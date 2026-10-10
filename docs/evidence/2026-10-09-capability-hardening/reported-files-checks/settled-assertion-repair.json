@@ -1,0 +1,39 @@
+{
+  "scope": "P19 integration assertion scope repair; no production change",
+  "diagnosis": "Three broad HTML substring assertions matched the new reported-file explanatory note in the retained hidden content pane, not a successful round label. Original settled regions rendered maintenance-ended, no-result-ended and tool-ended respectively.",
+  "originalFailure": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/frontend.txt",
+    "sha256": "2f08646143ea6181b63a25d003f368885d1f212dcc665629c6c0e1633614bec8"
+  },
+  "originalCounts": {
+    "testFiles": 338,
+    "passed": 4054,
+    "failed": 3
+  },
+  "fix": "Require exactly one settled region, its expected neutral label, and absence of the success label in that region. All existing no-result, request-failure and failed-tool state assertions remain.",
+  "owned": {
+    "src/components/ThreadView.outcomes.test.tsx": "4e0771e4145433aa69316c3904b5e8d0137789b8d789cd57a9f73d08f7cc4050",
+    "src/components/ThreadView.compaction.test.tsx": "fd0dfc3cdf12f69ee61353c7b2bc12e18306c141c71d2f8f107a2cbb55f87d1e"
+  },
+  "targeted": {
+    "argv": [
+      "corepack",
+      "pnpm",
+      "exec",
+      "vitest",
+      "run",
+      "src/components/ThreadView.outcomes.test.tsx",
+      "src/components/ThreadView.compaction.test.tsx",
+      "-t",
+      "shows an empty normal ending|shows a tool-only terminal result|renders an accessible retained summary"
+    ],
+    "passed": 3,
+    "skipped": 10,
+    "exitCode": 0,
+    "log": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/settled-targeted-green.txt",
+      "sha256": "78259e1824452aca229ddd8f9fd6df5951bc0f23816a03d60ae7b6459502091a"
+    }
+  },
+  "boundary": "SSR semantic assertions only. Does not replace actual browser or installed-product review."
+}

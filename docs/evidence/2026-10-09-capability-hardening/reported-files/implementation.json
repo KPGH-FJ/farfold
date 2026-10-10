@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-10T03:10:56.433578+00:00",
+  "scope": "P19 reported-file aggregation and passive list; product_coverage owned slice only",
+  "status": "source-and-targeted-checks-complete; independent full-App browser/integration pending",
+  "changes": [
+    "Completed non-delete diff/local resource_link/edit or move location reports form one row per exact declared path; all distinct tool/source provenance retained. Existing reportedFiles one-path API stays compatible.",
+    "scopedArtifactToolItems resolves original in-memory step/round references; copied entries, replaced tool/call/scope, withdrawn/changed sources and other thread/cwd fail current membership checks.",
+    "reportedArtifactCounts computes tool statistics once and merges round path sets; no file bodies or new event ledger. Unknown scope remains null, not all rounds.",
+    "ReportedFilesList exposes explicit onOpenFile(entry)/onOpenSource(entry,origin), with active/latest-render/live-membership checks. Rendering/navigation makes no file IPC. File pages have 50 rows, source pages 20, local max-height scroll.",
+    "Non-string location paths no longer become actionable String values; non-string diff remains raw. Invalid location shapes are preserved through existing reportedDetails and cleared by the real replacement rule.",
+    "Central strings added to the existing forbidden-word collection; existing visual tokens, keyboard buttons, path text selection and local scrolling retained."
+  ],
+  "api": {
+    "module": "src/runtime/reported_artifacts.ts",
+    "exports": [
+      "scopedArtifactToolItems(thread, scopeId)",
+      "reportedArtifactFiles(thread, scopeId)",
+      "isReportedArtifactCurrent(thread, scopeId, entry)",
+      "reportedArtifactCount(thread, scopeId)",
+      "reportedArtifactCounts(thread)"
+    ],
+    "list": "ReportedFilesList({thread,scopeId,active,onOpenFile(entry),onOpenSource?(entry,origin)})",
+    "authority": "Entry WeakMap tracks current source membership only. Parent must recheck its own visible/active/current thread/cwd/scope and then perform ordinary explicit VerifiedFile inspection. Entries neither prove disk existence nor grant future access."
+  },
+  "redGreen": [
+    {
+      "log": "path-shape-red.txt",
+      "result": "8 failures, of which 6 are valid non-string cases; 2 array rows were flattened by it.each into strings and are harness mistakes. Preserved, not counted as eight valid red tests."
+    },
+    {
+      "log": "path-shape-valid-red.txt",
+      "exitCode": 1,
+      "result": "Corrected object-wrapped parameters: 8/8 actual failures against original normalization."
+    },
+    {
+      "log": "path-shape-green.txt",
+      "exitCode": 0,
+      "result": "3 files/40 passed after strict path normalization; before the separate raw-location retention correction."
+    },
+    {
+      "log": "path-details-red.txt",
+      "exitCode": 1,
+      "result": "4 failures/4 passed: malformed locations absent from details. The later explicit [] assertions were not reached in those failing cases."
+    },
+    {
+      "log": "aggregation-first.txt",
+      "exitCode": 0,
+      "result": "3 files/41 passed after preserving malformed locations in existing details."
+    },
+    {
+      "log": "list-first.txt",
+      "exitCode": 0,
+      "result": "5 files/57 passed, including actual list callbacks in a test-local React hook lifecycle harness, not native/DOM execution."
+    },
+    {
+      "log": "counts-green.txt",
+      "exitCode": 0,
+      "result": "reported_artifacts 26/26 passed, including 1000 tool reports read once by bulk count; no wall-clock performance guarantee."
+    }
+  ],
+  "finalChecks": {
+    "frontend": {
+      "command": "corepack pnpm exec vitest run src/runtime/reported_artifacts.test.ts src/runtime/file_delivery.reported-shape.test.ts src/runtime/file_delivery.test.ts src/runtime/file_paths.test.ts src/runtime/tool_content.test.ts src/runtime/reported_details.test.ts src/runtime/strings.test.ts src/components/ReportedFilesList.test.tsx",
+      "log": "targeted-final.txt",
+      "exitCode": 0,
+      "files": 8,
+      "passed": 98
+    },
+    "typecheck": {
+      "command": "corepack pnpm typecheck",
+      "log": "typecheck-final.txt",
+      "exitCode": 0
+    },
+    "format": {
+      "command": "corepack pnpm exec prettier --write src/runtime/reported_artifacts.ts src/runtime/reported_artifacts.test.ts src/runtime/file_delivery.ts src/runtime/file_delivery.reported-shape.test.ts src/runtime/session_projection.ts src/runtime/reported_details.ts src/runtime/reported_artifact_strings.ts src/runtime/strings.test.ts src/components/ReportedFilesList.tsx src/components/ReportedFilesList.css src/components/ReportedFilesList.test.tsx",
+      "log": "format.txt",
+      "scope": "only owned paths"
+    },
+    "intermediateTypecheck": {
+      "log": "typecheck-first.txt",
+      "exitCode": 1,
+      "reason": "Only concurrent ArtifactPane.reported.test.tsx agents fixture type error; no claim that intermediate project typecheck passed."
+    }
+  },
+  "evidenceBoundaries": [
+    "No browser or formal app run by this agent; verification owns full-App two-engine checks. Root/architecture own upper integration and exact candidate/native validation.",
+    "Tool reports are candidates. No claim of file creation, all 29 Agents, physical alias deduplication, automatic rename tracking, or P22 real-Agent rework.",
+    "No production persistence, backend command, user file/configuration, model, Agent launch, package dependency or installation changes.",
+    "Input-generated diff remains a separate existing display; raw input, natural language, read/search locations, embedded resources, incomplete/failed/delete calls are not promoted to completed local file reports.",
+    "List source/authority tests use actual projection with synthetic events and controlled hooks. Existing literal files are not accessed by these unit fixtures."
+  ],
+  "owned": {
+    "src/runtime/reported_artifacts.ts": {
+      "sha256": "31fa93a3ee3cb89cdd7958f36c96542a6603b06409782c13f61be363d021bff2",
+      "lines": 208
+    },
+    "src/runtime/reported_artifacts.test.ts": {
+      "sha256": "b62e75e44c62cbbb8bbde50e4014707a3c932a37d664bd09aeddfb139c348e62",
+      "lines": 294
+    },
+    "src/runtime/file_delivery.ts": {
+      "sha256": "eaec401ada62b1da686016d811baf267e39726fd8b0292f428042a6011aea468",
+      "lines": 217
+    },
+    "src/runtime/file_delivery.reported-shape.test.ts": {
+      "sha256": "de676bedfc912e09aee2cb9e0901ac72a8bcfca6ee16fff6f57a8eca01af3a21",
+      "lines": 55
+    },
+    "src/runtime/session_projection.ts": {
+      "sha256": "c252ec05dbaa8a784164e3b3a94ff3cf71d80a8a533d12fcfdf35286c022161c",
+      "lines": 938
+    },
+    "src/runtime/reported_details.ts": {
+      "sha256": "a88ffc0d6ff15ed65a482db8a0824f1e0e6b785717351289e6b2d45e3b0f65f8",
+      "lines": 277
+    },
+    "src/runtime/reported_artifact_strings.ts": {
+      "sha256": "dbd791cf54c734d7fdc54eedbc87ac95a6e2811c48bcd40bb8abf681e1cde957",
+      "lines": 23
+    },
+    "src/runtime/strings.test.ts": {
+      "sha256": "22febd72d5f8ca2a2275d5db45193645c01c2275121f1609e7e3b4214cf3c2cc",
+      "lines": 159
+    },
+    "src/components/ReportedFilesList.tsx": {
+      "sha256": "3d828f82630e001d6b3895e0870207d77d4adcaa0ed29357c2395ca052fbb2e1",
+      "lines": 210
+    },
+    "src/components/ReportedFilesList.css": {
+      "sha256": "1b5103c11349ca2495c2861ef33964559d9d1a6ea24d79c059ea145771a10656",
+      "lines": 105
+    },
+    "src/components/ReportedFilesList.test.tsx": {
+      "sha256": "03c12467c49346fdd22b10790575cc42e4016bd8ddc8f52946394fa3b014cb35",
+      "lines": 248
+    }
+  },
+  "logs": {
+    "aggregation-first.txt": "ea0577b67d6bee5294f63b64d8cc1fe7271a0735a9105a4086c63ff238c92bf9",
+    "counts-green.txt": "30eacfc6b5eb352baa7b96f301efa1e4a3bcd939096bc3ec567d358a1a193d36",
+    "format.txt": "fe07603f954bd1153bf7fc7551a0204d75f6c781030fbb42f17c4c7694dad739",
+    "list-first.txt": "9fac06f23c1ad5e0c8afe2f22f92c9c0d51d9c73a1303ed1d9e823a0a90ba28c",
+    "path-details-red.txt": "c69e3994f5620252639ae60bf44cb6e45ee5895bd9f89fad24a7594a651db975",
+    "path-shape-green.txt": "9a04c6dbe21ac055583aaffea5feee46ec0f1fe7e81539560d47ab4019b550f8",
+    "path-shape-red.txt": "9a7252f233d5bd5ee6788c4da7f107ada175eadd7a5acfe4ee80f1d8776c7f6a",
+    "path-shape-valid-red.txt": "486f3bd0d209065a52a14287e143abef3439a5d0114441e99adb5e765b8a0881",
+    "targeted-final.txt": "49441ebee2a1a52f9c18fcf10ba62c8c9f56402b84f151a998f67c39667631a7",
+    "typecheck-final.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "typecheck-first.txt": "574ab9c7f9c1551b59347e10d125fc5df80ddcec97b8f7cce886778e035f9023"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "recordedAt": "2026-10-10T03:12:36.304408+00:00",
+  "scope": "P19 unified tool, round and all-content entries; explicit file navigation",
+  "status": "source_and_targeted_checks_passed_installed_and_real_agent_unverified",
+  "author": "architecture",
+  "changes": [
+    "Tool, settled-round and top-level entries use reported-artifact counts; transcript counts are calculated once.",
+    "The passive unified list hands an exact current entry to the pane; pane rechecks thread/cwd/scope/report immediately before handing the explicitly selected path to OpenedFileView.",
+    "Transient content ownership rejects handlers after hide, inactivity, directory/thread/scope changes; navigation delayed by BrowserSurfaceGuard checks ownership again.",
+    "File requests now carry cwd. A new report for the same path does not remount an explicitly opened file or replace its reading/feedback owner.",
+    "Existing diff/output presentation and missing historical round boundary behavior remain. No fallback to another scope."
+  ],
+  "redEvidence": [
+    {
+      "file": "entries-red.txt",
+      "tests": 4,
+      "failed": 4,
+      "reason": "Completed resource-link or edit location alone did not expose tool/round entries or a file list."
+    },
+    {
+      "file": "owner-red.txt",
+      "tests": 6,
+      "failed": 5,
+      "passed": 1,
+      "reason": "Captured file handler still selected after hide/inactive/cwd/scope/hide-return; another thread was already rejected."
+    }
+  ],
+  "intermediateResults": [
+    {
+      "file": "initial-green.txt",
+      "tests": 44,
+      "failed": 6,
+      "classification": [
+        "Two harness issues: module-init host_performance_origin is not file reading; ThreadPage SSR needs an explicit synchronous store snapshot in the harness. No production compatibility workaround.",
+        "Four implementation regressions: over-restricting expired scope callbacks removed the existing unavailable boundary entry/message. Restored the original behavior; ArtifactPane.rounds.test.tsx remained unchanged."
+      ]
+    },
+    {
+      "file": "entries-owner-green.txt",
+      "tests": 43,
+      "failed": 1,
+      "classification": [
+        "Harness did not traverse the header ReactNode prop passed from ThreadPage to ThreadView; corrected traversal only."
+      ]
+    },
+    {
+      "file": "expanded-green.txt",
+      "tests": 50,
+      "passed": 50
+    },
+    {
+      "file": "native-barrier-green.txt",
+      "tests": 6,
+      "passed": 6,
+      "boundary": "Actual BrowserSurfaceGuard plus a controlled Promise, not a native browser run."
+    }
+  ],
+  "finalChecks": {
+    "targeted": {
+      "command": "corepack pnpm exec vitest run src/components/ArtifactPane.reported.test.tsx src/components/ArtifactPane.reported-owner.test.tsx src/components/ThreadView.reported-owner.test.tsx src/components/ArtifactPane.rounds.test.tsx src/components/ArtifactPane.reading-position.test.tsx src/components/ArtifactPane.browser.test.tsx src/components/ArtifactPane.copy.test.tsx src/components/ArtifactPane.focus.test.tsx src/components/ThreadView.reading.test.tsx src/components/ThreadView.search-scope.test.tsx src/components/thread-items.file-links.test.tsx src/runtime/reported_artifacts.test.ts src/components/ReportedFilesList.test.tsx",
+      "exitCode": 0,
+      "files": 13,
+      "passed": 140,
+      "log": "targeted-final.txt"
+    },
+    "typecheck": {
+      "command": "corepack pnpm typecheck",
+      "exitCode": 0,
+      "log": "typecheck-final.txt"
+    },
+    "format": {
+      "command": "corepack pnpm exec prettier --check <eight owned files>",
+      "exitCode": 0,
+      "log": "format-final.txt"
+    },
+    "diffCheck": {
+      "command": "git diff --check -- src/components/ArtifactPane.tsx src/components/ThreadView.tsx src/components/ThreadPage.tsx src/components/useContentOwner.ts",
+      "exitCode": 0
+    }
+  },
+  "ownedFiles": {
+    "src/components/ArtifactPane.tsx": "d0686e396590ffa7fa15f59917ed8b75ecc050584fac8d29c653840eeb4449ee",
+    "src/components/ThreadView.tsx": "037591b3a4ddc9f8e0d0b0c2c49ab0f4c40782b3c4c66b0c166837dd0405852d",
+    "src/components/ThreadPage.tsx": "5704a111eea0712072e205983f6c9af0f3acfa2d8b3091f40235f695b1b2c611",
+    "src/components/useContentOwner.ts": "7d607eb88295d5f35d9f83eb3057f5c1214029c99cf279659dd4d9b773bc4236",
+    "src/components/ArtifactPane.reported.test.tsx": "67b0218f176a94fa6e1e9757483bd62935774144978d795a749cdb8c58527d85",
+    "src/components/ArtifactPane.reported-owner.test.tsx": "7a23759ef5a7f47c9a6ddaa9d18dba40f78120c7fcf0d3d8876e48a450929121",
+    "src/components/ThreadView.reported-owner.test.tsx": "196202cb6a1e4d1bc32d128cb8e9bf7a3e1338ed0dd41a6c109ee9de6719ef01",
+    "src/components/ArtifactPane.reading-position.test.tsx": "c9f06b337fb138dc7e414dfe8f34646646bf1a83d5af79793923af6c1a9af00e"
+  },
+  "dependencies": {
+    "src/runtime/reported_artifacts.ts": "31fa93a3ee3cb89cdd7958f36c96542a6603b06409782c13f61be363d021bff2",
+    "src/components/ReportedFilesList.tsx": "3d828f82630e001d6b3895e0870207d77d4adcaa0ed29357c2395ca052fbb2e1",
+    "src/components/ReportedFilesList.css": "1b5103c11349ca2495c2861ef33964559d9d1a6ea24d79c059ea145771a10656",
+    "src/runtime/reported_artifact_strings.ts": "dbd791cf54c734d7fdc54eedbc87ac95a6e2811c48bcd40bb8abf681e1cde957"
+  },
+  "logs": {
+    "entries-red.txt": "fd56fcdb14385c833af7e84ac9d9651551fe363aa6ed61171e039dd6e23896a2",
+    "owner-red.txt": "d3fccee44af95fd5bdd253eda08d04c7de8f449c01919f5ed494739fc6eecfce",
+    "initial-green.txt": "cee0dcb25026e307d8d7c4901af11e48a2bd3025b550b864e7709b85ce4dca13",
+    "entries-owner-green.txt": "06dba54dfe359073397022eac699b3713a8af0b3935df6c697067264a675269c",
+    "expanded-green.txt": "238e3f670abc5a776c62058effc10eb54cde51146ce2f39a3f6565c3dae3b862",
+    "native-barrier-green.txt": "2dddedfb7088bf4662bc9d5a51c6a7231a3c1d8ff79d6fc5a946ac61676f0c8b",
+    "typecheck-first.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "format.txt": "03cc128f2a84ba67e02ff316cf04e84fb2dff301d3542b45e5939ee6ac9d5763",
+    "targeted-final.txt": "3c35e57d101756956307f4a1b0e4c90f5fabbb379142251feedc24ddcb160f15",
+    "typecheck-final.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "format-final.txt": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+  },
+  "boundaries": [
+    "This is the implementation author receipt, not an independent review.",
+    "New entry tests use real components in SSR/hook-controlled fixtures. No formal app, Agent, user file or database was operated.",
+    "Passive-render assertions prohibit file_/browser_/settings_ calls. Module-init host_performance_origin is recorded separately; no claim of zero total IPC.",
+    "The same-path test proves stable OpenedFileView key/reading ref, not cold feedback persistence or disk-version end-to-end behavior.",
+    "File inspection, permission, save and feedback storage production paths were not changed. Browser, installed and real-Agent proof remain separate.",
+    "ThreadView is 1366 lines, ArtifactPane 638, ThreadPage 548; all below 1500.",
+    "No full-repository tests were rerun by this author. Root owns final integration."
+  ],
+  "receiptGenerationNote": "First receipt-generation command failed before writing a file due to Python stdin encoding. This ASCII-only retry creates the first receipt; no source/test result was changed."
+}

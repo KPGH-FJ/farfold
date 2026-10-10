@@ -247,8 +247,9 @@ function appendStreamText(
 function normalizeLocations(raw: unknown): ToolLocation[] {
   if (!Array.isArray(raw)) return [];
   return raw
+    .filter((loc) => typeof loc?.path === "string")
     .map((loc) => ({
-      path: String((loc as { path?: unknown })?.path ?? ""),
+      path: (loc as { path: string }).path,
       line:
         typeof (loc as { line?: unknown })?.line === "number"
           ? ((loc as { line: number }).line ?? undefined)
@@ -261,9 +262,10 @@ function normalizeToolContent(raw: unknown): ToolContent {
   const c = raw as Record<string, unknown> | null;
   switch (c?.type) {
     case "diff":
+      if (typeof c.path !== "string") return { type: "raw", value: raw };
       return {
         type: "diff",
-        path: String(c.path ?? ""),
+        path: c.path,
         oldText: typeof c.oldText === "string" ? c.oldText : null,
         newText: String(c.newText ?? ""),
       };

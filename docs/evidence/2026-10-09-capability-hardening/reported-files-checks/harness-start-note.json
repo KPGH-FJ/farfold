@@ -1,0 +1,13 @@
+{
+  "scope": "check harness startup only; not a product or test failure",
+  "firstAttempt": {
+    "command": "python3 docs/evidence/2026-10-09-capability-hardening/reported-files-checks/run-checks.py source",
+    "exitCode": 1,
+    "error": "ValueError: Unknown check output directory",
+    "cause": "runpy imported the prior collector while sys.argv still contained the new source mode; prior runner validates its optional directory argument at import time.",
+    "testsStarted": false,
+    "inputInventoryWritten": false,
+    "evidence": "Original traceback remains in the tool transcript; no separate raw stdout file was captured for this preflight failure."
+  },
+  "correction": "Temporarily pass only the imported runner path through sys.argv, restoring original argv in finally. No production input changed."
+}

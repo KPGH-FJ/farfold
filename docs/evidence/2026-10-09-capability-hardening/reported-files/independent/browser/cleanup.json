@@ -1,0 +1,16 @@
+{
+  "createdAt": "2026-10-10T03:21:53.065669+00:00",
+  "action": "normal SIGTERM to exact owned Vite process",
+  "pid": 20288,
+  "port": 1470,
+  "argv": "node docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/serve.mjs",
+  "listenerBefore": ["p20288", "f23"],
+  "signalSent": true,
+  "completion": "completed",
+  "scope": "Only task-owned controlled browser Vite service; no formal App or Agent operation",
+  "execSession": 87317,
+  "execExitCode": 143,
+  "processAbsent": true,
+  "portListenerAbsent": true,
+  "boundary": "SIGTERM was sent after exact process/port ownership checks; shell task returned 143. No claim that wrapper returned exit 0."
+}

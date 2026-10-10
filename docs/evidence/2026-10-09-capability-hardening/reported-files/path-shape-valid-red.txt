@@ -1,0 +1,221 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts (8 tests | 8 failed) 7ms
+   × does not promote a non-string protocol location into a file target: 123 4ms
+   × does not promote a non-string protocol location into a file target: true 1ms
+   × does not promote a non-string protocol location into a file target: { path: 'untrusted.md' } 0ms
+   × does not promote a non-string protocol location into a file target: [ 'untrusted.md' ] 0ms
+   × retains a non-string diff target as raw content, never as a file: 123 0ms
+   × retains a non-string diff target as raw content, never as a file: true 0ms
+   × retains a non-string diff target as raw content, never as a file: { path: 'untrusted.md' } 0ms
+   × retains a non-string diff target as raw content, never as a file: [ 'untrusted.md' ] 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/file_delivery.reported-shape.test.ts > does not promote a non-string protocol location into a file target: 123
+AssertionError: expected [ { path: '123', …(2) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "path": "123",
++     "source": "location",
++     "toolCallId": "write",
++   },
++ ]
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts:21:38
+     19|     const item = s.items[0];
+     20|     if (item.kind !== "tool") throw new Error("Expected tool");
+     21|     expect(reportedFiles(item.call)).toEqual([]);
+       |                                      ^
+     22|     expect(item.call.locations).toEqual([]);
+     23|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/runtime/file_delivery.reported-shape.test.ts > does not promote a non-string protocol location into a file target: true
+AssertionError: expected [ { path: 'true', …(2) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "path": "true",
++     "source": "location",
++     "toolCallId": "write",
++   },
++ ]
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts:21:38
+     19|     const item = s.items[0];
+     20|     if (item.kind !== "tool") throw new Error("Expected tool");
+     21|     expect(reportedFiles(item.call)).toEqual([]);
+       |                                      ^
+     22|     expect(item.call.locations).toEqual([]);
+     23|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/runtime/file_delivery.reported-shape.test.ts > does not promote a non-string protocol location into a file target: { path: 'untrusted.md' }
+AssertionError: expected [ { path: '[object Object]', …(2) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "path": "[object Object]",
++     "source": "location",
++     "toolCallId": "write",
++   },
++ ]
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts:21:38
+     19|     const item = s.items[0];
+     20|     if (item.kind !== "tool") throw new Error("Expected tool");
+     21|     expect(reportedFiles(item.call)).toEqual([]);
+       |                                      ^
+     22|     expect(item.call.locations).toEqual([]);
+     23|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/runtime/file_delivery.reported-shape.test.ts > does not promote a non-string protocol location into a file target: [ 'untrusted.md' ]
+AssertionError: expected [ { path: 'untrusted.md', …(2) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "path": "untrusted.md",
++     "source": "location",
++     "toolCallId": "write",
++   },
++ ]
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts:21:38
+     19|     const item = s.items[0];
+     20|     if (item.kind !== "tool") throw new Error("Expected tool");
+     21|     expect(reportedFiles(item.call)).toEqual([]);
+       |                                      ^
+     22|     expect(item.call.locations).toEqual([]);
+     23|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/runtime/file_delivery.reported-shape.test.ts > retains a non-string diff target as raw content, never as a file: 123
+AssertionError: expected [ { path: '123', …(2) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "path": "123",
++     "source": "diff",
++     "toolCallId": "write",
++   },
++ ]
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts:40:38
+     38|     const item = s.items[0];
+     39|     if (item.kind !== "tool") throw new Error("Expected tool");
+     40|     expect(reportedFiles(item.call)).toEqual([]);
+       |                                      ^
+     41|     expect(item.call.content).toEqual([{ type: "raw", value: content }…
+     42|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/runtime/file_delivery.reported-shape.test.ts > retains a non-string diff target as raw content, never as a file: true
+AssertionError: expected [ { path: 'true', …(2) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "path": "true",
++     "source": "diff",
++     "toolCallId": "write",
++   },
++ ]
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts:40:38
+     38|     const item = s.items[0];
+     39|     if (item.kind !== "tool") throw new Error("Expected tool");
+     40|     expect(reportedFiles(item.call)).toEqual([]);
+       |                                      ^
+     41|     expect(item.call.content).toEqual([{ type: "raw", value: content }…
+     42|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/runtime/file_delivery.reported-shape.test.ts > retains a non-string diff target as raw content, never as a file: { path: 'untrusted.md' }
+AssertionError: expected [ { path: '[object Object]', …(2) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "path": "[object Object]",
++     "source": "diff",
++     "toolCallId": "write",
++   },
++ ]
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts:40:38
+     38|     const item = s.items[0];
+     39|     if (item.kind !== "tool") throw new Error("Expected tool");
+     40|     expect(reportedFiles(item.call)).toEqual([]);
+       |                                      ^
+     41|     expect(item.call.content).toEqual([{ type: "raw", value: content }…
+     42|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  src/runtime/file_delivery.reported-shape.test.ts > retains a non-string diff target as raw content, never as a file: [ 'untrusted.md' ]
+AssertionError: expected [ { path: 'untrusted.md', …(2) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "path": "untrusted.md",
++     "source": "diff",
++     "toolCallId": "write",
++   },
++ ]
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts:40:38
+     38|     const item = s.items[0];
+     39|     if (item.kind !== "tool") throw new Error("Expected tool");
+     40|     expect(reportedFiles(item.call)).toEqual([]);
+       |                                      ^
+     41|     expect(item.call.content).toEqual([{ type: "raw", value: content }…
+     42|   },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  8 failed (8)
+   Start at  10:59:23
+   Duration  163ms (transform 64ms, setup 0ms, import 82ms, tests 7ms, environment 0ms)
+

@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ArtifactPane.reported.test.tsx (5 tests | 1 failed) 38ms
+   × the all-content header counts a completed link without probing the file 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ArtifactPane.reported.test.tsx > the all-content header counts a completed link without probing the file
+AssertionError: expected undefined to be defined
+ ❯ src/components/ArtifactPane.reported.test.tsx:42:17
+     40|  const tree=capture(()=>ThreadPage({viewKey:s.key,active:true,agents:u…
+     41|  const header=tree.find(n=>n.props["aria-label"]===W.showContent)!;
+     42|  expect(header).toBeDefined();
+       |                 ^
+     43|  expect(Children.toArray(header.props.children as ReactNode).filter(is…
+     44|  expect(vi.mocked(invoke).mock.calls.filter(([command])=>command.start…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 42 passed (43)
+   Start at  11:07:10
+   Duration  2.73s (transform 2.11s, setup 0ms, import 12.00s, tests 268ms, environment 0ms)
+

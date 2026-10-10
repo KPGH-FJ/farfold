@@ -135,7 +135,12 @@ export function collectReportedDetails(
     );
     each(
       u.locations,
-      (value, prefix) => collect(value, ["path", "line"], prefix),
+      (value, prefix) => {
+        // A malformed path is not consumed by the actionable location view.
+        // Preserve its original shape in the existing opaque details surface.
+        if (typeof record(value)?.path !== "string") details[prefix] = value;
+        else collect(value, ["path", "line"], prefix);
+      },
       "/update/locations",
     );
   }

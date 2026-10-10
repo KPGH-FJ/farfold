@@ -1,0 +1,73 @@
+{
+  "stage": "P19 independent review and controlled browser verification",
+  "status": "planned_not_test_results",
+  "basis": "docs/evidence/2026-10-09-capability-hardening/p19-next-review.json",
+  "ownership": {
+    "production": "product_coverage: extraction/list/type preservation; architecture: scope/ArtifactPane/ThreadView entries; root: integration",
+    "independent": "verification: real applyUpdate integration tests, full App WebKit/Chromium controlled IPC and receipts"
+  },
+  "counterexamples": [
+    {
+      "id": "event-late",
+      "layer": "actual applyUpdate + applyTurnEnd + pure list",
+      "case": "Old pending tool settles in A; B reports same path; late completion belongs only to A; retract A with explicit [] leaves B unchanged; queue state and old draft remain unchanged."
+    },
+    {
+      "id": "event-null-empty",
+      "layer": "actual applyUpdate",
+      "case": "ACP v1 nullable omitted fields preserve existing content/locations; explicit [] independently clears only that collection; no rawInput/prose fallback."
+    },
+    {
+      "id": "scope-exact",
+      "layer": "scope + pure list",
+      "case": "Missing referenced item, unknown scope, old scope missing reference never falls back to all/current; reordering loaded items preserves original item-ID membership; repeated reference never doubles source."
+    },
+    {
+      "id": "type-preservation",
+      "layer": "actual applyUpdate + list",
+      "case": "Nonstring location/diff paths cannot become actionable via String coercion; malformed detail remains available as raw evidence. Owner first records the normalization red; independent suite checks composition."
+    },
+    {
+      "id": "same-path-origins",
+      "layer": "actual updates + pure list",
+      "case": "Decoded file URI and identical path dedup exactly, retain each current tool origin; relative and absolute aliases are not invented equal; moving or deleting report does not migrate opinions."
+    },
+    {
+      "id": "passive-list",
+      "layer": "full actual App, controlled IPC",
+      "case": "Location/link-only tool and round entry reachable; open list, pagination and source updates cause no file inspect/read/copy/open IPC until explicit action."
+    },
+    {
+      "id": "click-ownership",
+      "layer": "full actual App, controlled IPC",
+      "case": "Thread/cwd/scope/hide/retraction and stale handler cannot inspect an unrelated or retired source; list refresh never changes existing opened version/draft."
+    },
+    {
+      "id": "explicit-verification",
+      "layer": "full actual App, controlled IPC",
+      "case": "Explicit file opening delegates exact path to existing wrapper; controlled missing/changed/read failure displays accurate failure and retains original drafts. Browser proves UI/mock contract only, not actual disk verification."
+    },
+    {
+      "id": "feedback-preservation",
+      "layer": "full actual App, controlled settings",
+      "case": "Same path new report/version retains old opinion path/contentId/anchor/text; take explicitly appends once to original composer and never sends."
+    },
+    {
+      "id": "layout-keyboard",
+      "layer": "WebKit and Chromium, actual components",
+      "case": "Tab/Enter reach report list and file controls; narrow complete App stays in local scroll region; existing diff/output and return controls remain reachable."
+    }
+  ],
+  "executionRules": [
+    "Wait for owner API and stable source before dependent tests/browser.",
+    "Keep first effective failures and exact source hashes; do not count build or harness errors as product regressions.",
+    "No production edit by reviewer; report concrete failing counterexamples to owner.",
+    "Preserve raw JSON bytes before formatting; final receipt links exact input and output hashes."
+  ],
+  "boundaries": [
+    "No formal Farfold app, Agent prompt, account, live user DB or user file access.",
+    "Controlled browser IPC is not Tauri native, real filesystem or 29-Agent acceptance.",
+    "Existing Rust file/copy boundary evidence reused only if exact inputs unchanged; no new copy implementation.",
+    "No histories or disk scans; only currently loaded structured tool reports."
+  ]
+}

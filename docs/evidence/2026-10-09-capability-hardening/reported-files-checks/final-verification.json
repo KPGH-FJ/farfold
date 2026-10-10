@@ -1,0 +1,254 @@
+{
+  "sourceBase": "22ff05ce95ffe2bd9530799d449ae981170563c3",
+  "inputCount": 1215,
+  "checkedAtUtc": "2026-10-10T03:29:34.509465+00:00",
+  "sourceStable": true,
+  "changedInputs": [],
+  "inputsBefore": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/inputs-final.json",
+    "sha256": "497904690df5b86916ca644bfaa910a35da9b01514f9887daf8722ff537107c4"
+  },
+  "inputsAfter": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/inputs-after-final.json",
+    "sha256": "497904690df5b86916ca644bfaa910a35da9b01514f9887daf8722ff537107c4"
+  },
+  "protectedBefore": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "protectedAfter": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "protectedUnchanged": true,
+  "sourceStageReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/source-final-verification.json",
+    "sha256": "60cb59ce21fec3a88634e48a4dd86cad6e532f7a424330e37c2d313e1e246dee"
+  },
+  "firstSourceStageReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/source-verification.json",
+    "sha256": "197f4674c1169851c2964b853d1e122a517213ca3d240c1d011bb713ffb33011"
+  },
+  "harnessStartupDiagnostic": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/harness-start-note.json",
+    "sha256": "c2f644d55c49125e25941a5d223699905c6d5683776f686c89c8be1779082b90"
+  },
+  "assertionScopeRepair": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/settled-assertion-repair.json",
+    "sha256": "7f6143a0d69574fc4a0c4dfcc738c6d9fb7c52da173f873ecfa86a6f1306e835"
+  },
+  "sourceClosure": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/source-closure.json",
+    "sha256": "851764e1770f2b0d56ca5be4ad5129299b6ed8e1a525cc516bf1b9ef785ebb03"
+  },
+  "runner": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/run-checks.py",
+    "sha256": "633f17ca44d822e4d4a80ea0a5f18ec0a5c3c5c1fd6fca85b4b6a8ac20959d10"
+  },
+  "rustReuse": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/rust-reuse-final.json",
+    "sha256": "9595d8ce5195d654f3af868302f901288b94aaa85a84ad7917729ef50e050bb0"
+  },
+  "checks": [
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.787,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": false,
+      "reused": true,
+      "reason": "All prior non-frontend, shared-fixture, Rust/config/lock inputs match exactly; added inventory coverage for two Rust inputs matches original Rust-check and a47 candidate commits. No Rust source or dependency change.",
+      "originalExecutionReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/final-verification.json",
+        "sha256": "987ca6cf856206498d12db4810910580daec713aad45579bb6bd80709acfe8ef"
+      }
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 1.32,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/clippy.txt",
+      "sha256": "b72370be6a423448fe4693e88696de86a459b0aa13f82e81efea0a37f3eebc6f",
+      "executedInThisRun": false,
+      "reused": true,
+      "reason": "All prior non-frontend, shared-fixture, Rust/config/lock inputs match exactly; added inventory coverage for two Rust inputs matches original Rust-check and a47 candidate commits. No Rust source or dependency change.",
+      "originalExecutionReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/final-verification.json",
+        "sha256": "987ca6cf856206498d12db4810910580daec713aad45579bb6bd80709acfe8ef"
+      }
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 45.781,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/rust.txt",
+      "sha256": "efc411643c123f8a1b133f698e94fea813f14c123b19291dbcacbf3d8264756b",
+      "executedInThisRun": false,
+      "reused": true,
+      "reason": "All prior non-frontend, shared-fixture, Rust/config/lock inputs match exactly; added inventory coverage for two Rust inputs matches original Rust-check and a47 candidate commits. No Rust source or dependency change.",
+      "originalExecutionReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/final-verification.json",
+        "sha256": "987ca6cf856206498d12db4810910580daec713aad45579bb6bd80709acfe8ef"
+      }
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 37.994,
+      "log": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/frontend-final.txt",
+      "sha256": "d8892dcb29cd92873f9c35e9a0952cabd1373978f440165e429bea9b04ee8030",
+      "executedInThisRun": true
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 18.541,
+      "log": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 7.894,
+      "log": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/build-final.txt",
+      "sha256": "df79090f5f9b49d978406fe7df3dd539d5a3d25375a16ebda89da88ac7c13ddb",
+      "executedInThisRun": true
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 23.689,
+      "log": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true
+    }
+  ],
+  "counts": {
+    "frontendSummary": [
+      "Test Files  338 passed (338)",
+      "Tests  4057 passed (4057)"
+    ],
+    "rustSummary": [
+      "test result: ok. 1230 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 40.65s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  "executedCheckCount": 4,
+  "reusedCheckCount": 3,
+  "allPassed": true,
+  "boundary": "P19 engineering aggregate only. Frontend/type/build/format executed for this slice; unchanged Rust checks explicitly reuse prior exact-input evidence. Controlled full-App browser, candidate, installed/native and real-Agent acceptance remain separate.",
+  "headAtFinalAnnotation": "33a249f7fd6d80dfb8ff7fc53261bce866690a19",
+  "headChangeSinceSourceStage": {
+    "paths": [
+      "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "docs/evidence/2026-10-09-capability-hardening/p22-next-review.json",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/generated-v1.raw.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/generated-v2.raw.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/independent-checks.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/independent-review.json",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/installed-rework.json",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/01-new-chat-ready.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/02-new-chat-current.png",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/02-new-chat-current.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/03-folder-selection.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/04-go-to-folder.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/05-owned-folder.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/06-folder-applied.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/07-workspace-ready.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/08-model-source.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/09-model-closed.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/10-existing-permission.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/11-permission-closed.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/12-initial-prompt.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/13-initial-request-sent.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/14-initial-request-result.png",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/14-initial-request-result.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/15-real-tool-artifact.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/16-real-file-preview.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/17-original-text.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/18-line-selector.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/19-target-line-selected.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/20-target-confirmed.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/21-feedback-hidden-preserved.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/22-feedback-reopened.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/23-feedback-taken-once.png",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/23-feedback-taken-once.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/24-retained-opinion-entry.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/25-retained-v1-opinion.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/26-rework-request-sent.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/27-rework-result.png",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/27-rework-result.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/28-real-rework-tool.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/29-tool-command-sha-check.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/30-v2-preview.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/31-retained-v1-after-rework.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/32-save-dialog.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/33-save-cancelled.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/34-save-again.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/35-export-folder.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/36-export-destination.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/37-export-result.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/38-export-completed.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/39-missing-file-reread.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/40-restored-file-preview.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/41-global-save-record.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/42-new-draft-for-folder-restore.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/43-folder-restore-ready.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/44-restore-go-to.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/45-original-folder.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/46-original-folder-restored.txt",
+      "docs/evidence/2026-10-09-capability-hardening/real-rework/native/47-idle-before-quit.txt",
+      "docs/status.md",
+      "plans/agent-access.md"
+    ],
+    "applicationInputsChanged": false,
+    "reason": "The source checks recorded the earlier HEAD; later commits changed only documentation/evidence. All 1215 application/config/test/fixture hashes still match the frozen final input inventory."
+  },
+  "candidateHelpersPreparedNotExecuted": {
+    "prepare-candidate.py": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/prepare-candidate.py",
+      "sha256": "eb64fc85f2fb502a1bd1ddcaff98b53e69057198fac572a8cd698449820577d4",
+      "syntaxParsed": true,
+      "scopeInventoryMatched": 1215,
+      "executed": false
+    },
+    "verify-candidate.py": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/verify-candidate.py",
+      "sha256": "598de5671a4fc00a924ea7d4dbf7f1d8ba433690e197e5bf42531fe5b47310dc",
+      "syntaxParsed": true,
+      "scopeInventoryMatched": 1215,
+      "executed": false
+    }
+  }
+}

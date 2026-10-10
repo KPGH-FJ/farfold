@@ -1,0 +1,105 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts (8 tests | 4 failed) 5ms
+   × does not promote a non-string protocol location into a file target: 123 3ms
+   × does not promote a non-string protocol location into a file target: true 0ms
+   × does not promote a non-string protocol location into a file target: { path: 'untrusted.md' } 0ms
+   × does not promote a non-string protocol location into a file target: [ 'untrusted.md' ] 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/file_delivery.reported-shape.test.ts > does not promote a non-string protocol location into a file target: 123
+AssertionError: expected undefined to deeply equal { path: 123 }
+
+- Expected:
+{
+  "path": 123,
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts:23:64
+     21|     expect(reportedFiles(item.call)).toEqual([]);
+     22|     expect(item.call.locations).toEqual([]);
+     23|     expect(item.call.reportedDetails?.["/update/locations/0"]).toEqual…
+       |                                                                ^
+     24|     applyUpdate(s, {
+     25|       sessionUpdate: "tool_call_update",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/runtime/file_delivery.reported-shape.test.ts > does not promote a non-string protocol location into a file target: true
+AssertionError: expected undefined to deeply equal { path: true }
+
+- Expected:
+{
+  "path": true,
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts:23:64
+     21|     expect(reportedFiles(item.call)).toEqual([]);
+     22|     expect(item.call.locations).toEqual([]);
+     23|     expect(item.call.reportedDetails?.["/update/locations/0"]).toEqual…
+       |                                                                ^
+     24|     applyUpdate(s, {
+     25|       sessionUpdate: "tool_call_update",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/runtime/file_delivery.reported-shape.test.ts > does not promote a non-string protocol location into a file target: { path: 'untrusted.md' }
+AssertionError: expected undefined to deeply equal { path: { path: 'untrusted.md' } }
+
+- Expected:
+{
+  "path": {
+    "path": "untrusted.md",
+  },
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts:23:64
+     21|     expect(reportedFiles(item.call)).toEqual([]);
+     22|     expect(item.call.locations).toEqual([]);
+     23|     expect(item.call.reportedDetails?.["/update/locations/0"]).toEqual…
+       |                                                                ^
+     24|     applyUpdate(s, {
+     25|       sessionUpdate: "tool_call_update",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/runtime/file_delivery.reported-shape.test.ts > does not promote a non-string protocol location into a file target: [ 'untrusted.md' ]
+AssertionError: expected undefined to deeply equal { path: [ 'untrusted.md' ] }
+
+- Expected:
+{
+  "path": [
+    "untrusted.md",
+  ],
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/file_delivery.reported-shape.test.ts:23:64
+     21|     expect(reportedFiles(item.call)).toEqual([]);
+     22|     expect(item.call.locations).toEqual([]);
+     23|     expect(item.call.reportedDetails?.["/update/locations/0"]).toEqual…
+       |                                                                ^
+     24|     applyUpdate(s, {
+     25|       sessionUpdate: "tool_call_update",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 4 passed (8)
+   Start at  11:01:35
+   Duration  139ms (transform 58ms, setup 0ms, import 73ms, tests 5ms, environment 0ms)
+

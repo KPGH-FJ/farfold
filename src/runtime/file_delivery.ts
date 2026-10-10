@@ -53,8 +53,9 @@ export interface DeliveryReceipt {
   sourceVersion: string | null;
 }
 
-function plainPath(path: string): boolean {
+function plainPath(path: unknown): path is string {
   return (
+    typeof path === "string" &&
     path.trim().length > 0 &&
     !/[\u0000-\u001f\u007f]/.test(path) &&
     (!/^[a-z][a-z0-9+.-]*:/i.test(path) || /^[a-z]:[\\/]/i.test(path))
@@ -63,6 +64,7 @@ function plainPath(path: string): boolean {
 
 /** Only an explicit local file URI, never a web URL or a path in prose. */
 export function localResourcePath(uri: string): string | null {
+  if (typeof uri !== "string") return null;
   try {
     const url = new URL(uri);
     if (
@@ -82,12 +84,14 @@ export function localResourcePath(uri: string): string | null {
   }
 }
 
-export function reportedFiles(call: ToolCallView): ReportedFile[] {
+/** Keep distinct report sources; repeated fields are not additional provenance. */
+export function reportedFileSources(call: ToolCallView): ReportedFile[] {
   if (call.status !== "completed" || call.kind === "delete") return [];
   const found = new Map<string, ReportedFile>();
   const add = (path: string, source: ReportedFile["source"]) => {
-    if (plainPath(path) && !found.has(path))
-      found.set(path, { path, source, toolCallId: call.toolCallId });
+    const key = JSON.stringify([path, source]);
+    if (plainPath(path) && !found.has(key))
+      found.set(key, { path, source, toolCallId: call.toolCallId });
   };
   for (const content of call.content) {
     if (content.type === "diff") add(content.path, "diff");
@@ -100,6 +104,14 @@ export function reportedFiles(call: ToolCallView): ReportedFile[] {
   if (call.kind === "edit" || call.kind === "move")
     for (const location of call.locations) add(location.path, "location");
   return [...found.values()];
+}
+
+/** Compatibility for callers asking for one candidate per declared path. */
+export function reportedFiles(call: ToolCallView): ReportedFile[] {
+  const files = new Map<string, ReportedFile>();
+  for (const file of reportedFileSources(call))
+    if (!files.has(file.path)) files.set(file.path, file);
+  return [...files.values()];
 }
 
 function inspectionFailure(error: unknown): never {

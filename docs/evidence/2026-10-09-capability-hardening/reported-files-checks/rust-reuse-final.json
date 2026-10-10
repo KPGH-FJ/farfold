@@ -1,0 +1,60 @@
+{
+  "priorCompleteReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-complete/final-verification.json",
+    "sha256": "80e7466614e121a3099c268df302f4e2f335b55fe4981399ca05717dbe9ceb15"
+  },
+  "priorInputs": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-complete/inputs.json",
+    "sha256": "644793269722418fdaeddc06866fc83c30669d03280bcde77a7be60f853c9fb2"
+  },
+  "candidateInputs": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/candidate-inputs.json",
+    "sha256": "0121c3205b3731d7197023b3de45862ca2b72935705f8445c8ef1c83ce7b673f"
+  },
+  "candidateCommit": "a47a6652453f44eb4ac4c89faea0ccd386f11ae0",
+  "changedPriorInputs": [
+    "src/components/ArtifactPane.reading-position.test.tsx",
+    "src/components/ArtifactPane.reported-owner.test.tsx",
+    "src/components/ArtifactPane.reported.test.tsx",
+    "src/components/ArtifactPane.tsx",
+    "src/components/ReportedFilesList.css",
+    "src/components/ReportedFilesList.test.tsx",
+    "src/components/ReportedFilesList.tsx",
+    "src/components/ThreadPage.tsx",
+    "src/components/ThreadView.compaction.test.tsx",
+    "src/components/ThreadView.outcomes.test.tsx",
+    "src/components/ThreadView.reported-owner.test.tsx",
+    "src/components/ThreadView.tsx",
+    "src/components/useContentOwner.ts",
+    "src/runtime/file_delivery.reported-shape.test.ts",
+    "src/runtime/file_delivery.ts",
+    "src/runtime/reported_artifact_strings.ts",
+    "src/runtime/reported_artifacts.independent.test.ts",
+    "src/runtime/reported_artifacts.test.ts",
+    "src/runtime/reported_artifacts.ts",
+    "src/runtime/reported_details.ts",
+    "src/runtime/session_projection.ts",
+    "src/runtime/strings.test.ts"
+  ],
+  "supplementalRustInputs": [
+    {
+      "path": "src-tauri/examples/windows_process_fixture.rs",
+      "sha256": "912aa227b06bd5422128b1a618f3e58b976990bca74cf0daeeacc1f2d3070b97",
+      "gitHashes": {
+        "2e97616870ec35d385b8ae1721d133efc89faf56": "912aa227b06bd5422128b1a618f3e58b976990bca74cf0daeeacc1f2d3070b97",
+        "a47a6652453f44eb4ac4c89faea0ccd386f11ae0": "912aa227b06bd5422128b1a618f3e58b976990bca74cf0daeeacc1f2d3070b97"
+      }
+    },
+    {
+      "path": "src-tauri/testdata/signed-update-metadata.json",
+      "sha256": "bac128c518c7115b9cb6d7b2d2ea5bd2d59379f4e8ab985ee6fed103ac448ec4",
+      "gitHashes": {
+        "2e97616870ec35d385b8ae1721d133efc89faf56": "bac128c518c7115b9cb6d7b2d2ea5bd2d59379f4e8ab985ee6fed103ac448ec4",
+        "a47a6652453f44eb4ac4c89faea0ccd386f11ae0": "bac128c518c7115b9cb6d7b2d2ea5bd2d59379f4e8ab985ee6fed103ac448ec4"
+      }
+    }
+  ],
+  "sharedFrontendFixturesUnchanged": true,
+  "rustWorkingTreeClean": true,
+  "boundary": "Reuses actual prior cargo fmt/clippy/test output; not a new Rust execution, toolchain revalidation, or application/Agent verification."
+}

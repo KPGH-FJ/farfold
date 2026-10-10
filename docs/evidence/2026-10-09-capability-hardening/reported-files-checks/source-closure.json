@@ -1,0 +1,192 @@
+{
+  "scope": "Dependency-closed P19 source/test list; no commit or installation",
+  "createdAt": "2026-10-10T03:25:18.606260+00:00",
+  "baseCandidate": "a47a6652453f44eb4ac4c89faea0ccd386f11ae0",
+  "files": {
+    "src/runtime/reported_artifacts.ts": {
+      "owner": "product_coverage",
+      "sha256": "31fa93a3ee3cb89cdd7958f36c96542a6603b06409782c13f61be363d021bff2",
+      "lines": 208,
+      "kind": "production"
+    },
+    "src/runtime/reported_artifacts.test.ts": {
+      "owner": "product_coverage",
+      "sha256": "b62e75e44c62cbbb8bbde50e4014707a3c932a37d664bd09aeddfb139c348e62",
+      "lines": 294,
+      "kind": "test"
+    },
+    "src/runtime/file_delivery.ts": {
+      "owner": "product_coverage",
+      "sha256": "eaec401ada62b1da686016d811baf267e39726fd8b0292f428042a6011aea468",
+      "lines": 217,
+      "kind": "production"
+    },
+    "src/runtime/file_delivery.reported-shape.test.ts": {
+      "owner": "product_coverage",
+      "sha256": "de676bedfc912e09aee2cb9e0901ac72a8bcfca6ee16fff6f57a8eca01af3a21",
+      "lines": 55,
+      "kind": "test"
+    },
+    "src/runtime/session_projection.ts": {
+      "owner": "product_coverage",
+      "sha256": "c252ec05dbaa8a784164e3b3a94ff3cf71d80a8a533d12fcfdf35286c022161c",
+      "lines": 938,
+      "kind": "production"
+    },
+    "src/runtime/reported_details.ts": {
+      "owner": "product_coverage",
+      "sha256": "a88ffc0d6ff15ed65a482db8a0824f1e0e6b785717351289e6b2d45e3b0f65f8",
+      "lines": 277,
+      "kind": "production"
+    },
+    "src/runtime/reported_artifact_strings.ts": {
+      "owner": "product_coverage",
+      "sha256": "dbd791cf54c734d7fdc54eedbc87ac95a6e2811c48bcd40bb8abf681e1cde957",
+      "lines": 23,
+      "kind": "production"
+    },
+    "src/runtime/strings.test.ts": {
+      "owner": "product_coverage",
+      "sha256": "22febd72d5f8ca2a2275d5db45193645c01c2275121f1609e7e3b4214cf3c2cc",
+      "lines": 159,
+      "kind": "test"
+    },
+    "src/components/ReportedFilesList.tsx": {
+      "owner": "product_coverage",
+      "sha256": "3d828f82630e001d6b3895e0870207d77d4adcaa0ed29357c2395ca052fbb2e1",
+      "lines": 210,
+      "kind": "production"
+    },
+    "src/components/ReportedFilesList.css": {
+      "owner": "product_coverage",
+      "sha256": "1b5103c11349ca2495c2861ef33964559d9d1a6ea24d79c059ea145771a10656",
+      "lines": 105,
+      "kind": "production"
+    },
+    "src/components/ReportedFilesList.test.tsx": {
+      "owner": "product_coverage",
+      "sha256": "03c12467c49346fdd22b10790575cc42e4016bd8ddc8f52946394fa3b014cb35",
+      "lines": 248,
+      "kind": "test"
+    },
+    "src/components/ArtifactPane.tsx": {
+      "owner": "architecture",
+      "sha256": "d0686e396590ffa7fa15f59917ed8b75ecc050584fac8d29c653840eeb4449ee",
+      "lines": 638,
+      "kind": "production"
+    },
+    "src/components/ThreadView.tsx": {
+      "owner": "architecture",
+      "sha256": "037591b3a4ddc9f8e0d0b0c2c49ab0f4c40782b3c4c66b0c166837dd0405852d",
+      "lines": 1366,
+      "kind": "production"
+    },
+    "src/components/ThreadPage.tsx": {
+      "owner": "architecture",
+      "sha256": "5704a111eea0712072e205983f6c9af0f3acfa2d8b3091f40235f695b1b2c611",
+      "lines": 548,
+      "kind": "production"
+    },
+    "src/components/useContentOwner.ts": {
+      "owner": "architecture",
+      "sha256": "7d607eb88295d5f35d9f83eb3057f5c1214029c99cf279659dd4d9b773bc4236",
+      "lines": 50,
+      "kind": "production"
+    },
+    "src/components/ArtifactPane.reported.test.tsx": {
+      "owner": "architecture",
+      "sha256": "67b0218f176a94fa6e1e9757483bd62935774144978d795a749cdb8c58527d85",
+      "lines": 166,
+      "kind": "test"
+    },
+    "src/components/ArtifactPane.reported-owner.test.tsx": {
+      "owner": "architecture",
+      "sha256": "7a23759ef5a7f47c9a6ddaa9d18dba40f78120c7fcf0d3d8876e48a450929121",
+      "lines": 219,
+      "kind": "test"
+    },
+    "src/components/ThreadView.reported-owner.test.tsx": {
+      "owner": "architecture",
+      "sha256": "196202cb6a1e4d1bc32d128cb8e9bf7a3e1338ed0dd41a6c109ee9de6719ef01",
+      "lines": 206,
+      "kind": "test"
+    },
+    "src/components/ArtifactPane.reading-position.test.tsx": {
+      "owner": "architecture",
+      "sha256": "c9f06b337fb138dc7e414dfe8f34646646bf1a83d5af79793923af6c1a9af00e",
+      "lines": 204,
+      "kind": "test"
+    },
+    "src/runtime/reported_artifacts.independent.test.ts": {
+      "owner": "verification",
+      "sha256": "bce7c5883e60c29d34a995ef75d693135d3d5140906f0ecb39c15f44289865b7",
+      "lines": 284,
+      "kind": "test"
+    },
+    "src/components/ThreadView.outcomes.test.tsx": {
+      "owner": "integration_assertion_repair",
+      "sha256": "4e0771e4145433aa69316c3904b5e8d0137789b8d789cd57a9f73d08f7cc4050",
+      "lines": 146,
+      "kind": "test"
+    },
+    "src/components/ThreadView.compaction.test.tsx": {
+      "owner": "integration_assertion_repair",
+      "sha256": "fd0dfc3cdf12f69ee61353c7b2bc12e18306c141c71d2f8f107a2cbb55f87d1e",
+      "lines": 116,
+      "kind": "test"
+    }
+  },
+  "fileCount": 22,
+  "productionCount": 11,
+  "testCount": 11,
+  "allCurrentHashesMatch": true,
+  "allFilesWithin1500Lines": true,
+  "exactFrontendDeltaFromPriorCandidate": [
+    "src/components/ArtifactPane.reading-position.test.tsx",
+    "src/components/ArtifactPane.reported-owner.test.tsx",
+    "src/components/ArtifactPane.reported.test.tsx",
+    "src/components/ArtifactPane.tsx",
+    "src/components/ReportedFilesList.css",
+    "src/components/ReportedFilesList.test.tsx",
+    "src/components/ReportedFilesList.tsx",
+    "src/components/ThreadPage.tsx",
+    "src/components/ThreadView.compaction.test.tsx",
+    "src/components/ThreadView.outcomes.test.tsx",
+    "src/components/ThreadView.reported-owner.test.tsx",
+    "src/components/ThreadView.tsx",
+    "src/components/useContentOwner.ts",
+    "src/runtime/file_delivery.reported-shape.test.ts",
+    "src/runtime/file_delivery.ts",
+    "src/runtime/reported_artifact_strings.ts",
+    "src/runtime/reported_artifacts.independent.test.ts",
+    "src/runtime/reported_artifacts.test.ts",
+    "src/runtime/reported_artifacts.ts",
+    "src/runtime/reported_details.ts",
+    "src/runtime/session_projection.ts",
+    "src/runtime/strings.test.ts"
+  ],
+  "supportingReceipts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/implementation.json",
+      "sha256": "6b4bf68ceb44ba57be6d256ea36eb9de5972712265c8cd7b507584c125c4f882"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-artifacts/integration/implementation.json",
+      "sha256": "604e9abb9f1f62399388731eb7500dce92af9f661e19aa0e765d1e0cd496248f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/implementation.json",
+      "sha256": "ac0b1b44f4a1838711d50f94c58ec2eb111709aadfb18e200639c5315b7df613"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/settled-assertion-repair.json",
+      "sha256": "7f6143a0d69574fc4a0c4dfcc738c6d9fb7c52da173f873ecfa86a6f1306e835"
+    }
+  ],
+  "boundaries": [
+    "File list stores only ephemeral references from current completed tool records, not filesystem or write-completion proof. No persistent artifact/event ledger.",
+    "Scope/current-entry handlers and the existing verified file inspection/open/save path remain required. Rendering and paging cause no file reads.",
+    "Actual controlled full-App browser evidence is separate from engineering tests and from the future installed P19 product.",
+    "Three first-suite failures were broad SSR substring collisions with the new explanatory note; only two assertion files were repaired. Initial raw and precise three-case green remain unchanged."
+  ]
+}

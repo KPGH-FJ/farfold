@@ -1,0 +1,23 @@
+export const REPORTED_ARTIFACT_STRINGS = {
+  title: "报告的文件",
+  count: (count: number) => `${count} 个文件位置`,
+  note: "来自已完成的工具记录，尚未核实文件当前状态。",
+  empty: "当前范围没有报告的文件位置。",
+  unavailable: "原记录暂不可用，未显示其他范围的文件。",
+  open: "查看文件",
+  openLabel: (path: string) => `查看文件 ${path}`,
+  sources: "查看来源",
+  sourceCount: (count: number) => `${count} 条工具记录`,
+  sourceRecord: (index: number) => `查看第 ${index} 条来源记录`,
+  sourceNames: {
+    diff: "文件差异",
+    location: "编辑或移动位置",
+    resourceLink: "文件链接",
+  },
+  previous: "上一组文件",
+  next: "下一组文件",
+  previousSources: "上一组来源",
+  nextSources: "下一组来源",
+  page: (page: number, count: number) => `第 ${page} / ${count} 组`,
+  loaded: "仅列出当前已加载记录中的文件位置。",
+} as const;

@@ -71,6 +71,7 @@ function opened() {
 function select(path: string, selection: number) {
   const fileRequest: OpenedFileRequest = {
     taskKey: props.thread.key,
+    cwd: props.thread.cwd,
     path,
     selection,
   };

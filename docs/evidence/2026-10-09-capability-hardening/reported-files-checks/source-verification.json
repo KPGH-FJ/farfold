@@ -1,0 +1,105 @@
+{
+  "checkedAtUtc": "2026-10-10T03:18:00.568655+00:00",
+  "sourceBase": "22ff05ce95ffe2bd9530799d449ae981170563c3",
+  "inputCount": 1215,
+  "sourceStable": true,
+  "changedInputs": [],
+  "protectedUnchanged": true,
+  "checks": [
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.787,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": false,
+      "reused": true,
+      "reason": "All prior non-frontend, shared-fixture, Rust/config/lock inputs match exactly; added inventory coverage for two Rust inputs matches original Rust-check and a47 candidate commits. No Rust source or dependency change.",
+      "originalExecutionReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/final-verification.json",
+        "sha256": "987ca6cf856206498d12db4810910580daec713aad45579bb6bd80709acfe8ef"
+      }
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 1.32,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/clippy.txt",
+      "sha256": "b72370be6a423448fe4693e88696de86a459b0aa13f82e81efea0a37f3eebc6f",
+      "executedInThisRun": false,
+      "reused": true,
+      "reason": "All prior non-frontend, shared-fixture, Rust/config/lock inputs match exactly; added inventory coverage for two Rust inputs matches original Rust-check and a47 candidate commits. No Rust source or dependency change.",
+      "originalExecutionReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/final-verification.json",
+        "sha256": "987ca6cf856206498d12db4810910580daec713aad45579bb6bd80709acfe8ef"
+      }
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 45.781,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/rust.txt",
+      "sha256": "efc411643c123f8a1b133f698e94fea813f14c123b19291dbcacbf3d8264756b",
+      "executedInThisRun": false,
+      "reused": true,
+      "reason": "All prior non-frontend, shared-fixture, Rust/config/lock inputs match exactly; added inventory coverage for two Rust inputs matches original Rust-check and a47 candidate commits. No Rust source or dependency change.",
+      "originalExecutionReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/final-verification.json",
+        "sha256": "987ca6cf856206498d12db4810910580daec713aad45579bb6bd80709acfe8ef"
+      }
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 1,
+      "seconds": 46.843,
+      "log": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/frontend.txt",
+      "sha256": "2f08646143ea6181b63a25d003f368885d1f212dcc665629c6c0e1633614bec8",
+      "executedInThisRun": true
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 24.204,
+      "log": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 8.204,
+      "log": "docs/evidence/2026-10-09-capability-hardening/reported-files-checks/build.txt",
+      "sha256": "b3dec04c6e08e283dab80cbfae617fb16bf31da0a90ddafea22dff08228a4593",
+      "executedInThisRun": true
+    }
+  ],
+  "sourceChecksPassed": false,
+  "formatPending": true
+}

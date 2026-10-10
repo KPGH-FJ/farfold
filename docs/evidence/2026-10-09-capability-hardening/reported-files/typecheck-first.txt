@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/ArtifactPane.reported.test.tsx(38,63): error TS2740: Type 'never[]' is missing the following properties from type 'AgentsState': loading, loadError, cards, connectedCards, and 14 more.
+ ELIFECYCLE  Command failed with exit code 1.

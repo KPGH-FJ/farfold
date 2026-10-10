@@ -1,0 +1,2 @@
+Owned P19 full-App Vite PID 20288
+11:10:44 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/index.html

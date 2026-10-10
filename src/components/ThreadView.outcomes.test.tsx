@@ -33,7 +33,10 @@ it("shows an empty normal ending without a success mark or invented failure", ()
   const html = render(s);
   expect(html).toContain(STRINGS.thread.noResult);
   expect(html).toContain(STRINGS.thread.noResultNote);
-  expect(html).not.toContain(STRINGS.thread.done);
+  const settled = html.match(/<div class="settled">[\s\S]*?<\/div>/g);
+  expect(settled).toHaveLength(1);
+  expect(settled![0]).toContain(STRINGS.thread.noResult);
+  expect(settled![0]).not.toContain(STRINGS.thread.done);
   expect(html).not.toContain(STRINGS.repair.requestFailed);
 });
 
@@ -49,7 +52,10 @@ it("shows a tool-only terminal result as ended and retains a failed tool's own s
   const html = render(s);
   expect(html).toContain(STRINGS.thread.ended);
   expect(html).not.toContain(STRINGS.thread.noResult);
-  expect(html).not.toContain(STRINGS.thread.done);
+  const settled = html.match(/<div class="settled">[\s\S]*?<\/div>/g);
+  expect(settled).toHaveLength(1);
+  expect(settled![0]).toContain(STRINGS.thread.ended);
+  expect(settled![0]).not.toContain(STRINGS.thread.done);
   expect(s.items.find((item) => item.kind === "tool")?.call.status).toBe(
     "failed",
   );

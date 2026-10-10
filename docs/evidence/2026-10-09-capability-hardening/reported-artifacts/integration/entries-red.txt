@@ -1,0 +1,46 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ArtifactPane.reported.test.tsx (4 tests | 4 failed) 24ms
+   × completed link alone exposes tool and round artifact entries without file reads 15ms
+   × completed location alone exposes tool and round artifact entries without file reads 3ms
+   × link reported file appears in all, step and round lists without automatic inspect 3ms
+   × location reported file appears in all, step and round lists without automatic inspect 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ArtifactPane.reported.test.tsx > completed link alone exposes tool and round artifact entries without file reads
+ FAIL  src/components/ArtifactPane.reported.test.tsx > completed location alone exposes tool and round artifact entries without file reads
+AssertionError: expected undefined to be type of 'function'
+
+Expected: "function"
+Received: "undefined"
+
+ ❯ src/components/ArtifactPane.reported.test.tsx:24:82
+     22| it.each(["link","location"] as const)("completed %s alone exposes tool…
+     23|  const s=reported(source); const tree=capture(()=>ThreadView({thread:s…
+     24|  const tool=tree.find(n=>n.type===ToolStep)!; expect(tool.props.onOpen…
+       |                                                                                  ^
+     25|  const settled=tree.find(n=>n.props.item===s.items.at(-1))!; expect(se…
+     26|  expect(invoke).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/components/ArtifactPane.reported.test.tsx > link reported file appears in all, step and round lists without automatic inspect
+ FAIL  src/components/ArtifactPane.reported.test.tsx > location reported file appears in all, step and round lists without automatic inspect
+AssertionError: expected '<aside class="artifact-pane" style="w…' to contain '/work/report.pdf'
+
+Expected: "/work/report.pdf"
+Received: "<aside class="artifact-pane" style="width:510px" aria-label="对话内容面板"><div class="a-drag" role="separator" aria-orientation="vertical" aria-label="调整内容宽度" aria-valuemin="320" aria-valuemax="720" aria-valuenow="510" tabindex="0"></div><div class="artifact-content-tabs" role="group" aria-label="对话内容面板"><button type="button" aria-pressed="true">文件与输出</button><button type="button" aria-pressed="false">网页</button></div><div class="artifact-browser-body" hidden=""><section class="browser-workspace" aria-label="网页"><div class="browser-workspace-controls"><form noValidate=""><label class="browser-workspace-sr-only" for="_R_3_">公开网页地址</label><div class="browser-workspace-address-row"><button type="button" class="browser-workspace-icon" title="重新加载网页" aria-label="重新加载网页" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M240,56v48a8,8,0,0,1-8,8H184a8,8,0,0,1,0-16H211.4L184.81,71.64l-.25-.24a80,80,0,1,0-1.67,114.78,8,8,0,0,1,11,11.63A95.44,95.44,0,0,1,128,224h-1.32A96,96,0,1,1,195.75,60L224,85.8V56a8,8,0,1,1,16,0Z"></path></svg></button><div class="browser-workspace-address-box"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><input id="_R_3_" type="url" placeholder="https://example.com" autoComplete="off" autoCapitalize="none" spellCheck="false" aria-describedby="_R_3H1_" disabled="" value=""/></div><button type="submit" class="browser-workspace-icon" title="打开" aria-label="打开" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path></svg></button><button type="button" class="browser-workspace-icon" title="读取文字快照" aria-label="读取文字快照" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M32,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H40A8,8,0,0,1,32,64Zm8,48H168a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16Zm176,24H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm-48,40H40a8,8,0,0,0,0,16H168a8,8,0,0,0,0-16Z"></path></svg></button><button type="button" class="browser-workspace-icon" title="关闭网页" aria-label="关闭网页" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button></div><p id="_R_3H1_" class="browser-workspace-sr-only">输入完整的 HTTPS 网址。</p></form><div class="browser-workspace-access-row"><span class="browser-workspace-sharing">未向 Agent 分享</span><div class="browser-workspace-file-actions"><select aria-label="打开来源" disabled=""><option value="public" selected="">公开网页</option><option value="development">本机服务</option></select><button type="button" disabled="">打开项目网页…</button><button type="button" disabled="">打开 HTML…</button><details class="browser-workspace-help"><summary>公开网页</summary><p>仅用于公开网页。请勿登录、切换账号或输入密码等秘密信息。</p></details></div></div></div><div class="browser-workspace-surface" aria-label="网页"><div class="browser-workspace-empty"><strong>在这里查看网页</strong><p>输入网址或本机服务地址，也可打开项目网页。内容不会自动发给 Agent。</p></div></div></section></div><div class="a-head"><span class="a-title">命令输出与日志</span><div class="a-actions"><button type="button" class="a-expand" aria-label="复制输出与日志" title="复制输出与日志" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"></path></svg></button><button type="button" class="a-expand" aria-label="放大内容" title="放大内容"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256"><path d="M216,48V96a8,8,0,0,1-16,0V67.31l-50.34,50.35a8,8,0,0,1-11.32-11.32L188.69,56H160a8,8,0,0,1,0-16h48A8,8,0,0,1,216,48ZM106.34,138.34,56,188.69V160a8,8,0,0,0-16,0v48a8,8,0,0,0,8,8H96a8,8,0,0,0,0-16H67.31l50.35-50.34a8,8,0,0,0-11.32-11.32Z"></path></svg></button><button type="button" class="a-close" aria-label="收起对话内容" title="收起对话内容"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256"><path d="M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,56H80V200H40ZM216,200H96V56H216V200Z"></path></svg></button></div></div><div class="a-list"><div class="a-empty">本轮还没有产物</div></div></aside>"
+
+ ❯ src/components/ArtifactPane.reported.test.tsx:30:164
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  10:59:43
+   Duration  1.84s (transform 429ms, setup 0ms, import 1.75s, tests 24ms, environment 0ms)
+

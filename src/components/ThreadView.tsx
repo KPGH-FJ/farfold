@@ -36,7 +36,6 @@ import { useConnectionHold } from "../runtime/connection_hold";
 import { AgentLogo } from "./AgentLogo";
 import {
   threads,
-  paneCards,
   modelConfigOption,
   configValueLabel,
   hasActiveTools,
@@ -56,7 +55,8 @@ import { FailedToolQueueHint } from "./FailedToolQueueHint";
 import { composerDrafts, useComposerDraft } from "../runtime/drafts";
 import { userMessageDraftAttachments } from "../runtime/message_actions";
 import { UserMessageActions } from "./UserMessageActions";
-import { artifactRoundCounts } from "../runtime/artifact_view";
+import { reportedArtifactCounts } from "../runtime/reported_artifacts";
+import { useContentOwner } from "./useContentOwner";
 import { settledRoundResults, type RoundResult } from "../runtime/round_result";
 import { maintenanceLabel } from "../runtime/compaction_strings";
 import { CompactionCard } from "./CompactionCard";
@@ -329,26 +329,37 @@ export function ThreadView({
   const draftReadRequired = thread.identity === "draft" && readRequired;
   const artifactReturnFocus =
     artifactReturnFocusRef ?? localArtifactReturnFocus;
+  const ownsContent = useContentOwner(thread, active);
   const openArtifacts = (roundId: string, opener: HTMLElement) => {
+    if (!ownsContent()) return;
     browserSurfaceGuard.runLatest(() => {
+      if (!ownsContent()) return;
       onContentModeChange?.("files");
+      if (!ownsContent()) return;
       artifactReturnFocus.current = opener;
       threads.openArtifactPane(thread.key, roundId);
     });
   };
   const openFile = (path: string, opener: HTMLElement) => {
-    if (!active) return;
+    if (!ownsContent()) return;
     const taskKey = thread.key;
     browserSurfaceGuard.runLatest(() => {
       if (
+        !ownsContent() ||
         !mounted.current ||
         !activeRef.current ||
         recoveryKey.current !== taskKey
       )
         return;
       artifactReturnFocus.current = opener;
-      setFileRequest({ taskKey, path, selection: ++fileRequestId.current });
       onContentModeChange?.("files");
+      if (!ownsContent()) return;
+      setFileRequest({
+        taskKey,
+        cwd: thread.cwd,
+        path,
+        selection: ++fileRequestId.current,
+      });
       threads.openArtifactPane(taskKey);
     });
   };
@@ -562,7 +573,7 @@ export function ThreadView({
 
   const permissions = thread.pendingPermissions;
   const blocks = itemBlocks(thread.items);
-  const artifactCounts = artifactRoundCounts(thread);
+  const artifactCounts = reportedArtifactCounts(thread);
   const empty =
     thread.items.length === 0 &&
     permissions.length === 0 &&
@@ -840,11 +851,7 @@ export function ThreadView({
                               onOpenFile={openFile}
                               activity={toolActivityState(thread, item.call)}
                               onOpenArtifacts={
-                                paneCards({ ...thread, items: [item] }).some(
-                                  (card) =>
-                                    card.kind === "diff" ||
-                                    card.output.length > 0,
-                                )
+                                (artifactCounts.get(item.id) ?? 0) > 0
                                   ? (event) =>
                                       openArtifacts(
                                         item.id,

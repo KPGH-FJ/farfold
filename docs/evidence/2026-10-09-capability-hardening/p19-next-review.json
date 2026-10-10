@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-10",
+  "kind": "read-only-next-increment-review",
+  "scope": "P19：统一已完成工具报告的本地文件清单；不新增活动计划、不改候选源码、不运行界面或 Agent。",
+  "decision": "建议下一片接通已有 reportedFiles 与内容栏、工具及轮次入口，复用当前磁盘核验、预览、打开、另存和版本意见。清单是当前已加载事件中的文件线索，不是已写成或仍存在的证明。",
+  "contract": [
+    {
+      "evidence": ["PRODUCT.md:183", "PRODUCT.md:186", "PRODUCT.md:193"],
+      "rule": "结构化位置先于核实；用户明确点击才检查该文件。相对路径限原工作目录，明确绝对路径只选择该文件；不扫描正文，不新增成果或事件账本。"
+    },
+    {
+      "evidence": [
+        "plans/agent-access.md:175",
+        "plans/agent-access.md:179",
+        "plans/agent-access.md:192"
+      ],
+      "rule": "P19需去重、来源、核验与交付；H06继续保护文件身份和替换竞态；H07要求网页不能取得主应用文件命令能力。工作目录不等于 Agent 沙箱。"
+    }
+  ],
+  "verifiedSourceFindings": [
+    {
+      "evidence": [
+        "src/runtime/file_delivery.ts:85",
+        "src/runtime/file_delivery.test.ts:37",
+        "src/runtime/tool_content.test.ts:61"
+      ],
+      "finding": "reportedFiles已有 completed 且非 delete 的真实 diff、file URI resource_link、edit/move locations抽取；当前 src 中调用全部位于测试。read/search位置、rawInput及自然语言不纳入。"
+    },
+    {
+      "evidence": [
+        "src/runtime/artifact_view.ts:165",
+        "src/runtime/artifacts.ts:98",
+        "src/runtime/artifacts.ts:134",
+        "src/components/FileDeliveryActions.tsx:26"
+      ],
+      "finding": "生产 artifactFiles只取diff卡。paneCards也包含edit输入合成的diff，必须保留其输入意图身份，不能将其升级为完成成果。现FileDeliveryActions仅把completed且source=diff当报告位置。"
+    },
+    {
+      "evidence": [
+        "src/components/thread-items.tsx:272",
+        "src/components/thread-items.tsx:303",
+        "src/components/ThreadView.tsx:842",
+        "src/runtime/artifact_view.ts:174",
+        "src/runtime/artifact_view.ts:192"
+      ],
+      "finding": "工具详情已经有位置/资源链接点击入口；缺统一清单。工具查看内容入口和轮次计数仍依赖paneCards，只有location/resource_link时也要接通入口，否则仅改列表不可达。轮次必须沿现有artifactToolItemIds，缺引用不能回退其他轮次。"
+    },
+    {
+      "evidence": [
+        "src/components/ArtifactPane.tsx:107",
+        "src/components/ArtifactPane.tsx:126",
+        "src/components/ArtifactPane.tsx:484",
+        "src/runtime/file_delivery.ts:121",
+        "src-tauri/src/file_delivery_commands.rs:19",
+        "src-tauri/src/file_delivery.rs:173",
+        "src-tauri/src/file_delivery.rs:228"
+      ],
+      "finding": "已有精确thread/path/selection重挂阅读入口、单份阅读位置ref和inspectLink路径；后端主界面限制及文件句柄/路径重核可以复用。聚合和展开清单本身不应发任何文件读取、外部打开或复制请求。"
+    },
+    {
+      "evidence": [
+        "src/components/OpenedFileView.tsx:634",
+        "src/runtime/drafts.ts:285",
+        "src/runtime/drafts.ts:325",
+        "src/components/FileArtifactView.tsx:294"
+      ],
+      "finding": "磁盘意见按原thread+resolvedPath+version+SHA保存，差异意见另有片段contentId。清单刷新、重复来源合并和文件移动不得迁移、清除或重新归属旧意见；加入输入框仍为明确动作且不自动发送。"
+    }
+  ],
+  "eventExamples": [
+    {
+      "evidence": "src/runtime/file_delivery.test.ts:38",
+      "level": "现有合成ToolCallView夹具，本次仅读，未重跑；非真实Agent录制",
+      "shape": "completed/edit；diff.path=report.md；locations.path=report.md；link.uri=file:///work/chart%20one.png",
+      "expected": "同一次调用report.md一条，图路径解码成/work/chart one.png另一条；两者均尚未核实磁盘。"
+    },
+    {
+      "evidence": [
+        "src/runtime/tool_content.test.ts:7",
+        "src/runtime/tool_content.test.ts:61",
+        "src/runtime/session_projection.ts:272"
+      ],
+      "level": "现有applyUpdate夹具；测试显式将状态设为completed后抽取",
+      "shape": "tool_call.content=[{type:content,content:{type:resource_link,name:Notes,uri:file:///work/notes.md}}]",
+      "expected": "归一成type=link，完成后可进文件清单；不是把任意未知顶层对象或原始输出当路径。"
+    },
+    {
+      "evidence": [
+        "src/runtime/file_delivery.test.ts:68",
+        "src/components/ArtifactPane.rounds.test.tsx:265",
+        "src/runtime/tool_content.test.ts:21"
+      ],
+      "level": "现有排除反例夹具，本次未执行",
+      "shape": "read/search locations、未完成execute、rawInput.path、Saved /private/file.txt文本、内嵌resource/image/audio",
+      "expected": "不当作已完成工具报告的本地成果；内嵌resource即使带file URI仍保留现有附件语义，不推断同路径磁盘副本。"
+    },
+    {
+      "evidence": [
+        "src/runtime/file_delivery.ts:99",
+        "src/runtime/file_delivery.test.ts:90"
+      ],
+      "level": "当前源码政策；move路径含义需真实接入另验",
+      "shape": "completed/move locations可能同时包含旧位置与新位置；completed/delete含diff",
+      "expected": "move各位置仅标工具报告位置，不猜哪个是目标；delete不新增成果。旧报告后被删除/移动时仍不能声称存在，点击交给实际核验，不扫描寻找替代文件。"
+    }
+  ],
+  "minimalImplementation": {
+    "ui": "沿当前内容栏增加一份文件清单，行显示路径、来源摘要和明确查看入口；有真实diff时另可查看原差异。现有差异及运行输出保留，不用伪diff占位资源链接。选择文件后复用OpenedFileView；返回仍回原清单/轮次。",
+    "pureApiProposal": [
+      "抽共用 scopedArtifactToolItems(thread, scopeId): 当前tool引用[] | null，供差异卡、报告文件清单及入口计数复用。null表示原轮/步骤不可用，不等于全部。",
+      "reportedArtifactFiles(thread, scopeId): readonly ReportedArtifactFile[] | null；每项含稳定path key、原path、只引用当前内存toolItemId/toolCallId/source的origins。复用reportedFiles，不存正文或另建历史。",
+      "文件去重至少覆盖相同明确path及已解码的同一file URI；保留多来源。不得大小写折叠、Unicode改写、消除带符号链接语义的..或把两个未经核验别名宣称同一实体。相对/绝对别名合并如要做，必须独立明确词法规则与反例，不能读盘来去重。",
+      "共用hasArtifactContent/计数口径同时覆盖报告文件和现有差异/非空输出；同path多来源不重复计文件。步/轮/all选择与计数由同一当前引用集合产生，迟到输出不得串到新轮。"
+    ],
+    "selectionAndAuthority": [
+      "显式查看时重查active/open/thread/cwd/scope及原条目仍在；沿原path新建OpenedFileRequest。旧按钮闭包不能在切任务/原条目撤回后读取另一个文件。",
+      "不因默认选中首项或列表更新自动读取。绝对路径复用inspectLink的单文件显式选择；相对路径仍由backend约束原cwd。权限审批允许/拒绝与文件核验完全独立，不能借审批请求或rawInput提升候选资格。",
+      "已打开文件仍属于其原VerifiedFile与selection；同path出现新报告不会换掉其版本或清旧稿。显式重读/现有安全刷新取得新文件后继续原P20/P21保护。",
+      "完整另存走现有共享copy job、取消/未知/退出保护；文本快照和差异片段不能冒充完整文件。列表不额外保存验证成功徽标或长久文件权限。"
+    ],
+    "boundedness": "仅枚举当前已加载tool items；不遍历目录、不读取未加载历史。来源用轻量引用且去重，长清单分页/分批显示并写明已加载范围，不静默截断或复制正文。来源更新按实际当前tool对象处理，不构造事件账本。",
+    "likelyFiles": [
+      "src/runtime/artifact_view.ts 或独立 reported_artifacts.ts",
+      "src/runtime/file_delivery.ts（复用抽取；确有必要才调整纯形状校验）",
+      "src/components/ArtifactPane.tsx 及独立 ReportedFilesList.tsx/CSS/集中字符串",
+      "src/components/ThreadView.tsx 与相关步/轮计数纯函数",
+      "各新增纯函数/清单/ArtifactPane/ThreadView关联测试；不预计需要新Rust命令或数据表"
+    ]
+  },
+  "requiredTests": [
+    "先有效红：只有completed resource_link或edit/move location时，现统一清单/步入口不可达；接通后能显式选择。",
+    "真实applyUpdate形状覆盖diff、wrapped resource_link、locations，pending→completed、null沿用及显式[]撤回；未知/failed/delete/read/search/input/普通文本不伪装成果。",
+    "同调用及跨调用重复path保留来源但只一条；literal文件名output不碰撞输出视图；空白、控制符、畸形URI、远程file host、URL查询/片段及windows路径边界。",
+    "非字符串locations/path不得因String(object/number)变成可操作文件目标；若现归一层丢类型需留实际红并最小修，不能以本研究当已修。",
+    "旧轮与新轮同path、同scope迟到completed、缺tool引用、replay重排；计数/列表/查看入口一致，缺范围不回退新轮。",
+    "渲染、展开、翻页及来源更新零inspect/read/open/copy IPC；只有一次明确点击触发精确路径检查。",
+    "切thread/cwd/scope、隐藏、重选与迟到检查成功/失败不串文件；被撤回条目的旧handler无效，默认回退选择不能自动读取。",
+    "真实受控磁盘缺失/移动/越界/替换/权限失败有准确结果和既有显式退路，不从相邻目录猜文件，不保留旧成功状态授权新操作。",
+    "同path新版本、别名或move报告不改旧意见path/contentId/anchor/text；take加入正确原输入框仅一次，保留已有草稿且不发Agent请求。",
+    "全量另存仍共享job：取消、迟到结果、unknown/settled/absence及跨页可达；独立核实际目标SHA，不拿对话框返回路径算交付。",
+    "受控完整App双引擎：纯资源链接工具→清单→真实fixture核验预览→返回→来源/轮次；Tab/Enter与窄窗可达，已有差异/输出/阅读位置回归。",
+    "安装后仅按真实做过的Agent事件和文件旅程宣称分项通过；合成事件/浏览器IPC mock不等同29家或P22真实返工。"
+  ],
+  "remainingOutsideThisSlice": [
+    "未加载或Agent未回放的历史成果无法补造；不扫描自然语言/目录推测成果。",
+    "任意文件别名物理去重、自动追踪重命名、远程成果下载、内嵌资源落盘不是本片隐含能力。",
+    "Agent报告completed不证明文件写成，也不证明该工具为唯一作者；真实Agent返工及导出闭环仍按P22独立验收。",
+    "H06/H07和Windows真实行为不因前端清单接通而全部完成；P16/P21其余格式/位置边界保留。"
+  ],
+  "validationPerformed": {
+    "method": "只读当前产品、计划、源码及已有测试定义；核src生产调用搜索。未运行测试/界面/Agent，未访问用户文件或正式数据库。",
+    "testResultsClaimed": false,
+    "productionModified": false,
+    "writeScope": "仅本研究JSON；不是活动计划或完成回执。"
+  }
+}

@@ -1,0 +1,533 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-10T03:23:50.316600+00:00",
+  "status": "completed_no_new_blocker",
+  "scope": "P19 independent real event-projection counterexamples and controlled complete-App browser review; not installed-product or real-Agent acceptance.",
+  "ownership": {
+    "productionChangedByReviewer": false,
+    "ownedSource": [
+      {
+        "path": "src/runtime/reported_artifacts.independent.test.ts",
+        "sha256": "bce7c5883e60c29d34a995ef75d693135d3d5140906f0ecb39c15f44289865b7"
+      }
+    ],
+    "ownerReceipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/implementation.json",
+      "sha256": "6b4bf68ceb44ba57be6d256ea36eb9de5972712265c8cd7b507584c125c4f882"
+    },
+    "owner11SourcesStillMatch": true,
+    "publicEvidenceContainsOnlySyntheticControlledContent": true
+  },
+  "projection": {
+    "passed": 8,
+    "failed": 0,
+    "uses": "Actual applyUpdate/applyTurnEnd and current scoped report APIs; no fabricated pre-normalized result as sole oracle.",
+    "final": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/projection-final.json",
+      "sha256": "0b52e65cd1b01e60a1729690c159965f96bc2cc2bdf0815e3c20006ac07202fa"
+    },
+    "stdout": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/projection-final.txt",
+      "sha256": "9e8e63d1a0ceb3b9bfb92985e65d4fbf0d60ce6a09aaeebf73723234b2fd93f4"
+    },
+    "eightInputsExactAndCurrent": true,
+    "coverage": [
+      "Late completion retains the exact previous settled-round membership; explicit empty arrays retract only their own content/location source.",
+      "Null omission preserves original fields and opaque invalid locations; malformed paths never become string paths.",
+      "Same-path diff/link/location and multiple original tool records retain all sources.",
+      "Reordered loaded items preserve membership; missing exact references do not fall back to a newer round.",
+      "Unknown late tool IDs are not retroactively added to old round results.",
+      "Copied or retired entries, replaced tool objects, changed source sets and mismatched scope/cwd reject.",
+      "Embedded resources/prose/input read locations/failed/delete tools are excluded."
+    ]
+  },
+  "browser": {
+    "technology": "Actual App/ThreadPage/ArtifactPane/OpenedFileView and React StrictMode, production CSS, real event projection and Markdown renderer in WebKit and Chromium. Tauri/file/settings IPC is explicitly controlled in memory.",
+    "runs": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-complete.json",
+        "sha256": "ead937ce27e225eeb7c3036420b3cecfe38173c547b2e942231a5eb1337b89c9",
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-complete.raw.txt",
+          "sha256": "ead937ce27e225eeb7c3036420b3cecfe38173c547b2e942231a5eb1337b89c9"
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-complete.txt",
+          "sha256": "af2e7901e1a3362496fdc7594a91d329585880b887a029a3c19fd9430f626ed3"
+        },
+        "engine": "webkit",
+        "assertionsPassed": 24,
+        "inputCount": 738,
+        "beforeAfterExact": true,
+        "currentDifferences": [
+          {
+            "path": "src/components/ThreadView.compaction.test.tsx",
+            "atRun": "e3520fb321be61ef73b2a148ac7acc5f6ea1f4042e1a7954c90b3cae18b9f188",
+            "current": "fd0dfc3cdf12f69ee61353c7b2bc12e18306c141c71d2f8f107a2cbb55f87d1e"
+          },
+          {
+            "path": "src/components/ThreadView.outcomes.test.tsx",
+            "atRun": "942dea73727b8a5d1514fa18d726b8725c9ad0516ad0feb78fc2abc3ab0b99dd",
+            "current": "4e0771e4145433aa69316c3904b5e8d0137789b8d789cd57a9f73d08f7cc4050"
+          }
+        ],
+        "productionStillMatches": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-complete.json",
+        "sha256": "4e112c4e7c7be10ed8e1572e56c05b239ee4a6b36bd8184a88780f1d25abf6e2",
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-complete.raw.txt",
+          "sha256": "4e112c4e7c7be10ed8e1572e56c05b239ee4a6b36bd8184a88780f1d25abf6e2"
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-complete.txt",
+          "sha256": "00c2937eb00b9b3292782f58bf068abe391e2a70d15c04ac9a9f5d70f2455dc2"
+        },
+        "engine": "chromium",
+        "assertionsPassed": 24,
+        "inputCount": 738,
+        "beforeAfterExact": true,
+        "currentDifferences": [
+          {
+            "path": "src/components/ThreadView.compaction.test.tsx",
+            "atRun": "e3520fb321be61ef73b2a148ac7acc5f6ea1f4042e1a7954c90b3cae18b9f188",
+            "current": "fd0dfc3cdf12f69ee61353c7b2bc12e18306c141c71d2f8f107a2cbb55f87d1e"
+          },
+          {
+            "path": "src/components/ThreadView.outcomes.test.tsx",
+            "atRun": "942dea73727b8a5d1514fa18d726b8725c9ad0516ad0feb78fc2abc3ab0b99dd",
+            "current": "4e0771e4145433aa69316c3904b5e8d0137789b8d789cd57a9f73d08f7cc4050"
+          }
+        ],
+        "productionStillMatches": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-complete.json",
+        "sha256": "51a78a2fbd8e388cda90b0eef3cd438e218c4599612480c0d50472612ab40f78",
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-complete.raw.txt",
+          "sha256": "51a78a2fbd8e388cda90b0eef3cd438e218c4599612480c0d50472612ab40f78"
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-complete.txt",
+          "sha256": "f738e15947a6d93581be4b24ef01c606b542a5d0ee91d7ff51c664521bcc288d"
+        },
+        "engine": "webkit",
+        "assertionsPassed": 11,
+        "inputCount": 738,
+        "beforeAfterExact": true,
+        "currentDifferences": [
+          {
+            "path": "src/components/ThreadView.compaction.test.tsx",
+            "atRun": "e3520fb321be61ef73b2a148ac7acc5f6ea1f4042e1a7954c90b3cae18b9f188",
+            "current": "fd0dfc3cdf12f69ee61353c7b2bc12e18306c141c71d2f8f107a2cbb55f87d1e"
+          },
+          {
+            "path": "src/components/ThreadView.outcomes.test.tsx",
+            "atRun": "942dea73727b8a5d1514fa18d726b8725c9ad0516ad0feb78fc2abc3ab0b99dd",
+            "current": "4e0771e4145433aa69316c3904b5e8d0137789b8d789cd57a9f73d08f7cc4050"
+          }
+        ],
+        "productionStillMatches": true
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-edges-complete.json",
+        "sha256": "41c253de1c27845d4486f255c06cbb2475bf206f226d6a2e5360c2914cdd58cd",
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-edges-complete.raw.txt",
+          "sha256": "41c253de1c27845d4486f255c06cbb2475bf206f226d6a2e5360c2914cdd58cd"
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-edges-complete.txt",
+          "sha256": "d136e34c15a9976eb7331d6952d6f33b1ebb669b2111e76ec3e3be8e6e11d279"
+        },
+        "engine": "chromium",
+        "assertionsPassed": 11,
+        "inputCount": 738,
+        "beforeAfterExact": true,
+        "currentDifferences": [
+          {
+            "path": "src/components/ThreadView.compaction.test.tsx",
+            "atRun": "e3520fb321be61ef73b2a148ac7acc5f6ea1f4042e1a7954c90b3cae18b9f188",
+            "current": "fd0dfc3cdf12f69ee61353c7b2bc12e18306c141c71d2f8f107a2cbb55f87d1e"
+          },
+          {
+            "path": "src/components/ThreadView.outcomes.test.tsx",
+            "atRun": "942dea73727b8a5d1514fa18d726b8725c9ad0516ad0feb78fc2abc3ab0b99dd",
+            "current": "4e0771e4145433aa69316c3904b5e8d0137789b8d789cd57a9f73d08f7cc4050"
+          }
+        ],
+        "productionStillMatches": true
+      }
+    ],
+    "assertionsPerEngine": 35,
+    "assertionsTotal": 70,
+    "mainPerEngine": 24,
+    "failureAndHiddenLatePerEngine": 11,
+    "coverage": [
+      "Report list/source disclosure/step-round-all navigation/retraction/pagination perform no file IPC.",
+      "59 reported paths paginate as 50+9; keyboard explicit open inspects only the exact selected path and reads content once.",
+      "Late old completion and explicit [] update the original round only; later same-path reports remain.",
+      "New same-path report while feedback editing leaves current v1 content and exact old feedback/composer unchanged.",
+      "Explicit re-open reads v2, keeps old-version opinion accessible, and take appends once while preserving composer prefix; no Agent prompt.",
+      "Missing controlled inspection preserves the old opinion and explicit retry/location fallback without stale success content or substitute reads.",
+      "Hide during delayed inspection discards late receipt before text read; reopen stays paused; next explicit other-file action reads only that selected path.",
+      "900x620 full App keeps windowY/appY at zero and root height equal to viewport; list paging and local scrolling remain reachable."
+    ],
+    "strictModeBoundary": "Development StrictMode performed two identical inspect_selected calls on an explicit mount, with the first result discarded and only one read_text. The original driver expectation of one inspect was too strict; no production change was made. No claim of native production double inspection or perfect single-inspect behavior.",
+    "feedbackBoundary": "The browser old-version opinion is whole-file feedback without an anchor. Its complete stored object and composer were compared; this is not a separate browser proof for every anchor kind.",
+    "viewedScreenshots": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-complete-narrow.png",
+        "sha256": "86e856d1bec385019208fd1465c02a9df14fcb760707300782d99616a31338fc"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-complete-opened.png",
+        "sha256": "f60eb8f453c4d0540ebb16bb5ef8e10a7aac92278c222c9d3ed8fe3d444a028f"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-complete-narrow.png",
+        "sha256": "3de1bf0321626cc1e54d5ee27014fcc894d4370d960a2beeb5bc0189d5bbcbcd"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-complete-missing.png",
+        "sha256": "589c50c2fee969402cc0e76e63ade985437d1421ad191ee6077de3662392d2a1"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-edges-complete-missing.png",
+        "sha256": "28fd62eb751982758438ae4e3b1039fdd78f9a6440930c9bcac4582c8187cb99"
+      }
+    ],
+    "visualObservations": "Five final images were actually inspected: wide text preview, narrow report-list local scrolling, and both-engine fixed missing-file feedback with explicit fallback. Other retained screenshots are evidence artifacts but are not claimed as independently viewed here."
+  },
+  "retainedEarlierAttempts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-first.json",
+      "classification": "harness_error",
+      "detail": "Early synthetic IPC logger used bare strings; driver assumed cmd objects. Zero completed checks; normalized harness logging only."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-second.json",
+      "classification": "driver_assumption_too_strict",
+      "detail": "11 checks passed before expecting one inspection under development StrictMode; two identical exact-path inspections and one text read were observed. Revised assertion records actual boundary."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-expanded.json",
+      "classification": "driver_missing_ui_step",
+      "detail": "19 checks passed then old opinion add button was sought inside collapsed details. Driver now explicitly expands the existing control."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-first.json",
+      "classification": "driver_wrong_label",
+      "detail": "Hidden-late checks passed; missing-file driver expected normal verified-file opener text instead of failed-inspection explicit selected-location fallback. Selector corrected."
+    }
+  ],
+  "laterEngineeringDelta": {
+    "onlyTwoSourceDifferencesSinceBrowser": true,
+    "files": [
+      "src/components/ThreadView.compaction.test.tsx",
+      "src/components/ThreadView.outcomes.test.tsx"
+    ],
+    "review": "Read-only diff confirms old whole-HTML absence assertions now require exactly one actual settled element, its expected outcome, and absence of the generic done label inside it. Other result/failed-tool assertions retained; no production edits.",
+    "boundary": "All browser runs retain their original 738-input before/after proof; current test-only changes are not silently merged into those historical hashes. Full engineering result is owned by the separate integration receipt."
+  },
+  "rawFormatting": {
+    "pairs": [
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-complete.json",
+          "sha256": "4e112c4e7c7be10ed8e1572e56c05b239ee4a6b36bd8184a88780f1d25abf6e2"
+        },
+        "originalRaw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-complete.raw.txt",
+          "sha256": "4e112c4e7c7be10ed8e1572e56c05b239ee4a6b36bd8184a88780f1d25abf6e2"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-edges-complete.json",
+          "sha256": "41c253de1c27845d4486f255c06cbb2475bf206f226d6a2e5360c2914cdd58cd"
+        },
+        "originalRaw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-edges-complete.raw.txt",
+          "sha256": "41c253de1c27845d4486f255c06cbb2475bf206f226d6a2e5360c2914cdd58cd"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-complete.json",
+          "sha256": "ead937ce27e225eeb7c3036420b3cecfe38173c547b2e942231a5eb1337b89c9"
+        },
+        "originalRaw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-complete.raw.txt",
+          "sha256": "ead937ce27e225eeb7c3036420b3cecfe38173c547b2e942231a5eb1337b89c9"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-complete.json",
+          "sha256": "51a78a2fbd8e388cda90b0eef3cd438e218c4599612480c0d50472612ab40f78"
+        },
+        "originalRaw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-complete.raw.txt",
+          "sha256": "51a78a2fbd8e388cda90b0eef3cd438e218c4599612480c0d50472612ab40f78"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-first.json",
+          "sha256": "cb94cbde9ad6bbd319d400946a412571bbb2eb2080cede369bcfca8a370bacda"
+        },
+        "originalRaw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-first.raw.txt",
+          "sha256": "cb94cbde9ad6bbd319d400946a412571bbb2eb2080cede369bcfca8a370bacda"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-expanded.json",
+          "sha256": "51d02e02ab656dbd206debef23fb2f9b02687aa6097d292a049c94ce2e46ec8b"
+        },
+        "originalRaw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-expanded.raw.txt",
+          "sha256": "51d02e02ab656dbd206debef23fb2f9b02687aa6097d292a049c94ce2e46ec8b"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-first.json",
+          "sha256": "870a3bef69131fa7d37e69b45e374e5c0cf71c0f689761832063dfdd1f8a4320"
+        },
+        "originalRaw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-first.raw.txt",
+          "sha256": "870a3bef69131fa7d37e69b45e374e5c0cf71c0f689761832063dfdd1f8a4320"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-second.json",
+          "sha256": "514ac49ddd695a847efd350782cd541bda1caf4b4488e8b75b48d3f342fed946"
+        },
+        "originalRaw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-second.raw.txt",
+          "sha256": "514ac49ddd695a847efd350782cd541bda1caf4b4488e8b75b48d3f342fed946"
+        },
+        "semanticEqual": true
+      }
+    ],
+    "rule": "Original run JSON bytes preserved as .raw.txt; formatted JSON parsed values equal raw. No original stdout was edited."
+  },
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/cleanup.json",
+    "sha256": "54f145013574a69aee99bf7252bf459322119205e1f479e4536a92152b4f6e3e"
+  },
+  "limitations": [
+    "No formal App/native interaction, real Agent/model/account, real filesystem read/permission/missing-file behavior or installed release tested in this harness.",
+    "No unrequested loading of unloaded history, attachment fetching, persisted message ledger, fallback opener invocation or automatic sending was performed.",
+    "Real backend disk identity/TOCTOU and OS resource limits remain separate existing evidence; mocked inspection errors do not prove those OS conditions.",
+    "No claim that P19 or the 29-Agent eight-standard contract is entirely accepted from this controlled slice.",
+    "Full-engineering current pass/fail is reported by its own integration artifact; this receipt does not substitute for those checks."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-complete-narrow.png",
+      "sha256": "3de1bf0321626cc1e54d5ee27014fcc894d4370d960a2beeb5bc0189d5bbcbcd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-complete-opened.png",
+      "sha256": "f60eb8f453c4d0540ebb16bb5ef8e10a7aac92278c222c9d3ed8fe3d444a028f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-complete.json",
+      "sha256": "4e112c4e7c7be10ed8e1572e56c05b239ee4a6b36bd8184a88780f1d25abf6e2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-complete.raw.txt",
+      "sha256": "4e112c4e7c7be10ed8e1572e56c05b239ee4a6b36bd8184a88780f1d25abf6e2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-complete.txt",
+      "sha256": "00c2937eb00b9b3292782f58bf068abe391e2a70d15c04ac9a9f5d70f2455dc2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-edges-complete-missing.png",
+      "sha256": "28fd62eb751982758438ae4e3b1039fdd78f9a6440930c9bcac4582c8187cb99"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-edges-complete.json",
+      "sha256": "41c253de1c27845d4486f255c06cbb2475bf206f226d6a2e5360c2914cdd58cd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-edges-complete.raw.txt",
+      "sha256": "41c253de1c27845d4486f255c06cbb2475bf206f226d6a2e5360c2914cdd58cd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/chromium-edges-complete.txt",
+      "sha256": "d136e34c15a9976eb7331d6952d6f33b1ebb669b2111e76ec3e3be8e6e11d279"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/cleanup.json",
+      "sha256": "54f145013574a69aee99bf7252bf459322119205e1f479e4536a92152b4f6e3e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/fixture.tsx",
+      "sha256": "bd23ee428034cc12373aeb341b96b8f76425437f2f761eb4a0ac481a165d7456"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/index.html",
+      "sha256": "9313522aaab210ee3139da0079826a9f84fb5adade385b365b4871b75b1d4ca5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/run-edges.mjs",
+      "sha256": "0bcda9fc764d936772d116b4f9b16b4fac83a32948b0cc9e9b3067ccc49e0230"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/run.mjs",
+      "sha256": "050ef1f5387a66fa78ef90f40bb6186e02f97b7768fc8c527ed0992a9dedfa3b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/serve.mjs",
+      "sha256": "9d32f2997e57c43e549c037280d29aeef43b9c478c623222a413618f227083bb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/server.txt",
+      "sha256": "8f2a8ca4675ebf1a56a59c9dbb75525ae9ad8f4f3dd75529bf0a36b95a0bee2d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-complete-narrow.png",
+      "sha256": "86e856d1bec385019208fd1465c02a9df14fcb760707300782d99616a31338fc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-complete-opened.png",
+      "sha256": "fc1c2bf2bd1b2e680f599a761d1468cf0025e5801df9fbffcf358aa7b1a0d7ad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-complete.json",
+      "sha256": "ead937ce27e225eeb7c3036420b3cecfe38173c547b2e942231a5eb1337b89c9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-complete.raw.txt",
+      "sha256": "ead937ce27e225eeb7c3036420b3cecfe38173c547b2e942231a5eb1337b89c9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-complete.txt",
+      "sha256": "af2e7901e1a3362496fdc7594a91d329585880b887a029a3c19fd9430f626ed3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-complete-missing.png",
+      "sha256": "589c50c2fee969402cc0e76e63ade985437d1421ad191ee6077de3662392d2a1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-complete.json",
+      "sha256": "51a78a2fbd8e388cda90b0eef3cd438e218c4599612480c0d50472612ab40f78"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-complete.raw.txt",
+      "sha256": "51a78a2fbd8e388cda90b0eef3cd438e218c4599612480c0d50472612ab40f78"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-complete.txt",
+      "sha256": "f738e15947a6d93581be4b24ef01c606b542a5d0ee91d7ff51c664521bcc288d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-first-missing-failure.png",
+      "sha256": "589c50c2fee969402cc0e76e63ade985437d1421ad191ee6077de3662392d2a1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-first.json",
+      "sha256": "cb94cbde9ad6bbd319d400946a412571bbb2eb2080cede369bcfca8a370bacda"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-first.raw.txt",
+      "sha256": "cb94cbde9ad6bbd319d400946a412571bbb2eb2080cede369bcfca8a370bacda"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-edges-first.txt",
+      "sha256": "fc9ccd7d33d4ab89ca057dd3725f8aaa33f879aa0afa6c71d167cc863c3e62f3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-expanded-failure.png",
+      "sha256": "285e3863c00858e6e6b2fb16cc58d801c8e8e0e2d3501f95924002312ff952d9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-expanded-opened.png",
+      "sha256": "fc1c2bf2bd1b2e680f599a761d1468cf0025e5801df9fbffcf358aa7b1a0d7ad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-expanded.json",
+      "sha256": "51d02e02ab656dbd206debef23fb2f9b02687aa6097d292a049c94ce2e46ec8b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-expanded.raw.txt",
+      "sha256": "51d02e02ab656dbd206debef23fb2f9b02687aa6097d292a049c94ce2e46ec8b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-expanded.txt",
+      "sha256": "e678a0047d1eedac5f1166dee6e6624c1e7e1354890a0c8bd1f5bea1acff479d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-first-failure.png",
+      "sha256": "40e51e1915fc98238cdf4e0562e6dd7f8fef7bff918ee269103f5f80e35e9c5c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-first.json",
+      "sha256": "870a3bef69131fa7d37e69b45e374e5c0cf71c0f689761832063dfdd1f8a4320"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-first.raw.txt",
+      "sha256": "870a3bef69131fa7d37e69b45e374e5c0cf71c0f689761832063dfdd1f8a4320"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-first.txt",
+      "sha256": "7a1179c655d73189524952ed6219b7d3bb22f0fea5ad7f68d6a905e36e49a979"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-second-failure.png",
+      "sha256": "f5cd09e20379cd7ae18aae65a4b04181bc05c78fcefc759db6a10347757860f9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-second.json",
+      "sha256": "514ac49ddd695a847efd350782cd541bda1caf4b4488e8b75b48d3f342fed946"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-second.raw.txt",
+      "sha256": "514ac49ddd695a847efd350782cd541bda1caf4b4488e8b75b48d3f342fed946"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/browser/webkit-second.txt",
+      "sha256": "4c04c8ecbe4a376819886cc58bde2a5d22b46a3ad9989ab43f6dab597e546b1f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/plan.json",
+      "sha256": "819cfc08111a35b9a37dff670db2c678cf68f7c1dff3e9040fdbbcd00b7bc310"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/projection-final.json",
+      "sha256": "0b52e65cd1b01e60a1729690c159965f96bc2cc2bdf0815e3c20006ac07202fa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/projection-final.txt",
+      "sha256": "9e8e63d1a0ceb3b9bfb92985e65d4fbf0d60ce6a09aaeebf73723234b2fd93f4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/projection-first.json",
+      "sha256": "e892f3bcfd7f8f257ccb59e5f5bc0086da7a297d450b0097db713a119a0d9430"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/projection-first.txt",
+      "sha256": "156a48e61449852688b36ac683df3fe898f903cac74f94f0453e39832c844be1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files/independent/projection-shape-green.txt",
+      "sha256": "522d59ddbda1b9719dd28022e5476e1b3f9fb648af5e4a75a5bed6dcd8defba8"
+    }
+  ]
+}

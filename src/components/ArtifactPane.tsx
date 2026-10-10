@@ -1,4 +1,12 @@
 import { OpenedFileView } from "./OpenedFileView";
+import { ReportedFilesList } from "./ReportedFilesList";
+import { useContentOwner } from "./useContentOwner";
+import {
+  isReportedArtifactCurrent,
+  reportedArtifactFiles,
+  type ReportedArtifactFile,
+  type ReportedArtifactOrigin,
+} from "../runtime/reported_artifacts";
 import type { VerifiedFile } from "../runtime/file_delivery";
 import type { PreviewReadingPositionRef } from "../runtime/preview_reading_position";
 import { BrowserWorkspace } from "./BrowserWorkspace";
@@ -74,6 +82,7 @@ function CommandCard({
 
 export interface OpenedFileRequest {
   taskKey: string;
+  cwd: string;
   path: string;
   selection: number;
 }
@@ -103,7 +112,9 @@ export function ArtifactPane({
   const [localMode, setLocalMode] = useState<"files" | "browser">("files");
   const contentMode = requestedMode ?? localMode;
   const [nativeVisible, setNativeVisible] = useState(false);
-  const [openedFile, setOpenedFile] = useState<OpenedFileRequest | null>(null);
+  const [openedFile, setOpenedFile] = useState<
+    (OpenedFileRequest & { scope: string | null }) | null
+  >(null);
   const fileSelection = useRef(0);
   const [htmlRequest, setHtmlRequest] = useState<{
     taskKey: string;
@@ -113,35 +124,71 @@ export function ArtifactPane({
     if (!active || !open || htmlRequest?.taskKey !== thread.key)
       setHtmlRequest(null);
   }, [active, open, thread.key]);
+  const roundId = thread.artifactPaneTarget?.roundId ?? null;
   const displayed = open || nativeVisible;
   const showingBrowser = contentMode === "browser" || nativeVisible;
+  const ownsContent = useContentOwner(
+    thread,
+    active && open && !showingBrowser,
+    roundId,
+  );
   useEffect(() => {
-    if (thread.artifactPaneTarget) {
+    if (roundId !== null) {
       setOpenedFile(null);
       setLocalMode("files");
       onContentModeChange?.("files");
     }
-  }, [thread.key, thread.artifactPaneTarget, onContentModeChange]);
+  }, [thread.key, thread.cwd, roundId]);
   const chooseContent = (mode: "files" | "browser") => {
     setLocalMode(mode);
     onContentModeChange?.(mode);
   };
   useEffect(() => {
-    if (!fileRequest || fileRequest.taskKey !== thread.key || !active || !open)
+    if (
+      !fileRequest ||
+      fileRequest.taskKey !== thread.key ||
+      fileRequest.cwd !== thread.cwd ||
+      !active ||
+      !open
+    )
       return;
-    setOpenedFile(fileRequest);
+    setOpenedFile({ ...fileRequest, cwd: thread.cwd, scope: roundId });
     chooseContent("files");
   }, [fileRequest, thread.key]);
   const openFile = (path: string) => {
-    if (!active || !open) return;
+    if (!ownsContent()) return;
     setOpenedFile({
       taskKey: thread.key,
+      cwd: thread.cwd,
+      scope: roundId,
       path,
       selection: --fileSelection.current,
     });
     chooseContent("files");
   };
-  const currentFile = openedFile?.taskKey === thread.key ? openedFile : null;
+  const openReportedFile = (entry: ReportedArtifactFile) => {
+    if (!ownsContent() || !isReportedArtifactCurrent(thread, roundId, entry))
+      return;
+    openFile(entry.path);
+  };
+  const openReportedSource = (
+    entry: ReportedArtifactFile,
+    origin: ReportedArtifactOrigin,
+  ) => {
+    if (
+      !ownsContent() ||
+      !entry.origins.includes(origin) ||
+      !isReportedArtifactCurrent(thread, roundId, entry)
+    )
+      return;
+    threads.openArtifactPane(thread.key, origin.toolItemId);
+  };
+  const currentFile =
+    openedFile?.taskKey === thread.key &&
+    openedFile.cwd === thread.cwd &&
+    openedFile.scope === roundId
+      ? openedFile
+      : null;
   // One transient entry, not a per-file cache. Selection IDs still remount the
   // reader; only the same request path within this thread/directory keeps location.
   const reading = useRef<{
@@ -166,7 +213,7 @@ export function ArtifactPane({
   // a late write from an old mount can then touch only its own retired entry.
   const readingPosition = reading.current.position;
   const openHtml = (file: VerifiedFile) => {
-    if (!active || !open) return;
+    if (!ownsContent()) return;
     setHtmlRequest({ taskKey: thread.key, file });
     chooseContent("browser");
   };
@@ -252,7 +299,6 @@ export function ArtifactPane({
   const resize = (next: number) =>
     setWidth(Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, next)));
 
-  const roundId = thread.artifactPaneTarget?.roundId ?? null;
   const outputScope = JSON.stringify([thread.key, roundId]);
   const [outputFilter, setOutputFilter] = useState({ scope: "", value: "all" });
   const filter =
@@ -268,6 +314,7 @@ export function ArtifactPane({
     : undefined;
   const scopedCards = artifactPaneCards(thread, roundId);
   const cards = scopedCards ?? [];
+  const reportedFiles = reportedArtifactFiles(thread, roundId);
   const files = artifactFiles(cards);
   const outputs = cards.filter((card) => card.kind !== "diff");
   const visibleOutputs = outputs.filter(
@@ -381,22 +428,35 @@ export function ArtifactPane({
       </button>
     </div>
   );
+  const reportedList =
+    scopedCards === null ? null : (
+      <ReportedFilesList
+        thread={thread}
+        scopeId={roundId}
+        active={active && open && !showingBrowser}
+        onOpenFile={openReportedFile}
+        onOpenSource={openReportedSource}
+      />
+    );
   const roundScope = roundId ? (
     <div className="artifact-round-scope">
       <span>{stepTarget ? W.stepContent : W.roundContent}</span>
       {containingRound && (
         <button
           type="button"
-          onClick={() =>
-            threads.openArtifactPane(thread.key, containingRound.id)
-          }
+          onClick={() => {
+            if (ownsContent())
+              threads.openArtifactPane(thread.key, containingRound.id);
+          }}
         >
           {W.showRoundContent}
         </button>
       )}
       <button
         type="button"
-        onClick={() => threads.openArtifactPane(thread.key)}
+        onClick={() => {
+          if (ownsContent()) threads.openArtifactPane(thread.key);
+        }}
       >
         {W.allArtifacts}
       </button>
@@ -508,13 +568,20 @@ export function ArtifactPane({
             onOpenFile={openFile}
             active={active && open}
             headerActions={headerActions}
-            headerSupplement={roundScope}
+            headerSupplement={
+              <>
+                {roundScope}
+                {reportedList}
+              </>
+            }
             fileSelector={fileSelector}
           />
         ) : (
           <>
             <div className="a-head">
-              <span className="a-title">{W.outputChoice}</span>
+              <span className="a-title">
+                {outputs.length ? W.outputChoice : W.content}
+              </span>
               {headerActions}
             </div>
             {outputCopy?.key === copyKey && (
@@ -523,6 +590,7 @@ export function ArtifactPane({
               </p>
             )}
             {roundScope}
+            {reportedList}
             {cards.length > 0 && (
               <div className="artifact-view-toolbar">
                 {fileSelector}
@@ -546,7 +614,8 @@ export function ArtifactPane({
               </div>
             )}
             <div className="a-list">
-              {cards.length === 0 && (
+              {(scopedCards === null ||
+                (cards.length === 0 && reportedFiles?.length === 0)) && (
                 <div className="a-empty">
                   {scopedCards === null
                     ? W.roundArtifactsUnavailable

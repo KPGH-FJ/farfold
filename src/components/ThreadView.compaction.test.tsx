@@ -11,6 +11,7 @@ import {
   freshThreadState,
 } from "../runtime/session_projection";
 import { STRINGS } from "../runtime/strings";
+import { COMPACTION } from "../runtime/compaction_strings";
 import { ThreadView } from "./ThreadView";
 
 const state = () => freshThreadState("a:/p:c", "a", "/p", "c");
@@ -63,7 +64,10 @@ it("renders an accessible retained summary, non-text blocks and original details
   expect(html).toContain("https://example.com/result");
   expect(html).toContain("preserved");
   expect(html).not.toContain(STRINGS.thread.noResultNote);
-  expect(html).not.toContain(STRINGS.thread.done);
+  const settled = html.match(/<div class="settled">[\s\S]*?<\/div>/g);
+  expect(settled).toHaveLength(1);
+  expect(settled![0]).toContain(COMPACTION.roundCompleted);
+  expect(settled![0]).not.toContain(STRINGS.thread.done);
 });
 it("labels partial failed content and connection loss honestly", () => {
   const s = state();

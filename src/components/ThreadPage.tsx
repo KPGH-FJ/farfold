@@ -16,6 +16,7 @@ import {
   GlobeIcon,
   DotsThreeIcon,
 } from "@phosphor-icons/react";
+import { useContentOwner } from "./useContentOwner";
 import { ThreadView } from "./ThreadView";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
@@ -31,7 +32,6 @@ import { LIBRARY } from "../runtime/library_strings";
 import { useArchiveBlockReasons } from "../runtime/archive_blockers";
 import {
   threads,
-  paneCards,
   basename,
   hasActiveTools,
   useThread,
@@ -40,6 +40,7 @@ import {
   type IndexRow,
   type ThreadState,
 } from "../runtime/sessions";
+import { reportedArtifactCount } from "../runtime/reported_artifacts";
 import { STRINGS } from "../runtime/strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { readableTranscript } from "../runtime/readable_transcript";
@@ -92,6 +93,7 @@ export function ThreadPage({
   defaultCwd?: string | null;
 }) {
   const thread = useThread(viewKey);
+  const ownsContent = useContentOwner(thread, active);
   useEffect(() => {
     // A discarded empty draft no longer needs a retained render slot. Its
     // native close still belongs to the existing guard, including retries.
@@ -108,7 +110,7 @@ export function ThreadPage({
   // 删除与归档共用活跃度门禁：进行中或未确认的对话先完成再删除。
   const deleteBlocked = archiveReason;
   const title = thread?.title || row?.title || STRINGS.sessions.newSession;
-  const artifactCount = thread ? paneCards(thread).length : 0;
+  const artifactCount = thread ? (reportedArtifactCount(thread, null) ?? 0) : 0;
   const canCopy =
     !!thread &&
     (thread.items.length > 0 ||
@@ -200,6 +202,7 @@ export function ThreadPage({
           aria-expanded={thread?.artifactPaneOpen ?? false}
           disabled={!thread}
           onClick={(event) => {
+            if (!ownsContent()) return;
             if (thread?.artifactPaneOpen) threads.closeArtifactPane(viewKey);
             else {
               artifactReturnFocus.current = event.currentTarget;

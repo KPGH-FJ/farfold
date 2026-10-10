@@ -1,0 +1,35 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/reported_artifacts.independent.test.ts"
+  ],
+  "exitCode": 0,
+  "seconds": 0.48107123374938965,
+  "before": {
+    "src/runtime/reported_artifacts.independent.test.ts": "bce7c5883e60c29d34a995ef75d693135d3d5140906f0ecb39c15f44289865b7",
+    "src/runtime/reported_artifacts.ts": "31fa93a3ee3cb89cdd7958f36c96542a6603b06409782c13f61be363d021bff2",
+    "src/runtime/file_delivery.ts": "eaec401ada62b1da686016d811baf267e39726fd8b0292f428042a6011aea468",
+    "src/runtime/session_projection.ts": "c252ec05dbaa8a784164e3b3a94ff3cf71d80a8a533d12fcfdf35286c022161c",
+    "src/runtime/reported_details.ts": "a88ffc0d6ff15ed65a482db8a0824f1e0e6b785717351289e6b2d45e3b0f65f8",
+    "src/runtime/artifacts.ts": "a839a1f9aaf980f4867750eb889e69b097e6e804d57a909d551c112b15c0ece5",
+    "src/runtime/round_result.ts": "e07449a198f810f2828ec95340c48f071d87472c9f3eeba80ea4962a9b546602",
+    "src/runtime/message_attachments.ts": "822455bd4349c22f53d7189f7e906a3db5fbd4b6a9deda715d46d1d621b158e0"
+  },
+  "after": {
+    "src/runtime/reported_artifacts.independent.test.ts": "bce7c5883e60c29d34a995ef75d693135d3d5140906f0ecb39c15f44289865b7",
+    "src/runtime/reported_artifacts.ts": "31fa93a3ee3cb89cdd7958f36c96542a6603b06409782c13f61be363d021bff2",
+    "src/runtime/file_delivery.ts": "eaec401ada62b1da686016d811baf267e39726fd8b0292f428042a6011aea468",
+    "src/runtime/session_projection.ts": "c252ec05dbaa8a784164e3b3a94ff3cf71d80a8a533d12fcfdf35286c022161c",
+    "src/runtime/reported_details.ts": "a88ffc0d6ff15ed65a482db8a0824f1e0e6b785717351289e6b2d45e3b0f65f8",
+    "src/runtime/artifacts.ts": "a839a1f9aaf980f4867750eb889e69b097e6e804d57a909d551c112b15c0ece5",
+    "src/runtime/round_result.ts": "e07449a198f810f2828ec95340c48f071d87472c9f3eeba80ea4962a9b546602",
+    "src/runtime/message_attachments.ts": "822455bd4349c22f53d7189f7e906a3db5fbd4b6a9deda715d46d1d621b158e0"
+  },
+  "sourceUnchanged": true,
+  "reasonForFinalRerun": "Owner completed malformed-value preservation and count-map optimization after first checkpoint; final integration source now frozen.",
+  "scope": "Actual projection and pure list, no browser or IPC."
+}

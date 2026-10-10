@@ -1,0 +1,34 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/reported_artifacts.independent.test.ts"
+  ],
+  "exitCode": 0,
+  "seconds": 0.4870169162750244,
+  "before": {
+    "src/runtime/reported_artifacts.independent.test.ts": "0e7208c48b97c87ee5df5b6251a22f133d59558e5cb02e2c3a873b6e9997739c",
+    "src/runtime/reported_artifacts.ts": "acf7537bd0241e9d5848226324bc4258e3f8bfe475c6afbc00c6ed972c29dbdd",
+    "src/runtime/file_delivery.ts": "eaec401ada62b1da686016d811baf267e39726fd8b0292f428042a6011aea468",
+    "src/runtime/session_projection.ts": "c252ec05dbaa8a784164e3b3a94ff3cf71d80a8a533d12fcfdf35286c022161c",
+    "src/runtime/reported_details.ts": "a88ffc0d6ff15ed65a482db8a0824f1e0e6b785717351289e6b2d45e3b0f65f8",
+    "src/runtime/artifacts.ts": "a839a1f9aaf980f4867750eb889e69b097e6e804d57a909d551c112b15c0ece5",
+    "src/runtime/round_result.ts": "e07449a198f810f2828ec95340c48f071d87472c9f3eeba80ea4962a9b546602",
+    "src/runtime/message_attachments.ts": "822455bd4349c22f53d7189f7e906a3db5fbd4b6a9deda715d46d1d621b158e0"
+  },
+  "after": {
+    "src/runtime/reported_artifacts.independent.test.ts": "0e7208c48b97c87ee5df5b6251a22f133d59558e5cb02e2c3a873b6e9997739c",
+    "src/runtime/reported_artifacts.ts": "acf7537bd0241e9d5848226324bc4258e3f8bfe475c6afbc00c6ed972c29dbdd",
+    "src/runtime/file_delivery.ts": "eaec401ada62b1da686016d811baf267e39726fd8b0292f428042a6011aea468",
+    "src/runtime/session_projection.ts": "c252ec05dbaa8a784164e3b3a94ff3cf71d80a8a533d12fcfdf35286c022161c",
+    "src/runtime/reported_details.ts": "a88ffc0d6ff15ed65a482db8a0824f1e0e6b785717351289e6b2d45e3b0f65f8",
+    "src/runtime/artifacts.ts": "a839a1f9aaf980f4867750eb889e69b097e6e804d57a909d551c112b15c0ece5",
+    "src/runtime/round_result.ts": "e07449a198f810f2828ec95340c48f071d87472c9f3eeba80ea4962a9b546602",
+    "src/runtime/message_attachments.ts": "822455bd4349c22f53d7189f7e906a3db5fbd4b6a9deda715d46d1d621b158e0"
+  },
+  "sourceUnchanged": true,
+  "scope": "Actual projection and pure list; no browser, IPC or native App."
+}

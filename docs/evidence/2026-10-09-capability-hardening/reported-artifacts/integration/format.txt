@@ -1,0 +1,8 @@
+src/components/ArtifactPane.tsx 76ms
+src/components/ThreadView.tsx 60ms
+src/components/ThreadPage.tsx 21ms (unchanged)
+src/components/useContentOwner.ts 2ms (unchanged)
+src/components/ArtifactPane.reported.test.tsx 8ms (unchanged)
+src/components/ArtifactPane.reported-owner.test.tsx 11ms (unchanged)
+src/components/ThreadView.reported-owner.test.tsx 10ms
+src/components/ArtifactPane.reading-position.test.tsx 7ms (unchanged)
