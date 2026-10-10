@@ -1,3 +1,10 @@
+import { mcpAddPort } from "./mcp_add";
+import {
+  freezeMcpAddInput,
+  mcpAddFailure,
+  type McpAddInput,
+  type McpAddCode,
+} from "./mcp_add_types";
 import type {
   InventoryOwner,
   InventoryResult,
@@ -8,10 +15,6 @@ import {
 } from "./skill_management";
 import { mcpManagementPort } from "./mcp_management";
 import {
-  skillChangeFailure,
-  type SkillChangeCode,
-} from "./skill_management_types";
-import {
   parseExtensionChangeOperation as parseSkillChangeOperation,
   parseExtensionChangeCancellation as parseSkillChangeCancellation,
   type ExtensionChangeRequest as SkillChangeRequest,
@@ -21,6 +24,7 @@ import {
   requestForTarget,
   confirmedRequest,
   isMcpRequest,
+  isAddRequest,
 } from "./extension_management_types";
 export type { ExtensionChangeTargetOwner as SkillChangeTargetOwner } from "./extension_management_types";
 
@@ -34,7 +38,8 @@ export interface SkillManagementView {
   cancelRequested: boolean;
   trackingReleased: boolean;
   admissionRejected: boolean;
-  error: SkillChangeCode | null;
+  error: McpAddCode | null;
+  additionInput: McpAddInput | null;
 }
 const EMPTY: SkillManagementView = Object.freeze({
   request: null,
@@ -47,6 +52,7 @@ const EMPTY: SkillManagementView = Object.freeze({
   trackingReleased: false,
   admissionRejected: false,
   error: null,
+  additionInput: null,
 });
 interface Flight {
   port: SkillManagementPort;
@@ -76,6 +82,7 @@ export class SkillManagementController {
     private uuid: () => string = () => crypto.randomUUID(),
     private now = () => Date.now(),
     private mcpPort: SkillManagementPort = mcpManagementPort,
+    private addPort: SkillManagementPort = mcpAddPort,
   ) {}
   subscribe = (fn: () => void) => {
     this.listeners.add(fn);
@@ -176,7 +183,8 @@ export class SkillManagementController {
     const timer = setTimeout(() => {
       if (this.attached(f) && f.view.unresolved) {
         f.lost = true;
-        if (f.view.request?.action === "setEnabled") f.target.changed();
+        if (["setEnabled", "add"].includes(f.view.request?.action ?? ""))
+          f.target.changed();
         this.publish(f, { checking: false, error: "timedOut" });
       }
     }, this.waitMs);
@@ -205,7 +213,7 @@ export class SkillManagementController {
         clearTimeout(timer);
         if (!this.attached(f) || !f.view.unresolved || epoch !== f.epoch)
           return;
-        const code = skillChangeFailure(reason) ?? "unavailable";
+        const code = mcpAddFailure(reason) ?? "unavailable";
         // Only these direct, fresh confirm errors are guaranteed before admission.
         // A timeout/status/other failure cannot be reclassified as an unwritten request.
         if (
@@ -229,7 +237,19 @@ export class SkillManagementController {
         this.publish(f, { checking: false, error: code });
       });
   }
-  inspect(target: SkillChangeTargetOwner): boolean {
+  inspect(inputTarget: SkillChangeTargetOwner): boolean {
+    // Copy the admitted form input; external edits never mutate the original review data.
+    let target = inputTarget;
+    if ("input" in inputTarget) {
+      try {
+        target = {
+          ...inputTarget,
+          input: freezeMcpAddInput(inputTarget.input),
+        };
+      } catch {
+        return false;
+      }
+    }
     const { owner } = target;
     const previous = this.entries.get(owner.agentId);
     const request = requestForTarget(target, this.uuid());
@@ -245,9 +265,18 @@ export class SkillManagementController {
       this.revokeReview(previous);
     }
     const f: Flight = {
-      port: isMcpRequest(request) ? this.mcpPort : this.port,
+      port: isAddRequest(request)
+        ? this.addPort
+        : isMcpRequest(request)
+          ? this.mcpPort
+          : this.port,
       target,
-      view: { ...EMPTY, request, unresolved: true },
+      view: {
+        ...EMPTY,
+        request,
+        unresolved: true,
+        additionInput: "input" in target ? target.input : null,
+      },
       retired: false,
       consumed: false,
       dispatched: false,
@@ -279,6 +308,16 @@ export class SkillManagementController {
         return;
       }
       f.dispatched = true;
+      if (isAddRequest(request)) {
+        if (!f.view.additionInput) throw { code: "invalidRequest" };
+        return f.port.inspect({
+          agentId: request.agentId,
+          requestId: request.requestId,
+          inventoryRequestId: request.target.inventoryRequestId,
+          inputId: request.target.inputId,
+          input: f.view.additionInput,
+        });
+      }
       return f.port.inspect({
         agentId: request.agentId,
         requestId: request.requestId,
@@ -313,7 +352,13 @@ export class SkillManagementController {
     );
     const f: Flight = {
       ...old,
-      view: { ...EMPTY, request, unresolved: true, reviewRetired: true },
+      view: {
+        ...EMPTY,
+        request,
+        unresolved: true,
+        reviewRetired: true,
+        additionInput: old.view.additionInput,
+      },
       dispatched: false,
       epoch: 0,
       lost: false,
@@ -391,6 +436,16 @@ export class SkillManagementController {
       this.publish(f, { review: null, reviewRetired: true });
     }
   }
+  retireAddition(owner: InventoryOwner, inputId: string) {
+    const f = this.entries.get(owner.agentId);
+    if (
+      f?.target.owner === owner &&
+      f.view.request?.action === "inspect" &&
+      isAddRequest(f.view.request) &&
+      f.view.request.target.inputId === inputId
+    )
+      this.retire(owner);
+  }
   retireInspectionForResult(
     owner: InventoryOwner,
     result: InventoryResult | undefined,
@@ -422,7 +477,13 @@ export class SkillManagementController {
     });
     const f: Flight = {
       ...old,
-      view: { ...EMPTY, request, unresolved: true, reviewRetired: true },
+      view: {
+        ...EMPTY,
+        request,
+        unresolved: true,
+        reviewRetired: true,
+        additionInput: old.view.additionInput,
+      },
       retired: true,
       dispatched: true,
       epoch: 0,

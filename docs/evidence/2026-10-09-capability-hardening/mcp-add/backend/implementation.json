@@ -1,0 +1,165 @@
+{
+  "status": "authorTargetedEvidenceRetained",
+  "sourceCheckpoint": {
+    "source": "output/2026-10-11-mcp-add-backend/source-checkpoint-final.json",
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/source-checkpoint-final.json.raw.txt",
+    "sha256": "312af17b97571bfde8198dd6c31ed24e137eae25e36b5956e37d3439eb1146b1"
+  },
+  "scope": "Add exactly one default-disabled stdio MCP through fixed official config/value/write after an explicit one-use review. No new command is executed.",
+  "tests": {
+    "initialAdded": {
+      "count": 8,
+      "result": "passed",
+      "log": "targeted-first.txt"
+    },
+    "confirmedFailures": [
+      {
+        "log": "input-transport-red.txt",
+        "count": 1,
+        "cause": "U+00AD accepted by backend incomplete prohibited-character set; public frontend already refused."
+      },
+      {
+        "log": "transport-red.txt",
+        "count": 1,
+        "cause": "unexpected url transport field still yielded matching."
+      }
+    ],
+    "managementRelated": {
+      "count": 53,
+      "result": "passed",
+      "log": "targeted-second.txt",
+      "inputs": 165,
+      "beforeAfterIdentical": true
+    },
+    "finalAddition": {
+      "count": 17,
+      "author": 13,
+      "independent": 4,
+      "result": "passed",
+      "log": "targeted-final-wire.txt"
+    },
+    "inventoryRelated": {
+      "count": 56,
+      "result": "passed",
+      "log": "inventory-related.txt"
+    },
+    "clippy": {
+      "first": "one collapsible_if lint failure",
+      "finalExitCode": 0,
+      "log": "clippy-final.txt"
+    },
+    "format": {
+      "exitCode": 0,
+      "log": "format-final.txt"
+    }
+  },
+  "boundaries": [
+    "No real official CLI, Agent, MCP endpoint, application or user configuration/database was opened or modified. All execution tests use synthetic temp peers/meta stores.",
+    "Official normal startup can maintain Agent-owned state; list can run existing authentication probes. No claim of zero writes/network.",
+    "expectedVersion is the official pre-write check, not a cross-process transaction/CAS guarantee.",
+    "No live connection/disconnection/tool/authentication readiness, HTTP/env/secret configuration, all-Agent or Windows acceptance is claimed. Original P41 remains open.",
+    "Private strings are excluded from public DTO/diagnostics; this is not a claim that every memory allocation is securely erased or arbitrary text proven secret-free."
+  ],
+  "copies": [
+    {
+      "source": "output/2026-10-11-mcp-add-backend/actual-wire.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/actual-wire.json",
+      "sha256": "dee93ade587843c9347de9a1ae5a20c357941be767549aab4216ee7e03014aa3"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/actual-wire.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/actual-wire.raw.txt",
+      "sha256": "4306f7d50b0ed35e25820cb50c8d3ea84fe0e40f4676dcf28502f9b86f67dc06"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/clippy-final.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/clippy-final.txt",
+      "sha256": "994cf74e828fa9d28881adc628da39e6350c9ea84bf6f0d2a6dd7daf6044bf76"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/clippy-first.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/clippy-first.txt",
+      "sha256": "d93a7a2d4fa8eb99872c15b174382c354603e81a1a9f6d0e2fe0dff044f51797"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/format-final.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/format-final.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/input-transport-red.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/input-transport-red.txt",
+      "sha256": "60d00c6dfbec8e9867af177bd1a9968a86d8d57cb913522172a2fee192bc6798"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/inventory-related.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/inventory-related.txt",
+      "sha256": "defddd84c62b6282a2495327a73a1e233fa4a44a0e8a8327753299c8dc575b9a"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/mcp_add.before-lint.rs.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/mcp_add.before-lint.rs.txt",
+      "sha256": "1976867677e7d57a5643a7b17d6cea3465265794d8648381add22a228c0736b0"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/mcp_add_input.rs.before-fix.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/mcp_add_input.rs.before-fix.txt",
+      "sha256": "adfe315b81be2072e825b1a0653bed0bbf9c804337ff96c8716bc94448d01392"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/mcp_add_plan.rs.before-fix.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/mcp_add_plan.rs.before-fix.txt",
+      "sha256": "16fbc49a433ec3864319c831fcbf5fcef231a510aaeb536e0b54d961a6427748"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/prohibited-codepoints.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/prohibited-codepoints.json.raw.txt",
+      "sha256": "64e6f5a053fa190c82af1eb566b273de2061152029d597f4f2801a7751edabc5"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/source-before.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/source-before.json.raw.txt",
+      "sha256": "decaf23170e24cdb68fc2263828e6590d72f6a1bfcc51cc0731fcdaecc9eff9d"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/source-checkpoint-final.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/source-checkpoint-final.json.raw.txt",
+      "sha256": "312af17b97571bfde8198dd6c31ed24e137eae25e36b5956e37d3439eb1146b1"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/targeted-after.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/targeted-after.json.raw.txt",
+      "sha256": "a3cadc29f3709a8cbd16e3d40eaa50269f116150855d35c736c6c48dbb316423"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/targeted-before.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/targeted-before.json.raw.txt",
+      "sha256": "80efb0736ccb430b071ff10b6e506399c3a429b3a873c3cbf4672d51902b9f45"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/targeted-final-wire.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/targeted-final-wire.txt",
+      "sha256": "17c5b9bcb6eb6d272d338c96e058bc2d2cdccb1d7c8d7f080b6855d00aa13147"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/targeted-first.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/targeted-first.txt",
+      "sha256": "92925c605713eb8e7df1b2fa6c7eb85598ae17615dd607abba34aee19c9fd8e7"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/targeted-second.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/targeted-second.txt",
+      "sha256": "d2837a5abb1715dfe2a6cc04c56431590c0c6bc76d94da0b3d0f49c874410606"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/transport-red.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/transport-red.txt",
+      "sha256": "b71c97f9628aa696447834cbe11b04e6d696c17a50ba165f18dc925857beae7e"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-backend/implementation.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/implementation.json.raw.txt",
+      "sha256": "f0124831213c286eb0dad24a11e6d81cfd90772ce667afd2c739f1c411a20a85"
+    }
+  ]
+}

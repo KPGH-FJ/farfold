@@ -1,0 +1,25 @@
+{
+  "status": "acceptedBoundedContractRetained",
+  "refs": [
+    {
+      "source": "output/2026-10-11-mcp-add-contract/contract.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/contract/contract.json.raw.txt",
+      "sha256": "8ad8f9967953fcb4ed0df82279b79bb9cb92313c3d7a1b27edab1af5caca1622"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-contract/contract.ts",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/contract/contract.ts.raw.txt",
+      "sha256": "896960ee55ef11a89fdeb8443b04078fbac72b5cf231c276faf343859989f116"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-contract/manifest.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/contract/manifest.json.raw.txt",
+      "sha256": "903856a3526e2b04f777c1fcf9d896ddda07bb20260089727e4dacf4d59fbfb8"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-root/contract-acceptance.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/contract/contract-acceptance.json.raw.txt",
+      "sha256": "796fbf0f34d469ae4dc2c9cb2f92ec6c06e1a0af260ac6ae12daaab150178974"
+    }
+  ]
+}

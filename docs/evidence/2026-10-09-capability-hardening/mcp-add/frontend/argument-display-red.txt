@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/SkillChangeReview.add.test.tsx (3 tests | 1 failed | 2 skipped) 25ms
+   × shows visible boundaries for empty, literal, whitespace and quoted path/arguments 24ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/SkillChangeReview.add.test.tsx > shows visible boundaries for empty, literal, whitespace and quoted path/arguments
+AssertionError: expected '<section class="skill-change-review" …' to contain '<code>&quot;&quot;</code>'
+
+Expected: "<code>&quot;&quot;</code>"
+Received: "<section class="skill-change-review" aria-label="添加本地 MCP"><div class="skill-change-header"><h5 tabindex="-1">添加本地 MCP</h5><button type="button" class="btn btn-ghost">收起审阅</button></div><strong>local-test</strong><p class="skill-change-path">/controlled</p><p>添加后的状态：停用</p><div class="mcp-add-review"><p>所检查范围中尚无此名称</p><p>程序绝对路径：<code>/Applications/Tool &quot;quoted&quot; </code></p><p>按顺序传入的参数</p><ol><li><code>空字符串</code></li><li><code>空字符串</code></li><li><code> leading </code></li><li><code>a&quot;b</code></li></ol></div><p>本次写入范围：用户配置</p><p class="skill-change-path">~/.example/config.toml</p><p>确认后保存所列程序和每项参数，保持停用；会影响以后沿用同一设置的其他对话。不发送消息，不启动填写的程序。</p><details><summary>修改范围与注意事项</summary><p>审阅时间：10/11/2026, 2:48:46 AM</p><p>保留其他配置值；配置文件的注释与排版可能变化。</p><p>请先结束其他程序对相关配置的编辑。外部同时修改可能无法完全检测或保留。</p><p>官方程序会使用已有配置、登录状态和环境，可能访问网络及维护自身状态。只请求保存此条目，不连接新 MCP。</p><p>此次确认限本次审阅有效期间；过期须重新审阅。</p></details><button type="button" class="btn btn-primary">确认添加并保持停用</button><p>尚未验证程序能否运行、连接或工具是否可用。不会自动启用、连接或重启对话。</p><div class="agent-extension-actions"></div></section>"
+
+ ❯ src/components/SkillChangeReview.add.test.tsx:108:16
+    106|     args: ["", "空字符串", " leading ", 'a"b'],
+    107|   }).render();
+    108|   expect(html).toContain('<code>&quot;&quot;</code>');
+       |                ^
+    109|   expect(html).toContain('<code>&quot;空字符串&quot;</code>');
+    110|   expect(html).toContain('<code>&quot; leading &quot;</code>');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 skipped (3)
+   Start at  02:48:45
+   Duration  221ms (transform 76ms, setup 0ms, import 114ms, tests 25ms, environment 0ms)
+

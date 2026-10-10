@@ -1,0 +1,142 @@
+{
+  "checkedAtUtc": "2026-10-10T18:39:28.725957+00:00",
+  "status": "preparedOnlyNoProductionFailureClaim",
+  "contractSha256": "8ad8f9967953fcb4ed0df82279b79bb9cb92313c3d7a1b27edab1af5caca1622",
+  "contractStatusNote": "Contract manifest retains draft wording; root has authorized implementation. This artifact is independent preparation, not executed validation.",
+  "committedMechanismBase": "f83cbff482d2ea5fe7d9c37de0eb91ca9648d360",
+  "highestRiskCases": [
+    {
+      "id": "domain-tombstone",
+      "priority": 1,
+      "method": "Production shared Registry only, no official command",
+      "steps": [
+        "Create an early cancellation tombstone for McpEnabled with UUID X; attempt McpAdd status/cancel/admission at same Agent+X. Repeat with Add/Skill original domains.",
+        "Capture exact original registry/review-interest; wrong-domain access must not mutate or replace it. Correct-domain late admission still receives cancelled.",
+        "For live/ready operation repeat wrong-domain confirm/recheck using the original review/operation IDs; correct original owner remains usable."
+      ],
+      "oracle": "No source kind inference from Kind::Mcp. Registry existing/get/cancel and tombstone domain are exact; wrong endpoint cannot consume review or claim cancellation of original operation.",
+      "discriminatingMutation": "Using inventory Kind for add/enabled, or overwriting tombstone on wrong-domain cancel.",
+      "coordination": "Author covers basic domain cases; independent focus is original tombstone preservation under repeated wrong-domain calls, not duplicate happy path."
+    },
+    {
+      "id": "raw-name-absence",
+      "priority": 1,
+      "method": "Actual private list decoder + complete catalogue admission + no-write synthetic peer counter",
+      "steps": [
+        "Parse fixture with a valid add-grammar name on unsupported transport and an unsafe hidden display name; neither yields manageable entry.",
+        "Assert private full raw names retains both, public unsafe name stays null and no private report leaks.",
+        "Attempt adding the valid unsupported-transport name: explicit nameConflict and zero write. Check same exact name in disabled raw config layer rejects too."
+      ],
+      "oracle": "Absence never follows from empty manageable targets or hidden/unsupported presentation.",
+      "discriminatingMutation": "Building names only from target()/visible items; reusing old MCP-enabled unique() that ignores disabled layers.",
+      "precision": "An unsafe name itself cannot also satisfy the strict ASCII add grammar; do not mislabel invalidName-first as evidence of hidden-name collision rejection."
+    },
+    {
+      "id": "postwrite-disabled-identity",
+      "priority": 1,
+      "method": "Real finite synthetic official peer through actual confirm observer",
+      "steps": [
+        "Admit exact input, inspect, confirm one write; full config matches intended.",
+        "Final get returns enabled=false but reordered/dropped empty argument, different command, or unexpected env.",
+        "Read-only recheck uses original plan, makes zero additional writes and does not rewrite historical writeAck."
+      ],
+      "oracle": "No verified from matching boolean alone. Report matching must include full intended transport/ordered args/default equivalence. A different report may still have reportedEnabled=false; strict TS must accept that factual combination.",
+      "discriminatingMutation": "Old bool-only matches_report or default-normalization that silently erases nonempty extra env/changed argv."
+    },
+    {
+      "id": "input-bound-uuid",
+      "priority": 1,
+      "method": "Production add admission/idempotence plus original private Input",
+      "steps": [
+        "Same UUID and all exact bytes returns same Job once.",
+        "For each fixture conflict variant reuse request UUID, including changed inputId alone and changed args while inputId remains same.",
+        "After a conflict the original exact input must still observe the same Job; no second worker or replaced input."
+      ],
+      "oracle": "inputId is correlation, not authority; complete immutable input comparison preserves empty arguments, order, case and whitespace.",
+      "discriminatingMutation": "Idempotence based only inputId/name/public target; trimming or shell-tokenizing argv."
+    },
+    {
+      "id": "supplied-command-never-dispatched",
+      "priority": 1,
+      "method": "Only after root grants tests, own temporary executable canary plus controlled official peer",
+      "steps": [
+        "Point submitted executablePath at owned marker-writing canary with exact args including empty/whitespace/quotes.",
+        "Real production inspect/confirm/recheck launches only fixed synthetic official verbs; capture peer argv and exact write payload.",
+        "Assert canary marker absent, payload enabled=false and argv byte/order exact; public DTO/diagnostics omit executablePath/args/private canary."
+      ],
+      "oracle": "Saving disabled data does not execute the supplied program or its arguments. No shell splitting, no automatic MCP initialization or mcp add/OAuth path.",
+      "discriminatingMutation": "Passing submitted executablePath to Command::new, shell expansion, or enabling as add fallback."
+    }
+  ],
+  "currentFindings": [
+    "No completed new implementation failure is asserted while author files are WIP.",
+    "Existing MCP-enabled unique() intentionally ignores disabled layers; add requires separate all-layer absence.",
+    "Existing observation bool rule cannot validate added command/argv identity.",
+    "ManagementDomain must distinguish Skill/McpEnabled/McpAdd despite only two inventory kinds."
+  ],
+  "laterExecution": "Wait root/source-ready and exact independent Rust test-file ownership; request Cargo slot before any compilation. Prefer a few stateful counterexamples and actual production parser/registry/peer, not new framework or repeated full suite.",
+  "performed": {
+    "contractAndSelectedSourceRead": true,
+    "outputFixtureAndPlanOnly": true,
+    "sourceTestWrites": false,
+    "cargoOrTests": false,
+    "officialCliAppMcpOrCredentials": false,
+    "userConfigOrDatabaseRead": false
+  },
+  "sourceObservationRefs": [
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "committedBaseSha256": "1dcee0a7b4b26d809d4bee514299261af215bd82318db37cafd0c753b6685a43",
+      "observedWorkingSha256": "1dcee0a7b4b26d809d4bee514299261af215bd82318db37cafd0c753b6685a43",
+      "workingTreeMayBeAuthorWip": true
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/domain.rs",
+      "committedBaseSha256": "eb02f28ef7d97774712697c2f5a1d13fc5423d5571d7f2b47b1de0744dc6ee64",
+      "observedWorkingSha256": "eb02f28ef7d97774712697c2f5a1d13fc5423d5571d7f2b47b1de0744dc6ee64",
+      "workingTreeMayBeAuthorWip": true
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_plan.rs",
+      "committedBaseSha256": "61d56ca94911c31043a7fad41ff25746429c7f719131319f2e2deb3fbea7bfd3",
+      "observedWorkingSha256": "61d56ca94911c31043a7fad41ff25746429c7f719131319f2e2deb3fbea7bfd3",
+      "workingTreeMayBeAuthorWip": true
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mcp_targets.rs",
+      "committedBaseSha256": "b394d876d9e02e7cf5c78533ec74693bb9020f6c4fbae3b98f16e7be58689ecf",
+      "observedWorkingSha256": "fdb9fa7405aa567b034400df6a175db1b5f21e4b6a0021866f08c64338b140c3",
+      "workingTreeMayBeAuthorWip": true
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "committedBaseSha256": "e75e30683869fa0504d7a02244f3ebd503443554a3c75b07d60ad3355094ad87",
+      "observedWorkingSha256": "fe2f4123b71a0ac69a5b9620c7e10873be5cc03729b75b8ce5809ab832ebc0d7",
+      "workingTreeMayBeAuthorWip": true
+    },
+    {
+      "path": "src/runtime/extension_change_validation.ts",
+      "committedBaseSha256": "9fe2b893487225e731bb74a08a962dd705aec5e6ff59ba5be02379971967d112",
+      "observedWorkingSha256": "569c307e1aeeca92615951c22049d8a3855ac8e305a31d466739827dc7d3027f",
+      "workingTreeMayBeAuthorWip": true
+    }
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-11-mcp-add-contract/contract.json",
+      "sha256": "8ad8f9967953fcb4ed0df82279b79bb9cb92313c3d7a1b27edab1af5caca1622"
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-contract/contract.ts",
+      "sha256": "896960ee55ef11a89fdeb8443b04078fbac72b5cf231c276faf343859989f116"
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-contract/manifest.json",
+      "sha256": "903856a3526e2b04f777c1fcf9d896ddda07bb20260089727e4dacf4d59fbfb8"
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-independent/input-fixtures.json",
+      "sha256": "730084f4134ad7726add325c15c2b23faf12a145248fe40dc96a7736fc89efa5"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/mcp_add.wire.test.tsx (16 tests | 2 failed) 38ms
+   × accepts actual Rust serialization without changing fields: inspectNameConflict 0ms
+   × accepts actual Rust serialization without changing fields: inspectCancelled 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/mcp_add.wire.test.tsx > accepts actual Rust serialization without changing fields: inspectNameConflict
+{ code: 'invalidOutput', stacks: [] }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/mcp_add.wire.test.tsx > accepts actual Rust serialization without changing fields: inspectCancelled
+{ code: 'invalidOutput', stacks: [] }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 14 passed (16)
+   Start at  02:53:40
+   Duration  288ms (transform 116ms, setup 0ms, import 160ms, tests 38ms, environment 0ms)
+

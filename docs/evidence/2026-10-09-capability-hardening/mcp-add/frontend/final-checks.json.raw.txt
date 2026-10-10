@@ -1,0 +1,45 @@
+{
+  "commands": [
+    {
+      "command": "corepack pnpm exec vitest run src/runtime/mcp_add*.test.ts src/runtime/mcp_add*.test.tsx src/runtime/*management*.test.ts src/runtime/*management*.test.tsx src/runtime/extension_inventory*.test.ts src/components/McpAddForm.test.tsx src/components/SkillChangeReview*.test.tsx src/components/AgentExtensionInventory*.test.tsx",
+      "exitCode": 0,
+      "files": 22,
+      "passed": 189,
+      "log": {
+        "path": "output/2026-10-11-mcp-add-frontend/associated-final.txt",
+        "sha256": "d4b2b5735efd64384d64126e13c323f621f961f1290fecbe3cb2a31ed1ddaa02",
+        "bytes": 216
+      }
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "exitCode": 0,
+      "log": {
+        "path": "output/2026-10-11-mcp-add-frontend/typecheck-final.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      }
+    },
+    {
+      "command": "corepack pnpm exec prettier --check [20 exact ownedFiles]",
+      "exitCode": 0,
+      "log": {
+        "path": "output/2026-10-11-mcp-add-frontend/format-final.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+        "bytes": 66
+      }
+    }
+  ],
+  "before": {
+    "path": "output/2026-10-11-mcp-add-frontend/source-before-final.json",
+    "sha256": "64a59c2f6fdbd9b6118cb979705d04030dd55168059889a8b478c8e852f7698f",
+    "bytes": 3828
+  },
+  "after": {
+    "path": "output/2026-10-11-mcp-add-frontend/source-checkpoint.json",
+    "sha256": "a8fc4b1142fb2cba252e8c377ff21bd8d29dbc4bebade38b7d327351d8874784",
+    "bytes": 4216
+  },
+  "ownedSourceStable": true,
+  "additionalActualWireStable": true
+}

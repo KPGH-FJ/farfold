@@ -1,0 +1,250 @@
+{
+  "status": "draft for root review; output only; not implemented or tested",
+  "createdAtUtc": "2026-10-10T18:32:42.668893+00:00",
+  "originalP41": {
+    "title": "任意MCP服务器的统一添加、连接和诊断管理",
+    "condition": "用户可经官方方式添加、连接、停用和诊断MCP服务器，作用域、凭据及工具可用状态可核查；失败/取消不污染其他会话，不代写私有配置，缺接口保持未完成。",
+    "unchanged": true
+  },
+  "firstSlice": {
+    "value": "用户可在现有完整清单中登记一个本地程序及准确逐项参数，官方保存为停用，重新查询可见；无需先手改配置或执行该程序。",
+    "write": "官方 config/value/write 的单个新 MCP 表；始终 enabled:false，确认界面不能改成 true。",
+    "scope": "已审官方入口、macOS、已有最高可写 User/profile-v2 配置文件、所选目录；不建立缺失 User 文件，不启用/连接/登录/安装/测试新命令。",
+    "exclusions": [
+      "HTTP transport",
+      "env/env_vars/headers/auth/secret dedicated fields",
+      "MCP initialization/tool/resource calls",
+      "restart/disconnect existing sessions",
+      "other Agent implementations or Windows coverage"
+    ]
+  },
+  "input": {
+    "name": {
+      "bytes": [
+        1,
+        256
+      ],
+      "grammar": "^[A-Za-z0-9._-]+$ and must not contain ..",
+      "normalization": "None: preserve exact case/bytes; no trim/case-fold. This explicit subset is compatible with current safe display and official grammar; broader official : @ / names remain out of this first slice.",
+      "excludedFirstSlice": [
+        "codex_apps"
+      ],
+      "exclusionReason": "codex_apps is the observed built-in host-owned Apps name; this slice declines it to avoid future source collision. The retained CLI grammar does not itself reserve it."
+    },
+    "executablePath": {
+      "bytes": [
+        1,
+        4096
+      ],
+      "syntax": "Absolute POSIX path starting /, final nonempty component, no empty/dot/dot-dot components; no NUL, Unicode control or display-direction/invisible controls. Spaces/Unicode printable filename characters remain exact.",
+      "interpretation": "Only the user intended future executable path is saved. No shell expansion, tilde/PATH lookup, canonical rewrite, execution, file digest/version pin, installation/readability/executable-permission guarantee or symlink-target guarantee. Do not claim this path is currently runnable."
+    },
+    "args": {
+      "count": [
+        0,
+        64
+      ],
+      "bytesPerArgument": [
+        0,
+        1024
+      ],
+      "totalUtf8BytesMax": 16384,
+      "syntax": "Exact ordered string array; empty argument is meaningful and allowed. No NUL/Unicode control/display-direction/invisible controls; preserve printable spaces/quotes/backslashes. Never parse one shell command string."
+    },
+    "inputJsonUtf8BytesMax": 32768,
+    "secrets": "No dedicated credential/env/header fields, no Keychain or service injection and no reading environment values into UI. Do not invent an exhaustive secret regex. User-entered path/args may themselves contain secrets: tell users not to put credentials here, never log/diagnose/persist the draft in Farfold, do not claim arbitrary text is proven secret-free. Official saving stores the exact user-entered values in its own configuration after confirmation."
+  },
+  "publicProtocol": {
+    "typescript": "contract.ts",
+    "capability": "ExtensionCapabilities.mcpAddition uses existing admission/cached environment capability and current selectionId. Capability availability is permission to inspect, not proof name is free or location writable. Legacy absent field grants no authority.",
+    "source": "Inspect requires original ready complete MCP inventoryRequestId, including valid empty inventory; no fake itemId. Original request/row/cwd/interest must remain exact. Its source was admitted with existing selectionId; no new secret-bearing row or epoch comes from FE.",
+    "draftBinding": "Inspect carries client inputId UUID and full name/executablePath/args; backend private Input equality includes all bytes, Agent and original inventory source. Same request UUID+same complete Input observes original; any changed field is requestConflict. inputId is only a correlation value, never independent write authority and not a cross-language JSON fingerprint. FE creates a fresh inputId whenever a field changes and retains frozen original input + nonreusable owner + inspect requestId; exact path and every indexed argument appear from that local input at confirmation. Public target echoes only inputId/name/transport/source, never path/args. ReviewId binds the complete backend immutable Plan. Reopened/stale view without that original owner and input cannot confirm."
+  },
+  "privateSourceChanges": [
+    "Extend the same MCP inventory TargetSet with the complete raw name set from that exact complete JSON array, including names hidden from UI and transports that cannot be managed. Do not derive absence from only parse_private successful targets or visible rows. Bounded by current 1MiB/512-row decoder, no new persistent index.",
+    "Add McpAddition source/Plan variants to the existing management registry; introduce private ManagementDomain(Skill,McpEnabled,McpAdd) independently of unchanged inventory Kind(Skills,Mcp). Wrong-domain status/cancel/confirm/recheck/UUID replay cannot consume or cancel another domain. Job.finish must include Add alongside SetEnabled for genuine prewrite rejection and write-unknown handling; recheck inherits original write facts. No second registry/loop/persistent ledger.",
+    "Original inventory cancel/prune revokes the addition source/read review too. It does not erase an already-dispatched write receipt; status/recheck continue under original exact operation. Public prior inventory may remain stale."
+  ],
+  "officialSequence": {
+    "inspect": [
+      "Validate bounded input and original inventory source, check original private full name set, create one Job with immutable input.",
+      "Under shared actual worker lease/configuration guard/AccountScope, fresh fixed relay cli mcp list --json in captured cwd; strict complete output, same name absent. Failed get never proves absence.",
+      "Start only the reviewed official app-server; initialize/initialized then config/read(includeLayers:true,cwd:null), config/read(includeLayers:true,cwd:original). Same highest writable User identity/file/raw layer required. Target key absent in every returned layer including disabled/inherited layers; malformed mcp_servers ancestor rejects. Preserve complete raw layer JSON only in RAM.",
+      "Construct intended User value by adding exactly {command:executablePath,args,enabled:false}. Retain raw layers/version/scope and inspected input privately. No write, MCP connection or supplied-command invocation.",
+      "Publish public single-use review only after official child/group/pipes actually finish and all exact source checks pass."
+    ],
+    "confirm": [
+      "Only exact reviewId plus new requestUUID; consume review atomically under the shared registry. Same live FE owner/frozen input is required, not value equality after A-B-A.",
+      "Fresh source/row/cwd, full configured list name absence, fresh two config scopes and exact original reviewed raw layers/version. Recheck after all waits and immediately before write; reject nameConflict/configurationChanged with zero writes if observed.",
+      "Exactly one config/value/write {filePath:private highest User file,expectedVersion:private reviewed version,keyPath:mcp_servers.<quoted escaped literal name>,mergeStrategy:replace,value:{command,args,enabled:false}}. Do not call mcp add or replace the complete MCP map.",
+      "Within same official app-server, read both scopes again. Intended complete User layer and all unrelated layer identities/values must match. Wait for its real cleanup.",
+      "A final exact fixed mcp get --json -- name observes the new entry without initializing MCP. Full planned command/ordered args and disabled state must match; canonical official null/empty defaults for env/env_vars/cwd are handled explicitly. Unknown/incompatible transport additions do not count matching. Final cleanup finishes before verified."
+    ],
+    "recheck": [
+      "Read only original operation and intended Plan; no new input or re-consumption of review. Full config scopes plus successful exact get may report current matching/different.",
+      "If get fails, use a complete configured list to prove current missing when possible; generic get failure/nonzero alone remains query failure/unknown, not missing.",
+      "Outcome observed means current values match; cannot retrospectively attribute unknown earlier write to Farfold. Preserve original writeDispatched/writeAck across this operation."
+    ]
+  },
+  "absenceScope": "Complete list is the official configured winning-name catalogue for this captured directory plus every returned raw layer in global/directory reads. It includes configured plugin winners, but not every future selected-plugin/thread/runtime extension or an atomic cross-process snapshot. A name never intentionally overwrites any observed entry. The list/get/config interfaces cannot prove universal all-time absence across every session; do not say so.",
+  "processAndSideEffects": [
+    "Use existing reviewed registered relay + inherited original environment, cached shell environment only, no env_clear/private HOME/credentials injection. Ordinary official startup may maintain Agent-owned state.",
+    "Official mcp list computes existing HTTP auth statuses; may perform authentication discovery/network I/O. No MCP initialization or new supplied command invocation. Button description must not call the query zero-network or zero-write.",
+    "Reuse absolute 30s operation deadline, configuration wait cancellation, current 1MiB list/get and 4MiB app-server total-output limits, 1MiB RPC frames and 64KiB stderr per child. Shared execution maximum2 across inventory and all management; one unsettled management per Agent. Do not add process polls or an Agent loop.",
+    "Existing cleanup proves only the owned official process/group/pipes at this finite no-MCP-initialization surface; do not use dynamic mcpServerStatus/list. Retain pendingCleanup until actual cleanup; busy/unknown Farfold work denied, idle aliases protected as current AccountScope coverage, not all external processes."
+  ],
+  "registryAndQueue": [
+    "Keep existing limits64 operations/tombstones,32 reviews,300s expiry; active workers never evicted. Addition shares all limits, rather than gaining a second allowance.",
+    "No write queue: simultaneous same-Agent new inspect/confirm gets busy; different Agent may wait within existing slot2/config guard. New input never silently queues or replaces an older intended write.",
+    "Status/cancel/confirm/recheck validate endpoint domain+Agent+UUID and exact input/review/operation. Wrong-domain calls cannot consume a review, cancel a different domain or overwrite tombstones. Cancel-before-admission tombstones must block late same-domain admission.",
+    "Capability refresh, directory/Agent/row changes, typing, closing and switching tabs retire the original UI inspect/review. Backend source revocation and confirmation idempotence remain exact. Already dispatched writes remain visible as unknown until real cleanup/readback; never auto-confirm on fresh status or reopening."
+  ],
+  "strictPublication": [
+    "All declared nullable operation fields are present. Existing P40/MCP-enable wire shapes and parsers unchanged; new target discriminator has its own strict add parser and shared lifecycle checks.",
+    "inspect ready alone has review; active/pendingCleanup never public review or verified/observed outcome. Inspect never writeDispatched.",
+    "configuration matching implies configuredEnabled=false. mcp matching implies reportedEnabled=false AND exact new transport/args. mcp different may still reportedEnabled=false when command/args differ; do not reuse old enable-only different-means-opposite-bool rule. mcp missing implies reportedEnabled=null.",
+    "add verified only ready/settled after successful write acknowledgement, both full config and report matching, all cleanup. okOverridden remains separate acknowledgement and cannot alone be success.",
+    "Once write may have been sent, cancellation/timeout/pipe loss/post-read failure remains unknown; rejected limited to existing exact official prewrite error whitelist. UserLayerNotFound/internal/parse failures are never no-write proof.",
+    "Same UUID retry observes original input/operation only; failed/missing status is not permission to write again. No automatic rollback, fresh-name retry or enabled fallback."
+  ],
+  "ui": [
+    "MCP inventory toolbar/empty state gets capability-driven 添加本地MCP…; modal/sheet uses common review shell, separate compact input form with name, absolute program path and indexed arguments. No brand branch.",
+    "First explicit 审阅添加 inspects only. Second 确认添加并保持停用 writes once; show original exact program and each argument in escaped plain text, configuration scope and impact on later conversations. Editing invalidates review; first Enter cannot flow through into second confirmation.",
+    "Result says 已添加，保持停用 only when verified; unknown offers original status/只读重新核查. 不发送消息、不启动填写程序、连接与工具尚未验证 in concise details.",
+    "After explicit refresh the new disabled item may use existing independent enablement flow. Never auto-enable or falsely state existing connections were stopped."
+  ],
+  "ownership": {
+    "backend": [
+      "extension_inventory: mcpAddition capability, complete private inventory name/source access, reuse fixed list/get launch",
+      "skill_management: small addition source/Plan/RPC/domain variants and wrappers over existing registry/leases/cleanup",
+      "necessary lib command registration; author unit/synthetic peer tests; no second controller/storage"
+    ],
+    "frontend": [
+      "small mcp_add_types/api/input component + common extension management controller union/ports and review rendering",
+      "original immutable input owner binding and plain-text indexed review; no second flight registry",
+      "exact DTO/wire + meaningful owner/collision/unknown/keyboard tests; preserve old P40/P41 assertions"
+    ],
+    "independent": "same reviewed public interfaces with synthetic peers, then root-controlled installed inert fixture; no real account/config read during this contract task"
+  },
+  "acceptanceScenarios": [
+    "Valid empty catalogue and absent mcp_servers create one disabled stdio entry; existing table unknown fields/arrays and every other layer/value remain semantically exact.",
+    "literal a.b vs nested a→b canary; duplicate names in any raw layer, disabled/inherited layer, plugin winner, hidden public row or unsupported transport reject with zero write. First-slice excluded codex_apps and invalid name/path/oversize/control args reject.",
+    "Inspect→external name appears before confirm; full layer/version drift; program/args/order changed; stale UI close/A-B-A; old queued response: no replacement target/no write/no revived review.",
+    "Existing MCP, skill and add domains share busy/two slots and wrong endpoint isolation; early cancel tombstone, expired/pruned original inventory Source Arc, TTL review expiry and UUID-payload conflict.",
+    "Exact user path and each argument appear at review without shell tokenization, markup execution, silent redaction or digest-only confirmation. Existing env/header/secret canaries never leave private decoder/Plan or enter diagnostics.",
+    "Synthetic actual process trace proves only fixed official verbs and one write; supplied command marker never executes. Output limits/deadline/leader exit held pipes/cancel maintain real guard until cleanup.",
+    "Official prewrite reject; write success then pipe loss; UserLayerNotFound after write; cancelled postget; final get same disabled bool but wrong args/env: no false verified/cancelled/no-write; readonly recheck preserves earlier unknown attribution.",
+    "Actual Rust serialization→strict TS plus common controller/render, two-step Enter, close/reopen, explicit refresh and default-disabled result; old skills/enable preference regressions unchanged.",
+    "Later root-authorized installed fixture with unique name and inert absolute command confirms exact saved disabled record + unchanged other settings and no supplied-command startup; cleanup must use separately reviewed exact official removal helper, not direct config edit. This contract executes nothing."
+  ],
+  "uncertaintiesAndNonGuarantees": [
+    "Official expectedVersion is prewrite version validation, not cross-process CAS; a race after reads can still occur. Full readback detects observed changes but cannot prove another external writer never intervened. No force/overwrite retry.",
+    "Configured catalogue omits runtime-only or later sources; cannot prove all-session/global-future absence. Confirm description and receipt must use checked scopes, not universal conflict-free claims.",
+    "Absolute path is stored data, not verified executable contents or future identity; symlink and future replacement semantics remain the official Agent responsibility. No secret-free guarantee for arbitrary user strings.",
+    "First-slice highest User file must already be represented by official config/read. Missing user layer, incompatible versions/shapes or unsupported platforms remain unavailable.",
+    "Original P41 arbitrary transports, other source/Agent coverage, live connection/disconnection/authentication/tool readiness/diagnostics and Windows remain open. This addition is a real configuration function, not complete P41."
+  ],
+  "officialEvidence": {
+    "fixedVersion": "retained rust-v0.156.1 commit b412ff32c417f855c2b2d1581b77058eed87c84b; no latest/all-version claim",
+    "anchors": [
+      "mcp_cmd.rs:278–443 default enabled and same-name insert/typed map save/OAuth add; 630–718 list complete configured winners plus auth status probes; 893–952 get config-only with unstructured missing error; 1079–1090 names",
+      "config_manager_service.rs:218–444 official User/profile-v2 file/version/write; 506–550 quoted path; 581–647 parent mutation requires preguard",
+      "mcp_types.rs:228 enabled=false skips initialization; 343 onward raw schema and defaults",
+      "catalog.rs:117–134 precedence; 470–530 winners/Remove omission; 581–587 configured projection",
+      "codex-mcp/src/mcp/mod.rs:64 known built-in codex_apps constant; catalog is_host_owned_apps uses this name (not a CLI name reservation)"
+    ]
+  },
+  "performed": {
+    "retainedOfficialSourceRead": true,
+    "productionSourceWrites": false,
+    "projectTestsOrCargo": false,
+    "officialCliMcpAppStarted": false,
+    "realConfigDatabaseRead": false
+  },
+  "refs": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "6e47477866b81e29cc36f44f6d1764e9e0689f16804705bdd2099e3b93b2973b"
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-root/next-scope-review.json",
+      "sha256": "d4d2177a03a8895b0afdda897d96a23543c8bc3935c5316e234d8bf808e29751"
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-contract/contract.json",
+      "sha256": "2afa8b31dca34d7b7000ab8f5c085649a58df6a779556b45ffe13c5f12e2f8e2"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "230b7fdf1b82d3b8a5b78c45878b901b320ff87f986396c9705e622b281916f0"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mcp_targets.rs",
+      "sha256": "b394d876d9e02e7cf5c78533ec74693bb9020f6c4fbae3b98f16e7be58689ecf"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "e75e30683869fa0504d7a02244f3ebd503443554a3c75b07d60ad3355094ad87"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/domain.rs",
+      "sha256": "eb02f28ef7d97774712697c2f5a1d13fc5423d5571d7f2b47b1de0744dc6ee64"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "1dcee0a7b4b26d809d4bee514299261af215bd82318db37cafd0c753b6685a43"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "2abdac3b745c7b04314d6f72e68a5a8ac7afe14acf42e59cb20669f6aa2e7def"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp.rs",
+      "sha256": "adfbe0604a7343048cf3cf17301bb93d858da670354f198e5b5dd5cd594fd597"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_plan.rs",
+      "sha256": "61d56ca94911c31043a7fad41ff25746429c7f719131319f2e2deb3fbea7bfd3"
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "7f7661d1b53ad36c1a93e13c4d81e5e9fb07fc0d9deebb51eacae41833a8bf3f"
+    },
+    {
+      "path": "src/runtime/extension_change_validation.ts",
+      "sha256": "9fe2b893487225e731bb74a08a962dd705aec5e6ff59ba5be02379971967d112"
+    },
+    {
+      "path": "src/components/AgentExtensionInventoryResult.tsx",
+      "sha256": "5d6fcad645b1a1c54baafd570ce5830ae03b3d07c8a3bd42152b5e86e1963ef1"
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "c6a5e7aa3b5c6099e7a722733a606cfd0e658d6b0d2bc5dbfd5e5f0d163d2459"
+    },
+    {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/cli/src/mcp_cmd.rs",
+      "sha256": "a5dd0a7a5e519daddd64e12fa876ece961db9fd8628e945bd49b8e407dc6a81f"
+    },
+    {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/config_manager_service.rs",
+      "sha256": "cb5e0862e3402aed6349d870f4a8b38472ad1835edd906f797ea1e3aeeac8209"
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-contract/official/mcp_types.rs",
+      "sha256": "1bca40f107d1b36b2c6d2bf8b5316b29f3226c8d2f15d00bef0f56f744c5f290"
+    },
+    {
+      "path": "output/2026-10-11-mcp-management-contract/official/catalog.rs",
+      "sha256": "a3223084e675743f72d27d21ee9d3c6c370207566e813acc37dfed3cdef6be3f"
+    },
+    {
+      "path": "output/2026-10-11-mcp-tool-inventory-design/official/codex-rs/codex-mcp/src/mcp/mod.rs",
+      "sha256": "f221ad924ec7a3f703c8d977fd6d09e875ba7b4802b93e5d8091a32ee976e573"
+    }
+  ]
+}

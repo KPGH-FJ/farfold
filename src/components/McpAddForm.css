@@ -1,0 +1,53 @@
+.mcp-add-form {
+  margin-block: 12px;
+  min-width: 0;
+}
+.mcp-add-form form,
+.mcp-add-form label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.mcp-add-form form {
+  gap: 12px;
+}
+.mcp-add-form input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.mcp-add-form fieldset {
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+}
+.mcp-add-argument {
+  display: flex;
+  gap: 8px;
+  align-items: end;
+  margin-block: 8px;
+}
+.mcp-add-argument label {
+  flex: 1;
+}
+.mcp-add-form p,
+.mcp-add-review code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.mcp-add-review {
+  min-width: 0;
+}
+.mcp-add-review ol {
+  padding-inline-start: 24px;
+}
+.mcp-add-review li {
+  margin-block: 6px;
+}
+@media (max-width: 540px) {
+  .mcp-add-argument {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

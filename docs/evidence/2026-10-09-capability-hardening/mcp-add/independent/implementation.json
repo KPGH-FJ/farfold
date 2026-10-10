@@ -1,0 +1,63 @@
+{
+  "status": "independentFocusedReviewRetained",
+  "originalReport": "output/2026-10-11-mcp-add-independent/source-final-independent.json",
+  "originalSha256": "9a99ed4737d5415187df81c840fd13d23992f0152900f2f6d4a5142c96527774",
+  "copies": [
+    {
+      "source": "output/2026-10-11-mcp-add-independent/challenge-plan.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/independent/challenge-plan.json.raw.txt",
+      "sha256": "76e181d12dc6cf74de836a0f88265ed29c1390af6d5b0d8089f5c78c3b44d4db"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-independent/input-fixtures.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/independent/input-fixtures.json.raw.txt",
+      "sha256": "730084f4134ad7726add325c15c2b23faf12a145248fe40dc96a7736fc89efa5"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-independent/native-helper-before-baseline-gate.py.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/independent/native-helper-before-baseline-gate.py.txt",
+      "sha256": "04cd348c663528d52800c2e5e3fd32f4cdd5e211269ceec18fe1ce81c5d1f604"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-independent/native-helper-first.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/independent/native-helper-first.txt",
+      "sha256": "cade6a98937c4c03ca55b7c80620673e511e239caccefca0aa8760511561b676"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-independent/native-helper-followup-green.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/independent/native-helper-followup-green.txt",
+      "sha256": "2a21bc8551f4a928f7d7155f7d70c6f31e1871f7c468b9d46c0aa3a65193460c"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-independent/native-helper-followup-tests.py",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/independent/native-helper-followup-tests.py.raw.txt",
+      "sha256": "84d12f2aa8924c0feb58a822511c5c38d503b82f5850b10960f6a02a803a4635"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-independent/native-helper-independent.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/independent/native-helper-independent.json.raw.txt",
+      "sha256": "3d6019766b2b3f34d565d0d0661eafd4692b0dd803f8e04b22b58c0ab20845e8"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-independent/native-helper-red.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/independent/native-helper-red.json.raw.txt",
+      "sha256": "5579d22cc3aa0babb54a5458df12ce94418c041f4bc9bfa691e08ee7cb976ee6"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-independent/native-helper-tests.py",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/independent/native-helper-tests.py.raw.txt",
+      "sha256": "4c66d8cf744ce5a500db47c1e088336e782f9f16a71a6db06ab28ea626679a72"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-independent/source-challenge-preparation.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/independent/source-challenge-preparation.json.raw.txt",
+      "sha256": "53d01b97bbd3d602b1903cc9ed1d6da69bb6d0afd94c4312e6a1f1d3d5c8213e"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-independent/source-final-independent.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/independent/source-final-independent.json.raw.txt",
+      "sha256": "9a99ed4737d5415187df81c840fd13d23992f0152900f2f6d4a5142c96527774"
+    }
+  ],
+  "boundary": "Exact original source/controlled evidence. Full integration, installation and official native validation are separate."
+}

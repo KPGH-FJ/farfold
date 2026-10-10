@@ -138,3 +138,11 @@ pub(in crate::acp_client) fn parse_private(
     }
     Ok((snapshot, targets))
 }
+
+// Complete names, including hidden labels and unsupported transports, are private
+// collision evidence. Successful management targets alone are not a catalogue.
+pub(in crate::acp_client) fn names(bytes: &[u8]) -> Result<HashSet<String>> {
+    parse(bytes)?;
+    let rows: Vec<Row> = serde_json::from_slice(bytes).map_err(|_| Code::InvalidOutput)?;
+    Ok(rows.into_iter().map(|v| v.name).collect())
+}

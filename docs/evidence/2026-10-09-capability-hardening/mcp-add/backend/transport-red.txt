@@ -1,0 +1,19 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.20s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::skill_management::mcp_add_tests::mcp_add_unknown_transport_fields_are_rejected' (26075508) panicked at src/acp_client/skill_management/mcp_add_tests.rs:379:9:
+url
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::skill_management::mcp_add_tests::mcp_add_unknown_transport_fields_are_rejected ... FAILED
+
+failures:
+
+failures:
+    acp_client::skill_management::mcp_add_tests::mcp_add_unknown_transport_fields_are_rejected
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1529 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

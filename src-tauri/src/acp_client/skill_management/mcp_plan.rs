@@ -29,7 +29,7 @@ pub(super) fn configured(config: &Config, name: &str) -> Option<bool> {
         Some(v) => v.as_bool(),
     }
 }
-fn same_scope(a: &Config, b: &Config) -> bool {
+pub(super) fn same_scope(a: &Config, b: &Config) -> bool {
     a.file == b.file
         && a.layers[a.active].name == b.layers[b.active].name
         && a.layers[a.active].config == b.layers[b.active].config
@@ -45,7 +45,7 @@ fn unique(config: &Config, name: &str) -> bool {
                 .is_none_or(|v| v.as_object().is_some_and(|v| !v.contains_key(name)))
     })
 }
-fn preserved(before: &Config, after: &Config, intended: &Value) -> bool {
+pub(super) fn preserved(before: &Config, after: &Config, intended: &Value) -> bool {
     before.active == after.active
         && before.file == after.file
         && before.layers.len() == after.layers.len()

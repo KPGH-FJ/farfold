@@ -1,0 +1,93 @@
+{
+  "status": "controlledAuthorEvidenceRetained",
+  "originalReport": "output/2026-10-11-mcp-add-frontend/implementation.json",
+  "originalSha256": "c817ecdd9ddcf1c0db7343c0810805eef67cc63bbc6e583daeeea5bb73a85325",
+  "copies": [
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/actual-wire-final-green.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/actual-wire-final-green.txt",
+      "sha256": "f64628e2a4ed670684f9b20434c2723b405eadd3d202c91275acfc514ecbe5c0"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/actual-wire-green.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/actual-wire-green.txt",
+      "sha256": "584e1a915b3bf2562105ee9671a971df8338e4d277293f92a8c634198c60d870"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/actual-wire-red.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/actual-wire-red.txt",
+      "sha256": "8e657e2ccc329f70324613200b841837b62298c2c386432fdcd5df45a5ae6a1f"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/argument-display-controls-green.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/argument-display-controls-green.txt",
+      "sha256": "f7c5a06afacba00ec2baa9f6c0ddbf0e6df3b9849c56d3c7bdbd53dcf45d816e"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/argument-display-red.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/argument-display-red.txt",
+      "sha256": "eb3480c6e4374cba1a9022b0ffae3db748e1a9b19a4406269219a5d9519fb488"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/associated-final.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/associated-final.txt",
+      "sha256": "d4b2b5735efd64384d64126e13c323f621f961f1290fecbe3cb2a31ed1ddaa02"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/final-checks.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/final-checks.json.raw.txt",
+      "sha256": "65781e593e87c3593895ea180128aa895e7ed0a4380c107f7fee6ee1d36896da"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/fixed-input-set-final.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/fixed-input-set-final.json.raw.txt",
+      "sha256": "4534efd08c1e239c5e98c281eb88f93970d7d6a31b5a4586d2b2ffc496840e27"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/format-final.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/implementation.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/implementation.json.raw.txt",
+      "sha256": "c817ecdd9ddcf1c0db7343c0810805eef67cc63bbc6e583daeeea5bb73a85325"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/inspect-result-copy-red.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/inspect-result-copy-red.txt",
+      "sha256": "96a55ccb1fde34308683c3ae56a16df023f8d9e7bc16d3e31f786518f6a7048b"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/review-baseline-red.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/review-baseline-red.txt",
+      "sha256": "f320a9051bf6464cebf7ef11d19f5aff8f5103fbeed3924c220b8f48f7b00e89"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/review-first-green.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/review-first-green.txt",
+      "sha256": "4bb570b7bb8876685e24d8f7d8674b7ef988c439850d800c6a3e2a6771752812"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/source-checkpoint.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/source-checkpoint.json.raw.txt",
+      "sha256": "a8fc4b1142fb2cba252e8c377ff21bd8d29dbc4bebade38b7d327351d8874784"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/typecheck-final.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/typecheck-first.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/typecheck-first.txt",
+      "sha256": "b60f4cf5590d099292afdc02afd8d3a73d56b0eb3e33253d553c81294d5b26a6"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-frontend/typecheck-second.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/frontend/typecheck-second.txt",
+      "sha256": "ce78b487a401c660ade29678f4418810d0c864a589dd87d4baf7eca421fbb61b"
+    }
+  ],
+  "boundary": "Exact original source/controlled evidence. Full integration, installation and official native validation are separate."
+}

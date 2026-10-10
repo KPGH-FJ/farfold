@@ -1,0 +1,95 @@
+// Proposed contract only; no production implementation. Existing P40/P41 wires remain unchanged.
+export type ExistingCode =
+  | 'notReviewed' | 'entryUnverified' | 'platformUnsupported' | 'environmentUnavailable'
+  | 'selectionChanged' | 'cwdUnavailable' | 'busy' | 'spawnFailed' | 'queryFailed'
+  | 'invalidOutput' | 'outputLimit' | 'timedOut' | 'cancelled' | 'pendingCleanup'
+  | 'unknownRequest' | 'invalidRequest' | 'requestConflict' | 'unavailable'
+  | 'targetUnavailable' | 'targetChanged' | 'inventoryIncomplete'
+  | 'reviewExpired' | 'reviewConsumed' | 'configurationUnsupported'
+  | 'configurationChanged' | 'configurationReadOnly' | 'configurationRejected' | 'writeUncertain';
+export type McpAddCode = ExistingCode | 'nameConflict' | 'invalidName' | 'invalidExecutablePath' | 'invalidArguments';
+export type Failure = { code: McpAddCode };
+export type InventoryCapability = {
+  availability: 'available' | 'unavailable';
+  source: 'officialAppServer' | null;
+  reason: ExistingCode | null;
+};
+// ExtensionCapabilities gains mcpAddition. Current server always emits it.
+// Legacy absence grants no addition authority; all present fields parse strictly.
+export type AdditionCapabilityDelta = { mcpAddition: InventoryCapability };
+
+// User-entered strings only. No shell splitting, env/header/auth/HTTP/secret fields.
+// Entire input is immutable private RAM after inspect admission, never diagnostic data.
+export type McpAddInput = { name: string; executablePath: string; args: string[] };
+export type McpAddInspect = {
+  agentId: string;
+  requestId: string;
+  inventoryRequestId: string; // ready complete MCP inventory; empty is valid, stale/revoked is not
+  inputId: string; // client fresh UUID, changed whenever any input field is edited
+  input: McpAddInput;
+};
+export type McpAddKey = { agentId: string; requestId: string };
+export type McpAddConfirm = McpAddKey & { reviewId: string };
+export type McpAddRecheck = McpAddKey & { operationId: string };
+export type McpAddTarget = {
+  kind: 'mcpAddition';
+  inventoryRequestId: string;
+  inputId: string; // exact client input UUID bound to the full immutable admitted Input
+  name: string;
+  transport: 'stdio';
+};
+export type McpAddReview = {
+  reviewId: string;
+  agentId: string;
+  cwd: string;
+  target: McpAddTarget;
+  requestedEnabled: false;
+  configuredEnabled: null; // absent in this inspection, not false or an existing row
+  reportedEnabled: null;
+  writeScope: { kind: 'user' | 'profile'; configDisplayPath: string };
+  observedAtMs: number;
+  validForMs: 300000;
+  mutation: 'addDisabledStdioMcp';
+  nameAvailability: 'absentInCheckedScopes';
+  preservation: 'otherConfigurationSemanticsPreserved';
+  sessionApplicability: 'unverified';
+};
+export type McpAddObservation = {
+  observedAtMs: number;
+  configuration: 'matching' | 'different'; // entire intended layer + all unrelated layers
+  mcp: 'matching' | 'different' | 'missing'; // exact new transport/args/disabled report, not only enabled bool
+  configuredEnabled: boolean | null;
+  reportedEnabled: boolean | null;
+  sessionApplicability: 'unverified';
+};
+export type McpAddOperation = {
+  agentId: string;
+  requestId: string;
+  action: 'inspect' | 'add' | 'recheck';
+  cwd: string;
+  target: McpAddTarget;
+  requestedEnabled: false;
+  operationId: string | null;
+  state: 'running' | 'cancelling' | 'pendingCleanup' | 'ready' | 'failed' | 'cancelled';
+  phase: 'queued' | 'starting' | 'reading' | 'writing' | 'checking' | 'cleaning' | 'complete';
+  settled: boolean;
+  writeDispatched: boolean;
+  writeAck: 'none' | 'ok' | 'okOverridden' | 'rejected' | 'unknown';
+  outcome: 'notDispatched' | 'rejected' | 'verified' | 'observed' | 'mismatch' | 'unknown' | null;
+  code: McpAddCode | null;
+  review: McpAddReview | null;
+  observation: McpAddObservation | null;
+};
+export type McpAddCancellation = McpAddKey & {
+  cancelRequested: boolean;
+  operation: McpAddOperation | null;
+};
+// All commands main-window-only, flat camelCase arguments, no arbitrary paths/RPC/method/argv launch.
+// agent_mcp_add_inspect(McpAddInspect) -> McpAddOperation
+// agent_mcp_add_confirm(McpAddConfirm) -> McpAddOperation
+// agent_mcp_add_status(McpAddKey) -> McpAddOperation
+// agent_mcp_add_cancel(McpAddKey) -> McpAddCancellation
+// agent_mcp_add_recheck(McpAddRecheck) -> McpAddOperation
+// All can reject with fixed Failure, never raw official errors/configuration.
+// Inspect stores input as data; executablePath/args are never passed to Farfold Command::new/arg(s).
+// Confirm accepts only a single-use reviewId; no public enabled/filePath/keyPath/version or replacement input.

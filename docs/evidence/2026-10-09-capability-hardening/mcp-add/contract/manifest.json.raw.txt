@@ -1,0 +1,21 @@
+{
+  "status": "frozen draft for root review, not applied",
+  "sourceRefsMatch": 21,
+  "sourceOrTestEdits": false,
+  "officialExecution": false,
+  "openDecisions": [
+    "absolute executable path is syntactically constrained saved data, not a claim of file executable/runnable status",
+    "complete configured-list/two-scope absence is observed coverage, not all future runtime sources or cross-process CAS",
+    "arbitrary user args cannot be proven secret-free; exact local review plus no dedicated secret fields and no logs, per root decision"
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-11-mcp-add-contract/contract.json",
+      "sha256": "8ad8f9967953fcb4ed0df82279b79bb9cb92313c3d7a1b27edab1af5caca1622"
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-contract/contract.ts",
+      "sha256": "896960ee55ef11a89fdeb8443b04078fbac72b5cf231c276faf343859989f116"
+    }
+  ]
+}

@@ -1,0 +1,276 @@
+{
+  "checkedAtUtc": "2026-10-10T19:09:45.118978+00:00",
+  "status": "passedReadOnlyFinalRecordGate",
+  "baselineCommit": "f83cbff482d2ea5fe7d9c37de0eb91ca9648d360",
+  "originalPlan": {
+    "originalItems": 122,
+    "orderedIdTitleCompletionTriplesExact": true,
+    "canonicalTriplesSha256": "6bbce4fb553038db25a6e9f751f11f5821850ceba163971e21fc644359dabcb3",
+    "newItems": 16,
+    "allNewRowsExact": true,
+    "statusChanges": [
+      {
+        "id": "P41",
+        "before": "部分；现有条目启停分项已实测",
+        "after": "启停分项已测；添加工程通过待实装"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "path": "docs/status.md",
+      "sha256": "580774001802d2f56a63badbdb45e01117403d33f20a4bb04ec9053bffed68d7",
+      "bytes": 55118,
+      "installedBaseline": "26a55a7b",
+      "newAdditionEngineeringOnly": true,
+      "newCandidateAndNativeNotClaimed": true,
+      "fullP41StillOpen": true,
+      "engineeringCountsMatchRawLogs": true,
+      "newDirectEvidenceLinks": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/verification.json",
+          "sha256": "47480fcdca5e3cc32a5b9c4a32b8fa31b186b0970cd026734f35a7041e0cf648",
+          "bytes": 3679
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/implementation.json",
+          "sha256": "d18176629713917f6a9791ca35d18f2bb2dea2b7ce4a047483db03088a5d1649",
+          "bytes": 10296
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "4f7bcbd3aa866cd9ed80af154b85cdb05ff47c940869a1eb0faa904d54c4a14c",
+      "bytes": 97489,
+      "installedBaseline": "26a55a7b",
+      "newAdditionEngineeringOnly": true,
+      "newCandidateAndNativeNotClaimed": true,
+      "fullP41StillOpen": true,
+      "engineeringCountsMatchRawLogs": true,
+      "newDirectEvidenceLinks": []
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "f9b72bda85b3d18a28dcd517c8a7841648073c46b1cd300661e1a6ae1918b395",
+      "bytes": 115173,
+      "installedBaseline": "26a55a7b",
+      "newAdditionEngineeringOnly": true,
+      "newCandidateAndNativeNotClaimed": true,
+      "fullP41StillOpen": true,
+      "engineeringCountsMatchRawLogs": true,
+      "newDirectEvidenceLinks": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/verification.json",
+          "sha256": "47480fcdca5e3cc32a5b9c4a32b8fa31b186b0970cd026734f35a7041e0cf648",
+          "bytes": 3679
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/implementation.json",
+          "sha256": "d18176629713917f6a9791ca35d18f2bb2dea2b7ce4a047483db03088a5d1649",
+          "bytes": 10296
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "sha256": "ce7b18c8e89783df3edade67296a74060560702849732e46f458bf70b9463a76",
+      "bytes": 60352,
+      "installedBaseline": "26a55a7b",
+      "newAdditionEngineeringOnly": true,
+      "newCandidateAndNativeNotClaimed": true,
+      "fullP41StillOpen": true,
+      "engineeringCountsMatchRawLogs": true,
+      "newDirectEvidenceLinks": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/verification.json",
+          "sha256": "47480fcdca5e3cc32a5b9c4a32b8fa31b186b0970cd026734f35a7041e0cf648",
+          "bytes": 3679
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/implementation.json",
+          "sha256": "d18176629713917f6a9791ca35d18f2bb2dea2b7ce4a047483db03088a5d1649",
+          "bytes": 10296
+        }
+      ]
+    }
+  ],
+  "productContract": {
+    "path": "PRODUCT.md",
+    "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+    "bytes": 35083
+  },
+  "protectedExistingDirtyDocuments": [
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+      "bytes": 11543
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7",
+      "bytes": 2341
+    }
+  ],
+  "engineering": {
+    "verification": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/verification.json",
+      "sha256": "47480fcdca5e3cc32a5b9c4a32b8fa31b186b0970cd026734f35a7041e0cf648",
+      "bytes": 3679
+    },
+    "inputsBefore": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/inputs-before.json",
+      "sha256": "06a9c91730feaf6a369f69e64b6410d7fe1188a2ecb843e868631289fa787ae5",
+      "bytes": 171106
+    },
+    "inputsAfter": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/inputs-after.json",
+      "sha256": "06a9c91730feaf6a369f69e64b6410d7fe1188a2ecb843e868631289fa787ae5",
+      "bytes": 171106
+    },
+    "inputCount": 1480,
+    "beforeAfterExact": true,
+    "allCurrentInputBytesMatch": true,
+    "allSevenRecordedCommandsExitedZero": true,
+    "logs": [
+      {
+        "name": "typecheck",
+        "argv": [
+          "corepack",
+          "pnpm",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/typecheck.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      },
+      {
+        "name": "frontend",
+        "argv": [
+          "corepack",
+          "pnpm",
+          "test"
+        ],
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/frontend.txt",
+        "sha256": "6261fe93e588c5310f4ed0c4e404bf29c9bba2dac576517f4f2d1dfb993df43f",
+        "bytes": 289
+      },
+      {
+        "name": "build",
+        "argv": [
+          "corepack",
+          "pnpm",
+          "build"
+        ],
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/build.txt",
+        "sha256": "ff44d48926a0665a9f6977ee561c866d9c81350e3f4700c8b700cd0932ad41a8",
+        "bytes": 4728
+      },
+      {
+        "name": "cargo-fmt",
+        "argv": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/cargo-fmt.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "name": "clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/clippy.txt",
+        "sha256": "dccad65a474a0e64d7c677fc96c87f30265067841005a793f4d82605fea6fe77",
+        "bytes": 72
+      },
+      {
+        "name": "rust",
+        "argv": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/rust.txt",
+        "sha256": "5df5be2f1e2de2e0103870acaa1d6b4aa3790bbf0e7acfddad9dd0c7dde6719d",
+        "bytes": 169839
+      },
+      {
+        "name": "format",
+        "argv": [
+          "corepack",
+          "pnpm",
+          "format:check"
+        ],
+        "exitCode": 0,
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-checks/run-01/format.txt",
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "bytes": 144
+      }
+    ],
+    "rawCounts": {
+      "frontend": [
+        "Test Files  413 passed (413)",
+        "Tests  4774 passed (4774)"
+      ],
+      "rust": [
+        "test result: ok. 1531 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 111.78s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    "testsRerunByReviewer": false
+  },
+  "controlledBrowser": {
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/implementation.json",
+      "sha256": "d18176629713917f6a9791ca35d18f2bb2dea2b7ce4a047483db03088a5d1649",
+      "bytes": 10296
+    },
+    "engines": [
+      {
+        "engine": "webkit",
+        "checks": 23,
+        "passed": 23,
+        "sourceStable": true,
+        "pageErrors": []
+      },
+      {
+        "engine": "chromium",
+        "checks": 23,
+        "passed": 23,
+        "sourceStable": true,
+        "pageErrors": []
+      }
+    ],
+    "allReferencedHashesMatch": true,
+    "referenceCount": 10,
+    "boundary": "No official CLI, MCP connection, user config, installed app or real Agent acceptance. Root source before/after equal for each final engine run."
+  },
+  "preparationReview": {
+    "path": "output/2026-10-11-mcp-add-frontend/record-review-preparation.json",
+    "sha256": "45afe385b8c8c741f08220148faae12605e07815bb3c01b53fc014d49529c699",
+    "bytes": 45487
+  },
+  "findings": [],
+  "boundary": "Read-only documentation/evidence reconciliation on current frozen bytes. Engineering and controlled full-App results do not prove candidate, installation, official MCP creation, actual server connection/tools, other Agents or Windows. Existing26a55a7b native results remain previous-slice evidence. No source/docs/Git changes and no test/App/Agent/config/database operations; only this new private receipt was written."
+}

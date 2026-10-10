@@ -1,0 +1,10 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/skill_management.test-support.ts(37,3): error TS2322: Type '{ target: { displayPath: string; name: string; origin: "user" | "repo"; itemId: number; inventoryRequestId: string; }; state: "failed" | "cancelled" | "ready" | "cancelling" | "running" | "pendingCleanup"; ... 13 more ...; requestId: string; } | { ...; } | { ...; }' is not assignable to type 'SkillChangeOperation'.
+  Type '{ target: { displayPath: string; name: string; origin: "user" | "repo"; itemId: number; inventoryRequestId: string; }; state: "failed" | "cancelled" | "ready" | "cancelling" | "running" | "pendingCleanup"; ... 13 more ...; requestedEnabled: false; }' is not assignable to type 'SkillChangeOperation'.
+    Types of property 'action' are incompatible.
+      Type 'McpAddAction' is not assignable to type '"inspect" | "setEnabled" | "recheck"'.
+        Type '"add"' is not assignable to type '"inspect" | "setEnabled" | "recheck"'.
+ ELIFECYCLE  Command failed with exit code 1.

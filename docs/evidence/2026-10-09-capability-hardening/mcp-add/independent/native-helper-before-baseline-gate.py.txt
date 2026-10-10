@@ -1,0 +1,190 @@
+"""One bounded official addition baseline/cleanup; raw configuration stays in RAM.
+
+Do not run until independently reviewed. No process is started on import.
+"""
+import argparse
+import copy
+import hashlib
+import os
+from pathlib import Path
+import re
+import subprocess
+
+import shared_configuration as shared
+from official_exchange import Exchange, Refused, decode, need
+
+ROOT = Path(__file__).resolve().parent
+shared.ROOT = ROOT
+shared.BACKUP = ROOT.parent / "2026-10-11-mcp-add-install/metadata-before.sqlite3"
+
+
+class Config:
+    def __init__(self, raw):
+        need(isinstance(raw, dict), "invalidConfig")
+        self.layers = raw.get("layers")
+        need(isinstance(self.layers, list) and 0 < len(self.layers) <= 128, "invalidConfig")
+        for layer in self.layers:
+            need(isinstance(layer, dict) and isinstance(layer.get("name"), dict)
+                 and isinstance(layer.get("config"), dict) and shared.supported(layer["config"])
+                 and isinstance(layer.get("version"), str) and 0 < len(layer["version"]) <= 256,
+                 "configurationUnsupported")
+        users = [i for i, layer in enumerate(self.layers) if layer["name"].get("type") == "user"]
+        need(bool(users), "userLayerMissing")
+        self.active = users[0]
+        self.layer = self.layers[self.active]
+        need(self.layer.get("disabledReason") is None, "configurationReadOnly")
+        self.file = self.layer["name"].get("file")
+        need(isinstance(self.file, str) and self.file.startswith("/") and len(self.file.encode()) <= 4096
+             and not any(ord(c) < 32 for c in self.file), "invalidSource")
+        self.raw = self.layer["config"]
+        self.present = "mcp_servers" in self.raw
+        self.servers = self.raw.get("mcp_servers", {})
+        need(isinstance(self.servers, dict), "configurationUnsupported")
+
+    def semantic(self, replacement=None):
+        return [{"name": layer["name"], "disabledReason": layer.get("disabledReason"),
+                 "config": replacement if i == self.active and replacement is not None else layer["config"]}
+                for i, layer in enumerate(self.layers)]
+
+    def identity(self):
+        return {"selectedIndex": self.active, "layerCount": len(self.layers),
+                "sourceSha256": shared.digest(self.layer["name"])}
+
+
+def read_configs(exchange, fixture):
+    values = [Config(exchange.request("config/read", {"includeLayers": True, "cwd": cwd}))
+              for cwd in (None, fixture["cwd"])]
+    need(values[0].layer["name"] == values[1].layer["name"]
+         and values[0].raw == values[1].raw
+         and values[0].layer["version"] == values[1].layer["version"], "configurationChanged")
+    return values
+
+
+def quoted_name(name):
+    # A single literal TOML key segment; never concatenate an unquoted dotted name.
+    return 'mcp_servers."' + name.replace('\\', '\\\\').replace('"', '\\"') + '"'
+
+
+def baseline(configs, fixture, binding):
+    for config in configs:
+        for layer in config.layers:
+            servers = layer["config"].get("mcp_servers", {})
+            need(isinstance(servers, dict) and fixture["name"] not in servers, "targetAlreadyPresent")
+    return {"schema": 1, "status": "originalBaselineVerified", "binding": binding,
+            "fixtureSha256": shared.digest(fixture), "identities": [c.identity() for c in configs],
+            "semanticLayersSha256": [shared.digest(c.semantic()) for c in configs],
+            "selectedLayerSha256": shared.digest(configs[0].raw),
+            "serversPresent": configs[0].present, "rawConfigurationPersisted": False}
+
+
+def cleanup_plan(configs, fixture, binding, saved):
+    need(saved.get("schema") == 1 and saved.get("status") == "originalBaselineVerified"
+         and saved.get("rawConfigurationPersisted") is False, "invalidBaseline")
+    need(saved["binding"] == binding and saved["fixtureSha256"] == shared.digest(fixture), "launchOrFixtureChanged")
+    need([c.identity() for c in configs] == saved["identities"], "sourceChanged")
+    if [shared.digest(c.semantic()) for c in configs] == saved["semanticLayersSha256"]:
+        return None, None
+    current = configs[0].servers.get(fixture["name"])
+    need(current == fixture["entry"] and type(current.get("enabled")) is bool, "fixtureEntryChanged")
+    for config in configs:
+        for i, layer in enumerate(config.layers):
+            if i != config.active:
+                servers = layer["config"].get("mcp_servers", {})
+                need(isinstance(servers, dict) and fixture["name"] not in servers, "foreignTargetAppeared")
+    intended = copy.deepcopy(configs[0].raw)
+    del intended["mcp_servers"][fixture["name"]]
+    key = quoted_name(fixture["name"])
+    if not saved["serversPresent"]:
+        need(not intended["mcp_servers"], "unrelatedDrift")
+        del intended["mcp_servers"]
+        key = "mcp_servers"
+    need(shared.digest(intended) == saved["selectedLayerSha256"]
+         and [shared.digest(c.semantic(intended)) for c in configs] == saved["semanticLayersSha256"], "unrelatedDrift")
+    return {"keyPath": key, "value": None, "mergeStrategy": "replace",
+            "filePath": configs[0].file, "expectedVersion": configs[0].layer["version"]}, intended
+
+
+def operation(exchange, mode, fixture, binding, save_baseline, saved=None):
+    exchange.initialize()
+    configs = read_configs(exchange, fixture)
+    if mode == "baseline":
+        saved = baseline(configs, fixture, binding)
+        save_baseline(saved)
+        return {"status": "originalBaselineVerified", "writes": 0,
+                "semanticLayersSha256": saved["semanticLayersSha256"],
+                "rawConfigurationPersisted": False}
+    need(mode == "cleanup", "invalidMode")
+    params, intended = cleanup_plan(configs, fixture, binding, saved)
+    if params is None:
+        return {"status": "originalSemanticsAlreadyPresent", "writes": 0,
+                "semanticLayersSha256": saved["semanticLayersSha256"]}
+    expected = [shared.digest(c.semantic(intended)) for c in configs]
+    ack = exchange.request("config/value/write", params)
+    need(isinstance(ack, dict) and ack.get("filePath") == configs[0].file
+         and ack.get("status") in ("ok", "okOverridden")
+         and isinstance(ack.get("version"), str) and 0 < len(ack["version"]) <= 256, "invalidWriteAck")
+    after = read_configs(exchange, fixture)
+    need([c.identity() for c in after] == saved["identities"]
+         and [shared.digest(c.semantic()) for c in after] == expected, "readbackMismatch")
+    if mode == "cleanup":
+        need(expected == saved["semanticLayersSha256"], "restorationMismatch")
+    return {"status": "originalSemanticsRestoredVerified",
+            "writes": 1, "writeAck": ack["status"], "semanticLayersSha256": expected,
+            "valueType": "null", "rawConfigurationPersisted": False,
+            "boundary": "Exact configuration semantics only; no current conversation, connection or tool availability proof. TOML formatting/comments and opaque versions may change."}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("mode", choices=("baseline", "cleanup"))
+    mode = parser.parse_args().mode
+    shared.write_new(ROOT / (mode + "-attempt.json"), {"mode": mode, "status": "startedNoOutcomeYet", "pid": os.getpid()})
+    exchange = result = failure = trace = None
+    try:
+        absent = subprocess.run(["pgrep", "-fal", "^/Applications/Farfold.app/Contents/MacOS/farfold"], capture_output=True, timeout=10)
+        need(absent.returncode == 1 and not absent.stdout, "formalAppNotClosed")
+        fixture = decode(shared.read_regular(ROOT / "fixture.json", 65536))
+        need(re.fullmatch(r"farfold-native-mcp-add-[0-9a-f-]{36}", fixture["name"]) is not None
+             and fixture["cwd"] == str(ROOT / "fixture")
+             and fixture["entry"] == {"command": str(ROOT / "fixture/never-run.sh"),
+                                      "args": ["--literal=a b", "", "quote \" value", "empty-string-label"],
+                                      "enabled": False}
+             and type(fixture["entry"]["enabled"]) is bool, "fixtureChanged")
+        canary = Path(fixture["entry"]["command"])
+        need(hashlib.sha256(shared.read_regular(canary, 65536)).hexdigest() == fixture["canarySha256"],
+             "fixtureChanged")
+        need(not (ROOT / "fixture/executed-marker").exists(), "fixtureWasExecuted")
+        need(not Path(fixture["cwd"]).is_symlink() and Path(fixture["cwd"]).is_dir(), "fixtureChanged")
+        argv, environment, binding = shared.registered_launch(shared.BACKUP)
+        saved = None
+        if mode == "cleanup":
+            saved = decode(shared.read_regular(ROOT / "baseline.json", 131072))
+        exchange = Exchange(argv, fixture["cwd"], environment)
+        result = operation(exchange, mode, fixture, binding,
+                           lambda record: shared.write_new(ROOT / "baseline.json", record), saved)
+    except BaseException as error:
+        failure = error.code if isinstance(error, Refused) else "localFailure"
+        trace = getattr(error, "cleanup_trace", None)
+    finally:
+        if exchange is not None:
+            try:
+                exchange.close()
+            except BaseException:
+                failure = "cleanupUnknown"
+            trace = exchange.cleanup_trace
+    if failure is not None:
+        shared.write_new(ROOT / (mode + "-failure.json"), {
+            "status": "unknown" if exchange and exchange.write_dispatched else "notCompleted",
+            "code": failure, "writeDispatched": bool(exchange and exchange.write_dispatched),
+            "cleanupVerified": bool(trace and trace["verified"]), "cleanup": trace, "automaticRetry": False})
+        print("Fixture operation did not complete; sanitized failure retained; no retry made.")
+        return 1
+    result.update(cleanupVerified=True, cleanup=trace, rawConfigurationPersisted=False,
+                  officialStartupMayMaintainOwnState=True)
+    shared.write_new(ROOT / (mode + "-result.json"), result)
+    print("Bounded official fixture operation and owned process cleanup verified.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

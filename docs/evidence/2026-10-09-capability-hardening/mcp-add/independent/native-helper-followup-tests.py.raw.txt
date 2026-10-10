@@ -1,0 +1,93 @@
+"""Pure synthetic main-path followup. All official process/DB boundaries forbidden."""
+import copy
+import hashlib
+import importlib.util
+import io
+import json
+from pathlib import Path
+import sqlite3
+import subprocess
+import sys
+import tempfile
+import unittest
+from contextlib import redirect_stdout
+from unittest.mock import patch
+sys.dont_write_bytecode = True
+HERE = Path(__file__).resolve().parent
+spec = importlib.util.spec_from_file_location('original_helper_tests', HERE / 'native-helper-tests.py')
+original = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(original)
+h = original.h
+
+class Followup(unittest.TestCase):
+    def run_main_pair(self, mutate=None):
+        with tempfile.TemporaryDirectory(prefix='followup-only-', dir=HERE) as t:
+            root = Path(t); (root / 'fixture').mkdir()
+            canary = b'never executed\n'
+            fixture = copy.deepcopy(original.F)
+            fixture['cwd'] = str(root / 'fixture')
+            fixture['entry']['command'] = str(root / 'fixture/never-run.sh')
+            fixture['canarySha256'] = hashlib.sha256(canary).hexdigest()
+            stored = {}; peers = []
+            class MainPeer(original.Peer):
+                def __init__(self, *args):
+                    raw = original.base()
+                    if peers:
+                        raw['layers'][0]['config']['mcp_servers'] = {fixture['name']: copy.deepcopy(fixture['entry'])}
+                    super().__init__(raw)
+                    self.cleanup_trace = None; peers.append(self)
+                def close(self):
+                    self.cleanup_trace = {'verified': True}
+            def regular(path, limit):
+                if path.name == 'fixture.json': return json.dumps(fixture).encode()
+                if path.name == 'never-run.sh': return canary
+                if path.name in stored: return json.dumps(stored[path.name]).encode()
+                raise AssertionError('unexpected read')
+            def write(path, value):
+                self.assertNotIn(path.name, stored)
+                stored[path.name] = copy.deepcopy(value)
+            with patch.object(h, 'ROOT', root), patch.object(h.shared, 'read_regular', regular), patch.object(h.shared, 'write_new', write), patch.object(h.shared, 'registered_launch', return_value=(['/synthetic/official'], {}, original.B)), patch.object(h, 'Exchange', MainPeer), patch.object(h.subprocess, 'run', return_value=subprocess.CompletedProcess([], 1, b'', b'')), redirect_stdout(io.StringIO()):
+                with patch.object(sys, 'argv', ['helper', 'baseline']): self.assertEqual(h.main(), 0)
+                self.assertTrue(stored['baseline-result.json']['cleanupVerified'])
+                if mutate: mutate(stored)
+                with patch.object(sys, 'argv', ['helper', 'cleanup']): code = h.main()
+            self.assertFalse((root / 'fixture/executed-marker').exists())
+            return code, stored, peers
+    def test_successful_exact_baseline_permits_one_exact_cleanup(self):
+        code, stored, peers = self.run_main_pair()
+        self.assertEqual(code, 0)
+        self.assertEqual(len(peers), 2)
+        self.assertFalse(peers[0].write_dispatched)
+        self.assertEqual(sum(method == 'config/value/write' for method, _ in peers[1].calls), 1)
+        result = stored['cleanup-result.json']
+        self.assertEqual(result['status'], 'originalSemanticsRestoredVerified')
+        self.assertEqual(result['semanticLayersSha256'], stored['baseline.json']['semanticLayersSha256'])
+        self.assertTrue(result['cleanupVerified'])
+    def test_every_success_authority_field_is_checked_before_exchange(self):
+        mutations = [
+            ('missing result', lambda s: s.pop('baseline-result.json')),
+            ('status', lambda s: s['baseline-result.json'].update(status='unknown')),
+            ('writes', lambda s: s['baseline-result.json'].update(writes=1)),
+            ('cleanupVerified', lambda s: s['baseline-result.json'].update(cleanupVerified=False)),
+            ('cleanup verified', lambda s: s['baseline-result.json']['cleanup'].update(verified=False)),
+            ('cleanup missing', lambda s: s['baseline-result.json'].pop('cleanup')),
+            ('raw persisted', lambda s: s['baseline-result.json'].update(rawConfigurationPersisted=True)),
+            ('baseline bytes hash', lambda s: s['baseline-result.json'].update(baselineReceiptSha256='0'*64)),
+            ('binding hash', lambda s: s['baseline-result.json'].update(bindingSha256='0'*64)),
+            ('fixture hash', lambda s: s['baseline-result.json'].update(fixtureSha256='0'*64)),
+            ('semantics', lambda s: s['baseline-result.json'].update(semanticLayersSha256=['0'*64]*2)),
+            ('baseline bytes changed', lambda s: s['baseline.json'].update(ignoredExtra='changed')),
+        ]
+        for label, mutate in mutations:
+            with self.subTest(label=label):
+                code, stored, peers = self.run_main_pair(mutate)
+                self.assertEqual(code, 1)
+                self.assertEqual(len(peers), 1, 'no cleanup process may start')
+                self.assertFalse(any(p.write_dispatched for p in peers))
+                self.assertFalse(stored['cleanup-failure.json']['automaticRetry'])
+
+if __name__ == '__main__':
+    suite = unittest.TestSuite([unittest.defaultTestLoader.loadTestsFromModule(original), unittest.defaultTestLoader.loadTestsFromTestCase(Followup)])
+    with patch.object(subprocess, 'Popen', side_effect=AssertionError('REAL PROCESS FORBIDDEN')), patch.object(sqlite3, 'connect', side_effect=AssertionError('SQLITE FORBIDDEN')):
+        result = unittest.TextTestRunner(verbosity=2).run(suite)
+    raise SystemExit(0 if result.wasSuccessful() else 1)

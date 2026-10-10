@@ -1,3 +1,5 @@
+import { MCP_ADD_STRINGS as ADD } from "../runtime/mcp_add_strings";
+import "./McpAddForm.css";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { skillManagement } from "../runtime/skill_management_controller";
 import type { InventoryOwner } from "../runtime/extension_inventory_controller";
@@ -60,15 +62,27 @@ export function SkillChangeReview({
           if (allowed()) setClosed(null);
         }}
       >
-        {("kind" in request.target ? MCP : SKILLS).reopen}
+        {
+          ("kind" in request.target
+            ? request.target.kind === "mcpAddition"
+              ? ADD
+              : MCP
+            : SKILLS
+          ).reopen
+        }
       </button>
     );
   const isMcp = "kind" in request.target;
-  const S = isMcp ? MCP : SKILLS;
+  const isAddition =
+    "kind" in request.target && request.target.kind === "mcpAddition";
+  const S = isAddition ? ADD : isMcp ? MCP : SKILLS;
   const outcome = op?.outcome;
   const summary = view.trackingReleased
     ? S.trackingReleased
-    : view.admissionRejected
+    : view.admissionRejected ||
+        (isAddition &&
+          request.action === "inspect" &&
+          outcome === "notDispatched")
       ? S.notDispatched
       : view.unresolved
         ? view.cancelRequested
@@ -120,7 +134,10 @@ export function SkillChangeReview({
       </p>
       {summary && <p role="status">{summary}</p>}
       {view.error && !view.trackingReleased && (
-        <p role="status">{S.errors[view.error]}</p>
+        <p role="status">
+          {(S.errors as Partial<Record<string, string>>)[view.error] ??
+            S.errors.unavailable}
+        </p>
       )}
       {view.unresolved &&
         (op?.writeDispatched || request.action !== "inspect") && (
@@ -133,15 +150,48 @@ export function SkillChangeReview({
               {S.target}：{review.target.displayPath}
             </p>
           )}
-          {"configuredEnabled" in review && (
+          {isAddition && (
+            <div className="mcp-add-review">
+              <p>{ADD.absent}</p>
+              {view.additionInput ? (
+                <>
+                  <p>
+                    {ADD.executable}：
+                    <code>
+                      {JSON.stringify(view.additionInput.executablePath)}
+                    </code>
+                  </p>
+                  <p>{ADD.arguments}</p>
+                  <p>{ADD.quotedValues}</p>
+                  {view.additionInput.args.length ? (
+                    <ol>
+                      {view.additionInput.args.map((arg, i) => (
+                        <li key={i}>
+                          <code>{JSON.stringify(arg)}</code>
+                          {arg === "" && `（${ADD.emptyArgument}）`}
+                        </li>
+                      ))}
+                    </ol>
+                  ) : (
+                    <p>{ADD.noArguments}</p>
+                  )}
+                </>
+              ) : (
+                <p role="alert">{ADD.inputMissing}</p>
+              )}
+            </div>
+          )}
+          {"configuredEnabled" in review && !isAddition && (
             <p>
               {MCP.configured}：
               {review.configuredEnabled ? S.enabled : S.disabled}
             </p>
           )}
-          <p>
-            {S.reported}：{review.reportedEnabled ? S.enabled : S.disabled}
-          </p>
+          {!isAddition && (
+            <p>
+              {S.reported}：{review.reportedEnabled ? S.enabled : S.disabled}
+            </p>
+          )}
           <p>
             {S.scope}：
             {review.writeScope.kind === "profile" ? S.profile : S.user}
@@ -168,12 +218,21 @@ export function SkillChangeReview({
           <button
             type="button"
             className="btn btn-primary"
-            disabled={!active || !skillManagement.canConfirm(owner, review)}
+            disabled={
+              !active ||
+              (isAddition && !view.additionInput) ||
+              !skillManagement.canConfirm(owner, review)
+            }
             onClick={() => {
-              if (allowed()) skillManagement.confirm(owner, review);
+              if (allowed() && (!isAddition || view.additionInput))
+                skillManagement.confirm(owner, review);
             }}
           >
-            {review.requestedEnabled ? S.enable : S.disable}
+            {isAddition
+              ? ADD.confirm
+              : review.requestedEnabled
+                ? S.enable
+                : S.disable}
           </button>
         </>
       )}

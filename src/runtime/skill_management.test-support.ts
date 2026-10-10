@@ -1,5 +1,6 @@
 import {
   isMcpRequest,
+  isAddRequest,
   type ExtensionChangeRequest,
 } from "./extension_management_types";
 import { vi } from "vitest";
@@ -32,7 +33,7 @@ export function operation(
   r: ExtensionChangeRequest,
   state: SkillChangeOperation["state"] = "running",
 ): SkillChangeOperation {
-  if (isMcpRequest(r))
+  if (isMcpRequest(r) || isAddRequest(r))
     throw new Error("This fixture only emits the skill protocol");
   const ready = state === "ready";
   return {

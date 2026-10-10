@@ -1,0 +1,127 @@
+"""Synthetic-only checks. No actual subprocess, SQLite or official config access."""
+import copy
+import hashlib
+import importlib.util
+import io
+import json
+import os
+from pathlib import Path
+import sqlite3
+import subprocess
+import sys
+import tempfile
+import unittest
+from contextlib import redirect_stdout
+from unittest.mock import patch
+sys.dont_write_bytecode=True
+HERE=Path(__file__).resolve().parent
+TARGET=HERE.parent/'2026-10-11-mcp-add-native-preparation'
+sys.path.insert(0,str(TARGET))
+spec=importlib.util.spec_from_file_location('owned_add_fixture_helper',TARGET/'mcp_add_fixture_helper.py')
+h=importlib.util.module_from_spec(spec);spec.loader.exec_module(h)
+
+def base(present=False):
+    raw={'other':{'secret':'SYNTHETIC_PRIVATE_CANARY','array':[1,True,'same']}}
+    if present:raw['mcp_servers']={'other':{'command':'/existing','enabled':True}}
+    return {'layers':[{'name':{'type':'user','file':'/synthetic/config.toml'},'config':raw,'version':'v1'},
+                      {'name':{'type':'project','file':'/synthetic/project.toml'},'config':{'other':'preserve'},'version':'p1','disabledReason':'untrusted'}]}
+F={'name':'farfold-native-mcp-add-00000000-0000-4000-8000-000000000000','cwd':'/synthetic/cwd','entry':{'command':'/synthetic/never-run.sh','args':['--literal=a b','','quote " value','empty-string-label'],'enabled':False},'canarySha256':'not-used-in-pure-functions'}
+B={'agentId':'synthetic','row':'hash','environment':'hash'}
+def configs(raw):return [h.Config(copy.deepcopy(raw)),h.Config(copy.deepcopy(raw))]
+def saved(raw):return h.baseline(configs(raw),F,B)
+def added(raw):
+    raw=copy.deepcopy(raw);raw['layers'][0]['config'].setdefault('mcp_servers',{})[F['name']]=copy.deepcopy(F['entry']);raw['layers'][0]['version']='v2';return raw
+class Peer:
+    def __init__(self,raw,mode='ok'):
+        self.raw=copy.deepcopy(raw);self.mode=mode;self.calls=[];self.write_dispatched=False
+    def initialize(self):self.calls.append(('initialize',None))
+    def request(self,method,params):
+        self.calls.append((method,copy.deepcopy(params)))
+        if method=='config/read':return copy.deepcopy(self.raw)
+        if method!='config/value/write':raise AssertionError('unexpected method')
+        if self.write_dispatched:raise AssertionError('second write')
+        self.write_dispatched=True
+        if params['keyPath']=='mcp_servers':del self.raw['layers'][0]['config']['mcp_servers']
+        else:del self.raw['layers'][0]['config']['mcp_servers'][F['name']]
+        self.raw['layers'][0]['version']='v3'
+        if self.mode=='lost':raise h.Refused('pipeClosed')
+        if self.mode=='drift':self.raw['layers'][1]['config']['other']='changed'
+        return {'filePath':'/synthetic/config.toml','version':'v3','status':'ok'}
+class Tests(unittest.TestCase):
+    def refusal(self,code,fn):
+        with self.assertRaises(h.Refused) as ctx:fn()
+        self.assertEqual(ctx.exception.code,code)
+    def test_readonly_baseline_has_no_write_and_no_raw_secret(self):
+        captured=[];p=Peer(base());r=h.operation(p,'baseline',F,B,captured.append)
+        self.assertEqual([x[0] for x in p.calls],['initialize','config/read','config/read'])
+        self.assertEqual(r['writes'],0);self.assertNotIn('SYNTHETIC_PRIVATE_CANARY',json.dumps([r,captured]))
+    def test_baseline_refuses_foreign_disabled_layer_collision(self):
+        raw=base();raw['layers'][1]['config']['mcp_servers']={F['name']:{'command':'/other'}}
+        self.refusal('targetAlreadyPresent',lambda:saved(raw))
+    def test_no_name_and_exact_original_is_noop(self):
+        raw=base();p=Peer(raw);r=h.operation(p,'cleanup',F,B,lambda _:None,saved(raw));self.assertEqual(r['writes'],0);self.assertFalse(p.write_dispatched)
+    def test_missing_name_plus_other_change_is_not_cleanup_authority(self):
+        raw=base();current=base();current['layers'][0]['config']['other']='changed'
+        self.refusal('fixtureEntryChanged',lambda:h.cleanup_plan(configs(current),F,B,saved(raw)))
+    def test_only_exact_entry_can_be_removed(self):
+        for field,value in [('enabled',True),('enabled',0),('args',[]),('args',['--literal=a','b','','quote " value','empty-string-label']),('command','/other'),('env',{'PRIVATE':'SYNTHETIC_ONLY'})]:
+            with self.subTest(field=field,valueType=type(value).__name__):
+                current=added(base());current['layers'][0]['config']['mcp_servers'][F['name']][field]=value
+                self.refusal('fixtureEntryChanged',lambda:h.cleanup_plan(configs(current),F,B,saved(base())))
+    def test_cleanup_refuses_foreign_layer_collision(self):
+        current=added(base());current['layers'][1]['config']['mcp_servers']={F['name']:{'command':'/other'}}
+        self.refusal('foreignTargetAppeared',lambda:h.cleanup_plan(configs(current),F,B,saved(base())))
+    def test_cleanup_refuses_unrelated_drift(self):
+        for layer in (0,1):
+            current=added(base());current['layers'][layer]['config']['other']='changed'
+            self.refusal('unrelatedDrift',lambda:h.cleanup_plan(configs(current),F,B,saved(base())))
+    def test_exact_cleanup_one_leaf_or_empty_table_and_two_scope_readback(self):
+        for present in (False,True):
+            raw=base(present);p=Peer(added(raw));r=h.operation(p,'cleanup',F,B,lambda _:None,saved(raw))
+            self.assertEqual(r['writes'],1);self.assertEqual(r['semanticLayersSha256'],saved(raw)['semanticLayersSha256'])
+            writes=[a for m,a in p.calls if m=='config/value/write'];self.assertEqual(len(writes),1)
+            self.assertEqual(writes[0]['keyPath'],h.quoted_name(F['name']) if present else 'mcp_servers')
+            self.assertIsNone(writes[0]['value']);self.assertEqual(sum(m=='config/read' for m,_ in p.calls),4)
+    def test_postwrite_lost_or_drift_never_retries(self):
+        for mode,code in [('lost','pipeClosed'),('drift','readbackMismatch')]:
+            p=Peer(added(base()),mode);self.refusal(code,lambda:h.operation(p,'cleanup',F,B,lambda _:None,saved(base())))
+            self.assertTrue(p.write_dispatched);self.assertEqual(sum(m=='config/value/write' for m,_ in p.calls),1)
+    def test_binding_and_fixture_drift_refused(self):
+        self.refusal('launchOrFixtureChanged',lambda:h.cleanup_plan(configs(added(base())),F,{'different':True},saved(base())))
+        f=copy.deepcopy(F);f['entry']['args'][0]='changed'
+        self.refusal('launchOrFixtureChanged',lambda:h.cleanup_plan(configs(added(base())),f,B,saved(base())))
+    def test_literal_dotted_quote_escape(self):
+        self.assertEqual(h.quoted_name('a.b"c\\d'),'mcp_servers."a.b\\"c\\\\d"')
+    def test_config_missing_layers_or_user_name_rejected(self):
+        for raw in ({},{'layers':[]},{'layers':[{'name':{},'config':{},'version':'v'}]}):
+            with self.assertRaises(h.Refused):h.Config(raw)
+    def test_baseline_unknown_process_cleanup_cannot_authorize_later_cleanup_write(self):
+        # Exercise real main with every boundary replaced in RAM; no process/DB.
+        with tempfile.TemporaryDirectory(prefix='helper-only-',dir=HERE) as t:
+            root=Path(t);(root/'fixture').mkdir();canary=b'canary-never-executed\n'
+            fixture=copy.deepcopy(F);fixture['cwd']=str(root/'fixture');fixture['entry']['command']=str(root/'fixture/never-run.sh');fixture['canarySha256']=hashlib.sha256(canary).hexdigest()
+            stored={};peers=[]
+            class MainPeer(Peer):
+                def __init__(self,*args):
+                    raw=base()
+                    if peers:raw['layers'][0]['config']['mcp_servers']={fixture['name']:copy.deepcopy(fixture['entry'])}
+                    super().__init__(raw);self.first=not peers;self.cleanup_trace=None;peers.append(self)
+                def close(self):
+                    self.cleanup_trace={'verified':not self.first}
+                    if self.first:raise h.Refused('cleanupUnknown')
+            def regular(path,limit):
+                if path.name=='fixture.json':return json.dumps(fixture).encode()
+                if path.name=='never-run.sh':return canary
+                if path.name in stored:return json.dumps(stored[path.name]).encode()
+                raise AssertionError('unexpected file read '+str(path))
+            def write(path,value):
+                self.assertNotIn(path.name,stored);stored[path.name]=copy.deepcopy(value)
+            with patch.object(h,'ROOT',root),patch.object(h.shared,'read_regular',regular),patch.object(h.shared,'write_new',write),patch.object(h.shared,'registered_launch',return_value=(['/synthetic/official'],{},B)),patch.object(h,'Exchange',MainPeer),patch.object(h.subprocess,'run',return_value=subprocess.CompletedProcess([],1,b'',b'')),redirect_stdout(io.StringIO()):
+                with patch.object(sys,'argv',['helper','baseline']):self.assertEqual(h.main(),1)
+                self.assertEqual(stored['baseline-failure.json']['code'],'cleanupUnknown')
+                with patch.object(sys,'argv',['helper','cleanup']):h.main()
+            self.assertFalse(any(p.write_dispatched for p in peers),'unknown baseline cleanup must not admit a later configuration write')
+            self.assertFalse((root/'fixture/executed-marker').exists())
+if __name__=='__main__':
+    with patch.object(subprocess,'Popen',side_effect=AssertionError('REAL PROCESS FORBIDDEN')),patch.object(sqlite3,'connect',side_effect=AssertionError('SQLITE FORBIDDEN')):
+        unittest.main(verbosity=2)

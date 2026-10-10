@@ -1,0 +1,37 @@
+{
+  "status": "oneConfirmedSyntheticFailure",
+  "executedOfficialCli": false,
+  "openedSQLite": false,
+  "ranApp": false,
+  "helperModified": false,
+  "tests": {
+    "total": 13,
+    "passed": 12,
+    "failed": 1
+  },
+  "finding": "Baseline JSON is persisted before Exchange.close. A cleanupUnknown failure leaves an originalBaselineVerified record that later cleanup accepts without requiring a successful baseline-result and exact binding. Synthetic real main admitted one write in that later cleanup.",
+  "testBoundary": "All subprocess creation and SQLite connect prohibited. Main Exchange, registered launch, reads/writes and pgrep replaced in RAM. A private empty temporary directory was used; no canary executed.",
+  "proposedFix": "Require a successful baseline-result with exact binding, fixture digest, saved baseline digest and cleanupVerified before cleanup starts. Root owns helper fix.",
+  "refs": [
+    {
+      "path": "output/2026-10-11-mcp-add-native-preparation/mcp_add_fixture_helper.py",
+      "sha256": "04cd348c663528d52800c2e5e3fd32f4cdd5e211269ceec18fe1ce81c5d1f604",
+      "bytes": 10182
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-independent/native-helper-before-baseline-gate.py.txt",
+      "sha256": "04cd348c663528d52800c2e5e3fd32f4cdd5e211269ceec18fe1ce81c5d1f604",
+      "bytes": 10182
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-independent/native-helper-tests.py",
+      "sha256": "4c66d8cf744ce5a500db47c1e088336e782f9f16a71a6db06ab28ea626679a72",
+      "bytes": 9400
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-independent/native-helper-first.txt",
+      "sha256": "cade6a98937c4c03ca55b7c80620673e511e239caccefca0aa8760511561b676",
+      "bytes": 1760
+    }
+  ]
+}

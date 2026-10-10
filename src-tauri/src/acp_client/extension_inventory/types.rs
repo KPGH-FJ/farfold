@@ -32,6 +32,10 @@ pub enum Code {
     ConfigurationReadOnly,
     ConfigurationRejected,
     WriteUncertain,
+    NameConflict,
+    InvalidName,
+    InvalidExecutablePath,
+    InvalidArguments,
 }
 #[derive(Clone, Copy, Debug, Serialize, PartialEq, Eq)]
 pub struct Failure {
@@ -59,6 +63,7 @@ pub struct ExtensionCapabilities {
     pub skills_inventory: InventoryCapability,
     pub skill_enablement: InventoryCapability,
     pub mcp_enablement: InventoryCapability,
+    pub mcp_addition: InventoryCapability,
     pub tool_inventory: &'static str,
 }
 

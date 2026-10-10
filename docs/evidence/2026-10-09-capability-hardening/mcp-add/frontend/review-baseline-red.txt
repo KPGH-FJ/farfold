@@ -1,0 +1,47 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/SkillChangeReview.add.test.tsx (2 tests | 2 failed) 33ms
+   × shows absent saved/report values without presenting them as an existing disabled preference 28ms
+   × reviews the exact local path and every ordered argument as plain text before separate confirmation 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/SkillChangeReview.add.test.tsx > shows absent saved/report values without presenting them as an existing disabled preference
+AssertionError: expected '<section class="skill-change-review" …' to contain '所检查范围中尚无此名称'
+
+Expected: "所检查范围中尚无此名称"
+Received: "<section class="skill-change-review" aria-label="MCP 启用偏好"><div class="skill-change-header"><h5 tabindex="-1">MCP 启用偏好</h5><button type="button" class="btn btn-ghost">收起审阅</button></div><strong>local-test</strong><p class="skill-change-path">/controlled</p><p>所选状态：停用</p><p>用户配置中的偏好：停用</p><p>此文件夹的配置报告：停用</p><p>本次写入范围：用户配置</p><p class="skill-change-path">~/.example/config.toml</p><p>仅修改所示用户配置中的启用偏好，会影响以后沿用同一设置的其他对话；保留该条目的程序、参数、凭据引用和其他设置，不发送对话消息。</p><details><summary>修改范围与注意事项</summary><p>审阅时间：10/11/2026, 2:37:43 AM</p><p>保留其他配置值；配置文件的注释与排版可能变化。</p><p>请先结束其他程序对相关配置的编辑。外部同时修改可能无法完全检测或保留。</p><p>官方程序会使用已有配置、登录状态和环境，可能访问网络及维护自身状态。确认后只请求这项偏好修改，不发送对话消息。</p><p>此次确认限本次审阅有效期间；过期须重新审阅。</p></details><button type="button" class="btn btn-primary">确认停用偏好</button><p>保存的启用偏好不代表当前对话的连接或工具状态。不会自动断开、连接或重启对话。</p><div class="agent-extension-actions"></div></section>"
+
+ ❯ src/components/SkillChangeReview.add.test.tsx:20:16
+     18| it("shows absent saved/report values without presenting them as an exi…
+     19|   const h = reviewed(), html = h.render();
+     20|   expect(html).toContain("所检查范围中尚无此名称");
+       |                ^
+     21|   expect(html).not.toContain("用户配置中的偏好：停用");
+     22|   expect(html).not.toContain("此文件夹的配置报告：停用");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/SkillChangeReview.add.test.tsx > reviews the exact local path and every ordered argument as plain text before separate confirmation
+AssertionError: expected '<section class="skill-change-review" …' to contain '/Applications/Local Tools/runner'
+
+Expected: "/Applications/Local Tools/runner"
+Received: "<section class="skill-change-review" aria-label="MCP 启用偏好"><div class="skill-change-header"><h5 tabindex="-1">MCP 启用偏好</h5><button type="button" class="btn btn-ghost">收起审阅</button></div><strong>local-test</strong><p class="skill-change-path">/controlled</p><p>所选状态：停用</p><p>用户配置中的偏好：停用</p><p>此文件夹的配置报告：停用</p><p>本次写入范围：用户配置</p><p class="skill-change-path">~/.example/config.toml</p><p>仅修改所示用户配置中的启用偏好，会影响以后沿用同一设置的其他对话；保留该条目的程序、参数、凭据引用和其他设置，不发送对话消息。</p><details><summary>修改范围与注意事项</summary><p>审阅时间：10/11/2026, 2:37:43 AM</p><p>保留其他配置值；配置文件的注释与排版可能变化。</p><p>请先结束其他程序对相关配置的编辑。外部同时修改可能无法完全检测或保留。</p><p>官方程序会使用已有配置、登录状态和环境，可能访问网络及维护自身状态。确认后只请求这项偏好修改，不发送对话消息。</p><p>此次确认限本次审阅有效期间；过期须重新审阅。</p></details><button type="button" class="btn btn-primary">确认停用偏好</button><p>保存的启用偏好不代表当前对话的连接或工具状态。不会自动断开、连接或重启对话。</p><div class="agent-extension-actions"></div></section>"
+
+ ❯ src/components/SkillChangeReview.add.test.tsx:28:16
+     26| it("reviews the exact local path and every ordered argument as plain t…
+     27|   const html = reviewed().render();
+     28|   expect(html).toContain("/Applications/Local Tools/runner");
+       |                ^
+     29|   expect(html).toContain("空字符串");
+     30|   expect(html).toContain("two words");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  02:37:42
+   Duration  313ms (transform 122ms, setup 0ms, import 174ms, tests 33ms, environment 0ms)
+

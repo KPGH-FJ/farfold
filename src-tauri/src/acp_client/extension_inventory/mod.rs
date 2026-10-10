@@ -145,9 +145,10 @@ fn query(
     let snapshot = match kind {
         Kind::Mcp => {
             let mut bytes = process::run(command, request)?;
-            let result = output::parse_private(&bytes);
+            let result = output::parse_private(&bytes)
+                .and_then(|(snapshot, entries)| Ok((snapshot, entries, output::names(&bytes)?)));
             bytes.fill(0);
-            let (snapshot, entries) = result?;
+            let (snapshot, entries, names) = result?;
             *request
                 .mcp_targets
                 .lock()
@@ -155,6 +156,7 @@ fn query(
                 row: row.clone(),
                 directory: directory.clone(),
                 entries,
+                names,
             }));
             InventorySnapshot::Mcp(snapshot)
         }

@@ -1,0 +1,148 @@
+{
+  "status": "designedSyntheticDataNotExecuted",
+  "inputId": "10000000-0000-4000-8000-000000000001",
+  "requestId": "20000000-0000-4000-8000-000000000001",
+  "input": {
+    "name": "independent.add-case",
+    "executablePath": "/owned synthetic fixtures/no-execution-canary",
+    "args": [
+      "",
+      " two words ",
+      "--flag=x.y",
+      "literal\"quote",
+      "literal\\backslash",
+      "文字"
+    ]
+  },
+  "sameDisabledDifferentArgsReport": {
+    "name": "independent.add-case",
+    "enabled": false,
+    "disabled_reason": null,
+    "transport": {
+      "type": "stdio",
+      "command": "/owned synthetic fixtures/no-execution-canary",
+      "args": [
+        "文字",
+        "literal\\backslash",
+        "literal\"quote",
+        "--flag=x.y",
+        " two words ",
+        ""
+      ],
+      "env": null,
+      "env_vars": [],
+      "cwd": null
+    },
+    "auth_status": "unsupported",
+    "enabled_tools": null,
+    "disabled_tools": null,
+    "startup_timeout_sec": null,
+    "tool_timeout_sec": null
+  },
+  "sameDisabledUnexpectedEnvReport": {
+    "name": "independent.add-case",
+    "enabled": false,
+    "disabled_reason": null,
+    "transport": {
+      "type": "stdio",
+      "command": "/owned synthetic fixtures/no-execution-canary",
+      "args": [
+        "",
+        " two words ",
+        "--flag=x.y",
+        "literal\"quote",
+        "literal\\backslash",
+        "文字"
+      ],
+      "env": {
+        "SYNTHETIC_PRIVATE_CANARY": "never-public"
+      },
+      "env_vars": [],
+      "cwd": null
+    },
+    "auth_status": "unsupported",
+    "enabled_tools": null,
+    "disabled_tools": null,
+    "startup_timeout_sec": null,
+    "tool_timeout_sec": null
+  },
+  "matchingGetReport": {
+    "name": "independent.add-case",
+    "enabled": false,
+    "disabled_reason": null,
+    "transport": {
+      "type": "stdio",
+      "command": "/owned synthetic fixtures/no-execution-canary",
+      "args": [
+        "",
+        " two words ",
+        "--flag=x.y",
+        "literal\"quote",
+        "literal\\backslash",
+        "文字"
+      ],
+      "env": null,
+      "env_vars": [],
+      "cwd": null
+    },
+    "auth_status": "unsupported",
+    "enabled_tools": null,
+    "disabled_tools": null,
+    "startup_timeout_sec": null,
+    "tool_timeout_sec": null
+  },
+  "completeListWithoutManageableTargets": [
+    {
+      "name": "independent.add-case",
+      "enabled": false,
+      "auth_status": "unsupported",
+      "transport": {
+        "type": "future"
+      }
+    },
+    {
+      "name": "/SYNTHETIC_HIDDEN_NAME",
+      "enabled": false,
+      "auth_status": "unsupported",
+      "transport": {
+        "type": "future"
+      }
+    }
+  ],
+  "inputConflictVariants": [
+    {
+      "field": "inputId",
+      "value": "10000000-0000-4000-8000-000000000002"
+    },
+    {
+      "field": "args",
+      "value": [
+        " two words ",
+        "--flag=x.y",
+        "literal\"quote",
+        "literal\\backslash",
+        "文字"
+      ]
+    },
+    {
+      "field": "args",
+      "value": [
+        "文字",
+        "literal\\backslash",
+        "literal\"quote",
+        "--flag=x.y",
+        " two words ",
+        ""
+      ]
+    },
+    {
+      "field": "executablePath",
+      "value": "/owned synthetic fixtures/replacement"
+    },
+    {
+      "field": "name",
+      "value": "independent.other-name"
+    }
+  ],
+  "boundary": "No actual paths created or command launched. Synthetic placeholder path must be replaced by an owned tempfile canary only when root authorizes actual isolated tests. Reports are controlled data, not real Rust/official wire."
+}

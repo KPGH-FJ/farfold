@@ -57,6 +57,7 @@ impl Fixture {
             row,
             directory: Arc::new(inventory::launch::Directory::open(&cwd).unwrap()),
             entries,
+            names: std::collections::HashSet::from(["fixture.one".to_owned()]),
         }));
         request.finish(Ok(inventory::InventorySnapshot::Mcp(snapshot)));
         std::fs::write(temp.path().join("state.json"),serde_json::to_vec(&json!({"name":"fixture.one","config":config(),"report":report(),"methods":[],"writes":0})).unwrap()).unwrap();

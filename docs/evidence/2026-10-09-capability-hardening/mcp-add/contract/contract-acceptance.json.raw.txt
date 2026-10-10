@@ -1,0 +1,20 @@
+{
+  "atUtc": "2026-10-10T18:37:09.809058+00:00",
+  "status": "rootAcceptedWithIndependentReadOnlyReview",
+  "head": "f83cbff482d2ea5fe7d9c37de0eb91ca9648d360",
+  "refs": {
+    "output/2026-10-11-mcp-add-contract/contract.json": "8ad8f9967953fcb4ed0df82279b79bb9cb92313c3d7a1b27edab1af5caca1622",
+    "output/2026-10-11-mcp-add-contract/contract.ts": "896960ee55ef11a89fdeb8443b04078fbac72b5cf231c276faf343859989f116",
+    "output/2026-10-11-mcp-add-contract/manifest.json": "903856a3526e2b04f777c1fcf9d896ddda07bb20260089727e4dacf4d59fbfb8"
+  },
+  "scope": "Default-disabled local stdio addition via official exact configuration API; original P41 conditions unchanged. No production implementation declared by contract approval.",
+  "reviewNotes": [
+    "Distinct management domain, unchanged inventory Kind",
+    "Review null means absent, never disabled",
+    "Report mismatch may still be disabled when args differ",
+    "client inputId binds exact private immutable input and local plain-text reviewed values",
+    "No universal name-absence, secret-free, executable-readiness or cross-process CAS claim"
+  ],
+  "sourceFreezeReleased": true,
+  "cargoTemporarilyHeld": "Owned stale-object cleanup must finish first"
+}

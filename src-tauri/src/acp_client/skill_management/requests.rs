@@ -1,6 +1,6 @@
 //! Bounded RAM ownership. A dropped observer does not settle a real worker.
 use super::{
-    domain::{PreparedPlan as Plan, Source},
+    domain::{Domain, PreparedPlan as Plan, Source},
     plan::Config,
     types::*,
 };
@@ -21,6 +21,11 @@ pub(super) enum Input {
         inventory: String,
         item: usize,
         enabled: bool,
+    },
+    InspectAdd {
+        inventory: String,
+        input_id: String,
+        input: super::mcp_add_input::Input,
     },
     Confirm {
         review: String,
@@ -88,7 +93,8 @@ impl Job {
             });
             v.settled = true;
             v.phase = Phase::Complete;
-            if v.write_ack == Ack::Rejected && v.action == Action::SetEnabled {
+            if v.write_ack == Ack::Rejected && matches!(v.action, Action::SetEnabled | Action::Add)
+            {
                 // The official pre-write refusal remains a fact even if cleanup fails.
                 v.state = State::Failed;
                 v.outcome = Some(Outcome::Rejected);
@@ -100,7 +106,7 @@ impl Job {
                 } else {
                     State::Failed
                 };
-                if v.action != Action::Inspect {
+                if v.action != Action::Inspect || self.source.domain() == Domain::McpAdd {
                     v.outcome = Some(if v.write_dispatched {
                         Outcome::Unknown
                     } else {
@@ -152,7 +158,7 @@ enum Entry {
     Job(Arc<Job>),
     Tombstone {
         agent: String,
-        kind: Kind,
+        domain: Domain,
         at: Instant,
     },
 }
@@ -212,18 +218,22 @@ impl RegistryState {
         agent: &str,
         id: &str,
         input: &Input,
-        kind: Kind,
+        domain: Domain,
     ) -> Result<Option<Arc<Job>>> {
         match self.entries.get(id) {
             None => Ok(None),
             Some(Entry::Job(j))
-                if j.source.row().id == agent && j.source.kind() == kind && &j.input == input =>
+                if j.source.row().id == agent
+                    && j.source.domain() == domain
+                    && &j.input == input =>
             {
                 Ok(Some(j.clone()))
             }
             Some(Entry::Tombstone {
-                agent: a, kind: k, ..
-            }) if a == agent && *k == kind => Err(Code::Cancelled.into()),
+                agent: a,
+                domain: k,
+                ..
+            }) if a == agent && *k == domain => Err(Code::Cancelled.into()),
             _ => Err(Code::RequestConflict.into()),
         }
     }
@@ -245,8 +255,14 @@ impl RegistryState {
             return Err(Code::Busy.into());
         }
         let action = match input {
-            Input::Inspect { .. } => Action::Inspect,
-            Input::Confirm { .. } => Action::SetEnabled,
+            Input::Inspect { .. } | Input::InspectAdd { .. } => Action::Inspect,
+            Input::Confirm { .. } => {
+                if source.domain() == Domain::McpAdd {
+                    Action::Add
+                } else {
+                    Action::SetEnabled
+                }
+            }
             Input::Recheck { .. } => Action::Recheck,
         };
         let target = source.public()?;
@@ -313,7 +329,7 @@ impl Requests {
         };
         let mut s = self.0.lock().unwrap_or_else(|p| p.into_inner());
         s.prune();
-        if let Some(j) = s.existing(agent, id, &input, kind)? {
+        if let Some(j) = s.existing(agent, id, &input, kind.into())? {
             return Ok((j, false));
         }
         let source = match kind {
@@ -327,6 +343,37 @@ impl Requests {
         s.insert(id, input, source, None, None, enabled)
             .map(|j| (j, true))
     }
+    pub fn begin_add_inspect(
+        &self,
+        agent: &str,
+        id: &str,
+        inventory: &str,
+        input_id: &str,
+        value: super::mcp_add_input::Input,
+    ) -> Result<(Arc<Job>, bool)> {
+        validate(agent, id)?;
+        let input = Input::InspectAdd {
+            inventory: inventory.into(),
+            input_id: input_id.into(),
+            input: value.clone(),
+        };
+        let mut s = self.0.lock().unwrap_or_else(|p| p.into_inner());
+        s.prune();
+        if let Some(j) = s.existing(agent, id, &input, Domain::McpAdd)? {
+            return Ok((j, false));
+        }
+        validate(agent, input_id)?;
+        value.validate()?;
+        let catalogue =
+            crate::acp_client::extension_inventory::mcp_targets::catalogue(agent, inventory)?;
+        let source = Source::Addition(super::mcp_add_input::Source {
+            catalogue,
+            input_id: input_id.into(),
+            input: value,
+        });
+        s.insert(id, input, source, None, None, false)
+            .map(|j| (j, true))
+    }
     pub fn begin_confirm(&self, agent: &str, id: &str, review: &str) -> Result<(Arc<Job>, bool)> {
         self.begin_confirm_kind(agent, id, review, Kind::Skills)
     }
@@ -337,18 +384,27 @@ impl Requests {
         review: &str,
         kind: Kind,
     ) -> Result<(Arc<Job>, bool)> {
+        self.begin_confirm_domain(agent, id, review, kind.into())
+    }
+    pub fn begin_confirm_domain(
+        &self,
+        agent: &str,
+        id: &str,
+        review: &str,
+        domain: Domain,
+    ) -> Result<(Arc<Job>, bool)> {
         validate(agent, id)?;
         let input = Input::Confirm {
             review: review.into(),
         };
         let mut s = self.0.lock().unwrap_or_else(|p| p.into_inner());
         s.prune();
-        if let Some(j) = s.existing(agent, id, &input, kind)? {
+        if let Some(j) = s.existing(agent, id, &input, domain)? {
             return Ok((j, false));
         }
         let r = s.reviews.get(review).ok_or(Code::ReviewExpired)?;
         if r.source.row().id != agent
-            || r.source.kind() != kind
+            || r.source.domain() != domain
             || !r.source.available()
             || !r.inspection.interested()
         {
@@ -381,13 +437,22 @@ impl Requests {
         operation: &str,
         kind: Kind,
     ) -> Result<(Arc<Job>, bool)> {
+        self.begin_recheck_domain(agent, id, operation, kind.into())
+    }
+    pub fn begin_recheck_domain(
+        &self,
+        agent: &str,
+        id: &str,
+        operation: &str,
+        domain: Domain,
+    ) -> Result<(Arc<Job>, bool)> {
         validate(agent, id)?;
         let input = Input::Recheck {
             operation: operation.into(),
         };
         let mut s = self.0.lock().unwrap_or_else(|p| p.into_inner());
         s.prune();
-        if let Some(j) = s.existing(agent, id, &input, kind)? {
+        if let Some(j) = s.existing(agent, id, &input, domain)? {
             return Ok((j, false));
         }
         let Some(Entry::Job(old)) = s.entries.get(operation) else {
@@ -395,8 +460,13 @@ impl Requests {
         };
         let op = old.snapshot();
         if op.agent_id != agent
-            || old.source.kind() != kind
-            || op.action != Action::SetEnabled
+            || old.source.domain() != domain
+            || op.action
+                != if domain == Domain::McpAdd {
+                    Action::Add
+                } else {
+                    Action::SetEnabled
+                }
             || !op.settled
         {
             return Err(Code::Busy.into());
@@ -456,11 +526,14 @@ impl Requests {
         self.get_kind(agent, id, Kind::Skills)
     }
     pub fn get_kind(&self, agent: &str, id: &str, kind: Kind) -> Result<Arc<Job>> {
+        self.get_domain(agent, id, kind.into())
+    }
+    pub fn get_domain(&self, agent: &str, id: &str, domain: Domain) -> Result<Arc<Job>> {
         validate(agent, id)?;
         let mut s = self.0.lock().unwrap_or_else(|p| p.into_inner());
         s.prune();
         match s.entries.get(id) {
-            Some(Entry::Job(j)) if j.source.row().id == agent && j.source.kind() == kind => {
+            Some(Entry::Job(j)) if j.source.row().id == agent && j.source.domain() == domain => {
                 Ok(j.clone())
             }
             _ => Err(Code::UnknownRequest.into()),
@@ -470,11 +543,14 @@ impl Requests {
         self.cancel_kind(agent, id, Kind::Skills)
     }
     pub fn cancel_kind(&self, agent: &str, id: &str, kind: Kind) -> Result<Cancellation> {
+        self.cancel_domain(agent, id, kind.into())
+    }
+    pub fn cancel_domain(&self, agent: &str, id: &str, domain: Domain) -> Result<Cancellation> {
         validate(agent, id)?;
         let mut s = self.0.lock().unwrap_or_else(|p| p.into_inner());
         s.prune();
         let op = match s.entries.get(id) {
-            Some(Entry::Job(j)) if j.source.row().id == agent && j.source.kind() == kind => {
+            Some(Entry::Job(j)) if j.source.row().id == agent && j.source.domain() == domain => {
                 j.operation.abandon();
                 j.pending_review
                     .lock()
@@ -490,8 +566,10 @@ impl Requests {
                 Some(op)
             }
             Some(Entry::Tombstone {
-                agent: a, kind: k, ..
-            }) if a == agent && *k == kind => None,
+                agent: a,
+                domain: k,
+                ..
+            }) if a == agent && *k == domain => None,
             Some(_) => return Err(Code::RequestConflict.into()),
             None => {
                 if s.entries.len() >= 64 {
@@ -501,7 +579,7 @@ impl Requests {
                     id.into(),
                     Entry::Tombstone {
                         agent: agent.into(),
-                        kind,
+                        domain,
                         at: Instant::now(),
                     },
                 );

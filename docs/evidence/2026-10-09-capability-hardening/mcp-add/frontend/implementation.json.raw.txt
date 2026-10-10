@@ -1,0 +1,228 @@
+{
+  "scope": "P41 default-disabled local stdio MCP addition, shared frontend management lifecycle; source and controlled verification, not installed-product acceptance",
+  "baseHead": "f83cbff482d2ea5fe7d9c37de0eb91ca9648d360",
+  "implementation": [
+    "Capability-driven inline input for name, absolute executable path and ordered arguments, including meaningful empty values; no environment, HTTP, credential fields or supplied program execution.",
+    "Copy/freeze the exact input under a fresh inputId. Existing per-Agent management owner retires review on edit/close/scope change, including A-B-A. First submit only inspects; separate explicit confirmation sends reviewId, not configuration keys or versions.",
+    "Same shared management registry/controller and review; fixed port retains original add domain for pending status/cancellation/read-only recheck. Unknown replies do not imply no write or trigger automatic retries.",
+    "Strict add DTO distinguishes absent review values from disabled configuration, and same disabled report with different command/arguments from a matching result. Exact settled inspect failure/cancellation is notDispatched only in add domain; prior skill/MCP rules remain unchanged.",
+    "Paths and every argument rendered as JSON string text with visible boundaries. Empty string annotation supplements the quoted representation; markup stays text. Fixed 28 forbidden control/format ranges match backend exactly."
+  ],
+  "sourceCheckpoint": {
+    "path": "output/2026-10-11-mcp-add-frontend/source-checkpoint.json",
+    "sha256": "a8fc4b1142fb2cba252e8c377ff21bd8d29dbc4bebade38b7d327351d8874784",
+    "bytes": 4216
+  },
+  "checks": {
+    "path": "output/2026-10-11-mcp-add-frontend/final-checks.json",
+    "sha256": "65781e593e87c3593895ea180128aa895e7ed0a4380c107f7fee6ee1d36896da",
+    "bytes": 1691
+  },
+  "regressions": [
+    {
+      "case": "Old shared review falsely labels null absent values disabled and omits input values",
+      "red": {
+        "path": "output/2026-10-11-mcp-add-frontend/review-baseline-red.txt",
+        "sha256": "f320a9051bf6464cebf7ef11d19f5aff8f5103fbeed3924c220b8f48f7b00e89",
+        "bytes": 5146
+      },
+      "failed": 2,
+      "repaired": {
+        "path": "output/2026-10-11-mcp-add-frontend/review-first-green.txt",
+        "sha256": "4bb570b7bb8876685e24d8f7d8674b7ef988c439850d800c6a3e2a6771752812",
+        "bytes": 212
+      },
+      "scope": "real React static rendering; not native UI"
+    },
+    {
+      "case": "Empty argument and literal empty-string label indistinguishable; whitespace/quoted path boundary ambiguous",
+      "red": {
+        "path": "output/2026-10-11-mcp-add-frontend/argument-display-red.txt",
+        "sha256": "eb3480c6e4374cba1a9022b0ffae3db748e1a9b19a4406269219a5d9519fb488",
+        "bytes": 2895
+      },
+      "failed": 1,
+      "repaired": {
+        "path": "output/2026-10-11-mcp-add-frontend/argument-display-controls-green.txt",
+        "sha256": "f7c5a06afacba00ec2baa9f6c0ddbf0e6df3b9849c56d3c7bdbd53dcf45d816e",
+        "bytes": 211
+      },
+      "scope": "real React static rendering"
+    },
+    {
+      "case": "Actual Rust add inspect name conflict/cancellation rejected as invalidOutput by old shared strict lifecycle",
+      "red": {
+        "path": "output/2026-10-11-mcp-add-frontend/actual-wire-red.txt",
+        "sha256": "8e657e2ccc329f70324613200b841837b62298c2c386432fdcd5df45a5ae6a1f",
+        "bytes": 1005
+      },
+      "failed": 2,
+      "otherwisePassed": 14,
+      "repaired": {
+        "path": "output/2026-10-11-mcp-add-frontend/actual-wire-green.txt",
+        "sha256": "584e1a915b3bf2562105ee9671a971df8338e4d277293f92a8c634198c60d870",
+        "bytes": 211
+      },
+      "scope": "unchanged actual Rust serde values into production TS parser"
+    },
+    {
+      "case": "Actual failed/cancelled inspect controller result displayed retired-review summary",
+      "red": {
+        "path": "output/2026-10-11-mcp-add-frontend/inspect-result-copy-red.txt",
+        "sha256": "96a55ccb1fde34308683c3ae56a16df023f8d9e7bc16d3e31f786518f6a7048b",
+        "bytes": 3652
+      },
+      "failed": 2,
+      "repaired": {
+        "path": "output/2026-10-11-mcp-add-frontend/actual-wire-final-green.txt",
+        "sha256": "f64628e2a4ed670684f9b20434c2723b405eadd3d202c91275acfc514ecbe5c0",
+        "bytes": 212
+      },
+      "scope": "actual operation bytes, controlled prerequisite catalogue, real controller and React static render"
+    }
+  ],
+  "actualWire": {
+    "source": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/actual-wire.json",
+      "sha256": "dee93ade587843c9347de9a1ae5a20c357941be767549aab4216ee7e03014aa3",
+      "bytes": 13284
+    },
+    "sourceValues": 14,
+    "checksIncludingControllerAndSSR": 18,
+    "scope": "All 14 values strict parsed losslessly. Same-chain empty inventory/inspection/verified uses actual bytes. Unknown/recheck and failed/cancelled inspect use explicitly controlled prerequisite empty inventory envelopes, preserving actual operation/review IDs and bytes. Synthetic original input matches backend fixture; no official invocation."
+  },
+  "inputPolicy": {
+    "path": "output/2026-10-11-mcp-add-frontend/fixed-input-set-final.json",
+    "sha256": "4534efd08c1e239c5e98c281eb88f93970d7d6a31b5a4586d2b2ffc496840e27",
+    "bytes": 497
+  },
+  "browser": {
+    "executedBy": "root, not repeated by frontend author",
+    "scope": "Actual full App, StrictMode and shared controller with controlled IPC/folders; no real configuration or official program invocation",
+    "final": [
+      {
+        "engine": "webkit",
+        "passed": 23,
+        "pageErrors": 0,
+        "sourceStable": true,
+        "all20OwnedSourceHashesMatch": true,
+        "raw": {
+          "path": "output/2026-10-11-mcp-add-browser/webkit-run03.raw.txt",
+          "sha256": "0b4b261fad60db018eea82bb1d16263b2058f03e58a2dd35983ac36de1a620a4",
+          "bytes": 246544
+        }
+      },
+      {
+        "engine": "chromium",
+        "passed": 23,
+        "pageErrors": 0,
+        "sourceStable": true,
+        "all20OwnedSourceHashesMatch": true,
+        "raw": {
+          "path": "output/2026-10-11-mcp-add-browser/chromium-run03.raw.txt",
+          "sha256": "d142e13bbe7cfb2a3b9aeb933d3e415f159146886b78aafe93a46e5de9eba947",
+          "bytes": 246546
+        }
+      }
+    ],
+    "earlierRun01Run02": "Root preserved earlier raw output; final claims here only run03 and exact final 20 frontend hashes."
+  },
+  "initialDevelopmentFailures": {
+    "typecheckFirstAndSecond": "Local type narrowing/generic/test-support compile errors retained, then typecheck final exit 0; not counted as product regressions.",
+    "refs": [
+      {
+        "path": "output/2026-10-11-mcp-add-frontend/typecheck-first.txt",
+        "sha256": "b60f4cf5590d099292afdc02afd8d3a73d56b0eb3e33253d553c81294d5b26a6",
+        "bytes": 3272
+      },
+      {
+        "path": "output/2026-10-11-mcp-add-frontend/typecheck-second.txt",
+        "sha256": "ce78b487a401c660ade29678f4418810d0c864a589dd87d4baf7eca421fbb61b",
+        "bytes": 1054
+      }
+    ]
+  },
+  "boundaries": [
+    "No full project suite, Cargo, packaging, installation, formal App, real account/Agent request or actual user configuration mutation by this author. Parent runs full integration separately.",
+    "The first add scope is local stdio saved disabled. Does not prove program executability, MCP connection, authentication, tool availability, or updates to current conversations.",
+    "Static Unicode interval policy does not identify all invisible glyphs or secrets. Credentials must not be entered in this plain configuration form.",
+    "No production changes after the final owned source snapshot; evidence JSON formatting only."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/review-baseline-red.txt",
+      "sha256": "f320a9051bf6464cebf7ef11d19f5aff8f5103fbeed3924c220b8f48f7b00e89",
+      "bytes": 5146
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/review-first-green.txt",
+      "sha256": "4bb570b7bb8876685e24d8f7d8674b7ef988c439850d800c6a3e2a6771752812",
+      "bytes": 212
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/argument-display-red.txt",
+      "sha256": "eb3480c6e4374cba1a9022b0ffae3db748e1a9b19a4406269219a5d9519fb488",
+      "bytes": 2895
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/argument-display-controls-green.txt",
+      "sha256": "f7c5a06afacba00ec2baa9f6c0ddbf0e6df3b9849c56d3c7bdbd53dcf45d816e",
+      "bytes": 211
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/actual-wire-red.txt",
+      "sha256": "8e657e2ccc329f70324613200b841837b62298c2c386432fdcd5df45a5ae6a1f",
+      "bytes": 1005
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/actual-wire-green.txt",
+      "sha256": "584e1a915b3bf2562105ee9671a971df8338e4d277293f92a8c634198c60d870",
+      "bytes": 211
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/inspect-result-copy-red.txt",
+      "sha256": "96a55ccb1fde34308683c3ae56a16df023f8d9e7bc16d3e31f786518f6a7048b",
+      "bytes": 3652
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/actual-wire-final-green.txt",
+      "sha256": "f64628e2a4ed670684f9b20434c2723b405eadd3d202c91275acfc514ecbe5c0",
+      "bytes": 212
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/associated-final.txt",
+      "sha256": "d4b2b5735efd64384d64126e13c323f621f961f1290fecbe3cb2a31ed1ddaa02",
+      "bytes": 216
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/typecheck-first.txt",
+      "sha256": "b60f4cf5590d099292afdc02afd8d3a73d56b0eb3e33253d553c81294d5b26a6",
+      "bytes": 3272
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/typecheck-second.txt",
+      "sha256": "ce78b487a401c660ade29678f4418810d0c864a589dd87d4baf7eca421fbb61b",
+      "bytes": 1054
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-contract/contract.json",
+      "sha256": "8ad8f9967953fcb4ed0df82279b79bb9cb92313c3d7a1b27edab1af5caca1622",
+      "bytes": 22648
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-contract/contract.ts",
+      "sha256": "896960ee55ef11a89fdeb8443b04078fbac72b5cf231c276faf343859989f116",
+      "bytes": 4604
+    }
+  ]
+}

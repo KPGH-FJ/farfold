@@ -1,0 +1,94 @@
+{
+  "status": "noRemainingBlockerForRootAuthorizedBaseline",
+  "scope": "Read-only review and pure synthetic tests of the private baseline/exact cleanup helper; not official execution or configuration verification.",
+  "helper": {
+    "path": "output/2026-10-11-mcp-add-native-preparation/mcp_add_fixture_helper.py",
+    "sha256": "1c5cca7c37ff40b317f80f87bb0be084cbd7225b8e84a73cab27653af31a2ff0",
+    "bytes": 11444
+  },
+  "reusedHelpersByteIdenticalToReviewedP41": {
+    "shared_configuration.py": true,
+    "official_exchange.py": true
+  },
+  "confirmedFailure": {
+    "before": {
+      "path": "output/2026-10-11-mcp-add-independent/native-helper-before-baseline-gate.py.txt",
+      "sha256": "04cd348c663528d52800c2e5e3fd32f4cdd5e211269ceec18fe1ce81c5d1f604",
+      "bytes": 10182
+    },
+    "raw": {
+      "path": "output/2026-10-11-mcp-add-independent/native-helper-first.txt",
+      "sha256": "cade6a98937c4c03ca55b7c80620673e511e239caccefca0aa8760511561b676",
+      "bytes": 1760
+    },
+    "passed": 12,
+    "failed": 1,
+    "finding": "Failed owned-process cleanup after baseline left a usable baseline.json that allowed a later cleanup write without a successful baseline result."
+  },
+  "repair": "Cleanup checks a successful baseline-result before constructing Exchange: exact saved bytes SHA, binding SHA, fixture SHA, semantic digests, writes=0, cleanupVerified=true and cleanup.verified=true. Baseline success result is published only after close.",
+  "validation": {
+    "exitCode": 0,
+    "tests": 15,
+    "originalRegressionTests": 13,
+    "newTests": 2,
+    "authorityFieldMutants": 12,
+    "raw": {
+      "path": "output/2026-10-11-mcp-add-independent/native-helper-followup-green.txt",
+      "sha256": "2a21bc8551f4a928f7d7155f7d70c6f31e1871f7c468b9d46c0aa3a65193460c",
+      "bytes": 1387
+    },
+    "script": {
+      "path": "output/2026-10-11-mcp-add-independent/native-helper-followup-tests.py",
+      "sha256": "84d12f2aa8924c0feb58a822511c5c38d503b82f5850b10960f6a02a803a4635",
+      "bytes": 5715
+    }
+  },
+  "reviewedGuards": [
+    "Baseline only reads both official scopes and rejects same-name entries in every raw layer, including disabled layers.",
+    "Cleanup only removes the exact fixture with enabled false boolean and byte-exact ordered args. Missing entry is no-op only if the full original semantics already match.",
+    "Whole selected and both full semantic layer digests must restore; sibling/foreign-layer/config drift rejects. Literal names are quoted as one key.",
+    "One write with official expectedVersion, then two-scope readback; lost ack or mismatch never retries. No setup write exists.",
+    "Raw config stays in RAM, registered launch is reused from reviewed backup reader; input executable is never started. Fixed canary bytes and marker absence checked."
+  ],
+  "executionBoundary": {
+    "officialProcess": false,
+    "SQLite": false,
+    "App": false,
+    "realConfigurationReadOrWrite": false,
+    "testSubprocessCreation": "Popen prohibited",
+    "testDatabase": "sqlite3.connect prohibited",
+    "mainTests": "Exchange/registered launch/read/write/pgrep replaced in RAM; only empty owned temporary directory created."
+  },
+  "limits": [
+    "Baseline approval is root-owned and separate from this review. A future official failure or drift must be retained without automatic retry.",
+    "No proof of MCP connection, authentication, tools or model interaction is made. Official startup may maintain its own state.",
+    "ExpectedVersion is not an all-process external transaction."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-11-mcp-add-native-preparation/fixture.json",
+      "sha256": "5ea07f2d8c567239e7d87d4bc0ad3b17acd33784d55e5d4d0c72efd04b5bc3c8",
+      "bytes": 507
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-native-preparation/shared_configuration.py",
+      "sha256": "64263d27428bc359a4fa69718f082ba72aa7aca57456d4cd9667e1fa42c34409",
+      "bytes": 17070
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-native-preparation/official_exchange.py",
+      "sha256": "dafe2d43ea3a7fbe187c12e8ef0fbdf2807611ac7e608ac35cc0278e8f804f47",
+      "bytes": 9712
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-independent/native-helper-tests.py",
+      "sha256": "4c66d8cf744ce5a500db47c1e088336e782f9f16a71a6db06ab28ea626679a72",
+      "bytes": 9400
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-independent/native-helper-red.json",
+      "sha256": "5579d22cc3aa0babb54a5458df12ce94418c041f4bc9bfa691e08ee7cb976ee6",
+      "bytes": 1731
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 use super::{launch::Directory, output, requests, types::*};
 use crate::meta_store::{AgentRow, MetaStore};
 use serde_json::{Value, json};
-use std::sync::Arc;
+use std::{collections::HashSet, sync::Arc};
 #[derive(Clone, PartialEq)]
 pub(in crate::acp_client) struct McpTarget {
     pub id: usize,
@@ -14,6 +14,7 @@ pub(in crate::acp_client) struct TargetSet {
     pub row: AgentRow,
     pub directory: Arc<Directory>,
     pub entries: Vec<McpTarget>,
+    pub names: HashSet<String>,
 }
 #[derive(Clone)]
 pub(in crate::acp_client) struct Source {
@@ -169,6 +170,74 @@ pub(in crate::acp_client) fn get(agent: &str, id: &str, item: usize) -> Result<S
         request,
         set,
         target,
+        inventory_id: id.into(),
+    })
+}
+
+// No item ordinal: a complete empty catalogue is sufficient to inspect addition.
+#[derive(Clone)]
+pub(in crate::acp_client) struct CatalogueSource {
+    pub request: Arc<requests::Request>,
+    pub set: Arc<TargetSet>,
+    pub inventory_id: String,
+}
+impl CatalogueSource {
+    pub fn cwd(&self) -> &str {
+        self.request.cwd.as_deref().unwrap_or_default()
+    }
+    pub fn available(&self) -> bool {
+        self.request.operation.interested()
+            && self
+                .request
+                .mcp_targets
+                .lock()
+                .unwrap_or_else(|p| p.into_inner())
+                .as_ref()
+                .is_some_and(|v| Arc::ptr_eq(v, &self.set))
+    }
+    pub fn current(&self, store: &MetaStore, require_inventory: bool) -> Result<()> {
+        let row = store
+            .get_agent(&self.set.row.id)
+            .map_err(|_| Code::Unavailable)?;
+        if !row
+            .as_ref()
+            .is_some_and(|r| super::launch::same_selection(r, &self.set.row))
+        {
+            return Err(Code::SelectionChanged.into());
+        }
+        if !self.set.directory.current() {
+            return Err(Code::CwdUnavailable.into());
+        }
+        if require_inventory && !self.available() {
+            return Err(Code::TargetUnavailable.into());
+        }
+        Ok(())
+    }
+}
+pub(in crate::acp_client) fn catalogue(agent: &str, id: &str) -> Result<CatalogueSource> {
+    let request = requests::shared().get(agent, id)?;
+    if !request.operation.interested()
+        || !request.snapshot().is_some_and(|v| {
+            v.settled
+                && v.state == State::Ready
+                && v.kind == Kind::Mcp
+                && matches!(
+                    v.snapshot,
+                    Some(InventorySnapshot::Mcp(McpInventory { complete: true, .. }))
+                )
+        })
+    {
+        return Err(Code::TargetUnavailable.into());
+    }
+    let set = request
+        .mcp_targets
+        .lock()
+        .unwrap_or_else(|p| p.into_inner())
+        .clone()
+        .ok_or(Code::TargetUnavailable)?;
+    Ok(CatalogueSource {
+        request,
+        set,
         inventory_id: id.into(),
     })
 }

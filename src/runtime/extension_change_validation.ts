@@ -6,6 +6,7 @@ import {
 import {
   SKILL_CHANGE_CODES,
   type SkillChangeOperation,
+  type SkillChangeCode,
   type SkillChangeRequest,
 } from "./skill_management_types";
 export function invalid(): never {
@@ -63,7 +64,9 @@ export const OPERATION_KEYS = [
   "review",
   "observation",
 ];
-type Identity = Omit<SkillChangeRequest, "target">;
+type Identity = Omit<SkillChangeRequest, "target" | "action"> & {
+  action: "inspect" | "setEnabled" | "add" | "recheck";
+};
 export function operationIdentity(
   v: Record<string, unknown>,
   expected: Identity,
@@ -83,7 +86,7 @@ export function operationIdentity(
   )
     invalid();
 }
-export function lifecycle(
+export function lifecycle<C extends string = SkillChangeCode>(
   v: Record<string, unknown>,
   expected: Identity,
   facts: {
@@ -91,7 +94,9 @@ export function lifecycle(
     hasReview: boolean;
     matching: boolean;
     different: boolean;
+    inspectionFailureOutcome?: "notDispatched";
   },
+  codes?: readonly C[],
 ) {
   const state = one(v.state, [
     "running",
@@ -130,7 +135,10 @@ export function lifecycle(
           "mismatch",
           "unknown",
         ] as const);
-  const code = v.code === null ? null : one(v.code, SKILL_CHANGE_CODES);
+  const code =
+    v.code === null
+      ? null
+      : (one<string>(v.code, codes ?? SKILL_CHANGE_CODES) as C);
   if (
     settled !== ["ready", "failed", "cancelled"].includes(state) ||
     settled !== (phase === "complete") ||
@@ -141,10 +149,13 @@ export function lifecycle(
   )
     invalid();
   if (expected.action === "inspect") {
+    const requiredOutcome = ["failed", "cancelled"].includes(state)
+      ? (facts.inspectionFailureOutcome ?? null)
+      : null;
     if (
       dispatched ||
       ack !== "none" ||
-      outcome !== null ||
+      outcome !== requiredOutcome ||
       facts.hasObservation ||
       (state === "ready") !== facts.hasReview
     )
@@ -153,7 +164,7 @@ export function lifecycle(
     if (facts.hasReview || (settled && outcome === null)) invalid();
     if (
       outcome === "verified" &&
-      (expected.action !== "setEnabled" ||
+      (!["setEnabled", "add"].includes(expected.action) ||
         !dispatched ||
         !["ok", "okOverridden"].includes(ack) ||
         !facts.matching ||
@@ -177,16 +188,19 @@ export function lifecycle(
     writeAck: ack,
     outcome,
     code,
-  } satisfies Pick<
-    SkillChangeOperation,
-    | "state"
-    | "phase"
-    | "settled"
-    | "writeDispatched"
-    | "writeAck"
-    | "outcome"
-    | "code"
-  >;
+  } satisfies Omit<
+    Pick<
+      SkillChangeOperation,
+      | "state"
+      | "phase"
+      | "settled"
+      | "writeDispatched"
+      | "writeAck"
+      | "outcome"
+      | "code"
+    >,
+    "code"
+  > & { code: C | null };
 }
 export function cancelledOperation(
   raw: unknown,

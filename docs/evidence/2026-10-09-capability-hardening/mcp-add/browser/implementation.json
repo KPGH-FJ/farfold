@@ -1,0 +1,299 @@
+{
+  "status": "controlledFullAppPassed",
+  "actualFrontend": true,
+  "StrictMode": true,
+  "transport": "Controlled IPC and directories only; exceptional terminal fields match actual Rust serialization",
+  "results": [
+    {
+      "engine": "webkit",
+      "checks": [
+        {
+          "name": "complete empty list permits explicit addition",
+          "pass": true
+        },
+        {
+          "name": "invalid relative program path cannot inspect",
+          "pass": true
+        },
+        {
+          "name": "initial entry does not falsely report a retired review",
+          "pass": true
+        },
+        {
+          "name": "Enter dispatches only explicit inspect with exact ordered input and original inventory",
+          "pass": true
+        },
+        {
+          "name": "asynchronous review does not inherit confirmation",
+          "pass": true
+        },
+        {
+          "name": "review shows exact quoted program, ordered arguments including empty and literal empty label, and absence",
+          "pass": true,
+          "detail": {
+            "displayedPath": "\"/controlled/My Programs/never-executed\"",
+            "displayedArgs": [
+              "\"--literal=a b\"",
+              "\"\"",
+              "\"<svg onload=\\\"window.P41_MARKER=1\\\">\"",
+              "\"quote \\\" value \\\\ end\"",
+              "\"空字符串\"",
+              "\"  spaced  \""
+            ]
+          }
+        },
+        {
+          "name": "typed markup stays plain text",
+          "pass": true
+        },
+        {
+          "name": "review distinguishes later configuration effects from connection readiness",
+          "pass": true
+        },
+        {
+          "name": "narrow full dialog has no horizontal overflow",
+          "pass": true,
+          "detail": {
+            "x": 17,
+            "right": 373,
+            "width": 390,
+            "scroll": 354,
+            "client": 354
+          }
+        },
+        {
+          "name": "input A-B-A cannot revive prior review",
+          "pass": true
+        },
+        {
+          "name": "fresh inspection has new input identity after editing",
+          "pass": true
+        },
+        {
+          "name": "review withdrawal focuses its own reopen action",
+          "pass": true
+        },
+        {
+          "name": "reopened withdrawn review cannot confirm",
+          "pass": true
+        },
+        {
+          "name": "settled name conflict keeps input and releases pending controls without writing",
+          "pass": true
+        },
+        {
+          "name": "confirmed inspection cancellation settles only its request and preserves entered values",
+          "pass": true
+        },
+        {
+          "name": "confirmation uses only one review id with no input or write scope",
+          "pass": true
+        },
+        {
+          "name": "unknown write keeps inventory stale and does not retry",
+          "pass": true
+        },
+        {
+          "name": "readonly recheck carries original write identity",
+          "pass": true
+        },
+        {
+          "name": "disabled report with changed arguments remains mismatch",
+          "pass": true
+        },
+        {
+          "name": "late A write cannot enter B panel",
+          "pass": true
+        },
+        {
+          "name": "old completed operation cannot renew confirmation",
+          "pass": true
+        },
+        {
+          "name": "no prompt, MCP connection or unexpected IPC",
+          "pass": true
+        },
+        {
+          "name": "existing draft and new conversation folder preserved",
+          "pass": true
+        }
+      ],
+      "stable": true,
+      "errors": []
+    },
+    {
+      "engine": "chromium",
+      "checks": [
+        {
+          "name": "complete empty list permits explicit addition",
+          "pass": true
+        },
+        {
+          "name": "invalid relative program path cannot inspect",
+          "pass": true
+        },
+        {
+          "name": "initial entry does not falsely report a retired review",
+          "pass": true
+        },
+        {
+          "name": "Enter dispatches only explicit inspect with exact ordered input and original inventory",
+          "pass": true
+        },
+        {
+          "name": "asynchronous review does not inherit confirmation",
+          "pass": true
+        },
+        {
+          "name": "review shows exact quoted program, ordered arguments including empty and literal empty label, and absence",
+          "pass": true,
+          "detail": {
+            "displayedPath": "\"/controlled/My Programs/never-executed\"",
+            "displayedArgs": [
+              "\"--literal=a b\"",
+              "\"\"",
+              "\"<svg onload=\\\"window.P41_MARKER=1\\\">\"",
+              "\"quote \\\" value \\\\ end\"",
+              "\"空字符串\"",
+              "\"  spaced  \""
+            ]
+          }
+        },
+        {
+          "name": "typed markup stays plain text",
+          "pass": true
+        },
+        {
+          "name": "review distinguishes later configuration effects from connection readiness",
+          "pass": true
+        },
+        {
+          "name": "narrow full dialog has no horizontal overflow",
+          "pass": true,
+          "detail": {
+            "x": 17,
+            "right": 373,
+            "width": 390,
+            "scroll": 354,
+            "client": 354
+          }
+        },
+        {
+          "name": "input A-B-A cannot revive prior review",
+          "pass": true
+        },
+        {
+          "name": "fresh inspection has new input identity after editing",
+          "pass": true
+        },
+        {
+          "name": "review withdrawal focuses its own reopen action",
+          "pass": true
+        },
+        {
+          "name": "reopened withdrawn review cannot confirm",
+          "pass": true
+        },
+        {
+          "name": "settled name conflict keeps input and releases pending controls without writing",
+          "pass": true
+        },
+        {
+          "name": "confirmed inspection cancellation settles only its request and preserves entered values",
+          "pass": true
+        },
+        {
+          "name": "confirmation uses only one review id with no input or write scope",
+          "pass": true
+        },
+        {
+          "name": "unknown write keeps inventory stale and does not retry",
+          "pass": true
+        },
+        {
+          "name": "readonly recheck carries original write identity",
+          "pass": true
+        },
+        {
+          "name": "disabled report with changed arguments remains mismatch",
+          "pass": true
+        },
+        {
+          "name": "late A write cannot enter B panel",
+          "pass": true
+        },
+        {
+          "name": "old completed operation cannot renew confirmation",
+          "pass": true
+        },
+        {
+          "name": "no prompt, MCP connection or unexpected IPC",
+          "pass": true
+        },
+        {
+          "name": "existing draft and new conversation folder preserved",
+          "pass": true
+        }
+      ],
+      "stable": true,
+      "errors": []
+    }
+  ],
+  "visualReview": [
+    "Root viewed final-layout run02 WebKit screenshot: quoted empty value, literal empty-label text and surrounding spaces distinguishable, narrow dialog readable",
+    "Final run03 extends same UI with conflict and cancelled-inspection terminal paths; final images retained"
+  ],
+  "refs": [
+    {
+      "source": "output/2026-10-11-mcp-add-browser/webkit-run03.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/webkit-run03.raw.txt",
+      "sha256": "0b4b261fad60db018eea82bb1d16263b2058f03e58a2dd35983ac36de1a620a4"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-browser/chromium-run03.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/chromium-run03.raw.txt",
+      "sha256": "d142e13bbe7cfb2a3b9aeb933d3e415f159146886b78aafe93a46e5de9eba947"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-browser/webkit-run03-review.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/webkit-run03-review.png",
+      "sha256": "d7d88c6e1d6426b2accc579bb8778a51408539a37a0f68b506ac2bada53a2990"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-browser/chromium-run03-review.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/chromium-run03-review.png",
+      "sha256": "9b4f20e02e46c90df0ded12e83c1660c2e4c19c702dc296ccf431729f5743d53"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-browser/webkit-run03-mismatch.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/webkit-run03-mismatch.png",
+      "sha256": "467d349068b4bde3795968d4fe27a1485fd857aa72ef48ebdb5def24df4a3490"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-browser/chromium-run03-mismatch.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/chromium-run03-mismatch.png",
+      "sha256": "e0a48bfd26689d6d54444b63bb82224eebd495f8318646cdc9b421b23a525520"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-browser/run.mjs",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/run.mjs.source.txt",
+      "sha256": "d35c55d53b6df3bb9398e102f6826e40c895b53b4120556b105bd24faf058fcb"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-browser/fixture.tsx",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/fixture.tsx.source.txt",
+      "sha256": "49b5147646d8f64f8ef77f81988ce7eace2cb6236e28de261be197c2d18d98d4"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-browser/serve.mjs",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/serve.mjs.source.txt",
+      "sha256": "7a417f17b811d04e85cec57f6fdb86616408f76aacb6d494dd2def2f43c9d214"
+    },
+    {
+      "source": "output/2026-10-11-mcp-add-browser/index.html",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/browser/index.html.source.txt",
+      "sha256": "d201886462c210266a9cceeda26c24acfb80e8d52dffe4071f98a78d5ad5434c"
+    }
+  ],
+  "boundary": "No official CLI, MCP connection, user config, installed app or real Agent acceptance. Root source before/after equal for each final engine run."
+}

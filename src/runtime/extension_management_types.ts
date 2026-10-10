@@ -1,4 +1,14 @@
-// One finite preference lifecycle for both domains; each wire parser stays exact.
+import {
+  parseMcpAddOperation,
+  parseMcpAddCancellation,
+  freezeMcpAddInput,
+  type McpAddInput,
+  type McpAddRequest,
+  type McpAddOperation,
+  type McpAddReview,
+} from "./mcp_add_types";
+import { validInventoryId } from "./extension_inventory_types";
+// One finite extension configuration lifecycle; each domain wire parser stays exact.
 import type {
   InventoryOwner,
   InventoryResult,
@@ -21,17 +31,25 @@ import {
   type McpChangeOperation,
   type McpChangeReview,
 } from "./mcp_management_types";
-export type ExtensionChangeRequest = SkillChangeRequest | McpChangeRequest;
+export type ExtensionChangeRequest =
+  SkillChangeRequest | McpChangeRequest | McpAddRequest;
 export type ExtensionChangeOperation =
-  SkillChangeOperation | McpChangeOperation;
-export type ExtensionChangeReview = SkillChangeReview | McpChangeReview;
-export interface ExtensionChangeTargetOwner {
+  SkillChangeOperation | McpChangeOperation | McpAddOperation;
+export type ExtensionChangeReview =
+  SkillChangeReview | McpChangeReview | McpAddReview;
+interface TargetOwnerBase {
   owner: InventoryOwner;
   result: InventoryResult;
-  item: InventoryItem | SkillInventoryItem;
-  requestedEnabled?: boolean;
   current(): boolean;
   changed(): void;
+}
+export type ExtensionChangeTargetOwner = TargetOwnerBase &
+  (
+    | { item: InventoryItem | SkillInventoryItem; requestedEnabled?: boolean }
+    | { kind: "mcpAddition"; inputId: string; input: McpAddInput }
+  );
+export function isAddRequest(r: ExtensionChangeRequest): r is McpAddRequest {
+  return "kind" in r.target && r.target.kind === "mcpAddition";
 }
 export function isMcpRequest(r: ExtensionChangeRequest): r is McpChangeRequest {
   return "kind" in r.target && r.target.kind === "mcp";
@@ -40,34 +58,67 @@ export function parseExtensionChangeOperation(
   raw: unknown,
   r: ExtensionChangeRequest,
 ): ExtensionChangeOperation {
-  return isMcpRequest(r)
-    ? parseMcpChangeOperation(raw, r)
-    : parseSkillChangeOperation(raw, r);
+  return isAddRequest(r)
+    ? parseMcpAddOperation(raw, r)
+    : isMcpRequest(r)
+      ? parseMcpChangeOperation(raw, r)
+      : parseSkillChangeOperation(raw, r);
 }
 export function parseExtensionChangeCancellation(
   raw: unknown,
   r: ExtensionChangeRequest,
 ): ExtensionChangeOperation | null {
-  return isMcpRequest(r)
-    ? parseMcpChangeCancellation(raw, r)
-    : parseSkillChangeCancellation(raw, r);
+  return isAddRequest(r)
+    ? parseMcpAddCancellation(raw, r)
+    : isMcpRequest(r)
+      ? parseMcpChangeCancellation(raw, r)
+      : parseSkillChangeCancellation(raw, r);
 }
 export function requestForTarget(
   t: ExtensionChangeTargetOwner,
   requestId: string,
 ): ExtensionChangeRequest | null {
-  const { result, item, owner } = t;
+  const { result, owner } = t;
   if (
     !owner.current() ||
     !t.current() ||
     result.owner !== owner ||
     result.request.agentId !== owner.agentId ||
     result.stale ||
-    !result.snapshot.complete ||
-    result.snapshot.items[item.id] !== item ||
-    !item.name
+    !result.snapshot.complete
   )
     return null;
+  if ("kind" in t) {
+    if (
+      t.kind !== "mcpAddition" ||
+      result.request.kind !== "mcp" ||
+      result.snapshot.source !== "officialCli" ||
+      !validInventoryId(t.inputId)
+    )
+      return null;
+    try {
+      freezeMcpAddInput(t.input);
+    } catch {
+      return null;
+    }
+    return Object.freeze({
+      agentId: owner.agentId,
+      requestId,
+      action: "inspect",
+      cwd: result.request.cwd,
+      requestedEnabled: false,
+      operationId: null,
+      target: Object.freeze({
+        kind: "mcpAddition",
+        inventoryRequestId: result.request.requestId,
+        inputId: t.inputId,
+        name: t.input.name,
+        transport: "stdio",
+      }),
+    });
+  }
+  const { item } = t;
+  if (result.snapshot.items[item.id] !== item || !item.name) return null;
   const base = {
     agentId: owner.agentId,
     requestId,
@@ -124,8 +175,19 @@ export function confirmedRequest(
   requestId: string,
 ): ExtensionChangeRequest {
   // Both the exact review object and its target were validated before this point.
+  if (isAddRequest(old)) {
+    if (review.mutation !== "addDisabledStdioMcp")
+      throw { code: "invalidOutput" };
+    return {
+      ...old,
+      requestId,
+      action: "add",
+      target: Object.freeze({ ...review.target }),
+    };
+  }
   if (isMcpRequest(old)) {
-    if (!("configuredEnabled" in review)) throw { code: "invalidOutput" };
+    if (review.mutation !== "setMcpEnabledPreference")
+      throw { code: "invalidOutput" };
     return {
       ...old,
       requestId,

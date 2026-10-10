@@ -1,0 +1,165 @@
+{
+  "status": "noRemainingBlockerFoundInReviewedSourceAndControlledEvidence",
+  "scope": "Independent focused backend review plus final frontend interoperability delta; no new Cargo, browser, official program, app, SQLite or configuration execution.",
+  "backend": {
+    "sourceCheckpoint": {
+      "path": "output/2026-10-11-mcp-add-backend/source-checkpoint-final.json",
+      "sha256": "312af17b97571bfde8198dd6c31ed24e137eae25e36b5956e37d3439eb1146b1",
+      "bytes": 5658
+    },
+    "implementation": {
+      "path": "output/2026-10-11-mcp-add-backend/implementation.json",
+      "sha256": "f0124831213c286eb0dad24a11e6d81cfd90772ce667afd2c739f1c411a20a85",
+      "bytes": 7864
+    },
+    "sourceHashesMatched": 19,
+    "implementationReferencesMatched": 19,
+    "authorManagementTests": 53,
+    "authorFinalAddTests": 17,
+    "authorInventoryTests": 56,
+    "independentTestsIncluded": 4,
+    "associationInputs": 165,
+    "associationInputsBeforeAfterEqual": true,
+    "lintOnlyFinalDelta": "Nested if collapsed with identical short-circuit evaluation; targeted tests precede that change, current clippy/fmt cover it. Full integration remains root-owned."
+  },
+  "independentCases": [
+    "Wrong-domain cancel tombstone cannot overwrite/retype another domain; original exact cancellation remains.",
+    "Complete raw names survive public hidden/unmanageable projection and block collision before any peer method.",
+    "Matching disabled boolean/config cannot validate changed transport or ordered argv including empty/space arguments.",
+    "Request identity includes inputId and immutable input bytes; altered input conflicts, exact original is idempotent."
+  ],
+  "reviewedBackendBoundaries": [
+    "All raw configuration layers including disabled ones are checked; no arbitrary raw input command is dispatched.",
+    "Plan preserves other raw values, literal name key, complete review/config identity and full report/argv; no optimistic disabled-only success.",
+    "Single shared registry preserves independent domains and one-use review; exact cancellation does not imply a write did not happen.",
+    "Write uncertainty and read-only recheck preserve ack facts; observed does not attribute an earlier write."
+  ],
+  "frontendInteroperability": {
+    "currentOwnedHashesMatched": 20,
+    "checkpoint": {
+      "path": "output/2026-10-11-mcp-add-frontend/source-checkpoint.json",
+      "sha256": "a8fc4b1142fb2cba252e8c377ff21bd8d29dbc4bebade38b7d327351d8874784",
+      "bytes": 4216
+    },
+    "wireValues": 14,
+    "rawMarkers": 7,
+    "rawMergedEqualsPublishedWire": true,
+    "privatePublicWireBytesEqual": true,
+    "confirmedFailure": "Actual inspectNameConflict and inspectCancelled returned terminal notDispatched; shared parser required null and rejected both. Original two failures retained.",
+    "repair": "Only MCP addition passes inspectionFailureOutcome=notDispatched. Ready/active inspections still require null; legacy skill/MCP callers keep prior null contract. Review renders no-write summary, not expired-review or success.",
+    "finalAuthorFocusedTests": 51,
+    "actualControllerSsrBoundary": "Original wire operations unchanged; unknown/failure chain catalogue prerequisite is explicitly controlled. No official UI result is inferred."
+  },
+  "limits": [
+    "Source/controlled peer tests are not installed application or real official configuration acceptance.",
+    "Only focused frontend final delta was independently reread; root owns the actual browser matrix.",
+    "No current MCP connection/tools/authentication readiness or Windows execution claim."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-11-mcp-add-backend/targeted-second.txt",
+      "sha256": "d2837a5abb1715dfe2a6cc04c56431590c0c6bc76d94da0b3d0f49c874410606",
+      "bytes": 37923
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-backend/targeted-final-wire.txt",
+      "sha256": "17c5b9bcb6eb6d272d338c96e058bc2d2cdccb1d7c8d7f080b6855d00aa13147",
+      "bytes": 13118
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-backend/inventory-related.txt",
+      "sha256": "defddd84c62b6282a2495327a73a1e233fa4a44a0e8a8327753299c8dc575b9a",
+      "bytes": 10653
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-backend/targeted-before.json",
+      "sha256": "80efb0736ccb430b071ff10b6e506399c3a429b3a873c3cbf4672d51902b9f45",
+      "bytes": 20209
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-backend/targeted-after.json",
+      "sha256": "a3cadc29f3709a8cbd16e3d40eaa50269f116150855d35c736c6c48dbb316423",
+      "bytes": 20210
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-backend/actual-wire.json",
+      "sha256": "dee93ade587843c9347de9a1ae5a20c357941be767549aab4216ee7e03014aa3",
+      "bytes": 13284
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-backend/actual-wire.raw.txt",
+      "sha256": "4306f7d50b0ed35e25820cb50c8d3ea84fe0e40f4676dcf28502f9b86f67dc06",
+      "bytes": 10700
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-backend/input-transport-red.txt",
+      "sha256": "60d00c6dfbec8e9867af177bd1a9968a86d8d57cb913522172a2fee192bc6798",
+      "bytes": 1019
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-backend/transport-red.txt",
+      "sha256": "b71c97f9628aa696447834cbe11b04e6d696c17a50ba165f18dc925857beae7e",
+      "bytes": 880
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-backend/clippy-final.txt",
+      "sha256": "994cf74e828fa9d28881adc628da39e6350c9ea84bf6f0d2a6dd7daf6044bf76",
+      "bytes": 139
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-backend/format-final.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-backend/mcp_add.before-lint.rs.txt",
+      "sha256": "1976867677e7d57a5643a7b17d6cea3465265794d8648381add22a228c0736b0",
+      "bytes": 6182
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/actual-wire-red.txt",
+      "sha256": "8e657e2ccc329f70324613200b841837b62298c2c386432fdcd5df45a5ae6a1f",
+      "bytes": 1005
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/inspect-result-copy-red.txt",
+      "sha256": "96a55ccb1fde34308683c3ae56a16df023f8d9e7bc16d3e31f786518f6a7048b",
+      "bytes": 3652
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/actual-wire-final-green.txt",
+      "sha256": "f64628e2a4ed670684f9b20434c2723b405eadd3d202c91275acfc514ecbe5c0",
+      "bytes": 212
+    },
+    {
+      "path": "src/runtime/mcp_add_types.ts",
+      "sha256": "bb95be455f8d19457e3a1924afef628bad96de442c6b55984797a0dc42552850",
+      "bytes": 10636
+    },
+    {
+      "path": "src/runtime/extension_change_validation.ts",
+      "sha256": "6964c014e571eac8a01aa8d24124ec1ea788e56b619ea5e583f533f5c7b28576",
+      "bytes": 5635
+    },
+    {
+      "path": "src/runtime/mcp_add_strings.ts",
+      "sha256": "a84bfd611db6088779e193481ade24ba6d28abece272f4bcd6b2ca132a618fb1",
+      "bytes": 2938
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "9794efa304911676fb91abef73d6494ce87aec1354742331ec378ceb96cfd647",
+      "bytes": 10398
+    },
+    {
+      "path": "src/runtime/mcp_add.wire.test.tsx",
+      "sha256": "c8be4f4a3f12b0110037b58193f86f603ac8c588f8d5e6c6e91dd62ca3d9c417",
+      "bytes": 7814
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_independent_tests.rs",
+      "sha256": "14840351585044c51187fe7cdee59dbb90bb0caa965d11f15b4a45124677ff34",
+      "bytes": 6946
+    }
+  ]
+}

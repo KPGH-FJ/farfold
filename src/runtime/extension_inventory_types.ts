@@ -32,6 +32,7 @@ export interface ExtensionCapabilities {
   mcpInventory: InventoryCapability;
   skillsInventory: InventoryCapability;
   skillEnablement: InventoryCapability;
+  mcpAddition?: InventoryCapability; // Legacy absence never grants addition authority.
   mcpEnablement?: InventoryCapability; // Missing legacy report never grants management.
   toolInventory: "unavailable";
 }
@@ -159,7 +160,7 @@ export function parseExtensionCapabilities(
       "skillEnablement",
       "toolInventory",
     ],
-    ["mcpEnablement"],
+    ["mcpEnablement", "mcpAddition"],
   );
   const capability = (
     raw: unknown,
@@ -203,6 +204,14 @@ export function parseExtensionCapabilities(
     mcpInventory.availability !== "available"
   )
     return invalid();
+  const mcpAddition = Object.hasOwn(v, "mcpAddition")
+    ? capability(v.mcpAddition, "officialAppServer")
+    : undefined;
+  if (
+    mcpAddition?.availability === "available" &&
+    mcpInventory.availability !== "available"
+  )
+    return invalid();
   const available =
     mcpInventory.availability === "available" ||
     skillsInventory.availability === "available";
@@ -217,6 +226,7 @@ export function parseExtensionCapabilities(
     skillsInventory,
     skillEnablement,
     ...(mcpEnablement ? { mcpEnablement } : {}),
+    ...(mcpAddition ? { mcpAddition } : {}),
     toolInventory: "unavailable",
   };
 }

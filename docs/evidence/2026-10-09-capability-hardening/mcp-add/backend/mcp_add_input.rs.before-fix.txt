@@ -1,0 +1,80 @@
+//! New user input remains private RAM; the public review carries only its opaque ID.
+use super::types::*;
+use crate::acp_client::extension_inventory::mcp_targets::CatalogueSource;
+use serde::{Deserialize, Serialize};
+#[derive(Clone, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct Input {
+    pub name: String,
+    pub executable_path: String,
+    pub args: Vec<String>,
+}
+#[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct PublicTarget {
+    pub kind: &'static str,
+    pub inventory_request_id: String,
+    pub input_id: String,
+    pub name: String,
+    pub transport: &'static str,
+}
+#[derive(Clone)]
+pub(super) struct Source {
+    pub catalogue: CatalogueSource,
+    pub input_id: String,
+    pub input: Input,
+}
+fn invisible(c: char) -> bool {
+    c.is_control()
+        || matches!(c,'\u{200b}'..='\u{200f}'|'\u{202a}'..='\u{202e}'|'\u{2060}'..='\u{206f}'|'\u{feff}')
+}
+impl Input {
+    pub fn validate(&self) -> Result<()> {
+        if self.name.is_empty()
+            || self.name.len() > 256
+            || self.name.contains("..")
+            || self.name == "codex_apps"
+            || !self
+                .name
+                .bytes()
+                .all(|c| c.is_ascii_alphanumeric() || b"._-".contains(&c))
+        {
+            return Err(Code::InvalidName.into());
+        }
+        let path = &self.executable_path;
+        if path.len() > 4096
+            || !path.starts_with('/')
+            || path.chars().any(invisible)
+            || path[1..]
+                .split('/')
+                .any(|s| s.is_empty() || s == "." || s == "..")
+        {
+            return Err(Code::InvalidExecutablePath.into());
+        }
+        if self.args.len() > 64
+            || self
+                .args
+                .iter()
+                .any(|s| s.len() > 1024 || s.chars().any(invisible))
+            || self.args.iter().map(String::len).sum::<usize>() > 16384
+            || serde_json::to_vec(self)
+                .map_err(|_| Code::InvalidArguments)?
+                .len()
+                > 32768
+        {
+            return Err(Code::InvalidArguments.into());
+        }
+        Ok(())
+    }
+}
+impl Source {
+    pub fn public(&self) -> PublicTarget {
+        PublicTarget {
+            kind: "mcpAddition",
+            inventory_request_id: self.catalogue.inventory_id.clone(),
+            input_id: self.input_id.clone(),
+            name: self.input.name.clone(),
+            transport: "stdio",
+        }
+    }
+}

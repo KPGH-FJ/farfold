@@ -1,0 +1,59 @@
+{
+  "checkedAtUtc": "2026-10-10T18:52:07.181735+00:00",
+  "status": "sourceChallengeAndTestsPreparedNotExecuted",
+  "tests": {
+    "ownedPath": "src-tauri/src/acp_client/skill_management/mcp_add_independent_tests.rs",
+    "count": 4,
+    "registeredBy": "backend author",
+    "cargoExecutedByReviewer": false,
+    "cases": [
+      "Exact UUID tombstones cannot be retyped across Skill/McpEnabled/McpAdd domains; foreign domain conflicts do not revoke the owning tombstone.",
+      "All raw names survive hidden label/unsupported transport projection; syntactically valid raw-only collision refuses before any peer method or write.",
+      "Pure plan requires exact transport and ordered argv including empty/space-only args even when enabled=false and full config matches.",
+      "Same request UUID requires both original inputId and identical input bytes; original Arc remains idempotent, changed ID or empty-to-space argument conflicts."
+    ]
+  },
+  "finding": {
+    "id": "inspect-not-dispatched-dto",
+    "status": "sourceMismatchAwaitingActualWireRed",
+    "backend": "requests.rs Job.finish sets outcome NotDispatched for failed/cancelled McpAdd Inspect",
+    "frontend": "extension_change_validation.ts lifecycle Inspect requires outcome null; parseMcpAddOperation reuses it",
+    "consequence": "Actual name conflict/cancel receipt is rejected as invalidOutput; controller retains unresolved instead of the finite refusal. No installed observation claimed.",
+    "coordination": "Both authors/root informed; keep old parser until actual failed/cancelled Rust DTO is tested; only add-domain terminal-not-dispatched may change, old inspect domains remain strict."
+  },
+  "reviewedScope": [
+    "Input deep clone and immutable args + exact inputId, original InventoryResult/owner/cwd, fresh request UUID",
+    "Wrong domain cannot share solely by inventory kind; source domain identity and add fixed CLI/query path read",
+    "No UI or real official configuration effect established; controlled peer test result still pending"
+  ],
+  "refs": [
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_independent_tests.rs",
+      "sha256": "14840351585044c51187fe7cdee59dbb90bb0caa965d11f15b4a45124677ff34"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "a9a53a6d6b5b9c66bc7c41b05c9a7ca2413ef99a938cfc8be13e1f73209b9196"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_plan.rs",
+      "sha256": "85a5d14d81e320ae942f814c1f53e496c853d1b74c45e4ed9fb5acc358924a9b"
+    },
+    {
+      "path": "src/runtime/extension_change_validation.ts",
+      "sha256": "e3c94f443a894ffed5f156f7a0f9249dca21edd16d96dda188b47a3922e64f5b"
+    },
+    {
+      "path": "src/runtime/mcp_add_types.ts",
+      "sha256": "40680d7ab1a2c7be92b999349f104aa077bed430925793fed71d3541744de3d5"
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "09a55589476e3ec5805e52f8cc771d09b9df51f3cdb151b8db7bd8f8c83284e3"
+    },
+    {
+      "path": "src/components/McpAddForm.tsx",
+      "sha256": "36e4dd1b1abb38602c333241f3ef654379a2297c216309aa355f39bf874491df"
+    }
+  ]
+}

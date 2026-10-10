@@ -1,0 +1,20 @@
+test_baseline_refuses_foreign_disabled_layer_collision (original_helper_tests.Tests) ... ok
+test_baseline_unknown_process_cleanup_cannot_authorize_later_cleanup_write (original_helper_tests.Tests) ... ok
+test_binding_and_fixture_drift_refused (original_helper_tests.Tests) ... ok
+test_cleanup_refuses_foreign_layer_collision (original_helper_tests.Tests) ... ok
+test_cleanup_refuses_unrelated_drift (original_helper_tests.Tests) ... ok
+test_config_missing_layers_or_user_name_rejected (original_helper_tests.Tests) ... ok
+test_exact_cleanup_one_leaf_or_empty_table_and_two_scope_readback (original_helper_tests.Tests) ... ok
+test_literal_dotted_quote_escape (original_helper_tests.Tests) ... ok
+test_missing_name_plus_other_change_is_not_cleanup_authority (original_helper_tests.Tests) ... ok
+test_no_name_and_exact_original_is_noop (original_helper_tests.Tests) ... ok
+test_only_exact_entry_can_be_removed (original_helper_tests.Tests) ... ok
+test_postwrite_lost_or_drift_never_retries (original_helper_tests.Tests) ... ok
+test_readonly_baseline_has_no_write_and_no_raw_secret (original_helper_tests.Tests) ... ok
+test_every_success_authority_field_is_checked_before_exchange (__main__.Followup) ... ok
+test_successful_exact_baseline_permits_one_exact_cleanup (__main__.Followup) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.067s
+
+OK

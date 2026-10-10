@@ -1,0 +1,26 @@
+test_baseline_refuses_foreign_disabled_layer_collision (__main__.Tests) ... ok
+test_baseline_unknown_process_cleanup_cannot_authorize_later_cleanup_write (__main__.Tests) ... FAIL
+test_binding_and_fixture_drift_refused (__main__.Tests) ... ok
+test_cleanup_refuses_foreign_layer_collision (__main__.Tests) ... ok
+test_cleanup_refuses_unrelated_drift (__main__.Tests) ... ok
+test_config_missing_layers_or_user_name_rejected (__main__.Tests) ... ok
+test_exact_cleanup_one_leaf_or_empty_table_and_two_scope_readback (__main__.Tests) ... ok
+test_literal_dotted_quote_escape (__main__.Tests) ... ok
+test_missing_name_plus_other_change_is_not_cleanup_authority (__main__.Tests) ... ok
+test_no_name_and_exact_original_is_noop (__main__.Tests) ... ok
+test_only_exact_entry_can_be_removed (__main__.Tests) ... ok
+test_postwrite_lost_or_drift_never_retries (__main__.Tests) ... ok
+test_readonly_baseline_has_no_write_and_no_raw_secret (__main__.Tests) ... ok
+
+======================================================================
+FAIL: test_baseline_unknown_process_cleanup_cannot_authorize_later_cleanup_write (__main__.Tests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/tw/Desktop/farfold/output/2026-10-11-mcp-add-independent/native-helper-tests.py", line 123, in test_baseline_unknown_process_cleanup_cannot_authorize_later_cleanup_write
+    self.assertFalse(any(p.write_dispatched for p in peers),'unknown baseline cleanup must not admit a later configuration write')
+AssertionError: True is not false : unknown baseline cleanup must not admit a later configuration write
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.010s
+
+FAILED (failures=1)

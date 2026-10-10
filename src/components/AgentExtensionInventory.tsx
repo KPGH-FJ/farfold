@@ -1,3 +1,5 @@
+import { McpAddForm } from "./McpAddForm";
+import { MCP_ADD_STRINGS as ADD } from "../runtime/mcp_add_strings";
 import {
   useEffect,
   useMemo,
@@ -150,6 +152,8 @@ export function AgentExtensionInventory({
   useEffect(() => {
     skillManagement.retireInspectionForResult(owner, result);
   }, [owner, result]);
+  const additionAvailable =
+    kind === "mcp" && cap?.value?.mcpAddition?.availability === "available";
   const stale =
     result?.stale || !active || !selection || result?.cwd !== cwd || !available;
   const reason = !selection
@@ -319,6 +323,27 @@ export function AgentExtensionInventory({
           }
         />
       )}
+      {additionAvailable && result && result.request.kind === "mcp" && (
+        <McpAddForm
+          key={result.request.requestId}
+          owner={owner}
+          result={result}
+          enabled={
+            active &&
+            !blocked &&
+            !stale &&
+            !view.unresolved &&
+            !managementView.unresolved
+          }
+          current={() =>
+            owner.current() &&
+            liveCapability.current === capabilityKey &&
+            additionAvailable &&
+            extensionInventory.isCurrentResult(owner, result)
+          }
+          changed={() => extensionInventory.markStale(result)}
+        />
+      )}
       <SkillChangeReview
         agentId={agentId}
         owner={owner}
@@ -329,9 +354,11 @@ export function AgentExtensionInventory({
         <p>{kind === "mcp" ? S.scope : S.skillScope}</p>
         <p>
           {kind === "mcp"
-            ? managementAvailable
-              ? M.limits
-              : S.limits
+            ? additionAvailable
+              ? ADD.limits
+              : managementAvailable
+                ? M.limits
+                : S.limits
             : managementAvailable
               ? S.skillManagementLimits
               : S.skillLimits}

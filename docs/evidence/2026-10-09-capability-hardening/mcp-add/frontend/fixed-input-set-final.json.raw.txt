@@ -1,0 +1,17 @@
+{
+  "same": true,
+  "rangeCount": 28,
+  "scope": "Exact fixed interval equality; not all invisible glyphs or credentials",
+  "refs": [
+    {
+      "path": "src/runtime/mcp_add_types.ts",
+      "sha256": "bb95be455f8d19457e3a1924afef628bad96de442c6b55984797a0dc42552850",
+      "bytes": 10636
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_input.rs",
+      "sha256": "c0ca244a235e4e675b68900a45db71afd1c2778864d2de12c16900e74a7e753e",
+      "bytes": 2998
+    }
+  ]
+}

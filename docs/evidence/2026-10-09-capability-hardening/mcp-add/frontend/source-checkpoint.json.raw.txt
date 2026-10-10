@@ -1,0 +1,132 @@
+{
+  "scope": "P41 disabled local stdio MCP addition frontend; 12 production and 8 test/support files",
+  "sourceStableAcrossFinalChecks": true,
+  "ownedFiles": [
+    {
+      "path": "src/runtime/mcp_add_types.ts",
+      "sha256": "bb95be455f8d19457e3a1924afef628bad96de442c6b55984797a0dc42552850",
+      "bytes": 10636,
+      "lines": 387
+    },
+    {
+      "path": "src/runtime/mcp_add.ts",
+      "sha256": "44df27812f99f000503d189031a024f265dbbb8a481907891b53476299419260",
+      "bytes": 565,
+      "lines": 11
+    },
+    {
+      "path": "src/runtime/mcp_add_strings.ts",
+      "sha256": "a84bfd611db6088779e193481ade24ba6d28abece272f4bcd6b2ca132a618fb1",
+      "bytes": 2938,
+      "lines": 51
+    },
+    {
+      "path": "src/components/McpAddForm.tsx",
+      "sha256": "36e4dd1b1abb38602c333241f3ef654379a2297c216309aa355f39bf874491df",
+      "bytes": 8103,
+      "lines": 240
+    },
+    {
+      "path": "src/components/McpAddForm.css",
+      "sha256": "cc984ac7711c89ab6b0af8fb9585dd393f0a295707e9dd96d23adb736a7ae0cb",
+      "bytes": 845,
+      "lines": 53
+    },
+    {
+      "path": "src/components/SkillChangeReview.add.test.tsx",
+      "sha256": "9ac9c8ff735009b6061ec89e873211a6718f7a7942d0419791155234467907fa",
+      "bytes": 3911,
+      "lines": 117
+    },
+    {
+      "path": "src/runtime/mcp_add.test-support.ts",
+      "sha256": "a93d57b2999ab777ec93b372052ebcb9d928744d0fe6fdac433790c681ad54ff",
+      "bytes": 4266,
+      "lines": 156
+    },
+    {
+      "path": "src/runtime/mcp_add_types.test.ts",
+      "sha256": "64b265fde3bb2c42fd4f7cc0a4e3c9fdaa70a33f3f7fb95ca28b4a006ab01450",
+      "bytes": 7526,
+      "lines": 240
+    },
+    {
+      "path": "src/runtime/mcp_add_controller.test.ts",
+      "sha256": "47f13ea4624f4a30ac1a5a6358017d4a9124c94f42915442d10df07281bd3ff8",
+      "bytes": 6015,
+      "lines": 169
+    },
+    {
+      "path": "src/components/McpAddForm.test.tsx",
+      "sha256": "eec2afff543f5ce36d72f22dfe4e790d06975231f70a4e3e2487d19adba14bdc",
+      "bytes": 5715,
+      "lines": 187
+    },
+    {
+      "path": "src/runtime/mcp_add.ipc.test.ts",
+      "sha256": "56a68fe05b8c8b25f97a067f1d70a3b5de092f1e1127f53b65d8c763a259bb37",
+      "bytes": 1154,
+      "lines": 26
+    },
+    {
+      "path": "src/runtime/extension_management_types.ts",
+      "sha256": "c1293360faf983107bff826c9eaf835953fc148e7a9e1eac54fc127971646a32",
+      "bytes": 5758,
+      "lines": 205
+    },
+    {
+      "path": "src/runtime/extension_change_validation.ts",
+      "sha256": "6964c014e571eac8a01aa8d24124ec1ea788e56b619ea5e583f533f5c7b28576",
+      "bytes": 5635,
+      "lines": 222
+    },
+    {
+      "path": "src/runtime/skill_management.ts",
+      "sha256": "844367cb0c24f564d3652621de30e09ccf29716ea43ba00a74e52845aece4866",
+      "bytes": 1120,
+      "lines": 26
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "09a55589476e3ec5805e52f8cc771d09b9df51f3cdb151b8db7bd8f8c83284e3",
+      "bytes": 15304,
+      "lines": 509
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "64a0952957e1f2cb2d571a301da122d2069e3183853d9468d69402b21aaa40ef",
+      "bytes": 14400,
+      "lines": 510
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "9794efa304911676fb91abef73d6494ce87aec1354742331ec378ceb96cfd647",
+      "bytes": 10398,
+      "lines": 323
+    },
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "ccff97b89e03582c76662706ce393cac8ff2d867013b63f742d7c67d877de27b",
+      "bytes": 12403,
+      "lines": 370
+    },
+    {
+      "path": "src/runtime/skill_management.test-support.ts",
+      "sha256": "6a2f5949f51a2f0c5dd1508bcd5a757ded495970fac229ed18725336bfe89700",
+      "bytes": 5385,
+      "lines": 188
+    },
+    {
+      "path": "src/runtime/mcp_add.wire.test.tsx",
+      "sha256": "c8be4f4a3f12b0110037b58193f86f603ac8c588f8d5e6c6e91dd62ca3d9c417",
+      "bytes": 7814,
+      "lines": 208
+    }
+  ],
+  "maxLines": 510,
+  "additionalTestInput": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/actual-wire.json",
+    "sha256": "dee93ade587843c9347de9a1ae5a20c357941be767549aab4216ee7e03014aa3",
+    "bytes": 13284
+  }
+}

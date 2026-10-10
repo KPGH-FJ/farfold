@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 pub enum Action {
     Inspect,
     SetEnabled,
+    Add,
     Recheck,
 }
 #[derive(Clone, Copy, Debug, Serialize, PartialEq, Eq)]
@@ -62,6 +63,7 @@ pub struct McpChangeTarget {
 pub enum Target {
     Skill(SkillChangeTarget),
     Mcp(McpChangeTarget),
+    McpAddition(super::mcp_add_input::PublicTarget),
 }
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -77,7 +79,7 @@ pub struct Review {
     pub cwd: String,
     pub target: Target,
     pub requested_enabled: bool,
-    pub reported_enabled: bool,
+    pub reported_enabled: Option<bool>,
     pub write_scope: Scope,
     pub observed_at_ms: u64,
     pub valid_for_ms: u32,
@@ -86,7 +88,9 @@ pub struct Review {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub rules_after: Option<usize>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub configured_enabled: Option<bool>,
+    pub configured_enabled: Option<Option<bool>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name_availability: Option<&'static str>,
     pub mutation: &'static str,
     pub preservation: &'static str,
     pub session_applicability: &'static str,
