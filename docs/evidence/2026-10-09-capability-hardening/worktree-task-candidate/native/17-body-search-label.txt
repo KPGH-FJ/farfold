@@ -1,0 +1,33 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 container
+		2 滚动区
+			3 HTML内容 Description: Farfold, URL: tauri://localhost
+				4 container 找回一段对话
+					5 container
+						6 标题 找回一段对话, Value: 2
+							7 文本 找回一段对话
+						8 按钮 关闭
+					9 container
+						10 文本 搜索范围
+						11 弹出式按钮 搜索范围, Value: 对话资料
+					12 组合框 (expanded, settable) 搜索所有对话, Placeholder: 搜索标题、Agent、分组或位置…, Secondary Actions: Collapse
+						13 文本 搜索标题、Agent、分组或位置…
+					14 列表 (settable)
+					15 文本 包含已归档对话，搜索标题、Agent、分组和位置。
+		16 菜单 Secondary Actions: Cancel
+			17 对话资料
+			18 已加载正文
+	19 关闭按钮
+	20 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	21 最小化按钮
+	22 文本 Farfold
+23 menu bar
+	24 Farfold
+	25 文件
+	26 编辑
+	27 显示
+	28 窗口
+	29 帮助
+
+The focused UI element is 11 弹出式按钮 搜索范围, Value: 对话资料

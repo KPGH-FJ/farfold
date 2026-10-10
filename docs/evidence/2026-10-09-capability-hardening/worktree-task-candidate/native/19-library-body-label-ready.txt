@@ -1,0 +1,81 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 滚动区
+		2 HTML内容 Description: Farfold, URL: tauri://localhost
+			3 container
+				4 图像 Farfold
+				5 按钮 收起导航
+				6 按钮 新对话 草稿 ⌘ N
+				7 按钮 搜索对话 ⌘ K
+				8 container 所有对话
+					9 按钮 所有对话 123
+					10 按钮 收藏 0
+					11 按钮 探索 Agent
+				12 按钮 (expanded) 最近, Secondary Actions: Collapse
+				13 按钮 FARFOLD_REAL_STOP_20261010：这是一次受控停止验证。请只
+				14 按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT
+				15 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
+				16 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
+				17 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
+				18 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
+				19 按钮 FARFOLD_WORKBOOK_4952C692_20261010。不要调用任
+				20 按钮 FARFOLD_TEXT_CD66AAE7_20261010。不要调用任何工具，
+				21 按钮 查看全部
+				22 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
+				23 按钮 管理我的 Agent
+				24 按钮 Codex 27
+				25 按钮 OpenCode 26
+				26 按钮 Grok Build 1
+				27 按钮 Poolside 1
+				28 按钮 MiniMax Code 1
+				29 按钮 Qwen Code 1
+				30 按钮 全部 Agent（29）
+				31 按钮 (expanded) 分组, Secondary Actions: Collapse
+				32 按钮 新建分组
+				33 按钮 验收 0928 4
+				34 按钮 验收 0928的操作
+				35 按钮 原型验收 0930 2
+				36 按钮 原型验收 0930的操作
+				37 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
+				38 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
+				39 container 对话动态
+					40 按钮 9 新回复
+				41 按钮 设置
+				42 文本 属于你的 Agent，在一处相遇。
+				43 container
+					44 文本 对话
+					45 按钮 继续草稿
+					46 标题 所有对话, Value: 1
+						47 文本 所有对话
+					48 文本 123 段对话
+					49 按钮 带入已有对话
+					50 按钮 新对话
+					51 文本 只查找已加载的用户消息、回复和已接收的附件文字。未加载历史、附件文件、思考和工具详情不在此范围。
+					52 弹出式按钮 搜索范围, Value: 已加载正文
+					53 文本栏 (settable) 搜索已加载正文…
+					54 弹出式按钮 所有 Agent
+					55 弹出式按钮 所有分组
+					56 开关按钮 (disabled) 整理, Value: off
+					57 标签组 (selectable) 全部状态
+						58 标签 (selected) 全部 123
+						59 标签 (selectable) 未发内容 14
+						60 标签 (selectable) 等你回应 0
+						61 标签 (selectable) 进行中 0
+						62 标签 (selectable) 新回复 9
+						63 标签 (selectable) 已归档 1
+					64 container 全部
+						65 container
+							66 text 只查找已加载的用户消息、回复和已接收的附件文字。未加载历史、附件文件、思考和工具详情不在此范围。 已加载 0 个对话  ·  123 个对话尚未加载  · 0 个对话的读取尚未确认 输入关键词查找已加载文字。
+	67 关闭按钮
+	68 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	69 最小化按钮
+	70 文本 Farfold
+71 menu bar
+	72 Farfold
+	73 文件
+	74 编辑
+	75 显示
+	76 窗口
+	77 帮助
+
+The focused UI element is 52 弹出式按钮 搜索范围, Value: 已加载正文

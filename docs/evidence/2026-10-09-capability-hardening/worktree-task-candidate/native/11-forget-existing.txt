@@ -1,0 +1,71 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 滚动区
+		2 HTML内容 Description: Farfold, URL: tauri://localhost
+			3 container 工作树
+				4 标题 工作树, Value: 2
+					5 文本 工作树
+				6 按钮 关闭
+				7 文本 工作树提供另一个文件夹；账号、Git设置和部分依赖仍可能共享。
+				8 按钮 选择已有文件夹
+				9 按钮 选择仓库文件夹
+				10 container
+					11 text 创建或接入完成 结果保留在此处。只有明确选择“使用此位置”才会更改当前草稿。 /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-existing
+					12 按钮 重新核查
+				13 标题 已有工作树, Value: 3
+					14 文本 已有工作树
+				15 按钮 刷新清单
+				16 container
+					17 text refs/heads/codex/native-created /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-new 由此处创建  · 使用前将重新核查
+					18 按钮 使用此位置
+					19 按钮 重新核查
+					20 按钮 从清单移除
+					21 text 当前提交 /private/tmp/farfold-worktree-native-rxejy97f/destinations/existing-adopted 已有工作树  · 使用前将重新核查
+					22 按钮 使用此位置
+					23 按钮 重新核查
+					24 按钮 从清单移除
+					25 文本 只移除此清单记录，不删除文件、分支或对话。
+					26 按钮 从清单移除
+					27 text refs/heads/codex/native-existing /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-existing 由此处创建  · 使用前将重新核查
+					28 按钮 使用此位置
+					29 按钮 重新核查
+					30 按钮 从清单移除
+				31 文本 /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-new
+				32 标题 仓库中的位置, Value: 3
+					33 文本 仓库中的位置
+				34 container
+					35 text refs/heads/main /private/tmp/farfold-worktree-native-rxejy97f/source
+					36 按钮 加入清单
+					37 text refs/heads/codex/native-created /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-new
+					38 按钮 加入清单
+					39 text 当前提交 /private/tmp/farfold-worktree-native-rxejy97f/destinations/existing-adopted
+					40 按钮 加入清单
+				41 标题 创建工作树, Value: 3
+					42 文本 创建工作树
+				43 文本 只创建文件，不运行项目脚本、不安装依赖、不复制未提交内容或秘密。
+				44 container
+					45 文本 分支
+					46 弹出式按钮 分支, Value: 使用已有本地分支
+				47 container
+					48 文本 使用已有本地分支
+					49 弹出式按钮 使用已有本地分支, Value: codex/native-existing
+				50 container
+					51 文本 目标父文件夹
+					52 按钮 目标父文件夹
+				53 container
+					54 文本 新文件夹名称
+					55 文本栏 (settable) 新文件夹名称, Value: created-existing
+				56 按钮 创建工作树
+	57 关闭按钮
+	58 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	59 最小化按钮
+	60 文本 Farfold
+61 menu bar
+	62 Farfold
+	63 文件
+	64 编辑
+	65 显示
+	66 窗口
+	67 帮助
+
+The focused UI element is 3 container 工作树

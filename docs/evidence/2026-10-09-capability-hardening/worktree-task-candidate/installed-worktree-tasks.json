@@ -1,0 +1,459 @@
+{
+  "kind": "installed-worktree-and-official-task-stop",
+  "observedAtUtc": "2026-10-10T06:41:39.356113+00:00",
+  "formalSourceCommit": "8780df9effd3832c1d73a494e8b447f91a2949b8",
+  "version": "0.1.7",
+  "platform": "macOS arm64",
+  "formalBundleMatchesCandidate": true,
+  "formalAppNormallyClosed": true,
+  "cases": [
+    {
+      "id": "new-branch-create",
+      "status": "passed",
+      "result": "Installed UI created exact base commit on a new branch; original dirty index/files unchanged."
+    },
+    {
+      "id": "explicit-use-and-draft",
+      "status": "passed",
+      "result": "Creation did not change TR draft location; explicit Use moved the same unsent draft only, without a prompt."
+    },
+    {
+      "id": "adopt-and-forget",
+      "status": "passed",
+      "result": "Pre-existing detached tree adopted with distinct ownership label, then record forgotten; files and Git registration remained."
+    },
+    {
+      "id": "existing-branch-linked-source",
+      "status": "passed",
+      "result": "Fresh branch listing through a linked source created exact existing local branch at the expected target."
+    },
+    {
+      "id": "cold-recheck",
+      "status": "passed",
+      "result": "Normal quit/relaunch kept draft and two created records. Current material recheck resolved restored unknown operation."
+    },
+    {
+      "id": "library-body-label",
+      "status": "passed",
+      "result": "Installed ConversationLibrary accessible body-search name now matches its selected scope."
+    },
+    {
+      "id": "palette-body-label",
+      "status": "followup-required",
+      "result": "Global palette retained generic search-all accessible label; a separate source fix is not in this installed binary."
+    },
+    {
+      "id": "official-task-stop",
+      "status": "passed",
+      "result": "One actual spawned Codex task: native Stop task once, same official task ID reported stopped, process absent before natural deadline and after 73.4 seconds, no completed marker."
+    },
+    {
+      "id": "normal-exit-and-retention",
+      "status": "passed",
+      "result": "Returned to original empty TR draft and normally quit; original 8 composers, 8 feedback groups, 3 queues and all 124 prior session rows equal. One controlled new session/activity added."
+    }
+  ],
+  "dataRetention": {
+    "atUtc": "2026-10-10T06:38:39.324108+00:00",
+    "beforeSha256": "0c0dbd0285b71a54955975c60932a957ea3d3fc059a1c1094b2b1e98ffaec66a",
+    "afterSha256": "46337b87d2c2a18d5653386186d8128e1c122ed555961e633234411082a32d39",
+    "originalUnsentItemsEqual": {
+      "composers": true,
+      "feedback": true,
+      "queues": true
+    },
+    "originalUnsentCounts": {
+      "composers": 8,
+      "feedback": 8,
+      "queues": 3
+    },
+    "wholeUnsentEqual": false,
+    "unsentChangedTopKeys": ["activity"],
+    "originalSessionIdentitiesEqual": true,
+    "originalSessions": 124,
+    "newSessions": 1,
+    "newSessionAgentIds": ["codex"],
+    "newSessionCwds": ["/private/tmp/farfold-async-stop-g06tnnsp"],
+    "newNativeSessionIds": ["01a12485-4dee-7750-ac89-5887304742ba"],
+    "settingsChangedKeys": ["unsentWork.v1", "worktreeLocations.v1"],
+    "allOldSessionRowsEqual": true,
+    "allOriginalActivityEntriesEqual": true,
+    "onlyAddedActivityBelongsToControlledNewSession": true,
+    "otherUnsentTopLevelFieldsExactlyEqual": true
+  },
+  "realAgent": {
+    "agent": "Codex",
+    "selectedModel": "6 Astra",
+    "reasoning": "Ultra",
+    "permissions": "Approve for me",
+    "serviceOrPermissionChanged": false,
+    "nativeSessionId": "01a12485-4dee-7750-ac89-5887304742ba",
+    "officialTaskId": "exec-e9a25c04-cc90-402c-8191-a828e342fbe1",
+    "requests": 1,
+    "commandStarts": 1,
+    "existingCommandPolls": 2,
+    "replyStopClicked": false,
+    "taskStopClicked": 1,
+    "rootOsTerminationSent": false,
+    "officialSessionCopySha256": "d602f83eba9026dabb2d808cb06f4eaffe0c3c54db412d0885d2183c32becd6f",
+    "stopClick": {
+      "atUtc": "2026-10-10T06:35:35.646Z",
+      "action": "native actual task card Stop task once",
+      "buttonLabel": "停止任务",
+      "observedCommand": "python3 -u /private/tmp/farfold-async-stop-g06tnnsp/controlled_wait.py",
+      "notReplyStop": true
+    },
+    "processObservation": {
+      "atUtc": "2026-10-10T06:35:44.804664+00:00",
+      "fixtureStarted": {
+        "marker": "FARFOLD_ASYNC_TASK_STOP_20261010",
+        "pid": 34393,
+        "pgid": 34393,
+        "utc": "2026-10-10T06:35:12.694505+00:00",
+        "monotonic": 0.018221833,
+        "nominalWaitSeconds": 60
+      },
+      "processStatusExit": 1,
+      "processStatus": "",
+      "naturalCompletionMarkerExists": false,
+      "observationOnly": true,
+      "osTerminationSent": false
+    },
+    "afterNaturalDeadline": {
+      "atUtc": "2026-10-10T06:36:26.096801+00:00",
+      "elapsedSinceStartSeconds": 73.402296,
+      "pid": 34393,
+      "pgid": 34393,
+      "processAbsent": true,
+      "naturalCompletionMarkerAbsentBeyondDeadline": true,
+      "fixtureScriptUnchanged": true,
+      "osTerminationSent": false,
+      "noSecondRequest": true,
+      "officialTaskId": "exec-e9a25c04-cc90-402c-8191-a828e342fbe1"
+    },
+    "eventEvidence": "Actual installed UI raw event details contain same-ID async_task_spawned and async_task_state_update stopped; this is not a captured full wire transcript."
+  },
+  "remaining": [
+    "H15 archive/restore/delete not present in installed 8780; next source slice is in progress.",
+    "No installed in-progress worktree cancellation/exit barrier, identity substitution or conflict-race test in this journey; controlled source tests remain separate.",
+    "Global palette accessible scope label and known task event heading need followups. Current raw task events are still titled unrecognized update.",
+    "Earlier whole-reply stop failure remains valid. This one explicit official task stop does not prove all work, all 29 Agents, restart recovery or other environments.",
+    "No Windows validation, public distribution/signing claim, whole-history search acceptance or full product completion."
+  ],
+  "driverNotes": [
+    "Native menu transitions sometimes required a later observation; captures before settled menu changes are retained.",
+    "One stale AX action after cold startup failed before mutation; fresh AX corrected it.",
+    "The first cold-exit process probe used a wrong-case executable and is excluded. App quit/relaunch was observed through CUA. Final closed-app probe uses Info.plist executable and valid POSIX regex.",
+    "One final probe used unsupported noncapturing regex and failed before copying data; corrected probe and actual backup succeeded."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/01-installed-initial.png",
+      "sha256": "5a44264b194eecdbb64cefe7954b2eea2ed551e6a5218ef3d0e3c1746fd9fc5c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/01-installed-initial.txt",
+      "sha256": "391c3ebac9c3e1f7a5cfbaa0999d8825c0542e96015ba68904eb0fb2775deda4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/02-create-form.png",
+      "sha256": "1b685f9825d953152a1bf4a519b50fe3fa47a5a26dfd7c36941d3e73c03ecc0e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/02-create-form.txt",
+      "sha256": "f068331a39920f997c3b08d2505064751a8f5dbf092c21c07a7f1656e6f9f04b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/03-created-ready.png",
+      "sha256": "2e67a526ff54ac2ef61ebf396df848003e4b6929c4dcfa8109e4217e9e1b88e5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/03-created-ready.txt",
+      "sha256": "91cb2b4e2371579fb8abe31979e20cd624c358f5caaf5720568f6ca95042770b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/04-created-draft-unchanged.png",
+      "sha256": "ae22cbddfdc47a626ac4e47f18dda4dd462250c7dba429f819e14593ce55dd13"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/04-created-draft-unchanged.txt",
+      "sha256": "ab28736eb5dbd866c813abc318ccc36244f43420d0337196a48d1db1fb72c984"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/05-use-explicit.png",
+      "sha256": "fd7649ec34ee41961c915eceb695f52b45ba2beb0ddd2fe0337afedc32ed3406"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/05-use-explicit.txt",
+      "sha256": "a1f5e6f52fbc76f7d415b34665c7f75bf59acd88c05b32bd7963b446d0451864"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/06-use-ready.png",
+      "sha256": "bf195fb4b959ff627aed8d87a100f47d1d2fe2f250692bc1602808f73a13aa5a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/06-use-ready.txt",
+      "sha256": "7c974eda6aebd9760becab9cb39a38c865701f5df1fb5fc6da58bdfd7fff8f9b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/07-adopt-existing.png",
+      "sha256": "2ffa9666806e5c9f38cb925058cecb9dcfbce98747c92d020fafaa18a0d6b6c7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/07-adopt-existing.txt",
+      "sha256": "702985c203156ddc68f4995862a8de93378511572a88d2fec273ed033c43de58"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/08-inspection-expired.png",
+      "sha256": "64caa6cbda90a3a925db2cdf96f45c92da4f14c68e6c2f099ee6ec0d67229543"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/08-inspection-expired.txt",
+      "sha256": "0f7362f5b141997a40a08f9fd2a0a1ffd87a26740ff4ec9f76244d9ee1dfe7ab"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/09-existing-branch-result.png",
+      "sha256": "4608143ee337ae1a8be959ed5a98720d688dc69ef2fa6d2f701d4271fddbb39e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/09-existing-branch-result.txt",
+      "sha256": "deafdf2d1def05d740b52c9ddf0894a0a25298f3e4bfc2649a3963674756f737"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/10-existing-branch-ready.png",
+      "sha256": "2ce3c7fcb3e389d10dec10d6ca6a5d34b52128410dbb149f455c108503a84534"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/10-existing-branch-ready.txt",
+      "sha256": "ce7efc8efa81e7479cd4e47f7cd53002af21aa4a2dcf26b121eb9f9fceb00e62"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/11-forget-existing.png",
+      "sha256": "a449247872da8ca92a8089903f9b367b1d83b37d4e7c69f129181d950b88e3e3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/11-forget-existing.txt",
+      "sha256": "8102cd58e347401f49c08b1b782d4c64896a15e0b9e1508f2f28243022a58dd2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/12-forgotten-ready.png",
+      "sha256": "45cd56e1e4434c034d82febac54a41068828365e268ddea00319ff4b5c32f496"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/12-forgotten-ready.txt",
+      "sha256": "0929e9f8e0c823d61a13fba6acd0c1319436c81111d5ae725c508392a7dc0a41"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/13-pre-cold-restart.png",
+      "sha256": "52d4d8d10b69651903fadeca60cb1045b23f57453476645973b07022b9312f97"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/13-pre-cold-restart.txt",
+      "sha256": "7c974eda6aebd9760becab9cb39a38c865701f5df1fb5fc6da58bdfd7fff8f9b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/14-cold-draft.png",
+      "sha256": "9fe233b2bfcfb4d6fabf89b4a7117e207ada02e1ec987dfe77bdd90cb6fcf82d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/14-cold-draft.txt",
+      "sha256": "192e150b45530984a27c58c126c91a1cae66683b7e5e0ef553ceae700bde2592"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/15-cold-worktree-list.png",
+      "sha256": "326781e86125c21ceb2d75ddfbbb02b8010262487460560b87660e8e4dd30b0c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/15-cold-worktree-list.txt",
+      "sha256": "3e394c135101a1d06b181957571f8e953c059be698b5c2cc44b3c95673166da4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/16-cold-rechecked.png",
+      "sha256": "01fa80020867a17f5f2c74b23f2b80314783218e2314dea5f0c1556fcb855630"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/16-cold-rechecked.txt",
+      "sha256": "a256b72087675c9457d6ff693ef297b34fbb58f1a0eee285ba9df41c9c72c745"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/17-body-search-label.png",
+      "sha256": "919d19da6ccdaab0ca921b5b3bbc18c02810255871bda500077b1096e61329d1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/17-body-search-label.txt",
+      "sha256": "bb1f00917eb79d7a3bcd317b162c98f0d2fdea15df8a902ef5068a805965d5ba"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/18-body-search-label-ready.png",
+      "sha256": "abe0d3ffbd0e3821b495315ad41c2e51f1b5535d3a4831dffce24c252ddc481f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/18-body-search-label-ready.txt",
+      "sha256": "f166338fa881a01f82999ceec6e976427cc1481620ca0fbd9f79c849759b5760"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/19-library-body-label-ready.png",
+      "sha256": "c67979d0657bca7e268d50fae675fcbbe864a7e484347ea7e1adfc48e88e83bb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/19-library-body-label-ready.txt",
+      "sha256": "e6194725b6dab13b7790e598888b77256c54c9c4e46073c291b3bb6f8098b850"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/20-async-preflight.png",
+      "sha256": "eb9a3112713f2a228ca3e4afca1eab04fc07e2fffc587b52802460ca8e6686d7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/20-async-preflight.txt",
+      "sha256": "2f64bed9e38af48545c98b03d455cfac6d504855c009616052cc48c078090d38"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/21-async-dispatched.png",
+      "sha256": "86fe80bbeecd3e14f53a6a9208a2f0d557fefe8819e631a08caae045eca7dd2f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/21-async-dispatched.txt",
+      "sha256": "89f79ca400231533a32fbe3ecfc0559ddac8013ee482b118eeaaf5e0b84fb335"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/22-async-started.png",
+      "sha256": "f14a981bbb974a27458017d66a67966cd9f60603eecec7aec10db0a3b89184b8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/22-async-started.txt",
+      "sha256": "4f12a7f33cbc919f5cc8300ad2f8f5e027832ce5bad6370f7e43d6590062bcbd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/23-async-process-visible.png",
+      "sha256": "43501a4cfd4aa40cee91e9d7c4c2943464c18d67fcdddeb0532eed840dcdb5ca"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/23-async-process-visible.txt",
+      "sha256": "71b522bcd7542c8b88ffa314ead5131d3757766b038003658ba973d6b3e661d7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/24-async-stop-requested.png",
+      "sha256": "5600acb9bc13836c0798f545f6686277dcd9e7fb4b3c09ce2f73a9ed24e8a5c5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/24-async-stop-requested.txt",
+      "sha256": "17793f0e3f0ffa29d92cd253ac2276dad78d8877677e36daa4d061172f6b4471"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/25-async-official-event.png",
+      "sha256": "6b0981e4080564b1b10ec7e77650b87296534e95a73794444a776d8aaf0bd98e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/25-async-official-event.txt",
+      "sha256": "e878ac173171f578acf7d926a1e113046793dec3a3bbfa9df4cbfeb9961110b3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/26-async-terminal-event.png",
+      "sha256": "81205e6f73086969f9d376409201e7068bb45752d7c337cc0340c432e59780b1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/26-async-terminal-event.txt",
+      "sha256": "2a8c6698d3f2d7f06c5d9e0a36b9d03234bcb886154d267224113ab5fba9eddb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/27-async-stopped-envelope.png",
+      "sha256": "7ce526d6d591f369467c1ba3a071e2f6eecdbf55e542cf4b8e1b42d0a891ceab"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/27-async-stopped-envelope.txt",
+      "sha256": "a4bafaceab648f117915c9d740c82c30ac503d845f3971426bdf92308ac865ba"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/28-restored-idle.png",
+      "sha256": "e6ea4871ba3d2a4499a3c43cd5de9d4cb16c67bdcd925be6dbaad21c84ebbae1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native/28-restored-idle.txt",
+      "sha256": "c1a5b10a491a4aaf931682f9f2faceecb87dbd91e5726419ae4eb3297ce7cc11"
+    },
+    {
+      "path": "output/2026-10-10-worktree-task-native/normal-exit.json",
+      "sha256": "3287f373ce8d3c8e898c5974bb6ec702c8e3bde0dca637bbeb4ce8864e9bd07a"
+    },
+    {
+      "path": "output/2026-10-10-worktree-task-native/metadata-backup-receipt.json",
+      "sha256": "e78ee29350a009f036def69100bbd72bc1bd93201cf76497bb3c39129242def7"
+    },
+    {
+      "path": "output/2026-10-10-worktree-task-native/data-retention.json",
+      "sha256": "caa8187f3c028a40bf6ecbbf47fd5c984fa200507aa69b3085d13e02d9a85ebc"
+    },
+    {
+      "path": "output/2026-10-10-worktree-task-native/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0"
+    },
+    {
+      "path": "output/2026-10-10-worktree-task-native/write_native_receipt.py",
+      "sha256": "2006979d73f1921116cb8db0dfc0d4f60912be8adfe5c5313fb42c1cf7c9f1b3"
+    },
+    {
+      "path": "output/2026-10-10-worktree-native/fixture-before.json",
+      "sha256": "c1bf3ebdbf534ee574b1c2ce6433e6fb6d2bb65a40faa0fefd58ee9904f07a6e"
+    },
+    {
+      "path": "output/2026-10-10-worktree-native/adoption-fixture.json",
+      "sha256": "c30cccd8e5ce437a9cd9e6b393c0d16d470487b588db6c337dbf3a2443729673"
+    },
+    {
+      "path": "output/2026-10-10-worktree-native/created-new-verified.json",
+      "sha256": "4115d3d54956dbf6cde6de65696b22b1913b5775b796971e318f72c376580e6a"
+    },
+    {
+      "path": "output/2026-10-10-worktree-native/existing-branch-and-forget.json",
+      "sha256": "457e4f91e68bea0710c387359b25c3bae1b744f93c5cddd60057d0d3c4d35a54"
+    },
+    {
+      "path": "output/2026-10-10-async-task-install/fixture-prepared.json",
+      "sha256": "00d5e08beaee13a25e1054dfea235ea7ac8ed2e21e43209cbf245d1fb9bd1ee0"
+    },
+    {
+      "path": "output/2026-10-10-async-task-install/prepared-prompt.txt",
+      "sha256": "4a551acabc2b91aa722a628d4c3b9552b0e30c63235b9abd7f1e710f84b0e8ef"
+    },
+    {
+      "path": "output/2026-10-10-async-task-install/dispatch.json",
+      "sha256": "e8e532551212e7e44ec30dba4d43704a8feaf60d29f21f1c59e98f1820f42213"
+    },
+    {
+      "path": "output/2026-10-10-async-task-install/task-stop-click.json",
+      "sha256": "6f714946cf80c50164d7778bbe1885f62361458d145657a07d47261f809cf5a9"
+    },
+    {
+      "path": "output/2026-10-10-async-task-install/started.json",
+      "sha256": "84caed876c190a038cc8b15271fecdeea188db3b9480c1f80f9a05baf9504ff3"
+    },
+    {
+      "path": "output/2026-10-10-async-task-install/immediate-stop-observation.json",
+      "sha256": "c0df26083e50efd5194c3bc7b1059d4117181c1c38b8608c391a85483464528f"
+    },
+    {
+      "path": "output/2026-10-10-async-task-install/post-deadline-observation.json",
+      "sha256": "fe7ce3152763e478ad9b13951f22c88d1caf4447e60cc9347ac73f21ddd13059"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/candidate.json",
+      "sha256": "173f1803387412bb431e1e5ce8b9b8c8a443331ef5482dd82260911ed2c38444"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/candidate-independent.json",
+      "sha256": "ddafd7296b4bc8b3337b8442782fea3690ee2d4a5bfdb54d33d56897380efdd0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/installed-data-retention.json",
+      "sha256": "ccaf364538554e901daac014929ebd474f9b50804d6217b02104c229fd38b95d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/install-independent.json",
+      "sha256": "5d05d6725978a60dbd3cbd8f427cdf79b6be4a2c5927df752c0e090eab15c962"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "019b434c5d5af5a0091eac638e51e75d2d1dc23537f2a76644c235bce3bf0d0e"
+    }
+  ]
+}

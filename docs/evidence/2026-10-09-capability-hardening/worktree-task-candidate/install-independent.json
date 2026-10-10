@@ -1,0 +1,204 @@
+{
+  "checkedAtUtc": "2026-10-10T06:02:11.235864+00:00",
+  "sourceCommit": "8780df9effd3832c1d73a494e8b447f91a2949b8",
+  "result": "passed",
+  "failures": [],
+  "checks": {
+    "receiptChain": {
+      "passed": true,
+      "candidateChecks": 9,
+      "candidateIndependent": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/candidate-independent.json",
+        "sha256": "ddafd7296b4bc8b3337b8442782fea3690ee2d4a5bfdb54d33d56897380efdd0",
+        "bytes": 4486
+      }
+    },
+    "normalExitAndInstall": {
+      "passed": true,
+      "normalExitObservedBy": "Root; independent review verifies records/hashes, not a second native observation.",
+      "operation": {
+        "path": "output/2026-10-10-worktree-task-install/install-operation.json",
+        "sha256": "cf19232258447bfe9de312304de12446df2a0fc1564edfd44c6129bd7cf914bc",
+        "bytes": 2871
+      },
+      "phase": "installedVerifiedNotLaunched",
+      "copyStarted": true,
+      "dataRetentionComparisonPending": "Historical installer flag; completed aggregate and independent raw manifest checks below close this step."
+    },
+    "completePrivateManifests": {
+      "passed": true,
+      "snapshots": [
+        {
+          "phase": "before",
+          "sha256": "1c38d2bc14a368794e540b033d86d857428189ed1b39338ecdb2ba09119163f4",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "preinstall",
+          "sha256": "1c38d2bc14a368794e540b033d86d857428189ed1b39338ecdb2ba09119163f4",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "after",
+          "sha256": "1c38d2bc14a368794e540b033d86d857428189ed1b39338ecdb2ba09119163f4",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        }
+      ],
+      "counts": {
+        "appData": {
+          "directory": 21360,
+          "file": 195450,
+          "special": 0,
+          "symlink": 328
+        },
+        "cache": {
+          "directory": 8,
+          "file": 2,
+          "special": 0,
+          "symlink": 0
+        },
+        "webkit": {
+          "directory": 152,
+          "file": 100,
+          "special": 0,
+          "symlink": 0
+        }
+      },
+      "allThreeEqual": true,
+      "contentsPrinted": false
+    },
+    "metadataCopyProtection": {
+      "passed": true,
+      "method": "Read retained captured main/WAL/SHM and backup hashes; SQLite integrity/iterdump digest only on second disposable private copies; original database never opened.",
+      "captureHashesMatchAllThreeManifests": true,
+      "capturedFileCount": 3,
+      "capturedAndBackupIntegrity": "ok",
+      "logicalContentsEqual": true,
+      "originalRetainedCopyHashesUnchanged": true,
+      "backupSha256": "0c0dbd0285b71a54955975c60932a957ea3d3fc059a1c1094b2b1e98ffaec66a",
+      "rawRowsPrintedOrSaved": false
+    },
+    "formalCandidateExactFiles": {
+      "passed": true,
+      "exactFileCount": 5,
+      "hashes": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "b850bcb19a6d3706aa9a6788d0586cfdc30a36921b5d75a8c61666b95d30086e",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      },
+      "modes": {
+        "Contents/Info.plist": "0o644",
+        "Contents/MacOS/farfold": "0o755",
+        "Contents/Resources/icon.icns": "0o644",
+        "Contents/Resources/release-manifest.json": "0o644",
+        "Contents/_CodeSignature/CodeResources": "0o644"
+      }
+    },
+    "archive": {
+      "passed": true,
+      "path": "src-tauri/target/internal-candidate/2026-10-10-8780df9e/Farfold-0.1.7-8780df9e.zip",
+      "sha256": "e3ac5d2cc5450693af6ccaaedd2fc4a1312debac6fee01a34412ee4b5f175315",
+      "bytes": 13312524,
+      "crc": "passed",
+      "exactFiveContentsAndModes": true
+    },
+    "formalIdentitySignature": {
+      "passed": true,
+      "identifier": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "architecture": "arm64",
+      "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+      "distribution": "ad-hoc; no public signing/notarization claim"
+    },
+    "exactCandidateSource": {
+      "passed": true,
+      "commit": "8780df9effd3832c1d73a494e8b447f91a2949b8",
+      "inputCount": 1277,
+      "scope": "Application source/configuration and tests; dependencies and toolchain not claimed",
+      "currentBytesAndGitBlobsMatch": true,
+      "engineeringVerification": {
+        "receipt": "docs/evidence/2026-10-09-capability-hardening/worktree-task-checks/run-02/verification.json",
+        "sha256": "dd966b85e4d4b049ba18b401e0b23c2731f9011a2c5938f858c6deb20f7e9272",
+        "inputs": "docs/evidence/2026-10-09-capability-hardening/worktree-task-checks/run-02/inputs-before.json",
+        "inputsSha256": "f2c1c9e30076913013d1152e6f3efd6cc318e18bfe7d792ed59ad9fe5550eab1",
+        "inputsAfter": "docs/evidence/2026-10-09-capability-hardening/worktree-task-checks/run-02/inputs-after.json",
+        "inputsAfterSha256": "f2c1c9e30076913013d1152e6f3efd6cc318e18bfe7d792ed59ad9fe5550eab1",
+        "sourceClosure": "docs/evidence/2026-10-09-capability-hardening/worktree-task-checks/source-closure.json",
+        "sourceClosureSha256": "3a34cc70563e83703bf3949d7fa7384134cdc019a2a9b5e02029b7758d0d2f9f",
+        "inputCount": 1277
+      }
+    },
+    "formalProcessAbsent": {
+      "passed": true,
+      "exitCode": 1,
+      "matched": 0
+    },
+    "verificationInputsStable": {
+      "passed": true,
+      "publicAndPrivateReceiptHashesUnchanged": true,
+      "formalCandidateArchiveRechecked": true
+    }
+  },
+  "methodOrigin": "Adapted from the reviewed browser-search ten-check verifier. This worktree/task invocation binds ece08 normal-exit evidence, current candidate engineering/source closure and dynamic complete input counts; it does not execute the installer.",
+  "inputReceipts": {
+    "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/candidate.json": "173f1803387412bb431e1e5ce8b9b8c8a443331ef5482dd82260911ed2c38444",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/candidate-inputs.json": "f2c1c9e30076913013d1152e6f3efd6cc318e18bfe7d792ed59ad9fe5550eab1",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/candidate-independent.json": "ddafd7296b4bc8b3337b8442782fea3690ee2d4a5bfdb54d33d56897380efdd0",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/installed-data-retention.json": "ccaf364538554e901daac014929ebd474f9b50804d6217b02104c229fd38b95d",
+    "output/2026-10-10-worktree-task-install/install-operation.json": "cf19232258447bfe9de312304de12446df2a0fc1564edfd44c6129bd7cf914bc",
+    "output/2026-10-10-worktree-task-install/normal-exit-observation.json": "8f9b5108668978ad7726144b3d612c72d32aeb706f2bfd53c6678e8d37910142",
+    "output/2026-10-10-worktree-task-install/metadata-backup-receipt.json": "3c844f5f6b198809241b78c17fb16815dc10c207548c39add6b94fdb1b9c407a",
+    "output/2026-10-10-worktree-task-install/install-data-before-summary.json": "ea1c35eb6a3c5981da7aef7c54111ba106da2436128d9c13b5e2cae7af3123c4",
+    "output/2026-10-10-worktree-task-install/install-data-preinstall-summary.json": "ea1c35eb6a3c5981da7aef7c54111ba106da2436128d9c13b5e2cae7af3123c4",
+    "output/2026-10-10-worktree-task-install/install-data-after-summary.json": "ea1c35eb6a3c5981da7aef7c54111ba106da2436128d9c13b5e2cae7af3123c4"
+  },
+  "reviewedHelpers": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/verify-install-independent.py",
+      "sha256": "14d34c7535f492eae437558e840b61d1ac4cae973092ea84106a0abd6dabc520",
+      "bytes": 22516
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/verify-candidate.py",
+      "sha256": "da40a7ead1bc6ed16ac1f36f09ce74f9712a21b5935269797a2dd81f01d86746",
+      "bytes": 20342
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/verify-data-retention.py",
+      "sha256": "acbab48042b863b27727d20f700b89fc65a4719aed6a6e81c4af4ea2ac83a411",
+      "bytes": 4010
+    },
+    {
+      "path": "output/2026-10-10-worktree-task-install/install_verified_candidate.py",
+      "sha256": "fae35e6f1db3c5824154f589fb306a3e1e49c30dea7676d2104a57f2cb34e7aa",
+      "bytes": 15310
+    },
+    {
+      "path": "output/2026-10-10-worktree-task-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+      "bytes": 2713
+    },
+    {
+      "path": "output/2026-10-10-worktree-task-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+      "bytes": 3792
+    }
+  ],
+  "boundaries": [
+    "Disk/hash/ZIP/signature/manifests and disposable SQLite verification only; root observed Cmd-Q.",
+    "No original database opened with SQLite; no rows or credentials printed or saved.",
+    "No app launch, replacement, quit, or duplicate bundle deletion by this verifier.",
+    "Installed worktree creation/adoption/draft ownership, async-task stop, search accessibility, Windows execution and real-Agent acceptance remain untested in this receipt.",
+    "Snapshot equivalence includes captured WAL; no claim beyond captured stable-source checks and equal installation manifests."
+  ],
+  "nativeReadyAfterRootDuplicateCleanup": true,
+  "completedAtUtc": "2026-10-10T06:02:13.668867+00:00"
+}
