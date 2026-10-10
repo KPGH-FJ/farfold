@@ -24,3 +24,24 @@ mod wire_tests;
 
 #[cfg(test)]
 pub(crate) mod recycle_tests;
+
+mod remove_types;
+pub use remove_types::*;
+mod recovery_pack;
+mod recovery_roots;
+#[cfg(test)]
+mod recovery_tests;
+
+mod removal;
+mod remove_validation;
+
+mod recover;
+
+#[cfg(test)]
+mod recover_tests;
+
+#[cfg(test)]
+mod remove_boundary_tests;
+
+#[cfg(test)]
+mod remove_wire_tests;

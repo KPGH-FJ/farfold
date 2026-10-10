@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/wire.test.ts (38 tests | 1 failed | 19 skipped) 16ms
+     × coldRemovalList accepted without loss 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/wire.test.ts > repaired > coldRemovalList accepted without loss
+Error: Invalid worktree removal receipt
+ ❯ invalid src/runtime/worktree_remove_types.ts:70:9
+     68|   }>;
+     69| const invalid = (): never => {
+     70|   throw new Error("Invalid worktree removal receipt");
+       |         ^
+     71| };
+     72| const record = (
+ ❯ parseWorktreeRemoval src/runtime/worktree_remove_types.ts:358:14
+ ❯ parseWorktreeReply src/runtime/worktree_types.ts:248:12
+ ❯ parseWorktreeList src/runtime/worktree_types.ts:413:35
+ ❯ docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/wire.test.ts:15:112
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 passed | 19 skipped (38)
+   Start at  16:07:16
+   Duration  221ms (transform 62ms, setup 0ms, import 84ms, tests 16ms, environment 0ms)
+

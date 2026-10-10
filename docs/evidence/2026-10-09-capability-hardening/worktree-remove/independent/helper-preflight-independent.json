@@ -1,0 +1,100 @@
+{
+  "scope": "Independent static review of eight candidate/install helpers; no helper imported or run, no build/install/scan/SQLite/App/Agent operation.",
+  "result": "No blocking mismatch found in this preflight; execution proofs remain pending.",
+  "baselineCommit": "418880a249da9809169d9b8d6e99557352a40f08",
+  "checks": [
+    {
+      "name": "pythonSyntax",
+      "result": "8 AST parses passed; no helper body executed"
+    },
+    {
+      "name": "adaptation",
+      "result": "Compared each with worktree-recycle predecessor: two helpers byte-identical; others change approved evidence/output paths, installed baseline, exit-evidence schema and remaining verification wording."
+    },
+    {
+      "name": "sourceCollector",
+      "result": "prepare-candidate, verify-candidate and private installer have equal literal SCOPES/TOP sets; install verifier imports candidate checker; fixtures and Rust example/testdata retained.",
+      "directoryScopes": 13,
+      "explicitFiles": 36
+    },
+    {
+      "name": "engineeringClosure",
+      "result": "Requires full exact commit, seven actual successful/stable commands and log hashes, before/after input equality, complete delta against installed baseline, <=1500 lines and protected Oct8 evidence hashes."
+    },
+    {
+      "name": "candidate",
+      "result": "Expected bundle/source/ZIP/hash/CRC/arm64/ad-hoc strict signature and unchanged formal baseline checks retained; no install or quit in prepare/verifier."
+    },
+    {
+      "name": "soleAppReplacement",
+      "result": "Installer mutation remains ditto from exact verified candidate to /Applications/Farfold.app after process absence and preinstall manifest checks. It does not launch, signal or copy user data; errors preserve exclusive operation receipt."
+    },
+    {
+      "name": "dataProtection",
+      "result": "Backup performs SQLite operations only on second private copied DB. Snapshot enumerates appData/WebKit/cache by held directories without following symlinks; before/preinstall/after equality is required later. This review did not repeat snapshots or read DB."
+    },
+    {
+      "name": "normalExit",
+      "result": "Read-only hash/schema check of all three normal exit refs passed. Both installed journey and independent closeout use formalSourceCommit=418880a2. Observation explicitly reuses completed normal quit; it does not claim another UI action."
+    },
+    {
+      "name": "duplicateCleanup",
+      "result": "Only exact src-tauri/target/release/bundle/macos/Farfold.app is removed after install-independent success and candidate/formal/ZIP contents and modes checks; formal app and archive rechecked after."
+    }
+  ],
+  "limits": [
+    "No current new source commit/candidate exists yet; final input count, closure, seven checks and installed data retention must be verified at execution, not inferred from this source review.",
+    "Static review is not installation or user-value acceptance. Ad-hoc signature is not notarization.",
+    "SourceScope prose in copied prepare helper still says worktree archive/restore inventory; executable closure points to current worktree-remove checks and requires exact inputs."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/prepare-candidate.py",
+      "sha256": "7cc788f38515899471a51ed99f4986507d3caa28abfe14869ae365f4fc454623"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/verify-candidate.py",
+      "sha256": "78e65b7e6d95369def3ebeedbd8308eee0f000bda679bd7b882e097c5aa397f5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/verify-install-independent.py",
+      "sha256": "7b803f00442e10ae6be693e76e340986f4bd89d8fb539a587413925e651b19b9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/verify-data-retention.py",
+      "sha256": "18e0aad87b1534a3da1132a6907c19aee05191821b5a0c0bff4f74ee2fc7f92c"
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0"
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-install/install_verified_candidate.py",
+      "sha256": "1b74866b2ab4787ccaa51ec941cedb11469b69bce83c5021820f6db5cf06f89b"
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3"
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-install/cleanup_duplicate.py",
+      "sha256": "25536a08acd4d92dfab51bab44f06cddb8eab145a5175b5eab62f5d035190711"
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-install/normal-exit-observation.json",
+      "sha256": "258d8151dc0a1de8551f73b3bde9f1a71cd85e73a0cb8a8a1f900768a7386947"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/final-normal-exit.json",
+      "sha256": "3dc84c3c1e188023f468e7d5e97dcb8344f4d511e6ec9162178387e50fc09c64"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/installed-archive-restore.json",
+      "sha256": "323d45e7144b83bd5b0955dc8c668f6c42b3d7c60e8c7556e7e976c336b16386"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native-closeout-independent.json",
+      "sha256": "ef0efdfd834ff51ebb3e44c6334d71bbc283465b05db2d6b5c171b31642d6ef3"
+    }
+  ]
+}

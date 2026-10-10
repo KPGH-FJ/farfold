@@ -84,6 +84,7 @@ beforeEach(() => {
     if (command === "worktree_list")
       return {
         locations: [location],
+        recoveries: [],
         archives: [],
         materials: [],
         operation: null,
@@ -186,6 +187,7 @@ it("cold unknown with no current maintenance does not lock editing or confer arc
   h.id = "cold";
   h.invoke.mockResolvedValue({
     locations: [location],
+    recoveries: [],
     archives: [],
     materials: [],
     operation: op("unknown", false),
@@ -220,6 +222,7 @@ it("restore removes the archived record only after exact confirmed original-loca
     if (c === "worktree_list")
       return {
         locations: [],
+        recoveries: [],
         archives: [archive],
         materials: [],
         operation: null,
@@ -313,6 +316,7 @@ it("checks an unknown archive independently of a superseded intent, without movi
     if (c === "worktree_list")
       return {
         locations: [],
+        recoveries: [],
         archives: [unknown],
         materials: [],
         operation: null,
@@ -320,6 +324,7 @@ it("checks an unknown archive independently of a superseded intent, without movi
     if (c === "worktree_recycle_check")
       return {
         locations: [],
+        recoveries: [],
         archives: [archive],
         materials: [],
         operation: null,
@@ -342,12 +347,14 @@ it("unknown archive check rejects a changed directory and preserves the original
     if (c === "worktree_list")
       return {
         locations: [],
+        recoveries: [],
         archives: [unknown],
         materials: [],
         operation: null,
       };
     return {
       locations: [{ ...location, path: "/other", revision: 4 }],
+      recoveries: [],
       archives: [],
       materials: [],
       operation: null,
@@ -371,6 +378,7 @@ it("read-only archive checks can recover the original active record, but old res
       listCalls++;
       return {
         locations: [],
+        recoveries: [],
         archives: [unknown],
         materials: [],
         operation: op("unknown", false),
@@ -387,6 +395,7 @@ it("read-only archive checks can recover the original active record, but old res
   await w.status();
   check.resolve({
     locations: [{ ...location, revision: 4 }],
+    recoveries: [],
     archives: [],
     materials: [],
     operation: op("unknown", false),

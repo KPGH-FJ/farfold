@@ -1,3 +1,4 @@
+import { currentWorkLocationGuidance } from "./runtime/archived_work_location";
 import { OpeningElicitationList } from "./components/OpeningElicitationList";
 import { openingInquiries } from "./runtime/opening_inquiries";
 import { REDESIGN as R } from "./runtime/redesign_strings";
@@ -487,6 +488,8 @@ export default function App() {
     )
       return;
     const target = threads.thread(key);
+    if (target && currentWorkLocationGuidance(target.cwd)?.kind === "archive")
+      return;
     if (target) allowAutomaticConnection(target.agentId);
     const request = ++historyOpen.current;
     try {
@@ -498,7 +501,6 @@ export default function App() {
   };
   const openRow = afterBrowserClose((row: IndexRow | SidebarRow) => {
     setNotificationOnlyKey(null);
-    allowAutomaticConnection(row.agentId);
     const request = ++historyOpen.current;
     routeHistory.current = [];
     setPaletteOpen(false);
@@ -506,6 +508,18 @@ export default function App() {
     const existing = threads.thread(key);
     if (existing) traceAfterPaint("thread_switch", Date.now());
     opened(key);
+    if (currentWorkLocationGuidance(row.cwd)?.kind === "archive") {
+      if (!existing)
+        threads.markOpenFailed(
+          key,
+          row.agentId,
+          row.cwd,
+          row.nativeSessionId ?? "",
+          STRINGS.thread.connectionIdle,
+        );
+      return;
+    }
+    allowAutomaticConnection(row.agentId);
     if (!row.nativeSessionId) {
       threads.markOpenFailed(
         key,

@@ -1,0 +1,455 @@
+import React, { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "/src/App";
+import { DraftStartup } from "/src/components/DraftStartup";
+import { StorageStartup } from "/src/components/StorageRecovery";
+import { threads, freshThreadState } from "/src/runtime/sessions";
+import {
+  composerDrafts,
+  newConversationChoice,
+  draftPersistence,
+} from "/src/runtime/drafts";
+import { worktrees } from "/src/runtime/worktrees";
+import { worktreeManagement } from "/src/runtime/worktree_management";
+import "@xterm/xterm/css/xterm.css";
+import "/src/styles.css";
+import "/src/styles-settings.css";
+import "/src/styles-content.css";
+import "/src/styles-thread.css";
+import "/src/styles-artifact.css";
+import "/src/product-shell.css";
+import "/src/conversation-workspace.css";
+import "/src/history-import.css";
+import "/src/desktop-workbench.css";
+
+const w = window as any;
+const params = new URLSearchParams(location.search);
+let mode = params.get("mode") ?? "normal";
+const oid = "a".repeat(40);
+const originalPath = "/controlled/created-tree";
+const retainedPath = "/controlled/retained/tree";
+const tree = {
+  id: "controlled-created",
+  revision: 1,
+  path: originalPath,
+  repositoryRoot: "/controlled/repo",
+  branch: "refs/heads/controlled",
+  headOid: oid,
+  ownership: "created",
+  availability: "verified",
+};
+const adopted = {
+  ...tree,
+  id: "controlled-existing",
+  path: "/controlled/adopted",
+  ownership: "existing",
+  branch: "refs/heads/adopted",
+};
+const archive = {
+  id: tree.id,
+  revision: 2,
+  originalPath,
+  retainedPath,
+  repositoryRoot: tree.repositoryRoot,
+  branch: tree.branch,
+  headOid: oid,
+  ownership: "created",
+  availability: "verified",
+};
+let locations: any[] = [adopted];
+let archives: any[] = [archive];
+let recoveries: any[] = [];
+let loadMode = "normal";
+let releaseLoad: (() => void) | null = null;
+let operation: any = null;
+let releasePrepare: (() => void) | null = null;
+let ticket = 0;
+const settings = new Map<string, unknown>();
+const key = "fixture:/controlled/created-tree:history";
+const row = {
+  id: key,
+  agentId: "fixture",
+  cwd: originalPath,
+  nativeSessionId: "history",
+  title: "CONTROLLED_HISTORY_UNMOVED",
+  configOptions: null,
+  pinned: false,
+  archived: false,
+  createdAt: 1,
+  updatedAt: 1,
+};
+const recovery = {
+  id: "controlled-recovery",
+  revision: 1,
+  archiveId: archive.id,
+  archiveRevision: archive.revision,
+  originalPath,
+  retainedPath,
+  repositoryRoot: tree.repositoryRoot,
+  headOid: oid,
+  branch: tree.branch,
+  path: "/controlled/recovery-copy",
+  bundleBytes: 1024,
+  bundleSha256: "d".repeat(64),
+  manifestSha256: "e".repeat(64),
+  rootsSha256: "b".repeat(64),
+  contentSha256: "c".repeat(64),
+  rootCount: 4,
+  objectCount: 14,
+  objectFormat: "sha1",
+  availability: "verified",
+};
+if (mode.includes("recovery")) {
+  archives = [];
+  recoveries = [
+    structuredClone(recovery),
+    {
+      ...recovery,
+      id: "controlled-recovery-two",
+      path: "/controlled/recovery-copy-two",
+    },
+  ];
+}
+const list = () =>
+  structuredClone({
+    locations,
+    archives,
+    recoveries,
+    materials: [],
+    operation,
+  });
+function removal(
+  id: string,
+  phase = "preparingRecovery",
+  state = "running",
+  extra: any = {},
+) {
+  return {
+    kind: "operation",
+    operationId: id,
+    action: "remove",
+    state,
+    maintenanceActive: !["ready", "cancelled", "failed", "unknown"].includes(
+      state,
+    ),
+    settled: ["ready", "cancelled", "failed", "unknown"].includes(state),
+    cancelRequested: state === "cancelled",
+    originalPath,
+    retainedPath,
+    removalPhase: phase,
+    deleteDispatched: state === "ready",
+    ...extra,
+  };
+}
+function prepared() {
+  operation = removal(
+    operation.operationId,
+    "awaitingConfirmation",
+    "prepared",
+    { recovery: structuredClone(recovery) },
+  );
+  recoveries = [structuredClone(recovery)];
+}
+function complete() {
+  if (operation.action === "remove") {
+    operation = removal(operation.operationId, "finished", "ready", {
+      recovery: structuredClone(recovery),
+      removed: {
+        recordId: archive.id,
+        revision: archive.revision + 1,
+        originalPath,
+        retainedPath,
+        recoveryId: recovery.id,
+      },
+    });
+    archives = [];
+    recoveries = [structuredClone(recovery)];
+  } else {
+    const location = {
+      ...adopted,
+      id: "recovered",
+      path: operation.targetPath,
+      repositoryRoot: operation.targetPath,
+      branch: tree.branch,
+      headOid: oid,
+    };
+    operation = { ...operation, state: "ready", settled: true, location };
+    locations.push(location);
+  }
+}
+w.testInvoke = async (cmd: string, args: any) => {
+  w.calls.push({
+    cmd,
+    args,
+    locked: !!draftPersistence.snapshot().interactionLocked,
+  });
+  if (cmd === "settings_get")
+    return args.key === "autoArchiveDays"
+      ? 0
+      : (settings.get(args.key) ?? null);
+  if (cmd === "settings_set") {
+    settings.set(args.key, structuredClone(args.value));
+    return;
+  }
+  if (cmd === "storage_recovery_status")
+    return {
+      ready: true,
+      issue: null,
+      dataDirectory: "/controlled/data",
+      databaseReplacementAvailable: false,
+      databaseReplacement: null,
+    };
+  if (
+    [
+      "app_drafts_ready",
+      "host_performance_sample",
+      "session_mark_read",
+      "session_index_mark_read",
+      "plugin:event|unlisten",
+    ].includes(cmd)
+  )
+    return;
+  if (cmd === "host_performance_origin") return null;
+  if (cmd === "plugin:event|listen") return 1;
+  if (cmd === "app_initial_snapshot") return { agents: [], settings: {} };
+  if (
+    [
+      "catalog_list",
+      "catalog_scan",
+      "credential_list",
+      "desktop_notification_take_pending",
+      "prompt_templates_list",
+      "agent_status",
+    ].includes(cmd)
+  )
+    return [];
+  if (cmd === "app_default_working_directory") return "/controlled/unrelated";
+  if (cmd === "session_index_list") return [row];
+  if (cmd === "session_open")
+    throw "Controlled reconnect response: no Agent launched";
+  if (cmd === "agent_work_get") {
+    if (mode.includes("cold")) throw "controlled missing cwd";
+    return { cwd: args.cwd, enabled: {}, locationEnabled: true };
+  }
+  if (cmd === "desktop_notifications_get")
+    return { enabled: false, sound: false };
+  if (cmd === "browser_share_status")
+    return {
+      taskKey: args.taskKey,
+      label: args.label,
+      agentId: "fixture",
+      phase: "unshared",
+      revision: 0,
+      reason: null,
+      pendingRequest: null,
+    };
+  if (cmd === "plugin:dialog|open") return "/controlled/recovered-parent";
+  if (cmd === "worktree_list") {
+    if (loadMode === "error") throw "controlled catalogue failure";
+    if (loadMode === "hold")
+      return new Promise((resolve) => {
+        releaseLoad = () => resolve(list());
+      });
+    return list();
+  }
+  if (cmd === "worktree_remove_inspect")
+    return {
+      inspectionId: "controlled-remove-ticket-" + ++ticket,
+      action: "remove",
+      recordId: archive.id,
+      revision: archive.revision,
+      originalPath,
+      retainedPath,
+      repositoryRoot: tree.repositoryRoot,
+      headOid: oid,
+      branch: tree.branch,
+      blockers: mode === "blocked" ? ["dirty"] : [],
+      impact: { conversations: 1, unsent: false },
+      draftBaseline: { unsentWork: "c".repeat(64), agentSetup: null },
+      roots: { count: 4, sha256: "b".repeat(64), objectFormat: "sha1" },
+      content: { entries: 2, bytes: 42, sha256: "c".repeat(64) },
+      localTracking: "noUpstream",
+    };
+  if (cmd === "worktree_remove_prepare") {
+    operation = removal(args.operationId);
+    if (mode === "refusal")
+      return (operation = removal(
+        args.operationId,
+        "preparingRecovery",
+        "failed",
+        { code: "draftChanged" },
+      ));
+    if (mode === "lost") throw "controlled lost prepare response";
+    if (mode === "late" || mode === "timeout")
+      return new Promise((resolve) => {
+        const originalId = args.operationId;
+        releasePrepare = () => {
+          const reply = removal(
+            originalId,
+            "awaitingConfirmation",
+            "prepared",
+            { recovery: structuredClone(recovery) },
+          );
+          recoveries = [structuredClone(recovery)];
+          resolve(reply);
+        };
+      });
+    return structuredClone(operation);
+  }
+  if (cmd === "worktree_remove_confirm") {
+    operation = removal(args.operationId, "verifyingRecovery", "running", {
+      recovery: structuredClone(recovery),
+    });
+    return structuredClone(operation);
+  }
+  if (cmd === "worktree_cancel") {
+    operation =
+      operation?.action === "recover"
+        ? {
+            ...operation,
+            state: "cancelled",
+            settled: true,
+            cancelRequested: true,
+          }
+        : removal(
+            args.operationId,
+            "finished",
+            "cancelled",
+            recoveries.length ? { recovery: structuredClone(recovery) } : {},
+          );
+    return structuredClone(operation);
+  }
+  if (cmd === "worktree_status" || cmd === "worktree_recheck")
+    return structuredClone(operation);
+  if (cmd === "worktree_recovery_check") {
+    recoveries = recoveries.map((r) => ({ ...r, availability: "verified" }));
+    return list();
+  }
+  if (cmd === "worktree_recover_prepare") {
+    operation = {
+      kind: "operation",
+      operationId: args.operationId,
+      action: "recover",
+      state: "prepared",
+      settled: false,
+      cancelRequested: false,
+      maintenanceActive: false,
+      targetPath: args.parentPath + "/" + args.directoryName,
+      recovery: structuredClone(recovery),
+    };
+    if (mode === "recover-late")
+      return new Promise((resolve) => {
+        const r = structuredClone(operation);
+        releasePrepare = () => resolve(r);
+      });
+    return structuredClone(operation);
+  }
+  if (cmd === "worktree_start") {
+    if (operation.action !== "recover")
+      throw Error("Removal must never use start");
+    operation = { ...operation, state: "running" };
+    return structuredClone(operation);
+  }
+  if (cmd === "worktree_check_location")
+    return structuredClone(locations.find((l) => l.id === args.locationId));
+  w.unexpected.push(cmd);
+  throw Error("Unexpected controlled IPC " + cmd);
+};
+await draftPersistence.load();
+newConversationChoice.cwd = mode.includes("cold")
+  ? originalPath
+  : "/controlled/unrelated";
+newConversationChoice.agentId = null;
+composerDrafts.update("new", () => ({
+  text: "KEEP_CONTROLLED_UNSENT_TEXT",
+  attachments: [],
+}));
+const state = freshThreadState(key, "fixture", originalPath, "history");
+state.title = row.title;
+state.identity = "established";
+state.items = [
+  {
+    kind: "agent",
+    id: "controlled-message",
+    text: "CONTROLLED_HISTORY_UNMOVED_BODY",
+    streaming: false,
+    time: 0,
+  },
+];
+state.connectionLost = mode === "lost-navigation" || mode.startsWith("known");
+state.connectionCloseReason = "configuration";
+threads.getSnapshot().threads.set(key, state);
+await draftPersistence.flush();
+w.fixture = {
+  mode: (v: string) => (mode = v),
+  retireHistory: () => {
+    state.connectionLost = true;
+    state.connectionCloseReason = "configuration";
+    threads.markOpenFailed(
+      key,
+      "fixture",
+      originalPath,
+      "history",
+      "",
+      false,
+      true,
+    );
+  },
+  complete,
+  loadCatalogue: () => worktrees.load(),
+  clearRecovery: () => {
+    recoveries = [];
+    return worktrees.load();
+  },
+  prepared,
+  changeRecovery: () => {
+    operation = {
+      ...operation,
+      recovery: { ...recovery, manifestSha256: "f".repeat(64) },
+    };
+  },
+  catalogue: (next: string) => {
+    loadMode = next;
+    void worktrees.load();
+  },
+  releaseLoad: () => releaseLoad?.(),
+  restoreCatalogue: () => {
+    archives = [];
+    return worktrees.load();
+  },
+  restoreArchives: () => {
+    archives = [archive];
+    loadMode = "normal";
+    return worktrees.load();
+  },
+  releasePrepare: () => releasePrepare?.(),
+  legacy: (v: boolean) => draftPersistence.lockInteraction(v),
+  current: () => ({
+    snapshot: worktrees.snapshot(),
+    locked: !!draftPersistence.snapshot().interactionLocked,
+    draft: composerDrafts.read("new"),
+    cwd: newConversationChoice.cwd,
+    historyCwd: state.cwd,
+    request: worktreeManagement.snapshot(),
+    calls: w.calls,
+    unexpected: w.unexpected,
+    settings: [...settings],
+  }),
+  unknownArchive: () => {
+    locations = [adopted];
+    archives = [{ ...archive, availability: "unknown" }];
+    operation = null;
+    return worktrees.load();
+  },
+  openManagement: () => worktreeManagement.open({ cwd: null, target: null }),
+  query: () => worktrees.status(),
+};
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <StorageStartup>
+      <DraftStartup>
+        <App />
+      </DraftStartup>
+    </StorageStartup>
+  </StrictMode>,
+);

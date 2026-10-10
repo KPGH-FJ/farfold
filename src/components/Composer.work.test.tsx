@@ -24,6 +24,7 @@ vi.mock("../runtime/work_policy", () => ({
   },
 }));
 import { Composer } from "./Composer";
+import { ComposerWorkNotice } from "./ComposerWorkNotice";
 import { composerDrafts, draftPersistence } from "../runtime/drafts";
 import { threads } from "../runtime/sessions";
 import { queueEditorKey, startQueueEditor } from "../runtime/queue_edit";
@@ -45,7 +46,13 @@ function captureComposer(props: ComponentProps<typeof Composer>) {
     Children.forEach(node, (child) => {
       if (!isValidElement<Record<string, unknown>>(child)) return;
       elements.push(child);
-      visit(child.props.children as ReactNode);
+      if (child.type === ComposerWorkNotice)
+        visit(
+          ComposerWorkNotice(
+            child.props as ComponentProps<typeof ComposerWorkNotice>,
+          ),
+        );
+      else visit(child.props.children as ReactNode);
     });
   };
   visit(tree);

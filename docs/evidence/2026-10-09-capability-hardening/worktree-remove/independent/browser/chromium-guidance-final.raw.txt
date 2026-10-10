@@ -1,0 +1,197 @@
+{
+  "engine": "chromium",
+  "label": "guidance-final",
+  "scope": "Actual complete App and React StrictMode, production stores/components/CSS. Controlled IPC, in-memory settings, synthetic filesystem/Git replies; no actual delete/recover or native app/Agent/user data.",
+  "before": {
+    "src/runtime/worktree_remove.test-fixtures.ts": "4d84babf07fa17428941bb220e892258fa090b7d15b6a8b9a379d5f00833cf07",
+    "src/runtime/worktree_remove.test.ts": "c2cbfd3d76f90d7ec44713b10d2e9115e757892455b99a2bd84f2a1d57171549",
+    "src/runtime/worktree_remove_types.test.ts": "9203bbbfa12d4fb5141339d147d7c04656c3687d91848f884276fe59e2ea1ae7",
+    "src/runtime/worktree_remove_types.ts": "606038d08834c91280159f9785d306fb202ecf878f8a0d4bf63d825d2d1d1984",
+    "src/runtime/worktree_types.ts": "015c38ccf205ed5fc0c08392d2f1cac56dab5f432d0f5c4491ad280f0d1c6c47",
+    "src/runtime/worktrees.ts": "b53a6b4d133fe07e4f27e46f938f8a023b96d63335008b2c27b46ce2f5b5233d",
+    "src/runtime/worktree_strings.ts": "28d235b85af35164109f2ebce3442dbee02cd10a516bd7a74d856e2ce0c5dfd8",
+    "src/runtime/worktree_recycle.test.ts": "dc234597b38ce4637f45200fc6a4d609837ec025c431383beea1da62dda701ea",
+    "src/runtime/worktree_recycle_types.test.ts": "872abf6a1688c3cc5b9bc0b582ea715229ae05bd3dbde702597e8e3ddd8f8ec9",
+    "src/runtime/worktree_types.test.ts": "1b90d8be9bad6e9fd8670fffd35462b3da57222be512a70ac4e0cc16107c1431",
+    "src/runtime/worktrees.test.ts": "b0d20fad5e8c17f8345cd3992eeedf45eb08288e8000f6fb2cc3670a8829d9c6",
+    "src/components/WorktreeDialog.tsx": "2c31d9cad8fa857ae9c77c82de08c0dd9455b4816bbfe22101e2e0c53869a6e5",
+    "src/components/WorktreeDialog.test.tsx": "f57ef90d2c407ea27c6a28bc4cbeeb443e595c79de1c6d7b258135a555abe2ad",
+    "src/components/WorktreeDialog.css": "26032a3d426972c28a50d3f0c0e4ef7982c0b74971e96da5bfae8f1afe799d16",
+    "src/components/WorktreeRecycleReview.tsx": "96b7c829fdef495b74bcaa38eef16f44fc6c5d9f8066c04faf5e5df0d78100db",
+    "src/components/WorktreeRecycleReview.test.tsx": "6088707de5402f1a4963b21335bee143178acb660890c636c0ef8482cebe8d4e",
+    "src/components/WorktreeRemovalReview.tsx": "50ebfdbb43b1640bad8ed8393c72158c290f25c3ddfd718fe419b426a1fb9fb3",
+    "src/components/WorktreeRemovalReview.test.tsx": "b22dff64a513913aa06492f6b8ceb9b9788c7107a93ca85664d12466927bc02a",
+    "src/components/WorktreeRecoveries.tsx": "f53f53556bf3ce6f510f4fe92328c9489516af2f3fb2b61b39479c066fcdc7e0",
+    "src/runtime/worktree_recover.test.ts": "4eb4ff2a2f85a310720c0652179dd5a0f3cdb58e4bce672cc89bf84a585e98b4",
+    "src/runtime/worktree_recover_types.test.ts": "1ef273922412644987f0bbbfcf63b57ee299c68856b0763621f342b383147bdd",
+    "src/components/WorktreeRecoveryForm.tsx": "e98894860e3e3b9a65421a64a0f720bba13c49d5018f0be20b73033f9be18fdc",
+    "src/components/WorktreeRecoveryForm.test.tsx": "ea8b0674b5fae0a5ec7148066555d1ea005577f363b6ccd5e3fbd7c8a4b42c1b",
+    "src/runtime/archived_work_location.ts": "894f2569e7de0f6e71284b9128b05fcb68b1c7a3a7847e5706bbde1c2a15e5be",
+    "src/runtime/archived_work_location_strings.ts": "2f947f701aced2fdd2eb69490f68e8dff98855f1a084bc94ed2c1a260a4b0ac5",
+    "src/runtime/archived_work_location.test.ts": "5f6517861357b3f099d526406ee1f9eb5cd41f400b1592b2b02a2d083cb30772",
+    "src/components/ArchivedWorkLocationNotice.tsx": "77ed70fc6f58011faf1d7c9da951a8380c91dee6150abcdb44821ec6e22d101d",
+    "src/components/ArchivedWorkLocationNotice.test.tsx": "42a6edfa80bb88015b1e7327a25a2ec7f5e3914b4f99d8487695641566dc1a62",
+    "src/components/ArchivedWorkLocation.integration.test.tsx": "55c1af29ef4e270451b5d17458e58eb5e20577e54204d6900bb05b57e906188f",
+    "src/components/ComposerWorkNotice.tsx": "bec3991d878a9799559bbfad43ca806bd20681ab6cf9900ae6e8ce90ceada9d0",
+    "src/components/Composer.tsx": "988f08cd7713ed9422f8e8235f860d63e555acab01a463bacf15fbda4dffbcb8",
+    "src/components/Composer.work.test.tsx": "8a2f2c878c4b510629fcd8140a9db1f8534f7aa8564dccaf0e2f729603d9e899",
+    "src/components/EmptyState.tsx": "740dda175f17441f91ebfdf445dab1f67ee77f3f31308ca6c7f18880b13ee077",
+    "src/components/ThreadView.tsx": "df3788a39095f6649b87ddc37f1b2f1e4469c7476ce9bcf4b41a9d838a9e5c7d",
+    "src/App.tsx": "10a4654c55ab520c0ea3fd3933a1be333eb0300954bc0fe264ef281afd12eb74",
+    "src/components/StorageRecovery.tsx": "d071a1a77160c85558495d5c1276124dd9d193a52b1c1e96d2475903ea0900a4",
+    "src/components/DraftStartup.tsx": "b26c1b8fb268c78aaf8cf7211faf13df74a83417148ab89830f7da2e6ad8ad5e",
+    "src/components/WorktreeManagementHost.tsx": "08ec977b1fb7d2d68ada16a2fd69da31115d812d5852ddb689d66c65c20fd2d6",
+    "src/runtime/worktree_management.ts": "a4819409219472fc873f5432a00b71f8c73271972845b66e21ade554ddf9eefb",
+    "src/runtime/draft_storage.ts": "a3fce4de9dd17be896e9db72429d5108cb1565b1fb34b927047aa5fa95d9823b",
+    "src/runtime/setup_storage.ts": "ea5074cf0ee47a197acab09ff6b5c02850037274dde6afcb69fe67d42ccf53fa",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/fixture.tsx": "4c012ab746f9b9da934d98b8ca80ed415d92795ffc268bfb35f508a2d741adbc",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/run.mjs": "fee432c619aef23c638ec08b588dca84d4aa10a97cfb9f9c427a42313617687d",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/serve.mjs": "f6feffce08ae4fe6fbd4280c3803e8f14d6fb1b4296190794b264378e5aa2db3",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/index.html": "4f7ee3f2f501b7f6c354f1191b875bfaeab8b3d3276777ed2b70706545970199",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/run-guidance-corrected.mjs": "c50a2d002619a93d6d10d7d035f51d2ca1d2bcd132be77aaf73ea6ec0b6b980e"
+  },
+  "checks": [
+    {
+      "name": "archive navigation precondition is ready catalogue before click",
+      "pass": true
+    },
+    {
+      "name": "archive ready catalogue preserves history with archive-only connection gate",
+      "pass": true
+    },
+    {
+      "name": "archive guidance gates only archive and does not change cwd",
+      "pass": true
+    },
+    {
+      "name": "archive opens management only without draft or backup selection",
+      "pass": true
+    },
+    {
+      "name": "archive association removal restores explicit retry but never dispatches itself",
+      "pass": true
+    },
+    {
+      "name": "recovery navigation precondition is ready catalogue before click",
+      "pass": true
+    },
+    {
+      "name": "recovery ready catalogue preserves history with archive-only connection gate",
+      "pass": true
+    },
+    {
+      "name": "recovery guidance gates only archive and does not change cwd",
+      "pass": true
+    },
+    {
+      "name": "recovery opens management only without draft or backup selection",
+      "pass": true
+    },
+    {
+      "name": "multiple recovery copies remain separate explicit choices",
+      "pass": true
+    },
+    {
+      "name": "recovery association removal restores explicit retry but never dispatches itself",
+      "pass": true
+    },
+    {
+      "name": "recovery catalogue loading withdraws stale guidance",
+      "pass": true
+    },
+    {
+      "name": "failed recovery catalogue does not claim current backup association",
+      "pass": true
+    },
+    {
+      "name": "cold recovery guidance preserves remembered path and exact unsent text",
+      "pass": true
+    },
+    {
+      "name": "copy guidance does not promise deleted or original-path restoration",
+      "pass": true
+    },
+    {
+      "name": "cold backup hint keeps ordinary work-settings error and exact draft",
+      "pass": true
+    },
+    {
+      "name": "prepared backup survives explicit deletion cancellation",
+      "pass": true
+    },
+    {
+      "name": "archive with cancelled preparation still keeps archive protection",
+      "pass": true
+    },
+    {
+      "name": "controlled explicit original-location restore keeps backup but restores reconnect",
+      "pass": true
+    },
+    {
+      "name": "explicit reconnect with retained recovery reaches ordinary IPC once without sending",
+      "pass": true
+    },
+    {
+      "name": "controlled followup has no unexpected IPC",
+      "pass": true,
+      "detail": []
+    }
+  ],
+  "errors": [],
+  "blocked": [],
+  "screenshots": [
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/chromium-guidance-final-multiple-recovery-choices.png",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/chromium-guidance-final-cold-recovery-guidance.png",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/chromium-guidance-final-retained-recovery-explicit-retry.png"
+  ],
+  "after": {
+    "src/runtime/worktree_remove.test-fixtures.ts": "4d84babf07fa17428941bb220e892258fa090b7d15b6a8b9a379d5f00833cf07",
+    "src/runtime/worktree_remove.test.ts": "c2cbfd3d76f90d7ec44713b10d2e9115e757892455b99a2bd84f2a1d57171549",
+    "src/runtime/worktree_remove_types.test.ts": "9203bbbfa12d4fb5141339d147d7c04656c3687d91848f884276fe59e2ea1ae7",
+    "src/runtime/worktree_remove_types.ts": "606038d08834c91280159f9785d306fb202ecf878f8a0d4bf63d825d2d1d1984",
+    "src/runtime/worktree_types.ts": "015c38ccf205ed5fc0c08392d2f1cac56dab5f432d0f5c4491ad280f0d1c6c47",
+    "src/runtime/worktrees.ts": "b53a6b4d133fe07e4f27e46f938f8a023b96d63335008b2c27b46ce2f5b5233d",
+    "src/runtime/worktree_strings.ts": "28d235b85af35164109f2ebce3442dbee02cd10a516bd7a74d856e2ce0c5dfd8",
+    "src/runtime/worktree_recycle.test.ts": "dc234597b38ce4637f45200fc6a4d609837ec025c431383beea1da62dda701ea",
+    "src/runtime/worktree_recycle_types.test.ts": "872abf6a1688c3cc5b9bc0b582ea715229ae05bd3dbde702597e8e3ddd8f8ec9",
+    "src/runtime/worktree_types.test.ts": "1b90d8be9bad6e9fd8670fffd35462b3da57222be512a70ac4e0cc16107c1431",
+    "src/runtime/worktrees.test.ts": "b0d20fad5e8c17f8345cd3992eeedf45eb08288e8000f6fb2cc3670a8829d9c6",
+    "src/components/WorktreeDialog.tsx": "2c31d9cad8fa857ae9c77c82de08c0dd9455b4816bbfe22101e2e0c53869a6e5",
+    "src/components/WorktreeDialog.test.tsx": "f57ef90d2c407ea27c6a28bc4cbeeb443e595c79de1c6d7b258135a555abe2ad",
+    "src/components/WorktreeDialog.css": "26032a3d426972c28a50d3f0c0e4ef7982c0b74971e96da5bfae8f1afe799d16",
+    "src/components/WorktreeRecycleReview.tsx": "96b7c829fdef495b74bcaa38eef16f44fc6c5d9f8066c04faf5e5df0d78100db",
+    "src/components/WorktreeRecycleReview.test.tsx": "6088707de5402f1a4963b21335bee143178acb660890c636c0ef8482cebe8d4e",
+    "src/components/WorktreeRemovalReview.tsx": "50ebfdbb43b1640bad8ed8393c72158c290f25c3ddfd718fe419b426a1fb9fb3",
+    "src/components/WorktreeRemovalReview.test.tsx": "b22dff64a513913aa06492f6b8ceb9b9788c7107a93ca85664d12466927bc02a",
+    "src/components/WorktreeRecoveries.tsx": "f53f53556bf3ce6f510f4fe92328c9489516af2f3fb2b61b39479c066fcdc7e0",
+    "src/runtime/worktree_recover.test.ts": "4eb4ff2a2f85a310720c0652179dd5a0f3cdb58e4bce672cc89bf84a585e98b4",
+    "src/runtime/worktree_recover_types.test.ts": "1ef273922412644987f0bbbfcf63b57ee299c68856b0763621f342b383147bdd",
+    "src/components/WorktreeRecoveryForm.tsx": "e98894860e3e3b9a65421a64a0f720bba13c49d5018f0be20b73033f9be18fdc",
+    "src/components/WorktreeRecoveryForm.test.tsx": "ea8b0674b5fae0a5ec7148066555d1ea005577f363b6ccd5e3fbd7c8a4b42c1b",
+    "src/runtime/archived_work_location.ts": "894f2569e7de0f6e71284b9128b05fcb68b1c7a3a7847e5706bbde1c2a15e5be",
+    "src/runtime/archived_work_location_strings.ts": "2f947f701aced2fdd2eb69490f68e8dff98855f1a084bc94ed2c1a260a4b0ac5",
+    "src/runtime/archived_work_location.test.ts": "5f6517861357b3f099d526406ee1f9eb5cd41f400b1592b2b02a2d083cb30772",
+    "src/components/ArchivedWorkLocationNotice.tsx": "77ed70fc6f58011faf1d7c9da951a8380c91dee6150abcdb44821ec6e22d101d",
+    "src/components/ArchivedWorkLocationNotice.test.tsx": "42a6edfa80bb88015b1e7327a25a2ec7f5e3914b4f99d8487695641566dc1a62",
+    "src/components/ArchivedWorkLocation.integration.test.tsx": "55c1af29ef4e270451b5d17458e58eb5e20577e54204d6900bb05b57e906188f",
+    "src/components/ComposerWorkNotice.tsx": "bec3991d878a9799559bbfad43ca806bd20681ab6cf9900ae6e8ce90ceada9d0",
+    "src/components/Composer.tsx": "988f08cd7713ed9422f8e8235f860d63e555acab01a463bacf15fbda4dffbcb8",
+    "src/components/Composer.work.test.tsx": "8a2f2c878c4b510629fcd8140a9db1f8534f7aa8564dccaf0e2f729603d9e899",
+    "src/components/EmptyState.tsx": "740dda175f17441f91ebfdf445dab1f67ee77f3f31308ca6c7f18880b13ee077",
+    "src/components/ThreadView.tsx": "df3788a39095f6649b87ddc37f1b2f1e4469c7476ce9bcf4b41a9d838a9e5c7d",
+    "src/App.tsx": "10a4654c55ab520c0ea3fd3933a1be333eb0300954bc0fe264ef281afd12eb74",
+    "src/components/StorageRecovery.tsx": "d071a1a77160c85558495d5c1276124dd9d193a52b1c1e96d2475903ea0900a4",
+    "src/components/DraftStartup.tsx": "b26c1b8fb268c78aaf8cf7211faf13df74a83417148ab89830f7da2e6ad8ad5e",
+    "src/components/WorktreeManagementHost.tsx": "08ec977b1fb7d2d68ada16a2fd69da31115d812d5852ddb689d66c65c20fd2d6",
+    "src/runtime/worktree_management.ts": "a4819409219472fc873f5432a00b71f8c73271972845b66e21ade554ddf9eefb",
+    "src/runtime/draft_storage.ts": "a3fce4de9dd17be896e9db72429d5108cb1565b1fb34b927047aa5fa95d9823b",
+    "src/runtime/setup_storage.ts": "ea5074cf0ee47a197acab09ff6b5c02850037274dde6afcb69fe67d42ccf53fa",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/fixture.tsx": "4c012ab746f9b9da934d98b8ca80ed415d92795ffc268bfb35f508a2d741adbc",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/run.mjs": "fee432c619aef23c638ec08b588dca84d4aa10a97cfb9f9c427a42313617687d",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/serve.mjs": "f6feffce08ae4fe6fbd4280c3803e8f14d6fb1b4296190794b264378e5aa2db3",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/index.html": "4f7ee3f2f501b7f6c354f1191b875bfaeab8b3d3276777ed2b70706545970199",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/run-guidance-corrected.mjs": "c50a2d002619a93d6d10d7d035f51d2ca1d2bcd132be77aaf73ea6ec0b6b980e"
+  },
+  "sourceUnchanged": true,
+  "passed": true
+}

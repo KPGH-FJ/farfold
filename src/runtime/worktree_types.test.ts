@@ -34,6 +34,7 @@ it("rejects missing fields, unknown schemas, sparse lists and duplicate IDs", ()
     parseWorktreeList({
       locations: Array(1),
       materials: [],
+      recoveries: [],
       archives: [],
       operation: null,
     }),
@@ -42,6 +43,7 @@ it("rejects missing fields, unknown schemas, sparse lists and duplicate IDs", ()
     parseWorktreeList({
       locations: [loc, loc],
       materials: [],
+      recoveries: [],
       archives: [],
       operation: null,
     }),
@@ -105,11 +107,18 @@ it("retains reviewed unknown target paths without fabricating verified locations
     { operationId: "lost", path: "/repo/possible", repositoryRoot: "/repo" },
   ];
   expect(
-    parseWorktreeList({ locations: [], archives: [], operation, materials }),
+    parseWorktreeList({
+      locations: [],
+      archives: [],
+      recoveries: [],
+      operation,
+      materials,
+    }),
   ).toEqual({
     locations: [],
     operation,
     materials,
+    recoveries: [],
     archives: [],
   });
   expect(() => parseWorktreeReply({ ...operation, settled: false })).toThrow();

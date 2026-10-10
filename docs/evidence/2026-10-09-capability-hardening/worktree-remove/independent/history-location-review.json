@@ -1,0 +1,194 @@
+{
+  "reviewedAtUtc": "2026-10-10T08:35:25.507348+00:00",
+  "scope": "Independent read-only review of the corrected archived/recovery location guidance. Source, tests and raw browser records were read; no test/browser/App/Agent/IPC/real filesystem recovery was run by this reviewer.",
+  "result": "No additional blocking finding within the final 13-file scope. Retained recovery metadata now supplements the original connection/error flow without claiming that the original directory was deleted.",
+  "sourceRefs": [
+    {
+      "path": "src/runtime/archived_work_location.ts",
+      "sha256": "894f2569e7de0f6e71284b9128b05fcb68b1c7a3a7847e5706bbde1c2a15e5be",
+      "bytes": 3216,
+      "lines": 93
+    },
+    {
+      "path": "src/runtime/archived_work_location_strings.ts",
+      "sha256": "2f947f701aced2fdd2eb69490f68e8dff98855f1a084bc94ed2c1a260a4b0ac5",
+      "bytes": 332,
+      "lines": 7
+    },
+    {
+      "path": "src/runtime/archived_work_location.test.ts",
+      "sha256": "5f6517861357b3f099d526406ee1f9eb5cd41f400b1592b2b02a2d083cb30772",
+      "bytes": 5057,
+      "lines": 161
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.tsx",
+      "sha256": "77ed70fc6f58011faf1d7c9da951a8380c91dee6150abcdb44821ec6e22d101d",
+      "bytes": 2412,
+      "lines": 78
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.test.tsx",
+      "sha256": "42a6edfa80bb88015b1e7327a25a2ec7f5e3914b4f99d8487695641566dc1a62",
+      "bytes": 6344,
+      "lines": 188
+    },
+    {
+      "path": "src/components/ArchivedWorkLocation.integration.test.tsx",
+      "sha256": "55c1af29ef4e270451b5d17458e58eb5e20577e54204d6900bb05b57e906188f",
+      "bytes": 9861,
+      "lines": 313
+    },
+    {
+      "path": "src/components/ComposerWorkNotice.tsx",
+      "sha256": "bec3991d878a9799559bbfad43ca806bd20681ab6cf9900ae6e8ce90ceada9d0",
+      "bytes": 2326,
+      "lines": 83
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "988f08cd7713ed9422f8e8235f860d63e555acab01a463bacf15fbda4dffbcb8",
+      "bytes": 49494,
+      "lines": 1461
+    },
+    {
+      "path": "src/components/Composer.work.test.tsx",
+      "sha256": "8a2f2c878c4b510629fcd8140a9db1f8534f7aa8564dccaf0e2f729603d9e899",
+      "bytes": 7150,
+      "lines": 213
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "740dda175f17441f91ebfdf445dab1f67ee77f3f31308ca6c7f18880b13ee077",
+      "bytes": 48976,
+      "lines": 1475
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "df3788a39095f6649b87ddc37f1b2f1e4469c7476ce9bcf4b41a9d838a9e5c7d",
+      "bytes": 51695,
+      "lines": 1395
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "10a4654c55ab520c0ea3fd3933a1be333eb0300954bc0fe264ef281afd12eb74",
+      "bytes": 45224,
+      "lines": 1261
+    },
+    {
+      "path": "src/App.work-location-review.test.tsx",
+      "sha256": "c91e92159e1993bbf63a5df6255687d0062014a994246aa736eb3c2fa679d202",
+      "bytes": 3610,
+      "lines": 119
+    }
+  ],
+  "reviewedPolicy": [
+    {
+      "area": "Catalogue facts",
+      "conclusion": "Only ready, nonloading, error-free catalogue association is used. Exact path-component matching rejects malformed or component-relative paths and prefix lookalikes; it does not resolve filesystem aliases. One matching archive takes precedence; conflicting archives yield no association. Recovery only records related backup history, independent of original-path existence or recovery availability."
+    },
+    {
+      "area": "Full App navigation",
+      "conclusion": "App.openRow and App.recover guard only kind=archive. A recovery association leaves the prior native-session/connection eligibility flow intact, including explicit ordinary open/reconnect. It does not choose a backup, restore anything, change cwd or send a prompt."
+    },
+    {
+      "area": "Thread reconnect and late actions",
+      "conclusion": "ThreadView current catalogue recheck only adds the archive guard to its existing recovery path. Retained handlers distinguish archive from recovery; existing active/request ownership and ordinary history-failure paths remain. The normal reconnect action survives the recovery hint."
+    },
+    {
+      "area": "Original error and controls",
+      "conclusion": "ArchivedWorkLocationNotice recovery branch first renders the unmodified ErrorNotice fallback including title/message/detail/children, then a separate management hint. archiveHandled suppresses only duplicate management and still returns the fallback for recovery. Existing archive replacement behavior is retained."
+    },
+    {
+      "area": "Cold draft",
+      "conclusion": "EmptyState passes remembered diagnostic cwd separately from a work grant. ComposerWorkNotice only attaches guidance to the existing work-load/reconnect failure classes; other errors remain ordinary. Recovery keeps work-settings error/retry and exact unsent text/path. No automatic use or cwd migration."
+    },
+    {
+      "area": "Management ownership",
+      "conclusion": "Click checks mounted/active/current cwd/current catalogue source before opening shared management with target=null. Multiple backups remain distinct choices; no implicit recovery selection. Loading/error/replaced catalogue retires old hints and rejects old handlers."
+    }
+  ],
+  "effectiveCounterexample": {
+    "scenario": "Prepare a recovery copy, cancel deletion, then explicitly restore the still-retained archive to its original directory. The recovery record persists and must not prevent that now-normal history connection.",
+    "originalResult": "3 effective failures: loaded and cold App navigation did not open; Thread/EmptyState original failure and retry were swallowed.",
+    "correctedResult": "The same 3 tests passed; retained-related log reports 5 files / 89 tests passed. Original red and historical prior checkpoints remain untouched."
+  },
+  "browserEvidenceReadOnly": [
+    {
+      "engine": "webkit",
+      "checks": 21,
+      "allPassed": true,
+      "recordedSourceBeforeEqualsAfter": true,
+      "currentProductionMatchesFinalCheckpoint": true,
+      "scope": "Actual complete App and React StrictMode, production stores/components/CSS. Controlled IPC, in-memory settings, synthetic filesystem/Git replies; no actual delete/recover or native app/Agent/user data."
+    },
+    {
+      "engine": "chromium",
+      "checks": 21,
+      "allPassed": true,
+      "recordedSourceBeforeEqualsAfter": true,
+      "currentProductionMatchesFinalCheckpoint": true,
+      "scope": "Actual complete App and React StrictMode, production stores/components/CSS. Controlled IPC, in-memory settings, synthetic filesystem/Git replies; no actual delete/recover or native app/Agent/user data."
+    }
+  ],
+  "boundaryChecks": {
+    "finalSourceHashes": 13,
+    "allMatch": true,
+    "allFilesAtMost1500Lines": true,
+    "productionFilesCheckedAgainstBothBrowserRuns": 8,
+    "testsExecutedByReviewer": false,
+    "typeAndFormat": "Author retained-typecheck and retained-final-format logs read; no repeat execution."
+  },
+  "limits": [
+    "The full App browser follows actual React/store/UI code with mocked IPC, synthetic Git/filesystem replies and in-memory settings; controlled restoreCatalogue is not a real Git restore.",
+    "A recovery association never proves the original directory absent or the backup currently readable. Actual connection errors remain visible; explicit manager checks still determine current backup usability.",
+    "No installed deletion/recovery or real Agent verification is claimed. Full engineering and guarded installation remain root work.",
+    "The original backend and helper reviews are unchanged and remain separately scoped; this supplement does not widen their conclusions."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/source-checkpoint-final.json",
+      "sha256": "8337cbb05089006cbb797bff978e78a4cd10eaf45d15981ec69945adb614fc78"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/retained-recovery-red.txt",
+      "sha256": "837a412b88c6299ab26e99c8b6bbdd6d610aa764ee2b630bf8f7cefebd8e3c88"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/retained-recovery-green.txt",
+      "sha256": "93134e2e1c3a37bd177c3eae71d5eb4a4a5ec1649c0de06c451b27a2ee3072a6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/retained-related.txt",
+      "sha256": "076a899c5c8b4c4ceba5a6d6acd94430c58ccc3dd290f6ecf9adc9604c5d803c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/retained-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/retained-final-format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-guidance-final.raw.txt",
+      "sha256": "c5ea68b5c6ffca4b37e8dc62ea004ba5d4a99ba11b8e671b57a20f31222c65e3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/chromium-guidance-final.raw.txt",
+      "sha256": "597ac378b93e76c95cc0d4e2ce80d09ea7cafb8a00fc046e440892c85d754f3e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/backend-review-final.json",
+      "sha256": "96a388fd9ed4eab51582b58c190d59584ff328b1170cea6d964610b7a66ebc2a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/helper-preflight-independent.json",
+      "sha256": "fada248bca7d0724c2b16985d66be844b02a9d1152e83adbd760d13e550028e3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/helper-preflight-final.json",
+      "sha256": "3bedfb1e78cdb939d5fde37a0819d299efba37ba5e29419eea784162d1262435"
+    }
+  ]
+}

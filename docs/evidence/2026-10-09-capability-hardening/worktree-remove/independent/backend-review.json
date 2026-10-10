@@ -1,0 +1,171 @@
+{
+  "reviewedAtUtc": "2026-10-10T08:23:50.832772+00:00",
+  "scope": "Independent H15 backend source review by frontend owner; no source edits, Cargo/Git fixture execution, browser, App, Agent, installation or user-data access in this review.",
+  "result": "No remaining blocking backend finding in the sealed source scope after the corrections below. Not whole-product, installed-app, Windows or H15 completion.",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/source-checkpoint-final.json",
+    "sha256": "23664a46005c312212396e2448f31e4bbc4b2811423e368d6029892469d2c808",
+    "files": 25,
+    "currentHashesMatch": true,
+    "allFilesAtMost1500Lines": true
+  },
+  "sourceRefs": {
+    "src-tauri/src/lib.rs": "10751edeeb677b70d3c57a8e0e1a1dde032641e16ca6b57ff65d96e0915da570",
+    "src-tauri/src/worktree_commands.rs": "a10ffb2b22dd2c81d80b901b051105fe735ff035765d81f9166ff9c445a9f2f7",
+    "src-tauri/src/worktrees/checkout.rs": "b1f5f1c16cbe646fb7b6b4046ccce48329b28769ccba231c4392edae17383657",
+    "src-tauri/src/worktrees/git.rs": "6c614ad712dc7cf54a65f3af9d76a072be34b2e7dc44c64b992db697df2edf23",
+    "src-tauri/src/worktrees/manager.rs": "1949c066d2f5ed442a4ee2bae54b164da9fdbf85c6d6331e8838ab7068c5cb60",
+    "src-tauri/src/worktrees/material_scan.rs": "4e4e1b827e756420c9b153a72db18ae2eb6eb5fc8928fca9329285dcec8c8859",
+    "src-tauri/src/worktrees/mod.rs": "9ae893a5f5eb4acbd632a170c73f8d0a343f26f391f1b55137d1eeac40ebdb22",
+    "src-tauri/src/worktrees/recover.rs": "b8f790087326fabad861f16fc1c1306a61eec256f780e2d5d227a892df4b2892",
+    "src-tauri/src/worktrees/recover_manager.rs": "df1053d401c79dc36e058f8620f480cdee55643bede85eee2d94353a1f38a87a",
+    "src-tauri/src/worktrees/recover_tests.rs": "0d675f62dd7b818d891c756b26a20fbdf07edb89a0ad3058a9c8bf8f589922ed",
+    "src-tauri/src/worktrees/recovery_pack.rs": "f31782d0d5292a2cf56f414c9486cb1b5a80d47386401d94ca2610fa966dda99",
+    "src-tauri/src/worktrees/recovery_roots.rs": "0fe8e23d9a4e92b9adcccd6f6154c3743617c054e1ce683eff421e19c60dbb2d",
+    "src-tauri/src/worktrees/recovery_tests.rs": "04781d6e10bdf150ee162f2a2e71c6177d9bb7fe22b2f1885ebe7346df170f1a",
+    "src-tauri/src/worktrees/recycle.rs": "32bc5e4fb9141bab01fd94f8d711342e45525c8cb049bb704bded9d32b01a85c",
+    "src-tauri/src/worktrees/recycle_manager.rs": "b20f701edc54c5b1f4132a66544cd1a470f569f6a1f51575e57b4fa8421494c2",
+    "src-tauri/src/worktrees/recycle_tests.rs": "bd5a934c13b8abd3a7320dac0d705289f6702a7940b34a566e040e71535fca60",
+    "src-tauri/src/worktrees/removal.rs": "2e8ca41584a56a68fb32691d17141f6c0ca82f51d2599e92227479e016ab4410",
+    "src-tauri/src/worktrees/remove_boundary_tests.rs": "7eb75c61086c231c898593dfbbf72cbed03acde74f474ebf51d1dfd4f0660ed8",
+    "src-tauri/src/worktrees/remove_manager.rs": "9519e54056fa168a8c3316669a2727c48eb9a89c56fb0eef499f7f09dd14b101",
+    "src-tauri/src/worktrees/remove_reconcile.rs": "8490f5d76761d52f00f0ec4bb0de72b03bc7f696a9a9a07638b5ba6420a76766",
+    "src-tauri/src/worktrees/remove_types.rs": "3fbee4b3e34bda17e36cbdb342cc1c2e26ff1b32b7fcfd997db00080b12203b6",
+    "src-tauri/src/worktrees/remove_validation.rs": "7aa324d86be803a10e6b3371d3b7abc1d537aa0b601132c468a536d1215b6ba4",
+    "src-tauri/src/worktrees/remove_wire_tests.rs": "59494ca93287b149a13e50766e652a99d728f4f1502ffb548117d4b7f6aae42d",
+    "src-tauri/src/worktrees/storage.rs": "83c95412f8becbaf7e9cd655bdb4eed12bd68833876d0cf30ea8856854ca775c",
+    "src-tauri/src/worktrees/types.rs": "c450c39b488198a4bc3459301c76a051eb739e7bfb960c401ad5ab6d0f4c1218"
+  },
+  "reviewedBoundaries": [
+    {
+      "area": "Explicit deletion authority",
+      "finding": "Prepare generates and actually verifies a separate recovery package, never deletes. Generic start rejects remove. Dedicated confirm requires exact live maintained prepared operation plus archive revision/recovery id/bundle and manifest hashes; dispatch intent is saved before Git. Duplicate confirmation does not repeat execution."
+    },
+    {
+      "area": "Private local commits",
+      "finding": "Enumerates HEAD, ORIG_HEAD, FETCH_HEAD, refs/worktree and both old/new reflog OIDs including orphaned private-ref logs. Known files are hashed into evidence; unrecognized private layouts are rejected instead of silently omitted. All admitted roots and their complete reachable objects are exported without adding source refs or fetching remotes."
+    },
+    {
+      "area": "Actual recovery and physical content",
+      "finding": "Bundle is imported into an independent second repository, exact roots/object closure checked, HEAD materialized under the captured safe checkout profile, then physical bytes/links/Git executable mode compared. Actual owner tests include source objects made unavailable and private orphan roots. Dirty index or physical dirty/untracked/ignored/extra empty-directory material that cannot be reproduced blocks deletion."
+    },
+    {
+      "area": "Identity and publication",
+      "finding": "Original/retained parents and source identities are rechecked. Reserved backup leaf stamp now flows into build; replacement or nonempty leaf is rejected. Git creates bundle in temporary staging, independently restores it, then bounded create_new/NOFOLLOW publication refuses existing destination files and symlinks. Final parent/leaf checks retain original identities."
+    },
+    {
+      "area": "Admission and cancellation",
+      "finding": "Maintenance admission, metadata seal and worker ownership remain until actual worker/process completion; cancellation is intent, not rollback. Root verification checks cancel before each next Git read. Known refusals retain exact action/id. Release failures remain storageUnknown; cold false maintenance is not proof of an old process ending."
+    },
+    {
+      "area": "Cold and unknown",
+      "finding": "Cold records do not restart or confirm work; current removed receipt is withdrawn while durable intent/recovery remains. Persisted per-archive dispatched marker prevents acknowledgement or replacement current intent from regranting disposal. Read-only reconciliation checks exact absence/identities/Git registration and preserved branch."
+    },
+    {
+      "area": "Restore to new directory",
+      "finding": "Exact canonical new parent/name, absent destination, current recovery proof and explicit action required. Recovery creates an independent existing-owned repository with all protected recovery refs; it gains no created-linked deletion authority and never applies a draft or changes old conversation cwd."
+    }
+  ],
+  "counterexamples": [
+    {
+      "finding": "confirm returned checkingOutcome while deleteDispatched=false",
+      "origin": "This source review; confirmed by verification actual Rust wire.",
+      "fix": "Pre-delete validation now verifyingRecovery/false; actual dispatch remains deleting/true.",
+      "evidence": "independent/wire/original-red.txt -> verified-green.txt"
+    },
+    {
+      "finding": "Cold unknown removal retained current removed success payload",
+      "origin": "Verification independent actual wire.",
+      "fix": "Cold conversion clears only current removed receipt, retains durable deletion/recovery metadata for explicit recheck.",
+      "evidence": "independent/wire/original-red.txt -> verified-green.txt"
+    },
+    {
+      "finding": "Backup parent replacement became a new baseline; deleted retained-parent replacement still accepted",
+      "origin": "Root path challenge expanded by this source review; backend owner executed two real inode counterexamples.",
+      "fix": "Fixed parent identities are required at build boundaries and verify_deleted.",
+      "evidence": "backend/parent-identity-red.txt; backend/worktrees-publication-green.txt"
+    },
+    {
+      "finding": "Replacement backup leaf accepted and existing recovery.bundle overwritten",
+      "origin": "This source review; backend owner executed one test with two failing semantic cases.",
+      "fix": "Reserve stamp carried to build, empty leaf check, staged bundle and exclusive final publication; existing file/symlink canaries verified.",
+      "evidence": "backend/leaf-identity-red.txt; backend/worktrees-publication-green.txt"
+    },
+    {
+      "finding": "Commit-root verification loop ignored cancellation until all roots were read",
+      "origin": "This source review; backend owner ran dedicated effective red.",
+      "fix": "Checks actual cancellation and passes signal to each bounded Git command.",
+      "evidence": "backend/roots-cancel-red.txt; backend/worktrees-publication-green.txt"
+    }
+  ],
+  "validationReadOnly": {
+    "backendAuthorExecuted": "Final worktrees module 62 passed, 0 failed; standard clippy and cargo fmt exit 0. Logs read, not rerun by reviewer.",
+    "wireVerifierExecuted": "18 actual serialized values plus extraction check: 19/19 passed. Original 17/19 and intermediate 18/19 remain; no parser relaxation. This wire checkpoint precedes final publication-only boundary changes; same-shape later raw wire is separately retained, not claimed re-parsed here.",
+    "hashes": "Recomputed all 25 final source hashes and every referenced independent wire receipt hash; no drift at sealing."
+  },
+  "limitsAndRemaining": [
+    "I/O still uses paths for directory creation/Git commands; identity checks detect stable external replacement but are not an OS-wide lock or fully handle-relative mutation. A race can leave material and unknown result; there is no automatic rollback or deletion of uncertain material.",
+    "Recovery is admitted Git commit/object and checkout-content recovery, not preservation of arbitrary ACLs, xattrs or all unsupported private Git state. Current limits include 4096 roots, 50000 objects and 256MiB packed/object budget; over-limit/unsupported sources remain explicit refusals.",
+    "No remote freshness or pushed status is inferred from local tracking information; no remote query/fetch is performed.",
+    "Successful deletion removes the archive entry while keeping recovery records and old conversation cwd. At review time archive-only historical notice lacked a recovery-specific entry after removal; root assigned verification a separate red/fix/followup. This review does not mark NEW-07 or all H15 complete.",
+    "Full seven checks, candidate source closure and installed delete/recover interaction remain root followup; no formal App or real Agent acceptance is supplied by this review."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/source-checkpoint-final.json",
+      "sha256": "23664a46005c312212396e2448f31e4bbc4b2811423e368d6029892469d2c808"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/final-lint-execution.json",
+      "sha256": "d5400f720ef1d77aa798f519116f3bb6de0650f42722b800d79f30ea301d50ad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/receipt.json",
+      "sha256": "a745cb52f3774a48126755adddd9d114d49c5416ecdbec181d3d24352d7628f4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-publication-green.txt",
+      "sha256": "bec86b0888b5feaf8a8f0ae3548ef90e8b8bf6072e292380adf9e97fa25bb394"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/clippy-publication.txt",
+      "sha256": "21002a4e23e9716c8eaaf7d2c60ef0e62d9297bfd1ee08364c68233862dcf83f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/format-publication.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/parent-identity-red.txt",
+      "sha256": "b4796dfa9236ba6434e3f630d01f1485ccc737bc1d1c1bf2e900898ffa89b3ab"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/leaf-identity-red.txt",
+      "sha256": "d94967de1bef545012dee135bbf30d615ad580b83acd2a08eacea2398bd83994"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/roots-cancel-red.txt",
+      "sha256": "f4c4263899985a97c016ed368c533513e67f60014770c65dd6a2fdfff6ae52b7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/recover-cancel-red.txt",
+      "sha256": "a475796694e569fe38a1aac797ff2aceac82d62f94e50b7cb6a72da5b4067764"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/original-red.txt",
+      "sha256": "b8ad2a500180daefa7344b2f9bad712a11215d6bb375609d886eb803bdc09e24"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/verified-green.txt",
+      "sha256": "13ffe055354347db207c749e9e20e3880cf1f85c0d67c5dc7c90447854b84414"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-wire-verified.json",
+      "sha256": "0d12415400523ec1c4b8def0d992c8af2ec95dd8732385438d88a0eb679afd25"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-wire-publication.json",
+      "sha256": "b2ccf3b57b497d2d3b106de001ca39e074c3bab45284c7fa323bacc2e4277d49"
+    }
+  ]
+}

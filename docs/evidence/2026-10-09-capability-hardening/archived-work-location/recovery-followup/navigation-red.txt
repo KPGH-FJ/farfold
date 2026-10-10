@@ -1,0 +1,68 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/App.work-location-review.test.tsx (7 tests | 3 failed) 13ms
+   × known archive navigation retains display without opening a connection 9ms
+   × known recovery navigation retains display without opening a connection 1ms
+   × cold known history retains identity and does not pretend to have loaded body 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.work-location-review.test.tsx > known archive navigation retains display without opening a connection
+ FAIL  src/App.work-location-review.test.tsx > known recovery navigation retains display without opening a connection
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "A",
+        "cwd": "/controlled/archived",
+        "nativeSessionId": "native",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/App.work-location-review.test.tsx:18:88
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/App.work-location-review.test.tsx > cold known history retains identity and does not pretend to have loaded body
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "A",
+        "cwd": "/controlled/archived",
+        "nativeSessionId": "native",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/App.work-location-review.test.tsx:22:21
+     20| it("cold known history retains identity and does not pretend to have l…
+     21|  const {r}=row(false);catalogue.value.recoveries=[{originalPath:cwd}];…
+     22|  expect(h.open).not.toHaveBeenCalled();expect(threads.markOpenFailed).…
+       |                     ^
+     23| });
+     24| it.each(["notReady","loading","error","unrelated"])("%s catalogue keep…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 4 passed (7)
+   Start at  16:18:34
+   Duration  1.00s (transform 207ms, setup 0ms, import 923ms, tests 13ms, environment 0ms)
+

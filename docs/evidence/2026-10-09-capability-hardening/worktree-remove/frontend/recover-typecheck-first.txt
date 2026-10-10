@@ -1,0 +1,8 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/WorktreeDialog.tsx(562,10): error TS2741: Property 'onRecover' is missing in type '{ recoveries: readonly Readonly<{ id: string; revision: number; archiveId: string; archiveRevision: number; originalPath: string; retainedPath: string; repositoryRoot: string; headOid: string; branch: string | null; ... 9 more ...; availability: "unknown" | ... 2 more ... | "verified"; }>[]; disabled: boolean; onChe...' but required in type '{ recoveries: readonly Readonly<{ id: string; revision: number; archiveId: string; archiveRevision: number; originalPath: string; retainedPath: string; repositoryRoot: string; headOid: string; branch: string | null; ... 9 more ...; availability: "unknown" | ... 2 more ... | "verified"; }>[]; disabled: boolean; onChe...'.
+src/runtime/worktree_recover.test.ts(145,31): error TS2339: Property 'state' does not exist on type 'WorktreeReply'.
+  Property 'state' does not exist on type 'Readonly<{ kind: "unknownOperation"; operationId: string; }>'.
+ ELIFECYCLE  Command failed with exit code 1.

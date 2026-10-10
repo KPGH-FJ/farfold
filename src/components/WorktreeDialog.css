@@ -88,3 +88,12 @@
   align-items: flex-start;
   gap: 8px;
 }
+.worktree-removal h3,
+.worktree-removal h4 {
+  margin: 0;
+}
+.worktree-delete-confirmation {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+}

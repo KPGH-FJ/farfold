@@ -137,6 +137,7 @@ pub(super) fn prepare_record(
     let retained_path = format!("{retained_parent}/worktree");
     absent(&retained_parent)?;
     let record = SavedArchive {
+        removal_operation: None,
         archive: Archive {
             id: location.location.id.clone(),
             revision: location.location.revision,

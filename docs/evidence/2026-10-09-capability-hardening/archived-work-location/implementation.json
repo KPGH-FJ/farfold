@@ -1,0 +1,227 @@
+{
+  "schema": 1,
+  "status": "source-and-targeted-checks-passed-native-not-tested",
+  "createdAt": "2026-10-10T07:53:37.873803+00:00",
+  "installedBaselineCommit": "418880a249da9809169d9b8d6e99557352a40f08",
+  "role": "author implementation; root independent review pending",
+  "scope": "Archived working-location guidance for existing history and cold remembered new-conversation location. No filesystem operation, Agent launch, automatic restore, cwd migration or prompt dispatch added.",
+  "sourceRefs": [
+    {
+      "path": "src/runtime/archived_work_location.ts",
+      "sha256": "a59585a06e5d28d85a1d4fe6aec648b9c00d259b92fa63b02305ec6c33a76def",
+      "bytes": 1875,
+      "lines": 58
+    },
+    {
+      "path": "src/runtime/archived_work_location_strings.ts",
+      "sha256": "eff399754af495cc01d4a0112d2e3ed7bae22036ace4346871a6f124d8375c6c",
+      "bytes": 158,
+      "lines": 4
+    },
+    {
+      "path": "src/runtime/archived_work_location.test.ts",
+      "sha256": "ab8784fd07542fbc5ba77042ed82d2ac635dc5a03ca1493690e1ba1d8e71e35a",
+      "bytes": 3146,
+      "lines": 99
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.tsx",
+      "sha256": "d2feccb18ddf00c6570becf10925c3a7bfa5d4f8dc7b75b80c7e87457f19c221",
+      "bytes": 1879,
+      "lines": 67
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.test.tsx",
+      "sha256": "9883644314d6a8c8146e99b908d3046a2b70d3c1a734b25992dfef5a36ab0e55",
+      "bytes": 4491,
+      "lines": 136
+    },
+    {
+      "path": "src/components/ArchivedWorkLocation.integration.test.tsx",
+      "sha256": "1190662b9979e676ef1e1e5fc3150aa2272451677c14cf003e6fb3fc626eb8af",
+      "bytes": 6944,
+      "lines": 234
+    },
+    {
+      "path": "src/components/ComposerWorkNotice.tsx",
+      "sha256": "bec3991d878a9799559bbfad43ca806bd20681ab6cf9900ae6e8ce90ceada9d0",
+      "bytes": 2326,
+      "lines": 83
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "988f08cd7713ed9422f8e8235f860d63e555acab01a463bacf15fbda4dffbcb8",
+      "bytes": 49494,
+      "lines": 1461
+    },
+    {
+      "path": "src/components/Composer.work.test.tsx",
+      "sha256": "8a2f2c878c4b510629fcd8140a9db1f8534f7aa8564dccaf0e2f729603d9e899",
+      "bytes": 7150,
+      "lines": 213
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "740dda175f17441f91ebfdf445dab1f67ee77f3f31308ca6c7f18880b13ee077",
+      "bytes": 48976,
+      "lines": 1475
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "92090d6fb43cba894d50403219fcfdcca02ce9ec75d43b376eb20927db421f7e",
+      "bytes": 51667,
+      "lines": 1394
+    }
+  ],
+  "sourceHashTiming": "Hashes collected after final related tests/typecheck/format; this local runner did not collect a whole-repository before/after inventory. Root integration still required.",
+  "contract": {
+    "catalogue": "Uses existing worktrees snapshot/subscribe/load; no store edit. Catalogue must be ready, not loading, and have no read error. Existing availability is a recorded association, not current filesystem proof.",
+    "paths": "Exact absolute POSIX path components or descendant; reject dot/dotdot/empty components/backslash/NUL and ambiguous overlapping records. No filesystem alias inference; future Windows path matching is not implemented here.",
+    "lifecycle": "Restore removes archive record and subscription returns ordinary notice/action. Management button rechecks mounted/active/cwd/exact archive object/current catalogue. Already retained reconnect handler is blocked once a current archived record exists.",
+    "recoveryAction": "Only opens existing management with target=null, no draft cwd application target. History, queue and draft bytes preserved in controlled tests; no installed-data assertion.",
+    "errors": "Only Composer workLoadFailed/reconnectFailed receive archive guidance; unrelated Composer notes keep original ErrorNotice. History keeps unknown prior execution and configuration notices. Duplicate archived notice is suppressed when parent already displays it.",
+    "lineLimit": 1475
+  },
+  "checks": [
+    {
+      "command": "corepack pnpm exec vitest run src/components/ArchivedWorkLocation.integration.test.tsx",
+      "log": "integration-red.txt",
+      "exitCode": 1,
+      "result": "4 effective missing-guidance failures / 6 passes; before production implementation"
+    },
+    {
+      "log": "integration-first-green.txt",
+      "exitCode": 0,
+      "result": "same 10 tests passed before extra boundary assertions"
+    },
+    {
+      "log": "targeted-green.txt",
+      "exitCode": 0,
+      "result": "3 files / 53 tests passed at intermediate checkpoint"
+    },
+    {
+      "log": "related-final.txt",
+      "exitCode": 0,
+      "result": "10 files / 99 tests passed; actual SSR integration plus controlled hook/callback tests and existing related tests"
+    },
+    {
+      "log": "typecheck-final.txt",
+      "exitCode": 0,
+      "result": "whole-project typecheck passed at completion"
+    },
+    {
+      "log": "format-final.txt",
+      "exitCode": 0,
+      "result": "11 owned files passed targeted Prettier check; owned git diff --check also exited 0"
+    }
+  ],
+  "preservedFailures": [
+    {
+      "log": "integration-harness-import-failure.txt",
+      "classification": "test harness only: invoke returned undefined during module import; zero tests executed, not product red"
+    },
+    {
+      "log": "related-first.txt",
+      "classification": "90 passed / 1 fixture failure: old manual Composer tree walker did not descend into extracted ComposerWorkNotice; adapted traversal of the actual stateless component, all original assertions retained"
+    }
+  ],
+  "nativeObservationRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/16-history-after-archive.txt",
+      "sha256": "4a025aea411fc8be8837e762cf8d663ca6153fbff7daf3012627e3a8f5bada99",
+      "bytes": 3948
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/17-reconnect-archived-location.txt",
+      "sha256": "1b705aec12b4450a8e1f947c5c36985fe5d17c8af6bf299581cc699fd5340cc3",
+      "bytes": 4014
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/18-cold-startup.txt",
+      "sha256": "c7d5a40aecfdb5cfdac4f325ed2d39ca4de2c15b7bdda161e9251b33a3ae6df4",
+      "bytes": 3174
+    }
+  ],
+  "nativeBoundary": "Root provided these installed-4188 observations. Author did not operate App or repeat native observation; new guidance is not installed or native-accepted. Existing missing-cwd validation remains unchanged and runs before connection setup.",
+  "evidenceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/format-boundaries.txt",
+      "sha256": "8da7f7f38ade8ccce47113e9ef8a17b804a476412ba8e6913253db0db896cff0",
+      "bytes": 176
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/format-related.txt",
+      "sha256": "cd800235ab7ea58667d613581a2be51dbe95fd224bb00f14771c41376e80d91e",
+      "bytes": 105
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/format.txt",
+      "sha256": "2e8309c0dc3b253997498f5108eb7205068301e54c330b62968772748731ceaf",
+      "bytes": 477
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/integration-first-green.txt",
+      "sha256": "cdffb28d44001bd1535c76a93afb3d50eb5446eaeae073bb1e394f899d7d93ab",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/integration-harness-import-failure.txt",
+      "sha256": "5085bb7774185782739eeb5cc1bd704038be93bcef1c5f146ba2e99a9afafbae",
+      "bytes": 1089
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/integration-red.test.tsx.txt",
+      "sha256": "3bacedd7f2e0a04f42cc40dba30309c6d1dfd6ecbd30114a77765a8499c4ed2b",
+      "bytes": 4759
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/integration-red.txt",
+      "sha256": "2c61f13e6fa7581d13937e6220f918a555c25a5aee64db611116bae76d43b232",
+      "bytes": 44836
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/related-final.txt",
+      "sha256": "781bf71c68c55625aed997d9eda2c63c54aebe062c2cc174d2b22112e6794fe7",
+      "bytes": 215
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/related-first.txt",
+      "sha256": "28cbc04fe7cda6b138612422fe6c10326ca302aff49591912d8832bd88df2b6e",
+      "bytes": 1104
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/targeted-green.txt",
+      "sha256": "7d44c30f2358d43261532435eaa6ae98b9caf1bd15588989b40368eed1dc313f",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/typecheck-first.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    }
+  ],
+  "notRun": [
+    "Cargo",
+    "build",
+    "full frontend suite",
+    "formal App/native UI",
+    "real Agent",
+    "filesystem/Git mutations",
+    "commit"
+  ],
+  "remaining": [
+    "Root independent source review and integration checks",
+    "Installed next candidate history/cold guidance and explicit management journey verification",
+    "H15 permanent deletion/recovery remains separate owner work in progress"
+  ]
+}

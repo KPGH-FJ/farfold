@@ -1,0 +1,9 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0063]: missing field `recovery` in initializer of `worktrees::storage::SavedOperation`
+   --> src/worktrees/remove_manager.rs:287:31
+    |
+287 |         next.operation = Some(SavedOperation {
+    |                               ^^^^^^^^^^^^^^ missing `recovery`
+
+For more information about this error, try `rustc --explain E0063`.
+error: could not compile `farfold` (lib test) due to 1 previous error

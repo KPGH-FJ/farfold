@@ -1,0 +1,91 @@
+{
+  "scope": "Independent actual Rust serialization -> production strict TypeScript parsing; no repeated Rust/Git/App/IPC",
+  "result": "passed",
+  "checks": 19,
+  "actualReceiptValues": 18,
+  "history": [
+    {
+      "log": "original-red.txt",
+      "passed": 17,
+      "failed": 2,
+      "failures": [
+        "removeConfirm checkingOutcome/false",
+        "coldRemovalList unknown+removed"
+      ]
+    },
+    {
+      "log": "repaired-green.txt",
+      "passed": 18,
+      "failed": 1,
+      "note": "Filename reflects intended result only: actual exit1 and coldRemovalList rejection retained."
+    },
+    {
+      "log": "verified-green.txt",
+      "passed": 19,
+      "failed": 0
+    }
+  ],
+  "boundaries": [
+    "Each set matches its unique original REMOVE_WIRE stdout JSON exactly.",
+    "Strict parser not loosened. Final cold unknown carries no current removed receipt, verified recheck can produce ready.",
+    "All filtered historical cases reported skipped by test runner; only selected 19 executed per run."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/wire.test.ts",
+      "sha256": "3425829f25c020b2fc24fec6de8ca1f335047c85971817f3a98752384bf28c56"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/vitest.config.ts",
+      "sha256": "a78ce36d2f7470023772e74b8d13d5ed60ed861409f6895dde6ece74239a9234"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/original-red.txt",
+      "sha256": "b8ad2a500180daefa7344b2f9bad712a11215d6bb375609d886eb803bdc09e24"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/repaired-green.txt",
+      "sha256": "e4b5657b5b1c2e71b96f99deb43798199d878006d60606cdf1e948a62f3711a7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/verified-green.txt",
+      "sha256": "13ffe055354347db207c749e9e20e3880cf1f85c0d67c5dc7c90447854b84414"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-wire.json",
+      "sha256": "494e067def135762e1e86df2c2c20e479948fd58fed1aeaa8638c30f4d788d9f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-wire-final.json",
+      "sha256": "e56311724bc99fbd0becce1e3930dd0fbf127a435461c21661a175461dfc77f6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-wire-verified.json",
+      "sha256": "0d12415400523ec1c4b8def0d992c8af2ec95dd8732385438d88a0eb679afd25"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-first.txt",
+      "sha256": "fb803ab76f9402412b9e1cd06550629149e170e5578dcddfc631caad91571828"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-second.txt",
+      "sha256": "bafdab4c71aaf8369b952ce506fdbef4f64ee926f6eb37116eb0ac087c457856"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-identity-cold-green.txt",
+      "sha256": "4db43b433ba9670ffdf58ebc309d1ddecf3cf57b031fe9db4f178e29b459c05c"
+    },
+    {
+      "path": "src/runtime/worktree_types.ts",
+      "sha256": "015c38ccf205ed5fc0c08392d2f1cac56dab5f432d0f5c4491ad280f0d1c6c47"
+    },
+    {
+      "path": "src/runtime/worktree_remove_types.ts",
+      "sha256": "606038d08834c91280159f9785d306fb202ecf878f8a0d4bf63d825d2d1d1984"
+    },
+    {
+      "path": "src/runtime/worktree_recycle_types.ts",
+      "sha256": "0d21e458427e7cc2249cbaaac099122b74611851aa52be24775e2f2ed6789602"
+    }
+  ]
+}

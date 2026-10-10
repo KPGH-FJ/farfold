@@ -53,6 +53,7 @@ beforeEach(() => {
           return {
             locations: [],
             materials: [],
+            recoveries: [],
             archives: [],
             operation: null,
           };
@@ -259,6 +260,7 @@ it("cold prepared intents are only displayed, never started", async () => {
   h.invoke.mockResolvedValueOnce({
     locations: [location],
     materials: [],
+    recoveries: [],
     archives: [],
     operation: reply("prepared"),
   });
@@ -277,6 +279,7 @@ it("an unconfirmed forget retains the listing until a successful refresh", async
   h.invoke.mockResolvedValueOnce({
     locations: [location],
     materials: [],
+    recoveries: [],
     archives: [],
     operation: null,
   });
@@ -287,6 +290,7 @@ it("an unconfirmed forget retains the listing until a successful refresh", async
   h.invoke.mockResolvedValueOnce({
     locations: [],
     materials: [],
+    recoveries: [],
     archives: [],
     operation: null,
   });
@@ -312,6 +316,7 @@ it("only an explicitly acknowledged settled unknown allows another creation", as
     if (command === "worktree_list")
       return {
         locations: [],
+        recoveries: [],
         archives: [],
         materials: [
           {
@@ -436,6 +441,7 @@ it("failed fresh location check reads back saved unavailability without applying
   h.invoke.mockResolvedValueOnce({
     locations: [location],
     materials: [],
+    recoveries: [],
     archives: [],
     operation: reply("ready"),
   });
@@ -447,6 +453,7 @@ it("failed fresh location check reads back saved unavailability without applying
       return {
         locations: [changed],
         materials: [],
+        recoveries: [],
         archives: [],
         operation: reply("ready"),
       };
@@ -460,6 +467,7 @@ it("confirmed forgetting clears the associated result and old observations canno
   h.invoke.mockResolvedValueOnce({
     locations: [location],
     materials: [],
+    recoveries: [],
     archives: [],
     operation: reply("ready"),
   });

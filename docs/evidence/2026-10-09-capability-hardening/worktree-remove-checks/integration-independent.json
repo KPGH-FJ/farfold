@@ -1,0 +1,333 @@
+{
+  "schemaVersion": 1,
+  "reviewedAtUTC": "2026-10-10T08:51:45.891276+00:00",
+  "status": "passed-with-explicit-evidence-boundaries",
+  "reviewer": "architecture",
+  "role": "Independent audit of root engineering execution, complete cross-owner source closure, evidence references and candidate helper readiness. This reviewer authored the backend; independent backend behavior review is product_coverage's frozen backend-review-final.json, not a claimed second implementation review here.",
+  "executedByReviewer": [
+    "Read/hash existing source, inputs, logs and receipts",
+    "Static Python AST parse and isolated literal inventory evaluation only",
+    "Format this new receipt only"
+  ],
+  "notExecutedByReviewer": [
+    "Cargo or frontend tests",
+    "Build or complete candidate/installer script",
+    "Browser or formal application",
+    "Real Agent, Git mutation or user database access"
+  ],
+  "sourceClosure": {
+    "priorInstalledCommit": "418880a249da9809169d9b8d6e99557352a40f08",
+    "engineeringSourceBase": "e8855483b97833dc013d910d6aa7edc40040372c",
+    "groups": {
+      "backend": 25,
+      "frontend": 23,
+      "guidance": 13,
+      "legacyTestWalkers": 2
+    },
+    "disjoint": true,
+    "changedInputs": 63,
+    "equalsCompleteInstalledCandidateDelta": true,
+    "allCurrentHashesMatch": true,
+    "allChangedFilesAtMost1500Lines": true,
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/source-closure.json",
+      "sha256": "a4fda2b19d8208658ba5211a839791adf8a34ffc0f6a7144304d80b2f79847f5"
+    }
+  },
+  "engineering": {
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/verification.json",
+      "sha256": "1db98a969acf4305001e163d0e095a229adb3d7e94a2717d0fd783ffbe1dee50"
+    },
+    "inputCount": 1328,
+    "beforeAfterAndCurrentEqual": true,
+    "allSevenActuallyExecutedByRoot": true,
+    "checks": [
+      {
+        "name": "typecheck",
+        "exitCode": 0,
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/typecheck.txt",
+          "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+        }
+      },
+      {
+        "name": "frontend",
+        "exitCode": 0,
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/frontend.txt",
+          "sha256": "dfbc39dd389baef7583bb7ee2e432a8bae2178f4e82dd019289b1026285cd49c"
+        }
+      },
+      {
+        "name": "build",
+        "exitCode": 0,
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/build.txt",
+          "sha256": "d208cab5c24d026d6ffc705298e51b4cfe0048ce908c47e0233f4d3f12ec36b4"
+        }
+      },
+      {
+        "name": "cargo-fmt",
+        "exitCode": 0,
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/cargo-fmt.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "clippy",
+        "exitCode": 0,
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/clippy.txt",
+          "sha256": "a7642a0867425c6137f6fda230ee0c5445d5148745ccd7b4f5b0b4f2b4540d91"
+        }
+      },
+      {
+        "name": "rust",
+        "exitCode": 0,
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/rust.txt",
+          "sha256": "d579007ea921655a1663c6589f86aa3211099f5bcfb217d1cbd34fecc9c5037c"
+        }
+      },
+      {
+        "name": "format",
+        "exitCode": 0,
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/format.txt",
+          "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+        }
+      }
+    ],
+    "countsFromRawLogs": {
+      "frontend": ["Test Files  370 passed (370)", "Tests  4385 passed (4385)"],
+      "rust": [
+        "test result: ok. 1342 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 68.57s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    "ignoredTestsAreNotPasses": 6,
+    "warnings": [
+      "Vite reports chunks over 500 kB; build exit is 0. No warning was hidden or promoted to a clean-size assertion."
+    ]
+  },
+  "firstRunPreserved": {
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/verification.json",
+      "sha256": "1c048f39e9c93f98c6274b18798708f4498ead51260ab4c6552f869d8e9afaf8"
+    },
+    "allPassed": false,
+    "frontendPassed": 4378,
+    "frontendFailed": 7,
+    "failedFiles": 2,
+    "remainingSixChecksExitZero": true,
+    "sourceStable": true,
+    "repairOnlyTwoExistingTestWalkers": true,
+    "allOriginalCaseBodiesByteIdentical": true,
+    "explanation": "Composer/Thread test walkers now descend into the extracted actual notice components using an explicit empty catalogue fixture and child hook slots. Original test bodies/assertions/timeouts are unchanged. Dedicated notice/fullApp evidence covers the actual child effect and owner lifecycle separately."
+  },
+  "evidenceBinding": {
+    "sourceClosureProofs": 13,
+    "allProofHashesMatch": true,
+    "mainReceiptsAudited": 7,
+    "recursivePathHashOccurrencesVerified": 266,
+    "distinctReferencedPathsVerified": 249,
+    "allReferencedBytesMatch": true,
+    "backendTargeted": 62,
+    "actualRustToProductionTypeScriptWireChecks": 19,
+    "browser": {
+      "webkitLifecycle": 27,
+      "chromiumLifecycle": 27,
+      "webkitFinalGuidance": 21,
+      "chromiumFinalGuidance": 21,
+      "errors": 0,
+      "boundary": "Actual full App/React production source with controlled IPC, in-memory settings and synthetic Git/filesystem replies. These are overlapping journeys, not 96 independent guarantees; no actual deletion or installed/native acceptance."
+    }
+  },
+  "reviewedIntegrationBoundaries": [
+    "Final notice source gates reconnect only for a current exact archive association. A recovery copy merely adds guidance and preserves ordinary errors, actions and explicit reconnect at the original cwd.",
+    "Management actions recheck active/mounted/current cwd and catalogue object and open with target=null; they do not migrate historical cwd or auto-restore/send.",
+    "Remove requires a separate exact confirmation after verified recovery preparation. Actual cross-language publication wire and original two strict-schema failures remain separately preserved.",
+    "Backend resource/identity/unknown-result limits remain exactly those in the authored implementation and peer review; an engineering pass does not strengthen path operations into OS-wide exclusion."
+  ],
+  "candidateReadiness": {
+    "helperChecks": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/prepare-candidate.py",
+        "sha256": "e9cbd733d525ff9ed253ab2fb7aee2d06584ea0cb8fc9f1a45e1b10e85ba4499",
+        "inventoryCount": 1328,
+        "inventoryMatchesEngineering": true,
+        "fullScriptExecuted": false
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/verify-candidate.py",
+        "sha256": "78e65b7e6d95369def3ebeedbd8308eee0f000bda679bd7b882e097c5aa397f5",
+        "inventoryCount": 1328,
+        "inventoryMatchesEngineering": true,
+        "fullScriptExecuted": false
+      }
+    ],
+    "same1328Inventory": true,
+    "baselineCommit": "418880a249da9809169d9b8d6e99557352a40f08",
+    "requiredCLI": "python3 docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/verify-candidate.py <exact new commit> docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/verification.json",
+    "executionCondition": "Only after root reports successful preparation for the exact committed source and freezes candidate receipts. Engineering proof, exact committed inputs, five bundle files, arm64/signature/archive, unchanged formal baseline and final input stability must pass then. No candidate result is claimed by this static review."
+  },
+  "protectedEvidence": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "remaining": [
+    "Exact committed candidate build/independent verification",
+    "Guarded installation/data retention/sole-app cleanup",
+    "Installed permanent-delete and independent-new-directory recovery plus corrected historical-location guidance",
+    "Windows, real Agent breadth, whole H15/H17 and full active-plan completion are not established"
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/verification.json",
+      "sha256": "1db98a969acf4305001e163d0e095a229adb3d7e94a2717d0fd783ffbe1dee50"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/inputs-before.json",
+      "sha256": "104c6b3319aa5207d037dbd1e800fcd2d66ab7c8fdf11f76c7bcd6179beba267"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/inputs-after.json",
+      "sha256": "104c6b3319aa5207d037dbd1e800fcd2d66ab7c8fdf11f76c7bcd6179beba267"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/source-closure.json",
+      "sha256": "a4fda2b19d8208658ba5211a839791adf8a34ffc0f6a7144304d80b2f79847f5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/verification.json",
+      "sha256": "1c048f39e9c93f98c6274b18798708f4498ead51260ab4c6552f869d8e9afaf8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/inputs-before.json",
+      "sha256": "a7f6d6ce629d6032f7baa0326694ca03d6903771969fb6ec9eaf88a89fbee4f9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/inputs-after.json",
+      "sha256": "a7f6d6ce629d6032f7baa0326694ca03d6903771969fb6ec9eaf88a89fbee4f9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/candidate.json",
+      "sha256": "6086898330102e220461e16d4eab4692872ce428d8944eac13cd10502972e821"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/candidate-inputs.json",
+      "sha256": "636d44e4d5f958e9fa7f12a282ab6610d43b56f13a99dd7e8c687621441efd0f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-checks.py",
+      "sha256": "f8b17de26385a9b78eda78d2f7c8c6a89f648abf7732b56ce70e51e01da81a3c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/implementation.json",
+      "sha256": "cd8b327d15983a6df3dfceec989e1818183c634092aaed917cf0522d8fa5e3b7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/final.json",
+      "sha256": "66e06d652071ad5a63aefe459e35fb09921276cd6545378784b7200ef10ca872"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/backend-review-final.json",
+      "sha256": "96a388fd9ed4eab51582b58c190d59584ff328b1170cea6d964610b7a66ebc2a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/publication-receipt.json",
+      "sha256": "80909f098cf003375df252dd986671cf4bb2104deef9632953cc23e56071d2cd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/receipt.json",
+      "sha256": "0f4afd8b0eaca585e1514e51d2c68f22c78a03aeb121a0d713cda77733ea88b0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/receipt.json",
+      "sha256": "8f10524f4d3d378a05d1e4742df552652e55adb2a963ea6f55e98984c2d607f4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/implementation.json",
+      "sha256": "877847b3259a7af99676e48808c907d34dd06cfb64535192d31684325e6bdd5a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/source-checkpoint-final.json",
+      "sha256": "23664a46005c312212396e2448f31e4bbc4b2811423e368d6029892469d2c808"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/source-checkpoint-final.json",
+      "sha256": "8337cbb05089006cbb797bff978e78a4cd10eaf45d15981ec69945adb614fc78"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/history-location-review.json",
+      "sha256": "96503980a73e387f9a8aeb21a666299c892a86f115d47bedccaefd2531d474e4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-review.json",
+      "sha256": "c96e464bd4a67bed8cf8a37495a8ebd906e8082e8cceceb1ae650486721d806c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/helper-preflight-final.json",
+      "sha256": "3bedfb1e78cdb939d5fde37a0819d299efba37ba5e29419eea784162d1262435"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/frontend.txt",
+      "sha256": "dfbc39dd389baef7583bb7ee2e432a8bae2178f4e82dd019289b1026285cd49c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/build.txt",
+      "sha256": "d208cab5c24d026d6ffc705298e51b4cfe0048ce908c47e0233f4d3f12ec36b4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/clippy.txt",
+      "sha256": "a7642a0867425c6137f6fda230ee0c5445d5148745ccd7b4f5b0b4f2b4540d91"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/rust.txt",
+      "sha256": "d579007ea921655a1663c6589f86aa3211099f5bcfb217d1cbd34fecc9c5037c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/frontend.txt",
+      "sha256": "ccbcf32fa28ed874e21042f3c806f5c51180c7fb6b3748112573270e64f000bd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/build.txt",
+      "sha256": "485d29eff144b0d867db5059f8ccea36f893229bd87ff29f8db77cdd6e10653d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/clippy.txt",
+      "sha256": "8ff208724cf0c04081c037b021a39dac4e914bed652a41bbea2f278fdd6433e0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/rust.txt",
+      "sha256": "46c86b98652ed366694935dfe122bde375bc0d8f51fa597f142db78c941f61c0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    }
+  ]
+}

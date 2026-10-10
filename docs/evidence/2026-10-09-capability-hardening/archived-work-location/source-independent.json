@@ -1,0 +1,98 @@
+{
+  "atUtc": "2026-10-10T07:59:06.083172+00:00",
+  "reviewer": "root independent of implementation author",
+  "kind": "source-and-authored-evidence-review",
+  "implementationSha256": "432b25dd06d2b666502300c7173104d3a379783b000c5962a835ea5529cd6b2b",
+  "verifiedReferences": 27,
+  "reviewedSourceRefs": [
+    {
+      "path": "src/runtime/archived_work_location.ts",
+      "sha256": "a59585a06e5d28d85a1d4fe6aec648b9c00d259b92fa63b02305ec6c33a76def",
+      "bytes": 1875,
+      "lines": 58
+    },
+    {
+      "path": "src/runtime/archived_work_location_strings.ts",
+      "sha256": "eff399754af495cc01d4a0112d2e3ed7bae22036ace4346871a6f124d8375c6c",
+      "bytes": 158,
+      "lines": 4
+    },
+    {
+      "path": "src/runtime/archived_work_location.test.ts",
+      "sha256": "ab8784fd07542fbc5ba77042ed82d2ac635dc5a03ca1493690e1ba1d8e71e35a",
+      "bytes": 3146,
+      "lines": 99
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.tsx",
+      "sha256": "d2feccb18ddf00c6570becf10925c3a7bfa5d4f8dc7b75b80c7e87457f19c221",
+      "bytes": 1879,
+      "lines": 67
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.test.tsx",
+      "sha256": "9883644314d6a8c8146e99b908d3046a2b70d3c1a734b25992dfef5a36ab0e55",
+      "bytes": 4491,
+      "lines": 136
+    },
+    {
+      "path": "src/components/ArchivedWorkLocation.integration.test.tsx",
+      "sha256": "1190662b9979e676ef1e1e5fc3150aa2272451677c14cf003e6fb3fc626eb8af",
+      "bytes": 6944,
+      "lines": 234
+    },
+    {
+      "path": "src/components/ComposerWorkNotice.tsx",
+      "sha256": "bec3991d878a9799559bbfad43ca806bd20681ab6cf9900ae6e8ce90ceada9d0",
+      "bytes": 2326,
+      "lines": 83
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "988f08cd7713ed9422f8e8235f860d63e555acab01a463bacf15fbda4dffbcb8",
+      "bytes": 49494,
+      "lines": 1461
+    },
+    {
+      "path": "src/components/Composer.work.test.tsx",
+      "sha256": "8a2f2c878c4b510629fcd8140a9db1f8534f7aa8564dccaf0e2f729603d9e899",
+      "bytes": 7150,
+      "lines": 213
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "740dda175f17441f91ebfdf445dab1f67ee77f3f31308ca6c7f18880b13ee077",
+      "bytes": 48976,
+      "lines": 1475
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "92090d6fb43cba894d50403219fcfdcca02ce9ec75d43b376eb20927db421f7e",
+      "bytes": 51667,
+      "lines": 1394
+    }
+  ],
+  "findings": [],
+  "reviewedBoundaries": [
+    "Exact full-component POSIX association; no normalization or unrelated/prefix path claim; conflicting archives rejected.",
+    "Only ready non-loading error-free existing catalogue used; no filesystem existence proof claimed.",
+    "Management opens existing surface with target null; no automatic restore, cwd move, Agent launch or prompt.",
+    "Mounted/active/cwd/archive identity and current snapshot checked at click; existing reconnect callback checks archive association.",
+    "Unrelated Composer errors preserved; history retains unknown prior execution and configuration details; duplicate archived message suppressed.",
+    "Original work actions retained in extracted component; old assertions retained, walker adapted to real child component.",
+    "Restore removing archive record withdraws guidance; ordinary reconnect remains explicit."
+  ],
+  "authoredChecksReviewed": {
+    "relatedTests": 99,
+    "effectivePriorSsrFailures": 4,
+    "typecheck": 0,
+    "ownedFormat": 0
+  },
+  "reviewerRanTests": false,
+  "reasonNoDuplicateRun": "Exact source hashes and existing red/green evidence reviewed; dynamic integration is queued in next browser harness and full integration remains required.",
+  "pending": [
+    "Actual production hook/browser transition and action checks with current shared store",
+    "Next installed formal guidance verification",
+    "Whole H15 safety and independent recovery review is separate"
+  ]
+}

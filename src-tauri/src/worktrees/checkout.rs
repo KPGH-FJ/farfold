@@ -303,6 +303,12 @@ impl Checkout {
         source.identity()?;
         Ok(this)
     }
+    pub(super) fn recovery_profile(&self) -> Result<(Vec<String>, Vec<u8>)> {
+        Ok((
+            self.configs.clone(),
+            fs::read(self.git_dir.join("info/attributes")).map_err(|_| error("unavailable"))?,
+        ))
+    }
     fn command(&self, args: &[&str], worktree: &Path) -> Result<std::process::Command> {
         self.command_options(args, worktree, false, None)
     }

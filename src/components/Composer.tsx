@@ -25,6 +25,7 @@ import {
 import { configCheckMessage } from "../runtime/config_check";
 import { toUiNotice, uiError, type UiNotice } from "../runtime/ui_error";
 import { ErrorNotice } from "./ErrorNotice";
+import { ComposerWorkNotice } from "./ComposerWorkNotice";
 import { traceAfterPaint } from "../runtime/performance-trace";
 import { invoke } from "@tauri-apps/api/core";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
@@ -106,6 +107,7 @@ export function Composer({
   sendRequest,
   placeholder,
   workContext,
+  workLocation,
   caption,
   contextChips,
   queueEditing = false,
@@ -148,6 +150,8 @@ export function Composer({
   sendRequest?: number;
   placeholder?: string;
   workContext?: { agentId: string; cwd: string };
+  /** Diagnostic location even before an Agent is selected; not a work grant. */
+  workLocation?: string | null;
   caption?: ReactNode;
   contextChips?: ReactNode;
   queueEditing?: boolean;
@@ -1151,49 +1155,17 @@ export function Composer({
         </div>
       )}
       {openNote && (
-        <ErrorNotice message={openNote} detail={openNoteDetail}>
-          {workAgentId && work.ready && !work.enabled(workAgentId) && (
-            <button
-              type="button"
-              className="btn btn-ghost"
-              title={
-                work.locationEnabled === false
-                  ? `${workCwd}\n${SEND.resumeHint}`
-                  : (workCwd ?? undefined)
-              }
-              disabled={work.saving}
-              onClick={() =>
-                void (work.locationEnabled === false
-                  ? work.setLocation(true)
-                  : work.set(workAgentId, true))
-              }
-            >
-              {work.saving
-                ? W.enablingWork
-                : work.locationEnabled === false
-                  ? SEND.resumeLocation
-                  : W.enableWork}
-            </button>
-          )}
-          {work.error && !work.ready && (
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={work.retry}
-            >
-              {STRINGS.service.retry}
-            </button>
-          )}
-          {showAction && (
-            <button
-              type="button"
-              className="btn btn-text"
-              onClick={onGoSettings}
-            >
-              {STRINGS.empty.goSettings}
-            </button>
-          )}
-        </ErrorNotice>
+        <ComposerWorkNotice
+          message={openNote}
+          detail={openNoteDetail}
+          showAction={showAction}
+          work={work}
+          workAgentId={workAgentId}
+          cwd={workCwd ?? workLocation ?? null}
+          active={active}
+          archiveHandled={suppressThreadOpenError}
+          onGoSettings={onGoSettings}
+        />
       )}
       {browserSuggestionsReady && slashOpen && (
         <div className="pick-menu" role="listbox">

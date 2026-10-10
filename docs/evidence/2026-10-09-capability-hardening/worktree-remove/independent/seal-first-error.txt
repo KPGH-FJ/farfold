@@ -1,0 +1,1 @@
+Author evidence helper only; no receipt created. First seal-final.py run exited1 at verify_refs(backend[sourceFiles]), TypeError: string indices must be integers. backend.sourceFiles is a path-to-sha dictionary, unlike sourceRefs arrays. Original helper bytes preserved. No source/test/browser rerun or mutation.

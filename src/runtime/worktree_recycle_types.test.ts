@@ -35,6 +35,7 @@ it("retains archive provenance separately from active locations and deeply freez
   expect(
     parseWorktreeList({
       locations: [],
+      recoveries: [],
       archives: [archive],
       materials: [],
       operation: null,
@@ -120,6 +121,7 @@ it("requires archive and restore success to match the exact original and retaine
   expect(() =>
     parseWorktreeList({
       locations: [location],
+      recoveries: [],
       archives: [archive],
       materials: [],
       operation: null,

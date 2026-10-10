@@ -1,0 +1,84 @@
+from pathlib import Path
+import hashlib
+import json
+
+BASE = Path('docs/evidence/2026-10-09-capability-hardening')
+BROWSER = BASE / 'worktree-remove/independent/browser'
+FOLLOW = BASE / 'archived-work-location/recovery-followup'
+
+def ref(path):
+    path = Path(path)
+    data = path.read_bytes()
+    return {'path': str(path), 'sha256': hashlib.sha256(data).hexdigest(), 'bytes': len(data)}
+
+def read(path):
+    return json.loads(Path(path).read_text())
+
+def verify_refs(refs):
+    for r in refs:
+        assert ref(r['path'])['sha256'] == r['sha256'], r['path']
+
+def save(path, value):
+    assert not path.exists(), path
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+source = read(FOLLOW / 'source-checkpoint-final.json')
+verify_refs(source['sourceRefs'])
+frontend = read(BASE / 'worktree-remove/frontend/final.json')
+verify_refs(frontend['ownedSourceRefs'])
+backend = read(BASE / 'worktree-remove/backend/source-checkpoint-final.json')
+verify_refs(backend['sourceFiles'])
+summary = []
+for name in ['webkit-lifecycle', 'chromium-lifecycle', 'webkit-guidance-final', 'chromium-guidance-final']:
+    r = read(BROWSER / (name + '.json'))
+    assert r['passed'] and r['sourceUnchanged'] and not r['errors'] and not r['blocked']
+    assert all(c['pass'] for c in r['checks'])
+    assert r['before'] == r['after']
+    assert read(BROWSER / (name + '.raw.txt')) == r
+    summary.append({'run': name, 'checks': len(r['checks']), 'sourceUnchanged': True,
+                    'scope': r['scope']})
+    if 'guidance-final' in name:
+        for path, sha in r['after'].items():
+            if path.startswith('src/'):
+                assert ref(path)['sha256'] == sha, path
+
+for p in [BROWSER / 'lifecycle-checkpoint.json', BASE / 'worktree-remove/independent/wire/receipt.json',
+          BASE / 'worktree-remove/independent/wire/publication-receipt.json']:
+    verify_refs(read(p)['references'])
+
+browser = {
+    'status': 'controlled-browser-and-wire-passed-not-installed',
+    'role': 'Independent H15 removal/recovery UI and cross-language verifier; author of archived/recovery guidance and App guard fixes. Root/peer independently review those authored sources.',
+    'runs': summary,
+    'countBoundary': '27 lifecycle checks per engine and 21 corrected guidance checks per engine are separate overlapping journeys; not 96 unique product guarantees. Prior 16-per-engine guidance results are historical and superseded by the retained-backup counterexample.',
+    'actualComponents': 'Complete App with production StorageStartup/DraftStartup, React StrictMode, production WorktreeManagementHost, stores, dialogs, notice and App navigation. Actual browser DOM, pointer/keyboard and screenshots.',
+    'mockBoundary': 'Tauri IPC, settings, catalogue and filesystem/Git results are controlled in-memory fixtures. No real deletion, recovery, Agent, formal App, user repository or user database is exercised. Explicit session_open in final corrected scenarios is logged then rejected by the mock; no claim of actual connection success.',
+    'lifecycleCoverage': [
+        'Separate preparation and deletion confirmation; stage 2 starts unchecked, another Enter does not confirm, exact recovery tuple binds the explicit click.',
+        'Cancellation retains backup; explicit check then recovery to an independent new location yields existing ownership; separate Use changes only the new draft location.',
+        'Second deletion takes fresh inspection and owner; late prepared reply after close or real 10-second observation timeout is cancelled rather than started; locks release only on known completion.',
+        'Archive known/current guidance, management target=null, loading/error/record removal transitions and cold remembered draft protection.',
+        'After prepare/cancel preserves backup, a controlled explicit archive-restoration catalogue update removes only archive; reconnect is restored and its explicit click reaches ordinary IPC exactly once without prompt/cwd migration.'
+    ],
+    'preservedFailures': [
+        'Original lifecycle first-fourth runner mistakes and fifth unknown-catalogue session_open observation remain in lifecycle-checkpoint.json; no repeated native observation or inferred real reconnection defect.',
+        'Original recovery guidance incorrectly treated an associated backup as absent original cwd. Root corrected the requirement; retained-recovery-red.txt records 3 real counterexamples before repair, then 3/3 green. Old dual-16 results and pre-correction 13-source checkpoint are retained.',
+        'webkit-guidance-corrected first attempt passed 15 checks then driver wrongly expected a cold no-Agent page to expose a retry button. The actual unchanged cold flow has an error without that button. Final driver asserts original error/draft and separately exercises actual history retry; controlled component tests preserve original fallback action when supplied.'
+    ],
+    'sourceProof': {'noticeFinal': ref(FOLLOW / 'source-checkpoint-final.json'),
+                    'frontendFinal': ref(BASE / 'worktree-remove/frontend/final.json'),
+                    'backendFinal': ref(BASE / 'worktree-remove/backend/source-checkpoint-final.json'),
+                    'wireFinal': ref(BASE / 'worktree-remove/independent/wire/publication-receipt.json')},
+    'inspectedScreenshots': [
+        'webkit-lifecycle-separate-confirmation.png', 'webkit-lifecycle-recovered-explicit-use.png',
+        'chromium-lifecycle-cold-archive-guidance.png', 'webkit-guidance-multiple-recovery-choices.png',
+        'chromium-guidance-cold-recovery-guidance.png',
+        'webkit-guidance-final-retained-recovery-explicit-retry.png',
+        'chromium-guidance-final-cold-recovery-guidance.png'
+    ],
+    'cleanup': 'Each browser closes in runner finally; owned servers PID31997 then PID70929 received normal SIGTERM, tool sessions exited143, exact PIDs and port1477 absent. No formal App or Agent process was manipulated.',
+    'remaining': ['Root/peer independent review of authored guidance', 'Whole-repository engineering integration', 'Next installed native deletion/recovery and guidance acceptance'],
+    'references': [ref(p) for p in sorted(BROWSER.iterdir()) if p.is_file()] + [ref(Path(__file__))]
+}
+save(BROWSER / 'receipt.json', browser)
+print('Browser receipt created; format before author receipt binds its bytes.')

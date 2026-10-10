@@ -1,0 +1,87 @@
+{
+  "capturedAt": "2026-10-10T08:17:40.470291+00:00",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/format-frozen.txt"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "worktrees::remove_",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-frozen.txt"
+    }
+  ],
+  "before": {
+    "src-tauri/src/lib.rs": "10751edeeb677b70d3c57a8e0e1a1dde032641e16ca6b57ff65d96e0915da570",
+    "src-tauri/src/worktree_commands.rs": "a10ffb2b22dd2c81d80b901b051105fe735ff035765d81f9166ff9c445a9f2f7",
+    "src-tauri/src/worktrees/checkout.rs": "b1f5f1c16cbe646fb7b6b4046ccce48329b28769ccba231c4392edae17383657",
+    "src-tauri/src/worktrees/git.rs": "6c614ad712dc7cf54a65f3af9d76a072be34b2e7dc44c64b992db697df2edf23",
+    "src-tauri/src/worktrees/manager.rs": "1949c066d2f5ed442a4ee2bae54b164da9fdbf85c6d6331e8838ab7068c5cb60",
+    "src-tauri/src/worktrees/material_scan.rs": "4e4e1b827e756420c9b153a72db18ae2eb6eb5fc8928fca9329285dcec8c8859",
+    "src-tauri/src/worktrees/mod.rs": "9ae893a5f5eb4acbd632a170c73f8d0a343f26f391f1b55137d1eeac40ebdb22",
+    "src-tauri/src/worktrees/recover.rs": "b8f790087326fabad861f16fc1c1306a61eec256f780e2d5d227a892df4b2892",
+    "src-tauri/src/worktrees/recover_manager.rs": "df1053d401c79dc36e058f8620f480cdee55643bede85eee2d94353a1f38a87a",
+    "src-tauri/src/worktrees/recover_tests.rs": "0d675f62dd7b818d891c756b26a20fbdf07edb89a0ad3058a9c8bf8f589922ed",
+    "src-tauri/src/worktrees/recovery_pack.rs": "69aec25ba7580e3ecf02dab60e17b54cd97da1b0b436b5988631568a1b565fd4",
+    "src-tauri/src/worktrees/recovery_roots.rs": "0fe8e23d9a4e92b9adcccd6f6154c3743617c054e1ce683eff421e19c60dbb2d",
+    "src-tauri/src/worktrees/recovery_tests.rs": "679ee53ebe7311d8321f0e2e8af7c2ce3994690ac09e7b6c1dae0552210ba150",
+    "src-tauri/src/worktrees/recycle.rs": "32bc5e4fb9141bab01fd94f8d711342e45525c8cb049bb704bded9d32b01a85c",
+    "src-tauri/src/worktrees/recycle_manager.rs": "b20f701edc54c5b1f4132a66544cd1a470f569f6a1f51575e57b4fa8421494c2",
+    "src-tauri/src/worktrees/recycle_tests.rs": "bd5a934c13b8abd3a7320dac0d705289f6702a7940b34a566e040e71535fca60",
+    "src-tauri/src/worktrees/removal.rs": "cbc9d8233204f50c8dd141e9097338b09c71b3f7db868d93a4510ebe74bfcf9c",
+    "src-tauri/src/worktrees/remove_boundary_tests.rs": "1e155b8ba406eeb43840ed91b9a9b8585b6fd29f9fcc6ccf3ba630853bed95c6",
+    "src-tauri/src/worktrees/remove_manager.rs": "c5126eba738ea21899af8012b07a843c787d3ae455141fd7102e685f4c1b764d",
+    "src-tauri/src/worktrees/remove_reconcile.rs": "8490f5d76761d52f00f0ec4bb0de72b03bc7f696a9a9a07638b5ba6420a76766",
+    "src-tauri/src/worktrees/remove_types.rs": "3fbee4b3e34bda17e36cbdb342cc1c2e26ff1b32b7fcfd997db00080b12203b6",
+    "src-tauri/src/worktrees/remove_validation.rs": "7aa324d86be803a10e6b3371d3b7abc1d537aa0b601132c468a536d1215b6ba4",
+    "src-tauri/src/worktrees/remove_wire_tests.rs": "59494ca93287b149a13e50766e652a99d728f4f1502ffb548117d4b7f6aae42d",
+    "src-tauri/src/worktrees/storage.rs": "83c95412f8becbaf7e9cd655bdb4eed12bd68833876d0cf30ea8856854ca775c",
+    "src-tauri/src/worktrees/types.rs": "c450c39b488198a4bc3459301c76a051eb739e7bfb960c401ad5ab6d0f4c1218"
+  },
+  "after": {
+    "src-tauri/src/lib.rs": "10751edeeb677b70d3c57a8e0e1a1dde032641e16ca6b57ff65d96e0915da570",
+    "src-tauri/src/worktree_commands.rs": "a10ffb2b22dd2c81d80b901b051105fe735ff035765d81f9166ff9c445a9f2f7",
+    "src-tauri/src/worktrees/checkout.rs": "b1f5f1c16cbe646fb7b6b4046ccce48329b28769ccba231c4392edae17383657",
+    "src-tauri/src/worktrees/git.rs": "6c614ad712dc7cf54a65f3af9d76a072be34b2e7dc44c64b992db697df2edf23",
+    "src-tauri/src/worktrees/manager.rs": "1949c066d2f5ed442a4ee2bae54b164da9fdbf85c6d6331e8838ab7068c5cb60",
+    "src-tauri/src/worktrees/material_scan.rs": "4e4e1b827e756420c9b153a72db18ae2eb6eb5fc8928fca9329285dcec8c8859",
+    "src-tauri/src/worktrees/mod.rs": "9ae893a5f5eb4acbd632a170c73f8d0a343f26f391f1b55137d1eeac40ebdb22",
+    "src-tauri/src/worktrees/recover.rs": "b8f790087326fabad861f16fc1c1306a61eec256f780e2d5d227a892df4b2892",
+    "src-tauri/src/worktrees/recover_manager.rs": "df1053d401c79dc36e058f8620f480cdee55643bede85eee2d94353a1f38a87a",
+    "src-tauri/src/worktrees/recover_tests.rs": "0d675f62dd7b818d891c756b26a20fbdf07edb89a0ad3058a9c8bf8f589922ed",
+    "src-tauri/src/worktrees/recovery_pack.rs": "69aec25ba7580e3ecf02dab60e17b54cd97da1b0b436b5988631568a1b565fd4",
+    "src-tauri/src/worktrees/recovery_roots.rs": "0fe8e23d9a4e92b9adcccd6f6154c3743617c054e1ce683eff421e19c60dbb2d",
+    "src-tauri/src/worktrees/recovery_tests.rs": "679ee53ebe7311d8321f0e2e8af7c2ce3994690ac09e7b6c1dae0552210ba150",
+    "src-tauri/src/worktrees/recycle.rs": "32bc5e4fb9141bab01fd94f8d711342e45525c8cb049bb704bded9d32b01a85c",
+    "src-tauri/src/worktrees/recycle_manager.rs": "b20f701edc54c5b1f4132a66544cd1a470f569f6a1f51575e57b4fa8421494c2",
+    "src-tauri/src/worktrees/recycle_tests.rs": "bd5a934c13b8abd3a7320dac0d705289f6702a7940b34a566e040e71535fca60",
+    "src-tauri/src/worktrees/removal.rs": "cbc9d8233204f50c8dd141e9097338b09c71b3f7db868d93a4510ebe74bfcf9c",
+    "src-tauri/src/worktrees/remove_boundary_tests.rs": "1e155b8ba406eeb43840ed91b9a9b8585b6fd29f9fcc6ccf3ba630853bed95c6",
+    "src-tauri/src/worktrees/remove_manager.rs": "c5126eba738ea21899af8012b07a843c787d3ae455141fd7102e685f4c1b764d",
+    "src-tauri/src/worktrees/remove_reconcile.rs": "8490f5d76761d52f00f0ec4bb0de72b03bc7f696a9a9a07638b5ba6420a76766",
+    "src-tauri/src/worktrees/remove_types.rs": "3fbee4b3e34bda17e36cbdb342cc1c2e26ff1b32b7fcfd997db00080b12203b6",
+    "src-tauri/src/worktrees/remove_validation.rs": "7aa324d86be803a10e6b3371d3b7abc1d537aa0b601132c468a536d1215b6ba4",
+    "src-tauri/src/worktrees/remove_wire_tests.rs": "59494ca93287b149a13e50766e652a99d728f4f1502ffb548117d4b7f6aae42d",
+    "src-tauri/src/worktrees/storage.rs": "83c95412f8becbaf7e9cd655bdb4eed12bd68833876d0cf30ea8856854ca775c",
+    "src-tauri/src/worktrees/types.rs": "c450c39b488198a4bc3459301c76a051eb739e7bfb960c401ad5ab6d0f4c1218"
+  },
+  "sourceStable": true,
+  "allPassed": true
+}

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorktreeRecycleReview.test.tsx (7 tests | 1 failed) 16ms
+   × shows one unsent explanation when distinct blocker sources report the same reason 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeRecycleReview.test.tsx > shows one unsent explanation when distinct blocker sources report the same reason
+AssertionError: expected [ …(4) ] to have a length of 2 but got 4
+
+- Expected
++ Received
+
+- 2
++ 4
+
+ ❯ src/components/WorktreeRecycleReview.test.tsx:227:43
+    225|   await settle();
+    226|   const html = renderToStaticMarkup(render());
+    227|   expect(html.split(S.errors.unsentWork)).toHaveLength(2);
+       |                                           ^
+    228|   expect(button(S.archive).props.disabled).toBe(true);
+    229|   expect(h.recycle).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  15:34:23
+   Duration  152ms (transform 36ms, setup 0ms, import 64ms, tests 16ms, environment 0ms)
+

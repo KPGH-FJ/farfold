@@ -1,0 +1,188 @@
+import { beforeEach, expect, it, vi } from "vitest";
+import { Children, isValidElement, type ReactElement } from "react";
+const h = vi.hoisted(() => ({
+  cursor: 0,
+  refs: [] as { current: unknown }[],
+  effects: [] as (() => void | (() => void))[],
+  catalogue: {
+    ready: true,
+    loading: false,
+    error: null as string | null,
+    archives: [] as unknown[],
+    recoveries: [] as unknown[],
+  },
+  load: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock("react", async (original) => ({
+  ...(await original<typeof import("react")>()),
+  useRef: (current: unknown) => (h.refs[h.cursor++] ??= { current }),
+  useEffect: (effect: () => void | (() => void)) => {
+    h.effects.push(effect);
+  },
+  useSyncExternalStore: (_subscribe: unknown, snapshot: () => unknown) =>
+    snapshot(),
+}));
+vi.mock("../runtime/worktrees", () => ({
+  worktrees: {
+    snapshot: () => h.catalogue,
+    subscribe: () => () => {},
+    load: h.load,
+  },
+}));
+import { ArchivedWorkLocationNotice } from "./ArchivedWorkLocationNotice";
+import { worktreeManagement } from "../runtime/worktree_management";
+import { ErrorNotice } from "./ErrorNotice";
+const cwd = "/controlled/project";
+const archive = Object.freeze({
+  id: "owned",
+  revision: 1,
+  originalPath: cwd,
+  retainedPath: "/controlled/retained",
+  repositoryRoot: "/controlled/repo",
+  ownership: "created",
+  availability: "unknown",
+  branch: null,
+  headOid: "a".repeat(40),
+});
+function render(path = cwd, active = true, archiveHandled = false) {
+  h.cursor = 0;
+  h.effects = [];
+  return ArchivedWorkLocationNotice({
+    cwd: path,
+    active,
+    archiveHandled,
+    message: "fallback",
+    children: <button>original action</button>,
+  });
+}
+function click(node: ReturnType<typeof render>) {
+  const buttons: ReactElement<{ onClick: () => void }>[] = [];
+  function visit(value: unknown) {
+    Children.forEach(value as import("react").ReactNode, (child) => {
+      if (
+        !isValidElement<{
+          children?: import("react").ReactNode;
+          onClick?: () => void;
+        }>(child)
+      )
+        return;
+      if (child.type === "button" && child.props.onClick)
+        buttons.push(child as ReactElement<{ onClick: () => void }>);
+      visit(child.props.children);
+    });
+  }
+  visit(node);
+  expect(buttons).toHaveLength(1);
+  buttons[0].props.onClick();
+}
+
+beforeEach(() => {
+  h.cursor = 0;
+  h.refs = [];
+  h.effects = [];
+  h.load.mockClear();
+  h.catalogue = {
+    ready: true,
+    loading: false,
+    error: null,
+    archives: [archive],
+    recoveries: [],
+  };
+  const prior = worktreeManagement.snapshot();
+  if (prior) worktreeManagement.close(prior);
+});
+it("opens only management with no cwd application target or automatic restore", () => {
+  click(render());
+  expect(worktreeManagement.snapshot()).toMatchObject({ cwd, target: null });
+  expect(h.load).not.toHaveBeenCalled();
+});
+it.each([
+  "hidden",
+  "changed",
+  "restored",
+  "replaced",
+  "loading",
+  "error",
+  "unmounted",
+])("rejects an obsolete management handler after %s", (transition) => {
+  const old = render();
+  const cleanup = h.effects
+    .map((effect) => effect())
+    .filter((value): value is () => void => typeof value === "function");
+  if (transition === "hidden") render(cwd, false);
+  if (transition === "changed") render("/other");
+  if (transition === "restored") h.catalogue.archives = [];
+  if (transition === "replaced")
+    h.catalogue.archives = [{ ...archive, revision: 2 }];
+  if (transition === "loading") h.catalogue.loading = true;
+  if (transition === "error") h.catalogue.error = "read failed";
+  if (transition === "unmounted") cleanup.forEach((fn) => fn());
+  click(old);
+  expect(worktreeManagement.snapshot()).toBeNull();
+});
+it("subscribes to restored catalogue state and returns the original notice and action", () => {
+  expect(render()!.props.message).not.toBe("fallback");
+  h.catalogue.archives = [];
+  const next = render()!;
+  expect(next.type).toBe(ErrorNotice);
+  expect(next.props.message).toBe("fallback");
+  expect(next.props.children.props.children).toBe("original action");
+});
+it("avoids a duplicate archived message already displayed by the parent", () => {
+  expect(render(cwd, true, true)).toBeNull();
+  h.catalogue.archives = [];
+  expect(render(cwd, true, true)!.props.message).toBe("fallback");
+});
+it("uses only the shared read on first active cold view", () => {
+  h.catalogue.ready = false;
+  const node = render();
+  h.effects.forEach((effect) => effect());
+  expect(node!.props.message).toBe("fallback");
+  expect(h.load).toHaveBeenCalledTimes(1);
+});
+it.each(["hidden", "loading", "failed", "ready"])(
+  "does not repeatedly request a catalogue while %s",
+  (mode) => {
+    h.catalogue.ready = mode === "ready";
+    h.catalogue.loading = mode === "loading";
+    h.catalogue.error = mode === "failed" ? "read failed" : null;
+    render(cwd, mode !== "hidden");
+    h.effects.forEach((effect) => effect());
+    expect(h.load).not.toHaveBeenCalled();
+  },
+);
+
+it("opens recovery management with no selected backup, not a restore action", () => {
+  h.catalogue.archives = [];
+  h.catalogue.recoveries = [
+    { originalPath: cwd, id: "one" },
+    { originalPath: cwd, id: "two" },
+  ];
+  click(render());
+  expect(worktreeManagement.snapshot()).toMatchObject({ cwd, target: null });
+  expect(h.load).not.toHaveBeenCalled();
+});
+it.each(["removed", "replaced", "loading", "error"])(
+  "old recovery handler is rejected after %s",
+  (change) => {
+    h.catalogue.archives = [];
+    h.catalogue.recoveries = [{ originalPath: cwd, id: "one" }];
+    const old = render();
+    if (change === "removed") h.catalogue.recoveries = [];
+    if (change === "replaced")
+      h.catalogue.recoveries = [{ originalPath: cwd, id: "two" }];
+    if (change === "loading") h.catalogue.loading = true;
+    if (change === "error") h.catalogue.error = "failed";
+    click(old);
+    expect(worktreeManagement.snapshot()).toBeNull();
+  },
+);
+
+it("supplemental recovery preserves fallback actions when a parent already presents its management hint", () => {
+  h.catalogue.archives = [];
+  h.catalogue.recoveries = [{ originalPath: cwd, id: "retained" }];
+  const node = render(cwd, true, true)!;
+  expect(node.type).toBe(ErrorNotice);
+  expect(node.props.message).toBe("fallback");
+  expect(node.props.children.props.children).toBe("original action");
+});

@@ -1,0 +1,9 @@
+{
+  "pid": 31997,
+  "beforeCommand": "node docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/serve.mjs",
+  "signal": "SIGTERM",
+  "ownedSurface": "127.0.0.1:1477",
+  "formalAppOrAgentTouched": false,
+  "processAbsent": true,
+  "listenerAbsent": true
+}

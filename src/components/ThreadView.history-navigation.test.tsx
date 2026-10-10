@@ -2,6 +2,7 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
   Children,
   isValidElement,
+  type ComponentProps,
   type ReactElement,
   type ReactNode,
 } from "react";
@@ -57,8 +58,27 @@ vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn().mockResolvedValue(null),
   Channel: class {},
 }));
+// These pre-existing error/retry scenarios have no associated worktree.
+// Keep the real notice renderer, without starting catalogue IPC from this hook fixture.
+vi.mock("../runtime/worktrees", () => {
+  const empty = {
+    ready: true,
+    loading: false,
+    error: null,
+    archives: [],
+    recoveries: [],
+  };
+  return {
+    worktrees: {
+      snapshot: () => empty,
+      subscribe: () => () => {},
+      load: vi.fn(),
+    },
+  };
+});
 import { ThreadView } from "./ThreadView";
 import { ErrorNotice } from "./ErrorNotice";
+import { ArchivedWorkLocationNotice } from "./ArchivedWorkLocationNotice";
 import {
   threads,
   freshThreadState,
@@ -68,12 +88,37 @@ import { STRINGS } from "../runtime/strings";
 import { invoke } from "@tauri-apps/api/core";
 import { composerDrafts, draftPersistence } from "../runtime/drafts";
 
+let noticeSlots: typeof h.slots = [];
+function renderArchivedNotice(
+  props: ComponentProps<typeof ArchivedWorkLocationNotice>,
+) {
+  const parent = { slots: h.slots, cursor: h.cursor, effects: h.effects };
+  h.slots = noticeSlots;
+  h.cursor = 0;
+  h.effects = [];
+  try {
+    return ArchivedWorkLocationNotice(props);
+  } finally {
+    noticeSlots = h.slots;
+    // Child effects/lifetime are covered by dedicated notice tests, not this parent fixture.
+    Object.assign(h, parent);
+  }
+}
 type Element = ReactElement<Record<string, unknown>>;
 function nodes(tree: ReactNode): Element[] {
   const result: Element[] = [];
   Children.forEach(tree, (child) => {
-    if (isValidElement<Record<string, unknown>>(child))
-      result.push(child, ...nodes(child.props.children as ReactNode));
+    if (!isValidElement<Record<string, unknown>>(child)) return;
+    result.push(child);
+    result.push(
+      ...nodes(
+        child.type === ArchivedWorkLocationNotice
+          ? renderArchivedNotice(
+              child.props as ComponentProps<typeof ArchivedWorkLocationNotice>,
+            )
+          : (child.props.children as ReactNode),
+      ),
+    );
   });
   return result;
 }
@@ -115,6 +160,7 @@ async function complete() {
 }
 
 beforeEach(() => {
+  noticeSlots = [];
   h.cursor = 0;
   h.slots = [];
   h.effects = [];

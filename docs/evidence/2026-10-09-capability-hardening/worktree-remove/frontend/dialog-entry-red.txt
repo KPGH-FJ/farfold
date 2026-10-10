@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorktreeDialog.test.tsx (22 tests | 1 failed) 27ms
+   × offers permanent deletion only for a verified created archive, not ordinary or unknown records 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeDialog.test.tsx > offers permanent deletion only for a verified created archive, not ordinary or unknown records
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/components/WorktreeDialog.test.tsx:517:19
+    515|     (n) => n.type === "button" && n.props.children === S.removal.open,
+    516|   );
+    517|   expect(actions).toHaveLength(1);
+       |                   ^
+    518|   expect(actions[0].props.disabled).toBe(false);
+    519|   h.state.archives = [{ ...archive, availability: "unknown" }];
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 21 passed (22)
+   Start at  15:37:34
+   Duration  185ms (transform 66ms, setup 0ms, import 98ms, tests 27ms, environment 0ms)
+

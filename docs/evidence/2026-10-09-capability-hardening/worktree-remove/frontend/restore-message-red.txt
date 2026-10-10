@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorktreeRecycleReview.test.tsx (8 tests | 1 failed) 17ms
+   × an occupied restore destination explains the fixed original path rather than suggesting a new name 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeRecycleReview.test.tsx > an occupied restore destination explains the fixed original path rather than suggesting a new name
+AssertionError: expected '<section class="worktree-operation" a…' to contain '原位置已有文件夹，请先处理或移走该文件夹，再重新检查。'
+
+Expected: "原位置已有文件夹，请先处理或移走该文件夹，再重新检查。"
+Received: "<section class="worktree-operation" aria-label="确认影响"><h3>恢复原位置</h3><p>只恢复到原位置，不覆盖已有文件夹，也不会更改草稿或自动发送。</p><dl class="worktree-paths"><dt>原位置</dt><dd>/tree</dd><dt>保留位置</dt><dd>/keep/tree</dd></dl><p>关联 2 段对话；原工作位置记录保持。</p><details><summary>查看原因</summary><p>已核查 2 项文件和目录、15 字节。</p><p>Farfold 无法阻止其他程序继续修改文件；如果仍在使用，请先取消。</p></details><div role="status"><p>仍有需要处理的内容或活动，请先查看原因。</p><ul><li>目标文件夹已经存在，请选择其他新名称。</li></ul></div><div class="worktree-actions"><button type="button" class="btn btn-primary" disabled="">恢复原位置</button><button type="button" class="btn btn-ghost">重新检查影响</button><button type="button" class="btn btn-ghost">取消此次确认</button></div></section>"
+
+ ❯ src/components/WorktreeRecycleReview.test.tsx:254:16
+    252|   await settle();
+    253|   const html = renderToStaticMarkup(render());
+    254|   expect(html).toContain(
+       |                ^
+    255|     "原位置已有文件夹，请先处理或移走该文件夹，再重新检查。",
+    256|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  15:40:01
+   Duration  146ms (transform 38ms, setup 0ms, import 63ms, tests 17ms, environment 0ms)
+

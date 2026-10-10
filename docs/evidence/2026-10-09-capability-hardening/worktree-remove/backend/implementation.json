@@ -1,0 +1,352 @@
+{
+  "status": "scoped_backend_implemented_and_verified_pending_full_engineering_candidate_and_installed_validation",
+  "capturedAt": "2026-10-10T08:23:41.422307+00:00",
+  "scope": "H15 explicit permanent removal of an owned retained linked worktree after independent verified recovery material and a separate confirmation; explicit recovery into a fresh independent ordinary repository.",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/source-checkpoint-final.json",
+    "sha256": "23664a46005c312212396e2448f31e4bbc4b2811423e368d6029892469d2c808"
+  },
+  "sourceFiles": {
+    "src-tauri/src/lib.rs": "10751edeeb677b70d3c57a8e0e1a1dde032641e16ca6b57ff65d96e0915da570",
+    "src-tauri/src/worktree_commands.rs": "a10ffb2b22dd2c81d80b901b051105fe735ff035765d81f9166ff9c445a9f2f7",
+    "src-tauri/src/worktrees/checkout.rs": "b1f5f1c16cbe646fb7b6b4046ccce48329b28769ccba231c4392edae17383657",
+    "src-tauri/src/worktrees/git.rs": "6c614ad712dc7cf54a65f3af9d76a072be34b2e7dc44c64b992db697df2edf23",
+    "src-tauri/src/worktrees/manager.rs": "1949c066d2f5ed442a4ee2bae54b164da9fdbf85c6d6331e8838ab7068c5cb60",
+    "src-tauri/src/worktrees/material_scan.rs": "4e4e1b827e756420c9b153a72db18ae2eb6eb5fc8928fca9329285dcec8c8859",
+    "src-tauri/src/worktrees/mod.rs": "9ae893a5f5eb4acbd632a170c73f8d0a343f26f391f1b55137d1eeac40ebdb22",
+    "src-tauri/src/worktrees/recover.rs": "b8f790087326fabad861f16fc1c1306a61eec256f780e2d5d227a892df4b2892",
+    "src-tauri/src/worktrees/recover_manager.rs": "df1053d401c79dc36e058f8620f480cdee55643bede85eee2d94353a1f38a87a",
+    "src-tauri/src/worktrees/recover_tests.rs": "0d675f62dd7b818d891c756b26a20fbdf07edb89a0ad3058a9c8bf8f589922ed",
+    "src-tauri/src/worktrees/recovery_pack.rs": "f31782d0d5292a2cf56f414c9486cb1b5a80d47386401d94ca2610fa966dda99",
+    "src-tauri/src/worktrees/recovery_roots.rs": "0fe8e23d9a4e92b9adcccd6f6154c3743617c054e1ce683eff421e19c60dbb2d",
+    "src-tauri/src/worktrees/recovery_tests.rs": "04781d6e10bdf150ee162f2a2e71c6177d9bb7fe22b2f1885ebe7346df170f1a",
+    "src-tauri/src/worktrees/recycle.rs": "32bc5e4fb9141bab01fd94f8d711342e45525c8cb049bb704bded9d32b01a85c",
+    "src-tauri/src/worktrees/recycle_manager.rs": "b20f701edc54c5b1f4132a66544cd1a470f569f6a1f51575e57b4fa8421494c2",
+    "src-tauri/src/worktrees/recycle_tests.rs": "bd5a934c13b8abd3a7320dac0d705289f6702a7940b34a566e040e71535fca60",
+    "src-tauri/src/worktrees/removal.rs": "2e8ca41584a56a68fb32691d17141f6c0ca82f51d2599e92227479e016ab4410",
+    "src-tauri/src/worktrees/remove_boundary_tests.rs": "7eb75c61086c231c898593dfbbf72cbed03acde74f474ebf51d1dfd4f0660ed8",
+    "src-tauri/src/worktrees/remove_manager.rs": "9519e54056fa168a8c3316669a2727c48eb9a89c56fb0eef499f7f09dd14b101",
+    "src-tauri/src/worktrees/remove_reconcile.rs": "8490f5d76761d52f00f0ec4bb0de72b03bc7f696a9a9a07638b5ba6420a76766",
+    "src-tauri/src/worktrees/remove_types.rs": "3fbee4b3e34bda17e36cbdb342cc1c2e26ff1b32b7fcfd997db00080b12203b6",
+    "src-tauri/src/worktrees/remove_validation.rs": "7aa324d86be803a10e6b3371d3b7abc1d537aa0b601132c468a536d1215b6ba4",
+    "src-tauri/src/worktrees/remove_wire_tests.rs": "59494ca93287b149a13e50766e652a99d728f4f1502ffb548117d4b7f6aae42d",
+    "src-tauri/src/worktrees/storage.rs": "83c95412f8becbaf7e9cd655bdb4eed12bd68833876d0cf30ea8856854ca775c",
+    "src-tauri/src/worktrees/types.rs": "c450c39b488198a4bc3459301c76a051eb739e7bfb960c401ad5ab6d0f4c1218"
+  },
+  "filesAtMost1500Lines": true,
+  "productionBoundaries": [
+    "Official Git is invoked only on exact locally verified roots. No Agent call/configuration, original user data, formal application or real project repository was operated by this implementation task. Tests use dedicated temporary repositories.",
+    "remove_inspect -> remove_prepare builds a durable non-cache bundle and manifest, then stops at awaitingConfirmation while the actual maintenance owner holds admission and the draft write seal. Only the separate six-field worktree_remove_confirm can authorize deletion. Old worktree_start rejects removal; repeated confirmations must match the same tuple.",
+    "HEAD, supported private refs and independently enumerated private reflogs (including orphaned logs and old/new commit roots), ORIG_HEAD and FETCH_HEAD are captured with exact raw evidence digests. Unknown/private in-progress layouts reject. Metadata or reflog changes with the same deduplicated root set still invalidate the proof.",
+    "Fixed roots are packed without source refs/index/config changes, imported into a fresh bare repository, checked for exact object closure and fsck, bundled, then actually restored into a second independent repository with all recovery refs and physical content verification. No source object alternates or remote are installed in the recovery repository.",
+    "Content comparison is separate from inode material identity and includes checkout bytes, file type, Git executable bits, link targets and empty-directory presence. Physical dirty data, ignored/untracked files and assume-unchanged edits prevent deletion when not reproduced by the exact checkout. This is not an ACL/xattr/system backup.",
+    "The selected parent and the originally reserved recovery-directory stamp are checked before and after work. A nonempty recovery directory rejects. Git writes only a private staged bundle; final publication uses bounded 64KiB streaming, create_new, O_NOFOLLOW, digest/size checks and fsync. An existing final file or symlink is never intentionally replaced.",
+    "Deletion uses official git worktree remove without force and never deletes branches or rewrites history/cwd. Current recovery/source/roots/content/directory identity are rechecked before dispatch; dispatch is persisted before Git invocation. Ready requires verified absence of exact original/retained/private Git paths, registration removal, original parent and retained-parent identity, and unchanged branch target.",
+    "Recover selects an exact canonical parent and new directory name, uses verified immutable recovery data, checks the actual independent repo/refs/HEAD/content and reports ownership existing, never created linked. Recovery remains possible with source objects unavailable. Result is not automatically used or sent to an Agent.",
+    "One durable current intent, bounded location/archive/material/recovery metadata and strict version migration are maintained; no operation event ledger. Recovery records remain reachable after later intents. Cold reload marks current claims unknown, clears current removed receipts and never restarts work. Only explicit actual rechecking regenerates ready.",
+    "Cancellation and lost replies retain exact request identity and worker-held admission until actual work finishes. Roots type-verification observes cancellation before every Git read. Panic/child ownership follows the existing reaping guard. Cold settled indicates this instance has no worker, not proof that a prior process stopped."
+  ],
+  "limits": {
+    "privateRoots": 4096,
+    "privateMetadataEntries": 4096,
+    "privateMetadataBytes": 16777216,
+    "objectCount": 50000,
+    "objectAndBundleBytes": 268435456,
+    "materialEntries": 100000,
+    "materialTotalBytes": 1073741824,
+    "materialFileBytes": 268435456,
+    "durableRecoveries": 256,
+    "ticketSeconds": 600,
+    "ticketCount": 32,
+    "gitPackStepTimeoutSeconds": 120,
+    "rootTypeReadStepTimeoutSeconds": 10,
+    "totalOperationWallClockGuarantee": false
+  },
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "worktrees::",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "passed": 62,
+      "failed": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-publication-green.txt",
+        "sha256": "bec86b0888b5feaf8a8f0ae3548ef90e8b8bf6072e292380adf9e97fa25bb394"
+      },
+      "scope": "Worktree tests including own temp Git deletion, recovery, identity, data and maintenance boundaries. Not the full Rust suite."
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/format-publication.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/clippy-publication.txt",
+        "sha256": "21002a4e23e9716c8eaaf7d2c60ef0e62d9297bfd1ee08364c68233862dcf83f"
+      }
+    }
+  ],
+  "finalLintExecution": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/final-lint-execution.json",
+    "sha256": "d5400f720ef1d77aa798f519116f3bb6de0650f42722b800d79f30ea301d50ad"
+  },
+  "earlierPostLintExecution": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/final-targeted-execution.json",
+    "sha256": "f05434ef1677f022255b23b7e70f48e51ab0d1258322d0d9ebc14314ea3feaed"
+  },
+  "validFailureHistory": [
+    {
+      "evidence": "recovery-foundation-diagnosis.txt",
+      "cause": "Ordinary linked Git metadata COMMIT_EDITMSG was incorrectly rejected; now retained as bounded evidence, not treated as a commit root."
+    },
+    {
+      "evidence": "remove-first.txt",
+      "cause": "Regular bundle/manifest identity incorrectly used the directory-only helper; split regular-file identity checks."
+    },
+    {
+      "evidence": "remove-file-identity-green.txt",
+      "actualResult": "2 passed / 1 failed despite filename",
+      "cause": "Production verification temp root used /var alias without canonicalizing; corrected exact temporary path, then actual flow passed."
+    },
+    {
+      "evidence": "cold-shape-red.txt",
+      "cause": "Five misaligned/duplicate persisted recovery shapes were accepted; strict source and operation correlations now reject them."
+    },
+    {
+      "evidence": "worktrees-first.txt",
+      "actualResult": "52 passed / 1 failed",
+      "cause": "New action routing attempted storage load before returning an already known exact refusal on cancel; rejected-first routing restored."
+    },
+    {
+      "evidence": "recover-cancel-red.txt",
+      "cause": "Cancellation during recovery validation returned action create; known request action is preserved and the real validation barrier confirms admission remains held."
+    },
+    {
+      "evidence": "parent-identity-red.txt",
+      "actualResult": "1 passed / 2 failed",
+      "cause": "Backup build rebaselined a replaced parent and deletion outcome omitted retained-parent identity. Both now reject; recovered-repository parent protection already passed."
+    },
+    {
+      "evidence": "roots-cancel-red.txt",
+      "cause": "Final root-type loop ignored true cancellation; actual shared helper now observes it and passes the token into Git."
+    },
+    {
+      "evidence": "leaf-identity-red.txt",
+      "actualResult": "1 failed with three observed facts",
+      "cause": "Replaced recovery leaf was accepted; prepopulated leaf was accepted; existing bundle was overwritten. Fixed original reserved stamp, empty-directory admission and exclusive publication."
+    },
+    {
+      "evidence": "../independent/wire/receipt.json",
+      "cause": "Independent actual Rust -> strict TS found checkingOutcome with deleteDispatched=false, then cold unknown carrying removed. Changed predelete phase to verifyingRecovery; cold/current unknown no longer carries removed. Strict TS unchanged."
+    }
+  ],
+  "nonBehavioralFailuresPreserved": [
+    "recovery-foundation-first.txt included a test-only noncanonical temporary alias failure; later diagnosis isolates the actual COMMIT_EDITMSG guard.",
+    "recover-symbol-first.txt and remove-boundaries-first.txt are incomplete-integration compiler errors, not effective behavioral counterexamples.",
+    "clippy-first.txt contains three lint diagnostics. Kept the fixed IPC signature with one documented too_many_arguments allowance and used equivalent explicit Result/if syntax. clippy-final and clippy-publication pass.",
+    "Historical green/final filenames are not used as result claims; each original log and actual test result is retained."
+  ],
+  "realWire": {
+    "latest": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-wire-publication.json",
+      "sha256": "b2ccf3b57b497d2d3b106de001ca39e074c3bab45284c7fa323bacc2e4277d49"
+    },
+    "raw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-publication-green.txt",
+      "sha256": "bec86b0888b5feaf8a8f0ae3548ef90e8b8bf6072e292380adf9e97fa25bb394"
+    },
+    "values": 18,
+    "beforePublicationIndependent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/receipt.json",
+      "sha256": "a745cb52f3774a48126755adddd9d114d49c5416ecdbec181d3d24352d7628f4"
+    },
+    "note": "Prior independent 19/19 covers 18 actual DTOs plus exact stdout identity. Latest capture comes from the same locked DTO contract after exclusive publication hardening; final independent supplement is separate."
+  },
+  "historyReferences": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/source-checkpoint.json",
+      "sha256": "1d2fcd424781d0d76c1d687a10391ef5c6fc4c781e8bd599dd1443f1236c2fc2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-wire.json",
+      "sha256": "494e067def135762e1e86df2c2c20e479948fd58fed1aeaa8638c30f4d788d9f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-wire-final.json",
+      "sha256": "e56311724bc99fbd0becce1e3930dd0fbf127a435461c21661a175461dfc77f6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-wire-verified.json",
+      "sha256": "0d12415400523ec1c4b8def0d992c8af2ec95dd8732385438d88a0eb679afd25"
+    }
+  ],
+  "logs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/clippy-final.txt",
+      "sha256": "b60b7d68a0691aebb010b1cd43a8d94c2f55279e8476aba63296e94ec3adfb56",
+      "lastTestSummary": null
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/clippy-first.txt",
+      "sha256": "d1593a843fb6c9b8fd18e2de632438b37d9cf94dc3d230f5825e904afefac49a",
+      "lastTestSummary": null
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/clippy-publication.txt",
+      "sha256": "21002a4e23e9716c8eaaf7d2c60ef0e62d9297bfd1ee08364c68233862dcf83f",
+      "lastTestSummary": null
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/cold-shape-red.txt",
+      "sha256": "536acacfb8e4a908f10dfd816a8a29f2596a2badc19c6ad1485a1cd905667b99",
+      "lastTestSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1337 filtered out; finished in 6.21s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/format-final.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lastTestSummary": null
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/format-frozen.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lastTestSummary": null
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/format-publication.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lastTestSummary": null
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/leaf-identity-red.txt",
+      "sha256": "d94967de1bef545012dee135bbf30d615ad580b83acd2a08eacea2398bd83994",
+      "lastTestSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1346 filtered out; finished in 4.68s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/parent-identity-red.txt",
+      "sha256": "b4796dfa9236ba6434e3f630d01f1485ccc737bc1d1c1bf2e900898ffa89b3ab",
+      "lastTestSummary": "test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 1342 filtered out; finished in 10.09s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/recover-cancel-red.txt",
+      "sha256": "a475796694e569fe38a1aac797ff2aceac82d62f94e50b7cb6a72da5b4067764",
+      "lastTestSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1340 filtered out; finished in 6.75s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/recover-new-folder-first.txt",
+      "sha256": "b27f73fa28c9692e9722482867516d6ef44a7c23b7d983a84088d1afb3d61bf0",
+      "lastTestSummary": "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1332 filtered out; finished in 7.37s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/recover-symbol-first.txt",
+      "sha256": "0a281714e1530f31be71c4971bde664543d5ec801d02b214945a5af8bdf5f0fa",
+      "lastTestSummary": null
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/recovery-foundation-diagnosis.txt",
+      "sha256": "835f963e34fcdaf348011ddc4c9f084112b88a37b030db0cda7621824fefef98",
+      "lastTestSummary": "test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 1327 filtered out; finished in 0.25s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/recovery-foundation-first.txt",
+      "sha256": "5583240088b5cae2942f6cb0cc1d09eb001a9f7431235191ca35d4f0a0d2414d",
+      "lastTestSummary": "test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 1327 filtered out; finished in 0.27s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-boundaries-first.txt",
+      "sha256": "771b1d5f0609f80ad4d34766606248d90d7264b85d93b0f344ab0ec81a4650bd",
+      "lastTestSummary": null
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-boundaries-green.txt",
+      "sha256": "fb2298ddab1c056c8869d0c3d8878f1fcf3ac1133bcffaf2619977c44522b0e8",
+      "lastTestSummary": "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1334 filtered out; finished in 7.12s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-cancel-material-first.txt",
+      "sha256": "7efd701a07e55d840cd150c379ca2ab00ff2183496dd7c36f726d3fe1822c7bd",
+      "lastTestSummary": "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1327 filtered out; finished in 9.47s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-file-identity-green.txt",
+      "sha256": "f74aa9594ef8514089f1b863cb48d8dce5a31446685dcfb488e14fc4b5725af9",
+      "lastTestSummary": "test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 1327 filtered out; finished in 6.07s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-first.txt",
+      "sha256": "177bb0ccdef8f78db5b95ff7932b9f15c44b86619f9ff49a3d04202328d61182",
+      "lastTestSummary": "test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 1327 filtered out; finished in 4.83s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-frozen.txt",
+      "sha256": "a9f9a7ebe130a2cfa596f21e93d6e26d966715a8b210132a96e828cd6a2b845a",
+      "lastTestSummary": "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 1337 filtered out; finished in 12.44s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/roots-cancel-red.txt",
+      "sha256": "f4c4263899985a97c016ed368c533513e67f60014770c65dd6a2fdfff6ae52b7",
+      "lastTestSummary": "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1345 filtered out; finished in 0.08s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-final.txt",
+      "sha256": "e26a8525e32891f46141d043f65297f9ef010f9ed757621a9695f07d2b1c2c0c",
+      "lastTestSummary": "test result: ok. 56 passed; 0 failed; 0 ignored; 0 measured; 1286 filtered out; finished in 29.30s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-first.txt",
+      "sha256": "fb803ab76f9402412b9e1cd06550629149e170e5578dcddfc631caad91571828",
+      "lastTestSummary": "test result: FAILED. 52 passed; 1 failed; 0 ignored; 0 measured; 1286 filtered out; finished in 23.96s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-identity-cold-green.txt",
+      "sha256": "4db43b433ba9670ffdf58ebc309d1ddecf3cf57b031fe9db4f178e29b459c05c",
+      "lastTestSummary": "test result: ok. 60 passed; 0 failed; 0 ignored; 0 measured; 1286 filtered out; finished in 33.63s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-publication-green.txt",
+      "sha256": "bec86b0888b5feaf8a8f0ae3548ef90e8b8bf6072e292380adf9e97fa25bb394",
+      "lastTestSummary": "test result: ok. 62 passed; 0 failed; 0 ignored; 0 measured; 1286 filtered out; finished in 40.46s"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-second.txt",
+      "sha256": "bafdab4c71aaf8369b952ce506fdbef4f64ee926f6eb37116eb0ac087c457856",
+      "lastTestSummary": "test result: ok. 54 passed; 0 failed; 0 ignored; 0 measured; 1286 filtered out; finished in 25.84s"
+    }
+  ],
+  "remaining": [
+    "Root-owned complete seven checks, exact source commit/candidate, guarded installation and native deletion/new-folder recovery validation remain; this receipt does not claim them.",
+    "Current formal 418880a2 binary is separate from this source increment. Existing archive/restore installed evidence is not deletion/recovery acceptance.",
+    "macOS own small SHA-1 fixtures only; SHA-256 schema support, Windows, maximum-size performance, power-loss/crash behavior and arbitrary external concurrent writers were not acceptance-tested.",
+    "Filesystem operations are path-based with before/after identity checks and exclusive final files; they do not provide an OS-wide lock. An external path race may leave material and an unknown result; there is no automatic retry or assumed rollback.",
+    "Cancellation is cooperative at bounded reads/Git steps, not instantaneous. A worker or process group not proven ended retains admission rather than publishing settled success."
+  ]
+}

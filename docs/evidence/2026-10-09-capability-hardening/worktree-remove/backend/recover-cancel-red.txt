@@ -1,0 +1,36 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.89s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission' (23735186) panicked at src/worktrees/recycle_tests.rs:97:5:
+
+running 1 test
+test worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission ... FAILED
+
+failures:
+
+failures:
+    worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1340 filtered out; finished in 6.73s
+
+
+thread 'worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission' (23735190) panicked at src/worktrees/recover_tests.rs:223:13:
+assertion `left == right` failed
+  left: "create"
+ right: "recover"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission ... FAILED
+
+failures:
+
+failures:
+    worktrees::recover_tests::recover_cancel_during_validation_has_exact_action_and_keeps_worker_admission
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1340 filtered out; finished in 6.75s
+
+error: test failed, to rerun pass `--lib`

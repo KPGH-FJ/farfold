@@ -1,0 +1,97 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_remove.test.ts (6 tests | 6 failed) 57ms
+   × preparing a verified recovery never calls start or delete; only a separate explicit exact confirmation dispatches 52ms
+   × status may advance the original live owner, but cannot give permission to a new dialog owner 1ms
+   × withdrawal during an unresolved prepare cancels only its UUID, keeps legacy lock, and cannot revive on late receipt 1ms
+   × prepare observation timeout retires confirmation authority without pretending to release maintenance 1ms
+   × a reentrant owner callback that withdraws permission cannot dispatch deletion 1ms
+   × a confirmed pre-dispatch rejection has its real reason and releases only this operation 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktree_remove.test.ts > preparing a verified recovery never calls start or delete; only a separate explicit exact confirmation dispatches
+TypeError: w.inspectRemoval is not a function
+ ❯ setup src/runtime/worktree_remove.test.ts:72:24
+     70|   const { draftPersistence: d } = await import("./draft_storage");
+     71|   await w.load();
+     72|   const view = await w.inspectRemoval(w.snapshot().archives[0]);
+       |                        ^
+     73|   const owner = {};
+     74|   return { w, d, view, owner };
+ ❯ src/runtime/worktree_remove.test.ts:77:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/runtime/worktree_remove.test.ts > status may advance the original live owner, but cannot give permission to a new dialog owner
+TypeError: w.inspectRemoval is not a function
+ ❯ setup src/runtime/worktree_remove.test.ts:72:24
+     70|   const { draftPersistence: d } = await import("./draft_storage");
+     71|   await w.load();
+     72|   const view = await w.inspectRemoval(w.snapshot().archives[0]);
+       |                        ^
+     73|   const owner = {};
+     74|   return { w, d, view, owner };
+ ❯ src/runtime/worktree_remove.test.ts:107:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/runtime/worktree_remove.test.ts > withdrawal during an unresolved prepare cancels only its UUID, keeps legacy lock, and cannot revive on late receipt
+TypeError: w.inspectRemoval is not a function
+ ❯ setup src/runtime/worktree_remove.test.ts:72:24
+     70|   const { draftPersistence: d } = await import("./draft_storage");
+     71|   await w.load();
+     72|   const view = await w.inspectRemoval(w.snapshot().archives[0]);
+       |                        ^
+     73|   const owner = {};
+     74|   return { w, d, view, owner };
+ ❯ src/runtime/worktree_remove.test.ts:136:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/runtime/worktree_remove.test.ts > prepare observation timeout retires confirmation authority without pretending to release maintenance
+TypeError: w.inspectRemoval is not a function
+ ❯ setup src/runtime/worktree_remove.test.ts:72:24
+     70|   const { draftPersistence: d } = await import("./draft_storage");
+     71|   await w.load();
+     72|   const view = await w.inspectRemoval(w.snapshot().archives[0]);
+       |                        ^
+     73|   const owner = {};
+     74|   return { w, d, view, owner };
+ ❯ src/runtime/worktree_remove.test.ts:169:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/runtime/worktree_remove.test.ts > a reentrant owner callback that withdraws permission cannot dispatch deletion
+TypeError: w.inspectRemoval is not a function
+ ❯ setup src/runtime/worktree_remove.test.ts:72:24
+     70|   const { draftPersistence: d } = await import("./draft_storage");
+     71|   await w.load();
+     72|   const view = await w.inspectRemoval(w.snapshot().archives[0]);
+       |                        ^
+     73|   const owner = {};
+     74|   return { w, d, view, owner };
+ ❯ src/runtime/worktree_remove.test.ts:194:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/runtime/worktree_remove.test.ts > a confirmed pre-dispatch rejection has its real reason and releases only this operation
+TypeError: w.inspectRemoval is not a function
+ ❯ setup src/runtime/worktree_remove.test.ts:72:24
+     70|   const { draftPersistence: d } = await import("./draft_storage");
+     71|   await w.load();
+     72|   const view = await w.inspectRemoval(w.snapshot().archives[0]);
+       |                        ^
+     73|   const owner = {};
+     74|   return { w, d, view, owner };
+ ❯ src/runtime/worktree_remove.test.ts:208:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  15:32:31
+   Duration  158ms (transform 62ms, setup 0ms, import 33ms, tests 57ms, environment 0ms)
+

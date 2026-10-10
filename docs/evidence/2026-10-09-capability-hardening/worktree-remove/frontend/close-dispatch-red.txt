@@ -1,0 +1,119 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorktreeRecoveryForm.test.tsx (5 tests | 1 failed) 9ms
+   × closing synchronously invalidates an already captured restore handler before React unmounts 3ms
+ ❯ src/components/WorktreeRemovalReview.test.tsx (8 tests | 1 failed) 30ms
+   × closing an unsubmitted delete review synchronously invalidates its captured first action 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeRecoveryForm.test.tsx > closing synchronously invalidates an already captured restore handler before React unmounts
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "archiveId": "created-tree",
+        "archiveRevision": 4,
+        "availability": "verified",
+        "branch": "refs/heads/work",
+        "bundleBytes": 1024,
+        "bundleSha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "contentSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "headOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "id": "recovery-one",
+        "manifestSha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "objectCount": 14,
+        "objectFormat": "sha1",
+        "originalPath": "/owned/tree",
+        "path": "/owned/recoveries/one",
+        "repositoryRoot": "/owned/repo",
+        "retainedPath": "/owned/.kept/tree",
+        "revision": 1,
+        "rootCount": 4,
+        "rootsSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      },
+      "/new",
+      "restored",
+      [Function owns],
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/WorktreeRecoveryForm.test.tsx:147:25
+    145|   old();
+    146|   await settle();
+    147|   expect(h.recover).not.toHaveBeenCalled();
+       |                         ^
+    148| });
+    149| it("the owner callback handed to a pending restore is false after clos…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/WorktreeRemovalReview.test.tsx > closing an unsubmitted delete review synchronously invalidates its captured first action
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "action": "remove",
+        "blockers": Array [],
+        "branch": "refs/heads/work",
+        "content": Object {
+          "bytes": 42,
+          "entries": 3,
+          "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        },
+        "draftBaseline": Object {
+          "agentSetup": null,
+          "unsentWork": null,
+        },
+        "headOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "impact": Object {
+          "conversations": 2,
+          "unsent": false,
+        },
+        "inspectionId": "remove-ticket",
+        "localTracking": "noUpstream",
+        "originalPath": "/owned/tree",
+        "recordId": "created-tree",
+        "repositoryRoot": "/owned/repo",
+        "retainedPath": "/owned/.kept/tree",
+        "revision": 4,
+        "roots": Object {
+          "count": 4,
+          "objectFormat": "sha1",
+          "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        },
+      },
+      Object {},
+      [Function owns],
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/WorktreeRemovalReview.test.tsx:279:25
+    277|   old();
+    278|   await settle();
+    279|   expect(h.prepare).not.toHaveBeenCalled();
+       |                         ^
+    280| });
+    281|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 11 passed (13)
+   Start at  15:56:35
+   Duration  156ms (transform 72ms, setup 0ms, import 116ms, tests 39ms, environment 0ms)
+

@@ -1,0 +1,283 @@
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import {
+  Children,
+  isValidElement,
+  type ReactNode,
+  type ReactElement,
+} from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+const h = vi.hoisted(() => ({
+  invoke: vi.fn<(command: string) => Promise<unknown>>(async () => null),
+  catalogue: {
+    ready: true,
+    loading: false,
+    error: null as string | null,
+    archives: [] as unknown[],
+    recoveries: [] as unknown[],
+  },
+}));
+vi.mock("@tauri-apps/api/core", () => ({
+  invoke: h.invoke,
+  Channel: class {
+    onmessage = (_: unknown) => {};
+  },
+}));
+vi.mock("../runtime/worktrees", () => ({
+  worktrees: {
+    snapshot: () => h.catalogue,
+    subscribe: () => () => {},
+    load: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+vi.mock("../runtime/work_policy", () => ({
+  useWorkPolicy: () => ({
+    ready: false,
+    saving: false,
+    error: "无法读取工作设置，请重试",
+    enabled: () => false,
+    set: vi.fn(),
+    retry: vi.fn(),
+  }),
+}));
+import { ThreadView } from "./ThreadView";
+import { EmptyState } from "./EmptyState";
+import { threads } from "../runtime/sessions";
+import { composerDrafts, newConversationChoice } from "../runtime/drafts";
+import { STRINGS } from "../runtime/strings";
+const message = "工作位置已归档，请先核对并恢复原位置。";
+const root = "/controlled/project";
+const archive = {
+  id: "owned",
+  revision: 2,
+  originalPath: root,
+  retainedPath: "/controlled/retained/worktree",
+  repositoryRoot: "/controlled/repo",
+  branch: "refs/heads/owned",
+  headOid: "a".repeat(40),
+  ownership: "created",
+  availability: "unknown",
+};
+function history(cwd = root, failed = false) {
+  const t = threads.markOpenFailed(
+    `fixture:${cwd}:archived`,
+    "fixture",
+    cwd,
+    "archived",
+    "retry",
+  );
+  t.items = [
+    {
+      kind: "agent",
+      id: "prior",
+      text: "Original history survives",
+      streaming: false,
+      time: 0,
+    },
+  ];
+  t.openError = failed ? STRINGS.repair.reconnectFailed : null;
+  t.connectionLost = true;
+  t.connectionCloseReason = "configuration";
+  t.queued = [[{ type: "text", text: "Queued unchanged" }]];
+  t.queuePaused = "unavailable";
+  return t;
+}
+function renderHistory(t = history()) {
+  return renderToStaticMarkup(
+    <ThreadView
+      thread={t}
+      active
+      agents={[]}
+      onGoSettings={() => {}}
+      onOpened={() => {}}
+    />,
+  );
+}
+beforeEach(() => {
+  h.invoke.mockImplementation(async (command) =>
+    command === "settings_get" ? null : [],
+  );
+  h.catalogue = {
+    ready: true,
+    loading: false,
+    error: null,
+    archives: [archive],
+    recoveries: [],
+  };
+  newConversationChoice.agentId = null;
+  newConversationChoice.cwd = root;
+  composerDrafts.update("new", () => ({
+    text: "Cold draft preserved",
+    attachments: [],
+  }));
+});
+afterEach(() => {
+  composerDrafts.clear("new");
+  newConversationChoice.cwd = null;
+  h.invoke.mockClear();
+});
+it.each([false, true])(
+  "guides archived history to management without offering blind reconnect (failed=%s)",
+  (failed) => {
+    const t = history(root, failed),
+      before = JSON.stringify(t);
+    const html = renderHistory(t);
+    expect(html.split(message)).toHaveLength(2);
+    expect(html).toContain("管理已归档位置");
+    expect(html).not.toMatch(/>重连<\/button>/);
+    expect(html).not.toContain(STRINGS.repair.reconnectFailed);
+    expect(html).not.toContain(STRINGS.thread.connectionIdle);
+    expect(html).toContain("Original history survives");
+    expect(JSON.stringify(t)).toBe(before);
+    expect(
+      h.invoke.mock.calls.filter(([command]) =>
+        [
+          "session_open",
+          "session_prompt",
+          "worktree_start",
+          "worktree_recycle_prepare",
+        ].includes(command),
+      ),
+    ).toEqual([]);
+  },
+);
+it("guides a cold remembered folder without requiring an Agent choice or altering its draft", () => {
+  const before = composerDrafts.read("new");
+  const html = renderToStaticMarkup(
+    <EmptyState
+      agents={[]}
+      onGoSettings={() => {}}
+      onProjectChange={() => {}}
+      onStarted={() => {}}
+    />,
+  );
+  expect(html.split(message)).toHaveLength(2);
+  expect(html).toContain("管理已归档位置");
+  expect(html).not.toContain(STRINGS.repair.workLoadFailed);
+  expect(html).toContain("Cold draft preserved");
+  expect(newConversationChoice.cwd).toBe(root);
+  expect(composerDrafts.read("new")).toBe(before);
+});
+it.each([
+  "/controlled/project-other",
+  "/controlled/project/../other",
+  "/ordinary/missing",
+])(
+  "does not infer an archive from an unrelated or ambiguous path %s",
+  (cwd) => {
+    expect(renderHistory(history(cwd))).not.toContain(message);
+  },
+);
+it.each(["notReady", "loading", "error"])(
+  "does not claim an archive from an unavailable catalogue (%s)",
+  (mode) => {
+    h.catalogue.ready = mode !== "notReady";
+    h.catalogue.loading = mode === "loading";
+    h.catalogue.error = mode === "error" ? "read failed" : null;
+    expect(renderHistory()).not.toContain(message);
+  },
+);
+it("withdraws archive guidance as soon as the archive record disappears after restore", () => {
+  const t = history(root + "/subdirectory");
+  expect(renderHistory(t)).toContain(message);
+  h.catalogue.archives = [];
+  const html = renderHistory(t);
+  expect(html).not.toContain(message);
+  expect(html).toMatch(/>重连<\/button>/);
+});
+
+it("keeps unknown prior execution and unrelated configuration errors visible", () => {
+  const t = history();
+  t.connectionOutcomeUnknown = true;
+  t.configError = "Configuration failure retained";
+  const html = renderHistory(t);
+  expect(html).toContain(message);
+  expect(html).toContain(STRINGS.thread.connectionLost);
+  expect(html).toContain(t.configError);
+});
+
+it.each(["archive", "recovery"])(
+  "an already retained reconnect handler cannot dispatch after the catalogue records %s",
+  async (kind) => {
+    const t = history();
+    h.catalogue.archives = [];
+    const onRecover = vi.fn().mockResolvedValue(undefined);
+    let tree: ReactNode;
+    function Capture() {
+      tree = ThreadView({
+        thread: t,
+        active: true,
+        agents: [],
+        onGoSettings() {},
+        onOpened() {},
+        onRecover,
+      });
+      return tree;
+    }
+    renderToStaticMarkup(<Capture />);
+    const nodes: ReactElement<Record<string, unknown>>[] = [];
+    const visit = (node: ReactNode) =>
+      Children.forEach(node, (child) => {
+        if (!isValidElement<Record<string, unknown>>(child)) return;
+        nodes.push(child);
+        visit(child.props.children as ReactNode);
+      });
+    visit(tree);
+    const button = nodes.find(
+      (node) =>
+        node.type === "button" &&
+        node.props.children === STRINGS.thread.reconnect,
+    )!;
+    expect(button).toBeDefined();
+    if (kind === "archive") h.catalogue.archives = [archive];
+    else h.catalogue.recoveries = [{ id: "backup", originalPath: root }];
+    (button.props.onClick as () => void)();
+    expect(onRecover).not.toHaveBeenCalled();
+    h.catalogue.archives = [];
+    h.catalogue.recoveries = [];
+    (button.props.onClick as () => void)();
+    expect(onRecover).toHaveBeenCalledExactlyOnceWith(t.key);
+    await Promise.resolve();
+  },
+);
+
+it.each([1, 2])(
+  "offers associated recovery management without claiming original restoration (%s copies)",
+  (count) => {
+    h.catalogue.archives = [];
+    h.catalogue.recoveries = Array.from({ length: count }, (_, i) => ({
+      id: "recovery-" + i,
+      originalPath: root,
+      path: "/backup/" + i,
+    }));
+    const t = history(root, true),
+      before = JSON.stringify(t);
+    const html = renderHistory(t);
+    expect(html).toContain("管理提交恢复副本");
+    expect(html).toContain("此工作位置有关联的提交恢复副本");
+    expect(html).not.toContain("恢复原位置");
+    expect(html).not.toMatch(/>重连<\/button>/);
+    expect(html).toContain("Original history survives");
+    expect(JSON.stringify(t)).toBe(before);
+    expect(h.invoke).not.toHaveBeenCalled();
+  },
+);
+it("cold recovery association preserves the remembered draft", () => {
+  h.catalogue.archives = [];
+  h.catalogue.recoveries = [
+    { id: "recovery", originalPath: root, path: "/backup" },
+  ];
+  newConversationChoice.cwd = root;
+  const before = composerDrafts.read("new");
+  const html = renderToStaticMarkup(
+    <EmptyState
+      agents={[]}
+      onGoSettings={() => {}}
+      onProjectChange={() => {}}
+      onStarted={() => {}}
+    />,
+  );
+  expect(html).toContain("管理提交恢复副本");
+  expect(html).not.toContain(STRINGS.repair.workLoadFailed);
+  expect(composerDrafts.read("new")).toBe(before);
+  expect(newConversationChoice.cwd).toBe(root);
+});

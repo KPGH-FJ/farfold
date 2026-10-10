@@ -1,0 +1,84 @@
+{
+  "status": "frozen-after-retained-recovery-correction",
+  "sourceRefs": [
+    {
+      "path": "src/runtime/archived_work_location.ts",
+      "sha256": "894f2569e7de0f6e71284b9128b05fcb68b1c7a3a7847e5706bbde1c2a15e5be",
+      "bytes": 3216,
+      "lines": 93
+    },
+    {
+      "path": "src/runtime/archived_work_location_strings.ts",
+      "sha256": "2f947f701aced2fdd2eb69490f68e8dff98855f1a084bc94ed2c1a260a4b0ac5",
+      "bytes": 332,
+      "lines": 7
+    },
+    {
+      "path": "src/runtime/archived_work_location.test.ts",
+      "sha256": "5f6517861357b3f099d526406ee1f9eb5cd41f400b1592b2b02a2d083cb30772",
+      "bytes": 5057,
+      "lines": 161
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.tsx",
+      "sha256": "77ed70fc6f58011faf1d7c9da951a8380c91dee6150abcdb44821ec6e22d101d",
+      "bytes": 2412,
+      "lines": 78
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.test.tsx",
+      "sha256": "42a6edfa80bb88015b1e7327a25a2ec7f5e3914b4f99d8487695641566dc1a62",
+      "bytes": 6344,
+      "lines": 188
+    },
+    {
+      "path": "src/components/ArchivedWorkLocation.integration.test.tsx",
+      "sha256": "55c1af29ef4e270451b5d17458e58eb5e20577e54204d6900bb05b57e906188f",
+      "bytes": 9861,
+      "lines": 313
+    },
+    {
+      "path": "src/components/ComposerWorkNotice.tsx",
+      "sha256": "bec3991d878a9799559bbfad43ca806bd20681ab6cf9900ae6e8ce90ceada9d0",
+      "bytes": 2326,
+      "lines": 83
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "988f08cd7713ed9422f8e8235f860d63e555acab01a463bacf15fbda4dffbcb8",
+      "bytes": 49494,
+      "lines": 1461
+    },
+    {
+      "path": "src/components/Composer.work.test.tsx",
+      "sha256": "8a2f2c878c4b510629fcd8140a9db1f8534f7aa8564dccaf0e2f729603d9e899",
+      "bytes": 7150,
+      "lines": 213
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "740dda175f17441f91ebfdf445dab1f67ee77f3f31308ca6c7f18880b13ee077",
+      "bytes": 48976,
+      "lines": 1475
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "df3788a39095f6649b87ddc37f1b2f1e4469c7476ce9bcf4b41a9d838a9e5c7d",
+      "bytes": 51695,
+      "lines": 1395
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "10a4654c55ab520c0ea3fd3933a1be333eb0300954bc0fe264ef281afd12eb74",
+      "bytes": 45224,
+      "lines": 1261
+    },
+    {
+      "path": "src/App.work-location-review.test.tsx",
+      "sha256": "c91e92159e1993bbf63a5df6255687d0062014a994246aa736eb3c2fa679d202",
+      "bytes": 3610,
+      "lines": 119
+    }
+  ],
+  "history": "source-checkpoint.json remains the pre-correction history, not current inputs. Recovery association is supplemental; archive alone gates connection."
+}

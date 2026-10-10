@@ -1,0 +1,101 @@
+{
+  "reviewedAtUtc": "2026-10-10T08:43:35.583089+00:00",
+  "scope": "Independent read-only review of the two legacy test walker corrections after the full run finished. Reviewer ran no tests, Cargo, browser, App or Agent and changed no source.",
+  "result": "No blocking issue in the test-only correction; production behavior and original assertions are preserved.",
+  "failureClassification": {
+    "originalFullRun": "7 failed and 4378 passed, 2 failed test files. Full engineering input inventory remained identical before/after (1328 entries).",
+    "cause": "The manual JSX walkers inspect props.children without rendering functional components. Newly extracted ComposerWorkNotice and ArchivedWorkLocationNotice hide the underlying ErrorNotice/actions from that shallow fixture, producing false negatives. This classification was confirmed by reading actual fail locations and production child forwarding, followed by the same original cases passing with actual child expansion.",
+    "notClaimed": "No blanket claim that all seven engineering checks pass after this correction; root will run the affected final integration."
+  },
+  "patchReview": [
+    "Only the two test fixtures add imports, a fixed ready empty worktree catalogue and explicit real child expansion; neither ErrorNotice nor production semantics are stubbed.",
+    "ComposerWorkNotice has no hooks; ArchivedWorkLocationNotice executes in independent child slots with a finally-restored parent slots/cursor/effects set. Child lifecycle effects are intentionally not run in these old error/retry fixtures, whose scope excludes worktree interaction; dedicated lifecycle/browser evidence remains separate.",
+    "All original test bodies and assertions from first it through EOF are byte-identical. Permission priority, no unrelated settings action, explicit settings callback, send-error retention/context reset, pending retry gate and exact recovery callbacks remain enforced."
+  ],
+  "testSources": [
+    {
+      "path": "src/components/Composer.errors.test.tsx",
+      "beforeSha256": "b5709cdcaaedafa2212049e33a9f119eeb926d1e6e0f5ff64363b1503d7aed3c",
+      "currentSha256": "92ffa3fbceff0f562468e603eafd965a6051c86539fd6bb222c7fa12fdf63aff",
+      "allOriginalCasesByteEqual": true,
+      "comparison": "From newline immediately preceding first it call through EOF, unchanged bytes."
+    },
+    {
+      "path": "src/components/ThreadView.history-navigation.test.tsx",
+      "beforeSha256": "2d523ab56766e1928742f5302ddb952f34e5e4603a72d0859e0e0420f707de76",
+      "currentSha256": "4f3ef28a6228441dd4ca2d087267dec7be378307e35bc12ca0fc8e866a06294f",
+      "allOriginalCasesByteEqual": true,
+      "comparison": "From newline immediately preceding first it call through EOF, unchanged bytes."
+    }
+  ],
+  "preservedSourceGroups": [
+    {
+      "receipt": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/final.json",
+      "receiptSha256": "66e06d652071ad5a63aefe459e35fb09921276cd6545378784b7200ef10ca872",
+      "sourceCount": 23,
+      "allCurrentHashesMatch": true
+    },
+    {
+      "receipt": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/source-checkpoint-final.json",
+      "receiptSha256": "23664a46005c312212396e2448f31e4bbc4b2811423e368d6029892469d2c808",
+      "sourceCount": 25,
+      "allCurrentHashesMatch": true
+    },
+    {
+      "receipt": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/source-checkpoint-final.json",
+      "receiptSha256": "8337cbb05089006cbb797bff978e78a4cd10eaf45d15981ec69945adb614fc78",
+      "sourceCount": 13,
+      "allCurrentHashesMatch": true
+    }
+  ],
+  "currentInputDelta": [
+    "src/components/Composer.errors.test.tsx",
+    "src/components/ThreadView.history-navigation.test.tsx"
+  ],
+  "validationReadOnly": {
+    "authorTargeted": "2 files / 29 tests passed, typecheck and formatting logs report success. Logs read only, not rerun.",
+    "currentHashes": "All 23 worktree frontend, 13 notice and 25 backend source refs match their frozen receipts. Only the two test files differ from the 1328-entry run-01 inventory."
+  },
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/frontend.txt",
+      "sha256": "ccbcf32fa28ed874e21042f3c806f5c51180c7fb6b3748112573270e64f000bd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/inputs-before.json",
+      "sha256": "a7f6d6ce629d6032f7baa0326694ca03d6903771969fb6ec9eaf88a89fbee4f9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/inputs-after.json",
+      "sha256": "a7f6d6ce629d6032f7baa0326694ca03d6903771969fb6ec9eaf88a89fbee4f9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/exact-test-patch.diff",
+      "sha256": "4d495b0fb8b9c38e9eb5231d5946e7cca542b81721368d1d614e197470fc4f8a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/original-assertions.json",
+      "sha256": "4c35b43aa6308de346ab702ca5f0c7a58077285d0f6c8cf553951fe59f477b55"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/targeted-green.txt",
+      "sha256": "18ee3e8f3c3ef45e206c70265116156560e2d0f314f17a500b39a6dad2a5fefd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/format-check.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/Composer.errors.test.tsx.before.txt",
+      "sha256": "b5709cdcaaedafa2212049e33a9f119eeb926d1e6e0f5ff64363b1503d7aed3c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/ThreadView.history-navigation.test.tsx.before.txt",
+      "sha256": "2d523ab56766e1928742f5302ddb952f34e5e4603a72d0859e0e0420f707de76"
+    }
+  ]
+}

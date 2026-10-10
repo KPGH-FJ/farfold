@@ -1,0 +1,38 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 22.22s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 5 tests
+test worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material ... ok
+private names ["ORIG_HEAD", "commondir", "HEAD", "logs", "index", "COMMIT_EDITMSG", "gitdir"], HEAD Ok("ref: refs/heads/private\n"), branch Some("refs/heads/private")
+test worktrees::recovery_tests::recovery_discovers_deleted_private_ref_log_and_orig_head_drift ... ok
+
+running 1 test
+test worktrees::recovery_tests::recovery_cancel_prepared_keeps_verified_artifact_and_no_delete_authority ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1331 filtered out; finished in 5.51s
+
+completed:worktrees::recovery_tests::recovery_cancel_prepared_keeps_verified_artifact_and_no_delete_authority
+
+test worktrees::recovery_tests::recovery_cancel_prepared_keeps_verified_artifact_and_no_delete_authority ... ok
+
+running 1 test
+test worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1331 filtered out; finished in 7.64s
+
+completed:worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects
+
+test worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects ... ok
+
+running 1 test
+test worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1331 filtered out; finished in 9.45s
+
+completed:worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories
+
+test worktrees::recovery_tests::recovery_refuses_assume_unchanged_bytes_and_ignored_empty_directories ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1327 filtered out; finished in 9.47s
+

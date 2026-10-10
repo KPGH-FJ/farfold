@@ -1,0 +1,56 @@
+{
+  "scope": "Independent actual final Rust stdout serialization -> production strict TypeScript parser; no Cargo, Git, IPC, App or filesystem mutation repeated.",
+  "result": "passed",
+  "checks": 19,
+  "actualReceiptValues": 18,
+  "command": "corepack pnpm exec vitest run --config docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/publication.config.ts",
+  "backendSourceCheckpoint": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/source-checkpoint-final.json",
+  "sourceChange": "Final backend changes bind reserved leaf identity and publish the verified bundle with create_new/NOFOLLOW; DTO did not change. This receipt adds final-output binding, not a replay of Git tests.",
+  "history": "Prior receipt a745 remains intact: original two genuine wire mismatches and intermediate one remaining mismatch are preserved. No strict TypeScript validation loosened.",
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/receipt.json",
+      "sha256": "a745cb52f3774a48126755adddd9d114d49c5416ecdbec181d3d24352d7628f4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/publication.test.ts",
+      "sha256": "625a4fbd765f36650244605daa959873991e98687431eb30f0de3f31775ea934"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/publication.config.ts",
+      "sha256": "59cb296b0b55f3d480724ba8b1786cd5cc48be3192006e1441dca7739735c7e1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/publication-green.txt",
+      "sha256": "2cbbdf3f55d076eb6650363eebc54366c28b7778fcf97b372ed7344621427957"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/remove-wire-publication.json",
+      "sha256": "b2ccf3b57b497d2d3b106de001ca39e074c3bab45284c7fa323bacc2e4277d49"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/worktrees-publication-green.txt",
+      "sha256": "bec86b0888b5feaf8a8f0ae3548ef90e8b8bf6072e292380adf9e97fa25bb394"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/source-checkpoint-final.json",
+      "sha256": "23664a46005c312212396e2448f31e4bbc4b2811423e368d6029892469d2c808"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/implementation.json",
+      "sha256": "cd8b327d15983a6df3dfceec989e1818183c634092aaed917cf0522d8fa5e3b7"
+    },
+    {
+      "path": "src/runtime/worktree_types.ts",
+      "sha256": "015c38ccf205ed5fc0c08392d2f1cac56dab5f432d0f5c4491ad280f0d1c6c47"
+    },
+    {
+      "path": "src/runtime/worktree_remove_types.ts",
+      "sha256": "606038d08834c91280159f9785d306fb202ecf878f8a0d4bf63d825d2d1d1984"
+    },
+    {
+      "path": "src/runtime/worktree_recycle_types.ts",
+      "sha256": "0d21e458427e7cc2249cbaaac099122b74611851aa52be24775e2f2ed6789602"
+    }
+  ]
+}

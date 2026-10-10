@@ -1,4 +1,11 @@
 import {
+  parseWorktreeRecovery,
+  parseWorktreeRemoval,
+  type WorktreeRecovery,
+  type WorktreeRemovalOperation,
+} from "./worktree_remove_types";
+export * from "./worktree_remove_types";
+import {
   parseWorktreeArchive,
   type WorktreeArchive,
 } from "./worktree_recycle_types";
@@ -45,10 +52,9 @@ export type WorktreeCreate = Readonly<{
     | Readonly<{ kind: "new"; name: string; startOid: string }>
     | Readonly<{ kind: "existing"; ref: string; expectedOid: string }>;
 }>;
-export type WorktreeOperation = Readonly<{
+export type WorktreeOperationBase = Readonly<{
   kind: "operation";
   operationId: string;
-  action: "create" | "adopt" | "archive" | "restore";
   maintenanceActive: boolean;
   state:
     | "prepared"
@@ -60,18 +66,40 @@ export type WorktreeOperation = Readonly<{
     | "unknown";
   settled: boolean;
   cancelRequested: boolean;
-  location?: WorktreeLocation;
   code?: string;
   reviewed?: boolean;
   targetPath?: string;
   originalPath?: string;
   retainedPath?: string;
-  archive?: WorktreeArchive;
 }>;
+export type WorktreeRecoveryOperation = WorktreeOperationBase &
+  Readonly<{
+    action: "recover";
+    recovery?: WorktreeRecovery;
+    location?: WorktreeLocation;
+    archive?: never;
+    removed?: never;
+    removalPhase?: never;
+    deleteDispatched?: never;
+  }>;
+export type WorktreeOperation =
+  | WorktreeRemovalOperation
+  | WorktreeRecoveryOperation
+  | (WorktreeOperationBase &
+      Readonly<{
+        action: "create" | "adopt" | "archive" | "restore";
+        location?: WorktreeLocation;
+        archive?: WorktreeArchive;
+        recovery?: never;
+        removed?: never;
+        removalPhase?: never;
+        deleteDispatched?: never;
+      }>);
 export type WorktreeReply =
   | WorktreeOperation
   | Readonly<{ kind: "unknownOperation"; operationId: string }>;
 export type WorktreeList = Readonly<{
+  recoveries: readonly WorktreeRecovery[];
   locations: readonly WorktreeLocation[];
   archives: readonly WorktreeArchive[];
   materials: readonly WorktreeMaterial[];
@@ -211,6 +239,13 @@ export function parseWorktreeReply(
   value: unknown,
   expectedId?: string,
 ): WorktreeReply {
+  if (
+    value &&
+    typeof value === "object" &&
+    "action" in value &&
+    value.action === "remove"
+  )
+    return parseWorktreeRemoval(value, expectedId);
   const v = record(value, [
     "kind",
     "operationId",
@@ -226,6 +261,7 @@ export function parseWorktreeReply(
     "originalPath",
     "retainedPath",
     "archive",
+    "recovery",
   ]);
   const operationId = text(v.operationId, 128);
   if (expectedId !== undefined && operationId !== expectedId)
@@ -235,7 +271,13 @@ export function parseWorktreeReply(
     return Object.freeze({ kind: "unknownOperation", operationId });
   }
   if (v.kind !== "operation") throw new Error("Invalid operation");
-  const action = oneOf(v.action, ["create", "adopt", "archive", "restore"]);
+  const action = oneOf(v.action, [
+    "create",
+    "adopt",
+    "archive",
+    "restore",
+    "recover",
+  ]);
   const maintenanceActive = bool(v.maintenanceActive);
   const recycle = action === "archive" || action === "restore";
   const archive =
@@ -274,6 +316,29 @@ export function parseWorktreeReply(
     throw new Error("Invalid completion");
   const location =
     v.location === undefined ? undefined : parseWorktreeLocation(v.location);
+  const recovery =
+    v.recovery === undefined ? undefined : parseWorktreeRecovery(v.recovery);
+  if (action === "recover") {
+    if (
+      (["prepared", "running", "ready"].includes(state) &&
+        (!v.targetPath || recovery?.availability !== "verified")) ||
+      (v.targetPath !== undefined &&
+        recovery &&
+        [recovery.path, recovery.originalPath, recovery.retainedPath].includes(
+          text(v.targetPath),
+        ))
+    )
+      throw new Error("Invalid recovery target");
+    if (
+      state === "ready" &&
+      (!location ||
+        location.path !== v.targetPath ||
+        location.repositoryRoot !== v.targetPath ||
+        location.ownership !== "existing" ||
+        location.headOid !== recovery?.headOid)
+    )
+      throw new Error("Invalid recovered location");
+  } else if (recovery) throw new Error("Unexpected recovery");
   if (action === "archive" && location)
     throw new Error("Archive is not usable");
   if (
@@ -293,6 +358,21 @@ export function parseWorktreeReply(
             location.ownership !== "created")))
   )
     throw new Error("Unverified result");
+  if (action === "recover")
+    return Object.freeze({
+      kind: "operation",
+      operationId,
+      action,
+      maintenanceActive,
+      state,
+      settled,
+      cancelRequested: bool(v.cancelRequested),
+      ...(recovery ? { recovery } : {}),
+      ...(location ? { location } : {}),
+      ...(v.code === undefined ? {} : { code: text(v.code, 128) }),
+      ...(reviewed === undefined ? {} : { reviewed }),
+      ...(v.targetPath === undefined ? {} : { targetPath: text(v.targetPath) }),
+    });
   return Object.freeze({
     kind: "operation",
     operationId,
@@ -310,7 +390,16 @@ export function parseWorktreeReply(
   });
 }
 export function parseWorktreeList(value: unknown): WorktreeList {
-  const v = record(value, ["locations", "operation", "materials", "archives"]);
+  const v = record(value, [
+    "locations",
+    "operation",
+    "materials",
+    "archives",
+    "recoveries",
+  ]);
+  const recoveries = array(v.recoveries, 256, parseWorktreeRecovery);
+  if (new Set(recoveries.map((r) => r.id)).size !== recoveries.length)
+    throw new Error("Duplicate recovery");
   const locations = array(v.locations, 256, parseWorktreeLocation);
   const archives = array(v.archives, 256, parseWorktreeArchive);
   if (
@@ -332,5 +421,17 @@ export function parseWorktreeList(value: unknown): WorktreeList {
       repositoryRoot: text(m.repositoryRoot),
     });
   });
-  return Object.freeze({ locations, archives, operation, materials });
+  if (
+    operation?.action === "remove" &&
+    operation.state === "ready" &&
+    archives.some((a) => a.id === operation.removed?.recordId)
+  )
+    throw new Error("Removed archive remains active");
+  return Object.freeze({
+    locations,
+    archives,
+    operation,
+    materials,
+    recoveries,
+  });
 }

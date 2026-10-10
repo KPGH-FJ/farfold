@@ -1,0 +1,499 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } =
+  await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base =
+  "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser";
+const engine = process.argv[2] ?? "webkit",
+  label = process.argv[3] ?? "first";
+const owner = JSON.parse(
+  fs.readFileSync(
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/final.json",
+    "utf8",
+  ),
+);
+const notice = JSON.parse(
+  fs.readFileSync(
+    "docs/evidence/2026-10-09-capability-hardening/archived-work-location/implementation.json",
+    "utf8",
+  ),
+);
+const inputs = [
+  ...new Set([
+    ...owner.ownedSourceRefs.map((r) => r.path),
+    ...notice.sourceRefs.map((r) => r.path),
+    "src/App.tsx",
+    "src/components/StorageRecovery.tsx",
+    "src/components/DraftStartup.tsx",
+    "src/components/WorktreeManagementHost.tsx",
+    "src/runtime/worktree_management.ts",
+    "src/runtime/draft_storage.ts",
+    "src/runtime/setup_storage.ts",
+    ...["fixture.tsx", "run.mjs", "serve.mjs", "index.html"].map(
+      (f) => base + "/" + f,
+    ),
+  ]),
+];
+const hashes = () =>
+  Object.fromEntries(
+    inputs.map((p) => [
+      p,
+      createHash("sha256").update(fs.readFileSync(p)).digest("hex"),
+    ]),
+  );
+const result = {
+  engine,
+  label,
+  scope:
+    "Actual complete App and React StrictMode, production stores/components/CSS. Controlled IPC, in-memory settings, synthetic filesystem/Git replies; no actual delete/recover or native app/Agent/user data.",
+  before: hashes(),
+  checks: [],
+  errors: [],
+  blocked: [],
+  screenshots: [],
+};
+const browser = await (engine === "webkit" ? webkit : chromium).launch({
+  headless: true,
+  executablePath:
+    engine === "webkit"
+      ? path.resolve(
+          "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+        )
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+});
+const timer = setTimeout(() => void browser.close(), 120000);
+const page = await browser.newPage({ viewport: { width: 1000, height: 760 } });
+page.setDefaultTimeout(6500);
+page.on("pageerror", (e) => result.errors.push(String(e)));
+await page.route("**/*", (r) =>
+  r.request().url().startsWith("http://127.0.0.1:1477/")
+    ? r.continue()
+    : (result.blocked.push(r.request().url()), r.abort()),
+);
+const button = (n) => page.getByRole("button", { name: n, exact: true });
+const dialog = () => page.getByRole("dialog", { name: "工作树", exact: true });
+const review = () =>
+  page.getByRole("region", { name: "删除已归档的工作文件", exact: true });
+const ack = "我已查看恢复副本和删除位置，确认永久删除此处的工作文件";
+const current = () => page.evaluate(() => fixture.current());
+const check = (name, pass, detail) => {
+  result.checks.push({ name, pass, detail });
+  if (!pass) throw Error(name);
+};
+const count = (s, cmd) => s.calls.filter((c) => c.cmd === cmd).length;
+async function snap(n) {
+  const p = `${base}/${engine}-${label}-${n}.png`;
+  await page.screenshot({ path: p });
+  result.screenshots.push(p);
+}
+async function load(mode = "normal", open = true) {
+  await page.goto(`http://127.0.0.1:1477/${base}/index.html?mode=${mode}`);
+  await button("工作树").waitFor();
+  if (open) {
+    await button("工作树").click();
+    await dialog().waitFor();
+    await dialog()
+      .getByRole("button", { name: "删除工作文件…", exact: true })
+      .waitFor();
+  }
+}
+async function inspect() {
+  await dialog()
+    .getByRole("button", { name: "删除工作文件…", exact: true })
+    .click();
+  await review()
+    .getByRole("checkbox", {
+      name: "我已停止其他程序使用这个工作树",
+      exact: true,
+    })
+    .waitFor();
+}
+async function prepare(keyboard = false) {
+  await inspect();
+  await review()
+    .getByRole("checkbox", {
+      name: "我已停止其他程序使用这个工作树",
+      exact: true,
+    })
+    .check();
+  const b = review().getByRole("button", {
+    name: "准备提交恢复副本",
+    exact: true,
+  });
+  if (keyboard) {
+    await b.focus();
+    await page.keyboard.press("Enter");
+  } else await b.click();
+}
+async function prepared() {
+  await page.evaluate(() => fixture.prepared());
+  await page.evaluate(() => fixture.query());
+  await review().getByRole("checkbox", { name: ack, exact: true }).waitFor();
+}
+async function unchanged(name) {
+  const s = await current();
+  check(
+    name,
+    s.draft.text === "KEEP_CONTROLLED_UNSENT_TEXT" &&
+      s.historyCwd === "/controlled/created-tree" &&
+      s.cwd === "/controlled/unrelated",
+  );
+}
+try {
+  await load();
+  await inspect();
+  let s = await current();
+  check(
+    "inspection does not prepare, start or delete",
+    count(s, "worktree_remove_inspect") === 1 &&
+      !count(s, "worktree_remove_prepare") &&
+      !count(s, "worktree_start") &&
+      !count(s, "worktree_remove_confirm") &&
+      !s.locked,
+  );
+  check(
+    "first explicit checkbox gates recovery creation",
+    await review()
+      .getByRole("button", { name: "准备提交恢复副本", exact: true })
+      .isDisabled(),
+  );
+  await review()
+    .getByRole("checkbox", {
+      name: "我已停止其他程序使用这个工作树",
+      exact: true,
+    })
+    .check();
+  await review()
+    .getByRole("button", { name: "准备提交恢复副本", exact: true })
+    .focus();
+  await page.keyboard.press("Enter");
+  await page.waitForFunction(
+    () => fixture.current().snapshot.operation?.state === "running",
+  );
+  s = await current();
+  check(
+    "only recovery preparation dispatched, draft lease held and host remains operable",
+    count(s, "worktree_remove_prepare") === 1 &&
+      !count(s, "worktree_start") &&
+      !count(s, "worktree_remove_confirm") &&
+      s.locked &&
+      (await dialog().evaluate((e) => !e.closest("[inert]"))),
+  );
+  await prepared();
+  check(
+    "same Enter does not transfer to second confirmation",
+    !(await review()
+      .getByRole("checkbox", { name: ack, exact: true })
+      .isChecked()) &&
+      (await review()
+        .getByRole("button", { name: "永久删除工作文件", exact: true })
+        .isDisabled()) &&
+      !count(await current(), "worktree_remove_confirm"),
+  );
+  await page.keyboard.press("Enter");
+  check(
+    "repeat Enter without new acknowledgement still cannot delete",
+    !count(await current(), "worktree_remove_confirm"),
+  );
+  await snap("separate-confirmation");
+  await review().getByRole("checkbox", { name: ack, exact: true }).check();
+  await review()
+    .getByRole("button", { name: "永久删除工作文件", exact: true })
+    .click();
+  s = await current();
+  const confirm = s.calls.find((c) => c.cmd === "worktree_remove_confirm");
+  check(
+    "separate explicit confirmation binds exact recovery tuple once",
+    count(s, "worktree_remove_confirm") === 1 &&
+      confirm.args.recoveryId === "controlled-recovery" &&
+      confirm.args.recoverySha256 === "d".repeat(64) &&
+      confirm.args.manifestSha256 === "e".repeat(64) &&
+      confirm.locked &&
+      !count(s, "worktree_start"),
+  );
+  await page.evaluate(() => fixture.complete());
+  await page.evaluate(() => fixture.query());
+  s = await current();
+  check(
+    "confirmed completion removes only archive, retains recovery and releases own lease",
+    s.snapshot.archives.length === 0 &&
+      s.snapshot.recoveries.length === 1 &&
+      !s.locked,
+  );
+  await unchanged(
+    "successful deletion receipt does not migrate history or draft",
+  );
+  await snap("deleted-backup-kept");
+  // Required cancel -> retained backup -> check -> recover independently -> explicit use.
+  await load();
+  await prepare();
+  await prepared();
+  await review().getByRole("button", { name: "取消", exact: true }).click();
+  await review().waitFor({ state: "hidden" });
+  await page.waitForFunction(
+    () => fixture.current().snapshot.operation?.state === "cancelled",
+  );
+  s = await current();
+  check(
+    "cancel preserves archive and recovery with zero deletion",
+    s.snapshot.archives.length === 1 &&
+      s.snapshot.recoveries.length === 1 &&
+      !s.locked &&
+      !count(s, "worktree_remove_confirm"),
+  );
+  const recoveryRegion = page.getByRole("region", {
+    name: "提交恢复副本",
+    exact: true,
+  });
+  await recoveryRegion
+    .getByRole("button", { name: "核对恢复副本", exact: true })
+    .click();
+  check(
+    "recovery check is explicit and never creates/removes files",
+    count(await current(), "worktree_recovery_check") === 1 &&
+      !count(await current(), "worktree_start"),
+  );
+  await recoveryRegion
+    .getByRole("button", { name: "恢复到新文件夹…", exact: true })
+    .click();
+  const form = page.getByRole("region", {
+    name: "从提交副本恢复到新文件夹",
+    exact: true,
+  });
+  await form
+    .getByRole("button", { name: "选择目标父文件夹", exact: true })
+    .click();
+  await form
+    .getByLabel("新文件夹名称", { exact: true })
+    .fill("recovered-independent");
+  await page.keyboard.press("Enter");
+  check(
+    "typing target and Enter do not implicitly recover",
+    !count(await current(), "worktree_recover_prepare"),
+  );
+  await form
+    .getByRole("button", { name: "恢复到新文件夹", exact: true })
+    .click();
+  await page.waitForFunction(
+    () =>
+      fixture.current().snapshot.operation?.action === "recover" &&
+      fixture.current().snapshot.operation?.state === "running",
+  );
+  s = await current();
+  check(
+    "explicit recover prepares and starts same owner once, never deletes",
+    count(s, "worktree_recover_prepare") === 1 &&
+      count(s, "worktree_start") === 1 &&
+      !count(s, "worktree_remove_confirm") &&
+      s.calls.find((c) => c.cmd === "worktree_start").args.operationId ===
+        s.calls.find((c) => c.cmd === "worktree_recover_prepare").args
+          .operationId,
+  );
+  await page.evaluate(() => fixture.complete());
+  await page.evaluate(() => fixture.query());
+  s = await current();
+  check(
+    "recovered repository is existing; original archive and backup survive",
+    s.snapshot.locations.some(
+      (l) =>
+        l.path === "/controlled/recovered-parent/recovered-independent" &&
+        l.ownership === "existing",
+    ) &&
+      s.snapshot.archives.length === 1 &&
+      s.snapshot.recoveries.length === 1,
+  );
+  await unchanged("recovery completion alone does not apply new cwd");
+  await snap("recovered-explicit-use");
+  await form.getByRole("button", { name: "关闭", exact: true }).click();
+  const recovered = dialog()
+    .locator("li")
+    .filter({
+      has: page.getByText(
+        "/controlled/recovered-parent/recovered-independent",
+        { exact: true },
+      ),
+    });
+  await recovered.getByRole("button", { name: "使用", exact: true }).click();
+  await dialog().waitFor({ state: "hidden" });
+  s = await current();
+  check(
+    "only separate Use applies new draft cwd after location check",
+    s.cwd === "/controlled/recovered-parent/recovered-independent" &&
+      s.historyCwd === "/controlled/created-tree" &&
+      s.draft.text === "KEEP_CONTROLLED_UNSENT_TEXT" &&
+      count(s, "worktree_check_location") === 1,
+  );
+  await button("工作树").click();
+  await inspect();
+  s = await current();
+  check(
+    "second removal requires new inspection and fresh first acknowledgement",
+    count(s, "worktree_remove_inspect") === 2 &&
+      !(await review()
+        .getByRole("checkbox", {
+          name: "我已停止其他程序使用这个工作树",
+          exact: true,
+        })
+        .isChecked()) &&
+      !count(s, "worktree_remove_confirm"),
+  );
+  // Close and late prepared response cannot resurrect permission.
+  await load("late");
+  await prepare();
+  await dialog().getByRole("button", { name: "关闭", exact: true }).click();
+  await dialog().waitFor({ state: "hidden" });
+  await page.evaluate(() => fixture.releasePrepare());
+  await page.waitForFunction(() =>
+    fixture.current().calls.some((c) => c.cmd === "worktree_cancel"),
+  );
+  s = await current();
+  check(
+    "late prepared after close is cancelled without start/confirm",
+    !count(s, "worktree_start") &&
+      !count(s, "worktree_remove_confirm") &&
+      s.calls
+        .filter((c) => c.cmd === "worktree_cancel")
+        .every(
+          (c) =>
+            c.args.operationId ===
+            s.calls.find((c) => c.cmd === "worktree_remove_prepare").args
+              .operationId,
+        ),
+  );
+  // Real ten seconds, no accelerated clock.
+  await load("timeout");
+  await prepare();
+  await page.waitForFunction(() => fixture.current().snapshot.uncertain, null, {
+    timeout: 13000,
+  });
+  check(
+    "actual 10s prepare wait retains lock and no deletion authority",
+    (await current()).locked &&
+      !count(await current(), "worktree_remove_confirm"),
+  );
+  await page.evaluate(() => fixture.releasePrepare());
+  await page.waitForFunction(
+    () => fixture.current().snapshot.operation?.state === "cancelled",
+  );
+  s = await current();
+  check(
+    "late timeout reply cancelled and confirmed release only",
+    !s.locked &&
+      !count(s, "worktree_start") &&
+      !count(s, "worktree_remove_confirm"),
+  );
+  await load("refusal");
+  await prepare();
+  await page.waitForFunction(
+    () => fixture.current().snapshot.operation?.state === "failed",
+  );
+  s = await current();
+  check(
+    "exact known refusal releases gate and preserves both paths",
+    !s.locked &&
+      s.snapshot.archives.length === 1 &&
+      !count(s, "worktree_remove_confirm"),
+  );
+  // Notices use full App history and cold new-draft path.
+  await load("normal", false);
+  await page.getByText("CONTROLLED_HISTORY_UNMOVED", { exact: true }).click();
+  await button("管理已归档位置").waitFor();
+  check(
+    "archived history shows recovery guidance and preserves body with no reconnect",
+    (await page
+      .getByText("CONTROLLED_HISTORY_UNMOVED_BODY", { exact: true })
+      .isVisible()) &&
+      (await button("重连").count()) === 0 &&
+      !count(await current(), "session_open"),
+  );
+  await button("管理已归档位置").click();
+  await dialog().waitFor();
+  s = await current();
+  check(
+    "notice opens manager without draft target",
+    s.request.target === null && s.historyCwd === "/controlled/created-tree",
+  );
+  await dialog().getByRole("button", { name: "关闭", exact: true }).click();
+  await page.evaluate(() => fixture.restoreCatalogue());
+  await button("重连").waitFor();
+  check(
+    "restored catalogue withdraws old notice and restores reconnect only",
+    (await button("管理已归档位置").count()) === 0 &&
+      !count(await current(), "session_open"),
+  );
+  await page.evaluate(() => fixture.restoreArchives());
+  await button("管理已归档位置").waitFor();
+  await page.evaluate(() => fixture.catalogue("hold"));
+  await button("重连").waitFor();
+  check(
+    "catalogue loading does not assert archive from stale entries",
+    (await button("管理已归档位置").count()) === 0,
+  );
+  await page.evaluate(() => fixture.releaseLoad());
+  await button("管理已归档位置").waitFor();
+  await page.evaluate(() => fixture.catalogue("error"));
+  await button("重连").waitFor();
+  check(
+    "catalogue read error does not assert archive from stale entries",
+    (await button("管理已归档位置").count()) === 0 &&
+      !count(await current(), "session_open"),
+  );
+  await load("notice-cold", false);
+  await button("管理已归档位置").waitFor();
+  s = await current();
+  check(
+    "cold remembered archived cwd replaces failed settings without changing draft",
+    s.cwd === "/controlled/created-tree" &&
+      s.draft.text === "KEEP_CONTROLLED_UNSENT_TEXT" &&
+      (await page
+        .getByText("无法读取工作设置，请重试", { exact: true })
+        .count()) === 0 &&
+      !count(s, "session_open") &&
+      !count(s, "session_prompt"),
+  );
+  await snap("cold-archive-guidance");
+  check(
+    "all controlled scenarios have zero unexpected IPC",
+    !(await current()).unexpected.length,
+    (await current()).unexpected,
+  );
+} catch (e) {
+  result.failure = String(e);
+  result.body = await page
+    .locator("body")
+    .innerText()
+    .catch(() => null);
+  result.current = await current().catch(() => null);
+  await snap("failure").catch(() => {});
+} finally {
+  result.after = hashes();
+  result.sourceUnchanged =
+    JSON.stringify(result.before) === JSON.stringify(result.after);
+  result.passed =
+    !result.failure &&
+    result.checks.every((c) => c.pass) &&
+    !result.errors.length &&
+    result.sourceUnchanged;
+  clearTimeout(timer);
+  await browser.close();
+  fs.writeFileSync(
+    `${base}/${engine}-${label}.raw.txt`,
+    JSON.stringify(result, null, 2) + "\n",
+  );
+  fs.writeFileSync(
+    `${base}/${engine}-${label}.json`,
+    JSON.stringify(result, null, 2) + "\n",
+  );
+  console.log(
+    JSON.stringify({
+      engine,
+      label,
+      passed: result.passed,
+      checks: result.checks.length,
+      failure: result.failure,
+      errors: result.errors,
+    }),
+  );
+  process.exitCode = result.passed ? 0 : 1;
+}

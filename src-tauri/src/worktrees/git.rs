@@ -116,16 +116,35 @@ impl Drop for OwnedProcess {
     }
 }
 pub(super) fn execute_command(
+    cmd: Command,
+    cancel: &AtomicBool,
+    timeout: Duration,
+) -> Result<Output> {
+    let stdout = tempfile::tempfile().map_err(|_| error("unavailable"))?;
+    execute_bounded(cmd, cancel, timeout, stdout, OUTPUT_LIMIT, true)
+}
+pub(super) fn execute_to_file(
+    cmd: Command,
+    cancel: &AtomicBool,
+    timeout: Duration,
+    stdout: File,
+    limit: u64,
+) -> Result<Output> {
+    execute_bounded(cmd, cancel, timeout, stdout, limit, false)
+}
+fn execute_bounded(
     mut cmd: Command,
     cancel: &AtomicBool,
     timeout: Duration,
+    mut stdout: File,
+    limit: u64,
+    collect: bool,
 ) -> Result<Output> {
     #[cfg(unix)]
     {
         use std::os::unix::process::CommandExt;
         cmd.process_group(0);
     }
-    let mut stdout = tempfile::tempfile().map_err(|_| error("unavailable"))?;
     let stderr = tempfile::tempfile().map_err(|_| error("unavailable"))?;
     cmd.stdout(stdout.try_clone().map_err(|_| error("unavailable"))?)
         .stderr(stderr.try_clone().map_err(|_| error("unavailable"))?);
@@ -177,9 +196,8 @@ pub(super) fn execute_command(
             if let Some(code) = stopped {
                 return Err(error(code));
             }
-            if [&stdout, &stderr]
-                .into_iter()
-                .any(|f| f.metadata().map_or(true, |m| m.len() > OUTPUT_LIMIT))
+            if stdout.metadata().map_or(true, |m| m.len() > limit)
+                || stderr.metadata().map_or(true, |m| m.len() > OUTPUT_LIMIT)
             {
                 return Err(error("tooLarge"));
             }
@@ -187,10 +205,14 @@ pub(super) fn execute_command(
                 .seek(SeekFrom::Start(0))
                 .map_err(|_| error("unavailable"))?;
             let mut bytes = Vec::new();
-            stdout
-                .take(OUTPUT_LIMIT + 1)
-                .read_to_end(&mut bytes)
-                .map_err(|_| error("unavailable"))?;
+            if collect {
+                stdout
+                    .take(OUTPUT_LIMIT + 1)
+                    .read_to_end(&mut bytes)
+                    .map_err(|_| error("unavailable"))?;
+            } else {
+                stdout.sync_all().map_err(|_| error("unavailable"))?;
+            }
             return Ok(Output {
                 success: status.success(),
                 code: status.code(),
@@ -198,9 +220,8 @@ pub(super) fn execute_command(
             });
         }
         if stopped.is_none() {
-            let over = [&stdout, &stderr]
-                .into_iter()
-                .any(|f: &File| f.metadata().map_or(true, |s| s.len() > OUTPUT_LIMIT));
+            let over = stdout.metadata().map_or(true, |s| s.len() > limit)
+                || stderr.metadata().map_or(true, |s| s.len() > OUTPUT_LIMIT);
             let reason = if cancel.load(Ordering::SeqCst) {
                 Some("cancelled")
             } else if started.elapsed() >= timeout {

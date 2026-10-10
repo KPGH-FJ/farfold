@@ -1,0 +1,116 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/Composer.errors.test.tsx (14 tests | 6 failed) 2101ms
+   × omits only the failed-open reason already presented by the conversation 14ms
+   × does not attach a hidden open error's settings action to the permission notice (parent presents it: false) 2ms
+   × does not attach a hidden open error's settings action to the permission notice (parent presents it: true) 3ms
+   × retains the independent composer's failed-open action and the Start page's explicit setup action 2ms
+   × keeps first-send failure 此消息发送失败，请重试 without routing to unrelated setup, until an explicit context switch 1006ms
+   × keeps first-send failure 附件已无法读取，请重新选择或移除后再发送。 without routing to unrelated setup, until an explicit context switch 1003ms
+ ❯ src/components/ThreadView.history-navigation.test.tsx (15 tests | 1 failed) 88ms
+   × shows a pending index-open recovery instead of the old startup failure and blocks another recovery 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/Composer.errors.test.tsx > omits only the failed-open reason already presented by the conversation
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/Composer.errors.test.tsx:120:5
+    118|       (e) => e.type === ErrorNotice && e.props.message === thread.conf…
+    119|     ),
+    120|   ).toBe(true);
+       |     ^
+    121|   expect(
+    122|     elements.some((e) => e.type === "button" && e.props.children === "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  src/components/Composer.errors.test.tsx > does not attach a hidden open error's settings action to the permission notice (parent presents it: false)
+ FAIL  src/components/Composer.errors.test.tsx > does not attach a hidden open error's settings action to the permission notice (parent presents it: true)
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/Composer.errors.test.tsx:151:7
+    149|           e.type === ErrorNotice && e.props.message === C.permissionUn…
+    150|       ),
+    151|     ).toBe(true);
+       |       ^
+    152|     expect(
+    153|       elements.some(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  src/components/Composer.errors.test.tsx > retains the independent composer's failed-open action and the Start page's explicit setup action
+AssertionError: expected undefined to be defined
+ ❯ src/components/Composer.errors.test.tsx:177:20
+    175|       (e) => e.type === "button" && e.props.children === "去设置",
+    176|     )!;
+    177|     expect(button).toBeDefined();
+       |                    ^
+    178|     (button.props.onClick as () => void)();
+    179|     expect(props.onGoSettings).toHaveBeenCalledExactlyOnceWith();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  src/components/Composer.errors.test.tsx > keeps first-send failure 此消息发送失败，请重试 without routing to unrelated setup, until an explicit context switch
+ FAIL  src/components/Composer.errors.test.tsx > keeps first-send failure 附件已无法读取，请重新选择或移除后再发送。 without routing to unrelated setup, until an explicit context switch
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/Composer.errors.test.tsx:209:57
+    207|         (e) => e.type === ErrorNotice && e.props.message === rejected,
+    208|       );
+    209|     await vi.waitFor(() => expect(shown(render(props))).toBe(true));
+       |                                                         ^
+    210|     expect(
+    211|       render(props).some(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  src/components/ThreadView.history-navigation.test.tsx > shows a pending index-open recovery instead of the old startup failure and blocks another recovery
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/ThreadView.history-navigation.test.tsx:271:5
+    269|       (node) => node.type === ErrorNotice && node.props.message === s.…
+    270|     ),
+    271|   ).toBe(true);
+       |     ^
+    272|   (retry.props.onClick as () => void)();
+    273|   await complete();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+
+ Test Files  2 failed | 368 passed (370)
+      Tests  7 failed | 4378 passed (4385)
+   Start at  16:36:31
+   Duration  47.80s (transform 14.49s, setup 0ms, import 277.90s, tests 89.84s, environment 33ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

@@ -1,0 +1,46 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/wire.test.ts (38 tests | 2 failed | 19 skipped) 18ms
+     × removeConfirm accepted without loss 5ms
+     × coldRemovalList accepted without loss 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/wire.test.ts > original > removeConfirm accepted without loss
+Error: Invalid worktree removal receipt
+ ❯ invalid src/runtime/worktree_remove_types.ts:70:9
+     68|   }>;
+     69| const invalid = (): never => {
+     70|   throw new Error("Invalid worktree removal receipt");
+       |         ^
+     71| };
+     72| const record = (
+ ❯ parseWorktreeRemoval src/runtime/worktree_remove_types.ts:317:12
+ ❯ parseWorktreeReply src/runtime/worktree_types.ts:248:12
+ ❯ docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/wire.test.ts:15:139
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/wire.test.ts > original > coldRemovalList accepted without loss
+Error: Invalid worktree removal receipt
+ ❯ invalid src/runtime/worktree_remove_types.ts:70:9
+     68|   }>;
+     69| const invalid = (): never => {
+     70|   throw new Error("Invalid worktree removal receipt");
+       |         ^
+     71| };
+     72| const record = (
+ ❯ parseWorktreeRemoval src/runtime/worktree_remove_types.ts:358:14
+ ❯ parseWorktreeReply src/runtime/worktree_types.ts:248:12
+ ❯ parseWorktreeList src/runtime/worktree_types.ts:413:35
+ ❯ docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/wire/wire.test.ts:15:112
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 17 passed | 19 skipped (38)
+   Start at  16:07:07
+   Duration  199ms (transform 46ms, setup 0ms, import 62ms, tests 18ms, environment 0ms)
+

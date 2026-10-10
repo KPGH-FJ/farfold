@@ -1,0 +1,67 @@
+{
+  "scope": "Single descriptive sentence followup to frozen helper static review; no helper execution.",
+  "result": "passed",
+  "priorReview": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/helper-preflight-independent.json",
+    "sha256": "fada248bca7d0724c2b16985d66be844b02a9d1152e83adbd760d13e550028e3"
+  },
+  "delta": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/prepare-candidate.py",
+    "oldSha256": "7cc788f38515899471a51ed99f4986507d3caa28abfe14869ae365f4fc454623",
+    "newSha256": "e9cbd733d525ff9ed253ab2fb7aee2d06584ea0cb8fc9f1a45e1b10e85ba4499",
+    "change": "Only sourceScope claim changed from worktree archive/restore engineering inventory to worktree deletion/recovery engineering inventory. Reversing exactly this sentence yields the reviewed prior bytes."
+  },
+  "unchangedReferences": 11,
+  "allPriorBehavioralConclusionsUnchanged": true,
+  "executionAndInstallationStillPending": true,
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/prepare-candidate.py",
+      "sha256": "e9cbd733d525ff9ed253ab2fb7aee2d06584ea0cb8fc9f1a45e1b10e85ba4499"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/verify-candidate.py",
+      "sha256": "78e65b7e6d95369def3ebeedbd8308eee0f000bda679bd7b882e097c5aa397f5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/verify-install-independent.py",
+      "sha256": "7b803f00442e10ae6be693e76e340986f4bd89d8fb539a587413925e651b19b9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/verify-data-retention.py",
+      "sha256": "18e0aad87b1534a3da1132a6907c19aee05191821b5a0c0bff4f74ee2fc7f92c"
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0"
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-install/install_verified_candidate.py",
+      "sha256": "1b74866b2ab4787ccaa51ec941cedb11469b69bce83c5021820f6db5cf06f89b"
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3"
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-install/cleanup_duplicate.py",
+      "sha256": "25536a08acd4d92dfab51bab44f06cddb8eab145a5175b5eab62f5d035190711"
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-install/normal-exit-observation.json",
+      "sha256": "258d8151dc0a1de8551f73b3bde9f1a71cd85e73a0cb8a8a1f900768a7386947"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/final-normal-exit.json",
+      "sha256": "3dc84c3c1e188023f468e7d5e97dcb8344f4d511e6ec9162178387e50fc09c64"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/installed-archive-restore.json",
+      "sha256": "323d45e7144b83bd5b0955dc8c668f6c42b3d7c60e8c7556e7e976c336b16386"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native-closeout-independent.json",
+      "sha256": "ef0efdfd834ff51ebb3e44c6334d71bbc283465b05db2d6b5c171b31642d6ef3"
+    }
+  ]
+}

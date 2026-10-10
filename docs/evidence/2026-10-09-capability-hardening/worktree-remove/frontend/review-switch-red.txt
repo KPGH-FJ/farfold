@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorktreeDialog.test.tsx (23 tests | 1 failed) 30ms
+   × switching from an unsubmitted delete review to restore retires the old review rather than leaving both active 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeDialog.test.tsx > switching from an unsubmitted delete review to restore retires the old review rather than leaving both active
+AssertionError: expected [ { …(10) } ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/components/WorktreeDialog.test.tsx:539:5
+    537|   expect(
+    538|     nodes(render()).filter((n) => n.type === WorktreeRemovalReview),
+    539|   ).toHaveLength(0);
+       |     ^
+    540|   expect(
+    541|     nodes(render()).filter((n) => n.type === WorktreeRecycleReview),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 22 passed (23)
+   Start at  15:46:05
+   Duration  212ms (transform 78ms, setup 0ms, import 112ms, tests 30ms, environment 0ms)
+

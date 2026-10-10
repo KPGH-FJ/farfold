@@ -209,3 +209,110 @@ pub async fn worktree_recycle_check(
     let (m, s) = context(&app, &webview)?;
     run(move || m.recycle_check(&s, &record_id, expected_revision)).await
 }
+
+#[tauri::command]
+pub async fn worktree_remove_inspect(
+    app: AppHandle,
+    webview: Webview,
+    record_id: String,
+    expected_revision: u64,
+) -> worktrees::Result<worktrees::RemoveInspection> {
+    let (m, s) = context(&app, &webview)?;
+    run(move || m.remove_inspect(&s, &record_id, expected_revision)).await
+}
+#[tauri::command]
+pub async fn worktree_remove_prepare(
+    app: AppHandle,
+    webview: Webview,
+    operation_id: String,
+    inspection_id: String,
+    expected_draft_baseline: worktrees::DraftBaseline,
+) -> worktrees::Result<worktrees::Reply> {
+    let (m, s) = context(&app, &webview)?;
+    run(move || {
+        m.prepare_remove(
+            &s,
+            &operation_id,
+            worktrees::RemoveInput {
+                inspection_id,
+                expected_draft_baseline,
+            },
+            |path| {
+                crate::acp_client::manager::runtime()
+                    .block_on(
+                        app.state::<crate::acp_client::manager::AcpManager>()
+                            .release_for_directory_maintenance(path),
+                    )
+                    .map_err(|_| worktrees::Failure {
+                        code: "connectionUnconfirmed",
+                    })
+            },
+        )
+    })
+    .await
+}
+// Keep the six explicit confirmation fields in the shared IPC contract; App/Webview are injected.
+#[allow(clippy::too_many_arguments)]
+#[tauri::command]
+pub async fn worktree_remove_confirm(
+    app: AppHandle,
+    webview: Webview,
+    operation_id: String,
+    record_id: String,
+    expected_revision: u64,
+    recovery_id: String,
+    recovery_sha256: String,
+    manifest_sha256: String,
+) -> worktrees::Result<worktrees::Reply> {
+    let (m, s) = context(&app, &webview)?;
+    run(move || {
+        m.confirm_remove(
+            &s,
+            &operation_id,
+            worktrees::RemoveConfirmation {
+                record_id,
+                expected_revision,
+                recovery_id,
+                recovery_sha256,
+                manifest_sha256,
+            },
+        )
+    })
+    .await
+}
+#[tauri::command]
+pub async fn worktree_recovery_check(
+    app: AppHandle,
+    webview: Webview,
+    recovery_id: String,
+    expected_revision: u64,
+) -> worktrees::Result<worktrees::Listing> {
+    let (m, s) = context(&app, &webview)?;
+    run(move || m.recovery_check(&s, &recovery_id, expected_revision)).await
+}
+
+#[tauri::command]
+pub async fn worktree_recover_prepare(
+    app: AppHandle,
+    webview: Webview,
+    operation_id: String,
+    recovery_id: String,
+    expected_revision: u64,
+    parent_path: String,
+    directory_name: String,
+) -> worktrees::Result<worktrees::Reply> {
+    let (m, s) = context(&app, &webview)?;
+    run(move || {
+        m.prepare_recover(
+            &s,
+            &operation_id,
+            worktrees::RecoverInput {
+                recovery_id,
+                expected_revision,
+                parent_path,
+                directory_name,
+            },
+        )
+    })
+    .await
+}

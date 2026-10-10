@@ -1,0 +1,47 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_recover.test.ts (5 tests | 2 failed) 63ms
+   × a subscriber retiring the owner at the final start boundary cannot dispatch checkout 3ms
+   × unknown or copied recovery records cannot open a new destination 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktree_recover.test.ts > a subscriber retiring the owner at the final start boundary cannot dispatch checkout
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/runtime/worktree_recover.test.ts:151:69
+    149|   await w.recover(r, "/new", "restored", () => current);
+    150|   stop();
+    151|   expect(h.invoke.mock.calls.some(([c]) => c === "worktree_start")).to…
+       |                                                                     ^
+    152| });
+    153| it("unknown or copied recovery records cannot open a new destination",…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/worktree_recover.test.ts > unknown or copied recovery records cannot open a new destination
+Error: 当前草稿或工作位置已变化，请重新选择。
+ ❯ Object.recover src/runtime/worktrees.ts:847:13
+    845|       [".", ".."].includes(directoryName)
+    846|     )
+    847|       throw new Error(S.changed);
+       |             ^
+    848|     const targetPath = parentPath.endsWith("/")
+    849|       ? parentPath + directoryName
+ ❯ src/runtime/worktree_recover.test.ts:156:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 passed (5)
+   Start at  15:53:26
+   Duration  158ms (transform 59ms, setup 0ms, import 28ms, tests 63ms, environment 0ms)
+

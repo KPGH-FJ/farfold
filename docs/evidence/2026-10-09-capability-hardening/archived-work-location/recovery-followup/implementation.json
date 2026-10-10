@@ -1,0 +1,263 @@
+{
+  "status": "author-source-targeted-and-controlled-browser-passed-awaiting-integration-and-native",
+  "role": "Author of guidance/App changes; product_coverage separately performed independent source/evidence review. No independent native observation claimed.",
+  "sourceRefs": [
+    {
+      "path": "src/runtime/archived_work_location.ts",
+      "sha256": "894f2569e7de0f6e71284b9128b05fcb68b1c7a3a7847e5706bbde1c2a15e5be",
+      "bytes": 3216,
+      "lines": 93
+    },
+    {
+      "path": "src/runtime/archived_work_location_strings.ts",
+      "sha256": "2f947f701aced2fdd2eb69490f68e8dff98855f1a084bc94ed2c1a260a4b0ac5",
+      "bytes": 332,
+      "lines": 7
+    },
+    {
+      "path": "src/runtime/archived_work_location.test.ts",
+      "sha256": "5f6517861357b3f099d526406ee1f9eb5cd41f400b1592b2b02a2d083cb30772",
+      "bytes": 5057,
+      "lines": 161
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.tsx",
+      "sha256": "77ed70fc6f58011faf1d7c9da951a8380c91dee6150abcdb44821ec6e22d101d",
+      "bytes": 2412,
+      "lines": 78
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.test.tsx",
+      "sha256": "42a6edfa80bb88015b1e7327a25a2ec7f5e3914b4f99d8487695641566dc1a62",
+      "bytes": 6344,
+      "lines": 188
+    },
+    {
+      "path": "src/components/ArchivedWorkLocation.integration.test.tsx",
+      "sha256": "55c1af29ef4e270451b5d17458e58eb5e20577e54204d6900bb05b57e906188f",
+      "bytes": 9861,
+      "lines": 313
+    },
+    {
+      "path": "src/components/ComposerWorkNotice.tsx",
+      "sha256": "bec3991d878a9799559bbfad43ca806bd20681ab6cf9900ae6e8ce90ceada9d0",
+      "bytes": 2326,
+      "lines": 83
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "988f08cd7713ed9422f8e8235f860d63e555acab01a463bacf15fbda4dffbcb8",
+      "bytes": 49494,
+      "lines": 1461
+    },
+    {
+      "path": "src/components/Composer.work.test.tsx",
+      "sha256": "8a2f2c878c4b510629fcd8140a9db1f8534f7aa8564dccaf0e2f729603d9e899",
+      "bytes": 7150,
+      "lines": 213
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "740dda175f17441f91ebfdf445dab1f67ee77f3f31308ca6c7f18880b13ee077",
+      "bytes": 48976,
+      "lines": 1475
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "df3788a39095f6649b87ddc37f1b2f1e4469c7476ce9bcf4b41a9d838a9e5c7d",
+      "bytes": 51695,
+      "lines": 1395
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "10a4654c55ab520c0ea3fd3933a1be333eb0300954bc0fe264ef281afd12eb74",
+      "bytes": 45224,
+      "lines": 1261
+    },
+    {
+      "path": "src/App.work-location-review.test.tsx",
+      "sha256": "c91e92159e1993bbf63a5df6255687d0062014a994246aa736eb3c2fa679d202",
+      "bytes": 3610,
+      "lines": 119
+    }
+  ],
+  "priorCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/implementation.json",
+    "sha256": "432b25dd06d2b666502300c7173104d3a379783b000c5962a835ea5529cd6b2b",
+    "bytes": 10065
+  },
+  "preCorrectionCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/source-checkpoint.json",
+    "sha256": "15b191b117be2b877e7075ccfaef1f0658a509e2d4f5b7e9fe95ba73d95f1f09",
+    "bytes": 2710
+  },
+  "finalCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/source-checkpoint-final.json",
+    "sha256": "8337cbb05089006cbb797bff978e78a4cd10eaf45d15981ec69945adb614fc78",
+    "bytes": 2746
+  },
+  "implementation": [
+    "Ready catalogue must not be loading or errored. Absolute POSIX component matching rejects ambiguous segments; no filesystem alias or existence inference.",
+    "An exact archive association keeps prior guidance and App/Thread reconnect guards. Multiple conflicting archive associations do not choose a record.",
+    "Associated recovery copies only add a management hint. Original ErrorNotice title/message/detail/children/actions remain; no path absence, deletion success or original-location restoration claim. Multiple copies remain separate manager choices.",
+    "Management click rechecks current active/mounted/cwd/source/catalogue identity and opens target=null. No automatic restore, cwd migration or prompt.",
+    "App known-archive navigation retains existing body or records unavailable history identity without dispatch; unknown/error catalogue keeps ordinary navigation. Recovery association never vetoes ordinary explicit navigation/reconnect."
+  ],
+  "counterexamples": [
+    {
+      "log": "red.txt",
+      "result": "3 valid missing-recovery-guidance SSR failures plus 7 App test-driver onSelect/onOpen mistakes, not 10 product defects."
+    },
+    {
+      "log": "navigation-red.txt",
+      "result": "3 valid ready-catalogue navigation failures under the earlier stronger requirement. Subsequent root correction narrows the gate to archive only; old evidence retained."
+    },
+    {
+      "log": "retained-recovery-red.txt",
+      "result": "3/3 genuine failures: prepared backup remains after cancelled deletion and explicit original archive restoration; loaded/cold navigation still blocked and original error/retry swallowed."
+    },
+    {
+      "log": "retained-recovery-green.txt",
+      "result": "Same 3 counterexamples pass after archive-only gate and supplemental recovery notice."
+    }
+  ],
+  "finalChecks": [
+    {
+      "log": "retained-related.txt",
+      "exitCode": 0,
+      "actualFiles": 5,
+      "actualTests": 89,
+      "scope": "Targeted App, pure association, notice owner, Thread/EmptyState SSR and Composer work tests. One nonexistent command path did not create an additional executed suite."
+    },
+    {
+      "log": "retained-typecheck.txt",
+      "exitCode": 0,
+      "scope": "Whole-project typecheck at final source state."
+    },
+    {
+      "log": "retained-final-format.txt",
+      "exitCode": 0,
+      "scope": "All13 author-owned source/test files, maximum1500 lines."
+    },
+    {
+      "receipt": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/receipt.json",
+      "scope": "Actual fullApp WebKit and Chromium corrected guidance each21passed. Controlled IPC and catalogue restoration, not Git/native/Agent. Earlier lifecycle each27 is a distinct prior checkpoint."
+    }
+  ],
+  "history": "Original11-source checkpoint, pre-correction13-source checkpoint, initial dual16browser results, original tests before expectation correction and all red/driver errors remain. Earlier recovery-no-reconnect expectations are explicitly superseded, not relabeled as final acceptance.",
+  "notRun": [
+    "Cargo",
+    "build",
+    "whole frontend suite",
+    "formal App",
+    "real Agent",
+    "user filesystem/database mutation",
+    "commit"
+  ],
+  "remaining": [
+    "Root engineering integration",
+    "Next installed native guidance including cancelled backup preparation followed by explicit original-location restore"
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/App.work-location-review.test.tsx.before-retained-recovery.txt",
+      "sha256": "5b2da77ac3e0d94ea4424253ef66ab183ebde82f5109357441e08a996153094a",
+      "bytes": 3076
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/ArchivedWorkLocation.integration.test.tsx.before-retained-recovery.txt",
+      "sha256": "671e41f9980ef1fad36029806952dad68b9c1c102278afc3b0a68ee51c6df410",
+      "bytes": 8717
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/ArchivedWorkLocationNotice.test.tsx.before-retained-recovery.txt",
+      "sha256": "d127ca097ea566c709b622bbd403658f9678f686b127ff832efac5a3877d8af2",
+      "bytes": 5502
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/first-green.txt",
+      "sha256": "134bfe2429ab1dd913f6f036abe4a0f0f7d9e3ff2043ff380bbfeed6cd8d17c8",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/format-check.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/navigation-red.txt",
+      "sha256": "4a5f3c0f22306ea98d10d13d90e1f1f77f09d9fd9cab58acbfc855a667ddbc93",
+      "bytes": 2178
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/red.txt",
+      "sha256": "e01b06f8b7a9ed5ab23b1afcaf77cd02c532439b4df40290b146e9c106109585",
+      "bytes": 22511
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/related-final.txt",
+      "sha256": "58ce9d6a21eb0ba6bbaeb8314a1424a8ba15ad850d4860ebd631e334c2817750",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/related-green.txt",
+      "sha256": "403ccf0b72d95fa326500a8bd5acec602ff3a7d6396cd7a3fc0ed8e8ae0fbb14",
+      "bytes": 213
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/retained-final-format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/retained-format.txt",
+      "sha256": "067371504eb55db3f37f5f37a0807ff6a4ce97b449ae9b5f840a155eb359743f",
+      "bytes": 275
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/retained-recovery-green.txt",
+      "sha256": "93134e2e1c3a37bd177c3eae71d5eb4a4a5ec1649c0de06c451b27a2ee3072a6",
+      "bytes": 223
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/retained-recovery-red.txt",
+      "sha256": "837a412b88c6299ab26e99c8b6bbdd6d610aa764ee2b630bf8f7cefebd8e3c88",
+      "bytes": 14471
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/retained-related.txt",
+      "sha256": "076a899c5c8b4c4ceba5a6d6acd94430c58ccc3dd290f6ecf9adc9604c5d803c",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/retained-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/source-checkpoint-final.json",
+      "sha256": "8337cbb05089006cbb797bff978e78a4cd10eaf45d15981ec69945adb614fc78",
+      "bytes": 2746
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/source-checkpoint.json",
+      "sha256": "15b191b117be2b877e7075ccfaef1f0658a509e2d4f5b7e9fe95ba73d95f1f09",
+      "bytes": 2710
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/receipt.json",
+      "sha256": "0f4afd8b0eaca585e1514e51d2c68f22c78a03aeb121a0d713cda77733ea88b0",
+      "bytes": 30181
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/history-location-review.json",
+      "sha256": "96503980a73e387f9a8aeb21a666299c892a86f115d47bedccaefd2531d474e4",
+      "bytes": 10241
+    }
+  ]
+}

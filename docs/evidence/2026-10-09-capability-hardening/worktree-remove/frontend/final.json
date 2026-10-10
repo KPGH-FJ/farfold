@@ -1,0 +1,349 @@
+{
+  "stage": "H15 removal plus recovery into a new directory: frontend final checkpoint",
+  "atUtc": "2026-10-10T08:01:06.622948+00:00",
+  "status": "Source frozen for independent browser and actual backend wire validation; not installed evidence",
+  "priorCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/implementation.json",
+    "sha256": "739d1d579971a95afa1f229d4bad1e011591b2bc50c80aa23ac62ab803b8d954",
+    "scope": "Original deletion-only19source checkpoint preserved, including then-pending new-directory restoration."
+  },
+  "ownedSourceRefs": [
+    {
+      "path": "src/runtime/worktree_remove.test-fixtures.ts",
+      "sha256": "4d84babf07fa17428941bb220e892258fa090b7d15b6a8b9a379d5f00833cf07",
+      "lines": 63
+    },
+    {
+      "path": "src/runtime/worktree_remove.test.ts",
+      "sha256": "c2cbfd3d76f90d7ec44713b10d2e9115e757892455b99a2bd84f2a1d57171549",
+      "lines": 376
+    },
+    {
+      "path": "src/runtime/worktree_remove_types.test.ts",
+      "sha256": "9203bbbfa12d4fb5141339d147d7c04656c3687d91848f884276fe59e2ea1ae7",
+      "lines": 143
+    },
+    {
+      "path": "src/runtime/worktree_remove_types.ts",
+      "sha256": "606038d08834c91280159f9785d306fb202ecf878f8a0d4bf63d825d2d1d1984",
+      "lines": 386
+    },
+    {
+      "path": "src/runtime/worktree_types.ts",
+      "sha256": "015c38ccf205ed5fc0c08392d2f1cac56dab5f432d0f5c4491ad280f0d1c6c47",
+      "lines": 437
+    },
+    {
+      "path": "src/runtime/worktrees.ts",
+      "sha256": "b53a6b4d133fe07e4f27e46f938f8a023b96d63335008b2c27b46ce2f5b5233d",
+      "lines": 1092
+    },
+    {
+      "path": "src/runtime/worktree_strings.ts",
+      "sha256": "28d235b85af35164109f2ebce3442dbee02cd10a516bd7a74d856e2ce0c5dfd8",
+      "lines": 285
+    },
+    {
+      "path": "src/runtime/worktree_recycle.test.ts",
+      "sha256": "dc234597b38ce4637f45200fc6a4d609837ec025c431383beea1da62dda701ea",
+      "lines": 411
+    },
+    {
+      "path": "src/runtime/worktree_recycle_types.test.ts",
+      "sha256": "872abf6a1688c3cc5b9bc0b582ea715229ae05bd3dbde702597e8e3ddd8f8ec9",
+      "lines": 151
+    },
+    {
+      "path": "src/runtime/worktree_types.test.ts",
+      "sha256": "1b90d8be9bad6e9fd8670fffd35462b3da57222be512a70ac4e0cc16107c1431",
+      "lines": 149
+    },
+    {
+      "path": "src/runtime/worktrees.test.ts",
+      "sha256": "b0d20fad5e8c17f8345cd3992eeedf45eb08288e8000f6fb2cc3670a8829d9c6",
+      "lines": 498
+    },
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "2c31d9cad8fa857ae9c77c82de08c0dd9455b4816bbfe22101e2e0c53869a6e5",
+      "lines": 642
+    },
+    {
+      "path": "src/components/WorktreeDialog.test.tsx",
+      "sha256": "f57ef90d2c407ea27c6a28bc4cbeeb443e595c79de1c6d7b258135a555abe2ad",
+      "lines": 596
+    },
+    {
+      "path": "src/components/WorktreeDialog.css",
+      "sha256": "26032a3d426972c28a50d3f0c0e4ef7982c0b74971e96da5bfae8f1afe799d16",
+      "lines": 99
+    },
+    {
+      "path": "src/components/WorktreeRecycleReview.tsx",
+      "sha256": "96b7c829fdef495b74bcaa38eef16f44fc6c5d9f8066c04faf5e5df0d78100db",
+      "lines": 215
+    },
+    {
+      "path": "src/components/WorktreeRecycleReview.test.tsx",
+      "sha256": "6088707de5402f1a4963b21335bee143178acb660890c636c0ef8482cebe8d4e",
+      "lines": 260
+    },
+    {
+      "path": "src/components/WorktreeRemovalReview.tsx",
+      "sha256": "50ebfdbb43b1640bad8ed8393c72158c290f25c3ddfd718fe419b426a1fb9fb3",
+      "lines": 353
+    },
+    {
+      "path": "src/components/WorktreeRemovalReview.test.tsx",
+      "sha256": "b22dff64a513913aa06492f6b8ceb9b9788c7107a93ca85664d12466927bc02a",
+      "lines": 280
+    },
+    {
+      "path": "src/components/WorktreeRecoveries.tsx",
+      "sha256": "f53f53556bf3ce6f510f4fe92328c9489516af2f3fb2b61b39479c066fcdc7e0",
+      "lines": 85
+    },
+    {
+      "path": "src/runtime/worktree_recover.test.ts",
+      "sha256": "4eb4ff2a2f85a310720c0652179dd5a0f3cdb58e4bce672cc89bf84a585e98b4",
+      "lines": 160
+    },
+    {
+      "path": "src/runtime/worktree_recover_types.test.ts",
+      "sha256": "1ef273922412644987f0bbbfcf63b57ee299c68856b0763621f342b383147bdd",
+      "lines": 77
+    },
+    {
+      "path": "src/components/WorktreeRecoveryForm.tsx",
+      "sha256": "e98894860e3e3b9a65421a64a0f720bba13c49d5018f0be20b73033f9be18fdc",
+      "lines": 144
+    },
+    {
+      "path": "src/components/WorktreeRecoveryForm.test.tsx",
+      "sha256": "ea8b0674b5fae0a5ec7148066555d1ea005577f363b6ccd5e3fbd7c8a4b42c1b",
+      "lines": 170
+    }
+  ],
+  "tests": {
+    "related": {
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recovery-related-final.txt",
+      "files": 16,
+      "passed": 163,
+      "exitCode": 0
+    },
+    "typecheck": {
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recovery-typecheck-final.txt",
+      "exitCode": 0
+    },
+    "format": {
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recovery-format-final.txt",
+      "exitCode": 0
+    }
+  },
+  "increment": [
+    "Explicit recovery form selects new canonical parent and new basename, invokes recover_prepare then current live owner may start. Existing remove still never uses start. Successful ordinary independent repository has ownership=existing and needs separate Use; no old cwd or draft mutation.",
+    "Strict recover DTO binds recovery proof and requested target; no mixed removal/maintenance fields. Cold/query cannot automatically start or delete. Recovery list remains independent and durable metadata.",
+    "Final start gate rechecks current ownership after synchronous subscribers; stale closure cancelled before React unmount cannot start either preparation or recovery.",
+    "Native09 duplicate explanation dedup, native20 fixed restore-path guidance, native22 neutral restored-result copy included. Generic unknown operation text no longer guesses create."
+  ],
+  "newEvidence": [
+    {
+      "file": "recover-types-red.txt",
+      "result": "3 normal recover schema cases rejected before implementation; remaining strict rejections already pass."
+    },
+    {
+      "file": "recover-lifecycle-red.txt",
+      "result": "5 unavailable-API failures before implementation, not installed defects."
+    },
+    {
+      "file": "recover-dispatch-first.txt",
+      "result": "1 actual final-start synchronous-owner withdrawal failure; 1 test incorrectly awaited a synchronous validation throw. Both distinguished; common start now rechecks after publish."
+    },
+    {
+      "file": "recover-dispatch-green.txt",
+      "result": "41 related store cases pass after final dispatch guard and test call correction."
+    },
+    {
+      "file": "close-dispatch-red.txt",
+      "result": "2 actual UI stale callbacks remained callable after Close before React cleanup; both now synchronously retire live flag."
+    },
+    {
+      "file": "close-dispatch-green.txt",
+      "result": "13 removal/recovery component scenarios pass."
+    },
+    {
+      "file": "recover-typecheck-first.txt",
+      "result": "Temporary missing onRecover wiring and test narrowing errors, fixed; final typecheck independent."
+    }
+  ],
+  "uiContract": {
+    "remove": [
+      "删除工作文件…",
+      "删除已归档的工作文件",
+      "我已停止其他程序使用这个工作树",
+      "准备提交恢复副本",
+      "我已查看恢复副本和删除位置，确认永久删除此处的工作文件",
+      "永久删除工作文件"
+    ],
+    "recover": [
+      "恢复到新文件夹…",
+      "从提交副本恢复到新文件夹",
+      "选择目标父文件夹",
+      "新文件夹名称",
+      "恢复到新文件夹"
+    ],
+    "guards": "All dispatch buttons explicit type=button. The remove second checkbox is newly unchecked and receipt-specific. No autofocus transfer, no same-form implicit confirm. Current management owner is independent from draft use."
+  },
+  "limits": [
+    "No full frontend/build/Rust suite executed here.",
+    "No production app, real Agent or user repository touched.",
+    "Browser matrix and actual Rust wire remain pending; test hooks/SSR are not browser proof.",
+    "New-directory recovery is implemented in source but not yet independent end-to-end accepted."
+  ],
+  "evidenceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/close-dispatch-green.txt",
+      "sha256": "5ac279c21bca3895d7cbaadaa1a81f7b0bf84ea6abc146624731f0aaff19ecc1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/close-dispatch-red.txt",
+      "sha256": "c30ec10f14fa72a5b0e1c6f9e289171a6608cc28f7ac238e980d728c7a5e6ef1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/dialog-entry-red.txt",
+      "sha256": "2bb8cd949c4cf5a77f47f1df197108837a92a322d5e9f92554687efa4249631e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/duplicate-reason-red.txt",
+      "sha256": "79dd7df74a61fe4c361955c4411cbacb72f691e6a6cc6472e0506b4a04a88f66"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/final-paths.txt",
+      "sha256": "5ca4ffbb7d1c34cc8759bc9ea22447981be2b7fa690a725a299721e29763b234"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/first-related.txt",
+      "sha256": "eb21eb77bef8807e2d0f149af68eaa47ed955451c7d697a07aa24bd38b44b825"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/format-owned.txt",
+      "sha256": "9d9406c62e2ccadf0901154b055dfe4004b4e79aee252c00a56b8e02f7cea5f2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/lifecycle-first.txt",
+      "sha256": "c01d3e6a668fcda0ca02f43df4e6e49866115a011deed790e9e509479ce892b9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/lifecycle-red.txt",
+      "sha256": "4360e3e1e90de4d34739231f5c4447fb36f538bbe981038967d34094f27a8bd4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/observation-proof-green.txt",
+      "sha256": "0c22dca6b1a24c3f2c172fc7b5a52d240b333bab43835ad29b90ac6fe221bd0a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/observation-proof-red.txt",
+      "sha256": "2537fe7f1a2762d0f62e55afded6f32424d67bc4f686ce47d4148c2e2b9d8190"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recover-dispatch-first.txt",
+      "sha256": "bc937d68cc849812a9989ada984d90332428a3531d1e84de84816077fad442ef"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recover-dispatch-green.txt",
+      "sha256": "bf61372021b21f305cf5c4cb9ea4418ea7863978fc20d5e1948df20d50523235"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recover-lifecycle-red.txt",
+      "sha256": "55f5c32e96635b728f88e36b90fededbef5bf7f9a13cb95479a2860958368b72"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recover-typecheck-first.txt",
+      "sha256": "77e277f247985867b71b55f08173c247dd65c83e0bd6cdeddca0898c87223071"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recover-typecheck-second.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recover-types-green.txt",
+      "sha256": "99306b2c55f904a2b0a15d06f0a57ea8c3176241368202bf57c703901fea4c3e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recover-types-red.txt",
+      "sha256": "48db489ba66f9072f8293c441010326483fd70cc933831b2d56e7e668724d9ee"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recovery-format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recovery-related-final.txt",
+      "sha256": "cc0046fba63ba1eaef4cdb06deb167bad4b5ea7cfcc9b28405a32520d927814f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/recovery-typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/related-final.txt",
+      "sha256": "f5367ad56bad450e90c7a8575059ab18703ad2779388f0404fe96399f1449b7f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/related-first.txt",
+      "sha256": "310c6980f4de95f44be6c221c0ae6261549b329c4c4d5bb005930644b3134b67"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/removal-boundaries-fixed.txt",
+      "sha256": "81359d6c3a0f32580f08084f045c2573ec944fb59ca937c8541adb7c243fa0dc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/removal-boundaries.txt",
+      "sha256": "216d2b16f783484ca1d291ed57deed30c900ca4528fb5fe9c15183d6379ec977"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/removal-component-first.txt",
+      "sha256": "eeaf93632e5b7447b3a0e81ba3ff91ec8796f198fc700879799f5b69597a9274"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/restore-message-green.txt",
+      "sha256": "b21bf03aa85a41e47e3a6278d276c4700191c8d778ac04550b85c6a404f5d073"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/restore-message-red.txt",
+      "sha256": "923bb65224b901c9a70d27d24167d26f8d58c7370daad29e4d3359abeb84cecf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/review-switch-green.txt",
+      "sha256": "60ac4d9442ae356a5b9c74441c90f63fd814d3f839255eec4a7156bf17c9affb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/review-switch-red.txt",
+      "sha256": "c681cf7bd631505b428c443e47bb9b6dcd360877168d67235ed6ba4d77fc5b60"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/typecheck-current.txt",
+      "sha256": "fbcae2932b6d7259a539e4629889f516b6ba70b370a2bac6de1171d1c85ce95d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/typecheck-first.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/types-adversarial-first.txt",
+      "sha256": "36ded4145e6c578a7911a8c18a0ace78de84042f6da1a6d9452c12e4f928b7ef"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/types-first-green.txt",
+      "sha256": "ac8e04fe1cac5e5cc46fb79e4e2b31c4a990c23157d9afc4d061a20944e8cc2a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/frontend/types-red.txt",
+      "sha256": "fae13b8db7135e9491f81fc291eb32a30e0f61e703b703efb6c46f8039393522"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.99s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 3 tests
+
+thread 'worktrees::remove_boundary_tests::removal_identity_backup_rejects_parent_replacement_before_build' (23772405) panicked at src/worktrees/recycle_tests.rs:97:5:
+
+running 1 test
+test worktrees::remove_boundary_tests::removal_identity_backup_rejects_parent_replacement_before_build ... FAILED
+
+failures:
+
+failures:
+    worktrees::remove_boundary_tests::removal_identity_backup_rejects_parent_replacement_before_build
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1344 filtered out; finished in 4.40s
+
+
+thread 'worktrees::remove_boundary_tests::removal_identity_backup_rejects_parent_replacement_before_build' (23772411) panicked at src/worktrees/remove_boundary_tests.rs:277:13:
+replaced parent was accepted as a fresh backup baseline
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test worktrees::remove_boundary_tests::removal_identity_backup_rejects_parent_replacement_before_build ... FAILED
+
+running 1 test
+test worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1344 filtered out; finished in 7.85s
+
+completed:worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent
+
+test worktrees::remove_boundary_tests::removal_identity_recovered_repository_rejects_replaced_parent ... ok
+
+thread 'worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent' (23772406) panicked at src/worktrees/recycle_tests.rs:97:5:
+
+running 1 test
+test worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent ... FAILED
+
+failures:
+
+failures:
+    worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1344 filtered out; finished in 10.08s
+
+
+thread 'worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent' (23772412) panicked at src/worktrees/remove_boundary_tests.rs:305:13:
+absence inside a replacement parent must not become a deletion receipt
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+test worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent ... FAILED
+
+failures:
+
+failures:
+    worktrees::remove_boundary_tests::removal_identity_backup_rejects_parent_replacement_before_build
+    worktrees::remove_boundary_tests::removal_identity_deleted_requires_original_retained_parent
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 1342 filtered out; finished in 10.09s
+
+error: test failed, to rerun pass `--lib`

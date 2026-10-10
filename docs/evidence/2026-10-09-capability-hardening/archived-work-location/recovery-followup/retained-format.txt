@@ -1,0 +1,6 @@
+src/App.tsx 115ms
+src/App.work-location-review.test.tsx 7ms
+src/components/ThreadView.tsx 69ms (unchanged)
+src/components/ArchivedWorkLocationNotice.tsx 3ms
+src/components/ArchivedWorkLocationNotice.test.tsx 10ms
+src/components/ArchivedWorkLocation.integration.test.tsx 13ms

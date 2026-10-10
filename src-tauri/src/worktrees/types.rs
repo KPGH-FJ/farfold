@@ -112,6 +112,14 @@ pub struct Operation {
     pub retained_path: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub code: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub removal_phase: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub delete_dispatched: Option<bool>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub recovery: Option<super::remove_types::Recovery>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub removed: Option<super::remove_types::Removed>,
 }
 fn default_action() -> String {
     "create".into()
@@ -146,6 +154,7 @@ pub struct Listing {
     pub locations: Vec<Location>,
     pub archives: Vec<super::recycle_types::Archive>,
     pub materials: Vec<Material>,
+    pub recoveries: Vec<super::remove_types::Recovery>,
     pub operation: Option<Operation>,
 }
 #[derive(Debug, Serialize)]

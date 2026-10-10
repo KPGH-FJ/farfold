@@ -58,8 +58,28 @@ vi.mock("@tauri-apps/api/core", () => ({
   invoke: vi.fn().mockResolvedValue(null),
   Channel: class {},
 }));
+// These pre-existing error/retry scenarios have no associated worktree.
+// Keep the real notice renderer, without starting catalogue IPC from this hook fixture.
+vi.mock("../runtime/worktrees", () => {
+  const empty = {
+    ready: true,
+    loading: false,
+    error: null,
+    archives: [],
+    recoveries: [],
+  };
+  return {
+    worktrees: {
+      snapshot: () => empty,
+      subscribe: () => () => {},
+      load: vi.fn(),
+    },
+  };
+});
 import { Composer } from "./Composer";
+import { ComposerWorkNotice } from "./ComposerWorkNotice";
 import { ErrorNotice } from "./ErrorNotice";
+import { ArchivedWorkLocationNotice } from "./ArchivedWorkLocationNotice";
 import { composerDrafts, draftPersistence } from "../runtime/drafts";
 import { freshThreadState } from "../runtime/session_projection";
 import { threads } from "../runtime/sessions";
@@ -67,6 +87,22 @@ import { invoke } from "@tauri-apps/api/core";
 import { STRINGS } from "../runtime/strings";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
 
+let noticeSlots: typeof h.slots = [];
+function renderArchivedNotice(
+  props: ComponentProps<typeof ArchivedWorkLocationNotice>,
+) {
+  const parent = { slots: h.slots, cursor: h.cursor, effects: h.effects };
+  h.slots = noticeSlots;
+  h.cursor = 0;
+  h.effects = [];
+  try {
+    return ArchivedWorkLocationNotice(props);
+  } finally {
+    noticeSlots = h.slots;
+    // Child effects/lifetime are covered by dedicated notice tests, not this parent fixture.
+    Object.assign(h, parent);
+  }
+}
 function render(props: ComponentProps<typeof Composer>) {
   h.cursor = 0;
   let tree = Composer(props);
@@ -78,12 +114,25 @@ function render(props: ComponentProps<typeof Composer>) {
     Children.forEach(node, (child) => {
       if (!isValidElement<Record<string, unknown>>(child)) return;
       elements.push(child);
-      visit(child.props.children as ReactNode);
+      if (child.type === ComposerWorkNotice)
+        visit(
+          ComposerWorkNotice(
+            child.props as ComponentProps<typeof ComposerWorkNotice>,
+          ),
+        );
+      else if (child.type === ArchivedWorkLocationNotice)
+        visit(
+          renderArchivedNotice(
+            child.props as ComponentProps<typeof ArchivedWorkLocationNotice>,
+          ),
+        );
+      else visit(child.props.children as ReactNode);
     });
   visit(tree);
   return elements;
 }
 beforeEach(() => {
+  noticeSlots = [];
   h.slots.length = 0;
   h.effects.length = 0;
   vi.spyOn(draftPersistence, "flush").mockResolvedValue();

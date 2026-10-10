@@ -1,0 +1,78 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_recover.test.ts (5 tests | 5 failed) 78ms
+   × explicit new-directory recovery starts only its own prepared intent, keeps backup and never applies a draft 72ms
+   × closed/replaced owner gets exact cancellation after late prepared, never a start 1ms
+   × a same-id prepared response with a different recovery proof cannot start or replace the backup 1ms
+   × a subscriber retiring the owner at the final start boundary cannot dispatch checkout 2ms
+   × unknown or copied recovery records cannot open a new destination 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktree_recover.test.ts > explicit new-directory recovery starts only its own prepared intent, keeps backup and never applies a draft
+TypeError: w.recover is not a function
+ ❯ src/runtime/worktree_recover.test.ts:68:11
+     66| it("explicit new-directory recovery starts only its own prepared inten…
+     67|   const { w, r } = await setup();
+     68|   await w.recover(r, "/new", "restored", () => true);
+       |           ^
+     69|   expect(
+     70|     h.invoke.mock.calls.filter(([c]) => c === "worktree_recover_prepar…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/runtime/worktree_recover.test.ts > closed/replaced owner gets exact cancellation after late prepared, never a start
+TypeError: w.recover is not a function
+ ❯ src/runtime/worktree_recover.test.ts:109:18
+    107|     throw Error(c);
+    108|   });
+    109|   const task = w.recover(r, "/new", "restored", () => current);
+       |                  ^
+    110|   current = false;
+    111|   resolve(op());
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/runtime/worktree_recover.test.ts > a same-id prepared response with a different recovery proof cannot start or replace the backup
+TypeError: w.recover is not a function
+ ❯ src/runtime/worktree_recover.test.ts:132:11
+    130|     throw Error(c);
+    131|   });
+    132|   await w.recover(r, "/new", "restored", () => true);
+       |           ^
+    133|   expect(w.snapshot().uncertain).toBe(true);
+    134|   expect(w.snapshot().recoveries[0]).toBe(r);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/runtime/worktree_recover.test.ts > a subscriber retiring the owner at the final start boundary cannot dispatch checkout
+TypeError: w.recover is not a function
+ ❯ src/runtime/worktree_recover.test.ts:148:11
+    146|       current = false;
+    147|   });
+    148|   await w.recover(r, "/new", "restored", () => current);
+       |           ^
+    149|   stop();
+    150|   expect(h.invoke.mock.calls.some(([c]) => c === "worktree_start")).to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/runtime/worktree_recover.test.ts > unknown or copied recovery records cannot open a new destination
+TypeError: w.recover is not a function
+ ❯ src/runtime/worktree_recover.test.ts:155:7
+    153|   const { w, r } = await setup();
+    154|   await expect(
+    155|     w.recover({ ...r }, "/new", "restored", () => true),
+       |       ^
+    156|   ).rejects.toThrow();
+    157|   expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  15:52:55
+   Duration  183ms (transform 72ms, setup 0ms, import 36ms, tests 78ms, environment 0ms)
+

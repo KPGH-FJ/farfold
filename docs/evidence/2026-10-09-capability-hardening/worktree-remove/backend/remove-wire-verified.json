@@ -1,0 +1,846 @@
+[
+  {
+    "name": "removeInspection",
+    "value": {
+      "inspectionId": "0bf4a592-9e9b-410c-87ba-c48b541e795a",
+      "action": "remove",
+      "recordId": "12345678-1234-4123-8123-123456789abc",
+      "revision": 1,
+      "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+      "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+      "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+      "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+      "branch": "refs/heads/retained-fixture",
+      "blockers": [],
+      "impact": {
+        "conversations": 0,
+        "unsent": false
+      },
+      "draftBaseline": {
+        "unsentWork": null,
+        "agentSetup": null
+      },
+      "roots": {
+        "count": 1,
+        "sha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+        "objectFormat": "sha1"
+      },
+      "content": {
+        "entries": 2,
+        "bytes": 7,
+        "sha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2"
+      },
+      "localTracking": "noUpstream"
+    }
+  },
+  {
+    "name": "knownRefusal",
+    "value": {
+      "kind": "operation",
+      "action": "remove",
+      "maintenanceActive": false,
+      "operationId": "72345678-1234-4123-8123-123456789abc",
+      "state": "failed",
+      "settled": true,
+      "cancelRequested": false,
+      "code": "draftChanged",
+      "removalPhase": "preparingRecovery",
+      "deleteDispatched": false
+    }
+  },
+  {
+    "name": "removeInitial",
+    "value": {
+      "kind": "operation",
+      "action": "remove",
+      "maintenanceActive": true,
+      "operationId": "42345678-1234-4123-8123-123456789abc",
+      "state": "running",
+      "settled": false,
+      "cancelRequested": false,
+      "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+      "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+      "removalPhase": "preparingRecovery",
+      "deleteDispatched": false
+    }
+  },
+  {
+    "name": "removePrepared",
+    "value": {
+      "kind": "operation",
+      "action": "remove",
+      "maintenanceActive": true,
+      "operationId": "42345678-1234-4123-8123-123456789abc",
+      "state": "prepared",
+      "settled": false,
+      "cancelRequested": false,
+      "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+      "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+      "removalPhase": "awaitingConfirmation",
+      "deleteDispatched": false,
+      "recovery": {
+        "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "revision": 0,
+        "archiveId": "12345678-1234-4123-8123-123456789abc",
+        "archiveRevision": 1,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+        "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+        "branch": "refs/heads/retained-fixture",
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "bundleBytes": 367,
+        "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+        "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+        "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+        "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+        "rootCount": 1,
+        "objectCount": 3,
+        "objectFormat": "sha1",
+        "availability": "verified"
+      }
+    }
+  },
+  {
+    "name": "awaitingList",
+    "value": {
+      "locations": [],
+      "archives": [
+        {
+          "id": "12345678-1234-4123-8123-123456789abc",
+          "revision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "branch": "refs/heads/retained-fixture",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "ownership": "created",
+          "availability": "verified"
+        }
+      ],
+      "materials": [],
+      "recoveries": [
+        {
+          "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "revision": 0,
+          "archiveId": "12345678-1234-4123-8123-123456789abc",
+          "archiveRevision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "branch": "refs/heads/retained-fixture",
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "bundleBytes": 367,
+          "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+          "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+          "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+          "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+          "rootCount": 1,
+          "objectCount": 3,
+          "objectFormat": "sha1",
+          "availability": "verified"
+        }
+      ],
+      "operation": {
+        "kind": "operation",
+        "action": "remove",
+        "maintenanceActive": true,
+        "operationId": "42345678-1234-4123-8123-123456789abc",
+        "state": "prepared",
+        "settled": false,
+        "cancelRequested": false,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "removalPhase": "awaitingConfirmation",
+        "deleteDispatched": false,
+        "recovery": {
+          "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "revision": 0,
+          "archiveId": "12345678-1234-4123-8123-123456789abc",
+          "archiveRevision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "branch": "refs/heads/retained-fixture",
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "bundleBytes": 367,
+          "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+          "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+          "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+          "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+          "rootCount": 1,
+          "objectCount": 3,
+          "objectFormat": "sha1",
+          "availability": "verified"
+        }
+      }
+    }
+  },
+  {
+    "name": "removeConfirm",
+    "value": {
+      "kind": "operation",
+      "action": "remove",
+      "maintenanceActive": true,
+      "operationId": "42345678-1234-4123-8123-123456789abc",
+      "state": "running",
+      "settled": false,
+      "cancelRequested": false,
+      "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+      "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+      "removalPhase": "verifyingRecovery",
+      "deleteDispatched": false,
+      "recovery": {
+        "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "revision": 0,
+        "archiveId": "12345678-1234-4123-8123-123456789abc",
+        "archiveRevision": 1,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+        "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+        "branch": "refs/heads/retained-fixture",
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "bundleBytes": 367,
+        "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+        "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+        "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+        "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+        "rootCount": 1,
+        "objectCount": 3,
+        "objectFormat": "sha1",
+        "availability": "verified"
+      }
+    }
+  },
+  {
+    "name": "removeReady",
+    "value": {
+      "kind": "operation",
+      "action": "remove",
+      "maintenanceActive": false,
+      "operationId": "42345678-1234-4123-8123-123456789abc",
+      "state": "ready",
+      "settled": true,
+      "cancelRequested": false,
+      "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+      "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+      "removalPhase": "finished",
+      "deleteDispatched": true,
+      "recovery": {
+        "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "revision": 0,
+        "archiveId": "12345678-1234-4123-8123-123456789abc",
+        "archiveRevision": 1,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+        "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+        "branch": "refs/heads/retained-fixture",
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "bundleBytes": 367,
+        "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+        "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+        "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+        "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+        "rootCount": 1,
+        "objectCount": 3,
+        "objectFormat": "sha1",
+        "availability": "verified"
+      },
+      "removed": {
+        "recordId": "12345678-1234-4123-8123-123456789abc",
+        "revision": 2,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "recoveryId": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042"
+      }
+    }
+  },
+  {
+    "name": "removedList",
+    "value": {
+      "locations": [],
+      "archives": [],
+      "materials": [],
+      "recoveries": [
+        {
+          "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "revision": 0,
+          "archiveId": "12345678-1234-4123-8123-123456789abc",
+          "archiveRevision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "branch": "refs/heads/retained-fixture",
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "bundleBytes": 367,
+          "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+          "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+          "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+          "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+          "rootCount": 1,
+          "objectCount": 3,
+          "objectFormat": "sha1",
+          "availability": "verified"
+        }
+      ],
+      "operation": {
+        "kind": "operation",
+        "action": "remove",
+        "maintenanceActive": false,
+        "operationId": "42345678-1234-4123-8123-123456789abc",
+        "state": "ready",
+        "settled": true,
+        "cancelRequested": false,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "removalPhase": "finished",
+        "deleteDispatched": true,
+        "recovery": {
+          "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "revision": 0,
+          "archiveId": "12345678-1234-4123-8123-123456789abc",
+          "archiveRevision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "branch": "refs/heads/retained-fixture",
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "bundleBytes": 367,
+          "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+          "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+          "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+          "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+          "rootCount": 1,
+          "objectCount": 3,
+          "objectFormat": "sha1",
+          "availability": "verified"
+        },
+        "removed": {
+          "recordId": "12345678-1234-4123-8123-123456789abc",
+          "revision": 2,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "recoveryId": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042"
+        }
+      }
+    }
+  },
+  {
+    "name": "coldRemovalList",
+    "value": {
+      "locations": [],
+      "archives": [],
+      "materials": [],
+      "recoveries": [
+        {
+          "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "revision": 0,
+          "archiveId": "12345678-1234-4123-8123-123456789abc",
+          "archiveRevision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "branch": "refs/heads/retained-fixture",
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "bundleBytes": 367,
+          "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+          "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+          "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+          "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+          "rootCount": 1,
+          "objectCount": 3,
+          "objectFormat": "sha1",
+          "availability": "unknown"
+        }
+      ],
+      "operation": {
+        "kind": "operation",
+        "action": "remove",
+        "maintenanceActive": false,
+        "operationId": "42345678-1234-4123-8123-123456789abc",
+        "state": "unknown",
+        "settled": true,
+        "cancelRequested": false,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "code": "recheckRequired",
+        "removalPhase": "finished",
+        "deleteDispatched": true,
+        "recovery": {
+          "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "revision": 0,
+          "archiveId": "12345678-1234-4123-8123-123456789abc",
+          "archiveRevision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "branch": "refs/heads/retained-fixture",
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "bundleBytes": 367,
+          "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+          "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+          "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+          "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+          "rootCount": 1,
+          "objectCount": 3,
+          "objectFormat": "sha1",
+          "availability": "unknown"
+        }
+      }
+    }
+  },
+  {
+    "name": "removeRechecked",
+    "value": {
+      "kind": "operation",
+      "action": "remove",
+      "maintenanceActive": false,
+      "operationId": "42345678-1234-4123-8123-123456789abc",
+      "state": "ready",
+      "settled": true,
+      "cancelRequested": false,
+      "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+      "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+      "removalPhase": "finished",
+      "deleteDispatched": true,
+      "recovery": {
+        "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "revision": 0,
+        "archiveId": "12345678-1234-4123-8123-123456789abc",
+        "archiveRevision": 1,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+        "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+        "branch": "refs/heads/retained-fixture",
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "bundleBytes": 367,
+        "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+        "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+        "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+        "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+        "rootCount": 1,
+        "objectCount": 3,
+        "objectFormat": "sha1",
+        "availability": "verified"
+      },
+      "removed": {
+        "recordId": "12345678-1234-4123-8123-123456789abc",
+        "revision": 2,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "recoveryId": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042"
+      }
+    }
+  },
+  {
+    "name": "recoveryChecked",
+    "value": {
+      "locations": [],
+      "archives": [],
+      "materials": [],
+      "recoveries": [
+        {
+          "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "revision": 1,
+          "archiveId": "12345678-1234-4123-8123-123456789abc",
+          "archiveRevision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "branch": "refs/heads/retained-fixture",
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "bundleBytes": 367,
+          "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+          "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+          "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+          "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+          "rootCount": 1,
+          "objectCount": 3,
+          "objectFormat": "sha1",
+          "availability": "verified"
+        }
+      ],
+      "operation": {
+        "kind": "operation",
+        "action": "remove",
+        "maintenanceActive": false,
+        "operationId": "42345678-1234-4123-8123-123456789abc",
+        "state": "ready",
+        "settled": true,
+        "cancelRequested": false,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "removalPhase": "finished",
+        "deleteDispatched": true,
+        "recovery": {
+          "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "revision": 0,
+          "archiveId": "12345678-1234-4123-8123-123456789abc",
+          "archiveRevision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "branch": "refs/heads/retained-fixture",
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "bundleBytes": 367,
+          "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+          "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+          "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+          "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+          "rootCount": 1,
+          "objectCount": 3,
+          "objectFormat": "sha1",
+          "availability": "verified"
+        },
+        "removed": {
+          "recordId": "12345678-1234-4123-8123-123456789abc",
+          "revision": 2,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "recoveryId": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042"
+        }
+      }
+    }
+  },
+  {
+    "name": "recoverPrepared",
+    "value": {
+      "kind": "operation",
+      "action": "recover",
+      "maintenanceActive": false,
+      "operationId": "52345678-1234-4123-8123-123456789abc",
+      "state": "prepared",
+      "settled": false,
+      "cancelRequested": false,
+      "targetPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+      "recovery": {
+        "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "revision": 1,
+        "archiveId": "12345678-1234-4123-8123-123456789abc",
+        "archiveRevision": 1,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+        "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+        "branch": "refs/heads/retained-fixture",
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "bundleBytes": 367,
+        "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+        "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+        "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+        "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+        "rootCount": 1,
+        "objectCount": 3,
+        "objectFormat": "sha1",
+        "availability": "verified"
+      }
+    }
+  },
+  {
+    "name": "recoverStart",
+    "value": {
+      "kind": "operation",
+      "action": "recover",
+      "maintenanceActive": false,
+      "operationId": "52345678-1234-4123-8123-123456789abc",
+      "state": "running",
+      "settled": false,
+      "cancelRequested": false,
+      "targetPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+      "recovery": {
+        "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "revision": 1,
+        "archiveId": "12345678-1234-4123-8123-123456789abc",
+        "archiveRevision": 1,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+        "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+        "branch": "refs/heads/retained-fixture",
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "bundleBytes": 367,
+        "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+        "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+        "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+        "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+        "rootCount": 1,
+        "objectCount": 3,
+        "objectFormat": "sha1",
+        "availability": "verified"
+      }
+    }
+  },
+  {
+    "name": "recoverReady",
+    "value": {
+      "kind": "operation",
+      "action": "recover",
+      "maintenanceActive": false,
+      "operationId": "52345678-1234-4123-8123-123456789abc",
+      "state": "ready",
+      "settled": true,
+      "cancelRequested": false,
+      "targetPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+      "location": {
+        "id": "52345678-1234-4123-8123-123456789abc",
+        "revision": 0,
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+        "branch": "refs/heads/recovery/root-0000",
+        "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+        "ownership": "existing",
+        "availability": "verified"
+      },
+      "recovery": {
+        "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "revision": 1,
+        "archiveId": "12345678-1234-4123-8123-123456789abc",
+        "archiveRevision": 1,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+        "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+        "branch": "refs/heads/retained-fixture",
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "bundleBytes": 367,
+        "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+        "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+        "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+        "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+        "rootCount": 1,
+        "objectCount": 3,
+        "objectFormat": "sha1",
+        "availability": "verified"
+      }
+    }
+  },
+  {
+    "name": "recoveredList",
+    "value": {
+      "locations": [
+        {
+          "id": "52345678-1234-4123-8123-123456789abc",
+          "revision": 0,
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+          "branch": "refs/heads/recovery/root-0000",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "ownership": "existing",
+          "availability": "verified"
+        }
+      ],
+      "archives": [],
+      "materials": [],
+      "recoveries": [
+        {
+          "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "revision": 1,
+          "archiveId": "12345678-1234-4123-8123-123456789abc",
+          "archiveRevision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "branch": "refs/heads/retained-fixture",
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "bundleBytes": 367,
+          "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+          "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+          "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+          "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+          "rootCount": 1,
+          "objectCount": 3,
+          "objectFormat": "sha1",
+          "availability": "verified"
+        }
+      ],
+      "operation": {
+        "kind": "operation",
+        "action": "recover",
+        "maintenanceActive": false,
+        "operationId": "52345678-1234-4123-8123-123456789abc",
+        "state": "ready",
+        "settled": true,
+        "cancelRequested": false,
+        "targetPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+        "location": {
+          "id": "52345678-1234-4123-8123-123456789abc",
+          "revision": 0,
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+          "branch": "refs/heads/recovery/root-0000",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "ownership": "existing",
+          "availability": "verified"
+        },
+        "recovery": {
+          "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "revision": 1,
+          "archiveId": "12345678-1234-4123-8123-123456789abc",
+          "archiveRevision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "branch": "refs/heads/retained-fixture",
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "bundleBytes": 367,
+          "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+          "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+          "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+          "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+          "rootCount": 1,
+          "objectCount": 3,
+          "objectFormat": "sha1",
+          "availability": "verified"
+        }
+      }
+    }
+  },
+  {
+    "name": "coldRecoveredList",
+    "value": {
+      "locations": [
+        {
+          "id": "52345678-1234-4123-8123-123456789abc",
+          "revision": 0,
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+          "branch": "refs/heads/recovery/root-0000",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "ownership": "existing",
+          "availability": "unknown"
+        }
+      ],
+      "archives": [],
+      "materials": [],
+      "recoveries": [
+        {
+          "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "revision": 1,
+          "archiveId": "12345678-1234-4123-8123-123456789abc",
+          "archiveRevision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "branch": "refs/heads/retained-fixture",
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "bundleBytes": 367,
+          "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+          "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+          "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+          "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+          "rootCount": 1,
+          "objectCount": 3,
+          "objectFormat": "sha1",
+          "availability": "unknown"
+        }
+      ],
+      "operation": {
+        "kind": "operation",
+        "action": "recover",
+        "maintenanceActive": false,
+        "operationId": "52345678-1234-4123-8123-123456789abc",
+        "state": "unknown",
+        "settled": true,
+        "cancelRequested": false,
+        "targetPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+        "location": {
+          "id": "52345678-1234-4123-8123-123456789abc",
+          "revision": 0,
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+          "branch": "refs/heads/recovery/root-0000",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "ownership": "existing",
+          "availability": "unknown"
+        },
+        "code": "recheckRequired",
+        "recovery": {
+          "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "revision": 1,
+          "archiveId": "12345678-1234-4123-8123-123456789abc",
+          "archiveRevision": 1,
+          "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+          "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+          "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+          "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+          "branch": "refs/heads/retained-fixture",
+          "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+          "bundleBytes": 367,
+          "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+          "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+          "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+          "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+          "rootCount": 1,
+          "objectCount": 3,
+          "objectFormat": "sha1",
+          "availability": "unknown"
+        }
+      }
+    }
+  },
+  {
+    "name": "recoverRechecked",
+    "value": {
+      "kind": "operation",
+      "action": "recover",
+      "maintenanceActive": false,
+      "operationId": "52345678-1234-4123-8123-123456789abc",
+      "state": "ready",
+      "settled": true,
+      "cancelRequested": false,
+      "targetPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+      "location": {
+        "id": "52345678-1234-4123-8123-123456789abc",
+        "revision": 0,
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/wire-recovered",
+        "branch": "refs/heads/recovery/root-0000",
+        "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+        "ownership": "existing",
+        "availability": "verified"
+      },
+      "recovery": {
+        "id": "61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "revision": 1,
+        "archiveId": "12345678-1234-4123-8123-123456789abc",
+        "archiveRevision": 1,
+        "originalPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/owned",
+        "retainedPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-retained-eae5a65b-44b2-4272-8397-7087bc8785a3/worktree",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/repo",
+        "headOid": "35c7bcab2c492f59baf27a54d2f38fc526684be0",
+        "branch": "refs/heads/retained-fixture",
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpArMPds/.farfold-recovery-61cfe2dd-bfc0-4e4b-bd74-1b6c7e447042",
+        "bundleBytes": 367,
+        "bundleSha256": "fdd02dcb973331968e60eef03b34c2af05fda1963977bf71315fffd0d6985513",
+        "manifestSha256": "4ef1e74eaf93dad7900362c8329266e111b7f54b7f66d4bc1de7cd05e8d41f03",
+        "rootsSha256": "e61e2a36fb37d77661320f21c08f5d8b41af2ab5b9296ecc6e951ecf8062e024",
+        "contentSha256": "712706c10f0892bd36573520332bd36a16e763d41872c5ccb385e38a759cf8b2",
+        "rootCount": 1,
+        "objectCount": 3,
+        "objectFormat": "sha1",
+        "availability": "verified"
+      }
+    }
+  },
+  {
+    "name": "exactUnknown",
+    "value": {
+      "kind": "unknownOperation",
+      "operationId": "ffffffff-ffff-4fff-8fff-ffffffffffff"
+    }
+  }
+]

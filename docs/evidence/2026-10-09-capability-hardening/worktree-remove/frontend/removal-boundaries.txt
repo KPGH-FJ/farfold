@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_remove.test.ts (12 tests | 1 failed) 58ms
+   × a cold awaiting-confirmation history can never create a new deletion permission 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktree_remove.test.ts > a cold awaiting-confirmation history can never create a new deletion permission
+AssertionError: expected undefined to be false // Object.is equality
+
+- Expected:
+false
+
++ Received:
+undefined
+
+ ❯ src/runtime/worktree_remove.test.ts:371:42
+    369|   await w.load();
+    370|   expect(w.canConfirmRemoval({}, w.snapshot().operation!)).toBe(false);
+    371|   expect(d.snapshot().interactionLocked).toBe(false);
+       |                                          ^
+    372|   await expect(w.confirmRemoval({}, w.snapshot().operation!)).rejects.…
+    373|   expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 41 passed (42)
+   Start at  15:47:37
+   Duration  188ms (transform 185ms, setup 0ms, import 211ms, tests 90ms, environment 0ms)
+

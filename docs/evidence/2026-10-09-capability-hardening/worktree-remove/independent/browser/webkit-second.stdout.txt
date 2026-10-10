@@ -1,0 +1,1 @@
+{"engine":"webkit","label":"second","passed":false,"checks":10,"failure":"TimeoutError: locator.click: Timeout 6500ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('region', { name: '从提交副本恢复到新文件夹', exact: true }).getByRole('button', { name: '选择目标父文件夹', exact: true })\u001b[22m\n","errors":[]}

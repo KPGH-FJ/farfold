@@ -1,0 +1,43 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_remove_types.test.ts (3 tests | 2 failed) 3ms
+   × accepts a verified recovery as a pending separate deletion decision, never as a usable location 2ms
+   × keeps cancelled recovery material reachable independently of the current intent 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktree_remove_types.test.ts > accepts a verified recovery as a pending separate deletion decision, never as a usable location
+Error: Invalid worktree receipt
+ ❯ record src/runtime/worktree_types.ts:96:11
+     94|     Object.keys(value).some((key) => !keys.includes(key))
+     95|   )
+     96|     throw new Error("Invalid worktree receipt");
+       |           ^
+     97|   return value as Record<string, unknown>;
+     98| };
+ ❯ parseWorktreeReply src/runtime/worktree_types.ts:214:13
+ ❯ src/runtime/worktree_remove_types.test.ts:9:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/worktree_remove_types.test.ts > keeps cancelled recovery material reachable independently of the current intent
+Error: Invalid worktree receipt
+ ❯ record src/runtime/worktree_types.ts:96:11
+     94|     Object.keys(value).some((key) => !keys.includes(key))
+     95|   )
+     96|     throw new Error("Invalid worktree receipt");
+       |           ^
+     97|   return value as Record<string, unknown>;
+     98| };
+ ❯ parseWorktreeList src/runtime/worktree_types.ts:313:13
+ ❯ src/runtime/worktree_remove_types.test.ts:18:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  15:29:31
+   Duration  105ms (transform 22ms, setup 0ms, import 29ms, tests 3ms, environment 0ms)
+

@@ -1,0 +1,26 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 28.97s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 2 tests
+
+running 1 test
+test worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1333 filtered out; finished in 5.67s
+
+completed:worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved
+
+test worktrees::recover_tests::recover_cancelled_prepare_never_creates_and_existing_destination_is_preserved ... ok
+
+running 1 test
+test worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1333 filtered out; finished in 7.36s
+
+completed:worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts
+
+test worktrees::recover_tests::recover_explicit_new_folder_is_independent_existing_and_cold_never_restarts ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1332 filtered out; finished in 7.37s
+

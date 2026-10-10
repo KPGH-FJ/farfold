@@ -60,6 +60,10 @@ import { WorktreeDialog } from "./WorktreeDialog";
 import { WORKTREE_STRINGS as S } from "../runtime/worktree_strings";
 import { parseWorktreeReply } from "../runtime/worktree_types";
 import { WorktreeRecycleReview } from "./WorktreeRecycleReview";
+import { WorktreeRemovalReview } from "./WorktreeRemovalReview";
+import { WorktreeRecoveries } from "./WorktreeRecoveries";
+import { WorktreeRecoveryForm } from "./WorktreeRecoveryForm";
+import { removalRecovery } from "../runtime/worktree_remove.test-fixtures";
 const location = {
   id: "one",
   revision: 1,
@@ -106,6 +110,7 @@ beforeEach(() => {
   h.state = {
     locations: [location],
     materials: [],
+    recoveries: [],
     archives: [],
     ready: true,
     loading: false,
@@ -497,4 +502,95 @@ it("unknown archives offer a pure location check but no restore/use/forget permi
     nodes(render()).find((n) => n.type === WorktreeRecycleReview)?.props
       .selection,
   ).toEqual({ action: "restore", record: (h.state.archives as object[])[0] });
+});
+it("offers permanent deletion only for a verified created archive, not ordinary or unknown records", () => {
+  const archive = {
+    id: location.id,
+    revision: 2,
+    originalPath: location.path,
+    retainedPath: "/kept/one",
+    repositoryRoot: location.repositoryRoot,
+    branch: location.branch,
+    headOid: location.headOid,
+    ownership: "created",
+    availability: "verified",
+  };
+  h.state.archives = [archive];
+  const actions = nodes(render()).filter(
+    (n) => n.type === "button" && n.props.children === S.removal.open,
+  );
+  expect(actions).toHaveLength(1);
+  expect(actions[0].props.disabled).toBe(false);
+  h.state.archives = [{ ...archive, availability: "unknown" }];
+  expect(button(S.removal.open).props.disabled).toBe(true);
+  expect(button(S.use).props.disabled).toBe(false);
+});
+
+it("switching from an unsubmitted delete review to restore retires the old review rather than leaving both active", () => {
+  const { path, ...rest } = location;
+  h.state.locations = [];
+  h.state.archives = [
+    { ...rest, revision: 2, originalPath: path, retainedPath: "/kept/one" },
+  ];
+  click(S.removal.open);
+  expect(
+    nodes(render()).filter((n) => n.type === WorktreeRemovalReview),
+  ).toHaveLength(1);
+  click(S.restore);
+  expect(
+    nodes(render()).filter((n) => n.type === WorktreeRemovalReview),
+  ).toHaveLength(0);
+  expect(
+    nodes(render()).filter((n) => n.type === WorktreeRecycleReview),
+  ).toHaveLength(1);
+});
+
+it("recovery management works without a draft target and rejects an old recovery row after the catalog changes", () => {
+  props.target = null;
+  h.state.recoveries = [removalRecovery];
+  const list = nodes(render()).find((n) => n.type === WorktreeRecoveries)!;
+  const open = list.props.onRecover as (r: unknown) => void;
+  open(removalRecovery);
+  const form = nodes(render()).find((n) => n.type === WorktreeRecoveryForm)!;
+  expect(form.props.recovery).toBe(removalRecovery);
+  expect((form.props.current as () => boolean)()).toBe(true);
+  h.state.recoveries = [{ ...removalRecovery, revision: 2 }];
+  render();
+  expect((form.props.current as () => boolean)()).toBe(false);
+  (form.props.onClose as () => void)();
+  render();
+  open(removalRecovery);
+  expect(nodes(render()).some((n) => n.type === WorktreeRecoveryForm)).toBe(
+    false,
+  );
+});
+it("unverified recoveries have a check action but no usable location or enabled restore action", () => {
+  const onRecover = vi.fn(),
+    onCheck = vi.fn();
+  const tree = WorktreeRecoveries({
+    recoveries: [{ ...removalRecovery, availability: "unknown" }],
+    disabled: false,
+    recoveryDisabled: false,
+    onRecover,
+    onCheck,
+  });
+  const actions = nodes(tree).filter((n) => n.type === "button");
+  expect(
+    actions.find((n) => n.props.children === S.recovery.open)?.props.disabled,
+  ).toBe(true);
+  (
+    actions.find((n) => n.props.children === S.recovery.open)?.props
+      .onClick as () => void
+  )();
+  expect(onRecover).not.toHaveBeenCalled();
+  expect(
+    actions.some(
+      (n) => n.props.children === S.use || n.props.children === S.forget,
+    ),
+  ).toBe(false);
+  (
+    actions.find((n) => n.props.children === S.removal.check)?.props
+      .onClick as () => void
+  )();
+  expect(onCheck).toHaveBeenCalledOnce();
 });

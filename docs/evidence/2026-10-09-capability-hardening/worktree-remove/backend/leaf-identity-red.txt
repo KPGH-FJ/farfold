@@ -1,0 +1,34 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.56s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'worktrees::remove_boundary_tests::removal_leaf_reservation_cannot_be_replaced_or_prepopulated' (23824660) panicked at src/worktrees/recycle_tests.rs:97:5:
+
+running 1 test
+test worktrees::remove_boundary_tests::removal_leaf_reservation_cannot_be_replaced_or_prepopulated ... FAILED
+
+failures:
+
+failures:
+    worktrees::remove_boundary_tests::removal_leaf_reservation_cannot_be_replaced_or_prepopulated
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1346 filtered out; finished in 4.67s
+
+
+thread 'worktrees::remove_boundary_tests::removal_leaf_reservation_cannot_be_replaced_or_prepopulated' (23824662) panicked at src/worktrees/remove_boundary_tests.rs:398:13:
+["replaced accepted", "occupied accepted", "existing file overwritten"]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test worktrees::remove_boundary_tests::removal_leaf_reservation_cannot_be_replaced_or_prepopulated ... FAILED
+
+failures:
+
+failures:
+    worktrees::remove_boundary_tests::removal_leaf_reservation_cannot_be_replaced_or_prepopulated
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1346 filtered out; finished in 4.68s
+
+error: test failed, to rerun pass `--lib`

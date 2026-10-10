@@ -1,0 +1,14 @@
+{
+  "checks": [
+    {
+      "path": "src/components/Composer.errors.test.tsx",
+      "allOriginalCaseBodiesByteEqual": true,
+      "caseBodiesSha256": "02b59d3e2b14a7c2d5e2fd536eb44eecd84476821d6156bfc2424790466e11f3"
+    },
+    {
+      "path": "src/components/ThreadView.history-navigation.test.tsx",
+      "allOriginalCaseBodiesByteEqual": true,
+      "caseBodiesSha256": "b7d83b7db50882c20a92ca7c477d7df40460e0e3ac724bc7eb88d65789d06fbc"
+    }
+  ]
+}

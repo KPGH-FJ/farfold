@@ -28,6 +28,7 @@ struct Scan {
     hash: Sha256,
     entries: u64,
     bytes: u64,
+    content_only: bool,
 }
 impl Scan {
     fn field(&mut self, raw: &[u8]) {
@@ -146,7 +147,9 @@ fn walk(
         let name = CString::new(raw.as_slice()).map_err(|_| error("unsafePath"))?;
         let meta = metadata(dir, &name)?;
         if depth == 0 && raw == b".git" {
-            if meta.st_mode & libc::S_IFMT != libc::S_IFREG {
+            if meta.st_mode & libc::S_IFMT != libc::S_IFREG
+                && !(scan.content_only && meta.st_mode & libc::S_IFMT == libc::S_IFDIR)
+            {
                 return Err(error("notLinked"));
             }
             continue; // Git itself updates this pointer on move; exact gitDir is separately checked.
@@ -160,9 +163,20 @@ fn walk(
         }
         relative.extend(&raw);
         scan.field(&relative);
-        scan.field(&(meta.st_mode as u32).to_le_bytes());
-        scan.field(&(meta.st_dev as u64).to_le_bytes());
-        scan.field(&meta.st_ino.to_le_bytes());
+        if scan.content_only {
+            let kind = meta.st_mode & libc::S_IFMT;
+            let mode = kind
+                | if kind == libc::S_IFREG {
+                    meta.st_mode & 0o111
+                } else {
+                    0
+                };
+            scan.field(&(mode as u32).to_le_bytes());
+        } else {
+            scan.field(&(meta.st_mode as u32).to_le_bytes());
+            scan.field(&(meta.st_dev as u64).to_le_bytes());
+            scan.field(&meta.st_ino.to_le_bytes());
+        }
         match meta.st_mode & libc::S_IFMT {
             libc::S_IFDIR | libc::S_IFREG => {
                 let directory = meta.st_mode & libc::S_IFMT == libc::S_IFDIR;
@@ -267,9 +281,15 @@ fn walk(
     Ok(())
 }
 pub(super) fn capture(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
+    scan(root, cancel, false)
+}
+pub(super) fn content(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummary> {
+    scan(root, cancel, true)
+}
+fn scan(root: &Path, cancel: &AtomicBool, content_only: bool) -> Result<MaterialSummary> {
     #[cfg(not(unix))]
     {
-        let _ = (root, cancel);
+        let _ = (root, cancel, content_only);
         Err(error("unsupportedGit"))
     }
     #[cfg(unix)]
@@ -279,13 +299,16 @@ pub(super) fn capture(root: &Path, cancel: &AtomicBool) -> Result<MaterialSummar
             hash: Sha256::new(),
             entries: 0,
             bytes: 0,
+            content_only,
         };
-        scan.field(
-            &dir.metadata()
-                .map_err(|_| error("unavailable"))?
-                .mode()
-                .to_le_bytes(),
-        );
+        if !content_only {
+            scan.field(
+                &dir.metadata()
+                    .map_err(|_| error("unavailable"))?
+                    .mode()
+                    .to_le_bytes(),
+            );
+        }
         walk(&mut scan, &dir, b"", 0, cancel)?;
         let fresh =
             crate::file_access::open_directory(root).map_err(|_| error("materialChanged"))?;

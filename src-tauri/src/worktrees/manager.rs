@@ -20,6 +20,13 @@ use std::{
 #[path = "recycle_manager.rs"]
 mod recycle_manager;
 use recycle_manager::{MaintenanceOwner, RecycleTicket};
+#[path = "remove_manager.rs"]
+mod remove_manager;
+use remove_manager::RemoveTicket;
+#[path = "recover_manager.rs"]
+mod recover_manager;
+#[path = "remove_reconcile.rs"]
+mod remove_reconcile;
 
 struct Ticket {
     snapshot: Snapshot,
@@ -34,6 +41,7 @@ struct Inner {
     poisoned: bool,
     tickets: HashMap<String, Ticket>,
     recycle_tickets: HashMap<String, RecycleTicket>,
+    remove_tickets: HashMap<String, RemoveTicket>,
     maintenance: Option<MaintenanceOwner>,
     seen: HashSet<String>,
     rejected: HashMap<String, Operation>,
@@ -65,6 +73,10 @@ fn operation(id: &str, state: &str, code: Option<&str>) -> Operation {
         original_path: None,
         retained_path: None,
         code: code.map(Into::into),
+        removal_phase: None,
+        delete_dispatched: None,
+        recovery: None,
+        removed: None,
     }
 }
 fn next_revision(n: u64) -> Result<u64> {
@@ -84,6 +96,9 @@ impl Inner {
         for v in &mut doc.locations {
             v.location.availability = "unknown".into();
         }
+        for v in &mut doc.recoveries {
+            v.receipt.availability = "unknown".into();
+        }
         for v in &mut doc.archives {
             v.archive.availability = "unknown".into();
         }
@@ -95,9 +110,15 @@ impl Inner {
                 op.status.state = "unknown".into();
                 op.status.settled = true;
                 op.status.code = Some("recheckRequired".into());
+                // This is a current completion receipt, not historical deletion authority.
+                // Durable intent/recovery metadata remains available for explicit rechecking.
+                op.status.removed = None;
             }
             if let Some(l) = &mut op.status.location {
                 l.availability = "unknown".into();
+            }
+            if let Some(r) = &mut op.status.recovery {
+                r.availability = "unknown".into();
             }
             if let Some(a) = &mut op.status.archive {
                 a.availability = "unknown".into();
@@ -107,6 +128,11 @@ impl Inner {
                 .insert(op.status.operation_id.clone(), op.request.clone());
             op.status.reviewed = false;
         }
+        self.seen.extend(
+            doc.recoveries
+                .iter()
+                .flat_map(|r| [r.receipt.id.clone(), r.operation_id.clone()]),
+        );
         self.seen
             .extend(doc.locations.iter().map(|v| v.location.id.clone()));
         self.seen
@@ -140,6 +166,7 @@ impl Inner {
                     op.status.settled = self.working.is_none();
                     op.status.code = Some("storageUnknown".into());
                     op.status.location = None;
+                    op.status.removed = None;
                 }
                 self.doc = next;
                 self.poisoned = true;
@@ -304,6 +331,7 @@ impl Worktrees {
             locations: i.doc.locations.iter().map(|v| v.location.clone()).collect(),
             archives: i.doc.archives.iter().map(|v| v.archive.clone()).collect(),
             materials: i.doc.materials.clone(),
+            recoveries: i.doc.recoveries.iter().map(|r| r.receipt.clone()).collect(),
             operation: i.doc.operation.as_ref().map(|o| o.status.clone()),
         })
     }
@@ -367,11 +395,19 @@ impl Worktrees {
             status: operation(id, "prepared", None),
             intent: Some(intent),
             recycle: None,
+            removal: None,
+            recovery: None,
         });
         i.save(store, next)?;
         Ok(i.reply(id))
     }
     pub fn start(&self, store: &MetaStore, id: &str) -> Result<Reply> {
+        if self.is_recover(store, id)? {
+            return self.start_recover(store, id);
+        }
+        if self.is_remove(store, id)? {
+            return Err(error("confirmationRequired"));
+        }
         if self.is_recycle(store, id)? {
             return self.start_recycle(store, id);
         }
@@ -535,6 +571,12 @@ impl Worktrees {
         Ok(i.reply(id))
     }
     pub fn cancel(&self, store: &MetaStore, id: &str) -> Result<Reply> {
+        if self.is_recover(store, id)? {
+            return self.cancel_recover(store, id);
+        }
+        if self.is_remove(store, id)? {
+            return self.cancel_remove(store, id);
+        }
         if self.is_recycle(store, id)? {
             return self.cancel_recycle(store, id);
         }
@@ -575,6 +617,16 @@ impl Worktrees {
         if i.preparing.contains(id) || !i.seen.contains(id) {
             i.reserve(id)?;
             let mut cancelled = operation(id, "cancelled", None);
+            cancelled.action = i
+                .requests
+                .get(id)
+                .map(Request::action)
+                .unwrap_or("create")
+                .into();
+            if cancelled.action == "remove" {
+                cancelled.removal_phase = Some("preparingRecovery".into());
+                cancelled.delete_dispatched = Some(false);
+            }
             cancelled.cancel_requested = true;
             i.rejected.insert(id.into(), cancelled);
         }
@@ -672,6 +724,8 @@ impl Worktrees {
             status,
             intent: None,
             recycle: None,
+            removal: None,
+            recovery: None,
         });
         i.save(store, next)?;
         Ok(i.reply(id))
@@ -762,6 +816,12 @@ impl Worktrees {
         Ok(Forgotten { forgotten: true })
     }
     pub fn recheck(&self, store: &MetaStore, id: &str) -> Result<Reply> {
+        if self.is_recover(store, id)? {
+            return self.recheck_recover(store, id);
+        }
+        if self.is_remove(store, id)? {
+            return self.recheck_remove(store, id);
+        }
         if self.is_recycle(store, id)? {
             return self.recheck_recycle(store, id);
         }

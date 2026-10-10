@@ -1,0 +1,115 @@
+{
+  "status": "test-harness-only-followup-passed-awaiting-full-integration",
+  "scope": "Two existing controlled-hook test walkers now traverse actual extracted notice components. No production source, assertion, timeout, test body, browser, Cargo, formal App or Agent change.",
+  "cause": {
+    "composer": "The original walker traversed only props.children. ComposerWorkNotice constructs ErrorNotice and settings actions internally, so all6 failing expectations could not see those returned nodes.",
+    "thread": "Retry actions remained props.children and preceding lifecycle assertions passed. ErrorNotice now comes from ArchivedWorkLocationNotice, so only the failed-state ErrorNotice lookup failed."
+  },
+  "repair": "Execute real ComposerWorkNotice and ArchivedWorkLocationNotice in the walker; use separate child hook slots and finally restore parent slots/cursor/effects. An explicit ready empty catalogue restores these tests original no-worktree premise. No ErrorNotice stub or assertion rewritten to accept the wrapper.",
+  "proof": {
+    "originalWholeSuite": {
+      "passed": 4378,
+      "failed": 7,
+      "failedFiles": 2
+    },
+    "targetedAfter": {
+      "files": 2,
+      "tests": 29,
+      "passed": 29,
+      "exitCode": 0
+    },
+    "typecheckExitCode": 0,
+    "formatCheckExitCode": 0,
+    "originalCaseBodies": "Both files from first it/it.each to EOF byte-identical; original-assertions.json binds that region hash.",
+    "sourceBoundaries": "Both preserved before files match run-01 input hashes. Prior13 production/test refs remain exact final8337 checkpoint; final public UI and backend receipts are unchanged.",
+    "independentReview": "product_coverage has exact patch and is checking it separately; no repeat test requested."
+  },
+  "sourceRefs": [
+    {
+      "path": "src/components/Composer.errors.test.tsx",
+      "sha256": "92ffa3fbceff0f562468e603eafd965a6051c86539fd6bb222c7fa12fdf63aff",
+      "bytes": 15013
+    },
+    {
+      "path": "src/components/ThreadView.history-navigation.test.tsx",
+      "sha256": "4f3ef28a6228441dd4ca2d087267dec7be378307e35bc12ca0fc8e866a06294f",
+      "bytes": 15065
+    }
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/Composer.errors.test.tsx.before.txt",
+      "sha256": "b5709cdcaaedafa2212049e33a9f119eeb926d1e6e0f5ff64363b1503d7aed3c",
+      "bytes": 13527
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/ThreadView.history-navigation.test.tsx.before.txt",
+      "sha256": "2d523ab56766e1928742f5302ddb952f34e5e4603a72d0859e0e0420f707de76",
+      "bytes": 13773
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/before.json",
+      "sha256": "3488649ee06ed319ce6f95300eeb22b7808335015115de603edbf4c1a1cf8590",
+      "bytes": 670
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/exact-test-patch.diff",
+      "sha256": "4d495b0fb8b9c38e9eb5231d5946e7cca542b81721368d1d614e197470fc4f8a",
+      "bytes": 5191
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/format-check.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/format.txt",
+      "sha256": "d88d7f7b519896997d06fc52a7367814f5ddee74578e727e2452d7ac1d90adbe",
+      "bytes": 104
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/original-assertions.json",
+      "sha256": "4c35b43aa6308de346ab702ca5f0c7a58077285d0f6c8cf553951fe59f477b55",
+      "bytes": 453
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/targeted-green.txt",
+      "sha256": "18ee3e8f3c3ef45e206c70265116156560e2d0f314f17a500b39a6dad2a5fefd",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/frontend.txt",
+      "sha256": "ccbcf32fa28ed874e21042f3c806f5c51180c7fb6b3748112573270e64f000bd",
+      "bytes": 4959
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/verification.json",
+      "sha256": "1c048f39e9c93f98c6274b18798708f4498ead51260ab4c6552f869d8e9afaf8",
+      "bytes": 3686
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/inputs-before.json",
+      "sha256": "a7f6d6ce629d6032f7baa0326694ca03d6903771969fb6ec9eaf88a89fbee4f9",
+      "bytes": 152571
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-01/inputs-after.json",
+      "sha256": "a7f6d6ce629d6032f7baa0326694ca03d6903771969fb6ec9eaf88a89fbee4f9",
+      "bytes": 152571
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/archived-work-location/recovery-followup/source-checkpoint-final.json",
+      "sha256": "8337cbb05089006cbb797bff978e78a4cd10eaf45d15981ec69945adb614fc78",
+      "bytes": 2746
+    }
+  ],
+  "limits": [
+    "This is a parent hook test fixture repair, not new archive/recovery catalogue coverage. Existing separate notice tests and controlled fullApp proofs cover those branches.",
+    "Root must rerun integration on the two-test-file delta; run-01 red is retained."
+  ]
+}

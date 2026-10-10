@@ -1,0 +1,227 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `remove_types::*`
+  --> src/worktrees/mod.rs:29:9
+   |
+29 | pub use remove_types::*;
+   |         ^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `execute_to_file` is never used
+   --> src/worktrees/git.rs:126:15
+    |
+126 | pub(super) fn execute_to_file(
+    |               ^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `recovery_profile` is never used
+   --> src/worktrees/checkout.rs:306:19
+    |
+ 89 | impl Checkout {
+    | ------------- method in this implementation
+...
+306 |     pub(super) fn recovery_profile(&self) -> Result<(Vec<String>, Vec<u8>)> {
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: struct `Recovery` is never constructed
+ --> src/worktrees/remove_types.rs:6:12
+  |
+6 | pub struct Recovery {
+  |            ^^^^^^^^
+
+warning: struct `Removed` is never constructed
+  --> src/worktrees/remove_types.rs:29:12
+   |
+29 | pub struct Removed {
+   |            ^^^^^^^
+
+warning: struct `RemoveInspection` is never constructed
+  --> src/worktrees/remove_types.rs:45:12
+   |
+45 | pub struct RemoveInspection {
+   |            ^^^^^^^^^^^^^^^^
+
+warning: struct `RemoveInput` is never constructed
+  --> src/worktrees/remove_types.rs:64:12
+   |
+64 | pub struct RemoveInput {
+   |            ^^^^^^^^^^^
+
+warning: struct `RemoveConfirmation` is never constructed
+  --> src/worktrees/remove_types.rs:70:12
+   |
+70 | pub struct RemoveConfirmation {
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: constant `MAX_OBJECTS` is never used
+  --> src/worktrees/recovery_roots.rs:15:18
+   |
+15 | pub(super) const MAX_OBJECTS: usize = 50_000;
+   |                  ^^^^^^^^^^^
+
+warning: constant `MAX_BYTES` is never used
+  --> src/worktrees/recovery_roots.rs:16:18
+   |
+16 | pub(super) const MAX_BYTES: u64 = 256 * 1024 * 1024;
+   |                  ^^^^^^^^^
+
+warning: method `input` is never used
+  --> src/worktrees/recovery_roots.rs:41:12
+   |
+31 | impl Roots {
+   | ---------- method in this implementation
+...
+41 |     pub fn input(&self) -> Vec<u8> {
+   |            ^^^^^
+
+warning: constant `COMMAND_TIME` is never used
+  --> src/worktrees/recovery_pack.rs:25:7
+   |
+25 | const COMMAND_TIME: Duration = Duration::from_secs(120);
+   |       ^^^^^^^^^^^^
+
+warning: struct `Manifest` is never constructed
+  --> src/worktrees/recovery_pack.rs:28:19
+   |
+28 | pub(super) struct Manifest {
+   |                   ^^^^^^^^
+
+warning: struct `SavedRecovery` is never constructed
+  --> src/worktrees/recovery_pack.rs:38:19
+   |
+38 | pub(super) struct SavedRecovery {
+   |                   ^^^^^^^^^^^^^
+
+warning: function `private_command` is never used
+  --> src/worktrees/recovery_pack.rs:46:4
+   |
+46 | fn private_command(root: &Path, args: &[&str]) -> Result<Command> {
+   |    ^^^^^^^^^^^^^^^
+
+warning: function `input` is never used
+  --> src/worktrees/recovery_pack.rs:53:4
+   |
+53 | fn input(mut c: Command, bytes: Option<&[u8]>) -> Result<Command> {
+   |    ^^^^^
+
+warning: function `run` is never used
+  --> src/worktrees/recovery_pack.rs:63:4
+   |
+63 | fn run(c: Command, bytes: Option<&[u8]>, cancel: &AtomicBool) -> Result<Vec<u8>> {
+   |    ^^^
+
+warning: function `private` is never used
+  --> src/worktrees/recovery_pack.rs:70:4
+   |
+70 | fn private(
+   |    ^^^^^^^
+
+warning: function `text` is never used
+  --> src/worktrees/recovery_pack.rs:78:4
+   |
+78 | fn text(bytes: Vec<u8>) -> Result<String> {
+   |    ^^^^
+
+warning: function `objects` is never used
+  --> src/worktrees/recovery_pack.rs:81:4
+   |
+81 | fn objects(c: Command, roots: &Roots, cancel: &AtomicBool) -> Result<Vec<String>> {
+   |    ^^^^^^^
+
+warning: function `capture` is never used
+  --> src/worktrees/recovery_pack.rs:94:15
+   |
+94 | pub(super) fn capture(s: &Snapshot, cancel: &AtomicBool) -> Result<Manifest> {
+   |               ^^^^^^^
+
+warning: function `init` is never used
+   --> src/worktrees/recovery_pack.rs:153:4
+    |
+153 | fn init(root: &Path, format: &str, bare: bool, cancel: &AtomicBool) -> Result<()> {
+    |    ^^^^
+
+warning: function `refs` is never used
+   --> src/worktrees/recovery_pack.rs:163:4
+    |
+163 | fn refs(m: &Manifest) -> Vec<(String, String)> {
+    |    ^^^^
+
+warning: function `install_refs` is never used
+   --> src/worktrees/recovery_pack.rs:171:4
+    |
+171 | fn install_refs(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
+    |    ^^^^^^^^^^^^
+
+warning: function `verify_objects` is never used
+   --> src/worktrees/recovery_pack.rs:183:4
+    |
+183 | fn verify_objects(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
+    |    ^^^^^^^^^^^^^^
+
+warning: function `checkout` is never used
+   --> src/worktrees/recovery_pack.rs:209:4
+    |
+209 | fn checkout(root: &Path, m: &Manifest, cancel: &AtomicBool) -> Result<()> {
+    |    ^^^^^^^^
+
+warning: function `validate` is never used
+   --> src/worktrees/recovery_pack.rs:234:4
+    |
+234 | fn validate(m: &Manifest) -> Result<()> {
+    |    ^^^^^^^^
+
+warning: function `recover_into` is never used
+   --> src/worktrees/recovery_pack.rs:274:15
+    |
+274 | pub(super) fn recover_into(
+    |               ^^^^^^^^^^^^
+
+warning: function `create_file` is never used
+   --> src/worktrees/recovery_pack.rs:306:4
+    |
+306 | fn create_file(path: &Path) -> Result<File> {
+    |    ^^^^^^^^^^^
+
+warning: function `digest` is never used
+   --> src/worktrees/recovery_pack.rs:316:15
+    |
+316 | pub(super) fn digest(path: &Path, cap: u64) -> Result<(u64, String)> {
+    |               ^^^^^^
+
+warning: function `build` is never used
+   --> src/worktrees/recovery_pack.rs:354:15
+    |
+354 | pub(super) fn build(
+    |               ^^^^^
+
+warning: function `verify` is never used
+   --> src/worktrees/recovery_pack.rs:466:15
+    |
+466 | pub(super) fn verify(saved: &SavedRecovery, cancel: &AtomicBool) -> Result<Manifest> {
+    |               ^^^^^^
+
+warning: `farfold` (lib test) generated 32 warnings (run `cargo fix --lib -p farfold --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 25.48s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 2 tests
+
+thread 'worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material' (23573889) panicked at src/worktrees/recovery_tests.rs:17:40:
+called `Result::unwrap()` on an `Err` value: Failure { code: "unsafePath" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material ... FAILED
+
+thread 'worktrees::recovery_tests::recovery_discovers_deleted_private_ref_log_and_orig_head_drift' (23573890) panicked at src/worktrees/recovery_tests.rs:52:50:
+called `Result::unwrap()` on an `Err` value: Failure { code: "unprovenPrivateCommits" }
+test worktrees::recovery_tests::recovery_discovers_deleted_private_ref_log_and_orig_head_drift ... FAILED
+
+failures:
+
+failures:
+    worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material
+    worktrees::recovery_tests::recovery_discovers_deleted_private_ref_log_and_orig_head_drift
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 1327 filtered out; finished in 0.27s
+
+error: test failed, to rerun pass `--lib`

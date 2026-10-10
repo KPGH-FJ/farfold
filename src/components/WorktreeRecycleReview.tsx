@@ -8,7 +8,7 @@ import type {
 } from "../runtime/worktree_types";
 import {
   WORKTREE_STRINGS as S,
-  worktreeErrorMessage,
+  worktreeBlockerReasons,
   worktreeFailureMessage,
 } from "../runtime/worktree_strings";
 
@@ -133,10 +133,13 @@ export function WorktreeRecycleReview({
             <div role="status">
               <p>{S.recycleBlocked}</p>
               <ul>
-                {inspection.blockers.map((code, i) => (
-                  <li key={i}>{worktreeErrorMessage(code)}</li>
+                {worktreeBlockerReasons(
+                  inspection.blockers,
+                  inspection.impact.unsent,
+                  selection.action,
+                ).map((reason) => (
+                  <li key={reason}>{reason}</li>
                 ))}
-                {inspection.impact.unsent && <li>{S.errors.unsentWork}</li>}
               </ul>
             </div>
           ) : (

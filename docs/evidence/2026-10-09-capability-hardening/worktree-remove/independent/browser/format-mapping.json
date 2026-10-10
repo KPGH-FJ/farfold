@@ -1,0 +1,187 @@
+{
+  "scope": "Only maintainable own harness/result JSON normalized; all prior frozen references checked unchanged. Original raw logs are not rewritten.",
+  "files": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/chromium-guidance-final.json",
+      "beforeSha256": "597ac378b93e76c95cc0d4e2ce80d09ea7cafb8a00fc046e440892c85d754f3e",
+      "afterSha256": "597ac378b93e76c95cc0d4e2ce80d09ea7cafb8a00fc046e440892c85d754f3e",
+      "changed": false,
+      "semanticEquality": true,
+      "originalRaw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/chromium-guidance-final.raw.txt",
+        "sha256": "597ac378b93e76c95cc0d4e2ce80d09ea7cafb8a00fc046e440892c85d754f3e"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/chromium-guidance.json",
+      "beforeSha256": "6d231f308c418582cede842290ff76299e71f0bb3b6505d8ae2d767da1a221a9",
+      "afterSha256": "6d231f308c418582cede842290ff76299e71f0bb3b6505d8ae2d767da1a221a9",
+      "changed": false,
+      "semanticEquality": true,
+      "originalRaw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/chromium-guidance.raw.txt",
+        "sha256": "6d231f308c418582cede842290ff76299e71f0bb3b6505d8ae2d767da1a221a9"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/chromium-lifecycle.json",
+      "beforeSha256": "4116cea5ed5b16d265f7dea5379221cf2e33eefb1dfc3ead9e14092311dbbd93",
+      "afterSha256": "4116cea5ed5b16d265f7dea5379221cf2e33eefb1dfc3ead9e14092311dbbd93",
+      "changed": false,
+      "semanticEquality": true,
+      "originalRaw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/chromium-lifecycle.raw.txt",
+        "sha256": "4116cea5ed5b16d265f7dea5379221cf2e33eefb1dfc3ead9e14092311dbbd93"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/cleanup-corrected.json",
+      "beforeSha256": "c49d0399e9133cce70619574afaf180ac83f97a0c8b4bd6350312a98526849af",
+      "afterSha256": "c49d0399e9133cce70619574afaf180ac83f97a0c8b4bd6350312a98526849af",
+      "changed": false,
+      "semanticEquality": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/cleanup.json",
+      "beforeSha256": "09946abf86dcd8a25f893233ce0998c5a3660833c3c800b91deeb3f4abed708b",
+      "afterSha256": "09946abf86dcd8a25f893233ce0998c5a3660833c3c800b91deeb3f4abed708b",
+      "changed": false,
+      "semanticEquality": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/fixture.tsx",
+      "beforeSha256": "4c012ab746f9b9da934d98b8ca80ed415d92795ffc268bfb35f508a2d741adbc",
+      "afterSha256": "4c012ab746f9b9da934d98b8ca80ed415d92795ffc268bfb35f508a2d741adbc",
+      "changed": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/index.html",
+      "beforeSha256": "4f7ee3f2f501b7f6c354f1191b875bfaeab8b3d3276777ed2b70706545970199",
+      "afterSha256": "4f7ee3f2f501b7f6c354f1191b875bfaeab8b3d3276777ed2b70706545970199",
+      "changed": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/run-guidance-corrected.mjs",
+      "beforeSha256": "c50a2d002619a93d6d10d7d035f51d2ca1d2bcd132be77aaf73ea6ec0b6b980e",
+      "afterSha256": "c50a2d002619a93d6d10d7d035f51d2ca1d2bcd132be77aaf73ea6ec0b6b980e",
+      "changed": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/run-guidance.mjs",
+      "beforeSha256": "ea2e17e4edf738a9f265c1aa616ff41e6caf2dd1c83ef8cab00e51eeb00edade",
+      "afterSha256": "ea2e17e4edf738a9f265c1aa616ff41e6caf2dd1c83ef8cab00e51eeb00edade",
+      "changed": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/run.mjs",
+      "beforeSha256": "fee432c619aef23c638ec08b588dca84d4aa10a97cfb9f9c427a42313617687d",
+      "afterSha256": "fee432c619aef23c638ec08b588dca84d4aa10a97cfb9f9c427a42313617687d",
+      "changed": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/serve.mjs",
+      "beforeSha256": "f6feffce08ae4fe6fbd4280c3803e8f14d6fb1b4296190794b264378e5aa2db3",
+      "afterSha256": "f6feffce08ae4fe6fbd4280c3803e8f14d6fb1b4296190794b264378e5aa2db3",
+      "changed": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-fifth.json",
+      "beforeSha256": "e53759d6da57848d183623fea2a06fccfb44d66bf3217ce71826e0e7ca269314",
+      "afterSha256": "e53759d6da57848d183623fea2a06fccfb44d66bf3217ce71826e0e7ca269314",
+      "changed": false,
+      "semanticEquality": true,
+      "originalRaw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-fifth.raw.txt",
+        "sha256": "b40497d5337a4717f9abc221497924002997558a05bc6679e50a628c92a3f8bb"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-first.json",
+      "beforeSha256": "9ab761ab680daedfe54bc884e8c44abe43cd914a55d779581bb42110adabf5cd",
+      "afterSha256": "9ab761ab680daedfe54bc884e8c44abe43cd914a55d779581bb42110adabf5cd",
+      "changed": false,
+      "semanticEquality": true,
+      "originalRaw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-first.raw.txt",
+        "sha256": "9ab761ab680daedfe54bc884e8c44abe43cd914a55d779581bb42110adabf5cd"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-fourth.json",
+      "beforeSha256": "a3ddcb08bcce39681053abf9777483cebb33a2deb63a0233ab05ac8c14d14ab7",
+      "afterSha256": "a3ddcb08bcce39681053abf9777483cebb33a2deb63a0233ab05ac8c14d14ab7",
+      "changed": false,
+      "semanticEquality": true,
+      "originalRaw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-fourth.raw.txt",
+        "sha256": "a3ddcb08bcce39681053abf9777483cebb33a2deb63a0233ab05ac8c14d14ab7"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-guidance-corrected.json",
+      "beforeSha256": "433d936ae8e075898e03756f3fcb6ebee069c291d12f9c6c3b852f11a49a79f9",
+      "afterSha256": "433d936ae8e075898e03756f3fcb6ebee069c291d12f9c6c3b852f11a49a79f9",
+      "changed": false,
+      "semanticEquality": true,
+      "originalRaw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-guidance-corrected.raw.txt",
+        "sha256": "433d936ae8e075898e03756f3fcb6ebee069c291d12f9c6c3b852f11a49a79f9"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-guidance-final.json",
+      "beforeSha256": "c5ea68b5c6ffca4b37e8dc62ea004ba5d4a99ba11b8e671b57a20f31222c65e3",
+      "afterSha256": "c5ea68b5c6ffca4b37e8dc62ea004ba5d4a99ba11b8e671b57a20f31222c65e3",
+      "changed": false,
+      "semanticEquality": true,
+      "originalRaw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-guidance-final.raw.txt",
+        "sha256": "c5ea68b5c6ffca4b37e8dc62ea004ba5d4a99ba11b8e671b57a20f31222c65e3"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-guidance.json",
+      "beforeSha256": "4af017bb1371d74d5aad63f60af04f58c33f293911aa72405cd026bd0f75b9e0",
+      "afterSha256": "4af017bb1371d74d5aad63f60af04f58c33f293911aa72405cd026bd0f75b9e0",
+      "changed": false,
+      "semanticEquality": true,
+      "originalRaw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-guidance.raw.txt",
+        "sha256": "4af017bb1371d74d5aad63f60af04f58c33f293911aa72405cd026bd0f75b9e0"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-lifecycle.json",
+      "beforeSha256": "8a62f8519e0846b8005433aff4f52a8c600be7b8f0810115b3dbe3027b279f61",
+      "afterSha256": "8a62f8519e0846b8005433aff4f52a8c600be7b8f0810115b3dbe3027b279f61",
+      "changed": false,
+      "semanticEquality": true,
+      "originalRaw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-lifecycle.raw.txt",
+        "sha256": "8a62f8519e0846b8005433aff4f52a8c600be7b8f0810115b3dbe3027b279f61"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-second.json",
+      "beforeSha256": "6b8031bc3a5f7baa557fceb4e3e5d6743a47b59504f2ff923e490a56f834a753",
+      "afterSha256": "6b8031bc3a5f7baa557fceb4e3e5d6743a47b59504f2ff923e490a56f834a753",
+      "changed": false,
+      "semanticEquality": true,
+      "originalRaw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-second.raw.txt",
+        "sha256": "6b8031bc3a5f7baa557fceb4e3e5d6743a47b59504f2ff923e490a56f834a753"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-third.json",
+      "beforeSha256": "e06042068a209469ff30b7f6e4d56adea50dc2d50ba11ff8ea63aac2d1a364b1",
+      "afterSha256": "e06042068a209469ff30b7f6e4d56adea50dc2d50ba11ff8ea63aac2d1a364b1",
+      "changed": false,
+      "semanticEquality": true,
+      "originalRaw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/webkit-third.raw.txt",
+        "sha256": "e06042068a209469ff30b7f6e4d56adea50dc2d50ba11ff8ea63aac2d1a364b1"
+      }
+    }
+  ]
+}

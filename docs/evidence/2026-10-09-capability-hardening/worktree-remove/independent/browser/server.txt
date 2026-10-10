@@ -1,0 +1,16 @@
+Owned H15 full App Vite PID 31997
+4:15:09 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/fixture.tsx
+4:15:09 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/fixture.tsx
+4:19:10 PM [vite] (client) hmr update /src/components/ThreadView.tsx, /src/components/ArchivedWorkLocationNotice.tsx
+4:19:10 PM [vite] (client) hmr update /src/components/ArchivedWorkLocationNotice.tsx
+4:19:10 PM [vite] (client) hmr update /src/components/ArchivedWorkLocationNotice.tsx
+4:19:10 PM [vite] (client) hmr update /src/components/ThreadView.tsx
+4:19:10 PM [vite] (client) hmr update /src/App.tsx
+4:20:19 PM [vite] (client) hmr update /src/components/ThreadView.tsx, /src/components/ArchivedWorkLocationNotice.tsx
+4:20:19 PM [vite] (client) hmr update /src/App.tsx
+4:20:19 PM [vite] (client) hmr update /src/components/ThreadView.tsx, /src/components/ArchivedWorkLocationNotice.tsx
+4:20:19 PM [vite] (client) hmr update /src/components/ArchivedWorkLocationNotice.tsx
+4:20:19 PM [vite] (client) hmr update /src/components/ArchivedWorkLocationNotice.tsx
+4:20:19 PM [vite] (client) hmr update /src/App.tsx
+4:21:28 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/fixture.tsx
+4:21:28 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/fixture.tsx

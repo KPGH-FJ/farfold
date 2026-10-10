@@ -1,0 +1,11 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/ArchivedWorkLocation.integration.test.tsx(47,37): error TS7006: Parameter 'command' implicitly has an 'any' type.
+src/components/ArchivedWorkLocation.integration.test.tsx(47,48): error TS2322: Type 'Promise<never[] | null>' is not assignable to type 'Promise<null>'.
+  Type 'never[] | null' is not assignable to type 'null'.
+    Type 'never[]' is not assignable to type 'null'.
+src/components/ArchivedWorkLocation.integration.test.tsx(68,39): error TS2493: Tuple type '[]' of length '0' has no element at index '0'.
+src/components/ArchivedWorkLocation.integration.test.tsx(68,139): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'string'.
+ ELIFECYCLE  Command failed with exit code 1.

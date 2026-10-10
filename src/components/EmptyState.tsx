@@ -1252,6 +1252,7 @@ export function EmptyState({
       )}
       <Composer
         thread={draft}
+        workLocation={cwd}
         workContext={
           agentId && requestCwd ? { agentId, cwd: requestCwd } : undefined
         }

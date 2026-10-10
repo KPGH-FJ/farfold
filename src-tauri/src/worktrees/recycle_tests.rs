@@ -13,7 +13,7 @@ fn wire(label: &str, value: &impl serde::Serialize) {
         serde_json::to_string(&serde_json::json!({"label":label,"value":value})).unwrap()
     );
 }
-fn wait(m: &Worktrees, s: &crate::meta_store::MetaStore, id: &str) -> Operation {
+pub(super) fn wait(m: &Worktrees, s: &crate::meta_store::MetaStore, id: &str) -> Operation {
     let deadline = Instant::now() + Duration::from_secs(20);
     loop {
         let o = op(m.status(s, id).unwrap());
@@ -24,7 +24,7 @@ fn wait(m: &Worktrees, s: &crate::meta_store::MetaStore, id: &str) -> Operation 
         std::thread::sleep(Duration::from_millis(5));
     }
 }
-fn created(m: &Worktrees, s: &crate::meta_store::MetaStore, r: &Repo) -> Location {
+pub(super) fn created(m: &Worktrees, s: &crate::meta_store::MetaStore, r: &Repo) -> Location {
     let args = input(
         m,
         s,
@@ -41,7 +41,7 @@ fn created(m: &Worktrees, s: &crate::meta_store::MetaStore, r: &Repo) -> Locatio
     assert_eq!(result.state, "ready");
     result.location.unwrap()
 }
-fn prepare(
+pub(super) fn prepare(
     m: &Worktrees,
     s: &crate::meta_store::MetaStore,
     id: &str,
@@ -552,7 +552,7 @@ fn storage_version_one_migrates_read_only_and_version_two_does_not_omit_required
     let raw = "{\"version\":1,\"locations\":[],\"materials\":[],\"operation\":null}";
     s.worktree_compare_write(None, raw).unwrap();
     let (original, doc) = storage::read(&s).unwrap();
-    assert_eq!(doc.version, 2);
+    assert_eq!(doc.version, 3);
     assert_eq!(original.as_deref(), Some(raw));
     assert_eq!(s.worktree_raw().unwrap().as_deref(), Some(raw));
     let bad = "{\"version\":2,\"locations\":[],\"materials\":[],\"operation\":null}";

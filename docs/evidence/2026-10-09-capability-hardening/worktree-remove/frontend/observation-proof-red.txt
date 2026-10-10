@@ -1,0 +1,66 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_remove.test.ts (8 tests | 2 failed) 124ms
+   × a rejected older status cannot revoke the newer exact prepared observation 8ms
+   × checking a recovery rejects a same-id response that substitutes its immutable repository or proof 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktree_remove.test.ts > a rejected older status cannot revoke the newer exact prepared observation
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/worktree_remove.test.ts:249:47
+    247|   await previous;
+    248|   expect(w.snapshot().operation).toBe(current);
+    249|   expect(w.canConfirmRemoval(owner, current)).toBe(true);
+       |                                               ^
+    250| });
+    251| it("checking a recovery rejects a same-id response that substitutes it…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/worktree_remove.test.ts > checking a recovery rejects a same-id response that substitutes its immutable repository or proof
+AssertionError: expected { id: 'recovery-one', …(18) } to be { id: 'recovery-one', …(18) } // Object.is equality
+
+- Expected
++ Received
+
+@@ -11,11 +11,11 @@
+    "manifestSha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "objectCount": 14,
+    "objectFormat": "sha1",
+    "originalPath": "/owned/tree",
+    "path": "/owned/recoveries/one",
+-   "repositoryRoot": "/owned/repo",
++   "repositoryRoot": "/other/repo",
+    "retainedPath": "/owned/.kept/tree",
+-   "revision": 1,
++   "revision": 2,
+    "rootCount": 4,
+-   "rootsSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
++   "rootsSha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  }
+
+ ❯ src/runtime/worktree_remove.test.ts:275:38
+    273|   });
+    274|   await w.checkRecovery(current);
+    275|   expect(w.snapshot().recoveries[0]).toBe(current);
+       |                                      ^
+    276|   expect(w.snapshot().error).toBeTruthy();
+    277| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 6 passed (8)
+   Start at  15:45:26
+   Duration  279ms (transform 104ms, setup 0ms, import 49ms, tests 124ms, environment 0ms)
+

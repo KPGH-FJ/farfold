@@ -1,0 +1,58 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_recover_types.test.ts (17 tests | 3 failed) 5ms
+   × accepts only an explicit new-directory recovery prepared result with its immutable proof 2ms
+   × a successful new-directory recovery is an independently verified ordinary repository, not a created linked deletion target 0ms
+   × a known preflight recovery refusal may omit paths/proof without inventing an outcome 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktree_recover_types.test.ts > accepts only an explicit new-directory recovery prepared result with its immutable proof
+Error: Invalid worktree receipt
+ ❯ record src/runtime/worktree_types.ts:113:11
+    111|     Object.keys(value).some((key) => !keys.includes(key))
+    112|   )
+    113|     throw new Error("Invalid worktree receipt");
+       |           ^
+    114|   return value as Record<string, unknown>;
+    115| };
+ ❯ parseWorktreeReply src/runtime/worktree_types.ts:238:13
+ ❯ src/runtime/worktree_recover_types.test.ts:26:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/worktree_recover_types.test.ts > a successful new-directory recovery is an independently verified ordinary repository, not a created linked deletion target
+Error: Invalid worktree receipt
+ ❯ record src/runtime/worktree_types.ts:113:11
+    111|     Object.keys(value).some((key) => !keys.includes(key))
+    112|   )
+    113|     throw new Error("Invalid worktree receipt");
+       |           ^
+    114|   return value as Record<string, unknown>;
+    115| };
+ ❯ parseWorktreeReply src/runtime/worktree_types.ts:238:13
+ ❯ src/runtime/worktree_recover_types.test.ts:34:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/worktree_recover_types.test.ts > a known preflight recovery refusal may omit paths/proof without inventing an outcome
+Error: Invalid worktree receipt
+ ❯ record src/runtime/worktree_types.ts:113:11
+    111|     Object.keys(value).some((key) => !keys.includes(key))
+    112|   )
+    113|     throw new Error("Invalid worktree receipt");
+       |           ^
+    114|   return value as Record<string, unknown>;
+    115| };
+ ❯ parseWorktreeReply src/runtime/worktree_types.ts:238:13
+ ❯ src/runtime/worktree_recover_types.test.ts:68:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 14 passed (17)
+   Start at  15:51:45
+   Duration  112ms (transform 31ms, setup 0ms, import 40ms, tests 5ms, environment 0ms)
+

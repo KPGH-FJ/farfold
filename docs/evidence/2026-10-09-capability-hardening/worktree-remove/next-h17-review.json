@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUTC": "2026-10-10T08:31:08.504963+00:00",
+  "owner": "architecture",
+  "status": "read-only-implementation-design-not-acceptance",
+  "headAtReview": "e8855483b97833dc013d910d6aa7edc40040372c",
+  "scope": "H17 only; production, active plan and existing evidence unchanged; no Cargo, service, Agent, install or user-repository operation.",
+  "originalRequirement": {
+    "path": "plans/agent-access.md",
+    "line": 249,
+    "text": "明确基础工作树依赖、端口、忽略文件和秘密的准备设计；纳入后准备/取消/失败有可核查结果且不影响其他对话，不自动复制秘密、不设私有HOME，文件分离不冒称完全环境隔离。"
+  },
+  "currentFacts": [
+    "Current worktree creation validates exact target commit and directory identity, creates the Git registration without checkout, then materializes committed files in a private Git checkout context. This context is not an Agent HOME or environment sandbox.",
+    "The visible note accurately says accounts, Git settings and some dependencies may be shared. Creation explicitly does not execute project scripts, install dependencies, or copy uncommitted/ignored contents. There is no current dependency/port/secret preparation state machine.",
+    "Explicit Use rechecks the location and applies only to the still-current new-conversation draft. useDraftWorkLocation retires its token before onApply; a later preparation action cannot reuse the consumed token. Historical conversation cwd does not move.",
+    "Recovered independent repositories have ownership existing. Neither recovery nor a verified location establishes dependency readiness or created-linked deletion authority.",
+    "EmptyState.tsx is currently 1475 lines. Put new preparation UI and ownership logic in small separate modules; retain only integration props/callbacks there."
+  ],
+  "primarySources": [
+    {
+      "url": "https://git-scm.com/docs/git-worktree#_configuration_file",
+      "retrievedAtUTC": "2026-10-10T08:31:08.512491+00:00",
+      "claim": "Repository configuration is shared across worktrees by default. Git offers a per-worktree configuration extension, but this proposal neither enables it nor changes repository configuration."
+    },
+    {
+      "url": "https://docs.npmjs.com/cli/v11/using-npm/scripts/",
+      "retrievedAtUTC": "2026-10-10T08:31:08.512500+00:00",
+      "claim": "npm installation can execute lifecycle scripts and arbitrary project commands. Dependency installation is executable work, not a passive directory copy."
+    }
+  ],
+  "proposedMinimumLoop": [
+    {
+      "step": 1,
+      "action": "Explicitly inspect the currently selected, verified location.",
+      "implementation": "A main-window read-only command reuses exact location revision/root/HEAD checks before and after bounded metadata inspection. Initial scope: selected project directory plus explicitly chosen monorepo subdirectory; known manifest/lock filenames and local dependency-directory type/link facts. Never execute a manifest, package manager, hook or config helper. Never enumerate a secret directory or read .env/config credential values.",
+      "truth": "Facts are existence/type/identity observations. A manifest or dependency directory is not an installed/usable verdict; unrecognized ecosystems remain unknown with the ordinary-folder route intact."
+    },
+    {
+      "step": 2,
+      "action": "Review preparation requirements and explicitly add them to the current input.",
+      "implementation": "A fresh transient preparation owner captures exact draft identity/generation, Agent/service selection, cwd and the inspection receipt. Clear any folder-pick auto-send arm. Recheck owner after location/flush awaits, then append once to the current draft with existing text, attachments and pending file opinions preserved. A save failure retains the inserted draft/error; it must not append again or send automatically.",
+      "truth": "Only a reviewed request was added. This is not installation, permission escalation, execution or completion."
+    },
+    {
+      "step": 3,
+      "action": "User sends through the existing Agent conversation and approvals.",
+      "implementation": "Keep the selected Agent, model, reasoning, service and official tool/approval/cancellation paths. Do not introduce a Farfold shell/package-manager runner, special Agent session, background loop or project startup command. Preparation failure or stop uses that exact request/task; a cancelled response does not prove every spawned service stopped.",
+      "truth": "Attribute observed tool results and failures to the actual request. Lost/unknown outcomes require explicit checking, never automatic resubmission or killing another conversation's process."
+    },
+    {
+      "step": 4,
+      "action": "Explicitly check the requested outcome and keep its evidence in the existing conversation.",
+      "implementation": "Use actual reported file paths plus existing verified reads for relevant non-secret outputs; use an explicitly requested URL through the existing browser flow for service observation. Port and background-task ownership must match the current request. Missing structured evidence stays unverified. A small outcome summary can reference the existing transcript/tool result; do not add a persistent execution ledger.",
+      "truth": "A successful dependency command, file existence and an observed service response are separate results. None alone becomes a universal environment-ready flag."
+    }
+  ],
+  "suggestedInterfacesNotImplemented": {
+    "backend": "worktree_preparation_inspect({locationId,expectedRevision,relativeProjectPath}) -> {inspectionId,locationId,revision,path,headOid,facts,limitsReached}; main-window only, read-only, bounded, stale identity rejected.",
+    "facts": "Closed discriminated metadata facts such as manifestPresent, lockPresent, dependencyDirectoryPresent, dependencySymlink and unknown. Do not include secret contents, process credentials, executable commands inferred from manifests, or a boolean ready.",
+    "frontend": "WorktreePreparation + useDraftPreparation own current request and exact draft context; pure formatter emits user-reviewed requirements. Proposed inspect draft state: idle -> inspecting -> review -> added, with failed/cancelled/stale terminal states; inspection cancellation withdraws presentation/acceptance and does not imply a stopped OS read.",
+    "budgets": "Proposed first implementation: at most 128 immediate directory entries, fixed known-file metadata checks and no recursive dependency scan. Limits must be visible and tested. Monorepo choice stays explicit; do not silently conclude a whole repository is covered.",
+    "durability": "Only ordinary draft text persists through the existing draft store. Inspection/live ownership is ephemeral; reopen must recheck. No new preparation event ledger or separate Agent identity."
+  },
+  "resourceBoundaries": {
+    "dependencies": "Do not copy/link node_modules, virtual environments or build directories from a sibling tree automatically. Agent-proposed commands remain subject to user review and official permissions. Shared package caches and installation scripts may affect other locations; prompt wording is not enforcement.",
+    "ports": "A user-entered port is a preference, not a reservation. Do not auto-select by an instantaneous free-port scan and claim exclusivity. On collision, retain evidence and ask through the existing workflow for a different explicit port; do not kill or reuse an unrelated listener. If actual service identity cannot be established, show unknown.",
+    "ignoredAndSecrets": "Default to no copy. A tracked file can also contain secrets, so tracked does not mean safe to read/upload. Preparation facts must not read credential values. Extra ignored-file or secret transfer would need a separate explicit source/destination and content-handling flow; do not smuggle it into this first handoff. Missing local secrets remain a visible user action, not an automatic failure-triggered search.",
+    "sharedGitAndAgentState": "Display shared repository identity as an observed fact, and shared account/config/cache possibilities as boundaries. Do not enable worktreeConfig, edit Agent HOME/config, inject a new Agent environment or migrate old cwd.",
+    "otherConversations": "Farfold-owned inspection/draft changes can be strictly scoped. Arbitrary Agent scripts and external services are not sandboxed by this design. The active requirement that other conversations remain unaffected stays open until the chosen actual workflow and shared resources are verified; a warning alone cannot close it."
+  },
+  "contractAssessment": {
+    "recommendedPathRequiresProductChange": false,
+    "reason": "Read-only file facts, explicit draft editing, existing Agent dispatch/approval and exact result rechecks remain within PRODUCT sections 4, 8 and 11.",
+    "alternativeConflict": "A built-in arbitrary project-script/package-manager executor would reopen client file/terminal execution prohibited by PRODUCT.md:183; an isolated Agent HOME/config writer would conflict with PRODUCT.md:148-155. Do not silently implement either as a worktree helper.",
+    "completion": "The proposed handoff is a bounded implementation increment. Design, filename detection and an appended prompt alone do not satisfy H17 preparation/cancellation/failure or shared-impact acceptance."
+  },
+  "requiredCounterexamplesBeforeAcceptance": [
+    "A->B->A draft/location/Agent changes, hide, restore saved draft and delayed inspection completion: old result cannot append, switch cwd or send; duplicate confirmation adds only once.",
+    "Existing draft text/attachments/opinions survive successful append, failed flush and reload; failed flush cannot trigger a second append or dispatch.",
+    "Alias, changed location revision, new HEAD, moved directory and replaced manifest/directory during inspection: reject stale facts; bounded large/monorepo layout reports incomplete coverage without recursive allocation.",
+    "Two owned temporary worktrees share common Git configuration but contain distinct local dependency data. A controlled successful preparation in one must preserve the other tree/index/config/draft and existing unrelated service.",
+    "An occupied port, an unrelated listener and a late service from an old request cannot produce ready or be stopped by the new request; an observed response alone does not prove process ownership.",
+    "Controlled dependency command failure, approval rejection, request cancellation and dispatched-unknown outcomes preserve real terminal/task evidence and do not retry automatically. Verify ordinary foreground and background task distinctions.",
+    "Ignored .env, tracked secret canaries, symlinked dependency directories and credentials in package configuration are never automatically read/copied/uploaded; missing prerequisites remain actionable without inventing readiness.",
+    "Actual installed UI and a bounded real-Agent journey must cover success/failure/cancel plus data retention. Unit tests/controlled browser/JSON evidence do not substitute for those levels."
+  ],
+  "unresolvedImplementationDecisions": [
+    "Which bounded manifest ecosystems and monorepo selection UI to support first; absence of a recognized file must not reject otherwise usable folders.",
+    "How the user explicitly identifies a service URL/process for outcome checks without allowing unrelated listener takeover; no generic port reservation/kill feature is authorized by this design.",
+    "Explicit extra-file/secret handling remains a separate necessary scope decision if H17 later includes it; current default no-copy must not be relabeled automatic preparation support."
+  ],
+  "references": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+      "lines": [49, 85, 148, 154, 183]
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "59015aff26f33fe0a5cfc89ceaa1eab69937324fd7d9cf199bde5240639457b0",
+      "lines": [64, 249]
+    },
+    {
+      "path": "src/runtime/worktree_strings.ts",
+      "sha256": "28d235b85af35164109f2ebce3442dbee02cd10a516bd7a74d856e2ce0c5dfd8",
+      "lines": [123, 125]
+    },
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "2c31d9cad8fa857ae9c77c82de08c0dd9455b4816bbfe22101e2e0c53869a6e5",
+      "lines": [136, 140]
+    },
+    {
+      "path": "src/components/WorktreeCreateForm.tsx",
+      "sha256": "e3498ae8a80c7b191b5b883080ac888a6c0a37952f2f1372d1d3a58ae727e71c",
+      "lines": [123]
+    },
+    {
+      "path": "src/components/useDraftWorkLocation.ts",
+      "sha256": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b",
+      "lines": [7, 27, 32]
+    },
+    {
+      "path": "src/runtime/draft_location_owner.ts",
+      "sha256": "5656bbadba38f035ce7c13ab4f85f0c60261eba7acade50b7519fc73299b9602",
+      "lines": [2, 6, 19]
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "740dda175f17441f91ebfdf445dab1f67ee77f3f31308ca6c7f18880b13ee077",
+      "lines": [329, 344, 356]
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "ef320f8577c383d25e53268bea1827227b757d47d3adb95e6479e4673b563db4",
+      "lines": [98, 172, 325, 746]
+    },
+    {
+      "path": "src-tauri/src/worktree_commands.rs",
+      "sha256": "a10ffb2b22dd2c81d80b901b051105fe735ff035765d81f9166ff9c445a9f2f7",
+      "lines": [1, 22, 30]
+    },
+    {
+      "path": "src-tauri/src/worktrees/create.rs",
+      "sha256": "4e5c2b21b66684daff9eec5fc181bfdd98b5e934525f0d9d9d0db46fb71de446",
+      "lines": [88, 101, 126]
+    },
+    {
+      "path": "src-tauri/src/worktrees/checkout.rs",
+      "sha256": "b1f5f1c16cbe646fb7b6b4046ccce48329b28769ccba231c4392edae17383657",
+      "lines": [90, 203, 233, 370]
+    },
+    {
+      "path": "src-tauri/src/worktrees/inspect.rs",
+      "sha256": "a9e4aa5fb6349563fb3e40bb7ba4a13433e8346c0ed5982e1dcde5920463f2bd",
+      "lines": [157, 172]
+    },
+    {
+      "path": "src/runtime/reported_artifacts.ts",
+      "sha256": "31fa93a3ee3cb89cdd7958f36c96542a6603b06409782c13f61be363d021bff2",
+      "lines": [1, 136]
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base-review-2026-10-10.json",
+      "sha256": "c8efa2205bcc7b15e2c1963eff6a9127d8cb7c7584e7f917d93f7b48e327b895",
+      "lines": []
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/implementation.json",
+      "sha256": "cd8b327d15983a6df3dfceec989e1818183c634092aaed917cf0522d8fa5e3b7",
+      "lines": []
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/backend/source-checkpoint-final.json",
+      "sha256": "23664a46005c312212396e2448f31e4bbc4b2811423e368d6029892469d2c808",
+      "lines": []
+    }
+  ],
+  "frozenBackendSourceHashesRechecked": 25,
+  "validationBoundary": "This review performed targeted source/contract reads and official documentation lookup only. No preparation implementation, Git probe, model call, service, browser UI, Cargo check or installed acceptance was executed."
+}

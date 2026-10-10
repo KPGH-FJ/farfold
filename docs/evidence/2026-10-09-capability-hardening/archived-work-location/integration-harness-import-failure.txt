@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ArchivedWorkLocation.integration.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ArchivedWorkLocation.integration.test.tsx [ src/components/ArchivedWorkLocation.integration.test.tsx ]
+TypeError: Cannot read properties of undefined (reading 'catch')
+ ❯ src/runtime/performance-trace.ts:5:64
+      3| // The Host only enables this for an explicitly opted-in local process…
+      4| // paths and native identifiers out of diagnostics; never persist UI s…
+      5| const origin = invoke<number | null>("host_performance_origin").catch(
+       |                                                                ^
+      6|   () => null,
+      7| );
+ ❯ src/components/Composer.tsx:28:1
+ ❯ src/components/MessageResendDialog.tsx:9:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  15:42:59
+   Duration  1.39s (transform 247ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)
+

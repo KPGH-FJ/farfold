@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/Composer.work.test.tsx (5 tests | 1 failed) 134ms
+   × restores an explicitly paused location without changing a single Agent or sending its queue 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/Composer.work.test.tsx > restores an explicitly paused location without changing a single Agent or sending its queue
+AssertionError: expected undefined to be defined
+ ❯ src/components/Composer.work.test.tsx:78:19
+     76|       node.type === "button" && node.props.children === "恢复此位置的发送",
+     77|   )!;
+     78|   expect(restore).toBeDefined();
+       |                   ^
+     79|   expect(restore.props.title).toContain("待发内容仍需手动发送");
+     80|   (restore.props.onClick as () => void)();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 7 passed (8)
+      Tests  1 failed | 90 passed (91)
+   Start at  15:49:56
+   Duration  3.45s (transform 3.00s, setup 0ms, import 14.91s, tests 593ms, environment 1ms)
+

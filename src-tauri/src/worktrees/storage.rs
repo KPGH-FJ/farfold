@@ -69,6 +69,8 @@ pub(super) struct Intent {
 pub(super) enum Request {
     Create(Create),
     Recycle(RecycleInput),
+    Remove(super::remove_types::RemoveInput),
+    Recover(super::remove_types::RecoverInput),
     Adopt {
         inspection_id: String,
         tree_path: String,
@@ -80,12 +82,16 @@ impl Request {
             Self::Create(_) => "create",
             Self::Adopt { .. } => "adopt",
             Self::Recycle(r) => r.action.name(),
+            Self::Remove(_) => "remove",
+            Self::Recover(_) => "recover",
         }
     }
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(super) struct SavedArchive {
+    #[serde(default)]
+    pub removal_operation: Option<String>,
     pub archive: Archive,
     pub original: SavedLocation,
     pub parent: String,
@@ -104,6 +110,30 @@ pub(super) struct RecycleIntent {
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
+pub(super) struct RemoveIntent {
+    pub saved: SavedArchive,
+    pub roots: super::remove_types::RootsSummary,
+    pub content: MaterialSummary,
+    pub profile_sha256: String,
+    pub recovery_id: String,
+    pub recovery_path: String,
+    pub recovery: Option<super::recovery_pack::SavedRecovery>,
+    pub dispatched: bool,
+    pub confirmation: Option<super::remove_types::RemoveConfirmation>,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) struct RecoverIntent {
+    pub input: super::remove_types::RecoverInput,
+    pub recovery: super::recovery_pack::SavedRecovery,
+    pub parent: String,
+    pub parent_stamp: Stamp,
+    pub target: String,
+    pub target_stamp: Option<Stamp>,
+    pub dispatched: bool,
+}
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub(super) struct SavedOperation {
     pub request: Request,
     pub completed: bool,
@@ -111,6 +141,10 @@ pub(super) struct SavedOperation {
     pub intent: Option<Intent>,
     #[serde(default)]
     pub recycle: Option<RecycleIntent>,
+    #[serde(default)]
+    pub removal: Option<RemoveIntent>,
+    #[serde(default)]
+    pub recovery: Option<RecoverIntent>,
 }
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -120,15 +154,18 @@ pub(super) struct Document {
     #[serde(default)]
     pub archives: Vec<SavedArchive>,
     pub materials: Vec<Material>,
+    #[serde(default)]
+    pub recoveries: Vec<super::recovery_pack::SavedRecovery>,
     pub operation: Option<SavedOperation>,
 }
 impl Default for Document {
     fn default() -> Self {
         Self {
-            version: 2,
+            version: 3,
             locations: Vec::new(),
             archives: Vec::new(),
             materials: Vec::new(),
+            recoveries: Vec::new(),
             operation: None,
         }
     }
@@ -143,7 +180,8 @@ impl SavedArchive {
     pub fn valid(&self) -> bool {
         let a = &self.archive;
         let l = &self.original.location;
-        id(&a.id)
+        self.removal_operation.as_ref().is_none_or(|v| id(v))
+            && id(&a.id)
             && a.id == l.id
             && a.revision <= 9_007_199_254_740_991
             && path(&a.original_path)
@@ -181,10 +219,15 @@ impl SavedArchive {
 impl Document {
     pub fn valid(&self) -> bool {
         let mut ids = HashSet::new();
-        self.version == 2
+        let mut recovery_ids = HashSet::new();
+        self.version == 3
             && self.locations.len() <= 256
             && self.archives.len() <= 256
             && self.materials.len() <= 256
+            && self.recoveries.len() <= 256
+            && self.recoveries.iter().all(|r| {
+                super::remove_validation::recovery(r) && recovery_ids.insert(&r.receipt.id)
+            })
             && self
                 .materials
                 .iter()
@@ -219,13 +262,33 @@ impl Document {
                     && s.action == v.request.action()
                     && s.original_path.is_some() == s.retained_path.is_some()
                     && match &v.request {
-                        Request::Recycle(r) => v.recycle.as_ref().is_some_and(|i| {
-                            i.action == r.action
-                                && s.original_path.as_ref() == Some(&i.saved.archive.original_path)
-                                && s.retained_path.as_ref() == Some(&i.saved.archive.retained_path)
-                        }),
+                        Request::Recycle(r) => {
+                            v.recovery.is_none()
+                                && v.removal.is_none()
+                                && s.removal_phase.is_none()
+                                && s.delete_dispatched.is_none()
+                                && s.recovery.is_none()
+                                && s.removed.is_none()
+                                && v.recycle.as_ref().is_some_and(|i| {
+                                    i.action == r.action
+                                        && s.original_path.as_ref()
+                                            == Some(&i.saved.archive.original_path)
+                                        && s.retained_path.as_ref()
+                                            == Some(&i.saved.archive.retained_path)
+                                })
+                        }
+                        Request::Remove(_) => {
+                            v.recovery.is_none() && super::remove_validation::operation(v)
+                        }
+                        Request::Recover(_) => super::recover::valid_operation(v),
                         _ => {
-                            v.recycle.is_none()
+                            v.recovery.is_none()
+                                && v.removal.is_none()
+                                && s.removal_phase.is_none()
+                                && s.delete_dispatched.is_none()
+                                && s.recovery.is_none()
+                                && s.removed.is_none()
+                                && v.recycle.is_none()
                                 && !s.maintenance_active
                                 && s.archive.is_none()
                                 && s.original_path.is_none()
@@ -300,6 +363,36 @@ pub(super) fn read(store: &MetaStore) -> Result<(Option<String>, Document)> {
         value.version = 2;
         if let Some(op) = &mut value.operation {
             op.status.action = op.request.action().into();
+        }
+    }
+    if value.version == 2 {
+        let old: serde_json::Value =
+            serde_json::from_str(raw.as_ref().ok_or(error("storageInvalid"))?)
+                .map_err(|_| error("storageInvalid"))?;
+        if old["archives"]
+            .as_array()
+            .is_some_and(|a| a.iter().any(|v| v.get("removal_operation").is_some()))
+            || old.get("recoveries").is_some()
+            || old["operation"].get("removal").is_some()
+            || old["operation"].get("recovery").is_some()
+            || ["removalPhase", "deleteDispatched", "recovery", "removed"]
+                .iter()
+                .any(|k| old["operation"]["status"].get(k).is_some())
+        {
+            return Err(error("storageInvalid"));
+        }
+        value.version = 3;
+    } else if value.version == 3 && raw.is_some() {
+        let old: serde_json::Value =
+            serde_json::from_str(raw.as_ref().unwrap()).map_err(|_| error("storageInvalid"))?;
+        if old.get("recoveries").is_none()
+            || old.get("archives").is_none()
+            || (old["operation"].is_object()
+                && ["action", "maintenanceActive"]
+                    .iter()
+                    .any(|k| old["operation"]["status"].get(k).is_none()))
+        {
+            return Err(error("storageInvalid"));
         }
     }
     if !value.valid() {

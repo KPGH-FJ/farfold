@@ -14,13 +14,13 @@ pub(super) struct RecycleTicket {
     created: Instant,
 }
 pub(super) struct MaintenanceOwner {
-    id: String,
-    _store: MaintenancePermit,
-    _global: UpdatePermit,
-    _own: UpdatePermit,
+    pub(super) id: String,
+    pub(super) _store: MaintenancePermit,
+    pub(super) _global: UpdatePermit,
+    pub(super) _own: UpdatePermit,
 }
 impl MaintenanceOwner {
-    fn release(self) -> std::result::Result<(), String> {
+    pub(super) fn release(self) -> std::result::Result<(), String> {
         let Self {
             _store,
             _global,
@@ -117,6 +117,9 @@ impl Worktrees {
                     .ok_or(error("missingArchive"))?,
             }
         };
+        if saved.removal_operation.is_some() {
+            return Err(error("recheckRequired"));
+        }
         recycle::verify_at(
             &saved,
             action == RecycleAction::Restore,
@@ -297,6 +300,8 @@ impl Worktrees {
             completed: false,
             status: status(id, "prepared", None, &saved, input.action, true),
             intent: None,
+            removal: None,
+            recovery: None,
             recycle: Some(RecycleIntent {
                 saved: saved.clone(),
                 action: input.action,
@@ -588,6 +593,9 @@ impl Worktrees {
                 .cloned()
                 .ok_or(error("missingArchive"))?
         };
+        if saved.removal_operation.is_some() {
+            return self.check_removed_archive(store, &saved);
+        }
         let retained = recycle::verify_at(&saved, true, &AtomicBool::new(false));
         let original = if retained.is_err() {
             recycle::verify_at(&saved, false, &AtomicBool::new(false)).ok()

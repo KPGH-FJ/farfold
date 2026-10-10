@@ -1,0 +1,83 @@
+{
+  "scope": "13 author-owned source/test files; prior 11-file checkpoint preserved. Logic and formatting frozen after scoped browser + targeted tests. Root independent review required.",
+  "sourceRefs": [
+    {
+      "path": "src/runtime/archived_work_location.ts",
+      "sha256": "894f2569e7de0f6e71284b9128b05fcb68b1c7a3a7847e5706bbde1c2a15e5be",
+      "bytes": 3216,
+      "lines": 93
+    },
+    {
+      "path": "src/runtime/archived_work_location_strings.ts",
+      "sha256": "2f947f701aced2fdd2eb69490f68e8dff98855f1a084bc94ed2c1a260a4b0ac5",
+      "bytes": 332,
+      "lines": 7
+    },
+    {
+      "path": "src/runtime/archived_work_location.test.ts",
+      "sha256": "5f6517861357b3f099d526406ee1f9eb5cd41f400b1592b2b02a2d083cb30772",
+      "bytes": 5057,
+      "lines": 161
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.tsx",
+      "sha256": "0e124287592a4d6d49428cb12fed354dba98decb7d1e6d959df845c4d75272b7",
+      "bytes": 2051,
+      "lines": 68
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.test.tsx",
+      "sha256": "d127ca097ea566c709b622bbd403658f9678f686b127ff832efac5a3877d8af2",
+      "bytes": 5502,
+      "lines": 164
+    },
+    {
+      "path": "src/components/ArchivedWorkLocation.integration.test.tsx",
+      "sha256": "671e41f9980ef1fad36029806952dad68b9c1c102278afc3b0a68ee51c6df410",
+      "bytes": 8717,
+      "lines": 283
+    },
+    {
+      "path": "src/components/ComposerWorkNotice.tsx",
+      "sha256": "bec3991d878a9799559bbfad43ca806bd20681ab6cf9900ae6e8ce90ceada9d0",
+      "bytes": 2326,
+      "lines": 83
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "988f08cd7713ed9422f8e8235f860d63e555acab01a463bacf15fbda4dffbcb8",
+      "bytes": 49494,
+      "lines": 1461
+    },
+    {
+      "path": "src/components/Composer.work.test.tsx",
+      "sha256": "8a2f2c878c4b510629fcd8140a9db1f8534f7aa8564dccaf0e2f729603d9e899",
+      "bytes": 7150,
+      "lines": 213
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "740dda175f17441f91ebfdf445dab1f67ee77f3f31308ca6c7f18880b13ee077",
+      "bytes": 48976,
+      "lines": 1475
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "6354f7f20c916d811869cd97cc30cb67dc47b1ace90f3cc673dbfed98865551e",
+      "bytes": 51667,
+      "lines": 1394
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "26cae0029fef3aa3ba40c2af48f0850fd490fb42edb6d9359ccd8bd0bdd28994",
+      "bytes": 45178,
+      "lines": 1260
+    },
+    {
+      "path": "src/App.work-location-review.test.tsx",
+      "sha256": "5b2da77ac3e0d94ea4424253ef66ab183ebde82f5109357441e08a996153094a",
+      "bytes": 3076,
+      "lines": 109
+    }
+  ]
+}

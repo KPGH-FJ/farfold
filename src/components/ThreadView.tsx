@@ -6,6 +6,8 @@ import { MessageResendDialog } from "./MessageResendDialog";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { ConnectionAccount } from "./ConnectionAccount";
 import { ErrorNotice } from "./ErrorNotice";
+import { ArchivedWorkLocationNotice } from "./ArchivedWorkLocationNotice";
+import { currentWorkLocationGuidance } from "../runtime/archived_work_location";
 import { BrowserReadRequest } from "./BrowserReadRequest";
 import { BrowserShareControls } from "./BrowserShareControls";
 import { useBrowserSharing } from "../runtime/browser_sharing";
@@ -391,7 +393,14 @@ export function ThreadView({
   const [reconnecting, setReconnecting] = useState(false);
   const recoveryBusy = reconnecting || thread.reconnecting;
   const recover = () => {
-    if (!activeRef.current || reconnecting || thread.reconnecting || creating)
+    if (
+      !activeRef.current ||
+      reconnecting ||
+      thread.reconnecting ||
+      creating ||
+      (!thread.historyUnavailable &&
+        currentWorkLocationGuidance(thread.cwd)?.kind === "archive")
+    )
       return;
     const key = thread.key;
     const request = ++recoveryRequest.current;
@@ -1146,7 +1155,10 @@ export function ThreadView({
           )}
           <FileFeedbackDrafts key={thread.key} threadKey={thread.key} />
           {recoveryNotice && (
-            <ErrorNotice
+            <ArchivedWorkLocationNotice
+              cwd={thread.cwd}
+              active={active}
+              archiveDetails={recoveryDetails}
               className="banner error-notice"
               role="status"
               title={
@@ -1185,7 +1197,7 @@ export function ThreadView({
                     : STRINGS.thread.reconnect}
                 </button>
               </span>
-            </ErrorNotice>
+            </ArchivedWorkLocationNotice>
           )}
           {draftComposerRef ? (
             <div className="prepared-composer-host" ref={draftComposerRef} />
@@ -1217,7 +1229,9 @@ export function ThreadView({
               imageEnabled={imageOk}
               embedContext={embedContext}
               onGoSettings={onGoSettings}
-              suppressThreadOpenError={Boolean(thread.openError)}
+              suppressThreadOpenError={
+                recoveryNotice || Boolean(thread.openError)
+              }
               disabled={draftReadRequired}
               note={draftReadRequired ? C.readRequired : undefined}
               prepareAction={draftReadRequired ? onGoSettings : undefined}

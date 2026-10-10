@@ -10,6 +10,13 @@ import {
   worktreeErrorMessage,
   worktreeFailureMessage,
 } from "../runtime/worktree_strings";
+import { WorktreeRemovalReview } from "./WorktreeRemovalReview";
+import { WorktreeRecoveries } from "./WorktreeRecoveries";
+import { WorktreeRecoveryForm } from "./WorktreeRecoveryForm";
+import type {
+  WorktreeArchive,
+  WorktreeRecovery,
+} from "../runtime/worktree_types";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { WorktreeCreateForm } from "./WorktreeCreateForm";
 import {
@@ -35,6 +42,12 @@ export function WorktreeDialog({
   const state = useWorktrees();
   const draftStatus = useDraftSaveStatus();
   const [recycle, setRecycle] = useState<WorktreeRecycleSelection | null>(null);
+  const [removal, setRemoval] = useState<WorktreeArchive | null>(null);
+  const [recovering, setRecovering] = useState<WorktreeRecovery | null>(null);
+  const currentRecovering = useRef(recovering);
+  currentRecovering.current = recovering;
+  const currentRemoval = useRef(removal);
+  currentRemoval.current = removal;
   const currentRecycle = useRef(recycle);
   currentRecycle.current = recycle;
   const [inspection, setInspection] = useState<WorktreeInspection | null>(null);
@@ -60,25 +73,41 @@ export function WorktreeDialog({
   const operation = state.operation;
   const maintenanceAction =
     operation?.kind === "operation" &&
-    (operation.action === "archive" || operation.action === "restore");
+    (operation.action === "archive" ||
+      operation.action === "restore" ||
+      operation.action === "remove");
   const operationLabel =
     operation?.kind !== "operation"
       ? S.unknownId
-      : !maintenanceAction
-        ? S.states[operation.state]
-        : operation.state === "ready"
-          ? operation.action === "archive"
-            ? S.archiveReady
-            : S.restoreReady
-          : operation.state === "failed"
-            ? S.recycleFailed
-            : operation.state === "cancelled"
-              ? S.recycleCancelled
-              : operation.state === "unknown"
-                ? S.states.unknown
-                : operation.state === "cancelling"
-                  ? S.states.cancelling
-                  : S.recycleRunning;
+      : operation.action === "recover"
+        ? S.recovery[
+            operation.state === "prepared" ? "preparing" : operation.state
+          ]
+        : operation.action === "remove"
+          ? operation.state === "ready"
+            ? S.removal.ready
+            : operation.state === "failed"
+              ? S.removal.failed
+              : operation.state === "cancelled"
+                ? S.removal.cancelled
+                : operation.state === "unknown"
+                  ? S.removal.unknown
+                  : S.removal.phases[operation.removalPhase]
+          : !maintenanceAction
+            ? S.states[operation.state]
+            : operation.state === "ready"
+              ? operation.action === "archive"
+                ? S.archiveReady
+                : S.restoreReady
+              : operation.state === "failed"
+                ? S.recycleFailed
+                : operation.state === "cancelled"
+                  ? S.recycleCancelled
+                  : operation.state === "unknown"
+                    ? S.states.unknown
+                    : operation.state === "cancelling"
+                      ? S.states.cancelling
+                      : S.recycleRunning;
   const canBegin =
     state.ready &&
     !state.loading &&
@@ -186,13 +215,22 @@ export function WorktreeDialog({
                   : S.unknownId}
             </strong>
             <p>
-              {maintenanceAction
+              {operation?.kind === "operation" && operation.action === "remove"
                 ? state.uncertain
-                  ? S.recycleUnknown
-                  : S.recycleResultNote
-                : state.uncertain
-                  ? S.unknown
-                  : S.delayed}
+                  ? S.removal.unknown
+                  : S.removal.resultNote
+                : operation?.kind === "operation" &&
+                    operation.action === "recover"
+                  ? state.uncertain
+                    ? S.recovery.unknown
+                    : S.recovery.note
+                  : maintenanceAction
+                    ? state.uncertain
+                      ? S.recycleUnknown
+                      : S.recycleResultNote
+                    : state.uncertain
+                      ? S.unknown
+                      : S.delayed}
             </p>
             {state.maintenanceLocked && (
               <p role="status">{S.maintenanceHeld}</p>
@@ -200,9 +238,11 @@ export function WorktreeDialog({
             {operation?.kind === "operation" && operation.code && (
               <p>
                 {operation.code === "cancelled" &&
-                (operation.state !== "cancelled" || maintenanceAction)
+                (operation.state !== "cancelled" ||
+                  maintenanceAction ||
+                  operation.action === "recover")
                   ? S.cancelRequested
-                  : worktreeErrorMessage(operation.code)}
+                  : worktreeErrorMessage(operation.code, operation.action)}
               </p>
             )}
             {operation?.kind === "operation" && operation.targetPath && (
@@ -223,13 +263,21 @@ export function WorktreeDialog({
               operation.settled &&
               !operation.maintenanceActive &&
               (operation.reviewed ? (
-                <p>{S.reviewed}</p>
+                <p>
+                  {operation.action === "remove"
+                    ? S.removal.reviewed
+                    : S.reviewed}
+                </p>
               ) : (
                 <div>
                   {reviewing === operation.operationId ? (
                     <>
                       <p>
-                        {maintenanceAction ? S.recycleReviewNote : S.reviewNote}
+                        {operation.action === "remove"
+                          ? S.removal.reviewNote
+                          : maintenanceAction
+                            ? S.recycleReviewNote
+                            : S.reviewNote}
                       </p>
                       <button
                         type="button"
@@ -281,7 +329,12 @@ export function WorktreeDialog({
                     void worktrees.cancel(state.operationId);
                   }}
                 >
-                  {maintenanceAction ? S.recycleCancelRequest : S.cancel}
+                  {operation?.kind === "operation" &&
+                  operation.action === "remove"
+                    ? S.removal.cancel
+                    : maintenanceAction
+                      ? S.recycleCancelRequest
+                      : S.cancel}
                 </button>
               )}
             </div>
@@ -298,6 +351,33 @@ export function WorktreeDialog({
             {S.refresh}
           </button>
         </div>
+        {recovering && (
+          <WorktreeRecoveryForm
+            key={recovering.id + ":" + recovering.revision}
+            recovery={recovering}
+            current={() =>
+              mounted.current &&
+              currentRecovering.current === recovering &&
+              !draftPersistence.snapshot().interactionLocked &&
+              worktrees.snapshot().recoveries.includes(recovering)
+            }
+            onClose={() =>
+              setRecovering((old) => (old === recovering ? null : old))
+            }
+          />
+        )}
+        {removal && (
+          <WorktreeRemovalReview
+            key={`remove:${removal.id}:${removal.revision}`}
+            archive={removal}
+            current={() =>
+              mounted.current &&
+              currentRemoval.current === removal &&
+              worktrees.snapshot().archives.includes(removal)
+            }
+            onClose={() => setRemoval((old) => (old === removal ? null : old))}
+          />
+        )}
         {recycle && (
           <WorktreeRecycleReview
             key={`${recycle.action}:${recycle.record.id}:${recycle.record.revision}`}
@@ -370,8 +450,11 @@ export function WorktreeDialog({
                       if (
                         canManage() &&
                         worktrees.snapshot().locations.includes(location)
-                      )
+                      ) {
+                        setRecovering(null);
+                        setRemoval(null);
                         setRecycle({ action: "archive", record: location });
+                      }
                     }}
                   >
                     {S.archive}
@@ -442,11 +525,35 @@ export function WorktreeDialog({
                           canManage() &&
                           archive.availability === "verified" &&
                           worktrees.snapshot().archives.includes(archive)
-                        )
+                        ) {
+                          setRecovering(null);
+                          setRemoval(null);
                           setRecycle({ action: "restore", record: archive });
+                        }
                       }}
                     >
                       {S.restore}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      disabled={
+                        busy || !canBegin || archive.availability !== "verified"
+                      }
+                      onClick={() => {
+                        if (
+                          canManage() &&
+                          archive.ownership === "created" &&
+                          archive.availability === "verified" &&
+                          worktrees.snapshot().archives.includes(archive)
+                        ) {
+                          setRecovering(null);
+                          setRecycle(null);
+                          setRemoval(archive);
+                        }
+                      }}
+                    >
+                      {S.removal.open}
                     </button>
                   </div>
                 </li>
@@ -454,6 +561,23 @@ export function WorktreeDialog({
             </ul>
           </section>
         )}
+        <WorktreeRecoveries
+          recoveries={state.recoveries}
+          disabled={busy || state.working || state.loading}
+          recoveryDisabled={!canBegin}
+          onRecover={(recovery) => {
+            if (
+              canManage() &&
+              recovery.availability === "verified" &&
+              worktrees.snapshot().recoveries.includes(recovery)
+            ) {
+              setRecycle(null);
+              setRemoval(null);
+              setRecovering(recovery);
+            }
+          }}
+          onCheck={(r) => void act(() => worktrees.checkRecovery(r))}
+        />
         {state.materials.length > 0 && (
           <section>
             <h3>{S.materials}</h3>

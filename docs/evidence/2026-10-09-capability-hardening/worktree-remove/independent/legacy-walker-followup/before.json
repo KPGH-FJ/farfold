@@ -1,0 +1,14 @@
+{
+  "sourceFiles": [
+    {
+      "path": "src/components/Composer.errors.test.tsx",
+      "sha256": "b5709cdcaaedafa2212049e33a9f119eeb926d1e6e0f5ff64363b1503d7aed3c",
+      "preserved": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/Composer.errors.test.tsx.before.txt"
+    },
+    {
+      "path": "src/components/ThreadView.history-navigation.test.tsx",
+      "sha256": "2d523ab56766e1928742f5302ddb952f34e5e4603a72d0859e0e0420f707de76",
+      "preserved": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/legacy-walker-followup/ThreadView.history-navigation.test.tsx.before.txt"
+    }
+  ]
+}

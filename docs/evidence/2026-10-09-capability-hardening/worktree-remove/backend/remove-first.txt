@@ -1,0 +1,48 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `recycle`
+ --> src/worktrees/remove_manager.rs:5:5
+  |
+5 |     recycle, removal,
+  |     ^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning (run `cargo fix --lib -p farfold --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 27.45s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 3 tests
+test worktrees::recovery_tests::recovery_content_has_no_inode_identity_but_preserves_empty_material ... ok
+private names ["ORIG_HEAD", "commondir", "HEAD", "logs", "index", "COMMIT_EDITMSG", "gitdir"], HEAD Ok("ref: refs/heads/private\n"), branch Some("refs/heads/private")
+test worktrees::recovery_tests::recovery_discovers_deleted_private_ref_log_and_orig_head_drift ... ok
+
+thread 'worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects' (23597280) panicked at src/worktrees/recycle_tests.rs:97:5:
+
+running 1 test
+test worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects ... FAILED
+
+failures:
+
+failures:
+    worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1329 filtered out; finished in 4.82s
+
+
+thread 'worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects' (23597283) panicked at src/worktrees/recovery_tests.rs:118:13:
+assertion `left == right` failed: Operation { kind: "operation", action: "remove", maintenance_active: false, operation_id: "42345678-1234-4123-8123-123456789abc", state: "failed", settled: true, cancel_requested: false, reviewed: false, target_path: None, location: None, archive: None, original_path: Some("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpWIUzyW/owned"), retained_path: Some("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpWIUzyW/.farfold-retained-36a0731f-d1d1-4aba-91e8-a6d453913076/worktree"), code: Some("unsafePath"), removal_phase: Some("preparingRecovery"), delete_dispatched: Some(false), recovery: None, removed: None }
+  left: "failed"
+ right: "prepared"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects ... FAILED
+
+failures:
+
+failures:
+    worktrees::recovery_tests::recovery_two_confirmations_preserve_branch_and_restore_without_source_objects
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 1327 filtered out; finished in 4.83s
+
+error: test failed, to rerun pass `--lib`

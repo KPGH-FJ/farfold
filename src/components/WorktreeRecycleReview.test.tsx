@@ -215,3 +215,46 @@ it("a late completed call cannot close a replacement selection", async () => {
   await settle();
   expect(props.onClose).not.toHaveBeenCalled();
 });
+it("shows one unsent explanation when distinct blocker sources report the same reason", async () => {
+  h.inspect.mockResolvedValue({
+    ...ticket,
+    blockers: ["unsentWork", "unsentWork"],
+    impact: { conversations: 2, unsent: true },
+  });
+  render();
+  await settle();
+  const html = renderToStaticMarkup(render());
+  expect(html.split(S.errors.unsentWork)).toHaveLength(2);
+  expect(button(S.archive).props.disabled).toBe(true);
+  expect(h.recycle).not.toHaveBeenCalled();
+});
+it("an occupied restore destination explains the fixed original path rather than suggesting a new name", async () => {
+  props.selection = {
+    action: "restore",
+    record: {
+      id: record.id,
+      revision: 2,
+      originalPath: record.path,
+      retainedPath: "/keep/tree",
+      repositoryRoot: record.repositoryRoot,
+      branch: record.branch,
+      headOid: record.headOid,
+      ownership: "created",
+      availability: "verified",
+    },
+  };
+  h.inspect.mockResolvedValue({
+    ...ticket,
+    action: "restore",
+    blockers: ["targetExists"],
+  });
+  render();
+  await settle();
+  const html = renderToStaticMarkup(render());
+  expect(html).toContain(
+    "原位置已有文件夹，请先处理或移走该文件夹，再重新检查。",
+  );
+  expect(html).not.toContain(S.errors.targetExists);
+  expect(button(S.restore).props.disabled).toBe(true);
+  expect(h.recycle).not.toHaveBeenCalled();
+});
