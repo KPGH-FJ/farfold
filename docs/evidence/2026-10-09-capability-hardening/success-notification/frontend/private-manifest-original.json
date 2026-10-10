@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "status": "privateDraftNotAppliedNotTested",
+  "baseCommit": "39955ec65a4274cdeac1bab9884f4073c792102a",
+  "owner": "/root/verification",
+  "scope": "P48 shared frontend success reminder; no production/config/test-tree edits",
+  "wire": {
+    "stateRequired": "successEnabled:boolean",
+    "set": "{enabled,successEnabled,sound}",
+    "kind": "success",
+    "oldEnabled": "approval/question/interrupted only",
+    "diagnosticEnabled": "effective preference for diagnostic kind; no new diagnostic fields"
+  },
+  "changes": [
+    "Actual send path begins one WeakMap candidate per exact thread/connection; live official terminal is followed by real projected ending checks.",
+    "Existing in-memory tool/compaction identities and bounded task IDs guard failed, unknown and unfinished work; no prose parsing or durable ledger.",
+    "Fresh request/connection/retired thread invalidates prior candidate; delayed notification rechecks eligibility.",
+    "Separate default-off success preference and settings switch; attention preference and shared sound retained.",
+    "Existing target/dedup/focus/system submission and notification-click route reused; native group gates are peer-owned."
+  ],
+  "sourceFiles": [
+    {
+      "path": "src/components/GeneralSettings.success-notifications.test.tsx",
+      "baseSha256": null,
+      "proposedSha256": "3bf0a978f8e3a760305f5c1c7d77cda9850a42a49741b84a01d15a2182bcb812",
+      "lines": 60
+    },
+    {
+      "path": "src/components/GeneralSettings.test.tsx",
+      "baseSha256": "50d130937224ded4a2ca8ec0ce7dc53b04c20d670efddc7e47237fa44d9713ff",
+      "proposedSha256": "55b0cc368896a0749b548b076277adebcc7b1b9fde86d7ae63b13fdf96ff7498",
+      "lines": 69
+    },
+    {
+      "path": "src/components/GeneralSettings.tsx",
+      "baseSha256": "1637479b76b24b3e566c47d17d2661bd53c3fd4635d46e8299451765fe0eb71e",
+      "proposedSha256": "4317976c9789c7c63087a5673f5501416b27960f0707fc32e8c347ceeb07d0d9",
+      "lines": 638
+    },
+    {
+      "path": "src/runtime/desktop_notifications.channel.test.ts",
+      "baseSha256": "8b3c102c03c85d98ddacd840dca49476654975be668b5ce76f5c5334e5a26ebe",
+      "proposedSha256": "ff717d50e561e2a313f06a0f8a824f379599ef963a1729bd9dfa7d665bfb8714",
+      "lines": 152
+    },
+    {
+      "path": "src/runtime/desktop_notifications.success-channel.test.ts",
+      "baseSha256": null,
+      "proposedSha256": "dd5e7fabc6a5ce8a54177dc6e365fe7315d12d140179c2aa280f74e27010d29e",
+      "lines": 168
+    },
+    {
+      "path": "src/runtime/desktop_notifications.success.test.ts",
+      "baseSha256": null,
+      "proposedSha256": "1e85c520ff6ef3915d77762a78ad159b67b3927860829f26456000fb64862a10",
+      "lines": 159
+    },
+    {
+      "path": "src/runtime/desktop_notifications.test.ts",
+      "baseSha256": "2ad37ac6762b03cca8f5ec2aee5e06a4d270a023ccb6903f5d11071705ebbbb5",
+      "proposedSha256": "feda807c9b9915b34d9cddace9c26dc4a6fca6f7cd8bab1629515e35722386c9",
+      "lines": 782
+    },
+    {
+      "path": "src/runtime/desktop_notifications.ts",
+      "baseSha256": "0a8d45e0b639f74c8cbbe9584afc39e1d079eb86b2e54e1fe54a8a18c5d50fb9",
+      "proposedSha256": "6da735a31f3bc889ffe18082837017fb5b395c21b5d666497548bda90562b56a",
+      "lines": 573
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "baseSha256": "f304c6875864f0bc0f0dbcc46961224da9e608648cbd6c735b3ea64afa16998c",
+      "proposedSha256": "454183f04a0b524c6ba7e5a03c7b2c35ba6e5cd21a96bc4507542747af4320ca",
+      "lines": 1499
+    },
+    {
+      "path": "src/runtime/settings_presentation_strings.ts",
+      "baseSha256": "0513c5b5e3d48b1bc2e988638ade7ce2971b1a1014e91040f80f593ebe9861a3",
+      "proposedSha256": "2b35a40421c0383c146a6c032012ab64196566060c9f552839ce0a0f8d05704c",
+      "lines": 83
+    },
+    {
+      "path": "src/runtime/success_notification.test.ts",
+      "baseSha256": null,
+      "proposedSha256": "47dd9e1a05bb508b0259bb94f12682643a96013f8f84fb2ff47f576c57c621c5",
+      "lines": 270
+    },
+    {
+      "path": "src/runtime/success_notification.ts",
+      "baseSha256": null,
+      "proposedSha256": "3930e37cc6efe4a68951ac6afa5b3eb60c4324b5b25b0356d10b4890761709e3",
+      "lines": 260
+    }
+  ],
+  "patchSha256": "7d587e8998db70c786d01e06af61bc7c165a271ba6ca33a41818885c7304c072",
+  "preparationOnly": {
+    "privateFilesFormatted": true,
+    "sourceApplied": false,
+    "testsExecuted": false,
+    "typecheckExecuted": false,
+    "browserExecuted": false,
+    "notificationsOrPermissionsRequested": false,
+    "agentStarted": false
+  },
+  "afterRelease": [
+    "Recheck every base SHA before applying. Do not overwrite independent source changes.",
+    "For a behavioral baseline red, first apply only desktop_notifications.success-channel.test.ts and run its real-send success case against unchanged production. New helper imports are not a valid preimplementation product red.",
+    "Apply production and remaining tests with coordinated backend DTO. Execute focused success/helper/channel/settings and old notification/navigation regressions plus typecheck.",
+    "Run actual React controlled UI for independent settings, keyboard/narrow layout and delayed preference changes; do not substitute this unexecuted draft for results.",
+    "Root performs full engineering and authorized formal notification delivery separately; P47 actual delivery and Windows cold activation remain unverified."
+  ],
+  "notes": [
+    "sessions.ts proposed line count is below the 1500-file limit; eligibility is extracted into success_notification.ts.",
+    "The prior planning receipt remains unchanged. This is implementable draft code, not a passed test or installed feature."
+  ]
+}

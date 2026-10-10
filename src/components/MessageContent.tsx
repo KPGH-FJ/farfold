@@ -16,6 +16,7 @@ import { attachmentMedia } from "../runtime/message_attachments";
 import { MESSAGE_ATTACHMENTS as A } from "../runtime/message_attachment_strings";
 import { THREAD_VIEW_STRINGS } from "../runtime/thread_view_strings";
 import "../message-attachments.css";
+import { MessageAttachmentMedia } from "./MessageAttachmentMedia";
 import { useSearchExpansion } from "./transcript-search";
 
 export type OpenMessageFile = (path: string, opener: HTMLElement) => void;
@@ -178,13 +179,12 @@ function MessageAttachment({ attachment }: { attachment: Attachment }) {
             </small>
           )}
         </figcaption>
-        {media?.kind === "image" && (
-          <img src={media.src} alt={attachment.name} />
-        )}
-        {media?.kind === "audio" && (
-          <audio controls preload="none" src={media.src}>
-            {A.audioUnavailable}
-          </audio>
+        {media && (
+          <MessageAttachmentMedia
+            key={media.src}
+            media={media}
+            name={attachment.name}
+          />
         )}
         {attachment.uri && (
           <div className="message-file-link" data-find-block>

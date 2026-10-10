@@ -1,0 +1,14 @@
+import fs from 'node:fs'; import path from 'node:path';
+const {webkit,chromium}=await import('/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs');
+const base='output/2026-10-10-success-notification-browser';
+for(const engine of ['webkit','chromium']){
+ const b=await(engine==='webkit'?webkit:chromium).launch({headless:true,executablePath:engine==='webkit'?path.resolve('output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh'):'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
+ const p=await b.newPage({viewport:{width:640,height:620}});const errors=[];p.on('pageerror',e=>errors.push(String(e)));
+ await p.goto('http://127.0.0.1:1503/'+base+'/index.html');const sw=p.getByRole('switch',{name:'工作完成时提醒',exact:true});await sw.waitFor();await p.waitForFunction(()=>!document.querySelector('[aria-label="工作完成时提醒"]').disabled);
+ await sw.click();await p.waitForFunction(()=>document.querySelector('[aria-label="工作完成时提醒"]').getAttribute('aria-checked')==='true');await sw.click();
+ await p.waitForFunction(()=>{const e=document.querySelector('[aria-label="工作完成时提醒"]');return e.getAttribute('aria-checked')==='false'&&getComputedStyle(e,'::after').transform==='none';});
+ await p.getByRole('switch',{name:'需要你时提醒',exact:true}).click();await p.waitForFunction(()=>getComputedStyle(document.querySelector('[aria-label="需要你时提醒"]'),'::after').transform==='matrix(1, 0, 0, 1, 18, 0)');
+ await sw.scrollIntoViewIfNeeded();await p.screenshot({path:base+'/'+engine+'-settled-narrow.png'});
+ const values=await p.getByRole('switch').evaluateAll(es=>es.map(e=>({label:e.getAttribute('aria-label'),checked:e.getAttribute('aria-checked'),transform:getComputedStyle(e,'::after').transform})));
+ fs.writeFileSync(base+'/'+engine+'-visual.json',JSON.stringify({engine,scope:'Actual settings CSS after transition completion; supplement to retained mid-transition original screenshot, no source changes.',values,errors},null,2)+'\n');await b.close();console.log(JSON.stringify({engine,values,errors}));
+}

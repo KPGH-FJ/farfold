@@ -1,0 +1,70 @@
+{
+  "engine": "chromium",
+  "label": "after",
+  "before": {
+    "src-tauri/tauri.conf.json": "c706b854dc18fb44c29a1b07f353efcbd83ccc6c8b836dbe78d1e854224f3c7c",
+    "src/components/MessageContent.tsx": "e1d1642acd7e3631b8f22fea54699895b8c0438400831a64289a1ada5b3bd4f3",
+    "src/components/MessageAttachmentMedia.tsx": "148d864ef4a69a5848a68356c290819058b43f198164723c3b3bec7cae3bfcd5",
+    "src/runtime/message_attachments.ts": "822455bd4349c22f53d7189f7e906a3db5fbd4b6a9deda715d46d1d621b158e0",
+    "src/runtime/message_attachment_strings.ts": "c3ec52ecc5bee9352782277c1be230f72ba45255e9febe10a108330b570ed53c",
+    "output/2026-10-10-media-feedback-patch/browser/fixture.tsx": "2c64eb42b3269d6bb59ca66dc21dc60b3812c47a6230a7d179c9796232e184af",
+    "output/2026-10-10-media-feedback-patch/browser/run-csp.mjs": "5d7c64249080eaa41461144bfedd3ebc0830cb46f89492f93c9a9541f4e49994"
+  },
+  "policy": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self' ipc: http://ipc.localhost; img-src 'self' data: blob: asset: http://asset.localhost; media-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'",
+  "checks": [
+    {
+      "name": "no audio or image existed before exact policy installation",
+      "pass": true
+    },
+    {
+      "name": "production CSP permits the already-admitted valid data audio",
+      "pass": true,
+      "details": {
+        "paused": false,
+        "code": null,
+        "srcPresent": true
+      }
+    },
+    {
+      "name": "valid data audio has no media-src violation",
+      "pass": true
+    },
+    {
+      "name": "bad admitted data produces fixed visible audio error",
+      "pass": true
+    },
+    {
+      "name": "existing data image permission remains working",
+      "pass": true
+    },
+    {
+      "name": "CSP still rejects external audio before network dispatch",
+      "pass": true,
+      "details": []
+    }
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "scope": "Exact current production CSP applied before any fixture media is created. Real production message components and real browser playback/decoders; development scripts were already loaded. This is not the Tauri WebView or proof of its script hashing.",
+  "violations": [
+    {
+      "directive": "media-src",
+      "blockedURI": "https://media.invalid/forbidden.wav",
+      "policy": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; connect-src 'self' ipc: http://ipc.localhost; img-src 'self' data: blob: asset: http://asset.localhost; media-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'"
+    }
+  ],
+  "after": {
+    "src-tauri/tauri.conf.json": "c706b854dc18fb44c29a1b07f353efcbd83ccc6c8b836dbe78d1e854224f3c7c",
+    "src/components/MessageContent.tsx": "e1d1642acd7e3631b8f22fea54699895b8c0438400831a64289a1ada5b3bd4f3",
+    "src/components/MessageAttachmentMedia.tsx": "148d864ef4a69a5848a68356c290819058b43f198164723c3b3bec7cae3bfcd5",
+    "src/runtime/message_attachments.ts": "822455bd4349c22f53d7189f7e906a3db5fbd4b6a9deda715d46d1d621b158e0",
+    "src/runtime/message_attachment_strings.ts": "c3ec52ecc5bee9352782277c1be230f72ba45255e9febe10a108330b570ed53c",
+    "output/2026-10-10-media-feedback-patch/browser/fixture.tsx": "2c64eb42b3269d6bb59ca66dc21dc60b3812c47a6230a7d179c9796232e184af",
+    "output/2026-10-10-media-feedback-patch/browser/run-csp.mjs": "5d7c64249080eaa41461144bfedd3ebc0830cb46f89492f93c9a9541f4e49994"
+  },
+  "sourceUnchanged": true,
+  "results": {
+    "passed": 6,
+    "failed": 0
+  }
+}

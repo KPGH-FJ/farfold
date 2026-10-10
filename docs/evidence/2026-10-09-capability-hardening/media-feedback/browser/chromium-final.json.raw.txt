@@ -1,0 +1,232 @@
+{
+  "engine": "chromium",
+  "label": "final",
+  "scope": "Production MessageContent/MessageAttachments/attachment normalization and actual StrictMode/DOM/image decoder/audio media elements. A component browser fixture, not full App/native/Agent or OS delivery.",
+  "before": {
+    "src/components/MessageContent.tsx": "e1d1642acd7e3631b8f22fea54699895b8c0438400831a64289a1ada5b3bd4f3",
+    "src/components/MessageAttachmentMedia.tsx": "148d864ef4a69a5848a68356c290819058b43f198164723c3b3bec7cae3bfcd5",
+    "src/components/transcript-search.tsx": "81a47ddc1cd7493eac9c64d94b6904d6173ce0da4ede626e2a344d63b2509ee8",
+    "src/runtime/message_attachments.ts": "822455bd4349c22f53d7189f7e906a3db5fbd4b6a9deda715d46d1d621b158e0",
+    "src/runtime/message_attachment_strings.ts": "c3ec52ecc5bee9352782277c1be230f72ba45255e9febe10a108330b570ed53c",
+    "src/runtime/transcript_search.ts": "140e3627ec63df594f7172fcb3a74a3e211d9fa669f4606367e3b37bf425ec31",
+    "src/runtime/message-link.ts": "7dc049264186d77c0c51b28ac358ef2269526ac6ae3a8a1b1d43f3adac1e0ab7",
+    "src/runtime/conversation_redesign_strings.ts": "f4b8901be6e3175ec6e98457d08a2d5fc15b9b6f5c19b181e751b1fb783be130",
+    "src/runtime/thread_view_strings.ts": "b9423afb030600bb12ff8bb4defc1b58f8c21319a966c24b43f80cc14d90acea",
+    "src/agent-hub.css": "903cb49f3b89bf7f4dacf42bb305cbbf9d3f33a7c98b393f79c06f628bdb4ad9",
+    "src/agent-redesign.css": "14c28e6f381b248d878a5fc455ae5174d46bfa875f7486533a7e792ffe52af91",
+    "src/agent-setup-presentation.css": "d6ccf7aebfa29deeb13c9b04163c508acd0f2b94b59dc36f918d78ec3b348851",
+    "src/api-settings.css": "aeb0187d615dcef6e11c4747a0669e4058be50c4c8ca035b0b58607a49e74099",
+    "src/attachment-review.css": "b2de62d822c679e423114c9acd91f7a4fd3a111a8023149eb4265ca05d25e380",
+    "src/browser-workspace.css": "e71b6f94f554c8c1230983e4db4cae2beeb4de69da9900995745edd2b8231f6a",
+    "src/command-palette.css": "119a52ff2ad2b065ef93039e632d3ea2bdf97c3ca3d8da7d330f83fc325ce111",
+    "src/compaction.css": "b79528e45d6ef7e179db6b989f6cafc262fe619f555624a208743fd2dbc911e2",
+    "src/components/AgentExtensionInventory.css": "732481949295d1ce3fb7668d9dadd78ae155fbc37b7022b0e0a4c6a9b4cef921",
+    "src/components/AsyncTasks.css": "34b6ca977558539e10f6780ef7e8e3b82204a0692d4ebb6ddabac8a6dd015749",
+    "src/components/DocxFilePreview.css": "45b60dfbe10f875975d59c8120213ce2ae95fa9c9d53598f2134091fe0acbfe5",
+    "src/components/LoadedSearchResults.css": "b5b8a7de89534eb2d16cddfb9704b80513d38903338c9af260e834276fbc9dd8",
+    "src/components/ProjectFileScanNotice.css": "1ee747020b5455a6022cefdb5ecb58b96de775d630598eba9ed3ab2fd94f4bb4",
+    "src/components/ReportedFilesList.css": "1b5103c11349ca2495c2861ef33964559d9d1a6ea24d79c059ea145771a10656",
+    "src/components/SourceTextSelection.css": "9c71277b59e4706e9d1d4c878fb46963a29a46fe91b06e3a192fc59a68ff6de8",
+    "src/components/StorageRecovery.css": "8588d684a03224061e09f701f23e8e85c82cc023a64961e575f2800aa319b59c",
+    "src/components/TextBlockPreview.css": "e1f083ae7f739a37ed920df7970d75fb30f8a9c213f6f1ed2b940e9609aee1e7",
+    "src/components/VisualFilePreview.css": "d8577f691f6a607239b647f60894030ee1b70a8e86a17fb42b64597ba3bb1eb0",
+    "src/components/WorkbookFilePreview.css": "c123d708d526f0bc54562a256a713a98c566d7aa5490b8fff7e245a199b9a0f2",
+    "src/components/WorktreeDialog.css": "26032a3d426972c28a50d3f0c0e4ef7982c0b74971e96da5bfae8f1afe799d16",
+    "src/components/WorktreePreparationDialog.css": "61f9ca5b01199ddb03db15d1666c6a13267e4e035abed0d232e2a68d0aa7a49f",
+    "src/conversation-redesign.css": "acdc215a66d8001e6c1d596bdc18922eb6b6828a38799acd6cdd6a284a52e6ea",
+    "src/conversation-workspace.css": "a6f6f686ff0031ba66a54dee3b198ea3a552fb3641e5c0546c914cb8fc3839f2",
+    "src/desktop-workbench.css": "4ea973fb9582c3abe5eee7d966e1e22a788207102997985306d14881cb137609",
+    "src/general-settings.css": "ef805811fa40ec0db7cdddd6efd251468675b972361340a3bc273738181b5a01",
+    "src/history-import.css": "4b0e1971afcfe8f5ca11d753377d10ce14a6739b2fd649d59e3aa4a00060bdc1",
+    "src/library-dialogs.css": "fededc2fd3c7a0b157dbfd2449cb571a33b83dba44b0bdb514345e02f0090db3",
+    "src/lifemodel-settings.css": "5aa2fb1b70ef3831ceea6bcaa34bd5719830da3fe5a90a6384a868eae427928c",
+    "src/message-attachments.css": "e3f41f1646cff5b1356e9c4db0b017c4a6ae87d545a5a0b753e4d842c9f8b3f7",
+    "src/new-conversation-pickers.css": "ceccbcbb60c17674fa4f50ae829703620d052d42782d57a05be50b5fe89867ee",
+    "src/product-shell.css": "2a9288c73edc98446bcfe2a336cbb6fc32b64a1e614baa8edc4c1e591fa4abe8",
+    "src/r5-agent-access.css": "e3296456411b243e91a161193864c9101f9d3b6751f5d3abbf8e80a83c0a204e",
+    "src/r5-program-access.css": "9fadfa3cc664ce11533efc8d278c83116a2faee55714bb78911f7706ddb6643a",
+    "src/settings-library-redesign.css": "50155114bad82aa30970287c85ce21087e60eba3cf022ebfe3e8925095e8e740",
+    "src/styles-artifact.css": "577f12c405866c85a96f776d3bca14f179c5d3d1aa631a18f8fff3b5b16cd780",
+    "src/styles-content.css": "063be3a6a9e860567d872b0a75e9d2afddb795ed51a78bcd8c47ef8b2377f441",
+    "src/styles-settings.css": "b94f0e508f2d6122dc5ff64ce08fe339a058f9c3ef334c9d8e432adaef781325",
+    "src/styles-thread.css": "f91a36084736da8c983d1bd4ec99f30bb907753cc920478e17227956424dfb01",
+    "src/styles.css": "348b4467d75e40afeab15495360243fe6e7ef626c683e265323f37bdcbda2d19",
+    "src/thread-usage.css": "afce250d5cb93afc754874aafec981497284d3b823d6f3419880fd51726065bf",
+    "output/2026-10-10-media-feedback-patch/browser/fixture.tsx": "0512b42380d0cfccdb036536d9f1b76d7103d265505bae605dd7a57bb6635791",
+    "output/2026-10-10-media-feedback-patch/browser/index.html": "7bee5c0ec0bacf75d90b2fc93df3deea81433d30c2a26e79084f7381f446539a",
+    "output/2026-10-10-media-feedback-patch/browser/serve.mjs": "29a3ab591dcd3c4843d115ce7f6370be4ac88cac2dfa67d2bbbdbba0ed9ff07d",
+    "output/2026-10-10-media-feedback-patch/browser/run.mjs": "d08bda3fd32cc50113757acf4e62a27e1d1f354318811bd0430601f87fcda6a8",
+    "vite.config.ts": "3770462d5600228e529ec36255ff112cf63c9504342d5e8000cc763fc36f63c0",
+    "pnpm-lock.yaml": "a7fc78bdd0b477c3a7c17b1a5129ff32200e4c3ad687c7a1ce70ad0e691412de"
+  },
+  "checks": [
+    {
+      "name": "real React StrictMode effect replay ran",
+      "pass": true,
+      "details": {
+        "mounts": 2,
+        "cleanups": 1
+      }
+    },
+    {
+      "name": "initial collapsed messages instantiate no media",
+      "pass": true
+    },
+    {
+      "name": "search-only expansion does not load media",
+      "pass": true
+    },
+    {
+      "name": "corrupt image reaches real browser decoder failure",
+      "pass": true,
+      "details": [
+        {
+          "event": "error",
+          "tag": "IMG",
+          "id": "bad-image"
+        }
+      ]
+    },
+    {
+      "name": "image decoder failure has accessible feedback",
+      "pass": true
+    },
+    {
+      "name": "image failed element identifies feedback",
+      "pass": true
+    },
+    {
+      "name": "explicit image retry replaces only same admitted source",
+      "pass": true
+    },
+    {
+      "name": "retry keyboard focus remains local",
+      "pass": true
+    },
+    {
+      "name": "audio stays user controlled before play",
+      "pass": true
+    },
+    {
+      "name": "corrupt audio reaches actual media error",
+      "pass": true,
+      "details": [
+        {
+          "event": "error",
+          "tag": "AUDIO",
+          "id": "bad-audio",
+          "code": 4
+        }
+      ]
+    },
+    {
+      "name": "audio playback failure has accessible feedback",
+      "pass": true
+    },
+    {
+      "name": "audio retry uses same data and does not autoplay",
+      "pass": true
+    },
+    {
+      "name": "valid image decodes without failure/retry chrome",
+      "pass": true
+    },
+    {
+      "name": "audio retains exact source through StrictMode ref replay",
+      "pass": true
+    },
+    {
+      "name": "valid audio actually starts without false failure",
+      "pass": true
+    },
+    {
+      "name": "closing releases only owned playing audio",
+      "pass": false
+    },
+    {
+      "name": "reopen gives fresh paused same-source player",
+      "pass": true
+    },
+    {
+      "name": "remote and active image sources never instantiate media",
+      "pass": true
+    },
+    {
+      "name": "no external network requests attempted",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "body order and exact attachment input unchanged",
+      "pass": true
+    },
+    {
+      "name": "unmount clears owned source without fetching replacement",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "after": {
+    "src/components/MessageContent.tsx": "e1d1642acd7e3631b8f22fea54699895b8c0438400831a64289a1ada5b3bd4f3",
+    "src/components/MessageAttachmentMedia.tsx": "148d864ef4a69a5848a68356c290819058b43f198164723c3b3bec7cae3bfcd5",
+    "src/components/transcript-search.tsx": "81a47ddc1cd7493eac9c64d94b6904d6173ce0da4ede626e2a344d63b2509ee8",
+    "src/runtime/message_attachments.ts": "822455bd4349c22f53d7189f7e906a3db5fbd4b6a9deda715d46d1d621b158e0",
+    "src/runtime/message_attachment_strings.ts": "c3ec52ecc5bee9352782277c1be230f72ba45255e9febe10a108330b570ed53c",
+    "src/runtime/transcript_search.ts": "140e3627ec63df594f7172fcb3a74a3e211d9fa669f4606367e3b37bf425ec31",
+    "src/runtime/message-link.ts": "7dc049264186d77c0c51b28ac358ef2269526ac6ae3a8a1b1d43f3adac1e0ab7",
+    "src/runtime/conversation_redesign_strings.ts": "f4b8901be6e3175ec6e98457d08a2d5fc15b9b6f5c19b181e751b1fb783be130",
+    "src/runtime/thread_view_strings.ts": "b9423afb030600bb12ff8bb4defc1b58f8c21319a966c24b43f80cc14d90acea",
+    "src/agent-hub.css": "903cb49f3b89bf7f4dacf42bb305cbbf9d3f33a7c98b393f79c06f628bdb4ad9",
+    "src/agent-redesign.css": "14c28e6f381b248d878a5fc455ae5174d46bfa875f7486533a7e792ffe52af91",
+    "src/agent-setup-presentation.css": "d6ccf7aebfa29deeb13c9b04163c508acd0f2b94b59dc36f918d78ec3b348851",
+    "src/api-settings.css": "aeb0187d615dcef6e11c4747a0669e4058be50c4c8ca035b0b58607a49e74099",
+    "src/attachment-review.css": "b2de62d822c679e423114c9acd91f7a4fd3a111a8023149eb4265ca05d25e380",
+    "src/browser-workspace.css": "e71b6f94f554c8c1230983e4db4cae2beeb4de69da9900995745edd2b8231f6a",
+    "src/command-palette.css": "119a52ff2ad2b065ef93039e632d3ea2bdf97c3ca3d8da7d330f83fc325ce111",
+    "src/compaction.css": "b79528e45d6ef7e179db6b989f6cafc262fe619f555624a208743fd2dbc911e2",
+    "src/components/AgentExtensionInventory.css": "732481949295d1ce3fb7668d9dadd78ae155fbc37b7022b0e0a4c6a9b4cef921",
+    "src/components/AsyncTasks.css": "34b6ca977558539e10f6780ef7e8e3b82204a0692d4ebb6ddabac8a6dd015749",
+    "src/components/DocxFilePreview.css": "45b60dfbe10f875975d59c8120213ce2ae95fa9c9d53598f2134091fe0acbfe5",
+    "src/components/LoadedSearchResults.css": "b5b8a7de89534eb2d16cddfb9704b80513d38903338c9af260e834276fbc9dd8",
+    "src/components/ProjectFileScanNotice.css": "1ee747020b5455a6022cefdb5ecb58b96de775d630598eba9ed3ab2fd94f4bb4",
+    "src/components/ReportedFilesList.css": "1b5103c11349ca2495c2861ef33964559d9d1a6ea24d79c059ea145771a10656",
+    "src/components/SourceTextSelection.css": "9c71277b59e4706e9d1d4c878fb46963a29a46fe91b06e3a192fc59a68ff6de8",
+    "src/components/StorageRecovery.css": "8588d684a03224061e09f701f23e8e85c82cc023a64961e575f2800aa319b59c",
+    "src/components/TextBlockPreview.css": "e1f083ae7f739a37ed920df7970d75fb30f8a9c213f6f1ed2b940e9609aee1e7",
+    "src/components/VisualFilePreview.css": "d8577f691f6a607239b647f60894030ee1b70a8e86a17fb42b64597ba3bb1eb0",
+    "src/components/WorkbookFilePreview.css": "c123d708d526f0bc54562a256a713a98c566d7aa5490b8fff7e245a199b9a0f2",
+    "src/components/WorktreeDialog.css": "26032a3d426972c28a50d3f0c0e4ef7982c0b74971e96da5bfae8f1afe799d16",
+    "src/components/WorktreePreparationDialog.css": "61f9ca5b01199ddb03db15d1666c6a13267e4e035abed0d232e2a68d0aa7a49f",
+    "src/conversation-redesign.css": "acdc215a66d8001e6c1d596bdc18922eb6b6828a38799acd6cdd6a284a52e6ea",
+    "src/conversation-workspace.css": "a6f6f686ff0031ba66a54dee3b198ea3a552fb3641e5c0546c914cb8fc3839f2",
+    "src/desktop-workbench.css": "4ea973fb9582c3abe5eee7d966e1e22a788207102997985306d14881cb137609",
+    "src/general-settings.css": "ef805811fa40ec0db7cdddd6efd251468675b972361340a3bc273738181b5a01",
+    "src/history-import.css": "4b0e1971afcfe8f5ca11d753377d10ce14a6739b2fd649d59e3aa4a00060bdc1",
+    "src/library-dialogs.css": "fededc2fd3c7a0b157dbfd2449cb571a33b83dba44b0bdb514345e02f0090db3",
+    "src/lifemodel-settings.css": "5aa2fb1b70ef3831ceea6bcaa34bd5719830da3fe5a90a6384a868eae427928c",
+    "src/message-attachments.css": "e3f41f1646cff5b1356e9c4db0b017c4a6ae87d545a5a0b753e4d842c9f8b3f7",
+    "src/new-conversation-pickers.css": "ceccbcbb60c17674fa4f50ae829703620d052d42782d57a05be50b5fe89867ee",
+    "src/product-shell.css": "2a9288c73edc98446bcfe2a336cbb6fc32b64a1e614baa8edc4c1e591fa4abe8",
+    "src/r5-agent-access.css": "e3296456411b243e91a161193864c9101f9d3b6751f5d3abbf8e80a83c0a204e",
+    "src/r5-program-access.css": "9fadfa3cc664ce11533efc8d278c83116a2faee55714bb78911f7706ddb6643a",
+    "src/settings-library-redesign.css": "50155114bad82aa30970287c85ce21087e60eba3cf022ebfe3e8925095e8e740",
+    "src/styles-artifact.css": "577f12c405866c85a96f776d3bca14f179c5d3d1aa631a18f8fff3b5b16cd780",
+    "src/styles-content.css": "063be3a6a9e860567d872b0a75e9d2afddb795ed51a78bcd8c47ef8b2377f441",
+    "src/styles-settings.css": "b94f0e508f2d6122dc5ff64ce08fe339a058f9c3ef334c9d8e432adaef781325",
+    "src/styles-thread.css": "f91a36084736da8c983d1bd4ec99f30bb907753cc920478e17227956424dfb01",
+    "src/styles.css": "348b4467d75e40afeab15495360243fe6e7ef626c683e265323f37bdcbda2d19",
+    "src/thread-usage.css": "afce250d5cb93afc754874aafec981497284d3b823d6f3419880fd51726065bf",
+    "output/2026-10-10-media-feedback-patch/browser/fixture.tsx": "0512b42380d0cfccdb036536d9f1b76d7103d265505bae605dd7a57bb6635791",
+    "output/2026-10-10-media-feedback-patch/browser/index.html": "7bee5c0ec0bacf75d90b2fc93df3deea81433d30c2a26e79084f7381f446539a",
+    "output/2026-10-10-media-feedback-patch/browser/serve.mjs": "29a3ab591dcd3c4843d115ce7f6370be4ac88cac2dfa67d2bbbdbba0ed9ff07d",
+    "output/2026-10-10-media-feedback-patch/browser/run.mjs": "d08bda3fd32cc50113757acf4e62a27e1d1f354318811bd0430601f87fcda6a8",
+    "vite.config.ts": "3770462d5600228e529ec36255ff112cf63c9504342d5e8000cc763fc36f63c0",
+    "pnpm-lock.yaml": "a7fc78bdd0b477c3a7c17b1a5129ff32200e4c3ad687c7a1ce70ad0e691412de"
+  },
+  "sourceUnchanged": true,
+  "results": {
+    "passed": 20,
+    "failed": 1
+  }
+}

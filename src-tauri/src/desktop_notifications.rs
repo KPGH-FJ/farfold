@@ -1,8 +1,11 @@
 //! Optional, content-free desktop reminders. Submission is not proof of delivery.
 //! The system receives only a digest of an existing index row, never its path.
 mod diagnostic;
+mod tickets;
 pub(crate) use diagnostic::DiagnosticSnapshot;
 use diagnostic::{Attempt, DiagnosticStore, Reason, Stage};
+pub use tickets::Withdrawal;
+use tickets::{Rejection, Ticket, Tickets};
 #[cfg(target_os = "macos")]
 mod native;
 #[cfg(windows)]
@@ -31,6 +34,8 @@ const SAVE_ERROR: &str = "提醒设置未能保存，仍使用之前的选择";
 struct Preference {
     version: u8,
     enabled: bool,
+    #[serde(default, rename = "successEnabled")]
+    success_enabled: bool,
     #[serde(default)]
     sound: bool,
 }
@@ -39,6 +44,7 @@ fn read_preference(store: &MetaStore) -> Result<Preference, String> {
         return Ok(Preference {
             version: 1,
             enabled: false,
+            success_enabled: false,
             sound: false,
         });
     };
@@ -48,11 +54,17 @@ fn read_preference(store: &MetaStore) -> Result<Preference, String> {
     }
     Ok(preference)
 }
-fn save_preference(store: &MetaStore, enabled: bool, sound: bool) -> Result<Preference, String> {
+fn save_preference(
+    store: &MetaStore,
+    enabled: bool,
+    success_enabled: bool,
+    sound: bool,
+) -> Result<Preference, String> {
     read_preference(store)?;
     let preference = Preference {
         version: 1,
         enabled,
+        success_enabled,
         sound,
     };
     let value = serde_json::to_value(&preference).map_err(|_| SAVE_ERROR)?;
@@ -115,6 +127,7 @@ impl SystemSettings {
 #[serde(rename_all = "camelCase")]
 pub struct NotificationState {
     enabled: bool,
+    success_enabled: bool,
     sound: bool,
     click_requires_running: bool,
     #[serde(flatten)]
@@ -123,6 +136,7 @@ pub struct NotificationState {
 fn snapshot(preference: Preference, system: SystemSettings) -> NotificationState {
     NotificationState {
         enabled: preference.enabled,
+        success_enabled: preference.success_enabled,
         sound: preference.sound,
         click_requires_running: cfg!(windows),
         system,
@@ -132,18 +146,38 @@ fn snapshot(preference: Preference, system: SystemSettings) -> NotificationState
 fn save_confirmed_preference(
     store: &MetaStore,
     enabled: bool,
+    success_enabled: bool,
     sound: bool,
     system: SystemSettings,
 ) -> Result<Preference, String> {
-    if enabled && system.permission == Permission::Unknown {
-        return Err("系统通知许可尚未确认，原设置保持不变".into());
+    let previous = read_preference(store)?;
+    if system.permission == Permission::Unknown {
+        // Unknown permission cannot enable a new kind or change an enabled
+        // sound choice, but explicitly disabling one kind preserves the other.
+        if requests_permission(&previous, enabled, success_enabled)
+            || ((enabled || success_enabled) && sound != previous.sound)
+        {
+            return Err("系统通知许可尚未确认，原设置保持不变".into());
+        }
+        return save_preference(store, enabled, success_enabled, sound);
     }
-    save_preference(store, enabled && system.allowed(), sound)
+    save_preference(
+        store,
+        // An unchanged saved choice is not a new authorization request. A
+        // denial while disabling the other kind must not erase that choice.
+        enabled && (previous.enabled || system.allowed()),
+        success_enabled && (previous.success_enabled || system.allowed()),
+        sound,
+    )
+}
+
+fn requests_permission(previous: &Preference, enabled: bool, success_enabled: bool) -> bool {
+    (enabled && !previous.enabled) || (success_enabled && !previous.success_enabled)
 }
 
 #[derive(Default)]
 pub struct DesktopNotifications {
-    seen: Mutex<VecDeque<(String, u64)>>,
+    tickets: Tickets,
     pending: Mutex<VecDeque<String>>,
     changes: tokio::sync::Mutex<()>,
     revision: AtomicU64,
@@ -179,6 +213,7 @@ pub enum NoticeKind {
     Approval,
     Question,
     Interrupted,
+    Success,
 }
 impl NoticeKind {
     fn body(self) -> &'static str {
@@ -186,6 +221,15 @@ impl NoticeKind {
             Self::Approval => "有一项批准请求需要你处理。请回到 Farfold 查看。",
             Self::Question => "有一个问题需要你回答。请回到 Farfold 查看。",
             Self::Interrupted => "有一项工作需要你检查。请回到 Farfold 查看。",
+            Self::Success => "有一项工作已完成。请回到 Farfold 查看。",
+        }
+    }
+}
+impl Preference {
+    fn enabled_for(&self, kind: NoticeKind) -> bool {
+        match kind {
+            NoticeKind::Success => self.success_enabled,
+            NoticeKind::Approval | NoticeKind::Question | NoticeKind::Interrupted => self.enabled,
         }
     }
 }
@@ -208,6 +252,7 @@ pub async fn desktop_notifications_get(app: AppHandle) -> Result<NotificationSta
 pub async fn desktop_notifications_set(
     app: AppHandle,
     enabled: bool,
+    success_enabled: bool,
     sound: bool,
 ) -> Result<NotificationState, String> {
     let state = app.state::<DesktopNotifications>();
@@ -217,35 +262,26 @@ pub async fn desktop_notifications_set(
         .map_err(|_| "提醒设置正在保存，请稍后重试")?;
     state.revision.fetch_add(1, Ordering::SeqCst);
     let previous = read_preference(app.state::<MetaStore>().inner())?;
-    // Disabling must work even when the system center is unavailable.
-    let system = if enabled {
-        native::settings(&app, !previous.enabled).await?
+    let request = requests_permission(&previous, enabled, success_enabled);
+    let only_disabling = !request
+        && sound == previous.sound
+        && ((previous.enabled && !enabled) || (previous.success_enabled && !success_enabled));
+    // Disabling either kind works even when the system center is unavailable.
+    let system = if (enabled || success_enabled) && !only_disabling {
+        native::settings(&app, request).await?
     } else {
         native::settings(&app, false)
             .await
             .unwrap_or_else(|_| SystemSettings::unknown())
     };
-    let preference =
-        save_confirmed_preference(app.state::<MetaStore>().inner(), enabled, sound, system)?;
+    let preference = save_confirmed_preference(
+        app.state::<MetaStore>().inner(),
+        enabled,
+        success_enabled,
+        sound,
+        system,
+    )?;
     Ok(snapshot(preference, system))
-}
-fn claim(seen: &mut VecDeque<(String, u64)>, renderer: &str, sequence: u64) -> bool {
-    if renderer.len() != 32
-        || !renderer
-            .bytes()
-            .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
-    {
-        return false;
-    }
-    let key = (renderer.to_owned(), sequence);
-    if sequence == 0 || seen.contains(&key) {
-        return false;
-    }
-    seen.push_back(key);
-    if seen.len() > 256 {
-        seen.pop_front();
-    }
-    true
 }
 fn target_digest(key: &str) -> String {
     Sha256::digest(format!("farfold-notification-v1\0{key}"))
@@ -274,31 +310,59 @@ fn resolve_target(store: &MetaStore, digest: &str) -> Option<String> {
     }
     Some(row.id)
 }
-fn may_submit(app: &AppHandle, revision: u64, attempt: &Attempt) -> bool {
+// Shared by the initial gate and both platforms' final submission gates.
+fn preference_gate(
+    store: &MetaStore,
+    kind: NoticeKind,
+    expected_revision: u64,
+    current_revision: u64,
+) -> Result<(), Reason> {
+    if expected_revision != current_revision {
+        return Err(Reason::PreferenceChanged);
+    }
+    match read_preference(store) {
+        Ok(preference) if preference.enabled_for(kind) => Ok(()),
+        Ok(_) => Err(Reason::PreferenceOff),
+        Err(_) => Err(Reason::PreferenceUnreadable),
+    }
+}
+
+fn may_submit(
+    app: &AppHandle,
+    ticket: &Ticket,
+    kind: NoticeKind,
+    revision: u64,
+    attempt: &Attempt,
+) -> bool {
     let state = app.state::<DesktopNotifications>();
     let Ok(_change) = state.changes.try_lock() else {
         diagnostic_stop(app, attempt, Stage::Backend, Reason::ChangeBusy);
         return false;
     };
-    may_submit_locked(app, revision, attempt, Stage::Backend)
+    may_submit_locked(app, ticket, kind, revision, attempt, Stage::Backend)
 }
 // Caller keeps changes locked through the final, nonblocking system submission.
-fn may_submit_locked(app: &AppHandle, revision: u64, attempt: &Attempt, stage: Stage) -> bool {
+fn may_submit_locked(
+    app: &AppHandle,
+    ticket: &Ticket,
+    kind: NoticeKind,
+    revision: u64,
+    attempt: &Attempt,
+    stage: Stage,
+) -> bool {
     let state = app.state::<DesktopNotifications>();
-    if state.revision.load(Ordering::SeqCst) != revision {
-        diagnostic_stop(app, attempt, stage, Reason::PreferenceChanged);
+    if !ticket.pending() {
+        diagnostic_stop(app, attempt, stage, Reason::AttemptRetired);
         return false;
     }
-    match read_preference(app.state::<MetaStore>().inner()) {
-        Ok(preference) if preference.enabled => {}
-        Ok(_) => {
-            diagnostic_stop(app, attempt, stage, Reason::PreferenceOff);
-            return false;
-        }
-        Err(_) => {
-            diagnostic_stop(app, attempt, stage, Reason::PreferenceUnreadable);
-            return false;
-        }
+    if let Err(reason) = preference_gate(
+        app.state::<MetaStore>().inner(),
+        kind,
+        revision,
+        state.revision.load(Ordering::SeqCst),
+    ) {
+        diagnostic_stop(app, attempt, stage, reason);
+        return false;
     }
     let Some(window) = app.get_webview_window("main") else {
         diagnostic_stop(app, attempt, stage, Reason::MainWindowMissing);
@@ -328,27 +392,24 @@ pub async fn desktop_notification_submit(
     let state = app.state::<DesktopNotifications>();
     let attempt = state.diagnostic.begin(&renderer_nonce, sequence);
     let revision = state.revision.load(Ordering::SeqCst);
-    let claimed = {
-        let mut seen = state.seen.lock().map_err(|_| {
-            diagnostic_stop(&app, &attempt, Stage::Backend, Reason::ClaimUnavailable);
-            "提醒未能提交"
-        })?;
-        claim(&mut seen, &renderer_nonce, sequence)
+    let ticket = match state.tickets.claim(&renderer_nonce, sequence) {
+        Ok(ticket) => ticket,
+        Err(rejection) => {
+            diagnostic_stop(
+                &app,
+                &attempt,
+                Stage::Backend,
+                match rejection {
+                    Rejection::Invalid => Reason::InvalidAttempt,
+                    Rejection::Duplicate => Reason::Duplicate,
+                    Rejection::OutOfOrder => Reason::AttemptOutOfOrder,
+                    Rejection::Capacity | Rejection::Unavailable => Reason::ClaimUnavailable,
+                },
+            );
+            return Ok(Submission::Suppressed);
+        }
     };
-    if !claimed {
-        diagnostic_stop(
-            &app,
-            &attempt,
-            Stage::Backend,
-            if sequence == 0 || !diagnostic::valid_renderer(&renderer_nonce) {
-                Reason::InvalidAttempt
-            } else {
-                Reason::Duplicate
-            },
-        );
-        return Ok(Submission::Suppressed);
-    }
-    if !may_submit(&app, revision, &attempt) {
+    if !may_submit(&app, &ticket, kind, revision, &attempt) {
         return Ok(Submission::Suppressed);
     }
     let store = app.state::<MetaStore>();
@@ -374,7 +435,7 @@ pub async fn desktop_notification_submit(
         diagnostic_stop(&app, &attempt, Stage::Backend, Reason::SystemNotAllowed);
         return Ok(Submission::Suppressed);
     }
-    if !may_submit(&app, revision, &attempt) {
+    if !may_submit(&app, &ticket, kind, revision, &attempt) {
         return Ok(Submission::Suppressed);
     }
     let sound = preference.sound && system.system_sound != Some(false);
@@ -384,10 +445,11 @@ pub async fn desktop_notification_submit(
     let submitted = native::submit(
         &app,
         target_digest(&target_key),
-        kind.body(),
+        kind,
         sound,
         revision,
         attempt,
+        ticket,
     )
     .await?;
     Ok(if submitted {
@@ -395,6 +457,17 @@ pub async fn desktop_notification_submit(
     } else {
         Submission::Suppressed
     })
+}
+
+#[tauri::command]
+pub fn desktop_notification_withdraw(
+    app: AppHandle,
+    renderer_nonce: String,
+    sequence: u64,
+) -> Withdrawal {
+    app.state::<DesktopNotifications>()
+        .tickets
+        .withdraw(&renderer_nonce, sequence)
 }
 
 fn activate(app: &AppHandle, digest: &str) {

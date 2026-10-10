@@ -1,0 +1,694 @@
+{
+  "engine": "webkit",
+  "label": "shared-final",
+  "before": {
+    "src/components/GeneralSettings.tsx": "4317976c9789c7c63087a5673f5501416b27960f0707fc32e8c347ceeb07d0d9",
+    "src/runtime/desktop_notifications.ts": "af1895332374c7e8ec37971004e556926aad41630b5956a60eaf93a6866d57b7",
+    "src/runtime/success_notification.ts": "c610573ac6d78bb700203e714111e7a9094bdbcd1389e02404b5b178f681e482",
+    "src/runtime/sessions.ts": "93754212761e08d20c35991ce8d102d4e923da0c5e622c637df00ce483b59066",
+    "src/runtime/session_projection.ts": "26936e5136ff294a5d7709385c754f061f01cbe8a43ed99ea395e8ef8f0ded79",
+    "src/runtime/async_tasks.ts": "08ea8a83bf5f1e3ed6ed94122087b1211c9165d80d242a04029e4e458428127f",
+    "src/runtime/session_types.ts": "8d1bdcc0fd993d75a7e42417d3c31e8a22f437ea10db83777d23b0363e5ed3ee",
+    "src/runtime/settings_presentation_strings.ts": "2b35a40421c0383c146a6c032012ab64196566060c9f552839ce0a0f8d05704c",
+    "output/2026-10-10-success-notification-browser/fixture.tsx": "738cca41cb7d527311ae919147774e69ed5bdf5d8f3c2d2ffc14479dc95f7521",
+    "output/2026-10-10-success-notification-browser/index.html": "1d3f53de5392e9ec6356a1fd2567bcf969ae13c88cadd6240490b75241e3370c",
+    "output/2026-10-10-success-notification-browser/serve.mjs": "e7239ca7af063fff625982c365e3bc9b6f25aa89364434b66ebce4ba599fb59c",
+    "output/2026-10-10-success-notification-browser/run.mjs": "2ff706d937426176fb4cee054e628aed999389297358ec03b9d2e73a6bc12645"
+  },
+  "checks": [
+    {
+      "name": "StrictMode initial render preserves both off without writing",
+      "pass": true
+    },
+    {
+      "name": "keyboard reaches independent success switch (WebKit Option+Tab, Chromium Tab)",
+      "pass": true
+    },
+    {
+      "name": "keyboard enables success only",
+      "pass": true
+    },
+    {
+      "name": "closing success preserves attention choice",
+      "pass": true
+    },
+    {
+      "name": "shared sound retains both preferences",
+      "pass": true
+    },
+    {
+      "name": "pending save locks all three switches with old confirmed choices",
+      "pass": true
+    },
+    {
+      "name": "save receipt alone publishes intended value",
+      "pass": true
+    },
+    {
+      "name": "failed save preserves both prior choices and exposes retryable UI",
+      "pass": true
+    },
+    {
+      "name": "foreground live success does not request notification",
+      "pass": true
+    },
+    {
+      "name": "background actual live ending submits only fixed kind/key",
+      "pass": true
+    },
+    {
+      "name": "retiring actual thread while submission held withdraws exact attempt",
+      "pass": true
+    },
+    {
+      "name": "controlled withdrawn receipt is not a submitted success",
+      "pass": true
+    },
+    {
+      "name": "late preference read cannot undo a later explicit save",
+      "pass": true
+    },
+    {
+      "name": "narrow settings switches stay within viewport",
+      "pass": true,
+      "details": [
+        {
+          "left": 536,
+          "right": 640,
+          "width": 104
+        },
+        {
+          "left": 536,
+          "right": 640,
+          "width": 104
+        },
+        {
+          "left": 536,
+          "right": 640,
+          "width": 104
+        }
+      ]
+    },
+    {
+      "name": "narrow keyboard focus remains reachable",
+      "pass": true
+    },
+    {
+      "name": "approval expires while held and withdraws exact same attempt",
+      "pass": true
+    },
+    {
+      "name": "question expires while held and withdraws exact same attempt",
+      "pass": true
+    },
+    {
+      "name": "no unexpected IPC",
+      "pass": true,
+      "details": []
+    },
+    {
+      "name": "no browser page error",
+      "pass": true,
+      "details": []
+    }
+  ],
+  "errors": [],
+  "scope": "Actual GeneralSettings/React StrictMode + notification singleton and ThreadsStore real send/projection. IPC, system permission, submit/withdraw and background state controlled; no system notifications/App/Agent/DB.",
+  "final": {
+    "preference": {
+      "enabled": true,
+      "successEnabled": false,
+      "sound": true,
+      "permission": "authorized",
+      "systemAlert": true,
+      "systemSound": true,
+      "clickRequiresRunning": false
+    },
+    "calls": [
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "unsentWork.v1"
+        }
+      },
+      {
+        "cmd": "desktop_notifications_get",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:app|version",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:app|version",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": false,
+          "sound": false,
+          "successEnabled": true
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": false,
+          "successEnabled": true
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": false,
+          "successEnabled": false
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": false,
+          "successEnabled": true
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": true,
+          "successEnabled": true
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": true,
+          "successEnabled": false
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": true,
+          "successEnabled": true
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": true,
+          "successEnabled": true
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {
+              "controlled-1": {
+                "blocks": [
+                  [
+                    {
+                      "type": "text",
+                      "text": "Controlled request"
+                    }
+                  ]
+                ],
+                "uncertainIndex": 0
+              }
+            },
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644581702,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {
+              "controlled-1": {
+                "blocks": [
+                  [
+                    {
+                      "type": "text",
+                      "text": "Controlled request"
+                    }
+                  ]
+                ],
+                "uncertainIndex": 0
+              }
+            },
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644581703,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "session_prompt",
+        "args": {
+          "agentId": "controlled",
+          "cwd": "/controlled",
+          "sessionId": "controlled-1",
+          "content": [
+            {
+              "type": "text",
+              "text": "Controlled request"
+            }
+          ]
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {},
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644581703,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "conversationReadState.v1"
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {},
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644581708,
+                "ended": true
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "conversationReadState.v1",
+          "value": {
+            "version": 1,
+            "unread": [
+              "controlled-1"
+            ]
+          }
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {
+              "controlled-2": {
+                "blocks": [
+                  [
+                    {
+                      "type": "text",
+                      "text": "Controlled request"
+                    }
+                  ]
+                ],
+                "uncertainIndex": 0
+              }
+            },
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644581708,
+                "ended": true
+              },
+              "controlled-2": {
+                "lastActivityAt": 1791644581712,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {
+              "controlled-2": {
+                "blocks": [
+                  [
+                    {
+                      "type": "text",
+                      "text": "Controlled request"
+                    }
+                  ]
+                ],
+                "uncertainIndex": 0
+              }
+            },
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644581708,
+                "ended": true
+              },
+              "controlled-2": {
+                "lastActivityAt": 1791644581712,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "session_prompt",
+        "args": {
+          "agentId": "controlled",
+          "cwd": "/controlled",
+          "sessionId": "controlled-2",
+          "content": [
+            {
+              "type": "text",
+              "text": "Controlled request"
+            }
+          ]
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {},
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644581708,
+                "ended": true
+              },
+              "controlled-2": {
+                "lastActivityAt": 1791644581712,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "desktop_notification_submit",
+        "args": {
+          "kind": "success",
+          "sequence": 1,
+          "targetKey": "controlled-2",
+          "rendererNonce": "f9227e961b3604bd0d2b5e376a110e42"
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {},
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644581708,
+                "ended": true
+              },
+              "controlled-2": {
+                "lastActivityAt": 1791644581712,
+                "ended": true
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "conversationReadState.v1",
+          "value": {
+            "version": 1,
+            "unread": [
+              "controlled-1",
+              "controlled-2"
+            ]
+          }
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "desktop_notification_withdraw",
+        "args": {
+          "rendererNonce": "f9227e961b3604bd0d2b5e376a110e42",
+          "sequence": 1
+        }
+      },
+      {
+        "cmd": "session_close",
+        "args": {
+          "agentId": "controlled",
+          "cwd": "/controlled",
+          "sessionId": "controlled-2"
+        }
+      },
+      {
+        "cmd": "desktop_notifications_get",
+        "args": {}
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": true,
+          "successEnabled": false
+        }
+      },
+      {
+        "cmd": "desktop_notification_submit",
+        "args": {
+          "kind": "approval",
+          "sequence": 2,
+          "targetKey": "attention-3",
+          "rendererNonce": "f9227e961b3604bd0d2b5e376a110e42"
+        }
+      },
+      {
+        "cmd": "desktop_notification_withdraw",
+        "args": {
+          "rendererNonce": "f9227e961b3604bd0d2b5e376a110e42",
+          "sequence": 2
+        }
+      },
+      {
+        "cmd": "desktop_notification_submit",
+        "args": {
+          "kind": "question",
+          "sequence": 3,
+          "targetKey": "attention-4",
+          "rendererNonce": "f9227e961b3604bd0d2b5e376a110e42"
+        }
+      },
+      {
+        "cmd": "desktop_notification_withdraw",
+        "args": {
+          "rendererNonce": "f9227e961b3604bd0d2b5e376a110e42",
+          "sequence": 3
+        }
+      }
+    ],
+    "unexpected": [],
+    "heldSave": false,
+    "waitingRead": 0,
+    "attempts": [
+      {
+        "kind": "success",
+        "sequence": 1,
+        "targetKey": "controlled-2",
+        "rendererNonce": "f9227e961b3604bd0d2b5e376a110e42",
+        "retracted": true
+      },
+      {
+        "kind": "approval",
+        "sequence": 2,
+        "targetKey": "attention-3",
+        "rendererNonce": "f9227e961b3604bd0d2b5e376a110e42",
+        "retracted": true
+      },
+      {
+        "kind": "question",
+        "sequence": 3,
+        "targetKey": "attention-4",
+        "rendererNonce": "f9227e961b3604bd0d2b5e376a110e42",
+        "retracted": true
+      }
+    ],
+    "diagnostic": {
+      "version": 1,
+      "frontend": {
+        "kind": "question",
+        "source": "agent",
+        "phase": "suppressed",
+        "reason": "suppressed",
+        "background": true,
+        "ready": true,
+        "enabled": true,
+        "saving": false
+      },
+      "backendAttempt": {
+        "rendererNonce": "f9227e961b3604bd0d2b5e376a110e42",
+        "sequence": 3
+      }
+    }
+  },
+  "result": "passed",
+  "after": {
+    "src/components/GeneralSettings.tsx": "4317976c9789c7c63087a5673f5501416b27960f0707fc32e8c347ceeb07d0d9",
+    "src/runtime/desktop_notifications.ts": "af1895332374c7e8ec37971004e556926aad41630b5956a60eaf93a6866d57b7",
+    "src/runtime/success_notification.ts": "c610573ac6d78bb700203e714111e7a9094bdbcd1389e02404b5b178f681e482",
+    "src/runtime/sessions.ts": "93754212761e08d20c35991ce8d102d4e923da0c5e622c637df00ce483b59066",
+    "src/runtime/session_projection.ts": "26936e5136ff294a5d7709385c754f061f01cbe8a43ed99ea395e8ef8f0ded79",
+    "src/runtime/async_tasks.ts": "08ea8a83bf5f1e3ed6ed94122087b1211c9165d80d242a04029e4e458428127f",
+    "src/runtime/session_types.ts": "8d1bdcc0fd993d75a7e42417d3c31e8a22f437ea10db83777d23b0363e5ed3ee",
+    "src/runtime/settings_presentation_strings.ts": "2b35a40421c0383c146a6c032012ab64196566060c9f552839ce0a0f8d05704c",
+    "output/2026-10-10-success-notification-browser/fixture.tsx": "738cca41cb7d527311ae919147774e69ed5bdf5d8f3c2d2ffc14479dc95f7521",
+    "output/2026-10-10-success-notification-browser/index.html": "1d3f53de5392e9ec6356a1fd2567bcf969ae13c88cadd6240490b75241e3370c",
+    "output/2026-10-10-success-notification-browser/serve.mjs": "e7239ca7af063fff625982c365e3bc9b6f25aa89364434b66ebce4ba599fb59c",
+    "output/2026-10-10-success-notification-browser/run.mjs": "2ff706d937426176fb4cee054e628aed999389297358ec03b9d2e73a6bc12645"
+  },
+  "inputsStable": true
+}

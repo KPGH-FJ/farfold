@@ -1,10 +1,13 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useEffect, useSyncExternalStore } from "react";
 import { completion } from "./completion";
+import { SuccessNotifications } from "./success_notification";
 import type { ThreadState } from "./session_types";
 
 export const NOTIFICATION_STRINGS = {
   hint: "在你离开 Farfold 时，提醒新的批准请求、提问和工作异常。提醒不包含对话内容。",
+  successHint:
+    "在你离开 Farfold 时，提醒已正常完成且没有待确认步骤的工作。提醒不包含对话内容。",
   systemHint: "是否实际显示仍由系统通知设置和专注模式决定。",
   permissionUnknown: "系统通知许可尚未确认，请重新检查。",
   permissionUnavailable:
@@ -51,7 +54,7 @@ function preferenceSaveError(error: unknown): string {
   }
 }
 
-type NoticeKind = "approval" | "question" | "interrupted";
+type NoticeKind = "approval" | "question" | "interrupted" | "success";
 type NoticeSource = "agent" | "browser";
 type DiagnosticPhase =
   | "none"
@@ -97,6 +100,7 @@ export type NotificationPermission =
   "not_determined" | "denied" | "authorized" | "provisional" | "unknown";
 export interface NotificationPreference {
   enabled: boolean;
+  successEnabled: boolean;
   sound: boolean;
   permission: NotificationPermission;
   systemAlert: boolean | null;
@@ -109,6 +113,7 @@ function preference(value: unknown): NotificationPreference {
   const v = value as Record<string, unknown>;
   if (
     typeof v.enabled !== "boolean" ||
+    typeof v.successEnabled !== "boolean" ||
     typeof v.sound !== "boolean" ||
     (v.systemAlert !== null && typeof v.systemAlert !== "boolean") ||
     (v.systemSound !== null && typeof v.systemSound !== "boolean") ||
@@ -149,13 +154,18 @@ interface PreferenceState extends NotificationPreference {
 }
 interface NotificationPort {
   read(): Promise<unknown>;
-  save(enabled: boolean, sound: boolean): Promise<unknown>;
+  save(
+    enabled: boolean,
+    sound: boolean,
+    successEnabled: boolean,
+  ): Promise<unknown>;
   submit(
     kind: NoticeKind,
     sequence: number,
     targetKey: string,
     rendererNonce: string,
   ): Promise<unknown>;
+  withdraw(rendererNonce: string, sequence: number): Promise<unknown>;
   background(): boolean;
 }
 
@@ -222,6 +232,7 @@ function noticeFor(
 export class DesktopNotifications {
   private state: PreferenceState = {
     enabled: false,
+    successEnabled: false,
     sound: false,
     permission: "unknown",
     systemAlert: null,
@@ -232,6 +243,32 @@ export class DesktopNotifications {
     error: null,
     submissionError: null,
   };
+  private readonly successes = new SuccessNotifications(
+    (s, endingId, current) =>
+      this.enqueue(
+        s,
+        { kind: "success", requestId: endingId },
+        "agent",
+        current,
+      ),
+  );
+  private pendingAttempts = new Set<{
+    current: () => boolean;
+    withdraw: () => void;
+  }>();
+  beginSuccess = (s: ThreadState, current: () => boolean): void => {
+    this.successes.begin(s, current);
+    this.checkSuccess();
+  };
+  /** Also runs on store publication, including removal of the thread object. */
+  checkSuccess = (s?: ThreadState): void => {
+    if (s) this.successes.check(s);
+    for (const attempt of this.pendingAttempts)
+      if (!attempt.current()) attempt.withdraw();
+  };
+  private enabledFor(kind: NoticeKind): boolean {
+    return kind === "success" ? this.state.successEnabled : this.state.enabled;
+  }
   private listeners = new Set<() => void>();
   private loading: Promise<void> | null = null;
   private revision = 0;
@@ -289,6 +326,7 @@ export class DesktopNotifications {
         if (revision === this.revision)
           this.publish({
             enabled: false,
+            successEnabled: false,
             error: NOTIFICATION_STRINGS.loadError,
           });
       } finally {
@@ -297,27 +335,44 @@ export class DesktopNotifications {
     })());
   };
   setEnabled = (enabled: boolean): Promise<void> =>
-    this.change(enabled, this.state.sound);
+    this.change(enabled, this.state.sound, this.state.successEnabled);
   setSound = (sound: boolean): Promise<void> =>
-    this.change(this.state.enabled, sound);
-  private change = async (enabled: boolean, sound: boolean): Promise<void> => {
+    this.change(this.state.enabled, sound, this.state.successEnabled);
+  setSuccessEnabled = (successEnabled: boolean): Promise<void> =>
+    this.change(this.state.enabled, this.state.sound, successEnabled);
+  private change = async (
+    enabled: boolean,
+    sound: boolean,
+    successEnabled: boolean,
+  ): Promise<void> => {
     if (
       !this.state.ready ||
       this.state.saving ||
-      (enabled === this.state.enabled && sound === this.state.sound)
+      (enabled === this.state.enabled &&
+        sound === this.state.sound &&
+        successEnabled === this.state.successEnabled)
     )
       return;
     this.revision++;
     this.publish({ saving: true, error: null });
     try {
-      const saved = preference(await this.port.save(enabled, sound));
-      if (saved.sound !== sound || (!enabled && saved.enabled))
+      const saved = preference(
+        await this.port.save(enabled, sound, successEnabled),
+      );
+      if (
+        saved.sound !== sound ||
+        (!enabled && saved.enabled) ||
+        (!successEnabled && saved.successEnabled)
+      )
         throw new Error("unconfirmed preference");
       this.publish({
         ...saved,
         submissionError: null,
         error:
-          enabled && !saved.enabled ? notificationPermissionLabel(saved) : null,
+          (enabled && !saved.enabled) ||
+          (successEnabled && !saved.successEnabled)
+            ? notificationPermissionLabel(saved)
+            : null,
       });
     } catch (error) {
       this.publish({ error: preferenceSaveError(error) });
@@ -326,10 +381,17 @@ export class DesktopNotifications {
     }
   };
 
-  observe = (s: ThreadState, event: unknown, live: boolean): void => {
+  observe = (
+    s: ThreadState,
+    event: unknown,
+    live: boolean,
+    owns: () => boolean = () => true,
+  ): void => {
+    this.successes.observe(s, event, live);
     const notice = noticeFor(s, event, live);
     if (!notice) return;
     this.enqueue(s, notice, "agent", () => {
+      if (!owns()) return false;
       if (!notice.requestId) return true;
       const requests =
         notice.kind === "approval"
@@ -362,6 +424,11 @@ export class DesktopNotifications {
     stillRelevant: () => boolean,
   ): void {
     const connection = s.connectionId;
+    const session = s.nativeSessionId;
+    const relevant = () =>
+      s.connectionId === connection &&
+      s.nativeSessionId === session &&
+      stillRelevant();
     // Remember decisions after submission too: unresolved tool work can remain
     // active after repeated end/error receipts. New rounds/connections get their
     // own decision. This bounded memory never stores or persists Agent content.
@@ -386,7 +453,7 @@ export class DesktopNotifications {
         reason: "none",
         background: null,
         ready: this.state.ready,
-        enabled: this.state.enabled,
+        enabled: this.enabledFor(notice.kind),
         saving: this.state.saving,
       },
       backendAttempt: null,
@@ -408,7 +475,7 @@ export class DesktopNotifications {
         background,
         ready: capturePreferences ? this.state.ready : candidate.frontend.ready,
         enabled: capturePreferences
-          ? this.state.enabled
+          ? this.enabledFor(notice.kind)
           : candidate.frontend.enabled,
         saving: capturePreferences
           ? this.state.saving
@@ -431,7 +498,7 @@ export class DesktopNotifications {
         if (!this.state.ready && !this.state.error) await this.load();
         const reason: DiagnosticReason | null = !this.state.ready
           ? "not_ready"
-          : !this.state.enabled
+          : !this.enabledFor(notice.kind)
             ? "disabled"
             : this.state.saving
               ? "saving"
@@ -452,8 +519,13 @@ export class DesktopNotifications {
         }
         // The state has now consumed the event. Do not notify an already answered,
         // expired or cancelled request after an asynchronous preference read.
-        if (!stillRelevant()) {
+        if (!relevant()) {
           record("skipped", "not_pending");
+          return;
+        }
+        // All reminder kinds share exact pending tickets, never a durable ledger.
+        if (this.pendingAttempts.size >= 256) {
+          record("suppressed", "suppressed");
           return;
         }
         const sequence = ++this.sequence;
@@ -461,12 +533,60 @@ export class DesktopNotifications {
           rendererNonce: this.rendererNonce,
           sequence,
         });
+        const attempt = {
+          current: relevant,
+          withdraw: () => {
+            if (!this.pendingAttempts.delete(attempt)) return;
+            // The exact key is registered before submit. An early withdrawal
+            // may overtake submit; the backend retains its matching tombstone.
+            void this.port
+              .withdraw(this.rendererNonce, sequence)
+              .then((value) => {
+                const state =
+                  value && typeof value === "object"
+                    ? (value as { state?: unknown }).state
+                    : null;
+                if (state === "withdrawn") record("suppressed", "not_pending");
+                else if (state !== "alreadySubmitted") {
+                  record(
+                    "unconfirmed",
+                    "unconfirmed",
+                    undefined,
+                    undefined,
+                    false,
+                  );
+                  this.publish({
+                    submissionError: NOTIFICATION_STRINGS.submitError,
+                  });
+                }
+                // alreadySubmitted means dispatch began, not that it was shown.
+                // Preserve the actual eventual submit receipt instead of inventing one.
+              })
+              .catch(() => {
+                record(
+                  "unconfirmed",
+                  "unconfirmed",
+                  undefined,
+                  undefined,
+                  false,
+                );
+                this.publish({
+                  submissionError: NOTIFICATION_STRINGS.submitError,
+                });
+              });
+          },
+        };
+        this.pendingAttempts.add(attempt);
         const submitted = await this.port.submit(
           notice.kind,
           sequence,
           s.key,
           this.rendererNonce,
         );
+        if (submitted === "submitted" || submitted === "suppressed")
+          this.pendingAttempts.delete(attempt);
+        // An unknown/timed-out submit can still be queued natively. Keep its
+        // exact retirement callback until owner invalidation; never retry submit.
         if (submitted !== "submitted" && submitted !== "suppressed")
           throw new Error("unconfirmed notification receipt");
         // Retain the actual gate-time preferences, not choices made while the
@@ -482,8 +602,8 @@ export class DesktopNotifications {
 
 const desktopNotifications = new DesktopNotifications({
   read: () => invoke("desktop_notifications_get"),
-  save: (enabled, sound) =>
-    invoke("desktop_notifications_set", { enabled, sound }),
+  save: (enabled, sound, successEnabled) =>
+    invoke("desktop_notifications_set", { enabled, sound, successEnabled }),
   submit: (kind, sequence, targetKey, rendererNonce) =>
     invoke("desktop_notification_submit", {
       kind,
@@ -491,6 +611,8 @@ const desktopNotifications = new DesktopNotifications({
       targetKey,
       rendererNonce,
     }),
+  withdraw: (rendererNonce, sequence) =>
+    invoke("desktop_notification_withdraw", { rendererNonce, sequence }),
   background: () =>
     typeof document !== "undefined" &&
     (document.hidden || !document.hasFocus()),
@@ -498,6 +620,9 @@ const desktopNotifications = new DesktopNotifications({
 
 /** Call once at applyChannelEvent entry, before changing the thread state. */
 export const observeDesktopNotification = desktopNotifications.observe;
+export const beginSuccessDesktopNotification =
+  desktopNotifications.beginSuccess;
+export const checkDesktopNotifications = desktopNotifications.checkSuccess;
 export const observeBrowserDesktopNotification =
   desktopNotifications.observeBrowserRequest;
 export const desktopNotificationDiagnostic = desktopNotifications.diagnostic;
@@ -520,6 +645,7 @@ export function useDesktopNotifications() {
     ...state,
     setEnabled: desktopNotifications.setEnabled,
     setSound: desktopNotifications.setSound,
+    setSuccessEnabled: desktopNotifications.setSuccessEnabled,
     retry: () => desktopNotifications.load(true),
   };
 }

@@ -1,0 +1,180 @@
+import { StrictMode, useEffect, useState } from "react";
+import { createRoot } from "react-dom/client";
+import "../../../src/styles.css";
+import "../../../src/styles-content.css";
+import { MessageContent } from "../../../src/components/MessageContent";
+import { normalizeMessageAttachment } from "../../../src/runtime/message_attachments";
+import { revealSearchAncestors } from "../../../src/runtime/transcript_search";
+
+// Actual components and browser decoders. No synthetic error events, media API
+// replacements, App/Agent IPC, external requests or production test switches.
+const badData = btoa("controlled corrupt media bytes");
+const png =
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII=";
+function wav() {
+  const bytes = new Uint8Array(44 + 8000 * 2 * 8);
+  const view = new DataView(bytes.buffer);
+  const word = (offset: number, value: string) => {
+    for (let i = 0; i < value.length; i++)
+      bytes[offset + i] = value.charCodeAt(i);
+  };
+  word(0, "RIFF");
+  view.setUint32(4, bytes.length - 8, true);
+  word(8, "WAVEfmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, 8000, true);
+  view.setUint32(28, 16000, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  word(36, "data");
+  view.setUint32(40, bytes.length - 44, true);
+  // Eight seconds of signed PCM zero = silence; real playback, no audible tone.
+  let text = "";
+  for (const byte of bytes) text += String.fromCharCode(byte);
+  return btoa(text);
+}
+const sources = {
+  badImage: `data:image/png;base64,${badData}`,
+  badAudio: `data:audio/wav;base64,${badData}`,
+  goodAudio: `data:audio/wav;base64,${wav()}`,
+};
+const events: { event: string; tag: string; id: string; code?: number }[] = [];
+for (const name of ["error", "loadeddata", "playing", "pause", "emptied"])
+  document.addEventListener(
+    name,
+    (event) => {
+      const node = event.target;
+      if (!(
+        node instanceof HTMLMediaElement || node instanceof HTMLImageElement
+      ))
+        return;
+      events.push({
+        event: name,
+        tag: node.tagName,
+        id: node.closest("section")?.id ?? "",
+        ...(node instanceof HTMLMediaElement ? { code: node.error?.code } : {}),
+      });
+    },
+    true,
+  );
+let mounts = 0;
+let cleanups = 0;
+let releases: (() => void)[] = [];
+const blocks = [
+  {
+    id: "bad-image",
+    text: "正文甲：图片之前。",
+    content: { type: "image", mimeType: "image/png", data: badData },
+  },
+  {
+    id: "bad-audio",
+    text: "正文乙：两种附件之间。",
+    content: { type: "audio", mimeType: "audio/wav", data: badData },
+  },
+  {
+    id: "good-image",
+    text: "正文丙：正常图片。",
+    content: { type: "image", mimeType: "image/png", data: png },
+  },
+  {
+    id: "good-audio",
+    text: "正文丁：正常音频。",
+    content: {
+      type: "audio",
+      mimeType: "audio/wav",
+      data: sources.goodAudio.split(",")[1],
+    },
+  },
+  {
+    id: "remote-image",
+    text: "正文戊：外部来源仅是链接。",
+    content: {
+      type: "resource_link",
+      name: "remote-picture",
+      mimeType: "image/png",
+      uri: "https://media.invalid/canary.png",
+    },
+  },
+  {
+    id: "active-image",
+    text: "正文己：不允许的格式。",
+    content: {
+      type: "image",
+      mimeType: "image/svg+xml",
+      data: btoa('<svg xmlns="http://www.w3.org/2000/svg"/>'),
+    },
+  },
+].map((b) => ({ ...b, attachment: normalizeMessageAttachment(b.content)! }));
+function Fixture() {
+  const [shown, setShown] = useState(true);
+  useEffect(() => {
+    mounts++;
+    return () => {
+      cleanups++;
+    };
+  }, []);
+  const play = (id: string) => {
+    const node = document.querySelector<HTMLAudioElement>(`#${id} audio`);
+    if (!node) throw Error("audio must be explicitly expanded first");
+    // Called only from a real click, never automatically by rendering.
+    void node.play().then(
+      () => events.push({ event: "play-resolved", tag: "AUDIO", id }),
+      () => events.push({ event: "play-rejected", tag: "AUDIO", id }),
+    );
+  };
+  return (
+    <main>
+      <h1>受控消息媒体检查</h1>
+      <button onClick={() => play("bad-audio")}>播放坏音频</button>
+      <button onClick={() => play("good-audio")}>播放正常音频</button>
+      <button onClick={() => setShown((v) => !v)}>
+        {shown ? "卸载消息" : "重新挂载消息"}
+      </button>
+      {shown && (
+        <article id="messages">
+          {blocks.map((b) => (
+            <section key={b.id} id={b.id}>
+              <MessageContent
+                source={b}
+                text={b.text}
+                attachments={[b.attachment]}
+              />
+            </section>
+          ))}
+        </article>
+      )}
+      <p id="after">正文庚：附件之后，原文保留。</p>
+    </main>
+  );
+}
+Object.assign(window, {
+  mediaFixture: {
+    snapshot: () => ({
+      mounts,
+      cleanups,
+      events: [...events],
+      blocks: blocks.map((b) => ({
+        id: b.id,
+        text: b.text,
+        attachment: b.attachment,
+      })),
+    }),
+    sources,
+    reveal: (id: string) => {
+      const node = document.querySelector(`#${id} figure`)!;
+      releases.push(
+        revealSearchAncestors(node, document.querySelector("#messages")!),
+      );
+    },
+    release: () => {
+      for (const release of releases.splice(0)) release();
+    },
+  },
+});
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <Fixture />
+  </StrictMode>,
+);

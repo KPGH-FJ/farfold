@@ -302,6 +302,7 @@ pub fn run() {
                 desktop_notifications::desktop_notifications_get,
                 desktop_notifications::desktop_notifications_set,
                 desktop_notifications::desktop_notification_submit,
+                desktop_notifications::desktop_notification_withdraw,
                 desktop_notifications::desktop_notification_take_pending,
                 pty::pty_spawn,
                 pty::pty_write,

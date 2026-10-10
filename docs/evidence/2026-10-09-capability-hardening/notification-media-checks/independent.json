@@ -1,0 +1,294 @@
+{
+  "atUtc": "2026-10-10T15:18:31.757254+00:00",
+  "status": "passedIndependentEngineeringIntegrationReview",
+  "sourceBase": "e1575cbad4a5e33fb3b348c7c84e788a47c8bf24",
+  "scope": "Read-only independent audit of the completed run-01, exact input bytes, scoped source delta and original plan conditions. No engineering command, browser, application, Agent or native notification was rerun.",
+  "sevenActualChecks": [
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/frontend.txt",
+      "sha256": "ce3566b4547fc946de600d6b268f82dd0a5bf1ea3f9840f3b3ff99fc2a7bdae7",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/build.txt",
+      "sha256": "08fbda9d2e4386841b151a521aa5a00ab313560f19e60a0ed02471e82843ed0f",
+      "executedInThisRun": true
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/clippy.txt",
+      "sha256": "0057ed30b6e3b0d7ed471c85d9ed236526b7bfe0b1a5afd368cc87db08fa0e15",
+      "executedInThisRun": true
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/rust.txt",
+      "sha256": "8e7c089916c5cf9d252065fc7468c9874a670210fc97a4c96501d30d673f6efc",
+      "executedInThisRun": true
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "log": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true
+    }
+  ],
+  "observedCounts": {
+    "frontendFiles": 396,
+    "frontendTestsPassed": 4621,
+    "rustTestsPassed": 1477,
+    "rustIgnored": 6,
+    "rustFailed": 0,
+    "rawLogSummariesMatchReceipt": true
+  },
+  "inputs": {
+    "count": 1415,
+    "beforeEqualsAfter": true,
+    "allCurrentHashesMatch": true,
+    "completeEnumerationMatches": true,
+    "enumerationMethod": "Separately extracted only the static SCOPES/TOP lists from the candidate verifier via AST; enumerated their regular files with the recorded .DS_Store/__pycache__ exclusions and hashed bytes. No verifier main/build/install or runner was executed. The resulting exact set and hashes equal both engineering inventories.",
+    "uncommittedScopedSourceFiles": 26,
+    "sourceRefsMatchTwoIndependentReviews": true,
+    "deltaMethod": "git diff HEAD plus git ls-files --others under src and src-tauri equals the union of the 20 notification and 6 media review paths, including tauri.conf.json.",
+    "sourceRefs": [
+      {
+        "path": "src-tauri/src/desktop_notifications.rs",
+        "sha256": "eecdf1298ac2c58c83cefab2c5c15bac8635ab171c634ae0ea97db01dca0ffd1"
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/diagnostic.rs",
+        "sha256": "c9c160f9a861984baa173f076793385cf0ef1c9336e609a55078beed56e231a5"
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/native.rs",
+        "sha256": "cd8ef26d89dcd78934572c516f729902c912b5019f0c9e2a8f69dcb3e9663394"
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/tests.rs",
+        "sha256": "ae3fa3c760ff4131921c09300cdccb7fe71f101e5e253a7a75d9b7ee4951cb6d"
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/tickets.rs",
+        "sha256": "da5ad170401a19b9567d4248a3dac801f7c35b5b813589ab8376c232e5c31095"
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/windows.rs",
+        "sha256": "6450d2ac59d63848d38585b593a0726ac3ad7766451da579800643e87f5c7b98"
+      },
+      {
+        "path": "src-tauri/src/diagnostics/notification.rs",
+        "sha256": "4fdd0007050a08435a76cdec0fdaf7ff82c4ae5d7263ed638c7a94733241371c"
+      },
+      {
+        "path": "src-tauri/src/lib.rs",
+        "sha256": "8b840f6e440dec4f7fb98a196b309c6b1510e156747f06b59d542d8bef445eb9"
+      },
+      {
+        "path": "src-tauri/tauri.conf.json",
+        "sha256": "c706b854dc18fb44c29a1b07f353efcbd83ccc6c8b836dbe78d1e854224f3c7c"
+      },
+      {
+        "path": "src/components/GeneralSettings.success-notifications.test.tsx",
+        "sha256": "3bf0a978f8e3a760305f5c1c7d77cda9850a42a49741b84a01d15a2182bcb812"
+      },
+      {
+        "path": "src/components/GeneralSettings.test.tsx",
+        "sha256": "55b0cc368896a0749b548b076277adebcc7b1b9fde86d7ae63b13fdf96ff7498"
+      },
+      {
+        "path": "src/components/GeneralSettings.tsx",
+        "sha256": "4317976c9789c7c63087a5673f5501416b27960f0707fc32e8c347ceeb07d0d9"
+      },
+      {
+        "path": "src/components/MessageAttachmentMedia.test.tsx",
+        "sha256": "40c5b2acf4a17bcb5d27cef229fe152c933b0be1acaef284dd340b9413e57176"
+      },
+      {
+        "path": "src/components/MessageAttachmentMedia.tsx",
+        "sha256": "148d864ef4a69a5848a68356c290819058b43f198164723c3b3bec7cae3bfcd5"
+      },
+      {
+        "path": "src/components/MessageContent.tsx",
+        "sha256": "e1d1642acd7e3631b8f22fea54699895b8c0438400831a64289a1ada5b3bd4f3"
+      },
+      {
+        "path": "src/message-attachments.css",
+        "sha256": "e3f41f1646cff5b1356e9c4db0b017c4a6ae87d545a5a0b753e4d842c9f8b3f7"
+      },
+      {
+        "path": "src/runtime/desktop_notifications.channel.test.ts",
+        "sha256": "291adfda505c05519a7dd3ae345c64c7eb997d037570f69ce7f9d5d0e7b25dac"
+      },
+      {
+        "path": "src/runtime/desktop_notifications.success-channel.test.ts",
+        "sha256": "ca9175f1066eb9ed73d9eb91fb0f0d103682834cd5d82daadd4ee5f351bdaf38"
+      },
+      {
+        "path": "src/runtime/desktop_notifications.success.test.ts",
+        "sha256": "935ac81253cfe44fcc44ed707ffd31e04db026ba7ffc19ca8ad15a68b0d1eb34"
+      },
+      {
+        "path": "src/runtime/desktop_notifications.test.ts",
+        "sha256": "582f4cfd9cc017e4862db1ceab130449180978031c7ee010ed0a8c819e289fa2"
+      },
+      {
+        "path": "src/runtime/desktop_notifications.ts",
+        "sha256": "af1895332374c7e8ec37971004e556926aad41630b5956a60eaf93a6866d57b7"
+      },
+      {
+        "path": "src/runtime/message_attachment_strings.ts",
+        "sha256": "c3ec52ecc5bee9352782277c1be230f72ba45255e9febe10a108330b570ed53c"
+      },
+      {
+        "path": "src/runtime/sessions.ts",
+        "sha256": "93754212761e08d20c35991ce8d102d4e923da0c5e622c637df00ce483b59066"
+      },
+      {
+        "path": "src/runtime/settings_presentation_strings.ts",
+        "sha256": "2b35a40421c0383c146a6c032012ab64196566060c9f552839ce0a0f8d05704c"
+      },
+      {
+        "path": "src/runtime/success_notification.test.ts",
+        "sha256": "47dd9e1a05bb508b0259bb94f12682643a96013f8f84fb2ff47f576c57c621c5"
+      },
+      {
+        "path": "src/runtime/success_notification.ts",
+        "sha256": "c610573ac6d78bb700203e714111e7a9094bdbcd1389e02404b5b178f681e482"
+      }
+    ]
+  },
+  "reviewBinding": {
+    "notifications": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/independent-review.json",
+      "sha256": "6ac53049307d25c7fa980764f1e476ac07a65bcf11b6f6016030f3f1d581dea3"
+    },
+    "media": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/independent-review.json",
+      "sha256": "f8dda5562609119933e0c94b3a1a3784fce1039c159374cbb3bdffeee1bb1aa5"
+    },
+    "windowsCorrection": "Original backend receipt remains historical; its Windows hash is resolved to preserved old bytes, while the final review binds 6450d2ac59d63848d38585b593a0726ac3ad7766451da579800643e87f5c7b98. The full engineering inventory uses that corrected file. No assertion that host Cargo compiles Windows."
+  },
+  "protectedDocuments": {
+    "count": 2,
+    "allExact": true,
+    "refs": [
+      {
+        "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+        "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+      },
+      {
+        "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+        "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+      }
+    ],
+    "boundary": "These two pre-existing dirty historical documents are compared to the frozen protected hashes, not reset or compared to clean HEAD."
+  },
+  "originalPlanContract": {
+    "count": 122,
+    "sameIdsTitlesAndConditions": true,
+    "orderedIdTitleConditionSha256": "6bbce4fb553038db25a6e9f751f11f5821850ceba163971e21fc644359dabcb3",
+    "baselineCommit": "e1575cbad4a5e33fb3b348c7c84e788a47c8bf24",
+    "progressChangesAtReview": [
+      {
+        "id": "P48",
+        "before": "缺少；待实现",
+        "after": "源码已补；正式实证待完成"
+      }
+    ],
+    "boundary": "Only progress text changes; P48 remains pending formal verification. NEW defect rows are additions outside the original 122 and do not replace original conditions. Current docs continue to distinguish source/controlled checks from installed app, real OS notification and Agent media. Maintainer may update current progress separately; this does not authorize modifying the 122 original conditions."
+  },
+  "nonBlockingEngineeringObservation": "Build succeeded with its recorded warning about chunks larger than 500 kB. Six Rust tests remain ignored; they are not counted as passed.",
+  "notEstablished": [
+    "Candidate/release package or installation.",
+    "Actual macOS notification delivery, sound, permission interaction or click; Windows runtime.",
+    "Real Agent image/audio return and installed WebView behavior.",
+    "Complete P13/P47/P48, all 29 Agents, or overall product acceptance."
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/verification.json",
+      "sha256": "62dcd83375bbed1f1ffc2866db48007522df0e6be5b98a7ed102433ad83d8132"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/inputs-before.json",
+      "sha256": "d269b924dca83524da0325723a93f0ca8e48c27378787ed2d21924fd0627a017"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/inputs-after.json",
+      "sha256": "d269b924dca83524da0325723a93f0ca8e48c27378787ed2d21924fd0627a017"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-checks.py",
+      "sha256": "19d48ce3638d2b2bbd533ff3513fbd47c43998a8db4449a7fa2842b708b691b4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/scope.json",
+      "sha256": "92060e2d7c723e10e144e268c0eb77a1bbfa48fcad99869f90029c7557fe2fa1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-candidate.py",
+      "sha256": "1ecbc75923b2c0fd504fa72a8b183b095d65c1eb9dd43d48cf01fed9ba2f7023"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/independent-review.json",
+      "sha256": "6ac53049307d25c7fa980764f1e476ac07a65bcf11b6f6016030f3f1d581dea3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/independent-review.json",
+      "sha256": "f8dda5562609119933e0c94b3a1a3784fce1039c159374cbb3bdffeee1bb1aa5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/windows-followup/receipt.json",
+      "sha256": "e9a28c881f47c841889a39966538b4823f1e0a7d29b2a4ce5d34c93060812478"
+    }
+  ]
+}

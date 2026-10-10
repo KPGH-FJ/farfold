@@ -1,0 +1,58 @@
+{
+  "status": "implementedSevenChecksPassedAwaitingInstalledValidation",
+  "sourceBase": "e1575cba",
+  "installedSource": "39955ec65a4274cdeac1bab9884f4073c792102a",
+  "tasks": {
+    "P48": "Independent default-off success preference; live exact request qualification and final platform gate; preserve no content in notification and unknown delivery distinction",
+    "P13": "Actual Agent attachment image/audio decoder failure feedback and same-source explicit retry; preserve explicit user media expansion",
+    "P47": "Shared exact pending withdrawal when approval/question expires or its store owner closes; preserve uncertain and already-dispatched outcomes"
+  },
+  "reviewCorrections": [
+    "Preserve other reminder preference while disabling one under denied permission",
+    "Withdraw exact pending success notification when request ownership expires; submission already dispatched or unknown cannot mean never shown",
+    "StrictMode audio ref detach/reattach restores only previously admitted source",
+    "Production audio CSP inherited default-src self and rejected valid data WAV; add only media-src self data after actual-engine red",
+    "Windows fallible callback registration completes before the exact native Show dispatch boundary; withdrawn registration is cleaned precisely and static review passed"
+  ],
+  "validationPlan": [
+    "Targeted real regression before fix, relevant tests and actual browser after fix",
+    "Independent review of final sources",
+    "All seven repository checks after source stabilizes",
+    "Scoped formal application update with existing metadata preserved, followed by actual feature checks"
+  ],
+  "boundaries": [
+    "No change to original122 IDs/titles/conditions",
+    "No full P13/P48/P47 or product completion claim based on drafts or API callbacks",
+    "No Agent runtime patch, second loop, config clone or new environment switch"
+  ],
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/installed-qualified-names.json": "1ec3e6b00d2c857363315b97cc858a5120b12c8c0d118d7000c05d24353e6e95",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/native-independent.json": "ceb2cece610c3872c51d62740e44a7a28e904d939b117f36fe51f4296ea5c766",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/next-success-notification-scope.json": "da43e94365bf5d8cf661299dbe5b54029637a6fc8c6ebf9b332520706be00cd0",
+    "output/2026-10-10-media-feedback-patch/manifest.json": "888623cc353e7011b8d1453bce22081e99a7b17b906c2ee1d9fdea88a172edde",
+    "output/2026-10-10-media-feedback-patch/independent-review.json": "23735fd313ea43e7088f74358a37923fb33efbb442083466eb237cd2fe583223",
+    "docs/evidence/2026-10-09-capability-hardening/media-feedback/implementation.json": "98f7ea5440857441157f2ac9f434fc1fea7990fb752740ad9c94031779ed7237",
+    "docs/evidence/2026-10-09-capability-hardening/media-feedback/independent-review.json": "f8dda5562609119933e0c94b3a1a3784fce1039c159374cbb3bdffeee1bb1aa5",
+    "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/implementation.json": "75d196f4a3721d75d5c499ea5cd1d407f7a73383ad95641ddd91ed630f89649f",
+    "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/implementation.json": "d3588acc25e5f53c751a76ac591921fae644da5e277cfdb691db16fd4ff00053",
+    "docs/evidence/2026-10-09-capability-hardening/success-notification/independent-review.json": "6ac53049307d25c7fa980764f1e476ac07a65bcf11b6f6016030f3f1d581dea3",
+    "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/windows-followup/receipt.json": "e9a28c881f47c841889a39966538b4823f1e0a7d29b2a4ce5d34c93060812478",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/verification.json": "62dcd83375bbed1f1ffc2866db48007522df0e6be5b98a7ed102433ad83d8132",
+    "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/chromium-after-toggle-both-failures.png": "9b36281651f44514b50a4ff9d625d8508b61dea56548a35557d7fd8531d2ffe6",
+    "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-shared-final-narrow.png": "9baffcb29c08f36c4c6180f95bae4024aee42b8711ecca2c716d6f846e17c097",
+    "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-settled-narrow.png": "7c2152a8c7589c1f6f87b46233fd6b4e180d59c820f5a98541effd5d4e5ac5ba"
+  },
+  "checks": {
+    "inputCount": 1415,
+    "sourceStable": true,
+    "commandsPassed": 7,
+    "frontendFiles": 396,
+    "frontendPassed": 4621,
+    "rustPassed": 1477,
+    "rustIgnored": 6
+  },
+  "rootVisualReview": {
+    "media": "Actual bad-image and bad-audio feedback/retry visible in chromium-after-toggle-both-failures.png; this component harness is not full App styling.",
+    "notification": "webkit-shared-final-narrow.png captured the 120ms switch transition after aria-checked became false; it is not evidence of settled thumb position. webkit-settled-narrow.png waited for CSS transform and shows off left/grey and on right/dark. Settings/CSS source unchanged between these runs; formal UI steady state still to check."
+  }
+}

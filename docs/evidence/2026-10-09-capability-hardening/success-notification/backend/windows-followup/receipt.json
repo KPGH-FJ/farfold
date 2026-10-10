@@ -1,0 +1,83 @@
+{
+  "status": "singleWindowsSourceOrderCorrectionStaticallyReviewedPendingPeer",
+  "finding": "The earlier dispatch closure marked DispatchStarted before the fallible notices mutex acquisition; a poisoned map could fail before Show yet answer alreadySubmitted. This was a static Windows finding, not an executed Windows failure.",
+  "repair": "Complete map registration and old-notice cleanup first, with map lock released; then dispatch covers only the actual Show call. If exact withdrawal wins after registration, forget(id) removes only this not-yet-submitted notice and Notice::drop unsubscribes its callbacks. Map failure leaves Ticket Pending until its owner drops to NotDispatched.",
+  "sourceRef": {
+    "path": "src-tauri/src/desktop_notifications/windows.rs",
+    "sha256": "6450d2ac59d63848d38585b593a0726ac3ad7766451da579800643e87f5c7b98",
+    "lines": 268
+  },
+  "previousSourceSha256": "11e110070cd6b72e2a04a3fa2c33b4ba2b109b9615dee1cf7bec6344d78f2d68",
+  "otherSevenOwnedFilesUnchanged": [
+    {
+      "path": "src-tauri/src/desktop_notifications/diagnostic.rs",
+      "sha256": "c9c160f9a861984baa173f076793385cf0ef1c9336e609a55078beed56e231a5",
+      "lines": 428
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/native.rs",
+      "sha256": "cd8ef26d89dcd78934572c516f729902c912b5019f0c9e2a8f69dcb3e9663394",
+      "lines": 328
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/tests.rs",
+      "sha256": "ae3fa3c760ff4131921c09300cdccb7fe71f101e5e253a7a75d9b7ee4951cb6d",
+      "lines": 345
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/tickets.rs",
+      "sha256": "da5ad170401a19b9567d4248a3dac801f7c35b5b813589ab8376c232e5c31095",
+      "lines": 409
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications.rs",
+      "sha256": "eecdf1298ac2c58c83cefab2c5c15bac8635ab171c634ae0ea97db01dca0ffd1",
+      "lines": 508
+    },
+    {
+      "path": "src-tauri/src/diagnostics/notification.rs",
+      "sha256": "4fdd0007050a08435a76cdec0fdaf7ff82c4ae5d7263ed638c7a94733241371c",
+      "lines": 262
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "8b840f6e440dec4f7fb98a196b309c6b1510e156747f06b59d542d8bef445eb9",
+      "lines": 431
+    }
+  ],
+  "validation": {
+    "ownedRustfmtExitCode": 0,
+    "exactSourceOrderChecked": true,
+    "reusedMechanismEvidence": "Earlier actual ticket tests prove exact withdrawal prevents closure invocation and dispatch/withdraw serialization, including synchronous diagnostics and observer-drop. No repeat was needed because tickets.rs is unchanged.",
+    "newWindowsTestExecuted": false,
+    "windowsCompiledOrExecuted": false,
+    "productionPlatformNotificationDispatched": false
+  },
+  "boundary": "alreadySubmitted still means the submission call began, not accepted, delivered or shown. New Windows code has static/format proof only; macOS Cargo does not establish Windows correctness.",
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/implementation.json",
+      "sha256": "d3588acc25e5f53c751a76ac591921fae644da5e277cfdb691db16fd4ff00053"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/source-checkpoint.json",
+      "sha256": "827203ca18823a97321deb47a701202688dd9807a4de237c26067c4abc687d4e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/windows-followup/windows-before.rs.txt",
+      "sha256": "11e110070cd6b72e2a04a3fa2c33b4ba2b109b9615dee1cf7bec6344d78f2d68"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/windows-followup/exact.diff",
+      "sha256": "15bba23a091d074a849c3ab1e7ff0b5c48687fdf8938d58050c6cf133ac7ec95"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/windows-followup/format.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/targeted-first.txt",
+      "sha256": "d312517c33bfb4041a1ea9606f3dda4248b187110a38c98f7de1f29eac72062a"
+    }
+  ]
+}

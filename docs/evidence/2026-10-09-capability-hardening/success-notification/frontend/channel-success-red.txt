@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/desktop_notifications.success-channel.test.ts (6 tests | 1 failed | 5 skipped) 6ms
+   × real send admission and projected successful ending submit once with only the existing target 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/desktop_notifications.success-channel.test.ts > real send admission and projected successful ending submit once with only the existing target
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/desktop_notifications.success-channel.test.ts:80:27
+     78|   f.event({ kind: "turnEnd", stopReason: "end_turn" });
+     79|   await tick();
+     80|   expect(f.submissions()).toHaveLength(1);
+       |                           ^
+     81|   expect(f.submissions()[0][1]).toMatchObject({
+     82|     kind: "success",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 skipped (6)
+   Start at  22:52:02
+   Duration  358ms (transform 194ms, setup 0ms, import 249ms, tests 6ms, environment 0ms)
+

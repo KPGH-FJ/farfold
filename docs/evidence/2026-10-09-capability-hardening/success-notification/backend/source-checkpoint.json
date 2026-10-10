@@ -1,0 +1,69 @@
+{
+  "status": "authorTargetedStablePendingIndependentReview",
+  "sourceHead": "e1575cbad4a5e33fb3b348c7c84e788a47c8bf24",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/desktop_notifications/diagnostic.rs",
+      "sha256": "c9c160f9a861984baa173f076793385cf0ef1c9336e609a55078beed56e231a5",
+      "lines": 428
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/native.rs",
+      "sha256": "cd8ef26d89dcd78934572c516f729902c912b5019f0c9e2a8f69dcb3e9663394",
+      "lines": 328
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/tests.rs",
+      "sha256": "ae3fa3c760ff4131921c09300cdccb7fe71f101e5e253a7a75d9b7ee4951cb6d",
+      "lines": 345
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/tickets.rs",
+      "sha256": "da5ad170401a19b9567d4248a3dac801f7c35b5b813589ab8376c232e5c31095",
+      "lines": 409
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/windows.rs",
+      "sha256": "11e110070cd6b72e2a04a3fa2c33b4ba2b109b9615dee1cf7bec6344d78f2d68",
+      "lines": 263
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications.rs",
+      "sha256": "eecdf1298ac2c58c83cefab2c5c15bac8635ab171c634ae0ea97db01dca0ffd1",
+      "lines": 508
+    },
+    {
+      "path": "src-tauri/src/diagnostics/notification.rs",
+      "sha256": "4fdd0007050a08435a76cdec0fdaf7ff82c4ae5d7263ed638c7a94733241371c",
+      "lines": 262
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "8b840f6e440dec4f7fb98a196b309c6b1510e156747f06b59d542d8bef445eb9",
+      "lines": 431
+    }
+  ],
+  "results": {
+    "originalProductionRegression": {
+      "failed": 2,
+      "log": "baseline-red.txt"
+    },
+    "notifications": {
+      "passed": 34,
+      "log": "targeted-first.txt"
+    },
+    "diagnostics": {
+      "passed": 4,
+      "log": "diagnostics-green.txt"
+    },
+    "format": {
+      "exitCode": 0,
+      "log": "format-green.txt"
+    },
+    "clippy": {
+      "exitCode": 0,
+      "log": "clippy-first.txt"
+    }
+  },
+  "firstRunInputStability": "No owned mutation between applying/rustfmt and these commands; no claimed separately captured pre/post full-repository inventory."
+}

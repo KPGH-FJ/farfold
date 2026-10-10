@@ -397,12 +397,41 @@ export function GeneralSettings({
                   : N.disabled}
           </button>
         </div>
+        <div className="general-setting-row">
+          <div>
+            <strong>{P.successNotification}</strong>
+            <p id="desktop-success-notification-hint">{N.successHint}</p>
+          </div>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            role="switch"
+            aria-label={P.successNotification}
+            aria-checked={notifications.successEnabled}
+            aria-describedby="desktop-success-notification-hint desktop-notification-system"
+            disabled={!notifications.ready || notifications.saving}
+            onClick={() =>
+              void notifications.setSuccessEnabled(
+                !notifications.successEnabled,
+              )
+            }
+          >
+            {notifications.saving
+              ? N.saving
+              : !notifications.ready && !notifications.error
+                ? N.reading
+                : notifications.successEnabled
+                  ? N.enabled
+                  : N.disabled}
+          </button>
+        </div>
         <p id="desktop-notification-system" className="auth-note">
           {notificationPermissionLabel(notifications)} {N.systemHint}
         </p>
-        {notifications.enabled && notifications.systemAlert === false && (
-          <p className="auth-note">{N.alertsDisabled}</p>
-        )}
+        {(notifications.enabled || notifications.successEnabled) &&
+          notifications.systemAlert === false && (
+            <p className="auth-note">{N.alertsDisabled}</p>
+          )}
         <button
           type="button"
           className="btn btn-text"

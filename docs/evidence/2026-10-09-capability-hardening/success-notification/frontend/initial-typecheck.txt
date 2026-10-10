@@ -1,0 +1,7 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/success_notification.ts(231,49): error TS18048: 'owned' is possibly 'undefined'.
+src/runtime/success_notification.ts(232,26): error TS18048: 'owned' is possibly 'undefined'.
+ ELIFECYCLE  Command failed with exit code 1.

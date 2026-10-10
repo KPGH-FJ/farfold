@@ -2,8 +2,8 @@
 //! Setting() is the actual system decision. Windows does not expose separate
 //! banner/sound settings here, and no cold-start COM activator is registered.
 use super::{
-    DesktopNotifications, Permission, SystemSettings,
-    diagnostic::{Attempt, Stage},
+    DesktopNotifications, NoticeKind, Permission, SystemSettings,
+    diagnostic::{Attempt, Reason, Stage},
 };
 use std::collections::VecDeque;
 use std::sync::{
@@ -117,10 +117,11 @@ pub(super) async fn settings(_app: &AppHandle, _request: bool) -> Result<SystemS
 pub(super) async fn submit(
     app: &AppHandle,
     target: String,
-    body: &'static str,
+    kind: NoticeKind,
     sound: bool,
     revision: u64,
     attempt: Attempt,
+    ticket: super::Ticket,
 ) -> Result<bool, String> {
     let app = app.clone();
     tokio::time::timeout(
@@ -133,7 +134,8 @@ pub(super) async fn submit(
             }
             let xml = XmlDocument::new().map_err(|_| "提醒未能提交")?;
             xml.LoadXml(&HSTRING::from(super::windows_payload::toast_xml(
-                body, sound,
+                kind.body(),
+                sound,
             )))
             .map_err(|_| "提醒未能提交")?;
             let toast =
@@ -193,7 +195,7 @@ pub(super) async fn submit(
             let Ok(_change) = state.changes.try_lock() else {
                 return Ok(false);
             };
-            if !super::may_submit_locked(&app, revision, &attempt, Stage::Native)
+            if !super::may_submit_locked(&app, &ticket, kind, revision, &attempt, Stage::Native)
                 || super::resolve_target(
                     app.state::<crate::meta_store::MetaStore>().inner(),
                     &target,
@@ -202,6 +204,8 @@ pub(super) async fn submit(
             {
                 return Ok(false);
             }
+            // Complete fallible registration and old-notice cleanup before
+            // consuming this ticket. Do not hold the map during OS callbacks.
             let evicted = {
                 let mut values = notices().lock().map_err(|_| "提醒未能提交")?;
                 values.push_back(notice);
@@ -214,12 +218,21 @@ pub(super) async fn submit(
             if let Some(old) = evicted {
                 remove(&notifier, &old);
             }
-            if notifier.Show(&toast).is_err() {
+            let submitted = ticket.dispatch(|| {
+                if notifier.Show(&toast).is_err() {
+                    forget(id);
+                    return Err("提醒未能提交".into());
+                }
+                // Accepted by the system API, never described as visible or delivered.
+                Ok(true)
+            });
+            submitted.unwrap_or_else(|| {
+                // Withdrawal won after registration but before Show. Remove
+                // only this new notice and release its subscribed callbacks.
                 forget(id);
-                return Err("提醒未能提交".into());
-            }
-            // Accepted by the system API, never described as visible or delivered.
-            Ok(true)
+                super::diagnostic_stop(&app, &attempt, Stage::Native, Reason::AttemptRetired);
+                Ok(false)
+            })
         }),
     )
     .await

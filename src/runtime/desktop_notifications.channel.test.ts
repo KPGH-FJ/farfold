@@ -47,6 +47,7 @@ beforeEach(() => {
     if (command === "desktop_notifications_get")
       return {
         enabled: true,
+        successEnabled: false,
         sound: false,
         permission: "authorized",
         systemAlert: true,
@@ -149,3 +150,61 @@ describe("production channel desktop reminder flow", () => {
     ).toHaveLength(0);
   });
 });
+
+it.each([
+  ["approval", "resolved"],
+  ["question", "resolved"],
+  ["approval", "owner-retired"],
+  ["question", "owner-retired"],
+])(
+  "withdraws in-flight %s when %s through the actual channel/store",
+  async (kind, action) => {
+    const s = state();
+    let release!: (value: string) => void;
+    const normal = invoke.getMockImplementation()!;
+    invoke.mockImplementation((command: string, ...args: unknown[]) => {
+      if (command === "desktop_notification_submit")
+        return new Promise((r) => {
+          release = r;
+        });
+      if (command === "desktop_notification_withdraw")
+        return Promise.resolve({ state: "withdrawn" });
+      return normal(command, ...args);
+    });
+    const requestId = `${kind}-${s.key}`;
+    channel.applyChannelEvent(
+      s.key,
+      kind === "approval"
+        ? permission(requestId)
+        : { kind: "elicitation", requestId, message: "Private question" },
+    );
+    await settle();
+    const calls = invoke.mock.calls.filter(
+      ([cmd]) => cmd === "desktop_notification_submit",
+    );
+    expect(calls).toHaveLength(1);
+    if (action === "owner-retired") await threads.close(s.key);
+    else
+      channel.applyChannelEvent(s.key, {
+        kind: "interactionExpired",
+        requestId,
+      });
+    await settle();
+    expect(
+      invoke.mock.calls.filter(
+        ([cmd]) => cmd === "desktop_notification_withdraw",
+      ),
+    ).toEqual([
+      [
+        "desktop_notification_withdraw",
+        {
+          rendererNonce: calls[0][1].rendererNonce,
+          sequence: calls[0][1].sequence,
+        },
+      ],
+    ]);
+    release("suppressed");
+    await settle();
+    expect(desktopNotificationDiagnostic().frontend.phase).toBe("suppressed");
+  },
+);

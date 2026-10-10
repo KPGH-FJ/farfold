@@ -1,0 +1,17 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.53s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 4 tests
+test diagnostics::notification::tests::strips_lookup_ids_and_does_not_attach_an_unmatched_backend ... ok
+test diagnostics::notification::tests::success_diagnostic_preserves_only_the_exact_kind_effective_preference ... ok
+test diagnostics::notification::tests::rejects_arbitrary_strings_extra_fields_and_invalid_correlation ... ok
+test diagnostics::notification::tests::exports_only_the_reviewed_notification_snapshot ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 1479 filtered out; finished in 0.01s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

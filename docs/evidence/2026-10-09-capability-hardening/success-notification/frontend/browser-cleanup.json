@@ -1,0 +1,9 @@
+{
+  "ownedServerPid": 6757,
+  "observedCommand": "node output/2026-10-10-success-notification-browser/serve.mjs",
+  "signal": "SIGTERM",
+  "sessionExitCode": 143,
+  "pidAbsentAfter": true,
+  "browserContexts": "Each runner awaited browser.close in finally.",
+  "boundary": "Only exact owned Vite process signalled. Exit 143 preserved, not reported as graceful exit 0. Formal App and Agent processes untouched."
+}

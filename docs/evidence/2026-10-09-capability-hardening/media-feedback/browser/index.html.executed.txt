@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Controlled message media decoder checks</title>
+  <style>
+    body {
+      overflow: auto;
+    }
+    main {
+      max-width: 940px;
+      margin: 24px auto;
+      padding: 0 24px;
+    }
+    section {
+      padding: 12px 0;
+    }
+  </style>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./fixture.tsx"></script>
+  </body>
+</html>

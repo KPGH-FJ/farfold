@@ -1,0 +1,199 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } =
+  await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base = "output/2026-10-10-media-feedback-patch/browser";
+const engine = process.argv[2],
+  label = process.argv[3];
+if (
+  !["webkit", "chromium"].includes(engine) ||
+  !/^[a-z0-9-]+$/.test(label ?? "")
+)
+  throw Error("engine and new label required");
+const out = `${base}/${engine}-csp-${label}`;
+if (fs.existsSync(out + ".json")) throw Error("never overwrite evidence");
+const configPath = "src-tauri/tauri.conf.json";
+const csp = JSON.parse(fs.readFileSync(configPath)).app.security.csp;
+const inputs = [
+  configPath,
+  "src/components/MessageContent.tsx",
+  "src/components/MessageAttachmentMedia.tsx",
+  "src/runtime/message_attachments.ts",
+  "src/runtime/message_attachment_strings.ts",
+  `${base}/fixture.tsx`,
+  `${base}/run-csp.mjs`,
+];
+const hashes = () =>
+  Object.fromEntries(
+    inputs.map((p) => [
+      p,
+      createHash("sha256").update(fs.readFileSync(p)).digest("hex"),
+    ]),
+  );
+const r = {
+  engine,
+  label,
+  before: hashes(),
+  policy: csp,
+  checks: [],
+  errors: [],
+  externalRequests: [],
+  scope:
+    "Exact current production CSP applied before any fixture media is created. Real production message components and real browser playback/decoders; development scripts were already loaded. This is not the Tauri WebView or proof of its script hashing.",
+};
+const b = await (engine === "webkit" ? webkit : chromium).launch({
+  headless: true,
+  executablePath:
+    engine === "webkit"
+      ? path.resolve(
+          "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+        )
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+});
+const p = await b.newPage({ viewport: { width: 1040, height: 850 } });
+p.setDefaultTimeout(5000);
+p.on("pageerror", (e) => r.errors.push(String(e)));
+const check = (name, pass, details) =>
+  r.checks.push({
+    name,
+    pass: Boolean(pass),
+    ...(details === undefined ? {} : { details }),
+  });
+try {
+  await p.route("**/*", (route) => {
+    const url = route.request().url();
+    if (
+      url.startsWith("http://127.0.0.1:1492/") ||
+      url.startsWith("data:") ||
+      url.startsWith("blob:http://127.0.0.1:1492/")
+    )
+      return route.continue();
+    r.externalRequests.push(url);
+    return route.abort();
+  });
+  await p.goto(`http://127.0.0.1:1492/${base}/index.html`);
+  await p.locator("#after").waitFor();
+  check(
+    "no audio or image existed before exact policy installation",
+    (await p.locator("img,audio").count()) === 0,
+  );
+  await p.evaluate((policy) => {
+    window.cspViolations = [];
+    document.addEventListener("securitypolicyviolation", (e) =>
+      window.cspViolations.push({
+        directive: e.effectiveDirective,
+        blockedURI: e.blockedURI,
+        policy: e.originalPolicy,
+      }),
+    );
+    const meta = document.createElement("meta");
+    meta.httpEquiv = "Content-Security-Policy";
+    meta.content = policy;
+    document.head.append(meta);
+  }, csp);
+  await p.locator("#good-audio summary").click();
+  await p.getByRole("button", { name: "播放正常音频", exact: true }).click();
+  await p.waitForFunction(() =>
+    window.mediaFixture
+      .snapshot()
+      .events.some(
+        (e) =>
+          e.id === "good-audio" &&
+          ["play-resolved", "play-rejected"].includes(e.event),
+      ),
+  );
+  const good = await p
+    .locator("#good-audio audio")
+    .evaluate((n) => ({
+      paused: n.paused,
+      code: n.error?.code ?? null,
+      srcPresent: Boolean(n.getAttribute("src")),
+    }));
+  check(
+    "production CSP permits the already-admitted valid data audio",
+    !good.paused && good.code === null,
+    good,
+  );
+  check(
+    "valid data audio has no media-src violation",
+    !(await p.evaluate(() => window.cspViolations)).some(
+      (v) => v.directive === "media-src" && v.blockedURI === "data",
+    ),
+  );
+  await p.locator("#bad-audio summary").click();
+  await p.getByRole("button", { name: "播放坏音频", exact: true }).click();
+  await p.waitForFunction(() =>
+    window.mediaFixture
+      .snapshot()
+      .events.some((e) => e.id === "bad-audio" && e.event === "error"),
+  );
+  check(
+    "bad admitted data produces fixed visible audio error",
+    (await p.locator("#bad-audio").getByRole("status").count()) === 1,
+  );
+  await p.locator("#good-image summary").click();
+  await p.waitForFunction(
+    () => document.querySelector("#good-image img")?.naturalWidth > 0,
+  );
+  check(
+    "existing data image permission remains working",
+    await p.locator("#good-image img").evaluate((n) => n.naturalWidth > 0),
+  );
+  // Bypass the renderer admission only here to challenge CSP defense itself.
+  await p.evaluate(async () => {
+    const n = document.createElement("audio");
+    n.src = "https://media.invalid/forbidden.wav";
+    document.body.append(n);
+    try {
+      await n.play();
+    } catch {
+      /* an expected policy denial is recorded below */
+    }
+    n.pause();
+    n.removeAttribute("src");
+    n.load();
+    n.remove();
+  });
+  await p.waitForFunction(() =>
+    window.cspViolations.some(
+      (v) =>
+        v.directive === "media-src" &&
+        v.blockedURI.startsWith("https://media.invalid"),
+    ),
+  );
+  check(
+    "CSP still rejects external audio before network dispatch",
+    r.externalRequests.length === 0,
+    r.externalRequests,
+  );
+  r.violations = await p.evaluate(() => window.cspViolations);
+  await p.screenshot({ path: out + ".png", fullPage: true });
+} catch (e) {
+  r.errors.push(String(e));
+  await p
+    .screenshot({ path: out + "-driver-failure.png", fullPage: true })
+    .catch(() => {});
+} finally {
+  r.after = hashes();
+  r.sourceUnchanged = JSON.stringify(r.before) === JSON.stringify(r.after);
+  r.results = {
+    passed: r.checks.filter((x) => x.pass).length,
+    failed: r.checks.filter((x) => !x.pass).length,
+  };
+  await b.close();
+  fs.writeFileSync(out + ".json", JSON.stringify(r, null, 2) + "\n", {
+    flag: "wx",
+  });
+  console.log(
+    JSON.stringify({
+      engine,
+      label,
+      results: r.results,
+      errors: r.errors,
+      sourceUnchanged: r.sourceUnchanged,
+    }),
+  );
+  if (r.results.failed || r.errors.length || !r.sourceUnchanged)
+    process.exitCode = 1;
+}

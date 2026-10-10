@@ -21,6 +21,7 @@ struct FrontendDecision {
     reason: Reason,
     background: Option<bool>,
     ready: bool,
+    // Effective preference for this exact kind, not the attention-only switch.
     enabled: bool,
     saving: bool,
 }
@@ -31,6 +32,7 @@ enum Kind {
     Approval,
     Question,
     Interrupted,
+    Success,
 }
 #[derive(Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
@@ -193,6 +195,21 @@ mod tests {
                 .validate()
                 .is_err()
         );
+    }
+
+    #[test]
+    fn success_diagnostic_preserves_only_the_exact_kind_effective_preference() {
+        let mut raw = submitting();
+        raw["frontend"]["kind"] = json!("success");
+        raw["frontend"]["enabled"] = json!(true);
+        let input: NotificationInput = serde_json::from_value(raw.clone()).unwrap();
+        let output: Value = serde_json::from_slice(&input.freeze(None).unwrap().data).unwrap();
+        assert_eq!(output["frontend"]["kind"], "success");
+        assert_eq!(output["frontend"]["enabled"], true);
+        assert!(output["backend"].is_null());
+        assert!(output["frontend"].get("successEnabled").is_none());
+        raw["frontend"]["kind"] = json!("completed");
+        assert!(serde_json::from_value::<NotificationInput>(raw).is_err());
     }
 
     #[test]

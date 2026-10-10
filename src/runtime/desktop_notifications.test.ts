@@ -23,8 +23,9 @@ function deferred<T>() {
   });
   return { promise, resolve, reject };
 }
-const saved = (enabled: boolean, sound = false) => ({
+const saved = (enabled: boolean, sound = false, successEnabled = false) => ({
   enabled,
+  successEnabled,
   sound,
   permission: "authorized",
   systemAlert: true,
@@ -33,8 +34,12 @@ const saved = (enabled: boolean, sound = false) => ({
 });
 function fixture(enabled = true) {
   const read = vi.fn(async (): Promise<unknown> => saved(enabled));
-  const save = vi.fn(async (value: boolean, sound: boolean): Promise<unknown> =>
-    saved(value, sound),
+  const save = vi.fn(
+    async (
+      value: boolean,
+      sound: boolean,
+      successEnabled: boolean,
+    ): Promise<unknown> => saved(value, sound, successEnabled),
   );
   const submit = vi.fn(
     async (
@@ -46,6 +51,7 @@ function fixture(enabled = true) {
   );
   const background = vi.fn(() => true);
   const notifications = new DesktopNotifications({
+    withdraw: async () => ({ state: "unknown" }),
     read,
     save,
     submit,
@@ -131,7 +137,7 @@ describe("desktop reminder preferences", () => {
         error: message,
       });
       await settle();
-      expect(f.save).toHaveBeenCalledExactlyOnceWith(true, true);
+      expect(f.save).toHaveBeenCalledExactlyOnceWith(true, true, false);
       expect(f.submit).not.toHaveBeenCalled();
     },
   );
@@ -173,7 +179,7 @@ describe("desktop reminder preferences", () => {
         error: NOTIFICATION_STRINGS.saveError,
       });
       await settle();
-      expect(f.save).toHaveBeenCalledExactlyOnceWith(true, true);
+      expect(f.save).toHaveBeenCalledExactlyOnceWith(true, true, false);
       expect(f.submit).not.toHaveBeenCalled();
     },
   );
@@ -183,7 +189,7 @@ describe("desktop reminder preferences", () => {
     await f.notifications.load();
     expect(f.notifications.snapshot().sound).toBe(false);
     await f.notifications.setSound(true);
-    expect(f.save).toHaveBeenCalledExactlyOnceWith(false, true);
+    expect(f.save).toHaveBeenCalledExactlyOnceWith(false, true, false);
     expect(f.notifications.snapshot()).toMatchObject({
       enabled: false,
       sound: true,

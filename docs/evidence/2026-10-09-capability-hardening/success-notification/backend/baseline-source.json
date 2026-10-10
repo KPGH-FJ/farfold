@@ -1,0 +1,54 @@
+{
+  "sourceHead": "e1575cbad4a5e33fb3b348c7c84e788a47c8bf24",
+  "files": [
+    {
+      "path": "src-tauri/src/desktop_notifications/diagnostic.rs",
+      "originalSha256": "e6c2cdd6ff1253bc13feeb4d118a9bcab9d40dabfc5df935cc8ade74e758461c",
+      "preparedSha256": "c9c160f9a861984baa173f076793385cf0ef1c9336e609a55078beed56e231a5",
+      "lines": 428
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/native.rs",
+      "originalSha256": "054deb9120522d6296467b1a5c6dc740cfe015a196e37bdeff46d3bd7b00599a",
+      "preparedSha256": "cd8ef26d89dcd78934572c516f729902c912b5019f0c9e2a8f69dcb3e9663394",
+      "lines": 328
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/tests.rs",
+      "originalSha256": "846cede0daffc1c6cc694eb9b2333b83156ebb810c02660c1a29b3cc51dd4fa6",
+      "preparedSha256": "6d1cf5a197f9712011fb2b1b460d31db37786beda380dac98d867a8906360f00",
+      "lines": 328
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/tickets.rs",
+      "originalSha256": null,
+      "preparedSha256": "dcb5d64576fa7026716c4601d16ccbf6032b1547accfd8bbb8c6b3d501b72837",
+      "lines": 335
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/windows.rs",
+      "originalSha256": "b7cba61823e2c9371ac972898490c64795a74a439fc4856517e921717eaa2c5e",
+      "preparedSha256": "11e110070cd6b72e2a04a3fa2c33b4ba2b109b9615dee1cf7bec6344d78f2d68",
+      "lines": 263
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications.rs",
+      "originalSha256": "2ddd68d76ebc60f955008e9f948217c600cc18c0cfc403228313bfb5e6d96507",
+      "preparedSha256": "eecdf1298ac2c58c83cefab2c5c15bac8635ab171c634ae0ea97db01dca0ffd1",
+      "lines": 508
+    },
+    {
+      "path": "src-tauri/src/diagnostics/notification.rs",
+      "originalSha256": "4ad3fff641b916acf626297c3c2ea60dbea45c0c352087722c78466e3f95a39b",
+      "preparedSha256": "4fdd0007050a08435a76cdec0fdaf7ff82c4ae5d7263ed638c7a94733241371c",
+      "lines": 262
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "originalSha256": "3aa9bd5c651c373f4d88a866f99ac149ca9b966df723cae0ac335d3deddb1896",
+      "preparedSha256": "8b840f6e440dec4f7fb98a196b309c6b1510e156747f06b59d542d8bef445eb9",
+      "lines": 431
+    }
+  ],
+  "patchCheckPassed": true
+}

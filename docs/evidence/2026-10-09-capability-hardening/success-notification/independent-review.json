@@ -1,0 +1,227 @@
+{
+  "atUtc": "2026-10-10T15:12:02.775751+00:00",
+  "status": "noAdditionalBlockingFindingWithinReviewedSourceScope",
+  "scope": "Independent static review of final common P47/P48 notification frontend/backend plus deterministic verification of author evidence. No application, real Agent, native notification, browser rerun, project test or Cargo execution by this reviewer.",
+  "source": {
+    "count": 20,
+    "maximumLines": 1500,
+    "refs": [
+      {
+        "path": "src-tauri/src/desktop_notifications/diagnostic.rs",
+        "sha256": "c9c160f9a861984baa173f076793385cf0ef1c9336e609a55078beed56e231a5",
+        "lines": 428
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/native.rs",
+        "sha256": "cd8ef26d89dcd78934572c516f729902c912b5019f0c9e2a8f69dcb3e9663394",
+        "lines": 328
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/tests.rs",
+        "sha256": "ae3fa3c760ff4131921c09300cdccb7fe71f101e5e253a7a75d9b7ee4951cb6d",
+        "lines": 345
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/tickets.rs",
+        "sha256": "da5ad170401a19b9567d4248a3dac801f7c35b5b813589ab8376c232e5c31095",
+        "lines": 409
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/windows.rs",
+        "sha256": "6450d2ac59d63848d38585b593a0726ac3ad7766451da579800643e87f5c7b98",
+        "lines": 268
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications.rs",
+        "sha256": "eecdf1298ac2c58c83cefab2c5c15bac8635ab171c634ae0ea97db01dca0ffd1",
+        "lines": 508
+      },
+      {
+        "path": "src-tauri/src/diagnostics/notification.rs",
+        "sha256": "4fdd0007050a08435a76cdec0fdaf7ff82c4ae5d7263ed638c7a94733241371c",
+        "lines": 262
+      },
+      {
+        "path": "src-tauri/src/lib.rs",
+        "sha256": "8b840f6e440dec4f7fb98a196b309c6b1510e156747f06b59d542d8bef445eb9",
+        "lines": 431
+      },
+      {
+        "path": "src/components/GeneralSettings.success-notifications.test.tsx",
+        "sha256": "3bf0a978f8e3a760305f5c1c7d77cda9850a42a49741b84a01d15a2182bcb812",
+        "lines": 60
+      },
+      {
+        "path": "src/components/GeneralSettings.test.tsx",
+        "sha256": "55b0cc368896a0749b548b076277adebcc7b1b9fde86d7ae63b13fdf96ff7498",
+        "lines": 69
+      },
+      {
+        "path": "src/components/GeneralSettings.tsx",
+        "sha256": "4317976c9789c7c63087a5673f5501416b27960f0707fc32e8c347ceeb07d0d9",
+        "lines": 638
+      },
+      {
+        "path": "src/runtime/desktop_notifications.channel.test.ts",
+        "sha256": "291adfda505c05519a7dd3ae345c64c7eb997d037570f69ce7f9d5d0e7b25dac",
+        "lines": 210
+      },
+      {
+        "path": "src/runtime/desktop_notifications.success-channel.test.ts",
+        "sha256": "ca9175f1066eb9ed73d9eb91fb0f0d103682834cd5d82daadd4ee5f351bdaf38",
+        "lines": 214
+      },
+      {
+        "path": "src/runtime/desktop_notifications.success.test.ts",
+        "sha256": "935ac81253cfe44fcc44ed707ffd31e04db026ba7ffc19ca8ad15a68b0d1eb34",
+        "lines": 267
+      },
+      {
+        "path": "src/runtime/desktop_notifications.test.ts",
+        "sha256": "582f4cfd9cc017e4862db1ceab130449180978031c7ee010ed0a8c819e289fa2",
+        "lines": 783
+      },
+      {
+        "path": "src/runtime/desktop_notifications.ts",
+        "sha256": "af1895332374c7e8ec37971004e556926aad41630b5956a60eaf93a6866d57b7",
+        "lines": 651
+      },
+      {
+        "path": "src/runtime/sessions.ts",
+        "sha256": "93754212761e08d20c35991ce8d102d4e923da0c5e622c637df00ce483b59066",
+        "lines": 1500
+      },
+      {
+        "path": "src/runtime/settings_presentation_strings.ts",
+        "sha256": "2b35a40421c0383c146a6c032012ab64196566060c9f552839ce0a0f8d05704c",
+        "lines": 83
+      },
+      {
+        "path": "src/runtime/success_notification.test.ts",
+        "sha256": "47dd9e1a05bb508b0259bb94f12682643a96013f8f84fb2ff47f576c57c621c5",
+        "lines": 270
+      },
+      {
+        "path": "src/runtime/success_notification.ts",
+        "sha256": "c610573ac6d78bb700203e714111e7a9094bdbcd1389e02404b5b178f681e482",
+        "lines": 264
+      }
+    ],
+    "baselineAccounting": "Original backend receipt and checkpoint remain frozen. Seven of its eight source hashes still match; windows.rs is superseded only by windows-followup/receipt.json. Exact old Windows bytes are retained and match the original SHA. All twelve final frontend hashes match."
+  },
+  "findingsClosed": [
+    {
+      "finding": "Disabling one reminder kind under system Denied must not erase the other unchanged saved preference.",
+      "origin": "Static review of private draft; not claimed as an installed production failure.",
+      "resolution": "Each requested false disables; unchanged true preserves the prior user choice; only false-to-true requires actual system permission. Delivery still checks real permission. Author targeted tests include both Denied directions."
+    },
+    {
+      "finding": "Frontend current-owner checks before IPC cannot retire a submission already waiting behind backend awaits.",
+      "resolution": "Exact existing rendererNonce/sequence RAM ticket, pending-attempt ownership and explicit withdrawal span both sides. Actual session store publication invalidates the owner synchronously; success, approval and question share pending tracking. Late/unknown submit is not retried or called suppressed without a withdrawal receipt."
+    },
+    {
+      "finding": "Windows DispatchStarted was set before fallible notice-map acquisition, which could return before Show.",
+      "origin": "Static source finding only; no Windows failure was executed.",
+      "resolution": "Map registration, release and old-notice cleanup now precede dispatch. The dispatch closure directly enters Show; withdrawal winning between registration and Show causes exact forget(id). Reviewed final minimal diff; owned rustfmt output is author evidence. No shared helper or unrelated code change."
+    }
+  ],
+  "reviewedInvariants": [
+    "Old preference data decodes with independent default-off successEnabled; reads do not rewrite settings. Fixed notification body and reviewed diagnostic fields exclude Agent/user message contents.",
+    "Only actual send admission creates a success candidate. Exact thread object, connection, native session and current request boundary remain required. Official end_turn and actual projected done/reply or completed tool result are reconciled; active/unknown/failed/stopped task, pending permission, uncertain configuration, failed tool/compaction, replay and prose do not prove successful completion.",
+    "The bounded pending-attempt set handles new work, connection loss and removed exact store owner. Approval/question pending IDs are rechecked. Hiding the work view alone does not retire the owner; interruption is not guessed resolved from presentation fields.",
+    "Pending tickets are never evicted. Bounded renderer watermarks prevent old not-yet-admitted submit revival after early withdrawal, including terminal record eviction. High sequences reject older unadmitted IPC without invalidating a live lower-sequence ticket. Capacity refuses new work rather than dropping live ownership.",
+    "The platform closure/worker owns the ticket across observer timeout. The final ticket lock arbitrates withdrawal versus platform submission; preference revision, actual background state and target resolution are rechecked. macOS callback/diagnostic paths do not acquire this ticket lock, avoiding synchronous-callback self-deadlock.",
+    "withdrawn proves the exact request did not cross the dispatch boundary; alreadySubmitted only means native submission began, not API acceptance/display. unknown retains uncertainty. No automatic notification retry or persistent event/delivery ledger was added.",
+    "Final Windows notice registration does not hold the map mutex during Show or event cleanup. macOS FFI start/one callback and Box ownership remain separate from observer completion. Windows execution and installed macOS presentation remain unverified in this review."
+  ],
+  "evidenceAudit": {
+    "referenceCountsByReceipt": {
+      "backendOriginal": 15,
+      "frontend": 52,
+      "windowsFollowup": 14
+    },
+    "allReferencedBytesMatch": true,
+    "historicalWindowsSourceResolvedToExactRetainedCopy": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/windows-followup/windows-before.rs.txt",
+    "frontendRawFormattedPairs": 7,
+    "allPairsSemanticallyEqual": true,
+    "currentSourceHashesMatch": true
+  },
+  "authorExecutionEvidence": {
+    "backend": "Original production decoder/default regression 2 failures; final notification tests 34 passed and diagnostic tests 4 passed, owned format and standard clippy exit 0 before the final Windows-only order correction. No claim that these host tests compiled Windows.",
+    "frontend": "Actual production-channel regressions: first success 1 red; success-owner withdrawal 3 red; approval/question held-submit expiry/close 4 red. Their fixes are included in final 12 files / 143 passed, typecheck and owned format exit 0.",
+    "browser": [
+      {
+        "engine": "webkit",
+        "checks": 19,
+        "inputsStable": true,
+        "report": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-shared-final.json",
+          "sha256": "f8740b49808678bbced3cda074a082667a8ae6b7c62a15e0bdcc2ce9426e4954"
+        }
+      },
+      {
+        "engine": "chromium",
+        "checks": 19,
+        "inputsStable": true,
+        "report": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-shared-final.json",
+          "sha256": "e45eeb6786946f7519f6639bac8e11480908d3da12152301c33c5299c431fcde"
+        }
+      }
+    ],
+    "browserBoundary": "Author ran actual GeneralSettings/React StrictMode, production singleton and real ThreadsStore send/projection with controlled IPC and system facts. This is not full App or actual OS notification delivery. Independent review inspected report data/hash/raw equivalence; did not repeat browser runs.",
+    "windowsFollowup": "Static order review and owned rustfmt only; tickets mechanism tests reused because tickets.rs is byte-identical. Actual Windows compile/runtime not performed."
+  },
+  "notClaimed": [
+    "Whole-repository engineering success; parent performs final seven checks.",
+    "Installed app behavior, real macOS permission/display/sound/click, or Windows native behavior.",
+    "Every Agent completing all work, or a reply alone establishing success.",
+    "P47/P48 full product acceptance from controlled evidence."
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/implementation.json",
+      "sha256": "d3588acc25e5f53c751a76ac591921fae644da5e277cfdb691db16fd4ff00053"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/source-checkpoint.json",
+      "sha256": "827203ca18823a97321deb47a701202688dd9807a4de237c26067c4abc687d4e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/windows-followup/receipt.json",
+      "sha256": "e9a28c881f47c841889a39966538b4823f1e0a7d29b2a4ce5d34c93060812478"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/windows-followup/exact.diff",
+      "sha256": "15bba23a091d074a849c3ab1e7ff0b5c48687fdf8938d58050c6cf133ac7ec95"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/windows-followup/windows-before.rs.txt",
+      "sha256": "11e110070cd6b72e2a04a3fa2c33b4ba2b109b9615dee1cf7bec6344d78f2d68"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/windows-followup/format.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/implementation.json",
+      "sha256": "75d196f4a3721d75d5c499ea5cd1d407f7a73383ad95641ddd91ed630f89649f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/source-checkpoint.json",
+      "sha256": "7231c5f3f30f791148309cffb41ca45c8aa9f806139799f535dd0cc3a9b791b1"
+    },
+    {
+      "path": "output/2026-10-10-success-notification-patch/backend/independent-review.json",
+      "sha256": "91d8a4d4d9179ded79a1a9d5b7490f212d349f6ca0aab887c8b21e0c15c32f0d"
+    },
+    {
+      "path": "src-tauri/native/DesktopNotifications.m",
+      "sha256": "63579c053ea890a00cfdded3bcec6d336fb7dc29efd846d522e93b2935d70525"
+    },
+    {
+      "path": "src/runtime/completion.ts",
+      "sha256": "fb871ff354db6ae9a75c68b29eac7102360423c1a341a6cbd99bbd97fad1c15f"
+    }
+  ]
+}

@@ -91,3 +91,19 @@
 .message-attachment-content audio {
   width: min(100%, 420px);
 }
+
+.message-attachment-media {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.message-attachment-media-failure {
+  color: var(--ink-2);
+}
+.message-attachment-media-failure p {
+  margin: 0 0 6px;
+}
+.message-attachment-media:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

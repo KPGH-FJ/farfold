@@ -1,0 +1,43 @@
+{
+  "frozenAtUtc": "2026-10-10T15:01:53.952067+00:00",
+  "baseCommit": "39955ec65a4274cdeac1bab9884f4073c792102a",
+  "sourceFiles": [
+    {
+      "path": "src/components/MessageAttachmentMedia.test.tsx",
+      "sha256": "40c5b2acf4a17bcb5d27cef229fe152c933b0be1acaef284dd340b9413e57176",
+      "bytes": 7578,
+      "lines": 218
+    },
+    {
+      "path": "src/components/MessageAttachmentMedia.tsx",
+      "sha256": "148d864ef4a69a5848a68356c290819058b43f198164723c3b3bec7cae3bfcd5",
+      "bytes": 4045,
+      "lines": 118
+    },
+    {
+      "path": "src/components/MessageContent.tsx",
+      "sha256": "e1d1642acd7e3631b8f22fea54699895b8c0438400831a64289a1ada5b3bd4f3",
+      "bytes": 9858,
+      "lines": 330
+    },
+    {
+      "path": "src/message-attachments.css",
+      "sha256": "e3f41f1646cff5b1356e9c4db0b017c4a6ae87d545a5a0b753e4d842c9f8b3f7",
+      "bytes": 2276,
+      "lines": 109
+    },
+    {
+      "path": "src/runtime/message_attachment_strings.ts",
+      "sha256": "c3ec52ecc5bee9352782277c1be230f72ba45255e9febe10a108330b570ed53c",
+      "bytes": 589,
+      "lines": 12
+    },
+    {
+      "path": "src-tauri/tauri.conf.json",
+      "sha256": "c706b854dc18fb44c29a1b07f353efcbd83ccc6c8b836dbe78d1e854224f3c7c",
+      "bytes": 1324,
+      "lines": 53
+    }
+  ],
+  "scope": "5 initial owned files plus parent-authorized tauri.conf.json media-src correction; no P48 ownership overlap."
+}

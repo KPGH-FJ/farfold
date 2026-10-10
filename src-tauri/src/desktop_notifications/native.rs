@@ -1,6 +1,6 @@
 //! UserNotifications bridge. Tests never initialize the system center.
 use super::{
-    DesktopNotifications, SystemSettings,
+    DesktopNotifications, NoticeKind, SystemSettings,
     diagnostic::{Attempt, Reason, Stage},
 };
 use std::{
@@ -176,10 +176,11 @@ unsafe extern "C" fn submit_reply(context: *mut c_void, success: bool) {
 pub(super) async fn submit(
     app: &AppHandle,
     target: String,
-    body: &'static str,
+    kind: NoticeKind,
     sound: bool,
     revision: u64,
     attempt: Attempt,
+    ticket: super::Ticket,
 ) -> Result<bool, String> {
     if !AVAILABLE.load(Ordering::SeqCst) {
         app.state::<DesktopNotifications>()
@@ -211,7 +212,14 @@ pub(super) async fn submit(
             let _ = reply.send(Ok(false));
             return;
         };
-        if !super::may_submit_locked(&owned, revision, &queued_attempt, Stage::Native) {
+        if !super::may_submit_locked(
+            &owned,
+            &ticket,
+            kind,
+            revision,
+            &queued_attempt,
+            Stage::Native,
+        ) {
             let _ = reply.send(Ok(false));
             return;
         }
@@ -237,7 +245,11 @@ pub(super) async fn submit(
             revision,
             attempt: queued_attempt,
         });
-        let strings = (CString::new(id), CString::new(target), CString::new(body));
+        let strings = (
+            CString::new(id),
+            CString::new(target),
+            CString::new(kind.body()),
+        );
         let (Ok(id), Ok(target), Ok(body)) = strings else {
             super::diagnostic_stop(
                 &context.app,
@@ -254,7 +266,7 @@ pub(super) async fn submit(
             .diagnostic
             .attach_notice(&context.attempt, &context.id);
         let pointer = Box::into_raw(context);
-        if !unsafe {
+        let started = ticket.dispatch(|| unsafe {
             ff_notifications_submit(
                 id.as_ptr(),
                 target.as_ptr(),
@@ -263,7 +275,19 @@ pub(super) async fn submit(
                 pointer.cast(),
                 submit_reply,
             )
-        } {
+        });
+        let Some(started) = started else {
+            let context = unsafe { Box::from_raw(pointer) };
+            super::diagnostic_stop(
+                &context.app,
+                &context.attempt,
+                Stage::Native,
+                Reason::AttemptRetired,
+            );
+            let _ = context.reply.send(Ok(false));
+            return;
+        };
+        if !started {
             // A bridge start failure is not an OS add rejection. The fixed
             // observer may already have recorded a more precise local reason.
             let failed = unsafe { &*pointer };

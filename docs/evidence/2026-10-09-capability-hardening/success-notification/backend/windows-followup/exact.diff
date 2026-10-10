@@ -1,0 +1,46 @@
+--- a/src-tauri/src/desktop_notifications/windows.rs
++++ b/src-tauri/src/desktop_notifications/windows.rs
+@@ -204,19 +204,21 @@
+             {
+                 return Ok(false);
+             }
++            // Complete fallible registration and old-notice cleanup before
++            // consuming this ticket. Do not hold the map during OS callbacks.
++            let evicted = {
++                let mut values = notices().lock().map_err(|_| "提醒未能提交")?;
++                values.push_back(notice);
++                if values.len() > 128 {
++                    values.pop_front()
++                } else {
++                    None
++                }
++            };
++            if let Some(old) = evicted {
++                remove(&notifier, &old);
++            }
+             let submitted = ticket.dispatch(|| {
+-                let evicted = {
+-                    let mut values = notices().lock().map_err(|_| "提醒未能提交")?;
+-                    values.push_back(notice);
+-                    if values.len() > 128 {
+-                        values.pop_front()
+-                    } else {
+-                        None
+-                    }
+-                };
+-                if let Some(old) = evicted {
+-                    remove(&notifier, &old);
+-                }
+                 if notifier.Show(&toast).is_err() {
+                     forget(id);
+                     return Err("提醒未能提交".into());
+@@ -225,6 +227,9 @@
+                 Ok(true)
+             });
+             submitted.unwrap_or_else(|| {
++                // Withdrawal won after registration but before Show. Remove
++                // only this new notice and release its subscribed callbacks.
++                forget(id);
+                 super::diagnostic_stop(&app, &attempt, Stage::Native, Reason::AttemptRetired);
+                 Ok(false)
+             })

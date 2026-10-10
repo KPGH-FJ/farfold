@@ -1,0 +1,360 @@
+{
+  "atUtc": "2026-10-10T15:05:36.012554+00:00",
+  "status": "frontendImplementedAndControlledVerifiedNotSystemDeliveryAcceptance",
+  "scope": "Common success-reminder preference, live official-ending eligibility, and shared exact pending-attempt retirement for success/approval/question/interrupted reminders. No Agent-specific UI or event ledger.",
+  "source": {
+    "count": 12,
+    "production": 5,
+    "tests": 7,
+    "maximumLines": 1500,
+    "checkpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/source-checkpoint.json",
+      "sha256": "7231c5f3f30f791148309cffb41ca45c8aa9f806139799f535dd0cc3a9b791b1"
+    }
+  },
+  "behavior": [
+    "successEnabled is an independent default-off preference; old enabled remains attention reminders, with shared sound and system permission facts.",
+    "Only actual send admission creates a success candidate. Official done/end_turn is reconciled with the real projected ending, no failed or pending tools/compactions, pending permissions, uncertain connection or unfinished official asynchronous task. History replay and prose do not establish success.",
+    "In-memory dedup and exact current thread/connection/session/end ownership prevent duplicate or stale work notifications. Work view visibility alone does not retire the owner.",
+    "Pending submission attempts share bounded exact rendererNonce/sequence withdrawal. The real thread store publishes retirement synchronously, including removal of the original object. Approval/question expiry after submit begins also withdraws. Interrupted notices are not assumed resolved from UI recovery.",
+    "A submit timeout remains uncertain and retains retirement until owner invalidation. No automatic resubmission. withdrawn means the backend ticket had not crossed its dispatch boundary; alreadySubmitted means the submission call began, not that the OS accepted or displayed it; unknown never proves suppression.",
+    "Existing click target navigation and foreground/system gates are reused. New backend platform gates and real system presentation are peer/root responsibilities."
+  ],
+  "redGreen": {
+    "initialLiveSuccess": {
+      "red": "channel-success-red.txt: 1 behavioral failure / 5 skipped against unchanged production; accepted send + actual done projection produced zero success attempts.",
+      "green": "initial-targeted.txt: 7 files / 105 tests passed after applying the private draft."
+    },
+    "successRetirement": {
+      "red": "withdraw-channel-red.txt: 3 behavioral failures for new request, lost connection and closed owner while submit was held.",
+      "green": "withdraw-channel-green.txt: 9 actual channel tests passed."
+    },
+    "sharedAttentionRetirement": {
+      "red": "shared-withdraw-red.txt: 4 behavioral failures, approval/question expiry and exact owner close while submit was held.",
+      "green": "shared-withdraw-green.txt: 2 files / 16 tests passed."
+    },
+    "final": "associated-final.txt: 12 files / 143 tests passed; typecheck-shared-final.txt and owned-format.txt exit 0."
+  },
+  "nonProductFailures": [
+    "Initial draft typecheck reported optional owned access; explicit presence guard fixed it before final typecheck.",
+    "First browser server attempt rejected occupied port 1492; no existing process was stopped. Owned server used strict port 1503.",
+    "First WebKit driver completed 12 checks then matched two different Recheck buttons. Selector was scoped to the actual Notifications region; failure/raw screenshot retained.",
+    "Original narrow screenshot captured a 120 ms existing switch transition. Separate settled-CSS probe verifies off thumb left/on thumb right in both engines; no production CSS change."
+  ],
+  "browser": {
+    "final": {
+      "webkit": 19,
+      "chromium": 19,
+      "errors": 0,
+      "inputsStable": true
+    },
+    "layer": "Actual GeneralSettings rendered in React StrictMode, production notification singleton/owner and real ThreadsStore send/projection; controlled Tauri IPC, preference saves/reads, OS submit/withdraw and background state. No actual OS permission/notification or external Agent. Not the complete App shell.",
+    "coverage": [
+      "Independent success/attention/shared sound switches, keyboard activation/navigation, controlled save wait/failure and stale preference read.",
+      "Foreground success suppression; background actual live end produces content-free attempt; thread close while held withdraws exact attempt.",
+      "Approval/question expire while held and withdraw their exact attempt.",
+      "640x620 reachable controls and settled off/on visuals."
+    ],
+    "historicalRuns": "Original two-engine 17-check runs preceded shared P47 retirement; final 19-check runs bind the final shared frontend bytes. WebKit uses host Option+Tab for button navigation, Chromium Tab.",
+    "inputBoundary": "Hash inventory covers the listed 8 production files and 4 harness files, not every imported repository source.",
+    "cleanup": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser-cleanup.json",
+      "sha256": "51e3450f6625796e957c18f58c2571975d1cf500b7ab06df093316c86cfcff66"
+    }
+  },
+  "formatMapping": [
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-first.raw.txt",
+        "sha256": "379b176cbb63265bbf975d74691bbb21c1894c956debed95f0f1c1a71fddf9fb"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-first.json",
+        "sha256": "8b5adf3ad3865ff4db313214681eb907112dd821c1aa05fb3caf689d5f564033"
+      },
+      "semanticEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-visual.raw.txt",
+        "sha256": "49233706595b5acae3595236f7260c85cb9102890f82bc817f6ebebd4b1ab2a5"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-visual.json",
+        "sha256": "49233706595b5acae3595236f7260c85cb9102890f82bc817f6ebebd4b1ab2a5"
+      },
+      "semanticEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-shared-final.raw.txt",
+        "sha256": "7dd17657a3c3e4f9c89ec3e9a6cad735c9b4bc9efa7eee0d64eba317b0b2f784"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-shared-final.json",
+        "sha256": "e45eeb6786946f7519f6639bac8e11480908d3da12152301c33c5299c431fcde"
+      },
+      "semanticEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-visual.raw.txt",
+        "sha256": "ed352b22b17d86abd76f096e0298105e9f7c35a64b755faa99da76bffb1fdf99"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-visual.json",
+        "sha256": "ed352b22b17d86abd76f096e0298105e9f7c35a64b755faa99da76bffb1fdf99"
+      },
+      "semanticEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-shared-final.raw.txt",
+        "sha256": "05b76085738a293bcdda3f3a21f114ab54735209e629e8550442d6b4b8c7505e"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-shared-final.json",
+        "sha256": "f8740b49808678bbced3cda074a082667a8ae6b7c62a15e0bdcc2ce9426e4954"
+      },
+      "semanticEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-final.raw.txt",
+        "sha256": "c54d9b53652a925cc46459333b6843d4b7ec798a57da82a1901bb03969165b65"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-final.json",
+        "sha256": "3f1778cd9abd772b5ee1e7f476dc81f24b972756c9f6bf9a678a95578adabbd6"
+      },
+      "semanticEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-final.raw.txt",
+        "sha256": "5f2b69b7f7c56480d241f06c88bde55354155d65d8ebf4e6f2ba1b0b60f34a37"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-final.json",
+        "sha256": "852eaf58e9c76428f83a6b609459f8e2c3d6342aa11804492895afdaa566c953"
+      },
+      "semanticEqual": true
+    }
+  ],
+  "notClaimed": [
+    "Actual macOS notification display/sound/click acceptance or denial/unknown permission interaction.",
+    "Windows native submission or cold activation.",
+    "Whole-repository engineering checks; root runs them after integration.",
+    "All work completed merely because an Agent replied; pending, failed, cancelled and unknown remain ineligible."
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/associated-final.txt",
+      "sha256": "d89d3522c3c8165d7e6f2cb66c606e7d2d1499e8ae2212c0b9189bcbd26f8d67"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/associated-first.txt",
+      "sha256": "cf1a8a110ef126216f69536319ccc82e9a0dea9a46ee127ed6919705c5465a29"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-final-narrow.png",
+      "sha256": "fc093fec8229dc3be3c83ce3db8dcb0246952d7bf22e81f70eadd5bb7f28bdec"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-final.json",
+      "sha256": "3f1778cd9abd772b5ee1e7f476dc81f24b972756c9f6bf9a678a95578adabbd6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-final.raw.txt",
+      "sha256": "c54d9b53652a925cc46459333b6843d4b7ec798a57da82a1901bb03969165b65"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-final.stdout.txt",
+      "sha256": "8cd4a33990fbb3b52d9312fa5ca2639bd3f4f39a2b4d48c2d5101382299586af"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-settled-narrow.png",
+      "sha256": "f79312b83ca596e063eb3f9fc9a953f0d9fc5bd6ddd7d3c9bf5ee1fad7fc327a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-shared-final-narrow.png",
+      "sha256": "fc093fec8229dc3be3c83ce3db8dcb0246952d7bf22e81f70eadd5bb7f28bdec"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-shared-final.json",
+      "sha256": "e45eeb6786946f7519f6639bac8e11480908d3da12152301c33c5299c431fcde"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-shared-final.raw.txt",
+      "sha256": "7dd17657a3c3e4f9c89ec3e9a6cad735c9b4bc9efa7eee0d64eba317b0b2f784"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-shared-final.stdout.txt",
+      "sha256": "28927a20190d4420e27c5c1ff9a84df255f3a20e3e618dc382d9c3b3bf9fcadc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-visual.json",
+      "sha256": "49233706595b5acae3595236f7260c85cb9102890f82bc817f6ebebd4b1ab2a5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/chromium-visual.raw.txt",
+      "sha256": "49233706595b5acae3595236f7260c85cb9102890f82bc817f6ebebd4b1ab2a5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/fixture.tsx.before-shared-withdraw.txt",
+      "sha256": "7759cf4b9b4284cd79339e823a84137819956954e9fa09104ee40ca70b1cfc63"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/fixture.tsx.executed.txt",
+      "sha256": "738cca41cb7d527311ae919147774e69ed5bdf5d8f3c2d2ffc14479dc95f7521"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/index.html.executed.txt",
+      "sha256": "1d3f53de5392e9ec6356a1fd2567bcf969ae13c88cadd6240490b75241e3370c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/run.mjs.before-shared-withdraw.txt",
+      "sha256": "9fcb341c810002b53b0d365124d4234a53fac5816ab37c19d460f36db1493fc2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/run.mjs.executed.txt",
+      "sha256": "2ff706d937426176fb4cee054e628aed999389297358ec03b9d2e73a6bc12645"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/serve.mjs.executed.txt",
+      "sha256": "e7239ca7af063fff625982c365e3bc9b6f25aa89364434b66ebce4ba599fb59c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/server-1503.txt",
+      "sha256": "47bc343233525fa5ccaff42b88c9c14a94b2fd138fed3bb451ed35cad5940b59"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/server.txt",
+      "sha256": "20f23c27606509eeea9ac10f6ae934cbf14ab3fa0a3ec22ef83c54d2e55ba772"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/visual.mjs.executed.txt",
+      "sha256": "0be9ee020d75a6e6fb307892b14bbd63a5302839681c88c1992609aab1644840"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/visual.stdout.txt",
+      "sha256": "bde9ff66de76bc69af93329187bf147c37fbfac29edd1b89661cfd6df0299d70"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-final-narrow.png",
+      "sha256": "4e2ac09a801000c85584041e456cbbf67fa3b29b13e4e9c6cc319bd967add7bc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-final.json",
+      "sha256": "852eaf58e9c76428f83a6b609459f8e2c3d6342aa11804492895afdaa566c953"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-final.raw.txt",
+      "sha256": "5f2b69b7f7c56480d241f06c88bde55354155d65d8ebf4e6f2ba1b0b60f34a37"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-final.stdout.txt",
+      "sha256": "cbfa069fb22eb3ca80d3f45dcdf3f5e647086627b578927a5a5d4ce5055a2301"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-first-failure.png",
+      "sha256": "576b2ddf8da2c3a635a82f148a7fc444bd35ffd3087930925d8160f5248f515b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-first.json",
+      "sha256": "8b5adf3ad3865ff4db313214681eb907112dd821c1aa05fb3caf689d5f564033"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-first.raw.txt",
+      "sha256": "379b176cbb63265bbf975d74691bbb21c1894c956debed95f0f1c1a71fddf9fb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-first.stdout.txt",
+      "sha256": "8145ae025443376c7de992f5eba5afcc6bfc911c1d9cb71e8050ccfb7d0041af"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-settled-narrow.png",
+      "sha256": "7c2152a8c7589c1f6f87b46233fd6b4e180d59c820f5a98541effd5d4e5ac5ba"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-shared-final-narrow.png",
+      "sha256": "9baffcb29c08f36c4c6180f95bae4024aee42b8711ecca2c716d6f846e17c097"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-shared-final.json",
+      "sha256": "f8740b49808678bbced3cda074a082667a8ae6b7c62a15e0bdcc2ce9426e4954"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-shared-final.raw.txt",
+      "sha256": "05b76085738a293bcdda3f3a21f114ab54735209e629e8550442d6b4b8c7505e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-shared-final.stdout.txt",
+      "sha256": "ecc9b9a3090429ff7f03bac848e4509e5e453210b1030144147361dfabef6387"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-visual.json",
+      "sha256": "ed352b22b17d86abd76f096e0298105e9f7c35a64b755faa99da76bffb1fdf99"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser/webkit-visual.raw.txt",
+      "sha256": "ed352b22b17d86abd76f096e0298105e9f7c35a64b755faa99da76bffb1fdf99"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/browser-cleanup.json",
+      "sha256": "51e3450f6625796e957c18f58c2571975d1cf500b7ab06df093316c86cfcff66"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/channel-success-red.txt",
+      "sha256": "bc1fa8bb46778fbe4b71dcaf5b22d008f85f33386805500470a801b3350dbf8d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/initial-targeted.txt",
+      "sha256": "6889894239ee626b419817d6dfd24376bb10f1d0ee3d9f7d2ebcf569c9380176"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/initial-typecheck.txt",
+      "sha256": "0e4e848f8a651f43c3e689e18bc7d87900ae2064bf107250890b0f643b7cbea9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/owned-format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/private-manifest-original.json",
+      "sha256": "3ccaa001d22e4e110f7fb67c8e593f039a4bbb31b93d98ae7930b29ad7adad16"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/shared-withdraw-green.txt",
+      "sha256": "512541983b7c2dca5598183f290d92cbd153dfa9875d1aa22b3286cc22b3da84"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/shared-withdraw-red.txt",
+      "sha256": "cbf877c548186e823475f4b5e128235e72682c6b63e48018938a74eb1730ecea"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/source-checkpoint.json",
+      "sha256": "7231c5f3f30f791148309cffb41ca45c8aa9f806139799f535dd0cc3a9b791b1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/typecheck-after-withdraw.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/typecheck-shared-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/withdraw-channel-green.txt",
+      "sha256": "c1db488a338ecf40a5852604154173bff49f33975d581f7e76047069eafd1086"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/frontend/withdraw-channel-red.txt",
+      "sha256": "a049dc1e90ae9bc02ddb4cb55693c861d09373a854e507c06f71a2d15b955430"
+    }
+  ]
+}

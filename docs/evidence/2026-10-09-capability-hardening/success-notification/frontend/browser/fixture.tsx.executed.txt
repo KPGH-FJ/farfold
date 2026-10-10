@@ -1,0 +1,72 @@
+import React, { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { GeneralSettings } from '/src/components/GeneralSettings';
+import { threads } from '/src/runtime/sessions';
+import { draftPersistence } from '/src/runtime/drafts';
+import { desktopNotificationDiagnostic } from '/src/runtime/desktop_notifications';
+import '/src/styles.css'; import '/src/styles-settings.css'; import '/src/styles-content.css';
+import '/src/styles-thread.css'; import '/src/styles-artifact.css'; import '/src/product-shell.css';
+import '/src/conversation-workspace.css'; import '/src/history-import.css'; import '/src/desktop-workbench.css';
+const w = window as any;
+const settings = new Map();
+let background = false;
+Object.defineProperty(document, 'hidden', {configurable:true,get:()=>background});
+document.hasFocus = () => !background;
+let preference = {enabled:false,successEnabled:false,sound:false,permission:'authorized',systemAlert:true,systemSound:true,clickRequiresRunning:false};
+let heldSave: null | {args:any,resolve:(v:any)=>void,reject:(e:any)=>void} = null;
+let saveMode='normal', submitMode='normal', readMode='normal';
+const waitingRead: {resolve:(value:any)=>void,value:any}[]=[];
+const attempts: any[]=[];
+let serial=0,current:any=null;
+w.testInvoke = async (cmd:string,args:any) => {
+ w.calls.push({cmd,args:args?{...args,channel:undefined}:args});
+ if(cmd==='desktop_notifications_get') {if(readMode==='hold')return new Promise(r=>waitingRead.push({resolve:r,value:{...preference}}));return {...preference};}
+ if(cmd==='desktop_notifications_set') {
+  if(saveMode==='hold')return new Promise((resolve,reject)=>{heldSave={args,resolve,reject};});
+  if(saveMode==='reject')throw new Error('controlled save failure');
+  preference={...preference,...args};return {...preference};
+ }
+ if(cmd==='desktop_notification_submit') {
+  const a={...args,retracted:false,resolve:null};attempts.push(a);
+  if(submitMode==='hold')return new Promise(r=>{a.resolve=r;});
+  return 'submitted';
+ }
+ if(cmd==='desktop_notification_withdraw') {
+  const a=attempts.find(a=>a.rendererNonce===args.rendererNonce&&a.sequence===args.sequence);
+  if(!a)return {state:'unknown'};
+  if(a.resolve){a.retracted=true;return {state:'withdrawn'};}
+  return {state:'alreadySubmitted'};
+ }
+ if(cmd==='settings_get')return args.key==='autoArchiveDays'?0:settings.get(args.key)??null;
+ if(cmd==='settings_set'){settings.set(args.key,structuredClone(args.value));return;}
+ if(cmd==='plugin:app|version')return 'controlled';
+ if(cmd==='session_prompt')return {status:'accepted'};
+ if(['session_mark_read','session_index_mark_read','session_close','session_dismiss'].includes(cmd))return;
+ if(cmd==='session_index_list')return [];
+ if(cmd==='host_performance_origin')return null;
+ w.unexpected.push(cmd);throw new Error('Unexpected controlled IPC '+cmd);
+};
+await draftPersistence.load();
+w.fixture={
+ state:()=>({preference,calls:w.calls,unexpected:w.unexpected,heldSave:Boolean(heldSave),waitingRead:waitingRead.length,attempts:attempts.map(({resolve,...a})=>a),diagnostic:desktopNotificationDiagnostic()}),
+ background:(v:boolean)=>{background=v;},
+ saveMode:(v:string)=>{saveMode=v;},
+ releaseSave:()=>{if(!heldSave)throw Error('no pending save');const p=heldSave;heldSave=null;preference={...preference,...p.args};p.resolve({...preference});},
+ readMode:(v:string)=>{readMode=v;},
+ releaseRead:()=>{readMode='normal';for(const r of waitingRead.splice(0))r.resolve(r.value);},
+ submitMode:(v:string)=>{submitMode=v;},
+ releaseSubmit:()=>{for(const a of attempts)if(a.resolve){const r=a.resolve;a.resolve=null;r(a.retracted?'suppressed':'submitted');}},
+ async success(){
+  const id='controlled-'+(++serial);current=threads.markOpenFailed(id,'controlled','/controlled',id,'Private title');current.openError=null;current.connectionId='c-'+serial;
+  await threads.send(current.key,[{type:'text',text:'Controlled request'}]);
+  (threads as any).applyChannelEvent(current.key,{update:{sessionUpdate:'agent_message_chunk',content:{type:'text',text:'Controlled result'}}});
+  (threads as any).applyChannelEvent(current.key,{kind:'turnEnd',stopReason:'end_turn'});
+ },
+ async attention(kind:string){
+  const id='attention-'+(++serial);current=threads.markOpenFailed(id,'controlled','/controlled',id,'Private title');current.openError=null;current.connectionId='c-'+serial;
+  (threads as any).applyChannelEvent(current.key,kind==='approval'?{kind:'permissionRequest',requestId:id,toolCall:{toolCallId:id,title:'Private command'},options:[{optionId:'allow',name:'Allow',kind:'allow_once'}]}:{kind:'elicitation',requestId:id,message:'Private question'});
+ },
+ expire(){(threads as any).applyChannelEvent(current.key,{kind:'interactionExpired',requestId:current.nativeSessionId});},
+ async retire(){await threads.close(current.key);},
+};
+createRoot(document.getElementById('root')!).render(<StrictMode><main style={{height:'100%',overflow:'auto'}}><GeneralSettings themeMode="light" themeStatus={{ready:true,saving:false,error:null,retry:()=>{}}} onThemeMode={()=>{}}/></main></StrictMode>);

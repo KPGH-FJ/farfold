@@ -1,0 +1,225 @@
+{
+  "status": "independentReadOnlyReviewNoNewBlocker",
+  "scope": "Current P13 source and author controlled-browser evidence; no repeated project tests, browsers, App or Agent started by reviewer.",
+  "authorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/implementation.json",
+    "sha256": "98f7ea5440857441157f2ac9f434fc1fea7990fb752740ad9c94031779ed7237"
+  },
+  "sourceRefs": [
+    {
+      "path": "src/components/MessageAttachmentMedia.test.tsx",
+      "sha256": "40c5b2acf4a17bcb5d27cef229fe152c933b0be1acaef284dd340b9413e57176",
+      "bytes": 7578,
+      "lines": 218
+    },
+    {
+      "path": "src/components/MessageAttachmentMedia.tsx",
+      "sha256": "148d864ef4a69a5848a68356c290819058b43f198164723c3b3bec7cae3bfcd5",
+      "bytes": 4045,
+      "lines": 118
+    },
+    {
+      "path": "src/components/MessageContent.tsx",
+      "sha256": "e1d1642acd7e3631b8f22fea54699895b8c0438400831a64289a1ada5b3bd4f3",
+      "bytes": 9858,
+      "lines": 330
+    },
+    {
+      "path": "src/message-attachments.css",
+      "sha256": "e3f41f1646cff5b1356e9c4db0b017c4a6ae87d545a5a0b753e4d842c9f8b3f7",
+      "bytes": 2276,
+      "lines": 109
+    },
+    {
+      "path": "src/runtime/message_attachment_strings.ts",
+      "sha256": "c3ec52ecc5bee9352782277c1be230f72ba45255e9febe10a108330b570ed53c",
+      "bytes": 589,
+      "lines": 12
+    },
+    {
+      "path": "src-tauri/tauri.conf.json",
+      "sha256": "c706b854dc18fb44c29a1b07f353efcbd83ccc6c8b836dbe78d1e854224f3c7c",
+      "bytes": 1324,
+      "lines": 53
+    }
+  ],
+  "integrity": {
+    "authorReferencesRecomputed": 52,
+    "rawJsonPairsSemanticallyEqual": 10,
+    "sixProductionHashesMatch": true,
+    "strictHistoricalValidationUnchanged": true
+  },
+  "findings": [],
+  "reviewedBoundaries": [
+    "MessageContent instantiates media only after its current explicit user expansion; loaded-text search expansion has no media authority. Existing inert MIME/base64 admission stays unchanged; remote and active-format attachments never become media src.",
+    "Retry replaces only the same admitted bytes, requires a live connected current element/attempt, ignores retired errors, and preserves local keyboard focus. Audio retains native controls/preload none/no autoplay.",
+    "Owned detach pauses and clears only its own audio src. Same-node StrictMode ref replay restores only the exact already-admitted source, closing the prior independently identified private-draft defect.",
+    "CSP structural comparison proves the only config change is media-src self data. Existing same-origin default is preserved, data audio is allowed, remote/blob media is not newly allowed; all other directives and config fields are unchanged.",
+    "Stricter historical user-image validation and existing source/body order are unchanged."
+  ],
+  "evidenceReview": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/webkit-old-source-corrected.json",
+      "results": {
+        "passed": 13,
+        "failed": 7
+      },
+      "sourceStableWithinRun": true,
+      "rawSummaryMatches": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/webkit-final.json",
+      "results": {
+        "passed": 21,
+        "failed": 0
+      },
+      "sourceStableWithinRun": true,
+      "rawSummaryMatches": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/chromium-after-toggle.json",
+      "results": {
+        "passed": 21,
+        "failed": 0
+      },
+      "sourceStableWithinRun": true,
+      "rawSummaryMatches": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/webkit-csp-before.json",
+      "results": {
+        "passed": 4,
+        "failed": 2
+      },
+      "sourceStableWithinRun": true,
+      "rawSummaryMatches": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/webkit-csp-after.json",
+      "results": {
+        "passed": 6,
+        "failed": 0
+      },
+      "sourceStableWithinRun": true,
+      "rawSummaryMatches": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/chromium-csp-after.json",
+      "results": {
+        "passed": 6,
+        "failed": 0
+      },
+      "sourceStableWithinRun": true,
+      "rawSummaryMatches": true
+    }
+  ],
+  "preservedFailures": [
+    "Old production has 7 real feature failures; the earlier eighth failure was a same-origin blob driver misclassification and remains preserved.",
+    "Chromium final/close-observed each retain 20/1; click completion raced details-toggle processing. The final after-toggle driver waits for actual audio detach, then keeps the exact paused/disconnected/src-null assertion. No production change was used to hide that result.",
+    "Old production CSP caused valid data WAV MediaError4 and explicit media-src/data violation (two failed assertions); exact revised policy passed 6 checks in each engine and still denied a test-only external media node before request dispatch."
+  ],
+  "authorValidationReadNotRerun": {
+    "targeted": "4 files / 36 tests",
+    "typecheck": "exit 0",
+    "format": "exit 0",
+    "componentBrowser": "WebKit 21/21; Chromium after-toggle 21/21",
+    "exactPolicyBrowser": "WebKit 6/6; Chromium 6/6"
+  },
+  "visualInspection": [
+    "browser/chromium-after-toggle-both-failures.png",
+    "browser/webkit-csp-before.png",
+    "browser/webkit-csp-after.png"
+  ],
+  "limitations": [
+    "Browser harness mounts production message components with real StrictMode/decoders/playback, not full App or installed Tauri.",
+    "Exact CSP injected after development scripts loaded and before any media exists proves media-policy behavior only, not packaged Tauri script/hash/WebView acceptance.",
+    "Silent controlled WAV play resolution is not audible-output or screen-reader verification.",
+    "Large-media budgets, waiting/stalled streams and real per-Agent multimodal journeys remain outside this fix; no whole-P13 completion claim."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/implementation.json",
+      "sha256": "98f7ea5440857441157f2ac9f434fc1fea7990fb752740ad9c94031779ed7237"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/source-checkpoint.json",
+      "sha256": "d5bea01c9cb0ef0bc4c3289c7f4ac98b7b6e407b062696f2744eb3d2993df8e3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/cleanup.json",
+      "sha256": "6f39625e08d8288fbc0c77ae9eb736d4138ff8ccfefe3b54b8d396f0ba32f5ea"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/targeted-first.txt",
+      "sha256": "c9ddf6cb210a6245838bfdbdb72e39c9fbcfa3648459ab370a888a4df87168e6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/typecheck-first.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/webkit-old-source-corrected.json",
+      "sha256": "561655340752ea7c67776d2b0ce00c3d1c76be95c2ee9f13b0530822abb0e5a8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/webkit-final.json",
+      "sha256": "db7cc198e5736e8a2fe70de9e3be71680a5ee5f23a52e2caaf7d637ef5b8ced8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/chromium-after-toggle.json",
+      "sha256": "b2141b1131f5d5b7be77b55824fc4a91fcb82b3ca6ab56133e7ca5f1aba915ac"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/webkit-csp-before.json",
+      "sha256": "2f12e4f39155f61608321885d79967e768a57a0f4e4b26758fd88df375d1c408"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/webkit-csp-after.json",
+      "sha256": "3b84dd9e5ca4e42e42eef497d6d1904a27ae68cd8f4fd9c860584b0d9377f1a1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/chromium-csp-after.json",
+      "sha256": "80876788ea2ea6346f603c710dc0384f4be38bc18aff262cd87369979ebe4119"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/chromium-after-toggle-both-failures.png",
+      "sha256": "9b36281651f44514b50a4ff9d625d8508b61dea56548a35557d7fd8531d2ffe6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/webkit-csp-before.png",
+      "sha256": "3d8b640f5d9fbacefdb79f7b67d947678a72cbeba66eb098997529d1df4e15fc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/webkit-csp-after.png",
+      "sha256": "77536767fac35c37755d313b6054e0ce7838c4d2facebca08797527bbe14848b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/run-csp.mjs.executed.txt",
+      "sha256": "5d7c64249080eaa41461144bfedd3ebc0830cb46f89492f93c9a9541f4e49994"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/media-feedback/browser/run.mjs.executed.txt",
+      "sha256": "8cf4e2d51a6fcc5adaceebdb44060a30776e37f148a74d4d66cba5501a646cd2"
+    },
+    {
+      "path": "src/runtime/message_attachments.ts",
+      "sha256": "822455bd4349c22f53d7189f7e906a3db5fbd4b6a9deda715d46d1d621b158e0"
+    },
+    {
+      "path": "src/components/UserMessageContent.tsx",
+      "sha256": "b012206004c7e2b3dc88583bbc9646c57a0e4914a1dedf1ff1fdc971861f3e23"
+    },
+    {
+      "path": "src/runtime/draft_images.ts",
+      "sha256": "8f049c3e813113e63b2b0c68fec5e040348daca8d1e85c55c2afeec99e3d1a86"
+    },
+    {
+      "path": "src/components/transcript-search.tsx",
+      "sha256": "81a47ddc1cd7493eac9c64d94b6904d6173ce0da4ede626e2a344d63b2509ee8"
+    }
+  ]
+}

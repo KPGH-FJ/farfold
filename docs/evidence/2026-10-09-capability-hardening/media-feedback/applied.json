@@ -1,0 +1,32 @@
+{
+  "appliedAtUtc": "2026-10-10T14:54:04.925151+00:00",
+  "baseChecked": "39955ec65a4274cdeac1bab9884f4073c792102a",
+  "oldBrowser": "browser/webkit-old-source-corrected.json",
+  "files": [
+    {
+      "path": "src/components/MessageAttachmentMedia.test.tsx",
+      "baseSha256": null,
+      "appliedSha256": "1aeacfece2100c7514c81b06798cd85884c47445da175575ce46b632e02ac7d7"
+    },
+    {
+      "path": "src/components/MessageAttachmentMedia.tsx",
+      "baseSha256": null,
+      "appliedSha256": "148d864ef4a69a5848a68356c290819058b43f198164723c3b3bec7cae3bfcd5"
+    },
+    {
+      "path": "src/components/MessageContent.tsx",
+      "baseSha256": "ea5e64ff5fb8f579b7ea9ad5d0a8bee42e10fba3c1c73bc38317c671cbac9223",
+      "appliedSha256": "e1d1642acd7e3631b8f22fea54699895b8c0438400831a64289a1ada5b3bd4f3"
+    },
+    {
+      "path": "src/message-attachments.css",
+      "baseSha256": "d510e69fe9fcceeca1f6d7de7913a7b4aeb6cc75ee32470558f77d6586c90759",
+      "appliedSha256": "e3f41f1646cff5b1356e9c4db0b017c4a6ae87d545a5a0b753e4d842c9f8b3f7"
+    },
+    {
+      "path": "src/runtime/message_attachment_strings.ts",
+      "baseSha256": "74ceada4f2cac7eb0cccbdeac5ebd4d5518f77d1349889305ec55b7ee19063a3",
+      "appliedSha256": "c3ec52ecc5bee9352782277c1be230f72ba45255e9febe10a108330b570ed53c"
+    }
+  ]
+}

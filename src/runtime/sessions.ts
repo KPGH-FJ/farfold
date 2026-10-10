@@ -36,7 +36,11 @@ import { stopAsyncTask } from "./async_task_actions";
  * inside this runtime module only (AGENTS.md vocabulary rule).
  */
 import { Channel, invoke } from "@tauri-apps/api/core";
-import { observeDesktopNotification } from "./desktop_notifications";
+import {
+  observeDesktopNotification,
+  beginSuccessDesktopNotification,
+  checkDesktopNotifications,
+} from "./desktop_notifications";
 import { paneCards, appendToolOutput } from "./artifacts";
 import { artifactPaneCards } from "./artifact_view";
 import type { PaneCard } from "./artifacts";
@@ -240,6 +244,7 @@ class ThreadsStore {
   getSnapshot = (): ThreadsSnapshot => this.snapshot;
 
   private emit(key?: string, preserveQueues = false): void {
+    checkDesktopNotifications();
     for (const state of preserveQueues
       ? []
       : key
@@ -269,6 +274,7 @@ class ThreadsStore {
   }
 
   private finishArchiveActivity(s: ThreadState): void {
+    checkDesktopNotifications(s);
     if (
       this.thread(s.key) !== s ||
       s.running ||
@@ -384,7 +390,7 @@ class ThreadsStore {
     const s = this.threads.get(key);
     if (!s || !event || typeof event !== "object") return;
     const e = event as Record<string, unknown>;
-    observeDesktopNotification(s, e, live);
+    observeDesktopNotification(s, e, live, () => this.thread(key) === s);
     if (e.kind === "configOptions") {
       if (!this.configurations.changing(s))
         replaceConfigOptions(
@@ -948,6 +954,7 @@ class ThreadsStore {
     };
     s.items.push(item);
     s.roundItemBase = s.items.length;
+    beginSuccessDesktopNotification(s, () => this.thread(key) === s);
     this.emit();
     let dispatched = false;
     const receivedEnding = () =>

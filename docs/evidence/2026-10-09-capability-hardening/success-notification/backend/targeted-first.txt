@@ -1,0 +1,48 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 33.11s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 34 tests
+test desktop_notifications::diagnostic::tests::missing_receipts_do_not_erase_actual_callbacks_or_known_gate_refusals ... ok
+test desktop_notifications::diagnostic::tests::local_start_failure_without_an_os_callback_is_not_an_add_rejection ... ok
+test desktop_notifications::diagnostic::tests::window_diagnostics_preserve_all_original_foreground_gate_combinations ... ok
+test desktop_notifications::diagnostic::tests::replacement_discards_old_callbacks_even_when_the_same_key_is_reused ... ok
+test desktop_notifications::diagnostic::tests::error_codes_are_finite_and_only_allowlisted_domains_survive ... ok
+test desktop_notifications::diagnostic::tests::native_observations_match_only_the_current_notice_and_never_claim_delivery ... ok
+test desktop_notifications::tests::p48_known_success_kind_uses_only_fixed_content_free_body ... ok
+test desktop_notifications::tests::renderer_restart_does_not_suppress_new_notices_with_reused_local_sequences ... ok
+test desktop_notifications::tests::duplicate_submissions_are_bounded_and_payloads_only_accept_known_kinds ... ok
+test desktop_notifications::tests::p48_old_record_exposes_explicit_default_off_success_without_mutation ... ok
+test desktop_notifications::tests::existing_preferences_migrate_sound_silently_without_changing_the_choice ... ok
+test desktop_notifications::tests::unknown_or_denied_permission_never_authorizes_a_submission ... ok
+test desktop_notifications::tests::denied_permission_does_not_erase_an_untouched_kind_when_disabling_the_other ... ok
+test desktop_notifications::tests::either_explicit_rising_preference_requests_permission_but_reads_and_disabling_do_not ... ok
+test desktop_notifications::tests::defaults_off_and_invalid_records_are_never_replaced ... ok
+test desktop_notifications::tests::opaque_target_only_resolves_an_existing_row_and_does_not_recreate_deleted_history ... ok
+test desktop_notifications::tickets::tests::exact_withdrawal_does_not_retire_another_key_or_renderer ... ok
+test desktop_notifications::tickets::tests::high_sequence_only_rejects_unadmitted_older_ipc_not_a_live_lower_ticket ... ok
+test desktop_notifications::tickets::tests::actual_dispatch_and_withdrawal_are_one_atomic_decision_not_a_delivery_claim ... ok
+test desktop_notifications::tickets::tests::invalid_keys_never_reserve_or_claim_a_dispatch ... ok
+test desktop_notifications::tickets::tests::observer_drop_does_not_prevent_withdrawing_the_queued_execution_owner ... ok
+test desktop_notifications::tests::legacy_settings_leave_success_off_without_rewriting_saved_bytes ... ok
+test desktop_notifications::tickets::tests::synchronous_native_observation_and_reply_do_not_reenter_ticket_lock ... ok
+test desktop_notifications::tickets::tests::withdrawal_during_settings_wait_blocks_the_actual_dispatch_after_resume ... ok
+test desktop_notifications::tickets::tests::early_withdrawal_blocks_late_submit_even_after_terminal_record_eviction ... ok
+test desktop_notifications::windows_payload::tests::markup_cannot_add_actions_and_silent_really_sets_the_native_flag ... ok
+test desktop_notifications::tickets::tests::queued_owner_stays_live_after_observer_drop_until_actual_worker_finishes ... ok
+test desktop_notifications::tests::shared_submission_preference_gate_checks_kind_and_current_revision ... ok
+test desktop_notifications::tests::success_wire_and_content_free_body_do_not_change_legacy_notice_kinds ... ok
+test desktop_notifications::tickets::tests::renderer_capacity_does_not_evict_live_or_block_existing_exact_withdrawal ... ok
+test desktop_notifications::tests::success_only_choice_survives_restart_and_failed_save_keeps_all_choices ... ok
+test desktop_notifications::tests::saved_choice_survives_restart_and_failed_write_preserves_it ... ok
+test desktop_notifications::tests::unknown_system_result_cannot_overwrite_an_existing_choice_but_disable_still_works ... ok
+test desktop_notifications::tests::unknown_permission_does_not_enable_success_or_erase_the_other_explicit_choice ... ok
+
+test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 1449 filtered out; finished in 0.03s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -2,7 +2,7 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：技能限定名修复已实测，继续提醒与媒体反馈
+## 当前衔接：提醒与媒体反馈已补源码，继续整合与正式验证
 
 正式版为 `39955ec6` / 0.1.7 arm64。[名称修复正式复验](skills-qualified-names-candidate/installed-qualified-names.json)一次查询返回24项，7个扩展技能限定名完整、0项隐藏；项目技能及查询范围说明保持。此前 `aadbe0f2` 的[技能实测](skills-inventory-candidate/installed-skills-inventory.json)覆盖正常/损坏目录、1项未读取提示、目录取消、类型/Agent隔离及过期处理，并有MCP返回5项；保留当时证据，不当作本版重复执行。
 
@@ -10,7 +10,7 @@
 
 实测后正常退出，原130会话完整行、168条已屏蔽记录、整个未发对象8/8/3、工作树清单及53项设置全等。40条Agent记录仅Codex更新时间变化，其余9列及存储模型/推理/来源保持；无模型发送或新会话。正式五文件及1,407输入到退出不变。
 
-当前继续P48成功完成提醒与P13媒体加载失败反馈，私有草稿及独立审查未计作已实现或通过。P39完整工具、P40/P41管理和全部原条件继续保留；全量市场目标仍未完成。
+当前P48成功完成提醒与P47过时提醒精确撤回已补源码，见[前端实现](success-notification/frontend/implementation.json)和[后端实现](success-notification/backend/implementation.json)；前端143项关联测试与双引擎各19项受控检查通过，[后端最终派发边界独立复核](success-notification/independent-review.json)已通过。P13坏媒体反馈、重试及收起清理见[实现](media-feedback/implementation.json)和[独立复核](media-feedback/independent-review.json)：组件各21项、精确媒体策略各6项通过；正式策略曾阻止有效音频的原失败保留，已最小修复。[全仓七项](notification-media-checks/run-01/verification.json)全部通过，1,415输入稳定，前端4,621项、Rust1,477项/6忽略；当前准备正式更新与实测，未把受控结果当成安装版、实际系统送达或真实Agent媒体验收。P13/P47/P48整项、P39完整工具、P40/P41管理和全部原条件继续保留；全量市场目标仍未完成。
 
 此前MCP首片已实现共用“技能与工具”入口与已核官方Codex入口的MCP配置只读查询：用户明确选择目录，结果只说明该次官方配置清单；该MCP报告不提供技能、工具详情、配置来源层和当前对话适用性，不补猜，不写Agent配置。当前选择的短期票据阻止旧选择和迟到回执串用；实际进程/输出未结束时保留清理中状态，旧结果标为过期。记录过期后只在用户明确结束等待且准确回执成立时释放跟踪，结果仍未知，不称原命令已取消。见[后端独立复核](extension-inventory/backend/independent-review.json)、[过期跟踪1红后6绿](extension-inventory/independent/expired-tracking-independent.json)。
 

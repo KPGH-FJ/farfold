@@ -1,0 +1,585 @@
+{
+  "engine": "webkit",
+  "label": "first",
+  "before": {
+    "src/components/GeneralSettings.tsx": "4317976c9789c7c63087a5673f5501416b27960f0707fc32e8c347ceeb07d0d9",
+    "src/runtime/desktop_notifications.ts": "a0e9e3afdd47366abf75372d80a48f432e0c013b395465eb7e43d67e5ebdad0b",
+    "src/runtime/success_notification.ts": "c610573ac6d78bb700203e714111e7a9094bdbcd1389e02404b5b178f681e482",
+    "src/runtime/sessions.ts": "7ddd2068167677c0cc98d35cae27864343c68c5a7fb36953ce0a7a22d2e0753c",
+    "src/runtime/session_projection.ts": "26936e5136ff294a5d7709385c754f061f01cbe8a43ed99ea395e8ef8f0ded79",
+    "src/runtime/async_tasks.ts": "08ea8a83bf5f1e3ed6ed94122087b1211c9165d80d242a04029e4e458428127f",
+    "src/runtime/session_types.ts": "8d1bdcc0fd993d75a7e42417d3c31e8a22f437ea10db83777d23b0363e5ed3ee",
+    "src/runtime/settings_presentation_strings.ts": "2b35a40421c0383c146a6c032012ab64196566060c9f552839ce0a0f8d05704c",
+    "output/2026-10-10-success-notification-browser/fixture.tsx": "bb2628e040a87d47806bf248c3bf44036380d05bba00123c5fad9c4917c0a90f",
+    "output/2026-10-10-success-notification-browser/index.html": "1d3f53de5392e9ec6356a1fd2567bcf969ae13c88cadd6240490b75241e3370c",
+    "output/2026-10-10-success-notification-browser/serve.mjs": "e7239ca7af063fff625982c365e3bc9b6f25aa89364434b66ebce4ba599fb59c",
+    "output/2026-10-10-success-notification-browser/run.mjs": "083445545db6f0ad79f0725feaa32af90b0a3c7bfc1131534c29581348015c0e"
+  },
+  "checks": [
+    {
+      "name": "StrictMode initial render preserves both off without writing",
+      "pass": true
+    },
+    {
+      "name": "keyboard reaches independent success switch (WebKit Option+Tab, Chromium Tab)",
+      "pass": true
+    },
+    {
+      "name": "keyboard enables success only",
+      "pass": true
+    },
+    {
+      "name": "closing success preserves attention choice",
+      "pass": true
+    },
+    {
+      "name": "shared sound retains both preferences",
+      "pass": true
+    },
+    {
+      "name": "pending save locks all three switches with old confirmed choices",
+      "pass": true
+    },
+    {
+      "name": "save receipt alone publishes intended value",
+      "pass": true
+    },
+    {
+      "name": "failed save preserves both prior choices and exposes retryable UI",
+      "pass": true
+    },
+    {
+      "name": "foreground live success does not request notification",
+      "pass": true
+    },
+    {
+      "name": "background actual live ending submits only fixed kind/key",
+      "pass": true
+    },
+    {
+      "name": "retiring actual thread while submission held withdraws exact attempt",
+      "pass": true
+    },
+    {
+      "name": "controlled withdrawn receipt is not a submitted success",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "scope": "Actual GeneralSettings/React StrictMode + notification singleton and ThreadsStore real send/projection. IPC, system permission, submit/withdraw and background state controlled; no system notifications/App/Agent/DB.",
+  "failure": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: '重新检查', exact: true }) resolved to 2 elements:\n    1) <button disabled type=\"button\" class=\"btn btn-text\">重新检查</button> aka getByLabel('工作与整理').getByRole('button', { name: '重新检查' })\n    2) <button type=\"button\" class=\"btn btn-text\">重新检查</button> aka getByLabel('提醒', { exact: true }).getByRole('button', { name: '重新检查' })\n\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '重新检查', exact: true })\u001b[22m\n",
+  "final": {
+    "preference": {
+      "enabled": true,
+      "successEnabled": true,
+      "sound": true,
+      "permission": "authorized",
+      "systemAlert": true,
+      "systemSound": true,
+      "clickRequiresRunning": false
+    },
+    "calls": [
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "unsentWork.v1"
+        }
+      },
+      {
+        "cmd": "desktop_notifications_get",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:app|version",
+        "args": {}
+      },
+      {
+        "cmd": "plugin:app|version",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": false,
+          "sound": false,
+          "successEnabled": true
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": false,
+          "successEnabled": true
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": false,
+          "successEnabled": false
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": false,
+          "successEnabled": true
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": true,
+          "successEnabled": true
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": true,
+          "successEnabled": false
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": true,
+          "successEnabled": true
+        }
+      },
+      {
+        "cmd": "desktop_notifications_set",
+        "args": {
+          "enabled": true,
+          "sound": true,
+          "successEnabled": true
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {
+              "controlled-1": {
+                "blocks": [
+                  [
+                    {
+                      "type": "text",
+                      "text": "Controlled request"
+                    }
+                  ]
+                ],
+                "uncertainIndex": 0
+              }
+            },
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644273993,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {
+              "controlled-1": {
+                "blocks": [
+                  [
+                    {
+                      "type": "text",
+                      "text": "Controlled request"
+                    }
+                  ]
+                ],
+                "uncertainIndex": 0
+              }
+            },
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644273994,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "session_prompt",
+        "args": {
+          "agentId": "controlled",
+          "cwd": "/controlled",
+          "sessionId": "controlled-1",
+          "content": [
+            {
+              "type": "text",
+              "text": "Controlled request"
+            }
+          ]
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {},
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644273994,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "conversationReadState.v1"
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {},
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644273995,
+                "ended": true
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "conversationReadState.v1",
+          "value": {
+            "version": 1,
+            "unread": ["controlled-1"]
+          }
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {
+              "controlled-2": {
+                "blocks": [
+                  [
+                    {
+                      "type": "text",
+                      "text": "Controlled request"
+                    }
+                  ]
+                ],
+                "uncertainIndex": 0
+              }
+            },
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644273995,
+                "ended": true
+              },
+              "controlled-2": {
+                "lastActivityAt": 1791644273998,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {
+              "controlled-2": {
+                "blocks": [
+                  [
+                    {
+                      "type": "text",
+                      "text": "Controlled request"
+                    }
+                  ]
+                ],
+                "uncertainIndex": 0
+              }
+            },
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644273995,
+                "ended": true
+              },
+              "controlled-2": {
+                "lastActivityAt": 1791644273998,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "session_prompt",
+        "args": {
+          "agentId": "controlled",
+          "cwd": "/controlled",
+          "sessionId": "controlled-2",
+          "content": [
+            {
+              "type": "text",
+              "text": "Controlled request"
+            }
+          ]
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {},
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644273995,
+                "ended": true
+              },
+              "controlled-2": {
+                "lastActivityAt": 1791644273998,
+                "ended": false
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "session_index_list",
+        "args": {}
+      },
+      {
+        "cmd": "desktop_notification_submit",
+        "args": {
+          "kind": "success",
+          "sequence": 1,
+          "targetKey": "controlled-2",
+          "rendererNonce": "147196d94da6901131efc5de991a60cd"
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "unsentWork.v1",
+          "value": {
+            "version": 1,
+            "composers": {},
+            "choice": {
+              "agentId": null,
+              "cwd": null,
+              "reviewRequired": false,
+              "service": null,
+              "config": {}
+            },
+            "feedback": {},
+            "queues": {},
+            "activity": {
+              "controlled-1": {
+                "lastActivityAt": 1791644273995,
+                "ended": true
+              },
+              "controlled-2": {
+                "lastActivityAt": 1791644273998,
+                "ended": true
+              }
+            }
+          }
+        }
+      },
+      {
+        "cmd": "settings_set",
+        "args": {
+          "key": "conversationReadState.v1",
+          "value": {
+            "version": 1,
+            "unread": ["controlled-1", "controlled-2"]
+          }
+        }
+      },
+      {
+        "cmd": "settings_get",
+        "args": {
+          "key": "autoArchiveDays"
+        }
+      },
+      {
+        "cmd": "desktop_notification_withdraw",
+        "args": {
+          "rendererNonce": "147196d94da6901131efc5de991a60cd",
+          "sequence": 1
+        }
+      },
+      {
+        "cmd": "session_close",
+        "args": {
+          "agentId": "controlled",
+          "cwd": "/controlled",
+          "sessionId": "controlled-2"
+        }
+      }
+    ],
+    "unexpected": [],
+    "heldSave": false,
+    "waitingRead": 0,
+    "attempts": [
+      {
+        "kind": "success",
+        "sequence": 1,
+        "targetKey": "controlled-2",
+        "rendererNonce": "147196d94da6901131efc5de991a60cd",
+        "retracted": true
+      }
+    ],
+    "diagnostic": {
+      "version": 1,
+      "frontend": {
+        "kind": "success",
+        "source": "agent",
+        "phase": "suppressed",
+        "reason": "suppressed",
+        "background": true,
+        "ready": true,
+        "enabled": true,
+        "saving": false
+      },
+      "backendAttempt": {
+        "rendererNonce": "147196d94da6901131efc5de991a60cd",
+        "sequence": 1
+      }
+    }
+  },
+  "result": "failed",
+  "after": {
+    "src/components/GeneralSettings.tsx": "4317976c9789c7c63087a5673f5501416b27960f0707fc32e8c347ceeb07d0d9",
+    "src/runtime/desktop_notifications.ts": "a0e9e3afdd47366abf75372d80a48f432e0c013b395465eb7e43d67e5ebdad0b",
+    "src/runtime/success_notification.ts": "c610573ac6d78bb700203e714111e7a9094bdbcd1389e02404b5b178f681e482",
+    "src/runtime/sessions.ts": "7ddd2068167677c0cc98d35cae27864343c68c5a7fb36953ce0a7a22d2e0753c",
+    "src/runtime/session_projection.ts": "26936e5136ff294a5d7709385c754f061f01cbe8a43ed99ea395e8ef8f0ded79",
+    "src/runtime/async_tasks.ts": "08ea8a83bf5f1e3ed6ed94122087b1211c9165d80d242a04029e4e458428127f",
+    "src/runtime/session_types.ts": "8d1bdcc0fd993d75a7e42417d3c31e8a22f437ea10db83777d23b0363e5ed3ee",
+    "src/runtime/settings_presentation_strings.ts": "2b35a40421c0383c146a6c032012ab64196566060c9f552839ce0a0f8d05704c",
+    "output/2026-10-10-success-notification-browser/fixture.tsx": "bb2628e040a87d47806bf248c3bf44036380d05bba00123c5fad9c4917c0a90f",
+    "output/2026-10-10-success-notification-browser/index.html": "1d3f53de5392e9ec6356a1fd2567bcf969ae13c88cadd6240490b75241e3370c",
+    "output/2026-10-10-success-notification-browser/serve.mjs": "e7239ca7af063fff625982c365e3bc9b6f25aa89364434b66ebce4ba599fb59c",
+    "output/2026-10-10-success-notification-browser/run.mjs": "083445545db6f0ad79f0725feaa32af90b0a3c7bfc1131534c29581348015c0e"
+  },
+  "inputsStable": true
+}

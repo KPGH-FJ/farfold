@@ -1,0 +1,137 @@
+{
+  "stage": "sourceImplementationAndControlledRustTests",
+  "status": "implementedAndAuthorTargetedVerified",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/desktop_notifications/diagnostic.rs",
+      "sha256": "c9c160f9a861984baa173f076793385cf0ef1c9336e609a55078beed56e231a5",
+      "lines": 428
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/native.rs",
+      "sha256": "cd8ef26d89dcd78934572c516f729902c912b5019f0c9e2a8f69dcb3e9663394",
+      "lines": 328
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/tests.rs",
+      "sha256": "ae3fa3c760ff4131921c09300cdccb7fe71f101e5e253a7a75d9b7ee4951cb6d",
+      "lines": 345
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/tickets.rs",
+      "sha256": "da5ad170401a19b9567d4248a3dac801f7c35b5b813589ab8376c232e5c31095",
+      "lines": 409
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/windows.rs",
+      "sha256": "11e110070cd6b72e2a04a3fa2c33b4ba2b109b9615dee1cf7bec6344d78f2d68",
+      "lines": 263
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications.rs",
+      "sha256": "eecdf1298ac2c58c83cefab2c5c15bac8635ab171c634ae0ea97db01dca0ffd1",
+      "lines": 508
+    },
+    {
+      "path": "src-tauri/src/diagnostics/notification.rs",
+      "sha256": "4fdd0007050a08435a76cdec0fdaf7ff82c4ae5d7263ed638c7a94733241371c",
+      "lines": 262
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "8b840f6e440dec4f7fb98a196b309c6b1510e156747f06b59d542d8bef445eb9",
+      "lines": 431
+    }
+  ],
+  "newRustTests": 20,
+  "verification": {
+    "originalProductionRegression": {
+      "failed": 2,
+      "log": "baseline-red.txt"
+    },
+    "notifications": {
+      "passed": 34,
+      "log": "targeted-first.txt"
+    },
+    "diagnostics": {
+      "passed": 4,
+      "log": "diagnostics-green.txt"
+    },
+    "format": {
+      "exitCode": 0,
+      "log": "format-green.txt"
+    },
+    "clippy": {
+      "exitCode": 0,
+      "log": "clippy-first.txt"
+    }
+  },
+  "scope": [
+    "Independent successEnabled default false alongside existing attention enabled; old settings are not rewritten on read.",
+    "Success kind uses fixed content-free body and the same initial/post-settings-await/platform-final preference, revision and background gates.",
+    "Disabling one kind under Unknown or Denied permission preserves the other saved choice; it does not bypass real system delivery permission.",
+    "Exact in-memory rendererNonce/sequence withdraw command; no persistent delivery ledger.",
+    "macOS queued closure and Windows blocking worker own the pending ticket; observer timeout does not free that pending authorization.",
+    "Final ticket mutex covers actual FFI/Show call. Native observation/reply callbacks do not reacquire the ticket lock."
+  ],
+  "withdrawalContract": {
+    "command": "desktop_notification_withdraw",
+    "arguments": [
+      "rendererNonce:32 lowercase hex",
+      "sequence:positive JS safe integer"
+    ],
+    "result": {
+      "state": ["withdrawn", "alreadySubmitted", "unknown"]
+    },
+    "withdrawn": "The exact ticket has not started the native submit call and late admission is prevented.",
+    "alreadySubmitted": "The native submit call has begun; withdrawal is not guaranteed. This is not proof of API acceptance, delivery or display, even if the call later returns false/error.",
+    "unknown": "Cannot prove no dispatch. No success/no-display assertion.",
+    "capacity": "256 renderer watermarks remain for app-process lifetime; 256 live/recent records; pending tickets never evicted. New renderer is refused at capacity; existing exact withdrawal remains available.",
+    "concurrency": "Higher sequence arrival can conservatively refuse older not-yet-admitted requests. It never retires admitted live lower-sequence tickets. No FIFO IPC guarantee."
+  },
+  "evidenceBoundaries": [
+    "Two original-production decoder/default behavior failures are preserved; the Denied preference issue was identified by static review of the private draft and its final regression test passed, not claimed as an old-installed production failure.",
+    "Synchronous callback tests use real DiagnosticStore and controlled execution owners, not the real macOS notification center.",
+    "Actual platform Show/FFI entry placement reviewed in source; macOS build/typechecked by Cargo, Windows source not executed/compiled for Windows here.",
+    "No application, Agent, real OS permission request, notification delivery, sound or click exercised.",
+    "No full-repository pre/post source inventory claimed for this author run; exact eight current source references provided.",
+    "Frontend owner invalidation and OS-installed user journey remain separate evidence owned by peers/root."
+  ],
+  "diagnostics": {
+    "backendReasonsAdded": ["attempt_retired", "attempt_out_of_order"],
+    "frontendKindAdded": "success",
+    "backendFreeze": "Backend reasons serialize directly into reviewed diagnostic export; frontend only sends its own decision plus exact lookup key, so no frontend backend-reason parser broadened.",
+    "privacy": "Only fixed diagnostic fields; target key and renderer correlation remain private lookup data, never exported."
+  },
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/baseline-red.txt",
+      "sha256": "f0b11ea01c10cf569ca10b28680c68b89fc2cbc6122007dd6c00c7fc9c602c73"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/targeted-first.txt",
+      "sha256": "d312517c33bfb4041a1ea9606f3dda4248b187110a38c98f7de1f29eac72062a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/diagnostics-green.txt",
+      "sha256": "9a22378c58ef876d7a47da0409f5530cc45ccf90a0c1967bcab317aff43db20c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/format-green.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/clippy-first.txt",
+      "sha256": "41906728a7cd0ce0a54d1aa626a0f0b474cb768790b4b44646c82f95cd06ec66"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/baseline-source.json",
+      "sha256": "df2a7c2b5717ba3286db778e54aaf5706acf39bbe1e8776c1942110cf47f9788"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/success-notification/backend/baseline-regression-tests.txt",
+      "sha256": "45dc3a295e7da58b7e2611774556585c55832edbb0851bf8c5172b672bb0e008"
+    }
+  ],
+  "next": "Independent source review and parent full checks; installed platform validation remains separate."
+}

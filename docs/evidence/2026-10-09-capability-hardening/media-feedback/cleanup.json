@@ -1,0 +1,11 @@
+{
+  "serverPid": 4902,
+  "port": 1492,
+  "signal": "SIGTERM",
+  "execExit": 143,
+  "listenerAbsent": true,
+  "lsofExit": 1,
+  "browserDriversAwaitedBrowserClose": true,
+  "formalAppStarted": false,
+  "agentStarted": false
+}

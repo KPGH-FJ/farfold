@@ -1,0 +1,365 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } =
+  await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base = "output/2026-10-10-media-feedback-patch/browser";
+const engine = process.argv[2];
+const label = process.argv[3];
+if (
+  !["webkit", "chromium"].includes(engine) ||
+  !/^[a-z0-9-]+$/.test(label ?? "")
+)
+  throw Error("engine and unique label required");
+const out = `${base}/${engine}-${label}`;
+if (fs.existsSync(out + ".json"))
+  throw Error("do not overwrite previous evidence");
+const walk = (p) =>
+  fs
+    .readdirSync(p, { withFileTypes: true })
+    .flatMap((x) =>
+      x.isDirectory()
+        ? walk(`${p}/${x.name}`)
+        : x.isFile()
+          ? [`${p}/${x.name}`]
+          : [],
+    );
+const files = [
+  ...[
+    "components/MessageContent.tsx",
+    "components/MessageAttachmentMedia.tsx",
+    "components/transcript-search.tsx",
+    "runtime/message_attachments.ts",
+    "runtime/message_attachment_strings.ts",
+    "runtime/transcript_search.ts",
+    "runtime/message-link.ts",
+    "runtime/conversation_redesign_strings.ts",
+    "runtime/thread_view_strings.ts",
+    ...walk("src")
+      .filter((p) => p.endsWith(".css"))
+      .map((p) => p.slice(4)),
+  ].map((p) => "src/" + p),
+  ...["fixture.tsx", "index.html", "serve.mjs", "run.mjs"].map(
+    (n) => `${base}/${n}`,
+  ),
+  "vite.config.ts",
+  "pnpm-lock.yaml",
+];
+const hash = (p) =>
+  createHash("sha256").update(fs.readFileSync(p)).digest("hex");
+const hashes = () => Object.fromEntries(files.map((p) => [p, hash(p)]));
+const r = {
+  engine,
+  label,
+  scope:
+    "Production MessageContent/MessageAttachments/attachment normalization and actual StrictMode/DOM/image decoder/audio media elements. A component browser fixture, not full App/native/Agent or OS delivery.",
+  before: hashes(),
+  checks: [],
+  errors: [],
+  externalRequests: [],
+};
+const check = (name, pass, details) =>
+  r.checks.push({
+    name,
+    pass: Boolean(pass),
+    ...(details === undefined ? {} : { details }),
+  });
+const browser = await (engine === "webkit" ? webkit : chromium).launch({
+  headless: true,
+  executablePath:
+    engine === "webkit"
+      ? path.resolve(
+          "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+        )
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+});
+const p = await browser.newPage({ viewport: { width: 1040, height: 900 } });
+p.setDefaultTimeout(6000);
+p.on("pageerror", (error) => r.errors.push(String(error)));
+const section = (id) => p.locator(`#${id}`);
+const open = (id) => section(id).locator("summary").click();
+const statuses = (id) => section(id).getByRole("status").count();
+const errorsFor = (id) =>
+  p.evaluate(
+    (id) =>
+      window.mediaFixture
+        .snapshot()
+        .events.filter((e) => e.id === id && e.event === "error"),
+    id,
+  );
+async function errorArrives(id) {
+  await p.waitForFunction(
+    (id) =>
+      window.mediaFixture
+        .snapshot()
+        .events.some((e) => e.id === id && e.event === "error"),
+    id,
+  );
+}
+try {
+  await p.route("**/*", (route) => {
+    const url = route.request().url();
+    if (
+      url.startsWith("http://127.0.0.1:1492/") ||
+      url.startsWith("data:") ||
+      url.startsWith("blob:http://127.0.0.1:1492/")
+    )
+      return route.continue();
+    r.externalRequests.push(url);
+    return route.abort();
+  });
+  await p.goto(`http://127.0.0.1:1492/${base}/index.html`);
+  await p.locator("#after").waitFor();
+  const initial = await p.evaluate(() => window.mediaFixture.snapshot());
+  check(
+    "real React StrictMode effect replay ran",
+    initial.mounts >= 2 && initial.cleanups >= 1,
+    { mounts: initial.mounts, cleanups: initial.cleanups },
+  );
+  check(
+    "initial collapsed messages instantiate no media",
+    (await p.locator("img,audio").count()) === 0,
+  );
+  const originalBodies = await p
+    .locator("section .message-text > p")
+    .allTextContents();
+  await p.evaluate(() => window.mediaFixture.reveal("bad-image"));
+  await section("bad-image").locator("details[open]").waitFor();
+  check(
+    "search-only expansion does not load media",
+    (await section("bad-image").locator("img,audio").count()) === 0,
+  );
+  await p.evaluate(() => window.mediaFixture.release());
+  await section("bad-image").locator("details:not([open])").waitFor();
+  await open("bad-image");
+  await errorArrives("bad-image");
+  check(
+    "corrupt image reaches real browser decoder failure",
+    await section("bad-image")
+      .locator("img")
+      .evaluate((n) => n.complete && n.naturalWidth === 0),
+    await errorsFor("bad-image"),
+  );
+  check(
+    "image decoder failure has accessible feedback",
+    (await statuses("bad-image")) === 1,
+  );
+  check(
+    "image failed element identifies feedback",
+    await section("bad-image")
+      .locator("img")
+      .evaluate((n) =>
+        Boolean(
+          n.getAttribute("aria-describedby") &&
+          document.getElementById(n.getAttribute("aria-describedby")),
+        ),
+      ),
+  );
+  const retry = section("bad-image").getByRole("button", {
+    name: "重新载入",
+    exact: true,
+  });
+  if (await retry.count()) {
+    await p.evaluate(() => {
+      window.oldImage = document.querySelector("#bad-image img");
+    });
+    const count = (await errorsFor("bad-image")).length;
+    await retry.focus();
+    await p.keyboard.press("Enter");
+    await p.waitForFunction(
+      (count) =>
+        window.mediaFixture
+          .snapshot()
+          .events.filter((e) => e.id === "bad-image" && e.event === "error")
+          .length > count,
+      count,
+    );
+    check(
+      "explicit image retry replaces only same admitted source",
+      await p.evaluate(() => {
+        const n = document.querySelector("#bad-image img");
+        return (
+          n !== window.oldImage &&
+          n.getAttribute("src") === window.mediaFixture.sources.badImage
+        );
+      }),
+    );
+    check(
+      "retry keyboard focus remains local",
+      await section("bad-image")
+        .locator(".message-attachment-media")
+        .evaluate((n) => n === document.activeElement),
+    );
+  } else check("explicit image retry is available", false);
+  await open("bad-audio");
+  check(
+    "audio stays user controlled before play",
+    await section("bad-audio")
+      .locator("audio")
+      .evaluate(
+        (n) => n.preload === "none" && !n.autoplay && n.paused && n.controls,
+      ),
+  );
+  await p.getByRole("button", { name: "播放坏音频", exact: true }).click();
+  await errorArrives("bad-audio");
+  check(
+    "corrupt audio reaches actual media error",
+    await section("bad-audio")
+      .locator("audio")
+      .evaluate((n) => Boolean(n.error)),
+    await errorsFor("bad-audio"),
+  );
+  check(
+    "audio playback failure has accessible feedback",
+    (await statuses("bad-audio")) === 1,
+  );
+  await p.screenshot({ path: out + "-both-failures.png", fullPage: true });
+  const audioRetry = section("bad-audio").getByRole("button", {
+    name: "重新载入",
+    exact: true,
+  });
+  if (await audioRetry.count()) {
+    await p.evaluate(() => {
+      window.oldAudio = document.querySelector("#bad-audio audio");
+    });
+    await audioRetry.click();
+    check(
+      "audio retry uses same data and does not autoplay",
+      await p.evaluate(() => {
+        const n = document.querySelector("#bad-audio audio");
+        return (
+          n !== window.oldAudio &&
+          n.getAttribute("src") === window.mediaFixture.sources.badAudio &&
+          n.paused
+        );
+      }),
+    );
+  } else check("explicit audio retry is available", false);
+  await p.screenshot({ path: out + "-errors.png", fullPage: true });
+  await open("good-image");
+  await p.waitForFunction(
+    () => document.querySelector("#good-image img")?.naturalWidth > 0,
+  );
+  check(
+    "valid image decodes without failure/retry chrome",
+    (await statuses("good-image")) === 0 &&
+      (await section("good-image")
+        .getByRole("button", { name: "重新载入", exact: true })
+        .count()) === 0,
+  );
+  await open("good-audio");
+  check(
+    "audio retains exact source through StrictMode ref replay",
+    await section("good-audio")
+      .locator("audio")
+      .evaluate(
+        (n) => n.getAttribute("src") === window.mediaFixture.sources.goodAudio,
+      ),
+  );
+  await p.getByRole("button", { name: "播放正常音频", exact: true }).click();
+  await p.waitForFunction(() =>
+    window.mediaFixture
+      .snapshot()
+      .events.some((e) => e.id === "good-audio" && e.event === "play-resolved"),
+  );
+  check(
+    "valid audio actually starts without false failure",
+    (await section("good-audio")
+      .locator("audio")
+      .evaluate((n) => !n.paused && !n.error)) &&
+      (await statuses("good-audio")) === 0,
+  );
+  await p.evaluate(() => {
+    window.closedAudio = document.querySelector("#good-audio audio");
+  });
+  await open("good-audio");
+  await section("good-audio").locator("audio").waitFor({ state: "detached" });
+  check(
+    "closing releases only owned playing audio",
+    await p.evaluate(
+      () =>
+        window.closedAudio.paused &&
+        !window.closedAudio.isConnected &&
+        window.closedAudio.getAttribute("src") === null,
+    ),
+  );
+  await open("good-audio");
+  check(
+    "reopen gives fresh paused same-source player",
+    await section("good-audio")
+      .locator("audio")
+      .evaluate(
+        (n) =>
+          n !== window.closedAudio &&
+          n.paused &&
+          n.getAttribute("src") === window.mediaFixture.sources.goodAudio,
+      ),
+  );
+  await open("remote-image");
+  await open("active-image");
+  check(
+    "remote and active image sources never instantiate media",
+    (await p
+      .locator(
+        "#remote-image img,#remote-image audio,#active-image img,#active-image audio",
+      )
+      .count()) === 0,
+  );
+  check(
+    "no external network requests attempted",
+    r.externalRequests.length === 0,
+    r.externalRequests,
+  );
+  check(
+    "body order and exact attachment input unchanged",
+    JSON.stringify(originalBodies) ===
+      JSON.stringify(
+        await p.locator("section .message-text > p").allTextContents(),
+      ) &&
+      JSON.stringify(initial.blocks) ===
+        JSON.stringify(
+          (await p.evaluate(() => window.mediaFixture.snapshot())).blocks,
+        ),
+  );
+  await p.evaluate(() => {
+    window.unmountedAudio = document.querySelector("#good-audio audio");
+  });
+  await p.getByRole("button", { name: "卸载消息", exact: true }).click();
+  check(
+    "unmount clears owned source without fetching replacement",
+    await p.evaluate(
+      () =>
+        !window.unmountedAudio.isConnected &&
+        window.unmountedAudio.paused &&
+        window.unmountedAudio.getAttribute("src") === null,
+    ),
+  );
+  await p.screenshot({ path: out + "-closed.png", fullPage: true });
+} catch (error) {
+  r.errors.push(String(error));
+  await p
+    .screenshot({ path: out + "-driver-failure.png", fullPage: true })
+    .catch(() => {});
+} finally {
+  r.after = hashes();
+  r.sourceUnchanged = JSON.stringify(r.before) === JSON.stringify(r.after);
+  r.results = {
+    passed: r.checks.filter((c) => c.pass).length,
+    failed: r.checks.filter((c) => !c.pass).length,
+  };
+  await browser.close();
+  fs.writeFileSync(out + ".json", JSON.stringify(r, null, 2) + "\n", {
+    flag: "wx",
+  });
+  console.log(
+    JSON.stringify({
+      engine,
+      label,
+      results: r.results,
+      errors: r.errors,
+      sourceUnchanged: r.sourceUnchanged,
+    }),
+  );
+  if (r.errors.length || r.results.failed || !r.sourceUnchanged)
+    process.exitCode = 1;
+}

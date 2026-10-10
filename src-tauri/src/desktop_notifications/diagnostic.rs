@@ -17,6 +17,8 @@ pub(crate) enum Reason {
     Checking,
     InvalidAttempt,
     Duplicate,
+    AttemptRetired,
+    AttemptOutOfOrder,
     ClaimUnavailable,
     ChangeBusy,
     PreferenceChanged,

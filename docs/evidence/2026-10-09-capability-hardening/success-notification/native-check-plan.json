@@ -1,0 +1,145 @@
+{
+  "kind": "readonly_native_feasibility_and_operator_checklist",
+  "preparedAtUtc": "2026-10-10T15:12:33.266893+00:00",
+  "status": "planned_not_executed",
+  "scope": "仅当前源码与现存接入源码静读、官方文档读取；本任务没有启动应用/Agent、发送请求、运行测试/浏览器、请求通知许可或读取数据库。不是 P47/P48/P13 实机完成记录。",
+  "notification": {
+    "entry": "侧栏 设置 → 通用 → 提醒；三个 switch 的准确标签为 需要你时提醒、工作完成时提醒、提醒声音。",
+    "defaults": {
+      "whenPreferenceMissing": {
+        "enabled": false,
+        "successEnabled": false,
+        "sound": false
+      },
+      "storageKey": "desktopNotifications.v1",
+      "version": 1,
+      "existingRecords": "旧记录缺 successEnabled 时只默认 false；读取不自动补写。本次未读实际设置，正式操作前必须记录 UI 原三值。"
+    },
+    "boundedPrompt": "不要调用任何工具，不读取或写入文件，不修改设置。请只用三句话说明为什么测试结果与实际效果应分别记录，最后一行写 P48-NATIVE-COMPLETE。不要提出后续任务。",
+    "steps": [
+      "仅在本片已安装且 root 确认可操作后，记录正式包、原三开关、系统许可/横幅/专注模式观察和当前 Codex 的模型/推理/服务选择；保留这些选择，不为验证改模型或账号。",
+      "只开启 工作完成时提醒，等保存完成；保留 需要你时提醒 与 提醒声音 原值。首次开启可能触发真实系统授权；若拒绝/未知，记录实际状态，不绕过系统限制。",
+      "在 root 明确拥有的测试对话中只发送上述一条请求，立即切到另一个非 Farfold 窗口；仅切换 Farfold 内部对话不等于离开应用。不要退出/停止，不追加 sleep 工具或自动重试。",
+      "以实际官方正常终态、界面回复完成且无待确认步骤为资格证据；固定文字标记只用于识别样本，不能由它推断成功。若终态在切出前到达，记当前可见抑制/本次未覆盖后台送达，不把稍后切出当新事件。",
+      "从系统实际横幅或通知中心独立观察标题 Farfold 和正文 有一项工作已完成。请回到 Farfold 查看。保存截图/AX与观察时间。没有看到时保持未观察到，不仅据提交回执称已送达。",
+      "明确点击该条系统通知，核 Farfold 聚焦并选中刚才对应对话、原回复可见、没有追加发送。若目标内容未加载，只应显示 查看这段对话 的明确入口，不因通知点击自动重连。保持应用运行，不把退出后重新启动纳入该单次样本。",
+      "在另一通知覆盖诊断前，设置 → 通用 → 导出诊断 → 预览诊断内容 → 展开 提醒诊断 notification.json。必要时 确认并导出 到本轮自有证据目录；备注可留空，不填对话正文、路径或秘密。记录 frontend.kind/phase/reason 与 backend.addResult/presentation/clicked。",
+      "回到 提醒，逐项恢复最初记录的三值，等保存完成并 重新检查；关闭/重开设置核回读。若原三值均 false，恢复 false/false/false。开启系统权限后关闭应用开关不会撤销 OS 授权，系统授权变化单列，不能声称全部系统设置已恢复。"
+    ],
+    "proofLevels": {
+      "officialCompletion": "正常 end_turn 加当前真实消息/已完成工具；失败/未知/取消、仍在运行的工具/后台任务或已退休对话不具成功资格。",
+      "submitStarted": "withdraw alreadySubmitted 只表示 FFI/Show 调用开始，既不表示接受也不表示显示。撤回结果不得改写原提交回执。",
+      "accepted": "macOS addNotificationRequest completion 无错误：backend.addResult=accepted、reason=add_accepted；仅系统接纳提交，不证明用户看到。",
+      "presentation": "presentation=banner_list 表示 willPresent 回调允许 Banner/List，不是像素显示证明；not_observed 也不能据此否定后台实际显示。",
+      "visible": "实际系统横幅/通知中心文字和截图另证，受系统设置/专注模式影响。",
+      "clicked": "backend.clicked=true 仅收到系统点击回调；仍须核实际选中准确对话且无隐式连接/发送。"
+    },
+    "limits": [
+      "一次真实成功样本不能覆盖全部失败/未知/重复/历史回放、P47批准/提问/中断和异步撤回竞争。",
+      "恢复关闭开关可证 UI 与保存回读；若没有第二次明确请求，不声称本轮已实测关闭后的新终态不投递。",
+      "声音原为 false 时保留 false，本轮不声称声音验收。",
+      "诊断仅保最近一次内容受限快照，新的通知可能覆盖；不得据缺失旧诊断推断旧通知未发生。"
+    ]
+  },
+  "media": {
+    "conclusion": "当前能确定接入映射，不能确定现有选择下有无需新增工具/配置即可产生 P13 image/audio 附件的真实任务；本清单不建议追加媒体模型请求。",
+    "viewImage": "官方文档确认 view_image 可把本地图片加入模型上下文；已装 codex-acp 1.13.1 的 createImageViewUpdate 实际只产生 resource_link、locations 和 rawInput，没有 image data。此路径不覆盖 MessageAttachmentMedia。",
+    "mcp": "该版本 createMcpToolCallUpdate/createExecuteToolCallUpdate 将 result 放在 rawOutput，未转换为附件 content；已有 MCP enabled 报告也不证明工具连接或会返回媒体，不新增 MCP 配置补证。",
+    "imageGeneration": "该版本 imageGenerationContent 确实把非空 result 转为 image/png base64 附件，并可带 savedPath；但本次未核所选官方程序/模型是否广告或接受该工具，也未确认写入范围。只有后续明确确认既有可用能力和受控写入范围后才适合另列正式样本。",
+    "audio": "现存事件处理器对 thread/realtime/outputAudio/delta 返回 null，未找到现有普通对话能确定送达 audio 附件的路径；不把 API 支持音频、文本 base64 或 resource_link 冒充本路径。",
+    "uiBoundary": "已有真正 image/audio(data+mimeType) 或资源 blob 才走固定惰性媒体格式；用户明确展开后解码。远程链接不自动加载，现有受控双引擎成功不能外推真实 Agent 已交付媒体。",
+    "installedAdapterReadOnlySource": {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js",
+      "packageVersion": "1.13.1",
+      "lines": {
+        "imageView": "28229-28247",
+        "mcp": "28212-28222,28310-28335",
+        "imageGeneration": "28731-28752"
+      },
+      "method": "只读取现存源码，不执行程序；包版本是本次路径的元数据，不用作兼容性或二进制准入门禁。"
+    },
+    "audioEventSource": {
+      "path": "output/acp-first-batch-research-2026-10-05/group-core-sources/codex-acp/v1.13.1/src/CodexEventHandler.ts",
+      "sha256": "3a1edf704d9eefe7510c64e5081ec59dcbf5e78f50d6c180e3056b163bec1c12",
+      "lines": "663-696"
+    },
+    "officialDocs": {
+      "url": "https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide",
+      "section": "View_image",
+      "retrieved": "2026-10-10",
+      "boundary": "只证明工具语义，不证明当前 Farfold 通道的媒体返回形状。"
+    }
+  },
+  "sourceRefs": [
+    {
+      "path": "src/components/GeneralSettings.tsx",
+      "sha256": "4317976c9789c7c63087a5673f5501416b27960f0707fc32e8c347ceeb07d0d9",
+      "lines": "366-483,537-565"
+    },
+    {
+      "path": "src/runtime/desktop_notifications.ts",
+      "sha256": "af1895332374c7e8ec37971004e556926aad41630b5956a60eaf93a6866d57b7",
+      "lines": "10-43,443-569,600-622"
+    },
+    {
+      "path": "src/runtime/success_notification.ts",
+      "sha256": "c610573ac6d78bb700203e714111e7a9094bdbcd1389e02404b5b178f681e482",
+      "lines": "36-210"
+    },
+    {
+      "path": "src/runtime/notification_navigation.ts",
+      "sha256": "bdcab5455aedcbaf69710355b2ca63c8b5112f162df718962dc7fa277e25c572",
+      "lines": "1-100"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "10a4654c55ab520c0ea3fd3933a1be333eb0300954bc0fe264ef281afd12eb74",
+      "lines": "570-600,935-953"
+    },
+    {
+      "path": "src/components/DiagnosticsDialog.tsx",
+      "sha256": "8ab363db774528b55b032a213cbfa685978591f912c5a5c6dbae6b21c3261ee6",
+      "lines": "10-108"
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications.rs",
+      "sha256": "eecdf1298ac2c58c83cefab2c5c15bac8635ab171c634ae0ea97db01dca0ffd1",
+      "lines": "32-74,210-284,385-503"
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/native.rs",
+      "sha256": "cd8ef26d89dcd78934572c516f729902c912b5019f0c9e2a8f69dcb3e9663394",
+      "lines": "151-173,210-309"
+    },
+    {
+      "path": "src-tauri/native/DesktopNotifications.m",
+      "sha256": "63579c053ea890a00cfdded3bcec6d336fb7dc29efd846d522e93b2935d70525",
+      "lines": "14-41,98-110,113-143"
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/diagnostic.rs",
+      "sha256": "c9c160f9a861984baa173f076793385cf0ef1c9336e609a55078beed56e231a5",
+      "lines": "64-98,167-210"
+    },
+    {
+      "path": "src-tauri/src/diagnostics/notification.rs",
+      "sha256": "4fdd0007050a08435a76cdec0fdaf7ff82c4ae5d7263ed638c7a94733241371c",
+      "lines": "78-136"
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "26936e5136ff294a5d7709385c754f061f01cbe8a43ed99ea395e8ef8f0ded79",
+      "lines": "175-198,263-292"
+    },
+    {
+      "path": "src/runtime/message_attachments.ts",
+      "sha256": "822455bd4349c22f53d7189f7e906a3db5fbd4b6a9deda715d46d1d621b158e0",
+      "lines": "15-60,85-98"
+    },
+    {
+      "path": "src/components/MessageContent.tsx",
+      "sha256": "e1d1642acd7e3631b8f22fea54699895b8c0438400831a64289a1ada5b3bd4f3",
+      "lines": "118-158"
+    }
+  ]
+}

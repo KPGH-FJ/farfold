@@ -1,0 +1,17 @@
+
+#[test]
+fn p48_old_record_exposes_explicit_default_off_success_without_mutation() {
+    let dir = tempfile::tempdir().unwrap();
+    let store = MetaStore::open(&dir.path().join("meta.db")).unwrap();
+    let old = json!({"version":1,"enabled":true,"sound":false});
+    store.set_setting(SETTINGS_KEY, &old).unwrap();
+    let preference = read_preference(&store).unwrap();
+    let state = serde_json::to_value(snapshot(preference, SystemSettings::unknown())).unwrap();
+    assert_eq!(state["successEnabled"], json!(false));
+    assert_eq!(store.get_setting(SETTINGS_KEY).unwrap(), Some(old));
+}
+#[test]
+fn p48_known_success_kind_uses_only_fixed_content_free_body() {
+    let kind: NoticeKind = serde_json::from_value(json!("success")).expect("known success kind");
+    assert_eq!(kind.body(), "有一项工作已完成。请回到 Farfold 查看。");
+}

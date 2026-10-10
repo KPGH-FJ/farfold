@@ -1,0 +1,65 @@
+{
+  "status": "ownerFrozenPendingIndependentReview",
+  "sourceRefs": [
+    {
+      "path": "src/components/GeneralSettings.success-notifications.test.tsx",
+      "sha256": "3bf0a978f8e3a760305f5c1c7d77cda9850a42a49741b84a01d15a2182bcb812",
+      "lines": 60
+    },
+    {
+      "path": "src/components/GeneralSettings.test.tsx",
+      "sha256": "55b0cc368896a0749b548b076277adebcc7b1b9fde86d7ae63b13fdf96ff7498",
+      "lines": 69
+    },
+    {
+      "path": "src/components/GeneralSettings.tsx",
+      "sha256": "4317976c9789c7c63087a5673f5501416b27960f0707fc32e8c347ceeb07d0d9",
+      "lines": 638
+    },
+    {
+      "path": "src/runtime/desktop_notifications.channel.test.ts",
+      "sha256": "291adfda505c05519a7dd3ae345c64c7eb997d037570f69ce7f9d5d0e7b25dac",
+      "lines": 210
+    },
+    {
+      "path": "src/runtime/desktop_notifications.success-channel.test.ts",
+      "sha256": "ca9175f1066eb9ed73d9eb91fb0f0d103682834cd5d82daadd4ee5f351bdaf38",
+      "lines": 214
+    },
+    {
+      "path": "src/runtime/desktop_notifications.success.test.ts",
+      "sha256": "935ac81253cfe44fcc44ed707ffd31e04db026ba7ffc19ca8ad15a68b0d1eb34",
+      "lines": 267
+    },
+    {
+      "path": "src/runtime/desktop_notifications.test.ts",
+      "sha256": "582f4cfd9cc017e4862db1ceab130449180978031c7ee010ed0a8c819e289fa2",
+      "lines": 783
+    },
+    {
+      "path": "src/runtime/desktop_notifications.ts",
+      "sha256": "af1895332374c7e8ec37971004e556926aad41630b5956a60eaf93a6866d57b7",
+      "lines": 651
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "93754212761e08d20c35991ce8d102d4e923da0c5e622c637df00ce483b59066",
+      "lines": 1500
+    },
+    {
+      "path": "src/runtime/settings_presentation_strings.ts",
+      "sha256": "2b35a40421c0383c146a6c032012ab64196566060c9f552839ce0a0f8d05704c",
+      "lines": 83
+    },
+    {
+      "path": "src/runtime/success_notification.test.ts",
+      "sha256": "47dd9e1a05bb508b0259bb94f12682643a96013f8f84fb2ff47f576c57c621c5",
+      "lines": 270
+    },
+    {
+      "path": "src/runtime/success_notification.ts",
+      "sha256": "c610573ac6d78bb700203e714111e7a9094bdbcd1389e02404b5b178f681e482",
+      "lines": 264
+    }
+  ]
+}

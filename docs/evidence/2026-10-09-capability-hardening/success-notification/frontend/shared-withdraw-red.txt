@@ -1,0 +1,125 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/desktop_notifications.channel.test.ts (7 tests | 4 failed | 3 skipped) 7ms
+   × withdraws in-flight approval when resolved through the actual channel/store 5ms
+   × withdraws in-flight question when resolved through the actual channel/store 1ms
+   × withdraws in-flight approval when owner-retired through the actual channel/store 1ms
+   × withdraws in-flight question when owner-retired through the actual channel/store 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/desktop_notifications.channel.test.ts > withdraws in-flight approval when resolved through the actual channel/store
+AssertionError: expected [] to deeply equal [ [ …(2) ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     "desktop_notification_withdraw",
+-     {
+-       "rendererNonce": "822839748505c4a649ca191072ab1f59",
+-       "sequence": 1,
+-     },
+-   ],
+- ]
++ []
+
+ ❯ src/runtime/desktop_notifications.channel.test.ts:174:84
+    172|   else channel.applyChannelEvent(s.key, {kind:"interactionExpired",req…
+    173|   await settle();
+    174|   expect(invoke.mock.calls.filter(([cmd])=>cmd==="desktop_notification…
+       |                                                                                    ^
+    175|     ["desktop_notification_withdraw", {rendererNonce:calls[0][1].rende…
+    176|   ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/runtime/desktop_notifications.channel.test.ts > withdraws in-flight question when resolved through the actual channel/store
+AssertionError: expected [] to deeply equal [ [ …(2) ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     "desktop_notification_withdraw",
+-     {
+-       "rendererNonce": "822839748505c4a649ca191072ab1f59",
+-       "sequence": 2,
+-     },
+-   ],
+- ]
++ []
+
+ ❯ src/runtime/desktop_notifications.channel.test.ts:174:84
+    172|   else channel.applyChannelEvent(s.key, {kind:"interactionExpired",req…
+    173|   await settle();
+    174|   expect(invoke.mock.calls.filter(([cmd])=>cmd==="desktop_notification…
+       |                                                                                    ^
+    175|     ["desktop_notification_withdraw", {rendererNonce:calls[0][1].rende…
+    176|   ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/runtime/desktop_notifications.channel.test.ts > withdraws in-flight approval when owner-retired through the actual channel/store
+AssertionError: expected [] to deeply equal [ [ …(2) ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     "desktop_notification_withdraw",
+-     {
+-       "rendererNonce": "822839748505c4a649ca191072ab1f59",
+-       "sequence": 3,
+-     },
+-   ],
+- ]
++ []
+
+ ❯ src/runtime/desktop_notifications.channel.test.ts:174:84
+    172|   else channel.applyChannelEvent(s.key, {kind:"interactionExpired",req…
+    173|   await settle();
+    174|   expect(invoke.mock.calls.filter(([cmd])=>cmd==="desktop_notification…
+       |                                                                                    ^
+    175|     ["desktop_notification_withdraw", {rendererNonce:calls[0][1].rende…
+    176|   ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/runtime/desktop_notifications.channel.test.ts > withdraws in-flight question when owner-retired through the actual channel/store
+AssertionError: expected [] to deeply equal [ [ …(2) ] ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     "desktop_notification_withdraw",
+-     {
+-       "rendererNonce": "822839748505c4a649ca191072ab1f59",
+-       "sequence": 4,
+-     },
+-   ],
+- ]
++ []
+
+ ❯ src/runtime/desktop_notifications.channel.test.ts:174:84
+    172|   else channel.applyChannelEvent(s.key, {kind:"interactionExpired",req…
+    173|   await settle();
+    174|   expect(invoke.mock.calls.filter(([cmd])=>cmd==="desktop_notification…
+       |                                                                                    ^
+    175|     ["desktop_notification_withdraw", {rendererNonce:calls[0][1].rende…
+    176|   ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 3 skipped (7)
+   Start at  23:01:35
+   Duration  264ms (transform 143ms, setup 0ms, import 184ms, tests 7ms, environment 0ms)
+
