@@ -1,0 +1,7 @@
+{
+  "src/runtime/draft_preparation.ts": "9a490bee2c87c655d63dc84b95c4b4d41d486f2b9a2b2d922e896c4f60569a14",
+  "src/runtime/draft_preparation.test.ts": "16918fcfb612d2335ebc2a237dafe32bbd5b9e7cbb2907fa9a72cca670a40a24",
+  "src/components/WorktreePreparationDialog.tsx": "a0fa76a836d26979534a8db396320970a6cdc9f94c596417b760c66b5e23bbaf",
+  "src/components/WorktreePreparationDialog.test.tsx": "b60583e4b29cb516f5966d8393a0dabe9936755a55409723ccecc77a3e7ad576",
+  "src/runtime/worktree_preparation_strings.ts": "5a176d494a45c0306d78962b32e8a4fe1de0842437e89a924cccf3914b96e4bf"
+}

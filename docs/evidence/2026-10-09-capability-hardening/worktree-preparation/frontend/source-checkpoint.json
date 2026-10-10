@@ -1,0 +1,114 @@
+{
+  "files": [
+    {
+      "path": "src/components/EmptyState.archived-draft.test.tsx",
+      "sha256": "b9cf6c435dff8ed04433248f0426d34e6c71372710f11826a661507ae4cd4031",
+      "lines": 700
+    },
+    {
+      "path": "src/components/EmptyState.preparation.test.tsx",
+      "sha256": "4b6d49cefff11bf1e4dc88ffd0ee165aa04c75e2079ccc5f61729bc7ef8eb02c",
+      "lines": 197
+    },
+    {
+      "path": "src/components/EmptyState.selection.test.tsx",
+      "sha256": "d794e6c056442ca4de3851a0300b5ac3c6117de37867202b2fe366bd4d503c8a",
+      "lines": 1500
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "1e9fb889542392207d6219fffa60e3d73e9d8951b4213d7c3d0da967fbb88d75",
+      "lines": 1487
+    },
+    {
+      "path": "src/components/EmptyState.worktree-owner.test.tsx",
+      "sha256": "a2a09f3b8c51b7775c6b46b751523ce61a3008f0473025abb5ea402336797fdb",
+      "lines": 197
+    },
+    {
+      "path": "src/components/NewConversationLocationBar.tsx",
+      "sha256": "e43a19cc0afba45666105f6be6c39032101fd8ba9de183e41a7b26eb95b4ec1b",
+      "lines": 67
+    },
+    {
+      "path": "src/components/WorktreePreparationControl.tsx",
+      "sha256": "6200421e4fcc40493d80ad31771d0d63a1b519e4945da9043bd9af35eab05258",
+      "lines": 45
+    },
+    {
+      "path": "src/components/WorktreePreparationDialog.css",
+      "sha256": "61f9ca5b01199ddb03db15d1666c6a13267e4e035abed0d232e2a68d0aa7a49f",
+      "lines": 42
+    },
+    {
+      "path": "src/components/WorktreePreparationDialog.test.tsx",
+      "sha256": "b60583e4b29cb516f5966d8393a0dabe9936755a55409723ccecc77a3e7ad576",
+      "lines": 251
+    },
+    {
+      "path": "src/components/WorktreePreparationDialog.tsx",
+      "sha256": "a0fa76a836d26979534a8db396320970a6cdc9f94c596417b760c66b5e23bbaf",
+      "lines": 349
+    },
+    {
+      "path": "src/components/useDraftPreparation.test.ts",
+      "sha256": "042e58bda191c440812a44c9e260f2ef51361622652de06a1ce774358dcf9926",
+      "lines": 81
+    },
+    {
+      "path": "src/components/useDraftPreparation.ts",
+      "sha256": "e53d82457d3e53979734b972ea701b8bc26e6df4746d1e72d22a0400250d6517",
+      "lines": 54
+    },
+    {
+      "path": "src/runtime/draft_preparation.test.ts",
+      "sha256": "16918fcfb612d2335ebc2a237dafe32bbd5b9e7cbb2907fa9a72cca670a40a24",
+      "lines": 181
+    },
+    {
+      "path": "src/runtime/draft_preparation.ts",
+      "sha256": "9a490bee2c87c655d63dc84b95c4b4d41d486f2b9a2b2d922e896c4f60569a14",
+      "lines": 127
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "408f643153949f574423be92b9c229ce53069ac42b8bc395eb30bd3cf4e564a5",
+      "lines": 167
+    },
+    {
+      "path": "src/runtime/worktree_preparation.test-fixtures.ts",
+      "sha256": "04b7e2b26bb07dbf050823c3d0ebca5ccb0bb70662feac7e6e762f1432b1bd4c",
+      "lines": 29
+    },
+    {
+      "path": "src/runtime/worktree_preparation.test.ts",
+      "sha256": "74d1e190984fe4f44666eb10f2cbdf75503ae61b6e45b297d67c86be954b4148",
+      "lines": 133
+    },
+    {
+      "path": "src/runtime/worktree_preparation.ts",
+      "sha256": "27dc41107f0e8e059cb9eba70d22ad60e49de10e912eb083ea3f4a6a2482b443",
+      "lines": 39
+    },
+    {
+      "path": "src/runtime/worktree_preparation.wire.test.ts",
+      "sha256": "023e74d861364633dbded47e913defd33fe7600e419d9fc6f63114fdb0be0244",
+      "lines": 41
+    },
+    {
+      "path": "src/runtime/worktree_preparation_request.ts",
+      "sha256": "38e5a5610609c41b91e39d01a7678a2aeb07cd17630568e9b326b306900fd2ed",
+      "lines": 62
+    },
+    {
+      "path": "src/runtime/worktree_preparation_strings.ts",
+      "sha256": "5a176d494a45c0306d78962b32e8a4fe1de0842437e89a924cccf3914b96e4bf",
+      "lines": 98
+    },
+    {
+      "path": "src/runtime/worktree_preparation_types.ts",
+      "sha256": "504fe268696220bf4ca95248b7e3cccf4465c7b3a5a0100604307e58bc3c232f",
+      "lines": 203
+    }
+  ]
+}

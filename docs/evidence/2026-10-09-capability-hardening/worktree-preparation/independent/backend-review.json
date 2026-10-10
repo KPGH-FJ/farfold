@@ -1,0 +1,98 @@
+{
+  "status": "read-only-backend-review-no-new-blocker",
+  "reviewedAtUtc": "2026-10-10T11:17:45.366601+00:00",
+  "authorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/implementation.json",
+    "sha256": "feccccf34a9a3a7b4389e8b49cbeb1de4638559a8e61e4451ddb5087f02d9fa2"
+  },
+  "referencesMatched": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/source-checkpoint.json",
+      "sha256": "34934de877a4ba409c6e9c0e96715de562d233f379b654173555bbd51f544b7a"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "a27a6eb91add87e295289d53fc38df34ceadf50ad141fc2eedd8986725c01438"
+    },
+    {
+      "path": "src-tauri/src/worktree_preparation_command_tests.rs",
+      "sha256": "b15ec82064c73d525abfd336567001e9dcf12f8dd156361aaddfe734cb88caf0"
+    },
+    {
+      "path": "src-tauri/src/worktree_preparation_commands.rs",
+      "sha256": "1e68e3d35a4fd7e046a7054d2712103a3711c9410f9d12926ccfd3b0c420c79c"
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "850a5ee56014dce63f62e374efd2102fe95652fd80dc0aef8e5dfa2df91fa513"
+    },
+    {
+      "path": "src-tauri/src/worktrees/mod.rs",
+      "sha256": "5ee1ec82df86a755aa4edab83704de7e6cf415a460fa048557d1fcdc3e2d52aa"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation.rs",
+      "sha256": "e8e09b089bde62d229d50281385d8dc5b4542be7730bf5ac190bd6b8189e5981"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_git.rs",
+      "sha256": "6792515e34c9a9aac568ce96450f9a9426e058fd567efd8441dcb0a3ffa00f1e"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager.rs",
+      "sha256": "db14721207ac95e96b280cbd357f60038fdfd7a4c25bf7bfb0e27f10883fffed"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "sha256": "13e1ff639b1b4a2a9ee5c971da4d73b25e448bcff6d54b2d8629f9c39fa7fcd4"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "sha256": "4f796451a4e2e9ef852864592c894fa7b6b55f3c78e2b85067d1a573fd27eba8"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_types.rs",
+      "sha256": "21172d3c10c6a58d036ff911277553ce6b3645ce475e1e772a38e953f2ce284e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/targeted-first.txt",
+      "sha256": "b23bc76ee5185a45e06a6de1bd74847c836783437e70c195f1020401abb68111"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/errno-targeted.txt",
+      "sha256": "25e1476aed64c1271537d53a846a2d7a41d64d20ed7e8236c0c621ed064c751b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/format-check.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/clippy-first.txt",
+      "sha256": "c3a5babdcb036ac4b0d475d346005ce0b5d40df7eed42aaef6af65f6c8bfaa6f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/preparation-wire.json",
+      "sha256": "8344abea89e76c59ff21364d7380968b19f24ff319a01039f5f83e6b4ead7105"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/preparation-wire.raw.txt",
+      "sha256": "a01960713916430f44b023b93fd9e3e252337beee5773053f6152ba8a1f25377"
+    }
+  ],
+  "sourceCount": 11,
+  "review": [
+    "Original exact SavedLocation including identity/revision is checked before and after OS work; no silent catalogue refresh during ticket validation.",
+    "Root and at most eight explicit ordinary components use held directory handles; no-follow rewalk and exact fixed-name stat records bracket fixed Git reads. Only ENOENT is absent; other errors remain unreadable.",
+    "Read observers retain actual blocking worker capacity/global permit after cancellation or response deadline; manager owns local and global permits through completion.",
+    "Thirty-two in-memory tickets expire after five minutes. Rejected observed tickets are removed; expiry/current catalogue is checked again after validation. No persistent readiness or command execution state is invented.",
+    "Git reads use existing fixed command/environment/process ownership. No dependency script, content scanning, port enumeration or Agent action is added."
+  ],
+  "actualWireStdoutIdentical": true,
+  "tests": "Author raw results read and hashes checked: 23 new +38 existing filter matches, one additional errno test, format/clippy. Reviewer did not run Cargo or duplicate those tests.",
+  "limits": [
+    "Frontend actual browser independent validation is separate and ongoing; one save-retry ownership UI finding is with the author.",
+    "No installed H17 or actual Agent preparation/failed installation/cancel/port-conflict journey tested here. Ordinary preparation text cannot complete H17.",
+    "Metadata facts are point-in-time; not dependency readiness, secret discovery, network/port availability, or complete environment isolation.",
+    "Main-window/recovery eligibility checked by source/author controlled tests, not actual native invocation. Windows unsupported remains explicit."
+  ]
+}

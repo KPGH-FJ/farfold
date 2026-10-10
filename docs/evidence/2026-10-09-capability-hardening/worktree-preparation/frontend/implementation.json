@@ -1,0 +1,222 @@
+{
+  "createdAtUtc": "2026-10-10T11:13:48.787707+00:00",
+  "sourceBase": "942d414e3cd8fc22dbe474c9cbe2c3b0bb6020cf",
+  "status": "frontend-source-frozen-for-independent-browser",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/source-checkpoint.json",
+    "sha256": "df62966ecffef9dc0bb384dbf19d10a77549d9b9af30034a2c5ae2cd2f049d0d"
+  },
+  "ownedFiles": [
+    {
+      "path": "src/components/EmptyState.archived-draft.test.tsx",
+      "sha256": "b9cf6c435dff8ed04433248f0426d34e6c71372710f11826a661507ae4cd4031",
+      "lines": 700
+    },
+    {
+      "path": "src/components/EmptyState.preparation.test.tsx",
+      "sha256": "4b6d49cefff11bf1e4dc88ffd0ee165aa04c75e2079ccc5f61729bc7ef8eb02c",
+      "lines": 197
+    },
+    {
+      "path": "src/components/EmptyState.selection.test.tsx",
+      "sha256": "d794e6c056442ca4de3851a0300b5ac3c6117de37867202b2fe366bd4d503c8a",
+      "lines": 1500
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "1e9fb889542392207d6219fffa60e3d73e9d8951b4213d7c3d0da967fbb88d75",
+      "lines": 1487
+    },
+    {
+      "path": "src/components/EmptyState.worktree-owner.test.tsx",
+      "sha256": "a2a09f3b8c51b7775c6b46b751523ce61a3008f0473025abb5ea402336797fdb",
+      "lines": 197
+    },
+    {
+      "path": "src/components/NewConversationLocationBar.tsx",
+      "sha256": "e43a19cc0afba45666105f6be6c39032101fd8ba9de183e41a7b26eb95b4ec1b",
+      "lines": 67
+    },
+    {
+      "path": "src/components/WorktreePreparationControl.tsx",
+      "sha256": "6200421e4fcc40493d80ad31771d0d63a1b519e4945da9043bd9af35eab05258",
+      "lines": 45
+    },
+    {
+      "path": "src/components/WorktreePreparationDialog.css",
+      "sha256": "61f9ca5b01199ddb03db15d1666c6a13267e4e035abed0d232e2a68d0aa7a49f",
+      "lines": 42
+    },
+    {
+      "path": "src/components/WorktreePreparationDialog.test.tsx",
+      "sha256": "b60583e4b29cb516f5966d8393a0dabe9936755a55409723ccecc77a3e7ad576",
+      "lines": 251
+    },
+    {
+      "path": "src/components/WorktreePreparationDialog.tsx",
+      "sha256": "a0fa76a836d26979534a8db396320970a6cdc9f94c596417b760c66b5e23bbaf",
+      "lines": 349
+    },
+    {
+      "path": "src/components/useDraftPreparation.test.ts",
+      "sha256": "042e58bda191c440812a44c9e260f2ef51361622652de06a1ce774358dcf9926",
+      "lines": 81
+    },
+    {
+      "path": "src/components/useDraftPreparation.ts",
+      "sha256": "e53d82457d3e53979734b972ea701b8bc26e6df4746d1e72d22a0400250d6517",
+      "lines": 54
+    },
+    {
+      "path": "src/runtime/draft_preparation.test.ts",
+      "sha256": "16918fcfb612d2335ebc2a237dafe32bbd5b9e7cbb2907fa9a72cca670a40a24",
+      "lines": 181
+    },
+    {
+      "path": "src/runtime/draft_preparation.ts",
+      "sha256": "9a490bee2c87c655d63dc84b95c4b4d41d486f2b9a2b2d922e896c4f60569a14",
+      "lines": 127
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "408f643153949f574423be92b9c229ce53069ac42b8bc395eb30bd3cf4e564a5",
+      "lines": 167
+    },
+    {
+      "path": "src/runtime/worktree_preparation.test-fixtures.ts",
+      "sha256": "04b7e2b26bb07dbf050823c3d0ebca5ccb0bb70662feac7e6e762f1432b1bd4c",
+      "lines": 29
+    },
+    {
+      "path": "src/runtime/worktree_preparation.test.ts",
+      "sha256": "74d1e190984fe4f44666eb10f2cbdf75503ae61b6e45b297d67c86be954b4148",
+      "lines": 133
+    },
+    {
+      "path": "src/runtime/worktree_preparation.ts",
+      "sha256": "27dc41107f0e8e059cb9eba70d22ad60e49de10e912eb083ea3f4a6a2482b443",
+      "lines": 39
+    },
+    {
+      "path": "src/runtime/worktree_preparation.wire.test.ts",
+      "sha256": "023e74d861364633dbded47e913defd33fe7600e419d9fc6f63114fdb0be0244",
+      "lines": 41
+    },
+    {
+      "path": "src/runtime/worktree_preparation_request.ts",
+      "sha256": "38e5a5610609c41b91e39d01a7678a2aeb07cd17630568e9b326b306900fd2ed",
+      "lines": 62
+    },
+    {
+      "path": "src/runtime/worktree_preparation_strings.ts",
+      "sha256": "5a176d494a45c0306d78962b32e8a4fe1de0842437e89a924cccf3914b96e4bf",
+      "lines": 98
+    },
+    {
+      "path": "src/runtime/worktree_preparation_types.ts",
+      "sha256": "504fe268696220bf4ca95248b7e3cccf4465c7b3a5a0100604307e58bc3c232f",
+      "lines": 203
+    }
+  ],
+  "sourceStableAcrossFinalChecks": true,
+  "implementation": [
+    "Explicit shared preparation action beside work location; no automatic popup or send.",
+    "Fresh registered exact-cwd Location check, bounded 22-name inspection, full visible request, separate add action; validate the same ticket before insertion.",
+    "Ordinary/unregistered location can explicitly review an unchecked request without auto-adoption or claiming dependency/port readiness.",
+    "Original new composer object, generation, whole choice, transient owner and maintenance lock checked; synchronous A-B-A/lock transitions retire previous permission.",
+    "Consume append right before synchronous draft update; preserve existing text/attachments/opinions and Agent/service/model/permissions; failed save retries only persistence.",
+    "Extract hook-free location bar to keep EmptyState at 1487 lines; close remains usable during checks, late receipts cannot add or close a new dialog."
+  ],
+  "checks": [
+    {
+      "command": "14 named Vitest files; exact command in raw log",
+      "exitCode": 0,
+      "files": 14,
+      "passed": 158,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/related-final.txt",
+        "sha256": "c32484dcfb148b5086d1148f330dca5f983b660bf03267cd459b40ce640ee619"
+      }
+    },
+    {
+      "command": "corepack pnpm typecheck",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/typecheck-final.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    {
+      "command": "targeted Prettier --write on the 22 owned files before final checkpoint",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/format-final.txt",
+        "sha256": "735e5c8e1b611ca8a121696b3ffb43904693ff7bf7f387f7e94d398eb53b9628"
+      }
+    }
+  ],
+  "earlierResults": {
+    "targetedFirst": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/targeted-first.txt",
+      "sha256": "4644eacafcfd041f339bca5839473e8ac8eec47fda9d8afcae22721fa5356a65"
+    },
+    "parentFirst": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/parent-first.txt",
+      "sha256": "2234cf5f40af6c418a514780a62ab7181e40cf0de942d0d5876e0fc69f5f0812"
+    },
+    "typeFirst": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/typecheck-first.txt",
+      "sha256": "b2a0ae3fd0f5d628279b97047b7ade4dcc42c9d6c177e040a7c21bbfc944fb09"
+    },
+    "typeFailure": "One test ComponentProps import missing after extracting real location bar traversal; fixed. No failed behavior assertion was relabeled as a product red.",
+    "typeSecond": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/typecheck-second.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  },
+  "actualWire": {
+    "input": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/preparation-wire.json",
+      "sha256": "8344abea89e76c59ff21364d7380968b19f24ff319a01039f5f83e6b4ead7105"
+    },
+    "raw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/preparation-wire.raw.txt",
+      "sha256": "a01960713916430f44b023b93fd9e3e252337beee5773053f6152ba8a1f25377"
+    },
+    "result": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/actual-wire-green.txt",
+      "sha256": "bf7db1a22aa40e75ce911519aa9f0319854a2406532efe762e4f431e6b150c3a"
+    },
+    "scope": "Actual temp Git existing main, empty fixed-name set, revision zero, inspect and validate. No JSX fixture is claimed as Git/OS evidence."
+  },
+  "unchangedExistingTests": [
+    {
+      "path": "src/components/EmptyState.archived-draft.test.tsx",
+      "existingCasesByteIdentical": true,
+      "bodySha256": "f2822129baa83e84564794739ea65db5c823b98e58216c71b0be2632fd2d33d5",
+      "difference": "Import/type and traversal expand the real hook-free NewConversationLocationBar; assertions unchanged."
+    },
+    {
+      "path": "src/components/EmptyState.selection.test.tsx",
+      "existingCasesByteIdentical": true,
+      "bodySha256": "69d677ed51a0e935aafffe7bc5e8acadfc2b2117ad835116133d5007478145ad",
+      "difference": "Import/type and traversal expand the real hook-free NewConversationLocationBar; assertions unchanged."
+    },
+    {
+      "path": "src/components/EmptyState.worktree-owner.test.tsx",
+      "existingCasesByteIdentical": true,
+      "bodySha256": "7c73453fd7094803e2b25126a7b627d108a7024cadac18ed01fc4cdafb1adb77",
+      "difference": "Import/type and traversal expand the real hook-free NewConversationLocationBar; assertions unchanged."
+    }
+  ],
+  "notProved": [
+    "Independent complete App keyboard/StrictMode/narrow viewport/cancellation/save-failure browser journey is in progress by verification.",
+    "No H17 installed App or real Agent task execution performed by this author.",
+    "Metadata only does not prove dependencies, services, ports, secret safety of later Agent execution, or H17 completion.",
+    "No frontend build/full repository suite in this author stage; no Cargo execution."
+  ],
+  "privatePreparedPatch": {
+    "path": "output/2026-10-10-worktree-preparation-frontend-patch/manifest-prepared.json",
+    "sha256": "34ee0a717be9eac360fae0c9afa100db850e58ba4816635e6523f87b7e9e2aca"
+  }
+}

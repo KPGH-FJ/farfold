@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "status": "source_frozen_after_targeted_checks",
+  "createdAtUtc": "2026-10-10T11:13:43.966385+00:00",
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "a27a6eb91add87e295289d53fc38df34ceadf50ad141fc2eedd8986725c01438",
+      "lines": 425
+    },
+    {
+      "path": "src-tauri/src/worktree_preparation_command_tests.rs",
+      "sha256": "b15ec82064c73d525abfd336567001e9dcf12f8dd156361aaddfe734cb88caf0",
+      "lines": 83
+    },
+    {
+      "path": "src-tauri/src/worktree_preparation_commands.rs",
+      "sha256": "1e68e3d35a4fd7e046a7054d2712103a3711c9410f9d12926ccfd3b0c420c79c",
+      "lines": 101
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "850a5ee56014dce63f62e374efd2102fe95652fd80dc0aef8e5dfa2df91fa513",
+      "lines": 980
+    },
+    {
+      "path": "src-tauri/src/worktrees/mod.rs",
+      "sha256": "5ee1ec82df86a755aa4edab83704de7e6cf415a460fa048557d1fcdc3e2d52aa",
+      "lines": 54
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation.rs",
+      "sha256": "e8e09b089bde62d229d50281385d8dc5b4542be7730bf5ac190bd6b8189e5981",
+      "lines": 296
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_git.rs",
+      "sha256": "6792515e34c9a9aac568ce96450f9a9426e058fd567efd8441dcb0a3ffa00f1e",
+      "lines": 135
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager.rs",
+      "sha256": "db14721207ac95e96b280cbd357f60038fdfd7a4c25bf7bfb0e27f10883fffed",
+      "lines": 202
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "sha256": "13e1ff639b1b4a2a9ee5c971da4d73b25e448bcff6d54b2d8629f9c39fa7fcd4",
+      "lines": 233
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "sha256": "4f796451a4e2e9ef852864592c894fa7b6b55f3c78e2b85067d1a573fd27eba8",
+      "lines": 229
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_types.rs",
+      "sha256": "21172d3c10c6a58d036ff911277553ce6b3645ce475e1e772a38e953f2ce284e",
+      "lines": 84
+    }
+  ],
+  "ownedFileCount": 11,
+  "newTestCount": 24,
+  "currentHead": "942d414e3cd8fc22dbe474c9cbe2c3b0bb6020cf",
+  "installedAppUnchanged": true
+}

@@ -1,0 +1,6 @@
+{"pid":28183,"port":1481}
+7:18:27 PM [vite] (client) hmr update /src/components/EmptyState.tsx
+7:18:27 PM [vite] (client) hmr update /src/components/WorktreePreparationDialog.tsx
+7:18:27 PM [vite] (client) hmr update /src/components/EmptyState.tsx, /src/components/WorktreePreparationControl.tsx, /src/components/WorktreePreparationDialog.tsx
+7:18:27 PM [vite] (client) hmr update /src/components/WorktreePreparationDialog.tsx
+7:18:27 PM [vite] (client) hmr update /src/components/EmptyState.tsx, /src/components/WorktreePreparationControl.tsx, /src/components/WorktreePreparationDialog.tsx

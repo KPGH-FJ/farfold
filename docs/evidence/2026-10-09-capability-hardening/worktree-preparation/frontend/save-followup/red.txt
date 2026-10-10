@@ -1,0 +1,59 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/draft_preparation.test.ts" "src/components/WorktreePreparationDialog.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorktreePreparationDialog.test.tsx (8 tests | 1 failed) 17ms
+   × a refused save retry explains the changed draft and removes the ineffective retry action 3ms
+ ❯ src/runtime/draft_preparation.test.ts (12 tests | 1 failed) 8ms
+   × retry distinguishes changed original draft from a repeatable storage failure without re-inserting 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreePreparationDialog.test.tsx > a refused save retry explains the changed draft and removes the ineffective retry action
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/WorktreePreparationDialog.test.tsx:263:107
+    261|   click(S.retrySave);
+    262|   await settle();
+    263|   expect(nodes(render()).some((n) => n.props.children === "内容已加入，但原草稿或…
+       |                                                                                                           ^
+    264|   expect(button(S.retrySave)).toBeUndefined();
+    265|   expect(button(S.close).props.disabled).not.toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/draft_preparation.test.ts > retry distinguishes changed original draft from a repeatable storage failure without re-inserting
+AssertionError: expected false to be 'unsaved' // Object.is equality
+
+- Expected:
+"unsaved"
+
++ Received:
+false
+
+ ❯ src/runtime/draft_preparation.test.ts:190:31
+    188|   const t = target(), validate = vi.fn().mockResolvedValue(undefined);
+    189|   expect(await t.appendOnce("Once", validate)).toBe("added-unsaved");
+    190|   expect(await t.retrySave()).toBe("unsaved");
+       |                               ^
+    191|   composerDrafts.update("new", (draft) => ({ ...draft, text: `${draft.…
+    192|   const changed = composerDrafts.read("new");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 18 passed (20)
+   Start at  19:17:59
+   Duration  180ms (transform 140ms, setup 0ms, import 191ms, tests 26ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

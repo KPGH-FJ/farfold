@@ -1,0 +1,174 @@
+{
+  "checkedAtUtc": "2026-10-10T11:26:59.156467+00:00",
+  "priorInstalledCommit": "c6356d429dc961671704efb6bc045076eec4446e",
+  "fileCount": 34,
+  "files": {
+    "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/preparation-wire.json": {
+      "sha256": "8344abea89e76c59ff21364d7380968b19f24ff319a01039f5f83e6b4ead7105",
+      "lines": 143
+    },
+    "src-tauri/src/lib.rs": {
+      "sha256": "a27a6eb91add87e295289d53fc38df34ceadf50ad141fc2eedd8986725c01438",
+      "lines": 425
+    },
+    "src-tauri/src/worktree_preparation_command_tests.rs": {
+      "sha256": "b15ec82064c73d525abfd336567001e9dcf12f8dd156361aaddfe734cb88caf0",
+      "lines": 83
+    },
+    "src-tauri/src/worktree_preparation_commands.rs": {
+      "sha256": "1e68e3d35a4fd7e046a7054d2712103a3711c9410f9d12926ccfd3b0c420c79c",
+      "lines": 101
+    },
+    "src-tauri/src/worktrees/manager.rs": {
+      "sha256": "850a5ee56014dce63f62e374efd2102fe95652fd80dc0aef8e5dfa2df91fa513",
+      "lines": 980
+    },
+    "src-tauri/src/worktrees/mod.rs": {
+      "sha256": "5ee1ec82df86a755aa4edab83704de7e6cf415a460fa048557d1fcdc3e2d52aa",
+      "lines": 54
+    },
+    "src-tauri/src/worktrees/preparation.rs": {
+      "sha256": "e8e09b089bde62d229d50281385d8dc5b4542be7730bf5ac190bd6b8189e5981",
+      "lines": 296
+    },
+    "src-tauri/src/worktrees/preparation_git.rs": {
+      "sha256": "6792515e34c9a9aac568ce96450f9a9426e058fd567efd8441dcb0a3ffa00f1e",
+      "lines": 135
+    },
+    "src-tauri/src/worktrees/preparation_manager.rs": {
+      "sha256": "db14721207ac95e96b280cbd357f60038fdfd7a4c25bf7bfb0e27f10883fffed",
+      "lines": 202
+    },
+    "src-tauri/src/worktrees/preparation_manager_tests.rs": {
+      "sha256": "13e1ff639b1b4a2a9ee5c971da4d73b25e448bcff6d54b2d8629f9c39fa7fcd4",
+      "lines": 233
+    },
+    "src-tauri/src/worktrees/preparation_tests.rs": {
+      "sha256": "4f796451a4e2e9ef852864592c894fa7b6b55f3c78e2b85067d1a573fd27eba8",
+      "lines": 229
+    },
+    "src-tauri/src/worktrees/preparation_types.rs": {
+      "sha256": "21172d3c10c6a58d036ff911277553ce6b3645ce475e1e772a38e953f2ce284e",
+      "lines": 84
+    },
+    "src/components/EmptyState.archived-draft.test.tsx": {
+      "sha256": "b9cf6c435dff8ed04433248f0426d34e6c71372710f11826a661507ae4cd4031",
+      "lines": 700
+    },
+    "src/components/EmptyState.preparation.test.tsx": {
+      "sha256": "4b6d49cefff11bf1e4dc88ffd0ee165aa04c75e2079ccc5f61729bc7ef8eb02c",
+      "lines": 197
+    },
+    "src/components/EmptyState.selection.test.tsx": {
+      "sha256": "d794e6c056442ca4de3851a0300b5ac3c6117de37867202b2fe366bd4d503c8a",
+      "lines": 1500
+    },
+    "src/components/EmptyState.tsx": {
+      "sha256": "1e9fb889542392207d6219fffa60e3d73e9d8951b4213d7c3d0da967fbb88d75",
+      "lines": 1487
+    },
+    "src/components/EmptyState.worktree-owner.test.tsx": {
+      "sha256": "a2a09f3b8c51b7775c6b46b751523ce61a3008f0473025abb5ea402336797fdb",
+      "lines": 197
+    },
+    "src/components/NewConversationLocationBar.tsx": {
+      "sha256": "e43a19cc0afba45666105f6be6c39032101fd8ba9de183e41a7b26eb95b4ec1b",
+      "lines": 67
+    },
+    "src/components/WorktreePreparationControl.tsx": {
+      "sha256": "6200421e4fcc40493d80ad31771d0d63a1b519e4945da9043bd9af35eab05258",
+      "lines": 45
+    },
+    "src/components/WorktreePreparationDialog.css": {
+      "sha256": "61f9ca5b01199ddb03db15d1666c6a13267e4e035abed0d232e2a68d0aa7a49f",
+      "lines": 42
+    },
+    "src/components/WorktreePreparationDialog.test.tsx": {
+      "sha256": "2ef1a4184059751f25670f8c46b85d7cec11b1b25472fe2adc5b84eff51863dc",
+      "lines": 293
+    },
+    "src/components/WorktreePreparationDialog.tsx": {
+      "sha256": "82bdb2310b027a5a20eea49e457507210716a3374dee2550f8cd5a71c33118ec",
+      "lines": 354
+    },
+    "src/components/useDraftPreparation.test.ts": {
+      "sha256": "042e58bda191c440812a44c9e260f2ef51361622652de06a1ce774358dcf9926",
+      "lines": 81
+    },
+    "src/components/useDraftPreparation.ts": {
+      "sha256": "e53d82457d3e53979734b972ea701b8bc26e6df4746d1e72d22a0400250d6517",
+      "lines": 54
+    },
+    "src/runtime/draft_preparation.test.ts": {
+      "sha256": "e5716adc6f11064169d2db23be4393081f66d9100cdddd14650431f457aa9a7c",
+      "lines": 203
+    },
+    "src/runtime/draft_preparation.ts": {
+      "sha256": "2f8c3afa91d0b5b26f74f110c1d0014d30fde7bf6711fd3d49d0e354340490e8",
+      "lines": 130
+    },
+    "src/runtime/strings.test.ts": {
+      "sha256": "408f643153949f574423be92b9c229ce53069ac42b8bc395eb30bd3cf4e564a5",
+      "lines": 167
+    },
+    "src/runtime/worktree_preparation.test-fixtures.ts": {
+      "sha256": "04b7e2b26bb07dbf050823c3d0ebca5ccb0bb70662feac7e6e762f1432b1bd4c",
+      "lines": 29
+    },
+    "src/runtime/worktree_preparation.test.ts": {
+      "sha256": "74d1e190984fe4f44666eb10f2cbdf75503ae61b6e45b297d67c86be954b4148",
+      "lines": 133
+    },
+    "src/runtime/worktree_preparation.ts": {
+      "sha256": "27dc41107f0e8e059cb9eba70d22ad60e49de10e912eb083ea3f4a6a2482b443",
+      "lines": 39
+    },
+    "src/runtime/worktree_preparation.wire.test.ts": {
+      "sha256": "023e74d861364633dbded47e913defd33fe7600e419d9fc6f63114fdb0be0244",
+      "lines": 41
+    },
+    "src/runtime/worktree_preparation_request.ts": {
+      "sha256": "38e5a5610609c41b91e39d01a7678a2aeb07cd17630568e9b326b306900fd2ed",
+      "lines": 62
+    },
+    "src/runtime/worktree_preparation_strings.ts": {
+      "sha256": "507f0938daa8dea7e032b48ed1355c427722d1cf1846f601b4c0ebb3d7b71b30",
+      "lines": 100
+    },
+    "src/runtime/worktree_preparation_types.ts": {
+      "sha256": "504fe268696220bf4ca95248b7e3cccf4465c7b3a5a0100604307e58bc3c232f",
+      "lines": 203
+    }
+  },
+  "protectedUnchanged": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "proofs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/implementation.json",
+      "sha256": "feccccf34a9a3a7b4389e8b49cbeb1de4638559a8e61e4451ddb5087f02d9fa2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/implementation.json",
+      "sha256": "6d6a43c284ce82352f8dcb7363a5d5ce7d0e755d2336ea301df8a2bacb028013"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/save-followup/implementation.json",
+      "sha256": "f3b21ffd5f5c8420039e999f523e39c66a8d52c0c10763a715806bdd6d317b85"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/implementation.json",
+      "sha256": "b0a20ea0d7e53d4b4bd55cdd82cb7473ffca3c9a7de875103b383519e54ac96d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/backend-review.json",
+      "sha256": "c34dfff2cf638e754bbbb90d85ac210b5292498aa2b98c3c3db8b97692a1bcd8"
+    }
+  ],
+  "engineering": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-checks/run-01/verification.json",
+    "sha256": "decb7e0767cb9212021363497730e60a590e01a00ac662f6920990eddd67db5f"
+  },
+  "boundary": "H17 source/controlled tests and browser accepted at this exact set. No installed or real Agent preparation claimed. Original contracts unchanged."
+}

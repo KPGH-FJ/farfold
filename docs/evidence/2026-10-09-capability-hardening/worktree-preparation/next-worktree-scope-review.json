@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 1,
+  "status": "read_only_mapping_recommend_close_supported_macos_basic_scope",
+  "originalConditions": {
+    "ARCH-47": "形成基础worktree的明确设计决定：用户主动选已有或新建、起点、归属、重启恢复、共享影响及安全清理；纳入后各路径实际闭合，不迁移活跃会话；决定或手选目录不能算完整生命周期已实现。",
+    "H13": "明确基础新建工作树的起点、分支冲突、归属及失败恢复设计；纳入后用户可主动创建或选择，并以实际Git结果和新会话cwd核验，不能迁移活跃会话或仅凭设计算完成。",
+    "H14": "明确工作树与单/多对话关联、移动/删除、重启重查及解除关联的设计；纳入后活动工作受保护，路径失效不替换cwd或丢历史，只存必要元数据，决定与实现完成分开。"
+  },
+  "conditionChanges": false,
+  "recommendation": {
+    "ARCH-47": "可关闭已支持的 macOS 基础工作树范围，未发现具体必做实现缺口。",
+    "H13": "可关闭已支持的 macOS 基础工作树范围，未发现具体必做实现缺口。",
+    "H14": "可关闭已支持的 macOS 基础工作树范围，未发现具体必做实现缺口。"
+  },
+  "mapping": [
+    {
+      "condition": "主动选择/创建、起点、分支冲突、归属",
+      "items": ["ARCH-47", "H13"],
+      "evidence": [
+        "design",
+        "createNative",
+        "createIndependent",
+        "executedRust"
+      ],
+      "result": "8780正式UI按明确OID创建新分支，并从linked source创建已有本地分支；创建不自动改稿，显式Use仅改原新草稿；采用已有detached tree与created归属不同。已有目标、分支占用、引用漂移的实际tempGit反例通过。",
+      "level": "正式路径与受控Git反例"
+    },
+    {
+      "condition": "实际Git结果与新会话cwd，不迁移旧会话",
+      "items": ["ARCH-47", "H13", "H14"],
+      "evidence": [
+        "createIndependent",
+        "archiveNative",
+        "archiveIndependent",
+        "draftOwner",
+        "product"
+      ],
+      "result": "Git分支/登记/HEAD和原index已核；4188正式Codex对话位于实际created-new，归档恢复后同native session继续成功。Use只改原新稿，旧sessions整行/cwd保持，不重建历史。",
+      "level": "正式UI、真实单个Codex和独立数据核对"
+    },
+    {
+      "condition": "单/多对话与一个工作树的对应",
+      "items": ["H14"],
+      "evidence": [
+        "sameDirectoryIsolation",
+        "executedRust",
+        "crossConversationImpact",
+        "allConnectionRetirement"
+      ],
+      "result": "位置不是单对话独占绑定。每个历史对话保原Agent/cwd/native ID；同Agent同cwd的两个真实stdio peer进程及停止/准备隔离的既有测试通过。维护按目录/别名/子目录枚举全部连接及保存的对话/未发材料，不只当前页。",
+      "level": "源码和已执行受控协议进程；不宣称多个真实Agent同时在同树实测"
+    },
+    {
+      "condition": "移动、删除与路径失效",
+      "items": ["ARCH-47", "H14"],
+      "evidence": [
+        "design",
+        "archiveNative",
+        "removeNative",
+        "coldFixedNative",
+        "warmFixedNative",
+        "h15Closure",
+        "locationManager",
+        "executedRust"
+      ],
+      "result": "纳入的移动是明确归档及恢复原路径；删除前独立副本、二次确认及新目录恢复已实测。外部移走/同名替换在check_location记missing/changed，不重定向旧cwd、不采用替换对象；保留材料并供明确重查。冷/暖已归档位置提示NEW07–11已分别正式修复。",
+      "level": "正式生命周期和受控外部替换反例；不声称任意搬迁历史cwd功能"
+    },
+    {
+      "condition": "重启重查及失败恢复",
+      "items": ["ARCH-47", "H13", "H14"],
+      "evidence": [
+        "createNative",
+        "archiveNative",
+        "coldFixedNative",
+        "warmFixedNative",
+        "executedRust"
+      ],
+      "result": "重启不自动重放Git变更，已存位置/操作需明确重查；失回执、存储失败及未知结果保留材料/原路径。9cbb单次冷删除主操作核查后直接恢复成功，c635暖态空草稿归档不再悬挂。",
+      "level": "正式与受控异常路径，历史原失败不抹去"
+    },
+    {
+      "condition": "解除关联、活动保护与必要元数据",
+      "items": ["H14"],
+      "evidence": [
+        "createNative",
+        "createIndependent",
+        "locationManager",
+        "catalogueStorage",
+        "crossConversationImpact",
+        "allConnectionRetirement",
+        "h15Closure"
+      ],
+      "result": "解除登记是forget的revision CAS，只移除清单；正式adopt→forget后目录及Git登记仍在，不改旧对话cwd/历史。目录维护保护全部相关在途/未知工作与未发材料，idle精确退役等真实结束。仅保存有界位置/归档/恢复材料与当前意图，不新增对话事件账本。",
+      "level": "正式forget/idle退役及源码/受控准入；外部OS进程不冒称全局排他"
+    },
+    {
+      "condition": "共享影响与安全清理",
+      "items": ["ARCH-47"],
+      "evidence": ["locationStrings", "h15Closure", "design"],
+      "result": "界面明确另一个文件夹仍可能共享账号、Git设置与依赖，工作位置不是文件沙箱。H15原条件现已按自身证据闭合；H17依赖/端口/秘密准备继续单列，不将其执行未验收当作已实现工作树生命周期的缺陷。",
+      "level": "现有说明和已闭合H15；不宣称环境完全隔离"
+    }
+  ],
+  "boundaries": [
+    "任意外部搬迁不自动迁移或修复旧对话cwd；用户可保留历史、核查原位置、恢复或为新对话明确另选/采用。原契约禁止迁移既有cwd，未把任意迁移新增为本次出口。",
+    "多对话机制已有实际stdio双会话测试；真实安装继续证据只覆盖所列Codex设置。受控协议证据不冒称29家或双真实Agent并行验收。",
+    "Windows、H17准备的成功/失败/取消和其他市场条目各自继续；不以这些独立范围继续挂起ARCH-47/H13/H14。",
+    "仅闭合有界、已支持Git布局/物理身份范围；未知布局/路径/外部竞态拒绝或unknown，不承诺任意ACL/xattr备份或全机排他。"
+  ],
+  "method": {
+    "readOnly": true,
+    "newExperiments": false,
+    "appOrAgentOrLiveDatabase": false,
+    "productionOrPlanOrStatusEdits": false,
+    "originalRecordsReused": true,
+    "nativeObservations": "Root原AX/截图及正式回执，未重新操作UI。",
+    "officialCwdCheck": "只读取既有受控official-final.jsonl的session_meta字段：native ID 01a124ba-30fe-7810-a72a-ecb0c3915e73，cwd=/private/tmp/farfold-worktree-native-rxejy97f/destinations/created-new，与原归档继续回执一致。"
+  },
+  "references": {
+    "plan": {
+      "path": "plans/agent-access.md",
+      "sha256": "510be39f9dace10dff4b725e4c3b846f23ccc3edf17c6ff5e133005460474197"
+    },
+    "product": {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    "design": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base-review-2026-10-10.json",
+      "sha256": "c8efa2205bcc7b15e2c1963eff6a9127d8cb7c7584e7f917d93f7b48e327b895"
+    },
+    "createNative": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/installed-worktree-tasks.json",
+      "sha256": "10c6c90a018030c0cfb8f22961cace665e12b50420e7606e827c8c938464680d"
+    },
+    "createIndependent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/native-closeout-independent.json",
+      "sha256": "889bb1d474bff48d6b91d529324518001fa5f0561c1faf4a31e01a304d554724"
+    },
+    "archiveNative": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/installed-archive-restore.json",
+      "sha256": "323d45e7144b83bd5b0955dc8c668f6c42b3d7c60e8c7556e7e976c336b16386"
+    },
+    "archiveIndependent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native-closeout-independent.json",
+      "sha256": "ef0efdfd834ff51ebb3e44c6334d71bbc283465b05db2d6b5c171b31642d6ef3"
+    },
+    "removeNative": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/installed-removal-initial.json",
+      "sha256": "e0b9cc37b22e8cf13e9ef99460b5c946733e1da00f52ddf186de7b0eddca88ce"
+    },
+    "coldFixedNative": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/installed-native-followup.json",
+      "sha256": "239c896f538dd1e3cdb75708db3d81ee036f180fc927a64a43a3be8325b60966"
+    },
+    "warmFixedNative": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/installed-new11.json",
+      "sha256": "61b445da67ecd676d0fa6b88c515aa70459cc736d77bfb3901323938388c5697"
+    },
+    "h15Closure": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/h15-closure.json",
+      "sha256": "932a9967941923fb1ef1b716afbd133e5febe85951099af94a3002e82b00a19b"
+    },
+    "executedRust": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/rust.txt",
+      "sha256": "d579007ea921655a1663c6589f86aa3211099f5bcfb217d1cbd34fecc9c5037c"
+    },
+    "locationManager": {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "850a5ee56014dce63f62e374efd2102fe95652fd80dc0aef8e5dfa2df91fa513"
+    },
+    "catalogueStorage": {
+      "path": "src-tauri/src/worktrees/storage.rs",
+      "sha256": "b58208243549028b16ad3106ac342ee97f6fb7b22de3b64add81fc9f4ef5b9a5"
+    },
+    "draftOwner": {
+      "path": "src/components/useDraftWorkLocation.ts",
+      "sha256": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b"
+    },
+    "crossConversationImpact": {
+      "path": "src-tauri/src/meta_store/worktree_impact.rs",
+      "sha256": "ccb81ec01bab05df2e5357f6eac1bcf9ffb670d4f98c5fb0870049d0f3bd5ae7"
+    },
+    "allConnectionRetirement": {
+      "path": "src-tauri/src/acp_client/directory_maintenance.rs",
+      "sha256": "de185fec12a93d920ef492b078592ecfa64f000c283f9c963b4ad0973a6c6d20"
+    },
+    "sameDirectoryIsolation": {
+      "path": "src-tauri/src/acp_client/connection_isolation_tests.rs",
+      "sha256": "91b98d7d4e5ce1d0288577d3db5de4ce0db78b5d2b7dc5b010af00a8bea946d2"
+    },
+    "locationStrings": {
+      "path": "src/runtime/worktree_strings.ts",
+      "sha256": "d030b4feb92d95364d631fb6f8b2f6e2ebebe2238866ab38afe29e7d471bee1b"
+    }
+  },
+  "recordedAtUtc": "2026-10-10T11:25:45.862310+00:00"
+}

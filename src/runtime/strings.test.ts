@@ -1,3 +1,4 @@
+import { WORKTREE_PREPARATION_STRINGS } from "./worktree_preparation_strings";
 import { ASYNC_TASKS } from "./async_task_strings";
 import { VISUAL_AREA_STRINGS } from "./visual_area_strings";
 import { WORKTREE_STRINGS } from "./worktree_strings";
@@ -88,6 +89,7 @@ describe("strings", () => {
       STRINGS,
       ASYNC_TASKS,
       WORKTREE_STRINGS,
+      WORKTREE_PREPARATION_STRINGS,
       REPORTED_ARTIFACT_STRINGS,
       DOCUMENT_STRINGS,
       VISUAL_AREA_STRINGS,

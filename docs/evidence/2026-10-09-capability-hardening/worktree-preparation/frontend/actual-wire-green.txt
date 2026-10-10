@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/worktree_preparation.wire.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  19:11:38
+   Duration  103ms (transform 29ms, setup 0ms, import 40ms, tests 3ms, environment 0ms)
+

@@ -60,6 +60,7 @@ mod uv_runtime;
 mod windows_process;
 mod work_policy;
 mod worktree_commands;
+mod worktree_preparation_commands;
 mod worktrees;
 
 /// Process ownership helper dispatches before GUI, logging or Agent work.
@@ -277,6 +278,8 @@ pub fn run() {
                 auth::settings_set,
                 prompt_templates_commands::prompt_templates_save,
                 worktree_commands::worktree_inspect,
+                worktree_preparation_commands::worktree_preparation_inspect,
+                worktree_preparation_commands::worktree_preparation_validate,
                 worktree_commands::worktree_recycle_inspect,
                 worktree_commands::worktree_recycle_prepare,
                 worktree_commands::worktree_recycle_check,

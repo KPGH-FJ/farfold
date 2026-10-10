@@ -1,7 +1,9 @@
+import { NewConversationLocationBar } from "./NewConversationLocationBar";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
   Children,
   isValidElement,
+  type ComponentProps,
   type ReactElement,
   type ReactNode,
 } from "react";
@@ -133,7 +135,18 @@ const props = {
 function nodes(node: ReactNode): Element[] {
   return Children.toArray(node).flatMap((child) =>
     isValidElement<Record<string, unknown>>(child)
-      ? [child, ...nodes(child.props.children as ReactNode)]
+      ? [
+          child,
+          ...nodes(
+            child.type === NewConversationLocationBar
+              ? NewConversationLocationBar(
+                  child.props as ComponentProps<
+                    typeof NewConversationLocationBar
+                  >,
+                )
+              : (child.props.children as ReactNode),
+          ),
+        ]
       : [],
   );
 }

@@ -1,0 +1,197 @@
+{
+  "createdAtUtc": "2026-10-10T11:19:11.222880+00:00",
+  "status": "source-frozen-awaiting-independent-browser-retest",
+  "priorCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/implementation.json",
+    "sha256": "6d6a43c284ce82352f8dcb7363a5d5ce7d0e755d2336ea301df8a2bacb028013"
+  },
+  "sourceRefs": [
+    {
+      "path": "src/components/EmptyState.archived-draft.test.tsx",
+      "sha256": "b9cf6c435dff8ed04433248f0426d34e6c71372710f11826a661507ae4cd4031",
+      "lines": 700
+    },
+    {
+      "path": "src/components/EmptyState.preparation.test.tsx",
+      "sha256": "4b6d49cefff11bf1e4dc88ffd0ee165aa04c75e2079ccc5f61729bc7ef8eb02c",
+      "lines": 197
+    },
+    {
+      "path": "src/components/EmptyState.selection.test.tsx",
+      "sha256": "d794e6c056442ca4de3851a0300b5ac3c6117de37867202b2fe366bd4d503c8a",
+      "lines": 1500
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "1e9fb889542392207d6219fffa60e3d73e9d8951b4213d7c3d0da967fbb88d75",
+      "lines": 1487
+    },
+    {
+      "path": "src/components/EmptyState.worktree-owner.test.tsx",
+      "sha256": "a2a09f3b8c51b7775c6b46b751523ce61a3008f0473025abb5ea402336797fdb",
+      "lines": 197
+    },
+    {
+      "path": "src/components/NewConversationLocationBar.tsx",
+      "sha256": "e43a19cc0afba45666105f6be6c39032101fd8ba9de183e41a7b26eb95b4ec1b",
+      "lines": 67
+    },
+    {
+      "path": "src/components/WorktreePreparationControl.tsx",
+      "sha256": "6200421e4fcc40493d80ad31771d0d63a1b519e4945da9043bd9af35eab05258",
+      "lines": 45
+    },
+    {
+      "path": "src/components/WorktreePreparationDialog.css",
+      "sha256": "61f9ca5b01199ddb03db15d1666c6a13267e4e035abed0d232e2a68d0aa7a49f",
+      "lines": 42
+    },
+    {
+      "path": "src/components/WorktreePreparationDialog.test.tsx",
+      "sha256": "2ef1a4184059751f25670f8c46b85d7cec11b1b25472fe2adc5b84eff51863dc",
+      "lines": 293
+    },
+    {
+      "path": "src/components/WorktreePreparationDialog.tsx",
+      "sha256": "82bdb2310b027a5a20eea49e457507210716a3374dee2550f8cd5a71c33118ec",
+      "lines": 354
+    },
+    {
+      "path": "src/components/useDraftPreparation.test.ts",
+      "sha256": "042e58bda191c440812a44c9e260f2ef51361622652de06a1ce774358dcf9926",
+      "lines": 81
+    },
+    {
+      "path": "src/components/useDraftPreparation.ts",
+      "sha256": "e53d82457d3e53979734b972ea701b8bc26e6df4746d1e72d22a0400250d6517",
+      "lines": 54
+    },
+    {
+      "path": "src/runtime/draft_preparation.test.ts",
+      "sha256": "e5716adc6f11064169d2db23be4393081f66d9100cdddd14650431f457aa9a7c",
+      "lines": 203
+    },
+    {
+      "path": "src/runtime/draft_preparation.ts",
+      "sha256": "2f8c3afa91d0b5b26f74f110c1d0014d30fde7bf6711fd3d49d0e354340490e8",
+      "lines": 130
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "408f643153949f574423be92b9c229ce53069ac42b8bc395eb30bd3cf4e564a5",
+      "lines": 167
+    },
+    {
+      "path": "src/runtime/worktree_preparation.test-fixtures.ts",
+      "sha256": "04b7e2b26bb07dbf050823c3d0ebca5ccb0bb70662feac7e6e762f1432b1bd4c",
+      "lines": 29
+    },
+    {
+      "path": "src/runtime/worktree_preparation.test.ts",
+      "sha256": "74d1e190984fe4f44666eb10f2cbdf75503ae61b6e45b297d67c86be954b4148",
+      "lines": 133
+    },
+    {
+      "path": "src/runtime/worktree_preparation.ts",
+      "sha256": "27dc41107f0e8e059cb9eba70d22ad60e49de10e912eb083ea3f4a6a2482b443",
+      "lines": 39
+    },
+    {
+      "path": "src/runtime/worktree_preparation.wire.test.ts",
+      "sha256": "023e74d861364633dbded47e913defd33fe7600e419d9fc6f63114fdb0be0244",
+      "lines": 41
+    },
+    {
+      "path": "src/runtime/worktree_preparation_request.ts",
+      "sha256": "38e5a5610609c41b91e39d01a7678a2aeb07cd17630568e9b326b306900fd2ed",
+      "lines": 62
+    },
+    {
+      "path": "src/runtime/worktree_preparation_strings.ts",
+      "sha256": "507f0938daa8dea7e032b48ed1355c427722d1cf1846f601b4c0ebb3d7b71b30",
+      "lines": 100
+    },
+    {
+      "path": "src/runtime/worktree_preparation_types.ts",
+      "sha256": "504fe268696220bf4ca95248b7e3cccf4465c7b3a5a0100604307e58bc3c232f",
+      "lines": 203
+    }
+  ],
+  "changedSourceRefs": [
+    {
+      "path": "src/components/WorktreePreparationDialog.test.tsx",
+      "sha256": "2ef1a4184059751f25670f8c46b85d7cec11b1b25472fe2adc5b84eff51863dc",
+      "lines": 293
+    },
+    {
+      "path": "src/components/WorktreePreparationDialog.tsx",
+      "sha256": "82bdb2310b027a5a20eea49e457507210716a3374dee2550f8cd5a71c33118ec",
+      "lines": 354
+    },
+    {
+      "path": "src/runtime/draft_preparation.test.ts",
+      "sha256": "e5716adc6f11064169d2db23be4393081f66d9100cdddd14650431f457aa9a7c",
+      "lines": 203
+    },
+    {
+      "path": "src/runtime/draft_preparation.ts",
+      "sha256": "2f8c3afa91d0b5b26f74f110c1d0014d30fde7bf6711fd3d49d0e354340490e8",
+      "lines": 130
+    },
+    {
+      "path": "src/runtime/worktree_preparation_strings.ts",
+      "sha256": "507f0938daa8dea7e032b48ed1355c427722d1cf1846f601b4c0ebb3d7b71b30",
+      "lines": 100
+    }
+  ],
+  "rootCause": "retrySave boolean conflated repeatable persistence failure with original draft ownership invalidation; dialog showed ineffective retry after a verified native-style browser refusal.",
+  "change": "typed saved/unsaved/stale result; stale result retains inserted content, removes retry and asks user to close and inspect the composer. Repeatable storage failure retains retry. Append, send and ownership guard unchanged.",
+  "checks": [
+    {
+      "path": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/save-followup/red.txt",
+        "sha256": "007d276f2a4a86bf81ba9b4dd1eb62dbeb9c06c3ec3eab91ec977522134fd0be"
+      },
+      "exitCode": 1,
+      "tests": 20,
+      "failed": 2,
+      "scope": "New result semantics unit reds. Runtime assertion stopped at repeatable-failure result, so later stale assertions were not reached; actual stale UI defect separately evidenced by independent browser."
+    },
+    {
+      "path": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/save-followup/green.txt",
+        "sha256": "2953cdc0873374f5b18ef7bc8beb7469038362355abcb7652f0dcc017a013251"
+      },
+      "exitCode": 0,
+      "tests": 29,
+      "files": 5
+    },
+    {
+      "path": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/save-followup/typecheck.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "exitCode": 0
+    },
+    {
+      "path": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/save-followup/format.txt",
+        "sha256": "67ff521ab0bb40a2d8588ba985be5eb083d43518a13501d469d67949c0ebb242"
+      },
+      "exitCode": 0
+    }
+  ],
+  "independentRed": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-draft-red.json",
+    "sha256": "5a4feba19c87f683ce03c3acd4082e1066726366b8ede18eb7ad45f2e818fa92"
+  },
+  "before": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/save-followup/before.json",
+    "sha256": "92d94545659b346b8ce2c4b2b9a75fc6039e539d2a2952ac7e6c0d523997c2b5"
+  },
+  "boundaries": [
+    "Original author implementation/checkpoint preserved.",
+    "No browser run by this author; independent original WebKit red awaits rerun.",
+    "No full suite/build/Cargo/install/App/Agent; no claim H17 complete."
+  ]
+}

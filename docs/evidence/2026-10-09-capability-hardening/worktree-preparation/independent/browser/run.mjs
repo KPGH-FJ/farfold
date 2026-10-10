@@ -1,0 +1,340 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } =
+  await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base =
+  "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser";
+const engine = process.argv[2] ?? "webkit",
+  label = process.argv[3] ?? "first";
+const files = [];
+function walk(p) {
+  for (const e of fs.readdirSync(p, { withFileTypes: true })) {
+    const f = path.join(p, e.name);
+    if (e.isDirectory()) walk(f);
+    else files.push(f);
+  }
+}
+walk("src");
+files.push(
+  "package.json",
+  "pnpm-lock.yaml",
+  "vite.config.ts",
+  ...["fixture.tsx", "index.html", "serve.mjs", "run.mjs"].map(
+    (n) => base + "/" + n,
+  ),
+);
+files.sort();
+const hashes = () =>
+  Object.fromEntries(
+    files.map((f) => [
+      f,
+      createHash("sha256").update(fs.readFileSync(f)).digest("hex"),
+    ]),
+  );
+const result = {
+  engine,
+  label,
+  scope:
+    "Actual App/EmptyState/WorkspaceDialog/production owner, parser, draft stores, persistence under React StrictMode. Only IPC/OS return values controlled in memory; no native App/Agent/Git/database.",
+  before: hashes(),
+  checks: [],
+  errors: [],
+  screenshots: [],
+  scenarios: [],
+};
+const browser = await (engine === "webkit" ? webkit : chromium).launch({
+  headless: true,
+  executablePath:
+    engine === "webkit"
+      ? path.resolve(
+          "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+        )
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+});
+const timeout = setTimeout(() => void browser.close(), 120000);
+let page;
+const ck = (name, pass, detail) =>
+  result.checks.push({ name, pass: !!pass, detail });
+const count = (s, n) => s.calls.filter((x) => x.cmd === n).length;
+const cur = () => page.evaluate(() => window.fixture.current());
+const button = (n) => page.getByRole("button", { name: n, exact: true });
+const dialog = () =>
+  page.getByRole("dialog", { name: "准备这个工作位置", exact: true });
+const db = (n) => dialog().getByRole("button", { name: n, exact: true });
+const close = () => db("关闭").last().click();
+async function load(n, width = 1100, height = 800) {
+  if (page) await page.close();
+  page = await browser.newPage({ viewport: { width, height } });
+  page.setDefaultTimeout(6500);
+  page.on("pageerror", (e) => result.errors.push(String(e)));
+  await page.route("**/*", (r) =>
+    r.request().url().startsWith("http://127.0.0.1:1481/")
+      ? r.continue()
+      : r.abort(),
+  );
+  await page.goto("http://127.0.0.1:1481/" + base + "/index.html?mode=" + n);
+  await button("准备环境…").waitFor();
+  await page.waitForFunction(() =>
+    window.fixture.current().threads.some((t) => t.identity === "draft"),
+  );
+  await page.waitForTimeout(100);
+  ck(
+    n + ": StrictMode ready parent has one prepared draft",
+    count(await cur(), "session_open") === 1,
+  );
+}
+async function open(task = "H17_TASK_ONCE") {
+  await button("准备环境…").click();
+  await dialog().waitFor();
+  await dialog().getByLabel("希望在这里做什么").fill(task);
+}
+async function review(inspect = true) {
+  await db(inspect ? "检查并预览请求" : "不检查，编写准备请求").click();
+  await dialog().locator(".worktree-preparation-request").waitFor();
+}
+async function shot(n) {
+  const p = base + "/" + engine + "-" + label + "-" + n + ".png";
+  await page.screenshot({ path: p });
+  result.screenshots.push(p);
+}
+async function post(n) {
+  const s = await cur();
+  ck(
+    n + ": no prompt or unexpected IPC",
+    count(s, "session_prompt") === 0 && s.unexpected.length === 0,
+    s.unexpected,
+  );
+  result.scenarios.push({
+    name: n,
+    state: s,
+    body: await page.locator("body").innerText(),
+  });
+}
+try {
+  await load("checked");
+  const before = await cur();
+  await open();
+  await review();
+  let s = await cur();
+  ck(
+    "inspection is explicit, real parser reached review without altering draft",
+    count(s, "worktree_preparation_inspect") === 1 &&
+      count(s, "worktree_preparation_validate") === 0 &&
+      s.draft.text === before.draft.text,
+  );
+  const text = await dialog()
+    .locator(".worktree-preparation-request")
+    .inputValue();
+  ck(
+    "review exact project facts and no false ready/port proof",
+    text.includes("/controlled/h17-tree") &&
+      text.includes(".venv：链接（未跟随）") &&
+      text.includes("不代表依赖完整或环境已就绪"),
+  );
+  await shot("review");
+  await db("加入输入框").focus();
+  await page.keyboard.press("Enter");
+  await dialog()
+    .getByText("已加入并保存，尚未发送。", { exact: true })
+    .waitFor();
+  await page.keyboard.press("Enter");
+  s = await cur();
+  ck(
+    "real owner validates and appends exactly once on keyboard Enter",
+    count(s, "worktree_preparation_validate") === 1 &&
+      (s.draft.text.match(/H17_TASK_ONCE/g) || []).length === 1 &&
+      s.draft.text.startsWith("ORIGINAL_DRAFT_KEEP\n\n"),
+  );
+  ck(
+    "attachments and opinions are unchanged",
+    JSON.stringify(s.draft.attachments) ===
+      JSON.stringify(before.draft.attachments) &&
+      JSON.stringify(s.feedback) === JSON.stringify(before.feedback),
+  );
+  ck(
+    "added text is actually saved in controlled settings",
+    JSON.stringify(s.settings).includes("H17_TASK_ONCE"),
+  );
+  await close();
+  ck(
+    "close returns focus to live preparation trigger",
+    await button("准备环境…").evaluate((e) => e === document.activeElement),
+  );
+  await post("checked");
+  await load("late-inspection");
+  await page.evaluate(() => window.fixture.controls({ holdInspect: true }));
+  await open("OLD_LATE");
+  await db("检查并预览请求").click();
+  await page.waitForFunction(() =>
+    window.fixture
+      .current()
+      .calls.some((c) => c.cmd === "worktree_preparation_inspect"),
+  );
+  await page.keyboard.press("Escape");
+  await dialog().waitFor({ state: "hidden" });
+  await open("NEW_CURRENT");
+  await page.evaluate(() => window.fixture.releaseInspect());
+  await page.waitForTimeout(100);
+  ck(
+    "late inspection cannot close new dialog or publish old review",
+    (await dialog().getByLabel("希望在这里做什么").inputValue()) ===
+      "NEW_CURRENT" &&
+      (await dialog().locator(".worktree-preparation-request").count()) === 0,
+  );
+  await review(false);
+  await db("加入输入框").click();
+  await dialog()
+    .getByText("已加入并保存，尚未发送。", { exact: true })
+    .waitFor();
+  s = await cur();
+  ck(
+    "late owner does not append; only current manual request adds",
+    s.draft.text.includes("NEW_CURRENT") &&
+      !s.draft.text.includes("OLD_LATE") &&
+      count(s, "worktree_preparation_validate") === 0,
+  );
+  await post("late-inspection");
+  await load("late-validation");
+  await open("DO_NOT_APPEND");
+  await review();
+  await page.evaluate(() => window.fixture.controls({ holdValidate: true }));
+  await db("加入输入框").click();
+  await page.waitForFunction(() =>
+    window.fixture
+      .current()
+      .calls.some((c) => c.cmd === "worktree_preparation_validate"),
+  );
+  await page.evaluate(() => window.fixture.choiceABA());
+  await page.evaluate(() => window.fixture.releaseValidate());
+  await page.waitForTimeout(150);
+  s = await cur();
+  ck(
+    "choice A-B-A retires original target before late validation",
+    s.draft.text === "ORIGINAL_DRAFT_KEEP",
+  );
+  await post("late-validation");
+  await load("failed-validation");
+  await open("RECHECK_ONLY");
+  await review();
+  await page.evaluate(() => window.fixture.controls({ failValidation: true }));
+  await db("加入输入框").click();
+  await dialog()
+    .getByText("位置或文件情况已经变化，请重新检查并审阅请求。", {
+      exact: true,
+    })
+    .waitFor();
+  s = await cur();
+  ck(
+    "metadata rejection keeps original draft and has no implicit reread",
+    s.draft.text === "ORIGINAL_DRAFT_KEEP" &&
+      count(s, "worktree_preparation_inspect") === 1,
+  );
+  await page.evaluate(() => window.fixture.controls({ failValidation: false }));
+  await review();
+  await db("加入输入框").click();
+  await dialog()
+    .getByText("已加入并保存，尚未发送。", { exact: true })
+    .waitFor();
+  ck(
+    "fresh explicit inspection can recover",
+    count(await cur(), "worktree_preparation_inspect") === 2,
+  );
+  await post("failed-validation");
+  await load("failed-save");
+  await open("SAVE_ONCE");
+  await review(false);
+  await page.evaluate(() => window.fixture.controls({ failSaves: true }));
+  await db("加入输入框").click();
+  await dialog()
+    .getByText(
+      "已加入输入框，但尚未保存成功。内容保留，请重试保存；不会再次加入。",
+      { exact: true },
+    )
+    .waitFor();
+  s = await cur();
+  ck(
+    "save failure keeps inserted text exactly once",
+    (s.draft.text.match(/SAVE_ONCE/g) || []).length === 1,
+  );
+  await page.evaluate(() => window.fixture.controls({ failSaves: false }));
+  await db("重试保存").click();
+  await dialog()
+    .getByText("已加入并保存，尚未发送。", { exact: true })
+    .waitFor();
+  s = await cur();
+  ck(
+    "save retry only saves, never reinserts or invokes validate",
+    count(s, "worktree_preparation_validate") === 0 &&
+      (s.draft.text.match(/SAVE_ONCE/g) || []).length === 1 &&
+      JSON.stringify(s.settings).includes("SAVE_ONCE"),
+  );
+  await post("failed-save");
+  await load("narrow", 900, 620);
+  await open("准备现有测试并保留所有原内容。".repeat(80));
+  await review();
+  await dialog().getByText("本次观察到的文件名", { exact: true }).click();
+  await db("加入输入框").focus();
+  const geometry = await page.evaluate(() => ({
+    windowY: scrollY,
+    appY:
+      document.querySelector(".app")?.getBoundingClientRect().y ??
+      document.querySelector("#root")?.getBoundingClientRect().y,
+    active: document.activeElement?.textContent,
+    box: (() => {
+      const r = document.activeElement?.getBoundingClientRect();
+      return r ? { top: r.top, bottom: r.bottom } : null;
+    })(),
+    height: innerHeight,
+  }));
+  ck(
+    "narrow focus stays in viewport without app root scrolling",
+    geometry.windowY === 0 &&
+      geometry.box.top >= 0 &&
+      geometry.box.bottom <= geometry.height,
+    geometry,
+  );
+  await shot("narrow");
+  await page.keyboard.press("Escape");
+  await dialog().waitFor({ state: "hidden" });
+  ck(
+    "narrow Escape cancels without writing",
+    (await cur()).draft.text === "ORIGINAL_DRAFT_KEEP",
+  );
+  await post("narrow");
+} catch (e) {
+  result.failure = String(e);
+  if (page) {
+    result.body = await page
+      .locator("body")
+      .innerText()
+      .catch(() => null);
+    result.current = await cur().catch(() => null);
+    await shot("failure").catch(() => {});
+  }
+} finally {
+  clearTimeout(timeout);
+  await browser.close();
+  result.after = hashes();
+  result.sourceUnchanged =
+    JSON.stringify(result.before) === JSON.stringify(result.after);
+  const raw = JSON.stringify(result, null, 2) + "\n";
+  fs.writeFileSync(base + "/" + engine + "-" + label + ".raw.txt", raw);
+  fs.writeFileSync(base + "/" + engine + "-" + label + ".json", raw);
+  console.log(
+    JSON.stringify({
+      engine,
+      checks: result.checks.length,
+      failed: result.checks.filter((c) => !c.pass),
+      failure: result.failure,
+      errors: result.errors,
+      sourceUnchanged: result.sourceUnchanged,
+    }),
+  );
+  if (
+    result.failure ||
+    result.errors.length ||
+    result.checks.some((c) => !c.pass)
+  )
+    process.exitCode = 1;
+}

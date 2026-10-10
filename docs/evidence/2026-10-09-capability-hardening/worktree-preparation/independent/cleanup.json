@@ -1,0 +1,29 @@
+{
+  "observedAtUtc": "2026-10-10T11:24:11.076361+00:00",
+  "ownedServer": {
+    "pid": 28183,
+    "port": 1481,
+    "command": "node docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/serve.mjs",
+    "shutdown": "Exact command was checked before SIGTERM. Existing exec session 94660 completed with actual exit 143; no second signal or restart.",
+    "sessionExitCode": 143,
+    "sessionExitEvidence": "Observed unified exec write_stdin completion in verification task; not inferred from ps."
+  },
+  "currentChecks": {
+    "ps": {
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "listener": {
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "browserCleanup": "Each owned Playwright run awaits browser.close() in finally; this is not a statement about unrelated user browser processes.",
+  "serverLog": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/server-first.txt",
+    "sha256": "88c8c6be2085fbb88dc001edc429c9affb0e5c84f147fd3887190a83f7502865"
+  },
+  "formalAppTouched": false
+}

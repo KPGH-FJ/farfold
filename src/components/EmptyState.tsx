@@ -4,7 +4,8 @@
  * 真会话并切到会话页。
  */
 import { PreservedDrafts } from "./PreservedDrafts";
-import { WorkLocationPicker } from "./WorkLocationPicker";
+import { NewConversationLocationBar } from "./NewConversationLocationBar";
+import { useDraftPreparation } from "./useDraftPreparation";
 import { useDraftWorkLocation } from "./useDraftWorkLocation";
 import {
   DraftArchiveBlockedError,
@@ -48,7 +49,6 @@ import {
 import { useConnectionHold } from "../runtime/connection_hold";
 import { ACCESS_STRINGS as A } from "../runtime/access_strings";
 import {
-  basename,
   modelConfigOption,
   configValueLabel,
   threads,
@@ -99,10 +99,8 @@ import {
   BookOpenIcon,
   CompassIcon,
   CaretDownIcon,
-  FolderSimpleIcon,
   PencilLineIcon,
   SlidersHorizontalIcon,
-  XIcon,
 } from "@phosphor-icons/react";
 
 const suggestionIcons = [AirplaneTiltIcon, PencilLineIcon, BookOpenIcon];
@@ -372,6 +370,26 @@ export function EmptyState({
         setFolder(path);
       },
     });
+  const beginPreparation = useDraftPreparation({
+    context: JSON.stringify([
+      pair,
+      initialAgentRevision,
+      draftRevision,
+      selectionEpoch.current,
+      draft?.key ?? null,
+    ]),
+    active,
+    cwd: requestCwd,
+    allowed: () =>
+      locationAllowed() &&
+      !archiveGuard.isBlocked() &&
+      !selectionReviewRef.current &&
+      !locationState.current.draft?.configuring,
+    onBegin: () => {
+      sendAfterFolder.current = null;
+      locationOwner.current.retire();
+    },
+  });
   const requireCurrentService = async () => {
     if (!service) return;
     const epoch = selectionEpoch.current;
@@ -1330,57 +1348,26 @@ export function EmptyState({
         autofocus={active}
         fit
       />
-      <div className="workspace-folder-bar">
-        <span className="workspace-folder-label">{W.workingFolder}</span>
-        <button
-          type="button"
-          className={`workspace-folder-button${folder ? " selected" : ""}`}
-          aria-label={folder ? W.changeFolder : W.folder}
-          title={folder ?? undefined}
-          disabled={
-            picking ||
-            !!unsent.pendingConversation ||
-            draft?.submitting ||
-            draft?.running
-          }
-          onClick={() => void pickProject()}
-        >
-          <FolderSimpleIcon size={18} />
-          <span>{folder ? basename(folder) : W.folder}</span>
-          <CaretDownIcon size={12} />
-        </button>
-        {folder && (
-          <button
-            type="button"
-            className="workspace-folder-clear icon-btn"
-            aria-label={W.clearFolder}
-            disabled={
-              picking ||
-              !!unsent.pendingConversation ||
-              draft?.submitting ||
-              draft?.running
-            }
-            onClick={() => {
-              locationOwner.current.retire();
-              setFolder(null);
-            }}
-          >
-            <XIcon size={14} />
-          </button>
-        )}
-        <WorkLocationPicker
-          cwd={folder}
-          disabled={
-            !active ||
-            picking ||
-            !!unsent.pendingConversation ||
-            !!draft?.submitting ||
-            !!draft?.running
-          }
-          begin={beginWorkLocation}
-        />
-        <span className="workspace-folder-hint">{R.folderHint}</span>
-      </div>
+      <NewConversationLocationBar
+        folder={folder}
+        active={active}
+        disabled={
+          picking ||
+          !!unsent.pendingConversation ||
+          !!draft?.submitting ||
+          !!draft?.running
+        }
+        preparationDisabled={
+          archiveBlocked || selectionNeedsReview || !!draft?.configuring
+        }
+        onPick={() => void pickProject()}
+        onClear={() => {
+          locationOwner.current.retire();
+          setFolder(null);
+        }}
+        beginWorkLocation={beginWorkLocation}
+        beginPreparation={beginPreparation}
+      />
       {(draftError ||
         draft?.connectionLost ||
         draft?.sourceError ||

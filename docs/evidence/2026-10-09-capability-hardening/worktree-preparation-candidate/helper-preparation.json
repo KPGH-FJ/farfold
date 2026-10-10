@@ -1,0 +1,220 @@
+{
+  "createdAtUtc": "2026-10-10T11:22:35.832577+00:00",
+  "status": "prepared-not-executed",
+  "baselineCommit": "c6356d429dc961671704efb6bc045076eec4446e",
+  "baselineCandidate": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/candidate.json",
+    "sha256": "f4c45431c2bfefe27052f77102ee7c13266579fac8f1f8a237c7d4487847c852",
+    "bytes": 8218
+  },
+  "engineeringRoot": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-checks",
+  "helpers": [
+    {
+      "source": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/prepare-candidate.py",
+        "sha256": "74ea93f630edb7550b1a28c0c29e64d56ac78a4961731546aee5930b4393fa2a",
+        "bytes": 15499
+      },
+      "prepared": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-candidate/prepare-candidate.py",
+        "sha256": "e4984d57c56434e2b8ca13ac9101cf65003d7d9ecdcccf8b6cf3f634161317e1",
+        "bytes": 15601
+      },
+      "diff": {
+        "path": "output/2026-10-10-worktree-preparation-install/helper-diffs/prepare-candidate.py.diff.txt",
+        "sha256": "184df05e26292e1015a83a6110ed2bb82bf71dd40a9603e8b17d702a7afc943f",
+        "bytes": 3061
+      },
+      "byteIdentical": false,
+      "astParsed": true
+    },
+    {
+      "source": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-candidate.py",
+        "sha256": "061cc71bb930ff278e2ee6fa3fc3fa9c3c817d41b5c8895df6172d53ff9057c9",
+        "bytes": 20462
+      },
+      "prepared": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-candidate/verify-candidate.py",
+        "sha256": "8199962dbd28cd2034ec3aada90a03c8b68c3cfbb745b4cba172815682c535c4",
+        "bytes": 20565
+      },
+      "diff": {
+        "path": "output/2026-10-10-worktree-preparation-install/helper-diffs/verify-candidate.py.diff.txt",
+        "sha256": "568066c0f480a26b49009577183e0335abd31aa9359118692c26368076505d33",
+        "bytes": 1357
+      },
+      "byteIdentical": false,
+      "astParsed": true
+    },
+    {
+      "source": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/verify-install-independent.py",
+        "sha256": "3d935f8e3706b0ccf728136ccab7f427c3a5e1435764b60c09585ec63834de45",
+        "bytes": 22712
+      },
+      "prepared": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-candidate/verify-install-independent.py",
+        "sha256": "41c4a7032d11f5abe21b51b08f0bd6df1115ad8af322c6c52c37431d33399216",
+        "bytes": 25493
+      },
+      "diff": {
+        "path": "output/2026-10-10-worktree-preparation-install/helper-diffs/verify-install-independent.py.diff.txt",
+        "sha256": "e06fd7b9cbc0e111c0776e4f81f56b314b92ff16cc021389b8cc33ce320465b5",
+        "bytes": 8844
+      },
+      "byteIdentical": false,
+      "astParsed": true
+    },
+    {
+      "source": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/verify-data-retention.py",
+        "sha256": "a5632da9a13916933c7a70747e7e2d558c76da867b41067ba1db08132da27137",
+        "bytes": 4019
+      },
+      "prepared": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-candidate/verify-data-retention.py",
+        "sha256": "cb6de9dc13f61e02de00703c9ecd63772a3eca1b4f2b2f1c6f28ed5e21804884",
+        "bytes": 4046
+      },
+      "diff": {
+        "path": "output/2026-10-10-worktree-preparation-install/helper-diffs/verify-data-retention.py.diff.txt",
+        "sha256": "750dfb00a28da382901f98ca8899d731e80ef127b340503ce9722346b52c3853",
+        "bytes": 1238
+      },
+      "byteIdentical": false,
+      "astParsed": true
+    },
+    {
+      "source": {
+        "path": "output/2026-10-10-worktree-new11-install/backup_metadata.py",
+        "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+        "bytes": 2713
+      },
+      "prepared": {
+        "path": "output/2026-10-10-worktree-preparation-install/backup_metadata.py",
+        "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+        "bytes": 2713
+      },
+      "diff": {
+        "path": "output/2026-10-10-worktree-preparation-install/helper-diffs/backup_metadata.py.diff.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "byteIdentical": true,
+      "astParsed": true
+    },
+    {
+      "source": {
+        "path": "output/2026-10-10-worktree-new11-install/install_verified_candidate.py",
+        "sha256": "43f292e199310ea39e51358316a601d471aa0530dc8d50580875c9019ff47517",
+        "bytes": 15420
+      },
+      "prepared": {
+        "path": "output/2026-10-10-worktree-preparation-install/install_verified_candidate.py",
+        "sha256": "c09a1eb428295a55fc5afd1e8f9731cbb41999d33c6d2b81d0962f36cf5d5215",
+        "bytes": 15540
+      },
+      "diff": {
+        "path": "output/2026-10-10-worktree-preparation-install/helper-diffs/install_verified_candidate.py.diff.txt",
+        "sha256": "dcb727ca5ce08f75f1fb3e96238ea4fc3e7f7a3aa7b7c169c449e264e08a5a07",
+        "bytes": 1274
+      },
+      "byteIdentical": false,
+      "astParsed": true
+    },
+    {
+      "source": {
+        "path": "output/2026-10-10-worktree-new11-install/install_data_snapshot.py",
+        "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+        "bytes": 3792
+      },
+      "prepared": {
+        "path": "output/2026-10-10-worktree-preparation-install/install_data_snapshot.py",
+        "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+        "bytes": 3792
+      },
+      "diff": {
+        "path": "output/2026-10-10-worktree-preparation-install/helper-diffs/install_data_snapshot.py.diff.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "byteIdentical": true,
+      "astParsed": true
+    },
+    {
+      "source": {
+        "path": "output/2026-10-10-worktree-new11-install/cleanup_duplicate.py",
+        "sha256": "52fa0edf3eb4826935a265fa361b6fe86761726e7a06f0e73464ca05e65fde89",
+        "bytes": 2075
+      },
+      "prepared": {
+        "path": "output/2026-10-10-worktree-preparation-install/cleanup_duplicate.py",
+        "sha256": "00abc0c1d244a6f7f3ad306190f1aa55ed5d0f6c0b2f8750379d0ad1f40e8b1c",
+        "bytes": 2081
+      },
+      "diff": {
+        "path": "output/2026-10-10-worktree-preparation-install/helper-diffs/cleanup_duplicate.py.diff.txt",
+        "sha256": "a44bc6fd40d0cf739876f24f150433ce62b05da724c5593e509e50ccc7303400",
+        "bytes": 587
+      },
+      "byteIdentical": false,
+      "astParsed": true
+    }
+  ],
+  "staticChecks": {
+    "astParsed": 8,
+    "helperModulesImported": 0,
+    "helperFunctionsExecuted": 0,
+    "strictEngineeringValidatorsAstIdenticalToPriorActualSevenCommands": true,
+    "allThreeInventoryCollectorsEqual": true,
+    "scopeDirectoriesUnchanged": true,
+    "topAddedOnly": [
+      "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/preparation-wire.json"
+    ],
+    "allOtherTopFilesUnchanged": true,
+    "installVerifierFunctionsOutsideMainAstUnchanged": [
+      "run",
+      "ref",
+      "process_absent",
+      "signature",
+      "manifest",
+      "logical_copy_digest",
+      "verify_metadata"
+    ],
+    "baselineReceiptJsonChainMatchesActualSchema": true
+  },
+  "baselineNormalExitRequiredRefs": [
+    {
+      "path": "output/2026-10-10-worktree-new11-native/final-normal-exit.json",
+      "sha256": "acac5da64f1660889a3afade258d6c4e14bb87ec00256b8edadf8f052fe49cc7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-new11-candidate/installed-new11.json",
+      "sha256": "61b445da67ecd676d0fa6b88c515aa70459cc736d77bfb3901323938388c5697"
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/final-data-comparison-independent.json",
+      "sha256": "c6770aaaf71320502dd7cf7f6d24e246be7f3bc0eec4a3761e80f173eff7351d"
+    },
+    {
+      "path": "output/2026-10-10-worktree-new11-native/root-data-delta-review.json",
+      "sha256": "61876cee3ec65f124c8ac310f5c7629d8444ad176ce755177610039758103324"
+    }
+  ],
+  "schemaAdaptation": [
+    "NEW11 installed receipt uses formalSourceCommit, not installedCommit. final-normal-exit and installed-new11 exact baseline and five candidate file hashes are required.",
+    "Normal-exit refs must contain all four exact frozen hashes. Independent comparison is observations-awaiting-root-delta-review; only matching root approval of exact catalogue plus full session/draft preservation is accepted.",
+    "Prior comparison retained-input and two disposable-copy logical comparison facts are checked as evidence; helper preparation does not open any database.",
+    "metadata backup, manifest walk, install-only sole-app replacement and exact duplicate cleanup retain their reviewed mechanisms. No Rust reuse in this candidate: seven actual commands required."
+  ],
+  "notExecuted": [
+    "Candidate build/verifiers",
+    "Metadata backup or DB access",
+    "Manifest scan",
+    "Installation/cleanup",
+    "App/Agent/process controls"
+  ],
+  "format": "Python scripts parsed with ast.parse only; JSON receipt formatted separately.",
+  "diffStorage": "output/2026-10-10-worktree-preparation-install/helper-diffs"
+}

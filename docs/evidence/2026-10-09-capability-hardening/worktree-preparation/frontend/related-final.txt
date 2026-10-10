@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/worktree_preparation.test.ts" "src/runtime/draft_preparation.test.ts" "src/components/useDraftPreparation.test.ts" "src/components/WorktreePreparationDialog.test.tsx" "src/components/EmptyState.selection.test.tsx" "src/components/EmptyState.archived-draft.test.tsx" "src/components/EmptyState.worktree-owner.test.tsx" "src/runtime/strings.test.ts" "src/components/EmptyState.preparation.test.tsx" "src/components/EmptyState.service-review.test.tsx" "src/components/EmptyState.work.test.tsx" "src/components/EmptyState.work-location.test.tsx" "src/App.prepared-draft-retirement.test.tsx" "src/runtime/worktree_preparation.wire.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  14 passed (14)
+      Tests  158 passed (158)
+   Start at  19:12:26
+   Duration  6.04s (transform 5.23s, setup 0ms, import 46.07s, tests 817ms, environment 1ms)
+

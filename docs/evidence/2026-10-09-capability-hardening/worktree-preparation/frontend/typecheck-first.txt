@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/EmptyState.archived-draft.test.tsx(142,34): error TS2304: Cannot find name 'ComponentProps'.
+ ELIFECYCLE  Command failed with exit code 1.

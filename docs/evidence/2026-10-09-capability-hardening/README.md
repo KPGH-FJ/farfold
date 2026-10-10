@@ -4,7 +4,7 @@
 
 ## 当前衔接：H15基础范围完成，继续H17
 
-最新正式版为 `c6356d42` / 0.1.7 arm64，[NEW-11正式复验](worktree-new11-candidate/installed-new11.json)确认暖态归档已准备空草稿立即显示准确恢复提示，点击新对话不再卡载入，原位置恢复后提示撤下；创建、归档、恢复各7项材料检查通过。原128条完整会话、8条输入、8组意见、3组待发及整个未发送对象相同，0新增持久会话；四项清单变化已逐项审核。零发送，有空对话准备，Codex 6 Astra / Ultra 选择保持，最终空白TR且正常退出。结合9cbb的Git锁及NEW-07–10正式结果，[H15原macOS基础范围已收口](worktree-new11-candidate/h15-closure.json)。当前H17进入源码实现与验证；29家、Windows及完整市场目标仍未完成。[NEW-11工程检查](worktree-new11-checks/final-verification.json)为前端4433项，未变Rust按精确输入复用；H17新源码另行验证，不冒称已在此安装包中。
+最新正式版为 `c6356d42` / 0.1.7 arm64，[NEW-11正式复验](worktree-new11-candidate/installed-new11.json)确认暖态归档已准备空草稿立即显示准确恢复提示，点击新对话不再卡载入，原位置恢复后提示撤下；创建、归档、恢复各7项材料检查通过。原128条完整会话、8条输入、8组意见、3组待发及整个未发送对象相同，0新增持久会话；四项清单变化已逐项审核。零发送，有空对话准备，Codex 6 Astra / Ultra 选择保持，最终空白TR且正常退出。结合9cbb的Git锁及NEW-07–10正式结果，[H15原macOS基础范围已收口](worktree-new11-candidate/h15-closure.json)。ARCH-47、H13、H14已按[原条件分层证据](worktree-preparation/next-worktree-scope-review.json)完成支持的macOS基础范围。H17新增工作位置检查、审阅请求后一次加入原新草稿、失效归属及保存失败保护；[七项工程检查](worktree-preparation-checks/run-01/verification.json)全部实际执行并通过，1,363输入稳定，前端4,487项、Rust1,372项/6忽略；[独立复核](worktree-preparation/independent/implementation.json)保留真实保存提示红例及修复，双引擎分项通过。H17待安装与真实准备/失败/停止验证；29家、Windows及完整市场目标仍未完成。[NEW-11工程检查](worktree-new11-checks/final-verification.json)为前端4433项，未变Rust按精确输入复用；H17新源码另行验证，不冒称已在此安装包中。
 
 以下保留原阶段成功与失败，历史“当前/待安装/待修复”描述均指当时阶段，不覆盖本节最新结论。
 

@@ -1,3 +1,4 @@
+import { NewConversationLocationBar } from "./NewConversationLocationBar";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import {
   Children,
@@ -124,8 +125,17 @@ let props: ComponentProps<typeof EmptyState>;
 function nodes(tree: ReactNode): Element[] {
   const result: Element[] = [];
   Children.forEach(tree, (child) => {
-    if (isValidElement<Record<string, unknown>>(child))
+    if (isValidElement<Record<string, unknown>>(child)) {
       result.push(child, ...nodes(child.props.children as ReactNode));
+      if (child.type === NewConversationLocationBar)
+        result.push(
+          ...nodes(
+            NewConversationLocationBar(
+              child.props as ComponentProps<typeof NewConversationLocationBar>,
+            ),
+          ),
+        );
+    }
   });
   return result;
 }

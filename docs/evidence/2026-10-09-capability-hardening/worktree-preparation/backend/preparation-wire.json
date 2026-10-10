@@ -1,0 +1,143 @@
+{
+  "inspection": {
+    "inspectionId": "ba9e3db2-cd54-43d8-b497-f03203cc0083",
+    "location": {
+      "id": "12345678-1234-4123-8123-123456789abc",
+      "revision": 0,
+      "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp3sAH8h/repo",
+      "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp3sAH8h/repo",
+      "branch": "refs/heads/main",
+      "headOid": "d2c32323f1c8e14dc822262018a192d3053eab8e",
+      "ownership": "existing",
+      "availability": "verified"
+    },
+    "projectRelativePath": "",
+    "projectPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp3sAH8h/repo",
+    "observedAtMs": 1791630574381,
+    "git": {
+      "kind": "main",
+      "otherWorktreeCount": 0
+    },
+    "facts": [
+      {
+        "name": "package.json",
+        "role": "manifest",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "pyproject.toml",
+        "role": "manifest",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "requirements.txt",
+        "role": "manifest",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "Pipfile",
+        "role": "manifest",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "Cargo.toml",
+        "role": "manifest",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "go.mod",
+        "role": "manifest",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "package-lock.json",
+        "role": "lock",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "npm-shrinkwrap.json",
+        "role": "lock",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "pnpm-lock.yaml",
+        "role": "lock",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "yarn.lock",
+        "role": "lock",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "bun.lock",
+        "role": "lock",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "bun.lockb",
+        "role": "lock",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "uv.lock",
+        "role": "lock",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "poetry.lock",
+        "role": "lock",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "Pipfile.lock",
+        "role": "lock",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "Cargo.lock",
+        "role": "lock",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "go.sum",
+        "role": "lock",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "node_modules",
+        "role": "dependencyDirectory",
+        "nodeKind": "missing"
+      },
+      {
+        "name": ".venv",
+        "role": "dependencyDirectory",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "venv",
+        "role": "dependencyDirectory",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "target",
+        "role": "dependencyDirectory",
+        "nodeKind": "missing"
+      },
+      {
+        "name": "vendor",
+        "role": "dependencyDirectory",
+        "nodeKind": "missing"
+      }
+    ],
+    "coverage": {
+      "scope": "fixedNameMetadata",
+      "checkedNames": 22,
+      "complete": true
+    }
+  },
+  "validation": {
+    "inspectionId": "ba9e3db2-cd54-43d8-b497-f03203cc0083",
+    "valid": true
+  }
+}

@@ -1,0 +1,719 @@
+{
+  "recordedAtUtc": "2026-10-10T11:25:00.433453+00:00",
+  "status": "independent-source-review-and-controlled-browser-complete",
+  "conclusion": "No remaining blocker found within reviewed backend and exercised H17 browser paths. One genuine stale-save guidance defect reproduced and corrected by frontend owner; source/controlled verification does not complete installed or real-Agent H17 acceptance.",
+  "scope": {
+    "actual": "Production App, EmptyState, preparation dialog, StrictMode, owner factory, strict IPC parser, draft stores and persistence. Full application CSS and keyboard/pointer browser interaction.",
+    "controlled": "Only IPC/OS results are in memory. Synthetic metadata uses the production fixed-name list; this is not an independent filesystem oracle. Fake session_open can prepare one empty draft; session_prompt is forbidden and zero in completed scenarios. No App/Agent/Git/database operations.",
+    "engines": ["Playwright WebKit", "Playwright Chromium"],
+    "viewports": ["1100x800", "900x620"],
+    "backend": "Read-only review and evidence hash/wire consistency checks. No duplicated Cargo; author actual temp-Git/metadata tests remain a separate proof level."
+  },
+  "coverage": {
+    "webkitMain": {
+      "run": "webkit-second",
+      "passed": 27,
+      "sourcePhase": "Before five-file save fix; unaffected paths retained with exact delta recorded."
+    },
+    "webkitSaveIncrement": {
+      "run": "webkit-save-final",
+      "passed": 9,
+      "sourcePhase": "Final source; ordinary retry and stale draft repair."
+    },
+    "chromiumMain": {
+      "run": "chromium-final",
+      "passed": 27,
+      "sourcePhase": "Final source."
+    },
+    "chromiumStaleSave": {
+      "run": "chromium-stale-save-final",
+      "passed": 5,
+      "sourcePhase": "Final source."
+    },
+    "countBoundary": "Counts include overlapping setup and safety assertions; not distinct capabilities or unique end-to-end journeys.",
+    "scenarios": [
+      "Explicit inspection and review before any append; no readiness/port claim.",
+      "Real target validation and keyboard Enter append once, original text prefix/attachments/feedback retained, controlled persistence checked.",
+      "Close/Escape and late inspection cannot publish into a newer dialog; new manual request remains separate.",
+      "Choice A-B-A during held validation retires original target, with no append or send.",
+      "Typed changed metadata rejects without implicit reread; explicit new inspection recovers.",
+      "Failed save preserves inserted text once, ordinary retry only saves. Changed original draft removes no-op retry and gives explicit close-and-confirm guidance.",
+      "Narrow window long content/facts remain reachable with local scrolling, windowY/appY zero; Escape writes nothing."
+    ]
+  },
+  "validFailure": {
+    "run": "webkit-stale-save-draft-red",
+    "passed": 4,
+    "failed": 1,
+    "origin": "Root proposed the stale-save concern; independent actual WebKit reproduction established the UI failure.",
+    "observation": "After inserted text failed persistence and original draft changed, retry correctly made no extra write, but UI retained enabled retry and retry instruction. This did not duplicate text or send a prompt.",
+    "authorFix": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/save-followup/implementation.json",
+      "sha256": "f3b21ffd5f5c8420039e999f523e39c66a8d52c0c10763a715806bdd6d317b85"
+    },
+    "repair": "Tri-state saved/unsaved/stale; stale removes retry and says to close and confirm/save in the input. Ordinary persistence retry remains available.",
+    "fixedRuns": ["webkit-save-final", "chromium-stale-save-final"]
+  },
+  "nonProductFailures": [
+    {
+      "run": "webkit-first",
+      "cause": "Driver exact accessible label did not match the review textarea label; actual review was visible. Driver switched to the production request textarea selector. No production change."
+    },
+    {
+      "run": "webkit-stale-save-red",
+      "cause": "Initial A-B-A probe after consumed append restored the same effective context, so retry saved; locator then waited for an absent retry button. Not a reproduction of the draft-change bug."
+    },
+    {
+      "run": "webkit-save-followup",
+      "cause": "Extracted driver used block-scoped s before initialization. Fixed driver scope only."
+    },
+    {
+      "run": null,
+      "cause": "One mistyped command omitted 10 in the evidence directory date, causing Node MODULE_NOT_FOUND before browser launch. Only tool output exists; no invented product or browser result."
+    }
+  ],
+  "sourceEvidence": {
+    "currentFrontendSourceRefs": [
+      {
+        "path": "src/components/EmptyState.archived-draft.test.tsx",
+        "sha256": "b9cf6c435dff8ed04433248f0426d34e6c71372710f11826a661507ae4cd4031",
+        "lines": 700
+      },
+      {
+        "path": "src/components/EmptyState.preparation.test.tsx",
+        "sha256": "4b6d49cefff11bf1e4dc88ffd0ee165aa04c75e2079ccc5f61729bc7ef8eb02c",
+        "lines": 197
+      },
+      {
+        "path": "src/components/EmptyState.selection.test.tsx",
+        "sha256": "d794e6c056442ca4de3851a0300b5ac3c6117de37867202b2fe366bd4d503c8a",
+        "lines": 1500
+      },
+      {
+        "path": "src/components/EmptyState.tsx",
+        "sha256": "1e9fb889542392207d6219fffa60e3d73e9d8951b4213d7c3d0da967fbb88d75",
+        "lines": 1487
+      },
+      {
+        "path": "src/components/EmptyState.worktree-owner.test.tsx",
+        "sha256": "a2a09f3b8c51b7775c6b46b751523ce61a3008f0473025abb5ea402336797fdb",
+        "lines": 197
+      },
+      {
+        "path": "src/components/NewConversationLocationBar.tsx",
+        "sha256": "e43a19cc0afba45666105f6be6c39032101fd8ba9de183e41a7b26eb95b4ec1b",
+        "lines": 67
+      },
+      {
+        "path": "src/components/WorktreePreparationControl.tsx",
+        "sha256": "6200421e4fcc40493d80ad31771d0d63a1b519e4945da9043bd9af35eab05258",
+        "lines": 45
+      },
+      {
+        "path": "src/components/WorktreePreparationDialog.css",
+        "sha256": "61f9ca5b01199ddb03db15d1666c6a13267e4e035abed0d232e2a68d0aa7a49f",
+        "lines": 42
+      },
+      {
+        "path": "src/components/WorktreePreparationDialog.test.tsx",
+        "sha256": "2ef1a4184059751f25670f8c46b85d7cec11b1b25472fe2adc5b84eff51863dc",
+        "lines": 293
+      },
+      {
+        "path": "src/components/WorktreePreparationDialog.tsx",
+        "sha256": "82bdb2310b027a5a20eea49e457507210716a3374dee2550f8cd5a71c33118ec",
+        "lines": 354
+      },
+      {
+        "path": "src/components/useDraftPreparation.test.ts",
+        "sha256": "042e58bda191c440812a44c9e260f2ef51361622652de06a1ce774358dcf9926",
+        "lines": 81
+      },
+      {
+        "path": "src/components/useDraftPreparation.ts",
+        "sha256": "e53d82457d3e53979734b972ea701b8bc26e6df4746d1e72d22a0400250d6517",
+        "lines": 54
+      },
+      {
+        "path": "src/runtime/draft_preparation.test.ts",
+        "sha256": "e5716adc6f11064169d2db23be4393081f66d9100cdddd14650431f457aa9a7c",
+        "lines": 203
+      },
+      {
+        "path": "src/runtime/draft_preparation.ts",
+        "sha256": "2f8c3afa91d0b5b26f74f110c1d0014d30fde7bf6711fd3d49d0e354340490e8",
+        "lines": 130
+      },
+      {
+        "path": "src/runtime/strings.test.ts",
+        "sha256": "408f643153949f574423be92b9c229ce53069ac42b8bc395eb30bd3cf4e564a5",
+        "lines": 167
+      },
+      {
+        "path": "src/runtime/worktree_preparation.test-fixtures.ts",
+        "sha256": "04b7e2b26bb07dbf050823c3d0ebca5ccb0bb70662feac7e6e762f1432b1bd4c",
+        "lines": 29
+      },
+      {
+        "path": "src/runtime/worktree_preparation.test.ts",
+        "sha256": "74d1e190984fe4f44666eb10f2cbdf75503ae61b6e45b297d67c86be954b4148",
+        "lines": 133
+      },
+      {
+        "path": "src/runtime/worktree_preparation.ts",
+        "sha256": "27dc41107f0e8e059cb9eba70d22ad60e49de10e912eb083ea3f4a6a2482b443",
+        "lines": 39
+      },
+      {
+        "path": "src/runtime/worktree_preparation.wire.test.ts",
+        "sha256": "023e74d861364633dbded47e913defd33fe7600e419d9fc6f63114fdb0be0244",
+        "lines": 41
+      },
+      {
+        "path": "src/runtime/worktree_preparation_request.ts",
+        "sha256": "38e5a5610609c41b91e39d01a7678a2aeb07cd17630568e9b326b306900fd2ed",
+        "lines": 62
+      },
+      {
+        "path": "src/runtime/worktree_preparation_strings.ts",
+        "sha256": "507f0938daa8dea7e032b48ed1355c427722d1cf1846f601b4c0ebb3d7b71b30",
+        "lines": 100
+      },
+      {
+        "path": "src/runtime/worktree_preparation_types.ts",
+        "sha256": "504fe268696220bf4ca95248b7e3cccf4465c7b3a5a0100604307e58bc3c232f",
+        "lines": 203
+      }
+    ],
+    "finalRunsEntire834InputMapsMatchCurrent": true,
+    "allRunsWithinRunBeforeAfterEqual": true,
+    "mainRunDelta": [
+      "src/components/WorktreePreparationDialog.test.tsx",
+      "src/components/WorktreePreparationDialog.tsx",
+      "src/runtime/draft_preparation.test.ts",
+      "src/runtime/draft_preparation.ts",
+      "src/runtime/worktree_preparation_strings.ts"
+    ],
+    "mainRunDeltaExactlyAuthorFiveChangedFiles": true,
+    "historicalDriverBytesVerified": [
+      {
+        "run": "webkit-first",
+        "preserved": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/run.first-selector.mjs.txt",
+          "sha256": "63fb5a1d387df3158a5541f496d47b4ccb127853ca67876d82428d5cb0ff66bf"
+        }
+      },
+      {
+        "run": "webkit-stale-save-red",
+        "preserved": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/run-stale-save.first-aba.mjs.txt",
+          "sha256": "ad30c3d827b7d7d26ae45ea9cc8aae05574117363a4e7232eead2f3f09d00bf5"
+        }
+      },
+      {
+        "run": "webkit-stale-save-draft-red",
+        "preserved": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/run-stale-save.exact-red.mjs.txt",
+          "sha256": "92a68f5f928c7f4c31267eac4507fa9c6003f8353d57d01b350279e3d898ab49"
+        }
+      },
+      {
+        "run": "webkit-save-followup",
+        "preserved": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/run-save-followup.before-scope-fix.mjs.txt",
+          "sha256": "ccac783a21ec991e8a74d5cb79dab3c450f55f6d9468c1dd524c44fe0a21e990"
+        }
+      }
+    ],
+    "hmrBoundary": "Author fix occurred between completed runs; each recorded run has exact equal before/after hashes. Historical old source hashes remain historical, not asserted current."
+  },
+  "runs": [
+    {
+      "name": "chromium-final",
+      "engine": "chromium",
+      "checks": 27,
+      "passed": 27,
+      "failed": 0,
+      "withinRunInputsUnchanged": true,
+      "inputCount": 834,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-final.json",
+        "sha256": "4c174b3b97bf9081533a80b5b9fea91e3486b831b704c6be9a4cd672475c5abd"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-final.stdout.txt",
+        "sha256": "000df3bfc584aadbb3a70dbcf4ce7893bc9785c1a53c596c197caec92c820783"
+      }
+    },
+    {
+      "name": "chromium-stale-save-final",
+      "engine": "chromium",
+      "checks": 5,
+      "passed": 5,
+      "failed": 0,
+      "withinRunInputsUnchanged": true,
+      "inputCount": 834,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-stale-save-final.json",
+        "sha256": "cb7a28e5cd01ad1f08f8d49cde95caeb5626637728ad6a95c3b7c621550efe47"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-stale-save-final.stdout.txt",
+        "sha256": "78e0fcaa4272b7fa4b1700f6ce960e1de9f6d307f452f8bc00287ad32274dd7a"
+      }
+    },
+    {
+      "name": "webkit-first",
+      "engine": "webkit",
+      "checks": 1,
+      "passed": 1,
+      "failed": 0,
+      "withinRunInputsUnchanged": true,
+      "inputCount": 834,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-first.json",
+        "sha256": "4a22add18595d840c6fc5edfe243a261a52c3945dc70fecda2970d77035646aa"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-first.stdout.txt",
+        "sha256": "c24da27df25ba9d96ee540a4cbb0fc54cade20a6f37c476069ab5bd86ef08bf8"
+      }
+    },
+    {
+      "name": "webkit-save-final",
+      "engine": "webkit",
+      "checks": 9,
+      "passed": 9,
+      "failed": 0,
+      "withinRunInputsUnchanged": true,
+      "inputCount": 834,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-final.json",
+        "sha256": "4760954a5658cd8da563ac31cda125ac0acb206f25b0bf847865c355bc0da7f9"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-final.stdout.txt",
+        "sha256": "a099af598dfd7b7d722a511d24059e91bcd1b344059c91ab8ad0134adaa94284"
+      }
+    },
+    {
+      "name": "webkit-save-followup",
+      "engine": "webkit",
+      "checks": 1,
+      "passed": 1,
+      "failed": 0,
+      "withinRunInputsUnchanged": true,
+      "inputCount": 834,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-followup.json",
+        "sha256": "cd0ec97010dbeef45c64b0814dd3549b1f10e14cf85eca5400a56c93061f4429"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-followup.stdout.txt",
+        "sha256": "2ec2b073eb21c985eb6946e1d824684d28f80952189d948ab2d04163326b29de"
+      }
+    },
+    {
+      "name": "webkit-second",
+      "engine": "webkit",
+      "checks": 27,
+      "passed": 27,
+      "failed": 0,
+      "withinRunInputsUnchanged": true,
+      "inputCount": 834,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-second.json",
+        "sha256": "f3cc5affab778701d109f2501c18669e0e9506552810d9864831378bb4b9ec97"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-second.stdout.txt",
+        "sha256": "917c8ac5a5aeff7345b51ee1899806da12ea7c96fbe4ef0c52c688af5c76ac6f"
+      }
+    },
+    {
+      "name": "webkit-stale-save-draft-red",
+      "engine": "webkit",
+      "checks": 5,
+      "passed": 4,
+      "failed": 1,
+      "withinRunInputsUnchanged": true,
+      "inputCount": 834,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-draft-red.json",
+        "sha256": "5a4feba19c87f683ce03c3acd4082e1066726366b8ede18eb7ad45f2e818fa92"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-draft-red.stdout.txt",
+        "sha256": "33db5f528863d5df95dcd73d5df36aec2424cdfbe5bcd7455768765fbf52626c"
+      }
+    },
+    {
+      "name": "webkit-stale-save-red",
+      "engine": "webkit",
+      "checks": 2,
+      "passed": 2,
+      "failed": 0,
+      "withinRunInputsUnchanged": true,
+      "inputCount": 834,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-red.json",
+        "sha256": "73a47c1ae7d0fd167ebeb4b272e4c5dc198f76cbb5843aa67e8a1cbf6c294492"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-red.stdout.txt",
+        "sha256": "586540fbf20e642baef8cb34f0176374e547c4a26d65d9992c971be5f224d383"
+      }
+    }
+  ],
+  "rawFormatting": [
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-final.raw.txt",
+        "sha256": "96062b216b38e448f2ee25e839d7dc6a26b030c5d02dd355b37fe366fc59d47f"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-final.json",
+        "sha256": "4c174b3b97bf9081533a80b5b9fea91e3486b831b704c6be9a4cd672475c5abd"
+      },
+      "jsonSemanticsEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-stale-save-final.raw.txt",
+        "sha256": "edffc5918ff6c1d9ae5b3db14eb760bb395b061332cb2deac589eb6069f20334"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-stale-save-final.json",
+        "sha256": "cb7a28e5cd01ad1f08f8d49cde95caeb5626637728ad6a95c3b7c621550efe47"
+      },
+      "jsonSemanticsEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-first.raw.txt",
+        "sha256": "4087c85cfa6b959347a405639bb350fef75e5a270c6d7e202b38cc4261d5ab84"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-first.json",
+        "sha256": "4a22add18595d840c6fc5edfe243a261a52c3945dc70fecda2970d77035646aa"
+      },
+      "jsonSemanticsEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-final.raw.txt",
+        "sha256": "ea73f7e2aeae87c56468d06ae2d18b665ca9a67f954f0a91ac91e84bf35a5a6e"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-final.json",
+        "sha256": "4760954a5658cd8da563ac31cda125ac0acb206f25b0bf847865c355bc0da7f9"
+      },
+      "jsonSemanticsEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-followup.raw.txt",
+        "sha256": "1dae83373816cb22270b0eb5bb399b52656905fdbc2c996541eda72eb8266ef4"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-followup.json",
+        "sha256": "cd0ec97010dbeef45c64b0814dd3549b1f10e14cf85eca5400a56c93061f4429"
+      },
+      "jsonSemanticsEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-second.raw.txt",
+        "sha256": "a88a3142106bafb166b4e367da69255b78650770eb893dedbba8118255b8c0de"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-second.json",
+        "sha256": "f3cc5affab778701d109f2501c18669e0e9506552810d9864831378bb4b9ec97"
+      },
+      "jsonSemanticsEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-draft-red.raw.txt",
+        "sha256": "c0d9290846bc50d5cb75c7df42598cc70c519690fe48a7e8037529b86e2cd19a"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-draft-red.json",
+        "sha256": "5a4feba19c87f683ce03c3acd4082e1066726366b8ede18eb7ad45f2e818fa92"
+      },
+      "jsonSemanticsEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-red.raw.txt",
+        "sha256": "78705f945694fe43385182517ed19c5468d31c0b64c48e1eaa35bb39e8b17525"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-red.json",
+        "sha256": "73a47c1ae7d0fd167ebeb4b272e4c5dc198f76cbb5843aa67e8a1cbf6c294492"
+      },
+      "jsonSemanticsEqual": true
+    }
+  ],
+  "visualReview": {
+    "actuallyViewed": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-first-failure.png",
+        "sha256": "87f1e9302d3e348de178de834deaac088359260eafeb6eba99352f478d0e3979"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-second-review.png",
+        "sha256": "edd7d2b5ad0c2ea4ef8e483b917bff7b65be3a267d651d256b5f67fd852ede2b"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-second-narrow.png",
+        "sha256": "3d9075d94974328db99c2f4e589224d189ad7b74cbe3c1c7fd076af56fa04a68"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-draft-red-stale-save.png",
+        "sha256": "9af37ae7b1599602b3b43f552b56b5cdbaf4fd768b84f225e08964f5532fbae2"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-final-narrow.png",
+        "sha256": "efa1e07969fd12f6856c4bffe9db783008af48dfe4c988e0abff3e43b4af2b11"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-final-stale-save.png",
+        "sha256": "beea1b07cbf22223732f0bf6f086965f77c4fd7e330b742a5357ba84ec1332be"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-stale-save-final-stale-save.png",
+        "sha256": "ba7e1c5ca678b46a25499a6a0340c538dd5db3b28cf39ae49ef8b2672e8572a1"
+      }
+    ],
+    "observed": "Old stale-save screenshot shows retry despite stale draft; both final stale-save images show specific guidance and only Close. Narrow WebKit/Chromium screenshots retain footer controls and application root; geometry assertions supply numerical bounds.",
+    "limits": "Screenshots and DOM checks are controlled browser observations, not native WebView or installed application observation."
+  },
+  "backendReview": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/backend-review.json",
+    "sha256": "c34dfff2cf638e754bbbb90d85ac210b5292498aa2b98c3c3db8b97692a1bcd8"
+  },
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/cleanup.json",
+    "sha256": "4b2ccda90c83d0b6a2aa8737a1d61921cbf5d1a8a5cb7ad7e26f910e4675f84b"
+  },
+  "remainingLimits": [
+    "No installed H17 journey or real Agent request/execution, dependency/service preparation, port health, credentials isolation, or Windows native behavior was validated here.",
+    "Browser metadata outcomes are controlled IPC values; filesystem no-follow and ticket/permit evidence is the separate backend review/author suite.",
+    "No full engineering checks were rerun by this agent; root owns the current seven-check integration."
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/backend-review.json",
+      "sha256": "c34dfff2cf638e754bbbb90d85ac210b5292498aa2b98c3c3db8b97692a1bcd8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-final-narrow.png",
+      "sha256": "efa1e07969fd12f6856c4bffe9db783008af48dfe4c988e0abff3e43b4af2b11"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-final-review.png",
+      "sha256": "6b4018c41ec786a8d524c244f2d07a087b4a556bac64ddc1e61ad681375a9145"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-final.json",
+      "sha256": "4c174b3b97bf9081533a80b5b9fea91e3486b831b704c6be9a4cd672475c5abd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-final.raw.txt",
+      "sha256": "96062b216b38e448f2ee25e839d7dc6a26b030c5d02dd355b37fe366fc59d47f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-final.stdout.txt",
+      "sha256": "000df3bfc584aadbb3a70dbcf4ce7893bc9785c1a53c596c197caec92c820783"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-stale-save-final-stale-save.png",
+      "sha256": "ba7e1c5ca678b46a25499a6a0340c538dd5db3b28cf39ae49ef8b2672e8572a1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-stale-save-final.json",
+      "sha256": "cb7a28e5cd01ad1f08f8d49cde95caeb5626637728ad6a95c3b7c621550efe47"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-stale-save-final.raw.txt",
+      "sha256": "edffc5918ff6c1d9ae5b3db14eb760bb395b061332cb2deac589eb6069f20334"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/chromium-stale-save-final.stdout.txt",
+      "sha256": "78e0fcaa4272b7fa4b1700f6ce960e1de9f6d307f452f8bc00287ad32274dd7a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/fixture.tsx",
+      "sha256": "26244800207fa7ed53cc18def99a742cce3cb93561d650dce665753ddb2700a5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/index.html",
+      "sha256": "b55d06f9246db652d1674cd3fa9ba9113067345dff3f3b8451cdec28fa5d9652"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/run-save-followup.before-scope-fix.mjs.txt",
+      "sha256": "ccac783a21ec991e8a74d5cb79dab3c450f55f6d9468c1dd524c44fe0a21e990"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/run-save-followup.mjs",
+      "sha256": "e652ec01303bcd6e710c2e0d7ac6d518a7f341029dc11f50c93fd846f2d6106f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/run-stale-save.exact-red.mjs.txt",
+      "sha256": "92a68f5f928c7f4c31267eac4507fa9c6003f8353d57d01b350279e3d898ab49"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/run-stale-save.first-aba.mjs.txt",
+      "sha256": "ad30c3d827b7d7d26ae45ea9cc8aae05574117363a4e7232eead2f3f09d00bf5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/run-stale-save.mjs",
+      "sha256": "2d1a89497b2f3ba79dafd00ae4577c91e3d6cd84b25e801692e8f29cfacd36a3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/run.first-selector.mjs.txt",
+      "sha256": "63fb5a1d387df3158a5541f496d47b4ccb127853ca67876d82428d5cb0ff66bf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/run.mjs",
+      "sha256": "20c9427eb07b6a460d194efc30b975d46122bd96c2764417a5c88608ff802ac9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/serve.mjs",
+      "sha256": "e28b9f9af7b33eb2848bc7468bd5c9700c3a81435b6bb7fb852488cb46144e16"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/server-first.txt",
+      "sha256": "88c8c6be2085fbb88dc001edc429c9affb0e5c84f147fd3887190a83f7502865"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-first-failure.png",
+      "sha256": "87f1e9302d3e348de178de834deaac088359260eafeb6eba99352f478d0e3979"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-first.json",
+      "sha256": "4a22add18595d840c6fc5edfe243a261a52c3945dc70fecda2970d77035646aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-first.raw.txt",
+      "sha256": "4087c85cfa6b959347a405639bb350fef75e5a270c6d7e202b38cc4261d5ab84"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-first.stdout.txt",
+      "sha256": "c24da27df25ba9d96ee540a4cbb0fc54cade20a6f37c476069ab5bd86ef08bf8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-final-stale-save.png",
+      "sha256": "beea1b07cbf22223732f0bf6f086965f77c4fd7e330b742a5357ba84ec1332be"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-final.json",
+      "sha256": "4760954a5658cd8da563ac31cda125ac0acb206f25b0bf847865c355bc0da7f9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-final.raw.txt",
+      "sha256": "ea73f7e2aeae87c56468d06ae2d18b665ca9a67f954f0a91ac91e84bf35a5a6e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-final.stdout.txt",
+      "sha256": "a099af598dfd7b7d722a511d24059e91bcd1b344059c91ab8ad0134adaa94284"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-followup-failure.png",
+      "sha256": "84ba7ad98e4d31a3e0181572a08dea6ea653c129dfdbac293beff364eb58d400"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-followup.json",
+      "sha256": "cd0ec97010dbeef45c64b0814dd3549b1f10e14cf85eca5400a56c93061f4429"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-followup.raw.txt",
+      "sha256": "1dae83373816cb22270b0eb5bb399b52656905fdbc2c996541eda72eb8266ef4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-save-followup.stdout.txt",
+      "sha256": "2ec2b073eb21c985eb6946e1d824684d28f80952189d948ab2d04163326b29de"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-second-narrow.png",
+      "sha256": "3d9075d94974328db99c2f4e589224d189ad7b74cbe3c1c7fd076af56fa04a68"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-second-review.png",
+      "sha256": "edd7d2b5ad0c2ea4ef8e483b917bff7b65be3a267d651d256b5f67fd852ede2b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-second.json",
+      "sha256": "f3cc5affab778701d109f2501c18669e0e9506552810d9864831378bb4b9ec97"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-second.raw.txt",
+      "sha256": "a88a3142106bafb166b4e367da69255b78650770eb893dedbba8118255b8c0de"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-second.stdout.txt",
+      "sha256": "917c8ac5a5aeff7345b51ee1899806da12ea7c96fbe4ef0c52c688af5c76ac6f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-draft-red-stale-save.png",
+      "sha256": "9af37ae7b1599602b3b43f552b56b5cdbaf4fd768b84f225e08964f5532fbae2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-draft-red.json",
+      "sha256": "5a4feba19c87f683ce03c3acd4082e1066726366b8ede18eb7ad45f2e818fa92"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-draft-red.raw.txt",
+      "sha256": "c0d9290846bc50d5cb75c7df42598cc70c519690fe48a7e8037529b86e2cd19a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-draft-red.stdout.txt",
+      "sha256": "33db5f528863d5df95dcd73d5df36aec2424cdfbe5bcd7455768765fbf52626c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-red-failure.png",
+      "sha256": "9cb1fa2007663c138a323f844c7f26080c0ac35a0246b25c937ec1f9250a51e1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-red.json",
+      "sha256": "73a47c1ae7d0fd167ebeb4b272e4c5dc198f76cbb5843aa67e8a1cbf6c294492"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-red.raw.txt",
+      "sha256": "78705f945694fe43385182517ed19c5468d31c0b64c48e1eaa35bb39e8b17525"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser/webkit-stale-save-red.stdout.txt",
+      "sha256": "586540fbf20e642baef8cb34f0176374e547c4a26d65d9992c971be5f224d383"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/cleanup.json",
+      "sha256": "4b2ccda90c83d0b6a2aa8737a1d61921cbf5d1a8a5cb7ad7e26f910e4675f84b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/implementation.json",
+      "sha256": "6d6a43c284ce82352f8dcb7363a5d5ce7d0e755d2336ea301df8a2bacb028013"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/source-checkpoint.json",
+      "sha256": "df62966ecffef9dc0bb384dbf19d10a77549d9b9af30034a2c5ae2cd2f049d0d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/frontend/save-followup/implementation.json",
+      "sha256": "f3b21ffd5f5c8420039e999f523e39c66a8d52c0c10763a715806bdd6d317b85"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/implementation.json",
+      "sha256": "feccccf34a9a3a7b4389e8b49cbeb1de4638559a8e61e4451ddb5087f02d9fa2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/source-checkpoint.json",
+      "sha256": "34934de877a4ba409c6e9c0e96715de562d233f379b654173555bbd51f544b7a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/preparation-wire.json",
+      "sha256": "8344abea89e76c59ff21364d7380968b19f24ff319a01039f5f83e6b4ead7105"
+    }
+  ]
+}

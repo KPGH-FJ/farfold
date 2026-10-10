@@ -23,6 +23,9 @@ use recycle_manager::{MaintenanceOwner, RecycleTicket};
 #[path = "remove_manager.rs"]
 mod remove_manager;
 use remove_manager::RemoveTicket;
+#[path = "preparation_manager.rs"]
+mod preparation_manager;
+use preparation_manager::PreparationTicket;
 #[path = "recover_manager.rs"]
 mod recover_manager;
 #[cfg(test)]
@@ -43,6 +46,7 @@ struct Inner {
     loaded: bool,
     poisoned: bool,
     tickets: HashMap<String, Ticket>,
+    preparation_tickets: HashMap<String, PreparationTicket>,
     recycle_tickets: HashMap<String, RecycleTicket>,
     remove_tickets: HashMap<String, RemoveTicket>,
     maintenance: Option<MaintenanceOwner>,

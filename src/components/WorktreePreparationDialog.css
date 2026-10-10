@@ -1,0 +1,42 @@
+.workspace-dialog:has(.worktree-preparation) {
+  width: min(640px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+}
+.worktree-preparation {
+  min-height: 0;
+  overflow-wrap: anywhere;
+}
+.worktree-preparation p {
+  margin: 0;
+}
+.worktree-preparation textarea {
+  width: 100%;
+  min-height: 90px;
+  resize: vertical;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font: inherit;
+  line-height: 1.6;
+}
+.worktree-preparation .worktree-preparation-request {
+  min-height: 180px;
+  max-height: 280px;
+}
+.worktree-preparation .worktree-preparation-check {
+  flex-direction: row;
+  align-items: center;
+}
+.worktree-preparation-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.worktree-preparation details ul {
+  max-height: 180px;
+  overflow: auto;
+}

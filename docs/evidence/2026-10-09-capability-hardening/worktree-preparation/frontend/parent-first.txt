@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/components/EmptyState.preparation.test.tsx" "src/components/EmptyState.service-review.test.tsx" "src/components/EmptyState.work.test.tsx" "src/components/EmptyState.work-location.test.tsx" "src/App.prepared-draft-retirement.test.tsx"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  5 passed (5)
+      Tests  17 passed (17)
+   Start at  19:10:38
+   Duration  2.37s (transform 1.64s, setup 0ms, import 11.25s, tests 62ms, environment 0ms)
+

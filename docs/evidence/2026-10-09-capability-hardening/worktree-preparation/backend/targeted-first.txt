@@ -1,0 +1,84 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `preparation_types::*`
+ --> src/worktrees/preparation_tests.rs:3:5
+  |
+3 |     preparation_types::*,
+  |     ^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning (run `cargo fix --lib -p farfold --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 36.89s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 61 tests
+test acp_client::manager::authentication_tests::borrowable_handshake_prefers_the_preparation_connection ... ok
+test acp_client::preparation_actions::tests::service_configuration_has_a_scoped_preview_without_execution_or_auth_mutation ... ok
+test acp_client::preparation_actions::tests::encoded_goose_root_keeps_the_existing_configuration_action_proof ... ok
+test acp_client::preparation_actions::tests::service_configuration_never_uses_only_a_name_or_id_as_provenance ... ok
+test acp_client::preparation_actions::tests::service_configuration_npm_rederives_reviewed_prefix_and_public_package ... ok
+test acp_client::preparation_actions::tests::service_configuration_npm_preview_keeps_shared_node_loader_and_protocol_methods ... ok
+test acp_client::preparation_actions::tests::service_configuration_npm_rejects_unverified_registration_receipts_and_manifest ... ok
+test acp_client::preparation_actions::tests::service_configuration_rederives_review_and_rejects_old_or_arbitrary_commands ... ok
+test acp_client::preparation_actions::tests::service_configuration_rejects_a_managed_directory_or_binary_symlink_escape ... ok
+test acp_client::preparation_actions::tests::service_configuration_npm_rejects_loader_package_or_manifest_aliases ... ok
+farfold-stdio-isolation-complete:acp_client::process::stdio::tests::mac_stdio_preparation_errors_do_not_launch_and_close_partial_pipe_endpoints
+
+test acp_client::process::stdio::tests::mac_stdio_preparation_errors_do_not_launch_and_close_partial_pipe_endpoints ... ok
+controlled fork witness before_exec=false, after_exec=true
+farfold-stdio-isolation-complete:acp_client::process::stdio::tests::mac_stdio_other_pre_exec_can_temporarily_inherit_a_preparation_endpoint
+
+test acp_client::process::stdio::tests::mac_stdio_other_pre_exec_can_temporarily_inherit_a_preparation_endpoint ... ok
+test acp_client::pump::preparation_mode_tests::preparation_cancelled_synthetic_mode_keeps_original_response ... ok
+test acp_client::pump::preparation_mode_tests::preparation_cancelled_mode_does_not_publish_late_success_or_following_config ... ok
+test acp_client::pump::preparation_mode_tests::preparation_modern_options_supersede_legacy_modes_even_without_mode_category ... ok
+test acp_client::pump::preparation_mode_tests::preparation_failed_mode_keeps_original_declared_value_and_warning ... ok
+test acp_client::pump::preparation_mode_tests::preparation_real_mode_category_suppresses_synthesis_with_a_different_option_id ... ok
+test acp_client::pump::preparation_mode_tests::preparation_modern_thinking_never_calls_legacy_mode ... ok
+test acp_client::pump::preparation_mode_tests::preparation_real_mode_option_keeps_its_config_route_with_or_without_category ... ok
+test acp_client::pump::preparation_mode_tests::preparation_rejects_undeclared_or_non_string_synthetic_modes_before_dispatch ... ok
+test acp_client::pump::preparation_mode_tests::preparation_restores_legacy_only_top_level_mode ... ok
+test acp_client::pump::preparation_mode_tests::preparation_resume_may_read_recorded_mode_without_requesting_a_change ... ok
+test acp_client::pump::preparation_mode_tests::preparation_resume_never_adds_mode_route_when_config_response_removes_real_mode ... ok
+test acp_client::pump::preparation_mode_tests::preparation_resume_rejects_new_synthetic_mode_model_and_thinking_changes ... ok
+test managed_paths::tests::preparation_rejects_every_existing_symlink_before_creating_descendants ... ok
+test acp_client::preparation::companion_preparation_tests::unverified_scoped_component_has_no_install_or_use_gate_or_environment_supplement ... ok
+test acp_client::preparation::companion_preparation_tests::search_path_commands_use_the_explicit_path_without_falling_back_to_the_declared_name ... ok
+test acp_client::preparation::companion_preparation_tests::selected_missing_autohand_never_uses_another_program_or_mutates_the_selection ... ok
+test storage_recovery::database_restore::tests::failed_first_preparation_can_be_explicitly_retried_without_discarding_materials ... ok
+test worktree_preparation_commands::tests::preparation_commands_stay_main_only_and_outside_recovery_allowlist ... ok
+test worktree_preparation_commands::tests::preparation_dropped_observer_keeps_real_worker_admission ... ok
+test worktree_preparation_commands::tests::preparation_observer_preserves_typed_failures_and_normalizes_unknown_details ... ok
+test acp_client::preparation::tests::catalog_uvx_preparation_is_available_before_registration_and_only_gates_installation ... ok
+test storage_recovery::database_restore::tests::missing_intent_after_preparation_never_becomes_a_fresh_database ... ok
+test storage_recovery::database_restore::tests::receipt_cannot_expand_total_material_size_past_the_preparation_limit ... ok
+test acp_client::preparation::companion_preparation_tests::unknown_npm_component_never_claims_an_install_candidate ... ok
+test acp_client::preparation_actions::tests::service_configuration_npm_terminal_uses_exact_loader_then_auth_without_metadata_changes ... ok
+test worktrees::manager::preparation_manager::tests::preparation_actual_work_or_maintenance_admission_is_not_bypassed ... ok
+test worktrees::manager::preparation_manager::tests::preparation_local_worker_admission_blocks_maintenance_until_actual_read_returns ... ok
+test acp_client::preparation::companion_preparation_tests::npm_companion_versions_and_candidate_are_visible_without_a_minimum ... ok
+test worktrees::manager::preparation_manager::tests::preparation_publication_rechecks_same_revision_availability ... ok
+test worktrees::manager::preparation_manager::tests::preparation_head_change_cannot_be_validated_from_old_ticket ... ok
+test worktrees::manager::preparation_manager::tests::preparation_failed_validation_retires_the_exact_ticket ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_new_conversation_uses_current_environment_not_preparation_spawn_facts ... ok
+test worktrees::manager::preparation_manager::tests::preparation_requires_fresh_verified_exact_location_and_does_not_adopt ... ok
+test worktrees::preparation_tests::preparation_detects_same_length_in_place_metadata_change ... ok
+test worktrees::manager::preparation_manager::tests::preparation_validation_detects_catalogue_revision_and_does_not_refresh_it ... ok
+test worktrees::manager::preparation_manager::tests::preparation_tickets_are_bounded_expire_and_do_not_survive_restart ... ok
+PREPARATION_WIRE {"inspection":{"inspectionId":"ba9e3db2-cd54-43d8-b497-f03203cc0083","location":{"id":"12345678-1234-4123-8123-123456789abc","revision":0,"path":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp3sAH8h/repo","repositoryRoot":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp3sAH8h/repo","branch":"refs/heads/main","headOid":"d2c32323f1c8e14dc822262018a192d3053eab8e","ownership":"existing","availability":"verified"},"projectRelativePath":"","projectPath":"/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp3sAH8h/repo","observedAtMs":1791630574381,"git":{"kind":"main","otherWorktreeCount":0},"facts":[{"name":"package.json","role":"manifest","nodeKind":"missing"},{"name":"pyproject.toml","role":"manifest","nodeKind":"missing"},{"name":"requirements.txt","role":"manifest","nodeKind":"missing"},{"name":"Pipfile","role":"manifest","nodeKind":"missing"},{"name":"Cargo.toml","role":"manifest","nodeKind":"missing"},{"name":"go.mod","role":"manifest","nodeKind":"missing"},{"name":"package-lock.json","role":"lock","nodeKind":"missing"},{"name":"npm-shrinkwrap.json","role":"lock","nodeKind":"missing"},{"name":"pnpm-lock.yaml","role":"lock","nodeKind":"missing"},{"name":"yarn.lock","role":"lock","nodeKind":"missing"},{"name":"bun.lock","role":"lock","nodeKind":"missing"},{"name":"bun.lockb","role":"lock","nodeKind":"missing"},{"name":"uv.lock","role":"lock","nodeKind":"missing"},{"name":"poetry.lock","role":"lock","nodeKind":"missing"},{"name":"Pipfile.lock","role":"lock","nodeKind":"missing"},{"name":"Cargo.lock","role":"lock","nodeKind":"missing"},{"name":"go.sum","role":"lock","nodeKind":"missing"},{"name":"node_modules","role":"dependencyDirectory","nodeKind":"missing"},{"name":".venv","role":"dependencyDirectory","nodeKind":"missing"},{"name":"venv","role":"dependencyDirectory","nodeKind":"missing"},{"name":"target","role":"dependencyDirectory","nodeKind":"missing"},{"name":"vendor","role":"dependencyDirectory","nodeKind":"missing"}],"coverage":{"scope":"fixedNameMetadata","checkedNames":22,"complete":true}},"validation":{"inspectionId":"ba9e3db2-cd54-43d8-b497-f03203cc0083","valid":true}}
+test worktrees::manager::preparation_manager::tests::preparation_ticket_is_metadata_only_does_not_save_or_increment_location ... ok
+test worktrees::preparation_tests::preparation_relative_scope_is_exact_and_bounded ... ok
+test worktrees::manager::preparation_manager::tests::preparation_ttl_is_rechecked_after_actual_validation_work ... ok
+test worktrees::preparation_tests::preparation_does_not_invoke_configured_hooks_fsmonitor_or_filters ... ok
+test worktrees::manager::preparation_manager::tests::preparation_validation_rechecks_catalogue_after_filesystem_work ... ok
+test acp_client::preparation_actions::tests::service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap ... ok
+test worktrees::preparation_tests::preparation_does_not_retarget_replaced_project_parent ... ok
+test worktrees::preparation_tests::preparation_rejects_head_change_without_running_status_or_touching_index ... ok
+test worktrees::preparation_tests::preparation_detects_fixed_leaf_replacement_missing_creation_and_symlink_swap ... ok
+test worktrees::preparation_tests::preparation_reports_only_fixed_metadata_never_reads_fifo_or_symlink_content ... ok
+test worktrees::preparation_tests::preparation_subdirectory_is_explicit_not_root_metadata ... ok
+test storage_recovery::database_restore::tests::first_preparation_interruptions_preserve_originals_and_have_a_deterministic_exit ... ok
+test worktrees::preparation_tests::preparation_git_layout_is_actual_main_and_linked_count ... ok
+
+test result: ok. 61 passed; 0 failed; 0 ignored; 0 measured; 1317 filtered out; finished in 5.29s
+

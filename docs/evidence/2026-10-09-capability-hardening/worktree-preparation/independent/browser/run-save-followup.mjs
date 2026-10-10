@@ -1,0 +1,221 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } =
+  await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base =
+  "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/independent/browser";
+const engine = process.argv[2] ?? "webkit",
+  label = process.argv[3] ?? "first";
+const files = [];
+function walk(p) {
+  for (const e of fs.readdirSync(p, { withFileTypes: true })) {
+    const f = path.join(p, e.name);
+    if (e.isDirectory()) walk(f);
+    else files.push(f);
+  }
+}
+walk("src");
+files.push(
+  "package.json",
+  "pnpm-lock.yaml",
+  "vite.config.ts",
+  ...["fixture.tsx", "index.html", "serve.mjs", "run-save-followup.mjs"].map(
+    (n) => base + "/" + n,
+  ),
+);
+files.sort();
+const hashes = () =>
+  Object.fromEntries(
+    files.map((f) => [
+      f,
+      createHash("sha256").update(fs.readFileSync(f)).digest("hex"),
+    ]),
+  );
+const result = {
+  engine,
+  label,
+  scope:
+    "Actual App/EmptyState/WorkspaceDialog/production owner, parser, draft stores, persistence under React StrictMode. Only IPC/OS return values controlled in memory; no native App/Agent/Git/database.",
+  before: hashes(),
+  checks: [],
+  errors: [],
+  screenshots: [],
+  scenarios: [],
+};
+const browser = await (engine === "webkit" ? webkit : chromium).launch({
+  headless: true,
+  executablePath:
+    engine === "webkit"
+      ? path.resolve(
+          "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+        )
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+});
+const timeout = setTimeout(() => void browser.close(), 120000);
+let page;
+const ck = (name, pass, detail) =>
+  result.checks.push({ name, pass: !!pass, detail });
+const count = (s, n) => s.calls.filter((x) => x.cmd === n).length;
+const cur = () => page.evaluate(() => window.fixture.current());
+const button = (n) => page.getByRole("button", { name: n, exact: true });
+const dialog = () =>
+  page.getByRole("dialog", { name: "准备这个工作位置", exact: true });
+const db = (n) => dialog().getByRole("button", { name: n, exact: true });
+const close = () => db("关闭").last().click();
+async function load(n, width = 1100, height = 800) {
+  if (page) await page.close();
+  page = await browser.newPage({ viewport: { width, height } });
+  page.setDefaultTimeout(6500);
+  page.on("pageerror", (e) => result.errors.push(String(e)));
+  await page.route("**/*", (r) =>
+    r.request().url().startsWith("http://127.0.0.1:1481/")
+      ? r.continue()
+      : r.abort(),
+  );
+  await page.goto("http://127.0.0.1:1481/" + base + "/index.html?mode=" + n);
+  await button("准备环境…").waitFor();
+  await page.waitForFunction(() =>
+    window.fixture.current().threads.some((t) => t.identity === "draft"),
+  );
+  await page.waitForTimeout(100);
+  ck(
+    n + ": StrictMode ready parent has one prepared draft",
+    count(await cur(), "session_open") === 1,
+  );
+}
+async function open(task = "H17_TASK_ONCE") {
+  await button("准备环境…").click();
+  await dialog().waitFor();
+  await dialog().getByLabel("希望在这里做什么").fill(task);
+}
+async function review(inspect = true) {
+  await db(inspect ? "检查并预览请求" : "不检查，编写准备请求").click();
+  await dialog().locator(".worktree-preparation-request").waitFor();
+}
+async function shot(n) {
+  const p = base + "/" + engine + "-" + label + "-" + n + ".png";
+  await page.screenshot({ path: p });
+  result.screenshots.push(p);
+}
+async function post(n) {
+  const s = await cur();
+  ck(
+    n + ": no prompt or unexpected IPC",
+    count(s, "session_prompt") === 0 && s.unexpected.length === 0,
+    s.unexpected,
+  );
+  result.scenarios.push({
+    name: n,
+    state: s,
+    body: await page.locator("body").innerText(),
+  });
+}
+try {
+  {
+    let s;
+    await load("failed-save");
+    await open("SAVE_ONCE");
+    await review(false);
+    await page.evaluate(() => window.fixture.controls({ failSaves: true }));
+    await db("加入输入框").click();
+    await dialog()
+      .getByText(
+        "已加入输入框，但尚未保存成功。内容保留，请重试保存；不会再次加入。",
+        { exact: true },
+      )
+      .waitFor();
+    s = await cur();
+    ck(
+      "save failure keeps inserted text exactly once",
+      (s.draft.text.match(/SAVE_ONCE/g) || []).length === 1,
+    );
+    await page.evaluate(() => window.fixture.controls({ failSaves: false }));
+    await db("重试保存").click();
+    await dialog()
+      .getByText("已加入并保存，尚未发送。", { exact: true })
+      .waitFor();
+    s = await cur();
+    ck(
+      "save retry only saves, never reinserts or invokes validate",
+      count(s, "worktree_preparation_validate") === 0 &&
+        (s.draft.text.match(/SAVE_ONCE/g) || []).length === 1 &&
+        JSON.stringify(s.settings).includes("SAVE_ONCE"),
+    );
+    await post("failed-save");
+  }
+  await load("stale-save");
+  await open("STALE_SAVE_KEEP");
+  await review(false);
+  await page.evaluate(() => window.fixture.controls({ failSaves: true }));
+  await db("加入输入框").click();
+  await dialog()
+    .getByText(
+      "已加入输入框，但尚未保存成功。内容保留，请重试保存；不会再次加入。",
+      { exact: true },
+    )
+    .waitFor();
+  const before = await cur();
+  await page.evaluate(() =>
+    window.fixture.setDraftText("EDITED_AFTER_FAILED_SAVE"),
+  );
+  await page.waitForTimeout(100);
+  const changed = await cur();
+  await page.evaluate(() => window.fixture.controls({ failSaves: false }));
+  await db("重试保存").click();
+  await page.waitForTimeout(100);
+  const s = await cur(),
+    body = await dialog().innerText();
+  ck(
+    "retired save owner preserves inserted text and never duplicates",
+    s.draft.text === "EDITED_AFTER_FAILED_SAVE",
+  );
+  ck(
+    "retired save owner has explicit withdrawal guidance and no retry button",
+    (await db("重试保存").count()) === 0 &&
+      body.includes("原草稿或当前选择已变化，无法在此重试保存"),
+    body,
+  );
+  ck(
+    "retired save owner performs no additional write",
+    count(s, "settings_set") === count(changed, "settings_set"),
+    { before: count(changed, "settings_set"), after: count(s, "settings_set") },
+  );
+  await shot("stale-save");
+  await post("stale-save");
+} catch (e) {
+  result.failure = String(e);
+  if (page) {
+    result.body = await page
+      .locator("body")
+      .innerText()
+      .catch(() => null);
+    result.current = await cur().catch(() => null);
+    await shot("failure").catch(() => {});
+  }
+} finally {
+  clearTimeout(timeout);
+  await browser.close();
+  result.after = hashes();
+  result.sourceUnchanged =
+    JSON.stringify(result.before) === JSON.stringify(result.after);
+  const raw = JSON.stringify(result, null, 2) + "\n";
+  fs.writeFileSync(base + "/" + engine + "-" + label + ".raw.txt", raw);
+  fs.writeFileSync(base + "/" + engine + "-" + label + ".json", raw);
+  console.log(
+    JSON.stringify({
+      engine,
+      checks: result.checks.length,
+      failed: result.checks.filter((c) => !c.pass),
+      failure: result.failure,
+      errors: result.errors,
+      sourceUnchanged: result.sourceUnchanged,
+    }),
+  );
+  if (
+    result.failure ||
+    result.errors.length ||
+    result.checks.some((c) => !c.pass)
+  )
+    process.exitCode = 1;
+}

@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "status": "backend_implemented_targeted_verified_pending_integration_and_installed_validation",
+  "scope": "H17 fixed-name metadata inspect and exact transient ticket validation for a registered verified work location",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/source-checkpoint.json",
+    "sha256": "34934de877a4ba409c6e9c0e96715de562d233f379b654173555bbd51f544b7a"
+  },
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "a27a6eb91add87e295289d53fc38df34ceadf50ad141fc2eedd8986725c01438",
+      "lines": 425
+    },
+    {
+      "path": "src-tauri/src/worktree_preparation_command_tests.rs",
+      "sha256": "b15ec82064c73d525abfd336567001e9dcf12f8dd156361aaddfe734cb88caf0",
+      "lines": 83
+    },
+    {
+      "path": "src-tauri/src/worktree_preparation_commands.rs",
+      "sha256": "1e68e3d35a4fd7e046a7054d2712103a3711c9410f9d12926ccfd3b0c420c79c",
+      "lines": 101
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "850a5ee56014dce63f62e374efd2102fe95652fd80dc0aef8e5dfa2df91fa513",
+      "lines": 980
+    },
+    {
+      "path": "src-tauri/src/worktrees/mod.rs",
+      "sha256": "5ee1ec82df86a755aa4edab83704de7e6cf415a460fa048557d1fcdc3e2d52aa",
+      "lines": 54
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation.rs",
+      "sha256": "e8e09b089bde62d229d50281385d8dc5b4542be7730bf5ac190bd6b8189e5981",
+      "lines": 296
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_git.rs",
+      "sha256": "6792515e34c9a9aac568ce96450f9a9426e058fd567efd8441dcb0a3ffa00f1e",
+      "lines": 135
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager.rs",
+      "sha256": "db14721207ac95e96b280cbd357f60038fdfd7a4c25bf7bfb0e27f10883fffed",
+      "lines": 202
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "sha256": "13e1ff639b1b4a2a9ee5c971da4d73b25e448bcff6d54b2d8629f9c39fa7fcd4",
+      "lines": 233
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "sha256": "4f796451a4e2e9ef852864592c894fa7b6b55f3c78e2b85067d1a573fd27eba8",
+      "lines": 229
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_types.rs",
+      "sha256": "21172d3c10c6a58d036ff911277553ce6b3645ce475e1e772a38e953f2ce284e",
+      "lines": 84
+    }
+  ],
+  "checks": [
+    {
+      "name": "preparation_filter",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib preparation_ -- --nocapture",
+      "exitCode": 0,
+      "passed": 61,
+      "newTests": 23,
+      "existingTestsMatchedByFilter": 38,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/targeted-first.txt",
+        "sha256": "b23bc76ee5185a45e06a6de1bd74847c836783437e70c195f1020401abb68111"
+      },
+      "inputNote": "Same production inputs as final. Test-only duplicate unused import remained in this run and was removed afterward; original warning preserved."
+    },
+    {
+      "name": "exact_missing_errno_classification",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib worktrees::preparation::platform::only_enoent_is_missing -- --exact --nocapture",
+      "exitCode": 0,
+      "passed": 1,
+      "newTests": 1,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/errno-targeted.txt",
+        "sha256": "25e1476aed64c1271537d53a846a2d7a41d64d20ed7e8236c0c621ed064c751b"
+      },
+      "inputNote": "Final owned source, after removal of duplicate test import."
+    },
+    {
+      "name": "cargo_fmt",
+      "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/format-check.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "standard_clippy",
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/clippy-first.txt",
+        "sha256": "c3a5babdcb036ac4b0d475d346005ce0b5d40df7eed42aaef6af65f6c8bfaa6f"
+      }
+    }
+  ],
+  "newTests": [
+    {
+      "path": "src-tauri/src/worktree_preparation_command_tests.rs",
+      "name": "preparation_observer_preserves_typed_failures_and_normalizes_unknown_details"
+    },
+    {
+      "path": "src-tauri/src/worktree_preparation_command_tests.rs",
+      "name": "preparation_dropped_observer_keeps_real_worker_admission"
+    },
+    {
+      "path": "src-tauri/src/worktree_preparation_command_tests.rs",
+      "name": "preparation_commands_stay_main_only_and_outside_recovery_allowlist"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation.rs",
+      "name": "only_enoent_is_missing"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "name": "preparation_ticket_is_metadata_only_does_not_save_or_increment_location"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "name": "preparation_requires_fresh_verified_exact_location_and_does_not_adopt"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "name": "preparation_validation_detects_catalogue_revision_and_does_not_refresh_it"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "name": "preparation_failed_validation_retires_the_exact_ticket"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "name": "preparation_publication_rechecks_same_revision_availability"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "name": "preparation_validation_rechecks_catalogue_after_filesystem_work"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "name": "preparation_tickets_are_bounded_expire_and_do_not_survive_restart"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "name": "preparation_local_worker_admission_blocks_maintenance_until_actual_read_returns"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "name": "preparation_head_change_cannot_be_validated_from_old_ticket"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "name": "preparation_actual_work_or_maintenance_admission_is_not_bypassed"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_manager_tests.rs",
+      "name": "preparation_ttl_is_rechecked_after_actual_validation_work"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "name": "preparation_relative_scope_is_exact_and_bounded"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "name": "preparation_reports_only_fixed_metadata_never_reads_fifo_or_symlink_content"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "name": "preparation_subdirectory_is_explicit_not_root_metadata"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "name": "preparation_detects_fixed_leaf_replacement_missing_creation_and_symlink_swap"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "name": "preparation_detects_same_length_in_place_metadata_change"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "name": "preparation_does_not_retarget_replaced_project_parent"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "name": "preparation_rejects_head_change_without_running_status_or_touching_index"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "name": "preparation_git_layout_is_actual_main_and_linked_count"
+    },
+    {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "name": "preparation_does_not_invoke_configured_hooks_fsmonitor_or_filters"
+    }
+  ],
+  "testEvidenceBoundary": {
+    "newTestsPassed": 24,
+    "semanticFailuresObserved": 0,
+    "redGreenClaim": false,
+    "firstRunWarning": "Unused preparation_types::* test import; removed because super::* already reexports the types. No production behavior changed.",
+    "initialTestSha256": "4f49153471a1c9de0e21ec4a36c670f353641379f1d0612dbe230d410424aeea",
+    "finalTest": {
+      "path": "src-tauri/src/worktrees/preparation_tests.rs",
+      "sha256": "4f796451a4e2e9ef852864592c894fa7b6b55f3c78e2b85067d1a573fd27eba8"
+    }
+  },
+  "actualWire": {
+    "json": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/preparation-wire.json",
+      "sha256": "8344abea89e76c59ff21364d7380968b19f24ff319a01039f5f83e6b4ead7105"
+    },
+    "rawJsonLine": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/preparation-wire.raw.txt",
+      "sha256": "a01960713916430f44b023b93fd9e3e252337beee5773053f6152ba8a1f25377"
+    },
+    "originLog": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/targeted-first.txt",
+      "sha256": "b23bc76ee5185a45e06a6de1bd74847c836783437e70c195f1020401abb68111"
+    },
+    "method": "Unique PREPARATION_WIRE line emitted by actual Worktrees manager using an owned temporary Git repository: adopt, preparation_inspect, preparation_validate. JSON semantics identical to raw stdout.",
+    "values": ["inspection", "validation"],
+    "strictFrontendParsing": "Delegated to frontend owner; not claimed by this receipt."
+  },
+  "implementation": {
+    "commands": [
+      "worktree_preparation_inspect",
+      "worktree_preparation_validate"
+    ],
+    "writePolicy": "No metadata setting write, no durable observation, no location revision increment; fixed local Git reads with optional locks disabled.",
+    "facts": 22,
+    "tickets": {
+      "maximum": 32,
+      "ttlSeconds": 300,
+      "storage": "process memory only"
+    },
+    "paths": {
+      "maximumUtf8Bytes": 1024,
+      "maximumSegments": 8,
+      "rootRelativeValue": "",
+      "noFollow": true
+    },
+    "workerOwnership": "Existing file_read_check observer bounds its response/capacity; real blocking work retains local/global admission. Dropping an observer does not terminate an OS request."
+  },
+  "boundaryEvidence": {
+    "metadataAndIdentityTests": "Held directory descriptors, fixed leaves, source/head/catalogue changes, exact after-read compare, no-follow symlinks and FIFO no-content path, errno classification, expiry/capacity and admission barrier.",
+    "mainOnlyAndRecoveryGuards": "Source-registration assertions plus existing caller/recovery dispatcher mechanisms, not real window invocation.",
+    "noContentRead": "Code uses fixed-leaf fstatat only; temp fixtures include unreadable-content file, FIFO, secret canaries, symlink and configured helper canary. No kernel-wide read trace is claimed."
+  },
+  "notTested": [
+    "Installed H17 UI or real selected Agent preparation",
+    "Windows implementation (returns unsupportedGit)",
+    "Actual dependency availability, package resolution or port readiness",
+    "Atomic filesystem isolation or arbitrary external writes",
+    "Full integration seven checks in this receipt"
+  ],
+  "next": "Root integration, actual frontend wire/UI, then installed explicit draft and existing Agent journey under the original H17 conditions."
+}

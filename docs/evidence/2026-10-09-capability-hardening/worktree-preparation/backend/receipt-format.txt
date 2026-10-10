@@ -1,0 +1,2 @@
+docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/source-checkpoint.json 11ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/implementation.json 5ms
