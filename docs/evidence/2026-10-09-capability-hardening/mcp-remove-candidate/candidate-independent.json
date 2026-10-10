@@ -1,0 +1,58 @@
+{
+  "sourceCommit": "8fa557c0ff56e578fc44bd97f1cb3f325ea03852",
+  "result": "passed",
+  "failures": [],
+  "checks": {
+    "candidateReceipts": {
+      "passed": true
+    },
+    "exactSourceAndEngineering": {
+      "passed": true,
+      "inputCount": 1497
+    },
+    "bundleFiles": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "8a5ef53ec95a504c2587d601fee3264a662cce156aa86e45bec804ffd5df648e",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      }
+    },
+    "plistAndEmbeddedManifest": {
+      "passed": true,
+      "bundleIdentifier": "ai.farfold.desktop",
+      "version": "0.1.7"
+    },
+    "architecture": {
+      "passed": true,
+      "architecture": "arm64"
+    },
+    "signature": {
+      "passed": true,
+      "codesignVerify": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement",
+      "codesignDetails": "Executable=/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold\nIdentifier=ai.farfold.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=260723 flags=0x10002(adhoc,runtime) hashes=8141+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=984320\nHash type=sha256 size=32\nCandidateCDHash sha256=81f405c969c9cf46a44c19ca601203a1fff8af30\nCandidateCDHashFull sha256=81f405c969c9cf46a44c19ca601203a1fff8af303923f13a4473d1c5c566395d\nHash choices=sha256\nCMSDigest=81f405c969c9cf46a44c19ca601203a1fff8af303923f13a4473d1c5c566395d\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=26198016\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=81f405c969c9cf46a44c19ca601203a1fff8af30\nSignature=adhoc\nInfo.plist entries=15\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources version=2 rules=13 files=2\nInternal requirements count=0 size=12"
+    },
+    "archive": {
+      "passed": true,
+      "archiveSha256": "7ec0b622f3302ada20b4efedb300a66738367c4e3d85a7723dc0c40c0d9ef0fe",
+      "archiveBytes": 14149763
+    },
+    "formalAppUnchanged": {
+      "passed": true
+    },
+    "verificationInputsStable": {
+      "passed": true
+    }
+  },
+  "startedAt": "2026-10-10T20:06:15.823903+00:00",
+  "installed": false,
+  "launched": false,
+  "realAgentInvoked": false,
+  "inputReceipts": {
+    "candidateJsonSha256": "002e28fcb9ce6f6f16248567203938b34451282eb4233766af4c6472e3431131",
+    "candidateInputsJsonSha256": "a7ad38b4d26303f3638703cdad8b7309e8ff41db5d0741d1527710530316040a"
+  },
+  "completedAt": "2026-10-10T20:06:16.612513+00:00"
+}

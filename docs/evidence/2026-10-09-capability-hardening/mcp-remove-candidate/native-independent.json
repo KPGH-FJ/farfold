@@ -1,0 +1,90 @@
+{
+  "reviewedAtUtc": "2026-10-10T20:22:27.918274+00:00",
+  "sourceCommit": "8fa557c0ff56e578fc44bd97f1cb3f325ea03852",
+  "status": "boundedInstalledRemovalEvidenceIndependentlyReviewed",
+  "result": "noAdditionalBlockingFindingWithinObservedScope",
+  "productComplete": false,
+  "referenceVerification": {
+    "publicDirectRefs": 66,
+    "privateDirectRefs": 64,
+    "allHashesMatch": true
+  },
+  "checks": [
+    {
+      "name": "Candidate, installation and source identity",
+      "passed": true,
+      "scope": "Prior independent single executions passed 9 candidate and 10 installation checks. The sealed native review freshly matched 1497 source inputs, five formal files and exact process absence after normal quit; no repeat installation or build."
+    },
+    {
+      "name": "Explicit review and withdrawal",
+      "passed": true,
+      "scope": "Installed disabled User stdio fixture only. Exact name/folder and sibling preservation are visible; withdrawn review cannot confirm, then an explicit fresh query and review restores confirmation."
+    },
+    {
+      "name": "Removal and separate observation",
+      "passed": true,
+      "scope": "One explicit confirmation reports matching full configuration and absence from the complete report with parent nonempty. Separate read-only recheck preserves the original outcome. Fresh list no longer contains the fixture."
+    },
+    {
+      "name": "Official fixture restoration",
+      "passed": true,
+      "scope": "Baseline 0 writes, setup 1 disabled-leaf write, cleanup 0 writes because original two-scope semantics were already present. Recorded owned children reaped, pipes EOF, groups gone; canary unchanged and marker absent."
+    },
+    {
+      "name": "Retained data and normal quit",
+      "passed": true,
+      "scope": "131 whole old conversation rows, 168 dismissed rows, 53 raw settings, whole unsent object (8/8/3), catalogue and all other cells retained. Only root-approved Codex updated_at changed. Empty TR draft / 6 Astra / Ultra and normal Save-and-quit are observed."
+    },
+    {
+      "name": "Public claims and execution limits",
+      "passed": true,
+      "scope": "Public claims match the private review and recorded native evidence. The snapshot-summary missing-file/atime/non-fail-fast recovery remains an execution-record issue, not a product failure; no native HTTP, empty-parent or failure-race coverage is inferred."
+    }
+  ],
+  "acceptedDataDelta": {
+    "table": "agents",
+    "id": "codex",
+    "column": "updated_at",
+    "before": 1791659928954,
+    "after": 1791663025176
+  },
+  "visualScope": {
+    "independentlyInspectedImages": [
+      "03c-full-visible-review.png",
+      "04-withdrawn-review.png",
+      "06-confirm-result.png",
+      "07-readonly-recheck.png",
+      "08-removed-inventory.png",
+      "09-restored-draft.png",
+      "10-normal-exit-prompt.png"
+    ],
+    "limits": [
+      "04 screenshot is scrolled and does not show the full retired notice; its full AX establishes the notice and absence of confirmation.",
+      "08 screenshot is one scrolled viewport; exact target absence is checked in complete AX, not inferred from the visible crop."
+    ]
+  },
+  "limits": [
+    "This is review of one installed journey, not a second native execution. No additional App, official CLI, configuration or database experiment was performed to publish this receipt.",
+    "No UI prompt sent is root recorded action scope. Zero new retained sessions does not establish zero official session preparation or requests.",
+    "Official configuration reports do not prove active connections stopped, tool availability, credential removal or current-conversation effect.",
+    "HTTP removal, empty or absent parent, cancellation, lost acknowledgement, timeout and concurrent external writes were not tested in this installed journey.",
+    "No byte-identical preservation of official configuration formatting/comments/version, whole P41 completion, all original conditions, all Agents or Windows acceptance is claimed."
+  ],
+  "sourceFreezeRecommendation": "No remaining blocker in this bounded native review. Root may release this slice after its record closeout; no source mutation is authorized by this receipt.",
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove-candidate/installed-mcp-remove.json": "6b3d946ec68ef88a75123ece438606c5c3c44af7ce5366e4dc0dff125f647a77",
+    "output/2026-10-11-mcp-remove-independent/native-final-independent.json": "9babc1638c29043fe6edc9654a6c375c84f0331f09bd6138754dfbdb31c915f0",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove-candidate/candidate-independent.json": "3a6855c27c6d2c0e2e0429091e4f6ae99db524bdd95e681b42fd38fc2d468402",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove-candidate/install-independent.json": "6a0fa9fe31458ffe5c0ca721c068b921a0fe686d8bae15925aed9ef75ce45b21",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove-checks/run-01/verification.json": "e6a815248b91cfc974e3664097d0a2acc3dc35757b5d20291ccefb31c19edcf5",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove/browser/receipt.json": "51929a82edd62a61911aa20a63492965340f3f60e0c8eb7935b3bc4beee91168",
+    "output/2026-10-11-mcp-remove-native/final-normal-exit.json": "111cfa0ed155bbbe15149d33d1ce82e7bd620d4d158769d4d91bddc9a930e93b",
+    "output/2026-10-11-mcp-remove-native/root-data-acceptance.json": "04d4d70a105a27e7c84101a45145c59bd15d1680b4fb3d255c23e08d155ff10c",
+    "output/2026-10-11-mcp-remove-native-preparation/data-review/final-data-comparison-independent.json": "e51427e280d5e738cee6ab8e251d9653d3bac93262d7bdaee102916639d96891",
+    "output/2026-10-11-mcp-remove-native-preparation/data-review/timestamp-delta-independent.json": "701c18030919cc885ccaafc14ecb683feb6c03df8fdc3aeafd7ee2873e022a1b",
+    "output/2026-10-11-mcp-remove-native-preparation/baseline-result.json": "6982f760ac43882d35e92a7573070b786364f3fd83fa9f77e971af0983d3d371",
+    "output/2026-10-11-mcp-remove-native-preparation/setup-result.json": "5298ac6b58f74da475b757025c9f284a4479d015b5a3f72f756ee3ca732884e0",
+    "output/2026-10-11-mcp-remove-native-preparation/cleanup-result.json": "e9a51894582063d19eb1117a2099136552a3992d424580432215865a5680f737",
+    "output/2026-10-11-mcp-remove-install/snapshot-summary-recovery.json": "80a898fbcc1bef8c5c461faa29817b2c4ffe4bd8119cfb7c997728feb0c0c371"
+  }
+}
