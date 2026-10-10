@@ -1,0 +1,85 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorktreeRemovalReview.test.tsx (11 tests | 3 failed) 37ms
+   × keeps the first stage during a pending preparation and reports uncertainty only after an actual observation timeout 4ms
+   × does not announce deletion confirmation during preparingRecovery 2ms
+   × does not announce deletion confirmation during verifyingRecovery 2ms
+ ❯ src/components/WorktreeDialog.test.tsx (26 tests | 1 failed) 37ms
+   × shows one exact unknown-result explanation while retaining maintenance and query controls 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeDialog.test.tsx > shows one exact unknown-result explanation while retaining maintenance and query controls
+AssertionError: expected [ …(3) ] to have a length of 2 but got 3
+
+- Expected
++ Received
+
+- 2
++ 3
+
+ ❯ src/components/WorktreeDialog.test.tsx:603:41
+    601|   h.state.uncertain = true;
+    602|   const html = renderToStaticMarkup(render());
+    603|   expect(html.split(S.removal.unknown)).toHaveLength(2);
+       |                                         ^
+    604|   expect(html).toContain(S.recheck);
+    605| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/components/WorktreeRemovalReview.test.tsx > keeps the first stage during a pending preparation and reports uncertainty only after an actual observation timeout
+AssertionError: expected '<section class="worktree-operation wo…' to contain '1. 准备恢复副本'
+
+Expected: "1. 准备恢复副本"
+Received: "<section class="worktree-operation worktree-removal" aria-label="删除已归档的工作文件"><h3>删除已归档的工作文件</h3><h4>2. 确认永久删除</h4><p role="status">实际结果尚未确认。请核查这次操作，保留原位置、保留位置和恢复副本；不要重复删除。</p><button type="button" class="btn btn-ghost">取消此次确认</button></section>"
+
+ ❯ src/components/WorktreeRemovalReview.test.tsx:290:19
+    288|   render(); await settle(); check(); click(M.prepare); await settle();
+    289|   const pending = renderToStaticMarkup(render());
+    290|   expect(pending).toContain(M.firstStep);
+       |                   ^
+    291|   expect(pending).toContain(M.phases.preparingRecovery);
+    292|   expect(pending).not.toContain(M.secondStep);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/components/WorktreeRemovalReview.test.tsx > does not announce deletion confirmation during preparingRecovery
+AssertionError: expected '<section class="worktree-operation wo…' to contain '1. 准备恢复副本'
+
+Expected: "1. 准备恢复副本"
+Received: "<section class="worktree-operation worktree-removal" aria-label="删除已归档的工作文件"><h3>删除已归档的工作文件</h3><h4>2. 确认永久删除</h4><p>副本保留本次核查的提交内容，可能包含已提交的敏感信息。它是本机副本，不是远程备份。</p><dl class="worktree-paths"><dt>保留位置</dt><dd>/owned/.kept/tree</dd><dt>恢复副本位置</dt><dd>/owned/recoveries/one</dd><dt>分支</dt><dd>refs/heads/work</dd></dl><p>提交恢复包 1024 字节；完整性摘要见详情。</p><p>只删除下方保留位置的工作文件及对应工作树登记。分支、恢复副本、对话和原工作位置记录保持。</p><p>分支保留，不会删除分支。</p><details><summary>查看完整性摘要</summary><dl class="worktree-paths"><dt>恢复包摘要</dt><dd>dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</dd><dt>内容清单摘要</dt><dd>eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee</dd><dt>提交范围摘要</dt><dd>bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb</dd></dl></details><p role="status">正在准备提交恢复副本…</p><button type="button" class="btn btn-ghost">取消此次确认</button></section>"
+
+ ❯ src/components/WorktreeRemovalReview.test.tsx:305:16
+    303|   render(); await settle(); check(); click(M.prepare); await settle();
+    304|   const html = renderToStaticMarkup(render());
+    305|   expect(html).toContain(M.firstStep);
+       |                ^
+    306|   expect(html).not.toContain(M.secondStep);
+    307|   expect(html).not.toContain(M.unknown);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/components/WorktreeRemovalReview.test.tsx > does not announce deletion confirmation during verifyingRecovery
+AssertionError: expected '<section class="worktree-operation wo…' to contain '1. 准备恢复副本'
+
+Expected: "1. 准备恢复副本"
+Received: "<section class="worktree-operation worktree-removal" aria-label="删除已归档的工作文件"><h3>删除已归档的工作文件</h3><h4>2. 确认永久删除</h4><p>副本保留本次核查的提交内容，可能包含已提交的敏感信息。它是本机副本，不是远程备份。</p><dl class="worktree-paths"><dt>保留位置</dt><dd>/owned/.kept/tree</dd><dt>恢复副本位置</dt><dd>/owned/recoveries/one</dd><dt>分支</dt><dd>refs/heads/work</dd></dl><p>提交恢复包 1024 字节；完整性摘要见详情。</p><p>只删除下方保留位置的工作文件及对应工作树登记。分支、恢复副本、对话和原工作位置记录保持。</p><p>分支保留，不会删除分支。</p><details><summary>查看完整性摘要</summary><dl class="worktree-paths"><dt>恢复包摘要</dt><dd>dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</dd><dt>内容清单摘要</dt><dd>eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee</dd><dt>提交范围摘要</dt><dd>bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb</dd></dl></details><p role="status">正在验证提交恢复副本…</p><button type="button" class="btn btn-ghost">取消此次确认</button></section>"
+
+ ❯ src/components/WorktreeRemovalReview.test.tsx:305:16
+    303|   render(); await settle(); check(); click(M.prepare); await settle();
+    304|   const html = renderToStaticMarkup(render());
+    305|   expect(html).toContain(M.firstStep);
+       |                ^
+    306|   expect(html).not.toContain(M.secondStep);
+    307|   expect(html).not.toContain(M.unknown);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 33 passed (37)
+   Start at  17:43:52
+   Duration  233ms (transform 159ms, setup 0ms, import 221ms, tests 74ms, environment 0ms)
+

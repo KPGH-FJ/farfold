@@ -108,6 +108,22 @@ export function WorktreeDialog({
                     : operation.state === "cancelling"
                       ? S.states.cancelling
                       : S.recycleRunning;
+  const operationNote =
+    operation?.kind === "operation" && operation.action === "remove"
+      ? state.uncertain
+        ? S.removal.unknown
+        : S.removal.resultNote
+      : operation?.kind === "operation" && operation.action === "recover"
+        ? state.uncertain
+          ? S.recovery.unknown
+          : S.recovery.note
+        : maintenanceAction
+          ? state.uncertain
+            ? S.recycleUnknown
+            : S.recycleResultNote
+          : state.uncertain
+            ? S.unknown
+            : S.delayed;
   const canBegin =
     state.ready &&
     !state.loading &&
@@ -214,24 +230,7 @@ export function WorktreeDialog({
                     : S.states.preparing
                   : S.unknownId}
             </strong>
-            <p>
-              {operation?.kind === "operation" && operation.action === "remove"
-                ? state.uncertain
-                  ? S.removal.unknown
-                  : S.removal.resultNote
-                : operation?.kind === "operation" &&
-                    operation.action === "recover"
-                  ? state.uncertain
-                    ? S.recovery.unknown
-                    : S.recovery.note
-                  : maintenanceAction
-                    ? state.uncertain
-                      ? S.recycleUnknown
-                      : S.recycleResultNote
-                    : state.uncertain
-                      ? S.unknown
-                      : S.delayed}
-            </p>
+            {operationNote !== operationLabel && <p>{operationNote}</p>}
             {state.maintenanceLocked && (
               <p role="status">{S.maintenanceHeld}</p>
             )}

@@ -1,0 +1,20 @@
+{
+  "sourceCommitBeforeFix": "ecc78ce3acb2c2d6be94809dadf7220e7199ad7b",
+  "sourceFiles": {
+    "src-tauri/src/worktrees/manager.rs": "9df75ab21992e441b2a87050d362926bfddfe50d2fe11b2b502478eee1ae0ebd",
+    "src-tauri/src/worktrees/remove_manager.rs": "a3e437fce26e4d4883fe07e6caf98818904ce91154eec1cc66f1a3afcc007b14",
+    "src-tauri/src/worktrees/storage.rs": "b58208243549028b16ad3106ac342ee97f6fb7b22de3b64add81fc9f4ef5b9a5",
+    "src-tauri/src/worktrees/recovery_pack.rs": "81cd9651e4a88e458b9c89dbd6cb1071e97e5fd2d4b4dcfbb46876b23a50d4f1",
+    "src-tauri/src/worktrees/remove_recheck_tests.rs": "f6b39f0e132f9a9ee921ceab0c00b88607fb512b4999c1a539615dc08e2efdfc"
+  },
+  "lineCounts": {
+    "src-tauri/src/worktrees/manager.rs": 976,
+    "src-tauri/src/worktrees/remove_manager.rs": 763,
+    "src-tauri/src/worktrees/storage.rs": 420,
+    "src-tauri/src/worktrees/recovery_pack.rs": 685,
+    "src-tauri/src/worktrees/remove_recheck_tests.rs": 344
+  },
+  "allUnder1500Lines": true,
+  "sourceFrozen": true,
+  "cargoStopped": true
+}

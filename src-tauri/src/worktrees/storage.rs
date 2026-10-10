@@ -7,7 +7,7 @@ use super::{
 use crate::meta_store::MetaStore;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashSet, path::Path};
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub(super) struct Identity {
     pub root: String,
@@ -47,7 +47,7 @@ impl Identity {
             && self.common_stamp == s.common_stamp
     }
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub(super) struct SavedLocation {
     pub location: Location,
@@ -87,7 +87,7 @@ impl Request {
         }
     }
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub(super) struct SavedArchive {
     #[serde(default)]
@@ -108,7 +108,7 @@ pub(super) struct RecycleIntent {
     pub action: RecycleAction,
     pub dispatched: bool,
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub(super) struct RemoveIntent {
     pub saved: SavedArchive,

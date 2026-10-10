@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_recovery_authority.test.ts (7 tests | 1 failed) 62ms
+   × a late catalogue read cannot replace a newer explicit recovery check 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktree_recovery_authority.test.ts > a late catalogue read cannot replace a newer explicit recovery check
+AssertionError: expected null to be truthy
+
+- Expected:
+true
+
++ Received:
+null
+
+ ❯ src/runtime/worktree_recovery_authority.test.ts:127:30
+    125|   expect(w.snapshot().operation).toMatchObject({ code: "changed" });
+    126|   expect(w.snapshot().recoveries[0].availability).toBe("unknown");
+    127|   expect(w.snapshot().error).toBeTruthy();
+       |                              ^
+    128|   h.invoke.mockImplementation(async (c) => {
+    129|     if(c === "worktree_list") return {...h.list, recoveries:[removalRe…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  18:03:00
+   Duration  151ms (transform 61ms, setup 0ms, import 31ms, tests 62ms, environment 0ms)
+

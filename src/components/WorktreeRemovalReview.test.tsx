@@ -19,7 +19,12 @@ const h = vi.hoisted(() => ({
   confirm: vi.fn(),
   withdraw: vi.fn(),
   canConfirm: vi.fn(),
-  state: { operation: null } as { operation: unknown },
+  state: { operation: null } as {
+    operation: unknown;
+    working?: boolean;
+    uncertain?: boolean;
+    error?: string | null;
+  },
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -277,4 +282,82 @@ it("closing an unsubmitted delete review synchronously invalidates its captured 
   old();
   await settle();
   expect(h.prepare).not.toHaveBeenCalled();
+});
+
+it("keeps the first stage during a pending preparation and reports uncertainty only after an actual observation timeout", async () => {
+  let finish!: () => void;
+  h.prepare.mockImplementation(() => {
+    h.state = { operation: null, working: true, uncertain: false };
+    return new Promise<void>((resolve) => {
+      finish = resolve;
+    });
+  });
+  render();
+  await settle();
+  check();
+  click(M.prepare);
+  await settle();
+  const pending = renderToStaticMarkup(render());
+  expect(pending).toContain(M.firstStep);
+  expect(pending).toContain(M.phases.preparingRecovery);
+  expect(pending).not.toContain(M.secondStep);
+  expect(pending).not.toContain(M.unknown);
+  expect(button(M.confirm)).toBeUndefined();
+  h.state = { operation: null, working: false, uncertain: true };
+  expect(renderToStaticMarkup(render())).toContain(M.unknown);
+  expect(button(M.confirm)).toBeUndefined();
+  finish();
+  await settle();
+  expect(h.confirm).not.toHaveBeenCalled();
+});
+it.each(["preparingRecovery", "verifyingRecovery"])(
+  "does not announce deletion confirmation during %s",
+  async (phase) => {
+    h.prepare.mockImplementation(async () => {
+      h.state = {
+        operation: {
+          ...preparedRemoval,
+          state: "running",
+          removalPhase: phase,
+        },
+      };
+    });
+    render();
+    await settle();
+    check();
+    click(M.prepare);
+    await settle();
+    const html = renderToStaticMarkup(render());
+    expect(html).toContain(M.firstStep);
+    expect(html).not.toContain(M.secondStep);
+    expect(html).not.toContain(M.unknown);
+    expect(button(M.confirm)).toBeUndefined();
+  },
+);
+
+it("verification after the second explicit action must not promise that this step cannot delete", async () => {
+  h.confirm.mockImplementation(async () => {
+    h.canConfirm.mockReturnValue(false);
+    h.state = {
+      operation: {
+        ...preparedRemoval,
+        state: "running",
+        removalPhase: "verifyingRecovery",
+      },
+    };
+  });
+  render();
+  await settle();
+  check();
+  click(M.prepare);
+  await settle();
+  check();
+  click(M.confirm);
+  await settle();
+  const html = renderToStaticMarkup(render());
+  expect(h.confirm).toHaveBeenCalledOnce();
+  expect(html).toContain(M.phases.verifyingRecovery);
+  expect(html).not.toContain(M.firstStep);
+  expect(html).not.toContain(M.prepareNote);
+  expect(button(M.confirm)).toBeUndefined();
 });

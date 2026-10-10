@@ -1,0 +1,135 @@
+{
+  "checkedAtUtc": "2026-10-10T10:19:44.714602+00:00",
+  "sourceBase": "d3742f74f4273e1e7d00f2c7c6cc47de51f59075",
+  "priorInstalledCommit": "ecc78ce3acb2c2d6be94809dadf7220e7199ad7b",
+  "fileCount": 23,
+  "files": {
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/actual-wire.json": {
+      "sha256": "05f6f2dfaa236802118a6c30ef4234a9d7dc0a203609613024527ede5cbf46a1",
+      "lines": 195
+    },
+    "src-tauri/src/worktrees/manager.rs": {
+      "sha256": "9df75ab21992e441b2a87050d362926bfddfe50d2fe11b2b502478eee1ae0ebd",
+      "lines": 976
+    },
+    "src-tauri/src/worktrees/recovery_pack.rs": {
+      "sha256": "81cd9651e4a88e458b9c89dbd6cb1071e97e5fd2d4b4dcfbb46876b23a50d4f1",
+      "lines": 685
+    },
+    "src-tauri/src/worktrees/remove_manager.rs": {
+      "sha256": "a3e437fce26e4d4883fe07e6caf98818904ce91154eec1cc66f1a3afcc007b14",
+      "lines": 763
+    },
+    "src-tauri/src/worktrees/remove_recheck_tests.rs": {
+      "sha256": "f6b39f0e132f9a9ee921ceab0c00b88607fb512b4999c1a539615dc08e2efdfc",
+      "lines": 344
+    },
+    "src-tauri/src/worktrees/remove_wire_tests.rs": {
+      "sha256": "1fabf7fda86b1bfa52c7827dc9e30c06c1c007a5dc2cc75baa6f88b77413adbf",
+      "lines": 143
+    },
+    "src-tauri/src/worktrees/storage.rs": {
+      "sha256": "b58208243549028b16ad3106ac342ee97f6fb7b22de3b64add81fc9f4ef5b9a5",
+      "lines": 420
+    },
+    "src/components/EmptyState.archived-draft.test.tsx": {
+      "sha256": "2282d9c2dc7abe4d3d0b3ec3a97257b3c1176a9a86f74c17abc44a3afbf8c6d8",
+      "lines": 576
+    },
+    "src/components/EmptyState.selection.test.tsx": {
+      "sha256": "8fc6faa62d7b1f1bbafed75eaa8af01edb2792f882685face03a1eb58bf010c9",
+      "lines": 1490
+    },
+    "src/components/EmptyState.service-review.test.tsx": {
+      "sha256": "5955550d02b34ac6218ec1a7b02fe0a8a363ad2b35d5f67bf2f567ec147abd0d",
+      "lines": 232
+    },
+    "src/components/EmptyState.tsx": {
+      "sha256": "a3115244a86a87310e9fc84cf5d8dde46cfeee2a3b0bedab0fd149b0bbdf6748",
+      "lines": 1500
+    },
+    "src/components/WorktreeDialog.test.tsx": {
+      "sha256": "c7407db1791248b1ad5beb72ad2399e416d3e078afc8f4623e2c9f3ab98f4754",
+      "lines": 631
+    },
+    "src/components/WorktreeDialog.tsx": {
+      "sha256": "033ffd14cb95d270e4e40f3e5e81ea9931ed959472387a0c7feb6a5c26937153",
+      "lines": 641
+    },
+    "src/components/WorktreeRemovalReview.test.tsx": {
+      "sha256": "954da5279df96224c9bdc5bd5bc87c098c02f71208c6edf448d1a9013e6c29d2",
+      "lines": 363
+    },
+    "src/components/WorktreeRemovalReview.tsx": {
+      "sha256": "92780d2d336e2420825c4b05d69c051b08b9bc6ab1f5f04a1ad0f5dcb561404a",
+      "lines": 378
+    },
+    "src/components/useDraftArchiveGuard.tsx": {
+      "sha256": "32df83c6784bc59f969a57e3904f536e469e4054c3d44b3557ba46e8bb1c1dff",
+      "lines": 124
+    },
+    "src/runtime/worktree_catalogue.test-fixture.ts": {
+      "sha256": "c3ba6d1834a6b0e70b08a2fc4c31de0f5bca108140932c5c418e461500d36822",
+      "lines": 19
+    },
+    "src/runtime/worktree_polling.test.ts": {
+      "sha256": "b816301700c89baf1748c050ea59b4dadbbfdcae25e6aef8bc609d0f4020c277",
+      "lines": 120
+    },
+    "src/runtime/worktree_recovery_authority.test.ts": {
+      "sha256": "ffe121e44797454474872eaac1f70bf890a21326b8b178305a0d58444bda33d2",
+      "lines": 200
+    },
+    "src/runtime/worktree_recovery_wire.test.ts": {
+      "sha256": "ba670d9c5c896e7ca835c76f769ffe2b46821d0d5a8dbf352856853bf13bd50c",
+      "lines": 90
+    },
+    "src/runtime/worktree_remove.test.ts": {
+      "sha256": "10d1a7ff51bfacb3ad3cb4973007b6fcdd95fd61cf65a1d7003d167aa0f495b8",
+      "lines": 376
+    },
+    "src/runtime/worktree_strings.ts": {
+      "sha256": "d030b4feb92d95364d631fb6f8b2f6e2ebebe2238866ab38afe29e7d471bee1b",
+      "lines": 291
+    },
+    "src/runtime/worktrees.ts": {
+      "sha256": "fb8e94d5bbe235d29d7c69fd3935f05bc55b51dde730c3d82387ddc6ba1c265c",
+      "lines": 1146
+    }
+  },
+  "protectedUnchanged": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "proofs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/implementation.json",
+      "sha256": "e793f3455bd1fff7adbd693a5e8e7498c804dc9ef46cae8fdb120ce311c5a92d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/independent-publication-review.json",
+      "sha256": "52e387a63151d82abcd63180f09e88116580f713a2494f29268a87fc3cc80e27"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/polling-followup.json",
+      "sha256": "f1f60ce3f5cf515de70d58558badf42c050ff95ed908de3aa0c620150c446fe3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/draft-archive-guard-review.json",
+      "sha256": "0184fc3982850421a1c21b5bab025b63174b6de0a41fcf5fefd25dd0b31af19d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/wire-regression-review.json",
+      "sha256": "180514f0aa1e92495d29bf24bc9d541a328a46d5050e90cd4d19836dbd417cb1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/implementation.json",
+      "sha256": "fb49623a0007d5514ec508011036e70fa9c57131a6a3277d3c37e4da7706601a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/wire-regression/receipt.json",
+      "sha256": "86a96b507ba5e1f1d71dd66f59df7d751d9e92a7fa573a02eda48f76044aac4f"
+    }
+  ],
+  "boundary": "Exact source/config/test-fixture delta from installed ecc78ce3 to frozen run-02 inputs, including final polling fix and the wire regression test. Whole-repository run-02 is still executing; this closure is not its completion or installed acceptance."
+}

@@ -55,7 +55,12 @@ let snapshot: WorktreesSnapshot = Object.freeze({
   error: null,
 });
 const listeners = new Set<() => void>();
-let loading: Promise<void> | null = null;
+let catalogueObservation = 0;
+let catalogueRead: {
+  promise: Promise<ReturnType<typeof parseWorktreeList>>;
+  operationId: string | null;
+  observation: number;
+} | null = null;
 let intent: {
   id: string;
   action: "create" | "adopt" | "archive" | "restore" | "remove" | "recover";
@@ -194,7 +199,7 @@ function pollMaintenance() {
   poll = setTimeout(() => {
     poll = null;
     if (snapshot.operationId !== op.operationId) return;
-    if (snapshot.working) {
+    if (snapshot.working || snapshot.loading) {
       pollMaintenance();
       return;
     }
@@ -247,19 +252,6 @@ function accept(reply: WorktreeReply, id: string, rechecked = false) {
   if (snapshot.operationId !== id || snapshot.operation !== reply) return;
   if (reply.kind === "operation") {
     if (reply.action === "remove") {
-      const r = reply.recovery;
-      if (r) {
-        const oldRecovery = snapshot.recoveries.find(
-          (item) => item.id === r.id,
-        );
-        if (!oldRecovery || oldRecovery.revision <= r.revision)
-          publish({
-            recoveries: Object.freeze([
-              ...snapshot.recoveries.filter((item) => item.id !== r.id),
-              r,
-            ]),
-          });
-      }
       if (reply.state === "ready" && reply.removed)
         publish({
           archives: Object.freeze(
@@ -347,33 +339,88 @@ async function observe(
     return null;
   } finally {
     clearTimeout(timer);
-    if (snapshot.operationId === id && request === observation)
+    if (snapshot.operationId === id && request === observation) {
       publish({ working: false });
+      await refreshRemovalCatalogue(id, request);
+    }
   }
 }
-async function reload() {
+async function refreshRemovalCatalogue(id: string, request: number) {
+  const op = snapshot.operation;
+  if (
+    snapshot.operationId === id &&
+    observation === request &&
+    op?.kind === "operation" &&
+    op.action === "remove" &&
+    op.recovery
+  )
+    await reload(true);
+}
+async function reload(recoveriesOnly = false) {
   if (snapshot.working) return;
-  const before = snapshot.operationId;
+  const before = snapshot.operationId,
+    request = observation;
+  const ticket = ++catalogueObservation;
+  const owns = () =>
+    before === snapshot.operationId &&
+    request === observation &&
+    ticket === catalogueObservation;
   publish({ loading: true, error: null });
+  // Keep the actual read single-flight even after an observer stops waiting.
+  // A timeout is not proof that the native mutex/SQLite read has ended.
+  if (!catalogueRead) {
+    const read = {
+      operationId: before,
+      observation: request,
+      promise: Promise.resolve()
+        .then(() => invoke("worktree_list"))
+        .then(parseWorktreeList),
+    };
+    catalogueRead = read;
+    const release = () => {
+      if (catalogueRead === read) catalogueRead = null;
+    };
+    void read.promise.then(release, release);
+  }
+  const read = catalogueRead;
+  let timer: ReturnType<typeof setTimeout> | undefined;
   try {
-    const result = parseWorktreeList(await invoke("worktree_list"));
-    if (before !== snapshot.operationId || snapshot.working) return;
-    publish({
-      locations: result.locations,
-      materials: result.materials,
-      archives: result.archives,
-      recoveries: result.recoveries,
-      ready: true,
-    });
-    if (!snapshot.operationId && result.operation) {
-      publish({ operationId: result.operation.operationId });
-      accept(result.operation, result.operation.operationId);
-    } else if (result.operation?.operationId === snapshot.operationId)
-      accept(result.operation, result.operation.operationId);
+    const result = await Promise.race([
+      read.promise,
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new Error(S.loadFailed)), 10_000);
+      }),
+    ]);
+    if (!owns() || snapshot.working) return;
+    if (read.operationId !== before || read.observation !== request) {
+      // The joined read predates the current operation. Keep old proof and
+      // require a fresh explicit catalogue read, never promote its late result.
+      publish({ error: S.loadFailed });
+      return;
+    }
+    if (recoveriesOnly) {
+      // A status receipt cannot promote persisted backups. Refresh that catalogue
+      // without replacing the archive object owning a separate deletion decision.
+      publish({ recoveries: result.recoveries });
+    } else {
+      publish({
+        locations: result.locations,
+        materials: result.materials,
+        archives: result.archives,
+        recoveries: result.recoveries,
+        ready: true,
+      });
+      if (!snapshot.operationId && result.operation) {
+        publish({ operationId: result.operation.operationId });
+        accept(result.operation, result.operation.operationId);
+      } else if (result.operation?.operationId === snapshot.operationId)
+        accept(result.operation, result.operation.operationId);
+    }
   } catch {
-    publish({ error: S.loadFailed });
+    if (owns()) publish({ error: S.loadFailed });
   } finally {
-    publish({ loading: false });
+    clearTimeout(timer);
+    if (ticket === catalogueObservation) publish({ loading: false });
   }
 }
 async function queryOperation(command: string, id: string) {
@@ -666,8 +713,10 @@ async function prepareRemoval(
       publish({ uncertain: true, error: S.unknown });
   } finally {
     clearTimeout(timer);
-    if (removal === local && observation === request)
+    if (removal === local && observation === request) {
       publish({ working: false });
+      await refreshRemovalCatalogue(local.id, request);
+    }
     pollMaintenance();
   }
 }
@@ -679,10 +728,7 @@ export const worktrees = {
       listeners.delete(listener);
     };
   },
-  load: () =>
-    (loading ??= reload().finally(() => {
-      loading = null;
-    })),
+  load: () => reload(),
   inspect: async (path: string) => {
     try {
       return parseWorktreeInspection(
@@ -1080,13 +1126,21 @@ export function useWorktrees() {
       op.settled ||
       (op.action === "remove" && op.state === "prepared") ||
       state.uncertain ||
-      state.working
+      state.working ||
+      state.loading
     )
       return;
     const timer = setTimeout(() => {
-      void worktrees.status();
+      const current = worktrees.snapshot();
+      if (
+        current.operation === op &&
+        !current.uncertain &&
+        !current.working &&
+        !current.loading
+      )
+        void worktrees.status();
     }, 1000);
     return () => clearTimeout(timer);
-  }, [state.operation, state.uncertain, state.working]);
+  }, [state.operation, state.uncertain, state.working, state.loading]);
   return state;
 }

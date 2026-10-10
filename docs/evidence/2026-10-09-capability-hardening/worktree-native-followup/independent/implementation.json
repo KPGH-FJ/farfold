@@ -1,0 +1,497 @@
+{
+  "schemaVersion": 1,
+  "status": "passed_with_explicit_boundaries",
+  "recordedAtUtc": "2026-10-10T10:18:53.822232+00:00",
+  "reviewOwner": "architecture independent reviewer; production repair by product_coverage",
+  "scope": "Targeted actual full App React StrictMode in WebKit and Chromium with production stores/components/styles and controlled in-memory Tauri IPC. Five scenarios per final engine. No installed App, Agent, live database, Git process, deletion or recovery filesystem operation executed.",
+  "sourceReview": {
+    "result": "no_remaining_blocker_in_reviewed_scope",
+    "files": [
+      "src/runtime/worktrees.ts",
+      "src/components/WorktreeRemovalReview.tsx",
+      "src/components/WorktreeDialog.tsx",
+      "src/components/useDraftArchiveGuard.tsx",
+      "src/components/EmptyState.tsx"
+    ],
+    "findingsClosed": [
+      "Operation proof cannot promote the independent canonical recovery list. Auto refresh changes recoveries only, retaining archive decision ownership.",
+      "List observation waits at most 10 seconds; actual promise remains single-flight until settlement. A read preceding a changed operation/observation cannot publish and requests explicit fresh refresh.",
+      "Confirmation consumes the local checkbox once; post-confirm verifying phase cannot reannounce preparation or promise no deletion.",
+      "Both store maintenance poll and UI hook wait while list is loading; hook timer rechecks exact current operation and status before dispatch.",
+      "Cold draft catalogue uncertainty blocks remembered-cwd preparation without claiming an archive. A known archive barrier survives read error/refresh and stale same-cwd ownership; direct/config late-open guards covered in independent source review and author tests."
+    ]
+  },
+  "finalResults": {
+    "webkit": {
+      "scenarios": 5,
+      "assertions": 35,
+      "passed": 35,
+      "pageErrors": 0,
+      "blockedUnexpectedNetworkRequests": 0,
+      "sourceStable": true,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final.json",
+        "sha256": "2c16b84be7256fc867369ac76569d2ac46bf138eed9772dfc22108ba236ade87"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final.txt",
+        "sha256": "4adf171e9b672cdd5a061879aa211f89e54479bce4e94a3729bf26a194aa79b9"
+      }
+    },
+    "chromium": {
+      "scenarios": 5,
+      "assertions": 35,
+      "passed": 35,
+      "pageErrors": 0,
+      "blockedUnexpectedNetworkRequests": 0,
+      "sourceStable": true,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final.json",
+        "sha256": "ec3d28b1156f5eb79c027faf38a30b735f8508edb1e08cdd1fb0e321e7e42073"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final.txt",
+        "sha256": "498bfde7894023d25bec1ffca4093f10dc03adea1e5091e020b2c24f54c225f9"
+      }
+    }
+  },
+  "checkNames": [
+    "fresh prepared recovery appears through canonical worktree_list",
+    "canonical refresh preserves separate decision and held maintenance",
+    "preparation never invokes start or confirmation",
+    "second checkbox starts unchecked",
+    "confirmed verification does not reannounce preparation or no-delete promise",
+    "exact one second confirmation and no legacy start",
+    "actual controlled completed receipt releases lease and keeps backup",
+    "explicit removal flow",
+    "explicit removal flow keeps draft/cwd/history",
+    "catalogue observation timeout does not overlap actual native read",
+    "new operation automatic catalogue refresh joins still unresolved read",
+    "old read cannot publish into newer operation or claim fresh backup absent",
+    "explicit fresh catalogue read recovers canonical backup without confirming",
+    "singleflight catalogue observation",
+    "singleflight catalogue observation keeps draft/cwd/history",
+    "ordinary catalogue load and automatic refresh share one actual read",
+    "maintenance polling waits while catalogue observer is active",
+    "shared read completion preserves exact current operation and lease",
+    "shared catalogue and maintenance poll",
+    "shared catalogue and maintenance poll keeps draft/cwd/history",
+    "cold canonical unknown is not promoted by same revision operation proof",
+    "unknown canonical copy disables recovery action",
+    "cold load does not dispatch recover preparation",
+    "explicit canonical verification alone enables new-folder recovery",
+    "old operation proof cannot replace canonical newer revision",
+    "cold recovery catalogue",
+    "cold recovery catalogue keeps draft/cwd/history",
+    "remembered draft waits for first canonical catalogue before opening",
+    "confirmed archived draft keeps preparation blocked",
+    "known archived barrier survives failed refresh",
+    "failed refresh displays catalogue uncertainty",
+    "remembered archived draft retry",
+    "remembered archived draft retry keeps draft/cwd/history",
+    "positive control: confirmed restored cwd permits mocked connection inquiry",
+    "no unexpected controlled IPC"
+  ],
+  "counterexample": {
+    "initial": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/polling-red.json",
+      "sha256": "0f0cad355046f2753778e1b22beceb1a496885124e6a64b5c97aac24345ac6ce"
+    },
+    "counts": {
+      "passed": 16,
+      "failed": 1
+    },
+    "classification": "real UI polling defect; not driver error",
+    "repairChanged": ["src/runtime/worktrees.ts"],
+    "repairAdded": ["src/runtime/worktree_polling.test.ts"],
+    "sameDriverOriginalRedNowGreen": true,
+    "actualSourceDeltaChecked": true
+  },
+  "supplementalColdRun": {
+    "result": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-cold-first.json",
+      "sha256": "c84463adf88e832ea2f4d922391917cb4e8f79dfae9ad8e77826288d4f7a32c4"
+    },
+    "assertions": 15,
+    "passed": 15,
+    "countedSeparatelyNotAddedToDistinctFinalCoverage": true
+  },
+  "rawFormattedPairs": [
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-cold-first.raw.txt",
+        "sha256": "a730239849072fbfe10aad28f73127487d7aba65fdc377d676aec655f1d0a094"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-cold-first.json",
+        "sha256": "c84463adf88e832ea2f4d922391917cb4e8f79dfae9ad8e77826288d4f7a32c4"
+      },
+      "semanticEquality": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final.raw.txt",
+        "sha256": "5594bc6ab2f440c82b591e44876f32f6683b7ae5e28b036b4943bf86b610f5bc"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final.json",
+        "sha256": "2c16b84be7256fc867369ac76569d2ac46bf138eed9772dfc22108ba236ade87"
+      },
+      "semanticEquality": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first.raw.txt",
+        "sha256": "d7cf33e8a52439e49bb5f0981a2302247e6e669e4f999799fe674aab83720fec"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first.json",
+        "sha256": "d7cf33e8a52439e49bb5f0981a2302247e6e669e4f999799fe674aab83720fec"
+      },
+      "semanticEquality": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final.raw.txt",
+        "sha256": "046cb730007aafc345e81927d6415d03d9303c8da3858a489eb9ea52740b86f7"
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final.json",
+        "sha256": "ec3d28b1156f5eb79c027faf38a30b735f8508edb1e08cdd1fb0e321e7e42073"
+      },
+      "semanticEquality": true
+    }
+  ],
+  "visualReview": {
+    "method": "Viewed returned local pixels via view_image, not inferred only from DOM",
+    "screenshots": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final-prepared-after-canonical-refresh.png",
+        "sha256": "f0b41c43183bc1ebe540892893e8d8931ba47c40a43eeb90f57f94ede208f7e5"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final-draft-first-catalogue-held.png",
+        "sha256": "24dc520844e74336b9352ce7a4cf2e17a03d655a46e6568ae6c4e9df8dd8b117"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final-draft-load-failure.png",
+        "sha256": "69dc87c0b5c534d915ba285c613d261b1727d0be208467b933b3a16e85b022bf"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final-cold-canonical-verified.png",
+        "sha256": "d54fda199f37074378a5e6405ba40abbd4d16517743665a708cdeb650d427b1b"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final-confirmed-verification.png",
+        "sha256": "2b3ebd8e9d7e4b94896fe3b4976f1dc0c015b97fd5a5246457517495da28fb32"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final-singleflight-old-read-new-operation.png",
+        "sha256": "8fbc3b023d44165e16c0107f925758725b5e74f2032122125e6da355ef2f1eac"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final-restored-cwd-mocked-inquiry-only.png",
+        "sha256": "d965275ebc18b1f96740662e3383a71aa355cec637b785ce7e8fa6aa0519d462"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first-confirmed-verification.png",
+        "sha256": "274aae3b53b6fdcd7f611c3a0a0aa62b21c959f3b2a310d9ea16a0441b882cad"
+      }
+    ],
+    "notes": "Second confirmation and current-operation wording readable; cold checking and known-archive uncertainty distinguishable; draft retained. Long manager content uses its existing scroll area; this narrow follow-up does not repeat all historical layout coverage."
+  },
+  "sourceCheckpoint": {
+    "totalInputPaths": 816,
+    "srcPaths": 809,
+    "configAndHarnessIncluded": true,
+    "eachFinalBeforeAfterAndCurrentMatch": true,
+    "ownerFinalRefs": [
+      {
+        "path": "src/components/EmptyState.selection.test.tsx",
+        "sha256": "8fc6faa62d7b1f1bbafed75eaa8af01edb2792f882685face03a1eb58bf010c9"
+      },
+      {
+        "path": "src/components/EmptyState.service-review.test.tsx",
+        "sha256": "5955550d02b34ac6218ec1a7b02fe0a8a363ad2b35d5f67bf2f567ec147abd0d"
+      },
+      {
+        "path": "src/components/EmptyState.tsx",
+        "sha256": "a3115244a86a87310e9fc84cf5d8dde46cfeee2a3b0bedab0fd149b0bbdf6748"
+      },
+      {
+        "path": "src/components/WorktreeDialog.test.tsx",
+        "sha256": "c7407db1791248b1ad5beb72ad2399e416d3e078afc8f4623e2c9f3ab98f4754"
+      },
+      {
+        "path": "src/components/WorktreeDialog.tsx",
+        "sha256": "033ffd14cb95d270e4e40f3e5e81ea9931ed959472387a0c7feb6a5c26937153"
+      },
+      {
+        "path": "src/components/WorktreeRemovalReview.test.tsx",
+        "sha256": "954da5279df96224c9bdc5bd5bc87c098c02f71208c6edf448d1a9013e6c29d2"
+      },
+      {
+        "path": "src/components/WorktreeRemovalReview.tsx",
+        "sha256": "92780d2d336e2420825c4b05d69c051b08b9bc6ab1f5f04a1ad0f5dcb561404a"
+      },
+      {
+        "path": "src/runtime/worktree_remove.test.ts",
+        "sha256": "10d1a7ff51bfacb3ad3cb4973007b6fcdd95fd61cf65a1d7003d167aa0f495b8"
+      },
+      {
+        "path": "src/runtime/worktree_strings.ts",
+        "sha256": "d030b4feb92d95364d631fb6f8b2f6e2ebebe2238866ab38afe29e7d471bee1b"
+      },
+      {
+        "path": "src/runtime/worktrees.ts",
+        "sha256": "fb8e94d5bbe235d29d7c69fd3935f05bc55b51dde730c3d82387ddc6ba1c265c"
+      },
+      {
+        "path": "src/components/EmptyState.archived-draft.test.tsx",
+        "sha256": "2282d9c2dc7abe4d3d0b3ec3a97257b3c1176a9a86f74c17abc44a3afbf8c6d8"
+      },
+      {
+        "path": "src/components/useDraftArchiveGuard.tsx",
+        "sha256": "32df83c6784bc59f969a57e3904f536e469e4054c3d44b3557ba46e8bb1c1dff"
+      },
+      {
+        "path": "src/runtime/worktree_catalogue.test-fixture.ts",
+        "sha256": "c3ba6d1834a6b0e70b08a2fc4c31de0f5bca108140932c5c418e461500d36822"
+      },
+      {
+        "path": "src/runtime/worktree_recovery_authority.test.ts",
+        "sha256": "ffe121e44797454474872eaac1f70bf890a21326b8b178305a0d58444bda33d2"
+      },
+      {
+        "path": "src/runtime/worktree_recovery_wire.test.ts",
+        "sha256": "ba670d9c5c896e7ca835c76f769ffe2b46821d0d5a8dbf352856853bf13bd50c"
+      },
+      {
+        "path": "src/runtime/worktree_polling.test.ts",
+        "sha256": "b816301700c89baf1748c050ea59b4dadbbfdcae25e6aef8bc609d0f4020c277"
+      }
+    ],
+    "fullMap": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final.json",
+      "sha256": "2c16b84be7256fc867369ac76569d2ac46bf138eed9772dfc22108ba236ade87"
+    }
+  },
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/cleanup.json",
+    "sha256": "d521d994adc672af64c0f3f2f11236e1546abf8a0b8e1525f90f69aed08369d5"
+  },
+  "boundaries": [
+    "Synthetic backend receipts exercise real UI/store authorization only. Actual Git/cold persistence repair evidence is separate and native installation is still root-owned.",
+    "The positive restored-cwd control reaches a mocked session_open that deliberately rejects; no Agent was launched and no session_prompt was sent.",
+    "10-second deadline is an observer limit, not proof native I/O stopped. No automatic retry of the unresolved list is introduced.",
+    "The two engine final counts overlap the same five scenarios; supplemental cold run is not additional unique coverage.",
+    "No claim about network traffic of WebKit system services or reaping every system service; page external requests were intercepted and none observed.",
+    "No new whole-suite/Cargo/build run was performed by this reviewer."
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final-cold-canonical-verified.png",
+      "sha256": "649f1aecf94ae8916fa6b2e62f1e538a70011beec81c51867847904a6e7c614d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final-confirmed-verification.png",
+      "sha256": "2b3ebd8e9d7e4b94896fe3b4976f1dc0c015b97fd5a5246457517495da28fb32"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final-draft-first-catalogue-held.png",
+      "sha256": "a5dccba39ca1cca05e78dc5bdf8a6e11ce1a3f3402394f60d973cf49087cd0a1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final-draft-load-failure.png",
+      "sha256": "69dc87c0b5c534d915ba285c613d261b1727d0be208467b933b3a16e85b022bf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final-prepared-after-canonical-refresh.png",
+      "sha256": "56b5dfc4442df114f8b13fc5233d1167460ba1bba80357827a18721f1665a10b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final-restored-cwd-mocked-inquiry-only.png",
+      "sha256": "da006f8361cd83541deaba56181badbd3ef686d80e7ddfb44b3c05ae0efbd56f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final-singleflight-old-read-new-operation.png",
+      "sha256": "8fbc3b023d44165e16c0107f925758725b5e74f2032122125e6da355ef2f1eac"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final.json",
+      "sha256": "ec3d28b1156f5eb79c027faf38a30b735f8508edb1e08cdd1fb0e321e7e42073"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final.raw.txt",
+      "sha256": "046cb730007aafc345e81927d6415d03d9303c8da3858a489eb9ea52740b86f7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/chromium-final.txt",
+      "sha256": "498bfde7894023d25bec1ffca4093f10dc03adea1e5091e020b2c24f54c225f9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/cleanup.json",
+      "sha256": "d521d994adc672af64c0f3f2f11236e1546abf8a0b8e1525f90f69aed08369d5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/fixture.tsx",
+      "sha256": "038cd05dab15aa991711e07355d1cdf3f06251706d6805df02ba7e8eb263a1ae"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/index.html",
+      "sha256": "4f7ee3f2f501b7f6c354f1191b875bfaeab8b3d3276777ed2b70706545970199"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/polling-red.json",
+      "sha256": "0f0cad355046f2753778e1b22beceb1a496885124e6a64b5c97aac24345ac6ce"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/provenance.json",
+      "sha256": "487377d61afa36318cc50ff5772c53e312c53b61adb4451fdf2b5e088c1a23ff"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/run-cold.mjs",
+      "sha256": "594f35e8a2d6c5d66c840d77d57b2b100db8c1277dc899462c02a3499f614dfe"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/run.mjs",
+      "sha256": "26d5543f41c9ec0d7c6cd7d5410c38d16ddfaaf65a1579367dd2e483c1f9c393"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/serve.mjs",
+      "sha256": "561bd4c72cf20082072b624837078af6d030b8ef8ec3b5d8bbbd1ee5cea9ca4e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/server.txt",
+      "sha256": "2374d433bd957d30a419dc46c1bdcf639358ed0cb3c361b3d0121bf3d5db8b8b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-cold-first-cold-canonical-verified.png",
+      "sha256": "d54fda199f37074378a5e6405ba40abbd4d16517743665a708cdeb650d427b1b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-cold-first-draft-first-catalogue-held.png",
+      "sha256": "24dc520844e74336b9352ce7a4cf2e17a03d655a46e6568ae6c4e9df8dd8b117"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-cold-first-draft-load-failure.png",
+      "sha256": "028a1802499a0eb3ea4bc025d6d366a2b6dcba3738b26be4c011e733e034c427"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-cold-first-restored-cwd-mocked-inquiry-only.png",
+      "sha256": "d965275ebc18b1f96740662e3383a71aa355cec637b785ce7e8fa6aa0519d462"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-cold-first.json",
+      "sha256": "c84463adf88e832ea2f4d922391917cb4e8f79dfae9ad8e77826288d4f7a32c4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-cold-first.raw.txt",
+      "sha256": "a730239849072fbfe10aad28f73127487d7aba65fdc377d676aec655f1d0a094"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-cold-first.txt",
+      "sha256": "1d4eeff3afee5f56e60e79cbdc7468281a1ce87fab25419e482b05d4333737d8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final-cold-canonical-verified.png",
+      "sha256": "d54fda199f37074378a5e6405ba40abbd4d16517743665a708cdeb650d427b1b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final-confirmed-verification.png",
+      "sha256": "274aae3b53b6fdcd7f611c3a0a0aa62b21c959f3b2a310d9ea16a0441b882cad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final-draft-first-catalogue-held.png",
+      "sha256": "24dc520844e74336b9352ce7a4cf2e17a03d655a46e6568ae6c4e9df8dd8b117"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final-draft-load-failure.png",
+      "sha256": "028a1802499a0eb3ea4bc025d6d366a2b6dcba3738b26be4c011e733e034c427"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final-prepared-after-canonical-refresh.png",
+      "sha256": "f0b41c43183bc1ebe540892893e8d8931ba47c40a43eeb90f57f94ede208f7e5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final-restored-cwd-mocked-inquiry-only.png",
+      "sha256": "d965275ebc18b1f96740662e3383a71aa355cec637b785ce7e8fa6aa0519d462"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final-singleflight-old-read-new-operation.png",
+      "sha256": "a6b7e1ffec084c70d3eae959d097c3330cf7957fac27a9284af45a55ca4a0f6b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final.json",
+      "sha256": "2c16b84be7256fc867369ac76569d2ac46bf138eed9772dfc22108ba236ade87"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final.raw.txt",
+      "sha256": "5594bc6ab2f440c82b591e44876f32f6683b7ae5e28b036b4943bf86b610f5bc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-final.txt",
+      "sha256": "4adf171e9b672cdd5a061879aa211f89e54479bce4e94a3729bf26a194aa79b9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first-confirmed-verification.png",
+      "sha256": "274aae3b53b6fdcd7f611c3a0a0aa62b21c959f3b2a310d9ea16a0441b882cad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first-failure.png",
+      "sha256": "55021f29fc991836c3c809e8aaaae7b2e76cb1e3e3d3a38347b6f6c5e68327a5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first-prepared-after-canonical-refresh.png",
+      "sha256": "f0b41c43183bc1ebe540892893e8d8931ba47c40a43eeb90f57f94ede208f7e5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first-singleflight-old-read-new-operation.png",
+      "sha256": "a6b7e1ffec084c70d3eae959d097c3330cf7957fac27a9284af45a55ca4a0f6b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first.json",
+      "sha256": "d7cf33e8a52439e49bb5f0981a2302247e6e669e4f999799fe674aab83720fec"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first.raw.txt",
+      "sha256": "d7cf33e8a52439e49bb5f0981a2302247e6e669e4f999799fe674aab83720fec"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first.txt",
+      "sha256": "2d8804f44572a37a3d962b8cc0711f9af18b7e99bcbf5eda9c6f38407caf5450"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/source-checkpoint.json",
+      "sha256": "eed15c949d444e8c35db232bdf73ea57934efe49a17b13ce57e5a5fd4ad24ce8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/implementation.json",
+      "sha256": "d14927849017e26c774c9278574b75455ea97f47a7d67d7a890272eb2a008b80"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/polling-followup.json",
+      "sha256": "f1f60ce3f5cf515de70d58558badf42c050ff95ed908de3aa0c620150c446fe3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/polling-red.txt",
+      "sha256": "692651bc5645ba461c81acca04a1dbc95b7dc91590437663bb01b6900191e655"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/polling-green.txt",
+      "sha256": "dd75caee453e6f24a6eb0437de577eeabc4b7371f52792a509974cbd9d92da6a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/polling-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/polling-format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/draft-archive-guard-review.json",
+      "sha256": "0184fc3982850421a1c21b5bab025b63174b6de0a41fcf5fefd25dd0b31af19d"
+    }
+  ]
+}

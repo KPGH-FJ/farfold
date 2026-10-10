@@ -24,6 +24,7 @@ export const WORKTREE_STRINGS = {
     prepareNote: "先保存本地提交的恢复副本并实际验证；这一步不会删除工作文件。",
     firstStep: "1. 准备恢复副本",
     secondStep: "2. 确认永久删除",
+    status: "此次操作状态",
     confirm: "永久删除工作文件",
     confirmAck: "我已查看恢复副本和删除位置，确认永久删除此处的工作文件",
     confirmNote:
@@ -73,6 +74,10 @@ export const WORKTREE_STRINGS = {
   archived: "已归档的工作树",
   checkArchive: "核对位置",
   archiveUnconfirmed: "位置尚未确认，请先核对。核对不会移动文件。",
+  draftCatalogueChecking: "正在核对工作位置清单，尚未准备新对话。",
+  draftCatalogueFailed: "工作位置清单尚未确认，请刷新清单后继续；草稿保持。",
+  draftArchiveUnconfirmed:
+    "此工作位置此前已归档；当前清单尚未确认，请先核对工作树清单。",
   archivedNote: "此工作树已归档。恢复原位置并核查后才能使用。",
   recycleBlocked: "仍有需要处理的内容或活动，请先查看原因。",
   recycleReview: "确认影响",
@@ -227,6 +232,7 @@ export const WORKTREE_STRINGS = {
     ignoredMaterial: "还有被忽略的材料，请先保留并处理。",
     unprovenPrivateCommits: "尚不能完整保护此工作树的本地提交，请保留原归档。",
     recoveryLimit: "提交恢复副本超出当前处理范围，请保留原归档。",
+    missingRecovery: "恢复副本尚未核实，请先重新核验恢复副本，再选择恢复位置。",
     recoveryInvalid: "提交恢复副本未通过实际恢复核验，不能继续删除。",
     recoveryChanged: "提交恢复副本在检查后发生变化，不能继续删除。",
     confirmationRequired: "删除工作文件需要再次明确确认。",

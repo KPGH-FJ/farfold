@@ -1,0 +1,167 @@
+{
+  "schema": 1,
+  "phase": "preparedAndStaticallyCheckedNotExecuted",
+  "sourceHelpersCopied": 8,
+  "pythonAstValid": true,
+  "baselineCommit": "ecc78ce3acb2c2d6be94809dadf7220e7199ad7b",
+  "baselineReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/candidate.json",
+    "sha256": "303c85156efd0cab37e6d2d8d5d2d2142aac615b59672562a7f9c72a23132820",
+    "bytes": 7842
+  },
+  "helperCopies": [
+    {
+      "previous": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/prepare-candidate.py",
+        "sha256": "e9cbd733d525ff9ed253ab2fb7aee2d06584ea0cb8fc9f1a45e1b10e85ba4499",
+        "bytes": 15374
+      },
+      "prepared": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/prepare-candidate.py",
+        "sha256": "74ea93f630edb7550b1a28c0c29e64d56ac78a4961731546aee5930b4393fa2a",
+        "bytes": 15499
+      },
+      "unchangedCopy": false
+    },
+    {
+      "previous": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/verify-candidate.py",
+        "sha256": "78e65b7e6d95369def3ebeedbd8308eee0f000bda679bd7b882e097c5aa397f5",
+        "bytes": 20346
+      },
+      "prepared": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-candidate.py",
+        "sha256": "061cc71bb930ff278e2ee6fa3fc3fa9c3c817d41b5c8895df6172d53ff9057c9",
+        "bytes": 20462
+      },
+      "unchangedCopy": false
+    },
+    {
+      "previous": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/verify-data-retention.py",
+        "sha256": "18e0aad87b1534a3da1132a6907c19aee05191821b5a0c0bff4f74ee2fc7f92c",
+        "bytes": 4020
+      },
+      "prepared": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-data-retention.py",
+        "sha256": "e19f9494b185152a4d79ed5a6cd3a517ad086c62de6200a31485169d84367bf7",
+        "bytes": 4029
+      },
+      "unchangedCopy": false
+    },
+    {
+      "previous": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/verify-install-independent.py",
+        "sha256": "7b803f00442e10ae6be693e76e340986f4bd89d8fb539a587413925e651b19b9",
+        "bytes": 22672
+      },
+      "prepared": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-candidate/verify-install-independent.py",
+        "sha256": "8f91670754bf0f7ce4b5bbce3eb4764aef3a378d111f375998ee2dbf1e746ec4",
+        "bytes": 22727
+      },
+      "unchangedCopy": false
+    },
+    {
+      "previous": {
+        "path": "output/2026-10-10-worktree-remove-install/backup_metadata.py",
+        "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+        "bytes": 2713
+      },
+      "prepared": {
+        "path": "output/2026-10-10-worktree-native-followup-install/backup_metadata.py",
+        "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+        "bytes": 2713
+      },
+      "unchangedCopy": true
+    },
+    {
+      "previous": {
+        "path": "output/2026-10-10-worktree-remove-install/cleanup_duplicate.py",
+        "sha256": "25536a08acd4d92dfab51bab44f06cddb8eab145a5175b5eab62f5d035190711",
+        "bytes": 2076
+      },
+      "prepared": {
+        "path": "output/2026-10-10-worktree-native-followup-install/cleanup_duplicate.py",
+        "sha256": "bf8c3f962bf0107ba5a74192b7de17e2d6694a18f4d90f5487c0b30ef02b10e9",
+        "bytes": 2085
+      },
+      "unchangedCopy": false
+    },
+    {
+      "previous": {
+        "path": "output/2026-10-10-worktree-remove-install/install_data_snapshot.py",
+        "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+        "bytes": 3792
+      },
+      "prepared": {
+        "path": "output/2026-10-10-worktree-native-followup-install/install_data_snapshot.py",
+        "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+        "bytes": 3792
+      },
+      "unchangedCopy": true
+    },
+    {
+      "previous": {
+        "path": "output/2026-10-10-worktree-remove-install/install_verified_candidate.py",
+        "sha256": "1b74866b2ab4787ccaa51ec941cedb11469b69bce83c5021820f6db5cf06f89b",
+        "bytes": 15314
+      },
+      "prepared": {
+        "path": "output/2026-10-10-worktree-native-followup-install/install_verified_candidate.py",
+        "sha256": "db28a4751574c9ae032fcde80a937b8c6ac9e08c116d05f66b3627db183536d5",
+        "bytes": 15440
+      },
+      "unchangedCopy": false
+    }
+  ],
+  "diff": {
+    "path": "output/2026-10-10-worktree-native-followup-install/prepared-helpers.diff.txt",
+    "sha256": "f9d696427593e63c4a34a6ffa03dabae69219d5f42a1c94224791f2979a90d19",
+    "bytes": 9405
+  },
+  "inventory": {
+    "prepareVerifyInstallExactSameScopesAndTop": true,
+    "priorScopesUnchanged": true,
+    "onlyAddedTop": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/actual-wire.json",
+      "sha256": "05f6f2dfaa236802118a6c30ef4234a9d7dc0a203609613024527ede5cbf46a1",
+      "bytes": 10191
+    }
+  },
+  "normalExitContract": {
+    "requiredRefsForRootObservation": [
+      {
+        "path": "output/2026-10-10-worktree-remove-native/final-normal-exit.json",
+        "sha256": "9354971b040dea8961bef44fcbc3895be78af40d43d4ed7a9b74a10f294234fe",
+        "bytes": 513
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/installed-removal-initial.json",
+        "sha256": "e0b9cc37b22e8cf13e9ef99460b5c946733e1da00f52ddf186de7b0eddca88ce",
+        "bytes": 24042
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/installed-native-closeout.json",
+        "sha256": "4e7ba37dfec59ca92bad65f65d6367cf39af525f1455c633b1de1c374c249e61",
+        "bytes": 5261
+      }
+    ],
+    "baselineExitActualFieldsChecked": [
+      "method",
+      "normalExit",
+      "rootOsSignalsSent",
+      "pgrepExit",
+      "pgrepStdout"
+    ],
+    "freshPgrepAndNormalExitObservationStillRequiredAtExecution": true,
+    "normalExitObservationNotFabricatedOrCreatedHere": true
+  },
+  "boundaries": [
+    "No copied helper was imported or executed.",
+    "No candidate commit has been selected or invented.",
+    "No App, Agent, build, test, SQLite, install, backup, snapshot or cleanup execution.",
+    "Root owns engineering run, commit, preinstall observations and all execution.",
+    "Only the exact new wire fixture is added; baseline receipt deliberately remains worktree-remove-candidate."
+  ]
+}

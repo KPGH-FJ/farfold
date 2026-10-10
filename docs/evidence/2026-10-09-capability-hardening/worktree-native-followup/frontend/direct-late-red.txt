@@ -1,0 +1,29 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/EmptyState.archived-draft.test.tsx (20 tests | 1 failed) 30ms
+   × a direct send's late empty draft is discarded after archive admission is withdrawn without a render 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/EmptyState.archived-draft.test.tsx > a direct send's late empty draft is discarded after archive admission is withdrawn without a render
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'late-send' ]
+
+Number of calls: 0
+
+ ❯ src/components/EmptyState.archived-draft.test.tsx:525:21
+    523|   await rejected;
+    524|   expect(h.send).not.toHaveBeenCalled();
+    525|   expect(h.discard).toHaveBeenCalledExactlyOnceWith("late-send");
+       |                     ^
+    526|   expect(composerDrafts.read("new").text).toBe("Keep this draft");
+    527| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 19 passed (20)
+   Start at  18:05:43
+   Duration  1.10s (transform 302ms, setup 0ms, import 1.01s, tests 30ms, environment 0ms)
+

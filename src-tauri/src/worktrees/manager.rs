@@ -25,6 +25,9 @@ mod remove_manager;
 use remove_manager::RemoveTicket;
 #[path = "recover_manager.rs"]
 mod recover_manager;
+#[cfg(test)]
+#[path = "remove_recheck_tests.rs"]
+mod remove_recheck_tests;
 #[path = "remove_reconcile.rs"]
 mod remove_reconcile;
 

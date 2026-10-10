@@ -1,0 +1,5 @@
+{
+  "initialExtraction": "A script requiring marker at line start found zero because the Rust test harness prefixes the test name on the same line; it wrote no wire or implementation receipt.",
+  "correctedExtraction": "One exact COLD_RECOVERY_WIRE= marker, parse the complete JSON suffix on that stdout line; no test rerun or raw change.",
+  "markerCount": 1
+}

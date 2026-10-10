@@ -1,0 +1,11 @@
+{
+  "scope": "New controlled full App followup only; old harness not changed.",
+  "copiedInputs": {
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/fixture.tsx": "4c012ab746f9b9da934d98b8ca80ed415d92795ffc268bfb35f508a2d741adbc",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/index.html": "4f7ee3f2f501b7f6c354f1191b875bfaeab8b3d3276777ed2b70706545970199",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/serve.mjs": "f6feffce08ae4fe6fbd4280c3803e8f14d6fb1b4296190794b264378e5aa2db3"
+  },
+  "port": 1478,
+  "started": false,
+  "nativeAppAgentGitAndUserDataAccess": false
+}

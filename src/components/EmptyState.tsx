@@ -6,6 +6,11 @@
 import { PreservedDrafts } from "./PreservedDrafts";
 import { WorkLocationPicker } from "./WorkLocationPicker";
 import { useDraftWorkLocation } from "./useDraftWorkLocation";
+import {
+  DraftArchiveBlockedError,
+  folderSendSignature,
+  useDraftArchiveGuard,
+} from "./useDraftArchiveGuard";
 import { REDESIGN as R } from "../runtime/redesign_strings";
 import { serviceSelectionIsCurrent } from "../runtime/conversation_actions";
 import { createPortal } from "react-dom";
@@ -143,8 +148,7 @@ export function EmptyState({
   const [folder, setFolder] = useState<string | null>(
     newConversationChoice.cwd,
   );
-  // A new conversation starts only in a folder explicitly chosen by the user.
-  // The application's preparation directory remains available to global setup.
+  // New conversations require an explicit folder, separate from global setup.
   const cwd = folder;
   useEffect(() => {
     newConversationChoice.cwd = folder;
@@ -321,6 +325,12 @@ export function EmptyState({
     to: string | null;
     content: string;
   } | null>(null);
+  const archiveGuard = useDraftArchiveGuard(
+    requestCwd,
+    active,
+    sendAfterFolder,
+  );
+  const archiveBlocked = archiveGuard.blocked;
   const currentPair = useRef(pair);
   currentPair.current = pair;
   const selectionEpoch = useRef(0);
@@ -424,8 +434,7 @@ export function EmptyState({
     initialSelection,
     initialCandidatePresentable,
   ]);
-  // Opening a search/settings page keeps the prepared draft. Returning only
-  // opens when there is no draft and no request already in flight.
+  // Hidden prepared drafts persist; return opens only if no draft/request exists.
   useEffect(() => {
     if (active && !draftKey && !opening) setDraftRevision((value) => value + 1);
   }, [active]);
@@ -435,7 +444,12 @@ export function EmptyState({
       setOpening(false);
       return;
     }
-    if (!candidateSelected || !connectionAllowed || selectionNeedsReview) {
+    if (
+      !candidateSelected ||
+      !connectionAllowed ||
+      selectionNeedsReview ||
+      archiveBlocked
+    ) {
       setOpening(false);
       return;
     }
@@ -459,6 +473,20 @@ export function EmptyState({
     const inquiryAbort = new AbortController();
     pendingInquiryAbort.current = inquiryAbort;
     let openedKey: string | null = null;
+    const rejectOpened = () => {
+      const unavailable = archiveGuard.isBlocked();
+      if (!cancelled && !unavailable) return false;
+      // Keep an open shared by a newer live effect for the same pair.
+      if (
+        openedKey &&
+        (!mounted.current || currentPair.current !== pair || unavailable)
+      ) {
+        if (!handedOffKeys.current.has(openedKey))
+          void threads.discardDraft(openedKey);
+        openedKey = null;
+      }
+      return true;
+    };
     const requestedConfig = { ...newConversationChoice.config };
     setDraftKey(null);
     setOpening(true);
@@ -475,6 +503,7 @@ export function EmptyState({
       setDraftError(null);
       (async () => {
         await requireCurrentService();
+        archiveGuard.requireAvailable();
         if (
           cancelled ||
           selectionReviewRef.current ||
@@ -487,7 +516,8 @@ export function EmptyState({
             !cancelled &&
             mounted.current &&
             activeRef.current &&
-            currentPair.current === pair,
+            currentPair.current === pair &&
+            !archiveGuard.isBlocked(),
           agentId,
           cwd: requestCwd!,
           service,
@@ -497,22 +527,18 @@ export function EmptyState({
       })()
         .then(async (state) => {
           openedKey = state.key;
+          if (rejectOpened()) return;
           if (
             !isCurrentCandidate(agentId) ||
             !isAutomaticConnectionAllowed(agentId)
           )
             return;
-          if (cancelled) {
-            // A later effect can be awaiting the same store-deduplicated open.
-            if (!mounted.current || currentPair.current !== pair)
-              void threads.discardDraft(state.key);
-            return;
-          }
           const modelId = modelConfigOption(state.configOptions)?.id;
           const choices = Object.entries(requestedConfig).sort(
             ([a], [b]) => Number(b === modelId) - Number(a === modelId),
           );
           for (const [id, value] of choices) {
+            if (rejectOpened()) return;
             if (
               cancelled ||
               !isCurrentCandidate(agentId) ||
@@ -532,6 +558,7 @@ export function EmptyState({
               throw new Error(STRINGS.repair.configFailed);
             if (value !== option.currentValue)
               await threads.setConfig(state.key, id, value);
+            if (rejectOpened()) return;
             if (
               threads
                 .thread(state.key)
@@ -551,16 +578,11 @@ export function EmptyState({
             )
           )
             throw new Error(STRINGS.repair.configFailed);
-          if (cancelled) {
-            // A later effect can be awaiting the same store-deduplicated open.
-            if (!mounted.current || currentPair.current !== pair)
-              void threads.discardDraft(state.key);
-            return;
-          }
+          if (rejectOpened()) return;
           setDraftKey(state.key);
         })
         .catch((error) => {
-          if (!cancelled) {
+          if (!cancelled && !(error instanceof DraftArchiveBlockedError)) {
             failedPairRef.current = pair;
             setDraftError(toUiNotice(error, STRINGS.repair.requestFailed));
           }
@@ -583,6 +605,7 @@ export function EmptyState({
     };
   }, [
     draftRevision,
+    archiveBlocked,
     selectionNeedsReview,
     agentId,
     candidateSelected,
@@ -690,9 +713,11 @@ export function EmptyState({
     };
     if (!mounted.current || !activeRef.current || currentPair.current !== pair)
       throw new Error(STRINGS.repair.sendFailed);
+    archiveGuard.requireAvailable();
     if (selectionReviewRef.current) throw new Error(R.selectionReview);
     if (readRequired()) throw new Error(C.readRequired);
     if (service) await requireCurrentService();
+    archiveGuard.requireAvailable();
     if (
       !mounted.current ||
       !activeRef.current ||
@@ -727,13 +752,13 @@ export function EmptyState({
       current.cwd !== requestCwd ||
       !sameSource
     ) {
-      // Stale/discarded draft or the eager open still in flight — the
-      // store dedupes a concurrent open for the same pair.
+      // The store dedupes a concurrent open for the same pair.
       const state = await threads.open({
         inquiryCurrent: () =>
           mounted.current &&
           activeRef.current &&
-          currentPair.current === sentPair,
+          currentPair.current === sentPair &&
+          !archiveGuard.isBlocked(),
         agentId,
         cwd: requestCwd,
         service,
@@ -745,6 +770,7 @@ export function EmptyState({
     handedOffKeys.current.add(key);
     let pending: PendingAttempt | undefined;
     try {
+      archiveGuard.requireAvailable();
       const target = threads.thread(key);
       if (!target) throw new Error(STRINGS.repair.sendFailed);
       if (
@@ -762,6 +788,7 @@ export function EmptyState({
         target,
       );
       if (service) await requireCurrentService();
+      archiveGuard.requireAvailable();
       if (
         !isCurrentCandidate(agentId) ||
         !isAutomaticConnectionAllowed(agentId) ||
@@ -790,7 +817,11 @@ export function EmptyState({
         !failed.queued.length
       ) {
         handedOffKeys.current.delete(key);
-        if (!mounted.current || currentPair.current !== sentPair)
+        if (
+          !mounted.current ||
+          currentPair.current !== sentPair ||
+          error instanceof DraftArchiveBlockedError
+        )
           void threads.discardDraft(key);
       }
       throw error;
@@ -803,6 +834,7 @@ export function EmptyState({
   };
 
   const agentSendable =
+    !archiveBlocked &&
     candidateSelected &&
     connectionAllowed &&
     preparationComplete &&
@@ -826,15 +858,7 @@ export function EmptyState({
     !draft.openError &&
     !draft.configuring;
   // Editing the draft abandons a pending folderless send.
-  const draftSignature = JSON.stringify([
-    unsent.text,
-    unsent.attachments.map((item) => [
-      item.kind,
-      item.name,
-      item.uri ?? "",
-      item.data?.length ?? 0,
-    ]),
-  ]);
+  const draftSignature = folderSendSignature(unsent);
   useEffect(() => {
     const armed = sendAfterFolder.current;
     if (!armed) return;
@@ -887,8 +911,7 @@ export function EmptyState({
     // Nothing was sent yet: the composer must keep the draft either way.
     return false;
   };
-  // Keep the original editor and its in-flight attachment/send state mounted.
-  // Only its DOM host moves; the draft remains in the existing `new` slot.
+  // Move only the editor's DOM host; preserve its pending work and `new` draft.
   const [editorRoot] = useState(() =>
     typeof document === "undefined" ? null : document.createElement("div"),
   );
@@ -938,7 +961,7 @@ export function EmptyState({
           : null
         : opening
           ? STRINGS.empty.opening
-          : draftError
+          : draftError && !archiveBlocked
             ? {
                 message: `${STRINGS.empty.openFailed}：${draftError.message}`,
                 detail: draftError.detail,
@@ -1250,7 +1273,9 @@ export function EmptyState({
           </button>
         </div>
       )}
+      {archiveGuard.notice}
       <Composer
+        suppressThreadOpenError={archiveBlocked}
         thread={draft}
         workLocation={cwd}
         workContext={

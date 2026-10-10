@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "status": "installedEvidenceCloseoutReviewedWithKnownNativeFailuresRetained",
+  "formalSourceCommit": "ecc78ce3acb2c2d6be94809dadf7220e7199ad7b",
+  "reviewScope": "Independent frozen receipt, approved expectation and hash review. Earlier data-difference work used only disposable secondary database copies; this review did not open SQLite or repeat native UI/material experiments.",
+  "hashVerification": {
+    "referenceOccurrences": 120,
+    "uniqueFiles": 106,
+    "allMatched": true,
+    "initialReceiptMatchesCommittedBlob": true,
+    "initialReceiptCommit": "d3742f74f4273e1e7d00f2c7c6cc47de51f59075"
+  },
+  "rootExecutedCloseout": {
+    "passedChecks": 10,
+    "approvedSpecMatchesDraftScopes": true,
+    "threeCapturedToConsolidatedLogicalComparisonsPassed": true,
+    "originalCapturedAndBackupBytesUnchanged": true
+  },
+  "data": {
+    "oldCompleteConversationRowsExact": 126,
+    "oldComposersExact": 8,
+    "oldFeedbackExact": 8,
+    "oldQueuesExact": 3,
+    "addedControlledSessions": 2,
+    "addedControlledActivity": 2,
+    "newUnsentEntries": 0,
+    "catalogue": "Reviewed exact 7 failure-stage and 8 final-stage record changes, explicit v2-to-v3 defaults and separate current-operation identity; not a wholly unchanged catalogue. One old location changes only availability from verified to unknown."
+  },
+  "officialScope": {
+    "nativeSessions": 2,
+    "uniqueRequests": 3,
+    "toolCalls": 0,
+    "completedEvents": 3,
+    "priorSnapshotIsPrefixOnly": true,
+    "configuration": "Codex 0.155.1, gpt-6-astra, ultra, on-request; these controlled no-tool requests only."
+  },
+  "materialEvidence": {
+    "firstFixtureRecordedReceipts": 6,
+    "secondFixtureDeletionChecks": 7,
+    "secondFixtureIndependentRestoreChecks": 7,
+    "secondFixturePostRestoreSourcePreservationChecks": 7,
+    "secondFixtureComparedToOwnManifest": true,
+    "boundary": "Second fixture is reviewed separately from the first-fixture helper loop. Existing recorded evidence only; no Git/material experiment repeated."
+  },
+  "preservedOutcomes": [
+    "Initial deletion refusal after root git-status index-cache interference remains a failed journey, not successful deletion.",
+    "The separate clean fixture completed explicit deletion.",
+    "After cold deletion recheck, direct new-folder recovery failed because operation and canonical recovery-list observations disagreed.",
+    "A separate explicit recovery verification then enabled independent restoration; that workaround does not validate the source fix or erase the cold failure.",
+    "NEW-07 through NEW-10 remain installed-version findings; this record does not close H15, all Agent coverage or Windows."
+  ],
+  "normalExit": "Root recorded normal Cmd+Q and absent exact process; evidence verified by hash, not a second native observation.",
+  "H15Closed": false,
+  "newSourceFixInstalledOrVerifiedHere": false,
+  "references": [
+    {
+      "path": "output/2026-10-10-worktree-remove-native/native-closeout.json",
+      "sha256": "b961a4a380a6fc4ddb2808bd5533829b72f5fcee48b5f458b5c5e319082619b9",
+      "bytes": 12731
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/root-reviewed-closeout-spec.json",
+      "sha256": "264e98c853c9d5814b555b9d55ea0ed01227e0800ff453b81b28535e8feca823",
+      "bytes": 22840
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/root-closeout-review.json",
+      "sha256": "c9174632a67e07538c583ecceaa11b719c8976612054ed098249a03534059ec6",
+      "bytes": 1378
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/verify_native_closeout.py",
+      "sha256": "d30f99a588307117c8fe5d51bfadda3e399d7474ef8289f7f54440a3a2e7147e",
+      "bytes": 28479
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/helper-cold-load-review.json",
+      "sha256": "643914f586b9ccde3fd5db34f9f60c5f8c46faf404719c5ec0ff97862d18b75c",
+      "bytes": 2181
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/executed-closeout-independent.json",
+      "sha256": "8de00a3e890b2c8b78b856b9d2596c764dfa306b786906039b5e78d0226ab4ed",
+      "bytes": 23140
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/installed-removal-initial.json",
+      "sha256": "e0b9cc37b22e8cf13e9ef99460b5c946733e1da00f52ddf186de7b0eddca88ce",
+      "bytes": 24042
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/clean-delete/fixture-before.json",
+      "sha256": "c7570f53f7f20e7dfd9e7783ea4bc0c082fba6c7617be1ac68eb68428d45c254",
+      "bytes": 4654
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/clean-delete/after-confirmed-remove.json",
+      "sha256": "8665e04cbcd5bdbe6187f66d5a67f9be363e0b978f4415eb28e2d106a7e8bb0e",
+      "bytes": 462
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/clean-delete/after-delete-explicit-verification-material.json",
+      "sha256": "73f0c74db489a7230447178fe8da41a69fce4642c15959d11cb6256b399d9f9d",
+      "bytes": 1878
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/clean-delete/after-recovery-source-preservation.json",
+      "sha256": "5d6eedd60ab75ffc0885127dab393e79690dc2ebeb1dea833408b87326e3c73e",
+      "bytes": 657
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "status": "source-frozen-for-independent-browser-and-root-engineering-checks",
+  "sourceBaseCommit": "d3742f74f4273e1e7d00f2c7c6cc47de51f59075",
+  "capturedAtUtc": "2026-10-10T10:09:04.996098+00:00",
+  "sourceRefs": [
+    {
+      "path": "src/components/EmptyState.selection.test.tsx",
+      "sha256": "8fc6faa62d7b1f1bbafed75eaa8af01edb2792f882685face03a1eb58bf010c9",
+      "lines": 1490
+    },
+    {
+      "path": "src/components/EmptyState.service-review.test.tsx",
+      "sha256": "5955550d02b34ac6218ec1a7b02fe0a8a363ad2b35d5f67bf2f567ec147abd0d",
+      "lines": 232
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "a3115244a86a87310e9fc84cf5d8dde46cfeee2a3b0bedab0fd149b0bbdf6748",
+      "lines": 1500
+    },
+    {
+      "path": "src/components/WorktreeDialog.test.tsx",
+      "sha256": "c7407db1791248b1ad5beb72ad2399e416d3e078afc8f4623e2c9f3ab98f4754",
+      "lines": 631
+    },
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "033ffd14cb95d270e4e40f3e5e81ea9931ed959472387a0c7feb6a5c26937153",
+      "lines": 641
+    },
+    {
+      "path": "src/components/WorktreeRemovalReview.test.tsx",
+      "sha256": "954da5279df96224c9bdc5bd5bc87c098c02f71208c6edf448d1a9013e6c29d2",
+      "lines": 363
+    },
+    {
+      "path": "src/components/WorktreeRemovalReview.tsx",
+      "sha256": "92780d2d336e2420825c4b05d69c051b08b9bc6ab1f5f04a1ad0f5dcb561404a",
+      "lines": 378
+    },
+    {
+      "path": "src/runtime/worktree_remove.test.ts",
+      "sha256": "10d1a7ff51bfacb3ad3cb4973007b6fcdd95fd61cf65a1d7003d167aa0f495b8",
+      "lines": 376
+    },
+    {
+      "path": "src/runtime/worktree_strings.ts",
+      "sha256": "d030b4feb92d95364d631fb6f8b2f6e2ebebe2238866ab38afe29e7d471bee1b",
+      "lines": 291
+    },
+    {
+      "path": "src/runtime/worktrees.ts",
+      "sha256": "89aaf40f15336f6af5cf56ff1454580a3865f6ed4e2dc45ac87d9936cf24c2e7",
+      "lines": 1138
+    },
+    {
+      "path": "src/components/EmptyState.archived-draft.test.tsx",
+      "sha256": "2282d9c2dc7abe4d3d0b3ec3a97257b3c1176a9a86f74c17abc44a3afbf8c6d8",
+      "lines": 576
+    },
+    {
+      "path": "src/components/useDraftArchiveGuard.tsx",
+      "sha256": "32df83c6784bc59f969a57e3904f536e469e4054c3d44b3557ba46e8bb1c1dff",
+      "lines": 124
+    },
+    {
+      "path": "src/runtime/worktree_catalogue.test-fixture.ts",
+      "sha256": "c3ba6d1834a6b0e70b08a2fc4c31de0f5bca108140932c5c418e461500d36822",
+      "lines": 19
+    },
+    {
+      "path": "src/runtime/worktree_recovery_authority.test.ts",
+      "sha256": "ffe121e44797454474872eaac1f70bf890a21326b8b178305a0d58444bda33d2",
+      "lines": 200
+    },
+    {
+      "path": "src/runtime/worktree_recovery_wire.test.ts",
+      "sha256": "ba670d9c5c896e7ca835c76f769ffe2b46821d0d5a8dbf352856853bf13bd50c",
+      "lines": 90
+    }
+  ]
+}

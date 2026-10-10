@@ -1,0 +1,69 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_remove.test.ts (12 tests | 2 failed) 144ms
+   × checking a recovery rejects a same-id response that substitutes its immutable repository or proof 4ms
+   × confirmed deletion keeps recovery reachable, removes only that archive, and releases maintenance without applying a location 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktree_remove.test.ts > checking a recovery rejects a same-id response that substitutes its immutable repository or proof
+Error: 请先核查当前操作，再开始另一项操作。
+ ❯ Object.checkRecovery src/runtime/worktrees.ts:891:13
+    889|       !snapshot.recoveries.includes(recovery)
+    890|     )
+    891|       throw new Error(S.pending);
+       |             ^
+    892|     const request = ++observation,
+    893|       id = snapshot.operationId;
+ ❯ src/runtime/worktree_remove.test.ts:274:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/worktree_remove.test.ts > confirmed deletion keeps recovery reachable, removes only that archive, and releases maintenance without applying a location
+AssertionError: expected [] to deeply equal [ { id: 'recovery-one', …(18) } ]
+
+- Expected
++ Received
+
+- [
+-   {
+-     "archiveId": "created-tree",
+-     "archiveRevision": 4,
+-     "availability": "verified",
+-     "branch": "refs/heads/work",
+-     "bundleBytes": 1024,
+-     "bundleSha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+-     "contentSha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+-     "headOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+-     "id": "recovery-one",
+-     "manifestSha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+-     "objectCount": 14,
+-     "objectFormat": "sha1",
+-     "originalPath": "/owned/tree",
+-     "path": "/owned/recoveries/one",
+-     "repositoryRoot": "/owned/repo",
+-     "retainedPath": "/owned/.kept/tree",
+-     "revision": 1,
+-     "rootCount": 4,
+-     "rootsSha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+-   },
+- ]
++ []
+
+ ❯ src/runtime/worktree_remove.test.ts:347:35
+    345|   expect(w.snapshot().archives).toEqual([]);
+    346|   expect(w.snapshot().locations).toEqual([]);
+    347|   expect(w.snapshot().recoveries).toEqual([removalRecovery]);
+       |                                   ^
+    348|   expect(d.snapshot().interactionLocked).toBe(false);
+    349| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  2 failed | 52 passed (54)
+   Start at  17:47:15
+   Duration  2.26s (transform 1.54s, setup 0ms, import 5.61s, tests 529ms, environment 0ms)
+

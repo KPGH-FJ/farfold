@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "status": "polling-followup-frozen-for-independent-browser",
+  "recordedAtUtc": "2026-10-10T10:16:04.276027+00:00",
+  "priorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/implementation.json",
+    "sha256": "d14927849017e26c774c9278574b75455ea97f47a7d67d7a890272eb2a008b80"
+  },
+  "priorSourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/source-checkpoint.json",
+    "sha256": "eed15c949d444e8c35db232bdf73ea57934efe49a17b13ce57e5a5fd4ad24ce8"
+  },
+  "sourceRefs": [
+    {
+      "path": "src/components/EmptyState.selection.test.tsx",
+      "sha256": "8fc6faa62d7b1f1bbafed75eaa8af01edb2792f882685face03a1eb58bf010c9"
+    },
+    {
+      "path": "src/components/EmptyState.service-review.test.tsx",
+      "sha256": "5955550d02b34ac6218ec1a7b02fe0a8a363ad2b35d5f67bf2f567ec147abd0d"
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "a3115244a86a87310e9fc84cf5d8dde46cfeee2a3b0bedab0fd149b0bbdf6748"
+    },
+    {
+      "path": "src/components/WorktreeDialog.test.tsx",
+      "sha256": "c7407db1791248b1ad5beb72ad2399e416d3e078afc8f4623e2c9f3ab98f4754"
+    },
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "033ffd14cb95d270e4e40f3e5e81ea9931ed959472387a0c7feb6a5c26937153"
+    },
+    {
+      "path": "src/components/WorktreeRemovalReview.test.tsx",
+      "sha256": "954da5279df96224c9bdc5bd5bc87c098c02f71208c6edf448d1a9013e6c29d2"
+    },
+    {
+      "path": "src/components/WorktreeRemovalReview.tsx",
+      "sha256": "92780d2d336e2420825c4b05d69c051b08b9bc6ab1f5f04a1ad0f5dcb561404a"
+    },
+    {
+      "path": "src/runtime/worktree_remove.test.ts",
+      "sha256": "10d1a7ff51bfacb3ad3cb4973007b6fcdd95fd61cf65a1d7003d167aa0f495b8"
+    },
+    {
+      "path": "src/runtime/worktree_strings.ts",
+      "sha256": "d030b4feb92d95364d631fb6f8b2f6e2ebebe2238866ab38afe29e7d471bee1b"
+    },
+    {
+      "path": "src/runtime/worktrees.ts",
+      "sha256": "fb8e94d5bbe235d29d7c69fd3935f05bc55b51dde730c3d82387ddc6ba1c265c"
+    },
+    {
+      "path": "src/components/EmptyState.archived-draft.test.tsx",
+      "sha256": "2282d9c2dc7abe4d3d0b3ec3a97257b3c1176a9a86f74c17abc44a3afbf8c6d8"
+    },
+    {
+      "path": "src/components/useDraftArchiveGuard.tsx",
+      "sha256": "32df83c6784bc59f969a57e3904f536e469e4054c3d44b3557ba46e8bb1c1dff"
+    },
+    {
+      "path": "src/runtime/worktree_catalogue.test-fixture.ts",
+      "sha256": "c3ba6d1834a6b0e70b08a2fc4c31de0f5bca108140932c5c418e461500d36822"
+    },
+    {
+      "path": "src/runtime/worktree_recovery_authority.test.ts",
+      "sha256": "ffe121e44797454474872eaac1f70bf890a21326b8b178305a0d58444bda33d2"
+    },
+    {
+      "path": "src/runtime/worktree_recovery_wire.test.ts",
+      "sha256": "ba670d9c5c896e7ca835c76f769ffe2b46821d0d5a8dbf352856853bf13bd50c"
+    },
+    {
+      "path": "src/runtime/worktree_polling.test.ts",
+      "sha256": "b816301700c89baf1748c050ea59b4dadbbfdcae25e6aef8bc609d0f4020c277"
+    }
+  ],
+  "delta": {
+    "modified": ["src/runtime/worktrees.ts"],
+    "added": ["src/runtime/worktree_polling.test.ts"],
+    "otherPriorSourceRefsUnchanged": true
+  },
+  "originalBrowserFailure": {
+    "scope": "Architecture actual full-App WebKit stopped at assertion 17: component status timer fired during a held canonical list although the store-level maintenance poll already waited; original sourceUnchanged=true.",
+    "rawStdout": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first.txt",
+      "sha256": "2d8804f44572a37a3d962b8cc0711f9af18b7e99bcbf5eda9c6f38407caf5450"
+    }
+  },
+  "cause": "useWorktrees effect checked working but not loading and its timer did not recheck the current operation/snapshot. It could retire an in-flight canonical observation before the list returned.",
+  "fix": "loading suppresses scheduling and is an effect dependency; the timer also checks exact operation reference and current loading/working/uncertain before dispatch, covering no React render between read-start and timer. No automatic start/confirm or maintenance release added.",
+  "validation": {
+    "red": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/polling-red.txt",
+      "sha256": "692651bc5645ba461c81acca04a1dbc95b7dc91590437663bb01b6900191e655"
+    },
+    "redCount": 2,
+    "redScopes": [
+      "render after catalogue started",
+      "no render after catalogue started"
+    ],
+    "green": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/polling-green.txt",
+      "sha256": "dd75caee453e6f24a6eb0437de577eeabc4b7371f52792a509974cbd9d92da6a"
+    },
+    "targetedCommand": "corepack pnpm exec vitest run src/runtime/worktree_polling.test.ts src/runtime/worktree_recovery_authority.test.ts src/runtime/worktree_recovery_wire.test.ts src/runtime/worktree_remove.test.ts src/runtime/worktrees.test.ts",
+    "files": 5,
+    "tests": 46,
+    "exitCode": 0,
+    "typecheck": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/polling-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    "typecheckExitCode": 0,
+    "format": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/polling-format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    "formatExitCode": 0
+  },
+  "boundaries": [
+    "Tests run the real store with bounded controlled IPC and hook effects; they prove one list read, no timed status during hold, maintenance retained, canonical receipt accepted, normal polling resumes, no start/remove_confirm.",
+    "Original 15-file/268-test receipt remains a historical checkpoint, not overwritten by this delta.",
+    "Root full checks and independent actual browser are separate; neither installed App nor real Agent was launched for this repair."
+  ]
+}

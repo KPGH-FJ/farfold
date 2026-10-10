@@ -80,8 +80,22 @@ fn actual_remove_and_recover_wire_receipts() {
             emit("coldRemovalList", cold_list, &mut wire);
             let verified = cold.recheck(&s, id).unwrap();
             assert_eq!(tests::op(verified.clone()).state, "ready");
+            // Rechecking deletion publishes a newer canonical recovery revision.
+            // An old preparation receipt must remain unusable for another check.
+            assert_eq!(
+                cold.recovery_check(&s, &b.id, b.revision).unwrap_err().code,
+                "missingRecovery"
+            );
+            let canonical = cold.list(&s).unwrap().recoveries.remove(0);
+            assert!(canonical.revision > b.revision);
+            assert_eq!(
+                tests::op(verified.clone()).recovery.as_ref(),
+                Some(&canonical)
+            );
             emit("removeRechecked", verified, &mut wire);
-            let checked = cold.recovery_check(&s, &b.id, b.revision).unwrap();
+            let checked = cold
+                .recovery_check(&s, &canonical.id, canonical.revision)
+                .unwrap();
             let b = checked.recoveries[0].clone();
             emit("recoveryChecked", checked, &mut wire);
             let recover = "52345678-1234-4123-8123-123456789abc";

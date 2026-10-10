@@ -603,6 +603,16 @@ impl Worktrees {
         self.status(store, id)
     }
     pub(super) fn recheck_remove(&self, store: &MetaStore, id: &str) -> Result<Reply> {
+        self.recheck_remove_with(store, id, |intent| {
+            removal::verify_deleted(intent, &AtomicBool::new(false))
+        })
+    }
+    pub(super) fn recheck_remove_with(
+        &self,
+        store: &MetaStore,
+        id: &str,
+        verify: impl FnOnce(&RemoveIntent) -> Result<()>,
+    ) -> Result<Reply> {
         let _own = self
             .0
             .admission
@@ -614,21 +624,98 @@ impl Worktrees {
         if i.working.is_some() || i.maintenance.is_some() {
             return Ok(i.reply(id));
         }
-        let old = i
+        let Some(old) = i
             .doc
             .operation
             .as_ref()
             .filter(|o| o.status.operation_id == id)
-            .cloned();
-        drop(i);
-        if let Some(o) = old
-            && let Some(intent) = o.removal
-            && intent.dispatched
-            && removal::verify_deleted(&intent, &AtomicBool::new(false)).is_ok()
-        {
-            self.finish_remove(store, id, Ok(()));
+            .cloned()
+        else {
+            return Ok(i.reply(id));
+        };
+        let Some(mut intent) = old.removal.clone().filter(|r| r.dispatched) else {
+            return Ok(i.reply(id));
+        };
+        let recorded = intent.recovery.as_ref().ok_or(error("recoveryInvalid"))?;
+        let current = i
+            .doc
+            .recoveries
+            .iter()
+            .find(|r| r.receipt.id == recorded.receipt.id)
+            .cloned()
+            .ok_or(error("missingRecovery"))?;
+        // Availability and revision are observations. Every identity and proof field must
+        // still name the original immutable recovery, even after an independent recheck.
+        let mut identity = current.clone();
+        identity.receipt.revision = recorded.receipt.revision;
+        identity.receipt.availability = recorded.receipt.availability.clone();
+        if current.receipt.revision < recorded.receipt.revision || identity != *recorded {
+            return Err(error("changed"));
         }
-        self.status(store, id)
+        intent.recovery = Some(current.clone());
+        drop(i);
+        // verify_deleted includes the full bundle/manifest and actual independent recovery
+        // checks. A past ready receipt or the absence of the removed directory is not proof.
+        let checked = verify(&intent);
+        let mut i = self.lock()?;
+        if i.working.is_some() || i.maintenance.is_some() || !i.preparing.is_empty() {
+            return Err(error("changed"));
+        }
+        let unchanged = i.doc.operation.as_ref().is_some_and(|o| {
+            o.status == old.status
+                && o.completed == old.completed
+                && o.request == old.request
+                && o.removal == old.removal
+        });
+        let index = i
+            .doc
+            .recoveries
+            .iter()
+            .position(|r| *r == current)
+            .filter(|_| unchanged)
+            .ok_or(error("changed"))?;
+        let mut verified = current;
+        verified.receipt.revision = next_revision(verified.receipt.revision)?;
+        verified.receipt.availability = if checked.is_ok() {
+            "verified"
+        } else {
+            "unknown"
+        }
+        .into();
+        intent.recovery = Some(verified.clone());
+        let mut n = i.doc.clone();
+        n.recoveries[index] = verified;
+        let mut status = set_status(
+            id,
+            if checked.is_ok() { "ready" } else { "unknown" },
+            old.status
+                .removal_phase
+                .as_deref()
+                .unwrap_or("checkingOutcome"),
+            checked.as_ref().err().map(|e| e.code),
+            &intent,
+            false,
+        );
+        status.cancel_requested = old.status.cancel_requested;
+        if checked.is_ok() {
+            status.removal_phase = Some("finished".into());
+            status.removed = Some(Removed {
+                record_id: intent.saved.archive.id.clone(),
+                revision: next_revision(intent.saved.archive.revision)?,
+                original_path: intent.saved.archive.original_path.clone(),
+                retained_path: intent.saved.archive.retained_path.clone(),
+                recovery_id: intent.recovery_id.clone(),
+            });
+            n.archives
+                .retain(|a| a.archive.id != intent.saved.archive.id);
+        }
+        let o = n.operation.as_mut().unwrap();
+        o.removal = Some(intent);
+        o.status = status;
+        o.completed = checked.is_ok();
+        // The catalogue, durable intent and returned receipt are one CAS publication.
+        i.save(store, n)?;
+        Ok(i.reply(id))
     }
     pub fn recovery_check(&self, store: &MetaStore, id: &str, revision: u64) -> Result<Listing> {
         let _own = self

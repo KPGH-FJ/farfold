@@ -33,13 +33,13 @@ pub(super) struct Manifest {
     pub configs: Vec<String>,
     pub attributes: Vec<u8>,
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub(super) struct FileIdentity {
     pub dev: u64,
     pub ino: u64,
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub(super) struct SavedRecovery {
     pub operation_id: String,

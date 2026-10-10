@@ -1,0 +1,89 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/EmptyState.archived-draft.test.tsx (14 tests | 4 failed) 23ms
+   × late prepared connection is discarded after its directory is archived even if the view has since hidden 3ms
+   × archive rejection after service await does not become a permanent generic failed-pair marker 1ms
+   × a previously confirmed archive remains blocked during catalogue loading until a successful list releases it 2ms
+   × a previously confirmed archive remains blocked during catalogue error until a successful list releases it 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/EmptyState.archived-draft.test.tsx > late prepared connection is discarded after its directory is archived even if the view has since hidden
+AssertionError: expected "vi.fn()" to be called once with arguments: [ 'late-archived' ]
+
+Number of calls: 0
+
+ ❯ src/components/EmptyState.archived-draft.test.tsx:281:21
+    279|   finish(freshThreadState("late-archived","service-review","/project",…
+    280|   for(let i=0;i<12;i++)await Promise.resolve();
+    281|   expect(h.discard).toHaveBeenCalledExactlyOnceWith("late-archived");
+       |                     ^
+    282|   expect(h.send).not.toHaveBeenCalled();
+    283| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/components/EmptyState.archived-draft.test.tsx > archive rejection after service await does not become a permanent generic failed-pair marker
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/EmptyState.archived-draft.test.tsx:293:18
+    291|   h.catalogue.archives=[];h.credentials.mockResolvedValue([credential]…
+    292|   composer();await vi.advanceTimersByTimeAsync(300);
+    293|   expect(h.open).toHaveBeenCalledOnce();
+       |                  ^
+    294|   expect(h.send).not.toHaveBeenCalled();
+    295| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/components/EmptyState.archived-draft.test.tsx > a previously confirmed archive remains blocked during catalogue loading until a successful list releases it
+ FAIL  src/components/EmptyState.archived-draft.test.tsx > a previously confirmed archive remains blocked during catalogue error until a successful list releases it
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "service-review",
+        "cwd": "/project",
+        "fresh": false,
+        "inquiryCurrent": [Function inquiryCurrent],
+        "inquirySignal": AbortSignal {
+          Symbol(kEvents): Map {},
+          Symbol(events.maxEventTargetListeners): 0,
+          Symbol(events.maxEventTargetListenersWarned): false,
+          Symbol(kHandlers): Map {},
+          Symbol(kAborted): false,
+          Symbol(kReason): undefined,
+          Symbol(kComposite): false,
+        },
+        "service": Object {
+          "id": "api",
+          "model": "model",
+          "revision": "current",
+        },
+        "serviceRevision": "current",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/EmptyState.archived-draft.test.tsx:300:22
+    298|   h.catalogue.loading=kind==="loading";h.catalogue.error=kind==="error…
+    299|   composer();await vi.advanceTimersByTimeAsync(600);
+    300|   expect(h.open).not.toHaveBeenCalled();
+       |                      ^
+    301|   await expect(send()).rejects.toThrow();
+    302|   expect(composer().props.disabled).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 10 passed (14)
+   Start at  17:50:43
+   Duration  1.29s (transform 318ms, setup 0ms, import 1.19s, tests 23ms, environment 0ms)
+

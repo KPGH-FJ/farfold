@@ -28,7 +28,8 @@ export function WorktreeRemovalReview({
   );
   const owner = useRef({}).current,
     live = useRef(false),
-    working = useRef(false);
+    working = useRef(false),
+    confirmed = useRef(false);
   const [inspection, setInspection] = useState<WorktreeRemoveInspection | null>(
       null,
     ),
@@ -140,6 +141,7 @@ export function WorktreeRemovalReview({
     // Consume this checkbox before any observable callback or IPC. It never transfers to a new receipt.
     latest.current.ack = null;
     setAck(null);
+    confirmed.current = true;
     working.current = true;
     setBusy(true);
     setError(null);
@@ -152,6 +154,17 @@ export function WorktreeRemovalReview({
       if (live.current) setBusy(false);
     }
   };
+  const preparing =
+    submitted &&
+    !confirmed.current &&
+    !state.uncertain &&
+    (!op
+      ? (busy || state.working) && !state.error
+      : op.kind === "operation" &&
+        op.action === "remove" &&
+        !op.settled &&
+        !op.deleteDispatched &&
+        ["preparingRecovery", "verifyingRecovery"].includes(op.removalPhase));
   const recovery =
     op?.kind === "operation" && op.action === "remove"
       ? op.recovery
@@ -252,9 +265,19 @@ export function WorktreeRemovalReview({
             </button>
           </div>
         </>
+      ) : preparing ? (
+        <>
+          <h4>{M.firstStep}</h4>
+          <p role="status">
+            {op?.kind === "operation" && op.action === "remove"
+              ? M.phases[op.removalPhase]
+              : M.phases.preparingRecovery}
+          </p>
+          <p>{M.prepareNote}</p>
+        </>
       ) : (
         <>
-          <h4>{M.secondStep}</h4>
+          <h4>{canConfirm ? M.secondStep : M.status}</h4>
           {recovery && (
             <>
               <p>{canConfirm ? M.prepared : M.recoveryNote}</p>
@@ -296,7 +319,9 @@ export function WorktreeRemovalReview({
                         : op.state === "prepared"
                           ? M.revoked
                           : M.phases[op.removalPhase]
-                : M.unknown}
+                : state.uncertain
+                  ? M.unknown
+                  : (state.error ?? M.failed)}
             </p>
           )}
           {canConfirm && (

@@ -44,7 +44,7 @@ beforeEach(() => {
         locations: [],
         archives: [archive],
         materials: [],
-        recoveries: [],
+        recoveries: h.id ? [removalRecovery] : [],
         operation: null,
       };
     if (c === "worktree_remove_inspect") return ticket;

@@ -1,0 +1,71 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_recovery_authority.test.ts (7 tests | 2 failed) 71ms
+   × canonical recovery refresh preserves the original archive owner for a separate deletion decision 3ms
+   × an unreturned catalogue has a bounded UI wait without dropping maintenance or issuing a second list read 2ms
+ ❯ src/components/WorktreeRemovalReview.test.tsx (12 tests | 1 failed) 44ms
+   × verification after the second explicit action must not promise that this step cannot delete 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeRemovalReview.test.tsx > verification after the second explicit action must not promise that this step cannot delete
+AssertionError: expected '<section class="worktree-operation wo…' not to contain '1. 准备恢复副本'
+
+Expected: "1. 准备恢复副本"
+Received: "<section class="worktree-operation worktree-removal" aria-label="删除已归档的工作文件"><h3>删除已归档的工作文件</h3><h4>1. 准备恢复副本</h4><p role="status">正在验证提交恢复副本…</p><p>先保存本地提交的恢复副本并实际验证；这一步不会删除工作文件。</p><button type="button" class="btn btn-ghost">取消此次确认</button></section>"
+
+ ❯ src/components/WorktreeRemovalReview.test.tsx:347:19
+    345|  expect(h.confirm).toHaveBeenCalledOnce();
+    346|  expect(html).toContain(M.phases.verifyingRecovery);
+    347|  expect(html).not.toContain(M.firstStep);
+       |                   ^
+    348|  expect(html).not.toContain(M.prepareNote);
+    349|  expect(button(M.confirm)).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/worktree_recovery_authority.test.ts > canonical recovery refresh preserves the original archive owner for a separate deletion decision
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/worktree_recovery_authority.test.ts:144:61
+    142|  const ticket=await w.inspectRemoval(archive), owner={};
+    143|  await w.prepareRemoval(ticket,owner,()=>w.snapshot().archives.include…
+    144|  expect(w.canConfirmRemoval(owner,w.snapshot().operation!)).toBe(true);
+       |                                                             ^
+    145|  expect(w.snapshot().recoveries[0].availability).toBe("verified");
+    146| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/worktree_recovery_authority.test.ts > an unreturned catalogue has a bounded UI wait without dropping maintenance or issuing a second list read
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/worktree_recovery_authority.test.ts:160:19
+    158|  void w.prepareRemoval(ticket,owner,()=>true).then(()=>{returned=true;…
+    159|  await vi.advanceTimersByTimeAsync(10020);
+    160|  expect(returned).toBe(true);
+       |                   ^
+    161|  expect(w.snapshot().loading).toBe(false);
+    162|  expect(w.snapshot().maintenanceLocked).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 16 passed (19)
+   Start at  17:56:51
+   Duration  202ms (transform 137ms, setup 0ms, import 132ms, tests 115ms, environment 0ms)
+

@@ -1,0 +1,41 @@
+{
+  "checkedAtUtc": "2026-10-10T10:15:29.926449+00:00",
+  "status": "targeted-wire-test-passed-full-second-run-pending",
+  "rootCause": "Existing wire test called recovery_check with preparation revision 0 after cold deletion recheck now atomically publishes newer canonical recovery revision 1. Strict missingRecovery rejection is required behavior.",
+  "change": "Keep an explicit missingRecovery assertion for old revision; read canonical listing; require revision increase and exact operation recovery equality; retain subsequent explicit recovery check/start/cold recheck assertions. Production sources unchanged by this followup.",
+  "originalFailure": "run-01: 1347 passed, 1 failed, 6 ignored, stale recovery_check at remove_wire_tests.rs:84. Original raw log retained.",
+  "targeted": {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "worktrees::remove_wire_tests::actual_remove_and_recover_wire_receipts",
+      "--",
+      "--nocapture"
+    ],
+    "exitCode": 0,
+    "passed": 1
+  },
+  "refs": [
+    {
+      "path": "src-tauri/src/worktrees/remove_wire_tests.rs",
+      "sha256": "1fabf7fda86b1bfa52c7827dc9e30c06c1c007a5dc2cc75baa6f88b77413adbf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-01/verification.json",
+      "sha256": "c1d2495f25aa43f24f3bddcf86fa92813dca1bb926f83fd44988171885555beb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-01/rust.txt",
+      "sha256": "4f058a2a8ec668827328fba68be72322352dd0ab73c75094df852dd47b70bf9b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/wire-regression/targeted-green.txt",
+      "sha256": "80a853733b56f45202106fb515f769397fc93698867d63cea11a21aa120354f4"
+    }
+  ],
+  "boundary": "Isolated synthetic Git/protocol receipts only; no formal App or real Agent. Full run-02 and installed verification remain pending."
+}

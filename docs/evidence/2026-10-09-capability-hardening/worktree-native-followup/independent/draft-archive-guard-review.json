@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "reviewedAtUtc": "2026-10-10T10:10:52.342043+00:00",
+  "status": "read-only-source-and-existing-evidence-review-no-additional-blocker",
+  "reviewer": "verification (not author of this guard increment)",
+  "scope": "useDraftArchiveGuard and EmptyState eager-open/direct-send ownership, archive admission, first cold catalogue retry, plus referenced store cleanup semantics.",
+  "authorCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/source-checkpoint.json",
+    "sha256": "eed15c949d444e8c35db232bdf73ea57934efe49a17b13ce57e5a5fd4ad24ce8",
+    "bytes": 2829
+  },
+  "checkpointMatch": {
+    "allSourceHashesMatch": true,
+    "count": 15,
+    "allFilesAtMost1500Lines": true,
+    "note": "All 15 source hashes checked; semantic review is limited to the named guard/caller/support paths, not every other frontend change."
+  },
+  "reviewedSources": [
+    {
+      "path": "src/components/useDraftArchiveGuard.tsx",
+      "sha256": "32df83c6784bc59f969a57e3904f536e469e4054c3d44b3557ba46e8bb1c1dff",
+      "bytes": 3861
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "a3115244a86a87310e9fc84cf5d8dde46cfeee2a3b0bedab0fd149b0bbdf6748",
+      "bytes": 49528
+    },
+    {
+      "path": "src/components/EmptyState.archived-draft.test.tsx",
+      "sha256": "2282d9c2dc7abe4d3d0b3ec3a97257b3c1176a9a86f74c17abc44a3afbf8c6d8",
+      "bytes": 18411
+    },
+    {
+      "path": "src/runtime/worktree_strings.ts",
+      "sha256": "d030b4feb92d95364d631fb6f8b2f6e2ebebe2238866ab38afe29e7d471bee1b",
+      "bytes": 16164
+    },
+    {
+      "path": "src/runtime/archived_work_location.ts",
+      "sha256": "894f2569e7de0f6e71284b9128b05fcb68b1c7a3a7847e5706bbde1c2a15e5be",
+      "bytes": 3216
+    },
+    {
+      "path": "src/components/ArchivedWorkLocationNotice.tsx",
+      "sha256": "77ed70fc6f58011faf1d7c9da951a8380c91dee6150abcdb44821ec6e22d101d",
+      "bytes": 2412
+    },
+    {
+      "path": "src/runtime/worktrees.ts",
+      "sha256": "89aaf40f15336f6af5cf56ff1454580a3865f6ed4e2dc45ac87d9936cf24c2e7",
+      "bytes": 35634
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "f304c6875864f0bc0f0dbcc46961224da9e608648cbd6c735b3ea64afa16998c",
+      "bytes": 49541
+    },
+    {
+      "path": "src/runtime/session_draft_cleanup.ts",
+      "sha256": "40ebb119b2e0fac93315fb809d99f92a432015c383cb8c05e3eff8a66393383b",
+      "bytes": 3347
+    }
+  ],
+  "authorEvidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/cold-config-red.txt",
+      "sha256": "b24702324210fae494bcf3f48d452e99ae9fc9db8dd9840ccfb6182d4c318194",
+      "bytes": 4394
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/cold-config-green.txt",
+      "sha256": "b73ea9e64fecd169e0780879e6daf3d46273b510aa60149d2740c09404e792a2",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/direct-late-red.txt",
+      "sha256": "b7c914df98c1f5d9cce23e9c1f64f069aa9192c40cc1062f59da315e190a8d23",
+      "bytes": 1157
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/aba-direct-red.txt",
+      "sha256": "da90196ced55a8f3f301004c1b3ac254495ec27f0591a1b0439e82da4b3929e5",
+      "bytes": 3050
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/aba-direct-green.txt",
+      "sha256": "f5ec66f34cc5783253a197bc3437864869e93163af968a02694c9ee94708fba7",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/associated-final.txt",
+      "sha256": "924d6f8781e023bbbc9fb34a73739eb6ecf43ace8ed25ebe5dcb4e7e91592129",
+      "bytes": 217
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/typecheck-complete.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/frontend/format-complete.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    }
+  ],
+  "findings": [
+    {
+      "topic": "A-B-A while catalogue reload remains loading or failed",
+      "origin": "Independent static trace reported by verification; product author reproduced and repaired.",
+      "evidence": "aba-direct-red.txt has two failing A-B-A cases plus the repeated direct-send failure.",
+      "resolution": "A retained canonical archive association is checked with the existing path-component matcher for the current cwd. It preserves a neutral barrier through loading/error without a new multi-directory cache. Unrelated B does not inherit A; a successful empty/recovery-only catalogue releases the association.",
+      "status": "resolved-in-reviewed-source"
+    },
+    {
+      "topic": "direct send late open after archive admission withdrawal",
+      "origin": "Author and independent read-review converged; author executed the counterexample.",
+      "evidence": "direct-late-red.txt has one failing discard assertion; the same case repeats in aba-direct-red.txt and is not a second defect.",
+      "resolution": "The DraftArchiveBlockedError catch retires the returned empty draft; uncertain/content/queued checks remain, and the real store independently refuses to discard nonempty/submitting/running drafts.",
+      "status": "resolved-in-reviewed-source"
+    },
+    {
+      "topic": "first cold catalogue and archive after config await",
+      "origin": "Root/author counterexamples reviewed from original logs and final source.",
+      "evidence": "cold-config-red.txt has three failures: first slow list, first failed list, and archive arriving during config await.",
+      "resolution": "No ready catalogue yields a neutral checking/error gate and explicit read-only retry. Eager open checks after service await, before/after each config await and before adoption. Archive denial is not cached as an unrelated permanent service failure.",
+      "status": "resolved-in-reviewed-source"
+    }
+  ],
+  "ownershipChecks": [
+    "Retry closure checks mounted, active, exact cwd-owner object, and current loading state; an old A callback cannot regain ownership after A-B-A.",
+    "sessions.open shares a pending Promise by draft group. Cancelled eager effects for the same live pair must not destroy the newer effect’s shared result; the new rejectOpened preserves this rule.",
+    "A changed cwd/unmounted view or archive barrier rejects a late eager result. Existing hidden prepared-draft behavior remains; a hidden view is not claimed to cancel native execution.",
+    "No duplicate native close is inferred merely from a mock discard count: real non-strict discardDraft synchronously forgets the exact thread before awaiting session_close; a later same-key call finds no thread.",
+    "The guard cancels only the folderless-send arm, retains draft text/attachments and permission, and does not restore paths, replace cwd, or dispatch a prompt.",
+    "Recovery association alone does not establish missing cwd and does not block normal preparation; unrelated paths use component matching rather than raw prefix matching.",
+    "New refresh calls the existing single-flight catalogue loader. Its timeout does not end the underlying read; stale ownership prevents late publication."
+  ],
+  "verificationLayers": {
+    "independentWork": "Read current source/diff, inspect existing author raw red/green logs, recompute checkpoint and reference hashes. No tests were executed by this reviewer.",
+    "authorResultsObserved": {
+      "associatedTestFiles": 21,
+      "associatedTestsPassed": 268,
+      "typecheckDiagnostics": 0,
+      "formatResult": "All matched files use Prettier code style"
+    },
+    "notPerformed": [
+      "Browser or native UI operation",
+      "Agent invocation or stop",
+      "Cargo or source tests/build",
+      "User data or live database access",
+      "Production source edit"
+    ],
+    "remaining": "Architecture owns actual full-App dual-engine verification; root owns engineering integration, candidate installation and native acceptance. This receipt is not proof of any of those later layers."
+  }
+}

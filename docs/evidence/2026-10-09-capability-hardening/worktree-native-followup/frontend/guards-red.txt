@@ -1,0 +1,293 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_recovery_authority.test.ts (3 tests | 3 failed) 67ms
+   × keeps canonical cold unknown recovery even when its same-revision operation receipt says verified 61ms
+   × status/recheck cannot promote the list, while a later verified canonical list can 2ms
+   × a newly prepared recovery is discovered through the persisted list without dispatching deletion 4ms
+ ❯ src/components/EmptyState.archived-draft.test.tsx (9 tests | 5 failed) 41ms
+   × blocks eager open and a stale direct send for an archived draft at /project without changing draft or permission 9ms
+   × blocks eager open and a stale direct send for an archived draft at /project/subdirectory without changing draft or permission 3ms
+   × rechecks catalogue after asynchronous service verification even without a React render 3ms
+   × a remembered archive becoming visible after the timer was scheduled prevents opening 3ms
+   × after catalogue restore normal preparation resumes, without sending or changing the saved content 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/EmptyState.archived-draft.test.tsx > blocks eager open and a stale direct send for an archived draft at /project without changing draft or permission
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "service-review",
+        "cwd": "/project",
+        "fresh": false,
+        "inquiryCurrent": [Function inquiryCurrent],
+        "inquirySignal": AbortSignal {
+          Symbol(kEvents): Map {},
+          Symbol(events.maxEventTargetListeners): 0,
+          Symbol(events.maxEventTargetListenersWarned): false,
+          Symbol(kHandlers): Map {},
+          Symbol(kAborted): false,
+          Symbol(kReason): undefined,
+          Symbol(kComposite): false,
+        },
+        "service": Object {
+          "id": "api",
+          "model": "model",
+          "revision": "current",
+        },
+        "serviceRevision": "current",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/EmptyState.archived-draft.test.tsx:169:22
+    167|   const before=JSON.stringify(composerDrafts.read("new"));
+    168|   composer(); await vi.advanceTimersByTimeAsync(300);
+    169|   expect(h.open).not.toHaveBeenCalled();
+       |                      ^
+    170|   expect(composer().props.disabled).toBe(true);
+    171|   await expect(send()).rejects.toThrow();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  src/components/EmptyState.archived-draft.test.tsx > blocks eager open and a stale direct send for an archived draft at /project/subdirectory without changing draft or permission
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "service-review",
+        "cwd": "/project/subdirectory",
+        "fresh": false,
+        "inquiryCurrent": [Function inquiryCurrent],
+        "inquirySignal": AbortSignal {
+          Symbol(kEvents): Map {},
+          Symbol(events.maxEventTargetListeners): 0,
+          Symbol(events.maxEventTargetListenersWarned): false,
+          Symbol(kHandlers): Map {},
+          Symbol(kAborted): false,
+          Symbol(kReason): undefined,
+          Symbol(kComposite): false,
+        },
+        "service": Object {
+          "id": "api",
+          "model": "model",
+          "revision": "current",
+        },
+        "serviceRevision": "current",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/EmptyState.archived-draft.test.tsx:169:22
+    167|   const before=JSON.stringify(composerDrafts.read("new"));
+    168|   composer(); await vi.advanceTimersByTimeAsync(300);
+    169|   expect(h.open).not.toHaveBeenCalled();
+       |                      ^
+    170|   expect(composer().props.disabled).toBe(true);
+    171|   await expect(send()).rejects.toThrow();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  src/components/EmptyState.archived-draft.test.tsx > rechecks catalogue after asynchronous service verification even without a React render
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "service-review",
+        "cwd": "/project",
+        "fresh": false,
+        "inquiryCurrent": [Function inquiryCurrent],
+        "inquirySignal": AbortSignal {
+          Symbol(kEvents): Map {},
+          Symbol(events.maxEventTargetListeners): 0,
+          Symbol(events.maxEventTargetListenersWarned): false,
+          Symbol(kHandlers): Map {},
+          Symbol(kAborted): false,
+          Symbol(kReason): undefined,
+          Symbol(kComposite): false,
+        },
+        "service": Object {
+          "id": "api",
+          "model": "model",
+          "revision": "current",
+        },
+        "serviceRevision": "current",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/EmptyState.archived-draft.test.tsx:185:22
+    183|   finish([credential]);
+    184|   for(let i=0;i<12;i++) await Promise.resolve();
+    185|   expect(h.open).not.toHaveBeenCalled();
+       |                      ^
+    186|   expect(h.send).not.toHaveBeenCalled();
+    187| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  src/components/EmptyState.archived-draft.test.tsx > a remembered archive becoming visible after the timer was scheduled prevents opening
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "service-review",
+        "cwd": "/project",
+        "fresh": false,
+        "inquiryCurrent": [Function inquiryCurrent],
+        "inquirySignal": AbortSignal {
+          Symbol(kEvents): Map {},
+          Symbol(events.maxEventTargetListeners): 0,
+          Symbol(events.maxEventTargetListenersWarned): false,
+          Symbol(kHandlers): Map {},
+          Symbol(kAborted): false,
+          Symbol(kReason): undefined,
+          Symbol(kComposite): false,
+        },
+        "service": Object {
+          "id": "api",
+          "model": "model",
+          "revision": "current",
+        },
+        "serviceRevision": "current",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/EmptyState.archived-draft.test.tsx:192:22
+    190|   h.catalogue.archives=[archived];
+    191|   await vi.advanceTimersByTimeAsync(300);
+    192|   expect(h.open).not.toHaveBeenCalled();
+       |                      ^
+    193| });
+    194| it("after catalogue restore normal preparation resumes, without sendin…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  src/components/EmptyState.archived-draft.test.tsx > after catalogue restore normal preparation resumes, without sending or changing the saved content
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "agentId": "service-review",
+        "cwd": "/project",
+        "fresh": false,
+        "inquiryCurrent": [Function inquiryCurrent],
+        "inquirySignal": AbortSignal {
+          Symbol(kEvents): Map {},
+          Symbol(events.maxEventTargetListeners): 0,
+          Symbol(events.maxEventTargetListenersWarned): false,
+          Symbol(kHandlers): Map {},
+          Symbol(kAborted): false,
+          Symbol(kReason): undefined,
+          Symbol(kComposite): false,
+        },
+        "service": Object {
+          "id": "api",
+          "model": "model",
+          "revision": "current",
+        },
+        "serviceRevision": "current",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/EmptyState.archived-draft.test.tsx:197:22
+    195|   h.catalogue.archives=[archived];
+    196|   composer(); await vi.advanceTimersByTimeAsync(300);
+    197|   expect(h.open).not.toHaveBeenCalled();
+       |                      ^
+    198|   h.catalogue.archives=[];
+    199|   composer(); await vi.advanceTimersByTimeAsync(300);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  src/runtime/worktree_recovery_authority.test.ts > keeps canonical cold unknown recovery even when its same-revision operation receipt says verified
+AssertionError: expected 'verified' to be 'unknown' // Object.is equality
+
+Expected: "unknown"
+Received: "verified"
+
+ ❯ src/runtime/worktree_recovery_authority.test.ts:22:50
+     20|  const {worktrees:w}=await import("./worktrees");await w.load();
+     21|  expect(w.snapshot().operation).toMatchObject({recovery:{availability:…
+     22|  expect(w.snapshot().recoveries[0].availability).toBe("unknown");
+       |                                                  ^
+     23|  expect(()=>w.recover(w.snapshot().recoveries[0],"/new","folder",()=>t…
+     24|  expect(h.invoke.mock.calls.some(([c])=>c==="worktree_recover_prepare"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  src/runtime/worktree_recovery_authority.test.ts > status/recheck cannot promote the list, while a later verified canonical list can
+AssertionError: expected 'verified' to be 'unknown' // Object.is equality
+
+Expected: "unknown"
+Received: "verified"
+
+ ❯ src/runtime/worktree_recovery_authority.test.ts:29:50
+     27|  const {worktrees:w}=await import("./worktrees");await w.load();
+     28|  await w.recheck();
+     29|  expect(w.snapshot().recoveries[0].availability).toBe("unknown");
+       |                                                  ^
+     30|  h.list={...h.list,recoveries:[removalRecovery]};
+     31|  await w.recheck();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  src/runtime/worktree_recovery_authority.test.ts > a newly prepared recovery is discovered through the persisted list without dispatching deletion
+AssertionError: expected [ [ 'worktree_list' ] ] to have a length of 2 but got 1
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ src/runtime/worktree_recovery_authority.test.ts:50:65
+     48|  await w.prepareRemoval(ticket,owner,()=>true);
+     49|  expect(w.snapshot().recoveries).toEqual([removalRecovery]);
+     50|  expect(h.invoke.mock.calls.filter(([c])=>c==="worktree_list")).toHave…
+       |                                                                 ^
+     51|  expect(w.canConfirmRemoval(owner,w.snapshot().operation!)).toBe(true);
+     52|  expect(h.invoke.mock.calls.some(([c])=>["worktree_start","worktree_re…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  8 failed | 4 passed (12)
+   Start at  17:45:15
+   Duration  1.59s (transform 463ms, setup 0ms, import 1.48s, tests 109ms, environment 0ms)
+

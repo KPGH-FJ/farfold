@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-10T09:54:37.082606+00:00",
+  "status": "noNewBlockerFoundInReadOnlyPublicationReview",
+  "scope": "Independent source/diff and frozen evidence review only; no Cargo, tests, App, Agent, Git or database execution. Not installed-fix validation.",
+  "authorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/implementation.json",
+    "sha256": "e793f3455bd1fff7adbd693a5e8e7498c804dc9ef46cae8fdb120ce311c5a92d"
+  },
+  "verifiedRefs": {
+    "src-tauri/src/worktrees/manager.rs": "9df75ab21992e441b2a87050d362926bfddfe50d2fe11b2b502478eee1ae0ebd",
+    "src-tauri/src/worktrees/remove_manager.rs": "a3e437fce26e4d4883fe07e6caf98818904ce91154eec1cc66f1a3afcc007b14",
+    "src-tauri/src/worktrees/storage.rs": "b58208243549028b16ad3106ac342ee97f6fb7b22de3b64add81fc9f4ef5b9a5",
+    "src-tauri/src/worktrees/recovery_pack.rs": "81cd9651e4a88e458b9c89dbd6cb1071e97e5fd2d4b4dcfbb46876b23a50d4f1",
+    "src-tauri/src/worktrees/remove_recheck_tests.rs": "f6b39f0e132f9a9ee921ceab0c00b88607fb512b4999c1a539615dc08e2efdfc",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-boundaries.txt": "19939129e0d84d49b3e714ef0a5395041dac38069201163ee54fc1d0c5056088",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-first-green.txt": "b0900406103844cbb5d374012fb67f91eb2a893e70307f1f4e85f3157d63b8a0",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/wire-extraction-note.json": "1ad471cf7ee0922dc88a664a157aade7a63ddd79043e5437f593816d2d22a42e",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-final.txt": "adc58defc7814ce6d9e319563cbab999bb905d549d01bf9d73456f68debaa5f4",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/actual-wire.json": "05f6f2dfaa236802118a6c30ef4234a9d7dc0a203609613024527ede5cbf46a1",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-boundaries-first.txt": "03bb8eaac48f9ca6ffef48b3e12b5e6c32b07e921f6b993794e43ff9bd43f309",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/source-checkpoint.json": "afee317ff3c94ce7b56ccc5a8a0edc8512bcf3806aff436fe9a1bb256a892bc6",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-red.txt": "dc4a70d7a357397c32935e57a2adf5a84903ee287ba77cb138aa1c5aaddd0461"
+  },
+  "findings": [
+    {
+      "boundary": "Old intent versus current canonical recovery",
+      "result": "Only the initial immutable-identity comparison normalizes observation revision/availability; current revision cannot go backwards and full SavedRecovery proof, origin and file identities remain equal."
+    },
+    {
+      "boundary": "Late publication",
+      "result": "After actual verify_deleted, exact captured current SavedRecovery equality includes revision and availability. Exact operation status, request, intent and completed flag plus no working/maintenance/preparing gate prevent late result from replacing newer owner or observation."
+    },
+    {
+      "boundary": "Atomic publication",
+      "result": "One cloned Document updates catalogue, removal intent and status, and Inner.save uses existing whole-raw compare-write. ready reply is returned only after save succeeds; error is propagated and existing poison/unknown handling remains."
+    },
+    {
+      "boundary": "Verification strength",
+      "result": "Production wrapper still calls complete verify_deleted including bundle/manifest, independently restored content and original/retained/gitDir/registry/branch checks; new Eq derives do not alter serialization or prepare_recover verified/revision guards."
+    }
+  ],
+  "evidenceRead": {
+    "authorFirstTwoTests": {
+      "warm": "passedBeforeFix",
+      "cold": "effectiveMissingRecoveryFailureBeforeFix"
+    },
+    "authorFinalTests": 6,
+    "lateSeams": [
+      "canonical revision",
+      "same revision availability alone",
+      "another operation"
+    ],
+    "notRepeated": true,
+    "actualWireConsumerReview": "Delegated to product_coverage; not counted as performed here."
+  },
+  "remaining": [
+    "Full integration and installed fixed-candidate journey are pending root.",
+    "Controlled callback seams are not exhaustive OS interleavings.",
+    "Original installed ecc failure and explicit separate verification workaround remain preserved."
+  ]
+}

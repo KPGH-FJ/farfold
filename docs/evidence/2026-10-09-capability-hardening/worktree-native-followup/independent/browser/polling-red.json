@@ -1,0 +1,35 @@
+{
+  "status": "confirmed-observer-polling-counterexample",
+  "actualResult": {
+    "checks": 17,
+    "passed": 16,
+    "failed": ["maintenance polling waits while catalogue observer is active"],
+    "pageErrors": [],
+    "sourceUnchanged": true
+  },
+  "finding": "useWorktrees effect polls while snapshot.loading=true; the independent store maintenance poll already waits. The extra status advances observation and retires an in-flight catalogue observer. No duplicate actual list read, repeated confirmation, legacy start, or released maintenance lease was observed.",
+  "boundary": "Actual full App WebKit with controlled in-memory IPC. This is not installed Tauri/Git/Agent evidence.",
+  "rawSemanticEquality": true,
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first.raw.txt",
+      "sha256": "d7cf33e8a52439e49bb5f0981a2302247e6e669e4f999799fe674aab83720fec"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first.json",
+      "sha256": "d7cf33e8a52439e49bb5f0981a2302247e6e669e4f999799fe674aab83720fec"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/webkit-first.txt",
+      "sha256": "2d8804f44572a37a3d962b8cc0711f9af18b7e99bcbf5eda9c6f38407caf5450"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/run.mjs",
+      "sha256": "26d5543f41c9ec0d7c6cd7d5410c38d16ddfaaf65a1579367dd2e483c1f9c393"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/fixture.tsx",
+      "sha256": "038cd05dab15aa991711e07355d1cdf3f06251706d6805df02ba7e8eb263a1ae"
+    }
+  ]
+}

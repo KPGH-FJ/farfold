@@ -1,0 +1,45 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 20.37s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 2 tests
+
+thread 'worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager' (24106397) panicked at src/worktrees/recycle_tests.rs:97:5:
+
+running 1 test
+test worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager ... FAILED
+
+failures:
+
+failures:
+    worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1349 filtered out; finished in 8.95s
+
+
+thread 'worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager' (24106402) panicked at src/worktrees/remove_recheck_tests.rs:67:5:
+assertion `left == right` failed: Operation { kind: "operation", action: "recover", maintenance_active: false, operation_id: "52345678-1234-4123-8123-123456789abc", state: "failed", settled: true, cancel_requested: false, reviewed: false, target_path: None, location: None, archive: None, original_path: None, retained_path: None, code: Some("missingRecovery"), removal_phase: None, delete_dispatched: None, recovery: None, removed: None }
+  left: "failed"
+ right: "prepared"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager ... FAILED
+
+running 1 test
+test worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1349 filtered out; finished in 10.60s
+
+completed:worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager
+
+test worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager ... ok
+
+failures:
+
+failures:
+    worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 1348 filtered out; finished in 10.61s
+
+error: test failed, to rerun pass `--lib`

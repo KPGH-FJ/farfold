@@ -63,7 +63,10 @@ import { WorktreeRecycleReview } from "./WorktreeRecycleReview";
 import { WorktreeRemovalReview } from "./WorktreeRemovalReview";
 import { WorktreeRecoveries } from "./WorktreeRecoveries";
 import { WorktreeRecoveryForm } from "./WorktreeRecoveryForm";
-import { removalRecovery } from "../runtime/worktree_remove.test-fixtures";
+import {
+  removalRecovery,
+  preparedRemoval,
+} from "../runtime/worktree_remove.test-fixtures";
 const location = {
   id: "one",
   revision: 1,
@@ -593,4 +596,36 @@ it("unverified recoveries have a check action but no usable location or enabled 
       .onClick as () => void
   )();
   expect(onCheck).toHaveBeenCalledOnce();
+});
+
+it("shows one exact unknown-result explanation while retaining maintenance and query controls", () => {
+  h.state.operationId = preparedRemoval.operationId;
+  h.state.operation = {
+    ...preparedRemoval,
+    state: "unknown",
+    settled: true,
+    maintenanceActive: false,
+  };
+  h.state.uncertain = true;
+  const html = renderToStaticMarkup(render());
+  expect(html.split(S.removal.unknown)).toHaveLength(2);
+  expect(html).toContain(S.check);
+});
+
+it("an exact failed recovery receipt explains missingRecovery without exposing raw backend text", () => {
+  h.state.operationId = "failed-recovery";
+  h.state.operation = parseWorktreeReply({
+    kind: "operation",
+    action: "recover",
+    operationId: "failed-recovery",
+    state: "failed",
+    settled: true,
+    maintenanceActive: false,
+    cancelRequested: false,
+    code: "missingRecovery",
+  });
+  const html = renderToStaticMarkup(render());
+  expect(html).toContain("请先重新核验恢复副本");
+  expect(html).not.toContain("missingRecovery");
+  expect(html).not.toContain(S.unavailable);
 });

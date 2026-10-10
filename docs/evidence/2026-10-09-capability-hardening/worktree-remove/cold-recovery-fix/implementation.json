@@ -1,0 +1,109 @@
+{
+  "status": "backend_fix_frozen_targeted_tests_passed_full_engineering_and_installed_fix_pending",
+  "capturedAt": "2026-10-10T09:52:28.801993+00:00",
+  "installedFailure": {
+    "commit": "ecc78ce3acb2c2d6be94809dadf7220e7199ad7b",
+    "diagnosis": {
+      "path": "output/2026-10-10-worktree-remove-native/recovery-failure-independent-_km_67vm/diagnosis.json",
+      "sha256": "0e25058e338923ed5f39f6a6dfc1832493ee5a71efa4c56f2bb18f7f8d4b4872"
+    },
+    "observed": "After cold recheck of a completed deletion, operation.recovery was verified revision 0 while independent recoveries held the same recovery as unknown revision 0. No recovery intent or target directory existed. The missingRecovery branch is inferred from the guard and persisted state; rejected IPC reply was not captured or durable."
+  },
+  "rootCause": "Cold load retires catalogue availability. Old recheck_remove verified the saved removal intent and finish_remove republished only its old operation receipt, leaving the standalone recovery catalogue unknown. prepare_recover correctly rejected that catalogue entry.",
+  "change": [
+    "Capture current independent SavedRecovery and compare all identity/proof fields to the original removal recovery. Only observation revision/availability may differ; revision cannot go backwards.",
+    "Run existing verify_deleted including full bundle/manifest and actual independent recovery checks against the current catalogue record.",
+    "After verification require exact operation status/request/intent and exact catalogue identity/revision/availability with no active worker, maintenance or preparing operation before publication.",
+    "One CAS persists catalogue receipt, removal intent and returned status at current revision plus one. Failed validation publishes unknown, without removed receipt or verified capability.",
+    "prepare_recover keeps its verified and exact revision guard. No DTO, recovery command, formal App or native fixture changes."
+  ],
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/source-checkpoint.json",
+    "sha256": "afee317ff3c94ce7b56ccc5a8a0edc8512bcf3806aff436fe9a1bb256a892bc6"
+  },
+  "sourceFiles": {
+    "src-tauri/src/worktrees/manager.rs": "9df75ab21992e441b2a87050d362926bfddfe50d2fe11b2b502478eee1ae0ebd",
+    "src-tauri/src/worktrees/remove_manager.rs": "a3e437fce26e4d4883fe07e6caf98818904ce91154eec1cc66f1a3afcc007b14",
+    "src-tauri/src/worktrees/storage.rs": "b58208243549028b16ad3106ac342ee97f6fb7b22de3b64add81fc9f4ef5b9a5",
+    "src-tauri/src/worktrees/recovery_pack.rs": "81cd9651e4a88e458b9c89dbd6cb1071e97e5fd2d4b4dcfbb46876b23a50d4f1",
+    "src-tauri/src/worktrees/remove_recheck_tests.rs": "f6b39f0e132f9a9ee921ceab0c00b88607fb512b4999c1a539615dc08e2efdfc"
+  },
+  "checks": [
+    {
+      "name": "Original unchanged production regression",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib worktrees::manager::remove_recheck_tests -- --nocapture",
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-red.txt",
+      "exitCode": 101,
+      "passed": 1,
+      "failed": 1,
+      "classification": "effective product regression: warm passed; cold prepare_recover returned missingRecovery instead of prepared"
+    },
+    {
+      "name": "Same original two tests after fix",
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-first-green.txt",
+      "exitCode": 0,
+      "passed": 2
+    },
+    {
+      "name": "Expanded test compilation",
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-boundaries-first.txt",
+      "exitCode": 101,
+      "classification": "Test authoring E0382: diagnostic JSON borrowed a partially moved test result. Corrected using as_ref. Not a product failure."
+    },
+    {
+      "name": "Expanded boundaries",
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-boundaries.txt",
+      "exitCode": 0,
+      "passed": 6
+    },
+    {
+      "name": "Final six tests with additional cold reload and late availability checks",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib worktrees::manager::remove_recheck_tests -- --nocapture",
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-final.txt",
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "elapsedSeconds": 24.44
+    },
+    {
+      "name": "Owned Rust formatting before tests",
+      "command": "rustfmt --edition 2024 on the five owned files, final test file formatted before final run",
+      "exitCode": 0,
+      "note": "Root owns final cargo fmt/clippy/full tests. None is claimed executed here."
+    }
+  ],
+  "coverage": [
+    "Warm and cold manager: create/archive/prepare/confirm remove/recheck/prepare_recover/start/ready independent existing repository; exact fixture bytes, no remotes or alternates.",
+    "Durable operation status, removal intent and catalogue receipts agree. Reopening newly saved metadata retires proof; another explicit recheck promotes all three at a newer revision.",
+    "Independent recovery_check raises canonical revision before remove recheck; new baseline is retained. Stale recover input is still rejected.",
+    "Actual bundle and manifest byte tampering remain untouched, produce unknown/non-restorable catalogue and operation, and create no target.",
+    "Changed proof hash, file inode identity, originating operation or older revision are rejected before filesystem verification.",
+    "Controlled callback seams after real verification change canonical revision, availability alone, or current operation through actual adopt API. Stale publication is rejected; durable bytes stay equal to the newer state."
+  ],
+  "wire": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/actual-wire.json",
+    "source": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-final.txt",
+    "marker": "COLD_RECOVERY_WIRE=",
+    "occurrences": 1,
+    "method": "Exact one stdout JSON suffix parsed; no hand-authored DTO data. TS/consumer checks independently owned."
+  },
+  "boundaries": [
+    "Only isolated own temporary Git repositories and in-memory metadata stores are used by tests. No installed App, original native fixture, user repository, live database, Agent or service access.",
+    "Cold state is a fresh Worktrees manager loading saved metadata; it is not an application crash or installed relaunch test.",
+    "Late publication cases use deterministic callbacks after actual verification; not exhaustive OS concurrency scheduling.",
+    "Fixed source has not been built, installed or tested in native App. Full engineering and frontend consumer fixes remain root/peer owned.",
+    "No prior failure evidence, protected README, active plan, product contract or existing frozen receipt changed; no commit.",
+    "Disk observed 1.8 GiB after targeted run, no OS28. Cargo/rustc absent afterward; further Cargo stopped at root request."
+  ],
+  "references": {
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-boundaries.txt": "19939129e0d84d49b3e714ef0a5395041dac38069201163ee54fc1d0c5056088",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-first-green.txt": "b0900406103844cbb5d374012fb67f91eb2a893e70307f1f4e85f3157d63b8a0",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/wire-extraction-note.json": "1ad471cf7ee0922dc88a664a157aade7a63ddd79043e5437f593816d2d22a42e",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-final.txt": "adc58defc7814ce6d9e319563cbab999bb905d549d01bf9d73456f68debaa5f4",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/actual-wire.json": "05f6f2dfaa236802118a6c30ef4234a9d7dc0a203609613024527ede5cbf46a1",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-boundaries-first.txt": "03bb8eaac48f9ca6ffef48b3e12b5e6c32b07e921f6b993794e43ff9bd43f309",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/source-checkpoint.json": "afee317ff3c94ce7b56ccc5a8a0edc8512bcf3806aff436fe9a1bb256a892bc6",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/manager-red.txt": "dc4a70d7a357397c32935e57a2adf5a84903ee287ba77cb138aa1c5aaddd0461"
+  }
+}

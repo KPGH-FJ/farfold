@@ -1,0 +1,11 @@
+{
+  "ownedPid": 54330,
+  "observedCommand": "node docs/evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/browser/serve.mjs",
+  "signal": "SIGTERM",
+  "requestedNormalServerShutdown": true,
+  "ownedProcessAbsent": true,
+  "ownPortListenerAbsent": true,
+  "serverExecExitCode": 143,
+  "browserProcesses": "Each awaited browser.close() on its own direct Playwright browser. No claim about individually reaping WebKit system services.",
+  "exitClassification": "Exec wrapper returned 143 after exact owned server SIGTERM; process and port absence verified. Not recorded as exit 0."
+}

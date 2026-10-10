@@ -96,6 +96,10 @@ vi.mock("../runtime/sessions", async (original) => ({
     thread: (key: string) => (key === h.live?.key ? h.live : null),
   },
 }));
+vi.mock(
+  "../runtime/worktrees",
+  () => import("../runtime/worktree_catalogue.test-fixture"),
+);
 import { EmptyState } from "./EmptyState";
 import { Composer } from "./Composer";
 import {

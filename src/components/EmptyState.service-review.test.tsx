@@ -70,6 +70,10 @@ vi.mock("../runtime/sessions", async (original) => ({
   threads: { open: h.open, thread: () => null, discardDraft: vi.fn() },
 }));
 vi.mock("../runtime/new_conversation", () => ({ sendNewConversation: h.send }));
+vi.mock(
+  "../runtime/worktrees",
+  () => import("../runtime/worktree_catalogue.test-fixture"),
+);
 import { EmptyState } from "./EmptyState";
 import { Composer } from "./Composer";
 import { NewConversationModelDialog } from "./NewConversationPickers";

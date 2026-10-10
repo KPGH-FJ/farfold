@@ -1,0 +1,103 @@
+{
+  "checkedAtUtc": "2026-10-10T10:13:37.346840+00:00",
+  "sourceBase": "d3742f74f4273e1e7d00f2c7c6cc47de51f59075",
+  "inputCount": 1335,
+  "sourceStable": true,
+  "changedInputs": [],
+  "protectedUnchanged": true,
+  "checks": [
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 10.327,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 66.795,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-01/frontend.txt",
+      "sha256": "49918c1a225b1555c68d090624500c76bdc434daa2b9d4f8f10f4d3deb862903",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 12.025,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-01/build.txt",
+      "sha256": "7b4c9c1b8f34b5f091f7705d9c11ba9667a8fc014b115947434cdbe39c9cdf69",
+      "executedInThisRun": true
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.624,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 11.868,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-01/clippy.txt",
+      "sha256": "872b675dda1e736a0ed9a1ed6c13d6c84a459231a2229ce541223f22042f9bc9",
+      "executedInThisRun": true
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 101,
+      "seconds": 101.723,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-01/rust.txt",
+      "sha256": "4f058a2a8ec668827328fba68be72322352dd0ab73c75094df852dd47b70bf9b",
+      "executedInThisRun": true
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 34.651,
+      "log": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-01/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true
+    }
+  ],
+  "counts": {
+    "frontend": ["Test Files  373 passed (373)", "Tests  4422 passed (4422)"],
+    "rust": [
+      "test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1353 filtered out; finished in 13.27s",
+      "test result: FAILED. 1347 passed; 1 failed; 6 ignored; 0 measured; 0 filtered out; finished in 81.91s"
+    ]
+  },
+  "allPassed": false,
+  "boundary": "Seven commands executed sequentially on the recorded source set. This is engineering evidence; it does not establish installed UI, real Agent, Windows, or full product acceptance."
+}

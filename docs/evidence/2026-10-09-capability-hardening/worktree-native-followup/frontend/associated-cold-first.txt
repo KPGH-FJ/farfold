@@ -1,0 +1,522 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/EmptyState.service-review.test.tsx (8 tests | 1 failed) 25ms
+   × prepares a current source only after explicit reselection and preserves the original text 9ms
+ ❯ src/components/EmptyState.selection.test.tsx (56 tests | 34 failed) 68ms
+   × requests exactly one send after the picked folder's draft becomes ready 8ms
+   × opens only the explicitly chosen folder, never the application preparation directory 1ms
+   × checks the current draft source independently from the selectable saved source (saved-source-auth) 2ms
+   × checks the current draft source independently from the selectable saved source (saved-source-read) 1ms
+   × opens a saved offline Agent on selection without changing its source or sending the draft 1ms
+   × does not reopen a manually disconnected Agent on refresh or return, and an explicit same-Agent choice resumes it 3ms
+   × holds only the visible draft's exact connection and releases that view when hidden 1ms
+   × rejects an old send callback after manual disconnect without reopening or clearing its draft 1ms
+   × freezes a prepared new draft when its Agent leaves the catalog without discarding it or accepting stale actions 1ms
+   × does not apply configuration or send when an opening draft leaves the catalog before its response 0ms
+   × rechecks directory admission after preserving a pending target and keeps rejected input intact 1ms
+   × rechecks current existing authentication after draft persistence before React renders 1ms
+   × rechecks current api authentication after draft persistence before React renders 0ms
+   × blocks stale send and model handlers as soon as configuration invalidates the original draft 1ms
+   × does not block a different preparation target (other-directory) 0ms
+   × does not block a different preparation target (api-source) 0ms
+   × changes the confirmed model only on apply and preserves the user's reasoning choice 0ms
+   × keeps the original choice and disables sending when model apply is not fully confirmed (model-not-confirmed) 0ms
+   × keeps the original choice and disables sending when model apply is not fully confirmed (reasoning-unavailable) 0ms
+   × keeps the original choice and disables sending when model apply is not fully confirmed (reasoning-not-confirmed) 0ms
+   × keeps the original choice and disables sending when model apply is not fully confirmed (later-model-drift) 0ms
+   × does not overwrite a different Agent's choice when an older model application finishes 0ms
+   × does not overwrite a newer explicit same-Agent selection when an older application finishes 0ms
+   × applies the model first and reads the newly returned reasoning choices before restoring Ultra 1ms
+   × preserves the selected configuration and offers model repair instead of downgrading (unavailable-model) 1ms
+   × preserves the selected configuration and offers model repair instead of downgrading (unavailable-reasoning) 1ms
+   × preserves the selected configuration and offers model repair instead of downgrading (unconfirmed-reasoning) 1ms
+   × preserves the selected configuration and offers model repair instead of downgrading (later-model-drift) 1ms
+   × exposes only a prepared real draft and keeps its original input and attachment slot on return 1ms
+   × uses the original first-send protection from the prepared workspace (rejected) 0ms
+   × uses the original first-send protection from the prepared workspace (unknown) 1ms
+   × keeps a single portal host and original input while moving the prepared editor, restoring its focus 1ms
+   × releases the prepared editor after recovering the original pending target without resending 0ms
+   × holds unknown historical sources until the user explicitly chooses the existing source 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 35 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > requests exactly one send after the picked folder's draft becomes ready
+AssertionError: expected "vi.fn()" to be called with arguments: [ ObjectContaining{…} ]
+
+Number of calls: 0
+
+ ❯ src/components/EmptyState.selection.test.tsx:304:20
+    302|     expect(newConversationChoice.cwd).toBe("/picked-project");
+    303|     await vi.advanceTimersByTimeAsync(300);
+    304|     expect(h.open).toHaveBeenCalledWith(
+       |                    ^
+    305|       expect.objectContaining({ agentId: "A", cwd: "/picked-project" }…
+    306|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > opens only the explicitly chosen folder, never the application preparation directory
+AssertionError: expected "vi.fn()" to be called with arguments: [ ObjectContaining{…} ]
+
+Number of calls: 0
+
+ ❯ src/components/EmptyState.selection.test.tsx:377:18
+    375|   await vi.advanceTimersByTimeAsync(300);
+    376|   expect(newConversationChoice.cwd).toBe("/chosen-project");
+    377|   expect(h.open).toHaveBeenCalledWith(
+       |                  ^
+    378|     expect.objectContaining({ agentId: "A", cwd: "/chosen-project" }),
+    379|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > checks the current draft source independently from the selectable saved source (saved-source-auth)
+ FAIL  src/components/EmptyState.selection.test.tsx > checks the current draft source independently from the selectable saved source (saved-source-read)
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/components/EmptyState.selection.test.tsx:471:35
+    469|       await vi.advanceTimersByTimeAsync(300);
+    470|       const view = composer();
+    471|       expect(view.props.disabled).toBe(reason === "current-source-auth…
+       |                                   ^
+    472|       expect(newConversationChoice.service).toEqual(current);
+    473|       expect(composerDrafts.read("new").text).toBe("Keep my draft");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > opens a saved offline Agent on selection without changing its source or sending the draft
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/EmptyState.selection.test.tsx:622:18
+    620|   composer();
+    621|   await vi.advanceTimersByTimeAsync(251);
+    622|   expect(h.open).toHaveBeenCalledOnce();
+       |                  ^
+    623|   expect(h.open).toHaveBeenCalledWith({
+    624|     agentId: "B",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > does not reopen a manually disconnected Agent on refresh or return, and an explicit same-Agent choice resumes it
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/EmptyState.selection.test.tsx:669:18
+    667|   composer();
+    668|   await vi.advanceTimersByTimeAsync(251);
+    669|   expect(h.open).toHaveBeenCalledOnce();
+       |                  ^
+    670|   expect(newConversationChoice.config).toEqual({
+    671|     model: "current-A",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > holds only the visible draft's exact connection and releases that view when hidden
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:756:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > rejects an old send callback after manual disconnect without reopening or clearing its draft
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:769:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > freezes a prepared new draft when its Agent leaves the catalog without discarding it or accepting stale actions
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:815:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > does not apply configuration or send when an opening draft leaves the catalog before its response
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/EmptyState.selection.test.tsx:856:18
+    854|   composer();
+    855|   await vi.advanceTimersByTimeAsync(251);
+    856|   expect(h.open).toHaveBeenCalledOnce();
+       |                  ^
+    857|   retireAgent();
+    858|   composer();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > rechecks directory admission after preserving a pending target and keeps rejected input intact
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:878:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > rechecks current existing authentication after draft persistence before React renders
+ FAIL  src/components/EmptyState.selection.test.tsx > rechecks current api authentication after draft persistence before React renders
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:922:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > blocks stale send and model handlers as soon as configuration invalidates the original draft
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:996:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > does not block a different preparation target (other-directory)
+ FAIL  src/components/EmptyState.selection.test.tsx > does not block a different preparation target (api-source)
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/EmptyState.selection.test.tsx:1039:20
+    1037|     composer();
+    1038|     await vi.advanceTimersByTimeAsync(251);
+    1039|     expect(h.open).toHaveBeenCalledOnce();
+       |                    ^
+    1040|     expect(preparationFor("A").getSnapshot().explicitReadTargets).toCo…
+    1041|       JSON.stringify(["A", cwd, null]),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > changes the confirmed model only on apply and preserves the user's reasoning choice
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:1047:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > keeps the original choice and disables sending when model apply is not fully confirmed (model-not-confirmed)
+ FAIL  src/components/EmptyState.selection.test.tsx > keeps the original choice and disables sending when model apply is not fully confirmed (reasoning-unavailable)
+ FAIL  src/components/EmptyState.selection.test.tsx > keeps the original choice and disables sending when model apply is not fully confirmed (reasoning-not-confirmed)
+ FAIL  src/components/EmptyState.selection.test.tsx > keeps the original choice and disables sending when model apply is not fully confirmed (later-model-drift)
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:1085:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > does not overwrite a different Agent's choice when an older model application finishes
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:1130:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > does not overwrite a newer explicit same-Agent selection when an older application finishes
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:1163:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > applies the model first and reads the newly returned reasoning choices before restoring Ultra
+AssertionError: expected [] to deeply equal [ [ 'model', 'Nemotron' ], …(1) ]
+
+- Expected
++ Received
+
+- [
+-   [
+-     "model",
+-     "Nemotron",
+-   ],
+-   [
+-     "reasoning",
+-     "ultra",
+-   ],
+- ]
++ []
+
+ ❯ src/components/EmptyState.selection.test.tsx:1228:70
+    1226|   );
+    1227|   await vi.advanceTimersByTimeAsync(251);
+    1228|   expect(h.setConfig.mock.calls.map(([, id, value]) => [id, value])).t…
+       |                                                                      ^
+    1229|     ["model", "Nemotron"],
+    1230|     ["reasoning", "ultra"],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > preserves the selected configuration and offers model repair instead of downgrading (unavailable-model)
+ FAIL  src/components/EmptyState.selection.test.tsx > preserves the selected configuration and offers model repair instead of downgrading (unavailable-reasoning)
+ FAIL  src/components/EmptyState.selection.test.tsx > preserves the selected configuration and offers model repair instead of downgrading (unconfirmed-reasoning)
+ FAIL  src/components/EmptyState.selection.test.tsx > preserves the selected configuration and offers model repair instead of downgrading (later-model-drift)
+AssertionError: expected "vi.fn()" to be called with arguments: [ 'B', ObjectContaining{…} ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    "B",
+-   ObjectContaining {
+-     "panel": "model",
++   {
++     "needsAuthentication": false,
++     "panel": "program",
++     "sourceContext": undefined,
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/components/EmptyState.selection.test.tsx:1281:32
+    1279|     expect(view.props.thread).toBeNull();
+    1280|     (view.props.onGoSettings as () => void)();
+    1281|     expect(props.onGoSettings).toHaveBeenCalledWith(
+       |                                ^
+    1282|       "B",
+    1283|       expect.objectContaining({ panel: "model" }),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > exposes only a prepared real draft and keeps its original input and attachment slot on return
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:1304:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > uses the original first-send protection from the prepared workspace (rejected)
+ FAIL  src/components/EmptyState.selection.test.tsx > uses the original first-send protection from the prepared workspace (unknown)
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:1327:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > keeps a single portal host and original input while moving the prepared editor, restoring its focus
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:1375:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > releases the prepared editor after recovering the original pending target without resending
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ startEditableDraft src/components/EmptyState.selection.test.tsx:746:37
+    744|   composer();
+    745|   await vi.advanceTimersByTimeAsync(251);
+    746|   expect(composer().props.disabled).toBe(false);
+       |                                     ^
+    747|   expect(h.setConfig).not.toHaveBeenCalled();
+    748| }
+ ❯ src/components/EmptyState.selection.test.tsx:1395:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/35]⎯
+
+ FAIL  src/components/EmptyState.selection.test.tsx > holds unknown historical sources until the user explicitly chooses the existing source
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ src/components/EmptyState.selection.test.tsx:1484:18
+    1482|   expect(newConversationChoice.config).toEqual({});
+    1483|   await vi.advanceTimersByTimeAsync(300);
+    1484|   expect(h.open).toHaveBeenCalledTimes(1);
+       |                  ^
+    1485|   expect(composerDrafts.read("new").text).toBe("Keep my draft");
+    1486| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/35]⎯
+
+ FAIL  src/components/EmptyState.service-review.test.tsx > prepares a current source only after explicit reselection and preserves the original text
+AssertionError: expected "vi.fn()" to be called once with arguments: [ ObjectContaining{…} ]
+
+Number of calls: 0
+
+ ❯ src/components/EmptyState.service-review.test.tsx:219:18
+    217|   composer();
+    218|   await vi.advanceTimersByTimeAsync(300);
+    219|   expect(h.open).toHaveBeenCalledExactlyOnceWith(
+       |                  ^
+    220|     expect.objectContaining({
+    221|       service: { id: "api", model: "model", revision: "current" },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/35]⎯
+
+
+ Test Files  2 failed | 17 passed (19)
+      Tests  35 failed | 212 passed (247)
+   Start at  18:03:30
+   Duration  2.97s (transform 3.28s, setup 0ms, import 16.85s, tests 1.03s, environment 1ms)
+

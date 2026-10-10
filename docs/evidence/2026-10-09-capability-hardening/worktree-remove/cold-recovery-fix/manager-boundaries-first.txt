@@ -1,0 +1,34 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0382]: borrow of partially moved value: `done`
+   --> src/worktrees/remove_recheck_tests.rs:105:13
+    |
+ 95 |       let location = done.location.unwrap();
+    |                                    -------- `done.location` partially moved due to this method call
+...
+105 | /             serde_json::json!({
+106 | |                 "removalRechecked": removed_op.status,
+107 | |                 "canonicalList": m.list(&s).unwrap(),
+108 | |                 "recoverPrepared": prepared,
+109 | |                 "recoverReady": done,
+110 | |             })
+    | |______________^ value borrowed here after partial move
+    |
+note: `std::option::Option::<T>::unwrap` takes ownership of the receiver `self`, which moves `done.location`
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/option.rs:1013:24
+    = note: partial move occurs because `done.location` has type `std::option::Option<worktrees::types::Location>`, which does not implement the `Copy` trait
+    = note: this error originates in the macro `$crate::json_internal` which comes from the expansion of the macro `serde_json::json` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: consider calling `.as_ref()` to borrow the value's contents
+    |
+ 95 |     let location = done.location.as_ref().unwrap();
+    |                                 +++++++++
+help: consider calling `.as_mut()` to mutably borrow the value's contents
+    |
+ 95 |     let location = done.location.as_mut().unwrap();
+    |                                 +++++++++
+help: you can `clone` the value and consume it, but this might not be your desired behavior
+    |
+ 95 |     let location = done.location.clone().unwrap();
+    |                                 ++++++++
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `farfold` (lib test) due to 1 previous error

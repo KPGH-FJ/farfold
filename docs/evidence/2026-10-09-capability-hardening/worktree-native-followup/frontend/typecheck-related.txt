@@ -1,0 +1,6 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/EmptyState.archived-draft.test.tsx(177,9): error TS2322: Type '"text"' is not assignable to type '"image" | "file"'.
+ ELIFECYCLE  Command failed with exit code 1.

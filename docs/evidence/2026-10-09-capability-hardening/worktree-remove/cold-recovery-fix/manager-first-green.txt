@@ -1,0 +1,26 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 23.85s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 2 tests
+
+running 1 test
+test worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1349 filtered out; finished in 10.40s
+
+completed:worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager
+
+test worktrees::manager::remove_recheck_tests::cold_remove_recheck_can_recover_through_the_manager ... ok
+
+running 1 test
+test worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1349 filtered out; finished in 10.45s
+
+completed:worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager
+
+test worktrees::manager::remove_recheck_tests::warm_remove_recheck_can_recover_through_the_manager ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1348 filtered out; finished in 10.47s
+

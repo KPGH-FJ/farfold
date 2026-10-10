@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_polling.test.ts (2 tests | 2 failed) 153ms
+   × does not retire a held canonical list through an automatic status poll (React render=true), then resumes after receipt 145ms
+   × does not retire a held canonical list through an automatic status poll (React render=false), then resumes after receipt 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktree_polling.test.ts > does not retire a held canonical list through an automatic status poll (React render=true), then resumes after receipt
+ FAIL  src/runtime/worktree_polling.test.ts > does not retire a held canonical list through an automatic status poll (React render=false), then resumes after receipt
+AssertionError: expected [ [ 'worktree_status', …(1) ] ] to have a length of +0 but got 1
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/runtime/worktree_polling.test.ts:99:7
+     97|     expect(
+     98|       h.invoke.mock.calls.filter(([c]) => c === "worktree_status"),
+     99|     ).toHaveLength(0);
+       |       ^
+    100|     expect(
+    101|       h.invoke.mock.calls.filter(([c]) => c === "worktree_list"),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  18:14:35
+   Duration  369ms (transform 140ms, setup 0ms, import 66ms, tests 153ms, environment 0ms)
+

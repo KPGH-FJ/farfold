@@ -1,0 +1,50 @@
+{
+  "reviewedAtUtc": "2026-10-10T10:17:06.911114+00:00",
+  "status": "read-only-test-diff-review-no-additional-blocker",
+  "scope": "Root wire regression fix only; no production changes or independent test execution.",
+  "rootReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/wire-regression/receipt.json",
+    "sha256": "86a96b507ba5e1f1d71dd66f59df7d751d9e92a7fa573a02eda48f76044aac4f"
+  },
+  "originalRun": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-01/verification.json",
+    "sha256": "c1d2495f25aa43f24f3bddcf86fa92813dca1bb926f83fd44988171885555beb"
+  },
+  "originalRustLog": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-01/rust.txt",
+    "sha256": "4f058a2a8ec668827328fba68be72322352dd0ab73c75094df852dd47b70bf9b"
+  },
+  "targetedLog": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/wire-regression/targeted-green.txt",
+    "sha256": "80a853733b56f45202106fb515f769397fc93698867d63cea11a21aa120354f4"
+  },
+  "source": {
+    "path": "src-tauri/src/worktrees/remove_wire_tests.rs",
+    "sha256": "1fabf7fda86b1bfa52c7827dc9e30c06c1c007a5dc2cc75baa6f88b77413adbf"
+  },
+  "productionCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/source-checkpoint.json",
+    "sha256": "afee317ff3c94ce7b56ccc5a8a0edc8512bcf3806aff436fe9a1bb256a892bc6"
+  },
+  "facts": {
+    "originalFault": "remove_wire_tests.rs:84 called recovery_check with preparation revision 0 after successful cold deletion recheck. The wrapper recycle_tests.rs:97 propagated the child failure; its timeout branch was not reached.",
+    "originalRustResult": "1347 passed, 1 failed, 6 ignored",
+    "rootTargetedResult": "1 passed, 0 failed; read existing log, not rerun",
+    "rustInputDeltaFromRun01": ["src-tauri/src/worktrees/remove_wire_tests.rs"],
+    "fivePriorColdRecoverySourceHashesStillMatch": true,
+    "originalSourcePrefixBeforeChangedSiteExact": true,
+    "originalSourceSuffixIncludingSubsequentRecoveryAndColdRecoveryAssertionsExact": true,
+    "onlyReplacement": "Add explicit stale revision missingRecovery rejection, take current canonical receipt, assert newer revision and exact equality with operation recovery, then call recovery_check with that exact ID/revision.",
+    "actualStdoutRevisionSequence": [0, 1, 2]
+  },
+  "assessment": "The patch strengthens stale-receipt coverage and follows the already reviewed atomic catalogue/intent/status publication. Production recovery_check and prepare_recover still require exact revision; no error is swallowed and no original later assertion is removed. Full run-02 remains required.",
+  "abandonedReuse": {
+    "path": "output/2026-10-10-worktree-native-followup-install/abandoned-reuse-preparation/withdrawn.json",
+    "sha256": "8c72a5ac14e7dec3d0e518e5692c65cd33038ad860eb0bafa43924f7593c64b2"
+  },
+  "boundary": [
+    "No Cargo, source test, build, App, Agent, database or material experiment executed by this reviewer.",
+    "No production or test source edited. Original run-01 failure retained.",
+    "Not an installed-product acceptance claim."
+  ]
+}
