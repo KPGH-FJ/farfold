@@ -1,0 +1,126 @@
+{
+  "checkedAtUtc": "2026-10-10T01:12:42.767350+00:00",
+  "status": "source_confirmed_gap_consistent_with_root_native_report",
+  "method": "Read-only source/contracts/existing evidence review. No UI, Agent, parser, Worker, tests or original database was run/read. Native pixels were observed only by root.",
+  "reportedNative": {
+    "observer": "root",
+    "commit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b",
+    "sequence": "window-boundaries.docx: paragraph inner part2/2 and table rows21–21/columns13–13; confirm whole table opinion; collapse; click same file link to reopen. Opinion retained, paragraph/table returned to first window.",
+    "evidence": "Root team message; native receipt not yet supplied to this reviewer."
+  },
+  "findings": [
+    {
+      "id": "document-inner-position",
+      "status": "confirmed_source_gap",
+      "cause": "Paragraph inner part and table row/column use local zero-initialized state; no reading-position callbacks. active=false removes the document subtree, so same-version hide/show resets them.",
+      "sourceLines": {
+        "src/components/DocxDocumentView.tsx": [430, 466, 467, 520, 686, 833],
+        "src/components/DocxFilePreview.tsx": [149, 206],
+        "src/runtime/preview_reading_position.ts": [24, 25, 26]
+      },
+      "scope": "Existing document reading ref stores story and top-level20-block segment only. Nested cell BlockSequence also has no saved position callback."
+    },
+    {
+      "id": "same-link-new-selection",
+      "status": "confirmed_source_gap_for_exact_reported_path",
+      "cause": "Each file-link selection increments selection; ArtifactPane assigns the request and keys OpenedFileView by selection. New OpenedFileView creates a fresh reading ref, even for same task/path.",
+      "sourceLines": {
+        "src/components/ThreadView.tsx": [350],
+        "src/components/ArtifactPane.tsx": [128, 131, 463],
+        "src/components/OpenedFileView.tsx": [242, 260]
+      },
+      "scope": "Same-link reopen differs from merely opening the retained content pane. It can discard outer reading refs for other formats too; no separate native observation of those formats is claimed."
+    }
+  ],
+  "contractAssessment": {
+    "plan": "plans/agent-access.md:P20 requires retaining reading position; observed scope is incomplete, not grounds to lower it.",
+    "historicalBoundary": "reading-position/implementation.json explicitly records story/top-level20-block support and excludes paragraph inner-part/table-detail position. Existing native file-refresh receipt covers21–40 outer paragraph groups, not long paragraph inner parts or table subwindows.",
+    "classification": "Unfinished reading-position coverage revealed by native journey. No evidence this new DOCX feedback change regressed previously verified inner-position behavior. Saved opinion/version retention is separate and was reported intact."
+  },
+  "minimalDesign": [
+    {
+      "step": "Retain transient reading carrier through a same-task/path reselection",
+      "detail": "Lift/pass a small reading ref above the selection-key remount (or equivalent explicit state transfer). Keep fresh file verification and old source retirement. Only apply after actual root/resolved identity matches; never preserve readiness, capture owner or feedback selection by merely reusing a React key."
+    },
+    {
+      "step": "Record inner viewport coordinates separately from feedback",
+      "detail": "Add a bounded in-memory document viewport map keyed by actual part+elementPath+kind (and appropriate verified document/version identity), holding paragraph part/table row+column and required nested viewport path. No text, bitmap, content ledger or automatically confirmed target."
+    },
+    {
+      "step": "Make restoration limits explicit",
+      "detail": "Same verified version can restore exact valid coordinates. New/shortened/restructured documents must clamp against actual current block bounds or reset when correspondence is unavailable; an old structural path alone does not prove unchanged semantic content. Changing story/window still retires candidates."
+    }
+  ],
+  "requiredCounterexamples": [
+    "Exact native fullApp sequence with long paragraph2/2 and table21/13 restores both after collapse and same-link reopen while opinion bytes remain unchanged.",
+    "Control: reopen through retained pane rather than new link; distinguish parent-ref loss from inner-state loss.",
+    "Nonzero outer story/segment plus inner part/table window restore without revived old confirmation source.",
+    "Same-version new prepared object and hide during read; no duplicated OS read or stale status adoption.",
+    "Shortened paragraph/table clamps to valid bounds; changed story/block kind/removed path does not borrow another block's position.",
+    "Different file/task/root/resolved identity and repeated text/IDs do not share viewport state.",
+    "Nested table/cell sequence if included by implementation: distinct block paths and bounded state, no unbounded map growth."
+  ],
+  "currentAction": "No source modified. Recommend a separate scoped repair preserving existing ownership gates; root decides timing alongside current XLSX-range development.",
+  "inputs": [
+    {
+      "path": "src/components/DocxDocumentView.tsx",
+      "sha256": "ccf57d848e16ee117b3f9493bd82a85fa84f514e5b0875d2f0f9414a259dfea0",
+      "matchesInstalledSourceCommit": true,
+      "sourceCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b"
+    },
+    {
+      "path": "src/components/DocxFilePreview.tsx",
+      "sha256": "7c2ad11e00c490436c0aa4d53728b0f52b179f1ef46a11fa57d980b7dd3c9c0d",
+      "matchesInstalledSourceCommit": true,
+      "sourceCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b"
+    },
+    {
+      "path": "src/runtime/preview_reading_position.ts",
+      "sha256": "6e928a9a6cfba4c7187560b44a6e19a2356b428e732d52b3faab0be6e3c85168",
+      "matchesInstalledSourceCommit": true,
+      "sourceCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b"
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "sha256": "cfed4403a9070469930c66c8388709b62625f74f39627390d49ea0bbdb483c33",
+      "matchesInstalledSourceCommit": true,
+      "sourceCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b"
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "d7a41fddde72901da4bf983c5e1db7f6ec0a481e0740606959b4d55d13adfa06",
+      "matchesInstalledSourceCommit": true,
+      "sourceCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b"
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "5c78c204200dc4625dcee6ecff1614fab4d8599c3ab4930ff1adb74f6304187e",
+      "matchesInstalledSourceCommit": true,
+      "sourceCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b"
+    },
+    {
+      "path": "src/components/PreviewReadingPosition.test.tsx",
+      "sha256": "e1cbb6773155dc83fb8496b646f48311c37352abeeb8d65f6566c41fb7cc77cc",
+      "matchesInstalledSourceCommit": true,
+      "sourceCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "748573c650b9055106ae21d3e6508a70a07bd39e9d4d1c8807e91420e6b77f14",
+      "matchesInstalledSourceCommit": true,
+      "sourceCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reading-position/implementation.json",
+      "sha256": "a5dff8af045836c256f8c7d97bf176ae8bf12e0332f9081631ec66568680d484",
+      "matchesInstalledSourceCommit": true,
+      "sourceCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-refresh-candidate/installed-file-refresh.json",
+      "sha256": "c962d943de4ab6ce8ce51622499c08df5d8c98d16068dd2e01b02afe2b458a60",
+      "matchesInstalledSourceCommit": true,
+      "sourceCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b"
+    }
+  ]
+}

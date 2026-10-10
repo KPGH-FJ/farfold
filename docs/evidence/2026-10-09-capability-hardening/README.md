@@ -2,9 +2,11 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：DOCX位置意见已完成工程检查，准备正式复验
+## 当前衔接：DOCX初轮实机完成，继续修复阅读位置并补表格矩形
 
-当前正式应用为 `4952c692` / 0.1.7 arm64，唯一 `/Applications/Farfold.app`，已完成[表格位置分项实机验证](workbook-feedback-candidate/installed-workbook-feedback.json)并正常退出；原4条输入、2组意见、3组待发逐值保留。此前e98的[正式窗口复验](text-selection-keyboard-candidate/installed-keyboard-scroll.json)已确认文字选段Enter和局部滚动修复，原4条输入、2组意见、3组待发逐值保留。XLSX单元格/合并范围意见的源码与受控浏览器检查已完成。此前 `cd66aae7` 的[实机初轮](text-feedback-candidate/installed-text-feedback-initial.json)所发现失败保持原记录。前一版本 `e8d76d4c` 的[修复复验](inspection-limit-candidate/installed-inspection-limit.json)确认大小限制提示、无效编码独立提示及16 MiB首段读取正常。候选独立核验9/9、安装10/10，三份217,400条数据一致；正常退出后原7项未发内容保持，无新Agent请求或权限变更。重复应用产物已精确移除。原[初轮失败](large-file-candidate/installed-large-file-initial.json)保留。前一P20版本 `fa235998` 的[候选独立核验](file-refresh-candidate/candidate-independent.json)9/9、[安装独立核验](file-refresh-candidate/install-independent.json)通过，三份217,400条数据一致，重复应用产物已精确移除。[正式刷新实测](file-refresh-candidate/installed-file-refresh.json)确认DOCX段落、XLSX行范围和PDF页跨版本保持或回到有效位置；损坏与移走文件保留旧快照并明确提示，编辑中的PDF意见与版本保持一致。正常退出后原3条输入、1组意见、3组待发逐值保留，测试副本均恢复；没有新Agent请求或权限变更。
+当前正式应用为 `8c2f5e29` / 0.1.7 arm64，[DOCX初轮实机](docx-feedback-candidate/installed-docx-feedback-initial.json)完成位置意见和冷恢复分项，NEW-03阅读位置缺口待修；最终正常退出。原未发送内容保持，严格逐值检查仅发现1条旧输入缺省sendPending规范为false，具体差异与原失败保留。XLSX任意矩形与阅读位置修复继续开发。
+
+前一正式应用为 `4952c692` / 0.1.7 arm64，唯一 `/Applications/Farfold.app`，已完成[表格位置分项实机验证](workbook-feedback-candidate/installed-workbook-feedback.json)并正常退出；原4条输入、2组意见、3组待发逐值保留。此前e98的[正式窗口复验](text-selection-keyboard-candidate/installed-keyboard-scroll.json)已确认文字选段Enter和局部滚动修复，原4条输入、2组意见、3组待发逐值保留。XLSX单元格/合并范围意见的源码与受控浏览器检查已完成。此前 `cd66aae7` 的[实机初轮](text-feedback-candidate/installed-text-feedback-initial.json)所发现失败保持原记录。前一版本 `e8d76d4c` 的[修复复验](inspection-limit-candidate/installed-inspection-limit.json)确认大小限制提示、无效编码独立提示及16 MiB首段读取正常。候选独立核验9/9、安装10/10，三份217,400条数据一致；正常退出后原7项未发内容保持，无新Agent请求或权限变更。重复应用产物已精确移除。原[初轮失败](large-file-candidate/installed-large-file-initial.json)保留。前一P20版本 `fa235998` 的[候选独立核验](file-refresh-candidate/candidate-independent.json)9/9、[安装独立核验](file-refresh-candidate/install-independent.json)通过，三份217,400条数据一致，重复应用产物已精确移除。[正式刷新实测](file-refresh-candidate/installed-file-refresh.json)确认DOCX段落、XLSX行范围和PDF页跨版本保持或回到有效位置；损坏与移走文件保留旧快照并明确提示，编辑中的PDF意见与版本保持一致。正常退出后原3条输入、1组意见、3组待发逐值保留，测试副本均恢复；没有新Agent请求或权限变更。
 
 P20 [七项工程检查](file-refresh-checks/final-verification.json)通过：1,073个输入稳定，前端3,183项、Rust1,195项/5项忽略。子预览受控浏览器23项、[父层实际浏览器](file-preview-refresh/parent-browser-independent.json)28项通过；后者为实际组件/Office解析器与模拟Tauri接口，不代替上述正式WebKit证据。隐藏、迟到读取和旧状态覆盖新预览的有效反例已修正。其他格式、真实Agent改写、Windows和全量122项/29家八项标准保持各自证据边界。
 
@@ -149,3 +151,5 @@ XLSX位置意见已补源码：实际单元格/完整合并范围与当前文件
 [独立受控验证](docx-feedback/independent/receipt.json)保留原样ZIP、独立XML坐标、真实Worker与完整App结果：两个引擎各89项DOCX及15项XLSX自动刷新回归通过；精确隐藏文字另各11项补验不重复计能力。首次整页溢出的两处反例经局部滚动修复通过，冷依赖优化和测试字面量修正分别记录。原96处结构位置不等于96处可见或可提意见对象。[叶层审查](docx-feedback/leaf-independent/review.json)保留取消焦点重入反例与修复，同文件新对象替换单测1/1通过。
 
 [工程整合](docx-feedback-checks/final-verification.json)前端315文件/3,651项及类型/打包/全仓格式通过；1,145输入稳定，Rust与共享夹具字节未变，三项Rust检查明确复用既有成功证据。正式应用仍为4952，本片待候选和实机验证；完整Office、任意表格矩形、PDF/图片区域及P22没有因此关闭。
+
+DOCX已提交安装8c2f5e29，候选9/9、安装10/10及三份217,400条数据核对通过。初轮实机的成功与NEW-03阅读位置失败均保留在[正式回执](docx-feedback-candidate/installed-docx-feedback-initial.json)，不将源码/浏览器通过提升为全项实机通过。原意见/输入内容保留；1条sendPending缺省→false规范化单列，不改写严格逐值检查的失败。接续修复同文件重选与内层阅读位置，并开发XLSX任意矩形。

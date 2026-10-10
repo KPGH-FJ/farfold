@@ -1,0 +1,153 @@
+{
+  "checkedAtUtc": "2026-10-10T01:14:40.304205+00:00",
+  "sourceCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b",
+  "version": "0.1.7",
+  "formalApp": "/Applications/Farfold.app",
+  "installedFiles": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "ae407f7ce485e17f8cdbd01485adfcd2d766de9f678f4924293c797444d5c56b",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "method": "Root native CUA accessibility and screenshots of actual formal window; no DOM injection or mocked IPC. Screenshots inline in conversation, no standalone image files. Root observation is not an independent replay.",
+  "scope": "DOCX paragraph/table versioned feedback, exact tested local fixtures; not all Office compatibility or Agent rework",
+  "controlledConversation": {
+    "marker": "FARFOLD_DOCX_8C2F5E29_20261010",
+    "id": "01a12357-3ec1-7f22-904d-3526a0325253",
+    "conversationCountBefore": 117,
+    "after": 118,
+    "agent": "Codex",
+    "model": "6 Astra",
+    "reasoning": "Ultra",
+    "service": "existing Agent settings",
+    "newPromptCount": 1,
+    "request": "Echo exactly three supplied Markdown links; no tools/file reads/writes/network tools.",
+    "observedReplyCompleted": true,
+    "observedToolCards": 0,
+    "existingPermissionChoiceUnchanged": true,
+    "feedbackSent": false,
+    "coldPermissionReconfirmation": false
+  },
+  "fixtureManifest": {
+    "path": "output/2026-10-10-docx-feedback/native-fixtures/manifest.json",
+    "sha256": "02c69c244881b06013976fa4a995ee0becfadaaed3237e3a7a8711c909728b4a"
+  },
+  "passedObserved": [
+    {
+      "case": "Repeated body text",
+      "result": "First duplicate selected by actual Tab then Return, opinion input focused. Browsing second duplicate retained first opinion; joining once produced original v1 SHA and word/document.xml [0,1]."
+    },
+    {
+      "case": "Cancel selection",
+      "result": "Second duplicate confirmed and text entered; cancel retired candidate and returned focus to its selection button; written opinion retained."
+    },
+    {
+      "case": "Manual version change",
+      "result": "Owned v1 -> v2 while editing displayed changed-file notice and retained old content/opinion; explicit reread displayed inserted marker. Historical opinion retained word/document.xml [0,3] and original v1 SHA."
+    },
+    {
+      "case": "Other document part",
+      "result": "Header selected through native menu; same visible words confirmed by keyboard. Joining once produced word/header1.xml [0] and v2 SHA, separate from body."
+    },
+    {
+      "case": "Automatic version replacement",
+      "result": "Cancelled active candidate, returned to body, restored owned v1 file. Without manual reread, visible inserted v2 marker disappeared and v1 body appeared; no exact native request-count claim."
+    },
+    {
+      "case": "Long paragraph",
+      "result": "Confirmed whole paragraph from part1, wrote opinion, changed to part2; candidate retired and opinion retained. Joined once; cold restored composer shows whole original paragraph [0,0] and window-fixture SHA."
+    },
+    {
+      "case": "Whole table from last window",
+      "result": "Navigated to row21/column13, actual detail ROW21 COL13 visible. Returned to grid, selected/confirmed whole table via keyboard; scope explicitly covers rows outside displayed window. Opinion text retained through hide/reopen; cold restored anchor word/document.xml [0,1], blockKind table."
+    },
+    {
+      "case": "Hidden and unsupported content",
+      "result": "Actual view showed hidden/unsupported/uncached-field notices and visible BEFORE/AFTER/END; no hidden raw literals visible. True empty paragraph offered keyboard confirmation; hidden-only and notice-only positions had no selection buttons. Empty anchor [0,2] recorded without opinion text."
+    },
+    {
+      "case": "Cold recovery",
+      "result": "Normal Cmd-Q -> exact process count0 -> relaunch -> own conversation restored. Three joined composer opinions each appeared once with original parts/paths/SHA; two nonempty retained opinions restored; did not confirm permission or send again."
+    },
+    {
+      "case": "Layout",
+      "result": "Native 2560x1640 screenshots show navigation/top bar stable and opinion controls reachable for tested document views. Narrow-window evidence remains controlled browser only."
+    }
+  ],
+  "failedObserved": [
+    {
+      "id": "NEW-03",
+      "area": "P20 DOCX inner reading positions and same-file link reselect",
+      "steps": [
+        "Long paragraph part2 and table row21/column13",
+        "Confirm whole-table opinion and enter text",
+        "Hide content pane",
+        "Click same file link to reopen"
+      ],
+      "observed": "Opinion and whole-table anchor retained, but paragraph reset to part1 and table window reset to first rows/columns.",
+      "status": "Unresolved in installed 8c2f; source repair in progress.",
+      "boundary": "Prior P20 proof covered story/top-level segment, not inner paragraph parts/table windows. Do not reinterpret older success as covering this path."
+    }
+  ],
+  "dataRetention": {
+    "privateReceipt": "output/2026-10-10-docx-feedback-install/post-ui-draft-retention.json",
+    "sha256": "9e3340de4b20154b119457074e90e094f783528aa086294dce99183314adda7e",
+    "groups": {
+      "composers": {
+        "beforeEntries": 5,
+        "afterEntries": 6,
+        "originalEntriesExactlyUnchanged": 4
+      },
+      "feedback": {
+        "beforeEntries": 3,
+        "afterEntries": 4,
+        "originalEntriesExactlyUnchanged": 3
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "originalEntriesExactlyUnchanged": 3
+      }
+    },
+    "allExistingContentAndOtherFieldsUnchanged": true,
+    "strictRawEquality": false,
+    "normalization": "One existing composer gained optional sendPending:false from absent; all other fields exact. Strict checker exit1 retained; installed decoder treats both inactive.",
+    "newEntriesOnlyControlledSession": true
+  },
+  "finalState": {
+    "normalQuitObserved": true,
+    "forcedQuit": false,
+    "formalProcessCount": 0,
+    "fixtureVersionRestored": "v1",
+    "duplicateBuildAppAbsent": true
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/candidate.json",
+      "sha256": "c16057ecf36f974e42df665b79daed11eb6e56649a8b1c535260f68edbe897d4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/candidate-independent.json",
+      "sha256": "aaade472bdff8b7de660489fb869163c66b63f750104d4669e0ebc663caeaa71"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/installed-data-retention.json",
+      "sha256": "1bcd2bad2037a27435587f668bd47a4f2a46a98e998f5f9402dd359f116df000"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/install-independent.json",
+      "sha256": "f9e62b75355b058aabc620fc7ba83c1e98b0117c1450787027190259f30c36cd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "d8010fcfea2887f93e5b7396f307d2dcdc728fcb9a57168f026585faa6ed5c92"
+    }
+  ],
+  "limits": [
+    "Reading-position defect remains open in this installed version",
+    "Full DOCX/Office compatibility, XLSX arbitrary rectangles, PDF/image regions and actual Agent rework remain open",
+    "Subsequent XLSX/DOCX repair source changes do not alter the exact installed 8c2f binary proof",
+    "All 29 Agent standards, Windows and market-readiness are not declared complete"
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "checkedAtUtc": "2026-10-10T01:21:56.218536+00:00",
+  "reviewer": "architecture",
+  "sourceCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b",
+  "result": "passed_scoped_disk_and_private_copy_review_with_explicit_normalization",
+  "method": "Read-only formal bundle/ZIP/signature/receipt checks. SQLite integrity and unsentWork comparison used new private disposable copies of captured, working and baseline metadata. Original user DB never opened; exclusive owner checker not rerun.",
+  "publicNativeReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/installed-docx-feedback-initial.json",
+    "sha256": "0ce094473dc6434eb71502c861d0ba72f3fed8790356cf0637c2878dc23346fe",
+    "bytes": 7980
+  },
+  "publicReceiptChain": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/candidate.json",
+      "sha256": "c16057ecf36f974e42df665b79daed11eb6e56649a8b1c535260f68edbe897d4",
+      "bytes": 6261
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/candidate-independent.json",
+      "sha256": "aaade472bdff8b7de660489fb869163c66b63f750104d4669e0ebc663caeaa71",
+      "bytes": 3624
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/installed-data-retention.json",
+      "sha256": "1bcd2bad2037a27435587f668bd47a4f2a46a98e998f5f9402dd359f116df000",
+      "bytes": 3206
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/install-independent.json",
+      "sha256": "f9e62b75355b058aabc620fc7ba83c1e98b0117c1450787027190259f30c36cd",
+      "bytes": 8756
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "d8010fcfea2887f93e5b7396f307d2dcdc728fcb9a57168f026585faa6ed5c92",
+      "bytes": 1210
+    }
+  ],
+  "formal": {
+    "exactFiveFiles": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+      "Contents/MacOS/farfold": "ae407f7ce485e17f8cdbd01485adfcd2d766de9f678f4924293c797444d5c56b",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+    },
+    "matchesInstalled8c2fCandidate": true,
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "strictCodesign": "Verified --deep --strict --verbose=2 successfully in this review.",
+    "archive": {
+      "path": "src-tauri/target/internal-candidate/2026-10-10-8c2f5e29/Farfold-0.1.7-8c2f5e29.zip",
+      "sha256": "2936b6334c1273a4d165c942b951b993fc2d204da5010524e9f87ccbd022af82",
+      "bytes": 12857755
+    },
+    "archiveCrcAndFivePayloadHashesAndModesMatch": true,
+    "formalProcessCount": 0,
+    "duplicateCandidateAbsent": true,
+    "boundary": "Ad-hoc identity/bytes check, not public signing or notarization."
+  },
+  "privateCopyReview": {
+    "retentionReceipt": {
+      "path": "output/2026-10-10-docx-feedback-install/post-ui-draft-retention.json",
+      "sha256": "9e3340de4b20154b119457074e90e094f783528aa086294dce99183314adda7e",
+      "bytes": 2029
+    },
+    "helperReadNotExecuted": {
+      "path": "output/2026-10-10-docx-feedback-install/check_post_ui_drafts.py",
+      "sha256": "4eaab373a78c171b61dfaedf6022c3174d8503cd8f7f06c3b679740685605faa",
+      "bytes": 2833
+    },
+    "backup": {
+      "path": "output/2026-10-10-docx-feedback-install/metadata-before.sqlite3",
+      "sha256": "71a8a1364199e287fd28d9190961faf0695c95627816b199a4df0ebd2065aa87",
+      "bytes": 335872
+    },
+    "capturedFiles": {
+      "farfold.sqlite3": "c8682d8294485906d5a3f8c16c53f08f97e16e8ad14161bd288d943cb4e50491",
+      "farfold.sqlite3-wal": "cf4b575075109afd207552dd2bee7e9f6acb29ba1de9ffbba87db28ea2150716",
+      "farfold.sqlite3-shm": "814e78ba200f5ae12fe98f1a66484d07b18b2fb9c0c07377a7ff7143408fcac5"
+    },
+    "workingFiles": {
+      "farfold.sqlite3": "c8682d8294485906d5a3f8c16c53f08f97e16e8ad14161bd288d943cb4e50491",
+      "farfold.sqlite3-wal": "cf4b575075109afd207552dd2bee7e9f6acb29ba1de9ffbba87db28ea2150716",
+      "farfold.sqlite3-shm": "db1f2b4f09b6e42e0e3b7983b805ecf7f80ec31ddcc845ba5c11a2a93b9056a7"
+    },
+    "disposableCopyIntegrity": {
+      "post-ui-metadata": "ok",
+      "post-ui-working": "ok",
+      "baseline": "ok"
+    },
+    "capturedAndWorkingUnsentWorkEqual": true,
+    "workingMainAndWalMatchCapture": true,
+    "groups": {
+      "composers": {
+        "beforeEntries": 5,
+        "afterEntries": 6,
+        "originalEntriesExactlyUnchanged": 4
+      },
+      "feedback": {
+        "beforeEntries": 3,
+        "afterEntries": 4,
+        "originalEntriesExactlyUnchanged": 3
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "originalEntriesExactlyUnchanged": 3
+      }
+    },
+    "strictRawEquality": false,
+    "normalizationsIndependentlyConfirmed": [
+      {
+        "group": "composers",
+        "keySha256": "3f429fad558512496256a594755ac2e97e1c9af61d67dab457a97d6adfef9204",
+        "field": "sendPending",
+        "before": "absent",
+        "after": false,
+        "allOtherFieldsExactlyUnchanged": true
+      }
+    ],
+    "allOriginalContentAndOtherFieldsExact": true,
+    "reportedStrictCheckerExit": 1,
+    "checkerBoundary": "Owner records retain original exit1. Independent comparison confirms precisely one absent sendPending to false change and no other old-entry differences; strict failure is not rewritten as pass.",
+    "installedDecoderBasis": {
+      "gitCommit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b",
+      "path": "src/runtime/drafts.ts",
+      "blobSha256": "ef320f8577c383d25e53268bea1827227b757d47d3adb95e6479e4673b563db4",
+      "lines": [
+        {
+          "line": 521,
+          "text": "sendPending: raw.sendPending === true,"
+        }
+      ],
+      "meaning": "Missing and false both decode to inactive."
+    },
+    "retainedCaptureWorkingBackupHashesUnchangedDuringReview": true,
+    "temporaryCopiesRemoved": true,
+    "originalDbOpened": false,
+    "oldUserTextPrintedOrSaved": false
+  },
+  "ownedMaterials": {
+    "newComposerCount": 1,
+    "newFeedbackGroupCount": 1,
+    "newQueueCount": 0,
+    "newEntriesOnlyExactControlledSession": true,
+    "controlledSession": "01a12357-3ec1-7f22-904d-3526a0325253",
+    "joinedMarkers": {
+      "DOCX_8C2F_BODY_FIRST": 1,
+      "DOCX_8C2F_HEADER": 1,
+      "DOCX_8C2F_LONG": 1
+    },
+    "joinedLocations": [
+      {
+        "part": "word/document.xml",
+        "elementPath": [0, 1]
+      },
+      {
+        "part": "word/header1.xml",
+        "elementPath": [0]
+      },
+      {
+        "part": "word/document.xml",
+        "elementPath": [0, 0]
+      }
+    ],
+    "retainedTextOpinions": 2,
+    "retainedAnchors": [
+      {
+        "part": "word/document.xml",
+        "elementPath": [0, 3],
+        "blockKind": "paragraph",
+        "fileSha256": "34067ebfc2f03cde70c2a8a49890fb1395c4280b78eec87751de53758727f3ce"
+      },
+      {
+        "part": "word/document.xml",
+        "elementPath": [0, 1],
+        "blockKind": "table",
+        "fileSha256": "5ea9f16cb6733475866958dd873187da986e26b9abce5dee9ccacda56233adab"
+      }
+    ],
+    "emptyAnchor": {
+      "part": "word/document.xml",
+      "elementPath": [0, 2],
+      "blockKind": "paragraph"
+    },
+    "fixtureManifest": {
+      "path": "output/2026-10-10-docx-feedback/native-fixtures/manifest.json",
+      "sha256": "02c69c244881b06013976fa4a995ee0becfadaaed3237e3a7a8711c909728b4a",
+      "bytes": 8708
+    },
+    "fixtureCurrentCopies": [
+      {
+        "sha256": "34067ebfc2f03cde70c2a8a49890fb1395c4280b78eec87751de53758727f3ce",
+        "sourceAndCurrentCopyEqual": true
+      },
+      {
+        "sha256": "5ea9f16cb6733475866958dd873187da986e26b9abce5dee9ccacda56233adab",
+        "sourceAndCurrentCopyEqual": true
+      },
+      {
+        "sha256": "810cffbb6fdcbf8a15e1652d8fdbec778fe2ddee54431be85403068f63b17940",
+        "sourceAndCurrentCopyEqual": true
+      }
+    ],
+    "versionedFixtureRestoredToV1": true
+  },
+  "evidenceExecution": "Checks ran through functions.exec Python/shell. No raw stdout log file was saved. Receipt summarizes actual tool output and comparisons, not reconstructed raw logs.",
+  "receiptWritingDiagnostic": "First receipt-generation invocation failed to decode stdin before executing; subsequent formatter reported absent file. Reissued ASCII-only writer. This is a review-script issue, not a product or data failure.",
+  "uiEvidenceBoundary": {
+    "observer": "root",
+    "uiNotIndependentlyReplayed": true,
+    "claim": "JSON and final-state comparisons do not independently prove native mouse/keyboard, visual, scrolling or automatic refresh behavior. Native UI evidence remains root CUA observations.",
+    "nativeFailureStillOpen": [
+      {
+        "id": "NEW-03",
+        "area": "P20 DOCX inner reading positions and same-file link reselect",
+        "steps": [
+          "Long paragraph part2 and table row21/column13",
+          "Confirm whole-table opinion and enter text",
+          "Hide content pane",
+          "Click same file link to reopen"
+        ],
+        "observed": "Opinion and whole-table anchor retained, but paragraph reset to part1 and table window reset to first rows/columns.",
+        "status": "Unresolved in installed 8c2f; source repair in progress.",
+        "boundary": "Prior P20 proof covered story/top-level segment, not inner paragraph parts/table windows. Do not reinterpret older success as covering this path."
+      }
+    ],
+    "agentBoundary": "The controlled link echo is not P22 feedback-driven rework or 29-Agent acceptance. Reviewer invoked no Agent."
+  },
+  "parallelSourceBoundary": "Workspace XLSX rectangle and NEW-03 repairs are separate. Only immutable installed8c2f/candidate are checked; current source is not required to equal installed commit.",
+  "notProven": [
+    "Installed NEW-03 inner reading-position and same-file reselect repair",
+    "All DOCX/Office compatibility and window sizes",
+    "Installed XLSX arbitrary rectangles and PDF/image regions",
+    "Real Agent feedback rework and overall market readiness"
+  ]
+}
