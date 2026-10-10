@@ -1,0 +1,60 @@
+{
+  "sourceCommit": "55441316981b59ef9805255e27b12b0c6761aa34",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_input.rs",
+      "sha256": "c0ca244a235e4e675b68900a45db71afd1c2778864d2de12c16900e74a7e753e",
+      "baseline": "output/2026-10-11-mcp-http-add-backend/baseline/skill_management/mcp_add_input.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_plan.rs",
+      "sha256": "ceb62951ead55df80d3fb3c36eb16efc60ba110967b55e0b44c19f0f8b246290",
+      "baseline": "output/2026-10-11-mcp-http-add-backend/baseline/skill_management/mcp_add_plan.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add.rs",
+      "sha256": "d0ee96b20ecbc46e45f8a95d58991ae62b392cb5b1ba18e076efc94055beaf2c",
+      "baseline": "output/2026-10-11-mcp-http-add-backend/baseline/skill_management/mcp_add.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/domain.rs",
+      "sha256": "d19cf61c331312ea869bbf2273cd0cad842ceba1569cb3b474c808436a7986e2",
+      "baseline": "output/2026-10-11-mcp-http-add-backend/baseline/skill_management/domain.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "bf092d67f0985a2b5e5bed357fe85c3bb1877e47ee5a1797b701116155565588",
+      "baseline": "output/2026-10-11-mcp-http-add-backend/baseline/skill_management/requests.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "8a2d026a57450bc674b7c3d7e77eaa181209fee1bfc398d33143d2a25444bfab",
+      "baseline": "output/2026-10-11-mcp-http-add-backend/baseline/skill_management/mod.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_tests.rs",
+      "sha256": "dc897bd7065deb37b7ab0887012e44b29401b69b5a2c3d21bc073ef7fcf4203a",
+      "baseline": "output/2026-10-11-mcp-http-add-backend/baseline/skill_management/mcp_add_tests.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_independent_tests.rs",
+      "sha256": "14840351585044c51187fe7cdee59dbb90bb0caa965d11f15b4a45124677ff34",
+      "baseline": "output/2026-10-11-mcp-http-add-backend/baseline/skill_management/mcp_add_independent_tests.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_peer.py",
+      "sha256": "4ebebed8943854437f7bc0c99eea75cb1917624b23e8f686b22300920296327d",
+      "baseline": "output/2026-10-11-mcp-http-add-backend/baseline/skill_management/mcp_add_peer.py"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "2d2eea04d88f10842e544983a3d9b7f14d6df75a9dc4d727a56d893d5b95446c",
+      "baseline": "output/2026-10-11-mcp-http-add-backend/baseline/extension_inventory/types.rs"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "9e66763f817b2cee937e341412a48de531550e3221168770e9b22f1d1568f12f",
+      "baseline": "output/2026-10-11-mcp-http-add-backend/baseline/extension_inventory/launch.rs"
+    }
+  ]
+}

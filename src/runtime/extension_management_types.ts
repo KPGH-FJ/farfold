@@ -9,6 +9,7 @@ import {
   parseMcpAddOperation,
   parseMcpAddCancellation,
   freezeMcpAddInput,
+  isHttpInput,
   type McpAddInput,
   type McpAddRequest,
   type McpAddOperation,
@@ -57,7 +58,12 @@ export type ExtensionChangeTargetOwner = TargetOwnerBase &
   (
     | { item: InventoryItem | SkillInventoryItem; requestedEnabled?: boolean }
     | { kind: "mcpRemoval"; item: InventoryItem }
-    | { kind: "mcpAddition"; inputId: string; input: McpAddInput }
+    | {
+        kind: "mcpAddition";
+        inputId: string;
+        input: McpAddInput;
+        httpAvailable?: boolean;
+      }
   );
 export function isRemoveRequest(
   r: ExtensionChangeRequest,
@@ -144,6 +150,7 @@ export function requestForTarget(
       !validInventoryId(t.inputId)
     )
       return null;
+    if (isHttpInput(t.input) && t.httpAvailable !== true) return null;
     try {
       freezeMcpAddInput(t.input);
     } catch {
@@ -161,7 +168,7 @@ export function requestForTarget(
         inventoryRequestId: result.request.requestId,
         inputId: t.inputId,
         name: t.input.name,
-        transport: "stdio",
+        transport: isHttpInput(t.input) ? "streamableHttp" : "stdio",
       }),
     });
   }
@@ -234,7 +241,12 @@ export function confirmedRequest(
     };
   }
   if (isAddRequest(old)) {
-    if (review.mutation !== "addDisabledStdioMcp")
+    if (
+      review.mutation !==
+      (old.target.transport === "streamableHttp"
+        ? "addDisabledHttpMcp"
+        : "addDisabledStdioMcp")
+    )
       throw { code: "invalidOutput" };
     return {
       ...old,

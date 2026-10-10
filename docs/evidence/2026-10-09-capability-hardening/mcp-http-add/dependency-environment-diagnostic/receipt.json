@@ -1,0 +1,58 @@
+{
+  "status": "diagnosticOnlyChangeWithBoundedFollowup",
+  "originalFullFailure": {
+    "passed": 1556,
+    "failed": 1,
+    "ignored": 6,
+    "scope": "existing dependency environment fixture exceeded its10s initialize wait; exact blocking cause not observed"
+  },
+  "isolatedOriginalSource": "1/1 passed; not a causal explanation",
+  "change": "Fixed no-secret spawn/communication stage, PID/timing and before/after cleanup diagnostics. Same10s deadline and all original assertions; no production behavior fix.",
+  "subsequentFullRust": {
+    "passed": 1557,
+    "failed": 0,
+    "ignored": 6,
+    "sourceInputCount": 1509,
+    "sourceStable": true,
+    "format": 0,
+    "clippy": 0
+  },
+  "unresolved": "Original intermittent test failure remains unlocalized. Later pass cannot establish environmental load, scheduler, process/EOF or any other cause.",
+  "copies": [
+    {
+      "source": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/diagnosis-before-instrumentation.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/diagnosis-before-instrumentation.json.raw.txt",
+      "sha256": "153d2f78027638a66773cd0f5cdfbd935135b96131fcc353b74a2bf4eab918ba"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/diagnostic-followup.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/diagnostic-followup.json.raw.txt",
+      "sha256": "ffe0a987decd04b1572dec7aefbd0307b633e070071c8452b8e71a945283c4e3"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/diagnostic-only.patch.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/diagnostic-only.patch.txt",
+      "sha256": "81b1000f3bdbc48f85483572fd9b0ac03251996e696249247b666af045d5f375"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/dependency_environment_tests.before.rs.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/dependency_environment_tests.before.rs.txt",
+      "sha256": "a9dbcc780e975cd9001fd750eee400e6c9c26689774cde668aee19e0dd226960"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/isolated-first.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/isolated-first.txt",
+      "sha256": "8a072ae678b4c3b563524b6b9eed4c387d0ae6c9acc742a07f74ad5fbba7df55"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/diagnostic-isolated.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/diagnostic-isolated.txt",
+      "sha256": "d94b5d5f6b7e19f3ce52566291f386e9f483e8e215d5a92367d63743d26d870c"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/final-commands.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/final-commands.json.raw.txt",
+      "sha256": "1e5a0da04b306986e41c7e93bde557c1f2372a86cf63e0d92c5059d85674e4e2"
+    }
+  ]
+}

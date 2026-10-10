@@ -1,0 +1,66 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.66s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 56 tests
+test acp_client::extension_inventory::skills_tests::duplicate_known_fields_and_deep_notifications_are_not_accepted ... ok
+test acp_client::extension_inventory::skills_tests::both_kinds_share_admission_and_request_ids_never_change_kind ... ok
+test acp_client::extension_inventory::skills_tests::explicit_credential_labels_keep_value_hidden_across_separate_assignment_tokens ... ok
+test acp_client::extension_inventory::skills_tests::fixed_exchange_handles_split_lines_and_notifications_but_sends_no_other_rpc ... ok
+test acp_client::extension_inventory::skills_tests::description_preference_fallback_and_unicode_budget_are_explicit ... ok
+test acp_client::extension_inventory::skills_tests::mismatched_unsolicited_error_duplicate_and_premature_responses_fail_closed ... ok
+test acp_client::extension_inventory::skills_tests::management_target_eligibility_is_explicit_and_duplicate_paths_refuse ... ok
+test acp_client::extension_inventory::skills_tests::nonblocking_partial_writes_never_skip_or_duplicate_request_bytes ... ok
+test acp_client::extension_inventory::skills_tests::official_qualified_skill_names_survive_the_production_decoder ... ok
+test acp_client::extension_inventory::skills_tests::qualified_skill_names_keep_path_control_and_segment_guards ... ok
+test acp_client::extension_inventory::skills_tests::recognizable_private_tokens_controls_and_unsafe_names_do_not_leave_decoder ... ok
+test acp_client::extension_inventory::skills_tests::request_cannot_publish_a_snapshot_for_a_different_inventory_kind ... ok
+test acp_client::extension_inventory::skills_tests::invalid_skill_structure_cwd_and_limits_fail_without_partial_success ... ok
+SKILLS_QUALIFIED_WIRE:{"requestId":"03000000-0000-4000-8000-000000000001","agentId":"fixture","cwd":"/tmp","kind":"skills","state":"ready","settled":true,"snapshot":{"observedAtMs":1791664737174,"scope":"officialSkillsForDirectory","source":"officialAppServer","complete":true,"sessionApplicability":"unverified","errorCount":0,"items":[{"id":0,"name":"sample:search","description":"Review documents","descriptionTruncated":false,"descriptionRedacted":false,"reportedEnabled":true,"origin":"repo","pluginReported":true,"enablement":{"availability":"unavailable","reason":"pluginManaged"}},{"id":1,"name":"documents:documents","description":"Review documents","descriptionTruncated":false,"descriptionRedacted":false,"reportedEnabled":false,"origin":"repo","pluginReported":true,"enablement":{"availability":"unavailable","reason":"pluginManaged"}},{"id":2,"name":"sample:search","description":"Review documents","descriptionTruncated":false,"descriptionRedacted":false,"reportedEnabled":true,"origin":"user","pluginReported":false,"enablement":{"availability":"reviewable","reason":null}},{"id":3,"name":"ordinary-name","description":"Review documents","descriptionTruncated":false,"descriptionRedacted":false,"reportedEnabled":true,"origin":"repo","pluginReported":true,"enablement":{"availability":"unavailable","reason":"pluginManaged"}}]}}
+test acp_client::extension_inventory::skills_tests::qualified_names_actual_rust_wire_keeps_disabled_and_duplicate_rows ... ok
+test acp_client::extension_inventory::skills_tests::unknown_scope_is_preserved_as_unknown_not_promoted_to_repository ... ok
+test acp_client::extension_inventory::skills_tests::useful_description_disabled_and_duplicate_names_survive_without_private_fields ... ok
+test acp_client::extension_inventory::tests::cancellation_is_not_settled_and_active_slots_survive_observer_abandonment ... ok
+test acp_client::extension_inventory::tests::cold_missing_status_does_not_mean_cancelled_or_empty ... ok
+test acp_client::extension_inventory::tests::complete_empty_requires_valid_full_array ... ok
+test acp_client::extension_inventory::tests::early_cancel_cannot_be_revived_and_cannot_cancel_other_agent ... ok
+SKILLS_INVENTORY_WIRE:{"skillsRunning":{"requestId":"01000000-0000-4000-8000-000000000001","agentId":"fixture","cwd":"/tmp","kind":"skills","state":"running","settled":false},"skillsReady":{"requestId":"01000000-0000-4000-8000-000000000001","agentId":"fixture","cwd":"/tmp","kind":"skills","state":"ready","settled":true,"snapshot":{"observedAtMs":1791664737177,"scope":"officialSkillsForDirectory","source":"officialAppServer","complete":false,"sessionApplicability":"unverified","errorCount":1,"items":[{"id":0,"name":"review-docs","description":"Review documents","descriptionTruncated":false,"descriptionRedacted":false,"reportedEnabled":false,"origin":"repo","pluginReported":true,"enablement":{"availability":"unavailable","reason":"incompleteInventory"}}]}}}
+test acp_client::extension_inventory::skills_tests::actual_skills_peer_emits_sanitized_serialization_with_partial_errors ... ok
+test acp_client::extension_inventory::skills_tests::skills_peer_receives_only_explicit_read_handshake_and_eof ... ok
+EXTENSION_INVENTORY_WIRE:{"capabilities":{"selectionId":null,"mcpInventory":{"availability":"unavailable","source":null,"reason":"notReviewed"},"skillsInventory":{"availability":"unavailable","source":null,"reason":"notReviewed"},"skillEnablement":{"availability":"unavailable","source":null,"reason":"notReviewed"},"mcpEnablement":{"availability":"unavailable","source":null,"reason":"notReviewed"},"mcpAddition":{"availability":"unavailable","source":null,"reason":"notReviewed"},"mcpHttpAddition":{"availability":"unavailable","source":null,"reason":"notReviewed"},"mcpRemoval":{"availability":"unavailable","source":null,"reason":"notReviewed"},"toolInventory":"unavailable"},"running":{"requestId":"00000000-0000-4000-8000-000000000001","agentId":"fixture","cwd":"/tmp","kind":"mcp","state":"running","settled":false},"ready":{"requestId":"00000000-0000-4000-8000-000000000001","agentId":"fixture","cwd":"/tmp","kind":"mcp","state":"ready","settled":true,"snapshot":{"observedAtMs":1791664737210,"scope":"officialCliConfigurationForDirectory","source":"officialCli","complete":true,"sessionApplicability":"unverified","items":[{"enablement":{"availability":"unavailable","reason":"unsupportedTransport"},"id":0,"name":"example","transport":"stdio","reportedEnabled":false,"reportedAuth":"notLoggedIn","origin":"unreported","configurationLayer":"unreported","connection":"unverified","tools":"unreported"}]}},"earlyCancellation":{"requestId":"00000000-0000-4000-8000-000000000002","agentId":"early","cancelRequested":true,"operation":null}}
+test acp_client::extension_inventory::tests::macos::actual_owned_output_emits_only_sanitized_serialized_wire ... ok
+test acp_client::extension_inventory::tests::macos::capability_capacity_never_evicts_another_live_selected_receipt ... ok
+test acp_client::extension_inventory::tests::macos::capability_receipts_are_exact_agent_opaque_and_expire_without_sliding_refresh ... ok
+test acp_client::extension_inventory::tests::macos::changed_row_while_waiting_for_configuration_is_not_a_new_query_selection ... ok
+test acp_client::extension_inventory::tests::macos::credential_placeholder_is_unavailable_without_keychain_lookup ... ok
+test acp_client::extension_inventory::tests::macos::dropped_ipc_observer_only_requests_cancel_and_does_not_finish_owner ... ok
+test acp_client::extension_inventory::skills_lifecycle_tests::cancelling_list_or_post_result_cleanup_does_not_publish_ready ... ok
+test acp_client::extension_inventory::tests::macos::exact_public_entry_is_required_without_version_or_binary_hash_gate ... ok
+test acp_client::extension_inventory::tests::macos::cancel_waits_for_exact_owned_group_and_inherited_pipe_completion ... ok
+test acp_client::extension_inventory::tests::macos::nonzero_stderr_never_becomes_a_public_error_message ... ok
+test acp_client::extension_inventory::tests::macos::official_relay_arguments_and_selected_environment_are_preserved ... ok
+test acp_client::extension_inventory::tests::macos::owned_process_returns_full_bytes_only_after_exit_and_eof ... ok
+test acp_client::extension_inventory::skills_lifecycle_tests::skills_result_waits_for_real_successful_exit_and_inherited_pipes ... ok
+test acp_client::extension_inventory::tests::macos::exited_leader_does_not_drop_inherited_pipe_or_process_group ... ok
+test acp_client::extension_inventory::tests::macos::replaced_cwd_is_not_published_as_current ... ok
+test acp_client::extension_inventory::tests::macos::reused_request_cannot_change_selection_and_expiry_does_not_cancel_inflight_work ... ok
+test acp_client::extension_inventory::tests::macos::selected_program_environment_and_replacement_row_are_not_interchangeable ... ok
+test acp_client::extension_inventory::tests::macos::selection_changed_before_first_metadata_read_is_not_admitted_as_replacement ... ok
+test acp_client::extension_inventory::tests::only_public_fields_leave_decoder ... ok
+test acp_client::extension_inventory::tests::published_known_fields_are_strict_and_duplicates_fail ... ok
+test acp_client::extension_inventory::tests::same_request_is_one_owner_and_different_payload_cannot_replace_it ... ok
+test acp_client::extension_inventory::tests::unknown_enums_stay_unknown_never_connected ... ok
+test acp_client::extension_inventory::tests::unsafe_name_is_an_unnamed_row_not_silently_removed ... ok
+test acp_client::extension_inventory::tests::urls_headers_helpers_and_hostnames_never_leave_http_transport ... ok
+test acp_client::extension_inventory::tests::whole_output_depth_and_row_budgets_reject_without_partial_success ... ok
+test acp_client::extension_inventory::skills_lifecycle_tests::skills_admission_rejects_busy_unsettled_and_candidate_connections ... ok
+test acp_client::extension_inventory::skills_lifecycle_tests::idle_scope_blocks_known_alias_work_and_connect_but_not_unrelated_entry ... ok
+test acp_client::extension_inventory::tests::macos::real_pipe_limits_fail_even_when_command_would_exit_successfully ... ok
+test acp_client::extension_inventory::tests::macos::dropped_observer_retains_real_worker_and_activity_until_group_cleanup ... ok
+test acp_client::extension_inventory::skills_tests::real_jsonl_peer_rejects_eof_wrong_id_rpc_errors_and_excess_output ... ok
+test acp_client::extension_inventory::tests::macos::real_cleanup_retains_activity_after_observer_and_cancel_return ... ok
+test acp_client::extension_inventory::skills_lifecycle_tests::dropping_skills_observer_keeps_scope_and_activity_until_real_child_cleanup ... ok
+test acp_client::extension_inventory::skills_tests::skills_handshake_deadline_cleans_up_instead_of_waiting_forever_for_initialize ... ok
+test acp_client::extension_inventory::tests::macos::actual_query_deadline_requests_cleanup_without_an_empty_success ... ok
+
+test result: ok. 56 passed; 0 failed; 0 ignored; 0 measured; 1507 filtered out; finished in 10.10s
+

@@ -1,3 +1,4 @@
+import { validMcpHttpUrl } from "./mcp_http_url";
 import { SKILL_CHANGE_CODES } from "./skill_management_types";
 import type {
   SkillChangeConfirmInput,
@@ -24,7 +25,7 @@ export type McpAddTarget = {
   inventoryRequestId: string;
   inputId: string;
   name: string;
-  transport: "stdio";
+  transport: "stdio" | "streamableHttp";
 };
 export type McpAddReview = {
   reviewId: string;
@@ -37,7 +38,7 @@ export type McpAddReview = {
   writeScope: { kind: "user" | "profile"; configDisplayPath: string };
   observedAtMs: number;
   validForMs: 300000;
-  mutation: "addDisabledStdioMcp";
+  mutation: "addDisabledStdioMcp" | "addDisabledHttpMcp";
   nameAvailability: "absentInCheckedScopes";
   preservation: "otherConfigurationSemanticsPreserved";
   sessionApplicability: "unverified";
@@ -94,13 +95,23 @@ export const MCP_ADD_CODES = [
   "invalidName",
   "invalidExecutablePath",
   "invalidArguments",
+  "invalidUrl",
 ] as const;
 export type McpAddCode = (typeof MCP_ADD_CODES)[number];
-export type McpAddInput = Readonly<{
+export type McpStdioInput = Readonly<{
   name: string;
   executablePath: string;
   args: readonly string[];
 }>;
+export type McpHttpInput = Readonly<{
+  transport: "streamableHttp";
+  name: string;
+  url: string;
+}>;
+export type McpAddInput = McpStdioInput | McpHttpInput;
+export function isHttpInput(value: McpAddInput): value is McpHttpInput {
+  return "transport" in value;
+}
 export type McpAddInspectInput = {
   agentId: string;
   requestId: string;
@@ -155,9 +166,12 @@ export function mcpAddInputError(value: unknown): McpAddCode | null {
   if (!value || typeof value !== "object" || Array.isArray(value))
     return "invalidRequest";
   const v = value as Record<string, unknown>;
+  const http = v.transport === "streamableHttp";
   if (
     Object.keys(v).length !== 3 ||
-    !["name", "executablePath", "args"].every((k) => Object.hasOwn(v, k))
+    !(
+      http ? ["transport", "name", "url"] : ["name", "executablePath", "args"]
+    ).every((k) => Object.hasOwn(v, k))
   )
     return "invalidRequest";
   if (
@@ -168,6 +182,10 @@ export function mcpAddInputError(value: unknown): McpAddCode | null {
     v.name === "codex_apps"
   )
     return "invalidName";
+  if (http)
+    return validMcpHttpUrl(v.url, hidden) && bytes(JSON.stringify(v)) <= 32768
+      ? null
+      : "invalidUrl";
   if (
     typeof v.executablePath !== "string" ||
     !v.executablePath.startsWith("/") ||
@@ -194,14 +212,22 @@ export function mcpAddInputError(value: unknown): McpAddCode | null {
     return "invalidArguments";
   return null;
 }
-export function freezeMcpAddInput(value: McpAddInput): McpAddInput {
+export function freezeMcpAddInput<T extends McpAddInput>(value: T): T {
   const error = mcpAddInputError(value);
   if (error) throw { code: error };
-  return Object.freeze({
-    name: value.name,
-    executablePath: value.executablePath,
-    args: Object.freeze([...value.args]),
-  });
+  return (
+    isHttpInput(value)
+      ? Object.freeze({
+          transport: "streamableHttp",
+          name: value.name,
+          url: value.url,
+        })
+      : Object.freeze({
+          name: value.name,
+          executablePath: value.executablePath,
+          args: Object.freeze([...value.args]),
+        })
+  ) as T;
 }
 export function mcpAddFailure(value: unknown): McpAddCode | null {
   if (
@@ -259,7 +285,7 @@ function target(raw: unknown, expected: McpAddRequest): McpAddTarget {
     inventoryRequestId: v.inventoryRequestId as string,
     inputId: v.inputId as string,
     name,
-    transport: one(v.transport, ["stdio"]),
+    transport: one(v.transport, ["stdio", "streamableHttp"]),
   };
 }
 function review(raw: unknown, expected: McpAddRequest): McpAddReview {
@@ -288,7 +314,10 @@ function review(raw: unknown, expected: McpAddRequest): McpAddReview {
     v.configuredEnabled !== null ||
     v.reportedEnabled !== null ||
     v.nameAvailability !== "absentInCheckedScopes" ||
-    v.mutation !== "addDisabledStdioMcp" ||
+    v.mutation !==
+      (expected.target.transport === "streamableHttp"
+        ? "addDisabledHttpMcp"
+        : "addDisabledStdioMcp") ||
     v.preservation !== "otherConfigurationSemanticsPreserved" ||
     v.sessionApplicability !== "unverified"
   )
@@ -308,7 +337,10 @@ function review(raw: unknown, expected: McpAddRequest): McpAddReview {
     },
     observedAtMs: integer(v.observedAtMs),
     validForMs: 300000,
-    mutation: "addDisabledStdioMcp",
+    mutation:
+      expected.target.transport === "streamableHttp"
+        ? "addDisabledHttpMcp"
+        : "addDisabledStdioMcp",
     nameAvailability: "absentInCheckedScopes",
     preservation: "otherConfigurationSemanticsPreserved",
     sessionApplicability: "unverified",

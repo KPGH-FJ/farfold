@@ -1,0 +1,61 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/mcp_http_add.test.ts (9 tests | 2 failed) 18ms
+   × owner loss between confirm scheduling and IPC clears the HTTP input without dispatch 3ms
+   × starting readonly recheck retires HTTP input before waiting for its reply 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/mcp_http_add.test.ts > owner loss between confirm scheduling and IPC clears the HTTP input without dispatch
+AssertionError: expected { transport: 'streamableHttp', …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "name": "new-http",
+  "transport": "streamableHttp",
+  "url": "HTTPS://endpoint.test:000443/mcp?token=SYNTHETIC&x=&x=+&p=%2f",
+}
+
+ ❯ src/runtime/mcp_http_add.test.ts:110:59
+    108|   await flush();
+    109|   expect(h.port.confirm).not.toHaveBeenCalled();
+    110|   expect(h.controller.get(h.owner.agentId).additionInput).toBeNull();
+       |                                                           ^
+    111|   expect(h.controller.get(h.owner.agentId).unresolved).toBe(false);
+    112| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/mcp_http_add.test.ts > starting readonly recheck retires HTTP input before waiting for its reply
+AssertionError: expected { transport: 'streamableHttp', …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "name": "new-http",
+  "transport": "streamableHttp",
+  "url": "HTTPS://endpoint.test:000443/mcp?token=SYNTHETIC&x=&x=+&p=%2f",
+}
+
+ ❯ src/runtime/mcp_http_add.test.ts:120:59
+    118|   h.pending.confirm.resolve(written(r)); await flush();
+    119|   expect(h.controller.recheck(h.owner.agentId, r.requestId)).toBe(true…
+    120|   expect(h.controller.get(h.owner.agentId).additionInput).toBeNull();
+       |                                                           ^
+    121|   expect(h.controller.canConfirm(h.owner, h.review)).toBe(false);
+    122|   h.pending.recheck.resolve({ ...written(h.controller.get(h.owner.agen…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 7 passed (9)
+   Start at  04:34:41
+   Duration  219ms (transform 96ms, setup 0ms, import 122ms, tests 18ms, environment 0ms)
+

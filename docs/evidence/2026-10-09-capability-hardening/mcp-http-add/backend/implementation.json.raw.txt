@@ -1,0 +1,181 @@
+{
+  "status": "backendSourceFrozenControlledChecksPassed",
+  "baselineCommit": "55441316981b59ef9805255e27b12b0c6761aa34",
+  "sourceCheckpoint": {
+    "path": "output/2026-10-11-mcp-http-add-backend/source-checkpoint.json",
+    "sha256": "092102d81e1a9db92a22576a547470a7a517277a36eece4fdcf3af483046175c",
+    "bytes": 3703
+  },
+  "sourceCount": 15,
+  "implementation": [
+    "Strict legacy stdio or explicitly tagged streamableHttp input; existing five MCP-add commands, domain, registry and owned execution path retained.",
+    "Independent mcpHttpAddition capability; bounded raw URL grammar then standard parser, preserving exact URL/query spelling only in private input and official leaf value.",
+    "One official leaf value {url, enabled:false}; complete two-scope configuration preservation and exact HTTP get identity including absence of auth/header helpers.",
+    "Fixed errors and safe public target; URL/host/query omitted from operations, review, status, cancellation and observations.",
+    "Unknown and rejected writes preserve their original acknowledgments during explicit readonly observation; actual worker retains account, activity and execution leases until cleanup."
+  ],
+  "verification": {
+    "targetedFirst": {
+      "passed": 10,
+      "failed": 0,
+      "scope": "9 new author tests and 1 existing HTTP test matched by name; before independent test registration"
+    },
+    "finalManagementAssociated": {
+      "passed": 79,
+      "failed": 0,
+      "newHttpTestsIncluded": 11,
+      "independentHttpTestsIncluded": 2,
+      "scope": "Actual shared registry, plan, finite exchanges and owned synthetic peer; all final source inputs stable"
+    },
+    "inventoryAssociated": {
+      "passed": 56,
+      "failed": 0
+    },
+    "urlCases": {
+      "literal": 58,
+      "generated": 4,
+      "executedBy": "Rust Input::validate and tauri::Url; accepted values also checked for exact original serialization"
+    },
+    "format": {
+      "exitCode": 0,
+      "scope": "Owned Rust source modules"
+    },
+    "clippy": {
+      "exitCode": 0,
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings"
+    },
+    "actualWire": {
+      "values": 21,
+      "markers": 7,
+      "sourceLog": {
+        "path": "output/2026-10-11-mcp-http-add-backend/related-management.txt",
+        "sha256": "3b417a4a935388c3bc1f46e1c47eb59f4d80cafbc92f7ca2a7b4c73967c784a7",
+        "bytes": 75999
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/actual-wire.json",
+        "sha256": "e8eb01a482663526d2484f8be3e36f07d6828905987456d486613e1cae038f87",
+        "bytes": 19700
+      }
+    },
+    "redBaseline": "No executed failing product baseline in this slice. First implementation and meaningful rejection/adversarial cases passed. Baseline source copies are not claimed as a red result.",
+    "evidenceAssembly": "Initial checkpoint script stopped when it incorrectly required the pre-independent-registration first-run module hash to equal the later final module; corrected by recording the exact first-to-final test-registration delta. No production change or repeated Cargo followed."
+  },
+  "boundaries": [
+    "No official Agent CLI, application, real account, user configuration, network endpoint, production database or installed build was invoked by these tests.",
+    "This proves configuration semantics with synthetic peers; it does not prove HTTP connection, authentication, tool discovery, tool execution or current-session refresh.",
+    "Capabilities wire is an actual unavailable synthetic-row result; an available response was not fabricated as actual Rust output.",
+    "pendingCleanup sample invokes the production publication method while an owned child remains live; it is not proof the operating-system cleanup deadline elapsed or that arbitrary processes can be killed.",
+    "Only the new default-disabled target is expected not to be contacted. Existing enabled HTTP entries may have official side effects; no global zero-network claim.",
+    "No cross-process CAS guarantee; official expectedVersion and full readback protections retain existing scope.",
+    "Frontend URL retirement and installed/native journeys are separately owned and not asserted here.",
+    "Shared URL case fixture is frontend-owned and included as a test input; 15 backend paths include one independently authored test file."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/baseline.json",
+      "sha256": "f56b7b0eb1278e7f321d1103269ac1a8babdd9175b41b6eca37af0061f3a92d1",
+      "bytes": 3053
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/source-checkpoint.json",
+      "sha256": "092102d81e1a9db92a22576a547470a7a517277a36eece4fdcf3af483046175c",
+      "bytes": 3703
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/first-to-final-input-delta.json",
+      "sha256": "1bf5768a57c8e201214bea8aaeb396a305716b6c5fc61d128b052a48900b4e73",
+      "bytes": 1055
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/legacy-wire-check.json",
+      "sha256": "e4863c7b7a69caef7c13b28b09b51f3d2c6c12df9b5f48336fa26bcc310af05c",
+      "bytes": 1451
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/targeted-first.txt",
+      "sha256": "d9b402d2c4e1e31ebbbc3ee0771dc5ffc6a3fc55c74102cfc9fcf0529bb60d77",
+      "bytes": 17376
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/targeted-first.json",
+      "sha256": "5fdf0c0896d5fbad395c4133bccd06cb7a2a9435f2704bc0f01a51eea027cdf9",
+      "bytes": 5460
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/related-management.txt",
+      "sha256": "3b417a4a935388c3bc1f46e1c47eb59f4d80cafbc92f7ca2a7b4c73967c784a7",
+      "bytes": 75999
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/related-management.json",
+      "sha256": "8edf553124291a1cf77e00f4ac583e16ee35c923eed5744bb6b15eb5a9c2db47",
+      "bytes": 5852
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/related-inventory.txt",
+      "sha256": "aba1a4c7f5562ab30d69b5c53d0f8fdcbd4a0eb9a5e98b8a2c28e3637f748451",
+      "bytes": 10820
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/related-inventory.json",
+      "sha256": "32b10716c8376f1e3c14048123c503d19630b47ae3388d8c8863dc07a2d844c8",
+      "bytes": 5854
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/format.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/format.json",
+      "sha256": "6f9354208e365ac01cbccdba4200f0f4c7f89400c8857c597f6d6b99e49a6a06",
+      "bytes": 6344
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/clippy.txt",
+      "sha256": "3615cb77779d4172d95ae61ad0d53df7067fddc33d24b1c7d7e0b9e3b6edf3cd",
+      "bytes": 139
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-backend/clippy.json",
+      "sha256": "60c57e52469e5fe6801c136290f9e7ece1997e1b3fc1e1a30c0a5ff451bf7d29",
+      "bytes": 5494
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/actual-wire.json",
+      "sha256": "e8eb01a482663526d2484f8be3e36f07d6828905987456d486613e1cae038f87",
+      "bytes": 19700
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/actual-wire.raw.txt",
+      "sha256": "fb1b97d3397814f13f1662918e0d67183c54f541d66721ca0b767fc0d9aeab5d",
+      "bytes": 15731
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/wire-capture.json",
+      "sha256": "be26cff5a5bebb0b467bf47027952593f3dc3f4d432e7982862783669856f055",
+      "bytes": 2525
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-design/contract-proposal-v2.json",
+      "sha256": "9a2f60fa6b6215693537955c1fd44de8cf5f0bfa1d06546de6039a665c07cb20",
+      "bytes": 30914
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-design/contract-proposal.ts",
+      "sha256": "4f4fa460996670ba48c3c940ce4b64c9d4f9ccb28f295f59bd1fec8ba063b46f",
+      "bytes": 4999
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-design/url-cases-v2.json",
+      "sha256": "597ae31d07567e0e5649ac3f20ac15a365b18256ceb1bf8d3602035e98d78295",
+      "bytes": 11535
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-design/independent-contract-review.json",
+      "sha256": "383628a7f3d292584f9c09ddd72cb32c913cd6c4f016f0e2f499e63c8c2c0daa",
+      "bytes": 14437
+    }
+  ]
+}

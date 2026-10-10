@@ -20,10 +20,11 @@ pub(super) fn absent(config: &Config, name: &str) -> Result<()> {
     Ok(())
 }
 impl Plan {
-    pub fn new(before: Config, directory: Config, input: Input) -> Result<Self> {
+    pub fn new(before: Config, directory: Config, input: impl Into<Input>) -> Result<Self> {
+        let input = input.into();
         input.validate()?;
-        absent(&before, &input.name)?;
-        absent(&directory, &input.name)?;
+        absent(&before, input.name())?;
+        absent(&directory, input.name())?;
         if !mcp_plan::same_scope(&before, &directory) {
             return Err(Code::ConfigurationUnsupported.into());
         }
@@ -31,8 +32,7 @@ impl Plan {
         if intended.get("mcp_servers").is_none() {
             intended["mcp_servers"] = json!({});
         }
-        intended["mcp_servers"][&input.name] =
-            json!({"command":input.executable_path,"args":input.args,"enabled":false});
+        intended["mcp_servers"][input.name()] = input.entry();
         Ok(Self {
             before,
             directory,
@@ -41,7 +41,7 @@ impl Plan {
         })
     }
     pub fn params(&self) -> Value {
-        json!({"keyPath":format!("mcp_servers.\"{}\"",self.input.name),"value":self.intended["mcp_servers"][&self.input.name],"mergeStrategy":"replace","filePath":self.before.file,"expectedVersion":self.before.version()})
+        json!({"keyPath":format!("mcp_servers.\"{}\"",self.input.name()),"value":self.intended["mcp_servers"][self.input.name()],"mergeStrategy":"replace","filePath":self.before.file,"expectedVersion":self.before.version()})
     }
     pub fn unchanged(&self, before: &Config, directory: &Config) -> bool {
         self.before == *before && self.directory == *directory
@@ -74,7 +74,7 @@ impl Plan {
                 } else {
                     "different"
                 }),
-                configured_enabled: Some(mcp_plan::configured(after, &self.input.name)),
+                configured_enabled: Some(mcp_plan::configured(after, self.input.name())),
                 reported_enabled: reported,
                 parent_outcome: None,
                 session_applicability: "unverified",
@@ -83,37 +83,26 @@ impl Plan {
         ))
     }
     fn matches_report(&self, r: &Value) -> bool {
-        let t = &r["transport"];
-        t.as_object().is_some_and(|v| {
-            v.keys().all(|k| {
-                ["type", "command", "args", "env", "env_vars", "cwd"].contains(&k.as_str())
+        self.input.matches_transport(&r["transport"])
+            && r.as_object().is_some_and(|v| {
+                v.keys().all(|k| {
+                    [
+                        "name",
+                        "enabled",
+                        "disabled_reason",
+                        "transport",
+                        "enabled_tools",
+                        "disabled_tools",
+                        "startup_timeout_sec",
+                        "tool_timeout_sec",
+                        "auth_status",
+                    ]
+                    .contains(&k.as_str())
+                })
             })
-        }) && r.as_object().is_some_and(|v| {
-            v.keys().all(|k| {
-                [
-                    "name",
-                    "enabled",
-                    "disabled_reason",
-                    "transport",
-                    "enabled_tools",
-                    "disabled_tools",
-                    "startup_timeout_sec",
-                    "tool_timeout_sec",
-                    "auth_status",
-                ]
-                .contains(&k.as_str())
-            })
-        }) && r["name"] == self.input.name
+            && r["name"] == self.input.name()
             && r["enabled"] == false
             && r.get("disabled_reason").is_none_or(Value::is_null)
-            && t["type"] == "stdio"
-            && t["command"] == self.input.executable_path
-            && t["args"] == json!(self.input.args)
-            && t.get("env")
-                .is_none_or(|v| v.is_null() || v.as_object().is_some_and(|v| v.is_empty()))
-            && t.get("env_vars")
-                .is_none_or(|v| v.is_null() || v.as_array().is_some_and(|v| v.is_empty()))
-            && t.get("cwd").is_none_or(Value::is_null)
             && [
                 "enabled_tools",
                 "disabled_tools",

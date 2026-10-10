@@ -17,6 +17,7 @@ const h = vi.hoisted(() => ({
   retire: vi.fn(),
   get: vi.fn(),
   confirm: vi.fn(),
+  listeners: new Set<() => void>(),
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -42,6 +43,10 @@ vi.mock("react", async (original) => ({
 }));
 vi.mock("../runtime/skill_management_controller", () => ({
   skillManagement: {
+    subscribe: (listener: () => void) => {
+      h.listeners.add(listener);
+      return () => h.listeners.delete(listener);
+    },
     inspect: h.inspect,
     retireAddition: h.retire,
     get: h.get,
@@ -93,6 +98,7 @@ function text() {
 }
 beforeEach(() => {
   h.slots = [];
+  h.listeners.clear();
   h.cursor = 0;
   h.inspect.mockReset().mockReturnValue(true);
   h.retire.mockReset();
@@ -184,4 +190,115 @@ it("closed form or late callback from another selection cannot inspect or revive
   props = { ...props, current: () => false };
   oldSubmit({ preventDefault: () => {} });
   expect(h.inspect).toHaveBeenCalledOnce();
+});
+it("HTTP mode keeps full query as user input and close clears owned raw references", () => {
+  props = { ...props, httpAvailable: true };
+  click("添加 MCP…");
+  const select = all().find(
+    (n) => n.type === "select" && n.props["aria-label"] === "添加方式",
+  )!;
+  (select.props.onChange as (e: unknown) => void)({
+    currentTarget: { value: "streamableHttp" },
+  });
+  edit(S.name, "http-name");
+  edit("HTTP 地址", "https://endpoint.test/mcp?token=SYNTHETIC&x=&x=+");
+  submit();
+  const target = h.inspect.mock.calls[0][0];
+  expect(target.input).toEqual({
+    transport: "streamableHttp",
+    name: "http-name",
+    url: "https://endpoint.test/mcp?token=SYNTHETIC&x=&x=+",
+  });
+  expect(target.current()).toBe(true);
+  click(S.cancelForm);
+  expect(target.current()).toBe(false);
+  expect(JSON.stringify(h.slots)).not.toContain("SYNTHETIC");
+  expect(all().some((n) => n.type === "a")).toBe(false);
+});
+
+function transport(value: string) {
+  const select = all().find((n) => n.type === "select")!;
+  (select.props.onChange as (e: unknown) => void)({ currentTarget: { value } });
+  render();
+}
+function httpDraft() {
+  props = { ...props, httpAvailable: true };
+  click("添加 MCP…");
+  transport("streamableHttp");
+  edit(S.name, "http-name");
+  edit("HTTP 地址", "https://endpoint.test/?token=SYNTHETIC");
+  submit();
+  return h.inspect.mock.calls.at(-1)![0];
+}
+it("transport HTTP-local-HTTP and URL A-B-A each create a new exact input owner", () => {
+  const first = httpDraft();
+  transport("stdio");
+  expect(first.current()).toBe(false);
+  expect(JSON.stringify(h.slots)).not.toContain("SYNTHETIC");
+  transport("streamableHttp");
+  expect(button(S.inspectButton).props.disabled).toBe(true);
+  edit("HTTP 地址", first.input.url);
+  submit();
+  const second = h.inspect.mock.calls.at(-1)![0];
+  expect(second.inputId).not.toBe(first.inputId);
+  edit("HTTP 地址", "https://different.test/");
+  edit("HTTP 地址", first.input.url);
+  submit();
+  const third = h.inspect.mock.calls.at(-1)![0];
+  expect(second.current()).toBe(false);
+  expect(third.inputId).not.toBe(second.inputId);
+});
+it("closing the review after dispatch synchronously clears the HTTP form even while safe status remains", () => {
+  const target = httpDraft();
+  h.get.mockReturnValue({
+    request: {
+      action: "add",
+      target: { kind: "mcpAddition", inputId: target.inputId },
+    },
+    additionInput: null,
+    unresolved: true,
+  });
+  for (const listener of h.listeners) listener();
+  expect(target.current()).toBe(false);
+  expect(JSON.stringify(h.slots)).not.toContain("SYNTHETIC");
+  expect(
+    all().some(
+      (n) => n.type === "input" && n.props["aria-label"] === "HTTP 地址",
+    ),
+  ).toBe(false);
+});
+it("owner replacement clears the old URL without letting its late callbacks consume the replacement draft", () => {
+  const first = httpDraft();
+  const late = all().find((n) => n.type === "form")!.props.onSubmit as (
+    e: unknown,
+  ) => void;
+  const owner = { ...props.owner, token: {} };
+  props = { ...props, owner, result: { ...props.result, owner } };
+  render();
+  render();
+  expect(JSON.stringify(h.slots)).not.toContain("SYNTHETIC");
+  expect(first.current()).toBe(false);
+  click("添加 MCP…");
+  transport("streamableHttp");
+  edit(S.name, "other");
+  edit("HTTP 地址", "https://other.test/");
+  late({ preventDefault() {} });
+  expect(h.inspect).toHaveBeenCalledOnce();
+  submit();
+  expect(h.inspect.mock.calls.at(-1)![0].current()).toBe(true);
+});
+it("an HTTP-only capability offers no local transport and does not begin inspection by opening the form", () => {
+  props = { ...props, httpAvailable: true, stdioAvailable: false };
+  click("添加 MCP…");
+  expect(
+    all()
+      .filter((n) => n.type === "option")
+      .map((n) => n.props.value),
+  ).toEqual(["streamableHttp"]);
+  expect(
+    all().some(
+      (n) => n.type === "input" && n.props["aria-label"] === "HTTP 地址",
+    ),
+  ).toBe(true);
+  expect(h.inspect).not.toHaveBeenCalled();
 });

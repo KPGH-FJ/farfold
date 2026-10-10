@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/McpAddForm.test.tsx (5 tests | 1 failed) 14ms
+   × HTTP mode keeps full query as user input, and transport A-B-A retires the old form owner 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/McpAddForm.test.tsx > HTTP mode keeps full query as user input, and transport A-B-A retires the old form owner
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ click src/components/McpAddForm.test.tsx:74:48
+     72|       (n.props.children === label || n.props["aria-label"] === label),
+     73|   )!;
+     74| const click = (label: string) => (button(label).props.onClick as () =>…
+       |                                                ^
+     75| function edit(label: string, value: string) {
+     76|   const n = all().find(
+ ❯ src/components/McpAddForm.test.tsx:190:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  04:29:21
+   Duration  207ms (transform 84ms, setup 0ms, import 113ms, tests 14ms, environment 0ms)
+

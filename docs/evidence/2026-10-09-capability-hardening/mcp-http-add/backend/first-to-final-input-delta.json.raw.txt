@@ -1,0 +1,26 @@
+{
+  "initialReceiptAssembly": "Stopped on an overbroad equality assertion before any checkpoint was written; it incorrectly required the first targeted run to have the later independent-test registration. No product/test failure.",
+  "changedFirstRunInputs": [
+    {
+      "before": {
+        "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+        "sha256": "5c3691c9d3994eceed0470e540fed9de6d294a2999e49df6ec27c88e40488a76"
+      },
+      "now": {
+        "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+        "sha256": "effc21a8e2d3381a32681b7e47fdeed9003d737c68bd3b972941cba3f4f3476a",
+        "bytes": 7921,
+        "lines": 255
+      }
+    }
+  ],
+  "newAfterFirstRun": [
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_http_independent_tests.rs",
+      "sha256": "5e318d232e956d3f80bc0eeb6d0790940f3bc4f3b0743451ef4a19c7c9c8fade",
+      "bytes": 3928,
+      "lines": 97
+    }
+  ],
+  "finalVerification": "Both associated groups and fmt/clippy use the complete final inputs; all matching final hashes."
+}

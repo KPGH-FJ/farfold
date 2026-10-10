@@ -1,0 +1,108 @@
+{
+  "createdAt": "2026-10-10T20:44:08.738943+00:00",
+  "scope": "HTTP MCP addition frontend source and tests",
+  "sourceStable": true,
+  "sourceRefs": [
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "c17b1e22df135875bd2fa083fd3e31b6ddff72307b09bbcc4734099cbcb2fc21",
+      "lines": 408
+    },
+    {
+      "path": "src/components/McpAddForm.http-progress.test.tsx",
+      "sha256": "b1b2efe8fa5ce5ff1f5864c8e3cb9dd74dc4ee40870832040f784d96ad2bfb80",
+      "lines": 172
+    },
+    {
+      "path": "src/components/McpAddForm.test.tsx",
+      "sha256": "397f8423023c2e1b73d4fd3d9698bce627289b92fcf1a18cb2c15c3d3b2f20ba",
+      "lines": 304
+    },
+    {
+      "path": "src/components/McpAddForm.tsx",
+      "sha256": "ca05ec91f5839fd5dadc974846a1815fd7efcf7631e942e1fb3d75ca50eba257",
+      "lines": 387
+    },
+    {
+      "path": "src/components/SkillChangeReview.http.test.tsx",
+      "sha256": "655ea489ee2bf7e94834e0196fa2889fbeddd6d29e0254cd60685f79306e13a9",
+      "lines": 65
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "91b58c649fcab09da891b40102d669018ee41078d04a7d4ce18e865b440a9889",
+      "lines": 396
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "03ca9aafbbaf65a9fa64fe331ae57f74968be55997b00279055d3a8963a852df",
+      "lines": 553
+    },
+    {
+      "path": "src/runtime/extension_management_types.ts",
+      "sha256": "80176b89acd4d966b05472b3ae725511fa59be6155075b4cf366d39bfb3d4489",
+      "lines": 275
+    },
+    {
+      "path": "src/runtime/fixtures/mcp-http-url-cases.json",
+      "sha256": "597ae31d07567e0e5649ac3f20ac15a365b18256ceb1bf8d3602035e98d78295",
+      "lines": 380
+    },
+    {
+      "path": "src/runtime/mcp_add.test-support.ts",
+      "sha256": "c38193f51e602f2a2a7e0da331d3bb62e76f7a263a26d5dfc19f87dd3336c2ff",
+      "lines": 156
+    },
+    {
+      "path": "src/runtime/mcp_add_controller.test.ts",
+      "sha256": "dbaecbbe0dfc8a8c18fefc2d668104d866b08bfbdeb1019dfae2ea3a7eed7e82",
+      "lines": 172
+    },
+    {
+      "path": "src/runtime/mcp_add_strings.ts",
+      "sha256": "e218c866746871f7d00d63c0ad1000641f881d6cffbb6ee46c5ba3088b2dc421",
+      "lines": 79
+    },
+    {
+      "path": "src/runtime/mcp_add_types.ts",
+      "sha256": "0f78108e40fac3b7fdc2ee712728b3196fbeca68bc4dbef0f03febc57ace8caf",
+      "lines": 419
+    },
+    {
+      "path": "src/runtime/mcp_http_add.test.ts",
+      "sha256": "989fff881bcb0b7a96c6f0073f34870f256c85fd2a0555e78394e7cce314c203",
+      "lines": 245
+    },
+    {
+      "path": "src/runtime/mcp_http_add.wire.test.tsx",
+      "sha256": "34e997fa510bbe7185347392145c093e4739a2e2933bddef0e8969d29a22049b",
+      "lines": 228
+    },
+    {
+      "path": "src/runtime/mcp_http_url.test.ts",
+      "sha256": "bc9de9252163c971fb49da2a3ffe11c1c6f30ae7725f3091c3044ef34efb8ab9",
+      "lines": 45
+    },
+    {
+      "path": "src/runtime/mcp_http_url.ts",
+      "sha256": "cef2e5a3494e2f54ffa7b7202806c77343c7ca04d617b5b903f77b2bb44b217f",
+      "lines": 52
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "d6035b796221f2aa64a678c41d994acfda02b46c604b1c8ad7f97f2c6557307e",
+      "lines": 605
+    }
+  ],
+  "actualWire": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/actual-wire.json",
+    "sha256": "e8eb01a482663526d2484f8be3e36f07d6828905987456d486613e1cae038f87"
+  },
+  "checks": {
+    "files": 18,
+    "passed": 223,
+    "typecheckExit": 0,
+    "formatExit": 0
+  },
+  "maxLines": 605
+}

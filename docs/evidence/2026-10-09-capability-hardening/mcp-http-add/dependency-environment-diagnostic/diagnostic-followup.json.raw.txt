@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "observedAtUtc": "2026-10-10T21:04:27.048335+00:00",
+  "status": "diagnosticsAddedAndAuthorizedValidationPassedOriginalCauseUnresolved",
+  "scope": "One controlled test fixture only; no HTTP production edit, deadline relaxation, retry or test-assertion removal. No installed App/official CLI/user DB validation.",
+  "inputDeltaFromFailedRun01": [
+    "src-tauri/src/acp_client/dependency_environment_tests.rs"
+  ],
+  "inputCount": 1509,
+  "sourceStableAcrossThreeCommands": true,
+  "protectedUnchanged": true,
+  "originalFailure": {
+    "rustPassed": 1556,
+    "rustFailed": 1,
+    "rustIgnored": 6,
+    "outerDeadlineSeconds": 10,
+    "lastWrittenStage": "probe_subprocess",
+    "cause": "unresolved",
+    "preserved": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/rust-resumed.txt",
+      "sha256": "7ac4a0c6a5ea595959d9e6ce82b00c37f92a03fb5be1e1d6478a9812af4b4bd0"
+    }
+  },
+  "sourceChange": {
+    "beforeSha256": "a9dbcc780e975cd9001fd750eee400e6c9c26689774cde668aee19e0dd226960",
+    "after": {
+      "path": "src-tauri/src/acp_client/dependency_environment_tests.rs",
+      "sha256": "f559add56e51b45f39b885d7534d6ec03a408017bdc60dad8ccf206334d09be2"
+    },
+    "equivalence": {
+      "assertionBlocksByteIdentical": 8,
+      "outerDeadlineSecondsUnchanged": 10,
+      "disconnectCallUnchangedAndUnconditional": true,
+      "productionBehaviorChanged": false,
+      "newFixedDiagnosticFields": [
+        "source",
+        "helperPid",
+        "childPid",
+        "elapsedMs",
+        "spawnElapsedMs",
+        "communicateElapsedMs",
+        "returncode"
+      ],
+      "diagnosticContainsEnvironmentOrArgsOrOutput": false,
+      "newStageBoundary": "Popen returned vs communicate returned; last written stage only, not syscall attribution",
+      "sourceBefore": "a9dbcc780e975cd9001fd750eee400e6c9c26689774cde668aee19e0dd226960",
+      "sourceAfter": "f559add56e51b45f39b885d7534d6ec03a408017bdc60dad8ccf206334d09be2"
+    },
+    "diagnosticBoundary": "Added stages record successful fixed diagnostic writes around Popen/communicate and before/after cleanup; they are not blocked-syscall or scheduling proof. No failure recurred to supply new failing-stage evidence."
+  },
+  "verification": {
+    "unchangedSourceIsolated": {
+      "passed": 1,
+      "failed": 0,
+      "testSeconds": 1.55,
+      "log": {
+        "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/isolated-first.txt",
+        "sha256": "8a072ae678b4c3b563524b6b9eed4c387d0ae6c9acc742a07f74ad5fbba7df55"
+      }
+    },
+    "diagnosticSourceIsolated": {
+      "passed": 1,
+      "failed": 0,
+      "testSeconds": 1.07,
+      "log": {
+        "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/diagnostic-isolated.txt",
+        "sha256": "d94b5d5f6b7e19f3ce52566291f386e9f483e8e215d5a92367d63743d26d870c"
+      }
+    },
+    "fullRust": {
+      "passed": 1557,
+      "failed": 0,
+      "ignored": 6,
+      "testSeconds": 114.36,
+      "commandSeconds": 116.48233804200001
+    },
+    "threeActualCommands": {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/final-commands.json",
+      "sha256": "1e5a0da04b306986e41c7e93bde557c1f2372a86cf63e0d92c5059d85674e4e2"
+    }
+  },
+  "interpretation": [
+    "Original and historical same-stage failures remain unexplained. Same-source isolated success did not establish repair.",
+    "Diagnostics preserve original assertion blocks and outer ten-second deadline; added observation IO can perturb timing.",
+    "Full Rust/fmt/clippy are actual final-source executions with separate owner provenance; root may preserve exact bytes in the next seven-command engineering receipt, without claiming a root rerun.",
+    "No further tests or Cargo commands are required by this private diagnostic step."
+  ],
+  "evidence": [
+    {
+      "path": "src-tauri/src/acp_client/dependency_environment_tests.rs",
+      "sha256": "f559add56e51b45f39b885d7534d6ec03a408017bdc60dad8ccf206334d09be2"
+    },
+    {
+      "path": "src-tauri/src/acp_client/dependency_environment.rs",
+      "sha256": "3710f77d1e46fcbaa26a2fbc3b09a1dcfd9dcd181b5e7353adf7406c9a94ca4f"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/dependency_environment_tests.before.rs.txt",
+      "sha256": "a9dbcc780e975cd9001fd750eee400e6c9c26689774cde668aee19e0dd226960"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/diagnostic-only.patch.txt",
+      "sha256": "81b1000f3bdbc48f85483572fd9b0ac03251996e696249247b666af045d5f375"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/diagnostic-diff-validation.json",
+      "sha256": "e84b5b0c8cc17f6b40876c165425f3662b3ae86318cbac4a578b722db37636d4"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/diagnosis-before-instrumentation.json",
+      "sha256": "153d2f78027638a66773cd0f5cdfbd935135b96131fcc353b74a2bf4eab918ba"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/isolated-first.txt",
+      "sha256": "8a072ae678b4c3b563524b6b9eed4c387d0ae6c9acc742a07f74ad5fbba7df55"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/diagnostic-isolated.txt",
+      "sha256": "d94b5d5f6b7e19f3ce52566291f386e9f483e8e215d5a92367d63743d26d870c"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/full-rust-diagnostic.txt",
+      "sha256": "d9ab7fd93ac00dd480cdd0d21c317b6da04bead287650f127ba88442270a927c"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/full-rust-result.json",
+      "sha256": "f40296458998ab9b795749aa1ab20ee1c246ba9772015e3a7144234a29e5bf5e"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/full-rust-inputs-before.json",
+      "sha256": "42f8bb2d9f07a63fc0ecd8959cdd0a1e95f77a67b2ace732d692bf51aa24ddeb"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/full-rust-inputs-after.json",
+      "sha256": "42f8bb2d9f07a63fc0ecd8959cdd0a1e95f77a67b2ace732d692bf51aa24ddeb"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/rustfmt-diagnostic.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/rustfmt-result.json",
+      "sha256": "be96598be6e7ce9c7a0754769b3c838cdd1a1c02cf318863c73022c30592f1c5"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/clippy-diagnostic.txt",
+      "sha256": "8950be1e8f4499f41b8e38ef15f09a0e2671be53a43aa5dec4d794320908881d"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/clippy-result.json",
+      "sha256": "bf01a61721781799a4b19304b39cfd13bb41607a99a036c922134515dddca660"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/final-commands.json",
+      "sha256": "1e5a0da04b306986e41c7e93bde557c1f2372a86cf63e0d92c5059d85674e4e2"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/final-inputs-after.json",
+      "sha256": "42f8bb2d9f07a63fc0ecd8959cdd0a1e95f77a67b2ace732d692bf51aa24ddeb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/rust-resumed.txt",
+      "sha256": "7ac4a0c6a5ea595959d9e6ce82b00c37f92a03fb5be1e1d6478a9812af4b4bd0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/verification.json",
+      "sha256": "064a774dd2e64965bb02584eea52705fe5ece756c82194c888e6675322070a34"
+    }
+  ]
+}

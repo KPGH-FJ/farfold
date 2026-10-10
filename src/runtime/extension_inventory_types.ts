@@ -33,6 +33,7 @@ export interface ExtensionCapabilities {
   skillsInventory: InventoryCapability;
   skillEnablement: InventoryCapability;
   mcpRemoval?: InventoryCapability; // Missing legacy report grants no removal.
+  mcpHttpAddition?: InventoryCapability; // Only explicit availability grants HTTP addition.
   mcpAddition?: InventoryCapability; // Legacy absence never grants addition authority.
   mcpEnablement?: InventoryCapability; // Missing legacy report never grants management.
   toolInventory: "unavailable";
@@ -161,7 +162,7 @@ export function parseExtensionCapabilities(
       "skillEnablement",
       "toolInventory",
     ],
-    ["mcpEnablement", "mcpAddition", "mcpRemoval"],
+    ["mcpEnablement", "mcpAddition", "mcpRemoval", "mcpHttpAddition"],
   );
   const capability = (
     raw: unknown,
@@ -218,6 +219,32 @@ export function parseExtensionCapabilities(
     mcpInventory.availability !== "available"
   )
     return invalid();
+  const mcpHttpAddition = Object.hasOwn(v, "mcpHttpAddition")
+    ? (() => {
+        const raw = object(v.mcpHttpAddition, [
+          "availability",
+          "source",
+          "reason",
+        ]);
+        if (raw.availability === "available")
+          return capability(raw, "officialAppServer");
+        if (
+          raw.availability !== "unavailable" ||
+          ![null, "officialAppServer"].includes(raw.source as null | string)
+        )
+          return invalid();
+        return {
+          availability: "unavailable" as const,
+          source: raw.source as "officialAppServer" | null,
+          reason: one(raw.reason, EXTENSION_CODES),
+        };
+      })()
+    : undefined;
+  if (
+    mcpHttpAddition?.availability === "available" &&
+    mcpInventory.availability !== "available"
+  )
+    return invalid();
   const mcpRemoval = Object.hasOwn(v, "mcpRemoval")
     ? capability(v.mcpRemoval, "officialAppServer", true)
     : undefined;
@@ -241,6 +268,7 @@ export function parseExtensionCapabilities(
     skillEnablement,
     ...(mcpEnablement ? { mcpEnablement } : {}),
     ...(mcpAddition ? { mcpAddition } : {}),
+    ...(mcpHttpAddition ? { mcpHttpAddition } : {}),
     ...(mcpRemoval ? { mcpRemoval } : {}),
     toolInventory: "unavailable",
   };

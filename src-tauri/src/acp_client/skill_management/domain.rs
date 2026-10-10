@@ -192,13 +192,13 @@ impl PreparedPlan {
                     "removeDisabledMcp",
                     "otherConfigurationSemanticsPreserved",
                 ),
-                Self::Addition(_) => (
+                Self::Addition(v) => (
                     Some(false),
                     None,
                     Some(None),
                     None,
                     None,
-                    "addDisabledStdioMcp",
+                    v.input.mutation(),
                     "otherConfigurationSemanticsPreserved",
                 ),
             };

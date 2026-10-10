@@ -1,0 +1,81 @@
+{
+  "status": "originalFullFailurePreservedSameSourceIsolatedPassRootCauseUnresolved",
+  "originalFailure": {
+    "passed": 1556,
+    "failed": 1,
+    "ignored": 6,
+    "seconds": 123.18,
+    "lastDiagnosticStage": "probe_subprocess",
+    "outerConnectDeadlineSeconds": 10,
+    "innerTimeoutConfigured": false,
+    "timedOutFalseMeaning": "Diagnostic written before subprocess.run, not proof of completion or the exact blocked syscall."
+  },
+  "isolated": {
+    "argv": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "acp_client::dependency_environment::launch_tests::manager_final_environment_handles_prepared_and_existing_sources_without_persisting_it",
+      "--",
+      "--exact",
+      "--nocapture"
+    ],
+    "exitCode": 0,
+    "passed": 1,
+    "testSeconds": 1.55,
+    "sourceUnchanged": true
+  },
+  "history": "fe63cf5 removed inner2s probe timeout and added fixed diagnostics while retaining outer10s. Later browser-search same-stage full failure remained unattributed after isolated and full success. HTTP changes did not modify this fixture or dependency environment production source.",
+  "known": [
+    "Python fixture started, decoded initialize and reached version-probe call.",
+    "connect timed out and manager.disconnect completed before test panic.",
+    "Original failure has no child PID or spawn/communicate boundary evidence."
+  ],
+  "unknown": [
+    "Which iteration (existing/prepared) stalled.",
+    "Whether Popen creation/exec completion, communicate/EOF, scheduling, or another cause accounted for delay.",
+    "No original process scheduler or fd snapshot supports a causal attribution."
+  ],
+  "next": "Root-authorized diagnostic-only test edit, retaining outer10s, cleanup and all original assertions; first exact test then one full Rust with final-source before/after hashes. No retry loop or production fix inferred from isolated pass.",
+  "refs": [
+    {
+      "path": "src-tauri/src/acp_client/dependency_environment.rs",
+      "sha256": "3710f77d1e46fcbaa26a2fbc3b09a1dcfd9dcd181b5e7353adf7406c9a94ca4f"
+    },
+    {
+      "path": "src-tauri/src/acp_client/dependency_environment_tests.rs",
+      "sha256": "a9dbcc780e975cd9001fd750eee400e6c9c26689774cde668aee19e0dd226960"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/inputs-before.json",
+      "sha256": "cc096703276b8f7199a084fea00ba5cf0b80f844dc4e512abb44694398ad6bdd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/rust-resumed.txt",
+      "sha256": "7ac4a0c6a5ea595959d9e6ce82b00c37f92a03fb5be1e1d6478a9812af4b4bd0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/verification.json",
+      "sha256": "064a774dd2e64965bb02584eea52705fe5ece756c82194c888e6675322070a34"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/isolated-first.txt",
+      "sha256": "8a072ae678b4c3b563524b6b9eed4c387d0ae6c9acc742a07f74ad5fbba7df55"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/dependency_environment_tests.before.rs.txt",
+      "sha256": "a9dbcc780e975cd9001fd750eee400e6c9c26689774cde668aee19e0dd226960"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/diagnosis.json",
+      "sha256": "8b4452cec76f8560a666c7ec131c6d6405c79e24ee33a78bd82e561e05f016ec"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/source-history.txt",
+      "sha256": "a7e91c168bf98b8906baaeb3410fd0e9cc9ab594e072523e45eda3f6a48edbfa"
+    }
+  ]
+}

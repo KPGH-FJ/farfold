@@ -1,0 +1,108 @@
+diff --git a/src-tauri/src/acp_client/dependency_environment_tests.rs b/src-tauri/src/acp_client/dependency_environment_tests.rs
+index cda41ea8..d5ea13c5 100644
+--- a/src-tauri/src/acp_client/dependency_environment_tests.rs
++++ b/src-tauri/src/acp_client/dependency_environment_tests.rs
+@@ -18,6 +18,13 @@ fn fixture_diagnostic(cwd: &std::path::Path) -> serde_json::Value {
+         "exceptionType": value["exceptionType"],
+         "timedOut": value["timedOut"],
+         "timeoutSeconds": value["timeoutSeconds"],
++        "source": value["source"],
++        "helperPid": value["helperPid"],
++        "childPid": value["childPid"],
++        "elapsedMs": value["elapsedMs"],
++        "spawnElapsedMs": value["spawnElapsedMs"],
++        "communicateElapsedMs": value["communicateElapsedMs"],
++        "returncode": value["returncode"],
+     })
+ }
+ 
+@@ -37,12 +44,16 @@ async fn manager_final_environment_handles_prepared_and_existing_sources_without
+     std::fs::write(package.join("package.json"), r#"{"name":"@autohandai/autohand-acp","version":"0.2.1","bin":{"autohand-acp":"dist/index.js"}}"#).unwrap();
+     let node = data.join("node");
+     std::fs::write(&node, r#"#!/usr/bin/python3
+-import sys,json,os,subprocess
++import sys,json,os,subprocess,time
+ stage='start'
++started=time.monotonic_ns()
++child_pid=spawn_elapsed=communicate_elapsed=returncode=None
++source='prepared' if os.path.basename(os.getcwd())=='selected-source' else 'existing'
+ def diagnose(error=None):
+  timed_out=isinstance(error,subprocess.TimeoutExpired)
+- with open('fixture-diagnostic.json','w') as f:
+-  json.dump({'stage':stage,'exceptionType':type(error).__name__ if error else None,'timedOut':timed_out,'timeoutSeconds':error.timeout if timed_out else None},f)
++ with open('fixture-diagnostic.tmp','w') as f:
++  json.dump({'stage':stage,'exceptionType':type(error).__name__ if error else None,'timedOut':timed_out,'timeoutSeconds':error.timeout if timed_out else None,'source':source,'helperPid':os.getpid(),'childPid':child_pid,'elapsedMs':(time.monotonic_ns()-started)/1000000,'spawnElapsedMs':spawn_elapsed,'communicateElapsedMs':communicate_elapsed,'returncode':returncode},f)
++ os.replace('fixture-diagnostic.tmp','fixture-diagnostic.json')
+ try:
+  diagnose()
+  for line in sys.stdin:
+@@ -51,13 +62,32 @@ try:
+   if m.get('method')=='initialize':
+    stage='read_command'
+    command=os.environ['AUTOHAND_CMD']
+-   stage='probe_subprocess'
++   stage='probe_spawn_started'
+    diagnose()
+    # This tests actual environment delivery, not a separate version-probe SLO.
+    # The outer 10-second deadline and exact process-group cleanup own this child.
+-   result=subprocess.run([command,'--version'],capture_output=True,text=True)
++   # Preserve run()'s Popen/communicate/exception cleanup, recording only fixed
++   # diagnostics. A last-written stage is not a blocked-syscall diagnosis.
++   spawn_started=time.monotonic_ns()
++   with subprocess.Popen([command,'--version'],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True) as probe:
++    try:
++     child_pid=probe.pid
++     spawn_elapsed=(time.monotonic_ns()-spawn_started)/1000000
++     stage='probe_spawn_returned'
++     diagnose()
++     stage='probe_communicate_started'
++     diagnose()
++     communicate_started=time.monotonic_ns()
++     output,_=probe.communicate()
++     communicate_elapsed=(time.monotonic_ns()-communicate_started)/1000000
++     returncode=probe.returncode
++     stage='probe_communicate_returned'
++     diagnose()
++    except BaseException:
++     probe.kill()
++     raise
+    stage='prepare_observation'
+-   observed={'command':command,'path':os.environ['PATH'],'marker':os.environ['PUBLIC_MARKER'],'exit':result.returncode,'output':result.stdout}
++   observed={'command':command,'path':os.environ['PATH'],'marker':os.environ['PUBLIC_MARKER'],'exit':returncode,'output':output}
+    stage='write_observation'
+    with open('observed.json','w') as f:
+     json.dump(observed,f)
+@@ -121,6 +151,9 @@ except Exception as error:
+             manager.connect_launch(&row, &cwd, &store, false, service),
+         )
+         .await;
++        // Capture the last fixed fixture observation before cleanup can change
++        // it. Neither this snapshot nor its stage identifies a blocked syscall.
++        let before_cleanup = fixture_diagnostic(&cwd);
+         let cleanup = manager.disconnect(&row.id, &cwd).await;
+         let connection_outcome = match &status {
+             Ok(Ok(status)) => status.state.as_str(),
+@@ -129,20 +162,20 @@ except Exception as error:
+         };
+         cleanup.unwrap_or_else(|error| {
+             panic!(
+-                "cleanup failed: {error}; connect={connection_outcome}; fixture={}",
++                "cleanup failed: {error}; connect={connection_outcome}; fixtureBeforeCleanup={before_cleanup}; fixtureAfterCleanup={}",
+                 fixture_diagnostic(&cwd)
+             )
+         });
+         let status = status
+             .unwrap_or_else(|error| {
+                 panic!(
+-                    "connect deadline: {error}; fixture={}",
++                    "connect deadline: {error}; fixtureBeforeCleanup={before_cleanup}; fixtureAfterCleanup={}",
+                     fixture_diagnostic(&cwd)
+                 )
+             })
+             .unwrap_or_else(|error| {
+                 panic!(
+-                    "connect failed: {error}; fixture={}",
++                    "connect failed: {error}; fixtureBeforeCleanup={before_cleanup}; fixtureAfterCleanup={}",
+                     fixture_diagnostic(&cwd)
+                 )
+             });

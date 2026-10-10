@@ -1,0 +1,92 @@
+{
+  "checks": [
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 116.48233804200001,
+      "inputCount": 1509,
+      "sourceStable": true,
+      "changedInputs": [],
+      "protectedUnchanged": true,
+      "log": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/full-rust-diagnostic.txt",
+      "sha256": "d9ab7fd93ac00dd480cdd0d21c317b6da04bead287650f127ba88442270a927c",
+      "boundary": "Diagnostic-only fixture edit; complete Rust command run once. Original full failure remains preserved and is not explained by a later pass.",
+      "executedInThisRun": true,
+      "owner": "/root/verification"
+    },
+    {
+      "name": "rustfmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 0.9904964169999999,
+      "log": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/rustfmt-diagnostic.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true,
+      "owner": "/root/verification",
+      "inputCount": 1509,
+      "sourceStable": true,
+      "protectedUnchanged": true
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.3937164169999998,
+      "log": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/clippy-diagnostic.txt",
+      "sha256": "8950be1e8f4499f41b8e38ef15f09a0e2671be53a43aa5dec4d794320908881d",
+      "executedInThisRun": true,
+      "owner": "/root/verification",
+      "inputCount": 1509,
+      "sourceStable": true,
+      "protectedUnchanged": true
+    }
+  ],
+  "sourceStable": true,
+  "protectedUnchanged": true,
+  "inputCount": 1509,
+  "inputsBefore": {
+    "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/full-rust-inputs-before.json",
+    "sha256": "42f8bb2d9f07a63fc0ecd8959cdd0a1e95f77a67b2ace732d692bf51aa24ddeb"
+  },
+  "inputsAfter": {
+    "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/final-inputs-after.json",
+    "sha256": "42f8bb2d9f07a63fc0ecd8959cdd0a1e95f77a67b2ace732d692bf51aa24ddeb"
+  },
+  "originalReceipts": [
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/full-rust-result.json",
+      "sha256": "f40296458998ab9b795749aa1ab20ee1c246ba9772015e3a7144234a29e5bf5e"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/rustfmt-result.json",
+      "sha256": "be96598be6e7ce9c7a0754769b3c838cdd1a1c02cf318863c73022c30592f1c5"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/clippy-result.json",
+      "sha256": "bf01a61721781799a4b19304b39cfd13bb41607a99a036c922134515dddca660"
+    }
+  ],
+  "boundary": "Three actual commands executed once by verification after a diagnostic-only fixture change. The original full-suite timeout remains unexplained; later passes are not a repair claim."
+}

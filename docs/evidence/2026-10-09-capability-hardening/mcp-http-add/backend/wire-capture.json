@@ -1,0 +1,85 @@
+{
+  "sourceLog": "output/2026-10-11-mcp-http-add-backend/related-management.txt",
+  "sourceLogSha256": "3b417a4a935388c3bc1f46e1c47eb59f4d80cafbc92f7ca2a7b4c73967c784a7",
+  "markers": [
+    {
+      "marker": "MCP_HTTP_CLEANUP_WIRE",
+      "line": 41,
+      "mode": null,
+      "labels": {
+        "inspection": "pendingInspection",
+        "pendingCleanup": "pendingCleanup",
+        "cancellation": "cancellation",
+        "cancelledAfterWrite": "cancelledAfterWrite",
+        "recheck": "cleanupRecheckObserved"
+      }
+    },
+    {
+      "marker": "MCP_HTTP_INPUT_WIRE",
+      "line": 43,
+      "mode": null,
+      "labels": {
+        "invalidUrl": "invalidUrl",
+        "inspectCancelled": "inspectCancelled"
+      }
+    },
+    {
+      "marker": "MCP_HTTP_REFUSAL_WIRE",
+      "line": 46,
+      "mode": null,
+      "labels": {
+        "inspectNameConflict": "inspectNameConflict"
+      }
+    },
+    {
+      "marker": "MCP_HTTP_READY_WIRE",
+      "line": 48,
+      "mode": null,
+      "labels": {
+        "inspection": "inspection",
+        "verified": "verified",
+        "inventory": "inventory",
+        "unavailableCapabilities": "unavailableCapabilities"
+      }
+    },
+    {
+      "marker": "MCP_HTTP_MISMATCH_WIRE",
+      "line": 50,
+      "mode": null,
+      "labels": {
+        "mismatchSameDisabled": "mismatchSameDisabled"
+      }
+    },
+    {
+      "marker": "MCP_HTTP_RECOVERY_WIRE",
+      "line": 52,
+      "mode": "lost-ack",
+      "labels": {
+        "inventory": "unknownInventory",
+        "inspection": "unknownInspection",
+        "original": "unknown",
+        "recheck": "recheckObserved"
+      }
+    },
+    {
+      "marker": "MCP_HTTP_RECOVERY_WIRE",
+      "line": 77,
+      "mode": "refused",
+      "labels": {
+        "inventory": "rejectedInventory",
+        "inspection": "rejectedInspection",
+        "original": "rejected",
+        "recheck": "rejectedRecheckObserved"
+      }
+    }
+  ],
+  "valueCount": 21,
+  "capturedWithoutValueEdits": true,
+  "boundaries": [
+    "Owned synthetic peer; no official CLI, application or account was executed.",
+    "unavailableCapabilities is an actual unsupported synthetic-row result, not an available-capability fixture.",
+    "pendingInspection is a ready inspection; label is not a state claim.",
+    "pendingCleanup uses production Job.pending_cleanup while an owned child remains live; it does not prove the OS cleanup deadline elapsed.",
+    "Raw URL is private fixture input; none of the public values contains its URL, host or query canary."
+  ]
+}

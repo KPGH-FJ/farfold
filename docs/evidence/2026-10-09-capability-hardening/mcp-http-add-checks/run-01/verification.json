@@ -1,0 +1,112 @@
+{
+  "checkedAtUtc": "2026-10-10T20:57:02.973281+00:00",
+  "sourceBase": "55441316981b59ef9805255e27b12b0c6761aa34",
+  "inputCount": 1509,
+  "sourceStable": true,
+  "changedInputs": [],
+  "protectedUnchanged": true,
+  "checks": [
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 12.054,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true,
+      "executionSegment": "before external interruption; observed runner result retained"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 75.972,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/frontend.txt",
+      "sha256": "7dbcc767a065d10040cf6a73e11c8f58071db25bee6e0f2507b58c376202a0c2",
+      "executedInThisRun": true,
+      "executionSegment": "before external interruption; observed runner result retained"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 13.64,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/build.txt",
+      "sha256": "3914354840623ad245ac57ab39a2e63ca83e2b4f7af8beaad49b596842408915",
+      "executedInThisRun": true,
+      "executionSegment": "before external interruption; observed runner result retained"
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.781,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true,
+      "executionSegment": "before external interruption; observed runner result retained"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.816,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/clippy.txt",
+      "sha256": "182e0273ab1d85020feb801d5e48b162fe456a7158fff856876f75864df8bcb0",
+      "executedInThisRun": true,
+      "executionSegment": "before external interruption; observed runner result retained"
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 101,
+      "seconds": 123.984,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/rust-resumed.txt",
+      "sha256": "7ac4a0c6a5ea595959d9e6ce82b00c37f92a03fb5be1e1d6478a9812af4b4bd0",
+      "executedInThisRun": true,
+      "executionSegment": "after interruption, full command rerun"
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 27.24,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true
+    }
+  ],
+  "counts": {
+    "frontend": ["Test Files  425 passed (425)", "Tests  4963 passed (4963)"],
+    "rust": [
+      "test result: FAILED. 1556 passed; 1 failed; 6 ignored; 0 measured; 0 filtered out; finished in 123.18s"
+    ]
+  },
+  "allPassed": false,
+  "interruption": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/interruption.json",
+    "sha256": "b2785586a77e68f411f34d13f42644a951162f8ac918ed305a6f09882b99b257"
+  },
+  "boundary": "All seven exact commands completed on unchanged1509 inputs across one interrupted/resumed run. First five actual exits retained with exact hashes; incomplete Rust not counted and complete command rerun; final format executed. Engineering only, not installed/official Agent/product acceptance."
+}

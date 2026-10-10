@@ -1,0 +1,121 @@
+{
+  "checkedAtUtc": "2026-10-10T21:05:37.148301+00:00",
+  "sourceBase": "55441316981b59ef9805255e27b12b0c6761aa34",
+  "inputCount": 1509,
+  "sourceStable": true,
+  "changedInputs": [],
+  "protectedUnchanged": true,
+  "checks": [
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 116.48233804200001,
+      "sha256": "d9ab7fd93ac00dd480cdd0d21c317b6da04bead287650f127ba88442270a927c",
+      "originalName": "rust",
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/rust.txt",
+      "executedInThisRun": true,
+      "executor": "independent agent, actual command on this frozen input set; root preserved exact output",
+      "originalLog": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/full-rust-diagnostic.txt"
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 0.9904964169999999,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "originalName": "rustfmt",
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/cargo-fmt.txt",
+      "executedInThisRun": true,
+      "executor": "independent agent, actual command on this frozen input set; root preserved exact output",
+      "originalLog": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/rustfmt-diagnostic.txt"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.3937164169999998,
+      "sha256": "8950be1e8f4499f41b8e38ef15f09a0e2671be53a43aa5dec4d794320908881d",
+      "originalName": "clippy",
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/clippy.txt",
+      "executedInThisRun": true,
+      "executor": "independent agent, actual command on this frozen input set; root preserved exact output",
+      "originalLog": "output/2026-10-11-mcp-http-add-independent/dependency-environment-debug/clippy-diagnostic.txt"
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 8.095,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true,
+      "executor": "root"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 41.495,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/frontend.txt",
+      "sha256": "59388c2cc3b518df4c00ca268326f0565610a4d34fb397860361fffca8561856",
+      "executedInThisRun": true,
+      "executor": "root"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 8.8,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/build.txt",
+      "sha256": "c8c21e48f060176dfef0b79a22b5aaca15fe09428a8f5fc528d773daf3cc6563",
+      "executedInThisRun": true,
+      "executor": "root"
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 26.632,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true,
+      "executor": "root"
+    }
+  ],
+  "counts": {
+    "rust": [
+      "test result: ok. 1557 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 114.36s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ],
+    "frontend": ["Test Files  425 passed (425)", "Tests  4963 passed (4963)"]
+  },
+  "allPassed": true,
+  "independentCommands": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/independent-commands.json.raw.txt",
+    "sha256": "1e5a0da04b306986e41c7e93bde557c1f2372a86cf63e0d92c5059d85674e4e2"
+  },
+  "boundary": "Seven actual sequential commands on the same input set, with executor provenance. The only change since failed run01 is bounded test diagnostics, not a production timeout fix. Original intermittent failure remains unlocalized; later pass is not causal proof. Engineering only, not installed/official Agent/product acceptance."
+}

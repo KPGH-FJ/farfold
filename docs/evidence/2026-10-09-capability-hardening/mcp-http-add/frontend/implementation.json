@@ -1,0 +1,279 @@
+{
+  "createdAt": "2026-10-10T20:44:54.113670+00:00",
+  "scope": "P41 shared HTTP MCP addition frontend",
+  "status": "sourceAndControlledTestsPassed",
+  "sourceRefs": [
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "c17b1e22df135875bd2fa083fd3e31b6ddff72307b09bbcc4734099cbcb2fc21",
+      "lines": 408
+    },
+    {
+      "path": "src/components/McpAddForm.http-progress.test.tsx",
+      "sha256": "b1b2efe8fa5ce5ff1f5864c8e3cb9dd74dc4ee40870832040f784d96ad2bfb80",
+      "lines": 172
+    },
+    {
+      "path": "src/components/McpAddForm.test.tsx",
+      "sha256": "397f8423023c2e1b73d4fd3d9698bce627289b92fcf1a18cb2c15c3d3b2f20ba",
+      "lines": 304
+    },
+    {
+      "path": "src/components/McpAddForm.tsx",
+      "sha256": "ca05ec91f5839fd5dadc974846a1815fd7efcf7631e942e1fb3d75ca50eba257",
+      "lines": 387
+    },
+    {
+      "path": "src/components/SkillChangeReview.http.test.tsx",
+      "sha256": "655ea489ee2bf7e94834e0196fa2889fbeddd6d29e0254cd60685f79306e13a9",
+      "lines": 65
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "91b58c649fcab09da891b40102d669018ee41078d04a7d4ce18e865b440a9889",
+      "lines": 396
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "03ca9aafbbaf65a9fa64fe331ae57f74968be55997b00279055d3a8963a852df",
+      "lines": 553
+    },
+    {
+      "path": "src/runtime/extension_management_types.ts",
+      "sha256": "80176b89acd4d966b05472b3ae725511fa59be6155075b4cf366d39bfb3d4489",
+      "lines": 275
+    },
+    {
+      "path": "src/runtime/fixtures/mcp-http-url-cases.json",
+      "sha256": "597ae31d07567e0e5649ac3f20ac15a365b18256ceb1bf8d3602035e98d78295",
+      "lines": 380
+    },
+    {
+      "path": "src/runtime/mcp_add.test-support.ts",
+      "sha256": "c38193f51e602f2a2a7e0da331d3bb62e76f7a263a26d5dfc19f87dd3336c2ff",
+      "lines": 156
+    },
+    {
+      "path": "src/runtime/mcp_add_controller.test.ts",
+      "sha256": "dbaecbbe0dfc8a8c18fefc2d668104d866b08bfbdeb1019dfae2ea3a7eed7e82",
+      "lines": 172
+    },
+    {
+      "path": "src/runtime/mcp_add_strings.ts",
+      "sha256": "e218c866746871f7d00d63c0ad1000641f881d6cffbb6ee46c5ba3088b2dc421",
+      "lines": 79
+    },
+    {
+      "path": "src/runtime/mcp_add_types.ts",
+      "sha256": "0f78108e40fac3b7fdc2ee712728b3196fbeca68bc4dbef0f03febc57ace8caf",
+      "lines": 419
+    },
+    {
+      "path": "src/runtime/mcp_http_add.test.ts",
+      "sha256": "989fff881bcb0b7a96c6f0073f34870f256c85fd2a0555e78394e7cce314c203",
+      "lines": 245
+    },
+    {
+      "path": "src/runtime/mcp_http_add.wire.test.tsx",
+      "sha256": "34e997fa510bbe7185347392145c093e4739a2e2933bddef0e8969d29a22049b",
+      "lines": 228
+    },
+    {
+      "path": "src/runtime/mcp_http_url.test.ts",
+      "sha256": "bc9de9252163c971fb49da2a3ffe11c1c6f30ae7725f3091c3044ef34efb8ab9",
+      "lines": 45
+    },
+    {
+      "path": "src/runtime/mcp_http_url.ts",
+      "sha256": "cef2e5a3494e2f54ffa7b7202806c77343c7ca04d617b5b903f77b2bb44b217f",
+      "lines": 52
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "d6035b796221f2aa64a678c41d994acfda02b46c604b1c8ad7f97f2c6557307e",
+      "lines": 605
+    }
+  ],
+  "sourceStableDuringFinalChecks": true,
+  "checks": {
+    "targetedFiles": 18,
+    "targetedPassed": 223,
+    "sharedURLCases": 62,
+    "actualRustWireValues": 21,
+    "actualWireControllerReviewChains": 4,
+    "typecheckExit": 0,
+    "formatExit": 0
+  },
+  "changes": [
+    "Separate capability-gated HTTP form in the existing MCP addition flow; old stdio input and historical wire kept",
+    "Preserve complete raw URL as quoted escaped text with no navigation/media/fetch, exact inputId per edit/transport change",
+    "Retire HTTP controller/view/form/live references and safe current callback without reconstructing raw input from operation metadata",
+    "A write marking its own catalogue stale clears raw input without cancelling the admitted operation; explicit close still retains exact cancellation",
+    "Strict transport/mutation pairing; actual Rust unknown/rejected/cleanup observations preserve prior operation facts"
+  ],
+  "effectiveFailuresPreserved": [
+    {
+      "log": "initial-red.txt",
+      "failed": 3,
+      "reason": "Existing implementation rejected HTTP input, capability and mutation"
+    },
+    {
+      "log": "form-red.txt",
+      "failed": 1,
+      "reason": "Existing form had no HTTP transport"
+    },
+    {
+      "log": "http-targeted-first.txt",
+      "failed": 1,
+      "reason": "Confirmation request accepted only stdio mutation"
+    },
+    {
+      "log": "retirement-window-red.txt",
+      "failed": 2,
+      "reason": "Predispatch owner loss and recheck retained HTTP input"
+    },
+    {
+      "log": "admission-retirement-red.txt",
+      "failed": 2,
+      "reason": "Fresh reviewExpired/reviewConsumed retired authority without clearing input"
+    },
+    {
+      "log": "related-first.txt",
+      "failed": 1,
+      "reason": "Repeated retire publication recursively invoked synchronous old skill subscriber"
+    },
+    {
+      "log": "progress-component-red.txt",
+      "failed": 1,
+      "reason": "Own write progress replaced catalogue and form cleanup cancelled confirmation"
+    }
+  ],
+  "nonProductFailures": [
+    {
+      "log": "typecheck-first.txt",
+      "reason": "Old stdio test annotation narrowed after input union; whole-input assertion strengthened without altering behavior"
+    },
+    {
+      "log": "review-first.txt",
+      "reason": "Expected copy differed from existing accurate not-connecting explanation; assertion corrected"
+    },
+    {
+      "log": "progress-component-green.txt",
+      "reason": "Synthetic final reply attempted to downgrade observed ACK ok to unknown and was correctly ignored; corrected to preserve ACK ok"
+    }
+  ],
+  "wireScope": {
+    "rawValuesUnchanged": true,
+    "capability": "Actual unavailable synthetic registration only; available capability is separately controlled",
+    "pendingCleanup": "Real backend Job lifecycle under held worker; not an OS-timeout proof",
+    "controllerPrerequisites": "normal/unknown/rejected use captured same-chain inventory. PendingCleanup has a clearly marked controlled catalogue prerequisite because none was captured for that chain."
+  },
+  "boundaries": [
+    "No official CLI, Agent, installed app, account, network/auth, user settings or database actions in this frontend verification",
+    "No authentication, live MCP connection, tools, Windows or other-Agent completion claimed",
+    "Raw data retirement concerns application-owned references, not JavaScript engine memory erasure or already-dispatched IPC buffers",
+    "Root owns independent full-App browser and full seven checks; these are not claimed by the author receipt"
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/initial-red.txt",
+      "sha256": "31778180423e05b0e547ce29b28f2f765cb94866ed43921abdf4938988309456"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/form-red.txt",
+      "sha256": "b3f709337e65e959694619c1571a907f2628e606052334db9e48e71aa94e9261"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/http-targeted-first.txt",
+      "sha256": "33d9237de23ab466cfc2fbac138ba55992b711629a4c72b6677cd27608f866d9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/http-confirm-green.txt",
+      "sha256": "560031d0e30e1461f434ca9e2844651ab3bd048bdbc3ef896ef019a4fda64561"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/retirement-window-red.txt",
+      "sha256": "31ee973eb0ddc99d4f892b3853bcfe115495d769ef73043d2837a81d02d5646e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/retirement-window-green.txt",
+      "sha256": "34181b415ee440840dc997fad733a2da12e68539011b6fcf546fdf1abba4ceb6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/admission-retirement-red.txt",
+      "sha256": "38fe570d2da721ea38a72feca455bd280ee6cc90ef561b6e2033dd531f72cfa3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/admission-retirement-green.txt",
+      "sha256": "7dcd206b4ab91753e3be2ea0e9a7c65692544c16ef7d9bdce12b64e2b5e21284"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/related-first.txt",
+      "sha256": "e0b24089d03e819236635b0883863bfc5fb8851a564903b2d8c567a530dacd6f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/reentrant-green.txt",
+      "sha256": "c8bde059237d37ca1dab7c9e03907deaa79e7d85625d0d590dd0f519e9e44fe8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/progress-component-red.txt",
+      "sha256": "5e94c06d0c01aa61e0f3ba2059b288a9311dacc2bd1c422190c449119bb4c95b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/progress-component-green.txt",
+      "sha256": "8319cf32eb2ce1d64c04db3310636d44776cd9fc269dd3ba9e80e18d3287b600"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/progress-related-final.txt",
+      "sha256": "14cd31d2780dfa7e8861f952f6abc91458e4ab4d09db7634d1048f1db3b9b9d2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/review-first.txt",
+      "sha256": "f4677063ca1209ad057a6ee45f8d5601e52901d40de2c39a13e3c586d09769a7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/typecheck-first.txt",
+      "sha256": "35942b7cf9d3566e6d8b2f704b888aeaa35d83f7b1aebe4de26b56056da6b48a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/actual-wire-first.txt",
+      "sha256": "da39eda0f444f8d98e828eb416e3afa62341c76eee17825a798d6813b9417027"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/related-complete.txt",
+      "sha256": "ad2a6538889ad401b5f90504200e381de09fbb6aec6287ee16c841656e8c704d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/typecheck-complete.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/format-complete.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/source-checkpoint.json",
+      "sha256": "575bd1b520fe77fcc5440e7ac8c60bf92ec39c7e9b9a7fcaee035f1bee211c71"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-frontend/source-before-final.json",
+      "sha256": "5771a6e449378f68b6a1fb7882d8858b5500e609c1eac8fd6b77a3159c411119"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-design/contract-proposal-v2.json",
+      "sha256": "9a2f60fa6b6215693537955c1fd44de8cf5f0bfa1d06546de6039a665c07cb20"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-design/contract-proposal.ts",
+      "sha256": "4f4fa460996670ba48c3c940ce4b64c9d4f9ccb28f295f59bd1fec8ba063b46f"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-design/url-cases-v2.json",
+      "sha256": "597ae31d07567e0e5649ac3f20ac15a365b18256ceb1bf8d3602035e98d78295"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/actual-wire.json",
+      "sha256": "e8eb01a482663526d2484f8be3e36f07d6828905987456d486613e1cae038f87"
+    }
+  ]
+}

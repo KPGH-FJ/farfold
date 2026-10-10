@@ -1,0 +1,112 @@
+{
+  "status": "controlledFullAppPassed",
+  "engines": [
+    {
+      "engine": "webkit",
+      "checks": 34,
+      "passed": true,
+      "sourceStable": true,
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/webkit-run04.raw.txt",
+        "sha256": "6c3c5413fb2427beda198bc7617ad2753961a0a61fa3f272008375aaf616ee82"
+      }
+    },
+    {
+      "engine": "chromium",
+      "checks": 34,
+      "passed": true,
+      "sourceStable": true,
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/chromium-run04.raw.txt",
+        "sha256": "07b87e01b53062c8033bd6e040b2a02494eea70df692d5492264cd6431809a4b"
+      }
+    }
+  ],
+  "actualRed": {
+    "raw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/webkit-run03.raw.txt",
+      "sha256": "d2e29ce33b10628c05023edfc4aa0b085f8b8be43faa590f927263723c07bd01"
+    },
+    "failure": "Error: own write progress retires private input without cancelling its in-flight confirmation",
+    "scope": "new HTTP source; not an installed-app failure"
+  },
+  "screenshotsReviewed": ["webkit-run04-review.png"],
+  "visualObservation": "At 390px width the exact quoted URL wraps inside the scrollable review and confirmation remains reachable; no endpoint link.",
+  "coverage": [
+    "exact raw URL and private field retirement",
+    "review withdrawal and owner/input/transport ABA",
+    "ID-only writes and independent readonly observations",
+    "unknown and worker-cleanup tracking",
+    "own write progress does not cancel itself; explicit cancellation retained",
+    "legacy capability fallback and old draft/cwd retention"
+  ],
+  "serverCleanup": {
+    "pid": 84588,
+    "command": "node output/2026-10-11-mcp-http-add-browser/serve.mjs",
+    "signal": "SIGTERM",
+    "observedExitCode": 143
+  },
+  "copies": [
+    {
+      "source": "output/2026-10-11-mcp-http-add-browser/index.html",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/index.html.raw.txt",
+      "sha256": "d201886462c210266a9cceeda26c24acfb80e8d52dffe4071f98a78d5ad5434c"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-browser/fixture.tsx",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/fixture.tsx.raw.txt",
+      "sha256": "578b41167930a2be798cd41361625b5aeda4b0f411857b2a5dba09bf94d167be"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-browser/run.mjs",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/run.mjs.raw.txt",
+      "sha256": "c67df108c9616d9a8b36d9dc0cb6d1056fe8772f1b791bf496721d9cf34597b6"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-browser/serve.mjs",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/serve.mjs.raw.txt",
+      "sha256": "49ea92c738aef6cb19bbf0028371162aa33b4a4127485e8c22ce92181a60b0c1"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-browser/webkit-run03.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/webkit-run03.raw.txt",
+      "sha256": "d2e29ce33b10628c05023edfc4aa0b085f8b8be43faa590f927263723c07bd01"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-browser/webkit-run03-failure.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/webkit-run03-failure.png",
+      "sha256": "abb19507ce7c85f99cf0da08d625065583c5dd564e66f571fdc31e20ec058899"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-browser/webkit-run04.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/webkit-run04.raw.txt",
+      "sha256": "6c3c5413fb2427beda198bc7617ad2753961a0a61fa3f272008375aaf616ee82"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-browser/webkit-run04-review.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/webkit-run04-review.png",
+      "sha256": "dcb76c7b60754ae70933069711d7787889426822e422b56019952e8f4232f0fe"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-browser/webkit-run04-mismatch.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/webkit-run04-mismatch.png",
+      "sha256": "38d8e933f2e0b3414eca7351b8081d35e51adbbc945b2c77a825df79be21d5e9"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-browser/chromium-run04.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/chromium-run04.raw.txt",
+      "sha256": "07b87e01b53062c8033bd6e040b2a02494eea70df692d5492264cd6431809a4b"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-browser/chromium-run04-review.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/chromium-run04-review.png",
+      "sha256": "5d73b89f5a1dc41264e3c82fd544b9ce55958c4b2b89db30a2c58dfe2be0cd64"
+    },
+    {
+      "source": "output/2026-10-11-mcp-http-add-browser/chromium-run04-mismatch.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/chromium-run04-mismatch.png",
+      "sha256": "44305c13625a5ca6390b9ebfcd0b8832be91bd36bda5929a72f5fb3f543089e2"
+    }
+  ],
+  "boundary": "Production full App/StrictMode frontend with controlled IPC and synthetic address. Not official CLI/configuration, installed WebView, real Agent, endpoint/network/auth, Windows or whole product acceptance."
+}

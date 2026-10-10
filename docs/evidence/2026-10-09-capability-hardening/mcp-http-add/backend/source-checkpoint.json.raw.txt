@@ -1,0 +1,108 @@
+{
+  "sourceCommit": "55441316981b59ef9805255e27b12b0c6761aa34",
+  "ownedFiles": [
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_input.rs",
+      "sha256": "58e2e2e146f518f365f9dc4bddf1ea0cf8fb4c9977ad8b259bf62db3684827dc",
+      "bytes": 6915,
+      "lines": 196
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_plan.rs",
+      "sha256": "ea8593dc9a3ed14c34041269c88d5673c3e400208ab7a3cc09dc329cf8a8497b",
+      "bytes": 4873,
+      "lines": 129
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add.rs",
+      "sha256": "db154382650fb65dc2e6c9f786f5b4ca150e72140743041b627bef541777901e",
+      "bytes": 6169,
+      "lines": 207
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/domain.rs",
+      "sha256": "c97128409b1b88775e458a2e9e95396576d6ba960fe494e2209719b344c70757",
+      "bytes": 7875,
+      "lines": 236
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "90c67f00eed25a6c16ec14d257ebbd55e4c3c15aeb6311c2bf1fb715ffe537b6",
+      "bytes": 21499,
+      "lines": 648
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "effc21a8e2d3381a32681b7e47fdeed9003d737c68bd3b972941cba3f4f3476a",
+      "bytes": 7921,
+      "lines": 255
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_tests.rs",
+      "sha256": "f97a611610c8f23816d9d334d58528416a11c900ebce2b2abfc223bc69094ace",
+      "bytes": 19305,
+      "lines": 527
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_independent_tests.rs",
+      "sha256": "d97ef7ad9ba33b8bbd0a0c905bc01416af5436e75ba84bc2ef02892bee24b236",
+      "bytes": 6951,
+      "lines": 199
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_add_peer.py",
+      "sha256": "3f4e9f8177366928279513ff2edb8c88c79183ff8ee457364fa811193bc9b623",
+      "bytes": 4995,
+      "lines": 105
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "e7191f1652f75e5d164cc1ab342d0bd1dc0aa843474b5f4800011f6f12a77219",
+      "bytes": 4703,
+      "lines": 176
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "3aee7124b225f738014c83cec6ee4027957818a63180605d9185a78b3228954f",
+      "bytes": 8561,
+      "lines": 247
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_http_url.rs",
+      "sha256": "f2a423b33626fd46c995765ad32ea516e4cc0d21b6bb0202aa5ba3dcbfa2246f",
+      "bytes": 2696,
+      "lines": 92
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_http_tests.rs",
+      "sha256": "0e5ef3289b7bb236a216dfaf016344d68b4413520305cd88b8a4ec80c59c8dd7",
+      "bytes": 12476,
+      "lines": 325
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_http_lifecycle_tests.rs",
+      "sha256": "b4bbc0b49d7383691c13ce24c25c85f1e6c396bfcfd5706fb36f15c6647e39ca",
+      "bytes": 4192,
+      "lines": 108
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mcp_http_independent_tests.rs",
+      "sha256": "5e318d232e956d3f80bc0eeb6d0790940f3bc4f3b0743451ef4a19c7c9c8fade",
+      "bytes": 3928,
+      "lines": 97
+    }
+  ],
+  "ownedCount": 15,
+  "authorOwnedCount": 14,
+  "independentTestOwner": "/root/verification owns mcp_http_independent_tests.rs; author registers and rustfmts it.",
+  "testInputs": [
+    {
+      "path": "src/runtime/fixtures/mcp-http-url-cases.json",
+      "sha256": "597ae31d07567e0e5649ac3f20ac15a365b18256ceb1bf8d3602035e98d78295",
+      "bytes": 11535,
+      "lines": 379
+    }
+  ],
+  "maxLines": 648,
+  "frozen": true
+}

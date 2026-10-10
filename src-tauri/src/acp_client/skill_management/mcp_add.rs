@@ -52,7 +52,7 @@ pub(super) fn query(store: &MetaStore, job: &Job) -> Result<()> {
             job.source.row(),
             job.source.cwd(),
             env.clone(),
-            &job.source.addition()?.input.name,
+            job.source.addition()?.input.name(),
         ),
     })
 }
@@ -65,8 +65,8 @@ pub(super) fn run_with(
     let source = job.source.addition()?;
     let action = job.snapshot().action;
     if action != Action::Recheck
-        && (source.catalogue.set.names.contains(&source.input.name)
-            || list(store, job, command(Stage::List)?)?.contains(&source.input.name))
+        && (source.catalogue.set.names.contains(source.input.name())
+            || list(store, job, command(Stage::List)?)?.contains(source.input.name()))
     {
         return Err(Code::NameConflict.into());
     }
@@ -84,7 +84,7 @@ pub(super) fn run_with(
             None,
             inventory::output::STDOUT_LIMIT,
         )?;
-        let result = super::mcp_add_plan::parse_report(&bytes, &source.input.name);
+        let result = super::mcp_add_plan::parse_report(&bytes, source.input.name());
         bytes.fill(0);
         result
     })();
@@ -95,7 +95,7 @@ pub(super) fn run_with(
                 && matches!(error.code, Code::QueryFailed | Code::InvalidOutput) =>
         {
             // A failed get is never absence proof: only a complete official list is.
-            if list(store, job, command(Stage::List)?)?.contains(&source.input.name) {
+            if list(store, job, command(Stage::List)?)?.contains(source.input.name()) {
                 return Err(error);
             }
             None

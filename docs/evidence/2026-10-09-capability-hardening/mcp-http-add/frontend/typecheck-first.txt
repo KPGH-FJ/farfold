@@ -1,0 +1,9 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/mcp_add_controller.test.ts(44,59): error TS2339: Property 'args' does not exist on type 'McpAddInput'.
+  Property 'args' does not exist on type 'Readonly<{ transport: "streamableHttp"; name: string; url: string; }>'.
+src/runtime/mcp_add_types.test.ts(63,22): error TS2339: Property 'executablePath' does not exist on type 'McpAddInput'.
+  Property 'executablePath' does not exist on type 'Readonly<{ transport: "streamableHttp"; name: string; url: string; }>'.
+ ELIFECYCLE  Command failed with exit code 1.

@@ -1,0 +1,46 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/McpAddForm.http-progress.test.tsx (1 test | 1 failed) 17ms
+   × own write progress invalidates catalogue and clears raw form data without cancelling the admitted write 16ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/McpAddForm.http-progress.test.tsx > own write progress invalidates catalogue and clears raw form data without cancelling the admitted write
+AssertionError: expected "vi.fn()" to not be called with arguments: [ { agentId: 'mcp-fixture', …(1) } ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    {
+      "agentId": "mcp-fixture",
+-     "requestId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000002",
++     "requestId": "bbbbbbbb-bbbb-bbbb-bbbb-000000000001",
+    },
+  ]
+
+  2nd vi.fn() call:
+
+Compared values have no visual difference.
+
+
+Number of calls: 2
+
+ ❯ src/components/McpAddForm.http-progress.test.tsx:41:29
+     39|   expect(stale).not.toBe(h.result); expect(stale.stale).toBe(true);
+     40|   props = { ...props, result: stale, enabled: false }; render(); rende…
+     41|   expect(h.port.cancel).not.toHaveBeenCalledWith({ agentId: writing.ag…
+       |                             ^
+     42|   expect(h.controller.get(h.owner.agentId).additionInput).toBeNull();
+     43|   expect(JSON.stringify(hooks.slots)).not.toContain("PROGRESS_CANARY");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  04:41:14
+   Duration  282ms (transform 125ms, setup 0ms, import 164ms, tests 17ms, environment 0ms)
+

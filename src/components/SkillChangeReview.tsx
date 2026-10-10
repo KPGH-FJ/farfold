@@ -1,5 +1,9 @@
+import { isHttpInput } from "../runtime/mcp_add_types";
 import { MCP_REMOVE_STRINGS as REMOVE } from "../runtime/mcp_remove_strings";
-import { MCP_ADD_STRINGS as ADD } from "../runtime/mcp_add_strings";
+import {
+  MCP_ADD_STRINGS as ADD,
+  MCP_HTTP_ADD_STRINGS as HTTP,
+} from "../runtime/mcp_add_strings";
 import "./McpAddForm.css";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { skillManagement } from "../runtime/skill_management_controller";
@@ -80,7 +84,19 @@ export function SkillChangeReview({
     "kind" in request.target && request.target.kind === "mcpAddition";
   const isRemoval =
     "kind" in request.target && request.target.kind === "mcpRemoval";
-  const S = isRemoval ? REMOVE : isAddition ? ADD : isMcp ? MCP : SKILLS;
+  const isHttp =
+    isAddition &&
+    "transport" in request.target &&
+    request.target.transport === "streamableHttp";
+  const S = isRemoval
+    ? REMOVE
+    : isHttp
+      ? HTTP
+      : isAddition
+        ? ADD
+        : isMcp
+          ? MCP
+          : SKILLS;
   const outcome = op?.outcome;
   const summary = view.trackingReleased
     ? S.trackingReleased
@@ -181,28 +197,38 @@ export function SkillChangeReview({
             <div className="mcp-add-review">
               <p>{ADD.absent}</p>
               {view.additionInput ? (
-                <>
-                  <p>
-                    {ADD.executable}：
-                    <code>
-                      {JSON.stringify(view.additionInput.executablePath)}
-                    </code>
-                  </p>
-                  <p>{ADD.arguments}</p>
-                  <p>{ADD.quotedValues}</p>
-                  {view.additionInput.args.length ? (
-                    <ol>
-                      {view.additionInput.args.map((arg, i) => (
-                        <li key={i}>
-                          <code>{JSON.stringify(arg)}</code>
-                          {arg === "" && `（${ADD.emptyArgument}）`}
-                        </li>
-                      ))}
-                    </ol>
-                  ) : (
-                    <p>{ADD.noArguments}</p>
-                  )}
-                </>
+                isHttpInput(view.additionInput) ? (
+                  <>
+                    <p>
+                      {HTTP.address}：
+                      <code>{JSON.stringify(view.additionInput.url)}</code>
+                    </p>
+                    <p>{ADD.quotedValues}</p>
+                  </>
+                ) : (
+                  <>
+                    <p>
+                      {ADD.executable}：
+                      <code>
+                        {JSON.stringify(view.additionInput.executablePath)}
+                      </code>
+                    </p>
+                    <p>{ADD.arguments}</p>
+                    <p>{ADD.quotedValues}</p>
+                    {view.additionInput.args.length ? (
+                      <ol>
+                        {view.additionInput.args.map((arg, i) => (
+                          <li key={i}>
+                            <code>{JSON.stringify(arg)}</code>
+                            {arg === "" && `（${ADD.emptyArgument}）`}
+                          </li>
+                        ))}
+                      </ol>
+                    ) : (
+                      <p>{ADD.noArguments}</p>
+                    )}
+                  </>
+                )
               ) : (
                 <p role="alert">{ADD.inputMissing}</p>
               )}

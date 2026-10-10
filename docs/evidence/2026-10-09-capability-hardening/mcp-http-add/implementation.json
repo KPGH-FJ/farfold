@@ -1,0 +1,46 @@
+{
+  "status": "sourceAndSevenChecksPassedNotYetInstalled",
+  "scope": "P41 default-disabled HTTP MCP addition through the existing shared flow",
+  "frontend": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/implementation.json",
+    "sha256": "201d6c9373685d6cd9abbbf60e03e9992cd32532f8baad99285a7322bf51b314"
+  },
+  "backend": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/implementation.json",
+    "sha256": "4ed98e1f38a1a5fefee181ca2079601e200027f0079e46c6d7a13f22e16d26f5"
+  },
+  "independentBackend": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend-independent.json.raw.txt",
+    "sha256": "f5da6dcead908725b296d7ef051503df8e6283d1a0f561a788602594850e0041"
+  },
+  "fullAppBrowser": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/receipt.json",
+    "sha256": "7dc932c0f5bd33ef9f3caec520ce656be8b01b2afbc0e15fdcc4849edfdf17fc"
+  },
+  "rawUrlPolicy": "Preserve original bytes including repeated/empty query values; input only is private. Public operation metadata and ID-only followups exclude full URL and derived host/query.",
+  "officialWrite": "Single literal quoted-name leaf via official config/value/write, enabled false, complete configuration comparison in two directory scopes.",
+  "rootReview": "Reviewed strict input union, raw URL admission, transport/mutation matching, input retirement and same-owner write progress fix; no additional blocking finding in these paths.",
+  "remaining": "Candidate/install and actual official disabled-HTTP flow next. Original intermittent dependency-environment full-suite timeout remains unlocalized; only diagnostics changed and full followup passed. P41 connection, diagnosis, credentials, otherAgents and original market goal remain incomplete.",
+  "nativeHelperReview": {
+    "path": "output/2026-10-11-mcp-http-add-independent/native-helper-review.json",
+    "sha256": "b1a20951f496a0014320787e076c575ebb0fffa3dc3faf81473f40578ad9e380",
+    "status": "preparedOnlyNotExecuted"
+  },
+  "engineering": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/verification.json",
+    "sha256": "61039efd3441b9f574ab4c254c8ad7844f5ff7f91ef55a433ec322934ba050c6",
+    "allPassed": true,
+    "inputCount": 1509,
+    "sourceStable": true,
+    "frontendFiles": 425,
+    "frontendPassed": 4963,
+    "rustPassed": 1557,
+    "rustFailed": 0,
+    "rustIgnored": 6,
+    "executors": "Independent agent actual Rust/fmt/clippy, root actual frontend/type/build/format, sequential same input set"
+  },
+  "diagnosticFollowup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/receipt.json",
+    "sha256": "2fa4600fc5ca541fb881f1275a3d393c10353040a6708d03b0465a635c1764e6"
+  }
+}

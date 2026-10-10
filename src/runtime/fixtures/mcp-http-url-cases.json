@@ -1,0 +1,379 @@
+{
+  "schema": 1,
+  "status": "sharedContractExamplesNotProductionValidatorResults",
+  "syntheticOnly": true,
+  "networkOrAgentUse": false,
+  "expectation": "BE and FE must consume these same literals and expected decisions in their owned tests after implementation. Accepted input must remain exactly equal at private admission, official write, display and report comparison; parser-normalized href is never persisted. These examples do not claim current backend support.",
+  "cases": [
+    {
+      "id": "minimal",
+      "url": "https://endpoint.test",
+      "accepted": true,
+      "reason": "Nonempty raw authority; preserve missing slash."
+    },
+    {
+      "id": "query-complete",
+      "url": "https://endpoint.test/mcp?project=one&project=two&empty=&flag&path=%2F&literal=%23&plus=a+b",
+      "accepted": true,
+      "reason": "Complete ordered opaque query preserved."
+    },
+    {
+      "id": "empty-query",
+      "url": "https://endpoint.test/mcp?",
+      "accepted": true,
+      "reason": "Keep final question mark."
+    },
+    {
+      "id": "query-credentials-looking",
+      "url": "https://endpoint.test/mcp?token=SYNTHETIC_ONLY&api_key=SYNTHETIC_ONLY&signature=a%2Fb%3D",
+      "accepted": true,
+      "reason": "Syntax accepted; no credential-name rejection or authentication proof."
+    },
+    {
+      "id": "query-punctuation",
+      "url": "https://endpoint.test/mcp?value=<example>&raw=@:;&encoded=%40%23%26&percent=%ab",
+      "accepted": true,
+      "reason": "Query is data; preserve markup and percent case; display plain quoted text."
+    },
+    {
+      "id": "path-at-encoded-fragment",
+      "url": "https://endpoint.test/a@b/%23mcp",
+      "accepted": true,
+      "reason": "No userinfo or raw fragment."
+    },
+    {
+      "id": "loopback-http",
+      "url": "http://127.0.0.1:8080/mcp",
+      "accepted": true,
+      "reason": "HTTP and loopback allowed; no endpoint contacted."
+    },
+    {
+      "id": "private-http",
+      "url": "http://10.0.0.1/mcp",
+      "accepted": true,
+      "reason": "Private host allowed; no endpoint contacted."
+    },
+    {
+      "id": "port-zero",
+      "url": "http://localhost:0/mcp",
+      "accepted": true,
+      "reason": "Explicit port zero accepted; no reachability claim."
+    },
+    {
+      "id": "port-max",
+      "url": "https://endpoint.test:65535/mcp",
+      "accepted": true,
+      "reason": "Port maximum inclusive."
+    },
+    {
+      "id": "port-leading-zero",
+      "url": "https://endpoint.test:000443/mcp",
+      "accepted": true,
+      "reason": "Leading zeros preserved; do not save parsed href."
+    },
+    {
+      "id": "port-many-leading-zero",
+      "url": "https://endpoint.test:00000000000000000000000000000000000000000443/mcp",
+      "accepted": true,
+      "reason": "No arbitrary five-digit lexical limit; numeric value 443."
+    },
+    {
+      "id": "port-all-zero",
+      "url": "http://endpoint.test:000000000000/mcp",
+      "accepted": true,
+      "reason": "Numeric zero; exact bytes retained."
+    },
+    {
+      "id": "ipv6-no-port",
+      "url": "http://[::1]/mcp",
+      "accepted": true,
+      "reason": "Bracketed literal; internal colons are not port separators."
+    },
+    {
+      "id": "ipv6-port",
+      "url": "https://[2001:db8::1]:000443/mcp?x=1",
+      "accepted": true,
+      "reason": "Only colon after closing bracket is port separator."
+    },
+    {
+      "id": "scheme-host-case",
+      "url": "HTTPS://EnDpOiNt.TeSt:443/mcp",
+      "accepted": true,
+      "reason": "Case-insensitive scheme; exact input not canonicalized for persistence."
+    },
+    {
+      "id": "unicode-host-path",
+      "url": "https://例子.test/准备?项目=一",
+      "accepted": true,
+      "reason": "IDN and Unicode path/query permitted if standard parser accepts."
+    },
+    {
+      "id": "encoded-space",
+      "url": "https://endpoint.test/a%20b?x=%09",
+      "accepted": true,
+      "reason": "Percent-encoded path/query bytes remain opaque; no decoded whitespace scan."
+    },
+    {
+      "id": "triple-slash",
+      "url": "https:///endpoint.test/mcp",
+      "accepted": false,
+      "reason": "Empty raw authority cannot be repaired by parser."
+    },
+    {
+      "id": "quadruple-slash",
+      "url": "https:////endpoint.test/mcp",
+      "accepted": false,
+      "reason": "Empty raw authority cannot be repaired by parser."
+    },
+    {
+      "id": "empty-authority-query",
+      "url": "https://?host=endpoint.test",
+      "accepted": false,
+      "reason": "Raw authority empty before query delimiter."
+    },
+    {
+      "id": "empty-authority",
+      "url": "https://",
+      "accepted": false,
+      "reason": "Raw authority empty."
+    },
+    {
+      "id": "empty-host-port",
+      "url": "https://:443/mcp",
+      "accepted": false,
+      "reason": "Raw host empty even though explicit port present."
+    },
+    {
+      "id": "empty-port",
+      "url": "https://endpoint.test:/mcp",
+      "accepted": false,
+      "reason": "Explicit colon requires nonempty decimal port."
+    },
+    {
+      "id": "empty-port-query",
+      "url": "https://endpoint.test:?x=1",
+      "accepted": false,
+      "reason": "Explicit colon requires nonempty decimal port."
+    },
+    {
+      "id": "ipv6-empty-port",
+      "url": "https://[::1]:/mcp",
+      "accepted": false,
+      "reason": "Explicit colon after bracket requires nonempty decimal port."
+    },
+    {
+      "id": "port-overflow",
+      "url": "https://endpoint.test:65536/mcp",
+      "accepted": false,
+      "reason": "Numeric port above 65535."
+    },
+    {
+      "id": "port-huge",
+      "url": "https://endpoint.test:99999999999999999999999999999999999/mcp",
+      "accepted": false,
+      "reason": "Bounded numeric fold must reject without overflow."
+    },
+    {
+      "id": "port-signed-plus",
+      "url": "https://endpoint.test:+443/mcp",
+      "accepted": false,
+      "reason": "ASCII digits only."
+    },
+    {
+      "id": "port-signed-minus",
+      "url": "https://endpoint.test:-1/mcp",
+      "accepted": false,
+      "reason": "ASCII digits only."
+    },
+    {
+      "id": "port-hex",
+      "url": "https://endpoint.test:0x1bb/mcp",
+      "accepted": false,
+      "reason": "ASCII decimal only."
+    },
+    {
+      "id": "port-unicode-digits",
+      "url": "https://endpoint.test:４４３/mcp",
+      "accepted": false,
+      "reason": "ASCII decimal only."
+    },
+    {
+      "id": "port-escaped",
+      "url": "https://endpoint.test:%34%34%33/mcp",
+      "accepted": false,
+      "reason": "Raw port must already be ASCII decimal."
+    },
+    {
+      "id": "port-double-colon",
+      "url": "https://endpoint.test:443:444/mcp",
+      "accepted": false,
+      "reason": "Unbracketed authority cannot have multiple colons."
+    },
+    {
+      "id": "ipv6-unbracketed",
+      "url": "https://2001:db8::1/mcp",
+      "accepted": false,
+      "reason": "Unbracketed multiple-colon host rejected."
+    },
+    {
+      "id": "ipv6-unclosed",
+      "url": "https://[::1/mcp",
+      "accepted": false,
+      "reason": "Missing closing bracket."
+    },
+    {
+      "id": "ipv6-extra-close",
+      "url": "https://[::1]]/mcp",
+      "accepted": false,
+      "reason": "Only empty suffix or colon+port after closing bracket."
+    },
+    {
+      "id": "ipv6-suffix",
+      "url": "https://[::1]extra/mcp",
+      "accepted": false,
+      "reason": "Only empty suffix or colon+port after closing bracket."
+    },
+    {
+      "id": "ipv6-invalid",
+      "url": "https://[not-an-ipv6]/mcp",
+      "accepted": false,
+      "reason": "Raw bracket shape is insufficient; standard parser must validate literal."
+    },
+    {
+      "id": "host-misplaced-bracket",
+      "url": "https://endpoint[.test/mcp",
+      "accepted": false,
+      "reason": "Bracket is legal only as complete bracketed host."
+    },
+    {
+      "id": "empty-userinfo",
+      "url": "https://@endpoint.test/mcp",
+      "accepted": false,
+      "reason": "Literal authority @ rejected even with empty username."
+    },
+    {
+      "id": "userinfo",
+      "url": "https://user:password@endpoint.test/mcp",
+      "accepted": false,
+      "reason": "Unsupported inline auth flow; no echo in error."
+    },
+    {
+      "id": "encoded-userinfo",
+      "url": "https://user%40name@endpoint.test/mcp",
+      "accepted": false,
+      "reason": "Literal authority delimiter still rejected."
+    },
+    {
+      "id": "fragment",
+      "url": "https://endpoint.test/mcp#section",
+      "accepted": false,
+      "reason": "Literal fragment not sent in HTTP request; reject, do not strip."
+    },
+    {
+      "id": "empty-fragment",
+      "url": "https://endpoint.test/mcp#",
+      "accepted": false,
+      "reason": "Even empty literal fragment rejected."
+    },
+    {
+      "id": "backslash",
+      "url": "https://endpoint.test\\mcp",
+      "accepted": false,
+      "reason": "No special-scheme backslash repair."
+    },
+    {
+      "id": "raw-space",
+      "url": "https://endpoint.test/a b",
+      "accepted": false,
+      "reason": "Raw whitespace rejected; do not trim or encode."
+    },
+    {
+      "id": "raw-nbsp",
+      "url": "https://endpoint.test/a b",
+      "accepted": false,
+      "reason": "Explicit supplementary raw whitespace set."
+    },
+    {
+      "id": "raw-line-separator",
+      "url": "https://endpoint.test/a b",
+      "accepted": false,
+      "reason": "Existing fixed control/format set."
+    },
+    {
+      "id": "raw-soft-hyphen",
+      "url": "https://endpoint.test/a­b",
+      "accepted": false,
+      "reason": "Existing fixed control/format set."
+    },
+    {
+      "id": "malformed-percent",
+      "url": "https://endpoint.test/mcp?x=%G0",
+      "accepted": false,
+      "reason": "Every literal percent needs two hex digits."
+    },
+    {
+      "id": "truncated-percent",
+      "url": "https://endpoint.test/mcp?x=%",
+      "accepted": false,
+      "reason": "Every literal percent needs two hex digits."
+    },
+    {
+      "id": "relative",
+      "url": "/mcp?x=1",
+      "accepted": false,
+      "reason": "No implicit base."
+    },
+    {
+      "id": "missing-slashes",
+      "url": "https:endpoint.test/mcp",
+      "accepted": false,
+      "reason": "Literal double slash required."
+    },
+    {
+      "id": "other-scheme",
+      "url": "ftp://endpoint.test/mcp",
+      "accepted": false,
+      "reason": "Only HTTP(S) input scope."
+    },
+    {
+      "id": "leading-space",
+      "url": " https://endpoint.test/mcp",
+      "accepted": false,
+      "reason": "No trimming before scheme check."
+    },
+    {
+      "id": "trailing-space",
+      "url": "https://endpoint.test/mcp ",
+      "accepted": false,
+      "reason": "No trimming before validation."
+    },
+    {
+      "id": "query-raw-fragment",
+      "url": "https://endpoint.test/mcp?x=#",
+      "accepted": false,
+      "reason": "Literal fragment delimiter remains forbidden even after question mark."
+    }
+  ],
+  "generatedCases": [
+    {
+      "id": "byte-limit-exact",
+      "recipe": "'https://endpoint.test/' plus ASCII 'a' until total UTF-8 bytes=4096",
+      "accepted": true
+    },
+    {
+      "id": "byte-limit-over",
+      "recipe": "same prefix plus ASCII 'a' until total UTF-8 bytes=4097",
+      "accepted": false
+    },
+    {
+      "id": "unpaired-surrogate",
+      "recipe": "JS string 'https://endpoint.test/' followed by lone U+D800; Rust JSON deserialization also refuses invalid scalar",
+      "accepted": false
+    },
+    {
+      "id": "bounded-many-zero-port",
+      "recipe": "'https://endpoint.test:' plus zeros then '443/mcp' with total bytes<=4096",
+      "accepted": true
+    }
+  ]
+}

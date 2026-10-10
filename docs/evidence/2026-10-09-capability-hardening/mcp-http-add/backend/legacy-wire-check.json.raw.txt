@@ -1,0 +1,41 @@
+{
+  "sourceCommit": "55441316981b59ef9805255e27b12b0c6761aa34",
+  "files": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/actual-wire.json",
+      "sha256": "dee93ade587843c9347de9a1ae5a20c357941be767549aab4216ee7e03014aa3",
+      "bytes": 13284,
+      "lines": 410,
+      "sameBytesAsBase": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/actual-wire.json",
+      "sha256": "734fe76f1ef952e8768e2282cffafc12492262513ee11a363818bc4e8cc59bbf",
+      "bytes": 22909,
+      "lines": 746,
+      "sameBytesAsBase": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/actual-wire.json",
+      "sha256": "6adf2a98e6f152f3f01bf478aa956fb7d3652251d2c2bbae4a95901157d8a404",
+      "bytes": 21527,
+      "lines": 632,
+      "sameBytesAsBase": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/actual-wire.json",
+      "sha256": "3c84eea3b0d3e260f001bc0813b048262f5a6d7161fbd26270ddef8b0f7ede7f",
+      "bytes": 4786,
+      "lines": 160,
+      "sameBytesAsBase": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/final-wire.json",
+      "sha256": "f8022c6dece7a7f6ace9511ffb1903b7c693032025735ab120ffcc4bf24ea837",
+      "bytes": 7958,
+      "lines": 263,
+      "sameBytesAsBase": true
+    }
+  ],
+  "sameBytes": true
+}

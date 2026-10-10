@@ -4,6 +4,7 @@ pub mod mcp;
 pub mod mcp_add;
 mod mcp_add_input;
 mod mcp_add_plan;
+mod mcp_http_url;
 mod mcp_plan;
 pub mod mcp_remove;
 mod mcp_remove_plan;
@@ -245,3 +246,10 @@ mod mcp_remove_tests;
 
 #[cfg(test)]
 mod mcp_remove_independent_tests;
+
+#[cfg(test)]
+mod mcp_http_independent_tests;
+#[cfg(test)]
+mod mcp_http_lifecycle_tests;
+#[cfg(test)]
+mod mcp_http_tests;

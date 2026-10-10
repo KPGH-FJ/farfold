@@ -1,0 +1,39 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/mcp_http_add.test.ts (12 tests | 2 failed) 22ms
+   × fresh confirmation reviewExpired retires raw HTTP review data, but does not fabricate a worker result 4ms
+   × fresh confirmation reviewConsumed retires raw HTTP review data, but does not fabricate a worker result 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/mcp_http_add.test.ts > fresh confirmation reviewExpired retires raw HTTP review data, but does not fabricate a worker result
+ FAIL  src/runtime/mcp_http_add.test.ts > fresh confirmation reviewConsumed retires raw HTTP review data, but does not fabricate a worker result
+AssertionError: expected { transport: 'streamableHttp', …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "name": "new-http",
+  "transport": "streamableHttp",
+  "url": "HTTPS://endpoint.test:000443/mcp?token=SYNTHETIC&x=&x=+&p=%2f",
+}
+
+ ❯ src/runtime/mcp_http_add.test.ts:217:30
+    215|   expect(view.admissionRejected).toBe(true);
+    216|   expect(view.operation).toBeNull();
+    217|   expect(view.additionInput).toBeNull();
+       |                              ^
+    218|   expect(view.unresolved).toBe(false);
+    219|   expect(h.controller.canConfirm(h.owner, h.review)).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 10 passed (12)
+   Start at  04:36:42
+   Duration  250ms (transform 99ms, setup 0ms, import 129ms, tests 22ms, environment 0ms)
+

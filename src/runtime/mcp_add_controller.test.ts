@@ -41,7 +41,10 @@ it("copies original form input and retires its inspection before edited A-B-A ca
   h.controller.inspect(target);
   args[0] = "B";
   await flush();
-  expect(h.controller.get(h.owner.agentId).additionInput?.args).toEqual(["a"]);
+  expect(h.controller.get(h.owner.agentId).additionInput).toEqual({
+    ...input,
+    args: ["a"],
+  });
   h.pending.inspect.resolve(
     operation(h.controller.get(h.owner.agentId).request!, true),
   );

@@ -1,0 +1,78 @@
+{
+  "status": "externalInterruptionDuringRustNoFinalVerdict",
+  "observedCompletedChecks": [
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 12.054,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true,
+      "executionSegment": "before external interruption; observed runner result retained"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 75.972,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/frontend.txt",
+      "sha256": "7dbcc767a065d10040cf6a73e11c8f58071db25bee6e0f2507b58c376202a0c2",
+      "executedInThisRun": true,
+      "executionSegment": "before external interruption; observed runner result retained"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 13.64,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/build.txt",
+      "sha256": "3914354840623ad245ac57ab39a2e63ca83e2b4f7af8beaad49b596842408915",
+      "executedInThisRun": true,
+      "executionSegment": "before external interruption; observed runner result retained"
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.781,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true,
+      "executionSegment": "before external interruption; observed runner result retained"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.816,
+      "log": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/clippy.txt",
+      "sha256": "182e0273ab1d85020feb801d5e48b162fe456a7158fff856876f75864df8bcb0",
+      "executedInThisRun": true,
+      "executionSegment": "before external interruption; observed runner result retained"
+    }
+  ],
+  "partialRust": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-01/rust.txt",
+    "sha256": "7a37ba844051d0e31ca69ce68b7c9f43e093557e127645cc618109c4db3af192"
+  },
+  "inputCount": 1509,
+  "inputsUnchangedAtResume": true,
+  "priorRunnerAndCargoProcessesAbsent": true,
+  "continuation": "Execute complete Rust suite again and the not-yet-run format check; retain original partial Rust log unchanged. No test success inferred from partial output."
+}

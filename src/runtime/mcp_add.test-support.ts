@@ -8,11 +8,11 @@ import {
 } from "./extension_management_types";
 import type { SkillManagementPort } from "./skill_management";
 import type {
-  McpAddInput,
+  McpStdioInput,
   McpAddOperation,
   McpAddRequest,
 } from "./mcp_add_types";
-export const input: McpAddInput = {
+export const input: McpStdioInput = {
   name: "new-local",
   executablePath: "/Applications/Local Tools/runner",
   args: ["", "a b", "x\\y", "--flag"],

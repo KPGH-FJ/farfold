@@ -3,6 +3,7 @@ import { mcpRemoveFailure, type McpRemoveCode } from "./mcp_remove_types";
 import { mcpAddPort } from "./mcp_add";
 import {
   freezeMcpAddInput,
+  isHttpInput,
   mcpAddFailure,
   type McpAddInput,
   type McpAddCode,
@@ -61,7 +62,10 @@ const EMPTY: SkillManagementView = Object.freeze({
 });
 interface Flight {
   port: SkillManagementPort;
-  target: SkillChangeTargetOwner;
+  target: Pick<
+    SkillChangeTargetOwner,
+    "owner" | "result" | "current" | "changed"
+  >;
   view: SkillManagementView;
   retired: boolean;
   consumed: boolean;
@@ -115,6 +119,24 @@ export class SkillManagementController {
       f.target.current()
     );
   }
+  private dropHttpInput(f: Flight) {
+    if (
+      !f.view.request ||
+      !isAddRequest(f.view.request) ||
+      f.view.request.target.transport !== "streamableHttp" ||
+      f.view.additionInput === null
+    )
+      return false;
+    // Preserve only safe ownership and callbacks needed for status/marking stale.
+    f.target = {
+      owner: f.target.owner,
+      result: f.target.result,
+      current: () => false,
+      changed: f.target.changed,
+    };
+    f.view = { ...f.view, additionInput: null };
+    return true;
+  }
   private revokeReview(f: Flight) {
     if (f.inspectionRevoked) return;
     f.inspectionRevoked = true;
@@ -129,6 +151,7 @@ export class SkillManagementController {
   }
   private accept(f: Flight, raw: unknown) {
     if (!this.attached(f) || !f.view.unresolved || !f.view.request) return;
+    if (!this.current(f)) this.dropHttpInput(f);
     const op = parseSkillChangeOperation(raw, f.view.request),
       old = f.view.operation;
     if (
@@ -245,6 +268,7 @@ export class SkillManagementController {
           (code === "reviewExpired" || code === "reviewConsumed")
         ) {
           f.retired = true;
+          this.dropHttpInput(f);
           this.publish(f, {
             checking: false,
             unresolved: false,
@@ -279,11 +303,13 @@ export class SkillManagementController {
     if (!previous && this.entries.size >= 64) {
       const old = [...this.entries].find(([, v]) => !v.view.unresolved);
       if (!old) return false;
+      this.dropHttpInput(old[1]);
       this.revokeReview(old[1]);
       this.entries.delete(old[0]);
     }
     if (previous) {
       previous.retired = true;
+      this.dropHttpInput(previous);
       this.revokeReview(previous);
     }
     const f: Flight = {
@@ -294,7 +320,15 @@ export class SkillManagementController {
           : isMcpRequest(request)
             ? this.mcpPort
             : this.port,
-      target,
+      target:
+        "input" in target && isHttpInput(target.input)
+          ? {
+              owner: target.owner,
+              result: target.result,
+              current: target.current,
+              changed: target.changed,
+            }
+          : target,
       view: {
         ...EMPTY,
         request,
@@ -316,6 +350,7 @@ export class SkillManagementController {
     this.entries.set(owner.agentId, f);
     this.publish(f, {});
     if (!this.current(f)) {
+      this.dropHttpInput(f);
       this.publish(f, {
         unresolved: false,
         reviewRetired: true,
@@ -325,6 +360,7 @@ export class SkillManagementController {
     }
     this.observe(f, async () => {
       if (!this.current(f) || f.view.cancelRequested) {
+        this.dropHttpInput(f);
         this.publish(f, {
           unresolved: false,
           reviewRetired: true,
@@ -401,6 +437,7 @@ export class SkillManagementController {
     this.publish(f, {});
     // A synchronous subscriber may retire this exact owner before IPC admission.
     if (!this.current(f)) {
+      this.dropHttpInput(f);
       this.publish(f, { unresolved: false, error: "selectionChanged" });
       return false;
     }
@@ -408,6 +445,7 @@ export class SkillManagementController {
       f,
       async () => {
         if (!this.current(f) || f.view.cancelRequested) {
+          this.dropHttpInput(f);
           this.publish(f, { unresolved: false, error: "selectionChanged" });
           return;
         }
@@ -442,6 +480,7 @@ export class SkillManagementController {
     if (!f || f.view.request?.requestId !== requestId) return;
     const releaseAbsent = explicit && f.view.error === "unknownRequest";
     f.retired = true;
+    this.dropHttpInput(f);
     if (f.view.request.action === "inspect" && f.view.unresolved)
       f.inspectionRevoked = true;
     else this.revokeReview(f);
@@ -460,7 +499,12 @@ export class SkillManagementController {
   }
   retire(owner: InventoryOwner) {
     const f = this.entries.get(owner.agentId);
-    if (!f || f.target.owner !== owner || f.retired) return;
+    if (!f || f.target.owner !== owner) return;
+    const inputDropped = this.dropHttpInput(f);
+    if (f.retired) {
+      if (inputDropped) this.publish(f, {});
+      return;
+    }
     if (f.view.unresolved && f.view.request)
       this.cancel(owner.agentId, f.view.request.requestId, false);
     else {
@@ -469,15 +513,32 @@ export class SkillManagementController {
       this.publish(f, { review: null, reviewRetired: true });
     }
   }
-  retireAddition(owner: InventoryOwner, inputId: string) {
+  retireAddition(
+    owner: InventoryOwner,
+    inputId: string,
+    resultReplaced = false,
+  ) {
     const f = this.entries.get(owner.agentId);
     if (
       f?.target.owner === owner &&
-      f.view.request?.action === "inspect" &&
+      f.view.request &&
+      (f.view.request.action === "inspect" ||
+        (isAddRequest(f.view.request) &&
+          f.view.request.target.transport === "streamableHttp")) &&
       isAddRequest(f.view.request) &&
       f.view.request.target.inputId === inputId
-    )
-      this.retire(owner);
+    ) {
+      if (
+        resultReplaced &&
+        f.view.request.action !== "inspect" &&
+        f.dispatched
+      ) {
+        // Our write marks its catalogue stale. Drop only the private form data;
+        // keep the admitted operation, including its later explicit cancel path.
+        this.dropHttpInput(f);
+        this.publish(f, { review: null, reviewRetired: true });
+      } else this.retire(owner);
+    }
   }
   retireInspectionForResult(
     owner: InventoryOwner,
@@ -502,6 +563,7 @@ export class SkillManagementController {
       !old.confirmation
     )
       return false;
+    this.dropHttpInput(old);
     const request: SkillChangeRequest = Object.freeze({
       ...old.confirmation,
       requestId: this.uuid(),

@@ -1,0 +1,116 @@
+{
+  "checkedAtUtc": "2026-10-10T21:07:54.048163+00:00",
+  "status": "noNewBlockerInEngineeringAndRecordScope",
+  "sourceBase": "55441316981b59ef9805255e27b12b0c6761aa34",
+  "engineering": {
+    "path": "output/2026-10-11-mcp-http-add-independent/engineering-independent-pre-docs.json",
+    "sha256": "bb0907c6de657df039a5a7df81bae2260ce047a83975103b15f4a63959a4aa87"
+  },
+  "checks": {
+    "sevenActualCommandsAndExactArgv": true,
+    "independentThreeOriginalLogsByteIdentical": true,
+    "rootFourActuallyExecuted": true,
+    "executorsExplicit": true,
+    "inputCount": 1509,
+    "currentInputHashSetExact": true,
+    "frontendFiles": 425,
+    "frontendTests": 4963,
+    "rustPassed": 1557,
+    "rustIgnored": 6,
+    "originalFailurePreservedUnexplained": true,
+    "frontend18AndBackend15CheckpointExact": true,
+    "original122IdTitleConditionExact": true,
+    "new16IdTitleConditionExact": true,
+    "productUnchanged": true,
+    "protectedTwoReadmesUnchanged": true,
+    "currentFourDocumentsAndImplementationConsistent": true
+  },
+  "limitations": [
+    "Read-only evidence review; no repeated tests, build, official program, UI or database access.",
+    "Three Rust commands were actually executed by this verification agent and preserved by root; this does not claim an independent second execution of those commands.",
+    "Installed formal baseline remains 8fa557c0; candidate/package/install/HTTP native flow awaits separate completion events.",
+    "Original ten-second environment fixture failure remains unlocalized; only diagnostic instrumentation changed."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/implementation.json",
+      "sha256": "48900aecf0986d48ea3f2694c313d6a2a5f39ade107e22719cd6291fa5c3283b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/frontend/implementation.json",
+      "sha256": "201d6c9373685d6cd9abbbf60e03e9992cd32532f8baad99285a7322bf51b314"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/implementation.json",
+      "sha256": "4ed98e1f38a1a5fefee181ca2079601e200027f0079e46c6d7a13f22e16d26f5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend-independent.json.raw.txt",
+      "sha256": "f5da6dcead908725b296d7ef051503df8e6283d1a0f561a788602594850e0041"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/browser/receipt.json",
+      "sha256": "7dc932c0f5bd33ef9f3caec520ce656be8b01b2afbc0e15fdcc4849edfdf17fc"
+    },
+    {
+      "path": "output/2026-10-11-mcp-http-add-independent/native-helper-review.json",
+      "sha256": "b1a20951f496a0014320787e076c575ebb0fffa3dc3faf81473f40578ad9e380"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/verification.json",
+      "sha256": "61039efd3441b9f574ab4c254c8ad7844f5ff7f91ef55a433ec322934ba050c6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/receipt.json",
+      "sha256": "2fa4600fc5ca541fb881f1275a3d393c10353040a6708d03b0465a635c1764e6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/receipt.json",
+      "sha256": "2fa4600fc5ca541fb881f1275a3d393c10353040a6708d03b0465a635c1764e6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/diagnosis-before-instrumentation.json.raw.txt",
+      "sha256": "153d2f78027638a66773cd0f5cdfbd935135b96131fcc353b74a2bf4eab918ba"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/diagnostic-followup.json.raw.txt",
+      "sha256": "ffe0a987decd04b1572dec7aefbd0307b633e070071c8452b8e71a945283c4e3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/diagnostic-only.patch.txt",
+      "sha256": "81b1000f3bdbc48f85483572fd9b0ac03251996e696249247b666af045d5f375"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/dependency_environment_tests.before.rs.txt",
+      "sha256": "a9dbcc780e975cd9001fd750eee400e6c9c26689774cde668aee19e0dd226960"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/isolated-first.txt",
+      "sha256": "8a072ae678b4c3b563524b6b9eed4c387d0ae6c9acc742a07f74ad5fbba7df55"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/diagnostic-isolated.txt",
+      "sha256": "d94b5d5f6b7e19f3ce52566291f386e9f483e8e215d5a92367d63743d26d870c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/dependency-environment-diagnostic/final-commands.json.raw.txt",
+      "sha256": "1e5a0da04b306986e41c7e93bde557c1f2372a86cf63e0d92c5059d85674e4e2"
+    },
+    {
+      "path": "docs/status.md",
+      "sha256": "33b628ad99481c739d349f0cf451ae192b6fcbdec8d34873fb516e3a06c38a0d"
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "c63ef2aeae316d55f9f46a6d401d0b37b1876f0dea2538ee810029e03d697685"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "8f4c6a9954c8309cce3eee9898a7bf61f5118da55661c39bc340a84451bce2ef"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "sha256": "2cac0d55fb34b93cd039deefcd18a56945c62becb818586d54cc8c2242992bc5"
+    }
+  ]
+}

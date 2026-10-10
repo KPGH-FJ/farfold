@@ -1,6 +1,9 @@
 import { MCP_REMOVE_STRINGS as REMOVE } from "../runtime/mcp_remove_strings";
 import { McpAddForm } from "./McpAddForm";
-import { MCP_ADD_STRINGS as ADD } from "../runtime/mcp_add_strings";
+import {
+  MCP_ADD_STRINGS as ADD,
+  MCP_HTTP_ADD_STRINGS as HTTP,
+} from "../runtime/mcp_add_strings";
 import {
   useEffect,
   useMemo,
@@ -155,6 +158,8 @@ export function AgentExtensionInventory({
   }, [owner, result]);
   const removalAvailable =
     kind === "mcp" && cap?.value?.mcpRemoval?.availability === "available";
+  const httpAdditionAvailable =
+    kind === "mcp" && cap?.value?.mcpHttpAddition?.availability === "available";
   const additionAvailable =
     kind === "mcp" && cap?.value?.mcpAddition?.availability === "available";
   const stale =
@@ -349,27 +354,31 @@ export function AgentExtensionInventory({
           }
         />
       )}
-      {additionAvailable && result && result.request.kind === "mcp" && (
-        <McpAddForm
-          key={result.request.requestId}
-          owner={owner}
-          result={result}
-          enabled={
-            active &&
-            !blocked &&
-            !stale &&
-            !view.unresolved &&
-            !managementView.unresolved
-          }
-          current={() =>
-            owner.current() &&
-            liveCapability.current === capabilityKey &&
-            additionAvailable &&
-            extensionInventory.isCurrentResult(owner, result)
-          }
-          changed={() => extensionInventory.markStale(result)}
-        />
-      )}
+      {(additionAvailable || httpAdditionAvailable) &&
+        result &&
+        result.request.kind === "mcp" && (
+          <McpAddForm
+            key={result.request.requestId}
+            owner={owner}
+            result={result}
+            httpAvailable={httpAdditionAvailable}
+            stdioAvailable={additionAvailable}
+            enabled={
+              active &&
+              !blocked &&
+              !stale &&
+              !view.unresolved &&
+              !managementView.unresolved
+            }
+            current={() =>
+              owner.current() &&
+              liveCapability.current === capabilityKey &&
+              (additionAvailable || httpAdditionAvailable) &&
+              extensionInventory.isCurrentResult(owner, result)
+            }
+            changed={() => extensionInventory.markStale(result)}
+          />
+        )}
       <SkillChangeReview
         agentId={agentId}
         owner={owner}
@@ -380,11 +389,13 @@ export function AgentExtensionInventory({
         <p>{kind === "mcp" ? S.scope : S.skillScope}</p>
         <p>
           {kind === "mcp"
-            ? additionAvailable
-              ? ADD.limits
-              : managementAvailable
-                ? M.limits
-                : S.limits
+            ? httpAdditionAvailable
+              ? HTTP.limits
+              : additionAvailable
+                ? ADD.limits
+                : managementAvailable
+                  ? M.limits
+                  : S.limits
             : managementAvailable
               ? S.skillManagementLimits
               : S.skillLimits}

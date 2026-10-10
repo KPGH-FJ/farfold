@@ -1,0 +1,176 @@
+{
+  "checkedAtUtc": "2026-10-10T20:44:57.900063+00:00",
+  "result": "noAdditionalBackendBlockingFindingWithinReviewedScope",
+  "productionTestsOrBrowserRerunByReviewer": false,
+  "backendSourceFiles": 15,
+  "testFixtureFiles": 1,
+  "sourceHashesMatchFrozenCheckpoint": true,
+  "runs": {
+    "targeted-first": {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "mcp_http",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "sourceStable": true,
+      "passed": 10,
+      "executor": "backend author; independently read raw output, not rerun"
+    },
+    "related-management": {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "acp_client::skill_management::",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "sourceStable": true,
+      "passed": 79,
+      "executor": "backend author; independently read raw output, not rerun"
+    },
+    "related-inventory": {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "acp_client::extension_inventory::",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "sourceStable": true,
+      "passed": 56,
+      "executor": "backend author; independently read raw output, not rerun"
+    },
+    "clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "sourceStable": true,
+      "passed": null,
+      "executor": "backend author; independently read raw output, not rerun"
+    },
+    "format": {
+      "command": [
+        "rustfmt",
+        "--check",
+        "--edition",
+        "2024",
+        "src-tauri/src/acp_client/skill_management/mcp_add_input.rs",
+        "src-tauri/src/acp_client/skill_management/mcp_add_plan.rs",
+        "src-tauri/src/acp_client/skill_management/mcp_add.rs",
+        "src-tauri/src/acp_client/skill_management/domain.rs",
+        "src-tauri/src/acp_client/skill_management/requests.rs",
+        "src-tauri/src/acp_client/skill_management/mod.rs",
+        "src-tauri/src/acp_client/skill_management/mcp_add_tests.rs",
+        "src-tauri/src/acp_client/skill_management/mcp_add_independent_tests.rs",
+        "src-tauri/src/acp_client/extension_inventory/types.rs",
+        "src-tauri/src/acp_client/extension_inventory/launch.rs",
+        "src-tauri/src/acp_client/skill_management/mcp_http_url.rs",
+        "src-tauri/src/acp_client/skill_management/mcp_http_tests.rs",
+        "src-tauri/src/acp_client/skill_management/mcp_http_lifecycle_tests.rs",
+        "src-tauri/src/acp_client/skill_management/mcp_http_independent_tests.rs"
+      ],
+      "exitCode": 0,
+      "sourceStable": true,
+      "passed": null,
+      "executor": "backend author; independently read raw output, not rerun"
+    }
+  },
+  "independentTests": {
+    "count": 2,
+    "bothActuallyPassedIn79RelatedTests": true,
+    "coverage": [
+      "Typed authentication defaults reject empty strings/false/arrays rather than treating them as null.",
+      "Actual owned peer lost ACK then exact cancellation and readonly recheck preserve original unknown/writeAck and one write; public metadata omits private URL/query."
+    ]
+  },
+  "actualWire": {
+    "values": 21,
+    "exactOriginalStdoutValues": true,
+    "publicAddressCanariesAbsent": true,
+    "strictFrontendInterop": "Author-owned; this reviewer did not repeat parser/UI suite."
+  },
+  "reviewedMechanisms": [
+    "Strict legacy stdio versus tagged HTTP input, denied mixed/unknown fields and existing UUID input conflict checks.",
+    "Raw-first bounded URL syntax validation; no normalization, endpoint request or new executor.",
+    "Literal-name leaf write and complete two-scope configuration preservation; post-get original URL and typed empty authentication defaults required.",
+    "Existing shared RPC/process/lease and terminal-result rules retained; reported false alone cannot verify identity; readonly recheck does not rewrite or upgrade old unknown ACK.",
+    "Source/review domain metadata comes from private input; public target/review/failure omit raw HTTP address."
+  ],
+  "frontendFollowup": {
+    "findingOrigin": "frontend author self-review; independent static trace confirmed; root and author retained actual red",
+    "issue": "Own write progress marks inventory stale and previously triggered HTTP form cleanup cancellation of its admitted confirm.",
+    "reviewedFix": "Same-owner result replacement after admission drops raw form input only; owner/explicit close still uses exact cancellation. No new confirmation authority and original write facts remain.",
+    "scope": "Narrow static final delta only; actual component/browser regressions are root/author evidence."
+  },
+  "limits": [
+    "Owned synthetic peer and source checks, not actual official configuration or installed HTTP behavior.",
+    "pendingCleanup sample invokes the actual Job method while the controlled worker remains live; no claim the production deadline elapsed.",
+    "Available official capability is not proven by unsupported-row wire.",
+    "Non-atomic external edits remain an explicit boundary; expectedVersion is not a cross-process global CAS.",
+    "No new frontend full-suite, browser, Cargo, App, official CLI, configuration or database call by this reviewer."
+  ],
+  "refs": {
+    "output/2026-10-11-mcp-http-add-backend/source-checkpoint.json": "092102d81e1a9db92a22576a547470a7a517277a36eece4fdcf3af483046175c",
+    "src-tauri/src/acp_client/skill_management/mcp_add_input.rs": "58e2e2e146f518f365f9dc4bddf1ea0cf8fb4c9977ad8b259bf62db3684827dc",
+    "src-tauri/src/acp_client/skill_management/mcp_add_plan.rs": "ea8593dc9a3ed14c34041269c88d5673c3e400208ab7a3cc09dc329cf8a8497b",
+    "src-tauri/src/acp_client/skill_management/mcp_add.rs": "db154382650fb65dc2e6c9f786f5b4ca150e72140743041b627bef541777901e",
+    "src-tauri/src/acp_client/skill_management/domain.rs": "c97128409b1b88775e458a2e9e95396576d6ba960fe494e2209719b344c70757",
+    "src-tauri/src/acp_client/skill_management/requests.rs": "90c67f00eed25a6c16ec14d257ebbd55e4c3c15aeb6311c2bf1fb715ffe537b6",
+    "src-tauri/src/acp_client/skill_management/mod.rs": "effc21a8e2d3381a32681b7e47fdeed9003d737c68bd3b972941cba3f4f3476a",
+    "src-tauri/src/acp_client/skill_management/mcp_add_tests.rs": "f97a611610c8f23816d9d334d58528416a11c900ebce2b2abfc223bc69094ace",
+    "src-tauri/src/acp_client/skill_management/mcp_add_independent_tests.rs": "d97ef7ad9ba33b8bbd0a0c905bc01416af5436e75ba84bc2ef02892bee24b236",
+    "src-tauri/src/acp_client/skill_management/mcp_add_peer.py": "3f4e9f8177366928279513ff2edb8c88c79183ff8ee457364fa811193bc9b623",
+    "src-tauri/src/acp_client/extension_inventory/types.rs": "e7191f1652f75e5d164cc1ab342d0bd1dc0aa843474b5f4800011f6f12a77219",
+    "src-tauri/src/acp_client/extension_inventory/launch.rs": "3aee7124b225f738014c83cec6ee4027957818a63180605d9185a78b3228954f",
+    "src-tauri/src/acp_client/skill_management/mcp_http_url.rs": "f2a423b33626fd46c995765ad32ea516e4cc0d21b6bb0202aa5ba3dcbfa2246f",
+    "src-tauri/src/acp_client/skill_management/mcp_http_tests.rs": "0e5ef3289b7bb236a216dfaf016344d68b4413520305cd88b8a4ec80c59c8dd7",
+    "src-tauri/src/acp_client/skill_management/mcp_http_lifecycle_tests.rs": "b4bbc0b49d7383691c13ce24c25c85f1e6c396bfcfd5706fb36f15c6647e39ca",
+    "src-tauri/src/acp_client/skill_management/mcp_http_independent_tests.rs": "5e318d232e956d3f80bc0eeb6d0790940f3bc4f3b0743451ef4a19c7c9c8fade",
+    "src/runtime/fixtures/mcp-http-url-cases.json": "597ae31d07567e0e5649ac3f20ac15a365b18256ceb1bf8d3602035e98d78295",
+    "output/2026-10-11-mcp-http-add-backend/targeted-first.json": "5fdf0c0896d5fbad395c4133bccd06cb7a2a9435f2704bc0f01a51eea027cdf9",
+    "output/2026-10-11-mcp-http-add-backend/targeted-first.txt": "d9b402d2c4e1e31ebbbc3ee0771dc5ffc6a3fc55c74102cfc9fcf0529bb60d77",
+    "output/2026-10-11-mcp-http-add-backend/related-management.json": "8edf553124291a1cf77e00f4ac583e16ee35c923eed5744bb6b15eb5a9c2db47",
+    "output/2026-10-11-mcp-http-add-backend/related-management.txt": "3b417a4a935388c3bc1f46e1c47eb59f4d80cafbc92f7ca2a7b4c73967c784a7",
+    "output/2026-10-11-mcp-http-add-backend/related-inventory.json": "32b10716c8376f1e3c14048123c503d19630b47ae3388d8c8863dc07a2d844c8",
+    "output/2026-10-11-mcp-http-add-backend/related-inventory.txt": "aba1a4c7f5562ab30d69b5c53d0f8fdcbd4a0eb9a5e98b8a2c28e3637f748451",
+    "output/2026-10-11-mcp-http-add-backend/clippy.json": "60c57e52469e5fe6801c136290f9e7ece1997e1b3fc1e1a30c0a5ff451bf7d29",
+    "output/2026-10-11-mcp-http-add-backend/clippy.txt": "3615cb77779d4172d95ae61ad0d53df7067fddc33d24b1c7d7e0b9e3b6edf3cd",
+    "output/2026-10-11-mcp-http-add-backend/format.json": "6f9354208e365ac01cbccdba4200f0f4c7f89400c8857c597f6d6b99e49a6a06",
+    "output/2026-10-11-mcp-http-add-backend/format.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/wire-capture.json": "be26cff5a5bebb0b467bf47027952593f3dc3f4d432e7982862783669856f055",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/actual-wire.json": "e8eb01a482663526d2484f8be3e36f07d6828905987456d486613e1cae038f87",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/actual-wire.raw.txt": "fb1b97d3397814f13f1662918e0d67183c54f541d66721ca0b767fc0d9aeab5d",
+    "output/2026-10-11-mcp-http-add-frontend/source-checkpoint-final.json": "575bd1b520fe77fcc5440e7ac8c60bf92ec39c7e9b9a7fcaee035f1bee211c71",
+    "src/components/McpAddForm.tsx": "ca05ec91f5839fd5dadc974846a1815fd7efcf7631e942e1fb3d75ca50eba257",
+    "src/runtime/skill_management_controller.ts": "d6035b796221f2aa64a678c41d994acfda02b46c604b1c8ad7f97f2c6557307e",
+    "src/runtime/extension_management_types.ts": "80176b89acd4d966b05472b3ae725511fa59be6155075b4cf366d39bfb3d4489",
+    "output/2026-10-11-mcp-http-add-backend/implementation.json": "83a20be733bfbb4abc645a5a2dc9d39a8cbd06c5073493e1d65f2065bb02183c",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/implementation.json": "4ed98e1f38a1a5fefee181ca2079601e200027f0079e46c6d7a13f22e16d26f5"
+  },
+  "initialRunBoundary": "Initial 10 tests preceded independent module registration; the final 79/56 runs bind all final backend inputs. The author recorded an initial receipt-script assumption failure about that module delta; it was not a product test failure."
+}

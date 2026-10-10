@@ -121,7 +121,7 @@ fn mcp_add_independent_raw_names_survive_hidden_and_unmanageable_projection() {
 fn mcp_add_independent_same_disabled_requires_exact_argv_and_transport() {
     let raw = json!({"layers":[{"name":{"type":"user","file":"/synthetic/config.toml"},"version":"v1","config":{"unrelated":{"keep":true}}}]});
     let before = Config::parse(raw.clone()).unwrap();
-    let intended_input = mcp_add_input::Input {
+    let intended_input = mcp_add_input::StdioInput {
         args: vec!["".into(), " ".into(), "two words".into(), "'$HOME'".into()],
         ..input()
     };

@@ -400,9 +400,10 @@ impl Requests {
         id: &str,
         inventory: &str,
         input_id: &str,
-        value: super::mcp_add_input::Input,
+        value: impl Into<super::mcp_add_input::Input>,
     ) -> Result<(Arc<Job>, bool)> {
         validate(agent, id)?;
+        let value = value.into();
         let input = Input::InspectAdd {
             inventory: inventory.into(),
             input_id: input_id.into(),

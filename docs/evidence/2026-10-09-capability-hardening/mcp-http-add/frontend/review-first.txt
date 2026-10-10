@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/SkillChangeReview.http.test.tsx (2 tests | 1 failed) 44ms
+   × shows all raw HTTP bytes in quoted escaped text, without a link, media or network action 43ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/SkillChangeReview.http.test.tsx > shows all raw HTTP bytes in quoted escaped text, without a link, media or network action
+AssertionError: expected '<section class="skill-change-review" …' to contain '不连接填写的地址'
+
+Expected: "不连接填写的地址"
+Received: "<section class="skill-change-review" aria-label="添加 HTTP MCP"><div class="skill-change-header"><h5 tabindex="-1">添加 HTTP MCP</h5><button type="button" class="btn btn-ghost">收起审阅</button></div><strong>new-local</strong><p class="skill-change-path">/controlled</p><p>添加后的状态：停用</p><div class="mcp-add-review"><p>所检查范围中尚无此名称</p><p>HTTP 地址：<code>&quot;HTTPS://Endpoint.test:000443/mcp?token=VISIBLE_CANARY&amp;x=&amp;x=+&amp;slash=%2f&amp;html=&lt;script&gt;bad()&lt;/script&gt;&quot;</code></p><p>引号标明值的边界；显示的转义不改变实际内容。</p></div><p>本次写入范围：用户配置</p><p class="skill-change-path">~/.example/config.toml</p><p>确认后保存所列完整地址并保持停用，会影响以后沿用同一设置的其他对话。不发送消息，不连接该地址。</p><details><summary>修改范围与注意事项</summary><p>审阅时间：10/11/2026, 4:35:15 AM</p><p>保留其他配置值；配置文件的注释与排版可能变化。</p><p>请先结束其他程序对相关配置的编辑。外部同时修改可能无法完全检测或保留。</p><p>官方程序会使用已有配置、登录状态和环境，可能访问网络及维护自身状态。只请求保存此条目，不连接新 MCP。</p><p>此次确认限本次审阅有效期间；过期须重新审阅。</p></details><button type="button" class="btn btn-primary">确认添加并保持停用</button><p>尚未验证认证、连接或工具是否可用。不会自动启用、连接或重启对话。</p><div class="agent-extension-actions"></div></section>"
+
+ ❯ src/components/SkillChangeReview.http.test.tsx:28:16
+     26|   expect(html).not.toMatch(/<(?:a|img|iframe|script)\b/);
+     27|   expect(html).toContain("确认添加并保持停用");
+     28|   expect(html).toContain("不连接填写的地址");
+       |                ^
+     29|   expect(confirm).not.toHaveBeenCalled(); expect(fetch).not.toHaveBeen…
+     30| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  04:35:15
+   Duration  339ms (transform 133ms, setup 0ms, import 184ms, tests 44ms, environment 0ms)
+

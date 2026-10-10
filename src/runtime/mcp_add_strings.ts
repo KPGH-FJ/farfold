@@ -45,7 +45,35 @@ export const MCP_ADD_STRINGS = {
       "名称仅限英文字母、数字、点、下划线和短横线，不能包含连续两点或使用保留名称，最多256字节。",
     invalidExecutablePath:
       "请填写准确的绝对程序路径，不使用相对路径、空路径段或受限制的控制或格式字符，最多4096字节。",
+    invalidUrl: "请检查 HTTP 地址格式并重新审阅，地址不会自动修正。",
     invalidArguments:
       "参数含受限制的控制或格式字符或超过限制；最多64项，每项1024字节，合计16384字节。",
+  },
+} as const;
+
+export const MCP_HTTP_ADD_STRINGS = {
+  ...MCP_ADD_STRINGS,
+  heading: "添加 HTTP MCP",
+  open: "添加 MCP…",
+  form: "MCP 添加内容",
+  transport: "添加方式",
+  local: "本地程序",
+  http: "HTTP 地址",
+  address: "HTTP 地址",
+  guidance: "填写完整的 HTTP 或 HTTPS 地址，查询参数会原样保存。",
+  secrets:
+    "地址可能含敏感内容。请勿嵌入密码或访问令牌；确认后完整地址会保存在 Agent 配置中，此表单不办理认证。",
+  notice:
+    "确认后保存所列完整地址并保持停用，会影响以后沿用同一设置的其他对话。不发送消息，不连接该地址。",
+  verified: "已添加，保持停用。地址和配置报告均已核对。",
+  mismatch: "配置或报告与此次添加内容不同；相同的停用状态也不代表地址一致。",
+  applicability:
+    "尚未验证认证、连接或工具是否可用。不会自动启用、连接或重启对话。",
+  limits:
+    "可以添加保持停用的本地程序或 HTTP 地址。不办理认证、不测试连接或调用工具。",
+  errors: {
+    ...MCP_ADD_STRINGS.errors,
+    invalidUrl:
+      "请填写完整的 HTTP 或 HTTPS 地址，不含用户名、密码、片段、空端口或受限制字符，最多4096字节。",
   },
 } as const;

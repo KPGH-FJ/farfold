@@ -1,0 +1,18 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/mcp_http_add.test.ts (7 tests | 1 failed) 14ms
+   × after HTTP confirm dispatch, close drops input but preserves unknown and readonly observation without reviving confirmation 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/mcp_http_add.test.ts > after HTTP confirm dispatch, close drops input but preserves unknown and readonly observation without reviving confirmation
+{ code: 'invalidOutput', stacks: [] }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 74 passed (75)
+   Start at  04:31:33
+   Duration  288ms (transform 284ms, setup 0ms, import 395ms, tests 48ms, environment 0ms)
+
