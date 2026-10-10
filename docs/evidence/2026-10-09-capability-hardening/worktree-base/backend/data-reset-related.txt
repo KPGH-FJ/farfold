@@ -1,0 +1,14 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.89s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 7 tests
+test data_reset::tests::prepared_copy_blocks_data_clear_before_any_deletion ... ok
+test data_reset::tests::clear_owned_reports_and_keeps_paths_that_cannot_be_removed ... ok
+test data_reset::tests::clear_owned_deletes_an_owned_symlink_without_touching_its_target ... ok
+test data_reset::tests::clear_owned_stops_before_namespaces_when_secret_deletion_fails ... ok
+test data_reset::tests::clear_owned_removes_only_farfold_namespaces_and_resets_metadata ... ok
+test data_reset::tests::cleared_store_rejects_late_old_snapshots_until_reopened ... ok
+test data_reset::worktree_tests::worktree_prepared_blocks_actual_clear_admission_without_deleting_any_material ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 1285 filtered out; finished in 0.65s
+

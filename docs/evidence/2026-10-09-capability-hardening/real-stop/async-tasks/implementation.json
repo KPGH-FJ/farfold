@@ -1,0 +1,671 @@
+{
+  "scope": "Generic capability-negotiated AIR v1 asyncTasks on the existing ACP connection, in-memory live ownership, separate from reply cancellation and tool results.",
+  "status": "implemented_and_targeted_verified_pending_root_integration_and_installed_real_agent_acceptance",
+  "headAtFreeze": "db022ca1531a40d1f23fb98dd0f3016c19061893",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/async_tasks.rs",
+      "sha256": "567536a89a852c273c9c167625f4f3ff8fbb5b341ff0752cef1296982d4b39bc",
+      "bytes": 11385,
+      "lines": 326
+    },
+    {
+      "path": "src-tauri/src/acp_client/async_tasks_tests.rs",
+      "sha256": "29535336fcb89f09c382c7158dd926988077ccf611fffa4802ee401866a373a7",
+      "bytes": 6488,
+      "lines": 166
+    },
+    {
+      "path": "src-tauri/src/acp_client/async_task_wire_tests.rs",
+      "sha256": "3aab04d02a2770f12b43ead490fbb597bd2f3abef15d47d78fab686c5b8638b8",
+      "bytes": 11885,
+      "lines": 336
+    },
+    {
+      "path": "src-tauri/src/acp_client/failures.rs",
+      "sha256": "2b53e950ba4fd95036df5c091a717ea97252347b42ecf8e3b1089b7020dfe16a",
+      "bytes": 4258,
+      "lines": 121
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "5da5a901cf0bf0e81693e46cac1f79a83ea97cd26d242df0e67295750f8853de",
+      "bytes": 51027,
+      "lines": 1204
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "436b7cb8eeca335cd94e08caefefafd62f29ea2aa613bd9e1dd9631c9964c5ab",
+      "bytes": 2456,
+      "lines": 119
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_mode_tests.rs",
+      "sha256": "31f636392e1e317fc5547a06198f909a3c6f982d238db2be62e18a927f81bc3b",
+      "bytes": 17904,
+      "lines": 450
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "159189718fbdbbe63e8271bd3e5131a3afed7bbc33e6ea4a71c647fb52a20ecc",
+      "bytes": 72798,
+      "lines": 1452
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "4f7e52b1ad840fbbbea7fb9a2f708537dbd9cdd13f84c87e7d348a514f40af75",
+      "bytes": 39551,
+      "lines": 1080
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "512a45af058eae5a72e6b26c821146a8f1181c1ff999cbcdef77b301bf8989ff",
+      "bytes": 20842,
+      "lines": 625
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/restore_config.rs",
+      "sha256": "093c4aefc412389473ffbb2cfc918ccbc039b7349f5377bf5b6628acd8975a04",
+      "bytes": 11259,
+      "lines": 326
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/restore_tests.rs",
+      "sha256": "3b29692ea2666a441662d9da860bd274815012a46f281c47377fd96f46523bcf",
+      "bytes": 16500,
+      "lines": 429
+    },
+    {
+      "path": "src/runtime/async_tasks.ts",
+      "sha256": "6fa3d2d72009a4b5b18254d27cc9a3fcc88830e06f95c21528aa0841241133e4",
+      "bytes": 3475,
+      "lines": 124
+    },
+    {
+      "path": "src/runtime/async_task_actions.ts",
+      "sha256": "7f67d8489850d847899ac41dee9aa28330647ba13cfa7eadd53d902ac9dd2915",
+      "bytes": 2050,
+      "lines": 71
+    },
+    {
+      "path": "src/runtime/async_task_strings.ts",
+      "sha256": "251dd5e0704a0c094dfa1451ff8564cb7928245daaefdffa63264963e82990fb",
+      "bytes": 622,
+      "lines": 15
+    },
+    {
+      "path": "src/runtime/async_tasks.test.ts",
+      "sha256": "0dff18a4824bb8c39b95700d2b768b528d0e82f6803806ac024ad4650cc2573c",
+      "bytes": 9752,
+      "lines": 314
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "8d1bdcc0fd993d75a7e42417d3c31e8a22f437ea10db83777d23b0363e5ed3ee",
+      "bytes": 10092,
+      "lines": 316
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "f304c6875864f0bc0f0dbcc46961224da9e608648cbd6c735b3ea64afa16998c",
+      "bytes": 49541,
+      "lines": 1493
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "96b393e8a1bd8865cf4309729b7548624cba0fb62e80b0f9318082a2eb5235a8",
+      "bytes": 28810,
+      "lines": 940
+    },
+    {
+      "path": "src/components/AsyncTasks.tsx",
+      "sha256": "666d8fa0892f1d3be30294decb1045c0796a9c2effe98462ed60e73f809a4e93",
+      "bytes": 2727,
+      "lines": 80
+    },
+    {
+      "path": "src/components/AsyncTasks.css",
+      "sha256": "34b6ca977558539e10f6780ef7e8e3b82204a0692d4ebb6ddabac8a6dd015749",
+      "bytes": 612,
+      "lines": 37
+    },
+    {
+      "path": "src/components/AsyncTasks.test.tsx",
+      "sha256": "878bca478038ef943eabb98380a079bb87d2c0d962b5101ecbd24f6774af9501",
+      "bytes": 4268,
+      "lines": 131
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "77f9945d906ec4c4cc075022dbe8b7dccf536bf0e863a997bcacc046062d55ec",
+      "bytes": 51034,
+      "lines": 1378
+    }
+  ],
+  "sharedIntegration": {
+    "path": "src-tauri/src/lib.rs",
+    "linePurpose": "session_stop_task registration added by architecture; file remains shared with worktree development and is excluded from this owned freeze"
+  },
+  "officialResearch": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/official-stop-followup.json",
+    "sha256": "be57e7e1df7d7dd7dfdf612a43710ce67ec1c7feba21369affacf713d81fcacf",
+    "bytes": 14112
+  },
+  "semantics": [
+    "Only exact AIR version 1 plus asyncTasks in both real initialize metadata grants controls; no Agent-name or binary-version branch.",
+    "Task ID comes only from validated current connection/native session announcements. Raw protocol envelopes remain visible; raw replay and arbitrary history IDs grant no task action.",
+    "Stop uses exact original asyncTaskId/sessionId on the existing connection. accepted/rejected/unknown are request observations; only official completed/failed/stopped state updates end task activity.",
+    "Task stop does not cancel the reply, rewrite original tool or turn results, pause/consume waiting messages, or alter their existing send policy.",
+    "Task activity retains the existing lifecycle work lease and participates in configuration/archive/delete/close guards. Cold automatic configuration restore now uses the same task busy state; confirmed terminal tasks retain ordinary restore behavior.",
+    "Late and wrong-owner replies do not transfer ownership. Unknown state can accept its first same-owner terminal, including before spawn; conflicting tool ownership remains uncertain and blocks idle.",
+    "512 total live task/early-state records bound memory. Overflow or conflicting ownership remains uncertain; no new persistent event/task ledger is introduced."
+  ],
+  "verification": {
+    "frontend": {
+      "raw": "frontend-final-after-visual.txt",
+      "files": 6,
+      "passed": 79,
+      "typecheckRaw": "typecheck-final-after-visual.txt",
+      "formatRaw": "format-final.txt",
+      "scope": "Actual runtime/card and associated existing workflow tests; no installed UI or real Agent. The original tool stdout does not embed the command argv."
+    },
+    "rust": [
+      {
+        "filter": "async_task_",
+        "raw": "rust-after-borrow.txt",
+        "passed": 18,
+        "exitCode": 0,
+        "includes": "10 state tests, 6 real manager/controlled ACP protocol tests, 2 cold restore tests"
+      },
+      {
+        "filter": "configuration_restore_",
+        "raw": "restore-green.txt",
+        "passed": 8,
+        "exitCode": 0,
+        "overlap": "Includes the same 2 task restore tests above; do not sum as distinct coverage."
+      },
+      {
+        "filter": "cancel_starvation_tests",
+        "raw": "cancel_starvation_tests-final.txt",
+        "passed": 5,
+        "exitCode": 0
+      },
+      {
+        "filter": "cancellation_tests",
+        "raw": "cancellation_tests-final.txt",
+        "passed": 2,
+        "exitCode": 0
+      },
+      {
+        "filter": "tool_activity_tests",
+        "raw": "tool_activity_tests-final.txt",
+        "passed": 3,
+        "exitCode": 0
+      }
+    ],
+    "rustFormat": {
+      "raw": "rustfmt-freeze.txt",
+      "exitCode": 0,
+      "scope": "12 owned Rust source/test files, edition 2024, skip_children=true"
+    },
+    "clippy": {
+      "firstRaw": "clippy-final.txt",
+      "firstExitCode": 101,
+      "firstErrors": 9,
+      "ownedIssue": "needless generic borrow in async_tasks.rs removed",
+      "finalRaw": "clippy-after-borrow.txt",
+      "finalExitCode": 101,
+      "remainingErrors": 8,
+      "remainingScope": "worktrees/manager.rs and worktrees/types.rs WIP owned by architecture; not a whole-project clippy pass"
+    },
+    "browser": {
+      "results": [
+        {
+          "engine": "webkit",
+          "passed": 14,
+          "failed": 0,
+          "receipt": {
+            "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit.json",
+            "sha256": "9909dd654537a878e58bd6e5da97c14ae29496a26b67ec57d93bb52bcc75c262",
+            "bytes": 3707
+          },
+          "sourceBeforeAfterAndCurrentEqual": true
+        },
+        {
+          "engine": "chromium",
+          "passed": 14,
+          "failed": 0,
+          "receipt": {
+            "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium.json",
+            "sha256": "8a8cb4e1eda1fc3e2461ee7c4decd167ba6f18de70990873a294a9653c9b8dfb",
+            "bytes": 3709
+          },
+          "sourceBeforeAfterAndCurrentEqual": true
+        }
+      ],
+      "scope": "Actual AsyncTasks React StrictMode and real threads event projection/action with controlled IPC. Standalone component page, not full App/native/real Agent execution. Keyboard explicit exact-ID request, no automatic request, pending/accepted still busy, terminal rendering, paused queue unchanged, wrong owner ignored, hidden controls, disconnected unknown and narrow layout.",
+      "personallyViewed": [
+        "browser/webkit-accepted.png",
+        "browser/webkit-lost-narrow.png",
+        "browser/chromium-lost-narrow.png"
+      ],
+      "cleanup": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/cleanup.json",
+        "sha256": "86792b1446ff40daebc6411a22615a1fab0304e57122888defd0c553146cdc5b",
+        "bytes": 292
+      }
+    }
+  },
+  "effectiveRedAndFix": [
+    {
+      "raw": "capability-red.txt",
+      "failure": "Actual manager initialize omitted asyncTasks advertisement",
+      "fix": "Advertise the supported generic AIR capability and require exact peer advertisement."
+    },
+    {
+      "raw": "order-red.txt",
+      "failure": "Early terminal could resurrect running; reused task ID could lose unresolved-work guard",
+      "fix": "Bounded early-state owner records and conflicting ownership guard."
+    },
+    {
+      "raw": "dispatch-reentry-red.txt",
+      "failed": 3,
+      "failure": "Synchronous subscription withdrawal between optimistic UI event and dispatch allowed stale-owner IPC",
+      "fix": "Revalidate exact owner/session/connection/thread/Agent/cwd and lost state after emit."
+    },
+    {
+      "raw": "browser/webkit-first.raw.txt",
+      "relatedUnitRaw": "completion-visible-red.txt",
+      "failure": "Final completion caused details to collapse automatically, hiding the actual result",
+      "fix": "Initially open details stays available through completion; user can collapse it."
+    },
+    {
+      "raw": "restore-red.txt",
+      "passed": 1,
+      "failed": 1,
+      "failure": "Running task reported while loading did not prevent automatic saved model mutation; first loop case failed so unknown case was not reached in this red",
+      "fix": "restore_config::busy includes async_tasks.busy; green executes running and unknown cases, and terminal control."
+    },
+    {
+      "raw": "early-terminal-red.txt",
+      "failed": 2,
+      "failure": "Same-owner early unknown ignored later completed; conflicting early owner was not visibly retained as overflow (busy itself remained true on that baseline)",
+      "fix": "Same-owner unknown accepts first terminal; mismatched owner sets persistent uncertainty, cannot unlock other work."
+    }
+  ],
+  "nonProductOrIntermediateFailures": [
+    {
+      "raw": "wire-first.txt",
+      "passed": 12,
+      "failed": 2,
+      "explanation": "Fixture incorrectly assumed normalized stop acknowledgment ordering relative to independently queued raw notifications. Fixed waits separately observe both; no terminal requirement removed."
+    },
+    {
+      "raw": "clippy-final.txt",
+      "explanation": "One owned style lint fixed; eight worktree WIP lints handed to its owner. Both actual failed runs retained."
+    }
+  ],
+  "independentReview": {
+    "frontend": "product_coverage read-only final review of async_task_actions.ts, async_tasks.ts and AsyncTasks.tsx reported no new blocker; no duplicated tests/browser.",
+    "fullSlice": "Root independent review and integration checks pending."
+  },
+  "remainingLimits": [
+    "Actual previously observed official command used Codex CLI 0.155.1. Official source/doc capability evidence does not prove a real installed stop call succeeded; no real Agent was started or prompted for this slice.",
+    "No candidate build, formal app replacement or installed UI acceptance performed by this work. Windows not executed.",
+    "Task stop RPC observation is bounded, not remote process termination. Lost connections and unknown outcomes stay unresolved; no process-name kill fallback.",
+    "Only capability-reported tasks with precise live ownership are controllable. Unsupported agents and historical envelopes remain raw without controls.",
+    "Whole-project checks remain root integration work; unrelated concurrent worktree clippy failures are preserved rather than relabeled passed."
+  ],
+  "evidenceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium-accepted.png",
+      "sha256": "c53b0fc155328c1bd55beb6de755012f5f42531b6b5036680c552eb375642689",
+      "bytes": 38717
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium-before-style-accepted.png",
+      "sha256": "a68c59279f912c6dd594ba178b0b410d82f47faf923d51fc0d91af9a58832816",
+      "bytes": 38579
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium-before-style-lost-narrow.png",
+      "sha256": "e80d03088f5b26b23d6996bcadc78c8e052ebb11114d40c2156d9cf375dc4e33",
+      "bytes": 36065
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium-before-style.json",
+      "sha256": "53dd790f4da67a9d4d88e3081fa29c27db5055c7c088ac4987b9a8ace40ef4b7",
+      "bytes": 3709
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium-before-style.raw.txt",
+      "sha256": "53dd790f4da67a9d4d88e3081fa29c27db5055c7c088ac4987b9a8ace40ef4b7",
+      "bytes": 3709
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium-before-style.txt",
+      "sha256": "6102926767411da8fcc4eab181686191360f0f97aba0a84a0201aee3459320e1",
+      "bytes": 71
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium-lost-narrow.png",
+      "sha256": "55b3824c414b3bad63f247f7f13f96d8aa2180d499977835c091fc75ec3bbaf4",
+      "bytes": 36057
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium.json",
+      "sha256": "8a8cb4e1eda1fc3e2461ee7c4decd167ba6f18de70990873a294a9653c9b8dfb",
+      "bytes": 3709
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium.raw.txt",
+      "sha256": "8a8cb4e1eda1fc3e2461ee7c4decd167ba6f18de70990873a294a9653c9b8dfb",
+      "bytes": 3709
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium.txt",
+      "sha256": "6102926767411da8fcc4eab181686191360f0f97aba0a84a0201aee3459320e1",
+      "bytes": 71
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/cleanup.json",
+      "sha256": "86792b1446ff40daebc6411a22615a1fab0304e57122888defd0c553146cdc5b",
+      "bytes": 292
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/fixture.tsx",
+      "sha256": "8f915c8c19673e2c197b9eb821c74ed15eed4a9cd397b024c0cfecc5b1d3b9c4",
+      "bytes": 2879
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/format.txt",
+      "sha256": "28ec11652df85a17f104aebf3830129d223b1183be8b0bbeca9529b2bfecf930",
+      "bytes": 364
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/index.html",
+      "sha256": "a3117bf8e3078bb16e71596c7dc968ae109c7034199abb19eeab4131576fc5a5",
+      "bytes": 759
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/json-format.txt",
+      "sha256": "bad88b7d038dfec5b1d129a69ec6d65d7ef8e2abbd9234288ad7974a1222960d",
+      "bytes": 662
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/run.mjs",
+      "sha256": "cf5b281760958b238b8eb1522ac1a01c1ca6fdd90c1b967d13ff4df57439f8e5",
+      "bytes": 5910
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/serve.mjs",
+      "sha256": "b22876daffd9e72d7b4611a46ef31f13ede942ff7be86e199c9d7614303e0d52",
+      "bytes": 682
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/server.txt",
+      "sha256": "11a6450e83a77f4c9a2b07a033904ae20558da226224d1e7f1dd852154eb5ff3",
+      "bytes": 299
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-accepted.png",
+      "sha256": "1df9ebfcd73f1c2d066306d3988ffc60c59482fc37d066a256905dbef51e621f",
+      "bytes": 52591
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-before-style-accepted.png",
+      "sha256": "020db6848ee9c10473e8ee56cd3f61de3804a1ab334cdf41392e04602dc7624e",
+      "bytes": 52732
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-before-style-lost-narrow.png",
+      "sha256": "2e5ac3b1f024b7b292b72564f33daa727d0203283e7dd990229901e4fe540cca",
+      "bytes": 44030
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-before-style.json",
+      "sha256": "e68600b6f6755e64389cab010db615d04ccf7729cf8818f83c9b49fc4a30bff4",
+      "bytes": 3707
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-before-style.raw.txt",
+      "sha256": "e68600b6f6755e64389cab010db615d04ccf7729cf8818f83c9b49fc4a30bff4",
+      "bytes": 3707
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-before-style.txt",
+      "sha256": "cf6c382a0faf326b43bdbf720e239bd56b6d376f4c2f8946c1f2ef8863e704a2",
+      "bytes": 69
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-first-accepted.png",
+      "sha256": "020db6848ee9c10473e8ee56cd3f61de3804a1ab334cdf41392e04602dc7624e",
+      "bytes": 52732
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-first.json",
+      "sha256": "d405c6ff3e7ce79abdfcc4341ff65d6b890cfc6764e4e87bdc7cf8e7db1d5dae",
+      "bytes": 3283
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-first.raw.txt",
+      "sha256": "d405c6ff3e7ce79abdfcc4341ff65d6b890cfc6764e4e87bdc7cf8e7db1d5dae",
+      "bytes": 3283
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-first.txt",
+      "sha256": "376164bef8b077508a29a5d74d524e10a64a4f1d4394e42e07c3cfeba9a9b508",
+      "bytes": 348
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-lost-narrow.png",
+      "sha256": "fb7b48ac04f943572a45e9f4b07e3d9367d76a8549d4be02350d4b50bd744e25",
+      "bytes": 43844
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit.json",
+      "sha256": "9909dd654537a878e58bd6e5da97c14ae29496a26b67ec57d93bb52bcc75c262",
+      "bytes": 3707
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit.raw.txt",
+      "sha256": "9909dd654537a878e58bd6e5da97c14ae29496a26b67ec57d93bb52bcc75c262",
+      "bytes": 3707
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit.txt",
+      "sha256": "cf6c382a0faf326b43bdbf720e239bd56b6d376f4c2f8946c1f2ef8863e704a2",
+      "bytes": 69
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/cancel_starvation_tests-final.txt",
+      "sha256": "ff5950bbfde138a4c83e6ee9b842b65fceb121b181b6a0c0b178d65e544f3b16",
+      "bytes": 1179
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/cancellation_tests-final.txt",
+      "sha256": "f584589e5bad35ca93263ab2850817b542d4297deaa51f34c1f28257f006a4c5",
+      "bytes": 888
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/capability-red.txt",
+      "sha256": "bfb0dc21f7eb04104636bb3059858c73b974b36836661a7e5db0fa57bb883bd5",
+      "bytes": 3811
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/channel-format.txt",
+      "sha256": "156140961a6f21ad9948dda964f2b8c265f65635438fd00bc91774c88a0447d5",
+      "bytes": 37
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/clippy-after-borrow.txt",
+      "sha256": "28e3b18d9868e26b271379a2f0e4881333a4389cb27f78828b0aaea59a682090",
+      "bytes": 6335
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/clippy-final.txt",
+      "sha256": "56d512333280dc1fb7e32c22fb380ecfa6bfaf18eaea985b478ed564f0f2f99c",
+      "bytes": 6989
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/completion-visible-format.txt",
+      "sha256": "edb3006f16cd10de6b7491582c154f998882621d1154fc99bc3f7df02c1aa976",
+      "bytes": 87
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/completion-visible-green.txt",
+      "sha256": "270fe260d5b82c8120cd0cb316047463d8276320c3edab445164447463e0ed54",
+      "bytes": 206
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/completion-visible-red.txt",
+      "sha256": "2358bed545d570a5105d6fddc9a1fc62815edc448329fde77e1f04a8950ded49",
+      "bytes": 1504
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/component-format.txt",
+      "sha256": "bfb3d328f94471b0338344e1997c7bf45e507aaa09d31df04e2144ad731c6748",
+      "bytes": 75
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/component-style-format.txt",
+      "sha256": "b8d9cda2b85cf57e33c268521c7694d9958ff2aec4b1ac5f13623321e89b70f3",
+      "bytes": 47
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/dispatch-reentry-green.txt",
+      "sha256": "ad9426b7312d83a730e448af032396777457876daec783a823f5a8c7a3948612",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/dispatch-reentry-red.txt",
+      "sha256": "375a525900f5e21454d50c28acdd06e04864359fdf841e22cbeb7bf25a9487e8",
+      "bytes": 2390
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/early-terminal-red.txt",
+      "sha256": "7f2052e61c96deae9ea1aa02c2847fa0af06e9b3c11f65107b975dc92e5cf67a",
+      "bytes": 1719
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/format-first.txt",
+      "sha256": "3b006e40bee62a9a0d8b0dcbc6e5f49e808c7bbe8081df65b81b4e1029dff291",
+      "bytes": 387
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/frontend-final-after-visual.txt",
+      "sha256": "7c7a253ea2626b94f6b4bfa5ef9e860ccf71529a2525ee86cc1870271da06a00",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/frontend-final.txt",
+      "sha256": "d6054d1f6f3321727366cb102fe22cfba947ce374110463b0b3511ce327a7563",
+      "bytes": 212
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/frontend-first.txt",
+      "sha256": "d644d4a2b010781ed70512b13ef05803f5268be1a2b3b28cecb5f54f6078825b",
+      "bytes": 208
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/frontend-related.txt",
+      "sha256": "a507062e2d2dbc11200411a54801c99b94f5b87bc74769bb24cfb6d09109a979",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/order-green.txt",
+      "sha256": "052216ecaf4e38e91d22a2c9b42703f53713f912c700765c20bbc86366dd92d3",
+      "bytes": 1839
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/order-red.txt",
+      "sha256": "e801385939170344111c4e82e6d1627027b588949e40511e4f29afc2a8289a40",
+      "bytes": 1999
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/receipt-format.txt",
+      "sha256": "70598b5eba63e1bc598c7d1dd2120850c5ae4729209d787c907ced7dc302f19b",
+      "bytes": 221
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/reentry-format.txt",
+      "sha256": "122265b28fa9b07c7549017559e2ab73ed5bbeb4c76e418e0eb4d4678310856f",
+      "bytes": 76
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/restore-green.txt",
+      "sha256": "0c3660d99d0c3e3732bcf3581360022c266fd6be70f0fb14c9b8a846e5100e03",
+      "bytes": 1708
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/restore-red.txt",
+      "sha256": "7324ada204f44a5f12d9592dcc953a69a32acf7e55e88307dc9a1a362317b441",
+      "bytes": 1431
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/rust-after-borrow.txt",
+      "sha256": "3fda870dd9c4cee4b275fe8600aed78fed1881da261b09404d6b74b80fa5f7d4",
+      "bytes": 2650
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/rust-final-commands.json",
+      "sha256": "c36663578633d4e0f441367f557ac9297a05eca72295d95336137ff6a1f8087c",
+      "bytes": 502
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/rust-final-targeted.txt",
+      "sha256": "30e0845150767e15980dfbf035b034447c0396a22058ca41127befcc0ea3bc5c",
+      "bytes": 2584
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/rust-related-commands.json",
+      "sha256": "891c338463b3f0e8c655d3343539161b3123335db26e7b661bd3d77b77769d2b",
+      "bytes": 837
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/rustfmt-final.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/rustfmt-freeze.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/tool_activity_tests-final.txt",
+      "sha256": "3db671a3c2bbd6ce434e9272776700e3bb114f1d7b6a14f48d58601ba8be5a05",
+      "bytes": 994
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/typecheck-final-after-visual.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/typecheck-first.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/wire-first.txt",
+      "sha256": "7b9002bf1a4fef85341f3951b24a43cc5311c7fa9e5dfa2e636c4c5bf996a6ca",
+      "bytes": 3207
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/wire-green.txt",
+      "sha256": "7a93d469a8d0c8565de61fc96c141b87eb758ca4d725b0648de0855356946d41",
+      "bytes": 2377
+    }
+  ]
+}

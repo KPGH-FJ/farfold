@@ -206,6 +206,7 @@ fn offers(options: &Value, value: &str) -> bool {
 
 pub(super) fn busy(ctx: &DispatchContext<'_>) -> bool {
     ctx.tools.busy()
+        || ctx.async_tasks.busy()
         || ctx
             .pending
             .lock()

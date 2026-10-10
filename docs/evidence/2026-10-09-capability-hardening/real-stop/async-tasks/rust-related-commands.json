@@ -1,0 +1,47 @@
+[
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "cancel_starvation_tests",
+      "--",
+      "--nocapture"
+    ],
+    "exitCode": 0,
+    "output": "cancel_starvation_tests-final.txt"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "cancellation_tests",
+      "--",
+      "--nocapture"
+    ],
+    "exitCode": 0,
+    "output": "cancellation_tests-final.txt"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "tool_activity_tests",
+      "--",
+      "--nocapture"
+    ],
+    "exitCode": 0,
+    "output": "tool_activity_tests-final.txt"
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "gitVersion": "git version 2.39.5 (Apple Git-154)",
+  "results": [
+    {
+      "protected": false,
+      "exit": 255,
+      "remoteHelperRan": true,
+      "stderr": "Preparing worktree (new branch 'owned')\nfatal: Could not read from remote repository.\n\nPlease make sure you have the correct access rights\nand the repository exists.\nfatal: Could not read from remote repository.\n\nPlease make sure you have the correct access rights\nand the repository exists.\nfatal: not a valid branch point: '9296d585d44b42844da5a1b4b0f88a3d7c49cdee'\n"
+    },
+    {
+      "protected": true,
+      "exit": 255,
+      "remoteHelperRan": false,
+      "stderr": "Preparing worktree (new branch 'owned')\nwarning: lazy fetching disabled; some objects may not be available\nfatal: not a valid branch point: '8cae7a3cfa163b5f77a22843b56b6fdbee12cc0e'\n"
+    }
+  ],
+  "officialSource": "https://git-scm.com/docs/git#Documentation/git.txt-codeGITNOLAZYFETCHcode",
+  "scope": "two isolated disposable local repositories; helper only writes owned canary; no network URL"
+}

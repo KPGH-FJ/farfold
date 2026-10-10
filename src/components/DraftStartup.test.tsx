@@ -190,6 +190,42 @@ it("keeps backend-only file activity in a cancellable exit review", async () => 
   );
 });
 
+it("keeps running worktree operations protected with their own exit explanation", async () => {
+  h.invoke.mockImplementation((name) =>
+    name === "app_exit_after_save"
+      ? Promise.reject("WORKTREE_EXIT_BLOCKED")
+      : undefined,
+  );
+  h.listeners.get("app:save-before-exit")!({ payload: 75 });
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", { token: 75 }),
+  );
+  await Promise.resolve();
+  const visit = (node: ReactNode): ReactNode[] => {
+    if (Array.isArray(node)) return node.flatMap(visit);
+    if (!isValidElement<{ children?: ReactNode }>(node)) return [node];
+    return [node, ...visit(node.props.children)];
+  };
+  const nodes = visit(render());
+  expect(nodes).toContain(
+    "工作位置操作仍在进行，或尚未确认是否结束。请先留在应用查看结果，再尝试退出。",
+  );
+  const exit = nodes.find(
+    (node) =>
+      isValidElement<{ children?: ReactNode }>(node) &&
+      node.type === "button" &&
+      node.props.children === EXIT_IMPACT.exit,
+  );
+  expect(
+    isValidElement<{ disabled?: boolean }>(exit) && exit.props.disabled,
+  ).toBe(true);
+  expect(h.lock).not.toHaveBeenCalledWith(false);
+  click(EXIT_IMPACT.stay);
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_cancel", { token: 75 }),
+  );
+});
+
 it("requires explicit confirmation for finished unknown copies, including restart", async () => {
   h.unknownCopy = true;
   h.listeners.get("app:save-before-restart")!({ payload: 74 });

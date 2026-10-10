@@ -1,0 +1,4 @@
+docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/fixture.tsx 35ms
+docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/index.html 18ms
+docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/serve.mjs 3ms
+docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/run.mjs 12ms

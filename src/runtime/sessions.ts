@@ -20,6 +20,8 @@ import {
 import { SessionConfiguration } from "./session_configuration";
 import { configChangeBusy } from "./protected_config";
 import { retainReportedDetails } from "./reported_details";
+import { receiveAsyncTasks, type AsyncTask } from "./async_tasks";
+import { stopAsyncTask } from "./async_task_actions";
 /**
  * Session command client and normalized conversation state.
  * Agent updates enter the shared `applyUpdate` projection.
@@ -111,7 +113,7 @@ export interface AgentOnlyRow {
 /** View-model types live in `session_types.ts` (file-size cap); re-export
  *  so `../runtime/sessions` imports keep working. */
 import type { PromptBlock, ThreadItem, ThreadState } from "./session_types";
-import { hasPendingRequests } from "./session_types";
+import { hasActiveTools, hasPendingRequests } from "./session_types";
 export * from "./session_types";
 export {
   freshThreadState,
@@ -276,7 +278,7 @@ class ThreadsStore {
       s.connectionLost ||
       s.connectionOutcomeUnknown ||
       s.uncertainPrompt ||
-      s.activeToolCallIds.length ||
+      hasActiveTools(s) ||
       hasPendingRequests(s) ||
       (s.permissionConfigId && s.permissionState !== "ready")
     )
@@ -393,6 +395,9 @@ class ThreadsStore {
     } else if (e.kind === "configCheck") {
       if (!this.configurations.receiveCheck(s, e.check as ConfigCheck))
         applyConfigCheck(s, e.check as ConfigCheck);
+    } else if (e.kind === "asyncTasks") {
+      if (!receiveAsyncTasks(s, e)) return;
+      this.finishArchiveActivity(s);
     } else if (e.kind === "toolActivity" && Array.isArray(e.toolCallIds)) {
       // Process exit ends local activity, but is not a successful tool result.
       if (e.reason === "process_ended" && s.activeToolCallIds.length > 0)
@@ -1198,6 +1203,17 @@ class ThreadsStore {
   }
 
   private stopConfirmation = new StopConfirmation();
+
+  async stopTask(key: string, task: AsyncTask): Promise<void> {
+    const thread = this.thread(key);
+    if (thread)
+      await stopAsyncTask(
+        thread,
+        task,
+        () => this.thread(key),
+        () => this.emit(),
+      );
+  }
 
   async cancel(key: string): Promise<void> {
     return this.stopConfirmation.cancel(

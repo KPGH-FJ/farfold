@@ -1,0 +1,169 @@
+{
+  "status": "implementation_design_review_only_not_H15_completion",
+  "date": "2026-10-10",
+  "scope": "只读复核当前 H15 契约与在建工作树底座；本次无仓库/配置/文件树变更，无测试、构建、Agent 或 App 操作。仅执行 /usr/bin/git --version，结果 git version 2.39.5 (Apple Git-154)。",
+  "contract": {
+    "conflictFound": false,
+    "unchanged": [
+      "已有对话 cwd 不迁移；分组/对话归档与磁盘工作树归档是不同操作。",
+      "仅明确自有对象可处置，不默认 force；脏/未跟踪/忽略文件、未推送提交、锁及活动进程必须保护。",
+      "不改 Agent HOME/配置/历史，不引入事件账本；本地归档不是文件系统隔离或远端备份。"
+    ],
+    "plan": "plans/agent-access.md H15 专项条件保留；先交付归档/恢复不等于永久删除及全部 H15 完成。"
+  },
+  "currentGaps": [
+    "Location 已区分 ownership=created/existing；只有真实创建核验并保存成功才授予 created。Material 仅路径与操作号；重查/接入不能升级成删除所有权。",
+    "当前 Request/Intent 仅 Create/Adopt；forget 只 CAS 移除元数据，无 move/remove/recovery 状态机。Identity 保留 root/gitDir/commonDir 的 dev/ino，但尚缺归档双路径和完整 Git 登记关联的重核。",
+    "inspect 当前不检查 tracked/index/untracked/ignored、ahead/upstream、嵌套仓库或使用者。work_policy 是精确 cwd 的发送设置，恢复路径还可绕过，不能作为回收锁。",
+    "managed_update 提供全局活动/排他；ConnectionLife 的 startup/work/operation 持有活动许可，但空闲 live connection 不等于目录无使用者。现 session 归档只处理一个原会话，不覆盖目录及子目录多 Agent。",
+    "现 draft owner 只保护当前新稿选择。归档还需对所有已加载/已保存草稿、队列、附件、文件意见与历史 cwd 做目录归属检查；历史索引本身保留，不因有关联就删除对话。"
+  ],
+  "minimumDeliverable": [
+    {
+      "step": 1,
+      "result": "目录维护准入＋只读影响预览",
+      "detail": "最小先复用全局排他作为短期保守门禁；不得在已持 activity 的当前 create 路径中再取排他。先暂停后续发送、锁编辑、flush，再以后端读到的两类未发数据基线及 sessions 行重核。阻止 startup/prompt/load/config/tool/async-task/approval/unknown、文件读写/复制和本应用 Git 并发；停止和拒绝仍可操作。枚举所有目标/子目录/别名连接；空闲连接要经现生命周期确认确切进程结束，无法确认则不移动。补目标保护的数据写入口，不能只信前端 boolean 或一次状态扫描。"
+    },
+    {
+      "step": 2,
+      "result": "只对 created linked 树进行保留式归档",
+      "detail": "两步确认显示原位置、保留位置及关联历史影响。持久 intent 先于任何 Git 变更；同卷、独占自有 0700 父目录内生成唯一归档目标，目标不存在。以官方 git worktree move 执行，不 force/unlock/prune/repair；拒绝主树、子模块、锁、身份漂移。普通脏/未跟踪/忽略材料整体保留，不 stash/commit/clean；源与目标 nofollow/对象身份、登记、分支/OID 及有界前后材料清单必须核对，资源超限先拒绝。"
+    },
+    {
+      "step": 3,
+      "result": "应用内恢复原位置与未知操作重查",
+      "detail": "保存原路径和归档路径，不改历史 sessions.cwd、意见或附件路径。原位置空闲、父对象及同 commonDir/gitDir/分支归属一致才允许显式 move 回原位置。占用/缺失/双路径/登记漂移时保持 unknown 并显示实际材料；重启只读重查，不自动移动、重试或覆盖。Git 成功但 CAS 保存失败保留原 intent/新位置，不将新建同名对象当旧对象。"
+    },
+    {
+      "step": 4,
+      "result": "单独确认永久删除已归档的自有工作树",
+      "detail": "不复用“从清单移除”的授权。重新取得维护准入；任何 tracked/index 变化、未跟踪/忽略内容、特殊文件、嵌套 Git/子模块、用户锁、在途/未知执行均阻止 remove。以官方 git worktree remove 精确归档路径，不 force，不删分支，不 prune，失败不 rm-rf 补偿。确认前必须完成下面的提交保护，确认后立即重核；命令结束后核原对象/登记消失、分支及恢复材料仍在。取消派发后仅表示已请求取消，不能当作回滚。"
+    }
+  ],
+  "commitProtection": {
+    "default": "ahead>0、无 upstream、浅克隆/缺对象或远端状态无法证实时，不默认删除。只读本地远端跟踪记录只能说明本地记录，ahead=0 也不证明远端当前仍保存提交。归档与恢复入口保持可用。",
+    "inAppCompletionPath": "为删除提供明确的“保留提交恢复副本后删除工作文件”分支，仍保留原本地分支。用既有隔离 Git 命令上下文固定实际 branch/HEAD OID，建立私有命名 ref 后生成无排除、无前置依赖 bundle；不能把裸 OID 直接当 bundle 引用。只捕获所选树需要保留的提交闭包，不拷全用户仓库秘密或自动联网。",
+    "requiredProof": "在独立空临时仓库中核 bundle prerequisites 为空、解包并 fsck/核精确 OID 与树，保存并回读摘要/文件身份后才给删除确认。bundle 不含未提交、未跟踪或忽略文件，因此这些文件仍阻止永久删除。失败/磁盘满/容量超限保留归档，不降级放行。",
+    "boundary": "此副本只证明核过的提交闭包可本地恢复，不证明已推送，也不备份 Agent 历史、全部 refs/reflog 或当前 checkout 的非 Git 元数据。该恢复材料生成/验证尚未实现或实测。"
+  },
+  "proposedApi": {
+    "preview": "worktree_recycle_inspect(locationId, expectedRevision, action) -> bounded ticket, exact identity, blockers, related conversations, material/commit summaries; frontend paths cannot choose the deletion target.",
+    "prepare": "worktree_recycle_prepare(callerUuid, ticket, action, expectedDraftBaseline) -> one durable typed current intent; same UUID/different payload rejected.",
+    "execute": "reuse start/status/cancel/recheck semantics with Archive/Restore/Remove typed requests; one dispatch and retained permits through exact process completion/readback. prepare receipt loss does not dispatch; start receipt loss only rechecks.",
+    "storage": "extend current strict versioned settings schema/migration with archive original/retained paths, exact object/Git identities, intent phase and recovery-material receipt. No body/event ledger; created/existing/material remain separate. Only positive final identity/readback can set ready/archived/removed."
+  },
+  "mustTest": [
+    "tracked staged+unstaged、untracked dir、ignored .env/唯一数据：归档/恢复逐字节保持；永久删除严格阻止。目录扫描超限/不可读不得当空。",
+    "锁、主树、submodule、嵌套仓库、symlink/reparse、特殊文件；existing 与 unknown Material 即使与 created 同路径也无删除权。",
+    "旧 root 同名替换、原 gitDir 被 prune/re-add、同 inode 路径关系变化、commonDir/branch tip 漂移；旧票据不能移动或删除新对象。",
+    "无 upstream、ahead、远端记录陈旧、detached/shallow/缺对象；bundle 缺前置/损坏/未核回读/磁盘满不放行；原分支不删除。",
+    "新建/恢复/续发与维护同时准入，子目录/别名/跨 Agent 连接；async task unknown、审批、文件复制/预览与未发意见均挡移动。无本地连接不能推断没有外部 Agent。",
+    "每次 move/remove 前后崩溃、Git 返回前取消、Git 成功但元数据 CAS 失败、回执丢失、两位置均有/均无、恢复目标被占；无自动 retry/rollback/repair/rm-rf。",
+    "独占归档后、最后扫描后外部持有 FD 写入/替换；保留真实失败或未确认结果，不能仅靠 inode 前检和普通 Git clean 宣称跨进程原子删除。",
+    "历史原 cwd/草稿/队列/附件/意见保留；归档后历史不重定向，恢复后才重新检查可用性；UI 确认/取消/切页/旧回执不会改变新对象或自动发送。"
+  ],
+  "unprovableByCurrentSurfaces": [
+    "Git CLI 无全系统工作目录排他锁。自有 0700 归档父目录和本应用 gate 不能撤销同 UID 外部进程已经打开的目录/文件描述符；lsof/进程扫描也只是瞬时结果。需用户明确停止外部使用并如实保留剩余竞态，不能承诺恶意并发下无损。",
+    "Git move 保留文件而非独立对象备份；shared refs/objects/registry 可被别处改变。恢复失败不能通过猜测重建原 Agent 会话或更改历史 cwd。",
+    "没有网络确认就无法证明推送状态；本片不增加 fetch/push/账号授权。独立已核提交副本是本地数据保护路线，不得文案替换成已同步。",
+    "普通非 force remove 也不是 ignored 文件保护、全进程静止或持久化原子性证明。断电/Windows文件身份与锁需独立验证，当前 macOS Git 设计不外推。"
+  ],
+  "allocation": {
+    "backend": "新 worktrees/{recycle,maintenance,recovery_materials}.rs 和专项测试；扩 storage/types/manager 与 worktree_commands 小接线。acp_client 只加目录范围维护查询/空闲退役，不实现第二 Agent loop。meta_store 仅 intent+保护基线事务。",
+    "frontend": "WorktreeDialog 独立管理子组件＋worktree_types/store/strings；目录影响/归档/恢复/永久删除分别明确，草稿编辑冻结与持久化保护复用公共机制。已有 EmptyState 选择不迁移既有线程。",
+    "independent": "自有临时 Git 反例、真实组件双引擎、候选安装与受控目录 native 分层；无真实 Agent 随意启动。首个可交付闭环为步骤1–3，步骤4和提交恢复材料是继续完成 H15 的后续必做，不以部分功能结项。"
+  },
+  "officialSources": [
+    {
+      "url": "https://git-scm.com/docs/git-worktree/2.39.0",
+      "supports": "move/remove/lock限制；主树与子模块限制；共享 refs/config 与 linked 元数据。"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-status/2.39.0",
+      "supports": "porcelain -z、显式 --ignored 与 untracked-files=all。"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-ls-files/2.39.0",
+      "supports": "ignored/others 与 --exclude-standard，不把默认状态当全磁盘材料清单。"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-bundle/2.38.0",
+      "supports": "命名 refs、无前置完整 bundle、verify 边界；适用于2.39系列的历史文档，未以在线最新版能力冒充本机验证。"
+    }
+  ],
+  "sourceRefsAtReadCheckpoint": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "5df9a7fc89cf672b269f235083e97eb2c3f863d2899a34df18b8c09606811600"
+    },
+    {
+      "path": "src-tauri/src/worktrees/types.rs",
+      "sha256": "9aa11fd0e395222a5884ea014d39c73db1cd01544295feb631f9810a87917b2f"
+    },
+    {
+      "path": "src-tauri/src/worktrees/storage.rs",
+      "sha256": "56c39d4760c5306b3d4a86a8d5a22ed33c25cc37b35311219329c1b55b388550"
+    },
+    {
+      "path": "src-tauri/src/worktrees/inspect.rs",
+      "sha256": "4bb371e094164849bfea9a802358edeb3ceabd4d4649f21584c96b696abb3af3"
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "a7ca3aa086a4909960b3f76b61684105f434f3a0e8da7912ec752c0da051b742"
+    },
+    {
+      "path": "src-tauri/src/worktrees/git.rs",
+      "sha256": "bfdb9fbb554747ae5959ef101c23827120b72c323e1f857f9a22308168ef8f09"
+    },
+    {
+      "path": "src-tauri/src/worktrees/checkout.rs",
+      "sha256": "25177ad7a4a277e40c7d85c42d0ba8f10184456df600441c97a7caef78cbb9cb"
+    },
+    {
+      "path": "src-tauri/src/meta_store/worktrees.rs",
+      "sha256": "bbfa801ce566ba26fed048febb68003eb3615681224eb637b7b7f2a01bac061d"
+    },
+    {
+      "path": "src-tauri/src/managed_update.rs",
+      "sha256": "8c45f7702260fb76293e461055cd58522c497e61a16af76030b24f6f14692fdd"
+    },
+    {
+      "path": "src-tauri/src/work_policy.rs",
+      "sha256": "b5b49105adb4308bc14d2cecdc9b1cc16ed535b72c469f5153113086b2d1303b"
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle.rs",
+      "sha256": "9aa051951e25877d824a62c743479f4e138041014b63408b2572cbff09632110"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "4f7e52b1ad840fbbbea7fb9a2f708537dbd9cdd13f84c87e7d348a514f40af75"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "512a45af058eae5a72e6b26c821146a8f1181c1ff999cbcdef77b301bf8989ff"
+    },
+    {
+      "path": "src/runtime/archive_admission.ts",
+      "sha256": "cd3985dfcaed5c825d4454392ea473af730e84ad562e1734489c1904241497ef"
+    },
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "514f66f2604f933666a2b715d82aa7d70ec0919314774827af960c2752636210"
+    },
+    {
+      "path": "src/components/useDraftWorkLocation.ts",
+      "sha256": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b"
+    },
+    {
+      "path": "src/runtime/draft_location_owner.ts",
+      "sha256": "5656bbadba38f035ce7c13ab4f85f0c60261eba7acade50b7519fc73299b9602"
+    }
+  ],
+  "checkpointLimit": "worktrees 源仍由 architecture 开发；本回执是具体设计依据的读取时点，不是全包冻结/独立安全验收，不改原工作树设计或活动计划。"
+}

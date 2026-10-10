@@ -17,6 +17,8 @@ export const EXIT_IMPACT = {
   copyUnknown:
     "文件保存已结束，但结果仍未知。退出不会把它视为保存成功；再次打开后也不会自动重试。请核对目标文件。",
   copyReview: "退出前需要核对文件保存状态。可先留在应用，查看保存结果。",
+  worktreeReview:
+    "工作位置操作仍在进行，或尚未确认是否结束。请先留在应用查看结果，再尝试退出。",
 } as const;
 
 export function hasUnknownFinishedFileCopies(): boolean {

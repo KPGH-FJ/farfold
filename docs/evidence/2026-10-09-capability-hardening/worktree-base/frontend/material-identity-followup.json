@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-10T05:28:53.217065+00:00",
+  "priorCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/implementation.json",
+    "sha256": "dee4ecc9bff3500c5fd5e3ac7b3f41b3b3e612ef1a418b3c561f94413c23e025",
+    "keptUnchanged": true
+  },
+  "reason": "Independent real backend alignment found Inspection.root is the selected linked tree, while unknown-material repository identity refers to the canonical main repository. Comparing root to repositoryRoot rejected valid material recovery.",
+  "status": "frontendFrozenAfterCanonicalRepositoryIdentityFix",
+  "changes": [
+    "src/runtime/worktree_types.ts",
+    "src/runtime/worktree_types.test.ts",
+    "src/components/WorktreeDialog.tsx",
+    "src/components/WorktreeDialog.test.tsx"
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/runtime/worktree_types.ts",
+      "sha256": "b63c623d1377fa16c5bb03d6a550d8f9abfc1dfe7a8e858c983225011e45faca",
+      "lines": 274
+    },
+    {
+      "path": "src/runtime/worktree_types.test.ts",
+      "sha256": "f12b5344e8bb4bb713b8ef9164c85fb0700a393e77fcc08d538418ebf26d39c4",
+      "lines": 127
+    },
+    {
+      "path": "src/runtime/worktrees.ts",
+      "sha256": "66522d892b9f0cae4b07bc8505cc7d70da27e788cf64f1c25da9a2706d12f3cc",
+      "lines": 402
+    },
+    {
+      "path": "src/runtime/worktrees.test.ts",
+      "sha256": "83ffa6d0c2e02f4a4c5d13d59175812637063888a047a9e3019103d12138df46",
+      "lines": 471
+    },
+    {
+      "path": "src/runtime/worktree_strings.ts",
+      "sha256": "1340f672582801adc61b0e783bd45ada2b38c9dd3d7dd28b7d105835f705dcef",
+      "lines": 136
+    },
+    {
+      "path": "src/runtime/draft_location_owner.ts",
+      "sha256": "5656bbadba38f035ce7c13ab4f85f0c60261eba7acade50b7519fc73299b9602",
+      "lines": 21
+    },
+    {
+      "path": "src/runtime/draft_location_owner.test.ts",
+      "sha256": "1e023441d7a55d0b1d82b42c8b4e9b8c1004c1a119454b86d744ebb4568a949a",
+      "lines": 30
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "683b4dab8e337823891205598ab5be88ae1600791ac8600de341a9a3e9a98b4a",
+      "lines": 163
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "e12d06173ee467b932fda0833cbb79fb11e36dd0e23afa5603f5b1d96576c416",
+      "lines": 1474
+    },
+    {
+      "path": "src/components/EmptyState.work-location.test.tsx",
+      "sha256": "88fa78a9795ea09be47415a8b24b88e69ce43d816b4ba14159f093c366a0d598",
+      "lines": 19
+    },
+    {
+      "path": "src/components/EmptyState.worktree-owner.test.tsx",
+      "sha256": "8821ee644ed178cafbff1667c2fa92f233ab14aade22391906572af5d7a94552",
+      "lines": 187
+    },
+    {
+      "path": "src/components/WorkLocationPicker.tsx",
+      "sha256": "7c252e26ba651d8ebc04efb8612c8ff22f31dc22062fdbf0964847f952598ebe",
+      "lines": 51
+    },
+    {
+      "path": "src/components/WorkLocationPicker.test.tsx",
+      "sha256": "ff6d0c0212642cc9b48a84a23e1293c4e5bc21797a3ceb0890a08b0a835cb4e2",
+      "lines": 54
+    },
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "514f66f2604f933666a2b715d82aa7d70ec0919314774827af960c2752636210",
+      "lines": 348
+    },
+    {
+      "path": "src/components/WorktreeDialog.test.tsx",
+      "sha256": "02ee4786f74137fd0bbc51e4d81cfe3c86c5266b27eec2405c24d7f54071620f",
+      "lines": 287
+    },
+    {
+      "path": "src/components/WorktreeDialog.css",
+      "sha256": "8371e0c6b9a0589b26a7791a88ccae43d5f777154e2ca7b73d0745233778ddb6",
+      "lines": 70
+    },
+    {
+      "path": "src/components/WorktreeCreateForm.tsx",
+      "sha256": "e3498ae8a80c7b191b5b883080ac888a6c0a37952f2f1372d1d3a58ae727e71c",
+      "lines": 247
+    },
+    {
+      "path": "src/components/useDraftWorkLocation.ts",
+      "sha256": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b",
+      "lines": 39
+    }
+  ],
+  "behavior": [
+    "Inspection.repositoryRoot is mandatory, independent of selected root.",
+    "Unknown material inspection checks canonical repositoryRoot, exact selected target root, and actual tree registration before offering normal explicit adoption.",
+    "No automatic adoption, Use, draft change or Git retry. Wrong repository/root/registration remains rejected."
+  ],
+  "proof": {
+    "effectiveRed": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-identity-red.txt",
+      "failed": 2,
+      "passed": 16
+    },
+    "targetedGreen": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-identity-green.txt",
+      "passed": 18
+    },
+    "relatedFinal": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/targeted-material-final.txt",
+      "files": 10,
+      "passed": 112,
+      "exitCode": 0
+    },
+    "typecheck": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/typecheck-material-final.txt",
+      "exitCode": 0
+    },
+    "browser": {
+      "webkit": 21,
+      "chromium": 21,
+      "bothSourceUnchanged": true,
+      "scope": "Same actual EmptyState/production components/StrictMode with controlled IPC, now including unknown linked target inspection against a distinct canonical repository. No actual Git or installed App."
+    }
+  },
+  "historicalArtifactChanges": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx",
+      "originalExecutedBytes": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture-backend-final.tsx.txt"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/run.mjs",
+      "originalExecutedBytes": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/run-backend-final.mjs.txt"
+    }
+  ],
+  "backendIndependentReview": {
+    "sourceRead": [
+      "src-tauri/src/worktrees/types.rs",
+      "src-tauri/src/worktrees/manager.rs",
+      "src-tauri/src/worktrees/storage.rs",
+      "src-tauri/src/worktree_commands.rs"
+    ],
+    "canonicalIdentityPatch": "Coordinated with backend owner; actual linked-source Git fixture and wire still pending owner evidence.",
+    "additionalFinding": "Fresh operation ID cancel before delayed prepare may reserve without a cancelled reply, leaving unknownOperation without acknowledgement route. Sent to backend owner for manager reproduction; no Rust changes or Cargo run by this reviewer.",
+    "otherObservedAlignment": "Flat command payloads, nullable head/ref fields, fixed {code} failures, optional reviewed/targetPath, list materials and exact ready receipt agree with frontend parser after this change."
+  },
+  "cleanup": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/material-cleanup.json",
+  "artifacts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/chromium-material-final-create.png",
+      "sha256": "6e9d9ea1a3a24cf0cd6420298b4845d1bbc7adffbd66d14276232aff651bbd45"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/chromium-material-final-narrow.png",
+      "sha256": "79a5a40782d40772d24be07eb99d0f64db3de1c6b0871dd14ad7fa9511c475f5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/chromium-material-final.json",
+      "sha256": "97a9cf1e1b248a35f027a6fd6001602eb6cbe6b69bcfd5726818666f3da02ffd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/chromium-material-final.raw.txt",
+      "sha256": "acf5c23664ec671aad530e5370774b28a5d733446772b01247fb14279383a857"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/chromium-material-final.txt",
+      "sha256": "b18aa6b023497b48820b0cd225f35c340e70428defeb3099c565457d025fcb6d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture-backend-final.tsx.txt",
+      "sha256": "490e751f5d0c72eec76e461fb107b02e10d24cdef1efbf1ce859101dba0b2d2d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx",
+      "sha256": "f203c48736b7acc112b19eee9afd9f27203ba5d683094848a703a2bf8209526a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/material-cleanup.json",
+      "sha256": "ce20034b5b7cc64a1a290b374148b7949a4f233550cb6e5548d0801c96d7e5b5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/material-server.txt",
+      "sha256": "89926251387b77dab8e31ec14b606061824f9a6744f5481bfb4b839747e12e7e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/run-backend-final.mjs.txt",
+      "sha256": "82e299309538765264e0e7af0f071e6add67ce3ab18c3bd016adedaad94a2075"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/run.mjs",
+      "sha256": "a8f49502f3d25a7a4425d4835f809775a4fc45a6deec7787d5f5ff795017d0a7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-material-final-create.png",
+      "sha256": "2656bc729df61184a4c4f160bd50b5ea2bad5ee03e9cb3092c299ef98bcaf49a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-material-final-narrow.png",
+      "sha256": "f72a4b9769b1a45cc650bc920847f7f0bca44bd13ee82483d5b003affd36b773"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-material-final.json",
+      "sha256": "1d9ff1e717ed5a2a9cd2bb07cb84022c96ef6a0ab2f718530cccc845f5db8294"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-material-final.raw.txt",
+      "sha256": "44a8546c818bd3839c797f65e861f798b5305f045c1f912718270cc6052da5b8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-material-final.txt",
+      "sha256": "4d7ce59e3893301a9c1745d296432dddc331c292b61740f8a213189313c35e16"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-browser-format.txt",
+      "sha256": "7f82a6b8f89667536f00ff9648ac48046b8580e3f917e0089476f31333d9d113"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-evidence-format.txt",
+      "sha256": "b317e603f37eb2a0cfd738e43612e53d17a9eac8fd43c2446a69acdad8f0f284"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-identity-green.txt",
+      "sha256": "b74b105c930d6c7b5d8e77d77be5a4c6b1a786a7f154f71673b2eb72010b5425"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-identity-red.txt",
+      "sha256": "9eafddf3a7351b2bf4882cdeefc1eac889ff9023de1532f1ca8a2bea33a07dbb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-identity-source-format.txt",
+      "sha256": "975f3a1605c80176d351f2eed6e16a7584bfd2ce961a5ffacc1267298717f68e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-identity-test-format.txt",
+      "sha256": "1734dbb766f1c1e6cf937cd5e6126b1b58d0abb0cdf408ea6dbe5019cf634fe1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/targeted-material-final.txt",
+      "sha256": "023f605af0c05626c2154853af11b762f2d7130a817538e4a6bb6ac3fa16dcb5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/typecheck-material-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  ]
+}

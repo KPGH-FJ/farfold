@@ -1,0 +1,30 @@
+{
+  "cases": [
+    {
+      "id": "existing-branch-tip-changed-after-selection",
+      "gitExitCode": 0,
+      "selectedOid": "9cce0e1ed4e2571968f39c0f7ed4a01cd57bc1a0",
+      "actualOid": "b4cba29ab118da0950e9376f8e155a21e4856f23",
+      "actualIsNewTip": true,
+      "meaning": "post-command identity/OID check must detect drift; never auto-remove real created tree"
+    },
+    {
+      "id": "nested-target-inside-source",
+      "gitExitCode": 0,
+      "createdInsideSource": true,
+      "meaning": "frontend/backend must reject overlap when unsupported; Git does not enforce independent-location UX"
+    },
+    {
+      "id": "symlink-target-parent",
+      "gitExitCode": 0,
+      "targetCreatedAtRealParent": true,
+      "aliasCanonicalSame": true,
+      "meaning": "identity and nofollow policy cannot rely on Git path spelling"
+    }
+  ],
+  "commandCount": 15,
+  "allDirectCommandsReaped": true,
+  "ownedTemporaryRoot": "/private/tmp/farfold-owned-worktree-path-bbikn2uf",
+  "ownedRootRemoved": true,
+  "sourceRepoTouched": false
+}

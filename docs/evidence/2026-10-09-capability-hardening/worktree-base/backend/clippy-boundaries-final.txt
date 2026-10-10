@@ -1,0 +1,3 @@
+command: ['cargo', 'clippy', '--manifest-path', 'src-tauri/Cargo.toml', '--locked', '--', '-D', 'warnings']
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.19s

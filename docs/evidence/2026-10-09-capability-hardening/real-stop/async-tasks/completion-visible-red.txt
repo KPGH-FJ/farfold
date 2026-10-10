@@ -1,0 +1,29 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/AsyncTasks.test.tsx (8 tests | 1 failed) 11ms
+   × does not automatically collapse the details when the requested task finishes 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/AsyncTasks.test.tsx > does not automatically collapse the details when the requested task finishes
+AssertionError: expected '<section class="async-tasks" aria-lab…' to contain '<details open="">'
+
+Expected: "<details open="">"
+Received: "<section class="async-tasks" aria-label="后台任务"><details><summary>后台任务 · 1</summary><p>仅显示 Agent 已报告的任务；停止回复不会自动停止这些任务。</p><ul><li><span class="async-task-name">A &lt;script&gt;name&lt;/script&gt;</span><span class="async-task-status" role="status">已完成</span></li></ul></details></section>"
+
+ ❯ src/components/AsyncTasks.test.tsx:128:156
+    126|   expect(render().html).toBe("");
+    127| });
+    128| it("does not automatically collapse the details when the requested tas…
+       |                                                                                                                                                            ^
+    129|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 passed (8)
+   Start at  13:10:45
+   Duration  170ms (transform 69ms, setup 0ms, import 102ms, tests 11ms, environment 0ms)
+

@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorktreeDialog.test.tsx (14 tests | 1 failed) 20ms
+   × preserves unknown after a cancellation left material instead of claiming no creation began 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeDialog.test.tsx > preserves unknown after a cancellation left material instead of claiming no creation began
+AssertionError: expected '<div class="worktree-dialog-body"><p>…' not to contain '未开始创建'
+
+Expected: "未开始创建"
+Received: "<div class="worktree-dialog-body"><p>工作树提供另一个文件夹；账号、Git设置和部分依赖仍可能共享。</p><div class="worktree-actions"><button type="button" class="btn btn-ghost">选择已有文件夹</button><button type="button" class="btn btn-ghost" disabled="">选择仓库文件夹</button></div><section class="worktree-operation" aria-live="polite"><strong>结果未确认</strong><p>操作结果尚未确认。请核查这次操作，不要重复创建或删除已有材料。</p><p>操作已取消，未开始创建。</p><p class="worktree-path">/repo/possibly-created</p><div><button type="button" class="btn btn-ghost">查看未知结果说明</button></div><div class="worktree-actions"><button type="button" class="btn btn-ghost">重新核查</button></div></section><div class="worktree-actions"><h3>已有工作树</h3><button type="button" class="btn btn-ghost">刷新清单</button></div><ul class="worktree-list"><li><span><strong>feature</strong><span class="worktree-path">/repo/linked</span><small>由此处创建 · 使用前将重新核查</small></span><div class="worktree-actions"><button type="button" class="btn btn-primary">使用此位置</button><button type="button" class="btn btn-ghost">重新核查</button><button type="button" class="btn btn-ghost">从清单移除</button></div></li></ul></div>"
+
+ ❯ src/components/WorktreeDialog.test.tsx:217:20
+    215|   expect(html).toContain(S.unknown);
+    216|   expect(html).toContain("/repo/possibly-created");
+    217|   expect(html).not.toContain("未开始创建");
+       |                    ^
+    218|   expect(html).not.toContain(S.errors.cancelled);
+    219|   expect(button(S.inspect).props.disabled).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  13:36:22
+   Duration  165ms (transform 47ms, setup 0ms, import 78ms, tests 20ms, environment 0ms)
+

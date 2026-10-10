@@ -1,0 +1,171 @@
+{
+  "at": "2026-10-10T05:37:31.887543+00:00",
+  "status": "frontendFrozenAfterCancellationCopyFix",
+  "priorCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-identity-followup.json",
+    "sha256": "261228b0eeb58bf790a5967c62cbc785b0377a07844bdb53386618b8de0396ae",
+    "keptUnchanged": true
+  },
+  "finding": "manager.run returns unknown + code=cancelled when mkdir/dispatch/existing target material prevents a no-side-effect result. The dialog previously also rendered the code-only message claiming creation had not started.",
+  "backendRead": {
+    "path": "src-tauri/src/worktrees/manager.rs",
+    "sha256": "ddf6b6369f7a684809aaafc1e1112bc7aad626636d0203784ad2c4eea53c630b",
+    "scope": "Read run/cancel classification only. run gives cancelled only with no target_stamp, no dispatch, and no existing target; cancellation before preparation/dispatch likewise has no creation. No Cargo or filesystem experiment repeated."
+  },
+  "fix": "For operation.code cancelled, only operation.state cancelled uses the no-start cancellation message. All other operation states use a neutral cancellation-request message. Unknown state, target path, acknowledgement and gates are unchanged.",
+  "changes": [
+    "src/runtime/worktree_strings.ts",
+    "src/components/WorktreeDialog.tsx",
+    "src/components/WorktreeDialog.test.tsx"
+  ],
+  "ownedFiles": [
+    {
+      "path": "src/runtime/worktree_types.ts",
+      "sha256": "b63c623d1377fa16c5bb03d6a550d8f9abfc1dfe7a8e858c983225011e45faca",
+      "lines": 274
+    },
+    {
+      "path": "src/runtime/worktree_types.test.ts",
+      "sha256": "f12b5344e8bb4bb713b8ef9164c85fb0700a393e77fcc08d538418ebf26d39c4",
+      "lines": 127
+    },
+    {
+      "path": "src/runtime/worktrees.ts",
+      "sha256": "66522d892b9f0cae4b07bc8505cc7d70da27e788cf64f1c25da9a2706d12f3cc",
+      "lines": 402
+    },
+    {
+      "path": "src/runtime/worktrees.test.ts",
+      "sha256": "83ffa6d0c2e02f4a4c5d13d59175812637063888a047a9e3019103d12138df46",
+      "lines": 471
+    },
+    {
+      "path": "src/runtime/worktree_strings.ts",
+      "sha256": "1aea644110a7d66bd858a472c606ceabc7b2ae4ce354f60fdfcced13858197b9",
+      "lines": 137
+    },
+    {
+      "path": "src/runtime/draft_location_owner.ts",
+      "sha256": "5656bbadba38f035ce7c13ab4f85f0c60261eba7acade50b7519fc73299b9602",
+      "lines": 21
+    },
+    {
+      "path": "src/runtime/draft_location_owner.test.ts",
+      "sha256": "1e023441d7a55d0b1d82b42c8b4e9b8c1004c1a119454b86d744ebb4568a949a",
+      "lines": 30
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "683b4dab8e337823891205598ab5be88ae1600791ac8600de341a9a3e9a98b4a",
+      "lines": 163
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "e12d06173ee467b932fda0833cbb79fb11e36dd0e23afa5603f5b1d96576c416",
+      "lines": 1474
+    },
+    {
+      "path": "src/components/EmptyState.work-location.test.tsx",
+      "sha256": "88fa78a9795ea09be47415a8b24b88e69ce43d816b4ba14159f093c366a0d598",
+      "lines": 19
+    },
+    {
+      "path": "src/components/EmptyState.worktree-owner.test.tsx",
+      "sha256": "8821ee644ed178cafbff1667c2fa92f233ab14aade22391906572af5d7a94552",
+      "lines": 187
+    },
+    {
+      "path": "src/components/WorkLocationPicker.tsx",
+      "sha256": "7c252e26ba651d8ebc04efb8612c8ff22f31dc22062fdbf0964847f952598ebe",
+      "lines": 51
+    },
+    {
+      "path": "src/components/WorkLocationPicker.test.tsx",
+      "sha256": "ff6d0c0212642cc9b48a84a23e1293c4e5bc21797a3ceb0890a08b0a835cb4e2",
+      "lines": 54
+    },
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "02afa62a4513f0747ef804aa29328c3152b19828603cbe87202f418f66d898cf",
+      "lines": 353
+    },
+    {
+      "path": "src/components/WorktreeDialog.test.tsx",
+      "sha256": "4402cd2ce7fad0abda8a012a771f4a57c819dbb1e413f6a5cf5ffc9d6c589995",
+      "lines": 323
+    },
+    {
+      "path": "src/components/WorktreeDialog.css",
+      "sha256": "8371e0c6b9a0589b26a7791a88ccae43d5f777154e2ca7b73d0745233778ddb6",
+      "lines": 70
+    },
+    {
+      "path": "src/components/WorktreeCreateForm.tsx",
+      "sha256": "e3498ae8a80c7b191b5b883080ac888a6c0a37952f2f1372d1d3a58ae727e71c",
+      "lines": 247
+    },
+    {
+      "path": "src/components/useDraftWorkLocation.ts",
+      "sha256": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b",
+      "lines": 39
+    }
+  ],
+  "effectiveRed": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/cancel-copy-red.txt",
+    "failed": 1,
+    "passed": 13,
+    "dtoBoundary": "Backend-shaped DTO validated by actual parseWorktreeReply, then actual WorktreeDialog SSR; not a captured installed IPC event."
+  },
+  "verification": {
+    "targeted": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/cancel-copy-related-green.txt",
+      "files": 10,
+      "passed": 114,
+      "exitCode": 0
+    },
+    "typecheck": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/typecheck-cancel-copy.txt",
+      "exitCode": 0
+    }
+  },
+  "browserReuse": {
+    "priorScope": "Previous material-final WebKit/Chromium each21 exercised component layout, real keyboard and lifecycle with controlled IPC.",
+    "notRerun": true,
+    "reason": "Only status-dependent copy and tests changed; no layout, event dispatch, owner or IPC changes. Prior browser source hashes are historical, not claimed identical to this followup.",
+    "newCopyProof": "Exact unknown cancellation and confirmed no-start cancellation covered by SSR assertions; installed text still requires future native verification."
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/cancel-copy-red.txt",
+      "sha256": "b582213ec16e976a7ac1f879ab7da44502bb3e9b9eca417b46410e86519a14a7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/cancel-copy-related-green.txt",
+      "sha256": "0b4b5e2781799d803f37d7879a03eb90697599b1fd710173b5d03fdbddded53a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/typecheck-cancel-copy.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/cancel-copy-test-format.txt",
+      "sha256": "912758edc142b044900baa9f31247339f8abae04f155cbd9a392556a4c1f133e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/cancel-copy-source-format.txt",
+      "sha256": "8470e1a1fa5d954f532adb10976f314af8c6dd928a6e2de74971ca1809555b6c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-identity-followup.json",
+      "sha256": "261228b0eeb58bf790a5967c62cbc785b0377a07844bdb53386618b8de0396ae"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/implementation.json",
+      "sha256": "dee4ecc9bff3500c5fd5e3ac7b3f41b3b3e612ef1a418b3c561f94413c23e025"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/actual-wire-check.json",
+      "sha256": "4ceabe4e06a88365db9af21e73153e4aa51a01e3469983658d9a9243eb392862"
+    }
+  ]
+}

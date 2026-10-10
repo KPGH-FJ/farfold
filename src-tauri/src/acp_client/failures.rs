@@ -4,7 +4,7 @@ use serde_json::{Value, json};
 use std::collections::VecDeque;
 
 pub(crate) fn capability() -> Value {
-    json!({"version": 1, "capabilities": ["sessionFailure"]})
+    json!({"version": 1, "capabilities": ["sessionFailure", "asyncTasks"]})
 }
 
 fn failure(meta: &Value) -> Option<&Value> {

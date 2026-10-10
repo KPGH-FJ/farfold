@@ -1,0 +1,58 @@
+from pathlib import Path
+import os,subprocess,tempfile,signal,json,hashlib,shutil,time
+out=Path(__file__).resolve().parent
+owned=Path(tempfile.mkdtemp(prefix='farfold-owned-worktree-review-',dir='/private/tmp')).resolve()
+config=owned/'empty-config';config.write_text('');hooks=owned/'empty-hooks';hooks.mkdir()
+env={k:v for k,v in os.environ.items() if not k.startswith('GIT_')};env.update({'GIT_CONFIG_NOSYSTEM':'1','GIT_CONFIG_SYSTEM':str(config),'GIT_CONFIG_GLOBAL':str(config),'GIT_TERMINAL_PROMPT':'0','LC_ALL':'C'})
+records=[];cases=[]
+def run(cwd,args,label,check=False,safe=True):
+ command=['/usr/bin/git','-c','core.fsmonitor=false','-c','gc.auto=0','-c','maintenance.auto=false','-c','commit.gpgSign=false']
+ if safe:command+=['-c','core.hooksPath='+str(hooks)]
+ command+=args;t=time.monotonic();p=subprocess.Popen(command,cwd=cwd,env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True)
+ timeout=False
+ try:so,se=p.communicate(timeout=10)
+ except subprocess.TimeoutExpired:
+  timeout=True;os.killpg(p.pid,signal.SIGKILL);so,se=p.communicate(timeout=3)
+ r={'label':label,'cwd':str(cwd),'args':command,'pid':p.pid,'exitCode':p.returncode,'timeout':timeout,'reaped':True,'elapsedSeconds':time.monotonic()-t,'stdout':so.decode('utf8','replace'),'stderr':se.decode('utf8','replace')};records.append(r)
+ assert len(so)+len(se)<65536
+ if check:assert p.returncode==0,r
+ return r
+repo=owned/'main';repo.mkdir();run(repo,['init','-b','main'],'init',True);run(repo,['config','user.name','Owned Fixture'],'name',True);run(repo,['config','user.email','fixture@example.invalid'],'email',True)
+(repo/'tracked.txt').write_text('base\n');(repo/'.gitignore').write_text('ignored/\n');run(repo,['add','.'],'add',True);run(repo,['commit','-m','owned initial'],'commit',True);oid=run(repo,['rev-parse','HEAD'],'oid',True)['stdout'].strip()
+# Explicit existing branch and new branch paths, no guessing or force.
+run(repo,['branch','existing',oid],'branch-existing',True);existing=owned/'existing tree';run(repo,['worktree','add','--',str(existing),'existing'],'existing-add',True)
+new=owned/'new tree\nline';run(repo,['worktree','add','-b','codex/owned-review','--',str(new),oid],'new-add',True)
+r=run(repo,['worktree','list','--porcelain','-z'],'nul-list',True);cases.append({'id':'create-existing-new-and-nul-path','result':'observed','newPathIsLiteralNulField':str(new)+'\x00' in r['stdout'],'sourceHeadUnchanged':run(repo,['rev-parse','HEAD'],'source-head',True)['stdout'].strip()==oid})
+r=run(repo,['worktree','add','--',str(owned/'conflict'),'existing'],'branch-in-use');cases.append({'id':'branch-in-use','exitCode':r['exitCode'],'targetExists':(owned/'conflict').exists()})
+# Destruction checks stay on small throwaway linked trees only.
+for kind in ['dirty','untracked','ignored','nested','locked','clean-unpushed']:
+ target=owned/kind;run(repo,['worktree','add','-b','probe/'+kind,'--',str(target),oid],kind+'-add',True)
+ if kind=='dirty':(target/'tracked.txt').write_text('changed\n')
+ if kind=='untracked':(target/'new.txt').write_text('keep\n')
+ if kind=='ignored':(target/'ignored').mkdir();(target/'ignored'/'own-secret.txt').write_text('synthetic-only\n')
+ if kind=='nested':
+  (target/'nested').mkdir();run(target/'nested',['init','-b','main'],'nested-init',True);(target/'nested'/'material').write_text('synthetic nested\n')
+ if kind=='locked':run(repo,['worktree','lock','--reason','owned review lock',str(target)],'lock',True)
+ if kind=='clean-unpushed':
+  (target/'tracked.txt').write_text('local unpublished change\n');run(target,['add','tracked.txt'],'unpushed-add',True);run(target,['commit','-m','local only'],'unpushed-commit',True)
+ status=run(target,['status','--porcelain=v1','-z','--untracked-files=all','--ignored'],'status-'+kind,True)
+ rm=run(repo,['worktree','remove','--',str(target)],'remove-'+kind)
+ cases.append({'id':kind+'-no-force-remove','exitCode':rm['exitCode'],'targetRetained':target.exists(),'status':status['stdout'],'branchRetained':run(repo,['show-ref','--verify','refs/heads/probe/'+kind],'branch-after-'+kind)['exitCode']==0})
+# Git itself does not know Agent busy; own retained child holds cwd only.
+working=owned/'busy';run(repo,['worktree','add','-b','probe/busy','--',str(working),oid],'busy-add',True)
+child=subprocess.Popen(['/bin/sleep','3'],cwd=working,start_new_session=True)
+rm=run(repo,['worktree','remove','--',str(working)],'remove-with-live-cwd-child');cases.append({'id':'live-cwd-child','exitCode':rm['exitCode'],'childStillRunningAfterRemove':child.poll() is None,'targetRetained':working.exists(),'meaning':'Synthetic sleep process only, not an Agent.'});child.wait(timeout=5)
+# A clean archive is a move, not a separate copy; branch/commonDir remain shared.
+archive=owned/'archived';before=(existing/'tracked.txt').read_bytes();run(repo,['worktree','move','--',str(existing),str(archive)],'move-archive',True);moved=run(archive,['rev-parse','--path-format=absolute','--git-common-dir'],'moved-common',True);run(repo,['worktree','move','--',str(archive),str(existing)],'restore-move',True);cases.append({'id':'move-restore','bytesEqual':(existing/'tracked.txt').read_bytes()==before,'sharedCommonDir':moved['stdout'].strip()==str(repo/'.git')})
+# A selected alias and root resolve to the same Git path; spelling is not identity.
+alias=owned/'alias';alias.symlink_to(existing,target_is_directory=True);r=run(alias,['rev-parse','--show-toplevel'],'alias-root',True);cases.append({'id':'symlink-alias','reportedRoot':r['stdout'].strip(),'canonicalSame':alias.resolve()==existing.resolve(),'lstatDifferent':alias.lstat().st_ino!=existing.stat().st_ino})
+# Standard official worktree add runs post-checkout; nonzero can leave real material.
+hook=repo/'.git/hooks/post-checkout';hook.write_text('#!/bin/sh\nprintf owned-hook > "'+str(owned/'hook-ran')+'"\nexit 7\n');hook.chmod(0o700)
+hooked=owned/'hooked';r=run(repo,['worktree','add','-b','probe/hook','--',str(hooked),oid],'hook-add',safe=False)
+cases.append({'id':'hook-failure-can-leave-created-tree','exitCode':r['exitCode'],'hookRan':(owned/'hook-ran').exists(),'targetRetained':hooked.exists(),'registered':str(hooked) in run(repo,['worktree','list','--porcelain','-z'],'hook-registration',True)['stdout'],'branchRetained':run(repo,['show-ref','--verify','refs/heads/probe/hook'],'hook-branch')['exitCode']==0})
+# Per-command hook override prevents that exact owned hook, without config rewrite.
+(owned/'hook-ran').unlink(missing_ok=True);r=run(repo,['worktree','add','-b','probe/nohook','--',str(owned/'nohook'),oid],'safe-hook-add',True);cases.append({'id':'command-hook-override','exitCode':r['exitCode'],'hookRan':(owned/'hook-ran').exists(),'hookFilePreserved':hook.exists()})
+version=run(repo,['--version'],'version',True)['stdout'].strip()
+raw=''.join(json.dumps(x,ensure_ascii=False)+'\n' for x in records);(out/'git-commands.raw.txt').write_text(raw)
+result={'gitVersion':version,'ownedTemporaryRoot':str(owned),'cases':cases,'commands':len(records),'allCommandsReaped':all(r['reaped'] for r in records),'timeouts':sum(r['timeout'] for r in records),'sourceRepoTouched':False,'agentsStarted':False,'environmentScope':'Only these synthetic Git child processes use isolated empty global/system config; no HOME or Agent environment changes.','rawSha256':hashlib.sha256((out/'git-commands.raw.txt').read_bytes()).hexdigest()}
+assert owned.parent==Path('/private/tmp') and owned.name.startswith('farfold-owned-worktree-review-');shutil.rmtree(owned);result['ownedRootRemoved']=not owned.exists();(out/'result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n');print(json.dumps(result,ensure_ascii=False))

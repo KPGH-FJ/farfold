@@ -1,0 +1,111 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: this `if` statement can be collapsed
+   --> src/worktrees/manager.rs:101:9
+    |
+101 | /         if let Some(op) = &mut next.operation {
+102 | |             if let Some(intent) = &op.intent {
+103 | |                 op.status.target_path = Some(intent.target.clone());
+104 | |             }
+105 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+101 ~         if let Some(op) = &mut next.operation
+102 ~             && let Some(intent) = &op.intent {
+103 |                 op.status.target_path = Some(intent.target.clone());
+104 ~             }
+    |
+
+error: this `if` statement can be collapsed
+   --> src/worktrees/manager.rs:139:9
+    |
+139 | /         if let Some(op) = &mut wanted.operation {
+140 | |             if !op.completed && !matches!(op.status.state.as_str(), "failed" | "cancelled") {
+141 | |                 op.status.state = "unknown".into();
+142 | |                 op.status.settled = true;
+...   |
+145 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+139 ~         if let Some(op) = &mut wanted.operation
+140 ~             && !op.completed && !matches!(op.status.state.as_str(), "failed" | "cancelled") {
+141 |                 op.status.state = "unknown".into();
+142 |                 op.status.settled = true;
+143 |                 op.status.code = Some("recheckRequired".into());
+144 ~             }
+    |
+
+error: this `if` statement can be collapsed
+   --> src/worktrees/manager.rs:507:9
+    |
+507 | /         if let Some((key, flag)) = &i.working {
+508 | |             if key == id {
+509 | |                 flag.store(true, Ordering::SeqCst);
+510 | |                 let mut next = i.doc.clone();
+...   |
+518 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+507 ~         if let Some((key, flag)) = &i.working
+508 ~             && key == id {
+509 |                 flag.store(true, Ordering::SeqCst);
+...
+516 |                 return Ok(i.reply(id));
+517 ~             }
+    |
+
+error: this `if` statement can be collapsed
+   --> src/worktrees/manager.rs:782:9
+    |
+782 | /         if let Some(intent) = &op.intent {
+783 | |             if !next.materials.iter().any(|m| m.operation_id == id) {
+784 | |                 if next.materials.len() >= 256 {
+785 | |                     return Err(error("capacity"));
+...   |
+793 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+782 ~         if let Some(intent) = &op.intent
+783 ~             && !next.materials.iter().any(|m| m.operation_id == id) {
+784 |                 if next.materials.len() >= 256 {
+...
+791 |                 });
+792 ~             }
+    |
+
+error: this `if` statement can be collapsed
+   --> src/worktrees/manager.rs:821:9
+    |
+821 | /         if let Some(store) = store {
+822 | |             if i.load(store).is_err() {
+823 | |                 if i.working.is_some() {
+824 | |                     return Err("WORKTREE_EXIT_BLOCKED".into());
+...   |
+831 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+821 ~         if let Some(store) = store
+822 ~             && i.load(store).is_err() {
+823 |                 if i.working.is_some() {
+...
+829 |                 return Ok(permit);
+830 ~             }
+    |
+
+error: could not compile `farfold` (lib) due to 5 previous errors

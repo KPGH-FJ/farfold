@@ -1,0 +1,16 @@
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/chromium-acknowledged.json 27ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/chromium-backend-final.json 9ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/chromium-final.json 6ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/chromium-recovery-final.json 6ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/cleanup.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx 41ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/index.html 17ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/run.mjs 21ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/serve.mjs 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-acknowledged.json 5ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-backend-final.json 5ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-expanded.json 4ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-final.json 3ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-first.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-recovery-final.json 3ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-second.json 2ms

@@ -1,0 +1,20 @@
+{
+  "fixture": "owned temporary bare repository with empty template",
+  "command": [
+    "/usr/bin/git",
+    "init",
+    "--bare",
+    "--template=/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-checkout-info-qapsixmi/empty",
+    "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-checkout-info-qapsixmi/git"
+  ],
+  "exitCode": 0,
+  "infoExists": false,
+  "entries": [
+    "HEAD",
+    "config",
+    "objects",
+    "refs"
+  ],
+  "stdout": "Initialized empty Git repository in /private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-checkout-info-qapsixmi/git/\n",
+  "stderr": ""
+}

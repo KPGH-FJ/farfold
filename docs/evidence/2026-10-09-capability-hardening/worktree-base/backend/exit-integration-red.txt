@@ -1,0 +1,29 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.75s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 3 tests
+
+thread 'draft_exit::worktree_tests::worktree_prepared_cannot_be_bypassed_by_save_exit_confirmation' (23095387) panicked at src/draft_exit_worktree_tests.rs:27:9:
+assertion `left == right` failed
+  left: None
+ right: Some("WORKTREE_EXIT_BLOCKED")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test draft_exit::worktree_tests::worktree_prepared_cannot_be_bypassed_by_save_exit_confirmation ... FAILED
+
+thread 'draft_exit::worktree_tests::cold_unknown_requires_explicit_risk_confirmation_at_the_actual_exit_gate' (23095386) panicked at src/draft_exit_worktree_tests.rs:47:5:
+assertion `left == right` failed
+  left: None
+ right: Some("EXIT_CONFIRMATION_REQUIRED")
+test data_reset::worktree_tests::worktree_prepared_blocks_actual_clear_admission_without_deleting_any_material ... ok
+test draft_exit::worktree_tests::cold_unknown_requires_explicit_risk_confirmation_at_the_actual_exit_gate ... FAILED
+
+failures:
+
+failures:
+    draft_exit::worktree_tests::cold_unknown_requires_explicit_risk_confirmation_at_the_actual_exit_gate
+    draft_exit::worktree_tests::worktree_prepared_cannot_be_bypassed_by_save_exit_confirmation
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 1286 filtered out; finished in 0.68s
+
+error: test failed, to rerun pass `--lib`

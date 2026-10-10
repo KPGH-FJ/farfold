@@ -1,0 +1,690 @@
+{
+  "engine": "chromium",
+  "label": "material-final",
+  "scope": "Actual EmptyState and worktree React components, production CSS and store; controlled in-memory IPC only. No Git, Agent, real files or installed app.",
+  "before": {
+    "src/components/EmptyState.tsx": "e12d06173ee467b932fda0833cbb79fb11e36dd0e23afa5603f5b1d96576c416",
+    "src/components/useDraftWorkLocation.ts": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b",
+    "src/components/WorkLocationPicker.tsx": "7c252e26ba651d8ebc04efb8612c8ff22f31dc22062fdbf0964847f952598ebe",
+    "src/components/WorktreeDialog.tsx": "514f66f2604f933666a2b715d82aa7d70ec0919314774827af960c2752636210",
+    "src/components/WorktreeDialog.css": "8371e0c6b9a0589b26a7791a88ccae43d5f777154e2ca7b73d0745233778ddb6",
+    "src/components/WorktreeCreateForm.tsx": "e3498ae8a80c7b191b5b883080ac888a6c0a37952f2f1372d1d3a58ae727e71c",
+    "src/runtime/worktree_types.ts": "b63c623d1377fa16c5bb03d6a550d8f9abfc1dfe7a8e858c983225011e45faca",
+    "src/runtime/worktrees.ts": "66522d892b9f0cae4b07bc8505cc7d70da27e788cf64f1c25da9a2706d12f3cc",
+    "src/runtime/worktree_strings.ts": "1340f672582801adc61b0e783bd45ada2b38c9dd3d7dd28b7d105835f705dcef",
+    "src/runtime/draft_location_owner.ts": "5656bbadba38f035ce7c13ab4f85f0c60261eba7acade50b7519fc73299b9602"
+  },
+  "checks": [
+    {
+      "name": "opening manager does not create or inspect",
+      "pass": true
+    },
+    {
+      "name": "fixed backend rejection is translated through actual dialog",
+      "pass": true
+    },
+    {
+      "name": "confirmed rejection enables another explicit create",
+      "pass": true
+    },
+    {
+      "name": "ready result does not change draft location",
+      "pass": true
+    },
+    {
+      "name": "keyboard use applies after fresh check and preserves unsent text",
+      "pass": true
+    },
+    {
+      "name": "forget needs explicit second confirmation",
+      "pass": true
+    },
+    {
+      "name": "forget never deletes or switches current draft",
+      "pass": true
+    },
+    {
+      "name": "forget clears the associated historical operation",
+      "pass": true
+    },
+    {
+      "name": "unknown recheck uses existing ID without restarting",
+      "pass": true
+    },
+    {
+      "name": "late prepare after close is cancelled, never started",
+      "pass": true
+    },
+    {
+      "name": "dialog stays within narrow viewport",
+      "pass": true,
+      "detail": {
+        "height": 486,
+        "width": 440,
+        "viewport": [700, 550],
+        "windowY": 0,
+        "body": 718
+      }
+    },
+    {
+      "name": "in-use branch is unavailable for another checkout",
+      "pass": true
+    },
+    {
+      "name": "keyboard create existing branch preserves exact inspected commit",
+      "pass": true
+    },
+    {
+      "name": "adopt does not start Git creation or automatically switch draft",
+      "pass": true
+    },
+    {
+      "name": "failed check shows saved missing state without applying",
+      "pass": true
+    },
+    {
+      "name": "unknown review has no automatic acknowledgement",
+      "pass": true
+    },
+    {
+      "name": "review preserves unknown status and permits another explicit attempt",
+      "pass": true
+    },
+    {
+      "name": "unknown linked target can be inspected under its distinct canonical repository",
+      "pass": true
+    },
+    {
+      "name": "ordinary-folder fallback preserves draft and applies only explicitly",
+      "pass": true
+    },
+    {
+      "name": "no unexpected IPC or send",
+      "pass": true,
+      "detail": []
+    },
+    {
+      "name": "no errors or external network",
+      "pass": true,
+      "detail": {
+        "errors": [],
+        "blocked": []
+      }
+    }
+  ],
+  "errors": [],
+  "blocked": [],
+  "calls": [
+    {
+      "cmd": "host_performance_origin",
+      "args": {}
+    },
+    {
+      "cmd": "settings_get",
+      "args": {
+        "key": "unsentWork.v1"
+      }
+    },
+    {
+      "cmd": "settings_set",
+      "args": {
+        "key": "unsentWork.v1",
+        "value": {
+          "version": 1,
+          "composers": {
+            "new": {
+              "text": "KEEP_UNSENT_DRAFT",
+              "attachments": []
+            }
+          },
+          "choice": {
+            "agentId": null,
+            "cwd": null,
+            "reviewRequired": false,
+            "service": null,
+            "config": {}
+          },
+          "feedback": {},
+          "queues": {},
+          "activity": {}
+        }
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-enter",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 1
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-enter",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 2
+      }
+    },
+    {
+      "cmd": "settings_get",
+      "args": {
+        "key": "promptTemplates.v1"
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-over",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 3
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-over",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 4
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-drop",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 5
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-drop",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 6
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-leave",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 7
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-leave",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 8
+      }
+    },
+    {
+      "cmd": "plugin:event|unlisten",
+      "args": {
+        "event": "tauri://drag-enter",
+        "eventId": 1
+      }
+    },
+    {
+      "cmd": "plugin:event|unlisten",
+      "args": {
+        "event": "tauri://drag-drop",
+        "eventId": 1
+      }
+    },
+    {
+      "cmd": "plugin:event|unlisten",
+      "args": {
+        "event": "tauri://drag-over",
+        "eventId": 1
+      }
+    },
+    {
+      "cmd": "plugin:event|unlisten",
+      "args": {
+        "event": "tauri://drag-leave",
+        "eventId": 1
+      }
+    },
+    {
+      "cmd": "worktree_list",
+      "args": {}
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false
+        }
+      }
+    },
+    {
+      "cmd": "worktree_inspect",
+      "args": {
+        "path": "/controlled/bare"
+      }
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false
+        }
+      }
+    },
+    {
+      "cmd": "worktree_inspect",
+      "args": {
+        "path": "/controlled/repo"
+      }
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false,
+          "defaultPath": "/controlled/repo"
+        }
+      }
+    },
+    {
+      "cmd": "worktree_prepare_create",
+      "args": {
+        "inspectionId": "inspect",
+        "parentPath": "/controlled/trees",
+        "directoryName": "feature",
+        "branch": {
+          "kind": "new",
+          "name": "feature",
+          "startOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "operationId": "40a7e431-7669-45e5-9271-99e89b7ddda8"
+      }
+    },
+    {
+      "cmd": "worktree_prepare_create",
+      "args": {
+        "inspectionId": "inspect",
+        "parentPath": "/controlled/trees",
+        "directoryName": "feature",
+        "branch": {
+          "kind": "new",
+          "name": "feature",
+          "startOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "operationId": "b0e12c03-a86b-4689-9eed-5112e10a4e1b"
+      }
+    },
+    {
+      "cmd": "worktree_start",
+      "args": {
+        "operationId": "b0e12c03-a86b-4689-9eed-5112e10a4e1b"
+      }
+    },
+    {
+      "cmd": "worktree_check_location",
+      "args": {
+        "locationId": "created"
+      }
+    },
+    {
+      "cmd": "settings_set",
+      "args": {
+        "key": "unsentWork.v1",
+        "value": {
+          "version": 1,
+          "composers": {
+            "new": {
+              "text": "KEEP_UNSENT_DRAFT",
+              "attachments": []
+            }
+          },
+          "choice": {
+            "agentId": null,
+            "cwd": "/controlled/trees/feature",
+            "reviewRequired": false,
+            "service": null,
+            "config": {}
+          },
+          "feedback": {},
+          "queues": {},
+          "activity": {}
+        }
+      }
+    },
+    {
+      "cmd": "agent_work_get",
+      "args": {
+        "cwd": "/controlled/trees/feature"
+      }
+    },
+    {
+      "cmd": "worktree_list",
+      "args": {}
+    },
+    {
+      "cmd": "worktree_forget",
+      "args": {
+        "locationId": "created",
+        "expectedRevision": 1
+      }
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false,
+          "defaultPath": "/controlled/trees/feature"
+        }
+      }
+    },
+    {
+      "cmd": "worktree_inspect",
+      "args": {
+        "path": "/controlled/repo"
+      }
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false,
+          "defaultPath": "/controlled/repo"
+        }
+      }
+    },
+    {
+      "cmd": "worktree_prepare_create",
+      "args": {
+        "inspectionId": "inspect",
+        "parentPath": "/controlled/trees",
+        "directoryName": "feature",
+        "branch": {
+          "kind": "new",
+          "name": "feature",
+          "startOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "operationId": "7023c7bd-30cf-4e0a-8c52-8b68d9fdbe9e"
+      }
+    },
+    {
+      "cmd": "worktree_start",
+      "args": {
+        "operationId": "7023c7bd-30cf-4e0a-8c52-8b68d9fdbe9e"
+      }
+    },
+    {
+      "cmd": "worktree_recheck",
+      "args": {
+        "operationId": "7023c7bd-30cf-4e0a-8c52-8b68d9fdbe9e"
+      }
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false,
+          "defaultPath": "/controlled/trees/feature"
+        }
+      }
+    },
+    {
+      "cmd": "worktree_inspect",
+      "args": {
+        "path": "/controlled/repo"
+      }
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false,
+          "defaultPath": "/controlled/trees"
+        }
+      }
+    },
+    {
+      "cmd": "worktree_prepare_create",
+      "args": {
+        "inspectionId": "inspect",
+        "parentPath": "/controlled/trees",
+        "directoryName": "feature",
+        "branch": {
+          "kind": "new",
+          "name": "feature",
+          "startOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "operationId": "a6ec57c0-a76f-4907-a1d3-cda44946554b"
+      }
+    },
+    {
+      "cmd": "worktree_cancel",
+      "args": {
+        "operationId": "a6ec57c0-a76f-4907-a1d3-cda44946554b"
+      }
+    },
+    {
+      "cmd": "worktree_list",
+      "args": {}
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false,
+          "defaultPath": "/controlled/trees/feature"
+        }
+      }
+    },
+    {
+      "cmd": "worktree_inspect",
+      "args": {
+        "path": "/controlled/repo"
+      }
+    },
+    {
+      "cmd": "worktree_refs",
+      "args": {
+        "inspectionId": "inspect"
+      }
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false,
+          "defaultPath": "/controlled/repo"
+        }
+      }
+    },
+    {
+      "cmd": "worktree_prepare_create",
+      "args": {
+        "inspectionId": "inspect",
+        "parentPath": "/controlled/trees",
+        "directoryName": "existing-copy",
+        "branch": {
+          "kind": "existing",
+          "ref": "refs/heads/existing",
+          "expectedOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "operationId": "3aa41983-afcf-4df4-a209-b70db7f661ed"
+      }
+    },
+    {
+      "cmd": "worktree_start",
+      "args": {
+        "operationId": "3aa41983-afcf-4df4-a209-b70db7f661ed"
+      }
+    },
+    {
+      "cmd": "worktree_adopt",
+      "args": {
+        "inspectionId": "inspect",
+        "treePath": "/controlled/repo",
+        "operationId": "b585f8c1-7d05-4f37-8590-0a6eee8a5c40"
+      }
+    },
+    {
+      "cmd": "worktree_check_location",
+      "args": {
+        "locationId": "created"
+      }
+    },
+    {
+      "cmd": "worktree_list",
+      "args": {}
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false,
+          "defaultPath": "/controlled/trees/feature"
+        }
+      }
+    },
+    {
+      "cmd": "worktree_inspect",
+      "args": {
+        "path": "/controlled/repo"
+      }
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false,
+          "defaultPath": "/controlled/trees"
+        }
+      }
+    },
+    {
+      "cmd": "worktree_prepare_create",
+      "args": {
+        "inspectionId": "inspect",
+        "parentPath": "/controlled/trees",
+        "directoryName": "feature",
+        "branch": {
+          "kind": "new",
+          "name": "feature",
+          "startOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "operationId": "bd34be19-0503-4497-baa5-2d5ce22950e1"
+      }
+    },
+    {
+      "cmd": "worktree_start",
+      "args": {
+        "operationId": "bd34be19-0503-4497-baa5-2d5ce22950e1"
+      }
+    },
+    {
+      "cmd": "worktree_acknowledge",
+      "args": {
+        "operationId": "bd34be19-0503-4497-baa5-2d5ce22950e1"
+      }
+    },
+    {
+      "cmd": "worktree_list",
+      "args": {}
+    },
+    {
+      "cmd": "worktree_inspect",
+      "args": {
+        "path": "/controlled/trees/possible"
+      }
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false,
+          "defaultPath": "/controlled/trees/feature"
+        }
+      }
+    },
+    {
+      "cmd": "settings_set",
+      "args": {
+        "key": "unsentWork.v1",
+        "value": {
+          "version": 1,
+          "composers": {
+            "new": {
+              "text": "KEEP_UNSENT_DRAFT",
+              "attachments": []
+            }
+          },
+          "choice": {
+            "agentId": null,
+            "cwd": "/controlled/ordinary",
+            "reviewRequired": false,
+            "service": null,
+            "config": {}
+          },
+          "feedback": {},
+          "queues": {},
+          "activity": {}
+        }
+      }
+    },
+    {
+      "cmd": "agent_work_get",
+      "args": {
+        "cwd": "/controlled/ordinary"
+      }
+    }
+  ],
+  "after": {
+    "src/components/EmptyState.tsx": "e12d06173ee467b932fda0833cbb79fb11e36dd0e23afa5603f5b1d96576c416",
+    "src/components/useDraftWorkLocation.ts": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b",
+    "src/components/WorkLocationPicker.tsx": "7c252e26ba651d8ebc04efb8612c8ff22f31dc22062fdbf0964847f952598ebe",
+    "src/components/WorktreeDialog.tsx": "514f66f2604f933666a2b715d82aa7d70ec0919314774827af960c2752636210",
+    "src/components/WorktreeDialog.css": "8371e0c6b9a0589b26a7791a88ccae43d5f777154e2ca7b73d0745233778ddb6",
+    "src/components/WorktreeCreateForm.tsx": "e3498ae8a80c7b191b5b883080ac888a6c0a37952f2f1372d1d3a58ae727e71c",
+    "src/runtime/worktree_types.ts": "b63c623d1377fa16c5bb03d6a550d8f9abfc1dfe7a8e858c983225011e45faca",
+    "src/runtime/worktrees.ts": "66522d892b9f0cae4b07bc8505cc7d70da27e788cf64f1c25da9a2706d12f3cc",
+    "src/runtime/worktree_strings.ts": "1340f672582801adc61b0e783bd45ada2b38c9dd3d7dd28b7d105835f705dcef",
+    "src/runtime/draft_location_owner.ts": "5656bbadba38f035ce7c13ab4f85f0c60261eba7acade50b7519fc73299b9602"
+  },
+  "sourceUnchanged": true
+}

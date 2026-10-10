@@ -17,6 +17,7 @@ pub(crate) mod prompt_templates;
 pub(crate) mod schema;
 mod startup_restore;
 mod storage_recovery;
+mod worktrees;
 use crate::storage_recovery::{io_receipt, sqlite_receipt};
 
 #[cfg(test)]

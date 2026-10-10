@@ -1,0 +1,1 @@
+{"engine":"webkit","checks":6,"failed":"TimeoutError: locator.waitFor: Timeout 6000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByText('已完成', { exact: true }) to be visible\u001b[22m\n\u001b[2m    16 × locator resolved to hidden <span role=\"status\" class=\"async-task-status\">已完成</span>\u001b[22m\n","sourceUnchanged":true}

@@ -1,0 +1,58 @@
+{
+  "kind": "root_independent_worktree_frontend_review",
+  "checkedAtUtc": "2026-10-10T05:29:47.933719+00:00",
+  "priorCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/implementation.json",
+    "sha256": "dee4ecc9bff3500c5fd5e3ac7b3f41b3b3e612ef1a418b3c561f94413c23e025"
+  },
+  "latestCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-identity-followup.json",
+    "sha256": "261228b0eeb58bf790a5967c62cbc785b0377a07844bdb53386618b8de0396ae"
+  },
+  "currentSourceFilesVerified": 18,
+  "latestArtifactsVerified": 24,
+  "priorArtifactsVerifiedWithExecutedCopies": 104,
+  "priorSourceChangesExactly": [
+    "src/runtime/worktree_types.ts",
+    "src/runtime/worktree_types.test.ts",
+    "src/components/WorktreeDialog.tsx",
+    "src/components/WorktreeDialog.test.tsx"
+  ],
+  "historicalExecutedCopies": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx",
+      "originalExecutedBytes": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture-backend-final.tsx.txt"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/run.mjs",
+      "originalExecutedBytes": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/run-backend-final.mjs.txt"
+    }
+  ],
+  "review": [
+    "Applying a work location requires a fresh backend check and the same unsent draft owner across both save barriers; no automatic prompt dispatch.",
+    "Late prepare/status/close and missing-result cases retain current ownership; acknowledged unknown material must be reread before another operation can replace its visible result.",
+    "New explicit recheck can invalidate an old ready result; older location revisions cannot overwrite the newer check. Forget clears only the list/result metadata.",
+    "Known structured failures render fixed Chinese messages and unknown errors never expose raw backend details.",
+    "Canonical repositoryRoot is separate from selected linked-tree root; material inspection also requires exact target and actual registration."
+  ],
+  "screenshotsPersonallyViewed": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-backend-final-create.png",
+      "sha256": "2656bc729df61184a4c4f160bd50b5ea2bad5ee03e9cb3092c299ef98bcaf49a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-backend-final-narrow.png",
+      "sha256": "f72a4b9769b1a45cc650bc920847f7f0bca44bd13ee82483d5b003affd36b773"
+    }
+  ],
+  "targetedEvidence": {
+    "tests": 112,
+    "scope": "Source/components/controlled browser only; no new test run in this independent review."
+  },
+  "remaining": [
+    "Actual backend serialized wire and Git fixture integration pending architecture owner.",
+    "Quit/update/reset backend integration, full repository checks and formal installed acceptance are not yet complete.",
+    "Safe archive/delete remains a required H15 follow-up."
+  ],
+  "conclusion": "No additional frontend source blocker found after the recorded corrections; not a whole worktree acceptance."
+}

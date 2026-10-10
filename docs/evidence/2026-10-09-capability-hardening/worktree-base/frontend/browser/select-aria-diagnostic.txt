@@ -1,0 +1,35 @@
+- dialog "工作树":
+  - heading "工作树" [level=2]
+  - button "关闭": ×
+  - paragraph: 工作树提供另一个文件夹；账号、Git设置和部分依赖仍可能共享。
+  - button "选择已有文件夹"
+  - button "选择仓库文件夹"
+  - heading "已有工作树" [level=3]
+  - button "刷新清单"
+  - paragraph: 尚未加入工作树。也可以直接选择已有文件夹。
+  - list
+  - paragraph: /controlled/repo
+  - heading "已有工作树" [level=3]
+  - list:
+    - listitem:
+      - strong: refs/heads/main
+      - text: /controlled/repo
+      - button "已有工作树"
+  - heading "创建工作树" [level=3]
+  - paragraph: 只创建文件，不运行项目脚本、不安装依赖、不复制未提交内容或秘密。
+  - text: 分支
+  - combobox "分支":
+    - option "新建分支" [selected]
+    - option "使用已有本地分支"
+  - text: 新分支名称
+  - textbox "新分支名称"
+  - text: 起点分支
+  - combobox "起点分支":
+    - option "当前提交" [selected]
+    - option "main (已在其他位置使用)"
+    - option "existing"
+  - text: 目标父文件夹
+  - button "目标父文件夹": 选择目标父文件夹
+  - text: 新文件夹名称
+  - textbox "新文件夹名称"
+  - button "创建工作树" [disabled]

@@ -1,0 +1,80 @@
+{
+  "scope": "Offline execution of exact frontend pure DTO parser against the backend owner's actual Rust serialization. Does not repeat Git, Tauri IPC, installed App or original filesystem operations.",
+  "source": {
+    "path": "src/runtime/worktree_types.ts",
+    "sha256": "b63c623d1377fa16c5bb03d6a550d8f9abfc1dfe7a8e858c983225011e45faca"
+  },
+  "wire": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/actual-wire.json",
+    "sha256": "f525a8196713a6ec8b027fdeb197b07b0e3c14fd91e9bfdb33b9725b3355ecbe"
+  },
+  "rawLog": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/wire-and-recovery-green.txt",
+    "sha256": "fb8f86bfdc016260a41d84c0e6be474270ca94456111949549ce886c8f6a53ff",
+    "singleWireLineSemanticallyEqual": true
+  },
+  "checks": [
+    {
+      "name": "inspection",
+      "parser": "parseWorktreeInspection",
+      "pass": true
+    },
+    {
+      "name": "refs",
+      "parser": "parseWorktreeRefs",
+      "pass": true
+    },
+    {
+      "name": "prepared",
+      "parser": "parseWorktreeReply",
+      "pass": true
+    },
+    {
+      "name": "ready",
+      "parser": "parseWorktreeReply",
+      "pass": true
+    },
+    {
+      "name": "list",
+      "parser": "parseWorktreeList",
+      "pass": true
+    },
+    {
+      "name": "unknown",
+      "parser": "parseWorktreeReply",
+      "pass": true
+    },
+    {
+      "name": "linkedInspection",
+      "parser": "parseWorktreeInspection",
+      "pass": true
+    },
+    {
+      "name": "beforeAcknowledge",
+      "parser": "parseWorktreeList",
+      "pass": true
+    },
+    {
+      "name": "acknowledged",
+      "parser": "parseWorktreeReply",
+      "pass": true
+    },
+    {
+      "name": "materialList",
+      "parser": "parseWorktreeList",
+      "pass": true
+    },
+    {
+      "name": "failed",
+      "parser": "parseWorktreeReply",
+      "pass": true
+    }
+  ],
+  "canonicalLinkedMaterialRoot": true,
+  "sourceUnchanged": true,
+  "notCovered": [
+    "End-to-end Tauri transport",
+    "Actual adopt/check_location/forget/refs-failure/cancel command results outside these 11 serialized objects",
+    "Installed App and Agent journey"
+  ]
+}

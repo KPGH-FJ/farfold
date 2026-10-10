@@ -1,0 +1,179 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: method `seal_exit` is never used
+   --> src/worktrees/manager.rs:789:19
+    |
+184 | impl Worktrees {
+    | -------------- method in this implementation
+...
+789 |     pub(crate) fn seal_exit(
+    |                   ^^^^^^^^^
+    |
+    = note: `-D dead-code` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`
+
+error: the borrowed expression implements the required traits
+   --> src/acp_client/async_tasks.rs:248:13
+    |
+248 |             &json!({"sessionId":self.session,"asyncTaskId":id}),
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: change this to: `json!({"sessionId":self.session,"asyncTaskId":id})`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#needless_borrows_for_generic_args
+    = note: `-D clippy::needless-borrows-for-generic-args` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_borrows_for_generic_args)]`
+
+error: large size difference between variants
+   --> src/worktrees/types.rs:107:1
+    |
+107 | /  pub enum Reply {
+108 | |      Operation(Operation),
+    | |      -------------------- the largest variant contains at least 304 bytes
+109 | |/     Unknown {
+110 | ||         kind: &'static str,
+111 | ||         #[serde(rename = "operationId")]
+112 | ||         operation_id: String,
+113 | ||     },
+    | ||_____- the second-largest variant contains at least 40 bytes
+114 | |  }
+    | |__^ the entire enum is at least 304 bytes
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#large_enum_variant
+    = note: `-D clippy::large-enum-variant` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::large_enum_variant)]`
+help: consider boxing the large fields or introducing indirection in some other way to reduce the total size of the enum
+    |
+108 -     Operation(Operation),
+108 +     Operation(Box<Operation>),
+    |
+
+error: this `if` statement can be collapsed
+   --> src/worktrees/manager.rs:96:9
+    |
+ 96 | /         if let Some(op) = &mut next.operation {
+ 97 | |             if let Some(intent) = &op.intent {
+ 98 | |                 op.status.target_path = Some(intent.target.clone());
+ 99 | |             }
+100 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+ 96 ~         if let Some(op) = &mut next.operation
+ 97 ~             && let Some(intent) = &op.intent {
+ 98 |                 op.status.target_path = Some(intent.target.clone());
+ 99 ~             }
+    |
+
+error: this `if` statement can be collapsed
+   --> src/worktrees/manager.rs:134:9
+    |
+134 | /         if let Some(op) = &mut wanted.operation {
+135 | |             if !op.completed && !matches!(op.status.state.as_str(), "failed" | "cancelled") {
+136 | |                 op.status.state = "unknown".into();
+137 | |                 op.status.settled = true;
+...   |
+140 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+134 ~         if let Some(op) = &mut wanted.operation
+135 ~             && !op.completed && !matches!(op.status.state.as_str(), "failed" | "cancelled") {
+136 |                 op.status.state = "unknown".into();
+137 |                 op.status.settled = true;
+138 |                 op.status.code = Some("recheckRequired".into());
+139 ~             }
+    |
+
+error: this boolean expression can be simplified
+   --> src/worktrees/manager.rs:520:16
+    |
+520 |               && !i
+    |  ________________^
+521 | |                 .doc
+522 | |                 .operation
+523 | |                 .as_ref()
+524 | |                 .is_some_and(|o| o.status.operation_id == id)
+    | |_____________________________________________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#nonminimal_bool
+    = note: `-D clippy::nonminimal-bool` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::nonminimal_bool)]`
+help: try
+    |
+520 ~             && i
+521 +                 .doc
+522 +                 .operation
+523 +                 .as_ref().is_none_or(|o| o.status.operation_id != id)
+    |
+
+error: this `if` statement can be collapsed
+   --> src/worktrees/manager.rs:494:9
+    |
+494 | /         if let Some((key, flag)) = &i.working {
+495 | |             if key == id {
+496 | |                 flag.store(true, Ordering::SeqCst);
+497 | |                 let mut next = i.doc.clone();
+...   |
+505 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+494 ~         if let Some((key, flag)) = &i.working
+495 ~             && key == id {
+496 |                 flag.store(true, Ordering::SeqCst);
+...
+503 |                 return Ok(i.reply(id));
+504 ~             }
+    |
+
+error: this `if` statement can be collapsed
+   --> src/worktrees/manager.rs:773:9
+    |
+773 | /         if let Some(intent) = &op.intent {
+774 | |             if !next.materials.iter().any(|m| m.operation_id == id) {
+775 | |                 if next.materials.len() >= 256 {
+776 | |                     return Err(error("capacity"));
+...   |
+784 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+773 ~         if let Some(intent) = &op.intent
+774 ~             && !next.materials.iter().any(|m| m.operation_id == id) {
+775 |                 if next.materials.len() >= 256 {
+...
+782 |                 });
+783 ~             }
+    |
+
+error: this `if` statement can be collapsed
+   --> src/worktrees/manager.rs:800:9
+    |
+800 | /         if let Some(store) = store {
+801 | |             if i.load(store).is_err() {
+802 | |                 if i.working.is_some() {
+803 | |                     return Err("WORKTREE_EXIT_BLOCKED".into());
+...   |
+810 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+help: collapse nested if block
+    |
+800 ~         if let Some(store) = store
+801 ~             && i.load(store).is_err() {
+802 |                 if i.working.is_some() {
+...
+808 |                 return Ok(permit);
+809 ~             }
+    |
+
+error: could not compile `farfold` (lib) due to 9 previous errors

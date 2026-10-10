@@ -59,6 +59,8 @@ mod uv_runtime;
 #[cfg(windows)]
 mod windows_process;
 mod work_policy;
+mod worktree_commands;
+mod worktrees;
 
 /// Process ownership helper dispatches before GUI, logging or Agent work.
 pub fn run_process_helper_if_requested() -> Option<i32> {
@@ -110,6 +112,7 @@ pub fn run() {
         .manage(pty::PtyManager::default())
         .manage(draft_exit::DraftExit::default())
         .manage(file_copy_jobs::FileCopyJobs::default())
+        .manage(worktrees::Worktrees::default())
         .manage(desktop_notifications::DesktopNotifications::default())
         .manage(diagnostics::DiagnosticsState::default())
         .manage(managed_update::ManagedUpdateAuthority::default())
@@ -229,6 +232,7 @@ pub fn run() {
                 acp_client::session_commands::session_open,
                 acp_client::session_commands::session_prompt,
                 acp_client::session_commands::session_cancel,
+                acp_client::session_commands::session_stop_task,
                 acp_client::session_commands::session_set_config,
                 acp_client::session_commands::session_confirm_config,
                 acp_client::session_commands::session_set_mode,
@@ -272,6 +276,18 @@ pub fn run() {
                 auth::settings_get,
                 auth::settings_set,
                 prompt_templates_commands::prompt_templates_save,
+                worktree_commands::worktree_inspect,
+                worktree_commands::worktree_refs,
+                worktree_commands::worktree_list,
+                worktree_commands::worktree_prepare_create,
+                worktree_commands::worktree_start,
+                worktree_commands::worktree_status,
+                worktree_commands::worktree_cancel,
+                worktree_commands::worktree_recheck,
+                worktree_commands::worktree_acknowledge,
+                worktree_commands::worktree_adopt,
+                worktree_commands::worktree_check_location,
+                worktree_commands::worktree_forget,
                 desktop_notifications::desktop_notifications_get,
                 desktop_notifications::desktop_notifications_set,
                 desktop_notifications::desktop_notification_submit,

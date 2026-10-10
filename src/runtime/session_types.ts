@@ -4,6 +4,7 @@
  */
 import type { CommandEntry } from "./commands";
 import type { ReportedDetailsOwner } from "./reported_details";
+import { hasAsyncTasks, type AsyncTasksState } from "./async_tasks";
 
 /** Content blocks accepted by `session_prompt`. */
 export type PromptBlock =
@@ -217,6 +218,7 @@ export interface ThreadState extends ReportedDetailsOwner {
   running: boolean;
   /** Live IDs reported by the connection, separate from prompt/replayed status. */
   activeToolCallIds: string[];
+  asyncTasks?: AsyncTasksState;
   queued: PromptBlock[][];
   pendingPermissions: PendingPermission[];
   identity: "draft" | "established";
@@ -289,9 +291,15 @@ export function hasPendingRequests(
 }
 
 export function hasActiveTools(
-  state: Pick<ThreadState, "activeToolCallIds" | "connectionLost">,
+  state: Pick<
+    ThreadState,
+    "activeToolCallIds" | "connectionLost" | "asyncTasks"
+  >,
 ): boolean {
-  return !state.connectionLost && state.activeToolCallIds.length > 0;
+  return (
+    (!state.connectionLost && state.activeToolCallIds.length > 0) ||
+    hasAsyncTasks(state)
+  );
 }
 
 /** Rendering only: never rewrite the Agent's reported tool status. */

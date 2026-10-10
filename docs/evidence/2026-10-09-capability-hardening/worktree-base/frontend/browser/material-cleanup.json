@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-10T05:28:24.472262+00:00",
+  "ownedPid": 91912,
+  "session": 86426,
+  "action": "SIGTERM exact owned process, collected exit143",
+  "pidAbsent": true,
+  "port1474Clear": true,
+  "browserRunners": "Both owned bounded runners closed browsers in finally and returned exit0"
+}

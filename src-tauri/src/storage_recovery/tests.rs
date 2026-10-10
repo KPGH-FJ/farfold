@@ -301,8 +301,7 @@ fn run_event_and_menu_paths_do_not_require_an_uninitialized_meta_store() {
         include_str!("../draft_exit.rs"),
         include_str!("../browser_workspace.rs"),
     ] {
-        assert!(!source.contains("state::<MetaStore>"));
-        assert!(!source.contains("state::<crate::meta_store::MetaStore>"));
+        assert!(!requires_meta_store(source));
     }
     let lib = include_str!("../lib.rs");
     let initialize = lib
@@ -310,12 +309,45 @@ fn run_event_and_menu_paths_do_not_require_an_uninitialized_meta_store() {
         .unwrap();
     for registered in [
         "draft_exit::DraftExit::default()",
+        "file_copy_jobs::FileCopyJobs::default()",
+        "worktrees::Worktrees::default()",
         "pty::PtyManager::default()",
         "AcpManager::new(",
         "AgentCatalog::new(",
         "NodeRuntimeState::new(",
     ] {
         assert!(lib.find(registered).unwrap() < initialize);
+    }
+}
+
+fn requires_meta_store(source: &str) -> bool {
+    let compact: String = source.chars().filter(|c| !c.is_whitespace()).collect();
+    // Match the required method identifier, not the suffix of non-panicking try_state.
+    [
+        ".state::<MetaStore>",
+        ".state::<crate::meta_store::MetaStore>",
+    ]
+    .iter()
+    .any(|call| compact.contains(call))
+}
+
+#[test]
+fn recovery_source_guard_distinguishes_optional_lookup_from_required_state() {
+    for call in [
+        "app.state::<MetaStore>()",
+        "app\n.state::<crate::meta_store::MetaStore>()",
+        "app . state :: < crate :: meta_store :: MetaStore > ()",
+    ] {
+        assert!(requires_meta_store(call), "must still reject {call}");
+    }
+    for call in [
+        "app.try_state::<MetaStore>()",
+        "app.try_state::<crate::meta_store::MetaStore>()",
+    ] {
+        assert!(
+            !requires_meta_store(call),
+            "optional lookup is safe: {call}"
+        );
     }
 }
 

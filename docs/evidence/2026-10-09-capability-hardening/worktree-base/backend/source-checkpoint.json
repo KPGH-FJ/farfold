@@ -1,0 +1,123 @@
+{
+  "time": "2026-10-10T05:42:18.118295+00:00",
+  "phase": "owned-backend-source-frozen",
+  "headAtCheckpoint": "db022ca1531a40d1f23fb98dd0f3016c19061893",
+  "sourceCount": 22,
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/data_reset.rs",
+      "sha256": "c3ab82eb10de5670ebd9a87a38eba3d2212127d181546f4da4400043fd534f17",
+      "bytes": 14956
+    },
+    {
+      "path": "src-tauri/src/data_reset_worktree_tests.rs",
+      "sha256": "aa93c1b8c30130731ae43b504ab16ea3e43005b3cdaf5a9695e10498695f123c",
+      "bytes": 884
+    },
+    {
+      "path": "src-tauri/src/draft_exit.rs",
+      "sha256": "a2a71669f806232a708608cf0ca7e1eda66068e004b27b352421221e03c953de",
+      "bytes": 21464
+    },
+    {
+      "path": "src-tauri/src/draft_exit_worktree_tests.rs",
+      "sha256": "d58b341c6defed1ee9ad2d7dc5c2baca34f28beda372315891c5017146bc71e2",
+      "bytes": 1838
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "7e74d734c3077e1948d7eb8971f50fa3b977df107b2f46706bf7c9068bcdc227",
+      "bytes": 17883
+    },
+    {
+      "path": "src-tauri/src/managed_update.rs",
+      "sha256": "8c45f7702260fb76293e461055cd58522c497e61a16af76030b24f6f14692fdd",
+      "bytes": 24730
+    },
+    {
+      "path": "src-tauri/src/meta_store.rs",
+      "sha256": "98041620e2d64c435405a2b4d7ae2cdf75dff83cea9bf08452d2553a7ca8c426",
+      "bytes": 52379
+    },
+    {
+      "path": "src-tauri/src/meta_store/worktrees.rs",
+      "sha256": "bbfa801ce566ba26fed048febb68003eb3615681224eb637b7b7f2a01bac061d",
+      "bytes": 1628
+    },
+    {
+      "path": "src-tauri/src/worktree_commands.rs",
+      "sha256": "aec75b48e956e29fc9fc5dff3eeeb5a4d9cad66b1ddadfe4c34eb85de846dd18",
+      "bytes": 4469
+    },
+    {
+      "path": "src-tauri/src/worktrees/checkout.rs",
+      "sha256": "846d9ef41288a18c07f4c5a98a571667d8ca36777d3f04ba954d3e451ac8947d",
+      "bytes": 15531
+    },
+    {
+      "path": "src-tauri/src/worktrees/checkout_boundary_tests.rs",
+      "sha256": "f2f599355ebf01869cb2a1ecbedccaffb2f7e481d6ce2fd4198cbe2e471dba93",
+      "bytes": 8987
+    },
+    {
+      "path": "src-tauri/src/worktrees/config_compatibility_tests.rs",
+      "sha256": "b75c33f186a5e978826d1590f60c62a48acfd6ebda1ffad0a15d1b70066a96b1",
+      "bytes": 1986
+    },
+    {
+      "path": "src-tauri/src/worktrees/create.rs",
+      "sha256": "4e5c2b21b66684daff9eec5fc181bfdd98b5e934525f0d9d9d0db46fb71de446",
+      "bytes": 5142
+    },
+    {
+      "path": "src-tauri/src/worktrees/git.rs",
+      "sha256": "33cd4ceae63018403a685252eeff625f79f0bab183371706fb5f0cef2f2c4ed4",
+      "bytes": 7966
+    },
+    {
+      "path": "src-tauri/src/worktrees/inspect.rs",
+      "sha256": "a9e4aa5fb6349563fb3e40bb7ba4a13433e8346c0ed5982e1dcde5920463f2bd",
+      "bytes": 10467
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "ddf6b6369f7a684809aaafc1e1112bc7aad626636d0203784ad2c4eea53c630b",
+      "bytes": 31173
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager_tests.rs",
+      "sha256": "ab46cd29e9efc0a455c29d7c661e4fd0336cafdbd01bdb324671f377e68f4189",
+      "bytes": 12206
+    },
+    {
+      "path": "src-tauri/src/worktrees/mod.rs",
+      "sha256": "01e40362c457757778943e4942b774493ea55d1ed86b84d77562d15b81b5c6e8",
+      "bytes": 379
+    },
+    {
+      "path": "src-tauri/src/worktrees/storage.rs",
+      "sha256": "56c39d4760c5306b3d4a86a8d5a22ed33c25cc37b35311219329c1b55b388550",
+      "bytes": 6510
+    },
+    {
+      "path": "src-tauri/src/worktrees/tests.rs",
+      "sha256": "d00882d6fb496c09b5db80f9a90667b4353b6465286b38bc18aeaff57f45dd1a",
+      "bytes": 13729
+    },
+    {
+      "path": "src-tauri/src/worktrees/types.rs",
+      "sha256": "9aa11fd0e395222a5884ea014d39c73db1cd01544295feb631f9810a87917b2f",
+      "bytes": 4587
+    },
+    {
+      "path": "src-tauri/src/worktrees/wire_tests.rs",
+      "sha256": "360e14bb29269f097bef8b662182f94db433552199cd865db4fc05852b80cd85",
+      "bytes": 2865
+    }
+  ],
+  "notes": [
+    "lib.rs includes parent-requested official session_stop_task registration owned by peer in acp_client.",
+    "Only the listed Rust inputs are frozen by this owner. Frontend and official async-task peer evidence are separate.",
+    "No production application launch, install, Agent invocation or user-repository mutation was performed for these worktree tests."
+  ]
+}

@@ -1,0 +1,15 @@
+export const ASYNC_TASKS = {
+  title: "后台任务",
+  stop: "停止任务",
+  running: "仍在运行",
+  requested: "正在请求停止…",
+  accepted: "停止请求已接受，等待任务结果",
+  rejected: "未能停止，任务仍未确认结束",
+  unknown: "任务结果尚未确认",
+  completed: "已完成",
+  failed: "失败",
+  stopped: "已停止",
+  overflow: "仍有任务状态未能确认，请保留对话连接。",
+  disconnected: "连接已结束，无法核实此任务的结果。",
+  description: "仅显示 Agent 已报告的任务；停止回复不会自动停止这些任务。",
+} as const;

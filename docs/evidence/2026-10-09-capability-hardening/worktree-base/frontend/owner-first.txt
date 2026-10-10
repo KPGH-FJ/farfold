@@ -1,0 +1,163 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+stderr | src/components/EmptyState.worktree-owner.test.tsx > uses an explicitly confirmed location without sending or replacing the draft
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/EmptyState.worktree-owner.test.tsx > does not resurrect an old picker when the page is left and returned to
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/EmptyState.worktree-owner.test.tsx > ordinary directory changes retire worktree owners even when the path returns
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/EmptyState.worktree-owner.test.tsx > rechecks original draft ownership after its save wait
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/EmptyState.worktree-owner.test.tsx > save failure preserves content and does not apply the requested path
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/EmptyState.worktree-owner.test.tsx > an existing unknown send prevents adopting a late location
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+ ❯ src/components/EmptyState.worktree-owner.test.tsx (6 tests | 6 failed) 7ms
+   × uses an explicitly confirmed location without sending or replacing the draft 5ms
+   × does not resurrect an old picker when the page is left and returned to 1ms
+   × ordinary directory changes retire worktree owners even when the path returns 0ms
+   × rechecks original draft ownership after its save wait 0ms
+   × save failure preserves content and does not apply the requested path 0ms
+   × an existing unknown send prevents adopting a late location 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/EmptyState.worktree-owner.test.tsx > uses an explicitly confirmed location without sending or replacing the draft
+TypeError: Cannot read properties of null (reading 'useCallback')
+ ❯ process.env.NODE_ENV.exports.useCallback node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1204:33
+ ❯ useThread src/runtime/session_hooks.ts:15:21
+     13|
+     14| export function useThread(key: string | null | undefined): ThreadState…
+     15|   const subscribe = useCallback(
+       |                     ^
+     16|     (fn: () => void) => (key ? threads.subscribeThread(key, fn) : () =…
+     17|     [key],
+ ❯ Module.EmptyState src/components/EmptyState.tsx:257:17
+ ❯ render src/components/EmptyState.worktree-owner.test.tsx:85:25
+ ❯ intent src/components/EmptyState.worktree-owner.test.tsx:93:5
+ ❯ src/components/EmptyState.worktree-owner.test.tsx:120:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  src/components/EmptyState.worktree-owner.test.tsx > does not resurrect an old picker when the page is left and returned to
+TypeError: Cannot read properties of null (reading 'useCallback')
+ ❯ process.env.NODE_ENV.exports.useCallback node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1204:33
+ ❯ useThread src/runtime/session_hooks.ts:15:21
+     13|
+     14| export function useThread(key: string | null | undefined): ThreadState…
+     15|   const subscribe = useCallback(
+       |                     ^
+     16|     (fn: () => void) => (key ? threads.subscribeThread(key, fn) : () =…
+     17|     [key],
+ ❯ Module.EmptyState src/components/EmptyState.tsx:257:17
+ ❯ render src/components/EmptyState.worktree-owner.test.tsx:85:25
+ ❯ intent src/components/EmptyState.worktree-owner.test.tsx:93:5
+ ❯ src/components/EmptyState.worktree-owner.test.tsx:133:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  src/components/EmptyState.worktree-owner.test.tsx > ordinary directory changes retire worktree owners even when the path returns
+TypeError: Cannot read properties of null (reading 'useCallback')
+ ❯ process.env.NODE_ENV.exports.useCallback node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1204:33
+ ❯ useThread src/runtime/session_hooks.ts:15:21
+     13|
+     14| export function useThread(key: string | null | undefined): ThreadState…
+     15|   const subscribe = useCallback(
+       |                     ^
+     16|     (fn: () => void) => (key ? threads.subscribeThread(key, fn) : () =…
+     17|     [key],
+ ❯ Module.EmptyState src/components/EmptyState.tsx:257:17
+ ❯ render src/components/EmptyState.worktree-owner.test.tsx:85:25
+ ❯ intent src/components/EmptyState.worktree-owner.test.tsx:93:5
+ ❯ src/components/EmptyState.worktree-owner.test.tsx:142:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  src/components/EmptyState.worktree-owner.test.tsx > rechecks original draft ownership after its save wait
+TypeError: Cannot read properties of null (reading 'useCallback')
+ ❯ process.env.NODE_ENV.exports.useCallback node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1204:33
+ ❯ useThread src/runtime/session_hooks.ts:15:21
+     13|
+     14| export function useThread(key: string | null | undefined): ThreadState…
+     15|   const subscribe = useCallback(
+       |                     ^
+     16|     (fn: () => void) => (key ? threads.subscribeThread(key, fn) : () =…
+     17|     [key],
+ ❯ Module.EmptyState src/components/EmptyState.tsx:257:17
+ ❯ render src/components/EmptyState.worktree-owner.test.tsx:85:25
+ ❯ intent src/components/EmptyState.worktree-owner.test.tsx:93:5
+ ❯ src/components/EmptyState.worktree-owner.test.tsx:166:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  src/components/EmptyState.worktree-owner.test.tsx > save failure preserves content and does not apply the requested path
+TypeError: Cannot read properties of null (reading 'useCallback')
+ ❯ process.env.NODE_ENV.exports.useCallback node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1204:33
+ ❯ useThread src/runtime/session_hooks.ts:15:21
+     13|
+     14| export function useThread(key: string | null | undefined): ThreadState…
+     15|   const subscribe = useCallback(
+       |                     ^
+     16|     (fn: () => void) => (key ? threads.subscribeThread(key, fn) : () =…
+     17|     [key],
+ ❯ Module.EmptyState src/components/EmptyState.tsx:257:17
+ ❯ render src/components/EmptyState.worktree-owner.test.tsx:85:25
+ ❯ intent src/components/EmptyState.worktree-owner.test.tsx:93:5
+ ❯ src/components/EmptyState.worktree-owner.test.tsx:175:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  src/components/EmptyState.worktree-owner.test.tsx > an existing unknown send prevents adopting a late location
+TypeError: Cannot read properties of null (reading 'useCallback')
+ ❯ process.env.NODE_ENV.exports.useCallback node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1204:33
+ ❯ useThread src/runtime/session_hooks.ts:15:21
+     13|
+     14| export function useThread(key: string | null | undefined): ThreadState…
+     15|   const subscribe = useCallback(
+       |                     ^
+     16|     (fn: () => void) => (key ? threads.subscribeThread(key, fn) : () =…
+     17|     [key],
+ ❯ Module.EmptyState src/components/EmptyState.tsx:257:17
+ ❯ render src/components/EmptyState.worktree-owner.test.tsx:85:25
+ ❯ intent src/components/EmptyState.worktree-owner.test.tsx:93:5
+ ❯ src/components/EmptyState.worktree-owner.test.tsx:182:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  6 failed | 4 passed (10)
+   Start at  12:52:45
+   Duration  1.32s (transform 314ms, setup 0ms, import 1.27s, tests 10ms, environment 0ms)
+

@@ -1,0 +1,29 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 13.00s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 5 tests
+test worktrees::checkout_boundary_tests::private_object_read_cannot_lazy_fetch_a_missing_target_from_new_source_promisor_config ... ok
+test worktrees::checkout_boundary_tests::checkout_after_info_filter_mutation_uses_captured_attributes_without_executing_helper ... ok
+test worktrees::checkout_boundary_tests::captured_global_info_and_tree_attributes_preserve_precedence_and_path_escaping ... ok
+
+thread 'worktrees::checkout_boundary_tests::linked_source_uses_common_info_attributes_for_materialization_and_filter_guard' (23123267) panicked at src/worktrees/checkout_boundary_tests.rs:196:5:
+assertion `left == right` failed
+  left: [111, 110, 101, 10, 116, 119, 111, 10]
+ right: [111, 110, 101, 13, 10, 116, 119, 111, 13, 10]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test worktrees::checkout_boundary_tests::linked_source_uses_common_info_attributes_for_materialization_and_filter_guard ... FAILED
+
+thread 'worktrees::checkout_boundary_tests::add_after_preflight_cannot_lazy_fetch_from_mutated_source_configuration' (23123264) panicked at src/worktrees/checkout_boundary_tests.rs:159:5:
+source worktree registration must never run a remote helper after preflight
+test worktrees::checkout_boundary_tests::add_after_preflight_cannot_lazy_fetch_from_mutated_source_configuration ... FAILED
+
+failures:
+
+failures:
+    worktrees::checkout_boundary_tests::add_after_preflight_cannot_lazy_fetch_from_mutated_source_configuration
+    worktrees::checkout_boundary_tests::linked_source_uses_common_info_attributes_for_materialization_and_filter_guard
+
+test result: FAILED. 3 passed; 2 failed; 0 ignored; 0 measured; 1291 filtered out; finished in 1.34s
+
+error: test failed, to rerun pass `--lib`

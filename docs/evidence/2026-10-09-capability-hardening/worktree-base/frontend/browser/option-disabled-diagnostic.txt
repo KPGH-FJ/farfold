@@ -1,0 +1,7 @@
+{
+  "isDisabled": false,
+  "dom": {
+    "disabled": true,
+    "html": "<option value=\"refs/heads/main\" disabled=\"\">main (已在其他位置使用)</option>"
+  }
+}

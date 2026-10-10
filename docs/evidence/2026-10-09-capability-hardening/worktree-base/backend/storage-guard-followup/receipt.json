@@ -1,0 +1,95 @@
+{
+  "phase": "test-guard-corrected-production-unchanged",
+  "timestamp": "2026-10-10T05:52:54.742271+00:00",
+  "rootCause": "The old contains(state::<MetaStore>) source assertion also matched the suffix of try_state. Both actual new draft_exit lookups are optional. Official installed Tauri 2.11.5 Manager::try_state returns state.try_get; required Manager::state unwraps and panics when missing.",
+  "originalFullFailure": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-checks/run-01/rust.txt",
+    "sha256": "b3585bc9088758e611747cfb66cbdaf37302c09731d28925cc810f604f91cd00",
+    "bytes": 141919
+  },
+  "targetedOriginalRed": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/storage-guard-followup/original-red.txt",
+    "sha256": "ace9e5cf771a0550f1cccbe609bc5a02e4954ffb651643a4162b8b5b8eef1b50",
+    "bytes": 872
+  },
+  "changes": [
+    "Match the required .state method identifier after whitespace normalization; explicit required calls remain rejected, including fully qualified type and spaced syntax. Optional try_state forms are tested separately.",
+    "Verify FileCopyJobs and Worktrees registration precedes storage initialization.",
+    "Exercise actual admit_file_exit(None) helper; both copy/worktree permits remain held until released, and prepared work cannot be bypassed even when passed None and explicit exit confirmation."
+  ],
+  "sources": [
+    {
+      "path": "src-tauri/src/storage_recovery/tests.rs",
+      "sha256": "e1bf0606b1bd74937fd2d4bda1ac454ed2809ca7553c05e8ccad0b4d57b68deb",
+      "bytes": 16756
+    },
+    {
+      "path": "src-tauri/src/draft_exit_worktree_tests.rs",
+      "sha256": "0564ba7f59200b6753500e65fd993faf954c8aacd9691d84f2f2310f4e482274",
+      "bytes": 2519
+    }
+  ],
+  "productionReferences": [
+    {
+      "path": "src-tauri/src/draft_exit.rs",
+      "sha256": "a2a71669f806232a708608cf0ca7e1eda66068e004b27b352421221e03c953de",
+      "bytes": 21464
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "ddf6b6369f7a684809aaafc1e1112bc7aad626636d0203784ad2c4eea53c630b",
+      "bytes": 31173
+    }
+  ],
+  "checks": [
+    {
+      "name": "storage_recovery::tests::",
+      "passed": 18,
+      "failed": 0,
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/storage-guard-followup/recovery-green.txt",
+        "sha256": "5c5b3ff7f91810ec7027d0fcc8d4169331f9ec544105cc42d645a47aea455780",
+        "bytes": 2271
+      }
+    },
+    {
+      "name": "draft_exit::",
+      "passed": 15,
+      "failed": 0,
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/storage-guard-followup/exit-green.txt",
+        "sha256": "c012fee3eb1226ebe077a5264b48a543abfdfd6b6e6c762968d73b4a9fd598af",
+        "bytes": 1682
+      }
+    },
+    {
+      "name": "two-test rustfmt",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/storage-guard-followup/format.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "name": "standard cargo clippy --locked -- -D warnings",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/storage-guard-followup/clippy.txt",
+        "sha256": "32d47f791eadf1ea833d9f8c84fbfea5cab1f438e113e93be05bd5b908e1c2ac",
+        "bytes": 72
+      }
+    }
+  ],
+  "sourceBoundary": "Two test files changed; old backend implementation and source-checkpoint retain their original valid checkpoint. No production edits, app launch, real database open or actual app exit. Root run-02 owns final full engineering validation.",
+  "officialInstalledSource": [
+    {
+      "path": "/Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tauri-2.11.5/src/lib.rs",
+      "sha256": "dd9d3eeec873339b8fcdd0aa1719e3a875c440462f449a0dc8833685d95996d2",
+      "bytes": 42734
+    }
+  ],
+  "next": "All production/test sources frozen; root full run-02 in progress. Candidate scripts cannot assume its success."
+}

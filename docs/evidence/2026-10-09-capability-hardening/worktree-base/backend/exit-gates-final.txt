@@ -1,0 +1,11 @@
+command: ['cargo', 'test', '--manifest-path', 'src-tauri/Cargo.toml', '--locked', '--lib', 'worktree_tests', '--', '--nocapture']
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.49s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 3 tests
+test draft_exit::worktree_tests::cold_unknown_requires_explicit_risk_confirmation_at_the_actual_exit_gate ... ok
+test draft_exit::worktree_tests::worktree_prepared_cannot_be_bypassed_by_save_exit_confirmation ... ok
+test data_reset::worktree_tests::worktree_prepared_blocks_actual_clear_admission_without_deleting_any_material ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1294 filtered out; finished in 0.66s
+

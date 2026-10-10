@@ -1,5 +1,6 @@
 // In-memory projection of ordered protocol events. No persistence or transport.
 import { roundArtifactCount } from "./artifacts";
+import { hasAsyncTasks } from "./async_tasks";
 import { readElicitation } from "./elicitation";
 import { INQUIRY } from "./elicitation_strings";
 import {
@@ -794,6 +795,7 @@ export function applyConnectionLost(s: ThreadState, reason?: unknown): void {
     s.stopping ||
     s.stopUnconfirmed ||
     s.activeToolCallIds.length > 0 ||
+    hasAsyncTasks(s) ||
     s.uncertainPrompt ||
     s.pendingPermissions.length ||
     s.pendingElicitations.length ||

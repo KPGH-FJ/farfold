@@ -1,0 +1,4 @@
+src/runtime/worktree_strings.ts 41ms
+src/runtime/worktrees.test.ts 44ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/run.mjs 32ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx 17ms

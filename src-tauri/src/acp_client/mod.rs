@@ -14,6 +14,7 @@ mod account_observer;
 mod account_query;
 pub(crate) mod account_status;
 mod api_key_auth;
+mod async_tasks;
 pub(crate) mod auth_compat;
 pub mod auth_connection;
 pub(crate) mod auth_route;
@@ -113,3 +114,6 @@ mod compaction_wire_tests;
 
 #[cfg(all(test, target_os = "macos"))]
 mod installed_initialize_probe;
+
+#[cfg(test)]
+mod async_task_wire_tests;

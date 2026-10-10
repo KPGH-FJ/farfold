@@ -1,0 +1,32 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.44s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 24 tests
+test worktrees::git::tests::child_exit_with_live_output_holder_is_not_success ... ok
+test worktrees::git::tests::fast_stderr_over_limit_cannot_be_success ... ok
+test worktrees::manager::tests::cancellation_before_prepare_retires_the_exact_fresh_id_with_a_confirmed_no_start_receipt ... ok
+test worktrees::checkout_boundary_tests::private_object_read_cannot_lazy_fetch_a_missing_target_from_new_source_promisor_config ... ok
+test draft_exit::worktree_tests::worktree_prepared_cannot_be_bypassed_by_save_exit_confirmation ... ok
+test draft_exit::worktree_tests::cold_unknown_requires_explicit_risk_confirmation_at_the_actual_exit_gate ... ok
+test worktrees::manager::tests::explicit_storage_recovery_retries_only_metadata_and_never_creates_a_directory ... ok
+test data_reset::worktree_tests::worktree_prepared_blocks_actual_clear_admission_without_deleting_any_material ... ok
+test worktrees::manager::tests::storage_failure_after_work_has_ended_allows_only_explicit_risk_confirmed_exit ... ok
+test worktrees::tests::adopt_existing_and_cold_recheck_require_same_os_and_git_identity ... ok
+test worktrees::checkout_boundary_tests::checkout_after_info_filter_mutation_uses_captured_attributes_without_executing_helper ... ok
+test worktrees::manager::tests::cold_old_location_and_material_ids_cannot_start_new_filesystem_work ... ok
+test worktrees::checkout_boundary_tests::captured_global_info_and_tree_attributes_preserve_precedence_and_path_escaping ... ok
+test worktrees::manager::tests::storage_failure_while_owned_work_is_in_flight_cannot_be_acknowledged_or_confirmed_away ... ok
+test worktrees::manager::tests::cold_unknown_can_be_reviewed_without_claiming_outcome_and_keeps_material_after_new_intent ... ok
+test worktrees::manager::tests::same_id_with_changed_input_and_cross_operation_never_reuses_authority ... ok
+test worktrees::tests::existing_target_nested_path_in_use_branch_and_changed_ref_do_not_write ... ok
+test worktrees::tests::branch_movement_after_precheck_never_executes_unchecked_filter ... ok
+test worktrees::tests::selected_old_commit_filter_is_not_replaced_by_current_index_attributes ... ok
+test worktrees::tests::prepared_cancel_never_creates_or_restarts_and_unknown_id_never_starts ... ok
+test worktrees::tests::info_attribute_change_after_precheck_never_executes_configured_filter ... ok
+test worktrees::tests::registered_unused_filter_is_allowed_but_effective_info_attribute_is_rejected_without_execution ... ok
+test worktrees::tests::creates_exact_new_branch_preserves_original_index_dirty_ignored_and_disables_hook ... ok
+test worktrees::tests::existing_branch_and_checkout_transforms_modes_links_are_preserved ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 1266 filtered out; finished in 4.51s
+

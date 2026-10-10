@@ -1,0 +1,351 @@
+{
+  "checkedAtUtc": "2026-10-10T05:54:28.371939+00:00",
+  "priorInstalledCommit": "ece08cd511b27ec62898ca03f688bb25b2966517",
+  "fileCount": 68,
+  "files": {
+    "src-tauri/src/acp_client/async_task_wire_tests.rs": {
+      "sha256": "3aab04d02a2770f12b43ead490fbb597bd2f3abef15d47d78fab686c5b8638b8",
+      "lines": 336
+    },
+    "src-tauri/src/acp_client/async_tasks.rs": {
+      "sha256": "567536a89a852c273c9c167625f4f3ff8fbb5b341ff0752cef1296982d4b39bc",
+      "lines": 326
+    },
+    "src-tauri/src/acp_client/async_tasks_tests.rs": {
+      "sha256": "29535336fcb89f09c382c7158dd926988077ccf611fffa4802ee401866a373a7",
+      "lines": 166
+    },
+    "src-tauri/src/acp_client/failures.rs": {
+      "sha256": "2b53e950ba4fd95036df5c091a717ea97252347b42ecf8e3b1089b7020dfe16a",
+      "lines": 121
+    },
+    "src-tauri/src/acp_client/manager.rs": {
+      "sha256": "5da5a901cf0bf0e81693e46cac1f79a83ea97cd26d242df0e67295750f8853de",
+      "lines": 1204
+    },
+    "src-tauri/src/acp_client/mod.rs": {
+      "sha256": "436b7cb8eeca335cd94e08caefefafd62f29ea2aa613bd9e1dd9631c9964c5ab",
+      "lines": 119
+    },
+    "src-tauri/src/acp_client/preparation_mode_tests.rs": {
+      "sha256": "31f636392e1e317fc5547a06198f909a3c6f982d238db2be62e18a927f81bc3b",
+      "lines": 450
+    },
+    "src-tauri/src/acp_client/pump.rs": {
+      "sha256": "159189718fbdbbe63e8271bd3e5131a3afed7bbc33e6ea4a71c647fb52a20ecc",
+      "lines": 1452
+    },
+    "src-tauri/src/acp_client/pump/restore_config.rs": {
+      "sha256": "093c4aefc412389473ffbb2cfc918ccbc039b7349f5377bf5b6628acd8975a04",
+      "lines": 326
+    },
+    "src-tauri/src/acp_client/pump/restore_tests.rs": {
+      "sha256": "3b29692ea2666a441662d9da860bd274815012a46f281c47377fd96f46523bcf",
+      "lines": 429
+    },
+    "src-tauri/src/acp_client/session.rs": {
+      "sha256": "4f7e52b1ad840fbbbea7fb9a2f708537dbd9cdd13f84c87e7d348a514f40af75",
+      "lines": 1080
+    },
+    "src-tauri/src/acp_client/session_commands.rs": {
+      "sha256": "512a45af058eae5a72e6b26c821146a8f1181c1ff999cbcdef77b301bf8989ff",
+      "lines": 625
+    },
+    "src-tauri/src/data_reset.rs": {
+      "sha256": "c3ab82eb10de5670ebd9a87a38eba3d2212127d181546f4da4400043fd534f17",
+      "lines": 382
+    },
+    "src-tauri/src/data_reset_worktree_tests.rs": {
+      "sha256": "aa93c1b8c30130731ae43b504ab16ea3e43005b3cdaf5a9695e10498695f123c",
+      "lines": 29
+    },
+    "src-tauri/src/draft_exit.rs": {
+      "sha256": "a2a71669f806232a708608cf0ca7e1eda66068e004b27b352421221e03c953de",
+      "lines": 552
+    },
+    "src-tauri/src/draft_exit_worktree_tests.rs": {
+      "sha256": "0564ba7f59200b6753500e65fd993faf954c8aacd9691d84f2f2310f4e482274",
+      "lines": 75
+    },
+    "src-tauri/src/lib.rs": {
+      "sha256": "7e74d734c3077e1948d7eb8971f50fa3b977df107b2f46706bf7c9068bcdc227",
+      "lines": 414
+    },
+    "src-tauri/src/managed_update.rs": {
+      "sha256": "8c45f7702260fb76293e461055cd58522c497e61a16af76030b24f6f14692fdd",
+      "lines": 693
+    },
+    "src-tauri/src/meta_store.rs": {
+      "sha256": "98041620e2d64c435405a2b4d7ae2cdf75dff83cea9bf08452d2553a7ca8c426",
+      "lines": 1305
+    },
+    "src-tauri/src/meta_store/worktrees.rs": {
+      "sha256": "bbfa801ce566ba26fed048febb68003eb3615681224eb637b7b7f2a01bac061d",
+      "lines": 44
+    },
+    "src-tauri/src/storage_recovery/tests.rs": {
+      "sha256": "e1bf0606b1bd74937fd2d4bda1ac454ed2809ca7553c05e8ccad0b4d57b68deb",
+      "lines": 451
+    },
+    "src-tauri/src/worktree_commands.rs": {
+      "sha256": "aec75b48e956e29fc9fc5dff3eeeb5a4d9cad66b1ddadfe4c34eb85de846dd18",
+      "lines": 156
+    },
+    "src-tauri/src/worktrees/checkout.rs": {
+      "sha256": "846d9ef41288a18c07f4c5a98a571667d8ca36777d3f04ba954d3e451ac8947d",
+      "lines": 399
+    },
+    "src-tauri/src/worktrees/checkout_boundary_tests.rs": {
+      "sha256": "f2f599355ebf01869cb2a1ecbedccaffb2f7e481d6ce2fd4198cbe2e471dba93",
+      "lines": 259
+    },
+    "src-tauri/src/worktrees/config_compatibility_tests.rs": {
+      "sha256": "b75c33f186a5e978826d1590f60c62a48acfd6ebda1ffad0a15d1b70066a96b1",
+      "lines": 54
+    },
+    "src-tauri/src/worktrees/create.rs": {
+      "sha256": "4e5c2b21b66684daff9eec5fc181bfdd98b5e934525f0d9d9d0db46fb71de446",
+      "lines": 147
+    },
+    "src-tauri/src/worktrees/git.rs": {
+      "sha256": "33cd4ceae63018403a685252eeff625f79f0bab183371706fb5f0cef2f2c4ed4",
+      "lines": 245
+    },
+    "src-tauri/src/worktrees/inspect.rs": {
+      "sha256": "a9e4aa5fb6349563fb3e40bb7ba4a13433e8346c0ed5982e1dcde5920463f2bd",
+      "lines": 319
+    },
+    "src-tauri/src/worktrees/manager.rs": {
+      "sha256": "ddf6b6369f7a684809aaafc1e1112bc7aad626636d0203784ad2c4eea53c630b",
+      "lines": 866
+    },
+    "src-tauri/src/worktrees/manager_tests.rs": {
+      "sha256": "ab46cd29e9efc0a455c29d7c661e4fd0336cafdbd01bdb324671f377e68f4189",
+      "lines": 351
+    },
+    "src-tauri/src/worktrees/mod.rs": {
+      "sha256": "01e40362c457757778943e4942b774493ea55d1ed86b84d77562d15b81b5c6e8",
+      "lines": 19
+    },
+    "src-tauri/src/worktrees/storage.rs": {
+      "sha256": "56c39d4760c5306b3d4a86a8d5a22ed33c25cc37b35311219329c1b55b388550",
+      "lines": 194
+    },
+    "src-tauri/src/worktrees/tests.rs": {
+      "sha256": "d00882d6fb496c09b5db80f9a90667b4353b6465286b38bc18aeaff57f45dd1a",
+      "lines": 402
+    },
+    "src-tauri/src/worktrees/types.rs": {
+      "sha256": "9aa11fd0e395222a5884ea014d39c73db1cd01544295feb631f9810a87917b2f",
+      "lines": 163
+    },
+    "src-tauri/src/worktrees/wire_tests.rs": {
+      "sha256": "360e14bb29269f097bef8b662182f94db433552199cd865db4fc05852b80cd85",
+      "lines": 84
+    },
+    "src/components/AsyncTasks.css": {
+      "sha256": "34b6ca977558539e10f6780ef7e8e3b82204a0692d4ebb6ddabac8a6dd015749",
+      "lines": 37
+    },
+    "src/components/AsyncTasks.test.tsx": {
+      "sha256": "878bca478038ef943eabb98380a079bb87d2c0d962b5101ecbd24f6774af9501",
+      "lines": 131
+    },
+    "src/components/AsyncTasks.tsx": {
+      "sha256": "666d8fa0892f1d3be30294decb1045c0796a9c2effe98462ed60e73f809a4e93",
+      "lines": 80
+    },
+    "src/components/ConversationLibrary.tsx": {
+      "sha256": "2aa86a68dd41367f979025f658b6db1826ca94faa2e4463857e7769b07004a61",
+      "lines": 1245
+    },
+    "src/components/DraftStartup.test.tsx": {
+      "sha256": "24eff87f3f8c79a2c1ac44a21e12cf41e1e6719c1c26dcacb2b20846e00b49a9",
+      "lines": 419
+    },
+    "src/components/DraftStartup.tsx": {
+      "sha256": "31f9b73d66d20732fb9e33c6486883117f9117f63d098bcb44d5afb0c3b8320e",
+      "lines": 309
+    },
+    "src/components/EmptyState.tsx": {
+      "sha256": "e12d06173ee467b932fda0833cbb79fb11e36dd0e23afa5603f5b1d96576c416",
+      "lines": 1474
+    },
+    "src/components/EmptyState.work-location.test.tsx": {
+      "sha256": "88fa78a9795ea09be47415a8b24b88e69ce43d816b4ba14159f093c366a0d598",
+      "lines": 19
+    },
+    "src/components/EmptyState.worktree-owner.test.tsx": {
+      "sha256": "8821ee644ed178cafbff1667c2fa92f233ab14aade22391906572af5d7a94552",
+      "lines": 187
+    },
+    "src/components/ThreadView.tsx": {
+      "sha256": "77f9945d906ec4c4cc075022dbe8b7dccf536bf0e863a997bcacc046062d55ec",
+      "lines": 1378
+    },
+    "src/components/WorkLocationPicker.test.tsx": {
+      "sha256": "ff6d0c0212642cc9b48a84a23e1293c4e5bc21797a3ceb0890a08b0a835cb4e2",
+      "lines": 54
+    },
+    "src/components/WorkLocationPicker.tsx": {
+      "sha256": "7c252e26ba651d8ebc04efb8612c8ff22f31dc22062fdbf0964847f952598ebe",
+      "lines": 51
+    },
+    "src/components/WorktreeCreateForm.tsx": {
+      "sha256": "e3498ae8a80c7b191b5b883080ac888a6c0a37952f2f1372d1d3a58ae727e71c",
+      "lines": 247
+    },
+    "src/components/WorktreeDialog.css": {
+      "sha256": "8371e0c6b9a0589b26a7791a88ccae43d5f777154e2ca7b73d0745233778ddb6",
+      "lines": 70
+    },
+    "src/components/WorktreeDialog.test.tsx": {
+      "sha256": "4402cd2ce7fad0abda8a012a771f4a57c819dbb1e413f6a5cf5ffc9d6c589995",
+      "lines": 323
+    },
+    "src/components/WorktreeDialog.tsx": {
+      "sha256": "02afa62a4513f0747ef804aa29328c3152b19828603cbe87202f418f66d898cf",
+      "lines": 353
+    },
+    "src/components/useDraftWorkLocation.ts": {
+      "sha256": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b",
+      "lines": 39
+    },
+    "src/runtime/async_task_actions.ts": {
+      "sha256": "7f67d8489850d847899ac41dee9aa28330647ba13cfa7eadd53d902ac9dd2915",
+      "lines": 71
+    },
+    "src/runtime/async_task_strings.ts": {
+      "sha256": "251dd5e0704a0c094dfa1451ff8564cb7928245daaefdffa63264963e82990fb",
+      "lines": 15
+    },
+    "src/runtime/async_tasks.test.ts": {
+      "sha256": "0dff18a4824bb8c39b95700d2b768b528d0e82f6803806ac024ad4650cc2573c",
+      "lines": 314
+    },
+    "src/runtime/async_tasks.ts": {
+      "sha256": "6fa3d2d72009a4b5b18254d27cc9a3fcc88830e06f95c21528aa0841241133e4",
+      "lines": 124
+    },
+    "src/runtime/draft_location_owner.test.ts": {
+      "sha256": "1e023441d7a55d0b1d82b42c8b4e9b8c1004c1a119454b86d744ebb4568a949a",
+      "lines": 30
+    },
+    "src/runtime/draft_location_owner.ts": {
+      "sha256": "5656bbadba38f035ce7c13ab4f85f0c60261eba7acade50b7519fc73299b9602",
+      "lines": 21
+    },
+    "src/runtime/exit_impact.ts": {
+      "sha256": "cb18a502bd7ee671218f76420aadd3b1d47cc9002e45a0b43361c374e300a6ce",
+      "lines": 43
+    },
+    "src/runtime/session_projection.ts": {
+      "sha256": "96b393e8a1bd8865cf4309729b7548624cba0fb62e80b0f9318082a2eb5235a8",
+      "lines": 940
+    },
+    "src/runtime/session_types.ts": {
+      "sha256": "8d1bdcc0fd993d75a7e42417d3c31e8a22f437ea10db83777d23b0363e5ed3ee",
+      "lines": 316
+    },
+    "src/runtime/sessions.ts": {
+      "sha256": "f304c6875864f0bc0f0dbcc46961224da9e608648cbd6c735b3ea64afa16998c",
+      "lines": 1493
+    },
+    "src/runtime/strings.test.ts": {
+      "sha256": "683b4dab8e337823891205598ab5be88ae1600791ac8600de341a9a3e9a98b4a",
+      "lines": 163
+    },
+    "src/runtime/worktree_strings.ts": {
+      "sha256": "1aea644110a7d66bd858a472c606ceabc7b2ae4ce354f60fdfcced13858197b9",
+      "lines": 137
+    },
+    "src/runtime/worktree_types.test.ts": {
+      "sha256": "f12b5344e8bb4bb713b8ef9164c85fb0700a393e77fcc08d538418ebf26d39c4",
+      "lines": 127
+    },
+    "src/runtime/worktree_types.ts": {
+      "sha256": "b63c623d1377fa16c5bb03d6a550d8f9abfc1dfe7a8e858c983225011e45faca",
+      "lines": 274
+    },
+    "src/runtime/worktrees.test.ts": {
+      "sha256": "83ffa6d0c2e02f4a4c5d13d59175812637063888a047a9e3019103d12138df46",
+      "lines": 471
+    },
+    "src/runtime/worktrees.ts": {
+      "sha256": "66522d892b9f0cae4b07bc8505cc7d70da27e788cf64f1c25da9a2706d12f3cc",
+      "lines": 402
+    }
+  },
+  "protectedUnchanged": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "proofs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-checks/run-02/verification.json",
+      "sha256": "dd966b85e4d4b049ba18b401e0b23c2731f9011a2c5938f858c6deb20f7e9272"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/implementation.json",
+      "sha256": "cdf1eec99a99a834c49d2289e2c45f7ab09bdb79a0b2072a6368a8ae4e2a8df5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/source-checkpoint.json",
+      "sha256": "054b41d595608a991466d4bd25bb5eabe4dc1abab871dac0dc3ce1499a5d8c4c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/storage-guard-followup/receipt.json",
+      "sha256": "b624f7385161c05600a634fe4501c50171a01886e7187210284bfca73fe772c1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend-independent-review.json",
+      "sha256": "d29fbc5f0624ef7970ab258d67a3cb310dff94e552a1672e0f245bf8c8cc68e2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/implementation.json",
+      "sha256": "dee4ecc9bff3500c5fd5e3ac7b3f41b3b3e612ef1a418b3c561f94413c23e025"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-identity-followup.json",
+      "sha256": "261228b0eeb58bf790a5967c62cbc785b0377a07844bdb53386618b8de0396ae"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/cancel-copy-followup.json",
+      "sha256": "291fb412781ba0dc5f6fb6ac977d639d31fc57cb2ad504a1ac78660c65a2e409"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/actual-wire-check.json",
+      "sha256": "4ceabe4e06a88365db9af21e73153e4aa51a01e3469983658d9a9243eb392862"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/backend-alignment-review.json",
+      "sha256": "1db3fc3d16db2e45218bdefe6be85ee62410fdbd5092286aa2a0f8aee2b60b7d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/root-independent.json",
+      "sha256": "2161629502645d2aa82c3557c91291b137d7a79f44001f4f2bc4b21a602c4af9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend-exit/implementation.json",
+      "sha256": "047a7e55bd904324efe16f64000db85e729e32542977ec784beccaf32f4de509"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend-exit/independent-review.json",
+      "sha256": "1ce914bcae595ac9308b099ef7a12afe1031d3b3a7c6f20a0970cb02cdf05296"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/implementation.json",
+      "sha256": "2f92988844f9cbbba08b9dc3363728c3e1ebf0df1f284beb036730f204c65131"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/root-independent.json",
+      "sha256": "b080078fd72398be4b7a6d5d6db6922ad1471c12c37365e5c2bb94b730d7aea6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/integration-preflight.json",
+      "sha256": "5559f077a47c43edf5133646b807326e562d5c2fe067679b823a9022e7e2fdc8"
+    }
+  ],
+  "scope": "Worktree create/adopt/location lifecycle and exact unsent draft use; negotiated official async task independent stop; worktree exit/reset/update gates; search body accessibility name. Directory archive/remove, real installed interactions and all-Agent acceptance remain outstanding.",
+  "historicalReferenceQualification": "Initial backend 22-source checkpoint and frontend original snapshots are preserved; storage-guard-followup updates two Rust test files only, material-identity and cancel-copy followups carry exact frontend changes. Original executed browser fixture bytes retained as recorded. run-01 Rust failure is a source-text guard misidentifying try_state, not observed production panic. run-02 reran all seven actual commands on the exact 1277 inputs."
+}

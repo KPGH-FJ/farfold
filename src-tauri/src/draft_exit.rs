@@ -14,6 +14,7 @@ pub struct DraftExit {
     pending: Mutex<Option<(u64, i32, bool)>>,
     exit_admission: Mutex<Option<crate::managed_update::UpdatePermit>>,
     copy_exit_admission: Mutex<Option<crate::managed_update::UpdatePermit>>,
+    worktree_exit_admission: Mutex<Option<crate::managed_update::UpdatePermit>>,
 }
 pub(crate) struct ClearExitGuard<'a>(&'a DraftExit);
 impl Drop for ClearExitGuard<'_> {
@@ -33,6 +34,7 @@ impl DraftExit {
         &self,
         permit: crate::managed_update::UpdatePermit,
         copy_permit: crate::managed_update::UpdatePermit,
+        worktree_permit: crate::managed_update::UpdatePermit,
     ) {
         self.ready.store(false, Ordering::SeqCst);
         *self
@@ -47,6 +49,10 @@ impl DraftExit {
             .copy_exit_admission
             .lock()
             .unwrap_or_else(|error| error.into_inner()) = Some(copy_permit);
+        *self
+            .worktree_exit_admission
+            .lock()
+            .unwrap_or_else(|error| error.into_inner()) = Some(worktree_permit);
     }
 
     #[cfg(target_os = "macos")]
@@ -153,16 +159,28 @@ pub fn handle(app: &AppHandle, event: &tauri::RunEvent) {
         // A copy admitted before renderer startup acknowledgement still owns
         // real OS work. Never rely solely on the renderer's exit UI.
         if let tauri::RunEvent::ExitRequested { api, .. } = event {
-            let mut held = state
+            let mut copies = state
                 .copy_exit_admission
                 .lock()
                 .unwrap_or_else(|error| error.into_inner());
-            if held.is_none() {
-                match app
-                    .state::<crate::file_copy_jobs::FileCopyJobs>()
-                    .seal_exit()
-                {
-                    Ok(permit) => *held = Some(permit),
+            let mut worktrees = state
+                .worktree_exit_admission
+                .lock()
+                .unwrap_or_else(|error| error.into_inner());
+            if copies.is_none() || worktrees.is_none() {
+                copies.take();
+                worktrees.take();
+                let store = app.try_state::<crate::meta_store::MetaStore>();
+                match admit_file_exit(
+                    &app.state::<crate::file_copy_jobs::FileCopyJobs>(),
+                    &app.state::<crate::worktrees::Worktrees>(),
+                    store.as_deref(),
+                    false,
+                ) {
+                    Ok((copy, worktree)) => {
+                        *copies = Some(copy);
+                        *worktrees = Some(worktree);
+                    }
                     Err(_) => api.prevent_exit(),
                 }
             }
@@ -178,6 +196,13 @@ pub fn handle(app: &AppHandle, event: &tauri::RunEvent) {
             if deferred.is_some() {
                 state
                     .copy_exit_admission
+                    .lock()
+                    .unwrap_or_else(|error| error.into_inner())
+                    .take();
+            }
+            if deferred.is_some() {
+                state
+                    .worktree_exit_admission
                     .lock()
                     .unwrap_or_else(|error| error.into_inner())
                     .take();
@@ -250,9 +275,13 @@ pub fn app_exit_after_save(
 ) -> Result<(), String> {
     // Separate from confirm_activity: confirmed Agent interruption never
     // cancels a filesystem write, nor permits a late copy after this point.
-    let copy_permit = app
-        .state::<crate::file_copy_jobs::FileCopyJobs>()
-        .seal_exit_with_confirmation(confirm_activity == Some(true))?;
+    let store = app.try_state::<crate::meta_store::MetaStore>();
+    let (copy_permit, worktree_permit) = admit_file_exit(
+        &app.state::<crate::file_copy_jobs::FileCopyJobs>(),
+        &app.state::<crate::worktrees::Worktrees>(),
+        store.as_deref(),
+        confirm_activity == Some(true),
+    )?;
     let installing = app
         .state::<crate::managed_update::ManagedUpdateAuthority>()
         .is_installing();
@@ -267,12 +296,33 @@ pub fn app_exit_after_save(
         .copy_exit_admission
         .lock()
         .unwrap_or_else(|error| error.into_inner()) = Some(copy_permit);
+    *app.state::<DraftExit>()
+        .worktree_exit_admission
+        .lock()
+        .unwrap_or_else(|error| error.into_inner()) = Some(worktree_permit);
     if code == tauri::RESTART_EXIT_CODE {
         app.request_restart();
     } else {
         app.exit(code);
     }
     Ok(())
+}
+
+fn admit_file_exit(
+    copies: &crate::file_copy_jobs::FileCopyJobs,
+    worktrees: &crate::worktrees::Worktrees,
+    store: Option<&crate::meta_store::MetaStore>,
+    confirm: bool,
+) -> Result<
+    (
+        crate::managed_update::UpdatePermit,
+        crate::managed_update::UpdatePermit,
+    ),
+    String,
+> {
+    let copy = copies.seal_exit_with_confirmation(confirm)?;
+    let worktree = worktrees.seal_exit(store, confirm)?;
+    Ok((copy, worktree))
 }
 
 #[tauri::command]
@@ -310,7 +360,13 @@ mod tests {
         assert_eq!(state.take_allowed(false), (None, Some(owner)));
         assert!(state.complete(owner, false, || Ok(None)).is_err());
         let copies = crate::file_copy_jobs::FileCopyJobs::default();
-        state.prepare_cleared_restart(gate.update().unwrap(), copies.seal_exit().unwrap());
+        let worktrees = crate::worktrees::Worktrees::default();
+        state.prepare_cleared_restart(
+            gate.update().unwrap(),
+            copies.seal_exit().unwrap(),
+            worktrees.seal_exit(None, false).unwrap(),
+        );
+        assert!(worktrees.seal_exit(None, false).is_err());
         assert!(
             copies.seal_exit().is_err(),
             "copy admission is retained until the cleared restart"
@@ -490,3 +546,7 @@ mod tests {
         assert_eq!(replies, [owner]);
     }
 }
+
+#[cfg(test)]
+#[path = "draft_exit_worktree_tests.rs"]
+mod worktree_tests;

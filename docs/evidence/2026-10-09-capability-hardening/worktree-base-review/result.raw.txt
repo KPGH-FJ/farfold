@@ -1,0 +1,99 @@
+{
+  "gitVersion": "git version 2.39.5 (Apple Git-154)",
+  "ownedTemporaryRoot": "/private/tmp/farfold-owned-worktree-review-_irylxaq",
+  "cases": [
+    {
+      "id": "create-existing-new-and-nul-path",
+      "result": "observed",
+      "newPathIsLiteralNulField": true,
+      "sourceHeadUnchanged": true
+    },
+    {
+      "id": "branch-in-use",
+      "exitCode": 128,
+      "targetExists": false
+    },
+    {
+      "id": "dirty-no-force-remove",
+      "exitCode": 128,
+      "targetRetained": true,
+      "status": " M tracked.txt\u0000",
+      "branchRetained": true
+    },
+    {
+      "id": "untracked-no-force-remove",
+      "exitCode": 128,
+      "targetRetained": true,
+      "status": "?? new.txt\u0000",
+      "branchRetained": true
+    },
+    {
+      "id": "ignored-no-force-remove",
+      "exitCode": 0,
+      "targetRetained": false,
+      "status": "!! ignored/own-secret.txt\u0000",
+      "branchRetained": true
+    },
+    {
+      "id": "nested-no-force-remove",
+      "exitCode": 128,
+      "targetRetained": true,
+      "status": "?? nested/\u0000",
+      "branchRetained": true
+    },
+    {
+      "id": "locked-no-force-remove",
+      "exitCode": 128,
+      "targetRetained": true,
+      "status": "",
+      "branchRetained": true
+    },
+    {
+      "id": "clean-unpushed-no-force-remove",
+      "exitCode": 0,
+      "targetRetained": false,
+      "status": "",
+      "branchRetained": true
+    },
+    {
+      "id": "live-cwd-child",
+      "exitCode": 0,
+      "childStillRunningAfterRemove": true,
+      "targetRetained": false,
+      "meaning": "Synthetic sleep process only, not an Agent."
+    },
+    {
+      "id": "move-restore",
+      "bytesEqual": true,
+      "sharedCommonDir": true
+    },
+    {
+      "id": "symlink-alias",
+      "reportedRoot": "/private/tmp/farfold-owned-worktree-review-_irylxaq/existing tree",
+      "canonicalSame": true,
+      "lstatDifferent": true
+    },
+    {
+      "id": "hook-failure-can-leave-created-tree",
+      "exitCode": 7,
+      "hookRan": true,
+      "targetRetained": true,
+      "registered": true,
+      "branchRetained": true
+    },
+    {
+      "id": "command-hook-override",
+      "exitCode": 0,
+      "hookRan": false,
+      "hookFilePreserved": true
+    }
+  ],
+  "commands": 51,
+  "allCommandsReaped": true,
+  "timeouts": 0,
+  "sourceRepoTouched": false,
+  "agentsStarted": false,
+  "environmentScope": "Only these synthetic Git child processes use isolated empty global/system config; no HOME or Agent environment changes.",
+  "rawSha256": "135b9cabda148746363fe7c2e00e07f2f41d74a12875a9c58d3e8dd19156c437",
+  "ownedRootRemoved": true
+}

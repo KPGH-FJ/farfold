@@ -1,0 +1,236 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } =
+  await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const engine = process.argv[2] ?? "webkit",
+  label = process.argv[3] ?? "first";
+const base =
+  "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser";
+const inputs = [
+  "src/components/EmptyState.tsx",
+  "src/components/useDraftWorkLocation.ts",
+  "src/components/WorkLocationPicker.tsx",
+  "src/components/WorktreeDialog.tsx",
+  "src/components/WorktreeDialog.css",
+  "src/components/WorktreeCreateForm.tsx",
+  "src/runtime/worktree_types.ts",
+  "src/runtime/worktrees.ts",
+  "src/runtime/worktree_strings.ts",
+  "src/runtime/draft_location_owner.ts",
+];
+const hashes = () =>
+  Object.fromEntries(
+    inputs.map((p) => [
+      p,
+      createHash("sha256").update(fs.readFileSync(p)).digest("hex"),
+    ]),
+  );
+const result = {
+  engine,
+  label,
+  scope:
+    "Actual EmptyState and worktree React components, production CSS and store; controlled in-memory IPC only. No Git, Agent, real files or installed app.",
+  before: hashes(),
+  checks: [],
+  errors: [],
+  blocked: [],
+};
+const browser = await (engine === "webkit" ? webkit : chromium).launch({
+  headless: true,
+  executablePath:
+    engine === "webkit"
+      ? path.resolve(
+          "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+        )
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+});
+const deadline = setTimeout(() => void browser.close(), 60000);
+const page = await browser.newPage({ viewport: { width: 1000, height: 760 } });
+page.setDefaultTimeout(6000);
+page.on("pageerror", (e) => result.errors.push(String(e)));
+await page.route("**/*", (r) =>
+  r.request().url().startsWith("http://127.0.0.1:1474/")
+    ? r.continue()
+    : (result.blocked.push(r.request().url()), r.abort()),
+);
+const check = (name, pass, detail) => {
+  result.checks.push({ name, pass, detail });
+  if (!pass) throw Error(name);
+};
+const button = (name) => page.getByRole("button", { name, exact: true });
+const dialog = page.getByRole("dialog", { name: "工作树", exact: true });
+const open = async () => {
+  await button("工作树").click();
+  await dialog.waitFor({ state: "visible" });
+};
+async function create(mode = "ready") {
+  await page.evaluate((v) => {
+    fixture.mode(v);
+    fixture.choose("/controlled/repo", "/controlled/trees");
+  }, mode);
+  await button("选择仓库文件夹").click();
+  await page.getByLabel("新分支名称", { exact: true }).fill("feature");
+  await button("选择目标父文件夹").click();
+  await page.getByLabel("新文件夹名称", { exact: true }).fill("feature");
+  await button("创建工作树").click();
+}
+try {
+  await page.goto("http://127.0.0.1:1474/" + base + "/index.html");
+  await open();
+  check(
+    "opening manager does not create or inspect",
+    await page.evaluate(
+      () =>
+        !calls.some((x) =>
+          /worktree_(inspect|prepare_create|start)/.test(x.cmd),
+        ),
+    ),
+  );
+  await create("failed");
+  await page
+    .getByText("目标文件夹已经存在，请选择其他新名称。", { exact: true })
+    .waitFor();
+  check(
+    "confirmed rejection enables another explicit create",
+    await button("创建工作树").isEnabled(),
+  );
+  await page.evaluate(() => fixture.mode("ready"));
+  await button("创建工作树").click();
+  await page.getByText("创建或接入完成", { exact: true }).waitFor();
+  check(
+    "ready result does not change draft location",
+    await page.evaluate(() => fixture.current().cwd === null),
+  );
+  await button("使用此位置").focus();
+  await page.keyboard.press("Enter");
+  await dialog.waitFor({ state: "hidden" });
+  check(
+    "keyboard use applies after fresh check and preserves unsent text",
+    await page.evaluate(
+      () =>
+        fixture.current().cwd === "/controlled/trees/feature" &&
+        fixture.current().draft.text === "KEEP_UNSENT_DRAFT" &&
+        calls.some((c) => c.cmd === "worktree_check_location"),
+    ),
+  );
+  await open();
+  await button("从清单移除").click();
+  await dialog
+    .getByText("只移除此清单记录，不删除文件、分支或对话。", { exact: true })
+    .waitFor();
+  check(
+    "forget needs explicit second confirmation",
+    await page.evaluate(() => !calls.some((c) => c.cmd === "worktree_forget")),
+  );
+  await button("从清单移除").last().click();
+  await page
+    .getByText("尚未加入工作树。也可以直接选择已有文件夹。", { exact: true })
+    .waitFor();
+  check(
+    "forget never deletes or switches current draft",
+    await page.evaluate(
+      () =>
+        fixture.current().cwd === "/controlled/trees/feature" &&
+        !calls.some((c) => /remove|delete/.test(c.cmd)),
+    ),
+  );
+  await create("unknown");
+  await page
+    .getByText(
+      "操作结果尚未确认。请核查这次操作，不要重复创建或删除已有材料。",
+      { exact: true },
+    )
+    .first()
+    .waitFor();
+  const startCount = await page.evaluate(
+    () => calls.filter((c) => c.cmd === "worktree_start").length,
+  );
+  await dialog
+    .locator(".worktree-operation")
+    .getByRole("button", { name: "重新核查", exact: true })
+    .click();
+  await page.getByText("创建或接入完成", { exact: true }).waitFor();
+  check(
+    "unknown recheck uses existing ID without restarting",
+    await page.evaluate(
+      (n) => calls.filter((c) => c.cmd === "worktree_start").length === n,
+      startCount,
+    ),
+  );
+  await create("late");
+  await page.getByText("正在准备创建…", { exact: true }).waitFor();
+  await page.keyboard.press("Escape");
+  await dialog.waitFor({ state: "hidden" });
+  await page.evaluate(() => fixture.release());
+  await page.waitForFunction(() =>
+    calls.some((c) => c.cmd === "worktree_cancel"),
+  );
+  check(
+    "late prepare after close is cancelled, never started",
+    await page.evaluate(
+      (n) => calls.filter((c) => c.cmd === "worktree_start").length === n,
+      startCount,
+    ),
+  );
+  await open();
+  await page.setViewportSize({ width: 700, height: 550 });
+  await page.screenshot({
+    path: base + "/" + engine + "-" + label + "-narrow.png",
+  });
+  const geometry = await dialog.evaluate((d) => ({
+    height: d.getBoundingClientRect().height,
+    width: d.getBoundingClientRect().width,
+    viewport: [innerWidth, innerHeight],
+    windowY: scrollY,
+    body: document.body.scrollHeight,
+  }));
+  check(
+    "dialog stays within narrow viewport",
+    geometry.height <= 550 && geometry.width <= 700 && geometry.windowY === 0,
+    geometry,
+  );
+  check(
+    "no unexpected IPC or send",
+    await page.evaluate(
+      () =>
+        unexpected.length === 0 &&
+        !calls.some((c) => /session_(open|prompt|send)/.test(c.cmd)),
+    ),
+    await page.evaluate(() => unexpected),
+  );
+  check(
+    "no errors or external network",
+    result.errors.length === 0 && result.blocked.length === 0,
+    { errors: result.errors, blocked: result.blocked },
+  );
+} catch (e) {
+  result.failure = String(e);
+  await page
+    .screenshot({ path: base + "/" + engine + "-" + label + "-failure.png" })
+    .catch(() => {});
+  process.exitCode = 1;
+} finally {
+  clearTimeout(deadline);
+  result.calls = await page.evaluate(() => calls).catch(() => []);
+  await browser.close();
+  result.after = hashes();
+  result.sourceUnchanged =
+    JSON.stringify(result.before) === JSON.stringify(result.after);
+  fs.writeFileSync(
+    base + "/" + engine + "-" + label + ".raw.txt",
+    JSON.stringify(result, null, 2) + "\n",
+  );
+  fs.writeFileSync(
+    base + "/" + engine + "-" + label + ".json",
+    JSON.stringify(result, null, 2) + "\n",
+  );
+  console.log(
+    JSON.stringify({
+      engine,
+      checks: result.checks,
+      failure: result.failure,
+      sourceUnchanged: result.sourceUnchanged,
+    }),
+  );
+}

@@ -1,0 +1,38 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: method `seal_exit` is never used
+   --> src/worktrees/manager.rs:789:19
+    |
+184 | impl Worktrees {
+    | -------------- method in this implementation
+...
+789 |     pub(crate) fn seal_exit(
+    |                   ^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.90s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 2 tests
+
+thread 'acp_client::async_tasks::tests::async_task_early_unknown_accepts_same_owner_first_terminal' (23071788) panicked at src/acp_client/async_tasks_tests.rs:127:9:
+same owner terminal must settle completed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'acp_client::async_tasks::tests::async_task_early_conflicting_owner_cannot_release_unknown_work' (23071787) panicked at src/acp_client/async_tasks_tests.rs:144:5:
+assertion `left == right` failed
+  left: Bool(false)
+ right: true
+test acp_client::async_tasks::tests::async_task_early_conflicting_owner_cannot_release_unknown_work ... FAILED
+test acp_client::async_tasks::tests::async_task_early_unknown_accepts_same_owner_first_terminal ... FAILED
+
+failures:
+
+failures:
+    acp_client::async_tasks::tests::async_task_early_conflicting_owner_cannot_release_unknown_work
+    acp_client::async_tasks::tests::async_task_early_unknown_accepts_same_owner_first_terminal
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 1275 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

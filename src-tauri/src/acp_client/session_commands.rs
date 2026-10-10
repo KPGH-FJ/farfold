@@ -256,6 +256,22 @@ pub async fn session_set_mode(
         .await
 }
 
+/// A capability-reported task only; no command/PID fallback.
+#[tauri::command]
+pub async fn session_stop_task(
+    app: AppHandle,
+    agent_id: String,
+    cwd: String,
+    session_id: String,
+    connection_id: String,
+    task_id: String,
+) -> Result<Value, String> {
+    let cwd = validate_cwd_async(&cwd).await?;
+    app.state::<AcpManager>()
+        .session_stop_task(&agent_id, &cwd, &session_id, &connection_id, &task_id)
+        .await
+}
+
 /// `session/cancel` for a running turn.
 #[tauri::command]
 pub async fn session_cancel(

@@ -1,0 +1,135 @@
+warning: unused import: `types::*`
+ --> src/worktrees/mod.rs:4:9
+  |
+4 | pub use types::*;
+  |         ^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `Location` is never constructed
+ --> src/worktrees/types.rs:5:12
+  |
+5 | pub struct Location {
+  |            ^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `Inspection` is never constructed
+  --> src/worktrees/types.rs:17:12
+   |
+17 | pub struct Inspection {
+   |            ^^^^^^^^^^
+
+warning: struct `Head` is never constructed
+  --> src/worktrees/types.rs:26:12
+   |
+26 | pub struct Head {
+   |            ^^^^
+
+warning: struct `Ref` is never constructed
+  --> src/worktrees/types.rs:41:12
+   |
+41 | pub struct Ref {
+   |            ^^^
+
+warning: struct `Refs` is never constructed
+  --> src/worktrees/types.rs:48:12
+   |
+48 | pub struct Refs {
+   |            ^^^^
+
+warning: enum `Branch` is never used
+  --> src/worktrees/types.rs:54:10
+   |
+54 | pub enum Branch {
+   |          ^^^^^^
+
+warning: methods `oid` and `name` are never used
+  --> src/worktrees/types.rs:67:12
+   |
+66 | impl Branch {
+   | ----------- methods in this implementation
+67 |     pub fn oid(&self) -> &str {
+   |            ^^^
+...
+73 |     pub fn name(&self) -> &str {
+   |            ^^^^
+
+warning: struct `Create` is never constructed
+  --> src/worktrees/types.rs:82:12
+   |
+82 | pub struct Create {
+   |            ^^^^^^
+
+warning: struct `Operation` is never constructed
+  --> src/worktrees/types.rs:90:12
+   |
+90 | pub struct Operation {
+   |            ^^^^^^^^^
+
+warning: enum `Reply` is never used
+   --> src/worktrees/types.rs:103:10
+    |
+103 | pub enum Reply {
+    |          ^^^^^
+
+warning: associated function `unknown` is never used
+   --> src/worktrees/types.rs:112:12
+    |
+111 | impl Reply {
+    | ---------- associated function in this implementation
+112 |     pub fn unknown(id: &str) -> Self {
+    |            ^^^^^^^
+
+warning: struct `Listing` is never constructed
+   --> src/worktrees/types.rs:120:12
+    |
+120 | pub struct Listing {
+    |            ^^^^^^^
+
+warning: struct `Forgotten` is never constructed
+   --> src/worktrees/types.rs:125:12
+    |
+125 | pub struct Forgotten {
+    |            ^^^^^^^^^
+
+warning: function `id` is never used
+   --> src/worktrees/types.rs:141:15
+    |
+141 | pub(super) fn id(s: &str) -> bool {
+    |               ^^
+
+warning: method `repository_root` is never used
+  --> src/worktrees/inspect.rs:83:12
+   |
+77 | impl Snapshot {
+   | ------------- method in this implementation
+...
+83 |     pub fn repository_root(&self) -> &str {
+   |            ^^^^^^^^^^^^^^^
+
+warning: function `refs` is never used
+   --> src/worktrees/inspect.rs:209:15
+    |
+209 | pub(super) fn refs(s: &Snapshot) -> Result<Vec<Ref>> {
+    |               ^^^^
+
+warning: `farfold` (lib test) generated 17 warnings (run `cargo fix --lib -p farfold --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.52s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::async_task_wire_tests::async_task_capability_is_negotiated_on_actual_initialize' (23016649) panicked at src/acp_client/async_task_wire_tests.rs:117:5:
+official optional task control is not negotiated
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::async_task_wire_tests::async_task_capability_is_negotiated_on_actual_initialize ... FAILED
+
+failures:
+
+failures:
+    acp_client::async_task_wire_tests::async_task_capability_is_negotiated_on_actual_initialize
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1249 filtered out; finished in 0.35s
+
+error: test failed, to rerun pass `--lib`

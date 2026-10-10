@@ -561,7 +561,7 @@ export function ConversationLibrary({
           <label className="library-search">
             <MagnifyingGlassIcon size={16} />
             <input
-              aria-label={LIBRARY.query}
+              aria-label={searchScope === "body" ? SEARCH.query : LIBRARY.query}
               placeholder={
                 searchScope === "body" ? SEARCH.query : LIBRARY.query
               }

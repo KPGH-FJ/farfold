@@ -1,0 +1,217 @@
+{
+  "engine": "webkit",
+  "label": "first",
+  "scope": "Actual EmptyState and worktree React components, production CSS and store; controlled in-memory IPC only. No Git, Agent, real files or installed app.",
+  "before": {
+    "src/components/EmptyState.tsx": "e12d06173ee467b932fda0833cbb79fb11e36dd0e23afa5603f5b1d96576c416",
+    "src/components/useDraftWorkLocation.ts": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b",
+    "src/components/WorkLocationPicker.tsx": "7c252e26ba651d8ebc04efb8612c8ff22f31dc22062fdbf0964847f952598ebe",
+    "src/components/WorktreeDialog.tsx": "c42829e8c1b43e849617bff70f10520587a37add79f6f56cb79e85a3b0b332e5",
+    "src/components/WorktreeDialog.css": "8371e0c6b9a0589b26a7791a88ccae43d5f777154e2ca7b73d0745233778ddb6",
+    "src/components/WorktreeCreateForm.tsx": "a84b900c776bbeae50cfb2c629c4c526be1978bfde18dac02198fc27c814d7f5",
+    "src/runtime/worktree_types.ts": "229628163918c6ec746931b6dcc7fd71cea343fd611bef87f04883e504d7b3fb",
+    "src/runtime/worktrees.ts": "b157a74da1c441be7680275896b1eafbd8d123eff2911489ba90fd8363750a7c",
+    "src/runtime/worktree_strings.ts": "3a73eb92916958f1b67deae25a69a1f597595a62e9261df86d960fb663bc0a6a",
+    "src/runtime/draft_location_owner.ts": "5656bbadba38f035ce7c13ab4f85f0c60261eba7acade50b7519fc73299b9602"
+  },
+  "checks": [
+    {
+      "name": "opening manager does not create or inspect",
+      "pass": true
+    }
+  ],
+  "errors": [],
+  "blocked": [],
+  "failure": "TimeoutError: locator.click: Timeout 6000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: '选择目标父文件夹', exact: true })\u001b[22m\n",
+  "calls": [
+    {
+      "cmd": "host_performance_origin",
+      "args": {}
+    },
+    {
+      "cmd": "settings_get",
+      "args": {
+        "key": "unsentWork.v1"
+      }
+    },
+    {
+      "cmd": "settings_set",
+      "args": {
+        "key": "unsentWork.v1",
+        "value": {
+          "version": 1,
+          "composers": {
+            "new": {
+              "text": "KEEP_UNSENT_DRAFT",
+              "attachments": []
+            }
+          },
+          "choice": {
+            "agentId": null,
+            "cwd": null,
+            "reviewRequired": false,
+            "service": null,
+            "config": {}
+          },
+          "feedback": {},
+          "queues": {},
+          "activity": {}
+        }
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-enter",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 1
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-enter",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 2
+      }
+    },
+    {
+      "cmd": "settings_get",
+      "args": {
+        "key": "promptTemplates.v1"
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-over",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 3
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-over",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 4
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-drop",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 5
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-drop",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 6
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-leave",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 7
+      }
+    },
+    {
+      "cmd": "plugin:event|listen",
+      "args": {
+        "event": "tauri://drag-leave",
+        "target": {
+          "kind": "Webview",
+          "label": "main"
+        },
+        "handler": 8
+      }
+    },
+    {
+      "cmd": "plugin:event|unlisten",
+      "args": {
+        "event": "tauri://drag-enter",
+        "eventId": 1
+      }
+    },
+    {
+      "cmd": "plugin:event|unlisten",
+      "args": {
+        "event": "tauri://drag-drop",
+        "eventId": 1
+      }
+    },
+    {
+      "cmd": "plugin:event|unlisten",
+      "args": {
+        "event": "tauri://drag-over",
+        "eventId": 1
+      }
+    },
+    {
+      "cmd": "plugin:event|unlisten",
+      "args": {
+        "event": "tauri://drag-leave",
+        "eventId": 1
+      }
+    },
+    {
+      "cmd": "worktree_list",
+      "args": {}
+    },
+    {
+      "cmd": "plugin:dialog|open",
+      "args": {
+        "options": {
+          "directory": true,
+          "multiple": false
+        }
+      }
+    },
+    {
+      "cmd": "worktree_inspect",
+      "args": {
+        "path": "/controlled/repo"
+      }
+    }
+  ],
+  "after": {
+    "src/components/EmptyState.tsx": "e12d06173ee467b932fda0833cbb79fb11e36dd0e23afa5603f5b1d96576c416",
+    "src/components/useDraftWorkLocation.ts": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b",
+    "src/components/WorkLocationPicker.tsx": "7c252e26ba651d8ebc04efb8612c8ff22f31dc22062fdbf0964847f952598ebe",
+    "src/components/WorktreeDialog.tsx": "c42829e8c1b43e849617bff70f10520587a37add79f6f56cb79e85a3b0b332e5",
+    "src/components/WorktreeDialog.css": "8371e0c6b9a0589b26a7791a88ccae43d5f777154e2ca7b73d0745233778ddb6",
+    "src/components/WorktreeCreateForm.tsx": "a84b900c776bbeae50cfb2c629c4c526be1978bfde18dac02198fc27c814d7f5",
+    "src/runtime/worktree_types.ts": "229628163918c6ec746931b6dcc7fd71cea343fd611bef87f04883e504d7b3fb",
+    "src/runtime/worktrees.ts": "b157a74da1c441be7680275896b1eafbd8d123eff2911489ba90fd8363750a7c",
+    "src/runtime/worktree_strings.ts": "3a73eb92916958f1b67deae25a69a1f597595a62e9261df86d960fb663bc0a6a",
+    "src/runtime/draft_location_owner.ts": "5656bbadba38f035ce7c13ab4f85f0c60261eba7acade50b7519fc73299b9602"
+  },
+  "sourceUnchanged": true
+}

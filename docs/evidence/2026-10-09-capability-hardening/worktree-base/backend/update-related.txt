@@ -1,0 +1,12 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.17s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 5 tests
+test managed_update::tests::checks_publish_terminal_state_and_discard_previous_candidates ... ok
+test managed_update::tests::cancelled_checks_and_concurrent_installs_cannot_leave_false_status ... ok
+test managed_update::tests::updates_require_quiescence_and_keep_new_work_out_until_restart ... ok
+test managed_update::tests::installed_update_can_retry_restart_without_claiming_installation ... ok
+test managed_update::tests::an_install_failure_releases_admission_and_ordinary_activity_can_resume ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1287 filtered out; finished in 0.00s
+

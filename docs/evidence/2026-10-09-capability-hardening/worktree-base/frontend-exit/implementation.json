@@ -1,0 +1,21 @@
+{
+  "scope": "Dedicated frontend exit review for backend WORKTREE_EXIT_BLOCKED; no backend completion or installed proof",
+  "red": {
+    "failed": 1,
+    "passed": 14
+  },
+  "green": {
+    "files": 2,
+    "passed": 26
+  },
+  "productionBehavior": "Keep quit review locked, show work-location-specific explanation, disable save-and-exit and allow staying. Backend remains final atomic admission authority.",
+  "sourceSha256": {
+    "src/components/DraftStartup.tsx": "31f9b73d66d20732fb9e33c6486883117f9117f63d098bcb44d5afb0c3b8320e",
+    "src/components/DraftStartup.test.tsx": "24eff87f3f8c79a2c1ac44a21e12cf41e1e6719c1c26dcacb2b20846e00b49a9",
+    "src/runtime/exit_impact.ts": "cb18a502bd7ee671218f76420aadd3b1d47cc9002e45a0b43361c374e300a6ce"
+  },
+  "evidenceSha256": {
+    "red.txt": "a4db35a84889b13b84c60b687fd32df69db4162bac7bd089472d35f422c287fa",
+    "green.txt": "f2cc720b480fee3659a0170c96ff2d2fb718cced406b156957ce49f5acfec563"
+  }
+}

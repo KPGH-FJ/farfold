@@ -1,0 +1,559 @@
+{
+  "timestamp": "2026-10-10T05:43:49.286794+00:00",
+  "phase": "backend-implemented-scoped-checks-passed-not-installed",
+  "author": "architecture",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/source-checkpoint.json",
+    "sha256": "054b41d595608a991466d4bd25bb5eabe4dc1abab871dac0dc3ce1499a5d8c4c",
+    "bytes": 4323
+  },
+  "ownedSourceCount": 22,
+  "scope": [
+    "Official Git inspection, paginated branch selection, explicit new/existing branch creation, explicit existing-tree adoption, persisted location list, fresh check before use, revision-checked metadata-only forgetting.",
+    "Known operation ID prepare/start/status/cancel/recheck/acknowledge; no automatic rerun of Git after missing IPC receipt, crash or metadata uncertainty.",
+    "One current intent plus necessary location/material metadata in Farfold settings; no Agent config/history/loop changes and no persistent process or event ledger.",
+    "Actual quit/save, pre-renderer native exit, clear/restart and managed-update worktree admission wiring."
+  ],
+  "implementation": {
+    "inspection": "Canonical selected root, canonical main repositoryRoot, common Git directory and directory identity; exact selected OID; supported Git metadata is read without an index/status rewrite. Bare/unborn/detached/locked/partial-clone/enabled-sparse constraints are explicit.",
+    "checkout": "Capture effective selected-tree attributes through an isolated temporary official Git context and index. Share source objects read-only, never source helper configuration. Copy only normalized checkout scalars and exact effective attributes. Register with official worktree add --no-checkout, then materialize the prechecked immutable OID and publish only the new linked-tree index. Recheck source, parent, target, registration, branch and OID. Never overwrite the original index or worktree.",
+    "helpers": "Every owned Git call disables hooks, fsmonitor, automatic maintenance/GC, credential helpers and lazy promisor fetch. GIT_NO_LAZY_FETCH=1 is the official fixed command environment, not an application flag or Agent environment. Existing branch ref drift is rejected before materialization; no source-config filter runs during registration.",
+    "attributes": "Global/system/info/selected-tree precedence is captured; linked-tree info location comes from official --git-path. Effective filters are rejected while unrelated registered git-lfs/filter drivers do not reject ordinary repositories. Git --type=bool normalizes legal bool aliases; autocrlf=input and safecrlf=warn remain explicit enums.",
+    "process": "Each command owns a dedicated process group and tempfile output. Direct child is reaped; same-group surviving descendants prevent success and retain admission until group disappearance. Cancel/timeout/oversized stdout or stderr never reports ready. Dropping an IPC receiver does not restart Git.",
+    "persistence": "Immediate SQLite raw-value CAS plus post-commit exact readback. Persist intent before side effects; final storage failure preserves actual files and prior persisted target, reports unknown, and only explicitly retries metadata. Same-ID changed input conflicts; cold IDs from current intent, saved locations and unresolved materials cannot execute again.",
+    "unknown": "Cold settled=true means this instance has no worker, not that a prior process stopped. Explicit acknowledgment preserves target/material identity and leaves state unknown; it does not create a verified Location. In-flight work cannot be acknowledged or bypassed by exit confirmation. Settled storage uncertainty permits explicit risk-confirmed exit without pretending persistence succeeded.",
+    "commands": "Main-window caller gate; fixed {code} failures, validated tagged DTOs, no raw Git stderr surfaced. The lib.rs registration also includes the parent-requested official async-task command, whose implementation/test ownership is separate."
+  },
+  "checks": [
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib worktrees:: -- --nocapture",
+      "exitCode": 0,
+      "result": {
+        "passed": 28,
+        "failed": 0
+      },
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/targeted-final.txt",
+        "sha256": "e3085b65efcfacb1f9b4bf60ca2d8b72729fa497ec58d01074547b26d37c615b",
+        "bytes": 8927
+      }
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib worktree_tests -- --nocapture",
+      "exitCode": 0,
+      "result": {
+        "passed": 3,
+        "failed": 0
+      },
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/exit-gates-final.txt",
+        "sha256": "12cc12466a3251c4ff1ba4b53842f23afeffd95a10ad0f8d025d87957151f588",
+        "bytes": 746
+      },
+      "boundary": "Exercises the same helper used by real quit/save and clear commands, no actual application exit or data clear."
+    },
+    {
+      "command": "rustfmt --edition 2024 --config skip_children=true --check <22 owned paths; exact argv in log>",
+      "exitCode": 0,
+      "result": "passed",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/owned-format-final.txt",
+        "sha256": "ddf7802e8997119b57c924b5a1d61cb7d261da288cacf03378c1898db44cb78d",
+        "bytes": 936
+      }
+    },
+    {
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "exitCode": 0,
+      "result": "passed",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/clippy-boundaries-final.txt",
+        "sha256": "87334a617e34716f0695bd96d2d94bed663f7053af7774bf62d3dbdf251224d0",
+        "bytes": 246
+      }
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib draft_exit:: -- --nocapture",
+      "exitCode": 0,
+      "result": {
+        "passed": 14,
+        "failed": 0
+      },
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/draft-exit-related.txt",
+        "sha256": "f5c11539cda37532ec4fdb1571adce084f36c90bf1bbca61c82a6fab0e144fd0",
+        "bytes": 1647
+      },
+      "boundary": "Earlier same exit sources; later changes only checkout/config boundary inputs, followed by final exit-gate rerun."
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib data_reset:: -- --nocapture",
+      "exitCode": 0,
+      "result": {
+        "passed": 7,
+        "failed": 0
+      },
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/data-reset-related.txt",
+        "sha256": "4ea6a5b99bc695ac264b5118a9426b13548ca9f59fef6fe8ecab51142b422b1d",
+        "bytes": 945
+      },
+      "boundary": "Earlier unchanged data-reset sources."
+    },
+    {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib managed_update:: -- --nocapture",
+      "exitCode": 0,
+      "result": {
+        "passed": 5,
+        "failed": 0
+      },
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/update-related.txt",
+        "sha256": "b485f0d77aed11ca49146b3bdba3e60244b3b325ddca57db87103a29816a95e4",
+        "bytes": 785
+      },
+      "boundary": "Earlier unchanged update sources; no network/update installation performed."
+    }
+  ],
+  "counterexamples": [
+    {
+      "case": "Selected old OID filter must not be replaced by current-index attributes",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/target-attributes-actual-red.txt",
+        "sha256": "c74656afa493550070c1f57f7005fffe38ae6917269d527ec122d8c792de81ce",
+        "bytes": 8219
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/targeted-final.txt",
+        "sha256": "e3085b65efcfacb1f9b4bf60ca2d8b72729fa497ec58d01074547b26d37c615b",
+        "bytes": 8927
+      }
+    },
+    {
+      "case": "Post-precheck info attribute/ref mutation must not run unchecked filter",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/checkout-races-valid-red.txt",
+        "sha256": "5382f6269b9f4f8eb2e591f699e6950e879efc64a35df591f280a4f3eac097c7",
+        "bytes": 1809
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/targeted-final.txt",
+        "sha256": "e3085b65efcfacb1f9b4bf60ca2d8b72729fa497ec58d01074547b26d37c615b",
+        "bytes": 8927
+      },
+      "qualification": "checkout-races-red.txt first branch failure was unsupported argument setup, not a branch helper-execution proof; its info-attribute case was valid."
+    },
+    {
+      "case": "Cold reused location ID and private object reads after source promisor mutation",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/boundary-red.txt",
+        "sha256": "20f196e0ba046ab3c785d1f9d603ec2316c678393cf6592348f6454a2d0c6982",
+        "bytes": 3712
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/targeted-final.txt",
+        "sha256": "e3085b65efcfacb1f9b4bf60ca2d8b72729fa497ec58d01074547b26d37c615b",
+        "bytes": 8927
+      },
+      "qualification": "Cold material-ID branch also passes but the original failing test stopped at the location-ID assertion; it is not a separate demonstrated red."
+    },
+    {
+      "case": "Actual quit/save confirmation must not bypass prepared worktree work",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/exit-integration-red.txt",
+        "sha256": "b7ed6f02e364446f9115498d456d3089d658e94ad7cd67ce1127f48d78c85ace",
+        "bytes": 1546
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/exit-gates-final.txt",
+        "sha256": "12cc12466a3251c4ff1ba4b53842f23afeffd95a10ad0f8d025d87957151f588",
+        "bytes": 746
+      },
+      "qualification": "Two valid exit failures. Original clear test happened to pass due shared activity and is not counted as its red."
+    },
+    {
+      "case": "Actual clear admission must reject a prepared worktree before deletion",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/clear-integration-red.txt",
+        "sha256": "80b412d2c494d1b52ea5788e579610065ed757ac158556b52ced7db975aa33e6",
+        "bytes": 1024
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/exit-gates-final.txt",
+        "sha256": "12cc12466a3251c4ff1ba4b53842f23afeffd95a10ad0f8d025d87957151f588",
+        "bytes": 746
+      }
+    },
+    {
+      "case": "Cancel before prepare must return exact terminal ownership and prevent later start",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/cancel-before-prepare-red.txt",
+        "sha256": "346c8c6133171882205fe0b4362c622ed4c5f80d93f5b76dbde3178e7404e821",
+        "bytes": 1006
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/targeted-final.txt",
+        "sha256": "e3085b65efcfacb1f9b4bf60ca2d8b72729fa497ec58d01074547b26d37c615b",
+        "bytes": 8927
+      }
+    },
+    {
+      "case": "Official bool aliases and explicitly disabled sparse checkout remain usable",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/config-aliases-red.txt",
+        "sha256": "758ef93d9e8e83358099d13469aad020a45a0026ac2bb13cdf4a6989dde85139",
+        "bytes": 1522
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/config-add-linked-green.txt",
+        "sha256": "1fd4327958d9fd21b2dfc6f0214882087e104ff3310a803c82b4bcc8954b69fd",
+        "bytes": 8800
+      }
+    },
+    {
+      "case": "After private preflight, source registration must not lazy-fetch and linked common info attributes must be honored",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/add-and-linked-red.txt",
+        "sha256": "42f8f1b07ee6f37a5398c9c6b57c11708c7015ad877ef265d770fa9d49562f49",
+        "bytes": 1973
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/config-add-linked-green.txt",
+        "sha256": "1fd4327958d9fd21b2dfc6f0214882087e104ff3310a803c82b4bcc8954b69fd",
+        "bytes": 8800
+      },
+      "probe": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/no-lazy-fetch-probe.json",
+        "sha256": "c7a0694156d2dd1bd1e0e15c0ce3a56aebb97c739fab5f342984c8e220785af1",
+        "bytes": 1059
+      }
+    },
+    {
+      "case": "Literal filter=unset must not silently omit a configured checkout transform",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/filter-sentinel-red.txt",
+        "sha256": "22f3a94dc611ed4086d5889a5536e87d8d775a4fa60450a7e559ca1a89eddeab",
+        "bytes": 1010
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/targeted-final.txt",
+        "sha256": "e3085b65efcfacb1f9b4bf60ca2d8b72729fa497ec58d01074547b26d37c615b",
+        "bytes": 8927
+      },
+      "qualification": "Official checkout-index first proves fixture→transformed. The actual red reaches unset only; unspecified was already rejected by the mirror mismatch, and is now consistently rejected with filters code."
+    }
+  ],
+  "additionalGreenEvidence": [
+    "Normal creation from exact new/existing branches preserves dirty and ignored source content and source index bytes; no configured post-checkout hook runs.",
+    "CRLF, executable mode, symlink, Unicode/space/glob file paths and attribute precedence checked on actual filesystem output.",
+    "Same ID/different input and create↔adopt conflict; cold acknowledgment retains unresolved materials across next intent; linked repository identity distinguishes selected root/main root.",
+    "Real completed Git creation followed by controlled SQLite final-ready write rejection retains files and persisted dispatched intent; explicit metadata-only recovery succeeds after removing the owned failure trigger.",
+    "Process-group output holder and fast stderr overflow are regression checks added after the fix, not claimed independently observed red.",
+    "Fresh cancel and preparing-owner cancellation, exact unknown reply, metadata-only forget CAS and check_location identity protection."
+  ],
+  "crossLanguage": {
+    "fixture": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/actual-wire.json",
+      "sha256": "f525a8196713a6ec8b027fdeb197b07b0e3c14fd91e9bfdb33b9725b3355ecbe",
+      "bytes": 6743
+    },
+    "originalProducerLog": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/wire-and-recovery-green.txt",
+      "sha256": "fb8f86bfdc016260a41d84c0e6be474270ca94456111949549ce886c8f6a53ff",
+      "bytes": 8634
+    },
+    "objects": 11,
+    "qualification": "Initial actual serialized temp-Git DTO captured before the last checkout safety changes; final targeted run independently emits the same DTO shapes with fresh IDs/paths. Frontend strict parser evidence is peer-owned. No Tauri IPC/native UI end-to-end claim."
+  },
+  "environmentAndSetupFailures": [
+    {
+      "artifact": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/target-attributes-red.txt",
+        "sha256": "b713017550682d64f7a7f42b50a125315ea03321d7bc47ab53a8582ad6a9d5ac",
+        "bytes": 7820
+      },
+      "classification": "OS error 28 during compilation; no test ran; never a valid red. Exact owned regenerable cleanup recorded separately."
+    },
+    {
+      "artifact": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/first-manager-checkout.txt",
+        "sha256": "400e8812d41e3ec2d5f112b2871ead577a17f3a73ca913f148426d4df7e0c982",
+        "bytes": 3207
+      },
+      "classification": "Two ordinary creation failures traced to private bare init not creating info directory; real probe confirms absent directory, then implementation creates it."
+    },
+    {
+      "artifact": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/private-info-directory-probe.json",
+        "sha256": "90e40dcacc2673027e677a244ce6339504f7ce6210925b683c238dd4e5491e40",
+        "bytes": 585
+      },
+      "classification": "Actual local Git init probe; separate from product test."
+    },
+    {
+      "artifact": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/clippy-first.txt",
+        "sha256": "bf5bdc3963adf6282240f9ccff5e821da953bb029ad9937fe7998947ddc0f45d",
+        "bytes": 4111
+      },
+      "classification": "Five author lint diagnostics retained; corrected before final standard clippy0."
+    }
+  ],
+  "limits": {
+    "platform": "macOS arm64, /usr/bin/git 2.39.5 (Apple Git-154) observed; no version pin/check added",
+    "gitCommandOutputBytes": 4194304,
+    "metadataCommandSeconds": 10,
+    "mutationCommandSeconds": 120,
+    "locations": 256,
+    "materials": 256,
+    "inspectionTickets": 32,
+    "ticketSeconds": 600,
+    "refsPerPage": 100,
+    "refsMaximum": 4096,
+    "selectedTreeEntries": 100000,
+    "selectedTreeAggregateBytes": 1073741824,
+    "selectedBlobBytes": 268435456,
+    "attributeCaptureBytes": 4194304,
+    "newIndexBytes": 33554432
+  },
+  "boundaries": [
+    "No formal app rebuild/install/launch, real Agent, credentials, actual user repository or real user database touched by this owner; all Git and SQLite tests use disposable owned fixtures.",
+    "No Windows validation. Unsupported platform/Git surfaces retain ordinary-folder fallback. The local Git supports GIT_NO_LAZY_FETCH environment but not the newer --no-lazy-fetch CLI; only the environment is used and its local behavior is actually proven.",
+    "Cold current-instance absence is not proof an old process stopped; there is no durable process ledger and acknowledgement does not say otherwise.",
+    "Same-process-group disappearance is checked; escaped process groups are not claimed tracked. Executable repository helpers are excluded from supported checkout, and tests do not certify every OS/network configuration.",
+    "Because official check-attr makes -filter and filter=unset ambiguous, a configured driver literally named unset conservatively blocks both rather than silently omitting a transform.",
+    "Safe physical worktree removal/archive and broader H15 maintenance remain pending. This slice forgets metadata only; no directory, ignored file, branch or commit deletion.",
+    "Large supported limits are bounds, not a throughput benchmark. Full-repository engineering and installed product acceptance belong to root subsequent checkpoints."
+  ],
+  "officialSources": [
+    {
+      "url": "https://git-scm.com/docs/git",
+      "used": "GIT_NO_LAZY_FETCH official no-demand-fetch semantics; checked 2026-10-10 with actual local canary."
+    },
+    {
+      "url": "https://git-scm.com/docs/git-config",
+      "used": "--type=bool official canonicalization of true/false/yes/no/on/off/numeric aliases."
+    },
+    {
+      "url": "https://git-scm.com/docs/git-check-attr/2.25.0",
+      "used": "Peer-reviewed official ambiguity warning for attribute sentinel values, independently confirmed by local transform test."
+    }
+  ],
+  "evidenceReferences": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/actual-wire.json",
+      "sha256": "f525a8196713a6ec8b027fdeb197b07b0e3c14fd91e9bfdb33b9725b3355ecbe",
+      "bytes": 6743
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/add-and-linked-red.txt",
+      "sha256": "42f8f1b07ee6f37a5398c9c6b57c11708c7015ad877ef265d770fa9d49562f49",
+      "bytes": 1973
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/boundary-green-first.txt",
+      "sha256": "0aa981ddb7fe49281e8e259127263b3bfa153702124b198ec17025133c96d8af",
+      "bytes": 2536
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/boundary-red.txt",
+      "sha256": "20f196e0ba046ab3c785d1f9d603ec2316c678393cf6592348f6454a2d0c6982",
+      "bytes": 3712
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/cancel-before-prepare-red.txt",
+      "sha256": "346c8c6133171882205fe0b4362c622ed4c5f80d93f5b76dbde3178e7404e821",
+      "bytes": 1006
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/checkout-races-red.txt",
+      "sha256": "e4b8bf5668985ca345350d43229fd773996073eebbff417e5ef59d07049751a2",
+      "bytes": 1820
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/checkout-races-valid-red.txt",
+      "sha256": "5382f6269b9f4f8eb2e591f699e6950e879efc64a35df591f280a4f3eac097c7",
+      "bytes": 1809
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/clear-integration-red.txt",
+      "sha256": "80b412d2c494d1b52ea5788e579610065ed757ac158556b52ced7db975aa33e6",
+      "bytes": 1024
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/clippy-after-boundary.txt",
+      "sha256": "c9816fe08310756a0aedbb2a1930f27f0ee6654e91f99db775bfabe150a339d1",
+      "bytes": 138
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/clippy-boundaries-final.txt",
+      "sha256": "87334a617e34716f0695bd96d2d94bed663f7053af7774bf62d3dbdf251224d0",
+      "bytes": 246
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/clippy-final.txt",
+      "sha256": "ba204916e2179063c1413566d1aaf859185d25de4a7f5ebdbaa687317562c930",
+      "bytes": 138
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/clippy-first.txt",
+      "sha256": "bf5bdc3963adf6282240f9ccff5e821da953bb029ad9937fe7998947ddc0f45d",
+      "bytes": 4111
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/config-add-linked-green.txt",
+      "sha256": "1fd4327958d9fd21b2dfc6f0214882087e104ff3310a803c82b4bcc8954b69fd",
+      "bytes": 8800
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/config-aliases-red.txt",
+      "sha256": "758ef93d9e8e83358099d13469aad020a45a0026ac2bb13cdf4a6989dde85139",
+      "bytes": 1522
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/data-reset-related.txt",
+      "sha256": "4ea6a5b99bc695ac264b5118a9426b13548ca9f59fef6fe8ecab51142b422b1d",
+      "bytes": 945
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/deps-object-cleanup.json",
+      "sha256": "34b4a285fdacfd81a27f65b4f6205333d0d153c4f7d5feafefe4092009c12ad3",
+      "bytes": 5674369
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/draft-exit-related.txt",
+      "sha256": "f5c11539cda37532ec4fdb1571adce084f36c90bf1bbca61c82a6fab0e144fd0",
+      "bytes": 1647
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/exit-boundaries-green-first.txt",
+      "sha256": "97879f410cc1041b190c35ecb600f3a3d7708851a264174a4b78cbb0446812fe",
+      "bytes": 2998
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/exit-gates-final.txt",
+      "sha256": "12cc12466a3251c4ff1ba4b53842f23afeffd95a10ad0f8d025d87957151f588",
+      "bytes": 746
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/exit-integration-red.txt",
+      "sha256": "b7ed6f02e364446f9115498d456d3089d658e94ad7cd67ce1127f48d78c85ace",
+      "bytes": 1546
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/filter-sentinel-red.txt",
+      "sha256": "22f3a94dc611ed4086d5889a5536e87d8d775a4fa60450a7e559ca1a89eddeab",
+      "bytes": 1010
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/first-manager-checkout.txt",
+      "sha256": "400e8812d41e3ec2d5f112b2871ead577a17f3a73ca913f148426d4df7e0c982",
+      "bytes": 3207
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/git-attributes-probe.json",
+      "sha256": "2aeb000ad8e9acdfc305ee47171b914d70066890a7cac7e1d164d05ac24d4820",
+      "bytes": 2270
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/git-attributes-probe.raw.txt",
+      "sha256": "2fb48a8c91f2afec3ce63441bc38e948513e333c85357b3aef32d58dcac4c644",
+      "bytes": 2542
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/incremental-cleanup-before.json",
+      "sha256": "8a5874e84f28f1f6ce91cea0f78b314d6dc56102b76cf373b1f6c2cda3f72f38",
+      "bytes": 4681
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/incremental-cleanup.json",
+      "sha256": "687d32d60c6bc3c1d990c20efb9478716f6679c970c5b2c2a9a814e207601259",
+      "bytes": 4672
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/no-lazy-fetch-probe.json",
+      "sha256": "c7a0694156d2dd1bd1e0e15c0ce3a56aebb97c739fab5f342984c8e220785af1",
+      "bytes": 1059
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/owned-format-final.txt",
+      "sha256": "ddf7802e8997119b57c924b5a1d61cb7d261da288cacf03378c1898db44cb78d",
+      "bytes": 936
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/private-info-directory-probe.json",
+      "sha256": "90e40dcacc2673027e677a244ce6339504f7ce6210925b683c238dd4e5491e40",
+      "bytes": 585
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/private-info-directory-probe.raw.txt",
+      "sha256": "739b80aab7e29a35c2f837484a9ec9dda7caa428e809ea22aa3650438e1d15ed",
+      "bytes": 605
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/source-checkpoint.json",
+      "sha256": "054b41d595608a991466d4bd25bb5eabe4dc1abab871dac0dc3ce1499a5d8c4c",
+      "bytes": 4323
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/target-attributes-actual-red.txt",
+      "sha256": "c74656afa493550070c1f57f7005fffe38ae6917269d527ec122d8c792de81ce",
+      "bytes": 8219
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/target-attributes-first-green.txt",
+      "sha256": "aedec3a912fa8c83f493a9a99c923d7a1639f44ff9269fa7b13b051964fd93da",
+      "bytes": 976
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/target-attributes-red.txt",
+      "sha256": "b713017550682d64f7a7f42b50a125315ea03321d7bc47ab53a8582ad6a9d5ac",
+      "bytes": 7820
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/targeted-final.txt",
+      "sha256": "e3085b65efcfacb1f9b4bf60ca2d8b72729fa497ec58d01074547b26d37c615b",
+      "bytes": 8927
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/update-related.txt",
+      "sha256": "b485f0d77aed11ca49146b3bdba3e60244b3b325ddca57db87103a29816a95e4",
+      "bytes": 785
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/wire-and-recovery-green.txt",
+      "sha256": "fb8f86bfdc016260a41d84c0e6be474270ca94456111949549ce886c8f6a53ff",
+      "bytes": 8634
+    }
+  ],
+  "next": "Root integrates exact frozen inputs and peer frontend/async-task evidence, performs full checks and candidate/installed verification. No commit made by this owner.",
+  "formatFollowup": {
+    "classification": "Two authored probe JSONs normalized before receipt freeze; original bytes preserved and JSON semantics verified equal. No source changed.",
+    "pairs": [
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/git-attributes-probe.json",
+          "sha256": "2aeb000ad8e9acdfc305ee47171b914d70066890a7cac7e1d164d05ac24d4820",
+          "bytes": 2270
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/git-attributes-probe.raw.txt",
+          "sha256": "2fb48a8c91f2afec3ce63441bc38e948513e333c85357b3aef32d58dcac4c644",
+          "bytes": 2542
+        }
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/private-info-directory-probe.json",
+          "sha256": "90e40dcacc2673027e677a244ce6339504f7ce6210925b683c238dd4e5491e40",
+          "bytes": 585
+        },
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/private-info-directory-probe.raw.txt",
+          "sha256": "739b80aab7e29a35c2f837484a9ec9dda7caa428e809ea22aa3650438e1d15ed",
+          "bytes": 605
+        }
+      }
+    ]
+  }
+}

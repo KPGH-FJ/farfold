@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUTC": "2026-10-10T04:08:07.610814+00:00",
+  "status": "implementation-ready-design-review-not-product-implementation",
+  "owner": "verification",
+  "previous": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base-design-2026-10-10.json",
+    "sha256": "2e5b9c02b4cbdf322b2ad6b450f57608398b72ff587953784d12f367e2918d30"
+  },
+  "planItems": ["ARCH-47", "H12", "H13", "H14", "H15", "H17"],
+  "contract": {
+    "conflictFound": false,
+    "basis": [
+      "PRODUCT §4 keeps existing conversation cwd, permits draft location choice before send; §8 preserves Agent HOME/config/history and only Farfold metadata.",
+      "Active plan M explicitly requests optional existing/new worktree, ownership, recovery and safe cleanup. Explicit user-initiated fixed Git commands are Farfold file-management operations, not a second Agent loop.",
+      "Do not label directory separation an environment sandbox; Git objects/refs/config, Agent account and dependencies can remain shared."
+    ],
+    "completionBoundary": "Design and temporary Git probes do not close any M item or reduce 122-item/29×8 conditions. Creation/adoption is a first deliverable; safe archival/restoration/deletion remain required separate implementations."
+  },
+  "currentSourceGaps": [
+    {
+      "source": "src/components/EmptyState.tsx:598",
+      "fact": "Directory picker only updates still-current draft pair after await; preserve this ownership check for worktree result. No current worktree manager exists."
+    },
+    {
+      "source": "src-tauri/src/acp_client/manager.rs:909; process.rs:211; session_commands.rs:39",
+      "fact": "cwd currently canonicalized before official session open and process current_dir. New tree must enter this existing chain; no rewriting indexed existing cwd."
+    },
+    {
+      "source": "src-tauri/src/work_policy.rs:29; session_commands.rs:89/180",
+      "fact": "Work policy locks exact cwd; load/resume bypasses that policy intentionally. It is not a subtree maintenance barrier or ongoing-execution lock."
+    },
+    {
+      "source": "src-tauri/src/acp_client/session.rs:77-130; src/runtime/archive_admission.ts:9-65",
+      "fact": "Current per-session restore/archive reservations and flush guards protect one indexed conversation, not every Agent/service/descendant path or external process in a tree."
+    },
+    {
+      "source": "src-tauri/src/managed_update.rs:27-69; draft_exit.rs",
+      "fact": "Existing global activity/update/exit ownership can retain a Git operation across UI disappearance, but does not establish repository-path quiescence or external-process absence."
+    }
+  ],
+  "observedGit": {
+    "version": "git version 2.39.5 (Apple Git-154)",
+    "commands": 66,
+    "cases": [
+      {
+        "id": "create-existing-new-and-nul-path",
+        "result": "observed",
+        "newPathIsLiteralNulField": true,
+        "sourceHeadUnchanged": true
+      },
+      {
+        "id": "branch-in-use",
+        "exitCode": 128,
+        "targetExists": false
+      },
+      {
+        "id": "dirty-no-force-remove",
+        "exitCode": 128,
+        "targetRetained": true,
+        "status": " M tracked.txt\u0000",
+        "branchRetained": true
+      },
+      {
+        "id": "untracked-no-force-remove",
+        "exitCode": 128,
+        "targetRetained": true,
+        "status": "?? new.txt\u0000",
+        "branchRetained": true
+      },
+      {
+        "id": "ignored-no-force-remove",
+        "exitCode": 0,
+        "targetRetained": false,
+        "status": "!! ignored/own-secret.txt\u0000",
+        "branchRetained": true
+      },
+      {
+        "id": "nested-no-force-remove",
+        "exitCode": 128,
+        "targetRetained": true,
+        "status": "?? nested/\u0000",
+        "branchRetained": true
+      },
+      {
+        "id": "locked-no-force-remove",
+        "exitCode": 128,
+        "targetRetained": true,
+        "status": "",
+        "branchRetained": true
+      },
+      {
+        "id": "clean-unpushed-no-force-remove",
+        "exitCode": 0,
+        "targetRetained": false,
+        "status": "",
+        "branchRetained": true
+      },
+      {
+        "id": "live-cwd-child",
+        "exitCode": 0,
+        "childStillRunningAfterRemove": true,
+        "targetRetained": false,
+        "meaning": "Synthetic sleep process only, not an Agent."
+      },
+      {
+        "id": "move-restore",
+        "bytesEqual": true,
+        "sharedCommonDir": true
+      },
+      {
+        "id": "symlink-alias",
+        "reportedRoot": "/private/tmp/farfold-owned-worktree-review-_irylxaq/existing tree",
+        "canonicalSame": true,
+        "lstatDifferent": true
+      },
+      {
+        "id": "hook-failure-can-leave-created-tree",
+        "exitCode": 7,
+        "hookRan": true,
+        "targetRetained": true,
+        "registered": true,
+        "branchRetained": true
+      },
+      {
+        "id": "command-hook-override",
+        "exitCode": 0,
+        "hookRan": false,
+        "hookFilePreserved": true
+      },
+      {
+        "id": "existing-branch-tip-changed-after-selection",
+        "gitExitCode": 0,
+        "selectedOid": "9cce0e1ed4e2571968f39c0f7ed4a01cd57bc1a0",
+        "actualOid": "b4cba29ab118da0950e9376f8e155a21e4856f23",
+        "actualIsNewTip": true,
+        "meaning": "post-command identity/OID check must detect drift; never auto-remove real created tree"
+      },
+      {
+        "id": "nested-target-inside-source",
+        "gitExitCode": 0,
+        "createdInsideSource": true,
+        "meaning": "frontend/backend must reject overlap when unsupported; Git does not enforce independent-location UX"
+      },
+      {
+        "id": "symlink-target-parent",
+        "gitExitCode": 0,
+        "targetCreatedAtRealParent": true,
+        "aliasCanonicalSame": true,
+        "meaning": "identity and nofollow policy cannot rely on Git path spelling"
+      }
+    ],
+    "allDirectCommandsReaped": true,
+    "timeouts": 0,
+    "ownedTemporaryRootsRemoved": true,
+    "nonGitChild": "One self-owned /bin/sleep3 held fixture cwd; directly waited and reaped. No Agent used.",
+    "criticalConclusions": [
+      "Non-force worktree remove removed an ignored synthetic file: require explicit ignored-file inventory; Git clean/no-force is insufficient.",
+      "Non-force remove succeeded while a controlled child still held cwd: Git does not enforce Farfold busy admission.",
+      "Non-force remove deleted a clean tree with an unpublished commit but retained branch: preserved branch is not proof of remote backup.",
+      "post-checkout exit7 left real branch/tree/registration: nonzero/cancel/timeout cannot be classified as no-effect or auto-retried.",
+      "Git permits nested target and symlinked parent; explicit path identity/overlap policy must precede operation.",
+      "Existing branch tip changed after preview and add checked out new tip: compare selected OID immediately before and after, preserve result on mismatch."
+    ]
+  },
+  "minimumBackendInterface": [
+    {
+      "name": "inspectWorktree(path)",
+      "semantics": "Readonly exact selected path; return main/linked/bare, canonical top/gitDir/commonDir identity, HEAD/OID/ref, lock/status/feature blockers. NUL-safe bounded official rev-parse and worktree list. Do not silently elevate imported tree to created ownership."
+    },
+    {
+      "name": "listWorktreeRefs(inspectToken,cursor)",
+      "semantics": "Bounded local refs with exact OID and checked-out paths; no fetch/remote guessing. Reject invalid/new conflicting refs using check-ref-format; new branch uses explicit start OID."
+    },
+    {
+      "name": "prepareCreate / startCreate / operationStatus",
+      "semantics": "Prepare validates nonoverlap, target absent, parent identity, supported checkout semantics and selected branch/OID. Persist single current intent with CAS before spawn. Start once with argv/no shell; exact process handle and bounded stdout/stderr; reap before terminal. Verify resulting Git registration, HEAD/ref/commonDir and OS object identity before ready. Unknown or nonzero preserves material and offers read-only recheck, never compensating rm/branch delete/retry."
+    },
+    {
+      "name": "adoptExisting / forgetListing",
+      "semantics": "Adopt verifies existing linked tree and saves bounded metadata; forget changes only Farfold list. Existing tree receives no deletion ownership. UI applies ready cwd only to original unsent draft; late success stays manageable without switching or sending."
+    },
+    {
+      "name": "prepareArchive / archive / restore / prepareRemove / remove",
+      "semantics": "Do not expose mutation until scoped maintenance lease covers create/load/restore/prompt and all affected native owners, saved/unsaved input, local page/service/file-copy operations. Recheck after flush and before official Git move/remove; keep lease across command/reap/CAS. Archive preserves directory with official same-volume move; restore requires exact old commonDir/registration/branch and vacant original path. Move is not an independent backup. Permanent removal needs separate explicit confirmation, ignored/untracked/nested/submodule/lock/unpushed/unknown checks; no force/prune/branch removal."
+    }
+  ],
+  "executionProfile": [
+    "Use a verified absolute Git executable with fixed argv, not repo-provided executable or shell. Feature-probe supported commands; do not infer behavior from version string alone.",
+    "Per-command disable hooks and fsmonitor, no maintenance/autofetch/recurse; identify configured filters/sparse/partial/promisor/submodule/unsupported checkout before mutation. Unknown capabilities reject with existing-directory route; do not silently omit files or claim these gates implemented.",
+    "Do not change global/local Git config or Agent env/HOME. Probe used empty Git global/system config only in own synthetic child environment; not a proposed Agent environment change.",
+    "Bound process/output/time/resource ownership. A terminated process may have changed disk or left lock/registration; retain current intent and require explicit recheck. No automatic lock deletion or Git repair."
+  ],
+  "requiredAdmissionDesign": {
+    "ownedActivity": "Canonical roots and path descendants/aliases; cover all Agent/service connections including restored sessions, opening/closing/config/approval/unknown tail states. Idle local process must be closed through exact owner when necessary before moving its cwd. Stop/negative replies stay allowed.",
+    "savedInput": "Flush and recheck composers/attachments/feedback/queues without enumerating bodies into logs; no cwd rewrite or automatic send.",
+    "externalActivity": "No local connection is not external-idle proof. The current design has no OS-wide exclusion and cannot promise arbitrary concurrent editor/Agent safety. Do not enable destructive remove until concrete race/identity/unknown behavior is implemented and tested.",
+    "lockOrdering": "Specify commonDir write serialization and path maintenance lease ordering before integration; avoid holding MetaStore mutex across subprocess wait.",
+    "recovery": "Startup only reads intent and actual Git/OS identities. Same spelling, missing source, dual locations, re-added registration or changed refs cannot be guessed as completed; no automatic replay/repair."
+  },
+  "suggestedOwnership": {
+    "backendIndependent": [
+      "src-tauri/src/worktrees/{git,inspect,refs,operations,store,admission}.rs",
+      "src-tauri/src/worktree_commands.rs",
+      "New dedicated temporary-repo tests; existing modules only small registered hooks after coordination."
+    ],
+    "backendSharedIntegration": [
+      "src-tauri/src/lib.rs command registration",
+      "src-tauri/src/meta_store/* bounded settings CAS",
+      "src-tauri/src/acp_client/{session_commands,session,manager} maintenance admission",
+      "Later browser/file/copy owners and draft_exit for archival/removal protection"
+    ],
+    "frontendIndependent": [
+      "src/runtime/worktree_types.ts",
+      "src/runtime/worktrees.ts",
+      "src/runtime/worktree_strings.ts",
+      "src/components/WorkLocationPicker.tsx",
+      "src/components/WorktreeDialog.tsx"
+    ],
+    "frontendSharedIntegration": [
+      "src/components/EmptyState.tsx draft-owner-only application",
+      "Management entry plus draft flush/persistence; existing session cwd unchanged."
+    ],
+    "recommendedFirstSlice": "inspect/local refs/explicit create or adopt/recheck + original draft selection, with hook/filter/network/unknown-result gates; leave actual recycle actions unexposed and H14/H15 pending until cross-owner maintenance admission is complete."
+  },
+  "remainingUnproven": [
+    "No Farfold API/UI/storage implementation or Agent busy test ran. Synthetic sleep only demonstrates Git does not protect a live cwd.",
+    "No filters/promisor/sparse/submodule lifecycle, Windows, huge repo/resource stress, disk-full/crash recovery, external-path race or OS-wide process exclusion tested.",
+    "Temporary command success proves these exact Apple Git2.39.5 fixtures only."
+  ],
+  "officialSources": [
+    {
+      "url": "https://git-scm.com/docs/git-worktree",
+      "usedFor": "Explicit add/list/move/remove and default branch/clean/lock semantics; actual local results determine version-specific behavior."
+    },
+    {
+      "url": "https://git-scm.com/docs/git-config",
+      "usedFor": "Per-command core.hooksPath disabling; no shared configuration edits."
+    },
+    {
+      "url": "https://git-scm.com/docs/git-status",
+      "usedFor": "Explicit ignored inventory and NUL porcelain."
+    }
+  ],
+  "sourceCheckpoint": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "94bbcde17d3dfface78cbbc1863ab01161596f3d30f4c31bc5ef29bc599d2712"
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "d8b6622e6665ad142833db9b14b84ff7ffd032e325030318e39ce79ee2301700"
+    },
+    {
+      "path": "src/runtime/archive_admission.ts",
+      "sha256": "cd3985dfcaed5c825d4454392ea473af730e84ad562e1734489c1904241497ef"
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "4513d99aad462a5da03981839b9e5e791eccb1fcc74b0dafae707448bc560d06"
+    },
+    {
+      "path": "src-tauri/src/acp_client/process.rs",
+      "sha256": "f160e72374889c0a03b4d208f6dec099a2f012bec34172005ba14cd1ba1c60f8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "5ef6d861006927dd824c026e037c9d932870bf33c016fbcfbeeb1be7504d65ce"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "a6ee961acd2ec5d3b7a247d2618e414578043dc42b17643ec4f67da37e17a8ac"
+    },
+    {
+      "path": "src-tauri/src/work_policy.rs",
+      "sha256": "b5b49105adb4308bc14d2cecdc9b1cc16ed535b72c469f5153113086b2d1303b"
+    },
+    {
+      "path": "src-tauri/src/managed_update.rs",
+      "sha256": "78abda06b88fc2e6e9f29f037ed45302d19e73ee35e03be6e4e77571e3d7bb75"
+    },
+    {
+      "path": "src-tauri/src/draft_exit.rs",
+      "sha256": "8d705d487c5c2587dfd9cf6f5e0baa2307efdd5c705285f9713e2265598dccf2"
+    },
+    {
+      "path": "src-tauri/src/meta_store.rs",
+      "sha256": "7b18f9ff6918a8d2611132eacd6cf769efbd596f93c757ec11e168bde7872e8e"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base-review/git-commands.raw.txt",
+      "sha256": "135b9cabda148746363fe7c2e00e07f2f41d74a12875a9c58d3e8dd19156c437"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base-review/path-commands.raw.txt",
+      "sha256": "a42466e3de21159e6ed432e4118c71171c6be33488dfc4f0e88772c50c73fe9b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base-review/path-probe.py.txt",
+      "sha256": "75ac3ae75669ee25349e235650f4789ccf75069fc408a082d14e81d0f400afbe"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base-review/path-result.raw.txt",
+      "sha256": "5c7201c632e34fedf935d01ec142ef5f5bec351fd11dd9c97977e9027701d856"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base-review/probe.py.txt",
+      "sha256": "5551c3b68befde6d8fceee767ac61769bcedad9d498165f13f29f0e12e47cdfc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base-review/result.raw.txt",
+      "sha256": "b7a5435208120e266ae37cf0cb8a4c2d5098cdfde6cce8cfedb3c2d1ca597c07"
+    }
+  ]
+}

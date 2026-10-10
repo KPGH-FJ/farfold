@@ -1,5 +1,6 @@
 import { SearchDisclosure, TranscriptSearchContext } from "./transcript-search";
 import { ConfigurationChangeReview } from "./ConfigurationChangeReview";
+import { AsyncTasks } from "./AsyncTasks";
 import { MessageResendDialog } from "./MessageResendDialog";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
 import { ConnectionAccount } from "./ConnectionAccount";
@@ -790,6 +791,7 @@ export function ThreadView({
                   )}
               </div>
             )}
+            <AsyncTasks thread={thread} active={active} />
             {empty && !thread.openError && (
               <div className="who">{STRINGS.thread.draftHint}</div>
             )}

@@ -1,0 +1,70 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktrees.test.ts (14 tests | 2 failed) 46ms
+   × keeps a confirmed prepare rejection and permits a new explicit attempt 4ms
+   × does not let an older rejected observation invalidate a newer success 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktrees.test.ts > keeps a confirmed prepare rejection and permits a new explicit attempt
+AssertionError: expected { locations: [], ready: true, …(6) } to match object { uncertain: false, …(1) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "operation": {
+-     "code": "unsafePath",
+-     "settled": true,
+-     "state": "failed",
+-   },
+-   "uncertain": false,
++   "operation": null,
++   "uncertain": true,
+  }
+
+ ❯ src/runtime/worktrees.test.ts:168:24
+    166|   await s.create(input, () => true);
+    167|   const first = h.id;
+    168|   expect(s.snapshot()).toMatchObject({
+       |                        ^
+    169|     uncertain: false,
+    170|     operation: { state: "failed", settled: true, code: "unsafePath" },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/worktrees.test.ts > does not let an older rejected observation invalidate a newer success
+AssertionError: expected { locations: [ { …(8) } ], …(7) } to match object { uncertain: false, error: null, …(1) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "error": null,
++   "error": "操作结果尚未确认。请核查这次操作，不要重复创建或删除已有材料。",
+    "operation": {
+      "state": "ready",
+    },
+-   "uncertain": false,
++   "uncertain": true,
+  }
+
+ ❯ src/runtime/worktrees.test.ts:189:24
+    187|   old.reject(new Error("late transport error"));
+    188|   await pending;
+    189|   expect(s.snapshot()).toMatchObject({
+       |                        ^
+    190|     uncertain: false,
+    191|     error: null,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 18 passed (20)
+   Start at  12:57:14
+   Duration  1.08s (transform 352ms, setup 0ms, import 1.03s, tests 60ms, environment 0ms)
+

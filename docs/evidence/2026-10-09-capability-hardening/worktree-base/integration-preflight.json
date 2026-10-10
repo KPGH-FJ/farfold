@@ -1,0 +1,198 @@
+{
+  "reviewedAtUtc": "2026-10-10T05:53:06.995320+00:00",
+  "status": "preflight_no_production_integration_omission_found_pending_final_rust_verification",
+  "scope": "Independent read-only receipt/source review and proposed installed assertions. No tests, build, Git mutation, Agent launch, application operation or user-data access performed by this review.",
+  "receiptRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/implementation.json",
+      "sha256": "cdf1eec99a99a834c49d2289e2c45f7ab09bdb79a0b2072a6368a8ae4e2a8df5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/source-checkpoint.json",
+      "sha256": "054b41d595608a991466d4bd25bb5eabe4dc1abab871dac0dc3ce1499a5d8c4c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/implementation.json",
+      "sha256": "dee4ecc9bff3500c5fd5e3ac7b3f41b3b3e612ef1a418b3c561f94413c23e025"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-identity-followup.json",
+      "sha256": "261228b0eeb58bf790a5967c62cbc785b0377a07844bdb53386618b8de0396ae"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/cancel-copy-followup.json",
+      "sha256": "291fb412781ba0dc5f6fb6ac977d639d31fc57cb2ad504a1ac78660c65a2e409"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/actual-wire-check.json",
+      "sha256": "4ceabe4e06a88365db9af21e73153e4aa51a01e3469983658d9a9243eb392862"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/implementation.json",
+      "sha256": "2f92988844f9cbbba08b9dc3363728c3e1ebf0df1f284beb036730f204c65131"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend-exit/implementation.json",
+      "sha256": "047a7e55bd904324efe16f64000db85e729e32542977ec784beccaf32f4de509"
+    }
+  ],
+  "sourceClosure": {
+    "initialFrozenUnion": {
+      "backend": 22,
+      "frontendLatest": 18,
+      "asyncTasks": 23,
+      "frontendExit": 3,
+      "new05": 1,
+      "uniqueFiles": 67,
+      "matchesSourceConfigDirtySet": true,
+      "missing": [],
+      "extra": []
+    },
+    "initialCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-checks/run-01/inputs-before.json",
+      "sha256": "48255464f0634a98b6819209d22603485ed2b237150d80e5d5f6d48c23960658"
+    },
+    "initialInputCount": 1277,
+    "initialCurrentInputsMatched": true,
+    "maxOwnedSourceLines": {
+      "path": "src/runtime/sessions.ts",
+      "lines": 1493
+    },
+    "subsequentKnownTestOnlyDelta": [
+      {
+        "path": "src-tauri/src/storage_recovery/tests.rs",
+        "sha256": "e1bf0606b1bd74937fd2d4bda1ac454ed2809ca7553c05e8ccad0b4d57b68deb"
+      },
+      {
+        "path": "src-tauri/src/draft_exit_worktree_tests.rs",
+        "sha256": "0564ba7f59200b6753500e65fd993faf954c8aacd9691d84f2f2310f4e482274"
+      }
+    ],
+    "currentExpectedUnion": 68,
+    "newlyOwnedPath": "src-tauri/src/storage_recovery/tests.rs",
+    "boundary": "The 67-file claim is the original frozen checkpoint, not the later test repair. Latest direct comparison found only the two listed tests changed against run-01 inputs; one extends an existing owned file. Production inputs remained unchanged. Root must bind final checks to the repaired hashes."
+  },
+  "historicalChain": {
+    "recursiveReferenceOccurrences": {
+      "backendImplementation": 74,
+      "backendSourceCheckpoint": 22,
+      "frontendImplementation": 122,
+      "frontendMaterialFollowup": 43,
+      "frontendCancelFollowup": 28,
+      "frontendActualWire": 3,
+      "asyncTasks": 97,
+      "frontendExitSourceAndEvidenceMaps": 5
+    },
+    "historicalSourceDifferences": "Original frontend receipt has five current source differences, exactly covered by material-identity and cancellation-copy followups. Material followup has three current source differences, exactly the cancellation-copy changes. These prior receipts were not rewritten.",
+    "preservedOriginalBrowserInputs": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture-backend-final.tsx.txt",
+        "sha256": "490e751f5d0c72eec76e461fb107b02e10d24cdef1efbf1ce859101dba0b2d2d"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/run-backend-final.mjs.txt",
+        "sha256": "82e299309538765264e0e7af0f071e6add67ce3ab18c3bd016adedaad94a2075"
+      }
+    ],
+    "preservedOriginalBytesMatchHistoricalHashes": true,
+    "actualWireBoundary": "Eleven actual Rust serialization shapes passed the frontend pure DTO parsers; this does not prove Tauri IPC or installed UI execution.",
+    "sourceIntegration": "lib.rs registers Worktrees before storage initialization and registers all twelve worktree commands plus session_stop_task. UI/data source ownership union includes the shared session/ThreadView and draft exit changes.",
+    "allLatestReceiptReferencesMatchedAtInitialFreeze": true,
+    "laterException": "The following test-only repair intentionally supersedes one backend checkpoint source hash; that original receipt remains historical. No production reference changed."
+  },
+  "engineeringCheckpoint": {
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-checks/run-01/verification.json",
+      "sha256": "f39b53e43a0adffa869af992a47f49cb46aa030d6652497b95cfdf7692997452"
+    },
+    "rustLog": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-checks/run-01/rust.txt",
+      "sha256": "b3585bc9088758e611747cfb66cbdaf37302c09731d28925cc810f604f91cd00"
+    },
+    "frontendLog": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-checks/run-01/frontend.txt",
+      "sha256": "75d89a778a9687e8229cbebf2309315eb4879907293ed53aa79d061ac5b1ea76"
+    },
+    "passedChecks": 6,
+    "allSevenPassed": false,
+    "frontend": {
+      "files": 354,
+      "passed": 4180
+    },
+    "rust": {
+      "passed": 1290,
+      "failed": 1,
+      "ignored": 6
+    },
+    "failure": "storage_recovery::tests::run_event_and_menu_paths_do_not_require_an_uninitialized_meta_store",
+    "causeSupportedBySource": "Substring state::<crate::meta_store::MetaStore> also occurs inside try_state::<crate::meta_store::MetaStore>. Actual draft_exit uses optional lookup and passes Option<&MetaStore> to the gate. The original failure is real test failure, not evidence of an uninitialized-state production panic.",
+    "readOnlyRepairReview": "The new matcher retains required .state lookups including whitespace variants, permits try_state, and expands pre-initialize registrations. Actual admit_file_exit(None) tests idle exit, retained permits, and prepared blocking for Some/None with either confirmation. No production repair was introduced.",
+    "actualRecoveryRoute": "Menu exits normally; macOS quit and browser callbacks use states registered before recovery initialization. Draft exit uses optional storage; worktree seal_exit(None) does not load a database and still protects in-memory work. The later recovery run-event handler retains its AVAILABLE/CHANGING replacement exclusion.",
+    "remaining": "Owner targeted repair results and root final full-Rust/fmt closure are separate later evidence. This preflight does not declare candidate or installed completion."
+  },
+  "minimumInstalledAssertions": {
+    "state": "planned_not_executed",
+    "sharedPrerequisites": [
+      "Use the exact independently verified candidate/formal bundle and preserve the existing data/draft baseline before replacement.",
+      "Root controls the only formal application. Use a newly owned temporary repository and unique target paths; no user repository mutations. Keep current Agent/account/model/reasoning/permissions."
+    ],
+    "worktree": [
+      {
+        "id": "W1",
+        "assertion": "Inspect an ordinary local owned repository. Record HEAD, source Git index hash and tracked dirty/untracked/ignored canaries before use; no project scripts, hooks or dependencies run."
+      },
+      {
+        "id": "W2",
+        "assertion": "Create a new branch worktree at the explicitly selected commit into a new child directory. Require ready receipt plus actual linked-worktree Git identity/branch/HEAD and committed content; dirty/untracked/ignored source bytes and source index remain unchanged. Directory existence alone is insufficient."
+      },
+      {
+        "id": "W3",
+        "assertion": "Exercise one unused existing local branch and one pre-existing linked tree adoption. Their exact common repository/path/branch identity must match; adopted location is marked existing, never promoted to created ownership."
+      },
+      {
+        "id": "W4",
+        "assertion": "Creating or adopting alone leaves the unsent draft cwd unchanged. Only Use after fresh verification applies the location to the currently owned new draft; original draft contents and historical conversation cwd remain, and no prompt is sent."
+      },
+      {
+        "id": "W5",
+        "assertion": "Choose an existing target or in-use branch once. Rejection must preserve both source and target. For a saved location, the explicit two-step From list removal changes metadata only: files, branch and conversations remain."
+      },
+      {
+        "id": "W6",
+        "assertion": "After normal close/reopen, saved locations require recheck before use. Original drafts remain. If a genuine unknown result occurs, retain its path, display uncertainty and allow only explicit review/recheck; do not retry creation or delete material to manufacture a pass."
+      },
+      {
+        "id": "W7",
+        "assertion": "If a real current creation is observably in flight, cancellation is only a request and exit must stay blocked until its actual outcome. If it completes too quickly, record cancellation/active-exit as not exercised; do not call ready completion a successful cancel or terminate processes to fabricate the state."
+      }
+    ],
+    "asyncStop": [
+      {
+        "id": "A1",
+        "assertion": "First retain actual AIR v1 asyncTasks advertisement from this connection and actual spawned notification with session/task/tool ownership. Without both, the stop control must not be offered and installed task stopping remains unexercised; never infer a task ID from command/PID/history."
+      },
+      {
+        "id": "A2",
+        "assertion": "For a bounded owned task explicitly reported stoppable, click Stop task once. Preserve exact connection/session/task ID and official request/reply. Accepted means only request accepted; UI must wait for an official task result. No OS kill or second connection substitute."
+      },
+      {
+        "id": "A3",
+        "assertion": "Record the subsequent official task event and any bounded owned marker timeline separately. stopped may establish the reported task terminal, not that every subprocess ended; completed means natural/actual completion and must not be relabeled stopped."
+      },
+      {
+        "id": "A4",
+        "assertion": "Task stop does not synthesize a reply/tool terminal, cancel the reply, or consume/pause unrelated queued drafts. Existing reply-stop queue behavior stays distinct. Compare pre/post unsent groups and original tool/reply events."
+      },
+      {
+        "id": "A5",
+        "assertion": "Repeated clicks while requested/accepted/unknown remain guarded. Changing conversation or viewing history cannot reuse old live ownership. If rejection/timeout/disconnection actually occurs, retain unknown/rejected state and configuration/exit protection; do not provoke loss or claim those error paths were native-tested when they were not."
+      }
+    ],
+    "stillOutsideThisSlice": [
+      "H15 safe archive/permanent disk deletion is not implemented; From list removal is not archival or delete authorization.",
+      "Windows native execution, recovery-shell induced corruption, crash/power loss, same-UID malicious filesystem races and all-Agent acceptance are not established by this review.",
+      "Cold worktree settled means this instance has no worker; acknowledgement does not prove an earlier process ended.",
+      "Controlled Git/ACP tests and React browser fixtures remain distinct from installed application and real Agent results."
+    ]
+  }
+}

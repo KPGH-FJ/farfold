@@ -1,0 +1,8 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/worktree_strings.ts(117,23): error TS2677: A type predicate's type must be assignable to its parameter's type.
+  Type 'string' is not assignable to type '"关闭" | "工作位置" | "工作树" | "选择已有文件夹" | "选择仓库文件夹" | "创建工作树" | "已有工作树" | "使用此位置" | "从清单移除" | "只移除此清单记录，不删除文件、分支或对话。" | "重新核查" | "刷新清单" | "请求停止创建" | "正在读取工作位置…" | "尚未加入工作树。也可以直接选择已有文件夹。" | ... 42 more ... | { ...; }'.
+src/runtime/worktree_strings.ts(124,50): error TS2345: Argument of type 'string' is not assignable to parameter of type '"关闭" | "工作位置" | "工作树" | "选择已有文件夹" | "选择仓库文件夹" | "创建工作树" | "已有工作树" | "使用此位置" | "从清单移除" | "只移除此清单记录，不删除文件、分支或对话。" | "重新核查" | "刷新清单" | "请求停止创建" | "正在读取工作位置…" | "尚未加入工作树。也可以直接选择已有文件夹。" | ... 71 more ... | { ...; }'.
+ ELIFECYCLE  Command failed with exit code 1.

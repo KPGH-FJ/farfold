@@ -36,12 +36,17 @@ for line in sys.stdin:
  if method=='session/load': restoring=True
  calls.append({'method':method,'restoring':restoring,'params':p});save()
  result={};prefix=[];suffix=[]
- if method=='initialize': result={'protocolVersion':1,'agentCapabilities':{'loadSession':True},'authMethods':[]}
+ if method=='initialize': result={'protocolVersion':1,'agentCapabilities':{'loadSession':True},'authMethods':[],'_meta':{'jetbrains':{'air':{'version':1,'capabilities':['asyncTasks']}}}}
  elif method in ('session/new','session/load'):
   if method=='session/load':
    if p['sessionId']!='restore-proof': raise ValueError('wrong native session')
    options[0]['currentValue']='m1';options[1]['currentValue']='low'
    prefix=[update()];suffix=[update()]
+   if os.path.exists(os.path.join(root,'fault')):
+    with open(os.path.join(root,'fault')) as f: mode=f.read()
+    if mode in ('load-async-running','load-async-completed','load-async-unknown'):
+     prefix.append({'method':'session/update','params':{'sessionId':'restore-proof','update':{'sessionUpdate':'async_task_spawned','asyncTaskId':'load-task','name':'Live load task','taskType':'shell','canStop':True,'toolCallId':'load-tool'}}})
+     if mode!='load-async-running': prefix.append({'method':'session/update','params':{'sessionId':'restore-proof','update':{'sessionUpdate':'async_task_state_update','asyncTaskId':'load-task','toolCallId':'load-tool','state':'completed' if mode=='load-async-completed' else 'future-state'}}})
   result=dict(configOptions=copy.deepcopy(options),**({'sessionId':'restore-proof'} if method=='session/new' else {}))
  elif method=='session/set_config_option':
   if p['sessionId']!='restore-proof': raise ValueError('changed native session')
@@ -378,6 +383,40 @@ async fn configuration_restore_confirmed_replay_save_failure_keeps_baseline_and_
     sql.execute_batch("CREATE TRIGGER fail_restore BEFORE UPDATE ON sessions BEGIN SELECT RAISE(FAIL, 'fixture recovery save'); END;").unwrap();
     let opened = fixture.cold().await;
     assert_not_ready(&fixture, opened).await;
+    assert_eq!(
+        fixture.restore_sets(),
+        vec![
+            ("model".into(), "m2".into()),
+            ("reasoning_effort".into(), "low".into())
+        ]
+    );
+    assert_eq!(fixture.record(), baseline);
+    fixture.assert_identity_and_no_prompt();
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn configuration_restore_async_task_busy_blocks_automatic_mutation() {
+    for mode in ["load-async-running", "load-async-unknown"] {
+        let fixture = Fixture::established().await;
+        let baseline = fixture.record();
+        std::fs::write(fixture.cwd.join("fault"), mode).unwrap();
+        let opened = fixture.cold().await;
+        assert!(
+            fixture.restore_sets().is_empty(),
+            "{mode}: task work must block automatic model mutation"
+        );
+        assert_not_ready(&fixture, opened).await;
+        assert_eq!(fixture.record(), baseline);
+        fixture.assert_identity_and_no_prompt();
+    }
+}
+#[tokio::test(flavor = "multi_thread")]
+async fn configuration_restore_async_task_terminal_still_allows_saved_selection() {
+    let fixture = Fixture::established().await;
+    let baseline = fixture.record();
+    std::fs::write(fixture.cwd.join("fault"), "load-async-completed").unwrap();
+    let opened = fixture.cold().await.unwrap();
+    assert_eq!(opened.config_check.status, "ready");
     assert_eq!(
         fixture.restore_sets(),
         vec![

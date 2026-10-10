@@ -1,0 +1,69 @@
+{
+  "status": "static_preflight_review_no_helper_execution",
+  "result": "no_new_blocker_found_in_requested_path_adaptation",
+  "date": "2026-10-10",
+  "scope": "只读四份安装/退出/数据核验/清理文件及对应前版差异；额外只读候选 prepare/verify 的工程证据接线。不执行任何 helper，不扫描数据、不读原数据库、不构建、不安装、不启动/退出 App 或 Agent。",
+  "comparison": [
+    "install_verified_candidate.py 与 browser-search-install 前版仅 OUT/EVIDENCE 两路径变化。",
+    "cleanup_duplicate.py 与前版仅候选 evidence 路径变化。",
+    "verify-data-retention.py 与前版仅 private 路径及 remaining 项目变化。",
+    "通过 AST 仅提取字面 SCOPES/TOP 声明，安装/prepare/verify 三者集合一致：13 scopes、36 explicit inputs，含两项额外 Rust 输入和既有视觉 fixtures。未执行脚本模块或扫描当前输入文件。"
+  ],
+  "guardsReviewed": {
+    "replacement": "唯一复制目标固定 /Applications/Farfold.app；固定 candidate 路径/ZIP 路径，精确 5 bundle 文件，路径无 symlink、bundle identifier/version/localization/arm64/strict ad-hoc codesign；mutation 前再次校验两包内容与精确进程数。无启动/退出操作。",
+    "commitAndEngineering": "安装参数需完整 40 位 SHA，candidate/independent 同 SHA，candidate 及 inputs hash 与独立回执相同，源码字节重新匹配该 commit。prepare/verify 另要求实际七命令全部 exit0、日志 hash、前后输入相等、source closure 精确覆盖与 ece08 基线差异、保护 README 未变；安装沿已验证 candidate hash 引用该链。当前候选尚未生成，本次不宣称这些运行时检查已通过。",
+    "exit": "normal-exit-observation 明确复用 ece08 实机旅程 CUA Cmd+Q 的正常退出，并记录后来精确进程查询为空；没有伪称本轮重新做 UI 退出。三条 evidence 引用 SHA 实际核对一致，原 installed-browser-search.formalSourceCommit 为 ece08cd511b27ec62898ca03f688bb25b2966517。本审查未重新查询当前进程；安装时脚本仍须实时查询两次。",
+    "data": "安装先验证私有 0600/当前 owner 的 preinstall manifest 完整读入、打开身份和前后 metadata 稳定、appData/webkit/cache 根/计数/hash。事后 verifier 独立重算 before/preinstall/after 的三个 raw hash 与计数、要求三个 summary 完全相等，并核元数据备份摘要/原完整性回执及正式包；缺失或未完成即不能生成成功证明。",
+    "cleanup": "清理必须已有 install-independent.result=passed，duplicate/formal/candidate hashes 相等、ZIP CRC/逐文件及权限一致；唯一删除路径固定为 target/release/bundle/macos/Farfold.app。独占新回执，再删除，再核正式包与 ZIP；不删正式应用或数据。"
+  },
+  "limitsAndNext": [
+    "静态审查不等于候选/安装验证。全仓检查、提交、候选构建与独立验证、完成 before/preinstall/after 扫描仍由各阶段原流程执行。",
+    "ditto 是既有直接替换，不宣称原子安装或自动回滚。copy/核验失败保留失败回执，不能启动应用或清理候选来掩盖失败；运行时变化会触发现有 guard。",
+    "数据三份一致只证明相应采集范围；安装后交互、工作树真实创建/草稿归属/后台停止与 NEW-05 仍须独立实机核验。"
+  ],
+  "sourceRefs": [
+    {
+      "path": "output/2026-10-10-worktree-task-install/install_verified_candidate.py",
+      "sha256": "fae35e6f1db3c5824154f589fb306a3e1e49c30dea7676d2104a57f2cb34e7aa"
+    },
+    {
+      "path": "output/2026-10-10-worktree-task-install/normal-exit-observation.json",
+      "sha256": "8f9b5108668978ad7726144b3d612c72d32aeb706f2bfd53c6678e8d37910142"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/verify-data-retention.py",
+      "sha256": "acbab48042b863b27727d20f700b89fc65a4719aed6a6e81c4af4ea2ac83a411"
+    },
+    {
+      "path": "output/2026-10-10-worktree-task-install/cleanup_duplicate.py",
+      "sha256": "df3747fc0bb653e10c1261896454b47152e22644d019f80aa81d2fba669eea14"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/prepare-candidate.py",
+      "sha256": "2e8d1296b45d8e6c6d8bd0c4228d02e7ae98bdf604643275baf9d8060d5e90b0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/verify-candidate.py",
+      "sha256": "da40a7ead1bc6ed16ac1f36f09ce74f9712a21b5935269797a2dd81f01d86746"
+    }
+  ],
+  "verifiedExitRefs": [
+    {
+      "path": "output/2026-10-10-browser-search-install/native-normal-exit.json",
+      "sha256": "0a8775da331a23f8a19c393cdb41bc4cabce56a6d1b05b7aa9693a030287d242"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/installed-browser-search.json",
+      "sha256": "13b2f2afd1e254892a10f3c5f7d1d492613b4a48eff6a579fc536ba0534dad95"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native-closeout-independent.json",
+      "sha256": "c82a838fb21bc454a6540fd2bcac272b57cb485c6655b3e9ea21efc5272a5f74"
+    }
+  ],
+  "unmodifiedPriorScripts": [
+    "output/2026-10-10-browser-search-install/install_verified_candidate.py",
+    "output/2026-10-10-browser-search-install/cleanup_duplicate.py",
+    "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/verify-data-retention.py"
+  ]
+}

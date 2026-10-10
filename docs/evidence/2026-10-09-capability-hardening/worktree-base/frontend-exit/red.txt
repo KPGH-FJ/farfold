@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/DraftStartup.test.tsx (15 tests | 1 failed) 1789ms
+   × keeps running worktree operations protected with their own exit explanation 113ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/DraftStartup.test.tsx > keeps running worktree operations protected with their own exit explanation
+AssertionError: expected [ { …(10) }, false, { …(10) }, …(8) ] to include '工作位置操作仍在进行，或尚未确认是否结束。请先留在应用查看结果，再尝试退出。'
+ ❯ src/components/DraftStartup.test.tsx:210:17
+    208|   };
+    209|   const nodes = visit(render());
+    210|   expect(nodes).toContain(
+       |                 ^
+    211|     "工作位置操作仍在进行，或尚未确认是否结束。请先留在应用查看结果，再尝试退出。",
+    212|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+   Start at  12:51:53
+   Duration  2.25s (transform 242ms, setup 0ms, import 295ms, tests 1.79s, environment 0ms)
+

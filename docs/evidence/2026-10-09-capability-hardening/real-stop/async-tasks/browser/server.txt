@@ -1,0 +1,4 @@
+Owned async task browser PID 80865
+1:09:47 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/index.html
+1:10:55 PM [vite] (client) hmr update /src/components/AsyncTasks.tsx
+1:12:12 PM [vite] (client) hmr update /src/components/AsyncTasks.tsx

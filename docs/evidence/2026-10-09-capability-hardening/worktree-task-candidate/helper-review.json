@@ -1,0 +1,108 @@
+{
+  "phase": "new-candidate-helpers-prepared-not-executed",
+  "timestamp": "2026-10-10T05:52:54.983590+00:00",
+  "scripts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/prepare-candidate.py",
+      "sha256": "2e8d1296b45d8e6c6d8bd0c4228d02e7ae98bdf604643275baf9d8060d5e90b0",
+      "bytes": 15355
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/verify-candidate.py",
+      "sha256": "da40a7ead1bc6ed16ac1f36f09ce74f9712a21b5935269797a2dd81f01d86746",
+      "bytes": 20342
+    }
+  ],
+  "origin": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/prepare-candidate.py",
+      "sha256": "034904cf24d9e08c4628b2badcdc66472063d7cbcf44e77abc7c5ada4b1a8e12",
+      "bytes": 10962
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/verify-candidate.py",
+      "sha256": "bfc6a3a8754b8d999d2a8481ccd6fb54f8226e320749c6100d9ce07a1832bfd8",
+      "bytes": 22125
+    }
+  ],
+  "cli": [
+    "python3 docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/prepare-candidate.py <exact40charCommit> docs/evidence/2026-10-09-capability-hardening/worktree-task-checks/run-02/verification.json",
+    "python3 docs/evidence/2026-10-09-capability-hardening/worktree-task-candidate/verify-candidate.py <sameExactCommit> docs/evidence/2026-10-09-capability-hardening/worktree-task-checks/run-02/verification.json"
+  ],
+  "baseline": {
+    "installedSourceCommit": "ece08cd511b27ec62898ca03f688bb25b2966517",
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/candidate.json",
+      "sha256": "8c26616a3867b2c61edef3fb0a056e3720faf9d3227476474877bd68fffa260f",
+      "bytes": 7607
+    },
+    "inputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/candidate-inputs.json",
+      "sha256": "27f9200b588f4d3280a3ea4e6c14402be1f397aa2c2b8ad681d9d8a9fd955a47",
+      "bytes": 141941
+    },
+    "currentHeadRole": "db022ca1 is later documentation-only development HEAD, not a new installed binary baseline."
+  },
+  "validation": [
+    "No imports of historical check scripts. Existing source scopes copied directly, exact inventory set and committed blob bytes checked independently.",
+    "All seven exact full commands must have exitCode=0, executedInThisRun=true, matching log hashes, allPassed/sourceStable/protectedUnchanged true. No legacy AST/format-only reuse assumptions remain.",
+    "Engineering input maps must match candidate inputs. Supports explicit inputsBefore/inputsAfter refs or raw-run sibling inputs-before.json/inputs-after.json.",
+    "Source closure found beside engineering receipt or its parent only, and constrained to current worktree-task-checks/source-closure.json. Exact delta recomputed against installed ece candidate map; no hardcoded input/delta count.",
+    "Current first-run scope count1277 and three inherited inventory sets agree; new final test delta belongs to run-02 and cannot reuse failed run-01 allPassed.",
+    "HEAD and each committed input must match before and after candidate build; frozen engineering references and formal baseline bundle rechecked.",
+    "Preserves candidate schema and independent sourceCommit/result/failures/checks[*].passed/inputReceipts fields expected by reviewed installer. Nine independent candidate checks remain.",
+    "AST parsed only. Candidate build, candidate verification, installation, launch, user data snapshots and original DB access were not executed."
+  ],
+  "safeCallConditions": [
+    "Finish run-02 or explicit successful final engineering aggregate, freeze raw logs/maps and source-closure proof references.",
+    "Commit complete scoped production/test closure, leaving protected unrelated work unchanged; use full committed SHA with exact current source.",
+    "Candidate destinations must be absent. Before independent verification, normalize candidate JSON formatting once, then freeze bytes.",
+    "Run independent candidate verifier only after preparation reports success; it cannot replace installed or native acceptance."
+  ],
+  "remainingInstallerAdaptation": [
+    "Reuse current private install_verified_candidate.py guards under fresh output/2026-10-10-worktree-task-install; update output/evidence paths and commit argument, keep exact common source scopes.",
+    "Adapt new independent install verifier normal-exit references from historical real-stop/native/21-before-normal-quit.txt to exact latest ece normal-exit evidence; do not rewrite historical observations to fit fields.",
+    "Take fresh before/preinstall/after full manifests while app remains closed and compare complete raw hashes/counts. No hardcoded217400 count or historical digest.",
+    "Use backup_metadata.py only after normal exit; capture original main/WAL/SHM as bytes, operate SQLite only on second private copy. Independent install opens additional disposable copies, never original DB.",
+    "Manifest equality covers paths/types/modes, file sizes and SHA256, symlink targets in appData/WebKit/cache. It does not compare xattrs/ACLs/ctime/mtime/inodes or Keychain/external Agent HOME/project data.",
+    "Physical ditto replacement is guarded and postchecked, not an atomic rollback mechanism. Failure after copyStarted remains explicit; never invent success or auto delete old evidence.",
+    "Only after installed ten-check independent success: root removes exact verified duplicate build bundle, retains ZIP/formal app, then separately performs native acceptance."
+  ],
+  "historicalScriptRefs": [
+    {
+      "path": "output/2026-10-10-browser-search-install/install_verified_candidate.py",
+      "sha256": "d865b88ecd402cb4768351a5b31af8762289a9b84e95131b2d68ef3a7a8248ec",
+      "bytes": 15312
+    },
+    {
+      "path": "output/2026-10-10-browser-search-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+      "bytes": 3792
+    },
+    {
+      "path": "output/2026-10-10-browser-search-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+      "bytes": 2713
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/verify-data-retention.py",
+      "sha256": "a7ef9984f1f2d74d66c31b793a17995418764f9ac1f6928e9d49f8341d6f47a6",
+      "bytes": 3985
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/verify-install-independent.py",
+      "sha256": "691c0ec1302c3eb2d4b4f1084d397d3f7d6014f5d326ffe90a0259b50297f200",
+      "bytes": 20444
+    },
+    {
+      "path": "output/2026-10-10-browser-search-install/cleanup_duplicate.py",
+      "sha256": "7f6962c8f12979e63aa90fb7d0cbc9c39842ad010d64f469fd57e1c058802791",
+      "bytes": 2075
+    }
+  ],
+  "boundaries": [
+    "Source→commit→build provenance relies on exact frozen inputs and build receipt; bundle is not claimed to embed its commit or provide a bit-for-bit reproducible build. Dependencies/toolchain are outside the source hash map.",
+    "Identity ai.farfold.desktop/version0.1.7/arm64/ad-hoc strict codesign and exact five payload files remain unchanged requirements; not a public signing/notarization claim.",
+    "No new production inputs or plans written; only these new evidence scripts/receipt."
+  ]
+}

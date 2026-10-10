@@ -1,0 +1,30 @@
+import { expect, it } from "vitest";
+import { DraftLocationOwner } from "./draft_location_owner";
+it("does not regain a former owner when the same choices return", () => {
+  const owners = new DraftLocationOwner();
+  owners.observe("A", true);
+  const a = owners.begin();
+  owners.observe("B", true);
+  owners.observe("A", true);
+  expect(owners.owns(a)).toBe(false);
+  const b = owners.begin();
+  expect(owners.owns(b)).toBe(true);
+  expect(b).not.toBe(a);
+});
+it("allows text-only rerenders but retires on leaving, sending or reopening", () => {
+  const owners = new DraftLocationOwner();
+  owners.observe("A", true);
+  const a = owners.begin();
+  owners.observe("A", true);
+  expect(owners.owns(a)).toBe(true);
+  owners.retire();
+  expect(owners.owns(a)).toBe(false);
+  const b = owners.begin();
+  owners.observe("A", false);
+  owners.observe("A", true);
+  expect(owners.owns(b)).toBe(false);
+  const c = owners.begin();
+  const d = owners.begin();
+  expect(owners.owns(c)).toBe(false);
+  expect(owners.owns(d)).toBe(true);
+});

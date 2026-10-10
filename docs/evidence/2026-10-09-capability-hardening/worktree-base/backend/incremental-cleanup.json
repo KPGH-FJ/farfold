@@ -1,0 +1,146 @@
+{
+  "removed": [
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/windows_process_fixture-3a83urcyu70af",
+      "files": 18,
+      "bytes": 183328
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold-3qv8g7xln911b",
+      "files": 4,
+      "bytes": 203766
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-1436ixlswy2su",
+      "files": 520,
+      "bytes": 1394879947
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold-04tgo4q6v0k7d",
+      "files": 9,
+      "bytes": 351333
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/windows_process_fixture-2zoy3zn4mzd2f",
+      "files": 18,
+      "bytes": 183328
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/build_script_build-1q0bsu5yryyjp",
+      "files": 62,
+      "bytes": 5895027
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/windows_process_fixture-38joqdaow6zhq",
+      "files": 9,
+      "bytes": 77821
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/build_script_build-3ekf4krrn0emq",
+      "files": 31,
+      "bytes": 2939151
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-2guxk3szcjlcj",
+      "files": 2,
+      "bytes": 89918065
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold-105qabut5axba",
+      "files": 4,
+      "bytes": 184384
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-1li7gzu4kpjhk",
+      "files": 5,
+      "bytes": 93031812
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-3rwssmq6rhtvr",
+      "files": 4,
+      "bytes": 122639193
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold-0pyajc20t394b",
+      "files": 8,
+      "bytes": 374624
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold-1wnm28twlyq2m",
+      "files": 18,
+      "bytes": 768288
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold-1h9axatdbgmhc",
+      "files": 18,
+      "bytes": 768548
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-0acp00disrb93",
+      "files": 522,
+      "bytes": 994066503
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-0mhiht1nv60z0",
+      "files": 522,
+      "bytes": 984350599
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-2puj5n9z4x1d7",
+      "files": 10,
+      "bytes": 206965907
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold-19qjv2pebsgs8",
+      "files": 8,
+      "bytes": 374874
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/build_script_build-3hppr4vp6unro",
+      "files": 62,
+      "bytes": 5958229
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-0tipwlo2gp34v",
+      "files": 520,
+      "bytes": 1302125704
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold-05nc5bmrb3zbu",
+      "files": 4,
+      "bytes": 187374
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold-1zbyyj8cs0lmf",
+      "files": 18,
+      "bytes": 768340
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold-008mrgmhp8die",
+      "files": 4,
+      "bytes": 238210
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-1tyhk1nnrcscr",
+      "files": 522,
+      "bytes": 1062013053
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-347pg2kvunbf3",
+      "files": 10,
+      "bytes": 170524462
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-2i191209l6gom",
+      "files": 10,
+      "bytes": 186943869
+    },
+    {
+      "path": "/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-0p58khvg83sjo",
+      "files": 520,
+      "bytes": 1280772530
+    }
+  ],
+  "scope": "Exact inventoried rustc incremental cache directories only; no target root, deps, backups, archive or application removal.",
+  "availableBytesAfter": 4701986816
+}

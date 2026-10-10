@@ -1,0 +1,2 @@
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/run.mjs 45ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx 34ms

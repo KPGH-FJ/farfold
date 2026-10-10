@@ -44,6 +44,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
   const [cancelError, setCancelError] = useState(false);
   const [readsSettled, setReadsSettled] = useState(false);
   const [backendCopyReview, setBackendCopyReview] = useState(false);
+  const [backendWorktreeReview, setBackendWorktreeReview] = useState(false);
   const cancelExit = async (token: number) => {
     if (currentExit.current !== token) return;
     const attempt = ++saveAttempt.current;
@@ -77,6 +78,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
     setExitReadError(null);
     setCancelError(false);
     setBackendCopyReview(false);
+    setBackendWorktreeReview(false);
     threads.pauseQueuesForExit();
     draftPersistence.lockInteraction(true);
     if (
@@ -119,9 +121,11 @@ export function DraftStartup({ children }: { children: ReactNode }) {
       const code = String(reason).replace(/^Error:\s*/, "");
       if (
         code === "EXIT_CONFIRMATION_REQUIRED" ||
-        code === "FILE_COPY_EXIT_BLOCKED"
+        code === "FILE_COPY_EXIT_BLOCKED" ||
+        code === "WORKTREE_EXIT_BLOCKED"
       ) {
         setBackendCopyReview(code === "FILE_COPY_EXIT_BLOCKED");
+        setBackendWorktreeReview(code === "WORKTREE_EXIT_BLOCKED");
         setExitReview(token);
         return;
       }
@@ -201,6 +205,8 @@ export function DraftStartup({ children }: { children: ReactNode }) {
               <p>{E.saved}</p>
               {copying ? (
                 <p role="status">{E.copying}</p>
+              ) : backendWorktreeReview ? (
+                <p role="status">{E.worktreeReview}</p>
               ) : unknownCopy ? (
                 <p role="status">{E.copyUnknown}</p>
               ) : backendCopyReview ? (
@@ -220,7 +226,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 className="btn btn-primary"
-                disabled={copying}
+                disabled={copying || backendWorktreeReview}
                 onClick={() => void saveAndExit(exitReview, true)}
               >
                 {E.exit}

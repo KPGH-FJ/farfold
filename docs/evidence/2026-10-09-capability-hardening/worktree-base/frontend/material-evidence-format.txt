@@ -1,0 +1,3 @@
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/webkit-material-final.json 23ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/chromium-material-final.json 9ms
+docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/material-cleanup.json 1ms (unchanged)

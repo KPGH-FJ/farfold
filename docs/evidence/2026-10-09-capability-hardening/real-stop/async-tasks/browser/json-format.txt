@@ -1,0 +1,6 @@
+docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium-before-style.json 14ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/cleanup.json 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-before-style.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-first.json 2ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit.json 2ms (unchanged)

@@ -1,0 +1,63 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktrees.test.ts (19 tests | 2 failed) 45ms
+   × an old late prepared reply is cancelled without changing the newer operation 5ms
+   × requires confirmed material-list readback before replacing a reviewed unknown 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktrees.test.ts > an old late prepared reply is cancelled without changing the newer operation
+AssertionError: expected { locations: [ { …(8) } ], …(8) } to match object { …(4) }
+(5 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -3,7 +3,7 @@
+      "operationId": "078b5ed8-b9ae-408c-a288-7bc5e116fb3c",
+      "state": "ready",
+    },
+    "operationId": "078b5ed8-b9ae-408c-a288-7bc5e116fb3c",
+    "uncertain": false,
+-   "working": false,
++   "working": true,
+  }
+
+ ❯ src/runtime/worktrees.test.ts:372:24
+    370|   late.resolve({ ...reply("prepared"), operationId: first });
+    371|   await previous;
+    372|   expect(s.snapshot()).toMatchObject({
+       |                        ^
+    373|     operationId: current,
+    374|     working: false,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/worktrees.test.ts > requires confirmed material-list readback before replacing a reviewed unknown
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ src/runtime/worktrees.test.ts:400:44
+    398|   });
+    399|   await s.acknowledge(h.id);
+    400|   await expect(s.create(input, () => true)).rejects.toThrow();
+       |                                            ^
+    401|   expect(s.snapshot().operation).toMatchObject({
+    402|     state: "unknown",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 17 passed (19)
+   Start at  13:14:13
+   Duration  154ms (transform 47ms, setup 0ms, import 40ms, tests 45ms, environment 0ms)
+

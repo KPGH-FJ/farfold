@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-10T05:23:07.318775+00:00",
+  "ownedServerPid": 78134,
+  "ownedSession": 97639,
+  "action": "SIGTERM exact owned Vite process; session collected exit 143",
+  "pidAbsent": true,
+  "port1474Clear": true,
+  "browserRunners": "Both bounded runners closed their own browser in finally; each returned exit 0. No formal app or Agent used."
+}

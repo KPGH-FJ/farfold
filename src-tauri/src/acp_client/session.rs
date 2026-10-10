@@ -541,6 +541,32 @@ impl AcpManager {
         .await?
     }
 
+    /// Exact task control stays on its original live connection.
+    pub(crate) async fn session_stop_task(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+        connection_id: &str,
+        task_id: &str,
+    ) -> Result<Value, String> {
+        let connection = self.session_connection(agent_id, cwd, session_id)?;
+        if connection.connection_id != connection_id {
+            return Err("对话状态已变化，无法停止此任务".into());
+        }
+        let control = self.session_control_tx(agent_id, cwd, session_id)?;
+        let (result, receive) = oneshot::channel();
+        control
+            .send(SessionControl::StopTask {
+                connection_id: connection_id.into(),
+                task_id: task_id.into(),
+                result,
+                deadline: tokio::time::Instant::now() + std::time::Duration::from_secs(10),
+            })
+            .map_err(|_| "对话连接已结束".to_string())?;
+        super::wait::reply(receive, std::time::Duration::from_secs(11), "停止任务").await?
+    }
+
     /// `session/set_config_option`; returns full options and the confirmed local
     /// configuration check together, after any selected-choice record is saved.
     pub(crate) async fn session_set_config(

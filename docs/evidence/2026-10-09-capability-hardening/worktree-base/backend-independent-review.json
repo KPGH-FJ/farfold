@@ -1,0 +1,236 @@
+{
+  "status": "completed_no_blocker_after_review_fixes",
+  "reviewer": "verification",
+  "scope": "Independent read-only review of this worktree creation/adoption slice; source and existing author-run outputs. No tests, Git repository mutation, process control, real Agent or installed App operation by this reviewer.",
+  "sourceCheckpoint": "Final owner freeze after 28 worktrees tests and 3 actual exit/reset gate tests; does not certify whole-project integration or native acceptance.",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/worktrees/git.rs",
+      "sha256": "33cd4ceae63018403a685252eeff625f79f0bab183371706fb5f0cef2f2c4ed4"
+    },
+    {
+      "path": "src-tauri/src/worktrees/checkout.rs",
+      "sha256": "846d9ef41288a18c07f4c5a98a571667d8ca36777d3f04ba954d3e451ac8947d"
+    },
+    {
+      "path": "src-tauri/src/worktrees/inspect.rs",
+      "sha256": "a9e4aa5fb6349563fb3e40bb7ba4a13433e8346c0ed5982e1dcde5920463f2bd"
+    },
+    {
+      "path": "src-tauri/src/worktrees/create.rs",
+      "sha256": "4e5c2b21b66684daff9eec5fc181bfdd98b5e934525f0d9d9d0db46fb71de446"
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "ddf6b6369f7a684809aaafc1e1112bc7aad626636d0203784ad2c4eea53c630b"
+    },
+    {
+      "path": "src-tauri/src/worktrees/storage.rs",
+      "sha256": "56c39d4760c5306b3d4a86a8d5a22ed33c25cc37b35311219329c1b55b388550"
+    },
+    {
+      "path": "src-tauri/src/worktrees/types.rs",
+      "sha256": "9aa11fd0e395222a5884ea014d39c73db1cd01544295feb631f9810a87917b2f"
+    },
+    {
+      "path": "src-tauri/src/worktrees/tests.rs",
+      "sha256": "d00882d6fb496c09b5db80f9a90667b4353b6465286b38bc18aeaff57f45dd1a"
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager_tests.rs",
+      "sha256": "ab46cd29e9efc0a455c29d7c661e4fd0336cafdbd01bdb324671f377e68f4189"
+    },
+    {
+      "path": "src-tauri/src/worktrees/checkout_boundary_tests.rs",
+      "sha256": "f2f599355ebf01869cb2a1ecbedccaffb2f7e481d6ce2fd4198cbe2e471dba93"
+    },
+    {
+      "path": "src-tauri/src/worktrees/config_compatibility_tests.rs",
+      "sha256": "b75c33f186a5e978826d1590f60c62a48acfd6ebda1ffad0a15d1b70066a96b1"
+    },
+    {
+      "path": "src-tauri/src/worktrees/wire_tests.rs",
+      "sha256": "360e14bb29269f097bef8b662182f94db433552199cd865db4fc05852b80cd85"
+    },
+    {
+      "path": "src-tauri/src/meta_store/worktrees.rs",
+      "sha256": "bbfa801ce566ba26fed048febb68003eb3615681224eb637b7b7f2a01bac061d"
+    },
+    {
+      "path": "src-tauri/src/worktree_commands.rs",
+      "sha256": "aec75b48e956e29fc9fc5dff3eeeb5a4d9cad66b1ddadfe4c34eb85de846dd18"
+    },
+    {
+      "path": "src-tauri/src/draft_exit.rs",
+      "sha256": "a2a71669f806232a708608cf0ca7e1eda66068e004b27b352421221e03c953de"
+    },
+    {
+      "path": "src-tauri/src/draft_exit_worktree_tests.rs",
+      "sha256": "d58b341c6defed1ee9ad2d7dc5c2baca34f28beda372315891c5017146bc71e2"
+    },
+    {
+      "path": "src-tauri/src/data_reset.rs",
+      "sha256": "c3ab82eb10de5670ebd9a87a38eba3d2212127d181546f4da4400043fd534f17"
+    },
+    {
+      "path": "src-tauri/src/data_reset_worktree_tests.rs",
+      "sha256": "aa93c1b8c30130731ae43b504ab16ea3e43005b3cdaf5a9695e10498695f123c"
+    },
+    {
+      "path": "src-tauri/src/managed_update.rs",
+      "sha256": "8c45f7702260fb76293e461055cd58522c497e61a16af76030b24f6f14692fdd"
+    },
+    {
+      "path": "src/runtime/worktrees.ts",
+      "sha256": "66522d892b9f0cae4b07bc8505cc7d70da27e788cf64f1c25da9a2706d12f3cc"
+    },
+    {
+      "path": "src/runtime/worktree_strings.ts",
+      "sha256": "1aea644110a7d66bd858a472c606ceabc7b2ae4ce354f60fdfcced13858197b9"
+    },
+    {
+      "path": "src/runtime/exit_impact.ts",
+      "sha256": "cb18a502bd7ee671218f76420aadd3b1d47cc9002e45a0b43361c374e300a6ce"
+    },
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "02afa62a4513f0747ef804aa29328c3152b19828603cbe87202f418f66d898cf"
+    },
+    {
+      "path": "src/components/WorktreeDialog.test.tsx",
+      "sha256": "4402cd2ce7fad0abda8a012a771f4a57c819dbb1e413f6a5cf5ffc9d6c589995"
+    }
+  ],
+  "findings": [
+    {
+      "id": "WT-REVIEW-01",
+      "status": "resolved",
+      "origin": "Independent reviewer identified post-preflight source add as still outside private object context; architecture implemented and ran the counterexample.",
+      "failure": "After private preparation, missing commit plus newly configured promisor caused source worktree add --no-checkout to execute the owned local remote-helper canary.",
+      "red": "backend/add-and-linked-red.txt",
+      "fix": "Every owned Git command sets the fixed official GIT_NO_LAZY_FETCH=1; missing objects fail locally. Actual Apple Git 2.39.5 probe and unchanged canary assertion are green. No Agent environment/config change."
+    },
+    {
+      "id": "WT-REVIEW-02",
+      "status": "resolved",
+      "origin": "Architecture identified and tested; independently read by verification.",
+      "failure": "A linked source used per-worktree info/attributes instead of Git resolved common attributes, losing CRLF conversion.",
+      "red": "backend/add-and-linked-red.txt",
+      "fix": "Git rev-parse --path-format=absolute --git-path info/attributes chooses the actual attribute path; captured bytes and effective attribute mirror remain bounded. The same test now also reaches the effective-filter rejection check."
+    },
+    {
+      "id": "WT-REVIEW-03",
+      "status": "resolved",
+      "origin": "Independent reviewer identified, product_coverage wrote actual DTO/parser/SSR red and fix.",
+      "failure": "unknown plus code cancelled after possible material creation displayed a claim that creation had not started.",
+      "red": "frontend/cancel-copy-red.txt",
+      "fix": "Only confirmed state cancelled uses no-start language; all other cancelled-code states display a cancellation-request message. Unknown, target path, acknowledgement and admission remain unchanged."
+    },
+    {
+      "id": "WT-REVIEW-04",
+      "status": "resolved",
+      "origin": "Independent reviewer checked official check-attr ambiguity; architecture ran actual Git transformation and production preflight red.",
+      "failure": "The literal filter driver named unset was confused with disabled filter and silently accepted despite an actual configured transformation.",
+      "red": "backend/filter-sentinel-red.txt",
+      "redBoundary": "The loop failed on unset; unspecified was not reached in red and previously rejected later by mirror mismatch.",
+      "fix": "An ambiguous unset with configured nonempty smudge/process or required=true rejects as filters. Explicit unspecified is rejected as a driver value. No helper is run by Farfold to resolve the ambiguity."
+    }
+  ],
+  "reviewedInvariants": [
+    "Exact selected OID is checked in a private Git config/ref/index context. Worktree registration uses no-checkout; before and after materialization the target/root/common/git identity, branch and OID are checked; new index publication is no-clobber.",
+    "Git arguments are structured, shell-free. Current owned subprocess group and direct child retain admission through completion/reap; output uses bounded anonymous files. Surviving helpers are not a successful receipt. This does not prove control of escaped external processes.",
+    "The current operation intent is saved before Git dispatch. Final save failure retains unknown and existing materials. Recovery compares old/intended raw values and retries metadata only, never restarts Git.",
+    "Same ID/different current payload rejects; persisted location and retained material IDs are retired on cold load. Existing/adopted ownership cannot become created by matching a path.",
+    "Unknown material acknowledgement stores the possible path and reviewed status, preserves unknown, and never grants ready/created/deletion rights. A later explicit adoption records existing ownership.",
+    "Quit, data reset and managed update use real backend gates. A worker owned by this process cannot be confirmed away; successful gates retain admission through the corresponding operation.",
+    "Official bool normalization preserves accepted aliases; sparseCheckout=false does not imply an active sparse checkout profile."
+  ],
+  "evidenceRead": {
+    "authorRunCounts": {
+      "worktreesFinal": 28,
+      "actualExitResetGatesFinal": 3,
+      "frontendCancellationRelated": 114
+    },
+    "formatAndClippy": "owned-format-final and clippy-boundaries-final exited successfully; reviewer did not rerun them.",
+    "refs": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/boundary-red.txt",
+        "sha256": "20f196e0ba046ab3c785d1f9d603ec2316c678393cf6592348f6454a2d0c6982"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/boundary-green-first.txt",
+        "sha256": "0aa981ddb7fe49281e8e259127263b3bfa153702124b198ec17025133c96d8af"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/checkout-races-valid-red.txt",
+        "sha256": "5382f6269b9f4f8eb2e591f699e6950e879efc64a35df591f280a4f3eac097c7"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/wire-and-recovery-green.txt",
+        "sha256": "fb8f86bfdc016260a41d84c0e6be474270ca94456111949549ce886c8f6a53ff"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/config-aliases-red.txt",
+        "sha256": "758ef93d9e8e83358099d13469aad020a45a0026ac2bb13cdf4a6989dde85139"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/add-and-linked-red.txt",
+        "sha256": "42f8f1b07ee6f37a5398c9c6b57c11708c7015ad877ef265d770fa9d49562f49"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/no-lazy-fetch-probe.json",
+        "sha256": "c7a0694156d2dd1bd1e0e15c0ce3a56aebb97c739fab5f342984c8e220785af1"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/config-add-linked-green.txt",
+        "sha256": "1fd4327958d9fd21b2dfc6f0214882087e104ff3310a803c82b4bcc8954b69fd"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/filter-sentinel-red.txt",
+        "sha256": "22f3a94dc611ed4086d5889a5536e87d8d775a4fa60450a7e559ca1a89eddeab"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/targeted-final.txt",
+        "sha256": "e3085b65efcfacb1f9b4bf60ca2d8b72729fa497ec58d01074547b26d37c615b"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/exit-gates-final.txt",
+        "sha256": "12cc12466a3251c4ff1ba4b53842f23afeffd95a10ad0f8d025d87957151f588"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/owned-format-final.txt",
+        "sha256": "ddf7802e8997119b57c924b5a1d61cb7d261da288cacf03378c1898db44cb78d"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/clippy-boundaries-final.txt",
+        "sha256": "87334a617e34716f0695bd96d2d94bed663f7053af7774bf62d3dbdf251224d0"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/cancel-copy-red.txt",
+        "sha256": "b582213ec16e976a7ac1f879ab7da44502bb3e9b9eca417b46410e86519a14a7"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/cancel-copy-related-green.txt",
+        "sha256": "0b4b5e2781799d803f37d7879a03eb90697599b1fd710173b5d03fdbddded53a"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/cancel-copy-followup.json",
+        "sha256": "291fb412781ba0dc5f6fb6ac977d639d31fc57cb2ad504a1ac78660c65a2e409"
+      }
+    ]
+  },
+  "boundaries": [
+    "Cold unknown plus settled means this instance owns no current worker; it is not proof that a child from an earlier crashed process ended. Review note explicitly says acknowledgement proves neither creation success nor prior operation stop. No persisted process ledger was added.",
+    "The rare combination of disabled -filter and an independently configured driver literally named unset is conservatively refused because Git check-attr output cannot distinguish it from filter=unset.",
+    "No claim of a filesystem sandbox against arbitrary same-UID writers or escaped processes. Repeated identity checks do not provide atomic protection from every external race.",
+    "Tests are controlled temporary repositories on this macOS Git. No Windows Git implementation/native verification, installed worktree journey, real project mutation, or full H15 archive/delete acceptance is claimed.",
+    "This receipt is a source checkpoint. Final integrated source hashes and required whole-project checks remain root responsibilities."
+  ],
+  "officialReferences": [
+    {
+      "url": "https://git-scm.com/docs/git-check-attr/2.25.0",
+      "use": "Official manual, unchanged through 2.39.5, explicitly demonstrates unspecified output ambiguity; source review used the distinction, author test establishes actual unset impact."
+    }
+  ],
+  "notModified": "Production, tests, user repositories/configuration, existing receipts and raw outputs remained unchanged by this reviewer."
+}

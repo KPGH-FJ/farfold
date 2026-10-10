@@ -1,4 +1,5 @@
 import { VISUAL_AREA_STRINGS } from "./visual_area_strings";
+import { WORKTREE_STRINGS } from "./worktree_strings";
 import { LOADED_SEARCH_STRINGS } from "./loaded_search_strings";
 import { REPORTED_ARTIFACT_STRINGS } from "./reported_artifact_strings";
 import { REDESIGN } from "./redesign_strings";
@@ -84,6 +85,7 @@ describe("strings", () => {
   const leaves = collectStrings(
     {
       STRINGS,
+      WORKTREE_STRINGS,
       REPORTED_ARTIFACT_STRINGS,
       DOCUMENT_STRINGS,
       VISUAL_AREA_STRINGS,

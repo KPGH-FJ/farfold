@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktrees.test.ts (12 tests | 1 failed) 33ms
+   × keeps a trusted settled unknown result settled despite an older in-flight status 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktrees.test.ts > keeps a trusted settled unknown result settled despite an older in-flight status
+AssertionError: expected { kind: 'operation', …(4) } to match object { state: 'unknown', settled: true }
+(3 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "settled": true,
+-   "state": "unknown",
++   "settled": false,
++   "state": "running",
+  }
+
+ ❯ src/runtime/worktrees.test.ts:181:34
+    179|   h.invoke.mockResolvedValueOnce(reply("running", false));
+    180|   await s.status();
+    181|   expect(s.snapshot().operation).toMatchObject({
+       |                                  ^
+    182|     state: "unknown",
+    183|     settled: true,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 13 passed (14)
+   Start at  12:50:22
+   Duration  126ms (transform 58ms, setup 0ms, import 62ms, tests 35ms, environment 0ms)
+

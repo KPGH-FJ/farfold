@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Controlled worktree frontend</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      window.calls = [];
+      window.unexpected = [];
+      let serial = 1;
+      window.testInvoke = async (cmd, args) => {
+        window.calls.push({ cmd, args });
+        return null;
+      };
+      window.__TAURI_INTERNALS__ = {
+        invoke: (cmd, args) => window.testInvoke(cmd, args),
+        transformCallback: () => serial++,
+        unregisterCallback: () => {},
+        convertFileSrc: (p) => p,
+        metadata: {
+          currentWindow: { label: "main" },
+          currentWebview: { label: "main" },
+        },
+      };
+      window.__TAURI_EVENT_PLUGIN_INTERNALS__ = {
+        unregisterListener: () => {},
+      };
+    </script>
+    <script type="module" src="./fixture.tsx"></script>
+  </body>
+</html>

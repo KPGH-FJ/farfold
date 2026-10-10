@@ -1,0 +1,117 @@
+{
+  "scope": "Owned temporary repo only; no Agent/application/project mutation",
+  "git": "git version 2.39.5 (Apple Git-154)",
+  "records": [
+    {
+      "args": [
+        "init",
+        "-q"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "config",
+        "user.name",
+        "Fixture"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "config",
+        "user.email",
+        "fixture@example.invalid"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "add",
+        "."
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "commit",
+        "-qm",
+        "target with filter"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "rev-parse",
+        "HEAD"
+      ],
+      "exitCode": 0,
+      "stdout": "ef35bc36aeedc3adc83eeff61dd49ee2e1b7f244\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "add",
+        "."
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "commit",
+        "-qm",
+        "current no filter"
+      ],
+      "exitCode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "check-attr",
+        "--source=ef35bc36aeedc3adc83eeff61dd49ee2e1b7f244",
+        "-z",
+        "--stdin",
+        "filter"
+      ],
+      "exitCode": 129,
+      "stdout": "",
+      "stderr": "error: unknown option `source=ef35bc36aeedc3adc83eeff61dd49ee2e1b7f244'\nusage: git check-attr [-a | --all | <attr>...] [--] <pathname>...\n   or: git check-attr --stdin [-z] [-a | --all | <attr>...]\n\n    -a, --all             report all attributes set on file\n    --cached              use .gitattributes only from the index\n    --stdin               read file names from stdin\n    -z                    terminate input and output records by a NUL character\n\n"
+    },
+    {
+      "args": [
+        "check-attr",
+        "--cached",
+        "-z",
+        "--stdin",
+        "filter"
+      ],
+      "exitCode": 0,
+      "stdout": "a.txt\u0000filter\u0000unspecified\u0000",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "cat-file",
+        "blob",
+        "ef35bc36aeedc3adc83eeff61dd49ee2e1b7f244:.gitattributes"
+      ],
+      "exitCode": 0,
+      "stdout": "*.txt filter=probe\n",
+      "stderr": ""
+    }
+  ],
+  "temporaryRootRemovedOnContextExit": true
+}

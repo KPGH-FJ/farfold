@@ -1,0 +1,18 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.52s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'worktrees::manager::tests::cancellation_before_prepare_retires_the_exact_fresh_id_with_a_confirmed_no_start_receipt' (23097673) panicked at src/worktrees/manager_tests.rs:285:5:
+fresh ID cancel must have an exact known result: Unknown { kind: "unknownOperation", operation_id: "12345678-1234-4123-8123-123456789abc" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test worktrees::manager::tests::cancellation_before_prepare_retires_the_exact_fresh_id_with_a_confirmed_no_start_receipt ... FAILED
+
+failures:
+
+failures:
+    worktrees::manager::tests::cancellation_before_prepare_retires_the_exact_fresh_id_with_a_confirmed_no_start_receipt
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1289 filtered out; finished in 0.20s
+
+error: test failed, to rerun pass `--lib`

@@ -108,6 +108,7 @@ pub(crate) use super::elicitation::{PendingElicitations, cancel as cancel_elicit
 /// use one lifecycle owner; unknown operations retain their reservation.
 #[derive(Clone)]
 pub(crate) struct SessionOps {
+    pub(crate) async_tasks_supported: Arc<AtomicBool>,
     pub(crate) opening: Option<super::lifecycle::OpenReservation>,
     pub(crate) connection_id: String,
     pub(crate) verify_identity: super::manager::SessionIdentityCheck,
@@ -164,6 +165,12 @@ pub(crate) enum SessionControl {
     Cancel {
         deadline: tokio::time::Instant,
         result: oneshot::Sender<Result<(), String>>,
+    },
+    StopTask {
+        connection_id: String,
+        task_id: String,
+        deadline: tokio::time::Instant,
+        result: oneshot::Sender<Result<Value, String>>,
     },
     SetConfig {
         config_id: String,
@@ -227,7 +234,10 @@ impl SessionControl {
             }
             | Self::Detach { deadline, result }
             | Self::Delete { deadline, result } => (*deadline, result.is_closed()),
-            Self::SetConfig {
+            Self::StopTask {
+                deadline, result, ..
+            }
+            | Self::SetConfig {
                 deadline, result, ..
             }
             | Self::ConfirmConfig {
@@ -488,6 +498,7 @@ struct DispatchContext<'a> {
     elicitation_ids: &'a mut Vec<String>,
     expirations: &'a mpsc::UnboundedSender<String>,
     tools: &'a mut super::tool_activity::ToolActivity,
+    async_tasks: &'a mut super::async_tasks::Tasks,
     prompt_cancelling: bool,
 }
 
@@ -517,9 +528,13 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
         Dispatch::Notification(message) => {
             if message.method() == "session/update" {
                 let activity = ctx.tools.observe(message.params());
+                let task_activity = ctx.async_tasks.observe(message.params());
                 // Raw passthrough: the params object is the update envelope,
                 // unknown fields and `_meta` survive untouched.
                 (ctx.events)(message.params().clone());
+                if let Some(activity) = task_activity {
+                    (ctx.events)(activity);
+                }
                 if let Some(activity) = activity {
                     (ctx.events)(activity);
                 }
@@ -684,6 +699,13 @@ async fn session_pump(
     let mut prompt_cancelling = false;
     let mut prompt_lease = None;
     let mut tools = super::tool_activity::ToolActivity::new(ops.life.clone());
+    let mut async_tasks = super::async_tasks::Tasks::new(
+        ops.async_tasks_supported.load(Ordering::SeqCst),
+        ops.connection_id.clone(),
+        session_id.clone(),
+        ops.life.clone(),
+    );
+    let (task_tx, mut task_rx) = mpsc::unbounded_channel();
     let mut failures = super::failures::FailureTracker::default();
     let mut elicitation_ids: Vec<String> = Vec::new();
     let (expiry_tx, mut expiry_rx) = mpsc::unbounded_channel::<String>();
@@ -692,6 +714,7 @@ async fn session_pump(
         if *stopping.borrow() {
             break;
         }
+        let task_deadline = async_tasks.deadline();
         let mut ctx = DispatchContext {
             session_id: &session_id,
             events: &events,
@@ -701,6 +724,7 @@ async fn session_pump(
             elicitation_ids: &mut elicitation_ids,
             expirations: &expiry_tx,
             tools: &mut tools,
+            async_tasks: &mut async_tasks,
             prompt_cancelling,
         };
         // Inspect only the FIFO head: a running prompt's cancellation must
@@ -709,15 +733,30 @@ async fn session_pump(
         if buffered_control.is_none() {
             buffered_control = control.try_recv().ok();
         }
-        if prompt_in_flight
-            && matches!(buffered_control, Some(SessionControl::Cancel { .. }))
+        if ((prompt_in_flight && matches!(buffered_control, Some(SessionControl::Cancel { .. })))
+            || (opening.is_none()
+                && matches!(buffered_control, Some(SessionControl::StopTask { .. }))))
             && let Some(command) = buffered_control.take()
         {
             if command.abandoned() {
                 continue;
             }
             ops.life.touch();
-            if let SessionControl::Cancel { result, .. } = command {
+            if let SessionControl::StopTask {
+                connection_id,
+                task_id,
+                result,
+                ..
+            } = command
+            {
+                events(ctx.async_tasks.start(
+                    &cx,
+                    &connection_id,
+                    &task_id,
+                    result,
+                    task_tx.clone(),
+                ));
+            } else if let SessionControl::Cancel { result, .. } = command {
                 if opening.is_some() {
                     let _ = result.send(Err("对话正在恢复，请稍后重试".into()));
                 } else {
@@ -739,6 +778,14 @@ async fn session_pump(
             // update the agent sent before the prompt response.
             biased;
             _ = stopping.changed() => break,
+            completion = task_rx.recv() => {
+                if let Some(completion) = completion
+                    && let Some(event) = ctx.async_tasks.complete(completion) { events(event); }
+            },
+            () = async {
+                if let Some(deadline) = task_deadline { tokio::time::sleep_until(deadline).await; }
+                else { std::future::pending::<()>().await; }
+            } => { events(ctx.async_tasks.expire()); },
             dispatch = inbox.recv() => match dispatch {
                 Some(dispatch) => {
                     if let Dispatch::Notification(message) = &dispatch
@@ -768,6 +815,7 @@ async fn session_pump(
             // prefix has reached the sink. Do not use a timing delay here.
             () = std::future::ready(()), if opening.as_ref().is_some_and(|opening| opening.reply.is_some()) && mutation.is_none() => {
                 events(ctx.tools.event());
+                events(ctx.async_tasks.event());
                 let source = config_store.validate_service().await;
                 restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard,
                     &mut permission_guard, &mut opening, &mut mutation);
@@ -1037,7 +1085,7 @@ async fn session_pump(
                             SessionControl::Prompt { result,.. } | SessionControl::Cancel { result,.. }
                             | SessionControl::SetMode { result,.. } | SessionControl::Close { result,.. }
                             | SessionControl::Delete { result,.. } | SessionControl::Detach { result,.. } => { let _=result.send(Err(error)); }
-                            SessionControl::SetConfig { result,.. } | SessionControl::ConfirmConfig { result,.. } => { let _=result.send(Err(error)); }
+                            SessionControl::StopTask { result,.. } | SessionControl::SetConfig { result,.. } | SessionControl::ConfirmConfig { result,.. } => { let _=result.send(Err(error)); }
                             SessionControl::Archive { result,.. } => { let _=result.send(Err(error)); }
                             SessionControl::Shutdown => break,
                         }
@@ -1046,7 +1094,7 @@ async fn session_pump(
                     match command {
                 SessionControl::Shutdown => break,
                 SessionControl::Archive { row, canonical_cwd, reservations, admission, result, .. } => {
-                    let busy = prompt_in_flight || mutation.is_some() || ctx.tools.busy()
+                    let busy = prompt_in_flight || mutation.is_some() || (ctx.tools.busy() || ctx.async_tasks.busy())
                         || !permission_guard.admissible() || !model_guard.admissible()
                         || pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id && entry.lease.belongs_to(&ops.life))).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id && entry.lease.belongs_to(&ops.life))).unwrap_or(true);
@@ -1065,7 +1113,7 @@ async fn session_pump(
                     let _ = result.send(outcome);
                 }
                 SessionControl::Detach { result, .. } => {
-                    let busy = prompt_in_flight || mutation.is_some() || ctx.tools.busy()
+                    let busy = prompt_in_flight || mutation.is_some() || (ctx.tools.busy() || ctx.async_tasks.busy())
                         || pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
                     if busy {
@@ -1152,11 +1200,14 @@ async fn session_pump(
                     send_session_cancel(&cx, &mut ctx, result, prompt_in_flight, mcp_requests.as_ref());
                     prompt_cancelling = ctx.prompt_cancelling;
                 }
+                SessionControl::StopTask { connection_id, task_id, result, .. } => {
+                    events(ctx.async_tasks.start(&cx, &connection_id, &task_id, result, task_tx.clone()));
+                }
                 SessionControl::SetConfig { config_id, value, result, deadline } => {
                     let permission = permission_guard.is_permission(&config_id);
                     let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
-                    if mutation.is_some() || prompt_in_flight || ctx.tools.busy() || awaiting || !model_guard.may_set(&config_id) {
+                    if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy()) || awaiting || !model_guard.may_set(&config_id) {
                         let _ = result.send(Err("当前无法修改此设置，请等待已发出的请求结束".into()));
                         continue;
                     }
@@ -1194,7 +1245,7 @@ async fn session_pump(
                         }
                         let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                             || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
-                        if !model_guard.admissible() || !permission_guard.admissible() || ctx.tools.busy() || awaiting {
+                        if !model_guard.admissible() || !permission_guard.admissible() || (ctx.tools.busy() || ctx.async_tasks.busy()) || awaiting {
                             let _ = result.send(Err("当前设置或待处理事项已变化，请重新检查此对话".into()));
                             continue;
                         }
@@ -1219,7 +1270,7 @@ async fn session_pump(
                 SessionControl::ConfirmConfig { displayed, result, .. } => {
                     let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
-                    let outcome = if mutation.is_some() || prompt_in_flight || ctx.tools.busy() || awaiting || !model_guard.confirmable(&displayed) {
+                    let outcome = if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy()) || awaiting || !model_guard.confirmable(&displayed) {
                         Err("当前设置已变化或无法确认，请重新检查".to_string())
                     } else if let Err(error) = save_confirmed_change(&session_id, &mut model_guard,
                         &mut config_store, &mut pending_config_store).await {
@@ -1275,7 +1326,7 @@ async fn session_pump(
                             "session/delete", serde_json::json!({"sessionId":session_id})),
                         _ => unreachable!(),
                     };
-                    if mutation.is_some() || prompt_in_flight || ctx.tools.busy() {
+                    if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy()) {
                         let _ = result.send(Err("上次请求尚未结束，请先停止或等待".into()));
                         continue;
                     }

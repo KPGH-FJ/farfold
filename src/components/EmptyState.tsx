@@ -4,6 +4,8 @@
  * 真会话并切到会话页。
  */
 import { PreservedDrafts } from "./PreservedDrafts";
+import { WorkLocationPicker } from "./WorkLocationPicker";
+import { useDraftWorkLocation } from "./useDraftWorkLocation";
 import { REDESIGN as R } from "../runtime/redesign_strings";
 import { serviceSelectionIsCurrent } from "../runtime/conversation_actions";
 import { createPortal } from "react-dom";
@@ -53,6 +55,7 @@ import { STRINGS } from "../runtime/strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import {
   composerDrafts,
+  draftPersistence,
   newConversationChoice,
   useComposerDraft,
   type ComposerDraft,
@@ -321,6 +324,44 @@ export function EmptyState({
   const currentPair = useRef(pair);
   currentPair.current = pair;
   const selectionEpoch = useRef(0);
+  const locationState = useRef({ draft, unsent, picking });
+  locationState.current = { draft, unsent, picking };
+  const locationAllowed = () => {
+    const value = locationState.current;
+    const saved = composerDrafts.read("new");
+    return (
+      mounted.current &&
+      activeRef.current &&
+      !value.picking &&
+      !draftPersistence.snapshot().interactionLocked &&
+      !value.unsent.pendingConversation &&
+      !saved.pendingConversation &&
+      !saved.sendPending &&
+      !value.draft?.submitting &&
+      !value.draft?.running
+    );
+  };
+  const { owner: locationOwner, begin: beginWorkLocation } =
+    useDraftWorkLocation({
+      context: JSON.stringify([
+        pair,
+        initialAgentRevision,
+        draftRevision,
+        selectionEpoch.current,
+      ]),
+      active,
+      allowed: locationAllowed,
+      onBegin: () => {
+        sendAfterFolder.current = null;
+      },
+      onApply: (path) => {
+        sendAfterFolder.current = null;
+        setDraftError(null);
+        failedPairRef.current = null;
+        newConversationChoice.cwd = path;
+        setFolder(path);
+      },
+    });
   const requireCurrentService = async () => {
     if (!service) return;
     const epoch = selectionEpoch.current;
@@ -600,6 +641,7 @@ export function EmptyState({
       draft?.running
     )
       return false;
+    locationOwner.current.retire();
     const selection = pair;
     setPicking(true);
     try {
@@ -630,6 +672,7 @@ export function EmptyState({
   };
 
   const send = async (blocks: PromptBlock[], submittedDraft: ComposerDraft) => {
+    locationOwner.current.retire();
     const authenticationBlocked = (key = draftKey) => {
       if (!agentId) return true;
       const context =
@@ -826,6 +869,7 @@ export function EmptyState({
     blocks: PromptBlock[],
     submittedDraft: ComposerDraft,
   ): Promise<boolean> => {
+    locationOwner.current.retire();
     // A direct send consumes any armed one-shot so it cannot fire twice.
     sendAfterFolder.current = null;
     if (selectionReviewRef.current) throw new Error(R.selectionReview);
@@ -906,6 +950,7 @@ export function EmptyState({
     !preparationComplete || !currentAgent || !candidateSelected;
   const pickAgent = (id: string) => {
     if (!isCurrentCandidate(id) || !currentReadiness.current(id)) return;
+    locationOwner.current.retire();
     setChoiceDialog(null);
     allowAutomaticConnection(id);
     if (id === agentId) {
@@ -942,6 +987,7 @@ export function EmptyState({
     onGoSettings(id);
   };
   const applyModel = async (choice: NewConversationModelChoice) => {
+    locationOwner.current.retire();
     if (
       !activeRef.current ||
       currentPair.current !== pair ||
@@ -1146,6 +1192,7 @@ export function EmptyState({
       {onRestoreDraft && (
         <PreservedDrafts
           onRestore={async (key) => {
+            locationOwner.current.retire();
             selectionEpoch.current++;
             await onRestoreDraft(key);
             const restored = newConversationChoice;
@@ -1218,6 +1265,7 @@ export function EmptyState({
         sendRequest={sendRequest}
         onRequireFolder={() => void pickProject()}
         onRecoverPending={async (target) => {
+          locationOwner.current.retire();
           const key = await recoverPendingConversation(target);
           handedOffKeys.current.add(key);
           if (mounted.current && activeRef.current) {
@@ -1286,11 +1334,25 @@ export function EmptyState({
               draft?.submitting ||
               draft?.running
             }
-            onClick={() => setFolder(null)}
+            onClick={() => {
+              locationOwner.current.retire();
+              setFolder(null);
+            }}
           >
             <XIcon size={14} />
           </button>
         )}
+        <WorkLocationPicker
+          cwd={folder}
+          disabled={
+            !active ||
+            picking ||
+            !!unsent.pendingConversation ||
+            !!draft?.submitting ||
+            !!draft?.running
+          }
+          begin={beginWorkLocation}
+        />
         <span className="workspace-folder-hint">{R.folderHint}</span>
       </div>
       {(draftError ||

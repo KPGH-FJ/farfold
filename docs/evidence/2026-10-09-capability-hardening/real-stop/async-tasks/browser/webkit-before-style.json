@@ -1,0 +1,111 @@
+{
+  "engine": "webkit",
+  "scope": "Actual AsyncTasks React StrictMode + real threads event projection/action; controlled IPC only. Not full App, native, Agent, or task termination proof.",
+  "before": {
+    "src/runtime/async_tasks.ts": "6fa3d2d72009a4b5b18254d27cc9a3fcc88830e06f95c21528aa0841241133e4",
+    "src/runtime/async_task_actions.ts": "7f67d8489850d847899ac41dee9aa28330647ba13cfa7eadd53d902ac9dd2915",
+    "src/runtime/async_task_strings.ts": "251dd5e0704a0c094dfa1451ff8564cb7928245daaefdffa63264963e82990fb",
+    "src/runtime/session_types.ts": "8d1bdcc0fd993d75a7e42417d3c31e8a22f437ea10db83777d23b0363e5ed3ee",
+    "src/runtime/sessions.ts": "f304c6875864f0bc0f0dbcc46961224da9e608648cbd6c735b3ea64afa16998c",
+    "src/runtime/session_projection.ts": "96b393e8a1bd8865cf4309729b7548624cba0fb62e80b0f9318082a2eb5235a8",
+    "src/components/AsyncTasks.tsx": "7aba209e1f8bf38e6a95cadbbbbfc8df48052b517fe4f293f072169158488f79",
+    "src/components/AsyncTasks.css": "34b6ca977558539e10f6780ef7e8e3b82204a0692d4ebb6ddabac8a6dd015749"
+  },
+  "checks": [
+    {
+      "name": "no automatic stop",
+      "pass": true
+    },
+    {
+      "name": "keyboard explicit dispatch once",
+      "pass": true
+    },
+    {
+      "name": "pending button disabled",
+      "pass": true
+    },
+    {
+      "name": "accepted keeps running",
+      "pass": true,
+      "detail": {
+        "busy": true,
+        "queue": [
+          [
+            {
+              "type": "text",
+              "text": "Retained queued draft"
+            }
+          ]
+        ],
+        "pause": "stopped",
+        "items": [],
+        "task": {
+          "asyncTaskId": "exact-1",
+          "name": "受控后台任务 · 保留完整执行归属",
+          "taskType": "shell",
+          "toolCallId": "original-tool",
+          "canStop": true,
+          "state": "running",
+          "stopRequest": "accepted"
+        }
+      }
+    },
+    {
+      "name": "queue paused retained",
+      "pass": true
+    },
+    {
+      "name": "wrong owner cannot clear card",
+      "pass": true
+    },
+    {
+      "name": "natural completion stays completed",
+      "pass": true
+    },
+    {
+      "name": "no fake turn or tool terminal",
+      "pass": true
+    },
+    {
+      "name": "inactive card disables control",
+      "pass": true
+    },
+    {
+      "name": "active exact card enabled",
+      "pass": true
+    },
+    {
+      "name": "connection loss preserves unknown work",
+      "pass": true
+    },
+    {
+      "name": "narrow content no horizontal overflow",
+      "pass": true
+    },
+    {
+      "name": "only exact target IPC",
+      "pass": true
+    },
+    {
+      "name": "no external requests or runtime errors",
+      "pass": true,
+      "detail": {
+        "errors": [],
+        "blocked": []
+      }
+    }
+  ],
+  "errors": [],
+  "blocked": [],
+  "after": {
+    "src/runtime/async_tasks.ts": "6fa3d2d72009a4b5b18254d27cc9a3fcc88830e06f95c21528aa0841241133e4",
+    "src/runtime/async_task_actions.ts": "7f67d8489850d847899ac41dee9aa28330647ba13cfa7eadd53d902ac9dd2915",
+    "src/runtime/async_task_strings.ts": "251dd5e0704a0c094dfa1451ff8564cb7928245daaefdffa63264963e82990fb",
+    "src/runtime/session_types.ts": "8d1bdcc0fd993d75a7e42417d3c31e8a22f437ea10db83777d23b0363e5ed3ee",
+    "src/runtime/sessions.ts": "f304c6875864f0bc0f0dbcc46961224da9e608648cbd6c735b3ea64afa16998c",
+    "src/runtime/session_projection.ts": "96b393e8a1bd8865cf4309729b7548624cba0fb62e80b0f9318082a2eb5235a8",
+    "src/components/AsyncTasks.tsx": "7aba209e1f8bf38e6a95cadbbbbfc8df48052b517fe4f293f072169158488f79",
+    "src/components/AsyncTasks.css": "34b6ca977558539e10f6780ef7e8e3b82204a0692d4ebb6ddabac8a6dd015749"
+  },
+  "sourceUnchanged": true
+}

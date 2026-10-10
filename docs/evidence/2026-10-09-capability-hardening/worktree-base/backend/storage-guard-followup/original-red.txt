@@ -1,0 +1,18 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.65s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'storage_recovery::tests::run_event_and_menu_paths_do_not_require_an_uninitialized_meta_store' (23165057) panicked at src/storage_recovery/tests.rs:305:9:
+assertion failed: !source.contains("state::<crate::meta_store::MetaStore>")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test storage_recovery::tests::run_event_and_menu_paths_do_not_require_an_uninitialized_meta_store ... FAILED
+
+failures:
+
+failures:
+    storage_recovery::tests::run_event_and_menu_paths_do_not_require_an_uninitialized_meta_store
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1296 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

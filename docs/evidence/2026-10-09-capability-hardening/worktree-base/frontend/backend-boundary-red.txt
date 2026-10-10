@@ -1,0 +1,146 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktrees.test.ts (23 tests | 4 failed) 42ms
+   × explicit recheck may invalidate a formerly ready location 4ms
+   × failed fresh location check reads back saved unavailability without applying 1ms
+   × confirmed forgetting clears the associated result and old observations cannot resurrect it 1ms
+   × fixed backend failure codes reach safe descriptions while arbitrary failures stay generic 1ms
+ ❯ src/components/WorktreeDialog.test.tsx (8 tests | 1 failed) 17ms
+   × displays a fixed mapped failure from a fresh location check 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeDialog.test.tsx > displays a fixed mapped failure from a fresh location check
+AssertionError: expected '<div class="worktree-dialog-body"><p>…' to contain '仓库检查已过期，请重新选择仓库文件夹。'
+
+Expected: "仓库检查已过期，请重新选择仓库文件夹。"
+Received: "<div class="worktree-dialog-body"><p>工作树提供另一个文件夹；账号、Git设置和部分依赖仍可能共享。</p><div class="worktree-actions"><button type="button" class="btn btn-ghost">选择已有文件夹</button><button type="button" class="btn btn-ghost">选择仓库文件夹</button></div><p role="alert">暂时无法核实工作树，请重新核查或选择已有文件夹。</p><div class="worktree-actions"><h3>已有工作树</h3><button type="button" class="btn btn-ghost">刷新清单</button></div><ul class="worktree-list"><li><span><strong>feature</strong><span class="worktree-path">/repo/linked</span><small>由此处创建 · 使用前将重新核查</small></span><div class="worktree-actions"><button type="button" class="btn btn-primary">使用此位置</button><button type="button" class="btn btn-ghost">重新核查</button><button type="button" class="btn btn-ghost">从清单移除</button></div></li></ul></div>"
+
+ ❯ src/components/WorktreeDialog.test.tsx:223:42
+    221|   click(S.use);
+    222|   await settle();
+    223|   expect(renderToStaticMarkup(render())).toContain(S.errors.inspection…
+       |                                          ^
+    224|   expect(props.target.apply).not.toHaveBeenCalled();
+    225| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/runtime/worktrees.test.ts > explicit recheck may invalidate a formerly ready location
+AssertionError: expected { kind: 'operation', …(5) } to match object { state: 'unknown', code: 'changed' }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "code": "changed",
+-   "state": "unknown",
++   "state": "ready",
+  }
+
+ ❯ src/runtime/worktrees.test.ts:416:34
+    414|   });
+    415|   await s.recheck();
+    416|   expect(s.snapshot().operation).toMatchObject({
+       |                                  ^
+    417|     state: "unknown",
+    418|     code: "changed",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/runtime/worktrees.test.ts > failed fresh location check reads back saved unavailability without applying
+AssertionError: expected [ { id: 'tree', revision: 1, …(6) } ] to deeply equal [ { id: 'tree', revision: 2, …(6) } ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "availability": "missing",
++     "availability": "verified",
+      "branch": "refs/heads/new",
+      "headOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "id": "tree",
+      "ownership": "created",
+      "path": "/trees/new",
+      "repositoryRoot": "/source",
+-     "revision": 2,
++     "revision": 1,
+    },
+  ]
+
+ ❯ src/runtime/worktrees.test.ts:438:34
+    436|   });
+    437|   await expect(s.check(location)).rejects.toThrow();
+    438|   expect(s.snapshot().locations).toEqual([changed]);
+       |                                  ^
+    439| });
+    440| it("confirmed forgetting clears the associated result and old observat…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/runtime/worktrees.test.ts > confirmed forgetting clears the associated result and old observations cannot resurrect it
+AssertionError: expected { locations: [], materials: [], …(7) } to match object { Object (locations, operation, ...) }
+(6 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+    "locations": [],
+-   "operation": null,
+-   "operationId": null,
++   "operation": {
++     "cancelRequested": false,
++     "kind": "operation",
++     "location": {
++       "availability": "verified",
++       "branch": "refs/heads/new",
++       "headOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
++       "id": "tree",
++       "ownership": "created",
++       "path": "/trees/new",
++       "repositoryRoot": "/source",
++       "revision": 1,
++     },
++     "operationId": "prior",
++     "settled": true,
++     "state": "ready",
++   },
++   "operationId": "prior",
+  }
+
+ ❯ src/runtime/worktrees.test.ts:450:24
+    448|   h.invoke.mockResolvedValueOnce({ forgotten: true });
+    449|   await s.forget(location);
+    450|   expect(s.snapshot()).toMatchObject({
+       |                        ^
+    451|     locations: [],
+    452|     operation: null,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/runtime/worktrees.test.ts > fixed backend failure codes reach safe descriptions while arbitrary failures stay generic
+AssertionError: expected [Function] to throw error including '此仓库没有普通工作文件夹。' but got '暂时无法核实工作树，请重新核查或选择已有文件夹。'
+
+Expected: "此仓库没有普通工作文件夹。"
+Received: "暂时无法核实工作树，请重新核查或选择已有文件夹。"
+
+ ❯ src/runtime/worktrees.test.ts:460:35
+    458|   const { WORKTREE_STRINGS: S } = await import("./worktree_strings");
+    459|   h.invoke.mockRejectedValueOnce({ code: "bare" });
+    460|   await expect(s.inspect("/repo")).rejects.toThrow(S.blockers.bare);
+       |                                   ^
+    461|   h.invoke.mockRejectedValueOnce({ code: "inspectionExpired" });
+    462|   await expect(s.refs("expired")).rejects.toThrow(S.errors.inspectionE…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  5 failed | 26 passed (31)
+   Start at  13:20:21
+   Duration  171ms (transform 94ms, setup 0ms, import 123ms, tests 59ms, environment 0ms)
+

@@ -1,0 +1,41 @@
+Owned worktree frontend Vite PID 78134
+1:05:41 PM [vite] (client) hmr update /docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx
+1:06:13 PM [vite] (client) hmr update /docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx
+1:07:27 PM [vite] (client) hmr update /src/components/EmptyState.tsx, /src/components/Composer.tsx, /src/components/AgentLogo.tsx, /src/components/AgentPick.tsx, /src/components/SessionOptionsMenu.tsx, /src/components/ReasoningControl.tsx, /src/components/PermissionControl.tsx, /src/components/ConfigurationChangeReview.tsx, /src/components/AttachmentRecovery.tsx
+1:07:27 PM [vite] (client) hmr update /src/components/EmptyState.tsx, /src/components/Composer.tsx, /src/components/AgentLogo.tsx, /src/components/AgentPick.tsx, /src/components/SessionOptionsMenu.tsx, /src/components/ReasoningControl.tsx, /src/components/PermissionControl.tsx, /src/components/ConfigurationChangeReview.tsx, /src/components/AttachmentRecovery.tsx
+1:09:16 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/index.html
+1:09:47 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/index.html
+1:11:19 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:11:19 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:11:19 PM [vite] (client) hmr update /src/components/WorkLocationPicker.tsx, /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:11:19 PM [vite] (client) hmr update /src/components/WorktreeCreateForm.tsx
+1:11:19 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx
+1:11:19 PM [vite] (client) hmr update /docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx
+1:11:20 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:11:20 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:11:20 PM [vite] (client) hmr update /src/components/WorkLocationPicker.tsx, /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:11:20 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx
+1:11:20 PM [vite] (client) hmr update /docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx
+1:12:00 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:12:00 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx
+1:12:55 PM [vite] (client) hmr update /docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx
+1:12:55 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx
+1:12:55 PM [vite] (client) hmr update /docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx
+1:14:34 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:14:34 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:15:35 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:15:35 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:18:15 PM [vite] (client) hmr update /src/components/WorkLocationPicker.tsx, /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:20:59 PM [vite] (client) hmr update /src/components/WorkLocationPicker.tsx, /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:20:59 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:20:59 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx
+1:20:59 PM [vite] (client) hmr update /src/components/WorktreeCreateForm.tsx
+1:21:00 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:21:00 PM [vite] (client) hmr update /src/components/WorkLocationPicker.tsx, /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:21:00 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx
+1:21:20 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:21:20 PM [vite] (client) hmr update /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:21:31 PM [vite] (client) hmr update /src/components/WorkLocationPicker.tsx, /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:22:13 PM [vite] (client) hmr update /docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx
+1:22:13 PM [vite] (client) hmr update /src/components/WorkLocationPicker.tsx, /src/components/WorktreeDialog.tsx, /src/components/WorktreeCreateForm.tsx
+1:22:13 PM [vite] (client) hmr update /docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/browser/fixture.tsx

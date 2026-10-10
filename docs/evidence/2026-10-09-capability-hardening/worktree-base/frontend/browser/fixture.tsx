@@ -1,0 +1,209 @@
+import React, { StrictMode, useState } from "react";
+import { createRoot } from "react-dom/client";
+import { EmptyState } from "/src/components/EmptyState";
+import {
+  composerDrafts,
+  newConversationChoice,
+  draftPersistence,
+} from "/src/runtime/drafts";
+import "/src/styles.css";
+import "/src/styles-settings.css";
+import "/src/styles-content.css";
+import "/src/styles-thread.css";
+import "/src/styles-artifact.css";
+import "/src/product-shell.css";
+import "/src/conversation-workspace.css";
+import "/src/desktop-workbench.css";
+const settings = new Map();
+let operation = null;
+let locations = [];
+let materials = [];
+let chooser = [];
+let mode = "ready";
+let releasePrepare;
+const oid = "a".repeat(40);
+const location = {
+  id: "created",
+  revision: 1,
+  path: "/controlled/trees/feature",
+  repositoryRoot: "/controlled/repo",
+  branch: "refs/heads/feature",
+  headOid: oid,
+  ownership: "created",
+  availability: "verified",
+};
+const state = (id, value) => ({
+  kind: "operation",
+  operationId: id,
+  state: value,
+  settled: ["ready", "failed", "cancelled"].includes(value),
+  cancelRequested: false,
+  ...(value === "ready" ? { location } : {}),
+});
+window.testInvoke = async (cmd, args) => {
+  window.calls.push({ cmd, args });
+  if (cmd === "settings_get") return settings.get(args.key) ?? null;
+  if (cmd === "settings_set") {
+    settings.set(args.key, args.value);
+    return;
+  }
+  if (cmd === "plugin:event|listen") return 1;
+  if (cmd === "plugin:event|unlisten" || cmd === "host_performance_origin")
+    return null;
+  if (cmd === "credential_list" || cmd === "agent_status") return [];
+  if (cmd === "agent_work_get")
+    return { cwd: args.cwd, enabled: {}, locationEnabled: true };
+  if (cmd === "plugin:dialog|open") return chooser.shift() ?? null;
+  if (cmd === "worktree_list") return { locations, operation, materials };
+  if (cmd === "worktree_inspect" && mode === "bare") throw { code: "bare" };
+  if (cmd === "worktree_inspect")
+    return {
+      inspectionId:
+        args.path === "/controlled/trees/possible"
+          ? "material-inspect"
+          : "inspect",
+      root:
+        args.path === "/controlled/trees/possible"
+          ? args.path
+          : "/controlled/repo",
+      repositoryRoot: "/controlled/repo",
+      kind: "main",
+      head: { oid, branch: "refs/heads/main" },
+      trees: [
+        { path: "/controlled/repo", branch: "refs/heads/main", locked: false },
+        ...(args.path === "/controlled/trees/possible"
+          ? [{ path: args.path, branch: "refs/heads/possible", locked: false }]
+          : []),
+      ],
+      blockers: [],
+    };
+  if (cmd === "worktree_refs")
+    return {
+      refs: [
+        { ref: "refs/heads/main", oid, inUse: true },
+        { ref: "refs/heads/existing", oid, inUse: false },
+      ],
+      nextCursor: null,
+    };
+  if (cmd === "worktree_prepare_create") {
+    operation = state(args.operationId, "prepared");
+    if (mode === "failed")
+      return (operation = {
+        ...state(args.operationId, "failed"),
+        code: "targetExists",
+      });
+    if (mode === "late")
+      return new Promise((r) => {
+        releasePrepare = () => r(operation);
+      });
+    return operation;
+  }
+  if (cmd === "worktree_start") {
+    if (mode === "settledUnknown")
+      return (operation = {
+        ...state(args.operationId, "unknown"),
+        settled: true,
+        targetPath: "/controlled/trees/possible",
+      });
+    if (mode === "unknown") throw Error("controlled lost receipt");
+    locations = [location];
+    return (operation = state(args.operationId, "ready"));
+  }
+  if (cmd === "worktree_recheck" || cmd === "worktree_status") {
+    if (mode === "unknown") {
+      locations = [location];
+      return (operation = state(args.operationId, "ready"));
+    }
+    return operation;
+  }
+  if (cmd === "worktree_cancel")
+    return (operation = {
+      ...state(args.operationId, "cancelled"),
+      cancelRequested: true,
+    });
+  if (cmd === "worktree_check_location" && mode === "missing") {
+    locations = locations.map((v) => ({
+      ...v,
+      revision: v.revision + 1,
+      availability: "missing",
+    }));
+    throw { code: "missing" };
+  }
+  if (cmd === "worktree_check_location")
+    return locations.find((v) => v.id === args.locationId) ?? location;
+  if (cmd === "worktree_acknowledge") {
+    if (
+      operation.operationId !== args.operationId ||
+      operation.state !== "unknown" ||
+      !operation.settled
+    )
+      throw Error("bad acknowledgement");
+    materials.push({
+      operationId: operation.operationId,
+      path: operation.targetPath,
+      repositoryRoot: "/controlled/repo",
+    });
+    return (operation = { ...operation, reviewed: true });
+  }
+  if (cmd === "worktree_forget") {
+    locations = [];
+    operation = null;
+    return { forgotten: true };
+  }
+  if (cmd === "worktree_adopt") {
+    locations = [{ ...location, ownership: "existing" }];
+    return (operation = {
+      ...state(args.operationId, "ready"),
+      location: locations[0],
+    });
+  }
+  window.unexpected.push(cmd);
+  throw Error("Unexpected controlled IPC " + cmd);
+};
+await draftPersistence.load();
+composerDrafts.update("new", () => ({
+  text: "KEEP_UNSENT_DRAFT",
+  attachments: [],
+}));
+newConversationChoice.cwd = null;
+newConversationChoice.agentId = null;
+let setActive;
+window.fixture = {
+  choose: (...paths) => chooser.push(...paths),
+  mode: (v) => (mode = v),
+  release: () => releasePrepare?.(),
+  active: (v) => setActive(v),
+  current: () => ({
+    cwd: newConversationChoice.cwd,
+    draft: composerDrafts.read("new"),
+  }),
+};
+function Harness() {
+  const [active, change] = useState(true);
+  setActive = change;
+  return (
+    <div className="app product-app">
+      <div className="workspace-route" hidden={!active}>
+        <EmptyState
+          active={active}
+          agents={[]}
+          onStarted={() => {
+            throw Error("Must never send");
+          }}
+          onGoSettings={() => {}}
+          onProjectChange={() => {}}
+          header={
+            <header className="workspace-topbar">
+              <h1>Controlled new conversation</h1>
+            </header>
+          }
+        />
+      </div>
+    </div>
+  );
+}
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <Harness />
+  </StrictMode>,
+);

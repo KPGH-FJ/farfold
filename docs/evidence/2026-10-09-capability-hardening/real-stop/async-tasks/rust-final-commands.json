@@ -1,0 +1,31 @@
+[
+  {
+    "command": [
+      "cargo",
+      "clippy",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 101,
+    "output": "clippy-after-borrow.txt"
+  },
+  {
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "async_task_",
+      "--",
+      "--nocapture"
+    ],
+    "exitCode": 0,
+    "output": "rust-after-borrow.txt"
+  }
+]

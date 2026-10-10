@@ -14,7 +14,7 @@ use sha2::{Digest, Sha256};
 use std::fmt::Write as _;
 use std::sync::{Arc, Mutex, OnceLock};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
-use tauri::AppHandle;
+use tauri::{AppHandle, Manager};
 use tauri_plugin_updater::UpdaterExt as _;
 
 use crate::update_feed::UpdateRelease;
@@ -488,6 +488,10 @@ pub async fn managed_update_install(
         InstallAction::Install(expected, guard) => (expected, guard),
         InstallAction::Restart => return crate::draft_exit::request_restart_after_save(&app),
     };
+    let store = app.try_state::<crate::meta_store::MetaStore>();
+    let _worktrees = app
+        .state::<crate::worktrees::Worktrees>()
+        .seal_maintenance(store.as_deref())?;
     let permit = admission().update()?;
 
     let updater = app

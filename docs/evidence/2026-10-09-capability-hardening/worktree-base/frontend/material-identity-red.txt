@@ -1,0 +1,66 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktree_types.test.ts (6 tests | 1 failed) 5ms
+   × distinguishes an inspected linked root from its canonical repository root 2ms
+ ❯ src/components/WorktreeDialog.test.tsx (12 tests | 1 failed) 18ms
+   × lets an unknown target be inspected through its canonical repository, without applying it 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorktreeDialog.test.tsx > lets an unknown target be inspected through its canonical repository, without applying it
+AssertionError: expected undefined to deeply equal { inspectionId: 'new-check', …(6) }
+
+- Expected:
+{
+  "blockers": [],
+  "head": {
+    "branch": "refs/heads/x",
+    "oid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  },
+  "inspectionId": "new-check",
+  "kind": "linked",
+  "repositoryRoot": "/repo",
+  "root": "/trees/target",
+  "trees": [
+    {
+      "branch": "refs/heads/x",
+      "locked": false,
+      "path": "/trees/target",
+    },
+  ],
+}
+
++ Received:
+undefined
+
+ ❯ src/components/WorktreeDialog.test.tsx:253:5
+    251|   expect(
+    252|     nodes(render()).find((n) => n.props.inspection)?.props.inspection,
+    253|   ).toEqual(result);
+       |     ^
+    254|   expect(props.target.apply).not.toHaveBeenCalled();
+    255| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/worktree_types.test.ts > distinguishes an inspected linked root from its canonical repository root
+Error: Invalid worktree receipt
+ ❯ record src/runtime/worktree_types.ts:84:11
+     82|     Object.keys(value).some((key) => !keys.includes(key))
+     83|   )
+     84|     throw new Error("Invalid worktree receipt");
+       |           ^
+     85|   return value as Record<string, unknown>;
+     86| };
+ ❯ parseWorktreeInspection src/runtime/worktree_types.ts:151:13
+ ❯ src/runtime/worktree_types.test.ts:123:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 16 passed (18)
+   Start at  13:26:33
+   Duration  162ms (transform 72ms, setup 0ms, import 113ms, tests 23ms, environment 0ms)
+

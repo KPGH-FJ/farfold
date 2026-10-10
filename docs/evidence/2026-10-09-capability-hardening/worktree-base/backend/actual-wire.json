@@ -1,0 +1,190 @@
+{
+  "inspection": {
+    "inspectionId": "ec57a900-f24a-4c1a-961c-37b6d47394f3",
+    "root": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/repo",
+    "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/repo",
+    "kind": "main",
+    "head": {
+      "oid": "cb89ca4be600221130dccc51aa8f61910d6f42ab",
+      "branch": "refs/heads/main"
+    },
+    "trees": [
+      {
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/repo",
+        "branch": "refs/heads/main",
+        "locked": false
+      }
+    ],
+    "blockers": []
+  },
+  "refs": {
+    "refs": [
+      {
+        "ref": "refs/heads/main",
+        "oid": "cb89ca4be600221130dccc51aa8f61910d6f42ab",
+        "inUse": true
+      }
+    ],
+    "nextCursor": null
+  },
+  "prepared": {
+    "kind": "operation",
+    "operationId": "12345678-1234-4123-8123-123456789abc",
+    "state": "prepared",
+    "settled": false,
+    "cancelRequested": false,
+    "targetPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-created"
+  },
+  "ready": {
+    "kind": "operation",
+    "operationId": "12345678-1234-4123-8123-123456789abc",
+    "state": "ready",
+    "settled": true,
+    "cancelRequested": false,
+    "targetPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-created",
+    "location": {
+      "id": "12345678-1234-4123-8123-123456789abc",
+      "revision": 0,
+      "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-created",
+      "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/repo",
+      "branch": "refs/heads/wire-created",
+      "headOid": "cb89ca4be600221130dccc51aa8f61910d6f42ab",
+      "ownership": "created",
+      "availability": "verified"
+    }
+  },
+  "list": {
+    "locations": [
+      {
+        "id": "12345678-1234-4123-8123-123456789abc",
+        "revision": 0,
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-created",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/repo",
+        "branch": "refs/heads/wire-created",
+        "headOid": "cb89ca4be600221130dccc51aa8f61910d6f42ab",
+        "ownership": "created",
+        "availability": "verified"
+      }
+    ],
+    "materials": [],
+    "operation": {
+      "kind": "operation",
+      "operationId": "12345678-1234-4123-8123-123456789abc",
+      "state": "ready",
+      "settled": true,
+      "cancelRequested": false,
+      "targetPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-created",
+      "location": {
+        "id": "12345678-1234-4123-8123-123456789abc",
+        "revision": 0,
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-created",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/repo",
+        "branch": "refs/heads/wire-created",
+        "headOid": "cb89ca4be600221130dccc51aa8f61910d6f42ab",
+        "ownership": "created",
+        "availability": "verified"
+      }
+    }
+  },
+  "unknown": {
+    "kind": "unknownOperation",
+    "operationId": "ffffffff-ffff-4fff-8fff-ffffffffffff"
+  },
+  "linkedInspection": {
+    "inspectionId": "43c09549-5b7e-4a96-9875-6cd925da268e",
+    "root": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-created",
+    "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/repo",
+    "kind": "linked",
+    "head": {
+      "oid": "cb89ca4be600221130dccc51aa8f61910d6f42ab",
+      "branch": "refs/heads/wire-created"
+    },
+    "trees": [
+      {
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/repo",
+        "branch": "refs/heads/main",
+        "locked": false
+      },
+      {
+        "locationId": "12345678-1234-4123-8123-123456789abc",
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-created",
+        "branch": "refs/heads/wire-created",
+        "locked": false
+      }
+    ],
+    "blockers": []
+  },
+  "beforeAcknowledge": {
+    "locations": [
+      {
+        "id": "12345678-1234-4123-8123-123456789abc",
+        "revision": 0,
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-created",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/repo",
+        "branch": "refs/heads/wire-created",
+        "headOid": "cb89ca4be600221130dccc51aa8f61910d6f42ab",
+        "ownership": "created",
+        "availability": "unknown"
+      }
+    ],
+    "materials": [],
+    "operation": {
+      "kind": "operation",
+      "operationId": "42345678-1234-4123-8123-123456789abc",
+      "state": "unknown",
+      "settled": true,
+      "cancelRequested": false,
+      "targetPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-unresolved",
+      "code": "recheckRequired"
+    }
+  },
+  "acknowledged": {
+    "kind": "operation",
+    "operationId": "42345678-1234-4123-8123-123456789abc",
+    "state": "unknown",
+    "settled": true,
+    "cancelRequested": false,
+    "reviewed": true,
+    "targetPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-unresolved",
+    "code": "recheckRequired"
+  },
+  "materialList": {
+    "locations": [
+      {
+        "id": "12345678-1234-4123-8123-123456789abc",
+        "revision": 0,
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-created",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/repo",
+        "branch": "refs/heads/wire-created",
+        "headOid": "cb89ca4be600221130dccc51aa8f61910d6f42ab",
+        "ownership": "created",
+        "availability": "unknown"
+      }
+    ],
+    "materials": [
+      {
+        "operationId": "42345678-1234-4123-8123-123456789abc",
+        "path": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-unresolved",
+        "repositoryRoot": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/repo"
+      }
+    ],
+    "operation": {
+      "kind": "operation",
+      "operationId": "42345678-1234-4123-8123-123456789abc",
+      "state": "unknown",
+      "settled": true,
+      "cancelRequested": false,
+      "reviewed": true,
+      "targetPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpV53mqu/wire-unresolved",
+      "code": "recheckRequired"
+    }
+  },
+  "failed": {
+    "kind": "operation",
+    "operationId": "52345678-1234-4123-8123-123456789abc",
+    "state": "failed",
+    "settled": true,
+    "cancelRequested": false,
+    "code": "targetExists"
+  }
+}

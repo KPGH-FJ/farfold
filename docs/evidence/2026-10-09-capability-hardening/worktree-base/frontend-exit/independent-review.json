@@ -1,0 +1,47 @@
+{
+  "status": "completed_no_new_blocker_in_reviewed_frontend_diff",
+  "method": "Independent read-only source/diff and author evidence hash review; no tests, Cargo, browser, native App or Agent run.",
+  "sourceRefs": [
+    {
+      "path": "src/components/DraftStartup.tsx",
+      "sha256": "31f9b73d66d20732fb9e33c6486883117f9117f63d098bcb44d5afb0c3b8320e"
+    },
+    {
+      "path": "src/components/DraftStartup.test.tsx",
+      "sha256": "24eff87f3f8c79a2c1ac44a21e12cf41e1e6719c1c26dcacb2b20846e00b49a9"
+    },
+    {
+      "path": "src/runtime/exit_impact.ts",
+      "sha256": "cb18a502bd7ee671218f76420aadd3b1d47cc9002e45a0b43361c374e300a6ce"
+    },
+    {
+      "path": "src/components/ConversationLibrary.tsx",
+      "sha256": "2aa86a68dd41367f979025f658b6db1826ca94faa2e4463857e7769b07004a61"
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend-exit/implementation.json",
+      "sha256": "047a7e55bd904324efe16f64000db85e729e32542977ec784beccaf32f4de509"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend-exit/red.txt",
+      "sha256": "a4db35a84889b13b84c60b687fd32df69db4162bac7bd089472d35f422c287fa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend-exit/green.txt",
+      "sha256": "f2cc720b480fee3659a0170c96ff2d2fb718cced406b156957ce49f5acfec563"
+    }
+  ],
+  "findings": [
+    "WORKTREE_EXIT_BLOCKED is recognized only after the current quit token/save attempt check; it preserves the interaction lock and shows the work-location explanation. The save-and-exit button is disabled while this state persists.",
+    "Leave-app-review uses exact app_exit_cancel token and waits for success before unlocking. Cancellation failure keeps the dialog/error visible; later quit attempts reset the special reason. No worktree cancellation, retry or completion is fabricated by this UI.",
+    "New test retains the original backend request assertion, checks the exact explanation, disabled exit, retained lock and explicit cancellation. Author 1 effective red to 26 related green is supported by unchanged raw logs; not independently re-executed.",
+    "NEW-05 ConversationLibrary changes only the query input accessible name to follow body versus metadata scope, matching its existing placeholder. Query, scope dispatch, loaded-only search and opening behavior are unchanged."
+  ],
+  "limits": [
+    "Backend seal_exit and its eventual quit/update/data-reset wiring remain the architecture owner’s in-progress implementation; this review does not certify atomic backend admission.",
+    "Working or unknown execution must still be blocked by the backend; UI disabled state is presentation, not the final authority. Settled unknown may use the separate existing explicit-confirmation response.",
+    "No new native accessibility or exit journey observed. Existing native NEW-05 discovery is not re-observed by this review."
+  ]
+}

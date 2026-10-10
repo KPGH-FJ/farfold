@@ -485,6 +485,7 @@ impl AcpManager {
             connection_id.clone(),
         );
         let ops = SessionOps {
+            async_tasks_supported: Arc::new(AtomicBool::new(false)),
             opening: None,
             connection_id: connection_id.clone(),
             verify_identity: self.session_identity_check(&key, &life),
@@ -635,6 +636,7 @@ impl AcpManager {
                             return Err(error);
                         }
                     };
+                    ops.async_tasks_supported.store(super::async_tasks::supported(&init_response.public_json()), Ordering::SeqCst);
                     // A configured service owns this fresh process. Do not
                     // publish ready or admit session work until the official
                     // route has been declared, applied and read back. Failure

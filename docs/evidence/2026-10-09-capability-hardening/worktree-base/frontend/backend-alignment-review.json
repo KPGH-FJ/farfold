@@ -1,0 +1,93 @@
+{
+  "at": "2026-10-10T05:31:46.426833+00:00",
+  "scope": "Independent frontend/backend contract review, followed by offline execution of frontend pure DTO parser. Backend code is peer-owned; this reviewer did not run Cargo, Git, Tauri, installed App or access user data.",
+  "sourceReadCheckpoint": [
+    {
+      "path": "src-tauri/src/worktrees/types.rs",
+      "sha256": "9aa11fd0e395222a5884ea014d39c73db1cd01544295feb631f9810a87917b2f"
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager.rs",
+      "sha256": "ddf6b6369f7a684809aaafc1e1112bc7aad626636d0203784ad2c4eea53c630b"
+    },
+    {
+      "path": "src-tauri/src/worktrees/storage.rs",
+      "sha256": "56c39d4760c5306b3d4a86a8d5a22ed33c25cc37b35311219329c1b55b388550"
+    },
+    {
+      "path": "src-tauri/src/worktree_commands.rs",
+      "sha256": "aec75b48e956e29fc9fc5dff3eeeb5a4d9cad66b1ddadfe4c34eb85de846dd18"
+    },
+    {
+      "path": "src-tauri/src/worktrees/wire_tests.rs",
+      "sha256": "360e14bb29269f097bef8b662182f94db433552199cd865db4fc05852b80cd85"
+    },
+    {
+      "path": "src-tauri/src/worktrees/manager_tests.rs",
+      "sha256": "ab46cd29e9efc0a455c29d7c661e4fd0336cafdbd01bdb324671f377e68f4189"
+    }
+  ],
+  "backendCheckpointCaveat": "Peer is still completing lint/format and final integration; these are exact bytes read, not a claim that all backend inputs are frozen.",
+  "findings": [
+    {
+      "id": "canonical-repository-root",
+      "status": "closed within covered fixtures",
+      "evidence": "material-identity-followup.json: 2 effective frontend red then 112 related tests and 21 checks per browser; actual Rust wire contains linked.root != repositoryRoot and unknown material retains the main repository root."
+    },
+    {
+      "id": "cancel-before-prepare",
+      "status": "closed in peer actual manager regression",
+      "evidence": "cancel-before-prepare-red.txt is a real unknownOperation failure; current manager retires fresh/preparing IDs with exact cancelled/settled/cancelRequested and peer 26-test green includes this test. Reviewed exact test and raw log; not independently re-executed."
+    }
+  ],
+  "contractResults": [
+    "Flat command names/payloads match frontend calls.",
+    "Actual 11 Rust serialized objects round-trip through the exact strict frontend parser with no dropped/added fields; source hash unchanged.",
+    "Optional reviewed/targetPath, nullable inspection HEAD/branch, materials without fake HEAD and ready verified location are handled.",
+    "Fixed backend Failure is translated from sole {code} only; unknown/error payloads remain generic.",
+    "check_location can persist unavailable and then reject; frontend reads back without applying. A higher revision is preserved against old operation.location.",
+    "forget success clears its associated transient ready result; late observations cannot revive it.",
+    "Explicit recheck may invalidate a formerly ready location while stale ordinary observations cannot regress confirmed completion.",
+    "Use still flushes and rechecks the same original new-conversation owner, clears auto-send arm and never changes a historical conversation cwd."
+  ],
+  "remaining": [
+    "Actual installed Tauri IPC and native Git worktree journey remain root/backend acceptance, not this browser fixture.",
+    "Archive/remove and material cleanup are not implemented by this slice.",
+    "The 11-object wire set does not separately serialize adopt/check_location/forget/cancel success or individual error rejects; these remain source and targeted mock coverage here."
+  ],
+  "newUnresolvedContractBlockers": [],
+  "artifacts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/implementation.json",
+      "sha256": "dee4ecc9bff3500c5fd5e3ac7b3f41b3b3e612ef1a418b3c561f94413c23e025"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/material-identity-followup.json",
+      "sha256": "261228b0eeb58bf790a5967c62cbc785b0377a07844bdb53386618b8de0396ae"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/actual-wire-check.json",
+      "sha256": "4ceabe4e06a88365db9af21e73153e4aa51a01e3469983658d9a9243eb392862"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/actual-wire-check.raw.txt",
+      "sha256": "4ceabe4e06a88365db9af21e73153e4aa51a01e3469983658d9a9243eb392862"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/frontend/check-actual-wire.mjs",
+      "sha256": "2fd4d4af07925a827910af81bb28d1f5656de94c63f770e4cee3a7b5c1033384"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/actual-wire.json",
+      "sha256": "f525a8196713a6ec8b027fdeb197b07b0e3c14fd91e9bfdb33b9725b3355ecbe"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/wire-and-recovery-green.txt",
+      "sha256": "fb8f86bfdc016260a41d84c0e6be474270ca94456111949549ce886c8f6a53ff"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/backend/cancel-before-prepare-red.txt",
+      "sha256": "346c8c6133171882205fe0b4362c622ed4c5f80d93f5b76dbde3178e7404e821"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "kind": "root_independent_async_task_source_and_evidence_review",
+  "checkedAtUtc": "2026-10-10T05:24:21.521804+00:00",
+  "implementation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/implementation.json",
+    "sha256": "2f92988844f9cbbba08b9dc3363728c3e1ebf0df1f284beb036730f204c65131"
+  },
+  "referencesVerified": 94,
+  "sourceFilesVerified": 23,
+  "sourceReview": [
+    "Exact negotiated AIR v1 with asyncTasks; same manager connection owns controls and raw notifications remain unchanged.",
+    "Task stop dispatch rechecks live owner after synchronous UI listeners; stale thread/task/connection cannot send or apply a late receipt.",
+    "Stop acknowledgment changes only request state; natural completion and task terminal remain independent from turn/tool/queue status.",
+    "Early unknown-to-terminal and cold configuration restore defects reproduced by owner tests then fixed; root reviewed original failures and final code.",
+    "Current task activity retains existing admission/exit protection; task metadata is in memory only."
+  ],
+  "browserReceipts": [
+    {
+      "engine": "webkit",
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit.json",
+        "sha256": "9909dd654537a878e58bd6e5da97c14ae29496a26b67ec57d93bb52bcc75c262"
+      },
+      "coveredChecks": 14,
+      "frozenInputsMatchCurrent": true
+    },
+    {
+      "engine": "chromium",
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/chromium.json",
+        "sha256": "8a8cb4e1eda1fc3e2461ee7c4decd167ba6f18de70990873a294a9653c9b8dfb"
+      },
+      "coveredChecks": 14,
+      "frozenInputsMatchCurrent": true
+    }
+  ],
+  "screenshotsPersonallyViewed": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-accepted.png",
+      "sha256": "1df9ebfcd73f1c2d066306d3988ffc60c59482fc37d066a256905dbef51e621f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/webkit-lost-narrow.png",
+      "sha256": "fb7b48ac04f943572a45e9f4b07e3d9367d76a8549d4be02350d4b50bd744e25"
+    }
+  ],
+  "remaining": [
+    "Full seven repository checks pending integrated worktree source freeze; last full clippy was failed on worktree changes, not passed.",
+    "No installed app or real Agent task stop test performed for this implementation yet.",
+    "512-record bound conservatively retains unknown activity on overflow; not a long-session or arbitrary-descendant termination guarantee.",
+    "Other Agents without negotiated precise controls and Windows remain untested."
+  ],
+  "newRuntimeTestsExecuted": 0,
+  "conclusion": "No additional source blocker found in the reviewed task-stop slice; integration and installed real Agent acceptance remain required."
+}

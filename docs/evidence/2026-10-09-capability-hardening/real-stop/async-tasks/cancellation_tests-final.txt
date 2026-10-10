@@ -1,0 +1,21 @@
+warning: method `seal_exit` is never used
+   --> src/worktrees/manager.rs:789:19
+    |
+184 | impl Worktrees {
+    | -------------- method in this implementation
+...
+789 |     pub(crate) fn seal_exit(
+    |                   ^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.16s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 2 tests
+test acp_client::cancellation_tests::late_form_after_cancel_is_cancelled_without_affecting_other_or_next_turn ... ok
+test acp_client::cancellation_tests::late_permission_after_cancel_is_cancelled_without_affecting_other_or_next_turn ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1275 filtered out; finished in 0.40s
+

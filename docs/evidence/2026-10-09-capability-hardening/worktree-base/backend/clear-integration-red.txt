@@ -1,0 +1,21 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.14s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'data_reset::worktree_tests::worktree_prepared_blocks_actual_clear_admission_without_deleting_any_material' (23097553) panicked at src/data_reset_worktree_tests.rs:23:5:
+assertion `left == right` failed
+  left: None
+ right: Some("工作位置操作仍未结束，请先核对操作状态")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test data_reset::worktree_tests::worktree_prepared_blocks_actual_clear_admission_without_deleting_any_material ... FAILED
+
+failures:
+
+failures:
+    data_reset::worktree_tests::worktree_prepared_blocks_actual_clear_admission_without_deleting_any_material
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1289 filtered out; finished in 0.67s
+
+error: test failed, to rerun pass `--lib`

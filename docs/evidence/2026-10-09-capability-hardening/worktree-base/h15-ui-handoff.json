@@ -1,0 +1,116 @@
+{
+  "status": "read_only_design_handoff_not_implementation_or_H15_completion",
+  "date": "2026-10-10",
+  "scope": "对照现有 H15 研究与当前前端；本次未改生产/测试/契约/活动计划，未执行 Git 操作、测试、浏览器、App 或 Agent。唯一新增本文件。",
+  "decision": "下一完整切片限定为明确自有 linked 工作树的保留式归档及显式恢复原位置。沿现有工作树管理入口，保持创建/接入/明确使用与清单移除；永久删除和提交恢复材料仍是 H15 后续必做，不能据此结项。",
+  "journey": [
+    "在已有工作树行中，仅 ownership=created 且后端重新确认 linked 身份的条目出现归档入口。existing、未确认材料和同名替代目录不获得归档或删除权限；清单移除继续只删元数据。",
+    "点击归档先取得只读影响预览：原位置、后端选择的保留位置、关联对话数量和未发内容/活动阻挡原因。结论在主层，路径和保护详情可展开；不可通过勾选风险说明绕过硬阻挡。",
+    "明确确认“归档并保留文件”后锁住相关可变工作并重新取得后端准入；显示精确操作状态，可请求取消及查询原操作。关闭界面不自动取消、重发或隐藏未确认材料；重新打开管理入口仍可核查。",
+    "成功项进入已归档分组，显示原位置与保留位置，只提供恢复原位置和重查。归档目录不自动变成可用于草稿的新位置；不调用 target.apply，不修改任何旧对话 cwd、附件、意见或队列。",
+    "恢复也先预览/重新确认；原位置被占或材料/登记变化则阻止。成功恢复后仅回到普通位置清单，使用仍需原草稿的明确操作和新核验，绝不发送。",
+    "失回执/取消后的未知状态保留原路径和保留路径，查询原 UUID；冷启动不自动 move/重试/修复。同名目录或两处均存在不得靠路径猜完成。"
+  ],
+  "currentIntegrationGaps": [
+    {
+      "source": "WorktreeDialog + WorkLocationPicker",
+      "fact": "Dialog 必须有原草稿 target；Picker disabled 时立即不渲染并清除 target。",
+      "required": "管理生命周期与草稿选择生命周期拆开，可选 target 仅用于创建后明确使用；管理/恢复/未知结果查询须在原草稿失效后仍可达，不能让旧回调关闭新 owner 的对话框。"
+    },
+    {
+      "source": "DraftStartup + draft_storage",
+      "fact": "interactionLocked 会将所有 children 设为 inert；lockInteraction 只是无 owner 的 boolean。",
+      "required": "保留同一管理 UI，但承载于可编辑树的 inert 边界之外。维护锁需有独立释放权，不能释放退出/存储恢复的锁；查询和取消不依赖普通草稿可编辑性。不得只增加现有 boolean 后宣称安全维护。"
+    },
+    {
+      "source": "worktree_types + worktrees + worktree_strings",
+      "fact": "Operation 没有 action；begin 仅 create/adopt，ready/cancelled 文案都以创建为基础。",
+      "required": "新增 action 判别或等价严格结果 union，按 archive/restore 分开呈现结果和取消含义。现有 ready.location、reviewed unknown 和材料确认逻辑不能直接作为归档完成或处置授权。"
+    },
+    {
+      "source": "WorktreeLocation + WorktreeList",
+      "fact": "活动位置只有单一 path；Material 不含已确认归档身份。",
+      "required": "增加有界 archives 元数据，保存原位置/保留位置、创建归属和精确身份；只在实际 move 与元数据回读均确认后转换。未知期间不能改 active path 使 retainedPath 获得 Use，不能用普通 Material 或已接入 existing 伪造 archive。"
+    },
+    {
+      "source": "archive_admission",
+      "fact": "现有方法只保护单个对话索引归档。",
+      "required": "不能作为移动目录准入；目标、子目录、别名、多 Agent、未发内容和文件操作须由后端维护准入再次核查。历史关联只供影响提示，不归档/删除这些对话。"
+    }
+  ],
+  "minimumApiNeeds": {
+    "preview": "worktree_recycle_inspect({action: archive|restore, locationId|archiveId, expectedRevision}) -> ticket + exact current record + originalPath/retainedPath + bounded impact/blockers. 路径由后端身份决定；UI 不提交任意移动/删除目标。",
+    "prepare": "worktree_recycle_prepare({operationId, ticket, action, expectedDraftBaseline}) -> action-discriminated durable operation. UUID 在 prepare 前已知；前端 flush 仅准备基线，后端必须在维护准入中精确比较且保护相关写入口。",
+    "lifecycle": "start/status/cancel/recheck 继续用同 UUID；prepare 丢回执不 dispatch，start 丢回执不第二次 start。需明确维护准入获得/释放时点，活动 child 未结束不能提前释放。",
+    "records": "list 扩 archives，严格版本解析/迁移；archive 记录与未知双路径材料不能因下一 intent 覆盖或普通 forget 丢失。restore 返回恢复核实结果，不能自动套用成新草稿。",
+    "uiContract": "管理 owner 不等于 WorkLocationIntent；后者仍只负责原草稿的明确 Use。维护取消/查询可在编辑锁期间操作，旧 action/ticket/revision/owner 回调均需拒绝。"
+  },
+  "riskConfirmation": [
+    "确认说明会移动工作文件、保留未提交/未跟踪/忽略材料；这是本地保留位置，不是独立备份，不保证 Git 共享对象和外部进程隔离。",
+    "要求用户先停止外部程序使用属于明确告知，不是已核实全系统静止；应用 gate、目录权限和瞬时进程扫描不能撤销外部已打开的文件描述符。硬阻挡或未确认状态不能由确认按钮解除。",
+    "归档成功不表示提交已推送；本片不 fetch/push、不改分支/Agent 配置、不删除历史或秘密。永久删除必须另有提交保护和明确授权，现有或未知目录始终不因重新核查获删除权。"
+  ],
+  "acceptance": [
+    "实际临时 Git 归档/恢复包含 staged、unstaged、untracked、ignored 的同一自有树，独立前后字节和身份核对；文件不自动复制到普通草稿，历史 cwd/未发内容逐值不变。",
+    "管理 dialog 在维护锁、退出锁、原草稿失效与切页后仍有适当取消/查询入口；晚到完成不切新草稿，不解除别人的锁，不关闭新管理 owner。",
+    "existing、unknown Material、主树、锁、同名替换、子目录/别名活动、审批/队列/后台任务未知、文件复制或未完成 OS 读取均按明确准入拒绝，预览后变化再次拒绝。",
+    "move 前后取消/回执丢失/CAS 失败/重启、双路径冲突、恢复目标被占：保留可核材料，只查询原操作；不猜回滚、不覆盖、不 force。",
+    "真实管理组件双引擎验证键盘确认/取消、局部滚动、精确状态文案；候选安装和自有目录 native 分层验证，不能用当前创建旅程替代归档验收。"
+  ],
+  "suggestedOwnership": {
+    "frontend": "独立管理子组件与 WorktreeDialog/Picker 接口、worktree_types/store/strings；编辑锁的 UI 承载点与 token 释放需要单独协调 DraftStartup owner。",
+    "backend": "沿既有 H15 研究实现维护准入、archive/restore typed intent、身份及材料核验、严格元数据迁移；对相关写入口和空闲进程结束的保护不能只在 UI。",
+    "independent": "临时 Git 反例与失回执/重启、编辑锁可达性及旧 owner 反例，真实 UI/安装另验。"
+  },
+  "sourceRefsAtReadCheckpoint": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "5df9a7fc89cf672b269f235083e97eb2c3f863d2899a34df18b8c09606811600"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-base/h15-followup-review.json",
+      "sha256": "a1eba28b869a680947d697dd4b2d238d3eed72f014fb31b8199138e468a61402"
+    },
+    {
+      "path": "src/components/WorktreeDialog.tsx",
+      "sha256": "02afa62a4513f0747ef804aa29328c3152b19828603cbe87202f418f66d898cf"
+    },
+    {
+      "path": "src/components/WorkLocationPicker.tsx",
+      "sha256": "7c252e26ba651d8ebc04efb8612c8ff22f31dc22062fdbf0964847f952598ebe"
+    },
+    {
+      "path": "src/components/useDraftWorkLocation.ts",
+      "sha256": "9e4124a81b73b3fc90895a65c1e4cacdfd70a62eb312f7ef9fbd0f8c4fee8a9b"
+    },
+    {
+      "path": "src/components/DraftStartup.tsx",
+      "sha256": "31f9b73d66d20732fb9e33c6486883117f9117f63d098bcb44d5afb0c3b8320e"
+    },
+    {
+      "path": "src/runtime/worktrees.ts",
+      "sha256": "66522d892b9f0cae4b07bc8505cc7d70da27e788cf64f1c25da9a2706d12f3cc"
+    },
+    {
+      "path": "src/runtime/worktree_types.ts",
+      "sha256": "b63c623d1377fa16c5bb03d6a550d8f9abfc1dfe7a8e858c983225011e45faca"
+    },
+    {
+      "path": "src/runtime/worktree_strings.ts",
+      "sha256": "1aea644110a7d66bd858a472c606ceabc7b2ae4ce354f60fdfcced13858197b9"
+    },
+    {
+      "path": "src/runtime/draft_storage.ts",
+      "sha256": "00e8abcbc9e7cf226432ed4a4f9357a6c901308a380320ed03396cf2e8808f6e"
+    },
+    {
+      "path": "src/runtime/archive_admission.ts",
+      "sha256": "cd3985dfcaed5c825d4454392ea473af730e84ad562e1734489c1904241497ef"
+    }
+  ],
+  "evidenceBoundary": "现有研究为依据，本次未重复联网核官方 Git 文档，未运行其 proposed commands；以上 API 为待协调最小接口，不代表后端已提供。原 H15 研究及历史成功/失败回执未修改。"
+}

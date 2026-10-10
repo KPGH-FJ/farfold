@@ -1,0 +1,277 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `types::*`
+ --> src/worktrees/mod.rs:4:9
+  |
+4 | pub use types::*;
+  |         ^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `OUTPUT_LIMIT` is never used
+  --> src/worktrees/git.rs:12:18
+   |
+12 | pub(super) const OUTPUT_LIMIT: u64 = 4 * 1024 * 1024;
+   |                  ^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `Output` is never constructed
+  --> src/worktrees/git.rs:13:19
+   |
+13 | pub(super) struct Output {
+   |                   ^^^^^^
+
+warning: function `environment` is never used
+  --> src/worktrees/git.rs:17:15
+   |
+17 | pub(super) fn environment() -> Result<()> {
+   |               ^^^^^^^^^^^
+
+warning: function `command` is never used
+  --> src/worktrees/git.rs:31:15
+   |
+31 | pub(super) fn command(root: &Path, args: &[&str]) -> Result<Command> {
+   |               ^^^^^^^
+
+warning: function `execute` is never used
+  --> src/worktrees/git.rs:65:15
+   |
+65 | pub(super) fn execute(
+   |               ^^^^^^^
+
+warning: function `read` is never used
+   --> src/worktrees/git.rs:129:15
+    |
+129 | pub(super) fn read(root: &Path, args: &[&str]) -> Result<Vec<u8>> {
+    |               ^^^^
+
+warning: function `text` is never used
+   --> src/worktrees/git.rs:137:15
+    |
+137 | pub(super) fn text(root: &Path, args: &[&str]) -> Result<String> {
+    |               ^^^^
+
+warning: struct `Location` is never constructed
+ --> src/worktrees/types.rs:5:12
+  |
+5 | pub struct Location {
+  |            ^^^^^^^^
+
+warning: struct `Inspection` is never constructed
+  --> src/worktrees/types.rs:17:12
+   |
+17 | pub struct Inspection {
+   |            ^^^^^^^^^^
+
+warning: struct `Head` is never constructed
+  --> src/worktrees/types.rs:26:12
+   |
+26 | pub struct Head {
+   |            ^^^^
+
+warning: struct `Tree` is never constructed
+  --> src/worktrees/types.rs:32:12
+   |
+32 | pub struct Tree {
+   |            ^^^^
+
+warning: struct `Ref` is never constructed
+  --> src/worktrees/types.rs:41:12
+   |
+41 | pub struct Ref {
+   |            ^^^
+
+warning: struct `Refs` is never constructed
+  --> src/worktrees/types.rs:48:12
+   |
+48 | pub struct Refs {
+   |            ^^^^
+
+warning: enum `Branch` is never used
+  --> src/worktrees/types.rs:54:10
+   |
+54 | pub enum Branch {
+   |          ^^^^^^
+
+warning: methods `oid` and `name` are never used
+  --> src/worktrees/types.rs:67:12
+   |
+66 | impl Branch {
+   | ----------- methods in this implementation
+67 |     pub fn oid(&self) -> &str {
+   |            ^^^
+...
+73 |     pub fn name(&self) -> &str {
+   |            ^^^^
+
+warning: struct `Create` is never constructed
+  --> src/worktrees/types.rs:82:12
+   |
+82 | pub struct Create {
+   |            ^^^^^^
+
+warning: struct `Operation` is never constructed
+  --> src/worktrees/types.rs:90:12
+   |
+90 | pub struct Operation {
+   |            ^^^^^^^^^
+
+warning: enum `Reply` is never used
+   --> src/worktrees/types.rs:103:10
+    |
+103 | pub enum Reply {
+    |          ^^^^^
+
+warning: associated function `unknown` is never used
+   --> src/worktrees/types.rs:112:12
+    |
+111 | impl Reply {
+    | ---------- associated function in this implementation
+112 |     pub fn unknown(id: &str) -> Self {
+    |            ^^^^^^^
+
+warning: struct `Listing` is never constructed
+   --> src/worktrees/types.rs:120:12
+    |
+120 | pub struct Listing {
+    |            ^^^^^^^
+
+warning: struct `Forgotten` is never constructed
+   --> src/worktrees/types.rs:125:12
+    |
+125 | pub struct Forgotten {
+    |            ^^^^^^^^^
+
+warning: struct `Failure` is never constructed
+   --> src/worktrees/types.rs:129:12
+    |
+129 | pub struct Failure {
+    |            ^^^^^^^
+
+warning: type alias `Result` is never used
+   --> src/worktrees/types.rs:132:10
+    |
+132 | pub type Result<T> = std::result::Result<T, Failure>;
+    |          ^^^^^^
+
+warning: function `error` is never used
+   --> src/worktrees/types.rs:133:15
+    |
+133 | pub(super) fn error(code: &'static str) -> Failure {
+    |               ^^^^^
+
+warning: function `oid` is never used
+   --> src/worktrees/types.rs:136:15
+    |
+136 | pub(super) fn oid(s: &str) -> bool {
+    |               ^^^
+
+warning: function `id` is never used
+   --> src/worktrees/types.rs:141:15
+    |
+141 | pub(super) fn id(s: &str) -> bool {
+    |               ^^
+
+warning: struct `Stamp` is never constructed
+  --> src/worktrees/inspect.rs:10:19
+   |
+10 | pub(super) struct Stamp {
+   |                   ^^^^^
+
+warning: function `stamp` is never used
+  --> src/worktrees/inspect.rs:14:15
+   |
+14 | pub(super) fn stamp(path: &Path) -> Result<Stamp> {
+   |               ^^^^^
+
+warning: function `canonical` is never used
+  --> src/worktrees/inspect.rs:38:15
+   |
+38 | pub(super) fn canonical(path: &Path) -> Result<String> {
+   |               ^^^^^^^^^
+
+warning: function `same` is never used
+  --> src/worktrees/inspect.rs:56:15
+   |
+56 | pub(super) fn same(path: &str, identity: &Stamp) -> Result<()> {
+   |               ^^^^
+
+warning: struct `Snapshot` is never constructed
+  --> src/worktrees/inspect.rs:65:19
+   |
+65 | pub(super) struct Snapshot {
+   |                   ^^^^^^^^
+
+warning: methods `identity` and `repository_root` are never used
+  --> src/worktrees/inspect.rs:78:12
+   |
+77 | impl Snapshot {
+   | ------------- methods in this implementation
+78 |     pub fn identity(&self) -> Result<()> {
+   |            ^^^^^^^^
+...
+83 |     pub fn repository_root(&self) -> &str {
+   |            ^^^^^^^^^^^^^^^
+
+warning: function `git_path` is never used
+  --> src/worktrees/inspect.rs:90:4
+   |
+90 | fn git_path(root: &Path, value: String) -> Result<String> {
+   |    ^^^^^^^^
+
+warning: function `trees` is never used
+  --> src/worktrees/inspect.rs:98:15
+   |
+98 | pub(super) fn trees(root: &Path) -> Result<Vec<Tree>> {
+   |               ^^^^^
+
+warning: function `configured` is never used
+   --> src/worktrees/inspect.rs:142:4
+    |
+142 | fn configured(root: &Path, pattern: &str) -> Result<bool> {
+    |    ^^^^^^^^^^
+
+warning: function `snapshot` is never used
+   --> src/worktrees/inspect.rs:152:15
+    |
+152 | pub(super) fn snapshot(path: &Path) -> Result<Snapshot> {
+    |               ^^^^^^^^
+
+warning: function `refs` is never used
+   --> src/worktrees/inspect.rs:209:15
+    |
+209 | pub(super) fn refs(s: &Snapshot) -> Result<Vec<Ref>> {
+    |               ^^^^
+
+warning: function `check_target` is never used
+   --> src/worktrees/inspect.rs:244:15
+    |
+244 | pub(super) fn check_target(_s: &Snapshot, _oid: &str) -> Result<()> {
+    |               ^^^^^^^^^^^^
+
+warning: struct `Location` is never constructed
+ --> src/worktrees/types.rs:5:12
+  |
+5 | pub struct Location {
+  |            ^^^^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `repository_root` is never used
+  --> src/worktrees/inspect.rs:83:12
+   |
+77 | impl Snapshot {
+   | ------------- method in this implementation
+...
+83 |     pub fn repository_root(&self) -> &str {
+   |            ^^^^^^^^^^^^^^^
+
+error: failed to write query cache to `/Users/tw/Desktop/farfold/src-tauri/target/debug/incremental/farfold_lib-1436ixlswy2su/s-hn2l6y3yjj-1633z0l-working/query-cache.bin`: No space left on device (os error 28)
+
+warning: `farfold` (lib test) generated 17 warnings (15 duplicates)
+error: could not compile `farfold` (lib test) due to 1 previous error; 17 warnings emitted
+warning: build failed, waiting for other jobs to finish...
+error: failed to build archive at `/Users/tw/Desktop/farfold/src-tauri/target/debug/deps/libfarfold_lib.a`: No space left on device (os error 28)
+
+warning: `farfold` (lib) generated 39 warnings
+error: could not compile `farfold` (lib) due to 1 previous error; 39 warnings emitted

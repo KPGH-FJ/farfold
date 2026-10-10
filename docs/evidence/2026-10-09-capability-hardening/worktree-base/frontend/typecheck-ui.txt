@@ -1,0 +1,8 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/WorktreeDialog.test.tsx(131,5): error TS2322: Type 'Mock<() => Promise<unknown>>' is not assignable to type '(path: string) => Promise<boolean>'.
+  Type 'Promise<unknown>' is not assignable to type 'Promise<boolean>'.
+    Type 'unknown' is not assignable to type 'boolean'.
+ ELIFECYCLE  Command failed with exit code 1.

@@ -1,0 +1,175 @@
+{
+  "kind": "M 基础工作树可执行设计补充",
+  "date": "2026-10-10",
+  "ids": ["ARCH-47", "H12", "H13", "H14", "H15", "H17"],
+  "status": "只读设计；未实现、未运行工作树实验，不关闭 M 条目",
+  "previous": "docs/evidence/2026-10-09-capability-hardening/worktree-base-research.json",
+  "authorization": {
+    "allowed": "现有连续开发授权允许用户主动的本地工作位置管理及必要通用 UI。开发方在实施记录明确采纳范围，不因新增 UI 或工程规模另设用户审批门槛。",
+    "unchanged": "采用官方 Git CLI 后把已核目录交现有新对话 cwd 链；不改 Agent 程序、HOME、账号、配置或已有对话 cwd。",
+    "excluded": "自动提交/合并/PR 平台、fetch/push/clone、仓库安装脚本、自动依赖准备、端口调度、秘密复制、文件系统沙箱、通用磁盘备份和自动清空。"
+  },
+  "contract": {
+    "conflictFound": false,
+    "scopeDecision": "plans/agent-access.md:240 仍要求先明确基础范围；本设计建议不是实现完成。创建/接入/保留式回收与永久删除须分别验收。",
+    "constraints": [
+      {
+        "source": "PRODUCT.md:85",
+        "quote": "已有对话保留原工作位置",
+        "effect": "只改未发送草稿；回收后历史保留原 cwd，恢复原位置后再核原 Agent 历史恢复。"
+      },
+      {
+        "source": "PRODUCT.md:150",
+        "quote": "不替 Agent 写配置文件",
+        "effect": "不准备私有 HOME，不改共享账号/配置。"
+      },
+      {
+        "source": "PRODUCT.md:152",
+        "quote": "会话索引与用户元数据、Settings",
+        "effect": "少量工作位置与当前操作意图放现有 meta_store.settings，不新增会话定位或事件账本。"
+      },
+      {
+        "source": "PRODUCT.md:155",
+        "quote": "只执行 registry 条目或用户显式配置的命令",
+        "effect": "此句邻接 Agent 启动边界；Git 用用户明确选择/确认的绝对工具路径执行固定参数，不从仓库加载可执行路径或隐含执行脚本。"
+      }
+    ]
+  },
+  "currentSource": [
+    {
+      "fact": "目录选择只改新稿且核对迟到选择归属；已有树可作为普通目录使用。",
+      "evidence": [
+        "src/components/EmptyState.tsx:598",
+        "src/components/EmptyState.tsx:606",
+        "src-tauri/src/acp_client/manager.rs:909",
+        "src-tauri/src/acp_client/process.rs:203"
+      ]
+    },
+    {
+      "fact": "尚缺 Git 创建/分支/回收执行器；当前索引只保存 cwd 等对话字段。",
+      "evidence": [
+        "docs/status.md:44",
+        "plans/agent-access.md:244",
+        "src-tauri/src/meta_store.rs:58"
+      ]
+    },
+    {
+      "fact": "work_policy 按精确 cwd 锁定，旧对话恢复绕过工作开关；不能当目录回收锁。",
+      "evidence": [
+        "src-tauri/src/work_policy.rs:29",
+        "src-tauri/src/work_policy.rs:96",
+        "src-tauri/src/acp_client/session_commands.rs:89",
+        "src-tauri/src/acp_client/session_commands.rs:180"
+      ]
+    },
+    {
+      "fact": "单对话归档已有草稿 flush、前后核查与会话 reservation；无本地连接不证明外部进程空闲。",
+      "evidence": [
+        "src/runtime/archive_admission.ts:9",
+        "src/runtime/archive_admission.ts:57",
+        "src-tauri/src/acp_client/session.rs:77",
+        "src-tauri/src/acp_client/session.rs:122"
+      ]
+    }
+  ],
+  "minimumPath": [
+    {
+      "step": "发现与选择",
+      "behavior": "新稿工作文件夹入口共用普通目录/已有工作树/创建。官方 rev-parse 核顶层、gitDir、commonDir、HEAD；list --porcelain -z 核登记/分支/锁。导入已有树不取得删除所有权。"
+    },
+    {
+      "step": "创建",
+      "behavior": "用户确认本机目标父目录、明确新分支或未在其他树检出的本地分支、起点 commit OID。远程跟踪项只标为本地记录，不隐含联网。源目录脏文件不复制；不使用 -B/force/默认猜分支。保存意图后执行 add，真实退出后核目标对象/Git 登记/HEAD/分支/commonDir并保存回读，才可用于原草稿。切稿后的迟到成功只留管理入口，不自动发送。"
+    },
+    {
+      "step": "共享与准备",
+      "behavior": "默认不额外准备依赖。简短说明依赖、端口、账号/HOME、缓存及 Git 配置可能共享；不复制 .env，不运行仓库脚本。有效 filters、partial/promisor、sparse、submodule 等未承接语义明确报告，不能把空或不完整 checkout 当成功。已有目录入口保留。"
+    },
+    {
+      "step": "维护准入",
+      "behavior": "增加目录范围维护 reservation，覆盖 canonical 根、子目录及已知别名，并接入新建/恢复/发送、浏览器本地服务和文件操作。停止与已有拒绝操作仍可用。聚合所有 Agent/服务的运行、尾程、审批、未知、打开/关闭在途及草稿/附件/意见/队列；前端 flush 后后端重核。同 commonDir 的本应用 Git 写操作也串行化。"
+    },
+    {
+      "step": "可恢复回收",
+      "behavior": "建议只对明确本应用创建的 linked 树提供“归档并保留文件”：维护准入后持久保存源/目标及预期身份，用官方 worktree move 移到同卷自有回收目录，核实际登记与对象。主树/子模块/用户锁/未知身份拒绝。保留目录及分支，不声称释放空间或独立备份。"
+    },
+    {
+      "step": "恢复",
+      "behavior": "原路径空闲且父目录、commonDir、登记及分支对象匹配时，用户显式以官方 move 恢复原位置。原路径被占则不覆盖，不偷偷改历史 cwd；目录恢复与原 Agent 可继续分别判断。"
+    },
+    {
+      "step": "永久删除",
+      "behavior": "单独明确确认，仅处理自有且已归档 linked 树；重新核 tracked/index/untracked/ignored、锁、子模块、嵌套仓库、特殊文件及全部活动归属。默认不 force、不删分支、不 prune。脏/忽略材料保留并说明；HEAD须仍由保留的本地分支可达。未推送或远端未知如实说明，本地 ahead=0 不是远端备份证明。真实命令结束、原对象与登记均已去除、保留分支仍存在后才记录成功。"
+    },
+    {
+      "step": "删除的实际开放条件",
+      "behavior": "move 缩小误操作范围，但不能锁外部编辑器/Agent。永久 remove 必须通过路径替换/检查后写入/部分删除/登记变化反例，不能误删替代对象或自动补偿清理；未闭合时永久删除维持未完成，不能以归档入口抵扣 H15，也不承诺抵御任意外部并发破坏。"
+    }
+  ],
+  "stateAndData": {
+    "states": [
+      "checking",
+      "creating",
+      "ready",
+      "archiving",
+      "archived",
+      "restoring",
+      "deleting",
+      "unknown",
+      "missingOrRedirected"
+    ],
+    "storage": "版本化 settings 工作位置记录；每对象最多一个当前操作意图（kind、精确路径、预期 Git/OS 身份、起点/分支、阶段和固定结果），成功后收敛现态。严格解析、上限、事务 CAS，不累计自由日志或正文。",
+    "ownership": "一树可供多对话使用，关联从现有 sessions.cwd 和未发位置推导。用户已有树只接入/解除清单，不补 createdBy 所有权。",
+    "recovery": "取消不是回滚证明；超时/回执丢失/保存失败先 unknown。重启只读核实际 Git 登记与对象，不自动 add/remove/move/repair。路径同名、prune/re-add、两位置均有或均无不能猜完成。",
+    "history": "移除清单不动文件/分支/对话；归档隐藏与移动回收、永久删除在 UI 分开，旧 cwd/草稿保持。"
+  },
+  "implementationUnits": [
+    {
+      "module": "新 worktrees/{git,inspect,operations,admission,store}.rs",
+      "role": "官方 CLI 固定执行器、有界输出和确切子进程回收、NUL 解析、settings CAS与当前操作恢复。"
+    },
+    {
+      "module": "新 worktree_commands.rs",
+      "role": "check/listRefs/prepareCreate/create/recheck/archive/restore/remove/forget；类型化错误，不暴露原始 stderr。"
+    },
+    {
+      "module": "现 session/manager、work_policy、browser/file 小接线",
+      "role": "共享目录维护 reservation，保留 Agent 原运行和恢复语义。"
+    },
+    {
+      "module": "新共用 WorkLocationPicker/WorktreeDialog + EmptyState 入口",
+      "role": "创建只更新原未发稿；管理页显示实际位置、分支、关联对话及恢复/回收结果。"
+    }
+  ],
+  "requiredCounterexamples": [
+    "分支已用/重名、执行前 tip 改变、目标同名替换/符号链接、路径空格换行；未知清单不获得修改资格。",
+    "已建 branch/目录后取消、checkout/hook 失败、Git 成功但 settings 保存失败、丢回执重启；不重复创建、不误清用户结果。",
+    "恢复旧对话/子目录 prompt 与回收同时准入；审批/尾程/未知/本地服务器/未发意见均保护。",
+    "ignored 中 .env/唯一数据、未跟踪目录、submodule/嵌套仓库/锁；普通 Git clean 不能放行。",
+    "无 upstream/离线陈旧 refs/shallow/detached 独有提交；不误称已推送，不删除保留分支。",
+    "archive 部分成功/原路径被占/commonDir 或 branch 对象丢失；文件尚在不等于已经验证可恢复。",
+    "检查后外部写入/替换、prune/re-add为另一树、Git partial remove；不对替代对象重试，不 rm-rf 补偿。",
+    "filters/fsmonitor/hooks/partial clone/GIT_DIR及配置注入不能产生隐含执行或联网；只命令级设置，不修改共享配置。",
+    "创建等待中切稿/切 Agent/取消，多稿共享一树；结果不串。macOS 与 Windows 路径/锁/进程/取消分别验证。"
+  ],
+  "officialSources": [
+    {
+      "url": "https://git-scm.com/docs/git-worktree",
+      "checked": "本次重读官方 CLI、共享 config/refs、NUL、branch 冲突、move 子模块限制与非 force remove；细节承接原研究。"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-status",
+      "checked": "本次打开；状态检查必须显式覆盖 ignored。"
+    },
+    {
+      "url": "https://git-scm.com/docs/gitattributes",
+      "checked": "本次打开；checkout filters 可运行程序，禁止隐含执行。"
+    },
+    {
+      "url": "https://git-scm.com/docs/git-config",
+      "checked": "本次打开；单命令覆盖与共享配置边界。"
+    }
+  ],
+  "independentChallenge": "verification 指出官方 move 不是独立快照；共享 refs/objects/登记后续变化会令恢复失败。已限定为文件保留，恢复前重核，不自动重建注册。",
+  "evidenceBoundary": "只读源码/官方资料和设计；没有 Git 工作树副作用、真实 Agent/UI/安装或新实验。此前冻结的 P20 源码/测试/回执未修改。"
+}

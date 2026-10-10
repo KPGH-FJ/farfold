@@ -1,0 +1,22 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.26s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 14 tests
+test draft_exit::tests::repeated_exit_keeps_one_owner_and_stale_save_cannot_authorize_exit ... ok
+test draft_exit::tests::installation_rejects_old_save_and_rechecks_an_already_queued_exit ... ok
+test draft_exit::tests::acknowledged_restart_keeps_its_own_admission_and_cannot_be_cancelled ... ok
+test draft_exit::tests::apple_event_owner_requires_ready_and_reuses_only_unconfirmed_normal_exit ... ok
+test draft_exit::tests::failed_clear_releases_its_quit_barrier ... ok
+test draft_exit::tests::apple_event_cannot_take_over_an_installed_restart ... ok
+test draft_exit::tests::restart_supersedes_a_failed_normal_exit_and_rejects_its_late_save ... ok
+test draft_exit::tests::late_installation_cannot_release_a_saved_quit_owner ... ok
+test draft_exit::tests::unacknowledged_restart_can_stay_in_app_without_allowing_exit ... ok
+test draft_exit::tests::quiet_exit_keeps_new_activity_out_after_save ... ok
+test draft_exit::tests::active_work_requires_acknowledgement_and_can_still_cancel ... ok
+test draft_exit::tests::data_clear_blocks_quit_then_restarts_without_saving_old_drafts ... ok
+test draft_exit::worktree_tests::cold_unknown_requires_explicit_risk_confirmation_at_the_actual_exit_gate ... ok
+test draft_exit::worktree_tests::worktree_prepared_cannot_be_bypassed_by_save_exit_confirmation ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 1278 filtered out; finished in 0.67s
+

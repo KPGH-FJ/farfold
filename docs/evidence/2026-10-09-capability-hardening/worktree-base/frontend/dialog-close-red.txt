@@ -1,0 +1,36 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/WorkLocationPicker.test.tsx (1 test | 1 failed) 5ms
+   × an old dialog's close callback cannot close a newer location choice 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/WorkLocationPicker.test.tsx > an old dialog's close callback cannot close a newer location choice
+AssertionError: expected undefined to be { …(2) } // Object.is equality
+
+- Expected:
+{
+  "apply": [Function apply],
+  "isCurrent": [Function isCurrent],
+}
+
++ Received:
+undefined
+
+ ❯ src/components/WorkLocationPicker.test.tsx:51:73
+     49|   expect(next.props.target).not.toBe(old.props.target);
+     50|   (old.props.onClose as () => void)();
+     51|   expect(render().find((n) => n.type === WorktreeDialog)?.props.target…
+       |                                                                         ^
+     52|     next.props.target,
+     53|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  13:01:23
+   Duration  190ms (transform 76ms, setup 0ms, import 111ms, tests 5ms, environment 0ms)
+

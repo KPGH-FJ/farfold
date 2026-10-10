@@ -1,0 +1,45 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/worktrees.test.ts (23 tests | 1 failed) 52ms
+   × failed fresh location check reads back saved unavailability without applying 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/worktrees.test.ts > failed fresh location check reads back saved unavailability without applying
+AssertionError: expected [ { id: 'tree', revision: 1, …(6) } ] to deeply equal [ { id: 'tree', revision: 2, …(6) } ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "availability": "missing",
++     "availability": "verified",
+      "branch": "refs/heads/new",
+      "headOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "id": "tree",
+      "ownership": "created",
+      "path": "/trees/new",
+      "repositoryRoot": "/source",
+-     "revision": 2,
++     "revision": 1,
+    },
+  ]
+
+ ❯ src/runtime/worktrees.test.ts:438:34
+    436|   });
+    437|   await expect(s.check(location)).rejects.toThrow();
+    438|   expect(s.snapshot().locations).toEqual([changed]);
+       |                                  ^
+    439| });
+    440| it("confirmed forgetting clears the associated result and old observat…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 32 passed (33)
+   Start at  13:21:00
+   Duration  480ms (transform 438ms, setup 0ms, import 549ms, tests 86ms, environment 0ms)
+

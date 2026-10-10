@@ -1,0 +1,79 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/async_tasks.test.ts (19 tests | 3 failed) 10ms
+   × does not dispatch after synchronous thread retirement during pending publication 2ms
+   × does not dispatch after synchronous session retirement during pending publication 0ms
+   × does not dispatch after synchronous lost retirement during pending publication 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/async_tasks.test.ts > does not dispatch after synchronous thread retirement during pending publication
+ FAIL  src/runtime/async_tasks.test.ts > does not dispatch after synchronous lost retirement during pending publication
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "session_stop_task",
+      Object {
+        "agentId": "fixture",
+        "connectionId": "connection",
+        "cwd": "/controlled",
+        "sessionId": "native",
+        "taskId": "exact-task",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/async_tasks.test.ts:243:21
+    241|   if(mode==="thread")current={...thread};else if(mode==="session")thre…
+    242|  });
+    243|  expect(invoke).not.toHaveBeenCalled();
+       |                     ^
+    244| });
+    245|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/async_tasks.test.ts > does not dispatch after synchronous session retirement during pending publication
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "session_stop_task",
+      Object {
+        "agentId": "fixture",
+        "connectionId": "connection",
+        "cwd": "/controlled",
+        "sessionId": "other",
+        "taskId": "exact-task",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/async_tasks.test.ts:243:21
+    241|   if(mode==="thread")current={...thread};else if(mode==="session")thre…
+    242|  });
+    243|  expect(invoke).not.toHaveBeenCalled();
+       |                     ^
+    244| });
+    245|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 16 passed (19)
+   Start at  13:07:05
+   Duration  185ms (transform 81ms, setup 0ms, import 108ms, tests 10ms, environment 0ms)
+

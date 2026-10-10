@@ -1,0 +1,8 @@
+{
+  "ownedPid": 80865,
+  "verifiedCommand": "node docs/evidence/2026-10-09-capability-hardening/real-stop/async-tasks/browser/serve.mjs",
+  "signal": "SIGTERM",
+  "completion": "original exec returned exit 143 after owned SIGTERM",
+  "noOtherProcessTouched": true,
+  "exactPidAbsent": true
+}

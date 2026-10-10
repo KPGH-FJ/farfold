@@ -1,0 +1,58 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: method `seal_exit` is never used
+   --> src/worktrees/manager.rs:673:19
+    |
+140 | impl Worktrees {
+    | -------------- method in this implementation
+...
+673 |     pub(crate) fn seal_exit(
+    |                   ^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `KEY` is never used
+ --> src/worktrees/storage.rs:9:18
+  |
+9 | pub(super) const KEY: &str = "worktreeLocations.v1";
+  |                  ^^^
+
+warning: `farfold` (lib test) generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.61s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 14 tests
+test acp_client::async_tasks::tests::async_task_reused_terminal_id_is_not_a_new_controllable_execution ... ok
+test acp_client::async_tasks::tests::async_task_bad_owner_and_malformed_data_never_grant_control ... ok
+test acp_client::async_tasks::tests::async_task_capability_gate_is_exact_and_retains_raw_only_for_other_profiles ... ok
+test acp_client::async_tasks::tests::async_task_terminal_before_spawn_cannot_reappear_running ... ok
+test acp_client::async_tasks::tests::async_task_terminal_is_first_wins_and_ack_never_rewrites_it ... ok
+test acp_client::async_tasks::tests::async_task_unknown_early_state_is_visible_and_holds_work ... ok
+test acp_client::async_tasks::tests::async_task_timeout_keeps_work_and_late_ack_has_no_terminal_authority ... ok
+test acp_client::async_tasks::tests::async_task_bounded_retirement_never_turns_untracked_work_idle ... ok
+test acp_client::async_task_wire_tests::async_task_stop_after_reply_cancel_retains_independent_task ... ok
+
+thread 'acp_client::async_task_wire_tests::async_task_stop_is_exact_and_ack_is_not_terminal' (23040167) panicked at src/acp_client/async_task_wire_tests.rs:214:5:
+assertion `left == right` failed
+  left: 0
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::async_task_wire_tests::async_task_no_agent_advertisement_keeps_raw_without_granting_control ... ok
+test acp_client::async_task_wire_tests::async_task_stop_is_exact_and_ack_is_not_terminal ... FAILED
+test acp_client::async_task_wire_tests::async_task_capability_is_negotiated_on_actual_initialize ... ok
+test acp_client::async_task_wire_tests::async_task_load_uses_current_connection_announcements ... ok
+
+thread 'acp_client::async_task_wire_tests::async_task_false_error_malformed_and_natural_completion_are_distinct' (23040163) panicked at src/acp_client/async_task_wire_tests.rs:286:9:
+assertion `left == right` failed
+  left: String("running")
+ right: "completed"
+test acp_client::async_task_wire_tests::async_task_false_error_malformed_and_natural_completion_are_distinct ... FAILED
+
+failures:
+
+failures:
+    acp_client::async_task_wire_tests::async_task_false_error_malformed_and_natural_completion_are_distinct
+    acp_client::async_task_wire_tests::async_task_stop_is_exact_and_ack_is_not_terminal
+
+test result: FAILED. 12 passed; 2 failed; 0 ignored; 0 measured; 1257 filtered out; finished in 0.69s
+
+error: test failed, to rerun pass `--lib`
