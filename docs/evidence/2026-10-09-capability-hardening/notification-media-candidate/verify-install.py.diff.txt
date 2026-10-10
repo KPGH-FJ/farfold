@@ -1,0 +1,110 @@
+--- docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/verify-install.py
++++ docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-install.py
+@@ -15,7 +15,7 @@
+ spec = importlib.util.spec_from_file_location('candidate_checks', Path(__file__).with_name('verify-candidate.py'))
+ v = importlib.util.module_from_spec(spec)
+ spec.loader.exec_module(v)
+-PRIVATE = v.ROOT / 'output/2026-10-10-skills-qualified-names-install'
++PRIVATE = v.ROOT / 'output/2026-10-10-notification-media-install'
+ NAMES = {'farfold.sqlite3', 'farfold.sqlite3-wal', 'farfold.sqlite3-shm'}
+ 
+ 
+@@ -105,6 +105,60 @@
+     return {'passed': True, 'method': 'Read retained captured main/WAL/SHM and backup hashes; SQLite integrity/iterdump digest only on second disposable private copies; original database never opened.', 'captureHashesMatchAllThreeManifests': True, 'capturedFileCount': len(captured), 'capturedAndBackupIntegrity': 'ok', 'logicalContentsEqual': True, 'originalRetainedCopyHashesUnchanged': True, 'backupSha256': backup['backupSha256'], 'rawRowsPrintedOrSaved': False}
+ 
+ 
++def verify_prior_baseline(normal, load):
++    v.need(normal['userAuthorizedContinuousDevelopment'] is True and normal['normalQuitObserved'] is True and normal['forcedQuit'] is False and normal['formalProcessCountAfter'] == 0 and normal['sourceCommit'] == v.BASELINE_COMMIT, 'Normal exit missing')
++    expected_refs = {
++        'output/2026-10-10-skills-qualified-names-native/final-normal-exit.json': '9a4365ce9715bcfc7b79f6f9f793dea574298e4a1d1c87757450ff96a234f014',
++        'output/2026-10-10-skills-qualified-names-native/freeze-release.json': '1a4b9b31c4b9fcfad83fb0f63888c8a273e34cc6782f0bd2a574a554fe2bb8d3',
++        'output/2026-10-10-skills-qualified-names-native/final-data-comparison-independent.json': '172e42aca73e3045d2cb388871f3f6b8ed3c619b58fadb415e560acd44d2a805',
++        'docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/native-independent.json': 'ceb2cece610c3872c51d62740e44a7a28e904d939b117f36fe51f4296ea5c766',
++        'docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/installed-qualified-names.json': '1ec3e6b00d2c857363315b97cc858a5120b12c8c0d118d7000c05d24353e6e95',
++    }
++    v.need(normal['refs'] == expected_refs and bool(normal['normalQuitEvidence']), 'Exact normal-exit references missing or changed')
++    records = {}
++    for name, expected in expected_refs.items():
++        path = v.relative(name)
++        v.need(v.sha(path) == expected, 'Prior normal exit/data reference changed')
++        records[path.name] = load(path)
++    exit_record, release, data, independent, installed = [records[name] for name in ('final-normal-exit.json', 'freeze-release.json', 'final-data-comparison-independent.json', 'native-independent.json', 'installed-qualified-names.json')]
++    v.need(all(record['sourceCommit'] == v.BASELINE_COMMIT for record in (exit_record, release, independent, installed)), 'Wrong prior source identity')
++    v.need(exit_record['normalQuitObserved'] is True and exit_record['forcedQuit'] is False and exit_record['formalProcessCountAfter'] == 0, 'Wrong prior normal exit')
++    v.need(exit_record['sourceInputCount'] == 1407 and exit_record['sourceInputsUnchanged'] is True and exit_record['formalFiveFilesUnchanged'] is True and exit_record['controlledDirectoriesUnchanged'] is True, 'Prior frozen identity not verified')
++    v.need(exit_record['nativeResult']['modelPromptSubmitted'] is False and exit_record['nativeResult']['configurationWriteRequested'] is False, 'Prior controlled scope changed')
++    v.need(release['sourceInputCount'] == 1407 and release['sourceInputsStillUnchanged'] is True and release['formalAppClosed'] is True, 'Prior release not complete')
++    v.need(release['onlyAcceptedDataDelta'] == 'codex.updated_at 1791641241089 to 1791643265860; other nine Agent columns exact', 'Prior accepted delta differs')
++    independent_name = str((v.BASELINE.parent / 'native-independent.json').relative_to(v.ROOT))
++    v.need(release['nativeIndependent'] == {'path': independent_name, 'sha256': expected_refs[independent_name]}, 'Release independent review changed')
++    v.need(independent['result'] == 'passedWithinStatedScope', 'Prior independent review incomplete')
++    independent_refs = {ref['path']: ref['sha256'] for ref in independent['refs']}
++    for name in expected_refs:
++        if name.endswith(('/final-normal-exit.json', '/final-data-comparison-independent.json', '/installed-qualified-names.json')):
++            v.need(independent_refs.get(name) == expected_refs[name], 'Independent review cross-reference differs')
++    for name in expected_refs:
++        if name.endswith(('/final-normal-exit.json', '/final-data-comparison-independent.json')):
++            v.need(installed['privateEvidence'].get(name) == expected_refs[name], 'Root review cross-reference differs')
++    root_agents = installed['dataAfterNative']['agents']
++    v.need(root_agents == {'count': 40, 'wholeRowsUnchanged': 39, 'onlyChange': 'codex.updated_at', 'before': 1791641241089, 'after': 1791643265860, 'otherNineColumnsExact': True, 'rootDeltaDecision': 'Accepted metadata timestamp update; retained in place, no configuration change or database restoration.'}, 'Root data authorization differs')
++    v.need(data['baseline']['wholeSessionRows'] == 130 and data['baseline']['unsentGroups'] == {'composers': 8, 'feedback': 8, 'queues': 3}, 'Prior retained data scope differs')
++    v.need(all(data[key] is True for key in ('oldWholeRowsExact', 'unsentWholeObjectEqual', 'unsentSchemaKeysEqual', 'allSettingsRawValuesEqual', 'databaseSchemaEqual', 'retainedInputsUnchanged')), 'Prior protected data differs')
++    v.need(all(data[key] == [] for key in ('sessionDifferences', 'addedSessions', 'activityDifferences', 'otherUnsentDifferences', 'otherSettingsDifferences', 'allSettingsDifferences')), 'Prior unreviewed data changes')
++    v.need(all(data['oldUnsentGroupsExact'].values()) and all(not values for values in data['unsentGroupDifferences'].values()), 'Prior draft groups differ')
++    catalogue = data['catalogue']
++    v.need(catalogue['beforeVersion'] == catalogue['afterVersion'] == 3 and catalogue['beforeSha256'] == catalogue['afterSha256'] and catalogue['topLevelKeysEqual'] is True and catalogue['operation'] == catalogue['otherFields'] == [] and all(not values for values in catalogue['collections'].values()), 'Prior catalogue differs')
++    v.need(set(data['allTables']) == {'agents', 'dismissed_sessions', 'sessions', 'settings'}, 'Prior table coverage differs')
++    for name, count in (('dismissed_sessions', 168), ('sessions', 130), ('settings', 53)):
++        table = data['allTables'][name]
++        v.need(table['beforeRows'] == table['afterRows'] == count and table['schemaEqual'] is True and table['wholeRowsEqual'] is True and table['rowDifferences'] == [], 'Prior table changed: ' + name)
++    agents = data['agentColumnComparison']
++    columns = ['id', 'name', 'source', 'command', 'args', 'env', 'version', 'handshake', 'created_at', 'updated_at']
++    v.need(agents['beforeRows'] == agents['afterRows'] == 40 and agents['columns'] == columns and agents['everyPriorRowComparedByEveryColumn'] is True and agents['equalColumnsAcrossAllPriorRows'] == columns[:-1], 'Prior Agent column coverage differs')
++    v.need(agents['changedRows'] == [{'primaryKeySha256': 'e25eaf648dc7039953915d93cac78cc23b21b780b60f562ff1aaa53086f25364', 'identity': {'id': 'codex', 'name': 'Codex'}, 'changedValuesPrivateOnly': {'updated_at': {'before': 1791641241089, 'after': 1791643265860}}}], 'Prior delta exceeds reviewed timestamp')
++    table = data['allTables']['agents']
++    v.need(table['beforeRows'] == table['afterRows'] == 40 and table['schemaEqual'] is True and len(table['rowDifferences']) == 1 and table['rowDifferences'][0]['primaryKeySha256'] == agents['changedRows'][0]['primaryKeySha256'] and table['rowDifferences'][0]['changedColumns'] == ['updated_at'], 'Prior Agent table comparison differs')
++    v.need(len(data['secondaryCopyChecks']) == 2 and all(item['fullIterdumpEqual'] is True and item['onlyDisposableSqliteCopiesOpened'] is True for item in data['secondaryCopyChecks']), 'Prior copy comparison incomplete')
++    return {'passed': True, 'baselineCommit': v.BASELINE_COMMIT, 'reviewedDelta': 'codex.updated_at only', 'priorOriginalSessions': 130, 'priorUnsentGroups': {'composers': 8, 'feedback': 8, 'queues': 3}, 'priorRawSettingsExact': 53, 'zeroPromptBoundary': 'Prior controlled native actions and frozen query implementation; not inferred from database counts.'}
++
++
+ def main():
+     commit, proof = v.arguments()
+     report = {'sourceCommit': commit, 'result': 'failed', 'checks': {}, 'failures': [], 'startedAt': v.now(), 'launched': False}
+@@ -129,36 +183,7 @@
+ 
+             stage = 'normalExitAndDataBaseline'
+             normal = load(PRIVATE / 'normal-exit-observation.json')
+-            v.need(normal['userAuthorizedContinuousDevelopment'] is True and normal['normalQuitObserved'] is True and normal['forcedQuit'] is False and normal['formalProcessCountAfter'] == 0 and normal['sourceCommit'] == v.BASELINE_COMMIT, 'Normal exit missing')
+-            expected_refs = {
+-                'output/2026-10-10-skills-inventory-native/final-normal-exit.json': '4b194e36e2e837fe13b1872828523b8a97a1f5076f0d722fd3ab4fcb5e1065f5',
+-                'output/2026-10-10-skills-inventory-native/freeze-release.json': '6a26f003a04c88929588bf1a35c0f65c0f97c4b2bfb28e9c12319d984222aa16',
+-                'output/2026-10-10-skills-inventory-native/final-data-comparison-independent.json': '965499093bfd6a8daa07dab8dff9a4dce18788668d85ad0abcc4b029bd094e3b',
+-                'output/2026-10-10-skills-inventory-native/final-agent-columns-independent.json': 'd98c37383b478e10517ee8a35059195a435f484a309c93d5960e1688e9a39218',
+-            }
+-            v.need(normal['refs'] == expected_refs and bool(normal['normalQuitEvidence']), 'Exact normal-exit references missing or changed')
+-            for name, expected in normal['refs'].items():
+-                path = v.relative(name)
+-                v.need(v.sha(path) == expected, 'Normal exit reference changed')
+-                load(path)
+-            prior = v.ROOT / 'output/2026-10-10-skills-inventory-native'
+-            exit_record, release, data, agents = [load(prior / n) for n in ('final-normal-exit.json', 'freeze-release.json', 'final-data-comparison-independent.json', 'final-agent-columns-independent.json')]
+-            v.need(exit_record['sourceCommit'] == release['sourceCommit'] == v.BASELINE_COMMIT and exit_record['normalQuitObserved'] and not exit_record['forcedQuit'] and exit_record['formalProcessCountAfter'] == 0, 'Wrong prior normal exit')
+-            v.need(release['released'] and release['formalClosed'] and bool(release['rootAcceptedDataDelta']), 'Prior data review not complete')
+-            v.need(release['sourceAndFormalStableThroughRecordedExit'] is True and release['sourceInputCount'] == 1404, 'Prior frozen identity not verified')
+-            for name, expected in release['refs'].items():
+-                path = v.relative(name)
+-                v.need(v.sha(path) == expected, 'Freeze reference changed')
+-                load(path)
+-            v.need(all(release['refs'].get(name) == expected for name, expected in expected_refs.items() if not name.endswith('/freeze-release.json')), 'Freeze belongs to a different data review')
+-            comparison_name = str((prior / 'final-data-comparison-independent.json').relative_to(v.ROOT))
+-            v.need(agents['mainComparison'] == {'path': comparison_name, 'sha256': expected_refs[comparison_name]}, 'Agent column review belongs to a different comparison')
+-            v.need(data['baseline']['wholeSessionRows'] == 130 and data['baseline']['unsentGroups'] == {'composers': 8, 'feedback': 8, 'queues': 3} and data['sessionDifferences'] == data['addedSessions'] == [] and data['allSettingsDifferences'] == [], 'Prior retained data scope differs')
+-
+-            v.need(data['oldWholeRowsExact'] and data['unsentWholeObjectEqual'] and data['allSettingsRawValuesEqual'] and data['retainedInputsUnchanged'], 'Prior protected data differs')
+-            v.need(agents['allStoredAgentConfigurationColumnsExact'] and agents['storedModelReasoningChoicesExact'] and agents['inputsUnchanged'], 'Prior Agent configuration differs')
+-            v.need(len(agents['differences']) == 1 and agents['differences'][0]['id'] == 'codex' and agents['differences'][0]['changedColumns'] == ['updated_at'], 'Prior delta exceeds reviewed timestamp')
+-            report['checks'][stage] = {'passed': True, 'baselineCommit': v.BASELINE_COMMIT, 'reviewedDelta': 'codex.updated_at only'}
++            report['checks'][stage] = verify_prior_baseline(normal, load)
+ 
+             stage = 'completeDataManifests'
+             snapshots, captured_maps = [], []

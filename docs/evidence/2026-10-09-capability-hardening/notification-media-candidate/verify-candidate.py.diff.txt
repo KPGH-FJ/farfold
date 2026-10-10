@@ -1,0 +1,33 @@
+--- docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/verify-candidate.py
++++ docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-candidate.py
+@@ -18,9 +18,9 @@
+ BASE = ROOT / 'docs/evidence/2026-10-09-capability-hardening'
+ APP = ROOT / 'src-tauri/target/release/bundle/macos/Farfold.app'
+ FORMAL = Path('/Applications/Farfold.app')
+-BASELINE_COMMIT = 'aadbe0f2952f9decd213804c12911ccccc58971b'
+-BASELINE = BASE / 'skills-inventory-candidate/candidate.json'
+-BASELINE_SHA = '10dbbe8680b5ef8ef72632ec21d5451b7334d215f3feb78ce3be2e97a5c0acdc'
++BASELINE_COMMIT = '39955ec65a4274cdeac1bab9884f4073c792102a'
++BASELINE = BASE / 'skills-qualified-names-candidate/candidate.json'
++BASELINE_SHA = '1112fd0ad235c9d86d2e1c4d6ffc6c3032603e9f291bb5137dacbc84242d1048'
+ BUNDLE_FILES = {'Contents/Info.plist', 'Contents/MacOS/farfold', 'Contents/Resources/icon.icns', 'Contents/Resources/release-manifest.json', 'Contents/_CodeSignature/CodeResources'}
+ BUILD = ['corepack', 'pnpm', 'tauri:build:internal']
+ SCOPES = ['src/', 'assets/', 'public/', 'scripts/', 'src-tauri/src/', 'src-tauri/native/', 'src-tauri/capabilities/', 'src-tauri/icons/', 'src-tauri/resources/', 'docs/evidence/2026-10-09-capability-hardening/docx-fixtures/', 'docs/evidence/2026-10-09-capability-hardening/docx/public-samples/']
+@@ -92,7 +92,7 @@
+ def arguments():
+     need(len(sys.argv) == 3 and re.fullmatch('[0-9a-f]{40}', sys.argv[1]), 'Expected exact 40-character SHA and engineering verification path')
+     engineering = relative(sys.argv[2])
+-    need(engineering.is_relative_to(BASE / 'skills-qualified-names-checks'), 'Wrong engineering directory')
++    need(engineering.is_relative_to(BASE / 'notification-media-checks'), 'Wrong engineering directory')
+     return sys.argv[1], engineering
+ 
+ 
+@@ -171,7 +171,7 @@
+     b = read(BASELINE)
+     need(b['sourceCommit'] == BASELINE_COMMIT and b['phase'] == 'internalCandidatePreparedNotInstalled', 'Wrong installed baseline')
+     actual = bundle(FORMAL)
+-    need(actual[0] == b['candidateFiles'], 'Formal application differs from aadbe0f2')
++    need(actual[0] == b['candidateFiles'], 'Formal application differs from 39955ec6')
+     return actual
+ 
+ 

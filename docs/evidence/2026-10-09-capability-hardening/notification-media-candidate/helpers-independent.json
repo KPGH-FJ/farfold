@@ -1,0 +1,414 @@
+{
+  "reviewedAtUtc": "2026-10-10T15:20:37.856803+00:00",
+  "result": "passedStaticReviewNoNewBlockingFinding",
+  "scope": "Independent review of three frozen public helpers plus root installer and byte-identical backup/snapshot helpers. AST and read-only JSON/input/hash parsing only; no helper main, build, install, App/Agent, codesign, ZIP extraction, SQLite or tests executed.",
+  "observedTimeline": [
+    {
+      "point": "initial read-only review",
+      "head": "e1575cbad4a5e33fb3b348c7c84e788a47c8bf24",
+      "newCommitStillRequired": true,
+      "normalExitWrapperPresent": false
+    },
+    {
+      "point": "final read-only closure after root notification",
+      "head": "6c37a012239d8d0194bfae3597700cfebc37333e",
+      "sourceMatchesExactCommit": true,
+      "inputCount": 1415,
+      "normalExitWrapperPresent": true,
+      "normalExitSchemaAndFiveRefsVerified": true
+    }
+  ],
+  "engineering": {
+    "receipt": {
+      "receipt": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/verification.json",
+      "sha256": "62dcd83375bbed1f1ffc2866db48007522df0e6be5b98a7ed102433ad83d8132",
+      "inputCount": 1415,
+      "references": {
+        "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/verification.json": "62dcd83375bbed1f1ffc2866db48007522df0e6be5b98a7ed102433ad83d8132",
+        "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/frontend.txt": "ce3566b4547fc946de600d6b268f82dd0a5bf1ea3f9840f3b3ff99fc2a7bdae7",
+        "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/build.txt": "08fbda9d2e4386841b151a521aa5a00ab313560f19e60a0ed02471e82843ed0f",
+        "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/clippy.txt": "0057ed30b6e3b0d7ed471c85d9ed236526b7bfe0b1a5afd368cc87db08fa0e15",
+        "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/rust.txt": "8e7c089916c5cf9d252065fc7468c9874a670210fc97a4c96501d30d673f6efc",
+        "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/inputs-before.json": "d269b924dca83524da0325723a93f0ca8e48c27378787ed2d21924fd0627a017",
+        "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/inputs-after.json": "d269b924dca83524da0325723a93f0ca8e48c27378787ed2d21924fd0627a017"
+      }
+    },
+    "commands": 7,
+    "allExecutedInRecordedRun": true,
+    "currentEqualsBothInputManifests": true,
+    "frontendFiles": 396,
+    "frontendTests": 4621,
+    "rustPassed": 1477,
+    "rustIgnored": 6,
+    "checksNotRerun": true
+  },
+  "delta": {
+    "baselineCommit": "39955ec65a4274cdeac1bab9884f4073c792102a",
+    "previousInputCount": 1407,
+    "currentInputCount": 1415,
+    "files": 26,
+    "added": 8,
+    "modified": 18,
+    "removed": 0,
+    "paths": [
+      {
+        "path": "src-tauri/src/desktop_notifications.rs",
+        "change": "modified",
+        "before": "2ddd68d76ebc60f955008e9f948217c600cc18c0cfc403228313bfb5e6d96507",
+        "after": "eecdf1298ac2c58c83cefab2c5c15bac8635ab171c634ae0ea97db01dca0ffd1"
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/diagnostic.rs",
+        "change": "modified",
+        "before": "e6c2cdd6ff1253bc13feeb4d118a9bcab9d40dabfc5df935cc8ade74e758461c",
+        "after": "c9c160f9a861984baa173f076793385cf0ef1c9336e609a55078beed56e231a5"
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/native.rs",
+        "change": "modified",
+        "before": "054deb9120522d6296467b1a5c6dc740cfe015a196e37bdeff46d3bd7b00599a",
+        "after": "cd8ef26d89dcd78934572c516f729902c912b5019f0c9e2a8f69dcb3e9663394"
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/tests.rs",
+        "change": "modified",
+        "before": "846cede0daffc1c6cc694eb9b2333b83156ebb810c02660c1a29b3cc51dd4fa6",
+        "after": "ae3fa3c760ff4131921c09300cdccb7fe71f101e5e253a7a75d9b7ee4951cb6d"
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/tickets.rs",
+        "change": "added",
+        "before": null,
+        "after": "da5ad170401a19b9567d4248a3dac801f7c35b5b813589ab8376c232e5c31095"
+      },
+      {
+        "path": "src-tauri/src/desktop_notifications/windows.rs",
+        "change": "modified",
+        "before": "b7cba61823e2c9371ac972898490c64795a74a439fc4856517e921717eaa2c5e",
+        "after": "6450d2ac59d63848d38585b593a0726ac3ad7766451da579800643e87f5c7b98"
+      },
+      {
+        "path": "src-tauri/src/diagnostics/notification.rs",
+        "change": "modified",
+        "before": "4ad3fff641b916acf626297c3c2ea60dbea45c0c352087722c78466e3f95a39b",
+        "after": "4fdd0007050a08435a76cdec0fdaf7ff82c4ae5d7263ed638c7a94733241371c"
+      },
+      {
+        "path": "src-tauri/src/lib.rs",
+        "change": "modified",
+        "before": "3aa9bd5c651c373f4d88a866f99ac149ca9b966df723cae0ac335d3deddb1896",
+        "after": "8b840f6e440dec4f7fb98a196b309c6b1510e156747f06b59d542d8bef445eb9"
+      },
+      {
+        "path": "src-tauri/tauri.conf.json",
+        "change": "modified",
+        "before": "8a32fbe08167dddd18459289443b6761fd7eb0b8040b8eb54ba4beec72bb821d",
+        "after": "c706b854dc18fb44c29a1b07f353efcbd83ccc6c8b836dbe78d1e854224f3c7c"
+      },
+      {
+        "path": "src/components/GeneralSettings.success-notifications.test.tsx",
+        "change": "added",
+        "before": null,
+        "after": "3bf0a978f8e3a760305f5c1c7d77cda9850a42a49741b84a01d15a2182bcb812"
+      },
+      {
+        "path": "src/components/GeneralSettings.test.tsx",
+        "change": "modified",
+        "before": "50d130937224ded4a2ca8ec0ce7dc53b04c20d670efddc7e47237fa44d9713ff",
+        "after": "55b0cc368896a0749b548b076277adebcc7b1b9fde86d7ae63b13fdf96ff7498"
+      },
+      {
+        "path": "src/components/GeneralSettings.tsx",
+        "change": "modified",
+        "before": "1637479b76b24b3e566c47d17d2661bd53c3fd4635d46e8299451765fe0eb71e",
+        "after": "4317976c9789c7c63087a5673f5501416b27960f0707fc32e8c347ceeb07d0d9"
+      },
+      {
+        "path": "src/components/MessageAttachmentMedia.test.tsx",
+        "change": "added",
+        "before": null,
+        "after": "40c5b2acf4a17bcb5d27cef229fe152c933b0be1acaef284dd340b9413e57176"
+      },
+      {
+        "path": "src/components/MessageAttachmentMedia.tsx",
+        "change": "added",
+        "before": null,
+        "after": "148d864ef4a69a5848a68356c290819058b43f198164723c3b3bec7cae3bfcd5"
+      },
+      {
+        "path": "src/components/MessageContent.tsx",
+        "change": "modified",
+        "before": "ea5e64ff5fb8f579b7ea9ad5d0a8bee42e10fba3c1c73bc38317c671cbac9223",
+        "after": "e1d1642acd7e3631b8f22fea54699895b8c0438400831a64289a1ada5b3bd4f3"
+      },
+      {
+        "path": "src/message-attachments.css",
+        "change": "modified",
+        "before": "d510e69fe9fcceeca1f6d7de7913a7b4aeb6cc75ee32470558f77d6586c90759",
+        "after": "e3f41f1646cff5b1356e9c4db0b017c4a6ae87d545a5a0b753e4d842c9f8b3f7"
+      },
+      {
+        "path": "src/runtime/desktop_notifications.channel.test.ts",
+        "change": "modified",
+        "before": "8b3c102c03c85d98ddacd840dca49476654975be668b5ce76f5c5334e5a26ebe",
+        "after": "291adfda505c05519a7dd3ae345c64c7eb997d037570f69ce7f9d5d0e7b25dac"
+      },
+      {
+        "path": "src/runtime/desktop_notifications.success-channel.test.ts",
+        "change": "added",
+        "before": null,
+        "after": "ca9175f1066eb9ed73d9eb91fb0f0d103682834cd5d82daadd4ee5f351bdaf38"
+      },
+      {
+        "path": "src/runtime/desktop_notifications.success.test.ts",
+        "change": "added",
+        "before": null,
+        "after": "935ac81253cfe44fcc44ed707ffd31e04db026ba7ffc19ca8ad15a68b0d1eb34"
+      },
+      {
+        "path": "src/runtime/desktop_notifications.test.ts",
+        "change": "modified",
+        "before": "2ad37ac6762b03cca8f5ec2aee5e06a4d270a023ccb6903f5d11071705ebbbb5",
+        "after": "582f4cfd9cc017e4862db1ceab130449180978031c7ee010ed0a8c819e289fa2"
+      },
+      {
+        "path": "src/runtime/desktop_notifications.ts",
+        "change": "modified",
+        "before": "0a8d45e0b639f74c8cbbe9584afc39e1d079eb86b2e54e1fe54a8a18c5d50fb9",
+        "after": "af1895332374c7e8ec37971004e556926aad41630b5956a60eaf93a6866d57b7"
+      },
+      {
+        "path": "src/runtime/message_attachment_strings.ts",
+        "change": "modified",
+        "before": "74ceada4f2cac7eb0cccbdeac5ebd4d5518f77d1349889305ec55b7ee19063a3",
+        "after": "c3ec52ecc5bee9352782277c1be230f72ba45255e9febe10a108330b570ed53c"
+      },
+      {
+        "path": "src/runtime/sessions.ts",
+        "change": "modified",
+        "before": "f304c6875864f0bc0f0dbcc46961224da9e608648cbd6c735b3ea64afa16998c",
+        "after": "93754212761e08d20c35991ce8d102d4e923da0c5e622c637df00ce483b59066"
+      },
+      {
+        "path": "src/runtime/settings_presentation_strings.ts",
+        "change": "modified",
+        "before": "0513c5b5e3d48b1bc2e988638ade7ce2971b1a1014e91040f80f593ebe9861a3",
+        "after": "2b35a40421c0383c146a6c032012ab64196566060c9f552839ce0a0f8d05704c"
+      },
+      {
+        "path": "src/runtime/success_notification.test.ts",
+        "change": "added",
+        "before": null,
+        "after": "47dd9e1a05bb508b0259bb94f12682643a96013f8f84fb2ff47f576c57c621c5"
+      },
+      {
+        "path": "src/runtime/success_notification.ts",
+        "change": "added",
+        "before": null,
+        "after": "c610573ac6d78bb700203e714111e7a9094bdbcd1389e02404b5b178f681e482"
+      }
+    ]
+  },
+  "helperDiffs": {
+    "prepare": "Entire bytes equal previous reviewed helper",
+    "candidateFunctionsChanged": ["arguments", "baseline"],
+    "candidateConstants": "Only 39955ec6 baseline commit/receipt/hash, current engineering directory and matching failure text changed; future exact commit remains required argument",
+    "installVerifier": "New private directory and exact 39955ec6 normal-exit/data schema; no old aad baseline accepted",
+    "preservedInstallFunctions": [
+      "absent",
+      "signature",
+      "manifest",
+      "logical_copy_digest",
+      "verify_metadata"
+    ],
+    "installer": "Only OUT and EVIDENCE exact directory assignments changed",
+    "backupAndDataSnapshot": "Entire bytes equal previous reviewed helpers",
+    "installerCandidateScopesEqual": true
+  },
+  "staticGates": [
+    "source(commit) requires exact current HEAD, complete disk/commit input set and per-file Git blob bytes; performed read-only against actual new commit at final review",
+    "engineering requires seven exact argv/log hashes and both complete before/after maps; no reused result accepted",
+    "candidate verifier retains nine checks and exact five bundle files, modes, arm64/plist/manifest, strict ad-hoc codesign, ZIP CRC/member/mode/payload and final stability checks",
+    "installation verifier retains ten checks, all three complete manifests, captured metadata hashes and secondary-copy full integrity/iterdump comparison; no SQLite on retained originals",
+    "installer verifies candidate/independent receipts, exact source, both bundle identities, archive and preinstall manifest, then absent formal process before its sole ditto mutation; never launches or quits",
+    "outputs remain exclusive; prior success/failure receipts are not overwritten"
+  ],
+  "priorBaselineSchema": {
+    "passed": true,
+    "baselineCommit": "39955ec65a4274cdeac1bab9884f4073c792102a",
+    "reviewedDelta": "codex.updated_at only",
+    "priorOriginalSessions": 130,
+    "priorUnsentGroups": {
+      "composers": 8,
+      "feedback": 8,
+      "queues": 3
+    },
+    "priorRawSettingsExact": 53,
+    "zeroPromptBoundary": "Prior controlled native actions and frozen query implementation; not inferred from database counts."
+  },
+  "beforeData": {
+    "entries": 217400,
+    "rawSha256": "8ed7b800d935db1abe1e9fefc3772d9cce97b306f8871c0ce23f9d52b40062a3",
+    "rawBytes": 59360435,
+    "method": "Read-only complete JSONL enumeration, counts/hash/mode and captured metadata hash comparison; backup/capture bytes hashed only, no SQLite opened",
+    "capturedLogicalComparison": "Not rerun in this static review; actual install verifier must perform its existing secondary-copy check"
+  },
+  "boundaries": [
+    "Not a nine-check candidate or ten-check installed verification result. Build/archive/formal signature and installation await their real executions.",
+    "Actual normal-exit observation and reviewed prior timestamp delta are root/previous independent evidence, not a new UI exit performed here.",
+    "The current exact 26-file delta is evidence scope, not a new hardcoded product gate. No source/config/test/previous receipts changed."
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/helper-preparation.json",
+      "sha256": "909e2258fcf73aad71336188b6d60abb0826a60b0c5ecb4957c62bcefd937bae"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/prepare-candidate.py",
+      "sha256": "9aad64e418633dba9d644713f76160128a579a353e4a4c53aaf910c654d533fe"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/prepare-candidate.py.diff.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-candidate.py",
+      "sha256": "1ecbc75923b2c0fd504fa72a8b183b095d65c1eb9dd43d48cf01fed9ba2f7023"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-candidate.py.diff.txt",
+      "sha256": "09a86d1f010c097247466c7f2c2bb270a8b08a5a9c9fe4d7ad4b150ccad3ac33"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-install.py",
+      "sha256": "0774928990bcb37430cde80324b397db244d58c88ec03334abf50220d53d4cce"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-install.py.diff.txt",
+      "sha256": "ed65b272f1c341cd054f056392a15f8c67766390adaa290680c1684015c19fb4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/build.txt",
+      "sha256": "08fbda9d2e4386841b151a521aa5a00ab313560f19e60a0ed02471e82843ed0f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/clippy.txt",
+      "sha256": "0057ed30b6e3b0d7ed471c85d9ed236526b7bfe0b1a5afd368cc87db08fa0e15"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/frontend.txt",
+      "sha256": "ce3566b4547fc946de600d6b268f82dd0a5bf1ea3f9840f3b3ff99fc2a7bdae7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/inputs-after.json",
+      "sha256": "d269b924dca83524da0325723a93f0ca8e48c27378787ed2d21924fd0627a017"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/inputs-before.json",
+      "sha256": "d269b924dca83524da0325723a93f0ca8e48c27378787ed2d21924fd0627a017"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/rust.txt",
+      "sha256": "8e7c089916c5cf9d252065fc7468c9874a670210fc97a4c96501d30d673f6efc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/verification.json",
+      "sha256": "62dcd83375bbed1f1ffc2866db48007522df0e6be5b98a7ed102433ad83d8132"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/candidate-inputs.json",
+      "sha256": "49494405052e8ae674b6268cd1dd9ca3461c7dc8f1eaa51ee1816abc61de65b7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/candidate.json",
+      "sha256": "1112fd0ad235c9d86d2e1c4d6ffc6c3032603e9f291bb5137dacbc84242d1048"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/installed-qualified-names.json",
+      "sha256": "1ec3e6b00d2c857363315b97cc858a5120b12c8c0d118d7000c05d24353e6e95"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/native-independent.json",
+      "sha256": "ceb2cece610c3872c51d62740e44a7a28e904d939b117f36fe51f4296ea5c766"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/prepare-candidate.py",
+      "sha256": "9aad64e418633dba9d644713f76160128a579a353e4a4c53aaf910c654d533fe"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/verify-candidate.py",
+      "sha256": "902c33190e9ded9c2a13790da35f5e0425de7c0090a1fac2d4f3b85e470c0fe3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/verify-install.py",
+      "sha256": "ec81510ffe92e61baa724d598bba60b1d4067b07642ba2842ea9560a7de53740"
+    },
+    {
+      "path": "output/2026-10-10-notification-media-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0"
+    },
+    {
+      "path": "output/2026-10-10-notification-media-install/install-data-before-summary.json",
+      "sha256": "478e2a4bc30ce3a2a64483e74ef0a8a460c38c73711d2eee1252f10776507bfc"
+    },
+    {
+      "path": "output/2026-10-10-notification-media-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3"
+    },
+    {
+      "path": "output/2026-10-10-notification-media-install/install_verified_candidate.py",
+      "sha256": "41530de7c986ed23305b032771544886a17a3f455f2461d3d1344ad05f24e244"
+    },
+    {
+      "path": "output/2026-10-10-notification-media-install/metadata-backup-receipt.json",
+      "sha256": "48542ab045afdf5a5adae51bb8a7cf63fdc2232b59ca7693fd29999006d906dd"
+    },
+    {
+      "path": "output/2026-10-10-notification-media-install/normal-exit-observation.json",
+      "sha256": "e1cac4696f35198dc214159fe6248e595c3009a859a02ac7fb7e4c52e4ca117b"
+    },
+    {
+      "path": "output/2026-10-10-notification-media-install/preflight.json",
+      "sha256": "2ad5d84d01c4d44e6f4200e381af4824077527a73bb8524c317f18a3410c43f8"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-install/install_verified_candidate.py",
+      "sha256": "cafeb4de1a4741bd4be44ef14c1c15b5edb3ddea94b88b0bd648671f4b27e40f"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-native/final-data-comparison-independent.json",
+      "sha256": "172e42aca73e3045d2cb388871f3f6b8ed3c619b58fadb415e560acd44d2a805"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-native/final-normal-exit.json",
+      "sha256": "9a4365ce9715bcfc7b79f6f9f793dea574298e4a1d1c87757450ff96a234f014"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-native/freeze-release.json",
+      "sha256": "1a4b9b31c4b9fcfad83fb0f63888c8a273e34cc6782f0bd2a574a554fe2bb8d3"
+    }
+  ]
+}

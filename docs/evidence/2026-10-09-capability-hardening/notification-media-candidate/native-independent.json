@@ -1,0 +1,167 @@
+{
+  "version": 1,
+  "atUtc": "2026-10-10T15:57:57.079282+00:00",
+  "sourceCommit": "6c37a012239d8d0194bfae3597700cfebc37333e",
+  "scope": "Independent review of the recorded installed macOS journey, current source/bundle identity, exported notification diagnostics, peer secondary-copy data comparison and root acceptance; not a second native execution.",
+  "result": "No new closeout blocker within the recorded scope; P13/P47/P48 and broader product conditions remain open.",
+  "checks": {
+    "publicReceiptReferences": {
+      "count": 15,
+      "allMatch": true
+    },
+    "nativeEvidence": {
+      "axCapturesRead": 11,
+      "pngCapturesVisuallyReviewed": 11,
+      "diagnosticJsonExactlyMatchesZipEntry": 3,
+      "stableSwitchPixels": "03 success on/right/dark; 08 all off/left/grey, consistent with text"
+    },
+    "engineering": {
+      "sevenOriginalCommandsAndLogsVerified": true,
+      "executedAgain": false,
+      "frontendTests": 4621,
+      "rustPassed": 1477,
+      "rustIgnored": 6
+    },
+    "source": {
+      "currentExactEnumeration": 1415,
+      "matchesCommitAndEngineeringBeforeAfterAndNativeBefore": true
+    },
+    "formalBundle": {
+      "exactFiveFilesMatchNativeBefore": true,
+      "currentProcessCheckExitCode": 1,
+      "currentExactProcessAbsent": true
+    },
+    "installation": {
+      "priorCandidateChecks": 9,
+      "priorInstallChecks": 10,
+      "recordedIdenticalSnapshots": 3,
+      "entriesEach": 217400,
+      "notRepeated": true
+    },
+    "documents": {
+      "reviewed": [
+        "docs/status.md",
+        "docs/architecture.md",
+        "plans/agent-access.md",
+        "docs/evidence/2026-10-09-capability-hardening/README.md"
+      ],
+      "originalIDsTitlesAndCompletionConditionsUnchanged": 122,
+      "comparisonCommit": "6c37a012239d8d0194bfae3597700cfebc37333e",
+      "claimsWithinEvidence": true
+    }
+  },
+  "nativeFindings": [
+    "One controlled conversation contains three explicit bounded no-tool prompts and visible completed replies, with the existing Codex / 6 Astra / Ultra and service selection retained. UI instructions and absence of visible tool rows are not a complete official tool trace.",
+    "First background completion: frontend submitted, enabled=true; macOS add_accepted/addResult=accepted. presentation=not_observed and clicked=false. Submission acceptance does not establish display or click.",
+    "Second completion: foreground suppression with preference off. This retained counterexample does not isolate the disabled-preference gate.",
+    "Third completion: background=true, reason=disabled and backend=null. The disabled preference prevented this notification submission.",
+    "All three preferences returned to their initial effective false values. Sound was not requested.",
+    "The saved exit record describes normal Save and quit after Finder reactivation restored observed focus, without force quit. The recorded offscreen/hidden-window interaction failures do not establish a product deadlock."
+  ],
+  "dataReview": {
+    "method": "Reviewed the existing independent secondary-copy reports and exact root acceptance; no database was opened or compared again in this review.",
+    "oldSessionWholeRowsEqual": 130,
+    "newControlledSessionRows": 1,
+    "dismissedRowsEqual": 168,
+    "agentRows": 40,
+    "acceptedAgentDelta": "Only Codex updated_at; all other nine columns unchanged.",
+    "settings": {
+      "countBeforeAndAfter": 53,
+      "rawUnchanged": 50,
+      "changedKeys": [
+        "desktopNotifications.v1",
+        "conversationReadState.v1",
+        "unsentWork.v1"
+      ]
+    },
+    "acceptedSettingDeltas": [
+      "Only absent successEnabled becomes explicit false; enabled and sound stay false.",
+      "Only the new controlled conversation is added to read state; all old entries retained.",
+      "Only the same new controlled conversation is added to activity with ended=true; all old activity retained."
+    ],
+    "oldWholeComposerFeedbackQueueGroupsEqual": [8, 8, 3],
+    "wholeUnsentObjectEqual": false,
+    "catalogueWholeEqual": true,
+    "schemaEqual": true,
+    "scope": "No other changes authorized by this review. No claim that every setting raw value or the whole unsent object is identical. Session counts do not prove absence of tools or model requests."
+  },
+  "notEstablished": [
+    "Actual macOS notification banner or Notification Center visibility",
+    "Actual notification click navigation",
+    "Sound with permission enabled",
+    "Formal expired approval/question notification withdrawal (P47/NEW-15)",
+    "Real Agent image/audio attachment paths and formal media playback/error/retry (P13/NEW-14)",
+    "Windows build and real system behavior",
+    "Other Agents and all 29 x 8 acceptance conditions"
+  ],
+  "activities": {
+    "appActions": 0,
+    "agentRequests": 0,
+    "databaseOpens": 0,
+    "testBuildInstallExecutions": 0,
+    "productionWrites": 0,
+    "currentReadOnlySourceAndFormalHashChecks": true
+  },
+  "referenceCount": 59,
+  "refs": {
+    "docs/architecture.md": "db647e795737f7ccfb3b37bfbf4a9e813f7dfab98c24a417a23ae7de7d9d4271",
+    "docs/evidence/2026-10-09-capability-hardening/README.md": "83b67aeb3f0c7d08e612c8f0a13b96944ef2ec01eff4bb2c25ff3079672100cd",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/candidate-independent.json": "2ea1462d377e0e29b982b1658f7e74d64ef79647ee1a4c4c953e63e069158716",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/duplicate-bundle-cleanup.json": "f05435b1d83ff46b5cbeb4bc1b4ec43fb6e4602415196450b9013fd012e4d5d8",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/install-independent.json": "60bf22c0894216c08be152e2f861457ed2b38effdb52721601a8b4cea736aac7",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/installed-notification-media.json": "e8a86291abd1a814fbaf529b903b5cf31ff478c747caa86441e7a85e5b831d11",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-candidate.py": "1ecbc75923b2c0fd504fa72a8b183b095d65c1eb9dd43d48cf01fed9ba2f7023",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/independent.json": "99d813d33009bed3e7dd4cb8deee965ca237b30f706cea08f934e3770b957541",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/build.txt": "08fbda9d2e4386841b151a521aa5a00ab313560f19e60a0ed02471e82843ed0f",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/clippy.txt": "0057ed30b6e3b0d7ed471c85d9ed236526b7bfe0b1a5afd368cc87db08fa0e15",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/frontend.txt": "ce3566b4547fc946de600d6b268f82dd0a5bf1ea3f9840f3b3ff99fc2a7bdae7",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/inputs-after.json": "d269b924dca83524da0325723a93f0ca8e48c27378787ed2d21924fd0627a017",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/inputs-before.json": "d269b924dca83524da0325723a93f0ca8e48c27378787ed2d21924fd0627a017",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/rust.txt": "8e7c089916c5cf9d252065fc7468c9874a670210fc97a4c96501d30d673f6efc",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/verification.json": "62dcd83375bbed1f1ffc2866db48007522df0e6be5b98a7ed102433ad83d8132",
+    "docs/status.md": "98984be7bf9db06e6cffde1e39fdf2a3ecf20af02af2e13a93ce2ba8222f97ba",
+    "output/2026-10-10-notification-media-native/01-launch.ax.txt": "bd1f6e8056c2bdb608ce17059388bb73864593091a8c3c0af3cf5c66927baf94",
+    "output/2026-10-10-notification-media-native/01-launch.png": "070095191745038f8a529ccbdecb9f6d09998cbf382542d0668d49188c7db195",
+    "output/2026-10-10-notification-media-native/02-notifications-default-off.ax.txt": "a5507bd9dc6f8d9431d88b93de39c89e20ba35c9a570162f55a43e148af240a6",
+    "output/2026-10-10-notification-media-native/02-notifications-default-off.png": "3fc5b345cdddf36267a8f3e21630dcc1d4baf9eec38afd35a5059ae4470f03b6",
+    "output/2026-10-10-notification-media-native/03-success-enabled.ax.txt": "6d672adfc95290b671fd18da6e682795c61fa5bc2dced8d686819174cc07d180",
+    "output/2026-10-10-notification-media-native/03-success-enabled.png": "b21698d322c8cc35e686ae9d3fe36a623c8271376675b38af89007d938e400c2",
+    "output/2026-10-10-notification-media-native/04-existing-model-source.ax.txt": "cfe1f47deeb68cd9901ce42434a481e3d16b3978fe3c09ac3c000506195e2451",
+    "output/2026-10-10-notification-media-native/04-existing-model-source.png": "94e621115a53869744aab80810d3c1bb401fa262ac82216823df704296a2b713",
+    "output/2026-10-10-notification-media-native/05-prompt-ready.ax.txt": "031e930a0a49780721d43b3382f3fba995328399a96baf296602bfd2bc49540f",
+    "output/2026-10-10-notification-media-native/05-prompt-ready.png": "33841142fa510256831a52ba3726f3c3b5d6074d2bbf5ce73cd0defe4ecabfb5",
+    "output/2026-10-10-notification-media-native/06-first-completed.ax.txt": "f55d0b3342a80cfd8afc499812888262e76407c4b6b22ceecb6b44f8dce26a39",
+    "output/2026-10-10-notification-media-native/06-first-completed.png": "f2a54fbb662d017e71640b2a07996435714314243990ce4c4ae1801b6cf7e597",
+    "output/2026-10-10-notification-media-native/07-enabled-notification-diagnostic.ax.txt": "d8fe75514a618b4165a0d149e3cc219d9224602aab2de97b8b311d10c1944f8d",
+    "output/2026-10-10-notification-media-native/07-enabled-notification-diagnostic.png": "0580e52c7e1ee022494d4aec9a6ae70c3e5e8fa92e83cb1a49a508c590ab9007",
+    "output/2026-10-10-notification-media-native/08-notifications-restored-off.ax.txt": "cd7f57684eaef3e344ed734bf97efa21d58ad94d6a34c447ed2ee073de82cd3f",
+    "output/2026-10-10-notification-media-native/08-notifications-restored-off.png": "42e360260be450ea69d8d00cf80243ad23cd7b79fa1412b2c26e19497fb1f252",
+    "output/2026-10-10-notification-media-native/09-disabled-request-result.ax.txt": "1caba057fb97deb2f8ea6661501e18796ce377784062843abb1c3fd4232b3f31",
+    "output/2026-10-10-notification-media-native/09-disabled-request-result.png": "7e5a4db7a8e43377b1ac25604867ca3b5eff4b2f809863f8f178bc1d3c528cf5",
+    "output/2026-10-10-notification-media-native/10-disabled-background-result.ax.txt": "14b894ccdec9b3012b4d0c4e9f19c1e473611003ef6d8c0e71ce84b239d8cca6",
+    "output/2026-10-10-notification-media-native/10-disabled-background-result.png": "c7cae4ee7b72ed049b879bd8ee02ac0dd015b22c85946083c18ea327c5471cd6",
+    "output/2026-10-10-notification-media-native/11-normal-quit-dialog.ax.txt": "ce407fc038509d04de4809ca5108d9c2340d4ec35ff03278d404cf69d6a87468",
+    "output/2026-10-10-notification-media-native/11-normal-quit-dialog.png": "b3cd72ad2d7e0885d6455539eb073c85211f1e2ace04daede1daa4beb21750bd",
+    "output/2026-10-10-notification-media-native/data-review/final-comparison.json": "adfb3af2d97ac4e59f1673f6416ed4bd9562a6a917c7f9547e57d51f4ff04389",
+    "output/2026-10-10-notification-media-native/data-review/final-delta-details.json": "f534577e290a0e9fa1338f4a11bd20c51ce9ccf7eeacce8cb7518202717a9229",
+    "output/2026-10-10-notification-media-native/disabled-background-diagnostics.zip": "ba936420dfc4483872afe75621d364884dc963c701c57e176fcfe5c363527c2d",
+    "output/2026-10-10-notification-media-native/disabled-background-notification.json": "3439e0ad58e0920a1aa317ae6f98212e44170697a796cc9b45c490c4cb723e7b",
+    "output/2026-10-10-notification-media-native/disabled-diagnostics.zip": "4034b207674035482d3c1a9607d6ebb389fe53e024ac9a618d165ed88dafd46f",
+    "output/2026-10-10-notification-media-native/disabled-notification.json": "f3c228e6b3ad2512db915a8dedda94ceae72e0f23910fd7eb887f42cedcd2f09",
+    "output/2026-10-10-notification-media-native/disabled-retest-scope.json": "1c81869311eb351670bd89478beb8cd08580012f7cb27253e2b246bcf2b00019",
+    "output/2026-10-10-notification-media-native/enabled-diagnostics.zip": "bdb807b4627cdbb658c50709ac81be41c81100e26227eb1c39417daead0c8bd4",
+    "output/2026-10-10-notification-media-native/enabled-notification.json": "deb91b32fc2fcf4e0c11201ea4e2ef7e88748b74be3c3d70ee208b622d3c5e2f",
+    "output/2026-10-10-notification-media-native/final-normal-exit.json": "0b1e70c95f5978bf7bf503c10d709dd2fa478adae60d9076cb668e7f43924bf6",
+    "output/2026-10-10-notification-media-native/final-snapshot/metadata-backup-receipt.json": "24079a8dbb9b43cedffa0cda59c588c91db4e4a2b9b08936d599ab6ef52a99bb",
+    "output/2026-10-10-notification-media-native/freeze-after-native.json": "5a9f464887a8f35353ec1e176953ae911a3908335532707f9940c19804ca2516",
+    "output/2026-10-10-notification-media-native/freeze-before-native.json": "43943f72d72ca5561d25aa914d870fd19270da5f6069d7290053fe6d8ff646a4",
+    "output/2026-10-10-notification-media-native/independent-pre-review.json": "0f1f2d861fd1706f3cd493c0639481737fb70dbb7237e565e20bd7fd210f3c47",
+    "output/2026-10-10-notification-media-native/root-data-acceptance.json": "48fcc1fb4a63c69cb208cd142c107bf086753711adca0f26d0df574e49f2d6a6",
+    "output/2026-10-10-notification-media-native/scope.json": "5d7fac2aa13e2497d282e0b6624c70c0c4239bd24afa21eb72d23c93b7a8fec4",
+    "output/2026-10-10-notification-media-native/ui-observation-limitations.json": "d10bf8f0c850ad5f1cdafd53bfb240c669b73f263a1b2c417e6d9dbb1d4a7140",
+    "plans/agent-access.md": "34eb3e6b2a6606f40b7a0f84424c3074586bc15d498db8cb1c30e79378d3661b"
+  }
+}

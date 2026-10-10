@@ -1,0 +1,165 @@
+{
+  "status": "preparedAndStaticallyCheckedNotExecuted",
+  "helpers": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/prepare-candidate.py",
+      "sha256": "9aad64e418633dba9d644713f76160128a579a353e4a4c53aaf910c654d533fe",
+      "source": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/prepare-candidate.py",
+      "sourceSha256": "9aad64e418633dba9d644713f76160128a579a353e4a4c53aaf910c654d533fe",
+      "diff": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/prepare-candidate.py.diff.txt",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "astParsed": true,
+      "pyCompiled": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-candidate.py",
+      "sha256": "1ecbc75923b2c0fd504fa72a8b183b095d65c1eb9dd43d48cf01fed9ba2f7023",
+      "source": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/verify-candidate.py",
+      "sourceSha256": "902c33190e9ded9c2a13790da35f5e0425de7c0090a1fac2d4f3b85e470c0fe3",
+      "diff": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-candidate.py.diff.txt",
+      "diffSha256": "09a86d1f010c097247466c7f2c2bb270a8b08a5a9c9fe4d7ad4b150ccad3ac33",
+      "astParsed": true,
+      "pyCompiled": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-install.py",
+      "sha256": "0774928990bcb37430cde80324b397db244d58c88ec03334abf50220d53d4cce",
+      "source": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/verify-install.py",
+      "sourceSha256": "ec81510ffe92e61baa724d598bba60b1d4067b07642ba2842ea9560a7de53740",
+      "diff": "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-install.py.diff.txt",
+      "diffSha256": "ed65b272f1c341cd054f056392a15f8c67766390adaa290680c1684015c19fb4",
+      "astParsed": true,
+      "pyCompiled": true
+    }
+  ],
+  "actualCandidateOrInstallChecksExecuted": false,
+  "sourceInputsReadOnly": {
+    "count": 1415,
+    "candidateScopeEqualsEngineeringCollector": true,
+    "newFilesExplicitlyCheckedPresent": [
+      "src-tauri/src/desktop_notifications/tickets.rs",
+      "src/components/MessageAttachmentMedia.tsx",
+      "src/components/MessageAttachmentMedia.test.tsx",
+      "src/components/GeneralSettings.success-notifications.test.tsx",
+      "src/runtime/desktop_notifications.success-channel.test.ts",
+      "src/runtime/desktop_notifications.success.test.ts",
+      "src/runtime/success_notification.test.ts",
+      "src/runtime/success_notification.ts"
+    ],
+    "dynamicRecursiveScopeNoFrozenCountAssumption": true
+  },
+  "preservedMechanisms": [
+    "Exact commit/disk Git blob verification",
+    "Seven actual commands plus before/after hashes",
+    "Five exact bundle payload files and Unix modes",
+    "arm64 strict codesign and ad-hoc identity",
+    "ZIP members/modes/CRC/hash",
+    "Complete three data manifests",
+    "Captured main/WAL/SHM and consolidated backup compared only in secondary copies",
+    "Formal process absent and final source/evidence stability"
+  ],
+  "baseline": {
+    "sourceCommit": "39955ec65a4274cdeac1bab9884f4073c792102a",
+    "candidateReceipt": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/candidate.json",
+    "candidateReceiptSha256": "1112fd0ad235c9d86d2e1c4d6ffc6c3032603e9f291bb5137dacbc84242d1048",
+    "normalExitAndDataRefs": {
+      "output/2026-10-10-skills-qualified-names-native/final-normal-exit.json": "9a4365ce9715bcfc7b79f6f9f793dea574298e4a1d1c87757450ff96a234f014",
+      "output/2026-10-10-skills-qualified-names-native/freeze-release.json": "1a4b9b31c4b9fcfad83fb0f63888c8a273e34cc6782f0bd2a574a554fe2bb8d3",
+      "output/2026-10-10-skills-qualified-names-native/final-data-comparison-independent.json": "172e42aca73e3045d2cb388871f3f6b8ed3c619b58fadb415e560acd44d2a805",
+      "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/native-independent.json": "ceb2cece610c3872c51d62740e44a7a28e904d939b117f36fe51f4296ea5c766",
+      "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/installed-qualified-names.json": "1ec3e6b00d2c857363315b97cc858a5120b12c8c0d118d7000c05d24353e6e95"
+    }
+  },
+  "baselineSchemaChecks": [
+    {
+      "name": "actualRecordedBaselineSchema",
+      "passed": true,
+      "sideEffects": "JSON reads only; no manifests, DB, signature, App or subprocess"
+    },
+    {
+      "name": "wrongSource",
+      "passed": true,
+      "result": "rejected",
+      "message": "Normal exit missing"
+    },
+    {
+      "name": "wrongNormalReference",
+      "passed": true,
+      "result": "rejected",
+      "message": "Exact normal-exit references missing or changed"
+    },
+    {
+      "name": "forcedExit",
+      "passed": true,
+      "result": "rejected",
+      "message": "Wrong prior normal exit"
+    },
+    {
+      "name": "unreviewedTimestamp",
+      "passed": true,
+      "result": "rejected",
+      "message": "Prior delta exceeds reviewed timestamp"
+    },
+    {
+      "name": "agentConfigurationColumn",
+      "passed": true,
+      "result": "rejected",
+      "message": "Prior Agent column coverage differs"
+    },
+    {
+      "name": "extraSession",
+      "passed": true,
+      "result": "rejected",
+      "message": "Prior unreviewed data changes"
+    },
+    {
+      "name": "rawSettingsChanged",
+      "passed": true,
+      "result": "rejected",
+      "message": "Prior protected data differs"
+    },
+    {
+      "name": "catalogueChanged",
+      "passed": true,
+      "result": "rejected",
+      "message": "Prior catalogue differs"
+    },
+    {
+      "name": "copyNotCompared",
+      "passed": true,
+      "result": "rejected",
+      "message": "Prior copy comparison incomplete"
+    },
+    {
+      "name": "missingIndependentCrossReference",
+      "passed": true,
+      "result": "rejected",
+      "message": "Independent review cross-reference differs"
+    },
+    {
+      "name": "rootAuthorizationMissing",
+      "passed": true,
+      "result": "rejected",
+      "message": "Root data authorization differs"
+    }
+  ],
+  "preservedFunctionASTs": [
+    "prepare-candidate entire bytes",
+    "verify-candidate all functions except arguments/baseline",
+    "verify-install absent/signature/manifest/logical_copy_digest/verify_metadata"
+  ],
+  "exampleNormalExit": {
+    "path": "output/2026-10-10-notification-media-helper-check/normal-exit-observation.example.json",
+    "sha256": "e1cac4696f35198dc214159fe6248e595c3009a859a02ac7fb7e4c52e4ca117b"
+  },
+  "usage": [
+    "python3 docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/prepare-candidate.py <new-exact-40-character-commit> docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/verification.json",
+    "python3 docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-candidate.py <new-exact-40-character-commit> docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/verification.json",
+    "python3 docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/verify-install.py <new-exact-40-character-commit> docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/verification.json"
+  ],
+  "boundary": "Only Python syntax/AST, JSON evidence schema and input enumeration were checked. No build, candidate validation, installation, codesign, SQLite, App or Agent was executed. Installed baseline remains 39955ec6; future candidate commit is a required argument.",
+  "staticChecker": {
+    "path": "output/2026-10-10-notification-media-helper-check/static-check.py",
+    "sha256": "e68e2f752b500fd7d635c9063220bdd9c0e727aeab49b46139ea3bbe2581c274"
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "sourceCommit": "6c37a012239d8d0194bfae3597700cfebc37333e",
+  "result": "passed",
+  "checks": {
+    "candidateChain": {
+      "passed": true,
+      "candidateChecks": 9
+    },
+    "normalExitAndDataBaseline": {
+      "passed": true,
+      "baselineCommit": "39955ec65a4274cdeac1bab9884f4073c792102a",
+      "reviewedDelta": "codex.updated_at only",
+      "priorOriginalSessions": 130,
+      "priorUnsentGroups": {
+        "composers": 8,
+        "feedback": 8,
+        "queues": 3
+      },
+      "priorRawSettingsExact": 53,
+      "zeroPromptBoundary": "Prior controlled native actions and frozen query implementation; not inferred from database counts."
+    },
+    "completeDataManifests": {
+      "passed": true,
+      "snapshots": [
+        {
+          "phase": "before",
+          "sha256": "8ed7b800d935db1abe1e9fefc3772d9cce97b306f8871c0ce23f9d52b40062a3",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "preinstall",
+          "sha256": "8ed7b800d935db1abe1e9fefc3772d9cce97b306f8871c0ce23f9d52b40062a3",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "after",
+          "sha256": "8ed7b800d935db1abe1e9fefc3772d9cce97b306f8871c0ce23f9d52b40062a3",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        }
+      ],
+      "entryCountEach": 217400,
+      "allRecordedContentTypesModesAndLinkTargetsEqual": true
+    },
+    "privateMetadataBackup": {
+      "passed": true,
+      "method": "Read retained captured main/WAL/SHM and backup hashes; SQLite integrity/iterdump digest only on second disposable private copies; original database never opened.",
+      "captureHashesMatchAllThreeManifests": true,
+      "capturedFileCount": 3,
+      "capturedAndBackupIntegrity": "ok",
+      "logicalContentsEqual": true,
+      "originalRetainedCopyHashesUnchanged": true,
+      "backupSha256": "df59f4169a4df469f85063c59e91fbb768347e31445780c8fbc004dc089e59ed",
+      "rawRowsPrintedOrSaved": false
+    },
+    "installedExactBundle": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "9dc160859da182d9bf7e274185a2b3d02d75063deffef98259af60b8f0156708",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      }
+    },
+    "archive": {
+      "passed": true,
+      "archiveSha256": "34d93568ed1c69ef33d420e91db15d8f98ab9f7c79cbb7644c86de48f81b0833",
+      "archiveBytes": 13923315
+    },
+    "identitySignature": {
+      "passed": true,
+      "bundleIdentifier": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "architecture": "arm64",
+      "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+      "distribution": "ad-hoc only"
+    },
+    "exactSourceAndEngineering": {
+      "passed": true,
+      "inputCount": 1415
+    },
+    "formalProcessAbsent": {
+      "passed": true
+    },
+    "verificationInputsStable": {
+      "passed": true
+    }
+  },
+  "failures": [],
+  "startedAt": "2026-10-10T15:22:14.615224+00:00",
+  "launched": false,
+  "inputReceipts": {
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/candidate.json": "8ddb1aaf705835bf2d6c90b0e40235fc5f169338c07021337a75ecd78beae51c",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/candidate-inputs.json": "d269b924dca83524da0325723a93f0ca8e48c27378787ed2d21924fd0627a017",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/candidate-independent.json": "2ea1462d377e0e29b982b1658f7e74d64ef79647ee1a4c4c953e63e069158716",
+    "output/2026-10-10-notification-media-install/install-operation.json": "8e2263acf6ea1125d0920c7618bdc60a00b5b928776c3e226630457e295abb45",
+    "output/2026-10-10-notification-media-install/normal-exit-observation.json": "e1cac4696f35198dc214159fe6248e595c3009a859a02ac7fb7e4c52e4ca117b",
+    "output/2026-10-10-skills-qualified-names-native/final-normal-exit.json": "9a4365ce9715bcfc7b79f6f9f793dea574298e4a1d1c87757450ff96a234f014",
+    "output/2026-10-10-skills-qualified-names-native/freeze-release.json": "1a4b9b31c4b9fcfad83fb0f63888c8a273e34cc6782f0bd2a574a554fe2bb8d3",
+    "output/2026-10-10-skills-qualified-names-native/final-data-comparison-independent.json": "172e42aca73e3045d2cb388871f3f6b8ed3c619b58fadb415e560acd44d2a805",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/native-independent.json": "ceb2cece610c3872c51d62740e44a7a28e904d939b117f36fe51f4296ea5c766",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/installed-qualified-names.json": "1ec3e6b00d2c857363315b97cc858a5120b12c8c0d118d7000c05d24353e6e95",
+    "output/2026-10-10-notification-media-install/install-data-before-summary.json": "478e2a4bc30ce3a2a64483e74ef0a8a460c38c73711d2eee1252f10776507bfc",
+    "output/2026-10-10-notification-media-install/install-data-before.jsonl": "8ed7b800d935db1abe1e9fefc3772d9cce97b306f8871c0ce23f9d52b40062a3",
+    "output/2026-10-10-notification-media-install/install-data-preinstall-summary.json": "478e2a4bc30ce3a2a64483e74ef0a8a460c38c73711d2eee1252f10776507bfc",
+    "output/2026-10-10-notification-media-install/install-data-preinstall.jsonl": "8ed7b800d935db1abe1e9fefc3772d9cce97b306f8871c0ce23f9d52b40062a3",
+    "output/2026-10-10-notification-media-install/install-data-after-summary.json": "478e2a4bc30ce3a2a64483e74ef0a8a460c38c73711d2eee1252f10776507bfc",
+    "output/2026-10-10-notification-media-install/install-data-after.jsonl": "8ed7b800d935db1abe1e9fefc3772d9cce97b306f8871c0ce23f9d52b40062a3",
+    "output/2026-10-10-notification-media-install/metadata-backup-receipt.json": "48542ab045afdf5a5adae51bb8a7cf63fdc2232b59ca7693fd29999006d906dd",
+    "output/2026-10-10-notification-media-install/metadata-before.sqlite3": "df59f4169a4df469f85063c59e91fbb768347e31445780c8fbc004dc089e59ed",
+    "output/2026-10-10-notification-media-install/metadata-source/farfold.sqlite3": "fb1330644d07e4b0eda09a22b0150d4ffc2e0fd606e18ec2f5943dc06c141b39",
+    "output/2026-10-10-notification-media-install/metadata-source/farfold.sqlite3-wal": "f33cfd5479df59d4eaee53b04cc0c2f09c1316a9680e7ad39b12fd8d161982e8",
+    "output/2026-10-10-notification-media-install/metadata-source/farfold.sqlite3-shm": "c8dbbab7b781b69f05a827f7065a9c0ec04312eaf2f246dc3799492f17fbc4d5",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/verification.json": "62dcd83375bbed1f1ffc2866db48007522df0e6be5b98a7ed102433ad83d8132",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/frontend.txt": "ce3566b4547fc946de600d6b268f82dd0a5bf1ea3f9840f3b3ff99fc2a7bdae7",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/build.txt": "08fbda9d2e4386841b151a521aa5a00ab313560f19e60a0ed02471e82843ed0f",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/clippy.txt": "0057ed30b6e3b0d7ed471c85d9ed236526b7bfe0b1a5afd368cc87db08fa0e15",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/rust.txt": "8e7c089916c5cf9d252065fc7468c9874a670210fc97a4c96501d30d673f6efc",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/inputs-before.json": "d269b924dca83524da0325723a93f0ca8e48c27378787ed2d21924fd0627a017",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/inputs-after.json": "d269b924dca83524da0325723a93f0ca8e48c27378787ed2d21924fd0627a017"
+  },
+  "completedAt": "2026-10-10T15:22:18.323740+00:00"
+}

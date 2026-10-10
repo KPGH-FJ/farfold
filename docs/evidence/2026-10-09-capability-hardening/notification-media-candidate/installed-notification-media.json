@@ -1,0 +1,140 @@
+{
+  "atUtc": "2026-10-10T15:51:19.361205+00:00",
+  "sourceCommit": "6c37a012239d8d0194bfae3597700cfebc37333e",
+  "installedApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "scope": "Installed macOS completion-reminder preferences and bounded existing-choice real Codex replies; no whole-capability acceptance.",
+  "engineering": {
+    "inputCount": 1415,
+    "sevenChecksPassed": true,
+    "frontendTests": 4621,
+    "rustPassed": 1477,
+    "rustIgnored": 6,
+    "sourceStayedFrozenThroughNative": true
+  },
+  "installation": {
+    "candidateIndependentChecks": 9,
+    "installationIndependentChecks": 10,
+    "fullDataSnapshotsIdentical": 3,
+    "entriesPerSnapshot": 217400,
+    "duplicateAppRemovedAfterVerification": true,
+    "publicSigningOrNotarization": false
+  },
+  "actualJourney": {
+    "newControlledConversations": 1,
+    "noToolPromptsSubmitted": 3,
+    "selectedAgent": "Codex",
+    "selectedModel": "6 Astra",
+    "selectedReasoning": "Ultra",
+    "selectedService": "existing Agent settings",
+    "selectionChanged": false,
+    "visibleNormalCompletions": 3,
+    "toolsObservedInControlledReplies": false,
+    "originalPreferences": {
+      "attention": false,
+      "success": false,
+      "sound": false
+    },
+    "finalPreferences": {
+      "attention": false,
+      "success": false,
+      "sound": false
+    },
+    "preferenceStablePixelsIndependentlyChecked": true,
+    "cases": [
+      {
+        "case": "success preference enabled, explicit hidden window",
+        "frontend": "submitted",
+        "background": true,
+        "enabled": true,
+        "backendAddResult": "accepted",
+        "backendReason": "add_accepted",
+        "windowVisible": false,
+        "windowFocused": false,
+        "soundRequested": false,
+        "presentation": "not_observed",
+        "clicked": false,
+        "conclusion": "Official macOS notification submission accepted; actual display and click unverified."
+      },
+      {
+        "case": "success preference disabled but foreground",
+        "frontend": "skipped",
+        "reason": "foreground",
+        "background": false,
+        "enabled": false,
+        "backend": null,
+        "conclusion": "Retained counterexample: does not isolate the disabled preference."
+      },
+      {
+        "case": "success preference disabled, explicitly hidden window retest",
+        "frontend": "skipped",
+        "reason": "disabled",
+        "background": true,
+        "enabled": false,
+        "backend": null,
+        "conclusion": "Disabled preference suppressed this actual completed request without native submission."
+      }
+    ]
+  },
+  "closeout": {
+    "normalExit": true,
+    "forceQuit": false,
+    "formalProcessCountAfter": 0,
+    "formalFiveFilesUnchanged": true,
+    "sourceInputsExactlyUnchanged": true,
+    "oldSessionsWholeRowsPreserved": 130,
+    "newControlledSessionRows": 1,
+    "dismissedRowsPreserved": 168,
+    "agentRows": 40,
+    "agentOnlyChange": "Codex updated_at; other nine columns unchanged",
+    "unsentGroupsPreserved": [8, 8, 3],
+    "settingsCountPreserved": 53,
+    "unchangedRawSettings": 50,
+    "acceptedSettingDeltas": [
+      "Notifications: missing successEnabled -> explicit false; all effective original preferences unchanged",
+      "Read state: only new controlled conversation added; all old unread entries retained",
+      "Unsent activity: only same new controlled conversation added; old activity and whole draft/feedback/queue records unchanged"
+    ],
+    "worktreeCatalogueWholeUnchanged": true,
+    "databaseSchemaUnchanged": true
+  },
+  "notVerified": [
+    "Actual macOS notification banner or Notification Center visibility",
+    "Actual notification click navigation",
+    "Sound with permission enabled",
+    "Formal expired approval/question notification withdrawal (P47/NEW-15)",
+    "Real Agent image/audio attachment paths and formal media playback/error/retry (P13/NEW-14)",
+    "Windows build and real system behavior",
+    "Other Agents and all 29 x 8 acceptance conditions"
+  ],
+  "openItems": [
+    "P13",
+    "P47",
+    "P48",
+    "P39",
+    "P40",
+    "P41",
+    "NEW-14",
+    "NEW-15",
+    "Full market-readiness goal"
+  ],
+  "uiToolLimitations": "Hidden-window focus required reopening the exact visible Farfold icon in Finder. Prior unsuccessful UI operations are retained and do not establish a product failure. Normal Save and quit completed after observed focus.",
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/verification.json": "62dcd83375bbed1f1ffc2866db48007522df0e6be5b98a7ed102433ad83d8132",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-checks/independent.json": "99d813d33009bed3e7dd4cb8deee965ca237b30f706cea08f934e3770b957541",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/candidate-independent.json": "2ea1462d377e0e29b982b1658f7e74d64ef79647ee1a4c4c953e63e069158716",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/install-independent.json": "60bf22c0894216c08be152e2f861457ed2b38effdb52721601a8b4cea736aac7",
+    "docs/evidence/2026-10-09-capability-hardening/notification-media-candidate/duplicate-bundle-cleanup.json": "f05435b1d83ff46b5cbeb4bc1b4ec43fb6e4602415196450b9013fd012e4d5d8",
+    "output/2026-10-10-notification-media-native/independent-pre-review.json": "0f1f2d861fd1706f3cd493c0639481737fb70dbb7237e565e20bd7fd210f3c47",
+    "output/2026-10-10-notification-media-native/enabled-notification.json": "deb91b32fc2fcf4e0c11201ea4e2ef7e88748b74be3c3d70ee208b622d3c5e2f",
+    "output/2026-10-10-notification-media-native/disabled-notification.json": "f3c228e6b3ad2512db915a8dedda94ceae72e0f23910fd7eb887f42cedcd2f09",
+    "output/2026-10-10-notification-media-native/disabled-background-notification.json": "3439e0ad58e0920a1aa317ae6f98212e44170697a796cc9b45c490c4cb723e7b",
+    "output/2026-10-10-notification-media-native/final-normal-exit.json": "0b1e70c95f5978bf7bf503c10d709dd2fa478adae60d9076cb668e7f43924bf6",
+    "output/2026-10-10-notification-media-native/freeze-after-native.json": "5a9f464887a8f35353ec1e176953ae911a3908335532707f9940c19804ca2516",
+    "output/2026-10-10-notification-media-native/root-data-acceptance.json": "48fcc1fb4a63c69cb208cd142c107bf086753711adca0f26d0df574e49f2d6a6",
+    "output/2026-10-10-notification-media-native/ui-observation-limitations.json": "d10bf8f0c850ad5f1cdafd53bfb240c669b73f263a1b2c417e6d9dbb1d4a7140",
+    "output/2026-10-10-notification-media-native/data-review/final-comparison.json": "adfb3af2d97ac4e59f1673f6416ed4bd9562a6a917c7f9547e57d51f4ff04389",
+    "output/2026-10-10-notification-media-native/data-review/final-delta-details.json": "f534577e290a0e9fa1338f4a11bd20c51ce9ccf7eeacce8cb7518202717a9229"
+  }
+}
