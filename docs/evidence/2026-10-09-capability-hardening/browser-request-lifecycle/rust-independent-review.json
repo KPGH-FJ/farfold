@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUTC": "2026-10-10T03:58:47.229725+00:00",
+  "status": "completed_no_new_blocker",
+  "reviewer": "verification",
+  "scope": "Independent read-only review of architecture Rust changes, source/checkpoint and raw result logs; no Cargo/tests/application/Agent repeated. Reviewer authored native Objective-C, which is independently reviewed by architecture.",
+  "reviewedReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/implementation.json",
+    "sha256": "84365e569a6d9b5648d1075d210bf3b00af6082862b14c2099ebaece175a62b9"
+  },
+  "verifiedReferences": [
+    {
+      "path": "src-tauri/src/browser_workspace.rs",
+      "sha256": "3c65ff55f8cd9112c43150461e8f6d7d50ac783a778543816041eda98bca9b9b",
+      "lines": 844
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/native_request.rs",
+      "sha256": "c7e1c06c018909dab579403af0cddcd61c2d465a49a003ff0b583c113f60a6ae",
+      "lines": 203
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/native.rs",
+      "sha256": "f2ff09ea80f30157bcee19d400dda1ec9bc67145160e8a752f0699c62661620a",
+      "lines": 826
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_read.rs",
+      "sha256": "a031b036bd1eca1dd7454232445459b42da89cc7f79c2dab38e14a5a56ffdee6",
+      "lines": 245
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/windows/mod.rs",
+      "sha256": "827c2550f96429e6bf395e22b6cff95dcfea1114443d4160e7f854aa36998ab8",
+      "lines": 629
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/windows/observation.rs",
+      "sha256": "7a2ccf683e3755198a57ecb3755396d61f4c86fab326d2a746c968afa1949bce",
+      "lines": 196
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/transport.rs",
+      "sha256": "daf4ecaedb66111c1d8ea556e2aa8202fad820fe7535124bd470020c1e0e9197",
+      "lines": 1439
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/transport_lifecycle_tests.rs",
+      "sha256": "f4f36313b64af76638f6cc3644a412953042e820d52a55612c436e00ffd52deb",
+      "lines": 124
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/wire-original-red.txt",
+      "sha256": "b4a227e6dc8b401b109694cede974a9f99b3eaec06c103cbecc758400ab5d60c",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked browser_sharing::transport::lifecycle_tests -- --nocapture",
+      "exitCode": 101,
+      "passed": 0,
+      "failed": 3,
+      "scope": "Actual Wire/lease regression: queued read/control cancel revoked the page grant; dropping pending read did not synchronously close its request gate."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/wire-green.txt",
+      "sha256": "e9c576267b0cb1cc9515fc13025a4768e20a6025cbdfca1cef7b6d521f7eac9c",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked browser_sharing::transport -- --nocapture",
+      "exitCode": 0,
+      "passed": 19,
+      "failed": 0,
+      "scope": "First repair checkpoint, before final error message and two inheritance tests."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native-owner-green.txt",
+      "sha256": "083fd2b96271e76fccf4da25a42615e95d05c45ff90bdc34ac4698ee5bf4c35d",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked browser_workspace::native_request -- --nocapture",
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0,
+      "scope": "Shared waiter and Windows slot pure tests on macOS; not native WebView2 execution."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/read-result-red.txt",
+      "sha256": "257e30cff1b07e5311416649833e799b3b0d9a741eb32c813362c15cb323c6f7",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked unconfirmed_read_does_not_claim_that_the_page_grant_was_revoked -- --nocapture",
+      "exitCode": 101,
+      "passed": 0,
+      "failed": 1,
+      "scope": "Real error mapper incorrectly said permission stopped for an unconfirmed read."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/browser-targeted-green.txt",
+      "sha256": "6dee8e40416d9360ad03ad961d1ccbd9ef6066bb54976597e5af03d7b271ca10",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked browser_ -- --nocapture",
+      "exitCode": 0,
+      "passed": 163,
+      "failed": 0,
+      "scope": "Substring scope includes one XLSX capture-contract test; not all 163 are exclusively browser tests. Before two additional gate tests."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/wire-final-green.txt",
+      "sha256": "8089fb6c6d38011b3f29eabc95c950b94d2c274e70cea95413e776afbf1595ba",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked browser_sharing::transport -- --nocapture",
+      "exitCode": 0,
+      "passed": 22,
+      "failed": 0,
+      "scope": "Final transport scope, including six new lifecycle cases and retained existing barrier/unknown checks."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/clippy.txt",
+      "sha256": "e6036b1c2f9746554b40c5f71d5a17cdc399ac051cbde85096214ed1afa60c5b",
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "exitCode": 0,
+      "passed": null,
+      "failed": null,
+      "scope": "macOS production clippy. Afterwards only Windows test clarification and two Rust test additions changed."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/fmt-final.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+      "exitCode": 0,
+      "passed": null,
+      "failed": null,
+      "scope": "Final current Rust source formatting check."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/windows-check.txt",
+      "sha256": "2774e60945f1e0d49e97a8e64cfc687d7d895218e04728dde8852ba2ae085ae3",
+      "command": "cargo check --manifest-path src-tauri/Cargo.toml --locked --target x86_64-pc-windows-gnu --lib",
+      "exitCode": 101,
+      "passed": null,
+      "failed": null,
+      "scope": "Blocked in ring before project Windows typechecking: missing x86_64-w64-mingw32-gcc. No compiler installed; not a Windows compile pass."
+    },
+    {
+      "path": "src-tauri/native/BrowserWorkspace.m",
+      "sha256": "bc07aeb36518a4bde9f0f21ac0749256c430d03e36c80cb7eb2f2cb621c3c593"
+    },
+    {
+      "path": "src-tauri/native/BrowserWorkspace.h",
+      "sha256": "e0da23400f263e1bf392154da3b5694db9eea1f142bda64c3d90b788d3145a9d"
+    }
+  ],
+  "conclusions": [
+    "NativeRequest uses a nonzero process-unique checked counter and one absolute deadline; drop/closed channel/timeout retire exact operation; successful native callback disarms retirement even for error results.",
+    "Mac accepted-start callback remains sole Box consumer; rejected-start Rust cleanup and queued-main closed receiver prevent double free or unwanted late dispatch. Native cancellation is best-effort main-queue work and never proof JS stopped.",
+    "Wire creates per-request gate without replacing a preexisting one-shot control gate; canceled request cannot revoke or resurrect whole-page authority. Queue cancellation still withdraws body/keeps stdout barrier, and actual whole-page withdrawal still invalidates every request.",
+    "Windows pending reply is optional; retirement/invalidation takes sender but retains slot. Exact completion clears it before successor; retired callback bypasses serialization and cannot restore observation. Close/new owner stays separate.",
+    "Existing error output now distinguishes unconfirmed operation from denied/revoked permission; disconnected control result remains structured unknown."
+  ],
+  "observedLogResults": {
+    "wireFinal": {
+      "passed": 22,
+      "failed": 0
+    },
+    "nativeOwnerPure": {
+      "passed": 6,
+      "failed": 0
+    },
+    "browserSubstringEarlier": {
+      "passed": 163,
+      "failed": 0,
+      "containsNonBrowserFixture": true
+    },
+    "windowsCheck": "blocked in ring due missing x86_64-w64-mingw32-gcc before project Windows source typechecking"
+  },
+  "retainedEvidenceBoundaries": [
+    "Original Wire3 failures and read mapper1 failure are actual controlled regressions; no sum of overlapping green scopes.",
+    "Native58 completion-seam and14 actual-WebKit late-effect are separately attributed, not installed Rust-to-Tauri-to-native acceptance.",
+    "Windows static/pure slot review does not prove target compilation or WebView2 execution.",
+    "Unending execution deliberately remains busy until exact completion or explicit close; timeout is not abort.",
+    "Original native receipt referenced by peer is byte-exact archived at native/implementation-before-boundary-clarification.json (2ee5d0d23df9275643068417699dbb7a5376dd2a2f5d6b578848486fe794af18); current native receipt only narrows direct-process/network observation wording."
+  ],
+  "productionSourcesChangedByReviewerInThisReview": []
+}

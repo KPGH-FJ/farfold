@@ -16,6 +16,8 @@ mod native;
 #[cfg(windows)]
 #[path = "browser_workspace/windows/mod.rs"]
 mod native;
+#[path = "browser_workspace/native_request.rs"]
+mod native_request;
 #[path = "browser_workspace/page_read.rs"]
 mod page_read;
 #[path = "browser_workspace/policy.rs"]

@@ -1,3 +1,4 @@
+use super::super::native_request::NativeRequest;
 use super::*;
 use serde_json::json;
 const WORLD: &str = "FarfoldFixedObservation";
@@ -106,10 +107,12 @@ fn random_id() -> Result<String, String> {
     getrandom::fill(&mut bytes).map_err(|_| "无法准备网页观察")?;
     Ok(bytes.iter().map(|b| format!("{b:02x}")).collect())
 }
-fn finish(view: &Rc<View>, operation: &str, result: Result<String, String>) {
+fn finish(view: &Rc<View>, operation: u64, result: Result<String, String>) {
     if let Some(pending) = PendingOperation::take_matching(&view.pending, operation) {
         view.action_navigation.set(None);
-        let _ = pending.reply.send(result);
+        if let Some(reply) = pending.reply {
+            let _ = reply.send(result);
+        }
     }
 }
 pub(super) fn unknown(observation: &str) -> String {
@@ -144,6 +147,16 @@ pub(super) async fn run(
             ("act", observation, node, kind, input)
         }
     };
+    let browser_id = scope.native_id();
+    let retire_app = app.clone();
+    let request = NativeRequest::new(move |operation_id| {
+        let _ = retire_app.run_on_main_thread(move || {
+            if let Ok(view) = lookup(browser_id) {
+                PendingOperation::retire_matching(&view.pending, operation_id);
+            }
+        });
+    })?;
+    let operation = request.id();
     let (sender, receiver) = oneshot::channel();
     main(app,move||{
         scope.observe(|id,expected|{
@@ -152,28 +165,32 @@ pub(super) async fn run(
             // A manual UI read has a validated ticket but no external grant URL.
             // Pin its current source now; external requests still supply an exact URL.
             let source=view.source()?;let expected=expected.unwrap_or(&source).to_owned();
-            if view.loading.get()||view.pending.borrow().is_some(){return Err("网页正在变化或操作中，请稍后再试".into());}
+            if view.loading.get()||view.pending.borrow().is_some(){return Err("网页仍在加载或等待先前操作结束，请等待或关闭网页".into());}
             if view.navigation.get()!=navigation||source!=expected{return Err("网页已变化，请重新确认要分享的页面".into());}
             let context=view.context.get().ok_or("网页观察保护尚未准备，请重新打开")?;
             if mode=="act" && view.observation.borrow().as_deref()!=Some(observation.as_str()){return Err("网页操作目标已失效，请重新观察".into());}
             view.observation.borrow_mut().take();let seed=random_id()?;let epoch=random_id()?;
-            let operation=seed.clone();let started_operation=operation.clone();
+            let started_operation=operation;
             let deadline=std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_err(|_|"系统时间无效")?.as_millis()+5000;
             let function=OPERATION.trim().trim_end_matches(';').replace("/* FARFOLD_OBSERVATION_PROGRAM */", PROGRAM);
             let args=[json!(mode),json!(epoch),json!(seed),json!(navigation.to_string()),json!(observation),json!(node),json!(kind),json!(input),json!(deadline as u64),json!(view.manual_revision.get())].into_iter().map(|value|json!({"value":value})).collect::<Vec<_>>();
-            *view.pending.borrow_mut()=Some(PendingOperation{id:operation.clone(),reply:sender,action:(mode=="act").then(||observation.clone())});
+            *view.pending.borrow_mut()=Some(PendingOperation{id:operation,reply:Some(sender),action:(mode=="act").then(||observation.clone())});
             if mode=="act"{view.action_navigation.set(Some(Instant::now()+Duration::from_secs(5)));}
             let done=view.clone();
             let result=cdp(&view,"Runtime.callFunctionOn",json!({"functionDeclaration":function,"executionContextId":context,"arguments":args,"returnByValue":true,"awaitPromise":true}),move|result|{
                 if done.pending.borrow().as_ref().is_none_or(|pending|pending.id!=operation){return;}
-                if !done.live()||done.navigation.get()!=navigation||done.source().ok().as_deref()!=Some(&expected){finish(&done,&operation,if mode=="act"{Ok(unknown(&observation))}else{Err("网页已变化，请重新确认分享范围".into())});return;}
+                if done.pending.borrow().as_ref().is_some_and(|pending|pending.reply.is_none()) {
+                    // No serialization or observation revival after retirement.
+                    PendingOperation::take_matching(&done.pending, operation);
+                    done.action_navigation.set(None);
+                    return;
+                }
+                if !done.live()||done.navigation.get()!=navigation||done.source().ok().as_deref()!=Some(&expected){finish(&done,operation,if mode=="act"{Ok(unknown(&observation))}else{Err("网页已变化，请重新确认分享范围".into())});return;}
                 let value=result.and_then(|result|{if result.get("exceptionDetails").is_some(){return Err("网页操作结果未确认".into());}result.get("result").and_then(|r|r.get("value")).cloned().filter(Value::is_object).ok_or("网页返回内容无效".into())});
                 let result=value.map(|mut value|{if mode=="observe"{if value["blocked"]==false{*done.observation.borrow_mut()=value["observationId"].as_str().map(str::to_owned);}value["screenshotReason"]=json!("当前页面受保护输入无法可靠核实，暂不提供截图");}value.to_string()});
-                finish(&done,&operation,result);
-            });if result.is_err(){finish(&view,&started_operation,Err("网页操作未能开始".into()));}result
+                finish(&done,operation,result);
+            });if result.is_err(){finish(&view,started_operation,Err("网页操作未能开始".into()));}result
         })
     }).await?;
-    receiver
-        .await
-        .map_err(|_| "网页操作结果未确认，请查看页面")?
+    request.reply(receiver).await
 }

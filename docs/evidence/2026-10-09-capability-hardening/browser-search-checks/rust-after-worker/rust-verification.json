@@ -1,0 +1,59 @@
+{
+  "checkedAtUtc": "2026-10-10T04:16:00.074792+00:00",
+  "sourceBase": "16a3f499e5b0f70b57e03686fb6e7791236ceaab",
+  "inputCount": 493,
+  "sourceStable": true,
+  "changedInputs": [],
+  "protectedUnchanged": true,
+  "checks": [
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.155,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.769,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/clippy.txt",
+      "sha256": "a7642a0867425c6137f6fda230ee0c5445d5148745ccd7b4f5b0b4f2b4540d91",
+      "executedInThisRun": true
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 101,
+      "seconds": 97.193,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/rust.txt",
+      "sha256": "fd86e121b530016498c2a4b9b8c29bad2efad8e318983dc7914617da30443abb",
+      "executedInThisRun": true
+    }
+  ],
+  "allPassed": false
+}

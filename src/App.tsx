@@ -13,6 +13,11 @@ import { listen } from "@tauri-apps/api/event";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { SidebarSimpleIcon } from "@phosphor-icons/react";
 import { CommandPalette } from "./components/CommandPalette";
+import {
+  loadedSearchHitIsCurrent,
+  type LoadedSearchHit,
+} from "./runtime/loaded_search";
+import type { LoadedSearchRequest } from "./components/LoadedSearchJump";
 import { EmptyState } from "./components/EmptyState";
 import { SettingsPage, type SettingsTab } from "./components/SettingsPage";
 import { CustomAgentDialog } from "./components/CustomAgentDialog";
@@ -129,8 +134,11 @@ export default function App() {
       : { kind: "start" },
   );
   const currentView = useRef(view);
+  const [loadedSearchRequest, setLoadedSearchRequest] =
+    useState<LoadedSearchRequest | null>(null);
   const historyOpen = useRef(0);
   const setView = (next: View) => {
+    setLoadedSearchRequest(null);
     openingInquiries.retireAll();
     currentView.current = next;
     updateView(next);
@@ -521,6 +529,32 @@ export default function App() {
         (error) => followRecovery(key, request, historyFailureKey(error)),
       );
   });
+  const openLoadedSearch = afterBrowserClose(
+    (hit: LoadedSearchHit, current: () => boolean) => {
+      if (!current()) return;
+      const snapshot = threads.getSnapshot();
+      const row = snapshot.index.find((row) => row.id === hit.threadKey);
+      const state = snapshot.threads.get(hit.threadKey);
+      if (
+        !row ||
+        !state ||
+        row.agentId !== state.agentId ||
+        row.cwd !== state.cwd ||
+        row.nativeSessionId !== state.nativeSessionId ||
+        !loadedSearchHitIsCurrent(hit, snapshot.threads)
+      )
+        return;
+      ++historyOpen.current;
+      routeHistory.current = [];
+      setPaletteOpen(false);
+      setNotificationOnlyKey(null);
+      // A search result selects its existing display only. It never admits a
+      // cold open, recovery, configuration change or model request.
+      setThreadKey(hit.threadKey);
+      setView({ kind: "thread", key: hit.threadKey });
+      setLoadedSearchRequest({ hit, token: {} });
+    },
+  );
   const notificationSelection = useRef<(key: string) => void>(() => {});
   notificationSelection.current = (key) => {
     // A click is a navigation request, never permission to recover or send.
@@ -867,6 +901,7 @@ export default function App() {
             filter={filter}
             onFilter={setFilter}
             onOpen={openRow}
+            onSelectLoaded={openLoadedSearch}
             onImport={(opener) => openImport(null, opener)}
             onNew={goNew}
             onReopen={reopenSame}
@@ -888,6 +923,11 @@ export default function App() {
           >
             <ThreadPage
               viewKey={pageKey}
+              searchRequest={
+                loadedSearchRequest?.hit.threadKey === pageKey
+                  ? loadedSearchRequest
+                  : null
+              }
               onManualOpen={
                 notificationOnlyKey === pageKey
                   ? () => {
@@ -1040,6 +1080,7 @@ export default function App() {
           returnFocusRef={searchReturnFocus}
           onClose={() => setPaletteOpen(false)}
           onSelect={openRow}
+          onSelectLoaded={openLoadedSearch}
         />
       )}
       {importMounted && (

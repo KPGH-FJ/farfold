@@ -1,0 +1,70 @@
+{
+  "checkedAtUtc": "2026-10-10T04:21:39.349412+00:00",
+  "betweenOriginalRunsChangedInputs": {
+    "vite.config.ts": [
+      "c6bed1bdbf62374502f49b20ebcacdcc3a747f0fc8e20627388d59d4baf6e07f",
+      "3770462d5600228e529ec36255ff112cf63c9504342d5e8000cc763fc36f63c0"
+    ]
+  },
+  "initialCurrentMatchesSecondInput": true,
+  "sourceStable": true,
+  "runs": [
+    {
+      "name": "dependency-environment",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "acp_client::dependency_environment::launch_tests::manager_final_environment_handles_prepared_and_existing_sources_without_persisting_it",
+        "--",
+        "--exact",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "exitCode": 0,
+      "seconds": 2.577,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/dependency-environment-isolated.txt"
+    },
+    {
+      "name": "transient-open",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "acp_client::transient_mcp_route_tests::transient_mcp_abandoned_real_open_revokes_after_late_reply_cleanup",
+        "--",
+        "--exact",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "exitCode": 0,
+      "seconds": 1.95,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/transient-open-isolated.txt"
+    },
+    {
+      "name": "program-launch",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "program_launch_tests::updated_node_remains_usable_when_it_still_meets_the_official_engine_range",
+        "--",
+        "--exact",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "exitCode": 0,
+      "seconds": 1.343,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/program-launch-isolated.txt"
+    }
+  ]
+}

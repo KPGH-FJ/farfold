@@ -11,6 +11,8 @@ static NSMutableSet<NSUUID *> *clearingHTMLStores;
 @interface FFReadRequest : NSObject
 @property(nonatomic) void *context;
 @property(nonatomic) FFBrowserRead callback;
+@property(nonatomic) uint64_t operationID;
+@property(nonatomic) BOOL retired;
 - (void)finish:(NSString *)json error:(NSString *)error;
 @end
 @implementation FFReadRequest
@@ -93,7 +95,9 @@ static BOOL resize(FFPublicBrowser *browser, double x, double y, double width, d
     } else return;
     self.observationID = nil;
     FFReadRequest *request = self.readRequest;
-    self.readRequest = nil;
+    // Manual activity withdraws the receiver, but does not prove already queued
+    // JavaScript has stopped. Keep its execution slot until completion/close.
+    request.retired = YES;
     uint64_t token = self.status ? self.status(self.context,6,self.currentToken,self.view.URL.absoluteString.UTF8String) : 0;
     if (token) self.currentToken = token;
     [request finish:nil error:@"你已操作此网页，请重新确认分享范围"];
@@ -549,8 +553,8 @@ bool ff_browser_set_visible(uint64_t browserID, bool visible, double x, double y
     return !browser.view.hidden;
 }
 
-int32_t ff_browser_read(uint64_t browserID, const char *expectedURL, void *context, FFBrowserRead callback) {
-    if (![NSThread isMainThread] || shutdownStarted) return false;
+int32_t ff_browser_read(uint64_t browserID, uint64_t operationID, const char *expectedURL, void *context, FFBrowserRead callback) {
+    if (![NSThread isMainThread] || shutdownStarted || !operationID) return false;
     FFPublicBrowser *browser = lookup(browserID);
     if (!browser || browser.closed || browser.localHTML || browser.view.loading || browser.readRequest || !callback) return false;
     if (expectedURL) {
@@ -558,6 +562,7 @@ int32_t ff_browser_read(uint64_t browserID, const char *expectedURL, void *conte
         if (!expected || ![browser.view.URL.absoluteString isEqualToString:expected]) return 2;
     }
     FFReadRequest *request = [FFReadRequest new];
+    request.operationID = operationID;
     request.context = context;
     request.callback = callback;
     browser.readRequest = request;
@@ -567,6 +572,9 @@ int32_t ff_browser_read(uint64_t browserID, const char *expectedURL, void *conte
         FFPublicBrowser *active = weakBrowser;
         if (!active || active.closed || active.readRequest != request) return;
         active.readRequest = nil;
+        // Receiver retirement cannot cancel JavaScript. Its actual callback is
+        // the point at which this old execution slot can be released safely.
+        if (request.retired) return;
         if (shutdownStarted) {
             [request finish:nil error:@"网页已关闭，读取已取消"];
             return;
@@ -604,6 +612,7 @@ static BOOL operationLive(FFPublicBrowser *browser, FFReadRequest *request, uint
 static void finishOperation(FFPublicBrowser *browser, FFReadRequest *request, NSDictionary *value, NSString *error) {
     if (!browser || browser.readRequest != request) return;
     browser.readRequest = nil;
+    if (request.retired) return;
     if (error) { [request finish:nil error:error]; return; }
     NSData *data = [NSJSONSerialization isValidJSONObject:value] ? [NSJSONSerialization dataWithJSONObject:value options:0 error:NULL] : nil;
     if (!data || data.length > 550000) { [request finish:nil error:@"网页返回内容过大"]; return; }
@@ -624,6 +633,7 @@ static void takeObservationSnapshot(FFPublicBrowser *browser, FFReadRequest *req
     [browser.view takeSnapshotWithConfiguration:configuration completionHandler:^(NSImage *image, NSError *error) {
         FFPublicBrowser *active = weakBrowser;
         if (!active || active.readRequest != request) return;
+        if (request.retired) { finishOperation(active,request,nil,nil); return; }
         if (!operationLive(active,request,navigation,url)) { finishOperation(active,request,nil,@"网页已变化，请重新观察"); return; }
         NSData *png = nil;
         NSBitmapImageRep *bitmap = image ? [NSBitmapImageRep imageRepWithData:image.TIFFRepresentation] : nil;
@@ -634,6 +644,7 @@ static void takeObservationSnapshot(FFPublicBrowser *browser, FFReadRequest *req
         [active.view callAsyncJavaScript:observationProgram() arguments:@{@"mode":@"check",@"epochSeed":NSUUID.UUID.UUIDString} inFrame:nil inContentWorld:observationWorld() completionHandler:^(id checked, NSError *checkError) {
             FFPublicBrowser *current = weakBrowser;
             if (!current || current.readRequest != request) return;
+            if (request.retired) { finishOperation(current,request,nil,nil); return; }
             if (!operationLive(current,request,navigation,url) || checkError || ![checked isKindOfClass:NSDictionary.class]) { finishOperation(current,request,nil,@"网页已变化，请重新观察"); return; }
             if ([checked[@"blocked"] boolValue]) { current.observationID = nil; finishOperation(current,request,@{@"blocked":@YES,@"reason":@"页面含敏感输入，请改用公开页面"},nil); return; }
             if (![checked[@"documentVersion"] isEqual:result[@"documentVersion"]] || ![checked[@"url"] isEqual:url]) { current.observationID = nil; finishOperation(current,request,nil,@"网页已变化，请重新观察"); return; }
@@ -642,10 +653,10 @@ static void takeObservationSnapshot(FFPublicBrowser *browser, FFReadRequest *req
         }];
     }];
 }
-static int32_t startObservation(uint64_t browserID, uint64_t navigation, const char *expectedURL, BOOL screenshot,
+static int32_t startObservation(uint64_t browserID, uint64_t operationID, uint64_t navigation, const char *expectedURL, BOOL screenshot,
                                 NSString *observationID, NSString *nodeRef, NSString *kind, NSString *inputText,
                                 void *context, FFBrowserRead callback) {
-    if (![NSThread isMainThread] || shutdownStarted) return 0;
+    if (![NSThread isMainThread] || shutdownStarted || !operationID) return 0;
     FFPublicBrowser *browser = lookup(browserID);
     if (!browser || browser.closed || browser.localHTML || browser.view.loading || browser.readRequest || !callback) return 0;
     NSString *url = browser.view.URL.absoluteString;
@@ -654,7 +665,7 @@ static int32_t startObservation(uint64_t browserID, uint64_t navigation, const c
     BOOL action = kind != nil;
     if (action && (!browser.observationID || ![browser.observationID isEqual:observationID])) return 3;
     browser.observationID = nil;
-    FFReadRequest *request = [FFReadRequest new]; request.context = context; request.callback = callback; browser.readRequest = request;
+    FFReadRequest *request = [FFReadRequest new]; request.operationID = operationID; request.context = context; request.callback = callback; browser.readRequest = request;
     // WebKit supplies these shared-program bindings only. Trusted DOM activity
     // is checked by the program's own captured revision; AppKit userActivity:
     // still cancels the request and advances the page token independently.
@@ -664,6 +675,7 @@ static int32_t startObservation(uint64_t browserID, uint64_t navigation, const c
     [browser.view callAsyncJavaScript:observationProgram() arguments:arguments inFrame:nil inContentWorld:observationWorld() completionHandler:^(id value, NSError *error) {
         FFPublicBrowser *active = weakBrowser;
         if (!active || active.readRequest != request) return;
+        if (request.retired) { finishOperation(active,request,nil,nil); return; }
         BOOL live = operationLive(active,request,navigation,url);
         if (action) {
             NSDictionary *result = live && !error && [value isKindOfClass:NSDictionary.class] ? value : unknownAction(observationID,!live);
@@ -681,17 +693,32 @@ static int32_t startObservation(uint64_t browserID, uint64_t navigation, const c
     }];
     return 1;
 }
-int32_t ff_browser_observe(uint64_t browserID, uint64_t navigation, const char *expectedURL, bool screenshot, void *context, FFBrowserRead callback) {
-    return startObservation(browserID,navigation,expectedURL,screenshot,nil,nil,nil,nil,context,callback);
+int32_t ff_browser_observe(uint64_t browserID, uint64_t operationID, uint64_t navigation, const char *expectedURL, bool screenshot, void *context, FFBrowserRead callback) {
+    return startObservation(browserID,operationID,navigation,expectedURL,screenshot,nil,nil,nil,nil,context,callback);
 }
-int32_t ff_browser_act(uint64_t browserID, uint64_t navigation, const char *expectedURL, const char *observationID,
+int32_t ff_browser_act(uint64_t browserID, uint64_t operationID, uint64_t navigation, const char *expectedURL, const char *observationID,
                       const char *nodeRef, int32_t kind, const char *inputText, void *context, FFBrowserRead callback) {
     NSString *observation = observationID ? [NSString stringWithUTF8String:observationID] : nil;
     NSString *node = nodeRef ? [NSString stringWithUTF8String:nodeRef] : nil;
     NSString *input = inputText ? [NSString stringWithUTF8String:inputText] : @"";
     if (!observation.length || observation.length > 128 || !node.length || node.length > 64 || !input ||
         [input lengthOfBytesUsingEncoding:NSUTF8StringEncoding] > 8192 || (kind != 1 && kind != 2)) return 0;
-    return startObservation(browserID,navigation,expectedURL,NO,observation,node,kind == 1 ? @"click" : @"input",input,context,callback);
+    return startObservation(browserID,operationID,navigation,expectedURL,NO,observation,node,kind == 1 ? @"click" : @"input",input,context,callback);
+}
+
+bool ff_browser_cancel_operation(uint64_t browserID, uint64_t operationID) {
+    if (![NSThread isMainThread] || !operationID) return false;
+    FFPublicBrowser *browser = lookup(browserID);
+    FFReadRequest *request = browser.readRequest;
+    if (!browser || browser.closed || !request || request.operationID != operationID) return false;
+    if (!request.retired) {
+        // Retire before invoking a possibly reentrant callback. Keep readRequest
+        // while WebKit may still execute: a cancelled receiver is not JS abort.
+        request.retired = YES;
+        browser.observationID = nil;
+        [request finish:nil error:@"网页操作结果未确认，请等待或关闭网页后重新打开"];
+    }
+    return true;
 }
 
 bool ff_browser_close(uint64_t browserID) {

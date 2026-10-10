@@ -1,0 +1,4 @@
+The following is a diff from the previous accessibility tree for Window: "" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~	82 文本 /private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-stop-gyw5pbwd‎⁨ - ⁩TR
+~	84 文本栏 (settable) Value: /private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-stop-gyw5pbwd, ID: PathTextField
+The focused UI element is 84 文本栏 (settable) Value: /private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-stop-gyw5pbwd, ID: PathTextField

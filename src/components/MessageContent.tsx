@@ -113,7 +113,11 @@ export function MessageAttachments({
       <div id={listId}>
         {(expansion.materialized ? attachments : attachments.slice(0, 3)).map(
           (attachment, index) => (
-            <div key={index} hidden={index >= 3 && !expansion.open}>
+            <div
+              key={index}
+              data-loaded-attachment={index}
+              hidden={index >= 3 && !expansion.open}
+            >
               <MessageAttachment attachment={attachment} />
             </div>
           ),
@@ -188,7 +192,9 @@ function MessageAttachment({ attachment }: { attachment: Attachment }) {
           </div>
         )}
         {attachment.text !== undefined && (
-          <pre data-find-block>{attachment.text}</pre>
+          <pre data-find-block data-loaded-attachment-text>
+            {attachment.text}
+          </pre>
         )}
         {mediaWaiting && (
           <button type="button" onClick={() => expansion.choose(true)}>
@@ -311,7 +317,11 @@ export const MessageContent = memo(function MessageContent({
 }) {
   return (
     <FileOpenContext.Provider value={onOpenFile ?? null}>
-      <div className="message-text markdown-body" data-find-block>
+      <div
+        className="message-text markdown-body"
+        data-find-block
+        data-loaded-body
+      >
         {messageTree(source, text)}
         <MessageAttachments attachments={attachments} />
       </div>

@@ -1,0 +1,305 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } =
+  await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base =
+  "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent";
+const engine = process.argv[2] ?? "webkit",
+  label = process.argv[3] ?? "first";
+const walk = (d) =>
+  fs
+    .readdirSync(d, { withFileTypes: true })
+    .flatMap((e) =>
+      e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)],
+    );
+const inputs = [
+  ...walk("src"),
+  ...["fixture.tsx", "index.html", "serve.mjs", "run-app.mjs"].map(
+    (n) => base + "/" + n,
+  ),
+];
+const hashes = () =>
+  Object.fromEntries(
+    inputs.map((p) => [
+      p,
+      createHash("sha256").update(fs.readFileSync(p)).digest("hex"),
+    ]),
+  );
+const result = {
+  engine,
+  label,
+  scope:
+    "Complete App with production projection/render/search/DOM; controlled in-memory invoke, synthetic index/records. No native/Agent/history/file reads.",
+  before: hashes(),
+  checks: [],
+  errors: [],
+  blocked: [],
+  network: [],
+};
+const browser = await (engine === "webkit" ? webkit : chromium).launch({
+  headless: true,
+  executablePath:
+    engine === "webkit"
+      ? path.resolve(
+          "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+        )
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+});
+const deadline = setTimeout(() => void browser.close(), 90000);
+const page = await browser.newPage({ viewport: { width: 1280, height: 820 } });
+page.setDefaultTimeout(10000);
+page.on("pageerror", (e) => result.errors.push(String(e)));
+page.on("request", (r) => result.network.push(r.url()));
+await page.route("**/*", (r) =>
+  r.request().url().startsWith("http://127.0.0.1:1472/")
+    ? r.continue()
+    : (result.blocked.push(r.request().url()), r.abort()),
+);
+const check = (name, pass, detail) => {
+  result.checks.push({ name, pass, detail });
+  if (!pass) throw Error(name);
+};
+const btn = (name) => page.getByRole("button", { name, exact: true });
+const palette = page.locator(".command-palette-dialog");
+const hits = () => palette.locator(".loaded-search-hit");
+async function open() {
+  if (!(await palette.isVisible())) await page.keyboard.press("Meta+k");
+  await palette.waitFor({ state: "visible" });
+}
+async function query(text) {
+  await palette.getByRole("combobox", { name: "搜索所有对话" }).fill(text);
+  await page.waitForFunction((t) => {
+    const p = document.querySelector(".command-palette-dialog");
+    return (
+      p?.querySelector("input")?.value === t &&
+      !p
+        .querySelector(".loaded-search-summary")
+        ?.textContent.includes("正在查找")
+    );
+  }, text);
+}
+async function scope(value) {
+  await palette.getByRole("combobox", { name: "搜索范围" }).selectOption(value);
+  await page.waitForTimeout(180);
+}
+async function locate(text) {
+  await open();
+  await scope("body");
+  await query(text);
+  await hits().first().click();
+  await page.getByText("已定位到搜索命中的消息", { exact: true }).waitFor();
+}
+try {
+  await page.goto("http://127.0.0.1:1472/" + base + "/index.html", {
+    waitUntil: "networkidle",
+  });
+  await page.waitForFunction(() => !!window.fixture);
+  await open();
+  await query("USER_ONLY");
+  check(
+    "metadata excludes message-only text",
+    (await palette.getByRole("listbox").getByRole("option").count()) === 0,
+  );
+  await scope("body");
+  await query("USER_ONLY");
+  check("body locates actual projected user", (await hits().count()) === 1);
+  const coverage = await palette.locator(".loaded-search-summary").innerText();
+  check(
+    "coverage distinguishes loaded cold and unconfirmed",
+    coverage.includes("已加载 3 个对话") &&
+      coverage.includes("1 个对话尚未加载") &&
+      coverage.includes("1 个对话的读取尚未确认"),
+    coverage,
+  );
+  for (const q of [
+    "EXCLUDED_TOOL",
+    "EXCLUDED_THOUGHT",
+    "UNCONFIRMED_BODY",
+    "must-never-read",
+  ]) {
+    await query(q);
+    check("excluded scope " + q, (await hits().count()) === 0);
+  }
+  await query("alphaomega");
+  check("table fields do not concatenate", (await hits().count()) === 0);
+  await query("Entity & ∉ &notit; ; 😀");
+  check(
+    "official named and numeric entities match rendered text",
+    (await hits().count()) === 1,
+  );
+  await query("Visible bold code & link label");
+  check(
+    "visible Markdown inline cross-format exact match",
+    (await hits().count()) === 1,
+  );
+  await hits().first().click();
+  await page.getByText("已定位到搜索命中的消息", { exact: true }).waitFor();
+  check(
+    "Agent hit focuses its actual message",
+    await page.evaluate(() =>
+      document.activeElement?.classList.contains("workspace-message-agent"),
+    ),
+  );
+  check(
+    "local scroll keeps app at origin",
+    (await page.evaluate(() => window.fixture.metrics())).windowY === 0,
+    await page.evaluate(() => window.fixture.metrics()),
+  );
+  await page.screenshot({
+    path: base + "/" + engine + "-" + label + "-located.png",
+  });
+  await locate("FOURTH_ATTACHMENT");
+  check(
+    "fourth actual attachment was materialized and expanded",
+    await page.evaluate(() => {
+      const node = document.querySelector('[data-loaded-attachment="3"] pre');
+      return (
+        !!node &&
+        node.getClientRects().length > 0 &&
+        node.textContent.includes("FOURTH_ATTACHMENT")
+      );
+    }),
+  );
+  check(
+    "search did not instantiate media",
+    (await page
+      .locator(
+        ".message-attachments img,.message-attachments audio,.message-attachments video",
+      )
+      .count()) === 0,
+  );
+  await btn("关闭搜索定位").click();
+  check(
+    "closing location restores folded fourth attachment",
+    (await page.locator('[data-loaded-attachment="3"] pre').count()) === 0,
+  );
+  await open();
+  await scope("body");
+  await query("CODE_ONLY needle");
+  await palette.getByRole("combobox", { name: "搜索所有对话" }).press("Enter");
+  await page.getByText("已定位到搜索命中的消息", { exact: true }).waitFor();
+  check(
+    "keyboard locates code text without copying UI label",
+    await page.evaluate(() =>
+      document.activeElement?.classList.contains("workspace-message-agent"),
+    ),
+  );
+  await open();
+  await scope("body");
+  await query("SECOND_THREAD");
+  check("other conversation result found", (await hits().count()) === 1);
+  await hits().first().click();
+  await page.getByText("已定位到搜索命中的消息", { exact: true }).waitFor();
+  check(
+    "selects loaded other conversation only",
+    await page
+      .locator(".workspace-message-agent.search-match")
+      .innerText()
+      .then((t) => t.includes("SECOND_THREAD")),
+  );
+  await page.evaluate(() => window.fixture.resetCalls());
+  await locate("TAIL_STREAM");
+  await page.evaluate(() => window.fixture.changeBody());
+  await page
+    .getByText("这处内容或检索范围已变化，请重新搜索。", { exact: true })
+    .waitFor();
+  check(
+    "stream change invalidates existing location",
+    (await page.locator(".workspace-message-agent.search-match").count()) === 0,
+  );
+  await open();
+  await scope("body");
+  await query("FOURTH_ATTACHMENT");
+  await page.evaluate(() => window.fixture.registerHeldSurface());
+  await hits().first().click({ force: true });
+  await palette
+    .getByRole("combobox", { name: "搜索所有对话" })
+    .fill("NO_LONGER_MATCH");
+  await page.evaluate(() => window.fixture.releaseSurface());
+  await page.waitForTimeout(220);
+  check(
+    "query changed during pending native-hide prevents old navigation",
+    await palette.isVisible(),
+  );
+  await query("SECOND_THREAD");
+  await page.evaluate(() => window.fixture.registerHeldSurface());
+  await hits().first().click({ force: true });
+  await page.keyboard.press("Escape");
+  await page.evaluate(() => window.fixture.releaseSurface());
+  await page.waitForTimeout(220);
+  check(
+    "dialog closed during pending hide prevents late navigation",
+    (await page.locator(".loaded-search-jump").innerText()).includes(
+      "这处内容或检索范围已变化",
+    ),
+  );
+  await page.evaluate(() => window.fixture.budget());
+  await open();
+  await scope("body");
+  await query("zzzz");
+  check(
+    "oversized field disclosed without full-history success",
+    (await palette.locator(".loaded-search-summary").innerText()).includes(
+      "未检索",
+    ),
+  );
+  await page.setViewportSize({ width: 900, height: 620 });
+  await query("target");
+  await palette
+    .getByRole("combobox", { name: "搜索所有对话" })
+    .press("ArrowDown");
+  await palette.getByRole("combobox", { name: "搜索所有对话" }).press("Enter");
+  await page.getByText("已定位到搜索命中的消息", { exact: true }).waitFor();
+  check(
+    "narrow keyboard navigation preserves app origin",
+    (await page.evaluate(() => window.fixture.metrics())).windowY === 0,
+    await page.evaluate(() => window.fixture.metrics()),
+  );
+  const calls = await page.evaluate(() => window.fixture.calls());
+  const forbidden = calls.filter((c) =>
+    /session_(open|prompt|new|load)|config|file_delivery|opener/.test(c.cmd),
+  );
+  check(
+    "no implicit restore settings file read send or opener",
+    forbidden.length === 0,
+    forbidden,
+  );
+  check(
+    "original composer remains unsent exact",
+    await page.evaluate(
+      () => window.fixture.composer().text === "PRESERVED_UNSENT_TEXT",
+    ),
+  );
+  check(
+    "no unexpected IPC",
+    await page.evaluate(() => window.unexpected.length === 0),
+    await page.evaluate(() => window.unexpected),
+  );
+  await page.screenshot({
+    path: base + "/" + engine + "-" + label + "-narrow.png",
+  });
+} catch (e) {
+  result.failure = String(e);
+  await page
+    .screenshot({ path: base + "/" + engine + "-" + label + "-failure.png" })
+    .catch(() => {});
+} finally {
+  clearTimeout(deadline);
+  result.after = hashes();
+  result.sourceUnchanged =
+    JSON.stringify(result.before) === JSON.stringify(result.after);
+  await browser.close();
+  fs.writeFileSync(
+    base + "/" + engine + "-" + label + ".raw.txt",
+    JSON.stringify(result, null, 2) + "\n",
+  );
+  console.log(
+    JSON.stringify({
+      checks: result.checks,
+      failure: result.failure,
+      errors: result.errors,
+      sourceUnchanged: result.sourceUnchanged,
+    }),
+  );
+}

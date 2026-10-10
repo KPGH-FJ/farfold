@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUTC": "2026-10-10T03:56:48.687590+00:00",
+  "status": "no_unresolved_blocker_in_reviewed_native_scope",
+  "reviewer": "architecture",
+  "methods": [
+    "Read exact changed Objective-C owner/FFI and Rust callback boundary.",
+    "Recomputed all 31 native receipt source/artifact hashes.",
+    "Read original 38-case baseline, 58-case repaired seam and 14-case real WebKit output; no repeat execution."
+  ],
+  "findings": [
+    "Accepted start transfers sole reply-context ownership to native finish; rejected start never calls back and Rust reclaims its Box. finish nulls context before callback, preventing reentrant duplicate release.",
+    "Cancel matches browser plus operation token, sets retired before callback, clears observation identity, and keeps execution slot until exact completion. Zero/unmatched cancellation cannot retire another request.",
+    "Manual activity uses the same retirement separation. Close clears ownership before callbacks; stale callbacks cannot clear a replacement view/request.",
+    "Read/observation/snapshot callback paths check exact identity and retired state before publishing content or an observation.",
+    "Peer actual fixed-JS canary demonstrates a late page effect after cancellation while successor observation remains blocked. This supports unknown-effect wording rather than abort claims."
+  ],
+  "evidence": {
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/implementation.json",
+      "sha256": "2ee5d0d23df9275643068417699dbb7a5376dd2a2f5d6b578848486fe794af18"
+    },
+    "verifiedRefCount": 31,
+    "source": [
+      {
+        "path": "src-tauri/native/BrowserWorkspace.m",
+        "sha256": "bc07aeb36518a4bde9f0f21ac0749256c430d03e36c80cb7eb2f2cb621c3c593",
+        "lines": 760
+      },
+      {
+        "path": "src-tauri/native/BrowserWorkspace.h",
+        "sha256": "e0da23400f263e1bf392154da3b5694db9eea1f142bda64c3d90b788d3145a9d",
+        "lines": 72
+      }
+    ],
+    "raw": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/native-baseline.raw.txt",
+        "sha256": "8561b5c0bcd3193145b6d1a5309b876318a16f0cd48ca62ad956835db3b4c481"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/native-repair-green.raw.txt",
+        "sha256": "4e84c029f9ca8dbb905392f19eb1331cae30ec45c6e0b29adb2881092f817b55"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/native-live-first.raw.txt",
+        "sha256": "03149b34db4e85cfe518307b3f2401dd55422f66ad4cbdcd7df84dd714a366a6"
+      }
+    ]
+  },
+  "classification": "Baseline has 35/38 raw passes. One of three failed assertions expected an unsafe immediate successor despite unconfirmed native execution; receipt explicitly corrects that expectation and retains original bytes. It is not counted as an additional product defect. Original compile errors are probe-only and preserved.",
+  "limits": [
+    "Reviewer did not execute native UI or the peer tests.",
+    "Native seams and actual fixed JS are separately scoped; no formal installed App, Rust/Tauri IPC journey or Agent end-to-end acceptance.",
+    "Unending native execution remains busy until explicit close; cancellation never guarantees effects stopped.",
+    "Windows runtime is outside this native review."
+  ]
+}

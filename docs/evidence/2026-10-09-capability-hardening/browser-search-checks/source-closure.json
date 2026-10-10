@@ -1,0 +1,211 @@
+{
+  "checkedAtUtc": "2026-10-10T04:22:46.130020+00:00",
+  "priorInstalledCommit": "394bb91af050c5944cc479c40f62e9559a367560",
+  "fileCount": 39,
+  "files": {
+    "src-tauri/native/BrowserWorkspace.h": {
+      "sha256": "e0da23400f263e1bf392154da3b5694db9eea1f142bda64c3d90b788d3145a9d",
+      "lines": 72
+    },
+    "src-tauri/native/BrowserWorkspace.m": {
+      "sha256": "bc07aeb36518a4bde9f0f21ac0749256c430d03e36c80cb7eb2f2cb621c3c593",
+      "lines": 760
+    },
+    "src-tauri/src/browser_sharing/transport.rs": {
+      "sha256": "daf4ecaedb66111c1d8ea556e2aa8202fad820fe7535124bd470020c1e0e9197",
+      "lines": 1439
+    },
+    "src-tauri/src/browser_sharing/transport_lifecycle_tests.rs": {
+      "sha256": "f4f36313b64af76638f6cc3644a412953042e820d52a55612c436e00ffd52deb",
+      "lines": 124
+    },
+    "src-tauri/src/browser_workspace.rs": {
+      "sha256": "3c65ff55f8cd9112c43150461e8f6d7d50ac783a778543816041eda98bca9b9b",
+      "lines": 844
+    },
+    "src-tauri/src/browser_workspace/native.rs": {
+      "sha256": "f2ff09ea80f30157bcee19d400dda1ec9bc67145160e8a752f0699c62661620a",
+      "lines": 826
+    },
+    "src-tauri/src/browser_workspace/native_request.rs": {
+      "sha256": "c7e1c06c018909dab579403af0cddcd61c2d465a49a003ff0b583c113f60a6ae",
+      "lines": 203
+    },
+    "src-tauri/src/browser_workspace/page_read.rs": {
+      "sha256": "a031b036bd1eca1dd7454232445459b42da89cc7f79c2dab38e14a5a56ffdee6",
+      "lines": 245
+    },
+    "src-tauri/src/browser_workspace/windows/mod.rs": {
+      "sha256": "827c2550f96429e6bf395e22b6cff95dcfea1114443d4160e7f854aa36998ab8",
+      "lines": 629
+    },
+    "src-tauri/src/browser_workspace/windows/observation.rs": {
+      "sha256": "7a2ccf683e3755198a57ecb3755396d61f4c86fab326d2a746c968afa1949bce",
+      "lines": 196
+    },
+    "src/App.loaded-search.test.tsx": {
+      "sha256": "1d490f08712d6c7a8e4f3cdd1205552da02f6537191e278b858c2aeeb46ba415",
+      "lines": 97
+    },
+    "src/App.test-harness.ts": {
+      "sha256": "071d04a55420fd55985030bcae927cf7e898cb403d2004ae8a6987de463e23a9",
+      "lines": 317
+    },
+    "src/App.tsx": {
+      "sha256": "94d8d21819e4a1a6257f2e623db2eb717c98dc765834097f77d14d0856693907",
+      "lines": 1247
+    },
+    "src/components/CommandPalette.search.test.tsx": {
+      "sha256": "633cef8c416e636ab665fc37d53c4e719dfa0cc42cf54069cfba3ccfdc6d95db",
+      "lines": 216
+    },
+    "src/components/CommandPalette.tsx": {
+      "sha256": "eb69fc3590e89f7762ac71023aec9a318d204bd91461d66bbd7e7953a89216ad",
+      "lines": 308
+    },
+    "src/components/ConversationLibrary.tsx": {
+      "sha256": "315fbdb70c166079a579c54adfc06f986e3aa2e3c5033baa56babd85cf97048a",
+      "lines": 1245
+    },
+    "src/components/LoadedConversationSearch.test.tsx": {
+      "sha256": "ffc0bf923563db4bb016ab651293e9e36cec638bf2883132e17babf125f9153e",
+      "lines": 19
+    },
+    "src/components/LoadedSearchJump.test.tsx": {
+      "sha256": "dec388b3981e704b623993c00149837c7b82bc0c20672cfa5e2ec357a62e3d03",
+      "lines": 106
+    },
+    "src/components/LoadedSearchJump.tsx": {
+      "sha256": "a6e74b4cc8734012e177f6b56473b8dfd12fffc45a56f58af84f7099a4b1b82d",
+      "lines": 118
+    },
+    "src/components/LoadedSearchResults.css": {
+      "sha256": "b5b8a7de89534eb2d16cddfb9704b80513d38903338c9af260e834276fbc9dd8",
+      "lines": 63
+    },
+    "src/components/LoadedSearchResults.tsx": {
+      "sha256": "2acece55f4784f8d2c5aac4afdc2dedb7784884973c7ae8fd88abdfbb3aba5ae",
+      "lines": 95
+    },
+    "src/components/MessageContent.tsx": {
+      "sha256": "ea5e64ff5fb8f579b7ea9ad5d0a8bee42e10fba3c1c73bc38317c671cbac9223",
+      "lines": 330
+    },
+    "src/components/ThreadPage.tsx": {
+      "sha256": "958b07ec43efc31378b4bd6b8e28e26975c9d272eef66e045d8dc605382cdad8",
+      "lines": 568
+    },
+    "src/components/ThreadView.tsx": {
+      "sha256": "c6747e4a2332645b92ef565e14d7bac030fe954c1263e20c542fd7d535d2ce36",
+      "lines": 1376
+    },
+    "src/components/UserMessageContent.tsx": {
+      "sha256": "b012206004c7e2b3dc88583bbc9646c57a0e4914a1dedf1ff1fdc971861f3e23",
+      "lines": 133
+    },
+    "src/components/useLoadedSearch.test.tsx": {
+      "sha256": "f11603431a07c710583111fff548224d9b8b682648dab4a77e295d3a100037ac",
+      "lines": 127
+    },
+    "src/components/useLoadedSearch.ts": {
+      "sha256": "bbc9d46e6cb3789c14e1960884ad2fa6bb495ce64f6fa5f38d86789a033eb7f3",
+      "lines": 88
+    },
+    "src/runtime/loaded_search.test.ts": {
+      "sha256": "b73533c5d70292025ee56ef51519c1dd97d6b581d99b0f8bf5b060ed990c3cd2",
+      "lines": 266
+    },
+    "src/runtime/loaded_search.ts": {
+      "sha256": "919c8ddd05573b98c581774c88656993f8ebe7befa439d7a7799f957745c8061",
+      "lines": 249
+    },
+    "src/runtime/loaded_search_dom.test.tsx": {
+      "sha256": "2f8e6f8ceb6f2263d7d3f01d24d1e1ac5c146a9905c8ca345d962c56602bfe0b",
+      "lines": 253
+    },
+    "src/runtime/loaded_search_dom.ts": {
+      "sha256": "b6b09533b7ef6c5c39fc74fd7618e4b3c282452d435f92a9864842a01219a3ef",
+      "lines": 50
+    },
+    "src/runtime/loaded_search_markdown.ts": {
+      "sha256": "045185f794bd2a6812f93ce8f1ca2814981ae90208a809c82b42cba6252b0467",
+      "lines": 63
+    },
+    "src/runtime/loaded_search_strings.ts": {
+      "sha256": "f2d091527a6232f0d9a8a8ebe3204ec3059f23d3e6b3cfd326bcb5820062d23e",
+      "lines": 27
+    },
+    "src/runtime/loaded_search_worker.test.ts": {
+      "sha256": "c0269de08692346bae431df7a454a2ccbb2a09d27f0a143abdce24321b2fd78b",
+      "lines": 114
+    },
+    "src/runtime/loaded_search_worker.ts": {
+      "sha256": "4afe1e838ea2f44bfaab68efb834b80b58767d3b470a6307a3384e3722d749b1",
+      "lines": 100
+    },
+    "src/runtime/strings.test.ts": {
+      "sha256": "71c99ef23e5c0d7839ffa4f03291cd22b62546f3991e8ad390b50ea9970605c3",
+      "lines": 161
+    },
+    "src/runtime/transcript_find_dom.ts": {
+      "sha256": "cd5d235ef1864465e929e7c495baa74fced85727e88416a05eaf44970e34812b",
+      "lines": 91
+    },
+    "src/workers/loaded_search.worker.ts": {
+      "sha256": "8ddd1cea5f788de2f4b9230ff72413c9118087f013efb36ad8e584b5dfccf571",
+      "lines": 29
+    },
+    "vite.config.ts": {
+      "sha256": "3770462d5600228e529ec36255ff112cf63c9504342d5e8000cc763fc36f63c0",
+      "lines": 35
+    }
+  },
+  "protectedUnchanged": {
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "proofs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/implementation.json",
+      "sha256": "84365e569a6d9b5648d1075d210bf3b00af6082862b14c2099ebaece175a62b9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/rust-independent-review.json",
+      "sha256": "ef8004818860758e7968763332e3ae572c5e3331ed4aef4f48726e280f0ce14e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/implementation.json",
+      "sha256": "3b4641b632eb805402df643631d9ad82f13b6021cf2538f3de9223b5322b4fc2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/independent-review.json",
+      "sha256": "af2c0883f667c733710be23b45d125ee7c1ea6d5178d2ca4019d17dda3c3ace6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/stream-order-final-checkpoint.json",
+      "sha256": "b1e6a59efeeffbe42c520a307022de945886dbddac8bd8f27f9bae59d5cfc68c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/implementation.json",
+      "sha256": "86f02adce6a195bd0e935310a62cc67cb2dbe759469e103558af2b3b858446ca"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native-boundary-addendum.json",
+      "sha256": "7721d0df8f96ea2ea09922dfce05e2330abdc32336ea7c8394bbc09b87f07bcd"
+    }
+  ],
+  "scope": "Exact delta from installed 394bb91a. 10 browser lifecycle and 29 loaded-search files. Native/browser/fixture proof is not installed or real-Agent acceptance.",
+  "historicalReferenceQualification": "Two frozen browser receipts reference native implementation before process/network wording correction. native-boundary-addendum.json maps their unchanged historical hash to implementation-before-boundary-clarification.json and current receipt; all 31 source/artifact references are unchanged.",
+  "testFormatOnlyFollowup": {
+    "path": "src/runtime/loaded_search_dom.test.tsx",
+    "before": {
+      "sha256": "5a763b5a37964b35b83c0820bf0aef7e3f963978b71877cf870b9a7822c42776",
+      "lines": 255
+    },
+    "after": {
+      "sha256": "2f8e6f8ceb6f2263d7d3f01d24d1e1ac5c146a9905c8ca345d962c56602bfe0b",
+      "lines": 253
+    },
+    "scope": "Prettier line wrapping only after independent reviews. Original bytes retained in loaded_search_dom.test.tsx.before-format.txt; production sources unchanged."
+  }
+}

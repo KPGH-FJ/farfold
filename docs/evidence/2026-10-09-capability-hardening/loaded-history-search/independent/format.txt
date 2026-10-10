@@ -1,0 +1,24 @@
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-final.json 44ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-library-final.json 23ms
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-perf-final.json 49ms
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/cleanup.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/performance-first.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/performance-multi.json 0ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-final.json 8ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-first.json 7ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-fourth.json 8ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-library-first.json 7ms
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-perf-final.json 40ms
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-second.json 7ms
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-third.json 8ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-fixed.json 9ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-perf-first.json 14ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/diagnose-worker.mjs 8ms
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-app.mjs 16ms
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-library-bundle.mjs 9ms
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-performance-multi.mjs 2ms
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-performance.mjs 2ms
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-worker-performance.mjs 7ms
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/serve.mjs 1ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/fixture.tsx 32ms
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/index.html 14ms

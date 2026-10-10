@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-10",
+  "kind": "installed_controlled_stop_journey_closeout",
+  "installedSourceCommit": "394bb91af050c5944cc479c40f62e9559a367560",
+  "result": "reply_cancel_confirmed_command_not_cancelled_whole_stop_requirement_not_passed",
+  "scope": {
+    "operator": "root 在正式已安装 Farfold 中完成一次受控 Codex 请求与停止；本收口只读其安全回执、native AX文本及一张截图，未重新启动应用、发送请求、停止进程或打开任何数据库。",
+    "agent": "Codex",
+    "officialCliVersion": "0.155.1",
+    "uiModel": "6 Astra",
+    "officialModel": "gpt-6-astra",
+    "reasoningEffort": "ultra",
+    "uiPermission": "Approve for me",
+    "officialApprovalPolicy": "on-request",
+    "officialSandbox": "workspace-write",
+    "officialNetworkAccess": false,
+    "permissionBoundary": "UI标签与官方实际设置分别记录，未推断为Full access；模型、思考和权限未为测试更改。"
+  },
+  "controlledCommand": {
+    "script": "controlled_wait.py",
+    "sha256": "565043ce72a2f587396cb271dd0611bacceecdc25c98ee51df9f24d45b50b478",
+    "rootAuthored": true,
+    "publicCopyIsExecutedBytes": true,
+    "executedByThisReview": false,
+    "nominalWaitSeconds": 45,
+    "writesOnly": ["started.json", "completed.txt"],
+    "commandStarts": 1,
+    "existingOutputPolls": 2,
+    "notes": "三个外层工具调用中只有一个启动命令，另两个只接收同一进程的已有输出；不能计作三次启动。"
+  },
+  "observations": [
+    {
+      "source": "native/12-stop-requested.txt",
+      "result": "停止后界面明确显示“回复已停止，仍有步骤未确认结束”、结果未知及已停止。"
+    },
+    {
+      "source": "native/13-stopped-with-unknown-step.png",
+      "result": "本次亲自查看截图：标题已是“未在运行”，底部为“已停止”，没有仍有步骤未确认横幅；同编号AX也记录其移除。",
+      "filenameCorrection": "文件名中的unknown-step不代表图中当前状态；该图是后续idle画面，精确截图时刻未独立确定，不据此推断横幅过早消失。"
+    },
+    {
+      "source": "native/14-after-bound-tool-state.txt",
+      "result": "后续同一命令显示完成勾选和45.1s。"
+    },
+    {
+      "source": "native/15-late-tool-details.txt",
+      "result": "技术详情含相同terminalId、exit_code=0及固定完成标记。"
+    },
+    {
+      "source": "native/20-default-restored.txt / native/21-before-normal-quit.txt",
+      "result": "工作文件夹已恢复TR；退出前显示空新对话、未在运行、发送禁用。正常退出由root执行，独立初审与数据回执记录正式进程已不存在。"
+    }
+  ],
+  "officialTimeline": {
+    "source": "output/2026-10-10-real-stop/independent/official-safe-timeline.json",
+    "taskStarts": 1,
+    "turnAborts": 1,
+    "taskCompleteEvents": 0,
+    "abortUtc": "2026-10-10T04:08:55.718Z",
+    "abortReason": "interrupted",
+    "lateCommandCompletedUtc": "2026-10-10T04:09:20.945Z",
+    "sameTurn": true,
+    "exitCode": 0,
+    "commandDurationSeconds": 45.049910084,
+    "noNewCommandAfterAbortInRetainedSnapshot": true,
+    "rawBoundary": "依据已冻结官方会话快照的安全摘要与先前独立核验，未再次读取原会话内容；该运行没有独立原始ACP取消报文捕获。"
+  },
+  "disk": {
+    "source": "output/2026-10-10-real-stop/after-stop-disk-observation.json",
+    "afterStopProcessStillAliveAtSeconds": 33.499817848205566,
+    "afterStopCompletionFile": false,
+    "completionFileMtimeSecondsAfterStart": 45.151878118515015,
+    "processAbsentOnlyObservedAtSeconds": 105.90076804161072,
+    "notes": "写文件时间、官方命令时长和后来观察到进程不存在是三类不同证据，不把105.9秒称命令运行时长。"
+  },
+  "dataRetention": {
+    "originalStrictWholeSnapshotEquality": false,
+    "originalStrictReceiptRetained": true,
+    "qualifiedComparison": {
+      "existingTopLevelDataAndActivityRetained": true,
+      "composers": {
+        "before": 8,
+        "after": 8,
+        "exactlyEqual": true
+      },
+      "feedback": {
+        "before": 8,
+        "after": 8,
+        "exactlyEqual": true
+      },
+      "queues": {
+        "before": 3,
+        "after": 3,
+        "exactlyEqual": true
+      },
+      "onlyDifference": "新增本次受控对话的1条activity，ended=true；无既有activity删除/改写，无其他字段差异。",
+      "oldSessionIdentitiesRetained": 123,
+      "newControlledSession": 1
+    },
+    "comparisonMethod": "root及先前独立审查仅打开私有不可变副本，integrity=ok；本收口只读比较回执，不打开原DB或副本。",
+    "failureClassification": "初次整对象strict equality=false不能改写成true；随后精确差异证明只是新增受控activity。先前独立查询sessions.key列不存在属于只读脚本错误，修为实际id后才完成比较。"
+  },
+  "attribution": {
+    "confirmed": "官方记录明确回复中断，但它此前启动的受控命令继续运行并写出完成标记。Farfold呈现未确认工具状态及随后迟到完成。",
+    "notConfirmed": "本样本未证明ACP适配层缺陷，也未证明Farfold能通过另一官方接口安全终止这个命令。",
+    "requirement": "回复取消不等于命令取消，整项停止目标未达成；不将该记录标成29家停止标准通过。"
+  },
+  "limits": [
+    "仅一次已配置Codex、一个自创有界脚本、macOS正式安装路径；不外推其他Agent/平台/命令。",
+    "没有实测同旅程中的排队自动续发、修改模型/来源、执行中退出或真实OS强杀；源码保护审查与真实动作分别保留。",
+    "没有修改产品源码、status或活动计划；未重做真实请求、信号或应用操作。"
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/independent-preliminary.json",
+      "sha256": "706e01951a1216addbb925118a277342b644fdce1bf409c686502d59b06a34d6",
+      "bytes": 20366,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/controlled_wait.py",
+      "sha256": "565043ce72a2f587396cb271dd0611bacceecdc25c98ee51df9f24d45b50b478",
+      "bytes": 498,
+      "private": false
+    },
+    {
+      "path": "output/2026-10-10-real-stop/script-manifest.json",
+      "sha256": "67cb8265ba8578d9ed0049612dec9f2201ba1ff87a4228b4e1e91439a922ba09",
+      "bytes": 311,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/running-disk-observation.json",
+      "sha256": "e4fc2c1824ba4c808bc04bb8c569cc1eefb067adf86675fd40ebfd258512f349",
+      "bytes": 540,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/after-stop-disk-observation.json",
+      "sha256": "c564457ab90aacee4947db23d553a0cfad742f8b70f9464ed4631cee45356be9",
+      "bytes": 463,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/after-bound-disk-observation.json",
+      "sha256": "024f8eeab3e3939ba3e069975dc78146840d3f251e0734d4db3b9a7221e89955",
+      "bytes": 700,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/data-retention.json",
+      "sha256": "0f2c52fccf490b97b3fe061115a4d5c3bf96b785a5482d440d12ca3e4d7bc346",
+      "bytes": 977,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/data-retention-qualified.json",
+      "sha256": "bfd8b5ab674e211e6dfecc0204df86897b3fd36ca89e0fdacb70216e07b00b70",
+      "bytes": 757,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/metadata-backup-receipt.json",
+      "sha256": "8646285c59104195045bb272ec7309a310ec0d0a7a4d2c25c93690f9b95e1678",
+      "bytes": 636,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/after/metadata-backup-receipt.json",
+      "sha256": "86d693b9755533abcddcd93514ba9029d52f67416121bc82f9c052bdf08b8037",
+      "bytes": 636,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/independent/official-safe-timeline.json",
+      "sha256": "2c194aa9fad5866e9fe48f6953a299de33548f3e72ffd335a28e930fe06ad542",
+      "bytes": 2732,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/independent/data-copy-check.json",
+      "sha256": "81490438dcb121b6b6573bfafc7c3d01a9793728108f0d9b82d2740bafd21b76",
+      "bytes": 1667,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/independent/official-snapshot-receipt.json",
+      "sha256": "f207b0589ab50331b0325549d7a82d25e60dcceba45da22ef4ce7b4f60acfd9a",
+      "bytes": 410,
+      "private": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/06-existing-model.txt",
+      "sha256": "ba3803a9806b86592edac344cac7fe7dd0032838322ee70f1fa672b57348168d",
+      "bytes": 1342,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/08-existing-permission.txt",
+      "sha256": "563c8337a7c4a6aa7861812c0af9f064cfe3476a0ef3ca30a7147ba17f713f6b",
+      "bytes": 859,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/12-stop-requested.txt",
+      "sha256": "05454722d8eefd9f4405c9b45dd204257790b07db7597de82ce588dc30b40254",
+      "bytes": 822,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/13-stopped-with-unknown-step.png",
+      "sha256": "a925e8f72a2e1da6e72b85851dcc2047f4e2e615c1f1cb48ecf74295fddb0ab2",
+      "bytes": 368059,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/13-stopped-with-unknown-step.txt",
+      "sha256": "4b91f8817497069037dd0c13cafc0b3ade3203328e4ac5b62fe731c539fd3825",
+      "bytes": 624,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/14-after-bound-tool-state.txt",
+      "sha256": "85ad78b347d48acc4623b87e7bacda2f87f7458bbcdd49eaae255dbc39b9c942",
+      "bytes": 623,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/15-late-tool-details.txt",
+      "sha256": "ad7a8c378d6f69e5cbd19953d35e989b1f53f3353b2fa019814db068c972d173",
+      "bytes": 1168,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/20-default-restored.txt",
+      "sha256": "6484bd43ac3490c7bcd2f142c412da6059d90e784536a2875c6a96548a8458cf",
+      "bytes": 3386,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/21-before-normal-quit.txt",
+      "sha256": "0d52e7b24addc3ee97dbe8ec9b91bd5d9c3b10da52e0ea432b9825bdc7aa1ee3",
+      "bytes": 3345,
+      "private": false
+    }
+  ]
+}

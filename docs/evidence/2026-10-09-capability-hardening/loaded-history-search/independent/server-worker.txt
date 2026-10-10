@@ -1,0 +1,5 @@
+Owned loaded search full-App Vite PID 51033
+12:12:17 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/fixture.tsx
+12:13:18 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/fixture.tsx
+12:15:23 PM [vite] (client) hmr update /src/components/CommandPalette.tsx, /src/components/ConversationLibrary.tsx
+12:16:29 PM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/fixture.tsx

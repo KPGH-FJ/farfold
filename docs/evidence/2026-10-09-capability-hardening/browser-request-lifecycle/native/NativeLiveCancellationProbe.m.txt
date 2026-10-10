@@ -1,0 +1,132 @@
+// Test-owned HTML in an undisplayed WKWebView, using actual production native
+// observation and action JS. The sole message handler is a test synchronization
+// barrier, never installed by product code. No network or user page is loaded.
+#import "../../src-tauri/native/BrowserWorkspace.m"
+#import <QuartzCore/QuartzCore.h>
+static NSString *const URL = @"https://lifecycle.invalid/controlled";
+static const uint64_t BrowserID = 901;
+@interface LiveProbe : NSObject <NSApplicationDelegate, WKScriptMessageHandler>
+@property(strong) NSWindow *window;
+@property(strong) WKWebView *parent;
+@property(strong) FFPublicBrowser *browser;
+@property(strong) NSMutableArray *checks;
+@property(copy) NSString *output;
+@property BOOL finished;
+@property BOOL loaded;
+@property BOOL entered;
+@property BOOL pageFinished;
+@property NSUInteger actionCallbacks;
+@property NSUInteger actionBodies;
+@property CFTimeInterval enteredAt;
+@property CFTimeInterval waitUntil;
+- (void)check:(NSString *)name pass:(BOOL)pass details:(NSDictionary *)details;
+- (void)loadedPage;
+- (void)observed:(NSDictionary *)value error:(NSString *)error;
+- (void)afterObservation:(NSDictionary *)value error:(NSString *)error;
+- (void)awaitActualCompletion;
+- (void)finish;
+@end
+static LiveProbe *owner(void *context) { return (__bridge LiveProbe *)context; }
+static bool allow(void *context, const char *url) { return url && !strcmp(url, URL.UTF8String); }
+static uint64_t status(void *context, int event, uint64_t token, const char *url) {
+    LiveProbe *probe = owner(context);
+    if (event == 1) dispatch_async(dispatch_get_main_queue(), ^{ [probe loadedPage]; });
+    if (event == 2 || event == 3 || event == 5) {
+        [probe check:@"owned_load_and_process_remain_usable" pass:NO details:@{@"event":@(event)}];
+        [probe finish];
+    }
+    return 0;
+}
+static void releaseOwner(void *context) {}
+static NSDictionary *decode(const char *json) {
+    return json ? [NSJSONSerialization JSONObjectWithData:[@(json) dataUsingEncoding:NSUTF8StringEncoding] options:0 error:NULL] : nil;
+}
+static void observed(void *context, const char *json, const char *error) { [owner(context) observed:decode(json) error:error ? @(error) : nil]; }
+static void afterObservation(void *context, const char *json, const char *error) { [owner(context) afterObservation:decode(json) error:error ? @(error) : nil]; }
+static void actionResult(void *context, const char *json, const char *error) {
+    LiveProbe *probe = owner(context); probe.actionCallbacks++; if (json) probe.actionBodies++;
+    [probe check:@"cancel_returns_exactly_one_error_receipt_without_action_success" pass:probe.actionCallbacks == 1 && json == NULL && error != NULL details:nil];
+}
+@implementation LiveProbe
+- (void)check:(NSString *)name pass:(BOOL)pass details:(NSDictionary *)details {
+    [self.checks addObject:@{@"name":name, @"pass":@(pass), @"details":details ?: @{}}];
+    fprintf(stdout, "%s %s\n", pass ? "PASS" : "FAIL", name.UTF8String); fflush(stdout);
+}
+- (void)applicationDidFinishLaunching:(NSNotification *)notification {
+    self.checks = [NSMutableArray new];
+    self.window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 640, 480) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+    NSView *container = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 640, 480)]; self.window.contentView = container;
+    WKWebViewConfiguration *config = [WKWebViewConfiguration new]; config.websiteDataStore = WKWebsiteDataStore.nonPersistentDataStore;
+    self.parent = [[WKWebView alloc] initWithFrame:container.bounds configuration:config]; [container addSubview:self.parent];
+    BOOL created = ff_browser_create(BrowserID, (__bridge void *)self.parent, 0, 0, 640, 480, (__bridge void *)self, allow, status, releaseOwner);
+    [self check:@"actual_production_browser_created" pass:created details:nil];
+    if (!created) { [self finish]; return; }
+    self.browser = lookup(BrowserID);
+    [self.browser.view.configuration.userContentController addScriptMessageHandler:self name:@"lifecycleFixture"];
+    NSString *html = @"<!doctype html><meta charset=utf-8><title>Owned lifecycle fixture</title><button id=apply>Apply once</button><p id=effect>Before effect</p><script>document.getElementById('apply').onclick=()=>{webkit.messageHandlers.lifecycleFixture.postMessage('entered');const until=performance.now()+1200;while(performance.now()<until){}document.getElementById('effect').textContent='Owned effect after cancellation';webkit.messageHandlers.lifecycleFixture.postMessage('finished');};</script>";
+    // Same load bookkeeping as production, but immutable test bytes replace a
+    // URL load. We deliberately do not enable localHTML's no-Agent mode.
+    self.browser.currentToken = 1; self.browser.pendingPolicyURL = URL;
+    WKNavigation *navigation = [self.browser.view loadHTMLString:html baseURL:[NSURL URLWithString:URL]];
+    self.browser.currentNavigation = navigation; [self.browser.navigationTokens setObject:@1 forKey:navigation];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 15 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{ if (!self.finished) { [self check:@"global_15_second_bound" pass:NO details:nil]; [self finish]; } });
+}
+- (void)loadedPage {
+    if (self.loaded || self.finished) return;
+    self.loaded = YES;
+    [self check:@"initial_actual_observation_started" pass:ff_browser_observe(BrowserID, 1, 1, URL.UTF8String, false, (__bridge void *)self, observed) == 1 details:nil];
+}
+- (void)observed:(NSDictionary *)value error:(NSString *)error {
+    BOOL valid = !error && [value[@"text"] containsString:@"Before effect"] && [value[@"nodes"] count] == 1;
+    [self check:@"actual_fixed_js_returns_original_node_and_text" pass:valid details:nil];
+    if (!valid) { [self finish]; return; }
+    NSString *node = value[@"nodes"][0][@"ref"];
+    [self check:@"actual_fixed_action_started" pass:ff_browser_act(BrowserID, 2, 1, URL.UTF8String, [value[@"observationId"] UTF8String], node.UTF8String, 1, "", (__bridge void *)self, actionResult) == 1 details:nil];
+}
+- (void)userContentController:(WKUserContentController *)controller didReceiveScriptMessage:(WKScriptMessage *)message {
+    if (self.finished || controller != self.browser.view.configuration.userContentController) return;
+    if ([message.body isEqual:@"entered"] && !self.entered) {
+        self.entered = YES; self.enteredAt = CACurrentMediaTime();
+        FFReadRequest *request = self.browser.readRequest;
+        [self check:@"real_click_handler_entered_before_cancel" pass:request && request.operationID == 2 && self.actionCallbacks == 0 details:nil];
+        BOOL cancelled = ff_browser_cancel_operation(BrowserID, 2);
+        [self check:@"cancel_does_not_claim_actual_js_finished" pass:cancelled && self.browser.readRequest == request && request.retired && self.actionCallbacks == 1 details:nil];
+        [self check:@"new_observation_blocked_while_cancelled_action_still_executes" pass:ff_browser_observe(BrowserID, 3, 1, URL.UTF8String, false, (__bridge void *)self, afterObservation) == 0 details:nil];
+    } else if ([message.body isEqual:@"finished"] && self.entered) {
+        self.pageFinished = YES;
+        [self check:@"page_effect_after_cancel_does_not_deliver_second_action_receipt" pass:self.actionCallbacks == 1 && self.actionBodies == 0 details:@{@"secondsSinceEnteredHostBarrier":@(CACurrentMediaTime() - self.enteredAt)}];
+        self.waitUntil = CACurrentMediaTime() + 3;
+        [self awaitActualCompletion];
+    }
+}
+- (void)awaitActualCompletion {
+    if (self.finished) return;
+    if (!self.browser.readRequest) {
+        [self check:@"actual_completion_released_retired_execution_slot" pass:self.pageFinished && self.browser.observationID == nil details:nil];
+        [self check:@"new_observation_after_actual_completion_started" pass:ff_browser_observe(BrowserID, 4, 1, URL.UTF8String, false, (__bridge void *)self, afterObservation) == 1 details:nil];
+    } else if (CACurrentMediaTime() < self.waitUntil) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 20 * NSEC_PER_MSEC), dispatch_get_main_queue(), ^{ [self awaitActualCompletion]; });
+    } else {
+        [self check:@"actual_completion_bounded_by_fixture" pass:NO details:nil]; [self finish];
+    }
+}
+- (void)afterObservation:(NSDictionary *)value error:(NSString *)error {
+    [self check:@"new_observation_sees_real_late_effect_without_repeating_click" pass:!error && [value[@"text"] containsString:@"Owned effect after cancellation"] && self.actionCallbacks == 1 && self.actionBodies == 0 details:nil];
+    [self finish];
+}
+- (void)finish {
+    if (self.finished) return; self.finished = YES;
+    [self.browser.view.configuration.userContentController removeScriptMessageHandlerForName:@"lifecycleFixture"];
+    [self check:@"owned_view_close_confirmed" pass:ff_browser_close(BrowserID) details:nil];
+    [self check:@"all_owned_views_close_confirmed" pass:ff_browser_close_all() details:nil];
+    NSUInteger failed = 0; for (NSDictionary *check in self.checks) if (![check[@"pass"] boolValue]) failed++;
+    NSDictionary *report = @{@"phase":@"real-webkit-late-action-effect", @"checks":self.checks ?: @[], @"failed":@(failed), @"heldSeconds":self.entered ? @(CACurrentMediaTime() - self.enteredAt) : @0, @"boundary":@"Real production fixed observation/action JS and native FFI in a test-owned nonpersistent WKWebView with immutable HTML bytes. Test message handler only synchronizes actual action entry/finish. No network, formal App, Agent, user data or installed-product claim. It proves receiver cancellation is not cancellation of the actual page effect."};
+    NSData *data = [NSJSONSerialization dataWithJSONObject:report options:NSJSONWritingPrettyPrinted|NSJSONWritingSortedKeys error:NULL]; [data writeToFile:self.output atomically:YES];
+    [NSApplication.sharedApplication terminate:nil];
+}
+@end
+int main(int argc, const char *argv[]) {
+    if (argc != 2) return 64;
+    @autoreleasepool { NSApplication *app = NSApplication.sharedApplication; [app setActivationPolicy:NSApplicationActivationPolicyProhibited]; LiveProbe *probe = [LiveProbe new]; probe.output = @(argv[1]); app.delegate = probe; [app run]; }
+    return 0;
+}

@@ -49,15 +49,21 @@ bool ff_browser_resize(uint64_t id, double x, double y, double width, double hei
 bool ff_browser_set_visible(uint64_t id, bool visible, double x, double y, double width, double height);
 // 0: unavailable, 1: started (callback owns context), 2: expected URL changed.
 // expected_url is NULL for the manual preview; a shared read requires its exact URL.
-int32_t ff_browser_read(uint64_t id, const char *expected_url, void *context, FFBrowserRead callback);
+// operation_id is nonzero and never reused by the caller in this process.
+int32_t ff_browser_read(uint64_t id, uint64_t operation_id, const char *expected_url, void *context, FFBrowserRead callback);
 // Fixed observation/action programs only. Navigation, URL and one-use node refs
 // are checked again inside WebKit; no caller-supplied script is accepted.
-int32_t ff_browser_observe(uint64_t id, uint64_t navigation, const char *expected_url,
+int32_t ff_browser_observe(uint64_t id, uint64_t operation_id, uint64_t navigation, const char *expected_url,
                           bool screenshot, void *context, FFBrowserRead callback);
 // kind 1 = click, 2 = replace ordinary text field. No submit/key/script API.
-int32_t ff_browser_act(uint64_t id, uint64_t navigation, const char *expected_url,
+int32_t ff_browser_act(uint64_t id, uint64_t operation_id, uint64_t navigation, const char *expected_url,
                       const char *observation_id, const char *node_ref, int32_t kind,
                       const char *input_text, void *context, FFBrowserRead callback);
+// Retires only the exact request's receiver, with one error callback. True is
+// NOT proof that WebKit execution stopped or that a dispatched action had no
+// effect. Keep the execution slot until its actual completion or view close;
+// subsequent operations remain busy. Zero/unknown tokens never affect a request.
+bool ff_browser_cancel_operation(uint64_t id, uint64_t operation_id);
 bool ff_browser_close(uint64_t id);
 // Shutdown only: permanently rejects new create/navigate/resize/read operations
 // in this process and closes this module's owners. Call on the main thread.

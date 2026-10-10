@@ -1,0 +1,49 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/LoadedSearchJump.test.tsx (3 tests | 2 failed) 5ms
+   × uses the revalidated DOM range after a folded attachment rerenders its text nodes 4ms
+   × immediately releases temporary disclosure if the message disappears before the next frame 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/LoadedSearchJump.test.tsx > uses the revalidated DOM range after a folded attachment rerenders its text nodes
+AssertionError: expected "vi.fn()" to be called with arguments: [ { startContainer: { …(1) } } ]
+
+Received:
+
+  1st vi.fn() call:
+
+Compared values have no visual difference.
+
+
+Number of calls: 1
+
+ ❯ src/components/LoadedSearchJump.test.tsx:43:15
+     41|   const { first, second, add } = view();
+     42|   h.frames.shift()!();
+     43|   expect(add).toHaveBeenCalledWith(second.range);
+       |               ^
+     44|   expect(second.message.focus).toHaveBeenCalledOnce();
+     45|   expect(second.range.startContainer.parentElement.scrollIntoView).toH…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/LoadedSearchJump.test.tsx > immediately releases temporary disclosure if the message disappears before the next frame
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/LoadedSearchJump.test.tsx:53:21
+     51|   h.frames.shift()!();
+     52|   expect(add).not.toHaveBeenCalled();
+     53|   expect(h.release).toHaveBeenCalledOnce();
+       |                     ^
+     54| });
+     55| it("does not scroll after focusing synchronously invalidates the sourc…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  12:01:30
+   Duration  110ms (transform 25ms, setup 0ms, import 40ms, tests 5ms, environment 0ms)
+

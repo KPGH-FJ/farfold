@@ -1,0 +1,9 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 65, 93-94
+~				13 按钮 FARFOLD_REAL_STOP_20261010：这是一次受控停止验证。请只
+~					48 text farfold-stop-gyw5pbwd · 未在运行
++					98 text 你  ·  12:08
+~					62 摘要 查看处理过程 1 步, Value: off
+~					75 弹出式按钮 思考深度: Ultra, Help: Ultra
+~					76 弹出式按钮 对话权限
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

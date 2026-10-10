@@ -1,7 +1,6 @@
 //! In-memory, fixed-page observation authority. No tool receives UI command access.
 use super::{BrowserWorkspace, PageSnapshot, ReadTicket, native};
 use std::sync::{Arc, Mutex};
-use std::time::Duration;
 use tauri::AppHandle;
 
 #[cfg(test)]
@@ -150,6 +149,10 @@ impl FixedPageReadScope {
         &self.ticket.label
     }
 
+    pub(super) fn native_id(&self) -> u64 {
+        self.ticket.id
+    }
+
     pub(super) fn navigation(&self) -> u64 {
         self.ticket.navigation
     }
@@ -167,6 +170,25 @@ impl FixedPageReadScope {
         let mut scope = self.clone();
         scope.action_lease = Some(PageReadLease::new());
         Ok(scope)
+    }
+
+    /// Every request, including a read, gets a separate delivery/dispatch gate.
+    /// Preserve an already-issued one-shot control decision instead of replacing it.
+    pub(crate) fn request_scope(&self) -> Self {
+        let mut scope = self.clone();
+        if scope.action_lease.is_none() {
+            scope.action_lease = Some(PageReadLease::new());
+        }
+        scope
+    }
+
+    pub(crate) fn grant_is_valid(&self) -> bool {
+        let action = || self.workspace.with_read_ticket(&self.ticket, |_| Ok(()));
+        match &self.lease {
+            Some(lease) => lease.with_live(action),
+            None => action(),
+        }
+        .is_ok()
     }
 
     pub(crate) fn cancel_action(&self) {
@@ -217,9 +239,7 @@ impl FixedPageReadScope {
 
     pub(crate) async fn read(&self, app: &AppHandle) -> Result<PageSnapshot, String> {
         self.with_valid(|| Ok(()))?;
-        let raw = tokio::time::timeout(Duration::from_secs(8), native::read(app, self.clone()))
-            .await
-            .map_err(|_| "网页读取未完成，请关闭网页后重新打开")??;
+        let raw = native::read(app, self.clone()).await?;
         self.complete(&raw)
     }
 }

@@ -1,0 +1,30 @@
+{
+  "scope": "Actual synchronous runtime search in controlled full-App Chromium; synthetic memory content, no Agent or native IPC.",
+  "before": {
+    "src/runtime/loaded_search.ts": "db140e30f3be7c40d747f3132307ca9ff68621aa8b9d00a9faeb89c510900e31",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/fixture.tsx": "6c0d605a0d70dee16fc57a1f5fef850aa9355fde284b8aac271545c39a118e69",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-performance.mjs": "3b83b6b47e00d8cd4108c3c356e4e25cde037308bc7de7b706578b984366d9df"
+  },
+  "results": [
+    {
+      "characters": 65525,
+      "elapsed": 110.80000001192093,
+      "heartbeat": 111.5,
+      "matches": 0,
+      "skipped": 0
+    },
+    {
+      "characters": 262125,
+      "elapsed": 318.80000001192093,
+      "heartbeat": 318.80000001192093,
+      "matches": 0,
+      "skipped": 0
+    }
+  ],
+  "errors": [],
+  "after": {
+    "src/runtime/loaded_search.ts": "db140e30f3be7c40d747f3132307ca9ff68621aa8b9d00a9faeb89c510900e31",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/fixture.tsx": "6c0d605a0d70dee16fc57a1f5fef850aa9355fde284b8aac271545c39a118e69",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-performance.mjs": "3b83b6b47e00d8cd4108c3c356e4e25cde037308bc7de7b706578b984366d9df"
+  }
+}

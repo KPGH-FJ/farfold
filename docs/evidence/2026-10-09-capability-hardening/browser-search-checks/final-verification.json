@@ -1,0 +1,175 @@
+{
+  "checkedAtUtc": "2026-10-10T04:33:09.735206+00:00",
+  "sourceBase": "16a3f499e5b0f70b57e03686fb6e7791236ceaab",
+  "inputCount": 1234,
+  "sourceStable": true,
+  "protectedUnchanged": true,
+  "inputsBefore": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/inputs-final.json",
+    "sha256": "27f9200b588f4d3280a3ea4e6c14402be1f397aa2c2b8ad681d9d8a9fd955a47"
+  },
+  "inputsAfter": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/inputs-final-after.json",
+    "sha256": "27f9200b588f4d3280a3ea4e6c14402be1f397aa2c2b8ad681d9d8a9fd955a47"
+  },
+  "checks": [
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 0.94,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-final/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": false,
+      "reuseBasis": "Exact current Rust inputs"
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.717,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-final/clippy.txt",
+      "sha256": "7b89f9d8b45896e66051e0a6a0854f36f5acdc9e450391ac977c70c47d4c66e3",
+      "executedInThisRun": false,
+      "reuseBasis": "Exact current Rust inputs"
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 40.641,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-final/rust.txt",
+      "sha256": "b35066216f895e2f00a9762992b429b04ba7fa265616dba1157bc73f5ab9705d",
+      "executedInThisRun": false,
+      "reuseBasis": "Exact current Rust inputs"
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 41.068,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/frontend-final/frontend.txt",
+      "sha256": "4f27fe87510d154e975857fa77d7ada89957bf9ac946c978b59d810c6a5f6f9d",
+      "executedInThisRun": false,
+      "reuseBasis": "All application inputs unchanged; one test whitespace-only correction has identical TypeScript syntax tree and leaf text plus targeted rerun"
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 8.239,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/frontend-final/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": false,
+      "reuseBasis": "All application inputs unchanged; one test whitespace-only correction has identical TypeScript syntax tree and leaf text plus targeted rerun"
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 10.287,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/frontend-final/build.txt",
+      "sha256": "e2bb569991ce10bec2b752dbfc9f88972ffa204a08721e57ef5ce373212a51f1",
+      "executedInThisRun": false,
+      "reuseBasis": "All application inputs unchanged; one test whitespace-only correction has identical TypeScript syntax tree and leaf text plus targeted rerun"
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 25.132,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/format-final.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true
+    }
+  ],
+  "counts": {
+    "frontend": ["Test Files  345 passed (345)", "Tests  4098 passed (4098)"],
+    "rust": [
+      "test result: ok. 1242 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 39.01s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  "sourceClosure": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/source-closure.json",
+    "sha256": "9322dfe256a1a5b5ebbd285cc6147f3d6979f4d801545bc9dd9583208b249bef"
+  },
+  "testFormattingFollowup": {
+    "path": "src/runtime/loaded_search_dom.test.tsx",
+    "beforeSha256": "5a763b5a37964b35b83c0820bf0aef7e3f963978b71877cf870b9a7822c42776",
+    "afterSha256": "2f8e6f8ceb6f2263d7d3f01d24d1e1ac5c146a9905c8ca345d962c56602bfe0b",
+    "equivalence": {
+      "name": "test-format-ast-equivalence",
+      "argv": [
+        "node",
+        "-e",
+        "const fs=require('fs'),ts=require('typescript');\nconst parse=s=>ts.createSourceFile('same.tsx',s,ts.ScriptTarget.Latest,true,ts.ScriptKind.TSX);\nconst tree=sf=>{if(sf.parseDiagnostics.length)throw Error('Parse error');const visit=n=>{const children=[];ts.forEachChild(n,c=>{children.push(visit(c))});return [n.kind,children.length?children:n.getText(sf)]};return JSON.stringify(visit(sf))};\nconst a=fs.readFileSync(process.argv[1],'utf8'),b=fs.readFileSync(process.argv[2],'utf8');\nconst left=parse(a),right=parse(b);if(tree(left)!==tree(right))throw Error('test syntax changed');\nconst printer=ts.createPrinter();console.log(JSON.stringify({syntaxTreeAndLeafTextEqual:true,printerOutputEqual:printer.printFile(left)===printer.printFile(right),qualification:'Printer preserves original line layout and is not an AST equality check. Prior printer rejection retained.'}));",
+        "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/browser-search-checks/loaded_search_dom.test.tsx.before-format.txt",
+        "src/runtime/loaded_search_dom.test.tsx"
+      ],
+      "exitCode": 0,
+      "seconds": 0.135,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/test-format-ast-equivalence.txt",
+      "sha256": "1c180d7997ff3568740dd351e2950cae238a5c91e71a0447c0b3884b1ba13c67",
+      "executedInThisRun": true
+    },
+    "targeted": {
+      "name": "test-format-targeted",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/runtime/loaded_search_dom.test.tsx"
+      ],
+      "exitCode": 0,
+      "seconds": 1.743,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/test-format-targeted.txt",
+      "sha256": "f8388f0e2c5d14ed5bdef893036161b5023852f6f565752f1dc77eab7a87a232",
+      "executedInThisRun": true
+    }
+  },
+  "priorFailedAggregate": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/final-verification-first-format-failure.json",
+    "sha256": "07e545fb8a223273448dc8a428a4bacdc56618201329267978f0116002099efe"
+  },
+  "priorRuns": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-verification.json",
+      "sha256": "6650227b1ee0b292decbe9f5fd902cbf0b49281cebe11081be84c02c4b898a96"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/frontend-verification.json",
+      "sha256": "270472d19f02c8ec2522c5d4c26f201c0429c5b6e4cae437a07bc48f4a411215"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/rust-verification.json",
+      "sha256": "c450a8c00b584597f2200ffa1af06c787a76838aa8acd856bf7a876aeb82f7fa"
+    }
+  ],
+  "allPassed": true,
+  "boundary": "Seven required checks have passing evidence. Final format and affected test rerun executed here; existing full tests/type/build reused only for identical production inputs and syntax-identical test reformat. Prior Rust failures remain unlocalized, not erased. No installed, real-Agent or Windows claim."
+}

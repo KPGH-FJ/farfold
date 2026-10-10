@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/useLoadedSearch.test.tsx (4 tests | 1 failed) 8ms
+   × keeps making progress when two live conversations swap recency order 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/useLoadedSearch.test.tsx > keeps making progress when two live conversations swap recency order
+TypeError: actual value must be number or bigint, received "undefined"
+ ❯ src/components/useLoadedSearch.test.tsx:98:36
+     96|     render();
+     97|   }
+     98|   expect(render().result?.matches).toBeGreaterThan(2);
+       |                                    ^
+     99| });
+    100| it("never presents an earlier query or scope as the current result", a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  12:14:46
+   Duration  223ms (transform 71ms, setup 0ms, import 152ms, tests 8ms, environment 0ms)
+

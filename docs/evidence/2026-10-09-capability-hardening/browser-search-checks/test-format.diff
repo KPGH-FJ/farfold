@@ -1,0 +1,23 @@
+--- before
++++ after
+@@ -83,14 +83,12 @@
+     stack.pop();
+   });
+   parser.on("text", (data) => {
+-    stack
+-      .at(-1)!
+-      .childNodes.push({
+-        nodeType: 3,
+-        data,
+-        textContent: data,
+-        length: data.length,
+-      });
++    stack.at(-1)!.childNodes.push({
++      nodeType: 3,
++      data,
++      textContent: data,
++      length: data.length,
++    });
+   });
+   parser.write(`<root>${html}</root>`).close();
+   const texts = (node: ElementNode): TextNode[] =>

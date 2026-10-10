@@ -1,0 +1,84 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 滚动区
+		2 HTML内容 Description: Farfold, URL: tauri://localhost
+			3 container
+				4 图像 Farfold
+				5 按钮 收起导航
+				6 按钮 新对话 ⌘ N
+				7 按钮 搜索对话 ⌘ K
+				8 container 所有对话
+					9 按钮 所有对话 123
+					10 按钮 收藏 0
+					11 按钮 探索 Agent
+				12 按钮 (expanded) 最近, Secondary Actions: Collapse
+				13 按钮 FARFOLD_REAL_STOP_20261010：这是一次受控停止验证。请只
+				14 按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT
+				15 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
+				16 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
+				17 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
+				18 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
+				19 按钮 FARFOLD_WORKBOOK_4952C692_20261010。不要调用任
+				20 按钮 FARFOLD_TEXT_CD66AAE7_20261010。不要调用任何工具，
+				21 按钮 查看全部
+				22 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
+				23 按钮 管理我的 Agent
+				24 按钮 Codex 27
+				25 按钮 OpenCode 26
+				26 按钮 Grok Build 1
+				27 按钮 Poolside 1
+				28 按钮 MiniMax Code 1
+				29 按钮 Qwen Code 1
+				30 按钮 全部 Agent（29）
+				31 按钮 (expanded) 分组, Secondary Actions: Collapse
+				32 按钮 新建分组
+				33 按钮 验收 0928 4
+				34 按钮 验收 0928的操作
+				35 按钮 原型验收 0930 2
+				36 按钮 原型验收 0930的操作
+				37 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
+				38 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
+				39 container 对话动态
+					40 按钮 9 新回复
+				41 按钮 设置
+				42 文本 属于你的 Agent，在一处相遇。
+				43 container
+					44 按钮 返回
+					45 标题 新会话, Value: 1
+						46 文本 新会话
+					47 text TR · 未在运行
+					48 按钮 查找当前对话
+					49 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
+					50 按钮 浏览器
+					51 弹出式按钮 新会话的操作
+					52 文本 第一条消息即开始会话
+					53 摘要 最近收到的扩展字段, Value: off
+						54 文本 最近收到的扩展字段
+					55 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 把想法放在这里…
+						56 文本 把想法放在这里…
+					57 弹出式按钮 添加文件或图片
+					58 弹出式按钮 选择 Agent
+					59 弹出式按钮 模型与来源
+					60 文本 思考
+					61 弹出式按钮 思考深度: Ultra, Help: Ultra
+					62 弹出式按钮 对话权限
+					63 弹出式按钮 更多设置
+					64 弹出式按钮 命令与模板
+					65 按钮 (disabled) 发送
+					66 text Enter 发送 · Shift Enter 换行 工作文件夹
+					67 按钮 更换工作文件夹, Help: /Users/tw/Desktop/TR
+					68 按钮 移除文件夹
+					69 文本 仅作为工作位置，权限另行确认
+	70 关闭按钮
+	71 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	72 最小化按钮
+	73 文本 Farfold
+74 menu bar
+	75 Farfold
+	76 文件
+	77 编辑
+	78 显示
+	79 窗口
+	80 帮助
+
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

@@ -1,0 +1,12 @@
+{
+  "output": {
+    "error": "Error: Search parser failed",
+    "stack": "@http://127.0.0.1:1472/src/runtime/loaded_search_worker.ts:62:44"
+  },
+  "errors": [
+    {
+      "message": "Can't find variable: document",
+      "stack": ""
+    }
+  ]
+}

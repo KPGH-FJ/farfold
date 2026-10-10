@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+const {chromium}=await import('/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs');
+const base='docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent';
+const sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+const files=['src/runtime/loaded_search.ts',base+'/fixture.tsx',base+'/run-performance.mjs'];
+const out={scope:'Actual synchronous runtime search in controlled full-App Chromium; synthetic memory content, no Agent or native IPC.',before:Object.fromEntries(files.map(p=>[p,sha(p)])),results:[],errors:[]};
+const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
+const timer=setTimeout(()=>{void browser.close();},45000);
+try{
+ const page=await browser.newPage();page.on('pageerror',e=>out.errors.push(String(e)));
+ await page.route('**/*',r=>r.request().url().startsWith('http://127.0.0.1:1472/')?r.continue():r.abort());
+ await page.goto('http://127.0.0.1:1472/'+base+'/index.html');
+ await page.waitForFunction(()=>!!window.fixture);
+ for(const size of [65536,262144])out.results.push(await page.evaluate(n=>window.fixture.benchmark(n),size));
+} catch(e){out.failure=String(e);}finally{clearTimeout(timer);await browser.close();out.after=Object.fromEntries(files.map(p=>[p,sha(p)]));fs.writeFileSync(base+'/performance-first.raw.txt',JSON.stringify(out,null,2)+'\n');console.log(JSON.stringify(out.results));}

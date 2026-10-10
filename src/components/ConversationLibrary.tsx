@@ -60,6 +60,17 @@ import {
 } from "../runtime/conversation_read_state";
 
 import { SETTINGS_REDESIGN as R } from "../runtime/settings_redesign_strings";
+import {
+  LoadedSearchResults,
+  LoadedSearchSummary,
+} from "./LoadedSearchResults";
+import { useLoadedSearch } from "./useLoadedSearch";
+import {
+  loadedSearchHitIsCurrent,
+  type LoadedSearchHit,
+  type SelectLoadedSearch,
+} from "../runtime/loaded_search";
+import { LOADED_SEARCH_STRINGS as SEARCH } from "../runtime/loaded_search_strings";
 import "../settings-library-redesign.css";
 
 const LIBRARY_TABS = [
@@ -125,6 +136,7 @@ export function ConversationLibrary({
   onReopen,
   defaultCwd,
   header,
+  onSelectLoaded,
 }: {
   active?: boolean;
   agents: AgentCardModel[];
@@ -137,6 +149,7 @@ export function ConversationLibrary({
   onReopen?: (row: SidebarRow) => void;
   defaultCwd: string | null;
   header?: ReactNode;
+  onSelectLoaded?: SelectLoadedSearch;
 }) {
   const data = useCollections();
   const readState = useConversationReadState();
@@ -191,6 +204,9 @@ export function ConversationLibrary({
   );
   const rowsWithDraft = new Set(draftKeys.split("\n"));
   const [organizing, setOrganizing] = useState(false);
+  const [searchScope, setSearchScope] = useState<"metadata" | "body">(
+    "metadata",
+  );
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -254,7 +270,8 @@ export function ConversationLibrary({
               : tab === "unread"
                 ? r.unread
                 : r.status === tab)) &&
-          (!query.trim() ||
+          (searchScope === "body" ||
+            !query.trim() ||
             `${r.title} ${r.cwd} ${agents.find((a) => a.id === r.agentId)?.name ?? r.agentId} ${data.groups.find((g) => g.id === data.assignments[r.key])?.name ?? ""}`
               .toLocaleLowerCase()
               .includes(query.trim().toLocaleLowerCase())),
@@ -268,6 +285,7 @@ export function ConversationLibrary({
       agents,
       tab,
       query,
+      searchScope,
       draftKeys,
       snapshot.threads,
     ],
@@ -285,7 +303,8 @@ export function ConversationLibrary({
         (dimensions.group === "none"
           ? !data.assignments[row.key]
           : data.assignments[row.key] === dimensions.group)) &&
-      (!query.trim() ||
+      (searchScope === "body" ||
+        !query.trim() ||
         `${row.title} ${row.cwd} ${agents.find((a) => a.id === row.agentId)?.name ?? row.agentId} ${data.groups.find((g) => g.id === data.assignments[row.key])?.name ?? ""}`
           .toLocaleLowerCase()
           .includes(query.trim().toLocaleLowerCase()));
@@ -303,6 +322,59 @@ export function ConversationLibrary({
     if (row.status === "need" || row.status === "run") increment(row.status);
   }
   const visibleSelected = selectedLibraryRows(rows, selected);
+  const searchKeys = rows.map((row) => row.key);
+  const bodySearch = useLoadedSearch(
+    searchKeys,
+    snapshot.threads,
+    query,
+    snapshot.version,
+    active && searchScope === "body",
+  );
+  const searchNow = useRef({
+    active,
+    searchScope,
+    query,
+    searchKeys,
+    bodySearch,
+    onSelectLoaded,
+  });
+  const searchMounted = useRef(true);
+  useEffect(() => {
+    searchMounted.current = true;
+    return () => {
+      searchMounted.current = false;
+    };
+  }, []);
+  searchNow.current = {
+    active,
+    searchScope,
+    query,
+    searchKeys,
+    bodySearch,
+    onSelectLoaded,
+  };
+  const chooseSearch = (hit: LoadedSearchHit) => {
+    const accepts = () => {
+      const now = searchNow.current;
+      return (
+        searchMounted.current &&
+        now.active &&
+        now.searchScope === "body" &&
+        now.query.trim() === hit.query &&
+        !!now.bodySearch.result?.hits.includes(hit) &&
+        loadedSearchHitIsCurrent(
+          hit,
+          threads.getSnapshot().threads,
+          now.searchKeys,
+        )
+      );
+    };
+    if (!accepts()) {
+      setError(SEARCH.stale);
+      return;
+    }
+    searchNow.current.onSelectLoaded?.(hit, accepts);
+  };
   const actionRow = actions && allRows.find((row) => row.key === actions.key);
   const actionArchiveReason =
     !archived && actionRow && archiveReasons.get(actionRow.key);
@@ -468,13 +540,32 @@ export function ConversationLibrary({
             </button>
           </div>
         </div>
-        <p className="library-search-boundary">{R.searchBoundary}</p>
+        <p className="library-search-boundary">
+          {searchScope === "body" ? SEARCH.boundary : R.searchBoundary}
+        </p>
         <div className="library-tools">
+          <select
+            aria-label={SEARCH.scope}
+            value={searchScope}
+            onChange={(event) => {
+              setSearchScope(
+                event.target.value === "body" ? "body" : "metadata",
+              );
+              setOrganizing(false);
+              changeSelection(() => new Set());
+            }}
+          >
+            <option value="metadata">{SEARCH.metadata}</option>
+            <option value="body">{SEARCH.body}</option>
+          </select>
           <label className="library-search">
             <MagnifyingGlassIcon size={16} />
             <input
               aria-label={LIBRARY.query}
-              placeholder={LIBRARY.query}
+              placeholder={
+                searchScope === "body" ? SEARCH.query : LIBRARY.query
+              }
+              maxLength={searchScope === "body" ? 512 : undefined}
               value={query}
               onChange={(e) => changeFilter({ query: e.target.value })}
             />
@@ -508,6 +599,7 @@ export function ConversationLibrary({
           <button
             type="button"
             className="btn btn-text library-organize"
+            disabled={searchScope === "body"}
             aria-pressed={organizing}
             onClick={() => {
               setOrganizing(!organizing);
@@ -649,7 +741,7 @@ export function ConversationLibrary({
             )}
           </div>
         )}
-        {organizing && rows.length > 0 && (
+        {organizing && searchScope === "metadata" && rows.length > 0 && (
           <div className="library-bulk">
             <label>
               <input
@@ -743,130 +835,147 @@ export function ConversationLibrary({
           </div>
         )}
         <div
-          className="library-list"
+          className={`library-list${searchScope === "body" ? " loaded-search-library" : ""}`}
           id="conversation-library-results"
           role="tabpanel"
           aria-label={LIBRARY_TABS.find(([id]) => id === tab)?.[1]}
         >
-          {rows.map((row) => {
-            const agentCard = agents.find((a) => a.id === row.agentId);
-            const loaded = snapshot.threads.get(row.key);
-            const result = row.status === "idle" ? loadedResult(loaded) : null;
-            const viewOnly =
-              loaded &&
-              (loaded.modelDrift || loaded.sourceError) &&
-              hasReadableMessages(loaded.items);
-            return (
-              <div className="library-row" key={row.key}>
-                {organizing && (
-                  <input
-                    type="checkbox"
-                    aria-label={row.title}
-                    checked={selected.has(row.key)}
-                    onChange={() =>
-                      changeSelection((prev) => {
-                        const next = new Set(prev);
-                        if (next.has(row.key)) next.delete(row.key);
-                        else next.add(row.key);
-                        return next;
-                      })
-                    }
-                  />
-                )}
-                <button
-                  type="button"
-                  className="library-row-open"
-                  onClick={() => onOpen(row)}
-                >
-                  {agentCard ? (
-                    <AgentLogo card={agentCard} />
-                  ) : (
-                    <ChatCircleIcon size={21} />
+          {searchScope === "body" ? (
+            <>
+              <LoadedSearchSummary {...bodySearch} query={query} />
+              <LoadedSearchResults
+                hits={bodySearch.result?.hits ?? []}
+                onChoose={chooseSearch}
+                title={(key) =>
+                  rows.find((row) => row.key === key)?.title ||
+                  STRINGS.sessions.untitled
+                }
+              />
+            </>
+          ) : (
+            rows.map((row) => {
+              const agentCard = agents.find((a) => a.id === row.agentId);
+              const loaded = snapshot.threads.get(row.key);
+              const result =
+                row.status === "idle" ? loadedResult(loaded) : null;
+              const viewOnly =
+                loaded &&
+                (loaded.modelDrift || loaded.sourceError) &&
+                hasReadableMessages(loaded.items);
+              return (
+                <div className="library-row" key={row.key}>
+                  {organizing && (
+                    <input
+                      type="checkbox"
+                      aria-label={row.title}
+                      checked={selected.has(row.key)}
+                      onChange={() =>
+                        changeSelection((prev) => {
+                          const next = new Set(prev);
+                          if (next.has(row.key)) next.delete(row.key);
+                          else next.add(row.key);
+                          return next;
+                        })
+                      }
+                    />
                   )}
-                  <span>
-                    <strong>{row.title}</strong>
-                    <small title={row.cwd}>
-                      {agentCard?.name ?? row.agentId} ·{" "}
-                      {row.cwd === defaultCwd
-                        ? LIBRARY.ordinary
-                        : basename(row.cwd)}
-                      {data.assignments[row.key]
-                        ? ` · ${data.groups.find((g) => g.id === data.assignments[row.key])?.name ?? ""}`
-                        : ""}
-                    </small>
-                  </span>
-                </button>
-                {row.status !== "idle" && (
-                  <span className={`library-status ${row.status}`}>
-                    {row.toolTailUnconfirmed
-                      ? STRINGS.thread.unknown
-                      : row.status === "need"
-                        ? LIBRARY.attention
-                        : LIBRARY.running}
-                  </span>
-                )}
-                {result && (
-                  <span
-                    className={`library-status${result.attention ? " need" : ""}`}
-                    title={result.title}
+                  <button
+                    type="button"
+                    className="library-row-open"
+                    onClick={() => onOpen(row)}
                   >
-                    {result.label}
-                  </span>
-                )}
-                {viewOnly && (
-                  <span className="library-status">{LIBRARY.viewOnly}</span>
-                )}
-                {row.unread && (
-                  <span className="library-status unread">
-                    {LIBRARY.unread}
-                  </span>
-                )}
-                {rowsWithDraft.has(row.key) && (
-                  <span className="draft-badge">{LIBRARY.draft}</span>
-                )}
-                {!!loaded?.queued.length && (
-                  <span className="draft-badge">
-                    {R.queued(loaded.queued.length)}
-                  </span>
-                )}
-                {row.archived && (
-                  <span className="library-status">{LIBRARY.archived}</span>
-                )}
-                <time>{relativeTime(row.updatedAt)}</time>
-                <button
-                  type="button"
-                  className={`icon-button library-star ${row.pinned ? "is-favorite" : ""}`}
-                  disabled={busy}
-                  aria-label={
-                    row.pinned ? LIBRARY.unfavorite : LIBRARY.favorite
-                  }
-                  onClick={() =>
-                    void perform(() => threads.setPinned(row.key, !row.pinned))
-                  }
-                >
-                  <StarIcon
-                    size={16}
-                    weight={row.pinned ? "fill" : "regular"}
-                  />
-                </button>
-                <button
-                  type="button"
-                  className="icon-button"
-                  aria-label={LIBRARY.actions(row.title)}
-                  aria-expanded={actions?.key === row.key}
-                  aria-haspopup="dialog"
-                  onClick={(event) => {
-                    actionAnchor.current = event?.currentTarget ?? null;
-                    operation.current.invalidate();
-                    setError(null);
-                    setActions(row);
-                  }}
-                >
-                  <DotsThreeIcon size={19} />
-                </button>
-              </div>
-            );
-          })}
+                    {agentCard ? (
+                      <AgentLogo card={agentCard} />
+                    ) : (
+                      <ChatCircleIcon size={21} />
+                    )}
+                    <span>
+                      <strong>{row.title}</strong>
+                      <small title={row.cwd}>
+                        {agentCard?.name ?? row.agentId} ·{" "}
+                        {row.cwd === defaultCwd
+                          ? LIBRARY.ordinary
+                          : basename(row.cwd)}
+                        {data.assignments[row.key]
+                          ? ` · ${data.groups.find((g) => g.id === data.assignments[row.key])?.name ?? ""}`
+                          : ""}
+                      </small>
+                    </span>
+                  </button>
+                  {row.status !== "idle" && (
+                    <span className={`library-status ${row.status}`}>
+                      {row.toolTailUnconfirmed
+                        ? STRINGS.thread.unknown
+                        : row.status === "need"
+                          ? LIBRARY.attention
+                          : LIBRARY.running}
+                    </span>
+                  )}
+                  {result && (
+                    <span
+                      className={`library-status${result.attention ? " need" : ""}`}
+                      title={result.title}
+                    >
+                      {result.label}
+                    </span>
+                  )}
+                  {viewOnly && (
+                    <span className="library-status">{LIBRARY.viewOnly}</span>
+                  )}
+                  {row.unread && (
+                    <span className="library-status unread">
+                      {LIBRARY.unread}
+                    </span>
+                  )}
+                  {rowsWithDraft.has(row.key) && (
+                    <span className="draft-badge">{LIBRARY.draft}</span>
+                  )}
+                  {!!loaded?.queued.length && (
+                    <span className="draft-badge">
+                      {R.queued(loaded.queued.length)}
+                    </span>
+                  )}
+                  {row.archived && (
+                    <span className="library-status">{LIBRARY.archived}</span>
+                  )}
+                  <time>{relativeTime(row.updatedAt)}</time>
+                  <button
+                    type="button"
+                    className={`icon-button library-star ${row.pinned ? "is-favorite" : ""}`}
+                    disabled={busy}
+                    aria-label={
+                      row.pinned ? LIBRARY.unfavorite : LIBRARY.favorite
+                    }
+                    onClick={() =>
+                      void perform(() =>
+                        threads.setPinned(row.key, !row.pinned),
+                      )
+                    }
+                  >
+                    <StarIcon
+                      size={16}
+                      weight={row.pinned ? "fill" : "regular"}
+                    />
+                  </button>
+                  <button
+                    type="button"
+                    className="icon-button"
+                    aria-label={LIBRARY.actions(row.title)}
+                    aria-expanded={actions?.key === row.key}
+                    aria-haspopup="dialog"
+                    onClick={(event) => {
+                      actionAnchor.current = event?.currentTarget ?? null;
+                      operation.current.invalidate();
+                      setError(null);
+                      setActions(row);
+                    }}
+                  >
+                    <DotsThreeIcon size={19} />
+                  </button>
+                </div>
+              );
+            })
+          )}
         </div>
         {rows.length === 0 && (
           <div className="library-empty">

@@ -1,0 +1,280 @@
+{
+  "boundary" : "Production Objective-C request owner\/FFI; test-owned WKWebView subclass holds completion without running page JS. Receiver abandonment models dropped Rust Future but does not execute Rust\/Tauri IPC. No proof of JS stop, no actual page effect, no native installed-product claim. All profiles nonpersistent, no visible window, no user data or network.",
+  "checks" : [
+    {
+      "details" : {
+
+      },
+      "name" : "read_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "code" : 1
+      },
+      "name" : "read_ffi_started_and_completion_held",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "code" : 1
+      },
+      "name" : "observe_ffi_started_and_completion_held",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "code" : 1
+      },
+      "name" : "act_ffi_started_and_completion_held",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "seconds" : 8.6621704999706708
+      },
+      "name" : "held_callbacks_exceed_existing_read_wait_without_clock_acceleration",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "callbackCount" : 0,
+        "nextCode" : 0
+      },
+      "name" : "read_actual_old_native_slot_still_blocks_successor",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "expected" : "A completed\/retired read must not strand the next exact read; baseline has no native retirement handoff",
+        "nativeOnlySeam" : true
+      },
+      "name" : "read_receiver_retirement_alone_does_not_supply_required_recovery",
+      "pass" : false
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_real_completion_clears_slot_after_receiver_abandoned",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "code" : 1
+      },
+      "name" : "read_successor_after_real_completion_starts",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_duplicate_old_callback_cannot_clear_successor",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_explicit_close_retires_pending_once",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "replacement_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_late_callback_after_close_does_not_touch_replacement",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_replacement_completion_available",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_replacement_closed",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "callbackCount" : 0,
+        "nextCode" : 0
+      },
+      "name" : "observe_actual_old_native_slot_still_blocks_successor",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "nativeOnlySeam" : true,
+        "notEvidenceOfJsTermination" : true
+      },
+      "name" : "observe_does_not_reach_bounded_terminal_callback",
+      "pass" : false
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_real_completion_clears_slot_after_receiver_abandoned",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "code" : 1
+      },
+      "name" : "observe_successor_after_real_completion_starts",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_duplicate_old_callback_cannot_clear_successor",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_explicit_close_retires_pending_once",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "replacement_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_late_callback_after_close_does_not_touch_replacement",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_replacement_completion_available",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_replacement_closed",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "callbackCount" : 0,
+        "nextCode" : 0
+      },
+      "name" : "act_actual_old_native_slot_still_blocks_successor",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "nativeOnlySeam" : true,
+        "notEvidenceOfJsTermination" : true
+      },
+      "name" : "act_does_not_reach_bounded_terminal_callback",
+      "pass" : false
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_real_completion_clears_slot_after_receiver_abandoned",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "code" : 1
+      },
+      "name" : "act_successor_after_real_completion_starts",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_duplicate_old_callback_cannot_clear_successor",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_explicit_close_retires_pending_once",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "replacement_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_late_callback_after_close_does_not_touch_replacement",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_replacement_completion_available",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_replacement_closed",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "all_owned_views_closed",
+      "pass" : true
+    }
+  ],
+  "failed" : 3,
+  "heldSeconds" : 8.6621704999706708,
+  "phase" : "baseline-native-completion-seam"
+}

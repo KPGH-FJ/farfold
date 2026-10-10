@@ -1,0 +1,38 @@
+{
+  "checkedAtUtc": "2026-10-10T04:29:00.011647+00:00",
+  "sourceBase": "16a3f499e5b0f70b57e03686fb6e7791236ceaab",
+  "inputCount": 1234,
+  "sourceStable": true,
+  "changedInputs": [],
+  "protectedUnchanged": true,
+  "checks": [
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 41.068,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/frontend-final/frontend.txt",
+      "sha256": "4f27fe87510d154e975857fa77d7ada89957bf9ac946c978b59d810c6a5f6f9d",
+      "executedInThisRun": true
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 8.239,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/frontend-final/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 10.287,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/frontend-final/build.txt",
+      "sha256": "e2bb569991ce10bec2b752dbfc9f88972ffa204a08721e57ef5ce373212a51f1",
+      "executedInThisRun": true
+    }
+  ],
+  "allPassed": true
+}

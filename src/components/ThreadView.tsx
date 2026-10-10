@@ -869,7 +869,12 @@ export function ThreadView({
               switch (first.kind) {
                 case "user":
                   return (
-                    <div key={first.id} className="workspace-message-user">
+                    <div
+                      key={first.id}
+                      data-loaded-message={first.id}
+                      tabIndex={-1}
+                      className="workspace-message-user"
+                    >
                       <div className="who">
                         {STRINGS.thread.you} · {timeLabel(first.time)}
                         {first.text && <MessageCopyButton text={first.text} />}
@@ -900,7 +905,12 @@ export function ThreadView({
                   );
                 case "agent":
                   return (
-                    <div key={first.id} className="workspace-message-agent">
+                    <div
+                      key={first.id}
+                      data-loaded-message={first.id}
+                      tabIndex={-1}
+                      className="workspace-message-agent"
+                    >
                       <div className="who">
                         {agent && <AgentLogo card={agent} />}
                         {agent?.name ?? thread.agentId} ·{" "}

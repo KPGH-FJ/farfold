@@ -1,0 +1,106 @@
+{
+  "boundary" : "Real production fixed observation\/action JS and native FFI in a test-owned nonpersistent WKWebView with immutable HTML bytes. Test message handler only synchronizes actual action entry\/finish. No network, formal App, Agent, user data or installed-product claim. It proves receiver cancellation is not cancellation of the actual page effect.",
+  "checks" : [
+    {
+      "details" : {
+
+      },
+      "name" : "actual_production_browser_created",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "initial_actual_observation_started",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "actual_fixed_js_returns_original_node_and_text",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "actual_fixed_action_started",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "real_click_handler_entered_before_cancel",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "cancel_returns_exactly_one_error_receipt_without_action_success",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "cancel_does_not_claim_actual_js_finished",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "new_observation_blocked_while_cancelled_action_still_executes",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "secondsSinceEnteredHostBarrier" : 1.2002545416471548
+      },
+      "name" : "page_effect_after_cancel_does_not_deliver_second_action_receipt",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "actual_completion_released_retired_execution_slot",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "new_observation_after_actual_completion_started",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "new_observation_sees_real_late_effect_without_repeating_click",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "owned_view_close_confirmed",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "all_owned_views_close_confirmed",
+      "pass" : true
+    }
+  ],
+  "failed" : 0,
+  "heldSeconds" : 1.2228232499910519,
+  "phase" : "real-webkit-late-action-effect"
+}

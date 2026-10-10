@@ -26,23 +26,8 @@ use windows::{
     core::{HSTRING, Interface, PCWSTR, PWSTR},
 };
 const ACK_WAIT: Duration = Duration::from_secs(8);
-type Reply = oneshot::Sender<Result<String, String>>;
 type CompletionReply = Rc<RefCell<Option<oneshot::Sender<Result<(), String>>>>>;
-struct PendingOperation {
-    id: String,
-    reply: Reply,
-    action: Option<String>,
-}
-impl PendingOperation {
-    fn take_matching(slot: &RefCell<Option<Self>>, id: &str) -> Option<Self> {
-        let mut pending = slot.borrow_mut();
-        if pending.as_ref().is_some_and(|pending| pending.id == id) {
-            pending.take()
-        } else {
-            None
-        }
-    }
-}
+use super::native_request::PendingOperation;
 thread_local! {
     static VIEWS:RefCell<HashMap<u64,Rc<View>>>=RefCell::new(HashMap::new());
     static SHUTDOWN:Cell<bool>=const{Cell::new(false)};
@@ -125,14 +110,18 @@ impl View {
     fn invalidate(&self, message: &str) {
         self.observation.borrow_mut().take();
         self.action_navigation.set(None);
-        if let Some(pending) = self.pending.borrow_mut().take() {
+        if let Some(pending) = self.pending.borrow_mut().as_mut()
+            && let Some(reply) = pending.reply.take()
+        {
             // Once dispatched, a lost callback cannot prove the action had no
-            // effect. Navigation, manual input and close all keep it unknown.
-            let result = match pending.action {
-                Some(observation) => Ok(observation::unknown(&observation)),
+            // effect. Keep the occupied slot until the actual callback (or view
+            // destruction), even after retiring its receiver. A new grant cannot
+            // overlap a still-running old operation.
+            let result = match &pending.action {
+                Some(observation) => Ok(observation::unknown(observation)),
                 None => Err(message.into()),
             };
-            let _ = pending.reply.send(result);
+            let _ = reply.send(result);
         }
     }
     fn manual_activity(&self) {
@@ -597,28 +586,41 @@ mod tests {
     fn late_operation_cannot_consume_a_new_reply() {
         let (a_reply, mut a_receive) = oneshot::channel();
         let slot = RefCell::new(Some(PendingOperation {
-            id: "a".into(),
-            reply: a_reply,
+            id: 1,
+            reply: Some(a_reply),
             action: Some("observation-a".into()),
         }));
-        // A was invalidated, then an independently approved B started.
-        let a = slot.borrow_mut().take().unwrap();
-        a.reply
-            .send(Ok(observation::unknown(a.action.as_deref().unwrap())))
-            .unwrap();
+        // Invalidate A's reply without admitting B; only its real completion
+        // removes the occupied slot, after which approved B may start.
+        {
+            let mut slot = slot.borrow_mut();
+            let a = slot.as_mut().unwrap();
+            a.reply
+                .take()
+                .unwrap()
+                .send(Ok(observation::unknown(a.action.as_deref().unwrap())))
+                .unwrap();
+        }
+        assert!(slot.borrow().is_some());
+        assert!(
+            PendingOperation::take_matching(&slot, 1)
+                .unwrap()
+                .reply
+                .is_none()
+        );
         let (b_reply, mut b_receive) = oneshot::channel();
         *slot.borrow_mut() = Some(PendingOperation {
-            id: "b".into(),
-            reply: b_reply,
+            id: 2,
+            reply: Some(b_reply),
             action: None,
         });
-        assert!(PendingOperation::take_matching(&slot, "a").is_none());
+        assert!(PendingOperation::take_matching(&slot, 1).is_none());
         assert!(matches!(
             b_receive.try_recv(),
             Err(oneshot::error::TryRecvError::Empty)
         ));
-        let b = PendingOperation::take_matching(&slot, "b").unwrap();
-        b.reply.send(Ok("b-result".into())).unwrap();
+        let b = PendingOperation::take_matching(&slot, 2).unwrap();
+        b.reply.unwrap().send(Ok("b-result".into())).unwrap();
         assert_eq!(b_receive.try_recv().unwrap().unwrap(), "b-result");
         let unknown: Value = serde_json::from_str(&a_receive.try_recv().unwrap().unwrap()).unwrap();
         assert_eq!(unknown["outcome"], "unknown");

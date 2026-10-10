@@ -1,0 +1,135 @@
+{
+  "checkedAtUtc": "2026-10-10T04:30:06.647468+00:00",
+  "sourceBase": "16a3f499e5b0f70b57e03686fb6e7791236ceaab",
+  "inputCount": 1234,
+  "sourceStable": true,
+  "protectedUnchanged": true,
+  "inputsBefore": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/inputs.json",
+    "sha256": "4502cf3c3b68f5b3dc706f12d31de35aab790403b769add54c1364e9f539f428"
+  },
+  "inputsAfter": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/inputs-after.json",
+    "sha256": "4502cf3c3b68f5b3dc706f12d31de35aab790403b769add54c1364e9f539f428"
+  },
+  "checks": [
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 0.94,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-final/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 0.717,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-final/clippy.txt",
+      "sha256": "7b89f9d8b45896e66051e0a6a0854f36f5acdc9e450391ac977c70c47d4c66e3",
+      "executedInThisRun": true
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 40.641,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-final/rust.txt",
+      "sha256": "b35066216f895e2f00a9762992b429b04ba7fa265616dba1157bc73f5ab9705d",
+      "executedInThisRun": true
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 41.068,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/frontend-final/frontend.txt",
+      "sha256": "4f27fe87510d154e975857fa77d7ada89957bf9ac946c978b59d810c6a5f6f9d",
+      "executedInThisRun": true
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 8.239,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/frontend-final/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 10.287,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/frontend-final/build.txt",
+      "sha256": "e2bb569991ce10bec2b752dbfc9f88972ffa204a08721e57ef5ce373212a51f1",
+      "executedInThisRun": true
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 1,
+      "seconds": 23.709,
+      "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/format.txt",
+      "sha256": "cbd9960f662427e4de5dbe7521b78ec8c7305982f5e7f10ceec7e10946173263",
+      "executedInThisRun": true
+    }
+  ],
+  "counts": {
+    "frontend": ["Test Files  345 passed (345)", "Tests  4098 passed (4098)"],
+    "rust": [
+      "test result: ok. 1242 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 39.01s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  "groups": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-final/rust-verification.json",
+      "sha256": "8b6a7f66823cec4810b862070b80d281028057127020366b713b5199238f7416"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/frontend-final/frontend-verification.json",
+      "sha256": "4d04f0fbf975fe8dfa850591f5036be86c574570c8f8e1a06a469205ede8d9bb"
+    }
+  ],
+  "priorRuns": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-verification.json",
+      "sha256": "6650227b1ee0b292decbe9f5fd902cbf0b49281cebe11081be84c02c4b898a96"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/frontend-verification.json",
+      "sha256": "270472d19f02c8ec2522c5d4c26f201c0429c5b6e4cae437a07bc48f4a411215"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/rust-verification.json",
+      "sha256": "c450a8c00b584597f2200ffa1af06c787a76838aa8acd856bf7a876aeb82f7fa"
+    }
+  ],
+  "allPassed": false,
+  "boundary": "All seven commands executed for this increment against verified current inputs. Earlier Rust failure remains in priorRuns and requires separate investigated attribution. Native harness, controlled browser, installation and real-Agent observations are separate. No Windows execution claim."
+}

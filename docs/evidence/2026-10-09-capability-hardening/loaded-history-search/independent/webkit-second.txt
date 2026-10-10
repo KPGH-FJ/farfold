@@ -1,0 +1,1 @@
+{"checks":[{"name":"metadata excludes message-only text","pass":true},{"name":"body locates actual projected user","pass":false}],"failure":"Error: body locates actual projected user","errors":["ReferenceError: Can't find variable: document"],"sourceUnchanged":true}

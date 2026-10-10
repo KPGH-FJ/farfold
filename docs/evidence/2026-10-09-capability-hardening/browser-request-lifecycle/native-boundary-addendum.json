@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUTC": "2026-10-10T03:58:29.832571+00:00",
+  "status": "no_source_change_no_retest_required",
+  "appliesTo": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/implementation.json",
+      "sha256": "84365e569a6d9b5648d1075d210bf3b00af6082862b14c2099ebaece175a62b9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/independent-review.json",
+      "sha256": "af2c0883f667c733710be23b45d125ee7c1ea6d5178d2ca4019d17dda3c3ace6"
+    }
+  ],
+  "historicalNativeReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/implementation-before-boundary-clarification.json",
+    "sha256": "2ee5d0d23df9275643068417699dbb7a5376dd2a2f5d6b578848486fe794af18"
+  },
+  "currentNativeReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/implementation.json",
+    "sha256": "3b4641b632eb805402df643631d9ad82f13b6021cf2538f3de9223b5322b4fc2"
+  },
+  "onlyChangedTopLevelField": ["processAndData"],
+  "clarification": [
+    "Only listed direct probe processes were confirmed exited and reaped; WebKit service processes were not individually reaped.",
+    "Fixture requested no network resources, but OS network traffic was not monitored. The old blanket networkRequests:false is superseded."
+  ],
+  "verification": "Original native receipt hash is exactly retained at the historical path. All 31 source/artifact references are identical. Rust source and native source unchanged; review conclusion and 58 seam/14 real JS test scope remain unchanged. Frozen earlier records are retained rather than silently rewritten."
+}

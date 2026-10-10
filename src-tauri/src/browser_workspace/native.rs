@@ -2,6 +2,7 @@ use super::{
     Bounds, BrowserWorkspace, FixedPageReadScope,
     local_html::StoragePartition,
     local_preview::{DevServerOrigin, DirectoryPreview},
+    native_request::NativeRequest,
     publish,
 };
 use std::ffi::{CStr, CString, c_char, c_void};
@@ -88,14 +89,17 @@ unsafe extern "C" {
         width: f64,
         height: f64,
     ) -> bool;
+    fn ff_browser_cancel_operation(id: u64, operation_id: u64) -> bool;
     fn ff_browser_read(
         id: u64,
+        operation_id: u64,
         expected_url: *const c_char,
         context: *mut c_void,
         callback: Read,
     ) -> i32;
     fn ff_browser_observe(
         id: u64,
+        operation_id: u64,
         navigation: u64,
         expected_url: *const c_char,
         screenshot: bool,
@@ -104,6 +108,7 @@ unsafe extern "C" {
     ) -> i32;
     fn ff_browser_act(
         id: u64,
+        operation_id: u64,
         navigation: u64,
         expected_url: *const c_char,
         observation_id: *const c_char,
@@ -624,7 +629,20 @@ pub(super) fn close_all_on_main_thread() -> bool {
     // The native entry point checks the thread before reporting an ACK.
     unsafe { ff_browser_close_all() }
 }
+fn request_owner(app: &AppHandle, browser_id: u64) -> Result<NativeRequest, String> {
+    let app = app.clone();
+    NativeRequest::new(move |operation_id| {
+        // Retirement is exact and best effort if the main thread is unavailable.
+        // Native retains any dispatched execution until its real completion.
+        // Only its single completion callback owns and releases the reply Box.
+        let _ = app.run_on_main_thread(move || unsafe {
+            ff_browser_cancel_operation(browser_id, operation_id);
+        });
+    })
+}
 pub(super) async fn read(app: &AppHandle, scope: FixedPageReadScope) -> Result<String, String> {
+    let request = request_owner(app, scope.native_id())?;
+    let operation_id = request.id();
     let (sender, receiver) = oneshot::channel();
     main(app, move || {
         let outcome = scope.observe(|id, expected| {
@@ -639,6 +657,7 @@ pub(super) async fn read(app: &AppHandle, scope: FixedPageReadScope) -> Result<S
             let outcome = unsafe {
                 ff_browser_read(
                     id,
+                    operation_id,
                     expected
                         .as_ref()
                         .map_or(std::ptr::null(), |url| url.as_ptr()),
@@ -660,11 +679,11 @@ pub(super) async fn read(app: &AppHandle, scope: FixedPageReadScope) -> Result<S
                 scope.revoke();
                 Err("网页已变化，请重新确认要分享的页面".into())
             }
-            _ => Err("网页正在变化或读取中，请稍后再试".into()),
+            _ => Err("网页仍在加载或等待先前读取结束，请等待或关闭网页".into()),
         }
     })
     .await?;
-    receiver.await.map_err(|_| "网页读取已取消")?
+    request.reply(receiver).await
 }
 
 pub(super) enum NativeAction {
@@ -740,6 +759,8 @@ async fn observation_operation(
     scope: FixedPageReadScope,
     operation: ObservationOperation,
 ) -> Result<String, String> {
+    let request = request_owner(app, scope.native_id())?;
+    let operation_id = request.id();
     let (sender, receiver) = oneshot::channel();
     main(app, move || {
         let navigation = scope.navigation();
@@ -755,6 +776,7 @@ async fn observation_operation(
                 match operation {
                     ObservationOperation::Observe { screenshot } => ff_browser_observe(
                         id,
+                        operation_id,
                         navigation,
                         expected.as_ptr(),
                         screenshot,
@@ -768,6 +790,7 @@ async fn observation_operation(
                         input,
                     } => ff_browser_act(
                         id,
+                        operation_id,
                         navigation,
                         expected.as_ptr(),
                         observation_id.as_ptr(),
@@ -793,13 +816,11 @@ async fn observation_operation(
                 Err("网页已变化，请重新确认要分享的页面".into())
             }
             3 => Err("网页操作目标已失效，请重新观察".into()),
-            _ => Err("网页正在变化或操作中，请稍后再试".into()),
+            _ => Err("网页仍在加载或等待先前操作结束，请等待或关闭网页".into()),
         }
     })
     .await?;
     // A cancelled receiver cannot imply that an already dispatched action had
     // no effect. Callers must keep timeout/closed results unknown and never retry.
-    receiver
-        .await
-        .map_err(|_| "网页操作结果未确认，请查看页面")?
+    request.reply(receiver).await
 }

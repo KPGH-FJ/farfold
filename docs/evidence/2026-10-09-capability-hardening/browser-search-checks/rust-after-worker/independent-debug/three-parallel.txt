@@ -1,0 +1,8 @@
+
+running 3 tests
+test acp_client::transient_mcp_route_tests::transient_mcp_abandoned_real_open_revokes_after_late_reply_cleanup ... ok
+test program_launch_tests::updated_node_remains_usable_when_it_still_meets_the_official_engine_range ... ok
+test acp_client::dependency_environment::launch_tests::manager_final_environment_handles_prepared_and_existing_sources_without_persisting_it ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1245 filtered out; finished in 2.11s
+

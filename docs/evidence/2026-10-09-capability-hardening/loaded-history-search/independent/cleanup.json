@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-10T04:20:48.810203+00:00",
+  "firstOwnedViteSession": 13939,
+  "firstExit": 130,
+  "secondOwnedVitePid": 51033,
+  "secondOwnedViteSession": 36397,
+  "termination": "SIGTERM exact own PID",
+  "secondExit": 143,
+  "port1472ListeningAfter": false,
+  "browserClosure": "Each direct Playwright browser.close awaited in runner finally; not an assertion that all operating-system WebKit services were individually reaped",
+  "formalAppOrAgentOperated": false
+}

@@ -128,10 +128,13 @@ it("focuses search after native modal opening and returns to the explicit mouse 
     (input.props.ref as { current: unknown }).current = new FocusTarget(
       "search-input",
     );
-    const cleanup = h.effects[0]();
+    // Search now owns cancellable work and a mounted guard as well as focus.
+    const cleanups = h.effects.map((effect) => effect());
     expect(events).toEqual(["showModal", "close-button", "search-input"]);
-    expect(typeof cleanup).toBe("function");
-    cleanup?.();
+    expect(cleanups.some((cleanup) => typeof cleanup === "function")).toBe(
+      true,
+    );
+    cleanups.reverse().forEach((cleanup) => cleanup?.());
     expect(events.slice(-2)).toEqual(["closeDialog", "search-trigger"]);
   } finally {
     vi.unstubAllGlobals();

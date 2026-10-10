@@ -1,0 +1,423 @@
+{
+  "reviewer": "architecture independent reviewer",
+  "at": "2026-10-10T04:21:36.090013+00:00",
+  "result": "passed_with_explicit_boundaries",
+  "remainingSourceBlockers": [],
+  "scope": "Complete production App, projection, render, runtime search, DOM locate and actual Worker in controlled WebKit/Chromium. Index/events/IPC are synthetic in-memory fixtures; no installed Farfold, account, real Agent, real history or user database operation.",
+  "finalSummary": {
+    "engines": [
+      "WebKit 2336 headless",
+      "installed Google Chrome via Playwright headless"
+    ],
+    "perEngine": {
+      "fullApp": 26,
+      "performanceAndLifecycle": 12,
+      "libraryAndProductionWorker": 10,
+      "total": 48
+    },
+    "total": 96,
+    "srcFiles": 751,
+    "srcStableAcrossEveryFinalRunAndCurrent": true,
+    "screenshotsPersonallyInspected": [
+      "chromium-final-located.png",
+      "chromium-final-narrow.png",
+      "webkit-final-located.png",
+      "webkit-final-narrow.png",
+      "webkit-library-first-library.png"
+    ]
+  },
+  "suites": [
+    {
+      "name": "webkit-final",
+      "checks": 26,
+      "passed": 26,
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-final.raw.txt",
+      "sha256": "ea5531005ffef0145536571fa4d1a6e3ffbc22a3b20abc2c84c5ddb244611a36",
+      "summary": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-final.json",
+      "summarySha256": "ea5531005ffef0145536571fa4d1a6e3ffbc22a3b20abc2c84c5ddb244611a36",
+      "browserExceptions": 0,
+      "allRecordedPageRequestsLoopback": true
+    },
+    {
+      "name": "chromium-final",
+      "checks": 26,
+      "passed": 26,
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-final.raw.txt",
+      "sha256": "aed1314afa746a7fe1d9495a984e0d5be80f3eef0c6e8663f739fc078a8407b3",
+      "summary": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-final.json",
+      "summarySha256": "aed1314afa746a7fe1d9495a984e0d5be80f3eef0c6e8663f739fc078a8407b3",
+      "browserExceptions": 0,
+      "allRecordedPageRequestsLoopback": true
+    },
+    {
+      "name": "webkit-perf-final",
+      "checks": 12,
+      "passed": 12,
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-perf-final.raw.txt",
+      "sha256": "b0a855270de40d09ddb8efcf2c047229910cf8f9bd3ebcc565d3915ce9cbaf6b",
+      "summary": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-perf-final.json",
+      "summarySha256": "de6a0d819895e7a6559588d420517846228debfdc7a7fff5bfe17a765b46c457",
+      "browserExceptions": 0,
+      "allRecordedPageRequestsLoopback": true
+    },
+    {
+      "name": "chromium-perf-final",
+      "checks": 12,
+      "passed": 12,
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-perf-final.raw.txt",
+      "sha256": "0a4bec2ec5062e669fd1fe84ce8f52493be2be82b9d0209231d3b0e1e300245c",
+      "summary": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-perf-final.json",
+      "summarySha256": "4b973cbc78f21daaccc4379edb3bb745aa06dd8864c3b049b01f716aeb5bd825",
+      "browserExceptions": 0,
+      "allRecordedPageRequestsLoopback": true
+    },
+    {
+      "name": "webkit-library-first",
+      "checks": 10,
+      "passed": 10,
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-library-first.raw.txt",
+      "sha256": "0ed27df5d3398ce40b8102685d3ecc309ac69255ada078addd1f6ae46d82e604",
+      "summary": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-library-first.json",
+      "summarySha256": "d38731190ead13c35e99d86abfe194f1cec566cf1713650bcd74559155413555",
+      "browserExceptions": 0,
+      "allRecordedPageRequestsLoopback": true
+    },
+    {
+      "name": "chromium-library-final",
+      "checks": 10,
+      "passed": 10,
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-library-final.raw.txt",
+      "sha256": "bc641f3a3955a98b74671bb1aa4007c9e4eaacbceea5a45760cbf3e4117316a9",
+      "summary": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-library-final.json",
+      "summarySha256": "9245ef472c93f16f0f42ef9a340454004b02f6fe61328c1490a091c91871ad68",
+      "browserExceptions": 0,
+      "allRecordedPageRequestsLoopback": true
+    }
+  ],
+  "productionIssues": [
+    {
+      "issue": "Synchronous Markdown no-match scanning blocked the main thread",
+      "original": "performance-multi.raw.txt",
+      "originalMeasuredMs": {
+        "search": 2431.6,
+        "heartbeatAndAbort": 2438.6
+      },
+      "input": "8 agent fields each262125 characters; no-match query; same input below original1MiB/16MiB bounds",
+      "resolution": "Per-query cancellable Worker, yield before every field; original input completely searched with zero skips; actual first posted request abort and UI query/close terminate exact workers"
+    },
+    {
+      "issue": "Initial real Worker imported DOM-only entity decoder",
+      "original": ["webkit-second.raw.txt", "worker-browser-red.txt"],
+      "evidence": "Actual WebKit Search parser failed and ReferenceError document; installed decode-named-character-reference browser entry used document.createElement during module evaluation",
+      "resolution": "Exact Vite alias through locked dependency to official non-DOM default implementation; fullApp visible entities and actual built Worker tested in both engines"
+    },
+    {
+      "issue": "DOM nodes can change across two animation frames",
+      "evidence": "Independent static challenge; author retained two effective red tests in jump-red.txt",
+      "resolution": "Author revalidates and uses second Range, releases temporary disclosure on stale result; source read and actual folded fourth attachment locate passed"
+    },
+    {
+      "issue": "Alternating streaming ordering could repeatedly cancel unchanged search membership",
+      "evidence": "Author stream-order-red.txt effective1failed3passed; not independently authored red",
+      "resolution": "Stable sorted deduplicated membership; our actual two-conversation30ms alternating updates produced results before stream stopped and terminated workers when search closed"
+    }
+  ],
+  "performance": {
+    "final": {
+      "webkit": [
+        {
+          "mode": "full",
+          "characters": 262125,
+          "count": 8,
+          "elapsed": 3483,
+          "heartbeat": 1,
+          "abortAt": null,
+          "error": null,
+          "matches": 0,
+          "skipped": 0,
+          "maxTickGap": 23,
+          "ticks": 174
+        },
+        {
+          "mode": "abort",
+          "characters": 262125,
+          "count": 8,
+          "elapsed": 0,
+          "heartbeat": 0,
+          "abortAt": 0,
+          "error": "AbortError:Search cancelled",
+          "maxTickGap": 0,
+          "ticks": 0
+        }
+      ],
+      "chromium": [
+        {
+          "mode": "full",
+          "characters": 262125,
+          "count": 8,
+          "elapsed": 2538.5,
+          "heartbeat": 2.5,
+          "abortAt": null,
+          "error": null,
+          "matches": 0,
+          "skipped": 0,
+          "maxTickGap": 19.5,
+          "ticks": 158
+        },
+        {
+          "mode": "abort",
+          "characters": 262125,
+          "count": 8,
+          "elapsed": 0.2999999523162842,
+          "heartbeat": 0.09999996423721313,
+          "abortAt": 0.19999998807907104,
+          "error": "AbortError:Search cancelled",
+          "maxTickGap": 0,
+          "ticks": 0
+        }
+      ]
+    },
+    "interpretation": "Single local controlled measurements, not a universal latency/throughput guarantee or installed-app benchmark. Main-thread responsiveness and cancellation are measured separately from total worker completion; no claim parsing became faster. Root engineering work may run concurrently.",
+    "limits": {
+      "inputFieldCodeUnits": 1048576,
+      "inputTotalCodeUnits": 16777216,
+      "displayedHits": 200,
+      "perFieldWorkerWaitMs": 10000,
+      "queryTotalWallClockGuarantee": false
+    }
+  },
+  "driverCorrections": [
+    {
+      "raw": "webkit-first.raw.txt",
+      "kind": "harness",
+      "reason": "getByRole(option) counted the search-scope select options; screenshot showed no metadata matches. Restricted count to actual listbox."
+    },
+    {
+      "raw": "webkit-worker-fixed.raw.txt",
+      "kind": "harness",
+      "reason": "Appending to old messageId after turn end creates a new projected message, so old hit was correctly unchanged. Introduced a real current streaming tail and appended to that same tail."
+    },
+    {
+      "raw": "webkit-third.raw.txt",
+      "kind": "harness",
+      "reason": "Closing pending navigation should retain the prior stale location bar, not remove it; corrected check to ensure that stale prior location remained rather than a new navigation."
+    },
+    {
+      "raw": "webkit-worker-perf-first.raw.txt",
+      "kind": "harness",
+      "reason": "Query cancellation probe matched an old benchmark post and captured no active worker. Restricted wait to current UI event window and not-yet-terminated ID."
+    }
+  ],
+  "evidenceLevels": {
+    "actualProductionCodeAndWorker": true,
+    "actualProjectionForUserAttachments": true,
+    "actualPointerKeyboardFocusAndLocalScroll": true,
+    "nativeSurfaceAcknowledgement": "Controlled deferred BrowserSurfaceGuard callbacks, not actual native WebView",
+    "productionBundle": "Actual dist worker185985bytes entities/Markdown parse; complete App browser runs use Vite dev transform with production components/styles, not installed Tauri",
+    "credentialsModelCallsFileReads": false,
+    "coldHistoryOrAttachmentFilesSearched": false,
+    "fullHistorySearchComplete": false
+  },
+  "sourceCheckpoint": "source-checkpoint.json",
+  "rawAndFormattedPairs": [
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-perf-final.raw.txt",
+      "rawSha256": "b0a855270de40d09ddb8efcf2c047229910cf8f9bd3ebcc565d3915ce9cbaf6b",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-perf-final.json",
+      "formattedSha256": "de6a0d819895e7a6559588d420517846228debfdc7a7fff5bfe17a765b46c457",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-perf-final.raw.txt",
+      "rawSha256": "0a4bec2ec5062e669fd1fe84ce8f52493be2be82b9d0209231d3b0e1e300245c",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-perf-final.json",
+      "formattedSha256": "4b973cbc78f21daaccc4379edb3bb745aa06dd8864c3b049b01f716aeb5bd825",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/performance-first.raw.txt",
+      "rawSha256": "48fc043974909943fc9d433f47b813da16e0e988352003f9e776c8072b15fb9f",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/performance-first.json",
+      "formattedSha256": "48fc043974909943fc9d433f47b813da16e0e988352003f9e776c8072b15fb9f",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-second.raw.txt",
+      "rawSha256": "d8076d27f9ee6923f27bc0b0d60f16cdf5c39ce2c6d9e864c77e42e7c3af4d3d",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-second.json",
+      "formattedSha256": "c985323b52a7aec436a34935b5c590ae0ca5cb47ae973ebb5de4a0acea278c1b",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-fixed.raw.txt",
+      "rawSha256": "51d26831baf254f62f18ae42d50d2886b6ab2554de723bfcb54da50ffde58e21",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-fixed.json",
+      "formattedSha256": "51d26831baf254f62f18ae42d50d2886b6ab2554de723bfcb54da50ffde58e21",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-library-final.raw.txt",
+      "rawSha256": "bc641f3a3955a98b74671bb1aa4007c9e4eaacbceea5a45760cbf3e4117316a9",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-library-final.json",
+      "formattedSha256": "9245ef472c93f16f0f42ef9a340454004b02f6fe61328c1490a091c91871ad68",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-fourth.raw.txt",
+      "rawSha256": "268674ae741c8b9e2aa6cb82ca73d742d0e54b786c3b1781892355987d96d865",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-fourth.json",
+      "formattedSha256": "268674ae741c8b9e2aa6cb82ca73d742d0e54b786c3b1781892355987d96d865",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-final.raw.txt",
+      "rawSha256": "ea5531005ffef0145536571fa4d1a6e3ffbc22a3b20abc2c84c5ddb244611a36",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-final.json",
+      "formattedSha256": "ea5531005ffef0145536571fa4d1a6e3ffbc22a3b20abc2c84c5ddb244611a36",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-library-first.raw.txt",
+      "rawSha256": "0ed27df5d3398ce40b8102685d3ecc309ac69255ada078addd1f6ae46d82e604",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-library-first.json",
+      "formattedSha256": "d38731190ead13c35e99d86abfe194f1cec566cf1713650bcd74559155413555",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-third.raw.txt",
+      "rawSha256": "03dc59625b68986cfd98949b7e9e1d07fefde5c1dcdff2a4c0c414878623f2cc",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-third.json",
+      "formattedSha256": "03dc59625b68986cfd98949b7e9e1d07fefde5c1dcdff2a4c0c414878623f2cc",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-first.raw.txt",
+      "rawSha256": "1c028b814967824ebee8e926295ab93a545518e15f18e41ed9ab93e5ce0ffe16",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-first.json",
+      "formattedSha256": "1c028b814967824ebee8e926295ab93a545518e15f18e41ed9ab93e5ce0ffe16",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/performance-multi.raw.txt",
+      "rawSha256": "0c5bef861e336feca4baae326f549a4559bc0bc904977f85c53b15f05d219a31",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/performance-multi.json",
+      "formattedSha256": "0c5bef861e336feca4baae326f549a4559bc0bc904977f85c53b15f05d219a31",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-final.raw.txt",
+      "rawSha256": "aed1314afa746a7fe1d9495a984e0d5be80f3eef0c6e8663f739fc078a8407b3",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-final.json",
+      "formattedSha256": "aed1314afa746a7fe1d9495a984e0d5be80f3eef0c6e8663f739fc078a8407b3",
+      "semanticEqual": true
+    },
+    {
+      "raw": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-perf-first.raw.txt",
+      "rawSha256": "4c4f6109a7f28bc3e09edb07c9d64ce966ffddb8622a1118d53948754bd83f68",
+      "formatted": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-perf-first.json",
+      "formattedSha256": "4c4f6109a7f28bc3e09edb07c9d64ce966ffddb8622a1118d53948754bd83f68",
+      "semanticEqual": true
+    }
+  ],
+  "cleanup": "cleanup.json",
+  "ownerEvidence": {
+    "checkpoint": "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/implementation-checkpoint.json",
+    "sha256": "9a31ed72f9c1c46f2fc23dd26776ee4b2618869d7756d893dac2b307bc32bd0a",
+    "note": "Checkpoint precedes two-file stable-membership repair. Final current src map and stream-order logs supplement that historical checkpoint; no frozen historical hashes rewritten."
+  },
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-perf-final.raw.txt": "b0a855270de40d09ddb8efcf2c047229910cf8f9bd3ebcc565d3915ce9cbaf6b",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-third-failure.png": "833332bd3535f91a8add56010c8677c4c5eeb6fcdab50dd0d13a23e3e85b53dd",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-library-bundle.mjs.executed-or-created-source.txt": "473d207cb1c46ac6302e76abce20a7a7781011fb8c3a4c498b20407eb14e2c1c",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-first.json": "1c028b814967824ebee8e926295ab93a545518e15f18e41ed9ab93e5ce0ffe16",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-second.json": "c985323b52a7aec436a34935b5c590ae0ca5cb47ae973ebb5de4a0acea278c1b",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-perf-final.raw.txt": "0a4bec2ec5062e669fd1fe84ce8f52493be2be82b9d0209231d3b0e1e300245c",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-app.mjs": "f610a06c56cec592bdff9441fc9405edae0df1ae70414a68f7044ba085d84d73",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-first-failure.png": "1e569ebd363affb392bf1435234fbcee945f6a52118237ec4edb0381d02d2a69",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/serve.mjs.executed-or-created-source.txt": "30d32599ab5568db8f1c98f00c87acb5e9c4df9df006a9c3a359d04b4945abe5",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/index.html": "e03149453306ccdbb44c219131844777b61ca9f167509e92b62d37bcadeb3518",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-final-located.png": "22f3a4920ca49f1a10798f9ae75706d613c5fdde12da15b6ad50cce5c0306ce0",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-library-first-library.png": "3c3ae2651ba2821fdfe6781831465911dc555c9f32ed082f4d993842de87fa41",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-fixed.txt": "f197c48ab28642276597aef6af5aad4096c4303bcb5d5ea25b557a96bdf87f9f",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/performance-first.raw.txt": "48fc043974909943fc9d433f47b813da16e0e988352003f9e776c8072b15fb9f",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-final-narrow.png": "b1e43fc29212335725fa351fcd2b0bff7a11f083021821a7c97b1384e2490400",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-third.json": "03dc59625b68986cfd98949b7e9e1d07fefde5c1dcdff2a4c0c414878623f2cc",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-performance-multi.mjs.executed-or-created-source.txt": "8065894d0e6892654ed278d32de142ad86ac4e714d3c4499ee0e3512514fcfca",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-second.raw.txt": "d8076d27f9ee6923f27bc0b0d60f16cdf5c39ce2c6d9e864c77e42e7c3af4d3d",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-second-failure.png": "b5f5bf2beee2617a8e480d40e6b43ba0ad3c36a59a65aa72724ffd713ece14fb",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-first.txt": "db1e9e99394350251fb0cff68da79599620a0b65a4ee8172c2c684f9d469d848",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/performance-multi.txt": "6eac3d7c7ed8bf8a8aa98f197d678b6ea4614131e4e4ce75d972b2739631bba2",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-library-first.json": "d38731190ead13c35e99d86abfe194f1cec566cf1713650bcd74559155413555",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-third.txt": "054ab5e39916d847722b02bea066739338139babcc39d9ca0af599e825ba15d1",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/diagnose-worker.mjs": "447900189660eb7f500b74ef63548ef22449397d2f965377c46e8e036a66fe77",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-library-final-library.png": "461752112e0a1cd6c84882f436b0c4afbacd5396401bad7222c2ba5f256c26d9",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/index-first.html.txt": "f2b15a040aa8d5ee103eae084f27434d82dc075cb92c53b56c0f671576fbd394",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/server.txt": "5567b8d8528817ba974592410e2c8b509c2a83486975c7840b6ee3e85126bf15",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-fixed.raw.txt": "51d26831baf254f62f18ae42d50d2886b6ab2554de723bfcb54da50ffde58e21",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/fixture-performance-first.tsx.txt": "6c0d605a0d70dee16fc57a1f5fef850aa9355fde284b8aac271545c39a118e69",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-library-final.raw.txt": "bc641f3a3955a98b74671bb1aa4007c9e4eaacbceea5a45760cbf3e4117316a9",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-app.mjs.executed-or-created-source.txt": "d56596e475d78f8af4b0127bc01bdc706fc602927173ae576c2c009d9931bfd1",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-fixed-located.png": "4ae6737046b8dc98f2ee53f9cffea7803322e031d093187b62357f3604d1e916",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/index.html.final-executed-source.txt": "f3d69c5a1809069d04165e4f1df6a8b7020640246aba3104321a0522fdc60958",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-app-worker-fixed.mjs.txt": "6f32f06707ae62d2ae19e4bc75fcb6ee0bcfbe194b66f16d75d5d2f2f5499407",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/performance-first.json": "48fc043974909943fc9d433f47b813da16e0e988352003f9e776c8072b15fb9f",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-fixed.json": "51d26831baf254f62f18ae42d50d2886b6ab2554de723bfcb54da50ffde58e21",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-fourth.txt": "1785377c9040fc9897f438eb4bea7325c36bc66620359a84fd09960a4d589fbe",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/fixture.tsx": "5779e6d8de39d5e6a964f1350d341c434580c8b69013b0877429837a957d24fc",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/cleanup.json": "10802b3a6010569e87f7f8f1e2a9ce2e91eb29d36a012fc4bfcc0f4c6d8717c3",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/fixture-performance-multi.tsx.txt": "e21cd3a4065bdc7f7e0d7539726026e85e6b97588430b0899695fa09df2cc14f",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-app-first.mjs.txt": "75f30b8f6651a1129406abc1753b52c78de03aba142ae872361d3afc11168c3a",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-worker-performance.mjs": "25bf38267a4298c53f26d31611c4cd80d3f0a3bd504b4635229b7dff660e256d",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-perf-final.txt": "eeb3ef37da7dc4b583fc619b68a99051c65e649aeb447535b3e5e9054b90539f",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-fixed-failure.png": "cca4845bd9cbda0ef1105ca05a80b6269767da526678eecf3b0d45ab626574ab",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-fourth.raw.txt": "268674ae741c8b9e2aa6cb82ca73d742d0e54b786c3b1781892355987d96d865",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/performance-first.txt": "1c0bd20ef4b50e0c04692f778c130c4809e7e4866feb9a396f0eb50a663c965c",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-library-final.json": "9245ef472c93f16f0f42ef9a340454004b02f6fe61328c1490a091c91871ad68",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-app-third.mjs.txt": "5d206daa2e0121cbe093f23e579683b73ea318ccf1b751157b009658821c44de",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-final.txt": "1785377c9040fc9897f438eb4bea7325c36bc66620359a84fd09960a4d589fbe",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-worker-performance-first.mjs.txt": "a99261bf257321c99608b5f17b18e05100b936a3a4c89ca02e5f42b265cda3e6",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/built-worker.js.txt": "75b60e96480c8c11de8e2e1ebb39e1fd9dd8fe053c9f6d7219e466f000ca3092",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-final.raw.txt": "ea5531005ffef0145536571fa4d1a6e3ffbc22a3b20abc2c84c5ddb244611a36",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-performance.mjs.executed-or-created-source.txt": "3b83b6b47e00d8cd4108c3c356e4e25cde037308bc7de7b706578b984366d9df",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-perf-final.json": "4b973cbc78f21daaccc4379edb3bb745aa06dd8864c3b049b01f716aeb5bd825",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-library-first.raw.txt": "0ed27df5d3398ce40b8102685d3ecc309ac69255ada078addd1f6ae46d82e604",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-third.raw.txt": "03dc59625b68986cfd98949b7e9e1d07fefde5c1dcdff2a4c0c414878623f2cc",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-final-located.png": "9ac2a8aa31b661a9d787876cff7ba01529752c25874df6d246fdf540cc3c7111",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-library-first.txt": "bf6efbd044f55ab590088c2fab7a2c24ba66493495f33dab338e3f5b1818add6",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/server-worker.txt": "18db30583954479a2965aa0d33fc3c7daf414163b172657f3d5140ae728e6aec",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-first.raw.txt": "1c028b814967824ebee8e926295ab93a545518e15f18e41ed9ab93e5ce0ffe16",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-final.json": "aed1314afa746a7fe1d9495a984e0d5be80f3eef0c6e8663f739fc078a8407b3",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/format.txt": "dd01922b97a63cd2215058212651ed2eee362354033825a152d068dbc7d76937",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-final.txt": "1785377c9040fc9897f438eb4bea7325c36bc66620359a84fd09960a4d589fbe",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/fixture-worker-fixed.tsx.txt": "2c739c54ab7bdffecd9e029e3ece4e0c6c9abcb4657df2694c139eba8af37c86",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-final.json": "ea5531005ffef0145536571fa4d1a6e3ffbc22a3b20abc2c84c5ddb244611a36",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-perf-first-failure.png": "25d6d9842430bca0f719be7df441d6f927a12dc245bb33a3c0316311864ef1d8",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/diagnose-worker.mjs.executed-or-created-source.txt": "7e8911f17b4d5d4281062406c2116cd991843e5a5796b1101f9aeff2c11d4d2a",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-perf-first.json": "4c4f6109a7f28bc3e09edb07c9d64ce966ffddb8622a1118d53948754bd83f68",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/performance-multi.raw.txt": "0c5bef861e336feca4baae326f549a4559bc0bc904977f85c53b15f05d219a31",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/worker-browser-red.txt": "c270fbe55fc52fa3e04163c1d39b23b5b8b5bd4d3037e46520f71638d5ec599a",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-worker-performance.mjs.executed-or-created-source.txt": "7b7c98c3b697a423712d33e083e7811bcf8834670c0fe36f42b04edd600ad86f",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-final-narrow.png": "abcaf312d2092e60bee3ebc72e2e27c71ca3b327c7adfb1353e719a3c371ed8f",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-library-final.txt": "bf6efbd044f55ab590088c2fab7a2c24ba66493495f33dab338e3f5b1818add6",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-final.raw.txt": "aed1314afa746a7fe1d9495a984e0d5be80f3eef0c6e8663f739fc078a8407b3",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-perf-first.txt": "8b38540b95d8cc62f0c2b285624419bdf0715582ebf5754b80e5581752842240",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-library-bundle.mjs": "6f01213902aec6703a0d176a5ab711a5d7cad0200972d08622203fcbe5cd3c8b",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/chromium-perf-final.txt": "e8c6ba1ff2710a9602779ae3b00c9000ba0eafd057fce0ed863755902639459c",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/performance-multi.json": "0c5bef861e336feca4baae326f549a4559bc0bc904977f85c53b15f05d219a31",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-fourth-narrow.png": "1df21ebf73e44545c5bad99994ca62804b55e9e7678e4a321bd8de1e4326490d",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-fourth.json": "268674ae741c8b9e2aa6cb82ca73d742d0e54b786c3b1781892355987d96d865",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-perf-final.json": "de6a0d819895e7a6559588d420517846228debfdc7a7fff5bfe17a765b46c457",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-second.txt": "318a68e470d3d2d5a768de640c8b6b8a998809d0f2862cddc10b0a3825fc05a4",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/fixture.tsx.final-executed-source.txt": "aa67f85bbb2affecb8d89c0338e7faa617877a2e67b52d67017052e0fbeb388c",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/serve.mjs": "30d32599ab5568db8f1c98f00c87acb5e9c4df9df006a9c3a359d04b4945abe5",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-performance.mjs": "4bbd523ade09164ba7455821a2b8e04c5bd7f7aa2201c381eab207bd0afdc29f",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/run-performance-multi.mjs": "80281130b6e3973b00c66434aec15679a69d8583ffedb47382c8f1036a9cad4e",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-worker-perf-first.raw.txt": "4c4f6109a7f28bc3e09edb07c9d64ce966ffddb8622a1118d53948754bd83f68",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-fourth-located.png": "14083100f6f4c4b94e7b56f52c87a006db1b3ea7ce32929ea7622eccdc617297",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/webkit-third-located.png": "eed92c0f15f8a47224c91156d01e761ae1973f472e73a0232872437a905328dd",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/source-checkpoint.json": "95394f226d3c360205fa7e8c55b78f0ab4adb51f6e9f2c64980bf86a6414cfd2",
+    "docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/format-receipt.txt": "ed7becdf04d56e761eb7c7c8699cadd5526fcb8e239418a2d36ba03d3cce1b39"
+  },
+  "sourceCheckpointSha256": "95394f226d3c360205fa7e8c55b78f0ab4adb51f6e9f2c64980bf86a6414cfd2",
+  "harnessFormatting": "Only independent harnesses/derived JSON were formatted after execution. Pre-format executed-or-created-source.txt and final-executed-source.txt preserve exact helper bytes; raw browser logs are untouched. Production source was not changed by the reviewer."
+}

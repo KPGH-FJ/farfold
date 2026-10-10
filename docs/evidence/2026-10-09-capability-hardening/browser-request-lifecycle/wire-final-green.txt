@@ -1,0 +1,36 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.93s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 22 tests
+test browser_sharing::transport::lifecycle_tests::unconfirmed_read_does_not_claim_that_the_page_grant_was_revoked ... ok
+test browser_sharing::transport::tests::matching_error_text_without_preflight_proof_keeps_unknown ... ok
+test browser_sharing::transport::lifecycle_tests::queued_control_cancellation_preserves_the_original_page_grant ... ok
+test browser_sharing::transport::lifecycle_tests::request_scope_never_refreshes_a_cancelled_control_decision ... ok
+test browser_sharing::transport::lifecycle_tests::queued_read_cancellation_preserves_the_original_page_grant ... ok
+test browser_sharing::transport::lifecycle_tests::separate_reads_keep_request_gates_but_still_inherit_whole_page_withdrawal ... ok
+test browser_sharing::transport::tests::cancellation_of_queued_page_body_retires_request_and_requires_stdout_barrier ... ok
+test browser_sharing::transport::tests::enqueuing_stop_is_ordered_and_never_synthesizes_an_ack ... ok
+test browser_sharing::transport::tests::noncontrol_errors_preserve_permission_and_unconfirmed_result_distinction ... ok
+test browser_sharing::transport::tests::page_data_cannot_mark_a_read_receipt_as_control_and_partial_frames_are_not_replaced ... ok
+test browser_sharing::transport::tests::read_arriving_during_stop_can_never_capture_a_future_grant ... ok
+test browser_sharing::transport::tests::review_regression_control_permission_preflight_failure_preserves_reason ... ok
+test browser_sharing::transport::tests::cancellation_finishes_only_the_original_waiting_call ... ok
+test browser_sharing::transport::tests::queued_control_withdrawal_preserves_unknown_status_and_discards_page_fields ... ok
+test browser_sharing::transport::tests::stopping_permission_wait_returns_same_call_error_and_still_waits_for_ack ... ok
+test browser_sharing::transport::tests::unknown_transport_exit_preserves_revoked_scope_for_registry_retirement ... ok
+test browser_sharing::transport::tests::control_cancelled_before_permission_never_reports_a_dispatched_effect ... ok
+test browser_sharing::transport::tests::review_regression_preflight_control_failure_reports_not_applied ... ok
+test browser_sharing::transport::lifecycle_tests::pending_read_drop_closes_only_its_own_dispatch_gate ... ok
+test browser_sharing::transport::tests::review_regression_cancel_after_control_dispatch_preserves_unknown_outcome ... ok
+test browser_sharing::transport::tests::review_regression_stop_after_control_dispatch_preserves_unknown_outcome_and_barrier ... ok
+test browser_sharing::transport::tests::oversized_response_becomes_a_bounded_fixed_error ... ok
+
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 1226 filtered out; finished in 0.04s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

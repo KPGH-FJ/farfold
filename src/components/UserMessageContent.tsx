@@ -118,7 +118,7 @@ export function UserMessageContent({
     [text, historical],
   );
   return (
-    <div className="msg-user">
+    <div className="msg-user" data-loaded-body>
       {parts.map((part) =>
         part.kind === "text" ? (
           <span key={part.offset} data-find-block>

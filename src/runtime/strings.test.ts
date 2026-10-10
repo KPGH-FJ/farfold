@@ -1,4 +1,5 @@
 import { VISUAL_AREA_STRINGS } from "./visual_area_strings";
+import { LOADED_SEARCH_STRINGS } from "./loaded_search_strings";
 import { REPORTED_ARTIFACT_STRINGS } from "./reported_artifact_strings";
 import { REDESIGN } from "./redesign_strings";
 import { DOCUMENT_STRINGS, DOCUMENT_WARNINGS } from "./document_strings";
@@ -86,6 +87,7 @@ describe("strings", () => {
       REPORTED_ARTIFACT_STRINGS,
       DOCUMENT_STRINGS,
       VISUAL_AREA_STRINGS,
+      LOADED_SEARCH_STRINGS,
       DOCUMENT_WARNINGS,
       INQUIRY,
       WORKBOOK_STRINGS,

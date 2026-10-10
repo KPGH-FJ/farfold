@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9",
+    "acp_client::dependency_environment::launch_tests::manager_final_environment_handles_prepared_and_existing_sources_without_persisting_it",
+    "acp_client::transient_mcp_route_tests::transient_mcp_abandoned_real_open_revokes_after_late_reply_cleanup",
+    "program_launch_tests::updated_node_remains_usable_when_it_still_meets_the_official_engine_range",
+    "--nocapture",
+    "--test-threads=3"
+  ],
+  "binarySha256": "3ecdadc620dedbd47e50c4744c94bf0223b5ea4b658b7a46a08b788d44a248a5",
+  "exitCode": 0,
+  "seconds": 2.199,
+  "outerObservationLimitSeconds": 45,
+  "pid": 57260,
+  "timedOut": false
+}

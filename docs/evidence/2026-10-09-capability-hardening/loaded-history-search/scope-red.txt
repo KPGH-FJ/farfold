@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/LoadedConversationSearch.test.tsx (1 test | 1 failed) 9ms
+   × offers explicit metadata and loaded-body scopes without opening a conversation 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/LoadedConversationSearch.test.tsx > offers explicit metadata and loaded-body scopes without opening a conversation
+AssertionError: expected '<dialog class="command-palette-dialog…' to contain '已加载正文'
+
+Expected: "已加载正文"
+Received: "<dialog class="command-palette-dialog" aria-labelledby="_R_0H1_"><header class="conversation-search-title"><h2 id="_R_0H1_">找回一段对话</h2><button type="button" class="icon-button" aria-label="关闭"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button></header><div class="conversation-search-body"><input class="conversation-search-input" role="combobox" aria-label="搜索所有对话" aria-expanded="true" aria-controls="_R_0_" aria-autocomplete="list" placeholder="搜索标题、Agent、分组或位置…" value=""/><div class="conversation-search-results" id="_R_0_" role="listbox"><p role="status">没有匹配项</p></div><p class="conversation-search-hint">包含已归档对话，搜索标题、Agent、分组和位置。</p></div></dialog>"
+
+ ❯ src/components/LoadedConversationSearch.test.tsx:16:16
+     14|     <CommandPalette agents={[]} onClose={() => {}} onSelect={onSelect}…
+     15|   );
+     16|   expect(html).toContain("已加载正文");
+       |                ^
+     17|   expect(html).toContain("对话资料");
+     18|   expect(onSelect).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  11:43:13
+   Duration  1.16s (transform 70ms, setup 0ms, import 1.07s, tests 9ms, environment 0ms)
+

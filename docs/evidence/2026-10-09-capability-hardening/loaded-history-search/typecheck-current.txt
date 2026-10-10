@@ -1,0 +1,9 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/App.loaded-search.test.tsx(31,54): error TS2322: Type 'Promise<boolean>' is not assignable to type 'Promise<void>'.
+  Type 'boolean' is not assignable to type 'void'.
+src/App.loaded-search.test.tsx(42,15): error TS2349: This expression is not callable.
+  Type 'BrowserSurfaceRegistration' has no call signatures.
+ ELIFECYCLE  Command failed with exit code 1.

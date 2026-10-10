@@ -1,0 +1,218 @@
+// Test-only completion seam. The production native module below is unmodified.
+// No page, Agent, app IPC, network listener, persistent profile, or user file.
+#import "../../src-tauri/native/BrowserWorkspace.m"
+#import <QuartzCore/QuartzCore.h>
+
+static uint64_t operationCounter = 1;
+static NSString *const FixtureURL = @"https://lifecycle.invalid/controlled";
+typedef void (^Completion)(id, NSError *);
+@interface HeldWebView : WKWebView
+@property(nonatomic, strong) NSMutableArray *held;
+@end
+@implementation HeldWebView
+- (instancetype)initWithFrame:(NSRect)frame configuration:(WKWebViewConfiguration *)configuration {
+    self = [super initWithFrame:frame configuration:configuration];
+    if (self) self.held = [NSMutableArray new];
+    return self;
+}
+- (NSURL *)URL { return [NSURL URLWithString:FixtureURL]; }
+- (BOOL)isLoading { return NO; }
+- (void)evaluateJavaScript:(NSString *)script inFrame:(WKFrameInfo *)frame inContentWorld:(WKContentWorld *)world completionHandler:(Completion)completion {
+    [self.held addObject:[completion copy]];
+}
+- (void)callAsyncJavaScript:(NSString *)script arguments:(NSDictionary *)arguments inFrame:(WKFrameInfo *)frame inContentWorld:(WKContentWorld *)world completionHandler:(Completion)completion {
+    [self.held addObject:[completion copy]];
+}
+@end
+
+@interface Receiver : NSObject
+@property NSUInteger calls;
+@property NSUInteger accepted;
+@property BOOL listening;
+@property BOOL sawError;
+@property(copy) void (^onReply)(void);
+@end
+@implementation Receiver
+@end
+static void receive(void *context, const char *json, const char *error) {
+    Receiver *r = (__bridge Receiver *)context;
+    r.calls++;
+    r.sawError = error != NULL;
+    if (r.listening) r.accepted++;
+    if (r.onReply) { void (^callback)(void) = r.onReply; r.onReply = nil; callback(); }
+}
+static bool allow(void *context, const char *url) { return url && !strcmp(url, FixtureURL.UTF8String); }
+static uint64_t status(void *context, int event, uint64_t token, const char *url) { return event == 6 ? token + 1 : 0; }
+static void releaseOwner(void *context) {}
+
+@interface Record : NSObject
+@property uint64_t identifier;
+@property uint64_t firstOperation;
+@property uint64_t nextOperation;
+@property(copy) NSString *kind;
+@property(strong) HeldWebView *view;
+@property(strong) FFPublicBrowser *browser;
+@property(strong) Receiver *first;
+@property(strong) Receiver *next;
+@property(copy) Completion originalCompletion;
+@end
+@implementation Record
+@end
+
+@interface Probe : NSObject <NSApplicationDelegate>
+@property(strong) WKWebView *parent;
+@property(strong) NSWindow *window;
+@property(strong) NSView *container;
+@property(strong) NSMutableArray *checks;
+@property(strong) NSMutableArray<Record *> *records;
+@property BOOL finished;
+@property CFTimeInterval started;
+@property CFTimeInterval heldSeconds;
+@property(copy) NSString *output;
+- (void)check:(NSString *)name pass:(BOOL)pass details:(NSDictionary *)details;
+- (void)finish;
+@end
+@implementation Probe
+- (void)check:(NSString *)name pass:(BOOL)pass details:(NSDictionary *)details {
+    [self.checks addObject:@{@"name":name, @"pass":@(pass), @"details":details ?: @{}}];
+    fprintf(stdout, "%s %s\n", pass ? "PASS" : "FAIL", name.UTF8String);
+    fflush(stdout);
+}
+- (Record *)make:(uint64_t)identifier kind:(NSString *)kind {
+    Record *r = [Record new]; r.identifier = identifier; r.kind = kind; r.firstOperation = operationCounter++; r.nextOperation = operationCounter++;
+    BOOL created = ff_browser_create(identifier, (__bridge void *)self.parent, 0, 0, 320, 240, NULL, allow, status, releaseOwner);
+    [self check:[kind stringByAppendingString:@"_production_create"] pass:created details:nil];
+    if (!created) return nil;
+    r.browser = lookup(identifier);
+    WKWebView *actual = r.browser.view;
+    WKWebViewConfiguration *config = [WKWebViewConfiguration new];
+    config.websiteDataStore = WKWebsiteDataStore.nonPersistentDataStore;
+    r.view = [[HeldWebView alloc] initWithFrame:actual.frame configuration:config];
+    [actual stopLoading]; actual.navigationDelegate = nil; actual.UIDelegate = nil; [actual removeFromSuperview];
+    r.browser.view = r.view;
+    [self.container addSubview:r.view];
+    r.browser.currentToken = 1;
+    r.browser.observationID = @"fixture-observation";
+    r.first = [Receiver new]; r.first.listening = YES;
+    return r;
+}
+- (int32_t)start:(Record *)r receiver:(Receiver *)receiver {
+    void *context = (__bridge void *)receiver;
+    uint64_t op = receiver == r.first ? r.firstOperation : r.nextOperation;
+    if ([r.kind isEqual:@"read"]) return ff_browser_read(r.identifier, op, FixtureURL.UTF8String, context, receive);
+    if ([r.kind isEqual:@"observe"]) return ff_browser_observe(r.identifier, op, 1, FixtureURL.UTF8String, false, context, receive);
+    return ff_browser_act(r.identifier, op, 1, FixtureURL.UTF8String, "fixture-observation", "n1", 1, "", context, receive);
+}
+- (NSDictionary *)value:(Record *)r {
+    if ([r.kind isEqual:@"act"]) return @{@"applied":@YES, @"outcome":@"dispatched", @"pageChanged":@YES, @"navigationChanged":@NO};
+    return @{@"blocked":@NO, @"url":FixtureURL, @"title":@"Synthetic completion", @"text":@"fixture only", @"observationId":@"fixture-observation", @"documentVersion":@"fixture:1", @"nodes":@[], @"truncated":@NO};
+}
+- (void)applicationDidFinishLaunching:(NSNotification *)notification {
+    self.checks = [NSMutableArray new]; self.records = [NSMutableArray new];
+    self.window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 640, 480) styleMask:NSWindowStyleMaskTitled backing:NSBackingStoreBuffered defer:NO];
+    self.container = [[NSView alloc] initWithFrame:NSMakeRect(0, 0, 640, 480)];
+    self.window.contentView = self.container;
+    WKWebViewConfiguration *config = [WKWebViewConfiguration new]; config.websiteDataStore = WKWebsiteDataStore.nonPersistentDataStore;
+    self.parent = [[WKWebView alloc] initWithFrame:self.container.bounds configuration:config];
+    [self.container addSubview:self.parent];
+    uint64_t identifier = 801;
+    for (NSString *kind in @[@"read", @"observe", @"act"]) {
+        Record *r = [self make:identifier++ kind:kind];
+        if (!r) { [self finish]; return; }
+        [self.records addObject:r];
+        int32_t code = [self start:r receiver:r.first];
+        [self check:[kind stringByAppendingString:@"_ffi_started_and_completion_held"] pass:code == 1 && r.view.held.count == 1 && r.browser.readRequest != nil details:@{@"code":@(code)}];
+        if (code != 1 || r.view.held.count != 1) { [self finish]; return; }
+        r.originalCompletion = r.view.held.firstObject;
+    }
+    self.started = CACurrentMediaTime();
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(8.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        if (self.finished) return;
+        self.heldSeconds = CACurrentMediaTime() - self.started;
+        [self check:@"held_callbacks_exceed_existing_read_wait_without_clock_acceleration" pass:self.heldSeconds >= 8.0 details:@{@"seconds":@(self.heldSeconds)}];
+        for (Record *r in self.records) {
+            r.next = [Receiver new]; r.next.listening = YES;
+            FFReadRequest *originalRequest = r.browser.readRequest;
+            [self check:[r.kind stringByAppendingString:@"zero_and_foreign_cancel_do_not_touch_request"] pass:!ff_browser_cancel_operation(r.identifier, 0) && !ff_browser_cancel_operation(r.identifier, r.firstOperation + 100000) && !ff_browser_cancel_operation(r.identifier + 100000, r.firstOperation) && r.browser.readRequest == originalRequest && r.first.calls == 0 details:nil];
+            r.first.listening = NO;
+            BOOL retired = ff_browser_cancel_operation(r.identifier, r.firstOperation);
+            [self check:[r.kind stringByAppendingString:@"_exact_cancel_retires_receiver_once_without_body"] pass:retired && r.first.calls == 1 && r.first.sawError && r.first.accepted == 0 && originalRequest.retired && originalRequest.callback == NULL && originalRequest.context == NULL details:nil];
+            [self check:[r.kind stringByAppendingString:@"_duplicate_cancel_is_idempotent"] pass:ff_browser_cancel_operation(r.identifier, r.firstOperation) && r.first.calls == 1 details:nil];
+            int32_t next = ff_browser_read(r.identifier, r.nextOperation, FixtureURL.UTF8String, (__bridge void *)r.next, receive);
+            [self check:[r.kind stringByAppendingString:@"_retired_execution_still_blocks_successor"] pass:r.browser.readRequest == originalRequest && next == 0 details:@{@"nextCode":@(next), @"notEvidenceOfJsTermination":@YES}];
+            r.originalCompletion([self value:r], nil);
+            [self check:[r.kind stringByAppendingString:@"_actual_completion_releases_slot_without_second_delivery"] pass:r.browser.readRequest == nil && r.first.calls == 1 && r.browser.observationID == nil details:nil];
+            int32_t after = ff_browser_read(r.identifier, r.nextOperation, FixtureURL.UTF8String, (__bridge void *)r.next, receive);
+            FFReadRequest *newRequest = r.browser.readRequest;
+            [self check:[r.kind stringByAppendingString:@"_successor_after_real_completion_starts"] pass:after == 1 && newRequest != nil details:@{@"code":@(after)}];
+            r.originalCompletion([self value:r], nil);
+            [self check:[r.kind stringByAppendingString:@"_duplicate_old_callback_and_cancel_cannot_clear_successor"] pass:!ff_browser_cancel_operation(r.identifier, r.firstOperation) && r.first.calls == 1 && r.next.calls == 0 && r.browser.readRequest == newRequest details:nil];
+            Completion secondCompletion = r.view.held.lastObject;
+            BOOL closed = ff_browser_close(r.identifier);
+            [self check:[r.kind stringByAppendingString:@"_explicit_close_retires_pending_once"] pass:closed && r.browser.readRequest == nil && r.next.calls == 1 && r.next.sawError details:nil];
+            Record *replacement = [self make:r.identifier kind:@"replacement"];
+            if (!replacement) { [self finish]; return; }
+            Receiver *replacementReceiver = replacement.first;
+            int32_t replacementCode = ff_browser_read(replacement.identifier, replacement.firstOperation, FixtureURL.UTF8String, (__bridge void *)replacementReceiver, receive);
+            FFReadRequest *replacementRequest = replacement.browser.readRequest;
+            secondCompletion([self value:r], nil);
+            [self check:[r.kind stringByAppendingString:@"_late_callback_and_old_cancel_do_not_touch_replacement"] pass:replacementCode == 1 && !ff_browser_cancel_operation(r.identifier, r.nextOperation) && replacement.browser.readRequest == replacementRequest && replacementReceiver.calls == 0 && r.next.calls == 1 details:nil];
+            Completion last = replacement.view.held.lastObject;
+            last([self value:replacement], nil);
+            [self check:[r.kind stringByAppendingString:@"_replacement_completion_available"] pass:replacementReceiver.calls == 1 && replacementReceiver.accepted == 1 && replacement.browser.readRequest == nil details:nil];
+            [self check:[r.kind stringByAppendingString:@"_replacement_closed"] pass:ff_browser_close(replacement.identifier) details:nil];
+        }
+        Record *manual = [self make:809 kind:@"read"];
+        if (!manual) { [self finish]; return; }
+        [self check:@"manual_test_start" pass:[self start:manual receiver:manual.first] == 1 details:nil];
+        FFReadRequest *manualRequest = manual.browser.readRequest;
+        Completion manualCompletion = manual.view.held.firstObject;
+        NSEvent *mouse = [NSEvent mouseEventWithType:NSEventTypeLeftMouseDown location:[manual.view convertPoint:NSMakePoint(10, 10) toView:nil] modifierFlags:0 timestamp:0 windowNumber:self.window.windowNumber context:nil eventNumber:1 clickCount:1 pressure:1];
+        [manual.browser userActivity:mouse];
+        [self check:@"manual_activity_retires_receiver_but_preserves_execution_slot" pass:manual.first.calls == 1 && manual.first.sawError && manualRequest.retired && manual.browser.readRequest == manualRequest && manual.browser.currentToken == 2 details:nil];
+        Receiver *unused = [Receiver new];
+        [self check:@"manual_activity_cannot_unlock_a_late_execution" pass:ff_browser_read(manual.identifier, manual.nextOperation, FixtureURL.UTF8String, (__bridge void *)unused, receive) == 0 details:nil];
+        manualCompletion([self value:manual], nil);
+        [self check:@"manual_actual_completion_clears_exact_slot" pass:manual.first.calls == 1 && manual.browser.readRequest == nil details:nil];
+        [self check:@"manual_owner_closed" pass:ff_browser_close(manual.identifier) details:nil];
+        Record *reentrant = [self make:810 kind:@"read"];
+        if (!reentrant) { [self finish]; return; }
+        [self check:@"reentrant_start" pass:[self start:reentrant receiver:reentrant.first] == 1 details:nil];
+        Completion reentrantCompletion = reentrant.view.held.firstObject;
+        __block Record *newOwner;
+        reentrant.first.onReply = ^{
+            [self check:@"reentrant_close_ack" pass:ff_browser_close(reentrant.identifier) details:nil];
+            newOwner = [self make:reentrant.identifier kind:@"read"];
+            [self check:@"reentrant_replacement_start" pass:newOwner && [self start:newOwner receiver:newOwner.first] == 1 details:nil];
+        };
+        [self check:@"cancel_callback_can_reenter_close_without_double_release" pass:ff_browser_cancel_operation(reentrant.identifier, reentrant.firstOperation) && reentrant.first.calls == 1 details:nil];
+        FFReadRequest *newOwnerRequest = newOwner.browser.readRequest;
+        reentrantCompletion([self value:reentrant], nil);
+        [self check:@"reentrant_late_callback_and_cancel_leave_replacement" pass:newOwner && newOwner.first.calls == 0 && newOwner.browser.readRequest == newOwnerRequest && !ff_browser_cancel_operation(reentrant.identifier, reentrant.firstOperation) details:nil];
+        [self check:@"reentrant_replacement_closed" pass:ff_browser_close(newOwner.identifier) && newOwner.first.calls == 1 details:nil];
+        [self finish];
+    });
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 20 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        if (!self.finished) { [self check:@"global_20_second_watchdog" pass:NO details:nil]; [self finish]; }
+    });
+}
+- (void)finish {
+    if (self.finished) return;
+    self.finished = YES;
+    [self check:@"all_owned_views_closed" pass:ff_browser_close_all() details:nil];
+    NSUInteger failed = 0; for (NSDictionary *check in self.checks) if (![check[@"pass"] boolValue]) failed++;
+    NSDictionary *report = @{@"phase":@"repaired-native-cancel-and-execution-separation", @"checks":self.checks ?: @[], @"failed":@(failed), @"heldSeconds":@(self.heldSeconds), @"boundary":@"Production Objective-C request owner/FFI; test-owned WKWebView subclass holds completion without running page JS. Exact native cancel is exercised after receiver abandonment; Rust/Tauri IPC is not executed. Synthetic event is passed only to the owned production predicate, never posted to the OS. No proof of JS stop, no actual page effect, no native installed-product claim. All profiles nonpersistent, no visible window, no user data or network."};
+    NSData *data = [NSJSONSerialization dataWithJSONObject:report options:NSJSONWritingPrettyPrinted|NSJSONWritingSortedKeys error:NULL];
+    [data writeToFile:self.output atomically:YES];
+    [NSApplication.sharedApplication terminate:nil];
+}
+@end
+int main(int argc, const char *argv[]) {
+    if (argc != 2) return 64;
+    @autoreleasepool {
+        NSApplication *app = NSApplication.sharedApplication;
+        [app setActivationPolicy:NSApplicationActivationPolicyProhibited];
+        Probe *probe = [Probe new]; probe.output = @(argv[1]); app.delegate = probe; [app run];
+    }
+    return 0;
+}

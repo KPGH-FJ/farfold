@@ -1,0 +1,502 @@
+{
+  "kind": "independent_readonly_preliminary_real_stop_review",
+  "checkedAtUtc": "2026-10-10T04:17:25.893955+00:00",
+  "installedSourceCommit": "394bb91af050c5944cc479c40f62e9559a367560",
+  "scope": "Independent review of root saved native AX/screenshot, official controlled-session snapshot, controlled disk observations, installed-commit source and immutable metadata copies. No second live native observation, prompt, cancellation, process signal, app start, test/build, Agent/adapter/config change.",
+  "conclusion": {
+    "replyAbort": "confirmed by official turn_aborted/interrupted and saved UI",
+    "backgroundCommandCancelled": false,
+    "backgroundCommandCompleted": "confirmed same turn, exit0, completion marker, duration45.049910084s",
+    "farfoldWholeStopSuccess": false,
+    "attribution": "Observed official Codex/unified-exec lifecycle separates turn interruption from its already-started subprocess; Farfold reports unconfirmed tool activity then the late completion. This evidence does not identify an ACP adapter defect or establish that Farfold could safely terminate that command via another official API.",
+    "notClaimed": [
+      "all tools cancelled",
+      "no side effects after stop",
+      "all Agent stop standards passed",
+      "raw ACP cancellation response independently captured",
+      "every queue/config/exit boundary exercised in native journey"
+    ]
+  },
+  "officialSnapshot": {
+    "capturedAt": "2026-10-10T04:13:30.551595+00:00",
+    "path": "/Users/tw/.codex/sessions/2026/10/10/rollout-2026-10-10T12-07-32-01a123fe-a243-7bd0-9fc4-3c481c9be807.jsonl",
+    "snapshotPath": "output/2026-10-10-real-stop/independent/official-session.snapshot.jsonl",
+    "sha256": "cefd8c9b0edbeb63117a1f8a1aa642eb3224166453c8df936b06aeaa8b6cb85d",
+    "bytes": 117720,
+    "lines": 29,
+    "endsWithNewline": true,
+    "sourceStillExactlyMatchesSnapshotAtReview": true,
+    "sessionId": "01a123fe-a243-7bd0-9fc4-3c481c9be807",
+    "cwdMatchedOwnedDirectory": true,
+    "cliVersion": "0.155.1",
+    "originator": "farfold",
+    "taskStarts": 1,
+    "customToolCalls": 3,
+    "execCommandStarts": 1,
+    "existingOutputPolls": 2,
+    "commandCompletionItems": 1,
+    "taskCompleteEvents": 0,
+    "turnAbortEvents": 1,
+    "noNewCommandAfterAbortInSnapshot": true
+  },
+  "configuration": {
+    "uiModel": "6 Astra",
+    "officialModel": "gpt-6-astra",
+    "effort": "ultra",
+    "uiPermission": "Approve for me",
+    "officialApprovalPolicy": "on-request",
+    "officialSandboxType": "workspace-write",
+    "officialNetworkAccess": false,
+    "note": "UI label and actual official settings are recorded separately; no inferred equivalence to full access."
+  },
+  "timeline": [
+    {
+      "line": 2,
+      "timestampUtc": "2026-10-10T04:08:30.545Z",
+      "event": "task_started",
+      "turnId": "01a123ff-843b-7c50-86e6-b33ae71166b6"
+    },
+    {
+      "line": 8,
+      "timestampUtc": "2026-10-10T04:08:31.584Z",
+      "event": "request_configuration",
+      "model": "gpt-6-astra",
+      "effort": "ultra",
+      "approvalPolicy": "on-request",
+      "sandboxPolicy": {
+        "type": "workspace-write",
+        "network_access": false,
+        "exclude_tmpdir_env_var": false,
+        "exclude_slash_tmp": false
+      }
+    },
+    {
+      "line": 13,
+      "timestampUtc": "2026-10-10T04:08:35.450Z",
+      "event": "custom_tool_call",
+      "outerName": "exec",
+      "callId": "call_177731ba584e489eacc10a63210ed6e4",
+      "innerOperation": "exec_command",
+      "commandStarts": 1,
+      "existingProcessSessionId": null
+    },
+    {
+      "line": 15,
+      "timestampUtc": "2026-10-10T04:08:36.898Z",
+      "event": "custom_tool_call_output",
+      "callId": "call_177731ba584e489eacc10a63210ed6e4",
+      "summary": "started PID50044, returned session42169"
+    },
+    {
+      "line": 17,
+      "timestampUtc": "2026-10-10T04:08:40.835Z",
+      "event": "custom_tool_call",
+      "outerName": "exec",
+      "callId": "call_19c0ccbeca4148bab4c1a84625bad9a2",
+      "innerOperation": "write_stdin",
+      "commandStarts": 0,
+      "existingProcessSessionId": 42169
+    },
+    {
+      "line": 19,
+      "timestampUtc": "2026-10-10T04:08:45.852Z",
+      "event": "custom_tool_call_output",
+      "callId": "call_19c0ccbeca4148bab4c1a84625bad9a2",
+      "summary": "existing session42169 still pending, no new output"
+    },
+    {
+      "line": 23,
+      "timestampUtc": "2026-10-10T04:08:51.882Z",
+      "event": "custom_tool_call",
+      "outerName": "exec",
+      "callId": "call_bcd3cbf1e42e478c83ee0583e4067691",
+      "innerOperation": "write_stdin",
+      "commandStarts": 0,
+      "existingProcessSessionId": 42169
+    },
+    {
+      "line": 25,
+      "timestampUtc": "2026-10-10T04:08:55.710Z",
+      "event": "custom_tool_call_output",
+      "callId": "call_bcd3cbf1e42e478c83ee0583e4067691",
+      "summary": "aborted by user after 3.8s"
+    },
+    {
+      "line": 28,
+      "timestampUtc": "2026-10-10T04:08:55.718Z",
+      "event": "turn_aborted",
+      "reason": "interrupted",
+      "turnId": "01a123ff-843b-7c50-86e6-b33ae71166b6",
+      "durationMs": 25180
+    },
+    {
+      "line": 29,
+      "timestampUtc": "2026-10-10T04:09:20.945Z",
+      "event": "command_completed_after_turn_abort",
+      "turnId": "01a123ff-843b-7c50-86e6-b33ae71166b6",
+      "itemId": "exec-65678cc4-2bf6-4c15-83de-68cdae0ae962",
+      "processSessionId": "42169",
+      "status": "completed",
+      "exitCode": 0,
+      "durationSeconds": 45.049910084,
+      "startedAtMs": 1791605315893,
+      "completedAtMs": 1791605360944,
+      "outputMarker": "FARFOLD_STOP_FINISHED_20261010"
+    }
+  ],
+  "controlledDisk": {
+    "files": [
+      {
+        "name": "controlled_wait.py",
+        "bytes": 498,
+        "sha256": "565043ce72a2f587396cb271dd0611bacceecdc25c98ee51df9f24d45b50b478",
+        "mtimeUnix": 1791605201.832569
+      },
+      {
+        "name": "started.json",
+        "bytes": 179,
+        "sha256": "1a6f7f1a94ed874e699683430157ffc19538b8d4ee38da33a2534a9a94dd59c9",
+        "mtimeUnix": 1791605315.7865815
+      },
+      {
+        "name": "completed.txt",
+        "bytes": 31,
+        "sha256": "3723bc934f66718a00091bf7ce48e6945d939de19058ade1915b3d8db8049655",
+        "mtimeUnix": 1791605360.938331
+      }
+    ],
+    "initialObservedAliveAtSeconds": 14.230070114135742,
+    "postStopObservedAliveAtSeconds": 33.499817848205566,
+    "postStopCompletedFileExists": false,
+    "completionFileMtimeSecondsAfterStartedJsonStart": 45.151878118515015,
+    "laterObservedAbsentAtSeconds": 105.90076804161072,
+    "note": "mtime establishes write timing; process absence was only observed later. Official command duration is a separately measured 45.049910084 seconds."
+  },
+  "savedUi": {
+    "immediateUnknownProof": "native/12-stop-requested.txt explicitly records result unknown and reply stopped with unconfirmed steps",
+    "imageActuallyViewed": "native/13-stopped-with-unknown-step.png",
+    "imageScopeCorrection": "Despite filename, saved image has no unconfirmed-step banner: header says not running and settled row says stopped. It is a later visual state; exact screenshot capture time not independently established.",
+    "lateTool": "native/14-after-bound-tool-state.txt shows completed checkmark45.1s; native/15-late-tool-details.txt identifies same exec terminalId and exit_code0."
+  },
+  "sourceReview": {
+    "comparisons": [
+      {
+        "path": "src/runtime/stop_confirmation.ts",
+        "installedSourceSha256": "f9077d37e76ad15a21b2e41d64cca44f0acad41685af8df93e1919712aa4c35c",
+        "currentSha256": "f9077d37e76ad15a21b2e41d64cca44f0acad41685af8df93e1919712aa4c35c",
+        "same": true
+      },
+      {
+        "path": "src/runtime/queue.ts",
+        "installedSourceSha256": "73531c9e53f70c5568dcf50e3896bd1831c444ac4390f39d6aa0569b09e600de",
+        "currentSha256": "73531c9e53f70c5568dcf50e3896bd1831c444ac4390f39d6aa0569b09e600de",
+        "same": true
+      },
+      {
+        "path": "src/runtime/completion.ts",
+        "installedSourceSha256": "fb871ff354db6ae9a75c68b29eac7102360423c1a341a6cbd99bbd97fad1c15f",
+        "currentSha256": "fb871ff354db6ae9a75c68b29eac7102360423c1a341a6cbd99bbd97fad1c15f",
+        "same": true
+      },
+      {
+        "path": "src/runtime/round_result.ts",
+        "installedSourceSha256": "e07449a198f810f2828ec95340c48f071d87472c9f3eeba80ea4962a9b546602",
+        "currentSha256": "e07449a198f810f2828ec95340c48f071d87472c9f3eeba80ea4962a9b546602",
+        "same": true
+      },
+      {
+        "path": "src/runtime/session_projection.ts",
+        "installedSourceSha256": "c252ec05dbaa8a784164e3b3a94ff3cf71d80a8a533d12fcfdf35286c022161c",
+        "currentSha256": "c252ec05dbaa8a784164e3b3a94ff3cf71d80a8a533d12fcfdf35286c022161c",
+        "same": true
+      },
+      {
+        "path": "src/runtime/session_types.ts",
+        "installedSourceSha256": "c00e3eadbbb77324088916fca0b3bf2c0fc30e0400f8fd53d476111069228c8b",
+        "currentSha256": "c00e3eadbbb77324088916fca0b3bf2c0fc30e0400f8fd53d476111069228c8b",
+        "same": true
+      },
+      {
+        "path": "src/runtime/sidebar.ts",
+        "installedSourceSha256": "6500fc188b7a901292fabd74c6e6651b68c247f2272ebf9024108a51d63dbcac",
+        "currentSha256": "6500fc188b7a901292fabd74c6e6651b68c247f2272ebf9024108a51d63dbcac",
+        "same": true
+      },
+      {
+        "path": "src/runtime/protected_config.ts",
+        "installedSourceSha256": "ebf49e0532d7ccc0e7e6f2a1f5d5f5ad13911c07bb91877ca306509c48d61ad8",
+        "currentSha256": "ebf49e0532d7ccc0e7e6f2a1f5d5f5ad13911c07bb91877ca306509c48d61ad8",
+        "same": true
+      },
+      {
+        "path": "src/runtime/strings.ts",
+        "installedSourceSha256": "625476305482f2701099b7baaad58396e5983a9417f7347b2d21d71fc03d6208",
+        "currentSha256": "625476305482f2701099b7baaad58396e5983a9417f7347b2d21d71fc03d6208",
+        "same": true
+      },
+      {
+        "path": "src/runtime/sessions.ts",
+        "installedSourceSha256": "341980835d24e924963d0acd1ed9aa19330c46e320a371697d8c696bf6c78432",
+        "currentSha256": "341980835d24e924963d0acd1ed9aa19330c46e320a371697d8c696bf6c78432",
+        "same": true
+      },
+      {
+        "path": "src/components/ThreadView.tsx",
+        "installedSourceSha256": "037591b3a4ddc9f8e0d0b0c2c49ab0f4c40782b3c4c66b0c166837dd0405852d",
+        "currentSha256": "c6747e4a2332645b92ef565e14d7bac030fe954c1263e20c542fd7d535d2ce36",
+        "same": false
+      },
+      {
+        "path": "src-tauri/src/acp_client/pump.rs",
+        "installedSourceSha256": "17526375e4a757be187783a31dde42f96f7b771e750a137bfae1547a020b0aea",
+        "currentSha256": "17526375e4a757be187783a31dde42f96f7b771e750a137bfae1547a020b0aea",
+        "same": true
+      },
+      {
+        "path": "src-tauri/src/acp_client/session.rs",
+        "installedSourceSha256": "5ef6d861006927dd824c026e037c9d932870bf33c016fbcfbeeb1be7504d65ce",
+        "currentSha256": "5ef6d861006927dd824c026e037c9d932870bf33c016fbcfbeeb1be7504d65ce",
+        "same": true
+      },
+      {
+        "path": "src-tauri/src/acp_client/tool_activity.rs",
+        "installedSourceSha256": "fee09478d578213f6dcbf1d565d8568346cf092cef60df73ed0f18bbfb37bfcd",
+        "currentSha256": "fee09478d578213f6dcbf1d565d8568346cf092cef60df73ed0f18bbfb37bfcd",
+        "same": true
+      }
+    ],
+    "installedThreadViewStopBannerFragmentEqualsCurrent": true,
+    "findings": [
+      {
+        "path": "src/runtime/stop_confirmation.ts",
+        "line": 28,
+        "finding": "Pauses queued sending immediately; cancel invocation acknowledgement never completes prompt. 30s no-confirmation timer marks uncertain only while same request still running."
+      },
+      {
+        "path": "src-tauri/src/acp_client/pump.rs",
+        "line": 639,
+        "finding": "Sends official session/cancel notification; does not kill this external command PID."
+      },
+      {
+        "path": "src-tauri/src/acp_client/pump.rs",
+        "line": 458,
+        "finding": "Passes prompt response stopReason into turnEnd; no raw ACP trace from this run available to independently reproduce exact wire mapping."
+      },
+      {
+        "path": "src/runtime/session_projection.ts",
+        "line": 728,
+        "finding": "Turn end settles reply but does not clear active tool IDs; cancelled maps to stopped and paused queue."
+      },
+      {
+        "path": "src-tauri/src/acp_client/tool_activity.rs",
+        "line": 34,
+        "finding": "Official pending/in_progress keeps tool lease; completed/failed retires exact ID. Prompt cancellation itself is not a terminal tool event."
+      },
+      {
+        "path": "src/runtime/round_result.ts",
+        "line": 69,
+        "finding": "Late tool result remains linked to original in-memory round; display update does not resume paused queue."
+      },
+      {
+        "path": "src/runtime/protected_config.ts",
+        "line": 37,
+        "finding": "Known active tools block configuration changes in code; this journey did not attempt a change."
+      },
+      {
+        "path": "src/components/ThreadView.tsx",
+        "line": 777,
+        "finding": "Matching stop banner exists in installed commit despite current file having unrelated search changes."
+      }
+    ]
+  },
+  "dataRetention": {
+    "copies": [
+      {
+        "copy": "output/2026-10-10-real-stop/metadata-before.sqlite3",
+        "sha256": "06cfee804521dfb63c782b8bb15c0525e659094fcb5874674e659420fba2b8e6",
+        "integrity": "ok",
+        "unchangedAfterReadonlyCheck": true,
+        "originalCapturedSetHashesMatch": true
+      },
+      {
+        "copy": "output/2026-10-10-real-stop/after/metadata-before.sqlite3",
+        "sha256": "3f0a73146156eebd5b54ab47151351de71f360d5117382665b4914b6d7cddeb8",
+        "integrity": "ok",
+        "unchangedAfterReadonlyCheck": true,
+        "originalCapturedSetHashesMatch": true
+      }
+    ],
+    "unsentWholeObjectEqual": false,
+    "groups": {
+      "composers": {
+        "equal": true,
+        "before": 8,
+        "after": 8
+      },
+      "feedback": {
+        "equal": true,
+        "before": 8,
+        "after": 8
+      },
+      "queues": {
+        "equal": true,
+        "before": 3,
+        "after": 3
+      }
+    },
+    "activityDelta": {
+      "activity": {
+        "added": [
+          "codex:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-stop-gyw5pbwd:01a123fe-a243-7bd0-9fc4-3c481c9be807"
+        ],
+        "removed": [],
+        "changed": []
+      }
+    },
+    "addedActivityValues": {
+      "codex:/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-stop-gyw5pbwd:01a123fe-a243-7bd0-9fc4-3c481c9be807": {
+        "lastActivityAt": 1791605360960,
+        "ended": true
+      }
+    },
+    "otherChangedKeys": [],
+    "newSessionCount": 1,
+    "oldSessionIdentityCount": 123,
+    "oldSessionIdentitiesAllRetained": true,
+    "initialProbeCorrection": "Initial SELECT used nonexistent sessions.key; corrected to schema id. Read-only query failed before evidence comparison; not a product/data failure."
+  },
+  "closedApp": {
+    "exactFormalProcessAbsentAtReview": true,
+    "method": "pgrep -fal anchored /Applications/Farfold.app/Contents/MacOS/farfold; exit1 empty stdout",
+    "normalQuit": "root report and backup precondition; not independently operated"
+  },
+  "limits": [
+    "One real configured Codex run and one controlled bounded Python command only.",
+    "Official raw snapshot retained privately; future append must be compared by exact prefix length/hash.",
+    "No real OS kill/interrupt efficacy or cross-platform conclusion.",
+    "Data checks open only immutable private backup files, never original DB; copied main/WAL/SHM hashes matched retained receipts.",
+    "Initial independent SQLite query used nonexistent sessions.key, failed read-only, corrected to schema id before comparisons."
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-10-real-stop/owned-directory.json",
+      "sha256": "0262906aaec834911c1742a86992785e6d09d9d99c257a18249db2efafd3eed8",
+      "bytes": 177,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/script-manifest.json",
+      "sha256": "67cb8265ba8578d9ed0049612dec9f2201ba1ff87a4228b4e1e91439a922ba09",
+      "bytes": 311,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/running-disk-observation.json",
+      "sha256": "e4fc2c1824ba4c808bc04bb8c569cc1eefb067adf86675fd40ebfd258512f349",
+      "bytes": 540,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/after-stop-disk-observation.json",
+      "sha256": "c564457ab90aacee4947db23d553a0cfad742f8b70f9464ed4631cee45356be9",
+      "bytes": 463,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/after-bound-disk-observation.json",
+      "sha256": "024f8eeab3e3939ba3e069975dc78146840d3f251e0734d4db3b9a7221e89955",
+      "bytes": 700,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/data-retention.json",
+      "sha256": "0f2c52fccf490b97b3fe061115a4d5c3bf96b785a5482d440d12ca3e4d7bc346",
+      "bytes": 977,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/data-retention-qualified.json",
+      "sha256": "bfd8b5ab674e211e6dfecc0204df86897b3fd36ca89e0fdacb70216e07b00b70",
+      "bytes": 757,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/independent/official-snapshot-receipt.json",
+      "sha256": "f207b0589ab50331b0325549d7a82d25e60dcceba45da22ef4ce7b4f60acfd9a",
+      "bytes": 410,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/independent/data-copy-check.json",
+      "sha256": "81490438dcb121b6b6573bfafc7c3d01a9793728108f0d9b82d2740bafd21b76",
+      "bytes": 1667,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/metadata-backup-receipt.json",
+      "sha256": "8646285c59104195045bb272ec7309a310ec0d0a7a4d2c25c93690f9b95e1678",
+      "bytes": 636,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/after/metadata-backup-receipt.json",
+      "sha256": "86d693b9755533abcddcd93514ba9029d52f67416121bc82f9c052bdf08b8037",
+      "bytes": 636,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+      "bytes": 2713,
+      "private": true
+    },
+    {
+      "path": "output/2026-10-10-real-stop/after/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0",
+      "bytes": 2713,
+      "private": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/06-existing-model.txt",
+      "sha256": "ba3803a9806b86592edac344cac7fe7dd0032838322ee70f1fa672b57348168d",
+      "bytes": 1342,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/08-existing-permission.txt",
+      "sha256": "563c8337a7c4a6aa7861812c0af9f064cfe3476a0ef3ca30a7147ba17f713f6b",
+      "bytes": 859,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/12-stop-requested.txt",
+      "sha256": "05454722d8eefd9f4405c9b45dd204257790b07db7597de82ce588dc30b40254",
+      "bytes": 822,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/13-stopped-with-unknown-step.png",
+      "sha256": "a925e8f72a2e1da6e72b85851dcc2047f4e2e615c1f1cb48ecf74295fddb0ab2",
+      "bytes": 368059,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/13-stopped-with-unknown-step.txt",
+      "sha256": "4b91f8817497069037dd0c13cafc0b3ade3203328e4ac5b62fe731c539fd3825",
+      "bytes": 624,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/14-after-bound-tool-state.txt",
+      "sha256": "85ad78b347d48acc4623b87e7bacda2f87f7458bbcdd49eaae255dbc39b9c942",
+      "bytes": 623,
+      "private": false
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/native/15-late-tool-details.txt",
+      "sha256": "ad7a8c378d6f69e5cbd19953d35e989b1f53f3353b2fa019814db068c972d173",
+      "bytes": 1168,
+      "private": false
+    }
+  ]
+}

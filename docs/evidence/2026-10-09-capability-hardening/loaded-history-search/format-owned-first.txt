@@ -1,0 +1,28 @@
+src/App.tsx 117ms
+src/App.test-harness.ts 20ms (unchanged)
+src/App.loaded-search.test.tsx 5ms
+src/components/CommandPalette.tsx 14ms
+src/components/CommandPalette.search.test.tsx 12ms
+src/components/ConversationLibrary.tsx 41ms
+src/components/ThreadPage.tsx 16ms
+src/components/ThreadView.tsx 42ms
+src/components/MessageContent.tsx 10ms
+src/components/UserMessageContent.tsx 4ms (unchanged)
+src/runtime/transcript_find_dom.ts 3ms
+src/runtime/strings.test.ts 3ms (unchanged)
+src/components/useLoadedSearch.ts 3ms
+src/components/useLoadedSearch.test.tsx 5ms
+src/components/LoadedSearchResults.tsx 3ms
+src/components/LoadedSearchResults.css 14ms
+src/components/LoadedSearchJump.tsx 4ms
+src/components/LoadedSearchJump.test.tsx 7ms
+src/components/LoadedConversationSearch.test.tsx 1ms (unchanged)
+src/workers/loaded_search.worker.ts 1ms
+src/runtime/loaded_search_strings.ts 1ms
+src/runtime/loaded_search_markdown.ts 2ms
+src/runtime/loaded_search_dom.test.tsx 11ms
+src/runtime/loaded_search_worker.ts 3ms
+src/runtime/loaded_search_dom.ts 2ms
+src/runtime/loaded_search.ts 6ms
+src/runtime/loaded_search.test.ts 6ms
+src/runtime/loaded_search_worker.test.ts 4ms

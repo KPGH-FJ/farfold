@@ -1,0 +1,417 @@
+{
+  "boundary" : "Production Objective-C request owner\/FFI; test-owned WKWebView subclass holds completion without running page JS. Exact native cancel is exercised after receiver abandonment; Rust\/Tauri IPC is not executed. Synthetic event is passed only to the owned production predicate, never posted to the OS. No proof of JS stop, no actual page effect, no native installed-product claim. All profiles nonpersistent, no visible window, no user data or network.",
+  "checks" : [
+    {
+      "details" : {
+
+      },
+      "name" : "read_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "code" : 1
+      },
+      "name" : "read_ffi_started_and_completion_held",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "code" : 1
+      },
+      "name" : "observe_ffi_started_and_completion_held",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "code" : 1
+      },
+      "name" : "act_ffi_started_and_completion_held",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "seconds" : 8.6626082083093934
+      },
+      "name" : "held_callbacks_exceed_existing_read_wait_without_clock_acceleration",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "readzero_and_foreign_cancel_do_not_touch_request",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_exact_cancel_retires_receiver_once_without_body",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_duplicate_cancel_is_idempotent",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "nextCode" : 0,
+        "notEvidenceOfJsTermination" : true
+      },
+      "name" : "read_retired_execution_still_blocks_successor",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_actual_completion_releases_slot_without_second_delivery",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "code" : 1
+      },
+      "name" : "read_successor_after_real_completion_starts",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_duplicate_old_callback_and_cancel_cannot_clear_successor",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_explicit_close_retires_pending_once",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "replacement_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_late_callback_and_old_cancel_do_not_touch_replacement",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_replacement_completion_available",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_replacement_closed",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observezero_and_foreign_cancel_do_not_touch_request",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_exact_cancel_retires_receiver_once_without_body",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_duplicate_cancel_is_idempotent",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "nextCode" : 0,
+        "notEvidenceOfJsTermination" : true
+      },
+      "name" : "observe_retired_execution_still_blocks_successor",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_actual_completion_releases_slot_without_second_delivery",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "code" : 1
+      },
+      "name" : "observe_successor_after_real_completion_starts",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_duplicate_old_callback_and_cancel_cannot_clear_successor",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_explicit_close_retires_pending_once",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "replacement_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_late_callback_and_old_cancel_do_not_touch_replacement",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_replacement_completion_available",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "observe_replacement_closed",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "actzero_and_foreign_cancel_do_not_touch_request",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_exact_cancel_retires_receiver_once_without_body",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_duplicate_cancel_is_idempotent",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "nextCode" : 0,
+        "notEvidenceOfJsTermination" : true
+      },
+      "name" : "act_retired_execution_still_blocks_successor",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_actual_completion_releases_slot_without_second_delivery",
+      "pass" : true
+    },
+    {
+      "details" : {
+        "code" : 1
+      },
+      "name" : "act_successor_after_real_completion_starts",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_duplicate_old_callback_and_cancel_cannot_clear_successor",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_explicit_close_retires_pending_once",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "replacement_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_late_callback_and_old_cancel_do_not_touch_replacement",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_replacement_completion_available",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "act_replacement_closed",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "manual_test_start",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "manual_activity_retires_receiver_but_preserves_execution_slot",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "manual_activity_cannot_unlock_a_late_execution",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "manual_actual_completion_clears_exact_slot",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "manual_owner_closed",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "reentrant_start",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "reentrant_close_ack",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "read_production_create",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "reentrant_replacement_start",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "cancel_callback_can_reenter_close_without_double_release",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "reentrant_late_callback_and_cancel_leave_replacement",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "reentrant_replacement_closed",
+      "pass" : true
+    },
+    {
+      "details" : {
+
+      },
+      "name" : "all_owned_views_closed",
+      "pass" : true
+    }
+  ],
+  "failed" : 0,
+  "heldSeconds" : 8.6626082083093934,
+  "phase" : "repaired-native-cancel-and-execution-separation"
+}

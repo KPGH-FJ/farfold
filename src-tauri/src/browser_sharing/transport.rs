@@ -23,6 +23,10 @@ use std::{
 use tauri::AppHandle;
 use tokio::sync::{oneshot, watch};
 
+#[cfg(test)]
+#[path = "transport_lifecycle_tests.rs"]
+mod lifecycle_tests;
+
 const BOOTSTRAP_TTL: Duration = Duration::from_secs(180);
 const WRITE_WAIT: Duration = Duration::from_secs(1);
 const MAX_REQUEST: usize = 65_536;
@@ -39,7 +43,10 @@ fn operation_error_reply(id: Value, control: bool, error: ToolFailure) -> Value 
             protocol::control_not_applied(id, &reason)
         }
         (true, ToolFailure::Unconfirmed) => protocol::control_unknown(id),
-        (false, _) => protocol::tool_error(id, "当前网页未允许读取或读取许可已停止"),
+        (false, _) => protocol::tool_error(
+            id,
+            "网页读取或观察的结果未确认，请等待或关闭网页；不要自动重试",
+        ),
     }
 }
 
@@ -285,10 +292,10 @@ struct PendingRead {
 }
 impl Drop for PendingRead {
     fn drop(&mut self) {
-        self.task.abort();
-        if self.request.control() && !self.finished.load(Ordering::Acquire) {
+        if !self.finished.load(Ordering::Acquire) {
             self.scope.cancel_action();
         }
+        self.task.abort();
     }
 }
 struct Barrier {
@@ -345,7 +352,7 @@ impl Wire {
         if let Some(delivery) = self.delivery.as_ref().filter(|p| &p.id == id)
             && let Some(scope) = delivery.scope.clone()
         {
-            scope.revoke();
+            scope.cancel_action();
             self.stop(false, None)?;
         }
         Ok(())
@@ -376,6 +383,7 @@ impl Wire {
             return Err(());
         }
         let id = value.get("id").cloned().unwrap_or(Value::Null);
+        let scope = scope.map(|scope| scope.request_scope());
         let (value, scope) = if serde_json::to_vec(&value).map_err(|_| ())?.len() >= MAX_RESPONSE {
             (
                 protocol::tool_error(id.clone(), "网页内容过大，读取未完成"),
@@ -518,16 +526,10 @@ impl Worker {
                 }
             }
             protocol::Action::Cancel { id } => {
-                let revoke = wire
-                    .delivery
-                    .as_ref()
-                    .filter(|d| d.id == id)
-                    .and_then(|d| d.scope.clone());
+                // Cancelling one call withdraws only its request gate. Page
+                // ownership and the user's original grant remain independent.
                 if wire.cancel(&id).is_err() {
                     return false;
-                }
-                if let Some(scope) = revoke {
-                    (self.on_invalidated)(scope);
                 }
             }
             protocol::Action::Read { id, request } => {
@@ -571,6 +573,7 @@ impl Worker {
         request: ToolRequest,
         wire: &mut Wire,
     ) {
+        let scope = scope.request_scope();
         let (send, receive) = mpsc::channel();
         let observer = scope.clone();
         let app = self.app.clone();
@@ -661,7 +664,7 @@ impl Worker {
                         let (value, grant) = match result {
                             Ok(page) => (protocol::snapshot(id, page), Some(scope)),
                             Err(error) => {
-                                if !scope.is_valid() {
+                                if !scope.grant_is_valid() {
                                     (self.on_invalidated)(scope);
                                 }
                                 let value = operation_error_reply(id, control, error);
@@ -678,9 +681,14 @@ impl Worker {
                     }
                     Err(mpsc::TryRecvError::Disconnected) => {
                         let id = read.id.clone();
+                        let control = read.request.control();
                         wire.pending = None;
                         if wire
-                            .reply(protocol::tool_error(id, "网页读取未完成"), None, false)
+                            .reply(
+                                operation_error_reply(id, control, ToolFailure::Unconfirmed),
+                                None,
+                                false,
+                            )
                             .is_err()
                         {
                             return false;
@@ -809,7 +817,9 @@ impl Worker {
                     if let Some(delivery) = wire.delivery.as_mut() {
                         delivery.scope = None;
                     }
-                    (self.on_invalidated)(scope);
+                    if !scope.grant_is_valid() {
+                        (self.on_invalidated)(scope);
+                    }
                 }
                 if poll_ready(channel::token(&channel), channel::WRITE) {
                     match channel.write(&packet.bytes[packet.written..]) {
@@ -1028,7 +1038,7 @@ mod tests {
     }
 
     #[test]
-    fn noncontrol_errors_keep_the_existing_read_reply() {
+    fn noncontrol_errors_preserve_permission_and_unconfirmed_result_distinction() {
         let reason = "网页观察已过期，请重新观察后再操作";
         let permission = permission_error_reply(json!(42), false, reason);
         assert_eq!(
@@ -1040,7 +1050,7 @@ mod tests {
             operation_error_reply(json!(42), false, ToolFailure::from(reason.to_owned()));
         assert_eq!(
             operation["result"]["content"][0]["text"],
-            "当前网页未允许读取或读取许可已停止"
+            "网页读取或观察的结果未确认，请等待或关闭网页；不要自动重试"
         );
         assert!(operation["result"].get("structuredContent").is_none());
     }
@@ -1306,7 +1316,7 @@ mod tests {
     }
 
     #[test]
-    fn cancellation_of_queued_page_body_revokes_and_requires_stdout_barrier() {
+    fn cancellation_of_queued_page_body_retires_request_and_requires_stdout_barrier() {
         let (scope, _) = crate::browser_workspace::sharing_scope_fixture("task-a", "page-a");
         let mut wire = Wire::default();
         wire.reply(
@@ -1316,7 +1326,17 @@ mod tests {
         )
         .unwrap();
         wire.cancel(&json!(42)).unwrap();
-        assert!(!scope.is_valid());
+        assert!(scope.is_valid());
+        assert!(
+            !wire
+                .delivery
+                .as_ref()
+                .unwrap()
+                .scope
+                .as_ref()
+                .unwrap()
+                .is_valid()
+        );
         assert!(wire.barrier.is_some());
         assert!(
             wire.delivery.is_some(),

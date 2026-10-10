@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-10",
+  "phase": "source_frozen_independent_browser_complete_engineering_integration_pending",
+  "priorCheckpoints": [
+    {
+      "path": "implementation-checkpoint.json",
+      "sha256": "9a31ed72f9c1c46f2fc23dd26776ee4b2618869d7756d893dac2b307bc32bd0a",
+      "boundary": "原22文件233项、type/build通过时点，早于两流重排修复；原件未改。"
+    },
+    {
+      "path": "stream-order-final-checkpoint.json",
+      "sha256": "b1e6a59efeeffbe42c520a307022de945886dbddac8bd8f27f9bae59d5cfc68c",
+      "boundary": "两流重排1有效红→3文件18绿；29项当前源哈希均匹配，原件未改。"
+    }
+  ],
+  "independent": {
+    "path": "independent/implementation.json",
+    "sha256": "86f02adce6a195bd0e935310a62cc67cb2dbe759469e103558af2b3b858446ca",
+    "executedBy": "architecture",
+    "readBy": "product_coverage",
+    "checkedArtifactHashes": 91,
+    "checkedCurrentSrcHashes": 751,
+    "checkedRawFormattedPairs": 14,
+    "checks": {
+      "webkit": 48,
+      "chromium": 48,
+      "remainingSourceBlockers": 0
+    },
+    "boundary": "本收口只读其最终回执与六套结果，并重算哈希/14对JSON语义；没有重复执行其浏览器，也不冒称独立审查自身实现。",
+    "covered": "实际完整App/生产组件、真实Worker、实际built Worker；第四附件展开定位、精确字句/实体语义、query/关闭取消、两对话连续流式重排、局部滚动、零额外读取/发送。数据与IPC为受控内存夹具。",
+    "performance": {
+      "input": "8个262125字符Markdown字段，原输入完整搜索、0跳过。",
+      "webkit": {
+        "totalMs": 3483,
+        "heartbeatMs": 1,
+        "maxTickGapMs": 23
+      },
+      "chromium": {
+        "totalMs": 2538.5,
+        "heartbeatMs": 2.5,
+        "maxTickGapMs": 19.5
+      },
+      "meaning": "实际单次本地响应性测量；不声称整体解析更快或普遍时延保证。"
+    },
+    "cleanup": "独立自有1472已停止；此作者没有另起浏览器或服务器。"
+  },
+  "budgets": {
+    "perFieldUtf16": 1048576,
+    "perQueryUtf16": 16777216,
+    "listedHits": 200,
+    "perFieldWorkerWaitMs": 10000,
+    "wholeQueryWallClockLimit": false,
+    "note": "Worker10秒为每次字段parse的等待期限；查询退出/换词/成员变化/卸载精确terminate。字段超预算整体跳过并明确范围，不冒称全历史无命中。"
+  },
+  "scope": "仅已加载且读取状态已确认的用户正文、回复和已接收附件text。未加载历史、附件实体、OCR/音频、工具过程不搜索；无正文持久账本或隐式load/resume。",
+  "pending": [
+    "root当前全部工程整合与候选/正式安装未由本回执确认。",
+    "P32未加载官方历史与附件实体搜索仍未完成。"
+  ],
+  "sourceChangesAfterStreamOrderCheckpoint": []
+}

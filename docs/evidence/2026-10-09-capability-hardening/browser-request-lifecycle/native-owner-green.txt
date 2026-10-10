@@ -1,0 +1,20 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.65s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 6 tests
+test browser_workspace::native_request::tests::retired_windows_reply_keeps_slot_until_exact_completion ... ok
+test browser_workspace::native_request::tests::dropping_waiter_retires_exact_nonzero_operation_once ... ok
+test browser_workspace::native_request::tests::receiver_closure_does_not_silently_disarm_an_unconfirmed_request ... ok
+test browser_workspace::native_request::tests::aborting_a_pending_wait_retires_its_exact_native_operation ... ok
+test browser_workspace::native_request::tests::deadline_retires_receiver_but_does_not_claim_native_execution_ended ... ok
+test browser_workspace::native_request::tests::completed_callback_disarms_retirement_even_when_result_is_error ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1239 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

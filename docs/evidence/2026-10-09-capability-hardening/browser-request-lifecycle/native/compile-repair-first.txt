@@ -1,0 +1,7 @@
+/Users/tw/Desktop/farfold/output/2026-10-10-browser-lifecycle-native/NativeLifecycleRepairProbe.m:184:70: error: capturing 'reentrant' strongly in this block is likely to lead to a retain cycle [-Werror,-Warc-retain-cycles]
+  184 |             [self check:@"reentrant_close_ack" pass:ff_browser_close(reentrant.identifier) details:nil];
+      |                                                                      ^~~~~~~~~
+/Users/tw/Desktop/farfold/output/2026-10-10-browser-lifecycle-native/NativeLifecycleRepairProbe.m:183:9: note: block will be retained by an object strongly retained by the captured object
+  183 |         reentrant.first.onReply = ^{
+      |         ^~~~~~~~~
+1 error generated.

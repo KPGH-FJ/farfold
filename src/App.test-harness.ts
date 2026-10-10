@@ -167,7 +167,7 @@ vi.mock("./runtime/collections", async (original) => ({
 vi.mock("./runtime/sessions", () => ({
   threads: {
     subscribe: () => () => {},
-    getSnapshot: () => ({ index: h.index }),
+    getSnapshot: () => ({ index: h.index, threads: h.threads }),
     thread: (key: string) => h.threads.get(key),
     refreshIndex: vi.fn(async () => {}),
     open: h.open,

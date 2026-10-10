@@ -1,0 +1,89 @@
+The following is a diff from the previous accessibility tree for Window: "打开" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 0-73
++81 表单 Description: 打开, ID: open-panel, Secondary Actions: Raise
++	82 分离组
++		83 滚动区 Secondary Actions: Scroll Up, Scroll Down
++			84 外框 边栏
++				85 row (selectable, expanded) Value: 个人收藏, Secondary Actions: Collapse
++				86 row (selectable) Description: 时钟, Value: 最近使用
++				87 row (selectable) 应用程序
++				88 row (selectable) 桌面
++				89 row (selectable) 文稿
++				90 row (selectable) Description: 箭头向下圆圈, Value: 下载
++				91 row (selectable, expanded) Value: 位置, Secondary Actions: Collapse
++				92 row (selectable) Description: iCloud, Value: iCloud云盘
++				93 row (selectable, expanded) Value: 标签, Secondary Actions: Collapse
++				94 row (selectable) 红色
++				95 row (selectable) 橙色
++				96 row (selectable) 黄色
++				97 row (selectable) 绿色
++				98 row (selectable) 蓝色
++				99 row (selectable) 紫色
++				100 row (selectable) 灰色
++				101 row (selectable) 所有标签…
++			102 滚动条 (settable, float) 0
++				103 值指示器 (settable, float) 0
++				104 增箭头按钮
++				105 减箭头按钮
++				106 增页面按钮
++				107 减页面按钮
++		108 分离器 (disabled, settable, float) 164
++		109 滚动区 Secondary Actions: Scroll Left, Scroll Right
++			110 外框 Description: 列表视图, ID: ListView
++				111 row (selectable) Description: 向下移动, Value: 今天
+大小
+种类
+添加日期
++				112 row (selectable)
++					113 单元格
++						114 图像
++						115 文本栏 (settable) URL: file:///private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-stop-gyw5pbwd/completed.txt, Value: completed.txt, Secondary Actions: 打开“访达”项目
++					116 单元格
++						117 文本 31 字节
++					118 单元格
++						119 文本 纯文本文稿
++					120 单元格
++						121 文本 今天 12:09
++				122 row (selectable)
++					123 单元格
++						124 图像
++						125 文本栏 (settable) URL: file:///private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-stop-gyw5pbwd/started.json, Value: started.json, Secondary Actions: 打开“访达”项目
++					126 单元格
++						127 文本 179 字节
++					128 单元格
++						129 文本 JSON document
++					130 单元格
++						131 文本 今天 12:08
++				132 row (selectable)
++					133 单元格
++						134 图像
++						135 文本栏 (settable) Value: controlled_wait.py, Secondary Actions: 打开“访达”项目, URL: file:///private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-stop-gyw5pbwd/controlled_wait.py
++					136 单元格
++						137 文本 498 字节
++					138 单元格
++						139 文本 Python script
++					140 单元格
++						141 文本 今天 12:06
++				142 container
++					143 排序按钮 名称
++					144 排序按钮 大小
++					145 排序按钮 种类
++					146 排序按钮 添加日期
++			147 滚动条 (settable, float) 0
++				148 值指示器 (settable, float) 0
++				149 增箭头按钮
++				150 减箭头按钮
++				151 增页面按钮
++				152 减页面按钮
++	153 container
++		154 按钮 (disabled) 返回
++		155 按钮 (disabled) 前进
++	156 菜单按钮 Description: 列表, Help: 显示为图标、列表或分栏，和隐藏/显示边栏, ID: View Options
++	157 菜单按钮 Help: 更改项目的分组方式（按住Option键来更改排列顺序）, ID: Group or Sort By
++	158 弹出式按钮 位置：, Value: farfold-stop-gyw5pbwd, ID: where popup
++	159 搜索文本栏 Search
++		160 按钮 搜索
++	161 按钮 新建文件夹, ID: NewFolderButton
++	162 按钮 取消, ID: CancelButton
++	163 按钮 打开, ID: OKButton
+The focused UI element is 110 外框 Description: 列表视图, ID: ListView

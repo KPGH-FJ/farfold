@@ -1,0 +1,318 @@
+{
+  "schemaVersion": 1,
+  "recordedAtUTC": "2026-10-10T03:53:03.022392+00:00",
+  "status": "native-targeted-passed-awaiting-Rust-integration-and-independent-review",
+  "owner": "verification",
+  "planItems": ["P25", "P26"],
+  "change": "Add exact volatile operation tokens and receiver retirement. Cancel invokes one error callback/context release, retains execution slot until original completion or explicit view close; manual activity follows the same separation. Late callbacks cannot publish content/observation identity or touch a successor.",
+  "api": {
+    "starts": "ff_browser_read/observe/act take nonzero operation_id immediately after browser id. Caller must never reuse it in the process.",
+    "cancel": "bool ff_browser_cancel_operation(browser_id,operation_id). true only means matching receiver retired (idempotent); it is NOT proof JavaScript stopped or action had no effect. false means no exact match, not success/cancellation proof.",
+    "zeroUnknown": "Zero/unknown browser/unknown operation do not touch the request. A rejected start never invokes its callback; caller retains the Box.",
+    "ownership": "Started request callback is sole context owner. finish nulls callback/context before invocation for reentrancy. Cancel keeps request object pending. Completion clears only the same request. Close clears this view and does not affect same-id replacement.",
+    "readAdmission": "Until actual pending execution completes, follow-up Read/Observe/Act remain busy. An unending operation can be recovered by explicit close, not automatic reload/retry.",
+    "alreadyDispatched": "Cancellation/timeout is unknown effect. An actual controlled click demonstrates the page can change after its receiver retires."
+  },
+  "baseline": {
+    "report": "native-baseline.raw.txt",
+    "rawChecks": 38,
+    "rawPass": 35,
+    "rawFailed": 3,
+    "heldSeconds": 8.66217049997067,
+    "sourceUnchanged": true,
+    "evidenceLevel": "Production native owner and FFI with test-only WKWebView completion seam; receiver abandonment models future drop, does not execute Rust/Tauri.",
+    "expectationCorrection": {
+      "name": "read_receiver_retirement_alone_does_not_supply_required_recovery",
+      "reason": "This assertion expected immediate successor start even while old native execution was unconfirmed. Root confirmed that expectation is too strong and unsafe. Its raw FAIL is preserved but is not counted as a product defect or a required green assertion.",
+      "safeReplacement": "Retire callback/context exactly once; keep active execution busy; permit successor only after actual original completion or explicit exact-view close."
+    },
+    "otherTwoFailures": "Observe/Act had no terminal callback after the controlled 8.662s hold. This native seam plus Rust source identifies the missing handoff/bound; final production defect statement also relies on architecture actual Rust cancellation/deadline tests. Not three independently confirmed product bugs.",
+    "positiveFacts": "All three actual native slots remained; completion restored each successor; duplicate callback and close/replacement isolation already passed before this change."
+  },
+  "verification": [
+    {
+      "id": "native-retirement-matrix",
+      "report": "native-repair-green.raw.txt",
+      "commandReceipt": "run-repair-green.raw.txt",
+      "assertions": 58,
+      "passed": 58,
+      "failed": 0,
+      "heldSeconds": 8.662608208309393,
+      "scope": [
+        "Exact/zero/foreign/idempotent cancel",
+        "Callback/context retire once without body",
+        "Still-executing retired request blocks successor",
+        "Actual completion restores successor",
+        "Duplicate old callback and cancel cannot clear new operation",
+        "Close then same-id replacement uses independent owner",
+        "Manual input predicate withdraws receiver without unlocking execution",
+        "Cancel callback reenters close/replacement without duplicate release"
+      ],
+      "limit": "Completion is held by a test-only subclass, not proof of real JavaScript execution or installed IPC."
+    },
+    {
+      "id": "actual-webkit-late-effect",
+      "report": "native-live-first.raw.txt",
+      "commandReceipt": "run-live-first.raw.txt",
+      "assertions": 14,
+      "passed": 14,
+      "failed": 0,
+      "scope": [
+        "Actual production fixed observation obtains original node",
+        "Actual fixed click enters controlled handler",
+        "Test barrier observes handler entry before exact cancellation",
+        "One error callback without action-success body",
+        "New observation rejected while old action still executes",
+        "Page modifies a fixture canary after cancellation",
+        "Original completion retires slot without second action receipt",
+        "New observation sees late effect without repeating click",
+        "Owned view close confirmed"
+      ],
+      "limit": "Real nonpersistent owned WebKit and immutable synthetic HTML; test-only message handler synchronizes entry/finish. No network, Tauri App, Agent, account, user page, or installed-product acceptance."
+    }
+  ],
+  "nonProductFailures": [
+    {
+      "file": "compile-original.txt",
+      "reason": "Probe dictionary literal missing Objective-C @ prefix; compile failed before process started."
+    },
+    {
+      "file": "compile-repair-first.txt",
+      "reason": "Probe callback captured its own retained record; compiler retain-cycle warning rejected build. Corrected by capturing scalar id. No product execution."
+    }
+  ],
+  "processAndData": {
+    "runs": [
+      {
+        "receipt": "run-baseline.raw.txt",
+        "pid": 36464,
+        "ownedExecutable": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-owned-native-lifecycle-1a9txx1u/NativeLifecycleProbe",
+        "timedOut": false,
+        "exitCode": 0,
+        "reaped": true,
+        "elapsedSeconds": 9.524317250000001
+      },
+      {
+        "receipt": "run-repair-green.raw.txt",
+        "pid": 39112,
+        "ownedExecutable": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-owned-native-lifecycle-b7sw547e/NativeLifecycleProbe",
+        "timedOut": false,
+        "exitCode": 0,
+        "reaped": true,
+        "elapsedSeconds": 9.364175375
+      },
+      {
+        "receipt": "run-live-first.raw.txt",
+        "pid": 40591,
+        "ownedExecutable": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-owned-native-lifecycle-cur3469_/NativeLifecycleProbe",
+        "timedOut": false,
+        "exitCode": 0,
+        "reaped": true,
+        "elapsedSeconds": 2.03142975
+      }
+    ],
+    "allProcessesExitedNormallyAndReaped": true,
+    "allOwnedViewsClosed": true,
+    "temporaryBuildDirectoriesRemoved": true,
+    "otherProcessSignals": false,
+    "formalAppActions": false,
+    "userFilesOrProfilesAccessed": false,
+    "networkRequests": false
+  },
+  "boundaries": [
+    "No claim to cancel JavaScript or reverse effects already dispatched.",
+    "No native response timer added: architecture Rust owner supplies absolute observation deadline and exact retirement dispatch.",
+    "Never-callback keeps one retired slot per view until explicit close, rather than admitting unsafe overlapping execution.",
+    "No Agent runtime, permission, model, persistent ledger or production screenshot capability changed.",
+    "P24 local preview and P27 screenshot remain separately scoped.",
+    "Windows native execution not tested; shared Rust semantic tests cannot replace WebView2.",
+    "No full engineering suite or installed build run by verification for this native slice."
+  ],
+  "ownedSources": [
+    {
+      "path": "src-tauri/native/BrowserWorkspace.m",
+      "sha256": "bc07aeb36518a4bde9f0f21ac0749256c430d03e36c80cb7eb2f2cb621c3c593",
+      "lines": 760
+    },
+    {
+      "path": "src-tauri/native/BrowserWorkspace.h",
+      "sha256": "e0da23400f263e1bf392154da3b5694db9eea1f142bda64c3d90b788d3145a9d",
+      "lines": 72
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/NativeLifecycleProbe.compile-error.m.txt",
+      "sha256": "8befb0b23a63cd536764291cd8e128fde12c0283065cbf51a64f96d3ddc3a9f1",
+      "original": "output/2026-10-10-browser-lifecycle-native/NativeLifecycleProbe.compile-error.m.txt",
+      "originalSha256": "8befb0b23a63cd536764291cd8e128fde12c0283065cbf51a64f96d3ddc3a9f1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/NativeLifecycleRepairProbe.compile-error.m.txt",
+      "sha256": "b4411f9dea04e3323bdec4a694b4a4d25ea4655c3d1dc3cf2980498c4e6baf4d",
+      "original": "output/2026-10-10-browser-lifecycle-native/NativeLifecycleRepairProbe.compile-error.m.txt",
+      "originalSha256": "b4411f9dea04e3323bdec4a694b4a4d25ea4655c3d1dc3cf2980498c4e6baf4d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/compile-original.txt",
+      "sha256": "0bd5e2659493815d82a24041b726a5d4fa58b8532a85e1d84820d360b95ec8ce",
+      "original": "output/2026-10-10-browser-lifecycle-native/compile-original.txt",
+      "originalSha256": "0bd5e2659493815d82a24041b726a5d4fa58b8532a85e1d84820d360b95ec8ce"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/run-original.raw.txt",
+      "sha256": "f5ff405a13a4467ef5d1fad2a770a248fdad642cedc26c025748d86eec3c2e2b",
+      "original": "output/2026-10-10-browser-lifecycle-native/run-original.json",
+      "originalSha256": "f5ff405a13a4467ef5d1fad2a770a248fdad642cedc26c025748d86eec3c2e2b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/compile-baseline.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "output/2026-10-10-browser-lifecycle-native/compile-baseline.txt",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/run-baseline.raw.txt",
+      "sha256": "339a89b70d96f88f132051ede271953b795392938be4d27909aa1a564b0f1ce9",
+      "original": "output/2026-10-10-browser-lifecycle-native/run-baseline.json",
+      "originalSha256": "339a89b70d96f88f132051ede271953b795392938be4d27909aa1a564b0f1ce9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/native-baseline.raw.txt",
+      "sha256": "8561b5c0bcd3193145b6d1a5309b876318a16f0cd48ca62ad956835db3b4c481",
+      "original": "output/2026-10-10-browser-lifecycle-native/native-baseline.json",
+      "originalSha256": "8561b5c0bcd3193145b6d1a5309b876318a16f0cd48ca62ad956835db3b4c481"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/native-baseline.stdout.txt",
+      "sha256": "069edec1066b19aa5f915216e4a1bc061977ef60f05c0043486835a7a07bdf1b",
+      "original": "output/2026-10-10-browser-lifecycle-native/native-baseline.stdout.txt",
+      "originalSha256": "069edec1066b19aa5f915216e4a1bc061977ef60f05c0043486835a7a07bdf1b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/native-baseline.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "output/2026-10-10-browser-lifecycle-native/native-baseline.stderr.txt",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/compile-repair-first.txt",
+      "sha256": "ad918c9479cff639e87cba29c57505eec0642f628049a2a63941afbb97efc290",
+      "original": "output/2026-10-10-browser-lifecycle-native/compile-repair-first.txt",
+      "originalSha256": "ad918c9479cff639e87cba29c57505eec0642f628049a2a63941afbb97efc290"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/run-repair-first.raw.txt",
+      "sha256": "d8e0dca2335213afe4b900d9d8b6b4cc3f24f723bd5ac89b310fcbd5c59caf0c",
+      "original": "output/2026-10-10-browser-lifecycle-native/run-repair-first.json",
+      "originalSha256": "d8e0dca2335213afe4b900d9d8b6b4cc3f24f723bd5ac89b310fcbd5c59caf0c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/compile-repair-green.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "output/2026-10-10-browser-lifecycle-native/compile-repair-green.txt",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/run-repair-green.raw.txt",
+      "sha256": "bfef927dc91498e69d60e1df828a0b1787be69c4819a124f0bd0b1a2d953c589",
+      "original": "output/2026-10-10-browser-lifecycle-native/run-repair-green.json",
+      "originalSha256": "bfef927dc91498e69d60e1df828a0b1787be69c4819a124f0bd0b1a2d953c589"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/native-repair-green.raw.txt",
+      "sha256": "4e84c029f9ca8dbb905392f19eb1331cae30ec45c6e0b29adb2881092f817b55",
+      "original": "output/2026-10-10-browser-lifecycle-native/native-repair-green.json",
+      "originalSha256": "4e84c029f9ca8dbb905392f19eb1331cae30ec45c6e0b29adb2881092f817b55"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/native-repair-green.stdout.txt",
+      "sha256": "077e13f33b7c74739592f3765cee335d306a9eecdc9d8c07f8493f09ca66310c",
+      "original": "output/2026-10-10-browser-lifecycle-native/native-repair-green.stdout.txt",
+      "originalSha256": "077e13f33b7c74739592f3765cee335d306a9eecdc9d8c07f8493f09ca66310c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/native-repair-green.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "output/2026-10-10-browser-lifecycle-native/native-repair-green.stderr.txt",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/compile-live-first.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "output/2026-10-10-browser-lifecycle-native/compile-live-first.txt",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/run-live-first.raw.txt",
+      "sha256": "4bca6e1942b0b4102cf2aa9f88e0200b18f0047a975d0ccedadd099baacd2f40",
+      "original": "output/2026-10-10-browser-lifecycle-native/run-live-first.json",
+      "originalSha256": "4bca6e1942b0b4102cf2aa9f88e0200b18f0047a975d0ccedadd099baacd2f40"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/native-live-first.raw.txt",
+      "sha256": "03149b34db4e85cfe518307b3f2401dd55422f66ad4cbdcd7df84dd714a366a6",
+      "original": "output/2026-10-10-browser-lifecycle-native/native-live-first.json",
+      "originalSha256": "03149b34db4e85cfe518307b3f2401dd55422f66ad4cbdcd7df84dd714a366a6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/native-live-first.stdout.txt",
+      "sha256": "98c23999d3ef98fffeacc6e45a319c6a7a163b94e0dbab6d6a42d48125127f03",
+      "original": "output/2026-10-10-browser-lifecycle-native/native-live-first.stdout.txt",
+      "originalSha256": "98c23999d3ef98fffeacc6e45a319c6a7a163b94e0dbab6d6a42d48125127f03"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/native-live-first.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "original": "output/2026-10-10-browser-lifecycle-native/native-live-first.stderr.txt",
+      "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/NativeLifecycleProbe.m.txt",
+      "sha256": "75a6ee638b3efb10c51c532fb20707369a090cfc766b3b9225b4dd5905592836",
+      "original": "output/2026-10-10-browser-lifecycle-native/NativeLifecycleProbe.m",
+      "originalSha256": "75a6ee638b3efb10c51c532fb20707369a090cfc766b3b9225b4dd5905592836"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/NativeLifecycleRepairProbe.m.txt",
+      "sha256": "adbc1f83c5f04148c875002a1991d6aad6debdba25398834479f7e2e5cb97f11",
+      "original": "output/2026-10-10-browser-lifecycle-native/NativeLifecycleRepairProbe.m",
+      "originalSha256": "adbc1f83c5f04148c875002a1991d6aad6debdba25398834479f7e2e5cb97f11"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/NativeLiveCancellationProbe.m.txt",
+      "sha256": "ea16cdc3ebd35825ab17dcf1d30adafee856d0ab117fad188d153e4175a0c786",
+      "original": "output/2026-10-10-browser-lifecycle-native/NativeLiveCancellationProbe.m",
+      "originalSha256": "ea16cdc3ebd35825ab17dcf1d30adafee856d0ab117fad188d153e4175a0c786"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/run_probe.py.txt",
+      "sha256": "47a6c81eb21acc28b51bf759d88462ecd49517c557a647b4ab8c5e507fe298a9",
+      "original": "output/2026-10-10-browser-lifecycle-native/run_probe.py",
+      "originalSha256": "47a6c81eb21acc28b51bf759d88462ecd49517c557a647b4ab8c5e507fe298a9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/run_repair.py.txt",
+      "sha256": "1eb65200c2849ef5fc5be38aa6da5f45add047f8905ba291881c2e41fba4fdf9",
+      "original": "output/2026-10-10-browser-lifecycle-native/run_repair.py",
+      "originalSha256": "1eb65200c2849ef5fc5be38aa6da5f45add047f8905ba291881c2e41fba4fdf9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/run_live.py.txt",
+      "sha256": "6e9e1f8760b90807e83a76e11d143d423b732dd775d098386dc681e1d8675257",
+      "original": "output/2026-10-10-browser-lifecycle-native/run_live.py",
+      "originalSha256": "6e9e1f8760b90807e83a76e11d143d423b732dd775d098386dc681e1d8675257"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/BrowserWorkspace.m.baseline.txt",
+      "sha256": "7dd61e561dd80c38e27be138abdbdb4686535b0c3b7bd5e7bd82e4e7428f67a5",
+      "meaning": "Original production bytes match baseline execution checkpoint; recovered from Git HEAD, not a rerun."
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-request-lifecycle/native/BrowserWorkspace.h.baseline.txt",
+      "sha256": "eabb3db7e3f788f98daced6feb8e436e07f4b494a5d12e324b4834dbe40a4865",
+      "meaning": "Original production bytes match baseline execution checkpoint; recovered from Git HEAD, not a rerun."
+    }
+  ],
+  "reproduction": "Raw .m.txt/.py.txt retain exactly the tested helper bytes and original paths. Source baseline snapshots match their run checkpoint. Helpers are task-owned, never production injection APIs. Native source import and repository root must be adjusted when relocating archived helpers; doing so is a new test input and must be recorded."
+}

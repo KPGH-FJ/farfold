@@ -1,0 +1,1 @@
+{"syntaxTreeAndLeafTextEqual":true,"printerOutputEqual":false,"qualification":"Printer preserves original line layout and is not an AST equality check. Prior printer rejection retained."}

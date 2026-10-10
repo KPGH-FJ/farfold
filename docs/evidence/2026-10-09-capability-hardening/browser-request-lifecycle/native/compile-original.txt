@@ -1,0 +1,5 @@
+/Users/tw/Desktop/farfold/output/2026-10-10-browser-lifecycle-native/NativeLifecycleProbe.m:132:134: error: string literal must be prefixed by '@' in a collection
+  132 |                 [self check:@"read_receiver_retirement_alone_does_not_supply_required_recovery" pass:next == 1 details:@{@"expected":"A completed/retired read must not strand the next exact read; baseline has no native retirement handoff", @"nativeOnlySeam":@YES}];
+      |                                                                                                                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                                                                                      @
+1 error generated.

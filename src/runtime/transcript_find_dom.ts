@@ -19,20 +19,15 @@ const boundaries = new Set([
 ]);
 /** Explicit presentation blocks, including their folded text. No layout reads,
  * synthetic wrappers, message copies, attachment decoding or external reads. */
-export function transcriptRanges(root: HTMLElement, query: string): Range[] {
-  if (!query.trim()) return [];
-  const ranges: Range[] = [];
+export function transcriptTextFields(root: HTMLElement, exclude?: string) {
+  const fields: { nodes: Text[]; text: string }[] = [];
   let texts: Text[] = [];
   const flush = () => {
-    for (const match of segmentedMatches(
-      texts.map((node) => node.data),
-      query,
-    )) {
-      const range = document.createRange();
-      range.setStart(texts[match.startIndex], match.startOffset);
-      range.setEnd(texts[match.endIndex], match.endOffset);
-      ranges.push(range);
-    }
+    if (texts.length)
+      fields.push({
+        nodes: texts,
+        text: texts.map((node) => node.data).join(""),
+      });
     texts = [];
   };
   // Walk once in document order. Nested fields interrupt the containing field,
@@ -45,6 +40,7 @@ export function transcriptRanges(root: HTMLElement, query: string): Range[] {
     if (node.nodeType !== 1) return;
     const element = node as HTMLElement;
     if (
+      (exclude && element.matches(exclude)) ||
       element.matches(
         "[data-copy-exclude], [data-find-exclude], .who, script, style, textarea, [aria-hidden='true']",
       ) ||
@@ -65,6 +61,22 @@ export function transcriptRanges(root: HTMLElement, query: string): Range[] {
   };
   visit(root, false);
   flush();
+  return fields;
+}
+export function transcriptRanges(root: HTMLElement, query: string): Range[] {
+  if (!query.trim()) return [];
+  const ranges: Range[] = [];
+  for (const { nodes } of transcriptTextFields(root)) {
+    for (const match of segmentedMatches(
+      nodes.map((node) => node.data),
+      query,
+    )) {
+      const range = document.createRange();
+      range.setStart(nodes[match.startIndex], match.startOffset);
+      range.setEnd(nodes[match.endIndex], match.endOffset);
+      ranges.push(range);
+    }
+  }
   return ranges;
 }
 export function sameTextRange(a: Range | undefined, b: Range | undefined) {

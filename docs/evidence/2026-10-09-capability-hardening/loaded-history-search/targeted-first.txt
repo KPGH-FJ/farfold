@@ -1,0 +1,58 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/loaded_search.test.ts (8 tests | 1 failed) 59ms
+     × does not search thoughts, tool fields, resource link targets or embedded image payloads 3ms
+ ❯ src/components/CommandPalette.search.test.tsx (7 tests | 1 failed) 17ms
+   × focuses search after native modal opening and returns to the explicit mouse trigger after closing 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/CommandPalette.search.test.tsx > focuses search after native modal opening and returns to the explicit mouse trigger after closing
+AssertionError: expected [] to deeply equal [ 'showModal', 'close-button', …(1) ]
+
+- Expected
++ Received
+
+- [
+-   "showModal",
+-   "close-button",
+-   "search-input",
+- ]
++ []
+
+ ❯ src/components/CommandPalette.search.test.tsx:132:20
+    130|     );
+    131|     const cleanup = h.effects[0]();
+    132|     expect(events).toEqual(["showModal", "close-button", "search-input…
+       |                    ^
+    133|     expect(typeof cleanup).toBe("function");
+    134|     cleanup?.();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/loaded_search.test.ts > loaded message search from actual projected protocol events > does not search thoughts, tool fields, resource link targets or embedded image payloads
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ src/runtime/loaded_search.test.ts:74:103
+     72|     applyUpdate(a, { sessionUpdate: "agent_message_chunk", messageId: …
+     73|     for (const query of ["secret-needle", "YWJjZA=="])
+     74|       expect((await searchLoadedConversations(["a"], new Map([["a", a]…
+       |                                                                                                       ^
+     75|   });
+     76|   it("reports bounded results separately from exact scanned count and …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 5 passed (7)
+      Tests  2 failed | 62 passed (64)
+   Start at  11:51:13
+   Duration  1.97s (transform 864ms, setup 0ms, import 7.64s, tests 481ms, environment 0ms)
+

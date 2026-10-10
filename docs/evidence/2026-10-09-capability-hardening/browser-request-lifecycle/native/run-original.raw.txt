@@ -1,0 +1,59 @@
+{
+  "startedAtUTC": "2026-10-10T03:40:23.780378+00:00",
+  "before": {
+    "src-tauri/native/BrowserWorkspace.m": "7dd61e561dd80c38e27be138abdbdb4686535b0c3b7bd5e7bd82e4e7428f67a5",
+    "src-tauri/native/BrowserWorkspace.h": "eabb3db7e3f788f98daced6feb8e436e07f4b494a5d12e324b4834dbe40a4865",
+    "src-tauri/native/browser_observation.js": "d33bd0f75cdf0e2b666faee3ad1df65f5abd2d4deeda9e6eec11d15750a6e59f",
+    "src-tauri/src/browser_workspace/native.rs": "d2f0aa1e4363a64e7a0b7d169f4344aa6cedccec0a84963f4ba6c60934843779",
+    "src-tauri/src/browser_workspace/page_read.rs": "0e0b5b25cef09508b0ddbfe37a47ae0cf37122191f6de70cbbdea88b983a6ffa",
+    "src-tauri/src/browser_workspace/browser_tools.rs": "38190051172b771756713fb30f22fce3ddada44a667f37714f3eadaa52623f6c",
+    "src-tauri/src/browser_sharing/transport.rs": "42b18294440a4800466745df0f9e95084822b988d63857cdc0593aa8a1416ec8",
+    "output/2026-10-10-browser-lifecycle-native/NativeLifecycleProbe.m": "8befb0b23a63cd536764291cd8e128fde12c0283065cbf51a64f96d3ddc3a9f1"
+  },
+  "scope": "Single test-only native completion seam; no Cargo, formal App, Agent or real pages.",
+  "compile": {
+    "command": [
+      "xcrun",
+      "--sdk",
+      "macosx",
+      "clang",
+      "-arch",
+      "arm64",
+      "-fobjc-arc",
+      "-mmacosx-version-min=11.0",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-unused-parameter",
+      "-I",
+      "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-owned-native-lifecycle-r27kggns",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-browser-lifecycle-native/NativeLifecycleProbe.m",
+      "-framework",
+      "AppKit",
+      "-framework",
+      "WebKit",
+      "-framework",
+      "QuartzCore",
+      "-o",
+      "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-owned-native-lifecycle-r27kggns/NativeLifecycleProbe"
+    ],
+    "exitCode": 1
+  },
+  "after": {
+    "src-tauri/native/BrowserWorkspace.m": "7dd61e561dd80c38e27be138abdbdb4686535b0c3b7bd5e7bd82e4e7428f67a5",
+    "src-tauri/native/BrowserWorkspace.h": "eabb3db7e3f788f98daced6feb8e436e07f4b494a5d12e324b4834dbe40a4865",
+    "src-tauri/native/browser_observation.js": "d33bd0f75cdf0e2b666faee3ad1df65f5abd2d4deeda9e6eec11d15750a6e59f",
+    "src-tauri/src/browser_workspace/native.rs": "d2f0aa1e4363a64e7a0b7d169f4344aa6cedccec0a84963f4ba6c60934843779",
+    "src-tauri/src/browser_workspace/page_read.rs": "0e0b5b25cef09508b0ddbfe37a47ae0cf37122191f6de70cbbdea88b983a6ffa",
+    "src-tauri/src/browser_workspace/browser_tools.rs": "38190051172b771756713fb30f22fce3ddada44a667f37714f3eadaa52623f6c",
+    "src-tauri/src/browser_sharing/transport.rs": "42b18294440a4800466745df0f9e95084822b988d63857cdc0593aa8a1416ec8",
+    "output/2026-10-10-browser-lifecycle-native/NativeLifecycleProbe.m": "8befb0b23a63cd536764291cd8e128fde12c0283065cbf51a64f96d3ddc3a9f1"
+  },
+  "sourceUnchanged": true,
+  "cleanup": {
+    "ownedTemporaryBuildDirectoryRemoved": true,
+    "noOtherProcessSignals": true,
+    "noFormalAppActions": true
+  },
+  "finishedAtUTC": "2026-10-10T03:40:24.510006+00:00"
+}

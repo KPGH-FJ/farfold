@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Controlled full App loaded search</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      window.workerEvents = [];
+      let workerSerial = 0;
+      const ActualWorker = window.Worker;
+      window.Worker = class extends ActualWorker {
+        constructor(url, options) {
+          super(url, options);
+          this.probeId = ++workerSerial;
+          window.workerEvents.push({
+            event: "new",
+            id: this.probeId,
+            url: String(url),
+            at: performance.now(),
+          });
+          this.addEventListener("message", (event) =>
+            window.workerEvents.push({
+              event: "message",
+              id: this.probeId,
+              at: performance.now(),
+              serial: event.data?.id,
+            }),
+          );
+        }
+        postMessage(message, ...args) {
+          window.workerEvents.push({
+            event: "post",
+            id: this.probeId,
+            at: performance.now(),
+            length: message?.text?.length,
+            serial: message?.id,
+          });
+          super.postMessage(message, ...args);
+          window.afterWorkerPost?.(this.probeId);
+        }
+        terminate() {
+          window.workerEvents.push({
+            event: "terminate",
+            id: this.probeId,
+            at: performance.now(),
+          });
+          super.terminate();
+        }
+      };
+      let next = 1;
+      window.__TAURI_INTERNALS__ = {
+        invoke: (cmd, args) => window.testInvoke(cmd, args),
+        transformCallback: () => next++,
+        unregisterCallback: () => {},
+        convertFileSrc: (path) => path,
+        metadata: {
+          currentWindow: { label: "main" },
+          currentWebview: { label: "main" },
+        },
+      };
+      window.__TAURI_EVENT_PLUGIN_INTERNALS__ = {
+        unregisterListener: () => {},
+      };
+      window.calls = [];
+      window.unexpected = [];
+      window.testInvoke = async (cmd, args) => {
+        window.calls.push({ cmd, args });
+        if (cmd === "host_performance_origin") return null;
+        return null;
+      };
+    </script>
+    <script type="module" src="./fixture.tsx"></script>
+  </body>
+</html>

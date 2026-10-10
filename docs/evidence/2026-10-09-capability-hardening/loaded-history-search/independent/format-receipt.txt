@@ -1,0 +1,2 @@
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/source-checkpoint.json 27ms (unchanged)
+docs/evidence/2026-10-09-capability-hardening/loaded-history-search/independent/implementation.json 7ms

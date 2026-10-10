@@ -20,6 +20,17 @@ import { LIBRARY } from "../runtime/library_strings";
 import { AgentLogo } from "./AgentLogo";
 import { useModalDialog } from "./useModalDialog";
 import "../command-palette.css";
+import {
+  LoadedSearchResults,
+  LoadedSearchSummary,
+} from "./LoadedSearchResults";
+import { useLoadedSearch } from "./useLoadedSearch";
+import {
+  loadedSearchHitIsCurrent,
+  type LoadedSearchHit,
+  type SelectLoadedSearch,
+} from "../runtime/loaded_search";
+import { LOADED_SEARCH_STRINGS as S } from "../runtime/loaded_search_strings";
 
 function fuzzyMatch(query: string, text: string): boolean {
   const q = query.trim().toLowerCase();
@@ -39,13 +50,17 @@ export function CommandPalette({
   onClose,
   onSelect,
   returnFocusRef,
+  onSelectLoaded,
 }: {
   agents: AgentCardModel[];
   onClose: () => void;
   onSelect: (row: IndexRow | SidebarRow) => void;
   returnFocusRef?: RefObject<HTMLElement | null>;
+  onSelectLoaded?: SelectLoadedSearch;
 }) {
   const [query, setQuery] = useState("");
+  const [scope, setScope] = useState<"metadata" | "body">("metadata");
+  const [searchError, setSearchError] = useState<string | null>(null);
   const [sel, setSel] = useState(0);
   const listRef = useRef<HTMLDivElement | null>(null);
   const dialogRef = useRef<HTMLDialogElement | null>(null);
@@ -53,7 +68,56 @@ export function CommandPalette({
   const listId = useId();
   const titleId = useId();
   const snapshot = useThreadsSnapshot();
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const collections = useCollections();
+  const searchKeys = snapshot.index.map((row) => row.id);
+  const body = useLoadedSearch(
+    searchKeys,
+    snapshot.threads,
+    query,
+    snapshot.version,
+    scope === "body",
+  );
+  const hits = body.result?.hits ?? [];
+  const current = useRef({
+    snapshot,
+    searchKeys,
+    query,
+    scope,
+    hits,
+    onSelectLoaded,
+  });
+  current.current = {
+    snapshot,
+    searchKeys,
+    query,
+    scope,
+    hits,
+    onSelectLoaded,
+  };
+  const chooseBody = (hit: LoadedSearchHit) => {
+    const accepts = () => {
+      const now = current.current;
+      return (
+        mounted.current &&
+        now.scope === "body" &&
+        now.query.trim() === hit.query &&
+        now.hits.includes(hit) &&
+        loadedSearchHitIsCurrent(hit, now.snapshot.threads, now.searchKeys)
+      );
+    };
+    if (!accepts()) {
+      setSearchError(S.stale);
+      return;
+    }
+    current.current.onSelectLoaded?.(hit, accepts);
+  };
   const { onCancel, onClick } = useModalDialog({
     dialogRef,
     onDismiss: onClose,
@@ -83,16 +147,20 @@ export function CommandPalette({
     [snapshot.index, agents, collections, query],
   );
 
-  useEffect(() => setSel(0), [query]);
+  const count = scope === "body" ? hits.length : entries.length;
+  useEffect(() => {
+    setSel(0);
+    setSearchError(null);
+  }, [query, scope]);
   useEffect(
-    () => setSel((value) => Math.max(0, Math.min(value, entries.length - 1))),
-    [entries.length],
+    () => setSel((value) => Math.max(0, Math.min(value, count - 1))),
+    [count],
   );
   useEffect(() => {
     listRef.current
       ?.querySelector('[aria-selected="true"]')
       ?.scrollIntoView({ block: "nearest" });
-  }, [sel, entries]);
+  }, [sel, entries, hits]);
   const choose = (row: IndexRow) => {
     onClose();
     onSelect(row);
@@ -106,13 +174,15 @@ export function CommandPalette({
       onClose();
     } else if (event.key === "ArrowDown") {
       event.preventDefault();
-      setSel((value) => Math.max(0, Math.min(entries.length - 1, value + 1)));
+      setSel((value) => Math.max(0, Math.min(count - 1, value + 1)));
     } else if (event.key === "ArrowUp") {
       event.preventDefault();
       setSel((value) => Math.max(0, value - 1));
     } else if (event.key === "Enter") {
       event.preventDefault();
-      if (entries[sel]) choose(entries[sel].row);
+      if (scope === "body") {
+        if (hits[sel]) chooseBody(hits[sel]);
+      } else if (entries[sel]) choose(entries[sel].row);
     }
   };
 
@@ -146,6 +216,19 @@ export function CommandPalette({
         </button>
       </header>
       <div className="conversation-search-body">
+        <label>
+          {S.scope}{" "}
+          <select
+            aria-label={S.scope}
+            value={scope}
+            onChange={(event) =>
+              setScope(event.target.value === "body" ? "body" : "metadata")
+            }
+          >
+            <option value="metadata">{S.metadata}</option>
+            <option value="body">{S.body}</option>
+          </select>
+        </label>
         <input
           ref={inputRef}
           className="conversation-search-input"
@@ -154,46 +237,71 @@ export function CommandPalette({
           aria-expanded="true"
           aria-controls={listId}
           aria-autocomplete="list"
-          aria-activedescendant={entries[sel] ? `${listId}-${sel}` : undefined}
-          placeholder={STRINGS.palette.placeholder}
+          aria-activedescendant={sel < count ? `${listId}-${sel}` : undefined}
+          placeholder={scope === "body" ? S.query : STRINGS.palette.placeholder}
+          maxLength={scope === "body" ? 512 : undefined}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onKeyDown={onKey}
         />
+        {scope === "body" && <LoadedSearchSummary {...body} query={query} />}
+        {searchError && <p role="alert">{searchError}</p>}
         <div
           className="conversation-search-results"
           id={listId}
           role="listbox"
           ref={listRef}
         >
-          {entries.length === 0 && <p role="status">{STRINGS.palette.empty}</p>}
-          {entries.map(({ row, agent, agentName, group }, index) => (
-            <button
-              key={row.id}
-              id={`${listId}-${index}`}
-              type="button"
-              role="option"
-              tabIndex={-1}
-              aria-selected={index === sel}
-              onMouseEnter={() => setSel(index)}
-              onClick={() => choose(row)}
-            >
-              {agent ? (
-                <AgentLogo card={agent} />
-              ) : (
-                <ChatCircleIcon size={19} />
+          {scope === "body" ? (
+            <LoadedSearchResults
+              hits={hits}
+              selected={sel}
+              onSelect={setSel}
+              onChoose={chooseBody}
+              id={listId}
+              title={(key) =>
+                snapshot.index.find((row) => row.id === key)?.title ||
+                STRINGS.sessions.untitled
+              }
+            />
+          ) : (
+            <>
+              {entries.length === 0 && (
+                <p role="status">{STRINGS.palette.empty}</p>
               )}
-              <span>
-                <strong>{row.title || STRINGS.sessions.untitled}</strong>
-                <small>
-                  {agentName} · {group || LIBRARY.noGroup}
-                  {row.archived ? ` · ${STRINGS.palette.groupArchived}` : ""}
-                </small>
-              </span>
-            </button>
-          ))}
+              {entries.map(({ row, agent, agentName, group }, index) => (
+                <button
+                  key={row.id}
+                  id={`${listId}-${index}`}
+                  type="button"
+                  role="option"
+                  tabIndex={-1}
+                  aria-selected={index === sel}
+                  onMouseEnter={() => setSel(index)}
+                  onClick={() => choose(row)}
+                >
+                  {agent ? (
+                    <AgentLogo card={agent} />
+                  ) : (
+                    <ChatCircleIcon size={19} />
+                  )}
+                  <span>
+                    <strong>{row.title || STRINGS.sessions.untitled}</strong>
+                    <small>
+                      {agentName} · {group || LIBRARY.noGroup}
+                      {row.archived
+                        ? ` · ${STRINGS.palette.groupArchived}`
+                        : ""}
+                    </small>
+                  </span>
+                </button>
+              ))}
+            </>
+          )}
         </div>
-        <p className="conversation-search-hint">{STRINGS.palette.hint}</p>
+        <p className="conversation-search-hint">
+          {scope === "body" ? S.keyboard : STRINGS.palette.hint}
+        </p>
       </div>
     </dialog>
   );

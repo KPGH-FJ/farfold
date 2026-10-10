@@ -1,0 +1,19 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 9.96s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'browser_sharing::transport::lifecycle_tests::unconfirmed_read_does_not_claim_that_the_page_grant_was_revoked' (22818342) panicked at src/browser_sharing/transport_lifecycle_tests.rs:57:5:
+assertion failed: message.contains("未确认")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test browser_sharing::transport::lifecycle_tests::unconfirmed_read_does_not_claim_that_the_page_grant_was_revoked ... FAILED
+
+failures:
+
+failures:
+    browser_sharing::transport::lifecycle_tests::unconfirmed_read_does_not_claim_that_the_page_grant_was_revoked
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1245 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--lib`

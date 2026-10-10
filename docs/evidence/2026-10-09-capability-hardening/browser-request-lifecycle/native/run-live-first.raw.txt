@@ -1,0 +1,64 @@
+{
+  "startedAtUTC": "2026-10-10T03:49:52.514799+00:00",
+  "before": {
+    "src-tauri/native/BrowserWorkspace.m": "bc07aeb36518a4bde9f0f21ac0749256c430d03e36c80cb7eb2f2cb621c3c593",
+    "src-tauri/native/BrowserWorkspace.h": "e0da23400f263e1bf392154da3b5694db9eea1f142bda64c3d90b788d3145a9d",
+    "src-tauri/native/browser_observation.js": "d33bd0f75cdf0e2b666faee3ad1df65f5abd2d4deeda9e6eec11d15750a6e59f",
+    "output/2026-10-10-browser-lifecycle-native/NativeLiveCancellationProbe.m": "ea16cdc3ebd35825ab17dcf1d30adafee856d0ab117fad188d153e4175a0c786"
+  },
+  "scope": "Single test-only native completion seam; no Cargo, formal App, Agent or real pages.",
+  "compile": {
+    "command": [
+      "xcrun",
+      "--sdk",
+      "macosx",
+      "clang",
+      "-arch",
+      "arm64",
+      "-fobjc-arc",
+      "-mmacosx-version-min=11.0",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-unused-parameter",
+      "-I",
+      "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-owned-native-lifecycle-cur3469_",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-browser-lifecycle-native/NativeLiveCancellationProbe.m",
+      "-framework",
+      "AppKit",
+      "-framework",
+      "WebKit",
+      "-framework",
+      "QuartzCore",
+      "-o",
+      "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-owned-native-lifecycle-cur3469_/NativeLifecycleProbe"
+    ],
+    "exitCode": 0
+  },
+  "process": {
+    "pid": 40591,
+    "ownedExecutable": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-owned-native-lifecycle-cur3469_/NativeLifecycleProbe",
+    "timedOut": false,
+    "exitCode": 0,
+    "reaped": true,
+    "elapsedSeconds": 2.03142975
+  },
+  "result": {
+    "checks": 14,
+    "failed": 0,
+    "heldSeconds": 1.2228232499910519
+  },
+  "after": {
+    "src-tauri/native/BrowserWorkspace.m": "bc07aeb36518a4bde9f0f21ac0749256c430d03e36c80cb7eb2f2cb621c3c593",
+    "src-tauri/native/BrowserWorkspace.h": "e0da23400f263e1bf392154da3b5694db9eea1f142bda64c3d90b788d3145a9d",
+    "src-tauri/native/browser_observation.js": "d33bd0f75cdf0e2b666faee3ad1df65f5abd2d4deeda9e6eec11d15750a6e59f",
+    "output/2026-10-10-browser-lifecycle-native/NativeLiveCancellationProbe.m": "ea16cdc3ebd35825ab17dcf1d30adafee856d0ab117fad188d153e4175a0c786"
+  },
+  "sourceUnchanged": true,
+  "cleanup": {
+    "ownedTemporaryBuildDirectoryRemoved": true,
+    "noOtherProcessSignals": true,
+    "noFormalAppActions": true
+  },
+  "finishedAtUTC": "2026-10-10T03:49:55.215410+00:00"
+}

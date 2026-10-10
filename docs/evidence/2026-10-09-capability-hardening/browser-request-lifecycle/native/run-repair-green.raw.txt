@@ -1,0 +1,72 @@
+{
+  "startedAtUTC": "2026-10-10T03:47:19.427502+00:00",
+  "before": {
+    "src-tauri/native/BrowserWorkspace.m": "bc07aeb36518a4bde9f0f21ac0749256c430d03e36c80cb7eb2f2cb621c3c593",
+    "src-tauri/native/BrowserWorkspace.h": "e0da23400f263e1bf392154da3b5694db9eea1f142bda64c3d90b788d3145a9d",
+    "src-tauri/native/browser_observation.js": "d33bd0f75cdf0e2b666faee3ad1df65f5abd2d4deeda9e6eec11d15750a6e59f",
+    "src-tauri/src/browser_workspace/native.rs": "c6239b98395f15c32aaa58bddb47025edbf548052c1fd984f2624e36e46660de",
+    "src-tauri/src/browser_workspace/page_read.rs": "30910e299062f20df5696c76a49c1252444bdebf61285b44e71a43dba1659f05",
+    "src-tauri/src/browser_workspace/browser_tools.rs": "38190051172b771756713fb30f22fce3ddada44a667f37714f3eadaa52623f6c",
+    "src-tauri/src/browser_sharing/transport.rs": "6a6bd0d7c958d084134f54dfda1f4c05d9c19c74d8de7e859f17d834ded9bce5",
+    "output/2026-10-10-browser-lifecycle-native/NativeLifecycleRepairProbe.m": "adbc1f83c5f04148c875002a1991d6aad6debdba25398834479f7e2e5cb97f11"
+  },
+  "scope": "Single test-only native completion seam; no Cargo, formal App, Agent or real pages.",
+  "compile": {
+    "command": [
+      "xcrun",
+      "--sdk",
+      "macosx",
+      "clang",
+      "-arch",
+      "arm64",
+      "-fobjc-arc",
+      "-mmacosx-version-min=11.0",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wno-unused-parameter",
+      "-I",
+      "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-owned-native-lifecycle-b7sw547e",
+      "/Users/tw/Desktop/farfold/output/2026-10-10-browser-lifecycle-native/NativeLifecycleRepairProbe.m",
+      "-framework",
+      "AppKit",
+      "-framework",
+      "WebKit",
+      "-framework",
+      "QuartzCore",
+      "-o",
+      "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-owned-native-lifecycle-b7sw547e/NativeLifecycleProbe"
+    ],
+    "exitCode": 0
+  },
+  "process": {
+    "pid": 39112,
+    "ownedExecutable": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-owned-native-lifecycle-b7sw547e/NativeLifecycleProbe",
+    "timedOut": false,
+    "exitCode": 0,
+    "reaped": true,
+    "elapsedSeconds": 9.364175375
+  },
+  "result": {
+    "checks": 58,
+    "failed": 0,
+    "heldSeconds": 8.662608208309393
+  },
+  "after": {
+    "src-tauri/native/BrowserWorkspace.m": "bc07aeb36518a4bde9f0f21ac0749256c430d03e36c80cb7eb2f2cb621c3c593",
+    "src-tauri/native/BrowserWorkspace.h": "e0da23400f263e1bf392154da3b5694db9eea1f142bda64c3d90b788d3145a9d",
+    "src-tauri/native/browser_observation.js": "d33bd0f75cdf0e2b666faee3ad1df65f5abd2d4deeda9e6eec11d15750a6e59f",
+    "src-tauri/src/browser_workspace/native.rs": "c6239b98395f15c32aaa58bddb47025edbf548052c1fd984f2624e36e46660de",
+    "src-tauri/src/browser_workspace/page_read.rs": "30910e299062f20df5696c76a49c1252444bdebf61285b44e71a43dba1659f05",
+    "src-tauri/src/browser_workspace/browser_tools.rs": "38190051172b771756713fb30f22fce3ddada44a667f37714f3eadaa52623f6c",
+    "src-tauri/src/browser_sharing/transport.rs": "6a6bd0d7c958d084134f54dfda1f4c05d9c19c74d8de7e859f17d834ded9bce5",
+    "output/2026-10-10-browser-lifecycle-native/NativeLifecycleRepairProbe.m": "adbc1f83c5f04148c875002a1991d6aad6debdba25398834479f7e2e5cb97f11"
+  },
+  "sourceUnchanged": true,
+  "cleanup": {
+    "ownedTemporaryBuildDirectoryRemoved": true,
+    "noOtherProcessSignals": true,
+    "noFormalAppActions": true
+  },
+  "finishedAtUTC": "2026-10-10T03:47:29.299538+00:00"
+}

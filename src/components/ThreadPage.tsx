@@ -1,6 +1,7 @@
 import { ConversationExportDialog } from "./ConversationExportDialog";
 import { TranscriptSearchContext } from "./transcript-search";
 import { ConversationFind } from "./ConversationFind";
+import { LoadedSearchJump, type LoadedSearchRequest } from "./LoadedSearchJump";
 import { useEffect, useRef, useState } from "react";
 import type { BrowserWorkspaceState } from "../runtime/browser_workspace";
 import { browserSurfaceGuard } from "../runtime/browser_surface";
@@ -67,8 +68,10 @@ export function ThreadPage({
   defaultCwd,
   onBrowserStateChange,
   draftComposerRef,
+  searchRequest,
 }: {
   onManualOpen?: () => void;
+  searchRequest?: LoadedSearchRequest | null;
   draftComposerRef?: React.Ref<HTMLDivElement>;
   onBrowserStateChange?: (
     taskKey: string,
@@ -118,6 +121,13 @@ export function ThreadPage({
       thread.pendingElicitations.length > 0);
   const [contentMode, setContentMode] = useState<"files" | "browser">("files");
   const [finding, setFinding] = useState(false);
+  const [closedSearch, setClosedSearch] = useState<object | null>(null);
+  const loadedSearch =
+    active &&
+    searchRequest?.hit.threadKey === viewKey &&
+    closedSearch !== searchRequest.token
+      ? searchRequest
+      : null;
   const findTrigger = useRef<HTMLButtonElement>(null);
   const [exported, setExported] = useState<{
     text: string;
@@ -257,10 +267,20 @@ export function ThreadPage({
           }}
         />
       )}
+      {loadedSearch && (
+        <LoadedSearchJump
+          host={host}
+          request={loadedSearch}
+          revision={snapshot.version}
+          onClose={() => setClosedSearch(loadedSearch.token)}
+        />
+      )}
     </>
   );
   return (
-    <TranscriptSearchContext.Provider value={active && finding}>
+    <TranscriptSearchContext.Provider
+      value={active && (finding || !!loadedSearch)}
+    >
       <main className="main workspace-thread" ref={host}>
         {thread ? (
           <ThreadView
