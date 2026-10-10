@@ -1,0 +1,160 @@
+{
+  "checkedAtUtc": "2026-10-10T19:31:40.001285+00:00",
+  "result": "passedCurrentRecordGate",
+  "sourceCommit": "51c5159fe5d446ce5eab8d20051ea6d703ca1e86",
+  "originalPlan": {
+    "items": 122,
+    "orderedIdsTitlesCompletionConditionsExact": true,
+    "newItems": 16,
+    "allNewRowsExact": true,
+    "statusChanges": [
+      {
+        "id": "P41",
+        "before": "启停分项已测；添加工程通过待实装",
+        "after": "启停与本地添加分项已测；其余未完"
+      }
+    ]
+  },
+  "documents": [
+    {
+      "path": "docs/status.md",
+      "sha256": "4e7a384befeb9b7287f71ada1215331103a2ffcffebd800f84ab83aa98227c32",
+      "bytes": 55474,
+      "latestInstalledBaseline": "51c5159f",
+      "boundedNativeAndUnfinishedScopeAccurate": true,
+      "newParagraphLinks": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-candidate/installed-mcp-add.json",
+          "sha256": "680e943d7f303fae274de2409789d3b9098330c8ae7fdc914cf19f47e9e44b60",
+          "bytes": 14599
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-candidate/native-independent.json",
+          "sha256": "0f9589bf409a2ece0ac5afa1687e7374bf32bbb16e056a60204403e26bc4e855",
+          "bytes": 9943
+        }
+      ]
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "95f0b4362003a3a647d3169e32851714173417713f8957c143db2893b263feeb",
+      "bytes": 98001,
+      "latestInstalledBaseline": "51c5159f",
+      "boundedNativeAndUnfinishedScopeAccurate": true,
+      "newParagraphLinks": [
+        {
+          "path": "docs/status.md",
+          "sha256": "4e7a384befeb9b7287f71ada1215331103a2ffcffebd800f84ab83aa98227c32",
+          "bytes": 55474
+        }
+      ]
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "fab8f3cac8f1d4e68d911cc789db1818149a022a823c9df02446af41c7d85002",
+      "bytes": 115525,
+      "latestInstalledBaseline": "51c5159f",
+      "boundedNativeAndUnfinishedScopeAccurate": true,
+      "newParagraphLinks": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-candidate/installed-mcp-add.json",
+          "sha256": "680e943d7f303fae274de2409789d3b9098330c8ae7fdc914cf19f47e9e44b60",
+          "bytes": 14599
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-candidate/native-independent.json",
+          "sha256": "0f9589bf409a2ece0ac5afa1687e7374bf32bbb16e056a60204403e26bc4e855",
+          "bytes": 9943
+        }
+      ]
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "sha256": "266d6f59b884a2d42306c230aa30c3a752105131082e293f546a2d1277b7f552",
+      "bytes": 60719,
+      "latestInstalledBaseline": "51c5159f",
+      "boundedNativeAndUnfinishedScopeAccurate": true,
+      "newParagraphLinks": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-candidate/installed-mcp-add.json",
+          "sha256": "680e943d7f303fae274de2409789d3b9098330c8ae7fdc914cf19f47e9e44b60",
+          "bytes": 14599
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-candidate/native-independent.json",
+          "sha256": "0f9589bf409a2ece0ac5afa1687e7374bf32bbb16e056a60204403e26bc4e855",
+          "bytes": 9943
+        }
+      ]
+    }
+  ],
+  "productContract": {
+    "path": "PRODUCT.md",
+    "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+    "bytes": 35083
+  },
+  "protectedExistingDirtyDocuments": [
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+      "bytes": 11543
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7",
+      "bytes": 2341
+    }
+  ],
+  "nativeRecord": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-candidate/installed-mcp-add.json",
+    "sha256": "680e943d7f303fae274de2409789d3b9098330c8ae7fdc914cf19f47e9e44b60",
+    "bytes": 14599
+  },
+  "independentNativeRecord": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-candidate/native-independent.json",
+    "sha256": "0f9589bf409a2ece0ac5afa1687e7374bf32bbb16e056a60204403e26bc4e855",
+    "bytes": 9943
+  },
+  "allInstalledRecordRefsMatch": true,
+  "installedRecordRefCount": 59,
+  "engineering": {
+    "inputCount": 1480,
+    "stableThroughNormalQuit": true,
+    "sevenChecks": "passed",
+    "frontendFiles": 413,
+    "frontendTests": 4774,
+    "rustPassed": 1531,
+    "rustIgnored": 6,
+    "candidateChecks": 9,
+    "installationChecks": 10,
+    "installationSnapshotEntries": 217400,
+    "threeInstallationSnapshotsIdentical": true,
+    "browserControlledChecksEach": 23
+  },
+  "acceptedDelta": {
+    "table": "agents",
+    "id": "codex",
+    "column": "updated_at",
+    "before": 1791655910815,
+    "after": 1791659928954
+  },
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-candidate/installed-mcp-add.json",
+      "sha256": "680e943d7f303fae274de2409789d3b9098330c8ae7fdc914cf19f47e9e44b60",
+      "bytes": 14599
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-add-candidate/native-independent.json",
+      "sha256": "0f9589bf409a2ece0ac5afa1687e7374bf32bbb16e056a60204403e26bc4e855",
+      "bytes": 9943
+    },
+    {
+      "path": "output/2026-10-11-mcp-add-frontend/record-gate-final.json",
+      "sha256": "2e6a3f97a2b5d10b78dd7270e4b58f30f948e93e245e0dd7845ff2aba994556d",
+      "bytes": 9929
+    }
+  ],
+  "findings": [],
+  "boundary": "Current record reconciliation only. No engineering rerun, App/Agent/configuration/database or source mutation. Previous source-only gate retains its old document hashes; they are not imposed on the current native-closeout documents. Original product conditions, 29x8 and all unfinished scope remain unchanged."
+}
