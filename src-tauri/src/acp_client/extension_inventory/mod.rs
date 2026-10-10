@@ -1,10 +1,12 @@
 //! Explicit one-shot official CLI inventory; no ACP session or configuration write.
-mod launch;
-mod output;
-mod process;
-mod requests;
-mod skills_output;
+pub(in crate::acp_client) mod execution;
+pub(in crate::acp_client) mod launch;
+pub(in crate::acp_client) mod output;
+pub(in crate::acp_client) mod process;
+pub(in crate::acp_client) mod requests;
+pub(in crate::acp_client) mod skills_output;
 mod skills_rpc;
+pub(in crate::acp_client) mod targets;
 mod types;
 use crate::meta_store::MetaStore;
 use std::{
@@ -14,12 +16,16 @@ use std::{
 use tauri::{AppHandle, Manager, Webview};
 pub use types::*;
 
-fn allowed(webview: &Webview) -> Result<()> {
+pub(in crate::acp_client) fn allowed(webview: &Webview) -> Result<()> {
     crate::browser_workspace::caller_allowed(webview)
         .then_some(())
         .ok_or_else(|| Code::Unavailable.into())
 }
-fn context(app: &AppHandle, webview: &Webview, command: &str) -> Result<MetaStore> {
+pub(in crate::acp_client) fn context(
+    app: &AppHandle,
+    webview: &Webview,
+    command: &str,
+) -> Result<MetaStore> {
     allowed(webview)?;
     if !app
         .try_state::<crate::storage_recovery::StorageRecoveryState>()
@@ -118,7 +124,7 @@ fn query(
     launch::admission(row)?;
     within(request)?;
     let cwd = request.cwd.as_deref().ok_or(Code::InvalidRequest)?;
-    let directory = launch::Directory::open(cwd)?;
+    let directory = Arc::new(launch::Directory::open(cwd)?);
     within(request)?;
     // Do not create a second environment-probe lifecycle inside this query.
     let environment = crate::shell_env::cached_command_env().ok_or(Code::EnvironmentUnavailable)?;
@@ -142,7 +148,16 @@ fn query(
             bytes.fill(0);
             InventorySnapshot::Mcp(result?)
         }
-        Kind::Skills => InventorySnapshot::Skills(process::run_skills(command, request)?),
+        Kind::Skills => {
+            let (snapshot, entries) = process::run_skills_private(command, request)?;
+            *request.targets.lock().unwrap_or_else(|p| p.into_inner()) =
+                Some(Arc::new(targets::TargetSet {
+                    row: row.clone(),
+                    directory: directory.clone(),
+                    entries,
+                }));
+            InventorySnapshot::Skills(snapshot)
+        }
     };
     within(request)?;
     let current = store
@@ -171,9 +186,17 @@ async fn execute_selected(
             request.finish(Err(Code::TimedOut.into())); return;
         }
     };
+    let execution = match execution::acquire() {
+        Ok(value) => value,
+        Err(error) => {
+            request.finish(Err(error));
+            return;
+        }
+    };
     let observer = request.clone();
     // The detached task/real blocking closure owns all permits, not IPC delivery.
     let result = tauri::async_runtime::spawn_blocking(move || {
+        let _execution = execution;
         let activity = activity;
         let scope = scope;
         let configuration = configuration;
@@ -270,7 +293,7 @@ mod tests;
 #[cfg(test)]
 mod skills_tests;
 
-fn skills_scope(
+pub(in crate::acp_client) fn skills_scope(
     manager: &super::manager::AcpManager,
     row: &crate::meta_store::AgentRow,
 ) -> Result<Option<super::manager::AccountScope>> {

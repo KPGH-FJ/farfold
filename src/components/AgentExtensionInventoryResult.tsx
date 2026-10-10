@@ -1,13 +1,17 @@
 import type { InventoryResult } from "../runtime/extension_inventory_controller";
 import { EXTENSION_INVENTORY_STRINGS as S } from "../runtime/extension_inventory_strings";
+import { SKILL_MANAGEMENT_STRINGS as M } from "../runtime/skill_management_strings";
+import type { SkillInventoryItem } from "../runtime/extension_inventory_types";
 
 /** Plain report metadata only; descriptions never become links or draft content. */
 export function AgentExtensionInventoryResult({
   result,
   stale,
+  management,
 }: {
   result: InventoryResult;
   stale: boolean;
+  management?: { enabled: boolean; inspect(item: SkillInventoryItem): void };
 }) {
   const snapshot = result.snapshot;
   const observed = new Date(snapshot.observedAtMs);
@@ -72,6 +76,23 @@ export function AgentExtensionInventoryResult({
                   {item.descriptionRedacted && (
                     <span>{S.descriptionRedacted}</span>
                   )}
+                  {management &&
+                  item.enablement.availability === "reviewable" ? (
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      disabled={stale || !management.enabled}
+                      onClick={() => {
+                        if (!stale && management.enabled)
+                          management.inspect(item);
+                      }}
+                    >
+                      {item.reportedEnabled ? M.reviewDisable : M.reviewEnable}
+                    </button>
+                  ) : management &&
+                    item.enablement.availability === "unavailable" ? (
+                    <span>{M.reasons[item.enablement.reason]}</span>
+                  ) : null}
                 </li>
               ))}
         </ul>

@@ -48,3 +48,8 @@ export function deferred<T = unknown>() {
 export async function flush() {
   for (let i = 0; i < 8; i++) await Promise.resolve();
 }
+
+export const reportOrigin = {
+  request: { ...request, kind: "skills" as const },
+  owner: { agentId: request.agentId, token: {}, current: () => false },
+};

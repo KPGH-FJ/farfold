@@ -34,6 +34,7 @@ const skills = (errors = 0) => ({
         reportedEnabled: false,
         origin: "repo",
         pluginReported: true,
+        enablement: { availability: "unavailable", reason: "pluginManaged" },
       },
     ],
   },
@@ -50,6 +51,11 @@ it("accepts skills capability independently from MCP and requires an exact ticke
       availability: "available",
       source: "officialAppServer",
       reason: null,
+    },
+    skillEnablement: {
+      availability: "unavailable",
+      source: null,
+      reason: "notReviewed",
     },
     toolInventory: "unavailable",
   };

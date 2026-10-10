@@ -1,0 +1,21 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 24.99s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::skill_management::tests::recheck_after_explicit_refusal_reports_current_observation_without_changing_ack' (25619810) panicked at src/acp_client/skill_management/tests.rs:311:5:
+assertion `left == right` failed
+  left: Some(Rejected)
+ right: Some(Observed)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::skill_management::tests::recheck_after_explicit_refusal_reports_current_observation_without_changing_ack ... FAILED
+
+failures:
+
+failures:
+    acp_client::skill_management::tests::recheck_after_explicit_refusal_reports_current_observation_without_changing_ack
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1503 filtered out; finished in 0.36s
+
+error: test failed, to rerun pass `--lib`

@@ -1,3 +1,4 @@
+import { reportOrigin } from "./extension_inventory.test-support";
 import { expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { AgentExtensionInventoryResult } from "../components/AgentExtensionInventoryResult";
@@ -33,6 +34,7 @@ function reported(names: readonly (string | null)[]): InventoryOperation & {
         reportedEnabled: id !== 1,
         origin: "user",
         pluginReported: true,
+        enablement: { availability: "unavailable", reason: "pluginManaged" },
       })),
     },
   };
@@ -105,6 +107,7 @@ it("renders parsed qualified names as distinct report rows, never links or comma
   const html = renderToStaticMarkup(
     <AgentExtensionInventoryResult
       result={{
+        ...reportOrigin,
         cwd: expected.cwd,
         snapshot: operation.snapshot!,
         stale: false,

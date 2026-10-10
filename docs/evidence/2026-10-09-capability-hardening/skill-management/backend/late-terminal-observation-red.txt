@@ -1,0 +1,21 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 16.19s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::skill_management::tests::settled_inspection_cannot_be_reopened_by_a_late_cleanup_observation' (25636534) panicked at src/acp_client/skill_management/tests.rs:484:5:
+assertion `left == right` failed
+  left: Object {"agentId": String("77aa714d-9c23-4d77-967f-9111cde05e46"), "requestId": String("3dd5753c-2da1-45ab-8c28-247b2cfa15b0"), "action": String("inspect"), "cwd": String("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp4trAyK"), "target": Object {"inventoryRequestId": String("6ce05c8a-3c50-43cd-9517-0884ac4a0e34"), "itemId": Number(0), "name": String("fixture"), "origin": String("user"), "displayPath": String("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp4trAyK/SKILL.md")}, "requestedEnabled": Bool(true), "operationId": Null, "state": String("pendingCleanup"), "phase": String("cleaning"), "settled": Bool(true), "writeDispatched": Bool(false), "writeAck": String("none"), "outcome": Null, "code": String("pendingCleanup"), "review": Object {"reviewId": String("7b03b92d-7001-481c-95f4-dd90e23f2aaa"), "agentId": String("77aa714d-9c23-4d77-967f-9111cde05e46"), "cwd": String("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp4trAyK"), "target": Object {"inventoryRequestId": String("6ce05c8a-3c50-43cd-9517-0884ac4a0e34"), "itemId": Number(0), "name": String("fixture"), "origin": String("user"), "displayPath": String("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp4trAyK/SKILL.md")}, "requestedEnabled": Bool(true), "reportedEnabled": Bool(false), "writeScope": Object {"kind": String("user"), "configDisplayPath": String("/controlled/config.toml")}, "observedAtMs": Number(1791649975016), "validForMs": Number(300000), "rulesBefore": Number(1), "rulesAfter": Number(2), "mutation": String("appendPathRule"), "preservation": String("officialJsonValues"), "sessionApplicability": String("unverified")}, "observation": Null}
+ right: Object {"agentId": String("77aa714d-9c23-4d77-967f-9111cde05e46"), "requestId": String("3dd5753c-2da1-45ab-8c28-247b2cfa15b0"), "action": String("inspect"), "cwd": String("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp4trAyK"), "target": Object {"inventoryRequestId": String("6ce05c8a-3c50-43cd-9517-0884ac4a0e34"), "itemId": Number(0), "name": String("fixture"), "origin": String("user"), "displayPath": String("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp4trAyK/SKILL.md")}, "requestedEnabled": Bool(true), "operationId": Null, "state": String("ready"), "phase": String("complete"), "settled": Bool(true), "writeDispatched": Bool(false), "writeAck": String("none"), "outcome": Null, "code": Null, "review": Object {"reviewId": String("7b03b92d-7001-481c-95f4-dd90e23f2aaa"), "agentId": String("77aa714d-9c23-4d77-967f-9111cde05e46"), "cwd": String("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp4trAyK"), "target": Object {"inventoryRequestId": String("6ce05c8a-3c50-43cd-9517-0884ac4a0e34"), "itemId": Number(0), "name": String("fixture"), "origin": String("user"), "displayPath": String("/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmp4trAyK/SKILL.md")}, "requestedEnabled": Bool(true), "reportedEnabled": Bool(false), "writeScope": Object {"kind": String("user"), "configDisplayPath": String("/controlled/config.toml")}, "observedAtMs": Number(1791649975016), "validForMs": Number(300000), "rulesBefore": Number(1), "rulesAfter": Number(2), "mutation": String("appendPathRule"), "preservation": String("officialJsonValues"), "sessionApplicability": String("unverified")}, "observation": Null}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::skill_management::tests::settled_inspection_cannot_be_reopened_by_a_late_cleanup_observation ... FAILED
+
+failures:
+
+failures:
+    acp_client::skill_management::tests::settled_inspection_cannot_be_reopened_by_a_late_cleanup_observation
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1507 filtered out; finished in 0.13s
+
+error: test failed, to rerun pass `--lib`

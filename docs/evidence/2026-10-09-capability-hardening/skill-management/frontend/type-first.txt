@@ -1,0 +1,14 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/components/AgentExtensionInventoryResult.test.tsx(15,5): error TS2741: Property 'enablement' is missing in type '{ id: number; name: null; description: string; descriptionTruncated: true; descriptionRedacted: true; reportedEnabled: false; origin: "repo"; pluginReported: true; }' but required in type 'SkillInventoryItem'.
+src/components/AgentExtensionInventoryResult.test.tsx(31,7): error TS2739: Type '{ cwd: string; snapshot: SkillsInventory; stale: true; }' is missing the following properties from type 'InventoryResult': request, owner
+src/components/AgentExtensionInventoryResult.test.tsx(52,7): error TS2739: Type '{ cwd: string; snapshot: { items: never[]; observedAtMs: number; scope: "officialSkillsForDirectory"; source: "officialAppServer"; complete: boolean; sessionApplicability: "unverified"; errorCount: number; }; stale: false; }' is missing the following properties from type 'InventoryResult': request, owner
+src/components/AgentExtensionInventoryResult.test.tsx(72,7): error TS2739: Type '{ cwd: string; snapshot: { items: { id: number; name: string; description: string | null; descriptionTruncated: boolean; descriptionRedacted: boolean; reportedEnabled: boolean; origin: "unknown" | "user" | "system" | "repo" | "admin"; pluginReported: boolean; enablement: SkillEnablement; }[]; ... 5 more ...; errorCo...' is missing the following properties from type 'InventoryResult': request, owner
+src/components/AgentExtensionInventoryResult.test.tsx(83,7): error TS2739: Type '{ cwd: string; snapshot: { items: never[]; complete: true; errorCount: number; observedAtMs: number; scope: "officialSkillsForDirectory"; source: "officialAppServer"; sessionApplicability: "unverified"; }; stale: false; }' is missing the following properties from type 'InventoryResult': request, owner
+src/runtime/extension_inventory.qualified-names.test.tsx(27,7): error TS2322: Type '{ id: number; name: string | null; description: null; descriptionTruncated: false; descriptionRedacted: false; reportedEnabled: boolean; origin: "user"; pluginReported: true; }[]' is not assignable to type 'SkillInventoryItem[]'.
+  Property 'enablement' is missing in type '{ id: number; name: string | null; description: null; descriptionTruncated: false; descriptionRedacted: false; reportedEnabled: boolean; origin: "user"; pluginReported: true; }' but required in type 'SkillInventoryItem'.
+src/runtime/extension_inventory.qualified-names.test.tsx(107,7): error TS2739: Type '{ cwd: string; snapshot: InventorySnapshot; stale: false; }' is missing the following properties from type 'InventoryResult': request, owner
+src/runtime/extension_inventory.qualified-wire.test.tsx(41,7): error TS2739: Type '{ cwd: string; snapshot: InventorySnapshot; stale: false; }' is missing the following properties from type 'InventoryResult': request, owner
+ ELIFECYCLE  Command failed with exit code 1.

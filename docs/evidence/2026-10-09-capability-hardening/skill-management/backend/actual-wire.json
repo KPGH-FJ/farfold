@@ -1,0 +1,632 @@
+{
+  "capabilities": {
+    "selectionId": null,
+    "mcpInventory": {
+      "availability": "unavailable",
+      "source": null,
+      "reason": "notReviewed"
+    },
+    "skillsInventory": {
+      "availability": "unavailable",
+      "source": null,
+      "reason": "notReviewed"
+    },
+    "skillEnablement": {
+      "availability": "unavailable",
+      "source": null,
+      "reason": "notReviewed"
+    },
+    "toolInventory": "unavailable"
+  },
+  "inventory": {
+    "requestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+    "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+    "kind": "skills",
+    "state": "ready",
+    "settled": true,
+    "snapshot": {
+      "observedAtMs": 1791649523765,
+      "scope": "officialSkillsForDirectory",
+      "source": "officialAppServer",
+      "complete": true,
+      "sessionApplicability": "unverified",
+      "errorCount": 0,
+      "items": [
+        {
+          "id": 0,
+          "name": "fixture",
+          "description": "Fixture",
+          "descriptionTruncated": false,
+          "descriptionRedacted": false,
+          "reportedEnabled": false,
+          "origin": "user",
+          "pluginReported": false,
+          "enablement": {
+            "availability": "reviewable",
+            "reason": null
+          }
+        }
+      ]
+    }
+  },
+  "operations": [
+    {
+      "label": "inspectRunning",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "8f391efc-f97d-422a-83da-2f49c12eccdd",
+        "action": "inspect",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "running",
+        "phase": "queued",
+        "settled": false,
+        "writeDispatched": false,
+        "writeAck": "none",
+        "outcome": null,
+        "code": null,
+        "review": null,
+        "observation": null
+      }
+    },
+    {
+      "label": "inspectReady",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "8f391efc-f97d-422a-83da-2f49c12eccdd",
+        "action": "inspect",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "ready",
+        "phase": "complete",
+        "settled": true,
+        "writeDispatched": false,
+        "writeAck": "none",
+        "outcome": null,
+        "code": null,
+        "review": {
+          "reviewId": "88592a23-6ded-40ad-8cd7-4c318fc6508b",
+          "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+          "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+          "target": {
+            "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+            "itemId": 0,
+            "name": "fixture",
+            "origin": "user",
+            "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+          },
+          "requestedEnabled": true,
+          "reportedEnabled": false,
+          "writeScope": {
+            "kind": "user",
+            "configDisplayPath": "/controlled/config.toml"
+          },
+          "observedAtMs": 1791649523861,
+          "validForMs": 300000,
+          "rulesBefore": 1,
+          "rulesAfter": 2,
+          "mutation": "appendPathRule",
+          "preservation": "officialJsonValues",
+          "sessionApplicability": "unverified"
+        },
+        "observation": null
+      }
+    },
+    {
+      "label": "confirmQueued",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "0e5fbb77-5346-4a99-862c-adca80cd377a",
+        "action": "setEnabled",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "running",
+        "phase": "queued",
+        "settled": false,
+        "writeDispatched": false,
+        "writeAck": "none",
+        "outcome": null,
+        "code": null,
+        "review": null,
+        "observation": null
+      }
+    },
+    {
+      "label": "confirmObservedAwaitingCleanup",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "0e5fbb77-5346-4a99-862c-adca80cd377a",
+        "action": "setEnabled",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "running",
+        "phase": "cleaning",
+        "settled": false,
+        "writeDispatched": true,
+        "writeAck": "ok",
+        "outcome": null,
+        "code": null,
+        "review": null,
+        "observation": {
+          "observedAtMs": 1791649524033,
+          "configuration": "matchesIntended",
+          "skill": "matchesRequested",
+          "reportedEnabled": true,
+          "sessionApplicability": "unverified"
+        }
+      }
+    },
+    {
+      "label": "confirmPendingCleanup",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "0e5fbb77-5346-4a99-862c-adca80cd377a",
+        "action": "setEnabled",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "pendingCleanup",
+        "phase": "cleaning",
+        "settled": false,
+        "writeDispatched": true,
+        "writeAck": "ok",
+        "outcome": null,
+        "code": "pendingCleanup",
+        "review": null,
+        "observation": {
+          "observedAtMs": 1791649524033,
+          "configuration": "matchesIntended",
+          "skill": "matchesRequested",
+          "reportedEnabled": true,
+          "sessionApplicability": "unverified"
+        }
+      }
+    },
+    {
+      "label": "confirmVerified",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "0e5fbb77-5346-4a99-862c-adca80cd377a",
+        "action": "setEnabled",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "ready",
+        "phase": "complete",
+        "settled": true,
+        "writeDispatched": true,
+        "writeAck": "ok",
+        "outcome": "verified",
+        "code": null,
+        "review": null,
+        "observation": {
+          "observedAtMs": 1791649524033,
+          "configuration": "matchesIntended",
+          "skill": "matchesRequested",
+          "reportedEnabled": true,
+          "sessionApplicability": "unverified"
+        }
+      }
+    },
+    {
+      "label": "readonlyObserved",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "ac81e668-2b83-4ba6-94df-00a76bf05261",
+        "action": "recheck",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": "0e5fbb77-5346-4a99-862c-adca80cd377a",
+        "state": "ready",
+        "phase": "complete",
+        "settled": true,
+        "writeDispatched": true,
+        "writeAck": "ok",
+        "outcome": "observed",
+        "code": null,
+        "review": null,
+        "observation": {
+          "observedAtMs": 1791649524139,
+          "configuration": "matchesIntended",
+          "skill": "matchesRequested",
+          "reportedEnabled": true,
+          "sessionApplicability": "unverified"
+        }
+      }
+    },
+    {
+      "label": "readonlyMissing",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "ba438faf-b543-4b57-8514-534607e7a5d0",
+        "action": "recheck",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": "0e5fbb77-5346-4a99-862c-adca80cd377a",
+        "state": "ready",
+        "phase": "complete",
+        "settled": true,
+        "writeDispatched": true,
+        "writeAck": "ok",
+        "outcome": "mismatch",
+        "code": null,
+        "review": null,
+        "observation": {
+          "observedAtMs": 1791649524241,
+          "configuration": "changed",
+          "skill": "missing",
+          "reportedEnabled": null,
+          "sessionApplicability": "unverified"
+        }
+      }
+    },
+    {
+      "label": "confirmRejectedInspection",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "509bb629-4133-499c-b4a8-e2f29a6299e4",
+        "action": "inspect",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "ready",
+        "phase": "complete",
+        "settled": true,
+        "writeDispatched": false,
+        "writeAck": "none",
+        "outcome": null,
+        "code": null,
+        "review": {
+          "reviewId": "29d57a8b-bc18-4a4b-8d36-b5d4987398a0",
+          "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+          "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+          "target": {
+            "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+            "itemId": 0,
+            "name": "fixture",
+            "origin": "user",
+            "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+          },
+          "requestedEnabled": true,
+          "reportedEnabled": false,
+          "writeScope": {
+            "kind": "user",
+            "configDisplayPath": "/controlled/config.toml"
+          },
+          "observedAtMs": 1791649524354,
+          "validForMs": 300000,
+          "rulesBefore": 1,
+          "rulesAfter": 2,
+          "mutation": "appendPathRule",
+          "preservation": "officialJsonValues",
+          "sessionApplicability": "unverified"
+        },
+        "observation": null
+      }
+    },
+    {
+      "label": "confirmRejectedBeforeCleanup",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "f42c4ab1-621c-47b1-a6b1-8f9f86dcca12",
+        "action": "setEnabled",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "running",
+        "phase": "writing",
+        "settled": false,
+        "writeDispatched": true,
+        "writeAck": "rejected",
+        "outcome": null,
+        "code": "configurationChanged",
+        "review": null,
+        "observation": null
+      }
+    },
+    {
+      "label": "confirmRejected",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "f42c4ab1-621c-47b1-a6b1-8f9f86dcca12",
+        "action": "setEnabled",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "failed",
+        "phase": "complete",
+        "settled": true,
+        "writeDispatched": true,
+        "writeAck": "rejected",
+        "outcome": "rejected",
+        "code": "configurationChanged",
+        "review": null,
+        "observation": null
+      }
+    },
+    {
+      "label": "confirmUnknownInspection",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "299d5d60-aa20-49f5-9539-6a52a8c77e39",
+        "action": "inspect",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "ready",
+        "phase": "complete",
+        "settled": true,
+        "writeDispatched": false,
+        "writeAck": "none",
+        "outcome": null,
+        "code": null,
+        "review": {
+          "reviewId": "5c80d928-decd-4574-a6d6-ecf86f42e3a2",
+          "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+          "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+          "target": {
+            "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+            "itemId": 0,
+            "name": "fixture",
+            "origin": "user",
+            "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+          },
+          "requestedEnabled": true,
+          "reportedEnabled": false,
+          "writeScope": {
+            "kind": "user",
+            "configDisplayPath": "/controlled/config.toml"
+          },
+          "observedAtMs": 1791649524581,
+          "validForMs": 300000,
+          "rulesBefore": 1,
+          "rulesAfter": 2,
+          "mutation": "appendPathRule",
+          "preservation": "officialJsonValues",
+          "sessionApplicability": "unverified"
+        },
+        "observation": null
+      }
+    },
+    {
+      "label": "confirmUnknownBeforeCleanup",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "ac407e11-331b-4f04-bafb-79c67716c7d4",
+        "action": "setEnabled",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "running",
+        "phase": "writing",
+        "settled": false,
+        "writeDispatched": true,
+        "writeAck": "unknown",
+        "outcome": null,
+        "code": null,
+        "review": null,
+        "observation": null
+      }
+    },
+    {
+      "label": "confirmUnknown",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "ac407e11-331b-4f04-bafb-79c67716c7d4",
+        "action": "setEnabled",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "failed",
+        "phase": "complete",
+        "settled": true,
+        "writeDispatched": true,
+        "writeAck": "unknown",
+        "outcome": "unknown",
+        "code": "invalidOutput",
+        "review": null,
+        "observation": null
+      }
+    },
+    {
+      "label": "unknownReadonlyObserved",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "bc633032-06dc-4599-bad8-b78a3efffc86",
+        "action": "recheck",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": "ac407e11-331b-4f04-bafb-79c67716c7d4",
+        "state": "ready",
+        "phase": "complete",
+        "settled": true,
+        "writeDispatched": true,
+        "writeAck": "unknown",
+        "outcome": "observed",
+        "code": null,
+        "review": null,
+        "observation": {
+          "observedAtMs": 1791649524775,
+          "configuration": "matchesIntended",
+          "skill": "matchesRequested",
+          "reportedEnabled": true,
+          "sessionApplicability": "unverified"
+        }
+      }
+    },
+    {
+      "label": "inspectCancelled",
+      "value": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "a7c75cb8-7557-4fcc-bcf0-d98921ccc55b",
+        "action": "inspect",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "cancelled",
+        "phase": "complete",
+        "settled": true,
+        "writeDispatched": false,
+        "writeAck": "none",
+        "outcome": null,
+        "code": "cancelled",
+        "review": null,
+        "observation": null
+      }
+    }
+  ],
+  "cancellations": [
+    {
+      "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+      "requestId": "a7c75cb8-7557-4fcc-bcf0-d98921ccc55b",
+      "cancelRequested": true,
+      "operation": {
+        "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+        "requestId": "a7c75cb8-7557-4fcc-bcf0-d98921ccc55b",
+        "action": "inspect",
+        "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t",
+        "target": {
+          "inventoryRequestId": "9b81aac9-0219-4d7d-92ec-7d39e5ffe2ec",
+          "itemId": 0,
+          "name": "fixture",
+          "origin": "user",
+          "displayPath": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpVdOH0t/SKILL.md"
+        },
+        "requestedEnabled": true,
+        "operationId": null,
+        "state": "cancelling",
+        "phase": "queued",
+        "settled": false,
+        "writeDispatched": false,
+        "writeAck": "none",
+        "outcome": null,
+        "code": null,
+        "review": null,
+        "observation": null
+      }
+    },
+    {
+      "agentId": "977a6b17-9056-4a66-b52f-8ea43ccfa4c9",
+      "requestId": "c1366ab5-800b-49d3-97c6-4308e6768fb0",
+      "cancelRequested": true,
+      "operation": null
+    }
+  ]
+}

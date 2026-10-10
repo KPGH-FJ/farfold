@@ -33,6 +33,7 @@ pub(super) struct Exchange {
     pending: Vec<u8>,
     sent: usize,
     result: Option<SkillsInventory>,
+    targets: Vec<super::targets::SkillTarget>,
 }
 impl Exchange {
     pub(super) fn new(cwd: &str) -> Result<Self> {
@@ -43,6 +44,7 @@ impl Exchange {
             pending,
             sent: 0,
             result: None,
+            targets: vec![],
         };
         this.pending.push(b'\n');
         Ok(this)
@@ -127,12 +129,17 @@ impl Exchange {
                 Ok(())
             }
             (Step::Skills, Some(Payload::Skills(value))) => {
-                self.result = Some(value.project(&self.cwd)?);
+                let (public, targets) = value.project_private(&self.cwd)?;
+                self.result = Some(public);
+                self.targets = targets;
                 self.step = Step::Done;
                 Ok(())
             }
             _ => Err(Code::InvalidOutput.into()),
         }
+    }
+    pub(super) fn take_targets(&mut self) -> Vec<super::targets::SkillTarget> {
+        std::mem::take(&mut self.targets)
     }
     pub(super) fn done(&self) -> bool {
         self.step == Step::Done

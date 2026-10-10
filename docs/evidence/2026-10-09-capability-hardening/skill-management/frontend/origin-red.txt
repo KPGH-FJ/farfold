@@ -1,0 +1,65 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/extension_inventory.management.test.ts (2 tests | 2 failed) 8ms
+   × retains the original request and publication owner with each report 6ms
+   × retires the private ready skills authority exactly once while retaining its stale public report 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/extension_inventory.management.test.ts > retains the original request and publication owner with each report
+AssertionError: expected { cwd: '/controlled', …(2) } to match object { request: { …(4) } }
+(10 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "request": {
+-     "agentId": "fixture",
+    "cwd": "/controlled",
+-     "kind": "skills",
+-     "requestId": "aaaaaaaa-aaaa-aaaa-aaaa-000000000001",
++   "snapshot": {
++     "complete": true,
++     "errorCount": 0,
++     "items": [],
++     "observedAtMs": 1,
++     "scope": "officialSkillsForDirectory",
++     "sessionApplicability": "unverified",
++     "source": "officialAppServer",
+    },
++   "stale": false,
+  }
+
+ ❯ src/runtime/extension_inventory.management.test.ts:24:18
+     22|   const h = setup(); h.c.begin(h.owner, "/controlled", ticket, "skills…
+     23|   const result = h.c.get("fixture").results.skills!;
+     24|   expect(result).toMatchObject({ request: h.c.get("fixture").request }…
+       |                  ^
+     25|   expect(Reflect.get(result, "owner")).toBe(h.owner);
+     26| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/extension_inventory.management.test.ts > retires the private ready skills authority exactly once while retaining its stale public report
+AssertionError: expected "vi.fn()" to be called once with arguments: [ { agentId: 'fixture', …(3) } ]
+
+Number of calls: 0
+
+ ❯ src/runtime/extension_inventory.management.test.ts:31:25
+     29|   const r = h.c.get("fixture").request;
+     30|   h.c.retire(h.owner); h.c.retire(h.owner); await flush();
+     31|   expect(h.port.cancel).toHaveBeenCalledExactlyOnceWith(r);
+       |                         ^
+     32|   expect(h.c.get("fixture").results.skills?.stale).toBe(true);
+     33|   expect(h.c.get("fixture").unresolved).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  00:01:21
+   Duration  180ms (transform 50ms, setup 0ms, import 69ms, tests 8ms, environment 0ms)
+

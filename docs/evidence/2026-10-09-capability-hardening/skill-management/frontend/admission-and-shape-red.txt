@@ -1,0 +1,92 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/skill_management_types.test.ts (8 tests | 2 failed) 9ms
+   × review and operation must describe the same display location 3ms
+   × cleanup may expose write facts and observation but not a final outcome 1ms
+ ❯ src/runtime/skill_management_controller.test.ts (15 tests | 2 failed) 24ms
+   × fresh direct reviewExpired rejection records no write without inventing a worker result 6ms
+   × fresh direct reviewConsumed rejection records no write without inventing a worker result 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/skill_management_controller.test.ts > fresh direct reviewExpired rejection records no write without inventing a worker result
+AssertionError: expected { request: { …(7) }, …(8) } to match object { unresolved: false, …(3) }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "admissionRejected": true,
+    "error": "reviewExpired",
+    "operation": null,
+-   "unresolved": false,
++   "unresolved": true,
+  }
+
+ ❯ src/runtime/skill_management_controller.test.ts:256:35
+    254|   h.client.confirm(h.owner, review);await flush();
+    255|   h.confirm.reject({code});await flush();
+    256|   expect(h.client.get("fixture")).toMatchObject({unresolved:false,admi…
+       |                                   ^
+    257|   expect(h.inventory.get("fixture").results.skills?.stale).toBe(false);
+    258|   expect(h.port.confirm).toHaveBeenCalledTimes(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/runtime/skill_management_controller.test.ts > fresh direct reviewConsumed rejection records no write without inventing a worker result
+AssertionError: expected { request: { …(7) }, …(8) } to match object { unresolved: false, …(3) }
+(13 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "admissionRejected": true,
+    "error": "reviewConsumed",
+    "operation": null,
+-   "unresolved": false,
++   "unresolved": true,
+  }
+
+ ❯ src/runtime/skill_management_controller.test.ts:256:35
+    254|   h.client.confirm(h.owner, review);await flush();
+    255|   h.confirm.reject({code});await flush();
+    256|   expect(h.client.get("fixture")).toMatchObject({unresolved:false,admi…
+       |                                   ^
+    257|   expect(h.inventory.get("fixture").results.skills?.stale).toBe(false);
+    258|   expect(h.port.confirm).toHaveBeenCalledTimes(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/runtime/skill_management_types.test.ts > review and operation must describe the same display location
+AssertionError: expected [Function] to throw an error
+ ❯ src/runtime/skill_management_types.test.ts:152:150
+    150| it("review and operation must describe the same display location",()=>{
+    151|   const op=operation(request,"ready");
+    152|   expect(()=>parseSkillChangeOperation({...op,review:{...op.review,tar…
+       |                                                                                                                                                      ^
+    153| });
+    154| it("cleanup may expose write facts and observation but not a final out…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/runtime/skill_management_types.test.ts > cleanup may expose write facts and observation but not a final outcome
+AssertionError: expected [Function] to throw an error
+ ❯ src/runtime/skill_management_types.test.ts:158:71
+    156|   const op={...written(r),state:"pendingCleanup",phase:"cleaning",sett…
+    157|   expect(parseSkillChangeOperation(op,r).outcome).toBeNull();
+    158|   expect(()=>parseSkillChangeOperation({...op,outcome:"rejected"},r)).…
+       |                                                                       ^
+    159| });
+    160|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed | 19 passed (23)
+   Start at  00:20:12
+   Duration  220ms (transform 127ms, setup 0ms, import 183ms, tests 33ms, environment 0ms)
+

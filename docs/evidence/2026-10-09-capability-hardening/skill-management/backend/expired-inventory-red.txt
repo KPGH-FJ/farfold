@@ -1,0 +1,18 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.62s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::skill_management::independent_tests::independent_expired_inventory_cannot_leave_review_arc_authority_after_cancel' (25615614) panicked at src/acp_client/skill_management/independent_tests.rs:354:5:
+assertion failed: matches!(confirmation, Err(Failure { code: Code::TargetUnavailable }))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::skill_management::independent_tests::independent_expired_inventory_cannot_leave_review_arc_authority_after_cancel ... FAILED
+
+failures:
+
+failures:
+    acp_client::skill_management::independent_tests::independent_expired_inventory_cannot_leave_review_arc_authority_after_cancel
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1499 filtered out; finished in 0.14s
+
+error: test failed, to rerun pass `--lib`

@@ -5,8 +5,8 @@ use std::{
     collections::HashSet,
     time::{SystemTime, UNIX_EPOCH},
 };
-pub(super) const STDOUT_LIMIT: usize = 1024 * 1024;
-pub(super) const STDERR_LIMIT: usize = 64 * 1024;
+pub(in crate::acp_client) const STDOUT_LIMIT: usize = 1024 * 1024;
+pub(in crate::acp_client) const STDERR_LIMIT: usize = 64 * 1024;
 
 #[derive(Deserialize)]
 struct Row {
@@ -22,7 +22,7 @@ struct Transport {
 
 // serde's recursion ceiling is larger than the query's budget. Count containers
 // outside JSON strings first; serde still validates escapes, UTF-8 and full EOF.
-pub(super) fn bounded_depth(bytes: &[u8]) -> bool {
+pub(in crate::acp_client) fn bounded_depth(bytes: &[u8]) -> bool {
     let (mut depth, mut string, mut escaped) = (0usize, false, false);
     for &byte in bytes {
         if string {
@@ -49,7 +49,7 @@ pub(super) fn bounded_depth(bytes: &[u8]) -> bool {
     }
     depth == 0 && !string
 }
-pub(super) fn safe_name(name: &str) -> Option<String> {
+pub(in crate::acp_client) fn safe_name(name: &str) -> Option<String> {
     // Display only simple labels. URL/path/header-like names are retained as an
     // unnamed row. No filter can prove arbitrary user-given labels contain no secret.
     (!name.is_empty()
@@ -60,7 +60,7 @@ pub(super) fn safe_name(name: &str) -> Option<String> {
         && !name.contains(".."))
     .then(|| name.to_owned())
 }
-pub(super) fn parse(bytes: &[u8]) -> Result<McpInventory> {
+pub(in crate::acp_client) fn parse(bytes: &[u8]) -> Result<McpInventory> {
     if bytes.len() > STDOUT_LIMIT {
         return Err(Code::OutputLimit.into());
     }

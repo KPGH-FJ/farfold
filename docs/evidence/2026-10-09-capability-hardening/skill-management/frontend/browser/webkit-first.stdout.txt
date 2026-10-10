@@ -1,0 +1,1 @@
+{"passed":false,"checks":3,"failure":"Error: row inspect uses original exact inventory request and item without path/config","errors":[]}

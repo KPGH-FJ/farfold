@@ -239,3 +239,15 @@ docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/
 docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/install-independent-schema-failure.json
 # Preserve the original failed installation-verifier receipt and its referenced hash.
 docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/install-independent-first-failed.json
+
+# Exact executed skill-management browser inputs, hashed by the frozen receipts.
+docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/run.mjs
+docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/run-admission.mjs
+docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/run-wire.mjs
+docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/fixture.tsx
+docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/wire-fixture.tsx
+docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/index.html
+docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/wire.html
+# Original serialized Rust output retains its exact bytes and existing references.
+docs/evidence/2026-10-09-capability-hardening/skill-management/backend/actual-wire-raw.json
+docs/evidence/2026-10-09-capability-hardening/skill-management/backend/final-wire-raw.json

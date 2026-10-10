@@ -1,0 +1,1 @@
+{"passed":true,"checks":[{"name":"exact pre-admission expired review does not imply a possible configuration write","pass":true},{"name":"expired review ends this local attempt without status/cancel cleanup fiction","pass":true},{"name":"no automatic repeat confirm or model request","pass":true}]}

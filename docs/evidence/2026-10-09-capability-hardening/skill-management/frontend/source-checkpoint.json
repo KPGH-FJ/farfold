@@ -1,0 +1,125 @@
+{
+  "phase": "sourceFrozenPendingPeerFinalReview",
+  "sourceCount": 23,
+  "sourceRefs": [
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "016305dbd46f7f308870c10765043ce55c56a19d90f6afd07b705422ced3e69b",
+      "lines": 337
+    },
+    {
+      "path": "src/components/AgentExtensionInventoryResult.test.tsx",
+      "sha256": "8c731e17469034478233a97b3ecbde82d513d5fe5d160314c49b99c7f4c87d0f",
+      "lines": 98
+    },
+    {
+      "path": "src/components/AgentExtensionInventoryResult.tsx",
+      "sha256": "eecdde2054e57e95d4cca6580dc631907cd5cb5808ece06e6f67371c3ac443f3",
+      "lines": 102
+    },
+    {
+      "path": "src/components/SkillChangeReview.css",
+      "sha256": "89da5c59124b987f8aec7f43583f37cbeb0a1beb29e78dd7bcff6cfd0afdfab7",
+      "lines": 35
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "bda2daa17631bc71b86324fc4c93989ed7358262c075348f546728bd7274f6f5",
+      "lines": 235
+    },
+    {
+      "path": "src/runtime/extension_inventory.management.test.ts",
+      "sha256": "bbaa6f8e87492f0b06481c97060c08e44baeaaaaeaa768b91623c9aa17523a9c",
+      "lines": 59
+    },
+    {
+      "path": "src/runtime/extension_inventory.qualified-names.test.tsx",
+      "sha256": "a1cff83c20f748ca8637748b60702e45cdda889168392a84bf936ffbaefa0e86",
+      "lines": 125
+    },
+    {
+      "path": "src/runtime/extension_inventory.qualified-wire.test.tsx",
+      "sha256": "af43016dd7a6b5d0badea9cafa733e6206e80c702f531e62bc3b366e651ea173",
+      "lines": 72
+    },
+    {
+      "path": "src/runtime/extension_inventory.skills.test.ts",
+      "sha256": "4f4a88f4bbe242c6869f84c07c05131ee35b97aea28c287008d1ed98bc025364",
+      "lines": 160
+    },
+    {
+      "path": "src/runtime/extension_inventory.test-support.ts",
+      "sha256": "09dc596141bf3377d6b9f0ff3f8515ad53985c778ea72e2c31691b5bb7896498",
+      "lines": 55
+    },
+    {
+      "path": "src/runtime/extension_inventory.wire.test.ts",
+      "sha256": "271f4fc2a56711b9a6bd197fb50d358460a236705fe9f3542b3cf7f0bd4e29f2",
+      "lines": 88
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.ts",
+      "sha256": "444c4375aa04bd86e819ded8aa80dd50fb28b5333c4c93c83cc7e207b1d1aa95",
+      "lines": 371
+    },
+    {
+      "path": "src/runtime/extension_inventory_strings.ts",
+      "sha256": "16f105bc7cdaf66d2e67681b0763b7390ba1cde070e8a8175403c28813884c61",
+      "lines": 100
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.test.ts",
+      "sha256": "4228109a2db34fcdc3d9d90223038c4cf056d4f9b10215c7294596838f3577a7",
+      "lines": 99
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "333c6848ac0704d7efca987e66be5631d4492251677f615a40f3eacf21b3c89e",
+      "lines": 471
+    },
+    {
+      "path": "src/runtime/skill_management.test-support.ts",
+      "sha256": "6bc360ed09ab78e75beeacc498e6b32e1c3690373ed67120d04447813bedd210",
+      "lines": 181
+    },
+    {
+      "path": "src/runtime/skill_management.ts",
+      "sha256": "83e8e84b767a042ed7372aed7f5b9976ad7f4b784cf77d53ef7786fe81d479b9",
+      "lines": 23
+    },
+    {
+      "path": "src/runtime/skill_management.wire.test.ts",
+      "sha256": "363253ae9942885ce92307743adf40b14c89bb00e75d82518a911524660f798a",
+      "lines": 69
+    },
+    {
+      "path": "src/runtime/skill_management_controller.test.ts",
+      "sha256": "8436d0bdc2b5b07dc4db84c6e5b2ff60e69cd91d9cbe3e1207879131a56ebad9",
+      "lines": 323
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "776a69333e30971dc498ac904efab22584c62093945cec12bfa8296824d1f476",
+      "lines": 477
+    },
+    {
+      "path": "src/runtime/skill_management_strings.ts",
+      "sha256": "a94f2f7c90c766ffeb1cfcb91afbae577cf7e3e5a722389bdf244a59fe0f44c0",
+      "lines": 85
+    },
+    {
+      "path": "src/runtime/skill_management_types.test.ts",
+      "sha256": "449b592af32fda65c53bcfed51c7cd40b403994c605c6ab47a61c29b46bbce9a",
+      "lines": 183
+    },
+    {
+      "path": "src/runtime/skill_management_types.ts",
+      "sha256": "3e2cdf35935dcdf0126a428803f916a84887649af81c6cf9cce3e014d9b1b344",
+      "lines": 522
+    }
+  ],
+  "actualWire": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/actual-wire.json",
+    "sha256": "6adf2a98e6f152f3f01bf478aa956fb7d3652251d2c2bbae4a95901157d8a404"
+  }
+}

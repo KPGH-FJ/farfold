@@ -1,0 +1,10 @@
+{
+  "pid": 54770,
+  "exactCommand": "node output/2026-10-11-skill-management-browser/serve.mjs",
+  "signal": "SIGTERM",
+  "scope": "Only this task owned Vite server; no App or Agent process",
+  "requestedAt": "2026-10-10T16:29:44.022559+00:00",
+  "execSessionExitCode": 143,
+  "afterExactPidAbsent": true,
+  "claim": "Owned server signalled only after all browser processes closed; no claim of exit code zero."
+}

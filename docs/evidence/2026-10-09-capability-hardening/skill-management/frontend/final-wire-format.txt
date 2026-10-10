@@ -1,0 +1,2 @@
+docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/final-wire-review.test.ts 133ms
+docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/final-wire-vitest.config.ts 3ms

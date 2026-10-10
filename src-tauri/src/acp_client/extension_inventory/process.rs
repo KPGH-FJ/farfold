@@ -132,33 +132,68 @@ fn drain(
         Err(_) => Err(Code::QueryFailed.into()),
     }
 }
-enum Output {
-    Bytes(Vec<u8>),
-    Skills(SkillsInventory),
+// A transport seam for the two fixed exchanges only; it exposes no RPC method API.
+pub(in crate::acp_client) trait FixedExchange {
+    fn write(&mut self, writer: &mut std::process::ChildStdin) -> Result<()>;
+    fn received(&mut self, bytes: &mut Vec<u8>) -> Result<()>;
+    fn done(&self) -> bool;
+}
+pub(in crate::acp_client) trait Control {
+    fn interested(&self) -> bool;
+    fn deadline(&self) -> Instant;
+    fn pending_cleanup(&self);
+}
+impl Control for Request {
+    fn interested(&self) -> bool {
+        self.operation.interested()
+    }
+    fn deadline(&self) -> Instant {
+        self.deadline
+    }
+    fn pending_cleanup(&self) {
+        self.progress(State::PendingCleanup, Some(Code::PendingCleanup));
+    }
+}
+impl FixedExchange for super::skills_rpc::Exchange {
+    fn write(&mut self, writer: &mut std::process::ChildStdin) -> Result<()> {
+        self.write(writer)
+    }
+    fn received(&mut self, bytes: &mut Vec<u8>) -> Result<()> {
+        self.received(bytes)
+    }
+    fn done(&self) -> bool {
+        self.done()
+    }
 }
 pub(super) fn run(command: Command, request: &Request) -> Result<Vec<u8>> {
-    match run_owned(command, request, None)? {
-        Output::Bytes(bytes) => Ok(bytes),
-        _ => Err(Code::InvalidOutput.into()),
-    }
+    run_owned(command, request, None, STDOUT_LIMIT)
 }
+#[cfg(test)]
 pub(super) fn run_skills(command: Command, request: &Request) -> Result<SkillsInventory> {
-    let rpc =
-        super::skills_rpc::Exchange::new(request.cwd.as_deref().ok_or(Code::InvalidRequest)?)?;
-    match run_owned(command, request, Some(rpc))? {
-        Output::Skills(value) => Ok(value),
-        _ => Err(Code::InvalidOutput.into()),
-    }
+    run_skills_private(command, request).map(|v| v.0)
 }
-fn run_owned(
+pub(super) fn run_skills_private(
     command: Command,
     request: &Request,
-    mut rpc: Option<super::skills_rpc::Exchange>,
-) -> Result<Output> {
-    if !request.operation.interested() {
+) -> Result<(SkillsInventory, Vec<super::targets::SkillTarget>)> {
+    let mut rpc =
+        super::skills_rpc::Exchange::new(request.cwd.as_deref().ok_or(Code::InvalidRequest)?)?;
+    let mut out = run_owned(command, request, Some(&mut rpc), STDOUT_LIMIT)?;
+    let targets = rpc.take_targets();
+    let result = rpc.finish(&out);
+    out.fill(0);
+    result.map(|v| (v, targets))
+}
+pub(in crate::acp_client) fn run_owned(
+    command: Command,
+    request: &dyn Control,
+    mut rpc: Option<&mut dyn FixedExchange>,
+    stdout_limit: usize,
+) -> Result<Vec<u8>> {
+    if !request.interested() {
         return Err(Code::Cancelled.into());
     }
-    if Instant::now() >= request.deadline {
+    if Instant::now() >= request.deadline() {
         return Err(Code::TimedOut.into());
     }
     let (mut owner, mut streams) = spawn(command, rpc.is_some())?;
@@ -171,9 +206,9 @@ fn run_owned(
     let mut killed = false;
     loop {
         if failure.is_none() {
-            failure = if Instant::now() >= request.deadline {
+            failure = if Instant::now() >= request.deadline() {
                 Some(Code::TimedOut.into())
-            } else if !request.operation.interested() {
+            } else if !request.interested() {
                 Some(Code::Cancelled.into())
             } else {
                 None
@@ -192,7 +227,7 @@ fn run_owned(
                 killed = true;
             }
             if start.elapsed() >= Duration::from_secs(7) {
-                request.progress(State::PendingCleanup, Some(Code::PendingCleanup));
+                request.pending_cleanup();
             }
         }
         if failure.is_none()
@@ -207,7 +242,7 @@ fn run_owned(
                 &mut streams.out,
                 &mut out,
                 &mut out_count,
-                STDOUT_LIMIT,
+                stdout_limit,
                 failure.is_none(),
             ) {
                 Ok(done) => out_done = done,
@@ -264,11 +299,5 @@ fn run_owned(
         out.fill(0);
         return Err(Code::QueryFailed.into());
     }
-    if let Some(exchange) = rpc {
-        let result = exchange.finish(&out);
-        out.fill(0);
-        result.map(Output::Skills)
-    } else {
-        Ok(Output::Bytes(out))
-    }
+    Ok(out)
 }

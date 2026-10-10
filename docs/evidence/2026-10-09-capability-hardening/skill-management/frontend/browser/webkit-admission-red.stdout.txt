@@ -1,0 +1,1 @@
+{"passed":false,"checks":[{"name":"exact pre-admission expired review does not imply a possible configuration write","pass":false}],"failure":"Error: exact pre-admission expired review does not imply a possible configuration write"}

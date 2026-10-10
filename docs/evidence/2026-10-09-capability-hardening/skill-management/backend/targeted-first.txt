@@ -1,0 +1,39 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error[E0603]: module `types` is private
+  --> src/acp_client/skill_management/independent_tests.rs:14:9
+   |
+14 |         types::{InventorySnapshot, Kind},
+   |         ^^^^^ private module
+   |
+help: consider importing this enum through its public re-export instead:
+      crate::acp_client::extension_inventory::InventorySnapshot
+  --> src/acp_client/skill_management/independent_tests.rs:14:17
+   |
+14 |         types::{InventorySnapshot, Kind},
+   |                 ^^^^^^^^^^^^^^^^^
+note: the module `types` is defined here
+  --> src/acp_client/extension_inventory/mod.rs:10:1
+   |
+10 | mod types;
+   | ^^^^^^^^^^
+
+error[E0603]: module `types` is private
+  --> src/acp_client/skill_management/independent_tests.rs:14:9
+   |
+14 |         types::{InventorySnapshot, Kind},
+   |         ^^^^^ private module
+   |
+help: consider importing this enum through its public re-export instead:
+      crate::acp_client::extension_inventory::Kind
+  --> src/acp_client/skill_management/independent_tests.rs:14:36
+   |
+14 |         types::{InventorySnapshot, Kind},
+   |                                    ^^^^
+note: the module `types` is defined here
+  --> src/acp_client/extension_inventory/mod.rs:10:1
+   |
+10 | mod types;
+   | ^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0603`.
+error: could not compile `farfold` (lib test) due to 2 previous errors

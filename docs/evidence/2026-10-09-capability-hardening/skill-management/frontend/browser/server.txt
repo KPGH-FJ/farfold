@@ -1,0 +1,10 @@
+{"pid":54770,"port":1502}
+12:19:30 AM [vite] (client) page reload output/2026-10-11-skill-management-browser/fixture.tsx
+12:20:39 AM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx, /src/components/SkillChangeReview.tsx
+12:20:39 AM [vite] (client) hmr update /src/components/SkillChangeReview.tsx
+12:20:39 AM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx, /src/components/SkillChangeReview.tsx
+12:21:37 AM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx, /src/components/SkillChangeReview.tsx
+12:21:37 AM [vite] (client) hmr update /src/components/AgentExtensionInventory.tsx, /src/components/SkillChangeReview.tsx
+12:21:37 AM [vite] (client) hmr update /src/components/SkillChangeReview.tsx
+12:26:07 AM [vite] (client) page reload output/2026-10-11-skill-management-browser/index.html
+12:26:07 AM [vite] (client) page reload output/2026-10-11-skill-management-browser/wire.html

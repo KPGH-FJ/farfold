@@ -22,6 +22,16 @@ pub enum Code {
     InvalidRequest,
     RequestConflict,
     Unavailable,
+    TargetUnavailable,
+    TargetChanged,
+    InventoryIncomplete,
+    ReviewExpired,
+    ReviewConsumed,
+    ConfigurationUnsupported,
+    ConfigurationChanged,
+    ConfigurationReadOnly,
+    ConfigurationRejected,
+    WriteUncertain,
 }
 #[derive(Clone, Copy, Debug, Serialize, PartialEq, Eq)]
 pub struct Failure {
@@ -47,6 +57,7 @@ pub struct ExtensionCapabilities {
     pub selection_id: Option<String>,
     pub mcp_inventory: InventoryCapability,
     pub skills_inventory: InventoryCapability,
+    pub skill_enablement: InventoryCapability,
     pub tool_inventory: &'static str,
 }
 
@@ -145,4 +156,10 @@ pub struct SkillInventoryItem {
     pub reported_enabled: bool,
     pub origin: &'static str,
     pub plugin_reported: bool,
+    pub enablement: SkillEnablement,
+}
+#[derive(Clone, Debug, Serialize)]
+pub struct SkillEnablement {
+    pub availability: &'static str,
+    pub reason: Option<&'static str>,
 }

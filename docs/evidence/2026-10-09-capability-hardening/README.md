@@ -2,7 +2,9 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：提醒与媒体反馈已安装，继续技能管理
+## 当前衔接：技能启停通过工程检查，准备正式分项验证
+
+2026-10-11，P40共用审阅、一次确认、取消/状态及只读核对已完成本片实现与[独立复核](skill-management/independent/implementation.json)。[七项工程检查](skill-management-checks/run-02/verification.json)全部通过：1,439输入稳定，前端400文件/4,670项、Rust1,502项通过/6项忽略。官方配置完整规则值与顺序保留，旧清单撤权、真实进程清理和未知写入分别处理；不自动重试修改，不把只读观察追认为此前写入成功。最终实际Rust输出的[严格解析及控制流程复核](skill-management/frontend/backend-final-publication-review.json)通过。首轮仅两份原始回执的格式失败及[精确范围修正](skill-management-checks/raw-evidence-format-followup.json)保留。接续候选、安装和正式配置实测，尚未完成该层证据。P40发现/安装及其他管理、P39完整清单、P41和29家八项标准均继续，未关闭原条件。
 
 正式版为 `6c37a012` / 0.1.7 arm64，[正式提醒分项验证](notification-media-candidate/installed-notification-media.json)确认默认偏好、后台正常完成的系统接受及后台关闭偏好后不提交；实际显示/声音/点击、P47撤回及P13媒体仍待正式实证。三次受控请求沿用既有Codex选择，三项偏好恢复关闭且已正常退出；旧130对话、168屏蔽、未发8/8/3及工作树清单保留，新增仅本轮对话及关联状态、Codex更新时间和显式关闭字段，其他50项设置原值不变。候选9/9、安装10/10及三份217,400条快照相同。
 

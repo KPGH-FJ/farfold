@@ -1,3 +1,4 @@
+import { reportOrigin } from "../runtime/extension_inventory.test-support";
 import { expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import { AgentExtensionInventoryResult } from "./AgentExtensionInventoryResult";
@@ -22,13 +23,14 @@ const snapshot: SkillsInventory = {
       reportedEnabled: false,
       origin: "repo",
       pluginReported: true,
+      enablement: { availability: "unavailable", reason: "pluginManaged" },
     },
   ],
 };
 it("renders skills as plain text with disabled, source, partial and filtering reports", () => {
   const html = renderToStaticMarkup(
     <AgentExtensionInventoryResult
-      result={{ cwd: "/controlled", snapshot, stale: true }}
+      result={{ ...reportOrigin, cwd: "/controlled", snapshot, stale: true }}
       stale
     />,
   );
@@ -50,6 +52,7 @@ it("does not turn a partial result without readable items into an empty complete
   const html = renderToStaticMarkup(
     <AgentExtensionInventoryResult
       result={{
+        ...reportOrigin,
         cwd: "/controlled",
         snapshot: { ...snapshot, items: [] },
         stale: false,
@@ -70,6 +73,7 @@ it("keeps duplicate reported names as distinct rows and shows a complete empty l
   const html = renderToStaticMarkup(
     <AgentExtensionInventoryResult
       result={{
+        ...reportOrigin,
         cwd: "/controlled",
         snapshot: { ...snapshot, items },
         stale: false,
@@ -81,6 +85,7 @@ it("keeps duplicate reported names as distinct rows and shows a complete empty l
   const empty = renderToStaticMarkup(
     <AgentExtensionInventoryResult
       result={{
+        ...reportOrigin,
         cwd: "/controlled",
         snapshot: { ...snapshot, items: [], complete: true, errorCount: 0 },
         stale: false,

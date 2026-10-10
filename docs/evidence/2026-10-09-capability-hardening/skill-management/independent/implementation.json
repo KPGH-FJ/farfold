@@ -1,0 +1,563 @@
+{
+  "status": "Independent source and controlled-peer review complete; no remaining blocker found in reviewed scope; not official configuration or installed acceptance",
+  "atUtc": "2026-10-10T16:39:40.261766+00:00",
+  "ownership": {
+    "reviewer": "product_coverage",
+    "testAuthor": "product_coverage",
+    "cargoExecutor": "architecture, single coordinated Cargo window",
+    "productionFixOwner": "architecture",
+    "frontendAuthorAndBrowserExecutor": "verification",
+    "independentExecutedCargoAgain": false,
+    "independentExecutedBrowser": false,
+    "realAgentOrCliStarted": false,
+    "userConfigurationOrLiveDatabaseAccessed": false
+  },
+  "checkpoints": {
+    "backendBefore": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/source-final-before.json",
+      "sha256": "88b63d6e85c979c554aa3391a2e4a35e7186f9a74dfe36f4f3e8a0bf0ce4c33d"
+    },
+    "backendAfter": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/source-final-after.json",
+      "sha256": "da4149a3a501248bd8bed79e1eb05a6b3d87cf99c08de4404adbec7e4da79594"
+    },
+    "backendBeforeAfterEqual": true,
+    "backendCurrentMatched": 24,
+    "frontend": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/source-checkpoint.json",
+      "sha256": "53955032b0f5b8412281d01fa26a193f0b3bc8313c815854bdad17b15866c21d"
+    },
+    "frontendCurrentMatched": 23,
+    "allCurrentSourcesMatched": true
+  },
+  "independentTests": {
+    "count": 10,
+    "cases": [
+      "independent_only_final_path_only_rule_is_updated_without_dropping_unknown_fields",
+      "independent_highest_user_profile_preserves_complete_unknown_json_and_other_layers",
+      "independent_malformed_postwrite_error_is_unknown_not_known_rejection",
+      "independent_inventory_revocation_does_not_cancel_separately_admitted_confirmation",
+      "independent_expired_inventory_cannot_leave_review_arc_authority_after_cancel",
+      "independent_ready_inventory_cancel_revokes_management_but_keeps_public_history",
+      "independent_actual_worker_holds_shared_slot_and_permits_after_observer_drop",
+      "independent_postwrite_errors_and_lost_ack_cannot_be_reported_as_rejected_or_not_dispatched",
+      "independent_matching_ok_overridden_is_verified_but_non_target_corruption_is_not",
+      "independent_known_prewrite_rejections_preserve_original_synthetic_config"
+    ],
+    "finalRun": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-complete.txt",
+      "sha256": "ba8dcf95e6bc554d294952928d89fa4e75af4d2bf32addc7b6215dfd9c01a6a0"
+    },
+    "allCasesPassed": true,
+    "suiteTotal": 24,
+    "scope": "Real production Config/Plan/private targets/Requests/fixed Exchange/process::run_owned; lifecycle case additionally uses production execute_with/run_selected and actual wait future dropped while the real controlled descendant holds the process group and stdout. All durable peer/config/audit writes confined to fresh synthetic temporary directories.",
+    "fixtureChange": "Final fixture stages the private review only after successful exchange/cleanup and calls production finish before reading public Ready, without manually setting watch DTO fields. Profile fixture now uses separate selected-profile.config.toml and base config.toml; it does not prove an official profile run."
+  },
+  "confirmedIndependentFindings": [
+    {
+      "id": "malformed-postwrite-error",
+      "origin": "Independent synthetic peer",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-serial-red.txt",
+        "sha256": "7efb4e2102c3ec195f5a57fa607c11ce809187aa1727e363142898e24a94780e"
+      },
+      "observed": "Peer durably records the intended synthetic write, then sends only data.config_write_error_code=configValidationError without numeric error code/message. Original decoder falsely published Rejected.",
+      "fix": "Only exact structured -32600 with a string message can use the four reviewed rejection codes; malformed, userLayerNotFound, internal and lost acknowledgement remain unknown.",
+      "finalTest": "independent_malformed_postwrite_error_is_unknown_not_known_rejection"
+    },
+    {
+      "id": "expired-inventory-arc",
+      "origin": "Root proposed lifetime window; independent deterministic registry/Arc counterexample",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/expired-inventory-red.txt",
+        "sha256": "38b8ac3fa081bdfb6c0f8c7804e822fae8aafcbf9e090c892ab649d8913433e4"
+      },
+      "observed": "Settled inventory pruning removed the map entry without retiring the Arc retained by a live review; exact cancel then created a new tombstone and confirm still succeeded.",
+      "fix": "Prune atomically abandons old authority and takes private targets before removal; active records remain retained. Separately admitted confirmations intentionally retain their independent operation.",
+      "finalTest": "independent_expired_inventory_cannot_leave_review_arc_authority_after_cancel"
+    }
+  ],
+  "otherRootAndAuthorFindingsReviewed": [
+    {
+      "issue": "Explicit prewrite rejection overwritten by cleanup error; final outcome published before real worker end; missing target recheck did not form observation",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-serial-red.txt",
+        "sha256": "7efb4e2102c3ec195f5a57fa607c11ce809187aa1727e363142898e24a94780e"
+      },
+      "final": "All corresponding author tests in final 24 pass."
+    },
+    {
+      "issue": "Recheck inherited rejected acknowledgement suppressed current observation",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/rejected-recheck-red.txt",
+        "sha256": "6bb4955ea1a12552ba0f62331fbc059f129bc503bde419f54da3d5c22aff2c7a"
+      },
+      "final": "Original acknowledgement retained; readonly current observation may be Observed."
+    },
+    {
+      "issue": "Inspection cancellation between review publication and finish revived Ready",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inspect-final-cancel-red.txt",
+        "sha256": "414fb77334c4a270464f06c044669294f27f97f09561221faaba2d7d599b06cd"
+      },
+      "final": "Inspection interest rechecked at finish; exact cancellation retires private review."
+    },
+    {
+      "issue": "Public review appeared while inspection still running, violating strict DTO",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inspect-publication-red.txt",
+        "sha256": "86ae579996b898da547cded37cb8c8c41e2859925d60423e224df4bd3afffc40"
+      },
+      "final": "Private pending_review becomes public only atomically with settled Ready."
+    },
+    {
+      "issue": "Late cleanup observation changed an already settled inspection",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/late-terminal-observation-red.txt",
+        "sha256": "f6183f8cb7b37eea6ab4960e101ccd7917fb477b9cbd145e3939b32f1af43bc5"
+      },
+      "final": "finish and pending cleanup preserve terminal facts; final targeted green."
+    }
+  ],
+  "failureClassification": {
+    "targetedFirst": "Compile-only private import error, fixed to existing public reexports; not product red.",
+    "initialParallel": "15 tests: 6 passed/9 failed; eight shared fixture/admission collisions plus one real rejection/cleanup defect. Preserved, not counted as nine product defects.",
+    "serialBaseline": "15 tests: 11 passed/4 genuine functional failures.",
+    "filterMiss": "Expired-inventory first filter matched zero tests, preserved but not a reproduction.",
+    "clippyFirst": "Two unused production helpers and one argument-count lint; final clippy passes.",
+    "historicalGreen": "20 and 22 case green runs are historical checkpoints; final 24 run binds the final source checkpoint."
+  },
+  "reviewedInvariants": [
+    "Same original private inventory target map supplies exact AgentRow, cwd directory identity, item path/name/origin. Public item ordinal or frontend label/path never supplies mutation authority.",
+    "Original inventory cancel revokes ready private map; review close/expiry cannot regrant authority. A separately admitted confirmation remains tracked by its own UUID.",
+    "Configuration review reads cwd:null high-to-low raw User layers; one exact complete skills.config array replacement preserves supported unknown semantic JSON values and order. Unsupported values refuse, not silently drop.",
+    "Confirm rereads exact target and full configuration baseline, consumes a review once, sends at most one fixed write and performs both full configuration and target readback. Recheck never repeats the write.",
+    "Four exact errors are known refusals of the requested edit, not evidence of zero startup/maintenance disk writes. UserLayerNotFound can occur after official apply and stays unknown.",
+    "Shared execution lease limits actual inventory and management workers to two. Observer drop does not release activity/configuration/AccountScope/worker lease before child/group/pipes cleanup.",
+    "Current account scope covers known selected entry aliases, not every external same-account process. Existing idle connections can still receive remote events.",
+    "Frontend review/confirm binds exact original result, owner and review. Fresh direct reviewExpired/reviewConsumed with no lost observer or observed operation only ends pre-admission tracking; status/cancel/late/unknown errors cannot borrow that exception.",
+    "Write facts are monotone in frontend observations; readback after lost acknowledgement reports current Observed rather than retroactive successful attribution. No automatic retry or optimistic skill toggle."
+  ],
+  "officialProfileAudit": {
+    "version": "retained official rust-v0.156.1 sources; no new CLI execution",
+    "result": "Profile-v2 is a distinct selected <name>.config.toml file. Protocol User.profile is real metadata. Loader adds base config.toml then selected file; config/read reports high-to-low and writer selects get_active_user_layer. filePath must equal loader-selected writable path; expectedVersion checks that layer, not profile selection. keyPath stays skills.config; legacy profiles.* is explicitly rejected.",
+    "lines": {
+      "protocol/v2/config.rs": [78, 85],
+      "loader/mod.rs": [282, 324],
+      "state.rs": [104, 111, 325, 335],
+      "config_manager.rs": [78, 80],
+      "config_manager_service.rs": [169, 225, 255, 284, 293, 413, 432]
+    },
+    "refs": [
+      {
+        "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/config_manager_service.rs",
+        "sha256": "cb5e0862e3402aed6349d870f4a8b38472ad1835edd906f797ea1e3aeeac8209"
+      },
+      {
+        "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/request_processors/config_processor.rs",
+        "sha256": "66d0f303742fc268f9f4557cc01418c89c85854ff58f3feb7321e19a891b1db2"
+      },
+      {
+        "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server-protocol/src/protocol/v2/config.rs",
+        "sha256": "8187edb07de0259f5a96927ca69b749a7ba9049062bf2ef2eb1ff9c7d8696447"
+      },
+      {
+        "path": "output/2026-10-10-skill-management-draft/official-followup/complete/codex-rs/app-server/src/config_manager.rs",
+        "sha256": "ec35b4c9ce10eb58d5a44baa58598006fbb63f0310d2fa5ca03f2d6bf8884bb2"
+      },
+      {
+        "path": "output/2026-10-10-skill-management-draft/official-followup/complete/codex-rs/config/src/state.rs",
+        "sha256": "4d3e0fd6be54861035c902565244ed1239f39f81b5b0cad9641b7e5d075a467d"
+      },
+      {
+        "path": "output/2026-10-10-skill-management-draft/official-followup/complete/codex-rs/config/src/loader/mod.rs",
+        "sha256": "de2afb184ca5e6807ab753f82ba18ba651aec7a8f75bc53722e5aab5b799d5b2"
+      },
+      {
+        "path": "output/2026-10-10-skill-management-draft/official-followup/complete-downloads.json",
+        "sha256": "4bcf65f4a44602a52d6007c7def68fbd3548ec782cdd67675893bcd961a4e9bc"
+      }
+    ]
+  },
+  "frontendReview": {
+    "implementation": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/implementation.json",
+      "sha256": "2b6befc29b0be7e267085d22a099dec046c1f0b136137e0a10a8f8c0ffd87bfd"
+    },
+    "associated94": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/associated-final.txt",
+      "sha256": "0af490062c4b77e65ef89eff241a7f7c5949e4ddfe2ef00daf0b418d01cdbd61"
+    },
+    "admissionAndShapeRed": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/admission-and-shape-red.txt",
+      "sha256": "8e27d98fb09ab9271d6d43102deab9e724034e91ba8561ae33f6c5151e38d6a8"
+    },
+    "narrowRefusalTests": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/associated-refusal.txt",
+      "sha256": "1e85526b87ecec6cff3810da0b4523b60af1719427fb246e2789ab657d5cbd9d"
+    },
+    "browserEvidence": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser-validation.json",
+      "sha256": "1e85a0db1344d5da55f79e583557c5485bc284d36498b6ffbb6f418b6a00cf8b"
+    },
+    "claim": "Source/hash/log review only; no independent browser rerun. WebKit 25 full-App checks precede three narrow frontend changes; final-source admission 3 and wire/shared-component 6 are separate. Chromium final full App 26 plus admission 3 and shared-component 6 are separately scoped."
+  },
+  "interoperability": {
+    "earlierActualWire": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/actual-wire.json",
+      "sha256": "6adf2a98e6f152f3f01bf478aa956fb7d3652251d2c2bbae4a95901157d8a404"
+    },
+    "finalActualWire": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/final-wire.json",
+      "sha256": "b1a40389a9008b582a74f9705302f53fba7684454a6b7473f6a79d705690823d"
+    },
+    "claim": "Actual synthetic peer -> production Rust serde. Frontend author owns final strict TS validation and UI replay; these are not real official configuration results.",
+    "earlierActualWireRaw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/actual-wire-raw.txt",
+      "sha256": "05d921b156ee4a0537477ee2844213dd6af790a0bc8e360684e97cf400e0d9a4"
+    },
+    "finalActualWireRaw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/final-wire-raw.txt",
+      "sha256": "8262cfbf9c58bdd150b8abf4279cf7e547d1ff9d737ecef70a92d5030592cf8f"
+    }
+  },
+  "limits": [
+    "No real Codex/app-server, official user configuration mutation, formal App, installed flow, external credentials or original database tested by this reviewer.",
+    "expectedVersion is not an interprocess CAS. A concurrent external edit after checking can race or be overwritten; readback cannot prove preservation of an unseen transient edit. No rollback guarantee.",
+    "Complete supported JSON values and array ordering are preserved; TOML comments/format bytes are not promised. Unknown/unrepresentable values refuse.",
+    "Independent shared-two-slot case starts one actual management worker plus a second shared lease primitive, not two official CLI processes. Child/group/pipe cleanup and dropped actual observer are exercised.",
+    "Profile test proves synthetic distinct-layer routing and preservation only. Scope applicability to existing sessions and all 29 Agents/Windows remain unverified.",
+    "Full repository checks, candidate, installation and actual official mutation remain parent-owned subsequent evidence."
+  ],
+  "helperStaticReview": {
+    "path": "output/2026-10-10-skill-management-independent/helper-static-review.json",
+    "sha256": "dbcec048100d77ed223db8cdb808a9e9777dbbea953b787925ce2a6be4dda609"
+  },
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/execution.rs",
+      "sha256": "c0f7c25f093856d42ca41e3cafa2b250e7c1f801b680bcf65a2e87b042d8b4af",
+      "bytes": 714,
+      "lines": 24
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/execution_tests.rs",
+      "sha256": "956cde3ab25a10b862ad4ed629d7f7848305c47b7caff39ed0db8602031e5a48",
+      "bytes": 286,
+      "lines": 5
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "211c2c9418096e9464e001546950c264a8b2bea2aacffd8cc99528f452967f96",
+      "bytes": 6734,
+      "lines": 192
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "d7a9103f466917e2d1eb7704d6370a5b788ac51a2ca6ab84ab23c889ac7be631",
+      "bytes": 10390,
+      "lines": 314
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "ec72c7406cec880342a683c071110e9241e1760c906ff22a204e3f71c2a844c2",
+      "bytes": 3973,
+      "lines": 115
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "sha256": "7dafa5a0f0c50047ed26a72cb6b4514247f91551c31f9d03371ffa5b2cd8efbc",
+      "bytes": 9796,
+      "lines": 303
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "sha256": "aa64062a8cf38cdb2e52d40db67bf63aa7d0e748750fa61c40ba6cf8fba4f1be",
+      "bytes": 8264,
+      "lines": 238
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests_tests.rs",
+      "sha256": "be587749d04d4efa33f88228a45e6c1065a5edb7db4282c5e07d0c6992a646ba",
+      "bytes": 499,
+      "lines": 11
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_output.rs",
+      "sha256": "2471f37d0077d67e2f8cdd8277dd735b9de743f61599b6363c19d0e67d6edd86",
+      "bytes": 8771,
+      "lines": 260
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_rpc.rs",
+      "sha256": "8eeb00b2bbe4017f81c86dcc30e55d2e6c639f04eb0389739268be00fdc15517",
+      "bytes": 5161,
+      "lines": 153
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_tests.rs",
+      "sha256": "302710d64b223d3964b0b28b436ea5df2b3a67819c50d407e5d782afb8cc212b",
+      "bytes": 21425,
+      "lines": 618
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/targets.rs",
+      "sha256": "10ebd93de2deea94e1bb1a4d4d4bac25aca4d2f2bb9bfc22bf66a8c7b3760f24",
+      "bytes": 2587,
+      "lines": 85
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "sha256": "4e730541230308ebb43cf171d6d9793e4b61159702e3be2f59067af547d2ab4c",
+      "bytes": 28236,
+      "lines": 742
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "ff69d0d61796e8cd65864c0b915748f846962c69b63f79a059068fbd924e70ad",
+      "bytes": 4369,
+      "lines": 165
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "ba65f41a1ca6fb55ad6519205b259cabd798702e6884c3d3beebd3f84f4085d4",
+      "bytes": 2511,
+      "lines": 121
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/independent_peer.py",
+      "sha256": "3ff798c1dfe22252ac16aae8ef7ebd45ee79dce96cf09d4d15cacc2bab1a0fcc",
+      "bytes": 4936,
+      "lines": 142
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/independent_tests.rs",
+      "sha256": "83fabf6618dcf1b5486b0f47eb3cf386dd60b76eb4d3a145bdd5452e98132b7e",
+      "bytes": 17946,
+      "lines": 477
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "7188627f1cefd558b8e54861adf168dcfa276928693cff3aceb5468156fdae49",
+      "bytes": 7116,
+      "lines": 212
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/plan.rs",
+      "sha256": "1efac5d8815f8d7be6353f3794d59bd4f9a7ee3e5c1466f4dc982d08ba366850",
+      "bytes": 7491,
+      "lines": 211
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "f0bf0db7f425311bedf3f370a7bfb9e1aadc8537db7a94b34c83cb87a6bcb091",
+      "bytes": 15490,
+      "lines": 456
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/rpc.rs",
+      "sha256": "3784b58005c621a483b7c0aa9c2fc87a731d7819e2b4667982359bfc3f43b5e9",
+      "bytes": 12529,
+      "lines": 334
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/tests.rs",
+      "sha256": "62a8cd30d216cc8cf2eb718b7942091d219694177387562386fccfa49d52461c",
+      "bytes": 17876,
+      "lines": 487
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/types.rs",
+      "sha256": "243c3c984b4f46804952d90dd1ba118145a2d8b0f8b6adf32c8647ba37a26cd9",
+      "bytes": 3134,
+      "lines": 117
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "1293c05e181cd7eb7fe42e47e707e422350b58b25da7ac338b9b41ee7daecb75",
+      "bytes": 19372,
+      "lines": 436
+    },
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "016305dbd46f7f308870c10765043ce55c56a19d90f6afd07b705422ced3e69b",
+      "lines": 337
+    },
+    {
+      "path": "src/components/AgentExtensionInventoryResult.test.tsx",
+      "sha256": "8c731e17469034478233a97b3ecbde82d513d5fe5d160314c49b99c7f4c87d0f",
+      "lines": 98
+    },
+    {
+      "path": "src/components/AgentExtensionInventoryResult.tsx",
+      "sha256": "eecdde2054e57e95d4cca6580dc631907cd5cb5808ece06e6f67371c3ac443f3",
+      "lines": 102
+    },
+    {
+      "path": "src/components/SkillChangeReview.css",
+      "sha256": "89da5c59124b987f8aec7f43583f37cbeb0a1beb29e78dd7bcff6cfd0afdfab7",
+      "lines": 35
+    },
+    {
+      "path": "src/components/SkillChangeReview.tsx",
+      "sha256": "bda2daa17631bc71b86324fc4c93989ed7358262c075348f546728bd7274f6f5",
+      "lines": 235
+    },
+    {
+      "path": "src/runtime/extension_inventory.management.test.ts",
+      "sha256": "bbaa6f8e87492f0b06481c97060c08e44baeaaaaeaa768b91623c9aa17523a9c",
+      "lines": 59
+    },
+    {
+      "path": "src/runtime/extension_inventory.qualified-names.test.tsx",
+      "sha256": "a1cff83c20f748ca8637748b60702e45cdda889168392a84bf936ffbaefa0e86",
+      "lines": 125
+    },
+    {
+      "path": "src/runtime/extension_inventory.qualified-wire.test.tsx",
+      "sha256": "af43016dd7a6b5d0badea9cafa733e6206e80c702f531e62bc3b366e651ea173",
+      "lines": 72
+    },
+    {
+      "path": "src/runtime/extension_inventory.skills.test.ts",
+      "sha256": "4f4a88f4bbe242c6869f84c07c05131ee35b97aea28c287008d1ed98bc025364",
+      "lines": 160
+    },
+    {
+      "path": "src/runtime/extension_inventory.test-support.ts",
+      "sha256": "09dc596141bf3377d6b9f0ff3f8515ad53985c778ea72e2c31691b5bb7896498",
+      "lines": 55
+    },
+    {
+      "path": "src/runtime/extension_inventory.wire.test.ts",
+      "sha256": "271f4fc2a56711b9a6bd197fb50d358460a236705fe9f3542b3cf7f0bd4e29f2",
+      "lines": 88
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.ts",
+      "sha256": "444c4375aa04bd86e819ded8aa80dd50fb28b5333c4c93c83cc7e207b1d1aa95",
+      "lines": 371
+    },
+    {
+      "path": "src/runtime/extension_inventory_strings.ts",
+      "sha256": "16f105bc7cdaf66d2e67681b0763b7390ba1cde070e8a8175403c28813884c61",
+      "lines": 100
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.test.ts",
+      "sha256": "4228109a2db34fcdc3d9d90223038c4cf056d4f9b10215c7294596838f3577a7",
+      "lines": 99
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "333c6848ac0704d7efca987e66be5631d4492251677f615a40f3eacf21b3c89e",
+      "lines": 471
+    },
+    {
+      "path": "src/runtime/skill_management.test-support.ts",
+      "sha256": "6bc360ed09ab78e75beeacc498e6b32e1c3690373ed67120d04447813bedd210",
+      "lines": 181
+    },
+    {
+      "path": "src/runtime/skill_management.ts",
+      "sha256": "83e8e84b767a042ed7372aed7f5b9976ad7f4b784cf77d53ef7786fe81d479b9",
+      "lines": 23
+    },
+    {
+      "path": "src/runtime/skill_management.wire.test.ts",
+      "sha256": "363253ae9942885ce92307743adf40b14c89bb00e75d82518a911524660f798a",
+      "lines": 69
+    },
+    {
+      "path": "src/runtime/skill_management_controller.test.ts",
+      "sha256": "8436d0bdc2b5b07dc4db84c6e5b2ff60e69cd91d9cbe3e1207879131a56ebad9",
+      "lines": 323
+    },
+    {
+      "path": "src/runtime/skill_management_controller.ts",
+      "sha256": "776a69333e30971dc498ac904efab22584c62093945cec12bfa8296824d1f476",
+      "lines": 477
+    },
+    {
+      "path": "src/runtime/skill_management_strings.ts",
+      "sha256": "a94f2f7c90c766ffeb1cfcb91afbae577cf7e3e5a722389bdf244a59fe0f44c0",
+      "lines": 85
+    },
+    {
+      "path": "src/runtime/skill_management_types.test.ts",
+      "sha256": "449b592af32fda65c53bcfed51c7cd40b403994c605c6ab47a61c29b46bbce9a",
+      "lines": 183
+    },
+    {
+      "path": "src/runtime/skill_management_types.ts",
+      "sha256": "3e2cdf35935dcdf0126a428803f916a84887649af81c6cf9cce3e014d9b1b344",
+      "lines": 522
+    }
+  ],
+  "rawRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-first.txt",
+      "sha256": "f7a4f335397aed2f18f3f1810f66883586a8877589c7b40c925fcad547f2434d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-initial-red.txt",
+      "sha256": "e6d15fc8b8b60fae5e49ff89435b2409cfd50112a182e82c60b2115039622792"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-serial-red.txt",
+      "sha256": "7efb4e2102c3ec195f5a57fa607c11ce809187aa1727e363142898e24a94780e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/expired-inventory-filter-miss.txt",
+      "sha256": "d99a3b0afd4e4988a86718c2839cc8dfad790bf3050eb9f72908ba93d02b6f57"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/expired-inventory-red.txt",
+      "sha256": "38b8ac3fa081bdfb6c0f8c7804e822fae8aafcbf9e090c892ab649d8913433e4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/rejected-recheck-red.txt",
+      "sha256": "6bb4955ea1a12552ba0f62331fbc059f129bc503bde419f54da3d5c22aff2c7a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inspect-final-cancel-red.txt",
+      "sha256": "414fb77334c4a270464f06c044669294f27f97f09561221faaba2d7d599b06cd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inspect-publication-red.txt",
+      "sha256": "86ae579996b898da547cded37cb8c8c41e2859925d60423e224df4bd3afffc40"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/late-terminal-observation-red.txt",
+      "sha256": "f6183f8cb7b37eea6ab4960e101ccd7917fb477b9cbd145e3939b32f1af43bc5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-green-first.txt",
+      "sha256": "0bfc8bd28dac1a2d2943c7f89a44ff651d276a19d219e3fbcb39b80b5c2d228d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-complete.txt",
+      "sha256": "ba8dcf95e6bc554d294952928d89fa4e75af4d2bf32addc7b6215dfd9c01a6a0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inventory-related.txt",
+      "sha256": "f79d80bf5c6f97fe56aa1a2ba03eb7ddcb9f7ee0373c9a57831a66a729fe0f58"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/clippy-first.txt",
+      "sha256": "e635fdc10a00d08eea4f5f3e89348028f6cbf992e47becd5017192fcf115d64d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/clippy-final.txt",
+      "sha256": "1fbbce2303acf8ed1e647395389357bd01b2330504f4471fe3f149f04f8a8f9f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/format-final.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "backendImplementation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/implementation.json",
+    "sha256": "82903731f51cc2e8f5ca6cec9d048ca57fda5b7650be674b0f2cb8c3d3d03456"
+  }
+}

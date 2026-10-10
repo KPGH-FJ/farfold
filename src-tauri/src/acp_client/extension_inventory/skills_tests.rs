@@ -42,6 +42,23 @@ fn response(skills: Vec<serde_json::Value>, errors: Vec<serde_json::Value>) -> s
 fn decode(value: serde_json::Value) -> Result<SkillsInventory> {
     skills_output::parse(&serde_json::to_vec(&value).unwrap(), "/tmp")
 }
+#[test]
+fn management_target_eligibility_is_explicit_and_duplicate_paths_refuse() {
+    let mut row = skill();
+    row["pluginId"] = serde_json::Value::Null;
+    let one = serde_json::to_value(decode(response(vec![row.clone()], vec![])).unwrap()).unwrap();
+    assert_eq!(one["items"][0]["enablement"]["availability"], "reviewable");
+    let duplicate =
+        serde_json::to_value(decode(response(vec![row.clone(), row], vec![])).unwrap()).unwrap();
+    assert_eq!(
+        duplicate["items"][0]["enablement"]["reason"],
+        "ambiguousTarget"
+    );
+    assert_eq!(
+        duplicate["items"][1]["enablement"]["reason"],
+        "ambiguousTarget"
+    );
+}
 fn peer(code: &str) -> Command {
     let mut command = Command::new(crate::platform_tests::python());
     command.args(["-u", "-c", code]);

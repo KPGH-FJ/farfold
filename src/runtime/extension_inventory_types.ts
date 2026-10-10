@@ -1,3 +1,4 @@
+import type { SkillEnablement } from "./skill_management_types";
 export const EXTENSION_CODES = [
   "notReviewed",
   "entryUnverified",
@@ -29,6 +30,7 @@ export interface ExtensionCapabilities {
   selectionId: string | null;
   mcpInventory: InventoryCapability;
   skillsInventory: InventoryCapability;
+  skillEnablement: InventoryCapability;
   toolInventory: "unavailable";
 }
 export interface InventoryItem {
@@ -60,6 +62,7 @@ export interface SkillInventoryItem {
   reportedEnabled: boolean;
   origin: "user" | "repo" | "system" | "admin" | "unknown";
   pluginReported: boolean;
+  enablement: SkillEnablement;
 }
 export interface SkillsInventory {
   observedAtMs: number;
@@ -148,6 +151,7 @@ export function parseExtensionCapabilities(
     "selectionId",
     "mcpInventory",
     "skillsInventory",
+    "skillEnablement",
     "toolInventory",
   ]);
   const capability = (
@@ -178,6 +182,12 @@ export function parseExtensionCapabilities(
   };
   const mcpInventory = capability(v.mcpInventory, "officialCli");
   const skillsInventory = capability(v.skillsInventory, "officialAppServer");
+  const skillEnablement = capability(v.skillEnablement, "officialAppServer");
+  if (
+    skillEnablement.availability === "available" &&
+    skillsInventory.availability !== "available"
+  )
+    return invalid();
   const available =
     mcpInventory.availability === "available" ||
     skillsInventory.availability === "available";
@@ -190,6 +200,7 @@ export function parseExtensionCapabilities(
     selectionId: v.selectionId as string | null,
     mcpInventory,
     skillsInventory,
+    skillEnablement,
     toolInventory: "unavailable",
   };
 }
@@ -242,6 +253,7 @@ function skillsSnapshot(value: unknown): SkillsInventory {
       "reportedEnabled",
       "origin",
       "pluginReported",
+      "enablement",
     ]);
     if (
       i.id !== index ||
@@ -261,6 +273,30 @@ function skillsSnapshot(value: unknown): SkillsInventory {
         new TextEncoder().encode(i.description).length > 8192)
     )
       return invalid();
+    const e = object(i.enablement, ["availability", "reason"]);
+    const availability = one(e.availability, ["reviewable", "unavailable"]);
+    const enablement: SkillEnablement =
+      availability === "reviewable"
+        ? { availability, reason: null }
+        : {
+            availability,
+            reason: one(e.reason, [
+              "incompleteInventory",
+              "unsupportedOrigin",
+              "pluginManaged",
+              "unsafeLabel",
+              "ambiguousTarget",
+            ]),
+          };
+    if (
+      availability === "reviewable" &&
+      (e.reason !== null ||
+        !v.complete ||
+        i.name === null ||
+        i.pluginReported !== false ||
+        !["user", "repo"].includes(String(i.origin)))
+    )
+      return invalid();
     return {
       id: index,
       name: skillsLabel(i.name),
@@ -270,6 +306,7 @@ function skillsSnapshot(value: unknown): SkillsInventory {
       reportedEnabled: i.reportedEnabled as boolean,
       origin: one(i.origin, ["user", "repo", "system", "admin", "unknown"]),
       pluginReported: i.pluginReported as boolean,
+      enablement,
     };
   });
   return {

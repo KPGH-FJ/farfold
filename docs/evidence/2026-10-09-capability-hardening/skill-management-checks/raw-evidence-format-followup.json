@@ -1,0 +1,12 @@
+{
+  "reason": "First seven-command run had six passes and format-only failure for two original serialized Rust captures. Restore original paths and bytes for frozen references; exclude only these two exact evidence files from formatting. No product code or test changed.",
+  "firstRun": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-01/verification.json",
+  "changedInputs": [".prettierignore"],
+  "beforeIgnoreSha256": "b5a848b92c05a641776ad2c4bc58ba39d17fa400a654e2fc0de1c625a4ba0084",
+  "afterIgnoreSha256": "8115e9f26bdc8345c12689d3886c5bb0f8604b2af760d24c98a731e868d492b4",
+  "rawEvidence": {
+    "actual-wire-raw.json": "05d921b156ee4a0537477ee2844213dd6af790a0bc8e360684e97cf400e0d9a4",
+    "final-wire-raw.json": "8262cfbf9c58bdd150b8abf4279cf7e547d1ff9d737ecef70a92d5030592cf8f"
+  },
+  "next": "Execute new run-02 on the adjusted frozen input set; retain original failure."
+}

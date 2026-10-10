@@ -1,0 +1,380 @@
+{
+  "status": "ScopedBackendImplementedAndSyntheticChecksPassedNotInstalled",
+  "baseCommit": "d559cf2353242dfeee9d77c8f06ab669b2feacd9",
+  "scope": "P40 first official-interface skill enablement slice: five main-window commands, no arbitrary RPC or direct config-file access.",
+  "sourceFrozen": true,
+  "cargoReleased": true,
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/execution.rs",
+      "sha256": "c0f7c25f093856d42ca41e3cafa2b250e7c1f801b680bcf65a2e87b042d8b4af",
+      "bytes": 714,
+      "lines": 24
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/execution_tests.rs",
+      "sha256": "956cde3ab25a10b862ad4ed629d7f7848305c47b7caff39ed0db8602031e5a48",
+      "bytes": 286,
+      "lines": 5
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "211c2c9418096e9464e001546950c264a8b2bea2aacffd8cc99528f452967f96",
+      "bytes": 6734,
+      "lines": 192
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "d7a9103f466917e2d1eb7704d6370a5b788ac51a2ca6ab84ab23c889ac7be631",
+      "bytes": 10390,
+      "lines": 314
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "ec72c7406cec880342a683c071110e9241e1760c906ff22a204e3f71c2a844c2",
+      "bytes": 3973,
+      "lines": 115
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "sha256": "7dafa5a0f0c50047ed26a72cb6b4514247f91551c31f9d03371ffa5b2cd8efbc",
+      "bytes": 9796,
+      "lines": 303
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "sha256": "aa64062a8cf38cdb2e52d40db67bf63aa7d0e748750fa61c40ba6cf8fba4f1be",
+      "bytes": 8264,
+      "lines": 238
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests_tests.rs",
+      "sha256": "be587749d04d4efa33f88228a45e6c1065a5edb7db4282c5e07d0c6992a646ba",
+      "bytes": 499,
+      "lines": 11
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_output.rs",
+      "sha256": "2471f37d0077d67e2f8cdd8277dd735b9de743f61599b6363c19d0e67d6edd86",
+      "bytes": 8771,
+      "lines": 260
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_rpc.rs",
+      "sha256": "8eeb00b2bbe4017f81c86dcc30e55d2e6c639f04eb0389739268be00fdc15517",
+      "bytes": 5161,
+      "lines": 153
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_tests.rs",
+      "sha256": "302710d64b223d3964b0b28b436ea5df2b3a67819c50d407e5d782afb8cc212b",
+      "bytes": 21425,
+      "lines": 618
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/targets.rs",
+      "sha256": "10ebd93de2deea94e1bb1a4d4d4bac25aca4d2f2bb9bfc22bf66a8c7b3760f24",
+      "bytes": 2587,
+      "lines": 85
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "sha256": "4e730541230308ebb43cf171d6d9793e4b61159702e3be2f59067af547d2ab4c",
+      "bytes": 28236,
+      "lines": 742
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "ff69d0d61796e8cd65864c0b915748f846962c69b63f79a059068fbd924e70ad",
+      "bytes": 4369,
+      "lines": 165
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "ba65f41a1ca6fb55ad6519205b259cabd798702e6884c3d3beebd3f84f4085d4",
+      "bytes": 2511,
+      "lines": 121
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/independent_peer.py",
+      "sha256": "3ff798c1dfe22252ac16aae8ef7ebd45ee79dce96cf09d4d15cacc2bab1a0fcc",
+      "bytes": 4936,
+      "lines": 142
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/independent_tests.rs",
+      "sha256": "83fabf6618dcf1b5486b0f47eb3cf386dd60b76eb4d3a145bdd5452e98132b7e",
+      "bytes": 17946,
+      "lines": 477
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "7188627f1cefd558b8e54861adf168dcfa276928693cff3aceb5468156fdae49",
+      "bytes": 7116,
+      "lines": 212
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/plan.rs",
+      "sha256": "1efac5d8815f8d7be6353f3794d59bd4f9a7ee3e5c1466f4dc982d08ba366850",
+      "bytes": 7491,
+      "lines": 211
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "f0bf0db7f425311bedf3f370a7bfb9e1aadc8537db7a94b34c83cb87a6bcb091",
+      "bytes": 15490,
+      "lines": 456
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/rpc.rs",
+      "sha256": "3784b58005c621a483b7c0aa9c2fc87a731d7819e2b4667982359bfc3f43b5e9",
+      "bytes": 12529,
+      "lines": 334
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/tests.rs",
+      "sha256": "62a8cd30d216cc8cf2eb718b7942091d219694177387562386fccfa49d52461c",
+      "bytes": 17876,
+      "lines": 487
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/types.rs",
+      "sha256": "243c3c984b4f46804952d90dd1ba118145a2d8b0f8b6adf32c8647ba37a26cd9",
+      "bytes": 3134,
+      "lines": 117
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "1293c05e181cd7eb7fe42e47e707e422350b58b25da7ac338b9b41ee7daecb75",
+      "bytes": 19372,
+      "lines": 436
+    }
+  ],
+  "independentAuthorFiles": [
+    "src-tauri/src/acp_client/skill_management/independent_tests.rs",
+    "src-tauri/src/acp_client/skill_management/independent_peer.py"
+  ],
+  "implemented": [
+    "Same-response private inventory targets retain original AgentRow, directory handle and item identity; exact cancel and settled expiry revoke old Arc authority while public history remains.",
+    "One-use 300-second review, bounded RAM registries and caller UUIDs; profile-aware complete selected User layer and full skills.config array preservation; inspect/confirm/status/cancel/read-only recheck registered with flat camelCase arguments.",
+    "Fixed initialize/config-read/skills-list/one optional value-write/readback sequence with absolute deadline and bounded frames. expectedVersion is not cross-process CAS; no auto retry or rollback.",
+    "Only four exact official pre-write error codes in a valid matching write-error envelope mean rejected. UserLayerNotFound/generic error/lost pipe remain unknown after dispatch; ack and observations are retained separately.",
+    "Private pending review and final outcome become public only with terminal state. Late cleanup or duplicate completion cannot regress terminal state. Known rejected ack survives cleanup failure; a fresh read-only recheck reports its own observation without changing that ack.",
+    "Shared inventory/management real-worker budget of two, configuration guard, AccountScope and ActivityPermit stay owned through actual child/group/pipe completion; observer cancellation never rolls back a dispatched write."
+  ],
+  "checks": {
+    "finalManagement": {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib skill_management -- --nocapture",
+      "exitCode": 0,
+      "passed": 24,
+      "failed": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-complete.txt",
+        "sha256": "ba8dcf95e6bc554d294952928d89fa4e75af4d2bf32addc7b6215dfd9c01a6a0"
+      }
+    },
+    "relatedInventory": {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib extension_inventory -- --nocapture",
+      "exitCode": 0,
+      "passed": 56,
+      "failed": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inventory-related.txt",
+        "sha256": "f79d80bf5c6f97fe56aa1a2ba03eb7ddcb9f7ee0373c9a57831a66a729fe0f58"
+      },
+      "subsequentDelta": "Only test-only cfg annotations on old public-only wrappers; subsequent production fixes were within management publication. Root will run unified final suite."
+    },
+    "ownedFormat": {
+      "command": "rustfmt --edition 2024 --check <23 Rust paths from source-final-before.json>",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/format-final.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "clippy": {
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/clippy-final.txt",
+        "sha256": "1fbbce2303acf8ed1e647395389357bd01b2330504f4471fe3f149f04f8a8f9f"
+      }
+    },
+    "sourceBefore": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/source-final-before.json",
+      "sha256": "88b63d6e85c979c554aa3391a2e4a35e7186f9a74dfe36f4f3e8a0bf0ce4c33d"
+    },
+    "sourceAfter": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/source-final-after.json",
+      "sha256": "da4149a3a501248bd8bed79e1eb05a6b3d87cf99c08de4404adbec7e4da79594"
+    },
+    "sourceStable": true,
+    "maximumOwnedLines": 742
+  },
+  "effectiveReds": [
+    {
+      "log": "inventory-baseline-red.txt",
+      "failed": 1,
+      "cause": "Missing explicit management eligibility in old inventory DTO."
+    },
+    {
+      "log": "targeted-serial-red.txt",
+      "failed": 4,
+      "cause": "Malformed error misclassified rejected; known refusal erased by cleanup failure; active verified outcome; missing target recheck failed instead of observation."
+    },
+    {
+      "log": "expired-inventory-red.txt",
+      "failed": 1,
+      "cause": "Registry eviction left an old Source Arc authorized."
+    },
+    {
+      "log": "rejected-recheck-red.txt",
+      "failed": 1,
+      "cause": "Inherited rejected ack overrode later read-only observed outcome."
+    },
+    {
+      "log": "inspect-final-cancel-red.txt",
+      "failed": 1,
+      "cause": "Inspect completion could republish ready after cancellation in the publication window."
+    },
+    {
+      "log": "inspect-publication-red.txt",
+      "failed": 1,
+      "cause": "Public review appeared before terminal ready state."
+    },
+    {
+      "log": "late-terminal-observation-red.txt",
+      "failed": 1,
+      "cause": "Late cleanup observation could reopen an already settled operation."
+    }
+  ],
+  "nonProductFailures": [
+    "inventory-baseline-first and expired-inventory-filter-miss matched zero tests; retained and not counted as passes.",
+    "targeted-first compile used private-module imports in independent test; corrected only imports.",
+    "targeted-initial-red: eight shared test-fixture Busy failures plus one actual refusal failure. Serial follow-up isolated the four genuine failures. Test-only lock and exact fixture retirement preserve production limits.",
+    "clippy-first: two now-test-only wrappers and an eight-argument helper; corrected without changing runtime limits or adding suppressions."
+  ],
+  "wire": {
+    "frontendInput": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/actual-wire.json",
+      "sha256": "6adf2a98e6f152f3f01bf478aa956fb7d3652251d2c2bbae4a95901157d8a404"
+    },
+    "frontendRaw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/actual-wire-raw.txt",
+      "sha256": "05d921b156ee4a0537477ee2844213dd6af790a0bc8e360684e97cf400e0d9a4"
+    },
+    "frontendOriginLog": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-green-first.txt",
+      "sha256": "0bfc8bd28dac1a2d2943c7f89a44ff651d276a19d219e3fbcb39b80b5c2d228d"
+    },
+    "finalInput": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/final-wire.json",
+      "sha256": "b1a40389a9008b582a74f9705302f53fba7684454a6b7473f6a79d705690823d"
+    },
+    "finalRaw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/final-wire-raw.txt",
+      "sha256": "8262cfbf9c58bdd150b8abf4279cf7e547d1ff9d737ecef70a92d5030592cf8f"
+    },
+    "finalOriginLog": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-complete.txt",
+      "sha256": "ba8dcf95e6bc554d294952928d89fa4e75af4d2bf32addc7b6215dfd9c01a6a0"
+    },
+    "operationCount": 16,
+    "cancellationCount": 2,
+    "scope": "Real Rust DTOs from synthetic fixed peers and actual registry/exchange, including ready inventory, unavailable synthetic capability, same-review unknown write and read-only observed chain. PendingCleanup schema sample explicitly calls actual Job method; it does not claim a real seven-second cleanup timeout. Original frontend input is not overwritten."
+  },
+  "boundaries": [
+    "No installed official CLI/App, account or real user configuration was launched/read/written. Synthetic peer config is JSON in own temp fixtures; this does not prove installed official TOML persistence.",
+    "AccountScope covers known same Agent/entry aliases, not all same-account processes or idle remote notifications. Only owned child group is signalled.",
+    "Exact path/name/origin proves only the official report at that position; no skill-file content, trust, install or symlink-content guarantee.",
+    "No Windows execution; original platform capability remains unsupported. No full repository suite/build/install in this scoped receipt.",
+    "P40 installation/discovery/other management and P41 remain outside this first enablement slice; current Session applicability stays unverified.",
+    "Complete supported official JSON semantics are preserved, not comments or TOML byte layout; external edit races after version check are not claimed locked."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inventory-baseline-first.txt",
+      "sha256": "beae62b8fc8ab1908f5a4e56fcacf4d5b856b9321d39f6e882928ed19d833d68"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inventory-baseline-red.txt",
+      "sha256": "9bf844d19c9eebbc3b97fff407ad838fdb88bad8eb0a117e0e98003677da4961"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-first.txt",
+      "sha256": "f7a4f335397aed2f18f3f1810f66883586a8877589c7b40c925fcad547f2434d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-initial-red.txt",
+      "sha256": "e6d15fc8b8b60fae5e49ff89435b2409cfd50112a182e82c60b2115039622792"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-serial-red.txt",
+      "sha256": "7efb4e2102c3ec195f5a57fa607c11ce809187aa1727e363142898e24a94780e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/expired-inventory-filter-miss.txt",
+      "sha256": "d99a3b0afd4e4988a86718c2839cc8dfad790bf3050eb9f72908ba93d02b6f57"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/expired-inventory-red.txt",
+      "sha256": "38b8ac3fa081bdfb6c0f8c7804e822fae8aafcbf9e090c892ab649d8913433e4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/rejected-recheck-red.txt",
+      "sha256": "6bb4955ea1a12552ba0f62331fbc059f129bc503bde419f54da3d5c22aff2c7a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-green-first.txt",
+      "sha256": "0bfc8bd28dac1a2d2943c7f89a44ff651d276a19d219e3fbcb39b80b5c2d228d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inventory-related.txt",
+      "sha256": "f79d80bf5c6f97fe56aa1a2ba03eb7ddcb9f7ee0373c9a57831a66a729fe0f58"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/clippy-first.txt",
+      "sha256": "e635fdc10a00d08eea4f5f3e89348028f6cbf992e47becd5017192fcf115d64d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inspect-final-cancel-red.txt",
+      "sha256": "414fb77334c4a270464f06c044669294f27f97f09561221faaba2d7d599b06cd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-final.txt",
+      "sha256": "237309278cc2018b512106fe0f07b6c978e72b7ca3595e6664ed4dd4eb2f22bd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inspect-publication-red.txt",
+      "sha256": "86ae579996b898da547cded37cb8c8c41e2859925d60423e224df4bd3afffc40"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/late-terminal-observation-red.txt",
+      "sha256": "f6183f8cb7b37eea6ab4960e101ccd7917fb477b9cbd145e3939b32f1af43bc5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-complete.txt",
+      "sha256": "ba8dcf95e6bc554d294952928d89fa4e75af4d2bf32addc7b6215dfd9c01a6a0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/format-final.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/clippy-final.txt",
+      "sha256": "1fbbce2303acf8ed1e647395389357bd01b2330504f4471fe3f149f04f8a8f9f"
+    },
+    {
+      "path": "output/2026-10-10-skill-management-draft/final-contract.json",
+      "sha256": "97486da569c6353910bb2d74bcd920c13b34463aa146e611b4562dac082ead3c"
+    },
+    {
+      "path": "output/2026-10-10-skill-management-draft/final-contract.ts",
+      "sha256": "58cae59c0ac09b134e46b5a5e700f640c343da3b287410bf26be0d3dc6758920"
+    },
+    {
+      "path": "output/2026-10-10-skill-management-draft/state-mapping.json",
+      "sha256": "63bfaaf856ae4bb9cf9d67e8a7c3f1778c7d90a270f3397332ed7f40561e2f53"
+    }
+  ]
+}

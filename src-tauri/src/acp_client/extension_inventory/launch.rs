@@ -13,7 +13,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-pub(super) fn admission(row: &AgentRow) -> Result<()> {
+pub(in crate::acp_client) fn admission(row: &AgentRow) -> Result<()> {
     if !cfg!(target_os = "macos") {
         return Err(Code::PlatformUnsupported.into());
     }
@@ -38,7 +38,7 @@ pub(super) fn admission(row: &AgentRow) -> Result<()> {
     }
     Ok(())
 }
-pub(super) fn capabilities(row: &AgentRow) -> Result<ExtensionCapabilities> {
+pub(in crate::acp_client) fn capabilities(row: &AgentRow) -> Result<ExtensionCapabilities> {
     let reason = admission(row).err().map(|error| error.code).or_else(|| {
         crate::shell_env::cached_command_env()
             .is_none()
@@ -69,6 +69,15 @@ pub(super) fn capabilities(row: &AgentRow) -> Result<ExtensionCapabilities> {
             source: reason.is_none().then_some("officialAppServer"),
             reason,
         },
+        skill_enablement: InventoryCapability {
+            availability: if reason.is_none() {
+                "available"
+            } else {
+                "unavailable"
+            },
+            source: reason.is_none().then_some("officialAppServer"),
+            reason,
+        },
         tool_inventory: "unavailable",
     })
 }
@@ -77,13 +86,13 @@ pub(super) fn capabilities(row: &AgentRow) -> Result<ExtensionCapabilities> {
 const SELECTION_LIMIT: usize = 64;
 const SELECTION_TTL: Duration = Duration::from_secs(300);
 #[derive(Default)]
-pub(super) struct Selections(Mutex<HashMap<String, (AgentRow, Instant)>>);
-pub(super) fn selections() -> &'static Selections {
+pub(in crate::acp_client) struct Selections(Mutex<HashMap<String, (AgentRow, Instant)>>);
+pub(in crate::acp_client) fn selections() -> &'static Selections {
     static SELECTIONS: OnceLock<Selections> = OnceLock::new();
     SELECTIONS.get_or_init(Default::default)
 }
 impl Selections {
-    pub(super) fn issue(&self, row: AgentRow, now: Instant) -> Result<String> {
+    pub(in crate::acp_client) fn issue(&self, row: AgentRow, now: Instant) -> Result<String> {
         let mut entries = self.0.lock().unwrap_or_else(|p| p.into_inner());
         entries.retain(|_, (_, issued)| now.saturating_duration_since(*issued) < SELECTION_TTL);
         if entries.len() >= SELECTION_LIMIT {
@@ -108,7 +117,12 @@ impl Selections {
         entries.insert(id.clone(), (row, now));
         Ok(id)
     }
-    pub(super) fn get(&self, agent: &str, id: &str, now: Instant) -> Result<AgentRow> {
+    pub(in crate::acp_client) fn get(
+        &self,
+        agent: &str,
+        id: &str,
+        now: Instant,
+    ) -> Result<AgentRow> {
         let mut entries = self.0.lock().unwrap_or_else(|p| p.into_inner());
         entries.retain(|_, (_, issued)| now.saturating_duration_since(*issued) < SELECTION_TTL);
         entries
@@ -118,7 +132,7 @@ impl Selections {
             .ok_or_else(|| Code::SelectionChanged.into())
     }
 }
-pub(super) fn same_selection(left: &AgentRow, right: &AgentRow) -> bool {
+pub(in crate::acp_client) fn same_selection(left: &AgentRow, right: &AgentRow) -> bool {
     left.id == right.id
         && left.source == right.source
         && left.command == right.command
@@ -127,7 +141,7 @@ pub(super) fn same_selection(left: &AgentRow, right: &AgentRow) -> bool {
         && left.created_at == right.created_at
         && left.updated_at == right.updated_at
 }
-pub(super) struct Directory {
+pub(in crate::acp_client) struct Directory {
     path: String,
     handle: File,
 }
@@ -149,7 +163,7 @@ impl Directory {
             .unwrap_or(false)
     }
 }
-pub(super) fn command(
+pub(in crate::acp_client) fn command(
     row: &AgentRow,
     cwd: &str,
     environment: HashMap<String, String>,

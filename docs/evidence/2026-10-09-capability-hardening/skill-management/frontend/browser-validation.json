@@ -1,0 +1,338 @@
+{
+  "scope": "Actual App controlled IPC journeys and separately actual Rust serialization replay through real controllers/shared React. Official configuration/native App not executed.",
+  "productionPaths": [
+    "src/components/AgentExtensionInventory.tsx",
+    "src/components/AgentExtensionInventoryResult.tsx",
+    "src/components/SkillChangeReview.css",
+    "src/components/SkillChangeReview.tsx",
+    "src/runtime/extension_inventory_controller.ts",
+    "src/runtime/extension_inventory_strings.ts",
+    "src/runtime/extension_inventory_types.ts",
+    "src/runtime/skill_management.ts",
+    "src/runtime/skill_management_controller.ts",
+    "src/runtime/skill_management_strings.ts",
+    "src/runtime/skill_management_types.ts"
+  ],
+  "runs": [
+    {
+      "name": "webkit-first",
+      "passed": false,
+      "checks": 3,
+      "sourceStableDuringRun": true,
+      "finalProductionDrift": [
+        {
+          "path": "src/components/SkillChangeReview.tsx",
+          "executedSha256": "8ecaeba8ea2dc73dcd4f226d138add7afeeaabc17dad3ff45381d680231caf26",
+          "currentSha256": "bda2daa17631bc71b86324fc4c93989ed7358262c075348f546728bd7274f6f5"
+        },
+        {
+          "path": "src/runtime/skill_management_controller.ts",
+          "executedSha256": "83168d74977eddf6623097132a7a36f67973ce49a26262b6c2f1633c2c7b02cf",
+          "currentSha256": "776a69333e30971dc498ac904efab22584c62093945cec12bfa8296824d1f476"
+        },
+        {
+          "path": "src/runtime/skill_management_types.ts",
+          "executedSha256": "c7951f5036f7e8326c6df24087b3b4cef4f09cea9e05239889385de9f439d280",
+          "currentSha256": "3e2cdf35935dcdf0126a428803f916a84887649af81c6cf9cce3e014d9b1b344"
+        }
+      ],
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-first.raw.txt",
+        "sha256": "7aeb3db670b30d6932e72206075f766be060920f11a1591a892a89fbdf6eb2a9"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-first.stdout.txt",
+        "sha256": "0489a097e2ac2ba0251e13de3ec4703bd8b95873dd20cd4733143f6942a6b707"
+      },
+      "scope": "Actual full App/AgentDetails/React StrictMode/registry owner/inventory + skill management controllers/strict IPC. Native process boundary controlled; no official Agent/configuration or installed App execution.",
+      "screenshots": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-first-failure.png",
+          "sha256": "17fbb2926822bb4e137629d7042a953837421be8639c53a7da92694887ed8c51"
+        }
+      ]
+    },
+    {
+      "name": "webkit-second",
+      "passed": true,
+      "checks": 25,
+      "sourceStableDuringRun": true,
+      "finalProductionDrift": [
+        {
+          "path": "src/components/SkillChangeReview.tsx",
+          "executedSha256": "8ecaeba8ea2dc73dcd4f226d138add7afeeaabc17dad3ff45381d680231caf26",
+          "currentSha256": "bda2daa17631bc71b86324fc4c93989ed7358262c075348f546728bd7274f6f5"
+        },
+        {
+          "path": "src/runtime/skill_management_controller.ts",
+          "executedSha256": "83168d74977eddf6623097132a7a36f67973ce49a26262b6c2f1633c2c7b02cf",
+          "currentSha256": "776a69333e30971dc498ac904efab22584c62093945cec12bfa8296824d1f476"
+        },
+        {
+          "path": "src/runtime/skill_management_types.ts",
+          "executedSha256": "c7951f5036f7e8326c6df24087b3b4cef4f09cea9e05239889385de9f439d280",
+          "currentSha256": "3e2cdf35935dcdf0126a428803f916a84887649af81c6cf9cce3e014d9b1b344"
+        }
+      ],
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-second.raw.txt",
+        "sha256": "412120770383026546b2c21a8619d5c07d534eccd6740fde518e07ef9c3f8cf0"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-second.stdout.txt",
+        "sha256": "831a1e497c3ddb37d0858a8f364c5fe190152cafca7b4583ece4cb28ca87571f"
+      },
+      "scope": "Actual full App/AgentDetails/React StrictMode/registry owner/inventory + skill management controllers/strict IPC. Native process boundary controlled; no official Agent/configuration or installed App execution.",
+      "screenshots": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-second-result.png",
+          "sha256": "32fc9c208f62f25ba87bee5abe66baf9107aa4cfe43a6e267f6c438561bce78b"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-second-review-narrow.png",
+          "sha256": "f20e01bd219472c0847014bbe308896ddabb5cf1a0b20a64b3f2ccd5665e6bda"
+        }
+      ]
+    },
+    {
+      "name": "webkit-admission-red",
+      "passed": false,
+      "checks": 1,
+      "sourceStableDuringRun": true,
+      "finalProductionDrift": [
+        {
+          "path": "src/components/SkillChangeReview.tsx",
+          "executedSha256": "8ecaeba8ea2dc73dcd4f226d138add7afeeaabc17dad3ff45381d680231caf26",
+          "currentSha256": "bda2daa17631bc71b86324fc4c93989ed7358262c075348f546728bd7274f6f5"
+        },
+        {
+          "path": "src/runtime/skill_management_controller.ts",
+          "executedSha256": "83168d74977eddf6623097132a7a36f67973ce49a26262b6c2f1633c2c7b02cf",
+          "currentSha256": "776a69333e30971dc498ac904efab22584c62093945cec12bfa8296824d1f476"
+        },
+        {
+          "path": "src/runtime/skill_management_types.ts",
+          "executedSha256": "c7951f5036f7e8326c6df24087b3b4cef4f09cea9e05239889385de9f439d280",
+          "currentSha256": "3e2cdf35935dcdf0126a428803f916a84887649af81c6cf9cce3e014d9b1b344"
+        }
+      ],
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-admission-red.raw.txt",
+        "sha256": "335cd22b84e556567357e22f118fe96f6acb78c62a7e96ae29e3312fb5f4d00c"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-admission-red.stdout.txt",
+        "sha256": "0b5b0f9e922ec1e322c5adb615d6ae670162efc80ae6c13b78ee4f9e871cd95c"
+      },
+      "scope": "Actual full App/StrictMode/controller/IPC parser; controlled fresh confirm rejection, no official process or config write.",
+      "screenshots": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-admission-red.png",
+          "sha256": "280d7ecf5515ad4a8dec1f670acadb93924e17c9d4d149460dc18c1f9562fd4e"
+        }
+      ]
+    },
+    {
+      "name": "webkit-admission-green",
+      "passed": true,
+      "checks": 3,
+      "sourceStableDuringRun": true,
+      "finalProductionDrift": [],
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-admission-green.raw.txt",
+        "sha256": "991a715f52d2db6758f078fabe2be09ad71563e2db6a919da4c02a1f835c36e3"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-admission-green.stdout.txt",
+        "sha256": "9f57b5a3ec275c26863dce8b3f702e6b365fbd6d3800a8cd4314d60bc70dcbb5"
+      },
+      "scope": "Actual full App/StrictMode/controller/IPC parser; controlled fresh confirm rejection, no official process or config write.",
+      "screenshots": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-admission-green.png",
+          "sha256": "388e5ef9dca4d67ad063c0844315ac821efb335aea1e94d160777b5ea5ee8c45"
+        }
+      ]
+    },
+    {
+      "name": "chromium-final",
+      "passed": true,
+      "checks": 26,
+      "sourceStableDuringRun": true,
+      "finalProductionDrift": [],
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-final.raw.txt",
+        "sha256": "aef78e519e47d6a89ff199081565bfd7dc9691032c77b4706386658a5ea3b440"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-final.stdout.txt",
+        "sha256": "4fb6abdbd7d6877818b7e553385feac20dc65dffa85a8edd9ff5a89936ca1fad"
+      },
+      "scope": "Actual full App/AgentDetails/React StrictMode/registry owner/inventory + skill management controllers/strict IPC. Native process boundary controlled; no official Agent/configuration or installed App execution.",
+      "screenshots": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-final-observed.png",
+          "sha256": "b4de13f08fa5eaaa68b479a429993785b21bda7531397376dd165ff5a8b6dc1a"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-final-result.png",
+          "sha256": "52333e52d8955e4cb3ad089467d5a15f2f873adb441b3caf40d85e6ea3978438"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-final-review-narrow.png",
+          "sha256": "f36e469ba107607bd40f77d8a1c483472f837ad234a61263b9b465faa4bd00cd"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-final-unknown.png",
+          "sha256": "36e3396b2deb49d3e8772f852ab8ead51a0bcf97a634f381c6512c3cca65ee55"
+        }
+      ]
+    },
+    {
+      "name": "chromium-admission-green",
+      "passed": true,
+      "checks": 3,
+      "sourceStableDuringRun": true,
+      "finalProductionDrift": [],
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-admission-green.raw.txt",
+        "sha256": "3342e429f3741e2b1cca88969f791566cf948586f8d5dc2c0b69babc22cca3dd"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-admission-green.stdout.txt",
+        "sha256": "9f57b5a3ec275c26863dce8b3f702e6b365fbd6d3800a8cd4314d60bc70dcbb5"
+      },
+      "scope": "Actual full App/StrictMode/controller/IPC parser; controlled fresh confirm rejection, no official process or config write.",
+      "screenshots": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-admission-green.png",
+          "sha256": "4c82e06b55653d9f0b591e9d611c9e546c32c9a77907a93633f1b519f09cbbac"
+        }
+      ]
+    },
+    {
+      "name": "webkit-wire-first",
+      "passed": true,
+      "checks": 6,
+      "sourceStableDuringRun": true,
+      "finalProductionDrift": [],
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-wire-first.raw.txt",
+        "sha256": "ebfaeca9693de237ee0564cdbf1484a9a54b5dc3ae53941ccda35640a5cdabf4"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-wire-first.stdout.txt",
+        "sha256": "ccec0de5de64b250c9ced38903f9502786b368dcea2ca019e789b3bdfef1630a"
+      },
+      "scope": "Unmodified actual Rust serde values through real strict TS parsers, controllers and shared React components under StrictMode. Exact IDs and clock replayed in controlled IPC; no live official process/configuration or available capability proof.",
+      "screenshots": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-wire-first-normal-observed.png",
+          "sha256": "7cf0a68b152785347b3336e910350bd6853789ebd8769f855f613d80a26c3c25"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-wire-first-normal-review.png",
+          "sha256": "e5e67b2c523613f6355ef37db7418befb926bf7a109975aa78bf30cd1b7d0beb"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-wire-first-unknown-observed.png",
+          "sha256": "31b71ee510a275bfc205c9c36800a2256e2c64052251323c37c2407fc21b037e"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-wire-first-unknown-review.png",
+          "sha256": "e5e67b2c523613f6355ef37db7418befb926bf7a109975aa78bf30cd1b7d0beb"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/webkit-wire-first-unknown.png",
+          "sha256": "8904a27dfb102996bbd2bd32b593f90dd07926b0f07ac087c25652a9bb841d3e"
+        }
+      ]
+    },
+    {
+      "name": "chromium-wire-final",
+      "passed": true,
+      "checks": 6,
+      "sourceStableDuringRun": true,
+      "finalProductionDrift": [],
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-wire-final.raw.txt",
+        "sha256": "9a310dc7ba35925fd670ce640197fb96584c27743fcb0d34f27c70645d2d7551"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-wire-final.stdout.txt",
+        "sha256": "ccec0de5de64b250c9ced38903f9502786b368dcea2ca019e789b3bdfef1630a"
+      },
+      "scope": "Unmodified actual Rust serde values through real strict TS parsers, controllers and shared React components under StrictMode. Exact IDs and clock replayed in controlled IPC; no live official process/configuration or available capability proof.",
+      "screenshots": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-wire-final-normal-observed.png",
+          "sha256": "f4a5ee4531f829c87a49943e430e50bb3352746fd96f205bb331549a13603ebb"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-wire-final-normal-review.png",
+          "sha256": "be05cf0c77baf4250d5120754e0a52cf7525a29e1ff0ce6c03860262c48c495f"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-wire-final-unknown-observed.png",
+          "sha256": "df51f805a3d9df8460ff64d78f73d13a66a1e15d45f4b312bdcbe6d5249e6491"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-wire-final-unknown-review.png",
+          "sha256": "be05cf0c77baf4250d5120754e0a52cf7525a29e1ff0ce6c03860262c48c495f"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/chromium-wire-final-unknown.png",
+          "sha256": "6ddc0817090102bb3929ba08093b840f68e3ccde839501a5a0a0fb3294ea3184"
+        }
+      ]
+    }
+  ],
+  "rawPreserved": true,
+  "firstDriverFailure": "Extra undefined channel inserted by the harness call logger caused an exact-key assertion failure. Preserved; not a product failure. Driver filters undefined keys, no source behavior changed.",
+  "redAdmission": "Actual WebKit direct reviewExpired displayed possible-write/cleanup uncertainty. Narrow backend-confirmed pre-admission mapping fixed.",
+  "webKitHistoricalRun": "25 full-App checks precede the narrow admission/strict-shape change. Final-source admission 3 and real-wire 6 checks separately cover affected behavior. Chromium fullApp26 includes MCP query regression and final-source admission3 + wire6. No summed all-final-source fullApp claim.",
+  "wireClock": "Original Rust JSON values are unchanged. UUID and clock replay only allow original review to remain temporally inspectable; no live backend capability/expiry/config effect proof.",
+  "server": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/server-stop.json",
+    "sha256": "81a28b128c574d636c8a46366e80c62aa0e42083dc4f96a55c26fb65bcc4014d"
+  },
+  "helpers": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/index.html",
+      "sha256": "0e4ac701a50705a7cff70a5256b7da9571f85a13694793a07d526c6845402c50"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/fixture.tsx",
+      "sha256": "9e6f560fff384114ecd8c9eb9a574710a91e75c8bcccec1868c9dc6f16e49d06"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/run.mjs",
+      "sha256": "9910ae7b33bddabd47d1d2acd747262bc0c4c6debf4a0a9087a62e22964ced94"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/run-admission.mjs",
+      "sha256": "b8f4a67849d08c41294e672aac067029020cb5223a269129f8bb9504c4a5cd59"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/wire.html",
+      "sha256": "76496eb775abf1f427990b3e7a8e926321ea64ea8c88690ca0fdc41377b21301"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/wire-fixture.tsx",
+      "sha256": "f6ff416ad1f38742400b0fa9c2ab2819587c7917e8494d52bd1f42c8bfb6370d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/run-wire.mjs",
+      "sha256": "b097ee4e39fdfeaa7ccc9c47af7ef4ffaf948e06548610ade8b7097b89c6b397"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/serve.mjs",
+      "sha256": "ccb77d560a73263c649bf3d9b76f1176ccbbdaa5b5a48c63d6552b54fdedd3eb"
+    }
+  ],
+  "visualReview": [
+    "webkit-second-review-narrow.png",
+    "chromium-final-observed.png",
+    "webkit-wire-first-unknown-observed.png"
+  ]
+}

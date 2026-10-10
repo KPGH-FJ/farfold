@@ -1,3 +1,4 @@
+import { reportOrigin } from "./extension_inventory.test-support";
 import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, it } from "vitest";
@@ -10,6 +11,18 @@ import { EXTENSION_INVENTORY_STRINGS as S } from "./extension_inventory_strings"
 const wire = JSON.parse(
   readFileSync("src/runtime/fixtures/skills-qualified-wire.json", "utf8"),
 );
+// Historical wire stays untouched. A deliberately unavailable additive field
+// adapts its report-only rows for current presentation regression, not management.
+const current = {
+  ...wire,
+  snapshot: {
+    ...wire.snapshot,
+    items: wire.snapshot.items.map((i: object) => ({
+      ...i,
+      enablement: { availability: "unavailable", reason: "ambiguousTarget" },
+    })),
+  },
+};
 const expected = {
   agentId: wire.agentId,
   requestId: wire.requestId,
@@ -17,8 +30,9 @@ const expected = {
   kind: wire.kind,
 };
 
-it("accepts the actual qualified-skill wire without changing names, status or identity", () => {
-  expect(parseInventoryOperation(wire, expected)).toEqual(wire);
+it("rejects the historical incomplete schema and preserves adapted report names, status and identity", () => {
+  expect(() => parseInventoryOperation(wire, expected)).toThrow();
+  expect(parseInventoryOperation(current, expected)).toEqual(current);
   expect(
     wire.snapshot.items.map((item: { name: string }) => item.name),
   ).toEqual([
@@ -34,11 +48,16 @@ it("accepts the actual qualified-skill wire without changing names, status or id
   ).toThrow();
 });
 
-it("shows every actual reported name as plain text, retaining duplicates and disabled state", () => {
-  const parsed = parseInventoryOperation(wire, expected);
+it("shows every historical reported name in the explicitly adapted display fixture as plain text, retaining duplicates and disabled state", () => {
+  const parsed = parseInventoryOperation(current, expected);
   const html = renderToStaticMarkup(
     <AgentExtensionInventoryResult
-      result={{ cwd: parsed.cwd, snapshot: parsed.snapshot!, stale: false }}
+      result={{
+        ...reportOrigin,
+        cwd: parsed.cwd,
+        snapshot: parsed.snapshot!,
+        stale: false,
+      }}
       stale={false}
     />,
   );

@@ -17,6 +17,8 @@ export interface InventoryOwner {
   current(): boolean;
 }
 export interface InventoryResult {
+  readonly request: InventoryRequest;
+  readonly owner: InventoryOwner;
   readonly cwd: string;
   readonly snapshot: InventorySnapshot;
   readonly stale: boolean;
@@ -54,6 +56,7 @@ interface Flight {
   dispatched: boolean;
   observationLost: boolean;
   checkEpoch: number;
+  managementRevoked: boolean;
 }
 /** Memory-only bounded slots survive a closed panel until actual terminal evidence. */
 export class ExtensionInventoryController {
@@ -103,7 +106,13 @@ export class ExtensionInventoryController {
       this.owns(f) &&
       !f.view.cancellationRequested;
     const result = display
-      ? { cwd: op.cwd, snapshot: op.snapshot!, stale: false }
+      ? {
+          request: f.view.request,
+          owner: f.owner,
+          cwd: op.cwd,
+          snapshot: op.snapshot!,
+          stale: false,
+        }
       : null;
     this.publish(f, {
       operation: op,
@@ -168,14 +177,16 @@ export class ExtensionInventoryController {
     if (!previous && this.entries.size >= 64) {
       const removable = [...this.entries].find(([, f]) => !f.view.unresolved);
       if (!removable) return false;
+      this.retire(removable[1].owner);
       this.entries.delete(removable[0]);
     }
-    const request = {
+    if (previous) this.revokeManagement(previous);
+    const request = Object.freeze({
       agentId: owner.agentId,
       cwd,
       requestId: this.uuid(),
       kind,
-    };
+    });
     const results = Object.fromEntries(
       Object.entries(previous?.view.results ?? {}).map(([key, value]) => [
         key,
@@ -188,6 +199,7 @@ export class ExtensionInventoryController {
       dispatched: false,
       observationLost: false,
       checkEpoch: 0,
+      managementRevoked: false,
       view: {
         ...EMPTY,
         request,
@@ -315,6 +327,45 @@ export class ExtensionInventoryController {
     });
     if (f.view.request && f.view.unresolved)
       this.cancel(owner.agentId, f.view.request.requestId, false);
+    else this.revokeManagement(f);
+  }
+  private revokeManagement(f: Flight) {
+    if (
+      f.managementRevoked ||
+      f.view.request?.kind !== "skills" ||
+      !f.dispatched
+    )
+      return;
+    f.managementRevoked = true;
+    const request = f.view.request;
+    // Ready reads may retain a private management map. Revoke that exact map,
+    // leaving the public report and an independent confirmation untouched.
+    void Promise.resolve()
+      .then(() => this.port.cancel(request))
+      .catch(() => {});
+  }
+  isCurrentResult(owner: InventoryOwner, result: InventoryResult): boolean {
+    const f = this.entries.get(owner.agentId);
+    return (
+      !!f &&
+      this.owns(f) &&
+      f.owner === owner &&
+      result.owner === owner &&
+      f.view.results.skills === result &&
+      !f.managementRevoked &&
+      !result.stale &&
+      !f.view.unresolved
+    );
+  }
+  markStale(result: InventoryResult): void {
+    const f = this.entries.get(result.request.agentId);
+    if (!f || f.view.results.skills !== result) return;
+    this.revokeManagement(f);
+    const stale = { ...result, stale: true };
+    this.publish(f, {
+      results: { ...f.view.results, skills: stale },
+      ...(f.view.result === result ? { result: stale, stale: true } : {}),
+    });
   }
 }
 export const extensionInventory = new ExtensionInventoryController();

@@ -21,6 +21,8 @@ import {
 import { EXTENSION_INVENTORY_STRINGS as S } from "../runtime/extension_inventory_strings";
 import "./AgentExtensionInventory.css";
 import { AgentExtensionInventoryResult } from "./AgentExtensionInventoryResult";
+import { SkillChangeReview } from "./SkillChangeReview";
+import { skillManagement } from "../runtime/skill_management_controller";
 
 /** Inline in the existing AgentDetails dialog; no separate modal or Agent UI. */
 export function AgentExtensionInventory({
@@ -67,6 +69,7 @@ export function AgentExtensionInventory({
     return () => {
       if (liveOwner.current === owner) liveOwner.current = null;
       extensionInventory.retire(owner);
+      skillManagement.retire(owner);
     };
   }, [owner]);
   useEffect(() => {
@@ -107,6 +110,11 @@ export function AgentExtensionInventory({
     () => extensionInventory.get(agentId),
     () => extensionInventory.get(agentId),
   );
+  const managementView = useSyncExternalStore(
+    skillManagement.subscribe,
+    () => skillManagement.get(agentId),
+    () => skillManagement.get(agentId),
+  );
   const cap = capability?.key === capabilityKey ? capability : null;
   const selectedCapability =
     kind === "mcp" ? cap?.value?.mcpInventory : cap?.value?.skillsInventory;
@@ -134,6 +142,11 @@ export function AgentExtensionInventory({
     view.error === "selectionChanged" && view.selectionId === ticket;
   const request = view.request;
   const result = view.results[kind];
+  const managementAvailable =
+    cap?.value?.skillEnablement.availability === "available";
+  useEffect(() => {
+    skillManagement.retireInspectionForResult(owner, result);
+  }, [owner, result]);
   const stale =
     result?.stale || !active || !selection || result?.cwd !== cwd || !available;
   const reason = !selection
@@ -275,12 +288,48 @@ export function AgentExtensionInventory({
         </p>
       ) : null}
       {result && (
-        <AgentExtensionInventoryResult result={result} stale={!!stale} />
+        <AgentExtensionInventoryResult
+          result={result}
+          stale={!!stale}
+          management={
+            kind === "skills" && managementAvailable
+              ? {
+                  enabled: active && !blocked && !managementView.unresolved,
+                  inspect: (item) => {
+                    const current = () =>
+                      owner.current() &&
+                      liveCapability.current === capabilityKey &&
+                      managementAvailable &&
+                      extensionInventory.isCurrentResult(owner, result);
+                    if (current())
+                      skillManagement.inspect({
+                        owner,
+                        result,
+                        item,
+                        current,
+                        changed: () => extensionInventory.markStale(result),
+                      });
+                  },
+                }
+              : undefined
+          }
+        />
       )}
+      <SkillChangeReview
+        agentId={agentId}
+        owner={owner}
+        active={active && !blocked}
+      />
       <details>
         <summary>{S.details}</summary>
         <p>{kind === "mcp" ? S.scope : S.skillScope}</p>
-        <p>{kind === "mcp" ? S.limits : S.skillLimits}</p>
+        <p>
+          {kind === "mcp"
+            ? S.limits
+            : managementAvailable
+              ? S.skillManagementLimits
+              : S.skillLimits}
+        </p>
         <p>{S.sideEffects}</p>
       </details>
     </section>

@@ -1,0 +1,61 @@
+warning: field `root` is never read
+  --> src/acp_client/skill_management/tests.rs:10:9
+   |
+ 9 | pub(super) struct Fixture {
+   |                   ------- field in this struct
+10 |     pub root: tempfile::TempDir,
+   |         ^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.56s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 15 tests
+test acp_client::skill_management::independent_tests::independent_highest_user_profile_preserves_complete_unknown_json_and_other_layers ... ok
+test acp_client::skill_management::independent_tests::independent_known_prewrite_rejections_preserve_original_synthetic_config ... ok
+test acp_client::skill_management::independent_tests::independent_malformed_postwrite_error_is_unknown_not_known_rejection ... 
+thread 'acp_client::skill_management::independent_tests::independent_malformed_postwrite_error_is_unknown_not_known_rejection' (25605534) panicked at src/acp_client/skill_management/independent_tests.rs:319:5:
+assertion `left == right` failed
+  left: Rejected
+ right: Unknown
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test acp_client::skill_management::independent_tests::independent_matching_ok_overridden_is_verified_but_non_target_corruption_is_not ... ok
+test acp_client::skill_management::independent_tests::independent_only_final_path_only_rule_is_updated_without_dropping_unknown_fields ... ok
+test acp_client::skill_management::independent_tests::independent_postwrite_errors_and_lost_ack_cannot_be_reported_as_rejected_or_not_dispatched ... ok
+test acp_client::skill_management::independent_tests::independent_ready_inventory_cancel_revokes_management_but_keeps_public_history ... ok
+test acp_client::skill_management::tests::acknowledged_refusal_survives_cleanup_failure ... 
+thread 'acp_client::skill_management::tests::acknowledged_refusal_survives_cleanup_failure' (25605619) panicked at src/acp_client/skill_management/tests.rs:223:5:
+assertion `left == right` failed
+  left: Some(Unknown)
+ right: Some(Rejected)
+FAILED
+test acp_client::skill_management::tests::complete_array_and_unknown_fields_preserved_with_profile_target ... ok
+test acp_client::skill_management::tests::final_outcome_is_not_published_before_worker_finishes ... 
+thread 'acp_client::skill_management::tests::final_outcome_is_not_published_before_worker_finishes' (25605628) panicked at src/acp_client/skill_management/tests.rs:235:5:
+assertion `left == right` failed
+  left: Some(Verified)
+ right: None
+FAILED
+test acp_client::skill_management::tests::missing_target_recheck_is_an_observation_not_a_repeated_write ... 
+thread 'acp_client::skill_management::tests::missing_target_recheck_is_an_observation_not_a_repeated_write' (25605651) panicked at src/acp_client/skill_management/tests.rs:255:30:
+called `Result::unwrap()` on an `Err` value: Failure { code: TargetChanged }
+FAILED
+test acp_client::skill_management::tests::postwrite_error_and_lost_reply_remain_unknown_without_retry ... ok
+test acp_client::skill_management::tests::ready_inventory_cancel_retires_targets_without_erasing_snapshot ... ok
+test acp_client::skill_management::tests::review_is_consumed_once_and_cancelled_inspect_cannot_confirm ... ok
+test acp_client::skill_management::tests::unsupported_null_is_refused_instead_of_dropping_unknown_value ... ok
+
+failures:
+
+failures:
+    acp_client::skill_management::independent_tests::independent_malformed_postwrite_error_is_unknown_not_known_rejection
+    acp_client::skill_management::tests::acknowledged_refusal_survives_cleanup_failure
+    acp_client::skill_management::tests::final_outcome_is_not_published_before_worker_finishes
+    acp_client::skill_management::tests::missing_target_recheck_is_an_observation_not_a_repeated_write
+
+test result: FAILED. 11 passed; 4 failed; 0 ignored; 0 measured; 1484 filtered out; finished in 4.99s
+
+error: test failed, to rerun pass `--lib`

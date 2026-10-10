@@ -10,8 +10,8 @@ use tokio::sync::watch;
 const CAPACITY: usize = 64;
 const RETENTION: Duration = Duration::from_secs(300);
 #[derive(Default)]
-pub(super) struct Requests(Mutex<HashMap<String, Arc<Request>>>);
-pub(super) struct Request {
+pub(in crate::acp_client) struct Requests(Mutex<HashMap<String, Arc<Request>>>);
+pub(in crate::acp_client) struct Request {
     pub agent: String,
     pub cwd: Option<String>,
     pub kind: Option<Kind>,
@@ -20,6 +20,7 @@ pub(super) struct Request {
     pub deadline: Instant,
     pub changed: watch::Sender<Option<InventoryOperation>>,
     touched: Mutex<Instant>,
+    pub targets: Mutex<Option<Arc<super::targets::TargetSet>>>,
 }
 impl Request {
     pub fn snapshot(&self) -> Option<InventoryOperation> {
@@ -79,7 +80,7 @@ impl Request {
         *self.touched.lock().unwrap_or_else(|p| p.into_inner()) = Instant::now();
     }
 }
-pub(super) fn valid_id(id: &str) -> bool {
+pub(in crate::acp_client) fn valid_id(id: &str) -> bool {
     id.len() == 36
         && id.bytes().enumerate().all(|(i, byte)| {
             if [8, 13, 18, 23].contains(&i) {
@@ -97,7 +98,7 @@ fn validate(agent: &str, id: &str) -> Result<()> {
         Ok(())
     }
 }
-pub(super) fn shared() -> Arc<Requests> {
+pub(in crate::acp_client) fn shared() -> Arc<Requests> {
     static REQUESTS: OnceLock<Arc<Requests>> = OnceLock::new();
     REQUESTS.get_or_init(Default::default).clone()
 }
@@ -105,12 +106,19 @@ impl Requests {
     fn entries(&self) -> std::sync::MutexGuard<'_, HashMap<String, Arc<Request>>> {
         let mut entries = self.0.lock().unwrap_or_else(|p| p.into_inner());
         entries.retain(|_, r| {
-            r.active()
+            let retained = r.active()
                 || r.touched
                     .lock()
                     .unwrap_or_else(|p| p.into_inner())
                     .elapsed()
-                    < RETENTION
+                    < RETENTION;
+            if !retained {
+                // Reviews may still hold this Arc. Retire its authority, not only
+                // the registry key, before making room for a later tombstone.
+                r.operation.abandon();
+                r.targets.lock().unwrap_or_else(|p| p.into_inner()).take();
+            }
+            retained
         });
         entries
     }
@@ -159,6 +167,7 @@ impl Requests {
             operation: Operation::new(),
             deadline: Instant::now() + Duration::from_secs(10),
             touched: Mutex::new(Instant::now()),
+            targets: Mutex::new(None),
             changed: watch::channel(Some(InventoryOperation {
                 request_id: id.into(),
                 agent_id: agent.into(),
@@ -202,12 +211,18 @@ impl Requests {
                 operation: Operation::new(),
                 deadline: Instant::now(),
                 touched: Mutex::new(Instant::now()),
+                targets: Mutex::new(None),
                 changed: watch::channel(None).0,
             });
             entries.insert(id.into(), request.clone());
             request
         };
         request.operation.abandon();
+        request
+            .targets
+            .lock()
+            .unwrap_or_else(|p| p.into_inner())
+            .take();
         request.progress(State::Cancelling, Some(Code::Cancelled));
         Ok(Cancellation {
             request_id: id.into(),
@@ -217,3 +232,7 @@ impl Requests {
         })
     }
 }
+
+#[cfg(test)]
+#[path = "requests_tests.rs"]
+mod test_support;

@@ -1,0 +1,133 @@
+{
+  "status": "Frontend implemented and frozen; independent final review and full engineering/install remain separate",
+  "baseCommit": "d559cf2353242dfeee9d77c8f06ab669b2feacd9",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/source-checkpoint.json",
+    "sha256": "53955032b0f5b8412281d01fa26a193f0b3bc8313c815854bdad17b15866c21d"
+  },
+  "change": [
+    "One capability-driven common skill review surface; original inventory request/owner retained with each result and exact ready-map retirement. No Agent name branches.",
+    "Inspect is read-only; one separate confirmation carries only review identity. No optimistic state toggle, no auto-write/retry, no frontend path/config/version authority.",
+    "Unknown write acknowledgement remains unknown. Explicit read-only recheck retains the original acknowledgement and reports observation separately from attributed verification.",
+    "Closing, kind/directory/Agent changes retire inspection authority; late results retain their original operation and never restore confirmation permission.",
+    "Only a fresh direct confirm refusal reviewExpired/reviewConsumed before observer loss/admitted operation ends local tracking as not dispatched; it does not synthesize a worker receipt. Other errors, status/cancel codes, and timed-out replies remain uncertain."
+  ],
+  "validation": {
+    "targeted": {
+      "command": "corepack pnpm exec vitest run src/runtime/skill_management src/runtime/extension_inventory src/components/AgentExtensionInventoryResult.test.tsx src/runtime/strings.test.ts",
+      "files": 12,
+      "testsPassed": 94,
+      "exitCode": 0,
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/associated-final.txt",
+        "sha256": "0af490062c4b77e65ef89eff241a7f7c5949e4ddfe2ef00daf0b418d01cdbd61"
+      }
+    },
+    "types": {
+      "command": "corepack pnpm typecheck",
+      "exitCode": 0,
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/type-final.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    "format": {
+      "scope": "23 owned source files, exact source checkpoint",
+      "exitCode": 0,
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/format-final.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      }
+    },
+    "actualWire": {
+      "source": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/actual-wire.json",
+        "sha256": "6adf2a98e6f152f3f01bf478aa956fb7d3652251d2c2bbae4a95901157d8a404"
+      },
+      "rawSource": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/actual-wire-raw.json",
+        "sha256": "05d921b156ee4a0537477ee2844213dd6af790a0bc8e360684e97cf400e0d9a4"
+      },
+      "operations": 16,
+      "cancellations": 2,
+      "assertions": 21,
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/actual-wire-first.txt",
+        "sha256": "9e061a17e9c5de52e01ceff08b0b4f383e94901d0bedad07f73c10d024675871"
+      },
+      "claim": "Actual controlled Python peer -> production Rust exchange/registry/serde -> strict TS parser. Synthetic unavailable capabilities do not establish a live official available entry."
+    },
+    "browser": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser-validation.json",
+      "sha256": "1e85a0db1344d5da55f79e583557c5485bc284d36498b6ffbb6f418b6a00cf8b"
+    }
+  },
+  "reproductions": [
+    {
+      "issue": "Original result request/owner omitted and ready inventory private authority not revoked",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/origin-red.txt",
+        "sha256": "ffabfc6db09f7f89c96385e539e7a393d3fb699c705aa34db1976ff6f269c92e"
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/origin-green.txt",
+        "sha256": "67b9dd93980ebe8839f496a90f111ffeb46c5e3c8676a2d7aef6925b10e06a46"
+      },
+      "tests": 2
+    },
+    {
+      "issue": "One in-flight inspect cancellation was sent twice",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/cancel-once-red.txt",
+        "sha256": "64f6ca129cd91fd8a69c930fac9620ce93f2ccff7a1b8cb3b8579c82dac30fc3"
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/controller-types-green.txt",
+        "sha256": "136552b2d79724ba45a3fb092392e783bc479c2cea96d92a3e2ff5f128abeaa1"
+      },
+      "tests": 1
+    },
+    {
+      "issue": "Fresh review refusal incorrectly retained possible-write wait; strict operation/review path and active final-outcome constraints missing",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/admission-and-shape-red.txt",
+        "sha256": "8e27d98fb09ab9271d6d43102deab9e724034e91ba8561ae33f6c5151e38d6a8"
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/admission-and-shape-green.txt",
+        "sha256": "1140b6bfe521bae12aecfacc0e07275e9a8c03b83b548377917a9251a0d96ded"
+      },
+      "redCount": 4,
+      "greenCount": 23,
+      "subsequentConservativeCases": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/associated-refusal.txt",
+        "sha256": "1e85526b87ecec6cff3810da0b4523b60af1719427fb246e2789ab657d5cbd9d"
+      }
+    }
+  ],
+  "evidenceLimits": [
+    "WebKit full App 25 checks were before the three narrow production changes. Final-source admission 3 and Rust-wire shared-component 6 passed separately. Chromium final-source full App 26 plus admission 3 and Rust-wire component 6 passed. Do not flatten these into a single all-final-source full App matrix.",
+    "Controlled IPC is not an official configuration write or installed product acceptance. Actual Rust peer values and reused UUID/clock provide interoperability/render evidence only.",
+    "Historical skills wire fixtures remain unchanged and explicitly reject missing new management fields. Controlled schema-adapted copies preserve old display coverage, not a claim of new Rust serialization. New actual wire is separately verified.",
+    "Initial type errors from missing new fixture fields and first browser logger-key failure are preserved as harness/WIP failures, not product runtime failures.",
+    "No formal App, real Agent, user configuration, provider credentials, live database, install/build or full repository check executed here."
+  ],
+  "boundaryEvidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/type-first.txt",
+      "sha256": "62bd1a87af3e91d85986c2e27338668201e1f085cf6ef7f725dc911aca7759e4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/associated-first.txt",
+      "sha256": "125684994ca845baa627dadae950c000d824e8c71635387efe7a3c048fef8bf8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/associated-current.txt",
+      "sha256": "95e03caa338343c2e8f75df56387432395af0924aa8bdc2c7ae86f8b15edb7dd"
+    }
+  ],
+  "serverClosure": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/server-stop.json",
+    "sha256": "81a28b128c574d636c8a46366e80c62aa0e42083dc4f96a55c26fb65bcc4014d"
+  }
+}

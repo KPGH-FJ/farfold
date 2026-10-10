@@ -1,0 +1,141 @@
+{
+  "scope": "Narrow independent final backend publication review and frozen frontend parser/controller compatibility.",
+  "result": "No new blocker in reviewed change.",
+  "sourceIntegrity": {
+    "frontend23Unchanged": true,
+    "backend24MatchAuthorFreeze": true,
+    "mainFrontendReceiptUnchanged": true
+  },
+  "actualWire": {
+    "values": 20,
+    "operations": 16,
+    "cancellations": 2,
+    "equalToUniqueFinalRustStdoutMarker": true
+  },
+  "ownExecution": {
+    "command": "corepack pnpm exec vitest run --config docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/final-wire-vitest.config.ts",
+    "exitCode": 0,
+    "testFiles": 1,
+    "testCases": 1,
+    "controllerChains": 2,
+    "coverage": "20 strict DTO parses; actual inventory and management controllers, verified/unknown writes followed by explicit read-only observed results, exact original IDs/ack retained, one confirm per chain, no automatic confirm.",
+    "executedHelperBytesEqualFormattedMaintainedFiles": true
+  },
+  "staticReview": [
+    "Review remains in private pending_review until finish atomically publishes terminal ready/review. Exact cancel retires inspection interest and pending authorization.",
+    "finish checks cancellation after taking the pending value; its terminal update and pending_cleanup refuse to reopen settled operations. Review publication and cancellation use the registry lock; there is no later unlocked public review write.",
+    "Intermediate wire outcome is null; acknowledgement/observation remain independent facts before cleanup finishes."
+  ],
+  "authorEvidenceOnly": {
+    "managementTests": 24,
+    "formatExitCode": 0,
+    "clippyExitCode": 0,
+    "rerun": false
+  },
+  "restoredOriginalRaw": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/actual-wire-raw.json",
+    "sha256": "05d921b156ee4a0537477ee2844213dd6af790a0bc8e360684e97cf400e0d9a4",
+    "bytes": 15289
+  },
+  "nonProductReceiptPreparationErrors": [
+    "First raw-marker check used = instead of actual colon.",
+    "Second check contained a hand-transcribed SHA typo; replaced with existing independently frozen peer reference. Both assertions stopped before writing; no source or test rerun."
+  ],
+  "boundaries": [
+    "No official CLI, App, configuration, Cargo or browser executed by this supplement.",
+    "Synthetic Rust peer/registry DTO compatibility does not prove installed official writes. Existing browser receipt keeps original actual-wire input.",
+    "PendingCleanup serialized sample calls the actual method; it does not prove a real seven-second timeout."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/implementation.json",
+      "sha256": "2b6befc29b0be7e267085d22a099dec046c1f0b136137e0a10a8f8c0ffd87bfd",
+      "bytes": 7726
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/source-checkpoint.json",
+      "sha256": "53955032b0f5b8412281d01fa26a193f0b3bc8313c815854bdad17b15866c21d",
+      "bytes": 4382
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/implementation.json",
+      "sha256": "82903731f51cc2e8f5ca6cec9d048ca57fda5b7650be674b0f2cb8c3d3d03456",
+      "bytes": 18093
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/final-wire.json",
+      "sha256": "b1a40389a9008b582a74f9705302f53fba7684454a6b7473f6a79d705690823d",
+      "bytes": 21527
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/final-wire-raw.txt",
+      "sha256": "8262cfbf9c58bdd150b8abf4279cf7e547d1ff9d737ecef70a92d5030592cf8f",
+      "bytes": 15289
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/targeted-complete.txt",
+      "sha256": "ba8dcf95e6bc554d294952928d89fa4e75af4d2bf32addc7b6215dfd9c01a6a0",
+      "bytes": 18615
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inspect-final-cancel-red.txt",
+      "sha256": "414fb77334c4a270464f06c044669294f27f97f09561221faaba2d7d599b06cd",
+      "bytes": 969
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/inspect-publication-red.txt",
+      "sha256": "86ae579996b898da547cded37cb8c8c41e2859925d60423e224df4bd3afffc40",
+      "bytes": 935
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/late-terminal-observation-red.txt",
+      "sha256": "f6183f8cb7b37eea6ab4960e101ccd7917fb477b9cbd145e3939b32f1af43bc5",
+      "bytes": 4306
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/format-final.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/clippy-final.txt",
+      "sha256": "1fbbce2303acf8ed1e647395389357bd01b2330504f4471fe3f149f04f8a8f9f",
+      "bytes": 139
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/final-wire-review.test.ts",
+      "sha256": "bd5200588678b1cf20ef070564f9e668b507c3e45334b8146b0170c0487d3a3f",
+      "bytes": 4112
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/final-wire-vitest.config.ts",
+      "sha256": "498943f07dd2a9d09b84247b2ab3b9e97186398b64e6c2c4eafe68e56ad711c7",
+      "bytes": 224
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/final-wire-review.txt",
+      "sha256": "4df8429921ecd532d0f401a8be2ef370ef1248bc57ebd558a905506750327037",
+      "bytes": 209
+    }
+  ],
+  "reviewedSource": [
+    {
+      "path": "src-tauri/src/acp_client/skill_management/mod.rs",
+      "sha256": "7188627f1cefd558b8e54861adf168dcfa276928693cff3aceb5468156fdae49",
+      "bytes": 7116,
+      "lines": 212
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/requests.rs",
+      "sha256": "f0bf0db7f425311bedf3f370a7bfb9e1aadc8537db7a94b34c83cb87a6bcb091",
+      "bytes": 15490,
+      "lines": 456
+    },
+    {
+      "path": "src-tauri/src/acp_client/skill_management/tests.rs",
+      "sha256": "62a8cd30d216cc8cf2eb718b7942091d219694177387562386fccfa49d52461c",
+      "bytes": 17876,
+      "lines": 487
+    }
+  ]
+}

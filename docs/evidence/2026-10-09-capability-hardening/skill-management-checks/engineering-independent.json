@@ -1,0 +1,156 @@
+{
+  "checkedAtUtc": "2026-10-10T16:50:53.151493+00:00",
+  "result": "Seven-command engineering evidence independently consistent with current frozen inputs; no additional blocker.",
+  "sourceBase": "d559cf2353242dfeee9d77c8f06ab669b2feacd9",
+  "checks": {
+    "sevenExactArgvAndRawLogHashesMatch": true,
+    "allExecutedInRun02": true,
+    "allExitCodesZero": true,
+    "countsFromRaw": {
+      "frontend": ["Test Files  400 passed (400)", "Tests  4670 passed (4670)"],
+      "rust": [
+        "test result: ok. 1502 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 94.08s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    "noCommandsRerun": true
+  },
+  "inputs": {
+    "count": 1439,
+    "run02BeforeEqualsAfterEqualsFreshScopeEnumeration": true,
+    "frontend23MatchesCheckpoint": true,
+    "backend24MatchesCheckpoint": true,
+    "twoProtectedFilesExact": true
+  },
+  "priorFailure": {
+    "retained": true,
+    "run01SixPassedFormatFailed": true,
+    "onlyBetweenRunInputChange": ".prettierignore",
+    "exactChange": "Appended one explanatory comment and the two exact original raw JSON evidence paths; reconstructing the previous bytes matches run-01 ignore hash. No production/test/fixture changed.",
+    "rawBytesPreserved": true
+  },
+  "warningsAndLimits": [
+    "Build logs retain the non-fatal large-chunk warning; no failed build is presented as passed.",
+    "This is read-only receipt/source review, not a repeated test execution, installed App, official configuration-write or Windows verification.",
+    "Current documentation edits are outside this engineering input scope and are not certified by this receipt."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-02/verification.json",
+      "sha256": "b9c633a51d03462309f4df1b8abc2d64b48f2c0529e44ec186c1702d4de68f43"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-02/inputs-before.json",
+      "sha256": "7decb2785ce9d7f3b4bb5155b18aeb4f2674bf5eab9f5aac5dd4aa8afdadcafc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-02/inputs-after.json",
+      "sha256": "7decb2785ce9d7f3b4bb5155b18aeb4f2674bf5eab9f5aac5dd4aa8afdadcafc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-01/verification.json",
+      "sha256": "6a47f5717d7ca521ab82bfccab3c46a29071c52d4bba917cbd8f9138714933a6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-01/inputs-before.json",
+      "sha256": "8819db381427fa5efd07ca835276be6626217eb1ed7edc98f00262b500fcae17"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-01/inputs-after.json",
+      "sha256": "8819db381427fa5efd07ca835276be6626217eb1ed7edc98f00262b500fcae17"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/raw-evidence-format-followup.json",
+      "sha256": "8ca7e42c668990dc82fcf20b8726565e2c165c1a3e8746bc8af74f7c2856d181"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-checks.py",
+      "sha256": "a02f97d1d73275896841f78267e13fb70d2922478af02b1feda583afbef22fae"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-candidate/verify-candidate.py",
+      "sha256": "babc09057ab144137771918cf05ef97ad0ff6f6d545c398a6e6eec8172d1e51b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/source-checkpoint.json",
+      "sha256": "53955032b0f5b8412281d01fa26a193f0b3bc8313c815854bdad17b15866c21d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/source-final-after.json",
+      "sha256": "da4149a3a501248bd8bed79e1eb05a6b3d87cf99c08de4404adbec7e4da79594"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/implementation.json",
+      "sha256": "2b6befc29b0be7e267085d22a099dec046c1f0b136137e0a10a8f8c0ffd87bfd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management/backend/implementation.json",
+      "sha256": "82903731f51cc2e8f5ca6cec9d048ca57fda5b7650be674b0f2cb8c3d3d03456"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-01/frontend.txt",
+      "sha256": "dbbb406f91f9bfcfcb20ba468c2dd28da2c578e3e17a334eb934588eede90d59"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-01/build.txt",
+      "sha256": "3e21898e0a5d975b307ff99c267aa9102cd400a191264a42f1d4ff06daabd6d6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-01/clippy.txt",
+      "sha256": "73596b79c23573c30ea3176cec2df235cf5a72cea804331b01f4aa027afa4a13"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-01/rust.txt",
+      "sha256": "fc059da23f09520638c88100bec396cc71477118e99cbd7d912e8a3bf5d765de"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-01/format.txt",
+      "sha256": "17cc7cd5b4864c6fdfac715a0edf4e6a3a3a8263e7ae1c2ec67356fb335efe2b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-02/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-02/frontend.txt",
+      "sha256": "5bd0c6bbd5b70ab9aa1b2b865ddc89db0f6f1aa9596bf9f84030c759ab6ac4fe"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-02/build.txt",
+      "sha256": "c18805c764546b4a7a1e509e28992fe0dec6923e04f741b4e5ece3a572f1e6aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-02/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-02/clippy.txt",
+      "sha256": "50d7c5226c6686d9fd7d2627bd23839dc13ee8383fe9823565b691ccfacf358d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-02/rust.txt",
+      "sha256": "f637aef880def4f4e9e0b359de28e78320dc749c7141d071e58939bb5c095ae2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-02/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+    }
+  ]
+}

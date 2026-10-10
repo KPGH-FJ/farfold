@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/skill_management_controller.test.ts (11 tests | 1 failed) 16ms
+   × cancel of one in-flight inspection sends one exact cancellation 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/skill_management_controller.test.ts > cancel of one in-flight inspection sends one exact cancellation
+AssertionError: expected "vi.fn()" to be called once with arguments: [ { agentId: 'fixture', …(1) } ]
+
+Received:
+
+  1st vi.fn() call:
+
+Compared values have no visual difference.
+
+  2nd vi.fn() call:
+
+Compared values have no visual difference.
+
+
+Number of calls: 2
+
+ ❯ src/runtime/skill_management_controller.test.ts:58:24
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 10 passed (11)
+   Start at  00:09:48
+   Duration  174ms (transform 55ms, setup 0ms, import 74ms, tests 16ms, environment 0ms)
+

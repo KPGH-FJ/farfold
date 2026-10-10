@@ -4,7 +4,7 @@ use serde::Deserialize;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Deserialize)]
-pub(super) struct Wire {
+pub(in crate::acp_client) struct Wire {
     data: Vec<Entry>,
 }
 #[derive(Deserialize)]
@@ -137,7 +137,14 @@ fn description(value: &str, path: &str) -> (Option<String>, bool, bool) {
     ((!output.is_empty()).then_some(output), truncated, redacted)
 }
 impl Wire {
+    #[cfg(test)]
     pub(super) fn project(self, cwd: &str) -> Result<SkillsInventory> {
+        self.project_private(cwd).map(|value| value.0)
+    }
+    pub(in crate::acp_client) fn project_private(
+        self,
+        cwd: &str,
+    ) -> Result<(SkillsInventory, Vec<super::targets::SkillTarget>)> {
         if self.data.len() != 1 {
             return Err(Code::InvalidOutput.into());
         }
@@ -148,6 +155,12 @@ impl Wire {
         if entry.skills.len() > 512 || entry.errors.len() > 512 {
             return Err(Code::OutputLimit.into());
         }
+        let mut paths = std::collections::HashMap::new();
+        for skill in &entry.skills {
+            *paths.entry(skill.path.clone()).or_insert(0usize) += 1;
+        }
+        let mut targets = Vec::new();
+        let complete = entry.errors.is_empty();
         let mut items = Vec::with_capacity(entry.skills.len());
         for (id, skill) in entry.skills.into_iter().enumerate() {
             if !std::path::Path::new(&skill.path).is_absolute()
@@ -168,9 +181,40 @@ impl Wire {
                 .unwrap_or(&skill.description);
             let (description, description_truncated, description_redacted) =
                 description(brief, &skill.path);
+            let name = safe_skill_name(&skill.name);
+            let reason = if !complete {
+                Some("incompleteInventory")
+            } else if skill.plugin_id.as_ref().is_some_and(|v| !v.is_empty()) {
+                Some("pluginManaged")
+            } else if !matches!(skill.scope.as_str(), "user" | "repo") {
+                Some("unsupportedOrigin")
+            } else if name.is_none() {
+                Some("unsafeLabel")
+            } else if paths.get(&skill.path) != Some(&1) {
+                Some("ambiguousTarget")
+            } else {
+                None
+            };
+            if reason.is_none() {
+                targets.push(super::targets::SkillTarget {
+                    id,
+                    path: skill.path.clone(),
+                    name: skill.name.clone(),
+                    origin: skill.scope.clone(),
+                    enabled: skill.enabled,
+                });
+            }
             items.push(SkillInventoryItem {
                 id,
-                name: safe_skill_name(&skill.name),
+                name,
+                enablement: SkillEnablement {
+                    availability: if reason.is_none() {
+                        "reviewable"
+                    } else {
+                        "unavailable"
+                    },
+                    reason,
+                },
                 description,
                 description_truncated,
                 description_redacted,
@@ -185,18 +229,21 @@ impl Wire {
                 plugin_reported: skill.plugin_id.as_ref().is_some_and(|s| !s.is_empty()),
             });
         }
-        Ok(SkillsInventory {
-            observed_at_ms: SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .map(|d| d.as_millis().min(9_007_199_254_740_991) as u64)
-                .unwrap_or_default(),
-            scope: "officialSkillsForDirectory",
-            source: "officialAppServer",
-            complete: entry.errors.is_empty(),
-            session_applicability: "unverified",
-            error_count: entry.errors.len(),
-            items,
-        })
+        Ok((
+            SkillsInventory {
+                observed_at_ms: SystemTime::now()
+                    .duration_since(UNIX_EPOCH)
+                    .map(|d| d.as_millis().min(9_007_199_254_740_991) as u64)
+                    .unwrap_or_default(),
+                scope: "officialSkillsForDirectory",
+                source: "officialAppServer",
+                complete: entry.errors.is_empty(),
+                session_applicability: "unverified",
+                error_count: entry.errors.len(),
+                items,
+            },
+            targets,
+        ))
     }
 }
 #[cfg(test)]

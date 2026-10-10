@@ -1,0 +1,29 @@
+{
+  "status": "implementationInProgressChecksNotStarted",
+  "createdAtUtc": "2026-10-10T16:11:27.809449+00:00",
+  "sourceBase": "d559cf23",
+  "installedSource": "6c37a012239d8d0194bfae3597700cfebc37333e",
+  "scope": "First P40 increment: explicit review, one-use confirmation, finite official skill enablement preference write and separate configuration/skill readback in the common UI.",
+  "boundaries": [
+    "No Agent loop or upstream patch, arbitrary RPC/config path, direct configuration file write, private HOME or new environment switch.",
+    "Raw official configuration stays private; preserve complete supported skill rule JSON entries, ordering and unrelated layer values.",
+    "Unknown write outcome never triggers automatic retry; explicit recheck reports current observed state without attributing it to the earlier request.",
+    "Inspect/confirmation authority belongs to the exact original inventory, directory, Agent selection and one-use review.",
+    "A completed finite exchange does not prove a running conversation reloaded a skill or that a model used it.",
+    "First route supports only the verified official surface; other Agents, skill discovery/installation and broader scope management remain open.",
+    "All 122 original requirements and 29 x 8 conditions remain in the active plan."
+  ],
+  "checksPlanned": [
+    "Targeted ownership, selection, configuration-preservation and lifecycle regressions",
+    "Actual Rust serialization parsed by TypeScript and common component controlled tests",
+    "Independent synthetic-peer/race challenges and source review",
+    "Seven required repository checks on an unchanged source set",
+    "Sole formal app update and bounded self-owned skill validation after engineering checks"
+  ],
+  "refs": {
+    "output/2026-10-10-skill-management-draft/final-contract.json": "97486da569c6353910bb2d74bcd920c13b34463aa146e611b4562dac082ead3c",
+    "output/2026-10-10-skill-management-draft/final-contract.ts": "58cae59c0ac09b134e46b5a5e700f640c343da3b287410bf26be0d3dc6758920",
+    "output/2026-10-10-skill-management-draft/state-mapping.json": "63bfaaf856ae4bb9cf9d67e8a7c3f1778c7d90a270f3397332ed7f40561e2f53",
+    "docs/evidence/2026-10-09-capability-hardening/skill-management-checks/run-checks.py": "a02f97d1d73275896841f78267e13fb70d2922478af02b1feda583afbef22fae"
+  }
+}

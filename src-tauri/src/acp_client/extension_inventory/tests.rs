@@ -317,6 +317,7 @@ mod macos {
 
     #[tokio::test]
     async fn changed_row_while_waiting_for_configuration_is_not_a_new_query_selection() {
+        let _serial = execution::fixture_lock();
         let f = fixture();
         let store = MetaStore::open(&f._root.path().join("fixture.sqlite")).unwrap();
         store.insert_agent(&f.row).unwrap();
@@ -355,6 +356,7 @@ mod macos {
     }
     #[tokio::test]
     async fn selection_changed_before_first_metadata_read_is_not_admitted_as_replacement() {
+        let _serial = execution::fixture_lock();
         let f = fixture();
         let store = MetaStore::open(&f._root.path().join("selection.sqlite")).unwrap();
         store.insert_agent(&f.row).unwrap();

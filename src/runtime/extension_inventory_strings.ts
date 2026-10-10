@@ -31,6 +31,8 @@ export const EXTENSION_INVENTORY_STRINGS = {
     "按所选工作文件夹查询技能，不代表当前对话已经加载或使用这些技能。来源范围不代表可在此修改的配置层级。",
   skillLimits:
     "本次未执行技能，也未检查具体工具或当前对话是否生效；此处不能启用、安装或修改技能。",
+  skillManagementLimits:
+    "清单查询不修改配置。可支持的技能需另行审阅并明确确认才修改启用偏好；不安装或执行技能，不证明当前对话生效。",
   capabilityChecking: "正在检查清单读取方式…",
   capabilityRetry: "重新检查读取方式",
   chooseDirectory: "选择工作文件夹",

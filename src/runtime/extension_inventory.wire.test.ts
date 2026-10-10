@@ -21,10 +21,17 @@ const request = {
   kind: wire.running.kind,
 };
 
-it("accepts the actual unavailable capability with a null selection ticket", () => {
-  expect(parseExtensionCapabilities(wire.capabilities)).toEqual(
-    wire.capabilities,
-  );
+it("rejects the old capability missing management availability; adapted unavailable stays read-only", () => {
+  expect(() => parseExtensionCapabilities(wire.capabilities)).toThrow();
+  const current = {
+    ...wire.capabilities,
+    skillEnablement: {
+      availability: "unavailable",
+      source: null,
+      reason: "notReviewed",
+    },
+  };
+  expect(parseExtensionCapabilities(current)).toEqual(current);
   expect(wire.capabilities.selectionId).toBeNull();
 });
 it("accepts the actual running operation without optional code or snapshot", () => {
@@ -52,9 +59,22 @@ it("accepts actual skills peer output with partial errors, disabled row and boun
   expect(parseInventoryOperation(wire.skillsRunning, expected)).toEqual(
     wire.skillsRunning,
   );
-  expect(parseInventoryOperation(wire.skillsReady, expected)).toEqual(
-    wire.skillsReady,
-  );
+  expect(() => parseInventoryOperation(wire.skillsReady, expected)).toThrow();
+  // Old partial peer output never grants management: explicit test-only schema adaptation.
+  const current = {
+    ...wire.skillsReady,
+    snapshot: {
+      ...wire.skillsReady.snapshot,
+      items: wire.skillsReady.snapshot.items.map((i: object) => ({
+        ...i,
+        enablement: {
+          availability: "unavailable",
+          reason: "incompleteInventory",
+        },
+      })),
+    },
+  };
+  expect(parseInventoryOperation(current, expected)).toEqual(current);
   expect(wire.skillsReady.snapshot.complete).toBe(false);
   expect(wire.skillsReady.snapshot.errorCount).toBe(1);
   expect(wire.skillsReady.snapshot.items[0]).toMatchObject({
