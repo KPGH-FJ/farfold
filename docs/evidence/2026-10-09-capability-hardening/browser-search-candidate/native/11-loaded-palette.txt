@@ -1,0 +1,19 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 3-90
++			102 container 找回一段对话
++				103 container
++					104 标题 找回一段对话, Value: 2
++						105 文本 找回一段对话
++					106 按钮 关闭
++				107 container
++					108 文本 搜索范围
++					109 弹出式按钮 搜索范围, Value: 对话资料
++				110 组合框 (expanded, settable) 搜索所有对话, Placeholder: 搜索标题、Agent、分组或位置…, Secondary Actions: Collapse
++					111 文本 搜索标题、Agent、分组或位置…
++				112 列表 (settable) (showing 0-6 of 100 items)
++					113 text (selected) FARFOLD_REAL_STOP_20261010：这是一次受控停止验证。请只 Codex · 未分组
++				114 文本 包含已归档对话，搜索标题、Agent、分组和位置。
+Selected:
+	113 文本 (selected) FARFOLD_REAL_STOP_20261010：这是一次受控停止验证。请只 Codex · 未分组
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

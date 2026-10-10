@@ -1,0 +1,268 @@
+{
+  "kind": "independent_readonly_official_stop_surface_followup",
+  "checkedAtUtc": "2026-10-10T04:47:45.347700+00:00",
+  "status": "implementable_official_acp_extension_gap_identified_not_runtime_accepted",
+  "scope": "只查已安装官方接入源码、保留的本次会话快照/不可变数据库副本和官方资料；未启动 Agent/App、发 initialize/prompt/stop、改配置/生产源、操作 OS 进程。",
+  "skill": {
+    "name": "openai-docs",
+    "path": "/Users/tw/.codex/skills/.system/openai-docs/SKILL.md",
+    "primaryReference": "references/official-docs.md"
+  },
+  "conclusion": {
+    "observedRun": "官方 0.155.1 的同一命令在 turn_aborted 后仍运行并于约45秒自然 exit0。此前普通取消不是全部命令已取消。",
+    "existingAcp": "现存 Codex ACP 1.13.1 提供能力协商的 AIR v1 asyncTasks 和 _session/async_task/stop；存档 initialize 已广告该能力。Farfold 仅 opt-in sessionFailure，未消费 asyncTasks/未提供该调用，因此是可确定的接入遗漏。",
+    "runtimeLimit": "不能据源码/存档广告断言本次0.155.1会公布该工具、接受停止或停止其全部后代。没有该扩展的真实请求/回执/后续终态证据；原停止未完成结论保留。",
+    "alternativeOfficialApi": "当前 OpenAI app-server 文档有精确 thread/backgroundTerminals/list + terminate，现存 ACP 内部已调用此路。无须先改成第二个并行 app-server 控制器。",
+    "sdkLimit": "SDK 概览未建立能从另一个 SDK 连接停止本 ACP 已启动命令的保证；不能以 SDK abort、command/exec/terminate 或 process/kill 代替本任务的确切所有权。"
+  },
+  "versions": {
+    "realStopCliVersion": "0.155.1",
+    "storedAcpVersion": "1.13.1",
+    "storedAgentInfo": {
+      "name": "@agentclientprotocol/codex-acp",
+      "title": "Codex",
+      "version": "1.13.1"
+    },
+    "storedAgentAir": {
+      "version": 1,
+      "capabilities": [
+        "sessionFailure",
+        "agentFileChangeReport",
+        "nativeSubagentSessions",
+        "asyncTasks",
+        "recommendedValue"
+      ]
+    },
+    "storedCodeXPath": "/Users/tw/.nvm/versions/node/v22.22.3/bin/codex",
+    "selectedEntrypointResolved": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/bin/codex.js",
+    "selectedCliPackageVersion": "0.155.1",
+    "adapterBundledCodexVersion": "0.156.1",
+    "explanation": "CODEX_PATH 选择全局0.155.1，独立 package 元数据与 session_meta 一致；ACP 自带0.156.1不能冒充本次运行版本。",
+    "savedHandshakeNotNewLiveHandshake": true,
+    "selectedBinaryReadonlyLiteralCheck": {
+      "methodsPresent": [
+        "thread/backgroundTerminals/list",
+        "thread/backgroundTerminals/terminate",
+        "ThreadBackgroundTerminalsTerminateParams",
+        "command/exec/terminate",
+        "turn/interrupt"
+      ],
+      "executed": false,
+      "binaryHashed": false,
+      "claim": "仅编入字符串，非接受接口或实际停止证明；不是兼容性/版本门禁。"
+    },
+    "taggedCliSourceLookup": "官方 openai/codex rust-v0.155.1/v2.rs 查询未取得文件（web404/internal error）；未将最新文档当该tag源码。"
+  },
+  "acpMechanism": {
+    "provenance": "agentclientprotocol/codex-acp 维护者官方接入的扩展；不是 ACP v1 标准 SessionUpdate 变体。",
+    "clientOptIn": {
+      "_meta": {
+        "jetbrains": {
+          "air": {
+            "version": 1,
+            "capabilities": ["sessionFailure", "asyncTasks"]
+          }
+        }
+      }
+    },
+    "agentDeclaration": "initialize 顶层 _meta.jetbrains.air.version=1 + capabilities包含asyncTasks。实现应按能力与精确 live 事件决定，不按 Agent 名称/固定版本/二进制 hash。",
+    "startEvent": {
+      "sessionUpdate": "async_task_spawned",
+      "asyncTaskId": "opaque Agent supplied",
+      "taskType": "shell",
+      "toolCallId": "exact reported tool",
+      "canStop": true
+    },
+    "stopRequest": {
+      "method": "_session/async_task/stop",
+      "params": {
+        "sessionId": "exact live ACP session",
+        "asyncTaskId": "exact published task"
+      }
+    },
+    "response": {
+      "stopped": "boolean; false covers unavailable/unpublished/not-running and terminate=false; thrown errors remain unknown or failed request"
+    },
+    "stateEvent": {
+      "sessionUpdate": "async_task_state_update",
+      "asyncTaskId": "same published task",
+      "state": ["completed", "failed", "stopped"],
+      "toolCallId": "reported tool"
+    },
+    "adapterFlow": "客户端未opt-in则createAsyncTasks disabled。启用后对原 app-server 的 commandExecution/processId及运行列表登记/公布任务；stop仅接受已公布running任务，通过该内部连接的threadId+processId terminate。",
+    "ordinaryCancel": "session/cancel 只调用 interruptSessionTurn→turnInterrupt；此方法没有逐任务 terminate。",
+    "raceBoundary": "stop true 不应覆盖已经先到的 completed/failed：adapter.finish 保留先到终态。任务消失、列表失败、断连和 stop 回执未知不等于所有命令终止；不得从 PID 或历史 processId 自造 asyncTaskId。"
+  },
+  "farfoldGap": {
+    "installedStopCommit": "394bb91af050c5944cc479c40f62e9559a367560",
+    "clientDeclaration": "src-tauri/src/acp_client/manager.rs:613-626 使用 failures::capability()；failures.rs:6-8 仅 sessionFailure。该 installed commit 同样如此。",
+    "rawPreservation": "src/runtime/session_projection.ts:700-704 未识别 sessionUpdate 仍保 raw；当前没有 asyncTasks 强类型状态/控制入口。",
+    "attribution": "普通 cancel 已发送链的证据不变。新增结论是 Farfold 没有接上已声明的可选精准后台任务控制，不是证明 ACP turn/cancel 故障或真实命令能被此路强制终止。"
+  },
+  "minimalNextSlice": {
+    "contractImpact": "可在既有官方接入/停止能力范围内实现，不改变 Agent loop、模型/权限/HOME/配置，不新增第二执行器或持久正文/事件账本。只依能力显示共享界面。",
+    "steps": [
+      "在 acp_client 协议层实现有界内存 async task 生命周期与 AIR v1 opt-in；验证原 session/connection、taskId、toolCallId、canStop 与字段形状。保留原 envelope。",
+      "只对当前已公布且可停止任务提供明确停止操作；调用同一 ACP 连接的扩展。未知/断连保持未确认，正常 prompt 取消与队列暂停逻辑继续独立。",
+      "收到明确终态后更新同一任务；禁止迟到旧连接/历史任务/别的对话 ID 的停止；不推算 OS PID、不自动启动新轮。",
+      "先协议 fixture 红绿与 UI 状态复核；再由 root 授权受控真实命令复验同一配置，分别保存停止回执、任务终态和有界命令实际未写完成标记的证据。"
+    ],
+    "requiredCounterexamples": [
+      "能力缺失/未知version/canStop=false无入口",
+      "未知/历史/跨session或旧connection taskId不派发",
+      "取消prompt后才公布任务仍精确归属",
+      "false与error/断连不显示已停止",
+      "停止与自然完成竞争保留真实先到终态",
+      "重复停止/回执迟到不串新任务",
+      "未知扩展仍保raw；不靠固定Agent名启用"
+    ],
+    "notImplementedOrTestedHere": true
+  },
+  "otherSurfaces": [
+    {
+      "surface": "app-server thread/backgroundTerminals/list + terminate",
+      "classification": "官方当前文档和已装ACP调用点存在；该实际0.155.1连接未调用验证",
+      "limitation": "experimentalApi=true；必须属于原 loaded thread/原服务器。新连接/历史文件不能代替原进程所有权。"
+    },
+    {
+      "surface": "app-server command/exec/terminate or process/kill",
+      "classification": "官方接口存在但不同启动族",
+      "limitation": "不能把 CodeMode exec_command 返回的42169直接当独立 command/exec 或 process/spawn 句柄。"
+    },
+    {
+      "surface": "ACP terminal/kill",
+      "classification": "标准 Agent调用Client管理的terminal接口",
+      "limitation": "本次Codex自己执行命令，不是已有 Farfold terminal/create ID；不可据名字反向调用。"
+    },
+    {
+      "surface": "TypeScript/Python SDK",
+      "classification": "另一路官方封装；概览只证实创建/继续/恢复和Python app-server控制",
+      "limitation": "没有本次既有命令的跨连接精确停止证据；不建议为停止加并行SDK控制器。"
+    }
+  ],
+  "officialSources": [
+    {
+      "url": "https://learn.chatgpt.com/docs/app-server",
+      "kind": "current_official_documentation",
+      "readLines": [1169, 1188, 1591, 1614, 1759, 1764, 1823, 1860],
+      "summary": "区分轮次interrupt、thread后台终端精确terminate、独立命令/process家族；后台终端接口需experimentalApi。当前页面不是0.155.1固定文档。"
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/codex-sdk",
+      "kind": "current_official_documentation",
+      "readLines": [917, 1039],
+      "summary": "TS线程run/resume与Python app-server包装；未从概览取得可停止本次ACP已有命令的承诺。两个repo链接本次web获取失败，不作源码证明。"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/v1.13.1/src/async-tasks/CodexBackgroundTerminalTasks.ts",
+      "kind": "maintainer_tagged_source",
+      "readLines": [45, 95, 165, 190, 259, 332],
+      "summary": "可协商任务的登记、公布、精确停止与状态流；与本地bundle对应。"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/v1.13.1/src/async-tasks/AsyncTaskExtension.ts",
+      "kind": "maintainer_tagged_source",
+      "summary": "扩展方法与sessionId/asyncTaskId参数。"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/agentclientprotocol/codex-acp/v1.13.1/src/async-tasks/BackgroundTerminalApi.ts",
+      "kind": "maintainer_tagged_source",
+      "summary": "后台终端processId/itemId、分页和terminated回执。"
+    },
+    {
+      "url": "https://agentclientprotocol.com/protocol/v1/terminals",
+      "kind": "official_protocol",
+      "summary": "Agent请求Client创建、等待、kill/release Client终端；不能等同Codex内部后台命令。"
+    },
+    {
+      "url": "https://agentclientprotocol.com/protocol/v1/prompt-turn",
+      "kind": "official_protocol",
+      "summary": "标准session更新和prompt取消流程；async_task不是当前标准SessionUpdate枚举。"
+    }
+  ],
+  "readOnlyProof": {
+    "metadataCopySha256BeforeAndAfter": "06cfee804521dfb63c782b8bb15c0525e659094fcb5874674e659420fba2b8e6",
+    "officialSnapshotSha256": "cefd8c9b0edbeb63117a1f8a1aa642eb3224166453c8df936b06aeaa8b6cb85d",
+    "officialSnapshotBytes": 117720,
+    "agentOrCommandInvocations": 0,
+    "productionOrConfigEdits": 0,
+    "osProcessSignals": 0,
+    "testsOrBuilds": 0,
+    "onlyNewPublicFile": "real-stop/official-stop-followup.json"
+  },
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/independent-preliminary.json",
+      "sha256": "706e01951a1216addbb925118a277342b644fdce1bf409c686502d59b06a34d6",
+      "bytes": 20366
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/real-stop/installed-stop.json",
+      "sha256": "f148fefe56417b930dc3a2e1f58f298005664b44e4352dcef634b1b8ddf8a93f",
+      "bytes": 10959
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/package.json",
+      "sha256": "21ad8f19e81d9c65ff32c48161de14235e91d30626cd32e05856875ae0f48b8a",
+      "bytes": 3835
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@agentclientprotocol/codex-acp/dist/index.js",
+      "sha256": "4c1f6c00e67c2ace5a96f0e0fe6e812502a48827a403014d4b68373464f55fce",
+      "bytes": 1500380,
+      "lines": [
+        28009, 28045, 33480, 33487, 36940, 37244, 37567, 37756, 37809, 38105,
+        38112, 39727, 39759, 40304, 40311, 40539, 40626
+      ]
+    },
+    {
+      "path": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/package.json",
+      "sha256": "98862962c00eef34e3946f14a4345c26efbaaa733f8c6188069654a234adeee0",
+      "bytes": 1082
+    },
+    {
+      "path": "/Users/tw/.nvm/versions/node/v22.22.3/lib/node_modules/@openai/codex/bin/codex.js",
+      "sha256": "61b0194f3bb6534439c8d26a3ed57d0805f84b884588b761795323eeb92fcf70",
+      "bytes": 8790
+    },
+    {
+      "path": "/Users/tw/Library/Application Support/ai.farfold.desktop/agents/codex/install-XMfqul/node_modules/@openai/codex/package.json",
+      "sha256": "c3f16464dca0fe1269b17d02fe0997d1ca3a241c3a61da3d89ec13def0a66c6e",
+      "bytes": 1082
+    },
+    {
+      "path": "output/2026-10-10-real-stop/metadata-before.sqlite3",
+      "sha256": "06cfee804521dfb63c782b8bb15c0525e659094fcb5874674e659420fba2b8e6",
+      "bytes": 364544
+    },
+    {
+      "path": "output/2026-10-10-real-stop/independent/official-session.snapshot.jsonl",
+      "sha256": "cefd8c9b0edbeb63117a1f8a1aa642eb3224166453c8df936b06aeaa8b6cb85d",
+      "bytes": 117720
+    },
+    {
+      "path": "src-tauri/src/acp_client/manager.rs",
+      "sha256": "4513d99aad462a5da03981839b9e5e791eccb1fcc74b0dafae707448bc560d06",
+      "bytes": 50826,
+      "lines": [595, 632]
+    },
+    {
+      "path": "src-tauri/src/acp_client/failures.rs",
+      "sha256": "05dad174856661cc236ab2a08d0cc62f811d343519770534c0ad68b320da8c31",
+      "bytes": 4244,
+      "lines": [6, 8]
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "c252ec05dbaa8a784164e3b3a94ff3cf71d80a8a533d12fcfdf35286c022161c",
+      "bytes": 28739,
+      "lines": [700, 704]
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "17526375e4a757be187783a31dde42f96f7b771e750a137bfae1547a020b0aea",
+      "bytes": 70427,
+      "lines": [632, 647]
+    }
+  ]
+}

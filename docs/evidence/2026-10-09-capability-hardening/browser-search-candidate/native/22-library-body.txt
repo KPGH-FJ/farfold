@@ -1,0 +1,69 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 123-186
+~	119 滚动区
+~		120 HTML内容 Description: Farfold, URL: tauri://localhost
+~			121 container
+~				122 图像 Farfold
++				123 按钮 收起导航
++				124 按钮 新对话 ⌘ N
++				125 按钮 搜索对话 ⌘ K
++				126 container 所有对话
++					127 按钮 所有对话 123
++					128 按钮 收藏 0
++					129 按钮 探索 Agent
++				130 按钮 (expanded) 最近, Secondary Actions: Collapse
++				131 按钮 FARFOLD_REAL_STOP_20261010：这是一次受控停止验证。请只
++				132 按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT 需要你
++				133 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受 需要你
++				134 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
++				135 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
++				136 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
++				137 按钮 FARFOLD_WORKBOOK_4952C692_20261010。不要调用任
++				138 按钮 FARFOLD_TEXT_CD66AAE7_20261010。不要调用任何工具，
++				139 按钮 查看全部
++				140 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
++				141 按钮 管理我的 Agent
++				142 按钮 Codex 27
++				143 按钮 OpenCode 26
++				144 按钮 Grok Build 1
++				145 按钮 Poolside 1
++				146 按钮 MiniMax Code 1
++				147 按钮 Qwen Code 1
++				148 按钮 全部 Agent（29）
++				149 按钮 (expanded) 分组, Secondary Actions: Collapse
++				150 按钮 新建分组
++				151 按钮 验收 0928 4
++				152 按钮 验收 0928的操作
++				153 按钮 原型验收 0930 2
++				154 按钮 原型验收 0930的操作
++				155 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
++				156 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
++				157 container 对话动态
++					158 按钮 2 等你回应
++					159 按钮 9 新回复
++				160 按钮 设置
++				161 文本 属于你的 Agent，在一处相遇。
++				162 container
++					163 文本 对话
++					164 标题 所有对话, Value: 1
++						165 文本 所有对话
++					166 文本 123 段对话
++					167 按钮 带入已有对话
++					168 按钮 新对话
++					169 文本 只查找已加载的用户消息、回复和已接收的附件文字。未加载历史、附件文件、思考和工具详情不在此范围。
++					170 弹出式按钮 搜索范围, Value: 已加载正文
++					171 文本栏 (settable) 搜索标题、Agent、分组或位置, Placeholder: 搜索已加载正文…
++					172 弹出式按钮 所有 Agent
++					173 弹出式按钮 所有分组
++					174 开关按钮 (disabled) 整理, Value: off
++					175 标签组 (selectable) 全部状态
++						176 标签 (selected) 全部 123
++						177 标签 (selectable) 未发内容 14
++						178 标签 (selectable) 等你回应 2
++						179 标签 (selectable) 进行中 0
++						180 标签 (selectable) 新回复 9
++						181 标签 (selectable) 已归档 1
++					182 container 全部
++						183 container
++							184 text 只查找已加载的用户消息、回复和已接收的附件文字。未加载历史、附件文件、思考和工具详情不在此范围。 已加载 2 个对话  ·  121 个对话尚未加载  · 0 个对话的读取尚未确认 输入关键词查找已加载文字。
+The focused UI element is 170 弹出式按钮 搜索范围, Value: 已加载正文

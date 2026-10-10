@@ -1,0 +1,514 @@
+{
+  "kind": "installed-loaded-search-and-manual-browser",
+  "observedAtUtc": "2026-10-10T04:53:30.058265+00:00",
+  "formalSourceCommit": "ece08cd511b27ec62898ca03f688bb25b2966517",
+  "version": "0.1.7",
+  "platform": "macOS arm64",
+  "formalBundleMatchesCandidate": true,
+  "cases": [
+    {
+      "id": "cold-search-coverage",
+      "status": "passed",
+      "observations": ["05-body-scope-confirmed", "06-cold-query"],
+      "result": "Initially no conversations loaded: body scope shows zero loaded, 124 unloaded; does not claim entire history searched."
+    },
+    {
+      "id": "native-worker-search",
+      "status": "passed",
+      "observations": [
+        "13-body-scope-selected",
+        "14-worker-search-query",
+        "15-reply-result-selected",
+        "16-located-reply"
+      ],
+      "result": "Load only existing controlled P19 conversation, search P19_ALPHA_V2: two matches. Keyboard selection jumps to the reply with exact visible highlight in the actual installed app."
+    },
+    {
+      "id": "two-conversation-library",
+      "status": "passed",
+      "observations": [
+        "19-second-loaded",
+        "22-library-body",
+        "23-two-conversation-results",
+        "25-library-specific-query",
+        "26-library-jump"
+      ],
+      "result": "Load existing controlled P22 conversation. Library searches two loaded conversations; FARFOLD gives seven matches, P19_ALPHA_V2 gives two. Clicking the reply navigates to its highlighted text."
+    },
+    {
+      "id": "no-match-and-dismiss",
+      "status": "passed",
+      "observations": [
+        "44-search-body",
+        "45-search-no-match",
+        "46-search-closed"
+      ],
+      "result": "Explicit missing marker reports no match in searched text with two loaded and 122 unloaded conversations; Escape restores the conversation."
+    },
+    {
+      "id": "local-browser-open",
+      "status": "passed",
+      "observations": ["32-local-open", "34-local-origin-open"],
+      "result": "Pathful local address rejected by existing origin-only policy. Exact loopback origin opens owned HTTP page in the native browser."
+    },
+    {
+      "id": "manual-browser-read",
+      "status": "passed",
+      "observations": [
+        "35-manual-snapshot",
+        "36-page-click",
+        "37-refreshed-snapshot",
+        "38-browser-render"
+      ],
+      "result": "Manual text snapshot reads controlled marker; single manual page click changes text and disables button; a fresh manual snapshot reads Clicked once. No Agent read permission was granted or request sent."
+    },
+    {
+      "id": "hide-reopen-close",
+      "status": "passed",
+      "observations": [
+        "39-browser-hidden",
+        "40-browser-reopened",
+        "41-browser-closed"
+      ],
+      "result": "Hiding removes native page from observed accessibility view. Reopening retains Clicked once; close removes page and snapshot, disables reading, and removes current-page composer chip."
+    },
+    {
+      "id": "safe-exit",
+      "status": "passed",
+      "observations": ["47-idle-draft"],
+      "result": "Returns to empty existing TR draft, normal Cmd+Q; exact process absence and closed-app private SQLite copies verify exit and preservation."
+    }
+  ],
+  "dataRetention": {
+    "originalDatabaseOpened": false,
+    "groups": {
+      "composers": {
+        "before": 8,
+        "after": 8,
+        "exactlyEqual": true
+      },
+      "feedback": {
+        "before": 8,
+        "after": 8,
+        "exactlyEqual": true
+      },
+      "queues": {
+        "before": 3,
+        "after": 3,
+        "exactlyEqual": true
+      }
+    },
+    "wholeUnsentExactlyEqual": true,
+    "sessionIdentitiesExactlyEqual": true,
+    "beforeSessionCount": 124,
+    "afterSessionCount": 124,
+    "copies": {
+      "metadata-before.sqlite3": "3f0a73146156eebd5b54ab47151351de71f360d5117382665b4914b6d7cddeb8",
+      "after-native/metadata-before.sqlite3": "0c0dbd0285b71a54955975c60932a957ea3d3fc059a1c1094b2b1e98ffaec66a"
+    }
+  },
+  "officialHistory": [
+    {
+      "label": "p19",
+      "path": "/Users/tw/.codex/sessions/2026/10/10/rollout-2026-10-10T11-38-48-01a123e4-5319-7d60-9db6-ab66f4d9d432.jsonl",
+      "baselineSha256": "4c6b746f6da4977bb32eb912039064363ac5c12addac9860dad89e2d74fe6685",
+      "exactPrefixLines": 30,
+      "exactPrefixBytes": 117385,
+      "currentLines": 31,
+      "currentBytes": 118083,
+      "currentSha256": "f1bec64c95cb46bf6fe69c147e4dc93c04c9e1c55e53886b61688bccd671ea47",
+      "appendedEventTypes": ["thread_settings_applied"],
+      "newPromptsOrTools": 0,
+      "frozenPrivate": "p19-official.snapshot.jsonl"
+    },
+    {
+      "label": "p22",
+      "path": "/Users/tw/.codex/sessions/2026/10/10/rollout-2026-10-10T11-08-06-01a123c8-3840-7c70-8bcc-543fb78c1baf.jsonl",
+      "baselineSha256": "b0f466163f0bec0d10b79e3e28a2a16cfe7fd5ca83ba5dc75aa3761a05535a10",
+      "exactPrefixLines": 39,
+      "exactPrefixBytes": 127233,
+      "currentLines": 40,
+      "currentBytes": 127927,
+      "currentSha256": "546c0be3f1af9075ec90b53be672ff4f479c59ad49fd44ed0eae8d39b6c7c755",
+      "appendedEventTypes": ["thread_settings_applied"],
+      "newPromptsOrTools": 0,
+      "frozenPrivate": "p22-official.snapshot.jsonl"
+    }
+  ],
+  "newDefects": [
+    {
+      "id": "NEW-05",
+      "status": "confirmedInstalledSourceFixedNotYetReinstalled",
+      "observations": ["22-library-body", "23-two-conversation-results"],
+      "finding": "Library body-search placeholder is correct but accessible input name still describes title/Agent/group/location. Source now selects the appropriate accessible label by scope."
+    }
+  ],
+  "scopeClarifications": [
+    "Palette includes one archived conversation: 124 total. Library excludes archived: 123. Coverage counts differ for that reason.",
+    "Root viewed the exact saved native screenshots. Independent source/browser checks are separate evidence, not native performance measurements.",
+    "Previous P19 and P22 official recorded hashes remain exact prefixes. Each has only one additional thread_settings_applied event; no new prompt/tool. Raw records remain private.",
+    "The own server received SIGTERM only after browser close and normal app quit; owned exec session reaped with exit143."
+  ],
+  "driverCorrections": [
+    "Native select popup required a subsequent observed Down/Return action; first immediate key attempt did not change it.",
+    "First library fill helper rejected duplicate focused-element summary before acting; numeric AX-line filtering corrected the helper.",
+    "Opening pathful loopback URL was correctly rejected by the existing documented origin-only rule, then exact origin opened.",
+    "CUA observation after Cmd+Q returned App quit; separate exact process check confirms completion."
+  ],
+  "notProven": [
+    "No new real Agent request or Agent browser-tool cancellation in this installed journey. Request cancel/timeout/late callbacks have separate controlled native evidence only.",
+    "No whole-history or attachment-file search; no performance/large-stream native benchmark; no Windows installed check.",
+    "Agent page-read permission was never granted, so hide/reopen does not prove permission preservation in this journey.",
+    "NEW-05 fix is not present in installed ece08cd5; broader product plan and 29-Agent standards remain incomplete."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/01-launched.png",
+      "sha256": "e23203a4ec6680b6ae8599fd2c0f328531c7d132c64fd47c9a22822c0c5b28e2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/01-launched.txt",
+      "sha256": "e88d86003f889dcdd12de09c5e6179f08ca87d1a19096cb213d5780f342da275"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/02-palette-before.txt",
+      "sha256": "86ff48fc6bac9b1ae2fa2cf2977e2c5e932fb5e30b57e0572bd9d02ef871ae21"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/02-palette.txt",
+      "sha256": "45346f56b773294ff6c596ee3fb691df05ed76fb2f698e0166bed8e2d351cb09"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/03-scope-menu.txt",
+      "sha256": "c3008e7af8ee43cc535600cab75f8c99f519e511dc47fa0bf28961251e635c18"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/04-body-cold.txt",
+      "sha256": "5498c2938a86928e905f1f804e355f7f57efae0bc10dbe8604d30aa9cf51f17c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/05-body-scope-confirmed.txt",
+      "sha256": "f1bd9829e00933db47385eebb16bf711eef0f72d69f4abd9915f2a25f61e0b35"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/06-cold-query.txt",
+      "sha256": "c1aad7083beb073ed8b1b9c036c74a4db9c98e5e72fab2ea0d57ec30bee1cab8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/07-close-cold-search-before.txt",
+      "sha256": "9aee0d961a5f096917e99bab1f18cd5430eed0e35afcda8bec9cb8dd0321b7a2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/07-close-cold-search.txt",
+      "sha256": "e3c292a9427c4e8952233e36caf3ddf49987361f871e9e497460131b2494c3df"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/08-load-controlled-report-before.txt",
+      "sha256": "b10c382bc072f8a261f87456cdb7dc3aa707f9461177b7cbb2789bd7dc42336f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/08-load-controlled-report.txt",
+      "sha256": "39ee46be4b890f9b243df75a186df6c83e5c9b0aac410eaee58782ab65a6a5b5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/09-report-loaded.txt",
+      "sha256": "712ab2d68452b94e273fd269052dc527deb8ac5dd54f2f00c7b89cbc1cc61e0c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/10-report-history-ready.txt",
+      "sha256": "42118606060e2c6d600c01be3d4cec9c12712a3ca7d55b41013bdff8274e4b02"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/11-loaded-palette-before.txt",
+      "sha256": "39fab3730dbb467fe0a68b558b8ac9320e715bcf9ff4020d13959d1c9e8c15a3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/11-loaded-palette.txt",
+      "sha256": "41f51ca3b2aedec26074a4ee74ad2314191342471853694f4fbdafb5b358eb72"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/12-loaded-body-scope.txt",
+      "sha256": "a91eb6a54886b2de8fac09746138df1bae1da09a9af9ae75cf9a109053cbadd2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/13-body-scope-selected.txt",
+      "sha256": "2bcb01bb16105fbabc823cf70c6750f515df15f29a524fbc6bda7b9925b9ec47"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/14-worker-search-query.txt",
+      "sha256": "13f8f254e2efc67559a84547166c8f1ed22aed5ce3cc541f42f8fec3a55f8245"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/15-reply-result-selected.txt",
+      "sha256": "96d376f73fc6395cb46f170bbd857afe54c0bfbce59922f25c11c30214c053c5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/16-located-reply.png",
+      "sha256": "3a46a0259380de79a8a87453749740b6033df2e9443fa187f2dbe6a0800dd34e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/16-located-reply.txt",
+      "sha256": "893a8f385598eb72ab3e49ec0dbdd3ea47ae4d0cb44f5eff4b3c83b5fb411a3f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/17-close-locate-before.txt",
+      "sha256": "72e148956e5199e0ae04c5f9ccd11d30b98950d36cf88d760b716c219762e79b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/17-close-locate.txt",
+      "sha256": "c88f42f87a404e7d5e802c441979510744561afb053f53f50664c040572b859e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/18-load-second-before.txt",
+      "sha256": "afabc283459352095978182849d0b77997c4e245fea44c30c909baefd697bf30"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/18-load-second.txt",
+      "sha256": "e6d4283f4d1973819797ac6b175d0c388923784c8dbec5cb728f841e73c2ae80"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/19-second-loaded.txt",
+      "sha256": "1b686ced3ca9943061b04460a4172bf884f9fb3d660ba18e0bf5e70e17bcbe7e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/20-library-before.txt",
+      "sha256": "80cdf628712f5edf5561f0f9264207036d420c1dacdcf986a557d6c661517bd9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/20-library.txt",
+      "sha256": "0e7a0bc493d6a3ff6e03dd7d39a82978eafebb3bea00a7d7f64b18ea2138cfb1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/21-library-scope-menu.txt",
+      "sha256": "cda64bc8e39a2328d0d19285b6e1f15cf2c1d3836097e09dbb351f6c0427ad97"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/22-library-body.txt",
+      "sha256": "618cc6e9312d327764f5ec5cae96b387a49d681e6f8c89525a0fa22d92fe687b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/23-two-conversation-results.png",
+      "sha256": "c725959655843644af8af92731aee6d950f6d2de4822be86cdc9cd9f9819747a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/23-two-conversation-results.txt",
+      "sha256": "04fdaa991d2be4ea247b28b51f0d6fb25588f72189c49d97d706842c7dcb5e8d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/24-library-specific-query-before.txt",
+      "sha256": "e11fd36937cf1a5e0fa07e16360bc23e6652c4021cd213e10f2cf16b08fb7b18"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/25-library-specific-query-before.txt",
+      "sha256": "e11fd36937cf1a5e0fa07e16360bc23e6652c4021cd213e10f2cf16b08fb7b18"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/25-library-specific-query.txt",
+      "sha256": "c390a54deba980bf185bc2c0275ec3486bd1ec631f4db8828e4f2292203c1161"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/26-library-jump.txt",
+      "sha256": "5612a61782ca829102d0897be5672ab2906744b94507be0e40a811d7608bdb65"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/27-clear-jump-before.txt",
+      "sha256": "da129f19c03b456e2d1cd7030d5d837120eb876f491631ec84cc5caa9e92a566"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/27-clear-jump.txt",
+      "sha256": "c88f42f87a404e7d5e802c441979510744561afb053f53f50664c040572b859e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/28-browser-panel-before.txt",
+      "sha256": "6b4936f5ef433a4b5aa4a5f476a4b02527add91659022be840f01edad91bd584"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/28-browser-panel.txt",
+      "sha256": "ebacfede1be26d99dd4f75654ff91ed8e6aa709e3f27e3ab5a384632088c6dc6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/29-browser-source-before.txt",
+      "sha256": "66034eb14b2eb29d1b632eb9e66d901ba5660244c3cf7a63bcf4d4ab5c1d68c1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/29-browser-source.txt",
+      "sha256": "64ee9529030bb4d811cccb0a4aabaefc7f2302907a69474906683398607ac097"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/30-local-source.txt",
+      "sha256": "88af0b7965c1abfbac61ce914c95082962505d00eb190e498545ea2f0a1046a7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/31-local-url.txt",
+      "sha256": "1612885b3c11671e8450b840e619331d318966836f61b75de84590cddc3debf9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/32-local-open.png",
+      "sha256": "101668425f61a5f09a981c737753fc95587f9dc7c537c63062cb2dbeadeadd24"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/32-local-open.txt",
+      "sha256": "4eefc0bfd5a24dd293a63afaa191e4f02a7a0b94f3434b4453633346336a5c03"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/33-local-origin-before.txt",
+      "sha256": "1000441b94c289e279a6e249a0e958a27603fb88826457cbe34d6ee7c34345c3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/33-local-origin.txt",
+      "sha256": "86a6972a8b02c89ea03d62ae4ef2a985c78ed4fbb9d6271d7942b89d13dfdbba"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/34-local-origin-open-before.txt",
+      "sha256": "ae67be4b6d77902dc829bfdf66ce96bc651a1a4997922fba5afc215ad5d1d83e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/34-local-origin-open.txt",
+      "sha256": "531a26f9cb45f5a94d6cb08bd939b3b076db50f8b7d9cd289ca313ee0b0af99a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/35-manual-snapshot-before.txt",
+      "sha256": "94268f194782d64ba39dc2c7cf65e51bb365dd581f469047ac923ef6f832390a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/35-manual-snapshot.txt",
+      "sha256": "3673eb158f1ff7d68ac0c8829c5676428baa0aeb97cb7fd6a45a411bf65e0e57"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/36-page-click-before.txt",
+      "sha256": "0eab1a32eaa329b646b5a264e58b0aebede2424a105c4958ffc2959ebc4ec7d9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/36-page-click.txt",
+      "sha256": "10e59900baf0ab26fc89cfc177ecb5f08f4a820e7862d29d16127618c62f43cb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/37-refreshed-snapshot-before.txt",
+      "sha256": "7dba58e247c9b9cc128695aa07376332c02c8c089b9886d81d71c02245adeea8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/37-refreshed-snapshot.txt",
+      "sha256": "99d811f235db7d7a52f07d14fa517788dca9197a6cbb1f0ee05d1a5471e88d0f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/38-browser-render.png",
+      "sha256": "dafe46b45f7b9073c254c2afefbe8ca15a59b3fcc3d2b3f8206822c71daefbb3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/38-browser-render.txt",
+      "sha256": "712ab2d68452b94e273fd269052dc527deb8ac5dd54f2f00c7b89cbc1cc61e0c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/39-browser-hidden-before.txt",
+      "sha256": "37b1d09110d9b915a7ea8331bc089cd5e0aa55555ffdb16c0bae5ea6d9fc3f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/39-browser-hidden.txt",
+      "sha256": "eb7468c49cff64d697ca16059469963e3906267d2640e7b1af460b30705f570e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/40-browser-reopened-before.txt",
+      "sha256": "82ff1ea5b902f4de5e1b41c2f920b6d4e54fc90fcaba0010aa41fa3b927b0ab9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/40-browser-reopened.txt",
+      "sha256": "6af9e367cb075f06946b84750678b5ea01321728d70d6e7e865c68081aa9c0aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/41-browser-closed-before.txt",
+      "sha256": "37b1d09110d9b915a7ea8331bc089cd5e0aa55555ffdb16c0bae5ea6d9fc3f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/41-browser-closed.txt",
+      "sha256": "5c46cf84b371057827967247dd97c2d6816386e280cce924f308c12f30fc3b10"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/42-search-again-before.txt",
+      "sha256": "41653956c44f55415890a2fda6c3ea1162f4251d6570936731a5aef85ec27ae9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/42-search-again.txt",
+      "sha256": "115fab9ac0e9e7260c658701822eb4ed73491fc3b2baae790719ade18f97e03a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/43-search-scope-menu.txt",
+      "sha256": "b929da5c96b1c6125da0180f8fa75f7985eb3e4c95241476efb896aeaaa16edb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/44-search-body.txt",
+      "sha256": "7e2aad47ef9c44a9a833c68a8ec6933d7713df2205bd5b90591910724adadaf9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/45-search-no-match-before.txt",
+      "sha256": "a6a452f6497b145c6a58aceb20f85c391156cf2c96c47281775c7e1b7ef24003"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/45-search-no-match.txt",
+      "sha256": "af0640cc6aee9a004842c3e04667665bbf242cdb6581dcf66cd4629efb54e1ea"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/46-search-closed.txt",
+      "sha256": "7fd781001f85a241334cbcde97d4c5947699b59a92e25b4a39d0e6d6ccb4948f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/47-idle-draft-before.txt",
+      "sha256": "8adca6c4e8df52089c7ad227accaf68afce1260301cc0c62b4a1d13aa5cd9e50"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/native/47-idle-draft.txt",
+      "sha256": "b1449afbefa8e8c450ae3b324c47ea9727df6e8cf86b392d76f0fdc589607818"
+    },
+    {
+      "path": "output/2026-10-10-browser-search-install/native-normal-exit.json",
+      "sha256": "0a8775da331a23f8a19c393cdb41bc4cabce56a6d1b05b7aa9693a030287d242"
+    },
+    {
+      "path": "output/2026-10-10-browser-search-install/native-data-retention.json",
+      "sha256": "3f7501a95bec5b59aaa6152a042f7b130f868263f558ec9a42ac849210e2842c"
+    },
+    {
+      "path": "output/2026-10-10-browser-search-install/native-official-history.json",
+      "sha256": "f4c6c6077b35b43dc45f90cbbf62acd0b24cb11039032ce2d8def9154ff72608"
+    },
+    {
+      "path": "output/2026-10-10-browser-search-install/metadata-backup-receipt.json",
+      "sha256": "18b778959eba2c624ba0c072793503d5b23a73dd77e5f0f298016ea75e671c63"
+    },
+    {
+      "path": "output/2026-10-10-browser-search-install/after-native/metadata-backup-receipt.json",
+      "sha256": "1f18e8aa1787212cff525906ef27af3003f3a337d9a9cd7daad7112e2117472f"
+    },
+    {
+      "path": "output/2026-10-10-browser-search-install/owned-server-stop.json",
+      "sha256": "fe19e63e9ff7f864869fba03b1b8de4e8377dab9d10c5adb4f0c6729ee8c6fca"
+    },
+    {
+      "path": "output/2026-10-10-browser-search-install/native-page/index.html",
+      "sha256": "1529d2ca7762ea8c97b65d46070110b79aa9ba9ca2900778907263793185ed96"
+    },
+    {
+      "path": "output/2026-10-10-browser-search-install/native-page/serve.py",
+      "sha256": "daf078ec9a083b6899679d531ee41eb8396ac5afa45feef2571ffe2a04e38e19"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/candidate.json",
+      "sha256": "8c26616a3867b2c61edef3fb0a056e3720faf9d3227476474877bd68fffa260f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/candidate-independent.json",
+      "sha256": "41cc1f1bc66945401f9f2d7c0443e72b686e7eb13111288974abd7560c8146a1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/installed-data-retention.json",
+      "sha256": "a99228879588ae686f1616d346b1602460ea3ac866c895baa67a68c5909f96f4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/install-independent.json",
+      "sha256": "22620e550d9a172dddfe4a1938a249a319b4669759e1a09d576255ebd9d4e7e7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "3c990a2eb25897988673edb935d25d1cf55933bde48131422936a7dc534c4323"
+    }
+  ]
+}

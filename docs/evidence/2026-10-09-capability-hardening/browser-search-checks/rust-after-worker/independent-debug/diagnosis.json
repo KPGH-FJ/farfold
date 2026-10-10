@@ -1,0 +1,187 @@
+{
+  "kind": "independent_bounded_rust_failure_diagnosis",
+  "checkedAtUtc": "2026-10-10T04:38:24.378916+00:00",
+  "status": "original_three_failures_unresolved_nonreproduced_in_bounded_followups",
+  "blockingFinding": null,
+  "sourceOrTimeoutChanges": false,
+  "originalEvidence": {
+    "firstFullRun": {
+      "passed": 1242,
+      "failed": 0,
+      "ignored": 6
+    },
+    "secondFullRun": {
+      "passed": 1239,
+      "failed": 3,
+      "ignored": 6,
+      "seconds": 96.8
+    },
+    "inputCount": 493,
+    "bothRunsInternallyStable": true,
+    "onlyBetweenRunInputDelta": {
+      "vite.config.ts": [
+        "c6bed1bdbf62374502f49b20ebcacdcc3a747f0fc8e20627388d59d4baf6e07f",
+        "3770462d5600228e529ec36255ff112cf63c9504342d5e8000cc763fc36f63c0"
+      ]
+    }
+  },
+  "failureBoundaries": [
+    {
+      "test": "manager_final_environment_handles_prepared_and_existing_sources_without_persisting_it",
+      "known": "Outer connect10s elapsed; controlled Python diagnostic had reached probe_subprocess. Its subprocess.run returned no recorded result before cleanup.",
+      "unknown": "Whether waiting for spawn/execution/output completion; original subprocess/process scheduler state was not captured."
+    },
+    {
+      "test": "transient_mcp_abandoned_real_open_revokes_after_late_reply_cleanup",
+      "known": "Common until10s failed. First wait includes manager connection/guard/process handshake/session-new; second waits revocation after release.",
+      "unknown": "Original log does not identify which wait failed. Peer architecture independently read the same diagnostic ambiguity; no additional run or source edit."
+    },
+    {
+      "test": "updated_node_remains_usable_when_it_still_meets_the_official_engine_range",
+      "known": "Node version check passed; launcher version result was None. fresh_program_version uses5s probe.",
+      "unknown": "None combines spawn/read/nonzero-exit/EOF/output-limit/deadline or unparsable-version outcomes; not enough evidence to label this specifically timeout."
+    }
+  ],
+  "independentFollowups": {
+    "exactIsolatedTests": {
+      "tests": 3,
+      "passed": 3,
+      "runs": [
+        {
+          "name": "dependency-environment",
+          "argv": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "--lib",
+            "acp_client::dependency_environment::launch_tests::manager_final_environment_handles_prepared_and_existing_sources_without_persisting_it",
+            "--",
+            "--exact",
+            "--nocapture",
+            "--test-threads=1"
+          ],
+          "exitCode": 0,
+          "seconds": 2.577,
+          "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/dependency-environment-isolated.txt"
+        },
+        {
+          "name": "transient-open",
+          "argv": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "--lib",
+            "acp_client::transient_mcp_route_tests::transient_mcp_abandoned_real_open_revokes_after_late_reply_cleanup",
+            "--",
+            "--exact",
+            "--nocapture",
+            "--test-threads=1"
+          ],
+          "exitCode": 0,
+          "seconds": 1.95,
+          "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/transient-open-isolated.txt"
+        },
+        {
+          "name": "program-launch",
+          "argv": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "--lib",
+            "program_launch_tests::updated_node_remains_usable_when_it_still_meets_the_official_engine_range",
+            "--",
+            "--exact",
+            "--nocapture",
+            "--test-threads=1"
+          ],
+          "exitCode": 0,
+          "seconds": 1.343,
+          "log": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/program-launch-isolated.txt"
+        }
+      ]
+    },
+    "threeTestsConcurrent": {
+      "argv": [
+        "src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9",
+        "acp_client::dependency_environment::launch_tests::manager_final_environment_handles_prepared_and_existing_sources_without_persisting_it",
+        "acp_client::transient_mcp_route_tests::transient_mcp_abandoned_real_open_revokes_after_late_reply_cleanup",
+        "program_launch_tests::updated_node_remains_usable_when_it_still_meets_the_official_engine_range",
+        "--nocapture",
+        "--test-threads=3"
+      ],
+      "binarySha256": "3ecdadc620dedbd47e50c4744c94bf0223b5ea4b658b7a46a08b788d44a248a5",
+      "exitCode": 0,
+      "seconds": 2.199,
+      "outerObservationLimitSeconds": 45,
+      "pid": 57260,
+      "timedOut": false,
+      "passed": 3,
+      "failed": 0,
+      "testBinarySeconds": 2.11
+    },
+    "sourceStableDuringIsolated": true,
+    "currentMatchedSecondRunInputsAtStart": true,
+    "noneExceededOuter45sObservationLimit": true,
+    "noFullSuiteStartedByReviewer": true
+  },
+  "rootFollowup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-final/rust.txt",
+    "sha256": "b35066216f895e2f00a9762992b429b04ba7fa265616dba1157bc73f5ab9705d",
+    "passed": 1242,
+    "failed": 0,
+    "ignored": 6,
+    "normalDefaultConcurrency": true,
+    "noFrontendOrBrowserOverlap": "root-reported execution scheduling",
+    "inputsBeforeAfterAndSecondRunIdentical": true
+  },
+  "conclusion": "The three original failures are preserved and remain unattributed. Same-source isolated tests, the three together, and a later normal full Rust run passed. This does not prove external load or concurrency caused the failures and does not establish a production defect. No retry loop, timeout extension, source fix, or assertion weakening was applied. If repeated, capture exact failing lifecycle stage and version-probe outcome before changing behavior.",
+  "limits": [
+    "Original failed-run process/resource timeline was not recorded; current idle observations cannot retrospectively establish cause.",
+    "Bounded followups do not exclude rare timing or process-lifecycle faults.",
+    "Only controlled test peers/programs were run; no real Agent/account or formal App operation."
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust.txt",
+      "sha256": "0989aa7d91d9006cab1f1b77f16a42ea894cbf301259918f14fa166120480655"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/rust.txt",
+      "sha256": "fd86e121b530016498c2a4b9b8c29bad2efad8e318983dc7914617da30443abb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-final/rust.txt",
+      "sha256": "b35066216f895e2f00a9762992b429b04ba7fa265616dba1157bc73f5ab9705d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/dependency-environment-isolated.txt",
+      "sha256": "85e9c6ef142a682d1d47a8b440af1be2f2a5ec566a353afe1ca677aa8c46d93a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/transient-open-isolated.txt",
+      "sha256": "f26f823f2b107011fdf2026849461be6416759df4844e2c3008abc0bf7d4cb70"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/program-launch-isolated.txt",
+      "sha256": "36a967de7faa96428a14c7052127008e4fe5907cbcca3a5941fedf2a47966487"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/three-parallel.txt",
+      "sha256": "bc7ae6133514dbd2d7b7eb5052805e64d5716ff3c5583bf55517e1035cb27bad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/isolated-results.json",
+      "sha256": "7fe57937afbd91e8edc4461a0c4ee0d40d219634f22141ae67336fee1360969a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-checks/rust-after-worker/independent-debug/three-parallel-result.json",
+      "sha256": "33b37222f4116b5e5391853cd0365a70a8e44d7dd47932ccbf725d43a0a9afd6"
+    }
+  ]
+}

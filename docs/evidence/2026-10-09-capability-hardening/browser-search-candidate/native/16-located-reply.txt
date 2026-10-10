@@ -1,0 +1,96 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 106-108, 112, 115, 118-119
+~			104 container
+~				105 图像 Farfold
++				106 按钮 收起导航
++				107 按钮 新对话 ⌘ N
++				108 按钮 搜索对话 ⌘ K
+~				109 container 所有对话
+~					110 按钮 所有对话 123
+~					111 按钮 收藏 0
++					112 按钮 探索 Agent
++				113 按钮 (expanded) 最近, Secondary Actions: Collapse
+~				114 按钮 FARFOLD_REAL_STOP_20261010：这是一次受控停止验证。请只
++				115 按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT 需要你
+~				116 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
+~				117 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
++				118 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
++				119 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
++				120 按钮 FARFOLD_WORKBOOK_4952C692_20261010。不要调用任
++				121 按钮 FARFOLD_TEXT_CD66AAE7_20261010。不要调用任何工具，
++				122 按钮 查看全部
++				123 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
++				124 按钮 管理我的 Agent
++				125 按钮 Codex 27
++				126 按钮 OpenCode 26
++				127 按钮 Grok Build 1
++				128 按钮 Poolside 1
++				129 按钮 MiniMax Code 1
++				130 按钮 Qwen Code 1
++				131 按钮 全部 Agent（29）
++				132 按钮 (expanded) 分组, Secondary Actions: Collapse
++				133 按钮 新建分组
++				134 按钮 验收 0928 4
++				135 按钮 验收 0928的操作
++				136 按钮 原型验收 0930 2
++				137 按钮 原型验收 0930的操作
++				138 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
++				139 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
++				140 container 对话动态
++					141 按钮 1 等你回应
++					142 按钮 9 新回复
++				143 按钮 设置
++				144 文本 属于你的 Agent，在一处相遇。
++				145 container
++					146 按钮 返回
++					147 标题 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT, Value: 1
++						148 文本 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT
++					149 text farfold-reported-0vgr9upp · 等你回应
++					150 按钮 查找当前对话
++					151 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
++					152 按钮 浏览器
++					153 弹出式按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT的操作
++					154 文本 已定位到搜索命中的消息
++					155 按钮 关闭搜索定位
++					156 text 你  ·  历史消息
++					157 按钮 复制消息
++					158 弹出式按钮 消息操作
++					159 文本 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORTED_P19_20261010。仅允许在当前空工作目录内创建和修改 alpha.md、beta.md 两个文件。请使用你现有的 apply_patch 文件补丁工具（不是通过 shell 调用，也不要用 exec/终端写文件），依次完成两次工具调用：
+1. 第一条补丁新增 alpha.md，内容为“# Alpha\n\nP19_ALPHA_V1\n”，以及 beta.md，内容为“# Beta\n\nP19_BETA_KEEP\n”。这里\n表示换行。
+2. 第二条补丁仅把 alpha.md 中 P19_ALPHA_V1 改为 P19_ALPHA_V2，其他内容保持不变。
+如果没有可用的 apply_patch 工具，请说明限制并停止，不要改用其他工具，不要写文件。不要读取其他文件、不访问网络、不启动额外 Agent、不修改配置或权限。两条补丁成功后用简短文字确认，并提供两个实际文件的可点击路径。
++					160 text Codex  · 历史消息
++					161 按钮 复制消息
++					162 弹出式按钮 消息操作
++					163 文本 我将依次调用两次 apply_patch，仅创建和修改 alpha.md、beta.md。
++					164 摘要 最近收到的扩展字段, Value: off
++						165 文本 最近收到的扩展字段
++					166 摘要 查看处理过程 2 步, Value: off
++						167 文本 查看处理过程
++						168 文本 2 步
++					169 text Codex  · 历史消息
++					170 按钮 复制消息
++					171 弹出式按钮 消息操作
++					172 文本 两条补丁已成功完成：alpha.md 已更新为 P19_ALPHA_V2，beta.md 保持 P19_BETA_KEEP。
++					173 container
++						174 按钮 alpha.md, Help: /private/tmp/farfold-reported-0vgr9upp/alpha.md
++						175 按钮 beta.md, Help: /private/tmp/farfold-reported-0vgr9upp/beta.md
++					176 摘要 最近收到的扩展字段, Value: off
++						177 文本 最近收到的扩展字段
++					178 摘要 最近收到的扩展字段, Value: off
++						179 文本 最近收到的扩展字段
++					180 摘要 未发送的文件意见（1）, Value: off
++						181 文本 未发送的文件意见（1）
++					182 文本 继续发送前，请重新确认这条对话的权限。
++					183 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…
++						184 文本 发送消息…
++					185 弹出式按钮 添加文件或图片
++					186 弹出式按钮 模型与来源
++					187 文本 思考
++					188 弹出式按钮 (disabled) 思考深度: Ultra, Help: Ultra
++					189 弹出式按钮 对话权限
++					190 弹出式按钮 命令与模板
++					191 按钮 (disabled) 加入待发
++					192 弹出式按钮 对话用量
++					193 文本 Enter 发送 · Shift Enter 换行
+The focused UI element is 194 container

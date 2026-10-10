@@ -1,0 +1,30 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 44-116
++				128 container
++					129 按钮 返回
++					130 标题 新会话, Value: 1
++						131 文本 新会话
++					132 text TR · 未在运行
++					133 按钮 查找当前对话
++					134 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
++					135 按钮 浏览器
++					136 弹出式按钮 新会话的操作
++					137 文本 第一条消息即开始会话
++					138 摘要 最近收到的扩展字段, Value: off
++						139 文本 最近收到的扩展字段
++					140 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 把想法放在这里…
++						141 文本 把想法放在这里…
++					142 弹出式按钮 添加文件或图片
++					143 弹出式按钮 选择 Agent
++					144 弹出式按钮 模型与来源
++					145 文本 思考
++					146 弹出式按钮 思考深度: Ultra, Help: Ultra
++					147 弹出式按钮 对话权限
++					148 弹出式按钮 更多设置
++					149 弹出式按钮 命令与模板
++					150 按钮 (disabled) 发送
++					151 text Enter 发送 · Shift Enter 换行 工作文件夹
++					152 按钮 更换工作文件夹, Help: /Users/tw/Desktop/TR
++					153 按钮 移除文件夹
++					154 文本 仅作为工作位置，权限另行确认
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

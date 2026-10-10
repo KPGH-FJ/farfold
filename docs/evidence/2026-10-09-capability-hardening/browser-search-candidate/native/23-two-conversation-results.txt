@@ -1,0 +1,31 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~					171 文本栏 (settable) 搜索标题、Agent、分组或位置, Value: FARFOLD, Placeholder: 搜索已加载正文…
++					185 container 当前筛选
++						186 按钮 FARFOLD ×
++						187 按钮 清除筛选
+~							184 text 只查找已加载的用户消息、回复和已接收的附件文字。未加载历史、附件文件、思考和工具详情不在此范围。 已加载 2 个对话  ·  121 个对话尚未加载  · 0 个对话的读取尚未确认 7 处匹配
++						188 按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT 用户消息 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORTED_P19_20261010。仅允许在当前空工作目录内创建和修改 alpha.md、beta.md 两个文件。请使
++						189 按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT 用户消息 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORTED_P19_20261010。仅允许在当前空工作目录内创建和修改 alpha.md、beta.md 两个文件。请使用你现有的 apply_patch 文件补丁工
++						190 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受 用户消息 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受限的文件生成验证。
+只在当前工作文件夹 /private/tmp/farfold-rework-m_ap16a
++						191 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受 用户消息 7A6652_20261010：这是一次范围受限的文件生成验证。
+只在当前工作文件夹 /private/tmp/farfold-rework-m_ap16a1 中创建 deliverable.md。不得读取、写入或修改其他文件，不访问网络，不启动额外 Agent。用 UTF-8 写入下面完整内容，保留
++						192 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受 用户消息 修改其他文件，不访问网络，不启动额外 Agent。用 UTF-8 写入下面完整内容，保留空行和末尾换行：
+
+# FARFOLD_REWORK_A47A6652
+
+KEEP_BEFORE_A47A6652
+
+TARGET_A47A6652: draft
+
+KEEP_AFTER_A47A6652
+
+完成后
++						193 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受 用户消息 ER_A47A6652
+
+完成后只回复这个 Markdown 文件链接：[查看文件](/private/tmp/farfold-rework-m_ap16a1/deliverable.md)。
++						194 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受 用户消息 6652_PREFIX：只执行下方这一条版本意见，保持本次测试的其他限制。
+
+关于 "/private/tmp/farfold-rework-m_ap16a1/deliverable.md"（当时查看的内容，第 5 行，字节 49–72（从 0 起，末位不含），位置未重新核对）：
+文件 SHA-256
+The focused UI element is 171 文本栏 (settable) 搜索标题、Agent、分组或位置, Value: FARFOLD, Placeholder: 搜索已加载正文…

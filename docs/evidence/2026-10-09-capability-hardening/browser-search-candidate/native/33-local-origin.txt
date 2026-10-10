@@ -1,0 +1,4 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 106
+~							101 URL栏 (settable) 本机服务地址, Value: http://127.0.0.1:53320, Placeholder: http://127.0.0.1:3000
+The focused UI element is 101 URL栏 (settable) 本机服务地址, Value: http://127.0.0.1:53320, Placeholder: http://127.0.0.1:3000

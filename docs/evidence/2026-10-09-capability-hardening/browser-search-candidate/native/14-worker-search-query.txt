@@ -1,0 +1,9 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 113
+~				112 组合框 (expanded, settable) 搜索所有对话, Value: P19_ALPHA_V2, Placeholder: 搜索已加载正文…, Secondary Actions: Collapse
++					118 文本 (settable) P19_ALPHA_V2
+~					115 text 只查找已加载的用户消息、回复和已接收的附件文字。未加载历史、附件文件、思考和工具详情不在此范围。 已加载 1 个对话  ·  123 个对话尚未加载  · 0 个对话的读取尚未确认 2 处匹配
++					119 text (selected) 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT 用户消息 KEEP\n”。这里\n表示换行。
+2. 第二条补丁仅把 alpha.md 中 P19_ALPHA_V1 改为 P19_ALPHA_V2，其他内容保持不变。
+如果没有可用的 apply_patch 工具，请说明限制并停止，不要改用其他工具，不要写文件。不要读取其他文件、不访问网络、不启动额外 Agent、不修改
+The focused UI element is 112 组合框 (expanded, settable) 搜索所有对话, Value: P19_ALPHA_V2, Placeholder: 搜索已加载正文…, Secondary Actions: Collapse

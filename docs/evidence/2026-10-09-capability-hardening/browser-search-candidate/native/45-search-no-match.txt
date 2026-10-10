@@ -1,0 +1,6 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 12
+~				11 组合框 (expanded, settable) 搜索所有对话, Value: FARFOLD_ABSENT_ECE08_7CA692, Placeholder: 搜索已加载正文…, Secondary Actions: Collapse
++					28 文本 (settable) FARFOLD_ABSENT_ECE08_7CA692
+~					14 text 只查找已加载的用户消息、回复和已接收的附件文字。未加载历史、附件文件、思考和工具详情不在此范围。 已加载 2 个对话  ·  122 个对话尚未加载  · 0 个对话的读取尚未确认 在已检索文字中没有匹配内容。
+The focused UI element is 11 组合框 (expanded, settable) 搜索所有对话, Value: FARFOLD_ABSENT_ECE08_7CA692, Placeholder: 搜索已加载正文…, Secondary Actions: Collapse

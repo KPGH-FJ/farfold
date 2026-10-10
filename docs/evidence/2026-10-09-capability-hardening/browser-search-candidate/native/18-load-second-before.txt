@@ -1,0 +1,108 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 滚动区
+		2 HTML内容 Description: Farfold, URL: tauri://localhost
+			3 container
+				4 图像 Farfold
+				5 按钮 收起导航
+				6 按钮 新对话 ⌘ N
+				7 按钮 搜索对话 ⌘ K
+				8 container 所有对话
+					9 按钮 所有对话 123
+					10 按钮 收藏 0
+					11 按钮 探索 Agent
+				12 按钮 (expanded) 最近, Secondary Actions: Collapse
+				13 按钮 FARFOLD_REAL_STOP_20261010：这是一次受控停止验证。请只
+				14 按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT 需要你
+				15 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
+				16 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
+				17 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
+				18 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
+				19 按钮 FARFOLD_WORKBOOK_4952C692_20261010。不要调用任
+				20 按钮 FARFOLD_TEXT_CD66AAE7_20261010。不要调用任何工具，
+				21 按钮 查看全部
+				22 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
+				23 按钮 管理我的 Agent
+				24 按钮 Codex 27
+				25 按钮 OpenCode 26
+				26 按钮 Grok Build 1
+				27 按钮 Poolside 1
+				28 按钮 MiniMax Code 1
+				29 按钮 Qwen Code 1
+				30 按钮 全部 Agent（29）
+				31 按钮 (expanded) 分组, Secondary Actions: Collapse
+				32 按钮 新建分组
+				33 按钮 验收 0928 4
+				34 按钮 验收 0928的操作
+				35 按钮 原型验收 0930 2
+				36 按钮 原型验收 0930的操作
+				37 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
+				38 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
+				39 container 对话动态
+					40 按钮 1 等你回应
+					41 按钮 9 新回复
+				42 按钮 设置
+				43 文本 属于你的 Agent，在一处相遇。
+				44 container
+					45 按钮 返回
+					46 标题 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT, Value: 1
+						47 文本 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT
+					48 text farfold-reported-0vgr9upp · 等你回应
+					49 按钮 查找当前对话
+					50 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
+					51 按钮 浏览器
+					52 弹出式按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT的操作
+					53 text 你  ·  历史消息
+					54 按钮 复制消息
+					55 弹出式按钮 消息操作
+					56 文本 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORTED_P19_20261010。仅允许在当前空工作目录内创建和修改 alpha.md、beta.md 两个文件。请使用你现有的 apply_patch 文件补丁工具（不是通过 shell 调用，也不要用 exec/终端写文件），依次完成两次工具调用：
+1. 第一条补丁新增 alpha.md，内容为“# Alpha\n\nP19_ALPHA_V1\n”，以及 beta.md，内容为“# Beta\n\nP19_BETA_KEEP\n”。这里\n表示换行。
+2. 第二条补丁仅把 alpha.md 中 P19_ALPHA_V1 改为 P19_ALPHA_V2，其他内容保持不变。
+如果没有可用的 apply_patch 工具，请说明限制并停止，不要改用其他工具，不要写文件。不要读取其他文件、不访问网络、不启动额外 Agent、不修改配置或权限。两条补丁成功后用简短文字确认，并提供两个实际文件的可点击路径。
+					57 text Codex  · 历史消息
+					58 按钮 复制消息
+					59 弹出式按钮 消息操作
+					60 文本 我将依次调用两次 apply_patch，仅创建和修改 alpha.md、beta.md。
+					61 摘要 最近收到的扩展字段, Value: off
+						62 文本 最近收到的扩展字段
+					63 摘要 查看处理过程 2 步, Value: off
+						64 文本 查看处理过程
+						65 文本 2 步
+					66 text Codex  · 历史消息
+					67 按钮 复制消息
+					68 弹出式按钮 消息操作
+					69 文本 两条补丁已成功完成：alpha.md 已更新为 P19_ALPHA_V2，beta.md 保持 P19_BETA_KEEP。
+					70 container
+						71 按钮 alpha.md, Help: /private/tmp/farfold-reported-0vgr9upp/alpha.md
+						72 按钮 beta.md, Help: /private/tmp/farfold-reported-0vgr9upp/beta.md
+					73 摘要 最近收到的扩展字段, Value: off
+						74 文本 最近收到的扩展字段
+					75 摘要 最近收到的扩展字段, Value: off
+						76 文本 最近收到的扩展字段
+					77 摘要 未发送的文件意见（1）, Value: off
+						78 文本 未发送的文件意见（1）
+					79 文本 继续发送前，请重新确认这条对话的权限。
+					80 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…
+						81 文本 发送消息…
+					82 弹出式按钮 添加文件或图片
+					83 弹出式按钮 模型与来源
+					84 文本 思考
+					85 弹出式按钮 (disabled) 思考深度: Ultra, Help: Ultra
+					86 弹出式按钮 对话权限
+					87 弹出式按钮 命令与模板
+					88 按钮 (disabled) 加入待发
+					89 弹出式按钮 对话用量
+					90 文本 Enter 发送 · Shift Enter 换行
+	91 关闭按钮
+	92 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	93 最小化按钮
+	94 文本 Farfold
+95 menu bar
+	96 Farfold
+	97 文件
+	98 编辑
+	99 显示
+	100 窗口
+	101 帮助
+
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

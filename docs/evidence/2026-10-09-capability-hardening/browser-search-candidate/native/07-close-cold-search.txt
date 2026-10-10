@@ -1,0 +1,70 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 3-16
++			28 container
++				29 图像 Farfold
++				30 按钮 收起导航
++				31 按钮 新对话 ⌘ N
++				32 按钮 搜索对话 ⌘ K
++				33 container 所有对话
++					34 按钮 所有对话 123
++					35 按钮 收藏 0
++					36 按钮 探索 Agent
++				37 按钮 (expanded) 最近, Secondary Actions: Collapse
++				38 按钮 FARFOLD_REAL_STOP_20261010：这是一次受控停止验证。请只
++				39 按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT
++				40 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
++				41 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
++				42 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
++				43 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
++				44 按钮 FARFOLD_WORKBOOK_4952C692_20261010。不要调用任
++				45 按钮 FARFOLD_TEXT_CD66AAE7_20261010。不要调用任何工具，
++				46 按钮 查看全部
++				47 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
++				48 按钮 管理我的 Agent
++				49 按钮 Codex 27
++				50 按钮 OpenCode 26
++				51 按钮 Grok Build 1
++				52 按钮 Poolside 1
++				53 按钮 MiniMax Code 1
++				54 按钮 Qwen Code 1
++				55 按钮 全部 Agent（29）
++				56 按钮 (expanded) 分组, Secondary Actions: Collapse
++				57 按钮 新建分组
++				58 按钮 验收 0928 4
++				59 按钮 验收 0928的操作
++				60 按钮 原型验收 0930 2
++				61 按钮 原型验收 0930的操作
++				62 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
++				63 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
++				64 container 对话动态
++					65 按钮 9 新回复
++				66 按钮 设置
++				67 文本 属于你的 Agent，在一处相遇。
++				68 container
++					69 按钮 返回
++					70 标题 新会话, Value: 1
++						71 文本 新会话
++					72 text TR · 未在运行
++					73 按钮 查找当前对话
++					74 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
++					75 按钮 浏览器
++					76 弹出式按钮 新会话的操作
++					77 文本 第一条消息即开始会话
++					78 摘要 最近收到的扩展字段, Value: off
++						79 文本 最近收到的扩展字段
++					80 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 把想法放在这里…
++						81 文本 把想法放在这里…
++					82 弹出式按钮 添加文件或图片
++					83 弹出式按钮 选择 Agent
++					84 弹出式按钮 模型与来源
++					85 文本 思考
++					86 弹出式按钮 思考深度: Ultra, Help: Ultra
++					87 弹出式按钮 对话权限
++					88 弹出式按钮 更多设置
++					89 弹出式按钮 命令与模板
++					90 按钮 (disabled) 发送
++					91 text Enter 发送 · Shift Enter 换行 工作文件夹
++					92 按钮 更换工作文件夹, Help: /Users/tw/Desktop/TR
++					93 按钮 移除文件夹
++					94 文本 仅作为工作位置，权限另行确认
+The focused UI element is 32 按钮 搜索对话 ⌘ K

@@ -1,0 +1,55 @@
+{
+  "kind": "independent-installed-search-closeout",
+  "atUtc": "2026-10-10T05:04:56.287981+00:00",
+  "status": "passed-with-NEW05-not-installed",
+  "reviewed": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-search-candidate/installed-browser-search.json",
+    "sha256": "13b2f2afd1e254892a10f3c5f7d1d492613b4a48eff6a579fc536ba0534dad95",
+    "referencesChecked": 87,
+    "referenceMismatches": 0
+  },
+  "formalSourceCommit": "ece08cd511b27ec62898ca03f688bb25b2966517",
+  "formalAllFileHashesMatch": true,
+  "privateDatabaseCopies": {
+    "mode": "SQLite URI mode=ro&immutable=1; never original DB",
+    "hashesBeforeAndAfterEqual": true,
+    "groups": {
+      "composers": {
+        "count": 8,
+        "exactlyEqual": true
+      },
+      "feedback": {
+        "count": 8,
+        "exactlyEqual": true
+      },
+      "queues": {
+        "count": 3,
+        "exactlyEqual": true
+      }
+    },
+    "wholeUnsentExactlyEqual": true,
+    "sessionIdentityCount": 124,
+    "sessionIdentitiesExactlyEqual": true
+  },
+  "officialPrivateSnapshots": [
+    {
+      "label": "p19",
+      "prefixMatches": true,
+      "appendedEventTypes": ["thread_settings_applied"],
+      "frozenSha256": "f1bec64c95cb46bf6fe69c147e4dc93c04c9e1c55e53886b61688bccd671ea47"
+    },
+    {
+      "label": "p22",
+      "prefixMatches": true,
+      "appendedEventTypes": ["thread_settings_applied"],
+      "frozenSha256": "546c0be3f1af9075ec90b53be672ff4f479c59ad49fd44ed0eae8d39b6c7c755"
+    }
+  ],
+  "scope": [
+    "This is independent receipt/hash/immutable-data review, not a repeat native UI journey.",
+    "Normal Cmd+Q and exact process absence are reviewed root records, not an action repeated here.",
+    "Installed ece08 still has NEW05 accessible-label defect; root source-only fix not installed.",
+    "No new Agent prompt/tool proved by this journey. Browser Agent permission was never granted.",
+    "No whole-history, attachment-entity, native long-search performance or Windows proof."
+  ]
+}

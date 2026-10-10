@@ -1,0 +1,11 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
++							135 container 文字快照
++								136 文本 文字快照
++								137 按钮 收起文字快照
++								138 文本 读取于 12:49:11
++								139 文本 只显示本次读取的文字，不会自动更新或发送。
++								140 标题 Farfold browser ECE08 check, Value: 3
++									141 文本 Farfold browser ECE08 check
++								142 文本 FARFOLD_BROWSER_ECE08_20261010Clicked onceControlled single click
+
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

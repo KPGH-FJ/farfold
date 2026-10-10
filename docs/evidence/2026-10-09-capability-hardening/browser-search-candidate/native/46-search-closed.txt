@@ -1,0 +1,120 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 3-11, 13-16, 28
++			28 container
++				29 图像 Farfold
++				30 按钮 收起导航
++				31 按钮 新对话 ⌘ N
++				32 按钮 搜索对话 ⌘ K
++				33 container 所有对话
++					34 按钮 所有对话 123
++					35 按钮 收藏 0
++					36 按钮 探索 Agent
++				37 按钮 (expanded) 最近, Secondary Actions: Collapse
++				38 按钮 FARFOLD_REAL_STOP_20261010：这是一次受控停止验证。请只
++				39 按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT 需要你
++				40 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受 需要你
++				41 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
++				42 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
++				43 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
++				44 按钮 FARFOLD_WORKBOOK_4952C692_20261010。不要调用任
++				45 按钮 FARFOLD_TEXT_CD66AAE7_20261010。不要调用任何工具，
++				46 按钮 查看全部
++				47 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
++				48 按钮 管理我的 Agent
++				49 按钮 Codex 27
++				50 按钮 OpenCode 26
++				51 按钮 Grok Build 1
++				52 按钮 Poolside 1
++				53 按钮 MiniMax Code 1
++				54 按钮 Qwen Code 1
++				55 按钮 全部 Agent（29）
++				56 按钮 (expanded) 分组, Secondary Actions: Collapse
++				57 按钮 新建分组
++				58 按钮 验收 0928 4
++				59 按钮 验收 0928的操作
++				60 按钮 原型验收 0930 2
++				61 按钮 原型验收 0930的操作
++				62 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
++				63 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
++				64 container 对话动态
++					65 按钮 2 等你回应
++					66 按钮 9 新回复
++				67 按钮 设置
++				68 文本 属于你的 Agent，在一处相遇。
++				69 container
++					70 按钮 返回
++					71 标题 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT, Value: 1
++						72 文本 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT
++					73 text farfold-reported-0vgr9upp · 等你回应
++					74 按钮 查找当前对话
++					75 按钮 (expanded) 收起对话内容, Secondary Actions: Collapse
++					76 按钮 浏览器
++					77 弹出式按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT的操作
++					78 text 你  ·  历史消息
++					79 按钮 复制消息
++					80 弹出式按钮 消息操作
++					81 文本 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORTED_P19_20261010。仅允许在当前空工作目录内创建和修改 alpha.md、beta.md 两个文件。请使用你现有的 apply_patch 文件补丁工具（不是通过 shell 调用，也不要用 exec/终端写文件），依次完成两次工具调用：
+1. 第一条补丁新增 alpha.md，内容为“# Alpha\n\nP19_ALPHA_V1\n”，以及 beta.md，内容为“# Beta\n\nP19_BETA_KEEP\n”。这里\n表示换行。
+2. 第二条补丁仅把 alpha.md 中 P19_ALPHA_V1 改为 P19_ALPHA_V2，其他内容保持不变。
+如果没有可用的 apply_patch 工具，请说明限制并停止，不要改用其他工具，不要写文件。不要读取其他文件、不访问网络、不启动额外 Agent、不修改配置或权限。两条补丁成功后用简短文字确认，并提供两个实际文件的可点击路径。
++					82 text Codex  · 历史消息
++					83 按钮 复制消息
++					84 弹出式按钮 消息操作
++					85 文本 我将依次调用两次 apply_patch，仅创建和修改 alpha.md、beta.md。
++					86 摘要 最近收到的扩展字段, Value: off
++						87 文本 最近收到的扩展字段
++					88 摘要 查看处理过程 2 步, Value: off
++						89 文本 查看处理过程
++						90 文本 2 步
++					91 text Codex  · 历史消息
++					92 按钮 复制消息
++					93 弹出式按钮 消息操作
++					94 文本 两条补丁已成功完成：alpha.md 已更新为 P19_ALPHA_V2，beta.md 保持 P19_BETA_KEEP。
++					95 container
++						96 按钮 alpha.md, Help: /private/tmp/farfold-reported-0vgr9upp/alpha.md
++						97 按钮 beta.md, Help: /private/tmp/farfold-reported-0vgr9upp/beta.md
++					98 摘要 最近收到的扩展字段, Value: off
++						99 文本 最近收到的扩展字段
++					100 摘要 最近收到的扩展字段, Value: off
++						101 文本 最近收到的扩展字段
++					102 摘要 未发送的文件意见（1）, Value: off
++						103 文本 未发送的文件意见（1）
++					104 文本 继续发送前，请重新确认这条对话的权限。
++					105 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…
++						106 文本 发送消息…
++					107 弹出式按钮 添加文件或图片
++					108 弹出式按钮 模型与来源
++					109 文本 思考
++					110 弹出式按钮 (disabled) 思考深度: Ultra, Help: Ultra
++					111 弹出式按钮 对话权限
++					112 弹出式按钮 命令与模板
++					113 按钮 (disabled) 加入待发
++					114 弹出式按钮 对话用量
++					115 文本 Enter 发送 · Shift Enter 换行
++					116 container 对话内容面板
++						117 分离器 调整内容宽度, Value: 510
++						118 container 对话内容面板
++							119 开关按钮 文件与输出, Value: off
++							120 开关按钮 网页, Value: on
++							121 按钮 放大内容
++							122 按钮 收起对话内容
++						123 container 网页
++							124 文本 本机服务地址
++							125 按钮 (disabled) 重新加载网页
++							126 URL栏 (settable) 本机服务地址, Value: http://127.0.0.1:53320/, Placeholder: http://127.0.0.1:3000
++							127 按钮 打开
++							128 按钮 (disabled) 读取文字快照
++							129 按钮 关闭网页
++							130 文本 请输入包含端口的 http://127.0.0.1:端口 或 http://[::1]:端口。
++							131 按钮 (disabled, collapsed) 读取权限, Secondary Actions: Expand
++							132 container 打开网页后可允许 Agent 读取。
++								133 文本 打开网页后可允许 Agent 读取。
++							134 弹出式按钮 打开来源, Value: 本机服务
++							135 按钮 打开项目网页…
++							136 按钮 打开 HTML…
++							137 摘要 本机服务, Value: off
++								138 文本 本机服务
++							139 container 网页
++								140 文本 在这里查看网页
++								141 文本 输入网址或本机服务地址，也可打开项目网页。内容不会自动发给 Agent。
+The focused UI element is 32 按钮 搜索对话 ⌘ K
