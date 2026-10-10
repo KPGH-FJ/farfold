@@ -1,0 +1,412 @@
+{
+  "recordedAtUtc": "2026-10-10T00:00:57.433490+00:00",
+  "reviewer": "architecture",
+  "status": "no_remaining_blocker_observed_within_reviewed_scope",
+  "scope": "XLSX 位置意见本片最终源码、普通 writer 兼容修复、全 App 布局与自动刷新修复及其工程/浏览器证据链。",
+  "method": [
+    "只读审查共享父层、Workbook 叶组件、parser 与两行 CSS 修复；核验实际原日志、哈希、输入集合及浏览器脚本和结果。未重跑作者测试、浏览器、构建或 Rust。",
+    "本 reviewer 编写了 factory/anchor/formatter 及其专项测试，故不把其自审称为独立实现复核；其 7 个 owned 文件当前哈希与原回执一致，另引用 verification 的独立 runtime review。",
+    "重新计算 1128 个完整工程输入、688 个浏览器 src 输入及所有 7 项检查日志；浏览器主回执、最终 run index、格式保留表共 103 个引用哈希/大小均一致，22 组 raw/格式化 JSON 语义一致。",
+    "此前同任务独立以 stdlib ZIP/XML oracle 只读复算三份原 XLSX 的 12 张 sheet 并与保存 oracle 全量一致；本次再次核原始 ZIP/oracle/manifest 哈希未变。"
+  ],
+  "engineering": {
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/final-verification.json",
+      "sha256": "16a87e25ec11f4dc15e09e0cf83cfd2924c38943b63db23ec02f01c2a7611638",
+      "bytes": 3715
+    },
+    "inputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/inputs.json",
+      "sha256": "34431684088af54a7dcd313cc83724e3cf3194339168ad22bd9fc6705ca99289",
+      "bytes": 127900
+    },
+    "inputCount": 1128,
+    "currentExactMatch": true,
+    "initialReceipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks/receipt.json",
+      "sha256": "dff06afd6c1ead42e3fb81f041d5f282883f8c51cdf9aec5762b5b701045fd71",
+      "bytes": 4012
+    },
+    "changedSinceInitial": [
+      "src/components/OpenedFileView.tsx",
+      "src/components/OpenedFileView.workbook-feedback.test.tsx",
+      "src/components/WorkbookFilePreview.css",
+      "src/components/WorkbookFilePreview.feedback.test.tsx",
+      "src/components/WorkbookFilePreview.tsx"
+    ],
+    "checks": [
+      {
+        "name": "frontend",
+        "argv": ["corepack", "pnpm", "test"],
+        "exitCode": 0,
+        "executedNow": true,
+        "log": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/frontend.txt",
+        "sha256": "6c066fa261020e626d3e454cab4764f38e0495b4bc9a081ba6f8211bc8dc5640"
+      },
+      {
+        "name": "typecheck",
+        "argv": ["corepack", "pnpm", "typecheck"],
+        "exitCode": 0,
+        "executedNow": true,
+        "log": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/typecheck.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      {
+        "name": "build",
+        "argv": ["corepack", "pnpm", "build"],
+        "exitCode": 0,
+        "executedNow": true,
+        "log": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/build.txt",
+        "sha256": "a83152665bd3a0ad157ce483c11353434e96a0735e1adf28e731e68bcf29e939"
+      },
+      {
+        "name": "format",
+        "argv": ["corepack", "pnpm", "format:check"],
+        "exitCode": 0,
+        "executedNow": true,
+        "log": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/format.txt",
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      {
+        "name": "cargo-fmt",
+        "exitCode": 0,
+        "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executedNow": false,
+        "reason": "Changes since the first workbook check are confined to five frontend files. All Rust, configuration and external fixtures match exactly; the earlier Rust reuse remains limited to its recorded identical inputs."
+      },
+      {
+        "name": "clippy",
+        "exitCode": 0,
+        "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+        "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+        "executedNow": false,
+        "reason": "Changes since the first workbook check are confined to five frontend files. All Rust, configuration and external fixtures match exactly; the earlier Rust reuse remains limited to its recorded identical inputs."
+      },
+      {
+        "name": "rust",
+        "exitCode": 0,
+        "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+        "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+        "executedNow": false,
+        "reason": "Changes since the first workbook check are confined to five frontend files. All Rust, configuration and external fixtures match exactly; the earlier Rust reuse remains limited to its recorded identical inputs."
+      }
+    ],
+    "frontend": {
+      "files": 308,
+      "tests": 3484,
+      "executedBy": "root",
+      "originalStdoutReviewed": true
+    },
+    "rustReuse": {
+      "executedNow": false,
+      "actualEarlierBaseline": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/inputs.json",
+        "sha256": "50e6abb432d5864b4ae0b5093d3b94c304b5d47b947e3f7e3c4a9e4a11a19c12",
+        "bytes": 124887
+      },
+      "nonSrcSharedFilesDirectlyCompared": 436,
+      "srcRuntimeFixtureFilesDirectlyCompared": 10,
+      "allIdentical": true,
+      "newFrontendOnlyInputs": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v1.xlsx",
+          "sha256": "6c026d2d3180a52e06b0a250e6594f5c26594447b3cea49e42e2c03852f6e349",
+          "bytes": 8694
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v2.xlsx",
+          "sha256": "1afd11016000d807761dc93d874b9044a3267d7cd2a43d3ea9145bb999d969d6",
+          "bytes": 8710
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v1-nonordinal-ids.xlsx",
+          "sha256": "4cee8ba3fcb587adbaa2ce3d1fdcfdde439e8e0bb1e59162db929255e1af5dae",
+          "bytes": 8733
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/oracle.json",
+          "sha256": "45cb04902d3dd1baeb845c777354d4e5bf5912860da7ad20e3f8b99566bfc98f",
+          "bytes": 133141
+        }
+      ],
+      "coverage": "新兼容测试实际 filesystem 读取只含这四个外置输入；其余 helper/test 在 src 集合中。collector 与候选 TOP 纳入四项，未将它们冒称 Rust 新执行输入。"
+    },
+    "history": "初轮 308 文件/3471 项全绿先于真实浏览器发现两类缺陷；该检查点和原失败证据保留。最终 5 个前端文件变化后，前端/type/build/全库 format 已重跑。"
+  },
+  "reviewedRepairs": [
+    {
+      "id": "workbook-automatic-refresh",
+      "finding": "原 parent 在 staging 时通过 active=false 让叶读取暂停，paused 状态又撤销 monitor 本次有效性，恢复旧状态后再次触发检查。",
+      "originalBrowser": "原 10 秒受控观察：WebKit 88 次 revision、88 次总 capture（87 次 v2）；Chromium 102 次 revision、102 次总 capture（101 次 v2）。这不是实际原生磁盘 IO 负载测量。",
+      "currentSource": "parent 传真实 active，另传 interactionBlocked。叶读取 effect 不依赖 blocked；section inert + 每个迟到事件的 current ref 守卫阻断交互，旧 grid/details 保留。source 在 blocked 变化时永久退休，解锁为实际当前 position 创建新 source，仍须显式确认。parent pending/operation/ready/file/source 匹配门禁保留。",
+      "parentEvidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/refresh-repair/parent-repair.json",
+        "sha256": "0ff9a778e1cbd631bf9b4039f8036d4419e9c4ad1001d547a7b45d1b70e66506",
+        "bytes": 2362
+      },
+      "parentTestBoundary": "两个新增真实 monitor 场景只有未隐藏场景产生有效红；原 13 项为 1 失败/12 通过。隐藏场景原本已通过。绿测 2 文件/20 项使用受控 hook/prepare，不当作实际浏览器。",
+      "leafEvidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/ui/interaction-block-fix.json",
+        "sha256": "2ddb418b08f0ed9eda350f9cc2a4d74e33a126beadd433f17890e376db1cf1d9",
+        "bytes": 6632
+      },
+      "leafTestBoundary": "加强版 11 红/18 绿转组件 29 绿，关联 6 文件/63 绿；没有把 hook runner 的 inert 属性断言当作真实键鼠证明。",
+      "actualFinal": "每引擎 automatic-inert-final 15 项：held 阶段旧 A2=0 可见，实际 inert，真实 pointer/ArrowDown/Tab 不更改 cell/sheet；release 后只捕获一次 v2，先解析再恢复入口，意见归属新名称/r:id/版本。",
+      "textBlockBoundary": "限定复核 TextBlock 的 active/pending：无 flight 时 cancel 不发 paused，且 admission 会拦 readInFlight，未找到同一自取消循环证据；本片没有顺带修改它。"
+    },
+    {
+      "id": "workbook-root-scroll",
+      "finding": "原完整 App WebKit 三个意见获焦场景使 windowY 为 511/511/654，根区域上移。",
+      "minimalFix": "仅 .workbook-preview 增加 min-height:0 与 overflow:auto；未改 body 的裁切策略。",
+      "contrast": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-candidate3.json",
+        "sha256": "004286ff3ef4520332aa318cbcdbbecd5e85537811eab657eb0109982cee0150",
+        "bytes": 261568
+      },
+      "source": {
+        "path": "src/components/WorkbookFilePreview.css",
+        "sha256": "98436ecfc27d54edbeca0a4ff618da7edfd01c07ea15f93be98bb20352ba7ac0",
+        "bytes": 2675
+      },
+      "actualFinal": "最终双引擎生产 CSS 无注入，根 windowY/appY=0，页面高度等于视口；Workbook 局部滚动、控件/详情/意见操作与窄窗路径在记录覆盖内。"
+    },
+    {
+      "id": "ordinary-writer-empty-values",
+      "sourceReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/parser/implementation.json",
+        "sha256": "513a8be824cacac0b30735e070b9297d7fe84adcedffeb83e0fc79e391a636ab",
+        "bytes": 6745
+      },
+      "review": "普通 openpyxl 缺 is 的空 inlineStr 保留其真实 blank/坐标/style；空 numeric formula cache 为 missingCache，str 空 cache、0、false 仍分别保留。结构校验先于早返回，未知/冲突结构仍拒绝。未发现容错扩大而静默丢内容的新增路径。",
+      "testBoundary": "30 项新增兼容例原 13 红/17 绿；只修 inline 后三原 ZIP 仍失败，后续缓存分类修复后关联 5 文件/87 项绿。87 并非新增 87 项。原文件的空值未被删除来换取成功。"
+    }
+  ],
+  "browser": {
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/receipt.json",
+      "sha256": "efb047d5b2568c9d27e97fc970f029d4df70240b1f6bcc7237aba7663fd3c2eb",
+      "bytes": 15265
+    },
+    "runIndex": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/final-run-index.json",
+      "sha256": "45e8c4baa9d50448edcf7a65af4259aa025ee0a42d4ef9b9d7e99b2cccf0011d",
+      "bytes": 7364
+    },
+    "sourceCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/browser-source-checkpoint.json",
+      "sha256": "69ddbd5f9125d07a57660776f70c7bef952534e6606ba390b4cc9293ad2afaa4",
+      "bytes": 77182
+    },
+    "runs": 8,
+    "cases": 12,
+    "assertions": 286,
+    "failed": 0,
+    "byEngine": {
+      "webkit": {
+        "cases": 6,
+        "assertions": 143
+      },
+      "chromium": {
+        "cases": 6,
+        "assertions": 143
+      }
+    },
+    "current688SrcMatchBeforeAndAfter": true,
+    "finalRuns": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-sealed.json",
+        "sha256": "2688c3d0c9a6b9f916b8524a184ae4e5cca42a04cd3f9cc150e72dc328d1a25d",
+        "bytes": 261553
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-inert-final.json",
+        "sha256": "6e8b3221f6f1dc07c44c7f539ba77a2acde11d40fdf3efb4ebb8d9261aaf4b88",
+        "bytes": 165046
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-clipped-final.json",
+        "sha256": "e4cde3cef049fd13fda80387a1dd5451e4ecb3c6d005491b74dd9d691f93434b",
+        "bytes": 164857
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-lifecycle-sealed.json",
+        "sha256": "ed9dc3ca6cb7f8c40e401257a9a30dbe727d5d4d1dedebf58c94a6025ed63021",
+        "bytes": 166519
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-sealed.json",
+        "sha256": "c719f483d84513b193d4bb8d95aaec097ff8bd0cbaa09edce79c4c4bac736edd",
+        "bytes": 261563
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-automatic-inert-final.json",
+        "sha256": "4ca93c5b2b0c38e12d3608cb8410331e7ce4e87ff77eb50e8b021a07e036eca4",
+        "bytes": 165050
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-clipped-final.json",
+        "sha256": "6810b7027477f65f7650056553b5fca3b8e89a913728298408cb1116309fd274",
+        "bytes": 164861
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/chromium-lifecycle-sealed.json",
+        "sha256": "1e0bda71d1056444cbe6d91ba0265e6fdcde0c04e3397c96ce43d558ac60f7ce",
+        "bytes": 166523
+      }
+    ],
+    "provenance": "实际完整 App/Thread/Composer/ArtifactPane/OpenedFileView 与生产 CSS、StrictMode、真实 XLSX Worker/parser；Tauri capture/revision/settings 受控，来自 SHA 核过原 ZIP parts，synthetic thread/path 与内存草稿。",
+    "matrix": "每引擎 main 三样本 96 项 + manual lifecycle 22 项 + automatic 15 项 + true clipped merge 10 项。v1/nonordinal 1280×820，v2 900×620；不声称每份在所有尺寸均测。",
+    "clippingCorrection": "主矩阵名为 clipped 的旧检查实际跳到 X99，只证明完整矩形；另 run-clipped 最终 10 项才验证 X99→X101→Y101 真实窗口裁切仍保持完整 X99:AA102，翻页撤回候选而不改已保存意见。",
+    "keyboardBoundary": "WebKit 使用 Option-Tab，Chromium 使用 Tab；不声称 WebKit bare-Tab。",
+    "preservedFailures": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/failure-classification.json",
+      "sha256": "2a98dd9edc8f798dc6f1f79a78fc7f4d35888dc08272adfc9e7a457f1337179a",
+      "bytes": 6815
+    },
+    "formatPreservation": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/format-preservation-final.json",
+      "sha256": "ea6596c1bd4e46c4cd788d6a7a80ce34f22350dd7b6c56f3554cc67d30d70a4c",
+      "bytes": 11730
+    },
+    "rawFormattedSemanticPairs": 22,
+    "personallyViewedAdditionalImages": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-automatic-inert-final.png",
+        "sha256": "bd723e65254634e288a1ae1e74a497599566be5e78e6e7cf048ba3cd594b254b",
+        "bytes": 228686
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/webkit-clipped-final.png",
+        "sha256": "fd1bf155d9560cfb9bb08eba9d97dccfff2c381d137a367e2ebd81ff94e32c2f",
+        "bytes": 219181
+      }
+    ],
+    "imageBoundary": "这两张最终截图亲自目视；此前另看原根上移和生产修后 v2 截图。不把截图本身当作 hidden-stage/事件归属证明。"
+  },
+  "runtimeAndFixtures": {
+    "authorCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/runtime/implementation.json",
+      "sha256": "0e1b2e2ad8f461d015940ed0f6130a3b1a20c6751650ef15f2c1a96a95953de4",
+      "bytes": 12743
+    },
+    "independentHistoricalRuntimeReview": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/independent/runtime-review.json",
+      "sha256": "c1377997db51eec346a6a347f43123ee95a5d387d7d65ac5adb00e2f76e39af5",
+      "bytes": 3550
+    },
+    "historicalHashBoundary": "两份 runtime 回执中的 shared UI/test 哈希是刷新修复前检查点，保留原值；当前 parent/leaf/CSS 以最终输入及最新修复回执为准。runtime 自有七文件未变。",
+    "fixtureOracle": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/oracle.json",
+      "sha256": "45cb04902d3dd1baeb845c777354d4e5bf5912860da7ad20e3f8b99566bfc98f",
+      "bytes": 133141
+    },
+    "fixtureManifest": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/manifest.json",
+      "sha256": "af0ce4d37328bff26da02dd60f1ea59f030616e07085a57ac03b0b9660334004",
+      "bytes": 4281
+    },
+    "oracleGenerator": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/oracle.py",
+      "sha256": "b6ca6ba3bbe24e01c72c790a778317faa62b276878dc3d1bda0631b1376d0e18",
+      "bytes": 4889
+    },
+    "semanticBoundary": "实际 relationship ID 与原完整 merge 坐标，无序号推断；WeakMap 仅证明当前内存 source/owner 与实际捕获/解析对象的关系，不独立证明磁盘真实性。冷保存坐标仍是当时位置，不变成当前内容已核证明。"
+  },
+  "currentReviewedSourceHashes": [
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "3790cadc22fef51149c0661fd3c0da71f50cbc07098b970619ee003ed6d44d76",
+      "bytes": 44236
+    },
+    {
+      "path": "src/components/OpenedFileView.workbook-feedback.test.tsx",
+      "sha256": "bcbc55ee815ef8b3e0ddb64c1cb768d40a4366837d62098f8d17afa7714b35e3",
+      "bytes": 16560
+    },
+    {
+      "path": "src/components/OpenedFileView.test.tsx",
+      "sha256": "5a0c076504d1fa1bc636dafa7556ba1596ae4b1dde4d58f860077a878ce2fba1",
+      "bytes": 46024
+    },
+    {
+      "path": "src/components/WorkbookFilePreview.tsx",
+      "sha256": "915935ec554b682676ebe6df3fe4e26469362c5550eea9c31802b84fb495d9a9",
+      "bytes": 27986
+    },
+    {
+      "path": "src/components/WorkbookFilePreview.feedback.test.tsx",
+      "sha256": "0c93467cfcc595ec7373670de47be9c4592eb176dd1fcad1ac02eed763e3fcce",
+      "bytes": 20022
+    },
+    {
+      "path": "src/components/WorkbookFilePreview.css",
+      "sha256": "98436ecfc27d54edbeca0a4ff618da7edfd01c07ea15f93be98bb20352ba7ac0",
+      "bytes": 2675
+    },
+    {
+      "path": "src/runtime/xlsx_sheet.ts",
+      "sha256": "757471213e28653e39a25abbafd8bfb2007904e1cc61fafd9523167243850775",
+      "bytes": 11813
+    },
+    {
+      "path": "src/runtime/xlsx_writer_compatibility.test.ts",
+      "sha256": "2baf506f772c5968602351a20e7c173269b924eba55f449af084dd3e711fd387",
+      "bytes": 7443
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.ts",
+      "sha256": "493790dea2c2798567eec2e7f967b8b4184061b6e214ac9a940ff6759a2e8286",
+      "bytes": 4364
+    },
+    {
+      "path": "src/runtime/feedback_strings.ts",
+      "sha256": "ddb59fcba2f1e3cf4534d733b4bc15233081744f98c4970501d8fd27d930a9b4",
+      "bytes": 3268
+    },
+    {
+      "path": "src/runtime/workbook_feedback_target.ts",
+      "sha256": "d65651a08b796fed361fb553166195d7d32c27ec95b004bf20427dd941d91cc7",
+      "bytes": 7621
+    },
+    {
+      "path": "src/runtime/office_feedback_target.ts",
+      "sha256": "f170eea47a4f60419f9ddb3cece6ede46866658366238c2abcf6f16b4c0b4532",
+      "bytes": 1145
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.workbook.test.ts",
+      "sha256": "887a6ae948e426e2fc10606440c8fe404256c4cb23741442ea4ad5a152e06c19",
+      "bytes": 4155
+    },
+    {
+      "path": "src/runtime/workbook_feedback_target.test.ts",
+      "sha256": "4f5d1e955ddcd5d229c19a6977729f14206fa3ab171dbe004d5bc6e875613a9a",
+      "bytes": 10484
+    },
+    {
+      "path": "src/runtime/workbook_feedback_persistence.test.ts",
+      "sha256": "08c29c890f191b74043b6962df3a036ce17b38184c405a07fe5c7a43b7d0a30e",
+      "bytes": 6302
+    }
+  ],
+  "protectedReadmes": [
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+      "bytes": 11543
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7",
+      "bytes": 2341
+    }
+  ],
+  "unresolvedBlockers": [],
+  "limits": [
+    "本记录没有启动或操作正式 Farfold、Agent、账号或用户数据；候选打包、正式安装和 native 验收仍由 root 后续单列。",
+    "受控浏览器不能替代原生 capture/CRC/filesystem、正式 CSP、真实持久草稿恢复或真实 Agent 用户旅程。",
+    "当前只支持所选单元格或整个原合并范围；不宣布任意范围、编辑重算、所有 Office 保真、DOCX/PPTX 位置意见或全 122 项已完成。",
+    "未扩大依赖、权限、产品契约、计划或改写旧失败记录。本次仅新增此独立 JSON，之后只对本文件定向 Prettier；根先前全仓 format 不覆盖本新文件。"
+  ]
+}

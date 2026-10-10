@@ -1,0 +1,154 @@
+{
+  "checkedAtUtc": "2026-10-10T00:35:41.818822+00:00",
+  "reviewer": "architecture",
+  "sourceCommit": "4952c6922d8495c58cbc8b74fa9fc409aa1338c0",
+  "result": "passed_scoped_disk_and_private_copy_review",
+  "failures": [],
+  "method": "只读核正式包/回执/受保护摘要；仅在新建私有临时副本用SQLite查询与integrity，未打开原用户DB。未运行独占check_post_ui_drafts.py、未启动/退出/删除应用或调用Agent。",
+  "publicNativeReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-candidate/installed-workbook-feedback.json",
+    "sha256": "913657f477b5fbfa3adc3f09840801060831250de28651fdbee988b3b8a3c8f0",
+    "bytes": 6380
+  },
+  "publicReceiptChain": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-candidate/candidate.json",
+      "sha256": "b6e60893dc1884927805456cebc131e4aef1f52f3c94f81dbd3f49be1d5d9852",
+      "bytes": 5430
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-candidate/candidate-independent.json",
+      "sha256": "e3ef630a796f76dd02740e0ddfda06c60f63f998acc21235dada935a8db43b2a",
+      "bytes": 3624
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-candidate/installed-data-retention.json",
+      "sha256": "9b9e901157b4bec4815412415d790ccb5d6a31f46f447ea5cea3cb4649340a24",
+      "bytes": 3205
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-candidate/install-independent.json",
+      "sha256": "54460238a215410d86498b503fc688f8379312d536e240361fdb64e47f93b422",
+      "bytes": 7826
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "123ec5ab8a59189a5bf4e0d094ad2e687421a0f2706cc51ec3bb8b71ef38d421",
+      "bytes": 1210
+    }
+  ],
+  "formal": {
+    "exactFiveFiles": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+      "Contents/MacOS/farfold": "ec537b86671f179d50db024b74e8f48f05807073ff5c1a0554d7f6d140fec203",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+    },
+    "matchesInstalled4952Candidate": true,
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+    "archive": {
+      "path": "src-tauri/target/internal-candidate/2026-10-10-4952c692/Farfold-0.1.7-4952c692.zip",
+      "sha256": "f8eac6e335e8669be8c3186eae8d16b764b0e327a69025d260fe57b0cc23b21c",
+      "bytes": 12854558
+    },
+    "formalProcessCount": 0,
+    "boundary": "ad-hoc包字节/身份检查，不是公开签名或公证。"
+  },
+  "privateCopyReview": {
+    "retentionReceipt": {
+      "path": "output/2026-10-10-workbook-feedback-install/post-ui-draft-retention.json",
+      "sha256": "818a9da40ebf47b78ea1f61ee53d7f205179dcb9c1c18c882b993440c4d5cc8a",
+      "bytes": 922
+    },
+    "helperReadNotExecuted": {
+      "path": "output/2026-10-10-workbook-feedback-install/check_post_ui_drafts.py",
+      "sha256": "32f1ddb91e97ca1a6839c28fa733ccf4a103b17dd15cd9f2e0b352cd0c034767",
+      "bytes": 2837
+    },
+    "backup": {
+      "path": "output/2026-10-10-workbook-feedback-install/metadata-before.sqlite3",
+      "sha256": "33536cd84ce8aa59ad7197ef0e70e5648af26408321a8ca2f5e849421093cb64",
+      "bytes": 327680
+    },
+    "capturedFiles": {
+      "farfold.sqlite3": "c8682d8294485906d5a3f8c16c53f08f97e16e8ad14161bd288d943cb4e50491",
+      "farfold.sqlite3-wal": "b67f4a34c1d5ddfc00f2325f8b11dc2220397e1c4100d12dcfec0edd23c58df5",
+      "farfold.sqlite3-shm": "33f0fa8e0baf7a3e35fbd8abd9bead5740660edbf17f6a21c8c0802563a6baaa"
+    },
+    "workingFiles": {
+      "farfold.sqlite3": "c8682d8294485906d5a3f8c16c53f08f97e16e8ad14161bd288d943cb4e50491",
+      "farfold.sqlite3-wal": "b67f4a34c1d5ddfc00f2325f8b11dc2220397e1c4100d12dcfec0edd23c58df5",
+      "farfold.sqlite3-shm": "7a66a0eee49d56806ef8dc7c68ea3b21b02d72d3890cdd62d240e8d9b9c23c92"
+    },
+    "currentSourceAndCaptureHashesMatch": true,
+    "workingMainAndWalMatchCapture": true,
+    "workingShmDiffersFromPristineCapture": true,
+    "shmBoundary": "工作副本曾被SQLite读取，SHM与原封存副本不同；未把可变SHM字节当作逻辑内容不一致。此次两套新临时副本integrity均ok且unsentWork逐值相同。",
+    "disposableCopyIntegrity": {
+      "post-ui-metadata": "ok",
+      "post-ui-working": "ok"
+    },
+    "capturedAndWorkingUnsentWorkEqual": true,
+    "groups": {
+      "composers": {
+        "beforeEntries": 4,
+        "afterEntries": 5,
+        "existingEntriesUnchanged": 4
+      },
+      "feedback": {
+        "beforeEntries": 2,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 2
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesUnchanged": 3
+      }
+    },
+    "differences": [],
+    "originalCaptureWorkingHashesUnchangedDuringReview": true,
+    "temporaryCopiesRemoved": true,
+    "oldUserTextPrinted": false
+  },
+  "ownedMaterials": {
+    "newComposerCount": 1,
+    "sessionIdentityCheckedByNewComposerKeyAndTitleMarkerPrefix": true,
+    "cellOpinionOccurrences": 1,
+    "nonordinalOpinionOccurrences": 1,
+    "bothContainOriginalFileShaOnce": true,
+    "bothA2AndCorrectActualRelationIds": true,
+    "unsentMergeOpinionCount": 1,
+    "mergeAnchor": {
+      "kind": "xlsx-range",
+      "sheetId": "rId1",
+      "sheetName": "数据一",
+      "fromRow": 99,
+      "toRow": 102,
+      "fromColumn": 24,
+      "toColumn": 27
+    },
+    "mergeOriginalV1ShaMatches": true,
+    "ownedFixtureCurrentBytesMatchOriginals": true,
+    "noOldUserTextIncluded": true
+  },
+  "reviewAssumptionCorrection": "首个独立查询错误假设public conversation marker等于完整数据库title，触发只读assert；实际自动title带提示前缀截断。随后从唯一新增composer key查精确session，并核marker前缀、自有路径、两意见与merge。没有改产品/回执或用户数据，不把核验假设错误当产品失败。",
+  "uiEvidenceBoundary": {
+    "observer": "root",
+    "methodAsRecorded": "Root CUA native AX and screenshots in this conversation; installed application with actual backend/Worker and fixture files, no injected UI state",
+    "uiNotIndependentlyReplayed": true,
+    "claim": "本review不能仅从JSON独立证明Tab/Return/指针、滚动位置、视觉稳定或原生自动刷新。只证明记录链和最终包/数据状态与root所述结果一致；实际UI来源仍是root同会话CUA观察。",
+    "agentBoundary": "root记录的一次自有链接回显不代表P22实际重做或29项Agent完整接入，本review未调用Agent。"
+  },
+  "parallelSourceBoundary": "当前工作区DOCX增量与本已安装4952应用分离；未要求当前工作区等同安装commit，也未把新source测试归给该native验收。",
+  "notProven": [
+    "Arbitrary XLSX rectangles, DOCX block feedback and PDF/image region feedback",
+    "All native window sizes and all workbook formats",
+    "P22 actual Agent rework from feedback",
+    "All market-readiness requirements and 29 Agent standards"
+  ]
+}
