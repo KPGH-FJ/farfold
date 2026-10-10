@@ -1,0 +1,55 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~					50 按钮 (expanded) 收起对话内容, Secondary Actions: Collapse
++					155 container 对话内容面板
++						156 分离器 调整内容宽度, Value: 510
++						157 container 对话内容面板
++							158 开关按钮 文件与输出, Value: on
++							159 开关按钮 网页, Value: off
++						160 container 文件
++							161 文本 window-boundaries.docx
++							162 按钮 返回文件与输出
++							163 按钮 放大内容
++							164 按钮 收起对话内容
++							165 摘要 文件位置, Value: off
++								166 文本 文件位置
++							167 按钮 重新读取
++							168 按钮 (expanded) 修改意见, Secondary Actions: Collapse
++							169 按钮 用默认应用打开
++							170 按钮 在文件夹中显示
++							171 按钮 完整文件另存为…
++							172 container 文档预览
++								173 文本 只读预览，显示文件保存时的内容。字段不重新计算。
++								174 文本 内容连续显示，保留支持的文字、列表、表格和图片；尺寸与间距适配预览，不还原 Word 分页。
++								175 摘要 预览范围说明 (1), Value: off
++									176 文本 预览范围说明
++									177 文本  (
++									178 文本 1
++									179 文本 )
++								180 container
++									181 开关按钮 选择整个段落, Value: off
++									182 文本 长段落分段显示，切换可查看其余内容。
++									183 按钮 上一部分
++									184 文本 长段落第 2 / 2 部分
++									185 按钮 (disabled) 下一部分
++									186 文本 甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲 END LONG SOURCE
++									187 container 表格
++										188 开关按钮 选择整个表格, Value: off
++										189 文本 表格按范围显示。单元格较长时显示摘要，可打开完整内容。
++										190 按钮 上一组行
++										191 按钮 (disabled) 下一组行
++										192 按钮 上一组列
++										193 按钮 (disabled) 下一组列
++										194 文本 当前显示第 21–21 行，第 13–13 列
++										195 container 表格
++											196 表格 表格
++												197 文本 表格
++												198 row (selectable)
++													199 单元格 (selectable) 查看第 21 行、第 13 列完整内容
++							200 文本 意见针对当时文档中的整个表格
++							201 文本 意见保留当时的文档位置和文件版本；查看其他内容不会改变目标，明确提意见才更换。
++							202 按钮 针对整个文件
++							203 文本输入区 (settable) 补充给 Agent 的意见, Value: [文本输入区: 补充给 Agent 的意见], Placeholder: 对这份内容有什么想法？
++								204 文本 (settable) DOCX_8C2F_TABLE：末尾窗口选择仍针对整个原表格。
++							205 文本 意见对应当前查看的内容，加入输入框后由你发送。
++							206 按钮 加入对话
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

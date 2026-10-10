@@ -166,7 +166,9 @@ def main():
 
             stage = 'normalExitAndInstall'
             require(normal['userAuthorizedContinuousDevelopment'] is True and normal['normalQuitObserved'] is True and normal['forcedQuit'] is False and normal['formalProcessCountAfter'] == 0, 'Normal exit observation missing')
-            require(sha(ROOT / normal['priorNativeEvidence']) == normal['priorNativeEvidenceSha256'], 'Prior normal-exit evidence differs')
+            prior_native = normal['previousNativeReceipt']
+            require(isinstance(prior_native, dict) and set(prior_native) == {'path', 'sha256'} and isinstance(prior_native['path'], str) and prior_native['path'].startswith('docs/evidence/'), 'Invalid prior normal-exit evidence reference')
+            require(sha(ROOT / prior_native['path']) == prior_native['sha256'], 'Prior normal-exit evidence differs')
             require(operation['candidateCommit'] == EXPECTED and operation['phase'] == 'installedVerifiedNotLaunched' and operation['installed'] is True and operation['copyStarted'] is True and operation['launched'] is False and operation['forcedQuit'] is False, 'Install operation did not finish closed')
             require(operation['formalAppProcessesBefore'] == operation['formalAppProcessesAfter'] == 0, 'Install process gate not satisfied')
             require(operation['receiptHashes'] == {'candidate': initial[OUT / names[0]], 'inputs': initial[OUT / names[1]], 'independent': initial[OUT / names[2]]}, 'Install input receipt chain differs')

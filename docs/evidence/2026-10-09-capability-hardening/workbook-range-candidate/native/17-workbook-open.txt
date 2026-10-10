@@ -1,0 +1,339 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~					50 按钮 (expanded) 收起对话内容, Secondary Actions: Collapse
++					108 container 对话内容面板
++						109 分离器 调整内容宽度, Value: 510
++						110 container 对话内容面板
++							111 开关按钮 文件与输出, Value: on
++							112 开关按钮 网页, Value: off
++						113 container 文件
++							114 文本 versioned-ranges.xlsx
++							115 按钮 返回文件与输出
++							116 按钮 放大内容
++							117 按钮 收起对话内容
++							118 摘要 文件位置, Value: off
++								119 文本 文件位置
++							120 按钮 重新读取
++							121 按钮 (collapsed) 修改意见, Secondary Actions: Expand
++							122 按钮 用默认应用打开
++							123 按钮 在文件夹中显示
++							124 按钮 完整文件另存为…
++							125 container 表格预览
++								126 container
++									127 文本 工作表
++									128 弹出式按钮 工作表, Value: 范围'与&0
++								129 文本 只读预览，显示文件保存时的内容。公式不重新计算。
++								130 文本 每次显示最多 100 行、24 列，尺寸会适配预览。可翻页或输入单元格位置。
++								131 摘要 预览范围说明 (4), Value: off
++									132 文本 预览范围说明
++									133 文本  (
++									134 文本 4
++									135 文本 )
++								136 按钮 选择意见范围
++								137 container
++									138 文本 单元格位置
++									139 文本栏 (settable) 单元格位置, Placeholder: A1
++								140 按钮 前往
++								141 container
++									142 复选框 显示隐藏行列, Value: 0
++									143 文本 显示隐藏行列
++								144 按钮 (disabled) 上一组行
++								145 按钮 下一组行
++								146 按钮 (disabled) 上一组列
++								147 按钮 下一组列
++								148 文本 当前范围 A1–X100
++								149 container 表格预览
++									150 表格 范围'与&0 (showing 1-13 of 100 items)
++										151 row (selectable) 单元格位置, Value: A
+B
+C
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+W
+X
++										152 row (selectable)
++											153 单元格 (selectable) 1
++											154 单元格 (selectable) 单元格 A1：RECTANGLE SOURCE
++											155 单元格 (selectable) 单元格 B1：数值
++											156 单元格 (selectable) 单元格 C1：布尔
++											157 单元格 (selectable) 单元格 E1：原始范围
++											158 单元格 (selectable) 单元格 F1
++											159 单元格 (selectable) 单元格 G1
++											160 单元格 (selectable) 单元格 H1
++											161 单元格 (selectable) 单元格 I1
++											162 单元格 (selectable) 单元格 J1
++											163 单元格 (selectable) 单元格 K1
++											164 单元格 (selectable) 单元格 L1
++											165 单元格 (selectable) 单元格 M1
++											166 单元格 (selectable) 单元格 N1
++											167 单元格 (selectable) 单元格 O1
++											168 单元格 (selectable) 单元格 P1
++											169 单元格 (selectable) 单元格 Q1
++											170 单元格 (selectable) 单元格 R1
++											171 单元格 (selectable) 单元格 S1
++											172 单元格 (selectable) 单元格 T1
++											173 单元格 (selectable) 单元格 U1
++											174 单元格 (selectable) 单元格 V1
++											175 单元格 (selectable) 单元格 W1
++											176 单元格 (selectable) 单元格 X1
++										177 row (selectable)
++											178 单元格 (selectable) 2
++											179 单元格 (selectable) 单元格 A2：0
++											180 单元格 (selectable) 单元格 B2：FALSE
++											181 单元格 (selectable) 单元格 C2
++											182 单元格 (selectable) 单元格 E2
++											183 单元格 (selectable) 单元格 F2：2
++											184 单元格 (selectable) 单元格 G2
++											185 单元格 (selectable) 单元格 H2
++											186 单元格 (selectable) 单元格 I2
++											187 单元格 (selectable) 单元格 J2
++											188 单元格 (selectable) 单元格 K2
++											189 单元格 (selectable) 单元格 L2
++											190 单元格 (selectable) 单元格 M2
++											191 单元格 (selectable) 单元格 N2
++											192 单元格 (selectable) 单元格 O2
++											193 单元格 (selectable) 单元格 P2
++											194 单元格 (selectable) 单元格 Q2
++											195 单元格 (selectable) 单元格 R2
++											196 单元格 (selectable) 单元格 S2
++											197 单元格 (selectable) 单元格 T2
++											198 单元格 (selectable) 单元格 U2
++											199 单元格 (selectable) 单元格 V2
++											200 单元格 (selectable) 单元格 W2
++											201 单元格 (selectable) 单元格 X2
++										202 row (selectable)
++											203 单元格 (selectable) 3
++											204 单元格 (selectable) 单元格 A3
++											205 单元格 (selectable) 单元格 B3
++											206 单元格 (selectable) 单元格 C3
++											207 单元格 (selectable) 单元格 E3
++											208 单元格 (selectable) 单元格 F3
++											209 单元格 (selectable) 单元格 G3
++											210 单元格 (selectable) 单元格 H3
++											211 单元格 (selectable) 单元格 I3
++											212 单元格 (selectable) 单元格 J3
++											213 单元格 (selectable) 单元格 K3
++											214 单元格 (selectable) 单元格 L3
++											215 单元格 (selectable) 单元格 M3
++											216 单元格 (selectable) 单元格 N3
++											217 单元格 (selectable) 单元格 O3
++											218 单元格 (selectable) 单元格 P3
++											219 单元格 (selectable) 单元格 Q3
++											220 单元格 (selectable) 单元格 R3
++											221 单元格 (selectable) 单元格 S3
++											222 单元格 (selectable) 单元格 T3
++											223 单元格 (selectable) 单元格 U3
++											224 单元格 (selectable) 单元格 V3
++											225 单元格 (selectable) 单元格 W3
++											226 单元格 (selectable) 单元格 X3
++										227 row (selectable)
++											228 单元格 (selectable) 4
++											229 单元格 (selectable) 单元格 A4
++											230 单元格 (selectable) 单元格 B4
++											231 单元格 (selectable) 单元格 C4
++											232 单元格 (selectable) 单元格 E4
++											233 单元格 (selectable) 单元格 F4
++											234 单元格 (selectable) 单元格 G4
++											235 单元格 (selectable) 单元格 H4
++											236 单元格 (selectable) 单元格 I4
++											237 单元格 (selectable) 单元格 J4
++											238 单元格 (selectable) 单元格 K4
++											239 单元格 (selectable) 单元格 L4
++											240 单元格 (selectable) 单元格 M4
++											241 单元格 (selectable) 单元格 N4
++											242 单元格 (selectable) 单元格 O4
++											243 单元格 (selectable) 单元格 P4
++											244 单元格 (selectable) 单元格 Q4
++											245 单元格 (selectable) 单元格 R4
++											246 单元格 (selectable) 单元格 S4
++											247 单元格 (selectable) 单元格 T4
++											248 单元格 (selectable) 单元格 U4
++											249 单元格 (selectable) 单元格 V4
++											250 单元格 (selectable) 单元格 W4
++											251 单元格 (selectable) 单元格 X4
++										252 row (selectable)
++											253 单元格 (selectable) 5
++											254 单元格 (selectable) 单元格 A5
++											255 单元格 (selectable) 单元格 B5
++											256 单元格 (selectable) 单元格 C5
++											257 单元格 (selectable) 单元格 E5
++											258 单元格 (selectable) 单元格 F5
++											259 单元格 (selectable) 单元格 G5
++											260 单元格 (selectable) 单元格 H5
++											261 单元格 (selectable) 单元格 I5
++											262 单元格 (selectable) 单元格 J5
++											263 单元格 (selectable) 单元格 K5
++											264 单元格 (selectable) 单元格 L5
++											265 单元格 (selectable) 单元格 M5
++											266 单元格 (selectable) 单元格 N5
++											267 单元格 (selectable) 单元格 O5
++											268 单元格 (selectable) 单元格 P5
++											269 单元格 (selectable) 单元格 Q5
++											270 单元格 (selectable) 单元格 R5
++											271 单元格 (selectable) 单元格 S5
++											272 单元格 (selectable) 单元格 T5
++											273 单元格 (selectable) 单元格 U5
++											274 单元格 (selectable) 单元格 V5
++											275 单元格 (selectable) 单元格 W5
++											276 单元格 (selectable) 单元格 X5
++										277 row (selectable)
++											278 单元格 (selectable) 6
++											279 单元格 (selectable) 单元格 A6
++											280 单元格 (selectable) 单元格 B6
++											281 单元格 (selectable) 单元格 C6
++											282 单元格 (selectable) 单元格 E6
++											283 单元格 (selectable) 单元格 F6
++											284 单元格 (selectable) 单元格 G6
++											285 单元格 (selectable) 单元格 H6
++											286 单元格 (selectable) 单元格 I6
++											287 单元格 (selectable) 单元格 J6
++											288 单元格 (selectable) 单元格 K6
++											289 单元格 (selectable) 单元格 L6
++											290 单元格 (selectable) 单元格 M6
++											291 单元格 (selectable) 单元格 N6
++											292 单元格 (selectable) 单元格 O6
++											293 单元格 (selectable) 单元格 P6
++											294 单元格 (selectable) 单元格 Q6
++											295 单元格 (selectable) 单元格 R6
++											296 单元格 (selectable) 单元格 S6
++											297 单元格 (selectable) 单元格 T6
++											298 单元格 (selectable) 单元格 U6
++											299 单元格 (selectable) 单元格 V6
++											300 单元格 (selectable) 单元格 W6
++											301 单元格 (selectable) 单元格 X6
++										302 row (selectable)
++											303 单元格 (selectable) 7
++											304 单元格 (selectable) 单元格 A7
++											305 单元格 (selectable) 单元格 B7
++											306 单元格 (selectable) 单元格 C7
++											307 单元格 (selectable) 单元格 E7
++											308 单元格 (selectable) 单元格 F7
++											309 单元格 (selectable) 单元格 G7
++											310 单元格 (selectable) 单元格 H7
++											311 单元格 (selectable) 单元格 I7
++											312 单元格 (selectable) 单元格 J7
++											313 单元格 (selectable) 单元格 K7
++											314 单元格 (selectable) 单元格 L7
++											315 单元格 (selectable) 单元格 M7
++											316 单元格 (selectable) 单元格 N7
++											317 单元格 (selectable) 单元格 O7
++											318 单元格 (selectable) 单元格 P7
++											319 单元格 (selectable) 单元格 Q7
++											320 单元格 (selectable) 单元格 R7
++											321 单元格 (selectable) 单元格 S7
++											322 单元格 (selectable) 单元格 T7
++											323 单元格 (selectable) 单元格 U7
++											324 单元格 (selectable) 单元格 V7
++											325 单元格 (selectable) 单元格 W7
++											326 单元格 (selectable) 单元格 X7
++										327 row (selectable)
++											328 单元格 (selectable) 8
++											329 单元格 (selectable) 单元格 A8
++											330 单元格 (selectable) 单元格 B8
++											331 单元格 (selectable) 单元格 C8：MERGE C8:F9, Rows: 8-9, Columns: 3-5
++											332 单元格 (selectable) 单元格 G8
++											333 单元格 (selectable) 单元格 H8
++											334 单元格 (selectable) 单元格 I8
++											335 单元格 (selectable) 单元格 J8
++											336 单元格 (selectable) 单元格 K8
++											337 单元格 (selectable) 单元格 L8
++											338 单元格 (selectable) 单元格 M8
++											339 单元格 (selectable) 单元格 N8
++											340 单元格 (selectable) 单元格 O8
++											341 单元格 (selectable) 单元格 P8
++											342 单元格 (selectable) 单元格 Q8
++											343 单元格 (selectable) 单元格 R8
++											344 单元格 (selectable) 单元格 S8
++											345 单元格 (selectable) 单元格 T8
++											346 单元格 (selectable) 单元格 U8
++											347 单元格 (selectable) 单元格 V8
++											348 单元格 (selectable) 单元格 W8
++											349 单元格 (selectable) 单元格 X8
++										350 row (selectable)
++											351 单元格 (selectable) 9
++											352 单元格 (selectable) 单元格 A9
++											353 单元格 (selectable) 单元格 B9
++											354 单元格 (selectable) 单元格 G9
++											355 单元格 (selectable) 单元格 H9
++											356 单元格 (selectable) 单元格 I9
++											357 单元格 (selectable) 单元格 J9
++											358 单元格 (selectable) 单元格 K9
++											359 单元格 (selectable) 单元格 L9
++											360 单元格 (selectable) 单元格 M9
++											361 单元格 (selectable) 单元格 N9
++											362 单元格 (selectable) 单元格 O9
++											363 单元格 (selectable) 单元格 P9
++											364 单元格 (selectable) 单元格 Q9
++											365 单元格 (selectable) 单元格 R9
++											366 单元格 (selectable) 单元格 S9
++											367 单元格 (selectable) 单元格 T9
++											368 单元格 (selectable) 单元格 U9
++											369 单元格 (selectable) 单元格 V9
++											370 单元格 (selectable) 单元格 W9
++											371 单元格 (selectable) 单元格 X9
++										372 row (selectable)
++											373 单元格 (selectable) 10
++											374 单元格 (selectable) 单元格 A10
++											375 单元格 (selectable) 单元格 B10
++											376 单元格 (selectable) 单元格 C10
++											377 单元格 (selectable) 单元格 E10
++											378 单元格 (selectable) 单元格 F10
++											379 单元格 (selectable) 单元格 G10
++											380 单元格 (selectable) 单元格 H10
++											381 单元格 (selectable) 单元格 I10
++											382 单元格 (selectable) 单元格 J10
++											383 单元格 (selectable) 单元格 K10
++											384 单元格 (selectable) 单元格 L10
++											385 单元格 (selectable) 单元格 M10
++											386 单元格 (selectable) 单元格 N10
++											387 单元格 (selectable) 单元格 O10
++											388 单元格 (selectable) 单元格 P10
++											389 单元格 (selectable) 单元格 Q10
++											390 单元格 (selectable) 单元格 R10
++											391 单元格 (selectable) 单元格 S10
++											392 单元格 (selectable) 单元格 T10
++											393 单元格 (selectable) 单元格 U10
++											394 单元格 (selectable) 单元格 V10
++											395 单元格 (selectable) 单元格 W10
++											396 单元格 (selectable) 单元格 X10
++										397 row (selectable)
++											398 单元格 (selectable) 11
++											399 单元格 (selectable) 单元格 A11
++											400 单元格 (selectable) 单元格 B11
++											401 单元格 (selectable) 单元格 C11
++											402 单元格 (selectable) 单元格 E11
++											403 单元格 (selectable) 单元格 F11
++											404 单元格 (selectable) 单元格 G11
++											405 单元格 (selectable) 单元格 H11
++											406 单元格 (selectable) 单元格 I11
++											407 单元格 (selectable) 单元格 J11
++											408 单元格 (selectable) 单元格 K11
++											409 单元格 (selectable) 单元格 L11
++											410 单元格 (selectable) 单元格 M11
++											411 单元格 (selectable) 单元格 N11
++											412 单元格 (selectable) 单元格 O11
++											413 单元格 (selectable) 单元格 P11
++											414 单元格 (selectable) 单元格 Q11
++											415 单元格 (selectable) 单元格 R11
++											416 单元格 (selectable) 单元格 S11
++											417 单元格 (selectable) 单元格 T11
++											418 单元格 (selectable) 单元格 U11
++											419 单元格 (selectable) 单元格 V11
++											420 单元格 (selectable) 单元格 W11
++											421 单元格 (selectable) 单元格 X11
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

@@ -1,11 +1,13 @@
 {
-  "updatedAtUtc": "2026-10-10T01:53:20.452185+00:00",
+  "updatedAtUtc": "2026-10-10T02:29:53.494207+00:00",
   "goal": "Continue the sole active market-readiness plan; global completion remains false.",
-  "head": "840972b705e9bc142d70857e80570e149ae33ded",
+  "head": "2e97616870ec35d385b8ae1721d133efc89faf56",
   "formalApp": {
-    "commit": "8c2f5e29472a72b2ee82f2076a11f827bb34524b",
+    "commit": "2e97616870ec35d385b8ae1721d133efc89faf56",
     "version": "0.1.7",
-    "state": "Normally closed; no replacement since DOCX initial native checks"
+    "path": "/Applications/Farfold.app",
+    "state": "Last recorded native observation: normally closed, exact formal process count 0; no forced quit; duplicate build bundle absent. This maintenance update does not repeat a live process inspection.",
+    "evidence": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/installed-workbook-range.json"
   },
   "currentSlice": [
     "XLSX exact arbitrary rectangle feedback, partial merge/hidden acknowledgement and editing protection",
@@ -20,31 +22,148 @@
     "Writer original Worker rejection diagnosed; two source files repaired; 203 related checks and dual-engine 404 checks reported by independent reviewer",
     "Final engineering: 323 files/3811 tests, type/build/full format pass; 1171 inputs stable; unchanged Rust evidence explicitly reused",
     "Independent full-App rectangle 148 assertions and DOCX 208 assertions passed across WebKit/Chromium",
-    "Final integration-independent.json: no blocker, 1171 exact candidate inputs and receipt hashes verified"
+    "Final integration-independent.json: no blocker, 1171 exact candidate inputs and receipt hashes verified",
+    "Scoped increment committed as 2e97616870ec35d385b8ae1721d133efc89faf56; candidate independently checked 9/9, install/data independently checked 10/10, exact duplicate bundle removed.",
+    "Native root CUA covered XLSX exact/partial-merge/cross-window ranges, hidden row/column acknowledgement, invalid editing, manual/automatic replacement, old opinions and cold persistence.",
+    "NEW03 same active-file link reopen and content-pane hide/reopen retained long paragraph part2 and table row21/column13; this specific defect is closed.",
+    "Root observed final normal quit; independent disk/private-copy review passed, without claiming independent UI replay."
   ],
   "inProgress": [
-    "Scoped commit, followed by exact committed candidate preparation"
+    "PDF/image display-oriented areas: source/runtime/leaf/parent targeted checks exist; independent fullApp browser and final integration are in progress.",
+    "NEW04 restore preview anchor allowlist repair is in source with controlled tests; actual installed recovery entry remains unverified."
   ],
-  "preparedNotExecuted": [
-    "workbook-range-candidate helpers and private output/2026-10-10-workbook-range-install installer; no candidate build or install yet",
-    "Owned native fixture /private/tmp/farfold-workbook-range-ugrktdm1; current v1; guarded switch helper self-checked and restored"
-  ],
+  "preparedNotExecuted": [],
   "dataProtection": {
     "privateBackup": "output/2026-10-10-workbook-range-install/metadata-before.sqlite3",
     "beforeManifestEntries": 217400,
     "beforeManifestSha256": "465640b0dbd7f3f7e2594897f073b693eccdfbc0d5a4e1213fe058c1c3b6d7dd",
-    "originalDbOpened": false
+    "originalDbOpened": false,
+    "installationManifestEntriesPerSnapshot": 217400,
+    "installationThreeSnapshotsEqual": true,
+    "postUiComparisonScope": "Before first cold restart; final cold reopen observed retained opinions without editing, not a new complete DB comparison.",
+    "oldComposersExactlyUnchanged": 5,
+    "oldComposerNormalization": "One optional sendPending absent -> false; every other field exact. Strict raw equality is false.",
+    "oldFeedbackGroupsExactlyUnchanged": 4,
+    "oldQueuesExactlyUnchanged": 3,
+    "unexpectedDifferences": [],
+    "nativeFeedbackSent": false
   },
   "next": [
-    "Scoped source commit, exact candidate build and 9-check verification",
-    "Capture preinstall, guarded sole-app replacement, postinstall retention and 10-check review, remove exact duplicate build bundle",
-    "Native XLSX rectangle and NEW03 recheck; preserve all original drafts and record actual results",
-    "Then continue PDF/image areas and real-Agent rework; both remain open"
+    "Complete current PDF/image region and NEW04 integration, close independent browser failures with affected-path evidence, then run stable engineering checks.",
+    "Prepare the next exact committed candidate only after integration; keep current installed 2e976168 and its native evidence separate.",
+    "Continue real feedback rework P22 and remaining P16/P20/P21/platform/29-Agent standards; current scoped success does not close them."
   ],
   "boundaries": [
     "No blanket P20/P21/P22 or market-complete claim",
     "Existing source/fixture/controlled browser/candidate/native/real-Agent proof levels remain distinct",
     "Two unrelated dirty 2026-10-08 review Markdown files are protected; no push",
-    "Deferred monitor means explicit reread after an editing hold. Test harness assumptions that expected automatic reattempt were corrected and failures preserved."
+    "Deferred monitor means explicit reread after an editing hold. Test harness assumptions that expected automatic reattempt were corrected and failures preserved.",
+    "Native worksheet coverage is a second visible worksheet and hidden rows/columns; earlier hidden-sheet filenames are preserved with an explicit correction.",
+    "NEW03 proof is within the active application: not reading position across application quit, and not nested cell-detail restoration.",
+    "Native private draft normalization is explicitly recorded; no claim that every original raw draft field is byte-identical."
+  ],
+  "workspace": "HEAD matches the installed commit; current uncommitted visual-area work is a later increment and is not represented by the previous frozen engineering results.",
+  "currentSliceStatus": "Committed, installed, and scoped native verification complete; global P20/P21/P22 completion remains false.",
+  "nativeScope": {
+    "passedObserved": [
+      {
+        "case": "NEW03 same-link reopen",
+        "result": "Original controlled DOCX fixture long paragraph part2 and table row21/column13 survived hide plus same-link reopen; old DOCX opinion and composer retained."
+      },
+      {
+        "case": "NEW03 pane toggle",
+        "result": "Hide/reopen with content toolbar retained both paragraph part2 and table row21/column13 together."
+      },
+      {
+        "case": "Partial merge and hidden column",
+        "result": "D8:E8 stayed exact and showed full intersecting merge C8:F9 separately. Confirmation absent until fresh hidden-column acknowledgment. Saved opinion joined once with sheet-main-A9 and v1 SHA."
+      },
+      {
+        "case": "Reversed coordinates and fresh acknowledgment",
+        "result": "G6:B3 normalized to B3:G6; earlier hidden acknowledgment was reset."
+      },
+      {
+        "case": "Cross display window",
+        "result": "W98:AB103 retained 6x6 bounds; current-window warning, one hidden row and column, partial-merge warning; stored anchor rows98..103 columns23..28."
+      },
+      {
+        "case": "Invalid editing protects read",
+        "result": "A: displayed input error. Owned v1->v2 caused changed-file/manual reread notice while preserving A: and old content. Cancelling retained notice; explicit reread displayed RECTANGLE SOURCE VERSION TWO."
+      },
+      {
+        "case": "Automatic refresh without editing",
+        "result": "After explicit read and no editor open, owned v2->v1 appeared automatically: A1 returned to RECTANGLE SOURCE. No native request-count claim."
+      },
+      {
+        "case": "Retained old-version opinion",
+        "result": "After writing CROSS at v1 then explicit v2 read, old opinion appeared under other versions with original sheet/main coordinate and v1 SHA."
+      },
+      {
+        "case": "Separate visible worksheet and blank maximum",
+        "result": "Explicit ordinary visible second-sheet selection accepted XFD1048576. Saved anchor uses sheet-other-17, row1048576/column16384 and v2 SHA, separate from main sheet."
+      },
+      {
+        "case": "Cold persistence",
+        "result": "Normal quit/relaunch restored PARTIAL once in composer and two retained CROSS/OTHER opinions with original coordinates, worksheet IDs and respective SHAs; no automatic send or permission reconfirmation."
+      }
+    ],
+    "notVerified": [
+      "P21 complete or global market readiness",
+      "Hidden worksheets in this native slice",
+      "Ordinary writer original ZIP native window (derived original ZIP used; both proven in controlled browsers)",
+      "Real Agent file rework/export",
+      "Windows",
+      "Nested DOCX cell detail reading state",
+      "Reading coordinates across application quit; NEW03 here is same active-file reopen only"
+    ],
+    "scopeCorrections": {
+      "hiddenWorksheet": "Both authored ZIPs have no sheet state attribute and are visible sheets. Some intermediate native filenames/titles say hidden-sheet from an earlier summary assumption; actual tests cover hidden rows/columns and a second visible worksheet, not a hidden worksheet. Original evidence untouched; separate peer correction is linked.",
+      "peerCorrection": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/hidden-sheet-scope-correction.json",
+        "sha256": "0fe9ebf25cf7a935067eb829e558346834540b2a11abf221b60b89bb757a34e5"
+      }
+    },
+    "finalState": {
+      "normalQuitObserved": true,
+      "formalProcessCount": 0,
+      "forcedQuit": false,
+      "duplicateBuildBundleAbsent": true,
+      "fixtureRestored": "v1",
+      "fileSha256": "27743826c6c713ffb57aef4727bf0456cf2c88a23524c1ad5ec14c502b6dfdde"
+    }
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-checks-final/final-verification.json",
+      "sha256": "c34b616600a301e969bca534bae33dcc42b79b072c4ed445e2a6dbc98cf735c7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/candidate-independent.json",
+      "sha256": "d64e0fe473c36f2201275299f96037d4fbca957f2edaa6fa1e265c48a1cae955"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/install-independent.json",
+      "sha256": "2b90661de12c823624dd732301de2f62cc60a21e840d0f266716c7ed8169ba69"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/installed-data-retention.json",
+      "sha256": "6d6a666abeca738baaa7a6b69b377b46799d1e4250c68eea31302516f91913fb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "a2485513fec8eecfe7bc8c3f5478fc720acce550b038ab11270ffaecf371ce12"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/installed-workbook-range.json",
+      "sha256": "8dd07a98e9617ffa766dc3326b5e452582686efbc5a74030e209f3f8b50cdc46"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/native-closeout-independent.json",
+      "sha256": "2999d91879a3078e0d9f10915fe08be2f2f8a391a7b025cffc5d94220ba75995"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/hidden-sheet-scope-correction.json",
+      "sha256": "0fe9ebf25cf7a935067eb829e558346834540b2a11abf221b60b89bb757a34e5"
+    }
   ]
 }

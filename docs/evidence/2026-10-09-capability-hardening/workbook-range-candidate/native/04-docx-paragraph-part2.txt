@@ -1,0 +1,6 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~									132 按钮 上一部分
+~									133 文本 长段落第 2 / 2 部分
+~									134 按钮 (disabled) 下一部分
+~									135 文本 甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲 END LONG SOURCE
+The focused UI element is 129 container

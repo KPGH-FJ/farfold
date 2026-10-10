@@ -1,0 +1,4 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 309-333
++							309 文本 文件已变化。当前内容和意见保持不变，重新读取可查看新内容。
+The focused UI element is 108 文本栏 (settable) 意见范围, Value: A:, Placeholder: A1:C200

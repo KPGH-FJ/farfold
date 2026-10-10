@@ -1,0 +1,10 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 105, 319-390
++								402 container 意见范围
++									403 container
++										404 文本 意见范围
++										405 文本栏 (settable) 意见范围, Placeholder: A1:C200
++									406 按钮 选择范围
++								407 文本 填写坐标仅指定意见位置，不表示已查看其中所有内容。选择范围后需明确确认，才会更换意见目标。
++								408 按钮 取消选择
+The focused UI element is 405 文本栏 (settable) 意见范围, Placeholder: A1:C200

@@ -1,0 +1,155 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 111-129
+~										108 文本栏 (settable) 意见范围, Value: A:, Placeholder: A1:C200
++								183 文本 请输入当前工作表的范围，例如 A1 或 A1:C200。
++										184 row (selectable)
++											185 单元格 (selectable) 2
++											186 单元格 (selectable) 单元格 A2：0
++											187 单元格 (selectable) 单元格 B2：FALSE
++											188 单元格 (selectable) 单元格 C2
++											189 单元格 (selectable) 单元格 E2
++											190 单元格 (selectable) 单元格 F2：2
++											191 单元格 (selectable) 单元格 G2
++											192 单元格 (selectable) 单元格 H2
++											193 单元格 (selectable) 单元格 I2
++											194 单元格 (selectable) 单元格 J2
++											195 单元格 (selectable) 单元格 K2
++											196 单元格 (selectable) 单元格 L2
++											197 单元格 (selectable) 单元格 M2
++											198 单元格 (selectable) 单元格 N2
++											199 单元格 (selectable) 单元格 O2
++											200 单元格 (selectable) 单元格 P2
++											201 单元格 (selectable) 单元格 Q2
++											202 单元格 (selectable) 单元格 R2
++											203 单元格 (selectable) 单元格 S2
++											204 单元格 (selectable) 单元格 T2
++											205 单元格 (selectable) 单元格 U2
++											206 单元格 (selectable) 单元格 V2
++											207 单元格 (selectable) 单元格 W2
++											208 单元格 (selectable) 单元格 X2
++										209 row (selectable)
++											210 单元格 (selectable) 3
++											211 单元格 (selectable) 单元格 A3
++											212 单元格 (selectable) 单元格 B3
++											213 单元格 (selectable) 单元格 C3
++											214 单元格 (selectable) 单元格 E3
++											215 单元格 (selectable) 单元格 F3
++											216 单元格 (selectable) 单元格 G3
++											217 单元格 (selectable) 单元格 H3
++											218 单元格 (selectable) 单元格 I3
++											219 单元格 (selectable) 单元格 J3
++											220 单元格 (selectable) 单元格 K3
++											221 单元格 (selectable) 单元格 L3
++											222 单元格 (selectable) 单元格 M3
++											223 单元格 (selectable) 单元格 N3
++											224 单元格 (selectable) 单元格 O3
++											225 单元格 (selectable) 单元格 P3
++											226 单元格 (selectable) 单元格 Q3
++											227 单元格 (selectable) 单元格 R3
++											228 单元格 (selectable) 单元格 S3
++											229 单元格 (selectable) 单元格 T3
++											230 单元格 (selectable) 单元格 U3
++											231 单元格 (selectable) 单元格 V3
++											232 单元格 (selectable) 单元格 W3
++											233 单元格 (selectable) 单元格 X3
++										234 row (selectable)
++											235 单元格 (selectable) 4
++											236 单元格 (selectable) 单元格 A4
++											237 单元格 (selectable) 单元格 B4
++											238 单元格 (selectable) 单元格 C4
++											239 单元格 (selectable) 单元格 E4
++											240 单元格 (selectable) 单元格 F4
++											241 单元格 (selectable) 单元格 G4
++											242 单元格 (selectable) 单元格 H4
++											243 单元格 (selectable) 单元格 I4
++											244 单元格 (selectable) 单元格 J4
++											245 单元格 (selectable) 单元格 K4
++											246 单元格 (selectable) 单元格 L4
++											247 单元格 (selectable) 单元格 M4
++											248 单元格 (selectable) 单元格 N4
++											249 单元格 (selectable) 单元格 O4
++											250 单元格 (selectable) 单元格 P4
++											251 单元格 (selectable) 单元格 Q4
++											252 单元格 (selectable) 单元格 R4
++											253 单元格 (selectable) 单元格 S4
++											254 单元格 (selectable) 单元格 T4
++											255 单元格 (selectable) 单元格 U4
++											256 单元格 (selectable) 单元格 V4
++											257 单元格 (selectable) 单元格 W4
++											258 单元格 (selectable) 单元格 X4
++										259 row (selectable)
++											260 单元格 (selectable) 5
++											261 单元格 (selectable) 单元格 A5
++											262 单元格 (selectable) 单元格 B5
++											263 单元格 (selectable) 单元格 C5
++											264 单元格 (selectable) 单元格 E5
++											265 单元格 (selectable) 单元格 F5
++											266 单元格 (selectable) 单元格 G5
++											267 单元格 (selectable) 单元格 H5
++											268 单元格 (selectable) 单元格 I5
++											269 单元格 (selectable) 单元格 J5
++											270 单元格 (selectable) 单元格 K5
++											271 单元格 (selectable) 单元格 L5
++											272 单元格 (selectable) 单元格 M5
++											273 单元格 (selectable) 单元格 N5
++											274 单元格 (selectable) 单元格 O5
++											275 单元格 (selectable) 单元格 P5
++											276 单元格 (selectable) 单元格 Q5
++											277 单元格 (selectable) 单元格 R5
++											278 单元格 (selectable) 单元格 S5
++											279 单元格 (selectable) 单元格 T5
++											280 单元格 (selectable) 单元格 U5
++											281 单元格 (selectable) 单元格 V5
++											282 单元格 (selectable) 单元格 W5
++											283 单元格 (selectable) 单元格 X5
++										284 row (selectable)
++											285 单元格 (selectable) 6
++											286 单元格 (selectable) 单元格 A6
++											287 单元格 (selectable) 单元格 B6
++											288 单元格 (selectable) 单元格 C6
++											289 单元格 (selectable) 单元格 E6
++											290 单元格 (selectable) 单元格 F6
++											291 单元格 (selectable) 单元格 G6
++											292 单元格 (selectable) 单元格 H6
++											293 单元格 (selectable) 单元格 I6
++											294 单元格 (selectable) 单元格 J6
++											295 单元格 (selectable) 单元格 K6
++											296 单元格 (selectable) 单元格 L6
++											297 单元格 (selectable) 单元格 M6
++											298 单元格 (selectable) 单元格 N6
++											299 单元格 (selectable) 单元格 O6
++											300 单元格 (selectable) 单元格 P6
++											301 单元格 (selectable) 单元格 Q6
++											302 单元格 (selectable) 单元格 R6
++											303 单元格 (selectable) 单元格 S6
++											304 单元格 (selectable) 单元格 T6
++											305 单元格 (selectable) 单元格 U6
++											306 单元格 (selectable) 单元格 V6
++											307 单元格 (selectable) 单元格 W6
++											308 单元格 (selectable) 单元格 X6
++										309 row (selectable)
++											310 单元格 (selectable) 7
++											311 单元格 (selectable) 单元格 A7
++											312 单元格 (selectable) 单元格 B7
++											313 单元格 (selectable) 单元格 C7
++											314 单元格 (selectable) 单元格 E7
++											315 单元格 (selectable) 单元格 F7
++											316 单元格 (selectable) 单元格 G7
++											317 单元格 (selectable) 单元格 H7
++											318 单元格 (selectable) 单元格 I7
++											319 单元格 (selectable) 单元格 J7
++											320 单元格 (selectable) 单元格 K7
++											321 单元格 (selectable) 单元格 L7
++											322 单元格 (selectable) 单元格 M7
++											323 单元格 (selectable) 单元格 N7
++											324 单元格 (selectable) 单元格 O7
++											325 单元格 (selectable) 单元格 P7
++											326 单元格 (selectable) 单元格 Q7
++											327 单元格 (selectable) 单元格 R7
++											328 单元格 (selectable) 单元格 S7
++											329 单元格 (selectable) 单元格 T7
++											330 单元格 (selectable) 单元格 U7
++											331 单元格 (selectable) 单元格 V7
++											332 单元格 (selectable) 单元格 W7
++											333 单元格 (selectable) 单元格 X7
+The focused UI element is 108 文本栏 (settable) 意见范围, Value: A:, Placeholder: A1:C200

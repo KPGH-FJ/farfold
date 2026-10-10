@@ -1,0 +1,32 @@
+{
+  "checkedAtUtc": "2026-10-10T01:58:50.109984+00:00",
+  "classification": "verification helper schema mismatch; not a product or installation failure",
+  "originalFailure": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/install-independent-schema-failure.json",
+    "sha256": "4ac070b46ebb1b4658e0e793a1a1b698c6a040ec6d6cfc877d1cf2ae82e05e9f",
+    "failureStage": "normalExitAndInstall",
+    "error": "KeyError before metadata/bundle checks"
+  },
+  "oldScript": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/verify-install-independent.before-schema-fix.raw.txt",
+    "sha256": "bfd5f8deb5195f6ea38342e887ff9f7b6512bc671df2edaeaaf2325b613ec141"
+  },
+  "newScript": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/verify-install-independent.py",
+    "sha256": "284778b878a7b1fa02b653cc0578de02af4917649da961045ba1cad294e70e9d"
+  },
+  "minimalDiff": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/install-verifier-schema-fix.diff.txt",
+    "sha256": "09635b8cf8fd44a7f3261831bc23c65bca5efab321b5d0bac5344f30a2831a1a"
+  },
+  "cause": "Current normal-exit receipt names the exact prior evidence previousNativeReceipt:{path,sha256}; the copied verifier still expected two older flat fields. The existing authorization/normal-exit/process guards were already satisfied.",
+  "change": "Read only the actual two-field prior evidence object, validate its shape/evidence path and verify the referenced original hash. No observed facts, public/private receipts, installed files or source inputs were edited.",
+  "pending": "None for the read-only ten-check installation audit. Native product interaction remains separately pending.",
+  "subsequentVerification": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/install-independent.json",
+    "sha256": "2b90661de12c823624dd732301de2f62cc60a21e840d0f266716c7ed8169ba69",
+    "result": "passed",
+    "checks": 10,
+    "scriptExitCode": 0
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "checkedAtUtc": "2026-10-10T01:57:40.177382+00:00",
+  "sourceCommit": "2e97616870ec35d385b8ae1721d133efc89faf56",
+  "result": "failed",
+  "failures": [
+    "normalExitAndInstall"
+  ],
+  "checks": {
+    "receiptChain": {
+      "passed": true,
+      "candidateChecks": 9,
+      "candidateIndependent": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/candidate-independent.json",
+        "sha256": "d64e0fe473c36f2201275299f96037d4fbca957f2edaa6fa1e265c48a1cae955",
+        "bytes": 3624
+      }
+    },
+    "normalExitAndInstall": {
+      "passed": false,
+      "errorType": "KeyError"
+    }
+  },
+  "methodOrigin": "New saved verifier implementing the prior workbook inline ten-check method; not a historical script.",
+  "inputReceipts": {
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/candidate.json": "cf334cad47080d8c321b3f3a1f71475f2d5aac92954641268d653ef724a29427",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/candidate-inputs.json": "7dc22cb583f5d14dcabf03df87c4f0a3e5d06fec2f47e57ec8835811ec7b8f96",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/candidate-independent.json": "d64e0fe473c36f2201275299f96037d4fbca957f2edaa6fa1e265c48a1cae955",
+    "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/installed-data-retention.json": "6d6a666abeca738baaa7a6b69b377b46799d1e4250c68eea31302516f91913fb",
+    "output/2026-10-10-workbook-range-install/install-operation.json": "2dc723c5cf81ba372525d7312a4950e64351315b3210c3b3aac8c4d3f8be6261",
+    "output/2026-10-10-workbook-range-install/normal-exit-observation.json": "b3b0744718a3be27ea360456d1b38d459012ee308ce06dd5a31d911ffc080737",
+    "output/2026-10-10-workbook-range-install/metadata-backup-receipt.json": "87649060dfc1f693090f85f3d499006bad322a1212b5e0b673e0fe8f3f3f5200",
+    "output/2026-10-10-workbook-range-install/install-data-before-summary.json": "cf37bda924a29fdd91874d4776c7f33ee09bf5c2acd8333bc232e380ae4fbe77",
+    "output/2026-10-10-workbook-range-install/install-data-preinstall-summary.json": "cf37bda924a29fdd91874d4776c7f33ee09bf5c2acd8333bc232e380ae4fbe77",
+    "output/2026-10-10-workbook-range-install/install-data-after-summary.json": "cf37bda924a29fdd91874d4776c7f33ee09bf5c2acd8333bc232e380ae4fbe77"
+  },
+  "completedAtUtc": "2026-10-10T01:57:40.242515+00:00"
+}

@@ -1,0 +1,25 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 97-98
++					115 container (expanded) Secondary Actions: Collapse
++						116 摘要 未发送的文件意见（2）, Value: on
++							117 文本 未发送的文件意见（2）
++						118 文本 意见仍对应当时查看的内容。可加入输入框，也可以复制；不会自动发送。
++						119 container
++							120 text /private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx  ·  保留的意见 1
++						121 文本 关于 "/private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx"（当时查看的内容，工作表 "范围'与&0"（文件内标识 "sheet-main-A9"），单元格 W98:AB103，位置未重新核对）：
+文件 SHA-256：27743826c6c713ffb57aef4727bf0456cf2c88a23524c1ad5ec14c502b6dfdde
+RANGE_2E976168_CROSS：保留 W98:AB103 的完整原范围和原版本。
+
+此意见针对上述版本；若文件已变化，请先核对位置与内容。
++						122 按钮 加入输入框
++						123 按钮 复制意见
++						124 container
++							125 text /private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx  ·  保留的意见 2
++						126 文本 关于 "/private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx"（当时查看的内容，工作表 "同文副页"（文件内标识 "sheet-other-17"），单元格 XFD1048576，位置未重新核对）：
+文件 SHA-256：82928dbf98ff3bb5793d036f1af88f7759ef8c47be312ef5c0aaf8e6eb015856
+RANGE_2E976168_OTHER：同文副页 XFD1048576 是独立空白位置，不沿用主表身份。
+
+此意见针对上述版本；若文件已变化，请先核对位置与内容。
++						127 按钮 加入输入框
++						128 按钮 复制意见
+The focused UI element is 116 摘要 未发送的文件意见（2）, Value: on

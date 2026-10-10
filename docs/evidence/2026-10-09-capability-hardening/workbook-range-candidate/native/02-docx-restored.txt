@@ -1,0 +1,55 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 56, 58-59
+~				13 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具， 需要你
++					56 按钮 1 等你回应
+~					57 按钮 返回
++					58 标题 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，, Value: 1
++						59 文本 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
+~					60 text TR · 等你回应
+~					61 按钮 查找当前对话
+~					62 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
+~					63 按钮 浏览器
+~					64 弹出式按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，的操作
++					65 text 你  ·  历史消息
++					66 按钮 复制消息
++					67 弹出式按钮 消息操作
++					68 text FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，不读取或修改任何文件，不使用网络工具。只原样回复下面三个 Markdown 链接，不加代码块或其他文字：
+[版本与同文](/private/tmp/farfold-docx-feedback-zjc_b0ji/versioned.docx)
+[长段与跨窗表格](/private/tmp/farfold-docx-feedback-zjc_b0ji/window-boundaries.docx)
+[隐藏与提示](/private/tmp/farfold-docx-feedback-zjc_b0ji/hidden-notice-boundaries.docx) Codex  · 历史消息
++					69 按钮 复制消息
++					70 弹出式按钮 消息操作
++					71 按钮 版本与同文, Help: /private/tmp/farfold-docx-feedback-zjc_b0ji/versioned.docx
++					72 按钮 长段与跨窗表格, Help: /private/tmp/farfold-docx-feedback-zjc_b0ji/window-boundaries.docx
++					73 按钮 隐藏与提示, Help: /private/tmp/farfold-docx-feedback-zjc_b0ji/hidden-notice-boundaries.docx
++					74 摘要 最近收到的扩展字段, Value: off
++						75 文本 最近收到的扩展字段
++					76 摘要 最近收到的扩展字段, Value: off
++						77 文本 最近收到的扩展字段
++					78 摘要 未发送的文件意见（2）, Value: off
++						79 文本 未发送的文件意见（2）
++					80 文本 继续发送前，请重新确认这条对话的权限。
++					81 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…
++						82 container (settable)
++							83 文本 (settable) 关于 "/private/tmp/farfold-docx-feedback-zjc_b0ji/versioned.docx"（当时查看的内容，整个段落，文档内部文件 "word/document.xml"，元素位置 [0,1]（每层从 0 起），位置未重新核对）：
++							84 文本 (settable) 文件 SHA-256：34067ebfc2f03cde70c2a8a49890fb1395c4280b78eec87751de53758727f3ce
++							85 文本 (settable) DOCX_8C2F_BODY_FIRST：保留第一个同文段落的原位置。
++							86 文本 (settable) 此意见针对上述版本；若文件已变化，请先核对位置与内容。
++							87 文本 (settable) 关于 "/private/tmp/farfold-docx-feedback-zjc_b0ji/versioned.docx"（当时查看的内容，整个段落，文档内部文件 "word/header1.xml"，元素位置 [0]（每层从 0 起），位置未重新核对）：
++							88 文本 (settable) 文件 SHA-256：75f508e0b83d9d3835f254abb58d51e2b576f390d79f49eb96303e0e652a5433
++							89 文本 (settable) DOCX_8C2F_HEADER：页眉同文位置独立。
++							90 文本 (settable) 此意见针对上述版本；若文件已变化，请先核对位置与内容。
++							91 文本 (settable) 关于 "/private/tmp/farfold-docx-feedback-zjc_b0ji/window-boundaries.docx"（当时查看的内容，整个段落，文档内部文件 "word/document.xml"，元素位置 [0,0]（每层从 0 起），位置未重新核对）：
++							92 文本 (settable) 文件 SHA-256：5ea9f16cb6733475866958dd873187da986e26b9abce5dee9ccacda56233adab
++							93 文本 (settable) DOCX_8C2F_LONG：意见对应原长段落全部内容。
++							94 文本 (settable) 此意见针对上述版本；若文件已变化，请先核对位置与内容。
++					95 弹出式按钮 添加文件或图片
++					96 弹出式按钮 模型与来源
++					97 文本 思考
++					98 弹出式按钮 (disabled) 思考深度: Ultra, Help: Ultra
++					99 弹出式按钮 对话权限
++					100 弹出式按钮 命令与模板
++					101 按钮 (disabled) 加入待发
++					102 弹出式按钮 对话用量
++					103 文本 Enter 发送 · Shift Enter 换行
+The focused UI element is 81 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…

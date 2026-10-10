@@ -234,3 +234,6 @@ docs/evidence/2026-10-09-capability-hardening/xlsx/browser/browser-realtime.diag
 docs/evidence/2026-10-09-capability-hardening/docx/browser/
 docs/evidence/2026-10-09-capability-hardening/docx/ui-browser/
 docs/evidence/2026-10-09-capability-hardening/nonform-interaction/browser/
+
+# Preserve the original failed install verifier capture referenced by its correction.
+docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/install-independent-schema-failure.json

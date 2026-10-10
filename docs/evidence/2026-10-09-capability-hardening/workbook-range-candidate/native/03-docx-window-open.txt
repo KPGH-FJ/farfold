@@ -1,0 +1,313 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~					62 按钮 (expanded) 收起对话内容, Secondary Actions: Collapse
++					104 container 对话内容面板
++						105 分离器 调整内容宽度, Value: 510
++						106 container 对话内容面板
++							107 开关按钮 文件与输出, Value: on
++							108 开关按钮 网页, Value: off
++						109 container 文件
++							110 文本 window-boundaries.docx
++							111 按钮 返回文件与输出
++							112 按钮 放大内容
++							113 按钮 收起对话内容
++							114 摘要 文件位置, Value: off
++								115 文本 文件位置
++							116 按钮 重新读取
++							117 按钮 (expanded) 修改意见, Secondary Actions: Collapse
++							118 按钮 用默认应用打开
++							119 按钮 在文件夹中显示
++							120 按钮 完整文件另存为…
++							121 container 文档预览
++								122 文本 只读预览，显示文件保存时的内容。字段不重新计算。
++								123 文本 内容连续显示，保留支持的文字、列表、表格和图片；尺寸与间距适配预览，不还原 Word 分页。
++								124 摘要 预览范围说明 (1), Value: off
++									125 文本 预览范围说明
++									126 文本  (
++									127 文本 1
++									128 文本 )
++								129 container
++									130 开关按钮 选择整个段落, Value: off
++									131 文本 长段落分段显示，切换可查看其余内容。
++									132 按钮 (disabled) 上一部分
++									133 文本 长段落第 1 / 2 部分
++									134 按钮 下一部分
++									135 文本 LONG SOURCE 段落 甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲甲
++									136 container 表格
++										137 开关按钮 选择整个表格, Value: off
++										138 文本 表格按范围显示。单元格较长时显示摘要，可打开完整内容。
++										139 按钮 (disabled) 上一组行
++										140 按钮 下一组行
++										141 按钮 (disabled) 上一组列
++										142 按钮 下一组列
++										143 文本 当前显示第 1–20 行，第 1–12 列
++										144 container 表格
++											145 表格 表格
++												146 文本 表格
++												147 row (selectable)
++													148 单元格 (selectable) 查看第 1 行、第 1 列完整内容
++													149 单元格 (selectable) 查看第 1 行、第 2 列完整内容
++													150 单元格 (selectable) 查看第 1 行、第 3 列完整内容
++													151 单元格 (selectable) 查看第 1 行、第 4 列完整内容
++													152 单元格 (selectable) 查看第 1 行、第 5 列完整内容
++													153 单元格 (selectable) 查看第 1 行、第 6 列完整内容
++													154 单元格 (selectable) 查看第 1 行、第 7 列完整内容
++													155 单元格 (selectable) 查看第 1 行、第 8 列完整内容
++													156 单元格 (selectable) 查看第 1 行、第 9 列完整内容
++													157 单元格 (selectable) 查看第 1 行、第 10 列完整内容
++													158 单元格 (selectable) 查看第 1 行、第 11 列完整内容
++													159 单元格 (selectable) 查看第 1 行、第 12 列完整内容
++												160 row (selectable)
++													161 单元格 (selectable) 查看第 2 行、第 1 列完整内容
++													162 单元格 (selectable) 查看第 2 行、第 2 列完整内容
++													163 单元格 (selectable) 查看第 2 行、第 3 列完整内容
++													164 单元格 (selectable) 查看第 2 行、第 4 列完整内容
++													165 单元格 (selectable) 查看第 2 行、第 5 列完整内容
++													166 单元格 (selectable) 查看第 2 行、第 6 列完整内容
++													167 单元格 (selectable) 查看第 2 行、第 7 列完整内容
++													168 单元格 (selectable) 查看第 2 行、第 8 列完整内容
++													169 单元格 (selectable) 查看第 2 行、第 9 列完整内容
++													170 单元格 (selectable) 查看第 2 行、第 10 列完整内容
++													171 单元格 (selectable) 查看第 2 行、第 11 列完整内容
++													172 单元格 (selectable) 查看第 2 行、第 12 列完整内容
++												173 row (selectable)
++													174 单元格 (selectable) 查看第 3 行、第 1 列完整内容
++													175 单元格 (selectable) 查看第 3 行、第 2 列完整内容
++													176 单元格 (selectable) 查看第 3 行、第 3 列完整内容
++													177 单元格 (selectable) 查看第 3 行、第 4 列完整内容
++													178 单元格 (selectable) 查看第 3 行、第 5 列完整内容
++													179 单元格 (selectable) 查看第 3 行、第 6 列完整内容
++													180 单元格 (selectable) 查看第 3 行、第 7 列完整内容
++													181 单元格 (selectable) 查看第 3 行、第 8 列完整内容
++													182 单元格 (selectable) 查看第 3 行、第 9 列完整内容
++													183 单元格 (selectable) 查看第 3 行、第 10 列完整内容
++													184 单元格 (selectable) 查看第 3 行、第 11 列完整内容
++													185 单元格 (selectable) 查看第 3 行、第 12 列完整内容
++												186 row (selectable)
++													187 单元格 (selectable) 查看第 4 行、第 1 列完整内容
++													188 单元格 (selectable) 查看第 4 行、第 2 列完整内容
++													189 单元格 (selectable) 查看第 4 行、第 3 列完整内容
++													190 单元格 (selectable) 查看第 4 行、第 4 列完整内容
++													191 单元格 (selectable) 查看第 4 行、第 5 列完整内容
++													192 单元格 (selectable) 查看第 4 行、第 6 列完整内容
++													193 单元格 (selectable) 查看第 4 行、第 7 列完整内容
++													194 单元格 (selectable) 查看第 4 行、第 8 列完整内容
++													195 单元格 (selectable) 查看第 4 行、第 9 列完整内容
++													196 单元格 (selectable) 查看第 4 行、第 10 列完整内容
++													197 单元格 (selectable) 查看第 4 行、第 11 列完整内容
++													198 单元格 (selectable) 查看第 4 行、第 12 列完整内容
++												199 row (selectable)
++													200 单元格 (selectable) 查看第 5 行、第 1 列完整内容
++													201 单元格 (selectable) 查看第 5 行、第 2 列完整内容
++													202 单元格 (selectable) 查看第 5 行、第 3 列完整内容
++													203 单元格 (selectable) 查看第 5 行、第 4 列完整内容
++													204 单元格 (selectable) 查看第 5 行、第 5 列完整内容
++													205 单元格 (selectable) 查看第 5 行、第 6 列完整内容
++													206 单元格 (selectable) 查看第 5 行、第 7 列完整内容
++													207 单元格 (selectable) 查看第 5 行、第 8 列完整内容
++													208 单元格 (selectable) 查看第 5 行、第 9 列完整内容
++													209 单元格 (selectable) 查看第 5 行、第 10 列完整内容
++													210 单元格 (selectable) 查看第 5 行、第 11 列完整内容
++													211 单元格 (selectable) 查看第 5 行、第 12 列完整内容
++												212 row (selectable)
++													213 单元格 (selectable) 查看第 6 行、第 1 列完整内容
++													214 单元格 (selectable) 查看第 6 行、第 2 列完整内容
++													215 单元格 (selectable) 查看第 6 行、第 3 列完整内容
++													216 单元格 (selectable) 查看第 6 行、第 4 列完整内容
++													217 单元格 (selectable) 查看第 6 行、第 5 列完整内容
++													218 单元格 (selectable) 查看第 6 行、第 6 列完整内容
++													219 单元格 (selectable) 查看第 6 行、第 7 列完整内容
++													220 单元格 (selectable) 查看第 6 行、第 8 列完整内容
++													221 单元格 (selectable) 查看第 6 行、第 9 列完整内容
++													222 单元格 (selectable) 查看第 6 行、第 10 列完整内容
++													223 单元格 (selectable) 查看第 6 行、第 11 列完整内容
++													224 单元格 (selectable) 查看第 6 行、第 12 列完整内容
++												225 row (selectable)
++													226 单元格 (selectable) 查看第 7 行、第 1 列完整内容
++													227 单元格 (selectable) 查看第 7 行、第 2 列完整内容
++													228 单元格 (selectable) 查看第 7 行、第 3 列完整内容
++													229 单元格 (selectable) 查看第 7 行、第 4 列完整内容
++													230 单元格 (selectable) 查看第 7 行、第 5 列完整内容
++													231 单元格 (selectable) 查看第 7 行、第 6 列完整内容
++													232 单元格 (selectable) 查看第 7 行、第 7 列完整内容
++													233 单元格 (selectable) 查看第 7 行、第 8 列完整内容
++													234 单元格 (selectable) 查看第 7 行、第 9 列完整内容
++													235 单元格 (selectable) 查看第 7 行、第 10 列完整内容
++													236 单元格 (selectable) 查看第 7 行、第 11 列完整内容
++													237 单元格 (selectable) 查看第 7 行、第 12 列完整内容
++												238 row (selectable)
++													239 单元格 (selectable) 查看第 8 行、第 1 列完整内容
++													240 单元格 (selectable) 查看第 8 行、第 2 列完整内容
++													241 单元格 (selectable) 查看第 8 行、第 3 列完整内容
++													242 单元格 (selectable) 查看第 8 行、第 4 列完整内容
++													243 单元格 (selectable) 查看第 8 行、第 5 列完整内容
++													244 单元格 (selectable) 查看第 8 行、第 6 列完整内容
++													245 单元格 (selectable) 查看第 8 行、第 7 列完整内容
++													246 单元格 (selectable) 查看第 8 行、第 8 列完整内容
++													247 单元格 (selectable) 查看第 8 行、第 9 列完整内容
++													248 单元格 (selectable) 查看第 8 行、第 10 列完整内容
++													249 单元格 (selectable) 查看第 8 行、第 11 列完整内容
++													250 单元格 (selectable) 查看第 8 行、第 12 列完整内容
++												251 row (selectable)
++													252 单元格 (selectable) 查看第 9 行、第 1 列完整内容
++													253 单元格 (selectable) 查看第 9 行、第 2 列完整内容
++													254 单元格 (selectable) 查看第 9 行、第 3 列完整内容
++													255 单元格 (selectable) 查看第 9 行、第 4 列完整内容
++													256 单元格 (selectable) 查看第 9 行、第 5 列完整内容
++													257 单元格 (selectable) 查看第 9 行、第 6 列完整内容
++													258 单元格 (selectable) 查看第 9 行、第 7 列完整内容
++													259 单元格 (selectable) 查看第 9 行、第 8 列完整内容
++													260 单元格 (selectable) 查看第 9 行、第 9 列完整内容
++													261 单元格 (selectable) 查看第 9 行、第 10 列完整内容
++													262 单元格 (selectable) 查看第 9 行、第 11 列完整内容
++													263 单元格 (selectable) 查看第 9 行、第 12 列完整内容
++												264 row (selectable)
++													265 单元格 (selectable) 查看第 10 行、第 1 列完整内容
++													266 单元格 (selectable) 查看第 10 行、第 2 列完整内容
++													267 单元格 (selectable) 查看第 10 行、第 3 列完整内容
++													268 单元格 (selectable) 查看第 10 行、第 4 列完整内容
++													269 单元格 (selectable) 查看第 10 行、第 5 列完整内容
++													270 单元格 (selectable) 查看第 10 行、第 6 列完整内容
++													271 单元格 (selectable) 查看第 10 行、第 7 列完整内容
++													272 单元格 (selectable) 查看第 10 行、第 8 列完整内容
++													273 单元格 (selectable) 查看第 10 行、第 9 列完整内容
++													274 单元格 (selectable) 查看第 10 行、第 10 列完整内容
++													275 单元格 (selectable) 查看第 10 行、第 11 列完整内容
++													276 单元格 (selectable) 查看第 10 行、第 12 列完整内容
++												277 row (selectable)
++													278 单元格 (selectable) 查看第 11 行、第 1 列完整内容
++													279 单元格 (selectable) 查看第 11 行、第 2 列完整内容
++													280 单元格 (selectable) 查看第 11 行、第 3 列完整内容
++													281 单元格 (selectable) 查看第 11 行、第 4 列完整内容
++													282 单元格 (selectable) 查看第 11 行、第 5 列完整内容
++													283 单元格 (selectable) 查看第 11 行、第 6 列完整内容
++													284 单元格 (selectable) 查看第 11 行、第 7 列完整内容
++													285 单元格 (selectable) 查看第 11 行、第 8 列完整内容
++													286 单元格 (selectable) 查看第 11 行、第 9 列完整内容
++													287 单元格 (selectable) 查看第 11 行、第 10 列完整内容
++													288 单元格 (selectable) 查看第 11 行、第 11 列完整内容
++													289 单元格 (selectable) 查看第 11 行、第 12 列完整内容
++												290 row (selectable)
++													291 单元格 (selectable) 查看第 12 行、第 1 列完整内容
++													292 单元格 (selectable) 查看第 12 行、第 2 列完整内容
++													293 单元格 (selectable) 查看第 12 行、第 3 列完整内容
++													294 单元格 (selectable) 查看第 12 行、第 4 列完整内容
++													295 单元格 (selectable) 查看第 12 行、第 5 列完整内容
++													296 单元格 (selectable) 查看第 12 行、第 6 列完整内容
++													297 单元格 (selectable) 查看第 12 行、第 7 列完整内容
++													298 单元格 (selectable) 查看第 12 行、第 8 列完整内容
++													299 单元格 (selectable) 查看第 12 行、第 9 列完整内容
++													300 单元格 (selectable) 查看第 12 行、第 10 列完整内容
++													301 单元格 (selectable) 查看第 12 行、第 11 列完整内容
++													302 单元格 (selectable) 查看第 12 行、第 12 列完整内容
++												303 row (selectable)
++													304 单元格 (selectable) 查看第 13 行、第 1 列完整内容
++													305 单元格 (selectable) 查看第 13 行、第 2 列完整内容
++													306 单元格 (selectable) 查看第 13 行、第 3 列完整内容
++													307 单元格 (selectable) 查看第 13 行、第 4 列完整内容
++													308 单元格 (selectable) 查看第 13 行、第 5 列完整内容
++													309 单元格 (selectable) 查看第 13 行、第 6 列完整内容
++													310 单元格 (selectable) 查看第 13 行、第 7 列完整内容
++													311 单元格 (selectable) 查看第 13 行、第 8 列完整内容
++													312 单元格 (selectable) 查看第 13 行、第 9 列完整内容
++													313 单元格 (selectable) 查看第 13 行、第 10 列完整内容
++													314 单元格 (selectable) 查看第 13 行、第 11 列完整内容
++													315 单元格 (selectable) 查看第 13 行、第 12 列完整内容
++												316 row (selectable)
++													317 单元格 (selectable) 查看第 14 行、第 1 列完整内容
++													318 单元格 (selectable) 查看第 14 行、第 2 列完整内容
++													319 单元格 (selectable) 查看第 14 行、第 3 列完整内容
++													320 单元格 (selectable) 查看第 14 行、第 4 列完整内容
++													321 单元格 (selectable) 查看第 14 行、第 5 列完整内容
++													322 单元格 (selectable) 查看第 14 行、第 6 列完整内容
++													323 单元格 (selectable) 查看第 14 行、第 7 列完整内容
++													324 单元格 (selectable) 查看第 14 行、第 8 列完整内容
++													325 单元格 (selectable) 查看第 14 行、第 9 列完整内容
++													326 单元格 (selectable) 查看第 14 行、第 10 列完整内容
++													327 单元格 (selectable) 查看第 14 行、第 11 列完整内容
++													328 单元格 (selectable) 查看第 14 行、第 12 列完整内容
++												329 row (selectable)
++													330 单元格 (selectable) 查看第 15 行、第 1 列完整内容
++													331 单元格 (selectable) 查看第 15 行、第 2 列完整内容
++													332 单元格 (selectable) 查看第 15 行、第 3 列完整内容
++													333 单元格 (selectable) 查看第 15 行、第 4 列完整内容
++													334 单元格 (selectable) 查看第 15 行、第 5 列完整内容
++													335 单元格 (selectable) 查看第 15 行、第 6 列完整内容
++													336 单元格 (selectable) 查看第 15 行、第 7 列完整内容
++													337 单元格 (selectable) 查看第 15 行、第 8 列完整内容
++													338 单元格 (selectable) 查看第 15 行、第 9 列完整内容
++													339 单元格 (selectable) 查看第 15 行、第 10 列完整内容
++													340 单元格 (selectable) 查看第 15 行、第 11 列完整内容
++													341 单元格 (selectable) 查看第 15 行、第 12 列完整内容
++												342 row (selectable)
++													343 单元格 (selectable) 查看第 16 行、第 1 列完整内容
++													344 单元格 (selectable) 查看第 16 行、第 2 列完整内容
++													345 单元格 (selectable) 查看第 16 行、第 3 列完整内容
++													346 单元格 (selectable) 查看第 16 行、第 4 列完整内容
++													347 单元格 (selectable) 查看第 16 行、第 5 列完整内容
++													348 单元格 (selectable) 查看第 16 行、第 6 列完整内容
++													349 单元格 (selectable) 查看第 16 行、第 7 列完整内容
++													350 单元格 (selectable) 查看第 16 行、第 8 列完整内容
++													351 单元格 (selectable) 查看第 16 行、第 9 列完整内容
++													352 单元格 (selectable) 查看第 16 行、第 10 列完整内容
++													353 单元格 (selectable) 查看第 16 行、第 11 列完整内容
++													354 单元格 (selectable) 查看第 16 行、第 12 列完整内容
++												355 row (selectable)
++													356 单元格 (selectable) 查看第 17 行、第 1 列完整内容
++													357 单元格 (selectable) 查看第 17 行、第 2 列完整内容
++													358 单元格 (selectable) 查看第 17 行、第 3 列完整内容
++													359 单元格 (selectable) 查看第 17 行、第 4 列完整内容
++													360 单元格 (selectable) 查看第 17 行、第 5 列完整内容
++													361 单元格 (selectable) 查看第 17 行、第 6 列完整内容
++													362 单元格 (selectable) 查看第 17 行、第 7 列完整内容
++													363 单元格 (selectable) 查看第 17 行、第 8 列完整内容
++													364 单元格 (selectable) 查看第 17 行、第 9 列完整内容
++													365 单元格 (selectable) 查看第 17 行、第 10 列完整内容
++													366 单元格 (selectable) 查看第 17 行、第 11 列完整内容
++													367 单元格 (selectable) 查看第 17 行、第 12 列完整内容
++												368 row (selectable)
++													369 单元格 (selectable) 查看第 18 行、第 1 列完整内容
++													370 单元格 (selectable) 查看第 18 行、第 2 列完整内容
++													371 单元格 (selectable) 查看第 18 行、第 3 列完整内容
++													372 单元格 (selectable) 查看第 18 行、第 4 列完整内容
++													373 单元格 (selectable) 查看第 18 行、第 5 列完整内容
++													374 单元格 (selectable) 查看第 18 行、第 6 列完整内容
++													375 单元格 (selectable) 查看第 18 行、第 7 列完整内容
++													376 单元格 (selectable) 查看第 18 行、第 8 列完整内容
++													377 单元格 (selectable) 查看第 18 行、第 9 列完整内容
++													378 单元格 (selectable) 查看第 18 行、第 10 列完整内容
++													379 单元格 (selectable) 查看第 18 行、第 11 列完整内容
++													380 单元格 (selectable) 查看第 18 行、第 12 列完整内容
++												381 row (selectable)
++													382 单元格 (selectable) 查看第 19 行、第 1 列完整内容
++													383 单元格 (selectable) 查看第 19 行、第 2 列完整内容
++													384 单元格 (selectable) 查看第 19 行、第 3 列完整内容
++													385 单元格 (selectable) 查看第 19 行、第 4 列完整内容
++													386 单元格 (selectable) 查看第 19 行、第 5 列完整内容
++													387 单元格 (selectable) 查看第 19 行、第 6 列完整内容
++													388 单元格 (selectable) 查看第 19 行、第 7 列完整内容
++													389 单元格 (selectable) 查看第 19 行、第 8 列完整内容
++													390 单元格 (selectable) 查看第 19 行、第 9 列完整内容
++													391 单元格 (selectable) 查看第 19 行、第 10 列完整内容
++													392 单元格 (selectable) 查看第 19 行、第 11 列完整内容
++													393 单元格 (selectable) 查看第 19 行、第 12 列完整内容
++												394 row (selectable)
++													395 单元格 (selectable) 查看第 20 行、第 1 列完整内容
++													396 单元格 (selectable) 查看第 20 行、第 2 列完整内容
++													397 单元格 (selectable) 查看第 20 行、第 3 列完整内容
++													398 单元格 (selectable) 查看第 20 行、第 4 列完整内容
++													399 单元格 (selectable) 查看第 20 行、第 5 列完整内容
++													400 单元格 (selectable) 查看第 20 行、第 6 列完整内容
++													401 单元格 (selectable) 查看第 20 行、第 7 列完整内容
++													402 单元格 (selectable) 查看第 20 行、第 8 列完整内容
++													403 单元格 (selectable) 查看第 20 行、第 9 列完整内容
++													404 单元格 (selectable) 查看第 20 行、第 10 列完整内容
++													405 单元格 (selectable) 查看第 20 行、第 11 列完整内容
++													406 单元格 (selectable) 查看第 20 行、第 12 列完整内容
++							407 文本 意见针对当时文档中的整个表格
++							408 文本 意见保留当时的文档位置和文件版本；查看其他内容不会改变目标，明确提意见才更换。
++							409 按钮 针对整个文件
++							410 文本输入区 (settable) 补充给 Agent 的意见, Value: [文本输入区: 补充给 Agent 的意见], Placeholder: 对这份内容有什么想法？
++								411 文本 (settable) DOCX_8C2F_TABLE：末尾窗口选择仍针对整个原表格。
++							412 文本 意见对应当前查看的内容，加入输入框后由你发送。
++							413 按钮 加入对话
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

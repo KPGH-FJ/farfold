@@ -1,0 +1,74 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 106-113
++								291 按钮 选择意见范围
++										292 row (selectable)
++											293 单元格 (selectable) 7
++											294 单元格 (selectable) 单元格 A7
++											295 单元格 (selectable) 单元格 B7
++											296 单元格 (selectable) 单元格 C7
++											297 单元格 (selectable) 单元格 E7
++											298 单元格 (selectable) 单元格 F7
++											299 单元格 (selectable) 单元格 G7
++											300 单元格 (selectable) 单元格 H7
++											301 单元格 (selectable) 单元格 I7
++											302 单元格 (selectable) 单元格 J7
++											303 单元格 (selectable) 单元格 K7
++											304 单元格 (selectable) 单元格 L7
++											305 单元格 (selectable) 单元格 M7
++											306 单元格 (selectable) 单元格 N7
++											307 单元格 (selectable) 单元格 O7
++											308 单元格 (selectable) 单元格 P7
++											309 单元格 (selectable) 单元格 Q7
++											310 单元格 (selectable) 单元格 R7
++											311 单元格 (selectable) 单元格 S7
++											312 单元格 (selectable) 单元格 T7
++											313 单元格 (selectable) 单元格 U7
++											314 单元格 (selectable) 单元格 V7
++											315 单元格 (selectable) 单元格 W7
++											316 单元格 (selectable) 单元格 X7
++										317 row (selectable)
++											318 单元格 (selectable) 8
++											319 单元格 (selectable) 单元格 A8
++											320 单元格 (selectable) 单元格 B8
++											321 单元格 (selectable) 单元格 C8：MERGE C8:F9, Rows: 8-9, Columns: 3-5
++											322 单元格 (selectable) 单元格 G8
++											323 单元格 (selectable) 单元格 H8
++											324 单元格 (selectable) 单元格 I8
++											325 单元格 (selectable) 单元格 J8
++											326 单元格 (selectable) 单元格 K8
++											327 单元格 (selectable) 单元格 L8
++											328 单元格 (selectable) 单元格 M8
++											329 单元格 (selectable) 单元格 N8
++											330 单元格 (selectable) 单元格 O8
++											331 单元格 (selectable) 单元格 P8
++											332 单元格 (selectable) 单元格 Q8
++											333 单元格 (selectable) 单元格 R8
++											334 单元格 (selectable) 单元格 S8
++											335 单元格 (selectable) 单元格 T8
++											336 单元格 (selectable) 单元格 U8
++											337 单元格 (selectable) 单元格 V8
++											338 单元格 (selectable) 单元格 W8
++											339 单元格 (selectable) 单元格 X8
++										340 row (selectable)
++											341 单元格 (selectable) 9
++											342 单元格 (selectable) 单元格 A9
++											343 单元格 (selectable) 单元格 B9
++											344 单元格 (selectable) 单元格 G9
++											345 单元格 (selectable) 单元格 H9
++											346 单元格 (selectable) 单元格 I9
++											347 单元格 (selectable) 单元格 J9
++											348 单元格 (selectable) 单元格 K9
++											349 单元格 (selectable) 单元格 L9
++											350 单元格 (selectable) 单元格 M9
++											351 单元格 (selectable) 单元格 N9
++											352 单元格 (selectable) 单元格 O9
++											353 单元格 (selectable) 单元格 P9
++											354 单元格 (selectable) 单元格 Q9
++											355 单元格 (selectable) 单元格 R9
++											356 单元格 (selectable) 单元格 S9
++											357 单元格 (selectable) 单元格 T9
++											358 单元格 (selectable) 单元格 U9
++											359 单元格 (selectable) 单元格 V9
++											360 单元格 (selectable) 单元格 W9
++											361 单元格 (selectable) 单元格 X9
+The focused UI element is 291 按钮 选择意见范围

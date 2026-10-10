@@ -1,0 +1,63 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 111-119, 227-234
+~										108 文本栏 (settable) 意见范围, Value: B3:G6, Placeholder: A1:C200
++								237 container
++									238 text 工作表“范围'与&0” · B3:G6 · 4 行 × 6 列 此范围包含 0 个隐藏行、1 个隐藏列。确认只包括这些位置，不会显示隐藏内容。
++									239 摘要 隐藏列位置 (1), Value: off
++										240 文本 隐藏列位置
++										241 文本  (
++										242 文本 1
++										243 文本 )
++									244 复选框 范围包括这些隐藏行列, Value: 0
++									245 文本 范围包括这些隐藏行列
++										246 row (selectable)
++											247 单元格 (selectable) 3
++											248 单元格 (selectable) 单元格 A3
++											249 单元格 (selectable) 单元格 B3
++											250 单元格 (selectable) 单元格 C3
++											251 单元格 (selectable) 单元格 E3
++											252 单元格 (selectable) 单元格 F3
++											253 单元格 (selectable) 单元格 G3
++											254 单元格 (selectable) 单元格 H3
++											255 单元格 (selectable) 单元格 I3
++											256 单元格 (selectable) 单元格 J3
++											257 单元格 (selectable) 单元格 K3
++											258 单元格 (selectable) 单元格 L3
++											259 单元格 (selectable) 单元格 M3
++											260 单元格 (selectable) 单元格 N3
++											261 单元格 (selectable) 单元格 O3
++											262 单元格 (selectable) 单元格 P3
++											263 单元格 (selectable) 单元格 Q3
++											264 单元格 (selectable) 单元格 R3
++											265 单元格 (selectable) 单元格 S3
++											266 单元格 (selectable) 单元格 T3
++											267 单元格 (selectable) 单元格 U3
++											268 单元格 (selectable) 单元格 V3
++											269 单元格 (selectable) 单元格 W3
++											270 单元格 (selectable) 单元格 X3
++										271 row (selectable)
++											272 单元格 (selectable) 4
++											273 单元格 (selectable) 单元格 A4
++											274 单元格 (selectable) 单元格 B4
++											275 单元格 (selectable) 单元格 C4
++											276 单元格 (selectable) 单元格 E4
++											277 单元格 (selectable) 单元格 F4
++											278 单元格 (selectable) 单元格 G4
++											279 单元格 (selectable) 单元格 H4
++											280 单元格 (selectable) 单元格 I4
++											281 单元格 (selectable) 单元格 J4
++											282 单元格 (selectable) 单元格 K4
++											283 单元格 (selectable) 单元格 L4
++											284 单元格 (selectable) 单元格 M4
++											285 单元格 (selectable) 单元格 N4
++											286 单元格 (selectable) 单元格 O4
++											287 单元格 (selectable) 单元格 P4
++											288 单元格 (selectable) 单元格 Q4
++											289 单元格 (selectable) 单元格 R4
++											290 单元格 (selectable) 单元格 S4
++											291 单元格 (selectable) 单元格 T4
++											292 单元格 (selectable) 单元格 U4
++											293 单元格 (selectable) 单元格 V4
++											294 单元格 (selectable) 单元格 W4
++											295 单元格 (selectable) 单元格 X4
+The focused UI element is 108 文本栏 (settable) 意见范围, Value: B3:G6, Placeholder: A1:C200

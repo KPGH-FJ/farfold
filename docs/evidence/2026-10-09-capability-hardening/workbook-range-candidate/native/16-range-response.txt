@@ -1,0 +1,21 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 83, 89, 96
+~				82 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
+~					48 text TR · 未在运行
+~					87 text FARFOLD_RANGE_2E976168_20261010。不要调用任何工具，不读取或修改任何文件，不使用网络工具。只原样回复下面两个 Markdown 链接，不加代码块或其他文字：
+[范围与隐藏](/private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx)
+[普通范围](/private/tmp/farfold-workbook-range-ugrktdm1/ordinary-ranges.xlsx) Codex  · 10:03
++					100 按钮 复制消息
++					101 弹出式按钮 消息操作
++					102 按钮 范围与隐藏, Help: /private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx
++					103 按钮 普通范围, Help: /private/tmp/farfold-workbook-range-ugrktdm1/ordinary-ranges.xlsx
++					104 摘要 最近收到的扩展字段, Value: off
++						105 文本 最近收到的扩展字段
++					106 text ✓  已完成 10:03
+~					88 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…
++						107 文本 发送消息…
+~					93 弹出式按钮 思考深度: Ultra, Help: Ultra
+~					94 弹出式按钮 对话权限
+~					97 按钮 (disabled) 发送
+~					99 文本 Enter 发送 · Shift Enter 换行
+The focused UI element is 88 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…

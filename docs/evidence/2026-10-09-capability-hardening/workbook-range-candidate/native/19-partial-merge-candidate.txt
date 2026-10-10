@@ -1,0 +1,18 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 227-349
+~										353 文本栏 (settable) 意见范围, Value: D8:E8, Placeholder: A1:C200
++								357 container
++									358 text 工作表“范围'与&0” · D8:E8 · 1 行 × 2 列 此范围包含 0 个隐藏行、1 个隐藏列。确认只包括这些位置，不会显示隐藏内容。
++									359 摘要 隐藏列位置 (1), Value: off
++										360 文本 隐藏列位置
++										361 文本  (
++										362 文本 1
++										363 文本 )
++									364 复选框 范围包括这些隐藏行列, Value: 0
++									365 text 范围包括这些隐藏行列 此范围与 1 个合并单元格部分相交，意见仍针对所填范围，不会扩大到整个合并范围。
++									366 摘要 涉及的完整合并范围 (1), Value: off
++										367 文本 涉及的完整合并范围
++										368 文本  (
++										369 文本 1
++										370 文本 )
+The focused UI element is 353 文本栏 (settable) 意见范围, Value: D8:E8, Placeholder: A1:C200

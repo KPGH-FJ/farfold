@@ -1,0 +1,433 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 滚动区
+		2 HTML内容 Description: Farfold, URL: tauri://localhost
+			3 container
+				4 图像 Farfold
+				5 按钮 收起导航
+				6 按钮 新对话 ⌘ N
+				7 按钮 搜索对话 ⌘ K
+				8 container 所有对话
+					9 按钮 所有对话 119
+					10 按钮 收藏 0
+					11 按钮 探索 Agent
+				12 按钮 (expanded) 最近, Secondary Actions: Collapse
+				13 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
+				14 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具， 需要你
+				15 按钮 FARFOLD_WORKBOOK_4952C692_20261010。不要调用任
+				16 按钮 FARFOLD_TEXT_CD66AAE7_20261010。不要调用任何工具，
+				17 按钮 FARFOLD_LARGE_F71A3434_20261010。不要调用任何工具
+				18 按钮 FARFOLD_DOCX_AF66F006_20261010。不要调用任何工具，
+				19 按钮 FARFOLD_PREVIEW_0DE05B0A_20261009：这是一项文件
+				20 按钮 FARFOLD_PREVIEW_CE9659D1_20261009：这是一项文件
+				21 按钮 查看全部
+				22 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
+				23 按钮 管理我的 Agent
+				24 按钮 Codex 23
+				25 按钮 OpenCode 26
+				26 按钮 Grok Build 1
+				27 按钮 Poolside 1
+				28 按钮 MiniMax Code 1
+				29 按钮 Qwen Code 1
+				30 按钮 全部 Agent（29）
+				31 按钮 (expanded) 分组, Secondary Actions: Collapse
+				32 按钮 新建分组
+				33 按钮 验收 0928 4
+				34 按钮 验收 0928的操作
+				35 按钮 原型验收 0930 2
+				36 按钮 原型验收 0930的操作
+				37 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
+				38 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
+				39 container 对话动态
+					40 按钮 1 等你回应
+					41 按钮 9 新回复
+				42 按钮 设置
+				43 文本 属于你的 Agent，在一处相遇。
+				44 container
+					45 按钮 返回
+					46 标题 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具, Value: 1
+						47 文本 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
+					48 text TR · 未在运行
+					49 按钮 查找当前对话
+					50 按钮 (expanded) 收起对话内容, Secondary Actions: Collapse
+					51 按钮 浏览器
+					52 弹出式按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具的操作
+					53 text 你  ·  10:02
+					54 按钮 复制消息
+					55 弹出式按钮 消息操作
+					56 text FARFOLD_RANGE_2E976168_20261010。不要调用任何工具，不读取或修改任何文件，不使用网络工具。只原样回复下面两个 Markdown 链接，不加代码块或其他文字：
+[范围与隐藏](/private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx)
+[普通范围](/private/tmp/farfold-workbook-range-ugrktdm1/ordinary-ranges.xlsx) Codex  · 10:03
+					57 按钮 复制消息
+					58 弹出式按钮 消息操作
+					59 按钮 范围与隐藏, Help: /private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx
+					60 按钮 普通范围, Help: /private/tmp/farfold-workbook-range-ugrktdm1/ordinary-ranges.xlsx
+					61 摘要 最近收到的扩展字段, Value: off
+						62 文本 最近收到的扩展字段
+					63 text ✓  已完成 10:03
+					64 摘要 最近收到的扩展字段, Value: off
+						65 文本 最近收到的扩展字段
+					66 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…
+						67 文本 (settable) 关于 "/private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx"（当时查看的内容，工作表 "范围'与&0"（文件内标识 "sheet-main-A9"），单元格 D8:E8，位置未重新核对）：
+文件 SHA-256：27743826c6c713ffb57aef4727bf0456cf2c88a23524c1ad5ec14c502b6dfdde
+RANGE_2E976168_PARTIAL：意见仅针对 D8:E8，不扩大到 C8:F9，隐藏列未显示。
+
+此意见针对上述版本；若文件已变化，请先核对位置与内容。
+					68 弹出式按钮 添加文件或图片
+					69 弹出式按钮 模型与来源
+					70 文本 思考
+					71 弹出式按钮 思考深度: Ultra, Help: Ultra
+					72 弹出式按钮 对话权限
+					73 弹出式按钮 命令与模板
+					74 按钮 发送
+					75 弹出式按钮 对话用量
+					76 文本 Enter 发送 · Shift Enter 换行
+					77 container 对话内容面板
+						78 分离器 调整内容宽度, Value: 510
+						79 container 对话内容面板
+							80 开关按钮 文件与输出, Value: on
+							81 开关按钮 网页, Value: off
+						82 container 文件
+							83 文本 versioned-ranges.xlsx
+							84 按钮 返回文件与输出
+							85 按钮 放大内容
+							86 按钮 收起对话内容
+							87 摘要 文件位置, Value: off
+								88 文本 文件位置
+							89 按钮 重新读取
+							90 按钮 (collapsed) 修改意见, Secondary Actions: Expand
+							91 按钮 用默认应用打开
+							92 按钮 在文件夹中显示
+							93 按钮 完整文件另存为…
+							94 container 表格预览
+								95 container
+									96 文本 工作表
+									97 弹出式按钮 工作表, Value: 范围'与&0
+								98 文本 只读预览，显示文件保存时的内容。公式不重新计算。
+								99 文本 每次显示最多 100 行、24 列，尺寸会适配预览。可翻页或输入单元格位置。
+								100 摘要 预览范围说明 (4), Value: off
+									101 文本 预览范围说明
+									102 文本  (
+									103 文本 4
+									104 文本 )
+								105 按钮 选择意见范围
+								106 container
+									107 文本 单元格位置
+									108 文本栏 (settable) 单元格位置, Placeholder: A1
+								109 按钮 前往
+								110 container
+									111 复选框 显示隐藏行列, Value: 0
+									112 文本 显示隐藏行列
+								113 按钮 (disabled) 上一组行
+								114 按钮 下一组行
+								115 按钮 (disabled) 上一组列
+								116 按钮 下一组列
+								117 文本 当前范围 A1–X100
+								118 container 表格预览
+									119 表格 范围'与&0 (showing 1-13 of 100 items)
+										120 row (selectable) 单元格位置, Value: A
+B
+C
+E
+F
+G
+H
+I
+J
+K
+L
+M
+N
+O
+P
+Q
+R
+S
+T
+U
+V
+W
+X
+										121 row (selectable)
+											122 单元格 (selectable) 1
+											123 单元格 (selectable) 单元格 A1：RECTANGLE SOURCE VERSION TWO
+											124 单元格 (selectable) 单元格 B1：数值
+											125 单元格 (selectable) 单元格 C1：布尔
+											126 单元格 (selectable) 单元格 E1：原始范围
+											127 单元格 (selectable) 单元格 F1
+											128 单元格 (selectable) 单元格 G1
+											129 单元格 (selectable) 单元格 H1
+											130 单元格 (selectable) 单元格 I1
+											131 单元格 (selectable) 单元格 J1
+											132 单元格 (selectable) 单元格 K1
+											133 单元格 (selectable) 单元格 L1
+											134 单元格 (selectable) 单元格 M1
+											135 单元格 (selectable) 单元格 N1
+											136 单元格 (selectable) 单元格 O1
+											137 单元格 (selectable) 单元格 P1
+											138 单元格 (selectable) 单元格 Q1
+											139 单元格 (selectable) 单元格 R1
+											140 单元格 (selectable) 单元格 S1
+											141 单元格 (selectable) 单元格 T1
+											142 单元格 (selectable) 单元格 U1
+											143 单元格 (selectable) 单元格 V1
+											144 单元格 (selectable) 单元格 W1
+											145 单元格 (selectable) 单元格 X1
+										146 row (selectable)
+											147 单元格 (selectable) 2
+											148 单元格 (selectable) 单元格 A2：0
+											149 单元格 (selectable) 单元格 B2：FALSE
+											150 单元格 (selectable) 单元格 C2
+											151 单元格 (selectable) 单元格 E2
+											152 单元格 (selectable) 单元格 F2：2
+											153 单元格 (selectable) 单元格 G2
+											154 单元格 (selectable) 单元格 H2
+											155 单元格 (selectable) 单元格 I2
+											156 单元格 (selectable) 单元格 J2
+											157 单元格 (selectable) 单元格 K2
+											158 单元格 (selectable) 单元格 L2
+											159 单元格 (selectable) 单元格 M2
+											160 单元格 (selectable) 单元格 N2
+											161 单元格 (selectable) 单元格 O2
+											162 单元格 (selectable) 单元格 P2
+											163 单元格 (selectable) 单元格 Q2
+											164 单元格 (selectable) 单元格 R2
+											165 单元格 (selectable) 单元格 S2
+											166 单元格 (selectable) 单元格 T2
+											167 单元格 (selectable) 单元格 U2
+											168 单元格 (selectable) 单元格 V2
+											169 单元格 (selectable) 单元格 W2
+											170 单元格 (selectable) 单元格 X2
+										171 row (selectable)
+											172 单元格 (selectable) 3
+											173 单元格 (selectable) 单元格 A3
+											174 单元格 (selectable) 单元格 B3
+											175 单元格 (selectable) 单元格 C3
+											176 单元格 (selectable) 单元格 E3
+											177 单元格 (selectable) 单元格 F3
+											178 单元格 (selectable) 单元格 G3
+											179 单元格 (selectable) 单元格 H3
+											180 单元格 (selectable) 单元格 I3
+											181 单元格 (selectable) 单元格 J3
+											182 单元格 (selectable) 单元格 K3
+											183 单元格 (selectable) 单元格 L3
+											184 单元格 (selectable) 单元格 M3
+											185 单元格 (selectable) 单元格 N3
+											186 单元格 (selectable) 单元格 O3
+											187 单元格 (selectable) 单元格 P3
+											188 单元格 (selectable) 单元格 Q3
+											189 单元格 (selectable) 单元格 R3
+											190 单元格 (selectable) 单元格 S3
+											191 单元格 (selectable) 单元格 T3
+											192 单元格 (selectable) 单元格 U3
+											193 单元格 (selectable) 单元格 V3
+											194 单元格 (selectable) 单元格 W3
+											195 单元格 (selectable) 单元格 X3
+										196 row (selectable)
+											197 单元格 (selectable) 4
+											198 单元格 (selectable) 单元格 A4
+											199 单元格 (selectable) 单元格 B4
+											200 单元格 (selectable) 单元格 C4
+											201 单元格 (selectable) 单元格 E4
+											202 单元格 (selectable) 单元格 F4
+											203 单元格 (selectable) 单元格 G4
+											204 单元格 (selectable) 单元格 H4
+											205 单元格 (selectable) 单元格 I4
+											206 单元格 (selectable) 单元格 J4
+											207 单元格 (selectable) 单元格 K4
+											208 单元格 (selectable) 单元格 L4
+											209 单元格 (selectable) 单元格 M4
+											210 单元格 (selectable) 单元格 N4
+											211 单元格 (selectable) 单元格 O4
+											212 单元格 (selectable) 单元格 P4
+											213 单元格 (selectable) 单元格 Q4
+											214 单元格 (selectable) 单元格 R4
+											215 单元格 (selectable) 单元格 S4
+											216 单元格 (selectable) 单元格 T4
+											217 单元格 (selectable) 单元格 U4
+											218 单元格 (selectable) 单元格 V4
+											219 单元格 (selectable) 单元格 W4
+											220 单元格 (selectable) 单元格 X4
+										221 row (selectable)
+											222 单元格 (selectable) 5
+											223 单元格 (selectable) 单元格 A5
+											224 单元格 (selectable) 单元格 B5
+											225 单元格 (selectable) 单元格 C5
+											226 单元格 (selectable) 单元格 E5
+											227 单元格 (selectable) 单元格 F5
+											228 单元格 (selectable) 单元格 G5
+											229 单元格 (selectable) 单元格 H5
+											230 单元格 (selectable) 单元格 I5
+											231 单元格 (selectable) 单元格 J5
+											232 单元格 (selectable) 单元格 K5
+											233 单元格 (selectable) 单元格 L5
+											234 单元格 (selectable) 单元格 M5
+											235 单元格 (selectable) 单元格 N5
+											236 单元格 (selectable) 单元格 O5
+											237 单元格 (selectable) 单元格 P5
+											238 单元格 (selectable) 单元格 Q5
+											239 单元格 (selectable) 单元格 R5
+											240 单元格 (selectable) 单元格 S5
+											241 单元格 (selectable) 单元格 T5
+											242 单元格 (selectable) 单元格 U5
+											243 单元格 (selectable) 单元格 V5
+											244 单元格 (selectable) 单元格 W5
+											245 单元格 (selectable) 单元格 X5
+										246 row (selectable)
+											247 单元格 (selectable) 6
+											248 单元格 (selectable) 单元格 A6
+											249 单元格 (selectable) 单元格 B6
+											250 单元格 (selectable) 单元格 C6
+											251 单元格 (selectable) 单元格 E6
+											252 单元格 (selectable) 单元格 F6
+											253 单元格 (selectable) 单元格 G6
+											254 单元格 (selectable) 单元格 H6
+											255 单元格 (selectable) 单元格 I6
+											256 单元格 (selectable) 单元格 J6
+											257 单元格 (selectable) 单元格 K6
+											258 单元格 (selectable) 单元格 L6
+											259 单元格 (selectable) 单元格 M6
+											260 单元格 (selectable) 单元格 N6
+											261 单元格 (selectable) 单元格 O6
+											262 单元格 (selectable) 单元格 P6
+											263 单元格 (selectable) 单元格 Q6
+											264 单元格 (selectable) 单元格 R6
+											265 单元格 (selectable) 单元格 S6
+											266 单元格 (selectable) 单元格 T6
+											267 单元格 (selectable) 单元格 U6
+											268 单元格 (selectable) 单元格 V6
+											269 单元格 (selectable) 单元格 W6
+											270 单元格 (selectable) 单元格 X6
+										271 row (selectable)
+											272 单元格 (selectable) 7
+											273 单元格 (selectable) 单元格 A7
+											274 单元格 (selectable) 单元格 B7
+											275 单元格 (selectable) 单元格 C7
+											276 单元格 (selectable) 单元格 E7
+											277 单元格 (selectable) 单元格 F7
+											278 单元格 (selectable) 单元格 G7
+											279 单元格 (selectable) 单元格 H7
+											280 单元格 (selectable) 单元格 I7
+											281 单元格 (selectable) 单元格 J7
+											282 单元格 (selectable) 单元格 K7
+											283 单元格 (selectable) 单元格 L7
+											284 单元格 (selectable) 单元格 M7
+											285 单元格 (selectable) 单元格 N7
+											286 单元格 (selectable) 单元格 O7
+											287 单元格 (selectable) 单元格 P7
+											288 单元格 (selectable) 单元格 Q7
+											289 单元格 (selectable) 单元格 R7
+											290 单元格 (selectable) 单元格 S7
+											291 单元格 (selectable) 单元格 T7
+											292 单元格 (selectable) 单元格 U7
+											293 单元格 (selectable) 单元格 V7
+											294 单元格 (selectable) 单元格 W7
+											295 单元格 (selectable) 单元格 X7
+										296 row (selectable)
+											297 单元格 (selectable) 8
+											298 单元格 (selectable) 单元格 A8
+											299 单元格 (selectable) 单元格 B8
+											300 单元格 (selectable) 单元格 C8：MERGE C8:F9, Rows: 8-9, Columns: 3-5
+											301 单元格 (selectable) 单元格 G8
+											302 单元格 (selectable) 单元格 H8
+											303 单元格 (selectable) 单元格 I8
+											304 单元格 (selectable) 单元格 J8
+											305 单元格 (selectable) 单元格 K8
+											306 单元格 (selectable) 单元格 L8
+											307 单元格 (selectable) 单元格 M8
+											308 单元格 (selectable) 单元格 N8
+											309 单元格 (selectable) 单元格 O8
+											310 单元格 (selectable) 单元格 P8
+											311 单元格 (selectable) 单元格 Q8
+											312 单元格 (selectable) 单元格 R8
+											313 单元格 (selectable) 单元格 S8
+											314 单元格 (selectable) 单元格 T8
+											315 单元格 (selectable) 单元格 U8
+											316 单元格 (selectable) 单元格 V8
+											317 单元格 (selectable) 单元格 W8
+											318 单元格 (selectable) 单元格 X8
+										319 row (selectable)
+											320 单元格 (selectable) 9
+											321 单元格 (selectable) 单元格 A9
+											322 单元格 (selectable) 单元格 B9
+											323 单元格 (selectable) 单元格 G9
+											324 单元格 (selectable) 单元格 H9
+											325 单元格 (selectable) 单元格 I9
+											326 单元格 (selectable) 单元格 J9
+											327 单元格 (selectable) 单元格 K9
+											328 单元格 (selectable) 单元格 L9
+											329 单元格 (selectable) 单元格 M9
+											330 单元格 (selectable) 单元格 N9
+											331 单元格 (selectable) 单元格 O9
+											332 单元格 (selectable) 单元格 P9
+											333 单元格 (selectable) 单元格 Q9
+											334 单元格 (selectable) 单元格 R9
+											335 单元格 (selectable) 单元格 S9
+											336 单元格 (selectable) 单元格 T9
+											337 单元格 (selectable) 单元格 U9
+											338 单元格 (selectable) 单元格 V9
+											339 单元格 (selectable) 单元格 W9
+											340 单元格 (selectable) 单元格 X9
+										341 row (selectable)
+											342 单元格 (selectable) 10
+											343 单元格 (selectable) 单元格 A10
+											344 单元格 (selectable) 单元格 B10
+											345 单元格 (selectable) 单元格 C10
+											346 单元格 (selectable) 单元格 E10
+											347 单元格 (selectable) 单元格 F10
+											348 单元格 (selectable) 单元格 G10
+											349 单元格 (selectable) 单元格 H10
+											350 单元格 (selectable) 单元格 I10
+											351 单元格 (selectable) 单元格 J10
+											352 单元格 (selectable) 单元格 K10
+											353 单元格 (selectable) 单元格 L10
+											354 单元格 (selectable) 单元格 M10
+											355 单元格 (selectable) 单元格 N10
+											356 单元格 (selectable) 单元格 O10
+											357 单元格 (selectable) 单元格 P10
+											358 单元格 (selectable) 单元格 Q10
+											359 单元格 (selectable) 单元格 R10
+											360 单元格 (selectable) 单元格 S10
+											361 单元格 (selectable) 单元格 T10
+											362 单元格 (selectable) 单元格 U10
+											363 单元格 (selectable) 单元格 V10
+											364 单元格 (selectable) 单元格 W10
+											365 单元格 (selectable) 单元格 X10
+										366 row (selectable)
+											367 单元格 (selectable) 11
+											368 单元格 (selectable) 单元格 A11
+											369 单元格 (selectable) 单元格 B11
+											370 单元格 (selectable) 单元格 C11
+											371 单元格 (selectable) 单元格 E11
+											372 单元格 (selectable) 单元格 F11
+											373 单元格 (selectable) 单元格 G11
+											374 单元格 (selectable) 单元格 H11
+											375 单元格 (selectable) 单元格 I11
+											376 单元格 (selectable) 单元格 J11
+											377 单元格 (selectable) 单元格 K11
+											378 单元格 (selectable) 单元格 L11
+											379 单元格 (selectable) 单元格 M11
+											380 单元格 (selectable) 单元格 N11
+											381 单元格 (selectable) 单元格 O11
+											382 单元格 (selectable) 单元格 P11
+											383 单元格 (selectable) 单元格 Q11
+											384 单元格 (selectable) 单元格 R11
+											385 单元格 (selectable) 单元格 S11
+											386 单元格 (selectable) 单元格 T11
+											387 单元格 (selectable) 单元格 U11
+											388 单元格 (selectable) 单元格 V11
+											389 单元格 (selectable) 单元格 W11
+											390 单元格 (selectable) 单元格 X11
+	391 关闭按钮
+	392 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	393 最小化按钮
+	394 文本 Farfold
+395 menu bar
+	396 Farfold
+	397 文件
+	398 编辑
+	399 显示
+	400 窗口
+	401 帮助
+
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

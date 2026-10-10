@@ -1,0 +1,8 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 168
+~				6 按钮 新对话 草稿 ⌘ N
++						182 文本 (settable) FARFOLD_RANGE_2E976168_20261010。不要调用任何工具，不读取或修改任何文件，不使用网络工具。只原样回复下面两个 Markdown 链接，不加代码块或其他文字：
+[范围与隐藏](/private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx)
+[普通范围](/private/tmp/farfold-workbook-range-ugrktdm1/ordinary-ranges.xlsx)
+~					177 按钮 发送
+The focused UI element is 167 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 把想法放在这里…

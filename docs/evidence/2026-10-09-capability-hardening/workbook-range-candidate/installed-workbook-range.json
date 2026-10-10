@@ -1,0 +1,195 @@
+{
+  "checkedAtUtc": "2026-10-10T02:13:55.914227+00:00",
+  "sourceCommit": "2e97616870ec35d385b8ae1721d133efc89faf56",
+  "version": "0.1.7",
+  "formalApp": "/Applications/Farfold.app",
+  "installedFiles": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "d7b9c8a923d71ddc429f57fe98e8d6c08bb5b4cb34c869351af32860f5cf80b6",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "method": "Root operated actual sole formal macOS app using native CUA accessibility and screenshots; no browser DOM injection, mocked IPC or programmatic UI dispatch. Root observation is not an independent native replay.",
+  "globalGoalComplete": false,
+  "controlledConversation": {
+    "marker": "FARFOLD_RANGE_2E976168_20261010",
+    "id": "01a1238a-2fb2-78c2-b03b-3eebc1e30d13",
+    "countBefore": 118,
+    "countAfter": 119,
+    "agent": "Codex",
+    "model": "6 Astra",
+    "reasoning": "Ultra",
+    "service": "existing selected Agent settings",
+    "permission": "existing Approve for me unchanged; cold permission not reconfirmed",
+    "newRequests": 1,
+    "request": "Echo exactly two authored Markdown links; no tool/file/network actions",
+    "replyObservedCompleted": true,
+    "toolCardsObserved": 0,
+    "feedbackSent": false
+  },
+  "passedObserved": [
+    {
+      "case": "NEW03 same-link reopen",
+      "result": "Original controlled DOCX fixture long paragraph part2 and table row21/column13 survived hide plus same-link reopen; old DOCX opinion and composer retained."
+    },
+    {
+      "case": "NEW03 pane toggle",
+      "result": "Hide/reopen with content toolbar retained both paragraph part2 and table row21/column13 together."
+    },
+    {
+      "case": "Partial merge and hidden column",
+      "result": "D8:E8 stayed exact and showed full intersecting merge C8:F9 separately. Confirmation absent until fresh hidden-column acknowledgment. Saved opinion joined once with sheet-main-A9 and v1 SHA."
+    },
+    {
+      "case": "Reversed coordinates and fresh acknowledgment",
+      "result": "G6:B3 normalized to B3:G6; earlier hidden acknowledgment was reset."
+    },
+    {
+      "case": "Cross display window",
+      "result": "W98:AB103 retained 6x6 bounds; current-window warning, one hidden row and column, partial-merge warning; stored anchor rows98..103 columns23..28."
+    },
+    {
+      "case": "Invalid editing protects read",
+      "result": "A: displayed input error. Owned v1->v2 caused changed-file/manual reread notice while preserving A: and old content. Cancelling retained notice; explicit reread displayed RECTANGLE SOURCE VERSION TWO."
+    },
+    {
+      "case": "Automatic refresh without editing",
+      "result": "After explicit read and no editor open, owned v2->v1 appeared automatically: A1 returned to RECTANGLE SOURCE. No native request-count claim."
+    },
+    {
+      "case": "Retained old-version opinion",
+      "result": "After writing CROSS at v1 then explicit v2 read, old opinion appeared under other versions with original sheet/main coordinate and v1 SHA."
+    },
+    {
+      "case": "Separate visible worksheet and blank maximum",
+      "result": "Explicit ordinary visible second-sheet selection accepted XFD1048576. Saved anchor uses sheet-other-17, row1048576/column16384 and v2 SHA, separate from main sheet."
+    },
+    {
+      "case": "Cold persistence",
+      "result": "Normal quit/relaunch restored PARTIAL once in composer and two retained CROSS/OTHER opinions with original coordinates, worksheet IDs and respective SHAs; no automatic send or permission reconfirmation."
+    }
+  ],
+  "scopeCorrections": {
+    "hiddenWorksheet": "Both authored ZIPs have no sheet state attribute and are visible sheets. Some intermediate native filenames/titles say hidden-sheet from an earlier summary assumption; actual tests cover hidden rows/columns and a second visible worksheet, not a hidden worksheet. Original evidence untouched; separate peer correction is linked.",
+    "peerCorrection": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/hidden-sheet-scope-correction.json",
+      "sha256": "0fe9ebf25cf7a935067eb829e558346834540b2a11abf221b60b89bb757a34e5"
+    }
+  },
+  "unsentRetentionBeforeFirstRestart": {
+    "groups": {
+      "composers": {
+        "beforeEntries": 6,
+        "afterEntries": 7,
+        "existingEntriesExactlyUnchanged": 5
+      },
+      "feedback": {
+        "beforeEntries": 4,
+        "afterEntries": 5,
+        "existingEntriesExactlyUnchanged": 4
+      },
+      "queues": {
+        "beforeEntries": 3,
+        "afterEntries": 3,
+        "existingEntriesExactlyUnchanged": 3
+      }
+    },
+    "unexpectedDifferences": [],
+    "normalization": [
+      {
+        "group": "composers",
+        "keySha256": "61dcd65bc511322f17d125ed7dc693a6e6cebf639e6c1ef605a59b0bdc3abf62",
+        "onlyChange": "absent sendPending -> false; same inactive decoding"
+      }
+    ],
+    "explanation": "Five old composers exact; one optional sendPending absent->false only, decoded inactive in both cases. All four prior feedback groups and three queues exact. Original DB never opened; copied databases only."
+  },
+  "privateEvidence": {
+    "native-fixtures/manifest.json": "af01fe19f1648550b7cd7608debee47d26f1ccb124a7a07a72fc04a1b4dda53d",
+    "post-ui-draft-retention.json": "1f6bf4c6d3063936bf07bab36e0a5b6e81f4c5cb0b6dc043e44dc821df8c8de2",
+    "post-ui-verifier-correction.json": "0ae505b00c8f2cc9592be82ffd87a19782b9cb29e8f6a9ac79124de760af6374",
+    "check_post_ui_drafts.py": "010b50ad40096adc26d4c4439f88019e61d7cfbfd4586d8afd4fec694c2e21ad",
+    "check_post_ui_drafts.first.raw.txt": "d8b07057b0a42edca95d5f6297c2e2ccf523acbb138b4a4af4c4a6bf8f67b4b1"
+  },
+  "nativeEvidence": {
+    "native/01-docx-cold-open.txt": "10bcffb492775647f340e1640678e975f4a8beb940a7a0bc649f3c37e182a3e4",
+    "native/02-docx-restored.txt": "881c681d2ff4c3037304f121c0571cd49983f54a2d812cb03bec3cf27cb2d56e",
+    "native/03-docx-window-open.txt": "5d21fa46e023ebcc614096b87eb6b9e52a7dcbae865ec206eb343115df92fb01",
+    "native/04-docx-paragraph-part2.txt": "35ae9f9075ef643463c64fdee37f0851fda81acee551a15900e83b1c61861bb5",
+    "native/05-docx-hide.txt": "0480b319dfb7818ab6caf2a64ef2085f4068e49f21b895b4eb27f1bade3b6087",
+    "native/06-docx-same-link-restored.png": "83a60e2d6e7860ee18bbc39dfd39c824d794009b7a2077607a14ed0782bd87bd",
+    "native/06-docx-same-link-restored.txt": "0f578b33386248a4f0f758d3f6b424b77514c8b756108fee007fab3c44c04915",
+    "native/07-docx-table-last-row.txt": "1829b8769768ee8046facb7ded4e798bcb115b0e7f3b790832df35645a61f58d",
+    "native/08-docx-table-last-column.txt": "5ae34a62d8e7ce8d36dd2c1f5003a2700f536c0f3068aab918ceb0bb49c9b80e",
+    "native/09-docx-hide-table.txt": "b2e6f75b6573e6eb19d341c5c269b52af4afe5005504dec655af79f0e3d25e5a",
+    "native/10-docx-table-same-link-restored.png": "3fd7649e63172d7d84f84b99e179369a6124b1f553f9a50d8b43100aa9d58d42",
+    "native/10-docx-table-same-link-restored.txt": "0ae7384e97e5e8f488ab98efa74202744c3665560b27612bde2003ee24400b00",
+    "native/11-docx-pane-hidden.txt": "c725e8b02f97ede1891612f7f0d39e5198045f40ce39efabf83aeac8c6412298",
+    "native/12-docx-pane-toggle-restored.txt": "c15381e5212802c5ded0e8c77f7759811f4f2617c97a2667bb692dc7bef0103a",
+    "native/13-new-range-conversation.txt": "8ae52a69172ca6ee50c7898554825ebe7fd49c58b90391f83fb65e079cb69d37",
+    "native/14-range-prompt-draft.png": "64994ba2b36164a7257851363a355da40791edda0a57e8b22b3c75c751a7ce3c",
+    "native/14-range-prompt-draft.txt": "cf4c1e87da296a4b06f71604df335d5bbf1fbacedae7252a6c2c46bb285760ec",
+    "native/15-range-request-sent.txt": "aa72071326587dbcbd9cab2dc101eeb1e870160531518df97266e66331bd7f68",
+    "native/16-range-response.txt": "c562d2fa6b195511e4ed253e79fabb7aaf1025bc612ffff172916c4f78042b82",
+    "native/17-workbook-open.txt": "b42e1448af0e0534acbe407c52a58e0c7bc280bd40acc6b208fe7e77ea1265c9",
+    "native/18-range-editor.txt": "34775854d2c7cfcc4b775097cb12029252a0ee5e6a83daa1ecd7d729be4f62a6",
+    "native/19-partial-merge-candidate.png": "c2e0a39c04613e35b3bc25a36c0b3f8055471f0fd1ea344946cf6321812e2f07",
+    "native/19-partial-merge-candidate.txt": "efb5c2a711be464b4f056034b7c5b89d42344ba38f7984c9976c056ceec44072",
+    "native/20-partial-merge-full-boundary.txt": "20e31a492ed463a189359b02e51a1c9ef8524b498d637b321c691cb879a9058e",
+    "native/21-hidden-acknowledged.txt": "e31b8f340f335e206c58cee9dc81e607ea56fb15616183a53e8ee77c654d1283",
+    "native/22-range-opinion-open.txt": "86dcc93af4b7be838914b284e6f8098edaa715cf971de04d62f8f2e96c6577b5",
+    "native/23-partial-opinion-written.txt": "40a5c0674676df3cf41b069f6e4f1eb7d62018d824da9edf7968851e757c7c02",
+    "native/24-partial-joined-once.txt": "e4a39668073fa5df6e56e22d7bc936898cd7d8ec802039a5c489dab3afc4e2c7",
+    "native/25-reversed-range-fresh-ack.txt": "464e2568a95d01d9558cb37144c1c3d289453cddef88244fb503985b7ea15a32",
+    "native/26-cross-window-range.png": "88abcf864a4938534857f1908b9596c5892790d92f19db7db1ab88c09f68df09",
+    "native/26-cross-window-range.txt": "5879dc6d0f92b36d7956b116670c3a72af6eb704ab3cbe10bd09de884b48f685",
+    "native/27-invalid-range-holds.txt": "cef812cffb4650f9a556bc5265813620756acb30c733edd7db373bfaab6ae9fe",
+    "native/28-invalid-edit-external-change.txt": "c4f62a0c96c50089f20d2a66cebe1f6de0b0a7d0237c65f4084fc8b98b92ce03",
+    "native/29-cancel-edit-keeps-change-notice.txt": "35313e644cf29565a1882b5edc1f13194fb668c8d09380fa8d094644361e26e2",
+    "native/30-explicit-reread-v2.txt": "acab737674b4f368bb014642547edb2c0e37797e10cd90fc5832e442943e9a63",
+    "native/31-v2-full-tree.txt": "48cfa53c1004bc2764ff8a571fbb6e59dad050f17c684486b6450b900a9711bb",
+    "native/32-unheld-auto-refresh-full.txt": "e2be8c2538e598c9500e994570237f502865ad59822e2341e5c3d126b82c1f40",
+    "native/32-unheld-auto-refresh.txt": "b5dd2faadd51ec1f85d44038fe6653fac489d9ec200c3976edba370d7be11ebe",
+    "native/33-range-editor-reopened.txt": "fd4da61430c9a62b8cac156a7b3ab8e9823514a25edfadf6507cc78774c8283a",
+    "native/34-cross-range-selected.txt": "6313fd059f9ee88d3cfa25d8d9aa4069861d9f2c74de7ac3ea0da530a371dc9b",
+    "native/35-cross-range-ack.txt": "18e2a09ae757cd76999e94b8e3f1f5e8ddf3f8ead46550159f6c2bf7d2695d26",
+    "native/36-cross-range-confirm.txt": "e602c287191befa5664872fea34aee0c1e667f88d0265c41f047bad07635e7b7",
+    "native/37-cross-range-draft.txt": "7b5730e23e15a67b9e226f9c02c368d0ea93f3d548eed68469fd4ef72aca0099",
+    "native/38-opinion-held-on-change.txt": "7ec2dbbe10815e5a1892d7d1ae8f43faab9bc9b7a1e74d63b2367a1495eecc07",
+    "native/39-old-opinion-after-v2-reread.txt": "7f20c2c409afbf8e23894f6c450d1c17fdfbb91bf422d5001aba0a6a2244bd70",
+    "native/40-old-version-opinion-visible.txt": "4c419d9bde443f10bc9714f5240140c69c9ff75c4bd4468d50b954d67b5129a9",
+    "native/41-hidden-sheet-menu.txt": "90b1fc96ea49ff586f7e6879816bd68572cd7442780ee121325406c3128ac4a7",
+    "native/42-hidden-sheet-selected.txt": "8194d6fbb26850263106ce4543118799e838627f1889dc9acaaeaaa17e137e36",
+    "native/43-hidden-sheet-applied.txt": "d9d3674e0a367bfa737f97304d4dd7088e3cf6b64e56c0a728da3f767f72afc1",
+    "native/44-hidden-sheet-range-editor.txt": "97001d0bad8cb643a0d6d589c5643fdc30a4a8866d23d7b97ec7c8e5a69f8ea4",
+    "native/45-hidden-sheet-max-blank.txt": "d8615ce2086d93da1d7d00ca9632d307714ee3f5a70747f9f95b8279aca77141",
+    "native/46-other-sheet-boundary-confirm.txt": "cc7b61038dd92d39deebaf73573f3c47749cc63d30099dee865de8d7fabf4d66",
+    "native/47-other-sheet-opinion.txt": "221e83956c139ee2ef1af03d4f24dc4c9e321f5bb8ba93e58d83d4fbf7b19718",
+    "native/48-range-cold-loading.txt": "aee8713417378ff45865eb24c9aa8bc11fcd43ea6acf2f4f70d6ca74efdd9e1e",
+    "native/49-range-cold-restored.txt": "e524f68374a44bd165ff0640de6a41e0211cff44af21d6b0ca315a6900f7fa51",
+    "native/50-range-cold-opinions.png": "933d7468a43c8b94f5756a2be5344f1bbc4a171c6120264155ffb4dc9b0d292f",
+    "native/50-range-cold-opinions.txt": "f3a8d7311c9457c3791856ea5ee67461571f5dece55e0fa0b58f63019ab83a04"
+  },
+  "finalState": {
+    "normalQuitObserved": true,
+    "formalProcessCount": 0,
+    "forcedQuit": false,
+    "duplicateBuildBundleAbsent": true,
+    "fixtureRestored": "v1",
+    "fileSha256": "27743826c6c713ffb57aef4727bf0456cf2c88a23524c1ad5ec14c502b6dfdde"
+  },
+  "notVerified": [
+    "P21 complete or global market readiness",
+    "Hidden worksheets in this native slice",
+    "Ordinary writer original ZIP native window (derived original ZIP used; both proven in controlled browsers)",
+    "Real Agent file rework/export",
+    "Windows",
+    "Nested DOCX cell detail reading state",
+    "Reading coordinates across application quit; NEW03 here is same active-file reopen only"
+  ],
+  "next": [
+    "Continue PDF/image areas and restore preview anchor repair",
+    "Retain P16/P20/P21/P22 remaining scope and all Agent standards"
+  ]
+}

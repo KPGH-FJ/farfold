@@ -1,0 +1,19 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 135-394
+~										127 按钮 上一组行
+~										128 按钮 (disabled) 下一组行
+~										131 文本 当前显示第 21–21 行，第 1–12 列
++												413 row (selectable)
++													414 单元格 (selectable) 查看第 21 行、第 1 列完整内容
++													415 单元格 (selectable) 查看第 21 行、第 2 列完整内容
++													416 单元格 (selectable) 查看第 21 行、第 3 列完整内容
++													417 单元格 (selectable) 查看第 21 行、第 4 列完整内容
++													418 单元格 (selectable) 查看第 21 行、第 5 列完整内容
++													419 单元格 (selectable) 查看第 21 行、第 6 列完整内容
++													420 单元格 (selectable) 查看第 21 行、第 7 列完整内容
++													421 单元格 (selectable) 查看第 21 行、第 8 列完整内容
++													422 单元格 (selectable) 查看第 21 行、第 9 列完整内容
++													423 单元格 (selectable) 查看第 21 行、第 10 列完整内容
++													424 单元格 (selectable) 查看第 21 行、第 11 列完整内容
++													425 单元格 (selectable) 查看第 21 行、第 12 列完整内容
+The focused UI element is 117 container

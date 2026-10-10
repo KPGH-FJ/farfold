@@ -1,0 +1,61 @@
+{
+  "kind": "append-only evidence wording correction; no product or fixture change",
+  "recordedAtUtc": "2026-10-10T02:10:11.722296+00:00",
+  "originalReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/independent/implementation.json",
+    "sha256": "6b3cc5e1700e1a06ec02ac24e1a391c4f70e94df967d52b1d4b4191dfb5ce17a"
+  },
+  "mistakenWording": "driverCorrections[0].facts[1]: Second hidden sheet also hides columnD; runner originally omitted the required fresh acknowledgement. Product correctly withheld confirmation.",
+  "correctedWording": "The second visible sheet also contains hidden columnD; the runner omitted fresh hidden-row/column acknowledgement after changing sheet identity. Product correctly withheld confirmation.",
+  "verifiedScope": "Both workbook sheets are visible. Actual browser matrix covers interior hidden rows/columns and fresh acknowledgement after switching to a different sheet ID, not hidden-sheet visibility/acceptance. Test case label hidden-ack-sheet-retire means acknowledgement retirement on sheet switch.",
+  "notClaimed": [
+    "No hidden worksheet tested by this matrix",
+    "No product failure inferred from this summary mistake",
+    "No second native observation"
+  ],
+  "rawWorkbookEvidence": [
+    {
+      "file": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/range-layout.xlsx",
+        "sha256": "c442df36a56e0ceaf07bbdee9a67b7c0b00238fe1b4cd9144e7e42189e47114d"
+      },
+      "workbookXmlSha256": "fd0754d5d4fb63f90fc5637d772a3b9d2fcda66a8fd6cecfd4591a20a7fd9682",
+      "sheets": [
+        {
+          "name": "范围'与&0",
+          "sheetId": "1",
+          "stateAttribute": null,
+          "interpretation": "visible (state attribute absent)"
+        },
+        {
+          "name": "同文副页",
+          "sheetId": "2",
+          "stateAttribute": null,
+          "interpretation": "visible (state attribute absent)"
+        }
+      ]
+    },
+    {
+      "file": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/range-nonordinal-hidden.xlsx",
+        "sha256": "27743826c6c713ffb57aef4727bf0456cf2c88a23524c1ad5ec14c502b6dfdde"
+      },
+      "workbookXmlSha256": "52f47685db8f7aa5303ed60eb3d1bba8d7693dbdee144bf8859ade08d8572d2f",
+      "sheets": [
+        {
+          "name": "范围'与&0",
+          "sheetId": "17",
+          "stateAttribute": null,
+          "interpretation": "visible (state attribute absent)"
+        },
+        {
+          "name": "同文副页",
+          "sheetId": "4",
+          "stateAttribute": null,
+          "interpretation": "visible (state attribute absent)"
+        }
+      ]
+    }
+  ],
+  "preservation": "Original ZIP/oracle/implementation receipt/raw browser outputs remain unchanged; cite this correction alongside the historical receipt."
+}

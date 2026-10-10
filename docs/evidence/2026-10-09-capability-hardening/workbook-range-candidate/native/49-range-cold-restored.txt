@@ -1,0 +1,45 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 76, 78-79
+~				13 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具 需要你
++					76 按钮 1 等你回应
+~					77 按钮 返回
++					78 标题 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具, Value: 1
++						79 文本 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
+~					80 text TR · 等你回应
+~					81 按钮 查找当前对话
+~					82 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
+~					83 按钮 浏览器
+~					84 弹出式按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具的操作
++					85 text 你  ·  历史消息
++					86 按钮 复制消息
++					87 弹出式按钮 消息操作
++					88 text FARFOLD_RANGE_2E976168_20261010。不要调用任何工具，不读取或修改任何文件，不使用网络工具。只原样回复下面两个 Markdown 链接，不加代码块或其他文字：
+[范围与隐藏](/private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx)
+[普通范围](/private/tmp/farfold-workbook-range-ugrktdm1/ordinary-ranges.xlsx) Codex  · 历史消息
++					89 按钮 复制消息
++					90 弹出式按钮 消息操作
++					91 按钮 范围与隐藏, Help: /private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx
++					92 按钮 普通范围, Help: /private/tmp/farfold-workbook-range-ugrktdm1/ordinary-ranges.xlsx
++					93 摘要 最近收到的扩展字段, Value: off
++						94 文本 最近收到的扩展字段
++					95 摘要 最近收到的扩展字段, Value: off
++						96 文本 最近收到的扩展字段
++					97 摘要 未发送的文件意见（2）, Value: off
++						98 文本 未发送的文件意见（2）
++					99 文本 继续发送前，请重新确认这条对话的权限。
++					100 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…
++						101 container (settable)
++							102 文本 (settable) 关于 "/private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx"（当时查看的内容，工作表 "范围'与&0"（文件内标识 "sheet-main-A9"），单元格 D8:E8，位置未重新核对）：
++							103 文本 (settable) 文件 SHA-256：27743826c6c713ffb57aef4727bf0456cf2c88a23524c1ad5ec14c502b6dfdde
++							104 文本 (settable) RANGE_2E976168_PARTIAL：意见仅针对 D8:E8，不扩大到 C8:F9，隐藏列未显示。
++							105 文本 (settable) 此意见针对上述版本；若文件已变化，请先核对位置与内容。
++					106 弹出式按钮 添加文件或图片
++					107 弹出式按钮 模型与来源
++					108 文本 思考
++					109 弹出式按钮 (disabled) 思考深度: Ultra, Help: Ultra
++					110 弹出式按钮 对话权限
++					111 弹出式按钮 命令与模板
++					112 按钮 (disabled) 加入待发
++					113 弹出式按钮 对话用量
++					114 文本 Enter 发送 · Shift Enter 换行
+The focused UI element is 100 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…

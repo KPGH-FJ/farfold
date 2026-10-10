@@ -1,0 +1,7 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 2679-2680, 5305
++					5308 摘要 未发送的文件意见（2）, Value: off
++						5309 文本 未发送的文件意见（2）
++								5310 文本 (settable) RANGE_2E976168_OTHER：同文副页 XFD1048576 是独立空白位置，不沿用主表身份。
+~							5307 按钮 加入对话
+The focused UI element is 5304 文本输入区 (settable) 补充给 Agent 的意见, Value: [文本输入区: 补充给 Agent 的意见], Placeholder: 对这份内容有什么想法？

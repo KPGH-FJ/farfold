@@ -1,0 +1,7 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 2811-2835
+~										2923 文本栏 (settable) 意见范围, Value: XFD1048576, Placeholder: A1:C200
++								2927 container
++									2928 text 工作表“同文副页” · XFD1048576 · 1 行 × 1 列 意见针对所填范围，当前仅显示其中一部分。
++								2929 按钮 对此范围提意见
+The focused UI element is 2923 文本栏 (settable) 意见范围, Value: XFD1048576, Placeholder: A1:C200

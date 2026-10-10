@@ -1,0 +1,30 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 20, 53, 56-70
+~				6 按钮 新对话 ⌘ N
+~					9 按钮 所有对话 119
++				82 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具 进行中
+~				24 按钮 Codex 23
++					83 按钮 1 进行中
+~					46 标题 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具, Value: 1
+~						47 文本 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
+~					48 text TR · 进行中
+~					52 弹出式按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具的操作
++					84 text 你  ·  10:02
++					85 按钮 复制消息
++					86 弹出式按钮 消息操作
++					87 文本 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具，不读取或修改任何文件，不使用网络工具。只原样回复下面两个 Markdown 链接，不加代码块或其他文字：
+[范围与隐藏](/private/tmp/farfold-workbook-range-ugrktdm1/versioned-ranges.xlsx)
+[普通范围](/private/tmp/farfold-workbook-range-ugrktdm1/ordinary-ranges.xlsx)
++					88 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 转向当前任务…（运行中发送将进入队列）
++						89 文本 转向当前任务…（运行中发送将进入队列）
++					90 弹出式按钮 添加文件或图片
++					91 弹出式按钮 模型与来源
++					92 文本 思考
++					93 弹出式按钮 (disabled) 思考深度: Ultra, Help: Ultra
++					94 弹出式按钮 (disabled) 对话权限
++					95 弹出式按钮 命令与模板
++					96 按钮 停止
++					97 按钮 (disabled) 加入待发
++					98 弹出式按钮 对话用量
++					99 文本 ⏎ 排队
+The focused UI element is 88 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 转向当前任务…（运行中发送将进入队列）
