@@ -1,0 +1,194 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 滚动区
+		2 HTML内容 Description: Farfold, URL: tauri://localhost
+			3 按钮 查看工作树操作
+			4 container
+				5 图像 Farfold
+				6 按钮 收起导航
+				7 按钮 新对话 ⌘ N
+				8 按钮 搜索对话 ⌘ K
+				9 container 所有对话
+					10 按钮 所有对话 125
+					11 按钮 收藏 0
+					12 按钮 探索 Agent
+				13 按钮 (expanded) 最近, Secondary Actions: Collapse
+				14 按钮 FARFOLD_RECYCLE_418880A2_20261010。这是受控的工
+				15 按钮 FARFOLD_ASYNC_TASK_STOP_20261010：这是一次受控后
+				16 按钮 FARFOLD_REAL_STOP_20261010：这是一次受控停止验证。请只
+				17 按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT
+				18 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
+				19 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
+				20 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
+				21 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
+				22 按钮 查看全部
+				23 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
+				24 按钮 管理我的 Agent
+				25 按钮 Codex 29
+				26 按钮 OpenCode 26
+				27 按钮 Grok Build 1
+				28 按钮 Poolside 1
+				29 按钮 MiniMax Code 1
+				30 按钮 Qwen Code 1
+				31 按钮 全部 Agent（29）
+				32 按钮 (expanded) 分组, Secondary Actions: Collapse
+				33 按钮 新建分组
+				34 按钮 验收 0928 4
+				35 按钮 验收 0928的操作
+				36 按钮 原型验收 0930 2
+				37 按钮 原型验收 0930的操作
+				38 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
+				39 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
+				40 container 对话动态
+					41 按钮 9 新回复
+				42 按钮 设置
+				43 文本 属于你的 Agent，在一处相遇。
+				44 container
+					45 按钮 返回
+					46 标题 FARFOLD_RECYCLE_418880A2_20261010。这是受控的工, Value: 1
+						47 文本 FARFOLD_RECYCLE_418880A2_20261010。这是受控的工
+					48 text created-new · 未在运行
+					49 按钮 查找当前对话
+					50 按钮 (collapsed) 查看对话内容, Secondary Actions: Expand
+					51 按钮 浏览器
+					52 弹出式按钮 FARFOLD_RECYCLE_418880A2_20261010。这是受控的工的操作
+					53 container 后台任务
+						54 container (expanded) Secondary Actions: Collapse
+							55 摘要 后台任务 · 1, Value: on
+								56 文本 后台任务
+								57 文本  · 
+								58 文本 1
+							59 文本 仅显示 Agent 已报告的任务；停止回复不会自动停止这些任务。
+							60 container
+								61 text /bin/sleep 60 已完成
+					62 text 你  ·  历史消息
+					63 按钮 复制消息
+					64 弹出式按钮 消息操作
+					65 文本 FARFOLD_RECYCLE_418880A2_20261010。这是受控的工作位置恢复验证。不要调用任何工具，不要读取或修改任何文件，不要访问网络。只回复 FARFOLD_RECYCLE_READY_20261010。
+					66 text Codex  · 历史消息
+					67 按钮 复制消息
+					68 弹出式按钮 消息操作
+					69 文本 FARFOLD_RECYCLE_READY_20261010
+					70 摘要 最近收到的扩展字段, Value: off
+						71 文本 最近收到的扩展字段
+					72 text 你  ·  15:42
+					73 按钮 复制消息
+					74 弹出式按钮 消息操作
+					75 文本 FARFOLD_RECYCLE_CONTINUE_20261010。仍不要调用任何工具，不要读取或修改文件，不要访问网络。只回复 FARFOLD_RECYCLE_RESTORED_20261010。
+					76 text Codex  · 15:42
+					77 按钮 复制消息
+					78 弹出式按钮 消息操作
+					79 文本 FARFOLD_RECYCLE_RESTORED_20261010
+					80 摘要 最近收到的扩展字段, Value: off
+						81 文本 最近收到的扩展字段
+					82 text ✓  已完成 15:42 你  ·  15:44
+					83 按钮 复制消息
+					84 弹出式按钮 消息操作
+					85 文本 FARFOLD_TASK_LABEL_418880A2_20261010：这是受控后台任务显示验证。仅调用一次 exec_command，cmd 必须是 /bin/sleep 12，yield_time_ms 设为 1000。不要读取或修改文件，不要访问网络，不要使用其他命令。若命令仍在运行，只用 write_stdin 等待它自然完成，然后只回复 FARFOLD_TASK_LABEL_DONE_20261010。
+					86 text Codex  · 15:44
+					87 按钮 复制消息
+					88 弹出式按钮 消息操作
+					89 文本 我会按指定参数执行一次命令，若仍在运行，仅等待它自然完成。
+					90 摘要 最近收到的扩展字段, Value: off
+						91 文本 最近收到的扩展字段
+					92 container (expanded) Secondary Actions: Collapse
+						93 摘要 查看处理过程 1 步, Value: on
+							94 文本 查看处理过程
+							95 文本 1 步
+						96 text ✓ 运行了命令
+						97 按钮 (expanded) 技术详情, Secondary Actions: Collapse
+						98 文本 11.9s
+						99 container
+							100 text 执行 ·  /bin/sleep 12
+						101 文本 命令
+						102 文本 /bin/sleep 12
+						103 文本 执行目录
+						104 文本 /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-new
+						105 摘要 完整输入, Value: off
+							106 文本 完整输入
+						107 文本 {
+  "type": "terminal",
+  "terminalId": "exec-88a0c907-2e58-424d-9cb1-7adb7a6bc04f"
+}
+						108 文本 {
+  "formatted_output": "",
+  "exit_code": 0
+}
+						109 摘要 最近收到的扩展字段, Value: off
+							110 文本 最近收到的扩展字段
+					111 text Codex  · 15:44
+					112 按钮 复制消息
+					113 弹出式按钮 消息操作
+					114 文本 FARFOLD_TASK_LABEL_DONE_20261010
+					115 摘要 最近收到的扩展字段, Value: off
+						116 文本 最近收到的扩展字段
+					117 text ✓  已完成 15:44 你  ·  15:51
+					118 按钮 复制消息
+					119 弹出式按钮 消息操作
+					120 文本 FARFOLD_TASK_LABEL_LONG_418880A2_20261010：这是受控后台任务显示验证。仅调用一次 exec_command，cmd 必须是 /bin/sleep 60，yield_time_ms 设为 1000。不要读取或修改文件，不要访问网络，不要使用其他命令。若命令仍在运行，只用 write_stdin 等待它自然完成，然后只回复 FARFOLD_TASK_LABEL_LONG_DONE_20261010。
+					121 text Codex  · 15:51
+					122 按钮 复制消息
+					123 弹出式按钮 消息操作
+					124 文本 我会按指定参数执行一次命令，若仍在运行，仅等待它自然完成。
+					125 摘要 最近收到的扩展字段, Value: off
+						126 文本 最近收到的扩展字段
+					127 摘要 查看处理过程 1 步, Value: off
+						128 文本 查看处理过程
+						129 文本 1 步
+					130 container (expanded) Secondary Actions: Collapse
+						131 摘要 后台任务更新, Value: on
+							132 文本 后台任务更新
+						133 文本 {
+  "sessionUpdate": "async_task_spawned",
+  "asyncTaskId": "exec-20d5a082-cc1c-4abe-ace7-171d155933fd",
+  "name": "/bin/sleep 60",
+  "taskType": "shell",
+  "showInTranscript": false,
+  "canStop": true,
+  "toolCallId": "exec-20d5a082-cc1c-4abe-ace7-171d155933fd"
+}
+					134 摘要 思考过程, Value: off
+						135 文本 思考过程
+					136 container (expanded) Secondary Actions: Collapse
+						137 摘要 后台任务更新, Value: on
+							138 文本 后台任务更新
+						139 文本 {
+  "sessionUpdate": "async_task_state_update",
+  "asyncTaskId": "exec-20d5a082-cc1c-4abe-ace7-171d155933fd",
+  "state": "completed",
+  "toolCallId": "exec-20d5a082-cc1c-4abe-ace7-171d155933fd"
+}
+					140 text Codex  · 15:52
+					141 按钮 复制消息
+					142 弹出式按钮 消息操作
+					143 文本 FARFOLD_TASK_LABEL_LONG_DONE_20261010
+					144 摘要 最近收到的扩展字段, Value: off
+						145 文本 最近收到的扩展字段
+					146 text ✓  已完成 15:52
+					147 按钮 本轮产物 1 ▸
+					148 摘要 最近收到的扩展字段, Value: off
+						149 文本 最近收到的扩展字段
+					150 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 发送消息…
+						151 文本 发送消息…
+					152 弹出式按钮 添加文件或图片
+					153 弹出式按钮 模型与来源
+					154 文本 思考
+					155 弹出式按钮 思考深度: Ultra, Help: Ultra
+					156 弹出式按钮 对话权限
+					157 弹出式按钮 命令与模板
+					158 按钮 (disabled) 发送
+					159 弹出式按钮 对话用量
+					160 文本 Enter 发送 · Shift Enter 换行
+	161 关闭按钮
+	162 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	163 最小化按钮
+	164 文本 Farfold
+165 menu bar
+	166 Farfold
+	167 文件
+	168 编辑
+	169 显示
+	170 窗口
+	171 帮助
+
+The focused UI element is 137 摘要 后台任务更新, Value: on

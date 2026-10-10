@@ -187,7 +187,7 @@ def main():
             require({exit_path, journey_path, closeout_path} <= set(normal_evidence), 'Current installed-baseline normal-exit references missing')
             observed_exit = read(ROOT / exit_path)
             require(observed_exit['nativeAction'] == 'Cmd+Q after idle capture28; CUA reported App quit' and observed_exit['exactProcessExecutable'] == '/Applications/Farfold.app/Contents/MacOS/farfold' and observed_exit['exactProcessAbsent'] is True and observed_exit['activeWorkAbsentInNativeObservation'] is True, 'Prior normally closed baseline differs')
-            require(read(ROOT / journey_path)['formalSourceCommit'] == read(ROOT / closeout_path)['formalSourceCommit'] == BASELINE_COMMIT, 'Normal-exit evidence belongs to another installed baseline')
+            require(read(ROOT / journey_path)['formalSourceCommit'] == read(ROOT / closeout_path)['installedSourceCommit'] == BASELINE_COMMIT, 'Normal-exit evidence belongs to another installed baseline')
             require(candidate_helpers.BASELINE_COMMIT == BASELINE_COMMIT, 'Candidate helper uses a different installed baseline')
             initial.update({ROOT / p: h for p, h in normal_evidence.items()})
             require(operation['candidateCommit'] == EXPECTED and operation['phase'] == 'installedVerifiedNotLaunched' and operation['installed'] is True and operation['copyStarted'] is True and operation['launched'] is False and operation['forcedQuit'] is False, 'Install operation did not finish closed')

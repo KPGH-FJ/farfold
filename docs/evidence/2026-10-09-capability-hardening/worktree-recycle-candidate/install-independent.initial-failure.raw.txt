@@ -1,0 +1,37 @@
+{
+  "checkedAtUtc": "2026-10-10T07:25:34.305947+00:00",
+  "sourceCommit": "418880a249da9809169d9b8d6e99557352a40f08",
+  "result": "failed",
+  "failures": [
+    "normalExitAndInstall"
+  ],
+  "checks": {
+    "receiptChain": {
+      "passed": true,
+      "candidateChecks": 9,
+      "candidateIndependent": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/candidate-independent.json",
+        "sha256": "3ed146fb805815b1a714e3c9bedb9817929976f29e028e962bb9f398a383d520",
+        "bytes": 4498
+      }
+    },
+    "normalExitAndInstall": {
+      "passed": false,
+      "errorType": "KeyError"
+    }
+  },
+  "methodOrigin": "Adapted from the reviewed browser-search ten-check verifier. This worktree archive/restore invocation binds 8780 normal-exit evidence, current candidate engineering/source closure and dynamic complete input counts; it does not execute the installer.",
+  "inputReceipts": {
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/candidate.json": "6086898330102e220461e16d4eab4692872ce428d8944eac13cd10502972e821",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/candidate-inputs.json": "636d44e4d5f958e9fa7f12a282ab6610d43b56f13a99dd7e8c687621441efd0f",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/candidate-independent.json": "3ed146fb805815b1a714e3c9bedb9817929976f29e028e962bb9f398a383d520",
+    "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/installed-data-retention.json": "d7d48a09928a9d3956ae573a5b31fa96473e854a2c48f30ce0b562a76f59b0bd",
+    "output/2026-10-10-worktree-recycle-install/install-operation.json": "34a9ed104d431e3b4e837ee9592a7e29f6f2202f167ffacd5a01f71f9a85a296",
+    "output/2026-10-10-worktree-recycle-install/normal-exit-observation.json": "20fddece7e759efafc2bf28701942bee3367ab55d53cc35a33cdf738f733c12b",
+    "output/2026-10-10-worktree-recycle-install/metadata-backup-receipt.json": "0f705f7d546558e31f66484fed7d2d14c654a9907822777fc48607c16c0fe1a0",
+    "output/2026-10-10-worktree-recycle-install/install-data-before-summary.json": "90592822b93cfe26c55d831ca2251f99da7736142feef9d7abf32a2367915337",
+    "output/2026-10-10-worktree-recycle-install/install-data-preinstall-summary.json": "90592822b93cfe26c55d831ca2251f99da7736142feef9d7abf32a2367915337",
+    "output/2026-10-10-worktree-recycle-install/install-data-after-summary.json": "90592822b93cfe26c55d831ca2251f99da7736142feef9d7abf32a2367915337"
+  },
+  "completedAtUtc": "2026-10-10T07:25:34.372613+00:00"
+}

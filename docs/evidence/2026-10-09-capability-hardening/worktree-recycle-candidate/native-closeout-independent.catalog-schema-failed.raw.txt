@@ -1,0 +1,7 @@
+{"check": "frozenReferences", "passed": true}
+{"check": "formalArchiveAndClosedState", "passed": true}
+{"check": "materialAndOccupiedProtection", "passed": true}
+Traceback (most recent call last):
+  File "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/verify-native-closeout-independent.py", line 167, in <module>
+    assert len(archived_catalog["archives"]) == 1 and archived_catalog["archives"][0]["originalPath"] == fixture["worktree"]
+KeyError: 'originalPath'

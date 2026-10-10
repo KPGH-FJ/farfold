@@ -1,0 +1,42 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 滚动区
+		2 HTML内容 Description: Farfold, URL: tauri://localhost
+			3 container 工作树
+				4 标题 工作树, Value: 2
+					5 文本 工作树
+				6 按钮 关闭
+				7 文本 工作树提供另一个文件夹；账号、Git设置和部分依赖仍可能共享。
+				8 按钮 选择已有文件夹
+				9 按钮 (disabled) 选择仓库文件夹
+				10 container
+					11 text 结果未确认 操作结果尚未确认。请核查这次操作，不要重复创建或删除已有材料。 使用前需要重新核查此位置。 /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-existing
+					12 按钮 查看未知结果说明
+					13 按钮 重新核查
+				14 标题 已有工作树, Value: 3
+					15 文本 已有工作树
+				16 按钮 刷新清单
+				17 container
+					18 text refs/heads/codex/native-created /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-new 由此处创建  · 使用前将重新核查
+					19 按钮 使用此位置
+					20 按钮 重新核查
+					21 按钮 从清单移除
+					22 按钮 (disabled) 归档并保留文件
+					23 text refs/heads/codex/native-existing /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-existing 由此处创建  · 使用前将重新核查
+					24 按钮 使用此位置
+					25 按钮 重新核查
+					26 按钮 从清单移除
+					27 按钮 (disabled) 归档并保留文件
+	28 关闭按钮
+	29 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	30 最小化按钮
+	31 文本 Farfold
+32 menu bar
+	33 Farfold
+	34 文件
+	35 编辑
+	36 显示
+	37 窗口
+	38 帮助
+
+The focused UI element is 3 container 工作树

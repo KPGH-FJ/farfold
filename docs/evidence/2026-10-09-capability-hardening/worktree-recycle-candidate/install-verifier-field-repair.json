@@ -1,0 +1,46 @@
+{
+  "kind": "install-verifier-field-alignment",
+  "atUtc": "2026-10-10T07:26:50.596594+00:00",
+  "sourceCommit": "418880a249da9809169d9b8d6e99557352a40f08",
+  "initialResult": {
+    "exitCode": 1,
+    "stage": "normalExitAndInstall",
+    "error": "KeyError: formalSourceCommit",
+    "checksCompletedBeforeFailure": ["receiptChain"],
+    "classification": "Independent verifier adaptation defect; not an observed install, exit or data loss failure."
+  },
+  "cause": "The prior root native receipt uses formalSourceCommit, but the prior independent native-closeout receipt uses installedSourceCommit. The verifier incorrectly read the former key from both. Both preserved evidence values are exactly 8780df9effd3832c1d73a494e8b447f91a2949b8.",
+  "repair": "One exact field access changed for closeout_path; no fallback and no weakened comparison. All original candidate/install/normal-exit/retention receipts remain unchanged.",
+  "preserved": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/verify-install-independent.before-field-fix.py.txt",
+      "sha256": "1bf4bbdfde26ef3ad3dddcd90376ce9b12ca5bc55cce5d94240d77988d6564ed",
+      "bytes": 22656
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/install-independent.initial-failure.raw.txt",
+      "sha256": "a2f26987fd5562631e7a91bc1e8edc37d4f0d1daf6ae4dcbca9b9e0d8e6b3c31",
+      "bytes": 2572
+    }
+  ],
+  "correctedVerifier": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/verify-install-independent.py",
+    "sha256": "0b1c86a07e48d961ffb598f53b0bd80886560dc276ebbd251fde5df83cbe8ce3",
+    "bytes": 22659
+  },
+  "finalResult": {
+    "exitCode": 0,
+    "passedChecks": 10,
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/install-independent.json",
+      "sha256": "6275ad3f03886b73660555f2dd11454b2e6b8d93eaa941483ed96a62b195ee33",
+      "bytes": 9961
+    }
+  },
+  "limits": [
+    "No rebuild or source/test changes.",
+    "No formal App launch, quit, replacement or cleanup.",
+    "No original database opened; the verifier uses disposable private copies of retained captured files and backup."
+  ],
+  "preflightLimitation": "The earlier helper-preflight-independent.json static review missed the actual prior closeout field name. That frozen preflight is preserved; this is a verifier defect, not a product failure. No production source, bundle, candidate inputs or data manifests changed."
+}

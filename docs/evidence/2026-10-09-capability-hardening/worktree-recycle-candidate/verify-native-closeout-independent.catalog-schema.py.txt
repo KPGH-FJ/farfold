@@ -1,0 +1,224 @@
+"""Read-only 4188 native evidence/copy/package audit. Never opens the live DB."""
+from pathlib import Path
+from datetime import datetime, timezone
+import hashlib
+import json
+import os
+import plistlib
+import sqlite3
+import stat
+import subprocess
+import zipfile
+
+ROOT = Path(__file__).resolve().parents[4]
+BASE = Path(__file__).resolve().parent
+PRIVATE = ROOT / "output/2026-10-10-worktree-recycle-native"
+INSTALL = ROOT / "output/2026-10-10-worktree-recycle-install"
+COMMIT = "418880a249da9809169d9b8d6e99557352a40f08"
+EXPECTED_RECEIPT = "323d45e7144b83bd5b0955dc8c668f6c42b3d7c60e8c7556e7e976c336b16386"
+checks = {}
+
+
+def sha(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def read(path):
+    return json.loads(Path(path).read_text())
+
+
+def ref(path):
+    path = Path(path)
+    return {"path": str(path.relative_to(ROOT)), "sha256": sha(path), "bytes": path.stat().st_size}
+
+
+def record(name, detail):
+    checks[name] = dict(passed=True, **detail)
+    print(json.dumps({"check": name, "passed": True}, ensure_ascii=False), flush=True)
+
+
+def command(args, expected=0):
+    result = subprocess.run(args, capture_output=True, text=True, timeout=30)
+    assert result.returncode == expected, "Read-only command failed: " + args[0]
+    return result
+
+
+def snapshot(root):
+    values = {}
+    for parent, dirs, files in os.walk(root, followlinks=False):
+        for name in sorted(dirs + files):
+            path = Path(parent) / name
+            relative = str(path.relative_to(root))
+            if relative == ".git":
+                continue
+            info = path.lstat()
+            v = {"mode": stat.S_IMODE(info.st_mode), "inode": info.st_ino, "device": info.st_dev}
+            if stat.S_ISLNK(info.st_mode):
+                v.update(kind="symlink", target=os.readlink(path))
+            elif stat.S_ISDIR(info.st_mode):
+                v.update(kind="directory")
+            elif stat.S_ISREG(info.st_mode):
+                v.update(kind="file", sha256=sha(path), bytes=info.st_size)
+            else:
+                raise AssertionError("Unexpected controlled material type")
+            values[relative] = v
+    return values
+
+
+def database(path):
+    assert path.is_relative_to(ROOT / "output") and path.name == "metadata-before.sqlite3"
+    with sqlite3.connect(path.as_uri() + "?mode=ro&immutable=1", uri=True) as db:
+        db.row_factory = sqlite3.Row
+        assert [tuple(r) for r in db.execute("PRAGMA integrity_check")] == [("ok",)]
+        settings = dict(db.execute("SELECT key,value FROM settings"))
+        rows = {r["id"]: dict(r) for r in db.execute("SELECT * FROM sessions")}
+    return settings, rows
+
+
+receipt_path = BASE / "installed-archive-restore.json"
+assert sha(receipt_path) == EXPECTED_RECEIPT
+receipt = read(receipt_path)
+original_receipt = BASE / "installed-archive-restore.before-format.json.txt"
+assert sha(original_receipt) == "be224f64ba53b30ee0fb347eb1c0f10a96d7e7c6146df8d053239ec107bd89e8"
+assert read(original_receipt) == receipt
+assert receipt["formalSourceCommit"] == COMMIT
+for item in receipt["references"] + receipt["privateReferences"]:
+    assert sha(ROOT / item["path"]) == item["sha256"], "Reference mismatch: " + item["path"]
+record("frozenReferences", {"receipt": ref(receipt_path), "public": len(receipt["references"]), "private": len(receipt["privateReferences"]), "nativeImageAxPairs": 41})
+
+candidate = read(BASE / "candidate.json")
+assert candidate["sourceCommit"] == COMMIT
+for name, count in (("candidate-independent.json", 9), ("install-independent.json", 10)):
+    prior = read(BASE / name)
+    assert prior["sourceCommit"] == COMMIT and not prior["failures"]
+    assert len(prior["checks"]) == count and all(v["passed"] for v in prior["checks"].values())
+formal = Path("/Applications/Farfold.app")
+files = {str(p.relative_to(formal)): sha(p) for p in formal.rglob("*") if p.is_file()}
+assert files == candidate["candidateFiles"] and len(files) == 5
+with (formal / "Contents/Info.plist").open("rb") as handle:
+    plist = plistlib.load(handle)
+assert plist["CFBundleIdentifier"] == "ai.farfold.desktop" and plist["CFBundleShortVersionString"] == "0.1.7"
+assert command(["lipo", "-archs", str(formal / "Contents/MacOS" / plist["CFBundleExecutable"])]).stdout.strip() == "arm64"
+sign = command(["codesign", "--verify", "--deep", "--strict", "--verbose=2", str(formal)])
+archive = Path(candidate["archive"])
+assert sha(archive) == candidate["archiveSha256"] and archive.stat().st_size == candidate["archiveBytes"]
+with zipfile.ZipFile(archive) as z:
+    assert z.testzip() is None
+    payload = [i for i in z.infolist() if not i.is_dir() and not i.filename.startswith("__MACOSX/")]
+    assert all(i.filename.startswith("Farfold.app/") for i in payload)
+    zip_files = {i.filename.removeprefix("Farfold.app/"): hashlib.sha256(z.read(i)).hexdigest() for i in payload}
+    assert zip_files == files
+    assert all(stat.S_IMODE((i.external_attr >> 16)) == stat.S_IMODE((formal / i.filename.removeprefix("Farfold.app/")).stat().st_mode) for i in payload)
+assert not Path(candidate["candidateApp"]).exists()
+process = command(["pgrep", "-fal", r"^/Applications/Farfold[.]app/Contents/MacOS/"], expected=1)
+assert not process.stdout.strip()
+record("formalArchiveAndClosedState", {"files": files, "archiveSha256": sha(archive), "archiveBytes": archive.stat().st_size, "strictSign": (sign.stderr + sign.stdout).strip(), "architecture": "arm64", "duplicateAbsent": True, "exactFormalExecutableProcessCount": 0, "sourceBasis": "Frozen 4188 candidate and prior 9/10 receipts; intentionally not current next-slice WIP source."})
+
+fixture = read(PRIVATE / "fixture-prepared.json")
+assert sha(ROOT / fixture["sourceReceipt"]["path"]) == fixture["sourceReceipt"]["sha256"]
+material_counts = []
+for name in ("before-archive", "after-archive", "after-restore", "after-final-exit"):
+    proof = read(PRIVATE / (name + ".json"))
+    a = proof["actual"]
+    assert proof["fixtureSha256"] == sha(PRIVATE / "fixture-prepared.json")
+    assert a["head"] == fixture["headOid"] and a["branch"] == fixture["branch"] and a["gitDir"] == fixture["gitDir"]
+    assert a["indexSha256"] == fixture["indexSha256"] and a["material"] == fixture["material"]
+    assert a["status"] == fixture["status"] and a["sourcePreserved"] == fixture["originalSourcePreserved"]
+    assert "worktree " + proof["currentPath"] + "\n" in a["registration"]
+    if name == "after-archive":
+        assert proof["currentPath"] != fixture["worktree"] and "worktree " + fixture["worktree"] + "\n" not in a["registration"]
+    else:
+        assert proof["currentPath"] == fixture["worktree"]
+    assert proof["allPassed"] and len(proof["checks"]) == 10 and all(proof["checks"].values())
+    material_counts.append({"stage": name, "entries": len(a["material"]), "checks": 10})
+current = Path(fixture["worktree"])
+assert snapshot(current) == fixture["material"]
+assert sha(Path(fixture["gitDir"]) / "index") == fixture["indexSha256"]
+for relative, digest in fixture["originalSourcePreserved"].items():
+    assert sha(Path(fixture["sourceRepository"]) / relative) == digest
+for args, expected in ((["rev-parse", "HEAD"], fixture["headOid"]), (["symbolic-ref", "HEAD"], fixture["branch"]), (["rev-parse", "--absolute-git-dir"], fixture["gitDir"]), (["status", "--porcelain=v1", "--untracked-files=all", "--ignored"], fixture["status"].strip())):
+    assert command(["git", "--no-optional-locks", "-c", "core.fsmonitor=false", "-C", str(current), *args]).stdout.strip() == expected
+occupant = read(PRIVATE / "occupied-original-fixture.json")
+preserved = read(PRIVATE / "occupied-rejection-verified.json")
+saved = Path(preserved["originalPathFreedByRenamingOwnedFixtureTo"])
+assert saved.lstat().st_ino == occupant["inode"] and sha(saved / "occupied-canary.txt") == occupant["fileSha256"]
+assert preserved["occupiedCanaryUnchanged"] and preserved["noDeletion"]
+record("materialAndOccupiedProtection", {"historicalStages": material_counts, "liveOwnedFixtureStillMatches": True, "movedAsideOccupantIdentityAndBytesMatch": True, "emptyDirectorySymlinkExecutableAndDirtyIndexPreserved": True, "conditionalCheckBoundary": "The two original-absent checks apply only to after-archive; other stages pass by documented current==original condition."})
+
+paths = [INSTALL / "metadata-before.sqlite3", PRIVATE / "archived-metadata/metadata-before.sqlite3", PRIVATE / "final-metadata/metadata-before.sqlite3"]
+before_hash = {str(p): sha(p) for p in paths}
+dbs = [database(p) for p in paths]
+settings, rows = dbs[0]
+old = json.loads(settings["unsentWork.v1"])
+assert {k: len(old[k]) for k in ("composers", "feedback", "queues")} == {"composers": 8, "feedback": 8, "queues": 3}
+assert len(rows) == 125
+for stage_settings, stage_rows in dbs[1:]:
+    assert all(stage_rows.get(k) == v for k, v in rows.items())
+    added = [r for k, r in stage_rows.items() if k not in rows]
+    assert len(added) == 1 and added[0]["native_session_id"] == receipt["realAgent"]["nativeSessionId"] and added[0]["cwd"] == fixture["worktree"]
+new = json.loads(dbs[2][0]["unsentWork.v1"])
+assert set(new) == set(old) and all(new[k] == v for k, v in old.items() if k != "activity")
+assert all(new["activity"].get(k) == v for k, v in old["activity"].items())
+assert set(new["activity"]) - set(old["activity"]) == {added[0]["id"]}
+changed = sorted(k for k in settings.keys() | dbs[2][0].keys() if settings.get(k) != dbs[2][0].get(k))
+assert changed == ["unsentWork.v1", "worktreeLocations.v1"]
+archived_catalog = json.loads(dbs[1][0]["worktreeLocations.v1"])
+final_catalog = json.loads(dbs[2][0]["worktreeLocations.v1"])
+assert len(archived_catalog["archives"]) == 1 and archived_catalog["archives"][0]["originalPath"] == fixture["worktree"]
+assert not final_catalog["archives"]
+assert any(v["path"] == fixture["worktree"] and v["ownership"] == "created" for v in final_catalog["locations"])
+for directory in (INSTALL, PRIVATE / "archived-metadata", PRIVATE / "final-metadata"):
+    proof = read(directory / "metadata-backup-receipt.json")
+    assert proof["backupSha256"] == sha(directory / "metadata-before.sqlite3") and proof["integrity"] == "ok"
+    assert all(sha(directory / "metadata-source" / name) == digest for name, digest in proof["capturedFiles"].items())
+assert before_hash == {str(p): sha(p) for p in paths}
+assert sha(paths[0]) == receipt["dataRetention"]["beforeSha256"] and sha(paths[2]) == receipt["dataRetention"]["afterSha256"]
+record("immutableMetadataCopies", {"copies": [ref(p) for p in paths], "integrity": ["ok"] * 3, "oldWholeRowsEqual": 125, "newControlledRows": 1, "oldGroupsExactlyEqual": {"composers": 8, "feedback": 8, "queues": 3}, "onlyAddedUnsentField": "one controlled activity entry", "changedSettingsKeys": changed, "archivedCatalogueCount": 1, "restoredCatalogueCount": 0, "backupFilesAndOriginalCaptureCopiesUnchanged": True, "liveDatabaseOpened": False})
+
+session = PRIVATE / "official-final.jsonl"
+raw = session.read_bytes()
+events = [json.loads(line) for line in raw.splitlines()]
+meta = next(e["payload"] for e in events if e["type"] == "session_meta")
+assert meta["id"] == receipt["realAgent"]["nativeSessionId"] and meta["cwd"] == fixture["worktree"]
+contexts = [e["payload"] for e in events if e["type"] == "turn_context"]
+assert len(contexts) == 4 and len({p["turn_id"] for p in contexts}) == 4
+assert all(p["cwd"] == fixture["worktree"] and p["model"] == "gpt-6-astra" and p["effort"] == "ultra" and p["approval_policy"] == "on-request" for p in contexts)
+assert all(p["sandbox_policy"] == contexts[0]["sandbox_policy"] for p in contexts)
+calls = [e["payload"] for e in events if e.get("payload", {}).get("type") in ("custom_tool_call", "function_call")]
+expected = ['text(await tools.exec_command({cmd:"/bin/sleep 12",yield_time_ms:1000}));\n', 'text(await tools.write_stdin({session_id:18050,chars:"",yield_time_ms:20000}));\n', 'text(await tools.exec_command({cmd:"/bin/sleep 60",yield_time_ms:1000}));\n', 'text(await tools.write_stdin({session_id:88390,chars:"",yield_time_ms:1000}));\n', '// @exec: {"yield_time_ms": 60000}\ntext(await tools.write_stdin({session_id:88390,chars:"",yield_time_ms:55000}));\n']
+assert len(calls) == 5 and [p["input"] for p in calls] == expected and all(p["name"] == "exec" for p in calls)
+first_two = {p["turn_id"] for p in contexts[:2]}
+assert all(p["internal_chat_message_metadata_passthrough"]["turn_id"] not in first_two for p in calls)
+completions = [e for e in events if e.get("payload", {}).get("type") == "task_complete"]
+assert [e["payload"]["last_agent_message"] for e in completions] == ["FARFOLD_RECYCLE_READY_20261010", "FARFOLD_RECYCLE_RESTORED_20261010", "FARFOLD_TASK_LABEL_DONE_20261010", "FARFOLD_TASK_LABEL_LONG_DONE_20261010"]
+assert not any(e.get("payload", {}).get("type") in ("turn_aborted", "task_aborted") for e in events)
+assert sha(session) == receipt["realAgent"]["officialSessionCopy"]["sha256"]
+prefixes = []
+for name in ("official-before-continuation.jsonl", "official-task12.jsonl"):
+    data = (PRIVATE / name).read_bytes()
+    assert raw.startswith(data)
+    prefixes.append(dict(ref(PRIVATE / name), preservedExactPrefix=True))
+record("officialRequestScope", {"snapshot": ref(session), "events": len(events), "cliVersion": meta.get("cli_version"), "requests": 4, "completedRequests": 4, "outerExecCalls": 5, "exactInnerCommands": ["/bin/sleep 12", "/bin/sleep 60"], "pollCalls": 3, "firstTwoRequestsHaveNoTools": True, "model": "gpt-6-astra", "reasoning": "ultra", "officialApprovalPolicy": "on-request", "sandboxPolicyUnchanged": True, "abortEvents": 0, "earlierCopies": prefixes, "completionTimes": [e["timestamp"] for e in completions], "taskEventBoundary": "async_task_spawned/state_update proof is root-captured native AX/raw-event UI, not this official JSONL's full wire transcript. This journey did not test stopping."})
+
+before_process = read(PRIVATE / "process-before-archive.json")
+after_process = read(PRIVATE / "process-after-archive.json")
+old_pids = {p["pid"] for p in before_process["processes"]}
+remaining = {p["pid"] for p in after_process["remainingFromBefore"]}
+absent = set(after_process["absentPids"])
+assert remaining.isdisjoint(absent) and remaining | absent == old_pids and before_process["appPid"] in remaining
+exit_receipt = read(PRIVATE / "final-normal-exit.json")
+assert exit_receipt["normalExit"] and exit_receipt["pgrepExit"] == 1 and not exit_receipt["formalAndHelperProcessMatches"] and not exit_receipt["rootOsSignalsSent"]
+record("recordedProcessLifecycle", {"historicallyAbsentControlledDescendants": len(absent), "historicallyRemainingAppAndOtherConnectionProcesses": len(remaining), "normalQuitRecorded": True, "currentFormalProcessCount": 0, "limit": "Recorded ancestry/PID observations establish observed absence. They do not prove every possible external descendant or that a specific waitpid ran. Reviewer did not reproduce the UI or send signals."})
+
+native = BASE / "native"
+required = {"09-draft-preflight-result": ["未发送内容", "按钮 (disabled)"], "15-archive-complete": ["已归档", ".farfold-retained-"], "16-history-after-archive": ["FARFOLD_RECYCLE_READY_20261010"], "17-reconnect-archived-location": ["重新连接失败"], "18-cold-startup": ["无法读取工作设置"], "19-cold-archive-unverified": ["结果未确认", "核查"], "20-restore-occupied-blocked": ["已经存在"], "22-restore-complete": ["已恢复原位置", "尚未用于任何草稿"], "27-global-loaded-search-label": ["搜索已加载正文"], "28-global-loaded-search-results": ["FARFOLD_RECYCLE_READY_20261010"], "37-known-task-raw-update": ["后台任务更新", '"sessionUpdate": "async_task_spawned"', receipt["realAgent"]["officialTaskId"]], "39-known-task-completed-raw": ["后台任务更新", '"state": "completed"', receipt["realAgent"]["officialTaskId"]], "40-sleep-reported-artifact": ["0 个文件位置", "命令输出与日志"]}
+for name, fragments in required.items():
+    text = (native / (name + ".txt")).read_text()
+    assert all(fragment in text for fragment in fragments)
+record("nativeArtifactClaimScope", {"requiredAxCases": len(required), "reviewerViewedSavedScreenshots": ["27-global-loaded-search-label", "28-global-loaded-search-results", "37-known-task-raw-update", "39-known-task-completed-raw", "20-restore-occupied-blocked", "22-restore-complete"], "sourceOfNativeActions": "Root only; independent review of stored screenshots/AX plus disk proof, not a second native execution.", "followupsRemain": ["archived history/cold guidance", "duplicate unsent blocker copy", "occupied-original restore copy", "restore result copy"], "safeRemovalAndIndependentRecoveryNotInstalled": True})
+
+result = {"schema": 1, "checkedAtUtc": datetime.now(timezone.utc).isoformat(), "formalSourceCommit": COMMIT, "status": "passed-with-existing-followups", "checks": checks, "findings": [], "verifierCorrections": [{"description": "Initial independent verifier incorrectly treated ZIP __MACOSX AppleDouble entries as application payload. Preserved failure; corrected to the established payload rule. No product or package changes.", "initialScript": ref(BASE / "verify-native-closeout-independent.initial.py.txt"), "initialFailure": ref(BASE / "native-closeout-independent.initial-failed.raw.txt")}, {"description": "Root formatted derived native receipt; parsed content is exactly equal to preserved original.", "original": ref(original_receipt), "current": ref(receipt_path)}], "script": ref(Path(__file__)), "scope": "Independent read-only audit of frozen root native artifacts, private immutable metadata copies, owned material and formal bundle/archive. No UI, Agent, live database, process termination, source edits or tests/build.", "remaining": receipt["remaining"]}
+with (BASE / "native-closeout-independent.json").open("x") as handle:
+    json.dump(result, handle, ensure_ascii=False, indent=2)
+    handle.write("\n")
+print(json.dumps({"result": result["status"], "checks": len(checks)}), flush=True)

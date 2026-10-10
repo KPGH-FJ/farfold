@@ -1,0 +1,78 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 滚动区
+		2 HTML内容 Description: Farfold, URL: tauri://localhost
+			3 container
+				4 图像 Farfold
+				5 按钮 收起导航
+				6 按钮 新对话 ⌘ N
+				7 按钮 搜索对话 ⌘ K
+				8 container 所有对话
+					9 按钮 所有对话 125
+					10 按钮 收藏 0
+					11 按钮 探索 Agent
+				12 按钮 (expanded) 最近, Secondary Actions: Collapse
+				13 按钮 FARFOLD_RECYCLE_418880A2_20261010。这是受控的工
+				14 按钮 FARFOLD_ASYNC_TASK_STOP_20261010：这是一次受控后
+				15 按钮 FARFOLD_REAL_STOP_20261010：这是一次受控停止验证。请只
+				16 按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT
+				17 按钮 FARFOLD_REWORK_A47A6652_20261010：这是一次范围受
+				18 按钮 FARFOLD_AREA_A47A6652_20261010。不要调用任何工具，
+				19 按钮 FARFOLD_RANGE_2E976168_20261010。不要调用任何工具
+				20 按钮 FARFOLD_DOCX_8C2F5E29_20261010。不要调用任何工具，
+				21 按钮 查看全部
+				22 按钮 (expanded) 我的 Agent, Secondary Actions: Collapse
+				23 按钮 管理我的 Agent
+				24 按钮 Codex 29
+				25 按钮 OpenCode 26
+				26 按钮 Grok Build 1
+				27 按钮 Poolside 1
+				28 按钮 MiniMax Code 1
+				29 按钮 Qwen Code 1
+				30 按钮 全部 Agent（29）
+				31 按钮 (expanded) 分组, Secondary Actions: Collapse
+				32 按钮 新建分组
+				33 按钮 验收 0928 4
+				34 按钮 验收 0928的操作
+				35 按钮 原型验收 0930 2
+				36 按钮 原型验收 0930的操作
+				37 按钮 FARFOLD_AUTONOMOUS_UI_20261007 0
+				38 按钮 FARFOLD_AUTONOMOUS_UI_20261007的操作
+				39 container 对话动态
+					40 按钮 9 新回复
+				41 按钮 设置
+				42 文本 属于你的 Agent，在一处相遇。
+				43 container
+					44 标题 新对话, Value: 1
+						45 文本 新对话
+					46 文本 从一个想法开始
+					47 标题 今天，想完成什么？, Value: 1
+						48 文本 今天，想完成什么？
+					49 text 先写下目标，再和合适的 Agent 一起推进。 无法读取工作设置，请重试
+					50 按钮 重试
+					51 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 把想法放在这里…
+						52 文本 把想法放在这里…
+					53 弹出式按钮 添加文件或图片
+					54 弹出式按钮 选择 Agent
+					55 弹出式按钮 模型与来源
+					56 按钮 (disabled) 发送
+					57 text Enter 发送 · Shift Enter 换行 工作文件夹
+					58 按钮 更换工作文件夹, Help: /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-new
+					59 按钮 移除文件夹
+					60 弹出式按钮 工作树
+					61 文本 仅作为工作位置，权限另行确认
+					62 按钮 计划一次旅行
+					63 按钮 把想法写清楚
+					64 按钮 一起读点东西
+					65 按钮 发现更多 Agent
+	66 关闭按钮
+	67 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	68 最小化按钮
+	69 文本 Farfold
+70 menu bar
+	71 Farfold
+	72 文件
+	73 编辑
+	74 显示
+	75 窗口
+	76 帮助

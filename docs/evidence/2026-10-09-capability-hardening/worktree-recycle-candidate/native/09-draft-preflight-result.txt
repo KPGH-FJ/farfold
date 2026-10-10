@@ -1,0 +1,65 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 滚动区
+		2 HTML内容 Description: Farfold, URL: tauri://localhost
+			3 container 工作树
+				4 标题 工作树, Value: 2
+					5 文本 工作树
+				6 按钮 关闭
+				7 文本 工作树提供另一个文件夹；账号、Git设置和部分依赖仍可能共享。
+				8 按钮 选择已有文件夹
+				9 按钮 选择仓库文件夹
+				10 container
+					11 text 创建或接入完成 结果保留在此处。只有明确选择“使用此位置”才会更改当前草稿。 /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-existing
+					12 按钮 重新核查
+				13 标题 已有工作树, Value: 3
+					14 文本 已有工作树
+				15 按钮 刷新清单
+				16 container 确认影响
+					17 标题 归档并保留文件, Value: 3
+						18 文本 归档并保留文件
+					19 文本 归档会移动工作文件并保留未提交和被忽略的内容；对话和原工作位置记录不会改变。这不是独立备份。
+					20 描述列表
+						21 文本 原位置
+						22 文本 /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-new
+						23 文本 保留位置
+						24 文本 /private/tmp/farfold-worktree-native-rxejy97f/destinations/.farfold-retained-93b37e8e-fede-4172-8399-26d37dbbec4b/worktree
+					25 文本 关联 0 段对话；原工作位置记录保持。
+					26 摘要 查看原因, Value: off
+						27 文本 查看原因
+					28 container
+						29 文本 仍有需要处理的内容或活动，请先查看原因。
+						30 内容列表
+							31 container 相关位置还有未发送内容，请先保留并处理。
+								32 列表刻度 •
+								33 文本 相关位置还有未发送内容，请先保留并处理。
+							34 container 相关位置还有未发送内容，请先保留并处理。
+								35 列表刻度 •
+								36 文本 相关位置还有未发送内容，请先保留并处理。
+					37 按钮 (disabled) 归档并保留文件
+					38 按钮 重新检查影响
+					39 按钮 取消此次确认
+				40 container
+					41 text refs/heads/codex/native-created /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-new 由此处创建  · 使用前将重新核查
+					42 按钮 使用此位置
+					43 按钮 重新核查
+					44 按钮 从清单移除
+					45 按钮 归档并保留文件
+					46 text refs/heads/codex/native-existing /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-existing 由此处创建  · 使用前将重新核查
+					47 按钮 使用此位置
+					48 按钮 重新核查
+					49 按钮 从清单移除
+					50 按钮 归档并保留文件
+	51 关闭按钮
+	52 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	53 最小化按钮
+	54 文本 Farfold
+55 menu bar
+	56 Farfold
+	57 文件
+	58 编辑
+	59 显示
+	60 窗口
+	61 帮助
+
+The focused UI element is 3 container 工作树

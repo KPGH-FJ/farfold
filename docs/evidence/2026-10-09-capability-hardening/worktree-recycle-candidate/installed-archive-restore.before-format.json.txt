@@ -1,0 +1,636 @@
+{
+  "kind": "installed-worktree-archive-restore-and-known-task-headings",
+  "observedAtUtc": "2026-10-10T07:55:45.178442+00:00",
+  "formalSourceCommit": "418880a249da9809169d9b8d6e99557352a40f08",
+  "version": "0.1.7",
+  "platform": "macOS arm64",
+  "formalBundleMatchesCandidate": true,
+  "formalAppNormallyClosed": true,
+  "cases": [
+    {
+      "id": "unsent-archive-block",
+      "status": "passed-with-copy-followup",
+      "result": "Unsent text blocks archive; duplicate explanation remains in installed 4188."
+    },
+    {
+      "id": "archive-material",
+      "status": "passed",
+      "result": "Owned dirty worktree moved via installed UI; staged/unstaged, untracked/ignored, symlink, executable and empty directory retained byte/mode/identity exactly."
+    },
+    {
+      "id": "idle-connection-release",
+      "status": "passed",
+      "result": "Previously observed controlled Agent/helper descendant processes absent after archive; no root OS signals. Original TR prepared connection remained."
+    },
+    {
+      "id": "history-identity",
+      "status": "passed-with-guidance-followup",
+      "result": "Original conversation remains at original cwd, preserves history. Reconnect while archived fails generically; clearer guidance is under development."
+    },
+    {
+      "id": "cold-recheck",
+      "status": "passed",
+      "result": "After normal quit/reopen archive result is unconfirmed; explicit recheck enables restore."
+    },
+    {
+      "id": "occupied-original",
+      "status": "passed-with-copy-followup",
+      "result": "Existing original target blocks restore and stays unchanged. The root-owned occupant was moved aside, not deleted. Installed copy incorrectly suggests another name."
+    },
+    {
+      "id": "restore-material-and-continue",
+      "status": "passed",
+      "result": "Restore recovered original path, material, index, HEAD and branch; same native session then answered correctly. Same prior permission mode explicitly reconfirmed after cold restart."
+    },
+    {
+      "id": "restore-result-copy",
+      "status": "followup-required",
+      "result": "Installed ready copy says not used by any draft; should accurately say draft unchanged."
+    },
+    {
+      "id": "NEW-05-global-search-label",
+      "status": "passed",
+      "result": "Actual global loaded-body field accessible name matches scope; expected loaded-history match found."
+    },
+    {
+      "id": "NEW-06-known-task-label",
+      "status": "passed",
+      "result": "Actual Codex 60-second natural task spawned/completed updates use Background task update heading and retain same-ID raw events."
+    },
+    {
+      "id": "normal-exit-data",
+      "status": "passed",
+      "result": "Empty original TR draft restored; normal quit; all 125 original session rows and original 8 composers/8 feedback/3 queues exactly equal."
+    }
+  ],
+  "materialChecks": [
+    {
+      "stage": "before-archive",
+      "checks": {
+        "head": true,
+        "branch": true,
+        "gitDir": true,
+        "index": true,
+        "allMaterial": true,
+        "status": true,
+        "sourceMaterial": true,
+        "registeredCurrent": true,
+        "originalAbsentWhenArchived": true,
+        "originalNotRegisteredWhenArchived": true
+      }
+    },
+    {
+      "stage": "after-archive",
+      "checks": {
+        "head": true,
+        "branch": true,
+        "gitDir": true,
+        "index": true,
+        "allMaterial": true,
+        "status": true,
+        "sourceMaterial": true,
+        "registeredCurrent": true,
+        "originalAbsentWhenArchived": true,
+        "originalNotRegisteredWhenArchived": true
+      }
+    },
+    {
+      "stage": "after-restore",
+      "checks": {
+        "head": true,
+        "branch": true,
+        "gitDir": true,
+        "index": true,
+        "allMaterial": true,
+        "status": true,
+        "sourceMaterial": true,
+        "registeredCurrent": true,
+        "originalAbsentWhenArchived": true,
+        "originalNotRegisteredWhenArchived": true
+      }
+    },
+    {
+      "stage": "after-final-exit",
+      "checks": {
+        "head": true,
+        "branch": true,
+        "gitDir": true,
+        "index": true,
+        "allMaterial": true,
+        "status": true,
+        "sourceMaterial": true,
+        "registeredCurrent": true,
+        "originalAbsentWhenArchived": true,
+        "originalNotRegisteredWhenArchived": true
+      }
+    }
+  ],
+  "dataRetention": {
+    "beforeSha256": "46337b87d2c2a18d5653386186d8128e1c122ed555961e633234411082a32d39",
+    "afterSha256": "3fbb66d38340f99c08bf83bc2fc30ba39c61c14eb5be2a75f2f4d8f24fbd9ae8",
+    "allOriginalSessionRowsEqual": true,
+    "originalSessions": 125,
+    "addedSessions": 1,
+    "originalUnsentCounts": {
+      "composers": 8,
+      "feedback": 8,
+      "queues": 3
+    },
+    "allOriginalUnsentEntriesEqual": true,
+    "allOriginalActivityEqual": true,
+    "onlyNewControlledActivityAdded": true,
+    "otherUnsentFieldsEqual": true,
+    "changedSettingsKeys": [
+      "unsentWork.v1",
+      "worktreeLocations.v1"
+    ],
+    "restoredCatalogArchives": 0
+  },
+  "realAgent": {
+    "agent": "Codex",
+    "model": "6 Astra",
+    "reasoning": "Ultra",
+    "permission": "Approve for me",
+    "serviceModelOrPermissionExpanded": false,
+    "coldPermissionReconfirmedSameMode": true,
+    "nativeSessionId": "01a124ba-30fe-7810-a72a-ecb0c3915e73",
+    "officialTaskId": "exec-20d5a082-cc1c-4abe-ace7-171d155933fd",
+    "requests": 4,
+    "commandStarts": 2,
+    "polls": 3,
+    "replyOrTaskStopClicked": false,
+    "rootOsTerminationSent": false,
+    "officialSessionCopy": {
+      "path": "output/2026-10-10-worktree-recycle-native/official-final.jsonl",
+      "sha256": "b5ac13232c6e49af4c8a752c22dcb5bac45abe5e344c04496663d0428d05be85"
+    },
+    "eventEvidence": "Actual installed raw-event UI, not a full captured wire transcript."
+  },
+  "remaining": [
+    "H15 safe removal and independent recovery UI are ongoing source work, not this installed binary.",
+    "Archived-location reconnect/cold error guidance and three maintenance-copy details still require updated installed verification.",
+    "No native archive cancellation race, permission failure or identity-substitution proof from this journey; source fixtures are separate.",
+    "One Codex connection/configuration only; no full 29-Agent, Windows, whole-product or public distribution acceptance."
+  ],
+  "driverNotes": [
+    "Initial native typeText omitted marker underscores; exact prompt was corrected through paste before sending.",
+    "An initial process probe wrongly assumed only one executable match; browser helpers shared the executable. Ancestry-based observation corrected the probe without any OS signals.",
+    "One stale AX click after screenshot renumbering failed before action; fresh AX corrected it.",
+    "First 12-second command completed without a background-task event; it does not cover NEW-06. The later 60-second command produced observed spawned and completed events.",
+    "Old official-before-continuation summary searched event_msg for agent text; final summary uses task_complete and actual response_item tool calls.",
+    "A visible output artifact after sleep was inspected: command output/logs, zero reported file locations, not an unexplained generated file.",
+    "Installation verifier initial field-name failure and its exact repair are separately retained; it was not application or data failure."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/01-startup.png",
+      "sha256": "b4cdf3749e1dbe91799c9d0327509a5de6cec240626ec8405be66caf457730c9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/01-startup.txt",
+      "sha256": "694147a05bfde7c2651986ee36b07d67f07645bad7bdaeef2e53bd05eded4222"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/02-worktree-list.png",
+      "sha256": "c2c880669803bed5c7d1f3b89054f5b80402afaceeb94a3bc02675bf70d3ec5d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/02-worktree-list.txt",
+      "sha256": "2fc31a55f787b8330ac1a5e50d25b2da94d7e54a7cf8ce7a4e7dca3f4e6e6a25"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/03-rechecked-created-new.png",
+      "sha256": "172de00ec4885c1a178fce42bc0c82b9be2231f26e6851db7f19a3d235b44284"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/03-rechecked-created-new.txt",
+      "sha256": "5fc3d174fe59eab279a552360e825c6b6417aa6fad40f31ce5fa3a77ba07d39f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/04-recheck-result.png",
+      "sha256": "a0a24a3cd780db739e996e85d00133ccfe11fbb5f53e85b61a9d664da879610e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/04-recheck-result.txt",
+      "sha256": "5fc3d174fe59eab279a552360e825c6b6417aa6fad40f31ce5fa3a77ba07d39f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/05-previous-operation-recheck.png",
+      "sha256": "9b77ab3c39334acfe6f952bbe25da4f680e86d588da7196f983afb3169c18afb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/05-previous-operation-recheck.txt",
+      "sha256": "8f1a01333d7e15d6e2b6da3518e85d3c1fe7858e2b30d7ac4fb5fe64dd7e0aa6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/06-use-created-new.png",
+      "sha256": "5323024dd141066395633b074b6bc795bf0f588c72456146dc9de5560cdc51d5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/06-use-created-new.txt",
+      "sha256": "69a0e45dd16f8ade5e99fcfb13b30ccf20f12cb777a2b472f2cc104e4268c3b6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/07-unsent-draft.png",
+      "sha256": "4360f0ed14d0c29bb4f9d9282347f2fd51b11179f9565fb1b79f8d6a22e2b932"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/07-unsent-draft.txt",
+      "sha256": "d9211af5718aab11f035dc481b667b3a700c11c3014d538543e9b7dd91008fbc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/08-draft-blocks-archive.png",
+      "sha256": "62f6107dd0c29581bd9f9556d3201892e96c8e259d8a7e2679790fdc4d3cb515"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/08-draft-blocks-archive.txt",
+      "sha256": "9b437f13f460cdc898f449c0a0adcbe7574c639ad61b72d67ed648de77915a0c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/09-draft-preflight-result.png",
+      "sha256": "f9c9e1ec17f6165ba96a3716bd9ccbb9aa172c2dec1dda01d9c7f92fe062911e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/09-draft-preflight-result.txt",
+      "sha256": "939513d45c628d3e830c781addff2b7731e41cbb37ad4dc88d663d61643fee68"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/10-controlled-prompt-ready.png",
+      "sha256": "852a7debe49e4b6bed56592f42a24c238b88d410360d7b6b3037765aada6baf1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/10-controlled-prompt-ready.txt",
+      "sha256": "ac4993eb53f0df42a34c71b58b92f4057cbfb41fa1e34d2bb4813ebf98cf4725"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/11-controlled-prompt-sent.png",
+      "sha256": "58f0ef2e76b9fe382fd4c8d558793d79e7b94a721f334876ba50de3232bf2242"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/11-controlled-prompt-sent.txt",
+      "sha256": "50ff57f899941ac79740453fff0724665367e3ac6b999f06fc8d9e4a174ebdb1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/12-controlled-reply-complete.png",
+      "sha256": "6795d727c7e05700e6ffada3ec9b8403119f095863d1d019bee56d56bf67ee07"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/12-controlled-reply-complete.txt",
+      "sha256": "88be90e3c65f4f8aeb0715e7c0a846e948cbed323b6f09372af5809b6ab0f68f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/13-archive-ready-review.png",
+      "sha256": "cd7a2febd8282ded6275459f60b17d916c1208688ccf9ecceca9a574410be726"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/13-archive-ready-review.txt",
+      "sha256": "48d37294cea257e74a9849c3be6c902241ee7bd860e1906ad196ae03fb7c4b8f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/14-archive-dispatched.png",
+      "sha256": "84a83d219305b1d619ce7d48ab8f0bb8fcd52f0a56c293668f2a86c3779c7edf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/14-archive-dispatched.txt",
+      "sha256": "62cb5eec93b6e980d6fe66df36a6e46e18bc340102048acec1d6323f35c9c2fb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/15-archive-complete.png",
+      "sha256": "5319756b73885b0428b7eb446524c2a81666e9c92f04ca833b8fd01b09394900"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/15-archive-complete.txt",
+      "sha256": "7af881565838458a81391ec0187ea3620a9e93bdba58cac70508faa016efa6fa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/16-history-after-archive.png",
+      "sha256": "18035c83651b0bbc1654c7e0a6c5893326e0469f62d5799bbb56b8806de6077d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/16-history-after-archive.txt",
+      "sha256": "4a025aea411fc8be8837e762cf8d663ca6153fbff7daf3012627e3a8f5bada99"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/17-reconnect-archived-location.png",
+      "sha256": "2297231e72ff857ebdc81ffa4107d496a33fe08ae67b8f6c855f89a134f063f9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/17-reconnect-archived-location.txt",
+      "sha256": "1b705aec12b4450a8e1f947c5c36985fe5d17c8af6bf299581cc699fd5340cc3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/18-cold-startup.png",
+      "sha256": "e49f0e66ab1280e184fa901b1e103d3b6c03f394bff0eed0058c1d9612660997"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/18-cold-startup.txt",
+      "sha256": "c7d5a40aecfdb5cfdac4f325ed2d39ca4de2c15b7bdda161e9251b33a3ae6df4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/19-cold-archive-unverified.png",
+      "sha256": "7483f36173c39935b768a746d7edd45bd1f8f23bf1fa18245133f7108dffffad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/19-cold-archive-unverified.txt",
+      "sha256": "85a7400c053ba2de1d4928ed8dc56f714edfbf0999ff23ee7428a0bd0cf33591"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/20-restore-occupied-blocked.png",
+      "sha256": "741c9885862fc8228e9d693512616c458a76bbc1ac3f62100d04514a96bf69f5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/20-restore-occupied-blocked.txt",
+      "sha256": "e0c65894feb7ffad6d8b10cb041b1ee63bbe8da6df3939510c29a1c221dcee27"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/21-restore-dispatched.png",
+      "sha256": "b922d9a81f4defc3ddd41d8540d386535ab57e1fbca63c144d79a7ba5f5c03a2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/21-restore-dispatched.txt",
+      "sha256": "1d4a9108728be2b09476041d8dfceaf633cfeae9c6850b0d3eabcfdbb56e8349"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/22-restore-complete.png",
+      "sha256": "85c991a1ae6e8ec167713f2c9c6f14fe745c787d7271080803af7b252ab9f078"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/22-restore-complete.txt",
+      "sha256": "58251a33d12b4e9ad83d01c9ee50b32939d0e372d5c5503129555e196d33191b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/23-restored-original-history.png",
+      "sha256": "cf61f4fcab7836282798cbe5c7a5eb53877246a77828148ab3fd3e3d17098084"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/23-restored-original-history.txt",
+      "sha256": "e87ddce67cd4381177ef3e8bdc2435f6f03d61f9058c271d1e7b7a6e8ddff7f5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/24-restored-permission-selection.png",
+      "sha256": "93c6661271cca8354a07cd743f52d34e40df75d676922a0b33aa97839c6952da"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/24-restored-permission-selection.txt",
+      "sha256": "280d043c15561026fc3ce608beabd07f4a17935deabdb7515a31cd7ece4573f8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/25-continuation-ready.png",
+      "sha256": "e576574c72064663c950e113be9bae68ccee60217b9c4fa41a77abc34e022012"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/25-continuation-ready.txt",
+      "sha256": "8d21e299721421ad418aaaa2b46b577f8fac332e005282ed2d63a2550f630466"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/26-continuation-sent.png",
+      "sha256": "2c3b9467a03ee0cb15417155c95cc803ff3bd3cb37dcd1fecb72ae09d3757d8d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/26-continuation-sent.txt",
+      "sha256": "a83a422a64f0980485bb0874584c9bbf3cb6a4f25e2545869ef2701c2961ddec"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/27-global-loaded-search-label.png",
+      "sha256": "989b76a37f1fa0faabff7299c71d4ab7367d3d2da2b4942bc674ee3e35939ac4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/27-global-loaded-search-label.txt",
+      "sha256": "46eef8a4b2255e1053653774e4280bcc9845324575ee1e217a35dd5d79f19ac6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/28-global-loaded-search-results.png",
+      "sha256": "af84d269bfbf9114cd470aee3c141dad8295bf4bb486d2c2a8a96edb238895ac"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/28-global-loaded-search-results.txt",
+      "sha256": "97b1df5b744e251fffb81fd5388763713c07030adef2110e0888df6efdb71041"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/29-continuation-complete.png",
+      "sha256": "0a6d2e70ffd22af69c4dd5421ee2b5a27f454bfe49ebcac9ed6825efb5a8e04f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/29-continuation-complete.txt",
+      "sha256": "1d9061a1341997d1995d95e891f5662da80a579b51a997bf73d46d7716fee42e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/30-task-label-prompt-sent.png",
+      "sha256": "399764a0db4d3f93b3e624427bf2181f5cd2d890eb2b4b68034fb3f5c525d060"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/30-task-label-prompt-sent.txt",
+      "sha256": "816bbff973358a1fb91c9ac0104b9513804bad83fa232ab4627bc1847c9d4c8f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/31-task-label-live.png",
+      "sha256": "4a9f588fa1651fdd1e18cfabe23816521511f99a7ba835d01382eef52eb3af1e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/31-task-label-live.txt",
+      "sha256": "f2123c8901d4fae719d840d9bd69bb6af7b3e3d16c9819e10c19b3a657ab1365"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/32-task-label-process-details.png",
+      "sha256": "9b047d3031b069a86b339931b73434e8cbec51199bb995af5383dc0f91ac62c6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/32-task-label-process-details.txt",
+      "sha256": "da02143c7b6fdc59a4a4ceb4bcdbeaae2c9c95c2381c94398dbe32d6872cbaa4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/33-task-label-tool-actual.png",
+      "sha256": "2ffa931936f0d516ded1b07658291e677d1e8b39d6e7776cdd261b9b6f239681"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/33-task-label-tool-actual.txt",
+      "sha256": "fa884191ed3949acbda88ce4723f0207b20c6722304f422b9debc25e10332066"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/34-long-task-label-sent.png",
+      "sha256": "b2654740dc0ca5c363ac363d68c49a4eda21b0ec4e3a8ec6cd17c173348a4c5f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/34-long-task-label-sent.txt",
+      "sha256": "70594efbe1e43ddb3a6ed5cf6b9e7bda5389292ab5b10ab439955a3f48279cce"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/35-long-task-running.png",
+      "sha256": "49bb0806e654842cca9daf2b8c46d707a5d96643b0db9087d12f082a891fe763"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/35-long-task-running.txt",
+      "sha256": "52af5174d6893781e8b0c0927417726a6f51ad6771acec493e7c11d8ed5c4e12"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/36-long-task-result.png",
+      "sha256": "65212a9ccd56c5e727317277f40c41f9f27b91d7f190cc69e0bdb5fe04d40b79"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/36-long-task-result.txt",
+      "sha256": "30e7b74c61bbeb705b5d66a35d54942f285a7a31b68357338e3035a375712aed"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/37-known-task-raw-update.png",
+      "sha256": "1a386af11df92e2707e784209e51275cf13647e559d2d7a7c60f4ce9d1615020"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/37-known-task-raw-update.txt",
+      "sha256": "2ecd07467c81a75b6c5a9c3847ddb3ad22531b1f86745a1b2a33a586fa294ce2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/38-long-task-completed.png",
+      "sha256": "d796d0ac93cb8809b6901e2cbbfacafaf6b2123e5e6d8e4795c76f69cfa9ae8c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/38-long-task-completed.txt",
+      "sha256": "9fd99b00ab81c71f421cbba9dcc0d8e5e3eee948adfe1ac806d22da4a43cec01"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/39-known-task-completed-raw.png",
+      "sha256": "0213bd3ae6c09eb5c35f8772cfae0132e088b2ee1176445abd1a20b81851e450"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/39-known-task-completed-raw.txt",
+      "sha256": "b6da247ae8a419f7b887806bd01c3f60edfeb5df2b19ad52a5672baf1a458e6e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/40-sleep-reported-artifact.png",
+      "sha256": "94241e90e3d13993a2bf6b605f9f23a54bcd111922259e557f287a4b0eb1d121"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/40-sleep-reported-artifact.txt",
+      "sha256": "f14a12372bf02eabdc74d2f830dd5196803b46c0e0e8d4a577afcf89d986a037"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/41-original-draft-restored.png",
+      "sha256": "87aaf4e60044b96ea565a6043d8c731aab26d871c84cd28c910f9e90266674e9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native/41-original-draft-restored.txt",
+      "sha256": "61e38af617ec3f6e48ba7dd5bdaff35e4bf51dd777f5bb017abc3c38c2f619ed"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/candidate.json",
+      "sha256": "6086898330102e220461e16d4eab4692872ce428d8944eac13cd10502972e821"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/candidate-independent.json",
+      "sha256": "3ed146fb805815b1a714e3c9bedb9817929976f29e028e962bb9f398a383d520"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/installed-data-retention.json",
+      "sha256": "d7d48a09928a9d3956ae573a5b31fa96473e854a2c48f30ce0b562a76f59b0bd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/install-independent.json",
+      "sha256": "6275ad3f03886b73660555f2dd11454b2e6b8d93eaa941483ed96a62b195ee33"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/install-verifier-field-repair.json",
+      "sha256": "da2d58e62e86b988b776496961dac66a9d8a3b95482e2d1be1ea56dad27536a7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "8902e98e9053f2b0b1d4eabfe1378402b89baaa41d8bb4096f44db48dc77c744"
+    }
+  ],
+  "privateReferences": [
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/after-archive.json",
+      "sha256": "a3cbcb76505ec7466a2357137512601d93d67b8728cced5f8707d5a1eb2bb486"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/after-final-exit.json",
+      "sha256": "f01a130c8fbe69056a8ff493589869e48c6fa2b8759ee6bac7f2c734e61b3faa"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/after-restore.json",
+      "sha256": "ac1b4d42ae13e31ef38c6b8baf39d6f7118d00ef9ff74ad4f99608fac23898c6"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/archive-normal-exit.json",
+      "sha256": "875f33c45f9385c01db27d9446fbbb93e7aeacc9a76749a1c1c0c0e71d9263be"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/archived-catalog.json",
+      "sha256": "44b7692eaaf009c3f181efb4fed3bc81f18c522dfcfb35974286eb28ba311715"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/archived-session-preservation.json",
+      "sha256": "4b9b946ec811735093013b0e82c76398be198354c21ed2604bde8f974b2e5774"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/before-archive.json",
+      "sha256": "b87890c4df05d614aa52550725978c3821bde894d7334487a6dbc0c8bb60694d"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/final-data-retention.json",
+      "sha256": "60938e911decd4bf3146097adf104940a60fb1e883b32d4981859390ecad7bf1"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/final-normal-exit.json",
+      "sha256": "3dc84c3c1e188023f468e7d5e97dcb8344f4d511e6ec9162178387e50fc09c64"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/fixture-prepared.json",
+      "sha256": "d2a8fdf379beb5002b597868f207f6c98f09b124350d60e4d2475c8b63decc51"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/occupied-original-fixture.json",
+      "sha256": "70a5b1524ff503837ba1dcae59e14e578a43aea58e555d270a7195b52918c4ff"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/occupied-rejection-verified.json",
+      "sha256": "bbfc1253d0234ec752e356f9adb4afb8d6ab29ad06ff673fa53195631684285d"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/official-before-continuation-summary.json",
+      "sha256": "58e710db55b65d7e1b60fd0fc345f54a7c165bfedde0f9415830ab072a733dbb"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/official-final-summary.json",
+      "sha256": "66ae5af4889bef122b3852f79ece807a8eca7436424d423eed654711e12ad305"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/process-after-archive.json",
+      "sha256": "083c3476ee5ab5a4f43827b423307ca60741c4db67c85613c7580f6594a3a5a2"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/process-before-archive.json",
+      "sha256": "fdfa364968ee58d73e6ccc43945cb8778ce4396c1b69d1adb866947e7ba833f5"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/verify_fixture.py",
+      "sha256": "fc9c32d9e9e8f0884c268119b5003cbca30bf373e1918e8a1ee86d131fbfb4f7"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/write_native_receipt.py",
+      "sha256": "2c96b6ed5b48d2fba10c41f11c0bc84ce9df74758bdd9fd39bb76ea75079ca47"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/official-before-continuation.jsonl",
+      "sha256": "bd2a749084bb6d73460c9fa3c474588c8589e0d26acb27b86a96eac8181c6713"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/official-task12.jsonl",
+      "sha256": "d6c3f9dfafad5cdda89e78708521161b6db0be4fa0cbc08a5eb7b25b5b02897b"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/official-final.jsonl",
+      "sha256": "b5ac13232c6e49af4c8a752c22dcb5bac45abe5e344c04496663d0428d05be85"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/archived-metadata/metadata-backup-receipt.json",
+      "sha256": "a00a5095af1f75251c898b707e1d8c921b94144c8e459d436a5620c31f9d72dc"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/final-metadata/metadata-backup-receipt.json",
+      "sha256": "f8494a361d5387ff1c19b6e9df5596d7350abb00168fc6a98e45d157e8e10a73"
+    },
+    {
+      "path": "output/2026-10-10-worktree-recycle-native/final-metadata/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0"
+    }
+  ]
+}

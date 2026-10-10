@@ -1,0 +1,49 @@
+Window: "Farfold", App: Farfold.
+0 标准窗口 Farfold, Secondary Actions: Raise
+	1 滚动区
+		2 HTML内容 Description: Farfold, URL: tauri://localhost
+			3 container 工作树
+				4 标题 工作树, Value: 2
+					5 文本 工作树
+				6 按钮 关闭
+				7 文本 工作树提供另一个文件夹；账号、Git设置和部分依赖仍可能共享。
+				8 按钮 选择已有文件夹
+				9 按钮 (disabled) 选择仓库文件夹
+				10 container
+					11 text 结果未确认 实际位置尚未确认。原位置和保留位置均保留记录，请核查这次操作，不要重复移动或删除。 使用前需要重新核查此位置。
+					12 描述列表
+						13 文本 原位置
+						14 文本 /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-new
+						15 文本 保留位置
+						16 文本 /private/tmp/farfold-worktree-native-rxejy97f/destinations/.farfold-retained-9b278d9c-74a7-4ff3-9eac-be07b3f9fa29/worktree
+					17 按钮 查看未知结果说明
+					18 按钮 重新核查
+				19 标题 已有工作树, Value: 3
+					20 文本 已有工作树
+				21 按钮 刷新清单
+				22 container
+					23 text refs/heads/codex/native-existing /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-existing 由此处创建  · 使用前将重新核查
+					24 按钮 使用此位置
+					25 按钮 重新核查
+					26 按钮 从清单移除
+					27 按钮 (disabled) 归档并保留文件
+				28 标题 已归档的工作树, Value: 3
+					29 文本 已归档的工作树
+				30 文本 此工作树已归档。恢复原位置并核查后才能使用。
+				31 container
+					32 text refs/heads/codex/native-created /private/tmp/farfold-worktree-native-rxejy97f/destinations/created-new /private/tmp/farfold-worktree-native-rxejy97f/destinations/.farfold-retained-9b278d9c-74a7-4ff3-9eac-be07b3f9fa29/worktree 位置尚未确认，请先核对。核对不会移动文件。
+					33 按钮 核对位置
+					34 按钮 (disabled) 恢复原位置
+	35 关闭按钮
+	36 全屏幕按钮 Help: 此按钮也可以执行缩放窗口的操作, Secondary Actions: 缩放窗口
+	37 最小化按钮
+	38 文本 Farfold
+39 menu bar
+	40 Farfold
+	41 文件
+	42 编辑
+	43 显示
+	44 窗口
+	45 帮助
+
+The focused UI element is 6 按钮 关闭

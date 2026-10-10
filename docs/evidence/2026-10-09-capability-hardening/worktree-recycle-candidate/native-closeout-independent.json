@@ -1,0 +1,223 @@
+{
+  "schema": 1,
+  "checkedAtUtc": "2026-10-10T08:03:37.281175+00:00",
+  "formalSourceCommit": "418880a249da9809169d9b8d6e99557352a40f08",
+  "status": "passed-with-existing-followups",
+  "checks": {
+    "frozenReferences": {
+      "passed": true,
+      "receipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/installed-archive-restore.json",
+        "sha256": "323d45e7144b83bd5b0955dc8c668f6c42b3d7c60e8c7556e7e976c336b16386",
+        "bytes": 31252
+      },
+      "public": 88,
+      "private": 24,
+      "nativeImageAxPairs": 41
+    },
+    "formalArchiveAndClosedState": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+        "Contents/MacOS/farfold": "87cfeb31a7ececbeba075090547fe0905e2db71d66ffba480350129bee8384e7",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+      },
+      "archiveSha256": "8f075dcbb47ad9b6c207136f0823fe9ae8729471617e0252e41fb4d8aafe2be8",
+      "archiveBytes": 13447910,
+      "strictSign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+      "architecture": "arm64",
+      "duplicateAbsent": true,
+      "exactFormalExecutableProcessCount": 0,
+      "sourceBasis": "Frozen 4188 candidate and prior 9/10 receipts; intentionally not current next-slice WIP source."
+    },
+    "materialAndOccupiedProtection": {
+      "passed": true,
+      "historicalStages": [
+        {
+          "stage": "before-archive",
+          "entries": 8,
+          "checks": 10
+        },
+        {
+          "stage": "after-archive",
+          "entries": 8,
+          "checks": 10
+        },
+        {
+          "stage": "after-restore",
+          "entries": 8,
+          "checks": 10
+        },
+        {
+          "stage": "after-final-exit",
+          "entries": 8,
+          "checks": 10
+        }
+      ],
+      "liveOwnedFixtureStillMatches": true,
+      "movedAsideOccupantIdentityAndBytesMatch": true,
+      "emptyDirectorySymlinkExecutableAndDirtyIndexPreserved": true,
+      "conditionalCheckBoundary": "The two original-absent checks apply only to after-archive; other stages pass by documented current==original condition."
+    },
+    "immutableMetadataCopies": {
+      "passed": true,
+      "copies": [
+        {
+          "path": "output/2026-10-10-worktree-recycle-install/metadata-before.sqlite3",
+          "sha256": "46337b87d2c2a18d5653386186d8128e1c122ed555961e633234411082a32d39",
+          "bytes": 372736
+        },
+        {
+          "path": "output/2026-10-10-worktree-recycle-native/archived-metadata/metadata-before.sqlite3",
+          "sha256": "4ce831b7265205f071ae126925080856d25ee346626c8745520c1bb2b3f96adf",
+          "bytes": 372736
+        },
+        {
+          "path": "output/2026-10-10-worktree-recycle-native/final-metadata/metadata-before.sqlite3",
+          "sha256": "3fbb66d38340f99c08bf83bc2fc30ba39c61c14eb5be2a75f2f4d8f24fbd9ae8",
+          "bytes": 376832
+        }
+      ],
+      "integrity": ["ok", "ok", "ok"],
+      "oldWholeRowsEqual": 125,
+      "newControlledRows": 1,
+      "oldGroupsExactlyEqual": {
+        "composers": 8,
+        "feedback": 8,
+        "queues": 3
+      },
+      "onlyAddedUnsentField": "one controlled activity entry",
+      "changedSettingsKeys": ["unsentWork.v1", "worktreeLocations.v1"],
+      "archivedCatalogueCount": 1,
+      "restoredCatalogueCount": 0,
+      "backupFilesAndOriginalCaptureCopiesUnchanged": true,
+      "liveDatabaseOpened": false
+    },
+    "officialRequestScope": {
+      "passed": true,
+      "snapshot": {
+        "path": "output/2026-10-10-worktree-recycle-native/official-final.jsonl",
+        "sha256": "b5ac13232c6e49af4c8a752c22dcb5bac45abe5e344c04496663d0428d05be85",
+        "bytes": 159036
+      },
+      "events": 74,
+      "cliVersion": "0.155.1",
+      "requests": 4,
+      "completedRequests": 4,
+      "outerExecCalls": 5,
+      "exactInnerCommands": ["/bin/sleep 12", "/bin/sleep 60"],
+      "pollCalls": 3,
+      "firstTwoRequestsHaveNoTools": true,
+      "model": "gpt-6-astra",
+      "reasoning": "ultra",
+      "officialApprovalPolicy": "on-request",
+      "sandboxPolicyUnchanged": true,
+      "abortEvents": 0,
+      "earlierCopies": [
+        {
+          "path": "output/2026-10-10-worktree-recycle-native/official-before-continuation.jsonl",
+          "sha256": "bd2a749084bb6d73460c9fa3c474588c8589e0d26acb27b86a96eac8181c6713",
+          "bytes": 106887,
+          "preservedExactPrefix": true
+        },
+        {
+          "path": "output/2026-10-10-worktree-recycle-native/official-task12.jsonl",
+          "sha256": "d6c3f9dfafad5cdda89e78708521161b6db0be4fa0cbc08a5eb7b25b5b02897b",
+          "bytes": 134815,
+          "preservedExactPrefix": true
+        }
+      ],
+      "completionTimes": [
+        "2026-10-10T07:34:01.256Z",
+        "2026-10-10T07:42:54.612Z",
+        "2026-10-10T07:44:47.921Z",
+        "2026-10-10T07:52:11.822Z"
+      ],
+      "taskEventBoundary": "async_task_spawned/state_update proof is root-captured native AX/raw-event UI, not this official JSONL's full wire transcript. This journey did not test stopping."
+    },
+    "recordedProcessLifecycle": {
+      "passed": true,
+      "historicallyAbsentControlledDescendants": 10,
+      "historicallyRemainingAppAndOtherConnectionProcesses": 4,
+      "normalQuitRecorded": true,
+      "currentFormalProcessCount": 0,
+      "limit": "Recorded ancestry/PID observations establish observed absence. They do not prove every possible external descendant or that a specific waitpid ran. Reviewer did not reproduce the UI or send signals."
+    },
+    "nativeArtifactClaimScope": {
+      "passed": true,
+      "requiredAxCases": 13,
+      "reviewerViewedSavedScreenshots": [
+        "27-global-loaded-search-label",
+        "28-global-loaded-search-results",
+        "37-known-task-raw-update",
+        "39-known-task-completed-raw",
+        "20-restore-occupied-blocked",
+        "22-restore-complete"
+      ],
+      "sourceOfNativeActions": "Root only; independent review of stored screenshots/AX plus disk proof, not a second native execution.",
+      "followupsRemain": [
+        "archived history/cold guidance",
+        "duplicate unsent blocker copy",
+        "occupied-original restore copy",
+        "restore result copy"
+      ],
+      "safeRemovalAndIndependentRecoveryNotInstalled": true
+    }
+  },
+  "findings": [],
+  "verifierCorrections": [
+    {
+      "description": "Second verifier run incorrectly assumed public archive/location DTO shape in the private persisted catalogue. Corrected to saved wrapper fields after immutable copy schema read; no data changes.",
+      "script": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/verify-native-closeout-independent.catalog-schema.py.txt",
+        "sha256": "8ca186d4d57b110ed54765e328596e14fc9ef5c25a1e09d2481a561317ee7d9f",
+        "bytes": 17956
+      },
+      "failure": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native-closeout-independent.catalog-schema-failed.raw.txt",
+        "sha256": "fbe01c3f88db2ab3435d00aa8967043da92bbe097531fb3a1047c017954b92ad",
+        "bytes": 516
+      }
+    },
+    {
+      "description": "Initial independent verifier incorrectly treated ZIP __MACOSX AppleDouble entries as application payload. Preserved failure; corrected to the established payload rule. No product or package changes.",
+      "initialScript": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/verify-native-closeout-independent.initial.py.txt",
+        "sha256": "2170b6b60fedd6bd7c43ac24ba6d2904f4f5245fb4d9cceccc7993c291d2ebdb",
+        "bytes": 17024
+      },
+      "initialFailure": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native-closeout-independent.initial-failed.raw.txt",
+        "sha256": "3052e07b2bfdba966305d3d71f69ff7ef9c95c5843b3228002427d6fa112822e",
+        "bytes": 295
+      }
+    },
+    {
+      "description": "Root formatted derived native receipt; parsed content is exactly equal to preserved original.",
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/installed-archive-restore.before-format.json.txt",
+        "sha256": "be224f64ba53b30ee0fb347eb1c0f10a96d7e7c6146df8d053239ec107bd89e8",
+        "bytes": 31270
+      },
+      "current": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/installed-archive-restore.json",
+        "sha256": "323d45e7144b83bd5b0955dc8c668f6c42b3d7c60e8c7556e7e976c336b16386",
+        "bytes": 31252
+      }
+    }
+  ],
+  "script": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/verify-native-closeout-independent.py",
+    "sha256": "3d02d10596a3d7e961cd93adab65b3e2e6e38b170d220bd85e846eea4a4bdb50",
+    "bytes": 18372
+  },
+  "scope": "Independent read-only audit of frozen root native artifacts, private immutable metadata copies, owned material and formal bundle/archive. No UI, Agent, live database, process termination, source edits or tests/build.",
+  "remaining": [
+    "H15 safe removal and independent recovery UI are ongoing source work, not this installed binary.",
+    "Archived-location reconnect/cold error guidance and three maintenance-copy details still require updated installed verification.",
+    "No native archive cancellation race, permission failure or identity-substitution proof from this journey; source fixtures are separate.",
+    "One Codex connection/configuration only; no full 29-Agent, Windows, whole-product or public distribution acceptance."
+  ]
+}
