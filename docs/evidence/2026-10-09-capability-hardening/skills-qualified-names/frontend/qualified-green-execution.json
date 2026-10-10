@@ -1,0 +1,14 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/extension_inventory.qualified-names.test.tsx"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 0.592,
+  "log": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/qualified-green.txt",
+  "sha256": "4e47defbe1096d118dd3961e74e13518d582bdf00a41d6a6ca92a3d52f7c4f50"
+}

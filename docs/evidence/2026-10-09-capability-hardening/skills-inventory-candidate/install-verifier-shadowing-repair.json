@@ -1,0 +1,14 @@
+{
+  "at": "2026-10-10T14:06:12.472835+00:00",
+  "scope": "evidence helper only; candidate source and formal app unchanged",
+  "failureReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/install-independent-first-failed.json",
+    "sha256": "e5093d7d659a6316eec948d2f9f86cbd79d60c19a8aaa63b0a481b60bf56902f"
+  },
+  "script": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/verify-install-independent.py",
+  "beforeSha256": "ae92ab9b45bd4068cf56be4fd4d501456a66e3279957e64732dae6bb1aa450cc",
+  "afterSha256": "1db90eab2b6ff252dffbccfd9c938027d6448c16c113abe8f46f26031910d2f5",
+  "change": "Rename prior native baseline independent variable at its assignment and two reads; preserve candidate independent variable for current engineering verification.",
+  "syntaxCheck": "passed",
+  "retry": "pending independent execution"
+}

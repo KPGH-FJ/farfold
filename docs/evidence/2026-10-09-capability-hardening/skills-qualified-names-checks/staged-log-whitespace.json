@@ -1,0 +1,22 @@
+{
+  "gitDiffCheckExit": 2,
+  "scope": "Only captured raw test/build log whitespace; immutable raw bytes retained",
+  "warnings": [
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/checks/candidate-build.txt:80: trailing whitespace.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/checks/candidate-build.txt:99: new blank line at EOF.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-01/build.txt:73: trailing whitespace.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-01/frontend.txt:13: new blank line at EOF.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-01/rust.txt:1483: new blank line at EOF.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-01/typecheck.txt:4: new blank line at EOF.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/build.txt:74: trailing whitespace.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/frontend.txt:13: new blank line at EOF.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/rust.txt:1482: new blank line at EOF.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/typecheck.txt:4: new blank line at EOF.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/backend/decoder-first.txt:14: new blank line at EOF.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/backend/targeted-green.txt:72: new blank line at EOF.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/qualified-green.txt:9: new blank line at EOF.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/qualified-red.txt:28: new blank line at EOF.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/targeted-final.txt:9: new blank line at EOF.",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/typecheck.txt:4: new blank line at EOF."
+  ]
+}

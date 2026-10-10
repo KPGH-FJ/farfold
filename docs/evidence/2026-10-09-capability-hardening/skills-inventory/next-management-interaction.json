@@ -1,0 +1,194 @@
+{
+  "status": "Design only for the first P40 management increment. No production edits, tests, browser, official program, configuration or account operation performed.",
+  "basis": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/next-management-surfaces.json",
+    "sha256": "041857adf56723fb72d9a362c1840721d09ec2372b2838a91e2be3f951dd1cd2"
+  },
+  "productAlignment": {
+    "contract": "PRODUCT §3 capability-driven shared UI and verified result/cancel/recovery; §5/§6 short Chinese conclusions with expandable reasons; active P40 retains discovery/install/enablement/scope and real effect requirements.",
+    "firstClosedSlice": "For an already discovered, supported user/repo skill, explicitly change its exact-path user preference through an official API, then report the fresh configuration and skill state. Installation, plugin-wide state, admin/system management, other Agents and Windows remain unfinished; this is not a reduced P40 completion condition.",
+    "noNewGate": "One confirmation for the selected setting change, no model test prerequisite, no extra approval checkbox, no blanket block of conversations, and no promise of isolation against every external writer.",
+    "officialNamesCorrection": "Readback methods are config/read and skills/list(forceReload:true); config/list does not exist in the inspected interface."
+  },
+  "existingSurface": {
+    "entry": "Reuse AgentDetails → 技能与工具 → 清单类型=技能清单, current explicit folder selection and query. No new settings destination or Agent-specific visible branch.",
+    "retain": "Existing names, plain-text descriptions, reported origin, query time/directory, partial error count, stale results, kind switch and exact old-request status/cancel remain intact. Opening details, switching kind or selecting a folder never writes settings.",
+    "changeWhenImplemented": "Add one text action per manageable skill and a shared inline confirmation/status section below the result list. Keep list scroll position and focus origin. Extract the management section/controller rather than growing the inventory component indefinitely.",
+    "readOnlyCopy": "Current skillLimits and sideEffects explicitly say no enable/config writes. Keep those statements for the read-only query, and add separate operation-specific text for management; do not globally mislabel all queries as writes or retain contradictory text on the confirmation."
+  },
+  "rowAction": {
+    "labels": {
+      "currentlyEnabled": "停用…",
+      "currentlyDisabled": "启用…",
+      "refresh": "重新查询技能"
+    },
+    "availability": "Driven by a separate verified management capability and an exact fresh target, not Agent name or the boolean reportedEnabled. First route supports non-plugin user/repo origins only; other origins stay visible with a short specific reason when management is unavailable.",
+    "target": "Use an opaque backend RAM target tied to exact Agent/program, cwd, original skill path and config version; public index/name is not authority. Same-name rows need a safe display-only location distinction. No silent first-match selection.",
+    "staleOrPartial": "Stale rows cannot write. Partial list does not mean absent skills are disabled; a displayed exact target may proceed if its relevant configuration is independently verified, otherwise show the targeted reason.",
+    "noOptimisticSwitch": "Keep the prior badge until fresh readback. A click only opens preparation/confirmation; the row never immediately flips."
+  },
+  "interactionSequence": [
+    {
+      "step": "Select row action",
+      "behavior": "Capture exact row/owner and requested enabled value. Explicitly read the official user-layer configuration and fresh target if needed. Keep old list visible; show 正在核对这项技能…. Cancel here retires the unsubmitted confirmation and returns focus to its row."
+    },
+    {
+      "step": "One inline confirmation",
+      "content": [
+        "技能名称 + 可辨认来源",
+        "变更：启用 / 停用",
+        "保存到：此 Agent 的用户设置",
+        "此设置也会影响在其他文件夹中发现的同一项技能；不删除技能文件。"
+      ],
+      "details": "Selected query directory/time, exact scope and precedence limitations, official program may use existing login/environment/cache. Current conversation adoption is not proven. No raw protocol, secret, arbitrary description link or code execution.",
+      "buttons": ["取消", "确认启用 / 确认停用"],
+      "guard": "Confirmation is a button, not implicit form submission or autofocus default. Double click/repeated Enter dispatches once. Agent, program, cwd, target or config version change retires the permission before dispatch."
+    },
+    {
+      "step": "Write then verify",
+      "behavior": "Use the selected exact official method and versioned user-layer change defined in the research. Preserve all non-target rules. Show 正在保存设置… then 正在核对保存结果…. A write acknowledgement alone does not flip the badge. Read config/read and skills/list with original cwd and forceReload:true."
+    },
+    {
+      "step": "Show observed outcome",
+      "behavior": "Publish only to the same management owner/target; refresh the appropriate skills result and time only from matching fresh data. Keep MCP results untouched. A changed list order cannot select another same-name skill."
+    },
+    {
+      "step": "Close or switch",
+      "behavior": "Before dispatch, withdraw confirmation with no write. After possible dispatch, close remains usable but does not mean cancelled/rolled back; operation tracking stays attached to the original Agent/kind/cwd. Reopen shows that operation with its explicit check/cancel actions; another kind must not rename it or auto-retry."
+    }
+  ],
+  "outcomes": [
+    {
+      "state": "verifiedDesired",
+      "copy": "已保存；技能报告：已启用。 / 已保存；技能报告：未启用。",
+      "evidence": "Official write accepted; fresh user-layer read shows the intended selected-rule change; fresh exact skill report matches desired enabled. Preserve unchanged-rule evidence at the controlled verification layer.",
+      "actions": "Return to list; an inverse change requires its own fresh action and confirmation.",
+      "limit": "Current conversation has not thereby been shown to load/use the change."
+    },
+    {
+      "state": "persistedButNotEffective",
+      "copy": "设置已保存，但此次技能报告仍为未启用。",
+      "evidence": "Fresh config confirms the preference, while fresh skill report differs. If the official response proves an overriding layer, explain it in details; otherwise say the cause is unconfirmed rather than inventing an override.",
+      "actions": "重新检查结果；查看原因. No automatic retry at a higher layer or use of the broad name selector."
+    },
+    {
+      "state": "notSavedKnown",
+      "copy": "未保存。设置已变化，请重新核对。 / 未保存。这项设置不能在此修改。",
+      "evidence": "Only precise pre-write rejection such as version conflict/readonly, not arbitrary process exit or timeout.",
+      "actions": "重新核对 returns to a fresh confirmation; never resubmits the old approval."
+    },
+    {
+      "state": "savedReadbackUnavailable",
+      "copy": "设置已提交，结果尚未核实。",
+      "evidence": "Write response was obtained, but config or skills readback is missing/partial/target absent; a returned effectiveEnabled echo is not sufficient.",
+      "actions": "重新检查结果; keep previous report visibly stale and do not change the requested value automatically."
+    },
+    {
+      "state": "unknown",
+      "copy": "结果未知。请检查结果后再修改。",
+      "evidence": "Lost response, timeout, cancellation or transport failure after possible write. Same operation can later resolve only through exact completion plus fresh official readback; a read matching desired state without write acknowledgement is an observed current state, not proof this request caused it.",
+      "actions": "检查本次操作状态 / 重新检查结果 as actually available. No blind re-write, auto rollback or success from a fresh desired value alone."
+    },
+    {
+      "state": "cancelRequested",
+      "copy": "已请求取消，尚未确认操作已结束。",
+      "evidence": "Cancel receipt is a request, not no-write evidence. Before-dispatch cancellation can be 未提交 only when backend proves it; after-dispatch cancellation may still need result readback.",
+      "actions": "Keep exact operation controls. Do not label a saved setting 已取消 or assume the read-only controller null-cancel release rules prove mutation absence."
+    },
+    {
+      "state": "targetChangedOrUnsupported",
+      "copy": "所选技能或设置已变化，请重新核对。 / 此项技能暂不能在此修改。",
+      "evidence": "Exact owner/ticket/target drift or missing reviewed official management route.",
+      "actions": "Preserve list and details, withdraw stale confirmation, allow explicit fresh query. Do not run official writes from an unreviewed fallback."
+    }
+  ],
+  "ownershipAndRecovery": {
+    "exactIdentity": "Keep read-query and write-operation identities separate. Controls always refer to the original operation; Agent/cwd/kind A→B→A never revives an old confirmation.",
+    "unresolvedScope": "Serialize only conflicting Farfold management work and protect the actual shared Agent/config scope. Keep independent UI navigation and existing drafts/history available; do not add a new global send prohibition merely because the panel is open.",
+    "reopenAndRestart": "Memory-only tracking survives panel close. After application restart require a fresh official read; do not claim old operation success or replay it. No persistent configuration mirror or operation ledger.",
+    "officialRoute": "Use only the official route proven by the research counterexamples; no fallback to dedicated toggle or direct private-file edits. No external all-process CAS claim.",
+    "currentConversation": "Say 当前对话是否采用此设置尚未核实 in details. Do not stop/reconnect a conversation or send a model request to demonstrate success without separate task authorization."
+  },
+  "accessibilityAndFit": [
+    "Existing dialog + inline review, no nested modal. Cancel restores focus only to its still-current connected row.",
+    "Tab/Shift+Tab reaches actions; one Enter must not both open and confirm. No confirmation autofocus or implicit form submission.",
+    "Existing CSS tokens/wrapping; narrow width and long text retain scope/cancel/status access without whole-window overflow.",
+    "Short status/alert and collapsed reasons; descriptions remain plain text, never links, HTML or composer content."
+  ],
+  "minimalAcceptance": [
+    {
+      "case": "Exact target and explicit write",
+      "proof": "Actual shared component/parent + real controller/strict parser, controlled IPC: duplicate names and reordered fresh list, one confirmation, one correct target write, no write on type/folder choice, no prompt/draft/config side effects from ordinary query."
+    },
+    {
+      "case": "Enable and disable with preservation",
+      "proof": "Use the existing planned owned official fixtures for AoT/inline preservation, duplicate path/name rules and scope. Verify config/read plus skills/list; retain real failures and do not substitute direct file edits."
+    },
+    {
+      "case": "Rejected and ineffective",
+      "proof": "Strict version conflict/readonly produces not-saved; accepted write plus conflicting fresh report produces persisted-but-not-effective. A reason is displayed as other-config override only when official evidence supports it."
+    },
+    {
+      "case": "Unknown, close and late result",
+      "proof": "Response lost after possible write, cancel ack, closed/reopened view, kind switch and A→B→A: no automatic resend or rollback, exact old operation can be checked, late response cannot flip new row. A write-acknowledged/readback-failed path differs from no acknowledgement."
+    },
+    {
+      "case": "Keyboard and narrow shared surface",
+      "proof": "WebKit and Chromium using real production components/controller after source freeze: Tab/Shift+Tab, one Enter does not cross both steps, cancel focus, narrow width with long row text, MCP read-only path retained. No separate design-only prototype counts as implemented."
+    },
+    {
+      "case": "Installed and effect boundary",
+      "proof": "Use ordinary candidate/install/data-retention workflow and authorized native setting change/reverse. Configuration evidence is not real skill execution. Real model adoption remains separately untested, without adding a new compulsory model smoke gate."
+    }
+  ],
+  "proposedCodeSeams": [
+    "AgentExtensionInventoryResult: optional capability/target-driven row action while retaining current report metadata",
+    "Shared inline SkillSettingReview and separate memory-only setting-operation controller/types/strings; reuse AgentDetails dialog and existing view ownership",
+    "acp_client official config-read/write/skills-read adapter with opaque target/version authority and exact terminal/unknown receipts; no direct user configuration edits"
+  ],
+  "deferredNotExcluded": [
+    "Install/discover additional skills and move/copy scope",
+    "System/admin/plugin-wide changes and arbitrary MCP management",
+    "Automatic session restart/reload, auth flow or model request",
+    "Any claim that returned enabled preference proves a concrete tool or skill ran"
+  ],
+  "sourceRefs": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "6fcdfb1f1cb7cadcf56aebfb46019aae0ef727510508bd92dbe3ad1d6eb414ba"
+    },
+    {
+      "path": "src/components/AgentDetails.tsx",
+      "sha256": "6d8bf6c10a43ad39f52da217ceb8025c26a8091c5da053ca6ed19cf34380f6cb"
+    },
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "2533e5c4e20913b330c87d871b26af1c8ca8f36acc7b1f0c650986c76a02576c"
+    },
+    {
+      "path": "src/components/AgentExtensionInventoryResult.tsx",
+      "sha256": "8e457a9a6a58a08a0d9df43dca8a57fc30b3ba5b69586b220175177bee71e4f4"
+    },
+    {
+      "path": "src/components/AgentExtensionInventory.css",
+      "sha256": "732481949295d1ce3fb7668d9dadd78ae155fbc37b7022b0e0a4c6a9b4cef921"
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.ts",
+      "sha256": "94ea22fe4c12cae428d31818fb9db78450e52efbf4d2c17896fa38e54c2afaa7"
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "6da4ae00bf97e3527e34dc7e97bab040bd55058a6f47da1b1a0ebf2ac81e6199"
+    },
+    {
+      "path": "src/runtime/extension_inventory_strings.ts",
+      "sha256": "057e682696238064c47e13255036c42137d79e8ae03bbb3ece57f664c1106f7d"
+    }
+  ],
+  "requiredOfficialProof": "Reuse the concrete official-interface counterexamples in next-management-surfaces.json; no additional unrelated experiments or new product acceptance gate."
+}

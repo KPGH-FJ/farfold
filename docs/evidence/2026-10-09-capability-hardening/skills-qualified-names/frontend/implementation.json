@@ -1,0 +1,142 @@
+{
+  "atUtc": "2026-10-10T14:21:14.606820+00:00",
+  "status": "source-and-targeted-validation-complete-not-installed",
+  "problem": "Skills name validation rejected official namespace:skill report names. This is one over-restrictive rule; the three failing tests are three observations of that same boundary.",
+  "change": "Only skillsLabel accepts either the unchanged ordinary-name grammar or exactly one colon between two nonempty simple segments without spaces. Total UTF-8 length remains <=256 and double-dot/path/URL/control/extra separators remain rejected. MCP name validation is unchanged.",
+  "sourceRefs": [
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "ccc2f4519d2e2e114efb20cb3c7221033c15091152dab353075a86a4eefada44"
+    },
+    {
+      "path": "src/runtime/extension_inventory.qualified-names.test.tsx",
+      "sha256": "a17c113e1ef1673655f7c5af601f40e90d58e5641310dacc1c06066bfebc671e"
+    },
+    {
+      "path": "src/runtime/extension_inventory.qualified-wire.test.tsx",
+      "sha256": "ddf77221bee8a092531b9bdb68e0da28287e9f0d9a3472cc531c8c3a72587f70"
+    }
+  ],
+  "actualWireRef": {
+    "path": "src/runtime/fixtures/skills-qualified-wire.json",
+    "sha256": "6dca69a9e52b6d3d63786fd3676535bc91c5f2c48cd65cdb1e328ec673f5093b"
+  },
+  "validation": {
+    "red": {
+      "files": 1,
+      "passed": 2,
+      "failed": 3,
+      "exitCode": 1,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/qualified-red.txt",
+        "sha256": "81256e08058134bb8d75f03d2a9031873d46d72bc0da098e2328f0e6cbf84d15"
+      }
+    },
+    "initialGreen": {
+      "files": 1,
+      "passed": 5,
+      "failed": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/qualified-green.txt",
+        "sha256": "4e47defbe1096d118dd3961e74e13518d582bdf00a41d6a6ca92a3d52f7c4f50"
+      }
+    },
+    "finalRelated": {
+      "files": 9,
+      "passed": 47,
+      "failed": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/targeted-final.txt",
+        "sha256": "666832f433a76d78cb4748144c06e0f079e7ff411c05143945814768a83a8a9b"
+      }
+    },
+    "typecheck": {
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/typecheck.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    "wire": {
+      "actualRawExactlyEqualsFixture": true,
+      "rawRef": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/backend/qualified-wire.raw.txt",
+        "sha256": "e2bd38959c3f9568a32b7b92e743888bd57f5205e85a00b8c12761be288139e1"
+      },
+      "caseCount": 2,
+      "scope": "Controlled peer through Rust decoder/Request serialization -> strict TS parser -> real React SSR result component. Not a live official CLI or installed-app result."
+    },
+    "component": {
+      "parserToRealSsr": true,
+      "duplicateRowsPreserved": true,
+      "disabledStatusPreserved": true,
+      "noAnchorButtonInputOrForm": true,
+      "notBrowser": true
+    },
+    "unchangedMcp": {
+      "exactFunctionAndFollowingBytes": true,
+      "sha256": "afdf7ea681afbfc1e9ad451d3e4bb37e4110c1f49bc1b2a7c12e63ce5bf6faf5",
+      "qualifiedNamesStillRejected": true
+    },
+    "format": {
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/format-final.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      }
+    }
+  },
+  "reviewCorrection": "Root initially suspected the old helper was shared by MCP, then independently confirmed its sole caller was skillsSnapshot and withdrew that concern. Renamed to skillsLabel for clarity; no extra shared-helper refactor.",
+  "boundaries": [
+    "No formal App, official CLI, Agent, model request, configuration write, installation or new browser journey in this followup.",
+    "Full engineering checks and formal installed followup belong to root.",
+    "Names remain display-only report metadata, not execution authority or proof of plugin ownership."
+  ],
+  "evidenceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/qualified-green-execution.json",
+      "sha256": "c520db5f5e3ce3c33d022d756a0f1b7fabeafdb9ccf78ce6d8bdc1e10290f429"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/qualified-green.txt",
+      "sha256": "4e47defbe1096d118dd3961e74e13518d582bdf00a41d6a6ca92a3d52f7c4f50"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/qualified-red-execution.json",
+      "sha256": "8ae29123da434031443d8cb83c7be1ac53c317c8d0eb0e521eaeb6894ab7232a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/qualified-red.txt",
+      "sha256": "81256e08058134bb8d75f03d2a9031873d46d72bc0da098e2328f0e6cbf84d15"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/source-before.json",
+      "sha256": "5e4e5df12e9a293fd017c35084512979fd02253f415b90f93890b40ba4775e15"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/targeted-final-execution.json",
+      "sha256": "8903f313dfc5576c864e4dfebdb84fd1b2bac78118f52df8139c7f390fc4971a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/targeted-final.txt",
+      "sha256": "666832f433a76d78cb4748144c06e0f079e7ff411c05143945814768a83a8a9b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/typecheck-execution.json",
+      "sha256": "e5d19c3e77b7de30e690f3b27a8ca5db9a80785aba34f546587bf6a8fd6095b0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/types-before.txt",
+      "sha256": "6da4ae00bf97e3527e34dc7e97bab040bd55058a6f47da1b1a0ebf2ac81e6199"
+    }
+  ],
+  "sourceUnchangedDuringFinalChecks": true,
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/source-checkpoint.json",
+    "sha256": "128613e6452300e96259d4b1efd2ffe65dd8862c873597c34577b206298e601a"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "command": ["corepack", "pnpm", "typecheck"],
+  "exitCode": 0,
+  "elapsedSeconds": 8.781,
+  "log": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/typecheck.txt",
+  "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+  "sourceBefore": {
+    "src/runtime/extension_inventory_types.ts": "ccc2f4519d2e2e114efb20cb3c7221033c15091152dab353075a86a4eefada44",
+    "src/runtime/extension_inventory.qualified-names.test.tsx": "a17c113e1ef1673655f7c5af601f40e90d58e5641310dacc1c06066bfebc671e",
+    "src/runtime/extension_inventory.qualified-wire.test.tsx": "ddf77221bee8a092531b9bdb68e0da28287e9f0d9a3472cc531c8c3a72587f70",
+    "src/runtime/fixtures/skills-qualified-wire.json": "6dca69a9e52b6d3d63786fd3676535bc91c5f2c48cd65cdb1e328ec673f5093b"
+  },
+  "sourceAfter": {
+    "src/runtime/extension_inventory_types.ts": "ccc2f4519d2e2e114efb20cb3c7221033c15091152dab353075a86a4eefada44",
+    "src/runtime/extension_inventory.qualified-names.test.tsx": "a17c113e1ef1673655f7c5af601f40e90d58e5641310dacc1c06066bfebc671e",
+    "src/runtime/extension_inventory.qualified-wire.test.tsx": "ddf77221bee8a092531b9bdb68e0da28287e9f0d9a3472cc531c8c3a72587f70",
+    "src/runtime/fixtures/skills-qualified-wire.json": "6dca69a9e52b6d3d63786fd3676535bc91c5f2c48cd65cdb1e328ec673f5093b"
+  },
+  "sourceStable": true
+}

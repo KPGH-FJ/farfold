@@ -1,0 +1,116 @@
+{
+  "verifiedAtUtc": "2026-10-10T14:12:35.799138+00:00",
+  "sourceCommit": "aadbe0f2952f9decd213804c12911ccccc58971b",
+  "formalApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "status": "Actual official skills and MCP queries completed; qualified names defect observed, repair pending; no P39 completion claim",
+  "officialQuery": {
+    "entryAccessVersionReported": "1.13.1",
+    "skillsQueryCount": 2,
+    "mcpQueryCount": 1,
+    "mechanism": "Explicit common native UI queries using production fixed official app-server skills/list and cli mcp list paths. Existing selected program and environment; no model prompt or config modification submitted.",
+    "normalDirectory": {
+      "items": 24,
+      "projectFixtureName": "farfold-inventory-valid",
+      "projectOriginReported": true,
+      "enabledReported": true,
+      "expectedDescriptionShown": true,
+      "partialNotice": false,
+      "time": "2026/10/10 22:08:35"
+    },
+    "partialDirectory": {
+      "items": 24,
+      "projectFixtureName": "farfold-inventory-partial",
+      "expectedDescriptionShown": true,
+      "reportedErrors": 1,
+      "partialNoticeShown": true,
+      "time": "2026/10/10 22:09:21"
+    },
+    "mcpRegression": {
+      "items": 5,
+      "enabled": 2,
+      "disabled": 3,
+      "time": "2026/10/10 22:10:02"
+    },
+    "actualSkillExecutionVerified": false,
+    "currentConversationApplicabilityVerified": false,
+    "rawUserSkillNamesDescriptionsExcluded": true
+  },
+  "uiObservations": {
+    "kindSelectionNoQuery": true,
+    "directorySelectionNoQuery": true,
+    "directoryPickerCancelExactAXPreserved": true,
+    "changedDirectoryOldReportMarkedStale": true,
+    "kindReportsSeparate": true,
+    "otherAgentSkillsUnreviewedAndNoReusedReport": true,
+    "closedReopenedBothKindsStaleAndRequireDirectory": true,
+    "scopeNotesVisible": true
+  },
+  "defect": {
+    "observation": "Seven plugin-reported skill rows show name unavailable in each actual skill report. AX contains only filtered names.",
+    "confirmedSourceCause": "Backend shared MCP safe_name and frontend shared label both reject colon; official plugin loader qualifies namespace:base_name.",
+    "scope": "Cannot establish each original raw name from AX; source proves lawful qualified names are filtered.",
+    "next": "Fix only skill-name paths and verify Rust/TS wire, component rendering and fresh formal result."
+  },
+  "notCovered": [
+    "Real running cancellation race: all three queries settled before post-action observation",
+    "Timeout, unknown tracking or official process failure in formal UI",
+    "Skill invocation, management, MCP server/tool execution",
+    "Other agents or Windows"
+  ],
+  "dataAfterNative": "Pending independent full secondary-copy comparison",
+  "exit": {
+    "normalQuit": true,
+    "forcedQuit": false,
+    "formalProcessCountAfter": 0
+  },
+  "sourceAndFixture": {
+    "inputCount": 1404,
+    "allInputsUnchangedThroughNative": true,
+    "formalFiveFilesUnchanged": true,
+    "controlledDirectoryFilesUnchanged": true
+  },
+  "driverCorrections": [
+    "First screenshot helper closed over unassigned app; no repeated UI navigation. Replaced capture helper with explicit app parameter.",
+    "Go To folder paste left prior selected path unchanged; clicked field and typed full observed path before choosing directory."
+  ],
+  "privateEvidence": {
+    "output/2026-10-10-skills-inventory-native/01-explore.png": "f66cfd037d77049f8bba50354953601595bc7067d7ef5f0aa4bf4738406d0a66",
+    "output/2026-10-10-skills-inventory-native/01-explore.txt": "04e0a06618b8d02da708161d2578b00c3e353070e91b8e53274d4fe414bcf607",
+    "output/2026-10-10-skills-inventory-native/02-codex-details.png": "6137c9f6b700c8d8eaf7bdc4e43440abe5ea3d2391248d898a2cf51572457799",
+    "output/2026-10-10-skills-inventory-native/02-codex-details.txt": "3f7e8a2b1073937852358fe826d37450d4d9235e22930fd49684f56a62be1d05",
+    "output/2026-10-10-skills-inventory-native/03-skills-no-query.png": "f4db318b13d8eadf748972a3621fc47977d1df08069e12fbad03d18ea70fcdfb",
+    "output/2026-10-10-skills-inventory-native/03-skills-no-query.txt": "7fd203a7625bd93fa73da3b51a8628961882bb4a5518d9ba62812a3f72af40a4",
+    "output/2026-10-10-skills-inventory-native/04-valid-selected.png": "79871b47b43545b5c2cada6ae7622a7b51f2b5aad0a417f0c369f811b1376602",
+    "output/2026-10-10-skills-inventory-native/04-valid-selected.txt": "379dd06e21f38dcf267cdbe232cba94315e8c972af7d34bb68389d3c7ff25d93",
+    "output/2026-10-10-skills-inventory-native/05-valid-query.png": "f49085740be1b406a19124da9dbef3ed7f9e02a2368a4a2e62adc0aa8bb4328b",
+    "output/2026-10-10-skills-inventory-native/05-valid-query.txt": "5397d9397f6771ff220d3c6a5d4830f03e0b16fde09eb11709c3dee73c73836b",
+    "output/2026-10-10-skills-inventory-native/06-picker-cancel-kept.png": "9901359a1959192ccb68229dbbc2eef565da463bd4c8b974fbbe5af2c46e1628",
+    "output/2026-10-10-skills-inventory-native/06-picker-cancel-kept.txt": "5397d9397f6771ff220d3c6a5d4830f03e0b16fde09eb11709c3dee73c73836b",
+    "output/2026-10-10-skills-inventory-native/07-changed-directory-stale.png": "ab4b2cb2eef85549722a1a06593a88fe6951f2bbd2aa506607126132fd2a58f6",
+    "output/2026-10-10-skills-inventory-native/07-changed-directory-stale.txt": "44ddef2addc449323cb559f2bd6d112f6935403b52a260b475dfd2b79fd6fd08",
+    "output/2026-10-10-skills-inventory-native/08-partial-query.png": "a9e8d4b14e46137e017c49d26a1bab5460e79f1b4d09932fd553ca772dcf9b30",
+    "output/2026-10-10-skills-inventory-native/08-partial-query.txt": "99b36fcf6fabe48eed4e00ecc2ad677fa618c575cea05918892cec7c83bc8345",
+    "output/2026-10-10-skills-inventory-native/09-scope-note.png": "ef964746a2e2724dcd02b4da2575d0b0b12deb78472e257a369d03f6679f68d4",
+    "output/2026-10-10-skills-inventory-native/09-scope-note.txt": "50073b48063014e3f89679948252b1eebf71adde2257e5c635ba0bdf339dc69e",
+    "output/2026-10-10-skills-inventory-native/10-partial-visible.png": "8a8e711e701de333f04a6585601a53840a8dbed9675951a069c24fd5bf1532ef",
+    "output/2026-10-10-skills-inventory-native/10-partial-visible.txt": "50073b48063014e3f89679948252b1eebf71adde2257e5c635ba0bdf339dc69e",
+    "output/2026-10-10-skills-inventory-native/11-mcp-selected-no-skill-data.png": "cca2c7edd10f85101ea6e9acc85586632565e42669d31e5f05d4bd31f79c07c8",
+    "output/2026-10-10-skills-inventory-native/11-mcp-selected-no-skill-data.txt": "6828293fdcabbbe458f9facaa794c571b183b663ff98364cf8b0108dee8e7c3a",
+    "output/2026-10-10-skills-inventory-native/12-mcp-regression.png": "72cc8ed82e44f9ce0534848df18f7005dfc73fa7f1bf44e9148e33c67480efe3",
+    "output/2026-10-10-skills-inventory-native/12-mcp-regression.txt": "d0dbbad8d96c336d0b486c8aef9bf138eb093c44e76c0b61a04d49031251d4f9",
+    "output/2026-10-10-skills-inventory-native/13-other-agent.png": "ee153ca0187cc1e67cbd75dd661a377cb8d6decfab43585518829bab2653d923",
+    "output/2026-10-10-skills-inventory-native/13-other-agent.txt": "a7fca43cdc994483ff154d61f87ed948aa74b9ea1e8f96702a6f26ec41710d9b",
+    "output/2026-10-10-skills-inventory-native/14-other-agent-skills-unreviewed.png": "1a4d9417c305fad07b35355caab9acf5fddd8599b574f59668032f0bdba6337d",
+    "output/2026-10-10-skills-inventory-native/14-other-agent-skills-unreviewed.txt": "7825e683446240714a9fb9eef481f78cc5f9a351bae1612078fd25caa487d393",
+    "output/2026-10-10-skills-inventory-native/15-reopened-mcp-stale.png": "1fa352424f6a5c6338bb9b09db2cd20405b4d4798f6201daa87f47ca8be1a961",
+    "output/2026-10-10-skills-inventory-native/15-reopened-mcp-stale.txt": "d40347f403ddb06535d7b6040dbd38a7e84488ccf761eef7e3b18ac448d8d9a7",
+    "output/2026-10-10-skills-inventory-native/16-reopened-skills-stale.png": "d43e31687599f4bdd80a903d58881f3933a445da1c8ae492fe9b8543377ad64d",
+    "output/2026-10-10-skills-inventory-native/16-reopened-skills-stale.txt": "9b0877fa49901d173bba08f5a59124bbb2c589c29b5fb720c2be46860ebabfba",
+    "output/2026-10-10-skills-inventory-native/17-normal-quit-dialog.png": "4337add8e81b527e9b23f2a1f30d7de66c924fb76cf75fc943c9ef00b9c5b038",
+    "output/2026-10-10-skills-inventory-native/17-normal-quit-dialog.txt": "c491503da974baeb9d74a623c9628bdb541557977fac0cb7aeb1c4bba3bfe8cf",
+    "output/2026-10-10-skills-inventory-native/final-normal-exit.json": "4b194e36e2e837fe13b1872828523b8a97a1f5076f0d722fd3ab4fcb5e1065f5",
+    "output/2026-10-10-skills-inventory-native/freeze-before-native.json": "ec6e76500a0ea222ba71145b1c22dc88cfd1dbf434a9afeb878a03d230ea7bd4"
+  }
+}

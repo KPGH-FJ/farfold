@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-10T14:16:52.787565+00:00",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_output.rs",
+      "sha256": "5dd45db48739a48fc8dc0bbcc8cc208652487b6f7cd3b88bde4fbad12839b700"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_tests.rs",
+      "sha256": "c6266eb7dad98544bbd81e645e2e8688165c56ec14b04670f58116959cd193cb"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "156fe0a61521b81baef133ea5e1b51b5b98a2bd8052b80a27ebf0b2da78a9b85"
+    }
+  ]
+}

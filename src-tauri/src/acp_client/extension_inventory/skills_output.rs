@@ -38,6 +38,17 @@ struct Skill {
 struct Interface {
     short_description: Option<String>,
 }
+fn safe_skill_name(name: &str) -> Option<String> {
+    let Some((namespace, skill)) = name.split_once(':') else {
+        return output::safe_name(name);
+    };
+    // Official plugin names are namespace:skill, not URLs or arbitrary headers.
+    (name.len() <= 256
+        && [namespace, skill]
+            .iter()
+            .all(|part| !part.contains(' ') && output::safe_name(part).is_some()))
+    .then(|| name.to_owned())
+}
 fn forbidden_char(c: char) -> bool {
     c.is_control()
         || matches!(c, '\u{200b}'..='\u{200f}' | '\u{202a}'..='\u{202e}' | '\u{2060}'..='\u{206f}' | '\u{feff}')
@@ -159,7 +170,7 @@ impl Wire {
                 description(brief, &skill.path);
             items.push(SkillInventoryItem {
                 id,
-                name: output::safe_name(&skill.name),
+                name: safe_skill_name(&skill.name),
                 description,
                 description_truncated,
                 description_redacted,

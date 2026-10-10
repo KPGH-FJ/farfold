@@ -1,0 +1,58 @@
+{
+  "requestId": "03000000-0000-4000-8000-000000000001",
+  "agentId": "fixture",
+  "cwd": "/tmp",
+  "kind": "skills",
+  "state": "ready",
+  "settled": true,
+  "snapshot": {
+    "observedAtMs": 1791641903174,
+    "scope": "officialSkillsForDirectory",
+    "source": "officialAppServer",
+    "complete": true,
+    "sessionApplicability": "unverified",
+    "errorCount": 0,
+    "items": [
+      {
+        "id": 0,
+        "name": "sample:search",
+        "description": "Review documents",
+        "descriptionTruncated": false,
+        "descriptionRedacted": false,
+        "reportedEnabled": true,
+        "origin": "repo",
+        "pluginReported": true
+      },
+      {
+        "id": 1,
+        "name": "documents:documents",
+        "description": "Review documents",
+        "descriptionTruncated": false,
+        "descriptionRedacted": false,
+        "reportedEnabled": false,
+        "origin": "repo",
+        "pluginReported": true
+      },
+      {
+        "id": 2,
+        "name": "sample:search",
+        "description": "Review documents",
+        "descriptionTruncated": false,
+        "descriptionRedacted": false,
+        "reportedEnabled": true,
+        "origin": "user",
+        "pluginReported": false
+      },
+      {
+        "id": 3,
+        "name": "ordinary-name",
+        "description": "Review documents",
+        "descriptionTruncated": false,
+        "descriptionRedacted": false,
+        "reportedEnabled": true,
+        "origin": "repo",
+        "pluginReported": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,462 @@
+{
+  "status": "Read-only official-interface research; design recommendation, not implemented or experimentally verified management.",
+  "performed": {
+    "officialSourceDownloads": true,
+    "publicPackageMetadataRead": true,
+    "officialDocsRead": true,
+    "officialCliOrAppExecution": false,
+    "modelOrAccountRequest": false,
+    "userConfigOrCredentialReadOrWrite": false,
+    "productionEdits": false,
+    "testsRun": false
+  },
+  "versionBoundary": {
+    "installedPublicPackage": "@openai/codex 0.156.1",
+    "adapterPublicPackage": "@agentclientprotocol/codex-acp 1.13.1",
+    "sourceTag": "rust-v0.156.1",
+    "tree": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/tree.json",
+      "sha256": "435e253cb7606872c18bc9899b16b54dcd3e5236741e339785850e7ad8ab4376"
+    },
+    "installedEvidence": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-skills/schema-draft.json",
+      "sha256": "f0cf6aa656590fb2edd826c87ff9ebda712b8497b8347b4699ed86c2b6e46880"
+    },
+    "checkedNow": "Both package.json version and SHA match the prior public-package records. This does not prove runtime method behavior and is not permission to pin a binary/version. Different registered official entry must advertise/negotiate or reject unsupported.",
+    "onlineDocs": "Current online documentation is not versioned to this installed package; tagged code owns exact wire/behavior. Docs path-only skills example omits supported name alternative; perCwdExtraUserRoots online example is absent from tag SkillsListParams.",
+    "sourceTreeSha": "b412ff32c417f855c2b2d1581b77058eed87c84b",
+    "tagCommitResolution": "Not claimed: tree API returns a tree SHA, not commit identity; a later tag-ref read was rate-limited (HTTP403). Exact tag URLs plus downloaded-file SHA identify inspected source."
+  },
+  "skillsConfigWrite": {
+    "request": {
+      "method": "skills/config/write",
+      "params": {
+        "path": "<absolute exact skill document path; omit name>",
+        "enabled": false
+      }
+    },
+    "alternateSelector": "Exactly one path OR nonempty trimmed name; both/neither invalid. Name affects every loaded same-name skill, so not appropriate for single-row UI authority.",
+    "response": {
+      "effectiveEnabled": "boolean: implementation returns the requested value, without verifying effective enablement"
+    },
+    "writeScope": "The handler writes effective CODEX_HOME/config.toml via ConfigEditsBuilder::new; not repo .codex, admin/system skill files, plugin manifest, or chosen cwd config. No filePath, expectedVersion, cwd, per-session target or operation nonce parameter.",
+    "disable": "Updates first matching selector or appends enabled=false; canonicalizes path when possible. Does not delete skill content.",
+    "enable": "Removes first matching override, not explicit enabled=true. Remaining duplicate/name/SessionFlags rules can still disable the skill; no matching selector can return success without changing disk.",
+    "applicability": "The override engine applies to merged loaded paths without filtering user/repo/system/admin/plugin scope; scope is origin, not write destination. Bundled-disabled, plugin-disabled, omitted/failed roots may not yield a skill to enable. This is not permission to enable an entire plugin or override administrator policy.",
+    "shapeRisk": {
+      "classification": "Concrete source-path risk; not a reproduced CLI/API failure in this task",
+      "finding": "set_skill_config accepts only toml_edit ArrayOfTables. A parsed inline skills.config=[{...}] follows the non-ArrayOfTables branch: enabled=false replaces the existing array before adding target; enabled=true returns without mutation. Thus unrelated rules may be lost or enabling may no-op. Existing three upstream examples cover only [[skills.config]].",
+      "evidence": ["configEdit:529-585", "configEditTests:480-544"],
+      "requiredProof": "Use self-owned config containing two valid inline entries and a distinct target; compare full semantic config before/after official call. Do not execute against user config, patch upstream, or infer safety from success response."
+    },
+    "writeMechanics": "Follows existing symlink resolution, reads full TOML, applies edits, then writes sibling temporary file and persists. Atomic replacement does not mean atomic compare-and-swap or power-loss durability; no explicit fsync in helper. Broken/cyclic symlink handling has fallback behavior and needs an owned fixture.",
+    "concurrency": "Method declares global config serialization within one server. Other CLI/server/editor writers are outside that serialization; official read-edit-persist path has no external lock or expected version.",
+    "failureUnknown": "Parse/write errors return internal error. After dispatch, lost response/cancellation/process exit is not proof no config changed. Do not auto-retry or auto-restore old config. Explicit fresh official read is the recovery action.",
+    "readback": "After writing, explicit skills/list {cwds:[exactOriginalCwd],forceReload:true} reloads config, invalidates caches and reports current enabled per exact path. Incomplete/errors, absent target or mismatched state remain unresolved/overridden, not enabled success.",
+    "currentConversation": "Dedicated handler only clears managers; it does not request existing Farfold ACP sessions to reload. Readback in an isolated management process proves its report, not current model use. No automatic restart, resume, send or current-session config change is proposed.",
+    "evidence": [
+      "skillsDto",
+      "requestRoutes",
+      "skillsProcessor",
+      "configEdit",
+      "atomicWrite",
+      "skillsRules",
+      "skillsHost",
+      "skillsRoots",
+      "loadedSkillInput"
+    ]
+  },
+  "saferOfficialAlternative": {
+    "assessment": "Preferred candidate for a controlled management implementation: official exact-key, version-checked user-layer edit. Requires owned integration proof; not a claim of full cross-process isolation.",
+    "read": {
+      "method": "config/read",
+      "params": {
+        "cwd": "<explicit selected cwd>",
+        "includeLayers": true
+      }
+    },
+    "capture": "Keep exact active User layer path/version and complete skills.config array only in restricted RAM. The API can return unrelated sensitive config; never forward/log the raw response. Validate/bound full response, extract minimal allowlist, then discard unrelated values. No direct private-file parser.",
+    "write": {
+      "method": "config/value/write",
+      "params": {
+        "keyPath": "skills.config",
+        "value": "<complete prior USER array, preserving every other entry and order; append or precisely replace selected canonical path rule enabled=true/false>",
+        "mergeStrategy": "replace",
+        "filePath": "<exact active User layer path from config/read>",
+        "expectedVersion": "<that same User layer version>"
+      }
+    },
+    "arraySemantics": "This key is an array, not an indexed path; do not invent skills.config.N.enabled. Remove only duplicate rules for the exact selected path if the approved diff explicitly shows this; do not remove same-name or unrelated rules. Prefer an appended path rule after preserved rules to disambiguate name precedence; reject ambiguous/unrecognized entries instead of silently normalizing.",
+    "response": {
+      "status": "ok | okOverridden",
+      "version": "new computed user-layer version",
+      "filePath": "written user-config path",
+      "overriddenMetadata": "nullable message/layer/effectiveValue; keep private and render sanitized reason"
+    },
+    "knownErrors": [
+      "configLayerReadonly",
+      "configRequirementReadonly",
+      "configVersionConflict",
+      "configValidationError",
+      "configPathNotFound",
+      "configSchemaUnknownKey",
+      "userLayerNotFound"
+    ],
+    "scope": "Only allowed user config path is accepted even though filePath exists. No repository-write selector. Config validation rejects managed exact requirements. The response override calculation is thread-agnostic and cannot prove selected repo or separate session behavior.",
+    "expectedVersionProtection": "Rejects a user layer changed before the method reload/check. Same-server global config serialization applies. An external edit after that check is not rechecked atomically at persist: ConfigEditsBuilder rereads then applies SetPath. This reduces stale writes but is not a global CAS guarantee or a reason to declare development impossible.",
+    "preservation": "Official SetPath changes only skills.config, preserving other keys structurally in the later disk document. Within the array, Farfold must pass every prior non-target rule exactly. External concurrent edits to this same array after check may still be overwritten; later full official readback must compare intended array and unrelated semantic config without leaking it.",
+    "representationInterop": "The generic writer serializes arrays as TOML inline arrays (configService:701-738). Mixing later dedicated skills/config/write with that representation may hit its shape risk. Owned tests must cover both directions; no silent switch back to dedicated method or claim that all other official clients are safe.",
+    "batchAlternative": "config/batchWrite uses edits[{keyPath,value,mergeStrategy}], same filePath/expectedVersion; optional reloadUserConfig reloads some settings of loaded threads in this same server. Do not request broad reload for this first slice or use it as evidence about separate ACP connections.",
+    "readback": "Read config again with exact cwd/layers and compare user-layer intended change; then skills/list forceReload. A successful write with ineffective enabled state must remain distinct. The returned write version is based on calculated layers, not a subsequent filesystem reread.",
+    "evidence": [
+      "configDto",
+      "configService",
+      "configCredentialEdits",
+      "configProcessor",
+      "requestRoutes",
+      "configEdit",
+      "atomicWrite"
+    ]
+  },
+  "mcpManagement": {
+    "add": {
+      "parameters": "mcp add NAME (--url URL | -- COMMAND...) ; stdio optional --env KEY=VALUE; HTTP --bearer-token-env-var, --oauth-client-id, --oauth-client-registration auto|cimd|dcr, --oauth-resource. No explicit scope, dry-run or skip-login option in this tag.",
+      "destination": "Loads global user MCP map, inserts/replaces the exact name with a default-enabled entry, writes entire mcp_servers map via user config.",
+      "partialCommit": "HTTP add discovers OAuth then persists configuration before automatic OAuth browser flow. Nonzero exit/timeout/cancel during login can leave configuration added. Do not say not-added or auto-remove rollback.",
+      "concurrentRisk": "replace_mcp_servers deletes keys absent from its earlier snapshot even though the file is read again; can lose concurrent same-table additions. Config atomic replacement does not cure stale map replacement."
+    },
+    "remove": {
+      "parameters": "mcp remove NAME",
+      "result": "Removes only global user entry, succeeds also when name absent; textual stdout, no structured mutation receipt. Not disable, logout, revocation, plugin removal or confirmation of current tool disconnection. Other config/plugin sources may still provide the server."
+    },
+    "narrowerConfigRoute": {
+      "addExample": {
+        "method": "config/value/write",
+        "params": {
+          "keyPath": "mcp_servers.\"explicit-name\"",
+          "value": {
+            "url": "https://example.invalid/mcp",
+            "enabled": false
+          },
+          "mergeStrategy": "replace",
+          "expectedVersion": "<fresh User version>",
+          "filePath": "<exact User config path>"
+        }
+      },
+      "disableExample": {
+        "keyPath": "mcp_servers.\"explicit-name\".enabled",
+        "value": false,
+        "mergeStrategy": "replace",
+        "expectedVersion": "<fresh User version>"
+      },
+      "removeExample": {
+        "keyPath": "mcp_servers.\"explicit-name\"",
+        "value": null,
+        "mergeStrategy": "replace",
+        "expectedVersion": "<fresh User version>"
+      },
+      "boundary": "Prospective configured-only management: no connect/login as side effect of this request. Verify actual behavior in controlled official process; disabled creation is intentional until separate explicit connection. Keys with dot/quote/backslash require protocol keyPath quoting, not concatenation. Existing same-name effective entry may come from repo/plugin; do not overwrite/remove on ambiguous provenance. No arbitrary secrets in command args/logs."
+    },
+    "login": {
+      "cli": "mcp login NAME [--no-browser] [--scopes comma,list] [--oauth-client-registration auto|cimd|dcr]. Streamable HTTP only; effective server lookup; configured header helper/runtime and external OAuth may have side effects.",
+      "structuredRequest": {
+        "method": "mcpServer/oauth/login",
+        "params": {
+          "name": "<exact configured server>",
+          "threadId": "<optional same-server loaded thread; omit for first management scope>",
+          "scopes": ["<explicit requested scope>"],
+          "timeoutSecs": "<bounded integer>",
+          "clientRegistration": "auto | cimd | dcr"
+        }
+      },
+      "reply": "authorizationUrl starts authentication, not success. Later mcpServer/oauthLogin/completed {name,threadId,success,error?} is completion; no independent operation identifier in notification.",
+      "credentials": "Official code writes its selected keyring or CODEX_HOME/.credentials.json fallback. Token success is saved before completion. File fallback uses aggregate store lock and regular-file/no-follow guard, then truncates+writes in place; not the config-file atomic rename. Config and credential updates are not one transaction.",
+      "cancel": "No dedicated MCP OAuth cancel method found in this tagged request registry; closing UI or stopping a local process cannot prove remote auth grant/token revocation. Late completion and timeout stay explicit unknown until official evidence. Do not misuse account/login cancel or mcp logout as rollback.",
+      "scope": "One exact owner/server attempt per managed process; notification name/threadId alone cannot disambiguate concurrent repeated login attempts. Farfold must retain process/request ownership and not publish late completion into another attempt."
+    },
+    "reloadAndDiagnosis": "config/mcpServer/reload {} acts on threads loaded in that management server only. mcpServerStatus/list can initialize/connect configured servers and must be a separately explicit diagnostic operation, not reused as passive P39 inventory. Neither proves separate Farfold ACP session reload. Return {} means refresh requested/applied config path, not all tools callable.",
+    "notYetProven": "No CLI mutation, OAuth account flow, secret-store behavior, live tool call, rollback, Windows, or installed management UI was executed. First MCP slice can be exact user entry disable/add-disabled with official config write and readback; connect/login/diagnosis remain separate required P41 work.",
+    "evidence": [
+      "mcpCli",
+      "configEdit",
+      "configService",
+      "mcpDto",
+      "mcpProcessor",
+      "mcpRefresh",
+      "oauthFinish",
+      "oauthStorage",
+      "requestRoutes"
+    ]
+  },
+  "recommendedFirstSlice": {
+    "name": "P40 existing skill exact-path user preference, official read → explicit approve → version-checked exact-key write → fresh report",
+    "deliverable": "A reversible user-layer enabled/disabled preference for an already-discovered user/repo skill. No file copying/deletion, install, plugin enablement, scope migration, automatic model request or configuration patch outside official API.",
+    "managementAuthority": "P39 public ordinal/name is presentation only. Current projection discards private path; extend a separate bounded opaque RAM management ticket containing exact reviewed Agent row/selection, cwd identity, private skill path/origin/plugin identity, observed state and user-layer version. Capability alone or stale public row cannot authorize write.",
+    "supportedStart": "Start with non-plugin user/repo paths. System/admin/plugin entries remain visible but management unavailable until separately proven policy semantics. This is a staged scope, not P40 completion or contractual exclusion.",
+    "confirmation": "Show skill/origin, requested change, user-configuration scope across directories where that path is discovered, no content deletion and no guaranteed current-conversation effect. Selection/Agent/cwd/version drift withdraws permission; one explicit action, no auto-retry.",
+    "lifecycle": "Before dispatch, cancellation means no write only if dispatch never happened. After dispatch, close/cancel preserves unknown and exact owner until worker termination and explicit official readback; never convert timeout to not-written or restore old config automatically. Serialize Farfold writes; external-process race limitation stays explicit.",
+    "successBar": "Official write response accepted AND fresh official config shows intended target-only user rule change AND skills/list reports desired enabled for the same target. Distinguish not-effective/changed/conflict/unknown. Readback is configuration/report verification; actual new-conversation adoption needs a separately authorized real-Agent test.",
+    "candidateRoute": "Prefer config/value/write exact skills.config array with expectedVersion after owned interoperability tests. Dedicated skills/config/write has concrete shape/echo risks and is not a safe blind fallback. External all-process isolation is not a prerequisite promise.",
+    "existingProjection": {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_output.rs",
+      "sha256": "5dd45db48739a48fc8dc0bbcc8cc208652487b6f7cd3b88bde4fbad12839b700",
+      "lines": [[128, 175]]
+    },
+    "implementationOwnershipSuggestion": "Backend official process/protocol and private ticket in acp_client; shared capability-driven controller/types and existing Agent details UI. No agent-specific visible panel, new config store, model executor or direct private-file writes.",
+    "remainingContract": "P40 discovery/install and broader scope management, P41 arbitrary server connect/auth/diagnostics, full P39 tool availability/current-conversation applicability, other Agents and Windows remain unfinished."
+  },
+  "requiredControlledProofsBeforeRelease": [
+    {
+      "case": "representation-and-preservation",
+      "sample": "Two distinct AoT rules; equivalent valid inline array; two same-name paths; duplicate selector; preserve unrelated rule order and unrelated config keys. Test dedicated and generic writer separately and their subsequent interoperability.",
+      "expected": "No unrelated rule lost; reported enabled must be freshly true/false as intended, not echoed return. Any observed upstream limitation retained."
+    },
+    {
+      "case": "precedence-and-scope",
+      "sample": "User name-disable plus selected path rule; SessionFlags disable; repo/admin skill origin; plugin disabled/missing; bundled disabled.",
+      "expected": "Exact user preference effect and scope labeled; desired state overridden/not discoverable does not count success. No plugin/config-layer change inferred."
+    },
+    {
+      "case": "version-and-concurrent-writer",
+      "sample": "Change user config before expectedVersion check; then controlled barrier edit between version check/read/persist using a self-owned process fixture.",
+      "expected": "Stale precheck rejected; prove actual within-server serialization; record external remaining race rather than claiming global CAS. No blind automatic retry."
+    },
+    {
+      "case": "unknown-and-failure",
+      "sample": "Malformed/readonly config, broken/cyclic symlink fixture, terminate/drop reply before versus after write, failed postwrite readback.",
+      "expected": "Original data retained where officially rejected; unknown after possible write remains unknown; explicit readback can resolve without rollback or model prompt."
+    },
+    {
+      "case": "ownership",
+      "sample": "Agent A→B→A, cwd replacement, fresh list with reordered duplicate names, close/reopen, expired ticket, late result after another operation.",
+      "expected": "No stale row/ordinal write authority, one confirmed dispatch, no auto query or publication to another owner."
+    },
+    {
+      "case": "MCP-stages",
+      "sample": "Add configured row then controlled OAuth failure; remove missing and layered same-name; config key containing punctuation; unrelated simultaneous table edit.",
+      "expected": "Separate configured/authenticated/connected/tool-usable evidence; no success by exit alone, no silent replace or automatic remove rollback."
+    }
+  ],
+  "officialDocumentation": [
+    {
+      "url": "https://learn.chatgpt.com/docs/app-server",
+      "observed": "2026-10-10",
+      "supports": "Documents path skill toggle, OAuth URL then completion, MCP reload/status and config writes. Current plugin list/read/install/uninstall marked not for production clients. Tagged source used for exact parameters."
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/build-skills",
+      "observed": "2026-10-10",
+      "supports": "Documents repo/user/admin/system discovery, same-name independent skills, symlink folders, user-config disabled path and restart after config changes. Installer is a prompted skill, not a verified deterministic install API."
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/extend/mcp?surface=cli",
+      "observed": "2026-10-10",
+      "supports": "Documents configured server login and enabled=false; plugin MCP transport owned by plugin, with separate plugin-scoped policy keys."
+    }
+  ],
+  "independentSourceReview": "Architecture peer statically corroborated MCP add write-before-login and stale whole-map replacement; no CLI/test run. This is source review, not independent management execution.",
+  "researchReadFailures": "One source path was a 404 (core/src/path_utils.rs); corrected via official tree to core/src/utils/path_utils.rs reexport and utils/path-utils/src/lib.rs. One public download IncompleteRead was retried before accepting a full file; no partial bytes used.",
+  "sources": {
+    "skillsDto": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-skills/codex-rs/app-server-protocol/src/protocol/v2/plugin.rs",
+      "sha256": "7d50b22ae6fbf54b9f42d95f817e389e2e3cd25fd0238c1dced84cdd373d7ea5",
+      "lines": [[933, 947]],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server-protocol/src/protocol/v2/plugin.rs#L933",
+      "supports": "SkillsConfigWriteParams/Response exact camelCase schema."
+    },
+    "requestRoutes": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-skills/codex-rs/app-server-protocol/src/protocol/common.rs",
+      "sha256": "02cd72be646c4388e90f21ed651838aeab3d6273ade14715e38f2de6c095ba99",
+      "lines": [
+        [1025, 1028],
+        [1214, 1229],
+        [1417, 1427]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server-protocol/src/protocol/common.rs#L1025",
+      "supports": "Official method routes, declared in-process config serialization; OAuth login/reload/status routes, no dedicated MCP OAuth cancel found in this registry."
+    },
+    "skillsProcessor": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-skills/codex-rs/app-server/src/request_processors/catalog_processor.rs",
+      "sha256": "8e2a25595aa8fd67eb96cb4e98689f0b50844632944650f910d9f7a3178e8bf2",
+      "lines": [
+        [482, 558],
+        [648, 683]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server/src/request_processors/catalog_processor.rs#L482",
+      "supports": "Exact selector validation; user-home writer; echoes requested enabled after persistence/cache invalidation. List reloads config per cwd."
+    },
+    "configEdit": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/core/src/config/edit.rs",
+      "sha256": "02159e7636fa00ed5ea3788b697d94e909420e6366299a1bfa3ca77808987485",
+      "lines": [
+        [431, 484],
+        [487, 595],
+        [692, 727],
+        [731, 779],
+        [789, 807],
+        [984, 995]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/core/src/config/edit.rs#L431",
+      "supports": "Whole-map MCP edits; skill selector shape/mutation; symlink-resolved user config read-edit-write and blocking task."
+    },
+    "configEditTests": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/core/src/config/edit_tests.rs",
+      "sha256": "6d0310b3de85385a25ef0757066a9f4d3c0ad3eb9fdda74432fb7d8953678c4f",
+      "lines": [[480, 544]],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/core/src/config/edit_tests.rs#L480",
+      "supports": "Upstream authored examples cover array-of-table path/name disable and removal on enable; not executed here."
+    },
+    "atomicWrite": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/utils/path-utils/src/lib.rs",
+      "sha256": "a3ea112cbb186dea296c4733511d784d161c071fa578c972818b40f00b96d3c7",
+      "lines": [
+        [48, 142],
+        [144, 155]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/utils/path-utils/src/lib.rs#L48",
+      "supports": "Symlink resolution and sibling NamedTempFile write/persist; no fsync or external compare-and-swap in this function."
+    },
+    "skillsRules": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/config/src/skills_config.rs",
+      "sha256": "bc2eb9fcb92c2c99fedaa25d1ca4bbff6d69a009499ba34762249bdc3b05cc8c",
+      "lines": [
+        [18, 47],
+        [90, 125],
+        [128, 209]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/config/src/skills_config.rs#L18",
+      "supports": "Rule types; ordered path/name matching; only User/SessionFlags for per-skill rules; bundled availability separate."
+    },
+    "skillsHost": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/ext/skills/src/host_service.rs",
+      "sha256": "0c77829ea20f6af113b55289d73862f06fe7ab511a3681eb81cb67f1b52daee3",
+      "lines": [[350, 372]],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/ext/skills/src/host_service.rs#L350",
+      "supports": "Rules applied after roots merged, without scope exclusion in this step."
+    },
+    "skillsRoots": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-skills/codex-rs/ext/skills/src/host_roots.rs",
+      "sha256": "d4290ba4d783110e7533586ad19719536aa9b23f517b43e3147d3afb40c91d56",
+      "lines": [[48, 133]],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/ext/skills/src/host_roots.rs#L48",
+      "supports": "Plugin/extra/repository/user/system/admin roots distinct from the config override layer."
+    },
+    "loadedSkillInput": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/core/src/skills.rs",
+      "sha256": "1969b75051e085dcd93275028f47a92a384fe86f0b0cc2edafed8b0a147c0db5",
+      "lines": [[27, 35]],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/core/src/skills.rs#L27",
+      "supports": "Core skill input clones the loaded config stack; isolated management readback does not establish another process/thread refresh."
+    },
+    "configDto": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server-protocol/src/protocol/v2/config.rs",
+      "sha256": "8187edb07de0259f5a96927ca69b749a7ba9049062bf2ef2eb1ff9c7d8696447",
+      "lines": [
+        [318, 407],
+        [1069, 1107]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server-protocol/src/protocol/v2/config.rs#L318",
+      "supports": "Config read/layers/version; write exact fields, statuses and errors; batch reload option."
+    },
+    "configService": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/config_manager_service.rs",
+      "sha256": "cb5e0862e3402aed6349d870f4a8b38472ad1835edd906f797ea1e3aeeac8209",
+      "lines": [
+        [119, 176],
+        [218, 255],
+        [263, 275],
+        [363, 440],
+        [443, 447],
+        [496, 550],
+        [581, 629],
+        [701, 738]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server/src/config_manager_service.rs#L119",
+      "supports": "Only user layer writable; expectedVersion checked before persistence; validation/overridden response; key parsing; null clears; array serialization."
+    },
+    "configCredentialEdits": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/config_manager_service_credential_edits.rs",
+      "sha256": "30862ce58b3dd7cb238dff862815d982387e84ad8bab485c6eb37dc30b5892a7",
+      "lines": [
+        [39, 65],
+        [264, 275]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server/src/config_manager_service_credential_edits.rs#L39",
+      "supports": "Generic exact-key edit produces SetPath/ClearPath after semantic merge."
+    },
+    "configProcessor": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/request_processors/config_processor.rs",
+      "sha256": "66d0f303742fc268f9f4557cc01418c89c85854ff58f3feb7321e19a891b1db2",
+      "lines": [[148, 180]],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server/src/request_processors/config_processor.rs#L148",
+      "supports": "Config write invalidation and optional same-process loaded-thread reload."
+    },
+    "mcpCli": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/cli/src/mcp_cmd.rs",
+      "sha256": "a5dd0a7a5e519daddd64e12fa876ece961db9fd8628e945bd49b8e407dc6a81f",
+      "lines": [
+        [90, 213],
+        [278, 295],
+        [351, 469],
+        [470, 500],
+        [511, 625]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/cli/src/mcp_cmd.rs#L90",
+      "supports": "Exact CLI parameters; global table write precedes automatic OAuth; remove and login/logout are separate operations."
+    },
+    "mcpDto": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server-protocol/src/protocol/v2/mcp.rs",
+      "sha256": "971d19b8e3d4b805e9573b04a6db3fdb915ffd5366a11996837aeef960b7f8ab",
+      "lines": [
+        [50, 98],
+        [258, 320]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server-protocol/src/protocol/v2/mcp.rs#L50",
+      "supports": "Structured login parameters/auth URL and completion; refresh/status schema."
+    },
+    "mcpProcessor": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/request_processors/mcp_processor.rs",
+      "sha256": "95a25bca9a8c4a516b164719506fedd047a9e9dfb3a29e61e59aaf462608e435",
+      "lines": [
+        [86, 119],
+        [125, 265],
+        [268, 310]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server/src/request_processors/mcp_processor.rs#L86",
+      "supports": "Refresh same manager only; login resolves effective server and credentials, completion notification after wait; status may initialize runtime."
+    },
+    "mcpRefresh": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/mcp_refresh.rs",
+      "sha256": "67845457ac569be6f8c3b226e1a2cf16cdebb4956f7529bc990d888cac7255fa",
+      "lines": [
+        [9, 65],
+        [151, 159]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server/src/mcp_refresh.rs#L9",
+      "supports": "Refresh iterates loaded threads of this process; runtime invalidation does not itself reload thread config."
+    },
+    "oauthFinish": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/rmcp-client/src/perform_oauth_login.rs",
+      "sha256": "a581c0aab80e9e215788464f1b8a45a8de6142c67269951294f2ea8833347711",
+      "lines": [
+        [413, 433],
+        [730, 741]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/rmcp-client/src/perform_oauth_login.rs#L413",
+      "supports": "Authorization URL response precedes completion; completion saves credentials before success."
+    },
+    "oauthStorage": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/rmcp-client/src/oauth.rs",
+      "sha256": "6e36ea29612fca8df3d4e72b3d071dcbd12d3eabac86a85f897adcb2948be11f",
+      "lines": [
+        [446, 478],
+        [815, 815],
+        [908, 947],
+        [1057, 1059],
+        [1083, 1132]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/rmcp-client/src/oauth.rs#L446",
+      "supports": "Official credential-store selection, keyring/file fallback, file aggregate lock and non-rename fallback write; independent of config transaction."
+    }
+  }
+}

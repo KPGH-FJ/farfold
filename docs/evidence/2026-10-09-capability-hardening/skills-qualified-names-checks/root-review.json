@@ -1,0 +1,25 @@
+{
+  "scope": "Final minimal skill qualified-name repair, with native red evidence and shared protocol boundary",
+  "productionFiles": [
+    "src-tauri/src/acp_client/extension_inventory/skills_output.rs",
+    "src/runtime/extension_inventory_types.ts"
+  ],
+  "finding": "No additional blocker identified; backend simple components and frontend skills-only regex accept one colon, exact UTF8 bound and no empty/space/path/control component. MCP rules remain unchanged.",
+  "reviewCorrection": "Initial root review assumed label was shared by MCP. Actual call search showed only skillsSnapshot uses it; MCP retains inline original regex. That initial concern was retracted; skills-only helper was renamed for clarity.",
+  "proofs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/backend/implementation.json",
+      "sha256": "4f651639d8ebf9e28d36e8a22e2c9b124b1e3e0c90ec764fbd0c990a03fe7d42"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/implementation.json",
+      "sha256": "48e34faf46dd801ac0d327215b352fb8e9db0d9566be32801b86e686049274bf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/independent-review.json",
+      "sha256": "a8f1387f1348fc88a9ebe09e99352fe5a37ee606b605f9aa81d4d1038ccd314f"
+    }
+  ],
+  "nativeFixVerification": "pending new candidate",
+  "formatterOnlyFollowup": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/format-preservation-followup.json"
+}

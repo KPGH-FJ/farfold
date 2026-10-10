@@ -1,0 +1,142 @@
+{
+  "checkedAtUtc": "2026-10-10T14:02:11.099660+00:00",
+  "sourceCommit": "aadbe0f2952f9decd213804c12911ccccc58971b",
+  "result": "failed",
+  "failures": [
+    "exactCandidateSource"
+  ],
+  "checks": {
+    "receiptChain": {
+      "passed": true,
+      "candidateChecks": 9,
+      "candidateIndependent": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/candidate-independent.json",
+        "sha256": "7aa9e3bc9829497de3701929324ca5fff1d89dda3dcbadd9f73a22e0f0f0e256",
+        "bytes": 4498
+      }
+    },
+    "normalExitAndInstall": {
+      "passed": true,
+      "normalExitObservedBy": "Root; independent review verifies records/hashes, not a second native observation.",
+      "operation": {
+        "path": "output/2026-10-10-skills-inventory-install/install-operation.json",
+        "sha256": "6e7fa0be5887485252287788919548908613dea0c419a057ea0557fffb858aed",
+        "bytes": 2871
+      },
+      "phase": "installedVerifiedNotLaunched",
+      "copyStarted": true,
+      "dataRetentionComparisonPending": "Historical installer flag; completed aggregate and independent raw manifest checks below close this step."
+    },
+    "completePrivateManifests": {
+      "passed": true,
+      "snapshots": [
+        {
+          "phase": "before",
+          "sha256": "d1fc51ff51847e858d5729bfdd6f9efd0ea898455ec807a1967cd0bc4b926822",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "preinstall",
+          "sha256": "d1fc51ff51847e858d5729bfdd6f9efd0ea898455ec807a1967cd0bc4b926822",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "after",
+          "sha256": "d1fc51ff51847e858d5729bfdd6f9efd0ea898455ec807a1967cd0bc4b926822",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        }
+      ],
+      "counts": {
+        "appData": {
+          "directory": 21360,
+          "file": 195450,
+          "special": 0,
+          "symlink": 328
+        },
+        "cache": {
+          "directory": 8,
+          "file": 2,
+          "special": 0,
+          "symlink": 0
+        },
+        "webkit": {
+          "directory": 152,
+          "file": 100,
+          "special": 0,
+          "symlink": 0
+        }
+      },
+      "allThreeEqual": true,
+      "contentsPrinted": false
+    },
+    "metadataCopyProtection": {
+      "passed": true,
+      "method": "Read retained captured main/WAL/SHM and backup hashes; SQLite integrity/iterdump digest only on second disposable private copies; original database never opened.",
+      "captureHashesMatchAllThreeManifests": true,
+      "capturedFileCount": 3,
+      "capturedAndBackupIntegrity": "ok",
+      "logicalContentsEqual": true,
+      "originalRetainedCopyHashesUnchanged": true,
+      "backupSha256": "f0d097b0a8ee6d350b05635c2892fedf082c4f73b712a55d87c29a8fd76e7cb0",
+      "rawRowsPrintedOrSaved": false
+    },
+    "formalCandidateExactFiles": {
+      "passed": true,
+      "exactFileCount": 5,
+      "hashes": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "c7dc039b065daf3a7cc94cfa4d8b6468d7b060dd8d5657797f34dfaca86742e4",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      },
+      "modes": {
+        "Contents/Info.plist": "0o644",
+        "Contents/MacOS/farfold": "0o755",
+        "Contents/Resources/icon.icns": "0o644",
+        "Contents/Resources/release-manifest.json": "0o644",
+        "Contents/_CodeSignature/CodeResources": "0o644"
+      }
+    },
+    "archive": {
+      "passed": true,
+      "path": "src-tauri/target/internal-candidate/2026-10-10-aadbe0f2/Farfold-0.1.7-aadbe0f2.zip",
+      "sha256": "6fc741fb03490da6add40985b7e8152bec1492fa1f9343d14d8cef4578a36e69",
+      "bytes": 13921051,
+      "crc": "passed",
+      "exactFiveContentsAndModes": true
+    },
+    "formalIdentitySignature": {
+      "passed": true,
+      "identifier": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "architecture": "arm64",
+      "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+      "distribution": "ad-hoc; no public signing/notarization claim"
+    },
+    "exactCandidateSource": {
+      "passed": false,
+      "errorType": "KeyError"
+    }
+  },
+  "methodOrigin": "Adapted from the reviewed browser-search ten-check verifier. This P39 skills invocation binds 08cff0ac normal-exit and freeze-release, independent native comparison and one explicitly accepted additive setup progress entry, current seven-command candidate engineering/source closure and dynamic complete input counts; it does not execute the installer.",
+  "inputReceipts": {
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/candidate.json": "10dbbe8680b5ef8ef72632ec21d5451b7334d215f3feb78ce3be2e97a5c0acdc",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/candidate-inputs.json": "72609738caab97292b8b11bec3650af7c7ee0a935109cae5a1c9fc29d532e6dd",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/candidate-independent.json": "7aa9e3bc9829497de3701929324ca5fff1d89dda3dcbadd9f73a22e0f0f0e256",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/installed-data-retention.json": "3dbe21e7ece8ff3c78024bb27bb2ad19798657d2cd9f435474ad7d4f7b448276",
+    "output/2026-10-10-skills-inventory-install/install-operation.json": "6e7fa0be5887485252287788919548908613dea0c419a057ea0557fffb858aed",
+    "output/2026-10-10-skills-inventory-install/normal-exit-observation.json": "894d32ecfa9fac06cd5c57fb09488989da0fe97d586af1df7b88b16e3e2d5af1",
+    "output/2026-10-10-skills-inventory-install/metadata-backup-receipt.json": "65689094c747186c6e142de938ccb6f610d23e0021f725be02de3f489adf6ba8",
+    "output/2026-10-10-skills-inventory-install/install-data-before-summary.json": "c127d2f8846a139e4f4c0c10913f8935440ac3a93764177e2b30d766fa82bc58",
+    "output/2026-10-10-skills-inventory-install/install-data-preinstall-summary.json": "c127d2f8846a139e4f4c0c10913f8935440ac3a93764177e2b30d766fa82bc58",
+    "output/2026-10-10-skills-inventory-install/install-data-after-summary.json": "c127d2f8846a139e4f4c0c10913f8935440ac3a93764177e2b30d766fa82bc58"
+  },
+  "completedAtUtc": "2026-10-10T14:02:13.440559+00:00"
+}

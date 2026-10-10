@@ -1,0 +1,63 @@
+{
+  "status": "prepared_not_executed_for_candidate",
+  "baseline": {
+    "commit": "aadbe0f2952f9decd213804c12911ccccc58971b",
+    "receipt": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/candidate.json",
+    "sha256": "10dbbe8680b5ef8ef72632ec21d5451b7334d215f3feb78ce3be2e97a5c0acdc"
+  },
+  "cli": [
+    "python3 prepare-candidate.py <exact40SHA> docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/<run>/verification.json",
+    "python3 verify-candidate.py <sameExact40SHA> <sameEngineeringPath>"
+  ],
+  "changes": [
+    "Two import-safe scripts; prepare imports only this new standalone verifier, never old scripts or their top-level flows.",
+    "All prior scopes/TOP preserved exactly; new src/runtime/fixtures/skills-qualified-wire.json is required and naturally included. Count is derived from complete commit and disk inventories, not hardcoded.",
+    "Seven actual commands, exit codes, log hashes and both source manifests checked directly; no inherited native/closure receipt chain.",
+    "Frozen aadbe0f2 baseline digest and exact five formal files before/after; exact candidate plist/embedded manifest/arm64/ad-hoc strict codesign.",
+    "Exclusive ZIP contains exactly five regular files with matching bytes and Unix permissions; directories implicit, no ignored resource-fork payload.",
+    "Exclusive receipts/logs/manifests/ZIP; old artifacts never replaced; failed preparation records and build log retained.",
+    "Independent verifier recomputes nine groups and rechecks source, evidence, bundle, archive and formal stability at end."
+  ],
+  "validation": {
+    "python": "3.9.6",
+    "syntheticChecksPassed": 27,
+    "syntaxAndSafeImport": true,
+    "sourceScopeMatchesPriorExactly": true,
+    "actualBuildInstallOrApp": false,
+    "firstHarnessResult": "Rejected symlink ancestry of default tempfile /var path; raw output and harness retained. Resolve the owned fixture path; no helper safety relaxation.",
+    "limitations": "Synthetic helper functions, not a completed build, actual candidate signature validation, installation, or data-retention acceptance."
+  },
+  "outputs": [
+    "candidate.json",
+    "candidate-inputs.json",
+    "candidate-inputs-after.json",
+    "checks/candidate-build.txt",
+    "candidate-independent.json"
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/prepare-candidate.py",
+      "sha256": "9aad64e418633dba9d644713f76160128a579a353e4a4c53aaf910c654d533fe"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/verify-candidate.py",
+      "sha256": "902c33190e9ded9c2a13790da35f5e0425de7c0090a1fac2d4f3b85e470c0fe3"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-helper-check/self-test.py",
+      "sha256": "c444edd81bd0ce99669541f7616d26fa8292026766f7d008236453085f0d4442"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-helper-check/self-test-first.py",
+      "sha256": "998e6ff5118552f7e1e0e8a05f7998ffda67026af0ad3eb5ad8689e30ca57c72"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-helper-check/self-test.txt",
+      "sha256": "467b9fc30d39284e5994ba39dfed7af7da6e4bcc9c1aaa41fd028072edbfa0e3"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-helper-check/self-test-final.txt",
+      "sha256": "8bd9a6669678a8ba55df162f9b9272c926917f965426bfe13165db4dee7b9e51"
+    }
+  ]
+}

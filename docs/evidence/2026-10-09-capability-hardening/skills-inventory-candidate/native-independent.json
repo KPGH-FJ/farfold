@@ -1,0 +1,167 @@
+{
+  "reviewedAtUtc": "2026-10-10T14:31:49.332256+00:00",
+  "sourceCommit": "aadbe0f2952f9decd213804c12911ccccc58971b",
+  "result": "scoped_native_observations_consistent_with_preserved_name_defect",
+  "fullP39Passed": false,
+  "method": {
+    "reviewer": "architecture independent review",
+    "uiExecutor": "root; this reviewer did not replay the UI",
+    "readOnly": true,
+    "databasesOpened": false,
+    "agentOrAppLaunched": false,
+    "currentSourceRequiredToMatchOldCommit": false,
+    "evidenceHashesChecked": 57,
+    "axGroupsChecked": 17,
+    "pngHashesChecked": 17,
+    "pngsVisuallyReviewed": [
+      "05-valid-query.png",
+      "10-partial-visible.png",
+      "14-other-agent-skills-unreviewed.png",
+      "16-reopened-skills-stale.png"
+    ],
+    "visualBoundary": "Counts and off-viewport rows are established by saved AX, not by claiming every row appears in a screenshot."
+  },
+  "identity": {
+    "frozenInputs": 1404,
+    "frozenManifestEqualsCandidateInputs": true,
+    "completeCommittedScopeAndEveryBlobMatchesFrozenSha256": true,
+    "commitReadMethod": "git ls-tree plus git cat-file --batch against aadbe0f2952f9decd213804c12911ccccc58971b",
+    "formalFiveFileHashesStillMatch": true,
+    "candidateIndependentChecks": 9,
+    "installationIndependentChecks": 10,
+    "exitEvidence": "Recorded normal Cmd+Q/save-and-quit and zero formal processes; no force or cancellation-success claim.",
+    "sourceBoundary": "The authorized qualified-name fix has changed current source. Native identity is tied to the exact installed commit and freeze/exit receipts, not to the changed checkout."
+  },
+  "observations": {
+    "skillsQueries": {
+      "rootControlledQueries": 2,
+      "normalReport": {
+        "items": 24,
+        "unavailableNames": 7,
+        "projectFixtureName": "farfold-inventory-valid",
+        "projectOriginAndEnabledReported": true,
+        "time": "2026/10/10 22:08:35"
+      },
+      "partialReport": {
+        "items": 24,
+        "unavailableNames": 7,
+        "projectFixtureName": "farfold-inventory-partial",
+        "reportedUnreadableItems": 1,
+        "partialNotice": true,
+        "time": "2026/10/10 22:09:21"
+      }
+    },
+    "mcpRegression": {
+      "rootControlledQueries": 1,
+      "items": 5,
+      "enabled": 2,
+      "disabled": 3,
+      "time": "2026/10/10 22:10:02"
+    },
+    "pickerCancelled": {
+      "beforeAndAfterAXExactlyEqual": true,
+      "sha256": "5397d9397f6771ff220d3c6a5d4830f03e0b16fde09eb11709c3dee73c73836b"
+    },
+    "kindAndDirectorySelectionBeforeExplicitQuery": "No report or query time in 03, 04 and 11 AX; consistent with the recorded explicit-only sequence.",
+    "staleAndIsolation": "Directory change marks old report stale; OpenCode reports unreviewed without Codex rows; reopening both kinds retains only stale prior results and requires choosing a directory.",
+    "zeroModelPrompts": {
+      "recordedCount": 0,
+      "basis": "Root controlled UI action sequence plus exact-commit fixed query path: initialize, initialized, skills/list or cli mcp list --json. No thread/turn/config-write method exists in the skills exchange.",
+      "notInferredFromDatabase": true,
+      "notAGlobalTrafficObservation": true,
+      "officialStartupMayMaintainOwnState": true
+    }
+  },
+  "defectRetained": {
+    "actualObservation": "Seven plugin-origin rows in each skills report show name unavailable. AX does not expose their original raw names.",
+    "exactSourceCause": "Backend skill-name filtering reused MCP output::safe_name; the old frontend label function was skills-specific and rejected colon. The MCP frontend decoder had a separate inline ordinary-character rule.",
+    "publicWordingCorrection": "The main/initial receipt phrase frontend shared label is imprecise. This independent correction leaves both original receipts and their hashes unchanged.",
+    "sourceInferenceBoundary": "This proves lawful namespace:skill names were filtered; it does not recover all seven original names from AX.",
+    "disposition": "Preserved failure requiring the subsequent skills-only fix and fresh formal verification; not full P39 success."
+  },
+  "dataReview": {
+    "basis": "Reviewed existing two independent disposable-copy comparison reports and their referenced byte hashes; did not reopen any database.",
+    "sessionsWholeRowsExact": 130,
+    "addedSessionRows": 0,
+    "dismissedWholeRowsExact": 168,
+    "settingsRawValuesExact": 53,
+    "wholeUnsentExact": {
+      "composers": 8,
+      "feedback": 8,
+      "queues": 3
+    },
+    "worktreeCatalogueExact": true,
+    "storedModelReasoningServiceChoicesExact": true,
+    "agents": {
+      "rows": 40,
+      "wholeUnchangedRows": 39,
+      "onlyChangedColumn": "codex.updated_at",
+      "allOtherNineNamedColumnsExact": true,
+      "rootAcceptedTimestampOnlyDifference": true
+    },
+    "wordingPrecision": "freeze-release says ten other columns; its precise supporting column report names nine unchanged columns plus updated_at. No configuration/content change is inferred from the timestamp.",
+    "externalAgentConfigurationCredentialsCachesCovered": false
+  },
+  "notVerified": [
+    "A live official-query cancellation race, timeout, unknown cleanup or formal failure path; all three queries had settled before the post-action observation.",
+    "Skill invocation, current-conversation applicability, management, MCP server/tool execution.",
+    "Other Agents, Windows, all P39 conditions or market readiness."
+  ],
+  "reviewedExactCommitSource": {
+    "src-tauri/src/acp_client/extension_inventory/skills_rpc.rs": "262d33d668ee0261c61b4b511226b0915c52b72b4da3aed33ab3e62c1638013a",
+    "src-tauri/src/acp_client/extension_inventory/launch.rs": "a7fb8c3ebffb4cb17da0d7166fa8c23020290f95ce4417a3f5cdd3debc63622f",
+    "src-tauri/src/acp_client/extension_inventory/skills_output.rs": "5dd45db48739a48fc8dc0bbcc8cc208652487b6f7cd3b88bde4fbad12839b700",
+    "src-tauri/src/acp_client/extension_inventory/output.rs": "156fe0a61521b81baef133ea5e1b51b5b98a2bd8052b80a27ebf0b2da78a9b85",
+    "src/runtime/extension_inventory_types.ts": "6da4ae00bf97e3527e34dc7e97bab040bd55058a6f47da1b1a0ebf2ac81e6199"
+  },
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/installed-skills-inventory.json",
+      "sha256": "3addff6f6b5576057c894336e5fc90059e0aa89273dd36ae96648473cf90797f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/installed-skills-inventory-initial.json",
+      "sha256": "f20491fa71a0de84f99fa22c52284fdf9546e08b304fd085d0640dffb19c6da0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/candidate.json",
+      "sha256": "10dbbe8680b5ef8ef72632ec21d5451b7334d215f3feb78ce3be2e97a5c0acdc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/candidate-inputs.json",
+      "sha256": "72609738caab97292b8b11bec3650af7c7ee0a935109cae5a1c9fc29d532e6dd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/candidate-independent.json",
+      "sha256": "7aa9e3bc9829497de3701929324ca5fff1d89dda3dcbadd9f73a22e0f0f0e256"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/install-independent.json",
+      "sha256": "130bb65d8e6eeed193c9c668253a2512e089c4d925fca0c499449313cedee898"
+    },
+    {
+      "path": "output/2026-10-10-skills-inventory-native/native-independent-checks.json",
+      "sha256": "6818f080195d81b7162be0ba30248d43f6ad8fcc11b7460829b101bbf45ca1fa"
+    },
+    {
+      "path": "output/2026-10-10-skills-inventory-native/freeze-before-native.json",
+      "sha256": "ec6e76500a0ea222ba71145b1c22dc88cfd1dbf434a9afeb878a03d230ea7bd4"
+    },
+    {
+      "path": "output/2026-10-10-skills-inventory-native/final-normal-exit.json",
+      "sha256": "4b194e36e2e837fe13b1872828523b8a97a1f5076f0d722fd3ab4fcb5e1065f5"
+    },
+    {
+      "path": "output/2026-10-10-skills-inventory-native/freeze-release.json",
+      "sha256": "6a26f003a04c88929588bf1a35c0f65c0f97c4b2bfb28e9c12319d984222aa16"
+    },
+    {
+      "path": "output/2026-10-10-skills-inventory-native/final-data-comparison-independent.json",
+      "sha256": "965499093bfd6a8daa07dab8dff9a4dce18788668d85ad0abcc4b029bd094e3b"
+    },
+    {
+      "path": "output/2026-10-10-skills-inventory-native/final-agent-columns-independent.json",
+      "sha256": "d98c37383b478e10517ee8a35059195a435f484a309c93d5960e1688e9a39218"
+    }
+  ]
+}

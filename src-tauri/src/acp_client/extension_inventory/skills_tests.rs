@@ -479,3 +479,123 @@ fn duplicate_known_fields_and_deep_notifications_are_not_accepted() {
         Code::InvalidOutput
     );
 }
+
+#[test]
+fn official_qualified_skill_names_survive_the_production_decoder() {
+    for name in [
+        "sample:search",
+        "documents:documents",
+        "my-plugin:review_docs",
+        "项目:审阅",
+    ] {
+        let mut row = skill();
+        row["name"] = json!(name);
+        let result = decode(response(vec![row], vec![])).unwrap();
+        assert_eq!(result.items[0].name.as_deref(), Some(name));
+    }
+}
+
+#[test]
+fn qualified_skill_names_keep_path_control_and_segment_guards() {
+    for name in [
+        "https://example.com",
+        "C:\\private",
+        "/private:skill",
+        "a:b:c",
+        "a:",
+        ":b",
+        "a: ",
+        "a b:c",
+        "a:b c",
+        "a:\tb",
+        "a:\nb",
+        "a:\u{202e}b",
+        "a:../b",
+        "a:b..c",
+    ] {
+        let mut row = skill();
+        row["name"] = json!(name);
+        assert!(
+            decode(response(vec![row], vec![])).unwrap().items[0]
+                .name
+                .is_none(),
+            "{name:?}"
+        );
+    }
+    for (name, visible) in [
+        (format!("{}:{}", "a".repeat(127), "b".repeat(128)), true),
+        (format!("{}:{}", "a".repeat(128), "b".repeat(128)), false),
+        (format!("{}:{}", "界".repeat(42), "文".repeat(42)), true),
+        (format!("{}:{}", "界".repeat(43), "文".repeat(43)), false),
+    ] {
+        let mut row = skill();
+        row["name"] = json!(name);
+        assert_eq!(
+            decode(response(vec![row], vec![])).unwrap().items[0]
+                .name
+                .is_some(),
+            visible
+        );
+    }
+    assert!(
+        output::safe_name("sample:search").is_none(),
+        "MCP policy remains unchanged"
+    );
+    for name in ["ordinary-name", "Review documents", "中文技能"] {
+        let mut row = skill();
+        row["name"] = json!(name);
+        assert_eq!(
+            decode(response(vec![row], vec![])).unwrap().items[0].name,
+            output::safe_name(name)
+        );
+    }
+}
+#[test]
+fn qualified_names_actual_rust_wire_keeps_disabled_and_duplicate_rows() {
+    let names = [
+        "sample:search",
+        "documents:documents",
+        "sample:search",
+        "ordinary-name",
+    ];
+    let rows = names
+        .iter()
+        .enumerate()
+        .map(|(index, name)| {
+            let mut row = skill();
+            row["name"] = json!(name);
+            row["path"] = json!(format!("/PRIVATE_{index}/SKILL.md"));
+            row["scope"] = json!(if index == 2 { "user" } else { "repo" });
+            row["enabled"] = json!(index != 1);
+            if index == 2 {
+                row["pluginId"] = json!(null);
+            }
+            row
+        })
+        .collect();
+    let value = response(rows, vec![]);
+    let response_line = serde_json::to_string(&json!({"id":2,"result":value})).unwrap();
+    let code=PEER.replace("print(json.dumps({'id':2,'result':{'data':[{'cwd':'/tmp','skills':[], 'errors':[]}]}}),flush=True)",&format!("print({},flush=True)",serde_json::to_string(&response_line).unwrap()));
+    let registry = requests::Requests::default();
+    let id = "03000000-0000-4000-8000-000000000001";
+    let (request, _) = registry
+        .begin("fixture", "/tmp", id, id, Kind::Skills)
+        .unwrap();
+    let snapshot = process::run_skills(peer(&code), &request).unwrap();
+    assert_eq!(
+        snapshot
+            .items
+            .iter()
+            .map(|i| i.name.as_deref().unwrap())
+            .collect::<Vec<_>>(),
+        names
+    );
+    assert!(!snapshot.items[1].reported_enabled);
+    assert!(!snapshot.items[2].plugin_reported);
+    request.finish(Ok(InventorySnapshot::Skills(snapshot)));
+    let operation = request.snapshot().unwrap();
+    assert_eq!(operation.state, State::Ready);
+    let wire = serde_json::to_string(&operation).unwrap();
+    assert!(!wire.contains("PRIVATE"));
+    println!("SKILLS_QUALIFIED_WIRE:{wire}");
+}

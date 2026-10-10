@@ -1,0 +1,65 @@
+{
+  "phase": "staticInstallationHelperReviewWithOwnedFixturesNotInstallationVerification",
+  "reviewedAt": "2026-10-10T14:28:44.243309+00:00",
+  "result": "passed",
+  "helper": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/verify-install.py",
+    "beforeSha256": "1fc0bcb14225a14cc85a135285f96f4f6aa948cbb20f3239874fcde85a094d47",
+    "afterSha256": "ec81510ffe92e61baa724d598bba60b1d4067b07642ba2842ea9560a7de53740",
+    "lines": 229
+  },
+  "findingsRepaired": [
+    {
+      "issue": "Backup receipt hashes/integrity flags did not independently prove retained main/WAL/SHM and consolidated backup contain the same logical database.",
+      "change": "Bind exact captured file set/hash to all three complete installation manifests. Hash and mode-check retained files; copy only to disposable private directories; run SQLite query_only/integrity/full iterdump digest on second copies; reject mismatch and recheck retained hashes."
+    },
+    {
+      "issue": "Normal-exit refs accepted an arbitrary set and lacked exact freeze/agent-column-comparison cross-links.",
+      "change": "Require exact four baseline receipt paths/current SHA; verify release references, source/formal frozen identity, 130 rows with 8/8/3 unsent groups, and exact main comparison link. Preserve the explicit accepted codex.updated_at-only delta and every existing bundle/source/signature/data check."
+    }
+  ],
+  "validation": {
+    "ast": "passed",
+    "pyCompile": "passed; bytecode written only in owned private fixture directory",
+    "ownedFixtureChecks": 13,
+    "actualBaselineJSONSchema": "passed by executing only the actual helper AST baseline block; no other main stage executed",
+    "cases": [
+      "actual_four_JSON_baseline_schema_and_crossrefs",
+      "missing_required_exit_reference_rejected",
+      "agent_review_wrong_comparison_rejected",
+      "wrong_128_row_baseline_rejected",
+      "actual_owned_WAL_three_manifests_reconstruct_equal_to_backup",
+      "main_without_WAL_is_demonstrably_not_equal",
+      "manifest_capture_mismatch_rejected",
+      "unexpected_retained_member_rejected",
+      "valid_backup_with_different_rows_rejected",
+      "manifest_summary_hash_mismatch_rejected",
+      "manifest_nonprivate_mode_rejected",
+      "retained_symlink_rejected",
+      "all_owned_retained_bytes_still_exact_after_negative_tests"
+    ]
+  },
+  "firstFixtureAttempt": {
+    "result": "driver error, retained",
+    "reason": "An owned sqlite3 connection context committed without closing, so its WAL edit did not change the supplied consolidated main file. Corrected fixture explicitly closes before hashing; this was not a verifier or product red."
+  },
+  "boundaries": {
+    "installationVerifierMainExecuted": false,
+    "candidateBuildOrInstallExecuted": false,
+    "formalAppOrAgentLaunched": false,
+    "realOriginalOrRetainedDatabaseOpenedWithSQLite": false,
+    "sqliteUsedOnlyForOwnedFixturesAndTheirSecondaryCopies": true,
+    "historicalReceiptsOrFrozenSourceChanged": false,
+    "currentCandidateAndInstallationAcceptance": "not established by this static review; await authorized actual nine/ten checks"
+  },
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/verify-install.py": "ec81510ffe92e61baa724d598bba60b1d4067b07642ba2842ea9560a7de53740",
+    "output/2026-10-10-skills-qualified-names-install/verify-install.before-static-review.py.txt": "1fc0bcb14225a14cc85a135285f96f4f6aa948cbb20f3239874fcde85a094d47",
+    "output/2026-10-10-skills-qualified-names-install/helper-fixture-review/check.py": "5b8f1c7fe53aa638672b5018180f37070cb1347377f2536ccd2d0ebad497b8e8",
+    "output/2026-10-10-skills-qualified-names-install/helper-fixture-review/check.first.py.txt": "ee7000885b0b58e7981e2ff6d040e019d5260642b945cc825b59105d542e8373",
+    "output/2026-10-10-skills-qualified-names-install/helper-fixture-review/result.json": "e1d3361b51fd09dd0189e1e3e10c8edf684d5d875c1b3063e07a4af74175c52b",
+    "output/2026-10-10-skills-qualified-names-install/helper-fixture-review/first-driver-failure.txt": "b8a03a994925b934a54a0ab54de04a8b6348bf7949e829dbf3f6992ce1eb2c85",
+    "output/2026-10-10-skills-qualified-names-install/helper-fixture-review/exact-repair.diff": "5d42a286394dda765583129dcc3a497f3978e55890c818ebb908be9158975b6b",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/verify-candidate.py": "902c33190e9ded9c2a13790da35f5e0425de7c0090a1fac2d4f3b85e470c0fe3"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/extension_inventory.qualified-names.test.tsx",
+    "src/runtime/extension_inventory.qualified-wire.test.tsx",
+    "src/runtime/extension_inventory_types.test.ts",
+    "src/runtime/extension_inventory.skills.test.ts",
+    "src/runtime/extension_inventory.wire.test.ts",
+    "src/runtime/extension_inventory_controller.test.ts",
+    "src/components/AgentExtensionInventoryResult.test.tsx",
+    "src/components/AgentDetails.inventory.test.tsx",
+    "src/components/AgentDetails.test.tsx"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 2.454,
+  "log": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/frontend/targeted-final.txt",
+  "sha256": "666832f433a76d78cb4748144c06e0f079e7ff411c05143945814768a83a8a9b",
+  "sourceBefore": {
+    "src/runtime/extension_inventory_types.ts": "ccc2f4519d2e2e114efb20cb3c7221033c15091152dab353075a86a4eefada44",
+    "src/runtime/extension_inventory.qualified-names.test.tsx": "a17c113e1ef1673655f7c5af601f40e90d58e5641310dacc1c06066bfebc671e",
+    "src/runtime/extension_inventory.qualified-wire.test.tsx": "ddf77221bee8a092531b9bdb68e0da28287e9f0d9a3472cc531c8c3a72587f70",
+    "src/runtime/fixtures/skills-qualified-wire.json": "6dca69a9e52b6d3d63786fd3676535bc91c5f2c48cd65cdb1e328ec673f5093b"
+  },
+  "sourceAfter": {
+    "src/runtime/extension_inventory_types.ts": "ccc2f4519d2e2e114efb20cb3c7221033c15091152dab353075a86a4eefada44",
+    "src/runtime/extension_inventory.qualified-names.test.tsx": "a17c113e1ef1673655f7c5af601f40e90d58e5641310dacc1c06066bfebc671e",
+    "src/runtime/extension_inventory.qualified-wire.test.tsx": "ddf77221bee8a092531b9bdb68e0da28287e9f0d9a3472cc531c8c3a72587f70",
+    "src/runtime/fixtures/skills-qualified-wire.json": "6dca69a9e52b6d3d63786fd3676535bc91c5f2c48cd65cdb1e328ec673f5093b"
+  },
+  "sourceStable": true
+}

@@ -1,0 +1,116 @@
+{
+  "status": "implementedTargetedVerifiedFrozenPendingIntegrationAndInstalledRecheck",
+  "atUtc": "2026-10-10T14:19:29.880134+00:00",
+  "sourceCommit": "aadbe0f2952f9decd213804c12911ccccc58971b",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_output.rs",
+      "sha256": "b5d9514cac9a1d25f3c5dab369898be9299e9d6973906525e52c52b74da97062",
+      "bytes": 6991,
+      "lines": 213
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_tests.rs",
+      "sha256": "2b46fc04215242f85a9e971e973f0b8fd6a87a12f5ce6fb137c19869ed6fd078",
+      "bytes": 20763,
+      "lines": 601
+    },
+    {
+      "path": "src/runtime/fixtures/skills-qualified-wire.json",
+      "sha256": "6dca69a9e52b6d3d63786fd3676535bc91c5f2c48cd65cdb1e328ec673f5093b",
+      "bytes": 1513,
+      "lines": 58
+    }
+  ],
+  "change": "Skills-only qualified name path accepts exactly one colon separating two nonempty simple segments with no spaces; each segment retains the original Unicode alphanumeric/dot/underscore/hyphen and no-double-dot policy, and the whole name remains <=256 UTF8 bytes. Unqualified names still call the unchanged original safe_name. MCP decoder is byte-identical.",
+  "protectedMcp": {
+    "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+    "sha256": "156fe0a61521b81baef133ea5e1b51b5b98a2bd8052b80a27ebf0b2da78a9b85"
+  },
+  "cause": {
+    "backend": "skills_output previously reused MCP safe_name; colon always produced null. Frontend strict skills label independently rejected colon too. Both must be changed before installed improvement is claimed.",
+    "officialSource": "https://raw.githubusercontent.com/openai/codex/rust-v0.156.1/codex-rs/ext/skills/src/loader/namespace.rs",
+    "officialBehavior": "ResolvedSkillNamespace::qualify at lines164-167 prefixes namespace:base_name. Native screenshot/AX showed seven unnamed pluginReported rows; raw seven original names were not collected, so per-row attribution remains an inference, not direct raw response observation.",
+    "nativeAx": {
+      "path": "output/2026-10-10-skills-inventory-native/05-valid-query.txt",
+      "sha256": "5397d9397f6771ff220d3c6a5d4830f03e0b16fde09eb11709c3dee73c73836b",
+      "bytes": 7867
+    }
+  },
+  "validation": {
+    "red": {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked acp_client::extension_inventory::skills_tests::official_qualified_skill_names_survive_the_production_decoder -- --exact --nocapture",
+      "exitCode": 101,
+      "passed": 0,
+      "failed": 1,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/backend/decoder-red.txt",
+        "sha256": "e248d578961d0c86d105aa68e1a094b4033c824895447ac20553adbddf9c2089",
+        "bytes": 941
+      },
+      "actual": "Production decode(response) returned name=None for official sample:search."
+    },
+    "green": {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked extension_inventory -- --nocapture",
+      "exitCode": 0,
+      "passed": 55,
+      "failed": 0,
+      "ignored": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/backend/targeted-green.txt",
+        "sha256": "7d9c9d696a00877a12dc291e65e0303f7e18fcf42d4e2b2806bdd451afa68bbc",
+        "bytes": 10128
+      }
+    },
+    "format": {
+      "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/backend/format.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    "selectorCorrection": {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/backend/decoder-first.txt",
+        "sha256": "62e8269cb66432e38713f4a6dce47c01b3b863d0dfd86fd674f43e0d868d4cd3",
+        "bytes": 552
+      },
+      "exitCode": 0,
+      "tests": 0,
+      "claim": "Initial short filter plus --exact matched no tests; not counted as any successful or failed product verification. Correct fully qualified filter produced the red above."
+    }
+  },
+  "coverage": [
+    "Production decoder accepts sample:search, documents:documents, my-plugin:review_docs and Unicode qualified labels.",
+    "URL, Windows path, absolute path, controls, directional formatting character, empty segments, spaced segments, multiple colons and parent-traversal-like names remain hidden.",
+    "Exact 256-byte and greater-than256 byte ASCII/Unicode boundaries tested; ordinary names follow prior behavior; MCP still rejects qualified name.",
+    "Controlled JSONL peer through actual Rust decoder and request serialization preserves disabled row and duplicate names without raw private paths."
+  ],
+  "wire": {
+    "file": {
+      "path": "src/runtime/fixtures/skills-qualified-wire.json",
+      "sha256": "6dca69a9e52b6d3d63786fd3676535bc91c5f2c48cd65cdb1e328ec673f5093b",
+      "bytes": 1513
+    },
+    "raw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/backend/qualified-wire.raw.txt",
+      "sha256": "e2bd38959c3f9568a32b7b92e743888bd57f5205e85a00b8c12761be288139e1",
+      "bytes": 1080
+    },
+    "provenance": "The unique SKILLS_QUALIFIED_WIRE line from targeted-green.txt, parsed without changing values. This is controlled peer serialization, not a new installed official query. Existing skills-inventory/backend/actual-wire.json is not modified."
+  },
+  "boundaries": [
+    "No App, official CLI or Agent started; no user config/credentials/database modified.",
+    "Only the two owned Rust files plus new fixture changed; frontend owned separately. No snapshot union or lifecycle policy change.",
+    "Independent review, full engineering checks and installed official name-display retest are separate next steps."
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names/backend/before.json",
+      "sha256": "a206fc66f36b8cb6029feac6694027115df40a744e46a126fab707a4bca428dd",
+      "bytes": 586
+    }
+  ]
+}

@@ -193,14 +193,17 @@ export function parseExtensionCapabilities(
     toolInventory: "unavailable",
   };
 }
-function label(value: unknown): string | null {
+function skillsLabel(value: unknown): string | null {
   if (value === null) return null;
   if (
     typeof value !== "string" ||
     !value ||
     new TextEncoder().encode(value).length > 256 ||
     value.includes("..") ||
-    !/^[\p{Alphabetic}\p{Number} ._-]+$/u.test(value)
+    (!/^[\p{Alphabetic}\p{Number} ._-]+$/u.test(value) &&
+      !/^[\p{Alphabetic}\p{Number}._-]+:[\p{Alphabetic}\p{Number}._-]+$/u.test(
+        value,
+      ))
   )
     return invalid();
   return value;
@@ -260,7 +263,7 @@ function skillsSnapshot(value: unknown): SkillsInventory {
       return invalid();
     return {
       id: index,
-      name: label(i.name),
+      name: skillsLabel(i.name),
       description: i.description as string | null,
       descriptionTruncated: i.descriptionTruncated as boolean,
       descriptionRedacted: i.descriptionRedacted as boolean,

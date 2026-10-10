@@ -1,0 +1,250 @@
+{
+  "status": "independent_static_review_complete_not_management_acceptance",
+  "capturedAtUtc": "2026-10-10T14:01:46.547545+00:00",
+  "research": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/next-management-surfaces.json",
+    "sha256": "041857adf56723fb72d9a362c1840721d09ec2372b2838a91e2be3f951dd1cd2",
+    "bytes": 33522
+  },
+  "versionBoundary": "Exact saved official rust-v0.156.1 sources identified by tag URL and byte hash. This does not pin a runtime binary, verify a newly installed process, or establish behavior for other versions.",
+  "performed": {
+    "officialSourceReadOnly": true,
+    "allResearchSourceHashesChecked": 20,
+    "officialCliExecution": false,
+    "accountOrModelRequest": false,
+    "appOrDatabaseOperation": false,
+    "configurationReadOrWrite": false,
+    "productionOrTestEdits": false,
+    "testsRun": false
+  },
+  "conclusion": "The researched version-checked generic official write route is a concrete implementation candidate. The dedicated skills writer has source-visible representation and result-reporting risks. No global external-process lock is proposed as a prerequisite or claimed by this review.",
+  "findings": [
+    {
+      "id": "inline-array",
+      "classification": "source-visible path; not reproduced by CLI/API here",
+      "fact": "set_skill_config only treats skills.config as ArrayOfTables. For an existing inline array, enabled=false replaces it with an empty ArrayOfTables before inserting the target rule, while enabled=true returns without mutation. The three inspected upstream examples use ArrayOfTables.",
+      "evidence": [
+        {
+          "source": "configEdit",
+          "lines": [529, 585]
+        },
+        {
+          "source": "configEditTests",
+          "lines": [480, 544]
+        }
+      ],
+      "implication": "Do not blindly use the dedicated writer on unknown representation or treat a successful response as preservation of unrelated rules."
+    },
+    {
+      "id": "effective-enabled",
+      "classification": "direct source fact",
+      "fact": "skills_config_write_response_inner returns effective_enabled: enabled after apply/cache invalidation. It does not reload the effective state. Enabling removes the first matching override rather than writing an explicit true; another matching name/path or higher SessionFlags rule can still disable the skill.",
+      "evidence": [
+        {
+          "source": "skillsProcessor",
+          "lines": [648, 683]
+        },
+        {
+          "source": "configEdit",
+          "lines": [548, 585]
+        },
+        {
+          "source": "skillsRules",
+          "lines": [90, 125]
+        },
+        {
+          "source": "skillsRules",
+          "lines": [153, 190]
+        }
+      ],
+      "implication": "Report desired preference, persistence and effective list result separately; echoed effectiveEnabled is not acceptance evidence."
+    },
+    {
+      "id": "expected-version",
+      "classification": "direct source fact plus bounded race inference",
+      "fact": "config/value/write validates only the allowed user path and compares expectedVersion with the loaded active User layer before persistence. The later ConfigEditsBuilder rereads TOML and applies the exact key edit without a second atomic version check. Returned version/status use calculated updated_layers, not a postwrite filesystem reread. Same-server global config serialization does not cover external writers.",
+      "evidence": [
+        {
+          "source": "configService",
+          "lines": [218, 255]
+        },
+        {
+          "source": "configService",
+          "lines": [403, 447]
+        },
+        {
+          "source": "configEdit",
+          "lines": [737, 779]
+        },
+        {
+          "source": "requestRoutes",
+          "lines": [1417, 1429]
+        }
+      ],
+      "implication": "Reject stale prechecks; after dispatch use explicit readback to determine observed outcome. Do not claim global CAS or blindly retry/restore prior config after unknown outcome."
+    },
+    {
+      "id": "generic-representation",
+      "classification": "direct source fact; future interoperability risk not experimentally verified",
+      "fact": "The generic writer represents TOML arrays using Value::Array and table elements using InlineTable. Writing skills.config through that route can therefore produce the representation rejected by the dedicated writer above.",
+      "evidence": [
+        {
+          "source": "configService",
+          "lines": [701, 738]
+        },
+        {
+          "source": "configCredentialEdits",
+          "lines": [264, 275]
+        }
+      ],
+      "implication": "Do not automatically switch/fallback to skills/config/write. Owned interoperability verification must cover subsequent dedicated edits as well as immediate generic-write preservation."
+    },
+    {
+      "id": "exact-readback-methods",
+      "classification": "direct source fact",
+      "fact": "The precise methods are config/read with includeLayers and explicit cwd, followed after a confirmed edit by fresh config/read and skills/list with the exact original cwd and forceReload. No config/list method is used by this design. skills/list reloads configuration for each cwd and returns current skills/errors.",
+      "evidence": [
+        {
+          "source": "configDto",
+          "lines": [379, 407]
+        },
+        {
+          "source": "skillsProcessor",
+          "lines": [482, 558]
+        },
+        {
+          "source": "requestRoutes",
+          "lines": [1392, 1397]
+        }
+      ],
+      "implication": "Partial/errors, missing target, state mismatch or different identity do not count as effective success; a separate management process report does not prove adoption by an existing ACP conversation."
+    }
+  ],
+  "candidate": {
+    "scope": "One explicit reversible user-layer preference for a currently discovered non-plugin user/repo skill, selected by exact private path rather than display name or ordinal.",
+    "sequence": [
+      "Fresh official config/read(includeLayers=true,cwd=exact selected cwd), retaining only bounded private User-layer path/version and complete skills.config array.",
+      "Show the target and user-layer scope, then consume one exact-owner confirmation. Preserve every non-target rule and order; reject ambiguity instead of silently normalizing.",
+      "Official config/value/write(keyPath=skills.config,mergeStrategy=replace,filePath=exact User layer,expectedVersion=fresh version) with the complete intended array.",
+      "Fresh config/read verifies the intended user-layer change and preservation, then skills/list(forceReload=true,cwds=[exact cwd]) checks the same target and effective enabled state."
+    ],
+    "privateData": "config/read may return unrelated sensitive configuration. Bound and validate it inside the backend, publish only the minimal allowed result, and do not log raw configuration or private skill paths.",
+    "unknownOutcome": "After possible write dispatch, cancellation/timeout/lost response is unknown, not not-written. Preserve exact request ownership, finish owned process cleanup and offer explicit readback without automatic mutation retry or rollback.",
+    "nextVerification": "Use only self-owned controlled configuration to compare ArrayOfTables and inline arrays, duplicates/name precedence, stale version rejection, postcheck external drift and full semantic preservation. This is an implementation prerequisite for the selected candidate, not evidence of already passing management."
+  },
+  "boundaries": [
+    "No official mutation, config/account experiment, native GUI, live tools, model request or Cargo execution was performed.",
+    "Readback would establish configuration and the management process report only; it cannot establish current model/tool use or automatic reload of separate conversations.",
+    "Official normal startup may maintain its own state; no zero-write/no-background-network guarantee is inferred.",
+    "Source-tag-specific limitations must remain explicit if the installed official surface differs.",
+    "P40/P41 completion, broader scope/install/login/diagnostics, other Agents and Windows are not implied."
+  ],
+  "sources": {
+    "skillsDto": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-skills/codex-rs/app-server-protocol/src/protocol/v2/plugin.rs",
+      "sha256": "7d50b22ae6fbf54b9f42d95f817e389e2e3cd25fd0238c1dced84cdd373d7ea5",
+      "lines": [[933, 947]],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server-protocol/src/protocol/v2/plugin.rs#L933",
+      "supports": "SkillsConfigWriteParams/Response exact camelCase schema."
+    },
+    "requestRoutes": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-skills/codex-rs/app-server-protocol/src/protocol/common.rs",
+      "sha256": "02cd72be646c4388e90f21ed651838aeab3d6273ade14715e38f2de6c095ba99",
+      "lines": [
+        [1025, 1028],
+        [1214, 1229],
+        [1417, 1427]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server-protocol/src/protocol/common.rs#L1025",
+      "supports": "Official method routes, declared in-process config serialization; OAuth login/reload/status routes, no dedicated MCP OAuth cancel found in this registry."
+    },
+    "skillsProcessor": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-skills/codex-rs/app-server/src/request_processors/catalog_processor.rs",
+      "sha256": "8e2a25595aa8fd67eb96cb4e98689f0b50844632944650f910d9f7a3178e8bf2",
+      "lines": [
+        [482, 558],
+        [648, 683]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server/src/request_processors/catalog_processor.rs#L482",
+      "supports": "Exact selector validation; user-home writer; echoes requested enabled after persistence/cache invalidation. List reloads config per cwd."
+    },
+    "configEdit": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/core/src/config/edit.rs",
+      "sha256": "02159e7636fa00ed5ea3788b697d94e909420e6366299a1bfa3ca77808987485",
+      "lines": [
+        [431, 484],
+        [487, 595],
+        [692, 727],
+        [731, 779],
+        [789, 807],
+        [984, 995]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/core/src/config/edit.rs#L431",
+      "supports": "Whole-map MCP edits; skill selector shape/mutation; symlink-resolved user config read-edit-write and blocking task."
+    },
+    "configEditTests": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/core/src/config/edit_tests.rs",
+      "sha256": "6d0310b3de85385a25ef0757066a9f4d3c0ad3eb9fdda74432fb7d8953678c4f",
+      "lines": [[480, 544]],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/core/src/config/edit_tests.rs#L480",
+      "supports": "Upstream authored examples cover array-of-table path/name disable and removal on enable; not executed here."
+    },
+    "atomicWrite": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/utils/path-utils/src/lib.rs",
+      "sha256": "a3ea112cbb186dea296c4733511d784d161c071fa578c972818b40f00b96d3c7",
+      "lines": [
+        [48, 142],
+        [144, 155]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/utils/path-utils/src/lib.rs#L48",
+      "supports": "Symlink resolution and sibling NamedTempFile write/persist; no fsync or external compare-and-swap in this function."
+    },
+    "skillsRules": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/config/src/skills_config.rs",
+      "sha256": "bc2eb9fcb92c2c99fedaa25d1ca4bbff6d69a009499ba34762249bdc3b05cc8c",
+      "lines": [
+        [18, 47],
+        [90, 125],
+        [128, 209]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/config/src/skills_config.rs#L18",
+      "supports": "Rule types; ordered path/name matching; only User/SessionFlags for per-skill rules; bundled availability separate."
+    },
+    "configDto": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server-protocol/src/protocol/v2/config.rs",
+      "sha256": "8187edb07de0259f5a96927ca69b749a7ba9049062bf2ef2eb1ff9c7d8696447",
+      "lines": [
+        [318, 407],
+        [1069, 1107]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server-protocol/src/protocol/v2/config.rs#L318",
+      "supports": "Config read/layers/version; write exact fields, statuses and errors; batch reload option."
+    },
+    "configService": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/config_manager_service.rs",
+      "sha256": "cb5e0862e3402aed6349d870f4a8b38472ad1835edd906f797ea1e3aeeac8209",
+      "lines": [
+        [119, 176],
+        [218, 255],
+        [263, 275],
+        [363, 440],
+        [443, 447],
+        [496, 550],
+        [581, 629],
+        [701, 738]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server/src/config_manager_service.rs#L119",
+      "supports": "Only user layer writable; expectedVersion checked before persistence; validation/overridden response; key parsing; null clears; array serialization."
+    },
+    "configCredentialEdits": {
+      "path": "output/2026-10-10-extension-official-surfaces/codex-management/codex-rs/app-server/src/config_manager_service_credential_edits.rs",
+      "sha256": "30862ce58b3dd7cb238dff862815d982387e84ad8bab485c6eb37dc30b5892a7",
+      "lines": [
+        [39, 65],
+        [264, 275]
+      ],
+      "url": "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server/src/config_manager_service_credential_edits.rs#L39",
+      "supports": "Generic exact-key edit produces SetPath/ClearPath after semantic merge."
+    }
+  }
+}

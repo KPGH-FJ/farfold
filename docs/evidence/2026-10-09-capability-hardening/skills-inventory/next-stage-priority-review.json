@@ -1,0 +1,305 @@
+{
+  "status": "read_only_priority_review_not_a_new_plan_or_acceptance",
+  "capturedAtUtc": "2026-10-10T14:11:51.695550+00:00",
+  "scope": "P39/P40/P41之外，依唯一活动计划原条件，当前源码索引及少量已明确引用的当前证据作接续排序；无源码/测试/计划改动、无App/Agent/CLI或新实测。",
+  "planIntegrity": {
+    "uniqueIds": 122,
+    "missingIds": [],
+    "titleAndConditionHash": "299d914f63d8bd760e4fdb3b3536aa08975beda3d5f6399e19e2be505da02f68",
+    "comparedWithCommit": "cd3d02a882a1681e29624bfad1d791897bd82fd5",
+    "same122IdsTitlesAndCompletionConditions": true,
+    "statesReviewed": 122,
+    "noUnqualifiedWholeItemCompletionLabels": true,
+    "note": "未把部分/局部实证/源码通过改写成全项完成；H13明确限定支持的macOS基础范围，不据其他Agent/Windows未测撤销该已验范围。"
+  },
+  "recordAudit": {
+    "stagePassOverclaimedAsWholeCompletionFound": false,
+    "basis": "当前122条均保专项条件，绝大多数保待验/部分，P39–41明确未完；章节历史按当次范围保留。",
+    "currentHeaderDrift": "技能首段仍写尚未安装，root正在aadbe0f2正式实测；本次不改动态状态，也不据安装中状态提前声称native通过。该滞后不是全项成功误写。",
+    "understatementToReconcileLater": [
+      "H12仍标源码待复验，而已有创建/采用/Use/继续证据可按原条件复用复核；不因此重复全部工作树开发。",
+      "docs/architecture.md技能段仍为MCP首片描述，当前skills代码已接；属于源码索引更新滞后，不是功能完成证明。"
+    ]
+  },
+  "recommendation": "保持P40当前主线时，立即并行order3成功通知与order4媒体失败反馈；order1接入矩阵、order2专用数据故障与order6真实负载测量持续推进。之后按order5/7/8依赖补文件交付、官方高级能力和网页，order9只补已有分项的明确余项；Windows按原顺序接续。不存在等待29家全部实测才可修独立共用功能的依赖。",
+  "nextBatches": [
+    {
+      "order": 1,
+      "lane": "持续并行，接入出口",
+      "ids": [
+        "ARCH-02",
+        "ARCH-07",
+        "ARCH-09",
+        "ARCH-11",
+        "ARCH-12",
+        "ARCH-13",
+        "ARCH-15",
+        "ARCH-17",
+        "ARCH-19",
+        "ARCH-21",
+        "ARCH-23",
+        "ARCH-29",
+        "ARCH-31",
+        "P33",
+        "ARCH-44"
+      ],
+      "gap": "29家×8项仍未形成当前条件下完整证据；代表Codex后台任务停止不等于每家停止全部外部工作，列表成功不等于恢复正文后可继续。旧232格“本版未复验”不是232个失败。",
+      "next": "按官方接口表先选现有明确账号/服务可测的一家，闭合其已有登录/来源→历史预览带入→同对话模型确认与冷恢复→精确停止及继续；遇源码缺口按准确接口补共用链，缺账号或官方能力则记录具体阻塞并转下一个可执行对象。ARCH-44先形成客户端文件/终端回调的具体必要性/权限决定，不能以第二循环口号跳过。",
+      "dependsOn": ["现有发送/配置/恢复门禁；每家真实可用的授权账号及官方接口"],
+      "entries": [
+        "src-tauri/src/acp_client/first_release.rs",
+        "src-tauri/src/acp_client/session_config.rs",
+        "src-tauri/src/acp_client/session_commands.rs",
+        "src/runtime/session_configuration.ts"
+      ],
+      "classification": "既有局部实测以外的接入/证据缺口，不据此判每个当前路径失败"
+    },
+    {
+      "order": 2,
+      "lane": "安全优先，专用对象实证",
+      "ids": ["H02", "H03", "H04", "ARCH-48"],
+      "additionalIds": ["NEW-01", "NEW-04"],
+      "gap": "NEW-01目录授权等待仍未定位闭合；NEW-04恢复入口尚缺正式实测。整库恢复/清数据的磁盘满、只读、中断与旧草稿回写保护仍不能由日常升级数据保持或纯组件通过替代。",
+      "next": "分别准备专用恢复数据和受控目录权限对象，沿现有恢复壳验证合法位置意见保留/损坏拒绝、保存失败可重试、清理与退出保留原文件；NEW-01先取得系统授权真实结果并修准确引导，不以加长超时/ shell成功作修复。",
+      "dependsOn": [
+        "专用副本和确切正常退出/进程归属；不触日常库或扩大系统授权"
+      ],
+      "entries": [
+        "src/components/StorageRecovery.tsx",
+        "src/components/StorageRestore.tsx",
+        "src-tauri/src/storage_recovery.rs",
+        "src-tauri/src/storage_recovery/database_restore.rs",
+        "src/runtime/draft_storage.ts"
+      ],
+      "classification": "正式故障入口与原计划数据保护验证缺口；本次未制造故障"
+    },
+    {
+      "order": 3,
+      "lane": "可立即开发的独立小片",
+      "ids": ["P48", "P47", "P38"],
+      "gap": "desktop_notifications的NoticeKind仅approval/question/interrupted，turnEnd只对failed/unknown提醒；没有成功完成的独立偏好与事件路径。现有系统提醒实际送达/声音/点击仍列待实证。",
+      "next": "复用现有通知服务增加独立成功提醒偏好，严格只从当前真实终态产生一次；保历史回放/失败/未知/正在查看抑制，接原对话定位。随后在明确系统通知权限下验送达、关闭偏好与点击。",
+      "dependsOn": ["现有completion分类与请求归属；系统通知可用条件"],
+      "entries": [
+        "src/runtime/desktop_notifications.ts",
+        "src-tauri/src/desktop_notifications.rs",
+        "src/runtime/notification_navigation.ts"
+      ],
+      "classification": "源码确认的缺失功能；可与P40后端独立推进"
+    },
+    {
+      "order": 4,
+      "lane": "可立即开发的内容反馈片",
+      "ids": ["P13", "P06", "P07", "P08"],
+      "gap": "MessageAttachment有img/audio呈现，但该渲染分支没有解码/播放onError状态；attachmentMedia只校验格式/base64，不能证明媒体实际解码。剪贴板、拖放与各格式真实Agent接收仍有原计划未测项。",
+      "next": "先给现有媒体组件接实际解码/播放失败和大媒体反馈，保原顺序/来源/正文；再沿既有附件核验链做剪贴板/拖放分项实机和已支持Agent接收验证。格式交付方式不足逐家补官方路径，不以预览成功算Agent可用。",
+      "dependsOn": [
+        "既有媒体白名单/附件核验；真实接收部分依赖order1的可用Agent"
+      ],
+      "entries": [
+        "src/components/MessageContent.tsx",
+        "src/runtime/message_attachments.ts",
+        "src/components/UserMessageContent.tsx"
+      ],
+      "classification": "渲染失败反馈是源码可达缺口；未在本次浏览器复现"
+    },
+    {
+      "order": 5,
+      "lane": "交付能力串行依赖",
+      "ids": ["P35", "P16", "P20", "P21"],
+      "gap": "Markdown导出明确只保附件名称/类型/来源而不打包，尚不是可迁移归档；Office预览只路由DOCX/XLSX，PPTX测试明确进入other。既有P20/P21分项不能覆盖未接幻灯片格式。",
+      "next": "先做明确范围的附件归档：复用文件身份核验/完整复制/取消，包内说明缺失项和隐私，实际核最终文件；另独立补PPTX视觉预览并核幻灯片内容，再接同版本刷新和位置意见。不得把附件包称Agent恢复文件。",
+      "dependsOn": ["H06文件身份/大文件交付底座；PPTX预览先于该格式刷新/意见"],
+      "entries": [
+        "src/runtime/conversation_export.ts",
+        "src/runtime/export_strings.ts",
+        "src/components/OpenedFileView.tsx",
+        "src/runtime/office_preview_prepare.ts",
+        "src-tauri/src/file_delivery.rs"
+      ],
+      "classification": "当前源与现有明确提示共同证明的缺口"
+    },
+    {
+      "order": 6,
+      "lane": "稳定性与可访问性实测，可在功能开发间并行",
+      "ids": ["ARCH-49", "H08", "H09", "H10", "P45", "P46"],
+      "gap": "当前仍缺安装版真实多路流式、长历史/富媒体、休眠/网络变化的规模与资源结论，以及实际读屏/大字号/系统缩放验收；单一长Markdown Worker修复不替代这些条件。",
+      "next": "复用现有性能记录入口固定实际负载和测量口径，先量首屏/输入/切换/内存，再按测量补预算和背压；同时逐关键路径只键盘/读屏/缩放，修复实际遮挡和焦点失败。沿同原会话做睡眠与断网恢复，未知不重发。",
+      "dependsOn": ["可用真实多任务条件；现有事件保真/恢复与草稿保护"],
+      "entries": [
+        "src/runtime/performance-trace.ts",
+        "src-tauri/src/performance_trace.rs",
+        "src/runtime/thread_notifications.ts",
+        "src/runtime/sessions.ts"
+      ],
+      "classification": "原条件要求的实证/设计缺口，未在本次凭源码断言性能不达标"
+    },
+    {
+      "order": 7,
+      "lane": "官方高级能力与历史接口接续",
+      "ids": [
+        "ARCH-33",
+        "P11",
+        "ARCH-36",
+        "ARCH-37",
+        "ARCH-38",
+        "ARCH-50",
+        "P32",
+        "ARCH-32",
+        "P34"
+      ],
+      "gap": "官方分支/回退、压缩控制和精确steer未闭合；现有steering研究明确旧supported布尔不足以保证当前轮。全局搜索只查内存正文/已收到attachment.text；未加载正文和附件实体仍缺官方读取闭环。删除本地记录与Agent残留只有分项接口，不能合并称远端清除。",
+      "next": "按官方可执行面先补一个精确能力（完整分支或压缩控制），复用同一请求/配置保护，明确上下文/文件副作用；搜索另核无副作用官方读取/搜索入口，不能用load会话冒充只读批搜；删除沿现有deleted/unsupported/unconfirmed回执补真实分项。",
+      "dependsOn": [
+        "order1相应Agent的官方能力/原会话身份；不因P40启停成功自动拥有高级会话权限"
+      ],
+      "entries": [
+        "src-tauri/src/acp_client/session_commands.rs",
+        "src/runtime/sessions.ts",
+        "src/runtime/loaded_search.ts"
+      ],
+      "classification": "计划缺失功能加已核官方语义限制；不是建议新Agent循环"
+    },
+    {
+      "order": 8,
+      "lane": "浏览器产品能力",
+      "ids": ["P27", "P28", "P30", "P25", "P26"],
+      "gap": "生产Observe显式把screenshot传false，并以闭合shadow受保护输入不可可靠判定为由拒像素；内部takeSnapshot和协议image编码测试不等于P27生产能力。多页面/恢复与29家临时工具注入未闭合，实机手动网页不代替真实Agent撤回/取消。",
+      "next": "先在原公开页边界内核能够证明保护条件的截图方案；无法满足则保具体限制，不用另一次许可绕过。多标签另补页面/对话归属和切换/关闭/恢复，再逐已核官方注入路径补真实调用与撤回。",
+      "dependsOn": [
+        "现有精确page/request归属与cleanup；官方截图保护条件及Agent临时工具接口"
+      ],
+      "entries": [
+        "src-tauri/src/browser_workspace/browser_tools.rs",
+        "src-tauri/src/browser_sharing/protocol.rs",
+        "src-tauri/native/BrowserWorkspace.m"
+      ],
+      "classification": "生产显式限制/缺失，保原标准不假称内部截图已完成"
+    },
+    {
+      "order": 9,
+      "lane": "已有分项的最小正式余项",
+      "ids": ["H11", "H17"],
+      "gap": "H11正式扫描取消仍未实测；H17准备成功/失败/停止已有正式证据，但端口EPERM/exit24不能作为端口冲突/启服成功。",
+      "next": "在有可观察扫描时做一次明确取消并核工作结束与输入保留；端口相关仅在明确系统权限条件可用后沿现有原Agent准备请求做冲突→准确失败→用户明确解决后的继续，保源/sibling/秘密不变。",
+      "dependsOn": ["实际可观察扫描负载；端口权限环境可用，不改Agent执行方式"],
+      "entries": [
+        "src-tauri/src/project_index_requests.rs",
+        "src/components/useProjectFiles.ts",
+        "src-tauri/src/worktrees/preparation.rs"
+      ],
+      "classification": "已记录的窄实证缺口，不重新打开已闭合基础工作树范围"
+    },
+    {
+      "order": 10,
+      "lane": "macOS共用链稳定后的平台接续",
+      "ids": ["P49", "H18", "H19"],
+      "gap": "Windows真实进程树/凭据/PTY/文件/WebView2/通知及UNC重解析支持仍未验收；macOS或交叉静态检查不能替代。",
+      "next": "在真实Windows环境先核现有本地路径和进程/凭据正常及失败恢复，再按已决定支持范围补UNC/重解析与通知冷激活，保同一UI。",
+      "dependsOn": ["可用Windows实机；前序共用路径稳定"],
+      "entries": [
+        "src-tauri/src/windows_process.rs",
+        "src-tauri/src/file_access/windows.rs",
+        "src-tauri/src/desktop_notifications/windows.rs",
+        "src-tauri/tauri.windows.conf.json"
+      ],
+      "classification": "明确平台能力/实证缺口；签名发布仍按原后置不加为本轮门槛"
+    }
+  ],
+  "scopeDecisionsNotFeatureSuccess": {
+    "ids": ["ARCH-44", "ARCH-49", "P29", "H16", "H22"],
+    "action": "保留每项具体范围/设计决定；前两项在order1/6推进，后三项待明确范围，不以同行功能并集自动立项或把决定当实现。"
+  },
+  "excludedFromNewBlockers": {
+    "ids": ["P50", "H20", "H21"],
+    "reason": "用户明确后置/契约排除：不把公开分发签名、公证、更新、多窗口、编辑器、LifeModel真实采集、Linux等恢复成当前能力阶段新门槛。"
+  },
+  "evidenceBoundaries": [
+    "本次只有静态源码/记录复核，不新增产品成功或失败实测。",
+    "29×8原条件不变，旧232未知格不改为失败或通过。",
+    "不恢复已撤销六条旅程、另一台电脑或逐家新增强制短消息门槛。",
+    "既有worktree归档/删除/恢复及Codex分项证据按原覆盖继续有效，只补明确剩余条件。"
+  ],
+  "references": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "6fcdfb1f1cb7cadcf56aebfb46019aae0ef727510508bd92dbe3ad1d6eb414ba"
+    },
+    {
+      "path": "docs/status.md",
+      "sha256": "a95dd7d99e2966c497afd6bc5cfe0907ecc51aab5646720075f53084139fb520"
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "0e48f89a9a9ae799e8115e03ff02204b4ddca6de611192460a00fa4f41c86083"
+    },
+    {
+      "path": "src/runtime/desktop_notifications.ts",
+      "sha256": "0a8d45e0b639f74c8cbbe9584afc39e1d079eb86b2e54e1fe54a8a18c5d50fb9"
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications.rs",
+      "sha256": "2ddd68d76ebc60f955008e9f948217c600cc18c0cfc403228313bfb5e6d96507"
+    },
+    {
+      "path": "src/components/MessageContent.tsx",
+      "sha256": "ea5e64ff5fb8f579b7ea9ad5d0a8bee42e10fba3c1c73bc38317c671cbac9223"
+    },
+    {
+      "path": "src/runtime/message_attachments.ts",
+      "sha256": "822455bd4349c22f53d7189f7e906a3db5fbd4b6a9deda715d46d1d621b158e0"
+    },
+    {
+      "path": "src/runtime/conversation_export.ts",
+      "sha256": "891e23090c2a7b191c80c9915fc2c0d9d89b4596282ca6c67f2e65f1e4d5f439"
+    },
+    {
+      "path": "src/runtime/export_strings.ts",
+      "sha256": "bc693440a82959e5466ba73b05b12fb8760ef744a83f1b6ad53aec59320bda8b"
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "b3975c605faf9655c2a5a53d1312b8ea43b2aaa83a15e5445d655ccc020f7829"
+    },
+    {
+      "path": "src/components/OpenedFileView.test.tsx",
+      "sha256": "b4f5f90a8456878b9b9e4cb79c545bf1fff09c4035019fbcc2b900437643b0d0"
+    },
+    {
+      "path": "src/runtime/loaded_search.ts",
+      "sha256": "919c8ddd05573b98c581774c88656993f8ebe7befa439d7a7799f957745c8061"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/browser_tools.rs",
+      "sha256": "38190051172b771756713fb30f22fce3ddada44a667f37714f3eadaa52623f6c"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/protocol.rs",
+      "sha256": "b43f435f45bbe4e32665c1413adf7b3ae65f6ec144294fc960e69670eb95f3c5"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "512a45af058eae5a72e6b26c821146a8f1181c1ff999cbcdef77b301bf8989ff"
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "f304c6875864f0bc0f0dbcc46961224da9e608648cbd6c735b3ea64afa16998c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/official-steering-surfaces.json",
+      "sha256": "b3c184ad017bde061a752641511d879f4ff746d036951782b50d94c620948d30"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-next-review.json",
+      "sha256": "ba58074666672884a6216927b3804d7e3180289c4fe6d2ef657881760f4a6f88"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-host-capability-audit/agent-standard-coverage.json",
+      "sha256": "8df2f05794eb787ab3c1c35fb7028ca3cf4e2bc88cf4abde6bc02699703c72c6"
+    }
+  ]
+}

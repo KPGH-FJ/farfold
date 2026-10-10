@@ -1,0 +1,220 @@
+{
+  "schema": 1,
+  "scope": "P48 成功完成通知最小实现准备；P47 既有通知链复用与实证边界",
+  "status": "readOnlyDesignNotImplementedOrTested",
+  "sourceHead": "aadbe0f2952f9decd213804c12911ccccc58971b",
+  "constraints": [
+    "生产、测试、配置输入保持冻结；本次仅写本证据 JSON。",
+    "未请求系统通知权限、未发通知、未启动 App/Agent/CLI、未执行测试。",
+    "不改 P47/P48 原标题、条件或完成状态；不创建新计划、事件账本或 Agent 专属 UI。"
+  ],
+  "observed": {
+    "currentKinds": ["approval", "question", "interrupted"],
+    "preference": "desktopNotifications.v1 现只有 enabled/sound；既有 UI 为需要你时提醒，没有独立成功开关。",
+    "completion": "completion() 仅无 error/failure 的 end_turn 为 done；cancelled 为 stopped，其余 failed/unknown 不可发成功通知。",
+    "resultIsNotSuccess": "roundResult 的 reply 优先、hasToolResult 包括 failed/尚未终态但已有输出。canContinueAfterCompletion 只服务队列继续，不能直接作为成功资格。",
+    "notificationTiming": "现入口在投影前；成功资格须基于本次真实 live ending 及投影后的实际工具/任务状态。普通文字、raw envelope、历史 replay 不能新建成功候选。",
+    "existingSuppression": "现有 FE 在观察与提交前两次检查 app 是否在前台；后端最终提交再次检查窗口可见/焦点。整个 app 前台均抑制，范围比仅当前对话更保守。",
+    "existingDedup": "FE 内存最多 512 个 owner/round/request 决策，BE 最多 256 个 renderer/sequence。关闭偏好或前台抑制也是已作出的决策；不得开启后回补。",
+    "navigation": "已通过本地 metadata 的 opaque digest 定位既有对话；仅选择历史界面，不自动连接、载入 Agent 会话或发送。删除目标不重建。",
+    "platformEvidence": "源码存在 macOS/Windows 实现；本次未测系统送达、声音或点击。Windows 现仅运行中点击，冷启动激活仍未提供。"
+  },
+  "proposedSlice": {
+    "definition": "仅为官方明确正常结束、收到可用回复或成功工具结果、且本次已知工作没有失败或未确认终态的请求发送通用完成提醒；不声称语义目标/产物质量已被 Farfold 验证。",
+    "eligibility": [
+      "completion.status 必须 done；确认是当前 live 通道产生的 settled，保留原 error/failure 判定优先级。",
+      "至少有真实回复或 status=completed 的工具结果；思考、计划、输入、整理通知和空 end_turn 不单独证明完成。",
+      "本次已有工具引用对应的 failed/pending/unknown 状态不能因 reply 或输出文本存在而忽略。当前未确认发送/停止/连接结果、待批准/提问、活跃工具、未知/运行后台任务或 overflow 均不能发成功。",
+      "后台任务仅依实际同 owner 的 task/tool 引用判断；已知 failed/stopped 不算成功，缺少归属依据不猜测属于其他请求。不得把 hasAsyncTasks=false 当任务成功证明。",
+      "正常 end_turn 先于工具实际完成时，可保留当前请求的内存候选；仅对应真实后续终态再次评估。新请求、连接替换/丢失、原对象退休或新的失败使旧候选失效；不以超时或取消已派发推断完成。"
+    ],
+    "scopeChoice": "首片对本次已知 failed 工具保守不报成功，不解析回复文字推断已经修复；若只做收到回复通知，应另注明更窄范围，不能代替 P48 任务成功条件。",
+    "implementation": "抽出 success_notification.ts 等小模块，复用现有 settled/tool 引用与真实通道归属，加入必要后置调用。sessions.ts 已 1493 行，应抽出逻辑而不是超过 1500 行；不另建持久运行账本。",
+    "preference": "在原设置增加 successEnabled 缺省 false；enabled 保留原需你处理提醒含义，两开关独立，声音共用。读取旧记录不自动落盘；坏记录继续不覆盖。成功开关单独开、原 enabled 关时也应可工作。",
+    "permission": "仅用户明确开启任一提醒时走既有系统许可流程；不启动即请求。未知许可不覆盖旧选择，明确关闭仍有效。",
+    "backend": "NoticeKind/状态 DTO/严格诊断 kind 同步扩展 success；Rust 初始及 macOS/Windows 最后提交都按对应 kind 检查正确偏好与 revision，不能只把前端开启成功而最终仍只看 enabled。",
+    "display": "现设置增加工作完成时提醒，保留通用固定通知正文且不含对话内容、标题、路径、工具参数或凭据。文案不把 submitted 说成已送达。",
+    "dedupAndFocus": "使用本次真实结束对象/现有 owner 身份一次决策，并复用现有有界投递去重。保留前台抑制与提交前二次核查，普通历史加载/重连回放/偏好重开不补发。",
+    "click": "复用现有 notification_navigation + App 定位，无需新增导航或自动连接路径。"
+  },
+  "ownershipSuggestion": {
+    "frontend": [
+      "src/runtime/desktop_notifications.ts",
+      "src/runtime/success_notification.ts (new, provisional name)",
+      "src/runtime/sessions.ts (minimal integration/extraction)",
+      "src/components/GeneralSettings.tsx",
+      "src/runtime/settings_presentation_strings.ts",
+      "对应通知/channel/设置定向测试"
+    ],
+    "backend": [
+      "src-tauri/src/desktop_notifications.rs",
+      "src-tauri/src/desktop_notifications/native.rs",
+      "src-tauri/src/desktop_notifications/windows.rs",
+      "src-tauri/src/diagnostics/notification.rs",
+      "对应偏好/最终提交门禁测试"
+    ],
+    "usuallyUnchanged": [
+      "Agent 接入与 prompt/工具状态契约",
+      "src-tauri/native/DesktopNotifications.m 固定正文与点击桥接",
+      "src/runtime/notification_navigation.ts",
+      "src/App.tsx 通知定位"
+    ],
+    "coordination": "不是纯 FE 即可闭合；root 应明确分配 BE 偏好/最后提交门禁所有权，避免与 P40 官方配置后端交叉。"
+  },
+  "necessaryTests": [
+    {
+      "case": "官方终态与结果",
+      "assert": "真实 live end_turn+reply/成功工具仅一次；failed/error/refusal/max_tokens/max_turn_requests/cancelled/未知原因/空结果/普通文字均无成功。"
+    },
+    {
+      "case": "混合与晚到工作",
+      "assert": "reply+failed tool、reply+active tool、async running/unknown/failed/stopped 不误报；同 owner 后续明确 completed 才可能通过，process_ended 清活跃数组不造成功。"
+    },
+    {
+      "case": "身份与回放",
+      "assert": "重复终态、live=false 前缀、重连历史、旧通道晚回执不发；新请求/owner 替换后旧候选不可用；同轮晚到成功最多一次。"
+    },
+    {
+      "case": "独立偏好",
+      "assert": "旧记录 success=false 且无自动写；attention-only/success-only/both-off 均按各自开关；许可拒绝/未知、读写失败保持原设置，旧 P47 行为保留。"
+    },
+    {
+      "case": "异步门禁",
+      "assert": "等待偏好/系统查询时关闭成功开关、切前台、owner 变化或用户已开启下一请求均不投递；未知提交不自动重试。"
+    },
+    {
+      "case": "实际平台派发入口",
+      "assert": "BE 与 native 队列最后门禁均区分 kind；相同 revision 下 success-only 允许、关闭 success 拒绝；diagnostic strict kind 可接受且没有内容泄漏。"
+    },
+    {
+      "case": "设置与点击",
+      "assert": "实际组件键盘/窄窗可达；真实通知导航入口仅选正确既有对话，未加载/已删除/迟到 dispose 保持无自动连接或发送。"
+    },
+    {
+      "case": "安装后独立实证",
+      "assert": "root 在获准系统条件下观察实际成功通知/关闭偏好/前台抑制/声音/点击；提交回执和实际出现分列，系统拒绝或静音不假报送达；P47 三种既有提醒仍需按实际覆盖单列。"
+    }
+  ],
+  "notClosed": [
+    "P48 尚未实现或验证。",
+    "P47 实际系统送达/声音/点击仍依正式实验，不因本设计或旧源码存在而完成。",
+    "未测试 Windows 系统行为或冷启动点击；未展开逐家 Agent 验收。"
+  ],
+  "sourceRefs": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+      "reviewedScope": "共用多 Agent UI、未知结果不能当成功及仅保存 Farfold 元数据的契约"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "a740b09f628c129b90adaeaf8617b9653c657c65cc44edef5c45aaf2db5d6ef4",
+      "reviewedScope": "P47/P48 原完成条件；本文件不修改条件或状态"
+    },
+    {
+      "path": "src/runtime/completion.ts",
+      "sha256": "fb871ff354db6ae9a75c68b29eac7102360423c1a341a6cbd99bbd97fad1c15f",
+      "reviewedScope": "25–57：官方 end_turn/error/failure/refusal/cancelled 的归一化；canContinueAfterCompletion 不是成功证明"
+    },
+    {
+      "path": "src/runtime/round_result.ts",
+      "sha256": "e07449a198f810f2828ec95340c48f071d87472c9f3eeba80ea4962a9b546602",
+      "reviewedScope": "27–85：failed 工具也属已收到结果，reply 优先于 pending；不得直接用于成功通知"
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "26936e5136ff294a5d7709385c754f061f01cbe8a43ed99ea395e8ef8f0ded79",
+      "reviewedScope": "applyTurnEnd 创建真实 settled 与已有工具/整理引用"
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "8d1bdcc0fd993d75a7e42417d3c31e8a22f437ea10db83777d23b0363e5ed3ee",
+      "reviewedScope": "真实 thread/connection、pending requests、active tools 与 async task 字段"
+    },
+    {
+      "path": "src/runtime/async_tasks.ts",
+      "sha256": "08ea8a83bf5f1e3ed6ed94122087b1211c9165d80d242a04029e4e458428127f",
+      "reviewedScope": "running/unknown/overflow 阻止终态；failed/stopped 不因不活跃变为成功"
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "f304c6875864f0bc0f0dbcc46961224da9e608648cbd6c735b3ea64afa16998c",
+      "reviewedScope": "271–311、383–513、781–789：live/history 分流、pre-projection 通知入口、后置实际终态入口；1493 行"
+    },
+    {
+      "path": "src/runtime/desktop_notifications.ts",
+      "sha256": "0a8d45e0b639f74c8cbbe9584afc39e1d079eb86b2e54e1fe54a8a18c5d50fb9",
+      "reviewedScope": "61、178–239、330–470：现有三类型、偏好、精确去重、延迟门禁、前台抑制"
+    },
+    {
+      "path": "src/runtime/notification_navigation.ts",
+      "sha256": "bdcab5455aedcbaf69710355b2ca63c8b5112f162df718962dc7fa277e25c572",
+      "reviewedScope": "订阅后排空、dispose/重复唤醒/无效目标保护"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "10a4654c55ab520c0ea3fd3933a1be333eb0300954bc0fe264ef281afd12eb74",
+      "reviewedScope": "572–600：通知仅定位既有对话，未加载内容保留显式打开入口"
+    },
+    {
+      "path": "src/components/GeneralSettings.tsx",
+      "sha256": "1637479b76b24b3e566c47d17d2661bd53c3fd4635d46e8299451765fe0eb71e",
+      "reviewedScope": "366–465：现有提醒和声音开关及系统状态"
+    },
+    {
+      "path": "src/runtime/settings_presentation_strings.ts",
+      "sha256": "0513c5b5e3d48b1bc2e988638ade7ce2971b1a1014e91040f80f593ebe9861a3",
+      "reviewedScope": "13–15：需要你时提醒 / 提醒声音"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "159189718fbdbbe63e8271bd3e5131a3afed7bbc33e6ea4a71c647fb52a20ecc",
+      "reviewedScope": "469–486：官方 prompt 返回值的 stopReason/meta 转发，不证明后台任务结束"
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications.rs",
+      "sha256": "2ddd68d76ebc60f955008e9f948217c600cc18c0cfc403228313bfb5e6d96507",
+      "reviewedScope": "31–58、117–142、178–230、276–399：设置、固定类型文案、许可与提交最终门禁"
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/native.rs",
+      "sha256": "054deb9120522d6296467b1a5c6dc740cfe015a196e37bdeff46d3bd7b00599a",
+      "reviewedScope": "原 macOS 精确提交/迟到回执/偏好修订守卫"
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/windows.rs",
+      "sha256": "b7cba61823e2c9371ac972898490c64795a74a439fc4856517e921717eaa2c5e",
+      "reviewedScope": "运行中激活及最终偏好门禁；不具备冷启动激活"
+    },
+    {
+      "path": "src-tauri/native/DesktopNotifications.m",
+      "sha256": "63579c053ea890a00cfdded3bcec6d336fb7dc29efd846d522e93b2935d70525",
+      "reviewedScope": "系统 delegate 前台抑制、固定内容与 opaque 点击目标"
+    },
+    {
+      "path": "src-tauri/src/diagnostics/notification.rs",
+      "sha256": "4ad3fff641b916acf626297c3c2ea60dbea45c0c352087722c78466e3f95a39b",
+      "reviewedScope": "固定 kind 解码枚举需随新增 success 扩展"
+    },
+    {
+      "path": "src/runtime/desktop_notifications.test.ts",
+      "sha256": "2ad37ac6762b03cca8f5ec2aee5e06a4d270a023ccb6903f5d11071705ebbbb5",
+      "reviewedScope": "现有偏好/历史/重复/前台/异步门禁测试，未在本次执行"
+    },
+    {
+      "path": "src/runtime/desktop_notifications.channel.test.ts",
+      "sha256": "8b3c102c03c85d98ddacd840dca49476654975be668b5ce76f5c5334e5a26ebe",
+      "reviewedScope": "真实通道与投影接线测试，未在本次执行"
+    },
+    {
+      "path": "src/runtime/notification_navigation.test.ts",
+      "sha256": "bfbee81190127e43e48060dd8db52777e758b033b9893cae17d87e457b38764c",
+      "reviewedScope": "无自动打开/发送及迟到导航测试，未在本次执行"
+    },
+    {
+      "path": "src-tauri/src/desktop_notifications/tests.rs",
+      "sha256": "846cede0daffc1c6cc694eb9b2333b83156ebb810c02660c1a29b3cc51dd4fa6",
+      "reviewedScope": "默认关闭、旧 sound 缺省、坏设置不覆盖、精确目标/去重测试，未在本次执行"
+    }
+  ]
+}

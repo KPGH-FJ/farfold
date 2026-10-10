@@ -4,27 +4,29 @@
 
 ## 当前基线与证据边界
 
-P39技能清单增量已完成源码与[第二轮七项工程检查](evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-02/verification.json)：1,404输入稳定，前端389文件/4,548项、Rust1,454项通过/6项忽略。共用入口可切换MCP与技能，对明确目录查询官方技能报告，保留停用项、说明、来源及部分读取失败；当前对话适用性仍未知，不提供启停或安装。说明按纯文本显示，不进入草稿或持久清单。后端52项定向、独立6项及双浏览器各44项受控检查通过；首轮clippy唯一写法失败已最小修复，原记录保留。见[后端独立复核](evidence/2026-10-09-capability-hardening/skills-inventory/backend/independent-review.json)、[界面证据](evidence/2026-10-09-capability-hardening/skills-inventory/frontend/implementation.json)。技能增量尚未安装或执行真实官方查询；下一步提交、更新正式应用并核正常目录和损坏技能样本，P39/P40/P41仍未完成。
+最新实装为 `aadbe0f2` / 0.1.7 arm64。P39技能清单已在正式共用入口执行两次官方查询：正常目录返回24项并显示受控技能的名称、说明、项目来源和启用报告；损坏目录仍显示有效项，并明确1项未读取。切换类型不串结果，换目录与关闭重开标为过期，选择器取消完整保留原报告，OpenCode未核查入口不复用Codex内容。同轮MCP查询返回5条（2启用/3停用）。见[正式分项记录](evidence/2026-10-09-capability-hardening/skills-inventory-candidate/installed-skills-inventory.json)。
 
-最新实装为 `08cff0ac` / 0.1.7 arm64，见[P39官方MCP配置查询分项实测](evidence/2026-10-09-capability-hardening/extension-inventory-candidate/installed-extension-inventory.json)。正式共用入口对一个明确选择的受控目录执行两次官方Codex查询，各返回5条配置（2条启用、3条停用）。选择器取消保留原目录、结果和时间；关闭再打开显示过期结果，OpenCode未核查入口不串入Codex清单；明确重选并重查后更新时间、解除过期标记。这不证明MCP服务器连接、工具调用或当前对话实际可用。
+实机发现待修缺陷：7个扩展技能显示“名称未显示”。两端的名称校验均拒绝官方合法的`namespace:skill`格式；后端复用MCP过滤函数，前端技能专用函数原来也仅接受普通字符。限定名最小修复已通过新一轮七项工程检查：1,407输入稳定，前端4,555项、Rust1,457项/6忽略，真实Rust输出通过TS解析与纯文本组件显示，MCP规则保持。当前待安装复验。该记录不作P39完成证明，技能执行、管理、全部工具和其他Agent仍未完成。已完成[七项工程检查](evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-02/verification.json)：1,404输入稳定，前端389文件/4,548项、Rust1,454项通过/6项忽略；后端52项定向、独立6项及双浏览器各44项为受控证据。首轮clippy写法失败与安装核验脚本变量重名失败均保留，后者只修脚本后安装10/10通过。
 
-候选9/9、安装10/10独立核对通过，安装前/替换前/替换后三份217,400条快照相同；1,396源码输入与正式包五文件保持至实测后正常退出。本轮未发送模型请求、未新增会话；原130条完整会话、整个未发送内容（8条输入、8组意见、3组待发）及工作树清单相同。设置唯一差异为agentSetup新增1条准备进度：开发方误入管理设置后放弃本次选择；原67条进度及已完成、待处理、已确认选择均保持，不称全部设置完全相同。
+候选9/9、安装10/10独立核对完成，三份217,400条数据快照相同；实测后已正常退出。原130条完整会话、168条已屏蔽记录、整个未发送内容8/8/3、工作树清单及全部53项设置相同。40条Agent记录仅Codex更新时间变化，其他配置、存储模型/推理/来源选择均保持；本轮无模型发送或新增会话，不用数据库单独证明零发送。正式五文件和1,404输入保持至退出。
+
+此前 `08cff0ac` 的[官方MCP配置分项实测](evidence/2026-10-09-capability-hardening/extension-inventory-candidate/installed-extension-inventory.json)继续按当时范围保留；其误入管理设置所增加的1条准备进度已纳入本轮基线，本轮未新增此项变化。
 
 此前[3632acb0文件选择与冷恢复实测](evidence/2026-10-09-capability-hardening/project-file-scan-candidate/installed-project-files.json)已核H11扫描/选择及NEW-12归档→恢复→重启→重新核查；正式扫描取消仍未测。H17的EPERM/退出24仍不作端口冲突、服务启动或恢复成功证明。下方阶段记录保留当时结果，不覆盖本节最新状态。
 
-P39首片已补共用“技能与工具”入口，按官方能力显示可查询范围；该已安装首片只支持已核官方Codex入口对用户明确选择目录的MCP配置只读查询。配置清单不等于当前对话实际可用工具；技能、工具详情及官方未报告的配置来源层仍明确不可获知，不读取私有配置补猜、不添加或修改配置，P39/P40/P41均未完成。见[后端实现与独立复核](evidence/2026-10-09-capability-hardening/extension-inventory/backend/independent-review.json)及[共用界面受控证据](evidence/2026-10-09-capability-hardening/extension-inventory/frontend/implementation.json)。
+P39首片已补共用“技能与工具”入口，按官方能力显示可查询范围；当时该首片只支持已核官方Codex入口对用户明确选择目录的MCP配置只读查询。配置清单不等于当前对话实际可用工具；该MCP报告不能提供技能、工具详情及官方未报告的配置来源层，不读取私有配置补猜、不添加或修改配置，P39/P40/P41均未完成。见[后端实现与独立复核](evidence/2026-10-09-capability-hardening/extension-inventory/backend/independent-review.json)及[共用界面受控证据](evidence/2026-10-09-capability-hardening/extension-inventory/frontend/implementation.json)。
 
 查询使用当前程序选择的短期票据，选择变化后旧票和迟到结果不能冒充新结果。取消或超时后，实际进程与输出尚未结束仍保留清理中状态并阻止新查询；旧结果标为过期。请求记录过期后，只有用户明确结束等待且取得准确回执才释放本次跟踪，结果仍未知，不宣称原命令已取消；[独立反例](evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-independent.json)由1项失败、5项通过复验为6项通过。
 
-P39[第二轮七项工程检查](evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-02/verification.json)全部通过：1,396输入稳定，前端387文件/4,537项、Rust1,433项通过/6项忽略。[首轮失败](evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-01/verification.json)保留：前端28项失败、其余6项检查通过；3份旧React模拟未提供useMemo，[各补一行后28项定向通过](evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/receipt.json)，原断言与生产源码不变。受控完整App的WebKit与Chromium各27项通过，目录选择和命令回执由测试控制。该首片随后已提交安装08cff0ac，正式分项结果见本节首段。查询取消、超时、过期跟踪和官方命令失败仍未在正式窗口覆盖，不能用受控结果替代；技能清单源码与工程接续见本节首段，下一步安装并实测，P39/P40/P41、29家、Windows与全量市场目标仍未完成。
+P39[第二轮七项工程检查](evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-02/verification.json)全部通过：1,396输入稳定，前端387文件/4,537项、Rust1,433项通过/6项忽略。[首轮失败](evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-01/verification.json)保留：前端28项失败、其余6项检查通过；3份旧React模拟未提供useMemo，[各补一行后28项定向通过](evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/receipt.json)，原断言与生产源码不变。受控完整App的WebKit与Chromium各27项通过，目录选择和命令回执由测试控制。该首片随后已提交安装08cff0ac，正式分项结果见本节首段。查询取消、超时、过期跟踪和官方命令失败仍未在正式窗口覆盖，不能用受控结果替代；技能清单实装与名称缺陷接续见本节首段，下一步修复并复测，P39/P40/P41、29家、Windows与全量市场目标仍未完成。
 
-| 层级         | 已有证据                                                               | 不能据此推出                                     |
-| ------------ | ---------------------------------------------------------------------- | ------------------------------------------------ |
-| 产品源码     | NEW-07–12与H11分项实装；P39的Codex MCP配置只读分项实装通过             | 完整技能/工具清单与管理或所有已列能力已补齐      |
-| 工程检查     | P39第二轮七项通过；1,396输入稳定，前端4,537项、Rust1,433项/6忽略       | 正式界面、官方CLI、所有Agent与系统环境均通过     |
-| 正式安装     | 当前 `08cff0ac` / 0.1.7 arm64；两次官方MCP配置查询分项通过；已正常退出 | 服务器/工具可用、查询取消及29家完整接入通过      |
-| 历史真实使用 | 部分 Agent、模型和路径有成功、失败与未测记录，逐条保留当时配置与版本   | 跨版本累计成功等于当前 29 家全部通过             |
-| 本轮能力审查 | 122 个唯一编号，基于源码、历史证据与同行官方资料/定向源码              | 122 个缺陷、122 个已获批准的新功能或市场达标证明 |
+| 层级         | 已有证据                                                                   | 不能据此推出                                     |
+| ------------ | -------------------------------------------------------------------------- | ------------------------------------------------ |
+| 产品源码     | NEW-07–12与H11分项实装；P39的Codex MCP及技能清单分项实测，限定名修复待实装 | 完整技能/工具清单与管理或所有已列能力已补齐      |
+| 工程检查     | 限定名修复七项通过；1,407输入稳定，前端4,555项、Rust1,457项/6忽略          | 正式界面、官方CLI、所有Agent与系统环境均通过     |
+| 正式安装     | 当前 `aadbe0f2` / 0.1.7 arm64；两次技能及一次MCP查询；已正常退出           | 服务器/工具可用、查询取消及29家完整接入通过      |
+| 历史真实使用 | 部分 Agent、模型和路径有成功、失败与未测记录，逐条保留当时配置与版本       | 跨版本累计成功等于当前 29 家全部通过             |
+| 本轮能力审查 | 122 个唯一编号，基于源码、历史证据与同行官方资料/定向源码                  | 122 个缺陷、122 个已获批准的新功能或市场达标证明 |
 
 安装细节见[正式落地](evidence/2026-10-09-prototype07-landing/README.md)和[最终布局安装](evidence/2026-10-09-prototype07-landing/prepared-draft-layout/README.md)。本轮源码与受控检查见[能力补强证据](evidence/2026-10-09-capability-hardening/README.md)。接续已调用已安装的官方 Claude 0.81.2 对接受控 HTTP 服务，确认实际路径、模型与测试认证头，并核本次进程组退出，见[路由实证](evidence/2026-10-09-capability-hardening/claude-service-delivery/installed-route.json)；不是实际模型回答、付费服务或新安装版 UI 证明。第三片[安装与数据保留](evidence/2026-10-09-capability-hardening/candidate/installed-data-retention.json)及[实际用量/冷恢复](evidence/2026-10-09-capability-hardening/candidate/installed-usage-progress.json)已有回执：Codex 1.13.1、gpt-6-astra / ultra 单次回复及累计用量显示，重启后正文恢复、未重报用量明确未知；继续发送仍需权限确认，本轮没有确认该权限或再次发送。第四片[安装与数据保留](evidence/2026-10-09-capability-hardening/fourth-candidate/installed-data-retention.json)核验完成，独立候选检查9/9通过，启动后110段对话可见；新能力仍逐项验证。OpenCode 1.18.31 在前三次 GUI 初始化超时后，本片重启恢复新草稿时再次自动准备并超时，没有手动点重试或发送。独立环境和真实传输探针均成功；第三次观测确认请求已写入、子进程卡在文件打开，macOS 同期出现桌面文件夹授权等待，结果仍未知且无可见弹窗。见[诊断回执](evidence/2026-10-09-capability-hardening/opencode-initialize-diagnosis.json)，不算恢复成功，不要求扩大到完全磁盘访问。
 

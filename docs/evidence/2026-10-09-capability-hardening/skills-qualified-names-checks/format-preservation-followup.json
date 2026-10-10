@@ -1,0 +1,10 @@
+{
+  "firstRun": "six engineering commands passed; format alone failed on preserved original failed installation verifier JSON",
+  "remedy": "Add only this exact immutable raw receipt to formatter ignore. Production, tests and original failure receipt unchanged.",
+  "formatterConfig": {
+    "beforeSha256": "699531452172bc3c90c23966692fbd073661190a855685c01e0277f8c44edc56",
+    "afterSha256": "43435e9bb234d0d50933aaf715791df1181f1205b245e884afc4cc1562dd1222"
+  },
+  "preservedFailedReceiptSha256": "e5093d7d659a6316eec948d2f9f86cbd79d60c19a8aaa63b0a481b60bf56902f",
+  "next": "Run current seven checks on this final input set; do not rewrite original failure bytes."
+}
