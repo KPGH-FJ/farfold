@@ -13,6 +13,11 @@ import {
   saveReadingPosition,
   type PreviewReadingPositionRef,
 } from "../runtime/preview_reading_position";
+import {
+  VisualAreaSelection,
+  type VisualAreaDisplay,
+  type VisualAreaCallbacks,
+} from "./VisualAreaSelection";
 import "./VisualFilePreview.css";
 
 export function VisualFilePreview({
@@ -20,18 +25,31 @@ export function VisualFilePreview({
   active,
   onReadiness,
   readingPosition,
-}: {
+  interactionBlocked = false,
+  onVisualTargetAvailability,
+  onVisualTargetConfirm,
+  onTargetEditing,
+}: VisualAreaCallbacks & {
   preview: VisualPreview;
   active: boolean;
+  interactionBlocked?: boolean;
   readingPosition?: PreviewReadingPositionRef;
   onReadiness?: (value: VisualPreviewReadiness) => void;
 }) {
   const canvas = useRef<HTMLCanvasElement | null>(null);
+  const viewport = useRef<HTMLDivElement | null>(null);
   const current = useRef<AbortController | null>(null);
+  const imageElement = useRef<HTMLImageElement>(null);
+  const [display, setDisplay] = useState<VisualAreaDisplay | null>(null);
+  const displayOwner = useRef<VisualAreaDisplay | null>(null);
+  const clearDisplay = () => {
+    displayOwner.current = null;
+    setDisplay(null);
+  };
   const report = useRef(onReadiness);
   report.current = onReadiness;
-  const source = useRef({ preview, active });
-  source.current = { preview, active };
+  const source = useRef({ preview, active, interactionBlocked });
+  source.current = { preview, active, interactionBlocked };
   const [requested, setRequested] = useState<{
     source: VisualPreview;
     page: number;
@@ -62,6 +80,7 @@ export function VisualFilePreview({
   useLayoutEffect(() => {
     const operation = new AbortController();
     current.current = operation;
+    clearDisplay();
     report.current?.({ source: preview, location: null });
     setImage(null);
     setPages(null);
@@ -91,12 +110,20 @@ export function VisualFilePreview({
           });
       } else {
         if (!owns() || !canvas.current) return;
+        // The optional selection stage is fit-content and has no intrinsic
+        // width while its canvas is hidden. Measure the stable content pane.
+        const container = viewport.current;
+        const style = container ? getComputedStyle(container) : null;
+        const width = container
+          ? container.clientWidth -
+            (Number.parseFloat(style?.paddingLeft ?? "0") || 0) -
+            (Number.parseFloat(style?.paddingRight ?? "0") || 0)
+          : 800;
         await renderPdfPage(
           checked.bytes,
           canvas.current,
           page,
-          Math.max(1, canvas.current.parentElement?.clientWidth ?? 800) *
-            Math.min(window.devicePixelRatio || 1, 2),
+          Math.max(1, width) * Math.min(window.devicePixelRatio || 1, 2),
           operation.signal,
           (total, actual = page) => {
             if (owns() && validPdfPage(actual, total)) {
@@ -114,6 +141,21 @@ export function VisualFilePreview({
         setState("ready");
         setMessage(S.snapshot);
         if (checked.kind === "pdf") {
+          const element = canvas.current;
+          if (element && element.width > 0 && element.height > 0) {
+            const next: VisualAreaDisplay = {
+              kind: "pdf",
+              preview,
+              owner: operation,
+              element,
+              pixelWidth: element.width,
+              pixelHeight: element.height,
+              page: renderedPage,
+              pageCount: renderedPages!,
+            };
+            displayOwner.current = next;
+            setDisplay(next);
+          }
           setDisplayedPage(renderedPage);
           saveReadingPosition(readingPosition, preview.file, {
             kind: "pdf",
@@ -131,6 +173,7 @@ export function VisualFilePreview({
       }
     })().catch((error) => {
       if (!owns()) return;
+      clearDisplay();
       setImage(null);
       report.current?.({ source: preview, location: null });
       setState("failed");
@@ -142,6 +185,7 @@ export function VisualFilePreview({
       );
     });
     return () => {
+      clearDisplay();
       operation.abort();
       if (canvas.current) {
         canvas.current.width = 0;
@@ -154,6 +198,7 @@ export function VisualFilePreview({
     };
   }, [preview, active, page, restorePage, readingPosition]);
   const pdf = preview.mimeType === "application/pdf";
+  const actionOwner = current.current;
   const displayedOperation = image?.owner ?? null;
   const ownsImage = () =>
     active &&
@@ -163,50 +208,9 @@ export function VisualFilePreview({
     displayedOperation !== null &&
     current.current === displayedOperation &&
     !displayedOperation.signal.aborted;
-  return (
-    <div className="visual-file-preview" aria-busy={state === "loading"}>
-      <div className="visual-file-controls">
-        {pdf && pages !== null && state === "ready" && (
-          <>
-            <button
-              type="button"
-              className="btn btn-text"
-              disabled={!active || displayedPage <= 1}
-              onClick={() =>
-                setRequested({ source: preview, page: displayedPage - 1 })
-              }
-            >
-              {S.previous}
-            </button>
-            <span>{S.page(displayedPage, pages)}</span>
-            <button
-              type="button"
-              className="btn btn-text"
-              disabled={!active || displayedPage >= pages}
-              onClick={() =>
-                setRequested({ source: preview, page: displayedPage + 1 })
-              }
-            >
-              {S.next}
-            </button>
-          </>
-        )}
-        {state === "loading" && (
-          <button
-            type="button"
-            className="btn btn-text"
-            onClick={() => {
-              current.current?.abort();
-              report.current?.({ source: preview, location: null });
-              setState("paused");
-              setMessage(S.cancelled);
-            }}
-          >
-            {S.cancel}
-          </button>
-        )}
-      </div>
-      <p role={state === "failed" ? "alert" : "status"}>{message}</p>
+  const pixels = (
+    <>
+      {" "}
       {pdf && (
         <canvas
           ref={canvas}
@@ -218,17 +222,37 @@ export function VisualFilePreview({
       )}
       {image && image.source === preview && state === "ready" && active && (
         <img
+          ref={imageElement}
           src={image.url}
           alt={preview.file.name}
           onLoad={() => {
-            if (ownsImage())
+            if (ownsImage()) {
+              const element = imageElement.current;
+              if (
+                element &&
+                element.naturalWidth > 0 &&
+                element.naturalHeight > 0
+              ) {
+                const next: VisualAreaDisplay = {
+                  kind: "image",
+                  preview,
+                  owner: displayedOperation!,
+                  element,
+                  pixelWidth: element.naturalWidth,
+                  pixelHeight: element.naturalHeight,
+                };
+                displayOwner.current = next;
+                setDisplay(next);
+              }
               report.current?.({
                 source: preview,
                 location: { kind: "image" },
               });
+            }
           }}
           onError={() => {
             if (ownsImage()) {
+              clearDisplay();
               displayedOperation?.abort();
               setImage(null);
               setState("failed");
@@ -237,6 +261,117 @@ export function VisualFilePreview({
             }
           }}
         />
+      )}
+    </>
+  );
+  return (
+    <div
+      ref={viewport}
+      className="visual-file-preview"
+      aria-busy={state === "loading"}
+      inert={interactionBlocked}
+    >
+      <div className="visual-file-controls">
+        {pdf && pages !== null && state === "ready" && (
+          <>
+            <button
+              type="button"
+              className="btn btn-text"
+              disabled={!active || interactionBlocked || displayedPage <= 1}
+              onClick={() => {
+                if (
+                  !source.current.active ||
+                  source.current.preview !== preview ||
+                  source.current.interactionBlocked ||
+                  current.current !== actionOwner ||
+                  current.current?.signal.aborted
+                )
+                  return;
+                clearDisplay();
+                current.current?.abort();
+                report.current?.({ source: preview, location: null });
+                setRequested({ source: preview, page: displayedPage - 1 });
+              }}
+            >
+              {S.previous}
+            </button>
+            <span>{S.page(displayedPage, pages)}</span>
+            <button
+              type="button"
+              className="btn btn-text"
+              disabled={!active || interactionBlocked || displayedPage >= pages}
+              onClick={() => {
+                if (
+                  !source.current.active ||
+                  source.current.preview !== preview ||
+                  source.current.interactionBlocked ||
+                  current.current !== actionOwner ||
+                  current.current?.signal.aborted
+                )
+                  return;
+                clearDisplay();
+                current.current?.abort();
+                report.current?.({ source: preview, location: null });
+                setRequested({ source: preview, page: displayedPage + 1 });
+              }}
+            >
+              {S.next}
+            </button>
+          </>
+        )}
+        {state === "loading" && (
+          <button
+            type="button"
+            className="btn btn-text"
+            onClick={() => {
+              if (
+                !source.current.active ||
+                source.current.preview !== preview ||
+                source.current.interactionBlocked ||
+                current.current !== actionOwner
+              )
+                return;
+              clearDisplay();
+              current.current?.abort();
+              report.current?.({ source: preview, location: null });
+              setState("paused");
+              setMessage(S.cancelled);
+            }}
+          >
+            {S.cancel}
+          </button>
+        )}
+      </div>
+      <p role={state === "failed" ? "alert" : "status"}>{message}</p>
+      {onVisualTargetConfirm ? (
+        <VisualAreaSelection
+          preview={preview}
+          display={active ? display : null}
+          interactionBlocked={interactionBlocked}
+          isCurrent={(expected) =>
+            displayOwner.current === expected &&
+            expected.preview === preview &&
+            source.current.preview === preview &&
+            source.current.active &&
+            current.current === expected.owner &&
+            !current.current?.signal.aborted &&
+            (expected.kind === "pdf"
+              ? canvas.current === expected.element &&
+                canvas.current.width === expected.pixelWidth &&
+                canvas.current.height === expected.pixelHeight
+              : imageElement.current === expected.element &&
+                imageElement.current.naturalWidth === expected.pixelWidth &&
+                imageElement.current.naturalHeight === expected.pixelHeight &&
+                imageElement.current.getAttribute("src") === image?.url)
+          }
+          onVisualTargetAvailability={onVisualTargetAvailability}
+          onVisualTargetConfirm={onVisualTargetConfirm}
+          onTargetEditing={onTargetEditing}
+        >
+          {pixels}
+        </VisualAreaSelection>
+      ) : (
+        pixels
       )}
     </div>
   );

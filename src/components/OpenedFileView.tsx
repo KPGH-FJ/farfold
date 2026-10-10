@@ -22,19 +22,19 @@ import { TextBlockPreview } from "./TextBlockPreview";
 import { SourceTextSelection } from "./SourceTextSelection";
 import {
   createTextFeedbackSource,
-  textFeedbackRangeMatches,
   type TextFeedbackSource,
 } from "../runtime/text_feedback_range";
-import type { TextRangeAnchor } from "../runtime/file_feedback_anchor";
+import type { FileFeedbackAnchor } from "../runtime/file_feedback_anchor";
 import {
   officeFeedbackSourceIsValid,
-  officeFeedbackTargetMatches,
-  retireOfficeFeedbackSource,
   type OfficeFeedbackSource,
-  type OfficeTargetAvailability,
-  type OfficeTargetConfirmation,
 } from "../runtime/office_feedback_target";
-import type { OfficeTargetEditing } from "../runtime/office_target_editing";
+import { useFileFeedbackTargets } from "./useFileFeedbackTargets";
+import {
+  visualAreaFeedbackTarget,
+  visualAreaFeedbackTargetMatches,
+  type VisualAreaFeedbackSource,
+} from "../runtime/visual_feedback_target";
 import { WORKBOOK_STRINGS as B } from "../runtime/workbook_strings";
 import { DOCUMENT_STRINGS as DOC } from "../runtime/document_strings";
 import {
@@ -66,7 +66,10 @@ import {
   fileFeedbackKey,
   useFileFeedback,
 } from "../runtime/drafts";
-import { fileFeedbackText } from "../runtime/feedback_strings";
+import {
+  fileFeedbackText,
+  FEEDBACK_STRINGS,
+} from "../runtime/feedback_strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
 import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
@@ -251,38 +254,11 @@ export function OpenedFileView({
   const readingOwner = useRef(identity);
   const textContent = useRef<HTMLDivElement>(null);
   const textScroll = useRef(0);
-  const textSelection = useRef<{
-    identity: string;
-    source: TextFeedbackSource;
-  } | null>(null);
-  const officeSelection = useRef<{
-    identity: string;
-    source: OfficeFeedbackSource;
-  } | null>(null);
-  const officeEditing = useRef<{
-    identity: string;
-    owner: object;
-    file: Readonly<VerifiedFile>;
-  } | null>(null);
-  const retiredEditors = useRef(new WeakSet<object>());
-  const clearOfficeEditing = () => {
-    if (officeEditing.current)
-      retiredEditors.current.add(officeEditing.current.owner);
-    officeEditing.current = null;
-  };
-  const clearOfficeSelection = () => {
-    if (officeSelection.current)
-      retireOfficeFeedbackSource(officeSelection.current.source);
-    officeSelection.current = null;
-  };
   const [sourceMode, setSourceMode] = useState<string | null>(null);
   if (readingOwner.current !== identity) {
     readingOwner.current = identity;
     readingPosition.current = null;
     textScroll.current = 0;
-    textSelection.current = null;
-    clearOfficeSelection();
-    clearOfficeEditing();
   }
   const [visualReadiness, setVisualReadiness] =
     useState<VisualPreviewReadiness | null>(null);
@@ -298,7 +274,7 @@ export function OpenedFileView({
     ) {
       latestOfficeStatus.current = status;
       if (status.state !== "ready" || status.readInFlight)
-        clearOfficeSelection();
+        targets.clearOffice();
       setOfficeStatus(status);
     }
   };
@@ -339,6 +315,7 @@ export function OpenedFileView({
       validVisualFeedbackLocation(value.source, value.location)
         ? value
         : null;
+    if (!next) targets.clearVisual();
     latestReadiness.current = next;
     setVisualReadiness(next);
   };
@@ -353,19 +330,16 @@ export function OpenedFileView({
     mounted.current = true;
     return () => {
       mounted.current = false;
-      clearOfficeSelection();
-      clearOfficeEditing();
+      targets.clear();
       operation.current?.parser?.abort();
       operation.current = null;
       latestReadiness.current = null;
-      textSelection.current = null;
+      targets.clearText();
     };
   }, []);
   useLayoutEffect(() => {
     if (!active) {
-      textSelection.current = null;
-      clearOfficeSelection();
-      clearOfficeEditing();
+      targets.clear();
       const refreshing = operation.current?.kind === "refresh";
       operation.current?.parser?.abort();
       operation.current = null;
@@ -403,9 +377,7 @@ export function OpenedFileView({
       parser: preserve ? new AbortController() : undefined,
     };
     operation.current = owner;
-    textSelection.current = null;
-    clearOfficeSelection();
-    clearOfficeEditing();
+    targets.clear();
     let applied = false;
     let blockAttempt = false;
     let inspected: VerifiedFile | undefined;
@@ -732,47 +704,6 @@ export function OpenedFileView({
         : sourceVisibleRef.current && latest.textSource === source)
     );
   };
-  const reportTextSelection = ({
-    source,
-    available,
-  }: {
-    source: TextFeedbackSource;
-    available: boolean;
-  }) => {
-    if (!available) {
-      if (textSelection.current?.source === source)
-        textSelection.current = null;
-    } else if (acceptsTextSource(source))
-      textSelection.current = { identity, source };
-  };
-  const confirmTextSelection = ({
-    source,
-    anchor,
-  }: {
-    source: TextFeedbackSource;
-    anchor: TextRangeAnchor;
-  }) => {
-    if (
-      !canEditFeedback() ||
-      !acceptsTextSource(source) ||
-      textSelection.current?.identity !== identity ||
-      textSelection.current.source !== source ||
-      !textFeedbackRangeMatches(source, anchor)
-    )
-      return;
-    const saved = fileFeedbackDrafts.read(threadKey, feedbackPath, contentId);
-    const { lineInput: _lineInput, ...value } = saved;
-    fileFeedbackDrafts.update(threadKey, feedbackPath, {
-      ...value,
-      contentId,
-      scope: "file",
-      selection: null,
-      anchor,
-    });
-    setFeedbackAdded(false);
-    setFeedbackOpen(true);
-    feedbackInput.current?.focus();
-  };
   const acceptsOfficeSource = (source: OfficeFeedbackSource) => {
     const latest = latestView.current;
     return (
@@ -793,58 +724,39 @@ export function OpenedFileView({
       officeFeedbackSourceIsValid(source)
     );
   };
-  const reportOfficeSelection = ({
-    source,
-    available,
-  }: OfficeTargetAvailability) => {
-    if (!available) {
-      if (officeSelection.current?.source === source) clearOfficeSelection();
-    } else if (acceptsOfficeSource(source)) {
-      if (officeSelection.current?.source !== source) clearOfficeSelection();
-      officeSelection.current = { identity, source };
-    }
-  };
-  const reportOfficeEditing = (value: OfficeTargetEditing) => {
-    if (!value.owner || typeof value.owner !== "object") return;
-    if (value.editing === false) {
-      if (
-        officeEditing.current?.owner === value.owner &&
-        !sameFile(officeEditing.current.file, value.file)
-      )
-        return;
-      retiredEditors.current.add(value.owner);
-      if (officeEditing.current?.owner === value.owner)
-        officeEditing.current = null;
-      return;
-    }
+  const acceptsVisualSource = (source: VisualAreaFeedbackSource) => {
     const latest = latestView.current;
     if (
-      value.editing !== true ||
-      retiredEditors.current.has(value.owner) ||
-      !canEditFeedback() ||
-      latest.file !== file ||
-      latest.office !== shown.office ||
-      !file ||
-      (!isWorkbook(file) && !isDocument(file)) ||
-      !sameFile(file, value.file)
+      !mounted.current ||
+      !currentProps.current.active ||
+      currentProps.current.identity !== identity ||
+      latest.identity !== identity ||
+      latest.phase !== "ready" ||
+      latest.pending ||
+      operation.current ||
+      !latest.file ||
+      !sameFile(latest.file, source.file) ||
+      !latest.visual ||
+      latestReadiness.current?.source !== latest.visual ||
+      !latestReadiness.current.location
     )
-      return;
-    if (officeEditing.current?.owner !== value.owner) clearOfficeEditing();
-    officeEditing.current = {
-      identity,
-      owner: value.owner,
-      file: { ...value.file },
-    };
+      return false;
+    const anchor = visualAreaFeedbackTarget(source);
+    if (source.kind === "image-area" && anchor?.kind === "image-area")
+      return (
+        latestReadiness.current.location.kind === "image" &&
+        visualAreaFeedbackTargetMatches({ source, anchor }, latest.visual)
+      );
+    if (source.kind === "pdf-area" && anchor?.kind === "pdf-area")
+      return (
+        latestReadiness.current.location.kind === "pdf" &&
+        latestReadiness.current.location.page === anchor.page &&
+        latestReadiness.current.location.pageCount === anchor.pageCount &&
+        visualAreaFeedbackTargetMatches({ source, anchor }, latest.visual)
+      );
+    return false;
   };
-  const confirmOfficeSelection = (value: OfficeTargetConfirmation) => {
-    if (
-      !canEditFeedback() ||
-      !acceptsOfficeSource(value.source) ||
-      officeSelection.current?.identity !== identity ||
-      officeSelection.current.source !== value.source ||
-      !officeFeedbackTargetMatches(value)
-    )
-      return;
+  const applyTarget = (anchor: FileFeedbackAnchor) => {
     const saved = fileFeedbackDrafts.read(threadKey, feedbackPath, contentId);
     const { lineInput: _lineInput, ...retained } = saved;
     fileFeedbackDrafts.update(threadKey, feedbackPath, {
@@ -852,12 +764,34 @@ export function OpenedFileView({
       contentId,
       scope: "file",
       selection: null,
-      anchor: value.anchor,
+      anchor,
     });
     setFeedbackAdded(false);
     setFeedbackOpen(true);
     feedbackInput.current?.focus();
   };
+  const targets = useFileFeedbackTargets({
+    identity,
+    canEdit: canEditFeedback,
+    acceptsText: acceptsTextSource,
+    acceptsOffice: acceptsOfficeSource,
+    acceptsVisual: acceptsVisualSource,
+    visualPreview: () => latestView.current.visual,
+    acceptsEditing: (targetFile) => {
+      const latest = latestView.current;
+      return (
+        latest.file === file &&
+        Boolean(file && sameFile(file, targetFile)) &&
+        ((Boolean(file && (isWorkbook(file) || isDocument(file))) &&
+          latest.office === shown.office) ||
+          (Boolean(shown.visual) &&
+            latest.visual === shown.visual &&
+            latestReadiness.current?.source === shown.visual &&
+            Boolean(latestReadiness.current?.location)))
+      );
+    },
+    apply: applyTarget,
+  });
   const revisionNotice = useFileRevisionMonitor({
     identity,
     file: file && !isHtml(file) ? file : undefined,
@@ -885,13 +819,7 @@ export function OpenedFileView({
       )
         return "deferred";
       // Do not replace the text beneath an opinion the user is editing.
-      if (
-        feedbackOpen ||
-        textSelection.current?.identity === identity ||
-        officeSelection.current?.identity === identity ||
-        officeEditing.current?.identity === identity
-      )
-        return "deferred";
+      if (feedbackOpen || targets.hasPendingSelection()) return "deferred";
       if (await load(next, true, valid)) return "applied";
       return valid() ? "failed" : "cancelled";
     },
@@ -1077,8 +1005,8 @@ export function OpenedFileView({
           active={active && !shown.pending}
           readingPosition={readingPosition}
           onStatus={reportBlockStatus}
-          onTextSelectionAvailability={reportTextSelection}
-          onTextSelectionConfirm={confirmTextSelection}
+          onTextSelectionAvailability={targets.reportText}
+          onTextSelectionConfirm={targets.confirmText}
         />
       )}
       {shown.visual && (
@@ -1087,6 +1015,10 @@ export function OpenedFileView({
           preview={shown.visual}
           active={active}
           onReadiness={reportVisualReadiness}
+          interactionBlocked={Boolean(shown.pending)}
+          onVisualTargetAvailability={targets.reportVisual}
+          onVisualTargetConfirm={targets.confirmVisual}
+          onTargetEditing={targets.reportEditing}
           readingPosition={readingPosition}
         />
       )}
@@ -1101,9 +1033,9 @@ export function OpenedFileView({
             shown.office?.kind === "workbook" ? shown.office : undefined
           }
           onStatus={reportOfficeStatus}
-          onOfficeTargetAvailability={reportOfficeSelection}
-          onOfficeTargetConfirm={confirmOfficeSelection}
-          onOfficeTargetEditing={reportOfficeEditing}
+          onOfficeTargetAvailability={targets.reportOffice}
+          onOfficeTargetConfirm={targets.confirmOffice}
+          onOfficeTargetEditing={targets.reportEditing}
         />
       )}
       {file && shown.phase === "ready" && isDocument(file) && (
@@ -1115,8 +1047,8 @@ export function OpenedFileView({
           readingPosition={readingPosition}
           prepared={shown.office?.kind === "docx" ? shown.office : undefined}
           onStatus={reportOfficeStatus}
-          onOfficeTargetAvailability={reportOfficeSelection}
-          onOfficeTargetConfirm={confirmOfficeSelection}
+          onOfficeTargetAvailability={targets.reportOffice}
+          onOfficeTargetConfirm={targets.confirmOffice}
         />
       )}
       {shown.text !== undefined && (
@@ -1135,7 +1067,7 @@ export function OpenedFileView({
                 disabled={disabled}
                 aria-pressed={!sourceVisible}
                 onClick={() => {
-                  textSelection.current = null;
+                  targets.clearText();
                   sourceVisibleRef.current = false;
                   setSourceMode(null);
                 }}
@@ -1172,8 +1104,8 @@ export function OpenedFileView({
               source={shown.textSource}
               enabled={!disabled && shown.phase === "ready"}
               className="a-term"
-              onAvailability={reportTextSelection}
-              onConfirm={confirmTextSelection}
+              onAvailability={targets.reportText}
+              onConfirm={targets.confirmText}
             />
           ) : (
             <pre
@@ -1205,14 +1137,18 @@ export function OpenedFileView({
           {file && visualFileKind(file.name) && (
             <div>
               <p role="status">
-                {feedback.anchor?.kind === "pdf-page"
-                  ? F.pageTarget(
-                      feedback.anchor.page,
-                      feedback.anchor.pageCount,
-                    )
-                  : F.fileTarget}
+                {feedback.anchor?.kind === "image-area" ||
+                feedback.anchor?.kind === "pdf-area"
+                  ? FEEDBACK_STRINGS.visualArea(feedback.anchor)
+                  : feedback.anchor?.kind === "pdf-page"
+                    ? F.pageTarget(
+                        feedback.anchor.page,
+                        feedback.anchor.pageCount,
+                      )
+                    : F.fileTarget}
               </p>
-              {visualFileKind(file.name) === "pdf" && (
+              {(visualFileKind(file.name) === "pdf" ||
+                feedback.anchor?.kind === "image-area") && (
                 <div className="ac-actions" style={{ flexWrap: "wrap" }}>
                   <button
                     type="button"

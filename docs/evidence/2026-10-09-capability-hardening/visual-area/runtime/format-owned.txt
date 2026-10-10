@@ -1,0 +1,11 @@
+src/runtime/visual_area_coordinates.ts 32ms (unchanged)
+src/runtime/visual_feedback_target.ts 24ms
+src/runtime/file_feedback_anchor.ts 15ms (unchanged)
+src/runtime/feedback_strings.ts 8ms (unchanged)
+src/runtime/storage_restore.ts 12ms (unchanged)
+src/runtime/fixtures/storage-restore-v1.json 6ms
+src/runtime/file_feedback_anchor.visual.test.ts 8ms (unchanged)
+src/runtime/visual_area_coordinates.test.ts 4ms
+src/runtime/visual_feedback_target.test.ts 10ms
+src/runtime/storage_restore.visual.test.ts 7ms
+src/runtime/visual_feedback_persistence.test.ts 12ms

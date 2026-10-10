@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "recordedAt": "2026-10-10T02:24:20.368595+00:00",
+  "scope": "Parent callback contract with mocked VisualFilePreview and real frame/source factory; not rendering/browser evidence.",
+  "result": "14/14 passed after root connected and hardened the shared target hook.",
+  "sourceCheckpointAfterTest": [
+    {
+      "path": "src/components/OpenedFileView.visual-area.test.tsx",
+      "sha256": "9279bc4e66dba9a69f2a1642501bac6c9d27d3145f7cb18968254abe7f5bca91"
+    },
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "b3975c605faf9655c2a5a53d1312b8ea43b2aaa83a15e5445d655ccc020f7829"
+    },
+    {
+      "path": "src/components/useFileFeedbackTargets.ts",
+      "sha256": "7b9e3fd34f600ccb397ce7c87d02877336f8844eb733cc63bd19d50a4a91fce8"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/parent-red.txt",
+      "sha256": "b8d662f62a07690857e591b0901e6dd9632987e668fdf73f216df73c232df0b6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/parent-first-wired.txt",
+      "sha256": "fe7931909ffbbb481a76308adf4d1ecf76944034429b14e181884f243fec19cd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/strings-final.txt",
+      "sha256": "054f257d303be7f7df3972895778480821ce81302d4dea2177056257e65dd26b"
+    }
+  ],
+  "tests": {
+    "parentRed": {
+      "count": 14,
+      "failed": 14,
+      "meaning": "Missing area callbacks and staging blocked prop; later assertions were not reached and are not claimed as distinct observed defects."
+    },
+    "parentWired": {
+      "count": 14,
+      "passed": 14,
+      "command": "corepack pnpm exec vitest run src/components/OpenedFileView.visual-area.test.tsx"
+    },
+    "strings": {
+      "passed": 2,
+      "command": "corepack pnpm exec vitest run src/runtime/strings.test.ts"
+    }
+  },
+  "coverage": [
+    "Explicit PDF/image confirmation only; preserves existing text; whole-file reset and legacy PDF-page target.",
+    "Exact VisualPreview object required even with matching seven file fields; successful current readiness required.",
+    "Incomplete numeric editing defers replacement; wrong-file false and retired owner false cannot release current hold.",
+    "Hidden/thread/selection/reread late callbacks do not change retained opinion.",
+    "Staging retains old preview object and active state, blocks interaction, then adopts a successful new read.",
+    "Renderer isCurrent callback triggering hide or refresh during confirmation cannot cross parent ownership checks."
+  ],
+  "limits": [
+    "No production files changed for the parent tests.",
+    "Parent uses controlled hooks/effects and mocked I/O; source factory is actual production code.",
+    "Independent fullApp browser and installed-product verification remain pending.",
+    "Leaf implementation.json remains the unchanged earlier checkpoint."
+  ]
+}

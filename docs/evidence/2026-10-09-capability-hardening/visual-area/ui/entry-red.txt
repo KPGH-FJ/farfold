@@ -1,0 +1,47 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/VisualFilePreview.area.test.tsx (2 tests | 2 failed) 12ms
+   × only offers a region after successful PDF pixels, never on a page count alone 9ms
+   × interaction blocking keeps ready pixels and does not repeat rendering 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/VisualFilePreview.area.test.tsx > only offers a region after successful PDF pixels, never on a page count alone
+AssertionError: expected '<div class="visual-file-preview" aria…' to contain '选择意见区域'
+
+Expected: "选择意见区域"
+Received: "<div class="visual-file-preview" aria-busy="false"><div class="visual-file-controls"><button type="button" class="btn btn-text" disabled="">上一页</button><span>第 1 / 3 页</span><button type="button" class="btn btn-text">下一页</button></div><p role="status">当前显示的是已读取的文件版本。</p><canvas aria-label="第 1 / 3 页"></canvas></div>"
+
+ ❯ src/components/VisualFilePreview.area.test.tsx:123:25
+    121|   target.width = 400; target.height = 200;
+    122|   draw.resolve(); await drain();
+    123|   expect(render().html).toContain("选择意见区域");
+       |                         ^
+    124| });
+    125| it("interaction blocking keeps ready pixels and does not repeat render…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/VisualFilePreview.area.test.tsx > interaction blocking keeps ready pixels and does not repeat rendering
+AssertionError: expected '<div class="visual-file-preview" aria…' to contain 'inert=""'
+
+Expected: "inert="""
+Received: "<div class="visual-file-preview" aria-busy="false"><div class="visual-file-controls"><button type="button" class="btn btn-text" disabled="">上一页</button><span>第 1 / 3 页</span><button type="button" class="btn btn-text">下一页</button></div><p role="status">当前显示的是已读取的文件版本。</p><canvas aria-label="第 1 / 3 页"></canvas></div>"
+
+ ❯ src/components/VisualFilePreview.area.test.tsx:133:23
+    131|   Object.assign(props, { interactionBlocked: true });
+    132|   const result=render();
+    133|   expect(result.html).toContain('inert=""');
+       |                       ^
+    134|   expect(h.render).toHaveBeenCalledOnce();
+    135|   expect(target.width).toBe(400);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  10:02:30
+   Duration  164ms (transform 54ms, setup 0ms, import 83ms, tests 12ms, environment 0ms)
+

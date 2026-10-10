@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/visual_feedback_target.test.ts (31 tests | 1 failed) 7ms
+   × rejects a confirmation mutated by the current-renderer callback 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/visual_feedback_target.test.ts > rejects a confirmation mutated by the current-renderer callback
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/runtime/visual_feedback_target.test.ts:91:107
+     89|   const f=fixture();const anchor=visualAreaFeedbackTarget(f.source)!;
+     90|   f.state.onCurrent=()=>Object.assign(anchor,{verified:true});
+     91|   expect(visualAreaFeedbackTargetMatches({source:f.source,anchor} as V…
+       |                                                                                                           ^
+     92| });
+     93|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 30 passed (31)
+   Start at  10:06:22
+   Duration  123ms (transform 41ms, setup 0ms, import 54ms, tests 7ms, environment 0ms)
+

@@ -1,0 +1,164 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.visual-area.test.tsx (14 tests | 14 failed) 762ms
+   × only explicit current pdf region confirmation changes the target and preserves text 61ms
+   × only explicit current image region confirmation changes the target and preserves text 54ms
+   × keeps the PDF page target path separate from a displayed region 54ms
+   × rejects a separately read preview even when all seven file fields match 52ms
+   × requires current successful frame readiness as well as a valid factory source 54ms
+   × holds automatic replacement for incomplete numeric editing without creating a target 52ms
+   × wrong-file false and the old editor cannot release the current editor hold 54ms
+   × rejects late callbacks after hide 52ms
+   × rejects late callbacks after thread 53ms
+   × rejects late callbacks after selection 51ms
+   × candidate holds auto refresh, while explicit reread retires old callbacks 54ms
+   × staging retains the actual old pixel preview and blocks controls until a new read succeeds 58ms
+   × rechecks parent ownership when the renderer's current callback synchronously causes hide 59ms
+   × rechecks parent ownership when the renderer's current callback synchronously causes pending 54ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 14 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > only explicit current pdf region confirmation changes the target and preserves text
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > only explicit current image region confirmation changes the target and preserves text
+TypeError: p.onVisualTargetConfirm is not a function
+ ❯ src/components/OpenedFileView.visual-area.test.tsx:266:7
+    264|     seed(f);
+    265|     const a = area(p.preview);
+    266|     p.onVisualTargetConfirm(a);
+       |       ^
+    267|     expect(saved(f).anchor).toBeUndefined();
+    268|     announce(p, a);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/14]⎯
+
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > keeps the PDF page target path separate from a displayed region
+TypeError: p.onVisualTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.visual-area.test.tsx:210:5
+    208| }
+    209| function announce(p: VisualProps, a = area(p.preview)) {
+    210|   p.onVisualTargetAvailability({ source: a.source, available: true });
+       |     ^
+    211|   return a;
+    212| }
+ ❯ src/components/OpenedFileView.visual-area.test.tsx:280:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/14]⎯
+
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > rejects a separately read preview even when all seven file fields match
+TypeError: p.onVisualTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.visual-area.test.tsx:210:5
+    208| }
+    209| function announce(p: VisualProps, a = area(p.preview)) {
+    210|   p.onVisualTargetAvailability({ source: a.source, available: true });
+       |     ^
+    211|   return a;
+    212| }
+ ❯ src/components/OpenedFileView.visual-area.test.tsx:292:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/14]⎯
+
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > requires current successful frame readiness as well as a valid factory source
+TypeError: p.onVisualTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.visual-area.test.tsx:210:5
+    208| }
+    209| function announce(p: VisualProps, a = area(p.preview)) {
+    210|   p.onVisualTargetAvailability({ source: a.source, available: true });
+       |     ^
+    211|   return a;
+    212| }
+ ❯ src/components/OpenedFileView.visual-area.test.tsx:305:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/14]⎯
+
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > holds automatic replacement for incomplete numeric editing without creating a target
+TypeError: p.onTargetEditing is not a function
+ ❯ src/components/OpenedFileView.visual-area.test.tsx:311:5
+    309| it("holds automatic replacement for incomplete numeric editing without…
+    310|   const p = await ready();
+    311|   p.onTargetEditing({ owner: {}, file: p.preview.file, editing: true }…
+       |     ^
+    312|   expect(await monitor().apply(next(), () => true)).toBe("deferred");
+    313|   expect(h.visual).toHaveBeenCalledTimes(1);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/14]⎯
+
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > wrong-file false and the old editor cannot release the current editor hold
+TypeError: p.onTargetEditing is not a function
+ ❯ src/components/OpenedFileView.visual-area.test.tsx:320:5
+    318|     old = {},
+    319|     current = {};
+    320|   p.onTargetEditing({ owner: old, file, editing: true });
+       |     ^
+    321|   p.onTargetEditing({ owner: current, file, editing: true });
+    322|   p.onTargetEditing({ owner: old, file, editing: false });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/14]⎯
+
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > rejects late callbacks after hide
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > rejects late callbacks after thread
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > rejects late callbacks after selection
+TypeError: p.onVisualTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.visual-area.test.tsx:210:5
+    208| }
+    209| function announce(p: VisualProps, a = area(p.preview)) {
+    210|   p.onVisualTargetAvailability({ source: a.source, available: true });
+       |     ^
+    211|   return a;
+    212| }
+ ❯ src/components/OpenedFileView.visual-area.test.tsx:333:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/14]⎯
+
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > candidate holds auto refresh, while explicit reread retires old callbacks
+TypeError: p.onVisualTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.visual-area.test.tsx:210:5
+    208| }
+    209| function announce(p: VisualProps, a = area(p.preview)) {
+    210|   p.onVisualTargetAvailability({ source: a.source, available: true });
+       |     ^
+    211|   return a;
+    212| }
+ ❯ src/components/OpenedFileView.visual-area.test.tsx:348:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/14]⎯
+
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > staging retains the actual old pixel preview and blocks controls until a new read succeeds
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ src/components/OpenedFileView.visual-area.test.tsx:368:37
+    366|   expect(staged.preview).toBe(p.preview);
+    367|   expect(staged.active).toBe(true);
+    368|   expect(staged.interactionBlocked).toBe(true);
+       |                                     ^
+    369|   const a = announce(p);
+    370|   p.onVisualTargetConfirm(a);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/14]⎯
+
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > rechecks parent ownership when the renderer's current callback synchronously causes hide
+ FAIL  src/components/OpenedFileView.visual-area.test.tsx > rechecks parent ownership when the renderer's current callback synchronously causes pending
+TypeError: p.onVisualTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.visual-area.test.tsx:210:5
+    208| }
+    209| function announce(p: VisualProps, a = area(p.preview)) {
+    210|   p.onVisualTargetAvailability({ source: a.source, available: true });
+       |     ^
+    211|   return a;
+    212| }
+ ❯ src/components/OpenedFileView.visual-area.test.tsx:389:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/14]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  14 failed (14)
+   Start at  10:18:56
+   Duration  1.13s (transform 158ms, setup 0ms, import 315ms, tests 762ms, environment 0ms)
+

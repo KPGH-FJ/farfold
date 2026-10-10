@@ -1,0 +1,193 @@
+{
+  "kind": "independent preparation, immutable fixture oracle and narrow recovery counterexample checkpoint",
+  "recordedAtUtc": "2026-10-10T02:06:56.719962+00:00",
+  "status": "preparation and narrow counterexample complete; actual area product/renderer/browser validation pending",
+  "baseCommit": "2e97616870ec35d385b8ae1721d133efc89faf56",
+  "changesOwned": "Only new visual-area evidence and task-owned output; no src/config/old shared fixture modification. Runtime owner made recovery allowlist repair.",
+  "recovery": {
+    "command": "corepack pnpm exec vitest run --config docs/evidence/2026-10-09-capability-hardening/visual-area/independent/vitest.config.ts docs/evidence/2026-10-09-capability-hardening/visual-area/independent/recovery-anchor.test.ts",
+    "red": {
+      "exit": 1,
+      "pass": 1,
+      "fail": 1,
+      "finding": "Same valid existing pdf-page passed parseDraftSnapshot but recovery previewEntries.valid=false. Preserved raw/current composer/no IPC assertions passed before failed final assertion."
+    },
+    "green": {
+      "exit": 0,
+      "pass": 2,
+      "fail": 0,
+      "finding": "After runtime owner added anchor to known feedback fields, exact same independent test file passed; invalid unknown anchor field still rejects whole snapshot without IO."
+    },
+    "scope": "Pure frontend production parser/preview functions, not restore IPC/SQLite/native; current implementation elsewhere is WIP.",
+    "redStorageSource": {
+      "source": "git show 2e976168:src/runtime/storage_restore.ts",
+      "sha256": "783aa55ebe0a8712daa44799ec2aa5e5fae9c4056ff672c38faf205d648f0ec8"
+    },
+    "greenStorageSource": {
+      "path": "src/runtime/storage_restore.ts",
+      "sha256": "5a55825117e244abbceb350a2b46fa7f558fcb81c0517e8cd42a346b582c50c3"
+    }
+  },
+  "fixtures": {
+    "directory": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures",
+    "count": 16,
+    "assetCount": 13,
+    "originalMaterial": "Entirely authored colored geometry. New files, no original document/photo/font.",
+    "immutableRule": "Do not regenerate or adjust expected literal boxes to fit implementation. Any later extra variant uses another path.",
+    "oracle": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/oracle.json",
+      "sha256": "51d6c23b5049fc09aaf2f9064a5ad076ece084bfaff82f056bbfb5d0e1011dd8"
+    },
+    "manifest": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/manifest.json",
+      "sha256": "2535534bd78ec1df8cd5f2b68c5f83be52610a3ba8cdedad7998439599f64d64"
+    },
+    "quantization": "Runtime owner lower-floor/upper-ceil pointer definition is captured in oracle, superseding nearest-rounding recommendation in original independent-plan. Numeric percent remains exact to4 decimal places."
+  },
+  "referenceChecks": {
+    "passed": 16,
+    "pdf": 8,
+    "jpegExif": 8,
+    "evidenceLevel": "Poppler/Pillow reference material checks against independent literal rational rectangles, not Farfold renderer/client/area API.",
+    "contactSheetActuallyViewed": {
+      "path": "output/2026-10-10-visual-area-independent/rendered/geometry-contact-sheet.png",
+      "sha256": "75945d40b23edb83ad18c371a99bd5d1e3bd635eefdfd6fef963e07bf0ac82bc"
+    },
+    "visualFinding": "Asymmetric magenta feature and four unique corner colors follow literal rotation/mirror order; crop clips outside black marks.",
+    "userUnitLimitation": "At -r72 Poppler emitted300x500 or500x300 for both UserUnit1 and2. Thus this reference proves crop/orientation/normalized bounds only, not UserUnit physical scaling. Production PDF.js unit handling remains a separate later observation."
+  },
+  "geometryPreparation": {
+    "literalRectangles": 12,
+    "letterboxCases": 1,
+    "dprCases": [1, 1.25, 2],
+    "boundary": "Pure Fraction calculations only; browser actual DPR and pixel geometry not observed yet."
+  },
+  "formatting": {
+    "fixtureReferenceJsonRawSemanticEqual": true,
+    "rawLogsUnmodified": true
+  },
+  "pending": [
+    "Actual successful bitmap/image frame and candidate provenance",
+    "Strict cold area union and shared TS/Rust temp DB roundtrip/rollback corpus (shared fixture owned by architecture)",
+    "Real PDF.js/Image decode pixel/geometry oracle and full App dual-engine pointer/keyboard/lifecycle",
+    "Installed native root review; Windows not observed"
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent-plan.json",
+      "sha256": "08124734b3d00355f5b170d42995e06e9470194d6a466b34ba108a581eb81345"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-1.jpg",
+      "sha256": "702b853293096f4d00383754b4fc769e22c7982af8741ed76af5562e3a0add1d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-2.jpg",
+      "sha256": "2589f23671da05b5bb15b5a159ac4ca2237a4622abf437cd2c786372a661d1fc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-3.jpg",
+      "sha256": "bcb53328b4eb2794a68d2d52d8768c5266a01c4ec1add3d827368b6290e1fda8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-4.jpg",
+      "sha256": "0e5a48ecd770207b9e2f3fcf2d984e8eabd3b858900868604a7ec07a5acc5495"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-5.jpg",
+      "sha256": "a03da6e8463c8605f02a5b9c5d014cc96a862b553d0506c381063410c6381fb6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-6.jpg",
+      "sha256": "4cbe91734e0c078f7e605a4c67bc232e61b5ed9e4f63a832523643d9be29d0df"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-7.jpg",
+      "sha256": "41cd3b8db4d1cd51c0e8ed2895ffe4941d540d2783516ae6b55a0893f0184fe0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-8.jpg",
+      "sha256": "921d687bde116f1c7b4c2f1a134d5fb3ceb2aeca739f866f028ccc1f41f7951d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-static.gif",
+      "sha256": "a07a3172029873edf3ea00ef7d9978ec9b0b6d8d11f46ac108cebc18a2d4a95f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-static.webp",
+      "sha256": "b669d2c43b10e9d30a5da8a97caaf530a61750ca2e664db5ae3a58d9476f63d0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric.png",
+      "sha256": "b9b82240b234925acbc614d16fe58b611f7168f5afe45e8db1b855c2257dff65"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/crop-rotations-unit1.pdf",
+      "sha256": "56c0b7761bd91ce58c326c995b321e89934c2d50cdb1693d9057ebb8f413b060"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/crop-rotations-unit2.pdf",
+      "sha256": "bcc68eed69bb3b4d6d309ae8ce3b863a9a206000ff7e10b5d2ca064752ef31f3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/generate.py",
+      "sha256": "33023dd173835ca4873bd6c96479a5c0c449c2babee09698d896fe414713b120"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/manifest.json",
+      "sha256": "2535534bd78ec1df8cd5f2b68c5f83be52610a3ba8cdedad7998439599f64d64"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/oracle.json",
+      "sha256": "51d6c23b5049fc09aaf2f9064a5ad076ece084bfaff82f056bbfb5d0e1011dd8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/recovery-anchor.test.ts",
+      "sha256": "e64d21d939cb73c6f6d389ce199e1360d61d27095b004fee35c30176b00e01be"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/vitest.config.ts",
+      "sha256": "e7557a603cc8fe07a3b8347348af62dec1e5598e7951990ed0a77ca1593a728b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/recovery-anchor-red.txt",
+      "sha256": "ba0ca4d67d273e91c7b1e7c6780beb41ae5277e8b00093b78762a4b92e6d1be5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/recovery-anchor-green.txt",
+      "sha256": "85f8caa81b55b8f80223982c1c127f9fa2cdb078499049e1d09689b11bd5d97f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/geometry_oracle.py",
+      "sha256": "8f5dc53548471763e3dad348e4ccfad57b8d46b5759057e13e835b087fa04ed7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/inspect_fixtures.py",
+      "sha256": "82565ae53922cafab1ca97baa07e72fd2a44bbee1c2e8bacdbc1be0d6a798625"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/fixture-generation.txt",
+      "sha256": "da83525c954df2ce3bee90b2c1518c4921ee9bdc7b26fc97ee9c0234eef32e30"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/fixture-reference-check.json",
+      "sha256": "79b5858779b30f3dfb863efc99c660a744567b4cd9763435398b2b2e18bc8fc1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/fixture-reference-check.raw.txt",
+      "sha256": "745c7478548e04d148dc8a073d43947afe7e58ee8e1c146c04812e8128cd35ee"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/fixture-reference-check.txt",
+      "sha256": "f06066d1de591541373a60fc241fc257eba8e1b5724f6957f4514be4d5aead2d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/poppler-unit1.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/poppler-unit2.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "checkedAtUtc": "2026-10-10T02:26:00.950924+00:00",
+  "reviewer": "architecture",
+  "result": "no_open_blocker_in_read_scope_after_parent_reentry_fix",
+  "sourceCheckpoint": {
+    "src/components/useFileFeedbackTargets.ts": "7b9e3fd34f600ccb397ce7c87d02877336f8844eb733cc63bd19d50a4a91fce8",
+    "src/components/OpenedFileView.tsx": "b3975c605faf9655c2a5a53d1312b8ea43b2aaa83a15e5445d655ccc020f7829",
+    "src/components/OpenedFileView.visual-area.test.tsx": "9279bc4e66dba9a69f2a1642501bac6c9d27d3145f7cb18968254abe7f5bca91",
+    "src/components/VisualFilePreview.tsx": "256de3190a4050f13462cf7f7197c959e10157de1f11271cfbe51ee7dece9bf2",
+    "src/components/VisualFilePreview.css": "d8577f691f6a607239b647f60894030ee1b70a8e86a17fb42b64597ba3bb1eb0",
+    "src/components/VisualAreaSelection.tsx": "17937afb5697fc32f78dc8102d2b8ed6d5b08d7294d4648f8a6cfa8a8a8616d3",
+    "src/components/VisualAreaSelection.test.tsx": "7d3e7ac50bdd59589a86b8d4c515c4ef5d7fbc8f52bdbcc6290d400d1448ad9d",
+    "src/components/VisualFilePreview.area.test.tsx": "7bdca5f006a1174e996341b022e0a4af89141ac1a2dff4f626a368654e4816a9",
+    "src/runtime/visual_area_strings.ts": "db6d0159d9d537dace4d09b3585eb95dc1daaf00b8f6533851ff74224000722d",
+    "src/runtime/file_target_editing.ts": "fc11063ecd641109c16088ec40727a9467d931718d770be984f65e2b176db4a5"
+  },
+  "scope": "Independent source review of root parent/hook and product leaf integration. Reviewer authored the underlying runtime, so this is not an independent review of that runtime. Actual browser/native outcomes remain separate.",
+  "executed": [
+    {
+      "command": "corepack pnpm exec vitest run --config docs/evidence/2026-10-09-capability-hardening/visual-area/independent/parent-reentry.config.ts",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/parent-reentry-red.txt",
+        "failed": 1,
+        "exitCode": 1
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/parent-reentry-green.txt",
+        "passed": 1,
+        "exitCode": 0
+      },
+      "method": "Actual hook plus real frame/source/matcher; React useRef container mocked. Current-renderer callback synchronously revokes parent canEdit but leaves its own frame current. Original hook applied once; repaired hook applies zero times. Same assertion/logic; test/config formatting occurred after red.",
+      "boundary": "Controlled helper counterexample, not native reproduction. No production edits by this reviewer."
+    }
+  ],
+  "reviewedConclusions": [
+    "Parent requires current active identity, ready current file, no operation/pending, current successful visual readiness, exact VisualPreview reference and registered source/anchor before applying target. PDF page/pageCount agree with current readiness.",
+    "Hook rechecks source registration, actual preview and latest policy/canEdit after matcher callbacks. Old render positive callback is rejected. Current production leaves read latest callback props for new confirmations; old negative cleanup still only clears its exact source/editor owner. No static ordinary-callback deadlock identified.",
+    "Apply target retains existing opinion text and removes conflicting line input; whole-file/current-page retarget stays explicit. Historical formatter continues disclosing prior coordinates; cold data does not register a live source.",
+    "Invalid numeric editing holds automatic replacement with a scoped transient owner, without creating an anchor. Wrong-file false cannot clear current editor; retired editor cannot re-register. Explicit reload/hide/selection change clears target/editor ownership.",
+    "Visual active is independent from interactionBlocked. Stage retains old pixels while blocking interaction; leaf render/decode effect excludes blocked. New frame/source after unblock cannot revive old ones, and geometry change clears selection but retains numeric input.",
+    "Resize observer cleanup is disposed-guarded. Frame is anchored to actual element dimensions, DPR/current draw; pointer starts within actual content bounds and moving viewport box during drag cancels it. Actual pixel alignment still awaits independent browser proof.",
+    "PDF page controls synchronously clear display, abort old owner and withdraw readiness before request update; late owner cannot confirm prior frame. Leaf confirm/current-frame validation and same-version new preview rejection preserve ownership."
+  ],
+  "artifacts": {
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/parent-reentry.test.ts": "5fd874db8446196355c71566b03ccd7a19a7cfecfac026cff10e2e0066786bd3",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/parent-reentry.config.ts": "f74d380c6c2806f298691dd15bb42325074ec0d74d6cbbd6c52b6cd4d3118b04",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/parent-reentry-red.txt": "63e8c0d1e1e6d833e30ea4aedcb69727c1a889733fa549e0fb6e2f133e9ec3c9",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/parent-reentry-green.txt": "e181b77aad68c2ad205400572a533d4ad45b423903e6460f0497b2db9d5c6baa",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/implementation.json": "94acf5a35313fa5139aba82cf81415980070b74fc7982973df313c9c6ee73639"
+  },
+  "notExecuted": [
+    "No author parent 14-case suite or whole-project tests rerun by this reviewer. Existing tests were read as code, not recounted as this review execution.",
+    "No application/Agent, native UI, screenshots, dependency install, build or original user database access.",
+    "No independent real geometry, EXIF orientation, rotation/UserUnit, pointer or keyboard browser acceptance in this receipt. Those are verification peer scope."
+  ],
+  "integrationBoundary": "This is an observed source checkpoint, not the later final engineering/source-input freeze. Root must verify hashes against final inputs or record subsequent deltas."
+}

@@ -1,0 +1,46 @@
+{
+  "kind": "independent read-only runtime checkpoint; not installed validation",
+  "recordedAtUtc": "2026-10-10T02:19:35.654819+00:00",
+  "status": "no blocker found within reviewed source paths",
+  "authorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/implementation.json",
+    "sha256": "de85a514d4f7046552a2be065345aaa435fa3d7dbf01c2815715f36dbb98813d"
+  },
+  "checkpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/source-checkpoint.json",
+    "sha256": "4c12ab07106f18eea8bb61d208d14f52e2ba1eafb2b9f89cc9e84330fd4ef663",
+    "files": 12,
+    "allCurrentHashesMatch": true
+  },
+  "checksReadNotRerun": [
+    "Author related frontend 13 files266 cases",
+    "Author actual temporary DB selected-record restore1 and restore module11",
+    "Author type/format logs"
+  ],
+  "reviewedBehavior": [
+    "Frame and source are distinct actual-reference WeakMaps; exact preview, draw owner, geometry and seven file fields are rechecked after renderer callback. Cold anchor cannot substitute a live frame/source.",
+    "Same owner new frame retires its prior source; hidden/invalid geometry or explicit source retirement cannot revive it through later true state. Captured data/selection/file mutation rejects.",
+    "Area exact union allows only correct display-oriented space, strict integer millionth edges and valid page/count; extra/mixed/unknown fields fail. Old four anchor types remain accepted.",
+    "Recovery change is only recognition of known anchor field before existing full parseDraftSnapshot; independent original pdf-page red→same test2green executed by reviewer.",
+    "Rust shared fixture changes validate protection/raw CAS/cold value preservation in temporary DB; Rust does not validate detailed area geometry."
+  ],
+  "limits": [
+    "No author266/Rust suite rerun by this reviewer",
+    "No complete renderer or full App finding in this source review; independent pixel/interaction experiments separately pending",
+    "No formal app, real data, Agent or Windows use"
+  ],
+  "sourceHashes": {
+    "src/runtime/visual_area_coordinates.ts": "fba785dab77ccbf5fd9790ea51cba6e0e211148c5774346ab2056732af158d27",
+    "src/runtime/visual_feedback_target.ts": "2942f814a2fedfdfd01b769ca817ab1bd6f5ef07801a97bd8c5111dc26e71fdb",
+    "src/runtime/file_feedback_anchor.ts": "d347868cac0a4b4af2caaf72004af1dba438248836455d15e7c3102396a33b9e",
+    "src/runtime/feedback_strings.ts": "a9ae75471bc166b09f73a7f115c8231e11c5eff222d81055634201764595b751",
+    "src/runtime/storage_restore.ts": "5a55825117e244abbceb350a2b46fa7f558fcb81c0517e8cd42a346b582c50c3",
+    "src/runtime/fixtures/storage-restore-v1.json": "ff1d062e932e32c058502cec401f578e81e7eda55e6aedca3741acd3a6f5d859",
+    "src-tauri/src/storage_recovery/restore_tests.rs": "98cd6b0e75177ab6c5376dd7fc0ec0ac86fbd548ebd6e9356b091658d4dc5590",
+    "src/runtime/file_feedback_anchor.visual.test.ts": "ac2b7c88b8df3b7f4e1112e783331fefd18f3910bf55231286717d456731c754",
+    "src/runtime/visual_area_coordinates.test.ts": "868a242ff006ebddf568379e40475cfcfe7d52caef35f4e431d919ffc3c82497",
+    "src/runtime/visual_feedback_target.test.ts": "ba0c141f6143fddd8521d921379e065bdcc35c8894065b801e8da3e001d7bba4",
+    "src/runtime/storage_restore.visual.test.ts": "c10eb7c77a07b1dd0b9e8684fc495a24d4f80598eedb29f06c8838649795fa6c",
+    "src/runtime/visual_feedback_persistence.test.ts": "2424d12aad92dfef8dc24af89615bde7b9b7064922dd332cc635c91d3434f163"
+  }
+}

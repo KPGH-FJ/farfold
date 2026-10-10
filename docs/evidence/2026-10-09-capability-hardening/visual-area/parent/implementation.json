@@ -1,0 +1,60 @@
+{
+  "recordedAtUtc": "2026-10-10T02:29:21.624365+00:00",
+  "source": [
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "b3975c605faf9655c2a5a53d1312b8ea43b2aaa83a15e5445d655ccc020f7829"
+    },
+    {
+      "path": "src/components/useFileFeedbackTargets.ts",
+      "sha256": "7b9e3fd34f600ccb397ce7c87d02877336f8844eb733cc63bd19d50a4a91fce8"
+    },
+    {
+      "path": "src/runtime/file_target_editing.ts",
+      "sha256": "fc11063ecd641109c16088ec40727a9467d931718d770be984f65e2b176db4a5"
+    },
+    {
+      "path": "src/runtime/office_target_editing.ts",
+      "sha256": "efb4a7fde1b6152daff77673b030492db26935d4b21e79cf54573a85b8e34570"
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "208ec98796e908a05b1e6a0f39572398019b031922e0cdd04b0381c7d40fc859"
+    }
+  ],
+  "implementation": [
+    "Transient file target ownership extracted from parent while actual read, active, operation and feedback gate stay in parent.",
+    "Visual targets require exact actual preview, current successful display/page and confirmed factory-created source. No persisted anchor can create a live selection.",
+    "Confirmation rechecks owner, current policy, edit gate, exact preview and source after renderer callbacks; original independent synchronous gate-revocation counterexample is preserved.",
+    "Invalid visual input holds the edit guard; refresh staging preserves old pixels but retires selection, and explicit reread clears pending target.",
+    "Image-area can return to whole-file target, PDF-area to current-page target; changing target preserves existing opinion text and never sends."
+  ],
+  "checks": {
+    "parentIndependent": {
+      "files": 1,
+      "passed": 14,
+      "receipt": "visual-area/ui/parent-addendum.json"
+    },
+    "existingRelated": {
+      "files": 7,
+      "passed": 128,
+      "log": "visual-area/parent/related-first.txt"
+    },
+    "reentry": "Independent genuine 1 red to 1 green; helper mock only, not native proof"
+  },
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/parent/related-first.txt",
+      "sha256": "d157ff3ef35f5fe63e0689aa3345413b5115f197392db461e8e9c5d05a6839f3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/parent-addendum.json",
+      "sha256": "69e3c230420266bc7ecba63fef763c158136852761ea6f1ca0b0451c67926087"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/architecture-source-review.json",
+      "sha256": "e562f707d68cc03e01336803cfa2e13b293e37b2537512aa67c8b1e39d2c895a"
+    }
+  ],
+  "boundary": "Parent source and controlled tests. Actual full-App checks in progress; no installation or complete P21/P22 claim."
+}

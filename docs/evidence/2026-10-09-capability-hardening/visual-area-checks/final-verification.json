@@ -1,0 +1,95 @@
+{
+  "checkedAtUtc": "2026-10-10T02:27:35.999946+00:00",
+  "sourceBase": "2e97616870ec35d385b8ae1721d133efc89faf56",
+  "inputCount": 1201,
+  "sourceStable": false,
+  "changedInputs": ["src/components/VisualFilePreview.area.test.tsx"],
+  "checks": [
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 43.724,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/frontend.txt",
+      "sha256": "f557c31c4768a4b05570177f1177698b311d8971a2307628431c56a0f21ef50a",
+      "executedNow": true
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 7.862,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedNow": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 7.889,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/build.txt",
+      "sha256": "102142dc24d2f1255c37de4083647f17958bcd5448d24ca495d7d8d876117854",
+      "executedNow": true
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.787,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": true
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 1.32,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/clippy.txt",
+      "sha256": "b72370be6a423448fe4693e88696de86a459b0aa13f82e81efea0a37f3eebc6f",
+      "executedNow": true
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 45.781,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/rust.txt",
+      "sha256": "efc411643c123f8a1b133f698e94fea813f14c123b19291dbcacbf3d8264756b",
+      "executedNow": true
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 1,
+      "seconds": 22.788,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/format.txt",
+      "sha256": "edba355012db88786f6d79c1c05113d01f4315d18d7e895b3307f14ec67513b3",
+      "executedNow": true
+    }
+  ],
+  "allPassed": false,
+  "boundary": "All seven checks executed now: shared storage fixture and Rust restore test changed. Engineering only; full App/browser, candidate, native and real Agent evidence remain separate."
+}

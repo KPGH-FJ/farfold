@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/visual_feedback_persistence.test.ts (5 tests | 1 failed) 63ms
+   × failed save keeps original coordinate opinion recoverable on disk 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/visual_feedback_persistence.test.ts > failed save keeps original coordinate opinion recoverable on disk
+Error: 未能读取未发送内容，请重试。原内容没有被覆盖。
+ ❯ src/runtime/draft_storage.ts:83:15
+     81|         const message = storageFailureMessage(error, DRAFT_STRINGS.loa…
+     82|         publish({ error: message });
+     83|         throw new Error(message);
+       |               ^
+     84|       })
+     85|       .finally(() => {
+ ❯ src/runtime/visual_feedback_persistence.test.ts:50:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  1 failed | 140 passed (141)
+   Start at  10:08:07
+   Duration  218ms (transform 362ms, setup 0ms, import 405ms, tests 232ms, environment 0ms)
+

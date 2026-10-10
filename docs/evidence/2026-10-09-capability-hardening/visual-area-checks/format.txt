@@ -1,0 +1,10 @@
+
+> farfold@0.1.7 format:check /Users/tw/Desktop/farfold
+> prettier --check .
+
+Checking formatting...
+[warn] docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/install-independent-schema-failure.json
+[warn] docs/status.md
+[warn] plans/agent-access.md
+[warn] Code style issues found in 3 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

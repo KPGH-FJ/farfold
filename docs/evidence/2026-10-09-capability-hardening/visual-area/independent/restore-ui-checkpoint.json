@@ -1,0 +1,74 @@
+{
+  "scope": "NEW-04 actual StorageRestore component in real browsers, controlled preview/dialog return only. No recovery write, original database, startup-failure gate, native App or Agent.",
+  "status": "passed_for_preview_selection_scope",
+  "results": [
+    {
+      "engine": "webkit",
+      "checks": 16,
+      "cases": ["valid", "invalid", "unknown"],
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-restore.json",
+        "sha256": "0d613a4963841d017442980848b1eae4e1e6b5a96f0dd598f820be0972ddfc6e"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-restore.raw.txt",
+        "sha256": "6ed0477416e9e4df2f3282a1f13da2d1de82400c8da57fb655d768316a3ae745"
+      },
+      "sourceUnchanged": true
+    },
+    {
+      "engine": "chromium",
+      "checks": 16,
+      "cases": ["valid", "invalid", "unknown"],
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-restore.json",
+        "sha256": "d3a583c68204592cf2f723ebb285c6fd49030a6eda3fe915d4ba5f926ac12a46"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-restore.raw.txt",
+        "sha256": "4ad4cd4f371815131ff30085c16622ce25182ff1624ccd75f10eed97e2c9c609"
+      },
+      "sourceUnchanged": true
+    }
+  ],
+  "oracle": {
+    "source": {
+      "path": "src/runtime/fixtures/storage-restore-v1.json",
+      "sha256": "ff1d062e932e32c058502cec401f578e81e7eda55e6aedca3741acd3a6f5d859"
+    },
+    "valid": "Original shared fixture includes four prior anchor kinds and two new area kinds. It remains selectable; explicit checkbox enables confirmation; uncheck revokes it.",
+    "invalid": "Fresh owned clone changes PDF right edge to zero; whole unsent record rejected.",
+    "unknown": "Fresh owned clone adds unrecognized image-area anchor field; whole unsent record rejected.",
+    "originalModified": false
+  },
+  "commandBoundary": "Each page made exactly dialog-open and storage_recovery_restore_preview; no apply/status/cancel/write command. No confirm click.",
+  "screenshotsActuallyViewed": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-restore-valid.png",
+      "sha256": "1c348abe96669b99809aa7f9d31101c496e5f142bce3ce070132b197edc7e066"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-restore-invalid.png",
+      "sha256": "27a598602489c1701324ac8dc9a886dd79580e63a5c099b4be4243b214b2f9d6"
+    }
+  ],
+  "stylingBoundary": "Direct component mount with base stylesheet; checks functional eligibility, not complete startup layout or installation appearance.",
+  "layering": {
+    "priorEffectiveFailure": "Existing valid pdf-page failed restoration preview before known-field allowlist correction; independent same test 1 fail/1 pass then2/2 pass, recorded in preparation receipt.",
+    "backend": "Architecture ran controlled temporary-DB protect/CAS/cold-read tests. This review does not rerun or rebrand those as browser or native recovery."
+  },
+  "harness": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/restore.tsx",
+      "sha256": "b86ece982349540dbc69ea78d8b52c2d8f333261ce3cb9fecd8fe5f7d76e7225"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/restore.html",
+      "sha256": "eb27ea54b1e68fe23330fac49bf825d8df3932226f003e74471f6f727e7cdbe1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-restore.mjs",
+      "sha256": "867071422d1809c805fae011211caeffa6f1aaaf7e473e700dc98445a123a5fa"
+    }
+  ]
+}

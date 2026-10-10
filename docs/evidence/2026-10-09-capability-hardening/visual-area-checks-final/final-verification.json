@@ -1,0 +1,107 @@
+{
+  "checkedAtUtc": "2026-10-10T02:32:54.911529+00:00",
+  "sourceBase": "be4965d19f8563ba33ddba1c349c2f8dc897718b",
+  "inputCount": 1201,
+  "sourceStable": true,
+  "changedInputsSinceFirstRun": [
+    ".prettierignore",
+    "src/components/VisualFilePreview.area.test.tsx",
+    "src/components/VisualFilePreview.tsx"
+  ],
+  "changedInputsDuringFinalRun": [],
+  "priorReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/final-verification.json",
+    "sha256": "987ca6cf856206498d12db4810910580daec713aad45579bb6bd80709acfe8ef"
+  },
+  "checks": [
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 40.489,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-final/frontend.txt",
+      "sha256": "9ffd88a0fa50b692b6551f376d525d380ecfcd3bcdf43108f6b4e5547840f8dd",
+      "executedNow": true
+    },
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 18.9,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-final/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedNow": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 11.642,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-final/build.txt",
+      "sha256": "e2319e9abf90021f71a75522af729e59b21a9691088ca16b0912c9f52817d9bd",
+      "executedNow": true
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 1,
+      "seconds": 28.165,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-final/format.txt",
+      "sha256": "5d8a111c9da897bda879fd18e2a43e733e06ad63503e6effe7d44afc4c6dbfd9",
+      "executedNow": true
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.787,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedNow": false,
+      "reason": "All Rust/shared fixture/config/lock inputs exactly match first-run hashes. First-run drift was solely a frontend test. Final delta is two frontend files and one exact formatting exclusion for a frozen historical receipt."
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 1.32,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/clippy.txt",
+      "sha256": "b72370be6a423448fe4693e88696de86a459b0aa13f82e81efea0a37f3eebc6f",
+      "executedNow": false,
+      "reason": "All Rust/shared fixture/config/lock inputs exactly match first-run hashes. First-run drift was solely a frontend test. Final delta is two frontend files and one exact formatting exclusion for a frozen historical receipt."
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 45.781,
+      "log": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/rust.txt",
+      "sha256": "efc411643c123f8a1b133f698e94fea813f14c123b19291dbcacbf3d8264756b",
+      "executedNow": false,
+      "reason": "All Rust/shared fixture/config/lock inputs exactly match first-run hashes. First-run drift was solely a frontend test. Final delta is two frontend files and one exact formatting exclusion for a frozen historical receipt."
+    }
+  ],
+  "allPassed": false,
+  "boundary": "Engineering only. First-run failure and browser-discovered one-pixel PDF defect retained. Frontend/type/build/format rerun after repair; unchanged Rust checks explicitly reused. Full-App, candidate, native and real Agent evidence remain separate."
+}

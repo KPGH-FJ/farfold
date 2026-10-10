@@ -1,0 +1,1101 @@
+{
+  "scope": "Actual production renderPdfPage worker + validateDraftImage and browser Image decoder; no App/IPC or area confirmation",
+  "engine": "chromium",
+  "label": "renderer-scoped",
+  "inputScope": "Production local import/Worker closure plus PDF.js implementation, lock/config, immutable fixture inputs and dedicated harness; type-only dependencies and unrelated tests excluded. Font-free synthetic PDFs do not request package font/cmap resources.",
+  "before": {
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-1.jpg": "702b853293096f4d00383754b4fc769e22c7982af8741ed76af5562e3a0add1d",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-2.jpg": "2589f23671da05b5bb15b5a159ac4ca2237a4622abf437cd2c786372a661d1fc",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-3.jpg": "bcb53328b4eb2794a68d2d52d8768c5266a01c4ec1add3d827368b6290e1fda8",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-4.jpg": "0e5a48ecd770207b9e2f3fcf2d984e8eabd3b858900868604a7ec07a5acc5495",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-5.jpg": "a03da6e8463c8605f02a5b9c5d014cc96a862b553d0506c381063410c6381fb6",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-6.jpg": "4cbe91734e0c078f7e605a4c67bc232e61b5ed9e4f63a832523643d9be29d0df",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-7.jpg": "41cd3b8db4d1cd51c0e8ed2895ffe4941d540d2783516ae6b55a0893f0184fe0",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-8.jpg": "921d687bde116f1c7b4c2f1a134d5fb3ceb2aeca739f866f028ccc1f41f7951d",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-static.gif": "a07a3172029873edf3ea00ef7d9978ec9b0b6d8d11f46ac108cebc18a2d4a95f",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-static.webp": "b669d2c43b10e9d30a5da8a97caaf530a61750ca2e664db5ae3a58d9476f63d0",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric.png": "b9b82240b234925acbc614d16fe58b611f7168f5afe45e8db1b855c2257dff65",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/crop-rotations-unit1.pdf": "56c0b7761bd91ce58c326c995b321e89934c2d50cdb1693d9057ebb8f413b060",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/crop-rotations-unit2.pdf": "bcc68eed69bb3b4d6d309ae8ce3b863a9a206000ff7e10b5d2ca064752ef31f3",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/generate.py": "33023dd173835ca4873bd6c96479a5c0c449c2babee09698d896fe414713b120",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/manifest.json": "2535534bd78ec1df8cd5f2b68c5f83be52610a3ba8cdedad7998439599f64d64",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/oracle.json": "51d6c23b5049fc09aaf2f9064a5ad076ece084bfaff82f056bbfb5d0e1011dd8",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/capture-data.json": "ac6abcd898ae3e66f316d1364ca35fc82f48d3a29368fe1668c22b007def19ae",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/renderer.html": "d320ee7dd9a48687de20f95274ea928ee53640b846706851cc8399cbbe179916",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/renderer.ts": "8943c9115e1e5375741ba5d5564f1d56e970c620d26a13e08feffb8cb0c78112",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-renderer.mjs": "c793cb9a1b2b8010a47ca944b36e2078b452fbfeb1f67270f3ee727da0e96802",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/serve.mjs": "328748442d3cf09286780961ee66aac950aa19842629428a342186d9e26801df",
+    "node_modules/pdfjs-dist/legacy/build/pdf.mjs": "91e29f812c593904e8d48d022db5ddf93e3443575d4765ac9bfbb42494cfbd8d",
+    "node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs": "df3bf6bf6b8b8dac8a4042d8c4ecf1cf21e1d197e0fe231c192122409eba656b",
+    "package.json": "00b8830ab4a5523895f61cea9c271114ead8cb45955274e62752b7bd061b936b",
+    "pnpm-lock.yaml": "a7fc78bdd0b477c3a7c17b1a5129ff32200e4c3ad687c7a1ce70ad0e691412de",
+    "src/runtime/draft_images.ts": "8f049c3e813113e63b2b0c68fec5e040348daca8d1e85c55c2afeec99e3d1a86",
+    "src/runtime/draft_storage.ts": "00e8abcbc9e7cf226432ed4a4f9357a6c901308a380320ed03396cf2e8808f6e",
+    "src/runtime/file_delivery_strings.ts": "ea4f53e2bd3da1f42a84dab277b01a39acea073867c7426610e784766f17d11f",
+    "src/runtime/image_bytes.ts": "bcf55418941f8b69842bd1c86074363ee646c62c27c4d07c4ece74e396e36b34",
+    "src/runtime/pdf_preview.ts": "6c803b774334f765a3b43d98077ec8d6122d2f03cfbeddffb34a6ec04557d415",
+    "src/runtime/pdf_preview_assets.ts": "539937d5a7905b82f0a62051df6ddde6f8a95e9c4f20d6eb70697a45d1f625e0",
+    "src/runtime/pdf_render_core.ts": "92aebc32667181f4e95de0c3f472004bffeb028ca0bfbe1f410e72482453c0b2",
+    "src/runtime/storage_recovery.ts": "d5b867d99c32ea9c1008f59629127d8285a3c93e891163029f531203a27d1f10",
+    "src/runtime/strings.ts": "625476305482f2701099b7baaad58396e5983a9417f7347b2d21d71fc03d6208",
+    "src/runtime/visual_preview.ts": "4dfc24d0c69496bd4e93bf4e6211d144b97af1e8d411a0a3451b6538db196141",
+    "src/workers/pdf_parser_diagnostics.ts": "45421396cf1efb5a8cd2e2a667343b98ca15a93c289d4af05859e4bcd47013f3",
+    "src/workers/pdf_preview.worker.ts": "c19100788781ffc68fd0f1563da97308dfc8d2fc8ed4544a72f88751989f3da9",
+    "src/workers/pdf_render.worker.ts": "9d74d59b1cb3d20c22e4fc7f7564d714fe4c46a760f87a98e150b07bcfa1202a",
+    "vite.config.ts": "c6bed1bdbf62374502f49b20ebcacdcc3a747f0fc8e20627388d59d4baf6e07f"
+  },
+  "errors": [],
+  "blocked": [],
+  "result": {
+    "done": true,
+    "passed": true,
+    "checks": [
+      {
+        "name": "crop-rotations-unit1.pdf page1 ready page identity",
+        "pass": true,
+        "details": {
+          "pages": 4,
+          "actual": 1
+        }
+      },
+      {
+        "name": "crop-rotations-unit1.pdf page1 marker from independent literal",
+        "pass": true,
+        "details": {
+          "actual": [
+            60,
+            200,
+            240,
+            400
+          ],
+          "wanted": [
+            60,
+            200,
+            240,
+            400
+          ],
+          "error": 0,
+          "size": [
+            600,
+            1000
+          ]
+        }
+      },
+      {
+        "name": "crop-rotations-unit1.pdf page2 ready page identity",
+        "pass": true,
+        "details": {
+          "pages": 4,
+          "actual": 2
+        }
+      },
+      {
+        "name": "crop-rotations-unit1.pdf page2 marker from independent literal",
+        "pass": true,
+        "details": {
+          "actual": [
+            540,
+            54,
+            720,
+            216
+          ],
+          "wanted": [
+            540,
+            54,
+            720,
+            216
+          ],
+          "error": 0,
+          "size": [
+            900,
+            540
+          ]
+        }
+      },
+      {
+        "name": "crop-rotations-unit1.pdf page3 ready page identity",
+        "pass": true,
+        "details": {
+          "pages": 4,
+          "actual": 3
+        }
+      },
+      {
+        "name": "crop-rotations-unit1.pdf page3 marker from independent literal",
+        "pass": true,
+        "details": {
+          "actual": [
+            360,
+            600,
+            540,
+            800
+          ],
+          "wanted": [
+            360,
+            600,
+            540,
+            800
+          ],
+          "error": 0,
+          "size": [
+            600,
+            1000
+          ]
+        }
+      },
+      {
+        "name": "crop-rotations-unit1.pdf page4 ready page identity",
+        "pass": true,
+        "details": {
+          "pages": 4,
+          "actual": 4
+        }
+      },
+      {
+        "name": "crop-rotations-unit1.pdf page4 marker from independent literal",
+        "pass": true,
+        "details": {
+          "actual": [
+            180,
+            324,
+            360,
+            486
+          ],
+          "wanted": [
+            180,
+            324,
+            360,
+            486
+          ],
+          "error": 0,
+          "size": [
+            900,
+            540
+          ]
+        }
+      },
+      {
+        "name": "crop-rotations-unit2.pdf page1 ready page identity",
+        "pass": true,
+        "details": {
+          "pages": 4,
+          "actual": 1
+        }
+      },
+      {
+        "name": "crop-rotations-unit2.pdf page1 marker from independent literal",
+        "pass": true,
+        "details": {
+          "actual": [
+            90,
+            300,
+            360,
+            600
+          ],
+          "wanted": [
+            90,
+            300,
+            360,
+            600
+          ],
+          "error": 0,
+          "size": [
+            900,
+            1500
+          ]
+        }
+      },
+      {
+        "name": "crop-rotations-unit2.pdf page2 ready page identity",
+        "pass": true,
+        "details": {
+          "pages": 4,
+          "actual": 2
+        }
+      },
+      {
+        "name": "crop-rotations-unit2.pdf page2 marker from independent literal",
+        "pass": true,
+        "details": {
+          "actual": [
+            540,
+            54,
+            720,
+            216
+          ],
+          "wanted": [
+            540,
+            54,
+            720,
+            216
+          ],
+          "error": 0,
+          "size": [
+            900,
+            540
+          ]
+        }
+      },
+      {
+        "name": "crop-rotations-unit2.pdf page3 ready page identity",
+        "pass": true,
+        "details": {
+          "pages": 4,
+          "actual": 3
+        }
+      },
+      {
+        "name": "crop-rotations-unit2.pdf page3 marker from independent literal",
+        "pass": true,
+        "details": {
+          "actual": [
+            540,
+            900,
+            810,
+            1200
+          ],
+          "wanted": [
+            540,
+            900,
+            810,
+            1200
+          ],
+          "error": 0,
+          "size": [
+            900,
+            1500
+          ]
+        }
+      },
+      {
+        "name": "crop-rotations-unit2.pdf page4 ready page identity",
+        "pass": true,
+        "details": {
+          "pages": 4,
+          "actual": 4
+        }
+      },
+      {
+        "name": "crop-rotations-unit2.pdf page4 marker from independent literal",
+        "pass": true,
+        "details": {
+          "actual": [
+            180,
+            324,
+            360,
+            486
+          ],
+          "wanted": [
+            180,
+            324,
+            360,
+            486
+          ],
+          "error": 0,
+          "size": [
+            900,
+            540
+          ]
+        }
+      },
+      {
+        "name": "asymmetric-exif-1.jpg actual oriented dimensions",
+        "pass": true,
+        "details": {
+          "actual": [
+            320,
+            200
+          ],
+          "wantedSize": [
+            320,
+            200
+          ]
+        }
+      },
+      {
+        "name": "asymmetric-exif-1.jpg actual decoded marker",
+        "pass": true,
+        "details": {
+          "actual": [
+            32,
+            40,
+            128,
+            100
+          ],
+          "wanted": [
+            32,
+            40,
+            128,
+            100
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "asymmetric-exif-2.jpg actual oriented dimensions",
+        "pass": true,
+        "details": {
+          "actual": [
+            320,
+            200
+          ],
+          "wantedSize": [
+            320,
+            200
+          ]
+        }
+      },
+      {
+        "name": "asymmetric-exif-2.jpg actual decoded marker",
+        "pass": true,
+        "details": {
+          "actual": [
+            192,
+            40,
+            288,
+            100
+          ],
+          "wanted": [
+            192,
+            40,
+            288,
+            100
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "asymmetric-exif-3.jpg actual oriented dimensions",
+        "pass": true,
+        "details": {
+          "actual": [
+            320,
+            200
+          ],
+          "wantedSize": [
+            320,
+            200
+          ]
+        }
+      },
+      {
+        "name": "asymmetric-exif-3.jpg actual decoded marker",
+        "pass": true,
+        "details": {
+          "actual": [
+            192,
+            100,
+            288,
+            160
+          ],
+          "wanted": [
+            192,
+            100,
+            288,
+            160
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "asymmetric-exif-4.jpg actual oriented dimensions",
+        "pass": true,
+        "details": {
+          "actual": [
+            320,
+            200
+          ],
+          "wantedSize": [
+            320,
+            200
+          ]
+        }
+      },
+      {
+        "name": "asymmetric-exif-4.jpg actual decoded marker",
+        "pass": true,
+        "details": {
+          "actual": [
+            32,
+            100,
+            128,
+            160
+          ],
+          "wanted": [
+            32,
+            100,
+            128,
+            160
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "asymmetric-exif-5.jpg actual oriented dimensions",
+        "pass": true,
+        "details": {
+          "actual": [
+            200,
+            320
+          ],
+          "wantedSize": [
+            200,
+            320
+          ]
+        }
+      },
+      {
+        "name": "asymmetric-exif-5.jpg actual decoded marker",
+        "pass": true,
+        "details": {
+          "actual": [
+            40,
+            32,
+            100,
+            128
+          ],
+          "wanted": [
+            40,
+            32,
+            100,
+            128
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "asymmetric-exif-6.jpg actual oriented dimensions",
+        "pass": true,
+        "details": {
+          "actual": [
+            200,
+            320
+          ],
+          "wantedSize": [
+            200,
+            320
+          ]
+        }
+      },
+      {
+        "name": "asymmetric-exif-6.jpg actual decoded marker",
+        "pass": true,
+        "details": {
+          "actual": [
+            100,
+            32,
+            160,
+            128
+          ],
+          "wanted": [
+            100,
+            32,
+            160,
+            128
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "asymmetric-exif-7.jpg actual oriented dimensions",
+        "pass": true,
+        "details": {
+          "actual": [
+            200,
+            320
+          ],
+          "wantedSize": [
+            200,
+            320
+          ]
+        }
+      },
+      {
+        "name": "asymmetric-exif-7.jpg actual decoded marker",
+        "pass": true,
+        "details": {
+          "actual": [
+            100,
+            192,
+            160,
+            288
+          ],
+          "wanted": [
+            100,
+            192,
+            160,
+            288
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "asymmetric-exif-8.jpg actual oriented dimensions",
+        "pass": true,
+        "details": {
+          "actual": [
+            200,
+            320
+          ],
+          "wantedSize": [
+            200,
+            320
+          ]
+        }
+      },
+      {
+        "name": "asymmetric-exif-8.jpg actual decoded marker",
+        "pass": true,
+        "details": {
+          "actual": [
+            40,
+            192,
+            100,
+            288
+          ],
+          "wanted": [
+            40,
+            192,
+            100,
+            288
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "asymmetric-static.gif actual oriented dimensions",
+        "pass": true,
+        "details": {
+          "actual": [
+            320,
+            200
+          ],
+          "wantedSize": [
+            320,
+            200
+          ]
+        }
+      },
+      {
+        "name": "asymmetric-static.gif actual decoded marker",
+        "pass": true,
+        "details": {
+          "actual": [
+            32,
+            40,
+            128,
+            100
+          ],
+          "wanted": [
+            32,
+            40,
+            128,
+            100
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "asymmetric-static.webp actual oriented dimensions",
+        "pass": true,
+        "details": {
+          "actual": [
+            320,
+            200
+          ],
+          "wantedSize": [
+            320,
+            200
+          ]
+        }
+      },
+      {
+        "name": "asymmetric-static.webp actual decoded marker",
+        "pass": true,
+        "details": {
+          "actual": [
+            32,
+            40,
+            128,
+            100
+          ],
+          "wanted": [
+            32,
+            40,
+            128,
+            100
+          ],
+          "error": 0
+        }
+      },
+      {
+        "name": "asymmetric.png actual oriented dimensions",
+        "pass": true,
+        "details": {
+          "actual": [
+            320,
+            200
+          ],
+          "wantedSize": [
+            320,
+            200
+          ]
+        }
+      },
+      {
+        "name": "asymmetric.png actual decoded marker",
+        "pass": true,
+        "details": {
+          "actual": [
+            32,
+            40,
+            128,
+            100
+          ],
+          "wanted": [
+            32,
+            40,
+            128,
+            100
+          ],
+          "error": 0
+        }
+      }
+    ],
+    "reports": [
+      {
+        "file": "crop-rotations-unit1.pdf",
+        "page": 1,
+        "angle": 0,
+        "expected": [
+          100000,
+          200000,
+          400000,
+          400000
+        ],
+        "actual": [
+          60,
+          200,
+          240,
+          400
+        ],
+        "canvas": [
+          600,
+          1000
+        ]
+      },
+      {
+        "file": "crop-rotations-unit1.pdf",
+        "page": 2,
+        "angle": 90,
+        "expected": [
+          600000,
+          100000,
+          800000,
+          400000
+        ],
+        "actual": [
+          540,
+          54,
+          720,
+          216
+        ],
+        "canvas": [
+          900,
+          540
+        ]
+      },
+      {
+        "file": "crop-rotations-unit1.pdf",
+        "page": 3,
+        "angle": 180,
+        "expected": [
+          600000,
+          600000,
+          900000,
+          800000
+        ],
+        "actual": [
+          360,
+          600,
+          540,
+          800
+        ],
+        "canvas": [
+          600,
+          1000
+        ]
+      },
+      {
+        "file": "crop-rotations-unit1.pdf",
+        "page": 4,
+        "angle": 270,
+        "expected": [
+          200000,
+          600000,
+          400000,
+          900000
+        ],
+        "actual": [
+          180,
+          324,
+          360,
+          486
+        ],
+        "canvas": [
+          900,
+          540
+        ]
+      },
+      {
+        "file": "crop-rotations-unit2.pdf",
+        "page": 1,
+        "angle": 0,
+        "expected": [
+          100000,
+          200000,
+          400000,
+          400000
+        ],
+        "actual": [
+          90,
+          300,
+          360,
+          600
+        ],
+        "canvas": [
+          900,
+          1500
+        ]
+      },
+      {
+        "file": "crop-rotations-unit2.pdf",
+        "page": 2,
+        "angle": 90,
+        "expected": [
+          600000,
+          100000,
+          800000,
+          400000
+        ],
+        "actual": [
+          540,
+          54,
+          720,
+          216
+        ],
+        "canvas": [
+          900,
+          540
+        ]
+      },
+      {
+        "file": "crop-rotations-unit2.pdf",
+        "page": 3,
+        "angle": 180,
+        "expected": [
+          600000,
+          600000,
+          900000,
+          800000
+        ],
+        "actual": [
+          540,
+          900,
+          810,
+          1200
+        ],
+        "canvas": [
+          900,
+          1500
+        ]
+      },
+      {
+        "file": "crop-rotations-unit2.pdf",
+        "page": 4,
+        "angle": 270,
+        "expected": [
+          200000,
+          600000,
+          400000,
+          900000
+        ],
+        "actual": [
+          180,
+          324,
+          360,
+          486
+        ],
+        "canvas": [
+          900,
+          540
+        ]
+      },
+      {
+        "file": "asymmetric-exif-1.jpg",
+        "tag": 1,
+        "expected": [
+          100000,
+          200000,
+          400000,
+          500000
+        ],
+        "actual": [
+          32,
+          40,
+          128,
+          100
+        ],
+        "size": [
+          320,
+          200
+        ]
+      },
+      {
+        "file": "asymmetric-exif-2.jpg",
+        "tag": 2,
+        "expected": [
+          600000,
+          200000,
+          900000,
+          500000
+        ],
+        "actual": [
+          192,
+          40,
+          288,
+          100
+        ],
+        "size": [
+          320,
+          200
+        ]
+      },
+      {
+        "file": "asymmetric-exif-3.jpg",
+        "tag": 3,
+        "expected": [
+          600000,
+          500000,
+          900000,
+          800000
+        ],
+        "actual": [
+          192,
+          100,
+          288,
+          160
+        ],
+        "size": [
+          320,
+          200
+        ]
+      },
+      {
+        "file": "asymmetric-exif-4.jpg",
+        "tag": 4,
+        "expected": [
+          100000,
+          500000,
+          400000,
+          800000
+        ],
+        "actual": [
+          32,
+          100,
+          128,
+          160
+        ],
+        "size": [
+          320,
+          200
+        ]
+      },
+      {
+        "file": "asymmetric-exif-5.jpg",
+        "tag": 5,
+        "expected": [
+          200000,
+          100000,
+          500000,
+          400000
+        ],
+        "actual": [
+          40,
+          32,
+          100,
+          128
+        ],
+        "size": [
+          200,
+          320
+        ]
+      },
+      {
+        "file": "asymmetric-exif-6.jpg",
+        "tag": 6,
+        "expected": [
+          500000,
+          100000,
+          800000,
+          400000
+        ],
+        "actual": [
+          100,
+          32,
+          160,
+          128
+        ],
+        "size": [
+          200,
+          320
+        ]
+      },
+      {
+        "file": "asymmetric-exif-7.jpg",
+        "tag": 7,
+        "expected": [
+          500000,
+          600000,
+          800000,
+          900000
+        ],
+        "actual": [
+          100,
+          192,
+          160,
+          288
+        ],
+        "size": [
+          200,
+          320
+        ]
+      },
+      {
+        "file": "asymmetric-exif-8.jpg",
+        "tag": 8,
+        "expected": [
+          200000,
+          600000,
+          500000,
+          900000
+        ],
+        "actual": [
+          40,
+          192,
+          100,
+          288
+        ],
+        "size": [
+          200,
+          320
+        ]
+      },
+      {
+        "file": "asymmetric-static.gif",
+        "tag": 1,
+        "expected": [
+          100000,
+          200000,
+          400000,
+          500000
+        ],
+        "actual": [
+          32,
+          40,
+          128,
+          100
+        ],
+        "size": [
+          320,
+          200
+        ]
+      },
+      {
+        "file": "asymmetric-static.webp",
+        "tag": 1,
+        "expected": [
+          100000,
+          200000,
+          400000,
+          500000
+        ],
+        "actual": [
+          32,
+          40,
+          128,
+          100
+        ],
+        "size": [
+          320,
+          200
+        ]
+      },
+      {
+        "file": "asymmetric.png",
+        "tag": 1,
+        "expected": [
+          100000,
+          200000,
+          400000,
+          500000
+        ],
+        "actual": [
+          32,
+          40,
+          128,
+          100
+        ],
+        "size": [
+          320,
+          200
+        ]
+      }
+    ],
+    "dpr": 1
+  },
+  "screenshot": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-scoped.png",
+  "after": {
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-1.jpg": "702b853293096f4d00383754b4fc769e22c7982af8741ed76af5562e3a0add1d",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-2.jpg": "2589f23671da05b5bb15b5a159ac4ca2237a4622abf437cd2c786372a661d1fc",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-3.jpg": "bcb53328b4eb2794a68d2d52d8768c5266a01c4ec1add3d827368b6290e1fda8",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-4.jpg": "0e5a48ecd770207b9e2f3fcf2d984e8eabd3b858900868604a7ec07a5acc5495",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-5.jpg": "a03da6e8463c8605f02a5b9c5d014cc96a862b553d0506c381063410c6381fb6",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-6.jpg": "4cbe91734e0c078f7e605a4c67bc232e61b5ed9e4f63a832523643d9be29d0df",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-7.jpg": "41cd3b8db4d1cd51c0e8ed2895ffe4941d540d2783516ae6b55a0893f0184fe0",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-8.jpg": "921d687bde116f1c7b4c2f1a134d5fb3ceb2aeca739f866f028ccc1f41f7951d",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-static.gif": "a07a3172029873edf3ea00ef7d9978ec9b0b6d8d11f46ac108cebc18a2d4a95f",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-static.webp": "b669d2c43b10e9d30a5da8a97caaf530a61750ca2e664db5ae3a58d9476f63d0",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric.png": "b9b82240b234925acbc614d16fe58b611f7168f5afe45e8db1b855c2257dff65",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/crop-rotations-unit1.pdf": "56c0b7761bd91ce58c326c995b321e89934c2d50cdb1693d9057ebb8f413b060",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/crop-rotations-unit2.pdf": "bcc68eed69bb3b4d6d309ae8ce3b863a9a206000ff7e10b5d2ca064752ef31f3",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/generate.py": "33023dd173835ca4873bd6c96479a5c0c449c2babee09698d896fe414713b120",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/manifest.json": "2535534bd78ec1df8cd5f2b68c5f83be52610a3ba8cdedad7998439599f64d64",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/oracle.json": "51d6c23b5049fc09aaf2f9064a5ad076ece084bfaff82f056bbfb5d0e1011dd8",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/capture-data.json": "ac6abcd898ae3e66f316d1364ca35fc82f48d3a29368fe1668c22b007def19ae",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/renderer.html": "d320ee7dd9a48687de20f95274ea928ee53640b846706851cc8399cbbe179916",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/renderer.ts": "8943c9115e1e5375741ba5d5564f1d56e970c620d26a13e08feffb8cb0c78112",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-renderer.mjs": "c793cb9a1b2b8010a47ca944b36e2078b452fbfeb1f67270f3ee727da0e96802",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/serve.mjs": "328748442d3cf09286780961ee66aac950aa19842629428a342186d9e26801df",
+    "node_modules/pdfjs-dist/legacy/build/pdf.mjs": "91e29f812c593904e8d48d022db5ddf93e3443575d4765ac9bfbb42494cfbd8d",
+    "node_modules/pdfjs-dist/legacy/build/pdf.worker.mjs": "df3bf6bf6b8b8dac8a4042d8c4ecf1cf21e1d197e0fe231c192122409eba656b",
+    "package.json": "00b8830ab4a5523895f61cea9c271114ead8cb45955274e62752b7bd061b936b",
+    "pnpm-lock.yaml": "a7fc78bdd0b477c3a7c17b1a5129ff32200e4c3ad687c7a1ce70ad0e691412de",
+    "src/runtime/draft_images.ts": "8f049c3e813113e63b2b0c68fec5e040348daca8d1e85c55c2afeec99e3d1a86",
+    "src/runtime/draft_storage.ts": "00e8abcbc9e7cf226432ed4a4f9357a6c901308a380320ed03396cf2e8808f6e",
+    "src/runtime/file_delivery_strings.ts": "ea4f53e2bd3da1f42a84dab277b01a39acea073867c7426610e784766f17d11f",
+    "src/runtime/image_bytes.ts": "bcf55418941f8b69842bd1c86074363ee646c62c27c4d07c4ece74e396e36b34",
+    "src/runtime/pdf_preview.ts": "6c803b774334f765a3b43d98077ec8d6122d2f03cfbeddffb34a6ec04557d415",
+    "src/runtime/pdf_preview_assets.ts": "539937d5a7905b82f0a62051df6ddde6f8a95e9c4f20d6eb70697a45d1f625e0",
+    "src/runtime/pdf_render_core.ts": "92aebc32667181f4e95de0c3f472004bffeb028ca0bfbe1f410e72482453c0b2",
+    "src/runtime/storage_recovery.ts": "d5b867d99c32ea9c1008f59629127d8285a3c93e891163029f531203a27d1f10",
+    "src/runtime/strings.ts": "625476305482f2701099b7baaad58396e5983a9417f7347b2d21d71fc03d6208",
+    "src/runtime/visual_preview.ts": "4dfc24d0c69496bd4e93bf4e6211d144b97af1e8d411a0a3451b6538db196141",
+    "src/workers/pdf_parser_diagnostics.ts": "45421396cf1efb5a8cd2e2a667343b98ca15a93c289d4af05859e4bcd47013f3",
+    "src/workers/pdf_preview.worker.ts": "c19100788781ffc68fd0f1563da97308dfc8d2fc8ed4544a72f88751989f3da9",
+    "src/workers/pdf_render.worker.ts": "9d74d59b1cb3d20c22e4fc7f7564d714fe4c46a760f87a98e150b07bcfa1202a",
+    "vite.config.ts": "c6bed1bdbf62374502f49b20ebcacdcc3a747f0fc8e20627388d59d4baf6e07f"
+  },
+  "sourceUnchanged": true,
+  "passed": true
+}

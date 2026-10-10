@@ -1,0 +1,2 @@
+src/components/VisualFilePreview.tsx(227,23): error TS2322: Type '{ kind: "image"; owner: AbortController; element: HTMLImageElement; pixelWidth: number; pixelHeight: number; }' is not assignable to type 'VisualAreaDisplay'.
+  Property 'preview' is missing in type '{ kind: "image"; owner: AbortController; element: HTMLImageElement; pixelWidth: number; pixelHeight: number; }' but required in type 'Readonly<{ owner: object; preview: VisualPreview; element: HTMLImageElement | HTMLCanvasElement; pixelWidth: number; pixelHeight: number; } & { ...; }>'.

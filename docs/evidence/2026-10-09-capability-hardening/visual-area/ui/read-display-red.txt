@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/VisualAreaSelection.test.tsx (14 tests | 1 failed) 41ms
+   × cannot pair a newly read version with the previous display pixels before the next draw 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/VisualAreaSelection.test.tsx > cannot pair a newly read version with the previous display pixels before the next draw
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/VisualAreaSelection.test.tsx:461:41
+    459|   props={...props,preview:{...props.preview,file:{...props.preview.fil…
+    460|   render();
+    461|   expect(button(S.open).props.disabled).toBe(true);
+       |                                         ^
+    462|   expect(props.onVisualTargetAvailability).not.toHaveBeenCalled();
+    463| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  10:11:59
+   Duration  184ms (transform 60ms, setup 0ms, import 79ms, tests 41ms, environment 0ms)
+

@@ -1,0 +1,9 @@
+Owned full-app visual-area Vite PID 95182
+10:19:12 AM [vite] (client) dependencies optimized: pdfjs-dist/legacy/build/pdf.mjs, pdfjs-dist/legacy/build/pdf.worker.mjs
+10:19:12 AM [vite] (client) optimized dependencies changed. reloading
+10:27:31 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/fixture.tsx
+10:27:31 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/fixture.tsx
+10:27:52 AM [vite] (client) hmr update /src/components/VisualFilePreview.tsx
+10:27:52 AM [vite] (client) hmr update /src/components/VisualFilePreview.tsx
+10:34:34 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/restore.html
+10:34:34 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/restore.html

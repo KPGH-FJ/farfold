@@ -2,7 +2,9 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：表格矩形已安装复验，继续PDF/图片区域
+## 当前衔接：PDF/图片区域源码已验证，接续正式安装
+
+PDF/图片区域意见及NEW-04恢复预览修复已完成[最终工程整合](visual-area-checks-complete/final-verification.json)：1,201输入稳定，前端331文件/3,977项及类型、打包、全仓格式通过；本轮Rust1,230项/6忽略按精确未变输入复用。[独立完整界面](visual-area/independent/implementation.json)双引擎各147项几何、30项生命周期、16项恢复预览通过，独立渲染各38项单列。实际PDF测宽1像素缺陷及修复、父层重入反例、驱动错误均保留。当前准备提交和候选；正式应用仍为下述2e976168，区域意见尚未安装，NEW-04不冒称正式故障恢复入口已验。
 
 当前正式应用为 `2e976168` / 0.1.7 arm64，[XLSX矩形与阅读位置实机](workbook-range-candidate/installed-workbook-range.json)完成分项验证及冷恢复，NEW-03具体缺陷复验通过；最终正常退出。原未发送内容保持，1条可选sendPending缺省规范为false单列，旧原始失败保留。候选9/9、安装10/10与三份217,400条快照一致；[独立收口](workbook-range-candidate/native-closeout-independent.json)未冒称独立界面重演。当前接续PDF/图片区域及恢复预览修复；[维护衔接记录](workbook-range/checkpoint.json)已收齐本片提交、安装、分项实机和下一步，下文按阶段保留当时状态。
 

@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-10-10T02:13:45.780612+00:00",
+  "status": "implemented_targeted_checks_passed_pending_independent_integration_and_installed_verification",
+  "scope": "P21 PDF/image displayed-area runtime, strict historical coordinates and draft recovery allowlist repair. No UI, Agent, app, account or user-data operation.",
+  "ownedFiles": {
+    "src/runtime/visual_area_coordinates.ts": "fba785dab77ccbf5fd9790ea51cba6e0e211148c5774346ab2056732af158d27",
+    "src/runtime/visual_feedback_target.ts": "2942f814a2fedfdfd01b769ca817ab1bd6f5ef07801a97bd8c5111dc26e71fdb",
+    "src/runtime/file_feedback_anchor.ts": "d347868cac0a4b4af2caaf72004af1dba438248836455d15e7c3102396a33b9e",
+    "src/runtime/feedback_strings.ts": "a9ae75471bc166b09f73a7f115c8231e11c5eff222d81055634201764595b751",
+    "src/runtime/storage_restore.ts": "5a55825117e244abbceb350a2b46fa7f558fcb81c0517e8cd42a346b582c50c3",
+    "src/runtime/fixtures/storage-restore-v1.json": "ff1d062e932e32c058502cec401f578e81e7eda55e6aedca3741acd3a6f5d859",
+    "src-tauri/src/storage_recovery/restore_tests.rs": "98cd6b0e75177ab6c5376dd7fc0ec0ac86fbd548ebd6e9356b091658d4dc5590",
+    "src/runtime/file_feedback_anchor.visual.test.ts": "ac2b7c88b8df3b7f4e1112e783331fefd18f3910bf55231286717d456731c754",
+    "src/runtime/visual_area_coordinates.test.ts": "868a242ff006ebddf568379e40475cfcfe7d52caef35f4e431d919ffc3c82497",
+    "src/runtime/visual_feedback_target.test.ts": "ba0c141f6143fddd8521d921379e065bdcc35c8894065b801e8da3e001d7bba4",
+    "src/runtime/storage_restore.visual.test.ts": "c10eb7c77a07b1dd0b9e8684fc495a24d4f80598eedb29f06c8838649795fa6c",
+    "src/runtime/visual_feedback_persistence.test.ts": "2424d12aad92dfef8dc24af89615bde7b9b7064922dd332cc635c91d3434f163"
+  },
+  "sourceStableAcrossFinalTargetedChecks": true,
+  "changes": [
+    "Two correlated cold anchor kinds: image-area and pdf-area, explicit display-oriented-v1, fixed-point integer edges 0..1000000 and nonzero rectangle. PDF retains exact page/pageCount.",
+    "Renderer registers an actual completed draw/image-load frame, with exact preview reference, draw/geometry owner, all seven VerifiedFile fields, MIME/data reference, bounded dimensions and current-owner callback. Source binds one exact selection and is irreversibly retired on replacement or observed invalidity.",
+    "Parent matcher requires the exact actual VisualPreview object and the registered source/anchor; rechecks after renderer callback so synchronous retirement, mutation or replacement cannot admit a stale confirmation.",
+    "Percent keyboard coordinates are exact decimal values with at most four fractional places; pointer coordinates alone sort direction/clip, lower floor and upper ceil. No original PDF user-space or JPEG raw-axis claim.",
+    "Strict draft parser accepts both new kinds only with existing disk path/version/SHA context and no extra/mixed fields. Formatter preserves opinion bytes and discloses historical displayed coordinates requiring recheck. Existing drafts.ts machinery required no change.",
+    "storage_restore.strictDraft now permits anchor as a feedback key; parseDraftSnapshot/parseFeedbackAnchor still enforce its semantics. This repairs rejection of already-supported anchors during selected-record recovery, without weakening unknown-field rejection.",
+    "Shared v1 restore fixture now carries all six historical anchor kinds. Existing Rust temporary-SQLite protection/CAS/idempotence/cold-read test verifies exact retention and unrelated-setting preservation. Rust does not independently validate coordinate semantics."
+  ],
+  "actualRedGreen": [
+    {
+      "case": "new cold anchors and format",
+      "red": "anchor-red.txt",
+      "redResult": {
+        "failed": 4,
+        "passed": 30
+      },
+      "green": "anchor-green.txt",
+      "greenResult": {
+        "passed": 34
+      },
+      "classification": "Genuine missing runtime support against prior parser/formatter, not missing-module failure."
+    },
+    {
+      "case": "confirmation mutated during current-renderer callback",
+      "red": "confirmation-reentry-red.txt",
+      "redResult": {
+        "failed": 1,
+        "passed": 30
+      },
+      "green": "confirmation-reentry-green.txt",
+      "greenResult": {
+        "passed": 31
+      },
+      "classification": "Genuine flaw in the new matcher found and corrected before freeze."
+    },
+    {
+      "case": "existing legal pdf-page rejected by recovery preview",
+      "author": "verification",
+      "red": "../independent/recovery-anchor-red.txt",
+      "redResult": {
+        "failed": 1,
+        "passed": 1
+      },
+      "green": "../independent/recovery-anchor-green.txt",
+      "greenResult": {
+        "passed": 2
+      },
+      "classification": "Independent original-code counterexample; same independent tests after the one-key allowlist repair. Unknown extra fields remain rejected."
+    }
+  ],
+  "preservedIntermediateResults": [
+    {
+      "log": "related-first.txt",
+      "result": {
+        "failed": 1,
+        "passed": 140
+      },
+      "classification": "New-test isolation error: shallow clone let the invalid-anchor case mutate the imported shared fixture and contaminate the next test. Fixed only the test clone with structuredClone; no product fix inferred."
+    },
+    {
+      "log": "related-green.txt",
+      "result": {
+        "passed": 141,
+        "files": 6
+      }
+    },
+    {
+      "note": "Product owner initially saw TS2783 duplicate kind in the new malformed-anchor test. The redundant spread/key order was corrected without changing the malformed mixed-shape case; full typecheck-first.txt then exited 0. No separate author raw type-failure log exists."
+    }
+  ],
+  "checks": [
+    {
+      "name": "related frontend",
+      "command": "corepack pnpm exec vitest run src/runtime/visual_area_coordinates.test.ts src/runtime/visual_feedback_target.test.ts src/runtime/file_feedback_anchor.visual.test.ts src/runtime/visual_feedback_persistence.test.ts src/runtime/storage_restore.visual.test.ts src/runtime/storage_restore.preview.test.ts src/runtime/file_feedback_anchor.test.ts src/runtime/file_feedback_anchor.text.test.ts src/runtime/file_feedback_anchor.workbook.test.ts src/runtime/file_feedback_anchor.docx.test.ts src/runtime/file_feedback_anchor.persistence.test.ts src/runtime/drafts.test.ts src/runtime/strings.test.ts",
+      "exitCode": 0,
+      "files": 13,
+      "passed": 266,
+      "log": "related-final.txt"
+    },
+    {
+      "name": "whole-project types at observed checkpoint",
+      "command": "corepack pnpm typecheck",
+      "exitCode": 0,
+      "log": "typecheck-first.txt",
+      "scope": "After implementation and the test duplicate-kind fix, before formatting-only owned changes; other owners were still working. Not whole-integration acceptance."
+    },
+    {
+      "name": "shared fixture actual restore",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked storage_recovery::restore_tests::valid_dual_record_fixture_restores_once_and_preserves_other_settings_and_original_copy -- --exact",
+      "exitCode": 0,
+      "passed": 1,
+      "log": "restore-shared-fixture.txt"
+    },
+    {
+      "name": "restore module regression",
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked storage_recovery::restore_tests",
+      "exitCode": 0,
+      "passed": 11,
+      "log": "restore-regression.txt"
+    },
+    {
+      "name": "owned TS/fixture formatting",
+      "exitCode": 0,
+      "log": "format-check.txt",
+      "scope": "11 TS/JSON owned files. Rust test formatted with rustfmt --edition 2024; global cargo fmt/check belongs to integration."
+    }
+  ],
+  "validationBoundaries": [
+    "Pure helper tests use author-specified literal coordinate expectations; they do not replace the independent PDF rotation/UserUnit/EXIF oracle or actual DOM hit-testing.",
+    "Frame registration is a renderer ownership contract, not a cryptographic proof of DOM visibility or re-decoding. Actual renderer/page/geometry integration is independently verified by UI/browser owners.",
+    "Cold stored coordinates never recreate a live source, automatically highlight a current file, read a file, dispatch Agent work or send an opinion. Cold semantic checks are TypeScript, not a Rust area enum.",
+    "Rust tests operate solely on temporary SQLite files and protected copies. They prove selected-record retention/CAS/rollback-related regression, not the installed native recovery journey.",
+    "No new dependency/environment flag, real Agent/account, application launch/replacement, formal data read/write, whole-suite/build rerun or performance claim in this receipt.",
+    "Root must run final whole integration with the changed shared fixture and Rust test; prior Rust evidence cannot be reused as if those inputs were unchanged."
+  ],
+  "artifacts": {
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/anchor-green.txt": "ad64e844749c711f65cca44c7fd24b5dc4668fc10800d26b22da5cd4b4530f5e",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/anchor-red.txt": "273d4d602d59c7906cce303b1e984e578d02e2c94dab3a7f91ae078acc418253",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/confirmation-reentry-green.txt": "3f0d5b13ca3b673564891ab11c729a13fc77eefc6e5f287a859ac8d44ae08a26",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/confirmation-reentry-red.txt": "04908222964e57bbb5b26ea9b4b6cf8adb6874f4851a775e17a414c730fa310a",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/format-check.txt": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/format-first.txt": "856469f2c0812920b7c97a1f4f2b729e686f73b65e070b059f498d80d63b4491",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/format-owned.txt": "55bac5a7a64563b8e948774732c20ccd906d20b0138c8be46f055bcf80e7f161",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/related-final.txt": "40920d826b263a0a3849793f11bd5e01fea8022fb6a2e1a518a69c7760452d67",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/related-first.txt": "8780a987bc38cf5be3312e8f7eba6de675595d543b8cb281372eed3d69c230a4",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/related-green.txt": "986b44b58e1e8e809d7088395914d82dcf530b880f92ab52a66e668ea437bccd",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/restore-regression.txt": "6fbaa2631d717813a179062705fec09483ec451c6fbd5f3fe6b31de053518496",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/restore-shared-fixture.txt": "41a51eec4e5d5f21e3ad3ae8d89cdd88aa0f9423d22387cbfa18e83cbab168ef",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/target-first.txt": "471214fc6a6ee00588961029c55687a130cb64732417559126caf2379a9df004",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/runtime/typecheck-first.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/recovery-anchor-red.txt": "ba0ca4d67d273e91c7b1e7c6780beb41ae5277e8b00093b78762a4b92e6d1be5",
+    "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/recovery-anchor-green.txt": "85f8caa81b55b8f80223982c1c127f9fa2cdb078499049e1d09689b11bd5d97f"
+  }
+}

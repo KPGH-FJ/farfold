@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-10T02:34:57.549793+00:00",
+  "result": "no-blocker-in-reviewed-static-helper-scope",
+  "method": "Read-only source diff, Python ast.parse (no import/execution), authored fixture hashes and directory metadata, candidate scope comparison. No original SQLite opened or installation/backup/snapshot/cleanup/switch helper executed.",
+  "reviewed": [
+    {
+      "path": "output/2026-10-10-visual-area-install/install_verified_candidate.py",
+      "sha256": "f3ab5972495483911158ae46ba95bbe7fc46a37da64aa4dccbc3f24dbeb86f39"
+    },
+    {
+      "path": "output/2026-10-10-visual-area-install/cleanup_duplicate.py",
+      "sha256": "36f7adc7877bab5a37fe12e20586e3f35111047b27a1320381ae91921e3f1480"
+    },
+    {
+      "path": "output/2026-10-10-visual-area-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0"
+    },
+    {
+      "path": "output/2026-10-10-visual-area-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3"
+    },
+    {
+      "path": "output/2026-10-10-visual-area-install/normal-exit-observation.json",
+      "sha256": "dba88f60134260a8c7001eb40faee26226bb1574290340d1efc5e660e0427683"
+    },
+    {
+      "path": "output/2026-10-10-visual-area-install/native-fixtures/switch-version.py",
+      "sha256": "b3773cd8a48421dab0455df7b20cede931012faa0b5f25b3a16f142fbef78d41"
+    }
+  ],
+  "relatedInputs": [
+    {
+      "path": "output/2026-10-10-visual-area-install/native-fixtures/manifest.json",
+      "sha256": "df018747ccf8857cbf01a9f3a39275e2aeccbdaa3a45daa30c1ef043b7505fac"
+    },
+    {
+      "path": "output/2026-10-10-visual-area-install/metadata-backup-receipt.json",
+      "sha256": "cfac7cd684ee4cdb01696a9f11c29f42beb44490bb3a412435d25919f9927abe"
+    },
+    {
+      "path": "output/2026-10-10-visual-area-install/install-data-before-summary.json",
+      "sha256": "810d26a582b20ecc5defca57ba5a1cfce3de3d5302a4facc8d950fc4f557c3cc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/installed-workbook-range.json",
+      "sha256": "8dd07a98e9617ffa766dc3326b5e452582686efbc5a74030e209f3f8b50cdc46"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/prepare-candidate.py",
+      "sha256": "4a2b2019909831378bda728cdd34c952bba5f49663bac764965cd5b767f43dc7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-candidate/verify-candidate.py",
+      "sha256": "f3b8ebd4b8533b237b9b8465c5b7c4efb4da0c1a629e50dc43764717bd485368"
+    }
+  ],
+  "checks": [
+    "All five Python helpers parse. Backup and snapshot scripts are byte-identical to workbook-range; installer only changes current paths, adds visual fixture scope and excludes __pycache__; cleanup only changes evidence path.",
+    "Installer TOP and combined SCOPES exactly match independently prepared candidate preparation/verification scripts; all 16 visual fixture inputs included.",
+    "Fixed release bundle and sole /Applications/Farfold.app; approved commit/source inventory, exact five files, identifier/version/localization/arm64/ad-hoc strict signature, ZIP CRC/hash/contents are checked before ditto. No launch, quit or Agent call.",
+    "Normal-exit record is required; exact formal executable process count checked twice before copy and once afterward. O_EXCL/O_NOFOLLOW installation receipt records failure phase and copyStarted; postcopy file/signature checks required.",
+    "Preinstall manifest requires 0600 owner-held file, descriptor identity and stable metadata, exact counts/hash. Backup uses SQLite exclusively on second private copy and retains source/capture hashes; snapshot uses directory/file O_NOFOLLOW descriptors and consistency checks.",
+    "Cleanup requires passed install review and matching candidate/formal/archive hashes and modes, removes only exact duplicate build bundle, then rechecks formal/archive. User data is not deleted.",
+    "Current three authored native targets are regular 0600 files in exact recorded dev/ino 0700 user-owned directory; exact file set and known hashes. Five source/private version pairs match manifest hashes/sizes. This reviewer did not switch versions.",
+    "Final switch helper adds explicit user ownership and requested-version length guards before writing; exact filename whitelist, known prior hashes, same-directory temporary file, fsync, temporary digest and replace retained.",
+    "Normal-exit prior receipt SHA matches; this verifies root evidence linkage, not independent UI replay."
+  ],
+  "preparationAlreadyExecutedByRoot": {
+    "backupIntegrity": "ok",
+    "sourceAndCaptureUnchanged": true,
+    "beforeSnapshotCounts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195450,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 152,
+        "file": 100,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "beforeSnapshotSha256": "0e07a6501b63f862c8cd79bca3c2cf3937a892474e663b4bbca387478338fa38",
+    "reexecutedByReviewer": false
+  },
+  "diagnostic": "First static guard assertion expected the local spelling len(versions); latest implementation correctly uses len(RECORD[files][name]). The checker assertion stopped before receipt creation. Source was unchanged; corrected read-only assertion passed.",
+  "boundaries": [
+    "Static approval does not execute installation or verify future candidate bytes; all execution-time guards remain required.",
+    "Copy is not an atomic rollback installer: interrupted/failed replacement must remain failed and unlaunched pending review.",
+    "Current private fixture identity is verified; no claim of adversarial live path-race resistance or future permissions.",
+    "No new original user-data scan or SQLite connection; only existing preparation receipts were read.",
+    "Native visual-area verification and product-wide acceptance remain separate."
+  ]
+}

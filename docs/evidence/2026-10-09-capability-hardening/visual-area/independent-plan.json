@@ -1,0 +1,391 @@
+{
+  "kind": "independent verification preparation; not a new active product plan",
+  "recordedAtUtc": "2026-10-10T02:00:27.529453+00:00",
+  "sourceCommit": "2e97616870ec35d385b8ae1721d133efc89faf56",
+  "status": "prepared; product tests and new fixtures await explicit source thaw",
+  "authorityAndScope": {
+    "allowedNow": "Read current code/design and prepare this new evidence plus task-owned output. Candidate build remains root-owned.",
+    "notPerformed": [
+      "No src/config/shared fixture edit",
+      "No formal or test App, browser, Agent or account run",
+      "No user database/file access",
+      "No render or product test",
+      "No dependency/environment/permission change"
+    ],
+    "contract": "P21 one display-oriented PDF/static-image rectangle. This matrix narrows the next experiment, not the existing 122-item/29-by-eight acceptance scope. It does not claim all P21/P20/P16 done."
+  },
+  "readOnlyFindings": [
+    {
+      "id": "F01",
+      "status": "verified source fact",
+      "evidence": "pdf_render_core.ts:155 uses getViewport scale1 then the bounded viewport. pdf_preview.ts:94-101 publishes ready only after drawImage.",
+      "implication": "The existing renderer already applies PDF page rotation/viewBox/userUnit; area proof must come from that successful draw, not requested page/raw PDF coordinates."
+    },
+    {
+      "id": "F02",
+      "status": "verified source fact",
+      "evidence": "VisualFilePreview.tsx:94-100 requests width multiplied by capped DPR; image onLoad around227 only reports kind. draft_images.ts:132 uses actual decoder natural dimensions but returns original encoded bytes.",
+      "implication": "No current frame token includes final displayed dimensions/owner. Do not reuse raw SOF dimensions or decoder preflight as proof that this visible image loaded."
+    },
+    {
+      "id": "F03",
+      "status": "confirmed static mismatch, not executed here",
+      "evidence": "storage_restore.ts:143-150 feedback allowlist omits anchor; drafts.ts:651 calls parseFeedbackAnchor; shared storage-restore-v1.json has no anchored feedback.",
+      "implication": "Even old valid anchored opinions fail recovery preview before the common parser. First directed red must use an existing valid anchor, then add new areas without accepting arbitrary extra fields."
+    },
+    {
+      "id": "F04",
+      "status": "verified source fact and peer corroboration",
+      "evidence": "meta_store.rs:618-643 JSON settings; storage_recovery/restore.rs:130-138 selected-key JSON/version; meta_store/startup_restore.rs:27-43 raw baseline CAS.",
+      "implication": "Rust has no FileFeedbackAnchor geometry enum. A Rust settings/restore pass proves preservation and transaction gates, not semantic area rejection. TS validates complete anchors before hydrate/apply."
+    },
+    {
+      "id": "F05",
+      "status": "static risk for later actual full-App check, not a proved bug",
+      "evidence": "VisualFilePreview.css root currently has min-width/padding only, unlike repaired document/workbook flex scrollers.",
+      "implication": "Check long feedback/short window/Tab with full App CSS; do not blindly copy a CSS fix or use body overflow hidden."
+    }
+  ],
+  "independentOracle": {
+    "separation": "Expected coordinates are hand-authored literals plus rational arithmetic in a Python standard-library helper. No Farfold coordinate/anchor helper, PDF.js PageViewport, image decoder output or browser DOM is imported as expected truth. Real pixels later independently identify the colored feature; renderer dimensions/transforms are observations, not the oracle.",
+    "pdf": {
+      "proposedFixtureNotYetCreated": "Four font-free pages with identical asymmetric colored marks; MediaBox [0,0,420,640], CropBox [40,70,340,570], Rotate 0/90/180/270. A second bounded unit=2 variant or page ensures uniform unit scaling cancels from normalized coordinates. Page outside-crop marks visibly absent.",
+      "crop": [40, 70, 340, 570],
+      "rawFeatureRect": [70, 370, 160, 470],
+      "rawAxes": "PDF x right/y up; u=(x-40)/300, v=(y-70)/500; transform all four corners then bound.",
+      "normalizedTransforms": {
+        "0": "(u,1-v)",
+        "90": "(v,u)",
+        "180": "(1-u,v)",
+        "270": "(1-v,1-u)"
+      },
+      "expectedRectanglesMillionths": {
+        "0": [100000, 200000, 400000, 400000],
+        "90": [600000, 100000, 800000, 400000],
+        "180": [600000, 600000, 900000, 800000],
+        "270": [200000, 600000, 400000, 900000]
+      },
+      "expectedAspectAtUnit1": {
+        "0": "300:500",
+        "90": "500:300",
+        "180": "300:500",
+        "270": "500:300"
+      },
+      "discriminators": [
+        "Crop origin is nonzero and differs on x/y; selecting the mark using MediaBox must fail the expected rectangle.",
+        "Non-square feature and four different corner colors distinguish rotation from mirror, width/height swap and Y flip.",
+        "UserUnit changes physical/backing size, never normalized target; do not assert exact canvas pixels where bounded render scale/ceil legitimately changes them.",
+        "After page change/restore clamp, target page is successfully displayed actual page; same-size pages must not share a frame lease."
+      ]
+    },
+    "image": {
+      "proposedFixtureNotYetCreated": "One authored 320x200 asymmetric raster with unique corner colors and an off-centre marked rectangle. PNG baseline plus JPEG tag1..8 sharing the same encoded raster orientation; generate only into a new owned fixture directory after thaw, retain writer/version/hash.",
+      "rawFeatureRect": [32, 40, 128, 100],
+      "rawAxes": "u=x/320, v=y/200, x right/y down. Pixel region is a continuous edge rectangle, not centre-index coordinates.",
+      "normalizedTransforms": {
+        "1": "(u,v)",
+        "2": "(1-u,v)",
+        "3": "(1-u,1-v)",
+        "4": "(u,1-v)",
+        "5": "(v,u)",
+        "6": "(1-v,u)",
+        "7": "(1-v,1-u)",
+        "8": "(v,1-u)"
+      },
+      "expectedRectanglesMillionths": {
+        "1": [100000, 200000, 400000, 500000],
+        "2": [600000, 200000, 900000, 500000],
+        "3": [600000, 500000, 900000, 800000],
+        "4": [100000, 500000, 400000, 800000],
+        "5": [200000, 100000, 500000, 400000],
+        "6": [500000, 100000, 800000, 400000],
+        "7": [500000, 600000, 800000, 900000],
+        "8": [200000, 600000, 500000, 900000]
+      },
+      "orientedDimensions": {
+        "1..4": [320, 200],
+        "5..8": [200, 320]
+      },
+      "discriminators": [
+        "Do not assume naturalWidth/Height alone proves mirror orientation: tags1..4 have identical dimensions.",
+        "Use interior pixel color samples and visibly asymmetric marker. JPEG pixel oracle permits explicit color tolerance away from edges, while rational anchor expectations remain exact.",
+        "A browser that does not honor a fixture orientation must produce a recorded compatibility failure, not rewritten expected coordinates.",
+        "Reuse old EXIF materials only by immutable copy/reference; never regenerate prior frozen fixtures."
+      ]
+    },
+    "cssDprLetterbox": {
+      "independentExample": {
+        "stageCss": [100, 50, 500, 420],
+        "borderEach": 2,
+        "paddingEach": 18,
+        "contentAreaCss": [120, 70, 460, 380],
+        "orientedImageAspect": "2:1",
+        "containedPixelsCss": [120, 145, 460, 230],
+        "featurePointerCss": [166, 191, 304, 260],
+        "expectedMillionths": [100000, 200000, 400000, 500000]
+      },
+      "qualification": "This padded/contain arrangement is an adversarial geometry model, not a claim current CSS uses object-fit. Current intrinsic img/canvas boxes must be measured as actually implemented; any future object-fit stage must exclude its bars.",
+      "rules": [
+        "Pointer clientX/clientY and getBoundingClientRect share viewport CSS units. Never multiply pointer offsets by DPR or divide by backing-store canvas.width.",
+        "DPR1/1.25/2, rendered CSS width257.5 and fractional left/top must preserve the same normalized feature. Requesting DPR on a test context is not evidence: record actual window.devicePixelRatio and backing/CSS dimensions.",
+        "Start in padding/letterbox/border produces no candidate. White/transparent pixels inside actual image content remain valid image area; do not infer content boundaries from alpha/color.",
+        "Page scroll between separate selections does not change normalized geometry. Scroll/resize/layout shift during an active drag must invalidate or use an explicitly frozen/rechecked box, never blend pointer positions from two layouts.",
+        "Candidate from old dimensions/resize/new draw cannot confirm even if same file/page and identical pixel dimensions recur."
+      ]
+    },
+    "quantizationDecisionBeforeTests": {
+      "status": "recommendation requiring owner agreement, not yet a product contract",
+      "recommended": "Normalize reverse pointer corners in real CSS fractions, clamp only the end of a drag that began inside; round each edge to nearest integer millionth with ties upward for nonnegative values. Reject if rounding collapses width/height; never silently inflate. Numeric percent input should map exactly with at most four decimal places (0.0001 percent = 1 millionth) and reject rather than round excess precision.",
+      "cases": [
+        "0 and100 percent endpoints",
+        "0.0001 percent and99.9999 percent",
+        "one-unit rectangle",
+        "exacthalf-unit tie",
+        "positive subunit rectangle collapsing tozero",
+        "negative/over100/NaN/Infinity/exponent/empty/whitespace ambiguity",
+        "inverted numeric rectangle rejected; reverse pointer gesture normalized"
+      ],
+      "why": "Freeze rounding and pointer-edge inclusion before implementation-based assertions, so an independent test cannot rationalize changed expected coordinates."
+    },
+    "preparationSelfCheck": {
+      "status": "passed",
+      "literalRectangleChecks": 12,
+      "letterboxCheck": 1,
+      "dprCases": [1, 1.25, 2],
+      "noRendererOrProductionImports": true,
+      "boundary": "Only literal-vs-rational calculation passed. No file was rendered and no product area API exists yet.",
+      "artifacts": [
+        {
+          "path": "output/2026-10-10-visual-area-independent/geometry_oracle.py",
+          "sha256": "8f5dc53548471763e3dad348e4ccfad57b8d46b5759057e13e835b087fa04ed7"
+        },
+        {
+          "path": "output/2026-10-10-visual-area-independent/geometry-oracle.json",
+          "sha256": "3456db61bef35f3c19bbffa749507ed4ba914970ae19cf7e9293aac24a64a1b4"
+        }
+      ]
+    }
+  },
+  "counterexampleMatrix": [
+    {
+      "id": "G01",
+      "layer": "real PDF worker + full App",
+      "trigger": "Select the off-centre mark on 4 rotated nonzero-CropBox pages at two actual DPRs.",
+      "mustObserve": "Literal box/page matches visible color feature; outside CropBox is absent; no page0/raw-coordinate substitution."
+    },
+    {
+      "id": "G02",
+      "layer": "real browser decoder + full App",
+      "trigger": "EXIF1..8 same raw JPEG, especially mirror tags2/4/5/7; select the same marked pixels.",
+      "mustObserve": "Eight literal oriented boxes; actual dimensions and sampled corner colors agree; no accidental second rotation."
+    },
+    {
+      "id": "G03",
+      "layer": "DOM pointer and numeric keyboard",
+      "trigger": "Fractional CSS geometry, border/letterbox start, reversed drag, out-of-bounds end, zero quantized area.",
+      "mustObserve": "Correct box or explicit invalid state, never wrapper-relative target/implicit inflated region."
+    },
+    {
+      "id": "L01",
+      "layer": "production ownership + component/full App",
+      "trigger": "Same file/page, new bitmap/img element; saved pointerup/confirm handler from old draw; hide/flip/read failure/cancel then latebitmap/onLoad.",
+      "mustObserve": "Old frame/source irrevocably retired; late pixels closed/ignored; new opinion unchanged; no stale candidate revived."
+    },
+    {
+      "id": "L02",
+      "layer": "StrictMode and synchronous reentry",
+      "trigger": "available:false/confirm/focus callback synchronously hides, switches file or blocks interaction; old action continues.",
+      "mustObserve": "Recheck current owner after callback; no old focus steal/anchor write; copied/cold/mutated frame/source rejected."
+    },
+    {
+      "id": "L03",
+      "layer": "real full App + controlled capture",
+      "trigger": "Invalid numeric edit or selected candidate while file changes; explicit cancel; separate no-edit automatic staging held pending.",
+      "mustObserve": "Edit defers replacement without authorizing confirmation; existing deferred-halt policy requires explicit reread, not invented autoretry. No-edit stage retains old pixels, becomes interactionBlocked/inert without active=false draw cancellation, swaps only after new ready."
+    },
+    {
+      "id": "L04",
+      "layer": "real full App lifecycle",
+      "trigger": "Hide/reopen, same-path changed SHA/version, old/new page counts; feedback form open with long composer in 900x620 window.",
+      "mustObserve": "Old stored anchor remains under old disk identity; no automatic redraw onto new file; local scroll/Tab/controls accessible and app/window scroll remains bounded."
+    },
+    {
+      "id": "C01",
+      "layer": "normal TS cold load + recovery preview",
+      "trigger": "Valid old pdf-page/text-range/xlsx-range/docx-block draft, then valid image-area/pdf-area; mix valid composer/queue with one malformed feedback.",
+      "mustObserve": "Known anchors retained; malformed snapshot wholly rejects before hydrate/apply and original raw storage remains available; no downgrade to whole-file or silent field loss."
+    },
+    {
+      "id": "C02",
+      "layer": "temporary Rust DB roundtrip -> actual TS parser",
+      "trigger": "Store/restore prepared shared JSON through actual settings/restore path, cold-read then pass to TS.",
+      "mustObserve": "Exact normalized numbers/path/version/SHA/opinion/composer/queue retained, unrelated settings untouched; TS rejects malformed anchor even if Rust JSON accepted it. A cold anchor never authenticates a live frame."
+    },
+    {
+      "id": "C03",
+      "layer": "real temporary DB restore failure",
+      "trigger": "Wrong key/futureversion, baseline changed, protection failure or transaction-trigger failure.",
+      "mustObserve": "Actual Rust gates reject/rollback under existing startup mutex. No partial import, no auto-send, retained protective materials truthful. Do not label this as Rust geometry validation."
+    },
+    {
+      "id": "C04",
+      "layer": "formatter + draft take + failed save",
+      "trigger": "Confirm area into existing feedback, take into nonempty composer, duplicate take, persistence failure and cold reload.",
+      "mustObserve": "Original text preserved exactly once with saved file/version/page/box; no body/screenshot/raw URL/autosend; failed save never falsely reports durable data."
+    }
+  ],
+  "coldRejectCorpus": {
+    "boundary": "Values are proposed shared tests after thaw, not modifications to the currently frozen fixture.",
+    "shape": [
+      "null/array/scalar anchor",
+      "missing edge/kind/space",
+      "unknown extra or prototype-looking own fields",
+      "mixed pdf/image/text/xlsx/docx fields",
+      "future unknown kind/space",
+      "image area with page/pageCount",
+      "pdf area missing page/count"
+    ],
+    "numbers": [
+      "negative edge",
+      "edge >1000000",
+      "string/boolean/null edge",
+      "fractional edge",
+      "unsafe integer",
+      "left=right or top=bottom",
+      "inverted edge",
+      "page0/page>count/count>existing MAX_PDF_PAGES"
+    ],
+    "nonJson": "NaN/Infinity/-Infinity and undefined only exist in direct TS objects; JSON.stringify turns nonfinite to null or drops undefined. Test both direct and serialized shapes; Rust serde_json rejection of malformed numeric JSON is not the same branch.",
+    "context": [
+      "fragment scope",
+      "non-null line selection",
+      "lineInput present",
+      "contentId absent/notdisk",
+      "wrong contentId path",
+      "empty version",
+      "non64hex SHA",
+      "one bad entry after a valid entry"
+    ],
+    "identityLimit": "A syntactically valid disk:path/version/SHA or historical pageCount can be invented in storage. Cold parser validates shape, not a disk read or actual page count. It may preserve such a historical record, but no registration or current confirmation may accept it without live verified preview/frame.",
+    "compatibility": [
+      "Undefined anchor and existing path-keyed legacy draft remain supported",
+      "All four existing anchor kinds retain exact behavior",
+      "Raw malformed input is preserved by startup storage failure path",
+      "Restored queues remain stopped/uncertain under existing recovery semantics"
+    ],
+    "crossLanguage": "Shared authored fixture should carry maxendpoint1000000 and one-unit edges through serde_json and SQLite without string/float conversion. Normal settings is semantic JSON roundtrip; recovery selected raw strings are exact-string CAS/write. Report these separately."
+  },
+  "executionOrderAfterThaw": [
+    "Agree display coordinate/quantization definition with runtime and UI owners. Add immutable asymmetric fixtures and literal oracle as new paths, include all input hashes in the candidate collector; never alter old fixtures.",
+    "Preserve effective existing-anchor recovery red, then strict union/restore corpus and renderer ownership reentry reds with actual production entrypoints. Source-only compilation failures while WIP are not product counterexamples.",
+    "Validate real worker/decoder pixels against literal colors/geometry; record DPR and actual canvas/img bounding boxes. Then exercise actual full App with controlled IPC/storage, both WebKit and Chromium and targeted short-window checks.",
+    "Run temporary DB cross-language fixture/restore gates when shared Rust input changes; coordinate cargo slot. Product engineering checks and native candidate/retention remain root-owned.",
+    "Freeze raw stdout/JSON/screenshots before formatting derived summaries; capture before/after source hashes, actually view key screenshots. Native installed macOS and Windows remain separate unclaimed layers until executed."
+  ],
+  "externalPrimarySources": [
+    {
+      "url": "https://pdfbox.apache.org/docs/2.0.9/javadocs/org/apache/pdfbox/pdmodel/PDPage.html",
+      "access": "opened in web tool",
+      "supports": "CropBox defines clipped visible user space; page rotation is clockwise. Library documentation, not a claim of full ISO conformance."
+    },
+    {
+      "url": "https://cipa.jp/std/documents/e/DC-X010-2017.pdf",
+      "access": "official-domain search extract; direct fetch unavailable",
+      "supports": "Table3 Orientation tag274 defines directions of coded row0 and column0 for values1..8. Fixed transforms above are independent mathematical derivations from those directions."
+    },
+    {
+      "url": "https://opensource.adobe.com/dc-acrobat-sdk-docs/pdfstandards/PDF32000_2008.pdf",
+      "access": "attempted only; web tool rejected 22MB content length",
+      "supports": "Not used as fetched evidence; do not claim the full standard was read."
+    }
+  ],
+  "localPrimaryImplementationObservation": {
+    "path": "node_modules/pdfjs-dist/legacy/build/pdf.mjs",
+    "version": "6.3.289 from package.json",
+    "locations": "PageViewport around7070; getViewport uses page.view/userUnit/rotate. Read for actual transform responsibility only, never execute it as independent expected geometry."
+  },
+  "readInputs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/next-visual-area-review.json",
+      "sha256": "29d472e71b05f6a8b3fa54afd69d7caa6732c31decc57f97d2d23f5ad7ed218c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/next-visual-area-runtime-review.json",
+      "sha256": "6403ad9934ac1d3ea4ab6ffa000cafca9435b413a5d34e4186ead48d050b4150"
+    },
+    {
+      "path": "src/components/VisualFilePreview.tsx",
+      "sha256": "b6cf6df1172ee5af245621b3168203b81961b82fdfeba5e85ac47b4c53a47571"
+    },
+    {
+      "path": "src/components/VisualFilePreview.css",
+      "sha256": "f94dc2a3334875e20b8ebc8e248ec3d5a0410e46a97e95877658a9f25ef2cad4"
+    },
+    {
+      "path": "src/runtime/pdf_render_core.ts",
+      "sha256": "92aebc32667181f4e95de0c3f472004bffeb028ca0bfbe1f410e72482453c0b2"
+    },
+    {
+      "path": "src/runtime/pdf_preview.ts",
+      "sha256": "6c803b774334f765a3b43d98077ec8d6122d2f03cfbeddffb34a6ec04557d415"
+    },
+    {
+      "path": "src/runtime/draft_images.ts",
+      "sha256": "8f049c3e813113e63b2b0c68fec5e040348daca8d1e85c55c2afeec99e3d1a86"
+    },
+    {
+      "path": "src/runtime/image_bytes.ts",
+      "sha256": "bcf55418941f8b69842bd1c86074363ee646c62c27c4d07c4ece74e396e36b34"
+    },
+    {
+      "path": "src/runtime/visual_feedback.ts",
+      "sha256": "3799c1238a6e2f85097eea356cc780b21652c4af4d5e54a26213a489f7645eef"
+    },
+    {
+      "path": "src/runtime/preview_capture.ts",
+      "sha256": "c19dd9ee241a34fc85fad97b23ff132e8de859dea7db1280c76f319dd73fa996"
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.ts",
+      "sha256": "7cf6a0157115aa862d5293613d0147673fac1486c4699b7fb08c89b6e936c63a"
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "ef320f8577c383d25e53268bea1827227b757d47d3adb95e6479e4673b563db4"
+    },
+    {
+      "path": "src/runtime/storage_restore.ts",
+      "sha256": "783aa55ebe0a8712daa44799ec2aa5e5fae9c4056ff672c38faf205d648f0ec8"
+    },
+    {
+      "path": "src/runtime/fixtures/storage-restore-v1.json",
+      "sha256": "403db7f09eae65c040d543c14fbe0749474a0dc186dbb8c4b2dc9c2ef64c3a4c"
+    },
+    {
+      "path": "src-tauri/src/meta_store.rs",
+      "sha256": "7b18f9ff6918a8d2611132eacd6cf769efbd596f93c757ec11e168bde7872e8e"
+    },
+    {
+      "path": "src-tauri/src/meta_store/startup_restore.rs",
+      "sha256": "09c2304887e4be058586b90824a14c8acd47c7a72465d8613fb69761b8e36ffe"
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/restore.rs",
+      "sha256": "b05b0e1f3d69b8755352c76793913825f8cbe5eca6b9d1dfb08d4648894dcbcd"
+    },
+    {
+      "path": "src-tauri/src/storage_recovery/restore_tests.rs",
+      "sha256": "b93eb8f6f5f42ef3e65d0bf2e1bd6f53c996cc91e7f323fec5ec658d619ccf70"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/visual.rs",
+      "sha256": "6232def73405a6423d92a425a2de44aa10202f8c5706587b13679941e31df805"
+    }
+  ],
+  "noCompletionClaim": [
+    "Area interaction not implemented or tested by this preparation",
+    "No second native observation",
+    "No user data read or new Agent/model use",
+    "No automatic original file edit, OCR, attachment export or cross-version semantic mapping"
+  ]
+}

@@ -142,6 +142,7 @@ function strictDraft(value: unknown) {
         "lineInput",
         "contentId",
         "scope",
+        "anchor",
       ]);
       if (feedback.selection !== null)
         known(feedback.selection, ["side", "line", "endLine"]);

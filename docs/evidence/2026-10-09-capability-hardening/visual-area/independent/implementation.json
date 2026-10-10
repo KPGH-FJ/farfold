@@ -1,0 +1,733 @@
+{
+  "status": "completed_no_blocker_in_tested_scope",
+  "scope": "Independent controlled browser review of PDF/image area feedback and recovery preview, plus independent literal geometry and source review. Formal App/native/install/real-Agent acceptance remains root-owned and not performed here.",
+  "productionEditsByReviewer": [],
+  "results": [
+    {
+      "scope": "full_app_geometry",
+      "engine": "webkit",
+      "checksPassed": 147,
+      "caseCount": 13,
+      "sourceUnchanged": true,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-scrolled.json",
+        "sha256": "3fbc4b8f45628f3a1bcabc8e84f09d516f373563c2eb25bf76f7e3e0c457af7d"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-scrolled.raw.txt",
+        "sha256": "fd9e40e14ea65ae4fb836bddef32312aa48fbe74f896ae7917c8358137a4362d"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-scrolled.txt",
+        "sha256": "530b1ef1bd15fd3c658192c87438c67bd82a49ad9660610a63e5d05f7056544f"
+      }
+    },
+    {
+      "scope": "full_app_geometry",
+      "engine": "chromium",
+      "checksPassed": 147,
+      "caseCount": 13,
+      "sourceUnchanged": true,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-geometry-scrolled.json",
+        "sha256": "6c48e6d2fe77ac9699dbb7926059f7e2afe599b534a4f070e2fafd00a1559bf1"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-geometry-scrolled.raw.txt",
+        "sha256": "5cd79d6fab6cbc8fc8cfc0a656b75c0bd342b0e93400bd2efac93716357e4d75"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-geometry-scrolled.txt",
+        "sha256": "530b1ef1bd15fd3c658192c87438c67bd82a49ad9660610a63e5d05f7056544f"
+      }
+    },
+    {
+      "scope": "full_app_lifecycle",
+      "engine": "webkit",
+      "checksPassed": 30,
+      "caseCount": 2,
+      "sourceUnchanged": true,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-cold-open.json",
+        "sha256": "3d74d81cc50a7de3e6ebc511af5dddb681f5eed56b32c8af9c4fa57eaf70a18a"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-cold-open.raw.txt",
+        "sha256": "06bfd7323084a6add93841b3e8002f80460a3e2551f80b81296af280126dc3ed"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-cold-open.txt",
+        "sha256": "45f046446c63d36c5204ad836fe4706aab0871a207f52dd2cea1aba9c9e78e7c"
+      }
+    },
+    {
+      "scope": "full_app_lifecycle",
+      "engine": "chromium",
+      "checksPassed": 30,
+      "caseCount": 2,
+      "sourceUnchanged": true,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-lifecycle-final.json",
+        "sha256": "96a48da3d6343989dd419f92ac76ec25b6e7dae0629fd813b79420bf5ecf6e07"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-lifecycle-final.raw.txt",
+        "sha256": "394e7031f84899abd946c24df9b862fc1e2a7eadbdf2c5aa9c3857c6a031e17f"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-lifecycle-final.txt",
+        "sha256": "45f046446c63d36c5204ad836fe4706aab0871a207f52dd2cea1aba9c9e78e7c"
+      }
+    },
+    {
+      "scope": "restore_component_preview_only",
+      "engine": "webkit",
+      "checksPassed": 16,
+      "caseCount": 3,
+      "sourceUnchanged": true,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-restore.json",
+        "sha256": "0d613a4963841d017442980848b1eae4e1e6b5a96f0dd598f820be0972ddfc6e"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-restore.raw.txt",
+        "sha256": "6ed0477416e9e4df2f3282a1f13da2d1de82400c8da57fb655d768316a3ae745"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-restore.txt",
+        "sha256": "08b84859f51fa6b6025d59afc36d45c78f0a63448355e2b77d3796c2d085825f"
+      }
+    },
+    {
+      "scope": "restore_component_preview_only",
+      "engine": "chromium",
+      "checksPassed": 16,
+      "caseCount": 3,
+      "sourceUnchanged": true,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-restore.json",
+        "sha256": "d3a583c68204592cf2f723ebb285c6fd49030a6eda3fe915d4ba5f926ac12a46"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-restore.raw.txt",
+        "sha256": "4ad4cd4f371815131ff30085c16622ce25182ff1624ccd75f10eed97e2c9c609"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-restore.txt",
+        "sha256": "08b84859f51fa6b6025d59afc36d45c78f0a63448355e2b77d3796c2d085825f"
+      }
+    }
+  ],
+  "standaloneRenderer": {
+    "checkpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/renderer-checkpoint.json",
+      "sha256": "272eb097fa61f8854de343622ebbe9f350b38d808409cb4b6451bfb6b76657be"
+    },
+    "checksPerEngine": 38,
+    "boundary": "Actual production renderPdfPage/PDF worker and validateDraftImage/browser decode; distinct from full App and persisted feedback."
+  },
+  "effectiveCounterexamples": [
+    {
+      "name": "Known legacy feedback anchor excluded from restore outer allowlist",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/preparation-receipt.json",
+        "sha256": "81717b35204264d0d1c4d6f6c609dc3091b53bd9f52449b0a42ed4ad0be5dc35"
+      },
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/recovery-anchor-red.txt",
+        "sha256": "ba0ca4d67d273e91c7b1e7c6780beb41ae5277e8b00093b78762a4b92e6d1be5"
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/recovery-anchor-green.txt",
+        "sha256": "85f8caa81b55b8f80223982c1c127f9fa2cdb078499049e1d09689b11bd5d97f"
+      },
+      "result": "Same independent2tests:1fail1pass before owner one-field allowlist correction;2pass after. Strict common semantic parser remains active."
+    },
+    {
+      "name": "PDF measured hidden fit-content parent as zero",
+      "red": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-first.json",
+        "sha256": "5222f8f92908ef6791c7896d121e5632f1cb50262cecbb71f9daa208739bee89"
+      },
+      "green": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-pdf-width-fixed.json",
+        "sha256": "c2212d1393751ca7bb7720d2eff832340595c5600d1d4ad439083fc83d670af5"
+      },
+      "ownerLogs": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/pdf-stage-width-red.txt",
+          "sha256": "6ea13a4eea636bc167f90b945b23e83b9a18c948d523bb9ce606fcb695a8c083"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/pdf-stage-width-green.txt",
+          "sha256": "c9b8b3e2e738e84e7a82d5fc086edb4dbe552a85ee43e08a0931351fdc4f40bf"
+        }
+      ],
+      "result": "Owner repair independently passed same actual PDF pointer/coordinate smoke8 then both147-check matrices."
+    }
+  ],
+  "coverage": {
+    "geometry": "13 immutable assets;19 displayed pages/images per engine:8PDF pages with CropBox/rotations/UserUnit and11images (EXIF1..8,PNG,GIF,WebP). Real mouse transport with actual stage hit-tests; stored normalized box within explicit <=one CSS pixel transport tolerance. Exact numeric decimals tested separately. DPR1/2 contexts assert actualDPR.",
+    "lifecycle": "Numeric Enter selects then explicit second Enter confirms; exact4-decimal percent;5 invalid numeric forms; target replacement preserves opinion text; actual pane-size change retires candidate; page/hide/same-file new preview retirement; controlled cold reload preserves exact anchor with unverified label; take preserves prior composer and adds once. Invalid editing defers auto replacement; pending capture/hide/late reply do not retarget old opinion; newversion separate draft; automatic staging retains oldcanvas and locks interaction until replacement.",
+    "restore": {
+      "checkpoint": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/restore-ui-checkpoint.json",
+        "sha256": "811d2dc6b772f91916dad2f90eb6bd33070848abe2f3ff91af5a365783970eea"
+      },
+      "details": "Actual StorageRestore3modes per engine:original shared six-kind fixture selectable; zero-width PDF area and unknown image-area field refuse. Preview-only two controlled IPCs, no apply."
+    },
+    "noSend": "No unexpected/Agent/open/reveal IPC and no external network request in passing full App journeys; browser-only controlled settings stored in this owned context sessionStorage."
+  },
+  "oracle": {
+    "plan": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent-plan.json",
+      "sha256": "08124734b3d00355f5b170d42995e06e9470194d6a466b34ba108a581eb81345"
+    },
+    "literal": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/oracle.json",
+      "sha256": "51d6c23b5049fc09aaf2f9064a5ad076ece084bfaff82f056bbfb5d0e1011dd8"
+    },
+    "manifest": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/manifest.json",
+      "sha256": "2535534bd78ec1df8cd5f2b68c5f83be52610a3ba8cdedad7998439599f64d64"
+    },
+    "fixtures": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-1.jpg",
+        "sha256": "702b853293096f4d00383754b4fc769e22c7982af8741ed76af5562e3a0add1d"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-2.jpg",
+        "sha256": "2589f23671da05b5bb15b5a159ac4ca2237a4622abf437cd2c786372a661d1fc"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-3.jpg",
+        "sha256": "bcb53328b4eb2794a68d2d52d8768c5266a01c4ec1add3d827368b6290e1fda8"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-4.jpg",
+        "sha256": "0e5a48ecd770207b9e2f3fcf2d984e8eabd3b858900868604a7ec07a5acc5495"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-5.jpg",
+        "sha256": "a03da6e8463c8605f02a5b9c5d014cc96a862b553d0506c381063410c6381fb6"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-6.jpg",
+        "sha256": "4cbe91734e0c078f7e605a4c67bc232e61b5ed9e4f63a832523643d9be29d0df"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-7.jpg",
+        "sha256": "41cd3b8db4d1cd51c0e8ed2895ffe4941d540d2783516ae6b55a0893f0184fe0"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-exif-8.jpg",
+        "sha256": "921d687bde116f1c7b4c2f1a134d5fb3ceb2aeca739f866f028ccc1f41f7951d"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-static.gif",
+        "sha256": "a07a3172029873edf3ea00ef7d9978ec9b0b6d8d11f46ac108cebc18a2d4a95f"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric-static.webp",
+        "sha256": "b669d2c43b10e9d30a5da8a97caaf530a61750ca2e664db5ae3a58d9476f63d0"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/asymmetric.png",
+        "sha256": "b9b82240b234925acbc614d16fe58b611f7168f5afe45e8db1b855c2257dff65"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/crop-rotations-unit1.pdf",
+        "sha256": "56c0b7761bd91ce58c326c995b321e89934c2d50cdb1693d9057ebb8f413b060"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/crop-rotations-unit2.pdf",
+        "sha256": "bcc68eed69bb3b4d6d309ae8ce3b863a9a206000ff7e10b5d2ca064752ef31f3"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/generate.py",
+        "sha256": "33023dd173835ca4873bd6c96479a5c0c449c2babee09698d896fe414713b120"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/manifest.json",
+        "sha256": "2535534bd78ec1df8cd5f2b68c5f83be52610a3ba8cdedad7998439599f64d64"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/oracle.json",
+        "sha256": "51d6c23b5049fc09aaf2f9064a5ad076ece084bfaff82f056bbfb5d0e1011dd8"
+      }
+    ],
+    "boundary": "Original synthetic assets and literal geometry preserved. Poppler/Pillow independent reference and actual renderer layers remain distinct. Reference Poppler did not prove UserUnit physical scale; final actual canvas sizes are recorded. No production coordinate helper supplies expected rectangles."
+  },
+  "sourceReview": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/runtime-source-review.json",
+    "sha256": "232d13e492fe4e251cf3ef5e45d89df54c732ca0932e5a779ec55ffb5236866b"
+  },
+  "sourceCurrentCheck": {
+    "comparedTo": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-lifecycle-final.json",
+      "sha256": "96a48da3d6343989dd419f92ac76ec25b6e7dae0629fd813b79420bf5ecf6e07"
+    },
+    "scope": "Every src file from final browser after-map, not Rust or installed binary. Each passing run also records its own before/after source plus fixtures/harness. Earlier renderer source scope is separately documented.",
+    "count": 722,
+    "deltas": []
+  },
+  "retainedFailedRuns": [
+    {
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-first.json",
+        "sha256": "5222f8f92908ef6791c7896d121e5632f1cb50262cecbb71f9daa208739bee89"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-first.raw.txt",
+        "sha256": "0cc8f71ad5ac30fb9d6349b03fc297b692d9d1989879324a22b15996c1144760"
+      },
+      "classification": "product",
+      "explanation": "First actual full App PDF draw returned ready with 1x1 canvas. Added fit-content stage had zero width while hidden; renderer measured immediate parent. Owner changed measurement to stable viewport minus computed padding. Same PDF smoke8 and final geometry147 pass."
+    },
+    {
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-final.json",
+        "sha256": "8cc84d6ebd976b7efb31ac20ae7c9146c6ce25dd7b732ee976f220dcf022b2b7"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-final.raw.txt",
+        "sha256": "7edae0eae1f25a4081db45ed6eb568f0bf4789c5bbf3b46ca77179200a57ce88"
+      },
+      "classification": "driver",
+      "explanation": "Whole-canvas scrollIntoView did not bring lower literal marker inside clipped preview. Pointer end was outside preview/window. Corrected driver wheels target region into view and verifies both endpoints hit actual stage; no production change."
+    },
+    {
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-first.json",
+        "sha256": "127b96fd1bd36a51e9057c7b29a805830cb4581c2fca8c288be6f807185b3536"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-first.raw.txt",
+        "sha256": "127b96fd1bd36a51e9057c7b29a805830cb4581c2fca8c288be6f807185b3536"
+      },
+      "classification": "driver",
+      "explanation": "JSON string property-order equality incorrectly rejected semantically identical exact decimal anchor. Corrected to deep structural comparison."
+    },
+    {
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-key-order-fixed.json",
+        "sha256": "5d957c78633bafde8c76b0c4ca3830a30b3f4b025d7be740ce78a6b9fb0e8e6e"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-key-order-fixed.raw.txt",
+        "sha256": "a2e7b57ef1b59363384db2346b2dd8cab2863187201e9d7088f5ee294f09500e"
+      },
+      "classification": "driver",
+      "explanation": "Window resize changed layout without changing displayed canvas dimensions, so candidate correctly remained valid. No evidence of missed actual-box resize."
+    },
+    {
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-pane-resize.json",
+        "sha256": "30e64ba8a91eebb36f73b6e3d9b0566427cbdc884959eda86fc4cfc06373e16e"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-pane-resize.raw.txt",
+        "sha256": "01a0a7c326c93b571fc442e18189928ff7387e61502a76f7a4e6db603eb90368"
+      },
+      "classification": "driver",
+      "explanation": "At narrow responsive width the pane filled available width and ignored adjustable width; canvas remained intrinsic477px. Changed sequence to real separator ArrowRight at wide viewport, actual box shrink then retired candidate."
+    },
+    {
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-content-resize.json",
+        "sha256": "8d7185cb4211b63e8e6c6369dc05f7b857434559fc38e4c996ecbd979edb517f"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-content-resize.raw.txt",
+        "sha256": "12a96be0fcc0a0fdf8f5b86414626627506ade26213856c74b4f53fdf85efad5"
+      },
+      "classification": "driver",
+      "explanation": "Two legitimate hide buttons share accessible label. Scoped action to actual artifact-pane close control."
+    },
+    {
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-close-scoped.json",
+        "sha256": "12deae0de6487ad308e6693abc42b7c4b587bb0f876a344d745477b27f3579ef"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-close-scoped.raw.txt",
+        "sha256": "7f3f66663381c7f34f32a9a22b10757c740b7a1ecf1625fdd66134f6782e5a20"
+      },
+      "classification": "driver",
+      "explanation": "Restored opinion form was already open; unconditional modify button toggled it closed. Driver now checks actual visibility before opening."
+    },
+    {
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-cold-visible.json",
+        "sha256": "42e63e2f7127630f56457b55d96cff95f88cf2f80523c160b74962a7b5405c35"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-cold-visible.raw.txt",
+        "sha256": "8ef1767ebe00a1536c0c122e973ca2d64498a499251d154c0ace54c1cbb62a42"
+      },
+      "classification": "driver",
+      "explanation": "Attempted string patch did not match driver indentation; repeated same unconditional close. Preserved output, asserted replacement then reran; no product change."
+    },
+    {
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-first.json",
+        "sha256": "9ffb55ba10f923baa253dadd255407e9c5d2da8dfe19d27ad229b82c10e41c91"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-first.raw.txt",
+        "sha256": "958f6fae582644c566dfe4f395f1d716373d8b39552e3ba57b0506ac87bb7a70"
+      },
+      "classification": "evidence_scope",
+      "explanation": "38 actual pixel checks passed, but broad input collector saw unrelated non-imported strings.test.ts modification. Dedicated renderer checkpoint preserves exact delta and corrected39-input rerun."
+    }
+  ],
+  "formatting": {
+    "rawPairs": [
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-geometry-scrolled.json",
+          "sha256": "6c48e6d2fe77ac9699dbb7926059f7e2afe599b534a4f070e2fafd00a1559bf1"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-geometry-scrolled.raw.txt",
+          "sha256": "5cd79d6fab6cbc8fc8cfc0a656b75c0bd342b0e93400bd2efac93716357e4d75"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-lifecycle-final.json",
+          "sha256": "96a48da3d6343989dd419f92ac76ec25b6e7dae0629fd813b79420bf5ecf6e07"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-lifecycle-final.raw.txt",
+          "sha256": "394e7031f84899abd946c24df9b862fc1e2a7eadbdf2c5aa9c3857c6a031e17f"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-first.json",
+          "sha256": "9ffb55ba10f923baa253dadd255407e9c5d2da8dfe19d27ad229b82c10e41c91"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-first.raw.txt",
+          "sha256": "958f6fae582644c566dfe4f395f1d716373d8b39552e3ba57b0506ac87bb7a70"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-scoped.json",
+          "sha256": "1e855e4c647b564c1217158893c9e022c0ebc717daae01c87eb272346542cbd2"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-scoped.raw.txt",
+          "sha256": "e560d54786d5a2ee2af41b2e170663cfef3c1729d65c9a33a3cef2b7415519a9"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-restore.json",
+          "sha256": "d3a583c68204592cf2f723ebb285c6fd49030a6eda3fe915d4ba5f926ac12a46"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-restore.raw.txt",
+          "sha256": "4ad4cd4f371815131ff30085c16622ce25182ff1624ccd75f10eed97e2c9c609"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-final.json",
+          "sha256": "8cc84d6ebd976b7efb31ac20ae7c9146c6ce25dd7b732ee976f220dcf022b2b7"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-final.raw.txt",
+          "sha256": "7edae0eae1f25a4081db45ed6eb568f0bf4789c5bbf3b46ca77179200a57ce88"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-first.json",
+          "sha256": "5222f8f92908ef6791c7896d121e5632f1cb50262cecbb71f9daa208739bee89"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-first.raw.txt",
+          "sha256": "0cc8f71ad5ac30fb9d6349b03fc297b692d9d1989879324a22b15996c1144760"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-pdf-width-fixed.json",
+          "sha256": "c2212d1393751ca7bb7720d2eff832340595c5600d1d4ad439083fc83d670af5"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-pdf-width-fixed.raw.txt",
+          "sha256": "2ce18e3e374719c486984154c46501f0c480dbcfc1e4841f1e6b120fba4907be"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-scrolled.json",
+          "sha256": "3fbc4b8f45628f3a1bcabc8e84f09d516f373563c2eb25bf76f7e3e0c457af7d"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-scrolled.raw.txt",
+          "sha256": "fd9e40e14ea65ae4fb836bddef32312aa48fbe74f896ae7917c8358137a4362d"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-close-scoped.json",
+          "sha256": "12deae0de6487ad308e6693abc42b7c4b587bb0f876a344d745477b27f3579ef"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-close-scoped.raw.txt",
+          "sha256": "7f3f66663381c7f34f32a9a22b10757c740b7a1ecf1625fdd66134f6782e5a20"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-cold-open.json",
+          "sha256": "3d74d81cc50a7de3e6ebc511af5dddb681f5eed56b32c8af9c4fa57eaf70a18a"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-cold-open.raw.txt",
+          "sha256": "06bfd7323084a6add93841b3e8002f80460a3e2551f80b81296af280126dc3ed"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-cold-visible.json",
+          "sha256": "42e63e2f7127630f56457b55d96cff95f88cf2f80523c160b74962a7b5405c35"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-cold-visible.raw.txt",
+          "sha256": "8ef1767ebe00a1536c0c122e973ca2d64498a499251d154c0ace54c1cbb62a42"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-content-resize.json",
+          "sha256": "8d7185cb4211b63e8e6c6369dc05f7b857434559fc38e4c996ecbd979edb517f"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-content-resize.raw.txt",
+          "sha256": "12a96be0fcc0a0fdf8f5b86414626627506ade26213856c74b4f53fdf85efad5"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-first.json",
+          "sha256": "127b96fd1bd36a51e9057c7b29a805830cb4581c2fca8c288be6f807185b3536"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-first.raw.txt",
+          "sha256": "127b96fd1bd36a51e9057c7b29a805830cb4581c2fca8c288be6f807185b3536"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-key-order-fixed.json",
+          "sha256": "5d957c78633bafde8c76b0c4ca3830a30b3f4b025d7be740ce78a6b9fb0e8e6e"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-key-order-fixed.raw.txt",
+          "sha256": "a2e7b57ef1b59363384db2346b2dd8cab2863187201e9d7088f5ee294f09500e"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-pane-resize.json",
+          "sha256": "30e64ba8a91eebb36f73b6e3d9b0566427cbdc884959eda86fc4cfc06373e16e"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-pane-resize.raw.txt",
+          "sha256": "01a0a7c326c93b571fc442e18189928ff7387e61502a76f7a4e6db603eb90368"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-renderer-first.json",
+          "sha256": "29c2fb30be2372393cd8e037cc2279bc2f1fa6b5b099e218f24df2eaa77f7d59"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-renderer-first.raw.txt",
+          "sha256": "35fde65815dcb5529aa157ff9b1c1f1540587c19d19d526ccc749ba2bf9dc908"
+        },
+        "semanticEqual": true
+      },
+      {
+        "formatted": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-restore.json",
+          "sha256": "0d613a4963841d017442980848b1eae4e1e6b5a96f0dd598f820be0972ddfc6e"
+        },
+        "raw": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-restore.raw.txt",
+          "sha256": "6ed0477416e9e4df2f3282a1f13da2d1de82400c8da57fb655d768316a3ae745"
+        },
+        "semanticEqual": true
+      }
+    ],
+    "browserFormat": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser-format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    "rule": "Raw stdout and raw JSON bytes are retained. Formatted JSON semantic equality asserted. Earlier driver snapshots preserved as .raw.txt; no original failure overwritten."
+  },
+  "screenshotsActuallyViewed": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-first-crop-rotations-unit1.pdf-failure.png",
+      "sha256": "64b8f1837e5fa49713072deeea4a4012b9a8cbfa5efd1383c5d29811b365b655"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-scrolled-crop-rotations-unit1.pdf-2.png",
+      "sha256": "f65c80bf69615e4c667690f920fd265cc1f3cffd69115da85fc458cfd4d6d3f8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-scrolled-asymmetric-exif-7.jpg-1.png",
+      "sha256": "6d0be72b7aa8ddab4c7854be66c11eb4315674f45aa381c4075cfa3a013ffc32"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-geometry-scrolled-asymmetric-exif-7.jpg-1.png",
+      "sha256": "132ecc6f3f3284f2e9398901de8da7c5988efbea5d69fa33f26422c04a01d0aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-cold-open-numeric-cold.png",
+      "sha256": "81dea8d05debd26507164582148673b77cb89b53b90b667ee766815e8bf6a088"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-lifecycle-cold-open-version-and-pending.png",
+      "sha256": "f31d4b28db670b2a15f2911279d8d7a11c24f43d63f08414b9857f741f7b374c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-lifecycle-final-version-and-pending.png",
+      "sha256": "4b4f4726082dac5f2f74c0f2a29ab2a905ce43f3232f3db0754c24946638fded"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-restore-valid.png",
+      "sha256": "1c348abe96669b99809aa7f9d31101c496e5f142bce3ce070132b197edc7e066"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-restore-invalid.png",
+      "sha256": "27a598602489c1701324ac8dc9a886dd79580e63a5c099b4be4243b214b2f9d6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-renderer-first.png",
+      "sha256": "edbe4ed39987daec70568df6e691bced79104a4a3e02bbdab91f7e08a8726b7e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-scoped.png",
+      "sha256": "e626f1c9fa31566fb098110bf3582679b7d51b6b4d35876a8d16bb209c699c1a"
+    }
+  ],
+  "limits": [
+    "Not formal installed Tauri/WebKit/CSP, real Agent, user-data recovery, or OS file-version capture proof. IPC and settings boundaries are controlled; actual parsers/drawing/component factory flow are production.",
+    "Browser pointer edge tolerance accounts for actual transport quantization; pure numeric case proves exact millionths separately.",
+    "DPR1/2 are separate actual contexts, not live monitor/DPR transition. This final real-pointer matrix is forward drag; reversed/clipped/zero/scroll-interrupted pointer cases are covered by owner pure/component checks only, not claimed as independently executed browser journeys.",
+    "Single connected local source selection; no Windows actual app, touch/stylus, arbitrary malformed PDF corpus, all fonts or accessibility assistive-technology proof.",
+    "Cold reload uses real draft serializer/parser into owned browser sessionStorage; Rust backing protection/CAS/recovery evidence belongs to architecture. No daily database was damaged or opened.",
+    "Direct recovery component mount checks functional eligibility; no visual claim for full startup recovery shell."
+  ],
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/cleanup.json",
+    "sha256": "ce631d5e2efd4c89bbd000598b9e8b9932a6de1bf48e4795dfdc1448534137b5"
+  },
+  "harnessArtifacts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/fixture-initial.tsx.raw.txt",
+      "sha256": "b9127d936df5cc6915098ce88e7099981d786ad5cb92775c46944087baebc510"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/fixture.tsx",
+      "sha256": "bbaff7631f085f0bb6de5701e27d1c489ec4779e55a45a32fd94f624c7660527"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/index.html",
+      "sha256": "ca8a8cae1977982f6af345e455b44192252d149d716265fd734a4cb2b5e72ece"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/renderer.html",
+      "sha256": "d320ee7dd9a48687de20f95274ea928ee53640b846706851cc8399cbbe179916"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/renderer.ts",
+      "sha256": "8943c9115e1e5375741ba5d5564f1d56e970c620d26a13e08feffb8cb0c78112"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/restore.html",
+      "sha256": "eb27ea54b1e68fe23330fac49bf825d8df3932226f003e74471f6f727e7cdbe1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/restore.tsx",
+      "sha256": "b86ece982349540dbc69ea78d8b52c2d8f333261ce3cb9fecd8fe5f7d76e7225"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-geometry-before-scroll.mjs.raw.txt",
+      "sha256": "707bbd4e81a378be6878870f2f6b9d453a140ac285056d170a8085e8866b7ae2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-geometry-first.mjs.raw.txt",
+      "sha256": "382fe167ec406a35ae973dd7f8abcfc8f435a17f01c7753f6e94dabac9a03d2c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-geometry.mjs",
+      "sha256": "7c1642118fcb7f86c1fdce571763e117a07d083721e5bb204a9d6137dfca6fdf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-lifecycle-before-close-scope.mjs.raw.txt",
+      "sha256": "459231a1556bad9ae4a913704aa955e36b6a0a531d7b8335a8f46f0a690d8713"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-lifecycle-before-cold-visible.mjs.raw.txt",
+      "sha256": "a6756f8ac47affbaf9742f06bb92190a52f4806db00d02532be22f4f99638051"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-lifecycle-before-pane-resize.mjs.raw.txt",
+      "sha256": "83ebad3c4d01bc02525036826f50389db4d4e8f7245c492ffdf87ea9d2a6af8d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-lifecycle-before-wide-pane.mjs.raw.txt",
+      "sha256": "fa7ca14631ec22b80dfe50775697a692f3c43c9f74e49e96dc62704bdfc190af"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-lifecycle-first.mjs.raw.txt",
+      "sha256": "747a895934ac225070279965dc38ddd0f91e48120c8a9224208e8628e3c93d91"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-lifecycle.mjs",
+      "sha256": "f6c51a051227c5d8ff0e8645da4fadf429daef522f587cd18c1d56bc41b3a702"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-renderer-first.mjs.raw.txt",
+      "sha256": "bac9f77c9ba673f069e2be9a45a75ff523196f65af4e0938fc74c48ed75f2b43"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-renderer.mjs",
+      "sha256": "c793cb9a1b2b8010a47ca944b36e2078b452fbfeb1f67270f3ee727da0e96802"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-restore.mjs",
+      "sha256": "867071422d1809c805fae011211caeffa6f1aaaf7e473e700dc98445a123a5fa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/serve.mjs",
+      "sha256": "328748442d3cf09286780961ee66aac950aa19842629428a342186d9e26801df"
+    }
+  ],
+  "next": "Root final engineering integration/candidate/native acceptance. No further source edits or browser work pending in this independent slice."
+}

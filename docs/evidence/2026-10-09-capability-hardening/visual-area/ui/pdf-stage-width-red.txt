@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/VisualFilePreview.area.test.tsx (4 tests | 1 failed) 21ms
+   × measures the stable preview content width while the hidden canvas stage has no intrinsic width 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/VisualFilePreview.area.test.tsx > measures the stable preview content width while the hidden canvas stage has no intrinsic width
+AssertionError: expected 2 to be 1664 // Object.is equality
+
+- Expected
++ Received
+
+- 1664
++ 2
+
+ ❯ src/components/VisualFilePreview.area.test.tsx:226:37
+    224|   // The real region stage is fit-content, and its only canvas is hidd…
+    225|   // drawing succeeds. Its width is therefore zero before the first dr…
+    226|   expect(h.render.mock.calls[0][3]).toBe((864 - 16 - 16) * 2);
+       |                                     ^
+    227| });
+    228|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  10:27:35
+   Duration  215ms (transform 80ms, setup 0ms, import 122ms, tests 21ms, environment 0ms)
+

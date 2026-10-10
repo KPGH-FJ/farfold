@@ -334,3 +334,5 @@ DOCX 8c2f5e29 已安装（候选9/9、安装10/10、三份217,400记录一致）
 XLSX 任意矩形与 NEW-03 源码及受控验证阶段完成时，正式应用仍为8c2f。矩形准确范围、部分合并提示、隐藏确认及编辑保护共用既有意见机制；独立写出器原样本默认内容类型拒绝已修，原ZIP未改。[最终工程](../docs/evidence/2026-10-09-capability-hardening/workbook-range-checks-final/final-verification.json)323文件/3,811项及类型、打包、格式通过，1,171输入稳定；Rust按未变输入复用。DOCX阅读恢复双浏览器208断言、矩形全App各74与真实解析各404分别留证；其后安装结果见下段。
 
 当前正式应用已更新为 `2e976168` / 0.1.7，候选独立9/9、安装10/10，三份217,400条快照一致。[实机分项](../docs/evidence/2026-10-09-capability-hardening/workbook-range-candidate/installed-workbook-range.json)通过准确矩形、隐藏行列确认、部分合并、无效输入保护、手动重读/自动换版、旧意见及冷恢复；NEW-03同文件重开阅读位置复验通过。一次受限链接回显沿用既有配置，意见未发送，旧未发送内容保留，最终正常退出。第二工作表实际可见，旧证据误称隐藏已单列纠正；不扩大覆盖。下一步继续PDF/图片区域及NEW-04，随后P22真实返工和计划其他余项；P20/P21全项仍未完成。
+
+PDF/图片区域及NEW-04源码与受控验证已完成：[最终工程](../docs/evidence/2026-10-09-capability-hardening/visual-area-checks-complete/final-verification.json)1,201输入稳定，前端331文件/3,977项及类型、打包、格式通过；本轮Rust1,230项/6忽略按精确输入复用。[独立完整界面](../docs/evidence/2026-10-09-capability-hardening/visual-area/independent/implementation.json)两引擎各147几何、30生命周期、16恢复预览通过，独立渲染各38项另列；PDF测宽及父层重入反例已修。意见保留当前文件版本和显示方向范围，只明确确认后更新目标，加入原输入不发送。接续候选、正式安装与分项实机；NEW-04真实故障恢复入口未验，不为验证破坏日常数据。其他P21/P22/市场条目继续保持原条件。

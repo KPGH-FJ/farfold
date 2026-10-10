@@ -218,6 +218,24 @@ fn valid_dual_record_fixture_restores_once_and_preserves_other_settings_and_orig
         "../../../src/runtime/fixtures/storage-restore-v1.json"
     ))
     .unwrap();
+    // Shared TS/Rust retention contract only. Coordinate validation remains in
+    // parseDraftSnapshot/parseFeedbackAnchor before the recovery apply request.
+    let feedback = &fixture["unsentWork.v1"]["feedback"]["fixture-thread"];
+    assert_eq!(feedback.as_object().unwrap().len(), 6);
+    assert_eq!(
+        feedback["area.png"]["anchor"],
+        json!({
+            "kind":"image-area", "space":"display-oriented-v1",
+            "left":1, "top":200000, "right":999999, "bottom":800001
+        })
+    );
+    assert_eq!(
+        feedback["area.pdf"]["anchor"],
+        json!({
+            "kind":"pdf-area", "space":"display-oriented-v1", "page":2, "pageCount":3,
+            "left":100001, "top":2, "right":700000, "bottom":1000000
+        })
+    );
     for key in KEYS {
         candidate.set_setting(key, &fixture[key]).unwrap();
     }

@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "recordedAt": "2026-10-10T02:20:32.416583+00:00",
+  "scope": "P21 display-oriented PDF/image area feedback leaf; parent integration, browser and installed-product checks remain pending.",
+  "status": "leaf-source-frozen",
+  "owned": [
+    {
+      "path": "src/components/VisualFilePreview.tsx",
+      "sha256": "256de3190a4050f13462cf7f7197c959e10157de1f11271cfbe51ee7dece9bf2",
+      "lines": 368
+    },
+    {
+      "path": "src/components/VisualFilePreview.css",
+      "sha256": "d8577f691f6a607239b647f60894030ee1b70a8e86a17fb42b64597ba3bb1eb0",
+      "lines": 91
+    },
+    {
+      "path": "src/components/VisualAreaSelection.tsx",
+      "sha256": "17937afb5697fc32f78dc8102d2b8ed6d5b08d7294d4648f8a6cfa8a8a8616d3",
+      "lines": 624
+    },
+    {
+      "path": "src/runtime/visual_area_strings.ts",
+      "sha256": "db6d0159d9d537dace4d09b3585eb95dc1daaf00b8f6533851ff74224000722d",
+      "lines": 25
+    },
+    {
+      "path": "src/components/VisualFilePreview.area.test.tsx",
+      "sha256": "7bdca5f006a1174e996341b022e0a4af89141ac1a2dff4f626a368654e4816a9",
+      "lines": 207
+    },
+    {
+      "path": "src/components/VisualAreaSelection.test.tsx",
+      "sha256": "7d3e7ac50bdd59589a86b8d4c515c4ef5d7fbc8f52bdbcc6290d400d1448ad9d",
+      "lines": 565
+    }
+  ],
+  "implementation": [
+    "Frame registered only from actual successful canvas/image display, exact VisualPreview, draw owner, pixel dimensions and current page.",
+    "display-oriented-v1 millionth coordinates: pointer direction normalized and clipped; numeric input rejects reversed/empty rectangles. Input, candidate and explicit confirmation remain separate.",
+    "Invalid input holds transient editing owner; interactionBlocked is excluded from draw effect, retires source/frame, then re-registers the same actual pixels on unblock.",
+    "ResizeObserver/window resize/DPR changes revoke candidate and retain numeric input; drag stops on content rectangle movement; hidden/page/error/stale callbacks cannot restore eligibility.",
+    "Centralized strings and keyboard percentage inputs; submission focuses confirmation after layout, and only explicit confirmation reports an opinion target."
+  ],
+  "checks": {
+    "targeted": {
+      "files": 5,
+      "testsPassed": 52,
+      "log": "targeted-final.txt",
+      "command": "corepack pnpm exec vitest run src/components/VisualAreaSelection.test.tsx src/components/VisualFilePreview.area.test.tsx src/components/VisualFilePreview.test.tsx src/components/PreviewReadingPosition.test.tsx src/runtime/visual_preview.test.ts"
+    },
+    "typecheck": {
+      "exit": 0,
+      "log": "typecheck-final.txt"
+    },
+    "format": {
+      "exit": 0,
+      "log": "format-final.txt"
+    },
+    "redGreen": [
+      {
+        "red": "entry-red.txt",
+        "failed": 2,
+        "boundary": "missing region entry and blocked state",
+        "green": "first.txt"
+      },
+      {
+        "red": "focus-owner-red.txt",
+        "failed": 2,
+        "boundary": "cancel focus before entry remount; old page control acting on new draw",
+        "green": "focus-owner-green.txt"
+      },
+      {
+        "red": "geometry-owner-red.txt",
+        "failed": 2,
+        "boundary": "late old observer; geometry changed while blocked",
+        "green": "geometry-owner-green.txt"
+      },
+      {
+        "red": "read-display-red.txt",
+        "failed": 1,
+        "boundary": "leaf contract allowed new read prop with old display pixels; not a full-app reproduction",
+        "green": "read-display-green.txt"
+      }
+    ],
+    "intermediateTypeFailures": [
+      "typecheck-first.txt: parallel runtime test duplicate kind, subsequently fixed by peer.",
+      "typecheck-second.txt: image display constructor omitted newly required preview, fixed and covered by final typecheck."
+    ],
+    "parentPending": {
+      "path": "src/components/OpenedFileView.visual-area.test.tsx",
+      "tests": 14,
+      "result": "14 red at unconnected callbacks / staging blocked prop; not all subsequent assertions reached",
+      "log": "parent-red.txt"
+    }
+  },
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/entry-red.txt",
+      "sha256": "769819cb4e70e89267ca41d570294ab4ba5fdfc4b66ba183d6c6cba62d8765cb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/first.txt",
+      "sha256": "b178ab94e3e35e16ae569d9547252b7cff4c3027fc236115a91e7ff217683efe"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/focus-owner-red.txt",
+      "sha256": "3e0d038ed7e5d6e68bf6899b4f76f11f4be391aeb2d9a4fec8c0174cecc6e2a8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/focus-owner-green.txt",
+      "sha256": "a6243b0198dac22feb46805866886c7122fea133713ee2937726456b668433a4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/geometry-owner-red.txt",
+      "sha256": "2cfd443c845c54e8af07c5fa590b4368f0e72e9026cb6377c65c180a61cb96d7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/geometry-owner-green.txt",
+      "sha256": "f56fa156cdad5fa433523dad637ffaec2b89784dd73abe64336f3352d522870f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/read-display-red.txt",
+      "sha256": "7c840bee0cb50100b883f24ec80418cc7c8468d0c5bcb3854fab3eba425a843b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/read-display-green.txt",
+      "sha256": "cc481d5dda6e2b857be2098272d2eb893965b04e20dcfac49b50485de4adba5e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/strict-reentry.txt",
+      "sha256": "1b462913d37c25e3ed9384b22f7b8dcadb16e93c9f968c57f269ed61194d59a8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/typecheck-first.txt",
+      "sha256": "f340515bf0741c877b685aba987d0c71d76e5e063359018f65b9b775e147cef5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/typecheck-ui.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/typecheck-second.txt",
+      "sha256": "dd4b010153990ca3f27605bcae15cf2c45796ad4652fd4d704cd31e43f80eb28"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/targeted-final.txt",
+      "sha256": "b012ac1bcd2bb890123e10cf6b61867921f648712a8713226bffd5f684929f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/parent-red.txt",
+      "sha256": "b8d662f62a07690857e591b0901e6dd9632987e668fdf73f216df73c232df0b6"
+    }
+  ],
+  "limits": [
+    "Controlled hooks/DOM geometry/rendering substitutes with real coordinate and provenance factories; not actual browser pointer or pixel/decode evidence.",
+    "Independent fullApp WebKit/Chromium owned by verification, awaiting parent freeze.",
+    "No installed-product or real-Agent proof for this increment.",
+    "Historical coordinates describe display orientation, not PDF user-space or raw JPEG EXIF coordinates."
+  ]
+}

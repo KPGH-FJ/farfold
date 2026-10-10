@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "recordedAt": "2026-10-10T02:31:07.565245+00:00",
+  "scope": "Narrow PDF drawing-width repair after independently observed full-App WebKit 1x1 pixels.",
+  "cause": "VisualFilePreview measured canvas.parentElement.clientWidth. New selection stage uses fit-content and the loading canvas is hidden, so its width was zero; Math.max(1, ...) requested a one-pixel render.",
+  "change": "Measure the stable visual preview container through its own ref, subtract actual computed horizontal padding, retain the existing DPR cap. No coordinate, worker, timeout, cancellation or parent policy change.",
+  "changedSources": [
+    {
+      "path": "src/components/VisualFilePreview.tsx",
+      "sha256": "13f2b34344e514ed1999836a8ba032b0f657669a72d18a742e9ec0e59e1c6512"
+    },
+    {
+      "path": "src/components/VisualFilePreview.area.test.tsx",
+      "sha256": "f76ccfbd96f9c57565fd25b5944841cf4458fcada0c9e178fed8ca123d114e10"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/pdf-stage-width-red.txt",
+      "sha256": "6ea13a4eea636bc167f90b945b23e83b9a18c948d523bb9ce606fcb695a8c083"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/pdf-stage-width-green.txt",
+      "sha256": "c9b8b3e2e738e84e7a82d5fc086edb4dbe552a85ee43e08a0931351fdc4f40bf"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/pdf-stage-width-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-first.json",
+      "sha256": "5222f8f92908ef6791c7896d121e5632f1cb50262cecbb71f9daa208739bee89"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-first.raw.txt",
+      "sha256": "0cc8f71ad5ac30fb9d6349b03fc297b692d9d1989879324a22b15996c1144760"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-pdf-width-fixed.json",
+      "sha256": "c2212d1393751ca7bb7720d2eff832340595c5600d1d4ad439083fc83d670af5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-geometry-pdf-width-fixed.raw.txt",
+      "sha256": "2ce18e3e374719c486984154c46501f0c480dbcfc1e4841f1e6b120fba4907be"
+    }
+  ],
+  "checks": {
+    "unitRed": {
+      "passed": 3,
+      "failed": 1,
+      "actualWidth": 2,
+      "expectedWidth": 1664,
+      "dpr": 3,
+      "dprCap": 2
+    },
+    "relatedGreen": {
+      "files": 5,
+      "tests": 64,
+      "command": "corepack pnpm exec vitest run src/components/VisualFilePreview.area.test.tsx src/components/VisualFilePreview.test.tsx src/components/VisualAreaSelection.test.tsx src/components/PreviewReadingPosition.test.tsx src/components/OpenedFileView.visual-area.test.tsx"
+    },
+    "typecheck": {
+      "exit": 0
+    },
+    "format": "Two changed files passed targeted Prettier and git diff --check.",
+    "independentWebKit": {
+      "executedBy": "verification",
+      "rerunByThisAgent": false,
+      "originalPassed": false,
+      "fixedPassed": true,
+      "fixedAssertions": 8,
+      "sourceUnchanged": true,
+      "fixedPixelDimensions": {
+        "pixelWidth": 477,
+        "pixelHeight": 795
+      }
+    }
+  },
+  "boundaries": [
+    "Original leaf implementation.json/source hashes remain the earlier checkpoint and are not rewritten.",
+    "Parent contract tests and real browser pixels are separate proof levels.",
+    "The independent rerun is the original PDF smoke case only; full geometry and lifecycle matrix is in progress.",
+    "No formal installation or native app operation was performed for this repair."
+  ]
+}

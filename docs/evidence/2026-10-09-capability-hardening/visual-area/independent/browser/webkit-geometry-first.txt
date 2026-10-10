@@ -1,0 +1,1 @@
+{"passed":false,"sourceUnchanged":true,"cases":[{"file":"crop-rotations-unit1.pdf","checks":2,"failure":"Error: page/image 1 actual decoded marker at literal location"}]}

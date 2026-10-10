@@ -1,0 +1,53 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/VisualAreaSelection.test.tsx (13 tests | 2 failed) 41ms
+   × a queued resize callback from an obsolete frame cannot retire the current frame 4ms
+   × geometry changed while blocked requires explicit re-selection after unblocking 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/VisualAreaSelection.test.tsx > a queued resize callback from an obsolete frame cannot retire the current frame
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/VisualAreaSelection.test.tsx:434:58
+    432|   const currentSource=source();
+    433|   oldResize();render();
+    434|   expect(visualAreaFeedbackSourceIsValid(currentSource)).toBe(true);
+       |                                                          ^
+    435|   click(S.confirm);
+    436|   expect(props.onVisualTargetConfirm).toHaveBeenCalledOnce();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/VisualAreaSelection.test.tsx > geometry changed while blocked requires explicit re-selection after unblocking
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/VisualAreaSelection.test.tsx:443:44
+    441|   rect={...rect,width:200,height:100};
+    442|   props={...props,interactionBlocked:false};render();
+    443|   expect(button(S.confirm).props.disabled).toBe(true);
+       |                                            ^
+    444|   expect(render().find(n=>n.props["aria-label"]===S.left)?.props.value…
+    445|   choose();click(S.confirm);expect(props.onVisualTargetConfirm).toHave…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 11 passed (13)
+   Start at  10:10:27
+   Duration  183ms (transform 59ms, setup 0ms, import 79ms, tests 41ms, environment 0ms)
+

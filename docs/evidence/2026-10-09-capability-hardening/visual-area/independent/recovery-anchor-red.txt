@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ docs/evidence/2026-10-09-capability-hardening/visual-area/independent/recovery-anchor.test.ts (2 tests | 1 failed) 5ms
+   × offers the same valid existing PDF page opinion in recovery as in normal cold parsing, without publishing or IO 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/evidence/2026-10-09-capability-hardening/visual-area/independent/recovery-anchor.test.ts > offers the same valid existing PDF page opinion in recovery as in normal cold parsing, without publishing or IO
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ docs/evidence/2026-10-09-capability-hardening/visual-area/independent/recovery-anchor.test.ts:53:28
+     51|   expect(composerDrafts.read("new")).toBe(current);
+     52|   expect(calls.invoke).not.toHaveBeenCalled();
+     53|   expect(entries[0].valid).toBe(true);
+       |                            ^
+     54| });
+     55| it("rejects a malformed anchored snapshot whole and keeps its raw byte…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  10:01:36
+   Duration  161ms (transform 70ms, setup 0ms, import 91ms, tests 5ms, environment 0ms)
+

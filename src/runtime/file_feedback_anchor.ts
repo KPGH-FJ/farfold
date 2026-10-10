@@ -1,5 +1,9 @@
 import { MAX_PDF_PAGES } from "./visual_preview";
 import { isDocxSourcePosition } from "./docx_source_position";
+import {
+  validVisualAreaRect,
+  type VisualAreaRect,
+} from "./visual_area_coordinates";
 
 export type PdfPageAnchor = {
   kind: "pdf-page";
@@ -35,13 +39,53 @@ export type DocxBlockAnchor = {
   blockKind: "paragraph" | "table";
 };
 
+/** Historical displayed coordinates; never original PDF/JPEG internal axes. */
+export type ImageAreaAnchor = VisualAreaRect & {
+  kind: "image-area";
+  space: "display-oriented-v1";
+};
+export type PdfAreaAnchor = VisualAreaRect & {
+  kind: "pdf-area";
+  space: "display-oriented-v1";
+  page: number;
+  pageCount: number;
+};
+
 export type FileFeedbackAnchor =
-  PdfPageAnchor | TextRangeAnchor | XlsxRangeAnchor | DocxBlockAnchor;
+  | PdfPageAnchor
+  | TextRangeAnchor
+  | XlsxRangeAnchor
+  | DocxBlockAnchor
+  | ImageAreaAnchor
+  | PdfAreaAnchor;
 
 function exactKeys(value: object, keys: readonly string[]): boolean {
   const actual = Object.keys(value);
   return (
     actual.length === keys.length && actual.every((key) => keys.includes(key))
+  );
+}
+
+export function validVisualAreaAnchor(
+  value: unknown,
+): value is ImageAreaAnchor | PdfAreaAnchor {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const a = value as ImageAreaAnchor | PdfAreaAnchor;
+  const keys = ["kind", "space", "left", "top", "right", "bottom"];
+  return (
+    (a.kind === "image-area" || a.kind === "pdf-area") &&
+    exactKeys(
+      a,
+      a.kind === "pdf-area" ? [...keys, "page", "pageCount"] : keys,
+    ) &&
+    a.space === "display-oriented-v1" &&
+    validVisualAreaRect({
+      left: a.left,
+      top: a.top,
+      right: a.right,
+      bottom: a.bottom,
+    }) &&
+    (a.kind === "image-area" || validPdfPage(a.page, a.pageCount))
   );
 }
 
@@ -163,6 +207,7 @@ export function parseFeedbackAnchor(
   if (validXlsxRange(value)) return { ...value };
   if (validDocxBlock(value))
     return { ...value, elementPath: [...value.elementPath] };
+  if (validVisualAreaAnchor(value)) return { ...value };
   if (
     !exactKeys(anchor, ["kind", "page", "pageCount"]) ||
     anchor.kind !== "pdf-page" ||

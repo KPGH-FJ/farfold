@@ -1,0 +1,1 @@
+{"passed":false,"sourceUnchanged":true,"cases":[{"name":"numeric-cold","checks":10,"failure":"TimeoutError: page.waitForFunction: Timeout 12000ms exceeded."}]}

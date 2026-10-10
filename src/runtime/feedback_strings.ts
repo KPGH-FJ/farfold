@@ -2,7 +2,13 @@ import type { SavedFileFeedback } from "./drafts";
 import { feedbackDiskVersion } from "./file_feedback_anchor";
 import { VISUAL_FEEDBACK_STRINGS as V } from "./visual_feedback_strings";
 import { cellAddress } from "./workbook_view";
-import type { DocxBlockAnchor, XlsxRangeAnchor } from "./file_feedback_anchor";
+import type {
+  DocxBlockAnchor,
+  XlsxRangeAnchor,
+  ImageAreaAnchor,
+  PdfAreaAnchor,
+} from "./file_feedback_anchor";
+import { formatVisualAreaPercent } from "./visual_area_coordinates";
 
 export const FEEDBACK_STRINGS = {
   saved: (count: number) => `未发送的文件意见（${count}）`,
@@ -29,6 +35,8 @@ export const FEEDBACK_STRINGS = {
   },
   documentBlock: (anchor: DocxBlockAnchor) =>
     `${anchor.blockKind === "table" ? "整个表格" : "整个段落"}，文档内部文件 ${JSON.stringify(anchor.part)}，元素位置 ${JSON.stringify(anchor.elementPath)}（每层从 0 起），位置未重新核对`,
+  visualArea: (anchor: ImageAreaAnchor | PdfAreaAnchor) =>
+    `${anchor.kind === "pdf-area" ? `第 ${anchor.page} / ${anchor.pageCount} 页，` : ""}以当时显示画面左上角为起点，左 ${formatVisualAreaPercent(anchor.left)}%、上 ${formatVisualAreaPercent(anchor.top)}%、右 ${formatVisualAreaPercent(anchor.right)}%、下 ${formatVisualAreaPercent(anchor.bottom)}%（按显示方向），位置未重新核对`,
 } as const;
 
 export function fileFeedbackText(entry: SavedFileFeedback): string {
@@ -37,32 +45,36 @@ export function fileFeedbackText(entry: SavedFileFeedback): string {
     ? `${entry.selection.line}${entry.selection.endLine && entry.selection.endLine !== entry.selection.line ? `–${entry.selection.endLine}` : ""}`
     : "";
   const location =
-    entry.anchor?.kind === "text-range"
-      ? FEEDBACK_STRINGS.textRange(
-          entry.anchor.startLine,
-          entry.anchor.endLine,
-          entry.anchor.byteStart,
-          entry.anchor.byteEnd,
-        )
-      : entry.anchor?.kind === "xlsx-range"
-        ? FEEDBACK_STRINGS.workbookRange(entry.anchor)
-        : entry.anchor?.kind === "docx-block"
-          ? FEEDBACK_STRINGS.documentBlock(entry.anchor)
-          : entry.anchor?.kind === "pdf-page"
-            ? `第 ${entry.anchor.page} / ${entry.anchor.pageCount} 页`
-            : entry.selection
-              ? entry.scope === "fragment"
-                ? `${side}片段第 ${lines} 行`
-                : entry.scope === "file"
-                  ? `${side}第 ${lines} 行`
-                  : `当时标记的第 ${lines} 行，位置未重新核对`
-              : entry.lineInput?.text.trim()
-                ? `${entry.lineInput.side === "before" ? "修改前" : "修改后"}${entry.scope === "fragment" ? "片段" : ""}行位置“${entry.lineInput.text.trim()}”（用户填写，尚未核对）`
-                : "";
+    entry.anchor?.kind === "image-area" || entry.anchor?.kind === "pdf-area"
+      ? FEEDBACK_STRINGS.visualArea(entry.anchor)
+      : entry.anchor?.kind === "text-range"
+        ? FEEDBACK_STRINGS.textRange(
+            entry.anchor.startLine,
+            entry.anchor.endLine,
+            entry.anchor.byteStart,
+            entry.anchor.byteEnd,
+          )
+        : entry.anchor?.kind === "xlsx-range"
+          ? FEEDBACK_STRINGS.workbookRange(entry.anchor)
+          : entry.anchor?.kind === "docx-block"
+            ? FEEDBACK_STRINGS.documentBlock(entry.anchor)
+            : entry.anchor?.kind === "pdf-page"
+              ? `第 ${entry.anchor.page} / ${entry.anchor.pageCount} 页`
+              : entry.selection
+                ? entry.scope === "fragment"
+                  ? `${side}片段第 ${lines} 行`
+                  : entry.scope === "file"
+                    ? `${side}第 ${lines} 行`
+                    : `当时标记的第 ${lines} 行，位置未重新核对`
+                : entry.lineInput?.text.trim()
+                  ? `${entry.lineInput.side === "before" ? "修改前" : "修改后"}${entry.scope === "fragment" ? "片段" : ""}行位置“${entry.lineInput.text.trim()}”（用户填写，尚未核对）`
+                  : "";
   const disk = feedbackDiskVersion(entry.path, entry.contentId);
   const exactOpinion =
     entry.anchor?.kind === "text-range" ||
     entry.anchor?.kind === "xlsx-range" ||
-    entry.anchor?.kind === "docx-block";
+    entry.anchor?.kind === "docx-block" ||
+    entry.anchor?.kind === "image-area" ||
+    entry.anchor?.kind === "pdf-area";
   return `关于 ${exactOpinion ? JSON.stringify(entry.path) : entry.path}（当时查看的内容${location ? `，${location}` : ""}）：\n${disk ? `${V.version(disk.sha256)}\n` : ""}${exactOpinion ? entry.text : entry.text.trim()}${disk ? `\n\n${V.verifyVersion}` : ""}`;
 }

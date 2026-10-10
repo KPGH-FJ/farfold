@@ -1,0 +1,71 @@
+{
+  "updatedAtUtc": "2026-10-10T02:43:01.074720+00:00",
+  "goal": "Complete the active market-readiness plan; global completion remains false.",
+  "head": "be4965d19f8563ba33ddba1c349c2f8dc897718b",
+  "formalApp": {
+    "sourceCommit": "2e97616870ec35d385b8ae1721d133efc89faf56",
+    "version": "0.1.7",
+    "state": "normally closed; native workbook-range checks committed in be4965d1; no visual-area app build/install yet"
+  },
+  "implemented": [
+    "P21 exact display-oriented PDF/image region target, keyboard percentages/pointer selection, current actual draw/source ownership and explicit confirmation.",
+    "Transient parent target ownership extraction, invalid editing/refresh retention and final reentry gate.",
+    "NEW04 restore preview allows anchor field but keeps semantic strict decoder.",
+    "Actual WebKit one-pixel PDF caused by hidden fit-content wrapper fixed by measuring stable content pane."
+  ],
+  "checks": {
+    "first": "331 files/3976 frontend plus type/build/Rust checks passed, but one frontend test changed during run and three formatting failures; original result allPassed false retained.",
+    "final": "1201 stable inputs; 331 files/3977 frontend, type/build passed. Rust 1230 passed/6 ignored from first run with exact unchanged Rust/shared/config inputs. Only current browser JSON formatting remains; full App lifecycle still running.",
+    "complete": "Final seven-check aggregate passed at 1201 stable inputs. 331 files/3977 frontend plus type/build/full format. Rust1230 passed/6 ignored retains exact current-slice origin.",
+    "browser": "Both engines:147 geometry,30 lifecycle,16 restore-preview; independent renderer38 separately. Actual one-pixel PDF defect fixed; driver failures and scope limits preserved."
+  },
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks/final-verification.json",
+      "sha256": "987ca6cf856206498d12db4810910580daec713aad45579bb6bd80709acfe8ef"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-final/final-verification.json",
+      "sha256": "b6b201347e8e4bce14b50f46dbe6e4625df0bc6c98aaf2e08a14dfe194a46565"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/parent/implementation.json",
+      "sha256": "2ae80a9a48e17bcfc4904e3d580329446380c2ee12c018eca7c3c8c7e6f4baca"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/ui/pdf-stage-width-fix.json",
+      "sha256": "7a78c16a348d521f9ef44e9ff9e400da181153a62609babde753b755941a836a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/architecture-source-review.json",
+      "sha256": "e562f707d68cc03e01336803cfa2e13b293e37b2537512aa67c8b1e39d2c895a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area-checks-complete/final-verification.json",
+      "sha256": "80e7466614e121a3099c268df302f4e2f335b55fe4981399ca05717dbe9ceb15"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/implementation.json",
+      "sha256": "b6fd23d88470d1f8a7c7e305be0be4f6cc834009dfffdf2ea773038482f895df"
+    }
+  ],
+  "privatePreparation": {
+    "directory": "output/2026-10-10-visual-area-install",
+    "metadataBackup": "copy-first integrity verified; original database never opened",
+    "beforeManifestEntries": 217400,
+    "beforeManifestSha256": "0e07a6501b63f862c8cd79bca3c2cf3937a892474e663b4bbca387478338fa38",
+    "nativeFixtureDirectory": "/private/tmp/farfold-visual-area-_eo3oy6p",
+    "nativeFixtures": "three owned copies at v1; switch helper guards directory identity, owner and exact known hashes"
+  },
+  "next": [
+    "Independent final integration receipt; dependency-closed source commit.",
+    "Candidate build and independent verification; preinstall snapshot, sole-app replacement and after-data review.",
+    "Native area feedback checks and old draft retention; normal exit.",
+    "Continue P22 bounded real rework and P19 reported-file aggregation; global market plan remains incomplete."
+  ],
+  "boundaries": [
+    "No complete P21/P22/market or 29-Agent eight-standard claim.",
+    "NEW04 native startup-recovery UI remains untested; do not corrupt real user data to create the entry.",
+    "Two Oct8 dirty markdown files remain protected; no push."
+  ]
+}

@@ -23,3 +23,69 @@
   gap: 8px;
   font-size: 12px;
 }
+.visual-file-preview {
+  min-height: 0;
+  overflow: auto;
+}
+.visual-area-controls {
+  margin-bottom: 12px;
+}
+.visual-area-editor {
+  display: grid;
+  gap: 10px;
+  font-size: 12px;
+}
+.visual-area-editor p {
+  margin: 0;
+}
+.visual-area-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.visual-area-fields label {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.visual-area-fields input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.visual-area-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.visual-area-stage {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  border: 0;
+  line-height: 0;
+}
+.visual-area-stage > canvas,
+.visual-area-stage > img {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  object-fit: fill;
+}
+.visual-area-stage.is-selecting {
+  cursor: crosshair;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.visual-area-outline {
+  position: absolute;
+  pointer-events: none;
+  box-sizing: border-box;
+  border: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 13%, transparent);
+  box-shadow: 0 0 0 1px var(--on-accent);
+}

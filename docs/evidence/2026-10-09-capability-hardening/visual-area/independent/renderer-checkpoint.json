@@ -1,0 +1,133 @@
+{
+  "scope": "Independent dedicated browser rendering proof; actual production PDF worker/renderPdfPage and validateDraftImage/browser image decoder. No App, Tauri IPC, persisted area draft, installed binary or Agent.",
+  "status": "passed_for_rendering_scope",
+  "inputs": {
+    "fixtures": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/manifest.json",
+      "sha256": "2535534bd78ec1df8cd5f2b68c5f83be52610a3ba8cdedad7998439599f64d64"
+    },
+    "oracle": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/oracle.json",
+      "sha256": "51d6c23b5049fc09aaf2f9064a5ad076ece084bfaff82f056bbfb5d0e1011dd8"
+    },
+    "images": 13,
+    "pdfPages": 8,
+    "imageDecodes": 11
+  },
+  "results": [
+    {
+      "engine": "webkit",
+      "checks": 38,
+      "passed": true,
+      "sourceUnchanged": true,
+      "inputCount": 446,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-renderer-first.json",
+        "sha256": "29c2fb30be2372393cd8e037cc2279bc2f1fa6b5b099e218f24df2eaa77f7d59"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-renderer-first.raw.txt",
+        "sha256": "35fde65815dcb5529aa157ff9b1c1f1540587c19d19d526ccc749ba2bf9dc908"
+      }
+    },
+    {
+      "engine": "chromium",
+      "checks": 38,
+      "passed": true,
+      "sourceUnchanged": true,
+      "inputCount": 39,
+      "result": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-scoped.json",
+        "sha256": "1e855e4c647b564c1217158893c9e022c0ebc717daae01c87eb272346542cbd2"
+      },
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-scoped.raw.txt",
+        "sha256": "e560d54786d5a2ee2af41b2e170663cfef3c1729d65c9a33a3cef2b7415519a9"
+      }
+    }
+  ],
+  "oracle": "Literal source-PDF CropBox/clockwise rotation and JPEG EXIF edge transforms, independent of product coordinate helper. Actual decoded magenta marker bounds measured from canvas pixels; <=1.01 pixel tolerance for edge rasterization. Ready page identity and all oriented raster dimensions checked separately.",
+  "coverage": [
+    "PDF CropBox [40,70,340,570], page rotations 0/90/180/270, UserUnit 1 and 2",
+    "JPEG EXIF tags 1 through 8; static PNG/GIF/WebP",
+    "No unexpected browser errors or external requests in passing runs"
+  ],
+  "retainedFirstChromium": {
+    "result": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-first.json",
+      "sha256": "9ffb55ba10f923baa253dadd255407e9c5d2da8dfe19d27ad229b82c10e41c91"
+    },
+    "raw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-first.raw.txt",
+      "sha256": "958f6fae582644c566dfe4f395f1d716373d8b39552e3ba57b0506ac87bb7a70"
+    },
+    "actualPixelChecksPassed": 38,
+    "overallPassed": false,
+    "cause": "Source collector included all runtime test files; only a non-imported test file changed during root work. This is not a rendering failure or a stable whole-runtime checkpoint.",
+    "delta": [
+      {
+        "path": "src/runtime/strings.test.ts",
+        "before": "3b2107053394c312be958955eff6c5786597c59399bb5e93108431d9f363b07a",
+        "after": "208ec98796e908a05b1e6a0f39572398019b031922e0cdd04b0381c7d40fc859"
+      }
+    ],
+    "correction": "Preserved runner bytes; collect production local JavaScript imports and Worker URLs after stripping type-only imports, plus package lock/config/PDF.js implementation/fixtures and dedicated harness. One Chromium rerun obtained stable 39-input proof.",
+    "originalRunner": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-renderer-first.mjs.raw.txt",
+      "sha256": "bac9f77c9ba673f069e2be9a45a75ff523196f65af4e0938fc74c48ed75f2b43"
+    },
+    "currentRunner": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/run-renderer.mjs",
+      "sha256": "c793cb9a1b2b8010a47ca944b36e2078b452fbfeb1f67270f3ee727da0e96802"
+    }
+  },
+  "screenshotsActuallyViewed": [
+    {
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-renderer-first.png",
+        "sha256": "edbe4ed39987daec70568df6e691bced79104a4a3e02bbdab91f7e08a8726b7e"
+      },
+      "meaning": "Final static WebP surface only; confirms the visible colored marker/corners, not all nineteen render outputs or full App layout."
+    },
+    {
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-scoped.png",
+        "sha256": "e626f1c9fa31566fb098110bf3582679b7d51b6b4d35876a8d16bb209c699c1a"
+      },
+      "meaning": "Final static WebP surface only; confirms the visible colored marker/corners, not all nineteen render outputs or full App layout."
+    }
+  ],
+  "limitations": [
+    "Standalone browser renderer proof does not verify area pointer/numeric interaction, feedback ownership, cold persistence, full App layout, Tauri WebKit/CSP or native install. These remain separate.",
+    "Both dedicated page runs use the browser default DPR; full App DPR 1/2 and interaction cases are prepared but not run in this checkpoint.",
+    "Prior independent Poppler reference did not demonstrate UserUnit physical scaling. This production renderer checkpoint records the actual canvas dimensions per page without widening that Poppler claim.",
+    "Synthetic font-free PDFs do not request external fonts/cmaps; packaged implementation+lock are hashed but not all unused font assets.",
+    "Original JSON raw bytes preserved; formatted JSONs were verified semantically identical."
+  ],
+  "artifacts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/renderer.ts",
+      "sha256": "8943c9115e1e5375741ba5d5564f1d56e970c620d26a13e08feffb8cb0c78112"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/renderer.html",
+      "sha256": "d320ee7dd9a48687de20f95274ea928ee53640b846706851cc8399cbbe179916"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/capture-data.json",
+      "sha256": "ac6abcd898ae3e66f316d1364ca35fc82f48d3a29368fe1668c22b007def19ae"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/webkit-renderer-first.txt",
+      "sha256": "e6f0b0f5235daecabfdc45e98576d1421cbf6f50361ffc1148dc6552c537ccb0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-first.txt",
+      "sha256": "9b68272e63c50c6450254193f1e5b4027bc9073e8dd62fbfc4a10b043b3305d1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/chromium-renderer-scoped.txt",
+      "sha256": "e6f0b0f5235daecabfdc45e98576d1421cbf6f50361ffc1148dc6552c537ccb0"
+    }
+  ]
+}

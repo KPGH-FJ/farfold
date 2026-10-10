@@ -1,0 +1,51 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/VisualFilePreview.area.test.tsx (3 tests | 1 failed) 19ms
+   × an old page control cannot act on a later completed draw of the same file 8ms
+ ❯ src/components/VisualAreaSelection.test.tsx (11 tests | 1 failed) 37ms
+   × cancel clears only the candidate and returns focus to this frame's entry 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/VisualAreaSelection.test.tsx > cancel clears only the candidate and returns focus to this frame's entry
+AssertionError: expected { current: null } to be { current: { focus: [Function Mock] } } // Object.is equality
+
+- Expected
++ Received
+
+  {
+-   "current": {
+-     "focus": [Function Mock],
+-   },
++   "current": null,
+  }
+
+ ❯ src/components/VisualAreaSelection.test.tsx:407:19
+    405|     expect.objectContaining({ editing: false }),
+    406|   );
+    407|   expect(focused).toBe(button(S.open).props.ref);
+       |                   ^
+    408| });
+    409| it("a retire callback that changes ownership cannot make the old input…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/VisualFilePreview.area.test.tsx > an old page control cannot act on a later completed draw of the same file
+AssertionError: expected "vi.fn()" to be called 3 times, but got 4 times
+ ❯ src/components/VisualFilePreview.area.test.tsx:184:20
+    182|   expect(h.render).toHaveBeenCalledTimes(3);
+    183|   firstNext();render();await drain();
+    184|   expect(h.render).toHaveBeenCalledTimes(3);
+       |                    ^
+    185|   expect(render().html).toContain("第 3 / 5 页");
+    186| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 12 passed (14)
+   Start at  10:09:20
+   Duration  180ms (transform 120ms, setup 0ms, import 170ms, tests 56ms, environment 0ms)
+

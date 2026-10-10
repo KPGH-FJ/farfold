@@ -1,0 +1,104 @@
+{
+  "kind": "new independently authored geometry fixture material; not a renderer test receipt",
+  "license": "Original synthetic shapes and colors created for Farfold testing; no third-party document, image or font material.",
+  "writers": {
+    "reportlab": "4.4.9",
+    "pypdf": "6.10.0",
+    "Pillow": "12.3.0"
+  },
+  "pdf": {
+    "mediaBox": [0, 0, 420, 640],
+    "cropBox": [40, 70, 340, 570],
+    "rotations": [0, 90, 180, 270],
+    "userUnits": [1, 2],
+    "featureRawRect": [70, 370, 160, 470],
+    "rawOrigin": "bottom-left; x right, y up",
+    "cornerOrderTopLeftTopRightBottomLeftBottomRight": [
+      "red",
+      "green",
+      "blue",
+      "yellow"
+    ]
+  },
+  "raster": {
+    "rawSize": [320, 200],
+    "featureRawEdgeRect": [32, 40, 128, 100],
+    "rawOrigin": "top-left; x right, y down",
+    "exifTag": 274,
+    "orientations": [1, 2, 3, 4, 5, 6, 7, 8],
+    "cornerOrderTopLeftTopRightBottomLeftBottomRight": [
+      "red",
+      "green",
+      "blue",
+      "yellow"
+    ]
+  },
+  "expectations": "Literal expected millionth boxes are frozen separately in visual-area/independent-plan.json. Generator does not derive expected coordinates from rendered output.",
+  "files": [
+    {
+      "path": "asymmetric-exif-1.jpg",
+      "bytes": 4198,
+      "sha256": "702b853293096f4d00383754b4fc769e22c7982af8741ed76af5562e3a0add1d"
+    },
+    {
+      "path": "asymmetric-exif-2.jpg",
+      "bytes": 4198,
+      "sha256": "2589f23671da05b5bb15b5a159ac4ca2237a4622abf437cd2c786372a661d1fc"
+    },
+    {
+      "path": "asymmetric-exif-3.jpg",
+      "bytes": 4198,
+      "sha256": "bcb53328b4eb2794a68d2d52d8768c5266a01c4ec1add3d827368b6290e1fda8"
+    },
+    {
+      "path": "asymmetric-exif-4.jpg",
+      "bytes": 4198,
+      "sha256": "0e5a48ecd770207b9e2f3fcf2d984e8eabd3b858900868604a7ec07a5acc5495"
+    },
+    {
+      "path": "asymmetric-exif-5.jpg",
+      "bytes": 4198,
+      "sha256": "a03da6e8463c8605f02a5b9c5d014cc96a862b553d0506c381063410c6381fb6"
+    },
+    {
+      "path": "asymmetric-exif-6.jpg",
+      "bytes": 4198,
+      "sha256": "4cbe91734e0c078f7e605a4c67bc232e61b5ed9e4f63a832523643d9be29d0df"
+    },
+    {
+      "path": "asymmetric-exif-7.jpg",
+      "bytes": 4198,
+      "sha256": "41cd3b8db4d1cd51c0e8ed2895ffe4941d540d2783516ae6b55a0893f0184fe0"
+    },
+    {
+      "path": "asymmetric-exif-8.jpg",
+      "bytes": 4198,
+      "sha256": "921d687bde116f1c7b4c2f1a134d5fb3ceb2aeca739f866f028ccc1f41f7951d"
+    },
+    {
+      "path": "asymmetric-static.gif",
+      "bytes": 907,
+      "sha256": "a07a3172029873edf3ea00ef7d9978ec9b0b6d8d11f46ac108cebc18a2d4a95f"
+    },
+    {
+      "path": "asymmetric-static.webp",
+      "bytes": 116,
+      "sha256": "b669d2c43b10e9d30a5da8a97caaf530a61750ca2e664db5ae3a58d9476f63d0"
+    },
+    {
+      "path": "asymmetric.png",
+      "bytes": 732,
+      "sha256": "b9b82240b234925acbc614d16fe58b611f7168f5afe45e8db1b855c2257dff65"
+    },
+    {
+      "path": "crop-rotations-unit1.pdf",
+      "bytes": 2803,
+      "sha256": "56c0b7761bd91ce58c326c995b321e89934c2d50cdb1693d9057ebb8f413b060"
+    },
+    {
+      "path": "crop-rotations-unit2.pdf",
+      "bytes": 2803,
+      "sha256": "bcc68eed69bb3b4d6d309ae8ce3b863a9a206000ff7e10b5d2ca064752ef31f3"
+    }
+  ]
+}

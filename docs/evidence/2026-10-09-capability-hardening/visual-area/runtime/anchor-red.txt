@@ -1,0 +1,56 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/file_feedback_anchor.visual.test.ts (34 tests | 4 failed) 8ms
+   × restores exact historical displayed area without live proof: {"kind":"image-area","space":"display-oriented-v1","left":0,"top":1,"right":999999,"bottom":1000000} 2ms
+   × restores exact historical displayed area without live proof: {"kind":"pdf-area","space":"display-oriented-v1","left":0,"top":1,"right":999999,"bottom":1000000,"page":2,"pageCount":3} 0ms
+   × formats fixed-point displayed coordinates, version and exact opinion: {"kind":"image-area","space":"display-oriented-v1","left":0,"top":1,"right":999999,"bottom":1000000} 2ms
+   × formats fixed-point displayed coordinates, version and exact opinion: {"kind":"pdf-area","space":"display-oriented-v1","left":0,"top":1,"right":999999,"bottom":1000000,"page":2,"pageCount":3} 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/file_feedback_anchor.visual.test.ts > restores exact historical displayed area without live proof: {"kind":"image-area","space":"display-oriented-v1","left":0,"top":1,"right":999999,"bottom":1000000}
+ FAIL  src/runtime/file_feedback_anchor.visual.test.ts > restores exact historical displayed area without live proof: {"kind":"pdf-area","space":"display-oriented-v1","left":0,"top":1,"right":999999,"bottom":1000000,"page":2,"pageCount":3}
+Error: invalid feedback anchor
+ ❯ Module.parseFeedbackAnchor src/runtime/file_feedback_anchor.ts:171:11
+    169|     !validPdfPage(anchor.page, anchor.pageCount)
+    170|   )
+    171|     throw new Error("invalid feedback anchor");
+       |           ^
+    172|   return {
+    173|     kind: "pdf-page",
+ ❯ src/runtime/file_feedback_anchor.visual.test.ts:25:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.visual.test.ts > formats fixed-point displayed coordinates, version and exact opinion: {"kind":"image-area","space":"display-oriented-v1","left":0,"top":1,"right":999999,"bottom":1000000}
+ FAIL  src/runtime/file_feedback_anchor.visual.test.ts > formats fixed-point displayed coordinates, version and exact opinion: {"kind":"pdf-area","space":"display-oriented-v1","left":0,"top":1,"right":999999,"bottom":1000000,"page":2,"pageCount":3}
+AssertionError: expected '关于 /work/画面\n".pdf（当时查看的内容）：\n文件 SHA-…' to contain '"/work/画面\n\".pdf"'
+
+- Expected
++ Received
+
+- "/work/画面\n\".pdf"
++ 关于 /work/画面
++ ".pdf（当时查看的内容）：
++ 文件 SHA-256：aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
++ 保留意见
++
++ 此意见针对上述版本；若文件已变化，请先核对位置与内容。
+
+ ❯ src/runtime/file_feedback_anchor.visual.test.ts:37:16
+     35|   const value = entry(anchor);
+     36|   const text = fileFeedbackText(value as SavedFileFeedback);
+     37|   expect(text).toContain(JSON.stringify(path));
+       |                ^
+     38|   expect(text).toContain("显示画面左上角");
+     39|   expect(text).toContain("左 0%");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 30 passed (34)
+   Start at  10:01:59
+   Duration  164ms (transform 62ms, setup 0ms, import 84ms, tests 8ms, environment 0ms)
+

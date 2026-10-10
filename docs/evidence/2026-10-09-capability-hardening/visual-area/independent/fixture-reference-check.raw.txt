@@ -1,0 +1,329 @@
+{
+  "kind": "independent fixture structure and reference-render check, not Farfold or browser validation",
+  "status": "passed",
+  "pdfRenderer": "Poppler pdftoppm -cropbox -r72",
+  "imageReference": "Pillow ImageOps.exif_transpose only; actual browser decode remains untested",
+  "checks": [
+    {
+      "case": "PDF u1 / 0",
+      "actualSize": [
+        300,
+        500
+      ],
+      "actualMarkerEdgeRect": [
+        30,
+        100,
+        120,
+        200
+      ],
+      "expectedPixelEdgeRect": [
+        30.0,
+        100.0,
+        120.0,
+        200.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "PDF u1 / 90",
+      "actualSize": [
+        500,
+        300
+      ],
+      "actualMarkerEdgeRect": [
+        300,
+        30,
+        400,
+        120
+      ],
+      "expectedPixelEdgeRect": [
+        300.0,
+        30.0,
+        400.0,
+        120.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "PDF u1 / 180",
+      "actualSize": [
+        300,
+        500
+      ],
+      "actualMarkerEdgeRect": [
+        180,
+        300,
+        270,
+        400
+      ],
+      "expectedPixelEdgeRect": [
+        180.0,
+        300.0,
+        270.0,
+        400.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "PDF u1 / 270",
+      "actualSize": [
+        500,
+        300
+      ],
+      "actualMarkerEdgeRect": [
+        100,
+        180,
+        200,
+        270
+      ],
+      "expectedPixelEdgeRect": [
+        100.0,
+        180.0,
+        200.0,
+        270.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "PDF u2 / 0",
+      "actualSize": [
+        300,
+        500
+      ],
+      "actualMarkerEdgeRect": [
+        30,
+        100,
+        120,
+        200
+      ],
+      "expectedPixelEdgeRect": [
+        30.0,
+        100.0,
+        120.0,
+        200.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "PDF u2 / 90",
+      "actualSize": [
+        500,
+        300
+      ],
+      "actualMarkerEdgeRect": [
+        300,
+        30,
+        400,
+        120
+      ],
+      "expectedPixelEdgeRect": [
+        300.0,
+        30.0,
+        400.0,
+        120.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "PDF u2 / 180",
+      "actualSize": [
+        300,
+        500
+      ],
+      "actualMarkerEdgeRect": [
+        180,
+        300,
+        270,
+        400
+      ],
+      "expectedPixelEdgeRect": [
+        180.0,
+        300.0,
+        270.0,
+        400.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "PDF u2 / 270",
+      "actualSize": [
+        500,
+        300
+      ],
+      "actualMarkerEdgeRect": [
+        100,
+        180,
+        200,
+        270
+      ],
+      "expectedPixelEdgeRect": [
+        100.0,
+        180.0,
+        200.0,
+        270.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "EXIF 1 (Pillow reference)",
+      "actualSize": [
+        320,
+        200
+      ],
+      "actualMarkerEdgeRect": [
+        32,
+        40,
+        128,
+        100
+      ],
+      "expectedPixelEdgeRect": [
+        32.0,
+        40.0,
+        128.0,
+        100.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "EXIF 2 (Pillow reference)",
+      "actualSize": [
+        320,
+        200
+      ],
+      "actualMarkerEdgeRect": [
+        192,
+        40,
+        288,
+        100
+      ],
+      "expectedPixelEdgeRect": [
+        192.0,
+        40.0,
+        288.0,
+        100.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "EXIF 3 (Pillow reference)",
+      "actualSize": [
+        320,
+        200
+      ],
+      "actualMarkerEdgeRect": [
+        192,
+        100,
+        288,
+        160
+      ],
+      "expectedPixelEdgeRect": [
+        192.0,
+        100.0,
+        288.0,
+        160.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "EXIF 4 (Pillow reference)",
+      "actualSize": [
+        320,
+        200
+      ],
+      "actualMarkerEdgeRect": [
+        32,
+        100,
+        128,
+        160
+      ],
+      "expectedPixelEdgeRect": [
+        32.0,
+        100.0,
+        128.0,
+        160.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "EXIF 5 (Pillow reference)",
+      "actualSize": [
+        200,
+        320
+      ],
+      "actualMarkerEdgeRect": [
+        40,
+        32,
+        100,
+        128
+      ],
+      "expectedPixelEdgeRect": [
+        40.0,
+        32.0,
+        100.0,
+        128.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "EXIF 6 (Pillow reference)",
+      "actualSize": [
+        200,
+        320
+      ],
+      "actualMarkerEdgeRect": [
+        100,
+        32,
+        160,
+        128
+      ],
+      "expectedPixelEdgeRect": [
+        100.0,
+        32.0,
+        160.0,
+        128.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "EXIF 7 (Pillow reference)",
+      "actualSize": [
+        200,
+        320
+      ],
+      "actualMarkerEdgeRect": [
+        100,
+        192,
+        160,
+        288
+      ],
+      "expectedPixelEdgeRect": [
+        100.0,
+        192.0,
+        160.0,
+        288.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    },
+    {
+      "case": "EXIF 8 (Pillow reference)",
+      "actualSize": [
+        200,
+        320
+      ],
+      "actualMarkerEdgeRect": [
+        40,
+        192,
+        100,
+        288
+      ],
+      "expectedPixelEdgeRect": [
+        40.0,
+        192.0,
+        100.0,
+        288.0
+      ],
+      "maximumEdgeErrorPixels": 0.0
+    }
+  ],
+  "warning": "Poppler actual size is reported, not used as the expected normalized oracle. UserUnit behavior may differ by renderer and is separately tested later in production PDF.js."
+}

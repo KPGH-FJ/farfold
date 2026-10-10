@@ -1,0 +1,1 @@
+{"passed":true,"sourceUnchanged":true,"cases":[{"mode":"valid","checks":6},{"mode":"invalid","checks":5},{"mode":"unknown","checks":5}]}

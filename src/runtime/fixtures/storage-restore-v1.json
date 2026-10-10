@@ -16,11 +16,113 @@
         "sendPending": true
       }
     },
-    "choice": { "agentId": null, "cwd": null, "service": null, "config": {} },
-    "feedback": {},
+    "choice": {
+      "agentId": null,
+      "cwd": null,
+      "service": null,
+      "config": {}
+    },
+    "feedback": {
+      "fixture-thread": {
+        "page.pdf": {
+          "path": "/fixture/page.pdf",
+          "contentId": "disk:[\"/fixture/page.pdf\",\"fixture-v1\",\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]",
+          "text": "Fixture opinion page.pdf",
+          "selection": null,
+          "scope": "file",
+          "anchor": {
+            "kind": "pdf-page",
+            "page": 2,
+            "pageCount": 3
+          }
+        },
+        "text.txt": {
+          "path": "/fixture/text.txt",
+          "contentId": "disk:[\"/fixture/text.txt\",\"fixture-v1\",\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]",
+          "text": "Fixture opinion text.txt",
+          "selection": null,
+          "scope": "file",
+          "anchor": {
+            "kind": "text-range",
+            "byteStart": 0,
+            "byteEnd": 3,
+            "startLine": 1,
+            "endLine": 1
+          }
+        },
+        "sheet.xlsx": {
+          "path": "/fixture/sheet.xlsx",
+          "contentId": "disk:[\"/fixture/sheet.xlsx\",\"fixture-v1\",\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]",
+          "text": "Fixture opinion sheet.xlsx",
+          "selection": null,
+          "scope": "file",
+          "anchor": {
+            "kind": "xlsx-range",
+            "sheetId": "rId17",
+            "sheetName": "Fixture sheet",
+            "fromRow": 1,
+            "toRow": 2,
+            "fromColumn": 2,
+            "toColumn": 3
+          }
+        },
+        "document.docx": {
+          "path": "/fixture/document.docx",
+          "contentId": "disk:[\"/fixture/document.docx\",\"fixture-v1\",\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]",
+          "text": "Fixture opinion document.docx",
+          "selection": null,
+          "scope": "file",
+          "anchor": {
+            "kind": "docx-block",
+            "part": "word/document.xml",
+            "elementPath": [0, 1],
+            "blockKind": "paragraph"
+          }
+        },
+        "area.png": {
+          "path": "/fixture/area.png",
+          "contentId": "disk:[\"/fixture/area.png\",\"fixture-v1\",\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]",
+          "text": "Fixture opinion area.png",
+          "selection": null,
+          "scope": "file",
+          "anchor": {
+            "kind": "image-area",
+            "space": "display-oriented-v1",
+            "left": 1,
+            "top": 200000,
+            "right": 999999,
+            "bottom": 800001
+          }
+        },
+        "area.pdf": {
+          "path": "/fixture/area.pdf",
+          "contentId": "disk:[\"/fixture/area.pdf\",\"fixture-v1\",\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"]",
+          "text": "Fixture opinion area.pdf",
+          "selection": null,
+          "scope": "file",
+          "anchor": {
+            "kind": "pdf-area",
+            "space": "display-oriented-v1",
+            "page": 2,
+            "pageCount": 3,
+            "left": 100001,
+            "top": 2,
+            "right": 700000,
+            "bottom": 1000000
+          }
+        }
+      }
+    },
     "queues": {
       "fixture-thread": {
-        "blocks": [[{ "type": "text", "text": "Fixture queued input" }]],
+        "blocks": [
+          [
+            {
+              "type": "text",
+              "text": "Fixture queued input"
+            }
+          ]
+        ],
         "uncertainIndex": 0
       }
     },
@@ -33,7 +135,9 @@
     "progress": {},
     "selections": {
       "fixture-agent": {
-        "config": { "model": "fixture-model" },
+        "config": {
+          "model": "fixture-model"
+        },
         "service": null
       }
     }

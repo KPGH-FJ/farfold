@@ -1,0 +1,24 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.55s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 11 tests
+test storage_recovery::restore_tests::a_symbolic_link_candidate_is_rejected_without_following_it ... ok
+test storage_recovery::restore_tests::direct_restore_rejects_keys_outside_the_two_allowed_records ... ok
+test storage_recovery::restore_tests::duplicate_candidate_key_rows_are_not_silently_selected ... ok
+test storage_recovery::restore_tests::a_valid_candidate_named_snapshot_sqlite3_does_not_collide_with_private_snapshot ... ok
+test storage_recovery::restore_tests::unknown_database_version_and_added_schema_are_refused_without_migration ... ok
+test storage_recovery::restore_tests::a_change_to_either_startup_key_after_preview_refuses_the_whole_restore ... ok
+test storage_recovery::restore_tests::a_failure_on_the_second_key_rolls_back_both_and_retains_a_confirmed_original_copy ... ok
+test storage_recovery::restore_tests::preview_is_read_only_and_restores_captured_bytes_not_a_later_replaced_file ... ok
+test storage_recovery::restore_tests::missing_backup_location_unknown_key_and_future_candidate_do_not_write ... ok
+test storage_recovery::restore_tests::startup_ready_and_restore_are_serialized_until_the_receipt_is_recorded ... ok
+test storage_recovery::restore_tests::valid_dual_record_fixture_restores_once_and_preserves_other_settings_and_original_copy ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 1225 filtered out; finished in 0.15s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

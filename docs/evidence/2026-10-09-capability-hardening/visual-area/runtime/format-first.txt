@@ -1,0 +1,6 @@
+src/runtime/visual_area_coordinates.ts 35ms
+src/runtime/visual_feedback_target.ts 23ms
+src/runtime/file_feedback_anchor.ts 15ms
+src/runtime/file_feedback_anchor.visual.test.ts 8ms
+src/runtime/feedback_strings.ts 8ms
+src/runtime/storage_restore.ts 13ms (unchanged)

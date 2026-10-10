@@ -1,0 +1,454 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+import { isDeepStrictEqual } from "node:util";
+const { webkit, chromium } =
+  await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base =
+  "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser";
+const engine = process.argv[2] ?? "webkit",
+  label = process.argv[3] ?? "lifecycle-first";
+const walk = (d) =>
+  fs
+    .readdirSync(d, { withFileTypes: true })
+    .flatMap((e) =>
+      e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)],
+    );
+const inputs = [
+  ...walk("src"),
+  ...walk(base.replace("/independent/browser", "/fixtures")),
+  ...[
+    "fixture.tsx",
+    "capture-data.json",
+    "index.html",
+    "serve.mjs",
+    "run-lifecycle.mjs",
+  ].map((n) => base + "/" + n),
+];
+const hashes = () =>
+  Object.fromEntries(
+    inputs.map((p) => [
+      p,
+      createHash("sha256").update(fs.readFileSync(p)).digest("hex"),
+    ]),
+  );
+const result = {
+  engine,
+  label,
+  scope:
+    "Actual complete App, real PDF worker/DOM/keyboard. Controlled in-memory IPC and owned browser sessionStorage only; no Tauri native, user data or Agent.",
+  before: hashes(),
+  cases: [],
+};
+const browser = await (engine === "webkit" ? webkit : chromium).launch({
+  headless: true,
+  executablePath:
+    engine === "webkit"
+      ? path.resolve(
+          "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+        )
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+});
+const same = (a, b) => isDeepStrictEqual(a, b);
+async function scenario(name, action) {
+  const c = { name, checks: [], errors: [], blocked: [] };
+  result.cases.push(c);
+  const context = await browser.newContext({
+      viewport: { width: 1280, height: 820 },
+    }),
+    page = await context.newPage();
+  page.setDefaultTimeout(12000);
+  page.on("pageerror", (e) => c.errors.push(String(e)));
+  await page.route("**/*", (r) =>
+    r.request().url().startsWith("http://127.0.0.1:1468/")
+      ? r.continue()
+      : (c.blocked.push(r.request().url()), r.abort()),
+  );
+  const check = (name, pass, detail) => {
+    c.checks.push({ name, pass, detail });
+    if (!pass) throw Error(name);
+  };
+  const button = (name) => page.getByRole("button", { name, exact: true });
+  const entries = () =>
+    page.evaluate(() => Object.values(window.fixture.feedback()));
+  const values = async (v) => {
+    for (const [i, label] of [
+      "左边（%）",
+      "上边（%）",
+      "右边（%）",
+      "下边（%）",
+    ].entries())
+      await page.getByLabel(label, { exact: true }).fill(v[i]);
+  };
+  const choose = async (v) => {
+    await values(v);
+    await page.getByLabel("下边（%）", { exact: true }).press("Enter");
+  };
+  const open = async () => {
+    await button("视觉样本").click();
+    await button("选择意见区域").waitFor();
+  };
+  try {
+    await page.goto(
+      `http://127.0.0.1:1468/${base}/index.html?fixture=crop-rotations-unit1.pdf&length=640`,
+      { waitUntil: "networkidle" },
+    );
+    await page
+      .getByText("CONTROLLED_VISUAL_AREA", { exact: true })
+      .first()
+      .click();
+    await open();
+    await action({ page, button, entries, values, choose, open, check, c });
+    check(
+      "no unexpected Agent/external IPC",
+      await page.evaluate(
+        () =>
+          !window.unexpected.length &&
+          !window.calls.some((x) =>
+            /session_prompt|session_send|file_delivery_open|file_delivery_reveal/.test(
+              x.cmd,
+            ),
+          ),
+      ),
+      await page.evaluate(() => window.unexpected),
+    );
+    check(
+      "no browser errors/external fetch",
+      !c.errors.length && !c.blocked.length,
+      { errors: c.errors, blocked: c.blocked },
+    );
+    const m = await page.evaluate(() => window.fixture.metrics());
+    check(
+      "root remains bounded",
+      m.windowY === 0 &&
+        m.elements[".app"].y === 0 &&
+        m.elements.html.scrollHeight <= m.elements.html.height,
+      m,
+    );
+    c.screenshot = `${base}/${engine}-${label}-${name}.png`;
+    await page.screenshot({ path: c.screenshot });
+  } catch (e) {
+    c.failure = String(e);
+    c.body = await page.locator("body").innerText();
+    c.calls = await page.evaluate(() => window.calls);
+    c.metrics = await page.evaluate(() => window.fixture?.metrics());
+    c.screenshot = `${base}/${engine}-${label}-${name}-failure.png`;
+    await page.screenshot({ path: c.screenshot });
+  } finally {
+    await context.close();
+  }
+  return !c.failure;
+}
+try {
+  const first = await scenario(
+    "numeric-cold",
+    async ({ page, button, entries, values, choose, open, check }) => {
+      const composer = await page.evaluate(
+        () => window.fixture.composer().text,
+      );
+      await button("选择意见区域").click();
+      await choose(["10.0001", "20.0002", "40.0003", "50.0004"]);
+      check(
+        "selection Enter focuses explicit confirmation",
+        await button("对此区域提意见").evaluate(
+          (e) => document.activeElement === e,
+        ),
+        await page.evaluate(() => document.activeElement?.outerHTML),
+      );
+      check(
+        "selection does not create saved opinion",
+        (await entries()).length === 0,
+        await entries(),
+      );
+      await page.keyboard.press("Enter");
+      let saved = (await entries())[0];
+      check(
+        "second Enter persists exact decimal millionths",
+        same(saved.anchor, {
+          kind: "pdf-area",
+          space: "display-oriented-v1",
+          left: 100001,
+          top: 200002,
+          right: 400003,
+          bottom: 500004,
+          page: 1,
+          pageCount: 4,
+        }),
+        saved.anchor,
+      );
+      await page
+        .getByLabel("补充给 Agent 的意见", { exact: true })
+        .fill("CONTROLLED_KEEP_TEXT");
+      const old = (await entries())[0];
+      await choose(["20", "30", "60", "70"]);
+      check(
+        "new candidate leaves saved target/text until confirmation",
+        same((await entries())[0], old),
+        await entries(),
+      );
+      await button("对此区域提意见").click();
+      saved = (await entries())[0];
+      check(
+        "confirmed replacement keeps opinion text",
+        saved.text === "CONTROLLED_KEEP_TEXT" &&
+          saved.anchor.left === 200000 &&
+          saved.anchor.bottom === 700000,
+        saved,
+      );
+      const valid = saved;
+      for (const v of [
+        ["NaN", "20", "40", "50"],
+        ["0", "20", "101", "50"],
+        ["10.00001", "20", "40", "50"],
+        ["60", "20", "40", "50"],
+        ["10", "20", "10", "50"],
+      ]) {
+        await choose(v);
+        check(
+          "invalid percentages rejected " + v.join("/"),
+          (await button("对此区域提意见").isDisabled()) &&
+            same((await entries())[0], valid),
+          { values: v, saved: (await entries())[0] },
+        );
+      }
+      await choose(["20", "30", "60", "70"]);
+      await page.locator(".a-drag").focus();
+      await page.locator(".a-drag").press("ArrowRight");
+      await page.waitForFunction(
+        () =>
+          document.querySelector(".visual-area-actions .btn-primary")
+            ?.disabled === true,
+      );
+      check(
+        "resize retires candidate and retains numeric editing",
+        (await page.getByLabel("左边（%）", { exact: true }).inputValue()) ===
+          "20" && same((await entries())[0], valid),
+        await entries(),
+      );
+      await page.setViewportSize({ width: 900, height: 620 });
+      await page.setViewportSize({ width: 1280, height: 820 });
+      await button("取消选择").click();
+      await button("下一页").click();
+      await button("选择意见区域").waitFor();
+      check(
+        "page change does not move saved page target",
+        (await entries())[0].anchor.page === 1,
+        await entries(),
+      );
+      await button("选择意见区域").click();
+      await choose(["1", "2", "3", "4"]);
+      await button("收起对话内容").click();
+      await open();
+      check(
+        "hide/reopen removes live candidate and keeps saved opinion",
+        (await page
+          .getByRole("form", { name: "意见区域", exact: true })
+          .count()) === 0 && same((await entries())[0], valid),
+        await entries(),
+      );
+      await button("选择意见区域").click();
+      await choose(["2", "3", "4", "5"]);
+      await button("重新读取").click();
+      await button("选择意见区域").waitFor();
+      check(
+        "same-file new preview retires prior candidate",
+        (await page
+          .getByRole("form", { name: "意见区域", exact: true })
+          .count()) === 0 && same((await entries())[0], valid),
+        await entries(),
+      );
+      await page.evaluate(() => window.fixture.saveNow());
+      const disk = await page.evaluate(() => window.fixture.settings());
+      check(
+        "real draft serializer wrote controlled storage",
+        Object.hasOwn(disk, "unsentWork.v1"),
+        Object.keys(disk),
+      );
+      await page.reload({ waitUntil: "networkidle" });
+      await page
+        .getByText("CONTROLLED_VISUAL_AREA", { exact: true })
+        .first()
+        .click();
+      await open();
+      check(
+        "cold load preserves exact anchor and opinion without live candidate",
+        same((await entries())[0], valid) &&
+          (await page
+            .getByRole("form", { name: "意见区域", exact: true })
+            .count()) === 0,
+        await entries(),
+      );
+      await button("修改意见").click();
+      check(
+        "cold label explicitly unverified",
+        (await page.locator(".artifact-feedback").innerText()).includes(
+          "位置未重新核对",
+        ),
+        await page.locator(".artifact-feedback").innerText(),
+      );
+      await page
+        .locator(".artifact-feedback")
+        .getByRole("button", { name: "加入对话", exact: true })
+        .click();
+      const taken = await page.evaluate(() => window.fixture.composer().text);
+      check(
+        "take keeps original composer and adds opinion once without sending",
+        taken.startsWith(composer) &&
+          taken.split("CONTROLLED_KEEP_TEXT").length === 2 &&
+          (await entries()).length === 0,
+        {
+          composerPrefix: composer.length,
+          takenLength: taken.length,
+          entries: await entries(),
+        },
+      );
+    },
+  );
+  if (first)
+    await scenario(
+      "version-and-pending",
+      async ({ page, button, entries, values, choose, open, check, c }) => {
+        await button("选择意见区域").click();
+        await choose(["10", "20", "40", "50"]);
+        await button("对此区域提意见").click();
+        await page
+          .getByLabel("补充给 Agent 的意见", { exact: true })
+          .fill("OLD_VERSION_OPINION");
+        const original = (await entries())[0];
+        await button("取消选择").click();
+        await button("修改意见").click();
+        await button("选择意见区域").click();
+        await values(["", "20", "40", "50"]);
+        const reads = await page.evaluate(
+          () =>
+            window.calls.filter((c) => c.cmd === "file_delivery_read_visual")
+              .length,
+        );
+        const checks = await page.evaluate(
+          () =>
+            window.calls.filter((c) => c.cmd === "file_delivery_check_revision")
+              .length,
+        );
+        await page.evaluate(() =>
+          window.fixture.replace("crop-rotations-unit2.pdf"),
+        );
+        await page.waitForFunction(
+          (n) =>
+            window.calls.filter((c) => c.cmd === "file_delivery_check_revision")
+              .length > n,
+          checks,
+          { timeout: 8000 },
+        );
+        check(
+          "invalid numeric editing prevents automatic replacement",
+          (await page.evaluate(
+            () =>
+              window.calls.filter((c) => c.cmd === "file_delivery_read_visual")
+                .length,
+          )) === reads && same((await entries())[0], original),
+          { reads, entries: await entries() },
+        );
+        await button("取消选择").click();
+        await page.evaluate(() => window.fixture.blockCapture());
+        await button("重新读取").click();
+        await page.waitForFunction(
+          (n) =>
+            window.calls.filter((c) => c.cmd === "file_delivery_read_visual")
+              .length > n,
+          reads,
+        );
+        check(
+          "pending new read offers no old live candidate",
+          (await button("对此区域提意见").count()) === 0 ||
+            (await button("对此区域提意见").isDisabled()),
+          await entries(),
+        );
+        await button("收起对话内容").click();
+        await page.evaluate(() => window.fixture.releaseCapture());
+        await open();
+        check(
+          "late hidden new capture does not retarget old opinion",
+          same((await entries())[0], original),
+          await entries(),
+        );
+        await button("选择意见区域").click();
+        await choose(["5", "10", "25", "30"]);
+        await button("对此区域提意见").click();
+        await page
+          .getByLabel("补充给 Agent 的意见", { exact: true })
+          .fill("NEW_VERSION_OPINION");
+        const all = await entries(),
+          newone = all.find((e) => e.text === "NEW_VERSION_OPINION");
+        check(
+          "new version gets separate exact identity while old preserved",
+          all.length === 2 &&
+            all.some((e) => same(e, original)) &&
+            newone.contentId !== original.contentId &&
+            newone.anchor.left === 50000,
+          all,
+        );
+        await button("取消选择").click();
+        await button("修改意见").click();
+        const before = await page.evaluate(
+          () =>
+            window.calls.filter((c) => c.cmd === "file_delivery_read_visual")
+              .length,
+        );
+        await page.evaluate(() => {
+          window.fixture.blockCapture();
+          window.fixture.replace("crop-rotations-unit1.pdf");
+        });
+        await page.waitForFunction(
+          (n) =>
+            window.calls.filter((c) => c.cmd === "file_delivery_read_visual")
+              .length > n,
+          before,
+          { timeout: 9000 },
+        );
+        check(
+          "automatic stage keeps actual old canvas while interaction locked",
+          await page
+            .locator(".visual-file-preview")
+            .evaluate((e) => e.inert && e.querySelector("canvas")?.width > 1),
+          await page.evaluate(() => window.fixture.metrics()),
+        );
+        await page.evaluate(() => window.fixture.releaseCapture());
+        await page.waitForFunction(
+          () =>
+            !document.querySelector(".visual-file-preview")?.inert &&
+            document.querySelector(".visual-file-preview canvas")?.width > 1,
+        );
+        check(
+          "automatic new preview does not modify either stored target",
+          same(await entries(), all),
+          await entries(),
+        );
+        c.readCount = await page.evaluate(
+          () =>
+            window.calls.filter((c) => c.cmd === "file_delivery_read_visual")
+              .length,
+        );
+      },
+    );
+} finally {
+  await browser.close();
+  result.after = hashes();
+  result.sourceUnchanged = same(result.before, result.after);
+  result.passed =
+    result.sourceUnchanged && result.cases.every((c) => !c.failure);
+  const raw = JSON.stringify(result, null, 2) + "\n";
+  fs.writeFileSync(`${base}/${engine}-${label}.raw.txt`, raw);
+  fs.writeFileSync(`${base}/${engine}-${label}.json`, raw);
+  console.log(
+    JSON.stringify({
+      passed: result.passed,
+      sourceUnchanged: result.sourceUnchanged,
+      cases: result.cases.map((c) => ({
+        name: c.name,
+        checks: c.checks.length,
+        failure: c.failure,
+      })),
+    }),
+  );
+  process.exitCode = result.passed ? 0 : 1;
+}

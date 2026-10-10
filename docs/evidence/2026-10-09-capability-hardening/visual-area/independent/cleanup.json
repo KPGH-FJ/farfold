@@ -1,0 +1,18 @@
+{
+  "scope": "Only owned Vite PID95182 and port1468; browser runners close their launched browser in finally; no formal App or Agent touched.",
+  "action": "SIGTERM after exact argv verification",
+  "before": "95182   119 Ss   node docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/serve.mjs",
+  "afterPsExit": 1,
+  "afterPs": "",
+  "portCommand": ["lsof", "-nP", "-iTCP:1468", "-sTCP:LISTEN"],
+  "portExit": 1,
+  "portOutput": "",
+  "serverLog": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/visual-area/independent/browser/server.txt",
+    "sha256": "444adc1ac0717f3be5098c1fe59f7de05b5ddc1b5275628111aa3d46d76145d7"
+  },
+  "serverSession": "99709",
+  "wrapperExit": 143,
+  "status": "owned PID gone and port has no listener",
+  "wrapperBoundary": "exec session99709 returned143 after exact SIGTERM; no claim of graceful exit0."
+}

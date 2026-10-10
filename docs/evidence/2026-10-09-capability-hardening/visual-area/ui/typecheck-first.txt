@@ -1,0 +1,1 @@
+src/runtime/file_feedback_anchor.visual.test.ts(96,5): error TS2783: 'kind' is specified more than once, so this usage will be overwritten.
