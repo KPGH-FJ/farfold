@@ -1,0 +1,124 @@
+{
+  "sourceCommit": "39955ec65a4274cdeac1bab9884f4073c792102a",
+  "result": "passed",
+  "checks": {
+    "candidateChain": {
+      "passed": true,
+      "candidateChecks": 9
+    },
+    "normalExitAndDataBaseline": {
+      "passed": true,
+      "baselineCommit": "aadbe0f2952f9decd213804c12911ccccc58971b",
+      "reviewedDelta": "codex.updated_at only"
+    },
+    "completeDataManifests": {
+      "passed": true,
+      "snapshots": [
+        {
+          "phase": "before",
+          "sha256": "c2fd4deb94e4a77ed3f36f949b8f6e275eb1e5734b84b939ffd9738b077422c0",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "preinstall",
+          "sha256": "c2fd4deb94e4a77ed3f36f949b8f6e275eb1e5734b84b939ffd9738b077422c0",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "after",
+          "sha256": "c2fd4deb94e4a77ed3f36f949b8f6e275eb1e5734b84b939ffd9738b077422c0",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        }
+      ],
+      "entryCountEach": 217400,
+      "allRecordedContentTypesModesAndLinkTargetsEqual": true
+    },
+    "privateMetadataBackup": {
+      "passed": true,
+      "method": "Read retained captured main/WAL/SHM and backup hashes; SQLite integrity/iterdump digest only on second disposable private copies; original database never opened.",
+      "captureHashesMatchAllThreeManifests": true,
+      "capturedFileCount": 3,
+      "capturedAndBackupIntegrity": "ok",
+      "logicalContentsEqual": true,
+      "originalRetainedCopyHashesUnchanged": true,
+      "backupSha256": "136112954ee9b830dbfffcdb1c71429b7d20425e67eaf4d579a274f574c09240",
+      "rawRowsPrintedOrSaved": false
+    },
+    "installedExactBundle": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "a20e0d237df5e86fcfaeda2447840140e694fe6e6f9071daed848cec0c4dc60d",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      }
+    },
+    "archive": {
+      "passed": true,
+      "archiveSha256": "6c222ec948f95fd0e363c5982b4a5af6ca829a9c3de10a8253ff975cd6e60eb2",
+      "archiveBytes": 13922575
+    },
+    "identitySignature": {
+      "passed": true,
+      "bundleIdentifier": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "architecture": "arm64",
+      "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+      "distribution": "ad-hoc only"
+    },
+    "exactSourceAndEngineering": {
+      "passed": true,
+      "inputCount": 1407
+    },
+    "formalProcessAbsent": {
+      "passed": true
+    },
+    "verificationInputsStable": {
+      "passed": true
+    }
+  },
+  "failures": [],
+  "startedAt": "2026-10-10T14:36:43.613107+00:00",
+  "launched": false,
+  "inputReceipts": {
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/candidate.json": "1112fd0ad235c9d86d2e1c4d6ffc6c3032603e9f291bb5137dacbc84242d1048",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/candidate-inputs.json": "49494405052e8ae674b6268cd1dd9ca3461c7dc8f1eaa51ee1816abc61de65b7",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/candidate-independent.json": "782e3bea699d49224b63454feeaad2587e0f0d0c5788fe8ec12c0090a29abd41",
+    "output/2026-10-10-skills-qualified-names-install/install-operation.json": "f49c571641de6793beb35ee447c004968cfb09fc79849f0f17f0f73ff43a4a9a",
+    "output/2026-10-10-skills-qualified-names-install/normal-exit-observation.json": "d60a9b86772f1ed6fea3e8ee20cddcb8e3d828b8fad079d7a4ce6f649fa20d8a",
+    "output/2026-10-10-skills-inventory-native/final-normal-exit.json": "4b194e36e2e837fe13b1872828523b8a97a1f5076f0d722fd3ab4fcb5e1065f5",
+    "output/2026-10-10-skills-inventory-native/freeze-release.json": "6a26f003a04c88929588bf1a35c0f65c0f97c4b2bfb28e9c12319d984222aa16",
+    "output/2026-10-10-skills-inventory-native/final-data-comparison-independent.json": "965499093bfd6a8daa07dab8dff9a4dce18788668d85ad0abcc4b029bd094e3b",
+    "output/2026-10-10-skills-inventory-native/final-agent-columns-independent.json": "d98c37383b478e10517ee8a35059195a435f484a309c93d5960e1688e9a39218",
+    "output/2026-10-10-skills-inventory-native/freeze-before-native.json": "ec6e76500a0ea222ba71145b1c22dc88cfd1dbf434a9afeb878a03d230ea7bd4",
+    "output/2026-10-10-skills-qualified-names-install/install-data-before-summary.json": "af36aac59b7be54480bc89411a131c02c48f76653d34db19f11a90055bf991c6",
+    "output/2026-10-10-skills-qualified-names-install/install-data-before.jsonl": "c2fd4deb94e4a77ed3f36f949b8f6e275eb1e5734b84b939ffd9738b077422c0",
+    "output/2026-10-10-skills-qualified-names-install/install-data-preinstall-summary.json": "af36aac59b7be54480bc89411a131c02c48f76653d34db19f11a90055bf991c6",
+    "output/2026-10-10-skills-qualified-names-install/install-data-preinstall.jsonl": "c2fd4deb94e4a77ed3f36f949b8f6e275eb1e5734b84b939ffd9738b077422c0",
+    "output/2026-10-10-skills-qualified-names-install/install-data-after-summary.json": "af36aac59b7be54480bc89411a131c02c48f76653d34db19f11a90055bf991c6",
+    "output/2026-10-10-skills-qualified-names-install/install-data-after.jsonl": "c2fd4deb94e4a77ed3f36f949b8f6e275eb1e5734b84b939ffd9738b077422c0",
+    "output/2026-10-10-skills-qualified-names-install/metadata-backup-receipt.json": "2fccd1cdd469852a912a96fd8ab5be4081c2f210ffcb8a262080a356ff43baba",
+    "output/2026-10-10-skills-qualified-names-install/metadata-before.sqlite3": "136112954ee9b830dbfffcdb1c71429b7d20425e67eaf4d579a274f574c09240",
+    "output/2026-10-10-skills-qualified-names-install/metadata-source/farfold.sqlite3": "fb1330644d07e4b0eda09a22b0150d4ffc2e0fd606e18ec2f5943dc06c141b39",
+    "output/2026-10-10-skills-qualified-names-install/metadata-source/farfold.sqlite3-wal": "1ab58e0c62bd5f7683bfbb4d5da04d6c9442f70c31e21710a689b2f6d4747db9",
+    "output/2026-10-10-skills-qualified-names-install/metadata-source/farfold.sqlite3-shm": "ab09594489be09b815bd5e1662ab04aac43e186b2ef26977b5cb77ea3cba487b",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/verification.json": "98183acf9786a7d47ba82c6423377f332622b7c283d47ec41b1b4f1d417dcf31",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/frontend.txt": "68b45d798ff1ef4d50ccf2eb6671efff64fcff0b2fc09bdbe53b5d555e030ede",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/build.txt": "52fa86e95b03f750bb52cf9bbe42ffa3d44abe1de02f69a82f4c38e7d8a08287",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/clippy.txt": "9116032755af23c3e54622e381d34afa9aa4fc7bc785c0058cd71dc498430cbf",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/rust.txt": "fa400bcbef1488c89f81118b90b6c75d290dacf3e6316b647fbf618b8511e142",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/inputs-before.json": "49494405052e8ae674b6268cd1dd9ca3461c7dc8f1eaa51ee1816abc61de65b7",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/inputs-after.json": "49494405052e8ae674b6268cd1dd9ca3461c7dc8f1eaa51ee1816abc61de65b7"
+  },
+  "completedAt": "2026-10-10T14:36:46.270024+00:00"
+}

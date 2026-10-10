@@ -1,0 +1,89 @@
+{
+  "result": "passedWithinStatedScope",
+  "sourceCommit": "39955ec65a4274cdeac1bab9884f4073c792102a",
+  "method": "Independent read-only review of root native capture, current frozen source/formal files and one previously executed secondary-copy database comparison; no second App/Agent/CLI journey.",
+  "evidenceChecks": {
+    "rootReceiptReferencesMatched": 32,
+    "frozenSourceInputsExact": 1407,
+    "formalBundleFilesExact": 5,
+    "formalModesExact": true,
+    "controlledFixtureFilesExact": {
+      "valid": 19,
+      "partial": 20
+    },
+    "freshExactFormalProcessCheck": "absent (pgrep exit 1)"
+  },
+  "nativeClaimsReviewed": {
+    "officialQuery": "One explicit skills query at 2026/10/10 22:42:04, as captured in the controlled root journey.",
+    "fullAccessibilityTree": {
+      "skillItems": 24,
+      "qualifiedNames": 7,
+      "hiddenNamePlaceholders": 0
+    },
+    "independentlyViewedPixelSample": "documents:documents in 08-qualified-name-pixels.png; all seven names verified in full AX, not claimed all visible in this single screenshot.",
+    "scopeNotes": "Official report for the chosen directory; no skill execution, tool/current-conversation applicability or configuration management proved.",
+    "normalExit": "Root Cmd+Q/save-and-quit record and subsequent exact process absence; no force quit."
+  },
+  "dataReview": {
+    "sessions": {
+      "wholeOriginalRowsExact": 130,
+      "added": 0
+    },
+    "dismissedWholeRowsExact": 168,
+    "settingsRawRowsExact": 53,
+    "wholeUnsentObjectExact": true,
+    "unsentGroups": {
+      "composers": 8,
+      "feedback": 8,
+      "queues": 3
+    },
+    "catalogueExact": true,
+    "agents": {
+      "rows": 40,
+      "wholeRowsExact": 39,
+      "onlyDelta": "codex.updated_at timestamp; accepted explicitly by root. All other nine columns, including command/args/env, exact."
+    },
+    "modelReasoningService": "Stored choices preserved by raw equality of all settings; no claim about external Agent configuration files.",
+    "sqliteMethod": "Both captured main/WAL and consolidated backup compared by full iterdump using disposable secondary copies only. Retained input SHA/bytes/modes unchanged. No database reopened for this receipt."
+  },
+  "notProved": [
+    "Zero model sends is the controlled action/source scope; zero added database rows alone is insufficient evidence.",
+    "No actual skill invocation or complete P39/P40/P41 acceptance.",
+    "No native timeout, cancellation or unknown-result recovery exercised in this journey.",
+    "Other Agents, Windows, previous partial-directory and MCP cases not rerun."
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/installed-qualified-names.json",
+      "sha256": "1ec3e6b00d2c857363315b97cc858a5120b12c8c0d118d7000c05d24353e6e95"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-native/native-evidence-independent.json",
+      "sha256": "8754233e8c869541735a621182b2666156229d2c0de303be7fed1fd66d392cc0"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-native/verify_native_evidence.py",
+      "sha256": "456d11010f3cde92373a5b443c10860b9af7a7be71da5c89ab50b286e3952dd6"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-native/final-data-comparison-independent.json",
+      "sha256": "172e42aca73e3045d2cb388871f3f6b8ed3c619b58fadb415e560acd44d2a805"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-native/compare_final_snapshot.py",
+      "sha256": "654a9ddb804fba2d8aa0ddd3b112b99ab68925068b5e6e0f008bf2b3d914c701"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-native/final-normal-exit.json",
+      "sha256": "9a4365ce9715bcfc7b79f6f9f793dea574298e4a1d1c87757450ff96a234f014"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-native/freeze-before-native.json",
+      "sha256": "651087522f37ad69d91e353db6b146aad4942f2c0eaaf0cb53f1af4d1df67ee7"
+    },
+    {
+      "path": "output/2026-10-10-skills-qualified-names-native/08-qualified-name-pixels.png",
+      "sha256": "2aa325e3b72bc81b510eed6bf284354a59780527a7bec1dfcc582fa16d672638"
+    }
+  ]
+}

@@ -2,17 +2,19 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：P39技能清单已实装，修复限定名后继续管理能力
+## 当前衔接：技能限定名修复已实测，继续提醒与媒体反馈
 
-正式版为 `aadbe0f2` / 0.1.7 arm64。[正式技能分项实测](skills-inventory-candidate/installed-skills-inventory.json)完成正常/损坏目录两次查询，各24项；后者明确1项未读取并保留有效技能。目录取消、类型/Agent隔离及旧结果过期处理已有实机观察，MCP复测返回5项。发现7个扩展技能名称被过度过滤，限定名修复已通过[七项工程检查](skills-qualified-names-checks/run-02/verification.json)：1,407输入稳定、前端4,555项、Rust1,457项/6忽略；两端接受受限官方限定名，MCP规则保持，待安装复验；不据其他分项通过关闭此缺陷或P39。
+正式版为 `39955ec6` / 0.1.7 arm64。[名称修复正式复验](skills-qualified-names-candidate/installed-qualified-names.json)一次查询返回24项，7个扩展技能限定名完整、0项隐藏；项目技能及查询范围说明保持。此前 `aadbe0f2` 的[技能实测](skills-inventory-candidate/installed-skills-inventory.json)覆盖正常/损坏目录、1项未读取提示、目录取消、类型/Agent隔离及过期处理，并有MCP返回5项；保留当时证据，不当作本版重复执行。
 
-[七项工程检查](skills-inventory-checks/run-02/verification.json)通过：1,404输入稳定，前端4,548项、Rust1,454项/6忽略；[后端独立6项](skills-inventory/backend/independent-review.json)及[双浏览器各44项](skills-inventory/frontend/implementation.json)为受控证据。候选9/9、安装10/10及三份217,400条快照一致；安装核验脚本变量重名的原失败保留，最小修正后通过，未改安装包。
+[七项工程检查](skills-qualified-names-checks/run-02/verification.json)全部通过：1,407输入稳定，前端391文件/4,555项、Rust1,457项/6忽略；候选9/9、安装10/10，三份217,400条快照一致。两端仅接受受限官方技能限定名，MCP规则保持；历史失败日志和脚本修正过程保留。
 
-实测后正常退出，原130会话完整行、168条已屏蔽记录、整个未发对象8/8/3、工作树清单及53项设置全等。40条Agent记录仅Codex更新时间变化，其余配置与存储模型/推理/来源保持；无模型发送或新会话。此前08cff0ac的MCP分项记录保持，下一步先闭合限定名实机缺陷，再继续P39/P40/P41及其余原条件；全量市场目标仍未完成。
+实测后正常退出，原130会话完整行、168条已屏蔽记录、整个未发对象8/8/3、工作树清单及53项设置全等。40条Agent记录仅Codex更新时间变化，其余9列及存储模型/推理/来源保持；无模型发送或新会话。正式五文件及1,407输入到退出不变。
+
+当前继续P48成功完成提醒与P13媒体加载失败反馈，私有草稿及独立审查未计作已实现或通过。P39完整工具、P40/P41管理和全部原条件继续保留；全量市场目标仍未完成。
 
 此前MCP首片已实现共用“技能与工具”入口与已核官方Codex入口的MCP配置只读查询：用户明确选择目录，结果只说明该次官方配置清单；该MCP报告不提供技能、工具详情、配置来源层和当前对话适用性，不补猜，不写Agent配置。当前选择的短期票据阻止旧选择和迟到回执串用；实际进程/输出未结束时保留清理中状态，旧结果标为过期。记录过期后只在用户明确结束等待且准确回执成立时释放跟踪，结果仍未知，不称原命令已取消。见[后端独立复核](extension-inventory/backend/independent-review.json)、[过期跟踪1红后6绿](extension-inventory/independent/expired-tracking-independent.json)。
 
-[本轮第二轮七项检查](extension-inventory-checks/run-02/verification.json)全部通过：1,396输入稳定，前端387文件/4,537项、Rust1,433项通过/6项忽略。[首轮](extension-inventory-checks/run-01/verification.json)前端28项失败、其余6项通过的原证据保留；[3份旧React模拟各补一行useMemo后28项定向通过](extension-inventory/frontend/hook-harness-followup/receipt.json)，原断言与生产源码不变。[受控完整App](extension-inventory/frontend/implementation.json)WebKit与Chromium各27项通过，使用受控命令回执及目录选择。该首片已提交安装并完成上述正式分项验证。查询取消、超时、过期跟踪与官方命令失败仍只有受控证据；技能清单源码接续见本节首段，下一步安装实测，完整技能/工具清单、P40/P41管理动作、29家和Windows继续按原条件推进，P39尚未全项完成。
+[本轮第二轮七项检查](extension-inventory-checks/run-02/verification.json)全部通过：1,396输入稳定，前端387文件/4,537项、Rust1,433项通过/6项忽略。[首轮](extension-inventory-checks/run-01/verification.json)前端28项失败、其余6项通过的原证据保留；[3份旧React模拟各补一行useMemo后28项定向通过](extension-inventory/frontend/hook-harness-followup/receipt.json)，原断言与生产源码不变。[受控完整App](extension-inventory/frontend/implementation.json)WebKit与Chromium各27项通过，使用受控命令回执及目录选择。该首片已提交安装并完成上述正式分项验证。查询取消、超时、过期跟踪与官方命令失败仍只有受控证据；技能清单实装及限定名复验见本节首段，完整技能/工具清单、P40/P41管理动作、29家和Windows继续按原条件推进，P39尚未全项完成。
 
 以下保留原阶段成功与失败，历史“当前/待安装/待修复”描述均指当时阶段，不覆盖本节最新结论。
 

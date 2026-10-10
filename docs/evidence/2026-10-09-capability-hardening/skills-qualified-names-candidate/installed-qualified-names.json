@@ -1,0 +1,101 @@
+{
+  "verifiedAtUtc": "2026-10-10T14:46:04.347164+00:00",
+  "sourceCommit": "39955ec65a4274cdeac1bab9884f4073c792102a",
+  "formalApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "status": "Qualified skill-name fix verified in formal common UI; complete P39/P40/P41 remain unfinished",
+  "officialQuery": {
+    "accessVersionReported": "1.13.1",
+    "skillsQueryCount": 1,
+    "queriedAtLocal": "2026/10/10 22:42:04",
+    "mechanism": "Explicit common UI query on unchanged controlled valid directory, fixed official skills/list path and existing program/environment. No model prompt or configuration-write action.",
+    "skillsReported": 24,
+    "qualifiedPluginNamesReported": 7,
+    "hiddenNames": 0,
+    "fixtureName": "farfold-inventory-valid",
+    "fixtureDescriptionAndProjectOriginRetained": true,
+    "plainTextPixelSample": "documents:documents",
+    "queryOnlyScopeNotesObserved": true
+  },
+  "defectDisposition": "The specific legitimate namespace:skill overfiltering defect is fixed and independently testable; prior original failed native evidence remains unchanged.",
+  "notCovered": [
+    "Actual skill invocation or current conversation applicability",
+    "Skill management, complete tool list, MCP server/tool execution",
+    "Other Agents or Windows",
+    "Real timeout/cancel/unknown query; each query settled before observation",
+    "Prior partial-directory and MCP cases were not rerun on this narrowly changed candidate"
+  ],
+  "dataAfterNative": {
+    "wholeSessionRows": 130,
+    "allOriginalSessionRowsExact": true,
+    "addedSessions": 0,
+    "dismissedRows": 168,
+    "allDismissedRowsExact": true,
+    "unsentWholeObjectExact": true,
+    "unsentGroups": {
+      "composers": 8,
+      "feedback": 8,
+      "queues": 3
+    },
+    "catalogueExact": true,
+    "settingsRawValuesExact": true,
+    "settingsCount": 53,
+    "storedModelReasoningServiceChoicesExact": true,
+    "agents": {
+      "count": 40,
+      "wholeRowsUnchanged": 39,
+      "onlyChange": "codex.updated_at",
+      "before": 1791641241089,
+      "after": 1791643265860,
+      "otherNineColumnsExact": true,
+      "rootDeltaDecision": "Accepted metadata timestamp update; retained in place, no configuration change or database restoration."
+    },
+    "modelPromptsSubmittedByControlledJourney": 0,
+    "evidenceBoundary": "Zero send is supported by controlled UI actions and frozen query implementation, not inferred from database row counts."
+  },
+  "exit": {
+    "normalQuit": true,
+    "forcedQuit": false,
+    "formalProcessCountAfter": 0
+  },
+  "sourceAndFixture": {
+    "inputCount": 1407,
+    "unchangedThroughNormalExit": true,
+    "formalFiles": 5,
+    "formalFilesUnchanged": true,
+    "fixtureFilesUnchanged": true
+  },
+  "privateEvidence": {
+    "output/2026-10-10-skills-qualified-names-native/01-explore.ax.txt": "04e0a06618b8d02da708161d2578b00c3e353070e91b8e53274d4fe414bcf607",
+    "output/2026-10-10-skills-qualified-names-native/01-explore.png": "f2d4232169bb6ad841297b3c3da55c5d56dd15a39d1d63db868c5c98efda01e2",
+    "output/2026-10-10-skills-qualified-names-native/02-codex-details.ax.txt": "3f7e8a2b1073937852358fe826d37450d4d9235e22930fd49684f56a62be1d05",
+    "output/2026-10-10-skills-qualified-names-native/02-codex-details.png": "a7a9d2ca9b14c5e05488688f7d2f1677a0c4f0e5c961b6b548d5e41fdf2f5103",
+    "output/2026-10-10-skills-qualified-names-native/03-skills-before-query.ax.txt": "7fd203a7625bd93fa73da3b51a8628961882bb4a5518d9ba62812a3f72af40a4",
+    "output/2026-10-10-skills-qualified-names-native/03-skills-before-query.png": "f4db318b13d8eadf748972a3621fc47977d1df08069e12fbad03d18ea70fcdfb",
+    "output/2026-10-10-skills-qualified-names-native/04-valid-ready.ax.txt": "379dd06e21f38dcf267cdbe232cba94315e8c972af7d34bb68389d3c7ff25d93",
+    "output/2026-10-10-skills-qualified-names-native/04-valid-ready.png": "ae84c8e3eb20ac92ce4df12127477c7b757e9ee4342bf2fd4e482cb4254c1e6c",
+    "output/2026-10-10-skills-qualified-names-native/05-qualified-result.ax.txt": "040ae49a4e444d52f070d4a533d840a51a8f61e30b8af5dcc33ab4beee668a42",
+    "output/2026-10-10-skills-qualified-names-native/05-qualified-result.png": "7c280b6c7b189d4af27f3debf27a69671f3adef2b14f8c85e868360abcbdf3b6",
+    "output/2026-10-10-skills-qualified-names-native/06-scope-boundary.ax.txt": "4943989aea8353b9e7b9895448a0f63bbdb26a97c9b82b09d7096f4594d22eb0",
+    "output/2026-10-10-skills-qualified-names-native/06-scope-boundary.png": "af974e28a9eba60c1e8010cf8089d7742d85459e64b371f37aafd710500a03f3",
+    "output/2026-10-10-skills-qualified-names-native/07-qualified-visible.ax.txt": "4943989aea8353b9e7b9895448a0f63bbdb26a97c9b82b09d7096f4594d22eb0",
+    "output/2026-10-10-skills-qualified-names-native/07-qualified-visible.png": "2cb543b10588b903c26cba3210523c7a247d5b42158d11a75f27c2d731e40ba4",
+    "output/2026-10-10-skills-qualified-names-native/08-qualified-name-pixels.ax.txt": "4943989aea8353b9e7b9895448a0f63bbdb26a97c9b82b09d7096f4594d22eb0",
+    "output/2026-10-10-skills-qualified-names-native/08-qualified-name-pixels.png": "2aa325e3b72bc81b510eed6bf284354a59780527a7bec1dfcc582fa16d672638",
+    "output/2026-10-10-skills-qualified-names-native/09-normal-quit-dialog.ax.txt": "c491503da974baeb9d74a623c9628bdb541557977fac0cb7aeb1c4bba3bfe8cf",
+    "output/2026-10-10-skills-qualified-names-native/09-normal-quit-dialog.png": "fe4f80557efbba986920e8df5f20dee88f00d2d3dbf58adc37bc5dfedd73409a",
+    "output/2026-10-10-skills-qualified-names-native/final-data-comparison-independent.json": "172e42aca73e3045d2cb388871f3f6b8ed3c619b58fadb415e560acd44d2a805",
+    "output/2026-10-10-skills-qualified-names-native/final-normal-exit.json": "9a4365ce9715bcfc7b79f6f9f793dea574298e4a1d1c87757450ff96a234f014",
+    "output/2026-10-10-skills-qualified-names-native/freeze-before-native.json": "651087522f37ad69d91e353db6b146aad4942f2c0eaaf0cb53f1af4d1df67ee7",
+    "output/2026-10-10-skills-qualified-names-native/scope.json": "e4e0f7f1549d7d80e48cf99c85f42312b989df6f6af8e8fbe7c02d186b3fd540"
+  },
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/candidate-independent.json": "782e3bea699d49224b63454feeaad2587e0f0d0c5788fe8ec12c0090a29abd41",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/install-independent.json": "6550e52a448fd12d82e50e161137ea9eca237dcd1b791771b53f142f37c016d9",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/duplicate-bundle-cleanup.json": "4c41f84c3b07b698387c0ea49a9d3255f4d008ea326784bea1561bd8ba6744a9",
+    "docs/evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/verification.json": "98183acf9786a7d47ba82c6423377f332622b7c283d47ec41b1b4f1d417dcf31",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/native-independent.json": "25519ae7e3bf17450873470e81e493d7d86ed96405c75e1d100b2f724089e851"
+  },
+  "next": "Continue success reminders and media failure feedback while retaining all original P39/P40/P41 and other market-readiness conditions."
+}
