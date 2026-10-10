@@ -1,0 +1,64 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~					195 按钮 (expanded) 收起对话内容, Secondary Actions: Collapse
++					238 container 对话内容面板
++						239 分离器 调整内容宽度, Value: 510
++						240 container 对话内容面板
++							241 开关按钮 文件与输出, Value: on
++							242 开关按钮 网页, Value: off
++						243 文本 文稿
++						244 弹出式按钮 查看方式, Value: 差异
++						245 按钮 放大内容
++						246 按钮 收起对话内容
++						247 文本 本轮产物
++						248 按钮 查看会话全部产物
++						249 container 报告的文件
++							250 文本 报告的文件
++							251 文本 2 个文件位置
++							252 文本 来自已完成的工具记录，尚未核实文件当前状态。
++							253 container
++								254 container /private/tmp/farfold-reported-0vgr9upp/alpha.md 文件差异 · 2 条工具记录
++									255 文本 /private/tmp/farfold-reported-0vgr9upp/alpha.md
++									256 按钮 查看文件 /private/tmp/farfold-reported-0vgr9upp/alpha.md
++									257 container
++										258 text 文件差异  ·  2 条工具记录
++									259 摘要 查看来源, Value: off
++										260 文本 查看来源
++								261 container /private/tmp/farfold-reported-0vgr9upp/beta.md 文件差异 · 1 条工具记录
++									262 文本 /private/tmp/farfold-reported-0vgr9upp/beta.md
++									263 按钮 查看文件 /private/tmp/farfold-reported-0vgr9upp/beta.md
++									264 container
++										265 text 文件差异  ·  1 条工具记录
++									266 摘要 查看来源, Value: off
++										267 文本 查看来源
++							268 文本 仅列出当前已加载记录中的文件位置。
++						269 container 选择内容
++							270 container /private/tmp/farfold-reported-0vgr9upp/alpha.md
+显示这个文件在本轮最后一次提供的内容。
++								271 弹出式按钮 选择内容, Value: alpha.md
++							272 开关按钮 统一, Value: on
++							273 开关按钮 并排, Value: off
++							274 按钮 复制文件路径
++							275 按钮 复制所示差异
++							276 按钮 (collapsed) 补充意见, Secondary Actions: Expand
++						277 container 文件交付
++							278 文本 Agent 提供了文件位置，尚未核实文件当前状态。
++							279 按钮 打开文件
++							280 按钮 核实文件
++							281 按钮 选择文件…
++							282 按钮 导出修改后文本…, Help: 只导出这一步的修改后文本，不代表取得了完整原文件。
++						283 按钮 修改前 · 片段第 1 行
++						284 按钮 修改后 · 片段第 1 行
++						285 文本 # Alpha
++						286 按钮 修改前 · 片段第 2 行
++						287 按钮 修改后 · 片段第 2 行
++						288 按钮 修改前 · 片段第 3 行
++						289 文本 −
++						290 文本 P19_ALPHA_V1
++						291 按钮 修改后 · 片段第 3 行
++						292 文本 +
++						293 文本 P19_ALPHA_V2
++						294 按钮 修改前 · 片段第 4 行
++						295 按钮 修改后 · 片段第 4 行
++						296 container
++							297 text 显示 Agent 报告的差异或文件内容，不代表文件当前状态。 按片段显示，行号从所示内容开头计数，不代表文件中的行号。
+The focused UI element is 83 HTML内容 Description: Farfold, URL: tauri://localhost

@@ -1,0 +1,25 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 84-123, 149-175
++			149 container 选择模型
++				150 container
++					151 标题 选择模型, Value: 2
++						152 文本 选择模型
++					153 按钮 关闭
++				154 文本栏 (settable) 搜索模型或服务, Placeholder: 搜索模型名称或服务名称
++				155 标题 Codex 的已有设置, Value: 3
++					156 文本 Codex 的已有设置
++				157 文本 使用 Agent 已有的账号或服务设置。
++				158 开关按钮 6 Astra, Value: on
++				159 开关按钮 6 Sol, Value: off
++				160 开关按钮 6 Luna, Value: off
++				161 开关按钮 5.6 Sol, Value: off
++				162 开关按钮 5.6 Terra, Value: off
++				163 开关按钮 5.6 Luna, Value: off
++				164 标题 你保存的 API 服务, Value: 3
++					165 文本 你保存的 API 服务
++				166 文本 还没有兼容的服务，可前往 API 管理添加。
++				167 文本 首次发送后，这段对话会保留所选的 Agent、来源和模型。
++				168 container
++					169 按钮 准备与连接
++					170 按钮 管理 API 服务
+The focused UI element is 154 文本栏 (settable) 搜索模型或服务, Placeholder: 搜索模型名称或服务名称

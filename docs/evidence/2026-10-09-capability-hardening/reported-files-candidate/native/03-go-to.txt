@@ -1,0 +1,24 @@
+The following is a diff from the previous accessibility tree for Window: "" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 83-225
+~81 表单 ID: GoToWindow, Secondary Actions: Raise
+~	82 文本 /Users/tw/Desktop/TR
++	83 按钮 Description: 关闭, ID: CloseButton
++	84 文本栏 (settable) Value: /Users/tw/Desktop/TR, ID: PathTextField
++	85 滚动区
++		86 表格
++			87 row (selectable)
++				88 单元格
++					89 文本 前往：
++			90 row (selected)
++				91 单元格 (selected)
++					92 列表 (disabled) Description: 路径, ID: /Users/tw/Desktop/TR
++						93 text Value: 用户 tw 桌面 TR, Secondary Actions: 打开
++			94 row (selectable)
++				95 单元格
++					96 列表 (disabled) Description: 路径, ID: /Users/tw/Desktop/TRAE WORKSPACE
++						97 text Value: 用户 tw 桌面 TRAE WORKSPACE, Secondary Actions: 打开
+Selected text: ```
+/Users/tw/Desktop/TR
+```
+
+Note: Pay special attention to the content selected by the user. If the user asks a question or refers to the content they are looking at on-screen, they might be referring to the selected content (but they might be referring to something else that's visible, too).

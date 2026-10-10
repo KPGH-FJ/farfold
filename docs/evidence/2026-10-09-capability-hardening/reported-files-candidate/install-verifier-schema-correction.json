@@ -1,0 +1,17 @@
+{
+  "reason": "Copied verifier expected previousNativeReceipt object; current frozen observation uses normalExitEvidence and normalExitEvidenceSha256. First failure was a verifier KeyError, not an installation or product failure.",
+  "oldScriptSha256": "a1a8661df8bf9ba085c3da1b1e4761d74cc05e86584180ae56d4b39c18e69ff0",
+  "newScriptSha256": "4a2c40201639901e00719e18fd9921718ca23861c2f263ba71709a9a9598326b",
+  "originalFailureSha256": "06d856dfeeb2e94744c2a064f1ae139a2b19759255142fb158f904936a1cf057",
+  "originalFailurePreserved": "install-independent-schema-failure.raw.txt",
+  "normalObservation": {
+    "path": "output/2026-10-10-reported-files-install/normal-exit-observation.json",
+    "sha256": "51089dd1bf5e2667438f3b1ff42e3fb3c43b022e03e00c1a8df786a441249629"
+  },
+  "priorNormalExitEvidence": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/real-rework/installed-rework.json",
+    "sha256": "3d742b3ceb9b3b2d1734541f04458be79b534e241b572e63fa067c12bae6b6f9"
+  },
+  "frozenInputsChanged": false,
+  "nextStep": "Rerun all ten checks without reinstalling, launching or taking new snapshots."
+}

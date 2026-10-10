@@ -1,0 +1,33 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 166, 198, 201, 208, 216
+~				152 按钮 新对话 ⌘ N
+~					155 按钮 所有对话 122
++				201 按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT 进行中
+~				170 按钮 Codex 26
++					202 按钮 1 进行中
+~					191 标题 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT, Value: 1
+~						192 文本 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT
+~					193 text farfold-reported-0vgr9upp · 进行中
+~					197 弹出式按钮 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORT的操作
+~					203 text 你  ·  11:39
+~					204 按钮 复制消息
+~					205 弹出式按钮 消息操作
+~					206 文本 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORTED_P19_20261010。仅允许在当前空工作目录内创建和修改 alpha.md、beta.md 两个文件。请使用你现有的 apply_patch 文件补丁工具（不是通过 shell 调用，也不要用 exec/终端写文件），依次完成两次工具调用：
+1. 第一条补丁新增 alpha.md，内容为“# Alpha\n\nP19_ALPHA_V1\n”，以及 beta.md，内容为“# Beta\n\nP19_BETA_KEEP\n”。这里\n表示换行。
+2. 第二条补丁仅把 alpha.md 中 P19_ALPHA_V1 改为 P19_ALPHA_V2，其他内容保持不变。
+如果没有可用的 apply_patch 工具，请说明限制并停止，不要改用其他工具，不要写文件。不要读取其他文件、不访问网络、不启动额外 Agent、不修改配置或权限。两条补丁成功后用简短文字确认，并提供两个实际文件的可点击路径。
++					199 摘要 最近收到的扩展字段, Value: off
++						200 文本 最近收到的扩展字段
+~					207 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 转向当前任务…（运行中发送将进入队列）
++						208 文本 转向当前任务…（运行中发送将进入队列）
+~					209 弹出式按钮 添加文件或图片
+~					210 弹出式按钮 模型与来源
+~					211 文本 思考
+~					212 弹出式按钮 (disabled) 思考深度: Ultra, Help: Ultra
+~					213 弹出式按钮 (disabled) 对话权限
+~					214 弹出式按钮 命令与模板
+~					215 按钮 停止
++					216 按钮 (disabled) 加入待发
++					217 弹出式按钮 对话用量
++					218 文本 ⏎ 排队
+The focused UI element is 207 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 转向当前任务…（运行中发送将进入队列）

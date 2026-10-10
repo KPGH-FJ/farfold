@@ -1,0 +1,29 @@
+--- before-schema.py
++++ verify-install-independent.py
+@@ -143,7 +143,7 @@
+     require(PRIVATE.stat().st_uid == os.getuid(), 'Private directory owner differs')
+     receipt_path = OUT / 'install-independent.json'
+     descriptor = os.open(receipt_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+-    record = {'checkedAtUtc': datetime.now(timezone.utc).isoformat(), 'sourceCommit': EXPECTED, 'result': 'failed', 'failures': [], 'checks': {}, 'methodOrigin': 'Adapted from the reviewed workbook-range ten-check verifier with corrected previousNativeReceipt schema; this is the visual-area invocation.'}
++    record = {'checkedAtUtc': datetime.now(timezone.utc).isoformat(), 'sourceCommit': EXPECTED, 'result': 'failed', 'failures': [], 'checks': {}, 'methodOrigin': 'Adapted from the reviewed workbook-range ten-check verifier with corrected previousNativeReceipt schema; this is the reported-file invocation.'}
+     stage = 'receiptChain'
+     with os.fdopen(descriptor, 'w') as handle:
+         try:
+@@ -166,7 +166,7 @@
+ 
+             stage = 'normalExitAndInstall'
+             require(normal['userAuthorizedContinuousDevelopment'] is True and normal['normalQuitObserved'] is True and normal['forcedQuit'] is False and normal['formalProcessCountAfter'] == 0, 'Normal exit observation missing')
+-            prior_native = normal['previousNativeReceipt']
++            prior_native = {'path': normal['normalExitEvidence'], 'sha256': normal['normalExitEvidenceSha256']}
+             require(isinstance(prior_native, dict) and set(prior_native) == {'path', 'sha256'} and isinstance(prior_native['path'], str) and prior_native['path'].startswith('docs/evidence/'), 'Invalid prior normal-exit evidence reference')
+             require(sha(ROOT / prior_native['path']) == prior_native['sha256'], 'Prior normal-exit evidence differs')
+             require(operation['candidateCommit'] == EXPECTED and operation['phase'] == 'installedVerifiedNotLaunched' and operation['installed'] is True and operation['copyStarted'] is True and operation['launched'] is False and operation['forcedQuit'] is False, 'Install operation did not finish closed')
+@@ -234,7 +234,7 @@
+             process_absent()
+             record['checks'][stage] = {'passed': True, 'publicAndPrivateReceiptHashesUnchanged': True, 'formalCandidateArchiveRechecked': True}
+             record['reviewedHelpers'] = [ref(p) for p in [Path(__file__), OUT / 'verify-candidate.py', OUT / 'verify-data-retention.py', PRIVATE / 'install_verified_candidate.py', PRIVATE / 'backup_metadata.py', PRIVATE / 'install_data_snapshot.py']]
+-            record['boundaries'] = ['Disk/hash/ZIP/signature/manifests and disposable SQLite verification only; root observed Cmd-Q.', 'No original database opened with SQLite; no rows or credentials printed or saved.', 'No app launch, replacement, quit, or duplicate bundle deletion by this verifier.', 'Installed PDF/image region interaction, historical-anchor recovery journey and real-Agent acceptance remain untested in this receipt.', 'Snapshot equivalence includes captured WAL; no claim beyond captured stable-source checks and equal installation manifests.']
++            record['boundaries'] = ['Disk/hash/ZIP/signature/manifests and disposable SQLite verification only; root observed Cmd-Q.', 'No original database opened with SQLite; no rows or credentials printed or saved.', 'No app launch, replacement, quit, or duplicate bundle deletion by this verifier.', 'Installed reported-file listing interaction and real-Agent acceptance remain untested in this receipt.', 'Snapshot equivalence includes captured WAL; no claim beyond captured stable-source checks and equal installation manifests.']
+             record['nativeReadyAfterRootDuplicateCleanup'] = True
+             record['result'] = 'passed'
+         except Exception as error:

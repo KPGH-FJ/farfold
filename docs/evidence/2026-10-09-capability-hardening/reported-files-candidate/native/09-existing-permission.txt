@@ -1,0 +1,9 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
++			216 container 对话权限
++				217 文本 对话权限
++				218 (settable, unknown) 对话权限
++					219 单选按钮 Ask for approval Always ask to edit external files and use the internet, Value: 0
++					220 单选按钮 Approve for me ✓ 当前 Only ask for actions detected as potentially unsafe, Value: 1
++					221 单选按钮 Full access Unrestricted access to the internet and any file on your computer, Value: 0
++				222 文本 只调整这条对话的后续操作。待发消息保持暂停，需要另行继续发送。
+The focused UI element is 219 单选按钮 Ask for approval Always ask to edit external files and use the internet, Value: 0

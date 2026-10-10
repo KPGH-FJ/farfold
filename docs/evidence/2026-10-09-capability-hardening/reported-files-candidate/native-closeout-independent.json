@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "checkedAtUtc": "2026-10-10T04:01:48.882740+00:00",
+  "status": "completed_no_new_blocker",
+  "reviewer": "verification",
+  "method": "Independent readonly receipt/hash/controlled official record and immutable retained SQLite-copy review. No application or Agent operation; not a second native visual witness.",
+  "formalSourceCommit": "394bb91af050c5944cc479c40f62e9559a367560",
+  "publicNativeReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/installed-reported-files.json",
+    "sha256": "41cdd66e831990e273a28da7c5bd5e11e581dacfe484f622d5c2a29732381a6d"
+  },
+  "publicReferencesVerified": 69,
+  "installChain": {
+    "candidateChecks": 9,
+    "installChecks": 10,
+    "exactFormalFiles": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+      "Contents/MacOS/farfold": "161ee98bec6516e08b10bd23d9c57707148c086d5e3c5d42d10179c2f5aded02",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+    },
+    "archiveSha256": "3b06427c6e349572a79bf53d741b8beed425aaf2dd07cd5b36b32127ddbc5768",
+    "archiveBytes": 12867859,
+    "zipCRC": "passed",
+    "strictCodesign": {
+      "exitCode": 0,
+      "output": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement\n"
+    },
+    "duplicateBundleAbsent": true,
+    "formalProcessCheck": {
+      "exitCode": 1,
+      "matches": 0
+    }
+  },
+  "privateCopies": [
+    {
+      "path": "output/2026-10-10-reported-files-install/metadata-before.sqlite3",
+      "sha256": "3b0204cfae5121780e2cce30695ab17d2e905177248c15d748b5129ab34014d9",
+      "integrity": "ok",
+      "sourceCaptureHashesMatch": true,
+      "copyUnchanged": true
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/pre-cold/metadata-before.sqlite3",
+      "sha256": "cf4874e9d0ce5afda826bf34e1b58cf0a2d58188c028b47d864066c5a4c7b1c1",
+      "integrity": "ok",
+      "sourceCaptureHashesMatch": true,
+      "copyUnchanged": true
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/after-cold/metadata-before.sqlite3",
+      "sha256": "06cfee804521dfb63c782b8bb15c0525e659094fcb5874674e659420fba2b8e6",
+      "integrity": "ok",
+      "sourceCaptureHashesMatch": true,
+      "copyUnchanged": true
+    }
+  ],
+  "retention": {
+    "groups": {
+      "composers": {
+        "baseline": 8,
+        "preCold": 8,
+        "afterCold": 8,
+        "originalValuesExactlyRetained": 8
+      },
+      "feedback": {
+        "baseline": 7,
+        "preCold": 8,
+        "afterCold": 8,
+        "originalValuesExactlyRetained": 7
+      },
+      "queues": {
+        "baseline": 3,
+        "preCold": 3,
+        "afterCold": 3,
+        "originalValuesExactlyRetained": 3
+      }
+    },
+    "warmColdUnsentExactlyEqual": true,
+    "originalSessionIdentityRowsRetained": 122,
+    "newSessionCount": 1,
+    "newControlledFeedbackGroups": 1,
+    "newControlledNonemptyOpinions": 1,
+    "opinionOriginalV2ContentIdExactlyRetained": true,
+    "originalDatabaseOpened": false,
+    "rawUnsentOrUserRowsPrinted": false
+  },
+  "controlledDisk": {
+    "alpha.md": {
+      "bytes": 22,
+      "sha256": "5a2f9d43a3244c44d4180ed36120b134a7979087e1c010db92e4e0cfcb4c0509"
+    },
+    "beta.md": {
+      "bytes": 22,
+      "sha256": "fbd015cc2e7b66c416c425e3d296cc6cbee49be1200021d0772f2dcaac7a63b6"
+    },
+    "beta-export.md": {
+      "bytes": 22,
+      "sha256": "fbd015cc2e7b66c416c425e3d296cc6cbee49be1200021d0772f2dcaac7a63b6"
+    }
+  },
+  "officialRecord": {
+    "appendOnlyVerification": {
+      "originalRecordedSha256": "7e7a5ccf99e5522b61dce129181bb7b2b5f41e08ae7936859f596ed38ba14ca4",
+      "currentSha256": "4c6b746f6da4977bb32eb912039064363ac5c12addac9860dad89e2d74fe6685",
+      "originalExactPrefixLines": 29,
+      "originalExactPrefixBytes": 116687,
+      "currentLines": 30,
+      "currentBytes": 117385,
+      "appendedEventTypes": ["thread_settings_applied"],
+      "appendedTaskStarts": 0,
+      "appendedToolCalls": 0,
+      "scope": "Exact byte-prefix verified; one thread_settings_applied event appended at 03:48:08.464Z; no new prompt, task or tool record in suffix. Does not by itself prove permission UI approval."
+    },
+    "sha256": "4c6b746f6da4977bb32eb912039064363ac5c12addac9860dad89e2d74fe6685",
+    "tasksStarted": 1,
+    "tasksCompleted": 1,
+    "outerToolNames": ["exec", "exec"],
+    "innerToolNames": [["apply_patch"], ["apply_patch"]],
+    "patchPaths": ["alpha.md", "beta.md", "alpha.md"],
+    "literalNoExecCompliance": false,
+    "scope": "One controlled official history only; no other sessions read."
+  },
+  "reviewerSetupCorrection": "First readonly verifier assertion included normal __MACOSX AppleDouble archive entries as application files; narrowed exact bundle comparison to Farfold.app/ while retaining full ZIP CRC and rejecting other top-level entries. Also decoded the recorded JavaScript string before extracting exact patch paths (outer raw input has escaped newlines). Both were verifier setup corrections, not product failures or source changes.",
+  "boundaries": [
+    "Root observed all nine native cases; this review verifies saved records and disk evidence, not pixels or a second installed UI journey.",
+    "Immediate post-CmdQ app inventory remained running; subsequent recorded and current exact process absence plus closed-app copies support completed exit.",
+    "Two outer Code Mode exec wrappers are preserved explicitly; only internal apply_patch edits were observed. No literal no-exec compliance claim.",
+    "Restored v2 bytes do not imply old opinion moved back into current-version group; saved contentId and other-content-versions distinction preserved.",
+    "Source workspace now contains next-slice changes; this review binds installed immutable candidate394bb91a, not current working tree.",
+    "Prior install217400 manifest proof is inherited through verified frozen install receipt hashes, not reclassified as post-native unchanged whole-data manifests.",
+    "No new real failed/canceled/unknown Agent operation proved, no other Agent/platform or complete P19 acceptance."
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/candidate.json",
+      "sha256": "8da406cbb96a2b33937f53365e80725971e66fc7bc0edfcf44f5771089dccf45"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/candidate-independent.json",
+      "sha256": "af1d99b1b0a77e49f7c66a3ab33f36a760346469470c4129011d8629395d3af0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/candidate-inputs.json",
+      "sha256": "497904690df5b86916ca644bfaa910a35da9b01514f9887daf8722ff537107c4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/install-independent.json",
+      "sha256": "a7c2e4d18884852ec32fd4b826e0577cae05d65d54073deb677252c1a9323dad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "e52225ca794626c723834ee196468f5fdf17d9803c3261b562f0abdc1dcdbb9e"
+    },
+    {
+      "path": "docs/status.md",
+      "sha256": "f7c11381f70a610d9a4aed1fc17947f9e78360e20bb746317031b2edca2ec288"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "1a0b03e5d92099485234368213ad70da599dbfe87c23655944e1c62a771dfe38"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "sha256": "fd38ee1e7ed826b4a271b14e43aac27e4831a5d56306f47d49d54e64ed80fde3"
+    }
+  ]
+}

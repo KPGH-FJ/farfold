@@ -1,0 +1,89 @@
+The following is a diff from the previous accessibility tree for Window: "打开" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 0-74
++82 表单 Description: 打开, ID: open-panel, Secondary Actions: Raise
++	83 分离组
++		84 滚动区 Secondary Actions: Scroll Up, Scroll Down
++			85 外框 边栏
++				86 row (selectable, expanded) Value: 个人收藏, Secondary Actions: Collapse
++				87 row (selectable) Description: 时钟, Value: 最近使用
++				88 row (selectable) 应用程序
++				89 row (selectable) 桌面
++				90 row (selectable) 文稿
++				91 row (selectable) Description: 箭头向下圆圈, Value: 下载
++				92 row (selectable, expanded) Value: 位置, Secondary Actions: Collapse
++				93 row (selectable) Description: iCloud, Value: iCloud云盘
++				94 row (selectable, expanded) Value: 标签, Secondary Actions: Collapse
++				95 row (selectable) 红色
++				96 row (selectable) 橙色
++				97 row (selectable) 黄色
++				98 row (selectable) 绿色
++				99 row (selectable) 蓝色
++				100 row (selectable) 紫色
++				101 row (selectable) 灰色
++				102 row (selectable) 所有标签…
++			103 滚动条 (settable, float) 0
++				104 值指示器 (settable, float) 0
++				105 增箭头按钮
++				106 减箭头按钮
++				107 增页面按钮
++				108 减页面按钮
++		109 分离器 (disabled, settable, float) 164
++		110 滚动区 Secondary Actions: Scroll Left, Scroll Right
++			111 外框 Description: 列表视图, ID: ListView
++				112 row (selectable) Description: 向下移动, Value: 今天
+大小
+种类
+添加日期
++				113 row (selectable)
++					114 单元格
++						115 图像
++						116 文本栏 (settable) URL: file:///private/tmp/farfold-reported-0vgr9upp/beta-export.md, Value: beta-export.md, Secondary Actions: 打开“访达”项目
++					117 单元格
++						118 文本 22 字节
++					119 单元格
++						120 文本 备忘录文稿
++					121 单元格
++						122 文本 今天 11:44
++				123 row (selectable)
++					124 单元格
++						125 图像
++						126 文本栏 (settable) URL: file:///private/tmp/farfold-reported-0vgr9upp/beta.md, Value: beta.md, Secondary Actions: 打开“访达”项目
++					127 单元格
++						128 文本 22 字节
++					129 单元格
++						130 文本 备忘录文稿
++					131 单元格
++						132 文本 今天 11:40
++				133 row (selectable)
++					134 单元格
++						135 图像
++						136 文本栏 (settable) URL: file:///private/tmp/farfold-reported-0vgr9upp/alpha.md, Value: alpha.md, Secondary Actions: 打开“访达”项目
++					137 单元格
++						138 文本 22 字节
++					139 单元格
++						140 文本 备忘录文稿
++					141 单元格
++						142 文本 今天 11:40
++				143 container
++					144 排序按钮 名称
++					145 排序按钮 大小
++					146 排序按钮 种类
++					147 排序按钮 添加日期
++			148 滚动条 (settable, float) 0
++				149 值指示器 (settable, float) 0
++				150 增箭头按钮
++				151 减箭头按钮
++				152 增页面按钮
++				153 减页面按钮
++	154 container
++		155 按钮 (disabled) 返回
++		156 按钮 (disabled) 前进
++	157 菜单按钮 Description: 列表, Help: 显示为图标、列表或分栏，和隐藏/显示边栏, ID: View Options
++	158 菜单按钮 Help: 更改项目的分组方式（按住Option键来更改排列顺序）, ID: Group or Sort By
++	159 弹出式按钮 位置：, Value: farfold-reported-0vgr9upp, ID: where popup
++	160 搜索文本栏 Search
++		161 按钮 搜索
++	162 按钮 新建文件夹, ID: NewFolderButton
++	163 按钮 取消, ID: CancelButton
++	164 按钮 打开, ID: OKButton
+The focused UI element is 111 外框 Description: 列表视图, ID: ListView

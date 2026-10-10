@@ -1,0 +1,48 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 165-173, 176-191, 193-197, 205-224
+~						162 文本 这一步的内容
+~						163 按钮 查看本轮全部内容
+~						164 按钮 查看会话全部产物
++						165 container 报告的文件
++							166 文本 报告的文件
++							167 文本 1 个文件位置
++							168 文本 来自已完成的工具记录，尚未核实文件当前状态。
++							169 container /private/tmp/farfold-reported-0vgr9upp/alpha.md 文件差异 · 1 条工具记录
++								170 文本 /private/tmp/farfold-reported-0vgr9upp/alpha.md
++								171 按钮 查看文件 /private/tmp/farfold-reported-0vgr9upp/alpha.md
++								172 container
++									173 text 文件差异  ·  1 条工具记录
++								174 摘要 查看来源, Value: off
++									175 文本 查看来源
++							176 文本 仅列出当前已加载记录中的文件位置。
++						177 container 选择内容
++							178 container /private/tmp/farfold-reported-0vgr9upp/alpha.md
+仅显示这一步的内容
++								179 弹出式按钮 选择内容, Value: alpha.md
++							180 开关按钮 统一, Value: on
++							181 开关按钮 并排, Value: off
++							182 按钮 复制文件路径
++							183 按钮 复制所示差异
++							184 按钮 (collapsed) 补充意见, Secondary Actions: Expand
++						185 container 文件交付
++							186 文本 Agent 提供了文件位置，尚未核实文件当前状态。
++							187 按钮 打开文件
++							188 按钮 核实文件
++							189 按钮 选择文件…
++							190 按钮 导出修改后文本…, Help: 只导出这一步的修改后文本，不代表取得了完整原文件。
++						191 按钮 修改前 · 片段第 1 行
+~						192 按钮 修改后 · 片段第 1 行
++						193 文本 # Alpha
++						194 按钮 修改前 · 片段第 2 行
++						195 按钮 修改后 · 片段第 2 行
++						196 按钮 修改前 · 片段第 3 行
++						197 文本 −
+~						198 文本 P19_ALPHA_V1
+~						199 按钮 修改后 · 片段第 3 行
+~						200 文本 +
+~						201 文本 P19_ALPHA_V2
+~						202 按钮 修改前 · 片段第 4 行
+~						203 按钮 修改后 · 片段第 4 行
+~						204 container
++							205 text 显示 Agent 报告的差异或文件内容，不代表文件当前状态。 按片段显示，行号从所示内容开头计数，不代表文件中的行号。
+The focused UI element is 2 HTML内容 Description: Farfold, URL: tauri://localhost

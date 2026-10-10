@@ -1,0 +1,35 @@
+{
+  "checkedAtUtc": "2026-10-10T03:35:55.709702+00:00",
+  "sourceCommit": "394bb91af050c5944cc479c40f62e9559a367560",
+  "result": "failed",
+  "failures": ["normalExitAndInstall"],
+  "checks": {
+    "receiptChain": {
+      "passed": true,
+      "candidateChecks": 9,
+      "candidateIndependent": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/candidate-independent.json",
+        "sha256": "af1d99b1b0a77e49f7c66a3ab33f36a760346469470c4129011d8629395d3af0",
+        "bytes": 4273
+      }
+    },
+    "normalExitAndInstall": {
+      "passed": false,
+      "errorType": "KeyError"
+    }
+  },
+  "methodOrigin": "Adapted from the reviewed workbook-range ten-check verifier with corrected previousNativeReceipt schema; this is the visual-area invocation.",
+  "inputReceipts": {
+    "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/candidate.json": "8da406cbb96a2b33937f53365e80725971e66fc7bc0edfcf44f5771089dccf45",
+    "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/candidate-inputs.json": "497904690df5b86916ca644bfaa910a35da9b01514f9887daf8722ff537107c4",
+    "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/candidate-independent.json": "af1d99b1b0a77e49f7c66a3ab33f36a760346469470c4129011d8629395d3af0",
+    "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/installed-data-retention.json": "165b88353c9b64002fd273cafe3c68134e654d6fea22ad074ed2d0aee436331f",
+    "output/2026-10-10-reported-files-install/install-operation.json": "d6759fb893f8c9745c00417cc72b169e379a09a097737f380d72e9a32aa38b28",
+    "output/2026-10-10-reported-files-install/normal-exit-observation.json": "51089dd1bf5e2667438f3b1ff42e3fb3c43b022e03e00c1a8df786a441249629",
+    "output/2026-10-10-reported-files-install/metadata-backup-receipt.json": "f72d2fad879ff287d897ae10b5c8543fb8c7c51d799539141577ac8f0a76c2bf",
+    "output/2026-10-10-reported-files-install/install-data-before-summary.json": "d3d81e85537fb063ce0fc72a976dc7f0f1f9d46534e3421d8fafb59762fbc809",
+    "output/2026-10-10-reported-files-install/install-data-preinstall-summary.json": "d3d81e85537fb063ce0fc72a976dc7f0f1f9d46534e3421d8fafb59762fbc809",
+    "output/2026-10-10-reported-files-install/install-data-after-summary.json": "d3d81e85537fb063ce0fc72a976dc7f0f1f9d46534e3421d8fafb59762fbc809"
+  },
+  "completedAtUtc": "2026-10-10T03:35:55.775986+00:00"
+}

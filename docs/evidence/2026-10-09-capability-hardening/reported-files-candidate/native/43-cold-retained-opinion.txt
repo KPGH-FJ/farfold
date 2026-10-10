@@ -1,0 +1,15 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+~							177 container (expanded) Secondary Actions: Collapse
+~								178 摘要 其他内容版本的意见, Value: on
++									179 文本 其他内容版本的意见
++								180 文本 意见仍对应当时查看的内容。可加入输入框，也可以复制；不会自动发送。
++								181 container
++									182 text /private/tmp/farfold-reported-0vgr9upp/alpha.md  ·  保留的意见 1
++								183 文本 关于 /private/tmp/farfold-reported-0vgr9upp/alpha.md（当时查看的内容）：
+文件 SHA-256：5a2f9d43a3244c44d4180ed36120b134a7979087e1c010db92e4e0cfcb4c0509
+P19_ALPHA_RETAIN_V2：这条意见只保留在此文件当前版本，不发送。
+
+此意见针对上述版本；若文件已变化，请先核对位置与内容。
++								184 按钮 加入输入框
++								185 按钮 复制意见
+The focused UI element is 178 摘要 其他内容版本的意见, Value: on

@@ -1,0 +1,9 @@
+The following is a diff from the previous accessibility tree for Window: "Farfold" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 202
+~				152 按钮 新对话 草稿 ⌘ N
++						216 文本 (settable) 这是 Farfold 成果文件列表的受控验证，标记 FARFOLD_REPORTED_P19_20261010。仅允许在当前空工作目录内创建和修改 alpha.md、beta.md 两个文件。请使用你现有的 apply_patch 文件补丁工具（不是通过 shell 调用，也不要用 exec/终端写文件），依次完成两次工具调用：
+1. 第一条补丁新增 alpha.md，内容为“# Alpha\n\nP19_ALPHA_V1\n”，以及 beta.md，内容为“# Beta\n\nP19_BETA_KEEP\n”。这里\n表示换行。
+2. 第二条补丁仅把 alpha.md 中 P19_ALPHA_V1 改为 P19_ALPHA_V2，其他内容保持不变。
+如果没有可用的 apply_patch 工具，请说明限制并停止，不要改用其他工具，不要写文件。不要读取其他文件、不访问网络、不启动额外 Agent、不修改配置或权限。两条补丁成功后用简短文字确认，并提供两个实际文件的可点击路径。
+~					211 按钮 发送
+The focused UI element is 201 文本输入区 (settable) 对话内容, Value: [文本输入区: 对话内容], Placeholder: 把想法放在这里…

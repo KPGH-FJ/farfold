@@ -1,0 +1,494 @@
+{
+  "kind": "installed-bounded-reported-files",
+  "observedAtUtc": "2026-10-10T03:53:14.607430+00:00",
+  "formalSourceCommit": "394bb91af050c5944cc479c40f62e9559a367560",
+  "version": "0.1.7",
+  "platform": "macOS arm64",
+  "nativeSessionId": "01a123e4-5319-7d60-9db6-ab66f4d9d432",
+  "cwd": "/private/tmp/farfold-reported-0vgr9upp",
+  "cases": [
+    {
+      "id": "existing-configuration",
+      "status": "passed",
+      "observations": [
+        "06-workspace-ready",
+        "07-existing-model",
+        "09-existing-permission"
+      ],
+      "result": "One owned empty workspace; existing Codex 6 Astra / Ultra / service and Approve for me unchanged."
+    },
+    {
+      "id": "actual-reported-files",
+      "status": "passed",
+      "observations": [
+        "10-prompt-ready",
+        "11-request-sent",
+        "12-real-result",
+        "13-round-files"
+      ],
+      "result": "One real request completes two patch operations. Task list deduplicates alpha across two sources and beta across one source into exactly two paths."
+    },
+    {
+      "id": "source-scope",
+      "status": "passed",
+      "observations": [
+        "14-alpha-sources",
+        "15-first-source",
+        "16-back-round",
+        "17-round-sources",
+        "18-second-source"
+      ],
+      "result": "First source contains alpha and beta; second source only alpha and original v1-to-v2 diff; return restores the round scope."
+    },
+    {
+      "id": "verified-file-and-opinion",
+      "status": "passed",
+      "observations": [
+        "19-verified-alpha",
+        "20-opinion",
+        "21-opinion-written",
+        "22-return-output",
+        "23-all-files"
+      ],
+      "result": "Explicit file opening reads actual v2 bytes. One whole-file opinion keeps v2 SHA and remains unsent; no implicit file proof from report listing."
+    },
+    {
+      "id": "missing-and-restored",
+      "status": "passed",
+      "observations": ["24-missing-reported-file", "25-beta-recovered"],
+      "result": "Root temporarily moves only owned beta unchanged. Opening shows unavailable/unverified state, not stale alpha success; restoring original bytes and explicitly reopening succeeds."
+    },
+    {
+      "id": "complete-export",
+      "status": "passed",
+      "observations": [
+        "26-save-file",
+        "27-export-target",
+        "28-export-result",
+        "29-export-completed",
+        "30-files-after-export"
+      ],
+      "result": "Actual full export completes22/22; independently byte-equal to beta. Extra exported disk file does not create a third Agent-reported entry."
+    },
+    {
+      "id": "external-version-change",
+      "status": "passed",
+      "observations": [
+        "31-reopen-new-disk-version",
+        "32-old-version-opinion",
+        "33-alpha-restored"
+      ],
+      "result": "Root changes only owned alpha to v3 then restores actual Agent v2. Explicit reads follow disk while old opinion remains attached to original v2 SHA. This is not an Agent edit or new report."
+    },
+    {
+      "id": "cold-restore",
+      "status": "passed",
+      "observations": [
+        "39-idle-before-cold",
+        "40-cold-controlled-conversation",
+        "41-cold-reported-list",
+        "42-cold-open-alpha",
+        "43-cold-retained-opinion"
+      ],
+      "result": "Cold official history replay restores two reports, source counts2/1, original diff and actual alpha v2 preview. Old v2 opinion survives; permission reconfirmation is required but not approved; no second prompt."
+    },
+    {
+      "id": "safe-finish",
+      "status": "passed",
+      "observations": [
+        "34-new-draft-restore-folder",
+        "35-default-folder-picker",
+        "36-default-go-to",
+        "37-original-folder",
+        "38-default-restored",
+        "44-before-normal-quit"
+      ],
+      "result": "Default directory restored to /Users/tw/Desktop/TR. No running work; final CmdQ followed by proven formal process absence and safe closed-app copies. All existing8 composers/7 feedback groups/3 queues exact."
+    }
+  ],
+  "diskChecks": {
+    "alpha.md": {
+      "bytes": 22,
+      "sha256": "5a2f9d43a3244c44d4180ed36120b134a7979087e1c010db92e4e0cfcb4c0509"
+    },
+    "beta.md": {
+      "bytes": 22,
+      "sha256": "fbd015cc2e7b66c416c425e3d296cc6cbee49be1200021d0772f2dcaac7a63b6"
+    },
+    "beta-export.md": {
+      "bytes": 22,
+      "sha256": "fbd015cc2e7b66c416c425e3d296cc6cbee49be1200021d0772f2dcaac7a63b6"
+    }
+  },
+  "draftRetention": {
+    "originalDatabaseOpened": false,
+    "integrity": "ok",
+    "groups": {
+      "composers": {
+        "before": 8,
+        "preCold": 8,
+        "afterCold": 8,
+        "existingExactlyUnchanged": 8
+      },
+      "feedback": {
+        "before": 7,
+        "preCold": 8,
+        "afterCold": 8,
+        "existingExactlyUnchanged": 7
+      },
+      "queues": {
+        "before": 3,
+        "preCold": 3,
+        "afterCold": 3,
+        "existingExactlyUnchanged": 3
+      }
+    },
+    "coldUnsentExactlyUnchanged": true,
+    "existingSessionIdentityRowsRetained": 122,
+    "newSessions": [
+      [
+        "codex:/private/tmp/farfold-reported-0vgr9upp:01a123e4-5319-7d60-9db6-ab66f4d9d432",
+        "codex",
+        "/private/tmp/farfold-reported-0vgr9upp",
+        "01a123e4-5319-7d60-9db6-ab66f4d9d432"
+      ]
+    ],
+    "retainedControlledOpinion": {
+      "text": "P19_ALPHA_RETAIN_V2：这条意见只保留在此文件当前版本，不发送。",
+      "selection": null,
+      "contentId": "disk:[\"/private/tmp/farfold-reported-0vgr9upp/alpha.md\",\"b603daafeb67d80d81793ea6983f4c5d4d12c584175c9b5a71d38f666a5e7bc5\",\"5a2f9d43a3244c44d4180ed36120b134a7979087e1c010db92e4e0cfcb4c0509\"]",
+      "scope": "file",
+      "path": "/private/tmp/farfold-reported-0vgr9upp/alpha.md"
+    },
+    "copyHashes": {
+      "metadata-before.sqlite3": "3b0204cfae5121780e2cce30695ab17d2e905177248c15d748b5129ab34014d9",
+      "pre-cold/metadata-before.sqlite3": "cf4874e9d0ce5afda826bf34e1b58cf0a2d58188c028b47d864066c5a4c7b1c1",
+      "after-cold/metadata-before.sqlite3": "06cfee804521dfb63c782b8bb15c0525e659094fcb5874674e659420fba2b8e6"
+    }
+  },
+  "officialSession": {
+    "officialRecord": "/Users/tw/.codex/sessions/2026/10/10/rollout-2026-10-10T11-38-48-01a123e4-5319-7d60-9db6-ab66f4d9d432.jsonl",
+    "sha256": "7e7a5ccf99e5522b61dce129181bb7b2b5f41e08ae7936859f596ed38ba14ca4",
+    "events": {
+      "task_started": 1,
+      "item_completed": 6,
+      "token_count": 3,
+      "task_complete": 1
+    },
+    "contexts": [
+      {
+        "cwd": "/private/tmp/farfold-reported-0vgr9upp",
+        "model": "gpt-6-astra",
+        "effort": "ultra",
+        "approval_policy": "on-request"
+      }
+    ],
+    "calls": [
+      {
+        "type": "custom_tool_call",
+        "name": "exec"
+      },
+      {
+        "type": "custom_tool_call",
+        "name": "exec"
+      }
+    ]
+  },
+  "toolScopeCaveat": "Official history outer custom_tool_call is exec twice (Code Mode JavaScript wrappers), each invokes tools.apply_patch only. No shell/exec_command or other file/network tool occurred. The prompt prohibited exec/terminal writing; no literal no-exec compliance claim is made. Both underlying patch edits were bounded to the two owned files.",
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/01-startup.png",
+      "sha256": "844796531a61a66c2b2bb69eb2e54c8c9f82ef5b22075739f6c6e3212e64f0c6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/01-startup.txt",
+      "sha256": "4f2743057a99a10c0ca5d869ed6d5e319ffd6d3555fa99494733dff778afe2a6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/02-folder-picker.txt",
+      "sha256": "c69059a10d15652aa4b221076c774f2f7bae5d0ceafabc61a0436287084a9d26"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/03-go-to.txt",
+      "sha256": "63cc9b268496bc0453e786715b096695caee670bf17daabf5f1677da1e212bfb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/04-owned-folder.txt",
+      "sha256": "ab512875eafd5bb7ec2a58af7135eba537d3739d235eb8a9ff5ff3ed9475f411"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/05-folder-applied.txt",
+      "sha256": "3e042bfac834f07160dbb8f53a2fa6228857b4d67429ce6313b7c38646ce75e7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/06-workspace-ready.txt",
+      "sha256": "b7a9c732aa0d54ec20bb9a0fd5857e5dccccbbd965f49affaefc493881e35cd4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/07-existing-model.txt",
+      "sha256": "ba3803a9806b86592edac344cac7fe7dd0032838322ee70f1fa672b57348168d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/08-model-closed.txt",
+      "sha256": "2adf6252e82098798e3d7a4345ef217d484e2b34eae20ce594c16c1b8bbe5a8d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/09-existing-permission.txt",
+      "sha256": "563c8337a7c4a6aa7861812c0af9f064cfe3476a0ef3ca30a7147ba17f713f6b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/10-prompt-ready.txt",
+      "sha256": "18ffd2178e7c3e081b7a242c28821967ca66ab7b8237d742c70d8cf7220ea6c7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/11-request-sent.txt",
+      "sha256": "a10b55a5519ea35b688410d6a1d5fa22032c130bdcd6c36c8317ffd8e2cf5ee7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/12-real-result.txt",
+      "sha256": "b8768d9fe9b3b9b0f4e6d12036e556ca051ef817439c68b5c3e6dab6404b3504"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/13-round-files.png",
+      "sha256": "8b435c56ef411e9b58a4efd18ba65de3482276f1b4c1cdb274989cb9f1ff2cc1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/13-round-files.txt",
+      "sha256": "833719f5451d43bfe440e56a27fa8e48e94bbe3fdba7996a4d76576eb2c58535"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/14-alpha-sources.txt",
+      "sha256": "5d57b1dbb40452535edc8d5d4958aa149ea51df9679515ee97b0d5b08910c711"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/15-first-source.txt",
+      "sha256": "d5a126a46ef223ba25bb62bb78eab335166a6f96d600e7e3deb2f8a426329991"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/16-back-round.txt",
+      "sha256": "bad0529ddd5bd10fba2cb42558196951b17afc91118da4af679f29c9b56ef56c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/17-round-sources.txt",
+      "sha256": "1e768a09ba7e866b843cb54f78b132728c2d918149133f1879fb70b3baa34375"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/18-second-source.txt",
+      "sha256": "eaf96759c4cfc1747ac4ea943cd05edfc7e867c88d4250650851a0346f04c265"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/19-verified-alpha.txt",
+      "sha256": "6e19bd7da0e5d0f6e2f4be10566965a789358cd06a35c14c38401c3c621dc6db"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/20-opinion.txt",
+      "sha256": "8bf2c0fc4a0dd67acdeeb012da7a26fe80c8edba34236844a3c5c68fa0438f9b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/21-opinion-written.txt",
+      "sha256": "324eb014908e2eff4166ec1944b14bdb8420a0e52eed34f65a7cd3d843042c6f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/22-return-output.txt",
+      "sha256": "04cc87bbe01931a684f966447def2018401347b9ddc81e253f17d1602a112695"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/23-all-files.txt",
+      "sha256": "52c484f1656c681622d1cca4705a3b2c271e24d2c75c5bf389c1f153dfd5d68b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/24-missing-reported-file.png",
+      "sha256": "58bb4bb6cd33efcf15adf84f36295a31650eaafab68025369642590b563f2767"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/24-missing-reported-file.txt",
+      "sha256": "94444d4c1d9aa0f6124222544ef98a29613222af025294ee50a478c26c59c91e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/25-beta-recovered.txt",
+      "sha256": "54a0737ad49b0ae816d87c4900810cff7e29934fc80c21426fa0c9ef00cf3e08"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/26-save-file.txt",
+      "sha256": "50ee46fe9b3069475d77298e518fbb6a9d134c84d2bcc5df0f7e66b8ec379941"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/27-export-target.txt",
+      "sha256": "315813116bf65a660190622313f6391fd4ba873e6f27311d4ece2597eebe3b2e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/28-export-result.txt",
+      "sha256": "e3e0ea71943446ca6d4524ac3184e1a33a18f6e93004ec44ced08d25b4e1f8f5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/29-export-completed.txt",
+      "sha256": "ea391e980695d7f7857a3e728036d494b16bc0aafa6112820c68901ca86a949d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/30-files-after-export.txt",
+      "sha256": "21debcdd6204220a21e020717128c35f072c3dbabc585c3b6241e6e610ef59e3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/31-reopen-new-disk-version.txt",
+      "sha256": "173f0cedcac08f2c20d5e2bfdb5c7b678d690d79f39788e2abc9494b1464d184"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/32-old-version-opinion.png",
+      "sha256": "05529448bbc4dc50472970d026d6eafb5d84eb8c2a821bdaf1a6fed252321a65"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/32-old-version-opinion.txt",
+      "sha256": "5abe7896dc7ea3ed60cd6695ccaf0998eaf21bd2c18e10e230cc47fb36364768"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/33-alpha-restored.txt",
+      "sha256": "10d463cf54b682fbdc3b6751cda8d8945193dc32c9a2a297bd24847b976a7bfc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/34-new-draft-restore-folder.txt",
+      "sha256": "0b944c4cd50d02fc41170420fc55c0f6160d7b3c6afd4cd1059d70655d80d3d9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/35-default-folder-picker-before.txt",
+      "sha256": "dbfd4b0f5b8532b5b75f12634cc3a0ccc522087e1941a451b0310ba01de55449"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/35-default-folder-picker.txt",
+      "sha256": "9e0feb11436cd58f6321c1104fcf2c3a5c21a8fdaa16be0dc91a07785103070c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/36-default-go-to.txt",
+      "sha256": "65fc7ba01476585290e3280b0dffdf0ecfdbb5ea22ce520faa1ef8355bc47258"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/37-original-folder.txt",
+      "sha256": "cf54aca8c413ff0eecbac330c2ed00c0a8f5422e5778130c3854aa27ef98d4b7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/38-default-restored.txt",
+      "sha256": "a39f5388b8597b4770cc012fbf6abd24024b1598a259e704a8c27b1fc581019f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/39-idle-before-cold.txt",
+      "sha256": "484b4c758b3858a5232cb49622a44bc98986c91723022d950dc8437135d0c385"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/40-cold-controlled-conversation-before.txt",
+      "sha256": "399f2ebd7d0771f840cf03eed3d0aecbfae185ae3fd7c0ecbcf13b1ed5dff23f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/40-cold-controlled-conversation.txt",
+      "sha256": "07411eac6f8264bfd6458bbb7dd4361507888aed2ff3311dfffa2e1b393db2de"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/41-cold-reported-list.png",
+      "sha256": "6cc7d024fab3dfac707274a182e3cc96587d07c7f20aac5d1f6e128e1f72788d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/41-cold-reported-list.txt",
+      "sha256": "b3ad1885013874626e6ea53d69a8fd4513b574a3297cb74331715e63d2d1d2a5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/42-cold-open-alpha-before.txt",
+      "sha256": "bb98cfc9e83718bfc2425d5a53e7af99768a18576efa225d7010aefc698250d2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/42-cold-open-alpha.txt",
+      "sha256": "f313bd6168c22d904ae895275b4bd0d59fe4d4bbe91b8d9904df020fd6c52034"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/43-cold-retained-opinion.png",
+      "sha256": "8a681fa22bdd9f315fed1b3a5bdadb68069de92d09f6032efbad1f5d5ba1ac92"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/43-cold-retained-opinion.txt",
+      "sha256": "3318cc3c36888204ed120890ac2af0034d2720e1397b9e9cf00d5479459b168c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/44-before-normal-quit.txt",
+      "sha256": "6706fa5434e3ebece9472c443859be59f995ae320a79a0de7cb205ef6d2ec9c7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/native/45-after-normal-quit.json",
+      "sha256": "13b961fdd34e8004493d2ad0b73082d60023a8a5a8e0fa9f18c388b4636c4d07"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/alpha.md.raw.txt",
+      "sha256": "5a2f9d43a3244c44d4180ed36120b134a7979087e1c010db92e4e0cfcb4c0509"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/beta.md.raw.txt",
+      "sha256": "fbd015cc2e7b66c416c425e3d296cc6cbee49be1200021d0772f2dcaac7a63b6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/reported-files-candidate/beta-export.md.raw.txt",
+      "sha256": "fbd015cc2e7b66c416c425e3d296cc6cbee49be1200021d0772f2dcaac7a63b6"
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/native-data-retention.json",
+      "sha256": "73f34eb0e91f825b4bf4814c0d856df291c907b2c34451f90a522c48d25b268f"
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/final-process-absence.json",
+      "sha256": "2fa9b1d9261dae0c0303d72bf0532e332c497c26ad47d3ed15687ee3737e2450"
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/metadata-backup-receipt.json",
+      "sha256": "f72d2fad879ff287d897ae10b5c8543fb8c7c51d799539141577ac8f0a76c2bf"
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/pre-cold/metadata-backup-receipt.json",
+      "sha256": "629966df205e27c48a895de4880ffd5c99ac470bd15967f68be3bbf8cadc0d73"
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/after-cold/metadata-backup-receipt.json",
+      "sha256": "9c2a9523aec4fe7434c88fe641719460a490a548440c9ee68013579de0b92a12"
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/official-session-summary.json",
+      "sha256": "788ce048d6083a6f3ba8573b2f4ad53713f6ce6a43bde91a3afafd8736660bd2"
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/controlled-alpha-v3.json",
+      "sha256": "35a8cea6d4a8196e0dcede85cc7b364dfaeb622985bbfc6400a34829d98df598"
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/controlled-alpha-restored.json",
+      "sha256": "24e36e0c5cee0025e3d53a59220004b5f86da442c140db67b0ecea64f3f9040b"
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/controlled-beta-moved.json",
+      "sha256": "f0d8b2780dd4c87ee3ac0743bf9566045b026dad52660fff5605c7930d994bd9"
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/controlled-beta-restored.json",
+      "sha256": "3c73cd8f7cf43626e9e6228dd295e7384eaa307f0b921346d3682f80f1cf45ec"
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/export-disk-check.json",
+      "sha256": "6a8573a7041fdf19a5060110679609b24e7627e36f2c778ec67bd1a8756f9a23"
+    },
+    {
+      "path": "output/2026-10-10-reported-files-install/driver-diagnostics.json",
+      "sha256": "fa7e10eaaa4b4f7ab57074060fe9b19aa3454057da3a4c89e4b90012ceaf89f7"
+    }
+  ],
+  "finish": {
+    "normalQuit": true,
+    "formalProcessAbsent": true,
+    "filesAndUnsentOpinionPreserved": true,
+    "defaultFolderRestored": true
+  },
+  "driverDiagnostics": [
+    "Immediate app inventory after CmdQ still reported isRunning=true; later exact process check and closed-app backup confirmed exit. Immediate inventory alone is not exit proof.",
+    "Preinstall summary was read while snapshot producer was still running; original JSONDecodeError retained, same process finished successfully before replacement.",
+    "Independent install verifier initially expected a prior receipt schema. Frozen actual operation and snapshots preserved; schema correction and first KeyError retained separately."
+  ],
+  "notProven": [
+    "Only this macOS/Codex/model/service/two small Markdown file path, not all Agents or full P19/market acceptance.",
+    "No unreported filesystem discovery, recursive scanning, global persistent output inventory or file validity inferred from Agent report.",
+    "No cancelled/failed/unknown real Agent tool operation in this journey; those remain controlled test evidence.",
+    "Cold history restore did not confirm conversation permission or send a new request.",
+    "Old version opinion remains under other-content-versions after root replaced and restored disk bytes; original SHA remains exact, no current-version reattachment claim."
+  ]
+}

@@ -1,0 +1,151 @@
+The following is a diff from the previous accessibility tree for Window: "打开" with ~ and + representing changed and added elements, respectively. Removed elements are summarized by ID range.
+Removed element IDs: 84-94
+~82 表单 Description: 打开, ID: open-panel, Secondary Actions: Raise
+~	83 分离组
++		84 滚动区 Secondary Actions: Scroll Up, Scroll Down
++			85 外框 边栏
++				86 row (selectable, expanded) Value: 个人收藏, Secondary Actions: Collapse
++				87 row (selectable) Description: 时钟, Value: 最近使用
++				88 row (selectable) 应用程序
++				89 row (selectable) 桌面
++				90 row (selectable) 文稿
++				91 row (selectable) Description: 箭头向下圆圈, Value: 下载
++				92 row (selectable, expanded) Value: 位置, Secondary Actions: Collapse
++				93 row (selectable) Description: iCloud, Value: iCloud云盘
++				94 row (selectable, expanded) Value: 标签, Secondary Actions: Collapse
++				95 row (selectable) 红色
++				96 row (selectable) 橙色
++				97 row (selectable) 黄色
++				98 row (selectable) 绿色
++				99 row (selectable) 蓝色
++				100 row (selectable) 紫色
++				101 row (selectable) 灰色
++				102 row (selectable) 所有标签…
++			103 滚动条 (settable, float) 0
++				104 值指示器 (settable, float) 0
++				105 增箭头按钮
++				106 减箭头按钮
++				107 增页面按钮
++				108 减页面按钮
++		109 分离器 (disabled, settable, float) 164
++		110 滚动区 Secondary Actions: Scroll Left, Scroll Right
++			111 外框 Description: 列表视图, ID: ListView
++				112 row (selectable) Description: 向下移动, Value: 昨天
+大小
+种类
+添加日期
++				113 row (selectable)
++					114 单元格
++						115 图像
++						116 文本栏 (settable) URL: file:///Users/tw/Desktop/TR/dog-mole-whack.html, Value: dog-mole-whack.html, Secondary Actions: 打开“访达”项目
++					117 单元格
++						118 文本 40 KB
++					119 单元格
++						120 文本 HTML文本
++					121 单元格
++						122 文本 昨天 13:58
++				123 row (selectable) 过去7天
++				124 row (selectable)
++					125 单元格
++						126 图像
++						127 文本栏 (settable) URL: file:///Users/tw/Desktop/TR/cat_fishing.html, Value: cat_fishing.html, Secondary Actions: 打开“访达”项目
++					128 单元格
++						129 文本 47 KB
++					130 单元格
++						131 文本 HTML文本
++					132 单元格
++						133 文本 2026年10月5日 01:06
++				134 row (selectable)
++					135 单元格
++						136 图像
++						137 文本栏 (settable) URL: file:///Users/tw/Desktop/TR/%E6%98%A5%E6%97%A5.md, Value: 春日.md, Secondary Actions: 打开“访达”项目
++					138 单元格
++						139 文本 124 字节
++					140 单元格
++						141 文本 备忘录文稿
++					142 单元格
++						143 文本 2026年10月3日 21:44
++				144 row (selectable)
++					145 单元格
++						146 图像
++						147 文本栏 (settable) URL: file:///Users/tw/Desktop/TR/ultraman_vs_zombies.html, Value: ultraman_vs_zombies.html, Secondary Actions: 打开“访达”项目
++					148 单元格
++						149 文本 186 KB
++					150 单元格
++						151 文本 HTML文本
++					152 单元格
++						153 文本 2026年10月3日 17:48
++				154 row (selectable, collapsed) Secondary Actions: Expand
++					155 单元格
++						156 图像
++						157 文本栏 (settable) URL: file:///Users/tw/Desktop/TR/ultraman/, Value: ultraman, Secondary Actions: 打开“访达”项目
++					158 单元格
++						159 文本 --
++					160 单元格
++						161 文本 文件夹
++					162 单元格
++						163 文本 2026年10月3日 16:16
++				164 row (selectable) 过去30天
++				165 row (selectable)
++					166 单元格
++						167 图像
++						168 文本栏 (settable) URL: file:///Users/tw/Desktop/TR/pelican_coastal_ride.html, Value: pelican_coastal_ride.html, Secondary Actions: 打开“访达”项目
++					169 单元格
++						170 文本 17 KB
++					171 单元格
++						172 文本 HTML文本
++					173 单元格
++						174 文本 2026年9月21日 10:05
++				175 row (selectable)
++					176 单元格
++						177 图像
++						178 文本栏 (settable) URL: file:///Users/tw/Desktop/TR/horse_eating_grass.html, Value: horse_eating_grass.html, Secondary Actions: 打开“访达”项目
++					179 单元格
++						180 文本 17 KB
++					181 单元格
++						182 文本 HTML文本
++					183 单元格
++						184 文本 2026年9月20日 16:42
++				185 row (selectable)
++					186 单元格
++						187 图像
++						188 文本栏 (settable) URL: file:///Users/tw/Desktop/TR/index.html, Value: index.html, Secondary Actions: 打开“访达”项目
++					189 单元格
++						190 文本 18 KB
++					191 单元格
++						192 文本 HTML文本
++					193 单元格
++						194 文本 2026年9月5日 23:52
++				195 row (selectable)
++					196 单元格
++						197 图像
++						198 文本栏 (settable) URL: file:///Users/tw/Desktop/TR/%E5%8A%A1%E5%B7%A5%E8%AF%81%E6%98%8E%E6%A8%A1%E6%9D%BF.docx, Value: 务工证明模板.docx, Secondary Actions: 打开“访达”项目
++					199 单元格
++						200 文本 4 KB
++					201 单元格
++						202 文本 Word 2007 (.docx)文稿
++					203 单元格
++						204 文本 2026年9月2日 16:34
++				205 container
++					206 排序按钮 名称
++					207 排序按钮 大小
++					208 排序按钮 种类
++					209 排序按钮 添加日期
++			210 滚动条 (settable, float) 0
++				211 值指示器 (settable, float) 0
++				212 增箭头按钮
++				213 减箭头按钮
++				214 增页面按钮
++				215 减页面按钮
++	216 container
++		217 按钮 返回
++		218 按钮 (disabled) 前进
++	219 菜单按钮 Description: 列表, Help: 显示为图标、列表或分栏，和隐藏/显示边栏, ID: View Options
++	220 菜单按钮 Help: 更改项目的分组方式（按住Option键来更改排列顺序）, ID: Group or Sort By
++	221 弹出式按钮 位置：, Value: TR, ID: where popup
++	222 搜索文本栏 Search
++		223 按钮 搜索
++	224 按钮 新建文件夹, ID: NewFolderButton
++	225 按钮 取消, ID: CancelButton
++	226 按钮 打开, ID: OKButton
+The focused UI element is 111 外框 Description: 列表视图, ID: ListView

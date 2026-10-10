@@ -6,9 +6,9 @@
 
 | 层级         | 已有证据                                                                                      | 不能据此推出                                             |
 | ------------ | --------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| 产品源码     | PDF/图片区域及恢复预览修复已安装，区域分项实机通过；P19清单继续开发                           | 所有已列能力已补齐                                       |
-| 工程检查     | 1,201输入稳定；前端331文件/3,977项、类型、打包、格式通过；本轮Rust1,230项/6忽略按精确输入复用 | 所有 Agent、系统权限及安装环境通过                       |
-| 正式安装     | 当前 `a47a6652` / 0.1.7 arm64；区域意见与冷恢复分项通过；已正常退出                           | 全产品 UI/UX、通知送达、真实停止恢复与 29 家完整接入通过 |
+| 产品源码     | P19成果清单已安装并分项实机通过；网页请求与已加载正文搜索继续开发                             | 所有已列能力已补齐                                       |
+| 工程检查     | 1,215输入稳定；前端338文件/4,057项、类型、打包、格式通过；未变Rust1,230项/6忽略按精确输入复用 | 所有 Agent、系统权限及安装环境通过                       |
+| 正式安装     | 当前 `394bb91a` / 0.1.7 arm64；成果清单与冷恢复分项通过；已正常退出                           | 全产品 UI/UX、通知送达、真实停止恢复与 29 家完整接入通过 |
 | 历史真实使用 | 部分 Agent、模型和路径有成功、失败与未测记录，逐条保留当时配置与版本                          | 跨版本累计成功等于当前 29 家全部通过                     |
 | 本轮能力审查 | 122 个唯一编号，基于源码、历史证据与同行官方资料/定向源码                                     | 122 个缺陷、122 个已获批准的新功能或市场达标证明         |
 
@@ -65,6 +65,8 @@ PDF/图片区域意见已提交安装 `a47a6652` / 0.1.7 arm64，候选独立9/9
 
 P22 已在正式 `a47a6652` 上完成一条有界真实 Codex 返工：[正式窗口与磁盘证据](evidence/2026-10-09-capability-hardening/real-rework/installed-rework.json)核到沿用 6 Astra / Ultra、既有服务与权限，两次请求分别生成文件和按意见修改。实际工具先核旧 SHA，再只将目标行 draft 改为 ready；明确重读显示新内容，另一条未发意见仍属于旧版本，实际完整另存 93 字节与新文件逐字节相同。保存选择器取消未产生文件；受控移走后重读明确失败，恢复原文件后可重新打开。正常退出后旧8条输入中7条逐值相同、1条仅sendPending缺省规范为false；旧6组意见和3组待发逐值不变。[独立核对](evidence/2026-10-09-capability-hardening/real-rework/independent-review.json)另核官方两次请求、文件字节、私有数据副本及正式包链。此为macOS/Codex/小Markdown正常返工及选择器取消证明；运行中Agent/复制取消、失败返工、结果未知、其他格式和环境仍未完成。
 
+P19 成果清单已提交安装 `394bb91a` / 0.1.7 arm64。[正式窗口与文件核对](evidence/2026-10-09-capability-hardening/reported-files-candidate/installed-reported-files.json)确认同一真实 Codex 请求的两次补丁报告去重为两个文件，来源次数2/1、单步与本轮切换、实际读取、移动失败/恢复、完整另存22字节、换版旧意见及重启恢复。沿用 6 Astra / Ultra、既有服务和权限；官方外层工具记录为两次 Code Mode `exec` 包裹内部 `tools.apply_patch`，没有 shell 写文件，不声称满足提示的字面“无exec”。正常退出后旧8条输入、7组意见、3组待发逐值保持，新增仅受控意见，冷恢复没有再次发送或确认权限。[工程检查](evidence/2026-10-09-capability-hardening/reported-files-checks/final-verification.json)1,215输入稳定，前端338文件/4,057项及类型、打包、格式通过；未变Rust1,230项/6忽略按精确输入复用。候选独立9/9、安装10/10，三份217,400条数据一致。此为macOS/Codex分项证明，其他Agent、失败/取消/未知与全量能力仍未完成。[独立收口](evidence/2026-10-09-capability-hardening/reported-files-candidate/native-closeout-independent.json)核对69处引用、正式包和三份私有数据副本；官方记录保留原快照前缀，恢复仅追加一条设置事件，没有新增请求或工具。接续网页请求生命周期和跨对话已加载正文检索。
+
 ## 当前边界与下一步
 
 - 首批仍为 [29 项](agent-first-release.md)，八项接入标准不减。只沿官方 ACP、SDK、CLI 承接能力，不修改 Agent/适配器，不私有 HOME，不代写其配置，不自建正文或事件账本。
@@ -73,7 +75,7 @@ P22 已在正式 `a47a6652` 上完成一条有界真实 Codex 返工：[正式�
 - 首批已推进停止竞态、数据保护、布尔协商和配置确认；接续官方来源映射、历史回放可见性、数据恢复与真实负载剩余条件。29 家公开资料见[官方能力基线](evidence/2026-10-09-capability-hardening/official-capabilities.json)，其中旧源码缺口与本轮修正按增量证据对照，不把资料核查算作真实通过。
 - 第五片整库恢复、PDF/图片预览与用户模板已完成源码整合及独立复核；[七项检查](evidence/2026-10-09-capability-hardening/fifth-checks-final/final-verification.json)通过，前端2,820项、Rust1,134项/5项忽略。首轮失败及修复证据保留；第五片已安装并启动，[数据留存](evidence/2026-10-09-capability-hardening/fifth-candidate/installed-data-retention.json)及[独立核验](evidence/2026-10-09-capability-hardening/fifth-candidate/install-independent.json)通过。[模板实机](evidence/2026-10-09-capability-hardening/fifth-candidate/installed-templates.json)覆盖创建/编辑/保存、关闭与重启恢复、保留草稿与附件且不自动发送；[预览实机](evidence/2026-10-09-capability-hardening/fifth-candidate/installed-visual-preview.json)覆盖临时受控副本两页PDF、Type3中文单字、PNG及损坏/密码反馈。桌面路径读取等候系统许可，未解决；该次尚无Office预览，后续XLSX/DOCX进展见前文；整库恢复未破坏日常数据进行验收。第六片已补强P12已加载内容检索和P35导出保真，分项实机结果见上文。运行中引导的[官方接口核查](evidence/2026-10-09-capability-hardening/official-steering-surfaces.json)发现旧接口能力声明不足以保证只作用于当前工作，ARCH-37继续未完成。
 
-- P21 的文字、XLSX单元格/合并范围/任意矩形、DOCX段落/整表、PDF/图片区域意见已分项安装验证，NEW-03具体阅读位置缺陷已复验关闭；P19源码与受控检查已完成待安装，P22有界真实返工已验、失败和运行中取消等余项继续。NEW-04恢复预览修复已安装，实际故障入口仍待验证；这些分项不代表完整P21完成。
+- P21 的文字、XLSX单元格/合并范围/任意矩形、DOCX段落/整表、PDF/图片区域意见已分项安装验证，NEW-03具体阅读位置缺陷已复验关闭；P19成果清单已安装并分项实机通过，P22有界真实返工已验、失败和运行中取消等余项继续。NEW-04恢复预览修复已安装，实际故障入口仍待验证；这些分项不代表完整P21完成。
 
 ## 历史与维护记录
 
