@@ -2,9 +2,11 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：H15基础范围完成，继续H17
+## 当前衔接：H17分项实装完成，修复NEW-12并继续全量计划
 
-最新正式版为 `c6356d42` / 0.1.7 arm64，[NEW-11正式复验](worktree-new11-candidate/installed-new11.json)确认暖态归档已准备空草稿立即显示准确恢复提示，点击新对话不再卡载入，原位置恢复后提示撤下；创建、归档、恢复各7项材料检查通过。原128条完整会话、8条输入、8组意见、3组待发及整个未发送对象相同，0新增持久会话；四项清单变化已逐项审核。零发送，有空对话准备，Codex 6 Astra / Ultra 选择保持，最终空白TR且正常退出。结合9cbb的Git锁及NEW-07–10正式结果，[H15原macOS基础范围已收口](worktree-new11-candidate/h15-closure.json)。ARCH-47、H13、H14已按[原条件分层证据](worktree-preparation/next-worktree-scope-review.json)完成支持的macOS基础范围。H17新增工作位置检查、审阅请求后一次加入原新草稿、失效归属及保存失败保护；[七项工程检查](worktree-preparation-checks/run-01/verification.json)全部实际执行并通过，1,363输入稳定，前端4,487项、Rust1,372项/6忽略；[独立复核](worktree-preparation/independent/implementation.json)保留真实保存提示红例及修复，双引擎分项通过。H17待安装与真实准备/失败/停止验证；29家、Windows及完整市场目标仍未完成。[NEW-11工程检查](worktree-new11-checks/final-verification.json)为前端4433项，未变Rust按精确输入复用；H17新源码另行验证，不冒称已在此安装包中。
+正式版为 `83cdfa10` / 0.1.7 arm64。[H17正式实测](worktree-preparation-candidate/installed-preparation.json)确认审阅准备请求、显式保存/发送、真实离线依赖安装/校验、预期退出23及同一后台任务停止。端口尝试实际为EPERM/退出24，原监听仍在；冲突、服务启动和端口恢复未实证。4次明确发送新增2个受控会话，Codex 6 Astra / Ultra和权限保持。原128条会话、8条输入、8组意见和3组待发保持，新增活动和清单差异逐项审核；最终恢复空白TR且正常退出。
+
+新增NEW-12：已完成恢复后冷启动，“重新核查”未检查已转入locations的条目；H15/H14/ARCH-47对应冷恢复路径重开，原暖态保护证据保留。H17[七项工程检查](worktree-preparation-checks/run-01/verification.json)为1,363输入稳定、前端4,487项、Rust1,372项/6忽略。继续修复NEW-12和H11等剩余条目；29家、Windows和完整市场目标仍未完成。
 
 以下保留原阶段成功与失败，历史“当前/待安装/待修复”描述均指当时阶段，不覆盖本节最新结论。
 

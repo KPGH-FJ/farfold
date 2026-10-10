@@ -1,0 +1,328 @@
+{
+  "recordedAtUtc": "2026-10-10T11:52:03.350216+00:00",
+  "sourceCommit": "83cdfa10c10e29eb183ca6b08446441ee9847a9e",
+  "installedApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "sourceInputs": 1363,
+  "sourceInputsUnchangedThroughNormalQuit": true,
+  "agent": "Codex",
+  "model": "6 Astra",
+  "reasoning": "Ultra",
+  "permission": "Approve for me (unchanged)",
+  "promptDispatches": 4,
+  "newPersistedConversations": 2,
+  "observations": [
+    {
+      "case": "reviewed-preparation",
+      "result": "passed",
+      "detail": "Created and explicitly used a new work location. Fixed-name metadata preview, reviewed task, explicit append with saved/not-sent feedback, then explicit Send. No automatic dependency execution."
+    },
+    {
+      "case": "dependency-install",
+      "result": "passed",
+      "commands": [
+        {
+          "command": "npm ci --offline --ignore-scripts --no-audit --no-fund --cache .h17-results/npm-cache",
+          "toolId": "exec-81613fc9-99d2-481f-a215-5387e7c24fd2",
+          "exitCode": 0
+        },
+        {
+          "command": "npm run verify --ignore-scripts",
+          "toolId": "exec-f1ffc221-5503-4f98-962b-a64df5545dcf",
+          "exitCode": 0
+        }
+      ],
+      "detail": "Actual Agent tool receipts and target dependency bytes/answer42 agree."
+    },
+    {
+      "case": "expected-failure",
+      "result": "passed expected failure handling",
+      "toolId": "exec-f4180877-43b4-42bb-93bc-0c15bbe7d10b",
+      "exitCode": 23,
+      "detail": "Exactly one controlled command; failure visible and Agent did not report preparation success or retry."
+    },
+    {
+      "case": "stop-background-task",
+      "result": "passed bounded task stop",
+      "toolId": "exec-e71d30b0-a2ba-4fd9-b3d0-ea302229bce6",
+      "pid": 62985,
+      "detail": "Same task spawned then stopped after one UI stop action. Actual PID absent at 36.577092s before nominal60s deadline, still absent at77.515582s; no completion marker, no root OS signal. Agent reported unknown process handle63613, retained separately from PID and stopped event; no natural completion claimed."
+    },
+    {
+      "case": "occupied-port",
+      "result": "external permission failure; conflict branch unverified",
+      "toolId": "exec-0a9cc91f-eb4f-41ed-a5e3-869dfcc92344",
+      "exitCode": 24,
+      "error": "EPERM",
+      "port": 53945,
+      "detail": "Agent ran exact reviewed command once and honestly reported permission failure. Existing owner PID63616 remained LISTEN afterward. Root later closed its own bounded port holder; no Agent port kill or automatic port change."
+    },
+    {
+      "case": "protected-materials",
+      "result": "passed bounded fixture",
+      "detail": "Source/sibling bytes, types, executable bits and Git index unchanged; target inherited none of controlled private files. This is not a full permissions audit or complete environment isolation."
+    },
+    {
+      "case": "cold-restored-location-recheck",
+      "result": "failed; NEW-12",
+      "detail": "After a previously completed restore, cold start marked the location unknown as intended; Recheck did nothing because the completed archive was no longer in archives. User-reviewed retain/continue allowed unrelated work without moving the old location. Prior warm restore evidence remains valid; affected cold lifecycle remains open."
+    }
+  ],
+  "dataReview": {
+    "oldConversationRowsExact": 128,
+    "oldComposersExact": 8,
+    "oldFeedbackExact": 8,
+    "oldQueuesExact": 3,
+    "otherSettingsExact": true,
+    "wholeUnsentObjectEqual": false,
+    "reviewedDeltas": [
+      {
+        "change": "two new conversations and ended activity",
+        "basis": "Exactly matches two new controlled conversations / four explicit prompt sends in this native journey."
+      },
+      {
+        "change": "new location a44bbed7-9b65-4b48-9235-51c9b027536e and create operation",
+        "basis": "Matches explicitly created and used fixture location; canonical revision3 versus creation receipt revision0 follows subsequent checks."
+      },
+      {
+        "change": "old ab436ea3-fd79-48b0-bb00-2d3523c2a094 availability verified to unknown only",
+        "basis": "Cold-load protection observed in02-worktree-check; NEW-12 recheck failed, so unknown retained honestly."
+      }
+    ],
+    "otherCatalogueCollectionsExact": true,
+    "comparisonInputsUnchanged": true,
+    "scope": "Root reviewed exact independent deltas against observed actions, not a blanket allow-list."
+  },
+  "normalExit": true,
+  "forcedExit": false,
+  "activeFormalProcessesAtEnd": 0,
+  "duplicateBuildAppRemoved": true,
+  "remaining": [
+    "EADDRINUSE and successful service startup/port recovery are unverified under existing Agent permissions; permissions were not changed.",
+    "NEW-12 completed-restore cold recheck requires code and installed follow-up.",
+    "Windows, all29 Agents and full122 item market readiness remain incomplete."
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/final-normal-exit.json",
+      "sha256": "91952fba491578e41957fc204d669754e58fb155591be8c6de2316434412fad5",
+      "bytes": 1233
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/final-data-comparison-independent.json",
+      "sha256": "a9d3314945fe090a06e87aa85caa04a5dfba6051d156a55e6db9ffe1762d868f",
+      "bytes": 13546
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/final-data-delta-values-independent.json",
+      "sha256": "4596bcee339d9bd82da4d7ab951c31c5404a59a25ffe955916440595d47ca125",
+      "bytes": 7459
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/created-fixture-check.json",
+      "sha256": "464d65d5562351c8c1a29214c309dfe5422c608ff33ab627700c6d7a45440c0a",
+      "bytes": 393
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/final-fixture-check.json",
+      "sha256": "4285828801a492f566b7c321904c9a532f66a7bb079c857c90709b2447bd8479",
+      "bytes": 2005
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/stop-immediate-process-check.json",
+      "sha256": "027e20ceaab9c7d0a621ba5ce353eaad85cffe73f961c83f6fe8a334417fa003",
+      "bytes": 525
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/stop-after-deadline-check.json",
+      "sha256": "2caaa7fbc41e0f7b742112a01981bc467b069b4733b567e1b5d536d70d80db44",
+      "bytes": 152
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/port-holder-after-attempt.json",
+      "sha256": "bf0d297c0fafaa6f5557221760b21d9ad33f27ca2e792ade2866ccf6be947fc6",
+      "bytes": 696
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/port-holder-ended.json",
+      "sha256": "0da83aa18dad529ad639fdcd4968c012ab8eed22e3b1f66850c6cf1503709ae1",
+      "bytes": 239
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/capture-events.jsonl",
+      "sha256": "5df14896e072a5ef718c92894e403969539d3b4410d9c47d2fa0985598e81f0d",
+      "bytes": 3123
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/01-installed-empty.ax.txt",
+      "sha256": "06767fd364db89a95ec0c5b09ee8b08f28166d57464ff6d8a7775a543dc4bf1a",
+      "bytes": 3366
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/02-worktree-check.ax.txt",
+      "sha256": "61123ca1cd789bc5d4815b139a6bd96e5d21750d355c30b886e65ba621fccb29",
+      "bytes": 5664
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/03-created-not-used.ax.txt",
+      "sha256": "48e5289ca48b8fa073023405fbb584de3636553a4cea81e8cb1756b7bc7172d1",
+      "bytes": 7001
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/04-preparation-preview.ax.txt",
+      "sha256": "b80a32e708a2c6bc80a8dbd38e294d9a7323846c1f52747bb17e6891c6f0e73e",
+      "bytes": 5518
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/05-draft-not-sent.ax.txt",
+      "sha256": "07d69c3a6893a9d6f2927733f2eec77c0efe33ec119f2b3d16d2589e94ae7379",
+      "bytes": 4213
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/06-dependency-success.ax.txt",
+      "sha256": "e61a708d713bf2c7dd4838d0d5e29458f3cf4b7519dd7fc3c7ec14e1bac781f6",
+      "bytes": 6692
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/07-success-tool-details.ax.txt",
+      "sha256": "9cd922801ab2d1ed3c4d50d993d8ee6608e6b524f1fad46d56f9bb385b03b763",
+      "bytes": 8279
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/08-controlled-failure.ax.txt",
+      "sha256": "23bfd398332aa6716cf010c616b281fc205b520e7f70f02a66e803c1c3b843a8",
+      "bytes": 11127
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/09-stop-running.ax.txt",
+      "sha256": "5f3ef23f2c89cee769c67057fb11567d41e97f3a06ed23191c877912b21ab7c0",
+      "bytes": 13633
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/10-stop-confirmed.ax.txt",
+      "sha256": "40e689da27457f3f135c5db90bf963fea0dfe9930717ed8bed4ec1d7eed35ed5",
+      "bytes": 15476
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/11-stop-task-update.ax.txt",
+      "sha256": "a399bb69b817b925354d986f2dfabb69026fe3301fffbf82c1f84d2e801f9f47",
+      "bytes": 15729
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/12-port-preview.ax.txt",
+      "sha256": "12fb64797ba237108f40e6d28a08ede55df247a58bcab37f571a0d4012102fbc",
+      "bytes": 5600
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/13-port-permission-failure.ax.txt",
+      "sha256": "dd4b7e2296e81ba3fd85e22b231d14e38a5751864dc3016439b195564128c4f7",
+      "bytes": 7060
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/14-final-empty-tr.ax.txt",
+      "sha256": "c1bcb76e0997fa079d141a41fcc47d7557675bb0e907d66a1f4cf11ea67cb7e3",
+      "bytes": 3450
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/01-installed-empty.png",
+      "sha256": "2f42fafe271c5269a77d4d1ca1f7c8e7ae31538a2502600a5dee74a64be18285",
+      "bytes": 224142
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/02-worktree-check.png",
+      "sha256": "239b729d7b22329733228e49cea7c66b1f017775e76dee88b3c0af3402e07943",
+      "bytes": 300845
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/03-created-not-used.png",
+      "sha256": "9b7bd5a61aab64b38664d30b63098a518dd971b2919b30c8de033610a132e008",
+      "bytes": 291033
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/04-preparation-preview.png",
+      "sha256": "ce6c3fd044401a004b1acd39b9972166d8e0ade95e3f448c73934d98acd41868",
+      "bytes": 357717
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/05-draft-not-sent.png",
+      "sha256": "bfc094802026396852f7f459a636b53b686d2cc00c27d9ecda15c280a2f2b667",
+      "bytes": 329851
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/06-dependency-success.png",
+      "sha256": "2da09b44faca352d3f7932ac4795183f48fc25516c9d2061b04ebb315016343b",
+      "bytes": 366542
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/07-success-tool-details.png",
+      "sha256": "56f807351e369bf205fd2eb451d0f286c9e523ff7e954237d0ad46c962ae07d8",
+      "bytes": 319952
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/08-controlled-failure.png",
+      "sha256": "50d0e43a5833571eb08275ced05200807ea7620ccd1e888544b151ef03f2f300",
+      "bytes": 380688
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/09-stop-running.png",
+      "sha256": "0fb3985b16fd85e28583ddac019f5263d8c5ee95327e5aedb4febb1455afde52",
+      "bytes": 388155
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/10-stop-confirmed.png",
+      "sha256": "208f44483f6859672ec4000d4c575c682f1542aba6f66ba76cff84b00330da14",
+      "bytes": 328512
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/11-stop-task-update.png",
+      "sha256": "8b2b4d88d8f3e171377ef1c182c9c863dc016863d0a8340fa3ca92afca176f6a",
+      "bytes": 347948
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/12-port-preview.png",
+      "sha256": "e32cf0a02f0d45db11dcb62a349c946f7b61e3b7f7383f4718d771dca1a74909",
+      "bytes": 332883
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/13-port-permission-failure.png",
+      "sha256": "9ed9f61041f1b17d118f594e76f557578b81c8848d331c0ecdd9d7d33d99d44b",
+      "bytes": 347729
+    },
+    {
+      "path": "output/2026-10-10-worktree-preparation-native/14-final-empty-tr.png",
+      "sha256": "88cf6bc3b776afefd76cf95bd26e2accc6a16f83d6c4ab1a71ca086bb6ac14b1",
+      "bytes": 227639
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-candidate/candidate.json",
+      "sha256": "b77d1826a573e827c81a1a4f031bad36db903bb7f5607105558f2bc9ab67504a",
+      "bytes": 8075
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-candidate/candidate-inputs.json",
+      "sha256": "ba70b08d5012a37f88e0d95ee86f9c646620b2c07cb56bebd7cf45ca30b51f73",
+      "bytes": 156781
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-candidate/candidate-independent.json",
+      "sha256": "ecec8c2eea4caef817163e9c13545291ec2756abb30c9c65671673f231a43886",
+      "bytes": 4514
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-candidate/install-independent.json",
+      "sha256": "c7eef878c55294f9c6a0802f6ee260336af0775c7ae9af37e696408cc42670dd",
+      "bytes": 10113
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-candidate/installed-data-retention.json",
+      "sha256": "f4e5cb547a647f005e55a51155b435b541d6f4111308e0dc19d9b6739723461a",
+      "bytes": 3229
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "4936d3f109e154fd2226a7b32cdd28bf17eac0207beed3ae27ef8f9b4fcbcb61",
+      "bytes": 1210
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "sourceCommit": "83cdfa10c10e29eb183ca6b08446441ee9847a9e",
+  "startedAt": "2026-10-10T11:30:46.165833+00:00",
+  "result": "passed",
+  "failures": [],
+  "checks": {
+    "candidateReceipts": {
+      "passed": true
+    },
+    "exactSource": {
+      "passed": true,
+      "inputCount": 1363,
+      "scope": "Application source/configuration and tests; dependencies and toolchain not claimed"
+    },
+    "bundleFiles": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "faa11a32a36efdea47c0107959cc723253edb1816636dd30a33e6da74aca6f46",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      }
+    },
+    "plistAndEmbeddedManifest": {
+      "passed": true,
+      "identifier": "ai.farfold.desktop",
+      "version": "0.1.7"
+    },
+    "architecture": {
+      "passed": true,
+      "architecture": "arm64"
+    },
+    "signature": {
+      "passed": true,
+      "strictVerification": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement",
+      "details": "Executable=/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold\nIdentifier=ai.farfold.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=251955 flags=0x10002(adhoc,runtime) hashes=7867+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=984320\nHash type=sha256 size=32\nCandidateCDHash sha256=d5b58c378a30b30b9680d6a12efb0060f297dade\nCandidateCDHashFull sha256=d5b58c378a30b30b9680d6a12efb0060f297dade848470df7c7e8f4a27af9945\nHash choices=sha256\nCMSDigest=d5b58c378a30b30b9680d6a12efb0060f297dade848470df7c7e8f4a27af9945\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=25362432\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=d5b58c378a30b30b9680d6a12efb0060f297dade\nSignature=adhoc\nInfo.plist entries=15\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources version=2 rules=13 files=2\nInternal requirements count=0 size=12",
+      "distribution": "ad-hoc; not notarized or publicly signed"
+    },
+    "archive": {
+      "passed": true,
+      "sha256": "e282c25f7e9e36b2562177a4469d48ab144f3c861f5af38381822c5b09ccdc85",
+      "bytes": 13771525,
+      "fileModes": {
+        "Contents/_CodeSignature/CodeResources": "0o644",
+        "Contents/MacOS/farfold": "0o755",
+        "Contents/Resources/icon.icns": "0o644",
+        "Contents/Resources/release-manifest.json": "0o644",
+        "Contents/Info.plist": "0o644"
+      }
+    },
+    "formalAppUnchanged": {
+      "passed": true,
+      "formalAppReplaced": false
+    },
+    "verificationInputsStable": {
+      "passed": true
+    }
+  },
+  "installed": false,
+  "launched": false,
+  "realAgentInvoked": false,
+  "claim": "Independent filesystem/source/signature/archive inspection only; no installed-app or real-Agent acceptance",
+  "inputReceipts": {
+    "candidateJsonSha256": "b77d1826a573e827c81a1a4f031bad36db903bb7f5607105558f2bc9ab67504a",
+    "candidateInputsJsonSha256": "ba70b08d5012a37f88e0d95ee86f9c646620b2c07cb56bebd7cf45ca30b51f73"
+  },
+  "engineeringVerification": {
+    "receipt": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-checks/run-01/verification.json",
+    "sha256": "decb7e0767cb9212021363497730e60a590e01a00ac662f6920990eddd67db5f",
+    "inputs": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-checks/run-01/inputs-before.json",
+    "inputsSha256": "ba70b08d5012a37f88e0d95ee86f9c646620b2c07cb56bebd7cf45ca30b51f73",
+    "inputsAfter": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-checks/run-01/inputs-after.json",
+    "inputsAfterSha256": "ba70b08d5012a37f88e0d95ee86f9c646620b2c07cb56bebd7cf45ca30b51f73",
+    "sourceClosure": "docs/evidence/2026-10-09-capability-hardening/worktree-preparation-checks/source-closure.json",
+    "sourceClosureSha256": "abc9d22082f9e2a9b9bff7d9eee7765def4ea7ac99e9c7c6258f327861624525",
+    "inputCount": 1363
+  },
+  "completedAt": "2026-10-10T11:30:46.594120+00:00"
+}
