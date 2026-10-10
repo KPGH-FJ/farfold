@@ -1,13 +1,17 @@
 import type {
   InventoryOperation,
+  McpInventory,
   InventoryRequest,
 } from "./extension_inventory_types";
 export const request: InventoryRequest = {
+  kind: "mcp",
   agentId: "fixture-agent",
   cwd: "/controlled/project",
   requestId: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
 };
-export const ready = (r = request): InventoryOperation => ({
+export const ready = (
+  r = request,
+): InventoryOperation & { snapshot: McpInventory } => ({
   ...r,
   state: "ready",
   settled: true,

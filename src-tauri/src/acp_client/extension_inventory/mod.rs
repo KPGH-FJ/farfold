@@ -3,6 +3,8 @@ mod launch;
 mod output;
 mod process;
 mod requests;
+mod skills_output;
+mod skills_rpc;
 mod types;
 use crate::meta_store::MetaStore;
 use std::{
@@ -102,7 +104,7 @@ fn query(
     store: &MetaStore,
     request: &requests::Request,
     row: &crate::meta_store::AgentRow,
-) -> Result<McpInventory> {
+) -> Result<InventorySnapshot> {
     within(request)?;
     let current = store
         .get_agent(&request.agent)
@@ -120,7 +122,8 @@ fn query(
     within(request)?;
     // Do not create a second environment-probe lifecycle inside this query.
     let environment = crate::shell_env::cached_command_env().ok_or(Code::EnvironmentUnavailable)?;
-    let command = launch::command(row, cwd, environment)?;
+    let kind = request.kind.ok_or(Code::InvalidRequest)?;
+    let command = launch::command(row, cwd, environment, kind)?;
     within(request)?;
     let current = store
         .get_agent(&request.agent)
@@ -132,31 +135,34 @@ fn query(
     {
         return Err(Code::SelectionChanged.into());
     }
-    let mut bytes = process::run(command, request)?;
-    let result = (|| {
-        within(request)?;
-        let current = store
-            .get_agent(&request.agent)
-            .map_err(|_| Code::Unavailable)?;
-        if !current
-            .as_ref()
-            .is_some_and(|next| launch::same_selection(row, next))
-            || !directory.current()
-        {
-            return Err(Code::SelectionChanged.into());
+    let snapshot = match kind {
+        Kind::Mcp => {
+            let mut bytes = process::run(command, request)?;
+            let result = output::parse(&bytes);
+            bytes.fill(0);
+            InventorySnapshot::Mcp(result?)
         }
-        let snapshot = output::parse(&bytes)?;
-        within(request)?;
-        Ok(snapshot)
-    })();
-    bytes.fill(0);
-    result
+        Kind::Skills => InventorySnapshot::Skills(process::run_skills(command, request)?),
+    };
+    within(request)?;
+    let current = store
+        .get_agent(&request.agent)
+        .map_err(|_| Code::Unavailable)?;
+    if !current
+        .as_ref()
+        .is_some_and(|next| launch::same_selection(row, next))
+        || !directory.current()
+    {
+        return Err(Code::SelectionChanged.into());
+    }
+    Ok(snapshot)
 }
 async fn execute_selected(
     store: MetaStore,
     request: Arc<requests::Request>,
     activity: crate::managed_update::ActivityPermit,
     row: crate::meta_store::AgentRow,
+    scope: Option<super::manager::AccountScope>,
 ) {
     let configuration = tokio::select! {
         guard = crate::install_job::configuration_guard(&request.agent) => guard,
@@ -169,12 +175,14 @@ async fn execute_selected(
     // The detached task/real blocking closure owns all permits, not IPC delivery.
     let result = tauri::async_runtime::spawn_blocking(move || {
         let activity = activity;
+        let scope = scope;
         let configuration = configuration;
         let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
             query(&store, &request, &row)
         }))
         .unwrap_or_else(|_| Err(Code::Unavailable.into()));
         // process::ChildOwner has finished group/pipe cleanup before query returns.
+        drop(scope);
         drop(configuration);
         drop(activity);
         request.finish(result);
@@ -192,18 +200,35 @@ pub async fn agent_extension_inventory_read(
     cwd: String,
     request_id: String,
     selection_id: String,
+    kind: Kind,
 ) -> Result<InventoryOperation> {
     let store = context(&app, &webview, "agent_extension_inventory_read")?;
     let activity = crate::managed_update::activity().map_err(|_| Code::Busy)?;
-    let (request, fresh) = requests::shared().begin(&agent_id, &cwd, &request_id, &selection_id)?;
+    let (request, fresh) =
+        requests::shared().begin(&agent_id, &cwd, &request_id, &selection_id, kind)?;
     if fresh {
         match launch::selections().get(&agent_id, &selection_id, Instant::now()) {
             Ok(selected) => {
+                let scope = if kind == Kind::Skills {
+                    app.try_state::<super::manager::AcpManager>()
+                        .ok_or_else(|| Failure::from(Code::Unavailable))
+                        .and_then(|manager| skills_scope(&manager, &selected))
+                } else {
+                    Ok(None)
+                };
+                let scope = match scope {
+                    Ok(scope) => scope,
+                    Err(error) => {
+                        request.finish(Err(error));
+                        return wait_for_result(request).await;
+                    }
+                };
                 tauri::async_runtime::spawn(execute_selected(
                     store,
                     request.clone(),
                     activity,
                     selected,
+                    scope,
                 ));
             }
             Err(error) => {
@@ -241,3 +266,26 @@ pub fn agent_extension_inventory_cancel(
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod skills_tests;
+
+fn skills_scope(
+    manager: &super::manager::AcpManager,
+    row: &crate::meta_store::AgentRow,
+) -> Result<Option<super::manager::AccountScope>> {
+    if manager
+        .shutting_down
+        .load(std::sync::atomic::Ordering::SeqCst)
+        || manager.candidate_pending(&row.id).map_err(|_| Code::Busy)?
+    {
+        return Err(Code::Busy.into());
+    }
+    manager
+        .reserve_preparation_action(row, &row.command, &row.args)
+        .map(Some)
+        .map_err(|_| Code::Busy.into())
+}
+
+#[cfg(test)]
+mod skills_lifecycle_tests;

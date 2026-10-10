@@ -60,7 +60,15 @@ pub(super) fn capabilities(row: &AgentRow) -> Result<ExtensionCapabilities> {
             source: reason.is_none().then_some("officialCli"),
             reason,
         },
-        skills_inventory: "unavailable",
+        skills_inventory: InventoryCapability {
+            availability: if reason.is_none() {
+                "available"
+            } else {
+                "unavailable"
+            },
+            source: reason.is_none().then_some("officialAppServer"),
+            reason,
+        },
         tool_inventory: "unavailable",
     })
 }
@@ -145,6 +153,7 @@ pub(super) fn command(
     row: &AgentRow,
     cwd: &str,
     environment: HashMap<String, String>,
+    kind: Kind,
 ) -> Result<Command> {
     admission(row)?;
     if environment
@@ -158,7 +167,10 @@ pub(super) fn command(
     // This intentionally does not resolve Keychain or apply a selected service.
     command
         .args(&row.args)
-        .args(["cli", "mcp", "list", "--json"])
+        .args(match kind {
+            Kind::Mcp => ["cli", "mcp", "list", "--json"],
+            Kind::Skills => ["cli", "app-server", "--listen", "stdio://"],
+        })
         .current_dir(cwd)
         .envs(environment)
         .envs(row.env.iter().cloned());

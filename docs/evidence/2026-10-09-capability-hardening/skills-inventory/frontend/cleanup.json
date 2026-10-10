@@ -1,0 +1,12 @@
+{
+  "ownedServerPid": 83600,
+  "port": 1490,
+  "action": "exact owned PID SIGTERM after both journeys; no process/port afterward",
+  "toolSessionExitCode": 143,
+  "browsersClosedByFinally": true,
+  "formalAppOrAgentTouched": false,
+  "log": {
+    "path": "output/2026-10-10-skills-inventory-browser/server.txt",
+    "sha256": "a361cacfd8cfda187b91565f44c17de0ff486289ebbf5766e955354610cb5326"
+  }
+}

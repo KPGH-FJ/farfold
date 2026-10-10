@@ -1,0 +1,9 @@
+{
+  "result": "Second full engineering run passed after minimal Clippy repair",
+  "engineering": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-02/verification.json",
+    "sha256": "3cfdd16831595e8e2cd07e8fef09f44226c9af5b674cd1a5a1b2ed90e6f95832"
+  },
+  "receiptCorrection": "Root briefly added final status to the already referenced clippy-followup receipt, then restored its exact independently reviewed 838-byte original SHA. Initial source closure retained as superseded because it referenced that temporary receipt revision; final source closure is regenerated. Production sources and test inputs were never changed by this evidence-only correction.",
+  "originalClippyReceiptSha256": "fbb0666b0b58417808a235c8e88e358d6702657f72b6a8a50ce3f0ae581078b8"
+}

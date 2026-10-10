@@ -129,13 +129,13 @@ fn early_cancel_cannot_be_revived_and_cannot_cancel_other_agent() {
     assert!(cancelled.cancel_requested);
     assert!(cancelled.operation.is_none());
     assert!(matches!(
-        registry.begin("a", "/tmp", ID, ID),
+        registry.begin("a", "/tmp", ID, ID, Kind::Mcp),
         Err(Failure {
             code: Code::Cancelled
         })
     ));
     assert!(matches!(
-        registry.begin("b", "/tmp", ID, ID),
+        registry.begin("b", "/tmp", ID, ID, Kind::Mcp),
         Err(Failure {
             code: Code::RequestConflict
         })
@@ -148,35 +148,35 @@ fn early_cancel_cannot_be_revived_and_cannot_cancel_other_agent() {
 #[test]
 fn same_request_is_one_owner_and_different_payload_cannot_replace_it() {
     let registry = requests::Requests::default();
-    let (first, fresh) = registry.begin("a", "/tmp", ID, ID).unwrap();
+    let (first, fresh) = registry.begin("a", "/tmp", ID, ID, Kind::Mcp).unwrap();
     assert!(fresh);
-    let (second, fresh) = registry.begin("a", "/tmp", ID, ID).unwrap();
+    let (second, fresh) = registry.begin("a", "/tmp", ID, ID, Kind::Mcp).unwrap();
     assert!(!fresh);
     assert!(Arc::ptr_eq(&first, &second));
     assert!(matches!(
-        registry.begin("a", "/changed", ID, ID),
+        registry.begin("a", "/changed", ID, ID, Kind::Mcp),
         Err(Failure {
             code: Code::RequestConflict
         })
     ));
     assert!(matches!(
-        registry.begin("a", "/tmp", OTHER, ID),
+        registry.begin("a", "/tmp", OTHER, ID, Kind::Mcp),
         Err(Failure { code: Code::Busy })
     ));
 }
 #[test]
 fn cancellation_is_not_settled_and_active_slots_survive_observer_abandonment() {
     let registry = requests::Requests::default();
-    let (first, _) = registry.begin("a", "/tmp", ID, ID).unwrap();
+    let (first, _) = registry.begin("a", "/tmp", ID, ID, Kind::Mcp).unwrap();
     let cancellation = registry.cancel("a", ID).unwrap();
     assert!(!cancellation.operation.unwrap().settled);
     first.progress(State::PendingCleanup, Some(Code::PendingCleanup));
     assert!(matches!(
-        registry.begin("a", "/tmp", OTHER, ID),
+        registry.begin("a", "/tmp", OTHER, ID, Kind::Mcp),
         Err(Failure { code: Code::Busy })
     ));
     first.finish(Err(Code::Cancelled.into()));
-    assert!(registry.begin("a", "/tmp", OTHER, ID).is_ok());
+    assert!(registry.begin("a", "/tmp", OTHER, ID, Kind::Mcp).is_ok());
 }
 #[test]
 fn cold_missing_status_does_not_mean_cancelled_or_empty() {
@@ -269,6 +269,7 @@ mod macos {
                 ("CODEX_PATH".into(), "/selected/codex".into()),
             ]
             .into(),
+            Kind::Mcp,
         )
         .unwrap();
         assert_eq!(
@@ -322,7 +323,9 @@ mod macos {
         let expected = store.get_agent(&f.row.id).unwrap().unwrap();
         let guard = crate::install_job::configuration_guard(&f.row.id).await;
         let registry = requests::Requests::default();
-        let (request, _) = registry.begin(&f.row.id, "/tmp", ID, ID).unwrap();
+        let (request, _) = registry
+            .begin(&f.row.id, "/tmp", ID, ID, Kind::Mcp)
+            .unwrap();
         let gate = crate::managed_update::UpdateAdmission::default();
         let selected = request.clone();
         let selected_store = store.clone();
@@ -331,6 +334,7 @@ mod macos {
             selected,
             gate.activity().unwrap(),
             expected,
+            None,
         ));
         tokio::task::yield_now().await;
         store
@@ -360,7 +364,7 @@ mod macos {
         let selection_id = receipts.issue(selected, Instant::now()).unwrap();
         let registry = requests::Requests::default();
         let (request, _) = registry
-            .begin(&f.row.id, "/tmp", ID, &selection_id)
+            .begin(&f.row.id, "/tmp", ID, &selection_id, Kind::Mcp)
             .unwrap();
         store
             .set_agent_env(
@@ -372,7 +376,14 @@ mod macos {
         let exact = receipts
             .get(&f.row.id, &selection_id, Instant::now())
             .unwrap();
-        execute_selected(store, request.clone(), gate.activity().unwrap(), exact).await;
+        execute_selected(
+            store,
+            request.clone(),
+            gate.activity().unwrap(),
+            exact,
+            None,
+        )
+        .await;
         let result = request.snapshot().unwrap();
         assert!(result.settled);
         assert_eq!(result.state, State::Failed);
@@ -439,9 +450,11 @@ mod macos {
         let selection = receipts.issue(f.row.clone(), now).unwrap();
         let replacement = receipts.issue(f.row.clone(), now).unwrap();
         let registry = requests::Requests::default();
-        let (request, _) = registry.begin(&f.row.id, "/tmp", ID, &selection).unwrap();
+        let (request, _) = registry
+            .begin(&f.row.id, "/tmp", ID, &selection, Kind::Mcp)
+            .unwrap();
         assert!(matches!(
-            registry.begin(&f.row.id, "/tmp", ID, &replacement),
+            registry.begin(&f.row.id, "/tmp", ID, &replacement, Kind::Mcp),
             Err(Failure {
                 code: Code::RequestConflict
             })
@@ -451,7 +464,9 @@ mod macos {
                 .get(&f.row.id, &selection, now + Duration::from_secs(301))
                 .is_err()
         );
-        let (same, fresh) = registry.begin(&f.row.id, "/tmp", ID, &selection).unwrap();
+        let (same, fresh) = registry
+            .begin(&f.row.id, "/tmp", ID, &selection, Kind::Mcp)
+            .unwrap();
         assert!(!fresh);
         assert!(Arc::ptr_eq(&same, &request));
         assert!(request.operation.interested());
@@ -477,7 +492,9 @@ mod macos {
     #[test]
     fn owned_process_returns_full_bytes_only_after_exit_and_eof() {
         let registry = requests::Requests::default();
-        let (request, _) = registry.begin("fixture", "/tmp", ID, ID).unwrap();
+        let (request, _) = registry
+            .begin("fixture", "/tmp", ID, ID, Kind::Mcp)
+            .unwrap();
         let mut command = Command::new("/bin/sh");
         command.args(["-c", "printf '[]'; printf 'discard-this' >&2"]);
         assert_eq!(process::run(command, &request).unwrap(), b"[]");
@@ -486,7 +503,9 @@ mod macos {
     #[test]
     fn nonzero_stderr_never_becomes_a_public_error_message() {
         let registry = requests::Requests::default();
-        let (request, _) = registry.begin("fixture", "/tmp", ID, ID).unwrap();
+        let (request, _) = registry
+            .begin("fixture", "/tmp", ID, ID, Kind::Mcp)
+            .unwrap();
         let mut command = Command::new("/bin/sh");
         command.args(["-c", "printf 'PRIVATE_TOKEN' >&2; exit 23"]);
         let error = process::run(command, &request).unwrap_err();
@@ -496,7 +515,9 @@ mod macos {
     #[test]
     fn cancel_waits_for_exact_owned_group_and_inherited_pipe_completion() {
         let registry = requests::Requests::default();
-        let (request, _) = registry.begin("fixture", "/tmp", ID, ID).unwrap();
+        let (request, _) = registry
+            .begin("fixture", "/tmp", ID, ID, Kind::Mcp)
+            .unwrap();
         let observed = request.clone();
         let worker = std::thread::spawn(move || {
             let mut command = Command::new("/bin/sh");
@@ -513,7 +534,9 @@ mod macos {
         let root = tempfile::tempdir().unwrap();
         let marker = root.path().join("started");
         let registry = requests::Requests::default();
-        let (request, _) = registry.begin("fixture", "/tmp", ID, ID).unwrap();
+        let (request, _) = registry
+            .begin("fixture", "/tmp", ID, ID, Kind::Mcp)
+            .unwrap();
         let gate = crate::managed_update::UpdateAdmission::default();
         let activity = gate.activity().unwrap();
         let observed = request.clone();
@@ -529,7 +552,7 @@ mod macos {
                 ])
                 .arg(child_marker);
             let result = process::run(command, &observed);
-            observed.finish(result.and_then(|bytes| output::parse(&bytes)));
+            observed.finish(result.and_then(|bytes| output::parse(&bytes).map(Into::into)));
         });
         let deadline = Instant::now() + Duration::from_secs(3);
         while !marker.is_file() && Instant::now() < deadline {
@@ -540,7 +563,7 @@ mod macos {
         assert!(!cancellation.operation.unwrap().settled);
         assert!(gate.update().is_err());
         assert!(matches!(
-            registry.begin("fixture", "/tmp", OTHER, ID),
+            registry.begin("fixture", "/tmp", OTHER, ID, Kind::Mcp),
             Err(Failure { code: Code::Busy })
         ));
         worker.join().unwrap();
@@ -551,7 +574,9 @@ mod macos {
     #[tokio::test]
     async fn dropped_ipc_observer_only_requests_cancel_and_does_not_finish_owner() {
         let registry = requests::Requests::default();
-        let (request, _) = registry.begin("fixture", "/tmp", ID, ID).unwrap();
+        let (request, _) = registry
+            .begin("fixture", "/tmp", ID, ID, Kind::Mcp)
+            .unwrap();
         let waiter = tokio::spawn(wait_for_result(request.clone()));
         tokio::task::yield_now().await;
         waiter.abort();
@@ -559,7 +584,7 @@ mod macos {
         assert!(!request.operation.interested());
         assert!(!request.snapshot().unwrap().settled);
         assert!(matches!(
-            registry.begin("fixture", "/tmp", OTHER, ID),
+            registry.begin("fixture", "/tmp", OTHER, ID, Kind::Mcp),
             Err(Failure { code: Code::Busy })
         ));
     }
@@ -567,7 +592,9 @@ mod macos {
     #[test]
     fn exited_leader_does_not_drop_inherited_pipe_or_process_group() {
         let registry = requests::Requests::default();
-        let (request, _) = registry.begin("fixture", "/tmp", ID, ID).unwrap();
+        let (request, _) = registry
+            .begin("fixture", "/tmp", ID, ID, Kind::Mcp)
+            .unwrap();
         let now = Instant::now();
         let mut command = Command::new("/bin/sh");
         command.args(["-c", "(sleep 0.15; printf '[]') & exit 0"]);
@@ -582,7 +609,9 @@ mod macos {
             (true, output::STDERR_LIMIT + 1),
         ] {
             let registry = requests::Requests::default();
-            let (request, _) = registry.begin("fixture", "/tmp", ID, ID).unwrap();
+            let (request, _) = registry
+                .begin("fixture", "/tmp", ID, ID, Kind::Mcp)
+                .unwrap();
             let mut command = Command::new("/bin/sh");
             command
                 .args([
@@ -605,7 +634,9 @@ mod macos {
     #[test]
     fn actual_query_deadline_requests_cleanup_without_an_empty_success() {
         let registry = requests::Requests::default();
-        let (request, _) = registry.begin("fixture", "/tmp", ID, ID).unwrap();
+        let (request, _) = registry
+            .begin("fixture", "/tmp", ID, ID, Kind::Mcp)
+            .unwrap();
         let started = Instant::now();
         let mut command = Command::new("/bin/sh");
         command.args(["-c", "sleep 30"]);
@@ -623,7 +654,9 @@ mod macos {
         let root = tempfile::tempdir().unwrap();
         let marker = root.path().join("started");
         let registry = requests::Requests::default();
-        let (request, _) = registry.begin("fixture", "/tmp", ID, ID).unwrap();
+        let (request, _) = registry
+            .begin("fixture", "/tmp", ID, ID, Kind::Mcp)
+            .unwrap();
         let gate = crate::managed_update::UpdateAdmission::default();
         let activity = gate.activity().unwrap();
         let observed = request.clone();
@@ -639,7 +672,7 @@ mod macos {
                 ])
                 .arg(child_marker);
             let result = process::run(command, &observed);
-            observed.finish(result.and_then(|bytes| output::parse(&bytes)));
+            observed.finish(result.and_then(|bytes| output::parse(&bytes).map(Into::into)));
         });
         let waiter = tokio::spawn(wait_for_result(request.clone()));
         let deadline = Instant::now() + Duration::from_secs(3);
@@ -653,7 +686,7 @@ mod macos {
         assert!(!request.snapshot().unwrap().settled);
         assert!(gate.update().is_err());
         assert!(matches!(
-            registry.begin("fixture", "/tmp", OTHER, ID),
+            registry.begin("fixture", "/tmp", OTHER, ID, Kind::Mcp),
             Err(Failure { code: Code::Busy })
         ));
         worker.await.unwrap();
@@ -667,7 +700,9 @@ mod macos {
     fn actual_owned_output_emits_only_sanitized_serialized_wire() {
         let registry = requests::Requests::default();
         let early = registry.cancel("early", OTHER).unwrap();
-        let (request, _) = registry.begin("fixture", "/tmp", ID, ID).unwrap();
+        let (request, _) = registry
+            .begin("fixture", "/tmp", ID, ID, Kind::Mcp)
+            .unwrap();
         let running = request.snapshot().unwrap();
         let mut command = Command::new("/bin/sh");
         command
@@ -676,7 +711,7 @@ mod macos {
         let mut bytes = process::run(command, &request).unwrap();
         let snapshot = output::parse(&bytes).unwrap();
         bytes.fill(0);
-        request.finish(Ok(snapshot));
+        request.finish(Ok(snapshot.into()));
         let ready = request.snapshot().unwrap();
         assert!(ready.settled);
         assert_eq!(ready.state, State::Ready);

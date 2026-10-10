@@ -14,6 +14,7 @@ pub(super) struct Requests(Mutex<HashMap<String, Arc<Request>>>);
 pub(super) struct Request {
     pub agent: String,
     pub cwd: Option<String>,
+    pub kind: Option<Kind>,
     selection_id: Option<String>,
     pub operation: Operation,
     pub deadline: Instant,
@@ -37,7 +38,18 @@ impl Request {
             true
         });
     }
-    pub fn finish(&self, outcome: Result<McpInventory>) {
+    pub fn finish(&self, outcome: Result<InventorySnapshot>) {
+        let outcome = outcome.and_then(|snapshot| {
+            if matches!(
+                (self.kind, &snapshot),
+                (Some(Kind::Mcp), InventorySnapshot::Mcp(_))
+                    | (Some(Kind::Skills), InventorySnapshot::Skills(_))
+            ) {
+                Ok(snapshot)
+            } else {
+                Err(Code::InvalidOutput.into())
+            }
+        });
         self.changed.send_modify(|value| {
             let Some(value) = value.as_mut() else {
                 return;
@@ -108,6 +120,7 @@ impl Requests {
         cwd: &str,
         id: &str,
         selection_id: &str,
+        kind: Kind,
     ) -> Result<(Arc<Request>, bool)> {
         validate(agent, id)?;
         if !valid_id(selection_id) {
@@ -126,6 +139,7 @@ impl Requests {
             }
             if request.cwd.as_deref() != Some(cwd)
                 || request.selection_id.as_deref() != Some(selection_id)
+                || request.kind != Some(kind)
             {
                 return Err(Code::RequestConflict.into());
             }
@@ -140,6 +154,7 @@ impl Requests {
         let request = Arc::new(Request {
             agent: agent.into(),
             cwd: Some(cwd.into()),
+            kind: Some(kind),
             selection_id: Some(selection_id.into()),
             operation: Operation::new(),
             deadline: Instant::now() + Duration::from_secs(10),
@@ -148,6 +163,7 @@ impl Requests {
                 request_id: id.into(),
                 agent_id: agent.into(),
                 cwd: cwd.into(),
+                kind,
                 state: State::Running,
                 settled: false,
                 code: None,
@@ -181,6 +197,7 @@ impl Requests {
             let request = Arc::new(Request {
                 agent: agent.into(),
                 cwd: None,
+                kind: None,
                 selection_id: None,
                 operation: Operation::new(),
                 deadline: Instant::now(),

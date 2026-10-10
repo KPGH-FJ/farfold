@@ -1,0 +1,108 @@
+{
+  "phase": "implementation contract; no official process invoked",
+  "ipc": {
+    "agent_extension_capabilities": {
+      "input": {
+        "agentId": "string"
+      },
+      "output": {
+        "selectionId": "uuid|null",
+        "mcpInventory": "InventoryCapability, source officialCli|null",
+        "skillsInventory": "InventoryCapability, source officialAppServer|null",
+        "toolInventory": "unavailable"
+      },
+      "InventoryCapability": "{availability:available|unavailable,source:string|null,reason:Code|null}",
+      "selection": "Same RAM exact AgentRow ticket authorizes either supported kind; 300 seconds non-sliding, bounded64, no env hash/disclosure."
+    },
+    "agent_extension_inventory_read": {
+      "input": {
+        "agentId": "string",
+        "cwd": "string",
+        "requestId": "uuid",
+        "selectionId": "uuid",
+        "kind": "mcp|skills (required)"
+      },
+      "output": "InventoryOperation"
+    },
+    "agent_extension_inventory_status": {
+      "input": {
+        "agentId": "string",
+        "requestId": "uuid"
+      },
+      "output": "InventoryOperation"
+    },
+    "agent_extension_inventory_cancel": {
+      "input": {
+        "agentId": "string",
+        "requestId": "uuid"
+      },
+      "output": "{agentId,requestId,cancelRequested:true,operation:InventoryOperation|null}"
+    }
+  },
+  "operation": {
+    "fields": "{requestId,agentId,cwd,kind:mcp|skills,state:running|cancelling|pendingCleanup|ready|failed|cancelled,settled:boolean,code?:Code,snapshot?:McpInventory|SkillsInventory}",
+    "correlation": "kind is mandatory in every operation; ready must have matching snapshot/source/scope; non-ready has no snapshot. cancel(null) has no kind because it is a before-dispatch tombstone, never historic exit proof.",
+    "idempotence": "One request UUID binds agent/cwd/selectionId/kind. Changing kind is requestConflict. Same Agent across both kinds shares one unfinished slot; global active maximum2, retention64/300s, active never evicted. status/cancel never require a nonexpired selection ticket."
+  },
+  "snapshots": {
+    "mcp": "Existing McpInventory fields/values are unchanged; operation adds kind=mcp.",
+    "skills": {
+      "observedAtMs": "nonnegative JS-safe integer",
+      "scope": "officialSkillsForDirectory",
+      "source": "officialAppServer",
+      "complete": "boolean; exactly errorCount==0",
+      "sessionApplicability": "unverified",
+      "errorCount": "integer0..512; count of official per-cwd errors, no raw error/path/message",
+      "items": "SkillInventoryItem[] length0..512"
+    },
+    "SkillInventoryItem": {
+      "id": "snapshot-local ordinal integer0..511",
+      "name": "safe plain label string|null; <=256 UTF8 bytes, same allowed label policy as MCP. null must show name unavailable, not omit the row.",
+      "description": "string|null; prefer interface.shortDescription, then shortDescription, then description; whitespace-only => null. Plain text only, never command/prompt/HTML/Markdown execution.",
+      "descriptionTruncated": "boolean; visible output clipped to <=2048 Unicode scalar values AND <=8192 UTF8 bytes. UI must disclose truncation.",
+      "descriptionRedacted": "boolean; control/format characters and detectable URI/path/credential-like tokens removed or replaced. UI can state filtered. No promise that arbitrary prose has been proven secret-free.",
+      "reportedEnabled": "boolean; retain false rows",
+      "origin": "user|repo|system|admin|unknown, mapped from official scope",
+      "pluginReported": "boolean only; no raw plugin ID/path"
+    }
+  },
+  "privacy": "Never forward raw skill/error paths, init codexHome/userAgent metadata, error.data/message, stderr, plugin identifiers, dependencies command/URL, icons/defaultPrompt or unknown fields. Bounded descriptions are user-facing metadata only: not logs/diagnostics, persisted inventory, or automatically appended to any draft.",
+  "readSemantics": "Exact one selected canonical cwd supplied in process cwd and skills/list cwds. Same skill name from multiple reported paths/scopes remains multiple rows. Nonempty errors plus zero skills is partial/error, not empty success. Official reported inventory is not proof current running conversation loaded/uses it; source scope is not a writable configuration layer.",
+  "process": "Exact reviewed Node/adapter CLI relay app-server --listen stdio://; initialize fixed clientInfo(no experimental/attestation opt-in), initialized, skills/list(cwds:[exact],forceReload:true), then stdin EOF. Fixed methods only, no thread/turn/write/config/auth calls. Same actual group/reap/pipe cleanup and observer ownership. Ordinary official startup may maintain its own state/cache/config-derived resources; not zero-write.",
+  "limits": {
+    "querySeconds": 10,
+    "stdoutBytes": 1048576,
+    "stderrBytes": 65536,
+    "jsonDepth": 32,
+    "items": 512,
+    "errors": 512,
+    "scope": "Entire query including handshake; exceeding budget fails, never truncated complete JSON. Notifications count against byte budget. Existing TERM then2s KILL,7s pendingCleanup observer, actual worker remains owner until cleanup."
+  },
+  "busy": "Skills additionally acquires existing AccountScope for selected program/registered aliases; no live or uncertain same-program work admitted, and no forced retirement of existing connections. Hold until actual cleanup. MCP existing behavior remains unchanged; external processes are not claimed globally locked.",
+  "codes": [
+    "notReviewed",
+    "entryUnverified",
+    "platformUnsupported",
+    "environmentUnavailable",
+    "selectionChanged",
+    "cwdUnavailable",
+    "busy",
+    "spawnFailed",
+    "queryFailed",
+    "invalidOutput",
+    "outputLimit",
+    "timedOut",
+    "cancelled",
+    "pendingCleanup",
+    "unknownRequest",
+    "invalidRequest",
+    "requestConflict",
+    "unavailable"
+  ],
+  "boundaries": [
+    "Explicit query only; choice of kind/Agent/directory does not start CLI.",
+    "Skills enable/disable/install/tools/P40/P41 remain unimplemented.",
+    "Agent-specific launch and official schema logic stay acp_client. No new dependency/environment flag/private HOME or upstream patch.",
+    "Official installed query will be performed by root later; controlled tests and actual Rust serialization are separate evidence."
+  ]
+}

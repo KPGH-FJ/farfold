@@ -1,0 +1,1 @@
+src/runtime/extension_inventory.wire.test.ts 28ms

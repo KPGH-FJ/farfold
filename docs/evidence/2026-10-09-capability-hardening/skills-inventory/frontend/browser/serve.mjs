@@ -1,0 +1,20 @@
+import { createServer } from "vite";
+const base = "output/2026-10-10-skills-inventory-browser";
+const server = await createServer({
+  configFile: "vite.config.ts",
+  cacheDir: base + "/.vite",
+  optimizeDeps: { entries: [base + "/index.html"] },
+  server: {
+    host: "127.0.0.1",
+    port: 1490,
+    strictPort: true,
+    watch: { ignored: ["**/src-tauri/**", "**/.git/**"] },
+  },
+});
+await server.listen();
+console.log(JSON.stringify({ pid: process.pid, port: 1490 }));
+for (const signal of ["SIGTERM", "SIGINT"])
+  process.on(signal, async () => {
+    await server.close();
+    process.exit(0);
+  });

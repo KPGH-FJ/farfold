@@ -16,9 +16,11 @@ import {
   validInventoryDirectory,
   type ExtensionCapabilities,
   type ExtensionCode,
+  type InventoryKind,
 } from "../runtime/extension_inventory_types";
 import { EXTENSION_INVENTORY_STRINGS as S } from "../runtime/extension_inventory_strings";
 import "./AgentExtensionInventory.css";
+import { AgentExtensionInventoryResult } from "./AgentExtensionInventoryResult";
 
 /** Inline in the existing AgentDetails dialog; no separate modal or Agent UI. */
 export function AgentExtensionInventory({
@@ -32,6 +34,7 @@ export function AgentExtensionInventory({
   active: boolean;
   blocked?: boolean;
 }) {
+  const [kind, setKind] = useState<InventoryKind>("mcp");
   const [cwd, setCwd] = useState("");
   const [choosing, setChoosing] = useState(false);
   const [folderError, setFolderError] = useState(false);
@@ -57,7 +60,7 @@ export function AgentExtensionInventory({
         active && !blocked && selection !== null && liveOwner.current === value,
     };
     return value;
-  }, [agentId, selection, active, blocked, cwd, revision]);
+  }, [agentId, selection, active, blocked, cwd, revision, kind]);
   liveOwner.current = owner;
   useEffect(() => {
     liveOwner.current = owner;
@@ -105,8 +108,10 @@ export function AgentExtensionInventory({
     () => extensionInventory.get(agentId),
   );
   const cap = capability?.key === capabilityKey ? capability : null;
+  const selectedCapability =
+    kind === "mcp" ? cap?.value?.mcpInventory : cap?.value?.skillsInventory;
   const available =
-    !blocked && cap?.value?.mcpInventory.availability === "available";
+    !blocked && selectedCapability?.availability === "available";
   const selectDirectory = async () => {
     if (!owner.current() || choosing || view.unresolved) return;
     setChoosing(true);
@@ -128,20 +133,32 @@ export function AgentExtensionInventory({
   const ticketRejected =
     view.error === "selectionChanged" && view.selectionId === ticket;
   const request = view.request;
+  const result = view.results[kind];
   const stale =
-    view.stale ||
-    !active ||
-    !selection ||
-    view.result?.cwd !== cwd ||
-    !available;
+    result?.stale || !active || !selection || result?.cwd !== cwd || !available;
   const reason = !selection
     ? "entryUnverified"
-    : (cap?.error ?? cap?.value?.mcpInventory.reason);
+    : (cap?.error ?? selectedCapability?.reason);
   return (
     <section className="agent-extension-inventory" aria-label={S.heading}>
       <h4>{S.heading}</h4>
       <p>{S.unavailableLists}</p>
-      <h5>{S.mcp}</h5>
+      <label className="agent-extension-kind">
+        <span>{S.kind}</span>
+        <select
+          aria-label={S.kind}
+          value={kind}
+          disabled={!active || blocked}
+          onChange={(event) => {
+            if (active && !blocked && liveOwner.current === owner)
+              setKind(event.target.value as InventoryKind);
+          }}
+        >
+          <option value="mcp">{S.mcp}</option>
+          <option value="skills">{S.skills}</option>
+        </select>
+      </label>
+      <h5>{kind === "mcp" ? S.mcp : S.skills}</h5>
       {(cap?.waiting || (active && !blocked && selection && !cap)) && (
         <p role="status">{S.capabilityChecking}</p>
       )}
@@ -183,10 +200,16 @@ export function AgentExtensionInventory({
               }
               onClick={() => {
                 if (owner.current() && available && ticket && !ticketRejected)
-                  extensionInventory.begin(owner, cwd, ticket);
+                  extensionInventory.begin(owner, cwd, ticket, kind);
               }}
             >
-              {view.result ? S.queryAgain : S.query}
+              {kind === "mcp"
+                ? result
+                  ? S.queryAgain
+                  : S.query
+                : result
+                  ? S.skillQueryAgain
+                  : S.skillQuery}
             </button>
           </>
         )}
@@ -200,6 +223,9 @@ export function AgentExtensionInventory({
       {folderError && <p role="alert">{S.chooseFailed}</p>}
       {unresolved && request && (
         <div className="agent-extension-progress" role="status">
+          <p>
+            {S.queryKind}：{request.kind === "mcp" ? S.mcp : S.skills}
+          </p>
           <p>
             {view.cancellationRequested
               ? S.cancelling
@@ -238,51 +264,23 @@ export function AgentExtensionInventory({
         </div>
       )}
       {!unresolved && view.trackingReleased ? (
-        <p role="status">{S.trackingReleased}</p>
+        <p role="status">
+          {request?.kind === "skills" ? S.skills : S.mcp}：
+          <span>{S.trackingReleased}</span>
+        </p>
       ) : !unresolved && view.error ? (
-        <p role="status">{S.errors[view.error]}</p>
+        <p role="status">
+          {request?.kind === "skills" ? S.skills : S.mcp}：
+          <span>{S.errors[view.error]}</span>
+        </p>
       ) : null}
-      {view.result && (
-        <div className="agent-extension-result">
-          {stale && (
-            <p role="status" className="auth-note">
-              {S.stale}
-            </p>
-          )}
-          <p className="agent-extension-directory">{view.result.cwd}</p>
-          <p>
-            {S.observed}：
-            <time>
-              {Number.isNaN(
-                new Date(view.result.snapshot.observedAtMs).valueOf(),
-              )
-                ? S.timeUnavailable
-                : new Date(view.result.snapshot.observedAtMs).toLocaleString()}
-            </time>
-          </p>
-          <p>{S.source}</p>
-          {view.result.snapshot.items.length === 0 ? (
-            <p>{S.empty}</p>
-          ) : (
-            <ul className="agent-extension-items">
-              {view.result.snapshot.items.map((item) => (
-                <li key={item.id}>
-                  <strong>{item.name ?? S.unnamed}</strong>
-                  <span>{S.transport[item.transport]}</span>
-                  <span>{item.reportedEnabled ? S.enabled : S.disabled}</span>
-                  <span>
-                    {S.auth}：{S.authentication[item.reportedAuth]}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+      {result && (
+        <AgentExtensionInventoryResult result={result} stale={!!stale} />
       )}
       <details>
         <summary>{S.details}</summary>
-        <p>{S.scope}</p>
-        <p>{S.limits}</p>
+        <p>{kind === "mcp" ? S.scope : S.skillScope}</p>
+        <p>{kind === "mcp" ? S.limits : S.skillLimits}</p>
         <p>{S.sideEffects}</p>
       </details>
     </section>

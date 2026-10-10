@@ -1,0 +1,38 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.60s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 13 tests
+
+thread 'acp_client::extension_inventory::skills_tests::request_cannot_publish_a_snapshot_for_a_different_inventory_kind' (25054718) panicked at src/acp_client/extension_inventory/skills_tests.rs:393:5:
+assertion `left == right` failed
+  left: Ready
+ right: Failed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::extension_inventory::skills_tests::mismatched_unsolicited_error_duplicate_and_premature_responses_fail_closed ... ok
+test acp_client::extension_inventory::skills_tests::fixed_exchange_handles_split_lines_and_notifications_but_sends_no_other_rpc ... ok
+
+thread 'acp_client::extension_inventory::skills_tests::explicit_credential_labels_keep_value_hidden_across_separate_assignment_tokens' (25054712) panicked at src/acp_client/extension_inventory/skills_tests.rs:384:9:
+token = PRIVATE_VALUE
+test acp_client::extension_inventory::skills_tests::recognizable_private_tokens_controls_and_unsafe_names_do_not_leave_decoder ... ok
+test acp_client::extension_inventory::skills_tests::both_kinds_share_admission_and_request_ids_never_change_kind ... ok
+test acp_client::extension_inventory::skills_tests::unknown_scope_is_preserved_as_unknown_not_promoted_to_repository ... ok
+test acp_client::extension_inventory::skills_tests::explicit_credential_labels_keep_value_hidden_across_separate_assignment_tokens ... FAILED
+test acp_client::extension_inventory::skills_tests::request_cannot_publish_a_snapshot_for_a_different_inventory_kind ... FAILED
+test acp_client::extension_inventory::skills_tests::useful_description_disabled_and_duplicate_names_survive_without_private_fields ... ok
+test acp_client::extension_inventory::skills_tests::description_preference_fallback_and_unicode_budget_are_explicit ... ok
+test acp_client::extension_inventory::skills_tests::invalid_skill_structure_cwd_and_limits_fail_without_partial_success ... ok
+SKILLS_INVENTORY_WIRE:{"skillsRunning":{"requestId":"01000000-0000-4000-8000-000000000001","agentId":"fixture","cwd":"/tmp","kind":"skills","state":"running","settled":false},"skillsReady":{"requestId":"01000000-0000-4000-8000-000000000001","agentId":"fixture","cwd":"/tmp","kind":"skills","state":"ready","settled":true,"snapshot":{"observedAtMs":1791639591275,"scope":"officialSkillsForDirectory","source":"officialAppServer","complete":false,"sessionApplicability":"unverified","errorCount":1,"items":[{"id":0,"name":"review-docs","description":"Review documents","descriptionTruncated":false,"descriptionRedacted":false,"reportedEnabled":false,"origin":"repo","pluginReported":true}]}}}
+test acp_client::extension_inventory::skills_tests::actual_skills_peer_emits_sanitized_serialization_with_partial_errors ... ok
+test acp_client::extension_inventory::skills_tests::skills_peer_receives_only_explicit_read_handshake_and_eof ... ok
+test acp_client::extension_inventory::skills_tests::real_jsonl_peer_rejects_eof_wrong_id_rpc_errors_and_excess_output ... ok
+
+failures:
+
+failures:
+    acp_client::extension_inventory::skills_tests::explicit_credential_labels_keep_value_hidden_across_separate_assignment_tokens
+    acp_client::extension_inventory::skills_tests::request_cannot_publish_a_snapshot_for_a_different_inventory_kind
+
+test result: FAILED. 11 passed; 2 failed; 0 ignored; 0 measured; 1439 filtered out; finished in 2.42s
+
+error: test failed, to rerun pass `--lib`

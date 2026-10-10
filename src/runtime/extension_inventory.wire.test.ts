@@ -10,7 +10,7 @@ import {
 // fixture does not prove a real Agent's available capability or live CLI result.
 const wire = JSON.parse(
   readFileSync(
-    "docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire.json",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/actual-wire.json",
     "utf8",
   ),
 );
@@ -18,6 +18,7 @@ const request = {
   agentId: wire.running.agentId,
   requestId: wire.running.requestId,
   cwd: wire.running.cwd,
+  kind: wire.running.kind,
 };
 
 it("accepts the actual unavailable capability with a null selection ticket", () => {
@@ -40,4 +41,28 @@ it("accepts actual early cancellation without inventing a completed operation", 
     parseInventoryCancellation(wire.earlyCancellation, wire.earlyCancellation),
   ).toBeNull();
   expect(wire.earlyCancellation.operation).toBeNull();
+});
+it("accepts actual skills peer output with partial errors, disabled row and bounded description", () => {
+  const expected = {
+    agentId: wire.skillsRunning.agentId,
+    requestId: wire.skillsRunning.requestId,
+    cwd: wire.skillsRunning.cwd,
+    kind: wire.skillsRunning.kind,
+  };
+  expect(parseInventoryOperation(wire.skillsRunning, expected)).toEqual(
+    wire.skillsRunning,
+  );
+  expect(parseInventoryOperation(wire.skillsReady, expected)).toEqual(
+    wire.skillsReady,
+  );
+  expect(wire.skillsReady.snapshot.complete).toBe(false);
+  expect(wire.skillsReady.snapshot.errorCount).toBe(1);
+  expect(wire.skillsReady.snapshot.items[0]).toMatchObject({
+    reportedEnabled: false,
+    origin: "repo",
+    description: "Review documents",
+  });
+  expect(() =>
+    parseInventoryOperation(wire.skillsReady, { ...expected, kind: "mcp" }),
+  ).toThrow();
 });

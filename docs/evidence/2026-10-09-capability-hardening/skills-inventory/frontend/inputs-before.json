@@ -1,0 +1,68 @@
+{
+  "sourceRefs": [
+    {
+      "path": "src/components/AgentDetails.inventory.test.tsx",
+      "sha256": "2111113bd8f7bb885ea1f6f2578de988a182f86d661710f8c5064d0270fa8a91"
+    },
+    {
+      "path": "src/components/AgentDetails.tsx",
+      "sha256": "6d8bf6c10a43ad39f52da217ceb8025c26a8091c5da053ca6ed19cf34380f6cb"
+    },
+    {
+      "path": "src/components/AgentExtensionInventory.css",
+      "sha256": "548762ab961bb397927a6179866f19c2c031df8bafc3acbc85bcdc4c5cd3f7a9"
+    },
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "31bf2f17bf28bead903b4ad65370765d8dddd72caa92d6215f3accc23b56f635"
+    },
+    {
+      "path": "src/runtime/agent_extension_owner.test.ts",
+      "sha256": "28e8fcad0fb8194cce30aad5609fe2611c0f69b6764f4c7b2771eed7c1ac8c16"
+    },
+    {
+      "path": "src/runtime/agent_extension_owner.ts",
+      "sha256": "aa14a808a63147ec6e53d449f52e321c718630192889539b50c8fa171bc723c9"
+    },
+    {
+      "path": "src/runtime/agents.ts",
+      "sha256": "7565c5b8ffe6b388ed7d169a4aae5c820c59dca4b479fe1c2eb40770918bc345"
+    },
+    {
+      "path": "src/runtime/extension_inventory.test-support.ts",
+      "sha256": "b0c86608d579635c5acec9362c699fea9531d6c87e52e2806f233ac0a1375ebc"
+    },
+    {
+      "path": "src/runtime/extension_inventory.ts",
+      "sha256": "4dd147f6907ed494d20f4ca327124ac65185b2583da82c306be7967f9afd70af"
+    },
+    {
+      "path": "src/runtime/extension_inventory.wire.test.ts",
+      "sha256": "cae1ec4a248fc3fbcd371384cc20f4efed9ae78ff55b688a208293560607e163"
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.test.ts",
+      "sha256": "5b3676028db8ea498f0db89b509db261afb20a929b772b6ffe9b22ff7d5e3383"
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.ts",
+      "sha256": "808b7f619b1734ae2252b466d45caa402a426e4e5bc493c64fb07ac5124fbadd"
+    },
+    {
+      "path": "src/runtime/extension_inventory_strings.ts",
+      "sha256": "e2548e4d70236fa62f275d987b5f9b877682d215f5a64505bcdac677b8741d4f"
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.test.ts",
+      "sha256": "e52a5fec2cd68314bd70212e2bf86734b9036bdc0958403f3d78cb001f2fbff4"
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "e76a56adacf6f8a907d3ec48d54f7cd38208e4b925db40f7c4af2aaefd2bf9f2"
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "ea7986e4daf4ecef41049d16d2e6e440371a7cf6332cad32c564f9260b2132b3"
+    }
+  ]
+}

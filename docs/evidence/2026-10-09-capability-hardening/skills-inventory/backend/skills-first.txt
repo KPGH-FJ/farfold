@@ -1,0 +1,26 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.26s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 11 tests
+test acp_client::extension_inventory::skills_tests::mismatched_unsolicited_error_duplicate_and_premature_responses_fail_closed ... ok
+test acp_client::extension_inventory::skills_tests::unknown_scope_is_preserved_as_unknown_not_promoted_to_repository ... ok
+test acp_client::extension_inventory::skills_tests::fixed_exchange_handles_split_lines_and_notifications_but_sends_no_other_rpc ... ok
+test acp_client::extension_inventory::skills_tests::recognizable_private_tokens_controls_and_unsafe_names_do_not_leave_decoder ... ok
+test acp_client::extension_inventory::skills_tests::both_kinds_share_admission_and_request_ids_never_change_kind ... ok
+test acp_client::extension_inventory::skills_tests::useful_description_disabled_and_duplicate_names_survive_without_private_fields ... ok
+test acp_client::extension_inventory::skills_tests::description_preference_fallback_and_unicode_budget_are_explicit ... ok
+test acp_client::extension_inventory::skills_tests::invalid_skill_structure_cwd_and_limits_fail_without_partial_success ... ok
+test acp_client::extension_inventory::skills_tests::skills_peer_receives_only_explicit_read_handshake_and_eof ... ok
+SKILLS_INVENTORY_WIRE:{"skillsRunning":{"requestId":"01000000-0000-4000-8000-000000000001","agentId":"fixture","cwd":"/tmp","kind":"skills","state":"running","settled":false},"skillsReady":{"requestId":"01000000-0000-4000-8000-000000000001","agentId":"fixture","cwd":"/tmp","kind":"skills","state":"ready","settled":true,"snapshot":{"observedAtMs":1791639513644,"scope":"officialSkillsForDirectory","source":"officialAppServer","complete":false,"sessionApplicability":"unverified","errorCount":1,"items":[{"id":0,"name":"review-docs","description":"Review documents","descriptionTruncated":false,"descriptionRedacted":false,"reportedEnabled":false,"origin":"repo","pluginReported":true}]}}}
+test acp_client::extension_inventory::skills_tests::actual_skills_peer_emits_sanitized_serialization_with_partial_errors ... ok
+test acp_client::extension_inventory::skills_tests::real_jsonl_peer_rejects_eof_wrong_id_rpc_errors_and_excess_output ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 1439 filtered out; finished in 2.40s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

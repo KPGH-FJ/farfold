@@ -19,14 +19,16 @@ export const EXTENSION_CODES = [
   "unavailable",
 ] as const;
 export type ExtensionCode = (typeof EXTENSION_CODES)[number];
+export type InventoryKind = "mcp" | "skills";
+export interface InventoryCapability {
+  availability: "available" | "unavailable";
+  source: "officialCli" | "officialAppServer" | null;
+  reason: ExtensionCode | null;
+}
 export interface ExtensionCapabilities {
   selectionId: string | null;
-  mcpInventory: {
-    availability: "available" | "unavailable";
-    source: "officialCli" | null;
-    reason: ExtensionCode | null;
-  };
-  skillsInventory: "unavailable";
+  mcpInventory: InventoryCapability;
+  skillsInventory: InventoryCapability;
   toolInventory: "unavailable";
 }
 export interface InventoryItem {
@@ -49,7 +51,28 @@ export interface McpInventory {
   sessionApplicability: "unverified";
   items: InventoryItem[];
 }
+export interface SkillInventoryItem {
+  id: number;
+  name: string | null;
+  description: string | null;
+  descriptionTruncated: boolean;
+  descriptionRedacted: boolean;
+  reportedEnabled: boolean;
+  origin: "user" | "repo" | "system" | "admin" | "unknown";
+  pluginReported: boolean;
+}
+export interface SkillsInventory {
+  observedAtMs: number;
+  scope: "officialSkillsForDirectory";
+  source: "officialAppServer";
+  complete: boolean;
+  sessionApplicability: "unverified";
+  errorCount: number;
+  items: SkillInventoryItem[];
+}
+export type InventorySnapshot = McpInventory | SkillsInventory;
 export interface InventoryRequest {
+  kind: InventoryKind;
   agentId: string;
   requestId: string;
   cwd: string;
@@ -64,7 +87,7 @@ export interface InventoryOperation extends InventoryRequest {
     | "cancelled";
   settled: boolean;
   code?: ExtensionCode;
-  snapshot?: McpInventory;
+  snapshot?: InventorySnapshot;
 }
 function invalid(): never {
   throw { code: "invalidOutput" };
@@ -127,40 +150,136 @@ export function parseExtensionCapabilities(
     "skillsInventory",
     "toolInventory",
   ]);
-  const m = object(v.mcpInventory, ["availability", "source", "reason"]);
-  const availability = one(m.availability, ["available", "unavailable"]);
-  if (v.skillsInventory !== "unavailable" || v.toolInventory !== "unavailable")
-    return invalid();
-  if (availability === "available") {
+  const capability = (
+    raw: unknown,
+    source: "officialCli" | "officialAppServer",
+  ): InventoryCapability => {
+    const m = object(raw, ["availability", "source", "reason"]);
+    const availability = one(m.availability, ["available", "unavailable"]);
+    if (availability === "available") {
+      if (m.source !== source || m.reason !== null) return invalid();
+      return { availability, source, reason: null };
+    }
     if (
-      !validInventoryId(v.selectionId) ||
-      m.source !== "officialCli" ||
-      m.reason !== null
+      m.source !== null ||
+      ![
+        "notReviewed",
+        "entryUnverified",
+        "platformUnsupported",
+        "environmentUnavailable",
+      ].includes(String(m.reason))
     )
       return invalid();
-  } else if (
-    v.selectionId !== null ||
-    m.source !== null ||
-    ![
-      "notReviewed",
-      "entryUnverified",
-      "platformUnsupported",
-      "environmentUnavailable",
-    ].includes(String(m.reason))
+    return {
+      availability,
+      source: null,
+      reason: one(m.reason, EXTENSION_CODES),
+    };
+  };
+  const mcpInventory = capability(v.mcpInventory, "officialCli");
+  const skillsInventory = capability(v.skillsInventory, "officialAppServer");
+  const available =
+    mcpInventory.availability === "available" ||
+    skillsInventory.availability === "available";
+  if (
+    v.toolInventory !== "unavailable" ||
+    (available ? !validInventoryId(v.selectionId) : v.selectionId !== null)
   )
     return invalid();
   return {
     selectionId: v.selectionId as string | null,
-    mcpInventory: {
-      availability,
-      source: availability === "available" ? "officialCli" : null,
-      reason:
-        availability === "available" ? null : one(m.reason, EXTENSION_CODES),
-    },
-    skillsInventory: "unavailable",
+    mcpInventory,
+    skillsInventory,
     toolInventory: "unavailable",
   };
 }
+function label(value: unknown): string | null {
+  if (value === null) return null;
+  if (
+    typeof value !== "string" ||
+    !value ||
+    new TextEncoder().encode(value).length > 256 ||
+    value.includes("..") ||
+    !/^[\p{Alphabetic}\p{Number} ._-]+$/u.test(value)
+  )
+    return invalid();
+  return value;
+}
+function skillsSnapshot(value: unknown): SkillsInventory {
+  const v = object(value, [
+    "observedAtMs",
+    "scope",
+    "source",
+    "complete",
+    "sessionApplicability",
+    "errorCount",
+    "items",
+  ]);
+  if (
+    !Number.isSafeInteger(v.observedAtMs) ||
+    (v.observedAtMs as number) < 0 ||
+    v.scope !== "officialSkillsForDirectory" ||
+    v.source !== "officialAppServer" ||
+    v.sessionApplicability !== "unverified" ||
+    !Number.isInteger(v.errorCount) ||
+    (v.errorCount as number) < 0 ||
+    (v.errorCount as number) > 512 ||
+    v.complete !== (v.errorCount === 0) ||
+    !Array.isArray(v.items) ||
+    v.items.length > 512
+  )
+    return invalid();
+  const items = v.items.map((raw, index): SkillInventoryItem => {
+    const i = object(raw, [
+      "id",
+      "name",
+      "description",
+      "descriptionTruncated",
+      "descriptionRedacted",
+      "reportedEnabled",
+      "origin",
+      "pluginReported",
+    ]);
+    if (
+      i.id !== index ||
+      [
+        i.descriptionTruncated,
+        i.descriptionRedacted,
+        i.reportedEnabled,
+        i.pluginReported,
+      ].some((x) => typeof x !== "boolean")
+    )
+      return invalid();
+    if (
+      i.description !== null &&
+      (typeof i.description !== "string" ||
+        !i.description.trim() ||
+        [...i.description].length > 2048 ||
+        new TextEncoder().encode(i.description).length > 8192)
+    )
+      return invalid();
+    return {
+      id: index,
+      name: label(i.name),
+      description: i.description as string | null,
+      descriptionTruncated: i.descriptionTruncated as boolean,
+      descriptionRedacted: i.descriptionRedacted as boolean,
+      reportedEnabled: i.reportedEnabled as boolean,
+      origin: one(i.origin, ["user", "repo", "system", "admin", "unknown"]),
+      pluginReported: i.pluginReported as boolean,
+    };
+  });
+  return {
+    observedAtMs: v.observedAtMs as number,
+    scope: "officialSkillsForDirectory",
+    source: "officialAppServer",
+    complete: v.complete as boolean,
+    sessionApplicability: "unverified",
+    errorCount: v.errorCount as number,
+    items,
+  };
+}
+
 function snapshot(value: unknown): McpInventory {
   const v = object(value, [
     "observedAtMs",
@@ -244,13 +363,15 @@ export function parseInventoryOperation(
 ): InventoryOperation {
   const v = object(
     value,
-    ["requestId", "agentId", "cwd", "state", "settled"],
+    ["requestId", "agentId", "cwd", "kind", "state", "settled"],
     ["code", "snapshot"],
   );
   if (
     v.requestId !== expected.requestId ||
     v.agentId !== expected.agentId ||
     v.cwd !== expected.cwd ||
+    v.kind !== expected.kind ||
+    !["mcp", "skills"].includes(String(v.kind)) ||
     typeof v.settled !== "boolean"
   )
     return invalid();
@@ -278,7 +399,14 @@ export function parseInventoryOperation(
     state,
     settled: terminal,
     ...(code ? { code } : {}),
-    ...(state === "ready" ? { snapshot: snapshot(v.snapshot) } : {}),
+    ...(state === "ready"
+      ? {
+          snapshot:
+            expected.kind === "skills"
+              ? skillsSnapshot(v.snapshot)
+              : snapshot(v.snapshot),
+        }
+      : {}),
   };
 }
 export function parseInventoryCancellation(

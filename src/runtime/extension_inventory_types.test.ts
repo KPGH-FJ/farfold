@@ -74,7 +74,11 @@ it("does not infer capability from an unknown shape or unavailable source", () =
       source: "officialCli",
       reason: null,
     },
-    skillsInventory: "unavailable",
+    skillsInventory: {
+      availability: "unavailable",
+      source: null,
+      reason: "notReviewed",
+    },
     toolInventory: "unavailable",
   };
   expect(parseExtensionCapabilities(value)).toEqual(value);

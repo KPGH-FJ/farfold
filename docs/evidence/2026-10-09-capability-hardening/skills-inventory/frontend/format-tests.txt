@@ -1,0 +1,2 @@
+src/runtime/extension_inventory.skills.test.ts 42ms
+src/runtime/extension_inventory.wire.test.ts 5ms (unchanged)

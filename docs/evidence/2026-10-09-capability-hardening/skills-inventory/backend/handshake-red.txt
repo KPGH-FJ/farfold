@@ -1,0 +1,28 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: unused import: `serde_json::json`
+ --> src/acp_client/extension_inventory/skills_tests.rs:3:5
+  |
+3 | use serde_json::json;
+  |     ^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib test) generated 1 warning (run `cargo fix --lib -p farfold --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 23.63s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::extension_inventory::skills_tests::skills_peer_receives_only_explicit_read_handshake_and_eof' (25034988) panicked at src/acp_client/extension_inventory/skills_tests.rs:28:5:
+official JSONL reading must complete its handshake: Err(Failure { code: QueryFailed })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::extension_inventory::skills_tests::skills_peer_receives_only_explicit_read_handshake_and_eof ... FAILED
+
+failures:
+
+failures:
+    acp_client::extension_inventory::skills_tests::skills_peer_receives_only_explicit_read_handshake_and_eof
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1439 filtered out; finished in 0.05s
+
+error: test failed, to rerun pass `--lib`

@@ -1,14 +1,43 @@
-import type { ExtensionCode, InventoryItem } from "./extension_inventory_types";
+import type {
+  ExtensionCode,
+  InventoryItem,
+  SkillInventoryItem,
+} from "./extension_inventory_types";
 export const EXTENSION_INVENTORY_STRINGS = {
   heading: "技能与工具",
   mcp: "MCP 配置清单",
+  skills: "技能清单",
+  kind: "清单类型",
+  queryKind: "本次查询类型",
+  skillQuery: "检查技能清单",
+  skillQueryAgain: "重新查询技能",
+  skillEmpty: "此次完整技能报告中没有技能项目。",
+  skillEnabled: "技能报告：已启用",
+  skillDisabled: "技能报告：未启用",
+  skillSource: "信息来源：官方程序的技能报告",
+  partial: "部分技能信息未能读取；下方不是完整清单。未读取项数：",
+  descriptionTruncated: "简述已截短",
+  descriptionRedacted: "简述中部分内容已过滤",
+  pluginReported: "报告来自扩展提供的技能",
+  origin: "报告来源",
+  origins: {
+    user: "用户范围",
+    repo: "项目范围",
+    system: "内置范围",
+    admin: "管理范围",
+    unknown: "未知",
+  } satisfies Record<SkillInventoryItem["origin"], string>,
+  skillScope:
+    "按所选工作文件夹查询技能，不代表当前对话已经加载或使用这些技能。来源范围不代表可在此修改的配置层级。",
+  skillLimits:
+    "本次未执行技能，也未检查具体工具或当前对话是否生效；此处不能启用、安装或修改技能。",
   capabilityChecking: "正在检查清单读取方式…",
   capabilityRetry: "重新检查读取方式",
   chooseDirectory: "选择工作文件夹",
   directory: "本次查询的工作文件夹",
   query: "检查 MCP 配置",
   queryAgain: "重新查询配置",
-  reading: "正在查询所选文件夹的配置…",
+  reading: "正在查询所选文件夹的清单…",
   cancelling: "已请求取消，尚未确认查询已结束。",
   pending: "查询结果仍未确认。结束情况确认前不能开始新的查询。",
   cancelled: "本次查询已取消。",
@@ -28,11 +57,11 @@ export const EXTENSION_INVENTORY_STRINGS = {
   auth: "认证报告",
   details: "范围与未验证事项",
   scope: "按所选工作文件夹单独查询配置，不代表当前对话的设置。",
-  unavailableLists: "技能清单和具体工具清单尚未提供。",
+  unavailableLists: "具体工具清单尚未提供。",
   limits:
     "本次未检查服务器连接、具体工具调用或当前对话是否生效；配置来源文件与配置层级未报告。",
   sideEffects:
-    "官方程序会使用已有配置、登录状态和环境，可能访问网络或更新自身缓存。Farfold 不发送配置修改命令、不附加已保存的服务密钥，也不启动 MCP 服务器。",
+    "官方程序会使用已有配置、登录状态和环境，可能访问网络及维护自身状态或缓存。Farfold 只请求清单，不发送消息或配置修改命令，也不附加已保存的服务密钥。",
   transport: {
     stdio: "本地程序",
     streamableHttp: "网络服务",

@@ -1,5 +1,5 @@
 //! Only typed, redacted query facts may leave the one-shot worker.
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -46,7 +46,7 @@ pub struct InventoryCapability {
 pub struct ExtensionCapabilities {
     pub selection_id: Option<String>,
     pub mcp_inventory: InventoryCapability,
-    pub skills_inventory: &'static str,
+    pub skills_inventory: InventoryCapability,
     pub tool_inventory: &'static str,
 }
 
@@ -66,12 +66,13 @@ pub struct InventoryOperation {
     pub request_id: String,
     pub agent_id: String,
     pub cwd: String,
+    pub kind: Kind,
     pub state: State,
     pub settled: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub code: Option<Code>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub snapshot: Option<McpInventory>,
+    pub snapshot: Option<InventorySnapshot>,
 }
 #[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -103,4 +104,45 @@ pub struct McpInventoryItem {
     pub configuration_layer: &'static str,
     pub connection: &'static str,
     pub tools: &'static str,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub enum Kind {
+    Mcp,
+    Skills,
+}
+#[derive(Clone, Debug, Serialize)]
+#[serde(untagged)]
+pub enum InventorySnapshot {
+    Mcp(McpInventory),
+    Skills(SkillsInventory),
+}
+impl From<McpInventory> for InventorySnapshot {
+    fn from(value: McpInventory) -> Self {
+        Self::Mcp(value)
+    }
+}
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SkillsInventory {
+    pub observed_at_ms: u64,
+    pub scope: &'static str,
+    pub source: &'static str,
+    pub complete: bool,
+    pub session_applicability: &'static str,
+    pub error_count: usize,
+    pub items: Vec<SkillInventoryItem>,
+}
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SkillInventoryItem {
+    pub id: usize,
+    pub name: Option<String>,
+    pub description: Option<String>,
+    pub description_truncated: bool,
+    pub description_redacted: bool,
+    pub reported_enabled: bool,
+    pub origin: &'static str,
+    pub plugin_reported: bool,
 }

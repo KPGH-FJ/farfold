@@ -1,0 +1,12 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.16s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 5 tests
+test acp_client::extension_inventory::skills_lifecycle_tests::cancelling_list_or_post_result_cleanup_does_not_publish_ready ... ok
+test acp_client::extension_inventory::skills_lifecycle_tests::dropping_skills_observer_keeps_scope_and_activity_until_real_child_cleanup ... ok
+test acp_client::extension_inventory::skills_lifecycle_tests::idle_scope_blocks_known_alias_work_and_connect_but_not_unrelated_entry ... ok
+test acp_client::extension_inventory::skills_lifecycle_tests::skills_admission_rejects_busy_unsettled_and_candidate_connections ... ok
+test acp_client::extension_inventory::skills_lifecycle_tests::skills_result_waits_for_real_successful_exit_and_inherited_pipes ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1455 filtered out; finished in 3.01s
+

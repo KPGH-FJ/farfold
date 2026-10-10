@@ -1,0 +1,46 @@
+{
+  "atUtc": "2026-10-10T13:44:45.852097+00:00",
+  "checks": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "acp_client::extension_inventory::skills_tests::explicit_credential_labels_keep_value_hidden_across_separate_assignment_tokens",
+        "--",
+        "--exact",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "seconds": 0.526,
+      "log": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/independent-credential-separators.txt",
+      "sha256": "95ea921ed986e6937fd53bd5527c54c030b02e5439f6efc6f2cdfd8bf5726b61"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "extension_inventory::skills_lifecycle_tests::",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "seconds": 3.204,
+      "log": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/independent-lifecycle.txt",
+      "sha256": "573877d0ca8f94525918bdf53077c8a85dc00c3c0db437757a58f2142a66fc48"
+    }
+  ],
+  "sourceStable": true,
+  "inputCount": 404,
+  "changedInputs": [],
+  "ownedSourceMatchCheckpoint": true,
+  "boundary": "Exact controlled Rust test filters only; no installed CLI/App or real Agent, no whole repository suite."
+}

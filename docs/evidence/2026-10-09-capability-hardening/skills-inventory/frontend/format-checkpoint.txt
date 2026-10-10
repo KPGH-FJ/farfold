@@ -1,0 +1,2 @@
+src/runtime/extension_inventory.skills.test.ts 40ms
+docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser-source-checkpoint.json 7ms (unchanged)

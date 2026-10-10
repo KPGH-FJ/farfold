@@ -8,7 +8,8 @@ import {
   type ExtensionCode,
   type InventoryOperation,
   type InventoryRequest,
-  type McpInventory,
+  type InventorySnapshot,
+  type InventoryKind,
 } from "./extension_inventory_types";
 export interface InventoryOwner {
   readonly agentId: string;
@@ -17,13 +18,15 @@ export interface InventoryOwner {
 }
 export interface InventoryResult {
   readonly cwd: string;
-  readonly snapshot: McpInventory;
+  readonly snapshot: InventorySnapshot;
+  readonly stale: boolean;
 }
 export interface InventoryView {
   request: InventoryRequest | null;
   selectionId: string | null;
   operation: InventoryOperation | null;
   result: InventoryResult | null;
+  results: Partial<Record<InventoryKind, InventoryResult>>;
   stale: boolean;
   unresolved: boolean;
   checking: boolean;
@@ -36,6 +39,7 @@ const EMPTY: InventoryView = Object.freeze({
   selectionId: null,
   operation: null,
   result: null,
+  results: Object.freeze({}),
   stale: false,
   unresolved: false,
   checking: false,
@@ -98,13 +102,20 @@ export class ExtensionInventoryController {
       op.snapshot &&
       this.owns(f) &&
       !f.view.cancellationRequested;
+    const result = display
+      ? { cwd: op.cwd, snapshot: op.snapshot!, stale: false }
+      : null;
     this.publish(f, {
       operation: op,
       unresolved: !op.settled,
       checking: false,
       error: op.code ?? null,
       ...(display
-        ? { result: { cwd: op.cwd, snapshot: op.snapshot! }, stale: false }
+        ? {
+            result,
+            results: { ...f.view.results, [op.kind]: result! },
+            stale: false,
+          }
         : {}),
     });
   }
@@ -140,7 +151,12 @@ export class ExtensionInventoryController {
       },
     );
   }
-  begin(owner: InventoryOwner, cwd: string, selectionId: string): boolean {
+  begin(
+    owner: InventoryOwner,
+    cwd: string,
+    selectionId: string,
+    kind: InventoryKind = "mcp",
+  ): boolean {
     const previous = this.entries.get(owner.agentId);
     if (
       !owner.current() ||
@@ -154,7 +170,18 @@ export class ExtensionInventoryController {
       if (!removable) return false;
       this.entries.delete(removable[0]);
     }
-    const request = { agentId: owner.agentId, cwd, requestId: this.uuid() };
+    const request = {
+      agentId: owner.agentId,
+      cwd,
+      requestId: this.uuid(),
+      kind,
+    };
+    const results = Object.fromEntries(
+      Object.entries(previous?.view.results ?? {}).map(([key, value]) => [
+        key,
+        { ...value, stale: true },
+      ]),
+    );
     const f: Flight = {
       owner,
       retired: false,
@@ -165,8 +192,9 @@ export class ExtensionInventoryController {
         ...EMPTY,
         request,
         selectionId,
-        result: previous?.view.result ?? null,
-        stale: !!previous?.view.result,
+        result: results[kind] ?? null,
+        results,
+        stale: !!results[kind],
         unresolved: true,
       },
     };
@@ -276,7 +304,15 @@ export class ExtensionInventoryController {
     const f = this.entries.get(owner.agentId);
     if (!f || f.owner !== owner || f.retired) return;
     f.retired = true;
-    this.publish(f, { stale: !!f.view.result });
+    this.publish(f, {
+      stale: !!f.view.result,
+      results: Object.fromEntries(
+        Object.entries(f.view.results).map(([key, value]) => [
+          key,
+          { ...value, stale: true },
+        ]),
+      ),
+    });
     if (f.view.request && f.view.unresolved)
       this.cancel(owner.agentId, f.view.request.requestId, false);
   }

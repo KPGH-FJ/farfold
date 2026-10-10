@@ -1,0 +1,18 @@
+--- tested/process.rs
++++ lint-fixed/process.rs
+@@ -197,12 +197,10 @@
+         }
+         if failure.is_none()
+             && let Some(exchange) = rpc.as_mut()
++            && let Some(input) = streams.input.as_mut()
++            && let Err(error) = exchange.write(input)
+         {
+-            if let Some(input) = streams.input.as_mut()
+-                && let Err(error) = exchange.write(input)
+-            {
+-                failure = Some(error);
+-            }
++            failure = Some(error);
+         }
+         if !out_done {
+             match drain(

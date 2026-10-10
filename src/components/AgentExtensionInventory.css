@@ -54,3 +54,19 @@
     white-space: normal;
   }
 }
+.agent-extension-kind {
+  display: grid;
+  gap: 6px;
+}
+.agent-extension-kind select {
+  max-width: 100%;
+  min-width: 0;
+  padding: 8px;
+  color: inherit;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+.agent-extension-description {
+  white-space: pre-wrap;
+}

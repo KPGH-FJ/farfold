@@ -1,0 +1,10 @@
+src/runtime/extension_inventory_types.ts 57ms
+src/runtime/extension_inventory.test-support.ts 6ms
+src/runtime/extension_inventory_types.test.ts 6ms
+src/runtime/extension_inventory_controller.ts 31ms
+src/runtime/extension_inventory.skills.test.ts 8ms
+src/runtime/extension_inventory_strings.ts 5ms
+src/components/AgentExtensionInventory.tsx 17ms
+src/components/AgentExtensionInventory.css 19ms (unchanged)
+src/components/AgentExtensionInventoryResult.tsx 6ms
+src/components/AgentExtensionInventoryResult.test.tsx 5ms

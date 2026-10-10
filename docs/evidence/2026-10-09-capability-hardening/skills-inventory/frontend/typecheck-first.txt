@@ -1,0 +1,11 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/extension_inventory.skills.test.ts(37,58): error TS2345: Argument of type '() => string' is not assignable to parameter of type '() => `${string}-${string}-${string}-${string}-${string}`'.
+  Type 'string' is not assignable to type '`${string}-${string}-${string}-${string}-${string}`'.
+src/runtime/extension_inventory.wire.test.ts(30,48): error TS2345: Argument of type '{ agentId: any; requestId: any; cwd: any; }' is not assignable to parameter of type 'InventoryRequest'.
+  Property 'kind' is missing in type '{ agentId: any; requestId: any; cwd: any; }' but required in type 'InventoryRequest'.
+src/runtime/extension_inventory.wire.test.ts(34,46): error TS2345: Argument of type '{ agentId: any; requestId: any; cwd: any; }' is not assignable to parameter of type 'InventoryRequest'.
+  Property 'kind' is missing in type '{ agentId: any; requestId: any; cwd: any; }' but required in type 'InventoryRequest'.
+ ELIFECYCLE  Command failed with exit code 1.

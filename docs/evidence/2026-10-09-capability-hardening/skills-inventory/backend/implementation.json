@@ -1,0 +1,259 @@
+{
+  "status": "implementedAuthorTargetedVerifiedPendingFullIntegrationAndInstalledOfficialQuery",
+  "timeUtc": "2026-10-10T13:45:20.811987+00:00",
+  "sourceCommit": "cd3d02a882a1681e29624bfad1d791897bd82fd5",
+  "sourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "a7fb8c3ebffb4cb17da0d7166fa8c23020290f95ce4417a3f5cdd3debc63622f",
+      "bytes": 6270,
+      "lines": 178
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/mod.rs",
+      "sha256": "a3e65085e59082e4c62a48b93b0221aef70d1b0834978d2d79b760fa0dcc6b05",
+      "bytes": 9522,
+      "lines": 291
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/output.rs",
+      "sha256": "156fe0a61521b81baef133ea5e1b51b5b98a2bd8052b80a27ebf0b2da78a9b85",
+      "bytes": 3898,
+      "lines": 115
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "sha256": "de5591386d0d0390bfe4fe23bda104e8bc846ff0fbea7d7c9d5ae158f9c94322",
+      "bytes": 8844,
+      "lines": 276
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "sha256": "6e251f5887d29b86cc1778b1ba41029fa365fe28b7d42ef7b13497370be33ac5",
+      "bytes": 7515,
+      "lines": 219
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_lifecycle_tests.rs",
+      "sha256": "428b9f8cd587cdf9196d1126204eccbd40a4b4f592784e96bcc795f1fbd11297",
+      "bytes": 10197,
+      "lines": 261
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_output.rs",
+      "sha256": "5dd45db48739a48fc8dc0bbcc8cc208652487b6f7cd3b88bde4fbad12839b700",
+      "bytes": 6563,
+      "lines": 202
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_rpc.rs",
+      "sha256": "262d33d668ee0261c61b4b511226b0915c52b72b4da3aed33ab3e62c1638013a",
+      "bytes": 4861,
+      "lines": 146
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_tests.rs",
+      "sha256": "c6266eb7dad98544bbd81e645e2e8688165c56ec14b04670f58116959cd193cb",
+      "bytes": 16874,
+      "lines": 481
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/tests.rs",
+      "sha256": "729267162af2a2e7e123ab979303ae860c12a506517e3242fc0d03a7f8a44434",
+      "bytes": 28138,
+      "lines": 740
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/types.rs",
+      "sha256": "def76addd4724eb12429a5dde8cf71e14b10ee87e0214a29083757f3ef950f6f",
+      "bytes": 3909,
+      "lines": 148
+    }
+  ],
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/source-checkpoint.json",
+    "sha256": "2f4e016d842e84177014b81837abe352911214dc797269a4c837e9f1da49f9d6",
+    "bytes": 3942
+  },
+  "implementation": [
+    "One shared extension inventory request registry and selection receipt supports mandatory mcp/skills kind. Kind is part of immutable request identity and final snapshot correlation. No new persistent query state or Agent loop.",
+    "Skills uses the already reviewed official relay with fixed cli app-server --listen stdio://, then only initialize/clientInfo, initialized and skills/list(cwds=[exact canonical directory],forceReload=true). Closes stdin after the typed result and still waits for child success, group exit and both pipe EOFs.",
+    "Same whole-query 10 second deadline, 1 MiB stdout / 64 KiB stderr totals, depth32, 512 rows/errors. Nonblocking partial stdin writes share the actual child owner and cancel/TERM/KILL/cleanup path; late observer loss does not release activity or preparation scope early.",
+    "Selected Agent and known same-entry aliases acquire the existing preparation AccountScope. Existing locally known work, unsettled operation and candidate admission reject before dispatch. Idle connections are retained; external/unregistered entrypoints and remote idle notifications are not globally locked.",
+    "Only bounded pure text display metadata leaves private decoding: disabled rows, duplicate names, source category, sanitized names/descriptions and partial-error count. Error bodies, paths, initialization metadata, dependency commands/URLs, plugin IDs and unknown fields are not forwarded.",
+    "MCP launch arguments, output schema, selected environment and pre-existing process cleanup semantics remain unchanged apart from required operation.kind=mcp."
+  ],
+  "validation": {
+    "finalTargeted": {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked extension_inventory -- --nocapture",
+      "exitCode": 0,
+      "passed": 52,
+      "failed": 0,
+      "ignored": 0,
+      "breakdown": {
+        "existingMcpTests": 31,
+        "newSkillsTests": 21
+      },
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/targeted-final.txt",
+        "sha256": "a99bc9103d13040e6cbc2a5387adff797b167f6c7f6142f8115444e72840a0ea",
+        "bytes": 8683
+      }
+    },
+    "format": {
+      "command": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+      "exitCode": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/format.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    "redGreen": [
+      {
+        "claim": "Old null stdin cannot perform the fixed app-server handshake",
+        "red": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/handshake-red.txt",
+          "sha256": "ee0a4be7d5f073c0db21844d0b1f8a11478861bf77fcba2e3047227b6fc0eb93",
+          "bytes": 1362
+        },
+        "redResult": {
+          "passed": 0,
+          "failed": 1
+        },
+        "green": "same named test passes in targeted-first and targeted-final"
+      },
+      {
+        "claim": "Explicit credential labels split by standalone = or : must not publish the following value",
+        "red": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/metadata-red.txt",
+          "sha256": "45a8c25ccc6ebe56746a82195582120a3fcd9143ab4c8b1b44f7638fadeda7e7",
+          "bytes": 3613
+        },
+        "redTest": "explicit_credential_labels_keep_value_hidden_across_separate_assignment_tokens",
+        "green": "targeted-final"
+      },
+      {
+        "claim": "A request cannot publish a ready snapshot for the other inventory kind",
+        "red": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/metadata-red.txt",
+          "sha256": "45a8c25ccc6ebe56746a82195582120a3fcd9143ab4c8b1b44f7638fadeda7e7",
+          "bytes": 3613
+        },
+        "redTest": "request_cannot_publish_a_snapshot_for_a_different_inventory_kind",
+        "green": "targeted-final"
+      }
+    ],
+    "intermediate": [
+      {
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/targeted-first.txt",
+          "sha256": "0a9935eee3902f2a27570fee09a8d777d8705363644b16a2ef62d90de35856b3",
+          "bytes": 6032
+        },
+        "passed": 32,
+        "failed": 0,
+        "scope": "existing31 plus handshake"
+      },
+      {
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/skills-first.txt",
+          "sha256": "a25a0e17f6a3facae92f2db04007bce438f3264e505367d860d1ca323f5a9a26",
+          "bytes": 2650
+        },
+        "passed": 11,
+        "failed": 0,
+        "scope": "new initial skills cases"
+      },
+      {
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/metadata-red.txt",
+          "sha256": "45a8c25ccc6ebe56746a82195582120a3fcd9143ab4c8b1b44f7638fadeda7e7",
+          "bytes": 3613
+        },
+        "passed": 11,
+        "failed": 2,
+        "scope": "deliberate effective red cases"
+      },
+      {
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/targeted-second.txt",
+          "sha256": "d14929473d33c267778602baa315e85e3730233e4f6f13c82289816de035bd4a",
+          "bytes": 8586
+        },
+        "passed": 47,
+        "failed": 1,
+        "scope": "test fixture attempted insert_agent twice with same ID; corrected fixture to use a distinct unrelated ID. This failure is not a production defect."
+      }
+    ],
+    "covered": [
+      "Fixed request sequence, initialized ordering, exact cwd, partial writes/WouldBlock, fragmented JSONL, notifications, rejected unexpected response IDs/server requests/duplicate known keys/deep JSON.",
+      "Real peer EOF/malformed output/RPC failure/stdout and stderr limit; meaningful short description selection and Unicode truncation; disabled and same-name sources; partial official error count; no raw path/error/dependencies/init data in serialized response.",
+      "Actual 10 second init deadline, cancellation while waiting for list and after receiving result but before process exit, failed exit rejection, leader exit while descendant still holds pipe.",
+      "Real controlled ACP connection with work and unsettled-operation leases, candidate admission; idle same-entry aliases blocked while unrelated script remains usable; observer abort retains scope/activity until the actual TERM-ignoring worker is killed/reaped."
+    ],
+    "notRun": [
+      "Installed official CLI/app-server or Agent",
+      "Full repository Rust/clippy/frontend/build (root integration follows)",
+      "Windows execution",
+      "Real disabled skill configuration change",
+      "No arbitrary prose secret-freedom proof"
+    ],
+    "sourceStability": "The frozen checkpoint was captured after targeted execution; this is not a full-tree before/after command hash claim. No source edits after checkpoint; independent and root integration own their exact before/after inventories."
+  },
+  "actualWire": {
+    "file": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/actual-wire.json",
+      "sha256": "a1317e8afb8b38ba3045c30e8012ed19ac77c356b316a69bf68b20f6cf17879b",
+      "bytes": 2365
+    },
+    "raw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/actual-wire.raw.txt",
+      "sha256": "c5b00d64525d9ed1a754e35740f4ceff41ec4b04d2ff647a6fa68a0d840232ac",
+      "bytes": 1741
+    },
+    "keys": [
+      "capabilities",
+      "running",
+      "ready",
+      "earlyCancellation",
+      "skillsRunning",
+      "skillsReady"
+    ],
+    "provenance": "Parsed exactly one EXTENSION_INVENTORY_WIRE line from targeted-first.txt plus one SKILLS_INVENTORY_WIRE line from skills-first.txt. The JSON equals their key-disjoint merge. These intermediate logs remain byte-preserved; final suite repeats the same schema with new timestamps, without overwriting delivered wire.",
+    "scope": "Actual Rust serialized controlled process results, not an installed official program. Capabilities are from a deliberately unsupported fixture row (both unavailable); available UI cases are controlled frontend fixtures, not cross-language available-admission evidence."
+  },
+  "officialStaticEvidence": {
+    "version": "Public OpenAI codex rust-v0.156.1 source; installed package identity previously inspected as @openai/codex0.156.1 via codex-acp1.13.1. Runtime does not pin versions or inspect executable hashes for admission.",
+    "fixtureConclusion": "Official repo roots walk from the located project marker root to selected cwd (inclusive) and check .agents/skills. Existing nonproject project_root_markers may alter that boundary. Controlled Git root with .agents/skills/<name>/SKILL.md is a suitable installed-query fixture; actual discovery remains for root to test.",
+    "validMinimum": "---\nname: fixture-skill\ndescription: Controlled fixture description\n---\nFixture instructions.",
+    "invalidMinimum": "A SKILL.md frontmatter with name but missing or empty description has a required-field parser error. Do not use colon-only malformed YAML because the official parser may repair common prose colons.",
+    "files": [
+      {
+        "url": "https://raw.githubusercontent.com/openai/codex/rust-v0.156.1/codex-rs/ext/skills/src/host_roots.rs",
+        "path": "output/2026-10-10-extension-official-surfaces/codex-skills/codex-rs/ext/skills/src/host_roots.rs",
+        "sha256": "d4290ba4d783110e7533586ad19719536aa9b23f517b43e3147d3afb40c91d56",
+        "bytes": 9511
+      },
+      {
+        "url": "https://raw.githubusercontent.com/openai/codex/rust-v0.156.1/codex-rs/skills/src/parser.rs",
+        "path": "output/2026-10-10-extension-official-surfaces/codex-skills/codex-rs/skills/src/parser.rs",
+        "sha256": "f3532df1cc16f4da423b8e5c813269940c90317bcd211b6659cad449fd877e89",
+        "bytes": 7250
+      }
+    ],
+    "sideEffects": "Normal official app-server startup may maintain official cache/state or other configuration-derived resources. This implementation sends no configuration/skills-write/auth/thread/turn RPC, adds no secret service environment, and does not promise zero disk writes."
+  },
+  "limitations": [
+    "Descriptions are plain text data, never executed or appended to a prompt. Deterministic masking recognizes certain private-looking tokens, exact reported paths and controls; arbitrary prose cannot be certified secret-free.",
+    "AccountScope covers the selected Agent and registered aliases with known identical entry identity, not all Codex executables, all shared-HOME accounts or independent external processes. Idle remote events may still occur.",
+    "The initialized capability describes a reviewed entry and prepared environment, not installed API compatibility or current conversation skill use. Unsupported, malformed, timed-out or failed official responses remain explicit failures.",
+    "The 7 second pending-cleanup observation is not a declaration that an OS child has stopped; actual owned resources remain until reap/group/pipe completion.",
+    "P39 is only extended for this official read surface. P40 enable/disable/install, P41 tools and other Agent/Windows coverage remain open."
+  ],
+  "next": [
+    "Independent backend source/targeted review",
+    "Root full checks and candidate installation",
+    "Root controlled official installed skills query using valid/partial repo fixtures"
+  ]
+}

@@ -1,0 +1,26 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: this `if` statement can be collapsed
+   --> src/acp_client/extension_inventory/process.rs:198:9
+    |
+198 | /         if failure.is_none()
+199 | |             && let Some(exchange) = rpc.as_mut()
+200 | |         {
+201 | |             if let Some(input) = streams.input.as_mut()
+...   |
+206 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+199 ~             && let Some(exchange) = rpc.as_mut()
+200 ~             && let Some(input) = streams.input.as_mut()
+201 |                 && let Err(error) = exchange.write(input)
+202 |             {
+203 |                 failure = Some(error);
+204 ~             }
+    |
+
+error: could not compile `farfold` (lib) due to 1 previous error

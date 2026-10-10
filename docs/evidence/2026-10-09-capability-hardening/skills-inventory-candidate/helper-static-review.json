@@ -1,0 +1,55 @@
+{
+  "reviewedBy": "architecture independent agent, read-only static inspection",
+  "result": "No execution blocker; stale sourceScope claim corrected by root before execution.",
+  "files": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-checks.py",
+      "sha256": "19d48ce3638d2b2bbd533ff3513fbd47c43998a8db4449a7fa2842b708b691b4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/prepare-candidate.py",
+      "sha256": "1d3f871693306637c420692a148730dab2f86d584a6bda266f67001e16a5e1e0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/verify-candidate.py",
+      "sha256": "acd5375348f931af161925bc5a02b06aa28e0dca532fbf12fc67c6db3eb12c1b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/verify-data-retention.py",
+      "sha256": "d52a75bba4bbc3507a977951c82f0baf7d82719a0fd6c6f6326dffe8af027490"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-candidate/verify-install-independent.py",
+      "sha256": "ae92ab9b45bd4068cf56be4fd4d501456a66e3279957e64732dae6bb1aa450cc"
+    },
+    {
+      "path": "output/2026-10-10-skills-inventory-install/backup_metadata.py",
+      "sha256": "23e697ae536adb4d9fc514dbb68d3f8494ffce03f5310d74116c725f3411d7a0"
+    },
+    {
+      "path": "output/2026-10-10-skills-inventory-install/cleanup_duplicate.py",
+      "sha256": "6389993b979f336aa6d25afe96dd4edb603f24fc82765f3674f84c0ca16bd722"
+    },
+    {
+      "path": "output/2026-10-10-skills-inventory-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3"
+    },
+    {
+      "path": "output/2026-10-10-skills-inventory-install/install_verified_candidate.py",
+      "sha256": "6f0efaee6a1bb25007f3d30a7d65633e9daa01b775e1dbc6595ad4572e459213"
+    }
+  ],
+  "checks": [
+    "9 Python ASTs valid",
+    "prepare/verify/installer source scopes identical and add skills actual-wire",
+    "current installed baseline 08cff0ac and six exact native/normal-exit references verified",
+    "read/write scopes retained; no helper invoked during review"
+  ],
+  "notEvidenceFor": [
+    "current skills implementation correctness",
+    "engineering checks",
+    "candidate creation",
+    "installation",
+    "native behavior"
+  ]
+}

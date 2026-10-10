@@ -1,0 +1,50 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/extension_inventory.skills.test.ts (7 tests | 3 failed) 6ms
+   × accepts skills capability independently from MCP and requires an exact ticket 1ms
+   × keeps disabled skills and partial errors even with no readable skill rows 0ms
+   × keeps independent snapshots and one unsettled admission slot across kinds 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/extension_inventory.skills.test.ts > accepts skills capability independently from MCP and requires an exact ticket
+{ code: 'invalidOutput', stacks: [] }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/extension_inventory.skills.test.ts > keeps disabled skills and partial errors even with no readable skill rows
+{ code: 'invalidOutput', stacks: [] }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/extension_inventory.skills.test.ts > keeps independent snapshots and one unsettled admission slot across kinds
+AssertionError: expected [ { agentId: 'fixture-agent', …(3) } ] to deeply equal [ { agentId: 'fixture-agent', …(4) } ]
+
+- Expected
++ Received
+
+  [
+    {
+      "agentId": "fixture-agent",
+      "cwd": "/controlled/project",
+-     "kind": "skills",
+      "requestId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "selectionId": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+    },
+  ]
+
+ ❯ src/runtime/extension_inventory.skills.test.ts:39:44
+     37|   const owner = { agentId: request.agentId, token: {}, current: () => …
+     38|   expect(c.begin(owner, request.cwd, "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbb…
+     39|   await flush();expect(read.mock.calls[0]).toEqual([{ ...skillRequest,…
+       |                                            ^
+     40|   expect(c.begin(owner, request.cwd, "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbb…
+     41|   wait.resolve(skills());await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 4 passed (7)
+   Start at  21:29:03
+   Duration  111ms (transform 27ms, setup 0ms, import 38ms, tests 6ms, environment 0ms)
+

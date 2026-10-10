@@ -1,0 +1,23 @@
+{
+  "verified": true,
+  "values": 6,
+  "method": "Exact JSON values from two distinct original Rust stdout markers merged without value changes. No actual official Agent query claim.",
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/actual-wire.json",
+      "sha256": "a1317e8afb8b38ba3045c30e8012ed19ac77c356b316a69bf68b20f6cf17879b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/actual-wire.raw.txt",
+      "sha256": "c5b00d64525d9ed1a754e35740f4ceff41ec4b04d2ff647a6fa68a0d840232ac"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/targeted-first.txt",
+      "sha256": "0a9935eee3902f2a27570fee09a8d777d8705363644b16a2ef62d90de35856b3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/skills-first.txt",
+      "sha256": "a25a0e17f6a3facae92f2db04007bce438f3264e505367d860d1ca323f5a9a26"
+    }
+  ]
+}

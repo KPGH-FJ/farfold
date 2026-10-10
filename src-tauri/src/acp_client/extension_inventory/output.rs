@@ -22,7 +22,7 @@ struct Transport {
 
 // serde's recursion ceiling is larger than the query's budget. Count containers
 // outside JSON strings first; serde still validates escapes, UTF-8 and full EOF.
-fn bounded_depth(bytes: &[u8]) -> bool {
+pub(super) fn bounded_depth(bytes: &[u8]) -> bool {
     let (mut depth, mut string, mut escaped) = (0usize, false, false);
     for &byte in bytes {
         if string {
@@ -49,7 +49,7 @@ fn bounded_depth(bytes: &[u8]) -> bool {
     }
     depth == 0 && !string
 }
-fn safe_name(name: &str) -> Option<String> {
+pub(super) fn safe_name(name: &str) -> Option<String> {
     // Display only simple labels. URL/path/header-like names are retained as an
     // unnamed row. No filter can prove arbitrary user-given labels contain no secret.
     (!name.is_empty()

@@ -1,0 +1,36 @@
+{
+  "reviewer": "root independent of frontend author",
+  "kind": "read-only production-source review",
+  "result": "No additional blocker in reviewed paths",
+  "checked": [
+    "No query is dispatched solely by kind/directory changes; explicit query uses selected kind and fresh ticket.",
+    "Shared unfinished request retains original kind/cwd/id for status/cancel while switching display; closing/ownership retirement cancels original query and suppresses late display.",
+    "Old reports keyed by kind remain stale; new ready report requires matching kind/source/scope and active owner.",
+    "Partial zero-item response does not render complete-empty success; origin/enabled are reported facts, no session applicability claim.",
+    "Description is a React text child, not HTML, links, markdown actions or draft insertion; bounded timestamps/descriptions/rows validated.",
+    "Official startup side-effect disclosure retained; no install/enable/config mutation entry added."
+  ],
+  "files": [
+    {
+      "path": "src/components/AgentExtensionInventory.tsx",
+      "sha256": "2533e5c4e20913b330c87d871b26af1c8ca8f36acc7b1f0c650986c76a02576c"
+    },
+    {
+      "path": "src/components/AgentExtensionInventoryResult.tsx",
+      "sha256": "8e457a9a6a58a08a0d9df43dca8a57fc30b3ba5b69586b220175177bee71e4f4"
+    },
+    {
+      "path": "src/runtime/extension_inventory_controller.ts",
+      "sha256": "94ea22fe4c12cae428d31818fb9db78450e52efbf4d2c17896fa38e54c2afaa7"
+    },
+    {
+      "path": "src/runtime/extension_inventory_strings.ts",
+      "sha256": "057e682696238064c47e13255036c42137d79e8ae03bbb3ece57f664c1106f7d"
+    },
+    {
+      "path": "src/runtime/extension_inventory_types.ts",
+      "sha256": "6da4ae00bf97e3527e34dc7e97bab040bd55058a6f47da1b1a0ebf2ac81e6199"
+    }
+  ],
+  "limits": "Source review only; author controlled browser/unit evidence separate. Official query and installed native behavior still pending."
+}

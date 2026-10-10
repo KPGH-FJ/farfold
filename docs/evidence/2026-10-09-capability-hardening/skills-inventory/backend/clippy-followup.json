@@ -1,0 +1,12 @@
+{
+  "reason": "run-01 clippy collapsible_if is denied by -D warnings; the other six required checks passed on stable 1404 inputs.",
+  "change": "Flatten only the existing nested if; preserve failure/exchange/input/write short-circuit order and failure assignment. No lint suppression.",
+  "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+  "beforeSha256": "de5591386d0d0390bfe4fe23bda104e8bc846ff0fbea7d7c9d5ae158f9c94322",
+  "afterSha256": "685a447a01a7879c3e14e7d612c71f3d4ffcc5b251742e48de463c504b0d6cea",
+  "priorRun": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-01/verification.json",
+    "sha256": "d44be0471f9a6bd4fee5be3f26d9d4e68ab0f9250e897867911a35c1a0e0da28"
+  },
+  "validation": "Seven required checks to be rerun against this final source; not yet complete."
+}

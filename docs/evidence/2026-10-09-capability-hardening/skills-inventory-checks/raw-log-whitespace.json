@@ -1,0 +1,28 @@
+{
+  "check": "git diff --cached --check",
+  "exitCode": 2,
+  "findingsOnlyInRawCommandLogs": true,
+  "files": [
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-01/build.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-01/frontend.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-01/rust.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-01/typecheck.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-02/build.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-02/frontend.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-02/rust.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory-checks/run-02/typecheck.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/independent-credential-separators.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/independent-lifecycle.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/skills-first.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/targeted-final.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/targeted-first.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/first-green.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/related-final.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/related-first.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/skills-red.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/typecheck-final.txt",
+    "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/typecheck-third.txt"
+  ],
+  "sourceOnlyDiffCheckExitCode": 0,
+  "decision": "Preserve exact stdout/stderr bytes and their hashes; do not rewrite test logs to remove their original trailing whitespace or final newline."
+}

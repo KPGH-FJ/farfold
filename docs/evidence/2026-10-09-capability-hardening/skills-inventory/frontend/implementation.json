@@ -1,0 +1,262 @@
+{
+  "status": "frontend source and controlled full App verified; not installed or official Agent query acceptance",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/source-checkpoint.json",
+    "sha256": "489f476790ec70850bdf5a31856028cc55611670a7c62bcd987edc7e213d3574"
+  },
+  "sourceCount": 19,
+  "changedSourceCount": 11,
+  "productionChangedCount": 6,
+  "implementation": [
+    "Common capability-driven kind selector in AgentDetails; selecting MCP/skills never runs an inventory query. No Agent-name UI branch.",
+    "One pending slot per Agent across kinds; exact request kind/ticket/cwd and current owner govern publication. Original request kind and status/cancel controls remain visible across kind changes.",
+    "Separate memory-only scoped stale snapshots per kind; no automatic read retry or persisted inventory.",
+    "Skills render name, bounded plain-text description, enabled report, source scope, plugin report, filter/truncation flags and incomplete-report count. No links, commands, prompts, enabling or installation.",
+    "Official process side-effects describe existing environment/login and possible network/state/cache maintenance; no claim of zero upstream writes."
+  ],
+  "checks": {
+    "effectiveFeatureRed": {
+      "failed": 3,
+      "otherPassed": 4,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/skills-red.txt",
+        "sha256": "797e24205f1713525af9dcb556fde483130af27e365b0c256aa9a2efddee2337"
+      }
+    },
+    "finalTargeted": {
+      "files": 8,
+      "passed": 42,
+      "actualRustWireTests": 5,
+      "actualSerializedValues": 6,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/related-final.txt",
+        "sha256": "2ae10f3c5da3a901fb98b4e7b0d5053f23ba99236fd8542e0880589073e67421"
+      }
+    },
+    "typecheckExit": 0,
+    "ownedFormatExit": 0
+  },
+  "diagnostics": {
+    "firstTypecheck": "Old wire expected request lacked required kind, and new test UUID factory inferred string rather than UUID template type; both test-only diagnostics retained.",
+    "secondTypecheck": "Test-only sequence UUID factory inferred string instead of UUID template type; corrected explicit test type.",
+    "finalTypecheck": "Passed with real new wire expected kind. No production type failure masked."
+  },
+  "browser": {
+    "webkitPassed": 44,
+    "chromiumPassed": 44,
+    "originalMcpRegressionAssertions": 27,
+    "skillsAdditionalAssertions": 17,
+    "productionInputsSameAsFinal": true,
+    "laterTestOnlyChanges": [
+      "src/runtime/extension_inventory.skills.test.ts",
+      "src/runtime/extension_inventory.wire.test.ts"
+    ],
+    "boundaries": "Actual App, StorageStartup, DraftStartup, AgentHub, AgentDetails, registry owners, controller and strict parsers in React StrictMode. Native IPC/registered Agents/directory chooser/deferred results are controlled. No real official program, account, model, formal App or database. Hashes cover listed source/harness inputs, not every imported repository source.",
+    "covered": [
+      "MCP capability/directory/read and scoped report behavior retained",
+      "skills explicit kind and ticket dispatch",
+      "type changes do not query; outstanding original kind gates all successors",
+      "late closed/kind-switched reply can settle but not publish",
+      "separate prior MCP/skills reports remain stale with their original cwd/time",
+      "partial errors with zero readable rows are not complete empty success",
+      "disabled/duplicate/unnamed rows retained",
+      "HTML and Markdown-shaped descriptions stay literal without links",
+      "failed reread preserves scoped prior report",
+      "directory chooser keyboard Enter/cancel preserves observation",
+      "720x600 local scroll and modal bounds; Tab does not query; focus return",
+      "selection ticket rejection requires explicit capabilities refresh",
+      "unknown status alone remains unresolved; explicit exact absence cancel ends tracking without asserting completion",
+      "unrelated Agent update preserves current owner; selected environment change retires",
+      "late A reply/capability cannot authorize or populate B",
+      "original draft/cwd exact; no session_open/session_prompt/agent_connect"
+    ],
+    "visualInspection": [
+      "webkit-first-skills.png",
+      "webkit-first-skills-narrow.png"
+    ],
+    "rawFormatting": "Original browser JSON and executed harness bytes preserved as .txt. Maintained JSON is semantically equal; harness copies formatted after execution only."
+  },
+  "wire": {
+    "identity": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/wire-identity.json",
+      "sha256": "745583dcb1e9071426acd1403e2ff5428074b1f7ea3bfce5725ff22521000f75"
+    },
+    "boundary": "Actual controlled Rust MCP shell and skills JSONL peer process output through production decoders and request serialization. Real unavailable capability only; available capability is controlled frontend fixture, not official installed capability proof. Original backend marker values unchanged."
+  },
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/cleanup.json",
+    "sha256": "70e2f3e5135677ff4ec1be22feb51377af140fdf61397058c5994ecd03ae863f"
+  },
+  "remaining": [
+    "Official installed skills query and actual metadata scope",
+    "Windows and unreviewed Agent surfaces",
+    "Skill execution, current conversation applicability, concrete tool inventory",
+    "Enable/disable/install/configuration mutation; P39 as a whole remains incomplete"
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/chromium-first-narrow.png",
+      "sha256": "afce5267fe5a772042e527c5e914eaad7f91463f15c3a472dd769caf8e94c1c3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/chromium-first-skills-narrow.png",
+      "sha256": "8ef797582e9943c2d4d62a160d52f6540c730f0ab7713a4dda1bf3bf2c34e3ca"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/chromium-first-skills.png",
+      "sha256": "d199402113e00f0bc46ea30e8e83f68a97af48ded1e26009d408bc2a8bc98ecb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/chromium-first.json",
+      "sha256": "d8a6fa9c47e424f4fb4c7ddfa51c223522898eb0d3d015120c9f6c82b71ad3e6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/chromium-first.raw.txt",
+      "sha256": "d8a6fa9c47e424f4fb4c7ddfa51c223522898eb0d3d015120c9f6c82b71ad3e6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/chromium-first.stdout.txt",
+      "sha256": "b5be5c5ebd64cb38c0430c0aeba9ef98fc48a05c33e783bcafaf30af0e6763cd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/fixture.tsx",
+      "sha256": "cd73e056a2cd57b6945ccf89ee975562f5ad4c4dc1a0fb7a5c77acd514b75074"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/fixture.tsx.executed.txt",
+      "sha256": "7e42657bcb1f8906358b7ae522e73a9338bf23b994731a924ebb2a4c95f348d9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/index.html",
+      "sha256": "d612e2fd99ad3c63ba39ca52979749ac4b0134a80e2dcceabb1d4d13a414fff1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/index.html.executed.txt",
+      "sha256": "66636fc0f4fc48dfc37508ebcfb010b8eefe433ec71676a0cab3ce9a5462cf8a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/run.mjs",
+      "sha256": "f93156ad1326e5ecc30d4c270a3ba350fe88d21a64fb3092996ab2b1b6e52dbd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/run.mjs.executed.txt",
+      "sha256": "c766d1c0027f680f5891f83655927f8008cf596bbf2684f6742dc2c8c1a41c59"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/serve.mjs",
+      "sha256": "9abaa3b8c0cdb58ea51fe97b29971a75f34d6f5ba61571b6a5d8d7594a1e334b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/serve.mjs.executed.txt",
+      "sha256": "9abaa3b8c0cdb58ea51fe97b29971a75f34d6f5ba61571b6a5d8d7594a1e334b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/webkit-first-narrow.png",
+      "sha256": "83f0a330f3f26778ea7f0dc691794afbc3e739247fafa3c8108694e20a248beb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/webkit-first-skills-narrow.png",
+      "sha256": "f2ab244772d0167bb92785f8ee6bb75a0a724c615568fc5f48ba9d8e9fe157db"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/webkit-first-skills.png",
+      "sha256": "c8aabb3d845c85bb717a47b0abeda81666db2a63882cf6e2743225ad7d955e12"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/webkit-first.json",
+      "sha256": "d1ed474bdc05513b023f0f1f1ec1382dc0897d8a44f9a8b4c3b6ca85ee6af00a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/webkit-first.raw.txt",
+      "sha256": "d1ed474bdc05513b023f0f1f1ec1382dc0897d8a44f9a8b4c3b6ca85ee6af00a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser/webkit-first.stdout.txt",
+      "sha256": "b5be5c5ebd64cb38c0430c0aeba9ef98fc48a05c33e783bcafaf30af0e6763cd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/browser-source-checkpoint.json",
+      "sha256": "ac84060904d450a2943c2bc654e2994f1c5eb5627160c06267549626d83450aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/cleanup.json",
+      "sha256": "70e2f3e5135677ff4ec1be22feb51377af140fdf61397058c5994ecd03ae863f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/first-green.txt",
+      "sha256": "fee6f2bba0ae6b078089d15656df01769e82f1d7ac7ba63df6269026737956e3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/format-checkpoint-final.txt",
+      "sha256": "7c3bf87fe7276313e4b316c5c370816629d5b91583757c81bf86f86fc995ca18"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/format-checkpoint.txt",
+      "sha256": "bc3715065a38f355043cdd07e3b5ae98c16e8ebd77d67deea5710454b930b1ba"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/format-evidence.txt",
+      "sha256": "2e7ca4bacd727970cd7c386514f26cf75899316718c9032dbcd7eed9de02184d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/format-first.txt",
+      "sha256": "4c80b9cbbb4f485f5a135b915263485894e80d52f3417c3821dc130250f749f0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/format-tests.txt",
+      "sha256": "d459fe0acb48609abc374a906965c8db5204b0cd77b3b6306300e6886605a7e3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/format-wire.txt",
+      "sha256": "24c3d72791f945bf0c0d78245f596b5cf064d486a57c3928a2a1ac84c7364cb7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/inputs-before.json",
+      "sha256": "33143eaf8446ee58261c91704f610a459a467e76c7a9ea96615783f2a947e7ec"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/related-final.txt",
+      "sha256": "2ae10f3c5da3a901fb98b4e7b0d5053f23ba99236fd8542e0880589073e67421"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/related-first.txt",
+      "sha256": "678d3094d10afde7d6cf5f3b032e325c458c38d2c180791ddbdb007903521711"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/root-source-review.json",
+      "sha256": "964237cdb67a1715968147b021ddcd737be696f02879ba9ae861e09e1b627d1e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/skills-red.txt",
+      "sha256": "797e24205f1713525af9dcb556fde483130af27e365b0c256aa9a2efddee2337"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/source-checkpoint.json",
+      "sha256": "489f476790ec70850bdf5a31856028cc55611670a7c62bcd987edc7e213d3574"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/typecheck-first.txt",
+      "sha256": "04cfc3df22d84c90230b874f12b52aaa0f34fc191ddfe2b615a35171255504dc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/typecheck-second.txt",
+      "sha256": "9e3b0836e9d1575c7926a24e91a62678f3c86534616ce28ad3f7cb91ca2bd15a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/typecheck-third.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/skills-inventory/frontend/wire-identity.json",
+      "sha256": "745583dcb1e9071426acd1403e2ff5428074b1f7ea3bfce5725ff22521000f75"
+    }
+  ]
+}

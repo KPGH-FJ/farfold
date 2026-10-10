@@ -17,6 +17,7 @@ use std::{
 struct Streams {
     out: PipeReader<io::PipeReader>,
     err: PipeReader<io::PipeReader>,
+    input: Option<std::process::ChildStdin>,
 }
 struct ChildOwner {
     child: Child,
@@ -41,16 +42,21 @@ impl Drop for ChildOwner {
         }
     }
 }
-fn spawn(mut command: Command) -> Result<(ChildOwner, Streams)> {
+fn spawn(mut command: Command, interactive: bool) -> Result<(ChildOwner, Streams)> {
     // Configure both fallible pipe readers before spawn, no post-spawn conversion.
     let (out, child_out) = io::pipe().map_err(|_| Code::SpawnFailed)?;
     let (err, child_err) = io::pipe().map_err(|_| Code::SpawnFailed)?;
-    let streams = Streams {
+    let mut streams = Streams {
         out: PipeReader::new(out).map_err(|_| Code::SpawnFailed)?,
         err: PipeReader::new(err).map_err(|_| Code::SpawnFailed)?,
+        input: None,
     };
     command
-        .stdin(Stdio::null())
+        .stdin(if interactive {
+            Stdio::piped()
+        } else {
+            Stdio::null()
+        })
         .stdout(child_out)
         .stderr(child_err);
     let group = process_platform::prepare_command(&mut command).map_err(|_| Code::SpawnFailed)?;
@@ -65,15 +71,32 @@ fn spawn(mut command: Command) -> Result<(ChildOwner, Streams)> {
             return Err(Code::SpawnFailed.into());
         }
     };
-    Ok((
-        ChildOwner {
-            child,
-            pid,
-            _group: group,
-            settled: false,
-        },
-        streams,
-    ))
+    let mut owner = ChildOwner {
+        child,
+        pid,
+        _group: group,
+        settled: false,
+    };
+    if interactive {
+        let input = owner.child.stdin.take().ok_or(Code::SpawnFailed)?;
+        nonblocking_input(&input)?;
+        streams.input = Some(input);
+    }
+    Ok((owner, streams))
+}
+#[cfg(unix)]
+fn nonblocking_input(input: &std::process::ChildStdin) -> Result<()> {
+    use std::os::fd::AsRawFd;
+    let fd = input.as_raw_fd();
+    let flags = unsafe { libc::fcntl(fd, libc::F_GETFL) };
+    if flags < 0 || unsafe { libc::fcntl(fd, libc::F_SETFL, flags | libc::O_NONBLOCK) } < 0 {
+        return Err(Code::SpawnFailed.into());
+    }
+    Ok(())
+}
+#[cfg(not(unix))]
+fn nonblocking_input(_: &std::process::ChildStdin) -> Result<()> {
+    Err(Code::PlatformUnsupported.into())
 }
 fn drain(
     reader: &mut impl Read,
@@ -109,14 +132,36 @@ fn drain(
         Err(_) => Err(Code::QueryFailed.into()),
     }
 }
+enum Output {
+    Bytes(Vec<u8>),
+    Skills(SkillsInventory),
+}
 pub(super) fn run(command: Command, request: &Request) -> Result<Vec<u8>> {
+    match run_owned(command, request, None)? {
+        Output::Bytes(bytes) => Ok(bytes),
+        _ => Err(Code::InvalidOutput.into()),
+    }
+}
+pub(super) fn run_skills(command: Command, request: &Request) -> Result<SkillsInventory> {
+    let rpc =
+        super::skills_rpc::Exchange::new(request.cwd.as_deref().ok_or(Code::InvalidRequest)?)?;
+    match run_owned(command, request, Some(rpc))? {
+        Output::Skills(value) => Ok(value),
+        _ => Err(Code::InvalidOutput.into()),
+    }
+}
+fn run_owned(
+    command: Command,
+    request: &Request,
+    mut rpc: Option<super::skills_rpc::Exchange>,
+) -> Result<Output> {
     if !request.operation.interested() {
         return Err(Code::Cancelled.into());
     }
     if Instant::now() >= request.deadline {
         return Err(Code::TimedOut.into());
     }
-    let (mut owner, mut streams) = spawn(command)?;
+    let (mut owner, mut streams) = spawn(command, rpc.is_some())?;
     let (mut out, mut discarded) = (Vec::new(), Vec::new());
     let (mut out_count, mut err_count) = (0, 0);
     let (mut out_done, mut err_done) = (false, false);
@@ -136,6 +181,7 @@ pub(super) fn run(command: Command, request: &Request) -> Result<Vec<u8>> {
         }
         if failure.is_some() && stopping.is_none() {
             stopping = Some(Instant::now());
+            streams.input.take();
             out.fill(0);
             out.clear();
             supervisor::signal_owned_group(owner.pid, supervisor::TERM);
@@ -148,6 +194,13 @@ pub(super) fn run(command: Command, request: &Request) -> Result<Vec<u8>> {
             if start.elapsed() >= Duration::from_secs(7) {
                 request.progress(State::PendingCleanup, Some(Code::PendingCleanup));
             }
+        }
+        if failure.is_none()
+            && let Some(exchange) = rpc.as_mut()
+            && let Some(input) = streams.input.as_mut()
+            && let Err(error) = exchange.write(input)
+        {
+            failure = Some(error);
         }
         if !out_done {
             match drain(
@@ -162,6 +215,16 @@ pub(super) fn run(command: Command, request: &Request) -> Result<Vec<u8>> {
                     out_done = error.code != Code::OutputLimit;
                     failure.get_or_insert(error);
                 }
+            }
+        }
+        if failure.is_none()
+            && let Some(exchange) = rpc.as_mut()
+        {
+            if let Err(error) = exchange.received(&mut out) {
+                failure = Some(error);
+            }
+            if exchange.done() {
+                streams.input.take();
             }
         }
         if !err_done {
@@ -201,5 +264,11 @@ pub(super) fn run(command: Command, request: &Request) -> Result<Vec<u8>> {
         out.fill(0);
         return Err(Code::QueryFailed.into());
     }
-    Ok(out)
+    if let Some(exchange) = rpc {
+        let result = exchange.finish(&out);
+        out.fill(0);
+        result.map(Output::Skills)
+    } else {
+        Ok(Output::Bytes(out))
+    }
 }
