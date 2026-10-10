@@ -1,0 +1,209 @@
+{
+  "checkedAtUtc": "2026-10-10T00:49:45.697738+00:00",
+  "reviewer": "architecture independent subagent",
+  "status": "no_remaining_blocking_source_finding_in_reviewed_scope",
+  "scope": "DOCX paragraph/whole-table feedback leaf lifecycle and source-position parser/Worker validator boundaries; final browser/installed acceptance remain separate.",
+  "method": [
+    "Read current source and changes without editing production/parser/tests owned by other agents.",
+    "Recomputed all 5 UI and 14 parser owner receipt source hashes; each matched.",
+    "Ran one isolated controlled hook/SSR adversarial test from an evidence-only harness copy; did not repeat the owner test suites, original XML oracle or actual browser automation.",
+    "Read actual cancel-focus red/green and final targeted/type/format logs. Viewed two final WebKit full-App screenshots; no native app operations."
+  ],
+  "uiOwnerReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-implementation.json",
+    "sha256": "67089fa39bc20fa3d8795f497d4d935dbc965922982d95b8f81a536dfb82cde9"
+  },
+  "parserOwnerReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/implementation.json",
+    "sha256": "dc12eceffee99818b170e3f49157129348de9a0a9b7f1f7f86d32aa5e7a32871"
+  },
+  "uiSource": [
+    {
+      "path": "src/components/DocxDocumentView.tsx",
+      "sha256": "ccf57d848e16ee117b3f9493bd82a85fa84f514e5b0875d2f0f9414a259dfea0"
+    },
+    {
+      "path": "src/components/DocxFilePreview.tsx",
+      "sha256": "7c2ad11e00c490436c0aa4d53728b0f52b179f1ef46a11fa57d980b7dd3c9c0d"
+    },
+    {
+      "path": "src/components/DocxFilePreview.css",
+      "sha256": "45b60dfbe10f875975d59c8120213ce2ae95fa9c9d53598f2134091fe0acbfe5"
+    },
+    {
+      "path": "src/components/DocxFilePreview.feedback.test.tsx",
+      "sha256": "b97c0aa85841e68f97f413cbb856c8fb9ed618b8295cd02ae6d59cf5be3be040"
+    },
+    {
+      "path": "src/runtime/document_strings.ts",
+      "sha256": "e9bf81b2f45d3fedea6fec890979c010d80174e4e1bb677f191768255a386657"
+    }
+  ],
+  "parserSource": [
+    {
+      "path": "src/runtime/docx_source_position.ts",
+      "sha256": "5992c08c69ffe667f5d852d298f0044171693371fb32ab0c91e59df821e491ce"
+    },
+    {
+      "path": "src/runtime/docx_source_position.test.ts",
+      "sha256": "984ca522c331ceba86d882f8c2a900fb216d6109cdbe4df7fb450429d85edf40"
+    },
+    {
+      "path": "src/runtime/docx_source_wire.test.ts",
+      "sha256": "18801d21384fe819ce437d3769ddd1cd6db80ca2d81d0558309835c1b8c175c4"
+    },
+    {
+      "path": "src/runtime/docx_types.ts",
+      "sha256": "9b6f5a2f0092266ee0e1c5380237b3a8ad2daa79e1780d93ef6dffed00f7391e"
+    },
+    {
+      "path": "src/runtime/docx_package.ts",
+      "sha256": "07df9d329cb4cd619f155299b1b942d69e06807b2fdc7910e1ddf2ceaa2fcd6d"
+    },
+    {
+      "path": "src/runtime/docx_parse.ts",
+      "sha256": "a29bf156332a555a948cbfce9a6981dfe85e7709f8bc0bc9ba030eb10646098f"
+    },
+    {
+      "path": "src/runtime/docx_table.ts",
+      "sha256": "3c65fbe03c723393e4d34d35005f32e0e85687ec5a280fe8a443e123a9565ce2"
+    },
+    {
+      "path": "src/runtime/docx_validation.ts",
+      "sha256": "08ff0bcb2f5f0a6f236d7cbd74bfb33d7a5fcd319e669f0f02a01eb6874b8bea"
+    },
+    {
+      "path": "src/runtime/docx_preview.ts",
+      "sha256": "b9b912a1d69e99731eb7ec5f5efb9ddcaa02b96d22bd0c945b741f8cf1fef9e7"
+    },
+    {
+      "path": "src/runtime/docx_preview.test.ts",
+      "sha256": "0a8a4111774a20e6ef06e5a1d59a698ede53d986f2a357bf13df315870f5cc35"
+    },
+    {
+      "path": "src/runtime/docx_compatibility.test.ts",
+      "sha256": "a1ee83e50b9f92e565f918a6727fe4c21dbb8328810f67efbb9a38441375f894"
+    },
+    {
+      "path": "src/runtime/docx_public_samples.test.ts",
+      "sha256": "c5a3def01fd856c27fa2a47288aa88d21811bd45d82e371dda46ec5a492747cb"
+    },
+    {
+      "path": "src/runtime/document_view.test.ts",
+      "sha256": "9d023761391952375661adf8787cbf04d347fb1827786b40cfd692eddf662261"
+    },
+    {
+      "path": "src/components/PreviewReadingPosition.test.tsx",
+      "sha256": "e1cbb6773155dc83fb8496b646f48311c37352abeeb8d65f6566c41fb7cc77cc"
+    }
+  ],
+  "checks": [
+    {
+      "id": "original_xml_position",
+      "result": "passed_read_only",
+      "detail": "DocxPackage caches original XML trees; the source index traverses original element children including markers/wrappers. compatible returns existing nodes instead of cloning or flattening their identity. Paragraph/table construction requests source using ctx.source and the original node. Story queue deduplicates kind/part/note identity; no display id or text-derived locator is used."
+    },
+    {
+      "id": "source_boundary",
+      "result": "passed_read_only",
+      "detail": "Closed source shape requires a captured part and a nonempty bounded path with explicit sparse-array rejection. Independent path-index/UTF-8 label budgets remain bounded alongside old body budgets; notice output forbids source. Main-thread Worker validation checks vocabulary and captured-part membership, not an independent reparse of XML; parser/oracle evidence is a different layer."
+    },
+    {
+      "id": "visible_target_eligibility",
+      "result": "passed_read_only",
+      "detail": "Only rendered paragraph/table controls can register; shared predicate excludes standalone and omission-only notices, permits real empty paragraphs and supported content mixed with visible omission notices. Cell excerpt buttons do not invent a paragraph location; opening actual detail mounts the real nested blocks. Whole-table and whole-paragraph disclosure explicitly includes undisplayed windows/fragments."
+    },
+    {
+      "id": "navigation_and_identity",
+      "result": "passed_read_only",
+      "detail": "Story, block segment, long paragraph part, table window, cell detail/back transitions withdraw synchronously before navigation. Confirmation checks exact live source/control owner/block plus actual preview membership. New same-file prepared identity makes loaded.prepared stale and unmounts the old view before the new parse is shown; old sources stay retired."
+    },
+    {
+      "id": "blocked_and_strictmode",
+      "result": "passed_read_only",
+      "detail": "interactionBlocked is excluded from the reading effect dependencies; it applies inert and synchronous control/source guards without pausing ready content or restarting capture. Registration during child-first layout replay permits a fresh source only for the selected exact owner/block/document; user events still require mounted/current state. Cleanup only retires the same live source, preventing a late old cleanup from clearing another selection."
+    },
+    {
+      "id": "cancel_reentrancy",
+      "result": "resolved_with_actual_owner_red_green",
+      "detail": "The original cancel emitted available:false then unconditionally focused the old button. A synchronous withdrawal callback could hide the view first. Final withdraw clears selected before callback; cancel rechecks allowed and no newer selection after callback; focus separately requires current ownership and a connected button, with preventScroll. Cancel only removes the candidate and cannot mutate a saved opinion; stale cancel cannot remove another block source."
+    },
+    {
+      "id": "css_scope",
+      "result": "passed_read_only_with_separate_browser_evidence",
+      "detail": "The layout repair adds min-height:0 and overflow:auto to document-preview. It bounds the flex child and keeps its controls inside a local scroll region; other existing inner scroll containers and content are retained. Full-App browser verification belongs to verification; screenshots viewed here show the narrow window detail and mixed/hidden content with the opinion editor reachable."
+    }
+  ],
+  "resolvedFinding": {
+    "id": "DOCX_CANCEL_REENTRANT_FOCUS",
+    "origin": "Independent static challenge sent to product_coverage; owner added a deterministic withdrawal-callback-hides-view test before correction.",
+    "red": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-cancel-focus-red.txt",
+      "sha256": "1c8e7b89a4f8ba852bef253cc26d19e3c323587f704b308f18343125dee38b54"
+    },
+    "redObserved": "1 failed / 23 passed; focus called after the controlled callback left the view.",
+    "green": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-cancel-focus-green.txt",
+      "sha256": "857547564cd9d75e4ac944b02ee780501a9dbedb4ac137fb96a3e0e913d28140"
+    },
+    "greenObserved": "24 passed; current/connected button checked after callback.",
+    "boundary": "Hook/SSR and DOM focus method double, not real browser focus proof."
+  },
+  "independentAdversarial": {
+    "harness": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/leaf-independent/same-file-replacement.test.tsx",
+      "sha256": "159e835fab5e64a63741cffe239cf52f00d249ed76e8e659910569272a24efac"
+    },
+    "config": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/leaf-independent/vitest.config.ts",
+      "sha256": "d42886055936e02e4278674f3d4f537b3c168e04356f23a3837e033f8bcfd5a3"
+    },
+    "harnessOrigin": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/leaf-independent/harness-origin.json",
+      "sha256": "9d11edb728cbe9a55651d332f62154aab62a713d860e4ee6044d3a3566acbb0a"
+    },
+    "log": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/leaf-independent/same-file-replacement.txt",
+      "sha256": "5798707d0326d5eda1b3eb00b20e478ab1fbbb9ad02ef2595d35b495b70f237d"
+    },
+    "command": "corepack pnpm exec vitest run --config docs/evidence/2026-10-09-capability-hardening/docx-feedback/leaf-independent/vitest.config.ts",
+    "observed": "1 file / 1 test passed. Same exact VerifiedFile object, different prepared DocxPreview/block objects and coordinates: new ready content can confirm only the new source, old source returns null and old button cannot confirm before or after readiness; capture and parser each remain at one original call.",
+    "boundary": "Synthetic prepared document intentionally differs while retaining one file receipt, to challenge reference ownership. This does not establish file authenticity, parser correctness or an actual disk update. Controlled author hook/SSR setup is copied and attributed, not an actual React DOM run.",
+    "diagnostic": "Vite warned that the evidence-only config import lacks a file extension for a possible future native config loader. Current run completed with 1 passed; no env flag was introduced and the raw warning is retained."
+  },
+  "authorFinalLogs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-related-final.txt",
+      "sha256": "6f65eb48bc090260bcd157b36259ee1ed1101cbf93d078024357636dd30d9358"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ],
+  "authorFinalObserved": {
+    "targeted": "8 files / 111 tests passed",
+    "typecheck": "owner reports command exit 0 and log inspected",
+    "format": "owner reports command exit 0 and log inspected",
+    "executedByReviewer": false
+  },
+  "viewedScreenshots": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/webkit-app-final-windows.png",
+      "sha256": "96e70961c360d5aa323f81c1f2ff22c1f3befcf1687e5d53b1e2d89ece692be3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/webkit-app-final-hidden.png",
+      "sha256": "c16313ba6c41db8eb4398af5db5ae2966cc713de3bdfa10fe7bb4b49cc7f0a7a"
+    }
+  ],
+  "remainingBoundaries": [
+    "Final complete-App browser receipt and stable-input engineering record are owned by verification/root and were not rerun here. Browser outputs still being sealed are not assigned immutable JSON hashes in this source review.",
+    "The nested unsupported compatibility sample remains unsupported and has no target; no claim that every structure in the original XML oracle is a visible selectable block.",
+    "No Windows/native installation/real Agent/account journey claim. No formal application, user database or protected README changes."
+  ]
+}

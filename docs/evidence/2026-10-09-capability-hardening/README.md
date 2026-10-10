@@ -2,7 +2,7 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
-## 当前衔接：表格位置意见已补源码，准备正式复验
+## 当前衔接：DOCX位置意见已完成工程检查，准备正式复验
 
 当前正式应用为 `4952c692` / 0.1.7 arm64，唯一 `/Applications/Farfold.app`，已完成[表格位置分项实机验证](workbook-feedback-candidate/installed-workbook-feedback.json)并正常退出；原4条输入、2组意见、3组待发逐值保留。此前e98的[正式窗口复验](text-selection-keyboard-candidate/installed-keyboard-scroll.json)已确认文字选段Enter和局部滚动修复，原4条输入、2组意见、3组待发逐值保留。XLSX单元格/合并范围意见的源码与受控浏览器检查已完成。此前 `cd66aae7` 的[实机初轮](text-feedback-candidate/installed-text-feedback-initial.json)所发现失败保持原记录。前一版本 `e8d76d4c` 的[修复复验](inspection-limit-candidate/installed-inspection-limit.json)确认大小限制提示、无效编码独立提示及16 MiB首段读取正常。候选独立核验9/9、安装10/10，三份217,400条数据一致；正常退出后原7项未发内容保持，无新Agent请求或权限变更。重复应用产物已精确移除。原[初轮失败](large-file-candidate/installed-large-file-initial.json)保留。前一P20版本 `fa235998` 的[候选独立核验](file-refresh-candidate/candidate-independent.json)9/9、[安装独立核验](file-refresh-candidate/install-independent.json)通过，三份217,400条数据一致，重复应用产物已精确移除。[正式刷新实测](file-refresh-candidate/installed-file-refresh.json)确认DOCX段落、XLSX行范围和PDF页跨版本保持或回到有效位置；损坏与移走文件保留旧快照并明确提示，编辑中的PDF意见与版本保持一致。正常退出后原3条输入、1组意见、3组待发逐值保留，测试副本均恢复；没有新Agent请求或权限变更。
 
@@ -104,7 +104,7 @@ P21文字选段意见源码及整合已补：[runtime记录](text-feedback/runti
 
 OpenCode 1.18.31 两次GUI初始化在60秒超时，未见协议响应；对应进程已正常完成受控清理。相同登记命令和工作目录的独立[握手探测](opencode-initialize.json)成功，GUI与shell环境不宣称相同，原因继续调查。
 
-下一批源码工作仍在进行：官方上下文整理生命周期已有[定向证据](compaction/receipt.json)；已知消息/工具扩展详情、v1工具补丁语义、启动阶段副本导入继续实现与检查。[设置读取差异](config-read-difference.json)已补确认前的具体对照，旧选择不自动改变；80项关联检查通过、独立复核未见阻断，尚未安装。全部122项和29家八标准保持，以上均不代表全计划完成。
+第三批结束时记录的后续增量：官方上下文整理生命周期已有[定向证据](compaction/receipt.json)；已知消息/工具扩展详情、v1工具补丁语义、启动阶段副本导入继续实现与检查。[设置读取差异](config-read-difference.json)已补确认前的具体对照，旧选择不自动改变；80项关联检查通过、独立复核未见阻断，当时尚未安装；随后已纳入下节第四片，当前状态见本文首段。全部122项和29家八标准保持，以上均不代表全计划完成。
 
 文件拖入已补到共用输入区：仅向当前可见且可编辑的目标添加，拖动中切换草稿、清空、退出或开始发送时不串入；复用既有附件核验且不自动发送，相同文件位置不重复加入。见[源码和定向检查](file-drop.json)，8文件71项通过；一次空草稿夹具错误已纠正，原输出保留。正式桌面拖入、Windows实际操作和跨路径别名去重不在此证明范围。
 
@@ -141,3 +141,11 @@ P09 用户模板已补创建、编辑、保存、删除和加入当前草稿，�
 2026-10-10 P21键盘/滚动修复闭合：`e98e2a46`已安装唯一正式应用，候选独立9项、安装独立10项通过；[三份217,400条数据](text-selection-keyboard-candidate/installed-data-retention.json)完全一致。[正式窗口复验](text-selection-keyboard-candidate/installed-keyboard-scroll.json)确认小文件结束行、大文件起始行的Enter保留选区、二次明确确认及NEW-02局部滚动，4条输入/2组意见/3组待发逐值不变，正常退出。原失败保留；没有新Agent请求或权限变更。下一片正在实现XLSX位置意见与真实写出器兼容，其他P21/P22范围仍开放。
 
 XLSX位置意见已补源码：实际单元格/完整合并范围与当前文件版本关联，明确确认才更换目标，旧意见保留并只加入原输入框。普通写出器原样ZIP暴露的空inline单元格/公式空缓存兼容问题已修；[父层自动刷新修复](workbook-feedback/refresh-repair/parent-repair.json)区分视图活动与临时交互锁，保留旧网格且不触发自身取消循环。原失败与驱动问题分别保留。[最终工程检查](workbook-feedback-checks-final/final-verification.json)前端308文件/3,484项、类型/打包/全仓格式通过，1,128输入稳定；本次重跑完整前端，未变Rust明确复用。[双浏览器最终12场景286项](workbook-feedback/independent/receipt.json)通过，涵盖普通/隐藏工作表、明确位置确认、跨窗口完整合并、旧版意见保留与自动刷新阶段的旧网格交互锁。已提交 `4952c692` 并替换正式应用，候选独立9/9、安装10/10，三份217,400条数据一致。[正式窗口分项实测](workbook-feedback-candidate/installed-workbook-feedback.json)另核单元格与完整合并范围、非顺序工作表标识、键盘确认、隐藏/换版/重启意见保留及自动刷新可见结果。仅新建一条受限链接回显对话；意见未发送、冷恢复权限未确认，退出后原4条输入、2组意见、3组待发逐值不变。任意矩形、DOCX位置、PDF/图片区域和P22继续未完成；并行DOCX工作树变化未进入此安装版本。[原生收口独立核对](workbook-feedback-candidate/native-closeout-independent.json)另确认正式包、回执链及私有副本数据一致；界面操作证据仍来自本轮原生窗口观察。
+
+## DOCX 段落与表格位置意见
+
+原文件位置链、意见生命周期和共用父层分别见[解析实现](docx-feedback/source/implementation.json)、[位置校验](docx-feedback/runtime/implementation.json)、[界面实现](docx-feedback/ui-implementation.json)和[父层整合](docx-feedback/parent-implementation.json)。重复文字按实际 XML 部件/元素路径区分；只确认当前可见对象，分段/分窗明确对应原完整段落/表格，旧意见不随浏览位置、换版或取消选择改写。加入输入框不自动发送。
+
+[独立受控验证](docx-feedback/independent/receipt.json)保留原样ZIP、独立XML坐标、真实Worker与完整App结果：两个引擎各89项DOCX及15项XLSX自动刷新回归通过；精确隐藏文字另各11项补验不重复计能力。首次整页溢出的两处反例经局部滚动修复通过，冷依赖优化和测试字面量修正分别记录。原96处结构位置不等于96处可见或可提意见对象。[叶层审查](docx-feedback/leaf-independent/review.json)保留取消焦点重入反例与修复，同文件新对象替换单测1/1通过。
+
+[工程整合](docx-feedback-checks/final-verification.json)前端315文件/3,651项及类型/打包/全仓格式通过；1,145输入稳定，Rust与共享夹具字节未变，三项Rust检查明确复用既有成功证据。正式应用仍为4952，本片待候选和实机验证；完整Office、任意表格矩形、PDF/图片区域及P22没有因此关闭。

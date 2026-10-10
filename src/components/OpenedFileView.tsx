@@ -35,6 +35,7 @@ import {
   type OfficeTargetConfirmation,
 } from "../runtime/office_feedback_target";
 import { WORKBOOK_STRINGS as B } from "../runtime/workbook_strings";
+import { DOCUMENT_STRINGS as DOC } from "../runtime/document_strings";
 import {
   readTextBlock,
   textBlockFailure,
@@ -654,7 +655,10 @@ export function OpenedFileView({
   const supportsFeedback =
     shown.text !== undefined ||
     Boolean(shown.block) ||
-    Boolean(file && (visualFileKind(file.name) || isWorkbook(file)));
+    Boolean(
+      file &&
+      (visualFileKind(file.name) || isWorkbook(file) || isDocument(file)),
+    );
   const officeReady = () =>
     latestOfficeStatus.current?.file === latestView.current.file &&
     latestOfficeStatus.current?.state === "ready" &&
@@ -670,12 +674,13 @@ export function OpenedFileView({
     currentFeedback.current === feedbackOwner &&
     !operation.current &&
     !latestView.current.pending &&
-    (!file || !isWorkbook(file) || officeReady()) &&
+    (!file || (!isWorkbook(file) && !isDocument(file)) || officeReady()) &&
     !(shown.block && latestBlockStatus.current?.readInFlight) &&
     shown.phase === "ready" &&
     (shown.text !== undefined ||
       Boolean(shown.block) ||
-      (Boolean(file && isWorkbook(file)) && officeReady()) ||
+      (Boolean(file && (isWorkbook(file) || isDocument(file))) &&
+        officeReady()) ||
       (latestReadiness.current?.source === shown.visual &&
         Boolean(latestReadiness.current?.location)) ||
       (supportsFeedback && hasRetainedFeedback())) &&
@@ -756,10 +761,10 @@ export function OpenedFileView({
       !latest.pending &&
       !operation.current &&
       officeReady() &&
-      source.kind === "xlsx" &&
       Boolean(
         latest.file &&
-        isWorkbook(latest.file) &&
+        ((source.kind === "xlsx" && isWorkbook(latest.file)) ||
+          (source.kind === "docx" && isDocument(latest.file))) &&
         sameFile(latest.file, source.file),
       ) &&
       officeFeedbackSourceIsValid(source)
@@ -1049,9 +1054,12 @@ export function OpenedFileView({
           key={`${identity}:${file.version}:${file.sha256}`}
           file={file}
           active={active}
+          interactionBlocked={Boolean(shown.pending)}
           readingPosition={readingPosition}
           prepared={shown.office?.kind === "docx" ? shown.office : undefined}
           onStatus={reportOfficeStatus}
+          onOfficeTargetAvailability={reportOfficeSelection}
+          onOfficeTargetConfirm={confirmOfficeSelection}
         />
       )}
       {shown.text !== undefined && (
@@ -1258,16 +1266,23 @@ export function OpenedFileView({
               {shown.block && !feedback.anchor && <p>{T.feedback}</p>}
             </div>
           )}
-          {file && isWorkbook(file) && (
+          {file && (isWorkbook(file) || isDocument(file)) && (
             <div>
               <p role="status">
                 {feedback.anchor?.kind === "xlsx-range"
                   ? B.feedbackTarget(feedback.anchor)
-                  : F.fileTarget}
+                  : feedback.anchor?.kind === "docx-block"
+                    ? DOC.feedbackTarget(feedback.anchor)
+                    : F.fileTarget}
               </p>
-              {feedback.anchor?.kind === "xlsx-range" && (
+              {(feedback.anchor?.kind === "xlsx-range" ||
+                feedback.anchor?.kind === "docx-block") && (
                 <>
-                  <p>{B.feedbackRetained}</p>
+                  <p>
+                    {feedback.anchor.kind === "xlsx-range"
+                      ? B.feedbackRetained
+                      : DOC.feedbackRetained}
+                  </p>
                   <button
                     type="button"
                     className="btn btn-text"

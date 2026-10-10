@@ -1,0 +1,184 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/DocxFilePreview.feedback.test.tsx (16 tests | 16 failed) 106ms
+   × selection registers a whole source paragraph and only an explicit second action confirms 17ms
+   × repeated text selects its actual second block, not text or display-id matching 8ms
+   × the entire original table remains the target despite a smaller rendered window 9ms
+   × notice-only blocks have no action, but a genuine empty source paragraph does 9ms
+   × selecting another paragraph withdraws immediately and an old confirm cannot retarget 8ms
+   × story transition withdraws before display changes 12ms
+   × segment transition withdraws before display changes 11ms
+   × paragraph-part transition withdraws before display changes 7ms
+   × table-window transition withdraws before display changes 4ms
+   × cell-detail transition withdraws before display changes 3ms
+   × header targets preserve their actual part, and cell detail targets preserve nested original paths 2ms
+   × blocking preserves body and readiness without read, then makes a fresh candidate 3ms
+   × hide invalidates old callbacks 4ms
+   × version invalidates old callbacks 3ms
+   × prepared invalidates old callbacks 3ms
+   × queued navigation cannot mutate a blocked view 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > selection registers a whole source paragraph and only an explicit second action confirms
+AssertionError: expected undefined to be defined
+ ❯ click src/components/DocxFilePreview.feedback.test.tsx:163:12
+    161| }
+    162| function click(n: Element|undefined) {
+    163|  expect(n).toBeDefined(); expect(n!.props.disabled).not.toBe(true);
+       |            ^
+    164|  (n!.props.onClick as ()=>void)();
+    165| }
+ ❯ select src/components/DocxFilePreview.feedback.test.tsx:170:2
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:180:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > repeated text selects its actual second block, not text or display-id matching
+AssertionError: expected undefined to be defined
+ ❯ click src/components/DocxFilePreview.feedback.test.tsx:163:12
+    161| }
+    162| function click(n: Element|undefined) {
+    163|  expect(n).toBeDefined(); expect(n!.props.disabled).not.toBe(true);
+       |            ^
+    164|  (n!.props.onClick as ()=>void)();
+    165| }
+ ❯ select src/components/DocxFilePreview.feedback.test.tsx:170:2
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:189:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > the entire original table remains the target despite a smaller rendered window
+AssertionError: expected undefined to be defined
+ ❯ click src/components/DocxFilePreview.feedback.test.tsx:163:12
+    161| }
+    162| function click(n: Element|undefined) {
+    163|  expect(n).toBeDefined(); expect(n!.props.disabled).not.toBe(true);
+       |            ^
+    164|  (n!.props.onClick as ()=>void)();
+    165| }
+ ❯ select src/components/DocxFilePreview.feedback.test.tsx:170:2
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:195:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > notice-only blocks have no action, but a genuine empty source paragraph does
+AssertionError: expected [] to have a length of 17 but got +0
+
+- Expected
++ Received
+
+- 17
++ 0
+
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:203:37
+    201|  const v=await ready();
+    202|  // 20 blocks on first segment: 1 table + 1 notice + 1 notice-only par…
+    203|  expect(buttons(v,selectParagraph)).toHaveLength(17);
+       |                                     ^
+    204|  const chosen=select(selectParagraph,2); click(buttons(chosen,confirmP…
+    205|  expect(props.onOfficeTargetConfirm.mock.lastCall?.[0].anchor).toEqual…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > selecting another paragraph withdraws immediately and an old confirm cannot retarget
+AssertionError: expected undefined to be defined
+ ❯ click src/components/DocxFilePreview.feedback.test.tsx:163:12
+    161| }
+    162| function click(n: Element|undefined) {
+    163|  expect(n).toBeDefined(); expect(n!.props.disabled).not.toBe(true);
+       |            ^
+    164|  (n!.props.onClick as ()=>void)();
+    165| }
+ ❯ select src/components/DocxFilePreview.feedback.test.tsx:170:2
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:208:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > story transition withdraws before display changes
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > segment transition withdraws before display changes
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > paragraph-part transition withdraws before display changes
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > table-window transition withdraws before display changes
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > cell-detail transition withdraws before display changes
+AssertionError: expected undefined to be defined
+ ❯ click src/components/DocxFilePreview.feedback.test.tsx:163:12
+    161| }
+    162| function click(n: Element|undefined) {
+    163|  expect(n).toBeDefined(); expect(n!.props.disabled).not.toBe(true);
+       |            ^
+    164|  (n!.props.onClick as ()=>void)();
+    165| }
+ ❯ select src/components/DocxFilePreview.feedback.test.tsx:170:2
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:215:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > header targets preserve their actual part, and cell detail targets preserve nested original paths
+AssertionError: expected undefined to be defined
+ ❯ click src/components/DocxFilePreview.feedback.test.tsx:163:12
+    161| }
+    162| function click(n: Element|undefined) {
+    163|  expect(n).toBeDefined(); expect(n!.props.disabled).not.toBe(true);
+       |            ^
+    164|  (n!.props.onClick as ()=>void)();
+    165| }
+ ❯ select src/components/DocxFilePreview.feedback.test.tsx:170:2
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:229:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > blocking preserves body and readiness without read, then makes a fresh candidate
+AssertionError: expected undefined to be defined
+ ❯ click src/components/DocxFilePreview.feedback.test.tsx:163:12
+    161| }
+    162| function click(n: Element|undefined) {
+    163|  expect(n).toBeDefined(); expect(n!.props.disabled).not.toBe(true);
+       |            ^
+    164|  (n!.props.onClick as ()=>void)();
+    165| }
+ ❯ select src/components/DocxFilePreview.feedback.test.tsx:170:2
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:239:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/16]⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > hide invalidates old callbacks
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > version invalidates old callbacks
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > prepared invalidates old callbacks
+AssertionError: expected undefined to be defined
+ ❯ click src/components/DocxFilePreview.feedback.test.tsx:163:12
+    161| }
+    162| function click(n: Element|undefined) {
+    163|  expect(n).toBeDefined(); expect(n!.props.disabled).not.toBe(true);
+       |            ^
+    164|  (n!.props.onClick as ()=>void)();
+    165| }
+ ❯ select src/components/DocxFilePreview.feedback.test.tsx:170:2
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:253:35
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/16]⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > queued navigation cannot mutate a blocked view
+AssertionError: expected 'header' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ header
+
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:267:60
+    265|  (selectStory.props.onChange as(e:unknown)=>void)({target:{value:"head…
+    266|  props={...props,interactionBlocked:false}; const after=view();
+    267|  expect(after.all.find(n=>n.type==="select")!.props.value).toBe("");
+       |                                                            ^
+    268|  expect(after.html).toContain("内容第 1 / 2 部分"); expect(buttons(after,S.…
+    269| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/16]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  16 failed (16)
+   Start at  08:34:14
+   Duration  256ms (transform 60ms, setup 0ms, import 91ms, tests 106ms, environment 0ms)
+

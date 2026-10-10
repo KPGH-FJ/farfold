@@ -1,0 +1,7 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/office_feedback_target.ts(51,32): error TS7053: Element implicitly has an 'any' type because expression of type 'keyof XlsxRangeAnchor' can't be used to index type 'XlsxRangeAnchor | DocxBlockAnchor'.
+  Property 'sheetId' does not exist on type 'XlsxRangeAnchor | DocxBlockAnchor'.
+ ELIFECYCLE  Command failed with exit code 1.

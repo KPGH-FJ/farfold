@@ -5,6 +5,7 @@ import {
   type DocxBorder,
   type DocxCell,
   type DocxTable,
+  type DocxSourcePosition,
 } from "./docx_types";
 import {
   W,
@@ -20,6 +21,7 @@ import type { DocxStyles, Warn } from "./docx_styles";
 export function parseDocxTable(
   node: DocxXml,
   id: string,
+  source: DocxSourcePosition,
   styles: DocxStyles,
   warn: Warn,
   blocks: (nodes: DocxXml[]) => DocxBlock[],
@@ -113,7 +115,7 @@ export function parseDocxTable(
       warn("unsupportedFormatting");
   const sourceRows = children(node, "tr");
   if (!sourceRows.length) throw new DocxError("invalid");
-  const result: DocxTable = { kind: "table", id, columnsPt, rows: [] };
+  const result: DocxTable = { kind: "table", id, source, columnsPt, rows: [] };
   let active = new Map<number, { cell: DocxCell; end: number }>();
   let widest = columnsPt.length;
   for (let rowIndex = 0; rowIndex < sourceRows.length; rowIndex++) {

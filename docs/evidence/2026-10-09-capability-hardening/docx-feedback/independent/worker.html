@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Controlled DOCX source Worker check</title>
+  </head>
+  <body>
+    <h1>Controlled DOCX source Worker check</h1>
+    <pre id="result">Preparing</pre>
+    <script type="module">
+      import { readDocxPreview } from "/src/runtime/docx_preview.ts";
+      let ipcCalls = 0;
+      window.__TAURI_INTERNALS__ = {
+        invoke() {
+          ipcCalls++;
+          return Promise.reject(new Error("Unexpected IPC"));
+        },
+      };
+      const check = (name, pass, detail) => {
+        checks.push({ name, pass: !!pass, ...(detail ? { detail } : {}) });
+        if (!pass) throw Error(name);
+      };
+      const checks = [],
+        samples = [];
+      const key = (part, path) => JSON.stringify([part, path]);
+      function flatten(preview) {
+        const out = [];
+        function walk(blocks) {
+          for (const block of blocks) {
+            out.push(block);
+            if (block.kind === "table")
+              for (const row of block.rows)
+                for (const cell of row.cells) walk(cell.blocks);
+          }
+        }
+        walk(preview.blocks);
+        for (const story of preview.stories) walk(story.blocks);
+        return out;
+      }
+      let error;
+      try {
+        const captures = await (await fetch("./captures.json")).json();
+        const oracle = await (await fetch("../fixtures/oracle.json")).json();
+        const extra = await (await fetch("./oracle-supplement.json")).json();
+        const expected = new Map(
+          oracle.fixtures.map((sample) => [
+            sample.file.split("/").at(-1),
+            sample.targets,
+          ]),
+        );
+        for (const sample of extra.supplement)
+          expected.set(
+            sample.file.path.split("/").at(-1),
+            sample.literalTargets.map((t) => ({ ...t, elementPath: t.path })),
+          );
+        for (const [name, capture] of Object.entries(captures)) {
+          if (name === "nested-choice-fallback.docx") {
+            let caught;
+            try {
+              await readDocxPreview(capture, new AbortController().signal);
+            } catch (e) {
+              caught = e.code;
+            }
+            check(
+              "nested MC explicitly unsupported by actual Worker",
+              caught === "unsupported",
+            );
+            samples.push({
+              name,
+              status: "unsupported",
+              actualSourceBlocks: 0,
+            });
+            continue;
+          }
+          const document = await readDocxPreview(
+            capture,
+            new AbortController().signal,
+          );
+          check(
+            name + ": exact capture identity preserved",
+            JSON.stringify(document.file) === JSON.stringify(capture.file),
+          );
+          const map = new Map(
+            expected.get(name).map((t) => [key(t.part, t.elementPath), t]),
+          );
+          const blocks = flatten(document),
+            seen = new Set();
+          for (const block of blocks) {
+            if (block.kind === "notice") {
+              check(
+                name + ": standalone notice has no source",
+                !("source" in block),
+              );
+              continue;
+            }
+            const k = key(block.source.part, block.source.elementPath),
+              target = map.get(k);
+            check(
+              name + ": actual output resolves original XML " + k,
+              !!target && target.blockKind === block.kind && !seen.has(k),
+            );
+            seen.add(k);
+            if (
+              block.kind === "paragraph" &&
+              name !== "hidden-notice-boundaries.docx"
+            ) {
+              const text = block.runs
+                .filter((r) => r.kind === "text")
+                .map((r) => r.text)
+                .join("");
+              const literal =
+                name === "07-header-footer-footnote.docx" &&
+                k === key("word/document.xml", [0, 0])
+                  ? "BODY with footnote[1]"
+                  : target.text;
+              check(name + ": visible literal matches " + k, text === literal);
+            }
+          }
+          if (name === "supported-choice-markers.docx")
+            check(
+              "supported Choice original wrapper paths only",
+              JSON.stringify([...seen]) ===
+                JSON.stringify([
+                  key("word/document.xml", [0, 1, 0, 0]),
+                  key("word/document.xml", [0, 3]),
+                ]),
+            );
+          if (name === "repeated-locations.docx") {
+            const repeated = blocks.filter(
+              (b) =>
+                b.kind === "paragraph" &&
+                b.runs
+                  .filter((r) => r.kind === "text")
+                  .map((r) => r.text)
+                  .join("") === "DUPLICATE 0 false cafe",
+            );
+            check(
+              "six repeated strings remain six source coordinates",
+              repeated.length === 6 &&
+                new Set(
+                  repeated.map((b) => key(b.source.part, b.source.elementPath)),
+                ).size === 6,
+            );
+          }
+          if (name === "hidden-notice-boundaries.docx") {
+            const text = JSON.stringify(document);
+            check(
+              "hidden and omitted original strings do not leak",
+              !text.includes("MUST NOT LEAK"),
+            );
+            check(
+              "partial warning remains explicit",
+              document.partial &&
+                document.warnings.some((w) => w.code === "hiddenContent"),
+            );
+            check(
+              "hidden-only and empty paragraphs remain distinct",
+              document.blocks[0].runs[0]?.kind === "notice" &&
+                document.blocks[1].runs.length === 0,
+            );
+            check(
+              "standalone omitted content is a notice without source",
+              document.blocks[3].kind === "notice" &&
+                !("source" in document.blocks[3]),
+            );
+          }
+          samples.push({
+            name,
+            status: "ready",
+            originalStructuralNodes: expected.get(name).length,
+            actualSourceBlocks: seen.size,
+            imagesDecoded: document.images.length,
+          });
+        }
+        check("zero native IPC calls", ipcCalls === 0);
+      } catch (e) {
+        error = String(e?.stack ?? e);
+      }
+      const result = {
+        passed: !error && checks.every((c) => c.pass),
+        checks,
+        samples,
+        ...(error ? { error } : {}),
+        boundary:
+          "Actual production Worker/readDocxPreview with controlled captured ZIP bytes; no native capture or UI eligibility proof.",
+      };
+      window.workerResult = result;
+      document.querySelector("#result").textContent = JSON.stringify(
+        result,
+        null,
+        2,
+      );
+    </script>
+  </body>
+</html>

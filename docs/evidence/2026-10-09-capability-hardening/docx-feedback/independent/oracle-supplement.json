@@ -1,0 +1,183 @@
+{
+  "kind": "Independent source-position comparison inputs",
+  "license": "New synthetic content and script CC0-1.0",
+  "originalOracleCheck": {
+    "originalOracle": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/oracle.json",
+      "sha256": "d42d305a9c51d98ba93554206b2857a099d44ee3020676be76e7267990e47be7",
+      "bytes": 48429
+    },
+    "files": 6,
+    "structuralRoundtrips": 96,
+    "renderedOrEligibleCount": null,
+    "method": "Independently open CRC-checked original ZIP parts; minidom element-only literal path resolution. No execution/import of original oracle.py or Farfold parser.",
+    "originalFiles": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-compatibility/01-unicode-lists.docx",
+        "sha256": "385461f56ba38ffe678e86fe6028e35e50122993f5ebf43e08b973dab9510861",
+        "bytes": 37156
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-compatibility/02-table-images-stories.docx",
+        "sha256": "53fe6691f24eff963d3b143100f2f4d2b9ecff31a1e9590b74cf6ece740576b5",
+        "bytes": 42364
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-compatibility/03-sections.docx",
+        "sha256": "3ced65515e1d26959d29df0ca7392da9e94b81692e9503a7335501efcfea4a4d",
+        "bytes": 39253
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/07-header-footer-footnote.docx",
+        "sha256": "0ce678ba6eb2757323e56c598771e63d2dc1f0b150e83ad8f8503eb0213baaef",
+        "bytes": 2475
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/16-alternate-content.docx",
+        "sha256": "2130989594b41858cde823e016e84f04840095a1765761e38a0d7f68d3826096",
+        "bytes": 1210
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/repeated-locations.docx",
+        "sha256": "34067ebfc2f03cde70c2a8a49890fb1395c4280b78eec87751de53758727f3ce",
+        "bytes": 37993
+      }
+    ]
+  },
+  "supplement": [
+    {
+      "file": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/supported-choice-markers.docx",
+        "sha256": "7716333a9ee159872342eb2e75a626846543a802a63b2c36d624aca407c8fb4c",
+        "bytes": 1086
+      },
+      "kind": "new small authored XML fixture, not independent ordinary writer output",
+      "mainPart": "word/document.xml",
+      "xmlSha256": "7f58cffc0080d8b29add12c432e9455c8a007bf9c7b3e5c7421635ced843f2d4",
+      "expectation": "Supported Requires=w selects Choice. Comments do not count; bookmark/proof elements and MC wrappers do. The paragraph pPr is an original child and is not removed from the XML tree.",
+      "literalTargets": [
+        {
+          "path": [0, 1, 0, 0],
+          "text": "CHOICE VISIBLE 同文",
+          "disposition": "selected supported Choice paragraph",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        },
+        {
+          "path": [0, 1, 1, 0],
+          "text": "FALLBACK MUST NOT DISPLAY",
+          "disposition": "unselected branch; never a candidate",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        },
+        {
+          "path": [0, 3],
+          "text": "AFTER MARKER",
+          "disposition": "visible paragraph; preceding ignored marker still counts",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        }
+      ]
+    },
+    {
+      "file": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/nested-choice-fallback.docx",
+        "sha256": "d41b8427a06c7a5bbf816af16da85eee3f33b0b5daa87c78cf35907747fbff72",
+        "bytes": 1016
+      },
+      "kind": "new small authored XML fixture, not independent ordinary writer output",
+      "mainPart": "word/document.xml",
+      "xmlSha256": "34d21baaadc40b00dbaba1463e085ffadccf4a94d30168a592094db87bdd41b8",
+      "expectation": "Do not silently expand existing format support for location work. If nested MC is unsupported, require explicit whole-preview rejection and no accepted target. If separately authorized later, exact selected original path above is the oracle; never flatten ancestor paths.",
+      "literalTargets": [
+        {
+          "path": [0, 0, 0, 0, 0, 0],
+          "text": "INNER UNKNOWN MUST NOT DISPLAY",
+          "disposition": "inner unselected Choice",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        },
+        {
+          "path": [0, 0, 0, 0, 1, 0],
+          "text": "NESTED FALLBACK",
+          "disposition": "structural semantic fallback; current parser profile may reject whole package",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        },
+        {
+          "path": [0, 0, 1, 0],
+          "text": "OUTER UNSELECTED",
+          "disposition": "outer unselected Fallback",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        },
+        {
+          "path": [0, 1],
+          "text": "AFTER NESTED",
+          "disposition": "structural paragraph after compatibility wrapper",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        }
+      ]
+    },
+    {
+      "file": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/hidden-notice-boundaries.docx",
+        "sha256": "810cffbb6fdcbf8a15e1652d8fdbec778fe2ddee54431be85403068f63b17940",
+        "bytes": 1075
+      },
+      "kind": "new small authored XML fixture, not independent ordinary writer output",
+      "mainPart": "word/document.xml",
+      "xmlSha256": "dbbb4ecd95c92fd49568d2af20c1f22cbb5e2b2fba908e34756c93acd8bac4ec",
+      "expectation": "Hidden raw text and omitted sdt body never render; notices remain explicit/partial. Standalone notice never has a paragraph/table source. Mixed paragraph may target the whole source, with omission disclosed. Empty and only-notice eligibility is separately checked against agreed factory policy.",
+      "literalTargets": [
+        {
+          "path": [0, 1],
+          "text": "HIDDEN ONLY MUST NOT LEAK",
+          "disposition": "hiddenContent notice only; original raw text must not render",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        },
+        {
+          "path": [0, 2],
+          "text": "",
+          "disposition": "real empty source paragraph; eligibility must be explicitly defined, not inferred from text length",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        },
+        {
+          "path": [0, 3],
+          "text": "VISIBLE BEFORE MIXED HIDDEN MUST NOT LEAK VISIBLE AFTER",
+          "disposition": "visible content and hidden notice; whole original paragraph path retained without hidden text",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        },
+        {
+          "path": [0, 4, 1, 0],
+          "text": "OMITTED CONTENT MUST NOT LEAK",
+          "disposition": "structural descendant only; standalone sdt notice cannot expose this as visible paragraph target",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        },
+        {
+          "path": [0, 5],
+          "text": "",
+          "disposition": "missingFieldResult notice only; eligibility must be explicitly defined",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        },
+        {
+          "path": [0, 6],
+          "text": "VISIBLE END",
+          "disposition": "visible paragraph after omitted block retains original index",
+          "part": "word/document.xml",
+          "blockKind": "paragraph"
+        }
+      ]
+    }
+  ],
+  "newStructuralCoordinates": 13,
+  "productionParserExecuted": false,
+  "workerExecuted": false,
+  "boundary": "96 original plus new literal records are original XML structures, not counts of visible/eligible feedback blocks. Production output/qualification is a later independent comparison."
+}

@@ -1,0 +1,1310 @@
+{
+  "schemaVersion": 1,
+  "method": "stdlib zipfile CRC + ElementTree; independently resolved again with minidom; no Farfold imports, parser calls or writer readback",
+  "pathDefinition": "Zero-based index among original XML element children, starting at the part root; all properties, markers and MC wrappers count. Comments and text nodes do not.",
+  "scope": "Structural target oracle; not a claim that every listed paragraph is rendered or offers feedback. Footnote separators and unselected MC branches are explicitly retained for negative checks.",
+  "fixtures": [
+    {
+      "file": "docs/evidence/2026-10-09-capability-hardening/docx-compatibility/01-unicode-lists.docx",
+      "bytes": 37156,
+      "sha256": "385461f56ba38ffe678e86fe6028e35e50122993f5ebf43e08b973dab9510861",
+      "mainPart": "word/document.xml",
+      "parts": [
+        {
+          "part": "word/document.xml",
+          "sha256": "66396410c57bd9445f9db6f4deadab97ac744d8d02da27f38502e21a2b6874d0",
+          "root": "w:document"
+        }
+      ],
+      "relationships": [
+        {
+          "sourcePart": "",
+          "id": "rId1",
+          "kind": "officeDocument",
+          "targetPart": "word/document.xml"
+        }
+      ],
+      "targets": [
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "兼容性纪要",
+          "textSha256": "9235bcf1b355c64e705acbf511eaf48d5c54007d8611b453a4d2a65051854994",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "这份公开样本用于检查普通文档的文字与列表。",
+          "textSha256": "2a617069f20382e9ca23f1bd1864a1a0ffaf689898229fea1072d3d3aa0bd74f",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "文本与样式",
+          "textSha256": "9deae4453cd88b7edd3ff69e7e2fe94620ecf83a74f79cc8cdfeb484f035be7b",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 3],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "普通文字 加粗文字 与 斜体 café 和普通结尾。",
+          "textSha256": "1582d984f38015d375dca48607eb8e8b873fa26828af7d2f603ece452339ae87",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 4],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "Unicode café naïve Ελληνικά 中文",
+          "textSha256": "dd24f9fbada5a206aa41ab9b78d170e81b4e8ca7188ff29d32e145afcae58124",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 5],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "0",
+          "textSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 6],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "false",
+          "textSha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 7],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 8],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "  保留  两处空格  ",
+          "textSha256": "b9edb11dc34f1c37db42bbe7ef21a3cb0ed5ecdcf697bdd7681eb660f051dec6",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 9],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "准备步骤",
+          "textSha256": "96def5a6ec20bd5938bd205b8da41cb438e3e444749dcf939b25769c78846e79",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 10],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "收集材料",
+          "textSha256": "9a1b7346829d8252bff244b40eadeaa409a503b69c5e9889ad5dcd0d666e210d",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 11],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "核对数值",
+          "textSha256": "a48d77c1cae8bba318e7134961938389cd8856f8e90a1d13a00a1fb40bfdc704",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 12],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "保存结果",
+          "textSha256": "8783d9db6edbe4dc704e8ff219ce4fac20e346c4577cff9ee4b7703beb052228",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 13],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "不自动发送",
+          "textSha256": "f80e44db19ad9a095a36fdda73a69370208b99bd763a1b5fb835c96d14f3f111",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 14],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "不读取外部文件",
+          "textSha256": "7a228ca6f6d2339ee947b4ad090da60932d2bb9b5b53ccb4d0fb8e75cbf574fe",
+          "compatibilityBranch": null,
+          "note": null
+        }
+      ],
+      "repeatedParagraphLocations": []
+    },
+    {
+      "file": "docs/evidence/2026-10-09-capability-hardening/docx-compatibility/02-table-images-stories.docx",
+      "bytes": 42364,
+      "sha256": "53fe6691f24eff963d3b143100f2f4d2b9ecff31a1e9590b74cf6ece740576b5",
+      "mainPart": "word/document.xml",
+      "parts": [
+        {
+          "part": "word/document.xml",
+          "sha256": "14640aa013b7804cdf1785e446fb0535c413818e2c6a83fe0642e77a90b429e3",
+          "root": "w:document"
+        },
+        {
+          "part": "word/footer1.xml",
+          "sha256": "0b356ba4c4f03db1ffa3aa2804074a52bdf5afcc5cb8404ff74076a8d6b34479",
+          "root": "w:ftr"
+        },
+        {
+          "part": "word/header1.xml",
+          "sha256": "bee915f6ab92d090017534a3a0a8a14352d3065c989be5597ccd807df6f87360",
+          "root": "w:hdr"
+        }
+      ],
+      "relationships": [
+        {
+          "sourcePart": "",
+          "id": "rId1",
+          "kind": "officeDocument",
+          "targetPart": "word/document.xml"
+        },
+        {
+          "sourcePart": "word/document.xml",
+          "id": "rId9",
+          "kind": "header",
+          "targetPart": "word/header1.xml"
+        },
+        {
+          "sourcePart": "word/document.xml",
+          "id": "rId10",
+          "kind": "footer",
+          "targetPart": "word/footer1.xml"
+        }
+      ],
+      "targets": [
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "表格与图片记录",
+          "textSha256": "043de41e6c04f446f7c33f807887958c0d83fe4704d49385590b37ed50376682",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "下表包含横向和纵向合并，图片均为本地生成的简单色块。",
+          "textSha256": "c7ac17ec0c9a93f7f054be8467097f0d97af765ba5acd377768557e031be5e7c",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2],
+          "blockKind": "table",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "横向合并说明纵向合并0false中文尾行12.50结束",
+          "textSha256": "a158e6379b550e926f99d6aa226ed1dc0604a0bb9562af900ac4a1607ae43819",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2, 2, 0, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "横向合并",
+          "textSha256": "82f490b2eebd6675d428dceea0de7f5bcb54c6c3475153eb0aa85411acd85bac",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2, 2, 1, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "说明",
+          "textSha256": "4262c45dc797bb0cd5008331ef25b684413859f55b73c71fb4e2c01b645dbbb7",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2, 3, 0, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "纵向合并",
+          "textSha256": "0fffd82218971999a539487242983d1ab6b5a47e8be170f1c6b9085957dbf520",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2, 3, 1, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "0",
+          "textSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2, 3, 2, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "false",
+          "textSha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2, 4, 0, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2, 4, 1, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2, 4, 2, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "中文",
+          "textSha256": "72726d8818f693066ceb69afa364218b692e62ea92b385782363780f47529c21",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2, 5, 0, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "尾行",
+          "textSha256": "1e40d7b3dbc384288c87767e211eabe59336c38ee38bc2bdc74640c5f5cbe437",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2, 5, 1, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "12.50",
+          "textSha256": "6d6cc696c282286ecbb59a9456f8e0011c75dacba2739ee494778150e188dae1",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2, 5, 2, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "结束",
+          "textSha256": "c7b24e7997e96eaa17a73b054f63dab3bf3ce8e38b2e1ab1d87a68cca5d09f4a",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 3],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "红色方块",
+          "textSha256": "31cb32c82cf9e20a65a1e3801b5af02efb72e0dae1f5f030ab82082120d7ebf1",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 4],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 5],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "PNG 红色方块说明",
+          "textSha256": "84abbb9a08fdcfd56b3e9fa4ba783cc81ec2d4ecfe42e5962ccae9a9493a961a",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 6],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "蓝色圆形",
+          "textSha256": "2e1264ffe526e344933828305bc5a0ea8325d6d7b62ad985723bd6571cbb15bd",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 7],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 8],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "JPEG 蓝色圆形说明",
+          "textSha256": "9ce7df49ee7a4e94562af0b68a2c35ece5fceca73524a63edae2df48e53295e2",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/footer1.xml",
+          "elementPath": [0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:ftr"],
+          "text": "公开兼容性样本 页脚",
+          "textSha256": "9c58298ff1f4f2579575743826713ce082f739f364f885556d91d64ced625256",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/header1.xml",
+          "elementPath": [0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:hdr"],
+          "text": "公开兼容性样本 页眉",
+          "textSha256": "61b55fff2d715d8c0efa0a581c34fd9a0a49ea3a163d634552a8e2dcfa226459",
+          "compatibilityBranch": null,
+          "note": null
+        }
+      ],
+      "repeatedParagraphLocations": []
+    },
+    {
+      "file": "docs/evidence/2026-10-09-capability-hardening/docx-compatibility/03-sections.docx",
+      "bytes": 39253,
+      "sha256": "3ced65515e1d26959d29df0ca7392da9e94b81692e9503a7335501efcfea4a4d",
+      "mainPart": "word/document.xml",
+      "parts": [
+        {
+          "part": "word/document.xml",
+          "sha256": "c83f01cfe1597fc9f48ed3c964487940151a6e156e7d87c2a79c48540740bb25",
+          "root": "w:document"
+        },
+        {
+          "part": "word/footer1.xml",
+          "sha256": "bb6948fa9c85f5efdb5524e6c2bc75f7dce7d4f4aba928a42df259365759cc71",
+          "root": "w:ftr"
+        },
+        {
+          "part": "word/footer2.xml",
+          "sha256": "8bdd0bfed5dbd4f607e1cab2f3ce6baac1cb33d3de14fae2ea8716817df5224a",
+          "root": "w:ftr"
+        },
+        {
+          "part": "word/header1.xml",
+          "sha256": "50b7ef3b896fcb46d18367c3524164016496bce6b5f4a050be835717b86da19c",
+          "root": "w:hdr"
+        },
+        {
+          "part": "word/header2.xml",
+          "sha256": "d0743b1ef12bb8949babe289151b54a3f289ca4feaa254f40367397f0b791257",
+          "root": "w:hdr"
+        }
+      ],
+      "relationships": [
+        {
+          "sourcePart": "",
+          "id": "rId1",
+          "kind": "officeDocument",
+          "targetPart": "word/document.xml"
+        },
+        {
+          "sourcePart": "word/document.xml",
+          "id": "rId9",
+          "kind": "header",
+          "targetPart": "word/header1.xml"
+        },
+        {
+          "sourcePart": "word/document.xml",
+          "id": "rId10",
+          "kind": "footer",
+          "targetPart": "word/footer1.xml"
+        },
+        {
+          "sourcePart": "word/document.xml",
+          "id": "rId11",
+          "kind": "header",
+          "targetPart": "word/header2.xml"
+        },
+        {
+          "sourcePart": "word/document.xml",
+          "id": "rId12",
+          "kind": "footer",
+          "targetPart": "word/footer2.xml"
+        }
+      ],
+      "targets": [
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "分节项目记录",
+          "textSha256": "c903ef8d2956893f45fad1229fc383da36cb423a8c035015b6c229c4041cafbb",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "第一组记录",
+          "textSha256": "d748bb8252b28f1bb4bf02d5f985069bfd3634f69af3bca02bd85d3e8e177891",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 01 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "63662c36c3f8407ecdce8f2a6affd2fdf6f38614659bc8b56efe963b32158afa",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 3],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 02 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "71dca216a0e89561797c811a2edbbf1d4bde9639b2d441508dcaf7cc7e2cf815",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 4],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 03 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "7137d7c9151f8ca73c9e8a3d0e084b210495952dedf02cc98aa0ba302aad1527",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 5],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 04 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "e40396c010a8b25b3030abfce37fdd19425b427b3e56c00d4049facf101ea1d6",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 6],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 05 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "d3f84142ca96d4f680b90f2b5f8ef92d853fa5095cc9f3ac34103a2aab39cb08",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 7],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 06 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "890c1bc69ceb534216f7b489f4c27cd4c6a77c6db182d56666d7e2ee1d3a143f",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 8],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 07 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "d77aea96647d759877d7f0fa540abb27d1de252c444f078eebd96076d1f1304a",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 9],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 08 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "b5738671e7c2cd0bb49cc499121846ebf34c64f545b29318d1674e1b5552df30",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 10],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 09 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "f85f2bcb00f931d8fcb89fbb7ca9ee8dd3bde268bfc4be13d54b66d4270f7f17",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 11],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 10 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "d8c116e33bb711c9217e02beab90803ad65cde0c78514061edca5fd13fc4b897",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 12],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 11 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "692fd4bd8495272483a5aae75bfaf3ebe72d54e3c09a3d7097608f86b92b31f2",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 13],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 12 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "c902d294393b41514f62bcbc4e7e5c51cd8918790e137af528225893f57a8cd9",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 14],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 13 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "017aca435a4840f44ecb85d47a0621ccff662f840fe50882378ffa6380d93641",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 15],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 14 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "13cbd4decc827f2ce5899012eb55486f0c0d6341460b5e92392909765f08d464",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 16],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 15 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "24a4dc1592e3c50a11b3ae205bfa39826aed437715fb61eb9e580aadf67a5f1b",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 17],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 16 中文与 Unicode café 内容保持顺序。",
+          "textSha256": "be0de6c335fd284551d10a7a7dbe9b96d2bad71c48bd93db18fda7e95d359e6a",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 18],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 19],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "第二组记录",
+          "textSha256": "dfb79e285e6dd17d9e6c52ef1906c0360ef44de5e4b666a176fe516aef1964ff",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 20],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 17 第二节保留正文和结尾。",
+          "textSha256": "956da654e54abcf9ff0a74a1eb1a679385ad57b5e43a79a806eabf0ded6df8e8",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 21],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 18 第二节保留正文和结尾。",
+          "textSha256": "5f5bf58cd33b64a05b8adaff78d85d200b94579a4d65176fc972d861335ce357",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 22],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 19 第二节保留正文和结尾。",
+          "textSha256": "64d14c0b3f68a48ce4c12f908e119d9d426eec9593aa855bd75249c2b9bd8f9a",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 23],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 20 第二节保留正文和结尾。",
+          "textSha256": "f4b4f09bfc74e37f13f4661d9516142871ffccebf072633129d7aa762c63a395",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 24],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 21 第二节保留正文和结尾。",
+          "textSha256": "9678e362fb1a4985d78f8007fb2fd05da8bb0330c0fe087d6f4c4345120317a1",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 25],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 22 第二节保留正文和结尾。",
+          "textSha256": "164b0845944f962dc239069c5a09d520e3e87d2e3d6b9128b2336b62bd7614bd",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 26],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 23 第二节保留正文和结尾。",
+          "textSha256": "468212475cf87a7fdceda7098522f0608da1c8e7f957cc9bf655a7064a709608",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 27],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 24 第二节保留正文和结尾。",
+          "textSha256": "a9e30b9f222da599e3a767c630373831710f8eab5e419e688f09d5a1995f2b62",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 28],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 25 第二节保留正文和结尾。",
+          "textSha256": "fd0ebda0e4d5c22255c72590f2795d400b091fa292aacb08087c8bd685d1a205",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 29],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 26 第二节保留正文和结尾。",
+          "textSha256": "da5495c52ed3a552d2e2261e8f15fee2582a944b462a547d9c9810720ef91271",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 30],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 27 第二节保留正文和结尾。",
+          "textSha256": "f1a5bb3c3deff1e04ce673b2d72e488d0fcd0d0e0a0f8c609afe049fd4917402",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 31],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 28 第二节保留正文和结尾。",
+          "textSha256": "6ac4e3788af734a5fbc25e635d154f20ed07f438150864aa2e7435c4326f404a",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 32],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 29 第二节保留正文和结尾。",
+          "textSha256": "3d7be89adb80685b8c6d50f014ce058bb01f4db49731fe2403e3d30b9fa8936c",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 33],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 30 第二节保留正文和结尾。",
+          "textSha256": "8d2e44794bbcc0d506a3833c2afcab9ee10ca9f0fc8fa472ec93ef69136c753d",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 34],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 31 第二节保留正文和结尾。",
+          "textSha256": "9066b98f068c285ed7eb46661f2d4404b5bffb8b54fae8a7b49b152a9cfb29f7",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 35],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "记录 32 第二节保留正文和结尾。",
+          "textSha256": "f55aca3a75e16e23a4fcb0c6de0f07ae3f1ed41e3536b6421342c7b1cc9f306b",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/footer1.xml",
+          "elementPath": [0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:ftr"],
+          "text": "第一节页脚",
+          "textSha256": "154ef13e43a9dea5a8e1ee35b39f445f0da9c2dacab11f557bca4cca94ace152",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/footer2.xml",
+          "elementPath": [0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:ftr"],
+          "text": "第二节页脚",
+          "textSha256": "a8b1364392247281ffc545f1a940031f3d609128cc19986ace925fca74d20242",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/header1.xml",
+          "elementPath": [0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:hdr"],
+          "text": "第一节页眉",
+          "textSha256": "4474e6e594af4826c1da784e807fd271f898d8ba4a93032f7e9e1973314d89a9",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/header2.xml",
+          "elementPath": [0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:hdr"],
+          "text": "第二节页眉",
+          "textSha256": "28ecdda13165969864b49bfe52a45ab7be88c007667bb4a8b0c1a55b03634ff5",
+          "compatibilityBranch": null,
+          "note": null
+        }
+      ],
+      "repeatedParagraphLocations": []
+    },
+    {
+      "file": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/07-header-footer-footnote.docx",
+      "bytes": 2475,
+      "sha256": "0ce678ba6eb2757323e56c598771e63d2dc1f0b150e83ad8f8503eb0213baaef",
+      "mainPart": "word/document.xml",
+      "parts": [
+        {
+          "part": "word/document.xml",
+          "sha256": "9b6ab9d44de59cbc4aac7c75e11ab66d3416f510b6140f45cf3a00c77d7d037b",
+          "root": "w:document"
+        },
+        {
+          "part": "word/footer1.xml",
+          "sha256": "c938bbd778dc68447b0fb1526167f04ce1fea321b8be34dcf5fd1ff268994702",
+          "root": "w:ftr"
+        },
+        {
+          "part": "word/footnotes.xml",
+          "sha256": "5a7d68fe061c12613ffc9151d5b9571360fb185e177e54a45a3e26a905f65bf2",
+          "root": "w:footnotes"
+        },
+        {
+          "part": "word/header1.xml",
+          "sha256": "24d30e527acc82d476bf5205cfd1d27c01fa12cdab927eb72163075796401f56",
+          "root": "w:hdr"
+        }
+      ],
+      "relationships": [
+        {
+          "sourcePart": "",
+          "id": "rIdDocument",
+          "kind": "officeDocument",
+          "targetPart": "word/document.xml"
+        },
+        {
+          "sourcePart": "word/document.xml",
+          "id": "rIdHeader",
+          "kind": "header",
+          "targetPart": "word/header1.xml"
+        },
+        {
+          "sourcePart": "word/document.xml",
+          "id": "rIdFooter",
+          "kind": "footer",
+          "targetPart": "word/footer1.xml"
+        },
+        {
+          "sourcePart": "word/document.xml",
+          "id": "rIdFootnotes",
+          "kind": "footnotes",
+          "targetPart": "word/footnotes.xml"
+        }
+      ],
+      "targets": [
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "BODY with footnote",
+          "textSha256": "acdb90063b22e5450cdb38178d25bd6ce2d8d8477f5008aa5467c072d90ac225",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/footer1.xml",
+          "elementPath": [0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:ftr"],
+          "text": "FOOTER public fixture",
+          "textSha256": "d727b352c426a5f1e3d9f4dcae53d017bcd9d2b3ee8fc5659c994359792f0274",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/footnotes.xml",
+          "elementPath": [0, 0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:footnotes", "w:footnote"],
+          "text": "",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compatibilityBranch": null,
+          "note": {
+            "kind": "w:footnote",
+            "id": "-1",
+            "type": "separator"
+          }
+        },
+        {
+          "part": "word/footnotes.xml",
+          "elementPath": [1, 0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:footnotes", "w:footnote"],
+          "text": "",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compatibilityBranch": null,
+          "note": {
+            "kind": "w:footnote",
+            "id": "0",
+            "type": "continuationSeparator"
+          }
+        },
+        {
+          "part": "word/footnotes.xml",
+          "elementPath": [2, 0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:footnotes", "w:footnote"],
+          "text": "FOOTNOTE public fixture",
+          "textSha256": "dd3b3f1eef6874425544df5f73fd4ba8677abcc03e2bf0b603c1be1bb37af999",
+          "compatibilityBranch": null,
+          "note": {
+            "kind": "w:footnote",
+            "id": "1",
+            "type": "normal"
+          }
+        },
+        {
+          "part": "word/header1.xml",
+          "elementPath": [0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:hdr"],
+          "text": "HEADER public fixture",
+          "textSha256": "e17a0585241fa277453c2b2011960e23c3061150c9a50e4b0082b64f95cd090a",
+          "compatibilityBranch": null,
+          "note": null
+        }
+      ],
+      "repeatedParagraphLocations": []
+    },
+    {
+      "file": "docs/evidence/2026-10-09-capability-hardening/docx-fixtures/16-alternate-content.docx",
+      "bytes": 1210,
+      "sha256": "2130989594b41858cde823e016e84f04840095a1765761e38a0d7f68d3826096",
+      "mainPart": "word/document.xml",
+      "parts": [
+        {
+          "part": "word/document.xml",
+          "sha256": "b1fe3c86a85866ace706fbe43aad0a9e46409dc76d18d2b5d13b4a621c381464",
+          "root": "w:document"
+        }
+      ],
+      "relationships": [
+        {
+          "sourcePart": "",
+          "id": "rIdDocument",
+          "kind": "officeDocument",
+          "targetPart": "word/document.xml"
+        }
+      ],
+      "targets": [
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 0, 0, 0, 0],
+          "blockKind": "paragraph",
+          "ancestorElements": [
+            "w:document",
+            "w:body",
+            "mc:AlternateContent",
+            "mc:Choice",
+            "{urn:farfold:public-docx-fixture}special"
+          ],
+          "text": "UNSUPPORTED CHOICE",
+          "textSha256": "682e9d7cd752b7e4ebf6d0f4683a85c6bccf04b7cbc23d79892c83b3dfe152b6",
+          "compatibilityBranch": {
+            "kind": "mc:Choice",
+            "elementPath": [0, 0, 0],
+            "requires": "fx"
+          },
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 0, 1, 0],
+          "blockKind": "paragraph",
+          "ancestorElements": [
+            "w:document",
+            "w:body",
+            "mc:AlternateContent",
+            "mc:Fallback"
+          ],
+          "text": "SUPPORTED FALLBACK",
+          "textSha256": "2623d19d087ed1bb86f6fb478c08772eeeb010ac9dd66fde3cacbf27cd5aea31",
+          "compatibilityBranch": {
+            "kind": "mc:Fallback",
+            "elementPath": [0, 0, 1],
+            "requires": null
+          },
+          "note": null
+        }
+      ],
+      "repeatedParagraphLocations": []
+    },
+    {
+      "file": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/repeated-locations.docx",
+      "bytes": 37993,
+      "sha256": "34067ebfc2f03cde70c2a8a49890fb1395c4280b78eec87751de53758727f3ce",
+      "mainPart": "word/document.xml",
+      "parts": [
+        {
+          "part": "word/document.xml",
+          "sha256": "8528d97222d897764d9e37021a253d7b8f121b757dce79f305c7393a2e91c079",
+          "root": "w:document"
+        },
+        {
+          "part": "word/footer1.xml",
+          "sha256": "afbc11cea8923a4b59847706281bf4e878aa957713c3c996b7136015eb86f83b",
+          "root": "w:ftr"
+        },
+        {
+          "part": "word/header1.xml",
+          "sha256": "4a09b6f72dabadd1f0693943fd0361fe64d20c335b15c168b27cb68d0cb12b08",
+          "root": "w:hdr"
+        }
+      ],
+      "relationships": [
+        {
+          "sourcePart": "",
+          "id": "rId1",
+          "kind": "officeDocument",
+          "targetPart": "word/document.xml"
+        },
+        {
+          "sourcePart": "word/document.xml",
+          "id": "rId9",
+          "kind": "header",
+          "targetPart": "word/header1.xml"
+        },
+        {
+          "sourcePart": "word/document.xml",
+          "id": "rId10",
+          "kind": "footer",
+          "targetPart": "word/footer1.xml"
+        }
+      ],
+      "targets": [
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "Repeated text locations",
+          "textSha256": "7bbd482867f2842bc0a35a9b53684de0d65e0424c74b8cf1cfe1efce18cb5856",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "DUPLICATE 0 false cafe",
+          "textSha256": "9c491850a0729d99569c6d5b38b474a1a8f83ffd86340d02c98dcb468cf6afff",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 2],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "A different paragraph keeps the body paths distinct.",
+          "textSha256": "acdbc6d92f568b72c638e6cecf2c35ef95c4b9f70be77e70ef4f63a7b27bb92d",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 3],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "DUPLICATE 0 false cafe",
+          "textSha256": "9c491850a0729d99569c6d5b38b474a1a8f83ffd86340d02c98dcb468cf6afff",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 4],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "",
+          "textSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 5],
+          "blockKind": "table",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "DUPLICATE 0 false cafeDUPLICATE 0 false cafe",
+          "textSha256": "ddb5dd4e0c687008ee685d0d2db9055c6a0806f248b2b5f7abb9df6a93135abc",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 5, 2, 0, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "DUPLICATE 0 false cafe",
+          "textSha256": "9c491850a0729d99569c6d5b38b474a1a8f83ffd86340d02c98dcb468cf6afff",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 5, 2, 1, 1],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body", "w:tbl", "w:tr", "w:tc"],
+          "text": "DUPLICATE 0 false cafe",
+          "textSha256": "9c491850a0729d99569c6d5b38b474a1a8f83ffd86340d02c98dcb468cf6afff",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/document.xml",
+          "elementPath": [0, 6],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:document", "w:body"],
+          "text": "End of location sample.",
+          "textSha256": "f64ad21a1d9bd55a8154a16ee7b2556300cb03e4364d3e8d2a2e131240a64075",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/footer1.xml",
+          "elementPath": [0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:ftr"],
+          "text": "DUPLICATE 0 false cafe",
+          "textSha256": "9c491850a0729d99569c6d5b38b474a1a8f83ffd86340d02c98dcb468cf6afff",
+          "compatibilityBranch": null,
+          "note": null
+        },
+        {
+          "part": "word/header1.xml",
+          "elementPath": [0],
+          "blockKind": "paragraph",
+          "ancestorElements": ["w:hdr"],
+          "text": "DUPLICATE 0 false cafe",
+          "textSha256": "9c491850a0729d99569c6d5b38b474a1a8f83ffd86340d02c98dcb468cf6afff",
+          "compatibilityBranch": null,
+          "note": null
+        }
+      ],
+      "repeatedParagraphLocations": [
+        {
+          "text": "DUPLICATE 0 false cafe",
+          "locations": [
+            {
+              "part": "word/document.xml",
+              "elementPath": [0, 1]
+            },
+            {
+              "part": "word/document.xml",
+              "elementPath": [0, 3]
+            },
+            {
+              "part": "word/document.xml",
+              "elementPath": [0, 5, 2, 0, 1]
+            },
+            {
+              "part": "word/document.xml",
+              "elementPath": [0, 5, 2, 1, 1]
+            },
+            {
+              "part": "word/footer1.xml",
+              "elementPath": [0]
+            },
+            {
+              "part": "word/header1.xml",
+              "elementPath": [0]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "alternateContentExpectation": {
+    "expectedSelectedText": "SUPPORTED FALLBACK",
+    "expectedSelectedSource": {
+      "part": "word/document.xml",
+      "elementPath": [0, 0, 1, 0],
+      "blockKind": "paragraph"
+    },
+    "mustNotBeRenderedText": "UNSUPPORTED CHOICE",
+    "basis": "Existing synthetic fixture declares unknown fx in Choice Requires, so its literal Fallback branch is expected; coordinates retain both wrappers."
+  },
+  "checks": {
+    "files": 6,
+    "coordinateRoundtrips": 96,
+    "duplicateTextDistinctCoordinates": 6,
+    "zipCrc": "all entries passed"
+  }
+}

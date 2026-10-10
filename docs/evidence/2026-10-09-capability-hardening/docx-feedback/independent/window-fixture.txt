@@ -1,0 +1,1 @@
+{"file": "window-boundaries.docx", "sha256": "5ea9f16cb6733475866958dd873187da986e26b9abce5dee9ccacda56233adab", "bytes": 1902, "literalCoordinates": 3, "captureSamples": 10}

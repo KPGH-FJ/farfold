@@ -114,6 +114,27 @@ describe("DOCX capture and exclusive disposable worker", () => {
     await rejected;
     expect((await next).blocks).toHaveLength(6);
   });
+  it("keeps the captured part allowlist fixed while awaiting the Worker", async () => {
+    vi.stubGlobal("Worker", ControlledWorker);
+    const mutableCapture = { ...capture, parts: [...capture.parts] };
+    const result = readDocxPreview(
+      mutableCapture,
+      new AbortController().signal,
+    );
+    mutableCapture.parts.push({ name: "word/late.xml", data: "" });
+    const document = parseDocx(input);
+    document.blocks = document.blocks.map((block) =>
+      block.kind === "notice"
+        ? block
+        : {
+            ...block,
+            source: { part: "word/late.xml", elementPath: [0, 0] },
+          },
+    );
+    ControlledWorker.instances[0].ready(document);
+    await expect(result).rejects.toMatchObject({ code: "invalid" });
+    expect(ControlledWorker.instances[0].terminate).toHaveBeenCalledOnce();
+  });
   it("deadline and constructor failure both release the worker slot", async () => {
     vi.useFakeTimers();
     vi.stubGlobal("Worker", ControlledWorker);
@@ -139,6 +160,36 @@ describe("DOCX capture and exclusive disposable worker", () => {
     await next;
   });
   it.each([
+    (d: DocxDocument) => ({
+      ...d,
+      blocks: d.blocks.map((block) => {
+        if (block.kind === "notice") return block;
+        const { source: _source, ...withoutSource } = block;
+        return withoutSource;
+      }),
+    }),
+    (d: DocxDocument) => ({
+      ...d,
+      blocks: d.blocks.map((block) =>
+        block.kind === "notice"
+          ? block
+          : {
+              ...block,
+              source: { part: "word/other.xml", elementPath: [0, 0] },
+            },
+      ),
+    }),
+    (d: DocxDocument) => ({
+      ...d,
+      blocks: d.blocks.map((block) =>
+        block.kind === "notice"
+          ? block
+          : {
+              ...block,
+              source: { part: "word/document.xml", elementPath: Array(1) },
+            },
+      ),
+    }),
     (d: DocxDocument) => ({ ...d, html: "<img src='remote'>" }),
     (d: DocxDocument) => ({
       ...d,
@@ -146,6 +197,7 @@ describe("DOCX capture and exclusive disposable worker", () => {
         {
           kind: "paragraph",
           id: "x",
+          source: { part: "word/document.xml", elementPath: [0, 0] },
           style: {},
           runs: [
             { kind: "text", text: "x", style: { background: "url(remote)" } },
@@ -159,6 +211,7 @@ describe("DOCX capture and exclusive disposable worker", () => {
         {
           kind: "paragraph",
           id: "x",
+          source: { part: "word/document.xml", elementPath: [0, 0] },
           style: {},
           runs: [
             {
@@ -179,6 +232,7 @@ describe("DOCX capture and exclusive disposable worker", () => {
         {
           kind: "table",
           id: "x",
+          source: { part: "word/document.xml", elementPath: [0, 0] },
           columnsPt: [1],
           rows: [
             { cells: [{ column: 0, columnSpan: 999, rowSpan: 1, blocks: [] }] },

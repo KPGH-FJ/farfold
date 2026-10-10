@@ -1,0 +1,176 @@
+{
+  "recordedAtUtc": "2026-10-10T00:29:25.348206+00:00",
+  "scope": "P21 DOCX 原始 XML 段落/整表位置的解析结果与 Worker 校验前置；不含 UI/冷锚点工厂或正式应用验收。",
+  "status": "source/DTO/checker frozen; independent real Worker and UI follow",
+  "owned": [
+    {
+      "path": "src/runtime/docx_source_position.ts",
+      "sha256": "5992c08c69ffe667f5d852d298f0044171693371fb32ab0c91e59df821e491ce"
+    },
+    {
+      "path": "src/runtime/docx_source_position.test.ts",
+      "sha256": "984ca522c331ceba86d882f8c2a900fb216d6109cdbe4df7fb450429d85edf40"
+    },
+    {
+      "path": "src/runtime/docx_source_wire.test.ts",
+      "sha256": "18801d21384fe819ce437d3769ddd1cd6db80ca2d81d0558309835c1b8c175c4"
+    },
+    {
+      "path": "src/runtime/docx_types.ts",
+      "sha256": "9b6f5a2f0092266ee0e1c5380237b3a8ad2daa79e1780d93ef6dffed00f7391e"
+    },
+    {
+      "path": "src/runtime/docx_package.ts",
+      "sha256": "07df9d329cb4cd619f155299b1b942d69e06807b2fdc7910e1ddf2ceaa2fcd6d"
+    },
+    {
+      "path": "src/runtime/docx_parse.ts",
+      "sha256": "a29bf156332a555a948cbfce9a6981dfe85e7709f8bc0bc9ba030eb10646098f"
+    },
+    {
+      "path": "src/runtime/docx_table.ts",
+      "sha256": "3c65fbe03c723393e4d34d35005f32e0e85687ec5a280fe8a443e123a9565ce2"
+    },
+    {
+      "path": "src/runtime/docx_validation.ts",
+      "sha256": "08ff0bcb2f5f0a6f236d7cbd74bfb33d7a5fcd319e669f0f02a01eb6874b8bea"
+    },
+    {
+      "path": "src/runtime/docx_preview.ts",
+      "sha256": "b9b912a1d69e99731eb7ec5f5efb9ddcaa02b96d22bd0c945b741f8cf1fef9e7"
+    },
+    {
+      "path": "src/runtime/docx_preview.test.ts",
+      "sha256": "0a8a4111774a20e6ef06e5a1d59a698ede53d986f2a357bf13df315870f5cc35"
+    },
+    {
+      "path": "src/runtime/docx_compatibility.test.ts",
+      "sha256": "a1ee83e50b9f92e565f918a6727fe4c21dbb8328810f67efbb9a38441375f894"
+    },
+    {
+      "path": "src/runtime/docx_public_samples.test.ts",
+      "sha256": "c5a3def01fd856c27fa2a47288aa88d21811bd45d82e371dda46ec5a492747cb"
+    },
+    {
+      "path": "src/runtime/document_view.test.ts",
+      "sha256": "9d023761391952375661adf8787cbf04d347fb1827786b40cfd692eddf662261"
+    },
+    {
+      "path": "src/components/PreviewReadingPosition.test.tsx",
+      "sha256": "e1cbb6773155dc83fb8496b646f48311c37352abeeb8d65f6566c41fb7cc77cc"
+    }
+  ],
+  "changes": [
+    "DocxParagraph/DocxTable.source 必填真实 part 与原 XML element-child path；notice 的闭合字段仍不允许 source。",
+    "DocxPackage 原缓存树建立惰性 WeakMap parent/index 索引，只在输出支持块时复制路径；兼容节点保持原祖先，不重编过滤后的编号。",
+    "source 路径1..63项、每项安全整数0..499999，part最多1024字符；累计路径630000项、标签UTF-8字节4MiB；正文/图像既有预算未放宽。",
+    "checkedDocxDocument 必须传本次捕获 part 名称集合；readDocxPreview 请求时固定集合，晚到变更不扩大允许范围。",
+    "必要旧手造测试只显式补合成 source；旧错样本仍测试原错误，不因缺字段提前替代其失效原因。"
+  ],
+  "tests": {
+    "wireRed": {
+      "log": "wire-red.txt",
+      "total": 23,
+      "failed": 11,
+      "passed": 12,
+      "exitCode": 1
+    },
+    "wireFirstGreen": {
+      "log": "wire-first.txt",
+      "total": 23,
+      "exitCode": 0
+    },
+    "sparseRed": {
+      "log": "sparse-path-red.txt",
+      "total": 25,
+      "failed": 1,
+      "passed": 24,
+      "exitCode": 1,
+      "origin": "architecture 独立指出 .every 跳过稀疏数组，实际复现后改逐项含空洞检查。"
+    },
+    "final": {
+      "log": "related-final.txt",
+      "files": 13,
+      "total": 167,
+      "exitCode": 0,
+      "command": "corepack pnpm exec vitest run src/runtime/docx_source_position.test.ts src/runtime/docx_source_wire.test.ts src/runtime/docx_parse.test.ts src/runtime/docx_preview.test.ts src/runtime/docx_compatibility.test.ts src/runtime/docx_public_samples.test.ts src/runtime/docx_budget.test.ts src/runtime/docx_images.test.ts src/runtime/docx_boundaries.test.ts src/runtime/document_view.test.ts src/components/PreviewReadingPosition.test.tsx src/components/OfficePreview.revision-review.test.tsx src/runtime/office_preview_prepare.test.ts"
+    },
+    "typecheck": {
+      "log": "typecheck-final.txt",
+      "exitCode": 0,
+      "command": "corepack pnpm typecheck"
+    },
+    "format": {
+      "log": "format-final.txt",
+      "exitCode": 0,
+      "command": "corepack pnpm exec prettier --check src/runtime/docx_source_position.ts src/runtime/docx_source_position.test.ts src/runtime/docx_source_wire.test.ts src/runtime/docx_types.ts src/runtime/docx_package.ts src/runtime/docx_parse.ts src/runtime/docx_table.ts src/runtime/docx_validation.ts src/runtime/docx_preview.ts src/runtime/docx_preview.test.ts src/runtime/docx_compatibility.test.ts src/runtime/docx_public_samples.test.ts src/runtime/document_view.test.ts src/components/PreviewReadingPosition.test.tsx"
+    },
+    "intermediateFailures": [
+      "wire-harness-parse-failure.txt 为新测试漏右花括号，未执行用例，不计有效红。",
+      "typecheck-initial.txt 为必填字段的旧fixture和并行office union接线；second只剩同行union WIP；最终全项目类型通过。"
+    ]
+  },
+  "independentInputs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/oracle.json",
+      "sha256": "d42d305a9c51d98ba93554206b2857a099d44ee3020676be76e7267990e47be7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/receipt.json",
+      "sha256": "a5f3b7122d7ffe2d3569a120e85a57bcb48561a8e687f3ba72ae513908c97815"
+    }
+  ],
+  "logs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/wire-harness-parse-failure.txt",
+      "sha256": "6c9fde0836fe09c2c3815a27ab18a53ec9233ee76b8dd932a476b860393a4ea7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/wire-red.txt",
+      "sha256": "f85303d3f7e7cf23bd3cc2999344cddbc13955ca276d4a39031b9573a8d8402c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/wire-first.txt",
+      "sha256": "2fdd226233dc3f63ae3973edec42fbfd1517e9e2c2b660d358297a7f139c2b32"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/sparse-path-red.txt",
+      "sha256": "80d7adc7e5eb4c0ad1a1b51c773171979bc06d20a5680afc053081147892e3aa"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/source-green.txt",
+      "sha256": "a5fa10fdbbd8f32b4c9f9453fe325799e6929996af042d86414e588cb653fa58"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/related-first.txt",
+      "sha256": "d2782c52b929dbceca53d4d95ba184058d8b45fb21b50c8d92a5a381232efae3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/related-final.txt",
+      "sha256": "56547f7519f17b25c9586fe5d880b6d656cee02adbaf7826129e0348c8f9e4b1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/typecheck-initial.txt",
+      "sha256": "a74c34570a15fe1432b299ca821fa8dd974e16bba7948243bcd89b6037955858"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/typecheck-second.txt",
+      "sha256": "de61335c466870bf09f8d9761fd213ab5fa6428da9d474f363994b8fed192364"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ],
+  "boundaries": [
+    "六份保留 ZIP 的实际输出块逐一对照独立原路径；oracle全部96结构节点不等于96可见目标。",
+    "本方测试实际解析普通writer与公开样本；Worker运输使用受控替身，独立真实Worker由verification另验，不冒称此记录已测试WebKit/Tauri。",
+    "captured part+shape 校验不是主线程再次解析 XML；坐标推导正确性以原树实现及独立literal对照证明。",
+    "嵌套AlternateContent仍按现有unsupported，不扩内容解释，不登记意见候选；兼容缺口保留。",
+    "没有生产UI、Rust/IPC、依赖、Agent、配置、原ZIP/oracle或旧evidence修改。"
+  ]
+}

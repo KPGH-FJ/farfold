@@ -1,0 +1,1 @@
+{"passed":true,"sourceUnchanged":true,"cases":[{"name":"automatic","pass":13},{"name":"cancel","pass":7},{"name":"hide-version","pass":13}]}

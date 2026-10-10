@@ -1,0 +1,46 @@
+{
+  "checkedAtUtc": "2026-10-10T00:37:43.284331+00:00",
+  "phase": "parent_integration_initially_frozen",
+  "productionChange": "DOCX joins the existing Office readiness, registered-candidate confirmation, per-version draft and take-to-composer paths. Pending preview replacement blocks interaction while active/read status remain independent. XLSX ownership guards remain shared.",
+  "inputs": {
+    "src/components/OpenedFileView.tsx": "5c78c204200dc4625dcee6ecff1614fab4d8599c3ab4930ff1adb74f6304187e",
+    "src/components/OpenedFileView.docx-feedback.test.tsx": "17ee38e662bea74c8d605ef839728c48dee2aa81ae6e5dfcbf9b5e3672945c43",
+    "src/components/OpenedFileView.test.tsx": "b4f5f90a8456878b9b9e4cb79c545bf1fff09c4035019fbcc2b900437643b0d0"
+  },
+  "checks": {
+    "beforeConnection": {
+      "log": "parent-red.txt",
+      "sha256": "ef6559e47cd6d581c788553070758ed0c7d2c8b6878801dc7a6ec9db0a4d8adb",
+      "failed": 11,
+      "passed": 0,
+      "interpretation": "Missing DOCX feedback entry/callback/interaction-block wiring is one feature gap exercised by multiple cases, not eleven independently diagnosed production defects."
+    },
+    "firstRelated": {
+      "log": "parent-first-green.txt",
+      "sha256": "e71e364fdc8fde095ad191a05977fbf95a4a22d58ed34ea63961e3dd89b1108b",
+      "passed": 105,
+      "failed": 1,
+      "reason": "Existing opening test required no DOCX feedback entry. New capability intentionally supplies one, disabled until current preview readiness. Only this obsolete expectation was changed."
+    },
+    "finalRelated": {
+      "log": "parent-related-green.txt",
+      "sha256": "fb2a0b487571aecba52fea8e509e2d00bf712d6eeb8d0492e7fec09da686d58a",
+      "files": 4,
+      "passed": 106,
+      "failed": 0
+    }
+  },
+  "testScope": [
+    "Mock React lifecycle and preview leaf; real draft/source factories and parent callbacks",
+    "Actual FileRevisionMonitor while holding replacement completion: one check/prepare, active retained, blocked true; true hide cancels adoption",
+    "Readiness/failed-editor guard; same-text different-position confirmation; old callbacks after hide/conversation/selection change",
+    "Candidate retirement after loading/failed/paused; deferred current candidate; original version retained and once-only compose"
+  ],
+  "fixtureCorrection": "Before first green run, expected feedback serialization was aligned to the existing explicit JSON element path [2,0], not an invented slash form. No production output was changed for that assertion.",
+  "limits": [
+    "Not actual browser or native proof",
+    "Whole-project typecheck/build/format pending complete leaf/API integration",
+    "DOCX leaf UI is still being implemented by product_coverage; installed4952 does not include this source"
+  ],
+  "next": "Independent parent review and full App browser checks after leaf freezes."
+}

@@ -15,6 +15,10 @@ import {
   type PreviewContentStatus,
 } from "../runtime/preview_capture";
 import type { PreparedDocxPreview } from "../runtime/office_preview_prepare";
+import type {
+  OfficeTargetAvailability,
+  OfficeTargetConfirmation,
+} from "../runtime/office_feedback_target";
 import "./DocxFilePreview.css";
 
 /** Only the parent file refresh changes the captured document version. */
@@ -24,15 +28,21 @@ export function DocxFilePreview({
   readingPosition,
   prepared,
   onStatus,
+  interactionBlocked = false,
+  onOfficeTargetAvailability,
+  onOfficeTargetConfirm,
 }: {
   file: VerifiedFile;
   active: boolean;
   readingPosition?: PreviewReadingPositionRef;
   prepared?: PreparedDocxPreview;
   onStatus?: (status: PreviewContentStatus) => void;
+  interactionBlocked?: boolean;
+  onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
+  onOfficeTargetConfirm?: (value: OfficeTargetConfirmation) => void;
 }) {
-  const props = useRef({ file, active });
-  props.current = { file, active };
+  const props = useRef({ file, active, interactionBlocked });
+  props.current = { file, active, interactionBlocked };
   const status = useRef(onStatus);
   status.current = onStatus;
   const current = useRef<AbortController | null>(null);
@@ -43,7 +53,12 @@ export function DocxFilePreview({
   const cached = useRef<{ file: VerifiedFile; value: DocxPreview } | null>(
     null,
   );
-  const [loaded, setLoaded] = useState<typeof cached.current>(null);
+  const [loaded, setLoaded] = useState<{
+    file: VerifiedFile;
+    value: DocxPreview;
+    retry: number;
+    prepared: PreparedDocxPreview | undefined;
+  } | null>(null);
   const [state, setState] = useState<"loading" | "ready" | "failed" | "paused">(
     "loading",
   );
@@ -51,6 +66,8 @@ export function DocxFilePreview({
   const [retry, setRetry] = useState(0);
   const attempt = useRef({ retry, prepared });
   attempt.current = { retry, prepared };
+  const shown = useRef({ loaded, state });
+  shown.current = { loaded, state };
   useLayoutEffect(() => {
     const operation = new AbortController();
     current.current = operation;
@@ -83,13 +100,13 @@ export function DocxFilePreview({
       ) {
         const result = { file, value: prepared.value };
         cached.current = result;
-        setLoaded(result);
+        setLoaded({ ...result, retry, prepared });
         setState("ready");
         status.current?.({ file, state: "ready" });
         return;
       }
       if (cached.current?.file === file) {
-        setLoaded(cached.current);
+        setLoaded({ ...cached.current, retry, prepared });
         setState("ready");
         status.current?.({ file, state: "ready" });
         return;
@@ -108,7 +125,7 @@ export function DocxFilePreview({
       captureReader.current.release(file);
       const result = { file, value };
       cached.current = result;
-      setLoaded(result);
+      setLoaded({ ...result, retry, prepared });
       setState("ready");
       status.current?.({ file, state: "ready" });
     })().catch((error) => {
@@ -130,18 +147,32 @@ export function DocxFilePreview({
     };
   }, [file, active, retry, prepared]);
   const ready =
-    active && state === "ready" && loaded?.file === file ? loaded.value : null;
+    active &&
+    state === "ready" &&
+    loaded?.file === file &&
+    loaded.retry === retry &&
+    loaded.prepared === prepared
+      ? loaded.value
+      : null;
+  const controlsCurrent = () =>
+    props.current.file === file &&
+    props.current.active &&
+    !props.current.interactionBlocked &&
+    attempt.current.retry === retry &&
+    attempt.current.prepared === prepared;
   return (
     <section
       className="document-preview"
       aria-label={S.title}
       aria-busy={active && state === "loading"}
+      inert={interactionBlocked}
     >
       {state === "loading" && active && (
         <button
           type="button"
           className="btn btn-ghost"
           onClick={() => {
+            if (!controlsCurrent() || shown.current.state !== "loading") return;
             current.current?.abort();
             current.current = null;
             capture.current = null;
@@ -157,7 +188,14 @@ export function DocxFilePreview({
         <button
           type="button"
           className="btn btn-ghost"
-          onClick={() => setRetry((n) => n + 1)}
+          onClick={() => {
+            if (
+              !controlsCurrent() ||
+              !["failed", "paused"].includes(shown.current.state)
+            )
+              return;
+            setRetry((n) => n + 1);
+          }}
         >
           {S.retry}
         </button>
@@ -170,6 +208,16 @@ export function DocxFilePreview({
           key={`${file.resolvedPath}:${file.version}:${file.sha256}`}
           document={ready}
           readingPosition={readingPosition}
+          interactionBlocked={interactionBlocked}
+          isCurrent={() =>
+            controlsCurrent() &&
+            shown.current.state === "ready" &&
+            shown.current.loaded === loaded &&
+            current.current !== null &&
+            !current.current.signal.aborted
+          }
+          onOfficeTargetAvailability={onOfficeTargetAvailability}
+          onOfficeTargetConfirm={onOfficeTargetConfirm}
         />
       )}
     </section>

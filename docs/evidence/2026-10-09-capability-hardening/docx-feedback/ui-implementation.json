@@ -1,0 +1,176 @@
+{
+  "recordedAtUtc": "2026-10-10T00:46:37.220006+00:00",
+  "scope": "P21 DOCX 当前实际呈现的原段落/整表位置意见叶层；父层保存、冷恢复和安装验证另有证据。",
+  "status": "owned production/test frozen; targeted checks passed; independent final App browser in progress",
+  "owned": [
+    {
+      "path": "src/components/DocxDocumentView.tsx",
+      "sha256": "ccf57d848e16ee117b3f9493bd82a85fa84f514e5b0875d2f0f9414a259dfea0"
+    },
+    {
+      "path": "src/components/DocxFilePreview.tsx",
+      "sha256": "7c2ad11e00c490436c0aa4d53728b0f52b179f1ef46a11fa57d980b7dd3c9c0d"
+    },
+    {
+      "path": "src/components/DocxFilePreview.css",
+      "sha256": "45b60dfbe10f875975d59c8120213ce2ae95fa9c9d53598f2134091fe0acbfe5"
+    },
+    {
+      "path": "src/components/DocxFilePreview.feedback.test.tsx",
+      "sha256": "b97c0aa85841e68f97f413cbb856c8fb9ed618b8295cd02ae6d59cf5be3be040"
+    },
+    {
+      "path": "src/runtime/document_strings.ts",
+      "sha256": "e9bf81b2f45d3fedea6fec890979c010d80174e4e1bb677f191768255a386657"
+    }
+  ],
+  "sourcePrerequisite": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/implementation.json",
+    "sha256": "dc12eceffee99818b170e3f49157129348de9a0a9b7f1f7f86d32aa5e7a32871",
+    "note": "14 个 parser/DTO/checker 相关输入仍按该已冻结回执，不重写之前测试事实。"
+  },
+  "behavior": [
+    "只给实际显示且资格合格的原段落或整表提供选择；notice/全隐藏及遗漏提示专属段落没有候选，真正空段落保留资格。",
+    "选择只登记短期 source；明确确认再次核当前 owner/block/source/read attempt 后上交共同 Office callback，不发送给 Agent、不改文件。",
+    "区域/内容段/长段分片/表格窗口/单元格详情变更同步退休旧 source；interactionBlocked 保留可见内容和已选块、不触发读取或 paused，解除后建新 source。",
+    "取消选择仅撤回当前候选；旧确认/取消回调不能碰新候选。撤回回调后再核当前归属与 DOM 连接性，焦点返回当前选择按钮。",
+    "同文件 prepared 变化会先排除旧 loaded attempt；读取等待/失败/隐藏仍保留已有明确待重试与 bounded capture 行为。",
+    "文档区域独立滚动；两行 flex 收缩修复来自独立 WebKit 原失败与仅注入样式的同路径对照。"
+  ],
+  "redGreen": [
+    {
+      "red": "ui-red.txt",
+      "total": 16,
+      "failed": 16,
+      "green": "ui-green.txt",
+      "note": "缺选择/确认与锁定事件边界；初始 prepared 夹具 kind=\"document\" 后校正为已有 \"docx\"，原红都在缺选择前置失败，未冒称该轮已验证 prepared 后置。"
+    },
+    {
+      "red": "ui-first.txt",
+      "total": 16,
+      "failed": 1,
+      "green": "ui-green.txt",
+      "note": "实际同文件 prepared 变更仍接受旧确认；loaded 增加 attempt 字段后转绿。"
+    },
+    {
+      "red": "ui-replay-red.txt",
+      "total": 21,
+      "failed": 2,
+      "green": "ui-replay-green.txt",
+      "note": "再次选择同块及 child-first effect replay 的 source 生命周期。"
+    },
+    {
+      "red": "ui-cancel-red.txt",
+      "total": 23,
+      "failed": 2,
+      "green": "ui-cancel-green.txt",
+      "note": "明确取消出口、旧取消回调与新候选隔离。"
+    },
+    {
+      "red": "ui-cancel-focus-red.txt",
+      "total": 24,
+      "failed": 1,
+      "green": "ui-cancel-focus-green.txt",
+      "note": "同步撤回 owner 后仍调用 focus 的 hook/DOM-focus-double 反例；不冒称实际浏览器抢焦。"
+    }
+  ],
+  "checks": {
+    "targeted": {
+      "files": 8,
+      "tests": 111,
+      "exitCode": 0,
+      "log": "ui-related-final.txt",
+      "command": "corepack pnpm exec vitest run src/components/DocxFilePreview.feedback.test.tsx src/components/PreviewReadingPosition.test.tsx src/components/OfficePreview.revision-review.test.tsx src/runtime/document_view.test.ts src/runtime/document_image_csp.test.ts src/runtime/docx_preview.test.ts src/runtime/strings.test.ts src/runtime/docx_feedback_target.test.ts"
+    },
+    "typecheck": {
+      "exitCode": 0,
+      "log": "ui-typecheck-final.txt",
+      "command": "corepack pnpm typecheck"
+    },
+    "format": {
+      "exitCode": 0,
+      "log": "ui-format-final.txt",
+      "command": "corepack pnpm exec prettier --check src/components/DocxDocumentView.tsx src/components/DocxFilePreview.tsx src/components/DocxFilePreview.css src/components/DocxFilePreview.feedback.test.tsx src/runtime/document_strings.ts"
+    },
+    "priorRelated": {
+      "files": 6,
+      "tests": 81,
+      "log": "ui-related.txt",
+      "note": "旧命令另含两个当时不存在的测试路径；实际仅6文件匹配，没有冒称8文件。"
+    },
+    "diffCheck": {
+      "exitCode": 0,
+      "scope": "owned tracked production diff; no whitespace errors"
+    }
+  },
+  "independentBrowser": {
+    "executor": "verification peer; this implementer read source JSON and viewed the first hidden-case screenshot, did not rerun browser",
+    "red": "independent/webkit-app-first.json",
+    "control": "independent/webkit-app-candidate.json",
+    "note": "首轮2布局失败：documentHeight895/viewport820；窄窗windowY12/appY-12。仅注入min-height:0/overflow:auto的5场景56检查绿，当前两行已进生产；无注入最终双引擎另由peer回执。"
+  },
+  "limits": [
+    "连续文档的原 XML 块位置，不代表 Word 页码或完整 Office 保真。",
+    "nested MC 内容解释未扩展，当前明确 unsupported 且不提供意见候选。",
+    "SSR hook/effect harness 验证状态/回调；键鼠/焦点/布局以独立浏览器证据为准。",
+    "无正式安装/真实 Agent 证明；本片未运行收费模型、修改账号配置或用户文档。"
+  ],
+  "logs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-red.txt",
+      "sha256": "20d891068a82bb848f24d55e1b4959be2700cd6ba49c74c193360a834d35e713"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-first.txt",
+      "sha256": "012022d1625f814a64f008d8860240634f24067e3b6ca5b06ca09247a25960f6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-green.txt",
+      "sha256": "f8e23f664a3e2932c1ed73e033c3252270b5cdfbd3d2735c025dfc302fb8e696"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-replay-red.txt",
+      "sha256": "b90f247b7039b95081e539f63699268f83073f74f4499415a4a3a78d93cd8b27"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-replay-green.txt",
+      "sha256": "0929ea39719f35e630a6d23fe1205e38dff79e5756f97b36712c4edf0194583e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-cancel-red.txt",
+      "sha256": "935927491a93f9723eed7c19d7395e4bf1c5a0200cc0bd4badc02be13ae08d33"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-cancel-green.txt",
+      "sha256": "097773454465fd817b79e4f926e3359e2c3c107b803e64f01ad32e7d4a1e750b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-cancel-focus-red.txt",
+      "sha256": "1c8e7b89a4f8ba852bef253cc26d19e3c323587f704b308f18343125dee38b54"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-cancel-focus-green.txt",
+      "sha256": "857547564cd9d75e4ac944b02ee780501a9dbedb4ac137fb96a3e0e913d28140"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-related.txt",
+      "sha256": "7a6caeff98ce080e749c2939fdfadfca7e50fce01b6735c3b27ffbb922d96f71"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-related-final.txt",
+      "sha256": "6f65eb48bc090260bcd157b36259ee1ed1101cbf93d078024357636dd30d9358"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_source_position.test.ts (25 tests | 1 failed) 12ms
+     × refuses sparse array holes including a structured-cloned Worker value 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_source_position.test.ts > DOCX coordinate shape and aggregate budgets > refuses sparse array holes including a structured-cloned Worker value
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/runtime/docx_source_position.test.ts:75:42
+     73|   it("refuses sparse array holes including a structured-cloned Worker …
+     74|     const sparse = { part, elementPath: Array(1) };
+     75|     expect(isDocxSourcePosition(sparse)).toBe(false);
+       |                                          ^
+     76|     expect(isDocxSourcePosition(structuredClone(sparse))).toBe(false);
+     77|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 24 passed (25)
+   Start at  08:25:29
+   Duration  112ms (transform 23ms, setup 0ms, import 36ms, tests 12ms, environment 0ms)
+

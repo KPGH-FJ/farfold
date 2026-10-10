@@ -1,0 +1,410 @@
+{
+  "recordedAtUtc": "2026-10-10T00:31:53.582973+00:00",
+  "phase": "independent structure/parser/Worker checkpoint; full App UI still pending",
+  "status": "passed_scoped_no_current_blocker",
+  "originalStructuralOracle": {
+    "files": 6,
+    "coordinatesVerified": 96,
+    "actualOutputSourceBlocks": 92,
+    "notEmitted": [
+      {
+        "sample": "02-table-images-stories.docx",
+        "part": "word/document.xml",
+        "path": [0, 2, 4, 0, 1],
+        "cause": "empty paragraph in original vMerge continuation cell; original XML parent inspected"
+      },
+      {
+        "sample": "07-header-footer-footnote.docx",
+        "part": "word/footnotes.xml",
+        "paths": [
+          [0, 0],
+          [1, 0]
+        ],
+        "cause": "separator/continuationSeparator not displayed as referenced note content"
+      },
+      {
+        "sample": "16-alternate-content.docx",
+        "part": "word/document.xml",
+        "path": [0, 0, 0, 0, 0],
+        "cause": "unselected unknown Choice"
+      }
+    ],
+    "claim": "These are structural/output counts, not counts of DOM-eligible opinions."
+  },
+  "newSupplement": {
+    "fixtures": 3,
+    "structuralCoordinates": 13,
+    "actualSourceBlocks": 7,
+    "nestedMC": "Actual Worker unsupported in both engines; no interpretation expansion authorized. This remains an Office compatibility limitation.",
+    "oracle": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/oracle-supplement.json",
+      "sha256": "58e8578c486539d63f06fa175c25eae8539ea870eec4c53b43d0c5eb6b373b22",
+      "bytes": 8064
+    }
+  },
+  "pureParser": {
+    "first": {
+      "passed": 9,
+      "failed": 1,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/parser-first.txt",
+        "sha256": "84875c8cff4443c404ffc777f34b9e8bdd11344694aca9b72e41fb01ef61c204",
+        "bytes": 1356
+      },
+      "classification": "Independent test expected only w:t text, omitted actual original w:footnoteReference id=1 marker. Not a production/source-coordinate failure.",
+      "originalTest": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/source-oracle-first.raw.txt",
+        "sha256": "e34e174f95baa1c696ead4347ed10d1ca32e68bb71c27e93fed3af0a08592894",
+        "bytes": 5799
+      }
+    },
+    "correctedLiteral": {
+      "passed": 10,
+      "failed": 0,
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/parser-literal-fixed.txt",
+        "sha256": "b8c8a2e98bf018b9988af3e65ab09f1221ab4aeccfe5d6ca55f3401a7fae51c5",
+        "bytes": 210
+      },
+      "change": "Only exact known body paragraph expects BODY with footnote[1]; structural path/kind/uniqueness and all other literal comparisons retained."
+    }
+  },
+  "actualWorker": {
+    "runs": [
+      {
+        "engine": "webkit",
+        "exitCode": 0,
+        "checks": 208,
+        "sampleOutcomes": [
+          {
+            "name": "01-unicode-lists.docx",
+            "status": "ready",
+            "originalStructuralNodes": 15,
+            "actualSourceBlocks": 15,
+            "imagesDecoded": 0
+          },
+          {
+            "name": "02-table-images-stories.docx",
+            "status": "ready",
+            "originalStructuralNodes": 22,
+            "actualSourceBlocks": 21,
+            "imagesDecoded": 2
+          },
+          {
+            "name": "03-sections.docx",
+            "status": "ready",
+            "originalStructuralNodes": 40,
+            "actualSourceBlocks": 40,
+            "imagesDecoded": 0
+          },
+          {
+            "name": "07-header-footer-footnote.docx",
+            "status": "ready",
+            "originalStructuralNodes": 6,
+            "actualSourceBlocks": 4,
+            "imagesDecoded": 0
+          },
+          {
+            "name": "16-alternate-content.docx",
+            "status": "ready",
+            "originalStructuralNodes": 2,
+            "actualSourceBlocks": 1,
+            "imagesDecoded": 0
+          },
+          {
+            "name": "repeated-locations.docx",
+            "status": "ready",
+            "originalStructuralNodes": 11,
+            "actualSourceBlocks": 11,
+            "imagesDecoded": 0
+          },
+          {
+            "name": "supported-choice-markers.docx",
+            "status": "ready",
+            "originalStructuralNodes": 3,
+            "actualSourceBlocks": 2,
+            "imagesDecoded": 0
+          },
+          {
+            "name": "nested-choice-fallback.docx",
+            "status": "unsupported",
+            "actualSourceBlocks": 0
+          },
+          {
+            "name": "hidden-notice-boundaries.docx",
+            "status": "ready",
+            "originalStructuralNodes": 6,
+            "actualSourceBlocks": 5,
+            "imagesDecoded": 0
+          }
+        ],
+        "evidence": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/worker-webkit.json",
+          "sha256": "3cb1050f6785553bb4f872ee51b0c5d837ae0cc6242ee1e629958908d15e0652",
+          "bytes": 34809
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/worker-webkit.txt",
+          "sha256": "d8b2f3a3086309c076c4a2acac1a28956b4c22d8211a59e2bc0a69df05327637",
+          "bytes": 82
+        }
+      },
+      {
+        "engine": "chromium",
+        "exitCode": 0,
+        "checks": 208,
+        "sampleOutcomes": [
+          {
+            "name": "01-unicode-lists.docx",
+            "status": "ready",
+            "originalStructuralNodes": 15,
+            "actualSourceBlocks": 15,
+            "imagesDecoded": 0
+          },
+          {
+            "name": "02-table-images-stories.docx",
+            "status": "ready",
+            "originalStructuralNodes": 22,
+            "actualSourceBlocks": 21,
+            "imagesDecoded": 2
+          },
+          {
+            "name": "03-sections.docx",
+            "status": "ready",
+            "originalStructuralNodes": 40,
+            "actualSourceBlocks": 40,
+            "imagesDecoded": 0
+          },
+          {
+            "name": "07-header-footer-footnote.docx",
+            "status": "ready",
+            "originalStructuralNodes": 6,
+            "actualSourceBlocks": 4,
+            "imagesDecoded": 0
+          },
+          {
+            "name": "16-alternate-content.docx",
+            "status": "ready",
+            "originalStructuralNodes": 2,
+            "actualSourceBlocks": 1,
+            "imagesDecoded": 0
+          },
+          {
+            "name": "repeated-locations.docx",
+            "status": "ready",
+            "originalStructuralNodes": 11,
+            "actualSourceBlocks": 11,
+            "imagesDecoded": 0
+          },
+          {
+            "name": "supported-choice-markers.docx",
+            "status": "ready",
+            "originalStructuralNodes": 3,
+            "actualSourceBlocks": 2,
+            "imagesDecoded": 0
+          },
+          {
+            "name": "nested-choice-fallback.docx",
+            "status": "unsupported",
+            "actualSourceBlocks": 0
+          },
+          {
+            "name": "hidden-notice-boundaries.docx",
+            "status": "ready",
+            "originalStructuralNodes": 6,
+            "actualSourceBlocks": 5,
+            "imagesDecoded": 0
+          }
+        ],
+        "evidence": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/worker-chromium.json",
+          "sha256": "8518e19d1386f8a8b4a716b4edca51d2f937d05ca67764af9e709a970ffabe48",
+          "bytes": 34811
+        },
+        "stdout": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/worker-chromium.txt",
+          "sha256": "4c3c4c49e0bb098770cc843cf4c73820edc53ae0c5d21665d8f3efa67a742226",
+          "bytes": 84
+        }
+      }
+    ],
+    "totalChecks": 416,
+    "sourceScope": "14 production DOCX parser/Worker files plus controlled page/capture/oracle inputs snapshotted before and after each run; each unchanged. Not whole-build proof.",
+    "inputBoundary": "Production readDocxPreview/Worker/image decoder; test-only ZIP materialization, no native filesystem capture or official App."
+  },
+  "readOnlySourceReview": {
+    "sources": [
+      {
+        "path": "src/runtime/docx_feedback_target.ts",
+        "sha256": "44cb5aef346757561a275cf025f8591a5fd5c680b828316ad864d7012976f0a9",
+        "bytes": 7021
+      },
+      {
+        "path": "src/runtime/office_feedback_target.ts",
+        "sha256": "198767f573d5d5077a584a1c1537eb20c6419ea02c2dde02b0e1e2ac1d005af5",
+        "bytes": 2302
+      },
+      {
+        "path": "src/runtime/file_feedback_anchor.ts",
+        "sha256": "7cf6a0157115aa862d5293613d0147673fac1486c4699b7fb08c89b6e936c63a",
+        "bytes": 5201
+      },
+      {
+        "path": "src/runtime/feedback_strings.ts",
+        "sha256": "919335f8c79178b7d5802b35fb43b7479ab35b697ad72a5dfcb94528b22e98f5",
+        "bytes": 3726
+      },
+      {
+        "path": "src/runtime/docx_source_position.ts",
+        "sha256": "5992c08c69ffe667f5d852d298f0044171693371fb32ab0c91e59df821e491ce",
+        "bytes": 3756
+      },
+      {
+        "path": "src/runtime/docx_package.ts",
+        "sha256": "07df9d329cb4cd619f155299b1b942d69e06807b2fdc7910e1ddf2ceaa2fcd6d",
+        "bytes": 8209
+      },
+      {
+        "path": "src/runtime/docx_parse.ts",
+        "sha256": "a29bf156332a555a948cbfce9a6981dfe85e7709f8bc0bc9ba030eb10646098f",
+        "bytes": 17856
+      },
+      {
+        "path": "src/runtime/docx_table.ts",
+        "sha256": "3c65fbe03c723393e4d34d35005f32e0e85687ec5a280fe8a443e123a9565ce2",
+        "bytes": 7554
+      },
+      {
+        "path": "src/runtime/docx_validation.ts",
+        "sha256": "08ff0bcb2f5f0a6f236d7cbd74bfb33d7a5fcd319e669f0f02a01eb6874b8bea",
+        "bytes": 9702
+      },
+      {
+        "path": "src/runtime/docx_preview.ts",
+        "sha256": "b9b912a1d69e99731eb7ec5f5efb9ddcaa02b96d22bd0c945b741f8cf1fef9e7",
+        "bytes": 5183
+      },
+      {
+        "path": "src/workers/docx_preview.worker.ts",
+        "sha256": "190a24f1667d539e5c720e7b46298d4dcd4c86755108f5ea48794c1e8e8934b3",
+        "bytes": 981
+      }
+    ],
+    "result": "initial_stable_checkpoint_no_blocker",
+    "reviewed": [
+      "Original part element-child ancestry including properties, marker/wrapper indices; WeakMap parent links bounded and full paths copied only for emitted source blocks.",
+      "Closed Worker source shape/member allowlist and budget; membership is syntactic/captured-part proof, not independent XML reparse. Literal oracle supplies independent output coordinate check.",
+      "Actual preview/block nested-reference and seven file fields; copied/retired identity rejected; source/path object and coordinate mutation rechecked.",
+      "Standalone notice and only-notice/hidden paragraphs rejected; genuine empty paragraph accepted as a structure; mixed visible text/image/tab/break plus notice accepted with omission disclosure retained.",
+      "Cold anchor is exact historical coordinates without live registration or body ledger; no claim it proves current display/disk state.",
+      "Child must retire on story/fragment/table-window/hide/version changes. Those DOM lifecycle and parent ready/pending gates remain future full-App work."
+    ],
+    "authorTestRerun": false
+  },
+  "artifacts": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/oracle-supplement.py",
+      "sha256": "d1b4330af9a259bdee0847c0929f91bcac558269b126f2e8ba2fc7b5ee04c170",
+      "bytes": 11656
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/oracle-supplement-check.txt",
+      "sha256": "e19e59eb29444a8c6d2b3bc443bf7c9e0b3f1416d54146bbd24c65177d98eaac",
+      "bytes": 159
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/make-captures.py",
+      "sha256": "f46e6a20116927945c2ffed8ebb8f679504d50a1469779d2eec34335e9af5ad3",
+      "bytes": 1973
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/make-captures.txt",
+      "sha256": "871b51a9a57a14536a76dcd76fdc559d8fe7111e00a4fcf6bb72f689ff4de61b",
+      "bytes": 71
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/captures.json",
+      "sha256": "d12d70281746afbcca5e2bd0831b81d4397df76267cd8690bf5811fdd2023ac2",
+      "bytes": 4470509
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/source-oracle.test.ts",
+      "sha256": "dbabe35584873fa9ee08d1b363fc308ea8c974b192f73fe84aeb5b1f368b25db",
+      "bytes": 6131
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/vitest.config.ts",
+      "sha256": "291e370c0a429eafe5ac1cec0e1d577215b429e855837d5d5ce789a9c0fba005",
+      "bytes": 208
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/worker.html",
+      "sha256": "9d9180687e252f451e72713bd5d379a29587ee9cbb765364a7fc41478ff8f77d",
+      "bytes": 6913
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/run-worker.mjs",
+      "sha256": "bf14439e30e26ede51f9178fb001d8e05d7f8d9644bc5b67bcd5145cbd07c4b9",
+      "bytes": 2988
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/serve.mjs",
+      "sha256": "839ef73c55c2ee5c8e2b4d8c74c5c1dd897e9c0cf884b6db137fa3dabfd9d62e",
+      "bytes": 674
+    }
+  ],
+  "formatPreservation": [
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/oracle-supplement.raw.txt",
+        "sha256": "9354847e679d2380d0899a69c04311ada37fd42efcd0690c08b635bb959e5e44",
+        "bytes": 8724
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/oracle-supplement.json",
+        "sha256": "58e8578c486539d63f06fa175c25eae8539ea870eec4c53b43d0c5eb6b373b22",
+        "bytes": 8064
+      },
+      "semanticEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/worker-webkit.raw.txt",
+        "sha256": "3cb1050f6785553bb4f872ee51b0c5d837ae0cc6242ee1e629958908d15e0652",
+        "bytes": 34809
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/worker-webkit.json",
+        "sha256": "3cb1050f6785553bb4f872ee51b0c5d837ae0cc6242ee1e629958908d15e0652",
+        "bytes": 34809
+      },
+      "semanticEqual": true
+    },
+    {
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/worker-chromium.raw.txt",
+        "sha256": "8518e19d1386f8a8b4a716b4edca51d2f937d05ca67764af9e709a970ffabe48",
+        "bytes": 34811
+      },
+      "formatted": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/worker-chromium.json",
+        "sha256": "8518e19d1386f8a8b4a716b4edca51d2f937d05ca67764af9e709a970ffabe48",
+        "bytes": 34811
+      },
+      "semanticEqual": true
+    }
+  ],
+  "service": {
+    "ownedVitePid": 46080,
+    "port": 1464,
+    "toolSession": 84483,
+    "currentlyRetainedForFullApp": true,
+    "browserProcesses": "Each completed runner awaited browser.close; no owned browser retained."
+  },
+  "limits": [
+    "No production code or original oracle/ZIP changed by this reviewer.",
+    "Three new small authored XML ZIPs are synthetic counterexamples, not independent ordinary-writer compatibility samples.",
+    "No formal app, Agent, accounts, permissions or user data accessed.",
+    "No final DOM eligibility/layout/keyboard or installed acceptance claim yet; parent/leaf production remains in progress."
+  ]
+}

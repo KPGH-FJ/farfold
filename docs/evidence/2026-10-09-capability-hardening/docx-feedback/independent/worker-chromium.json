@@ -1,0 +1,947 @@
+{
+  "engine": "chromium",
+  "recordedAtUtc": "2026-10-10T00:28:44.014Z",
+  "before": {
+    "src/runtime/docx_parse.ts": "a29bf156332a555a948cbfce9a6981dfe85e7709f8bc0bc9ba030eb10646098f",
+    "src/runtime/docx_package.ts": "07df9d329cb4cd619f155299b1b942d69e06807b2fdc7910e1ddf2ceaa2fcd6d",
+    "src/runtime/docx_types.ts": "9b6f5a2f0092266ee0e1c5380237b3a8ad2daa79e1780d93ef6dffed00f7391e",
+    "src/runtime/docx_xml.ts": "51d974c0c9d657b96efa222062b27f67d27c17c4ebf7eecf5353b9608b764cd9",
+    "src/runtime/docx_styles.ts": "63ccce9b7e79754c21b1b2eec332b7312eb48ce002feb0b7786bed120342cd00",
+    "src/runtime/docx_numbering.ts": "bc975850b2573eeb9aab75e73bdc43793580dd16028159dbe272da567a6ee5e6",
+    "src/runtime/docx_table.ts": "3c65fbe03c723393e4d34d35005f32e0e85687ec5a280fe8a443e123a9565ce2",
+    "src/runtime/docx_images.ts": "4c44858caf1f0385726925754911b42e1491e0786834ab64fcd7b1e6937a28e7",
+    "src/runtime/docx_decode.ts": "3e3deef54779ae2184976b0424a2f36b9ea098c0ab301da31a0c21cd46fcc5e6",
+    "src/runtime/docx_source_position.ts": "5992c08c69ffe667f5d852d298f0044171693371fb32ab0c91e59df821e491ce",
+    "src/runtime/docx_validation.ts": "08ff0bcb2f5f0a6f236d7cbd74bfb33d7a5fcd319e669f0f02a01eb6874b8bea",
+    "src/runtime/docx_preview.ts": "b9b912a1d69e99731eb7ec5f5efb9ddcaa02b96d22bd0c945b741f8cf1fef9e7",
+    "src/runtime/image_bytes.ts": "bcf55418941f8b69842bd1c86074363ee646c62c27c4d07c4ece74e396e36b34",
+    "src/workers/docx_preview.worker.ts": "190a24f1667d539e5c720e7b46298d4dcd4c86755108f5ea48794c1e8e8934b3",
+    "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/worker.html": "9d9180687e252f451e72713bd5d379a29587ee9cbb765364a7fc41478ff8f77d",
+    "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/captures.json": "d12d70281746afbcca5e2bd0831b81d4397df76267cd8690bf5811fdd2023ac2",
+    "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/oracle-supplement.json": "58e8578c486539d63f06fa175c25eae8539ea870eec4c53b43d0c5eb6b373b22"
+  },
+  "after": {
+    "src/runtime/docx_parse.ts": "a29bf156332a555a948cbfce9a6981dfe85e7709f8bc0bc9ba030eb10646098f",
+    "src/runtime/docx_package.ts": "07df9d329cb4cd619f155299b1b942d69e06807b2fdc7910e1ddf2ceaa2fcd6d",
+    "src/runtime/docx_types.ts": "9b6f5a2f0092266ee0e1c5380237b3a8ad2daa79e1780d93ef6dffed00f7391e",
+    "src/runtime/docx_xml.ts": "51d974c0c9d657b96efa222062b27f67d27c17c4ebf7eecf5353b9608b764cd9",
+    "src/runtime/docx_styles.ts": "63ccce9b7e79754c21b1b2eec332b7312eb48ce002feb0b7786bed120342cd00",
+    "src/runtime/docx_numbering.ts": "bc975850b2573eeb9aab75e73bdc43793580dd16028159dbe272da567a6ee5e6",
+    "src/runtime/docx_table.ts": "3c65fbe03c723393e4d34d35005f32e0e85687ec5a280fe8a443e123a9565ce2",
+    "src/runtime/docx_images.ts": "4c44858caf1f0385726925754911b42e1491e0786834ab64fcd7b1e6937a28e7",
+    "src/runtime/docx_decode.ts": "3e3deef54779ae2184976b0424a2f36b9ea098c0ab301da31a0c21cd46fcc5e6",
+    "src/runtime/docx_source_position.ts": "5992c08c69ffe667f5d852d298f0044171693371fb32ab0c91e59df821e491ce",
+    "src/runtime/docx_validation.ts": "08ff0bcb2f5f0a6f236d7cbd74bfb33d7a5fcd319e669f0f02a01eb6874b8bea",
+    "src/runtime/docx_preview.ts": "b9b912a1d69e99731eb7ec5f5efb9ddcaa02b96d22bd0c945b741f8cf1fef9e7",
+    "src/runtime/image_bytes.ts": "bcf55418941f8b69842bd1c86074363ee646c62c27c4d07c4ece74e396e36b34",
+    "src/workers/docx_preview.worker.ts": "190a24f1667d539e5c720e7b46298d4dcd4c86755108f5ea48794c1e8e8934b3",
+    "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/worker.html": "9d9180687e252f451e72713bd5d379a29587ee9cbb765364a7fc41478ff8f77d",
+    "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/captures.json": "d12d70281746afbcca5e2bd0831b81d4397df76267cd8690bf5811fdd2023ac2",
+    "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/oracle-supplement.json": "58e8578c486539d63f06fa175c25eae8539ea870eec4c53b43d0c5eb6b373b22"
+  },
+  "sourceUnchanged": true,
+  "errors": [],
+  "blocked": [],
+  "result": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "01-unicode-lists.docx: exact capture identity preserved",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,0]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,0]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,1]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,1]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,2]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,2]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,3]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,3]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,4]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,4]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,5]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,5]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,6]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,6]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,7]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,7]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,8]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,8]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,9]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,9]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,10]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,10]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,11]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,11]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,12]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,12]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,13]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,13]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: actual output resolves original XML [\"word/document.xml\",[0,14]]",
+        "pass": true
+      },
+      {
+        "name": "01-unicode-lists.docx: visible literal matches [\"word/document.xml\",[0,14]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: exact capture identity preserved",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,0]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,0]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,2]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,2,2,0,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,2,2,0,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,2,2,1,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,2,2,1,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,2,3,0,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,2,3,0,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,2,3,1,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,2,3,1,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,2,3,2,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,2,3,2,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,2,4,1,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,2,4,1,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,2,4,2,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,2,4,2,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,2,5,0,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,2,5,0,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,2,5,1,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,2,5,1,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,2,5,2,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,2,5,2,1]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,3]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,3]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,4]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,4]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,5]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,5]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,6]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,6]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,7]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,7]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/document.xml\",[0,8]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/document.xml\",[0,8]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/header1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/header1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: actual output resolves original XML [\"word/footer1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "02-table-images-stories.docx: visible literal matches [\"word/footer1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: exact capture identity preserved",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,0]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,0]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,1]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,1]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,2]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,2]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,3]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,3]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,4]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,4]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,5]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,5]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,6]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,6]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,7]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,7]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,8]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,8]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,9]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,9]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,10]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,10]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,11]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,11]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,12]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,12]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,13]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,13]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,14]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,14]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,15]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,15]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,16]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,16]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,17]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,17]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,18]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,18]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,19]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,19]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,20]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,20]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,21]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,21]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,22]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,22]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,23]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,23]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,24]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,24]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,25]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,25]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,26]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,26]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,27]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,27]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,28]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,28]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,29]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,29]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,30]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,30]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,31]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,31]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,32]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,32]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,33]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,33]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,34]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,34]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/document.xml\",[0,35]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/document.xml\",[0,35]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/header1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/header1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/footer1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/footer1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/header2.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/header2.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: actual output resolves original XML [\"word/footer2.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "03-sections.docx: visible literal matches [\"word/footer2.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "07-header-footer-footnote.docx: exact capture identity preserved",
+        "pass": true
+      },
+      {
+        "name": "07-header-footer-footnote.docx: actual output resolves original XML [\"word/document.xml\",[0,0]]",
+        "pass": true
+      },
+      {
+        "name": "07-header-footer-footnote.docx: visible literal matches [\"word/document.xml\",[0,0]]",
+        "pass": true
+      },
+      {
+        "name": "07-header-footer-footnote.docx: actual output resolves original XML [\"word/footnotes.xml\",[2,0]]",
+        "pass": true
+      },
+      {
+        "name": "07-header-footer-footnote.docx: visible literal matches [\"word/footnotes.xml\",[2,0]]",
+        "pass": true
+      },
+      {
+        "name": "07-header-footer-footnote.docx: actual output resolves original XML [\"word/header1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "07-header-footer-footnote.docx: visible literal matches [\"word/header1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "07-header-footer-footnote.docx: actual output resolves original XML [\"word/footer1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "07-header-footer-footnote.docx: visible literal matches [\"word/footer1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "16-alternate-content.docx: exact capture identity preserved",
+        "pass": true
+      },
+      {
+        "name": "16-alternate-content.docx: actual output resolves original XML [\"word/document.xml\",[0,0,1,0]]",
+        "pass": true
+      },
+      {
+        "name": "16-alternate-content.docx: visible literal matches [\"word/document.xml\",[0,0,1,0]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: exact capture identity preserved",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: actual output resolves original XML [\"word/document.xml\",[0,0]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: visible literal matches [\"word/document.xml\",[0,0]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: actual output resolves original XML [\"word/document.xml\",[0,1]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: visible literal matches [\"word/document.xml\",[0,1]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: actual output resolves original XML [\"word/document.xml\",[0,2]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: visible literal matches [\"word/document.xml\",[0,2]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: actual output resolves original XML [\"word/document.xml\",[0,3]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: visible literal matches [\"word/document.xml\",[0,3]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: actual output resolves original XML [\"word/document.xml\",[0,4]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: visible literal matches [\"word/document.xml\",[0,4]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: actual output resolves original XML [\"word/document.xml\",[0,5]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: actual output resolves original XML [\"word/document.xml\",[0,5,2,0,1]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: visible literal matches [\"word/document.xml\",[0,5,2,0,1]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: actual output resolves original XML [\"word/document.xml\",[0,5,2,1,1]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: visible literal matches [\"word/document.xml\",[0,5,2,1,1]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: actual output resolves original XML [\"word/document.xml\",[0,6]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: visible literal matches [\"word/document.xml\",[0,6]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: actual output resolves original XML [\"word/header1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: visible literal matches [\"word/header1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: actual output resolves original XML [\"word/footer1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "repeated-locations.docx: visible literal matches [\"word/footer1.xml\",[0]]",
+        "pass": true
+      },
+      {
+        "name": "six repeated strings remain six source coordinates",
+        "pass": true
+      },
+      {
+        "name": "supported-choice-markers.docx: exact capture identity preserved",
+        "pass": true
+      },
+      {
+        "name": "supported-choice-markers.docx: actual output resolves original XML [\"word/document.xml\",[0,1,0,0]]",
+        "pass": true
+      },
+      {
+        "name": "supported-choice-markers.docx: visible literal matches [\"word/document.xml\",[0,1,0,0]]",
+        "pass": true
+      },
+      {
+        "name": "supported-choice-markers.docx: actual output resolves original XML [\"word/document.xml\",[0,3]]",
+        "pass": true
+      },
+      {
+        "name": "supported-choice-markers.docx: visible literal matches [\"word/document.xml\",[0,3]]",
+        "pass": true
+      },
+      {
+        "name": "supported Choice original wrapper paths only",
+        "pass": true
+      },
+      {
+        "name": "nested MC explicitly unsupported by actual Worker",
+        "pass": true
+      },
+      {
+        "name": "hidden-notice-boundaries.docx: exact capture identity preserved",
+        "pass": true
+      },
+      {
+        "name": "hidden-notice-boundaries.docx: actual output resolves original XML [\"word/document.xml\",[0,1]]",
+        "pass": true
+      },
+      {
+        "name": "hidden-notice-boundaries.docx: actual output resolves original XML [\"word/document.xml\",[0,2]]",
+        "pass": true
+      },
+      {
+        "name": "hidden-notice-boundaries.docx: actual output resolves original XML [\"word/document.xml\",[0,3]]",
+        "pass": true
+      },
+      {
+        "name": "hidden-notice-boundaries.docx: standalone notice has no source",
+        "pass": true
+      },
+      {
+        "name": "hidden-notice-boundaries.docx: actual output resolves original XML [\"word/document.xml\",[0,5]]",
+        "pass": true
+      },
+      {
+        "name": "hidden-notice-boundaries.docx: actual output resolves original XML [\"word/document.xml\",[0,6]]",
+        "pass": true
+      },
+      {
+        "name": "hidden and omitted original strings do not leak",
+        "pass": true
+      },
+      {
+        "name": "partial warning remains explicit",
+        "pass": true
+      },
+      {
+        "name": "hidden-only and empty paragraphs remain distinct",
+        "pass": true
+      },
+      {
+        "name": "standalone omitted content is a notice without source",
+        "pass": true
+      },
+      {
+        "name": "zero native IPC calls",
+        "pass": true
+      }
+    ],
+    "samples": [
+      {
+        "name": "01-unicode-lists.docx",
+        "status": "ready",
+        "originalStructuralNodes": 15,
+        "actualSourceBlocks": 15,
+        "imagesDecoded": 0
+      },
+      {
+        "name": "02-table-images-stories.docx",
+        "status": "ready",
+        "originalStructuralNodes": 22,
+        "actualSourceBlocks": 21,
+        "imagesDecoded": 2
+      },
+      {
+        "name": "03-sections.docx",
+        "status": "ready",
+        "originalStructuralNodes": 40,
+        "actualSourceBlocks": 40,
+        "imagesDecoded": 0
+      },
+      {
+        "name": "07-header-footer-footnote.docx",
+        "status": "ready",
+        "originalStructuralNodes": 6,
+        "actualSourceBlocks": 4,
+        "imagesDecoded": 0
+      },
+      {
+        "name": "16-alternate-content.docx",
+        "status": "ready",
+        "originalStructuralNodes": 2,
+        "actualSourceBlocks": 1,
+        "imagesDecoded": 0
+      },
+      {
+        "name": "repeated-locations.docx",
+        "status": "ready",
+        "originalStructuralNodes": 11,
+        "actualSourceBlocks": 11,
+        "imagesDecoded": 0
+      },
+      {
+        "name": "supported-choice-markers.docx",
+        "status": "ready",
+        "originalStructuralNodes": 3,
+        "actualSourceBlocks": 2,
+        "imagesDecoded": 0
+      },
+      {
+        "name": "nested-choice-fallback.docx",
+        "status": "unsupported",
+        "actualSourceBlocks": 0
+      },
+      {
+        "name": "hidden-notice-boundaries.docx",
+        "status": "ready",
+        "originalStructuralNodes": 6,
+        "actualSourceBlocks": 5,
+        "imagesDecoded": 0
+      }
+    ],
+    "boundary": "Actual production Worker/readDocxPreview with controlled captured ZIP bytes; no native capture or UI eligibility proof."
+  },
+  "passed": true
+}

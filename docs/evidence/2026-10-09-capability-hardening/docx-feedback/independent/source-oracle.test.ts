@@ -1,0 +1,182 @@
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+import { parseDocx } from "../../../../../src/runtime/docx_parse";
+import { checkedDocxDocument } from "../../../../../src/runtime/docx_validation";
+import type {
+  DocxBlock,
+  DocxCapture,
+  DocxDocument,
+} from "../../../../../src/runtime/docx_types";
+
+const base = "docs/evidence/2026-10-09-capability-hardening/docx-feedback/";
+const captures: Record<string, DocxCapture> = JSON.parse(
+  readFileSync(base + "independent/captures.json", "utf8"),
+);
+interface Target {
+  part: string;
+  elementPath: number[];
+  blockKind: "paragraph" | "table";
+  text: string;
+}
+const oracle: {
+  fixtures: { file: string; targets: Target[] }[];
+} = JSON.parse(readFileSync(base + "fixtures/oracle.json", "utf8"));
+function all(document: DocxDocument) {
+  const out: DocxBlock[] = [];
+  function walk(items: DocxBlock[]) {
+    for (const block of items) {
+      out.push(block);
+      if (block.kind === "table")
+        for (const row of block.rows)
+          for (const cell of row.cells) walk(cell.blocks);
+    }
+  }
+  walk(document.blocks);
+  for (const story of document.stories) walk(story.blocks);
+  return out;
+}
+function key(part: string, path: readonly number[]) {
+  return JSON.stringify([part, path]);
+}
+function checked(name: string) {
+  const capture = captures[name];
+  const parsed = parseDocx(capture);
+  return checkedDocxDocument(
+    structuredClone(parsed),
+    new Set(capture.parts.map((part) => part.name)),
+  );
+}
+
+describe("independent original ZIP source-location oracle", () => {
+  for (const sample of oracle.fixtures) {
+    const name = sample.file.split("/").at(-1)!;
+    it(`${name}: every actual output resolves to the original structural node`, () => {
+      const parsed = checked(name);
+      const expected = new Map(
+        sample.targets.map((t) => [key(t.part, t.elementPath), t]),
+      );
+      const seen = new Set<string>();
+      for (const block of all(parsed)) {
+        if (block.kind === "notice") {
+          expect(block).not.toHaveProperty("source");
+          continue;
+        }
+        const k = key(block.source.part, block.source.elementPath);
+        const target = expected.get(k);
+        expect(target, k).toBeDefined();
+        expect(target!.blockKind).toBe(block.kind);
+        expect(seen.has(k)).toBe(false);
+        seen.add(k);
+        if (block.kind === "paragraph")
+          expect(
+            block.runs
+              .flatMap((r) => (r.kind === "text" ? [r.text] : []))
+              .join(""),
+          ).toBe(
+            // Original XML contains w:footnoteReference id=1 after its text.
+            // The structural oracle deliberately stores only literal w:t.
+            name === "07-header-footer-footnote.docx" &&
+              k === key("word/document.xml", [0, 0])
+              ? "BODY with footnote[1]"
+              : target!.text,
+          );
+      }
+      expect(seen.size).toBeGreaterThan(0);
+      console.log(
+        JSON.stringify({
+          name,
+          structuralNodes: sample.targets.length,
+          actualSourceBlocks: seen.size,
+        }),
+      );
+    });
+  }
+
+  it("six equal strings remain six distinct body/cell/header/footer nodes", () => {
+    const parsed = checked("repeated-locations.docx");
+    const locations = all(parsed)
+      .flatMap((block) =>
+        block.kind === "paragraph" &&
+        block.runs
+          .flatMap((r) => (r.kind === "text" ? [r.text] : []))
+          .join("") === "DUPLICATE 0 false cafe"
+          ? [key(block.source.part, block.source.elementPath)]
+          : [],
+      )
+      .sort();
+    expect(locations).toEqual(
+      [
+        key("word/document.xml", [0, 1]),
+        key("word/document.xml", [0, 3]),
+        key("word/document.xml", [0, 5, 2, 0, 1]),
+        key("word/document.xml", [0, 5, 2, 1, 1]),
+        key("word/header1.xml", [0]),
+        key("word/footer1.xml", [0]),
+      ].sort(),
+    );
+  });
+
+  it("supported Choice keeps wrapper and original marker indices", () => {
+    const parsed = checked("supported-choice-markers.docx");
+    const blocks = all(parsed);
+    expect(
+      blocks.map((block) => (block.kind === "notice" ? null : block.source)),
+    ).toEqual([
+      { part: "word/document.xml", elementPath: [0, 1, 0, 0] },
+      { part: "word/document.xml", elementPath: [0, 3] },
+    ]);
+    expect(JSON.stringify(parsed)).toContain("CHOICE VISIBLE 同文");
+    expect(JSON.stringify(parsed)).not.toContain("FALLBACK MUST NOT DISPLAY");
+  });
+
+  it("nested MC remains explicitly unsupported, not flattened or partially accepted", () => {
+    expect(() =>
+      parseDocx(captures["nested-choice-fallback.docx"]),
+    ).toThrowError(expect.objectContaining({ code: "unsupported" }));
+  });
+
+  it("hidden and omitted content retains notices without leaking original text or inventing source", () => {
+    const parsed = checked("hidden-notice-boundaries.docx");
+    expect(parsed.partial).toBe(true);
+    expect(parsed.blocks.map((b) => b.kind)).toEqual([
+      "paragraph",
+      "paragraph",
+      "paragraph",
+      "notice",
+      "paragraph",
+      "paragraph",
+    ]);
+    expect(
+      parsed.blocks.flatMap((b) =>
+        b.kind === "notice" ? [] : [b.source.elementPath],
+      ),
+    ).toEqual([
+      [0, 1],
+      [0, 2],
+      [0, 3],
+      [0, 5],
+      [0, 6],
+    ]);
+    expect(parsed.blocks[3]).not.toHaveProperty("source");
+    for (const hidden of [
+      "HIDDEN ONLY MUST NOT LEAK",
+      "MIXED HIDDEN MUST NOT LEAK",
+      "OMITTED CONTENT MUST NOT LEAK",
+    ])
+      expect(JSON.stringify(parsed)).not.toContain(hidden);
+    expect(parsed.blocks[0]).toMatchObject({
+      runs: [{ kind: "notice", code: "hiddenContent" }],
+    });
+    expect(parsed.blocks[1]).toMatchObject({ runs: [] });
+    expect(parsed.blocks[2]).toMatchObject({
+      runs: [
+        { kind: "text", text: "VISIBLE BEFORE " },
+        { kind: "notice", code: "hiddenContent" },
+        { kind: "text", text: " VISIBLE AFTER" },
+      ],
+    });
+    expect(parsed.blocks[4]).toMatchObject({
+      runs: [{ kind: "notice", code: "missingFieldResult" }],
+    });
+  });
+});

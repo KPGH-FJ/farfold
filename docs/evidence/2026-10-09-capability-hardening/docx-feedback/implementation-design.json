@@ -1,0 +1,150 @@
+{
+  "recordedAtUtc": "2026-10-09T23:52:15.529239+00:00",
+  "kind": "只读实施设计；不是活动计划、源码授权或功能完成证明",
+  "productionChanged": false,
+  "dependencies": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/text-feedback/next-office-api-review.json",
+      "sha256": "1ad8eb19f368ea94540e99144c09f775d78cbf3f4f7b66ed319ebabffaeada20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/receipt.json",
+      "sha256": "a5f3b7122d7ffe2d3569a120e85a57bcb48561a8e687f3ba72ae513908c97815"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/oracle.json",
+      "sha256": "d42d305a9c51d98ba93554206b2857a099d44ee3020676be76e7267990e47be7"
+    }
+  ],
+  "minimumSlice": "当前实际显示区域内的完整源段落或整表；正文、页眉页脚、已支持脚注/尾注区域使用真实 part 与 XML element-child path。分片段落/裁切表格仍明确针对整个源块，不提供 Word 页码、任意文字/run/表格单元格范围。",
+  "schema": {
+    "parsedBlock": "DocxParagraph/DocxTable 必填 source:{part:string;elementPath:readonly number[]}；DocxBlock notice 禁止 source。block-N/story-N 仅保留为现有显示标识。",
+    "savedAnchor": "{kind:\"docx-block\",part:string,elementPath:readonly number[],blockKind:\"paragraph\"|\"table\"}；不保存正文、显示序号或就绪标志。",
+    "factory": "createDocumentFeedbackSource({preview,block,expectedFile}) → DocumentFeedbackSource|null；检查 exact 已成功 DocxPreview/实际嵌套 block 引用/七字段文件身份，WeakMap 只持当前内存引用。",
+    "sharedCallbacks": "扩展现有 office_feedback_target 的关联 discriminated union；onOfficeTargetAvailability 与 onOfficeTargetConfirm 共用，source/anchor 类型必须成对，retire 不可逆。"
+  },
+  "implementationOrder": [
+    {
+      "step": 1,
+      "owner": "product_coverage，待 root 明确解冻",
+      "files": [
+        "docx_source_position.ts + 专项（新）",
+        "docx_package.ts",
+        "docx_types.ts",
+        "docx_parse.ts",
+        "docx_table.ts"
+      ],
+      "work": "在 cached part 原树首次需要坐标时建立节点→parent/index 的 WeakMap；只为输出段落/整表回溯复制路径。parseDocxTable 构造结果必须同步接 source，不能只改 parse.ts。"
+    },
+    {
+      "step": 2,
+      "owner": "product_coverage",
+      "files": [
+        "docx_validation.ts",
+        "docx_preview.ts",
+        "docx_source_wire.test.ts（新）",
+        "相关现有 docx 测试样本类型"
+      ],
+      "work": "Worker 回执闭合校验 source，readDocxPreview 传当前真实 capture.parts 名称集合；原取消、超时、版本与 owner 保护不降级。旧手造测试对象显式补合成 source，不为兼容测试放宽生产必填。"
+    },
+    {
+      "step": 3,
+      "owner": "architecture，与 root 最终确认",
+      "files": [
+        "docx_feedback_target.ts + 测试（新）",
+        "office_feedback_target.ts",
+        "file_feedback_anchor.ts",
+        "feedback_strings.ts",
+        "冷解析/formatter/草稿专项"
+      ],
+      "work": "source 真正随 parser 回执可用后才接 DOCX anchor、合法冷恢复和 live 工厂；旧 PDF/图片/文本/XLSX 严格解析保持。"
+    },
+    {
+      "step": 4,
+      "owner": "product_coverage，DTO 冻结后由 root 下发",
+      "files": [
+        "DocxFilePreview.tsx",
+        "DocxDocumentView.tsx",
+        "document_strings.ts",
+        "对应反馈组件专项"
+      ],
+      "work": "沿当前 block 控件显式选择/确认，当前块 mount/setup 内登记，StrictMode 重放新建 source。段落片段、故事、表格窗口、隐藏/重读/取消切换先退休；只选中不更换意见。"
+    },
+    {
+      "step": 5,
+      "owner": "root + verification",
+      "files": [
+        "OpenedFileView 父层/意见回归由 root",
+        "独立 oracle/真实 Worker/完整 App 双引擎由 verification"
+      ],
+      "work": "父层 exact file/thread/source/ready/active/pending 守卫和旧稿保留；刷新采用独立 interactionBlocked，不以 active=false 撤销自己的 staging。最终另验已安装应用。"
+    }
+  ],
+  "coordinateRules": [
+    "part root=[]；每一级按原 XML element children 的零基序号，忽略的是文本/注释节点，不能移除 pPr/tblPr 等属性元素、标记或 wrapper 后重新编号。",
+    "compatible() 当前返回 Choice/Fallback 的原 children，因此路径必须保留 AlternateContent 和已选分支祖先；未选分支不会因 oracle 存在而成为可见候选。",
+    "页眉页脚、footnote/endnote 保留各 part 与源容器序号；关系/故事列表顺序和 noteId 不替代路径。",
+    "当前表格过滤仍保留原节点身份；被合并规则消去的 continuation 段落不因 oracle 存在而强行生成目标。",
+    "closed validation 核 part 合法格式、真实 capture 名称成员、整数路径和原 depth/nodes 上限；聚合路径索引及 part 标签字节也有明确预算，不能为每个原始节点复制全路径。",
+    "这些校验是形状/成员检查，不是主线程再次解析 XML 的独立证明；原树推导用独立 literal oracle 和真实 Worker 对照验证。"
+  ],
+  "tests": [
+    "现96个结构坐标 oracle 是对照素材，不是96个应当渲染/可提意见的目标；重复正文/单元格/页眉脚以独立 part/path 区分。",
+    "固定 wrapper fallback [0,0,1,0]、未选 Choice [0,0,0,0,0]、note id1 [2,0]；补 supported Choice/嵌套兼容节点和忽略 marker 的小型单测，不改已冻结原 ZIP。",
+    "外来节点/错误 part/越界、分数、过深和过预算路径；extra 字段、source 缺失、notice 携 source；Worker ready 拒绝异常，不渲染半通过结果。",
+    "长段分片、整表裁切/嵌套、重复文字与不同 stories；直接 notice 不提供目标。段内 omission notice 仍保原有缺失提示，不暴露隐藏正文；仅 notice/全隐藏段的候选资格须在实现时精确测试。",
+    "换故事/片段/表窗口、hide/retry/刷新、同路径换版、过期 click、StrictMode、blocked/unblock：旧 source 永久退休，新候选不自动改稿。",
+    "真实普通 writer 成功预览/精确目标、键盘与指针确认、草稿失败保护/冷恢复/take；完整 App 局部滚动和自动刷新无循环分别实测。"
+  ],
+  "nonChanges": [
+    "无需 Rust/IPC 或新读取权限；现 VerifiedFile DOCX capture 足够。",
+    "不新增依赖、内容账本、自动发送、Agent能力或远程资源。",
+    "不改现有 fixture/oracle/冻结 evidence；此文件只新增设计记录。"
+  ],
+  "sourceCheckpoint": [
+    {
+      "path": "src/runtime/docx_types.ts",
+      "sha256": "16bea742e8cff97150ecbe98c7403df03ef93d125172bdcb0a67b140b0934c24"
+    },
+    {
+      "path": "src/runtime/docx_package.ts",
+      "sha256": "d05f6baced64a5bd8d60a96f2155a768866653d44f5e66744bcc08e1751d69e9"
+    },
+    {
+      "path": "src/runtime/docx_xml.ts",
+      "sha256": "51d974c0c9d657b96efa222062b27f67d27c17c4ebf7eecf5353b9608b764cd9"
+    },
+    {
+      "path": "src/runtime/docx_parse.ts",
+      "sha256": "55a34ca12f9bade4fa1199a530e30498ce383ba73032cf73abfbfa4af8853cd4"
+    },
+    {
+      "path": "src/runtime/docx_table.ts",
+      "sha256": "2db9eacc788acda33d54fb6a76afad00d7de33674e1d429a9a358218e06db62e"
+    },
+    {
+      "path": "src/runtime/docx_validation.ts",
+      "sha256": "6f4b3f1ea92bcf14f57c8fea573cbb6f1d73af15a1341ea54a7ee855a877d598"
+    },
+    {
+      "path": "src/runtime/docx_preview.ts",
+      "sha256": "61f8fa651241a8193b7697c5c902ad6a4d9d15bd26ae648ac96be962fbbd445d"
+    },
+    {
+      "path": "src/workers/docx_preview.worker.ts",
+      "sha256": "190a24f1667d539e5c720e7b46298d4dcd4c86755108f5ea48794c1e8e8934b3"
+    },
+    {
+      "path": "src/components/DocxFilePreview.tsx",
+      "sha256": "5df10bbe06a6aa08da75107d90c216c423839c2424dd80782a1a703d37fabc3f"
+    },
+    {
+      "path": "src/components/DocxDocumentView.tsx",
+      "sha256": "48d9d9582bd9c4d9580698c098d64d517475a571f4b8068ed4c2d06a150a33e9"
+    },
+    {
+      "path": "src/runtime/office_feedback_target.ts",
+      "sha256": "f170eea47a4f60419f9ddb3cece6ede46866658366238c2abcf6f16b4c0b4532"
+    }
+  ]
+}

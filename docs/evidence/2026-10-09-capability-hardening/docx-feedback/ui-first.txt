@@ -1,0 +1,60 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/DocxFilePreview.feedback.test.tsx (16 tests | 1 failed) 161ms
+   × prepared invalidates old callbacks 9ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > prepared invalidates old callbacks
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "anchor": Object {
+          "blockKind": "paragraph",
+          "elementPath": Array [
+            0,
+            1,
+          ],
+          "kind": "docx-block",
+          "part": "word/document.xml",
+        },
+        "source": Object {
+          "file": Object {
+            "name": "positions.docx",
+            "path": "/work/positions.docx",
+            "resolvedPath": "/work/positions.docx",
+            "root": "/work",
+            "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "size": 100,
+            "version": "one",
+          },
+          "kind": "docx",
+        },
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:257:62
+    255|  else if(change==="version") props={...props,file:{...file,version:"tw…
+    256|  else props={...props,prepared:{kind:"docx",file,value:document()}};
+    257|  view(); click(old); expect(props.onOfficeTargetConfirm).not.toHaveBee…
+       |                                                              ^
+    258|  expect(props.onOfficeTargetAvailability.mock.lastCall?.[0].available)…
+    259| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 passed (16)
+   Start at  08:35:55
+   Duration  324ms (transform 75ms, setup 0ms, import 106ms, tests 161ms, environment 0ms)
+

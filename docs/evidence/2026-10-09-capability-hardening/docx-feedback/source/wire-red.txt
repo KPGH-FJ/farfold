@@ -1,0 +1,204 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_source_wire.test.ts (23 tests | 11 failed) 335ms
+     × docs/evidence/2026-10-09-capability-hardening/docx-compatibility/01-unicode-lists.docx 92ms
+     × docs/evidence/2026-10-09-capability-hardening/docx-compatibility/02-table-images-stories.docx 65ms
+     × docs/evidence/2026-10-09-capability-hardening/docx-compatibility/03-sections.docx 51ms
+     × docs/evidence/2026-10-09-capability-hardening/docx-fixtures/07-header-footer-footnote.docx 2ms
+     × docs/evidence/2026-10-09-capability-hardening/docx-fixtures/16-alternate-content.docx 1ms
+     × docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/repeated-locations.docx 52ms
+     × identical text in six places keeps six independent original coordinates 67ms
+     × keeps chosen fallback wrappers and note separator positions 1ms
+     × does not renumber after original property and inert marker elements 1ms
+     × accepts a supported original coordinate only within the current captured parts 1ms
+     × rejects a missing coordinate instead of accepting a display id 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_source_wire.test.ts > DOCX original XML coordinates, independent ZIP oracle > docs/evidence/2026-10-09-capability-hardening/docx-compatibility/01-unicode-lists.docx
+ FAIL  src/runtime/docx_source_wire.test.ts > DOCX original XML coordinates, independent ZIP oracle > docs/evidence/2026-10-09-capability-hardening/docx-compatibility/02-table-images-stories.docx
+ FAIL  src/runtime/docx_source_wire.test.ts > DOCX original XML coordinates, independent ZIP oracle > docs/evidence/2026-10-09-capability-hardening/docx-compatibility/03-sections.docx
+ FAIL  src/runtime/docx_source_wire.test.ts > DOCX original XML coordinates, independent ZIP oracle > docs/evidence/2026-10-09-capability-hardening/docx-fixtures/07-header-footer-footnote.docx
+ FAIL  src/runtime/docx_source_wire.test.ts > DOCX original XML coordinates, independent ZIP oracle > docs/evidence/2026-10-09-capability-hardening/docx-fixtures/16-alternate-content.docx
+ FAIL  src/runtime/docx_source_wire.test.ts > DOCX original XML coordinates, independent ZIP oracle > docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/repeated-locations.docx
+AssertionError: expected undefined to be defined
+ ❯ src/runtime/docx_source_wire.test.ts:58:31
+     56|       expect(supported.length).toBeGreaterThan(0);
+     57|       for (const block of supported) {
+     58|         expect(source(block)).toBeDefined();
+       |                               ^
+     59|         expect(sample.targets).toContainEqual(
+     60|           expect.objectContaining({ ...source(block), blockKind: block…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  src/runtime/docx_source_wire.test.ts > DOCX original XML coordinates, independent ZIP oracle > identical text in six places keeps six independent original coordinates
+AssertionError: expected [ undefined, undefined, …(4) ] to deeply equal [ { …(2) }, { …(2) }, { …(2) }, …(3) ]
+
+- Expected
++ Received
+
+  [
+-   {
+-     "elementPath": [
+-       0,
+-       1,
+-     ],
+-     "part": "word/document.xml",
+-   },
+-   {
+-     "elementPath": [
+-       0,
+-       3,
+-     ],
+-     "part": "word/document.xml",
+-   },
+-   {
+-     "elementPath": [
+-       0,
+-       5,
+-       2,
+-       0,
+-       1,
+-     ],
+-     "part": "word/document.xml",
+-   },
+-   {
+-     "elementPath": [
+-       0,
+-       5,
+-       2,
+-       1,
+-       1,
+-     ],
+-     "part": "word/document.xml",
+-   },
+-   {
+-     "elementPath": [
+-       0,
+-     ],
+-     "part": "word/header1.xml",
+-   },
+-   {
+-     "elementPath": [
+-       0,
+-     ],
+-     "part": "word/footer1.xml",
+-   },
++   undefined,
++   undefined,
++   undefined,
++   undefined,
++   undefined,
++   undefined,
+  ]
+
+ ❯ src/runtime/docx_source_wire.test.ts:82:36
+     80|           .join("") === "DUPLICATE 0 false cafe",
+     81|     );
+     82|     expect(duplicates.map(source)).toEqual([
+       |                                    ^
+     83|       { part: "word/document.xml", elementPath: [0, 1] },
+     84|       { part: "word/document.xml", elementPath: [0, 3] },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  src/runtime/docx_source_wire.test.ts > DOCX original XML coordinates, independent ZIP oracle > keeps chosen fallback wrappers and note separator positions
+AssertionError: expected [ undefined ] to deeply equal [ { part: 'word/document.xml', …(1) } ]
+
+- Expected
++ Received
+
+  [
+-   {
+-     "elementPath": [
+-       0,
+-       0,
+-       1,
+-       0,
+-     ],
+-     "part": "word/document.xml",
+-   },
++   undefined,
+  ]
+
+ ❯ src/runtime/docx_source_wire.test.ts:94:7
+     92|     expect(
+     93|       parseDocx(docxFixture("16-alternate-content")).blocks.map(source…
+     94|     ).toEqual([{ part: "word/document.xml", elementPath: [0, 0, 1, 0] …
+       |       ^
+     95|     const note = parseDocx(
+     96|       docxFixture("07-header-footer-footnote"),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  src/runtime/docx_source_wire.test.ts > DOCX original XML coordinates, independent ZIP oracle > does not renumber after original property and inert marker elements
+AssertionError: expected [ undefined, undefined ] to deeply equal [ { …(2) }, { …(2) } ]
+
+- Expected
++ Received
+
+  [
+-   {
+-     "elementPath": [
+-       0,
+-       1,
+-     ],
+-     "part": "word/document.xml",
+-   },
+-   {
+-     "elementPath": [
+-       0,
+-       3,
+-     ],
+-     "part": "word/document.xml",
+-   },
++   undefined,
++   undefined,
+  ]
+
+ ❯ src/runtime/docx_source_wire.test.ts:109:51
+    107|       ),
+    108|     );
+    109|     expect(parseDocx(changed).blocks.map(source)).toEqual([
+       |                                                   ^
+    110|       { part: "word/document.xml", elementPath: [0, 1] },
+    111|       { part: "word/document.xml", elementPath: [0, 3] },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  src/runtime/docx_source_wire.test.ts > closed DOCX coordinate Worker boundary > accepts a supported original coordinate only within the current captured parts
+Error: invalid
+ ❯ invalid src/runtime/docx_validation.ts:10:9
+      8| type ObjectValue = Record<string, unknown>;
+      9| function invalid(): never {
+     10|   throw new DocxError("invalid");
+       |         ^
+     11| }
+     12| function object(v: unknown, keys: string[]): ObjectValue {
+ ❯ object src/runtime/docx_validation.ts:19:5
+ ❯ blockList src/runtime/docx_validation.ts:186:17
+ ❯ checkedDocxDocument src/runtime/docx_validation.ts:275:3
+ ❯ src/runtime/docx_source_wire.test.ts:147:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  src/runtime/docx_source_wire.test.ts > closed DOCX coordinate Worker boundary > rejects a missing coordinate instead of accepting a display id
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/runtime/docx_source_wire.test.ts:155:7
+    153|     expect(() =>
+    154|       checked({ ...document, blocks: [paragraph] }, allowed),
+    155|     ).toThrow(DocxError);
+       |       ^
+    156|   });
+    157|   it.each([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed | 12 passed (23)
+   Start at  08:22:15
+   Duration  520ms (transform 77ms, setup 0ms, import 106ms, tests 335ms, environment 0ms)
+

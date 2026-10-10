@@ -1,5 +1,6 @@
 import { FILE_DELIVERY_STRINGS as D } from "./file_delivery_strings";
 import { DocxError, type DocxWarningCode } from "./docx_types";
+import type { DocxBlockAnchor } from "./file_feedback_anchor";
 
 export const DOCUMENT_STRINGS = {
   title: "文档预览",
@@ -28,6 +29,17 @@ export const DOCUMENT_STRINGS = {
   paragraphPart: (n: number, total: number) => `长段落第 ${n} / ${total} 部分`,
   paragraphSplit: "长段落分段显示，切换可查看其余内容。",
   table: "表格",
+  selectParagraph: "选择整个段落",
+  selectTable: "选择整个表格",
+  feedbackParagraph: "对此段落提意见",
+  feedbackTable: "对此表格提意见",
+  cancelSelection: "取消选择",
+  feedbackParagraphScope: "意见针对整个原段落，包括分段显示的其余内容。",
+  feedbackTableScope: "意见针对整个原表格，包括当前范围以外的行列。",
+  feedbackTarget: (anchor: DocxBlockAnchor) =>
+    `意见针对当时文档中的${anchor.blockKind === "paragraph" ? "整个段落" : "整个表格"}`,
+  feedbackRetained:
+    "意见保留当时的文档位置和文件版本；查看其他内容不会改变目标，明确提意见才更换。",
   tableRange: (r: number, end: number, c: number, last: number) =>
     `当前显示第 ${r}–${end} 行，第 ${c}–${last} 列`,
   tableScope: "表格按范围显示。单元格较长时显示摘要，可打开完整内容。",

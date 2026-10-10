@@ -458,7 +458,8 @@ it("opens only the inspected DOCX version and refreshes it without handing the f
   expect(h.readText).not.toHaveBeenCalled();
   expect(h.readVisual).not.toHaveBeenCalled();
   expect(h.open).not.toHaveBeenCalled();
-  expect(button(S.feedback)).toBeUndefined();
+  // DOCX opinions become available only after the exact preview reports ready.
+  expect(button(S.feedback)?.props.disabled).toBe(true);
   h.inspectLink.mockResolvedValueOnce({
     ...file,
     version: "v2",

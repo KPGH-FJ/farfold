@@ -1,0 +1,30 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/source-oracle.test.ts (10 tests | 1 failed) 246ms
+     × 07-header-footer-footnote.docx: every actual output resolves to the original structural node 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/source-oracle.test.ts > independent original ZIP source-location oracle > 07-header-footer-footnote.docx: every actual output resolves to the original structural node
+AssertionError: expected 'BODY with footnote[1]' to be 'BODY with footnote' // Object.is equality
+
+Expected: "BODY with footnote"
+Received: "BODY with footnote[1]"
+
+ ❯ docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/source-oracle.test.ts:75:13
+     73|               .flatMap((r) => (r.kind === "text" ? [r.text] : []))
+     74|               .join(""),
+     75|           ).toBe(target!.text);
+       |             ^
+     76|       }
+     77|       expect(seen.size).toBeGreaterThan(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  08:25:52
+   Duration  390ms (transform 62ms, setup 0ms, import 86ms, tests 246ms, environment 0ms)
+

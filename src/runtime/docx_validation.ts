@@ -5,6 +5,7 @@ import {
   type DocxDocument,
 } from "./docx_types";
 import { inspectDocxImage } from "./docx_images";
+import { DocxSourceBudget, isDocxSourcePosition } from "./docx_source_position";
 type ObjectValue = Record<string, unknown>;
 function invalid(): never {
   throw new DocxError("invalid");
@@ -44,7 +45,18 @@ const optional = (v: unknown, check: (v: unknown) => unknown) => {
   if (v !== undefined) check(v);
 };
 /** Validate the closed Worker response vocabulary before it reaches DOM/CSS. */
-export function checkedDocxDocument(value: unknown): DocxDocument {
+export function checkedDocxDocument(
+  value: unknown,
+  capturedParts: ReadonlySet<string>,
+): DocxDocument {
+  if (!(capturedParts instanceof Set) || capturedParts.size > L.entries)
+    invalid();
+  const sourceBudget = new DocxSourceBudget();
+  const source = (value: unknown) => {
+    if (!isDocxSourcePosition(value) || !capturedParts.has(value.part))
+      invalid();
+    sourceBudget.add(value);
+  };
   const d = object(value, [
     "blocks",
     "stories",
@@ -186,6 +198,7 @@ export function checkedDocxDocument(value: unknown): DocxDocument {
       const b = object(item, [
         "kind",
         "id",
+        "source",
         "runs",
         "style",
         "headingLevel",
@@ -196,7 +209,16 @@ export function checkedDocxDocument(value: unknown): DocxDocument {
       ]);
       id(b.id);
       if (b.kind === "paragraph") {
-        object(item, ["kind", "id", "runs", "style", "headingLevel", "list"]);
+        object(item, [
+          "kind",
+          "id",
+          "source",
+          "runs",
+          "style",
+          "headingLevel",
+          "list",
+        ]);
+        source(b.source);
         paragraphStyle(b.style);
         optional(b.headingLevel, (v) => number(v, 1, 9, true));
         if (b.list !== undefined) {
@@ -209,7 +231,8 @@ export function checkedDocxDocument(value: unknown): DocxDocument {
         object(item, ["kind", "id", "code"]);
         choice(b.code, DOCX_WARNING_CODES);
       } else if (b.kind === "table") {
-        object(item, ["kind", "id", "columnsPt", "rows"]);
+        object(item, ["kind", "id", "source", "columnsPt", "rows"]);
+        source(b.source);
         if (depth >= L.tableDepth) invalid();
         const cols = array(b.columnsPt, L.tableColumns);
         if (!cols.length) invalid();

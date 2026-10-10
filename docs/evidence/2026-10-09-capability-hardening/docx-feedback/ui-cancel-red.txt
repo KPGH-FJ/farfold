@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/DocxFilePreview.feedback.test.tsx (23 tests | 2 failed) 222ms
+   × cancel selection withdraws only the candidate and returns focus without clearing a confirmed opinion 7ms
+   × a retired cancel button cannot withdraw another block's newer candidate 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > cancel selection withdraws only the candidate and returns focus without clearing a confirmed opinion
+AssertionError: expected undefined to be defined
+ ❯ click src/components/DocxFilePreview.feedback.test.tsx:214:13
+    212| }
+    213| function click(n: Element | undefined) {
+    214|   expect(n).toBeDefined();
+       |             ^
+    215|   expect(n!.props.disabled).not.toBe(true);
+    216|   (n!.props.onClick as () => void)();
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:527:2
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > a retired cancel button cannot withdraw another block's newer candidate
+AssertionError: expected undefined to be defined
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:538:20
+    536| it("a retired cancel button cannot withdraw another block's newer cand…
+    537|  await ready(); const chosen=select(); const oldCancel=buttons(chosen,…
+    538|  expect(oldCancel).toBeDefined();
+       |                    ^
+    539|  const next=select(selectParagraph,1); const source=props.onOfficeTarg…
+    540|  click(oldCancel);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 21 passed (23)
+   Start at  08:40:33
+   Duration  447ms (transform 106ms, setup 0ms, import 153ms, tests 222ms, environment 0ms)
+

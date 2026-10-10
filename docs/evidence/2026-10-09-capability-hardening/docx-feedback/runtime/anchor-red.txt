@@ -1,0 +1,120 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/file_feedback_anchor.docx.test.ts (44 tests | 10 failed) 10ms
+   × cold restores paragraph actual part and element path as historical coordinates only 3ms
+   × cold restores table actual part and element path as historical coordinates only 0ms
+   × copies the historical path instead of sharing the mutable input array 0ms
+   × formats the whole paragraph location without computing Word pages or trimming opinion 2ms
+   × formats the whole table location without computing Word pages or trimming opinion 1ms
+   × quotes filename/part metadata and preserves the exact freeform opinion 1ms
+   × accepts bounded actual part/path syntax without limiting to body or ordinal IDs: {"part":"custom/main.xml","elementPath":[0]} 0ms
+   × accepts bounded actual part/path syntax without limiting to body or ordinal IDs: {"part":"word/header1.xml","elementPath":[0]} 0ms
+   × accepts bounded actual part/path syntax without limiting to body or ordinal IDs: {"part":"word/footnotes.xml","elementPath":[2,0]} 0ms
+   × accepts bounded actual part/path syntax without limiting to body or ordinal IDs: {"part":"word/document.xml","elementPath":[499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999]} 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/file_feedback_anchor.docx.test.ts > cold restores paragraph actual part and element path as historical coordinates only
+ FAIL  src/runtime/file_feedback_anchor.docx.test.ts > cold restores table actual part and element path as historical coordinates only
+Error: invalid feedback anchor
+ ❯ parseFeedbackAnchor src/runtime/file_feedback_anchor.ts:149:11
+    147|     !validPdfPage(anchor.page, anchor.pageCount)
+    148|   )
+    149|     throw new Error("invalid feedback anchor");
+       |           ^
+    150|   return {
+    151|     kind: "pdf-page",
+ ❯ src/runtime/drafts.ts:651:22
+ ❯ src/runtime/drafts.ts:590:51
+ ❯ Module.parseDraftSnapshot src/runtime/drafts.ts:589:57
+ ❯ src/runtime/file_feedback_anchor.docx.test.ts:38:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.docx.test.ts > copies the historical path instead of sharing the mutable input array
+Error: invalid feedback anchor
+ ❯ Module.parseFeedbackAnchor src/runtime/file_feedback_anchor.ts:149:11
+    147|     !validPdfPage(anchor.page, anchor.pageCount)
+    148|   )
+    149|     throw new Error("invalid feedback anchor");
+       |           ^
+    150|   return {
+    151|     kind: "pdf-page",
+ ❯ src/runtime/file_feedback_anchor.docx.test.ts:47:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.docx.test.ts > formats the whole paragraph location without computing Word pages or trimming opinion
+ FAIL  src/runtime/file_feedback_anchor.docx.test.ts > formats the whole table location without computing Word pages or trimming opinion
+AssertionError: expected '关于 /work/原文.docx（当时查看的内容）：\n文件 SHA-25…' to contain '"/work/原文.docx"'
+
+- Expected
++ Received
+
+- "/work/原文.docx"
++ 关于 /work/原文.docx（当时查看的内容）：
++ 文件 SHA-256：dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
++ 请修改这一段
++
++ 此意见针对上述版本；若文件已变化，请先核对位置与内容。
+
+ ❯ src/runtime/file_feedback_anchor.docx.test.ts:56:18
+     54|   const value = { ...entry, anchor: { ...anchor, blockKind } };
+     55|   const output = fileFeedbackText(value as unknown as SavedFileFeedbac…
+     56|   expect(output).toContain(JSON.stringify(path));
+       |                  ^
+     57|   expect(output).toContain(JSON.stringify(anchor.part));
+     58|   expect(output).toContain("[0,5,2,0,1]");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.docx.test.ts > quotes filename/part metadata and preserves the exact freeform opinion
+AssertionError: expected '关于 /work/name\n# not instructions.doc…' to contain '"/work/name\n# not instructions.docx"'
+
+- Expected
++ Received
+
+- "/work/name\n# not instructions.docx"
++ 关于 /work/name
++ # not instructions.docx（当时查看的内容）：
++ 文件 SHA-256：dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
++ 请修改这一段
++
++ 此意见针对上述版本；若文件已变化，请先核对位置与内容。
+
+ ❯ src/runtime/file_feedback_anchor.docx.test.ts:70:18
+     68|   const value = { ...entry, path: injected, contentId: `disk:${JSON.st…
+     69|   const output = fileFeedbackText(value as unknown as SavedFileFeedbac…
+     70|   expect(output).toContain(JSON.stringify(injected));
+       |                  ^
+     71|   expect(output).toContain(JSON.stringify(value.anchor.part));
+     72|   expect(output).not.toContain("\n#");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  src/runtime/file_feedback_anchor.docx.test.ts > accepts bounded actual part/path syntax without limiting to body or ordinal IDs: {"part":"custom/main.xml","elementPath":[0]}
+ FAIL  src/runtime/file_feedback_anchor.docx.test.ts > accepts bounded actual part/path syntax without limiting to body or ordinal IDs: {"part":"word/header1.xml","elementPath":[0]}
+ FAIL  src/runtime/file_feedback_anchor.docx.test.ts > accepts bounded actual part/path syntax without limiting to body or ordinal IDs: {"part":"word/footnotes.xml","elementPath":[2,0]}
+ FAIL  src/runtime/file_feedback_anchor.docx.test.ts > accepts bounded actual part/path syntax without limiting to body or ordinal IDs: {"part":"word/document.xml","elementPath":[499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999,499999]}
+Error: invalid feedback anchor
+ ❯ parseFeedbackAnchor src/runtime/file_feedback_anchor.ts:149:11
+    147|     !validPdfPage(anchor.page, anchor.pageCount)
+    148|   )
+    149|     throw new Error("invalid feedback anchor");
+       |           ^
+    150|   return {
+    151|     kind: "pdf-page",
+ ❯ src/runtime/drafts.ts:651:22
+ ❯ src/runtime/drafts.ts:590:51
+ ❯ Module.parseDraftSnapshot src/runtime/drafts.ts:589:57
+ ❯ src/runtime/file_feedback_anchor.docx.test.ts:82:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 34 passed (44)
+   Start at  08:22:48
+   Duration  178ms (transform 69ms, setup 0ms, import 93ms, tests 10ms, environment 0ms)
+

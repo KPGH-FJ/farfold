@@ -15,13 +15,13 @@ const source = JSON.parse(
 describe("unchanged maintainer-published DOCX samples", () => {
   for (const sample of source.files)
     it(sample.file, () => {
+      const capture = docxFixture(
+        sample.file.replace(/\.docx$/, ""),
+        "docx/public-samples",
+      );
       const result = checkedDocxDocument(
-        parseDocx(
-          docxFixture(
-            sample.file.replace(/\.docx$/, ""),
-            "docx/public-samples",
-          ),
-        ),
+        parseDocx(capture),
+        new Set(capture.parts.map((p) => p.name)),
       );
       for (const text of sample.sourceTextNodes)
         expect(JSON.stringify(result.blocks)).toContain(text);

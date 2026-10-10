@@ -1,0 +1,13 @@
+Owned DOCX position Vite PID 46080
+8:28:38 AM [vite] (client) dependency optimized: saxes
+8:31:11 AM [vite] (client) page reload docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/index.html
+8:39:02 AM [vite] (client) dependencies optimized: @phosphor-icons/react, @tauri-apps/api/app, @tauri-apps/api/event, @tauri-apps/api/webview, @tauri-apps/plugin-dialog, @tauri-apps/plugin-opener, @xterm/addon-fit, @xterm/xterm, react-dom/client, react-markdown, remark-gfm
+8:39:02 AM [vite] (client) optimized dependencies changed. reloading
+8:40:33 AM [vite] (client) hmr update /src/components/OpenedFileView.tsx, /src/components/DocxFilePreview.tsx, /src/components/DocxDocumentView.tsx
+8:40:33 AM [vite] (client) hmr update /src/components/DocxDocumentView.tsx
+8:40:34 AM [vite] (client) hmr update /src/components/DocxDocumentView.tsx
+8:44:55 AM [vite] (client) hmr update /src/components/DocxDocumentView.tsx
+8:44:55 AM [vite] (client) hmr update /src/components/DocxFilePreview.css
+8:44:55 AM [vite] (client) hmr update /src/components/DocxDocumentView.tsx
+8:47:05 AM [vite] (client) dependency optimized: ssf
+8:47:05 AM [vite] (client) optimized dependencies changed. reloading

@@ -422,6 +422,7 @@ export function parseDocx(input: DocxWorkerInput): DocxDocument {
             p: DocxParagraph = {
               kind: "paragraph",
               id: id(),
+              source: pkg.source(ctx.source, n),
               runs: [],
               style: resolved.paragraph,
             };
@@ -452,6 +453,7 @@ export function parseDocx(input: DocxWorkerInput): DocxDocument {
             parseDocxTable(
               n,
               id(),
+              pkg.source(ctx.source, n),
               styles,
               warn,
               (items) => parseBlocks(items, ctx),

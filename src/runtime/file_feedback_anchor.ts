@@ -1,4 +1,5 @@
 import { MAX_PDF_PAGES } from "./visual_preview";
+import { isDocxSourcePosition } from "./docx_source_position";
 
 export type PdfPageAnchor = {
   kind: "pdf-page";
@@ -26,13 +27,32 @@ export type XlsxRangeAnchor = {
   toColumn: number;
 };
 
+/** A whole source block in the document version saved with the opinion. */
+export type DocxBlockAnchor = {
+  kind: "docx-block";
+  part: string;
+  elementPath: readonly number[];
+  blockKind: "paragraph" | "table";
+};
+
 export type FileFeedbackAnchor =
-  PdfPageAnchor | TextRangeAnchor | XlsxRangeAnchor;
+  PdfPageAnchor | TextRangeAnchor | XlsxRangeAnchor | DocxBlockAnchor;
 
 function exactKeys(value: object, keys: readonly string[]): boolean {
   const actual = Object.keys(value);
   return (
     actual.length === keys.length && actual.every((key) => keys.includes(key))
+  );
+}
+
+export function validDocxBlock(value: unknown): value is DocxBlockAnchor {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const a = value as DocxBlockAnchor;
+  return (
+    exactKeys(a, ["kind", "part", "elementPath", "blockKind"]) &&
+    a.kind === "docx-block" &&
+    (a.blockKind === "paragraph" || a.blockKind === "table") &&
+    isDocxSourcePosition({ part: a.part, elementPath: a.elementPath })
   );
 }
 
@@ -141,6 +161,8 @@ export function parseFeedbackAnchor(
     throw new Error("invalid feedback anchor");
   if (validTextRange(value)) return { ...value };
   if (validXlsxRange(value)) return { ...value };
+  if (validDocxBlock(value))
+    return { ...value, elementPath: [...value.elementPath] };
   if (
     !exactKeys(anchor, ["kind", "page", "pageCount"]) ||
     anchor.kind !== "pdf-page" ||

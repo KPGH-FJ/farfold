@@ -1,0 +1,111 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/OpenedFileView.docx-feedback.test.tsx (11 tests | 11 failed) 606ms
+   × gates DOCX opinions on current completed preview and revokes a stale editor 61ms
+   × only explicit current confirmation changes a same-text block target, retaining opinion text 56ms
+   × rejects old DOCX callbacks after hidden 54ms
+   × rejects old DOCX callbacks after other conversation 54ms
+   × rejects old DOCX callbacks after new selection 54ms
+   × permanently retires candidate on DOCX loading 55ms
+   × permanently retires candidate on DOCX failed 55ms
+   × permanently retires candidate on DOCX paused 54ms
+   × preserves old DOCX coordinates across replacement and joins new content once 54ms
+   × does not cancel DOCX refresh itself while interaction is blocked (hide=false) 56ms
+   × does not cancel DOCX refresh itself while interaction is blocked (hide=true) 54ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/OpenedFileView.docx-feedback.test.tsx > gates DOCX opinions on current completed preview and revokes a stale editor
+AssertionError: expected undefined to be defined
+ ❯ src/components/OpenedFileView.docx-feedback.test.tsx:175:30
+    173|   render();
+    174|   await vi.waitFor(() => expect(render().nodes.some(n => n.type === Do…
+    175|   expect(button(S.feedback)).toBeDefined();
+       |                              ^
+    176|   expect(button(S.feedback)?.props.disabled).toBe(true);
+    177|   const p=child(); p.onStatus({file:p.file,state:"ready"});
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  src/components/OpenedFileView.docx-feedback.test.tsx > only explicit current confirmation changes a same-text block target, retaining opinion text
+TypeError: p.onOfficeTargetConfirm is not a function
+ ❯ src/components/OpenedFileView.docx-feedback.test.tsx:187:5
+    185| it("only explicit current confirmation changes a same-text block targe…
+    186|   const p=await ready(); seed(); const a=target();
+    187|   p.onOfficeTargetConfirm(a); expect(saved().anchor).toBeUndefined();
+       |     ^
+    188|   announce(p,a); expect(saved().anchor).toBeUndefined();
+    189|   p.onOfficeTargetConfirm(a); expect(saved()).toMatchObject({text:" 保留…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  src/components/OpenedFileView.docx-feedback.test.tsx > rejects old DOCX callbacks after hidden
+ FAIL  src/components/OpenedFileView.docx-feedback.test.tsx > rejects old DOCX callbacks after other conversation
+ FAIL  src/components/OpenedFileView.docx-feedback.test.tsx > rejects old DOCX callbacks after new selection
+TypeError: p.onOfficeTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.docx-feedback.test.tsx:145:5
+    143| }
+    144| function announce(p = child(), t = target()) {
+    145|   p.onOfficeTargetAvailability({source: t.source, available: true}); r…
+       |     ^
+    146| }
+    147| function edit(text: string) {
+ ❯ src/components/OpenedFileView.docx-feedback.test.tsx:200:42
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  src/components/OpenedFileView.docx-feedback.test.tsx > permanently retires candidate on DOCX loading
+ FAIL  src/components/OpenedFileView.docx-feedback.test.tsx > permanently retires candidate on DOCX failed
+ FAIL  src/components/OpenedFileView.docx-feedback.test.tsx > permanently retires candidate on DOCX paused
+TypeError: p.onOfficeTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.docx-feedback.test.tsx:145:5
+    143| }
+    144| function announce(p = child(), t = target()) {
+    145|   p.onOfficeTargetAvailability({source: t.source, available: true}); r…
+       |     ^
+    146| }
+    147| function edit(text: string) {
+ ❯ src/components/OpenedFileView.docx-feedback.test.tsx:210:34
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  src/components/OpenedFileView.docx-feedback.test.tsx > preserves old DOCX coordinates across replacement and joins new content once
+TypeError: p.onOfficeTargetAvailability is not a function
+ ❯ announce src/components/OpenedFileView.docx-feedback.test.tsx:145:5
+    143| }
+    144| function announce(p = child(), t = target()) {
+    145|   p.onOfficeTargetAvailability({source: t.source, available: true}); r…
+       |     ^
+    146| }
+    147| function edit(text: string) {
+ ❯ src/components/OpenedFileView.docx-feedback.test.tsx:216:40
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  src/components/OpenedFileView.docx-feedback.test.tsx > does not cancel DOCX refresh itself while interaction is blocked (hide=false)
+ FAIL  src/components/OpenedFileView.docx-feedback.test.tsx > does not cancel DOCX refresh itself while interaction is blocked (hide=true)
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ src/components/OpenedFileView.docx-feedback.test.tsx:241:72
+    239|     render();real.focus();await vi.advanceTimersByTimeAsync(0);
+    240|     expect(h.prepare).toHaveBeenCalledTimes(1);const staged=child();
+    241|     expect(staged.active).toBe(true);expect(staged.interactionBlocked)…
+       |                                                                        ^
+    242|     const t=target();old.onOfficeTargetAvailability({source:t.source,a…
+    243|     if(hide) render({...props,active:false});finish({kind:"docx",file:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 failed (11)
+   Start at  08:32:34
+   Duration  946ms (transform 133ms, setup 0ms, import 283ms, tests 606ms, environment 0ms)
+

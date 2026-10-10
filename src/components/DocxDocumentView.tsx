@@ -14,6 +14,17 @@ import type {
   DocxRun,
   DocxTable,
 } from "../runtime/docx_types";
+import {
+  createDocumentFeedbackSource,
+  documentFeedbackBlockIsEligible,
+  documentFeedbackTarget,
+  retireDocumentFeedbackSource,
+  type DocumentFeedbackSource,
+} from "../runtime/docx_feedback_target";
+import type {
+  OfficeTargetAvailability,
+  OfficeTargetConfirmation,
+} from "../runtime/office_feedback_target";
 import { DocumentImages } from "../runtime/document_images";
 import {
   DOCUMENT_STRINGS as S,
@@ -35,6 +46,247 @@ import {
   saveReadingPosition,
   type PreviewReadingPositionRef,
 } from "../runtime/preview_reading_position";
+
+type FeedbackBlock = DocxParagraph | DocxTable;
+type FeedbackSelection = { owner: object; block: FeedbackBlock };
+function useDocumentFeedback({
+  document,
+  interactionBlocked,
+  isCurrent,
+  onOfficeTargetAvailability,
+  onOfficeTargetConfirm,
+}: {
+  document: DocxPreview;
+  interactionBlocked: boolean;
+  isCurrent?: () => boolean;
+  onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
+  onOfficeTargetConfirm?: (value: OfficeTargetConfirmation) => void;
+}) {
+  const latest = useRef({
+    document,
+    interactionBlocked,
+    isCurrent,
+    onOfficeTargetAvailability,
+    onOfficeTargetConfirm,
+  });
+  latest.current = {
+    document,
+    interactionBlocked,
+    isCurrent,
+    onOfficeTargetAvailability,
+    onOfficeTargetConfirm,
+  };
+  const mounted = useRef(false);
+  const selected = useRef<FeedbackSelection | null>(null);
+  const [selection, setSelection] = useState<FeedbackSelection | null>(null);
+  const live = useRef<{
+    source: DocumentFeedbackSource;
+    owner: object;
+    block: FeedbackBlock;
+  } | null>(null);
+  const currentView = () =>
+    latest.current.document === document &&
+    !latest.current.interactionBlocked &&
+    latest.current.isCurrent?.() !== false;
+  const allowed = () => mounted.current && currentView();
+  const retire = () => {
+    const old = live.current;
+    live.current = null;
+    if (old) {
+      retireDocumentFeedbackSource(old.source);
+      latest.current.onOfficeTargetAvailability?.({
+        source: old.source,
+        available: false,
+      });
+    }
+  };
+  const withdraw = () => {
+    selected.current = null;
+    setSelection(null);
+    retire();
+  };
+  useLayoutEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      retire();
+    };
+  }, [document]);
+  return {
+    document,
+    interactionBlocked,
+    selection,
+    integrated: !!onOfficeTargetConfirm,
+    allowed,
+    navigate: (action: () => void) => {
+      if (!allowed()) return;
+      withdraw();
+      action();
+    },
+    choose: (owner: object, block: FeedbackBlock) => {
+      if (!allowed() || !latest.current.onOfficeTargetConfirm) return;
+      if (selected.current?.owner === owner && selected.current.block === block)
+        return;
+      retire();
+      selected.current = { owner, block };
+      setSelection(selected.current);
+    },
+    register: (owner: object, block: FeedbackBlock) => {
+      // Child layout setup precedes the parent setup during an effect replay.
+      // Registration is called only by a mounted control; events still require
+      // the complete mounted/current guard above.
+      if (
+        !currentView() ||
+        !latest.current.onOfficeTargetConfirm ||
+        selected.current?.owner !== owner ||
+        selected.current.block !== block
+      )
+        return null;
+      const source = createDocumentFeedbackSource({
+        preview: document,
+        block,
+        expectedFile: document.file,
+      });
+      if (!source) return null;
+      retire();
+      live.current = { source, owner, block };
+      latest.current.onOfficeTargetAvailability?.({ source, available: true });
+      return source;
+    },
+    unregister: (source: DocumentFeedbackSource) => {
+      if (live.current?.source === source) retire();
+      else retireDocumentFeedbackSource(source);
+    },
+    cancel: (source: DocumentFeedbackSource, owner: object) => {
+      if (
+        !allowed() ||
+        live.current?.source !== source ||
+        live.current.owner !== owner
+      )
+        return false;
+      withdraw();
+      return allowed() && selected.current === null;
+    },
+    confirm: (
+      source: DocumentFeedbackSource,
+      owner: object,
+      block: FeedbackBlock,
+    ) => {
+      if (
+        !allowed() ||
+        live.current?.source !== source ||
+        live.current.owner !== owner ||
+        live.current.block !== block ||
+        selected.current?.owner !== owner ||
+        selected.current.block !== block
+      )
+        return;
+      const anchor = documentFeedbackTarget(source);
+      if (anchor) latest.current.onOfficeTargetConfirm?.({ source, anchor });
+    },
+  };
+}
+type Feedback = ReturnType<typeof useDocumentFeedback>;
+function FeedbackControls({
+  block,
+  feedback,
+}: {
+  block: FeedbackBlock;
+  feedback: Feedback;
+}) {
+  const owner = useRef({});
+  const selectButton = useRef<HTMLButtonElement | null>(null);
+  const mounted = useRef(false);
+  const latest = useRef({ block, feedback });
+  latest.current = { block, feedback };
+  const [source, setSource] = useState<DocumentFeedbackSource | null>(null);
+  const selected =
+    feedback.selection?.owner === owner.current &&
+    feedback.selection.block === block;
+  useLayoutEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  useLayoutEffect(() => {
+    if (!selected || !feedback.integrated || feedback.interactionBlocked) {
+      setSource(null);
+      return;
+    }
+    const value = feedback.register(owner.current, block);
+    setSource(value);
+    return () => {
+      if (value) feedback.unregister(value);
+      setSource(null);
+    };
+  }, [
+    selected,
+    block,
+    feedback.document,
+    feedback.integrated,
+    feedback.interactionBlocked,
+  ]);
+  if (!feedback.integrated || !documentFeedbackBlockIsEligible(block))
+    return null;
+  const current = () =>
+    mounted.current &&
+    latest.current.block === block &&
+    latest.current.feedback.allowed();
+  return (
+    <div
+      className="document-feedback-controls"
+      data-document-feedback={block.id}
+    >
+      <button
+        type="button"
+        className="btn btn-ghost"
+        aria-pressed={selected}
+        ref={selectButton}
+        onClick={() => {
+          if (current()) latest.current.feedback.choose(owner.current, block);
+        }}
+      >
+        {block.kind === "paragraph" ? S.selectParagraph : S.selectTable}
+      </button>
+      {selected && source && !feedback.interactionBlocked && (
+        <>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => {
+              if (current())
+                latest.current.feedback.confirm(source, owner.current, block);
+            }}
+          >
+            {block.kind === "paragraph" ? S.feedbackParagraph : S.feedbackTable}
+          </button>
+          <button
+            type="button"
+            className="btn btn-ghost"
+            onClick={() => {
+              if (
+                !current() ||
+                !latest.current.feedback.cancel(source, owner.current)
+              )
+                return;
+              // Withdrawal can synchronously leave or replace this display.
+              if (current() && selectButton.current?.isConnected)
+                selectButton.current.focus({ preventScroll: true });
+            }}
+          >
+            {S.cancelSelection}
+          </button>
+          <span className="document-scope">
+            {block.kind === "paragraph"
+              ? S.feedbackParagraphScope
+              : S.feedbackTableScope}
+          </span>
+        </>
+      )}
+    </div>
+  );
+}
 
 type Images = DocumentImages;
 function DocumentImage({
@@ -169,20 +421,23 @@ function Pagination({
 function Paragraph({
   block,
   images,
+  feedback,
 }: {
   block: DocxParagraph;
   images: Images;
+  feedback: Feedback;
 }) {
   const [part, setPart] = useState(0);
   const parts = useMemo(() => paragraphParts(block.runs), [block]);
   const level = block.headingLevel;
   return (
     <div className="document-paragraph">
+      <FeedbackControls block={block} feedback={feedback} />
       {parts.length > 1 && <p className="document-scope">{S.paragraphSplit}</p>}
       <Pagination
         page={part}
         pages={parts.length}
-        onChange={setPart}
+        onChange={(next) => feedback.navigate(() => setPart(next))}
         label={S.paragraphPart(part + 1, parts.length)}
       />
       <p
@@ -199,7 +454,15 @@ function Paragraph({
   );
 }
 
-function Table({ block, images }: { block: DocxTable; images: Images }) {
+function Table({
+  block,
+  images,
+  feedback,
+}: {
+  block: DocxTable;
+  images: Images;
+  feedback: Feedback;
+}) {
   const [row, setRow] = useState(0);
   const [column, setColumn] = useState(0);
   const [selection, setSelection] = useState<DocumentCellPosition | null>(null);
@@ -231,6 +494,7 @@ function Table({ block, images }: { block: DocxTable; images: Images }) {
   );
   return (
     <section className="document-table" aria-label={S.table}>
+      {!selection && <FeedbackControls block={block} feedback={feedback} />}
       {selection?.cell && (
         <div className="document-cell-detail" tabIndex={-1} ref={detail}>
           <strong>
@@ -239,7 +503,7 @@ function Table({ block, images }: { block: DocxTable; images: Images }) {
           <button
             className="btn btn-ghost"
             type="button"
-            onClick={() => setSelection(null)}
+            onClick={() => feedback.navigate(() => setSelection(null))}
           >
             {S.backTable}
           </button>
@@ -253,7 +517,11 @@ function Table({ block, images }: { block: DocxTable; images: Images }) {
               )}
             </p>
           )}
-          <BlockSequence blocks={selection.cell.blocks} images={images} />
+          <BlockSequence
+            blocks={selection.cell.blocks}
+            images={images}
+            feedback={feedback}
+          />
         </div>
       )}
       {!selection && (
@@ -264,7 +532,11 @@ function Table({ block, images }: { block: DocxTable; images: Images }) {
               type="button"
               className="btn btn-ghost"
               disabled={!row}
-              onClick={() => setRow(Math.max(0, row - DOCUMENT_WINDOW.rows))}
+              onClick={() =>
+                feedback.navigate(() =>
+                  setRow(Math.max(0, row - DOCUMENT_WINDOW.rows)),
+                )
+              }
             >
               {S.previousRows}
             </button>
@@ -272,7 +544,9 @@ function Table({ block, images }: { block: DocxTable; images: Images }) {
               type="button"
               className="btn btn-ghost"
               disabled={window.endRow >= block.rows.length}
-              onClick={() => setRow(row + DOCUMENT_WINDOW.rows)}
+              onClick={() =>
+                feedback.navigate(() => setRow(row + DOCUMENT_WINDOW.rows))
+              }
             >
               {S.nextRows}
             </button>
@@ -281,7 +555,9 @@ function Table({ block, images }: { block: DocxTable; images: Images }) {
               className="btn btn-ghost"
               disabled={!column}
               onClick={() =>
-                setColumn(Math.max(0, column - DOCUMENT_WINDOW.columns))
+                feedback.navigate(() =>
+                  setColumn(Math.max(0, column - DOCUMENT_WINDOW.columns)),
+                )
               }
             >
               {S.previousColumns}
@@ -290,7 +566,11 @@ function Table({ block, images }: { block: DocxTable; images: Images }) {
               type="button"
               className="btn btn-ghost"
               disabled={window.endColumn >= window.columns}
-              onClick={() => setColumn(column + DOCUMENT_WINDOW.columns)}
+              onClick={() =>
+                feedback.navigate(() =>
+                  setColumn(column + DOCUMENT_WINDOW.columns),
+                )
+              }
             >
               {S.nextColumns}
             </button>
@@ -340,10 +620,12 @@ function Table({ block, images }: { block: DocxTable; images: Images }) {
                                 position.sourceRow + 1,
                                 position.sourceColumn + 1,
                               )}
-                              onClick={() => {
-                                focusTarget.current = `${position.row}:${position.column}`;
-                                setSelection(position);
-                              }}
+                              onClick={() =>
+                                feedback.navigate(() => {
+                                  focusTarget.current = `${position.row}:${position.column}`;
+                                  setSelection(position);
+                                })
+                              }
                             >
                               <span
                                 className="document-cell-excerpt"
@@ -393,11 +675,13 @@ function BlockSequence({
   images,
   initialSegment = 0,
   onPosition,
+  feedback,
 }: {
   blocks: DocxBlock[];
   images: Images;
   initialSegment?: number;
   onPosition?: (segment: number) => void;
+  feedback: Feedback;
 }) {
   const [page, setPage] = useState(initialSegment);
   useLayoutEffect(() => {
@@ -406,8 +690,10 @@ function BlockSequence({
   const region = useRef<HTMLDivElement | null>(null);
   const pages = Math.max(1, Math.ceil(blocks.length / DOCUMENT_WINDOW.blocks));
   const show = (next: number) => {
-    setPage(next);
-    region.current?.scrollTo({ top: 0, left: 0 });
+    feedback.navigate(() => {
+      setPage(next);
+      region.current?.scrollTo({ top: 0, left: 0 });
+    });
   };
   return (
     <div className="document-block-sequence">
@@ -428,10 +714,18 @@ function BlockSequence({
             let node: ReactNode;
             switch (block.kind) {
               case "paragraph":
-                node = <Paragraph block={block} images={images} />;
+                node = (
+                  <Paragraph
+                    block={block}
+                    images={images}
+                    feedback={feedback}
+                  />
+                );
                 break;
               case "table":
-                node = <Table block={block} images={images} />;
+                node = (
+                  <Table block={block} images={images} feedback={feedback} />
+                );
                 break;
               case "notice":
                 node = (
@@ -451,10 +745,25 @@ function BlockSequence({
 export function DocxDocumentView({
   document,
   readingPosition,
+  interactionBlocked = false,
+  isCurrent,
+  onOfficeTargetAvailability,
+  onOfficeTargetConfirm,
 }: {
   document: DocxPreview;
   readingPosition?: PreviewReadingPositionRef;
+  interactionBlocked?: boolean;
+  isCurrent?: () => boolean;
+  onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
+  onOfficeTargetConfirm?: (value: OfficeTargetConfirmation) => void;
 }) {
+  const feedback = useDocumentFeedback({
+    document,
+    interactionBlocked,
+    isCurrent,
+    onOfficeTargetAvailability,
+    onOfficeTargetConfirm,
+  });
   const restored = restoredDocumentPosition(document, readingPosition);
   const [choice, setChoice] = useState<{
     source: DocxPreview;
@@ -495,7 +804,9 @@ export function DocxDocumentView({
             aria-label={S.sections}
             value={story}
             onChange={(event) =>
-              setChoice({ source: document, id: event.target.value })
+              feedback.navigate(() =>
+                setChoice({ source: document, id: event.target.value }),
+              )
             }
           >
             <option value="">{S.body}</option>
@@ -512,6 +823,7 @@ export function DocxDocumentView({
       <BlockSequence
         key={`${document.file.root}:${document.file.resolvedPath}:${document.file.version}:${document.file.sha256}:${selected?.id ?? "body"}`}
         blocks={selected?.blocks ?? document.blocks}
+        feedback={feedback}
         images={images}
         initialSegment={
           (selected?.id ?? "") === (restored.story?.id ?? "")

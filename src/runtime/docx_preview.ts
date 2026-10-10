@@ -87,6 +87,7 @@ export async function readDocxPreview(
   if (signal.aborted) throw new DocxError("cancelled");
   checkedCapture(capture.file, capture);
   const file = { ...capture.file };
+  const capturedParts = new Set(capture.parts.map((part) => part.name));
   if (typeof Worker === "undefined") throw new DocxError("unsupported");
   if (running) throw new DocxError("busy");
   running = true;
@@ -143,7 +144,10 @@ export async function readDocxPreview(
         }
         try {
           if (event.data?.kind !== "ready") throw new DocxError("invalid");
-          const document = checkedDocxDocument(event.data.document);
+          const document = checkedDocxDocument(
+            event.data.document,
+            capturedParts,
+          );
           if (signal.aborted) {
             abort?.();
             return;

@@ -1,0 +1,1 @@
+{"originalFilesVerified": 6, "originalStructuralCoordinatesVerified": 96, "newFixtures": 3, "newStructuralCoordinates": 13, "productionParserExecuted": false}

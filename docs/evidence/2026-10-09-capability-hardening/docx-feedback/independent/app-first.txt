@@ -1,0 +1,1 @@
+{"passed":false,"sourceUnchanged":true,"cases":[{"name":"repeated","pass":21},{"name":"choice","pass":7},{"name":"hidden","pass":7,"failure":"Error: notice mixed opinion root bounded"},{"name":"nested","pass":5},{"name":"windows","pass":8,"failure":"Error: narrow window detail and opinion root bounded"}]}

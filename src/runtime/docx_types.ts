@@ -97,9 +97,14 @@ export type DocxRun =
       alt: string;
     }
   | { kind: "notice"; code: DocxWarningCode };
+export interface DocxSourcePosition {
+  readonly part: string;
+  readonly elementPath: readonly number[];
+}
 export interface DocxParagraph {
   kind: "paragraph";
   id: string;
+  source: DocxSourcePosition;
   runs: DocxRun[];
   style: DocxParagraphStyle;
   headingLevel?: number;
@@ -123,6 +128,7 @@ export interface DocxCell {
 export interface DocxTable {
   kind: "table";
   id: string;
+  source: DocxSourcePosition;
   columnsPt: number[];
   rows: { cells: DocxCell[] }[];
 }

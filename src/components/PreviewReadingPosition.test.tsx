@@ -176,6 +176,7 @@ function document(file: VerifiedFile, count = 45): DocxPreview {
   const blocks = Array.from({ length: count }, (_, i) => ({
     kind: "paragraph" as const,
     id: `p${i}`,
+    source: { part: "word/footnotes.xml", elementPath: [2, i] },
     style: {},
     runs: [
       { kind: "text" as const, style: {}, text: `${file.version}-note-${i}` },
@@ -187,6 +188,7 @@ function document(file: VerifiedFile, count = 45): DocxPreview {
       {
         kind: "paragraph",
         id: "body",
+        source: { part: "word/document.xml", elementPath: [0, 0] },
         style: {},
         runs: [{ kind: "text", style: {}, text: `${file.version}-body` }],
       },

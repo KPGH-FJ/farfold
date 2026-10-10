@@ -1,0 +1,5 @@
+{
+  "path": "src/components/DocxFilePreview.feedback.test.tsx",
+  "sha256": "b97c0aa85841e68f97f413cbb856c8fb9ed618b8295cd02ae6d59cf5be3be040",
+  "method": "Copied only the controlled hook/SSR setup before the first test; import paths relocated. One independent same-file/new-document test added. Original source/tests unchanged. This is not actual React DOM lifecycle or real Worker."
+}

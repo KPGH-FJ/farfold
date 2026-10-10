@@ -1,0 +1,40 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/DocxFilePreview.feedback.test.tsx (24 tests | 1 failed) 221ms
+   × a withdrawal callback which leaves the view cannot refocus its old selection button 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > a withdrawal callback which leaves the view cannot refocus its old selection button
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "preventScroll": true,
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:566:20
+    564|  });
+    565|  click(buttons(chosen,"取消选择")[0]);
+    566|  expect(focus).not.toHaveBeenCalled();
+       |                    ^
+    567|  expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled();
+    568| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 23 passed (24)
+   Start at  08:43:51
+   Duration  395ms (transform 76ms, setup 0ms, import 109ms, tests 221ms, environment 0ms)
+

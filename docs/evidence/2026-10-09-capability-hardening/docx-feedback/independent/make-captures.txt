@@ -1,0 +1,1 @@
+{"fixtures": 9, "captureBytes": 4470605, "nativeCaptureProven": false}

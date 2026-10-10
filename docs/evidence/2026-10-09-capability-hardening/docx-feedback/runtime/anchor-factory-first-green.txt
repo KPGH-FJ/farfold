@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_feedback_target.test.ts (30 tests | 5 failed) 20ms
+   × accepts empty structural or genuinely visible paragraph without persisting text: undefined 3ms
+   × accepts empty structural or genuinely visible paragraph without persisting text: {"kind":"text","text":"","style":{}} 0ms
+   × accepts empty structural or genuinely visible paragraph without persisting text: {"kind":"text","text":"visible","style":{}} 0ms
+   × accepts empty structural or genuinely visible paragraph without persisting text: {"kind":"tab"} 1ms
+   × accepts empty structural or genuinely visible paragraph without persisting text: {"kind":"break"} 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_feedback_target.test.ts > accepts empty structural or genuinely visible paragraph without persisting text: undefined
+ FAIL  src/runtime/docx_feedback_target.test.ts > accepts empty structural or genuinely visible paragraph without persisting text: {"kind":"text","text":"","style":{}}
+ FAIL  src/runtime/docx_feedback_target.test.ts > accepts empty structural or genuinely visible paragraph without persisting text: {"kind":"text","text":"visible","style":{}}
+ FAIL  src/runtime/docx_feedback_target.test.ts > accepts empty structural or genuinely visible paragraph without persisting text: {"kind":"tab"}
+ FAIL  src/runtime/docx_feedback_target.test.ts > accepts empty structural or genuinely visible paragraph without persisting text: {"kind":"break"}
+AssertionError: expected null not to be null
+ ❯ target src/runtime/docx_feedback_target.test.ts:38:22
+     36| const target = (input: DocumentFeedbackSourceInput) => {
+     37|   const source = createDocumentFeedbackSource(input);
+     38|   expect(source).not.toBeNull();
+       |                      ^
+     39|   return { source: source!, anchor: documentFeedbackTarget(source!)! };
+     40| };
+ ❯ src/runtime/docx_feedback_target.test.ts:141:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  5 failed | 128 passed (133)
+   Start at  08:25:51
+   Duration  242ms (transform 324ms, setup 0ms, import 469ms, tests 57ms, environment 0ms)
+

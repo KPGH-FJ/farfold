@@ -1,0 +1,12 @@
+(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "../../../../../vite.config" without a file extension (docs/evidence/2026-10-09-capability-hardening/docx-feedback/leaf-independent/vitest.config.ts:2:18). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  08:46:18
+   Duration  203ms (transform 67ms, setup 0ms, import 100ms, tests 41ms, environment 0ms)
+

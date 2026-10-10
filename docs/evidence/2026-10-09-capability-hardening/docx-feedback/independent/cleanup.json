@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-10T00:49:22.576928+00:00",
+  "ownedServerPid": 46080,
+  "commandObserved": "46080 Ss   node docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/serve.mjs",
+  "signal": "SIGTERM",
+  "signalDispatched": true,
+  "reapedToolSession": {
+    "session": 84483,
+    "exitCode": 143
+  },
+  "formalAppOperated": false,
+  "agentStarted": false,
+  "exactPidAbsent": true,
+  "ownedPort1464ListenerAbsent": true,
+  "browserCleanup": "Every completed runner awaited its owned browser.close() in finally; no formal App or user browser was controlled."
+}

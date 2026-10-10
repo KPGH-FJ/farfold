@@ -1,0 +1,189 @@
+{
+  "recordedAtUtc": "2026-10-10T00:32:29.713029+00:00",
+  "status": "owned_runtime_source_and_tests_frozen",
+  "sourceBaseline": "4952c6922d8495c58cbc8b74fa9fc409aa1338c0",
+  "scope": "DOCX整源段落/整表意见目标、Office相关union、严格历史anchor/formatter及草稿边界专项；不包含UI/parser/原生安装验收。",
+  "owned": [
+    {
+      "path": "src/runtime/docx_feedback_target.ts",
+      "sha256": "44cb5aef346757561a275cf025f8591a5fd5c680b828316ad864d7012976f0a9",
+      "bytes": 7021
+    },
+    {
+      "path": "src/runtime/docx_feedback_target.test.ts",
+      "sha256": "b9ab719b6eb0c8aa320ab2a5e03d5f43402e832e2261fc589ff36a5e2ed505bf",
+      "bytes": 10609
+    },
+    {
+      "path": "src/runtime/office_feedback_target.ts",
+      "sha256": "198767f573d5d5077a584a1c1537eb20c6419ea02c2dde02b0e1e2ac1d005af5",
+      "bytes": 2302
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.ts",
+      "sha256": "7cf6a0157115aa862d5293613d0147673fac1486c4699b7fb08c89b6e936c63a",
+      "bytes": 5201
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.docx.test.ts",
+      "sha256": "13a50acab0c17653313cd0058c495983b178b5b04dd6f04df72048fe104f4355",
+      "bytes": 5495
+    },
+    {
+      "path": "src/runtime/feedback_strings.ts",
+      "sha256": "919335f8c79178b7d5802b35fb43b7479ab35b697ad72a5dfcb94528b22e98f5",
+      "bytes": 3726
+    },
+    {
+      "path": "src/runtime/docx_feedback_persistence.test.ts",
+      "sha256": "73478c9c831218c9a09cd9d82fb5213331c734c18cf624e4a75772756c37ee7d",
+      "bytes": 6249
+    }
+  ],
+  "sharedDependencies": [
+    {
+      "path": "src/runtime/docx_types.ts",
+      "sha256": "9b6f5a2f0092266ee0e1c5380237b3a8ad2daa79e1780d93ef6dffed00f7391e",
+      "bytes": 3974
+    },
+    {
+      "path": "src/runtime/docx_source_position.ts",
+      "sha256": "5992c08c69ffe667f5d852d298f0044171693371fb32ab0c91e59df821e491ce",
+      "bytes": 3756
+    },
+    {
+      "path": "src/runtime/preview_capture.ts",
+      "sha256": "c19dd9ee241a34fc85fad97b23ff132e8de859dea7db1280c76f319dd73fa996",
+      "bytes": 2116
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "ef320f8577c383d25e53268bea1827227b757d47d3adb95e6479e4673b563db4",
+      "bytes": 24631
+    }
+  ],
+  "api": {
+    "create": "createDocumentFeedbackSource({preview:DocxPreview,block:DocxParagraph|DocxTable,expectedFile:VerifiedFile}) → DocumentFeedbackSource|null",
+    "source": "只公开冻结的 {kind:\"docx\",file:Readonly<VerifiedFile>}；WeakMap留当前对象关系，不进草稿。",
+    "target": "documentFeedbackTarget(source) → {kind:\"docx-block\",part,elementPath,blockKind:\"paragraph\"|\"table\"}|null",
+    "lifecycle": "documentFeedbackSourceIsValid / retireDocumentFeedbackSource；retire幂等且同source不可逆，另登记必须生成新identity。",
+    "displayOnly": "documentFeedbackBlockIsEligible(block) 仅类型/notice资格谓词，不证明当前读取、membership或DOM；caller可据此显示入口，仍须factory及当前view守卫。",
+    "shared": "OfficeTargetConfirmation 为 {WorkbookFeedbackSource,XlsxRangeAnchor}|{DocumentFeedbackSource,DocxBlockAnchor} 相关union；officeFeedbackTargetMatches/SourceIsValid/retire统一dispatch，交叉配对运行时拒绝并有type反例。"
+  },
+  "invariants": [
+    "注册与每次target都核同一实际DocxPreview、实际body/story/table后代block引用，按原part/path校验，不以id/文本/页码推断。复制block/source不可替代，重复membership/坐标歧义/cycle拒绝，遍历使用现DOCX块/表深度/单元格预算。",
+    "文件root/path/resolvedPath/name/size/sha256/version七字段精确一致；保留preview.file及block.source/path对象引用并比较坐标，换引用/换版本/删除目标会失效。",
+    "paragraph仅notice（包括隐藏内容或缺字段结果）拒绝；真实空段落允许；混合可见run+notice允许但不删除原提示。standalone notice拒绝；整表作为真实结构目标可以注册，不因此把内部隐藏/notice段落变成可见目标。",
+    "历史anchor闭合四字段，part≤1024沿OPC路径规则，elementPath1..63且每项0..499999，blockKind只能paragraph/table。复用parser纯位置校验函数，不重复XML解析。",
+    "冷parse复制elementPath，拒未来字段/格式混合/矛盾scope或行范围/非确切disk版本；旧PDF/text/XLSX严格性保持。无需改drafts.ts或存储schema。",
+    "formatter仅描述当时整个源块、原内部文件与元素路径，元数据JSON引用/意见字节保留/带原sha；不生造Word页码、不存正文、不自动发送。分片范围与当前DOM归属须由UI明确。"
+  ],
+  "checks": [
+    {
+      "name": "cold-anchor-original-red",
+      "exitCode": 1,
+      "files": 1,
+      "tests": 44,
+      "failed": 10,
+      "passed": 34,
+      "meaning": "旧实现没有DOCX anchor/formatter，合法历史坐标与精准描述10个有效失败；非法/矛盾上下文34项仍拒。",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/runtime/anchor-red.txt",
+        "sha256": "d784c674de68480e1b8033e35c8e8a816cf85265c58b22c0459d14c3a835a813",
+        "bytes": 7327
+      }
+    },
+    {
+      "name": "first-factory-fixture-failure",
+      "exitCode": 1,
+      "files": 4,
+      "tests": 133,
+      "failed": 5,
+      "passed": 128,
+      "meaning": "文件名为first-green但实际失败。it.each直接传嵌套数组，Vitest展开参数，5个正向runs未作为数组传入。仅修测试表map为{runs}；不把该失败算生产反例。",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/runtime/anchor-factory-first-green.txt",
+        "sha256": "4d8a708c841cf5d8e02fed45931593a34483fb8ae8f5028370a4442e7c851575",
+        "bytes": 2261
+      }
+    },
+    {
+      "name": "factory-and-old-workbook",
+      "exitCode": 0,
+      "files": 6,
+      "tests": 141,
+      "meaning": "修正夹具后DOCX新边界和XLSX旧边界通过。新factory为首次绿色，不伪称存在旧factory红测。",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/runtime/boundaries-green.txt",
+        "sha256": "2fa4923eece9294e6773cb1ce9ed1315bac45aa9540a74105d54ff3b57491263",
+        "bytes": 214
+      }
+    },
+    {
+      "name": "associated-formats-and-storage",
+      "exitCode": 0,
+      "files": 13,
+      "tests": 237,
+      "meaning": "PDF、text、XLSX、DOCX、冷保存失败恢复和集中strings；7owned输入测试前后一致。之后仅工厂导出共享显示资格predicate并复用原逻辑、增加1专项。",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/runtime/targeted-final.txt",
+        "sha256": "94575302fd87625d10af35addcd6095bd08c1a52b1d0123dc15ac8011aa4a856",
+        "bytes": 216
+      }
+    },
+    {
+      "name": "final-display-predicate-increment",
+      "exitCode": 0,
+      "files": 3,
+      "tests": 79,
+      "meaning": "最后工厂/API与DOCX冷解析/持久化再验；复制block即使显示eligible仍不能注册live source。",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/runtime/eligibility-final.txt",
+        "sha256": "b4e5d2209b3c441b0598a7d5f9af4f59c9e75eb3a0b8f3bbfdbf15575e3e95d0",
+        "bytes": 212
+      }
+    },
+    {
+      "name": "final-owned-format",
+      "exitCode": 0,
+      "meaning": "7owned定向Prettier check。",
+      "evidence": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/runtime/format-eligibility-final.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+        "bytes": 66
+      }
+    }
+  ],
+  "typecheckCheckpoint": {
+    "executedBy": "product_coverage",
+    "exitCode": 0,
+    "evidence": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    "boundary": "该全项目typecheck在最后共享display predicate导出/调用复用及1个测试之前通过。最后差异已定向79项与格式通过；后续最终全项目type由root整合记录，不将此旧检查点换成最终字节证明。"
+  },
+  "sourceHistory": {
+    "237TestFactorySha256": "055b76c1a7e145a1dd8d408658446e15bc8ba032263090073dea1d52d5f719b6",
+    "237TestFactoryTestSha256": "a4c945c2046d69f0069d0784544882a8b28c61ccb6853de0da172b83f1b54c91",
+    "finalDifference": "仅提取并导出documentFeedbackBlockIsEligible供UI复用原规则，factory调用同predicate；新增不将eligibility当live权限的用例。其余5owned无变化。",
+    "redInputBoundary": "初始红测试文件之后仅经过排版及新增factory/持久化文件；原日志保留，不补造当时未留存的完整输入清单。"
+  },
+  "peerReview": {
+    "reviewer": "verification",
+    "status": "read_only_no_blocker_reported_before_final_predicate_export",
+    "record": "同任务消息；actual block/7filefields/source/path重核及notice边界已读，无独立重复suite。最终UI/实际Worker/安装仍由各owner另验。"
+  },
+  "notChanged": [
+    "Rust/IPC/权限/依赖/Agent配置",
+    "drafts schema和正文存储",
+    "父层/UI/parser/原始fixtures/活动文档"
+  ],
+  "limits": [
+    "WeakMap与文件字段不能单独证明磁盘真实性或当前DOM：必须传成功Worker preview，并由caller在story/段落分片/表格窗口/隐藏/重读/active/blocked变化时退休。",
+    "当前只整个源段落/整表，不是任意文本/Word页码/表格单元格选择；完整源块的隐藏/未支持内容不会自动变为已看过或持久正文。",
+    "本测试的native持久化为controlled settings IPC；真实cold disk/installed UI/Agent均未在本任务执行。实际parser仅指定07脚注与16Fallback source走入工厂，不代表全DOCX保真。",
+    "共享DocxSourcePosition helper的稀疏数组反例由本任务指出、product独立红→修；其日志归source owner，不重复计为本runtime红测。"
+  ]
+}

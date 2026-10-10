@@ -1,4 +1,5 @@
 import { DOCX_LIMITS, DocxError, type DocxWorkerInput } from "./docx_types";
+import { DocxSourcePositions } from "./docx_source_position";
 import {
   PR,
   R,
@@ -58,6 +59,7 @@ export class DocxPackage {
   readonly entries = new Set<string>();
   readonly document: string;
   private parsed = new Map<string, DocxXml>();
+  private positions = new DocxSourcePositions();
   private relationsCache = new Map<string, DocxRelation[]>();
   private budget: XmlBudget = { nodes: 0, text: 0 };
   private contentTypes = new Map<string, string>();
@@ -168,6 +170,9 @@ export class DocxPackage {
     const value = parseXml(bytes, this.budget);
     this.parsed.set(name, value);
     return value;
+  }
+  source(part: string, node: DocxXml) {
+    return this.positions.position(part, this.xml(part), node);
   }
   private readRelations(name: string): DocxRelation[] {
     const saved = this.relationsCache.get(name);

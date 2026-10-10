@@ -106,6 +106,7 @@ describe("DOCX bounded presentation", () => {
         {
           kind: "paragraph",
           id: "p",
+          source: { part: "word/document.xml", elementPath: [0, 0, 1, 0, 0] },
           runs: [text("original merge")],
           style: {},
         },
@@ -114,6 +115,7 @@ describe("DOCX bounded presentation", () => {
     const table: DocxTable = {
       kind: "table",
       id: "t",
+      source: { part: "word/document.xml", elementPath: [0, 0] },
       columnsPt: Array(18).fill(50),
       rows: Array.from({ length: 30 }, (_, i) => ({
         cells: i === 0 ? [cell] : [],
@@ -138,6 +140,7 @@ describe("DOCX bounded presentation", () => {
     const table: DocxTable = {
       kind: "table",
       id: "t",
+      source: { part: "word/document.xml", elementPath: [0, 0] },
       columnsPt: [],
       rows: [
         { cells: [{ blocks: [], column: 14, columnSpan: 1, rowSpan: 1 }] },
@@ -152,6 +155,7 @@ describe("DOCX bounded presentation", () => {
     const paragraph = {
       kind: "paragraph" as const,
       id: "p",
+      source: { part: "word/document.xml", elementPath: [0, 0] },
       runs: [text("a".repeat(601))],
       style: {},
     };

@@ -1,0 +1,372 @@
+{
+  "checkedAtUtc": "2026-10-10T00:56:18.978998+00:00",
+  "result": "passed_with_explicit_evidence_boundaries",
+  "reviewer": "architecture independent subagent",
+  "method": "Read-only source/evidence/helper audit; recomputed hashes and parsed raw/formatted results. Did not rerun engineering suites, browser automation, build or candidate helpers. Wrote only this new receipt.",
+  "engineering": {
+    "finalVerification": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-checks/final-verification.json",
+      "sha256": "943be4c844dd71931fbc3fb5d8a038b961f7aedc7c5447416e0169c1b36d1a42",
+      "bytes": 5287
+    },
+    "inputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-checks/inputs.json",
+      "sha256": "4797586350035ed5632e89a6a52562e45bb2b33f3eb81b6a5395e97cb74dbdff",
+      "bytes": 130285
+    },
+    "runner": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/run-docx-feedback-checks.py",
+      "sha256": "8d2405d94721c7c27407d7866e0b19d6f1e0f426873d6887fa0b066e78028078",
+      "bytes": 6983
+    },
+    "inputCount": 1145,
+    "exactCurrentInputMatch": true,
+    "sourceStableDuringAuthorRun": true,
+    "allSevenRequirementsSatisfied": true,
+    "checks": [
+      {
+        "name": "frontend",
+        "argv": ["corepack", "pnpm", "test"],
+        "exitCode": 0,
+        "seconds": 34.317,
+        "log": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-checks/frontend.txt",
+        "sha256": "159ff460ba926e7626de299e35007045e1d7d9fc41d3fcc7f81d213fbfff7e7a",
+        "executedNow": true
+      },
+      {
+        "name": "typecheck",
+        "argv": ["corepack", "pnpm", "typecheck"],
+        "exitCode": 0,
+        "seconds": 18.87,
+        "log": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-checks/typecheck.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "executedNow": true
+      },
+      {
+        "name": "build",
+        "argv": ["corepack", "pnpm", "build"],
+        "exitCode": 0,
+        "seconds": 7.49,
+        "log": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-checks/build.txt",
+        "sha256": "f54955478b0499bf2ff7c4d4dc16071de5aece4708bb72f8473e79dec1ec8cc4",
+        "executedNow": true
+      },
+      {
+        "name": "format",
+        "argv": ["corepack", "pnpm", "format:check"],
+        "exitCode": 0,
+        "seconds": 21.277,
+        "log": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-checks/format.txt",
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "executedNow": true
+      },
+      {
+        "name": "cargo-fmt",
+        "exitCode": 0,
+        "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executedNow": false,
+        "reason": "All previous Rust/config/shared fixture inputs exactly match. Eight added DOCX frontend-only test/oracle files are explicitly frozen; they are not read by Rust checks."
+      },
+      {
+        "name": "clippy",
+        "exitCode": 0,
+        "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+        "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e",
+        "executedNow": false,
+        "reason": "All previous Rust/config/shared fixture inputs exactly match. Eight added DOCX frontend-only test/oracle files are explicitly frozen; they are not read by Rust checks."
+      },
+      {
+        "name": "rust",
+        "exitCode": 0,
+        "log": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+        "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b",
+        "executedNow": false,
+        "reason": "All previous Rust/config/shared fixture inputs exactly match. Eight added DOCX frontend-only test/oracle files are explicitly frozen; they are not read by Rust checks."
+      }
+    ],
+    "observedFreshResults": {
+      "frontend": {
+        "files": 315,
+        "passed": 3651
+      },
+      "typecheck": "exit 0",
+      "build": "exit 0; original chunk-size warning retained, not a performance acceptance claim",
+      "format": "exit 0; all matched files use Prettier style"
+    },
+    "reviewerExecutedChecks": false
+  },
+  "deltaAndRustReuse": {
+    "priorInputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/inputs.json",
+      "sha256": "34431684088af54a7dcd313cc83724e3cf3194339168ad22bd9fc6705ca99289",
+      "bytes": 127900
+    },
+    "changedCount": 37,
+    "frontendChangedCount": 29,
+    "newExternalCount": 8,
+    "changedInputs": [
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/oracle.json",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/repeated-locations.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/hidden-notice-boundaries.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/nested-choice-fallback.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/oracle-supplement.json",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/supported-choice-markers.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/window-boundaries.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/window-oracle.json",
+      "src/components/DocxDocumentView.tsx",
+      "src/components/DocxFilePreview.css",
+      "src/components/DocxFilePreview.feedback.test.tsx",
+      "src/components/DocxFilePreview.tsx",
+      "src/components/OpenedFileView.docx-feedback.test.tsx",
+      "src/components/OpenedFileView.test.tsx",
+      "src/components/OpenedFileView.tsx",
+      "src/components/PreviewReadingPosition.test.tsx",
+      "src/runtime/document_strings.ts",
+      "src/runtime/document_view.test.ts",
+      "src/runtime/docx_compatibility.test.ts",
+      "src/runtime/docx_feedback_persistence.test.ts",
+      "src/runtime/docx_feedback_target.test.ts",
+      "src/runtime/docx_feedback_target.ts",
+      "src/runtime/docx_package.ts",
+      "src/runtime/docx_parse.ts",
+      "src/runtime/docx_preview.test.ts",
+      "src/runtime/docx_preview.ts",
+      "src/runtime/docx_public_samples.test.ts",
+      "src/runtime/docx_source_position.test.ts",
+      "src/runtime/docx_source_position.ts",
+      "src/runtime/docx_source_wire.test.ts",
+      "src/runtime/docx_table.ts",
+      "src/runtime/docx_types.ts",
+      "src/runtime/docx_validation.ts",
+      "src/runtime/feedback_strings.ts",
+      "src/runtime/file_feedback_anchor.docx.test.ts",
+      "src/runtime/file_feedback_anchor.ts",
+      "src/runtime/office_feedback_target.ts"
+    ],
+    "priorNonFrontendExactUnchanged": 440,
+    "runtimeSharedFixtureCountUnchanged": 10,
+    "directOriginalRustInputBaseline": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/inputs.json",
+      "sha256": "50e6abb432d5864b4ae0b5093d3b94c304b5d47b947e3f7e3c4a9e4a11a19c12",
+      "bytes": 124887
+    },
+    "originalNonFrontendAndSharedFixtureHashesCompared": 446,
+    "originalComparisonMismatches": [],
+    "rustOutcomeReused": "Original large-file-checks rust stdout: 1230 passed, 6 ignored; cargo-fmt/clippy/rust are explicitly executedNow=false, their original bytes/hash and the relevant original inputs match. No new Rust run claimed.",
+    "guardReview": "Runner separately asserts prior allPassed/sourceStable/seven checks/input count; current src/runtime/fixtures set+hash equal prior; other changed paths restricted to src or eight explicitly new frontend fixtures. New added fixture list cannot overwrite an earlier shared input."
+  },
+  "frozenOwners": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/source/implementation.json",
+      "sha256": "dc12eceffee99818b170e3f49157129348de9a0a9b7f1f7f86d32aa5e7a32871",
+      "bytes": 8630,
+      "currentInputHashMatch": true,
+      "ownedFileCount": 14
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/runtime/implementation.json",
+      "sha256": "1d4217b2d0d249c546bf958a8a9bd78768c70d739bfd5a339a80ccb14e3b830b",
+      "bytes": 10215,
+      "currentInputHashMatch": true,
+      "ownedFileCount": 7
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/ui-implementation.json",
+      "sha256": "67089fa39bc20fa3d8795f497d4d935dbc965922982d95b8f81a536dfb82cde9",
+      "bytes": 8543,
+      "currentInputHashMatch": true,
+      "ownedFileCount": 5
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/parent-implementation.json",
+      "sha256": "41e56f64ec9baa5f39a21320e6057990496c321a1b9745a18a0d96e0009adb41",
+      "bytes": 2853,
+      "currentInputHashMatch": true,
+      "ownedFileCount": 3
+    }
+  ],
+  "priorIndependentSourceReviews": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/parent-independent.json",
+      "sha256": "19897833967a9ef2683e98068f7e14197a2b8295c548248774860932f4064947",
+      "bytes": 12378
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/leaf-independent/review.json",
+      "sha256": "5b060a55e0dda1ebdd1995229cf68605b58f0389f186f1d16228be17c5ba3361",
+      "bytes": 12536
+    }
+  ],
+  "browserAudit": {
+    "receipt": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/receipt.json",
+      "sha256": "f770ec0f67e25e252929db4081e0fbe39d57ff772cd272027ce754163a4b44d3",
+      "bytes": 130299
+    },
+    "exactReceiptExpectedSha": "f770ec0f67e25e252929db4081e0fbe39d57ff772cd272027ce754163a4b44d3",
+    "allReferencedMaterialsMatched": true,
+    "referenceOccurrencesChecked": 167,
+    "uniqueReferencePathsChecked": 107,
+    "artifactInventoryCount": 103,
+    "currentSourceMapCount": 697,
+    "sourceMapExactCurrent": true,
+    "rawFormattedSemanticPairs": 14,
+    "runs": [
+      {
+        "name": "webkit-app-final",
+        "engine": "webkit",
+        "cases": 5,
+        "assertions": 56,
+        "totalRunInputs": 705,
+        "sourceSubsetMatchesCurrent": true,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/webkit-app-final.json",
+          "sha256": "7399d278155f12e9827e2903ef76937d349eace6fcf19fc8d1cb2622ae6cbd8b",
+          "bytes": 224998
+        }
+      },
+      {
+        "name": "chromium-app-final",
+        "engine": "chromium",
+        "cases": 5,
+        "assertions": 56,
+        "totalRunInputs": 705,
+        "sourceSubsetMatchesCurrent": true,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/chromium-app-final.json",
+          "sha256": "8d914dc564587101738d1edb1980a60db81e728596a58d8815859201f9d48155",
+          "bytes": 224978
+        }
+      },
+      {
+        "name": "webkit-lifecycle-first",
+        "engine": "webkit",
+        "cases": 3,
+        "assertions": 33,
+        "totalRunInputs": 705,
+        "sourceSubsetMatchesCurrent": true,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/webkit-lifecycle-first.json",
+          "sha256": "c83a8239fcaf03d4c8cdea6be9afeafe9c613bc7a92025707814113e6ec4c6a9",
+          "bytes": 195100
+        }
+      },
+      {
+        "name": "chromium-lifecycle-final",
+        "engine": "chromium",
+        "cases": 3,
+        "assertions": 33,
+        "totalRunInputs": 705,
+        "sourceSubsetMatchesCurrent": true,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/chromium-lifecycle-final.json",
+          "sha256": "3da1586cbdfcc59220a20af8d79b6a4f69361eb4f4f9ee491fe586e5a53544b9",
+          "bytes": 195067
+        }
+      },
+      {
+        "name": "webkit-hidden-literal-final",
+        "engine": "webkit",
+        "cases": 1,
+        "assertions": 11,
+        "totalRunInputs": 706,
+        "sourceSubsetMatchesCurrent": true,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/webkit-hidden-literal-final.json",
+          "sha256": "b65891c88ee0fc96f54553e5e64ecea4cff4e3a60c00c731c5cd625f17c07d8d",
+          "bytes": 171703
+        }
+      },
+      {
+        "name": "chromium-hidden-literal-final",
+        "engine": "chromium",
+        "cases": 1,
+        "assertions": 11,
+        "totalRunInputs": 706,
+        "sourceSubsetMatchesCurrent": true,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/chromium-hidden-literal-final.json",
+          "sha256": "f980cd1a35df2ef65cc6fdb64aabe9db497a373ec03d1ecd68f57374a4a36645",
+          "bytes": 171709
+        }
+      },
+      {
+        "name": "webkit-workbook-regression-warm",
+        "engine": "webkit",
+        "cases": 1,
+        "assertions": 15,
+        "totalRunInputs": 700,
+        "sourceSubsetMatchesCurrent": true,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/webkit-workbook-regression-warm.json",
+          "sha256": "a597c07d76c7e24e5d241dbebd2f0b36964494692d96468fd37652bbd58b8aa8",
+          "bytes": 167180
+        }
+      },
+      {
+        "name": "chromium-workbook-regression",
+        "engine": "chromium",
+        "cases": 1,
+        "assertions": 15,
+        "totalRunInputs": 700,
+        "sourceSubsetMatchesCurrent": true,
+        "result": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/chromium-workbook-regression.json",
+          "sha256": "44a1903cd59318a47dc1543f8ca6711fd96c90cf1a5f193cbc42f05679e65b3d",
+          "bytes": 167174
+        }
+      }
+    ],
+    "classification": "Per engine: 56 main + 33 lifecycle = 89 DOCX assertions; additional 15 XLSX automatic regression; focused 11 hidden-literal checks repeat one scenario and are not added as independent capabilities. Real React StrictMode full App/CSS and document/worksheet Worker, controlled Tauri IPC/material capture/settings; no installed native read or Agent claim.",
+    "historicalFailuresPreserved": [
+      "Two actual layout failures are two manifestations of the same document-preview flex-minimum/overflow problem; original red, injection-only candidate and final no-injection green are retained.",
+      "First worksheet warmup ran zero assertions after Vite dependency optimization caused reload; no false product failure or green claim; same-source warm result retained.",
+      "OMITTED CONTROL versus fixture OMITTED CONTENT was a harness literal mismatch, corrected/expanded only in focused hidden checks.",
+      "Independent same-file/different-document object replacement remains a controlled component-harness result, not an actual browser or file-authenticity result."
+    ]
+  },
+  "candidateReadiness": {
+    "helpers": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/prepare-candidate.py",
+        "sha256": "6b537a74acbeb99f51b84ac5b5534d39cc223dc4da05492096d6ee63efdbf1e0",
+        "bytes": 7867,
+        "inputCount": 1145,
+        "exactlyMatchesEngineeringInputInventory": true,
+        "executed": false
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback-candidate/verify-candidate.py",
+        "sha256": "08f2183c088d9f0092976d6f15f1ee60c842ba469b69e5fd29545257425b9a1e",
+        "bytes": 12949,
+        "inputCount": 1145,
+        "exactlyMatchesEngineeringInputInventory": true,
+        "executed": false
+      }
+    ],
+    "sameEightNewDocxInputsAndFourExistingWorkbookInputsIncluded": true,
+    "claim": "Syntax and exact current input-scope checks only. Helpers retain exact commit/inventory checks, exclusive receipts, plist/manifest/arm64/ad-hoc codesign/archive/formal-unchanged checks; prepare and verifier have not run for this increment. Root must supply a completed exact-commit candidate before independent candidate execution.",
+    "noCandidateOrInstalledAcceptanceYet": true
+  },
+  "protectedReadmes": [
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+      "bytes": 11543
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7",
+      "bytes": 2341
+    }
+  ],
+  "auditDiagnostics": [
+    "Initial ad-hoc comparison incorrectly compared complete browser input maps (705/706/700 including harness files) to the 697-source-only map, causing an AssertionError. A follow-up assumed all runs use cases and encountered KeyError for the single-regression checks shape. Corrected read-only comparison uses exact src subset and the documented per-run cases/checks structure; no source or product failure was inferred and no tests were rerun."
+  ],
+  "limits": [
+    "Source/tests/protocol/browser/candidate/installed app/real Agent remain separate proof levels. This increment is ready for exact candidate preparation, not installed DOCX feedback acceptance.",
+    "Global capability plan, all P21/P16 surfaces and 29 Agent eight-standard acceptance are not marked complete.",
+    "No production edit, original receipt mutation, real Agent, formal app or user database operation in this review. Maintained Markdown updates outside the frozen build inputs remain root responsibility."
+  ]
+}

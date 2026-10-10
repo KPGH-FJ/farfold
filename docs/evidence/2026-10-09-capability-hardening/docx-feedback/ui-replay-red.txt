@@ -1,0 +1,46 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/DocxFilePreview.feedback.test.tsx (21 tests | 2 failed) 189ms
+   × selecting the already selected paragraph keeps a usable candidate 9ms
+   × StrictMode-style child-first effect replay retires the old source and registers a fresh one 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > selecting the already selected paragraph keeps a usable candidate
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:272:82
+    270| it("selecting the already selected paragraph keeps a usable candidate"…
+    271|  await ready(); const chosen=select(); click(buttons(chosen,selectPara…
+    272|  click(buttons(view(),confirmParagraph)[0]); expect(props.onOfficeTarg…
+       |                                                                                  ^
+    273| });
+    274| it("StrictMode-style child-first effect replay retires the old source …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/DocxFilePreview.feedback.test.tsx > StrictMode-style child-first effect replay retires the old source and registers a fresh one
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/DocxFilePreview.feedback.test.tsx:282:25
+    280|    if(slot.setup) slot.cleanup=slot.setup()||undefined;
+    281|  const next=props.onOfficeTargetAvailability.mock.lastCall![0];
+    282|  expect(next.available).toBe(true); expect(next.source).not.toBe(sourc…
+       |                         ^
+    283|  click(old); expect(props.onOfficeTargetConfirm).not.toHaveBeenCalled(…
+    284|  click(buttons(view(),confirmParagraph)[0]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 19 passed (21)
+   Start at  08:37:16
+   Duration  344ms (transform 69ms, setup 0ms, import 97ms, tests 189ms, environment 0ms)
+

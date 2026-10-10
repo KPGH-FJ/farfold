@@ -1,0 +1,23 @@
+{
+  "license": "CC0-1.0 synthetic text/XML and generator",
+  "file": "window-boundaries.docx",
+  "sha256": "5ea9f16cb6733475866958dd873187da986e26b9abce5dee9ccacda56233adab",
+  "bytes": 1902,
+  "longParagraph": {
+    "part": "word/document.xml",
+    "elementPath": [0, 0],
+    "utf16Length": 40061
+  },
+  "table": {
+    "part": "word/document.xml",
+    "elementPath": [0, 1],
+    "rows": 21,
+    "columns": 13
+  },
+  "lastCellParagraph": {
+    "part": "word/document.xml",
+    "elementPath": [0, 1, 21, 12, 0],
+    "text": "ROW21 COL13"
+  },
+  "method": "Literal original XML path checked with minidom; no production parser import; structure coordinates, not Word pagination."
+}

@@ -1,0 +1,228 @@
+{
+  "checkedAtUtc": "2026-10-10T00:41:13.948645+00:00",
+  "reviewer": "architecture independent subagent",
+  "sourceBase": "12766bffdfce530b67053dcd91196512db997cd4",
+  "status": "no_blocking_finding_in_reviewed_parent_scope",
+  "method": "只读当前差异与相关调用链，检查作者保留的原始测试输出，并计算当前输入/引用材料 SHA256。没有重复运行作者测试，没有改产品源码或正式应用。",
+  "parentSource": [
+    {
+      "path": "src/components/OpenedFileView.tsx",
+      "sha256": "5c78c204200dc4625dcee6ecff1614fab4d8599c3ab4930ff1adb74f6304187e"
+    },
+    {
+      "path": "src/components/OpenedFileView.docx-feedback.test.tsx",
+      "sha256": "17ee38e662bea74c8d605ef839728c48dee2aa81ae6e5dfcbf9b5e3672945c43"
+    },
+    {
+      "path": "src/components/OpenedFileView.test.tsx",
+      "sha256": "b4f5f90a8456878b9b9e4cb79c545bf1fff09c4035019fbcc2b900437643b0d0"
+    }
+  ],
+  "sharedRuntimeReferences": [
+    {
+      "path": "src/runtime/office_feedback_target.ts",
+      "sha256": "198767f573d5d5077a584a1c1537eb20c6419ea02c2dde02b0e1e2ac1d005af5"
+    },
+    {
+      "path": "src/runtime/docx_feedback_target.ts",
+      "sha256": "44cb5aef346757561a275cf025f8591a5fd5c680b828316ad864d7012976f0a9"
+    },
+    {
+      "path": "src/runtime/file_feedback_anchor.ts",
+      "sha256": "7cf6a0157115aa862d5293613d0147673fac1486c4699b7fb08c89b6e936c63a"
+    },
+    {
+      "path": "src/runtime/feedback_strings.ts",
+      "sha256": "919335f8c79178b7d5802b35fb43b7479ab35b697ad72a5dfcb94528b22e98f5"
+    }
+  ],
+  "leafLimitedRead": {
+    "files": [
+      {
+        "path": "src/components/DocxFilePreview.tsx",
+        "sha256": "7c2ad11e00c490436c0aa4d53728b0f52b179f1ef46a11fa57d980b7dd3c9c0d"
+      },
+      {
+        "path": "src/components/DocxDocumentView.tsx",
+        "sha256": "31b89fb9e3b51f9f29f6a8ac0020ad9f288007817f7d5507ffbfebf14a47ef1c"
+      },
+      {
+        "path": "src/components/DocxFilePreview.css",
+        "sha256": "758f7591bc66736a1f3d0dced9eaef714be38a8a982043cff802a85c8ec659a9"
+      },
+      {
+        "path": "src/runtime/document_strings.ts",
+        "sha256": "e9bf81b2f45d3fedea6fec890979c010d80174e4e1bb677f191768255a386657"
+      }
+    ],
+    "scope": "补看父层依赖的当前 active/blocked、选择 owner/source、同步撤回、布局登记与确认链；不是完整叶层、布局或浏览器验收。"
+  },
+  "findings": [],
+  "checks": [
+    {
+      "id": "current_source_and_version",
+      "result": "passed_read_only",
+      "detail": "父层 acceptsOfficeSource 按 source.kind 与当前 docx/xlsx 类型匹配；同一来源还需七项文件字段相同、精确已登记 source、当前会话/选择身份、ready、无 pending/operation、工厂仍有效。onStatus 用当前 file 对象身份，旧版状态不能令新版就绪。"
+    },
+    {
+      "id": "retirement_and_late_callbacks",
+      "result": "passed_read_only",
+      "detail": "离开、隐藏、开始重读、非 ready 或在读状态撤回来源；false 仅清相同来源，接受另一个 source 先退休旧来源。确认再核工厂坐标，已退休来源不能靠晚到 available 复活。叶层负责窗口/段落/表格/区域切换时同步退休，父层不把相同正文视为坐标。"
+    },
+    {
+      "id": "refresh_lifecycle",
+      "result": "passed_read_only",
+      "detail": "DOCX 与既有 XLSX 都传 active={active} 和独立 interactionBlocked={Boolean(shown.pending)}；不因自动 stage 自行暂停旧读取。父层 operation/pending 拒绝新坐标，候选或意见编辑时 monitor apply 延后。叶层 inert 和事件 allowed 守卫保持旧正文显示但拒绝操作。"
+    },
+    {
+      "id": "draft_and_explicit_target",
+      "result": "passed_read_only",
+      "detail": "只有显式确认改变坐标，保留已写意见；显式整文件按钮删除 anchor/旧 lineInput，保留文本。同路径换版使用不同 disk contentId，旧意见保留当时坐标且不冒称当前验证，加入输入沿 take 一次路径且不自动发送。"
+    },
+    {
+      "id": "existing_workbook_boundary",
+      "result": "passed_read_only",
+      "detail": "本次只扩 Office 关联类型与 DOCX 同一门禁；既有 XLSX active/blocked、七字段检查、精确来源和确认链仍在。没有新增按正文或显示 id 推导位置的分支。"
+    },
+    {
+      "id": "old_assertion_correction",
+      "result": "passed_read_only",
+      "detail": "OpenedFileView.test.tsx 旧 DOCX 不显示意见入口断言改为读取未 ready 时入口 disabled；原 inspect/read/open/version 断言保留，新增 11 项覆盖 ready 后能力与撤回。"
+    }
+  ],
+  "authorEvidence": [
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/parent-red.txt",
+        "sha256": "ef6559e47cd6d581c788553070758ed0c7d2c8b6878801dc7a6ec9db0a4d8adb"
+      },
+      "observed": "1 文件 11 项失败；共同缺少 DOCX 入口/回调/blocked 接线，不声称 11 个独立产品根因。"
+    },
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/parent-first-green.txt",
+        "sha256": "e71e364fdc8fde095ad191a05977fbf95a4a22d58ed34ea63961e3dd89b1108b"
+      },
+      "observed": "4 文件 105 通过/1 失败；保留已过期的“不显示意见按钮”预期，与本次新增能力冲突。"
+    },
+    {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-feedback/parent-related-green.txt",
+        "sha256": "fb2a0b487571aecba52fea8e509e2d00bf712d6eeb8d0492e7fec09da686d58a"
+      },
+      "observed": "4 文件 106 通过，包含修正后的既有断言。"
+    }
+  ],
+  "testLayer": "父层用受控 hook runner/SSR 与 mock Docx leaf/读取、真实 runtime factory；自动 stage 两场景另使用真实 FileRevisionMonitor 与受控延迟 prepare。不能据此证明真实 React commit/DOM、真实 Worker 原 XML 坐标、WebKit、正式安装或 Agent 行为。",
+  "preparedRunnerReview": {
+    "runner": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/run-docx-feedback-checks.py",
+      "sha256": "8d2405d94721c7c27407d7866e0b19d6f1e0f426873d6887fa0b066e78028078"
+    },
+    "executed": false,
+    "collectorOnlyCalled": true,
+    "currentInputCount": 1145,
+    "priorInputCount": 1128,
+    "priorInputs": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/inputs.json",
+      "sha256": "34431684088af54a7dcd313cc83724e3cf3194339168ad22bd9fc6705ca99289"
+    },
+    "priorFinalVerification": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/workbook-feedback-checks-final/final-verification.json",
+      "sha256": "16a87e25ec11f4dc15e09e0cf83cfd2924c38943b63db23ec02f01c2a7611638"
+    },
+    "changedInputsAtReview": [
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/oracle.json",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/repeated-locations.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/hidden-notice-boundaries.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/nested-choice-fallback.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/oracle-supplement.json",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/supported-choice-markers.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/window-boundaries.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/window-oracle.json",
+      "src/components/DocxDocumentView.tsx",
+      "src/components/DocxFilePreview.css",
+      "src/components/DocxFilePreview.feedback.test.tsx",
+      "src/components/DocxFilePreview.tsx",
+      "src/components/OpenedFileView.docx-feedback.test.tsx",
+      "src/components/OpenedFileView.test.tsx",
+      "src/components/OpenedFileView.tsx",
+      "src/components/PreviewReadingPosition.test.tsx",
+      "src/runtime/document_strings.ts",
+      "src/runtime/document_view.test.ts",
+      "src/runtime/docx_compatibility.test.ts",
+      "src/runtime/docx_feedback_persistence.test.ts",
+      "src/runtime/docx_feedback_target.test.ts",
+      "src/runtime/docx_feedback_target.ts",
+      "src/runtime/docx_package.ts",
+      "src/runtime/docx_parse.ts",
+      "src/runtime/docx_preview.test.ts",
+      "src/runtime/docx_preview.ts",
+      "src/runtime/docx_public_samples.test.ts",
+      "src/runtime/docx_source_position.test.ts",
+      "src/runtime/docx_source_position.ts",
+      "src/runtime/docx_source_wire.test.ts",
+      "src/runtime/docx_table.ts",
+      "src/runtime/docx_types.ts",
+      "src/runtime/docx_validation.ts",
+      "src/runtime/feedback_strings.ts",
+      "src/runtime/file_feedback_anchor.docx.test.ts",
+      "src/runtime/file_feedback_anchor.ts",
+      "src/runtime/office_feedback_target.ts"
+    ],
+    "unchangedPriorNonFrontendInputCount": 440,
+    "unchangedSharedRuntimeFixtures": 10,
+    "newExternalFrontendInputs": [
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/repeated-locations.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/oracle.json",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/supported-choice-markers.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/nested-choice-fallback.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/hidden-notice-boundaries.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/oracle-supplement.json",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/window-boundaries.docx",
+      "docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/window-oracle.json"
+    ],
+    "reuseConclusion": "当前实际差异仅前端及明确新增的 8 个 DOCX 测试/oracle 文件；10 个 runtime 共享夹具与先前所有非 src 输入一致，三项 Rust 成功原日志 hash 匹配。当前复用有事实依据；不是新运行 Rust。",
+    "priorRustEvidence": [
+      {
+        "name": "cargo-fmt",
+        "priorExitCode": 0,
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/cargo-fmt.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "executedByReviewer": false
+      },
+      {
+        "name": "clippy",
+        "priorExitCode": 0,
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/clippy.txt",
+          "sha256": "80a72ab0b6d57f57833fbff08eb4f1c216d4bb98fd0953be701bdd8ef1a25c8e"
+        },
+        "executedByReviewer": false
+      },
+      {
+        "name": "rust",
+        "priorExitCode": 0,
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/large-file-checks/rust.txt",
+          "sha256": "c76077a5d60a977c6ecf4fcfabcf9aee9b14d1f4de90ca0c5a74c6d9c748649b"
+        },
+        "executedByReviewer": false
+      }
+    ],
+    "guardSuggestion": "已落实并只读核对：执行器单独比较 src/runtime/fixtures/ 全集合与摘要；同时要求 prior allPassed/sourceStable/7 项 check/inputCount 匹配，8 个新增 DOCX 输入只能新增，不掩盖旧夹具变化。ast.parse 成功，未执行工程检查。",
+    "previousRunnerCheckpoint": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/run-docx-feedback-checks.py",
+      "sha256": "8d2405d94721c7c27407d7866e0b19d6f1e0f426873d6887fa0b066e78028078"
+    }
+  },
+  "boundaries": [
+    "这是当前父层阶段检查，不是本片最终工程/浏览器通过回执。",
+    "verification 的实际完整 App 双引擎、原 XML oracle 与当前叶层独立证据尚待最终收口。",
+    "新增样本或后续源变化需在最终 collector 冻结后重新核差异；本记录保留当前时点。",
+    "未启动正式应用、Agent、账号，未读取/改写用户数据或修改两份保护 README。",
+    "root 随后报告叶层存在两项实际布局问题并计划增加取消选择；本父层只读结论不覆盖这些新发现，当前完整 UI 尚未最终冻结。"
+  ]
+}

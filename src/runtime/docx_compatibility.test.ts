@@ -25,10 +25,12 @@ function text(blocks: DocxBlock[]): string[] {
 describe("independent python-docx writer compatibility", () => {
   for (const sample of expected.samples)
     it(sample.file, () => {
-      const document = parseDocx(
-        docxFixture(sample.file.replace(/\.docx$/, ""), "docx-compatibility"),
+      const capture = docxFixture(
+        sample.file.replace(/\.docx$/, ""),
+        "docx-compatibility",
       );
-      checkedDocxDocument(document);
+      const document = parseDocx(capture);
+      checkedDocxDocument(document, new Set(capture.parts.map((p) => p.name)));
       const strings = text(document.blocks);
       if (sample.requiredBodyTextInOrder)
         expect(strings.filter(Boolean)).toEqual(sample.requiredBodyTextInOrder);
