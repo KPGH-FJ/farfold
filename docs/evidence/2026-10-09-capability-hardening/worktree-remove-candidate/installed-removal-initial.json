@@ -1,0 +1,532 @@
+{
+  "kind": "installed-worktree-removal-initial-with-open-native-defects",
+  "observedAtUtc": "2026-10-10T09:46:03.644079+00:00",
+  "formalSourceCommit": "ecc78ce3acb2c2d6be94809dadf7220e7199ad7b",
+  "version": "0.1.7",
+  "platform": "macOS arm64",
+  "formalBundleMatchesCandidate": true,
+  "formalAppNormallyClosed": true,
+  "allPlanComplete": false,
+  "H15Closed": false,
+  "cases": [
+    {
+      "id": "unsent-archive-block",
+      "status": "passed",
+      "result": "One unsent controlled canary blocks archive; clearing only that canary enables the explicit archive. Single blocker copy confirmed."
+    },
+    {
+      "id": "archived-history-guidance",
+      "status": "passed",
+      "result": "Warm and cold historical conversation identify the exact archived location. No automatic restore, path replacement or send. Cold unavailable native history is not replaced by fabricated cached text."
+    },
+    {
+      "id": "prepare-and-cancel",
+      "status": "passed-with-presentation-defect",
+      "result": "A verified recovery is prepared before a separate deletion checkbox/action. Cancel preserves the archived worktree and recovery. Preparation temporarily displays premature second-step/unknown wording (NEW-09); no automatic deletion."
+    },
+    {
+      "id": "offline-independent-recovery",
+      "status": "passed",
+      "result": "With only the root-owned source repository temporarily moved aside, an independent repository was restored from the retained commit bundle. Source was then returned with exact identity; material matched."
+    },
+    {
+      "id": "occupied-original-and-restore",
+      "status": "passed",
+      "result": "A controlled occupant blocks restoration without overwrite; it was moved aside intact. Original location then restored and the same Codex conversation continued successfully, despite an existing recovery backup."
+    },
+    {
+      "id": "first-remove-refused-after-test-interference",
+      "status": "failed-preserved",
+      "result": "First deletion was not dispatched: a root verification command used plain git status and refreshed index stat cache. The strict raw-index guard rejected materialChanged. All files/recoveries remain. 125 stat-cache bytes plus 20 checksum bytes differ; file OIDs/modes/paths/flags and extension unchanged. A content-equivalent recreated index was used for field comparison, not falsely labeled the original saved bytes."
+    },
+    {
+      "id": "clean-confirmed-remove",
+      "status": "passed",
+      "result": "A separate clean synthetic worktree was created/archived/prepared through the installed UI. Explicit second confirmation removed its retained files and Git registration. Original source, branch, source index and exact verified recovery bundle/manifest remained."
+    },
+    {
+      "id": "cold-remove-recheck-then-recover",
+      "status": "failed",
+      "result": "After restart, rechecking deletion shows recovery as verified in UI, but canonical recovery list remains unknown. The subsequent new-directory recovery is rejected before materialization (NEW-10); no partial target created. This is not a backup-content failure."
+    },
+    {
+      "id": "post-delete-separate-recovery-verification",
+      "status": "passed-workaround-only",
+      "result": "A separate explicit recovery-verification button updates the canonical record; restoring to the absent new directory then succeeds. Exact commit/material/modes/symlink, independent Git identity and source/branch/index preservation pass. This does not close the cold recheck defect."
+    },
+    {
+      "id": "new-draft-archived-location",
+      "status": "failed",
+      "result": "New Conversation with the remembered archived original cwd attempts eager preparation and shows a generic creation failure. Historical guidance succeeds but this NEW-07 new-draft path remains open. Evidence is root tool observation and traced source, not a relabeled manager screenshot."
+    },
+    {
+      "id": "normal-exit-data",
+      "status": "passed",
+      "result": "Final empty TR draft is unchanged, normal Cmd+Q verified by process absence. All 126 old full session rows and original 8 inputs/8 feedback/3 queues, old activity and other unsent fields remain exact; only two controlled sessions and their activity are added. Catalogue changes are individually reported; it is not claimed wholly unchanged."
+    }
+  ],
+  "realAgent": {
+    "agent": "Codex",
+    "model": "6 Astra",
+    "reasoning": "Ultra",
+    "officialModel": "gpt-6-astra",
+    "officialEffort": "ultra",
+    "permission": "Approve for me",
+    "officialApprovalPolicy": "on-request",
+    "nativeSessions": 2,
+    "requests": 3,
+    "toolCalls": 0,
+    "completedEvents": 3,
+    "scope": "Controlled no-tool markers: original request, same conversation after original-location restoration, and a new conversation after explicit use of a cold-restored independent location. No 29-Agent generalization."
+  },
+  "dataRetention": {
+    "oldFullRowsEqual": 126,
+    "addedControlledSessions": 2,
+    "oldUnsentCounts": {
+      "composers": 8,
+      "feedback": 8,
+      "queues": 3
+    },
+    "oldUnsentEntriesExact": true,
+    "oldActivityExact": true,
+    "newActivityOnlyControlled": true,
+    "catalogueUnchanged": false,
+    "catalogueBoundary": "Exact per-record changes in private final difference, including one old availability verified-to-unknown cold-load change; no other old record field changes allowed."
+  },
+  "openIssues": [
+    "NEW-07 new-draft archived-location admission and guidance",
+    "NEW-08 duplicated unknown-delete copy",
+    "NEW-09 premature preparation phase presentation",
+    "NEW-10 cold deletion recheck and canonical recovery-list disagreement"
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/candidate.json",
+      "sha256": "303c85156efd0cab37e6d2d8d5d2d2142aac615b59672562a7f9c72a23132820",
+      "bytes": 7842
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/candidate-independent.json",
+      "sha256": "93ee00bd1bc9a61d0f0059ee4c79d4d4e3a97d938edba5c948081f1670d23194",
+      "bytes": 4494
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/installed-data-retention.json",
+      "sha256": "be492c5606adfc3c473149cb4857d99188aed271776a9bbfd02a634cca6bc3ae",
+      "bytes": 3208
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/install-independent.json",
+      "sha256": "aa60df495a9d8dadc19c39f18a7b846bbd31acd9f32f7a55fbb9f9ac2a2cd4b2",
+      "bytes": 9939
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/worktree-remove-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "b9533fd69f6692d383abbcf3e05dce72b8ad8dbb62cec4b6fa393ba4a8dd10a8",
+      "bytes": 1210
+    }
+  ],
+  "privateReferences": [
+    {
+      "path": "output/2026-10-10-worktree-remove-native/created-material.json",
+      "sha256": "f54e44a6c1bbc6418600e8c1a6dece58454d5b95dc6ddcc98ce47a72e8d5e148",
+      "bytes": 1963
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/archived-material.json",
+      "sha256": "c295f8cb7063fe1bc4696beea6f6e8fe055268470cced5db24ffd2273e72ed53",
+      "bytes": 2067
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/offline-recovered-material.json",
+      "sha256": "534019dd00b5cd7b71d8a8d9e110a1f4331d028784337e896ba37c6c525822ba",
+      "bytes": 1855
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/restored-original-material.json",
+      "sha256": "6b77f085e0062be06ce2a42c2a605d194f77f68c6be0c6d197d39d90601c044f",
+      "bytes": 1963
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/rearchived-material.json",
+      "sha256": "089dee330bd334979c7ad1a26ca3523bb7accac2507157d90c1925fe9af6f88c",
+      "bytes": 2067
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/cold-recovered-material.json",
+      "sha256": "aada8d70fd493ae3b33d4afe988e5f7d34a58f24a3c47759d5f5ee1bc8eb507b",
+      "bytes": 1842
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/source-offline.json",
+      "sha256": "292b664e662fa38fb45afc725fbfe46132753e74e2e4a065977f7dee9ee8f860",
+      "bytes": 1084
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/source-returned.json",
+      "sha256": "74dbc14ac12cf793189410ffca296432e33b7d782e441b8caa780848d54f82bc",
+      "bytes": 342
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/occupied-before.json",
+      "sha256": "ac52381ea87eeecb0865cf51acc9fc314b7836e284d94fde71ef515889183ffd",
+      "bytes": 522
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/occupied-preserved.json",
+      "sha256": "13723927121b6608a4b12ea55d6b03d79d61092c8b5511dad30a0b3db40e37a5",
+      "bytes": 684
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/after-confirmed-remove.json",
+      "sha256": "3e6bd5461440f2e9a71707afcb30f6bd5eae411d2bafab068cf785cac1eb2b37",
+      "bytes": 690
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/index-diagnosis-jxx9_18n/index-field-comparison.json",
+      "sha256": "55b28e13e866b68df929c747cbee5d3d65788a69b556f0bbb2e687d6c0ff6333",
+      "bytes": 15067
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/followup-notes.json",
+      "sha256": "2d0d592df94537646af0a9f127954dc5536f9508bcf0484413a143d3a063d79d",
+      "bytes": 10031
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/post-delete-independent-zecg3qdt/independent-review.json",
+      "sha256": "2665c50e0c766f9b2705a6cd374d4221df660090171d4336e26e4a54022985ba",
+      "bytes": 8016
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/recovery-failure-independent-_km_67vm/diagnosis.json",
+      "sha256": "0e25058e338923ed5f39f6a6dfc1832493ee5a71efa4c56f2bb18f7f8d4b4872",
+      "bytes": 3365
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/recovery-failure-difference-independent.json",
+      "sha256": "069a135b4d58a3aff618b88f7be3dbe1882de1cc8ac54de2970cb1abe21b904e",
+      "bytes": 32999
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/final-difference-independent.json",
+      "sha256": "d1503472031af7cbfcec0838bf15fba98522c78b105543933d3a916c311dc5ad",
+      "bytes": 74808
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/recovery-failure-official-copy-index.json",
+      "sha256": "2a830050449460bdb2ab03af1f953dac7cf802b1bf7d1d896fde499afe12c015",
+      "bytes": 2713
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/final-normal-exit.json",
+      "sha256": "9354971b040dea8961bef44fcbc3895be78af40d43d4ed7a9b74a10f294234fe",
+      "bytes": 513
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/clean-delete/after-confirmed-remove.json",
+      "sha256": "8665e04cbcd5bdbe6187f66d5a67f9be363e0b978f4415eb28e2d106a7e8bb0e",
+      "bytes": 462
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/clean-delete/after-delete-explicit-verification-material.json",
+      "sha256": "73f0c74db489a7230447178fe8da41a69fce4642c15959d11cb6256b399d9f9d",
+      "bytes": 1878
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/clean-delete/after-recovery-source-preservation.json",
+      "sha256": "5d6eedd60ab75ffc0885127dab393e79690dc2ebeb1dea833408b87326e3c73e",
+      "bytes": 657
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/01-installed-start.ax.txt",
+      "sha256": "622381de509c36423984e81e428f580b0dca04c206ee39cb568851a188d476e2",
+      "bytes": 3191
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/02-prior-position-recheck.ax.txt",
+      "sha256": "84a173514fb784ac76548eef49611c22a641264d45ee57576f2071626f418030",
+      "bytes": 122
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/03-created-not-used.ax.txt",
+      "sha256": "62d9c9bb9e16347aa8bbc2265390d57ff88908778b584d8f8f6ebdbfab68a919",
+      "bytes": 1494
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/04-real-marker-reply.ax.txt",
+      "sha256": "fcdcb4e9007eb079b1673156a2b65c9c05cf59b3e3dd0585ef631585a447d448",
+      "bytes": 1102
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/05-unsent-single-blocker.ax.txt",
+      "sha256": "6fab3c0370e6bf59e636e73d47554a4e35934794e1bc28a7c8a0a7b1948dc25b",
+      "bytes": 1072
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/06-archived.ax.txt",
+      "sha256": "d09dda0c9f228e5b4e2bbf6341d61d555347c700c28bbf9a0dc18dba3c1ba368",
+      "bytes": 2455
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/07-history-archived-guidance.ax.txt",
+      "sha256": "d1daf7b12d87baf2d83a31cf2c1fdb0fa8e1e0b16f6a7eac8926ae41bfc7bf87",
+      "bytes": 3958
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/08-recovery-prepared-before-delete.ax.txt",
+      "sha256": "4fc1cfbe49286307d51b18b6f3360e9de7f86a942d74ce2116ab22caa175da86",
+      "bytes": 4721
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/09-offline-recovery-ready.ax.txt",
+      "sha256": "91e13a77e56e5cc18cc8a5d8af45e4a270ad3374fbbfb6c56df2927cfbd4ae3c",
+      "bytes": 4200
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/10-original-occupied-refusal.ax.txt",
+      "sha256": "b9004309dd163f2628a48e740fe549ffeac2df1019275fd007711fb425afd040",
+      "bytes": 3647
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/11-original-restored-with-backup.ax.txt",
+      "sha256": "49af1ae1716adbc5d47c53d7b6ca3470152a6dcd5ace2309b551dc67ce6836f0",
+      "bytes": 3162
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/12-original-reconnected-completed.ax.txt",
+      "sha256": "e368269729152062503042a0826522227a948b159c0025f8dc0a941d35d263e6",
+      "bytes": 4383
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/13-second-delete-separate-confirmation.ax.txt",
+      "sha256": "30b5c9834aae618f608729d58cf0c26647bc72e47cf35d1bf1520ef1155f134f",
+      "bytes": 5330
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/14-remove-result.ax.txt",
+      "sha256": "f0c99beee73e4d8c3fcf1067457cbd3889b7a71d399f5d1f6c4d48872cc9645d",
+      "bytes": 5100
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/15-idle-tr-before-diagnostic-exit.ax.txt",
+      "sha256": "7520f04ca0a3bc5a7137bd01a90a8688a7a5d821dd2b1bc788d14db20bb55f16",
+      "bytes": 3408
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/16-cold-archived-history-guidance.ax.txt",
+      "sha256": "839a54f76e70bdeab573acc0d83839805763087da2f041d22de225b052144301",
+      "bytes": 3245
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/17-cold-recoveries-require-verification.ax.txt",
+      "sha256": "ec729732d39959a6757211fcbfdccfb12ca843087abc344073c857123892340f",
+      "bytes": 3935
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/18-cold-recovery-completed.ax.txt",
+      "sha256": "9838490e28f6aab6f7a06cbc927f60b3d230a47f567a892e68fcb4ee48d7f95e",
+      "bytes": 4892
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/19-recovered-location-explicitly-used.ax.txt",
+      "sha256": "35f9a3ada3e505ed8286fc1ff91b44e5ba6392d7787dfd5f54ce3e8e394f6d20",
+      "bytes": 3478
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/20-cold-recovered-real-reply.ax.txt",
+      "sha256": "7c4b09dd9bf36b70c81c2e983562714b991d81a327154064e5ad6219397bf8e9",
+      "bytes": 3956
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/21-clean-prepare-phase-observation.ax.txt",
+      "sha256": "075f17a259bf3bb871be7e2a59441ee487cbc2ad40858b5e0a488c93cf9efa87",
+      "bytes": 6060
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/22-clean-remove-completed.ax.txt",
+      "sha256": "30cda30e39608c2e088d02b2cbff4095b5f310945647931caa7ebf05d6dd566b",
+      "bytes": 6733
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/23-empty-before-post-delete-restart.ax.txt",
+      "sha256": "fc2534dba40d05e38f0744dd1d7bf36259b4136bca65db6cd1a12b86c40b3c33",
+      "bytes": 3480
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/24-cold-delete-rechecked.ax.txt",
+      "sha256": "6a6fe638d208ce8da8dbd7e36c0b76fcac0d85ed513db0112ef50ca601ed3659",
+      "bytes": 4398
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/25-post-delete-recovery-failed.ax.txt",
+      "sha256": "e9d424b938a3ab7fe10c11b4d650cf7920603de37c2d3e248c18d505e17a61ee",
+      "bytes": 5234
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/26-empty-tr-before-recovery-diagnosis-exit.ax.txt",
+      "sha256": "bf3e409f51261ed266b6afa028d74554228e035b7fb7e1d8fa0ed78b34f93d41",
+      "bytes": 3410
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/27-post-delete-explicit-verification-recovered.ax.txt",
+      "sha256": "cf0a4dda8367cbc1f900df3c78c7ca73a7bbf02aa53237c02139e85c5b623958",
+      "bytes": 5463
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/28-post-delete-recovered-status.ax.txt",
+      "sha256": "cf0a4dda8367cbc1f900df3c78c7ca73a7bbf02aa53237c02139e85c5b623958",
+      "bytes": 5463
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/29-final-empty-tr.ax.txt",
+      "sha256": "c078a9b61156cdd375531fab23b13f7996fce5acdd3d2887575524e4929341f1",
+      "bytes": 3381
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/01-installed-start.png",
+      "sha256": "09eefe3df4c74ae2da575d639fa35897683ce9c5f7186e69f3ca6d2cbcd4152a",
+      "bytes": 216229
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/02-prior-position-recheck.png",
+      "sha256": "2739a088a75076668e7344fcdaafafff7e2d1ed0cd3f611e55f2ada0320a49aa",
+      "bytes": 303229
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/03-created-not-used.png",
+      "sha256": "674e25961082d70f2248f2d80591f9df1e8d259843f2a1fe1198ccf7508a4e5f",
+      "bytes": 273882
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/04-real-marker-reply.png",
+      "sha256": "4bd0540ae03f11f58f3292abbaa0d5f7f74dc3369224aae9e63e7bde2b38b5e3",
+      "bytes": 285237
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/05-unsent-single-blocker.png",
+      "sha256": "fc94e962f2eb219171344f41a94fadde852c70912ca3dcd5a1ed3123600e7957",
+      "bytes": 325463
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/06-archived.png",
+      "sha256": "f91f28578c5e5af5b349c911f9eaeb01f4908cd5c51959a2693118b3de01aea2",
+      "bytes": 319527
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/07-history-archived-guidance.png",
+      "sha256": "a015126a051857708c386fbf0377d123eacb6754cc961dc088f7ea2c62883a88",
+      "bytes": 290886
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/08-recovery-prepared-before-delete.png",
+      "sha256": "c04a84ff113876741b020cf02fe0db9d5f00c407afba3576187e6cdba8fde17a",
+      "bytes": 350986
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/09-offline-recovery-ready.png",
+      "sha256": "d4b74474d8569f5d6562871be222ebbd2a5e6ecd1af83b529c829e6a29954805",
+      "bytes": 347054
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/10-original-occupied-refusal.png",
+      "sha256": "2262dded64ef06aa56c460a4564fdb5ddca48359b12624bfcff48159748c8f43",
+      "bytes": 369710
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/11-original-restored-with-backup.png",
+      "sha256": "698a27b06c0cf3241ff53cebac95d0e46527e2083db8e09b341ee088cf77684f",
+      "bytes": 352753
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/12-original-reconnected-completed.png",
+      "sha256": "75936d68aa4802fe502915f739a9c8f17e8b80bc092feb2ecbd4dc4ce59131ce",
+      "bytes": 337150
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/13-second-delete-separate-confirmation.png",
+      "sha256": "ed97b7cf804e4e9d741de25f3144d1f68d26c1c48bd2d30ad722a89ae8c6df8c",
+      "bytes": 344853
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/14-remove-result.png",
+      "sha256": "68bc2c6f637f5cff6cf0bdab1d307753c3c9f75524adddfe6941a3fbfc0533b3",
+      "bytes": 346239
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/15-idle-tr-before-diagnostic-exit.png",
+      "sha256": "900ecbce852c01e01c5829fb40e59dabed56f8e610b3d58afb2fac7f088e7872",
+      "bytes": 219397
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/16-cold-archived-history-guidance.png",
+      "sha256": "a7af06af52c066e4348e5b44d12fdb2bc7f522fc3b23b8f4c0a2e7ccf6d641ca",
+      "bytes": 230806
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/17-cold-recoveries-require-verification.png",
+      "sha256": "a423201097089a922b3e00fed9d2aa573c3373bc1ce5da2e81392ee797b2f1ae",
+      "bytes": 327276
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/18-cold-recovery-completed.png",
+      "sha256": "5b972cf7fa61fb8bc19998ffcb998e9948344527700426da532f427d9ab1d279",
+      "bytes": 371717
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/19-recovered-location-explicitly-used.png",
+      "sha256": "e404d1b4e49bffbc858b4eb5ec7abcecf30ba4922fcda7e40a1753ae7d22fc00",
+      "bytes": 225460
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/20-cold-recovered-real-reply.png",
+      "sha256": "d209d0750db98583d9324b23c32b6298d897ffca40638ad6e22ed5c3ad81ffd3",
+      "bytes": 293124
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/21-clean-prepare-phase-observation.png",
+      "sha256": "5ec54ef6cd959d4e2cd3b738f68503496b2e6ff13f62ee886d95d674290da644",
+      "bytes": 360663
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/22-clean-remove-completed.png",
+      "sha256": "b8fca4ba1f9ec5034025c49272fc2ef49638a8bf1a4c3ddf10a6de5ed4588545",
+      "bytes": 349860
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/24-cold-delete-rechecked.png",
+      "sha256": "e0696eed63793879cc31d36487bf76b3d657ce78cdf97b019b1448bf0e21b66f",
+      "bytes": 312465
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/25-post-delete-recovery-failed.png",
+      "sha256": "03336c6d9b4dcdb60cfe7db0405082e24146df1168c40ccf05b0e6e255d4fe1c",
+      "bytes": 365015
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/26-empty-tr-before-recovery-diagnosis-exit.png",
+      "sha256": "00f632199c4f2b7eb370901411f15383cc4e175868b1e5b8650a61e55b1ba091",
+      "bytes": 219740
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/27-post-delete-explicit-verification-recovered.png",
+      "sha256": "361034a1bc784aec7e6e6c8b2c230ee490aa56613d273f22179e8fad776841fe",
+      "bytes": 362385
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/28-post-delete-recovered-status.png",
+      "sha256": "f62e4b5b0b75c18150709ad56a7c950ef42de1c2c7fdfb601094525f928e83a0",
+      "bytes": 338637
+    },
+    {
+      "path": "output/2026-10-10-worktree-remove-native/29-final-empty-tr.png",
+      "sha256": "6999bf83d2e050c55e29a9d438b4870dbfc174b8a22fcf1012a5765a73557a7a",
+      "bytes": 218752
+    }
+  ],
+  "limitations": [
+    "Installed evidence covers these synthetic macOS worktree paths and one Agent configuration only.",
+    "First refusal is retained as failed journey with root test interference, not silently counted as successful deletion.",
+    "Direct post-delete cold restore failed; the explicit-verification workaround is separate evidence.",
+    "H15 and the full market capability/29-by-8/Windows plan remain open; signing and public distribution remain deferred."
+  ]
+}
