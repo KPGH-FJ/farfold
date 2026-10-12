@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from "react";
+import { useId, useRef, useState, type ReactNode } from "react";
 import type { DraftAttachment } from "../runtime/drafts";
 import { draftImagePreview } from "../runtime/draft_images";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
@@ -9,9 +9,11 @@ import "../conversation-redesign.css";
 export function ComposerAttachments({
   items,
   onRemove,
+  action,
 }: {
   items: readonly DraftAttachment[];
   onRemove: (id: string) => void;
+  action?: (item: DraftAttachment) => ReactNode;
 }) {
   const [expanded, setExpanded] = useState(false);
   const id = useId();
@@ -49,6 +51,7 @@ export function ComposerAttachments({
                 <span>{chip.name}</span>
                 {expanded && chip.uri && <small>{chip.uri}</small>}
               </span>
+              {action?.(chip)}
               <button
                 type="button"
                 className="x"

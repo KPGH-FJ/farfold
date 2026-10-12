@@ -1,0 +1,8 @@
+{
+  "scope": "Own output-only receipt construction; no product code or browser proof changes.",
+  "originalActualExit": 1,
+  "originalError": "AssertionError: []",
+  "cause": "Receipt builder incorrectly expected the root-owned repaired Composer.project-files.test.tsx to be a mismatch in the explicit 49-ref source manifest. That test is not a listed ref; all 49 listed refs match exactly.",
+  "correction": "Require zero listed-ref mismatches; retain observed server completion receipt created before failed assertion. No source/fixture/browser rerun needed for this mistaken receipt expectation.",
+  "all49RefsExact": true
+}

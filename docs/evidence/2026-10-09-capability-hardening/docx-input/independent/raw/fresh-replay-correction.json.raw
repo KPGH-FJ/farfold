@@ -1,0 +1,11 @@
+{
+  "originalRun": {
+    "path": "output/2026-10-13-docx-input-independent/webkit-run02.json",
+    "sha256": "bcd01de6e7f548d2528b658a96d68763cf0dc41acf5a2901dfa338f89dcea5e6",
+    "actualExitCode": 1,
+    "assertionsExecuted": 0
+  },
+  "diagnostic": "Original draft loaded but an invented user replay on a fresh null-ID preparation altered the current view before any DOCX inspect/capture call. Original seeded draft remains preserved.",
+  "correction": "Fresh controlled preparation emits no user history; only explicit resumed record gets the exact history marker/body, matching the existing full-App native-IPC fixture pattern.",
+  "productSourceModified": false
+}

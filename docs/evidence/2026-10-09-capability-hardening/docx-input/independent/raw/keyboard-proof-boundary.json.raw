@@ -1,0 +1,15 @@
+{
+  "scope": "Own harness only; no product source edits. run06 genuine failure remains immutable.",
+  "retainedRunner": {
+    "path": "output/2026-10-13-docx-input-independent/run.before-keyboard-preference-navigation.mjs.raw",
+    "sha256": "c8cc21c684dcad2c17cdf56f4c54dff156ba8a28ad75f9fdc590e3ee1f1ae7f1"
+  },
+  "retainedFailure": "webkit-run06.json",
+  "diagnostic": "keyboard-diagnostic.json",
+  "applePrimarySource": {
+    "url": "https://support.apple.com/en-lamr/guide/safari/cpsh003/mac",
+    "observed": "2026-10-13",
+    "paraphrase": "Apple documents that Tab button coverage depends on keyboard navigation settings, and Option-Tab is the broader webpage navigation shortcut. Safari can swap these behaviors in Advanced settings."
+  },
+  "decision": "Use observed WebKit Option+Tab and Chromium Tab for explicit reach/Enter proof, keep ordinary WebKit Tab failure and native keyboard preferences unknown. Do not claim all-cycle custom focus trapping. Added distinct send-stage source drift check; source implementation unchanged."
+}

@@ -5,8 +5,56 @@ import {
   hasReadableMessages,
   normalizeMessageAttachment,
 } from "./message_attachments";
+import { localMessageAttachments } from "./prompt_blocks";
+import { documentBlock } from "./docx_draft.test-support";
 
 describe("declared message attachments", () => {
+  it("matches an official DOCX echo without losing the outgoing source choice or trusting incoming metadata", () => {
+    const state = freshThreadState("docx-echo", "chosen", "/owned", "id");
+    const local = documentBlock();
+    const attachments = localMessageAttachments([local]);
+    const metadata = attachments[0].localDocumentText;
+    state.items.push({
+      kind: "user",
+      id: "local-docx",
+      text: "",
+      attachments,
+      streaming: false,
+      time: 1,
+    });
+    const forged = {
+      ...local,
+      localDocumentText: {
+        ...local.localDocumentText,
+        source: { root: "/not-approved" },
+      },
+    };
+    applyUpdate(state, {
+      sessionUpdate: "user_message_chunk",
+      content: forged,
+    });
+    expect(state.items).toHaveLength(1);
+    expect(state.items[0]).toMatchObject({
+      kind: "user",
+      attachments: [{ localDocumentText: local.localDocumentText }],
+    });
+    expect(attachments[0].localDocumentText).toBe(metadata);
+    applyUpdate(state, {
+      sessionUpdate: "user_message_chunk",
+      content: {
+        ...local,
+        resource: { ...local.resource, text: "different official body" },
+      },
+    });
+    expect(state.items).toHaveLength(2);
+    expect(state.items[1]).toMatchObject({
+      attachments: [{ text: "different official body" }],
+    });
+    if (state.items[1].kind !== "user") throw new Error("missing user echo");
+    expect(state.items[1].attachments[0]).not.toHaveProperty(
+      "localDocumentText",
+    );
+  });
   it.each([
     { type: "image", data: "aW1hZ2U=", mimeType: "image/png" },
     { type: "audio", data: "YXVkaW8=", mimeType: "audio/wav" },

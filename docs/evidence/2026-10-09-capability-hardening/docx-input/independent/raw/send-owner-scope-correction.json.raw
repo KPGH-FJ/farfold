@@ -1,0 +1,11 @@
+{
+  "originalRun": {
+    "path": "output/2026-10-13-docx-input-independent/webkit-run03.json",
+    "sha256": "3eaf85c500cff7ca4ea484a4048811aacb4620ea4b0e43790dcb3e5bd586c0f4",
+    "actualExitCode": 1,
+    "checks": 12,
+    "all12Passed": true
+  },
+  "cause": "Global CSS c-send locator matched current visible composer and a hidden standby composer. Strictness correctly rejected ambiguous ownership; no IPC prompt was sent.",
+  "correction": "Resolve visible main workbench with exact registered title DOCX_CONTROLLED, assert same original draft text, then use its exact send button. No arbitrary first(), source change or relaxed functional assertion."
+}

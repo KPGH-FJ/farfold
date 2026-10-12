@@ -1,0 +1,8 @@
+import fs from 'node:fs';
+import path from 'node:path';
+const {webkit}=await import('/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs');
+const browser=await webkit.launch({headless:true,executablePath:path.resolve('output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh')});
+const p=await browser.newPage({viewport:{width:1100,height:820}});p.setDefaultTimeout(10000);
+const receipt={scope:'One bounded entry diagnostic only, no document conversion/send assertion',errors:[]};
+p.on('pageerror',e=>receipt.errors.push(String(e)));
+try{await p.goto('http://127.0.0.1:1526/output/2026-10-13-docx-input-independent/index.html');await p.locator('.product-recent').filter({hasText:'DOCX_CONTROLLED'}).click();await p.waitForFunction(()=>window.fixture.current().calls.some(c=>c.cmd==='session_open'));await p.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));receipt.state=await p.evaluate(()=>window.fixture.current());receipt.textareas=await p.locator('textarea').evaluateAll(nodes=>nodes.map(n=>({value:n.value,disabled:n.disabled,placeholder:n.placeholder,label:n.getAttribute('aria-label')})));receipt.body=await p.locator('body').innerText();await p.screenshot({path:'output/2026-10-13-docx-input-independent/entry-diagnostic.png'});}catch(e){receipt.failure=String(e);}finally{await browser.close();fs.writeFileSync('output/2026-10-13-docx-input-independent/entry-diagnostic.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify({failure:receipt.failure,errors:receipt.errors,textareas:receipt.textareas,openCalls:receipt.state?.calls.filter(c=>c.cmd==='session_open'),draftText:receipt.state?.draft.text,newDraftText:receipt.state?.newDraft.text}));}

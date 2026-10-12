@@ -1,0 +1,181 @@
+{
+  "checkedAtUtc": "2026-10-12T21:32:25.185455+00:00",
+  "sourceBase": "483f4989bcf5d8b0adeb93fce8506586582e7242",
+  "inputCount": 1605,
+  "sourceStable": true,
+  "protectedUnchanged": true,
+  "changedInputsDuringRun": [],
+  "changesSinceRun01": [
+    {
+      "path": "src/components/Composer.project-files.test.tsx",
+      "before": "8a5d2620245b4cca0f6ffcafdd4ff2c96e5bd5be15e1397fc4201b623b901d86",
+      "after": "0c307b6ec5e5231f43a560383537c479dd6be1f0527e17f427e263fc25279d60"
+    }
+  ],
+  "unchangedOtherInputCount": 1604,
+  "checks": [
+    {
+      "name": "format",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "format:check"
+      ],
+      "startedAtUtc": "2026-10-12T21:30:58.553779+00:00",
+      "exitCode": 0,
+      "seconds": 28.181,
+      "log": "output/2026-10-13-docx-input-checks/run-02/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true,
+      "executionRun": "run-02",
+      "owner": "root"
+    },
+    {
+      "name": "typecheck",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "typecheck"
+      ],
+      "startedAtUtc": "2026-10-12T21:31:26.735988+00:00",
+      "exitCode": 0,
+      "seconds": 7.936,
+      "log": "output/2026-10-13-docx-input-checks/run-02/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true,
+      "executionRun": "run-02",
+      "owner": "root"
+    },
+    {
+      "name": "frontend",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "test"
+      ],
+      "startedAtUtc": "2026-10-12T21:31:34.672769+00:00",
+      "exitCode": 0,
+      "seconds": 40.475,
+      "log": "output/2026-10-13-docx-input-checks/run-02/frontend.txt",
+      "sha256": "6c0904352c59190d7d3c74ea180a3c257296063591367700fa707d6fe655f3a1",
+      "executedInThisRun": true,
+      "executionRun": "run-02",
+      "owner": "root"
+    },
+    {
+      "name": "build",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "build"
+      ],
+      "startedAtUtc": "2026-10-12T21:32:15.149611+00:00",
+      "exitCode": 0,
+      "seconds": 9.9,
+      "log": "output/2026-10-13-docx-input-checks/run-02/build.txt",
+      "sha256": "738ae234488c45a56b400ce1a13c6ad495448b03c907bd4b114c923fb37d695d",
+      "executedInThisRun": true,
+      "executionRun": "run-02",
+      "owner": "root"
+    },
+    {
+      "name": "cargo-fmt",
+      "group": "native",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "startedAtUtc": "2026-10-12T21:26:45.732186+00:00",
+      "exitCode": 0,
+      "seconds": 1.141,
+      "log": "output/2026-10-13-docx-input-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": false,
+      "owner": "root",
+      "executedInRun01": true,
+      "executionRun": "run-01",
+      "reuseReason": "All 1604 other recorded inputs, including all backend/configuration/fixture/wire inputs, are byte-identical; the only change is the pinned shallow frontend test component location; production source is unchanged.",
+      "originalReceipt": {
+        "path": "output/2026-10-13-docx-input-checks/verification.json",
+        "sha256": "736d290aadd299271a2344201b0ed749ac4ef2ab9c6f4dd292a41be8b73157f0",
+        "bytes": 4025
+      }
+    },
+    {
+      "name": "clippy",
+      "group": "native",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "startedAtUtc": "2026-10-12T21:26:46.873410+00:00",
+      "exitCode": 0,
+      "seconds": 10.958,
+      "log": "output/2026-10-13-docx-input-checks/clippy.txt",
+      "sha256": "537301cf47a02fc6126212678f437647cdb0caa9c85b39875acb31203d087695",
+      "executedInThisRun": false,
+      "owner": "root",
+      "executedInRun01": true,
+      "executionRun": "run-01",
+      "reuseReason": "All 1604 other recorded inputs, including all backend/configuration/fixture/wire inputs, are byte-identical; the only change is the pinned shallow frontend test component location; production source is unchanged.",
+      "originalReceipt": {
+        "path": "output/2026-10-13-docx-input-checks/verification.json",
+        "sha256": "736d290aadd299271a2344201b0ed749ac4ef2ab9c6f4dd292a41be8b73157f0",
+        "bytes": 4025
+      }
+    },
+    {
+      "name": "rust",
+      "group": "native",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "startedAtUtc": "2026-10-12T21:26:57.832432+00:00",
+      "exitCode": 0,
+      "seconds": 121.5,
+      "log": "output/2026-10-13-docx-input-checks/rust.txt",
+      "sha256": "56378c50c09ad41f5656018b0bf5c2fae72313d652ad233ecc7b941e4788ca3b",
+      "executedInThisRun": false,
+      "owner": "root",
+      "executedInRun01": true,
+      "executionRun": "run-01",
+      "reuseReason": "All 1604 other recorded inputs, including all backend/configuration/fixture/wire inputs, are byte-identical; the only change is the pinned shallow frontend test component location; production source is unchanged.",
+      "originalReceipt": {
+        "path": "output/2026-10-13-docx-input-checks/verification.json",
+        "sha256": "736d290aadd299271a2344201b0ed749ac4ef2ab9c6f4dd292a41be8b73157f0",
+        "bytes": 4025
+      }
+    }
+  ],
+  "counts": {
+    "rustReusedFromRun01": [
+      "test result: ok. 1617 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 119.75s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ],
+    "frontend": [
+      "Test Files  451 passed (451)",
+      "Tests  5265 passed (5265)"
+    ]
+  },
+  "priorVerification": {
+    "path": "output/2026-10-13-docx-input-checks/verification.json",
+    "sha256": "736d290aadd299271a2344201b0ed749ac4ef2ab9c6f4dd292a41be8b73157f0",
+    "bytes": 4025
+  },
+  "allPassed": true,
+  "boundary": "Four frontend commands actually executed this run; three native results are explicitly reused from the pinned run-01 three successful native checks (its frontend regression failed and build was not executed) on byte-identical native/configuration/fixture/wire inputs. No candidate, installation or native-user-effect validation is inferred."
+}

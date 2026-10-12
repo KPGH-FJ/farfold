@@ -68,6 +68,14 @@ export function normalizeMessageAttachments(
     .filter((attachment): attachment is Attachment => attachment !== null);
 }
 
+/** Match only official declared content. Local approval metadata cannot come
+ * from an echoed notification and must not make an exact echo a new message. */
+export function sameOfficialAttachment(a: Attachment, b: Attachment): boolean {
+  const { localDocumentText: _localA, ...officialA } = a;
+  const { localDocumentText: _localB, ...officialB } = b;
+  return JSON.stringify(officialA) === JSON.stringify(officialB);
+}
+
 export function hasReadableMessages(items: readonly ThreadItem[]): boolean {
   return items.some(
     (item) =>

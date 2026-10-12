@@ -22,6 +22,45 @@ use crate::acp_client::manager::{
 use crate::acp_client::pump::{OpenedSession, SessionControl, SessionSink};
 use crate::meta_store::{AgentRow, MetaStore};
 
+fn session_control(
+    connection: &ManagedConnection,
+    session_id: &str,
+) -> Result<mpsc::UnboundedSender<SessionControl>, String> {
+    let sessions = connection
+        .sessions
+        .lock()
+        .map_err(|_| "session map lock poisoned")?;
+    let entry = sessions
+        .get(session_id)
+        .ok_or_else(|| format!("session {session_id} is not open"))?;
+    if entry.preview_token.is_some() {
+        return Err("此对话正在预览，加入后再继续".into());
+    }
+    Ok(entry.control.clone())
+}
+
+fn embedded_context_admission(
+    handshake: Option<&Handshake>,
+    blocks: &[ContentBlock],
+) -> Result<(), &'static str> {
+    if !blocks
+        .iter()
+        .any(|block| matches!(block, ContentBlock::Resource(_)))
+    {
+        return Ok(());
+    }
+    let handshake = handshake.ok_or("FAILED:PROMPT_EMBEDDED_CONTEXT_UNKNOWN")?;
+    if !handshake
+        .typed
+        .agent_capabilities
+        .prompt_capabilities
+        .embedded_context
+    {
+        return Err("FAILED:PROMPT_EMBEDDED_CONTEXT_UNSUPPORTED");
+    }
+    Ok(())
+}
+
 impl AcpManager {
     #[cfg(test)]
     pub(crate) async fn archive_session(
@@ -191,17 +230,7 @@ impl AcpManager {
         session_id: &str,
     ) -> Result<mpsc::UnboundedSender<SessionControl>, String> {
         let connection = self.session_connection(agent_id, cwd, session_id)?;
-        let sessions = connection
-            .sessions
-            .lock()
-            .map_err(|_| "session map lock poisoned")?;
-        let entry = sessions
-            .get(session_id)
-            .ok_or_else(|| format!("session {session_id} is not open"))?;
-        if entry.preview_token.is_some() {
-            return Err("此对话正在预览，加入后再继续".into());
-        }
-        Ok(entry.control.clone())
+        session_control(&connection, session_id)
     }
 
     /// Open a session on the `(agent_id, cwd)` connection, connecting first
@@ -472,9 +501,14 @@ impl AcpManager {
         session_id: &str,
         blocks: Vec<ContentBlock>,
     ) -> Result<(), String> {
-        let control = self
-            .session_control_tx(agent_id, cwd, session_id)
-            .map_err(|error| format!("FAILED: {error}"))?;
+        // Declarations and the sending entry belong to this one actual owner;
+        // cached cards and preparation connections cannot authorize this prompt.
+        let connection = self
+            .session_connection(agent_id, cwd, session_id)
+            .map_err(|_| "FAILED: SESSION_UNAVAILABLE".to_string())?;
+        let control =
+            session_control(&connection, session_id).map_err(|error| format!("FAILED: {error}"))?;
+        embedded_context_admission(connection.handshake.get(), &blocks)?;
         let (result_tx, result_rx) = oneshot::channel();
         control
             .send(SessionControl::Prompt {
@@ -1021,6 +1055,10 @@ mod close_tests;
 #[cfg(test)]
 #[path = "session/recheck_tests.rs"]
 mod recheck_tests;
+
+#[cfg(test)]
+#[path = "session/prompt_context_tests.rs"]
+mod prompt_context_tests;
 
 // ---------------------------------------------------------------------------
 // Wire types

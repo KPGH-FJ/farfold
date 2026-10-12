@@ -1,5 +1,6 @@
 import type { Attachment, PromptBlock } from "./session_types";
 import type { DraftAttachment } from "./drafts";
+import { resourceDraftAttachment } from "./prompt_blocks";
 
 /**
  * W3-6 用户消息操作：把一条已发送的用户消息还原为输入块或草稿附件。
@@ -28,6 +29,9 @@ export function userMessageBlocks(
           mimeType: item.mimeType ?? "text/plain",
           text: item.text,
         },
+        ...(item.localDocumentText !== undefined
+          ? { localDocumentText: structuredClone(item.localDocumentText) }
+          : {}),
       });
     else if (item.uri)
       blocks.push({
@@ -55,15 +59,16 @@ export function userMessageDraftAttachments(
         data: item.data,
         mimeType: item.mimeType,
       });
-    else if (item.uri)
-      out.push({
-        id: crypto.randomUUID(),
-        kind: "file",
-        name: item.name,
-        uri: item.uri,
-        mimeType: item.mimeType,
-        content: item.text,
-      });
+    else if (item.uri) {
+      const [block] = userMessageBlocks("", [item]);
+      if (block?.type === "resource" || block?.type === "resource_link")
+        out.push(
+          resourceDraftAttachment(block, {
+            name: item.name,
+            keepContent: true,
+          }),
+        );
+    }
   }
   return out;
 }

@@ -2,7 +2,7 @@ import { useProjectFiles } from "./useProjectFiles";
 import { ProjectFileScanNotice } from "./ProjectFileScanNotice";
 import { useComposerFileDrop } from "./useComposerFileDrop";
 import { FILE_DROP_STRINGS } from "../runtime/composer_file_drop";
-import { ComposerAttachments } from "./ComposerAttachments";
+import { DocumentComposerAttachments } from "./DocumentComposerAttachments";
 import { ThreadUsage } from "./ThreadUsage";
 import {
   ComposerTemplateActions,
@@ -1275,8 +1275,17 @@ export function Composer({
           </p>
         )}
         {contextChips}
-        <ComposerAttachments
+        <DocumentComposerAttachments
           key={storageKey}
+          draftKey={storageKey}
+          context={JSON.stringify([errorContext, workAgentId, workCwd])}
+          enabled={
+            active &&
+            !inputDisabled &&
+            !busy.current &&
+            !input.sendPending &&
+            !input.pendingConversation
+          }
           items={chips}
           onRemove={(id) =>
             setChips((previous) => previous.filter((chip) => chip.id !== id))

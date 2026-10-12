@@ -1,0 +1,127 @@
+{
+  "recordedAtUtc": "2026-10-12T21:20:35.555816+00:00",
+  "scope": "Read-only independent review of actual connection resource admission; no Cargo/test/App/Agent/database execution by reviewer.",
+  "findings": [],
+  "reviewedBehavior": [
+    "Exactly one session_connection result supplies both own handshake and own session entry/control; no cached/preparation card check or second lookup is used.",
+    "Actual Resource blocks require the typed handshake true embedded_context before control send. Text/resource_link remain unchanged.",
+    "Pre-wire known unsupported/unknown map to rejected; downstream unresolved transport results retain unknown semantics; existing work/config/permission/busy paths are retained."
+  ],
+  "authorEvidenceOnly": {
+    "targetedNew": 7,
+    "existingRelated": 5,
+    "formalAppOrRealAgent": false,
+    "notReviewerTestExecution": true
+  },
+  "refs": [
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "318ce90444c5edd4d6afa79944e686ac9f5bf68fc938ebbae87e08f90545050a",
+      "bytes": 40698
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "352b42e22fe15b01f5213905fd9671bc809ac52dffc3ff3f13a018f89c6b3fab",
+      "bytes": 22301
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_context_tests.rs",
+      "sha256": "dbe252223b0568dec04834c83ea6f3a484d592aa9ddac6687afea394ad65578e",
+      "bytes": 11227
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/targeted-original-red.txt",
+      "sha256": "bb0a5171b0bbcdeaf7e349b20a58bdd2e7e4f3e5b8d795746030e20bbc8ba2cf",
+      "bytes": 957
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/targeted-original-red.execution.json",
+      "sha256": "4af4eedfa7ec9ef4b7a94049d7c1f392286d35dda98c68f00704bfe94d5db2af",
+      "bytes": 381
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/targeted-pre-gate.txt",
+      "sha256": "350d39e66ac41090180aa5f502e9706925296a9f5798023c3c8982df13d017c0",
+      "bytes": 1794
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/targeted-pre-gate.execution.json",
+      "sha256": "0821eab4fcbd80b4fae08a48baf3726bb47733801e496d0825f68a067219789f",
+      "bytes": 378
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/targeted-green.txt",
+      "sha256": "1f1d6b10167c0dc3fa5b5f2e0d7bf3f607032d02deadcc22358507bb2b240115",
+      "bytes": 1269
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/targeted-green.execution.json",
+      "sha256": "41407d9f190920958be00ee1c28b13d2ade6470ccd95f4352fde4bda04b65328",
+      "bytes": 389
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/source-targeted-before.json",
+      "sha256": "061bec791bcbacee1bb6adf5eaf8746701eca4da50b6ed49f113b871d54877ca",
+      "bytes": 360
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/source-targeted-after.json",
+      "sha256": "061bec791bcbacee1bb6adf5eaf8746701eca4da50b6ed49f113b871d54877ca",
+      "bytes": 360
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/config_guard_tests.txt",
+      "sha256": "c8ab7afffa29630ab74e9a677caa383ec55cafc6cae06f9d54096ef20a3da6dc",
+      "bytes": 399
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/permission_guard_tests.txt",
+      "sha256": "2dba6a2034a2373c488dce4215f6d0e42d56fa6bb4b70f5af7154715eb339e1c",
+      "bytes": 416
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/regression_tests.txt",
+      "sha256": "f20a7908a8e2b4d011065d8d35dd72d5f247764a89b82a292acf494b795fb0af",
+      "bytes": 590
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/owned-format.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/associated.execution.json",
+      "sha256": "ccf8961adf6a158e5cb400bf1efe40565577c5679e47c7e11a9747e66a254428",
+      "bytes": 2801
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/source-original.json",
+      "sha256": "cecf8338796bc279d0f38100e26c42d08aafaec9b1f7257328f5fd8b592c8546",
+      "bytes": 230
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/session.rs.before.txt",
+      "sha256": "4f7e52b1ad840fbbbea7fb9a2f708537dbd9cdd13f84c87e7d348a514f40af75",
+      "bytes": 39551
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/session_commands.rs.before.txt",
+      "sha256": "512a45af058eae5a72e6b26c821146a8f1181c1ff999cbcdef77b301bf8989ff",
+      "bytes": 20842
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/changes.diff",
+      "sha256": "28455725556140bb5a6f5fee53016a8bc98938f3a120f7af5ec1aea01baadcff",
+      "bytes": 20425
+    },
+    {
+      "path": "output/2026-10-13-docx-input-backend/source-checkpoint.json",
+      "sha256": "9e8237adc0673514f6536470f34c319ef0cad9dc57b7a0c4c72fd62868315b0e",
+      "bytes": 1074
+    }
+  ],
+  "limitations": [
+    "This static review and author controlled RPC evidence do not prove installed App actual route or real Agent capability behavior.",
+    "P08 conversion/UI/draft/queue/cold-restore/outgoing-byte behavior is separately pending full production App and actual Worker controlled proof."
+  ]
+}

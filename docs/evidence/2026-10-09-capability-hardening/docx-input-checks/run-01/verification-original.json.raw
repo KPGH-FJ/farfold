@@ -1,0 +1,131 @@
+{
+  "checkedAtUtc": "2026-10-12T21:28:59.395232+00:00",
+  "sourceBase": "483f4989bcf5d8b0adeb93fce8506586582e7242",
+  "inputCount": 1605,
+  "sourceStable": true,
+  "changedInputs": [],
+  "protectedUnchanged": true,
+  "checks": [
+    {
+      "name": "format",
+      "group": "frontend",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "format:check"
+      ],
+      "startedAtUtc": "2026-10-12T21:26:45.732011+00:00",
+      "exitCode": 0,
+      "seconds": 31.283,
+      "log": "output/2026-10-13-docx-input-checks/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true,
+      "owner": "root"
+    },
+    {
+      "name": "typecheck",
+      "group": "frontend",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "typecheck"
+      ],
+      "startedAtUtc": "2026-10-12T21:27:17.016542+00:00",
+      "exitCode": 0,
+      "seconds": 8.198,
+      "log": "output/2026-10-13-docx-input-checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true,
+      "owner": "root"
+    },
+    {
+      "name": "frontend",
+      "group": "frontend",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "test"
+      ],
+      "startedAtUtc": "2026-10-12T21:27:25.214701+00:00",
+      "exitCode": 1,
+      "seconds": 44.283,
+      "log": "output/2026-10-13-docx-input-checks/frontend.txt",
+      "sha256": "da07c0dc5a322fbb97a8b8b831a07fdb1b64b450b0d2ad28026faa11e64bb271",
+      "executedInThisRun": true,
+      "owner": "root"
+    },
+    {
+      "name": "cargo-fmt",
+      "group": "native",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "startedAtUtc": "2026-10-12T21:26:45.732186+00:00",
+      "exitCode": 0,
+      "seconds": 1.141,
+      "log": "output/2026-10-13-docx-input-checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true,
+      "owner": "root"
+    },
+    {
+      "name": "clippy",
+      "group": "native",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "startedAtUtc": "2026-10-12T21:26:46.873410+00:00",
+      "exitCode": 0,
+      "seconds": 10.958,
+      "log": "output/2026-10-13-docx-input-checks/clippy.txt",
+      "sha256": "537301cf47a02fc6126212678f437647cdb0caa9c85b39875acb31203d087695",
+      "executedInThisRun": true,
+      "owner": "root"
+    },
+    {
+      "name": "rust",
+      "group": "native",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "startedAtUtc": "2026-10-12T21:26:57.832432+00:00",
+      "exitCode": 0,
+      "seconds": 121.5,
+      "log": "output/2026-10-13-docx-input-checks/rust.txt",
+      "sha256": "56378c50c09ad41f5656018b0bf5c2fae72313d652ad233ecc7b941e4788ca3b",
+      "executedInThisRun": true,
+      "owner": "root"
+    }
+  ],
+  "counts": {
+    "frontend": [
+      "Test Files  1 failed | 450 passed (451)",
+      "Tests  1 failed | 5264 passed (5265)"
+    ],
+    "rust": [
+      "test result: ok. 1617 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 119.75s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  "notExecuted": [
+    "build"
+  ],
+  "allPassed": false,
+  "boundary": "All listed checks were actually executed this run; no prior pass reuse. Engineering only: DOCX parser, approval, retained drafts, actual-connection capability gate and official-field wire projection. Controlled browser/Worker, candidate, formal app and real Agent are separate. Complete P08/29 standards/Windows remain open."
+}

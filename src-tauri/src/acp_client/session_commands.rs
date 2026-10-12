@@ -154,6 +154,37 @@ pub struct PromptAdmission {
     reason: Option<&'static str>,
 }
 
+fn prompt_failure_admission(error: &str) -> PromptAdmission {
+    let reason = match error {
+        "WORK_DISABLED" => "work_disabled",
+        "UNAVAILABLE" | "FAILED: SESSION_UNAVAILABLE" => "unavailable",
+        "FAILED:PROMPT_EMBEDDED_CONTEXT_UNKNOWN" => "embedded_context_unknown",
+        "FAILED:PROMPT_EMBEDDED_CONTEXT_UNSUPPORTED" => "embedded_context_unsupported",
+        "FAILED: SERVICE_UNAVAILABLE" => "service_unavailable",
+        error if error.starts_with("FAILED: CONFIG_") => {
+            if error.contains("RECORD_FAILED") {
+                "config_record_failed"
+            } else if error.contains("CONFIRMATION_REQUIRED") {
+                "config_confirmation_required"
+            } else {
+                "config_blocked"
+            }
+        }
+        // `FAILED:` is a known pre-wire rejection, not an unknown outcome.
+        error if error.starts_with("FAILED:") => "failed",
+        _ => {
+            return PromptAdmission {
+                status: "unknown",
+                reason: Some("uncertain"),
+            };
+        }
+    };
+    PromptAdmission {
+        status: "rejected",
+        reason: Some(reason),
+    }
+}
+
 #[tauri::command]
 pub async fn session_prompt(
     app: AppHandle,
@@ -179,9 +210,6 @@ pub async fn session_prompt(
     let manager = app.state::<AcpManager>();
     let outcome = crate::work_policy::admit(&store, &agent_id, &cwd, || async {
         manager
-            .session_connection(&agent_id, &cwd, &session_id)
-            .map_err(|_| "UNAVAILABLE".to_string())?;
-        manager
             .session_prompt(&agent_id, &cwd, &session_id, prompt)
             .await
     })
@@ -206,37 +234,52 @@ pub async fn session_prompt(
                 reason: None,
             })
         }
-        Err(error) if error == "WORK_DISABLED" => Ok(PromptAdmission {
-            status: "rejected",
-            reason: Some("work_disabled"),
-        }),
-        Err(error) if error == "UNAVAILABLE" => Ok(PromptAdmission {
-            status: "rejected",
-            reason: Some("unavailable"),
-        }),
-        Err(error) if error == "FAILED: SERVICE_UNAVAILABLE" => Ok(PromptAdmission {
-            status: "rejected",
-            reason: Some("service_unavailable"),
-        }),
-        Err(error) if error.starts_with("FAILED: CONFIG_") => Ok(PromptAdmission {
-            status: "rejected",
-            reason: Some(if error.contains("RECORD_FAILED") {
-                "config_record_failed"
-            } else if error.contains("CONFIRMATION_REQUIRED") {
-                "config_confirmation_required"
-            } else {
-                "config_blocked"
-            }),
-        }),
-        // `FAILED:` = provably never sent (see `session_prompt`).
-        Err(error) if error.starts_with("FAILED:") => Ok(PromptAdmission {
-            status: "rejected",
-            reason: Some("failed"),
-        }),
-        Err(_) => Ok(PromptAdmission {
-            status: "unknown",
-            reason: Some("uncertain"),
-        }),
+        Err(error) => Ok(prompt_failure_admission(&error)),
+    }
+}
+
+#[cfg(test)]
+mod prompt_context_admission_tests {
+    use super::*;
+
+    #[test]
+    fn exact_unsent_reasons_and_existing_rejections_keep_their_public_classification() {
+        for (error, reason) in [
+            (
+                "FAILED:PROMPT_EMBEDDED_CONTEXT_UNKNOWN",
+                "embedded_context_unknown",
+            ),
+            (
+                "FAILED:PROMPT_EMBEDDED_CONTEXT_UNSUPPORTED",
+                "embedded_context_unsupported",
+            ),
+            ("WORK_DISABLED", "work_disabled"),
+            ("UNAVAILABLE", "unavailable"),
+            ("FAILED: SESSION_UNAVAILABLE", "unavailable"),
+            ("FAILED: SERVICE_UNAVAILABLE", "service_unavailable"),
+            ("FAILED: CONFIG_RECORD_FAILED", "config_record_failed"),
+            (
+                "FAILED: CONFIG_CONFIRMATION_REQUIRED",
+                "config_confirmation_required",
+            ),
+            ("FAILED: CONFIG_BLOCKED", "config_blocked"),
+            ("FAILED: session is closed", "failed"),
+        ] {
+            assert_eq!(
+                serde_json::to_value(prompt_failure_admission(error)).unwrap(),
+                serde_json::json!({"status":"rejected","reason":reason})
+            );
+        }
+        for error in [
+            "session prompt deadline elapsed",
+            "session prompt channel closed",
+            "PROMPT_EMBEDDED_CONTEXT_UNKNOWN",
+        ] {
+            assert_eq!(
+                serde_json::to_value(prompt_failure_admission(error)).unwrap(),
+                serde_json::json!({"status":"unknown","reason":"uncertain"})
+            );
+        }
     }
 }
 

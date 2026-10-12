@@ -365,8 +365,9 @@ export function parseDocx(input: DocxWorkerInput): DocxDocument {
                 throw new DocxError("invalid");
               queueStory(kind, path, noteId);
               push({
-                kind: "text",
-                text: `[${noteId}]`,
+                kind: "noteReference",
+                noteKind: kind,
+                noteId,
                 style: { ...style, verticalAlign: "superscript" },
               });
               break;

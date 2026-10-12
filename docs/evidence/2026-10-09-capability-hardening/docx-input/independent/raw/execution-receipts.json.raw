@@ -1,0 +1,73 @@
+{
+  "scope": "Transcribed observed unified-exec completion results; no inference from missing processes. Browser reports contain internal try/finally close and final input hashes.",
+  "browserRuns": [
+    {
+      "engine": "webkit",
+      "label": "run07",
+      "sessionId": 44887,
+      "actualExitCode": 0,
+      "completionChunk": "78d32e",
+      "observedFinalOutput": {
+        "engine": "webkit",
+        "label": "run07",
+        "passed": true,
+        "checks": 81,
+        "errors": [],
+        "blockedRequests": [],
+        "sourceStable": true,
+        "changedTestInputs": []
+      }
+    },
+    {
+      "engine": "chromium",
+      "label": "run07",
+      "sessionId": 96727,
+      "actualExitCode": 0,
+      "completionChunk": "43bade",
+      "observedFinalOutput": {
+        "engine": "chromium",
+        "label": "run07",
+        "passed": true,
+        "checks": 81,
+        "errors": [],
+        "blockedRequests": [],
+        "sourceStable": true,
+        "changedTestInputs": []
+      }
+    }
+  ],
+  "ownedServer": {
+    "pid": 76977,
+    "sessionId": 26222,
+    "actualExitCode": 0,
+    "completionChunk": "4cfbd0",
+    "exactIdentityBeforeSignal": {
+      "scope": "Only independently owned fixed-port controlled fixture server; no Agent/App or other process targeted",
+      "pid": 76977,
+      "port": 1526,
+      "verifiedCommand": "node output/2026-10-13-docx-input-independent/serve.mjs",
+      "signal": "SIGINT",
+      "signalledAtUtc": "2026-10-12T21:52:37.394982+00:00"
+    },
+    "postExitPidCheck": {
+      "command": [
+        "ps",
+        "-p",
+        "76977",
+        "-o",
+        "command="
+      ],
+      "actualExitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "postExitConnectEx": {
+      "host": "127.0.0.1",
+      "port": 1526,
+      "observedErrno": 61,
+      "meaning": "ECONNREFUSED"
+    },
+    "scope": "Only this owned node/Vite fixture server closed normally. No formal App/Agent/native Worker process cleanup claim."
+  },
+  "recordedAtUtc": "2026-10-12T21:54:50.157012+00:00"
+}

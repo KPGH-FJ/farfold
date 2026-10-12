@@ -1,0 +1,6 @@
+import { createServer } from 'vite';
+const base = 'output/2026-10-13-docx-input-independent';
+const server = await createServer({configFile:'vite.config.ts',cacheDir:base+'/.vite',optimizeDeps:{entries:[base+'/index.html']},server:{host:'127.0.0.1',port:1526,strictPort:true,watch:{ignored:['**/src-tauri/**','**/.git/**']}}});
+await server.listen();
+console.log(JSON.stringify({pid:process.pid,port:1526,scope:'Owned controlled full production App and actual DOCX Worker; no native App/Agent/database'}));
+for (const signal of ['SIGINT','SIGTERM']) process.on(signal,async()=>{await server.close();process.exit(0);});

@@ -1,0 +1,320 @@
+{
+  "updatedAt": "2026-10-13",
+  "implementationStatus": "DOCX explicit text source implemented; scoped engineering and controlled proof; formal/realAgent not yet tested.",
+  "sourceBase": "483f4989bcf5d8b0adeb93fce8506586582e7242",
+  "installedSourceStill": "3bcd43dcd86713748d95f9255f2653e656772b3a",
+  "sourceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input/fixtures/active-object.docx",
+      "sha256": "6ba9d18ec8bd688702da09d8ccbd9f1d037fb55689ffcb50a3acc06ee56a5236"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input/fixtures/complete.docx",
+      "sha256": "28846c88745421a1f697bf618b276c62acb91c3be39abbbbc326e59f04da398c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input/fixtures/image-empty-note.docx",
+      "sha256": "95025fc17a2f787a1d64a904dbdabbb07dbab8643e06b837e174115a236da777"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input/fixtures/literal-marker.docx",
+      "sha256": "50ccb165eae4bbfde21e4ba46b915ecf600330ce637ab68745867482c32a6d4f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input/fixtures/oracle.json",
+      "sha256": "cee58be5f490ca728f09e52b1799a1b123d7067753146b3f497012791f0aa64b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input/fixtures/partial-hidden.docx",
+      "sha256": "86dcde31ecfcd70ef45b5f6a9f96c1d55c073399498da340e47c4dc5c3b00b7b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input/make-fixtures.py",
+      "sha256": "11ba771c354e53734d8354852208539e2d7e2f6a720a891ffd0b972948059516"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "318ce90444c5edd4d6afa79944e686ac9f5bf68fc938ebbae87e08f90545050a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_context_tests.rs",
+      "sha256": "dbe252223b0568dec04834c83ea6f3a484d592aa9ddac6687afea394ad65578e"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "352b42e22fe15b01f5213905fd9671bc809ac52dffc3ff3f13a018f89c6b3fab"
+    },
+    {
+      "path": "src/components/Composer.project-files.test.tsx",
+      "sha256": "0c307b6ec5e5231f43a560383537c479dd6be1f0527e17f427e263fc25279d60"
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "3ff97cefae6b06d88164ca738134daba15c3a97d23d13947c0a8f41c4d097ae5"
+    },
+    {
+      "path": "src/components/ComposerAttachments.tsx",
+      "sha256": "71dab6f6162b59f33911a16cc194d480a0739f26ba98c1606338e73120eef633"
+    },
+    {
+      "path": "src/components/DocumentComposerAttachments.tsx",
+      "sha256": "5f653e3aaf5a182b92549a3b8dd502ea80a0c2f0fe79f8f318a2486731b26c95"
+    },
+    {
+      "path": "src/components/DocumentInputReview.test.tsx",
+      "sha256": "63874868987ae57260b0e41d48941c14d2914cf499061aac7ef565eaa6eef9b2"
+    },
+    {
+      "path": "src/components/DocumentInputReview.tsx",
+      "sha256": "b5aa84233ac9be07b10c74f8ecd06e43c1f7121618ecff78f1de4fa4a0ca08fc"
+    },
+    {
+      "path": "src/components/DocxDocumentView.tsx",
+      "sha256": "01e7ec3e38537e14d3ae54711b08c6153121b3556357893b5a51eb1efab15d94"
+    },
+    {
+      "path": "src/document-input.css",
+      "sha256": "974d9197e27f6798ba654248925d6611f4d9a653e90ff22175b9fc8aafa66a7d"
+    },
+    {
+      "path": "src/runtime/attachment_review.ts",
+      "sha256": "7faed6bee07550a91f1353d9a781f2519c100de62f6f679d4c1c9aa21061b891"
+    },
+    {
+      "path": "src/runtime/document_input.test.ts",
+      "sha256": "dc2251fbfcdf1b7705390a81c573d704547e7b22b6601b0a56ae8d7d5dae86c5"
+    },
+    {
+      "path": "src/runtime/document_input.ts",
+      "sha256": "38fa4926be3e05903a5cf5da0a6d695eef5ef48d0e251c106d9a3f48b25ab739"
+    },
+    {
+      "path": "src/runtime/document_input_draft.test.ts",
+      "sha256": "f11ea09afa64ec75de7107b82b4494c39da51ed9a3181181f84f3a306c5c08b8"
+    },
+    {
+      "path": "src/runtime/document_input_draft.ts",
+      "sha256": "53a46fc181c680c16e7cadd24464641f7238ecc9234e77e258f17b149b3e03c6"
+    },
+    {
+      "path": "src/runtime/document_input_strings.ts",
+      "sha256": "36f180b72aa55eaf69c39fa4f08b16a737b261fd11d9c4f90aff3d99f258f961"
+    },
+    {
+      "path": "src/runtime/document_input_types.test.ts",
+      "sha256": "427bd37f9dfe6ab9722059e963ec51fe63d7a0a25aac0b8886549e990e87c2b0"
+    },
+    {
+      "path": "src/runtime/document_input_types.ts",
+      "sha256": "a60bcd71b7eb92c6ca68604fb30d9844a3574a674c4f9ae76ec04bda7f8b0c95"
+    },
+    {
+      "path": "src/runtime/docx_attachment_review.test.ts",
+      "sha256": "7ef69583d2568c49e64293a228ab5cc6cd506961e80c6e0043b434b2c26ff068"
+    },
+    {
+      "path": "src/runtime/docx_draft.test-support.ts",
+      "sha256": "f905f9b24508586815967ba1d476845e7c2eece2d72cf16871ddc6c5018f37f9"
+    },
+    {
+      "path": "src/runtime/docx_draft_integration.test.ts",
+      "sha256": "4222af571a28cb7d62b4d967ebd65cc7b677a1e90389afb4145d668d804b1be3"
+    },
+    {
+      "path": "src/runtime/docx_draft_recovery.test.ts",
+      "sha256": "51dc52e5c86438b14a3cf3c8e80a105cc5b7954e83a732f904b73206701d6c14"
+    },
+    {
+      "path": "src/runtime/docx_feedback_target.ts",
+      "sha256": "dd10e5f49d62e150c01a19cae4e868e1b071a8de69302a7eeca2d2c8abb73297"
+    },
+    {
+      "path": "src/runtime/docx_fixture.ts",
+      "sha256": "18ed31695a9148ee9fca4b7184b76eb90573cbe4751249b10cc7c30c368c89ca"
+    },
+    {
+      "path": "src/runtime/docx_input_text.test.ts",
+      "sha256": "ee6a07eebc4f91468051c61eace32dfe6caf03317e0cf7181a1d49f9bca052d1"
+    },
+    {
+      "path": "src/runtime/docx_input_text.ts",
+      "sha256": "c9df3d4de2df52ad3d8c6ed4cbdf8839a01dd3aaea413408766802dea318cad1"
+    },
+    {
+      "path": "src/runtime/docx_parse.ts",
+      "sha256": "d5d8df33043eed279b1e3ee178f18a69eb644354a4b276ed68632787d8584c82"
+    },
+    {
+      "path": "src/runtime/docx_types.ts",
+      "sha256": "a707d91ded0af49e37d2110d281cb902a5a3294711f086365c681af4983c08ab"
+    },
+    {
+      "path": "src/runtime/docx_validation.ts",
+      "sha256": "743fb4a516ed645d50367bf45367b5174794446e1d20d4f46aa054d32245cc50"
+    },
+    {
+      "path": "src/runtime/draft_attachments.ts",
+      "sha256": "23a4aa2d47d83578bc2501114f1cf94debe0190d18b54832d8f83eb64901781b"
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "e4f0d47cfbb4937d07a749f91499daaf6da94f32ceb1fc80ec8a99893d1ed297"
+    },
+    {
+      "path": "src/runtime/message_actions.ts",
+      "sha256": "75d0adf8af1521d210d2d8d5b2909362e22cfb07204aaaf0170a640071d01369"
+    },
+    {
+      "path": "src/runtime/message_attachments.test.ts",
+      "sha256": "79a483611049a8d0c9e85d3c2d2167ed4f78338de536283f0138bbdb2f49f78b"
+    },
+    {
+      "path": "src/runtime/message_attachments.ts",
+      "sha256": "1e37c60935f2f071edb19aa3f263655ed6ede3de21b1fd7075c09092bb3c19e8"
+    },
+    {
+      "path": "src/runtime/prompt_blocks.ts",
+      "sha256": "a9108092885290337aadcb0abd4bbfa77ba5b08a7f02d963c5caa2caa5c7e91b"
+    },
+    {
+      "path": "src/runtime/queue.ts",
+      "sha256": "a390dd5aa53006422247f67f8149b10b5957d7e59f4c507b4377196899ad9408"
+    },
+    {
+      "path": "src/runtime/queue_edit.ts",
+      "sha256": "e336b0833c1fe228fc917e1f4d7d2db8a3e4650693c76173c92ed27dfea6ae33"
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "71fb019a5b322c59b0836d5f49a91ccef23ed1e148ada355843c0ec8838eacd5"
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "65e15edf662457b4bbd9f5f6261aa6742f33dcae1e73aec4d949b45c3513bc19"
+    },
+    {
+      "path": "src/runtime/sessions.docx-input.test.ts",
+      "sha256": "46bcbd53fe2116d6246b8e5af2b84d0d2a75afef3c94f62ee123d02712ca1341"
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "53ed1d672d895dfe3143d7a4e593d2268bf6e9298799231099229ffdc404c4ad"
+    },
+    {
+      "path": "src/runtime/uncertain_prompt.ts",
+      "sha256": "e3d28f1527d27df3182bb0e81c91d2a5e06c6b0316a01b2f71e2b4e93d49dc80"
+    }
+  ],
+  "behavior": [
+    "Read whole validated DOCX structure; no preview-window or summary truncation, ≤256KiB full UTF8 text with all scope labels.",
+    "Author text, literal note-like text, generated note positions and omitted image pixels are distinguished.",
+    "Explicit review and confirmation updates only exact unsent draft/chip; partial scope needs separately unchecked consent.",
+    "Full source version/content and text digest checked on confirmation and dispatch; cold known text requires explicit reparse; null historical source keeps exact text without invented authority.",
+    "Draft/queue/editor/unknown/resend preserve approved text/source; no link or UTF8 fallback for document text.",
+    "Actual one connection provides both typed embeddedContext declaration and control handle; false/unknown rejects without forwarding.",
+    "Wire copy lists official fields only; incoming official content cannot supply local approval; matching official echo retains local outgoing projection."
+  ],
+  "engineering": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/verification.json",
+    "sha256": "b37b1ddc995df2866e50cc2065dbc59a39432ec1c1fad510edb5ea8ab25998bb",
+    "inputCount": 1605,
+    "run02FrontendActualCommands": 4,
+    "frontendFiles": 451,
+    "frontendTests": 5265,
+    "nativeCommandsActuallyPassedRun01AndReusedOnUnchangedInputs": 3,
+    "rustPassed": 1617,
+    "rustIgnored": 6,
+    "firstFrontendFailedAndBuildNotExecutedPreserved": true
+  },
+  "controlledBrowser": {
+    "summary": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input/independent/summary.json",
+      "sha256": "474674f39329427026226a32458a1b2553d8c654d5c59a6bec6f1cd507a85ace"
+    },
+    "engines": [
+      {
+        "engine": "webkit",
+        "checksPassed": 81,
+        "actualExitCode": 0,
+        "sourceStable": true,
+        "pageErrors": 0,
+        "externalRequests": 0,
+        "changedTestInputs": [],
+        "original": {
+          "path": "output/2026-10-13-docx-input-independent/webkit-run07.json",
+          "sha256": "2813ac17c4137c3e915168384c1cd5182accae52c83a5c810fc0524a2c70a791",
+          "bytes": 242296
+        },
+        "published": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-input/independent/raw/webkit-run07.json.raw",
+          "sha256": "2813ac17c4137c3e915168384c1cd5182accae52c83a5c810fc0524a2c70a791",
+          "bytes": 242296
+        }
+      },
+      {
+        "engine": "chromium",
+        "checksPassed": 81,
+        "actualExitCode": 0,
+        "sourceStable": true,
+        "pageErrors": 0,
+        "externalRequests": 0,
+        "changedTestInputs": [],
+        "original": {
+          "path": "output/2026-10-13-docx-input-independent/chromium-run07.json",
+          "sha256": "266c9b55f828550d609f95879aab94961e5b6da88267ea07076dd2a21c3c7d73",
+          "bytes": 242318
+        },
+        "published": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-input/independent/raw/chromium-run07.json.raw",
+          "sha256": "266c9b55f828550d609f95879aab94961e5b6da88267ea07076dd2a21c3c7d73",
+          "bytes": 242318
+        }
+      }
+    ],
+    "scope": "Independent production App/StrictMode/real OOXML Worker; native IPC and Agent controlled. No installed/native/real-Agent acceptance inferred.",
+    "keyboardBoundary": "Ordinary WebKit Tab run06 failure retained. Observed Option+Tab/Chromium Tab reach, Enter confirm and Escape cancel passed; system preference and installed WebView untested."
+  },
+  "review": {
+    "sourceReviews": [
+      {
+        "original": {
+          "path": "output/2026-10-13-docx-input-independent/backend-review.json",
+          "sha256": "434d58ecdac3920513c79791c2161fbb6fee761001e8f007ef6ab8e61c2473ab",
+          "bytes": 5261
+        },
+        "published": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-input/independent/raw/backend-review.json.raw",
+          "sha256": "434d58ecdac3920513c79791c2161fbb6fee761001e8f007ef6ab8e61c2473ab",
+          "bytes": 5261
+        }
+      },
+      {
+        "original": {
+          "path": "output/2026-10-13-docx-input-independent/source-review-child/review.json",
+          "sha256": "948d95a4990e544fd787aae13055d655e6ae8ec2ba8c4cffe5ae68cc59df7146",
+          "bytes": 7811
+        },
+        "published": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/docx-input/independent/raw/source-review-child/review.json.raw",
+          "sha256": "948d95a4990e544fd787aae13055d655e6ae8ec2ba8c4cffe5ae68cc59df7146",
+          "bytes": 7811
+        }
+      }
+    ],
+    "conclusion": "27files/10boundaries static and actual same-connection backend review; no confirmed blocker, no tests executed in static review."
+  },
+  "sourceCorrections": [
+    "Root static callback ticket ownership and exact saved-hint ownership fixed before stable engineering; retired native results exercised in controlled proof.",
+    "Prior32-test shallow Composer fixture location updated; original input/image/no-Agent assertions retained.",
+    "Fixed test OOXML archives copied byte-exact into current evidence directory; oracle whitespace formatted with parsed values equal and original raw preserved."
+  ],
+  "uncompleted": [
+    "Installed App and actual source native IPC with Worker whole chain.",
+    "One bounded existing service/model realAgent content-use result and no-tools observation.",
+    "Formal cold restoration, source-change rejection and data-retention receipts.",
+    "Other P08 formats, individual29Agent official delivery/8standards, Windows and whole P08/market goal."
+  ],
+  "contract": "All122original IDs/titles/conditions retain exact semantics. Signature/notarization/public distribution/update channels deferred. No upstream fork, second loop, extra App, or history-body ledger.",
+  "sourceCommittedAtRecordCapture": false,
+  "recordCaptureBoundary": "Source-stage record captured before the next source commit; later source/candidate records establish that exact commit."
+}

@@ -19,7 +19,10 @@ import { forgetConfigurationPause } from "./configuration_pause";
 import { connectionCloseReason } from "./connection_close";
 import { STRINGS } from "./strings";
 import { reportedTokens, reportedUsage } from "./session_usage";
-import { normalizeMessageAttachment } from "./message_attachments";
+import {
+  normalizeMessageAttachment,
+  sameOfficialAttachment,
+} from "./message_attachments";
 import { streamTailItem } from "./session_streams";
 import { retainReportedDetails } from "./reported_details";
 import type {
@@ -192,9 +195,8 @@ function appendStreamText(
           !last.streaming &&
           kind === "user" &&
           (messageId === undefined || optimisticEcho) &&
-          last.attachments?.some(
-            (existing) =>
-              JSON.stringify(existing) === JSON.stringify(attachment),
+          last.attachments?.some((existing) =>
+            sameOfficialAttachment(existing, attachment),
           );
         if (duplicate) {
           if (messageId !== undefined) last.messageId = messageId;

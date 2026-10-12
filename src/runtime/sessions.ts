@@ -49,7 +49,13 @@ import { STRINGS } from "./strings";
 import { InteractionActions } from "./interaction_actions";
 import { StopConfirmation } from "./stop_confirmation";
 import { composerDrafts, draftQueues, draftPersistence } from "./drafts";
-import { normalizeMessageAttachments } from "./message_attachments";
+import {
+  localMessageAttachments,
+  wirePromptBlocks,
+  titleFromBlocks,
+  promptText,
+  promptRejectionItem,
+} from "./prompt_blocks";
 import { validateQueuedAttachments } from "./draft_attachments";
 import {
   markRestoredQueueAttachments,
@@ -170,16 +176,6 @@ export interface ThreadsSnapshot {
 export const DEFAULT_AUTO_ARCHIVE_DAYS = 30;
 
 export type SendAdmission = PromptAdmission | { status: "queued" };
-
-function titleFromBlocks(blocks: PromptBlock[]): string {
-  const text = blocks
-    .filter((b): b is { type: "text"; text: string } => b.type === "text")
-    .map((b) => b.text)
-    .join(" ")
-    .replace(/\s+/g, " ")
-    .trim();
-  return text.slice(0, 40);
-}
 
 class ThreadsStore {
   constructor() {
@@ -940,10 +936,7 @@ class ThreadsStore {
     s.running = true;
     const firstPrompt = s.identity === "draft";
     sealStreams(s);
-    const text = blocks
-      .filter((b): b is { type: "text"; text: string } => b.type === "text")
-      .map((b) => b.text)
-      .join("\n");
+    const text = promptText(blocks);
     const item: ThreadItem = {
       kind: "user",
       id: nextItemId(),
@@ -985,7 +978,7 @@ class ThreadsStore {
     try {
       await validateQueuedAttachments(blocks);
       // Project checked dispatch content, not the earlier queue snapshot.
-      item.attachments = normalizeMessageAttachments(blocks);
+      item.attachments = localMessageAttachments(blocks);
       // Persist the in-flight input before it can reach an Agent. A crash in
       // this window restores an explicitly quarantined request, never a retry.
       this.emit(key);
@@ -1002,13 +995,14 @@ class ThreadsStore {
         if (firstPrompt) s.identity = "draft";
         return { status: "rejected", reason: "unavailable" };
       }
+      const content = wirePromptBlocks(blocks);
       finishPreparation();
       dispatched = true;
       const result = await invoke<PromptAdmission>("session_prompt", {
         agentId: s.agentId,
         cwd: s.cwd,
         sessionId: s.nativeSessionId,
-        content: blocks,
+        content,
       });
       if (this.thread(key) !== s) return result;
       if (
@@ -1033,6 +1027,8 @@ class ThreadsStore {
           s.stopping = false;
           s.stopUnconfirmed = false;
           s.items = s.items.filter((i) => i !== item);
+          const notice = promptRejectionItem(result, nextItemId);
+          if (notice) s.items.push(notice);
           pauseQueue(
             s,
             result.reason === "work_disabled"

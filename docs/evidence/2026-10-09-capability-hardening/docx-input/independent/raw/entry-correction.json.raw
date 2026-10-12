@@ -1,0 +1,16 @@
+{
+  "originalRun": {
+    "path": "output/2026-10-13-docx-input-independent/webkit-run01.json",
+    "sha256": "3fc481a1719ae275b0abc6a61f84486dbb59ab1b1c6ce9460666005eee3c0cae",
+    "actualExitCode": 1,
+    "assertionsExecuted": 0
+  },
+  "diagnostic": {
+    "path": "output/2026-10-13-docx-input-independent/entry-diagnostic.json",
+    "sha256": "4c7d080752b92ad088c1178a7594b326121003360dd76e98fefa27541f120628",
+    "actualExitCode": 0
+  },
+  "cause": "Controlled session_open responded with the registered existing native ID for a fresh null-ID preparation request; production prepared composer therefore displayed the distinct new draft, not the seeded existing draft.",
+  "correction": "Own IPC fixture gives fresh requests their own distinct controlled ID, as the earlier successful full-App pattern does. No product source change, no product regression inference.",
+  "secondaryDiagnosticFix": "Use JSON serialization for own newConversationChoice Proxy capture; structuredClone cannot clone a Proxy. Original fixture and original failed diagnostic retained."
+}

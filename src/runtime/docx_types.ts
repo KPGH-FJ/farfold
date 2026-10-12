@@ -87,6 +87,12 @@ export interface DocxParagraphStyle {
 }
 export type DocxRun =
   | { kind: "text"; text: string; style: DocxTextStyle }
+  | {
+      kind: "noteReference";
+      noteKind: "footnote" | "endnote";
+      noteId: string;
+      style: DocxTextStyle;
+    }
   | { kind: "break"; page?: boolean }
   | { kind: "tab" }
   | {

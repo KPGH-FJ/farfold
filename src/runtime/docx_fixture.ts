@@ -13,6 +13,11 @@ export function docxFixture(
       import.meta.url,
     ),
   );
+  return docxFixtureBytes(data);
+}
+
+/** Decode controlled ZIP bytes for parser tests; never a product ZIP reader. */
+export function docxFixtureBytes(data: Buffer): DocxWorkerInput {
   const entries: string[] = [],
     parts: { name: string; data: string }[] = [];
   let at = data.indexOf(Buffer.from("PK\x01\x02", "binary"));

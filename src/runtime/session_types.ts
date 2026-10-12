@@ -5,6 +5,7 @@
 import type { CommandEntry } from "./commands";
 import type { ReportedDetailsOwner } from "./reported_details";
 import { hasAsyncTasks, type AsyncTasksState } from "./async_tasks";
+import type { LocalDocumentText } from "./document_input_types";
 
 /** Content blocks accepted by `session_prompt`. */
 export type PromptBlock =
@@ -14,6 +15,8 @@ export type PromptBlock =
   | {
       type: "resource";
       resource: { uri: string; mimeType: string; text: string };
+      /** User-approved input provenance; never part of the official wire. */
+      localDocumentText?: LocalDocumentText | null;
     };
 
 export interface Attachment {
@@ -24,6 +27,8 @@ export interface Attachment {
   /** Declared message or tool content; memory only, never a local transcript. */
   data?: string;
   text?: string;
+  /** Only attached by our checked outgoing-message projection. */
+  localDocumentText?: LocalDocumentText | null;
 }
 
 export interface PlanEntry {

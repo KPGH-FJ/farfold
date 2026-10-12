@@ -1,6 +1,10 @@
 import { useSyncExternalStore } from "react";
 import type { ServiceSelection } from "./credentials";
 import type { PromptBlock } from "./session_types";
+import {
+  parseApprovedDocumentText,
+  type ApprovedDocumentText,
+} from "./document_input_types";
 import { draftPersistence } from "./draft_storage";
 import { REDESIGN } from "./redesign_strings";
 import { archiveActivity, parseArchiveActivity } from "./archive_activity";
@@ -27,6 +31,8 @@ export interface DraftAttachment {
   data?: string;
   mimeType?: string;
   content?: string;
+  /** Explicitly chosen document text, retained only while input is unsent. */
+  documentText?: ApprovedDocumentText;
   loading?: boolean;
   recovered?: boolean;
   /** Transient preview eligibility for these exact checked bytes and source.
@@ -415,6 +421,8 @@ function isPromptBlocks(value: unknown): value is PromptBlock[] {
     Array.isArray(value) &&
     value.every((item) => {
       if (!item || typeof item !== "object") return false;
+      if (item.type !== "resource" && item.localDocumentText !== undefined)
+        return false;
       if (item.type === "text") return typeof item.text === "string";
       if (item.type === "image")
         return (
@@ -422,13 +430,26 @@ function isPromptBlocks(value: unknown): value is PromptBlock[] {
         );
       if (item.type === "resource_link")
         return typeof item.uri === "string" && typeof item.name === "string";
-      if (item.type === "resource")
-        return (
+      if (item.type === "resource") {
+        const valid = Boolean(
           item.resource &&
           typeof item.resource.uri === "string" &&
           typeof item.resource.text === "string" &&
-          typeof item.resource.mimeType === "string"
+          typeof item.resource.mimeType === "string",
         );
+        if (!valid) return false;
+        if (item.localDocumentText !== undefined) {
+          try {
+            parseApprovedDocumentText({
+              text: item.resource.text,
+              local: item.localDocumentText,
+            });
+          } catch {
+            return false;
+          }
+        }
+        return true;
+      }
       return false;
     })
   );
@@ -531,6 +552,12 @@ function parseComposer(value: unknown): ComposerDraft {
         )
       )
         throw new Error("invalid attachment");
+      const documentText =
+        a.documentText === undefined
+          ? undefined
+          : parseApprovedDocumentText(a.documentText);
+      if (documentText && (a.kind !== "file" || typeof a.uri !== "string"))
+        throw new Error("invalid document attachment");
       return {
         id: a.id,
         name: a.name,
@@ -538,6 +565,7 @@ function parseComposer(value: unknown): ComposerDraft {
         uri: typeof a.uri === "string" ? a.uri : undefined,
         data: typeof a.data === "string" ? a.data : undefined,
         mimeType: typeof a.mimeType === "string" ? a.mimeType : undefined,
+        ...(documentText ? { documentText } : {}),
         recovered: true,
       };
     }),

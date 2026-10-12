@@ -1,0 +1,581 @@
+{
+  "scope": "Exact immutable independent P08 controlled evidence closure; excludes only owned .vite cache and this manifest itself. No product completion promotion.",
+  "recordedAtUtc": "2026-10-12T21:56:11.158533+00:00",
+  "summary": {
+    "path": "output/2026-10-13-docx-input-independent/summary.json",
+    "sha256": "21581000eaab4c3953636117a87ca1286bf31451900132fc414eca6da2f411db",
+    "bytes": 11866
+  },
+  "files": [
+    {
+      "path": "output/2026-10-13-docx-input-independent/backend-review.json",
+      "sha256": "434d58ecdac3920513c79791c2161fbb6fee761001e8f007ef6ab8e61c2473ab",
+      "bytes": 5261
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05-approved-and-sent.png",
+      "sha256": "2a8ea278156b82c1c09ba53f89e9542cd63e83460e693566fa55ed3d165761ea",
+      "bytes": 72779
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05-embedded_context_unknown.png",
+      "sha256": "3d3a403434c9a534e96f8c0b30500e8140752d37cd686f68bf446c0709d68386",
+      "bytes": 72120
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05-embedded_context_unsupported.png",
+      "sha256": "3ff6673620abe941f47d71eaf93a8f108601387cfe9e8e5bef23271838fa6a0c",
+      "bytes": 71637
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05-error-broken.png",
+      "sha256": "774aa306b3cfb11e88a23d66cf5631a631670fb022deab1320e8da84ba857daf",
+      "bytes": 133991
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05-error-empty-note.png",
+      "sha256": "12126377058adb5ab2c715b429cfddbe9a912c9f2218228b5a6c4713f27b6a69",
+      "bytes": 134568
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05-error-oversize.png",
+      "sha256": "2d433f09b9297320c7e6ba9f607e478d945033defe54b537dfe95032270d4a3b",
+      "bytes": 135383
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05-full-review-dark.png",
+      "sha256": "7b3baed4ccb6e745ce2707bf257b161ba5d9f7b9d10116dd31016ff0f51f1931",
+      "bytes": 149740
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05-full-review-light.png",
+      "sha256": "ce7ff4bbc9a80bb91db586d7bf2ab13b968f753a33aa338d5e00f509f6d06990",
+      "bytes": 155325
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05-full-review-narrow-keyboard.png",
+      "sha256": "e8f2307136fc2c9fc6c5aa67af67c39074df6cef68502cb7a43be1638b73e32f",
+      "bytes": 78622
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05-partial-review.png",
+      "sha256": "e9c52ca0acbe10e05e1e35dea1c1c54ec7aa6c6a1559fe430140033cb76bf121",
+      "bytes": 174316
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05-save-error.png",
+      "sha256": "c0c8793f9840edd918bc33c8e0782c89b7bbc5ea6a18e1f29f76d59af2821277",
+      "bytes": 72508
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05.json",
+      "sha256": "3730a7cb07a38b273044e4fb5bcd0042a36262adb5f2956a21b9f1a01d248fa6",
+      "bytes": 239369
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07-approved-and-sent.png",
+      "sha256": "133aa61cba5a4b4d8b8ce59c039c2aa89b3db88de7867dcb4a432e58c6ed9eb8",
+      "bytes": 72603
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07-embedded_context_unknown.png",
+      "sha256": "3d3a403434c9a534e96f8c0b30500e8140752d37cd686f68bf446c0709d68386",
+      "bytes": 72120
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07-embedded_context_unsupported.png",
+      "sha256": "3ff6673620abe941f47d71eaf93a8f108601387cfe9e8e5bef23271838fa6a0c",
+      "bytes": 71637
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07-error-broken.png",
+      "sha256": "07a4b85c989b01b1a820d7747673815b87e5ccd310b2f689784e388fa06a3a92",
+      "bytes": 133593
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07-error-empty-note.png",
+      "sha256": "945e76a292c44bfc333712a88048bbb3874841dd2976ba0b14a2f5bd3fdfe5bb",
+      "bytes": 134397
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07-error-oversize.png",
+      "sha256": "569120053b68ff56d2e01c86f200dcad1b4d30c991bab195de35f08f021626b0",
+      "bytes": 135365
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07-full-review-dark.png",
+      "sha256": "8882d5d6da99887feac739f477ee2d915dc36100745b001231247aeb191d94bc",
+      "bytes": 149741
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07-full-review-light.png",
+      "sha256": "7ba3af20b3d6ebf78764e7b8d383eb40d58b90a03cfba880ab76699161f7ca13",
+      "bytes": 155453
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07-full-review-narrow-keyboard.png",
+      "sha256": "1ac549aba477fc648b4a9369a9dfd022639c0f9b1c73f6f2164b78fd544695bc",
+      "bytes": 79228
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07-partial-review.png",
+      "sha256": "e9c52ca0acbe10e05e1e35dea1c1c54ec7aa6c6a1559fe430140033cb76bf121",
+      "bytes": 174316
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07-save-error.png",
+      "sha256": "c0c8793f9840edd918bc33c8e0782c89b7bbc5ea6a18e1f29f76d59af2821277",
+      "bytes": 72508
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07-source-changed-before-send.png",
+      "sha256": "5044b8bb6cb1c0c2bbab610f404f05662e5d6d56e82e1e40369201980cfb878e",
+      "bytes": 69640
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07.json",
+      "sha256": "266c9b55f828550d609f95879aab94961e5b6da88267ea07076dd2a21c3c7d73",
+      "bytes": 242318
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/closeout-check-correction.json",
+      "sha256": "3604a7db54eef55423db4447137c70a5e8625da8b295ad2afe10c09ffd0c0dd2",
+      "bytes": 628
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/debug_entry.mjs",
+      "sha256": "0e93c331261bb678f6b7e7116d2827e5e21738e08194175ce207c8dec85422c1",
+      "bytes": 1773
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/debug_keyboard.mjs",
+      "sha256": "16fe322bdee122ef014bc2029e6268b958a5e6d919349a9d1c3c9bc92332ed31",
+      "bytes": 2206
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/entry-correction.json",
+      "sha256": "7906993e84d6babfe8f916e37f6d50c7d13e229bd5464adc918544be9572d133",
+      "bytes": 1068
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/entry-diagnostic.json",
+      "sha256": "4c7d080752b92ad088c1178a7594b326121003360dd76e98fefa27541f120628",
+      "bytes": 21984
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/entry-diagnostic.png",
+      "sha256": "63fc12f75831f85a5be0fa5659a7c33bea0f1f22271f335f99468104028b45b7",
+      "bytes": 89761
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/execution-receipts.json",
+      "sha256": "b3bfd4771538639893ba9a9f2f8415baf13ada5f5c328bbb84006a1035877195",
+      "bytes": 2045
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixture.before-entry-diagnostic.tsx.raw",
+      "sha256": "b590adb9faf7b1af5ff517a3456454ee5ed69973a78d8779ea0840a856edcd58",
+      "bytes": 9322
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixture.before-fresh-replay-fix.tsx.raw",
+      "sha256": "cfb4553e40102209ff305e27f2d32045471cf7c22ceadab338d39fec1a98dfdb",
+      "bytes": 9381
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixture.before-fresh-session-id.tsx.raw",
+      "sha256": "31bc78004e1debd935081715b69aa1dcbee3ad061089c6081abdc47c5069eea0",
+      "bytes": 9343
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixture.tsx",
+      "sha256": "6cf27c3772794782695164e49794c1ddeb3e964cf6269616541eb1576c7c1abd",
+      "bytes": 9383
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixture.tsx.before-extra-scenarios.raw",
+      "sha256": "6cf27c3772794782695164e49794c1ddeb3e964cf6269616541eb1576c7c1abd",
+      "bytes": 9383
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/broken.capture.json",
+      "sha256": "9745505ac40a4a34f68b7a492bba142401b9eac02b47b11aca662fd12ecea0a7",
+      "bytes": 1798
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/broken.docx",
+      "sha256": "fa95c4895fcdb0ed0246dfd241bb450d2a49ef96eb3c44e8f00cad0318dc1355",
+      "bytes": 782
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/empty-note.capture.json",
+      "sha256": "d914d0d4077b00a23695086f9c75ef072ffed857827affc9f85aedb5ce337572",
+      "bytes": 5014
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/empty-note.docx",
+      "sha256": "2326bc1faa8bdf932b6428fe0b26e4c8fa9614956784ab99e3d1e9d619f899e7",
+      "bytes": 2184
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/full.capture.json",
+      "sha256": "c269f8a7b523c40a855b064d8955b9175cf5477118527dde91e8b4379908c8be",
+      "bytes": 41215
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/full.docx",
+      "sha256": "ccf582c307326ff35f4b869b0cd530a044e6fa35209431458546dbdaedb84946",
+      "bytes": 3411
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/literal-note.capture.json",
+      "sha256": "5ccff542ba3d8bf8d87cb23c58f8873f49deb16cce002628ac0a202a31028d4e",
+      "bytes": 1998
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/literal-note.docx",
+      "sha256": "00c4d14fbfb1e661106ea0d10dc7f8e917cdd9e2042ff71e77968ef2dea9f5af",
+      "bytes": 826
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/oracle.json",
+      "sha256": "529639c09a58f7363c9b52589011225f733bfe1b5f725e64a7dc0d811614f4e5",
+      "bytes": 16178
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/oversize.capture.json",
+      "sha256": "9383d6d470a965b7ca367de700cd557922fb94d7a7d934e2feb33b7a61cebf8e",
+      "bytes": 361982
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/oversize.docx",
+      "sha256": "2dd297402111f92879d47ca87e43993cf6558e163fa25275c17fef6567076297",
+      "bytes": 1124
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/partial.capture.json",
+      "sha256": "3388d3b83c9378a58da0e35048d177b7821dc4f9ba1337e212fda56efd69b8a9",
+      "bytes": 2110
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/partial.docx",
+      "sha256": "5eafb874ea8358b4f27350ddeaf9ee43faf645a121f26a32fce6807d31391f66",
+      "bytes": 887
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fresh-replay-correction.json",
+      "sha256": "f1723a26d3f5a42199c55d485db2e789060378d8099d480d106d7df9bb40c4c6",
+      "bytes": 669
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/generate.py",
+      "sha256": "d80fb5a197bd116477f8593e32fdfd38f2e1a3cb48226ce856cb00acd652554e",
+      "bytes": 6591
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/index.html",
+      "sha256": "0bf7c7ac41dcef49be09a9b555e77adc008bd419cadb68889d6d355474b93b92",
+      "bytes": 768
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/keyboard-diagnostic.json",
+      "sha256": "23366eb4d66507d2c2efd2583ed1280299a3f0c2c7ebea9a4acb18d8125229bc",
+      "bytes": 15173
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/keyboard-proof-boundary.json",
+      "sha256": "25f120f267f411fc5ba5f696d0dd5c0030eb89f8c671406dce07576063a74727",
+      "bytes": 1046
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/run.before-keyboard-preference-navigation.mjs.raw",
+      "sha256": "c8cc21c684dcad2c17cdf56f4c54dff156ba8a28ad75f9fdc590e3ee1f1ae7f1",
+      "bytes": 22028
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/run.before-keyboard-strengthening.mjs.raw",
+      "sha256": "ff32dcc1db20e068b18327877edbe7eefa50810fdc429cf5a03f93807b94417f",
+      "bytes": 20890
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/run.before-send-owner-scope.mjs.raw",
+      "sha256": "4565457ca4626a923399108f2e6993dcb29e5c2a5895d549fada2ab4266dc75b",
+      "bytes": 17756
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/run.mjs",
+      "sha256": "600d4541bab73d2f715330bed80dd9eb40da56a37ed1eea17980e732f98f8297",
+      "bytes": 23557
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/run.mjs.before-extra-scenarios.raw",
+      "sha256": "b266fd2358377647ee119685890d7758b6ca80d9638b4cb894da7232af14f33b",
+      "bytes": 18135
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/send-owner-scope-correction.json",
+      "sha256": "49063d29f3bfe044d0539f01158d20f5f042a6d5b57d35e92c6c89bdbc1498b1",
+      "bytes": 658
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/serve.mjs",
+      "sha256": "673eb653cfeb8710f8091cc9ae60bddce883b6084ef4c324e4d947261232698f",
+      "bytes": 619
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/server-stop-dispatch.json",
+      "sha256": "d9339c1af5b9da69659222e961845aa1edcb9f0e36b8f06ba06d8b72d5a0d4b8",
+      "bytes": 309
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/source-review-child/review.json",
+      "sha256": "948d95a4990e544fd787aae13055d655e6ae8ec2ba8c4cffe5ae68cc59df7146",
+      "bytes": 7811
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/summary.json",
+      "sha256": "21581000eaab4c3953636117a87ca1286bf31451900132fc414eca6da2f411db",
+      "bytes": 11866
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run01-failure.png",
+      "sha256": "3bd5b2651d09f47118474b11f31dc228d026f2587979c8f26e9876b3363757dc",
+      "bytes": 89778
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run01.json",
+      "sha256": "3fc481a1719ae275b0abc6a61f84486dbb59ab1b1c6ce9460666005eee3c0cae",
+      "bytes": 229182
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run02-failure.png",
+      "sha256": "f48c71846977062096fb5ca61dac881e9d3c1e113917e75d9362feacdd7d5941",
+      "bytes": 84315
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run02.json",
+      "sha256": "bcd01de6e7f548d2528b658a96d68763cf0dc41acf5a2901dfa338f89dcea5e6",
+      "bytes": 247971
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run03-failure.png",
+      "sha256": "e0be2fd6b8c608dd680eb5e4bca1bf36033e6ac7196214c88d04d79fa3aa2269",
+      "bytes": 90210
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run03-full-review-dark.png",
+      "sha256": "51c2bbe49753e6ba19df4adab86b70a7b1a0bbd5a76b7b571f7e7026b5f0f8a5",
+      "bytes": 157030
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run03-full-review-light.png",
+      "sha256": "ca9f2b9efb9bf7287bfe393898cd9881a470782cd8e847388c08f8044ed22ca6",
+      "bytes": 166679
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run03-full-review-narrow-keyboard.png",
+      "sha256": "22d45e027ed74cf6e0bffcf3699dcf4557230eb2021e3ce450ae3eae23651b94",
+      "bytes": 90704
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run03.json",
+      "sha256": "3eaf85c500cff7ca4ea484a4048811aacb4620ea4b0e43790dcb3e5bd586c0f4",
+      "bytes": 354253
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run04-approved-and-sent.png",
+      "sha256": "2654669fcde9b8efca25daf2b044ce1b7f06cd728189a0e3fa1ebb2ccb478461",
+      "bytes": 99502
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run04-error-broken.png",
+      "sha256": "37f0906b8acbfc256de13bc0a2e51b1e9b99b7bb190550a1b56f795b16a3484f",
+      "bytes": 144367
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run04-error-empty-note.png",
+      "sha256": "362a19e134fedc9aaaacfed27f540e8117b3bf8b57fe10e310efc434ca45b1ac",
+      "bytes": 144821
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run04-error-oversize.png",
+      "sha256": "a75e75918a75753980a26d8688e0055f46e069080146faef375275a6ef9ed59d",
+      "bytes": 145004
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run04-full-review-dark.png",
+      "sha256": "51c2bbe49753e6ba19df4adab86b70a7b1a0bbd5a76b7b571f7e7026b5f0f8a5",
+      "bytes": 157030
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run04-full-review-light.png",
+      "sha256": "93288b0f4da3f91c202743d1dce748134031477d67572aa3bb1f78575c35eefb",
+      "bytes": 166756
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run04-full-review-narrow-keyboard.png",
+      "sha256": "da51de59ddc731cd2254661dda46eb6e009aa66be0160d947d9ee49a20ab22a8",
+      "bytes": 90727
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run04-partial-review.png",
+      "sha256": "e7a69d4bdb920f5e829eba4c72b49de962fe4628e94880bbe6542387a5b5e82e",
+      "bytes": 185853
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run04-save-error.png",
+      "sha256": "f54f5f309fff53bce34f74c03d309f7fef777f3487543c18bc176a9325d97a67",
+      "bytes": 99176
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run04.json",
+      "sha256": "d7b33326a5101191be79823464c268fa0f60501970853b857a87ddb6b901bb4d",
+      "bytes": 237480
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05-approved-and-sent.png",
+      "sha256": "07de94912c4c8ec1b46e62598729dc583c82581c7e23bcd635de78ccad027ee1",
+      "bytes": 99528
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05-embedded_context_unknown.png",
+      "sha256": "54822a72d613ceaac30246ced29ff1944c52a12fcc2e1ada16117cc4102e7c56",
+      "bytes": 98306
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05-embedded_context_unsupported.png",
+      "sha256": "c3aaf51522d1ec51dbed2093aab931473ef380d40858a6e6cd47e7bdbc106339",
+      "bytes": 97973
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05-error-broken.png",
+      "sha256": "4db198ff80cd96e9906012fd3773b9cc3eadcb515b7693cc3fe0bad30d62b448",
+      "bytes": 144358
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05-error-empty-note.png",
+      "sha256": "9a31ac38deba178b7c0675390dc23750cc80a1ae63bc43b93428d6b21d214e4a",
+      "bytes": 144466
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05-error-oversize.png",
+      "sha256": "dde8b0376a47ae9c74f24f352d31fc83a0988154b777ec5b32fda514e261b98e",
+      "bytes": 145003
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05-full-review-dark.png",
+      "sha256": "51c2bbe49753e6ba19df4adab86b70a7b1a0bbd5a76b7b571f7e7026b5f0f8a5",
+      "bytes": 157030
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05-full-review-light.png",
+      "sha256": "93288b0f4da3f91c202743d1dce748134031477d67572aa3bb1f78575c35eefb",
+      "bytes": 166756
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05-full-review-narrow-keyboard.png",
+      "sha256": "fc71b3fb24d3422ee5d68e7ae6c5d68ac625a278851eeda73bcd7e61e2170dfd",
+      "bytes": 90700
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05-partial-review.png",
+      "sha256": "e6878d20226dfc6d8ac0df8c723590137ed2c26025bbd50ee5d258fc58517d79",
+      "bytes": 186044
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05-save-error.png",
+      "sha256": "f54f5f309fff53bce34f74c03d309f7fef777f3487543c18bc176a9325d97a67",
+      "bytes": 99176
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05.json",
+      "sha256": "9abbda8e56948f1d0d755a488fddd9d190daf036375a65c1e9b016081e33508c",
+      "bytes": 239345
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run06-failure.png",
+      "sha256": "93cf1665974c87ea56af7b9f895c2c06852eb7fec4fe387314743e1dea0dcbef",
+      "bytes": 90693
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run06-full-review-dark.png",
+      "sha256": "51c2bbe49753e6ba19df4adab86b70a7b1a0bbd5a76b7b571f7e7026b5f0f8a5",
+      "bytes": 157030
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run06-full-review-light.png",
+      "sha256": "e33438910de892f642dc11b5f5f154024a3f865f8781b73097fb4c55d36fd103",
+      "bytes": 166767
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run06.json",
+      "sha256": "7eac25db842bbd2e4233b7eaa29fb9f2aa0285a7bb7ff016578de73a61de9c80",
+      "bytes": 295434
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07-approved-and-sent.png",
+      "sha256": "6beabd33a00dcbb6caa0b17dd2a4f3d1d3f80936ca49178fd6d5cf0201b29145",
+      "bytes": 99187
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07-embedded_context_unknown.png",
+      "sha256": "54822a72d613ceaac30246ced29ff1944c52a12fcc2e1ada16117cc4102e7c56",
+      "bytes": 98306
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07-embedded_context_unsupported.png",
+      "sha256": "c3aaf51522d1ec51dbed2093aab931473ef380d40858a6e6cd47e7bdbc106339",
+      "bytes": 97973
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07-error-broken.png",
+      "sha256": "37f0906b8acbfc256de13bc0a2e51b1e9b99b7bb190550a1b56f795b16a3484f",
+      "bytes": 144367
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07-error-empty-note.png",
+      "sha256": "c27c567e89298ab4040f25999e19a77b1eaec11a96709423c2b7d1501bd62586",
+      "bytes": 144634
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07-error-oversize.png",
+      "sha256": "f5e03cd62e9c7e3aa5f7446b3a99c3b6c42c4b02d24000bb012749a3006dc2d0",
+      "bytes": 145088
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07-full-review-dark.png",
+      "sha256": "6c82e02252e884fe8d923b31dd1b775bb137e3ba891864dd67f526b30d51175d",
+      "bytes": 157055
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07-full-review-light.png",
+      "sha256": "e33438910de892f642dc11b5f5f154024a3f865f8781b73097fb4c55d36fd103",
+      "bytes": 166767
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07-full-review-narrow-keyboard.png",
+      "sha256": "1a3d8921b06379c55c54db867f6fd374f803572c7677cd3cd0e1bad586169eee",
+      "bytes": 90407
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07-partial-review.png",
+      "sha256": "2c2d1d75a887a89312bce95fb5739ab84a008f08a4934fcfd0160ebd4ba09d87",
+      "bytes": 186036
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07-save-error.png",
+      "sha256": "f54f5f309fff53bce34f74c03d309f7fef777f3487543c18bc176a9325d97a67",
+      "bytes": 99176
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07-source-changed-before-send.png",
+      "sha256": "e44213b994810a00b1618b961ddcbd82daeb7014af2b1903e695049bc6b7e105",
+      "bytes": 95655
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07.json",
+      "sha256": "2813ac17c4137c3e915168384c1cd5182accae52c83a5c810fc0524a2c70a791",
+      "bytes": 242296
+    }
+  ]
+}

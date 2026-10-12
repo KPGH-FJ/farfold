@@ -157,6 +157,7 @@ export function checkedDocxDocument(
     codes.add(w.code);
   }
   if (!codes.has("continuousLayout")) invalid();
+  const noteReferences = new Set<string>();
   const run = (raw: unknown) => {
     if (++runs > L.runs) invalid();
     const r = object(raw, [
@@ -169,11 +170,20 @@ export function checkedDocxDocument(
       "heightPt",
       "alt",
       "code",
+      "noteKind",
+      "noteId",
     ]);
     if (r.kind === "text") {
       object(raw, ["kind", "text", "style"]);
       string(r.text);
       textStyle(r.style);
+    } else if (r.kind === "noteReference") {
+      object(raw, ["kind", "noteKind", "noteId", "style"]);
+      choice(r.noteKind, ["footnote", "endnote"]);
+      string(r.noteId, 1024);
+      if (typeof r.noteId !== "string" || !/^-?\d+$/.test(r.noteId)) invalid();
+      textStyle(r.style);
+      noteReferences.add(`${r.noteKind}\0${r.noteId}`);
     } else if (r.kind === "break") {
       object(raw, ["kind", "page"]);
       optional(r.page, (v) => choice(v, [true, false]));
@@ -296,12 +306,24 @@ export function checkedDocxDocument(
     }
   };
   blockList(d.blocks, 0);
+  const notes = new Set<string>();
   for (const raw of array(d.stories, L.blocks)) {
     const s = object(raw, ["id", "kind", "noteId", "blocks"]);
     id(s.id);
     choice(s.kind, ["header", "footer", "footnote", "endnote"]);
     optional(s.noteId, (v) => string(v, 1024));
+    if (s.kind === "footnote" || s.kind === "endnote") {
+      if (typeof s.noteId !== "string" || !/^-?\d+$/.test(s.noteId)) invalid();
+      const key = `${s.kind}\0${s.noteId}`;
+      if (notes.has(key)) invalid();
+      notes.add(key);
+    } else if (s.noteId !== undefined) invalid();
     blockList(s.blocks, 0);
   }
+  if (
+    [...noteReferences].some((reference) => !notes.has(reference)) ||
+    [...notes].some((note) => !noteReferences.has(note))
+  )
+    invalid();
   return value as DocxDocument;
 }

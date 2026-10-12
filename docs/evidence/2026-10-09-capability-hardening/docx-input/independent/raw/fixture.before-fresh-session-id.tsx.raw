@@ -1,0 +1,88 @@
+import React, { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from '/src/App';
+import { DraftStartup } from '/src/components/DraftStartup';
+import { StorageStartup } from '/src/components/StorageRecovery';
+import { threads, freshThreadState } from '/src/runtime/sessions';
+import { composerDrafts, newConversationChoice, draftPersistence, fileFeedbackDrafts } from '/src/runtime/drafts';
+import { readDocumentInput, confirmDocumentInput, verifyDocumentInput } from '/src/runtime/document_input';
+import { userMessageDraftAttachments } from '/src/runtime/message_actions';
+import { resourceDraftAttachment } from '/src/runtime/prompt_blocks';
+import '@xterm/xterm/css/xterm.css';
+import '/src/styles.css'; import '/src/styles-settings.css'; import '/src/styles-content.css';
+import '/src/styles-thread.css'; import '/src/styles-artifact.css'; import '/src/product-shell.css';
+import '/src/conversation-workspace.css'; import '/src/history-import.css'; import '/src/desktop-workbench.css';
+
+const w = window as any, base='/output/2026-10-13-docx-input-independent';
+const oracle=await fetch(base+'/fixtures/oracle.json').then(r=>r.json());
+const captures = new Map<string,any>();
+for(const f of oracle.fixtureManifest) captures.set(f.name,await fetch('/'+f.capture).then(r=>r.json()));
+const fixtureFiles=Object.fromEntries(oracle.fixtureManifest.map((f:any)=>[f.name,f]));
+const settings=new Map<string,any>();
+const seed=w.fixtureSeed;
+if(seed?.unsentWork) settings.set('unsentWork.v1',structuredClone(seed.unsentWork));
+const agent={id:'independent-docx',name:'Controlled document Agent',source:'custom',command:'/controlled/never-executed',args:[],env:[],version:null,handshake:{agentCapabilities:{promptCapabilities:{embeddedContext:true}},authMethods:[],configOptions:[]},createdAt:1,updatedAt:1};
+const row={id:'independent-docx:/controlled/docx:native-docx',agentId:agent.id,cwd:'/controlled/docx',nativeSessionId:'native-docx',title:'DOCX_CONTROLLED',configOptions:null,pinned:false,archived:false,createdAt:1,updatedAt:1};
+const draftKey='session:'+row.id;
+const channels:any[]=[];
+const mode={captureHold:false,inspectHold:false,revisionHold:false,sourceChanged:false,saveFail:false,promptReason:null as null|string};
+const pending:{name:string;resolve:(v:any)=>void;reject:(v:any)=>void;value:any}[]=[];
+const clone=(v:any)=>structuredClone(v);
+const held=(name:string,value:any)=>new Promise((resolve,reject)=>pending.push({name,resolve,reject,value}));
+const captureFor=(file:any)=>{const entry=[...captures.values()].find(v=>v.file.path===file.path);if(!entry)throw {code:'missing'};return entry;};
+function events(channel:any,body:string='KEEP_LOADED_BODY') {
+  channel.onmessage({update:{sessionUpdate:'user_message_chunk',content:{type:'text',text:body}}});
+}
+w.testInvoke=async(cmd:string,args:any)=>{
+  const {channel,...rest}=args??{};w.calls.push({cmd,args:clone(rest)});
+  if(cmd==='settings_get')return args.key==='autoArchiveDays'?0:settings.get(args.key)??null;
+  if(cmd==='settings_set'){if(args.key==='unsentWork.v1'&&mode.saveFail)throw Error('OWN_CONTROLLED_SAVE_FAILURE');settings.set(args.key,clone(args.value));return;}
+  if(cmd==='storage_recovery_status')return {ready:true,issue:null,dataDirectory:'/controlled/data',databaseReplacementAvailable:false,databaseReplacement:null};
+  if(cmd==='app_initial_snapshot')return {agents:[agent],settings:{}};
+  if(cmd==='app_default_working_directory')return row.cwd;
+  if(cmd==='session_index_list')return [clone(row)];
+  if(['catalog_list','catalog_scan','credential_list','desktop_notification_take_pending','prompt_templates_list','agent_status'].includes(cmd))return [];
+  if(['app_drafts_ready','host_performance_sample','session_mark_read','session_index_mark_read','session_close','session_dismiss','plugin:event|unlisten'].includes(cmd))return;
+  if(cmd==='host_performance_origin')return null;
+  if(cmd==='plugin:event|listen')return 1;
+  if(cmd==='agent_work_get')return {cwd:args.cwd,enabled:{},locationEnabled:true};
+  if(cmd==='desktop_notifications_get')return {enabled:false,successEnabled:false,sound:false};
+  if(cmd==='worktree_list')return {locations:[],archives:[],recoveries:[],materials:[],operation:null};
+  if(cmd==='browser_share_status')return {taskKey:args.taskKey,label:args.label,agentId:agent.id,phase:'unshared',revision:0,reason:null,pendingRequest:null};
+  if(cmd==='file_delivery_inspect_selected') {const cap=[...captures.values()].find(v=>v.file.path===args.path);if(!cap)throw {code:'missing'};return mode.inspectHold?held('inspect',clone(cap.file)):clone(cap.file);}
+  if(cmd==='file_delivery_read_docx'){const value=clone(captureFor(args.file));return mode.captureHold?held('capture',value):value;}
+  if(cmd==='file_delivery_check_revision'){const value={kind:'verified',file:{...clone(args.file),...(mode.sourceChanged?{version:'controlled-changed-version'}:{})}};return mode.revisionHold?held('revision',value):value;}
+  if(cmd==='draft_attachment_check')throw Error('DOCX must never be re-read as ordinary UTF8');
+  if(cmd==='session_open'){channels.push(channel);events(channel);channel.onmessage({kind:'session_history_complete',openToken:args.openToken});return {nativeSessionId:args.nativeSessionId??row.nativeSessionId,connectionId:'controlled-document-connection',cwd:row.cwd,configOptions:[],configOptionsModern:true,resumed:Boolean(args.nativeSessionId),warnings:[],permissionState:'ready'};}
+  if(cmd==='session_prompt')return mode.promptReason?{status:mode.promptReason==='uncertain'?'unknown':'rejected',reason:mode.promptReason}:{status:'accepted'};
+  w.unexpected.push(cmd);throw Error('Unexpected independent controlled IPC '+cmd);
+};
+settings.set('agentSetup.v1',{version:1,completed:[agent.id],pending:{},progress:{},selections:{[agent.id]:{service:null,config:{}}}});
+await draftPersistence.load();
+newConversationChoice.cwd=row.cwd;newConversationChoice.agentId=agent.id;
+const state=freshThreadState(row.id,agent.id,row.cwd,row.nativeSessionId);
+state.identity='established';state.title=row.title;state.openError=null;state.workEnabled=true;
+state.items=[{kind:'user',id:'original-user',text:'KEEP_LOADED_BODY',attachments:[],streaming:false,time:1}];
+threads.getSnapshot().threads.set(row.id,state);
+function fileAttachment(name:string,id='document-chip') {const f=fixtureFiles[name];return{id,kind:'file' as const,name:f.file.name,uri:f.uri,mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'};}
+if(!seed?.unsentWork) composerDrafts.update(draftKey,()=>({text:'KEEP_COMPOSER',attachments:[fileAttachment('full')]}));
+fileFeedbackDrafts.update(row.id,'/controlled/keep.txt',{text:'KEEP_OPINION',selection:null});
+await draftPersistence.flush();
+w.fixture={
+  oracle,files:fixtureFiles,draftKey,row,
+  current:()=>({calls:clone(w.calls),unexpected:clone(w.unexpected),draft:clone(composerDrafts.read(draftKey)),newDraft:clone(composerDrafts.read('new')),thread:JSON.parse(JSON.stringify(threads.thread(row.id))),status:clone(draftPersistence.snapshot()),saved:clone(settings.get('unsentWork.v1')),pending:pending.map(x=>x.name),channels:channels.length,choice:JSON.parse(JSON.stringify(newConversationChoice))}),
+  mode:(patch:any)=>Object.assign(mode,patch),
+  release:(name:string,error?:boolean)=>{const i=pending.findIndex(p=>p.name===name);if(i<0)throw Error('no pending '+name);const [p]=pending.splice(i,1);error?p.reject({code:'unreadable'}):p.resolve(clone(p.value));},
+  choose:(name:string)=>composerDrafts.update(draftKey,d=>({...d,attachments:[fileAttachment(name)]})),
+  remove:()=>composerDrafts.update(draftKey,d=>({...d,attachments:[]})),
+  removeReadd:()=>{const d=composerDrafts.read(draftKey);const a=d.attachments[0];composerDrafts.update(draftKey,x=>({...x,attachments:[]}));composerDrafts.update(draftKey,x=>({...x,attachments:[{...a,loading:false}]}));},
+  edit:(text:string)=>composerDrafts.update(draftKey,d=>({...d,text})),
+  useUnknown:(text:string)=>composerDrafts.update(draftKey,d=>({...d,attachments:[{...fileAttachment('full'),documentText:{text,local:null},recovered:true}]})),
+  flush:()=>draftPersistence.flush(),
+  readAPI:(name:string)=>readDocumentInput({uri:fixtureFiles[name].uri,name:fixtureFiles[name].file.name},new AbortController().signal),
+  verifyAPI:(value:any,uri:string,reparse:boolean)=>verifyDocumentInput(value,uri,{reparse}),
+  resendFromLocal:()=>{const thread=threads.thread(row.id)!;const user=thread.items.find((i:any)=>i.kind==='user'&&i.attachments?.some((a:any)=>a.localDocumentText));return user?userMessageDraftAttachments((user as any).attachments??[]):null;},
+  historicalResource:(text:string)=>resourceDraftAttachment({type:'resource',resource:{uri:fixtureFiles.full.uri,mimeType:'text/plain',text}}),
+  echo:()=>{const sent=w.calls.filter((x:any)=>x.cmd==='session_prompt').at(-1);if(!sent)throw Error('no send');const channel=channels.at(-1);const deliver=(event:any)=>channel?channel.onmessage(event):(threads as any).applyChannelEvent(row.id,event);for(const block of sent.args.content)deliver({update:{sessionUpdate:'user_message_chunk',content:clone(block)}});deliver({kind:'turnEnd',stopReason:'end_turn'});},
+};
+createRoot(document.getElementById('root')!).render(<StrictMode><StorageStartup><DraftStartup><App/></DraftStartup></StorageStartup></StrictMode>);

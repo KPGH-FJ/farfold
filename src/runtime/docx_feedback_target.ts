@@ -71,6 +71,7 @@ function eligibleParagraph(block: DocxParagraph): boolean {
     block.runs.some(
       (run) =>
         (run.kind === "text" && run.text.length > 0) ||
+        run.kind === "noteReference" ||
         run.kind === "image" ||
         run.kind === "break" ||
         run.kind === "tab",

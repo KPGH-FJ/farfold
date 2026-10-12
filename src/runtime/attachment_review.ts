@@ -160,7 +160,9 @@ export async function confirmAttachmentReview(
     }
     if (!kept.has(entry.id)) continue;
     try {
-      const [checked] = await prepareDraftAttachments([attachment], embed);
+      const [checked] = await prepareDraftAttachments([attachment], embed, {
+        reparseDocuments: true,
+      });
       attachments.push({ ...checked, recovered: false });
     } catch {
       if (!isCurrent()) return false;
@@ -186,7 +188,7 @@ export async function confirmAttachmentReview(
       if (!kept.has(entry.id)) continue;
       const checked = structuredClone(block);
       try {
-        await validateQueuedAttachments([checked]);
+        await validateQueuedAttachments([checked], { reparseDocuments: true });
       } catch {
         if (!isCurrent()) return false;
         throw new Error(S.unreadable(entry.label));

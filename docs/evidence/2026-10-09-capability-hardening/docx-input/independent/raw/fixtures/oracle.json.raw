@@ -1,0 +1,456 @@
+{
+  "scope": "Independently authored explicit OOXML/ZIP data and expected author text; no production conversion or author test oracle generates these expectations. Capture protocol derived from own ZIP with Python CRC check; no real native file capture claim.",
+  "bodyParagraphTexts": [
+    "BODY_0_中文🙂\t[1]|literal",
+    "BODY_1_中文🙂\t[1]|literal",
+    "BODY_2_中文🙂\t[1]|literal",
+    "BODY_3_中文🙂\t[1]|literal",
+    "BODY_4_中文🙂\t[1]|literal",
+    "BODY_5_中文🙂\t[1]|literal",
+    "BODY_6_中文🙂\t[1]|literal",
+    "BODY_7_中文🙂\t[1]|literal",
+    "BODY_8_中文🙂\t[1]|literal",
+    "BODY_9_中文🙂\t[1]|literal",
+    "BODY_10_中文🙂\t[1]|literal",
+    "BODY_11_中文🙂\t[1]|literal",
+    "BODY_12_中文🙂\t[1]|literal",
+    "BODY_13_中文🙂\t[1]|literal",
+    "BODY_14_中文🙂\t[1]|literal",
+    "BODY_15_中文🙂\t[1]|literal",
+    "BODY_16_中文🙂\t[1]|literal",
+    "BODY_17_中文🙂\t[1]|literal",
+    "BODY_18_中文🙂\t[1]|literal",
+    "BODY_19_中文🙂\t[1]|literal",
+    "BODY_20_中文🙂\t[1]|literal",
+    "BODY_21_中文🙂\t[1]|literal",
+    "BODY_22_中文🙂\t[1]|literal",
+    "BODY_23_中文🙂\t[1]|literal",
+    "BODY_24_中文🙂\t[1]|literal",
+    "BODY_25_中文🙂\t[1]|literal",
+    "BODY_26_中文🙂\t[1]|literal",
+    "BODY_27_中文🙂\t[1]|literal",
+    "BODY_28_中文🙂\t[1]|literal",
+    "BODY_29_中文🙂\t[1]|literal",
+    "BODY_30_中文🙂\t[1]|literal",
+    "BODY_31_中文🙂\t[1]|literal",
+    "BODY_32_中文🙂\t[1]|literal",
+    "BODY_33_中文🙂\t[1]|literal",
+    "BODY_34_中文🙂\t[1]|literal",
+    "BODY_35_中文🙂\t[1]|literal",
+    "BODY_36_中文🙂\t[1]|literal",
+    "BODY_37_中文🙂\t[1]|literal",
+    "BODY_38_中文🙂\t[1]|literal",
+    "BODY_39_中文🙂\t[1]|literal",
+    "BODY_40_中文🙂\t[1]|literal",
+    "BODY_41_中文🙂\t[1]|literal",
+    "BODY_42_中文🙂\t[1]|literal",
+    "BODY_43_中文🙂\t[1]|literal",
+    "BODY_44_中文🙂\t[1]|literal_BODY_TAIL_AFTER_PRESENTATION_PAGE"
+  ],
+  "tableRows": [
+    [
+      "CELL_0_0",
+      "CELL_0_1",
+      "CELL_0_2",
+      "CELL_0_3",
+      "CELL_0_4",
+      "CELL_0_5",
+      "CELL_0_6"
+    ],
+    [
+      "CELL_1_0",
+      "CELL_1_1",
+      "CELL_1_2",
+      "CELL_1_3",
+      "CELL_1_4",
+      "CELL_1_5",
+      "CELL_1_6"
+    ],
+    [
+      "CELL_2_0",
+      "CELL_2_1",
+      "CELL_2_2",
+      "CELL_2_3",
+      "CELL_2_4",
+      "CELL_2_5",
+      "CELL_2_6"
+    ],
+    [
+      "CELL_3_0",
+      "CELL_3_1",
+      "CELL_3_2",
+      "CELL_3_3",
+      "CELL_3_4",
+      "CELL_3_5",
+      "CELL_3_6"
+    ],
+    [
+      "CELL_4_0",
+      "CELL_4_1",
+      "CELL_4_2",
+      "CELL_4_3",
+      "CELL_4_4",
+      "CELL_4_5",
+      "CELL_4_6"
+    ],
+    [
+      "CELL_5_0",
+      "CELL_5_1",
+      "CELL_5_2",
+      "CELL_5_3",
+      "CELL_5_4",
+      "CELL_5_5",
+      "CELL_5_6"
+    ],
+    [
+      "CELL_6_0",
+      "CELL_6_1",
+      "CELL_6_2",
+      "CELL_6_3",
+      "CELL_6_4",
+      "CELL_6_5",
+      "CELL_6_6"
+    ],
+    [
+      "CELL_7_0",
+      "CELL_7_1",
+      "CELL_7_2",
+      "CELL_7_3",
+      "CELL_7_4",
+      "CELL_7_5",
+      "CELL_7_6"
+    ],
+    [
+      "CELL_8_0",
+      "CELL_8_1",
+      "CELL_8_2",
+      "CELL_8_3",
+      "CELL_8_4",
+      "CELL_8_5",
+      "CELL_8_6"
+    ],
+    [
+      "CELL_9_0",
+      "CELL_9_1",
+      "CELL_9_2",
+      "CELL_9_3",
+      "CELL_9_4",
+      "CELL_9_5",
+      "CELL_9_6"
+    ],
+    [
+      "CELL_10_0",
+      "CELL_10_1",
+      "CELL_10_2",
+      "CELL_10_3",
+      "CELL_10_4",
+      "CELL_10_5",
+      "CELL_10_6"
+    ],
+    [
+      "CELL_11_0",
+      "CELL_11_1",
+      "CELL_11_2",
+      "CELL_11_3",
+      "CELL_11_4",
+      "CELL_11_5",
+      "CELL_11_6"
+    ],
+    [
+      "CELL_12_0",
+      "CELL_12_1",
+      "CELL_12_2",
+      "CELL_12_3",
+      "CELL_12_4",
+      "CELL_12_5",
+      "CELL_12_6"
+    ],
+    [
+      "CELL_13_0",
+      "CELL_13_1",
+      "CELL_13_2",
+      "CELL_13_3",
+      "CELL_13_4",
+      "CELL_13_5",
+      "CELL_13_6"
+    ],
+    [
+      "CELL_14_0",
+      "CELL_14_1",
+      "CELL_14_2",
+      "CELL_14_3",
+      "CELL_14_4",
+      "CELL_14_5",
+      "CELL_14_6"
+    ],
+    [
+      "CELL_15_0",
+      "CELL_15_1",
+      "CELL_15_2",
+      "CELL_15_3",
+      "CELL_15_4",
+      "CELL_15_5",
+      "CELL_15_6"
+    ],
+    [
+      "CELL_16_0",
+      "CELL_16_1",
+      "CELL_16_2",
+      "CELL_16_3",
+      "CELL_16_4",
+      "CELL_16_5",
+      "CELL_16_6"
+    ],
+    [
+      "CELL_17_0",
+      "CELL_17_1",
+      "CELL_17_2",
+      "CELL_17_3",
+      "CELL_17_4",
+      "CELL_17_5",
+      "CELL_17_6"
+    ],
+    [
+      "CELL_18_0",
+      "CELL_18_1",
+      "CELL_18_2",
+      "CELL_18_3",
+      "CELL_18_4",
+      "CELL_18_5",
+      "CELL_18_6"
+    ],
+    [
+      "CELL_19_0",
+      "CELL_19_1",
+      "CELL_19_2",
+      "CELL_19_3",
+      "CELL_19_4",
+      "CELL_19_5",
+      "CELL_19_6"
+    ],
+    [
+      "CELL_20_0",
+      "CELL_20_1",
+      "CELL_20_2",
+      "CELL_20_3",
+      "CELL_20_4",
+      "CELL_20_5",
+      "CELL_20_6"
+    ],
+    [
+      "CELL_21_0",
+      "CELL_21_1",
+      "CELL_21_2",
+      "CELL_21_3",
+      "CELL_21_4",
+      "CELL_21_5",
+      "CELL_21_6"
+    ],
+    [
+      "CELL_22_0",
+      "CELL_22_1",
+      "CELL_22_2",
+      "CELL_22_3",
+      "CELL_22_4",
+      "CELL_22_5",
+      "CELL_22_6"
+    ],
+    [
+      "CELL_23_0",
+      "CELL_23_1",
+      "CELL_23_2",
+      "CELL_23_3",
+      "CELL_23_4",
+      "CELL_23_5",
+      "CELL_23_6"
+    ],
+    [
+      "CELL_24_0",
+      "CELL_24_1",
+      "CELL_24_2",
+      "CELL_24_3",
+      "CELL_24_4",
+      "CELL_24_5",
+      "CELL_24_6"
+    ],
+    [
+      "CELL_25_0",
+      "CELL_25_1",
+      "CELL_25_2",
+      "CELL_25_3",
+      "CELL_25_4",
+      "CELL_25_5",
+      "CELL_25_6"
+    ],
+    [
+      "CELL_26_0",
+      "CELL_26_1",
+      "CELL_26_2",
+      "CELL_26_3",
+      "CELL_26_4",
+      "CELL_26_5",
+      "CELL_26_6"
+    ],
+    [
+      "CELL_27_0",
+      "CELL_27_1",
+      "CELL_27_2",
+      "CELL_27_3",
+      "CELL_27_4",
+      "CELL_27_5",
+      "CELL_27_6"
+    ],
+    [
+      "CELL_28_0",
+      "CELL_28_1",
+      "CELL_28_2",
+      "CELL_28_3",
+      "CELL_28_4",
+      "CELL_28_5",
+      "CELL_28_6"
+    ],
+    [
+      "CELL_29_0",
+      "CELL_29_1",
+      "CELL_29_2",
+      "CELL_29_3",
+      "CELL_29_4",
+      "CELL_29_5",
+      "CELL_29_6"
+    ],
+    [
+      "CELL_30_0",
+      "CELL_30_1",
+      "CELL_30_2",
+      "CELL_30_3",
+      "CELL_30_4",
+      "CELL_30_5",
+      "CELL_30_6_LAST_CELL_表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n表格内全部文字|\"\n_CELL_TAIL_AFTER_600"
+    ]
+  ],
+  "merge": {
+    "anchor": "MERGED_ANCHOR_ONCE",
+    "rowSpan": 2,
+    "columnSpan": 2,
+    "expectedAnchorOccurrences": 1
+  },
+  "stories": [
+    "HEADER_ALL_STORY_TAIL",
+    "FOOTER_ALL_STORY_TAIL",
+    "FOOTNOTE_ONE_TAIL",
+    "ENDNOTE_THREE_TAIL"
+  ],
+  "literal": "AUTHOR_LITERAL_[1]",
+  "emptyNoteOnlyHasNoAuthorText": true,
+  "oversizeTextUtf8Bytes": 270000,
+  "fixtureManifest": [
+    {
+      "name": "full",
+      "archive": "output/2026-10-13-docx-input-independent/fixtures/full.docx",
+      "sha256": "ccf582c307326ff35f4b869b0cd530a044e6fa35209431458546dbdaedb84946",
+      "bytes": 3411,
+      "uri": "file:///Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/full.docx",
+      "file": {
+        "root": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures",
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/full.docx",
+        "resolvedPath": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/full.docx",
+        "name": "full.docx",
+        "size": 3411,
+        "sha256": "ccf582c307326ff35f4b869b0cd530a044e6fa35209431458546dbdaedb84946",
+        "version": "independent-owned-full-v1"
+      },
+      "capture": "output/2026-10-13-docx-input-independent/fixtures/full.capture.json",
+      "zipCrcVerified": true
+    },
+    {
+      "name": "partial",
+      "archive": "output/2026-10-13-docx-input-independent/fixtures/partial.docx",
+      "sha256": "5eafb874ea8358b4f27350ddeaf9ee43faf645a121f26a32fce6807d31391f66",
+      "bytes": 887,
+      "uri": "file:///Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/partial.docx",
+      "file": {
+        "root": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures",
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/partial.docx",
+        "resolvedPath": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/partial.docx",
+        "name": "partial.docx",
+        "size": 887,
+        "sha256": "5eafb874ea8358b4f27350ddeaf9ee43faf645a121f26a32fce6807d31391f66",
+        "version": "independent-owned-partial-v1"
+      },
+      "capture": "output/2026-10-13-docx-input-independent/fixtures/partial.capture.json",
+      "zipCrcVerified": true
+    },
+    {
+      "name": "empty-note",
+      "archive": "output/2026-10-13-docx-input-independent/fixtures/empty-note.docx",
+      "sha256": "2326bc1faa8bdf932b6428fe0b26e4c8fa9614956784ab99e3d1e9d619f899e7",
+      "bytes": 2184,
+      "uri": "file:///Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/empty-note.docx",
+      "file": {
+        "root": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures",
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/empty-note.docx",
+        "resolvedPath": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/empty-note.docx",
+        "name": "empty-note.docx",
+        "size": 2184,
+        "sha256": "2326bc1faa8bdf932b6428fe0b26e4c8fa9614956784ab99e3d1e9d619f899e7",
+        "version": "independent-owned-empty-note-v1"
+      },
+      "capture": "output/2026-10-13-docx-input-independent/fixtures/empty-note.capture.json",
+      "zipCrcVerified": true
+    },
+    {
+      "name": "literal-note",
+      "archive": "output/2026-10-13-docx-input-independent/fixtures/literal-note.docx",
+      "sha256": "00c4d14fbfb1e661106ea0d10dc7f8e917cdd9e2042ff71e77968ef2dea9f5af",
+      "bytes": 826,
+      "uri": "file:///Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/literal-note.docx",
+      "file": {
+        "root": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures",
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/literal-note.docx",
+        "resolvedPath": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/literal-note.docx",
+        "name": "literal-note.docx",
+        "size": 826,
+        "sha256": "00c4d14fbfb1e661106ea0d10dc7f8e917cdd9e2042ff71e77968ef2dea9f5af",
+        "version": "independent-owned-literal-note-v1"
+      },
+      "capture": "output/2026-10-13-docx-input-independent/fixtures/literal-note.capture.json",
+      "zipCrcVerified": true
+    },
+    {
+      "name": "oversize",
+      "archive": "output/2026-10-13-docx-input-independent/fixtures/oversize.docx",
+      "sha256": "2dd297402111f92879d47ca87e43993cf6558e163fa25275c17fef6567076297",
+      "bytes": 1124,
+      "uri": "file:///Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/oversize.docx",
+      "file": {
+        "root": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures",
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/oversize.docx",
+        "resolvedPath": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/oversize.docx",
+        "name": "oversize.docx",
+        "size": 1124,
+        "sha256": "2dd297402111f92879d47ca87e43993cf6558e163fa25275c17fef6567076297",
+        "version": "independent-owned-oversize-v1"
+      },
+      "capture": "output/2026-10-13-docx-input-independent/fixtures/oversize.capture.json",
+      "zipCrcVerified": true
+    },
+    {
+      "name": "broken",
+      "archive": "output/2026-10-13-docx-input-independent/fixtures/broken.docx",
+      "sha256": "fa95c4895fcdb0ed0246dfd241bb450d2a49ef96eb3c44e8f00cad0318dc1355",
+      "bytes": 782,
+      "uri": "file:///Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/broken.docx",
+      "file": {
+        "root": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures",
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/broken.docx",
+        "resolvedPath": "/Users/tw/Desktop/farfold/output/2026-10-13-docx-input-independent/fixtures/broken.docx",
+        "name": "broken.docx",
+        "size": 782,
+        "sha256": "fa95c4895fcdb0ed0246dfd241bb450d2a49ef96eb3c44e8f00cad0318dc1355",
+        "version": "independent-owned-broken-v1"
+      },
+      "capture": "output/2026-10-13-docx-input-independent/fixtures/broken.capture.json",
+      "zipCrcVerified": true
+    }
+  ]
+}

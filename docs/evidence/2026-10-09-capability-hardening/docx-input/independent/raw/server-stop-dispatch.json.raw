@@ -1,0 +1,8 @@
+{
+  "scope": "Only independently owned fixed-port controlled fixture server; no Agent/App or other process targeted",
+  "pid": 76977,
+  "port": 1526,
+  "verifiedCommand": "node output/2026-10-13-docx-input-independent/serve.mjs",
+  "signal": "SIGINT",
+  "signalledAtUtc": "2026-10-12T21:52:37.394982+00:00"
+}

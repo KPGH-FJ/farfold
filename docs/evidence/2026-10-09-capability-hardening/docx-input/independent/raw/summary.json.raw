@@ -1,0 +1,220 @@
+{
+  "recordedAtUtc": "2026-10-12T21:56:11.155561+00:00",
+  "result": "No confirmed source blocker in reviewed P08 slice. WebKit and Chromium controlled production App/StrictMode plus real OOXML Worker journey each pass 81 checks, actual exit 0. Installed/native/real-Agent acceptance remains separate.",
+  "writeBoundary": "Only output/2026-10-13-docx-input-independent; no source/docs/App/DB/Git/Agent execution or edits by independent browser reviewer.",
+  "productionProofBoundary": {
+    "nativeBoundary": "Controlled IPC/capture/version/admission/save responses and initial synthetic data. Actual native file I/O, OS permission/process lifecycle and Agent delivery are not exercised.",
+    "frontendBoundary": "Real production App, StrictMode, startup, controllers, drafts, OOXML Worker/parser/serializer, Composer send, resource normalization and cold restore. No fake DOCX converter/Worker or copied presentation slice.",
+    "echoBoundary": "Warm synthetic current row has no native Channel admission. The explicit direct production applyChannelEvent envelope entry proves projection/deduplication only; it does not prove a real Agent echo or Channel routing/ownership.",
+    "inputCounts": {
+      "nonTestSrcBackendAndOwnedFixtureInputs": 540,
+      "separatelyObservedFrontendTestInputs": 450
+    },
+    "sameInputsAcrossFinalEngines": true,
+    "sourceStableBeforeAfterBoth": true,
+    "testDriftBoth": []
+  },
+  "finalBrowserProofs": [
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run07.json",
+      "sha256": "2813ac17c4137c3e915168384c1cd5182accae52c83a5c810fc0524a2c70a791",
+      "bytes": 242296
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run07.json",
+      "sha256": "266c9b55f828550d609f95879aab94961e5b6da88267ea07076dd2a21c3c7d73",
+      "bytes": 242318
+    }
+  ],
+  "independentSourceReviews": [
+    {
+      "path": "output/2026-10-13-docx-input-independent/backend-review.json",
+      "sha256": "434d58ecdac3920513c79791c2161fbb6fee761001e8f007ef6ab8e61c2473ab",
+      "bytes": 5261
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/source-review-child/review.json",
+      "sha256": "948d95a4990e544fd787aae13055d655e6ae8ec2ba8c4cffe5ae68cc59df7146",
+      "bytes": 7811
+    }
+  ],
+  "wholeEngineeringFreeze": {
+    "reference": {
+      "path": "output/2026-10-13-docx-input-checks/freeze.json",
+      "sha256": "e775ee391049261320bd1e43327b5d7249daadbe73f19121cd8895ffcba9126f",
+      "bytes": 6942
+    },
+    "allListed49RefsCurrentlyExact": true,
+    "currentMismatches": [],
+    "scopeNote": "This is the explicit 49-ref source/fixture freeze. Parent owns seven-check completion and the repaired old shallow frontend test; the browser separately hashes all frontend tests. No claim that this 49-ref manifest lists every repository input."
+  },
+  "independentOOXML": {
+    "generator": {
+      "path": "output/2026-10-13-docx-input-independent/generate.py",
+      "sha256": "d80fb5a197bd116477f8593e32fdfd38f2e1a3cb48226ce856cb00acd652554e",
+      "bytes": 6591
+    },
+    "oracle": {
+      "path": "output/2026-10-13-docx-input-independent/fixtures/oracle.json",
+      "sha256": "529639c09a58f7363c9b52589011225f733bfe1b5f725e64a7dc0d811614f4e5",
+      "bytes": 16178
+    },
+    "samples": [
+      {
+        "path": "output/2026-10-13-docx-input-independent/fixtures/broken.docx",
+        "sha256": "fa95c4895fcdb0ed0246dfd241bb450d2a49ef96eb3c44e8f00cad0318dc1355",
+        "bytes": 782
+      },
+      {
+        "path": "output/2026-10-13-docx-input-independent/fixtures/empty-note.docx",
+        "sha256": "2326bc1faa8bdf932b6428fe0b26e4c8fa9614956784ab99e3d1e9d619f899e7",
+        "bytes": 2184
+      },
+      {
+        "path": "output/2026-10-13-docx-input-independent/fixtures/full.docx",
+        "sha256": "ccf582c307326ff35f4b869b0cd530a044e6fa35209431458546dbdaedb84946",
+        "bytes": 3411
+      },
+      {
+        "path": "output/2026-10-13-docx-input-independent/fixtures/literal-note.docx",
+        "sha256": "00c4d14fbfb1e661106ea0d10dc7f8e917cdd9e2042ff71e77968ef2dea9f5af",
+        "bytes": 826
+      },
+      {
+        "path": "output/2026-10-13-docx-input-independent/fixtures/oversize.docx",
+        "sha256": "2dd297402111f92879d47ca87e43993cf6558e163fa25275c17fef6567076297",
+        "bytes": 1124
+      },
+      {
+        "path": "output/2026-10-13-docx-input-independent/fixtures/partial.docx",
+        "sha256": "5eafb874ea8358b4f27350ddeaf9ee43faf645a121f26a32fce6807d31391f66",
+        "bytes": 887
+      }
+    ],
+    "coverage": "45 body paragraphs; 31×7 whole table; 1290-character final cell beyond display truncation; merged spans; saved header/footer/footnote/endnote stories; empty generated note vs literal [1]; partial hidden text; whole UTF-8 overlimit and malformed XML. Native capture protocol is authored from ZIP entries and controlled."
+  },
+  "testedFinalScenes": [
+    "whole-OOXML-and-explicit-confirm",
+    "keyboard-Escape-keeps-original-draft",
+    "cold-known-source-explicit-review",
+    "unknown-history-source-and-reread",
+    "cold-null-source-preserves-authority-gap",
+    "partial-non-default-consent",
+    "error-empty-note",
+    "error-oversize",
+    "error-broken",
+    "literal-note-is-author-text",
+    "source-version-changes-before-confirm",
+    "source-version-changes-before-send",
+    "exact-selection-ABA-and-late-native-failure",
+    "retired-capture-failure-with-successor",
+    "retired-revision-failure-with-successor",
+    "actual-dispatch-rejected-embedded_context_unsupported",
+    "actual-dispatch-rejected-embedded_context_unknown",
+    "save-failure-keeps-approved-input"
+  ],
+  "keyboard": {
+    "proof": "Actual Chromium Tab / WebKit Option+Tab each reaches confirm in 4 steps within narrow native modal; actual keyboard Enter confirms. Escape cancels initial review and known-source reread preserving input.",
+    "diagnostic": {
+      "path": "output/2026-10-13-docx-input-independent/keyboard-diagnostic.json",
+      "sha256": "23366eb4d66507d2c2efd2583ed1280299a3f0c2c7ebea9a4acb18d8125229bc",
+      "bytes": 15173
+    },
+    "boundary": {
+      "path": "output/2026-10-13-docx-input-independent/keyboard-proof-boundary.json",
+      "sha256": "25f120f267f411fc5ba5f696d0dd5c0030eb89f8c671406dce07576063a74727",
+      "bytes": 1046
+    },
+    "retainedOrdinaryWebKitTabFailure": {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run06.json",
+      "sha256": "7eac25db842bbd2e4233b7eaa29fb9f2aa0285a7bb7ff016578de73a61de9c80",
+      "bytes": 295434
+    },
+    "ordinaryTabResult": "WebKit plain Tab skips Cancel/Confirm under this headless profile; dialog is open and modal. Both engines full cycling can visit BODY/native browser focus boundary. No custom trap is implemented or claimed.",
+    "applePrimarySource": "https://support.apple.com/en-lamr/guide/safari/cpsh003/mac",
+    "sourceInterpretation": "Apple documents keyboard preference-dependent Tab button coverage. The observed headless behavior is consistent with that rule; actual system preferences and formal Tauri WebView behavior were not inspected, so causation is an inference and native behavior remains unknown.",
+    "formalWebViewStillRequired": "Verify actual keyboard navigation under the current system preference in the unique formal app: focus reachability, Enter confirmation, Escape cancellation/reread, no background control activation. Ordinary Tab/Option+Tab results must be recorded separately."
+  },
+  "retainedEarlierRuns": [
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run01.json",
+      "actualOutcome": "exit1, zero checks; own fresh-session identity fake wrong"
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run02.json",
+      "actualOutcome": "exit1, zero checks; own fresh preparation fake replayed old history"
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run03.json",
+      "actualOutcome": "exit1, 12 passes; global send locator ambiguous active/standby Composers"
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run04.json",
+      "actualOutcome": "exit0, 62 passes"
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run05.json",
+      "actualOutcome": "exit0, 70 passes"
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/chromium-run05.json",
+      "actualOutcome": "exit0, 70 passes"
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/webkit-run06.json",
+      "actualOutcome": "exit1, 8 passes and one failed ordinary Tab claim"
+    }
+  ],
+  "retainedCorrectionRecords": [
+    {
+      "path": "output/2026-10-13-docx-input-independent/entry-correction.json",
+      "sha256": "7906993e84d6babfe8f916e37f6d50c7d13e229bd5464adc918544be9572d133",
+      "bytes": 1068
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/fresh-replay-correction.json",
+      "sha256": "f1723a26d3f5a42199c55d485db2e789060378d8099d480d106d7df9bb40c4c6",
+      "bytes": 669
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/send-owner-scope-correction.json",
+      "sha256": "49063d29f3bfe044d0539f01158d20f5f042a6d5b57d35e92c6c89bdbc1498b1",
+      "bytes": 658
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/keyboard-proof-boundary.json",
+      "sha256": "25f120f267f411fc5ba5f696d0dd5c0030eb89f8c671406dce07576063a74727",
+      "bytes": 1046
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent/closeout-check-correction.json",
+      "sha256": "3604a7db54eef55423db4447137c70a5e8625da8b295ad2afe10c09ffd0c0dd2",
+      "bytes": 628
+    }
+  ],
+  "materialLimitations": [
+    "Source reviews are static; author unit and backend RPC tests remain distinct evidence.",
+    "No formal application, real Agent, account, service/model, database or actual native capture was exercised by this independent proof.",
+    "No queue-editor UI operation was exercised here. Queue source ownership review and author tests are separate; rejected admission did retain the real production queued resource.",
+    "Old native rejection after abort can prove ignored late response but cannot by itself prove a retired read/confirm catch actually executed late. That race remains statically reviewed and is not claimed dynamically reproduced.",
+    "Headless keyboard settings do not prove formal WebView preferences. Ordinary WebKit Tab failure remains preserved.",
+    "This DOCX input slice does not close all P08 document formats, Windows, all 29 Agents or the 122-item plan."
+  ],
+  "visualInspection": {
+    "reviewerViewed": [
+      "output/2026-10-13-docx-input-independent/webkit-run07-full-review-narrow-keyboard.png",
+      "output/2026-10-13-docx-input-independent/webkit-run07-source-changed-before-send.png"
+    ],
+    "observed": "390×740 review is readable and within viewport with visible focused confirm/cancel. Send-stage source drift displays the concrete correction and keeps full.docx approved input and original composer text. Additional light/dark/partial/error/capability/save screenshots are frozen for parent inspection."
+  },
+  "serverCompletion": {
+    "path": "output/2026-10-13-docx-input-independent/execution-receipts.json",
+    "sha256": "b3bfd4771538639893ba9a9f2f8415baf13ada5f5c328bbb84006a1035877195",
+    "bytes": 2045
+  },
+  "publishableFiles": {
+    "syntheticFixtures": "generate.py and fixtures/* (own synthetic ZIPs, capture protocol and independent oracle)",
+    "proofAndDiagnostics": "summary.json, execution-receipts.json, browser/diagnostic/correction JSON receipts, exact retained .raw runner/fixture copies, source reviews, final engine screenshots",
+    "notForPublication": "Own .vite cache and any installation/application/private database/config files; none of the latter exist in this owned output."
+  }
+}

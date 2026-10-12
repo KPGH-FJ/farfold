@@ -353,6 +353,12 @@ function Runs({ runs, images }: { runs: DocxRun[]; images: Images }) {
             {run.text}
           </span>
         );
+      case "noteReference":
+        return (
+          <span key={i} style={documentTextStyle(run.style)}>
+            {`[${run.noteId}]`}
+          </span>
+        );
       case "tab":
         return (
           <span key={i} className="document-tab">

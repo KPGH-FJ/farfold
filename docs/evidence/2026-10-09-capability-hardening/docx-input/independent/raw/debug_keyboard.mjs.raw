@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import path from 'node:path';
+const {webkit,chromium}=await import('/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs');
+const base='output/2026-10-13-docx-input-independent';
+const receipt={scope:'Bounded read-only browser focus diagnostic after real DOCX Worker; no source edits or message dispatch',engines:[]};
+for(const engine of ['webkit','chromium']){
+ const b=await(engine==='webkit'?webkit:chromium).launch({headless:true,executablePath:engine==='webkit'?path.resolve('output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh'):'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
+ const p=await b.newPage({viewport:{width:390,height:740}});p.setDefaultTimeout(10000);const row={engine,errors:[],focus:[]};p.on('pageerror',e=>row.errors.push(String(e)));
+ const focus=async(key,step)=>{row.focus.push(await p.getByRole('dialog',{name:'加入文档文字',exact:true}).evaluate((d,{key,step})=>{const a=document.activeElement;return {key,step,dialogOpen:d.open,modal:d.matches(':modal'),inside:d.contains(a),tag:a?.tagName,name:a?.getAttribute('aria-label'),text:a?.tagName==='BUTTON'?a.textContent.trim():null,readonly:a?.readOnly};},{key,step}));};
+ try{await p.goto('http://127.0.0.1:1526/'+base+'/index.html');await p.locator('.product-recent').filter({hasText:'DOCX_CONTROLLED'}).click();await p.waitForFunction(()=>document.querySelector('textarea')?.value==='KEEP_COMPOSER');await p.getByRole('button',{name:'加入文字',exact:true}).click();const d=p.getByRole('dialog',{name:'加入文档文字',exact:true});await d.getByRole('textbox',{name:'本次拟加入的全部文字',exact:true}).waitFor();for(const key of ['Tab','Alt+Tab']){await d.getByRole('button',{name:'关闭',exact:true}).focus();await focus(key,0);for(let i=1;i<=8;i++){await p.keyboard.press(key);await focus(key,i);}}row.calls=(await p.evaluate(()=>window.fixture.current())).calls.map(c=>c.cmd);}catch(e){row.failure=String(e);}finally{await b.close();receipt.engines.push(row);}
+}
+fs.writeFileSync(base+'/keyboard-diagnostic.json',JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt));

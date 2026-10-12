@@ -77,7 +77,7 @@ import { Composer } from "./Composer";
 import { ProjectFileScanNotice } from "./ProjectFileScanNotice";
 import { projectFilesFixture } from "../runtime/project_files.test-support";
 import { PROJECT_FILES } from "../runtime/project_files";
-import { ComposerAttachments } from "./ComposerAttachments";
+import { DocumentComposerAttachments } from "./DocumentComposerAttachments";
 import { draftImagePreview } from "../runtime/draft_images";
 import { composerDrafts } from "../runtime/drafts";
 import { threads } from "../runtime/sessions";
@@ -244,7 +244,7 @@ it("uses the existing add-file menu to import an image without changing text or 
   expect(threads.send).not.toHaveBeenCalled();
   expect(props.onSend).not.toHaveBeenCalled();
   const attachmentProps = render().find(
-    (node) => node.type === ComposerAttachments,
+    (node) => node.type === DocumentComposerAttachments,
   )!.props;
   expect(
     (

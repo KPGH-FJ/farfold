@@ -1,0 +1,172 @@
+{
+  "createdAtUtc": "2026-10-12T21:29:46.167234+00:00",
+  "review": "Independent narrow source challenge for P08 DOCX approved-text input",
+  "readOnlySource": true,
+  "writesOnly": "output/2026-10-13-docx-input-independent/source-review-child",
+  "latestEngineeringFreeze": {
+    "path": "output/2026-10-13-docx-input-checks/freeze.json",
+    "sha256": "e775ee391049261320bd1e43327b5d7249daadbe73f19121cd8895ffcba9126f",
+    "bytes": 6942
+  },
+  "reviewedSourceRefs": [
+    {
+      "path": "src/runtime/document_input_types.ts",
+      "sha256": "a60bcd71b7eb92c6ca68604fb30d9844a3574a674c4f9ae76ec04bda7f8b0c95",
+      "bytes": 5780
+    },
+    {
+      "path": "src/runtime/document_input.ts",
+      "sha256": "38fa4926be3e05903a5cf5da0a6d695eef5ef48d0e251c106d9a3f48b25ab739",
+      "bytes": 7385
+    },
+    {
+      "path": "src/runtime/document_input_draft.ts",
+      "sha256": "53a46fc181c680c16e7cadd24464641f7238ecc9234e77e258f17b149b3e03c6",
+      "bytes": 3815
+    },
+    {
+      "path": "src/runtime/document_input_strings.ts",
+      "sha256": "36f180b72aa55eaf69c39fa4f08b16a737b261fd11d9c4f90aff3d99f258f961",
+      "bytes": 3771
+    },
+    {
+      "path": "src/runtime/docx_input_text.ts",
+      "sha256": "c9df3d4de2df52ad3d8c6ed4cbdf8839a01dd3aaea413408766802dea318cad1",
+      "bytes": 4115
+    },
+    {
+      "path": "src/runtime/docx_parse.ts",
+      "sha256": "d5d8df33043eed279b1e3ee178f18a69eb644354a4b276ed68632787d8584c82",
+      "bytes": 17884
+    },
+    {
+      "path": "src/runtime/docx_validation.ts",
+      "sha256": "743fb4a516ed645d50367bf45367b5174794446e1d20d4f46aa054d32245cc50",
+      "bytes": 10606
+    },
+    {
+      "path": "src/runtime/docx_preview.ts",
+      "sha256": "b9b912a1d69e99731eb7ec5f5efb9ddcaa02b96d22bd0c945b741f8cf1fef9e7",
+      "bytes": 5183
+    },
+    {
+      "path": "src/runtime/file_delivery.ts",
+      "sha256": "eaec401ada62b1da686016d811baf267e39726fd8b0292f428042a6011aea468",
+      "bytes": 7202
+    },
+    {
+      "path": "src/runtime/file_paths.ts",
+      "sha256": "f080ec23a4e6aff3c0b57118f40587d3f758dcede09f6a3e313f8d628745a1a1",
+      "bytes": 2404
+    },
+    {
+      "path": "src/runtime/draft_attachments.ts",
+      "sha256": "23a4aa2d47d83578bc2501114f1cf94debe0190d18b54832d8f83eb64901781b",
+      "bytes": 5416
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "e4f0d47cfbb4937d07a749f91499daaf6da94f32ceb1fc80ec8a99893d1ed297",
+      "bytes": 25628
+    },
+    {
+      "path": "src/runtime/draft_storage.ts",
+      "sha256": "a3fce4de9dd17be896e9db72429d5108cb1565b1fb34b927047aa5fa95d9823b",
+      "bytes": 5691
+    },
+    {
+      "path": "src/runtime/prompt_blocks.ts",
+      "sha256": "a9108092885290337aadcb0abd4bbfa77ba5b08a7f02d963c5caa2caa5c7e91b",
+      "bytes": 5245
+    },
+    {
+      "path": "src/runtime/message_actions.ts",
+      "sha256": "75d0adf8af1521d210d2d8d5b2909362e22cfb07204aaaf0170a640071d01369",
+      "bytes": 2307
+    },
+    {
+      "path": "src/runtime/message_attachments.ts",
+      "sha256": "1e37c60935f2f071edb19aa3f263655ed6ede3de21b1fd7075c09092bb3c19e8",
+      "bytes": 3723
+    },
+    {
+      "path": "src/runtime/attachment_review.ts",
+      "sha256": "7faed6bee07550a91f1353d9a781f2519c100de62f6f679d4c1c9aa21061b891",
+      "bytes": 6813
+    },
+    {
+      "path": "src/runtime/queue_edit.ts",
+      "sha256": "e336b0833c1fe228fc917e1f4d7d2db8a3e4650693c76173c92ed27dfea6ae33",
+      "bytes": 2318
+    },
+    {
+      "path": "src/runtime/recovered_attachments.ts",
+      "sha256": "6a89fb3b59355db642c425881aa0a991e58db77d2b9cf25aced36c083c9affa1",
+      "bytes": 567
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "53ed1d672d895dfe3143d7a4e593d2268bf6e9298799231099229ffdc404c4ad",
+      "bytes": 49765
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "71fb019a5b322c59b0836d5f49a91ccef23ed1e148ada355843c0ec8838eacd5",
+      "bytes": 28936
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "65e15edf662457b4bbd9f5f6261aa6742f33dcae1e73aec4d949b45c3513bc19",
+      "bytes": 10402
+    },
+    {
+      "path": "src/components/DocumentComposerAttachments.tsx",
+      "sha256": "5f653e3aaf5a182b92549a3b8dd502ea80a0c2f0fe79f8f318a2486731b26c95",
+      "bytes": 8309
+    },
+    {
+      "path": "src/components/DocumentInputReview.tsx",
+      "sha256": "b5aa84233ac9be07b10c74f8ecd06e43c1f7121618ecff78f1de4fa4a0ca08fc",
+      "bytes": 3067
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "3ff97cefae6b06d88164ca738134daba15c3a97d23d13947c0a8f41c4d097ae5",
+      "bytes": 50459
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "318ce90444c5edd4d6afa79944e686ac9f5bf68fc938ebbae87e08f90545050a",
+      "bytes": 40698
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "352b42e22fe15b01f5213905fd9671bc809ac52dffc3ff3f13a018f89c6b3fab",
+      "bytes": 22301
+    }
+  ],
+  "latestFreezeComparedPaths": 22,
+  "latestFreezeMismatches": [],
+  "blockingFindings": [],
+  "reviewedBoundaries": [
+    "URI strictly decoded once via existing file URI parser and compared to original capture source path; checkRevision content mode compares all seven source fields.",
+    "Confirmed known text validates current conversion vocabulary, UTF-8 byte budget, digest and partial-selection consent before dispatch; null source never becomes a resource link.",
+    "Cold composer marks every retained attachment recovered; cold queued attachment objects are marked for explicit review; reparsing compares source/text/hash/size/partial/images/warnings while retaining old snapshot on failure.",
+    "Official resource normalization ignores incoming localDocumentText; local authority is projected only from checked outgoing data; explicit official equality strips only local metadata for exact echo comparison.",
+    "wirePromptBlocks enumerates official resource fields, excluding all local source/version/consent metadata.",
+    "Queue editor relies on WeakMap object identity plus original content; duplicate content and cold restored editors cannot select a target by equality.",
+    "createDocumentInputTarget captures draft object/generation, attachment identity, new choice, context/storage locks and pending state; cancellation or removal invalidates only its exact loading chip.",
+    "Read/confirm callbacks require their original ticket, apply consumes once, and saved hint requires matching draft key/attachment id/exact approved object; delayed saves retain in-memory input/global error.",
+    "Complete validated AST serializer traverses all body/table/nested/story blocks, includes explicit merge anchors and escaping; noteReference is separate from literal author text and omitted images/markers do not qualify as author text.",
+    "Backend obtains one actual connection, derives both original session control and embedded capability from it, retains preview prohibition and old pump failure, never searches for a second connection after validation."
+  ],
+  "testsExecutedInThisReview": [],
+  "reasonNoAdditionalTests": "Parent owns actual Worker/full-App proof and root owns stable full engineering run. No confirmed counterexample required another focused experiment; existing tests read as context only.",
+  "notProvenByThisReview": [
+    "Actual native file capture or Worker execution",
+    "Browser or installed-app behavior",
+    "Actual Agent input use/echo and selected service/model behavior",
+    "All P08 formats, Windows, or the 29-Agent completion standard"
+  ],
+  "historicalFreezeNote": "A original bc4cb12 remains preserved; two test fixture-path edits differ from that history but match current e775ee39 engineering freeze. A production files, B and root/backend frozen refs remain unchanged."
+}

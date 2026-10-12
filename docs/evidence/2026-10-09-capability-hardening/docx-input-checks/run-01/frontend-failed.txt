@@ -1,0 +1,31 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/Composer.project-files.test.tsx (32 tests | 1 failed) 370ms
+   × uses the existing add-file menu to import an image without changing text or contacting an Agent 66ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/Composer.project-files.test.tsx > uses the existing add-file menu to import an image without changing text or contacting an Agent
+TypeError: Cannot read properties of undefined (reading 'props')
+ ❯ src/components/Composer.project-files.test.tsx:248:4
+    246|   const attachmentProps = render().find(
+    247|     (node) => node.type === ComposerAttachments,
+    248|   )!.props;
+       |    ^
+    249|   expect(
+    250|     (
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 450 passed (451)
+      Tests  1 failed | 5264 passed (5265)
+   Start at  05:27:25
+   Duration  43.91s (transform 12.35s, setup 0ms, import 254.97s, tests 75.62s, environment 37ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

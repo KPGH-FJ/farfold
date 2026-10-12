@@ -5,6 +5,7 @@ import {
 } from "./drafts";
 import type { PromptBlock } from "./session_types";
 import { queuedAttachmentsNeedReview } from "./recovered_attachments";
+import { resourceDraftAttachment } from "./prompt_blocks";
 
 const liveTargets = new WeakMap<
   NonNullable<ComposerDraft["queueEdit"]>,
@@ -34,19 +35,11 @@ export function startQueueEditor(
         recovered: queuedAttachmentsNeedReview(blocks),
       });
     else {
-      const uri = block.type === "resource" ? block.resource.uri : block.uri;
-      attachments.push({
-        id: crypto.randomUUID(),
-        kind: "file",
-        name:
-          block.type === "resource_link"
-            ? block.name
-            : (uri.split("/").pop() ?? uri),
-        uri,
-        mimeType:
-          block.type === "resource" ? block.resource.mimeType : block.mimeType,
-        recovered: queuedAttachmentsNeedReview(blocks),
-      });
+      attachments.push(
+        resourceDraftAttachment(block, {
+          recovered: queuedAttachmentsNeedReview(blocks),
+        }),
+      );
     }
   }
   const editing = { index, original: structuredClone(blocks) };
