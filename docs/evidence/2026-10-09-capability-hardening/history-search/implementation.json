@@ -1,0 +1,67 @@
+{
+  "status": "sourceIntegratedVerifiedNotInstalled",
+  "recordedAt": "2026-10-12T16:03:21.043896+00:00",
+  "scope": "First generic explicitly selected unloaded indexed-history temporary user/reply text search through reviewed official surface; does not close all P32.",
+  "implemented": [
+    "Explicit same-Agent selection of up to20 saved indexed histories, capability check and start separate",
+    "Metadata-derived source, official fixed read-only paging and process lifetime protection",
+    "Coverage, partial/unread/error/truncation and unconfirmed hit text shown accurately",
+    "Plain-text match preview and separate protected open-original action",
+    "No persistent transcript/search ledger or Agent loop; no attachment/tool/reasoning text read"
+  ],
+  "validationBoundary": "1566 stable inputs. Seven commands have passing evidence: four frontend-related commands rerun after the terminal-copy correction; three native checks reused on identical native source/configuration/fixture/wire. Frontend439 files5151 tests; Rust1597 passed6 ignored. Full production App controlled WebKit and Chromium37 assertions each. Installed UI and real official history read not yet executed.",
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/implementation.json",
+      "sha256": "32fba99f8806caa8ba40223b0e4a39e201260a5e6c79a186da9518d96afca092"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/source-checkpoint.json",
+      "sha256": "c8592076f5b46f359465e86a010d38a6cbc4ef745d737243b1d1b1de1ec4ed4c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/implementation.json",
+      "sha256": "10c949571bd7297f0ab528923c3a37bbed1f03140c9e80b11504618ce2c2d84b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/final-wire-followup.json",
+      "sha256": "c8d7627fd336072f22085c591665c728ddd502ba7b5117c02a16202aeb0a48d0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/source-checkpoint-final.json",
+      "sha256": "1de798ab16c51a89d93ae0343f72796953e8ef3e2eb246a9f2ca07c5958b71ca"
+    },
+    {
+      "path": "output/2026-10-12-history-search-independent/final-review.json",
+      "sha256": "9564d502530a0e7dfa3bd4c24492f1a7080efa3a2eb95c623d59711f7128a5e6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/terminal-copy-followup.json",
+      "sha256": "005087a8b768d61247cd02b7d12fadfd70e7eed580f602524ffb06caa7cc5c1c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/source-checkpoint-terminal.json",
+      "sha256": "4e5a7d978a61a7d03620dcfc7ea24db8f0a6b7553912b1f8769d0f84b3cd326c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/browser-validation.json",
+      "sha256": "b1b77919a9c8205339c312a8fa6ba36d59d42fc2370d2b45cf8cb4d5f4ed408f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-02/verification.json",
+      "sha256": "9d4401531662a29710e204c0066b452d47632c1fe0fdfaf2bedac4f466e80852"
+    },
+    {
+      "path": "output/2026-10-12-history-search-independent/terminal-copy-independent.json",
+      "sha256": "0ff28cb807086f5d68b41c1134a139c12de7806170bdfafdcd97f0658ac2fc2f"
+    }
+  ],
+  "notProven": [
+    "Installed history-search UI",
+    "Actual official read-only history retrieval",
+    "All Agent official routes",
+    "Attachment contents",
+    "Windows",
+    "Entire P32 or market readiness"
+  ]
+}

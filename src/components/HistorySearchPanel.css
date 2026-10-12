@@ -1,0 +1,132 @@
+.history-search-panel {
+  padding: 20px;
+  min-width: 0;
+}
+.history-search-panel > h2 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+.history-search-panel p,
+.history-search-panel small {
+  color: var(--ink-2);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.history-search-agent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  font-size: 13px;
+}
+.history-search-agent select {
+  max-width: 240px;
+  min-width: 120px;
+}
+.history-search-panel fieldset {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  min-width: 0;
+  padding: 12px;
+}
+.history-search-panel legend {
+  font-size: 12px;
+  padding: 0 6px;
+}
+.history-search-candidates {
+  max-height: 260px;
+  overflow: auto;
+}
+.history-search-candidates label {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 13px;
+  align-items: start;
+}
+.history-search-candidates span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.history-search-candidates small {
+  display: block;
+}
+.history-search-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 14px 0;
+}
+.history-search-coverage {
+  font-size: 12px;
+  padding: 12px 0;
+}
+.history-search-coverage li {
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+.history-search-coverage span {
+  margin-left: 8px;
+}
+.history-search-coverage small {
+  display: block;
+}
+.history-search-panel h3 {
+  font-size: 14px;
+}
+.history-search-hits {
+  list-style: none;
+  padding: 0;
+}
+.history-search-hit {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  gap: 7px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.history-search-hit:hover {
+  background: var(--row-hover);
+}
+.history-search-hit:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.history-search-excerpt {
+  white-space: pre-wrap;
+  font-size: 12px;
+  color: var(--ink-2);
+}
+.history-search-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 55vh;
+  overflow-y: auto;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.65;
+}
+.history-search-text mark {
+  background: var(--row-hover);
+  text-decoration: underline;
+  color: inherit;
+}
+@media (max-width: 600px) {
+  .history-search-panel {
+    padding: 12px;
+  }
+  .history-search-agent {
+    flex-wrap: wrap;
+  }
+}

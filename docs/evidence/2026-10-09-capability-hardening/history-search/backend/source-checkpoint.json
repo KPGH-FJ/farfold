@@ -1,0 +1,66 @@
+{
+  "scope": "P32 official selected-history search backend",
+  "ownedFiles": [
+    {
+      "path": "src-tauri/src/acp_client/history_search/mod.rs",
+      "sha256": "ad996ca5a63287de63e410700682492444b3b963422998c5f0d921dfdb1e71b7",
+      "bytes": 7972,
+      "lines": 248
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/peer.py",
+      "sha256": "465a42395431fd07df2dccf0227fdae1379dfc9cf15dd8b84501ed12dfe7d182",
+      "bytes": 1987,
+      "lines": 32
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/requests.rs",
+      "sha256": "cccab3581b61500754bc021e12a00b93fe0950120574c91e9a74e9cc4ef9022f",
+      "bytes": 9221,
+      "lines": 273
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/rpc.rs",
+      "sha256": "2f63ffb62b897a3769689e301e2584589ab56675d96516b858c7d5d7189a442d",
+      "bytes": 13220,
+      "lines": 361
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/source.rs",
+      "sha256": "999798886b400d5f4b216b67262eff2bca96deef440d830ee6f3aa40c1c5f616",
+      "bytes": 7022,
+      "lines": 228
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/tests.rs",
+      "sha256": "e1e7f73cb8174c655db9f5496d1d03c4fb6e57e8a0b5d261d23c5102265d5ead",
+      "bytes": 19704,
+      "lines": 540
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/text.rs",
+      "sha256": "83b06f1a99b2041de3dae449fafbfbd6c9aebe8e8b988a4365b7ad98ab963118",
+      "bytes": 3557,
+      "lines": 105
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/types.rs",
+      "sha256": "3d11ae1ba0e5208e14910443e96346052fc45076e532f66fd7365cca5bf635a4",
+      "bytes": 4887,
+      "lines": 179
+    },
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "e66049b0afe4560c7492e1141d4905c83d2b55b503d598bcff406672a2e34c83",
+      "bytes": 2535,
+      "lines": 122
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "684c152cd42f82f7a23d42a7722a18cb91db649a64c3c9d0d3bcc279d5b5266d",
+      "bytes": 21248,
+      "lines": 463
+    }
+  ],
+  "capture": "After final targeted tests and clippy; the module declaration order alone was then corrected to rustfmt order, recorded separately. No pre-run whole-repository snapshot claimed."
+}

@@ -1,0 +1,226 @@
+{
+  "status": "frozenSourceAndTargetedEvidenceReviewedNoNewBlockingFinding",
+  "recordedAt": "2026-10-12T14:42:41.769507+00:00",
+  "scope": "P32 selected unopened indexed history first official read-only route; independent source and evidence review, not native or full-suite acceptance.",
+  "reviewMethod": "Applicable code-review-excellence workflow. Read final source and integration diff, meaningful original failures, author final logs, strict wire and actual component/controller assertions; recompute input hashes. No tests, Cargo, App, official CLI, database or configuration actions executed by this reviewer.",
+  "source": {
+    "backendPaths": 10,
+    "frontendPaths": 17,
+    "totalUniquePaths": 27,
+    "allCurrentHashesAndBytesMatch": true,
+    "maximumLines": 1309,
+    "frontendDeltaFromFirstFreeze": {
+      "changed": [
+        "src/runtime/history_search_strings.ts",
+        "src/components/HistorySearchResults.tsx",
+        "src/components/HistorySearchResults.test.tsx"
+      ],
+      "added": ["src/runtime/history_search.final-wire.test.tsx"],
+      "allOtherFirstFreezeSourcesUnchanged": true
+    },
+    "backendPostTestDelta": "Only acp_client/mod.rs declaration ordering for rustfmt; author registration-format-followup records it. Final source checkpoint is post-format, not a fabricated whole-repository before/after manifest."
+  },
+  "fixedFindingsReviewed": [
+    {
+      "issue": "Expired capability and zero read coverage were incorrectly described as changed settings or no match.",
+      "resolution": "Neutral expiry/selection wording; unread, confirmed no-text, true no-match and unconfirmed discovered matches are separate. Original three copy reds plus final real-wire two reds retained."
+    },
+    {
+      "issue": "Captured old callbacks could affect a successor request or revive an expired preparation owner.",
+      "resolution": "check/cancel/dismiss require exact requestId; retired owner WeakSet and activeOwner identity fence prepare/start. Selected row objects and explicit scope govern ownership; unrelated index addition does not retire unchanged selection. Old handlers and old prepare have actual component/controller red-to-green evidence."
+    },
+    {
+      "issue": "Current-row text was public before post-read source/Directory validation.",
+      "resolution": "Read stages row hits privately through owned child/group/pipes cleanup; checks deadline/interest, original directory handle, complete original Agent/index metadata before publication. Cancellation and publication share Job value lock; earlier verified rows remain historical results."
+    },
+    {
+      "issue": "A reaped prior pendingCleanup state leaked into next-row reading.",
+      "resolution": "Next row sets running/null under lock while interested; cancelled work cannot advance. Original controlled publication red retained, without claiming this case is an OS-unreapable process."
+    },
+    {
+      "issue": "Loaded same native id under another directory or proven entry alias could be treated as unopened.",
+      "resolution": "Guard covers same Agent or exact known LaunchIdentity, then native id. It does not infer all-account identity or collide native IDs globally; actual controlled ACP alias red-to-green preserved."
+    },
+    {
+      "issue": "New post-read staging legitimately reports matchedTextBlocks>0 with no confirmed hits, which old UI called zero matches.",
+      "resolution": "Actual final Rust readingUnconfirmed to sourceDrift chain is strictly parsed and rendered; UI labels viewable blocks and discovered-but-unconfirmed matches, and exposes no hit actions. Final real controller retains zero public hits."
+    }
+  ],
+  "mechanismsReviewed": [
+    "Only supplied saved-index IDs are resolved by backend; exact AgentRow and SessionRow metadata, ticket and query identities are rechecked. No FE-supplied native id/cwd/command authority.",
+    "Fixed initialize/initialized/thread-read metadata/thread-turns-list full pages; no resume, prompt, model/reasoning setter or private history-file reader added. AccountScope and shared two-worker admission remain held through real cleanup.",
+    "Request tombstones, 4096 saturation, conflict rejection, live-release refusal and monotonic revisions keep late IPC from recreating authority. Status is observation, cancellation is a request until actual settled state.",
+    "Hit and context bodies stay RAM-only, plain React text; close/scope/Agent/query/selection changes discard display authority. Explicit existing protected open route is separate from preview and does not fabricate a turn jump.",
+    "20 selected rows, 20 pages per row, 10 turns per page, child stdout and total deadline bounds; partial/failure coverage remains visible. Original UTF16 offsets, lowercase literal matching and separate user text parts are preserved.",
+    "Same common UI is capability-driven; first route is macOS reviewed entry only. Official startup may maintain its state, and legacy pagination may replay full rollout internally; no zero-write/network or constant internal-cost guarantee."
+  ],
+  "authorValidationReviewed": {
+    "backendFinal": {
+      "passed": 19,
+      "failed": 0,
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/targeted-final-alias.txt",
+        "sha256": "ae36e06cc3af77c3d082c1250963c255832c048c9a8a020a4cc43f6b4267cc49",
+        "bytes": 44704
+      }
+    },
+    "frontendFinal": {
+      "files": 9,
+      "passed": 111,
+      "failed": 0,
+      "log": {
+        "path": "output/2026-10-12-history-search-frontend/final-wire-related-final.txt",
+        "sha256": "b07d0dd273646414671d810e468c76b23b6ae9b5ea9620bc23de9fe7d5426a8e",
+        "bytes": 682
+      }
+    },
+    "backendClippyAndOwnedFormatExit": 0,
+    "frontendTypeAndOwnedFormatExit": 0,
+    "wire": {
+      "finalValues": 12,
+      "exactParsedFinalStdout": true,
+      "exactRawMarkerLines": true,
+      "markers": [
+        {
+          "prefix": "HISTORY_SEARCH_WIRE=",
+          "line": 21
+        },
+        {
+          "prefix": "HISTORY_SEARCH_POST_READ_WIRE=",
+          "line": 11
+        }
+      ],
+      "finalTests": 15,
+      "breakdown": "12 strict actual values + 2 actual Results SSR assertions + 1 actual-value controller chain. Available capability in controller setup is explicitly synthetic; unavailable capability is the actual Rust sample."
+    },
+    "independentCommandsExecuted": "hash/JSON/source inspection only; no rerun or new process experiment"
+  },
+  "referenceAudit": {
+    "backendUniqueDirectRefs": 26,
+    "frontendFinalUniqueDirectRefs": 28,
+    "allMatch": true,
+    "historicalBoundary": "Prior FE checkpoint remains historical; its three changed files are not claimed equal to the final tree. Original raw failures and old actual-wire remain unchanged."
+  },
+  "notEstablished": [
+    "Full App browser acceptance (separate author/root work)",
+    "Whole-repository seven checks (parent owns current run)",
+    "Installed P32 UI or real official history request",
+    "Available real registered-entry capability",
+    "29 Agent coverage or Windows route",
+    "Attachment, tool, reasoning or unreturned-history search",
+    "Atomic external-history snapshot or protection against all external clients"
+  ],
+  "remaining": "Parent may proceed with separate integration/browser/candidate gates. This review does not mark all P32 conditions complete.",
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/implementation.json",
+      "sha256": "32fba99f8806caa8ba40223b0e4a39e201260a5e6c79a186da9518d96afca092",
+      "bytes": 11855
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/source-checkpoint.json",
+      "sha256": "c8592076f5b46f359465e86a010d38a6cbc4ef745d737243b1d1b1de1ec4ed4c",
+      "bytes": 2263
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/final-wire-followup.json",
+      "sha256": "c8d7627fd336072f22085c591665c728ddd502ba7b5117c02a16202aeb0a48d0",
+      "bytes": 3222
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/source-checkpoint-final.json",
+      "sha256": "1de798ab16c51a89d93ae0343f72796953e8ef3e2eb246a9f2ca07c5958b71ca",
+      "bytes": 3876
+    },
+    {
+      "path": "output/2026-10-12-history-search-independent/preliminary-review.json",
+      "sha256": "83ab6c21c9133f0039ad012bd34718d43bd2d5a99ae9b960598f9f2e1a20c914",
+      "bytes": 6988
+    },
+    {
+      "path": "output/2026-10-12-history-search-independent/frontend-first-freeze-references.json",
+      "sha256": "4e03c6ce964b416b5819ab19ee0817c15d559db60572ee638836e0cc4c706eb9",
+      "bytes": 12007
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/implementation.json",
+      "sha256": "10c949571bd7297f0ab528923c3a37bbed1f03140c9e80b11504618ce2c2d84b",
+      "bytes": 8865
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/source-checkpoint.json",
+      "sha256": "fa64588f0a90d055590f5354285403eb919e04aa79d2a268b53d14bd84065ad8",
+      "bytes": 3439
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/final-wire.raw.txt",
+      "sha256": "8d171a6536d0f02eda37e709b43644ea37e78344ea3448032e7342fdb3b259ef",
+      "bytes": 42469
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/targeted-final-alias.txt",
+      "sha256": "ae36e06cc3af77c3d082c1250963c255832c048c9a8a020a4cc43f6b4267cc49",
+      "bytes": 44704
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/post-read-red.txt",
+      "sha256": "6eb52c5be1e823424ced4fc4e997608a49f6c918b4589fbe31ed08c3fc802038",
+      "bytes": 43810
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/alias-owner-red.txt",
+      "sha256": "2c52cc2b69f1a1e3a44172a5a5ef51a183532ae56305fed68d8658b3c44fed33",
+      "bytes": 933
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/exact-handler-red.txt",
+      "sha256": "20b020ec07fc4ecafce8ffab7c18758acadb7aaa909931ec48d481c35b43d6de",
+      "bytes": 1806
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/exact-handler-green.txt",
+      "sha256": "7a27a06ea60af3d3ea00e0ebdf2da6c0d6b02abc4078cba7c394c928544da286",
+      "bytes": 409
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/matched-unpublished-red.txt",
+      "sha256": "b5f9d24cf3a9d5875275540e288b6cd25913b354d36eb878bfb47e0c6980e5d3",
+      "bytes": 2372
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/final-wire-related-final.txt",
+      "sha256": "b07d0dd273646414671d810e468c76b23b6ae9b5ea9620bc23de9fe7d5426a8e",
+      "bytes": 682
+    },
+    {
+      "path": "src-tauri/src/acp_client/account_scope.rs",
+      "sha256": "040457f028f178db9096effe873493150ae7ad1a340054d90f05e31f4ebdee15",
+      "bytes": 10279
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "sha256": "7dafa5a0f0c50047ed26a72cb6b4514247f91551c31f9d03371ffa5b2cd8efbc",
+      "bytes": 9796
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "3aee7124b225f738014c83cec6ee4027957818a63180605d9185a78b3228954f",
+      "bytes": 8561
+    },
+    {
+      "path": "output/2026-10-12-history-search-backend/official/thread.rs",
+      "sha256": "761fb1a61a8107ab37dcfd7f997a4983bd58aab81cf84355ae30197ed809c8ac",
+      "bytes": 77161
+    },
+    {
+      "path": "output/2026-10-12-history-search-backend/official/thread_processor.rs",
+      "sha256": "57e6398917825662f3b457197419607274b141e21b93e17c67ea6a1e328f3033",
+      "bytes": 249139
+    },
+    {
+      "path": "output/2026-10-12-history-search-backend/official/thread_data.rs",
+      "sha256": "ee9ea61126d10654919fceedc32524d480812206ff5d953f4430485f438ca9a2",
+      "bytes": 18381
+    }
+  ]
+}

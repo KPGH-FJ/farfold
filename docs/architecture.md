@@ -11,6 +11,14 @@
 - 文件可核验、查看、另存并提出版本意见；文字/Markdown/HTML与其他格式的呈现边界分别处理。网页已有公开页、本地单文件、多文件目录和开发服务器路径，工具声明包含读取、观察、点击和普通输入；生产截图明确不可用，工具实际接入覆盖仍有限。
 - Windows 系统适配已进入源码，实机运行与macOS证据分开；公开分发、正式签名和更新渠道按用户决定延后，不作为本轮开发门槛。
 
+## 所选未加载历史的临时检索（2026-10-13 源码集成）
+
+`HistorySearchPanel/Results`接入共用对话库的搜索范围；`history_search_controller/types`保持准确请求、短期读取确认及界面归属，按实际范围和终态呈现。最多明确选择同Agent的20条已有索引；点击检查只核入口和来源，点击开始才启动读取。`acp_client/history_search`从现有元数据取得目录和真实历史标识，首条已核官方方式使用固定只读metadata与完整分页接口，无resume、prompt或配置修改。Agent差异仅在接入层，界面按能力显示。
+
+请求与两任务预算、账号操作范围、退出/维护许可随真实工作保留到子进程/进程组/管道结束。当前行命中文字先临时保留，真实清理、目录与来源再次核实后才同锁公开；取消、来源变化、已加载同Agent或准确入口别名的对话均保留准确状态。只检索官方返回的用户消息与回复文字，结果保存于内存、单独查看文字快照，打开原对话继续现有保护路径；不伪造已有消息定位，不读取附件/工具/思考，不建持久搜索或正文账本。
+
+[本片证据](evidence/2026-10-09-capability-hardening/history-search/implementation.json)分别列定向、实际Rust回执互通、受控完整App、工程及独立复核。当前尚未实装、未执行真实官方历史查询；其他Agent、附件内容与Windows继续保留原条件。
+
 ## 所选附件归档与工具正文导出（2026-10-12 已安装分项验证）
 
 `ConversationExportHost`统一工作对话和对话列表入口，打开时冻结已加载内容；`conversation_export`默认Markdown，明确勾选才加入安全文本围栏中的工具文字、差异两侧和终端输出。`conversation_archive_snapshot/selection/input`负责声明附件候选、用户选择和规范输入，`conversation_archive_jobs/parse`跟踪准备、启动、取消及准确状态，`ConversationArchiveJobsStatus`接入共用文件保存活动和退出保护。

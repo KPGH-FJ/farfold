@@ -1,0 +1,30 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: large size difference between variants
+   --> src/acp_client/history_search/types.rs:155:1
+    |
+155 | /   pub enum Reply {
+156 | | /     Operation {
+157 | | |         operation: SearchOperation,
+158 | | |     },
+    | | |_____- the largest variant contains at least 296 bytes
+159 | |       #[serde(rename_all = "camelCase")]
+160 | | /     Absent {
+161 | | |         agent_id: String,
+162 | | |         request_id: String,
+163 | | |         scope: &'static str,
+164 | | |         admission_closed: bool,
+165 | | |     },
+    | | |_____- the second-largest variant contains at least 65 bytes
+166 | |   }
+    | |___^ the entire enum is at least 296 bytes
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#large_enum_variant
+    = note: `-D clippy::large-enum-variant` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::large_enum_variant)]`
+help: consider boxing the large fields or introducing indirection in some other way to reduce the total size of the enum
+    |
+157 -         operation: SearchOperation,
+157 +         operation: Box<SearchOperation>,
+    |
+
+error: could not compile `farfold` (lib) due to 1 previous error

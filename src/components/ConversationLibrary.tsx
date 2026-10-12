@@ -75,6 +75,8 @@ import {
 } from "../runtime/loaded_search";
 import { LOADED_SEARCH_STRINGS as SEARCH } from "../runtime/loaded_search_strings";
 import "../settings-library-redesign.css";
+import { HistorySearchPanel } from "./HistorySearchPanel";
+import { HISTORY_SEARCH_STRINGS as HISTORY } from "../runtime/history_search_strings";
 
 const LIBRARY_TABS = [
   ["all", LIBRARY.allTab],
@@ -140,8 +142,10 @@ export function ConversationLibrary({
   defaultCwd,
   header,
   onSelectLoaded,
+  agentOwners,
 }: {
   active?: boolean;
+  agentOwners?: ReadonlyMap<string, object>;
   agents: AgentCardModel[];
   filter: LibraryFilter;
   onFilter: (filter: LibraryFilter) => void;
@@ -207,9 +211,9 @@ export function ConversationLibrary({
   );
   const rowsWithDraft = new Set(draftKeys.split("\n"));
   const [organizing, setOrganizing] = useState(false);
-  const [searchScope, setSearchScope] = useState<"metadata" | "body">(
-    "metadata",
-  );
+  const [searchScope, setSearchScope] = useState<
+    "metadata" | "body" | "history"
+  >("metadata");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -278,7 +282,7 @@ export function ConversationLibrary({
               : tab === "unread"
                 ? r.unread
                 : r.status === tab)) &&
-          (searchScope === "body" ||
+          (searchScope !== "metadata" ||
             !query.trim() ||
             `${r.title} ${r.cwd} ${agents.find((a) => a.id === r.agentId)?.name ?? r.agentId} ${data.groups.find((g) => g.id === data.assignments[r.key])?.name ?? ""}`
               .toLocaleLowerCase()
@@ -311,7 +315,7 @@ export function ConversationLibrary({
         (dimensions.group === "none"
           ? !data.assignments[row.key]
           : data.assignments[row.key] === dimensions.group)) &&
-      (searchScope === "body" ||
+      (searchScope !== "metadata" ||
         !query.trim() ||
         `${row.title} ${row.cwd} ${agents.find((a) => a.id === row.agentId)?.name ?? row.agentId} ${data.groups.find((g) => g.id === data.assignments[row.key])?.name ?? ""}`
           .toLocaleLowerCase()
@@ -550,7 +554,11 @@ export function ConversationLibrary({
           </div>
         </div>
         <p className="library-search-boundary">
-          {searchScope === "body" ? SEARCH.boundary : R.searchBoundary}
+          {searchScope === "history"
+            ? HISTORY.boundary
+            : searchScope === "body"
+              ? SEARCH.boundary
+              : R.searchBoundary}
         </p>
         <div className="library-tools">
           <select
@@ -558,7 +566,11 @@ export function ConversationLibrary({
             value={searchScope}
             onChange={(event) => {
               setSearchScope(
-                event.target.value === "body" ? "body" : "metadata",
+                event.target.value === "history"
+                  ? "history"
+                  : event.target.value === "body"
+                    ? "body"
+                    : "metadata",
               );
               setOrganizing(false);
               changeSelection(() => new Set());
@@ -566,13 +578,24 @@ export function ConversationLibrary({
           >
             <option value="metadata">{SEARCH.metadata}</option>
             <option value="body">{SEARCH.body}</option>
+            <option value="history">{HISTORY.scope}</option>
           </select>
           <label className="library-search">
             <MagnifyingGlassIcon size={16} />
             <input
-              aria-label={searchScope === "body" ? SEARCH.query : LIBRARY.query}
+              aria-label={
+                searchScope === "history"
+                  ? HISTORY.query
+                  : searchScope === "body"
+                    ? SEARCH.query
+                    : LIBRARY.query
+              }
               placeholder={
-                searchScope === "body" ? SEARCH.query : LIBRARY.query
+                searchScope === "history"
+                  ? HISTORY.query
+                  : searchScope === "body"
+                    ? SEARCH.query
+                    : LIBRARY.query
               }
               maxLength={searchScope === "body" ? 512 : undefined}
               value={query}
@@ -608,7 +631,7 @@ export function ConversationLibrary({
           <button
             type="button"
             className="btn btn-text library-organize"
-            disabled={searchScope === "body"}
+            disabled={searchScope !== "metadata"}
             aria-pressed={organizing}
             onClick={() => {
               setOrganizing(!organizing);
@@ -849,7 +872,22 @@ export function ConversationLibrary({
           role="tabpanel"
           aria-label={LIBRARY_TABS.find(([id]) => id === tab)?.[1]}
         >
-          {searchScope === "body" ? (
+          {searchScope === "history" ? (
+            <HistorySearchPanel
+              scopeKey={JSON.stringify([
+                tab,
+                dimensions.agent,
+                dimensions.group,
+                dimensions.favorites,
+              ])}
+              active={active}
+              agents={agents}
+              agentOwners={agentOwners}
+              rows={rows}
+              query={query}
+              onOpen={onOpen}
+            />
+          ) : searchScope === "body" ? (
             <>
               <LoadedSearchSummary {...bodySearch} query={query} />
               <LoadedSearchResults

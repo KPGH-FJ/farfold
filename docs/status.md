@@ -1,12 +1,14 @@
 # Farfold 当前状态
 
-更新：2026-10-12。当前阶段为**能力建设与逐项补强**，目标是可面向市场用户、具备一线多 Agent 桌面工作台水准。执行顺序与全部原始条目见[唯一活动计划](../plans/agent-access.md)，产品要求以 [PRODUCT.md](../PRODUCT.md) 为准。
+更新：2026-10-13。当前阶段为**能力建设与逐项补强**，目标是可面向市场用户、具备一线多 Agent 桌面工作台水准。执行顺序与全部原始条目见[唯一活动计划](../plans/agent-access.md)，产品要求以 [PRODUCT.md](../PRODUCT.md) 为准。
 
 ## 当前基线与证据边界
 
 所选附件归档已提交安装 `a5a24810` / 0.1.7 arm64，并完成[正式窗口到真实ZIP的分项验证](evidence/2026-10-09-capability-hardening/attachment-archive-candidate/installed-archive-native.json)：默认Markdown、明确勾选两项附件、已加载修改前后文字、保存选择器取消后保留选择、替代来源标识、所选源文件失效时不发布ZIP及恢复后的准确保存。两包分别核到2/1和1/3项打包/省略，44字节附件内容与磁盘逐字节相同；本例未证明全部终端或工具正文类型。候选9/9通过，安装9组核心核验及产物稳定性通过；末尾包装断言在后续有意启动应用后失败，原失败保留，不写成10/10。三份217,400条安装数据快照相同；实测正常退出后133条完整会话、170条屏蔽及53项设置原值保持，整个未发内容与工作树清单相同，仅Codex更新时间变化。界面可见132条与数据库133行分别记录。重复打包应用已精确删除，唯一正式应用和候选ZIP保持。
 
-[本片源码与受控证据](evidence/2026-10-09-capability-hardening/attachment-archive/implementation.json)、[原七项工程检查](evidence/2026-10-09-capability-hardening/attachment-archive-checks/final-verification.json)继续保持各自范围：1,542输入，前端5,071项、Rust1,578项/6忽略；原格式失败保留，六项同源码检查未机械重复。写入中原生取消、未知清理、其他Agent与Windows及P35/P14/H06其余条件仍未完成。P32明确选择的未加载历史临时搜索正在开发和独立复核，尚未完成完整App、正式安装及真实官方读取，不建持久正文库。[桌面权限补查](evidence/2026-10-09-capability-hardening/desktop-permission-followup.json)中一次直接桌面PDF已显示实际两页中的第一页，旧失败当前在此路径未复现；OpenCode初始化原因、系统授权结果与NEW-01仍未关闭。签名、公开分发及市场目标继续未完成。
+[本片源码与受控证据](evidence/2026-10-09-capability-hardening/attachment-archive/implementation.json)、[原七项工程检查](evidence/2026-10-09-capability-hardening/attachment-archive-checks/final-verification.json)继续保持各自范围：1,542输入，前端5,071项、Rust1,578项/6忽略；原格式失败保留，六项同源码检查未机械重复。写入中原生取消、未知清理、其他Agent与Windows及P35/P14/H06其余条件仍未完成。P32明确选择的未加载历史临时文字搜索已完成源码、独立复核及受控完整App检查，当前待安全实装和真实官方读取，详见下段。[桌面权限补查](evidence/2026-10-09-capability-hardening/desktop-permission-followup.json)中一次直接桌面PDF已显示实际两页中的第一页，旧失败当前在此路径未复现；OpenCode初始化原因、系统授权结果与NEW-01仍未关闭。签名、公开分发及市场目标继续未完成。
+
+P32首片[所选历史临时检索](evidence/2026-10-09-capability-hardening/history-search/implementation.json)通过源码集成：同Agent最多20条已有索引，先检查读取方式、再明确开始；后端经官方只读分页接口读取用户消息和回复文字，核实真实进程结束及来源后公开匹配；范围、缺失、截断、失败和未知分开呈现，纯文字查看和打开原对话分开。无持久正文库、无模型消息、不代替Agent循环；首条已核接口在接入层，其他Agent及附件/工具/思考不在首片范围。[工程证据](evidence/2026-10-09-capability-hardening/history-search-checks/run-02/verification.json)对应1,566稳定输入、前端439文件/5,151项，Rust1,597项/6忽略：两前端文件小修后重查四项，三项原生检查在相同源码/配置/夹具/wire上复用；原格式失败及准确例外保留。[完整受控App](evidence/2026-10-09-capability-hardening/history-search/frontend/browser-validation.json)两引擎各37项；返回已结束搜索时误提示核对/取消的原红已修复并复测。以上不等于真实官方读取、正式安装、所有Agent、附件搜索或P32整体完成。下一步进行本片候选和正式分项验证。
 
 HTTP MCP默认停用添加已提交安装 `8cfb2ccb` / 0.1.7 arm64，见[正式分项验证](evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/installed-mcp-http-add.json)和[独立收口](evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/native-independent.json)。完整地址原样审阅、撤回后重新审阅、一次明确添加并保持停用、单独只读核对及同名拒绝已实测；官方接口已恢复两种目录范围原完整配置语义，专用本地端点在观测期间接收0次连接，不扩大为全局无网络或工具可用证明。[七项整合](evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/verification.json)通过：1,509输入稳定，前端425文件/4,963项、Rust1,557项/6忽略；双浏览器各34项，候选9/9、安装10/10，三份217,400条安装数据快照相同。有限实测正常退出后的131条完整会话、168条屏蔽、整个未发8/8/3及工作树清单保持；52项设置原值相同，另1项仅Codex准备页签由账号页变为程序页，其余字段与选择保持；Codex更新时间变化已逐值核对。首次安装核验脚本字段映射错误已修，原失败保留。已有启动环境测试偶发超时仍未定位，仅增强诊断，后续全量通过不作为已修复证明。该片实测后曾重新打开且有待回应项；随后归档片的正常退出及当前安装见首段，旧快照不代表后续状态。附件归档的后续源码进展见本节首段；连接、认证、诊断、其他Agent、P41及全量市场目标继续未完成。
 

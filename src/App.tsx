@@ -910,6 +910,7 @@ export default function App() {
         </div>
         <div className="workspace-route" hidden={view.kind !== "library"}>
           <ConversationLibrary
+            agentOwners={agents.extensionOwners}
             active={view.kind === "library" && !paletteOpen && !importOpen}
             agents={agents.cards}
             filter={filter}

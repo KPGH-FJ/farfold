@@ -1,0 +1,115 @@
+{
+  "status": "production frozen after scoped terminal-copy repair; browser follows",
+  "finding": "Retired owner after confirmed terminal or admission-closed reply still asked user to check or cancel when only dismiss existed. Now only unsettled, nonclosed tracking shows that instruction; terminal headline/dismiss remain.",
+  "changedSources": [
+    {
+      "path": "src/components/HistorySearchPanel.tsx",
+      "before": "ff23345ccc116405620f5fe646aebf297415b47331079816b751915ec648a404",
+      "after": "22a2ca7e77eda27ca2c2ec74562acfdd3d235110ba78a37445316c21a43f03f9"
+    },
+    {
+      "path": "src/components/HistorySearchPanel.test.tsx",
+      "before": "4dca376e5e1f7e9e588301c13391bcbc4fd741fe0c67bbfd84a9f69e0991f83d",
+      "after": "5574f82be8cf3028863da79680d6be5fa0097e768e2b8b3dd779b80276f0b82c"
+    }
+  ],
+  "regressions": {
+    "browserOriginal": {
+      "checksPassed": 3,
+      "effectiveFailed": 1,
+      "sourceStable": true
+    },
+    "panelOriginal": {
+      "passed": 13,
+      "effectiveFailed": 4
+    },
+    "green": {
+      "files": 4,
+      "passed": 50,
+      "newTests": 5
+    },
+    "typeExit": 0,
+    "ownedFormatExit": 0
+  },
+  "boundaries": [
+    "No Rust, IPC, parser, wire, controller, draft or model/service change.",
+    "Full App controlled browser is not installed product or official history evidence."
+  ],
+  "previousCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/source-checkpoint-final.json",
+    "sha256": "1de798ab16c51a89d93ae0343f72796953e8ef3e2eb246a9f2ca07c5958b71ca",
+    "bytes": 3876
+  },
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/source-checkpoint-terminal.json",
+    "sha256": "4e5a7d978a61a7d03620dcfc7ea24db8f0a6b7553912b1f8769d0f84b3cd326c",
+    "bytes": 3805
+  },
+  "refs": [
+    {
+      "path": "output/2026-10-12-history-search-frontend/terminal-copy-followup/HistorySearchPanel.before.tsx.txt",
+      "sha256": "ff23345ccc116405620f5fe646aebf297415b47331079816b751915ec648a404",
+      "bytes": 12993
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/terminal-copy-followup/HistorySearchPanel.test.before.tsx.txt",
+      "sha256": "4dca376e5e1f7e9e588301c13391bcbc4fd741fe0c67bbfd84a9f69e0991f83d",
+      "bytes": 11390
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/terminal-copy-followup/exact-patch.diff",
+      "sha256": "96d8dca6bd019616018227ee19342cebddec5a212cc061bf95b625a427978e77",
+      "bytes": 2553
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/terminal-copy-followup/format-write.txt",
+      "sha256": "904ac67c094ac0a22879a522fdb6b73c9d27d0d0a9e98272fff712920a46b0eb",
+      "bytes": 115
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/terminal-copy-followup/format.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/terminal-copy-followup/green.txt",
+      "sha256": "364355580ffd3f9332a1c32e7ed982229fe0aed2c6ebbfafc1d069ee05bd8d65",
+      "bytes": 462
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/terminal-copy-followup/red.txt",
+      "sha256": "2daa6d1e0ae92f13accc3a77730f9a37e41257dad7b9fb9cab57172d79c6591b",
+      "bytes": 2072
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/terminal-copy-followup/test-format.txt",
+      "sha256": "12caeb3d9bf66086f17ad47acd0290368805a527ca32f60a93205b8422a352af",
+      "bytes": 48
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/terminal-copy-followup/type.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-10-12-history-search-browser/webkit-run04.json",
+      "sha256": "70846ec0bed3ecf006b9902faff2d44123e4075aa07e485e59ec12c13ba10917",
+      "bytes": 261106
+    },
+    {
+      "path": "output/2026-10-12-history-search-browser/webkit-run04.raw.txt",
+      "sha256": "fcd7f242ff5871f2508ab0af5170a1061402427bbb2da908cc1ff6cf57756408",
+      "bytes": 210
+    },
+    {
+      "path": "output/2026-10-12-history-search-browser/webkit-run04-cancelled.png",
+      "sha256": "868c7832ab6734a7f4fb0b7fb752726794ff55225a10133c3db7af2ee99fe5e1",
+      "bytes": 153295
+    },
+    {
+      "path": "output/2026-10-12-history-search-browser/terminal-probe.mjs",
+      "sha256": "c555d1d512c82144d1daee1f671805a9c8685871bcb7b8649e975ca9d0f8e45e",
+      "bytes": 7324
+    }
+  ]
+}

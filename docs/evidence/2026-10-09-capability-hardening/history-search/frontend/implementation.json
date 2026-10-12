@@ -1,0 +1,197 @@
+{
+  "stage": "P32 explicitly selected unopened indexed history, frontend first slice",
+  "implemented": [
+    "Common library search scope, one Agent and up to 20 saved conversations selected explicitly; capability check then separate start. No implicit official read on mount/typing.",
+    "Strict exact reply identities, monotonic revision, per-row text coverage, UTF16 ranges and per-content-part hit identities.",
+    "Bounded temporary plain-text context; separate explicit existing protected open route. No fabricated ThreadState, import preview, prompt, persistent body index, attachment/OCR/tool/reasoning search.",
+    "Late replies after owner retirement drop hit bodies while retaining exact request tracking. Closed current-process absence may retire local observation without asserting historical stop/success.",
+    "Exact old-handler request guards and retired-owner WeakSet prevent old buttons affecting later searches; unrelated index updates retain unchanged selected-row authority."
+  ],
+  "validation": {
+    "related": {
+      "files": 8,
+      "passed": 96,
+      "newHistoryTests": 60,
+      "log": {
+        "path": "output/2026-10-12-history-search-frontend/related-final.txt",
+        "sha256": "d01e4f5f0ec9d7d97d50e765bff66f89a39c440548f42036cbbdc92f6073cf5b",
+        "bytes": 631
+      }
+    },
+    "typecheck": {
+      "exitCode": 0,
+      "log": {
+        "path": "output/2026-10-12-history-search-frontend/type-final.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      }
+    },
+    "ownedFormat": {
+      "exitCode": 0,
+      "log": {
+        "path": "output/2026-10-12-history-search-frontend/format-final.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+        "bytes": 66
+      }
+    },
+    "actualRustInterop": {
+      "tests": 12,
+      "wire": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/actual-wire.json",
+        "sha256": "fc05adf243b8549c7e336fdf26d571b7b796362eac390f6cc695b938438096ea",
+        "bytes": 82941
+      },
+      "boundary": "10 actual Rust serialized values preserved; controller admission capability is explicitly synthetic, operation chain untouched actual Rust values. No real Agent query."
+    }
+  },
+  "retainedFailures": [
+    {
+      "log": {
+        "path": "output/2026-10-12-history-search-frontend/panel-first.txt",
+        "sha256": "07e858bbf9ac9b1cf8853d789291933286a27a00282699edb7f0dfb2ddffb10e",
+        "bytes": 4227
+      },
+      "classification": "test driver only",
+      "detail": "Manual JSX walker recursively rendered undefined children, eight stack-overflow failures before product assertions; corrected walker only."
+    },
+    {
+      "log": {
+        "path": "output/2026-10-12-history-search-frontend/type-second.txt",
+        "sha256": "2c77d0c11f5963e8f69afbab383647f0e2c75e2b10cfb6aef69d951af7cab224",
+        "bytes": 420
+      },
+      "classification": "test injection typing",
+      "detail": "crypto.randomUUID inferred template return was too narrow for injected validated string; explicit () => string, no production wire change."
+    },
+    {
+      "log": {
+        "path": "output/2026-10-12-history-search-frontend/coverage-copy-red.txt",
+        "sha256": "ccc7893c26d013292f6e11f52a383091cdec320d39677a5c2af253a8c914406b",
+        "bytes": 4155
+      },
+      "classification": "three effective product wording assertions",
+      "detail": "Expired capability misattributed to settings; zero unread and confirmed-empty coverage incorrectly used no-match text."
+    },
+    {
+      "log": {
+        "path": "output/2026-10-12-history-search-frontend/unrelated-index-red.txt",
+        "sha256": "a4112d81629de227d720428463f2f50bff9f408347b848974890908770f56210",
+        "bytes": 1141
+      },
+      "classification": "one effective product ownership assertion",
+      "detail": "Unrelated index-array addition retired unchanged selected source; now scope and exact selected row refs govern ownership."
+    },
+    {
+      "log": {
+        "path": "output/2026-10-12-history-search-frontend/exact-handler-red.txt",
+        "sha256": "20b020ec07fc4ecafce8ffab7c18758acadb7aaa909931ec48d481c35b43d6de",
+        "bytes": 1806
+      },
+      "classification": "two effective product stale-handler assertions",
+      "detail": "Old check/cancel reached successor request; old prepare revived retired scope. Fixed exact ID entry points and owner retirement."
+    }
+  ],
+  "boundaries": [
+    "Actual panel tests execute component with controlled hooks and real controller, not browser/native UI acceptance.",
+    "Full App browser, complete repository checks, installed search UI and actual official history reads are not claimed here.",
+    "First supported official capability only; unavailable Agents retain unavailable path. Search does not cover every Agent or unregistered/unreturned histories.",
+    "Closing requests cancellation; only backend settled or exact current-process closed admission ends tracking. No promise that an individual OS read is interruptible."
+  ],
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/source-checkpoint.json",
+    "sha256": "fa64588f0a90d055590f5354285403eb919e04aa79d2a268b53d14bd84065ad8",
+    "bytes": 3439
+  },
+  "refs": [
+    {
+      "path": "output/2026-10-12-history-search-frontend/controller-first.txt",
+      "sha256": "df3b2368a528c81f43abf9feeb100cff440252ea33fe176dc91df8f586b8342b",
+      "bytes": 351
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/related-first.txt",
+      "sha256": "dc77fa460120e4f920c30362eac0803ab5da33a3141f38715cb7eeb2fee1574c",
+      "bytes": 488
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/type-first.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/panel-first.txt",
+      "sha256": "07e858bbf9ac9b1cf8853d789291933286a27a00282699edb7f0dfb2ddffb10e",
+      "bytes": 4227
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/panel-second.txt",
+      "sha256": "3073240517f8cae642c935428b51c55dc06f27281d7827e4e46bedad82f7564b",
+      "bytes": 314
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/wire-first.txt",
+      "sha256": "16b8174366d3e788b3192f882179b7c9bbc51b55667364cea68bc06618464e9d",
+      "bytes": 314
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/type-second.txt",
+      "sha256": "2c77d0c11f5963e8f69afbab383647f0e2c75e2b10cfb6aef69d951af7cab224",
+      "bytes": 420
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/related-second.txt",
+      "sha256": "b147c882cca3045f596dcf3a7f7f20daf2d678c8d3c4fa59107ff36a62df1060",
+      "bytes": 631
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/type-third.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/coverage-copy-red.txt",
+      "sha256": "ccc7893c26d013292f6e11f52a383091cdec320d39677a5c2af253a8c914406b",
+      "bytes": 4155
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/unrelated-index-red.txt",
+      "sha256": "a4112d81629de227d720428463f2f50bff9f408347b848974890908770f56210",
+      "bytes": 1141
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/coverage-owner-green.txt",
+      "sha256": "e5baf91fcce6995653c00b8ff4d94171c57889b7afad714502263fc24556aa50",
+      "bytes": 408
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/exact-handler-red.txt",
+      "sha256": "20b020ec07fc4ecafce8ffab7c18758acadb7aaa909931ec48d481c35b43d6de",
+      "bytes": 1806
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/exact-handler-green.txt",
+      "sha256": "7a27a06ea60af3d3ea00e0ebdf2da6c0d6b02abc4078cba7c394c928544da286",
+      "bytes": 409
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/type-fourth.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/related-final.txt",
+      "sha256": "d01e4f5f0ec9d7d97d50e765bff66f89a39c440548f42036cbbdc92f6073cf5b",
+      "bytes": 631
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/type-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    }
+  ]
+}

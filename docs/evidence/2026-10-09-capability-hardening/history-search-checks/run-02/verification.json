@@ -1,0 +1,114 @@
+{
+  "status": "frontendCorrectionValidatedWithUnchangedNativeChecks",
+  "inputCount": 1566,
+  "sourceStable": true,
+  "protectedUnchanged": true,
+  "changedInputsSinceOriginal": [
+    ".prettierignore",
+    "src/components/HistorySearchPanel.test.tsx",
+    "src/components/HistorySearchPanel.tsx"
+  ],
+  "checksExecutedHere": [
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 7.844,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-02/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 47.29,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-02/frontend.txt",
+      "sha256": "e952ca5e1b7299940948890287d1fb3edb9d31dd8e262940eecbf6f16b1bf3bd",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 8.697,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-02/build.txt",
+      "sha256": "0d3f70de727e4d2c347bdb11a510b3a60afa1f1a74c2b2315e37593bf5c9b4d9",
+      "executedInThisRun": true
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 27.358,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-02/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true
+    }
+  ],
+  "nativeChecksReused": [
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.247,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 12.706,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/clippy.txt",
+      "sha256": "30681c73ed3f85a8d07ac9ea3bf194f181b5f343e04bef4fe72e6f41c163a219",
+      "executedInThisRun": true
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 118.868,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/rust.txt",
+      "sha256": "b77f6c9b73e3f2e36147aa0822f035e6027495611f393be0bf72ffea000afcf4",
+      "executedInThisRun": true
+    }
+  ],
+  "originalRun": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/verification.json",
+    "sha256": "2d2d68e9595eaa228af4d03ee8202fc76356474bf0c1de5f6612feca7569fd11"
+  },
+  "originalNativeSourceAndWireUnchanged": true,
+  "allSevenCommandsHavePassingEvidence": true,
+  "counts": {
+    "frontend": ["Test Files  439 passed (439)", "Tests  5151 passed (5151)"],
+    "rust": [
+      "test result: ok. 1597 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 91.96s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  "boundary": "Seven repository commands on recorded inputs including actual Rust history-search wire. Engineering only; official read-only history queries, native installed UI, Windows and whole P32 have separate evidence."
+}

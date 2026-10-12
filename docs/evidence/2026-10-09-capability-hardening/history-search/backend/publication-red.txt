@@ -1,0 +1,21 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 16.97s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'acp_client::history_search::tests::invalid_cursor_page_is_not_published_and_cleanup_state_does_not_regress' (27182077) panicked at src/acp_client/history_search/tests.rs:182:5:
+assertion `left == right` failed: repeated cursor page must remain unpublished
+  left: 4
+ right: 2
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test acp_client::history_search::tests::invalid_cursor_page_is_not_published_and_cleanup_state_does_not_regress ... FAILED
+
+failures:
+
+failures:
+    acp_client::history_search::tests::invalid_cursor_page_is_not_published_and_cleanup_state_does_not_regress
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1594 filtered out; finished in 0.16s
+
+error: test failed, to rerun pass `--lib`

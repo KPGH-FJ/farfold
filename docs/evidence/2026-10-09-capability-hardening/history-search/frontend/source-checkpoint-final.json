@@ -1,0 +1,115 @@
+{
+  "stage": "history-search-frontend",
+  "capturedAt": "2026-10-12T14:37:59.821232+00:00",
+  "baseCommit": "a5a24810fd494a9f31e69881c74c55ca2d1fbd49",
+  "captureBoundary": "Captured after final targeted/type/format commands; not a claim of a separately captured before/after input manifest. Parent integration will freeze and verify complete inputs.",
+  "sources": [
+    {
+      "path": "src/runtime/history_search.ts",
+      "sha256": "cc9396c32e9cb0db69164fd7674321d55ccfc60f6d58208b0274ae675871f975",
+      "bytes": 902,
+      "lines": 19
+    },
+    {
+      "path": "src/runtime/history_search_types.ts",
+      "sha256": "dfe182be5ec7ef172b2e36a2f4e627c4113a14d135eec6a0711f458c9ec5e17a",
+      "bytes": 11974,
+      "lines": 449
+    },
+    {
+      "path": "src/runtime/history_search_controller.ts",
+      "sha256": "e8d47f5855b929989a62a81547c741d509ffa9dc5777b9400c05301bfa3fd929",
+      "bytes": 11113,
+      "lines": 376
+    },
+    {
+      "path": "src/runtime/history_search_strings.ts",
+      "sha256": "4b7785099befa1646cbc9a6ce11b4a8470af7c1fe7077e37391a50e0e154891e",
+      "bytes": 5472,
+      "lines": 99
+    },
+    {
+      "path": "src/runtime/history_search.test-support.ts",
+      "sha256": "aa852240ec69607d3af8f40e04ca0de4d321f499d674b9922d6b2bfc3ee484f4",
+      "bytes": 4186,
+      "lines": 157
+    },
+    {
+      "path": "src/runtime/history_search_controller.test.ts",
+      "sha256": "2ce8ccb6b3e8de8993912cf01c89ca61fca0a2704618f45c6d64cb83edfaa987",
+      "bytes": 7680,
+      "lines": 205
+    },
+    {
+      "path": "src/runtime/history_search_types.test.ts",
+      "sha256": "62326fbc7963c3d8406b620ed9b5fa6f4e4e0a6f5c4eaa2ba7b343ed7ec9d183",
+      "bytes": 4775,
+      "lines": 167
+    },
+    {
+      "path": "src/runtime/history_search.wire.test.tsx",
+      "sha256": "971c6246037f8e76f44def2ac08bab76ba6f2087d459a3bf7cd2e6505c0f9ac6",
+      "bytes": 4005,
+      "lines": 110
+    },
+    {
+      "path": "src/components/HistorySearchPanel.tsx",
+      "sha256": "ff23345ccc116405620f5fe646aebf297415b47331079816b751915ec648a404",
+      "bytes": 12993,
+      "lines": 411
+    },
+    {
+      "path": "src/components/HistorySearchPanel.css",
+      "sha256": "498487e86ba5b9e7e75d24cdb052c604dfb94d3e6a6c59a1650971c42f9d840b",
+      "bytes": 2452,
+      "lines": 132
+    },
+    {
+      "path": "src/components/HistorySearchPanel.test.tsx",
+      "sha256": "4dca376e5e1f7e9e588301c13391bcbc4fd741fe0c67bbfd84a9f69e0991f83d",
+      "bytes": 11390,
+      "lines": 363
+    },
+    {
+      "path": "src/components/HistorySearchResults.tsx",
+      "sha256": "41ce7794eb09003a898924649a5852d9f97ca72f9fea3dbd9eb38aa548b1ebeb",
+      "bytes": 3024,
+      "lines": 100
+    },
+    {
+      "path": "src/components/HistorySearchResults.test.tsx",
+      "sha256": "1f065d7c9a746c6cd55d19b2ce6b2a21d6937c02ac157f1d91a26e87c283de09",
+      "bytes": 2471,
+      "lines": 65
+    },
+    {
+      "path": "src/components/ConversationLibrary.tsx",
+      "sha256": "abcbf237385b24f67718550e6dfcf7b305d6e20897fc50b451783a7740a5772a",
+      "bytes": 43993,
+      "lines": 1309
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "d68e42c70a92de0b41f18c9e17673c737f8cfe6e14169fcc49b23e530ffddf36",
+      "bytes": 45273,
+      "lines": 1262
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "114aecb77a987d7533a7c9884c08f395b2be67ca5d435926f73c36d53c23aa2a",
+      "bytes": 7048,
+      "lines": 175
+    },
+    {
+      "path": "src/runtime/history_search.final-wire.test.tsx",
+      "sha256": "8f097d2d03a1047be3f7e9f18d14c6a5ff1b26113788c4e5b93b9117d7f7939d",
+      "bytes": 3453,
+      "lines": 94
+    }
+  ],
+  "priorCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/source-checkpoint.json",
+    "sha256": "fa64588f0a90d055590f5354285403eb919e04aa79d2a268b53d14bd84065ad8",
+    "bytes": 3439
+  }
+}

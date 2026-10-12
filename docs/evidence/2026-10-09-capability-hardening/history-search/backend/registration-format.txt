@@ -1,0 +1,16 @@
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/mod.rs:26:
+ mod failures;
+ pub(crate) mod first_release;
+ pub(crate) mod handshake;
++pub mod history_search;
+ mod initialization;
+ pub(crate) mod installation_parameters;
+ mod lifecycle;
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/acp_client/mod.rs:46:
+ pub mod session_commands;
+ mod session_config;
+ pub mod session_discovery;
+-pub mod history_search;
+ pub(crate) mod session_index;
+ pub mod skill_management;
+ pub(crate) mod startup_diagnostics;

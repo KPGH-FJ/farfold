@@ -26,6 +26,7 @@ pub mod extension_inventory;
 mod failures;
 pub(crate) mod first_release;
 pub(crate) mod handshake;
+pub mod history_search;
 mod initialization;
 pub(crate) mod installation_parameters;
 mod lifecycle;

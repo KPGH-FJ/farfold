@@ -1,3 +1,4 @@
+import { HISTORY_SEARCH_STRINGS } from "./history_search_strings";
 import { EXTENSION_INVENTORY_STRINGS } from "./extension_inventory_strings";
 import { WORKTREE_PREPARATION_STRINGS } from "./worktree_preparation_strings";
 import { ASYNC_TASKS } from "./async_task_strings";
@@ -90,6 +91,7 @@ describe("strings", () => {
   const leaves = collectStrings(
     {
       STRINGS,
+      HISTORY_SEARCH_STRINGS,
       ASYNC_TASKS,
       WORKTREE_STRINGS,
       WORKTREE_PREPARATION_STRINGS,

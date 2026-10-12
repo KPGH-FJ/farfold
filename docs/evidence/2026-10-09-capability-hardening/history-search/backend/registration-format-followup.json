@@ -1,0 +1,7 @@
+{
+  "path": "src-tauri/src/acp_client/mod.rs",
+  "beforeSha256": "30e3de27b072fe39f5b021596e65abfcb5d1743a2bd72e4fee498dcc34c03383",
+  "afterSha256": "e66049b0afe4560c7492e1141d4905c83d2b55b503d598bcff406672a2e34c83",
+  "change": "rustfmt module declaration ordering only; same module registration, no function change",
+  "tests": "19 targeted and clippy success preceded this formatting-only reorder; root owns final whole-source checks"
+}

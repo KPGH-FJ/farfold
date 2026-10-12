@@ -1,0 +1,113 @@
+{
+  "status": "sevenChecksPassedWithNarrowFormattingFollowup",
+  "checkedAtUtc": "2026-10-12T14:47:32.745338+00:00",
+  "sourceBase": "e66b3b6df7fc982c5ef8728b32fe9da49883e907",
+  "inputCount": 1566,
+  "productSourceUnchangedSinceFullChecks": true,
+  "changedInputsAfterFullRun": [".prettierignore"],
+  "explanation": "Six exact source/wire checks passed. Original format failure concerned only original serialized actual-wire.json; its exact path is exempted to preserve the captured bytes. Full formatting alone reran and passed; six unchanged checks were not repeated.",
+  "originalRun": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/verification.json",
+    "sha256": "2d2d68e9595eaa228af4d03ee8202fc76356474bf0c1de5f6612feca7569fd11"
+  },
+  "successfulCommands": [
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 8.448,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 43.833,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/frontend.txt",
+      "sha256": "236e773ba1b7e106801e6785d139ab8cb4e639719c0562a5ce27222783e52ddc",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 9.008,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/build.txt",
+      "sha256": "e8469eb639320947cc77e5e1d6a7d6050d5b8a79ca3243592ec752a7a0b6178d",
+      "executedInThisRun": true
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.247,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 12.706,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/clippy.txt",
+      "sha256": "30681c73ed3f85a8d07ac9ea3bf194f181b5f343e04bef4fe72e6f41c163a219",
+      "executedInThisRun": true
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 118.868,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/rust.txt",
+      "sha256": "b77f6c9b73e3f2e36147aa0822f035e6027495611f393be0bf72ffea000afcf4",
+      "executedInThisRun": true
+    }
+  ],
+  "formatFollowup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/format-followup.json",
+    "sha256": "b21cc08b4bc20fbf5db8201a0e9fe0251a6b3042e62a08152eaccf03c601025f"
+  },
+  "finalInputs": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/inputs-final.json",
+    "sha256": "3cc7459561dac706c101ce3c11d6d3ea8c788a38b16662c5fd26d9d49467ebfd"
+  },
+  "originalFailureBytesPreserved": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/actual-wire.json",
+    "sha256": "fc05adf243b8549c7e336fdf26d571b7b796362eac390f6cc695b938438096ea"
+  },
+  "allSevenCommandsHavePassingEvidence": true,
+  "counts": {
+    "frontend": ["Test Files  439 passed (439)", "Tests  5146 passed (5146)"],
+    "rust": [
+      "test result: ok. 1597 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 91.96s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  "protectedUnchanged": true,
+  "boundary": "Source/configuration/tests and consumed wire only. Controlled full App, actual official queries, installed UI, Windows and entire P32 separately verified."
+}

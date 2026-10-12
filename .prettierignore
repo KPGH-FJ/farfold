@@ -200,6 +200,9 @@ docs/evidence/2026-10-05-mcp-file-feedback/official-merge/
 # Actual installed archive members retain the exact bytes verified inside the ZIP.
 docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/native/selected-manifest.json
 docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/native/selected-conversation.md
+
+# Preserve the original serialized history-search wire and its captured hash.
+docs/evidence/2026-10-09-capability-hardening/history-search/backend/actual-wire.json
 /generated_images/
 
 # Frozen research and real-response receipts retain captured bytes.

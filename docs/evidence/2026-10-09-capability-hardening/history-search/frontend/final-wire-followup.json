@@ -1,0 +1,78 @@
+{
+  "status": "frontend frozen; controlled full App browser follows",
+  "changes": "Title counts only viewable confirmed text blocks. Discovered matches without publishable text explicitly remain unconfirmed, both during reading and after source drift. Old stdio/other scope evidence unrelated and unchanged.",
+  "originalReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/implementation.json",
+    "sha256": "10c949571bd7297f0ab528923c3a37bbed1f03140c9e80b11504618ce2c2d84b",
+    "bytes": 8865
+  },
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/source-checkpoint-final.json",
+    "sha256": "1de798ab16c51a89d93ae0343f72796953e8ef3e2eb246a9f2ca07c5958b71ca",
+    "bytes": 3876
+  },
+  "actualWire": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/final-wire.json",
+    "sha256": "7c31fe02551b75440ca66b39d7555b6a542e4b3917d07c90d5e1a493cdcea3cc",
+    "bytes": 84556
+  },
+  "tests": {
+    "relatedFiles": 9,
+    "passed": 111,
+    "newFinalWireTests": 15,
+    "actualRustValues": 12,
+    "typeExit": 0,
+    "formatExit": 0
+  },
+  "retainedFailures": [
+    {
+      "file": "matched-unpublished-red.txt",
+      "classification": "2 effective product copy failures from actual Rust readingUnconfirmed/sourceDrift values"
+    },
+    {
+      "file": "final-wire-related-green.txt",
+      "classification": "1 prior synthetic no-match fixture retained matchedTextBlocks=1 after removing hits; fixed only fixture count to preserve intended true-no-match assertion, new actual-wire assertions unchanged"
+    },
+    {
+      "file": "final-wire-format.txt",
+      "classification": "new test file needed second formatting pass; final exact formatting passed"
+    }
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-12-history-search-frontend/matched-unpublished-red.txt",
+      "sha256": "b5f9d24cf3a9d5875275540e288b6cd25913b354d36eb878bfb47e0c6980e5d3",
+      "bytes": 2372
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/final-wire-related-green.txt",
+      "sha256": "52d07b1a61b9ad3ada1c168c7a75a31d08b041d407c9e0ca399a3c066b1f56e6",
+      "bytes": 2260
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/final-wire-type.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/final-wire-format.txt",
+      "sha256": "90b7b5894491fc89ea9699822778b22e280c972d9d0cef0d013279426b116ccb",
+      "bytes": 161
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/final-wire-related-final.txt",
+      "sha256": "b07d0dd273646414671d810e468c76b23b6ae9b5ea9620bc23de9fe7d5426a8e",
+      "bytes": 682
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/final-wire-type-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-10-12-history-search-frontend/final-wire-format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    }
+  ]
+}

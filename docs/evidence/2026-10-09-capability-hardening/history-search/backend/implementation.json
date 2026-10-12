@@ -1,0 +1,222 @@
+{
+  "phase": "sourceImplementedTargetedVerifiedNotInstalled",
+  "scope": "P32 first selected unloaded-history text-search slice; generic capability-driven interface with one reviewed official app-server route",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/source-checkpoint.json",
+    "sha256": "c8592076f5b46f359465e86a010d38a6cbc4ef745d737243b1d1b1de1ec4ed4c",
+    "bytes": 2263
+  },
+  "ownedPaths": 10,
+  "commands": [
+    "history_search_capabilities",
+    "history_search_start",
+    "history_search_status",
+    "history_search_cancel",
+    "history_search_release"
+  ],
+  "behavior": {
+    "selection": "User explicitly selects at most 20 existing Farfold index rows from one Agent. Backend captures exact AgentRow and complete SessionRow metadata; front end supplies no native id, cwd, launch command or config.",
+    "officialRead": [
+      "initialize",
+      "initialized",
+      "thread/read includeTurns=false",
+      "thread/turns/list itemsView=full limit=10 sortDirection=asc"
+    ],
+    "notDispatched": [
+      "resume",
+      "thread/start",
+      "turn/start",
+      "session/load",
+      "model/reasoning/config setters"
+    ],
+    "ownership": "Reject selected native history loaded under any owned directory/service of the same Agent, or a proven LaunchIdentity alias. Existing AccountScope also rejects busy/unsettled/candidate work and blocks new affected work until real cleanup. This is not account-wide or all-external-process discovery.",
+    "worker": "Existing global execution 2-slot lease, ActivityPermit, configuration guard and AccountScope are held by actual blocking worker. Real owned child/group/pipes settle before terminal release; observers do not own worker lifetime.",
+    "publication": "Page counts remain progress only. Current-row hit text and final row status remain private until actual child cleanup, original directory-handle identity and exact source metadata recheck. Publish serializes with cancellation. Earlier verified rows remain available. Invalid/repeated-cursor pages never contribute hits; valid earlier pages can remain partial if source still verifies.",
+    "pendingCleanup": "Once a previous child really exits, the next row returns to running/code:null; cancellation prevents continuing. No claim that sending cancellation is already stopped.",
+    "body": "Only individual official user text parts and assistant text blocks. Tools, reasoning, attachments and other message kinds explicitly excluded. Original native turn/item ids and partIndex identify each bounded result. No fabricated live ThreadState or automatic open/restore.",
+    "matching": "Unicode per-scalar lowercase literal substring. UTF16 ranges address returned original plain-text window; separate user parts never concatenate. Exact query bytes retained; no regex/semantic/OCR claims.",
+    "storage": "RAM only; no persistent transcript, event ledger or body index. Settled detail can be released or pruned after 300s access; used-id compact tombstones survive process lifetime. No private Agent history/config files read."
+  },
+  "limits": {
+    "rows": 20,
+    "queryUtf8Bytes": 256,
+    "capabilityTickets": 32,
+    "capabilityMs": 300000,
+    "detailRecords": 32,
+    "settledDetailMs": 300000,
+    "usedIds": 4096,
+    "jobMs": 60000,
+    "perChildMs": 15000,
+    "pagesPerRow": 20,
+    "turnsPerPage": 10,
+    "childStdoutBytes": 8388608,
+    "childStderrBytes": 65536,
+    "inputTextBlockUtf8Bytes": 1048576,
+    "resultHits": 200,
+    "hitTextUtf8Bytes": 16384,
+    "rangesPerHit": 64,
+    "idUtf8Bytes": 1024
+  },
+  "validation": {
+    "firstCompile": {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/targeted-first.txt",
+        "sha256": "116776b903a1c29aabe3ac5f144dd33a3a39c9119ba71e053f22ac3bb828ac36",
+        "bytes": 1338
+      },
+      "result": "Failed: two closure Result inference annotations; not a functional red."
+    },
+    "initial": {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/targeted-second.txt",
+        "sha256": "65ac69a0dc7b8c52e9e1487d443599fefef20c0949c3400278abf61d46f93adf",
+        "bytes": 41947
+      },
+      "passed": 10
+    },
+    "functionalReds": [
+      {
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/publication-red.txt",
+          "sha256": "79cea2fdfd00e4bbb4b9fac9d9591a313877619f6e406592e11beba6b8d854fb",
+          "bytes": 1013
+        },
+        "failed": 1,
+        "finding": "Repeated cursor page was published before cursor rejection."
+      },
+      {
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/owner-directory-red.txt",
+          "sha256": "ffb45208e9c792bcf99bec0b7778ff74cd641cfc3416b2ab5c70a4c71f244b02",
+          "bytes": 921
+        },
+        "failed": 1,
+        "finding": "Same Agent native id loaded in another directory was treated as unloaded."
+      },
+      {
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/post-read-red.txt",
+          "sha256": "6eb52c5be1e823424ced4fc4e997608a49f6c918b4589fbe31ed08c3fc802038",
+          "bytes": 43810
+        },
+        "passed": 11,
+        "failed": 2,
+        "findings": [
+          "Directory replaced after read left unverified current-row hits visible.",
+          "Previous pendingCleanup incorrectly remained while reading next row."
+        ]
+      },
+      {
+        "log": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/alias-owner-red.txt",
+          "sha256": "2c52cc2b69f1a1e3a44172a5a5ef51a183532ae56305fed68d8658b3c44fed33",
+          "bytes": 933
+        },
+        "failed": 1,
+        "finding": "Proven entry alias with loaded same native id was treated as unloaded."
+      }
+    ],
+    "final": {
+      "command": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib history_search -- --nocapture",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/targeted-final-alias.txt",
+        "sha256": "ae36e06cc3af77c3d082c1250963c255832c048c9a8a020a4cc43f6b4267cc49",
+        "bytes": 44704
+      },
+      "passed": 19,
+      "failed": 0
+    },
+    "actualProcess": "Owned Python peer exercises fixed official-shaped JSONL handshake/pages, real process termination, ignored TERM then exact group KILL/reap. Real wrapper holds global execution slot/activity/account scope through cleanup; loaded guard tests use actual controlled ACP connections, never installed Agent.",
+    "sourceDrift": "A held real peer returns first page while hits remain private; test changes original saved index before completion. Final fixed error retains matched progress with zero confirmed hits. Separate real peer renames source directory and creates replacement; only prior verified-row hits remain.",
+    "registry": "Exact early-cancel, same-id conflict, active release refusal, 4096 used-id saturation closes new admission, original pair remains operable and released ids cannot restart.",
+    "clippyInitial": {
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/clippy-first.txt",
+        "sha256": "7dcd0ff58e22c94c2a944a3c8ce669ae3fa1462ab87a2661e53a3c63e8e5f7f1",
+        "bytes": 1294
+      },
+      "result": "large enum variant; Box preserves JSON shape"
+    },
+    "clippyFinal": {
+      "command": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+      "log": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/clippy-final.txt",
+        "sha256": "526afc11784d13deb96b772307676f76eba102770075bab46cc9f3b4568f6b12",
+        "bytes": 138
+      },
+      "exitCode": 0
+    },
+    "format": {
+      "ownedModuleCheck": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/format-frozen.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "registrationCheck": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/registration-format-final.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "exitCode": 0
+    },
+    "formatOnlyAfterTests": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/registration-format-followup.json",
+      "sha256": "3d1dc58e5c81cbefd6832c715b911caebbe80d7c665349536062f282cc11e836",
+      "bytes": 441
+    },
+    "noWholeSuite": "Parent owns one frozen full seven-check integration. No full test run claimed here."
+  },
+  "actualWire": {
+    "previousImmutable": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/actual-wire.json",
+      "sha256": "fc05adf243b8549c7e336fdf26d571b7b796362eac390f6cc695b938438096ea",
+      "bytes": 82941
+    },
+    "final": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/final-wire.json",
+      "sha256": "7c31fe02551b75440ca66b39d7555b6a542e4b3917d07c90d5e1a493cdcea3cc",
+      "bytes": 84556
+    },
+    "raw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/final-wire.raw.txt",
+      "sha256": "8d171a6536d0f02eda37e709b43644ea37e78344ea3448032e7342fdb3b259ef",
+      "bytes": 42469
+    },
+    "sourceLog": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/targeted-final-alias.txt",
+      "sha256": "ae36e06cc3af77c3d082c1250963c255832c048c9a8a020a4cc43f6b4267cc49",
+      "bytes": 44704
+    },
+    "markers": [
+      {
+        "prefix": "HISTORY_SEARCH_WIRE=",
+        "line": 21
+      },
+      {
+        "prefix": "HISTORY_SEARCH_POST_READ_WIRE=",
+        "line": 11
+      }
+    ],
+    "values": 12,
+    "allValuesEqualParsedRustStdout": true,
+    "scope": "Unavailable capability is actual synthetic unsupported selection, not proof of available official entry. Pending cleanup value uses controlled invocation of production publication method, not proof of an OS-unreapable child. readingUnconfirmed/sourceDrift are same real held-peer/index-change chain. Earlier wire retained unchanged; final revisions may differ."
+  },
+  "officialSourceReview": {
+    "tag": "rust-v0.156.1 static protocol/handler source review only; no runtime version or binary SHA gate",
+    "links": [
+      "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server-protocol/src/protocol/v2/thread.rs",
+      "https://github.com/openai/codex/blob/rust-v0.156.1/codex-rs/app-server/src/request_processors/thread_processor.rs"
+    ],
+    "facts": "Stable turns/list reads legacy and paginated history. Experimental searchOccurrences covers paginated storage only. Legacy turns/list may internally replay the whole rollout per page; Farfold limits requests/output/time, not official internal computational cost. Normal official startup may maintain Agent-owned state; no zero-write or global-zero-network claim."
+  },
+  "notVerified": [
+    "Installed product UI for this source",
+    "Real official Agent/history request",
+    "Available capability on actual registered entry",
+    "29-Agent complete coverage",
+    "Windows route (explicitly unsupported)",
+    "Attachment content search, tool/reasoning search",
+    "Atomic immutable external-history snapshot or all external account activity"
+  ],
+  "completionBoundary": "This does not close all P32 conditions: official selected unloaded-history text route is implemented and synthetic process-backed tests are green; other routes, actual installed/official runs, and attachments remain separately tracked."
+}
