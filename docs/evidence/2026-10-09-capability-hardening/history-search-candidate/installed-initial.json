@@ -1,0 +1,48 @@
+{
+  "status": "installedInitialRealReadReturnedExpectedText_thenRefreshLostUsableResults",
+  "sourceCommit": "66a2bbfcbf70c7492846a1fb6f6548ece9665577",
+  "install": "Candidate9/9 and installed10/10; retry three217400-entry manifests equal; first preparation failure retained separately",
+  "operatorObserved": {
+    "scope": "Exactly one existing indexed controlled Codex history, initially unloaded",
+    "query": "FARFOLD_REPORTED_P19_20261010",
+    "nativeHistoryId": "01a123e4-5319-7d60-9db6-ab66f4d9d432",
+    "actions": "Select history, separate capability check and one explicit start; no prompt or config approval",
+    "firstTerminal": "Read finished;1 matching historical user message with correct full marker",
+    "laterFailure": "Same query and selected history; coverage and hits vanished, leaving finished state and close-result only. Old AX230 activation was rejected as invalid; no delivered click claimed. Fresh AX and screenshot after scrolling confirmed disappearance.",
+    "normalExit": "CmdQ, 保存并退出; CUA App quit; exact process0 afterwards",
+    "noNegativeCaseAcceptance": "Tool-only negative and opening original not executed because results vanished"
+  },
+  "identifiedMechanism": "App refreshIndex every60seconds replaces IPC row objects; strict selected-row references retire equal-value results. Previous controlled fixture returned the same objects unlike actual IPC.",
+  "controlledReproduction": {
+    "path": "output/2026-10-13-history-search-native-loss/reproduction.json",
+    "sourceStable": true,
+    "reproduced": true,
+    "cases": "Full App/StrictMode actual60s interval advanced61000ms: same-object IPC retains1; structuredClone same-values IPC loses1. Query/selection/row values unchanged, settled completed, owner retired, no cancel.",
+    "sha256": "404740947a62a93c8d85c91f45df561612f5f0bf2e1340962f2bd4a71c448dff"
+  },
+  "metadataIndependent": {
+    "path": "output/2026-10-12-history-search-independent/initial-native-data/data-comparison.json",
+    "sha256": "164fdd5e5cb653a8ed587657b812eadf4e5b7979520cdfdbf0d52ea9a7b864ba",
+    "allTablesAndCompleteRowsEqual": true,
+    "sessions": 133,
+    "dismissed": 170,
+    "agents": 40,
+    "settings": 53,
+    "allUnsentAndWorktreeStateEqual": true,
+    "newSessions": 0
+  },
+  "rootReceipt": {
+    "path": "output/2026-10-12-history-search-native/observations.json",
+    "sha256": "169ec670911d769111bc85339576820a5024594d691140d05d759f1c3b9b9a25"
+  },
+  "newIssue": "NEW-17",
+  "notProven": [
+    "Stable usable installed search",
+    "Real tool-text exclusion negative",
+    "Open original conversation",
+    "All Agents or attachment search",
+    "EntireP32 or market readiness"
+  ],
+  "next": "Fix equal-value metadata identity preservation while retaining actual source/configuration changes and removal/ABA invalidation; controlled replay, engineering, candidate/install and native refresh retention proof",
+  "recordedAtUtc": "2026-10-12T16:38:50.615751+00:00"
+}

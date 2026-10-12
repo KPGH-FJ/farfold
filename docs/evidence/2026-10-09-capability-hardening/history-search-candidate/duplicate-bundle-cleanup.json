@@ -1,0 +1,24 @@
+{
+  "sourceCommit": "66a2bbfcbf70c7492846a1fb6f6548ece9665577",
+  "exactVerifiedDuplicateRemoved": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "bundleFilesAndModesMatchedFormalAndArchiveBefore": true,
+  "removed": true,
+  "formalExactFiveFilesAfter": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "214170e2a37fb72e0ced36b51325bc813de4f7023457e3adecdc9f0936c9490e",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "formalModesAfter": {
+    "Contents/Info.plist": 420,
+    "Contents/MacOS/farfold": 493,
+    "Contents/Resources/icon.icns": 420,
+    "Contents/Resources/release-manifest.json": 420,
+    "Contents/_CodeSignature/CodeResources": 420
+  },
+  "candidateArchivePreserved": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-12-66a2bbfc/Farfold-0.1.7-66a2bbfc.zip",
+  "candidateArchiveSha256": "fca62818190ccc356a005e1b08725b28f3c6b5789728c7f5eaf16991d1c2ac8f",
+  "formalProcessCount": 0,
+  "scope": "Only verified regenerable duplicate bundle removed; unique formal app, candidate archive, source and all evidence/data retained. Initial native result-loss failure remains."
+}

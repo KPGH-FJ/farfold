@@ -1,0 +1,28 @@
+{
+  "recordedAtUtc": "2026-10-12T16:21:51.897820+00:00",
+  "phase": "preparationCorrectionVerifiedAndInstalledNotLaunched",
+  "originalFailure": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search-candidate/install-preparation-first-failure.txt",
+    "sha256": "991388642e512792c162d18d4654e3a742bda213eeecc0ad4bd22e0db39d8871",
+    "failedDuring": "preflight",
+    "copyStarted": false,
+    "reason": "Root did not persist successful snapshot stdout summary; installation gate rejected missing summary"
+  },
+  "failedAttemptSnapshots": {
+    "before": "9745c0f97d3ef4646e811586941f36a0e67fcd6417a566790b794651bc011ce4",
+    "preinstall": "9745c0f97d3ef4646e811586941f36a0e67fcd6417a566790b794651bc011ce4",
+    "after": "9745c0f97d3ef4646e811586941f36a0e67fcd6417a566790b794651bc011ce4"
+  },
+  "failedAttemptAfterMeaning": "post preflight failure; not a completed installation after snapshot",
+  "correction": "Fresh exclusive retry directory, successful stdout summary persisted only after exit0; installer functions unchanged except fixed output path",
+  "retryInstallation": {
+    "path": "output/2026-10-12-history-search-install/retry-02/install-operation.json",
+    "sha256": "2669812b22368e0b25cfe8e94c5873d3eac33e1ccceb0c7d83dca3bf5d9fd7f0",
+    "phase": "installedVerifiedNotLaunched",
+    "sourceCommit": "66a2bbfcbf70c7492846a1fb6f6548ece9665577"
+  },
+  "retryRawManifestsEqual": true,
+  "retryRawManifestSha256": "9745c0f97d3ef4646e811586941f36a0e67fcd6417a566790b794651bc011ce4",
+  "retryRawEntries": 217400,
+  "evidenceBoundary": "Preparation and actual install receipts only; independent installed review and real history-search observations are separate"
+}

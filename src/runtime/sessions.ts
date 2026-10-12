@@ -1,4 +1,5 @@
 import { openingInquiries } from "./opening_inquiries";
+import { retainIndexRows } from "./session_index_refresh";
 import { draftGroup, type OpenInput } from "./session_open_input";
 export type { OpenInput } from "./session_open_input";
 import { observeAuthentication } from "./authentication";
@@ -82,11 +83,9 @@ import {
 
 export type { PaneCard };
 export { paneCards };
-
 // ---------------------------------------------------------------------------
 // Wire types
 // ---------------------------------------------------------------------------
-
 /** meta_store session row (`<agentId>:<cwd>:<nativeSessionId>`). */
 export interface IndexRow {
   id: string;
@@ -369,7 +368,8 @@ class ThreadsStore {
   async refreshIndex(): Promise<void> {
     const archiveRevision = this.archiveRevision;
     try {
-      this.indexRows = await invoke<IndexRow[]>("session_index_list");
+      const rows = await invoke<IndexRow[]>("session_index_list");
+      this.indexRows = retainIndexRows(this.indexRows, rows);
     } catch {
       // Keep the last known index; a failed read must not blank the sidebar.
     }
@@ -718,7 +718,7 @@ class ThreadsStore {
       const rows = await invoke<IndexRow[]>("session_index_list").catch(
         () => null,
       );
-      if (rows) this.indexRows = rows;
+      if (rows) this.indexRows = retainIndexRows(this.indexRows, rows);
       recheck?.validateResult(result);
       const existing = this.threads.get(key);
       const state = freshThreadState(

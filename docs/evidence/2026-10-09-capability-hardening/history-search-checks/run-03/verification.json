@@ -1,0 +1,130 @@
+{
+  "status": "metadataRefreshCorrectionValidatedWithUnchangedNativeChecks",
+  "inputCount": 1568,
+  "sourceStable": true,
+  "protectedUnchanged": true,
+  "changedInputsSincePrevious": [
+    "src/runtime/session_index_refresh.ts",
+    "src/runtime/sessions.index-refresh.test.ts",
+    "src/runtime/sessions.ts"
+  ],
+  "changedInputsSinceOriginal": [
+    ".prettierignore",
+    "src/components/HistorySearchPanel.test.tsx",
+    "src/components/HistorySearchPanel.tsx",
+    "src/runtime/session_index_refresh.ts",
+    "src/runtime/sessions.index-refresh.test.ts",
+    "src/runtime/sessions.ts"
+  ],
+  "addedInputsSinceOriginal": [
+    "src/runtime/session_index_refresh.ts",
+    "src/runtime/sessions.index-refresh.test.ts"
+  ],
+  "checksExecutedHere": [
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 7.741,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-03/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 38.419,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-03/frontend.txt",
+      "sha256": "51da5760a36d1b7273a018b751c6c0467bbd47e64e6f981204b4d5df90bdc2f8",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 8.749,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-03/build.txt",
+      "sha256": "97d9884ef43145aebd004c4025bd25b32c21b916b7c6cf980e7b57c61c7dc127",
+      "executedInThisRun": true
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 28.793,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-03/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true
+    }
+  ],
+  "nativeChecksReused": [
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.247,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 12.706,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/clippy.txt",
+      "sha256": "30681c73ed3f85a8d07ac9ea3bf194f181b5f343e04bef4fe72e6f41c163a219",
+      "executedInThisRun": true
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 118.868,
+      "log": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/rust.txt",
+      "sha256": "b77f6c9b73e3f2e36147aa0822f035e6027495611f393be0bf72ffea000afcf4",
+      "executedInThisRun": true
+    }
+  ],
+  "originalRun": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-01/verification.json",
+    "sha256": "2d2d68e9595eaa228af4d03ee8202fc76356474bf0c1de5f6612feca7569fd11"
+  },
+  "previousRun": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-02/verification.json",
+    "sha256": "9d4401531662a29710e204c0066b452d47632c1fe0fdfaf2bedac4f466e80852"
+  },
+  "originalNativeSourceAndWireUnchanged": true,
+  "allSevenCommandsHavePassingEvidence": true,
+  "counts": {
+    "frontend": ["Test Files  440 passed (440)", "Tests  5168 passed (5168)"],
+    "rust": [
+      "test result: ok. 1597 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 91.96s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  "boundary": "Seven repository commands on recorded inputs including actual Rust history-search wire. Engineering only; official read-only history queries, native installed UI, Windows and whole P32 have separate evidence."
+}

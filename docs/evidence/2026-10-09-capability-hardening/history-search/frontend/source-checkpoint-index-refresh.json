@@ -1,0 +1,36 @@
+{
+  "scope": "Only index refresh identity follow-up. Source frozen after final targeted tests/type/format and both controlled full-App browsers. No backend change.",
+  "baseInstalledCommit": "66a2bbfcbf70c7492846a1fb6f6548ece9665577",
+  "sourceRefs": [
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "6e86e02ae09b90573b76fc2f7dcfb213b2999e8fd4b191ce58a5392520b3eeec",
+      "lines": 1500
+    },
+    {
+      "path": "src/runtime/session_index_refresh.ts",
+      "sha256": "39df0b3d40976af25520c980d2d5bbba3a5a2e511d2049d0e9ac4fb8381146e0",
+      "lines": 16
+    },
+    {
+      "path": "src/runtime/sessions.index-refresh.test.ts",
+      "sha256": "151b2db9f4d9c25ee04b79beb95f16f2143d237a4663747992e121b8049e9891",
+      "lines": 150
+    }
+  ],
+  "changedSinceOriginalReproduction": [
+    "src/runtime/session_index_refresh.ts",
+    "src/runtime/sessions.index-refresh.test.ts",
+    "src/runtime/sessions.ts"
+  ],
+  "allFrontendSourceCount": 948,
+  "browserSourceStable": true,
+  "sourceBeforeOriginal": {
+    "path": "output/2026-10-13-history-search-native-loss/reproduction.json",
+    "sha256": "404740947a62a93c8d85c91f45df561612f5f0bf2e1340962f2bd4a71c448dff"
+  },
+  "sourceFinal": {
+    "path": "output/2026-10-13-history-search-native-loss/followup/chromium-run01.json",
+    "sha256": "b70f4e091d57158b3b96cc160441d5a657d59d51704df2c763be5f8f2141171b"
+  }
+}

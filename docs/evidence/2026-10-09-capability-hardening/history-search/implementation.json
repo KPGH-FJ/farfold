@@ -1,6 +1,6 @@
 {
-  "status": "sourceIntegratedVerifiedNotInstalled",
-  "recordedAt": "2026-10-12T16:03:21.043896+00:00",
+  "status": "installedInitialRealReadFailed_sourceRefreshCorrectionVerifiedAwaitingReinstall",
+  "recordedAt": "2026-10-12T16:51:13.283001+00:00",
   "scope": "First generic explicitly selected unloaded indexed-history temporary user/reply text search through reviewed official surface; does not close all P32.",
   "implemented": [
     "Explicit same-Agent selection of up to20 saved indexed histories, capability check and start separate",
@@ -9,7 +9,7 @@
     "Plain-text match preview and separate protected open-original action",
     "No persistent transcript/search ledger or Agent loop; no attachment/tool/reasoning text read"
   ],
-  "validationBoundary": "1566 stable inputs. Seven commands have passing evidence: four frontend-related commands rerun after the terminal-copy correction; three native checks reused on identical native source/configuration/fixture/wire. Frontend439 files5151 tests; Rust1597 passed6 ignored. Full production App controlled WebKit and Chromium37 assertions each. Installed UI and real official history read not yet executed.",
+  "validationBoundary": "1568 stable inputs; four frontend commands rerun after shared metadata identity correction and two new frontend files. Frontend440 files5168 tests; Rust1597 passed6ignored retained on identical native source/configuration/fixtures/wires. Controlled fullApp realistic cloned IPC: each engine63 checks; original native firstquery returned correct text but lost results after refresh, preserved as failure. Repair installed/native retention, negative and open-original proof pending.",
   "references": [
     {
       "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/implementation.json",
@@ -54,11 +54,31 @@
     {
       "path": "output/2026-10-12-history-search-independent/terminal-copy-independent.json",
       "sha256": "0ff28cb807086f5d68b41c1134a139c12de7806170bdfafdcd97f0658ac2fc2f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search/frontend/index-refresh-followup.json",
+      "sha256": "76d0ffe15fe38d4ec44fecaca284a45eace9103359c168f858ade6dbd5e39e80"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-checks/run-03/verification.json",
+      "sha256": "a00f246b45e5cf4cc370c962ff3b43d49f63a4c8a359e34d7b5ddc66d789b6f4"
+    },
+    {
+      "path": "output/2026-10-12-history-search-independent/index-refresh-source-independent.json",
+      "sha256": "22fe9efc597410ab7fcd09ed2dbf137cb51d9e1513fcfc625db3de4ab034750b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-candidate/installed-initial.json",
+      "sha256": "3fce718dd099316c770e9a4adfc549ab410922d0290d17e6fad8b623d1ead562"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-candidate/install-independent-final.json",
+      "sha256": "cd3bbfce250ae41b0ac307bfbce31e3ea6c2182a16a568041ecae95977f7def7"
     }
   ],
   "notProven": [
-    "Installed history-search UI",
-    "Actual official read-only history retrieval",
+    "Stable usable repaired installed history-search after natural refresh",
+    "Real tool-only negative and open original",
     "All Agent official routes",
     "Attachment contents",
     "Windows",

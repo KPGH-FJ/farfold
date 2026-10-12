@@ -1,0 +1,23 @@
+{
+  "startedAtUtc": "2026-10-12T16:09:28.841747+00:00",
+  "candidateCommit": "66a2bbfcbf70c7492846a1fb6f6548ece9665577",
+  "phase": "failed",
+  "userAuthorizedContinuousDevelopment": true,
+  "normalQuitObservedByRootAgent": true,
+  "forcedQuit": false,
+  "copyStarted": false,
+  "installed": false,
+  "launched": false,
+  "realAgentInvoked": false,
+  "dataRetentionComparisonPending": true,
+  "candidateVerification": {
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "strictCodesign": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement",
+    "signature": "ad-hoc; not notarized"
+  },
+  "failedDuring": "preflight",
+  "error": "FileNotFoundError: [Errno 2] No such file or directory: '/Users/tw/Desktop/farfold/output/2026-10-12-history-search-install/install-data-preinstall-summary.json'",
+  "completedAtUtc": "2026-10-12T16:09:29.375489+00:00"
+}

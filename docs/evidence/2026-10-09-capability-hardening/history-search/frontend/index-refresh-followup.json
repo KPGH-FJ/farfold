@@ -1,0 +1,193 @@
+{
+  "status": "source-fixed-controlled-verification-passed-not-installed",
+  "problem": "正式66a在首次真实历史读取返回命中后，无搜索或范围操作即丢失命中和范围说明；该次正式P32流程不算通过。",
+  "rootCause": {
+    "chain": [
+      "App.tsx每60000ms触发threads.refreshIndex。",
+      "refreshIndex原样替换JSON IPC的所有IndexRow对象；完全相同的记录也产生新引用。",
+      "HistorySearchPanel使用严格row引用决定owner。新引用退休旧owner，controller.retire清hits，终态不发取消，只留下完成状态和关闭结果。"
+    ],
+    "directlyReproduced": true,
+    "scope": "Full production App/StrictMode, real timer and controllers, controlled native IPC only. Existing identical-reference fixture compared with structuredClone JSON response; only clock advanced 61000ms.",
+    "originalResult": {
+      "sameObjectControlHits": 1,
+      "freshEqualObjectsHits": 0,
+      "freshEqualObjectsOwner": false,
+      "sameAllRowValues": true,
+      "sourceStable": true,
+      "pageErrors": 0
+    },
+    "previousEvidenceLimitation": "旧完整App fixture session_index_list直接return rows，同引用模式未覆盖真实IPC克隆；原绿证据原件保留，不能代替本次边界。",
+    "agentOwners": "普通AgentRow等值克隆保留AgentExtensionOwners token；本修不放宽Agent/source/timestamp保护。"
+  },
+  "implementation": [
+    "共享纯函数只复用当前数组中完整JSON值相等的记录，比较包括全部字段/未知字段/嵌套配置/数组顺序，忽略JSON对象键顺序。",
+    "两个session_index_list赋值点在await返回后比较当前数组，不持久化、不保存旧行历史，不改Panel/controller的撤权与exact请求保护。",
+    "记录字段变化、删除后恢复、ABA均产生新引用；会话已加载的threads.has守卫、Agent/service变化、旧回调隔离保持。"
+  ],
+  "validation": {
+    "red": {
+      "command": "corepack pnpm exec vitest run src/runtime/sessions.index-refresh.test.ts",
+      "failed": 3,
+      "passed": 13,
+      "meaning": "生产refreshIndex等值/键序/邻居复用三项真红；不是编译或fixture失败。"
+    },
+    "finalTargeted": {
+      "files": 6,
+      "tests": 93,
+      "passed": 93,
+      "newIndexTests": 17,
+      "addedAfterInitialRed": "await期间A→B→A以返回时当前记录比较，不能借用请求前旧引用。"
+    },
+    "typecheckExit": 0,
+    "ownedFormatExit": 0,
+    "fullApp": {
+      "webkitChecks": 63,
+      "chromiumChecks": 63,
+      "pageErrors": 0,
+      "blockedRequests": 0,
+      "sourceAndHarnessStableBeforeAfter": true,
+      "bothEnginesSameInputs": true,
+      "fixture": "本次后续fixture总是structuredClone所有session_index_list返回，不改历史fixture/回执。",
+      "coverage": [
+        "原37项完整App流程及窄窗/纯文本/官方能力不可用边界",
+        "实际App60秒刷新后，完成命中/范围说明/已打开预览保留",
+        "pending等值刷新不误取消；真实scope关闭仍exact cancel并阻晚到命中",
+        "服务/目录变化与删除再恢复退休owner，原A文本不能因恢复相同值复活",
+        "草稿/附件/意见/模型服务选择不变，零prompt/config写入/外部资源请求"
+      ]
+    }
+  },
+  "limits": [
+    "真实官方历史读取由root此前执行并暴露本bug；此处双浏览器受控IPC不算修后正式应用或官方接口实测。",
+    "不修改后端或官方协议；最终全仓工程与正式替换/重复原生流程由root整合。",
+    "本地并发索引请求既有返回顺序未重设计；本修明确不复活中途被替换的旧row authority。"
+  ],
+  "sourceRefs": [
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "6e86e02ae09b90573b76fc2f7dcfb213b2999e8fd4b191ce58a5392520b3eeec",
+      "lines": 1500
+    },
+    {
+      "path": "src/runtime/session_index_refresh.ts",
+      "sha256": "39df0b3d40976af25520c980d2d5bbba3a5a2e511d2049d0e9ac4fb8381146e0",
+      "lines": 16
+    },
+    {
+      "path": "src/runtime/sessions.index-refresh.test.ts",
+      "sha256": "151b2db9f4d9c25ee04b79beb95f16f2143d237a4663747992e121b8049e9891",
+      "lines": 150
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "path": "output/2026-10-13-history-search-native-loss/reproduce.mjs",
+      "sha256": "d821604ef8506321d5ec7bc3de8d9374bbd88b4456d620ad238c06a8e05dac48"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/fixture.tsx",
+      "sha256": "4b744a826118069c6a3bea28afe79daeb8d6d7731fa0733770a29a418c956c7e"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/reproduction.json",
+      "sha256": "404740947a62a93c8d85c91f45df561612f5f0bf2e1340962f2bd4a71c448dff"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/reproduction.txt",
+      "sha256": "c9e1cbca05546bd2355d60b979d2a91ded23a15c5c043a533f2f8ed89bd39281"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/clone-before.png",
+      "sha256": "2de3afc5a722915fbb41030da1647fa945e148b7fe85d73b929bd47e0a01ea3d"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/clone-after.png",
+      "sha256": "7e1232820fd2f312c904c3a32af4e7d36f197f33efa562bc39aa3c539a6d064b"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/same-before.png",
+      "sha256": "2de3afc5a722915fbb41030da1647fa945e148b7fe85d73b929bd47e0a01ea3d"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/same-after.png",
+      "sha256": "2de3afc5a722915fbb41030da1647fa945e148b7fe85d73b929bd47e0a01ea3d"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/sessions.before.ts.txt",
+      "sha256": "93754212761e08d20c35991ce8d102d4e923da0c5e622c637df00ce483b59066"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/index-refresh-red.txt",
+      "sha256": "e76d803289b6c5803b8eabc34bb99b784082d98cbc0ff187d5a05d4da9fe8a20"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/related-final.txt",
+      "sha256": "507f7021ea97e69634d3f941f580080da620c346d331e909606278d1d97a4bed"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/typecheck-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/format-check-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/exact-source.diff",
+      "sha256": "da0bc88830b8a54e2461463220cf53e921aec552b1ab68574a77706671df961b"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/cleanup.json",
+      "sha256": "255646c669b01472d3139b84dfe08f7d447c7f2be5aac74efc17bc386a707ebd"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/native-observations-at-investigation.json",
+      "sha256": "169ec670911d769111bc85339576820a5024594d691140d05d759f1c3b9b9a25"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/followup/index.html",
+      "sha256": "5b91c89bd14548d4b14532f834e79fe91242c778a5237bd3efd113264643dcc0"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/followup/fixture.tsx",
+      "sha256": "bf456340c3a20b4c42b2c31282a796ab5b731c802db799a3383e0a7f44d2dc5c"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/followup/serve.mjs",
+      "sha256": "1572eb903f0862fcbd3bb94f13c121a923f9521679aa8c8437e5b32508c37386"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/followup/run.mjs",
+      "sha256": "524315bff1bd0b22d38a9d2231a396a5392d79a74b7345676cea405c142c5e22"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/followup/server.txt",
+      "sha256": "959df2a1a5e35703549d45a289eccf15a56721264a0916b2645e3ca2bdf1b8cc"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/followup/webkit-run01.json",
+      "sha256": "c19288ba6b60e6d157193624c060f73428f432fa597afd1b10f2c1045c0fece5"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/followup/webkit-run01.txt",
+      "sha256": "730215a0fb66e5ebb4afa90c110871d29040827d2f6ac505bffcf9129f5f3deb"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/followup/chromium-run01.json",
+      "sha256": "b70f4e091d57158b3b96cc160441d5a657d59d51704df2c763be5f8f2141171b"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/followup/chromium-run01.txt",
+      "sha256": "224794db43e2ec8b7192e004964971af84a2ab319999688d654b980eb10afbb8"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/followup/webkit-run01-equal-completed-preview.png",
+      "sha256": "c7c064fb75bf8980891919030356ba1f82630473a908452341905b14726af584"
+    },
+    {
+      "path": "output/2026-10-13-history-search-native-loss/followup/chromium-run01-equal-completed-preview.png",
+      "sha256": "a10dcf2a32671576a5fb4cb5bc210da1dbdead46648ae8bdd9b13144da94e7ca"
+    }
+  ]
+}
