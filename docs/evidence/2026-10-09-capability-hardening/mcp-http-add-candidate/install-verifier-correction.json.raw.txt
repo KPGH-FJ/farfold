@@ -1,0 +1,50 @@
+{
+  "checkedAtUtc": "2026-10-10T21:14:51.328865+00:00",
+  "scope": "Evidence-verifier schema correction only; no product source, bundle, original observation or original data altered.",
+  "failure": {
+    "stage": "normalExitAndDataBaseline",
+    "error": "'sourceCommit'",
+    "cause": "The adapter assumed sourceCommit/refs/normalQuitEvidence on the current observation; its actual schema used formalSourceCommit and an exact prior-quit source/hash. This was a validator/preparation schema oversight, not a product defect.",
+    "result": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/install-independent-run-01.json",
+      "sha256": "dc0809a6915a83dc590330b7d4049ac1088746decf21e14ac54f558da299b4ee"
+    }
+  },
+  "change": [
+    "Read formalSourceCommit.",
+    "Bind the exact immutable previous final-normal-exit path/hash and current no-launch/formal-five-files assertions.",
+    "Read normalQuitEvidence on that independently hash-bound previous exit record.",
+    "Retain all six prior references, historical fixed document blobs, exact data delta, fresh installation manifests, secondary-copy integrity/iterdump, bundle/signature/source/engineering checks."
+  ],
+  "beforeHelper": {
+    "path": "output/2026-10-11-mcp-http-add-independent/verify-install.before-normal-schema.py.txt",
+    "sha256": "91d35b11d22cc5a936541c36bac80f2558e6c54cca273bed6dd9643fc5c842b8"
+  },
+  "afterHelper": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/verify-install.py",
+    "sha256": "16681e2c21d11bd9d4adce84c9da7bec112a308c8630b5e4413f3238fca389e2"
+  },
+  "patch": {
+    "path": "output/2026-10-11-mcp-http-add-independent/verify-install-normal-schema.patch.txt",
+    "sha256": "12676713491e934260d932a7507c234206a0ff07cbd509ad415d62484544eaa5"
+  },
+  "originalObservation": {
+    "path": "output/2026-10-11-mcp-http-add-install/normal-exit-observation.json",
+    "sha256": "a85e665687c6d155a2a5918144c51adfb667213240dccddf9d586e53f77bd242"
+  },
+  "result": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/install-independent.json",
+    "sha256": "287f67eb9e80409e858a3b043ef65b885fb5821b258b7b10d93ea6ff2f6d6602"
+  },
+  "validation": {
+    "singleCorrectedInvocation": true,
+    "exitCode": 0,
+    "checks": 10,
+    "allPassed": true,
+    "sourceCommit": "8cfb2ccb58a4154219505a324e92e1a5af0d4500",
+    "inputCount": 1509,
+    "formalProcessAbsent": true,
+    "receiptFormatSemanticUnchanged": true
+  },
+  "boundary": "Original failed receipt retained byte-for-byte. Corrected verifier succeeded once. No application launch, official command or original SQLite access; metadata comparison used only the already reviewed disposable second-copy method."
+}

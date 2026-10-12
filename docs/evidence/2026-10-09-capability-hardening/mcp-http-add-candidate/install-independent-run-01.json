@@ -1,0 +1,20 @@
+{
+  "sourceCommit": "8cfb2ccb58a4154219505a324e92e1a5af0d4500",
+  "result": "failed",
+  "checks": {
+    "candidateChain": {
+      "passed": true,
+      "candidateChecks": 9
+    },
+    "normalExitAndDataBaseline": {
+      "passed": false,
+      "error": "'sourceCommit'"
+    }
+  },
+  "failures": [
+    "normalExitAndDataBaseline"
+  ],
+  "startedAt": "2026-10-10T21:13:08.921486+00:00",
+  "launched": false,
+  "completedAt": "2026-10-10T21:13:08.923696+00:00"
+}

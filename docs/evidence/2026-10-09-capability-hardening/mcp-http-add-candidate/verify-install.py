@@ -47,8 +47,9 @@ def record_refs(record):
 
 
 def verify_prior_baseline(normal, load):
-    v.need(normal["userAuthorizedContinuousDevelopment"] is True and normal["normalQuitObserved"] is True and normal["forcedQuit"] is False and normal["formalProcessCountAfter"] == 0 and normal["sourceCommit"] == v.BASELINE_COMMIT, "Prior normal exit missing")
-    v.need(normal["refs"] == PRIOR_REFS and bool(normal["normalQuitEvidence"]), "Prior baseline references differ")
+    v.need(normal["userAuthorizedContinuousDevelopment"] is True and normal["normalQuitObserved"] is True and normal["forcedQuit"] is False and normal["formalProcessCountAfter"] == 0 and normal["formalSourceCommit"] == v.BASELINE_COMMIT, "Prior normal exit missing")
+    exit_path = "output/2026-10-11-mcp-remove-native/final-normal-exit.json"
+    v.need(normal["normalQuitSource"] == exit_path and normal["normalQuitSourceSha256"] == PRIOR_REFS[exit_path] and normal["noLaunchSincePriorNormalExitByThisTask"] is True and normal["formalFiveFilesMatchOldCandidate"] is True, "Prior normal-exit observation binding differs")
     records = {}
     for name, expected in PRIOR_REFS.items():
         historical_ref(name, expected)
@@ -60,7 +61,7 @@ def verify_prior_baseline(normal, load):
     native = records["native-final-independent.json"]
     installed = records["installed-mcp-remove.json"]
     gate = records["record-gate.json"]
-    v.need(exit_record["normalQuitObserved"] is True and exit_record["forcedQuit"] is False and exit_record["formalProcessCountAfter"] == 0, "Prior app was not normally closed")
+    v.need(exit_record["normalQuitObserved"] is True and exit_record["forcedQuit"] is False and exit_record["formalProcessCountAfter"] == 0 and bool(exit_record["normalQuitEvidence"]), "Prior app was not normally closed")
     v.need(exit_record["sourceInputCount"] == 1497 and exit_record["sourceInputsUnchanged"] is True and exit_record["formalFiveFilesUnchanged"] is True, "Prior native source/bundle identity differs")
     v.need(accepted["decision"] == "acceptExactObservedTimestampDeltaOnly" and accepted["acceptedDelta"] == EXACT_DELTA and accepted["allOtherRowsAndColumnsEqual"] is True and accepted["settingsAndWholeUnsentAndCatalogueEqual"] is True, "Prior exact data acceptance differs")
     v.need(independent["status"] == "boundedInstalledRemovalEvidenceIndependentlyReviewed" and native["status"] == "boundedInstalledNativeEvidenceIndependentlyReviewed", "Prior independent review differs")

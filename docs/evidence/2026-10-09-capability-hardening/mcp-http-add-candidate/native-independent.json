@@ -1,0 +1,95 @@
+{
+  "status": "boundedInstalledHttpAdditionEvidenceIndependentlyReviewed",
+  "sourceCommit": "8cfb2ccb58a4154219505a324e92e1a5af0d4500",
+  "productComplete": false,
+  "scope": "Existing finite native UI, fixed snapshots, official fixture cleanup and one owned listener. Read-only evidence review; not a second installation or native run.",
+  "referenceVerification": {
+    "sealedReviewReferences": 77,
+    "allHashesMatch": true
+  },
+  "candidateChecks": 9,
+  "installChecks": 10,
+  "nativeFindings": {
+    "firstReviewWithdrawn": true,
+    "freshReviewQuotedUrlAndDisabledIntent": true,
+    "explicitAddConfirmations": 1,
+    "disabledAdditionReportedVerified": true,
+    "separateReadonlyRecheck": true,
+    "recheckNotRetrospectiveWriteProof": true,
+    "freshInventoryReportsTargetHttpDisabled": true,
+    "sameNameInspectRefusedWithoutSecondWrite": true,
+    "emptyTRDraftAnd6AstraUltraObserved": true,
+    "historicalNormalSaveQuit": true,
+    "forcedQuit": false,
+    "historicalExactPgrepExitCode": 1,
+    "quitWarnedUnfinishedOrUnknownWork": true
+  },
+  "dataRetention": {
+    "schemaEqual": true,
+    "oldWholeSessionRowsExact": 131,
+    "newRetainedSessionRows": 0,
+    "dismissedRowsExact": 168,
+    "agentsCompared": 40,
+    "rawSettingsExact": 52,
+    "settingsTotal": 53,
+    "wholeUnsentObjectExact": true,
+    "unsentGroups": [8, 8, 3],
+    "worktreeCatalogueWholeExact": true,
+    "acceptedDeltas": [
+      {
+        "table": "agents",
+        "id": "codex",
+        "column": "updated_at",
+        "before": 1791663025176,
+        "after": 1791666916173
+      },
+      {
+        "table": "settings",
+        "id": "agentSetup.v1",
+        "progressKeySha256": "bcae78ce3d4670ee10c24f4723c8d82d19a73a2d2b21f5c16894ac910b902cd3",
+        "field": "step",
+        "before": 1,
+        "after": 0,
+        "interpretation": "Navigation from account/service tab to program tab, consistent with actual root UI action and exact source enum; remaining67records and all other fields/selection/completion/pending unchanged."
+      }
+    ],
+    "setupScopeIdentity": ["codex", null, null],
+    "otherSetupProgressRecordsExact": 67,
+    "allOtherSetupFieldsAndSelectionsExact": true,
+    "secondaryCopyOnlyAndCapturedWalLogicalComparison": true,
+    "rawRetainedInputsUnchanged": true
+  },
+  "configurationCleanup": {
+    "baselineWrites": 0,
+    "cleanupWrites": 1,
+    "writeAck": "ok",
+    "twoScopeSemanticHashesRestored": [
+      "a620dc080d259d0e39939533ff913a5294e92d887e8428db16cb587081260da4",
+      "a620dc080d259d0e39939533ff913a5294e92d887e8428db16cb587081260da4"
+    ],
+    "officialChildrenReapedAndPipesEofAndGroupsGone": true,
+    "rawConfigurationPersisted": false,
+    "claim": "Configuration semantics only, not TOML bytes/comments/versions, authentication, connection, or tools."
+  },
+  "listener": {
+    "pid": 41759,
+    "port": 58599,
+    "acceptedContacts": 0,
+    "cooperativeStopAndOwnedExitRecorded": true,
+    "scope": "One exact owned loopback endpoint during recorded interval; no global-network claim."
+  },
+  "currentStateBoundary": "Earlier normal quit and the two fixed snapshots remain historical evidence. Root subsequently observed the App running with two waiting responses. This review neither inspects nor interrupts that current activity and does not assert it is closed.",
+  "limitations": [
+    "No UI prompt is the operator journey scope, not inferred from zero added database rows; official startup may prepare a session.",
+    "Navigation step1→0 matches source enum and reported GUI action; database delta alone does not identify the writer.",
+    "Screenshots/AX prove the observed disabled HTTP configuration flow, not authentication, connection, tool execution, all Agents or overall P41/product completion.",
+    "Original interrupted/full-suite timeout remains unlocalized; diagnostic enhancement and later full-suite pass do not prove a timeout fix.",
+    "Initial install verifier schema failure remains preserved; corrected verifier passed10/10 without product modification.",
+    "Original journey/exit records retain their then-pending closeout wording; this later record binds completed cleanup, comparison and exact root acceptance."
+  ],
+  "blockingFindings": [],
+  "refs": {
+    "output/2026-10-11-mcp-http-add-independent/native-final-independent.json": "bf903a9b70c8a519eefe4727ceb3bf0496eaa60a3241b8848813e6c11d5266ac",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/installed-mcp-http-add.json": "53dd12a9d690518a9c7048572bcdfe8bf1b23cbd11c0c43b9d093b7c2c4f26de"
+  }
+}

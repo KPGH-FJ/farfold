@@ -1,0 +1,148 @@
+{
+  "sourceCommit": "8cfb2ccb58a4154219505a324e92e1a5af0d4500",
+  "result": "passed",
+  "checks": {
+    "candidateChain": {
+      "passed": true,
+      "candidateChecks": 9
+    },
+    "normalExitAndDataBaseline": {
+      "passed": true,
+      "baselineCommit": "8fa557c0ff56e578fc44bd97f1cb3f325ea03852",
+      "currentSessionBaseline": 131,
+      "priorUnsentGroups": {
+        "composers": 8,
+        "feedback": 8,
+        "queues": 3
+      },
+      "rawSettingsPreserved": 53,
+      "reviewedDelta": {
+        "table": "agents",
+        "id": "codex",
+        "column": "updated_at",
+        "before": 1791659928954,
+        "after": 1791663025176
+      },
+      "historicalDocumentCommit": "55441316981b59ef9805255e27b12b0c6761aa34",
+      "historicalDocumentHashes": {
+        "docs/status.md": "a77cb83479cabc06873f78ec6d53d39e8c43ed38a1eecea08850d28074808577",
+        "docs/architecture.md": "8cd5c2802f56d5c7fd348ae2038e227b629d975d91fb3da427baef7c834c4a5e",
+        "plans/agent-access.md": "3942049dcdddb481c0227c9dd8c57888b2aa46b80ff7b059e1897816d2a82484",
+        "docs/evidence/2026-10-09-capability-hardening/README.md": "821cea6eb540b328a0e7fcb4f2f3ef1cfcac519a5412fb3da1b762da7ea1ac03"
+      },
+      "boundary": "Prior immutable native/record/data evidence only. Four document snapshots use fixed 55441316 Git blobs. No fabricated new quit or release; fresh installation snapshots are required separately. Old source need not remain current."
+    },
+    "completeDataManifests": {
+      "passed": true,
+      "snapshots": [
+        {
+          "phase": "before",
+          "sha256": "d0b9e205f884efffd49e7ffc9d72cbc334a8f4e230fb695bc80b280592ab6e04",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "preinstall",
+          "sha256": "d0b9e205f884efffd49e7ffc9d72cbc334a8f4e230fb695bc80b280592ab6e04",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        },
+        {
+          "phase": "after",
+          "sha256": "d0b9e205f884efffd49e7ffc9d72cbc334a8f4e230fb695bc80b280592ab6e04",
+          "bytes": 59360435,
+          "entries": 217400,
+          "mode": "0600"
+        }
+      ],
+      "entryCountEach": 217400,
+      "allRecordedContentTypesModesAndLinkTargetsEqual": true
+    },
+    "privateMetadataBackup": {
+      "passed": true,
+      "method": "Read retained captured main/WAL/SHM and backup hashes; SQLite integrity/iterdump digest only on second disposable private copies; original database never opened.",
+      "captureHashesMatchAllThreeManifests": true,
+      "capturedFileCount": 3,
+      "capturedAndBackupIntegrity": "ok",
+      "logicalContentsEqual": true,
+      "originalRetainedCopyHashesUnchanged": true,
+      "backupSha256": "7a368e48cdacf4a4e21743499c63ab03df7b1f293e7113c79b9718315d71b176",
+      "rawRowsPrintedOrSaved": false
+    },
+    "installedExactBundle": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "3f23e355d04d34ed3af673acd667feb03bf491c8ecbd2e9846f2db705b5d14d4",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      }
+    },
+    "archive": {
+      "passed": true,
+      "archiveSha256": "c58892a4a6562bf21ef563cb26495c2d27d40defa0329033fe7d19c6f59dc1a3",
+      "archiveBytes": 14166744
+    },
+    "identitySignature": {
+      "passed": true,
+      "bundleIdentifier": "ai.farfold.desktop",
+      "version": "0.1.7",
+      "architecture": "arm64",
+      "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+      "distribution": "ad-hoc only"
+    },
+    "exactSourceAndEngineering": {
+      "passed": true,
+      "inputCount": 1509
+    },
+    "formalProcessAbsent": {
+      "passed": true
+    },
+    "verificationInputsStable": {
+      "passed": true
+    }
+  },
+  "failures": [],
+  "startedAt": "2026-10-10T21:14:15.462457+00:00",
+  "launched": false,
+  "inputReceipts": {
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/candidate.json": "761230f77c1528b8f21af61d001fa11db930b3ca3c56d2aae8c9761e8568ca8b",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/candidate-inputs.json": "42f8bb2d9f07a63fc0ecd8959cdd0a1e95f77a67b2ace732d692bf51aa24ddeb",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/candidate-independent.json": "c35d2ce176215151405b6b074b4254f17872d230ce8f5f7886fbe2a426982f2b",
+    "output/2026-10-11-mcp-http-add-install/install-operation.json": "4ed8c02a39d3668ec1ec9aee36d24486033fb2e56befa34d20a9eac18a5689fe",
+    "output/2026-10-11-mcp-http-add-install/normal-exit-observation.json": "a85e665687c6d155a2a5918144c51adfb667213240dccddf9d586e53f77bd242",
+    "output/2026-10-11-mcp-remove-native/final-normal-exit.json": "111cfa0ed155bbbe15149d33d1ce82e7bd620d4d158769d4d91bddc9a930e93b",
+    "output/2026-10-11-mcp-remove-native/root-data-acceptance.json": "04d4d70a105a27e7c84101a45145c59bd15d1680b4fb3d255c23e08d155ff10c",
+    "output/2026-10-11-mcp-remove-independent/native-final-independent.json": "9babc1638c29043fe6edc9654a6c375c84f0331f09bd6138754dfbdb31c915f0",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove-candidate/native-independent.json": "8d29e2b94202126da55b11782f755f964d1d9d9015a39c60b265a935f47eb891",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-remove-candidate/installed-mcp-remove.json": "6b3d946ec68ef88a75123ece438606c5c3c44af7ce5366e4dc0dff125f647a77",
+    "output/2026-10-11-mcp-remove-root/record-gate.json": "165ca90f286f582f04e89826d2836410ad20dc94309442f33c0a0f5734c23554",
+    "output/2026-10-11-mcp-remove-native-preparation/data-review/final-data-comparison-independent.json": "e51427e280d5e738cee6ab8e251d9653d3bac93262d7bdaee102916639d96891",
+    "output/2026-10-11-mcp-remove-native-preparation/data-review/timestamp-delta-independent.json": "701c18030919cc885ccaafc14ecb683feb6c03df8fdc3aeafd7ee2873e022a1b",
+    "output/2026-10-11-mcp-http-add-install/install-data-before-summary.json": "c9d4f69bc78afb6f24e3a1b6250580691707148feaf62d151c2cd1ce2305b4ad",
+    "output/2026-10-11-mcp-http-add-install/install-data-before.jsonl": "d0b9e205f884efffd49e7ffc9d72cbc334a8f4e230fb695bc80b280592ab6e04",
+    "output/2026-10-11-mcp-http-add-install/install-data-preinstall-summary.json": "63cbfb68f79ad23516728a378afee41e38bf06b6a3dc75c013a48cc279fd0a3b",
+    "output/2026-10-11-mcp-http-add-install/install-data-preinstall.jsonl": "d0b9e205f884efffd49e7ffc9d72cbc334a8f4e230fb695bc80b280592ab6e04",
+    "output/2026-10-11-mcp-http-add-install/install-data-after-summary.json": "63cbfb68f79ad23516728a378afee41e38bf06b6a3dc75c013a48cc279fd0a3b",
+    "output/2026-10-11-mcp-http-add-install/install-data-after.jsonl": "d0b9e205f884efffd49e7ffc9d72cbc334a8f4e230fb695bc80b280592ab6e04",
+    "output/2026-10-11-mcp-http-add-install/metadata-backup-receipt.json": "97d5b07ad84e2a9921a9790adc31ccfb2186d9690a416bee01f797f94b819639",
+    "output/2026-10-11-mcp-http-add-install/metadata-before.sqlite3": "7a368e48cdacf4a4e21743499c63ab03df7b1f293e7113c79b9718315d71b176",
+    "output/2026-10-11-mcp-http-add-install/metadata-source/farfold.sqlite3": "ec59ea5c0e5ecaa6f081460db31ca5d31263efa2179f21a6b81ad68af43bba47",
+    "output/2026-10-11-mcp-http-add-install/metadata-source/farfold.sqlite3-wal": "a77c4a87c4e674e5b61c07177a60014d5e15e8088a1736e38e698bdc402d4160",
+    "output/2026-10-11-mcp-http-add-install/metadata-source/farfold.sqlite3-shm": "0b2190b873792d7407c09057fd390b18ad571f61be006ccda06446068408d18c",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/verification.json": "61039efd3441b9f574ab4c254c8ad7844f5ff7f91ef55a433ec322934ba050c6",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/rust.txt": "d9ab7fd93ac00dd480cdd0d21c317b6da04bead287650f127ba88442270a927c",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/clippy.txt": "8950be1e8f4499f41b8e38ef15f09a0e2671be53a43aa5dec4d794320908881d",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/frontend.txt": "59388c2cc3b518df4c00ca268326f0565610a4d34fb397860361fffca8561856",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/build.txt": "c8c21e48f060176dfef0b79a22b5aaca15fe09428a8f5fc528d773daf3cc6563",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/inputs-before.json": "42f8bb2d9f07a63fc0ecd8959cdd0a1e95f77a67b2ace732d692bf51aa24ddeb",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/inputs-after.json": "42f8bb2d9f07a63fc0ecd8959cdd0a1e95f77a67b2ace732d692bf51aa24ddeb"
+  },
+  "completedAt": "2026-10-10T21:14:18.007927+00:00"
+}

@@ -1,0 +1,91 @@
+{
+  "status": "installedFiniteHttpAdditionIndependentlyVerified",
+  "sourceCommit": "8cfb2ccb58a4154219505a324e92e1a5af0d4500",
+  "recordedClientDate": "2026-10-12",
+  "formalApplication": {
+    "path": "/Applications/Farfold.app",
+    "version": "0.1.7",
+    "architecture": "arm64"
+  },
+  "engineering": {
+    "inputCount": 1509,
+    "frontendFiles": 425,
+    "frontendTests": 4963,
+    "rustPassed": 1557,
+    "rustIgnored": 6,
+    "checks": 7
+  },
+  "candidateChecks": 9,
+  "installChecks": 10,
+  "installationData": {
+    "entriesPerSnapshot": 217400,
+    "beforePreinstallAfterExact": true
+  },
+  "native": {
+    "firstReviewWithdrawn": true,
+    "freshReviewExactUrl": true,
+    "explicitDisabledAddConfirmations": 1,
+    "readonlyRechecks": 1,
+    "freshDisabledHttpEntryObserved": true,
+    "sameNameRefusedWithoutWrite": true,
+    "twoScopeConfigurationSemanticsRestored": true,
+    "oneOwnedEndpointAcceptedContacts": 0,
+    "listenerOwnedExitVerified": true
+  },
+  "closeout": {
+    "originalWholeSessions": 131,
+    "newRetainedSessions": 0,
+    "dismissedSessions": 168,
+    "rawSettingsExact": 52,
+    "settingsTotal": 53,
+    "wholeUnsentObjectEqual": true,
+    "unsentGroups": [8, 8, 3],
+    "worktreeCatalogueWholeEqual": true,
+    "allOtherAgentCellsExact": true,
+    "normalQuit": true,
+    "forcedQuit": false,
+    "acceptedMetadataDeltas": [
+      {
+        "table": "agents",
+        "id": "codex",
+        "column": "updated_at",
+        "before": 1791663025176,
+        "after": 1791666916173
+      },
+      {
+        "table": "settings",
+        "id": "agentSetup.v1",
+        "progressKeySha256": "bcae78ce3d4670ee10c24f4723c8d82d19a73a2d2b21f5c16894ac910b902cd3",
+        "field": "step",
+        "before": 1,
+        "after": 0,
+        "interpretation": "Navigation from account/service tab to program tab, consistent with actual root UI action and exact source enum; remaining67records and all other fields/selection/completion/pending unchanged."
+      }
+    ]
+  },
+  "limitations": [
+    "Finite disabled configuration flow only; no authentication, connection, tool execution, other Agent or full P41 acceptance.",
+    "Zero contacts applies only to the one owned endpoint during its observation interval.",
+    "No UI prompt sent; official startup may prepare a session.",
+    "Saved normal exit and metadata snapshots describe the bounded test. App later reopened with pending responses; current state is not claimed closed or covered by that snapshot.",
+    "Existing intermittent dependency-environment test timeout remains unlocalized; diagnostics enhanced, followup suite passed.",
+    "First install verifier failed due observation-schema mismatch; original failure preserved and exact evidence mapping repaired before10/10."
+  ],
+  "refs": {
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/candidate.json": "761230f77c1528b8f21af61d001fa11db930b3ca3c56d2aae8c9761e8568ca8b",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/candidate-independent.json": "c35d2ce176215151405b6b074b4254f17872d230ce8f5f7886fbe2a426982f2b",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/install-independent.json": "287f67eb9e80409e858a3b043ef65b885fb5821b258b7b10d93ea6ff2f6d6602",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/install-independent-run-01.json": "dc0809a6915a83dc590330b7d4049ac1088746decf21e14ac54f558da299b4ee",
+    "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/duplicate-bundle-cleanup.json": "2d91f3a400d8d2a7cbd82b447fbc9d724d48a4c95598f1fd906a5575278cf2e7",
+    "output/2026-10-11-mcp-http-add-native/journey.json": "aec9146085643a9af5726b9d056ee811c012f91125794102db3c2b53426cbc9b",
+    "output/2026-10-11-mcp-http-add-native/final-normal-exit.json": "dfbdd0c5c0647ecbcdb3520b9f0b9eb02ef6a7275609aceed33aeec5b1d9b9f4",
+    "output/2026-10-11-mcp-http-add-native/root-data-acceptance.json": "dee5f675ab5a060314192bda5d858d8ae965517b860189412a524957ce88694d",
+    "output/2026-10-11-mcp-http-add-native-preparation/execution-pins.json": "7cf0cb7310082dd2b152679dcf6485bf6a328ac85089e5f87c8c3d8641254fcf",
+    "output/2026-10-11-mcp-http-add-native-preparation/baseline-result.json": "ca5dcdc17affad8691316d29a008a1ca283c67ca242c3d7dfed5481a5342b740",
+    "output/2026-10-11-mcp-http-add-native-preparation/cleanup-result.json": "d7826b082d0f14abb196f5f79cd5bb2031241fec41ccc5bb8d0e461117d4dfd9",
+    "output/2026-10-11-mcp-http-add-native-preparation/listener-stop-result.json": "57f99e27deaf3bc9aafd782d1be83d3e06f30240173662d5bfc465a16524610f",
+    "output/2026-10-11-mcp-http-add-independent/install-verifier-correction.json": "10e3a4cea4d46115ecbb4406c1554e39e5fdb36e33728d37d09f2c51c31f2622",
+    "output/2026-10-11-mcp-http-add-independent/native-final-independent.json": "bf903a9b70c8a519eefe4727ceb3bf0496eaa60a3241b8848813e6c11d5266ac"
+  },
+  "productComplete": false
+}

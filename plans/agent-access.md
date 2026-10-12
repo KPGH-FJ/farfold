@@ -1,6 +1,6 @@
 # Farfold 当前工作计划
 
-更新：2026-10-11。**目标：把 Farfold 的能力做扎实，达到可面向市场用户、具备一线多 Agent 桌面工作台水准，再做必要的局部 UI 优化并交给用户试用。** 本文件是唯一活动计划；[PRODUCT.md](../PRODUCT.md) 是唯一产品契约，[当前状态](../docs/status.md)记录实际进展。旧六阶段及 UI 落地过程见[冻结原文](../docs/archive/2026-10-09-before-capability-hardening/plans/agent-access.md)，不作为当前操作顺序或测试授权。
+更新：2026-10-12。**目标：把 Farfold 的能力做扎实，达到可面向市场用户、具备一线多 Agent 桌面工作台水准，再做必要的局部 UI 优化并交给用户试用。** 本文件是唯一活动计划；[PRODUCT.md](../PRODUCT.md) 是唯一产品契约，[当前状态](../docs/status.md)记录实际进展。旧六阶段及 UI 落地过程见[冻结原文](../docs/archive/2026-10-09-before-capability-hardening/plans/agent-access.md)，不作为当前操作顺序或测试授权。
 
 ## 1. 全量承接，不以整理缩减要求
 
@@ -18,7 +18,7 @@
 
 ## 2. 推进顺序与依赖
 
-当前HTTP MCP默认停用添加已完成[源码与受控检查](../docs/evidence/2026-10-09-capability-hardening/mcp-http-add/implementation.json)和[七项整合](../docs/evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/verification.json)：1,509输入稳定，前端4,963项、Rust1,557项/6忽略，完整App双浏览器各34项。自身写入进度误发取消已修；首轮已有启动环境测试超时只增强诊断，复测通过但原因仍未定位。接续正式安装/官方HTTP配置验证，再推进附件打包、未加载历史搜索和原清单余项；不以源码或分项成功关闭P41及市场目标。
+当前HTTP MCP默认停用添加已提交安装 `8cfb2ccb`，完成[正式分项验证](../docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/installed-mcp-http-add.json)：撤回后重新审阅、一次添加、停用报告、独立只读核对及同名拒绝通过；两范围原配置语义恢复。七项整合通过（1,509输入，前端4,963项、Rust1,557项/6忽略），双浏览器各34项，候选9/9、安装10/10。三份217,400条安装快照相同，有限实测后的会话、未发内容及工作树清单保持；明确保留一个准备页签位置和Codex更新时间的已核差异，不宣称53项设置原值全同。已有启动环境测试超时仍未定位；安装核验脚本字段映射错误已修并保留原失败。接续已加载对话与明确选中附件的ZIP归档，再补已加载工具正文导出、未加载历史搜索及其余能力；P35、P41和市场目标不因单片完成而关闭。正式应用后续已重开且有待回应项，源码工作继续，下一次安装须重新核实可退出条件及数据基线。
 
 P41精确移除已提交安装 `8fa557c0` / 0.1.7 arm64，完成[正式分项验证](../docs/evidence/2026-10-09-capability-hardening/mcp-remove-candidate/installed-mcp-remove.json)与[独立收口](../docs/evidence/2026-10-09-capability-hardening/mcp-remove-candidate/native-independent.json)：一个明确停用的本地MCP条目，经撤回审阅、重新审阅、一次移除、独立只读核对及新清单确认缺失；其他配置及两种目录范围原语义保持。七项工程全过（1,497输入稳定，前端4,854项、Rust1,546项/6忽略），双浏览器各31项，候选9/9、安装10/10。三份217,400条安装快照相同，正常退出后131条完整会话、168条屏蔽、53项设置、整个未发8/8/3与工作树清单保持；仅Codex更新时间发生已核对的变化。下一步接续HTTP添加，并推进附件打包、未加载历史搜索及其他剩余能力；连接、诊断、凭据、其他来源/Agent和全部原完成条件保持未完成，不以配置操作分项关闭P41。
 
