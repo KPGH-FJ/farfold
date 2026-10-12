@@ -23,28 +23,17 @@
   "trace": [
     {
       "path": "src-tauri/src/acp_client/extension_inventory/skills_lifecycle_tests.rs",
-      "originalLines": [
-        224,
-        260
-      ],
+      "originalLines": [224, 260],
       "fact": "Both complete=false (list in progress) and complete=true (response emitted, stdin EOF received, cleanup pending) publish PID then sleep30. Parent waits only for file existence, reads/parses before cancel; final assertions require real child exit, Cancelled and no snapshot."
     },
     {
       "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
-      "lines": [
-        184,
-        303
-      ],
+      "lines": [184, 303],
       "fact": "Owned runner checks interest/deadline, closes stdin after exchange completion, signals only the owned process group on cancellation and waits real status plus stdout/stderr EOF and absent group before return."
     },
     {
       "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
-      "lines": [
-        50,
-        82,
-        219,
-        268
-      ],
+      "lines": [50, 82, 219, 268],
       "fact": "Cancel abandons operation and records Cancelling before finish. Final Ready requires still-interested successful outcome; this path is reached only after run_owned returns."
     }
   ],
@@ -62,12 +51,7 @@
     ],
     "sameShapeSecondSite": "dropping_skills_observer_keeps_scope_and_activity_until_real_child_cleanup uses the same helper. It was inspected and patched here; this subagent did not separately run that filter. Root subsequent full suite owns its actual validation.",
     "formatting": {
-      "argv": [
-        "cargo",
-        "fmt",
-        "--manifest-path",
-        "src-tauri/Cargo.toml"
-      ],
+      "argv": ["cargo", "fmt", "--manifest-path", "src-tauri/Cargo.toml"],
       "exitCode": 0
     },
     "sourceBefore": {
@@ -202,7 +186,7 @@
       "sha256": "428b9f8cd587cdf9196d1126204eccbd40a4b4f592784e96bcc795f1fbd11297"
     },
     {
-      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/failed-test-investigation.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/failed-test-investigation.json.raw",
       "bytes": 7691,
       "sha256": "6de401f263172f538689deec1027e1d1e426e43ead0b8806c9ac1e9845d23996"
     }

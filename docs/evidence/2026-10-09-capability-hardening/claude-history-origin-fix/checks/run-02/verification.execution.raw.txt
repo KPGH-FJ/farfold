@@ -1,0 +1,196 @@
+{
+  "checkedAtUtc": "2026-10-12T19:58:51.870706+00:00",
+  "sourceBase": "63f646e748404a4499f9b92aad7efa9e3b74d93f",
+  "inputCount": 1578,
+  "sourceStable": true,
+  "protectedUnchanged": true,
+  "changedInputsDuringRun": [],
+  "changesSinceRun01": [
+    {
+      "path": "src/runtime/history_search_strings.ts",
+      "before": "dddebe073f30fa8d28a85d7de87d1a50cfaf578f5df0ddf0a29ced08af407b4f",
+      "after": "71417bd3f8569594b0db05e0c9dd70cd094a60ab36ec8988ecec3b869e604d11"
+    }
+  ],
+  "unchangedOtherInputCount": 1577,
+  "checks": [
+    {
+      "name": "format",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "format:check"
+      ],
+      "startedAtUtc": "2026-10-12T19:57:28.068394+00:00",
+      "exitCode": 0,
+      "seconds": 27.626,
+      "log": "output/2026-10-13-claude-history-origin-fix-checks/run-02/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true,
+      "executionRun": "run-02",
+      "owner": "verification"
+    },
+    {
+      "name": "typecheck",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "typecheck"
+      ],
+      "startedAtUtc": "2026-10-12T19:57:55.696086+00:00",
+      "exitCode": 0,
+      "seconds": 7.85,
+      "log": "output/2026-10-13-claude-history-origin-fix-checks/run-02/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true,
+      "executionRun": "run-02",
+      "owner": "verification"
+    },
+    {
+      "name": "frontend",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "test"
+      ],
+      "startedAtUtc": "2026-10-12T19:58:03.546997+00:00",
+      "exitCode": 0,
+      "seconds": 39.556,
+      "log": "output/2026-10-13-claude-history-origin-fix-checks/run-02/frontend.txt",
+      "sha256": "743810b92092c3a229b549b76c51bd7459929bc5349d020a88d7d0091afff338",
+      "executedInThisRun": true,
+      "executionRun": "run-02",
+      "owner": "verification"
+    },
+    {
+      "name": "build",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "build"
+      ],
+      "startedAtUtc": "2026-10-12T19:58:43.104950+00:00",
+      "exitCode": 0,
+      "seconds": 8.71,
+      "log": "output/2026-10-13-claude-history-origin-fix-checks/run-02/build.txt",
+      "sha256": "7b2d1da12f70c368b71cb8ee8af2b39ac65f41374cfb775ee5eedb2acf368719",
+      "executedInThisRun": true,
+      "executionRun": "run-02",
+      "owner": "verification"
+    },
+    {
+      "name": "cargo-fmt",
+      "group": "native",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "startedAtUtc": "2026-10-12T19:32:27.418420+00:00",
+      "exitCode": 0,
+      "seconds": 1.08,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": false,
+      "owner": "verification",
+      "originalLog": {
+        "path": "output/2026-10-13-claude-history-origin-fix-checks/cargo-fmt.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "executedInRun01": true,
+      "executionRun": "run-01",
+      "reuseReason": "All 1577 other recorded inputs, including all backend/configuration/fixture/wire inputs, are byte-identical; the only change is the pinned frontend strings file.",
+      "originalReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/verification.json",
+        "sha256": "fbd9a6dd737ab4724ca2d09b8eba76931e91962324340368f7766c56efb2948b",
+        "bytes": 8377
+      }
+    },
+    {
+      "name": "clippy",
+      "group": "native",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "startedAtUtc": "2026-10-12T19:32:28.499148+00:00",
+      "exitCode": 0,
+      "seconds": 5.411,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/clippy.txt",
+      "sha256": "8343f9c7c1b8a7bf2e9b30ac3d3a2d4397aee855fec0927f04883bbe6edaa252",
+      "executedInThisRun": false,
+      "owner": "verification",
+      "originalLog": {
+        "path": "output/2026-10-13-claude-history-origin-fix-checks/clippy.txt",
+        "sha256": "8343f9c7c1b8a7bf2e9b30ac3d3a2d4397aee855fec0927f04883bbe6edaa252",
+        "bytes": 138
+      },
+      "executedInRun01": true,
+      "executionRun": "run-01",
+      "reuseReason": "All 1577 other recorded inputs, including all backend/configuration/fixture/wire inputs, are byte-identical; the only change is the pinned frontend strings file.",
+      "originalReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/verification.json",
+        "sha256": "fbd9a6dd737ab4724ca2d09b8eba76931e91962324340368f7766c56efb2948b",
+        "bytes": 8377
+      }
+    },
+    {
+      "name": "rust",
+      "group": "native",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "startedAtUtc": "2026-10-12T19:32:33.911032+00:00",
+      "exitCode": 0,
+      "seconds": 128.412,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/rust.txt",
+      "sha256": "0f3fa646fb99ae9a806fcb82d85356d47e7b24320d79b5e5e4bdcca1c660045a",
+      "executedInThisRun": false,
+      "owner": "verification",
+      "originalLog": {
+        "path": "output/2026-10-13-claude-history-origin-fix-checks/rust.txt",
+        "sha256": "0f3fa646fb99ae9a806fcb82d85356d47e7b24320d79b5e5e4bdcca1c660045a",
+        "bytes": 179363
+      },
+      "executedInRun01": true,
+      "executionRun": "run-01",
+      "reuseReason": "All 1577 other recorded inputs, including all backend/configuration/fixture/wire inputs, are byte-identical; the only change is the pinned frontend strings file.",
+      "originalReceipt": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/verification.json",
+        "sha256": "fbd9a6dd737ab4724ca2d09b8eba76931e91962324340368f7766c56efb2948b",
+        "bytes": 8377
+      }
+    }
+  ],
+  "counts": {
+    "rustReusedFromRun01": [
+      "test result: ok. 1610 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 126.64s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ],
+    "frontend": [
+      "Test Files  442 passed (442)",
+      "Tests  5203 passed (5203)"
+    ]
+  },
+  "priorVerification": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/verification.json",
+    "sha256": "fbd9a6dd737ab4724ca2d09b8eba76931e91962324340368f7766c56efb2948b",
+    "bytes": 8377
+  },
+  "allPassed": true,
+  "boundary": "Four frontend commands actually executed this run; three native results are explicitly reused from the pinned complete seven-check run on byte-identical native/configuration/fixture/wire inputs. No candidate, installation or native-user-effect validation is inferred."
+}

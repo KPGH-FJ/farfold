@@ -4,6 +4,16 @@
 
 ## 当前基线与证据边界
 
+P32第二条官方读取路径已安装 `63f646e7`，[候选9项、安装10项](evidence/2026-10-09-capability-hardening/claude-history-candidate/install-independent-final.json)及三份217,400条数据清单一致。正式共用界面只选一条已登记Claude历史，真实SDK每次返回部分覆盖的1页/1段文字：不存在词0匹配，但已确认存在的用户文字及短前缀也均0匹配，正向验证失败；命中文字预览和从结果打开原对话未执行，不能算P32完成。
+
+[来源过滤与选择器修正](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json)已完成源码和受控验证：官方human用户来源被误排除的用例先真红，修复后Node19项、Rust目标类12项及独立23项通过；共用选择器空白候选双浏览器各23项通过，正式重测待做。只搜索官方返回的已保存用户/回复文字，不另行搜索附件文件、工具结果或思考；保存文字可能包含处理后的上下文，不能承诺逐字键盘原文。全部结果仍为部分覆盖，当前分支、上下文续接、其他Agent与附件内容搜索等原条件未证；NEW-18/19尚未关闭，新候选安装和正式正向验证待执行。
+
+63f本轮已正常保存退出。[数据逐字段接受](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json)保留133条完整会话、170条屏蔽、53项设置原值及整个未发/工作树记录；唯一Claude记录的providers字段由缺失变为空对象及更新时间变化获明确接受，其余字段准确保持。不能写成全部Agent行完全相同，具体写入者未证；私有数据只保留摘要和哈希。
+
+[第四处说明的复查](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/verification.json)在1,578稳定输入上四项前端全部实际通过：442文件/5,203项；三项后端在未变的后端、配置、夹具与协议输入上明确复用[三处修正的原七项工程](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/verification.json)，Rust1,610项/6忽略，本轮未再执行后端三项。原三处修正的七项全部实际通过仍保历史范围；工程通过不算正式界面验证。旧源码/受控99项双浏览器、真实Rust回执及独立8项继续保持历史范围。原Clippy、未定位Node取消测试、PID标记失败及模板错误保留；后续通过不算已定位Node原因，原JSON及规范视图的格式桥也不覆盖原记录。
+
+P16独立Office连接探针实际核到974项服务并正常结束，未加载文档；[自身CLI隔离探针](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json)的父进程SIGTRAP，系统报告code identity错误100001，隔离尚未验证，继续核查官方路径。P16原完成条件保持。
+
 所选附件归档已提交安装 `a5a24810` / 0.1.7 arm64，并完成[正式窗口到真实ZIP的分项验证](evidence/2026-10-09-capability-hardening/attachment-archive-candidate/installed-archive-native.json)：默认Markdown、明确勾选两项附件、已加载修改前后文字、保存选择器取消后保留选择、替代来源标识、所选源文件失效时不发布ZIP及恢复后的准确保存。两包分别核到2/1和1/3项打包/省略，44字节附件内容与磁盘逐字节相同；本例未证明全部终端或工具正文类型。候选9/9通过，安装9组核心核验及产物稳定性通过；末尾包装断言在后续有意启动应用后失败，原失败保留，不写成10/10。三份217,400条安装数据快照相同；实测正常退出后133条完整会话、170条屏蔽及53项设置原值保持，整个未发内容与工作树清单相同，仅Codex更新时间变化。界面可见132条与数据库133行分别记录。重复打包应用已精确删除，唯一正式应用和候选ZIP保持。
 
 [本片源码与受控证据](evidence/2026-10-09-capability-hardening/attachment-archive/implementation.json)、[原七项工程检查](evidence/2026-10-09-capability-hardening/attachment-archive-checks/final-verification.json)继续保持各自范围：1,542输入，前端5,071项、Rust1,578项/6忽略；原格式失败保留，六项同源码检查未机械重复。写入中原生取消、未知清理、其他Agent与Windows及P35/P14/H06其余条件仍未完成。P32所选未加载历史临时文字搜索的刷新缺陷已修复，500a0570正式版同一历史的命中预览在自然等待148,478毫秒后仍保留；无匹配查询及单独打开正确原对话已复验。此前66a的结果消失失败保留，本轮正常退出后数据独立核对完成，仅Codex更新时间变化经逐值接受，详见下段。[桌面权限补查](evidence/2026-10-09-capability-hardening/desktop-permission-followup.json)中一次直接桌面PDF已显示实际两页中的第一页，旧失败当前在此路径未复现；OpenCode初始化原因、系统授权结果与NEW-01仍未关闭。签名、公开分发及市场目标继续未完成。

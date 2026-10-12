@@ -13,10 +13,7 @@
     "inputCount": 1578,
     "sourceStable": true,
     "counts": {
-      "frontend": [
-        "Test Files  442 passed (442)",
-        "Tests  5203 passed (5203)"
-      ],
+      "frontend": ["Test Files  442 passed (442)", "Tests  5203 passed (5203)"],
       "rust": [
         "test result: FAILED. 1609 passed; 1 failed; 6 ignored; 0 measured; 0 filtered out; finished in 128.34s"
       ]

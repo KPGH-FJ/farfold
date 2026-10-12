@@ -1,0 +1,267 @@
+{
+  "version": 1,
+  "recordedAtUtc": "2026-10-12T19:28:15.191082+00:00",
+  "status": "historicalBytesPreservedAndCanonicalEvidenceFormatted",
+  "scope": "Evidence-only correction. No source fix, native acceptance, engineering rerun other than format checking, or change to the earlier failed-test conclusions.",
+  "reason": "The full format check for the selector CSS follow-up found three previously sealed evidence JSON files with noncanonical whitespace.",
+  "originalFailure": {
+    "argv": ["corepack", "pnpm", "format:check"],
+    "exitCode": 1,
+    "seconds": 31.397,
+    "log": {
+      "path": "output/2026-10-13-claude-history-independent/selector-mitigation/checks/format.log",
+      "sha256": "ff5269fc38b455926c3b816c567fa9cbb657e6478ff9b3cc5ee4d5ed78b1594f",
+      "bytes": 561
+    },
+    "retained": true
+  },
+  "preservation": {
+    "method": "Original bytes were saved with exclusive creation before edits. Original JSON copies remain immutable; their historical path declarations are resolved only by the exact mappings below.",
+    "originalFiles": [
+      {
+        "originalDeclaredPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/failed-test-investigation.json",
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/failed-test-investigation.json.raw",
+          "sha256": "6de401f263172f538689deec1027e1d1e426e43ead0b8806c9ac1e9845d23996",
+          "bytes": 7691
+        },
+        "canonicalPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/failed-test-investigation.json"
+      },
+      {
+        "originalDeclaredPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/run02-record-correction.json",
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/run02-record-correction.json.raw",
+          "sha256": "2a43228d3d906f51d729f9c28bdf9e9c8b3d0adc2496a2b55d928a9c948ec213",
+          "bytes": 4008
+        },
+        "canonicalPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/run02-record-correction.json"
+      },
+      {
+        "originalDeclaredPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/skills-marker-investigation.json",
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/skills-marker-investigation.json.raw",
+          "sha256": "41f40679fd3a0e5f692571531d80c3cceff1647d15a789b896f214e013c0f3c8",
+          "bytes": 9360
+        },
+        "canonicalPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/skills-marker-investigation.json"
+      },
+      {
+        "originalDeclaredPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/implementation.json",
+        "original": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/implementation.json.raw",
+          "sha256": "928c5fe88b24544febbd032e1cfad44c944c14e398df7ce2997b3b69941cd44f",
+          "bytes": 14864
+        },
+        "canonicalPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/implementation.json"
+      }
+    ],
+    "currentCanonicalFiles": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/failed-test-investigation.json",
+        "sha256": "6ba801b705accfdf9e6554bca50c946270a74c024486928ed2d9392dc6c81456",
+        "bytes": 7669
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/run02-record-correction.json",
+        "sha256": "5dc2d9351fcc6e3086ebf2009c859dfff7c1db52bbee7c0e8bb184ad9153b1d1",
+        "bytes": 3984
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/skills-marker-investigation.json",
+        "sha256": "b97b208d32645436438c8a8975aa5a6de3e786ed57b1e6438be090a7d48f7504",
+        "bytes": 9250
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/implementation.json",
+        "sha256": "2660d50e1a213210bf5dd95f1034f1d1c4e8f5495536770439128dcb5db4aaff",
+        "bytes": 14918
+      }
+    ]
+  },
+  "allowedCurrentChanges": {
+    "referencePathChanges": [
+      {
+        "document": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/failed-test-investigation.json",
+        "jsonPointer": "/separateRecordCorrection/path",
+        "before": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/run02-record-correction.json",
+        "after": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/run02-record-correction.json.raw",
+        "sha256Unchanged": "2a43228d3d906f51d729f9c28bdf9e9c8b3d0adc2496a2b55d928a9c948ec213"
+      },
+      {
+        "document": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/skills-marker-investigation.json",
+        "jsonPointer": "/refs/4/path",
+        "before": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/failed-test-investigation.json",
+        "after": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/failed-test-investigation.json.raw",
+        "sha256Unchanged": "6de401f263172f538689deec1027e1d1e426e43ead0b8806c9ac1e9845d23996"
+      },
+      {
+        "document": "docs/evidence/2026-10-09-capability-hardening/claude-history/implementation.json",
+        "jsonPointer": "/evidenceRefs/5/path",
+        "before": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/failed-test-investigation.json",
+        "after": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/failed-test-investigation.json.raw",
+        "sha256Unchanged": "6de401f263172f538689deec1027e1d1e426e43ead0b8806c9ac1e9845d23996"
+      },
+      {
+        "document": "docs/evidence/2026-10-09-capability-hardening/claude-history/implementation.json",
+        "jsonPointer": "/evidenceRefs/6/path",
+        "before": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/run02-record-correction.json",
+        "after": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/run02-record-correction.json.raw",
+        "sha256Unchanged": "2a43228d3d906f51d729f9c28bdf9e9c8b3d0adc2496a2b55d928a9c948ec213"
+      },
+      {
+        "document": "docs/evidence/2026-10-09-capability-hardening/claude-history/implementation.json",
+        "jsonPointer": "/evidenceRefs/7/path",
+        "before": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/skills-marker-investigation.json",
+        "after": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/skills-marker-investigation.json.raw",
+        "sha256Unchanged": "41f40679fd3a0e5f692571531d80c3cceff1647d15a789b896f214e013c0f3c8"
+      }
+    ],
+    "sha256AndByteCountValuesUnchanged": true,
+    "allOtherParsedValuesUnchanged": true,
+    "normalization": "Reverse only these five exact path changes, then compare each parsed canonical document against its preserved original; all four compare equal.",
+    "evidence": {
+      "path": "output/2026-10-13-claude-history-independent/formatting-correction/semantic-equivalence.json",
+      "sha256": "e674cf0a0f7d86da759a2f72ebe7e553087faa094f83796000a86394d45c5a27",
+      "bytes": 4932
+    }
+  },
+  "historicalReferenceResolution": {
+    "policy": "These sealed private receipts were not edited. Each original declared path plus original SHA resolves to the exact raw copy listed, not to the now-formatted canonical file. This is a fixed four-original mapping, not a general fallback.",
+    "edgeCount": 7,
+    "sealedReceipts": [
+      {
+        "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/diagnostic-increment.json",
+        "sha256": "6de401f263172f538689deec1027e1d1e426e43ead0b8806c9ac1e9845d23996",
+        "bytes": 7691
+      },
+      {
+        "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/diagnostic-increment-before-cargo-fmt.json",
+        "sha256": "ed1886991b79a4395740f7d8837a5c85a3231dcf33796e8e56159eee10c96a7d",
+        "bytes": 6317
+      },
+      {
+        "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/skills-marker-investigation.json",
+        "sha256": "41f40679fd3a0e5f692571531d80c3cceff1647d15a789b896f214e013c0f3c8",
+        "bytes": 9360
+      },
+      {
+        "path": "output/2026-10-13-claude-history-independent/docs-alignment/before-format/4-implementation.json",
+        "sha256": "588b5939dccc007a29b7bd9b55d3e77b4ca90ec88972e345ddb29953709a25f3",
+        "bytes": 14680
+      },
+      {
+        "path": "output/2026-10-13-claude-history-independent/docs-alignment/final-docs-alignment.json",
+        "sha256": "957d5711f135f890be0be6fa5cadfc62046903b3c006cccd3d4e31c069f976af",
+        "bytes": 4165
+      }
+    ],
+    "edges": [
+      {
+        "sealedReceipt": "output/2026-10-13-claude-history-independent/failed-test-investigation/diagnostic-increment.json",
+        "jsonPointer": "/separateRecordCorrection",
+        "originalDeclaredPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/run02-record-correction.json",
+        "sha256": "2a43228d3d906f51d729f9c28bdf9e9c8b3d0adc2496a2b55d928a9c948ec213",
+        "preservedOriginalPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/run02-record-correction.json.raw"
+      },
+      {
+        "sealedReceipt": "output/2026-10-13-claude-history-independent/failed-test-investigation/diagnostic-increment-before-cargo-fmt.json",
+        "jsonPointer": "/separateRecordCorrection",
+        "originalDeclaredPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/run02-record-correction.json",
+        "sha256": "2a43228d3d906f51d729f9c28bdf9e9c8b3d0adc2496a2b55d928a9c948ec213",
+        "preservedOriginalPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/run02-record-correction.json.raw"
+      },
+      {
+        "sealedReceipt": "output/2026-10-13-claude-history-independent/failed-test-investigation/skills-marker-investigation.json",
+        "jsonPointer": "/refs/4",
+        "originalDeclaredPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/failed-test-investigation.json",
+        "sha256": "6de401f263172f538689deec1027e1d1e426e43ead0b8806c9ac1e9845d23996",
+        "preservedOriginalPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/failed-test-investigation.json.raw"
+      },
+      {
+        "sealedReceipt": "output/2026-10-13-claude-history-independent/docs-alignment/before-format/4-implementation.json",
+        "jsonPointer": "/evidenceRefs/5",
+        "originalDeclaredPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/failed-test-investigation.json",
+        "sha256": "6de401f263172f538689deec1027e1d1e426e43ead0b8806c9ac1e9845d23996",
+        "preservedOriginalPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/failed-test-investigation.json.raw"
+      },
+      {
+        "sealedReceipt": "output/2026-10-13-claude-history-independent/docs-alignment/before-format/4-implementation.json",
+        "jsonPointer": "/evidenceRefs/6",
+        "originalDeclaredPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/run02-record-correction.json",
+        "sha256": "2a43228d3d906f51d729f9c28bdf9e9c8b3d0adc2496a2b55d928a9c948ec213",
+        "preservedOriginalPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/run02-record-correction.json.raw"
+      },
+      {
+        "sealedReceipt": "output/2026-10-13-claude-history-independent/docs-alignment/before-format/4-implementation.json",
+        "jsonPointer": "/evidenceRefs/7",
+        "originalDeclaredPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/skills-marker-investigation.json",
+        "sha256": "41f40679fd3a0e5f692571531d80c3cceff1647d15a789b896f214e013c0f3c8",
+        "preservedOriginalPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/skills-marker-investigation.json.raw"
+      },
+      {
+        "sealedReceipt": "output/2026-10-13-claude-history-independent/docs-alignment/final-docs-alignment.json",
+        "jsonPointer": "/changedRefs/4",
+        "originalDeclaredPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/implementation.json",
+        "sha256": "928c5fe88b24544febbd032e1cfad44c944c14e398df7ce2997b3b69941cd44f",
+        "preservedOriginalPath": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/implementation.json.raw"
+      }
+    ]
+  },
+  "validation": {
+    "rawOriginalsExact": 4,
+    "currentRelocatedReferencesExact": 5,
+    "parsedDocumentsEquivalentAfterInversePathMapping": 4,
+    "sealedPrivateReceiptsUnchanged": 5,
+    "protectedFilesUnchanged": [
+      {
+        "path": ".prettierignore",
+        "sha256": "3dcf99c478cea0ebedefec69a3782d59adb10d7dc26f963b30ec57f21f5dbb6a",
+        "bytes": 16941
+      },
+      {
+        "path": "PRODUCT.md",
+        "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+        "bytes": 35083
+      },
+      {
+        "path": "docs/status.md",
+        "sha256": "b0402ea6a3ca4aed6d1ff9999f286e4d28e06e57ebe6f5b287e4502d26d6d8cc",
+        "bytes": 66071
+      },
+      {
+        "path": "docs/architecture.md",
+        "sha256": "b8bd7d849a7a26acf669bd9015ab0d9cf00d093ac75296148ce2432dfaa10cb3",
+        "bytes": 106703
+      },
+      {
+        "path": "plans/agent-access.md",
+        "sha256": "b4e002b2e17fc7a347af89faf3670d6c2d92bd76679678834fc1f95dcafa0d03",
+        "bytes": 123010
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+        "sha256": "4635300ba8c5ed120c277c81b53319d687afa1e53b0b3c8991be7c8792bbf9bb",
+        "bytes": 65896
+      }
+    ],
+    "actualWholeRepositoryFormatCheck": {
+      "argv": ["corepack", "pnpm", "format:check"],
+      "startedAtUtc": "2026-10-12T19:26:51.383761+00:00",
+      "exitCode": 0,
+      "seconds": 28.659,
+      "log": {
+        "path": "output/2026-10-13-claude-history-independent/formatting-correction/global-format-check.txt",
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "bytes": 144
+      },
+      "scope": "Actual full repository Prettier check after the four authorized canonical JSON edits; correction manifest is generated afterwards and receives its own final targeted check."
+    },
+    "manifestValidationBoundary": "This receipt is written after the recorded global format check and is separately formatted and checked. The final private validation receipt binds its final bytes."
+  },
+  "boundaries": [
+    "No original failed-test log or original JSON byte was overwritten.",
+    "The earlier Node version/cancellation failure remains unlocated; later passes do not establish its cause or a production fix.",
+    "No source, formatter scope, .prettierignore, product contract, current narrative document, App, configuration, or user database was changed by this correction.",
+    "The canonical JSON files are readable reformatted copies; historical byte-hash assertions remain attached to the preserved raw originals."
+  ]
+}

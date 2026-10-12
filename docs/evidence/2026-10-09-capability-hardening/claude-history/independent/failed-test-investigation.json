@@ -111,18 +111,13 @@
       "sha256": "31456ca77050d496c88d2680bb51818a48ff3a5263d4c285c198f2f13dda54a0"
     },
     "cargoFormatting": {
-      "argv": [
-        "cargo",
-        "fmt",
-        "--manifest-path",
-        "src-tauri/Cargo.toml"
-      ],
+      "argv": ["cargo", "fmt", "--manifest-path", "src-tauri/Cargo.toml"],
       "exitCode": 0,
       "afterTwoSourcesEqualPreFormatFreeze": true
     }
   },
   "separateRecordCorrection": {
-    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/run02-record-correction.json",
+    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/original-json/run02-record-correction.json.raw",
     "bytes": 4008,
     "sha256": "2a43228d3d906f51d729f9c28bdf9e9c8b3d0adc2496a2b55d928a9c948ec213"
   },

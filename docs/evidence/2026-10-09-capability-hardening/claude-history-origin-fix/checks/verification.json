@@ -1,0 +1,211 @@
+{
+  "checkedAtUtc": "2026-10-12T19:34:42.383232+00:00",
+  "sourceBase": "63f646e748404a4499f9b92aad7efa9e3b74d93f",
+  "inputCount": 1578,
+  "sourceStable": true,
+  "changedInputs": [],
+  "protectedUnchanged": true,
+  "checks": [
+    {
+      "name": "format",
+      "group": "frontend",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "startedAtUtc": "2026-10-12T19:32:27.418266+00:00",
+      "exitCode": 0,
+      "seconds": 29.841,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true,
+      "owner": "verification",
+      "originalLog": {
+        "path": "output/2026-10-13-claude-history-origin-fix-checks/format.txt",
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "bytes": 144
+      }
+    },
+    {
+      "name": "typecheck",
+      "group": "frontend",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "startedAtUtc": "2026-10-12T19:32:57.260773+00:00",
+      "exitCode": 0,
+      "seconds": 8.148,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true,
+      "owner": "verification",
+      "originalLog": {
+        "path": "output/2026-10-13-claude-history-origin-fix-checks/typecheck.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      }
+    },
+    {
+      "name": "frontend",
+      "group": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "startedAtUtc": "2026-10-12T19:33:05.409160+00:00",
+      "exitCode": 0,
+      "seconds": 41.649,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/frontend.txt",
+      "sha256": "75c35e755cd02ce7aca4c4d62dd05b2570dc8a85cb5172ce0e063445351f3004",
+      "executedInThisRun": true,
+      "owner": "verification",
+      "originalLog": {
+        "path": "output/2026-10-13-claude-history-origin-fix-checks/frontend.txt",
+        "sha256": "75c35e755cd02ce7aca4c4d62dd05b2570dc8a85cb5172ce0e063445351f3004",
+        "bytes": 288
+      }
+    },
+    {
+      "name": "build",
+      "group": "frontend",
+      "argv": ["corepack", "pnpm", "build"],
+      "startedAtUtc": "2026-10-12T19:33:47.059657+00:00",
+      "exitCode": 0,
+      "seconds": 9.413,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/build.txt",
+      "sha256": "63ec52b9119afdb63c529550431a63e5db6e2d1a4a66d4c0a2f815a37bcd223f",
+      "executedInThisRun": true,
+      "owner": "verification",
+      "originalLog": {
+        "path": "output/2026-10-13-claude-history-origin-fix-checks/build.txt",
+        "sha256": "63ec52b9119afdb63c529550431a63e5db6e2d1a4a66d4c0a2f815a37bcd223f",
+        "bytes": 4728
+      }
+    },
+    {
+      "name": "cargo-fmt",
+      "group": "native",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "startedAtUtc": "2026-10-12T19:32:27.418420+00:00",
+      "exitCode": 0,
+      "seconds": 1.08,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true,
+      "owner": "verification",
+      "originalLog": {
+        "path": "output/2026-10-13-claude-history-origin-fix-checks/cargo-fmt.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "name": "clippy",
+      "group": "native",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "startedAtUtc": "2026-10-12T19:32:28.499148+00:00",
+      "exitCode": 0,
+      "seconds": 5.411,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/clippy.txt",
+      "sha256": "8343f9c7c1b8a7bf2e9b30ac3d3a2d4397aee855fec0927f04883bbe6edaa252",
+      "executedInThisRun": true,
+      "owner": "verification",
+      "originalLog": {
+        "path": "output/2026-10-13-claude-history-origin-fix-checks/clippy.txt",
+        "sha256": "8343f9c7c1b8a7bf2e9b30ac3d3a2d4397aee855fec0927f04883bbe6edaa252",
+        "bytes": 138
+      }
+    },
+    {
+      "name": "rust",
+      "group": "native",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "startedAtUtc": "2026-10-12T19:32:33.911032+00:00",
+      "exitCode": 0,
+      "seconds": 128.412,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/rust.txt",
+      "sha256": "0f3fa646fb99ae9a806fcb82d85356d47e7b24320d79b5e5e4bdcca1c660045a",
+      "executedInThisRun": true,
+      "owner": "verification",
+      "originalLog": {
+        "path": "output/2026-10-13-claude-history-origin-fix-checks/rust.txt",
+        "sha256": "0f3fa646fb99ae9a806fcb82d85356d47e7b24320d79b5e5e4bdcca1c660045a",
+        "bytes": 179363
+      }
+    }
+  ],
+  "counts": {
+    "frontend": ["Test Files  442 passed (442)", "Tests  5203 passed (5203)"],
+    "rust": [
+      "test result: ok. 1610 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 126.64s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  "notExecuted": [],
+  "allPassed": true,
+  "boundary": "All listed checks were actually executed this run; no prior pass reuse. Engineering only, not candidate build/install, real SDK effectiveness, native UI or complete P32 acceptance. Earlier real formal63 positive-match failure remains separate.",
+  "originalExecutionReceipt": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/verification.execution.raw.txt",
+    "sha256": "910b0db29ed394af45eba97aecffbfc7e806e95dd8a527767a3e7175a17c406f",
+    "bytes": 4511
+  },
+  "runner": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run_checks.py.raw.txt",
+    "sha256": "d1068a3ae49c3eaecabc2da3a292304e9bc1b36c5e8425ab3095114b4e25ca47",
+    "bytes": 6460
+  },
+  "inputRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/inputs-before.json",
+      "sha256": "c3d2719f2c3f9b220987e153143fc46f7723f25697ea8f09077d12f7e09bac8d",
+      "bytes": 182982
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/inputs-after.json",
+      "sha256": "c3d2719f2c3f9b220987e153143fc46f7723f25697ea8f09077d12f7e09bac8d",
+      "bytes": 182982
+    }
+  ],
+  "protectionRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/protected-before.json",
+      "sha256": "5e3f812325b0e53cb88e702d45799fc104557017355c0813c11e8930abebdb0a",
+      "bytes": 357
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/protected-after.json",
+      "sha256": "5e3f812325b0e53cb88e702d45799fc104557017355c0813c11e8930abebdb0a",
+      "bytes": 357
+    }
+  ],
+  "executionPlan": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/execution-plan.json",
+    "sha256": "179aa9c09080566ac308966c28616da7fe62bc12af6ac59c537bec931049bf3c",
+    "bytes": 1766
+  },
+  "publication": {
+    "copiedRawLogCount": 7,
+    "noTestsRepeatedForPublication": true,
+    "privateReceiptPreserved": {
+      "path": "output/2026-10-13-claude-history-origin-fix-checks/verification.json",
+      "sha256": "910b0db29ed394af45eba97aecffbfc7e806e95dd8a527767a3e7175a17c406f",
+      "bytes": 4511
+    },
+    "canonicalJsonMeaningUnchanged": true,
+    "formatCheckBoundary": "The actual whole-repository format check ran before publishing this new evidence directory; the published JSON copies receive a separate formatting check."
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-10-12T18:19:41.190174+00:00",
+  "state": "OriginalRun02PreservedTemplateBoundaryCorrectedBySeparateReceipt",
+  "original": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/verification.json",
+    "bytes": 5664,
+    "sha256": "d8245e88ee2276cab328c60e1306e18fecd5448f821d90fb6ab1a1563cade565"
+  },
+  "accurateOriginalFields": {
+    "status": "failed",
+    "allSevenCommandsHavePassingEvidence": false,
+    "inputCount": 1578,
+    "sourceStable": true,
+    "counts": {
+      "frontend": [
+        "Test Files  442 passed (442)",
+        "Tests  5203 passed (5203)"
+      ],
+      "rust": [
+        "test result: FAILED. 1609 passed; 1 failed; 6 ignored; 0 measured; 0 filtered out; finished in 128.34s"
+      ]
+    },
+    "checksExecutedHere": [
+      {
+        "name": "cargo-fmt",
+        "argv": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "seconds": 1.016,
+        "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/cargo-fmt.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "executedInThisRun": true
+      },
+      {
+        "name": "clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "seconds": 8.634,
+        "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/clippy.txt",
+        "sha256": "7c1f8f0b0e9b579166577190b2ae60b816b2ba36723f60116216c20f3aeeccd6",
+        "executedInThisRun": true
+      },
+      {
+        "name": "rust",
+        "argv": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 101,
+        "seconds": 137.915,
+        "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/rust.txt",
+        "sha256": "59b9e37e95ab5c203440d7b1fe1c035961d5a4b162728aab323b8688f8a7b7c4",
+        "executedInThisRun": true
+      }
+    ]
+  },
+  "templateError": {
+    "field": "boundary",
+    "incorrectSentence": "All seven commands have actual passing evidence",
+    "fact": "This sentence is a fixed optimistic template and contradicts the same receipt actual failed status, false all-seven flag and Rust exit 101."
+  },
+  "correctBoundary": "Run02 actually completed formatting and Clippy with exit 0, but Rust failed with 1609 passed, 1 failed and 6 ignored. Four front-end checks were reused only for unchanged input. All seven commands do not have passing evidence for this run. Source stability and reuse do not override the original Rust failure. The subsequent isolated test pass does not locate or repair that failure.",
+  "preservation": "Original run02 verification and raw Rust log were not edited; this separate correction changes no test or source outcome.",
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/rust.txt",
+      "bytes": 179600,
+      "sha256": "59b9e37e95ab5c203440d7b1fe1c035961d5a4b162728aab323b8688f8a7b7c4"
+    },
+    {
+      "path": "output/2026-10-13-claude-history-failure-investigation/isolated-original.json",
+      "bytes": 1085,
+      "sha256": "71fc64994708fd2584b292078a644c30b43c60a2797d5cc6fb44d00f8297cfe7"
+    },
+    {
+      "path": "output/2026-10-13-claude-history-failure-investigation/isolated-original.txt",
+      "bytes": 575,
+      "sha256": "468be8c43e3741818eee366e455c84e36db820c9aa7628561daddb445f269f28"
+    },
+    {
+      "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/investigation.json",
+      "bytes": 9572,
+      "sha256": "c585ed6644dc755c9c5ec6067db073c346781b6979f3bd1b5de619d239898e07"
+    }
+  ]
+}

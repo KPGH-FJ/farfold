@@ -1,0 +1,128 @@
+"""Prepared only: require the root's explicit document-freeze event before main."""
+import datetime
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import runpy
+import subprocess
+import sys
+import time
+
+sys.dont_write_bytecode = True
+ROOT = Path(__file__).resolve().parents[2]
+OUT = Path(__file__).resolve().parent / "run-02"
+PUBLIC = ROOT / "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks"
+PRIOR = PUBLIC / "verification.json"
+PRIOR_SHA = "fbd9a6dd737ab4724ca2d09b8eba76931e91962324340368f7766c56efb2948b"
+COLLECTOR = ROOT / "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-checks.py"
+COLLECTOR_SHA = "7511457423df6b3b8c22ffc28c960768221e4cd4ee10b8f611512f53415dbe2c"
+CHANGED = "src/runtime/history_search_strings.ts"
+CHANGED_BEFORE = "dddebe073f30fa8d28a85d7de87d1a50cfaf578f5df0ddf0a29ced08af407b4f"
+CHANGED_AFTER = "71417bd3f8569594b0db05e0c9dd70cd094a60ab36ec8988ecec3b869e604d11"
+COMMANDS = [
+    ("format", ["corepack", "pnpm", "format:check"]),
+    ("typecheck", ["corepack", "pnpm", "typecheck"]),
+    ("frontend", ["corepack", "pnpm", "test"]),
+    ("build", ["corepack", "pnpm", "build"]),
+]
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def ref(path):
+    return {"path": str(path.relative_to(ROOT)), "sha256": sha(path), "bytes": path.stat().st_size}
+
+
+def write(path, value):
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "w") as stream:
+        json.dump(value, stream, ensure_ascii=False, indent=2)
+        stream.write("\n")
+
+
+def validate_prior():
+    assert sha(PRIOR) == PRIOR_SHA
+    prior = json.loads(PRIOR.read_text())
+    assert prior["allPassed"] and prior["sourceStable"] and prior["protectedUnchanged"]
+    assert prior["inputCount"] == 1578 and len(prior["checks"]) == 7
+    for check in prior["checks"]:
+        assert check["exitCode"] == 0 and check["executedInThisRun"] is True
+        assert sha(ROOT / check["log"]) == check["sha256"]
+    for r in prior["inputRefs"] + prior["protectionRefs"]:
+        assert sha(ROOT / r["path"]) == r["sha256"]
+    old = json.loads((PUBLIC / "inputs-after.json").read_text())
+    assert json.loads((PUBLIC / "inputs-before.json").read_text()) == old
+    return prior, old
+
+
+def main():
+    if sys.argv[1:] != ["--root-confirmed-docs-frozen"]:
+        raise ValueError("Preparation only until the root's explicit document-freeze event")
+    prior, old = validate_prior()
+    assert sha(COLLECTOR) == COLLECTOR_SHA
+    runner = runpy.run_path(str(COLLECTOR))["runner"]
+    before = runner.inputs()
+    assert len(before) == 1578 and before.keys() == old.keys()
+    delta = sorted(p for p in before if before[p] != old[p])
+    assert delta == [CHANGED] and old[CHANGED] == CHANGED_BEFORE and before[CHANGED] == CHANGED_AFTER
+    protected = json.loads((PUBLIC / "protected-after.json").read_text())
+    assert all(sha(ROOT / p) == digest for p, digest in protected.items())
+    OUT.mkdir(mode=0o700, exist_ok=False)
+    write(OUT / "inputs-before.json", before)
+    write(OUT / "protected-before.json", protected)
+    checks = []
+    for name, argv in COMMANDS:
+        started = time.monotonic()
+        start_utc = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        log = OUT / (name + ".txt")
+        print(json.dumps({"started": name, "argv": argv}), flush=True)
+        fd = os.open(log, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "wb") as stream:
+            result = subprocess.run(argv, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT)
+        check = {"name": name, "argv": argv, "startedAtUtc": start_utc,
+                 "exitCode": result.returncode, "seconds": round(time.monotonic() - started, 3),
+                 "log": str(log.relative_to(ROOT)), "sha256": sha(log),
+                 "executedInThisRun": True, "executionRun": "run-02", "owner": "verification"}
+        write(OUT / (name + "-result.json"), check)
+        checks.append(check)
+        print(json.dumps(check), flush=True)
+        if result.returncode != 0:
+            break
+    reused = []
+    for name in ("cargo-fmt", "clippy", "rust"):
+        matches = [c for c in prior["checks"] if c["name"] == name]
+        assert len(matches) == 1
+        check = dict(matches[0])
+        check.update({"executedInThisRun": False, "executedInRun01": True,
+                      "executionRun": "run-01", "reuseReason": "All 1577 other recorded inputs, including all backend/configuration/fixture/wire inputs, are byte-identical; the only change is the pinned frontend strings file.",
+                      "originalReceipt": ref(PRIOR)})
+        reused.append(check)
+    after = runner.inputs()
+    protected_after = {p: sha(ROOT / p) for p in protected}
+    write(OUT / "inputs-after.json", after)
+    write(OUT / "protected-after.json", protected_after)
+    counts = {"rustReusedFromRun01": prior["counts"]["rust"]}
+    if any(c["name"] == "frontend" for c in checks):
+        raw = re.sub(r"\x1b\[[0-9;]*m", "", (OUT / "frontend.txt").read_text())
+        counts["frontend"] = [line.strip() for line in raw.splitlines() if re.match(r"\s*(Test Files|Tests)\s+", line)]
+    result = {"checkedAtUtc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              "sourceBase": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+              "inputCount": len(before), "sourceStable": before == after,
+              "protectedUnchanged": protected == protected_after,
+              "changedInputsDuringRun": sorted(p for p in before.keys() | after.keys() if before.get(p) != after.get(p)),
+              "changesSinceRun01": [{"path": CHANGED, "before": CHANGED_BEFORE, "after": CHANGED_AFTER}],
+              "unchangedOtherInputCount": 1577, "checks": checks + reused, "counts": counts,
+              "priorVerification": ref(PRIOR),
+              "allPassed": len(checks) == 4 and all(c["exitCode"] == 0 for c in checks) and before == after and protected == protected_after,
+              "boundary": "Four frontend commands actually executed this run; three native results are explicitly reused from the pinned complete seven-check run on byte-identical native/configuration/fixture/wire inputs. No candidate, installation or native-user-effect validation is inferred."}
+    write(OUT / "verification.json", result)
+    print(json.dumps({k: result[k] for k in ("allPassed", "inputCount", "sourceStable", "protectedUnchanged", "counts")}), flush=True)
+    return 0 if result["allPassed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

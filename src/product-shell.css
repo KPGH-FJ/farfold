@@ -513,6 +513,7 @@ select:focus-visible {
 }
 .library-tools select,
 .library-bulk select,
+.history-search-agent select,
 .workspace-dialog select {
   color: var(--ink-2);
   border: 1px solid var(--line);

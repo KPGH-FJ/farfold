@@ -1,0 +1,50 @@
+{
+  "collector": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-checks.py",
+    "sha256": "7511457423df6b3b8c22ffc28c960768221e4cd4ee10b8f611512f53415dbe2c"
+  },
+  "sourceBase": "63f646e748404a4499f9b92aad7efa9e3b74d93f",
+  "inputCount": 1578,
+  "frozenPins": {
+    "src-tauri/src/acp_client/history_search/claude_read.mjs": "74c9fef4ef9b707b1ca8e0fe6f9252652ec8fab5b60ec02f7e06cf5f571460d5",
+    "src-tauri/src/acp_client/history_search/claude_read.test.mjs": "8f9a8ecfecfdf99af6984c923913e360005de0d553eda935770e4c8e77c09799",
+    "src/product-shell.css": "46a18b951328bfd9f82c5aa76b76515cd5dd68e9c84d5f75ae3ed64fb56a44c7"
+  },
+  "changesFromPriorRun04": [
+    "src-tauri/src/acp_client/history_search/claude_read.mjs",
+    "src-tauri/src/acp_client/history_search/claude_read.test.mjs",
+    "src/product-shell.css"
+  ],
+  "groups": {
+    "frontend": [
+      ["format", ["corepack", "pnpm", "format:check"]],
+      ["typecheck", ["corepack", "pnpm", "typecheck"]],
+      ["frontend", ["corepack", "pnpm", "test"]],
+      ["build", ["corepack", "pnpm", "build"]]
+    ],
+    "native": [
+      [
+        "cargo-fmt",
+        ["cargo", "fmt", "--check", "--manifest-path", "src-tauri/Cargo.toml"]
+      ],
+      [
+        "clippy",
+        [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ]
+      ],
+      [
+        "rust",
+        ["cargo", "test", "--manifest-path", "src-tauri/Cargo.toml", "--locked"]
+      ]
+    ]
+  },
+  "execution": "Two concurrent groups, sequential within each. No retries; on failure do not start subsequent commands. Already running command finishes normally."
+}

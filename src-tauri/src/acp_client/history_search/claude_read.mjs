@@ -254,12 +254,17 @@ export function project(messages, request) {
       record.isCompletedLocalCommand === true
     )
       continue;
-    // The public wrapper preserves task/other origins. Without proof these are
-    // original main-conversation prose, omit them rather than relabel as user.
+    // Official ACP relays human user input with this documented origin shape.
+    // Other origins or additional origin fields remain outside this text scope.
     if (record.origin !== undefined && record.origin !== null) {
       if (!plain(record.origin) || typeof record.origin.kind !== "string")
         fail("invalidOutput");
-      continue;
+      if (
+        record.type !== "user" ||
+        record.origin.kind !== "human" ||
+        Object.keys(record.origin).join() !== "kind"
+      )
+        continue;
     }
     const content = record.message.content;
     const parts =

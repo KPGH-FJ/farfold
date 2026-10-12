@@ -1,0 +1,298 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-10-12T18:41:08.068104+00:00",
+  "state": "SecondOfficialPartialTextRouteImplementedAndControlledVerifiedNotActualSdkOrInstalledAccepted",
+  "sourceBase": "0be2268d8405b80e4a04764e61faa8bd12be213c",
+  "planItem": "P32",
+  "wholePlanItemComplete": false,
+  "marketGoalComplete": false,
+  "scope": {
+    "route": "Official SDK resolved only from the selected official Claude program installation public declarations.",
+    "history": "At most 20 explicitly selected existing same-Agent index entries; exact saved history ID and cwd.",
+    "fields": "Readable official user/assistant text only; preserve official message UUID and original content-part index.",
+    "coverage": "Always partial; registered exact ID does not establish current logical branch or context continuation. Empty or no-readable-text output remains sourceUnconfirmed.",
+    "storage": "Temporary in-memory result and plain text preview; open original conversation separately. No persistent body/event/locator ledger."
+  },
+  "changes": [
+    "Fixed read-only getSessionInfo -> getSessionMessages -> getSessionInfo helper; no model query, resume or native configuration write.",
+    "Selected installation/environment and source checks before read and again before publication; reuse exact existing account/work/update protection and owned-process cleanup.",
+    "Shared history source/locator parser, controller, panel and results; original Codex serialization and equal-refresh behavior retained, true drift/retirement/ABA withdraw old authority."
+  ],
+  "verification": {
+    "engineering": {
+      "inputCount": 1578,
+      "sourceStable": true,
+      "nativeExecutedInFinalRun": 3,
+      "allNativeExitCodes": 0,
+      "frontendReusedFromRun01": 4,
+      "frontendInputsUnchanged": true,
+      "frontendFiles": 442,
+      "frontendTests": 5203,
+      "rustPassed": 1610,
+      "rustFailed": 0,
+      "rustIgnored": 6,
+      "final": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-04/verification.json",
+        "bytes": 10984,
+        "sha256": "aac295538d88224e4fd910c98c835ee2d8849305c692b1dcb10946bec862b5cc"
+      }
+    },
+    "controlledBrowser": {
+      "engines": ["webkit", "chromium"],
+      "assertionsEach": 99,
+      "sourceInputsEach": 955,
+      "pageErrorsEach": 0,
+      "blockedExternalRequestsEach": 0,
+      "completeProductionApp": true,
+      "realIpc": false,
+      "scope": "Controlled IPC with actual Rust-serialized job results through shared production parser/controller/renderer; capability shape only typed serialization. Does not exercise actual official SDK or installed App."
+    },
+    "backendAuthor": {
+      "targetedRustPassed": 32,
+      "nodeProjectionCasesEmbedded": 9,
+      "scope": "Owned controlled package/process fixtures; preserved author source receipt predates two final equivalent Clippy corrections."
+    },
+    "independent": {
+      "pureFunctionAndOwnedPackageProbesPassed": 8,
+      "scope": "Production helper pure functions and owned synthetic package declarations, never actual SDK import or private history."
+    }
+  },
+  "retainedFailures": {
+    "run01": "Actual Clippy exit101; launch/source equivalent let-chain and short-circuit style corrections. Original successful six commands and failed Clippy retained.",
+    "run02": "Actual Rust exit101, 1609 passed/1 failed/6 ignored; old Node cancellation test returned version-unavailable before expected marker cancellation. Exact isolated original passed, and later full suites passed this test, but original concrete cause remains unlocated. Added only cfg(test) cause/errno/exit/eof/byte diagnostics; no production repair claim.",
+    "run03": "Actual Rust exit101, 1609 passed/1 failed/6 ignored; old skills fixture parsed Empty PID before cancel. Controlled counterexample established file creation visible before write. Only two same-file peers now close a completed temporary marker and atomically replace final marker; unchanged assertions/deadlines and one exact after-test passed. Final full run04 validates the changed fixtures.",
+    "recordErrata": "Run02 optimistic boundary sentence and run02/run03 copied frontend executedInThisRun flags were erroneous. Immutable originals kept; run04 marks four FE checks false/inOriginal true/executionRun run-01 and separately records original failures.",
+    "controlledAuthorFailures": "Backend command-origin, unknown-record, common-source cases and frontend original expectations/driver correction remain in immutable author evidence; no prior red is rewritten."
+  },
+  "referenceQualifications": {
+    "finalProofAudit": "190 reference objects checked, 1578 final current inputs identical; only two declared historical backend author launch/source hashes differ.",
+    "datedAuthorAndResearch": "Author backend and preparation receipts record their then-current sources/public declarations. They are not asserted equal to later source changes or proof of actual SDK execution.",
+    "currentSource": "The current 25 source refs below and final native run cover the increment plus diagnostics and test-readiness correction.",
+    "oldInstalledEvidence": "Existing 500a0570 first-route installed refresh/data evidence remains within its original scope; this new route has not replaced that app or performed new data-after verification."
+  },
+  "notVerified": [
+    "Actual official SDK import and helper API execution against the selected real installation.",
+    "Exact correspondence with user-owned original history, actual current branch/context continuation.",
+    "Formal installed new-route UI/IPC, real original-conversation opening, native cancellation/unknown cleanup and post-use data retention.",
+    "Other unimplemented official routes, attachment content, Windows and complete P32/29-Agent acceptance.",
+    "Hard kernel I/O/RSS bounds, atomic SDK history snapshots or SDK import/transitive side-effect guarantees."
+  ],
+  "contractProtection": {
+    "originalReviewIds": 122,
+    "newIssues": 17,
+    "conditionsUnchanged": true,
+    "p32StatusOnlyUpdated": true,
+    "product": {
+      "path": "PRODUCT.md",
+      "bytes": 35083,
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    "upstreamAgentRuntimeChanged": false,
+    "newAgentLoopOrPrivateHistoryFallback": false
+  },
+  "currentSourceRefs": [
+    {
+      "path": "src-tauri/src/acp_client/history_search/claude.rs",
+      "bytes": 7443,
+      "sha256": "04a9647b3117df71dd7a22dfc575b5cf58e0772ca43cb286d2115bb7589f6649"
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/claude_peer.mjs",
+      "bytes": 1764,
+      "sha256": "261e881bac303d577b9fa00d5563f1c8e3ea9bd6c9efe77dcafd9645e46ab1a7"
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/claude_read.mjs",
+      "bytes": 13011,
+      "sha256": "a1e4ad12fa5ebf7aecb4de1e1e908a8a7e1cf35788c2e710a084d5e1629d66aa"
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/claude_read.test.mjs",
+      "bytes": 4093,
+      "sha256": "69298367f7843b8e8d1bcb9b082b6e5bf34ea20a6de8ef391bf24b0daed607b6"
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/claude_tests.rs",
+      "bytes": 16259,
+      "sha256": "1c35684599b46ac8384928a946c5a9cd5b553da85692f4d6ec2475b9663f0439"
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/launch.rs",
+      "bytes": 8790,
+      "sha256": "08c96e9da81e1369cb71aad8f14ba49abb4933ebad048781a92c2926b871e7f8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/mod.rs",
+      "bytes": 8675,
+      "sha256": "c4ccdff71c4ea58085ecd1cf69bfc463ec9b618416d4249fedd8e489befdf8d8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/requests.rs",
+      "bytes": 9268,
+      "sha256": "05319a268fdd7387d88787335fe827f641f34d67b795090a53a63a40ec19905f"
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/rpc.rs",
+      "bytes": 13364,
+      "sha256": "900152e8ce5c7f77334b588521ce5b80ee6257020917ce54a571aab7a868312a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/source.rs",
+      "bytes": 8579,
+      "sha256": "c06d60c9ba250fd90d2a07151a220d65f88afeeaf499538faaa155c06a554e3a"
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/tests.rs",
+      "bytes": 19833,
+      "sha256": "9ebed73032e3292d10944f3a2aab79020a8b70b951526330cfb2d74e5db64704"
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/types.rs",
+      "bytes": 6114,
+      "sha256": "73680db3f6fa0268bd8710bb550202b12d11c0019490fd6fbdb92dfa58afa77d"
+    },
+    {
+      "path": "src/components/HistorySearchPanel.test.tsx",
+      "bytes": 14862,
+      "sha256": "c34c30ea01cfccf5c09f70d6afedf1b922dcde7f18957ed91abd20c78062924e"
+    },
+    {
+      "path": "src/components/HistorySearchPanel.tsx",
+      "bytes": 13666,
+      "sha256": "19badb5b2ffb4ec408bf8e5a53bb5e835f5fbeb24b62f5c9b08e8497dad81be3"
+    },
+    {
+      "path": "src/components/HistorySearchResults.tsx",
+      "bytes": 2991,
+      "sha256": "38ab6a8eabc371d34b7012c2630b0adccc854f585171e5e2ca7f94b925f36e2a"
+    },
+    {
+      "path": "src/runtime/history_search.sdk-wire.test.tsx",
+      "bytes": 4215,
+      "sha256": "ab26553a83761a47bd7ad854e3dceb572a2b1594e4113a0a517ec04e6302056c"
+    },
+    {
+      "path": "src/runtime/history_search.sdk.test-support.ts",
+      "bytes": 1232,
+      "sha256": "f7425899ea9468154350ddca7851239bdb5aace33dd1fa95f4cac5fd5f2a21f6"
+    },
+    {
+      "path": "src/runtime/history_search.sdk.test.tsx",
+      "bytes": 8452,
+      "sha256": "e7c3c1a340db58f36658761c798e0e46b8926883c6190d7d940ac4c70eac47cc"
+    },
+    {
+      "path": "src/runtime/history_search.test-support.ts",
+      "bytes": 4222,
+      "sha256": "4d91dac1751b1aaadf3b6bf915a3d9f1b61ea55645745cdc877ee939d71dbac7"
+    },
+    {
+      "path": "src/runtime/history_search_controller.ts",
+      "bytes": 11246,
+      "sha256": "237ec5d18b6a5165ee5d89ea553eeed758f5af7655fbbd0495f94730f89e5507"
+    },
+    {
+      "path": "src/runtime/history_search_strings.ts",
+      "bytes": 6221,
+      "sha256": "dddebe073f30fa8d28a85d7de87d1a50cfaf578f5df0ddf0a29ced08af407b4f"
+    },
+    {
+      "path": "src/runtime/history_search_types.ts",
+      "bytes": 14623,
+      "sha256": "ebc43a989b38f56ac3010cc4a1e674ba60c36970ba0a128a4e21e7af2b00c0e3"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_lifecycle_tests.rs",
+      "bytes": 10355,
+      "sha256": "8ff796ef7b34327d8de3027a4887c685a3dc08a452f29f09cd0db2bbcf4b1400"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation.rs",
+      "bytes": 36006,
+      "sha256": "5d540cda3f3b80f182a2cc97533d8cb9a451a55918ec4f68204c200700e9d3b8"
+    },
+    {
+      "path": "src-tauri/src/agent_discovery.rs",
+      "bytes": 14999,
+      "sha256": "b7d5524b94d52b2af5bbb4cef4bdefb81d029f344b24874e3682666ac336e6c3"
+    }
+  ],
+  "evidenceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-04/verification.json",
+      "bytes": 10984,
+      "sha256": "aac295538d88224e4fd910c98c835ee2d8849305c692b1dcb10946bec862b5cc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/backend/actual-wire.json",
+      "bytes": 5645,
+      "sha256": "bf9d61b290eeb2c8c67d12cc95dae72b9aad7235da556c8a3d951fc164240505"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/implementation.json",
+      "bytes": 14787,
+      "sha256": "68337b2034a3ea252a66b5ad162078dd52d01170260b8ac33657f25e943c6aad"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser-validation.json",
+      "bytes": 8919,
+      "sha256": "f88930ccd5cb47ffd22b1df3db3d909ce42cee2d15b7be41068a66cf46ac3d21"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/source-review.json",
+      "bytes": 9599,
+      "sha256": "e038bccd024cb7c5bb23d7bbd2047c9fe035c3f5dbaf4fd0281e042de0384ff0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/failed-test-investigation.json",
+      "bytes": 7691,
+      "sha256": "6de401f263172f538689deec1027e1d1e426e43ead0b8806c9ac1e9845d23996"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/run02-record-correction.json",
+      "bytes": 4008,
+      "sha256": "2a43228d3d906f51d729f9c28bdf9e9c8b3d0adc2496a2b55d928a9c948ec213"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/skills-marker-investigation.json",
+      "bytes": 9360,
+      "sha256": "41f40679fd3a0e5f692571531d80c3cceff1647d15a789b896f214e013c0f3c8"
+    },
+    {
+      "path": "output/2026-10-13-claude-history-backend/implementation.json",
+      "bytes": 9645,
+      "sha256": "9b53d7c81ecd48d396a2dfbf7ebe5088deadfa1f1dd6cc7c5dcef87416d02560"
+    },
+    {
+      "path": "output/2026-10-13-claude-history-failure-investigation/isolated-original.json",
+      "bytes": 1085,
+      "sha256": "71fc64994708fd2584b292078a644c30b43c60a2797d5cc6fb44d00f8297cfe7"
+    },
+    {
+      "path": "output/2026-10-13-claude-history-independent/projection-probes.json",
+      "bytes": 1415,
+      "sha256": "1badd10b149811dac220549883f76424181b5bf0af098612bcb1731e3a6c1e2f"
+    },
+    {
+      "path": "output/2026-10-13-claude-history-independent/docs-alignment/final-proof-audit.json",
+      "bytes": 135673,
+      "sha256": "9ce5c5728798fe4bc6eb34627ae303a1fb8d25a17bc735fdaac9146414c0fb10"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/verification.json",
+      "bytes": 3779,
+      "sha256": "9cfd0f889c73e343fd2cd6c06a99d064594ac31da4ba3a13c3ad40561069abe4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/verification.json",
+      "bytes": 5664,
+      "sha256": "d8245e88ee2276cab328c60e1306e18fecd5448f821d90fb6ab1a1563cade565"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-03/verification.json",
+      "bytes": 8607,
+      "sha256": "dc752e748b15c6a179dd4fb1779a9b2424b26219f8b69b41f50d4a0a4471babb"
+    }
+  ],
+  "next": "Verify source and the precise candidate nine checks. Confirm no active work and normal exit, save before/preinstall data inventories and private metadata copies, then safely replace the unique formal App. Verify after, agreement of all three inventories and installed ten checks. Then explicitly select one indexed record through the formal shared UI for actual SDK reading and original-text comparison; do not invoke SDK through standalone Node outside the product. Continue original remaining requirements; no release/signing/distribution work here."
+}

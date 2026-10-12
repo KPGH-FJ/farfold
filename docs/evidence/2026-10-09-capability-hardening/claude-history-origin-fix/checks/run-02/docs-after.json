@@ -1,0 +1,54 @@
+{
+  "checkedAtUtc": "2026-10-12T19:59:45.707804+00:00",
+  "freezeManifest": {
+    "path": "output/2026-10-13-claude-history-independent/origin-docs-alignment/final-docs-freeze.json",
+    "sha256": "7d71044755375cfae7a69d4b670e17ee93d71dfbc00e6409828638763025d47a",
+    "bytes": 1972
+  },
+  "invariants": {
+    "path": "output/2026-10-13-claude-history-independent/origin-docs-alignment/invariants.json",
+    "sha256": "1db047a004e35a80ec1e8ba51eb52194b91af850da96e36f141ff6dd3b21e30e",
+    "bytes": 5074
+  },
+  "formatCheck": {
+    "path": "output/2026-10-13-claude-history-independent/origin-docs-alignment/format-check.json",
+    "sha256": "fd19ecbaf7dc68ea2a0b59219783816afe9fbb54c0f29b0c01d3712f807054b4",
+    "bytes": 602
+  },
+  "filesAtCheckTime": [
+    {
+      "path": "docs/status.md",
+      "sha256": "509a0f2d3c70ba5e97763dcb8b8486cf698f9f108a7df9f0015c789a6f34c1ed",
+      "bytes": 67087
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "e6007ff0eca336caadfcf13bbb7f4e34ee67142417a429a7a0f7ebdd93848e16",
+      "bytes": 107247
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "8adb9941a9fa7fe6ab851e6fc0ee81b3eaac3f3f01ea598522ccb18e0662a7e2",
+      "bytes": 124647
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "sha256": "648b9a96fc11ef3237baf6eaee0046850ecfc03a33f68211c3644bd6cc24b0d4",
+      "bytes": 66530
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/implementation.json",
+      "sha256": "30cdcfe2711e46b286de060bf3927cb4c7b8c7e91b5005cf52c3453d638ed993",
+      "bytes": 17348
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json",
+      "sha256": "2cbd48919e9362982307d69c2b4e27e3ada024e0da3ed0f3f6ea7e8ff306cec5",
+      "bytes": 13164
+    }
+  ],
+  "allSixExactBeforeAndAfter": true,
+  "source1578CurrentlyExact": true,
+  "protectionExact": true,
+  "boundary": "A time-bounded observation of the frozen six files during this FE run; no later edits or native effect are claimed."
+}

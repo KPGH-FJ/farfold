@@ -18,11 +18,58 @@ const msg = (extra = {}) => ({
   parent_agent_id: null,
   ...extra,
 });
+test("official human-origin ACP user text retains its message locator", async () => {
+  // The official ACP client stamps relayed user input with this SDK origin.
+  const human = msg({
+    origin: { kind: "human" },
+    message: {
+      role: "user",
+      content: [{ type: "text", text: "FARFOLD-CONTROLLED-HUMAN" }],
+    },
+  });
+  const assistant = msg({
+    uuid: "00000000-0000-0000-0000-000000000001",
+    type: "assistant",
+    message: { role: "assistant", content: "controlled reply" },
+  });
+  const value = await readProjection(
+    {
+      getSessionInfo: async () => info,
+      getSessionMessages: async () => [human, assistant],
+    },
+    request,
+    async (v) => v,
+  );
+  assert.deepEqual(
+    value.blocks.map((block) => block.role),
+    ["user", "assistant"],
+  );
+  assert.equal(value.blocks[0].text, "FARFOLD-CONTROLLED-HUMAN");
+  assert.deepEqual(value.blocks[0].messageLocator, {
+    kind: "message",
+    messageId: human.uuid,
+    partIndex: 0,
+  });
+  assert.equal(value.coverage, "partial");
+});
 for (const extra of [
   { isCompletedLocalCommand: true },
   { isQueuedCommand: true },
   { origin: { kind: "task-notification" } },
   { origin: { kind: "future-origin" } },
+  { origin: { kind: "peer", from: "controlled-peer" } },
+  { origin: { kind: "channel", server: "controlled-channel" } },
+  { origin: { kind: "human", from: "controlled-peer" } },
+  { origin: { kind: "human", body: "injected text" } },
+  { origin: { kind: "human" }, is_meta: true },
+  { origin: { kind: "human" }, isCompactSummary: true },
+  { origin: { kind: "human" }, isQueuedCommand: true },
+  { origin: { kind: "human" }, isCompletedLocalCommand: true },
+  {
+    type: "assistant",
+    message: { role: "assistant", content: "controlled non-user origin" },
+    origin: { kind: "human" },
+  },
 ]) {
   test(
     "official transformed command/origin is not user prose " +
@@ -130,6 +177,14 @@ test("bounded unicode byte projection and sentinel always partial", () => {
 test("unknown record semantics and malformed command flags are not original prose", () => {
   assert.throws(
     () => project([msg({ isFutureGeneratedSummary: true })], request),
+    { code: "invalidOutput" },
+  );
+  assert.throws(
+    () =>
+      project(
+        [msg({ isFutureGeneratedSummary: true, origin: { kind: "human" } })],
+        request,
+      ),
     { code: "invalidOutput" },
   );
   assert.throws(() => project([msg({ isQueuedCommand: "yes" })], request), {

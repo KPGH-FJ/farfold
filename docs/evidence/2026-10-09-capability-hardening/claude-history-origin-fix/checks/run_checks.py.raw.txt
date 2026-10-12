@@ -1,0 +1,128 @@
+"""Execute the seven authorized checks once; never retry or reuse a pass."""
+import concurrent.futures
+import datetime
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import runpy
+import subprocess
+import sys
+import threading
+import time
+
+sys.dont_write_bytecode = True
+ROOT = Path(__file__).resolve().parents[2]
+OUT = Path(__file__).resolve().parent
+COLLECTOR = ROOT / "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-checks.py"
+COLLECTOR_SHA = "7511457423df6b3b8c22ffc28c960768221e4cd4ee10b8f611512f53415dbe2c"
+PINNED = {
+    "src-tauri/src/acp_client/history_search/claude_read.mjs": "74c9fef4ef9b707b1ca8e0fe6f9252652ec8fab5b60ec02f7e06cf5f571460d5",
+    "src-tauri/src/acp_client/history_search/claude_read.test.mjs": "8f9a8ecfecfdf99af6984c923913e360005de0d553eda935770e4c8e77c09799",
+    "src/product-shell.css": "46a18b951328bfd9f82c5aa76b76515cd5dd68e9c84d5f75ae3ed64fb56a44c7",
+}
+GROUPS = {
+    "frontend": [
+        ("format", ["corepack", "pnpm", "format:check"]),
+        ("typecheck", ["corepack", "pnpm", "typecheck"]),
+        ("frontend", ["corepack", "pnpm", "test"]),
+        ("build", ["corepack", "pnpm", "build"]),
+    ],
+    "native": [
+        ("cargo-fmt", ["cargo", "fmt", "--check", "--manifest-path", "src-tauri/Cargo.toml"]),
+        ("clippy", ["cargo", "clippy", "--manifest-path", "src-tauri/Cargo.toml", "--locked", "--", "-D", "warnings"]),
+        ("rust", ["cargo", "test", "--manifest-path", "src-tauri/Cargo.toml", "--locked"]),
+    ],
+}
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def write(path, value):
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "w") as stream:
+        json.dump(value, stream, ensure_ascii=False, indent=2)
+        stream.write("\n")
+
+
+def main():
+    assert sha(COLLECTOR) == COLLECTOR_SHA
+    runner = runpy.run_path(str(COLLECTOR))["runner"]
+    before = runner.inputs()
+    assert len(before) == 1578
+    assert all(before.get(path) == digest for path, digest in PINNED.items())
+    old = json.loads((COLLECTOR.parent / "run-04/inputs-after.json").read_text())
+    delta = sorted(p for p in before.keys() | old.keys() if before.get(p) != old.get(p))
+    assert delta == sorted(PINNED), delta
+    protected = dict(runner.PROTECTED)
+    protected["PRODUCT.md"] = sha(ROOT / "PRODUCT.md")
+    assert all(sha(ROOT / p) == digest for p, digest in protected.items())
+    write(OUT / "inputs-before.json", before)
+    write(OUT / "protected-before.json", protected)
+    write(OUT / "execution-plan.json", {
+        "collector": {"path": str(COLLECTOR.relative_to(ROOT)), "sha256": COLLECTOR_SHA},
+        "sourceBase": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        "inputCount": len(before), "frozenPins": PINNED, "changesFromPriorRun04": delta,
+        "groups": GROUPS, "execution": "Two concurrent groups, sequential within each. No retries; on failure do not start subsequent commands. Already running command finishes normally.",
+    })
+    stopped = threading.Event()
+
+    def group(name, commands):
+        results = []
+        for command_name, argv in commands:
+            if stopped.is_set():
+                break
+            started_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+            started = time.monotonic()
+            log = OUT / (command_name + ".txt")
+            print(json.dumps({"started": command_name, "group": name, "argv": argv}), flush=True)
+            fd = os.open(log, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            with os.fdopen(fd, "wb") as stream:
+                result = subprocess.run(argv, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT)
+            receipt = {
+                "name": command_name, "group": name, "argv": argv,
+                "startedAtUtc": started_at, "exitCode": result.returncode,
+                "seconds": round(time.monotonic() - started, 3),
+                "log": str(log.relative_to(ROOT)), "sha256": sha(log),
+                "executedInThisRun": True, "owner": "verification",
+            }
+            write(OUT / (command_name + "-result.json"), receipt)
+            results.append(receipt)
+            print(json.dumps(receipt), flush=True)
+            if result.returncode != 0:
+                stopped.set()
+        return results
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+        futures = [pool.submit(group, name, commands) for name, commands in GROUPS.items()]
+        checks = [item for future in futures for item in future.result()]
+    after = runner.inputs()
+    protected_after = {p: sha(ROOT / p) for p in protected}
+    write(OUT / "inputs-after.json", after)
+    write(OUT / "protected-after.json", protected_after)
+    counts = {}
+    for check in checks:
+        if check["name"] in ("frontend", "rust"):
+            raw = re.sub(r"\x1b\[[0-9;]*m", "", (ROOT / check["log"]).read_text())
+            counts[check["name"]] = [line.strip() for line in raw.splitlines()
+                if re.match(r"\s*(Test Files|Tests)\s+", line) or line.startswith("test result:")]
+    result = {
+        "checkedAtUtc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "sourceBase": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+        "inputCount": len(before), "sourceStable": before == after,
+        "changedInputs": sorted(p for p in before.keys() | after.keys() if before.get(p) != after.get(p)),
+        "protectedUnchanged": protected == protected_after, "checks": checks, "counts": counts,
+        "notExecuted": [name for commands in GROUPS.values() for name, _ in commands if name not in {c["name"] for c in checks}],
+        "allPassed": len(checks) == 7 and before == after and protected == protected_after and all(c["exitCode"] == 0 for c in checks),
+        "boundary": "All listed checks were actually executed this run; no prior pass reuse. Engineering only, not candidate build/install, real SDK effectiveness, native UI or complete P32 acceptance. Earlier real formal63 positive-match failure remains separate.",
+    }
+    write(OUT / "verification.json", result)
+    print(json.dumps({k: result[k] for k in ("allPassed", "counts", "inputCount", "sourceStable", "protectedUnchanged", "notExecuted")}), flush=True)
+    return 0 if result["allPassed"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
