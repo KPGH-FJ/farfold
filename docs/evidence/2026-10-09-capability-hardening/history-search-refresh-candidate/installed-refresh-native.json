@@ -1,0 +1,93 @@
+{
+  "status": "installedSelectedCodexHistoryRefreshCorrectionAndBoundedNativeDataCloseoutPassed",
+  "sourceCommit": "500a057002dd422887223a06bec998baf9bfd3b7",
+  "version": "0.1.7 macOS arm64",
+  "installation": {
+    "candidateIndependent": "9/9 passed",
+    "installedIndependent": "10/10 passed before intentional launch",
+    "snapshotEntriesEach": 217400,
+    "allThreeInstallationSnapshotsEqual": true,
+    "snapshotSha256": "3920c6cfd0764911ff4a49ae46b05154513df2dff93beed605d5503f7500c2ad"
+  },
+  "operatorObserved": {
+    "scope": "Exactly one existing indexed controlled Codex history, initially unloaded",
+    "query": "FARFOLD_REPORTED_P19_20261010",
+    "nativeHistoryId": "01a123e4-5319-7d60-9db6-ab66f4d9d432",
+    "firstQuery": "Separate check/start; terminal complete,1 correct historical user-message match; opened plain-text snapshot separately",
+    "naturalRefreshRetention": {
+      "elapsedMsAtReobservation": 148478,
+      "previewUnchanged": true,
+      "returnedListRetainedOneMatch": true,
+      "coverageRetained": "Selected history:本次范围读取完成,1页,3段文字,1段匹配",
+      "evidence": "Native AX plus screenshot after returning and expanding coverage; no query/scope/source changes during wait. This does not instrument the timer or prove every refresh interval."
+    },
+    "zeroMatchQuery": {
+      "query": "FARFOLD_P32_ABSENT_500a0570_20261013",
+      "observed": "Terminal complete,1页/3段文字/0匹配;在已检索文字中没有匹配内容"
+    },
+    "repeatOriginal": "Original marker queried again returns1 correct match; separate snapshot followed by one explicit 打开原对话",
+    "openOriginal": "Correct controlled title/work position and historical user/reply/alpha-beta links; existing未发送文件意见1,Ultra,permission reconfirmation before sending retained",
+    "sentPrompt": false,
+    "configurationApprovalClicked": false,
+    "normalExit": "CmdQ then 保存并退出; App quit; exact formal process absent afterward",
+    "unconfirmedWorkMarkedStoppedOrComplete": false
+  },
+  "testExpectationCorrection": {
+    "originalPreparationRetained": "output/2026-10-12-history-search-root/native-selection-preparation.json",
+    "originalMistake": "P19_ALPHA_V2 described as tool-only, although actual historical user request and assistant reply contain it",
+    "incorrectNegativeNotExecuted": true,
+    "replacementBoundary": "Absent marker0 proves no matches in returned user/reply text. It does not prove native tool/attachment/reasoning exclusion."
+  },
+  "metadataIndependent": {
+    "sessionsCompleteRowsEqual": 133,
+    "dismissedCompleteRowsEqual": 170,
+    "settingsAllRawValuesEqual": 53,
+    "newSessions": 0,
+    "allUnsentObjectAndActivityEqual": true,
+    "unsentGroups": {
+      "composers": 8,
+      "feedback": 8,
+      "queues": 3
+    },
+    "entireWorktreeCatalogueAndSchemaEqual": true,
+    "soleDelta": "agents/codex.updated_at; other39 Agent rows and remaining Codex columns equal",
+    "updatedAtBefore": 1791813933503,
+    "updatedAtAfter": 1791825431267,
+    "rootDeltaReview": "Timestamp change is compatible with this bounded journey and accepted as metadata-only; writer or exact restore action is not proven by the database. Model/service/reasoning and all stored configuration fields remain equal.",
+    "method": "Original main/WAL/SHM captured unchanged, SQLite APIs only on disposable second copies; all schemas/tables/columns/complete rows and raw settings compared",
+    "externalAgentConfigurationKeychainAndCachesNotCovered": true
+  },
+  "helperFailuresPreserved": [
+    "Data comparison first preparation used final-normal-exit.json instead of actual normal-exit-observation.json; exit1 before opening SQLite. Exact path corrected, fresh comparison exit0. Not a data-loss failure.",
+    "Duplicate cleanup first preflight expected a nonexistent sourceCommit field in version manifest; exit1 before deletion. Exact five file/mode identity checked against pinned installed gate instead; actual cleanup then exit0. Formal App/ZIP retained."
+  ],
+  "unrelatedObservedState": "Restored new-chat page showed initialize timeout; no retry clicked. Reason remains unknown, separately retained; completed search/original-history recovery does not close it.",
+  "resolvedSpecificIssue": "NEW-17: observed equal-metadata-refresh result loss corrected and bounded formal retention retested",
+  "originalFailurePreserved": "history-search-candidate/installed-initial.json",
+  "notProven": [
+    "All Agent official history routes and all history branches",
+    "Attachment contents or native tool/reasoning exclusion negative",
+    "Native read cancellation/unknown cleanup",
+    "Windows",
+    "Entire P32 or market readiness"
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-refresh-candidate/install-independent-final.json",
+      "sha256": "f34af6ceaed50e89a5f8d6769e0efe071a1be354eef2116612406c4d87ba2f5b"
+    },
+    {
+      "path": "output/2026-10-13-history-search-refresh-native/observations.json",
+      "sha256": "79ddd3fc3450190a092daaaa84c9fc48f34d576ab661aec6daecc5fdd7347c50"
+    },
+    {
+      "path": "output/2026-10-12-history-search-independent/refresh-native-data/data-comparison.json",
+      "sha256": "c4c5e507fe0f26d15f41553f915ed5880a04b186fc844427d7cf861f05b6b829"
+    },
+    {
+      "path": "output/2026-10-12-history-search-independent/refresh-native-data/timestamp-delta.json",
+      "sha256": "78b0c29f00157d8168ede98f79f4ff47dda7f61a1d689536ba2bfc321e914229"
+    }
+  ],
+  "recordedAtUtc": "2026-10-12T17:28:06.019834+00:00"
+}

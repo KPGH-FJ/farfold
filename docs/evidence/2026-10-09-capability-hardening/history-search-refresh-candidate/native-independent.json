@@ -1,0 +1,112 @@
+{
+  "result": "passedWithinRecordedScope",
+  "sourceCommit": "500a057002dd422887223a06bec998baf9bfd3b7",
+  "reviewedAtUtc": "2026-10-12T17:32:01.232727+00:00",
+  "conclusion": "The installed equal-metadata-refresh correction and recorded bounded Codex journey are consistently evidenced. This does not close all P32 paths or establish market readiness.",
+  "installation": {
+    "candidateChecks": 9,
+    "installedChecks": 10,
+    "formalFiveFilesAndModesMatchRetainedZip": true,
+    "verifiedDuplicateAbsent": true
+  },
+  "nativeScope": {
+    "operator": "Root; reviewer did not repeat native UI or independently inspect new screenshots",
+    "positiveZeroPositive": [1, 0, 1],
+    "retentionObservationMs": 148478,
+    "previewResultAndCoverageRetained": true,
+    "originalHistoryOpeningObserved": true,
+    "timerExecutionNotInstrumented": true,
+    "noPromptOrConfigurationApproval": "Operator observation, not inferred from metadata"
+  },
+  "metadata": {
+    "oldSessionsEqual": 133,
+    "newSessions": 0,
+    "dismissedRowsEqual": 170,
+    "allRawSettingsEqual": 53,
+    "wholeUnsentAndActivityEqual": true,
+    "wholeCatalogueAndSchemaEqual": true,
+    "onlyAcceptedDelta": "Codex updated_at timestamp, exact values bound in private comparison and root-reviewed installed receipt; writer not inferred"
+  },
+  "failuresPreserved": [
+    "Original installed66 result loss remains recorded.",
+    "Initial data helper wrong exit-receipt filename failed before SQLite access.",
+    "Initial duplicate cleanup assumed a nonexistent manifest field and failed before deletion.",
+    "Unrelated new-chat initialize timeout remains unlocated."
+  ],
+  "notProven": [
+    "All Agent official history routes and all history branches",
+    "Attachment contents or native tool/reasoning exclusion negative",
+    "Native read cancellation/unknown cleanup",
+    "Windows",
+    "Entire P32 or market readiness"
+  ],
+  "privacy": "No credentials, raw configuration values or private message bodies are included in this review.",
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-refresh-candidate/installed-refresh-native.json",
+      "sha256": "39c3a0b3d4168d5f93d3746606323465f5c7b5ad6d4d82f7e6c5f644a7c0e1e7",
+      "bytes": 5613
+    },
+    {
+      "path": "output/2026-10-12-history-search-independent/refresh-native-final-independent.json",
+      "sha256": "943bf57967241c6361f988e3e1e1ef981024484b24b6ae9c1c1ab3b3ecd245a4",
+      "bytes": 20537
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-refresh-candidate/candidate-independent.json",
+      "sha256": "d099c757b36943d66c127f05e4154591cdcc00372441b99c9c67a383f995038f",
+      "bytes": 3060
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-refresh-candidate/install-independent-final.json",
+      "sha256": "f34af6ceaed50e89a5f8d6769e0efe071a1be354eef2116612406c4d87ba2f5b",
+      "bytes": 11980
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-refresh-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "4264c07acd42c6b43b209cb60666c3b6f5417d8ffef6d0c336192db1df928c30",
+      "bytes": 1403
+    },
+    {
+      "path": "output/2026-10-13-history-search-refresh-native/observations.json",
+      "sha256": "79ddd3fc3450190a092daaaa84c9fc48f34d576ab661aec6daecc5fdd7347c50",
+      "bytes": 3242
+    },
+    {
+      "path": "output/2026-10-13-history-search-refresh-native/normal-exit-observation.json",
+      "sha256": "bc63ec22590d3e90443471dc2301aa6f009c24271a4cb199f87711753a106f57",
+      "bytes": 454
+    },
+    {
+      "path": "output/2026-10-12-history-search-independent/refresh-native-data/data-comparison.json",
+      "sha256": "c4c5e507fe0f26d15f41553f915ed5880a04b186fc844427d7cf861f05b6b829",
+      "bytes": 12136
+    },
+    {
+      "path": "output/2026-10-12-history-search-independent/refresh-native-data/timestamp-delta.json",
+      "sha256": "78b0c29f00157d8168ede98f79f4ff47dda7f61a1d689536ba2bfc321e914229",
+      "bytes": 4000
+    },
+    {
+      "path": "output/2026-10-13-history-search-refresh-native/cleanup-first-failure.json",
+      "sha256": "a97890b8dc61d61d0386628e78c21dd0c01afd3a1499911eb9e96aeb9b5b1ed3",
+      "bytes": 387
+    },
+    {
+      "path": "output/2026-10-12-history-search-independent/refresh-native-data/attempt-01-failure.json",
+      "sha256": "3742443c8feca4cf932dd097b9459910414ef4ca4e1f1371fe9eefc1391f5d2c",
+      "bytes": 1231
+    },
+    {
+      "path": "output/2026-10-12-history-search-independent/refresh-native-data/exit-path-correction.json",
+      "sha256": "5d3c2ee6201aa01309ff3a9956e69451a5953b7161a028b42c0df7afd7f25598",
+      "bytes": 1099
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-candidate/installed-initial.json",
+      "sha256": "3fce718dd099316c770e9a4adfc549ab410922d0290d17e6fad8b623d1ead562",
+      "bytes": 2975
+    }
+  ],
+  "boundary": "Read-only evidence and exact bundle/archive review only; no App/CLI/DB/engineering/installation rerun, cleanup or late source/process gate; current five documents excluded."
+}

@@ -19,7 +19,7 @@
 
 共享 `session_index_refresh` 在每次索引读取返回后比较当前记录的全部JSON字段，仅复用完全相等的当前对象；来源或字段变化、删除再出现和A→B→A仍产生新对象，不保留旧行历史。它修复一分钟正常刷新误撤回搜索结果的问题，Panel/controller的准确请求、已加载排除及真正变化撤权规则保持。
 
-[本片证据](evidence/2026-10-09-capability-hardening/history-search/implementation.json)分别列定向、实际Rust回执互通、受控完整App、工程及独立复核。66a2bbfc正式首查确实返回正确用户文字，但刷新后结果消失，原失败列NEW-17；源码已修，修后安装与真实复验待完成。其他Agent、附件内容与Windows继续保留原条件。
+[本片证据](evidence/2026-10-09-capability-hardening/history-search/implementation.json)分别列定向、实际Rust回执互通、受控完整App、工程及独立复核。66a2bbfc正式首查返回正确用户文字后刷新丢结果，原失败列NEW-17并保留。[500a0570已复验同一历史预览](evidence/2026-10-09-capability-hardening/history-search-refresh-candidate/installed-refresh-native.json)自然等待148,478毫秒仍保留，范围/无匹配/再次命中及单独打开原对话准确；本轮正常退出后数据独立核对完成，仅Codex更新时间变化经逐值接受。其他Agent、附件内容与Windows继续保留原条件。
 
 ## 所选附件归档与工具正文导出（2026-10-12 已安装分项验证）
 

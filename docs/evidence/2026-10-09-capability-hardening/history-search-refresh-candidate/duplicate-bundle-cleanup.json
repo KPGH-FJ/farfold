@@ -1,0 +1,36 @@
+{
+  "sourceCommit": "500a057002dd422887223a06bec998baf9bfd3b7",
+  "checkedAtUtc": "2026-10-12T17:25:55.944422+00:00",
+  "exactVerifiedDuplicateRemoved": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "removed": true,
+  "formalFiveFilesAndModesUnchanged": {
+    "Contents/Info.plist": {
+      "sha256": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "mode": 420,
+      "bytes": 1039
+    },
+    "Contents/MacOS/farfold": {
+      "sha256": "1e7f25a4874537b39f585d4281a94948d8f3571d12fdbf4491bc83e429ece81e",
+      "mode": 493,
+      "bytes": 34319472
+    },
+    "Contents/Resources/icon.icns": {
+      "sha256": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "mode": 420,
+      "bytes": 184063
+    },
+    "Contents/Resources/release-manifest.json": {
+      "sha256": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+      "mode": 420,
+      "bytes": 56
+    },
+    "Contents/_CodeSignature/CodeResources": {
+      "sha256": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+      "mode": 420,
+      "bytes": 2688
+    }
+  },
+  "archiveSha256Unchanged": "4ff06dcbbe9a48c194c64fa7fa9bf9b91b8a096bdbbefce5f53fb2268343c6c9",
+  "formalProcessCount": 0,
+  "scope": "Only verified regenerable duplicate removed. Unique formal App, candidate ZIP, source, evidence and user data retained."
+}

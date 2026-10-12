@@ -1,6 +1,6 @@
 {
-  "status": "installedInitialRealReadFailed_sourceRefreshCorrectionVerifiedAwaitingReinstall",
-  "recordedAt": "2026-10-12T16:51:13.283001+00:00",
+  "status": "installedRefreshCorrectionAndBoundedNativeDataCloseoutPassed",
+  "recordedAt": "2026-10-12T17:28:52.653766+00:00",
   "scope": "First generic explicitly selected unloaded indexed-history temporary user/reply text search through reviewed official surface; does not close all P32.",
   "implemented": [
     "Explicit same-Agent selection of up to20 saved indexed histories, capability check and start separate",
@@ -9,7 +9,7 @@
     "Plain-text match preview and separate protected open-original action",
     "No persistent transcript/search ledger or Agent loop; no attachment/tool/reasoning text read"
   ],
-  "validationBoundary": "1568 stable inputs; four frontend commands rerun after shared metadata identity correction and two new frontend files. Frontend440 files5168 tests; Rust1597 passed6ignored retained on identical native source/configuration/fixtures/wires. Controlled fullApp realistic cloned IPC: each engine63 checks; original native firstquery returned correct text but lost results after refresh, preserved as failure. Repair installed/native retention, negative and open-original proof pending.",
+  "validationBoundary": "1568 stable inputs; four frontend commands rerun after shared metadata identity correction and two new frontend files. Frontend440 files5168 tests; Rust1597 passed6ignored retained on identical native source/configuration/fixtures/wires. Controlled fullApp realistic cloned IPC: each engine63 checks. Original66a native correct match then refresh loss retained as failure. Installed500a bounded formal retest: same controlled history positive1, natural preview wait148478ms retained with1page/3textBlocks/1match; absent-marker0, repeated positive1 and separate exact original opening. No prompt or permission confirmation. NEW-17 resolved. Complete post-quit metadata comparison passed except sole accepted Codex updated_at; this does not close all P32.",
   "references": [
     {
       "path": "docs/evidence/2026-10-09-capability-hardening/history-search/backend/implementation.json",
@@ -74,14 +74,66 @@
     {
       "path": "docs/evidence/2026-10-09-capability-hardening/history-search-candidate/install-independent-final.json",
       "sha256": "cd3bbfce250ae41b0ac307bfbce31e3ea6c2182a16a568041ecae95977f7def7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-refresh-candidate/installed-refresh-native.json",
+      "sha256": "39c3a0b3d4168d5f93d3746606323465f5c7b5ad6d4d82f7e6c5f644a7c0e1e7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-refresh-candidate/candidate-independent.json",
+      "sha256": "d099c757b36943d66c127f05e4154591cdcc00372441b99c9c67a383f995038f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-refresh-candidate/install-independent-final.json",
+      "sha256": "f34af6ceaed50e89a5f8d6769e0efe071a1be354eef2116612406c4d87ba2f5b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/history-search-refresh-candidate/native-independent.json",
+      "sha256": "45c262c6097e293bdc7793c7deef5fc8cd9e0f0bd7b620a8374bd60da0f897c2"
     }
   ],
   "notProven": [
-    "Stable usable repaired installed history-search after natural refresh",
-    "Real tool-only negative and open original",
-    "All Agent official routes",
-    "Attachment contents",
+    "All Agent official history routes and all history branches",
+    "Attachment contents or native tool/reasoning exclusion negative; P19_ALPHA_V2 original expectation was invalid and not executed",
+    "Native read cancellation or unknown cleanup",
     "Windows",
-    "Entire P32 or market readiness"
-  ]
+    "Entire P32 or market readiness",
+    "Cause of separately observed new-chat initialize timeout",
+    "Specific writer/action responsible for the accepted Codex updated_at change"
+  ],
+  "generatedAtUtc": "2026-10-12T17:28:52.653766+00:00",
+  "installedNative": {
+    "sourceCommit": "500a057002dd422887223a06bec998baf9bfd3b7",
+    "candidateIndependent": "9/9",
+    "installedIndependent": "10/10",
+    "naturalRefreshRetentionMs": 148478,
+    "positiveZeroPositiveCounts": [1, 0, 1],
+    "originalOpenedSeparately": true,
+    "specificIssueClosed": "NEW-17",
+    "dataRetention": {
+      "sessionsCompleteRowsEqual": 133,
+      "dismissedCompleteRowsEqual": 170,
+      "settingsAllRawValuesEqual": 53,
+      "newSessions": 0,
+      "allUnsentObjectAndActivityEqual": true,
+      "unsentGroups": {
+        "composers": 8,
+        "feedback": 8,
+        "queues": 3
+      },
+      "entireWorktreeCatalogueAndSchemaEqual": true,
+      "soleDelta": "agents/codex.updated_at; other39 Agent rows and remaining Codex columns equal",
+      "updatedAtBefore": 1791813933503,
+      "updatedAtAfter": 1791825431267,
+      "rootDeltaReview": "Timestamp change is compatible with this bounded journey and accepted as metadata-only; writer or exact restore action is not proven by the database. Model/service/reasoning and all stored configuration fields remain equal.",
+      "method": "Original main/WAL/SHM captured unchanged, SQLite APIs only on disposable second copies; all schemas/tables/columns/complete rows and raw settings compared",
+      "externalAgentConfigurationKeychainAndCachesNotCovered": true
+    },
+    "expectationCorrection": {
+      "originalPreparationRetained": "output/2026-10-12-history-search-root/native-selection-preparation.json",
+      "originalMistake": "P19_ALPHA_V2 described as tool-only, although actual historical user request and assistant reply contain it",
+      "incorrectNegativeNotExecuted": true,
+      "replacementBoundary": "Absent marker0 proves no matches in returned user/reply text. It does not prove native tool/attachment/reasoning exclusion."
+    }
+  }
 }
