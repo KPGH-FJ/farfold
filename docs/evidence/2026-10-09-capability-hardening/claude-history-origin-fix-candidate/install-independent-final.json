@@ -1,0 +1,233 @@
+{
+  "sourceCommit": "3bcd43dcd86713748d95f9255f2653e656772b3a",
+  "startedAt": "2026-10-12T20:26:27.682419+00:00",
+  "completedAt": "2026-10-12T20:26:29.954338+00:00",
+  "result": "passed",
+  "checks": {
+    "normalExitAndFreshPreparation": {
+      "passed": true,
+      "freshInstallDirectory": "output/2026-10-13-claude-history-origin-fix-install",
+      "priorFormalSourceCommit": "63f646e748404a4499f9b92aad7efa9e3b74d93f",
+      "boundary": "Prior observed normal quit plus this preparation fresh absence; no newly fabricated quit."
+    },
+    "candidateReceipts": {
+      "passed": true,
+      "candidateChecks": 9
+    },
+    "exactSourceAndEngineering": {
+      "passed": true,
+      "inputCount": 1578,
+      "engineering": {
+        "receipt": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/verification.json",
+        "sha256": "d4f94bd7a76b95f9db23dfc3eecd159963f36959cd1300c25ef2545bdd78be9d",
+        "inputCount": 1578,
+        "references": {
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/verification.json": "d4f94bd7a76b95f9db23dfc3eecd159963f36959cd1300c25ef2545bdd78be9d",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/verification.json": "fbd9a6dd737ab4724ca2d09b8eba76931e91962324340368f7766c56efb2948b",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/inputs-before.json": "c3d2719f2c3f9b220987e153143fc46f7723f25697ea8f09077d12f7e09bac8d",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/inputs-after.json": "c3d2719f2c3f9b220987e153143fc46f7723f25697ea8f09077d12f7e09bac8d",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/protected-before.json": "5e3f812325b0e53cb88e702d45799fc104557017355c0813c11e8930abebdb0a",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/protected-after.json": "5e3f812325b0e53cb88e702d45799fc104557017355c0813c11e8930abebdb0a",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/verification.execution.raw.txt": "910b0db29ed394af45eba97aecffbfc7e806e95dd8a527767a3e7175a17c406f",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/inputs-before.json": "34d16c6d0a6f459f416219209f3a590319154209ae9f5aa8d956ccf043672779",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/inputs-after.json": "34d16c6d0a6f459f416219209f3a590319154209ae9f5aa8d956ccf043672779",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/protected-before.json": "5e3f812325b0e53cb88e702d45799fc104557017355c0813c11e8930abebdb0a",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/protected-after.json": "5e3f812325b0e53cb88e702d45799fc104557017355c0813c11e8930abebdb0a",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/verification.execution.raw.txt": "9a2fbc245b565fbd0bab2dd2cf812d9e2fe6ee0abf6b70c7f2034efc10493ab5",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/docs-after.json": "76779b51bf97e3f69e6ffc14dda3b6fc464964728c831469ebb9de7971d88739",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/run_frontend_followup.py.raw.txt": "4ad8c8d037a9a8ae5d1fc3a52d7fb2012c41afc858b90d1c8f782df0c1870bdb",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run_checks.py.raw.txt": "d1068a3ae49c3eaecabc2da3a292304e9bc1b36c5e8425ab3095114b4e25ca47",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/frontend.txt": "75c35e755cd02ce7aca4c4d62dd05b2570dc8a85cb5172ce0e063445351f3004",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/build.txt": "63ec52b9119afdb63c529550431a63e5db6e2d1a4a66d4c0a2f815a37bcd223f",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/clippy.txt": "8343f9c7c1b8a7bf2e9b30ac3d3a2d4397aee855fec0927f04883bbe6edaa252",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/rust.txt": "0f3fa646fb99ae9a806fcb82d85356d47e7b24320d79b5e5e4bdcca1c660045a",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "output/2026-10-13-claude-history-origin-fix-checks/run-02/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "output/2026-10-13-claude-history-origin-fix-checks/run-02/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/frontend.txt": "743810b92092c3a229b549b76c51bd7459929bc5349d020a88d7d0091afff338",
+          "output/2026-10-13-claude-history-origin-fix-checks/run-02/frontend.txt": "743810b92092c3a229b549b76c51bd7459929bc5349d020a88d7d0091afff338",
+          "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/build.txt": "7b2d1da12f70c368b71cb8ee8af2b39ac65f41374cfb775ee5eedb2acf368719",
+          "output/2026-10-13-claude-history-origin-fix-checks/run-02/build.txt": "7b2d1da12f70c368b71cb8ee8af2b39ac65f41374cfb775ee5eedb2acf368719"
+        },
+        "boundary": "Four actual frontend commands in run02; three exact native executions reused from the complete seven-check run01. Only the pinned frontend strings input differs; all other 1577 inputs are identical. Earlier failure records, including formal63 positive-match failure, remain separate and are not repaired or accepted by this engineering proof."
+      }
+    },
+    "candidateFormalFiveFiles": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "ee76e2c344545eb303a93034e2ef13a8cdeda42e6f2c015faae00d67b5a0c735",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      },
+      "modes": {
+        "Contents/Info.plist": 420,
+        "Contents/MacOS/farfold": 493,
+        "Contents/Resources/icon.icns": 420,
+        "Contents/Resources/release-manifest.json": 420,
+        "Contents/_CodeSignature/CodeResources": 420
+      }
+    },
+    "identityArchitectureSignature": {
+      "passed": true,
+      "candidate": {
+        "identifier": "ai.farfold.desktop",
+        "version": "0.1.7",
+        "architecture": "arm64",
+        "strictCodesign": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement",
+        "signature": "ad-hoc; not notarized"
+      },
+      "formal": {
+        "identifier": "ai.farfold.desktop",
+        "version": "0.1.7",
+        "architecture": "arm64",
+        "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+        "signature": "ad-hoc; not notarized"
+      }
+    },
+    "archive": {
+      "passed": true,
+      "sha256": "ef96aa6ba1b7c4e033d826967406f886d381cfc65d51290dab37485a3edab037",
+      "bytes": 14424103
+    },
+    "installationOperation": {
+      "passed": true,
+      "phase": "installedVerifiedNotLaunched",
+      "rootInstallerReportedLaunched": false
+    },
+    "snapshotCaptures": {
+      "passed": true,
+      "actualSuccessfulCaptures": 3,
+      "rawMode": "0600",
+      "entriesEach": 217400
+    },
+    "retainedDataEquality": {
+      "passed": true,
+      "allThreeManifestsEqual": true,
+      "entriesEach": 217400,
+      "sha256": "6eb0085c285d81c8254205455b97f994c08fe5762ca38131f03ef6a04a8799ff"
+    },
+    "finalStableAndProcessAbsent": {
+      "passed": true,
+      "checkedAt": "2026-10-12T20:26:29.954323+00:00",
+      "formalProcessCount": 0,
+      "sourceInputCount": 1578
+    }
+  },
+  "failures": [],
+  "reviewerLaunchedApp": false,
+  "reviewerReadLiveDatabase": false,
+  "boundary": "Single read-only installed gate. Snapshot manifests were read, not live user files or SQLite. This gate concerns only the configured origin-fix installation over the formal63 baseline. The current engineering proof contains four actual frontend checks and three exact reused native checks; earlier engineering/native-effect failures remain historical. Seven engineering commands were not rerun. Gate applies at the recorded time before root intentional native testing; no later process/source recheck is implied. Ad-hoc signature is not notarization or distribution approval.",
+  "refs": [
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-independent/install-final-review.json",
+      "sha256": "589988610b171925b2129864dc200c010fa7e0be174e25ccd39ed39a226d336c",
+      "bytes": 14291
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/install-data-before-summary.json",
+      "sha256": "ecdd9c7435df03353e862143c3f1240f693a9c8cc2f40f474feff1c841cad8dd",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/snapshot-before-execution.json",
+      "sha256": "924163972f27692b712ddf237532ed332564482ff6db808983106f5fd417ca45",
+      "bytes": 396
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/install-data-before.jsonl",
+      "sha256": "6eb0085c285d81c8254205455b97f994c08fe5762ca38131f03ef6a04a8799ff",
+      "bytes": 59360435
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/install-data-preinstall-summary.json",
+      "sha256": "ecdd9c7435df03353e862143c3f1240f693a9c8cc2f40f474feff1c841cad8dd",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/snapshot-preinstall-execution.json",
+      "sha256": "924163972f27692b712ddf237532ed332564482ff6db808983106f5fd417ca45",
+      "bytes": 396
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/install-data-preinstall.jsonl",
+      "sha256": "6eb0085c285d81c8254205455b97f994c08fe5762ca38131f03ef6a04a8799ff",
+      "bytes": 59360435
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/install-data-after-summary.json",
+      "sha256": "ecdd9c7435df03353e862143c3f1240f693a9c8cc2f40f474feff1c841cad8dd",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/snapshot-after-execution.json",
+      "sha256": "924163972f27692b712ddf237532ed332564482ff6db808983106f5fd417ca45",
+      "bytes": 396
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/install-data-after.jsonl",
+      "sha256": "6eb0085c285d81c8254205455b97f994c08fe5762ca38131f03ef6a04a8799ff",
+      "bytes": 59360435
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-independent/verify_installed_final.py",
+      "sha256": "2e5b7da1ffaac1c5b5b6d195a1865e06a4fcdf730399eb88894b35570d4a52d3",
+      "bytes": 13434
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/install_verified_candidate.py",
+      "sha256": "b63ee267dbe12a08ada08b8baddc690d0af929859877bb20e531316ad7771d14",
+      "bytes": 18187
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/install_data_snapshot.py",
+      "sha256": "55f027c11883e2f1efb772d99f7e9201c3146f2c6215e3e8e9211411499b68f3",
+      "bytes": 3792
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/capture_snapshot.py",
+      "sha256": "fc244d7dd6832ed450b080af534250fcad5a5b44413c539c235c6f95bf441835",
+      "bytes": 902
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/normal-exit-observation.json",
+      "sha256": "7913456bc625835ed7909a3628d82a8759b9944b2ab300dec35f3fa51d4105d3",
+      "bytes": 912
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install/install-operation.json",
+      "sha256": "9fb42808b7f4723f6fceead9d3d2ae9550f382cbe37539015ceaff4aaf1b6cee",
+      "bytes": 2871
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-install-preparation/generated-tools.json",
+      "sha256": "d09cdfbcce93c9b35367820c07292290be48af94bfbccb02aa1ceee6d0c6686e",
+      "bytes": 18423
+    },
+    {
+      "path": "output/2026-10-13-claude-history-native/normal-exit-observation.json",
+      "sha256": "1197d9a8fbffbeee24c8eadbbaf04c38ef6d958c929080d16aae24999802e5b9",
+      "bytes": 560
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix-candidate/candidate.json",
+      "sha256": "1abbf0411d5abb1370d7b66faeaf7deb9c1b8b81dd8534cf8023a4b2872b5469",
+      "bytes": 14701
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix-candidate/candidate-independent.json",
+      "sha256": "3058f857dc70305079b719a63de353dd9b08c9ff1f639457af35750833cac8c0",
+      "bytes": 3060
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix-candidate/candidate-inputs.json",
+      "sha256": "34d16c6d0a6f459f416219209f3a590319154209ae9f5aa8d956ccf043672779",
+      "bytes": 182982
+    }
+  ]
+}

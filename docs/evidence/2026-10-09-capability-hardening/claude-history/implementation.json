@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "generatedAt": "2026-10-12T18:41:08.068104+00:00",
-  "state": "HistoricalSecondOfficialRouteSummaryWithCurrentOriginFixFollowup",
+  "state": "HistoricalSecondOfficialRouteSummaryWithInstalledSource3bcdScopedFollowup",
   "sourceBase": "0be2268d8405b80e4a04764e61faa8bd12be213c",
   "planItem": "P32",
   "wholePlanItemComplete": false,
@@ -298,6 +298,60 @@
   "originalNext": "Verify source and the precise candidate nine checks. Confirm no active work and normal exit, save before/preinstall data inventories and private metadata copies, then safely replace the unique formal App. Verify after, agreement of all three inventories and installed ten checks. Then explicitly select one indexed record through the formal shared UI for actual SDK reading and original-text comparison; do not invoke SDK through standalone Node outside the product. Continue original remaining requirements; no release/signing/distribution work here.",
   "historicalSummaryBoundary": "All pre-existing scope/verification/qualifications and renamed original fields record the source-controlled stage before formal63 installation. Original25 refs retain original hashes and paths; not current-byte assertions. Followup supplies current installed failure/data/source-fix state. This is an explicit follow-up edit, not pure-format semantic equality.",
   "followup": {
+    "updatedAtUtc": "2026-10-12T20:53:16.768940+00:00",
+    "summary": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json",
+      "sha256": "1245ce7cc224a5e5d983935db26b3916164f2539e5fa17ee1da4334baed7464e",
+      "bytes": 21320
+    },
+    "currentState": "InstalledSource3bcdScopedHumanHistoryAndNativeSelectionVerifiedP32Incomplete",
+    "currentSourceRefs": [
+      {
+        "path": "src-tauri/src/acp_client/history_search/claude_read.mjs",
+        "bytes": 13161,
+        "sha256": "74c9fef4ef9b707b1ca8e0fe6f9252652ec8fab5b60ec02f7e06cf5f571460d5",
+        "role": "currentSource"
+      },
+      {
+        "path": "src-tauri/src/acp_client/history_search/claude_read.test.mjs",
+        "bytes": 5899,
+        "sha256": "8f9a8ecfecfdf99af6984c923913e360005de0d553eda935770e4c8e77c09799",
+        "role": "currentSource"
+      },
+      {
+        "path": "src/product-shell.css",
+        "bytes": 18557,
+        "sha256": "46a18b951328bfd9f82c5aa76b76515cd5dd68e9c84d5f75ae3ed64fb56a44c7",
+        "role": "currentSource"
+      },
+      {
+        "path": "src/runtime/history_search_strings.ts",
+        "bytes": 6304,
+        "sha256": "71417bd3f8569594b0db05e0c9dd70cd094a60ab36ec8988ecec3b869e604d11",
+        "role": "currentSource"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/inputs-before.json",
+        "bytes": 182982,
+        "sha256": "34d16c6d0a6f459f416219209f3a590319154209ae9f5aa8d956ccf043672779",
+        "role": "current1578InputManifestRun02FourFrontendExecutedThreeNativeReused"
+      }
+    ],
+    "currentEngineeringRef": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/verification.json",
+      "bytes": 10594,
+      "sha256": "d4f94bd7a76b95f9db23dfc3eecd159963f36959cd1300c25ef2545bdd78be9d"
+    },
+    "wholePlanItemComplete": false,
+    "newCandidateAndNativePending": false,
+    "nativeSummary": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix-candidate/installed-native-followup.json",
+      "sha256": "d914e955ed5a484ef6cf7e6f2ea956e1affdf99019fc0b81d2d86182feb731b8",
+      "bytes": 7214
+    },
+    "boundary": "Installed source3bcd formal local human-history and select paths passed; current branch/continuation, other themes/histories/Agents/attachments/Windows/full P32 remain unverified. Original pre-native followup retained verbatim with precise historical revision/snapshot resolution."
+  },
+  "preNativeSourceAndControlledFollowup": {
     "updatedAtUtc": "2026-10-12T20:07:30.531750+00:00",
     "summary": {
       "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json",
@@ -345,5 +399,35 @@
       "bytes": 10594,
       "sha256": "d4f94bd7a76b95f9db23dfc3eecd159963f36959cd1300c25ef2545bdd78be9d"
     }
+  },
+  "preNativeFollowupReferenceBoundary": {
+    "sourceCommit": "3bcd43dcd86713748d95f9255f2653e656772b3a",
+    "summarySnapshot": {
+      "path": "output/2026-10-13-claude-history-origin-fix-record-closeout/before/6-implementation.json.raw",
+      "sha256": "a6107c31f2863c187ae6a403e1cb8bcc9897d57f69db343723313f2716fc54b8",
+      "bytes": 15402
+    },
+    "rule": "The original summary path/hash in preNativeSourceAndControlledFollowup is the exact pre-native record at sourceCommit and snapshot, not an assertion about current canonical bytes. Original hash/path objects remain unmodified."
+  },
+  "preNativeSummaryState": "HistoricalSecondOfficialRouteSummaryWithCurrentOriginFixFollowup",
+  "installedSource3bcdFollowup": {
+    "sourceCommit": "3bcd43dcd86713748d95f9255f2653e656772b3a",
+    "nativeSummary": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix-candidate/installed-native-followup.json",
+      "sha256": "d914e955ed5a484ef6cf7e6f2ea956e1affdf99019fc0b81d2d86182feb731b8",
+      "bytes": 7214
+    },
+    "summary": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json",
+      "sha256": "1245ce7cc224a5e5d983935db26b3916164f2539e5fa17ee1da4334baed7464e",
+      "bytes": 21320
+    },
+    "nextDevelopment": {
+      "planItem": "P08",
+      "scope": "Explicit DOCX text conversion and version/send/cold-restore chain",
+      "state": "DesignUnderReviewNotImplemented"
+    },
+    "wholePlanItemComplete": false,
+    "marketGoalComplete": false
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "updatedAtUtc": "2026-10-12T20:07:30.531750+00:00",
-  "state": "FourSourceCorrectionsImplementedFourFrontendActuallyVerifiedThreeNativeExplicitlyReusedNewCandidateAndNativePending",
+  "updatedAtUtc": "2026-10-12T20:53:16.768940+00:00",
+  "state": "InstalledSource3bcdScopedHumanHistoryAndNativeSelectionVerifiedP32Incomplete",
   "sourceBase": "63f646e748404a4499f9b92aad7efa9e3b74d93f",
   "planItem": "P32",
   "wholePlanItemComplete": false,
@@ -300,13 +300,17 @@
     "boundary": "Only connection/lifecycle and own-code probe evidence. No document preview, integration, isolation acceptance or change to original P16 completion condition."
   },
   "notVerified": [
-    "New candidate/installation with four source corrections",
-    "Formal positive matching, matched preview and separate correct original opening after fix",
-    "Native placeholder/selected-name/menu/keyboard mitigation after fix",
-    "True current branch/context continuation and native cancellation/unknown cleanup",
-    "Other official Agent routes, attachment contents, Windows and whole P32/29-Agent acceptance"
+    "complete P32 and original attachment conditions",
+    "complete Agent history/current branch/continuing reply",
+    "other indexed histories and other Agents",
+    "native search cancellation and independent child cleanup",
+    "native dark/other theme variants",
+    "Windows real-machine acceptance",
+    "P16 sandbox/identity/document preview",
+    "market-level completion",
+    "P08 explicit DOCX conversion and version/send/cold-restore chain: design under review, not implemented"
   ],
-  "next": "Prepare/verify candidate9, confirm no active work and normal exit, preserve before/preinstall data and private copies, safely replace unique formal App, compare after/all three and installed10. Through formal common UI explicitly select the same registered record and separately verify positive matching, preview and correct original opening plus native select feedback; no standalone SDK bypass. Continue original P16 official-route research without claiming document/isolation completion.",
+  "next": "Prioritize P08 explicit DOCX text conversion and the version/send/cold-restore chain; current design is under review and not implemented. Continue all original P32 and other item requirements. P16 expected-host alternatives are read-only proposals, unselected and unexecuted; no isolation/document acceptance.",
   "references": [
     {
       "path": "output/2026-10-13-claude-history-native/initial-ui-observations.json",
@@ -323,5 +327,116 @@
       "bytes": 5093,
       "sha256": "761da093e00ac4eaf25ca9940b2f7af690404948695db95e298295f115a7d846"
     }
-  ]
+  ],
+  "preNativeStage": {
+    "updatedAtUtc": "2026-10-12T20:07:30.531750+00:00",
+    "state": "FourSourceCorrectionsImplementedFourFrontendActuallyVerifiedThreeNativeExplicitlyReusedNewCandidateAndNativePending",
+    "notVerified": [
+      "New candidate/installation with four source corrections",
+      "Formal positive matching, matched preview and separate correct original opening after fix",
+      "Native placeholder/selected-name/menu/keyboard mitigation after fix",
+      "True current branch/context continuation and native cancellation/unknown cleanup",
+      "Other official Agent routes, attachment contents, Windows and whole P32/29-Agent acceptance"
+    ],
+    "next": "Prepare/verify candidate9, confirm no active work and normal exit, preserve before/preinstall data and private copies, safely replace unique formal App, compare after/all three and installed10. Through formal common UI explicitly select the same registered record and separately verify positive matching, preview and correct original opening plus native select feedback; no standalone SDK bypass. Continue original P16 official-route research without claiming document/isolation completion.",
+    "recordSnapshot": {
+      "path": "output/2026-10-13-claude-history-origin-fix-record-closeout/before/6-implementation.json.raw",
+      "sha256": "a6107c31f2863c187ae6a403e1cb8bcc9897d57f69db343723313f2716fc54b8",
+      "bytes": 15402,
+      "sourceCommit": "3bcd43dcd86713748d95f9255f2653e656772b3a",
+      "role": "exactPreNativeRecord"
+    }
+  },
+  "installedSource3bcdFollowup": {
+    "recordedAtUtc": "2026-10-12T20:53:16.768940+00:00",
+    "sourceCommit": "3bcd43dcd86713748d95f9255f2653e656772b3a",
+    "nativeSummary": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix-candidate/installed-native-followup.json",
+      "sha256": "d914e955ed5a484ef6cf7e6f2ea956e1affdf99019fc0b81d2d86182feb731b8",
+      "bytes": 7214
+    },
+    "candidateChecks": 9,
+    "installationChecks": 10,
+    "retentionManifestCaptures": 3,
+    "retentionEntriesEach": 217400,
+    "retentionManifestDigest": "6eb0085c285d81c8254205455b97f994c08fe5762ca38131f03ef6a04a8799ff",
+    "allThreeRetentionManifestsIdentical": true,
+    "nativeHistory": {
+      "officialReadsFromSharedUI": 3,
+      "boundedQueries": [
+        "known exact token",
+        "absent exact token",
+        "known exact token again"
+      ],
+      "pagesEach": 1,
+      "textBlocksEach": 2,
+      "matchedBlocksInOrder": [1, 0, 1],
+      "knownUserBodyVisibleAndEqualToPreviouslyObservedOriginal": true,
+      "twoPreviewsActual": true,
+      "keywordHighlightVisible": true,
+      "openOriginalFromSecondPositiveResultActual": true,
+      "openedOriginalUserBodyMatchesSnapshot": true,
+      "historicalAssistantBodyNotVisible": true,
+      "partialCoverageAndBranchContinueWarningVisible": true,
+      "afterOriginalLoadSelectedHistoryGuardedAsAlreadyLoaded": true,
+      "readResultsClosedBeforeNormalQuit": true,
+      "noPromptOrPermissionConfigApprovalSentViaUI": true,
+      "currentBranchAndContinuingReplyNotEstablished": true
+    },
+    "nativeSelection": {
+      "placeholderAndSelectedClaudeVisibleInActualFormalScreenshots": true,
+      "mouseOpenedMenuWithClaudeOption": true,
+      "keyboardSpaceOpenedMenu": true,
+      "upDownReturnRetainedClaude": true,
+      "nativeOtherThemesNotExercised": true,
+      "earlierBlankCauseNotUniquelyEstablished": true
+    },
+    "dataRetention": {
+      "wholeSessionsPreserved": 133,
+      "newSessions": 0,
+      "dismissedRowsPreserved": 170,
+      "settingsRawValuesPreserved": 53,
+      "entireUnsentObjectPreserved": true,
+      "unsentGroups": {
+        "composers": 8,
+        "feedback": 8,
+        "queues": 3
+      },
+      "worktreeCatalogueAndSchemaPreserved": true,
+      "agents": 40,
+      "onlyAcceptedDelta": "Claude metadata updated_at; all other columns identical",
+      "timestampWriterNotEstablished": true,
+      "liveDatabaseOpenedForVerification": false
+    },
+    "normallyClosedAfterTest": true,
+    "duplicateGeneratedAppRemoved": true,
+    "formalAppAndCandidateZipUnchangedDuringDuplicateCleanup": true,
+    "NEW-18": "Only the formal local placeholder/selected-name and mouse/keyboard paths exercised in this bounded journey are verified; original blank cause and other themes remain unknown.",
+    "NEW-19": "Only the selected exact registered official human-user history path, two previews and separate correct original opening are verified; original63 failure remains unchanged.",
+    "wholePlanItemComplete": false,
+    "marketGoalComplete": false,
+    "p16ExpectedHostAlternative": {
+      "readOnlyResearchExists": true,
+      "policySelected": false,
+      "runtimeExecuted": false,
+      "isolationAccepted": false
+    },
+    "nextDevelopment": {
+      "planItem": "P08",
+      "scope": "Explicit DOCX text conversion and version/send/cold-restore chain",
+      "state": "DesignUnderReviewNotImplemented"
+    },
+    "remainingNotVerified": [
+      "complete P32 and original attachment conditions",
+      "complete Agent history/current branch/continuing reply",
+      "other indexed histories and other Agents",
+      "native search cancellation and independent child cleanup",
+      "native dark/other theme variants",
+      "Windows real-machine acceptance",
+      "P16 sandbox/identity/document preview",
+      "market-level completion"
+    ],
+    "boundary": "Root actual formal UI journey; independent candidate/install/data checks remain separate. No all-theme/all-history/all-Agent/full-P32/market acceptance. Original63, engineering, original25 source refs and formatting bridge remain historical and unchanged."
+  },
+  "recordScopeBoundary": "Existing retainedFormal63/retainedPostUseData/source/controlled/engineering records preserve their original stages. The old state/notVerified/next/date are retained verbatim in preNativeStage and exact EXCL snapshot; installedSource3bcdFollowup supplies latest scoped formal acceptance without changing any original requirement or evidence hash."
 }

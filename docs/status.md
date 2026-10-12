@@ -4,15 +4,21 @@
 
 ## 当前基线与证据边界
 
-P32第二条官方读取路径已安装 `63f646e7`，[候选9项、安装10项](evidence/2026-10-09-capability-hardening/claude-history-candidate/install-independent-final.json)及三份217,400条数据清单一致。正式共用界面只选一条已登记Claude历史，真实SDK每次返回部分覆盖的1页/1段文字：不存在词0匹配，但已确认存在的用户文字及短前缀也均0匹配，正向验证失败；命中文字预览和从结果打开原对话未执行，不能算P32完成。
+当前正式应用为 `3bcd43dc` / 0.1.7 arm64，[本片正式复验](evidence/2026-10-09-capability-hardening/claude-history-origin-fix-candidate/installed-native-followup.json)已完成：候选9/9、安装10/10，三份新的217,400条数据清单一致。共用界面仅选同一条已登记Claude历史，三次官方读取按已知标记→不存在标记→已知标记返回部分覆盖的1页/2段文字，匹配1→0→1；两次纯文字预览与从第二次正向结果打开的原对话用户文字一致。占位和选中Claude名称在正式截图可见，鼠标菜单及Space/Up/Down/Return保持正确选择。NEW-18/19仅此本机、本片官方human文字路径复验；原空白原因未唯一定位，其他主题与历史未测。原对话只见用户历史，回复、当前分支和上下文续接未证；没有经界面发送prompt或批准权限/配置，P32整体及29家八项标准仍未完成。
 
-[来源过滤与选择器修正](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json)已完成源码和受控验证：官方human用户来源被误排除的用例先真红，修复后Node19项、Rust目标类12项及独立23项通过；共用选择器空白候选双浏览器各23项通过，正式重测待做。只搜索官方返回的已保存用户/回复文字，不另行搜索附件文件、工具结果或思考；保存文字可能包含处理后的上下文，不能承诺逐字键盘原文。全部结果仍为部分覆盖，当前分支、上下文续接、其他Agent与附件内容搜索等原条件未证；NEW-18/19尚未关闭，新候选安装和正式正向验证待执行。
+3bcd本轮已正常保存退出，退出回执与随后正式进程不存在分别留证，不据退出警告推断全部外部工作完成或停止。133条完整会话、170条屏蔽、53项设置原值、整个未发8/8/3及活动、工作树清单、schema保持，0新增；唯一Claude更新时间变化经root窄逐值接受，其他列保持，具体写入者未证。重复打包应用已精确移除，唯一正式应用和候选ZIP保持；私有数据只保留本地证据、摘要和哈希。
 
-63f本轮已正常保存退出。[数据逐字段接受](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json)保留133条完整会话、170条屏蔽、53项设置原值及整个未发/工作树记录；唯一Claude记录的providers字段由缺失变为空对象及更新时间变化获明确接受，其余字段准确保持。不能写成全部Agent行完全相同，具体写入者未证；私有数据只保留摘要和哈希。
+此前P32第二条官方读取路径已安装 `63f646e7`，[候选9项、安装10项](evidence/2026-10-09-capability-hardening/claude-history-candidate/install-independent-final.json)及三份217,400条数据清单一致。正式共用界面只选一条已登记Claude历史，真实SDK每次返回部分覆盖的1页/1段文字：不存在词0匹配，但已确认存在的用户文字及短前缀也均0匹配，正向验证失败；命中文字预览和从结果打开原对话未执行，不能算P32完成。
+
+[来源过滤与选择器修正](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json)已完成源码和受控验证：官方human用户来源被误排除的用例先真红，修复后Node19项、Rust目标类12项及独立23项通过；共用选择器空白候选双浏览器各23项通过，本片正式复验见首段，浏览器结果不代替原生证据。只搜索官方返回的已保存用户/回复文字，不另行搜索附件文件、工具结果或思考；保存文字可能包含处理后的上下文，不能承诺逐字键盘原文。全部结果仍为部分覆盖，当前分支、上下文续接、其他Agent与附件内容搜索等原条件未证；NEW-18/19本机本片路径已复验，其他主题、历史和Agent未测，不计P32整体完成。
+
+63f原轮已正常保存退出。[数据逐字段接受](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json)保留133条完整会话、170条屏蔽、53项设置原值及整个未发/工作树记录；唯一Claude记录的providers字段由缺失变为空对象及更新时间变化获明确接受，其余字段准确保持。不能写成全部Agent行完全相同，具体写入者未证；私有数据只保留摘要和哈希。
 
 [第四处说明的复查](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/verification.json)在1,578稳定输入上四项前端全部实际通过：442文件/5,203项；三项后端在未变的后端、配置、夹具与协议输入上明确复用[三处修正的原七项工程](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/verification.json)，Rust1,610项/6忽略，本轮未再执行后端三项。原三处修正的七项全部实际通过仍保历史范围；工程通过不算正式界面验证。旧源码/受控99项双浏览器、真实Rust回执及独立8项继续保持历史范围。原Clippy、未定位Node取消测试、PID标记失败及模板错误保留；后续通过不算已定位Node原因，原JSON及规范视图的格式桥也不覆盖原记录。
 
 P16独立Office连接探针实际核到974项服务并正常结束，未加载文档；[自身CLI隔离探针](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json)的父进程SIGTRAP，系统报告code identity错误100001，隔离尚未验证，继续核查官方路径。P16原完成条件保持。
+
+下一开发优先P08：DOCX显式文字转换及版本、发送、冷恢复全链，当前仅在审设计，尚未实现；P08与原发送边界不因此改变。P16已有新的只读expected-host身份候选研究，但方案未选择、未执行，隔离及文档预览仍未验证；原P16及全部剩余完成条件保持。
 
 所选附件归档已提交安装 `a5a24810` / 0.1.7 arm64，并完成[正式窗口到真实ZIP的分项验证](evidence/2026-10-09-capability-hardening/attachment-archive-candidate/installed-archive-native.json)：默认Markdown、明确勾选两项附件、已加载修改前后文字、保存选择器取消后保留选择、替代来源标识、所选源文件失效时不发布ZIP及恢复后的准确保存。两包分别核到2/1和1/3项打包/省略，44字节附件内容与磁盘逐字节相同；本例未证明全部终端或工具正文类型。候选9/9通过，安装9组核心核验及产物稳定性通过；末尾包装断言在后续有意启动应用后失败，原失败保留，不写成10/10。三份217,400条安装数据快照相同；实测正常退出后133条完整会话、170条屏蔽及53项设置原值保持，整个未发内容与工作树清单相同，仅Codex更新时间变化。界面可见132条与数据库133行分别记录。重复打包应用已精确删除，唯一正式应用和候选ZIP保持。
 

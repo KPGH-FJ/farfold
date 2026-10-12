@@ -1,0 +1,176 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-12T21:00:22.643119+00:00",
+  "result": "passedWithinRecordedScope",
+  "sourceCommit": "3bcd43dcd86713748d95f9255f2653e656772b3a",
+  "errors": [],
+  "review": {
+    "publicReceiptDirectReferences": 13,
+    "publicAndPrivateReferenceCounts": {
+      "public": 3,
+      "private": 10
+    },
+    "allDirectReferenceHashesAndBytesMatch": true,
+    "sourceInputsMatchGitAndCandidate": 1578,
+    "formalFiveFilesAndModesMatchCandidateAndZip": true,
+    "duplicateGeneratedAppAbsent": true,
+    "sixFrozenCurrentRecordsMatch": true,
+    "currentRecordReferenceObjectsVerified": 26,
+    "originalPlanIdsTitlesAndCompletionCellsPreserved": 122,
+    "otherOriginalPlanRowsByteExact": 121,
+    "NEW01Through17RowsByteExact": true,
+    "NEW18And19CompletionConditionsPreserved": true,
+    "P32StillIncomplete": true,
+    "protectedProductAndTwoDirtyReadmesUnchanged": true,
+    "originalJsonFieldsReconstructExactly": true
+  },
+  "nativeEvidenceAssessment": {
+    "performedBy": "root",
+    "independentSecondUiJourney": false,
+    "observationFormat": "Root transcriptions of actual CUA accessibility and screenshot observations; this review did not operate or reobserve the App or inspect an independently saved screenshot series.",
+    "selectedHistoryCount": 1,
+    "officialReadCount": 3,
+    "pagesEach": 1,
+    "textBlocksEach": 2,
+    "matchedBlocksInOrder": [1, 0, 1],
+    "twoPreviewsAndSeparateOriginalUserBodyAgreement": "Supported by the two root observation receipts.",
+    "selectionScope": "Observed native placeholder/selected Claude name, mouse menu and Space/Up/Down/Return in this local journey. Other themes remain untested; original blank cause is not uniquely established.",
+    "noPromptClaim": "UI operation scope only; no global API/network/child-lifecycle inference.",
+    "historyLimit": "Original user body visible; assistant body, true current branch and continuation not established.",
+    "quitLimit": "Recorded normal save quit and process absence support the completed past journey. Warning of unconfirmed work is retained and is not proof all external work stopped."
+  },
+  "dataAssessment": {
+    "method": "Reviewed previously executed secondary-copy whole-table comparison and narrow timestamp receipts; no SQLite reopened for this review.",
+    "wholeSessionsEqual": 133,
+    "addedSessions": 0,
+    "dismissedEqual": 170,
+    "rawSettingsEqual": 53,
+    "wholeUnsentEqual": true,
+    "unsentGroups": [8, 8, 3],
+    "catalogueAndSchemaEqual": true,
+    "agentRows": 40,
+    "onlyRootAcceptedDelta": {
+      "agentId": "registry:claude-acp",
+      "column": "updated_at",
+      "before": 1791832073005,
+      "after": 1791837309491,
+      "allOtherColumnsEqual": true
+    },
+    "writerProven": false,
+    "externalConfigurationAndCachesCovered": false
+  },
+  "preservedFailureBoundaries": [
+    "Formal63 original known-user-text zero-match failure is historical and unchanged.",
+    "Pre-existing blank TR automatic initialization timeout remains unknown; no user prompt was submitted.",
+    "Root narrow URI read failed; later disposable plain-path read does not explain the original cause.",
+    "Original engineering failures and their source/controlled followups retain their stated boundaries.",
+    "Reviewer initial plan-row parser omitted ARCH IDs; its failed assertion and correction are recorded separately, without product/record changes."
+  ],
+  "engineeringBoundary": "Run02 four actual frontend checks plus three byte-identical native run01 reuses; no new engineering or installer verification execution here.",
+  "notEstablished": [
+    "complete P32 and original attachment conditions",
+    "complete Agent history/current branch/continuing reply",
+    "other indexed histories and other Agents",
+    "native search cancellation and independent child cleanup",
+    "native dark/other theme variants",
+    "Windows real-machine acceptance",
+    "P16 sandbox/identity/document preview",
+    "market-level completion"
+  ],
+  "recordsAssessment": "Current six records consistently describe formal3bcd bounded success, preserved formal63 failures, P32 incomplete, P08 design-only and P16 research-only. No original completion condition was lowered.",
+  "privacyAssessment": "Public native summary contains bounded counts, safe scope and hashes, without retained DB bodies or credentials. Private evidence was not copied into public output.",
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix-candidate/installed-native-followup.json",
+      "sha256": "d914e955ed5a484ef6cf7e6f2ea956e1affdf99019fc0b81d2d86182feb731b8",
+      "bytes": 7214
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix-candidate/candidate.json",
+      "sha256": "1abbf0411d5abb1370d7b66faeaf7deb9c1b8b81dd8534cf8023a4b2872b5469",
+      "bytes": 14701
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix-candidate/candidate-independent.json",
+      "sha256": "3058f857dc70305079b719a63de353dd9b08c9ff1f639457af35750833cac8c0",
+      "bytes": 3060
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-origin-fix-candidate/install-independent-final.json",
+      "sha256": "3a26c8e52d22b1fe198b3b4b70b9c88e253e0ce11d7c2d52f6cee6cc4778166e",
+      "bytes": 14508
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-native/positive-and-selection-observation.json",
+      "sha256": "85ded13c698b04d8b8740c28b578c0e7a48acec28ebf84391da0814772af2e6b",
+      "bytes": 2089
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-native/completed-native-observation.json",
+      "sha256": "95525e7059d76a99459aab218cb89997e5c74553d1d8462e10677bf80fd8bac7",
+      "bytes": 2087
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-native/normal-exit-observation.json",
+      "sha256": "4ae7c026654fce8cbe42d261d93bac6a62df9623683ff759d00550ffa6aa1055",
+      "bytes": 655
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-native/installed-dependency-versions.json",
+      "sha256": "a801007f2129392590a4bea9925ba89dee9308fb3c0e91d3335cc46185f5dd64",
+      "bytes": 645
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-native/metadata-backup-receipt.json",
+      "sha256": "1d4202e115dc52b0f08635389bacfee89b7fb44c79b2d8f4e74837e9a4365231",
+      "bytes": 636
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-native/root-data-acceptance.json",
+      "sha256": "e1bf32f675a7d9fcd87c79950e9a11f19cea278814f48753b96901a9c9998e47",
+      "bytes": 1215
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-native/duplicate-candidate-cleanup.json",
+      "sha256": "71a966407eece9b72a0e04f19e2402fa83b71804c593005a04a6701ee95c630d",
+      "bytes": 1368
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-native-preparation/post-use/data-comparison.json",
+      "sha256": "0dbb89b49313fba6dec2d8e964f0b9741e4557f7dab17249473d569fa6b1cbc5",
+      "bytes": 12215
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-native-preparation/post-use/timestamp-delta.json",
+      "sha256": "7f79093a4fe7e69c2a0fd7575ee0708e828b4d7a497b6f8ac1042faabffea4b4",
+      "bytes": 4566
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-native-preparation/post-use/timestamp-review-root-failure/failure.json",
+      "sha256": "2fa756905bd0bff3a408726320ca9bf1e6d9962b11c6054d021ddd7c157430c5",
+      "bytes": 1417
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-closeout-independent/source-bundle-current.json",
+      "sha256": "f9b290e14a31e5f075e4160ab7407843ecfe2d1da933cc193c3f947daf81f2f2",
+      "bytes": 2299
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-closeout-independent/records-gate.json",
+      "sha256": "886bc38e34ba5a819b392679e1f9896fd2600383038a5e4c17f8960c6cb439cd",
+      "bytes": 11434
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-closeout-independent/review-driver-correction.json",
+      "sha256": "a29d6b42d9993ea3eb4c6c3155c7fa85f41aa09a4a21250def899c9bf0c0e65d",
+      "bytes": 444
+    }
+  ],
+  "boundary": "Read-only independent closeout, not a second native run or global completion. No App/Agent/CLI execution, live DB/credential read, candidate/install rerun, cleanup rerun, source/current-record edit, commit or push.",
+  "originalIndependentReview": {
+    "path": "output/2026-10-13-claude-history-origin-fix-closeout-independent/final-review.json",
+    "sha256": "466e4391bcfd8a3e6373b261408f25abb6fc6fc9f13d7b4a2e415e1fa3747ce7",
+    "bytes": 8586,
+    "publicRendering": "Same parsed review with this explicit origin reference, no private contents copied."
+  }
+}
