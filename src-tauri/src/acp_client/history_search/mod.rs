@@ -1,4 +1,6 @@
 //! Explicit selected-history search through a bounded official read-only surface.
+mod claude;
+mod launch;
 mod requests;
 mod rpc;
 mod source;
@@ -39,6 +41,18 @@ fn run_selected(job: &Job, index: usize, command: std::process::Command) -> Resu
         job,
         deadline: job.deadline.min(Instant::now() + Duration::from_secs(15)),
     };
+    if let launch::Route::Sdk(resolved) = &job.source.route {
+        let mut exchange = claude::Exchange::new(job, index, resolved)?;
+        let result = inventory::process::run_owned(command, &control, Some(&mut exchange), 8388608);
+        return match result {
+            Ok(mut out) => {
+                let result = exchange.finish(&out, None);
+                out.fill(0);
+                result
+            }
+            Err(e) => exchange.finish(&[], Some(e.into())),
+        };
+    }
     let mut exchange = rpc::Exchange::new(job, index);
     let result = inventory::process::run_owned(command, &control, Some(&mut exchange), 8388608);
     match result {
@@ -52,6 +66,9 @@ fn run_selected(job: &Job, index: usize, command: std::process::Command) -> Resu
 }
 fn query(store: &MetaStore, job: &Job) -> Result<()> {
     query_with(store, job, |_, row| {
+        if let launch::Route::Sdk(resolved) = &job.source.route {
+            return launch::command(&job.source.agent, &row.cwd, resolved);
+        }
         let env = crate::shell_env::cached_command_env().ok_or(Code::EnvironmentUnavailable)?;
         Ok(inventory::launch::command(
             &job.source.agent,
@@ -246,3 +263,6 @@ pub fn history_search_release(
 }
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod claude_tests;

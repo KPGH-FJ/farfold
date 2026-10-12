@@ -22,6 +22,10 @@ export const HISTORY_SEARCH_CODES = [
   "timedOut",
   "cancelled",
   "pendingCleanup",
+  "coverageUnconfirmed",
+  "sourceUnconfirmed",
+  "sourceChanged",
+  "sourceTooLarge",
 ] as const;
 export type HistorySearchCode = (typeof HISTORY_SEARCH_CODES)[number];
 export const HISTORY_SEARCH_LIMITS = {
@@ -43,11 +47,18 @@ export interface HistorySearchRequest extends HistorySearchIdentity {
 export interface HistorySearchExpected extends HistorySearchRequest {
   rowIds: readonly string[];
 }
-export interface HistorySearchSelection {
+export type HistorySearchSource = "officialAppServer" | "officialSdk";
+export interface HistorySearchSdkScope {
+  source: "officialSdk";
+  coverage: "partial";
+  relation: "registeredExactId";
+  continuation: "unverified";
+  branch: "unverified";
+}
+interface HistorySearchSelectionFields {
   agentId: string;
   selectionId: string | null;
   validForMs: 300000;
-  source: "officialAppServer" | null;
   scope: "userAndAssistantText";
   availability: "available" | "unavailable";
   code: HistorySearchCode | null;
@@ -57,16 +68,40 @@ export interface HistorySearchSelection {
     code: HistorySearchCode | null;
   }[];
 }
-export interface HistorySearchHit {
+export type HistorySearchSelection = HistorySearchSelectionFields &
+  ({ source: "officialAppServer" | null } | HistorySearchSdkScope);
+interface HistorySearchHitFields {
   rowId: string;
-  turnId: string;
-  itemId: string;
-  partIndex: number;
   role: "user" | "assistant";
   text: string;
   textTruncated: boolean;
   matches: { start: number; end: number }[];
   matchesTruncated: boolean;
+}
+export interface HistorySearchAppServerHit extends HistorySearchHitFields {
+  turnId: string;
+  itemId: string;
+  partIndex: number;
+}
+export interface HistorySearchSdkHit extends HistorySearchHitFields {
+  messageLocator: { kind: "message"; messageId: string; partIndex: number };
+}
+export type HistorySearchHit = HistorySearchAppServerHit | HistorySearchSdkHit;
+export function historySearchHitKey(hit: HistorySearchHit): string {
+  return "messageLocator" in hit
+    ? JSON.stringify([
+        hit.rowId,
+        "message",
+        hit.messageLocator.messageId,
+        hit.messageLocator.partIndex,
+      ])
+    : JSON.stringify([
+        hit.rowId,
+        "turnItem",
+        hit.turnId,
+        hit.itemId,
+        hit.partIndex,
+      ]);
 }
 export interface HistorySearchRow {
   rowId: string;
@@ -76,7 +111,7 @@ export interface HistorySearchRow {
   matchedTextBlocks: number;
   code: HistorySearchCode | null;
 }
-export interface HistorySearchOperation extends HistorySearchRequest {
+interface HistorySearchOperationFields extends HistorySearchRequest {
   rowIds: string[];
   revision: number;
   state:
@@ -88,13 +123,19 @@ export interface HistorySearchOperation extends HistorySearchRequest {
     | "failed";
   settled: boolean;
   code: HistorySearchCode | null;
-  source: "officialAppServer";
   scope: "userAndAssistantText";
   matchMode: "unicodeLowercaseLiteral";
   exclusions: ["attachments", "toolOutput", "reasoning", "otherMessageKinds"];
   rows: HistorySearchRow[];
-  hits: HistorySearchHit[];
 }
+export type HistorySearchAppServerOperation = HistorySearchOperationFields & {
+  source: "officialAppServer";
+  hits: HistorySearchAppServerHit[];
+};
+export type HistorySearchSdkOperation = HistorySearchOperationFields &
+  HistorySearchSdkScope & { hits: HistorySearchSdkHit[] };
+export type HistorySearchOperation =
+  HistorySearchAppServerOperation | HistorySearchSdkOperation;
 export type HistorySearchReply =
   | { kind: "operation"; operation: HistorySearchOperation }
   | {
@@ -188,6 +229,30 @@ export function historySearchError(error: unknown): HistorySearchCode {
     return error.code;
   return "unavailable";
 }
+const sdkFields = ["coverage", "relation", "continuation", "branch"] as const;
+function sourceFields(value: unknown): readonly string[] {
+  return value &&
+    typeof value === "object" &&
+    "source" in value &&
+    value.source === "officialSdk"
+    ? sdkFields
+    : [];
+}
+function validSource(
+  value: Record<string, unknown>,
+  nullable = false,
+): boolean {
+  if (value.source === "officialSdk")
+    return (
+      value.coverage === "partial" &&
+      value.relation === "registeredExactId" &&
+      value.continuation === "unverified" &&
+      value.branch === "unverified"
+    );
+  return (
+    value.source === "officialAppServer" || (nullable && value.source === null)
+  );
+}
 export function parseHistorySelection(
   value: unknown,
   agentId: string,
@@ -202,6 +267,7 @@ export function parseHistorySelection(
     "availability",
     "code",
     "rows",
+    ...sourceFields(value),
   ]);
   if (
     v.agentId !== agentId ||
@@ -231,7 +297,7 @@ export function parseHistorySelection(
   if (v.availability === "available") {
     if (
       !historySearchUuid(v.selectionId) ||
-      v.source !== "officialAppServer" ||
+      !validSource(v) ||
       v.code !== null ||
       v.rows.some(
         (r) => (r as Record<string, unknown>).availability !== "available",
@@ -239,11 +305,7 @@ export function parseHistorySelection(
     )
       return invalid();
   } else if (v.availability === "unavailable") {
-    if (
-      v.selectionId !== null ||
-      v.code === null ||
-      (v.source !== null && v.source !== "officialAppServer")
-    )
+    if (v.selectionId !== null || v.code === null || !validSource(v, true))
       return invalid();
   } else return invalid();
   return value as HistorySearchSelection;
@@ -256,12 +318,16 @@ function surrogateBoundary(text: string, offset: number) {
     /[\uDC00-\uDFFF]/.test(text[offset])
   );
 }
-function parseHit(value: unknown, rowIds: readonly string[]): HistorySearchHit {
+function parseHit(
+  value: unknown,
+  rowIds: readonly string[],
+  source: HistorySearchSource,
+): HistorySearchHit {
   const v = object(value, [
     "rowId",
-    "turnId",
-    "itemId",
-    "partIndex",
+    ...(source === "officialSdk"
+      ? ["messageLocator"]
+      : ["turnId", "itemId", "partIndex"]),
     "role",
     "text",
     "textTruncated",
@@ -271,10 +337,6 @@ function parseHit(value: unknown, rowIds: readonly string[]): HistorySearchHit {
   if (
     !identifier(v.rowId) ||
     !rowIds.includes(v.rowId) ||
-    !identifier(v.turnId) ||
-    !identifier(v.itemId) ||
-    !count(v.partIndex) ||
-    (v.role === "assistant" && v.partIndex !== 0) ||
     !["user", "assistant"].includes(String(v.role)) ||
     !scalarText(v.text, 16384, true) ||
     !boolean(v.textTruncated) ||
@@ -282,6 +344,25 @@ function parseHit(value: unknown, rowIds: readonly string[]): HistorySearchHit {
     !Array.isArray(v.matches) ||
     !v.matches.length ||
     v.matches.length > 64
+  )
+    return invalid();
+  if (source === "officialSdk") {
+    const locator = object(v.messageLocator, [
+      "kind",
+      "messageId",
+      "partIndex",
+    ]);
+    if (
+      locator.kind !== "message" ||
+      !historySearchUuid(locator.messageId) ||
+      !count(locator.partIndex)
+    )
+      return invalid();
+  } else if (
+    !identifier(v.turnId) ||
+    !identifier(v.itemId) ||
+    !count(v.partIndex) ||
+    (v.role === "assistant" && v.partIndex !== 0)
   )
     return invalid();
   let end = 0;
@@ -304,6 +385,7 @@ function parseHit(value: unknown, rowIds: readonly string[]): HistorySearchHit {
 export function parseHistoryReply(
   value: unknown,
   expected: HistorySearchExpected,
+  source: HistorySearchSource = "officialAppServer",
 ): HistorySearchReply {
   if (!value || typeof value !== "object" || !("kind" in value))
     return invalid();
@@ -342,6 +424,7 @@ export function parseHistoryReply(
     "exclusions",
     "rows",
     "hits",
+    ...sourceFields(envelope.operation),
   ]);
   if (
     v.agentId !== expected.agentId ||
@@ -355,7 +438,8 @@ export function parseHistoryReply(
     !count(v.revision) ||
     !code(v.code) ||
     !boolean(v.settled) ||
-    v.source !== "officialAppServer" ||
+    v.source !== source ||
+    !validSource(v) ||
     v.scope !== "userAndAssistantText" ||
     v.matchMode !== "unicodeLowercaseLiteral" ||
     JSON.stringify(v.exclusions) !==
@@ -407,6 +491,7 @@ export function parseHistoryReply(
     ]);
     if (
       row.rowId !== expected.rowIds[i] ||
+      (source === "officialSdk" && row.state === "complete") ||
       ![
         "queued",
         "reading",
@@ -431,7 +516,7 @@ export function parseHistoryReply(
     if (v.settled && ["queued", "reading"].includes(String(row.state)))
       return invalid();
   }
-  for (const hit of v.hits) parseHit(hit, expected.rowIds);
+  for (const hit of v.hits) parseHit(hit, expected.rowIds, source);
   for (const raw of v.rows) {
     const row = raw as HistorySearchRow;
     if (
@@ -442,7 +527,7 @@ export function parseHistoryReply(
   }
   const identities = v.hits.map((h) => {
     const hit = h as HistorySearchHit;
-    return JSON.stringify([hit.rowId, hit.turnId, hit.itemId, hit.partIndex]);
+    return historySearchHitKey(hit);
   });
   if (new Set(identities).size !== identities.length) return invalid();
   return value as HistorySearchReply;

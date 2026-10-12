@@ -75,6 +75,10 @@ import {
   operation,
   flush,
 } from "../runtime/history_search.test-support";
+import {
+  sdkSelection,
+  sdkOperation,
+} from "../runtime/history_search.sdk.test-support";
 let h: ReturnType<typeof setup>,
   active = true,
   query = "hello",
@@ -400,5 +404,55 @@ it("returning to an unsettled retired read keeps exact status and cancel guidanc
   expect(rendered.some((n) => n.props.children === S.check)).toBe(true);
   expect(rendered.some((n) => n.props.children === S.cancel)).toBe(true);
   expect(rendered.some((n) => n.props.children === S.dismiss)).toBe(false);
+  expect(h.port.start).toHaveBeenCalledTimes(1);
+});
+
+it("declares the limited registered-ID scope before explicit reading, with no automatic open", async () => {
+  h.port.capabilities.mockResolvedValue(sdkSelection());
+  choose();
+  click(S.prepare);
+  await flush();
+  expect(nodes().some((n) => n.props.children === S.registeredScope)).toBe(
+    true,
+  );
+  expect(nodes().some((n) => n.props.children === S.registeredCheck)).toBe(
+    true,
+  );
+  expect(h.port.start).not.toHaveBeenCalled();
+  expect(onOpen).not.toHaveBeenCalled();
+});
+it("previews SDK text without inventing message navigation and protects original opening", async () => {
+  h.port.capabilities.mockResolvedValue(sdkSelection());
+  await start();
+  const result = sdkOperation();
+  h.start.resolve(result);
+  await flush();
+  (
+    nodes().find((n) => n.type === HistorySearchResults)!.props
+      .onPreview as Function
+  )(result.operation.hits[0]);
+  expect(nodes().some((n) => n.props.children === S.registeredOpen)).toBe(true);
+  expect(onOpen).not.toHaveBeenCalled();
+  const open = nodes().find(
+    (n) => n.type === "button" && n.props.children === S.openConversation,
+  )!.props.onClick as Function;
+  hooks.index = [
+    { ...(hooks.index[0] as IndexRow), nativeSessionId: "changed" },
+  ];
+  open();
+  expect(onOpen).not.toHaveBeenCalled();
+});
+it("keeps a partial-route preview's original opening a separate explicit action", async () => {
+  h.port.capabilities.mockResolvedValue(sdkSelection());
+  await start();
+  const result = sdkOperation();
+  h.start.resolve(result);
+  await flush();
+  (
+    nodes().find((n) => n.type === HistorySearchResults)!.props
+      .onPreview as Function
+  )(result.operation.hits[0]);
+  click(S.openConversation);
+  expect(onOpen).toHaveBeenCalledExactlyOnceWith(rows[0]);
   expect(h.port.start).toHaveBeenCalledTimes(1);
 });

@@ -1,0 +1,84 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/history_search.sdk.test.tsx (18 tests | 5 failed) 12ms
+   × accepts only the declared registered-ID partial capability and real message locator 1ms
+   × does not let a legacy response replace the route granted by a new capability 2ms
+   × fixes the capability route for the flight without sending implementation fields in start 1ms
+   × retiring a partial-route owner discards late bodies while keeping exact cancellation tracking 1ms
+   × shows a partial registered-ID result without promising the current branch or continuation 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/history_search.sdk.test.tsx > accepts only the declared registered-ID partial capability and real message locator
+{ code: 'invalidOutput', stacks: [] }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/runtime/history_search.sdk.test.tsx > does not let a legacy response replace the route granted by a new capability
+AssertionError: expected [Function] to throw an error
+ ❯ src/runtime/history_search.sdk.test.tsx:47:84
+     45|
+     46| it("does not let a legacy response replace the route granted by a new …
+     47|   expect(() => parseHistoryReply(operation("completed"), expected, "of…
+       |                                                                                    ^
+     48|   expect(() => parseHistoryReply(sdkOperation(), expected, "officialAp…
+     49| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/runtime/history_search.sdk.test.tsx > fixes the capability route for the flight without sending implementation fields in start
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/history_search.sdk.test.tsx:64:29
+     62|   const h = setup();
+     63|   h.port.capabilities.mockResolvedValue(sdkSelection());
+     64|   expect(await h.prepare()).toBe(true);
+       |                             ^
+     65|   expect(h.controller.start(h.owner, "hello")).toBe(true);
+     66|   expect(h.port.start.mock.calls[0][0]).toEqual({ agentId: expected.ag…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/runtime/history_search.sdk.test.tsx > retiring a partial-route owner discards late bodies while keeping exact cancellation tracking
+AssertionError: expected "vi.fn()" to be called with arguments: [ { agentId: 'fixture', …(1) } ]
+
+Number of calls: 0
+
+ ❯ src/runtime/history_search.sdk.test.tsx:78:25
+     76|   h.controller.start(h.owner, "hello");
+     77|   h.close();
+     78|   expect(h.port.cancel).toHaveBeenCalledWith({ agentId: expected.agent…
+       |                         ^
+     79|   h.start.resolve(sdkOperation());
+     80|   await flush();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/runtime/history_search.sdk.test.tsx > shows a partial registered-ID result without promising the current branch or continuation
+AssertionError: expected '<details class="history-search-covera…' to contain '已登记标识'
+
+Expected: "已登记标识"
+Received: "<details class="history-search-coverage" open=""><summary>范围说明</summary><ul><li><strong>Selected</strong><span>只读取了部分内容</span><small>1 页 · 1 段文字 · 1 段匹配 · undefined</small></li></ul></details><p>本次未能检索全部所选内容，详情见范围说明。</p><h3>可查看的匹配文字 · 1 段</h3><ul class="history-search-hits"><li><button class="history-search-hit" type="button"><span><strong>Selected</strong> · 用户消息</span><span class="history-search-excerpt">hello &lt;script&gt;PRIVATE_BODY&lt;/script&gt;</span><small>查看匹配文字</small></button></li></ul>"
+
+ ❯ src/runtime/history_search.sdk.test.tsx:88:16
+     86|   const op = sdkOperation().operation as unknown as HistorySearchOpera…
+     87|   const html = renderToStaticMarkup(<HistorySearchResults operation={o…
+     88|   expect(html).toContain("已登记标识");
+       |                ^
+     89|   expect(html).toContain("当前分支");
+     90|   expect(html).toContain("后续继续");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 13 passed (18)
+   Start at  01:43:04
+   Duration  146ms (transform 41ms, setup 0ms, import 66ms, tests 12ms, environment 0ms)
+

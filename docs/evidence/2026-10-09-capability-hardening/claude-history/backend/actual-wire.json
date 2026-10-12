@@ -1,0 +1,218 @@
+{
+  "capabilityShape": {
+    "agentId": "registry:claude-acp",
+    "selectionId": "00000000-0000-4000-8000-000000000002",
+    "validForMs": 300000,
+    "source": "officialSdk",
+    "coverage": "partial",
+    "relation": "registeredExactId",
+    "continuation": "unverified",
+    "branch": "unverified",
+    "scope": "userAndAssistantText",
+    "availability": "available",
+    "code": null,
+    "rows": [
+      {
+        "rowId": "saved-1",
+        "availability": "available",
+        "code": null
+      }
+    ]
+  },
+  "running": {
+    "kind": "operation",
+    "operation": {
+      "agentId": "registry:claude-acp",
+      "requestId": "00000000-0000-4000-8000-000000000001",
+      "selectionId": "00000000-0000-4000-8000-000000000002",
+      "rowIds": ["saved-1"],
+      "query": "hello",
+      "revision": 0,
+      "state": "running",
+      "settled": false,
+      "code": null,
+      "source": "officialSdk",
+      "coverage": "partial",
+      "relation": "registeredExactId",
+      "continuation": "unverified",
+      "branch": "unverified",
+      "scope": "userAndAssistantText",
+      "matchMode": "unicodeLowercaseLiteral",
+      "exclusions": [
+        "attachments",
+        "toolOutput",
+        "reasoning",
+        "otherMessageKinds"
+      ],
+      "rows": [
+        {
+          "rowId": "saved-1",
+          "state": "queued",
+          "pagesRead": 0,
+          "textBlocksRead": 0,
+          "matchedTextBlocks": 0,
+          "code": null
+        }
+      ],
+      "hits": []
+    }
+  },
+  "completed": {
+    "kind": "operation",
+    "operation": {
+      "agentId": "registry:claude-acp",
+      "requestId": "00000000-0000-4000-8000-000000000001",
+      "selectionId": "00000000-0000-4000-8000-000000000002",
+      "rowIds": ["saved-1"],
+      "query": "hello",
+      "revision": 3,
+      "state": "completed",
+      "settled": true,
+      "code": null,
+      "source": "officialSdk",
+      "coverage": "partial",
+      "relation": "registeredExactId",
+      "continuation": "unverified",
+      "branch": "unverified",
+      "scope": "userAndAssistantText",
+      "matchMode": "unicodeLowercaseLiteral",
+      "exclusions": [
+        "attachments",
+        "toolOutput",
+        "reasoning",
+        "otherMessageKinds"
+      ],
+      "rows": [
+        {
+          "rowId": "saved-1",
+          "state": "partial",
+          "pagesRead": 1,
+          "textBlocksRead": 2,
+          "matchedTextBlocks": 2,
+          "code": "coverageUnconfirmed"
+        }
+      ],
+      "hits": [
+        {
+          "rowId": "saved-1",
+          "messageLocator": {
+            "kind": "message",
+            "messageId": "00000000-0000-0000-0000-000000000001",
+            "partIndex": 0
+          },
+          "role": "user",
+          "text": "😀 Hello",
+          "textTruncated": false,
+          "matches": [
+            {
+              "start": 3,
+              "end": 8
+            }
+          ],
+          "matchesTruncated": false
+        },
+        {
+          "rowId": "saved-1",
+          "messageLocator": {
+            "kind": "message",
+            "messageId": "00000000-0000-0000-0000-000000000002",
+            "partIndex": 2
+          },
+          "role": "assistant",
+          "text": "HELLO",
+          "textTruncated": false,
+          "matches": [
+            {
+              "start": 0,
+              "end": 5
+            }
+          ],
+          "matchesTruncated": false
+        }
+      ]
+    }
+  },
+  "closed": {
+    "kind": "absent",
+    "agentId": "registry:claude-acp",
+    "requestId": "00000000-0000-4000-8000-000000000001",
+    "scope": "currentProcess",
+    "admissionClosed": true
+  },
+  "empty": {
+    "kind": "operation",
+    "operation": {
+      "agentId": "registry:claude-acp",
+      "requestId": "00000000-0000-4000-8000-000000000001",
+      "selectionId": "00000000-0000-4000-8000-000000000002",
+      "rowIds": ["saved-1"],
+      "query": "hello",
+      "revision": 3,
+      "state": "failed",
+      "settled": true,
+      "code": "sourceUnconfirmed",
+      "source": "officialSdk",
+      "coverage": "partial",
+      "relation": "registeredExactId",
+      "continuation": "unverified",
+      "branch": "unverified",
+      "scope": "userAndAssistantText",
+      "matchMode": "unicodeLowercaseLiteral",
+      "exclusions": [
+        "attachments",
+        "toolOutput",
+        "reasoning",
+        "otherMessageKinds"
+      ],
+      "rows": [
+        {
+          "rowId": "saved-1",
+          "state": "failed",
+          "pagesRead": 0,
+          "textBlocksRead": 0,
+          "matchedTextBlocks": 0,
+          "code": "sourceUnconfirmed"
+        }
+      ],
+      "hits": []
+    }
+  },
+  "sourceChanged": {
+    "kind": "operation",
+    "operation": {
+      "agentId": "registry:claude-acp",
+      "requestId": "00000000-0000-4000-8000-000000000001",
+      "selectionId": "00000000-0000-4000-8000-000000000002",
+      "rowIds": ["saved-1"],
+      "query": "hello",
+      "revision": 3,
+      "state": "failed",
+      "settled": true,
+      "code": "sourceChanged",
+      "source": "officialSdk",
+      "coverage": "partial",
+      "relation": "registeredExactId",
+      "continuation": "unverified",
+      "branch": "unverified",
+      "scope": "userAndAssistantText",
+      "matchMode": "unicodeLowercaseLiteral",
+      "exclusions": [
+        "attachments",
+        "toolOutput",
+        "reasoning",
+        "otherMessageKinds"
+      ],
+      "rows": [
+        {
+          "rowId": "saved-1",
+          "state": "failed",
+          "pagesRead": 0,
+          "textBlocksRead": 0,
+          "matchedTextBlocks": 0,
+          "code": "sourceChanged"
+        }
+      ],
+      "hits": []
+    }
+  }
+}

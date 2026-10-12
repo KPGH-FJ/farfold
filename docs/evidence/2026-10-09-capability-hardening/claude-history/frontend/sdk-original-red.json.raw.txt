@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/history_search.sdk.test.tsx"
+  ],
+  "exitCode": 1,
+  "seconds": 0.541383791,
+  "log": "output/2026-10-13-claude-history-frontend/sdk-original-red.txt",
+  "sha256": "e49b8d480196b82388eb400659db182e7754b638d9c31627c8a92c41f849b549",
+  "scope": "new strict shared frontend SDK DTO/controller/render tests against unchanged production"
+}

@@ -1,4 +1,7 @@
-use super::types::*;
+use super::{
+    launch::{self, Route},
+    types::*,
+};
 use crate::{
     acp_client::{
         extension_inventory as inventory,
@@ -15,6 +18,7 @@ use std::{
 pub(super) struct Source {
     pub agent: AgentRow,
     pub rows: Vec<SessionRow>,
+    pub route: Route,
 }
 impl Source {
     pub fn current(&self, store: &MetaStore) -> Result<()> {
@@ -35,6 +39,7 @@ impl Source {
                 return Err(Code::IndexChanged.into());
             }
         }
+        self.route.current(&self.agent)?;
         Ok(())
     }
     pub fn unopened(&self, manager: &AcpManager) -> Result<()> {
@@ -134,15 +139,12 @@ pub(super) fn capabilities(
         .get_agent(agent)
         .map_err(|_| Code::Unavailable)?
         .ok_or(Code::Unavailable)?;
-    let common = inventory::launch::admission(&row)
-        .map_err(Failure::from)
-        .err()
-        .map(|v| v.code)
-        .or_else(|| {
-            crate::shell_env::cached_command_env()
-                .is_none()
-                .then_some(Code::EnvironmentUnavailable)
-        });
+    let route = launch::admission(&row);
+    let common = route.as_ref().err().map(|v| v.code).or_else(|| {
+        crate::shell_env::cached_command_env()
+            .is_none()
+            .then_some(Code::EnvironmentUnavailable)
+    });
     let mut saved = vec![];
     let mut rows = vec![];
     for id in ids {
@@ -157,8 +159,21 @@ pub(super) fn capabilities(
             {
                 Some(Code::NoNativeHistory)
             }
+            Some(s)
+                if matches!(&route, Ok(Route::Sdk(_)))
+                    && !s.native_session_id.as_deref().is_some_and(uuid) =>
+            {
+                Some(Code::NoNativeHistory)
+            }
             Some(s) => {
-                if inventory::launch::Directory::open(&s.cwd).is_err() {
+                if (matches!(&route, Ok(Route::Sdk(_)))
+                    && std::fs::canonicalize(&s.cwd)
+                        .ok()
+                        .and_then(|p| p.to_str().map(str::to_owned))
+                        .as_deref()
+                        != Some(s.cwd.as_str()))
+                    || inventory::launch::Directory::open(&s.cwd).is_err()
+                {
                     Some(Code::CwdUnavailable)
                 } else {
                     match is_open(
@@ -203,6 +218,7 @@ pub(super) fn capabilities(
                 Source {
                     agent: row,
                     rows: saved,
+                    route: route.as_ref().map_err(Clone::clone)?.clone(),
                 },
                 Instant::now(),
             ),
@@ -211,11 +227,13 @@ pub(super) fn capabilities(
     } else {
         None
     };
+    let (public_source, sdk_scope) = public_surface(&route, common);
     Ok(Selection {
         agent_id: agent.into(),
         selection_id,
         valid_for_ms: 300000,
-        source: common.is_none().then_some("officialAppServer"),
+        source: public_source,
+        sdk_scope,
         scope: "userAndAssistantText",
         availability: if code.is_none() {
             "available"
@@ -225,4 +243,27 @@ pub(super) fn capabilities(
         code,
         rows,
     })
+}
+
+pub(super) fn public_surface(
+    route: &Result<Route>,
+    common: Option<Code>,
+) -> (Option<&'static str>, Option<SdkScope>) {
+    let route = route.as_ref().ok().filter(|_| common.is_none());
+    (route.map(Route::source), route.and_then(Route::scope))
+}
+#[cfg(test)]
+mod surface_tests {
+    use super::*;
+    #[test]
+    fn common_environment_failure_does_not_publish_codex_or_sdk_source() {
+        let route = Ok(Route::AppServer);
+        let (source, scope) = public_surface(&route, Some(Code::EnvironmentUnavailable));
+        assert!(source.is_none());
+        assert!(scope.is_none());
+        let (source, scope) = public_surface(&route, None);
+        // Per-row unavailable (e.g. already open) does not invalidate the checked route.
+        assert_eq!(source, Some("officialAppServer"));
+        assert!(scope.is_none());
+    }
 }

@@ -1,0 +1,104 @@
+{
+  "checkedAtUtc": "2026-10-12T18:05:02.131680+00:00",
+  "sourceBase": "0be2268d8405b80e4a04764e61faa8bd12be213c",
+  "inputCount": 1578,
+  "sourceStable": true,
+  "changedInputs": [],
+  "protectedUnchanged": true,
+  "checks": [
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 7.928,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 39.805,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/frontend.txt",
+      "sha256": "1be283891a2bc2b36d55557a1fc261113c79e1299334d0bc866ddff385cb359e",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 8.762,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/build.txt",
+      "sha256": "34e2ff4a8a8a3975368e161fe189806f208d924b47aa3235b47fc1480f212c6e",
+      "executedInThisRun": true
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.206,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 101,
+      "seconds": 8.817,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/clippy.txt",
+      "sha256": "3a4e84f31c4f01578bba570dcb56dae0b9e580639b9e148be9ded50a86d9bfb8",
+      "executedInThisRun": true
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "seconds": 147.717,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/rust.txt",
+      "sha256": "184a1acccfdd463673ff7069c9e9090c77026e737281587babb8cba62a490acc",
+      "executedInThisRun": true
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 28.849,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true
+    }
+  ],
+  "counts": {
+    "frontend": ["Test Files  442 passed (442)", "Tests  5203 passed (5203)"],
+    "rust": [
+      "test result: ok. 1610 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 121.78s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+      "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+    ]
+  },
+  "allPassed": false,
+  "boundary": "Seven commands actually executed on frozen source and official-history serde wires, including the new SDK partial-projection branch. Controlled fixtures, actual official SDK calls, installed App, Windows and whole P32 have separate evidence. No previous native commands are reused when the native source changes."
+}

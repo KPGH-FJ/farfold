@@ -393,6 +393,14 @@ fn observe_program(
         check_succeeded: output.as_ref().is_some_and(|text| !text.is_empty()),
         version: output.as_deref().and_then(public_version),
     };
+    #[cfg(test)]
+    if observation.version.is_none() {
+        eprintln!(
+            "[farfold-version-probe] reason=version_unparsed output_present={} bytes={}",
+            output.is_some(),
+            output.as_ref().map_or(0, String::len),
+        );
+    }
     check()?;
     if cache.len() >= 128 {
         cache.clear();

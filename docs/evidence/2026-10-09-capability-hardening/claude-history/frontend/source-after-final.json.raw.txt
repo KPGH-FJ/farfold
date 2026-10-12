@@ -1,0 +1,72 @@
+[
+  {
+    "path": "src/runtime/history_search_types.ts",
+    "sha256": "ebc43a989b38f56ac3010cc4a1e674ba60c36970ba0a128a4e21e7af2b00c0e3",
+    "bytes": 14623
+  },
+  {
+    "path": "src/runtime/history_search_controller.ts",
+    "sha256": "237ec5d18b6a5165ee5d89ea553eeed758f5af7655fbbd0495f94730f89e5507",
+    "bytes": 11246
+  },
+  {
+    "path": "src/runtime/history_search_strings.ts",
+    "sha256": "dddebe073f30fa8d28a85d7de87d1a50cfaf578f5df0ddf0a29ced08af407b4f",
+    "bytes": 6221
+  },
+  {
+    "path": "src/runtime/history_search.test-support.ts",
+    "sha256": "4d91dac1751b1aaadf3b6bf915a3d9f1b61ea55645745cdc877ee939d71dbac7",
+    "bytes": 4222
+  },
+  {
+    "path": "src/runtime/history_search.sdk.test-support.ts",
+    "sha256": "f7425899ea9468154350ddca7851239bdb5aace33dd1fa95f4cac5fd5f2a21f6",
+    "bytes": 1232
+  },
+  {
+    "path": "src/runtime/history_search.sdk.test.tsx",
+    "sha256": "e7c3c1a340db58f36658761c798e0e46b8926883c6190d7d940ac4c70eac47cc",
+    "bytes": 8452
+  },
+  {
+    "path": "src/runtime/history_search.sdk-wire.test.tsx",
+    "sha256": "ab26553a83761a47bd7ad854e3dceb572a2b1594e4113a0a517ec04e6302056c",
+    "bytes": 4215
+  },
+  {
+    "path": "src/components/HistorySearchPanel.tsx",
+    "sha256": "19badb5b2ffb4ec408bf8e5a53bb5e835f5fbeb24b62f5c9b08e8497dad81be3",
+    "bytes": 13666
+  },
+  {
+    "path": "src/components/HistorySearchResults.tsx",
+    "sha256": "38ab6a8eabc371d34b7012c2630b0adccc854f585171e5e2ca7f94b925f36e2a",
+    "bytes": 2991
+  },
+  {
+    "path": "src/components/HistorySearchPanel.test.tsx",
+    "sha256": "c34c30ea01cfccf5c09f70d6afedf1b922dcde7f18957ed91abd20c78062924e",
+    "bytes": 14862
+  },
+  {
+    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/backend/actual-wire.json",
+    "sha256": "bf9d61b290eeb2c8c67d12cc95dae72b9aad7235da556c8a3d951fc164240505",
+    "bytes": 5645
+  },
+  {
+    "path": "src/runtime/session_index_refresh.ts",
+    "sha256": "39df0b3d40976af25520c980d2d5bbba3a5a2e511d2049d0e9ac4fb8381146e0",
+    "bytes": 640
+  },
+  {
+    "path": "src/runtime/sessions.ts",
+    "sha256": "6e86e02ae09b90573b76fc2f7dcfb213b2999e8fd4b191ce58a5392520b3eeec",
+    "bytes": 49923
+  },
+  {
+    "path": "src/runtime/sessions.index-refresh.test.ts",
+    "sha256": "151b2db9f4d9c25ee04b79beb95f16f2143d237a4663747992e121b8049e9891",
+    "bytes": 4450
+  }
+]

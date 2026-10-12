@@ -6,7 +6,7 @@ import {
 import type {
   HistorySearchExpected,
   HistorySearchOperation,
-  HistorySearchReply,
+  HistorySearchAppServerOperation,
   HistorySearchSelection,
 } from "./history_search_types";
 export const requestId = "00000000-0000-4000-8000-000000000001";
@@ -45,7 +45,7 @@ export function operation(
   state: HistorySearchOperation["state"] = "running",
   revision = 0,
   identity = expected,
-): HistorySearchReply & { kind: "operation" } {
+): { kind: "operation"; operation: HistorySearchAppServerOperation } {
   const settled = ["completed", "cancelled", "failed"].includes(state);
   return {
     kind: "operation",

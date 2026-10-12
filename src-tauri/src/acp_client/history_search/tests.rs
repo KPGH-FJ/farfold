@@ -2,7 +2,7 @@ use super::*;
 use crate::meta_store::{AgentRow, SessionRow};
 use serde_json::json;
 use std::process::Command;
-fn source(path: &str) -> source::Source {
+pub(super) fn source(path: &str) -> source::Source {
     source::Source {
         agent: AgentRow {
             id: "synthetic".into(),
@@ -16,6 +16,7 @@ fn source(path: &str) -> source::Source {
             created_at: 0,
             updated_at: 0,
         },
+        route: super::launch::Route::AppServer,
         rows: vec![SessionRow {
             id: "saved-1".into(),
             agent_id: "synthetic".into(),
@@ -30,7 +31,7 @@ fn source(path: &str) -> source::Source {
         }],
     }
 }
-fn request() -> Request {
+pub(super) fn request() -> Request {
     Request {
         agent_id: "synthetic".into(),
         request_id: "00000000-0000-4000-8000-000000000001".into(),
@@ -65,9 +66,14 @@ fn official_pages_preserve_source_and_offsets_without_resume() {
     assert_eq!(v.rows[0].state, RowState::Complete);
     assert_eq!(v.rows[0].pages_read, 2);
     assert_eq!(v.hits.len(), 2);
-    assert_eq!(v.hits[0].turn_id, "turn-1");
-    assert_eq!(v.hits[0].item_id, "u-1");
-    assert_eq!(v.hits[0].part_index, 1);
+    assert_eq!(
+        v.hits[0].locator,
+        Locator::TurnItem {
+            turn_id: "turn-1".into(),
+            item_id: "u-1".into(),
+            part_index: 1
+        }
+    );
     assert_eq!(v.hits[0].matches, vec![Range { start: 3, end: 8 }]);
     assert_eq!(v.rows[0].text_blocks_read, 3);
 }

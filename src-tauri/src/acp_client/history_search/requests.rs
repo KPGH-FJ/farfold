@@ -32,7 +32,8 @@ impl Job {
             state: State::Running,
             settled: false,
             code: None,
-            source: "officialAppServer",
+            source: source.route.source(),
+            sdk_scope: source.route.scope(),
             scope: "userAndAssistantText",
             match_mode: "unicodeLowercaseLiteral",
             exclusions: [

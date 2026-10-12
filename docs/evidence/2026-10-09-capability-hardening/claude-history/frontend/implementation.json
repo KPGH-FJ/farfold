@@ -1,0 +1,333 @@
+{
+  "phase": "frontendImplementedAndControlledValidatedNotInstalled",
+  "scope": "Extend the one capability-driven history-search UI with an officialSdk source branch; no Agent-name branch and no new persistent data or invented turn IDs. Old officialAppServer serialized shape remains strict.",
+  "changes": [
+    "SDK selection/operation require all four exact partial/relation/continuation/branch constants; SDK hits require UUID messageLocator and reject mixed old locator fields. Flight captures source from accepted capability for all start/status/cancel replies.",
+    "Before explicit start, describe only saved records corresponding to the selected conversation and unverified current branch/continuation. Capability check does not claim actual history/API read. SDK returned rows cannot claim complete coverage; no usable text remains unconfirmed.",
+    "Literal snapshot preview and separate original-open guard retain exact hit/row/owner. Only type-equivalent includes to some identity membership change was necessary for union hit arrays.",
+    "Existing full-value index refresh helper, sessions current-row assignment, and protected owner/ABA behavior remain unchanged."
+  ],
+  "validation": {
+    "focused": {
+      "files": 10,
+      "tests": 134,
+      "allPassed": true,
+      "sourceStable": true
+    },
+    "typecheckExitCode": 0,
+    "ownedFormatExitCode": 0,
+    "actualWire": {
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/backend/actual-wire.json",
+        "sha256": "bf9d61b290eeb2c8c67d12cc95dae72b9aad7235da556c8a3d951fc164240505",
+        "bytes": 5645
+      },
+      "values": 6,
+      "interopTests": 9,
+      "scope": "Rust serialized capabilityShape is only typed-shape evidence; running/completed/closed use one actual controlled SDK child/job sequence; empty/sourceChanged separate controlled cases. No real official SDK installation or capability API was exercised by FE."
+    },
+    "browser": {
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser-validation.json",
+        "sha256": "f88930ccd5cb47ffd22b1df3db3d909ce42cee2d15b7be41068a66cf46ac3d21",
+        "bytes": 8919
+      },
+      "eachEngine": 99,
+      "scope": "Controlled IPC complete App, not installed official history validation."
+    }
+  },
+  "originalFailures": {
+    "newBranchBeforeImplementation": {
+      "tests": 18,
+      "failed": 5,
+      "passed": 13,
+      "scope": "Unsupported new source/locator/UI route before this extension; not a claim of five independently installed defects."
+    },
+    "typecheckFirst": "Three union-array includes type errors fixed with equivalent exact-object some checks.",
+    "testDriverCorrection": "New test asserted nonexistent unresolved field; corrected to actual unconfirmed. Original failure/type logs retained; not a production behavior defect."
+  },
+  "evidenceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/source-checkpoint.json",
+      "sha256": "db7c2d8fd414ec1d76265ac37ef3dd424013ae106fdbf5af2ed2bd265b5c19bf",
+      "bytes": 2745
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser-validation.json",
+      "sha256": "f88930ccd5cb47ffd22b1df3db3d909ce42cee2d15b7be41068a66cf46ac3d21",
+      "bytes": 8919
+    },
+    {
+      "path": "output/2026-10-13-claude-history-frontend/preparation.json",
+      "sha256": "c203a8d7e214640d448c0c2bd7798944382f3f1c1659b82dc54f8463c1bdf6f0",
+      "bytes": 4656
+    },
+    {
+      "path": "output/2026-10-13-claude-history-backend/contract.ts",
+      "sha256": "195cf371a70ca4bf4574b39ef58d34fb73b4a564e7ffe90371de1a9f7b2566f3",
+      "bytes": 1383
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/sdk-original-red.txt",
+      "sha256": "e49b8d480196b82388eb400659db182e7754b638d9c31627c8a92c41f849b549",
+      "bytes": 4524
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/sdk-original-red.json.raw.txt",
+      "sha256": "b69bb227c5bc65e16cbfdef7b4dd099e66a331a1c042357ea88fda5bbb944aa3",
+      "bytes": 431
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/sdk-first-green.txt",
+      "sha256": "166a0339152d30a862b860910d6a014bb7b0d424e8891644bf61555f5731c16a",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/typecheck-first.txt",
+      "sha256": "4902c71ef6b92fcf1b6bf94dee72fe11afd8eb027964be428831ce66b44f24f3",
+      "bytes": 1388
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/sdk-panel-green.txt",
+      "sha256": "320b1b0ba99544fe362741179eb3caea54770b9760e8a23bf90d13e41803b479",
+      "bytes": 1207
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/typecheck-second.txt",
+      "sha256": "252e199a1c446cb9e4248a8179bdc145081584005338e6ad2ce22e02404fc677",
+      "bytes": 390
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/test-driver-correction.json.raw.txt",
+      "sha256": "ff07a8e1e093c8dd7d89714602f7d71fa656561c522d312faa5cf0e488eb8358",
+      "bytes": 413
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/sdk-panel-green-corrected.txt",
+      "sha256": "257b3b39d60af9ec4e5f7dd1206d2b4feb9034aa535a62a2901ea615805adb2b",
+      "bytes": 211
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/typecheck-third.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/related-final.txt",
+      "sha256": "13d07a1baa28663612b14a07b95146a7e7b475a23dc7aea36527b985e67f9129",
+      "bytes": 216
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/type-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/owned-format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "bytes": 66
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/source-before-final.json.raw.txt",
+      "sha256": "af54e2b8ef4efa4e732613f04bf556daf63e183c6c801218726933348b9e5b10",
+      "bytes": 2344
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/source-after-final.json.raw.txt",
+      "sha256": "af54e2b8ef4efa4e732613f04bf556daf63e183c6c801218726933348b9e5b10",
+      "bytes": 2344
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/final-checks.json.raw.txt",
+      "sha256": "bcfd3ae26ded6e8de0d7d00e71f720458b458b456343038721b107f0b68fa85e",
+      "bytes": 4105
+    }
+  ],
+  "rawCopyMap": [
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/sdk-original-red.txt",
+        "sha256": "e49b8d480196b82388eb400659db182e7754b638d9c31627c8a92c41f849b549",
+        "bytes": 4524
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/sdk-original-red.txt",
+        "sha256": "e49b8d480196b82388eb400659db182e7754b638d9c31627c8a92c41f849b549",
+        "bytes": 4524
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/sdk-original-red.json",
+        "sha256": "b69bb227c5bc65e16cbfdef7b4dd099e66a331a1c042357ea88fda5bbb944aa3",
+        "bytes": 431
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/sdk-original-red.json.raw.txt",
+        "sha256": "b69bb227c5bc65e16cbfdef7b4dd099e66a331a1c042357ea88fda5bbb944aa3",
+        "bytes": 431
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/sdk-first-green.txt",
+        "sha256": "166a0339152d30a862b860910d6a014bb7b0d424e8891644bf61555f5731c16a",
+        "bytes": 211
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/sdk-first-green.txt",
+        "sha256": "166a0339152d30a862b860910d6a014bb7b0d424e8891644bf61555f5731c16a",
+        "bytes": 211
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/typecheck-first.txt",
+        "sha256": "4902c71ef6b92fcf1b6bf94dee72fe11afd8eb027964be428831ce66b44f24f3",
+        "bytes": 1388
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/typecheck-first.txt",
+        "sha256": "4902c71ef6b92fcf1b6bf94dee72fe11afd8eb027964be428831ce66b44f24f3",
+        "bytes": 1388
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/sdk-panel-green.txt",
+        "sha256": "320b1b0ba99544fe362741179eb3caea54770b9760e8a23bf90d13e41803b479",
+        "bytes": 1207
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/sdk-panel-green.txt",
+        "sha256": "320b1b0ba99544fe362741179eb3caea54770b9760e8a23bf90d13e41803b479",
+        "bytes": 1207
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/typecheck-second.txt",
+        "sha256": "252e199a1c446cb9e4248a8179bdc145081584005338e6ad2ce22e02404fc677",
+        "bytes": 390
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/typecheck-second.txt",
+        "sha256": "252e199a1c446cb9e4248a8179bdc145081584005338e6ad2ce22e02404fc677",
+        "bytes": 390
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/test-driver-correction.json",
+        "sha256": "ff07a8e1e093c8dd7d89714602f7d71fa656561c522d312faa5cf0e488eb8358",
+        "bytes": 413
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/test-driver-correction.json.raw.txt",
+        "sha256": "ff07a8e1e093c8dd7d89714602f7d71fa656561c522d312faa5cf0e488eb8358",
+        "bytes": 413
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/sdk-panel-green-corrected.txt",
+        "sha256": "257b3b39d60af9ec4e5f7dd1206d2b4feb9034aa535a62a2901ea615805adb2b",
+        "bytes": 211
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/sdk-panel-green-corrected.txt",
+        "sha256": "257b3b39d60af9ec4e5f7dd1206d2b4feb9034aa535a62a2901ea615805adb2b",
+        "bytes": 211
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/typecheck-third.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/typecheck-third.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/related-final.txt",
+        "sha256": "13d07a1baa28663612b14a07b95146a7e7b475a23dc7aea36527b985e67f9129",
+        "bytes": 216
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/related-final.txt",
+        "sha256": "13d07a1baa28663612b14a07b95146a7e7b475a23dc7aea36527b985e67f9129",
+        "bytes": 216
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/type-final.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/type-final.txt",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/owned-format-final.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+        "bytes": 66
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/owned-format-final.txt",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+        "bytes": 66
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/source-before-final.json",
+        "sha256": "af54e2b8ef4efa4e732613f04bf556daf63e183c6c801218726933348b9e5b10",
+        "bytes": 2344
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/source-before-final.json.raw.txt",
+        "sha256": "af54e2b8ef4efa4e732613f04bf556daf63e183c6c801218726933348b9e5b10",
+        "bytes": 2344
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/source-after-final.json",
+        "sha256": "af54e2b8ef4efa4e732613f04bf556daf63e183c6c801218726933348b9e5b10",
+        "bytes": 2344
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/source-after-final.json.raw.txt",
+        "sha256": "af54e2b8ef4efa4e732613f04bf556daf63e183c6c801218726933348b9e5b10",
+        "bytes": 2344
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-claude-history-frontend/final-checks.json",
+        "sha256": "bcfd3ae26ded6e8de0d7d00e71f720458b458b456343038721b107f0b68fa85e",
+        "bytes": 4105
+      },
+      "copy": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/final-checks.json.raw.txt",
+        "sha256": "bcfd3ae26ded6e8de0d7d00e71f720458b458b456343038721b107f0b68fa85e",
+        "bytes": 4105
+      }
+    }
+  ],
+  "limits": [
+    "No official Agent/SDK/App/live database, model prompt, account or configuration change.",
+    "Old Codex and new partial source browser cases prove their controlled paths only; actual official history, branch correspondence and continued session behavior remain unverified.",
+    "Full engineering checks, candidate, installation and official native test belong to root; this receipt does not mark P32 complete."
+  ]
+}

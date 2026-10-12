@@ -1,0 +1,86 @@
+import React, { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "/src/App";
+import { DraftStartup } from "/src/components/DraftStartup";
+import { StorageStartup } from "/src/components/StorageRecovery";
+import { threads, freshThreadState } from "/src/runtime/sessions";
+import {
+  composerDrafts,
+  newConversationChoice,
+  draftPersistence,
+  fileFeedbackDrafts,
+} from "/src/runtime/drafts";
+import "@xterm/xterm/css/xterm.css";
+import "/src/styles.css";
+import "/src/styles-settings.css";
+import "/src/styles-content.css";
+import "/src/styles-thread.css";
+import "/src/styles-artifact.css";
+import "/src/product-shell.css";
+import "/src/conversation-workspace.css";
+import "/src/history-import.css";
+import "/src/desktop-workbench.css";
+
+import { historySearch } from "/src/runtime/history_search_controller";
+// Only native boundaries are controlled. Production App/StrictMode/controllers/parsers are intact.
+const w=window as any, settings=new Map<string,unknown>(),caps=new Map<string,any>(),jobs=new Map<string,any>();
+let sdkRoute=false, capHold=false,unavailable=false, startHold=false, cancelClosed=false, capResolve:any=null;
+const agent={id:'fixture',name:'Controlled Agent',source:'custom',command:'/controlled/never-executed',args:[],env:[],version:null,handshake:null,createdAt:1,updatedAt:1};
+const rows=['KEEP',...Array.from({length:21},(_,i)=>String(i+1).padStart(2,'0')),'NO_HISTORY'].map((name,i)=>({id:`fixture:/controlled/project-${name}:native-${name}`,agentId:'fixture',cwd:`/controlled/project-${name}`,nativeSessionId:name==='NO_HISTORY'?null:`native-${name}`,title:`HISTORY_${name}`,configOptions:null,pinned:false,archived:false,createdAt:1,updatedAt:100-i}));
+settings.set('agentSetup.v1',{version:1,completed:['fixture'],pending:{},progress:{},selections:{fixture:{service:null,config:{}}}});
+const clone=(v:any)=>structuredClone(v);
+const sdkScope={source:'officialSdk',coverage:'partial',relation:'registeredExactId',continuation:'unverified',branch:'unverified'};
+const originalRows=clone(rows);
+function operation(a:any,rowIds:string[],source:string){return{...a,rowIds,revision:1,state:'running',settled:false,code:null,...(source==='officialSdk'?sdkScope:{source:'officialAppServer'}),scope:'userAndAssistantText',matchMode:'unicodeLowercaseLiteral',exclusions:['attachments','toolOutput','reasoning','otherMessageKinds'],rows:rowIds.map(rowId=>({rowId,state:'reading',pagesRead:0,textBlocksRead:0,matchedTextBlocks:0,code:null})),hits:[]};}
+const reply=(j:any)=>({kind:'operation',operation:clone(j.op)});
+const absent=(a:any,closed:boolean)=>({kind:'absent',agentId:a.agentId,requestId:a.requestId,scope:'currentProcess',admissionClosed:closed});
+function finish(id:string,mode:string){const j=jobs.get(id);if(!j)throw Error('unknown owned job');const op=j.op;op.revision++;op.settled=!['unconfirmedMatches','cancelling','pendingCleanup'].includes(mode);op.state=mode==='cancelling'?'cancelling':mode==='pendingCleanup'?'pendingCleanup':mode==='cancelled'?'cancelled':mode==='unread'||mode==='drift'?'failed':mode==='unconfirmedMatches'?'running':'completed';op.code=op.state==='cancelling'||op.state==='cancelled'?'cancelled':op.state==='pendingCleanup'?'pendingCleanup':op.state==='failed'?(mode==='drift'?'indexChanged':'queryFailed'):null;op.hits=[];
+ op.rows=op.rowIds.map((rowId:string,i:number)=>({rowId,state:mode==='cancelled'?'skipped':mode==='unread'?'failed':mode==='partial'&&i>0||mode==='drift'?'partial':op.settled?'complete':'reading',pagesRead:mode==='unread'?0:1,textBlocksRead:mode==='unread'?0:2,matchedTextBlocks:mode==='unread'||mode==='cancelled'?0:i===0?1:0,code:mode==='cancelled'?'cancelled':mode==='unread'?'queryFailed':mode==='partial'&&i>0?'resultLimit':mode==='drift'?'indexChanged':null}));
+ if(['complete','partial','late'].includes(mode)){const text=`${op.query} <img src="https://example.invalid/SHOULD_NOT_FETCH">\n<script>window.UNSAFE=1</script> [go](https://example.invalid/) literal body`;op.hits=[{rowId:op.rowIds[0],turnId:'turn-1',itemId:'item-1',partIndex:0,role:'user',text,textTruncated:mode==='partial',matches:[{start:0,end:op.query.length}],matchesTruncated:mode==='partial'}];}
+ if(op.source==='officialSdk'){
+  if(mode==='sdkEmpty'){op.hits=[];op.rows=op.rows.map((r:any)=>({...r,matchedTextBlocks:0}));}
+  if(mode==='unread'){op.code='sourceUnconfirmed';op.rows=op.rows.map((r:any)=>({...r,code:'sourceUnconfirmed'}));}
+  if(mode==='drift'){op.code='sourceChanged';op.rows=op.rows.map((r:any)=>({...r,code:'sourceChanged'}));}
+  op.rows=op.rows.map((r:any)=>r.state==='complete'?{...r,state:'partial',code:'coverageUnconfirmed'}:r);
+  op.hits=op.hits.map(({turnId,itemId,partIndex,...h}:any)=>({...h,role:'assistant',messageLocator:{kind:'message',messageId:'00000000-0000-4000-8000-000000000010',partIndex:2}}));
+ }
+ return reply(j);
+}
+w.testInvoke=async(cmd:string,args:any)=>{const {channel: _channel,...captured}=args??{};w.calls.push({cmd,args:args?clone(captured):args});
+ if(cmd==='settings_get')return args.key==='autoArchiveDays'?0:settings.get(args.key)??null;
+ if(cmd==='settings_set'){settings.set(args.key,clone(args.value));return;}
+ if(cmd==='storage_recovery_status')return{ready:true,issue:null,dataDirectory:'/controlled/data',databaseReplacementAvailable:false,databaseReplacement:null};
+ if(cmd==='app_initial_snapshot')return{agents:[agent],settings:{}};
+ if(cmd==='app_default_working_directory')return '/controlled/project-KEEP';
+ if(cmd==='session_index_list')return clone(rows);
+ if(['catalog_list','catalog_scan','credential_list','desktop_notification_take_pending','prompt_templates_list','agent_status'].includes(cmd))return[];
+ if(['app_drafts_ready','host_performance_sample','session_mark_read','session_index_mark_read','session_close','session_dismiss','plugin:event|unlisten'].includes(cmd))return;
+ if(cmd==='host_performance_origin')return null;
+ if(cmd==='plugin:event|listen')return 1;
+ if(cmd==='agent_work_get')return{cwd:args.cwd,enabled:{},locationEnabled:true};
+ if(cmd==='desktop_notifications_get')return{enabled:false,successEnabled:false,sound:false};
+ if(cmd==='worktree_list')return{locations:[],archives:[],recoveries:[],materials:[],operation:null};
+ if(cmd==='browser_share_status')return{taskKey:args.taskKey,label:args.label,agentId:'fixture',phase:'unshared',revision:0,reason:null,pendingRequest:null};
+ if(cmd==='session_open')return{nativeSessionId:args.nativeSessionId??'controlled-empty-preparation',connectionId:'controlled-no-process-'+w.calls.length,cwd:args.cwd,configOptions:[],configOptionsModern:true,resumed:Boolean(args.nativeSessionId),warnings:[],permissionState:'ready'};
+ if(cmd==='history_search_capabilities'){const selectionId=crypto.randomUUID(),r={agentId:args.agentId,selectionId:unavailable?null:selectionId,validForMs:300000,availability:unavailable?'unavailable':'available',...(sdkRoute?sdkScope:{source:unavailable?null:'officialAppServer'}),scope:'userAndAssistantText',code:unavailable?'notReviewed':null,rows:args.rowIds.map((rowId:string)=>({rowId,availability:unavailable?'unavailable':'available',code:unavailable?'notReviewed':null}))};caps.set(selectionId,{rowIds:args.rowIds,response:r});return capHold?new Promise(resolve=>{capResolve=()=>resolve(clone(r));}):clone(r);}
+ if(cmd==='history_search_start'){const c=caps.get(args.selectionId);if(!c)throw{code:'selectionChanged'};const j={input:clone(args),op:operation(args,c.rowIds,c.response.source),resolve:null,closed:false};jobs.set(args.requestId,j);return startHold?new Promise(resolve=>{j.resolve=resolve;}):reply(j);}
+ if(cmd==='history_search_status'){const j=jobs.get(args.requestId);return j&&!j.closed?reply(j):absent(args,Boolean(j?.closed));}
+ if(cmd==='history_search_cancel'){const j=jobs.get(args.requestId);if(cancelClosed){if(j)j.closed=true;return absent(args,true);}if(!j)return absent(args,true);if(!j.op.settled)return finish(args.requestId,'cancelling');return reply(j);}
+ if(cmd==='history_search_release'){const j=jobs.get(args.requestId);if(!j?.op.settled)return false;j.closed=true;return true;}
+ w.unexpected.push(cmd);throw Error('Unexpected controlled IPC '+cmd);
+};
+await draftPersistence.load();newConversationChoice.cwd='/controlled/project-KEEP';newConversationChoice.agentId='fixture';
+const keep=rows[0],thread=freshThreadState(keep.id,keep.agentId,keep.cwd,keep.nativeSessionId!);thread.identity='established';thread.title=keep.title;thread.items=[{kind:'user',id:'u',text:'KEEP_LOADED_BODY',attachments:[],streaming:false,time:1}];threads.getSnapshot().threads.set(keep.id,thread);
+composerDrafts.update(`session:${keep.id}`,()=>({text:'KEEP_COMPOSER',attachments:[{id:'keep',kind:'file',name:'KEEP_ATTACHMENT',content:'KEEP_ATTACHMENT_BYTES'}]}));fileFeedbackDrafts.update(keep.id,'/controlled/keep.txt',{text:'KEEP_OPINION',selection:null});await draftPersistence.flush();
+w.fixture={
+ indexPatch:async(p:any)=>{rows[1]={...rows[1],...clone(p)};await threads.refreshIndex();},
+ indexRemove:async()=>{rows.splice(1,1);await threads.refreshIndex();},
+ indexRestore:async()=>{rows.splice(0,rows.length,...clone(originalRows));await threads.refreshIndex();},
+
+ refreshIndex:()=>threads.refreshIndex(), current:()=>({flightOwnerPresent:Boolean(historySearch.get('fixture').flight?.owner),indexSameObjects:threads.getSnapshot().index.every((r:any,i:number)=>r===rows[i]),indexValueSame:JSON.stringify(threads.getSnapshot().index)===JSON.stringify(rows),rows,calls:w.calls,unexpected:w.unexpected,jobs:[...jobs.values()].map(({resolve,...j})=>j),protected:{choice:JSON.parse(JSON.stringify(newConversationChoice)),draft:composerDrafts.read(`session:${keep.id}`),feedback:fileFeedbackDrafts.entries(keep.id)},search:JSON.parse(JSON.stringify(historySearch.get('fixture'),(key,v)=>key==='owner'||key==='current'?undefined:v))}),
+ mode:(m:any)=>{if(m.sdkRoute!==undefined)sdkRoute=m.sdkRoute;if(m.capHold!==undefined)capHold=m.capHold;if(m.unavailable!==undefined)unavailable=m.unavailable;if(m.startHold!==undefined)startHold=m.startHold;if(m.cancelClosed!==undefined)cancelClosed=m.cancelClosed;},
+ capReply:()=>{if(!capResolve)throw Error('no cap');const r=capResolve;capResolve=null;r();},
+ finish,
+ late:(id:string,mode='late')=>{const j=jobs.get(id),r=j.resolve;if(!r)throw Error('no late');j.resolve=null;r(finish(id,mode));},
+};
+createRoot(document.getElementById('root')!).render(<StrictMode><StorageStartup><DraftStartup><App/></DraftStartup></StorageStartup></StrictMode>);

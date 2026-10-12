@@ -1,0 +1,180 @@
+{
+  "phase": "controlledCompleteAppDualEnginePassed",
+  "counts": {
+    "eachEngine": 99,
+    "originalCodexRegressionChecks": 63,
+    "newPartialSourceChecks": 36,
+    "sourceFiles": 951,
+    "harnessFiles": 4
+  },
+  "sourceIdenticalBeforeAfterAndAcrossEngines": true,
+  "currentInputsMatchedAtSeal": true,
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/source-checkpoint.json",
+    "sha256": "db7c2d8fd414ec1d76265ac37ef3dd424013ae106fdbf5af2ed2bd265b5c19bf",
+    "bytes": 2745
+  },
+  "scope": "Production App/StrictMode, Library, Panel, controller and strict parser; only native IPC controlled. session_index_list returns structuredClone; actual App 60-second timer exercised using browser clock. No Agent/SDK/formal App/account/history DB/model call. Message preview and original open are separate; controlled session_open does not prove native restore.",
+  "visualInspection": [
+    "WebKit and Chromium 390x720 preflight scope notice before start; keyboard start reachable; partial scope wraps without horizontal overflow.",
+    "Both narrow preview screenshots render literal markup/URL as text, no loaded media or link; independent original-open action and continuation warning visible.",
+    "Empty/unconfirmed-result assertions inspect full DOM; their screenshots show only viewport and do not substitute for those assertions."
+  ],
+  "serverStop": {
+    "path": "output/2026-10-13-claude-history-frontend/browser/server-stop.json",
+    "sha256": "f42995bad49ab738d73693001b1a256bfa97e65f1a1a11bdb7fe0d4c2525dea5",
+    "bytes": 306
+  },
+  "evidenceRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01.result.raw.txt",
+      "sha256": "57bd99e9c389b2a956e560e84e8b50955ecb9d1e7a61818e08a695f91cb85368",
+      "bytes": 913664
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01.txt",
+      "sha256": "b774792d50c912742e4b2f47e28c7ec8b064afb78d465b93658e1d41de078c0a",
+      "bytes": 115
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01-scope-narrow.png",
+      "sha256": "c46ff5e7347d9bcd0447b0c586107c5fd2b68dadbbadfc08db8b72eee0f487de",
+      "bytes": 83075
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01-preview-narrow.png",
+      "sha256": "304351e23e57ef3d5401a3925c61cccc9d5dee54b81b6ee6feae65ffa14e83f7",
+      "bytes": 108248
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01-opened-original.png",
+      "sha256": "c529da15f313b3a7aa84d4c67081c91b2a895d10f45f2029aed7b0ae503e7ca0",
+      "bytes": 47454
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01-drift.png",
+      "sha256": "74c1a42a11123851d842561b468af06d7f40bd0fc4976cb24ee911106dbffa98",
+      "bytes": 154340
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01-cancelled.png",
+      "sha256": "fc342e31feb27655979e9f4a7a048d45742d1d1730df3f07eb5edb93b2ad499e",
+      "bytes": 148469
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01-unavailable.png",
+      "sha256": "045b7dbe159747ae363de90ac89b7d04c06c87db16d1799bf77cfc52572cc74d",
+      "bytes": 161625
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01-equal-completed-preview.png",
+      "sha256": "c7c064fb75bf8980891919030356ba1f82630473a908452341905b14726af584",
+      "bytes": 188443
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01-sdk-preflight-narrow.png",
+      "sha256": "3d322316153e6faf8024d014312c15e7916645f0db3bb2d34c12341f29750be7",
+      "bytes": 85038
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01-sdk-preview-narrow.png",
+      "sha256": "9eba0ad9932bc688503a7401cc8a33e9a1bc05350c72f7293e99583e08dc9453",
+      "bytes": 112446
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01-sdk-empty.png",
+      "sha256": "b29cbef157372203a864e5f3a8ce9c58b8e8f27b616aede02d79246b6ee87978",
+      "bytes": 157586
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/webkit-run01-sdk-unconfirmed.png",
+      "sha256": "1881b76d86e0d5a47cc19e4fa0cd980e261dd27cb8626b2bf536a939e6470762",
+      "bytes": 154237
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01.result.raw.txt",
+      "sha256": "8397b2ca753e2e79a3f2fdad4c3122e56234f19e5f96a19bbf14b4457b8a897c",
+      "bytes": 915788
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01.txt",
+      "sha256": "9e4e2ca01b374867f5fabd05599fcd3690582145292f67274ea3f3536ebf5f37",
+      "bytes": 117
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01-scope-narrow.png",
+      "sha256": "27816ce120129c62039a8f2cbc28955b006aaac842bbbf9ee382706a8222bb8f",
+      "bytes": 64348
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01-preview-narrow.png",
+      "sha256": "6660ef5e5ac0daced3ef233096461fc8981bea9cef8a582b4a15c796774d7bce",
+      "bytes": 103144
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01-opened-original.png",
+      "sha256": "6d2f57c03f04d29594ffeefd38356f240892e94446d58bcaec62346cb06cb840",
+      "bytes": 35095
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01-drift.png",
+      "sha256": "015e3246c830b6856f355565b1b02957966a0199a2c96890ba5b0158f8145c5e",
+      "bytes": 122522
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01-cancelled.png",
+      "sha256": "7c988cb9f17c4a325b938b521597cbfe27f4cf0ecbe2fbd5aa3c03d4b65fc9b8",
+      "bytes": 116753
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01-unavailable.png",
+      "sha256": "13a2b2c6ed61c2dce74ef7be5cbf74408235185026221cd3a83eee7f24020177",
+      "bytes": 129321
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01-equal-completed-preview.png",
+      "sha256": "a10dcf2a32671576a5fb4cb5bc210da1dbdead46648ae8bdd9b13144da94e7ca",
+      "bytes": 171888
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01-sdk-preflight-narrow.png",
+      "sha256": "c0270219e8294460ae0f287305fd11febc5cfd82abf67c920f4d6176bc1626fc",
+      "bytes": 68863
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01-sdk-preview-narrow.png",
+      "sha256": "54f9545434309de58cee777d0cc86bb8d75d72de3f1bbf20f274605b00ec37df",
+      "bytes": 104583
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01-sdk-empty.png",
+      "sha256": "d24f113369744722d3d71c950c8d1023590abf20404a1034b307369bea8a276b",
+      "bytes": 119126
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/chromium-run01-sdk-unconfirmed.png",
+      "sha256": "90782b1463c0fc02aafbd7070cc97340332b1acc4c04904d0ee13718f4e72c70",
+      "bytes": 121424
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/index.html.raw.txt",
+      "sha256": "5b91c89bd14548d4b14532f834e79fe91242c778a5237bd3efd113264643dcc0",
+      "bytes": 960
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/fixture.tsx.raw.txt",
+      "sha256": "48cef5a312de212639423e5e31767e2c2fc860f6dbcebbcfa741412581fe65f7",
+      "bytes": 10492
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/serve.mjs.raw.txt",
+      "sha256": "3f6304b1c3c388e3b75e8847a89b04ea06652ac97f0c94f842a7fed64fd8ac2c",
+      "bytes": 612
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/frontend/browser/run.mjs.raw.txt",
+      "sha256": "fde00cb38b02e3cccea63be0ad11f65e368e820823c92be4bf0fc906775dc0cd",
+      "bytes": 25239
+    }
+  ]
+}

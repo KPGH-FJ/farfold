@@ -8,6 +8,11 @@ export const HISTORY_SEARCH_STRINGS = {
     "仅读取你选择的对话，通过 Agent 提供的方式查找历史文字，不发送消息。仅查找用户消息和回复中的文字；附件、工具结果、思考和未返回的历史不在本次范围。",
   officialStartup:
     "开始后会使用现有设置打开官方程序；程序可能维护自己的缓存或状态。",
+  registeredScope:
+    "仅检索所选对话的已保存记录所返回的文字。是否对应当前分支及后续继续对话仍未确认，结果仅代表部分范围。",
+  registeredCheck: "已确认读取方式，尚未实际读取历史。开始后仅查询所选记录。",
+  registeredOpen:
+    "可尝试打开原对话；是否对应这些文字及后续继续仍需确认，不会自动发送消息。",
   chooseAgent: "选择 Agent",
   chooseConversations: "选择要读取的对话",
   noCandidates: "当前范围没有可选择的历史对话。",
@@ -95,5 +100,9 @@ export const HISTORY_SEARCH_STRINGS = {
     timedOut: "本次读取超时，未覆盖的范围仍未确认。",
     cancelled: "已取消本次读取。",
     pendingCleanup: "正在等待读取结束，暂不能重新开始。",
+    coverageUnconfirmed: "仅有返回文字，历史覆盖范围尚未确认。",
+    sourceUnconfirmed: "未能确认可检索文字，不能据此判断原对话为空。",
+    sourceChanged: "读取期间来源发生变化，返回文字暂不可查看。",
+    sourceTooLarge: "所选历史超过本次读取大小范围。",
   },
 } as const;

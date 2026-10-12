@@ -1,0 +1,195 @@
+{
+  "checkedAtUtc": "2026-10-12T18:22:34.070040+00:00",
+  "sourceBase": "0be2268d8405b80e4a04764e61faa8bd12be213c",
+  "status": "failed",
+  "allSevenCommandsHavePassingEvidence": false,
+  "inputCount": 1578,
+  "sourceStable": true,
+  "changedInputs": [],
+  "changedInputsSinceOriginal": [
+    "src-tauri/src/acp_client/history_search/launch.rs",
+    "src-tauri/src/acp_client/history_search/source.rs",
+    "src-tauri/src/acp_client/preparation.rs",
+    "src-tauri/src/agent_discovery.rs"
+  ],
+  "changedInputsSincePrevious": [
+    "src-tauri/src/acp_client/preparation.rs",
+    "src-tauri/src/agent_discovery.rs"
+  ],
+  "protectedUnchanged": true,
+  "checksExecutedHere": [
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "seconds": 1.006,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-03/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "executedInThisRun": true
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "seconds": 5.612,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-03/clippy.txt",
+      "sha256": "89d6085763e3f004254e8afb6852bc5c5a8f05960b3a8fe46c5f4b40ac9cb4e7",
+      "executedInThisRun": true
+    },
+    {
+      "name": "rust",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 101,
+      "seconds": 138.188,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-03/rust.txt",
+      "sha256": "cd31653daa35b7bae172104ba5975b6130c5cd630385f091612ea4bce212ac57",
+      "executedInThisRun": true
+    }
+  ],
+  "frontendChecksReused": [
+    {
+      "name": "typecheck",
+      "argv": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "seconds": 7.928,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "executedInThisRun": true
+    },
+    {
+      "name": "frontend",
+      "argv": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "seconds": 39.805,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/frontend.txt",
+      "sha256": "1be283891a2bc2b36d55557a1fc261113c79e1299334d0bc866ddff385cb359e",
+      "executedInThisRun": true
+    },
+    {
+      "name": "build",
+      "argv": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "seconds": 8.762,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/build.txt",
+      "sha256": "34e2ff4a8a8a3975368e161fe189806f208d924b47aa3235b47fc1480f212c6e",
+      "executedInThisRun": true
+    },
+    {
+      "name": "format",
+      "argv": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "seconds": 28.849,
+      "log": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "executedInThisRun": true
+    }
+  ],
+  "originalRun": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/verification.json",
+    "sha256": "9cfd0f889c73e343fd2cd6c06a99d064594ac31da4ba3a13c3ad40561069abe4"
+  },
+  "previousRun": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/verification.json",
+    "sha256": "d8245e88ee2276cab328c60e1306e18fecd5448f821d90fb6ab1a1563cade565"
+  },
+  "retainedReferences": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/verification.json",
+      "sha256": "9cfd0f889c73e343fd2cd6c06a99d064594ac31da4ba3a13c3ad40561069abe4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/verification.json",
+      "sha256": "d8245e88ee2276cab328c60e1306e18fecd5448f821d90fb6ab1a1563cade565"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/inputs-before.json",
+      "sha256": "31ca296cfe3a0a0cbe40dd58e5ec7f246390ed6bd7fd4d6cb6cd6e82e8e874d6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/inputs-after.json",
+      "sha256": "31ca296cfe3a0a0cbe40dd58e5ec7f246390ed6bd7fd4d6cb6cd6e82e8e874d6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/typecheck.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/frontend.txt",
+      "sha256": "1be283891a2bc2b36d55557a1fc261113c79e1299334d0bc866ddff385cb359e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/build.txt",
+      "sha256": "34e2ff4a8a8a3975368e161fe189806f208d924b47aa3235b47fc1480f212c6e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/clippy.txt",
+      "sha256": "3a4e84f31c4f01578bba570dcb56dae0b9e580639b9e148be9ded50a86d9bfb8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/rust.txt",
+      "sha256": "184a1acccfdd463673ff7069c9e9090c77026e737281587babb8cba62a490acc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/format.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/inputs-before.json",
+      "sha256": "c13ce41aef0f9dd1b0ec3543325ff563143c563d10c6cdbf3f098fbba9d2a0a0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/inputs-after.json",
+      "sha256": "c13ce41aef0f9dd1b0ec3543325ff563143c563d10c6cdbf3f098fbba9d2a0a0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/cargo-fmt.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/clippy.txt",
+      "sha256": "7c1f8f0b0e9b579166577190b2ae60b816b2ba36723f60116216c20f3aeeccd6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/rust.txt",
+      "sha256": "59b9e37e95ab5c203440d7b1fe1c035961d5a4b162728aab323b8688f8a7b7c4"
+    }
+  ],
+  "counts": {
+    "frontend": ["Test Files  442 passed (442)", "Tests  5203 passed (5203)"],
+    "rust": [
+      "test result: FAILED. 1609 passed; 1 failed; 6 ignored; 0 measured; 0 filtered out; finished in 120.94s"
+    ]
+  },
+  "retainedFailures": {
+    "run01": "Clippy exit101 on two equivalent-style issues; original six passing commands retained.",
+    "run02": "Rust exit101: second validate in existing cancelled_selection_does_not_start_program_version_check returned Node version unavailable. Isolated unchanged-code sample passed; concrete original cause remains unlocated.",
+    "run02BoundaryErratum": "Original numeric/status fields correctly say failed. Its fixed-template boundary first sentence incorrectly asserted all seven passing evidence; do not use that sentence as a success claim. Original receipt preserved unchanged.",
+    "diagnosticChanges": "Test-only fixed cause/exit/errno/eof/byte diagnostics; no production behavior/deadline/return or assertion relaxation. Later green does not prove original failure repaired."
+  },
+  "boundary": "Final native recheck failed; no all-seven success claim. Three native commands executed after test-only diagnostic enrichment; four frontend checks retained on byte-identical frontend/configuration/fixture/wire inputs. Original failures and erratum are retained. Controlled engineering does not establish actual official SDK, installed App, Windows or whole P32 acceptance."
+}

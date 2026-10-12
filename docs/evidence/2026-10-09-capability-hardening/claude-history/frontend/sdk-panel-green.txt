@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/history_search.sdk.test.tsx (23 tests | 1 failed) 15ms
+   × keeps status and cancel on the captured source, refusing a cross-source late response 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/history_search.sdk.test.tsx > keeps status and cancel on the captured source, refusing a cross-source late response
+AssertionError: expected undefined to be true // Object.is equality
+
+- Expected:
+true
+
++ Received:
+undefined
+
+ ❯ src/runtime/history_search.sdk.test.tsx:229:58
+    227|   );
+    228|   expect(h.controller.get("fixture").flight?.operation?.revision).toBe…
+    229|   expect(h.controller.get("fixture").flight?.unresolved).toBe(true);
+       |                                                          ^
+    230|   h.controller.cancel("fixture", expected.requestId);
+    231|   h.cancel.resolve(sdkOperation("cancelled", 3));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 78 passed (79)
+   Start at  01:50:57
+   Duration  224ms (transform 261ms, setup 0ms, import 378ms, tests 77ms, environment 0ms)
+

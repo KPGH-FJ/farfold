@@ -166,6 +166,19 @@ impl Drop for VersionChild {
     }
 }
 
+#[cfg(test)]
+fn version_probe_diagnostic(
+    reason: &'static str,
+    errno: Option<i32>,
+    exit_code: Option<i32>,
+    bytes: usize,
+    eof: bool,
+) {
+    eprintln!(
+        "[farfold-version-probe] reason={reason} errno={errno:?} exit_code={exit_code:?} bytes={bytes} eof={eof}"
+    );
+}
+
 /// Shared bounded probe for discovery and install preparation. Cancellation
 /// is checked even when no output arrives or a descendant retains the pipe.
 pub(crate) fn version_output(
@@ -185,7 +198,13 @@ pub(crate) fn version_output(
         .stdout(Stdio::piped())
         .stderr(Stdio::null())
         .spawn();
-    let Ok(child) = child else { return Ok(None) };
+    let Ok(child) = child else {
+        #[cfg(test)]
+        if let Err(error) = child {
+            version_probe_diagnostic("spawn_failed", error.raw_os_error(), None, 0, false);
+        }
+        return Ok(None);
+    };
     let group = pending
         .attach(child.id())
         .map_err(|_| "无法确认程序检查进程")?;
@@ -194,6 +213,8 @@ pub(crate) fn version_output(
         _group: group,
     };
     let Some(stdout) = child.child.stdout.take() else {
+        #[cfg(test)]
+        version_probe_diagnostic("stdout_missing", None, None, 0, false);
         return Ok(None);
     };
     let mut stdout =
@@ -205,11 +226,15 @@ pub(crate) fn version_output(
     loop {
         check()?;
         if Instant::now() >= deadline {
+            #[cfg(test)]
+            version_probe_diagnostic("deadline_loop", None, None, buffer.len(), eof);
             return Ok(None);
         }
         while !eof {
             check()?;
             if Instant::now() >= deadline {
+                #[cfg(test)]
+                version_probe_diagnostic("deadline_read", None, None, buffer.len(), eof);
                 return Ok(None);
             }
             match stdout.read(&mut chunk) {
@@ -217,18 +242,46 @@ pub(crate) fn version_output(
                 Ok(count) if buffer.len() + count <= VERSION_OUTPUT_CAP => {
                     buffer.extend_from_slice(&chunk[..count]);
                 }
-                Ok(_) => return Ok(None),
+                Ok(_count) => {
+                    #[cfg(test)]
+                    version_probe_diagnostic("output_cap", None, None, buffer.len() + _count, eof);
+                    return Ok(None);
+                }
                 Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => break,
                 Err(error) if error.kind() == std::io::ErrorKind::Interrupted => continue,
-                Err(_) => return Ok(None),
+                Err(_error) => {
+                    #[cfg(test)]
+                    version_probe_diagnostic(
+                        "read_failed",
+                        _error.raw_os_error(),
+                        None,
+                        buffer.len(),
+                        eof,
+                    );
+                    return Ok(None);
+                }
             }
         }
         match child.child.try_wait() {
             Ok(Some(status)) if status.success() && eof => {
                 return Ok(Some(String::from_utf8_lossy(&buffer).trim().to_string()));
             }
-            Ok(Some(status)) if !status.success() => return Ok(None),
-            Err(_) => return Ok(None),
+            Ok(Some(status)) if !status.success() => {
+                #[cfg(test)]
+                version_probe_diagnostic("exit_failed", None, status.code(), buffer.len(), eof);
+                return Ok(None);
+            }
+            Err(_error) => {
+                #[cfg(test)]
+                version_probe_diagnostic(
+                    "wait_failed",
+                    _error.raw_os_error(),
+                    None,
+                    buffer.len(),
+                    eof,
+                );
+                return Ok(None);
+            }
             _ => {}
         }
         std::thread::sleep(

@@ -179,7 +179,7 @@ export function HistorySearchPanel({
       active &&
       owner.current() &&
       flight?.owner === owner &&
-      flight.operation?.hits.includes(hit)
+      flight.operation?.hits.some((currentHit) => currentHit === hit)
     )
       setPreview(hit);
   };
@@ -189,7 +189,7 @@ export function HistorySearchPanel({
       !active ||
       !owner.current() ||
       flight?.owner !== owner ||
-      !flight.operation?.hits.includes(preview)
+      !flight.operation?.hits.some((currentHit) => currentHit === preview)
     ) {
       setError(S.stale);
       return;
@@ -224,7 +224,9 @@ export function HistorySearchPanel({
               ? S.cancelling
               : S.reading;
   const previewCurrent =
-    preview && visibleOperation?.hits.includes(preview) ? preview : null;
+    preview && visibleOperation?.hits.some((hit) => hit === preview)
+      ? preview
+      : null;
   return (
     <section className="history-search-panel" aria-label={S.title}>
       <h2>{S.title}</h2>
@@ -287,6 +289,14 @@ export function HistorySearchPanel({
           </div>
         </fieldset>
       )}
+      {!flight && view.selection?.source === "officialSdk" && (
+        <div className="history-search-coverage">
+          <p>{S.registeredScope}</p>
+          {view.selection.availability === "available" && (
+            <p>{S.registeredCheck}</p>
+          )}
+        </div>
+      )}
       {!flight && (
         <div className="history-search-actions">
           <button
@@ -314,6 +324,9 @@ export function HistorySearchPanel({
           </button>
           {query && !validHistoryQuery(query) && <p>{S.queryInvalid}</p>}
         </div>
+      )}
+      {flight?.source === "officialSdk" && !visibleOperation && (
+        <p>{S.registeredScope}</p>
       )}
       {view.error && <p role="status">{S.errors[view.error]}</p>}
       {view.selection?.availability === "unavailable" && (
@@ -398,7 +411,11 @@ export function HistorySearchPanel({
           <HistorySearchText hit={previewCurrent} />
           {previewCurrent.textTruncated && <p>{S.truncated}</p>}
           {previewCurrent.matchesTruncated && <p>{S.matchesTruncated}</p>}
-          <p>{S.openScope}</p>
+          <p>
+            {visibleOperation?.source === "officialSdk"
+              ? S.registeredOpen
+              : S.openScope}
+          </p>
           <button
             className="btn btn-primary"
             type="button"

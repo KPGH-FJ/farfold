@@ -1,0 +1,184 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-10-12T18:20:42.707661+00:00",
+  "state": "TestOnlyDiagnosticsFrozenPendingRootReviewAndDefaultParallelNativeRun03",
+  "rootCause": "Unlocated. No causal repair is claimed.",
+  "originalFailure": {
+    "test": "program_launch_tests::cancelled_selection_does_not_start_program_version_check",
+    "line": 211,
+    "phase": "Second validate call; first immediately-cancelled call and no-node-marker assertion had already passed.",
+    "left": "此程序所需的 Node 版本未满足或无法核对，请重新检查；原选择保持不变",
+    "right": "fixture selection cancelled",
+    "rustPassed": 1609,
+    "rustFailed": 1,
+    "rustIgnored": 6,
+    "rustExit": 101,
+    "sourceStable": true,
+    "inputCount": 1578,
+    "formatExit": 0,
+    "clippyExit": 0
+  },
+  "originalReadOnlyInvestigation": {
+    "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/investigation.json",
+    "bytes": 9572,
+    "sha256": "c585ed6644dc755c9c5ec6067db073c346781b6979f3bd1b5de619d239898e07"
+  },
+  "isolatedFollowup": {
+    "actualExit": 0,
+    "actualSeconds": 1.926,
+    "sourceStable": true,
+    "originalFourCoreSourceHashes": {
+      "src-tauri/src/program_launch.rs": "8cce8a6bb043df916f1398c8da085da3333d15c844aeb61dc3b0ba647fff2743",
+      "src-tauri/src/program_launch_tests.rs": "31456ca77050d496c88d2680bb51818a48ff3a5263d4c285c198f2f13dda54a0",
+      "src-tauri/src/agent_discovery.rs": "fe70aebd08535efa98b3381a8ec2b371c9c8fb52d1433c7633b1f4226dd09b7c",
+      "src-tauri/src/acp_client/preparation.rs": "e16aaba7fdc814e5e4ebfce78f31232220ef9f2ec23db9a203358faf8783993a"
+    },
+    "meaning": "One exact isolated test passed on the original unchanged sources. It does not explain, erase, or repair the default-parallel full-suite failure.",
+    "receipt": {
+      "path": "output/2026-10-13-claude-history-failure-investigation/isolated-original.json",
+      "bytes": 1085,
+      "sha256": "71fc64994708fd2584b292078a644c30b43c60a2797d5cc6fb44d00f8297cfe7"
+    },
+    "log": {
+      "path": "output/2026-10-13-claude-history-failure-investigation/isolated-original.txt",
+      "bytes": 575,
+      "sha256": "468be8c43e3741818eee366e455c84e36db820c9aa7628561daddb445f269f28"
+    }
+  },
+  "authorizedDiagnosticIncrement": {
+    "productionScope": [
+      "src-tauri/src/agent_discovery.rs",
+      "src-tauri/src/acp_client/preparation.rs"
+    ],
+    "agentDiscovery": "One cfg(test)-only helper emits a fixed reason and numeric errno/exit_code/byte count plus EOF. All eight Ok(None) exits are tagged: spawn_failed, stdout_missing, deadline_loop, deadline_read, output_cap, read_failed, exit_failed, wait_failed.",
+    "preparation": "Only when the parsed version is None, a cfg(test)-only diagnostic emits fixed reason=version_unparsed and output presence/byte length.",
+    "unchangedByStaticReview": [
+      "Probe result and error values",
+      "Cancellation check positions",
+      "Process/group ownership and cleanup",
+      "Timeouts and output cap",
+      "Successful version output and parsing",
+      "Test fixtures and assertions",
+      "Dependencies, environment variables and switches"
+    ],
+    "privacy": "No path, original stdout/stderr contents, environment or credentials are emitted.",
+    "releaseBoundary": "Diagnostics and their helper are cfg(test)-only. No release compilation or runtime verification was run by this reviewer.",
+    "formatting": {
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--config",
+        "skip_children=true",
+        "src-tauri/src/agent_discovery.rs",
+        "src-tauri/src/acp_client/preparation.rs"
+      ],
+      "exitCode": 0
+    },
+    "validation": "Reviewer performed direct source/diff inspection and exact reference hashing only. Root owns compilation, Clippy and default-parallel run03; no Cargo was run by this reviewer.",
+    "before": [
+      {
+        "path": "src-tauri/src/agent_discovery.rs",
+        "bytes": 13250,
+        "sha256": "fe70aebd08535efa98b3381a8ec2b371c9c8fb52d1433c7633b1f4226dd09b7c"
+      },
+      {
+        "path": "src-tauri/src/acp_client/preparation.rs",
+        "bytes": 35742,
+        "sha256": "e16aaba7fdc814e5e4ebfce78f31232220ef9f2ec23db9a203358faf8783993a"
+      }
+    ],
+    "after": [
+      {
+        "path": "src-tauri/src/agent_discovery.rs",
+        "bytes": 14999,
+        "sha256": "b7d5524b94d52b2af5bbb4cef4bdefb81d029f344b24874e3682666ac336e6c3"
+      },
+      {
+        "path": "src-tauri/src/acp_client/preparation.rs",
+        "bytes": 36006,
+        "sha256": "5d540cda3f3b80f182a2cc97533d8cb9a451a55918ec4f68204c200700e9d3b8"
+      }
+    ],
+    "diff": {
+      "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/test-only-diagnostic.patch",
+      "bytes": 4973,
+      "sha256": "e323e40417cd8273747f7a2c5e39cf06d5674fe4fd31c7be6c36f18451155b06"
+    },
+    "testAssertionsUnchanged": {
+      "path": "src-tauri/src/program_launch_tests.rs",
+      "bytes": 7489,
+      "sha256": "31456ca77050d496c88d2680bb51818a48ff3a5263d4c285c198f2f13dda54a0"
+    },
+    "cargoFormatting": {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "afterTwoSourcesEqualPreFormatFreeze": true
+    }
+  },
+  "separateRecordCorrection": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/run02-record-correction.json",
+    "bytes": 4008,
+    "sha256": "2a43228d3d906f51d729f9c28bdf9e9c8b3d0adc2496a2b55d928a9c948ec213"
+  },
+  "docsAlignment": "Success alignment remains paused. Original PRODUCT and four active documentation files have not been edited by this reviewer.",
+  "refs": [
+    {
+      "path": "src-tauri/src/program_launch.rs",
+      "bytes": 7865,
+      "sha256": "8cce8a6bb043df916f1398c8da085da3333d15c844aeb61dc3b0ba647fff2743"
+    },
+    {
+      "path": "src-tauri/src/acp_client/versions.rs",
+      "bytes": 2172,
+      "sha256": "3e5f0d9fa5d5d519d93ae607446d6eebd95c1db2388fe56a24f2daeca44247fd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-01/verification.json",
+      "bytes": 3779,
+      "sha256": "9cfd0f889c73e343fd2cd6c06a99d064594ac31da4ba3a13c3ad40561069abe4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-02/verification.json",
+      "bytes": 5664,
+      "sha256": "d8245e88ee2276cab328c60e1306e18fecd5448f821d90fb6ab1a1563cade565"
+    }
+  ],
+  "previousFrozenDiagnosticReceipt": {
+    "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/diagnostic-increment-before-cargo-fmt.json",
+    "bytes": 6317,
+    "sha256": "ed1886991b79a4395740f7d8837a5c85a3231dcf33796e8e56159eee10c96a7d"
+  },
+  "protectedDocumentationUnchanged": [
+    {
+      "path": "docs/status.md",
+      "sha256": "bb745fd719dbf3fae660947146ffb5b5996572ed6f7c8b117fd97ac161a9b1e0",
+      "equalsBaseline": true
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "18886a3f449e20e8217d11688c7257159a3a050663b98dab053fb3582ee42f99",
+      "equalsBaseline": true
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "708677249265957ace64bd7e76ed92148324de2616fbc003a0f93435fec9374a",
+      "equalsBaseline": true
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "sha256": "e120942b84184b2d14b8c3b17fa938483cb07c2894bf5d14567f9ffb355c118a",
+      "equalsBaseline": true
+    },
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+      "equalsBaseline": true
+    }
+  ]
+}

@@ -14,10 +14,10 @@ enum Step {
     Done,
 }
 pub(super) struct Read {
-    hits: Vec<Hit>,
-    state: RowState,
-    code: Option<Code>,
-    error: Option<Code>,
+    pub(super) hits: Vec<Hit>,
+    pub(super) state: RowState,
+    pub(super) code: Option<Code>,
+    pub(super) error: Option<Code>,
 }
 impl Read {
     pub fn publish(self, job: &Job, index: usize) -> Result<()> {
@@ -253,9 +253,11 @@ impl<'a> Exchange<'a> {
                     if let Some(found) = text::find(part, &self.job.request.query) {
                         hits.push(Hit {
                             row_id: self.row_id().into(),
-                            turn_id: tid.into(),
-                            item_id: id.into(),
-                            part_index,
+                            locator: Locator::TurnItem {
+                                turn_id: tid.into(),
+                                item_id: id.into(),
+                                part_index,
+                            },
                             role: if kind == "userMessage" {
                                 "user"
                             } else {

@@ -25,6 +25,10 @@ pub enum Code {
     TimedOut,
     Cancelled,
     PendingCleanup,
+    CoverageUnconfirmed,
+    SourceUnconfirmed,
+    SourceChanged,
+    SourceTooLarge,
 }
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -69,6 +73,8 @@ pub struct Selection {
     pub selection_id: Option<String>,
     pub valid_for_ms: u64,
     pub source: Option<&'static str>,
+    #[serde(flatten)]
+    pub sdk_scope: Option<SdkScope>,
     pub scope: &'static str,
     pub availability: &'static str,
     pub code: Option<Code>,
@@ -92,14 +98,53 @@ pub struct Range {
 #[serde(rename_all = "camelCase")]
 pub struct Hit {
     pub row_id: String,
-    pub turn_id: String,
-    pub item_id: String,
-    pub part_index: usize,
+    #[serde(flatten)]
+    pub locator: Locator,
     pub role: &'static str,
     pub text: String,
     pub text_truncated: bool,
     pub matches: Vec<Range>,
     pub matches_truncated: bool,
+}
+#[derive(Clone, Debug, Serialize, PartialEq, Eq)]
+#[serde(untagged)]
+pub enum Locator {
+    TurnItem {
+        #[serde(rename = "turnId")]
+        turn_id: String,
+        #[serde(rename = "itemId")]
+        item_id: String,
+        #[serde(rename = "partIndex")]
+        part_index: usize,
+    },
+    Message {
+        #[serde(rename = "messageLocator")]
+        message_locator: MessageLocator,
+    },
+}
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct MessageLocator {
+    pub kind: String,
+    pub message_id: String,
+    pub part_index: usize,
+}
+#[derive(Clone, Debug, Serialize)]
+pub struct SdkScope {
+    pub coverage: &'static str,
+    pub relation: &'static str,
+    pub continuation: &'static str,
+    pub branch: &'static str,
+}
+impl SdkScope {
+    pub fn partial() -> Self {
+        Self {
+            coverage: "partial",
+            relation: "registeredExactId",
+            continuation: "unverified",
+            branch: "unverified",
+        }
+    }
 }
 #[derive(Clone, Copy, Debug, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -144,6 +189,8 @@ pub struct SearchOperation {
     pub settled: bool,
     pub code: Option<Code>,
     pub source: &'static str,
+    #[serde(flatten)]
+    pub sdk_scope: Option<SdkScope>,
     pub scope: &'static str,
     pub match_mode: &'static str,
     pub exclusions: [&'static str; 4],

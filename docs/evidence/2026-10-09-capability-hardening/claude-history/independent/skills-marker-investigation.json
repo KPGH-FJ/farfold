@@ -1,0 +1,210 @@
+{
+  "schema": 1,
+  "generatedAt": "2026-10-12T18:28:38.413355+00:00",
+  "state": "ConfirmedFixtureReadinessDefectCorrectedAndOneExactTestPassedPendingFullNativeRun04",
+  "failure": {
+    "run": "run03",
+    "test": "acp_client::extension_inventory::skills_lifecycle_tests::cancelling_list_or_post_result_cleanup_does_not_publish_ready",
+    "line": 252,
+    "error": "ParseIntError { kind: Empty }",
+    "rustExitCode": 101,
+    "rustPassed": 1609,
+    "rustFailed": 1,
+    "rustIgnored": 6,
+    "sourceStable": true,
+    "inputCount": 1578,
+    "beforeCancellation": "The panic follows file-exists gate and unsettled assertion, then fails parsing PID before registry.cancel, child cleanup assertions or Ready/Cancelled outcome checks."
+  },
+  "rootCause": {
+    "defect": "The test publishes an empty stage file at open(w) before writing/flushing/closing its PID; is_file is an insufficient readiness gate. An observer can pass the gate and parse empty text, exactly the failure kind in original run03.",
+    "controlledEvidence": "One explicitly gated owned-process counterexample observes the old stage as a zero-byte file while PID write is pending. The corresponding temporary-file/close/replace publication keeps the stage absent until its complete PID is available.",
+    "precision": "This establishes the fixture publication/readiness defect and an actual corresponding counterexample. The original full-suite OS schedule was not instrumented; no production cancellation defect or new-SDK contamination is inferred."
+  },
+  "trace": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_lifecycle_tests.rs",
+      "originalLines": [
+        224,
+        260
+      ],
+      "fact": "Both complete=false (list in progress) and complete=true (response emitted, stdin EOF received, cleanup pending) publish PID then sleep30. Parent waits only for file existence, reads/parses before cancel; final assertions require real child exit, Cancelled and no snapshot."
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "lines": [
+        184,
+        303
+      ],
+      "fact": "Owned runner checks interest/deadline, closes stdin after exchange completion, signals only the owned process group on cancellation and waits real status plus stdout/stderr EOF and absent group before return."
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "lines": [
+        50,
+        82,
+        219,
+        268
+      ],
+      "fact": "Cancel abandons operation and records Cancelling before finish. Final Ready requires still-interested successful outcome; this path is reached only after run_owned returns."
+    }
+  ],
+  "fix": {
+    "onlySource": "src-tauri/src/acp_client/extension_inventory/skills_lifecycle_tests.rs",
+    "before": "stage path becomes visible when opened and may still be empty.",
+    "after": "Both same-shaped owned test peers write their PID to stage.pending, close it, then os.replace within the same owned temporary directory. Existing is_file gate now observes only a closed complete PID file.",
+    "unchanged": [
+      "All Rust assertions and gate-to-function-end tails",
+      "Parent wait deadline4s and polling10ms",
+      "Peer sleep30s",
+      "All cancellation and cleanup ordering",
+      "Production process/requests/RPC files",
+      "Dependencies, credentials, Agent configuration and environment switches"
+    ],
+    "sameShapeSecondSite": "dropping_skills_observer_keeps_scope_and_activity_until_real_child_cleanup uses the same helper. It was inspected and patched here; this subagent did not separately run that filter. Root subsequent full suite owns its actual validation.",
+    "formatting": {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0
+    },
+    "sourceBefore": {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_lifecycle_tests.rs",
+      "sha256": "428b9f8cd587cdf9196d1126204eccbd40a4b4f592784e96bcc795f1fbd11297"
+    },
+    "sourceAfter": {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_lifecycle_tests.rs",
+      "bytes": 10355,
+      "sha256": "8ff796ef7b34327d8de3027a4887c685a3dc08a452f29f09cd0db2bbcf4b1400"
+    },
+    "diff": {
+      "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/skills-marker-fixture.patch",
+      "bytes": 2442,
+      "sha256": "5c5c1ade1127d6844deee88c4233d847d1a04e78feaaa4459c111de60c06935e"
+    }
+  },
+  "controlledCounterexample": {
+    "argv": [
+      "/usr/bin/python3",
+      "output/2026-10-13-claude-history-independent/failed-test-investigation/pid-marker-counterexample.py"
+    ],
+    "exitCode": 0,
+    "receipt": {
+      "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/pid-marker-counterexample.json",
+      "bytes": 1155,
+      "sha256": "f5b36df30bcaaab11caae33dd4d765463f93e71d452df80db111420b9f6e0133"
+    },
+    "script": {
+      "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/pid-marker-counterexample.py",
+      "bytes": 3634,
+      "sha256": "bcc68c0b66f92854f689fa2f40c7944585c7f24a007d1cc28e4d66cc67c9eb0e"
+    }
+  },
+  "exactAfterTest": {
+    "argv": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "acp_client::extension_inventory::skills_lifecycle_tests::cancelling_list_or_post_result_cleanup_does_not_publish_ready",
+      "--",
+      "--exact",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "seconds": 13.37,
+    "actualCounts": "1 passed; 0 failed; 0 ignored; 1615 filtered out",
+    "bothCompleteBranches": true,
+    "inputCount": 1578,
+    "sourceStable": true,
+    "changedSinceRun03": [
+      "src-tauri/src/acp_client/extension_inventory/skills_lifecycle_tests.rs"
+    ],
+    "receipt": {
+      "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/skills-targeted.json",
+      "bytes": 1167,
+      "sha256": "3518ec8a5e1f634481f329a65adfbd8fea123b1ed3622d066958d5b547db7808"
+    },
+    "log": {
+      "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/skills-targeted.txt",
+      "bytes": 682,
+      "sha256": "d49d89cb0e26d3e2b8dcb9efcc77a15389df7e7e9e835516a1c10287105155b6"
+    }
+  },
+  "retainedBoundary": "No repeated test to obtain green, no default full suite or concurrent Cargo by reviewer. Root owns native run04. The earlier run02 Node probe cause remains unlocated, despite original isolated pass and run03 passing that test. Successful docs alignment remains paused. No actual SDK, Agent history, installed App or data-after verification.",
+  "protectedDocumentationUnchanged": [
+    {
+      "path": "docs/status.md",
+      "bytes": 64408,
+      "sha256": "bb745fd719dbf3fae660947146ffb5b5996572ed6f7c8b117fd97ac161a9b1e0"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 104858,
+      "sha256": "18886a3f449e20e8217d11688c7257159a3a050663b98dab053fb3582ee42f99"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 121349,
+      "sha256": "708677249265957ace64bd7e76ed92148324de2616fbc003a0f93435fec9374a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 64721,
+      "sha256": "e120942b84184b2d14b8c3b17fa938483cb07c2894bf5d14567f9ffb355c118a"
+    },
+    {
+      "path": "PRODUCT.md",
+      "bytes": 35083,
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    }
+  ],
+  "productionSourcesUnchanged": [
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/process.rs",
+      "bytes": 9796,
+      "sha256": "7dafa5a0f0c50047ed26a72cb6b4514247f91551c31f9d03371ffa5b2cd8efbc"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/requests.rs",
+      "bytes": 8699,
+      "sha256": "4fbb156d8136aec4ee55e1d69b56dfd6290803484617b5998a4cf96ac3493db8"
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/skills_rpc.rs",
+      "bytes": 5161,
+      "sha256": "8eeb00b2bbe4017f81c86dcc30e55d2e6c639f04eb0389739268be00fdc15517"
+    }
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-03/verification.json",
+      "bytes": 8607,
+      "sha256": "dc752e748b15c6a179dd4fb1779a9b2424b26219f8b69b41f50d4a0a4471babb"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history-checks/run-03/rust.txt",
+      "bytes": 179730,
+      "sha256": "cd31653daa35b7bae172104ba5975b6130c5cd630385f091612ea4bce212ac57"
+    },
+    {
+      "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/run03-failure-excerpt.txt",
+      "bytes": 792,
+      "sha256": "e008fa85d704abd672e48c6fdd47d0be9be3bf4842f295cea149a1501f4892a6"
+    },
+    {
+      "path": "output/2026-10-13-claude-history-independent/failed-test-investigation/skills-lifecycle-before.rs",
+      "bytes": 10197,
+      "sha256": "428b9f8cd587cdf9196d1126204eccbd40a4b4f592784e96bcc795f1fbd11297"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/claude-history/independent/failed-test-investigation.json",
+      "bytes": 7691,
+      "sha256": "6de401f263172f538689deec1027e1d1e426e43ead0b8806c9ac1e9845d23996"
+    }
+  ]
+}

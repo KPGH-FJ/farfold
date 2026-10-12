@@ -8,6 +8,7 @@ import {
   type HistorySearchExpected,
   type HistorySearchOperation,
   type HistorySearchSelection,
+  type HistorySearchSource,
 } from "./history_search_types";
 
 export interface HistorySearchOwner {
@@ -17,6 +18,7 @@ export interface HistorySearchOwner {
 }
 export interface HistorySearchFlight {
   expected: HistorySearchExpected;
+  source: HistorySearchSource;
   owner: HistorySearchOwner | null;
   operation: HistorySearchOperation | null;
   admissionClosed: boolean;
@@ -161,6 +163,7 @@ export class HistorySearchController {
     if (
       selection?.availability !== "available" ||
       !selection.selectionId ||
+      !selection.source ||
       this.now() >= slot.expiresAt
     ) {
       slot.selection = null;
@@ -169,6 +172,7 @@ export class HistorySearchController {
       return false;
     }
     const flight: HistorySearchFlight = {
+      source: selection.source,
       expected: {
         agentId: owner.agentId,
         requestId: this.uuid(),
@@ -237,7 +241,7 @@ export class HistorySearchController {
     try {
       const raw = await run();
       if (!this.owns(slot, flight)) return;
-      const reply = parseHistoryReply(raw, flight.expected);
+      const reply = parseHistoryReply(raw, flight.expected, flight.source);
       if (reply.kind === "absent") {
         if (flight.operation?.settled) return;
         if (reply.admissionClosed) {

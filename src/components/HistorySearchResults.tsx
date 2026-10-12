@@ -1,6 +1,7 @@
-import type {
-  HistorySearchHit,
-  HistorySearchOperation,
+import {
+  historySearchHitKey,
+  type HistorySearchHit,
+  type HistorySearchOperation,
 } from "../runtime/history_search_types";
 import { HISTORY_SEARCH_STRINGS as S } from "../runtime/history_search_strings";
 
@@ -33,6 +34,7 @@ export function HistorySearchResults({
         open={operation.settled && partial}
       >
         <summary>{S.details}</summary>
+        {operation.source === "officialSdk" && <p>{S.registeredScope}</p>}
         <ul>
           {operation.rows.map((row) => (
             <li key={row.rowId}>
@@ -67,14 +69,7 @@ export function HistorySearchResults({
       )}
       <ul className="history-search-hits">
         {operation.hits.map((hit) => (
-          <li
-            key={JSON.stringify([
-              hit.rowId,
-              hit.turnId,
-              hit.itemId,
-              hit.partIndex,
-            ])}
-          >
+          <li key={historySearchHitKey(hit)}>
             <button
               className="history-search-hit"
               type="button"

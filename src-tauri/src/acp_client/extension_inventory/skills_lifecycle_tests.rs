@@ -14,6 +14,7 @@ for line in sys.stdin:
  elif m.get('method')=='session/new':
   print(json.dumps({'jsonrpc':'2.0','id':m['id'],'result':{'sessionId':'fixture','configOptions':[]}}),flush=True)
 "#;
+const PUBLISH_PID: &str = "with open(sys.argv[1]+'.pending','w') as marker:\n marker.write(str(os.getpid()))\nos.replace(sys.argv[1]+'.pending',sys.argv[1])";
 struct Fixture {
     _root: tempfile::TempDir,
     path: PathBuf,
@@ -155,7 +156,10 @@ async fn dropping_skills_observer_keeps_scope_and_activity_until_real_child_clea
         let scope = scope;
         let activity = activity;
         let mut command = Command::new(crate::platform_tests::python());
-        command.args(["-u","-c","import sys,os,signal,time;signal.signal(signal.SIGTERM,signal.SIG_IGN);sys.stdin.readline();open(sys.argv[1],'w').write(str(os.getpid()));time.sleep(30)"]).arg(owned_marker);
+        let code = format!(
+            "import sys,os,signal,time\nsignal.signal(signal.SIGTERM,signal.SIG_IGN)\nsys.stdin.readline()\n{PUBLISH_PID}\ntime.sleep(30)"
+        );
+        command.args(["-u", "-c", &code]).arg(owned_marker);
         let result = process::run_skills(command, &owned);
         drop(scope);
         drop(activity);
@@ -229,7 +233,7 @@ async fn cancelling_list_or_post_result_cleanup_does_not_publish_ready() {
             .begin("fixture", "/tmp", ID, ID, Kind::Skills)
             .unwrap();
         let code = format!(
-            "import sys,json,os,time\nsys.stdin.readline()\nprint(json.dumps({{'id':1,'result':{{'userAgent':'fixture'}}}}),flush=True)\nsys.stdin.readline();sys.stdin.readline()\n{}\nopen(sys.argv[1],'w').write(str(os.getpid()))\ntime.sleep(30)",
+            "import sys,json,os,time\nsys.stdin.readline()\nprint(json.dumps({{'id':1,'result':{{'userAgent':'fixture'}}}}),flush=True)\nsys.stdin.readline();sys.stdin.readline()\n{}\n{PUBLISH_PID}\ntime.sleep(30)",
             if complete {
                 "print(json.dumps({'id':2,'result':{'data':[{'cwd':'/tmp','skills':[],'errors':[]}]}}),flush=True)\nassert sys.stdin.read()==''"
             } else {

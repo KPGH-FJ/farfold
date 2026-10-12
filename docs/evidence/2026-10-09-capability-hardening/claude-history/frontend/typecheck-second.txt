@@ -1,0 +1,7 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/history_search.sdk.test.tsx(229,46): error TS2339: Property 'unresolved' does not exist on type 'HistorySearchFlight'.
+src/runtime/history_search.sdk.test.tsx(236,46): error TS2339: Property 'unresolved' does not exist on type 'HistorySearchFlight'.
+ ELIFECYCLE  Command failed with exit code 1.

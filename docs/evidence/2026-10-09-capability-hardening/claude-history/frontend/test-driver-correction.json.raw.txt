@@ -1,0 +1,6 @@
+{
+  "scope": "test driver only",
+  "failureLog": "output/2026-10-13-claude-history-frontend/sdk-panel-green.txt",
+  "typeLog": "output/2026-10-13-claude-history-frontend/typecheck-second.txt",
+  "reason": "New test used a nonexistent unresolved field; production Flight exposes unconfirmed and operation.settled. Assertions now use the actual unconfirmed state. No production fix attributable to this failure."
+}
