@@ -19,6 +19,7 @@ const h = vi.hoisted(() => ({
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
+  useSyncExternalStore: (_subscribe: unknown, get: () => unknown) => get(),
   useRef: (current: unknown) => (h.refs[h.refCursor++] ??= { current }),
   useState: (initial: unknown) => {
     const index = h.stateCursor++;

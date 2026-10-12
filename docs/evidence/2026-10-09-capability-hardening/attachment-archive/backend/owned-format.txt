@@ -1,0 +1,10 @@
+Diff in /Users/tw/Desktop/farfold/src-tauri/src/file_delivery.rs:29:
+ mod stream;
+ mod text_blocks;
+ pub use text_blocks::{TextBlock, TextBlockFailure, read_text_block};
+-mod copy_stream;
+ mod archive_stream;
++mod copy_stream;
+ pub(crate) use archive_stream::{ArchiveOutcome, stream_archive};
+ pub(crate) use copy_stream::{CopyOutcome, stream_copy};
+ mod selected_location;

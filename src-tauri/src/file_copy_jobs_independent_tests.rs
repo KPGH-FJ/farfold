@@ -220,6 +220,9 @@ fn independent_expired_reservation_cannot_restart_and_releases_only_its_gate() {
     {
         let mut all = jobs.jobs.lock().unwrap();
         let first = all.entries.get_mut(&first.operation_id).unwrap();
+        let Entry::Copy(first) = first else {
+            panic!("copy domain")
+        };
         Arc::get_mut(first).unwrap().created = Instant::now() - READY_LIFETIME;
     }
     assert!(jobs.status(&first.operation_id).unwrap().is_none());

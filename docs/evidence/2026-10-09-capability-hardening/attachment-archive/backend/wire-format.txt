@@ -1,0 +1,3 @@
+docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/canonical-wire.json 18ms
+[error] No files matching the pattern were found: "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/actual-wire.json".
+[error] No files matching the pattern were found: "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/wire-capture.json".

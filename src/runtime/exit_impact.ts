@@ -1,3 +1,4 @@
+import { conversationArchiveJobs } from "./conversation_archive_jobs";
 import { threads } from "./sessions";
 import { hasActiveAuthentication } from "./authentication";
 import { updateConversationBlocker } from "./update_impact";
@@ -22,13 +23,16 @@ export const EXIT_IMPACT = {
 } as const;
 
 export function hasUnknownFinishedFileCopies(): boolean {
-  return fileCopyJobs
-    .getSnapshot()
-    .some(
-      (job) =>
-        job.absence === true ||
-        (job.status?.state === "unknown" && job.status.settled),
-    );
+  return (
+    conversationArchiveJobs.hasUnknownFinished() ||
+    fileCopyJobs
+      .getSnapshot()
+      .some(
+        (job) =>
+          job.absence === true ||
+          (job.status?.state === "unknown" && job.status.settled),
+      )
+  );
 }
 
 export function exitNeedsReview(): boolean {

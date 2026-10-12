@@ -116,7 +116,9 @@ fn real_cancel_and_publication_gate_have_one_winner() {
     let (_directory, file, destination) = fixture();
     let jobs = FileCopyJobs::default();
     let first = jobs.prepare(file.clone(), destination.clone()).unwrap();
-    let job = jobs.jobs.lock().unwrap().entries[&first.operation_id].clone();
+    let job = jobs.jobs.lock().unwrap().entries[&first.operation_id]
+        .as_copy()
+        .unwrap();
     job.status.lock().unwrap().state = CopyState::Copying;
     assert_eq!(
         jobs.cancel(&first.operation_id).unwrap().unwrap().state,
@@ -130,7 +132,9 @@ fn real_cancel_and_publication_gate_have_one_winner() {
     );
     job.finish(CopyOutcome::Cancelled);
     let second = jobs.prepare(file, destination).unwrap();
-    let job = jobs.jobs.lock().unwrap().entries[&second.operation_id].clone();
+    let job = jobs.jobs.lock().unwrap().entries[&second.operation_id]
+        .as_copy()
+        .unwrap();
     job.status.lock().unwrap().state = CopyState::Copying;
     assert!(job.claim_publication());
     assert_eq!(
@@ -149,7 +153,9 @@ fn finished_unknown_requires_explicit_review_and_does_not_claim_success() {
     let (_directory, file, destination) = fixture();
     let jobs = FileCopyJobs::default();
     let ready = jobs.prepare(file, destination).unwrap();
-    let job = jobs.jobs.lock().unwrap().entries[&ready.operation_id].clone();
+    let job = jobs.jobs.lock().unwrap().entries[&ready.operation_id]
+        .as_copy()
+        .unwrap();
     job.finish(CopyOutcome::CleanupUnknown);
     let status = jobs.status(&ready.operation_id).unwrap().unwrap();
     assert_eq!(status.state, CopyState::Unknown);

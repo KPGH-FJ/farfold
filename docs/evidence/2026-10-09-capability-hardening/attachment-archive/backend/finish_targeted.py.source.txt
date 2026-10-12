@@ -1,0 +1,15 @@
+from pathlib import Path
+import hashlib,json,subprocess,time
+base=Path('output/2026-10-12-attachment-archive-backend');j=json.loads((base/'source-checkpoint.json').read_text());refs=j['ownedFiles']+j['dependencies']
+def stable():
+ return all(hashlib.sha256(Path(r['path']).read_bytes()).hexdigest()==r['sha256']for r in refs)
+assert stable()
+commands=[('final-input-writer',['cargo','test','--manifest-path','src-tauri/Cargo.toml','--locked','--lib','file_archive','--','--nocapture']),('final-jobs',['cargo','test','--manifest-path','src-tauri/Cargo.toml','--locked','--lib','file_copy_jobs','--','--nocapture']),('final-short-write',['cargo','test','--manifest-path','src-tauri/Cargo.toml','--locked','--lib','file_delivery::archive_stream','--','--nocapture']),('final-copy-wire',['cargo','test','--manifest-path','src-tauri/Cargo.toml','--locked','--lib','file_copy_commands','--','--nocapture']),('final-owned-format',['rustfmt','--edition','2024','--check','--config','skip_children=true',*[r['path'] for r in j['ownedFiles']]]),('final-clippy',['cargo','clippy','--manifest-path','src-tauri/Cargo.toml','--locked','--','-D','warnings'])]
+results=[]
+for name,argv in commands:
+ assert stable();log=base/(name+'.txt');t=time.monotonic()
+ with log.open('xb') as f: r=subprocess.run(argv,stdout=f,stderr=subprocess.STDOUT)
+ results.append(dict(name=name,argv=argv,exitCode=r.returncode,elapsedSeconds=round(time.monotonic()-t,3),log=str(log),logSha256=hashlib.sha256(log.read_bytes()).hexdigest(),sourceStable=stable()))
+ (base/'final-targeted.json').write_text(json.dumps({'commands':results,'sourceStable':stable(),'allPassed':len(results)==len(commands)and all(x['exitCode']==0 and x['sourceStable']for x in results)},indent=2)+'\n')
+ print(name,r.returncode,flush=True)
+ if r.returncode!=0 or not stable():raise SystemExit(1)

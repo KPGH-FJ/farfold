@@ -19,6 +19,8 @@ mod diagnostics;
 mod draft_attachment;
 mod draft_exit;
 mod file_access;
+mod file_archive;
+mod file_archive_commands;
 mod file_copy_commands;
 mod file_copy_jobs;
 mod file_delivery;
@@ -344,6 +346,11 @@ pub fn run() {
                 file_delivery_commands::file_delivery_read_visual,
                 file_delivery_commands::file_delivery_read_workbook,
                 file_delivery_commands::file_delivery_read_docx,
+                file_archive_commands::file_archive_prepare,
+                file_archive_commands::file_archive_start,
+                file_archive_commands::file_archive_status,
+                file_archive_commands::file_archive_cancel,
+                file_archive_commands::file_archive_release,
                 file_copy_commands::file_copy_prepare,
                 file_copy_commands::file_copy_start,
                 file_copy_commands::file_copy_status,

@@ -1,0 +1,33 @@
+{
+  "sources": [
+    {
+      "path": "output/2026-10-12-attachment-archive-backend/member-writer-green.txt",
+      "sha256": "c428aff22af2713cf54e0e79cca9f4ddd8edec28c7a53fd57074f99a61dec5ca",
+      "line": 8,
+      "marker": "ARCHIVE_CANONICAL_WIRE",
+      "prefixBeforeMarker": "",
+      "payloadSha256": "863389116de00cc4d4b7b5cc8fafbfa332074a17fd6b62ac4916e92ed1664a46"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-backend/member-writer-green.txt",
+      "sha256": "c428aff22af2713cf54e0e79cca9f4ddd8edec28c7a53fd57074f99a61dec5ca",
+      "line": 7,
+      "marker": "ARCHIVE_CANONICAL_BOUNDARY_WIRE",
+      "prefixBeforeMarker": "",
+      "payloadSha256": "94ce83f6144a24eb63f551d11047a083ad216da0fd51745840e8625d0cc08381"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-backend/jobs-member-final.txt",
+      "sha256": "576384a6f29b4362b4824054d4e563705943a9f762def5f8edd5f09910d731cd",
+      "line": 28,
+      "marker": "ARCHIVE_STATES_WIRE",
+      "prefixBeforeMarker": "ZipWriter drop failed: Io(Custom { kind: Other, error: \"archive write stopped\" })",
+      "payloadSha256": "d491f0fe835f5ffd3418d4b21f07f8272124eaa832d988da7807081ee19789c4"
+    }
+  ],
+  "values": {
+    "canonical": 6,
+    "states": 14
+  },
+  "scope": "Actual Rust DTO serialization from owned local fixtures; no installed app, real Agent or Windows runtime execution."
+}

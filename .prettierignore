@@ -251,3 +251,5 @@ docs/evidence/2026-10-09-capability-hardening/skill-management/frontend/browser/
 # Original serialized Rust output retains its exact bytes and existing references.
 docs/evidence/2026-10-09-capability-hardening/skill-management/backend/actual-wire-raw.json
 docs/evidence/2026-10-09-capability-hardening/skill-management/backend/final-wire-raw.json
+# Preserve the original failed HTTP install-verifier receipt and referenced hash.
+docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/install-independent-run-01.json

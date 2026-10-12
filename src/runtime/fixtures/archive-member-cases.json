@@ -1,0 +1,242 @@
+[
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "review.PDF",
+    "member": "attachments/0001.pdf"
+  },
+  {
+    "index": 1,
+    "inlineText": false,
+    "displayName": "review.PNG",
+    "member": "attachments/0002.png"
+  },
+  {
+    "index": 2,
+    "inlineText": false,
+    "displayName": "review.JPG",
+    "member": "attachments/0003.jpg"
+  },
+  {
+    "index": 3,
+    "inlineText": false,
+    "displayName": "review.JPEG",
+    "member": "attachments/0004.jpeg"
+  },
+  {
+    "index": 4,
+    "inlineText": false,
+    "displayName": "review.GIF",
+    "member": "attachments/0005.gif"
+  },
+  {
+    "index": 5,
+    "inlineText": false,
+    "displayName": "review.WEBP",
+    "member": "attachments/0006.webp"
+  },
+  {
+    "index": 6,
+    "inlineText": false,
+    "displayName": "review.TXT",
+    "member": "attachments/0007.txt"
+  },
+  {
+    "index": 7,
+    "inlineText": false,
+    "displayName": "review.MD",
+    "member": "attachments/0008.md"
+  },
+  {
+    "index": 8,
+    "inlineText": false,
+    "displayName": "review.CSV",
+    "member": "attachments/0009.csv"
+  },
+  {
+    "index": 9,
+    "inlineText": false,
+    "displayName": "review.JSON",
+    "member": "attachments/0010.json"
+  },
+  {
+    "index": 10,
+    "inlineText": false,
+    "displayName": "review.DOCX",
+    "member": "attachments/0011.docx"
+  },
+  {
+    "index": 11,
+    "inlineText": false,
+    "displayName": "review.XLSX",
+    "member": "attachments/0012.xlsx"
+  },
+  {
+    "index": 12,
+    "inlineText": false,
+    "displayName": "review.PPTX",
+    "member": "attachments/0013.pptx"
+  },
+  {
+    "index": 13,
+    "inlineText": false,
+    "displayName": "review.ODT",
+    "member": "attachments/0014.odt"
+  },
+  {
+    "index": 14,
+    "inlineText": false,
+    "displayName": "review.ODS",
+    "member": "attachments/0015.ods"
+  },
+  {
+    "index": 15,
+    "inlineText": false,
+    "displayName": "review.ODP",
+    "member": "attachments/0016.odp"
+  },
+  {
+    "index": 16,
+    "inlineText": false,
+    "displayName": "review.MP3",
+    "member": "attachments/0017.mp3"
+  },
+  {
+    "index": 17,
+    "inlineText": false,
+    "displayName": "review.WAV",
+    "member": "attachments/0018.wav"
+  },
+  {
+    "index": 18,
+    "inlineText": false,
+    "displayName": "review.M4A",
+    "member": "attachments/0019.m4a"
+  },
+  {
+    "index": 19,
+    "inlineText": false,
+    "displayName": "review.MP4",
+    "member": "attachments/0020.mp4"
+  },
+  {
+    "index": 20,
+    "inlineText": false,
+    "displayName": "review.MOV",
+    "member": "attachments/0021.mov"
+  },
+  {
+    "index": 21,
+    "inlineText": false,
+    "displayName": "review.WEBM",
+    "member": "attachments/0022.webm"
+  },
+  {
+    "index": 22,
+    "inlineText": false,
+    "displayName": "review.ZIP",
+    "member": "attachments/0023.zip"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "image.svg",
+    "member": "attachments/0001.bin"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "page.html",
+    "member": "attachments/0001.bin"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "page.htm",
+    "member": "attachments/0001.bin"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "code.js",
+    "member": "attachments/0001.bin"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "tool.exe",
+    "member": "attachments/0001.bin"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "script.sh",
+    "member": "attachments/0001.bin"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "file.pdf.exe",
+    "member": "attachments/0001.bin"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "file.pdf ",
+    "member": "attachments/0001.bin"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "file.pdf/extra",
+    "member": "attachments/0001.bin"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "noextension",
+    "member": "attachments/0001.bin"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "file.",
+    "member": "attachments/0001.bin"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "file.ＰＤＦ",
+    "member": "attachments/0001.bin"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "../../report.PDF",
+    "member": "attachments/0001.pdf"
+  },
+  {
+    "index": 0,
+    "inlineText": false,
+    "displayName": "private/path/item.pdf",
+    "member": "attachments/0001.pdf"
+  },
+  {
+    "index": 255,
+    "inlineText": false,
+    "displayName": "report.docx",
+    "member": "attachments/0256.docx"
+  },
+  {
+    "index": 0,
+    "inlineText": true,
+    "displayName": "name.png",
+    "member": "attachments/0001.txt"
+  },
+  {
+    "index": 0,
+    "inlineText": true,
+    "displayName": "run.exe",
+    "member": "attachments/0001.txt"
+  }
+]

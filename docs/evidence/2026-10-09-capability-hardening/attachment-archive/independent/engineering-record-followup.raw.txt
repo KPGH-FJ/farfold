@@ -1,0 +1,126 @@
+{
+  "status": "engineeringAndRecordFollowupPassedNoNewBlocker",
+  "checkedAtUtc": "2026-10-12T07:06:20.677932+00:00",
+  "sourceBase": "1bc36bdc116df8965409c5a8ddd2925beb9a6c7b",
+  "scope": "Read-only verification of existing seven-command evidence, source input delta, current four documents and protected plan conditions; no checks or application interaction rerun.",
+  "engineering": {
+    "originalRunAllPassed": false,
+    "originalSixPassed": true,
+    "formatOriginalExit": 1,
+    "formatFollowupExit": 0,
+    "sevenDistinctCommandsHavePassingEvidence": true,
+    "sixCommandsReexecutedInFollowup": false,
+    "successfulCommandsExecutedInThisRunFlagRefersToOriginalRun01": true,
+    "inputCount": 1542,
+    "originalBeforeAfterEqual": true,
+    "currentCollectorEqualsFinalInputs": true,
+    "changedInputsAfterRun01": [
+      ".prettierignore"
+    ],
+    "changeIsOnlyExactHistoricalReceiptFormattingExclusion": true,
+    "originalFailedReceiptSha256": "dc0809a6915a83dc590330b7d4049ac1088746decf21e14ac54f558da299b4ee",
+    "frontendFiles": 433,
+    "frontendTests": 5071,
+    "rustPassed": 1578,
+    "rustIgnored": 6,
+    "allOriginalLogHashesMatch": true
+  },
+  "records": {
+    "originalItems": 122,
+    "newIssues": 16,
+    "idsTitlesCompletionConditionsByteEqualAfterTrimmingTablePadding": true,
+    "progressOnlyChanges": [
+      "P41",
+      "P14",
+      "H06",
+      "P35"
+    ],
+    "allAddedLocalLinksExist": true,
+    "newLocalLinkCount": 0,
+    "currentDocsScope": "Archive source/controlled/browser/engineering passed; installed archive and complete P35/P14/H06 remain unverified. Last known formal build is HTTP 8cfb2ccb with later pending responses. This review did not re-observe the running App.",
+    "productUnchanged": true,
+    "protectedDirtyReadmesUnchanged": true,
+    "privateOriginalReviewUnchanged": true,
+    "totalReceiptDirectRefsVerified": 5
+  },
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/final-verification.json",
+      "sha256": "39c80a291e591dcb6c83e9b4f5f912e1ac4012c1df990a18c3064b50decd2c7c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/run-01/verification.json",
+      "sha256": "1fe5be551fd18723c6bffc6bd8df443fcec24af30f8339d84c4273efccca8107"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/run-01/inputs-before.json",
+      "sha256": "a7e6f2db02cd15fc97b059849035967e7b5682b884f826631b728888c86e9aab"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/run-01/inputs-after.json",
+      "sha256": "a7e6f2db02cd15fc97b059849035967e7b5682b884f826631b728888c86e9aab"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/inputs-final.json",
+      "sha256": "ceeede552cb911bedf9a0617d625af1b90d547b9700de655fd553bbe986ac5c9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/format-followup.json",
+      "sha256": "f8a64f3a131cde438e76c22c9400a99c8af8fb038817416927866ec9550ae525"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/format-followup.txt",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/implementation.json",
+      "sha256": "c647fba6e23a9aad6580aa2c798a440a5feb12c4caf8189ec96235f5c1e77351"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-independent/final-review.json",
+      "sha256": "f4e6a802ac97c743ab3ee02cccc66333dd9106d8dc78f632a0bca15dd0b45ead"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/install-independent-run-01.json",
+      "sha256": "dc0809a6915a83dc590330b7d4049ac1088746decf21e14ac54f558da299b4ee"
+    },
+    {
+      "path": ".prettierignore",
+      "sha256": "e6c42cb122c57ece41a92cd9ee356d14cb687234dbcfcf9e9b54aac506b78e1c"
+    },
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "docs/status.md",
+      "sha256": "8dde86023621ddd761ff64dfd33bb0785a0b12ff72d09568cd69276cd603d3f4"
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "8e38b88100443aedeefb30b03d94d25dfc1bdb8d89363ffa72f33fb0dcb2dda7"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "1cc525cfc6f22c7475bb1f9e0a62b2e7dd897d5e85cd323698d3a2e384adfa5f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "sha256": "d405f32eea789f85754537e308d8529cd8c89e46b1dd90a2277fcc0fc67f8c6b"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+    }
+  ],
+  "notClaimed": [
+    "No new Cargo/frontend/build/format command execution by this reviewer",
+    "No formal application operation or fresh proof that it can safely exit",
+    "No installed ZIP journey or full original product-condition completion",
+    "No claim that the unrelated intermittent startup-environment timeout was fixed"
+  ]
+}

@@ -1,3 +1,4 @@
+import { conversationArchiveJobs } from "./conversation_archive_jobs";
 import { invoke } from "@tauri-apps/api/core";
 import { useSyncExternalStore } from "react";
 import type { VerifiedFile } from "./file_delivery";
@@ -423,7 +424,8 @@ export class FileCopyJobs {
   }
 }
 export const fileCopyJobs = new FileCopyJobs();
-export const hasUnsettledFileCopies = fileCopyJobs.hasUnsettled;
+export const hasUnsettledFileCopies = () =>
+  fileCopyJobs.hasUnsettled() || conversationArchiveJobs.hasUnsettled();
 export function useFileCopyJobs() {
   return useSyncExternalStore(
     fileCopyJobs.subscribe,

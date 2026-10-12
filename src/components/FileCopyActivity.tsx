@@ -1,3 +1,5 @@
+import { useConversationArchiveJobs } from "../runtime/conversation_archive_jobs";
+import { ConversationArchiveJobsStatus } from "./ConversationArchiveJobsStatus";
 import { useRef, useState } from "react";
 import { DownloadSimpleIcon } from "@phosphor-icons/react";
 import { useFileCopyJobs } from "../runtime/file_copy_jobs";
@@ -8,9 +10,11 @@ import { WorkspaceDialog } from "./WorkspaceDialog";
 /** Saving continues when the source preview is closed or another file opens. */
 export function FileCopyActivity() {
   const jobs = useFileCopyJobs();
+  const archives = useConversationArchiveJobs();
+  const count = jobs.length + archives.length;
   const [open, setOpen] = useState(false);
   const opener = useRef<HTMLButtonElement>(null);
-  if (!jobs.length && !open) return null;
+  if (!count && !open) return null;
   return (
     <>
       <button
@@ -20,7 +24,7 @@ export function FileCopyActivity() {
         onClick={() => setOpen(true)}
       >
         <DownloadSimpleIcon size={18} />
-        {S.activityCount(jobs.length)}
+        {S.activityCount(count)}
       </button>
       {open && (
         <WorkspaceDialog
@@ -30,7 +34,8 @@ export function FileCopyActivity() {
         >
           <div className="workspace-dialog-body">
             <FileCopyJobsStatus />
-            {!jobs.length && <p role="status">{S.activityEmpty}</p>}
+            <ConversationArchiveJobsStatus />
+            {!count && <p role="status">{S.activityEmpty}</p>}
           </div>
           <footer>
             <button

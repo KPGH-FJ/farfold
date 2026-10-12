@@ -1,0 +1,29 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ConversationArchiveDialog.test.tsx (4 tests | 1 failed) 35ms
+   × after synchronous intent registration close only hides and retains the saving activity 22ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ConversationArchiveDialog.test.tsx > after synchronous intent registration close only hides and retains the saving activity
+RangeError: Maximum call stack size exceeded
+ ❯ node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:782:42
+ ❯ node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:456:21
+ ❯ mapIntoArray node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:357:20
+ ❯ mapIntoArray node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:402:32
+ ❯ mapChildren node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:455:7
+ ❯ Object.toArray node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:782:11
+ ❯ nodes src/components/ConversationArchiveDialog.test.tsx:19:103
+
+ ❯ src/components/ConversationArchiveDialog.test.tsx:19:218
+ ❯ nodes src/components/ConversationArchiveDialog.test.tsx:19:117
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 7 passed (8)
+      Tests  1 failed | 59 passed (60)
+   Start at  14:31:33
+   Duration  498ms (transform 589ms, setup 0ms, import 835ms, tests 385ms, environment 0ms)
+

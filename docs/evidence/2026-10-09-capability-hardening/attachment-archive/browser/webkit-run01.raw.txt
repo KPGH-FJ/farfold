@@ -1,0 +1,1 @@
+{"path":"output/2026-10-12-attachment-archive-browser/webkit-run01.json","passed":false,"checks":0,"failure":"TimeoutError: locator.inputValue: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog', { name: '导出对话', exact: true }).getByLabel('导出格式', { exact: true })\u001b[22m\n","errors":[],"sourceStable":true}

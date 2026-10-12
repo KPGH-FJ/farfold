@@ -1,0 +1,367 @@
+{
+  "phase": "sourceImplementedControlledBackendVerifiedNotInstalled",
+  "sourceCheckpoint": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/source-checkpoint.json",
+    "sha256": "c0691ccaa97a00e5f55aabedcceda09702f39747a8228f1a540c3889f934f1f3",
+    "bytes": 3484
+  },
+  "originalSourceCheckpoint": {
+    "path": "output/2026-10-12-attachment-archive-backend/source-checkpoint.json",
+    "sha256": "c0691ccaa97a00e5f55aabedcceda09702f39747a8228f1a540c3889f934f1f3",
+    "bytes": 3484
+  },
+  "verification": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/verification.json",
+    "sha256": "1ae411045d713eb36311dad86123fcb8fba7b86857a5f433ebfe61a90be7ef44",
+    "bytes": 4734
+  },
+  "sourceFiles": 17,
+  "independentOwnedTest": "src-tauri/src/file_archive_independent_tests.rs",
+  "sharedFixture": {
+    "path": "src/runtime/fixtures/archive-member-cases.json",
+    "sha256": "b474fc1e13b8e936b557deb08761123d9a2fddaef776fc4eb4aa231807ffcfa9"
+  },
+  "implementation": [
+    "Five main-only strict flat archive IPC commands validate a typed canonical UTF-8 tuple and exact operationId/inputSha256 pair; original Copy wire remains separate.",
+    "Copy and Archive share the real worker slot and application-exit protection; cancellation and observer completion do not release the worker before actual I/O cleanup.",
+    "Finite in-memory detail/payload/seen limits, exact early cancellation and expiry preserve admission closure without evicting active work or adding persistent history.",
+    "Streamed ZIP contains conversation.md, selected attachment bytes and a portable manifest; any selected source failure aborts the whole unpublished package.",
+    "Handle-anchored parent/source checks, no-replace publication and actual ZIP readback hash/identity checks distinguish published success, definite failure and unknown.",
+    "Generated ordinal basenames retain only a fixed safe extension hint; unknown or active formats use .bin, text uses .txt. Declared MIME and filename suffix do not certify the content format."
+  ],
+  "tests": {
+    "finalPass": 37,
+    "failed": 0,
+    "ownedFormatExit": 0,
+    "clippyExit": 0,
+    "independentTestsWithin37": 4,
+    "sharedMemberCases": 40,
+    "coverage": [
+      "Strict schema, explicit nulls, canonical Unicode/empty text/array order/safe-integer samples and hash mismatch rejection.",
+      "Actual ZIP bytes/members/manifest/hashes, zero selected attachments, changed/replaced/symlink source failure and temporary material cleanup.",
+      "Short writes and output cap, exact pair/domain conflicts, 4096 seen capacity and ready expiry.",
+      "Real progress barrier cancellation retains worker, exit permit and shared slot until actual completion.",
+      "Parent replacement at publication preserves the published old-parent material and reports unknown; competing destination is not overwritten."
+    ]
+  },
+  "wire": {
+    "actual": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/actual-wire.json",
+      "sha256": "71450491101bdfd70680942b68f5946e2d9e5ff2ac1cd3e71100409890401b5c",
+      "bytes": 27699
+    },
+    "raw": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/actual-wire.raw.txt",
+      "sha256": "96faacb47aec18846e5990ea9b505187e5e6c93c1c03cb0a5bd249d79a54285a",
+      "bytes": 21271
+    },
+    "capture": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/wire-capture.json",
+      "sha256": "11b5e43272502229f0e231125baf7d831ca5aee0206707cf0c90920a5cd3cb50",
+      "bytes": 1388
+    },
+    "canonicalSamples": 6,
+    "stateSamples": 14,
+    "origin": "Actual Rust serialization from synthetic inputs and owned local filesystem jobs; wire source logs are copied verbatim below. Final targeted runs repeat the tests on the frozen checkpoint; published wire keeps its original temporary paths and bytes.",
+    "progressMeaning": "totalInputBytes and processedInputBytes count selected attachment bytes only; ZIP size also includes Markdown and manifest. A zero total is not completion until the real worker publishes completed."
+  },
+  "failureHistory": [
+    {
+      "log": "canonical-first.txt",
+      "classification": "Compilation failure",
+      "detail": "sha2 output does not implement LowerHex; fixed explicit byte-to-hex formatting."
+    },
+    {
+      "log": "registry-first.txt",
+      "classification": "Test compilation failure",
+      "detail": "A test passed &str where String was required; corrected the fixture argument."
+    },
+    {
+      "log": "writer-first.txt",
+      "classification": "Two incorrect test expectations; not two product defects",
+      "detail": "One assertion incorrectly rejected the manifest schema version, and another expected destinationChanged where the existing pre-publication parent guard reports changed. Both oracles were narrowed to the actual safety contract; writer-second preserved the followup."
+    },
+    {
+      "log": "clippy-first.txt",
+      "classification": "Two lint failures",
+      "detail": "Equivalent nested conditions collapsed without relaxing validation."
+    },
+    {
+      "log": "member-hints-red.txt",
+      "classification": "Effective red for the newly approved export usability requirement",
+      "detail": "Original all-binary .bin member naming failed the expected safe .pdf hint; fixed whitelist and shared 40-case tests pass."
+    },
+    {
+      "log": "owned-format.txt",
+      "classification": "Owned module declaration formatting failure",
+      "detail": "rustfmt module order corrected, then final owned formatting passed."
+    },
+    {
+      "log": "wire-format.txt",
+      "classification": "Evidence capture/format command failure",
+      "detail": "A ZipWriter stderr prefix preceded the unique marker; extraction now preserves the entire original line and records the exact prefix/payload hash. This did not alter product behavior or the original stdout."
+    }
+  ],
+  "boundaries": [
+    "No formal application, actual Agent, installation or Windows runtime was exercised by this backend evidence.",
+    "Readback and identity verification describe the observed publication point, not permanent exclusion of external filesystem changes.",
+    "The ZIP stores selected loaded content. It does not scan full history, fetch remote resources, resume an Agent session or prove arbitrary ACL/xattr preservation.",
+    "Portable metadata omits source root/resolvedPath/version/private input identity; user-provided Markdown may itself contain paths or secrets and is not rewritten as a privacy scrubber.",
+    "The fixed extension whitelist is an unverified filename hint, not a malware, file-format or content-trust check.",
+    "Source/controlled backend success is a P35 slice; parent browser, integration and eventual safe installed validation are separate evidence."
+  ],
+  "preservedCopies": [
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/canonical-first.txt",
+        "sha256": "f477e7c7d70c28c02212f649d7710928af61876aab4018a8a8abcc70e75bc78c",
+        "bytes": 1504
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/canonical-first.txt",
+        "sha256": "f477e7c7d70c28c02212f649d7710928af61876aab4018a8a8abcc70e75bc78c",
+        "bytes": 1504
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/canonical-second.txt",
+        "sha256": "ecee81530cb94c027c59b15d99357655faf78d3e3a2d7bfda37adacbaec0e37c",
+        "bytes": 10163
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/canonical-second.txt",
+        "sha256": "ecee81530cb94c027c59b15d99357655faf78d3e3a2d7bfda37adacbaec0e37c",
+        "bytes": 10163
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/registry-first.txt",
+        "sha256": "015b0c8837ab03ce012fdea5cab2d2ba6ff73e126e2f7c4c978ef5eff4048d93",
+        "bytes": 973
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/registry-first.txt",
+        "sha256": "015b0c8837ab03ce012fdea5cab2d2ba6ff73e126e2f7c4c978ef5eff4048d93",
+        "bytes": 973
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/writer-first.txt",
+        "sha256": "0c37f5573a1c93aa4bec3ca8e309f1b5f11e1b1adf96bde914b58ea14de1093b",
+        "bytes": 10367
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/writer-first.txt",
+        "sha256": "0c37f5573a1c93aa4bec3ca8e309f1b5f11e1b1adf96bde914b58ea14de1093b",
+        "bytes": 10367
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/writer-second.txt",
+        "sha256": "d12eb2db606a1dec9c4933d8564228d241e9cf51215b664bebb272fad47203cf",
+        "bytes": 9590
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/writer-second.txt",
+        "sha256": "d12eb2db606a1dec9c4933d8564228d241e9cf51215b664bebb272fad47203cf",
+        "bytes": 9590
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/clippy-first.txt",
+        "sha256": "65aa426c2b9e7d8e7d656a83ceb153dc225965a6818ac9773f22817f7a184e7a",
+        "bytes": 1805
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/clippy-first.txt",
+        "sha256": "65aa426c2b9e7d8e7d656a83ceb153dc225965a6818ac9773f22817f7a184e7a",
+        "bytes": 1805
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/member-hints-red.txt",
+        "sha256": "dc828723c564d1c37954f3bc2102b586054ae6585c64b60c048d1842beb83bd2",
+        "bytes": 1078
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/member-hints-red.txt",
+        "sha256": "dc828723c564d1c37954f3bc2102b586054ae6585c64b60c048d1842beb83bd2",
+        "bytes": 1078
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/member-writer-green.txt",
+        "sha256": "c428aff22af2713cf54e0e79cca9f4ddd8edec28c7a53fd57074f99a61dec5ca",
+        "bytes": 14960
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/member-writer-green.txt",
+        "sha256": "c428aff22af2713cf54e0e79cca9f4ddd8edec28c7a53fd57074f99a61dec5ca",
+        "bytes": 14960
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/jobs-member-final.txt",
+        "sha256": "576384a6f29b4362b4824054d4e563705943a9f762def5f8edd5f09910d731cd",
+        "bytes": 12958
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/jobs-member-final.txt",
+        "sha256": "576384a6f29b4362b4824054d4e563705943a9f762def5f8edd5f09910d731cd",
+        "bytes": 12958
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/owned-format.txt",
+        "sha256": "91f0921ea4e5856f5912c7224904525cfc4679186a1126fa4b37bb8029f745f1",
+        "bytes": 374
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/owned-format.txt",
+        "sha256": "91f0921ea4e5856f5912c7224904525cfc4679186a1126fa4b37bb8029f745f1",
+        "bytes": 374
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/wire-format.txt",
+        "sha256": "5d619c007ef59bdb74e436f3cbbd3ff687394591d4f4d9d2597959e33734cdc5",
+        "bytes": 385
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/wire-format.txt",
+        "sha256": "5d619c007ef59bdb74e436f3cbbd3ff687394591d4f4d9d2597959e33734cdc5",
+        "bytes": 385
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/wire-format-final.txt",
+        "sha256": "2655c148985343ef7f1b8eefb4a7c74bf24451041501637f58c8a4f905c10fa4",
+        "bytes": 324
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/wire-format-final.txt",
+        "sha256": "2655c148985343ef7f1b8eefb4a7c74bf24451041501637f58c8a4f905c10fa4",
+        "bytes": 324
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/final-input-writer.txt",
+        "sha256": "2b7526b415ec1475443f31c77960e295c837b416fd5b8710fe32c55fea83b214",
+        "bytes": 14959
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-input-writer.txt",
+        "sha256": "2b7526b415ec1475443f31c77960e295c837b416fd5b8710fe32c55fea83b214",
+        "bytes": 14959
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/final-jobs.txt",
+        "sha256": "c031c0e902e5fc90d25f5c00a9770e4c98cf93aa84dfa6f9c73b77c5c5a08099",
+        "bytes": 12892
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-jobs.txt",
+        "sha256": "c031c0e902e5fc90d25f5c00a9770e4c98cf93aa84dfa6f9c73b77c5c5a08099",
+        "bytes": 12892
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/final-short-write.txt",
+        "sha256": "34230016d91def6072658470537b69f0ab5231d77918c54f7a1ba219ffd88ae2",
+        "bytes": 405
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-short-write.txt",
+        "sha256": "34230016d91def6072658470537b69f0ab5231d77918c54f7a1ba219ffd88ae2",
+        "bytes": 405
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/final-copy-wire.txt",
+        "sha256": "9ab2448a659115769765de8e922212494acc592e957f9a80847c1a7cbae9c1d5",
+        "bytes": 386
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-copy-wire.txt",
+        "sha256": "9ab2448a659115769765de8e922212494acc592e957f9a80847c1a7cbae9c1d5",
+        "bytes": 386
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/final-owned-format.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-owned-format.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/final-clippy.txt",
+        "sha256": "03ebb7dbb76c754e840ac6441b97ee7d41448f89dfdadfdab5cc4e62745f3da2",
+        "bytes": 138
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-clippy.txt",
+        "sha256": "03ebb7dbb76c754e840ac6441b97ee7d41448f89dfdadfdab5cc4e62745f3da2",
+        "bytes": 138
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/source-checkpoint.json",
+        "sha256": "c0691ccaa97a00e5f55aabedcceda09702f39747a8228f1a540c3889f934f1f3",
+        "bytes": 3484
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/source-checkpoint.json.raw.txt",
+        "sha256": "c0691ccaa97a00e5f55aabedcceda09702f39747a8228f1a540c3889f934f1f3",
+        "bytes": 3484
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/final-targeted.json",
+        "sha256": "2aa4777d78e50245fbeba9d73a9ac316fe0071afbb2bfd66e4eb228f678a59ff",
+        "bytes": 3886
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-targeted.json.raw.txt",
+        "sha256": "2aa4777d78e50245fbeba9d73a9ac316fe0071afbb2bfd66e4eb228f678a59ff",
+        "bytes": 3886
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-12-attachment-archive-backend/finish_targeted.py",
+        "sha256": "71e1871f21eeaa49d0a64da2f8bed231e96370cf027cb54a8db224d072348074",
+        "bytes": 1833
+      },
+      "preserved": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/finish_targeted.py.source.txt",
+        "sha256": "71e1871f21eeaa49d0a64da2f8bed231e96370cf027cb54a8db224d072348074",
+        "bytes": 1833
+      }
+    }
+  ]
+}

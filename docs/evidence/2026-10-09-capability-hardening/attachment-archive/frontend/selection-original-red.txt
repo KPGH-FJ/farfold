@@ -1,0 +1,73 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/conversation_archive_selection.test.ts (5 tests | 3 failed) 8ms
+   × removing a user-selected replacement restores an ordinary omitted original without a dangling replacement 5ms
+   × replacing the same original again leaves exactly one selected replacement and one original omission 1ms
+   × selecting the original retires its replacement and uses fresh source verification 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/conversation_archive_selection.test.ts > removing a user-selected replacement restores an ordinary omitted original without a dangling replacement
+AssertionError: expected [ { …(6) }, { …(6) } ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/runtime/conversation_archive_selection.test.ts:12:27
+     10|  await selection.select(replacement.candidate.candidateId,false);
+     11|  const input=(await selection.prepare("/owned/out.zip",()=>true))!;
+     12|  expect(input.candidates).toHaveLength(1);expect(input.selected).toEqu…
+       |                           ^
+     13| });
+     14| it("replacing the same original again leaves exactly one selected repl…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/conversation_archive_selection.test.ts > replacing the same original again leaves exactly one selected replacement and one original omission
+AssertionError: expected [ { …(6) }, { …(6) }, { …(6) } ] to have a length of 2 but got 3
+
+- Expected
++ Received
+
+- 2
++ 3
+
+ ❯ src/runtime/conversation_archive_selection.test.ts:18:27
+     16|  await selection.replace(original,"/owned/one.txt");await selection.re…
+     17|  const input=(await selection.prepare("/owned/out.zip",()=>true))!;
+     18|  expect(input.candidates).toHaveLength(2);expect(input.selected).toHav…
+       |                           ^
+     19| });
+     20| it("selecting the original retires its replacement and uses fresh sour…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/conversation_archive_selection.test.ts > selecting the original retires its replacement and uses fresh source verification
+AssertionError: expected [ { …(6) }, { …(6) } ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/runtime/conversation_archive_selection.test.ts:24:27
+     22|  await selection.replace(original,"/owned/one.txt");await selection.se…
+     23|  const input=(await selection.prepare("/owned/out.zip",()=>true))!;
+     24|  expect(input.candidates).toHaveLength(1);expect(input.omitted).toEqua…
+       |                           ^
+     25| });
+     26| it("late selected-file receipt after deselect/reselect or view retirem…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 2 passed (5)
+   Start at  14:25:52
+   Duration  127ms (transform 43ms, setup 0ms, import 55ms, tests 8ms, environment 0ms)
+

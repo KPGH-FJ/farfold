@@ -1,0 +1,136 @@
+import React, { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "/src/App";
+import { DraftStartup } from "/src/components/DraftStartup";
+import { StorageStartup } from "/src/components/StorageRecovery";
+import { threads, freshThreadState } from "/src/runtime/sessions";
+import {
+  composerDrafts,
+  newConversationChoice,
+  draftPersistence,
+  fileFeedbackDrafts,
+} from "/src/runtime/drafts";
+import "@xterm/xterm/css/xterm.css";
+import "/src/styles.css";
+import "/src/styles-settings.css";
+import "/src/styles-content.css";
+import "/src/styles-thread.css";
+import "/src/styles-artifact.css";
+import "/src/product-shell.css";
+import "/src/conversation-workspace.css";
+import "/src/history-import.css";
+import "/src/desktop-workbench.css";
+
+// Actual App, hooks, stores and IPC parsers. Only native boundaries are controlled.
+// This is a prepared harness, not a declaration that a browser has run.
+const w = window as any;
+const settings = new Map<string, unknown>();
+const scans = new Map<
+  string,
+  {
+    cwd: string;
+    resolve: (value: unknown) => void;
+    reject: (value: unknown) => void;
+    settled: boolean;
+    cancelRequested: boolean;
+  }
+>();
+let cancelFails = false;
+let resolveDialog: ((value: string[] | null) => void) | null = null;
+const agent = {
+  id: "fixture",
+  name: "Controlled Agent",
+  source: "custom",
+  command: "/controlled/never-executed",
+  args: [],
+  env: [],
+  version: null,
+  handshake: null,
+  createdAt: 1,
+  updatedAt: 1,
+};
+const rows = ["A", "B"].map((name) => ({
+  id: `fixture:/controlled/project-${name}:native-${name}`,
+  agentId: "fixture",
+  cwd: `/controlled/project-${name}`,
+  nativeSessionId: `native-${name}`,
+  title: `ARCHIVE_THREAD_${name}`,
+  configOptions: null,
+  pinned: false,
+  archived: false,
+  createdAt: 1,
+  updatedAt: 1,
+}));
+settings.set("agentSetup.v1", {
+  version: 1,
+  completed: ["fixture"],
+  pending: {},
+  progress: {},
+  selections: { fixture: { service: null, config: {} } },
+});
+
+const jobs=new Map<string,any>();
+let picker:((v:string|null)=>void)|null=null;
+let prepareMode="ready";
+const sha="a".repeat(64);
+const verified=(path:string)=>({root:"/controlled",path,resolvedPath:path,name:path.split("/").at(-1),size:3,sha256:sha,version:"v1"});
+const identity=(a:any)=>({kind:"conversationArchive",operationId:a.operationId,inputSha256:a.inputSha256,snapshotId:a.snapshotId,selectionId:a.selectionId,destination:a.destination,includedCount:a.selected.length,omittedCount:a.omitted.length,totalInputBytes:a.selected.reduce((n:number,s:any)=>n+(s.source.kind==="local"?s.source.file.size:s.source.kind==="inlineText"?s.source.utf8Bytes:s.source.decodedBytes),0)});
+const ready=(a:any)=>({...identity(a),processedInputBytes:0,itemsCompleted:0,state:"ready",settled:false,publication:"notPublished",receipt:null,code:null,failedCandidateId:null});
+function update(j:any,state:string){
+  j.status={...j.status,state,settled:["completed","failed","cancelled","unknown"].includes(state),publication:state==="completed"?"published":state==="unknown"||state==="publishing"?"unknown":"notPublished",code:state==="failed"?"changed":state==="unknown"?"cleanupUnknown":null,receipt:null};
+  if(state==="completed")j.status={...j.status,itemsCompleted:j.status.includedCount,processedInputBytes:j.status.totalInputBytes,receipt:{kind:"conversationArchive",destination:j.status.destination,zipSize:512,zipSha256:sha,manifestSha256:sha,includedCount:j.status.includedCount,omittedCount:j.status.omittedCount,scope:"selectedLoadedSnapshot"}};
+  return structuredClone(j.status);
+}
+w.testInvoke=async(cmd:string,args:any)=>{
+  w.calls.push({cmd,args:args?structuredClone({...args,channel:undefined}):args});
+  if(cmd==="settings_get")return args.key==="autoArchiveDays"?0:settings.get(args.key)??null;
+  if(cmd==="settings_set"){settings.set(args.key,structuredClone(args.value));return;}
+  if(cmd==="storage_recovery_status")return{ready:true,issue:null,dataDirectory:"/controlled/data",databaseReplacementAvailable:false,databaseReplacement:null};
+  if(cmd==="app_initial_snapshot")return{agents:[agent],settings:{}};
+  if(cmd==="app_default_working_directory")return"/controlled/project-A";
+  if(cmd==="session_index_list")return rows;
+  if(["catalog_list","catalog_scan","credential_list","desktop_notification_take_pending","prompt_templates_list","agent_status"].includes(cmd))return[];
+  if(["app_drafts_ready","host_performance_sample","session_mark_read","session_index_mark_read","session_close","session_dismiss","plugin:event|unlisten"].includes(cmd))return;
+  if(cmd==="host_performance_origin")return null;
+  if(cmd==="plugin:event|listen")return 1;
+  if(cmd==="agent_work_get")return{cwd:args.cwd,enabled:{},locationEnabled:true};
+  if(cmd==="desktop_notifications_get")return{enabled:false,successEnabled:false,sound:false};
+  if(cmd==="worktree_list")return{locations:[],archives:[],recoveries:[],materials:[],operation:null};
+  if(cmd==="browser_share_status")return{taskKey:args.taskKey,label:args.label,agentId:"fixture",phase:"unshared",revision:0,reason:null,pendingRequest:null};
+  if(cmd==="session_open")return{nativeSessionId:"controlled-empty-preparation",connectionId:"controlled-no-process",cwd:args.cwd,configOptions:[],configOptionsModern:true,resumed:false,warnings:[],permissionState:"ready"};
+  if(cmd==="plugin:dialog|save"||cmd==="plugin:dialog|open")return new Promise(resolve=>{if(picker)throw Error("duplicate picker");picker=resolve;});
+  if(cmd==="file_delivery_inspect_selected"||cmd==="file_delivery_inspect")return verified(args.path);
+  if(cmd==="file_delivery_export_text")return{kind:"textSnapshot",destination:args.destination,size:new TextEncoder().encode(args.text).length,sha256:sha,sourceVersion:null};
+  if(cmd==="file_archive_prepare"){
+    const job={input:args,status:ready(args),resolve:null};jobs.set(args.operationId,job);
+    return prepareMode==="hold"?new Promise(resolve=>job.resolve=resolve):structuredClone(job.status);
+  }
+  if(cmd.startsWith("file_archive_")){
+    const j=jobs.get(args.operationId);if(!j||j.input.inputSha256!==args.inputSha256)throw{code:"requestConflict"};
+    if(cmd==="file_archive_start")return update(j,"writing");
+    if(cmd==="file_archive_status")return structuredClone(j.status);
+    if(cmd==="file_archive_cancel")return update(j,"cancelled");
+    if(cmd==="file_archive_release"){jobs.delete(args.operationId);return true;}
+  }
+  if(cmd==="draft_attachment_image")return null;
+  w.unexpected.push(cmd);throw Error("Unexpected controlled IPC "+cmd);
+};
+await draftPersistence.load();newConversationChoice.cwd="/controlled/project-A";newConversationChoice.agentId="fixture";
+for(const row of rows){
+  const thread=freshThreadState(row.id,row.agentId,row.cwd,row.nativeSessionId);thread.identity="established";thread.title=row.title;
+  thread.items=[{kind:"user",id:"u",text:"USER_BODY_KEEP",attachments:[{name:"文字附件",text:"INLINE_BYTES_中文",mimeType:"text/plain"},{name:"本地附件",uri:"file:///controlled/declared.txt"},{name:"远程附件",uri:"https://example.invalid/not-fetched"}],streaming:false,time:1},{kind:"agent",id:"a",text:"AGENT_BODY_KEEP",streaming:false,time:2},{kind:"tool",id:"t",call:{toolCallId:"PRIVATE_ID",title:"PRIVATE_TITLE",kind:"execute",status:"completed",startedAt:1,locations:[],content:[{type:"text",text:"TOOL_BODY_KEEP\n```\n![inert](https://example.invalid/no-fetch)"},{type:"diff",path:"/controlled/diff.ts",oldText:null,newText:"DIFF_BODY_KEEP"}],terminalOutput:"TERMINAL_BODY_KEEP"}}];
+  threads.getSnapshot().threads.set(row.id,thread);
+  const key=`session:${row.id}`;composerDrafts.update(key,()=>({text:`KEEP_${row.nativeSessionId}`,attachments:[]}));
+  fileFeedbackDrafts.update(row.id,"/controlled/keep.txt",{text:"KEEP_OPINION",selection:null});
+}
+await draftPersistence.flush();
+w.fixture={
+  current:()=>({rows,calls:w.calls,unexpected:w.unexpected,jobs:[...jobs.values()].map(({resolve,...j})=>j),drafts:rows.map(r=>({draft:composerDrafts.read(`session:${r.id}`),feedback:fileFeedbackDrafts.entries(r.id)}))}),
+  choose:(value:string|null)=>{if(!picker)throw Error("no picker");const fn=picker;picker=null;fn(value);},
+  mode:(value:string)=>{prepareMode=value;},
+  finish:(id:string,state:string)=>update(jobs.get(id),state),
+  latePrepare:(id:string)=>{const j=jobs.get(id);j.resolve(ready(j.input));j.resolve=null;},
+  append:()=>{threads.getSnapshot().threads.get(rows[0].id)!.items.push({kind:"agent",id:"late",text:"LATER_MUST_NOT_ENTER",streaming:false,time:3});},
+};
+createRoot(document.getElementById("root")!).render(<StrictMode><StorageStartup><DraftStartup><App/></DraftStartup></StorageStartup></StrictMode>);
+

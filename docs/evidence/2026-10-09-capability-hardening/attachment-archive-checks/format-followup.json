@@ -1,0 +1,11 @@
+{
+  "startedAtUtc": "2026-10-12T07:01:19.496340+00:00",
+  "completedAtUtc": "2026-10-12T07:01:46.124511+00:00",
+  "command": ["corepack", "pnpm", "format:check"],
+  "exitCode": 0,
+  "log": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/format-followup.txt",
+    "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+  },
+  "change": "One exact Prettier exclusion for the unchanged historical failed HTTP install-verifier receipt, whose raw bytes are referenced by installed evidence. No product source or test changes."
+}

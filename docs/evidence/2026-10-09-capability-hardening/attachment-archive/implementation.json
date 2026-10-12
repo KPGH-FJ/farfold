@@ -1,0 +1,68 @@
+{
+  "status": "implementedEngineeringAndControlledEvidencePassedNotInstalled",
+  "updatedAtUtc": "2026-10-12T07:02:27.182353+00:00",
+  "productComplete": false,
+  "originalPlanItems": ["P35", "P14", "H06"],
+  "implemented": [
+    "Both conversation and library use one frozen export capture, default Markdown; optional loaded tool text, diff sides and terminal output are literal and readable.",
+    "Explicit ZIP choice and attachment selection; no history loading, prose scanning or remote fetching. The ZIP includes conversation.md, a manifest and selected byte content.",
+    "Current declared local files and received text/binary retain separate provenance; user-chosen substitutions are clearly replacements. Generated member names retain only a safe unverified extension hint.",
+    "Copy and Archive share one actual worker, progress display and exit protection. Late preparation cannot start after cancellation; selected-source failure aborts the unpublished package and uncertain cleanup remains unknown."
+  ],
+  "verification": {
+    "backendTargetedPassed": 37,
+    "backendIndependentCasesWithinTargeted": 4,
+    "frontendTargetedFiles": 19,
+    "frontendTargetedPassed": 249,
+    "canonicalSamples": 6,
+    "actualStateSamples": 14,
+    "safeSuffixSharedCases": 40,
+    "controlledBrowserChecksEach": 23,
+    "fullFrontendFiles": 433,
+    "fullFrontendPassed": 5071,
+    "fullRustPassed": 1578,
+    "fullRustIgnored": 6,
+    "sevenCommandsPassingEvidence": true
+  },
+  "evidence": {
+    "backend": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/implementation.json",
+      "sha256": "2a62907e9b62c2f4c4b8dccd34b092931de258cd6f2c1b2e16c1a2c9fbc1ce33"
+    },
+    "frontend": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/implementation.json",
+      "sha256": "98e584d42d162e735fe7bb2df73569ce3ddf36a8d4966d694fd2d4693f4ce318"
+    },
+    "browser": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/receipt.json",
+      "sha256": "bd5234189a6858bbc660f318983665efa28d9bd93e10e26ac929420a788d6123"
+    },
+    "independent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/independent/final-review.raw.txt",
+      "sha256": "f4e6a802ac97c743ab3ee02cccc66333dd9106d8dc78f632a0bca15dd0b45ead"
+    },
+    "engineering": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/final-verification.json",
+      "sha256": "39c80a291e591dcb6c83e9b4f5f912e1ac4012c1df990a18c3064b50decd2c7c"
+    }
+  },
+  "proposalAdjustment": "Loaded tool details are included inline in conversation.md, rather than additional text members from the original T02 design sketch. Tests cover the implemented inline rendering; the abandoned separate-member case is not claimed.",
+  "failureBoundaries": [
+    "Effective attachment replacement/closed absence/optional size admission/suffix usability red cases and repairs remain in author evidence.",
+    "Test fixture, compilation, evidence extraction and formatting failures are separately classified; browser run01 was driver lookup and run02 was unstable source/served-copy evidence, neither is counted as final acceptance.",
+    "Existing unrelated startup-environment intermittent timeout remains unlocalized; this passing full suite does not claim it is fixed."
+  ],
+  "installed": {
+    "archiveInstalled": false,
+    "lastKnownInstalledSource": "8cfb2ccb58a4154219505a324e92e1a5af0d4500",
+    "version": "0.1.7",
+    "platform": "macOS arm64",
+    "lastObservation": "Formal App was reopened with pending responses; not quit or replaced for this increment.",
+    "nextGate": "Fresh safe state observation, normal exit and data baseline before any installation."
+  },
+  "notClaimed": [
+    "Formal installed archive UI or an end-to-end native picker-to-ZIP journey",
+    "Unloaded history, arbitrary format validation or complete portable Agent session recovery",
+    "All P35/P14/H06 conditions, 122 original items, 16 added issues, 29 Agents by eight standards, Windows or market readiness"
+  ]
+}

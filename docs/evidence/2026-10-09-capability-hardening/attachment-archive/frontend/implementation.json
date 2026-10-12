@@ -1,0 +1,288 @@
+{
+  "createdAt": "2026-10-12T06:52:58.448146+00:00",
+  "scope": "P35/P14/H06 shared loaded-conversation Markdown and explicitly selected attachment ZIP frontend",
+  "status": "sourceAndTargetedTestsPassed",
+  "sourceRefs": [
+    {
+      "path": "src/components/ConversationArchiveDialog.test.tsx",
+      "sha256": "1adde5b62c86b0ebf4910b43425d7ac7a90dd6c2eadd1ec61bd3dc1b6767b80c",
+      "lines": 173
+    },
+    {
+      "path": "src/components/ConversationArchiveDialog.tsx",
+      "sha256": "66060f90201d0784047ab6deb1711f00328b099876aff8cb17fcd8d4f577bb5c",
+      "lines": 262
+    },
+    {
+      "path": "src/components/ConversationArchiveJobsStatus.tsx",
+      "sha256": "20a25e832ee9274ade766ccf8ddc9c83ed08c1e0851e61169d00bfe77dd02ef6",
+      "lines": 120
+    },
+    {
+      "path": "src/components/ConversationExportDialog.tsx",
+      "sha256": "c08d76497523a2261d57df527946a3738e7983a32296e848880c722700179e8d",
+      "lines": 117
+    },
+    {
+      "path": "src/components/ConversationExportHost.tsx",
+      "sha256": "3ce75927d6737abf50a3d7764c5234486d170d1bd224d286778ccad2f9d4ccd2",
+      "lines": 90
+    },
+    {
+      "path": "src/components/ConversationLibrary.tsx",
+      "sha256": "1cbc85d72a93b6de1ac32318a156f4709d5baa63f6c654bbcd2c726132bc5f25",
+      "lines": 1271
+    },
+    {
+      "path": "src/components/DraftStartup.restore.test.tsx",
+      "sha256": "55be074a450c725e971b99a306c42e2daee8f66eecf279e17bea538411122bd6",
+      "lines": 102
+    },
+    {
+      "path": "src/components/DraftStartup.test.tsx",
+      "sha256": "b950648c33d353a87e909f5a12f2cab8dfa8b8d98524513c3dfa0c170d574b9f",
+      "lines": 440
+    },
+    {
+      "path": "src/components/DraftStartup.tsx",
+      "sha256": "df4d2cdcff94fa02fd00530572d7cb81dae0a9bbadb8b19e7380c72f40b29f76",
+      "lines": 315
+    },
+    {
+      "path": "src/components/FileCopyActivity.tsx",
+      "sha256": "c589dddcc1b3ccdd4d87a1dc8437ea37ae76f83e7e8b0fdf0f9fb6e9f455d381",
+      "lines": 53
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "sha256": "0fbdf183813c3f798333048b7f6b8011ef32cfea7be9c72031c758953726c260",
+      "lines": 581
+    },
+    {
+      "path": "src/runtime/conversation_archive.states-wire.test.tsx",
+      "sha256": "b2c41d425268d7a0513603bd0220968b76dd624613cc68b6183bfc34698d3f88",
+      "lines": 130
+    },
+    {
+      "path": "src/runtime/conversation_archive.wire.test.ts",
+      "sha256": "5c048f2a5b0c76cfcbd8bed94eb7c69c3a61521bb77884e2d96a78f820125c1c",
+      "lines": 60
+    },
+    {
+      "path": "src/runtime/conversation_archive_exit.test.ts",
+      "sha256": "1bc4a972553c00565f7f4ddc095b5da42466b4498ebc9651fe9888f0a12656df",
+      "lines": 54
+    },
+    {
+      "path": "src/runtime/conversation_archive_input.ts",
+      "sha256": "98d3c46238a12077e95eb761e282c08e1faf62548df149bbe8dc3caadde443d3",
+      "lines": 102
+    },
+    {
+      "path": "src/runtime/conversation_archive_jobs.test.ts",
+      "sha256": "cc217fbe56fc29627f5dc1a825ca5c605b6df8c1f832da37456fdb29e3c442c6",
+      "lines": 193
+    },
+    {
+      "path": "src/runtime/conversation_archive_jobs.ts",
+      "sha256": "cb7d2a42e714d543a51a5bfd71453121a7bbf3e7a63da9cbd1694def56903428",
+      "lines": 367
+    },
+    {
+      "path": "src/runtime/conversation_archive_parse.ts",
+      "sha256": "55594613d046619892d6364ef3662f13604c32b9ebb0c10795d7dfc92b071ffc",
+      "lines": 170
+    },
+    {
+      "path": "src/runtime/conversation_archive_selection.test.ts",
+      "sha256": "0a05139a11750b0e450b2b7630029e9dbcc53142428392e5ceec4d895ba85aa2",
+      "lines": 153
+    },
+    {
+      "path": "src/runtime/conversation_archive_selection.ts",
+      "sha256": "f5b386c1dce6f32e9cbd3e2b253c8ba545c6c5849b2b0d297743f27624769158",
+      "lines": 297
+    },
+    {
+      "path": "src/runtime/conversation_archive_snapshot.test.ts",
+      "sha256": "10ec2da920aa112799ea8863bcfd49bb4a5a892c9e177e1b11fcec36555a4706",
+      "lines": 117
+    },
+    {
+      "path": "src/runtime/conversation_archive_snapshot.ts",
+      "sha256": "1b1e60fba3f88f0d2807a26fbd52c2ca0f03f770089892415e2a1f58e5572d54",
+      "lines": 274
+    },
+    {
+      "path": "src/runtime/conversation_archive_strings.ts",
+      "sha256": "21db595988af5e9c0ec4ae5a6a793c3a7d33a460c10f0e9ea5bd09e8723a3570",
+      "lines": 84
+    },
+    {
+      "path": "src/runtime/conversation_archive_types.ts",
+      "sha256": "9ece950fc7418bd4f00c92cb07efeed1e63411acc7178c432c7bfe8357b02a93",
+      "lines": 173
+    },
+    {
+      "path": "src/runtime/exit_impact.ts",
+      "sha256": "36e2233f9bd65f39903ea3854f9e95a8ba598300711f16897ded8ae29968ad27",
+      "lines": 47
+    },
+    {
+      "path": "src/runtime/file_copy_jobs.ts",
+      "sha256": "432c56d9fc97cb8c9fc73b45b260b4153eaaa01b9748109e9f6e5ad119949a92",
+      "lines": 435
+    },
+    {
+      "path": "src/runtime/fixtures/archive-member-cases.json",
+      "sha256": "b474fc1e13b8e936b557deb08761123d9a2fddaef776fc4eb4aa231807ffcfa9",
+      "lines": 242
+    },
+    {
+      "path": "src/runtime/library_strings.ts",
+      "sha256": "dc2c535fac63e7e9bad0c60adb1421b813e38a8e95284f3936dd2004b460a5a7",
+      "lines": 138
+    }
+  ],
+  "sourceStableDuringFinalChecks": true,
+  "observedInputCount": 33,
+  "checks": {
+    "targetedFiles": 19,
+    "targetedPassed": 249,
+    "typecheckExit": 0,
+    "ownedFormatExit": 0,
+    "sharedFilenameSuffixCases": 40,
+    "actualRustCanonicalSamples": 6,
+    "actualRustStateSamples": 14,
+    "actualStateWireTests": 23,
+    "maxOwnedLines": 1271
+  },
+  "changes": [
+    "ThreadPage and Library now open one frozen export flow; default Markdown output remains the existing default, with an explicit loaded tool-details option implemented by root.",
+    "ZIP candidates start unchecked. Local selections use the existing exact-file inspection, received text/bytes stay distinct, and remote references never trigger automatic downloads.",
+    "Replacement selection permits deselecting, reselecting and replacing again without dangling replacement metadata. Optional ZIP/detail limits cannot disable the otherwise valid default Markdown variant.",
+    "The canonical UTF-8 digest matches real Rust samples. Only the live explicit Save owner can register and start its timely ready preparation; close/picker/hash late results cannot reauthorize another save.",
+    "Registered jobs retain safe identity/progress across close and navigation; they join file-save activity and quit protection. Request observation timeout is not worker completion. Closed absent acknowledgement retires only the frontend observation; ordinary unknown still requires backend release.",
+    "Registered form and parent captures discard export-owned payload references. The actual IPC may retain its input while pending; this is not a claim of JavaScript memory zeroing or modification of conversation data.",
+    "Generated member basenames remain numeric. A fixed ordinary filename suffix whitelist improves PDF/image/Office handoff; unknown/active suffixes fall back to .bin and inline text remains .txt. This is not content or MIME validation."
+  ],
+  "effectiveFailuresPreserved": [
+    {
+      "log": "selection-original-red.txt",
+      "failed": 3,
+      "cause": "Replacement deselection/replacement/original reselection produced invalid selection graphs",
+      "green": "selection-green.txt"
+    },
+    {
+      "log": "optional-limit-original-red.txt",
+      "failed": 2,
+      "cause": "Optional oversized detail content or attachment count blocked the default ordinary Markdown capture",
+      "green": "optional-limit-green.txt"
+    },
+    {
+      "log": "closed-absence-original-red.txt",
+      "failed": 1,
+      "cause": "Backend release=false for closed absent prevented explicit acknowledgement from dismissing the frontend observation",
+      "green": "closed-absence-green.txt"
+    }
+  ],
+  "testFixtureCorrections": [
+    {
+      "log": "related-second.txt",
+      "failed": 1,
+      "classification": "Manual component walker recursed into undefined children by reusing its default root argument; fixed test walker only."
+    },
+    {
+      "log": "related-third.txt",
+      "failed": 18,
+      "classification": "Two legacy manual-hook fixtures did not supply the newly subscribed useSyncExternalStore getter. Added getter support only; original test bodies and assertions remain byte-identical."
+    }
+  ],
+  "interoperability": {
+    "actualWire": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/actual-wire.json",
+      "sha256": "71450491101bdfd70680942b68f5946e2d9e5ff2ac1cd3e71100409890401b5c"
+    },
+    "wireValuesUnchanged": true,
+    "requestReconstruction": "Jobs tests reconstruct the actual Rust canonical sample 0 with the actual job destination/operation ID and require the complete recomputed canonical hash to equal the real ready/unknown identity before replaying unchanged Rust replies. No state fields are rewritten.",
+    "canonicalOriginal": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/canonical-wire.json",
+      "sha256": "7815dba0713c379df5ee6ef10794fa7f10367fa7d53e62a8f9b18dd02acb6d97"
+    },
+    "scope": "Strict parsing, bounded frontend observer logic and actual React SSR; no claim of a frontend test performing real ZIP IO."
+  },
+  "limits": [
+    "No formal App, real Agent, database, browser, Cargo, full build or installed ZIP extraction was run by this author. Root owns complete controlled browser and later installed validation.",
+    "Only already-loaded readable transcript content and explicitly opted-in loaded text/diff/terminal details are included; unloaded history, raw tool envelopes, thoughts, drafts and queued content are outside this export.",
+    "User/assistant body text and selected file bytes are preserved, and may contain private information. Generated source metadata omits automatic local path/URI fields; filenames are display metadata rather than universal secret filtering.",
+    "Frontend activity is process-local. An absent result describes only the current process; closed absence does not prove past save success, cancellation or failure.",
+    "Old ordinary file-copy wire and class behavior are preserved; the shared activity/exit queries aggregate archive state.",
+    "Targeted source/fixture results do not close the original P35/P14/H06 installed/product acceptance conditions."
+  ],
+  "artifactRefs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/closed-absence-green.txt",
+      "sha256": "9623e71291eee54d281678e147d78546969974657147c31f6778fb1c3f51b056"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/closed-absence-original-red.txt",
+      "sha256": "51fe4d19f1a84510dba05fa4424edf192283fcbb8372a77088dc6d65962257ab"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/existing-fixture-adaptation.json",
+      "sha256": "a9e1cc6b65febe9ae98450c5ed4dc2b6e3ae3a2436b7c9c9144c657f808e338f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/format-final.txt",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/inputs-after-final.json",
+      "sha256": "8a42505f7a09ca05d17544c195fd3bd0abdc0f31c5f5000ddaa14b71bae88222"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/inputs-before-final.json",
+      "sha256": "8a42505f7a09ca05d17544c195fd3bd0abdc0f31c5f5000ddaa14b71bae88222"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/optional-limit-green.txt",
+      "sha256": "a17e4014971e0eda6a7be4effe32ac7cd3d036d8554393f03db6916ec6ecc735"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/optional-limit-original-red.txt",
+      "sha256": "7927b5aae1228a7130c23dda5a39c2ee59343cfc0026ff5e8845e20ec5050eb1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/related-second.txt",
+      "sha256": "dda40d259cffed713260718944e72bd78261c6ece3650680aac0c6861566801b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/related-third.txt",
+      "sha256": "6a56804485b2b4fa9c1e545f7f7d19887b24e70f4c3414d5edd7a5e4cace1495"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/selection-green.txt",
+      "sha256": "59d64e8a3cd8e02eb4451519379f8e1b6fbd7298305d1b142f87594269b39c9c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/selection-original-red.txt",
+      "sha256": "ce00d6488508ec64f6e7e3f2efe02de46507dc95a0113bbae4658b90516a7278"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/source-checkpoint.json",
+      "sha256": "dfdd96774e276cce99fe4e54268272b6720966df2665d8fcb28e6b86101a22fd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/states-wire-first.txt",
+      "sha256": "d6007138b39efe52008c0aa060358424715cca37b10f96ef14a23d3563ffe918"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/targeted-final.txt",
+      "sha256": "2198eaf0d245a1ca20db610ab0bcd01b55fa8244551403fae803fbd6674a2787"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/type-final.txt",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  ]
+}

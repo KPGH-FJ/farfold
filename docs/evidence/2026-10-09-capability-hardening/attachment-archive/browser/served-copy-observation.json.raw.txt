@@ -1,0 +1,18 @@
+{
+  "atUtc": "2026-10-12T06:45:45.213598+00:00",
+  "url": "http://127.0.0.1:1512/src/runtime/conversation_archive_strings.ts",
+  "servedContainsOldWaitSuffix": false,
+  "diskContainsOldWaitSuffix": false,
+  "servedSha256": "260e63efba613adb29514dd4e47e4c85f661ec138fea2205def1fbdc2badfcf9",
+  "headers": {
+    "Vary": "Origin",
+    "Content-Type": "text/javascript",
+    "Cache-Control": "no-cache",
+    "Etag": "W/\"10ff-7tvu2gAnEnFJSHiEFOWkYiMHwns\"",
+    "Date": "Mon, 12 Oct 2026 06:45:45 GMT",
+    "Connection": "keep-alive",
+    "Keep-Alive": "timeout=5",
+    "Content-Length": "12202"
+  },
+  "note": "Read-only request to task-owned Vite. Preliminary browser receipt cannot bind source identity from file hashes alone; final server will restart after freeze."
+}

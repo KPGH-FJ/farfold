@@ -1,0 +1,662 @@
+{
+  "canonical": [
+    {
+      "input": {
+        "operationId": "00000000-0000-4000-8000-000000000001",
+        "inputSha256": "ff2f2ab56ed0e70afa641d5f09336a583aa943b8a232d70602e155bbf64099f9",
+        "snapshotId": "00000000-0000-4000-8000-000000000002",
+        "selectionId": "00000000-0000-4000-8000-000000000003",
+        "destination": "/synthetic/未创建 archive.zip",
+        "markdown": "# 已加载\n\n正文 <literal>\n",
+        "candidates": [
+          {
+            "candidateId": "00000000-0000-4000-8000-000000000004",
+            "origin": {
+              "itemOrdinal": 0,
+              "role": "agent",
+              "attachmentOrdinal": 0,
+              "toolContentOrdinal": null,
+              "declaration": "messageAttachment"
+            },
+            "displayName": "空\" \n😀 ",
+            "declaredMimeType": "text/plain",
+            "representation": "receivedText",
+            "replacesCandidateId": null
+          }
+        ],
+        "selected": [
+          {
+            "candidateId": "00000000-0000-4000-8000-000000000004",
+            "source": {
+              "kind": "inlineText",
+              "text": "\u0000\t\b\f\r\n中文😀",
+              "utf8Bytes": 16
+            }
+          }
+        ],
+        "omitted": []
+      },
+      "canonical": "[\"farfold.conversationArchive.v1\",\"00000000-0000-4000-8000-000000000002\",\"00000000-0000-4000-8000-000000000003\",\"/synthetic/未创建 archive.zip\",\"# 已加载\\n\\n正文 <literal>\\n\",[[\"00000000-0000-4000-8000-000000000004\",[0,\"agent\",0,null,\"messageAttachment\"],\"空\\\" \\n😀 \",\"text/plain\",\"receivedText\",null]],[[\"00000000-0000-4000-8000-000000000004\",[\"inlineText\",\"\\u0000\\t\\b\\f\\r\\n中文😀\",16]]],[]]",
+      "sha256": "ff2f2ab56ed0e70afa641d5f09336a583aa943b8a232d70602e155bbf64099f9",
+      "ready": {
+        "kind": "conversationArchive",
+        "operationId": "00000000-0000-4000-8000-000000000001",
+        "inputSha256": "ff2f2ab56ed0e70afa641d5f09336a583aa943b8a232d70602e155bbf64099f9",
+        "snapshotId": "00000000-0000-4000-8000-000000000002",
+        "selectionId": "00000000-0000-4000-8000-000000000003",
+        "destination": "/synthetic/未创建 archive.zip",
+        "includedCount": 1,
+        "omittedCount": 0,
+        "totalInputBytes": 16,
+        "processedInputBytes": 0,
+        "itemsCompleted": 0,
+        "state": "ready",
+        "settled": false,
+        "publication": "notPublished",
+        "receipt": null,
+        "code": null,
+        "failedCandidateId": null
+      }
+    },
+    {
+      "input": {
+        "operationId": "00000000-0000-4000-8000-000000000005",
+        "inputSha256": "d58b7799b14e60423ec38c836640cc6df7887f701132939545d01b4c34e784bb",
+        "snapshotId": "00000000-0000-4000-8000-000000000002",
+        "selectionId": "00000000-0000-4000-8000-000000000003",
+        "destination": "/synthetic/未创建 archive.zip",
+        "markdown": "# 已加载\n\n正文 <literal>\n",
+        "candidates": [
+          {
+            "candidateId": "00000000-0000-4000-8000-000000000004",
+            "origin": {
+              "itemOrdinal": 0,
+              "role": "agent",
+              "attachmentOrdinal": 0,
+              "toolContentOrdinal": null,
+              "declaration": "messageAttachment"
+            },
+            "displayName": "空\" \n😀 ",
+            "declaredMimeType": "text/plain",
+            "representation": "receivedText",
+            "replacesCandidateId": null
+          }
+        ],
+        "selected": [],
+        "omitted": [
+          {
+            "candidateId": "00000000-0000-4000-8000-000000000004",
+            "reason": "notSelected"
+          }
+        ]
+      },
+      "canonical": "[\"farfold.conversationArchive.v1\",\"00000000-0000-4000-8000-000000000002\",\"00000000-0000-4000-8000-000000000003\",\"/synthetic/未创建 archive.zip\",\"# 已加载\\n\\n正文 <literal>\\n\",[[\"00000000-0000-4000-8000-000000000004\",[0,\"agent\",0,null,\"messageAttachment\"],\"空\\\" \\n😀 \",\"text/plain\",\"receivedText\",null]],[],[[\"00000000-0000-4000-8000-000000000004\",\"notSelected\"]]]",
+      "sha256": "d58b7799b14e60423ec38c836640cc6df7887f701132939545d01b4c34e784bb",
+      "ready": {
+        "kind": "conversationArchive",
+        "operationId": "00000000-0000-4000-8000-000000000005",
+        "inputSha256": "d58b7799b14e60423ec38c836640cc6df7887f701132939545d01b4c34e784bb",
+        "snapshotId": "00000000-0000-4000-8000-000000000002",
+        "selectionId": "00000000-0000-4000-8000-000000000003",
+        "destination": "/synthetic/未创建 archive.zip",
+        "includedCount": 0,
+        "omittedCount": 1,
+        "totalInputBytes": 0,
+        "processedInputBytes": 0,
+        "itemsCompleted": 0,
+        "state": "ready",
+        "settled": false,
+        "publication": "notPublished",
+        "receipt": null,
+        "code": null,
+        "failedCandidateId": null
+      }
+    },
+    {
+      "input": {
+        "operationId": "00000000-0000-4000-8000-000000000006",
+        "inputSha256": "d05f2f0eb55518716179e83b341a6ed05718758477cf5d51d4eb3230776e4d48",
+        "snapshotId": "00000000-0000-4000-8000-000000000002",
+        "selectionId": "00000000-0000-4000-8000-000000000003",
+        "destination": "/synthetic/未创建 archive.zip",
+        "markdown": "# 已加载\n\n正文 <literal>\n",
+        "candidates": [
+          {
+            "candidateId": "00000000-0000-4000-8000-000000000004",
+            "origin": {
+              "itemOrdinal": 0,
+              "role": "agent",
+              "attachmentOrdinal": 0,
+              "toolContentOrdinal": null,
+              "declaration": "messageAttachment"
+            },
+            "displayName": "空\" \n😀 ",
+            "declaredMimeType": "text/plain",
+            "representation": "receivedBytes",
+            "replacesCandidateId": null
+          }
+        ],
+        "selected": [
+          {
+            "candidateId": "00000000-0000-4000-8000-000000000004",
+            "source": {
+              "kind": "inlineBinary",
+              "base64": "AAEC/w==",
+              "decodedBytes": 4
+            }
+          }
+        ],
+        "omitted": []
+      },
+      "canonical": "[\"farfold.conversationArchive.v1\",\"00000000-0000-4000-8000-000000000002\",\"00000000-0000-4000-8000-000000000003\",\"/synthetic/未创建 archive.zip\",\"# 已加载\\n\\n正文 <literal>\\n\",[[\"00000000-0000-4000-8000-000000000004\",[0,\"agent\",0,null,\"messageAttachment\"],\"空\\\" \\n😀 \",\"text/plain\",\"receivedBytes\",null]],[[\"00000000-0000-4000-8000-000000000004\",[\"inlineBinary\",\"AAEC/w==\",4]]],[]]",
+      "sha256": "d05f2f0eb55518716179e83b341a6ed05718758477cf5d51d4eb3230776e4d48",
+      "ready": {
+        "kind": "conversationArchive",
+        "operationId": "00000000-0000-4000-8000-000000000006",
+        "inputSha256": "d05f2f0eb55518716179e83b341a6ed05718758477cf5d51d4eb3230776e4d48",
+        "snapshotId": "00000000-0000-4000-8000-000000000002",
+        "selectionId": "00000000-0000-4000-8000-000000000003",
+        "destination": "/synthetic/未创建 archive.zip",
+        "includedCount": 1,
+        "omittedCount": 0,
+        "totalInputBytes": 4,
+        "processedInputBytes": 0,
+        "itemsCompleted": 0,
+        "state": "ready",
+        "settled": false,
+        "publication": "notPublished",
+        "receipt": null,
+        "code": null,
+        "failedCandidateId": null
+      }
+    },
+    {
+      "input": {
+        "operationId": "00000000-0000-4000-8000-000000000007",
+        "inputSha256": "5bb63e883d4a96928806ac45defa406b742ca6d4d030d435e4d98a5252c9b2c9",
+        "snapshotId": "00000000-0000-4000-8000-000000000002",
+        "selectionId": "00000000-0000-4000-8000-000000000003",
+        "destination": "/synthetic/未创建 archive.zip",
+        "markdown": "# 已加载\n\n正文 <literal>\n",
+        "candidates": [
+          {
+            "candidateId": "00000000-0000-4000-8000-000000000004",
+            "origin": {
+              "itemOrdinal": 0,
+              "role": "agent",
+              "attachmentOrdinal": 0,
+              "toolContentOrdinal": null,
+              "declaration": "messageAttachment"
+            },
+            "displayName": "空\" \n😀 ",
+            "declaredMimeType": "text/plain",
+            "representation": "localCurrentFile",
+            "replacesCandidateId": null
+          }
+        ],
+        "selected": [
+          {
+            "candidateId": "00000000-0000-4000-8000-000000000004",
+            "source": {
+              "kind": "local",
+              "file": {
+                "root": "/synthetic",
+                "path": "/synthetic/source",
+                "resolvedPath": "/synthetic/source",
+                "name": "source",
+                "size": 0,
+                "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+                "version": "1111111111111111111111111111111111111111111111111111111111111111"
+              },
+              "selectedBy": "declaredSource"
+            }
+          }
+        ],
+        "omitted": []
+      },
+      "canonical": "[\"farfold.conversationArchive.v1\",\"00000000-0000-4000-8000-000000000002\",\"00000000-0000-4000-8000-000000000003\",\"/synthetic/未创建 archive.zip\",\"# 已加载\\n\\n正文 <literal>\\n\",[[\"00000000-0000-4000-8000-000000000004\",[0,\"agent\",0,null,\"messageAttachment\"],\"空\\\" \\n😀 \",\"text/plain\",\"localCurrentFile\",null]],[[\"00000000-0000-4000-8000-000000000004\",[\"local\",[\"/synthetic\",\"/synthetic/source\",\"/synthetic/source\",\"source\",0,\"0000000000000000000000000000000000000000000000000000000000000000\",\"1111111111111111111111111111111111111111111111111111111111111111\"],\"declaredSource\"]]],[]]",
+      "sha256": "5bb63e883d4a96928806ac45defa406b742ca6d4d030d435e4d98a5252c9b2c9",
+      "ready": {
+        "kind": "conversationArchive",
+        "operationId": "00000000-0000-4000-8000-000000000007",
+        "inputSha256": "5bb63e883d4a96928806ac45defa406b742ca6d4d030d435e4d98a5252c9b2c9",
+        "snapshotId": "00000000-0000-4000-8000-000000000002",
+        "selectionId": "00000000-0000-4000-8000-000000000003",
+        "destination": "/synthetic/未创建 archive.zip",
+        "includedCount": 1,
+        "omittedCount": 0,
+        "totalInputBytes": 0,
+        "processedInputBytes": 0,
+        "itemsCompleted": 0,
+        "state": "ready",
+        "settled": false,
+        "publication": "notPublished",
+        "receipt": null,
+        "code": null,
+        "failedCandidateId": null
+      }
+    },
+    {
+      "input": {
+        "operationId": "00000000-0000-4000-8000-000000000001",
+        "inputSha256": "4086e3f04814f71bf3e26a3c83252b538ffbf62cb2a5324ecb42b5687f22d2dd",
+        "snapshotId": "00000000-0000-4000-8000-000000000002",
+        "selectionId": "00000000-0000-4000-8000-000000000003",
+        "destination": "/synthetic/boundary.zip",
+        "markdown": "# 已加载\n\n正文 <literal>\n",
+        "candidates": [
+          {
+            "candidateId": "00000000-0000-4000-8000-000000000004",
+            "origin": {
+              "itemOrdinal": 9007199254740991,
+              "role": "agent",
+              "attachmentOrdinal": 0,
+              "toolContentOrdinal": null,
+              "declaration": "messageAttachment"
+            },
+            "displayName": "空\" \n😀 ",
+            "declaredMimeType": "text/plain",
+            "representation": "receivedText",
+            "replacesCandidateId": null
+          },
+          {
+            "candidateId": "00000000-0000-4000-8000-00000000000a",
+            "origin": {
+              "itemOrdinal": 9007199254740991,
+              "role": "agent",
+              "attachmentOrdinal": 0,
+              "toolContentOrdinal": null,
+              "declaration": "messageAttachment"
+            },
+            "displayName": "",
+            "declaredMimeType": null,
+            "representation": "receivedText",
+            "replacesCandidateId": null
+          }
+        ],
+        "selected": [
+          {
+            "candidateId": "00000000-0000-4000-8000-000000000004",
+            "source": {
+              "kind": "inlineText",
+              "text": "",
+              "utf8Bytes": 0
+            }
+          }
+        ],
+        "omitted": [
+          {
+            "candidateId": "00000000-0000-4000-8000-00000000000a",
+            "reason": "notSelected"
+          }
+        ]
+      },
+      "canonical": "[\"farfold.conversationArchive.v1\",\"00000000-0000-4000-8000-000000000002\",\"00000000-0000-4000-8000-000000000003\",\"/synthetic/boundary.zip\",\"# 已加载\\n\\n正文 <literal>\\n\",[[\"00000000-0000-4000-8000-000000000004\",[9007199254740991,\"agent\",0,null,\"messageAttachment\"],\"空\\\" \\n😀 \",\"text/plain\",\"receivedText\",null],[\"00000000-0000-4000-8000-00000000000a\",[9007199254740991,\"agent\",0,null,\"messageAttachment\"],\"\",null,\"receivedText\",null]],[[\"00000000-0000-4000-8000-000000000004\",[\"inlineText\",\"\",0]]],[[\"00000000-0000-4000-8000-00000000000a\",\"notSelected\"]]]",
+      "sha256": "4086e3f04814f71bf3e26a3c83252b538ffbf62cb2a5324ecb42b5687f22d2dd",
+      "ready": {
+        "kind": "conversationArchive",
+        "operationId": "00000000-0000-4000-8000-000000000001",
+        "inputSha256": "4086e3f04814f71bf3e26a3c83252b538ffbf62cb2a5324ecb42b5687f22d2dd",
+        "snapshotId": "00000000-0000-4000-8000-000000000002",
+        "selectionId": "00000000-0000-4000-8000-000000000003",
+        "destination": "/synthetic/boundary.zip",
+        "includedCount": 1,
+        "omittedCount": 1,
+        "totalInputBytes": 0,
+        "processedInputBytes": 0,
+        "itemsCompleted": 0,
+        "state": "ready",
+        "settled": false,
+        "publication": "notPublished",
+        "receipt": null,
+        "code": null,
+        "failedCandidateId": null
+      }
+    },
+    {
+      "input": {
+        "operationId": "00000000-0000-4000-8000-000000000001",
+        "inputSha256": "da5684fbe68818fefd9c212aadfb574a6cc4e207cc51c10d8bc8b3e53d375e92",
+        "snapshotId": "00000000-0000-4000-8000-000000000002",
+        "selectionId": "00000000-0000-4000-8000-000000000003",
+        "destination": "/synthetic/boundary.zip",
+        "markdown": "# 已加载\n\n正文 <literal>\n",
+        "candidates": [
+          {
+            "candidateId": "00000000-0000-4000-8000-00000000000a",
+            "origin": {
+              "itemOrdinal": 9007199254740991,
+              "role": "agent",
+              "attachmentOrdinal": 0,
+              "toolContentOrdinal": null,
+              "declaration": "messageAttachment"
+            },
+            "displayName": "",
+            "declaredMimeType": null,
+            "representation": "receivedText",
+            "replacesCandidateId": null
+          },
+          {
+            "candidateId": "00000000-0000-4000-8000-000000000004",
+            "origin": {
+              "itemOrdinal": 9007199254740991,
+              "role": "agent",
+              "attachmentOrdinal": 0,
+              "toolContentOrdinal": null,
+              "declaration": "messageAttachment"
+            },
+            "displayName": "空\" \n😀 ",
+            "declaredMimeType": "text/plain",
+            "representation": "receivedText",
+            "replacesCandidateId": null
+          }
+        ],
+        "selected": [
+          {
+            "candidateId": "00000000-0000-4000-8000-000000000004",
+            "source": {
+              "kind": "inlineText",
+              "text": "",
+              "utf8Bytes": 0
+            }
+          }
+        ],
+        "omitted": [
+          {
+            "candidateId": "00000000-0000-4000-8000-00000000000a",
+            "reason": "notSelected"
+          }
+        ]
+      },
+      "canonical": "[\"farfold.conversationArchive.v1\",\"00000000-0000-4000-8000-000000000002\",\"00000000-0000-4000-8000-000000000003\",\"/synthetic/boundary.zip\",\"# 已加载\\n\\n正文 <literal>\\n\",[[\"00000000-0000-4000-8000-00000000000a\",[9007199254740991,\"agent\",0,null,\"messageAttachment\"],\"\",null,\"receivedText\",null],[\"00000000-0000-4000-8000-000000000004\",[9007199254740991,\"agent\",0,null,\"messageAttachment\"],\"空\\\" \\n😀 \",\"text/plain\",\"receivedText\",null]],[[\"00000000-0000-4000-8000-000000000004\",[\"inlineText\",\"\",0]]],[[\"00000000-0000-4000-8000-00000000000a\",\"notSelected\"]]]",
+      "sha256": "da5684fbe68818fefd9c212aadfb574a6cc4e207cc51c10d8bc8b3e53d375e92",
+      "ready": {
+        "kind": "conversationArchive",
+        "operationId": "00000000-0000-4000-8000-000000000001",
+        "inputSha256": "da5684fbe68818fefd9c212aadfb574a6cc4e207cc51c10d8bc8b3e53d375e92",
+        "snapshotId": "00000000-0000-4000-8000-000000000002",
+        "selectionId": "00000000-0000-4000-8000-000000000003",
+        "destination": "/synthetic/boundary.zip",
+        "includedCount": 1,
+        "omittedCount": 1,
+        "totalInputBytes": 0,
+        "processedInputBytes": 0,
+        "itemsCompleted": 0,
+        "state": "ready",
+        "settled": false,
+        "publication": "notPublished",
+        "receipt": null,
+        "code": null,
+        "failedCandidateId": null
+      }
+    }
+  ],
+  "states": {
+    "ready": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-000000000001",
+      "inputSha256": "667fb0b266bbde6ca1e9b28e16f438633a7c324d91d14ae0e6ab3de4fa65492f",
+      "snapshotId": "00000000-0000-4000-8000-000000000002",
+      "selectionId": "00000000-0000-4000-8000-000000000003",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/actual.zip",
+      "includedCount": 1,
+      "omittedCount": 0,
+      "totalInputBytes": 16,
+      "processedInputBytes": 0,
+      "itemsCompleted": 0,
+      "state": "ready",
+      "settled": false,
+      "publication": "notPublished",
+      "receipt": null,
+      "code": null,
+      "failedCandidateId": null
+    },
+    "writing": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-000000000001",
+      "inputSha256": "667fb0b266bbde6ca1e9b28e16f438633a7c324d91d14ae0e6ab3de4fa65492f",
+      "snapshotId": "00000000-0000-4000-8000-000000000002",
+      "selectionId": "00000000-0000-4000-8000-000000000003",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/actual.zip",
+      "includedCount": 1,
+      "omittedCount": 0,
+      "totalInputBytes": 16,
+      "processedInputBytes": 0,
+      "itemsCompleted": 0,
+      "state": "writing",
+      "settled": false,
+      "publication": "notPublished",
+      "receipt": null,
+      "code": null,
+      "failedCandidateId": null
+    },
+    "publishing": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-000000000001",
+      "inputSha256": "667fb0b266bbde6ca1e9b28e16f438633a7c324d91d14ae0e6ab3de4fa65492f",
+      "snapshotId": "00000000-0000-4000-8000-000000000002",
+      "selectionId": "00000000-0000-4000-8000-000000000003",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/actual.zip",
+      "includedCount": 1,
+      "omittedCount": 0,
+      "totalInputBytes": 16,
+      "processedInputBytes": 16,
+      "itemsCompleted": 1,
+      "state": "publishing",
+      "settled": false,
+      "publication": "unknown",
+      "receipt": null,
+      "code": null,
+      "failedCandidateId": null
+    },
+    "completed": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-000000000001",
+      "inputSha256": "667fb0b266bbde6ca1e9b28e16f438633a7c324d91d14ae0e6ab3de4fa65492f",
+      "snapshotId": "00000000-0000-4000-8000-000000000002",
+      "selectionId": "00000000-0000-4000-8000-000000000003",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/actual.zip",
+      "includedCount": 1,
+      "omittedCount": 0,
+      "totalInputBytes": 16,
+      "processedInputBytes": 16,
+      "itemsCompleted": 1,
+      "state": "completed",
+      "settled": true,
+      "publication": "published",
+      "receipt": {
+        "kind": "conversationArchive",
+        "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/actual.zip",
+        "zipSize": 1238,
+        "zipSha256": "d827a189545bd1afb37fd054af5d354aab80848ecb91e345a11039eaebd68fda",
+        "manifestSha256": "ff172b8ed3f2f9a72f5b8daf3cc9f88e393baeed384b171493cd103fb9552f6f",
+        "includedCount": 1,
+        "omittedCount": 0,
+        "scope": "selectedLoadedSnapshot"
+      },
+      "code": null,
+      "failedCandidateId": null
+    },
+    "cancelReady": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-00000000001f",
+      "inputSha256": "16e05d6f575b5eec70ca2b906dfd7596a24dd9be73fb8c6ddabfe392e157143f",
+      "snapshotId": "00000000-0000-4000-8000-000000000002",
+      "selectionId": "00000000-0000-4000-8000-000000000003",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/cancel.zip",
+      "includedCount": 1,
+      "omittedCount": 0,
+      "totalInputBytes": 16,
+      "processedInputBytes": 0,
+      "itemsCompleted": 0,
+      "state": "ready",
+      "settled": false,
+      "publication": "notPublished",
+      "receipt": null,
+      "code": null,
+      "failedCandidateId": null
+    },
+    "cancelled": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-00000000001f",
+      "inputSha256": "16e05d6f575b5eec70ca2b906dfd7596a24dd9be73fb8c6ddabfe392e157143f",
+      "snapshotId": "00000000-0000-4000-8000-000000000002",
+      "selectionId": "00000000-0000-4000-8000-000000000003",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/cancel.zip",
+      "includedCount": 1,
+      "omittedCount": 0,
+      "totalInputBytes": 16,
+      "processedInputBytes": 0,
+      "itemsCompleted": 0,
+      "state": "cancelled",
+      "settled": true,
+      "publication": "notPublished",
+      "receipt": null,
+      "code": null,
+      "failedCandidateId": null
+    },
+    "failed": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-000000000020",
+      "inputSha256": "c25fa0046ab75731f7a3e8316b7ab67248bd5886e731e75beab91983d4cf040f",
+      "snapshotId": "00000000-0000-4000-8000-000000000002",
+      "selectionId": "00000000-0000-4000-8000-000000000003",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/absent-parent/no.zip",
+      "includedCount": 1,
+      "omittedCount": 0,
+      "totalInputBytes": 16,
+      "processedInputBytes": 0,
+      "itemsCompleted": 0,
+      "state": "failed",
+      "settled": true,
+      "publication": "notPublished",
+      "receipt": null,
+      "code": "invalidDestination",
+      "failedCandidateId": null
+    },
+    "unknown": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-000000000022",
+      "inputSha256": "b4c7a50ccc241552d4a9fce10e020c1bac5b38dfb54f9b23b15a34172e69c471",
+      "snapshotId": "00000000-0000-4000-8000-000000000002",
+      "selectionId": "00000000-0000-4000-8000-000000000003",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/unknown-parent/unknown.zip",
+      "includedCount": 1,
+      "omittedCount": 0,
+      "totalInputBytes": 16,
+      "processedInputBytes": 16,
+      "itemsCompleted": 1,
+      "state": "unknown",
+      "settled": true,
+      "publication": "unknown",
+      "receipt": null,
+      "code": "destinationChanged",
+      "failedCandidateId": null
+    },
+    "absent": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-000000000021",
+      "inputSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "state": "absent",
+      "settled": true,
+      "admissionClosed": false,
+      "result": "unknown",
+      "scope": "currentProcess"
+    },
+    "admissionClosed": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-000000000021",
+      "inputSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "state": "absent",
+      "settled": true,
+      "admissionClosed": true,
+      "result": "unknown",
+      "scope": "currentProcess"
+    },
+    "cancelling": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-000000000023",
+      "inputSha256": "ed0740282fddf29c6b664c64bd746f85747754f749fed8a8784d4071152920f5",
+      "snapshotId": "00000000-0000-4000-8000-000000000002",
+      "selectionId": "00000000-0000-4000-8000-000000000003",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/in-progress-cancel.zip",
+      "includedCount": 1,
+      "omittedCount": 0,
+      "totalInputBytes": 16,
+      "processedInputBytes": 16,
+      "itemsCompleted": 0,
+      "state": "cancelling",
+      "settled": false,
+      "publication": "notPublished",
+      "receipt": null,
+      "code": null,
+      "failedCandidateId": null
+    },
+    "cancelledWriting": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-000000000023",
+      "inputSha256": "ed0740282fddf29c6b664c64bd746f85747754f749fed8a8784d4071152920f5",
+      "snapshotId": "00000000-0000-4000-8000-000000000002",
+      "selectionId": "00000000-0000-4000-8000-000000000003",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/in-progress-cancel.zip",
+      "includedCount": 1,
+      "omittedCount": 0,
+      "totalInputBytes": 16,
+      "processedInputBytes": 16,
+      "itemsCompleted": 1,
+      "state": "cancelled",
+      "settled": true,
+      "publication": "notPublished",
+      "receipt": null,
+      "code": null,
+      "failedCandidateId": null
+    },
+    "zeroReady": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-000000000024",
+      "inputSha256": "e538afaf38b0fe64522b5f780b7791a5efdf53e5da3827c4401a5925fa68e45a",
+      "snapshotId": "00000000-0000-4000-8000-000000000002",
+      "selectionId": "00000000-0000-4000-8000-000000000003",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/zero-selected.zip",
+      "includedCount": 0,
+      "omittedCount": 1,
+      "totalInputBytes": 0,
+      "processedInputBytes": 0,
+      "itemsCompleted": 0,
+      "state": "ready",
+      "settled": false,
+      "publication": "notPublished",
+      "receipt": null,
+      "code": null,
+      "failedCandidateId": null
+    },
+    "zeroCompleted": {
+      "kind": "conversationArchive",
+      "operationId": "00000000-0000-4000-8000-000000000024",
+      "inputSha256": "e538afaf38b0fe64522b5f780b7791a5efdf53e5da3827c4401a5925fa68e45a",
+      "snapshotId": "00000000-0000-4000-8000-000000000002",
+      "selectionId": "00000000-0000-4000-8000-000000000003",
+      "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/zero-selected.zip",
+      "includedCount": 0,
+      "omittedCount": 1,
+      "totalInputBytes": 0,
+      "processedInputBytes": 0,
+      "itemsCompleted": 0,
+      "state": "completed",
+      "settled": true,
+      "publication": "published",
+      "receipt": {
+        "kind": "conversationArchive",
+        "destination": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpIeg0V4/zero-selected.zip",
+        "zipSize": 984,
+        "zipSha256": "2e315719f28710b8e9da854b2c18b527712834f21644c4d2a69fc9b110aa5cfc",
+        "manifestSha256": "d79518f21c5d648168cf94bfbae8cb0ea2d9cb701852ea16660ebcef9ac6e6b1",
+        "includedCount": 0,
+        "omittedCount": 1,
+        "scope": "selectedLoadedSnapshot"
+      },
+      "code": null,
+      "failedCandidateId": null
+    }
+  }
+}

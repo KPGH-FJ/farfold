@@ -1,0 +1,62 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/conversation_archive_jobs.test.ts (7 tests | 1 failed) 10ms
+   × same-process absent observation stays unknown; explicit admission closure can be reviewed without historical success 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/conversation_archive_jobs.test.ts > same-process absent observation stays unknown; explicit admission closure can be reviewed without historical success
+AssertionError: expected [ { identity: { …(9) }, …(6) } ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   {
++     "cancelRequested": true,
++     "checking": false,
++     "closeFailed": true,
++     "code": null,
++     "identity": {
++       "destination": "/synthetic/未创建 archive.zip",
++       "includedCount": 1,
++       "inputSha256": "ff2f2ab56ed0e70afa641d5f09336a583aa943b8a232d70602e155bbf64099f9",
++       "kind": "conversationArchive",
++       "omittedCount": 0,
++       "operationId": "00000000-0000-4000-8000-000000000001",
++       "selectionId": "00000000-0000-4000-8000-000000000003",
++       "snapshotId": "00000000-0000-4000-8000-000000000002",
++       "totalInputBytes": 16,
++     },
++     "phase": "unconfirmed",
++     "reply": {
++       "admissionClosed": true,
++       "inputSha256": "ff2f2ab56ed0e70afa641d5f09336a583aa943b8a232d70602e155bbf64099f9",
++       "kind": "conversationArchive",
++       "operationId": "00000000-0000-4000-8000-000000000001",
++       "result": "unknown",
++       "scope": "currentProcess",
++       "settled": true,
++       "state": "absent",
++     },
++   },
++ ]
+
+ ❯ src/runtime/conversation_archive_jobs.test.ts:47:153
+     45|  api.file_archive_cancel.mockResolvedValue({...absent,admissionClosed:…
+     46|  api.file_archive_release.mockResolvedValue(false);
+     47|  await jobs.dismiss(input.operationId);expect(jobs.getSnapshot()).toHa…
+       |                                                                                                                                                         ^
+     48| });
+     49| it("completed publication wins over late cancellation and exposes only…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 passed (7)
+   Start at  14:32:51
+   Duration  144ms (transform 52ms, setup 0ms, import 71ms, tests 10ms, environment 0ms)
+

@@ -1,0 +1,150 @@
+{
+  "status": "frontendSourceFrozen",
+  "capturedAtUtc": "2026-10-12T06:50:58.238598+00:00",
+  "sources": [
+    {
+      "path": "src/components/ConversationArchiveDialog.test.tsx",
+      "sha256": "1adde5b62c86b0ebf4910b43425d7ac7a90dd6c2eadd1ec61bd3dc1b6767b80c",
+      "lines": 173
+    },
+    {
+      "path": "src/components/ConversationArchiveDialog.tsx",
+      "sha256": "66060f90201d0784047ab6deb1711f00328b099876aff8cb17fcd8d4f577bb5c",
+      "lines": 262
+    },
+    {
+      "path": "src/components/ConversationArchiveJobsStatus.tsx",
+      "sha256": "20a25e832ee9274ade766ccf8ddc9c83ed08c1e0851e61169d00bfe77dd02ef6",
+      "lines": 120
+    },
+    {
+      "path": "src/components/ConversationExportDialog.tsx",
+      "sha256": "c08d76497523a2261d57df527946a3738e7983a32296e848880c722700179e8d",
+      "lines": 117
+    },
+    {
+      "path": "src/components/ConversationExportHost.tsx",
+      "sha256": "3ce75927d6737abf50a3d7764c5234486d170d1bd224d286778ccad2f9d4ccd2",
+      "lines": 90
+    },
+    {
+      "path": "src/components/ConversationLibrary.tsx",
+      "sha256": "1cbc85d72a93b6de1ac32318a156f4709d5baa63f6c654bbcd2c726132bc5f25",
+      "lines": 1271
+    },
+    {
+      "path": "src/components/DraftStartup.restore.test.tsx",
+      "sha256": "55be074a450c725e971b99a306c42e2daee8f66eecf279e17bea538411122bd6",
+      "lines": 102
+    },
+    {
+      "path": "src/components/DraftStartup.test.tsx",
+      "sha256": "b950648c33d353a87e909f5a12f2cab8dfa8b8d98524513c3dfa0c170d574b9f",
+      "lines": 440
+    },
+    {
+      "path": "src/components/DraftStartup.tsx",
+      "sha256": "df4d2cdcff94fa02fd00530572d7cb81dae0a9bbadb8b19e7380c72f40b29f76",
+      "lines": 315
+    },
+    {
+      "path": "src/components/FileCopyActivity.tsx",
+      "sha256": "c589dddcc1b3ccdd4d87a1dc8437ea37ae76f83e7e8b0fdf0f9fb6e9f455d381",
+      "lines": 53
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "sha256": "0fbdf183813c3f798333048b7f6b8011ef32cfea7be9c72031c758953726c260",
+      "lines": 581
+    },
+    {
+      "path": "src/runtime/conversation_archive.states-wire.test.tsx",
+      "sha256": "b2c41d425268d7a0513603bd0220968b76dd624613cc68b6183bfc34698d3f88",
+      "lines": 130
+    },
+    {
+      "path": "src/runtime/conversation_archive.wire.test.ts",
+      "sha256": "5c048f2a5b0c76cfcbd8bed94eb7c69c3a61521bb77884e2d96a78f820125c1c",
+      "lines": 60
+    },
+    {
+      "path": "src/runtime/conversation_archive_exit.test.ts",
+      "sha256": "1bc4a972553c00565f7f4ddc095b5da42466b4498ebc9651fe9888f0a12656df",
+      "lines": 54
+    },
+    {
+      "path": "src/runtime/conversation_archive_input.ts",
+      "sha256": "98d3c46238a12077e95eb761e282c08e1faf62548df149bbe8dc3caadde443d3",
+      "lines": 102
+    },
+    {
+      "path": "src/runtime/conversation_archive_jobs.test.ts",
+      "sha256": "cc217fbe56fc29627f5dc1a825ca5c605b6df8c1f832da37456fdb29e3c442c6",
+      "lines": 193
+    },
+    {
+      "path": "src/runtime/conversation_archive_jobs.ts",
+      "sha256": "cb7d2a42e714d543a51a5bfd71453121a7bbf3e7a63da9cbd1694def56903428",
+      "lines": 367
+    },
+    {
+      "path": "src/runtime/conversation_archive_parse.ts",
+      "sha256": "55594613d046619892d6364ef3662f13604c32b9ebb0c10795d7dfc92b071ffc",
+      "lines": 170
+    },
+    {
+      "path": "src/runtime/conversation_archive_selection.test.ts",
+      "sha256": "0a05139a11750b0e450b2b7630029e9dbcc53142428392e5ceec4d895ba85aa2",
+      "lines": 153
+    },
+    {
+      "path": "src/runtime/conversation_archive_selection.ts",
+      "sha256": "f5b386c1dce6f32e9cbd3e2b253c8ba545c6c5849b2b0d297743f27624769158",
+      "lines": 297
+    },
+    {
+      "path": "src/runtime/conversation_archive_snapshot.test.ts",
+      "sha256": "10ec2da920aa112799ea8863bcfd49bb4a5a892c9e177e1b11fcec36555a4706",
+      "lines": 117
+    },
+    {
+      "path": "src/runtime/conversation_archive_snapshot.ts",
+      "sha256": "1b1e60fba3f88f0d2807a26fbd52c2ca0f03f770089892415e2a1f58e5572d54",
+      "lines": 274
+    },
+    {
+      "path": "src/runtime/conversation_archive_strings.ts",
+      "sha256": "21db595988af5e9c0ec4ae5a6a793c3a7d33a460c10f0e9ea5bd09e8723a3570",
+      "lines": 84
+    },
+    {
+      "path": "src/runtime/conversation_archive_types.ts",
+      "sha256": "9ece950fc7418bd4f00c92cb07efeed1e63411acc7178c432c7bfe8357b02a93",
+      "lines": 173
+    },
+    {
+      "path": "src/runtime/exit_impact.ts",
+      "sha256": "36e2233f9bd65f39903ea3854f9e95a8ba598300711f16897ded8ae29968ad27",
+      "lines": 47
+    },
+    {
+      "path": "src/runtime/file_copy_jobs.ts",
+      "sha256": "432c56d9fc97cb8c9fc73b45b260b4153eaaa01b9748109e9f6e5ad119949a92",
+      "lines": 435
+    },
+    {
+      "path": "src/runtime/fixtures/archive-member-cases.json",
+      "sha256": "b474fc1e13b8e936b557deb08761123d9a2fddaef776fc4eb4aa231807ffcfa9",
+      "lines": 242
+    },
+    {
+      "path": "src/runtime/library_strings.ts",
+      "sha256": "dc2c535fac63e7e9bad0c60adb1421b813e38a8e95284f3936dd2004b460a5a7",
+      "lines": 138
+    }
+  ],
+  "ownedCount": 28,
+  "sourceStableDuringFinalChecks": true,
+  "observedInputCount": 33,
+  "maxOwnedLines": 1271
+}

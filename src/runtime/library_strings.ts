@@ -100,7 +100,7 @@ export const LIBRARY = {
   clearDraft: "清空并新开",
   defaultDirectoryError: "普通对话的资料位置准备失败，请重试。",
   /* W3-9 对话管理操作 */
-  exportMarkdown: "导出为 Markdown",
+  exportMarkdown: "导出对话",
   exportEmpty: "这段对话还没有可导出的内容。",
   exportNotLoaded: "这段对话的内容还没有载入，请先打开后再导出。",
   exported: (destination: string) => `已导出到 ${destination}`,

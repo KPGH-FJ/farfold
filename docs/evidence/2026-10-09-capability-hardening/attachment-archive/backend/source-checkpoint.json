@@ -1,0 +1,112 @@
+{
+  "ownedFiles": [
+    {
+      "path": "src-tauri/src/file_archive.rs",
+      "sha256": "7e386f980fe3bbab4672138df5236044960f95165c0d3ad6ff494e805a070f6e",
+      "bytes": 242,
+      "lines": 11
+    },
+    {
+      "path": "src-tauri/src/file_archive_commands.rs",
+      "sha256": "db65ee720dacbf99431bd84c092ac96b7da8e7cafea398bebd8b2b6ce49ec33c",
+      "bytes": 2763,
+      "lines": 91
+    },
+    {
+      "path": "src-tauri/src/file_archive_jobs_tests.rs",
+      "sha256": "8f96c6d2295c1fc8e952d5f70106206d7e562e72a43ee092a0e37b29ee68a71c",
+      "bytes": 9614,
+      "lines": 268
+    },
+    {
+      "path": "src-tauri/src/file_archive_independent_tests.rs",
+      "sha256": "af9b07238a259ca49771e398d3c84f7454b8aac12bcec7d019fb1555a3190163",
+      "bytes": 9076,
+      "lines": 266
+    },
+    {
+      "path": "src-tauri/src/file_copy_jobs.rs",
+      "sha256": "21aa7d2465a4180f58943fa98f393a64dc14f4770679b589249311b3a2d84c60",
+      "bytes": 12133,
+      "lines": 351
+    },
+    {
+      "path": "src-tauri/src/file_copy_jobs/archive.rs",
+      "sha256": "bd21204444d4e75c18891f94b32281cce0ff37c38ecf8a6aa4022bc94c856b9f",
+      "bytes": 9246,
+      "lines": 251
+    },
+    {
+      "path": "src-tauri/src/file_copy_jobs_tests.rs",
+      "sha256": "e99c255a06b1b5df40451dd322937198f4642fbeb828ecb07f33e7bd0ccfbc54",
+      "bytes": 6572,
+      "lines": 181
+    },
+    {
+      "path": "src-tauri/src/file_copy_jobs_independent_tests.rs",
+      "sha256": "2caaa3c51fc9fa386cfcc0301bc5a5a9729ddae7efb488b6c4d5761d72108d98",
+      "bytes": 8346,
+      "lines": 238
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "sha256": "82cdca7da7d1d0357a5fd2e46fc5ab6108364a51ad455f0b5880fb42fa699f9a",
+      "bytes": 17362,
+      "lines": 501
+    },
+    {
+      "path": "src-tauri/src/file_delivery/archive_stream.rs",
+      "sha256": "c174c286d27cd9ad7bdb8dc07fdc6bcb777ac5a6949192815edec5dc1a578394",
+      "bytes": 12042,
+      "lines": 324
+    },
+    {
+      "path": "src-tauri/src/file_delivery/archive_write_tests.rs",
+      "sha256": "1748118e6e0fae9c6a7de9e2b007a0261339f4d842a34c528a14ac16138663e1",
+      "bytes": 1673,
+      "lines": 59
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "02ef3aa6e3aba8de68db4dbe7e79a02e48032facfe1bd3d6ff0cc3ac2fdb0754",
+      "bytes": 20907,
+      "lines": 458
+    },
+    {
+      "path": "src-tauri/src/file_archive/input.rs",
+      "sha256": "7ac205124f09577910b70bc19bc6c5b8ba94a7efb4d8dfd5530a18ca6d874d97",
+      "bytes": 9643,
+      "lines": 276
+    },
+    {
+      "path": "src-tauri/src/file_archive/manifest.rs",
+      "sha256": "9dca1416a5f4fb6b7f5f2970b2f596d35fb3ea7d1629b15ba7c61af1ef40e139",
+      "bytes": 2285,
+      "lines": 40
+    },
+    {
+      "path": "src-tauri/src/file_archive/tests.rs",
+      "sha256": "bb3794616a6c380e6f28f632d5f21cccb005642847511e688d663be6f24cad8f",
+      "bytes": 7751,
+      "lines": 211
+    },
+    {
+      "path": "src-tauri/src/file_archive/types.rs",
+      "sha256": "79207d9d4c400f02d14697b77f1180e6ef6e81af8bfea2d179a88fa3eed2414a",
+      "bytes": 7764,
+      "lines": 271
+    },
+    {
+      "path": "src-tauri/src/file_archive/writer_tests.rs",
+      "sha256": "d5844e64b4b815735a2dffadf90613669cd79cb24f71da7e1b76e69d1925fea6",
+      "bytes": 10229,
+      "lines": 285
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "src/runtime/fixtures/archive-member-cases.json",
+      "sha256": "b474fc1e13b8e936b557deb08761123d9a2fddaef776fc4eb4aa231807ffcfa9"
+    }
+  ]
+}

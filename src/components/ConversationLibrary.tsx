@@ -29,12 +29,15 @@ import {
 import { LIBRARY } from "../runtime/library_strings";
 import { useArchiveBlockReasons } from "../runtime/archive_blockers";
 import { uiError } from "../runtime/ui_error";
-import { save } from "@tauri-apps/plugin-dialog";
-import { fileDelivery } from "../runtime/file_delivery";
+import { ConversationExportHost } from "./ConversationExportHost";
 import {
-  exportFileName,
-  transcriptMarkdown,
-} from "../runtime/conversation_actions";
+  captureConversationExport,
+  releasedExportSnapshot,
+  type ConversationExportSnapshot,
+} from "../runtime/conversation_archive_snapshot";
+import { ARCHIVE_STRINGS } from "../runtime/conversation_archive_strings";
+import { fileDelivery } from "../runtime/file_delivery";
+import { exportFileName } from "../runtime/conversation_actions";
 import {
   basename,
   relativeTime,
@@ -212,6 +215,10 @@ export function ConversationLibrary({
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState<SidebarRow | null>(null);
   const [title, setTitle] = useState("");
+  const [exported, setExported] = useState<{
+    capture: ConversationExportSnapshot;
+    name: string;
+  } | null>(null);
   const [actions, setActions] = useState<SidebarRow | null>(null);
   const [moving, setMoving] = useState<string[] | null>(null);
   const [deleting, setDeleting] = useState<SidebarRow[] | null>(null);
@@ -223,6 +230,7 @@ export function ConversationLibrary({
   useEffect(() => {
     if (!active) {
       operation.current.invalidate();
+      setExported(null);
       setActions(null);
       setEditing(null);
       setMoving(null);
@@ -482,29 +490,30 @@ export function ConversationLibrary({
           .catch(() => undefined);
       },
     );
-  const exportRow = (row: SidebarRow) =>
-    perform(
-      async () => {
-        const loaded = snapshot.threads.get(row.key);
-        if (!loaded) throw new Error(LIBRARY.exportNotLoaded);
-        const text = transcriptMarkdown(
+  const exportRow = (row: SidebarRow) => {
+    const loaded = snapshot.threads.get(row.key);
+    if (!loaded) {
+      setError(LIBRARY.exportNotLoaded);
+      return;
+    }
+    try {
+      setExported({
+        capture: captureConversationExport(
           loaded,
           row.title,
           agents.find((a) => a.id === row.agentId)?.name ?? row.agentId,
-        );
-        if (!text.replace(/^#\s.*$/m, "").trim())
-          throw new Error(LIBRARY.exportEmpty);
-        const destination = await save({
-          defaultPath: exportFileName(row.title),
-        });
-        if (!destination) return false;
-        await fileDelivery.exportText(text, destination);
-        return true;
-      },
-      (done) => {
-        if (done) setActions(null);
-      },
-    );
+        ),
+        name: exportFileName(row.title),
+      });
+      setActions(null);
+    } catch (e) {
+      setError(
+        e && typeof e === "object" && "code" in e && e.code === "empty"
+          ? LIBRARY.exportEmpty
+          : ARCHIVE_STRINGS.errors.tooLarge,
+      );
+    }
+  };
   const revealLocation = (row: SidebarRow) =>
     perform(
       () => fileDelivery.revealLocation(row.cwd),
@@ -1239,6 +1248,23 @@ export function ConversationLibrary({
             </footer>
           </form>
         </WorkspaceDialog>
+      )}
+      {active && exported && (
+        <ConversationExportHost
+          {...exported}
+          onRegistered={() =>
+            setExported((current) =>
+              current
+                ? {
+                    ...current,
+                    capture: releasedExportSnapshot(current.capture),
+                  }
+                : null,
+            )
+          }
+          returnFocusRef={actionAnchor}
+          onClose={() => setExported(null)}
+        />
       )}
     </main>
   );

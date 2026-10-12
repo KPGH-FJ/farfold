@@ -1,4 +1,4 @@
-import { useRef, useState, type RefObject } from "react";
+import { useRef, useState, type ReactNode, type RefObject } from "react";
 import { save } from "@tauri-apps/plugin-dialog";
 import { fileDelivery } from "../runtime/file_delivery";
 import { EXPORT_STRINGS as E } from "../runtime/export_strings";
@@ -10,7 +10,13 @@ export function ConversationExportDialog({
   name,
   onClose,
   returnFocusRef,
+  formatControls,
+  includeLoadedToolDetails = false,
+  unavailable = false,
 }: {
+  includeLoadedToolDetails?: boolean;
+  unavailable?: boolean;
+  formatControls?: (busy: boolean) => ReactNode;
   text: string;
   name: string;
   onClose: () => void;
@@ -25,7 +31,7 @@ export function ConversationExportDialog({
     if (!writing.current) onClose();
   };
   const exportText = async () => {
-    if (writing.current) return;
+    if (writing.current || unavailable) return;
     writing.current = true;
     setSaving(true);
     setError(null);
@@ -57,6 +63,7 @@ export function ConversationExportDialog({
       returnFocusRef={returnFocusRef}
     >
       <div className="conversation-export-body">
+        {formatControls?.(saving)}
         <strong role="status">
           {saving
             ? R.exportSaving
@@ -73,10 +80,17 @@ export function ConversationExportDialog({
         <details>
           <summary>{E.details}</summary>
           <p>{E.dialogScope}</p>
-          <p>{E.excludedScope}</p>
+          <p>
+            {includeLoadedToolDetails
+              ? E.detailsExcludedScope
+              : E.excludedScope}
+          </p>
+          {includeLoadedToolDetails && <p>{E.detailsScope}</p>}
           <p>{E.attachmentsScope}</p>
           <p>{E.lineScope}</p>
-          <p>{E.privacyScope}</p>
+          <p>
+            {includeLoadedToolDetails ? E.detailsPrivacyScope : E.privacyScope}
+          </p>
         </details>
         {error && <p role="alert">{error}</p>}
         <footer>
@@ -91,7 +105,7 @@ export function ConversationExportDialog({
           <button
             type="button"
             className="btn btn-primary"
-            disabled={saving}
+            disabled={saving || unavailable}
             onClick={() => void exportText()}
           >
             {R.exportSave}

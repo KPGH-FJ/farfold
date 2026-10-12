@@ -1,0 +1,21 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.41s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+running 1 test
+
+thread 'file_archive::tests::ordinary_extension_hints_are_usable_without_reusing_untrusted_basenames' (26881419) panicked at src/file_archive/tests.rs:201:9:
+assertion `left == right` failed: shared hint case {"index":0,"inlineText":false,"displayName":"review.PDF","member":"attachments/0001.pdf"}
+  left: String("attachments/0001.bin")
+ right: String("attachments/0001.pdf")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test file_archive::tests::ordinary_extension_hints_are_usable_without_reusing_untrusted_basenames ... FAILED
+
+failures:
+
+failures:
+    file_archive::tests::ordinary_extension_hints_are_usable_without_reusing_untrusted_basenames
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1583 filtered out; finished in 0.01s
+
+error: test failed, to rerun pass `--lib`

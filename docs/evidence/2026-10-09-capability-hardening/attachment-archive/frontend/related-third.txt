@@ -1,0 +1,204 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+stderr | src/components/DraftStartup.restore.test.tsx > waits for the other read when draft fails first
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.restore.test.tsx > waits for the other read when setup fails first
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+ ❯ src/components/DraftStartup.restore.test.tsx (2 tests | 2 failed) 5ms
+   × waits for the other read when draft fails first 3ms
+   × waits for the other read when setup fails first 1ms
+stderr | src/components/DraftStartup.test.tsx > keeps the worktree manager outside the locked editable subtree during quit
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > does not let confirmation or restart interrupt an unsettled file save
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > rechecks file saves after metadata flush before acknowledging exit
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > keeps backend-only file activity in a cancellable exit review
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > keeps running worktree operations protected with their own exit explanation
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > requires explicit confirmation for finished unknown copies, including restart
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > does not acknowledge normal quit while known work is still running
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > requires review when backend activity starts after the renderer save began
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > only an explicit confirm saves and acknowledges active work
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > staying invalidates the save owner and a late flush cannot close the app
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > an already installed restart uses its backend admission despite stale frontend work
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > keeps an unconfirmed cancel visible and permits an explicit retry
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > ignores an old exit save failure while a newer restart is saving
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > ignores a late command rejection and a deferred old exit after a new owner starts
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > keeps the app open when preparation cannot save and waits for it on explicit retry
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/DraftStartup.test.tsx > waits for pending unread metadata, keeps its actual save error and retries before exit
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+ ❯ src/components/DraftStartup.test.tsx (16 tests | 16 failed) 7ms
+   × keeps the worktree manager outside the locked editable subtree during quit 4ms
+   × does not let confirmation or restart interrupt an unsettled file save 0ms
+   × rechecks file saves after metadata flush before acknowledging exit 0ms
+   × keeps backend-only file activity in a cancellable exit review 0ms
+   × keeps running worktree operations protected with their own exit explanation 0ms
+   × requires explicit confirmation for finished unknown copies, including restart 0ms
+   × does not acknowledge normal quit while known work is still running 0ms
+   × requires review when backend activity starts after the renderer save began 0ms
+   × only an explicit confirm saves and acknowledges active work 1ms
+   × staying invalidates the save owner and a late flush cannot close the app 0ms
+   × an already installed restart uses its backend admission despite stale frontend work 0ms
+   × keeps an unconfirmed cancel visible and permits an explicit retry 0ms
+   × ignores an old exit save failure while a newer restart is saving 0ms
+   × ignores a late command rejection and a deferred old exit after a new owner starts 0ms
+   × keeps the app open when preparation cannot save and waits for it on explicit retry 0ms
+   × waits for pending unread metadata, keeps its actual save error and retries before exit 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 18 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/DraftStartup.restore.test.tsx > waits for the other read when draft fails first
+ FAIL  src/components/DraftStartup.restore.test.tsx > waits for the other read when setup fails first
+TypeError: Cannot read properties of null (reading 'useSyncExternalStore')
+ ❯ process.env.NODE_ENV.exports.useSyncExternalStore node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1270:33
+ ❯ useConversationArchiveJobs src/runtime/conversation_archive_jobs.ts:136:53
+    134| }
+    135| export const conversationArchiveJobs=new ConversationArchiveJobs();
+    136| export function useConversationArchiveJobs(){return useSyncExternalSto…
+       |                                                     ^
+    137|
+ ❯ Module.DraftStartup src/components/DraftStartup.tsx:35:3
+ ❯ render src/components/DraftStartup.restore.test.tsx:60:10
+ ❯ src/components/DraftStartup.restore.test.tsx:87:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/18]⎯
+
+ FAIL  src/components/DraftStartup.test.tsx > keeps the worktree manager outside the locked editable subtree during quit
+ FAIL  src/components/DraftStartup.test.tsx > does not let confirmation or restart interrupt an unsettled file save
+ FAIL  src/components/DraftStartup.test.tsx > rechecks file saves after metadata flush before acknowledging exit
+ FAIL  src/components/DraftStartup.test.tsx > keeps backend-only file activity in a cancellable exit review
+ FAIL  src/components/DraftStartup.test.tsx > keeps running worktree operations protected with their own exit explanation
+ FAIL  src/components/DraftStartup.test.tsx > requires explicit confirmation for finished unknown copies, including restart
+ FAIL  src/components/DraftStartup.test.tsx > does not acknowledge normal quit while known work is still running
+ FAIL  src/components/DraftStartup.test.tsx > requires review when backend activity starts after the renderer save began
+ FAIL  src/components/DraftStartup.test.tsx > only an explicit confirm saves and acknowledges active work
+ FAIL  src/components/DraftStartup.test.tsx > staying invalidates the save owner and a late flush cannot close the app
+ FAIL  src/components/DraftStartup.test.tsx > an already installed restart uses its backend admission despite stale frontend work
+ FAIL  src/components/DraftStartup.test.tsx > keeps an unconfirmed cancel visible and permits an explicit retry
+ FAIL  src/components/DraftStartup.test.tsx > ignores an old exit save failure while a newer restart is saving
+ FAIL  src/components/DraftStartup.test.tsx > ignores a late command rejection and a deferred old exit after a new owner starts
+ FAIL  src/components/DraftStartup.test.tsx > keeps the app open when preparation cannot save and waits for it on explicit retry
+ FAIL  src/components/DraftStartup.test.tsx > waits for pending unread metadata, keeps its actual save error and retries before exit
+TypeError: Cannot read properties of null (reading 'useSyncExternalStore')
+ ❯ process.env.NODE_ENV.exports.useSyncExternalStore node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1270:33
+ ❯ useConversationArchiveJobs src/runtime/conversation_archive_jobs.ts:136:53
+    134| }
+    135| export const conversationArchiveJobs=new ConversationArchiveJobs();
+    136| export function useConversationArchiveJobs(){return useSyncExternalSto…
+       |                                                     ^
+    137|
+ ❯ Module.DraftStartup src/components/DraftStartup.tsx:35:3
+ ❯ render src/components/DraftStartup.test.tsx:96:10
+ ❯ src/components/DraftStartup.test.tsx:134:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/18]⎯
+
+
+ Test Files  2 failed | 12 passed (14)
+      Tests  18 failed | 116 passed (134)
+   Start at  14:38:20
+   Duration  1.57s (transform 1.42s, setup 0ms, import 4.37s, tests 586ms, environment 1ms)
+

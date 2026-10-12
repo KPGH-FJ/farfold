@@ -1,3 +1,5 @@
+import { useConversationArchiveJobs } from "../runtime/conversation_archive_jobs";
+import { ConversationArchiveJobsStatus } from "./ConversationArchiveJobsStatus";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
@@ -30,6 +32,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
   const setup = useSetupStorage();
   // Subscribe even when the underlying file view is closed or inert for quit.
   useFileCopyJobs();
+  useConversationArchiveJobs();
   const copying = hasUnsettledFileCopies();
   const unknownCopy = hasUnknownFinishedFileCopies();
   const [connected, setConnected] = useState(false);
@@ -215,6 +218,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
                 <p role="status">{E.copyReview}</p>
               ) : null}
               <FileCopyJobsStatus />
+              <ConversationArchiveJobsStatus />
               {cancelError && <p role="alert">{E.cancelFailed}</p>}
             </div>
             <footer>

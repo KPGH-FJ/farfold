@@ -60,6 +60,8 @@ import { UPDATE_IMPACT } from "./update_impact";
 import { CONNECTION_ACCOUNT_STRINGS } from "./connection_account_strings";
 import { SIDEBAR_STRINGS } from "./sidebar_strings";
 import { WORKBOOK_STRINGS, WORKBOOK_WARNINGS } from "./workbook_strings";
+import { EXPORT_STRINGS } from "./export_strings";
+import { ARCHIVE_STRINGS as CONVERSATION_ARCHIVE_STRINGS } from "./conversation_archive_strings";
 
 // PRODUCT.md §5 禁用词：不得出现在任何用户可见字符串中。
 const FORBIDDEN =
@@ -151,6 +153,8 @@ describe("strings", () => {
       UPDATE_IMPACT,
       CONNECTION_ACCOUNT_STRINGS,
       SIDEBAR_STRINGS,
+      EXPORT_STRINGS,
+      CONVERSATION_ARCHIVE_STRINGS,
     },
     [],
   );

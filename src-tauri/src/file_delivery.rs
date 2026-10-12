@@ -29,7 +29,9 @@ pub use revision::{RevisionCheck, RevisionFailure, RevisionMode, check_revision}
 mod stream;
 mod text_blocks;
 pub use text_blocks::{TextBlock, TextBlockFailure, read_text_block};
+mod archive_stream;
 mod copy_stream;
+pub(crate) use archive_stream::{ArchiveOutcome, stream_archive};
 pub(crate) use copy_stream::{CopyOutcome, stream_copy};
 mod selected_location;
 pub(crate) use selected_location::{document_extension, selected_location};

@@ -1,0 +1,232 @@
+{
+  "status": "controlledFullAppPassed",
+  "observedAtUtc": "2026-10-12T06:58:11.074111+00:00",
+  "engines": [
+    {
+      "engine": "webkit",
+      "checksPassed": 23,
+      "sourceStable": true,
+      "inputCount": 936,
+      "exitCode": 0,
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run03.result.raw.txt",
+        "sha256": "e608bc396e52517502775610ee01d98a813d1673f1d3a29bbc8fb4ae57f5ce37"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run03.raw.txt",
+        "sha256": "9dee8ac5a57400fc5e4d8de8e1328afb72ce6ebbf03d06eca1c19f7eea236d73"
+      }
+    },
+    {
+      "engine": "chromium",
+      "checksPassed": 23,
+      "sourceStable": true,
+      "inputCount": 936,
+      "exitCode": 0,
+      "raw": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/chromium-run01.result.raw.txt",
+        "sha256": "21a88383f046d2466dac0bab6c65f8a519137ae29aaf192ca078d6573ea5e8eb"
+      },
+      "stdout": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/chromium-run01.raw.txt",
+        "sha256": "95611dfdef1a5eb41450fd1d077a71e19c45a609b2da672d8beb79feb25449fa"
+      }
+    }
+  ],
+  "coverage": [
+    "Default format is Markdown and attachment capture does not inspect files",
+    "Selected detail disclosure no longer says collapsed bodies excluded",
+    "Markdown contains frozen text/diff/terminal, excluding later events and raw identity",
+    "No additional Agent request/history/preparation or unexpected IPC",
+    "Original drafts and feedback unchanged",
+    "Explicit ZIP selection has no file reads or automatic selections",
+    "Narrow selection stays within viewport and save remains reachable",
+    "One explicit intent prepares and starts exact selected subset once",
+    "ZIP Markdown includes selected readable bodies and omits generated source locations",
+    "Closed export continues as same shared save activity",
+    "Completion is shown only after controlled completed receipt and no waiting instruction remains",
+    "No additional Agent request/history/preparation or unexpected IPC",
+    "Original drafts and feedback unchanged",
+    "Late chooser after close cannot prepare or write",
+    "No additional Agent request/history/preparation or unexpected IPC",
+    "Original drafts and feedback unchanged",
+    "Cancel before prepare reply prevents delayed ready from starting",
+    "No additional Agent request/history/preparation or unexpected IPC",
+    "Original drafts and feedback unchanged",
+    "Library opens the same default format and detail choice",
+    "Library uses same declared attachment selection",
+    "No additional Agent request/history/preparation or unexpected IPC",
+    "Original drafts and feedback unchanged"
+  ],
+  "rootVisualReview": {
+    "screenshots": [
+      "webkit-run03-selection-narrow.png",
+      "webkit-run03-completed.png",
+      "chromium-run01-selection-narrow.png",
+      "chromium-run01-completed.png"
+    ],
+    "observation": "390 x 720 selection body scrolls without horizontal overflow; save control reachable. Completed views show numeric progress and success without obsolete wait instruction."
+  },
+  "originalRuns": {
+    "run01": "Driver exact getByLabel lookup failed before first assertion; exact accessible combobox role/name and actual checkbox copy fix passed. Not a product accessibility failure.",
+    "run02": "23 checks passed with no page errors, but source changed during run; old progress copy appeared in rendered screenshot despite current source already corrected. Served module/hot reload cause not localized. Preserved as preliminary only, excluded from final source evidence."
+  },
+  "publicationCorrection": "First publication asserted compact stdout summary equalled the complete result JSON. That driver assertion failed before publication; both distinct immutable artifacts are now copied and checked by their actual schemas. No browser rerun or source change needed.",
+  "serverCleanup": {
+    "preliminary": {
+      "pid": 53021,
+      "execSession": 24527,
+      "signal": "SIGINT",
+      "observedExitCode": 0
+    },
+    "final": {
+      "pid": 54417,
+      "execSession": 38617,
+      "signal": "SIGINT",
+      "observedExitCode": 0
+    }
+  },
+  "copies": [
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/fixture.tsx",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/fixture.tsx.raw.txt",
+      "sha256": "ab92db2c797f4c311aaab0517ee04a37655f40af114f4798f3675a9223117784"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/index.html",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/index.html.raw.txt",
+      "sha256": "ce5c9938ff8f4512b65c356a3acc35a13a27bc900e91a6a743b08a1bc12feffd"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/run.mjs",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/run.mjs.raw.txt",
+      "sha256": "6d5e5b03cf00f1cdffcc22a1335044e21f2942a5b193c6233609d2273d038054"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/serve.mjs",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/serve.mjs.raw.txt",
+      "sha256": "112abe9eb53b04a2f70f825a340e5eb6b71849e7cde37a309af9175e1d16f9fd"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/preliminary-review.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/preliminary-review.json.raw.txt",
+      "sha256": "26f1de0598aedeb106fd854c6a8805d9862ec8b1bb62ce1a4f2d429c62ac2394"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/served-copy-observation.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/served-copy-observation.json.raw.txt",
+      "sha256": "b1952482d6d1046cc0a385e6faf8ff977e258ddb56b261238a17fc07f3706927"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run03.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run03.result.raw.txt",
+      "sha256": "e608bc396e52517502775610ee01d98a813d1673f1d3a29bbc8fb4ae57f5ce37"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run03.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run03.raw.txt",
+      "sha256": "9dee8ac5a57400fc5e4d8de8e1328afb72ce6ebbf03d06eca1c19f7eea236d73"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run03-markdown.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run03-markdown.png",
+      "sha256": "e5cd0b98dc2ac8b65c007215a8c30f5cf165beff1fca91a3c44a15673af742f2"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run03-selection-narrow.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run03-selection-narrow.png",
+      "sha256": "aa3aecd860664664bebc0a52f996086bab1891580e80d1b550cd6d58a791974f"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run03-completed.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run03-completed.png",
+      "sha256": "79ff7783a669c470165b62d55c3b271f3f722fbe4e7180d0fc4923ed16d6eb7b"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run03-cancelled.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run03-cancelled.png",
+      "sha256": "d601f696802f4b40ed42910ac5d236416eb1d8f101f9a965a843baaaf0e8aeef"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run03-library.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run03-library.png",
+      "sha256": "704cf5091508b5b5f6573bc6b45a711d8758a29d0ff39260154ac05a657a0f3d"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/chromium-run01.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/chromium-run01.result.raw.txt",
+      "sha256": "21a88383f046d2466dac0bab6c65f8a519137ae29aaf192ca078d6573ea5e8eb"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/chromium-run01.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/chromium-run01.raw.txt",
+      "sha256": "95611dfdef1a5eb41450fd1d077a71e19c45a609b2da672d8beb79feb25449fa"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/chromium-run01-markdown.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/chromium-run01-markdown.png",
+      "sha256": "f648629037c67708c03011881a7c97125e53df493672c495041a1c999ae26d7f"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/chromium-run01-selection-narrow.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/chromium-run01-selection-narrow.png",
+      "sha256": "3968ad461d007425ec135aa024e46a9d0df0a061f657d6c922876651589fa5e8"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/chromium-run01-completed.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/chromium-run01-completed.png",
+      "sha256": "c4d8f8dcfd2c45c6c82ae733c6067746511cbd442f8b6a61f227b874574db915"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/chromium-run01-cancelled.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/chromium-run01-cancelled.png",
+      "sha256": "27f6cff58bad19180aaf477cc101d2dc759f6912599c3db049e1d17a9eeada78"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/chromium-run01-library.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/chromium-run01-library.png",
+      "sha256": "f31f238e6f34914552dc38fd2277b6051a7b8523cddd9bae13b7104836572ae0"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run01.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run01.result.raw.txt",
+      "sha256": "499d6a9ce84487ca9c5f2ee48d349e5173dce06e528ec361959fd9ae49fdde15"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run01.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run01.raw.txt",
+      "sha256": "f0cd129e44355c32e800385352b2a0048f5bca1e160e9e7f9043bc33a5a0ced4"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run02.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run02.result.raw.txt",
+      "sha256": "aedc86e073735378556ef2bff754714f836a67c222d6b66fb34cd041f2a407f7"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run02.raw.txt",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run02.raw.txt",
+      "sha256": "5c3149b97211eefc683b2e6e529d4af2d9b06d9f3d50c5346542685c7d14be65"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run01-failure.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run01-failure.png",
+      "sha256": "83f81e4b5f0a3e8662865ff4216fae6339461702b61b229df3f6bf50e4d00304"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run02-selection-narrow.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run02-selection-narrow.png",
+      "sha256": "aa3aecd860664664bebc0a52f996086bab1891580e80d1b550cd6d58a791974f"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run02-completed.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run02-completed.png",
+      "sha256": "79ff7783a669c470165b62d55c3b271f3f722fbe4e7180d0fc4923ed16d6eb7b"
+    },
+    {
+      "source": "output/2026-10-12-attachment-archive-browser/webkit-run02-library.png",
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/webkit-run02-library.png",
+      "sha256": "704cf5091508b5b5f6573bc6b45a711d8758a29d0ff39260154ac05a657a0f3d"
+    }
+  ],
+  "boundary": "Production App and StrictMode with real parents, capture, selection, parser, controller and shared activity; picker and native IPC controlled. No real file read, ZIP write, Agent, official history, formal installed App or database. Source/backend filesystem and installed evidence are separate."
+}

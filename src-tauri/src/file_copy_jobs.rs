@@ -1,6 +1,8 @@
-//! Bounded in-memory ownership for explicit file copies; no persisted operation log.
+//! Shared bounded ownership for explicit copies and archives; no persisted operation log.
+mod archive;
 use crate::file_delivery::{self, CopyOutcome, DeliveryError, DeliveryReceipt, VerifiedFile};
 use crate::managed_update::{ActivityPermit, UpdateAdmission, UpdatePermit};
+use archive::ArchiveJob;
 use serde::Serialize;
 use std::{
     collections::HashMap,
@@ -134,16 +136,52 @@ impl Job {
             .take();
     }
 }
+#[derive(Clone)]
+enum Entry {
+    Copy(Arc<Job>),
+    Archive(Arc<ArchiveJob>),
+}
+impl Entry {
+    fn as_copy(&self) -> Result<Arc<Job>, CopyFailure> {
+        match self {
+            Self::Copy(job) => Ok(job.clone()),
+            Self::Archive(_) => Err(failure("requestConflict")),
+        }
+    }
+    fn expired(&self) -> bool {
+        match self {
+            Self::Copy(job) => {
+                job.created.elapsed() >= READY_LIFETIME && job.snapshot().state == CopyState::Ready
+            }
+            Self::Archive(job) => {
+                job.created.elapsed() >= READY_LIFETIME
+                    && job.snapshot().state == crate::file_archive::State::Ready
+            }
+        }
+    }
+    fn unknown(&self) -> bool {
+        match self {
+            Self::Copy(job) => job.snapshot().state == CopyState::Unknown,
+            Self::Archive(job) => job.snapshot().state == crate::file_archive::State::Unknown,
+        }
+    }
+}
 #[derive(Default)]
 struct Jobs {
-    entries: HashMap<String, Arc<Job>>,
+    entries: HashMap<String, Entry>,
+    // Compact correlation only, never input bodies; no eviction before process exit.
+    seen: HashMap<String, String>,
     active: Option<String>,
 }
 impl Jobs {
     fn expire(&mut self) {
-        self.entries.retain(|_, job| {
-            !(job.created.elapsed() >= READY_LIFETIME && job.snapshot().state == CopyState::Ready)
-        });
+        self.entries.retain(|_, job| !job.expired());
+    }
+    fn copy(&self, id: &str) -> Result<Option<Arc<Job>>, CopyFailure> {
+        if self.seen.contains_key(id) {
+            return Err(failure("requestConflict"));
+        }
+        self.entries.get(id).map(Entry::as_copy).transpose()
     }
 }
 #[derive(Default)]
@@ -179,7 +217,7 @@ impl FileCopyJobs {
         let mut random = [0u8; 24];
         getrandom::fill(&mut random).map_err(|_| failure("unavailable"))?;
         let operation_id: String = random.iter().map(|byte| format!("{byte:02x}")).collect();
-        if jobs.entries.contains_key(&operation_id) {
+        if jobs.entries.contains_key(&operation_id) || jobs.seen.contains_key(&operation_id) {
             return Err(failure("unavailable"));
         }
         let status = CopyStatus {
@@ -195,19 +233,19 @@ impl FileCopyJobs {
         };
         jobs.entries.insert(
             operation_id,
-            Arc::new(Job {
+            Entry::Copy(Arc::new(Job {
                 created: Instant::now(),
                 phase: AtomicU8::new(RUNNING),
                 status: Mutex::new(status.clone()),
                 admission: Mutex::new(Some(admission)),
-            }),
+            })),
         );
         Ok(status)
     }
     pub fn start(&self, id: &str) -> Result<Option<CopyStatus>, CopyFailure> {
         let mut jobs = self.jobs.lock().map_err(|_| failure("unavailable"))?;
         jobs.expire();
-        let Some(job) = jobs.entries.get(id).cloned() else {
+        let Some(job) = jobs.copy(id)? else {
             return Ok(None);
         };
         if job.snapshot().state != CopyState::Ready {
@@ -254,12 +292,12 @@ impl FileCopyJobs {
     pub fn status(&self, id: &str) -> Result<Option<CopyStatus>, CopyFailure> {
         let mut jobs = self.jobs.lock().map_err(|_| failure("unavailable"))?;
         jobs.expire();
-        Ok(jobs.entries.get(id).map(|job| job.snapshot()))
+        Ok(jobs.copy(id)?.map(|job| job.snapshot()))
     }
     pub fn cancel(&self, id: &str) -> Result<Option<CopyStatus>, CopyFailure> {
         let mut jobs = self.jobs.lock().map_err(|_| failure("unavailable"))?;
         jobs.expire();
-        let Some(job) = jobs.entries.get(id) else {
+        let Some(job) = jobs.copy(id)? else {
             return Ok(None);
         };
         if job.snapshot().state == CopyState::Ready {
@@ -274,7 +312,7 @@ impl FileCopyJobs {
     pub fn release(&self, id: &str) -> Result<bool, CopyFailure> {
         let mut jobs = self.jobs.lock().map_err(|_| failure("unavailable"))?;
         jobs.expire();
-        let Some(job) = jobs.entries.get(id) else {
+        let Some(job) = jobs.copy(id)? else {
             return Ok(false);
         };
         if job.snapshot().state.working() {
@@ -298,12 +336,7 @@ impl FileCopyJobs {
             .admission
             .update()
             .map_err(|_| EXIT_BLOCKED.to_owned())?;
-        if !confirm_unknown
-            && jobs
-                .entries
-                .values()
-                .any(|job| job.snapshot().state == CopyState::Unknown)
-        {
+        if !confirm_unknown && jobs.entries.values().any(Entry::unknown) {
             return Err("EXIT_CONFIRMATION_REQUIRED".into());
         }
         Ok(permit)

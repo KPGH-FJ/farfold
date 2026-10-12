@@ -1,0 +1,27 @@
+{
+  "status": "preliminaryOnlyAwaitingFrozenFreshServer",
+  "originalRun01": {
+    "result": "driver lookup failed before first assertion",
+    "cause": "getByLabel exact matched raw enclosing label text differently; exact accessible combobox role/name lookup works. Checkbox wording updated to actual visible copy.",
+    "path": "output/2026-10-12-attachment-archive-browser/webkit-run01.json"
+  },
+  "run02": {
+    "checksPassed": 23,
+    "pageErrors": [],
+    "blockedRequests": [],
+    "sourceStable": false,
+    "changedInputs": [
+      "src/components/ConversationArchiveDialog.tsx"
+    ],
+    "oldProgressTextInRenderedScreenshot": true,
+    "currentDiskStringAlreadyFixed": true,
+    "cause": "Unresolved served-module/hot-reload snapshot boundary; not classified as current source defect."
+  },
+  "rootViewedScreenshots": [
+    "webkit-run01-failure.png",
+    "webkit-run02-selection-narrow.png",
+    "webkit-run02-completed.png",
+    "webkit-run02-library.png"
+  ],
+  "next": "Restart owned Vite after frontend freeze, run both engines on stable inputs; completed DOM must not retain wait instruction. Original evidence retained."
+}

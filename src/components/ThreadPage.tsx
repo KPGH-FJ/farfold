@@ -1,4 +1,11 @@
-import { ConversationExportDialog } from "./ConversationExportDialog";
+import { ConversationExportHost } from "./ConversationExportHost";
+import {
+  captureConversationExport,
+  releasedExportSnapshot,
+  hasExportableContent,
+  type ConversationExportSnapshot,
+} from "../runtime/conversation_archive_snapshot";
+import { ARCHIVE_STRINGS } from "../runtime/conversation_archive_strings";
 import { TranscriptSearchContext } from "./transcript-search";
 import { ConversationFind } from "./ConversationFind";
 import { LoadedSearchJump, type LoadedSearchRequest } from "./LoadedSearchJump";
@@ -45,10 +52,7 @@ import { reportedArtifactCount } from "../runtime/reported_artifacts";
 import { STRINGS } from "../runtime/strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { readableTranscript } from "../runtime/readable_transcript";
-import {
-  exportFileName,
-  transcriptMarkdown,
-} from "../runtime/conversation_actions";
+import { exportFileName } from "../runtime/conversation_actions";
 import { fileDelivery } from "../runtime/file_delivery";
 import { uiError } from "../runtime/ui_error";
 
@@ -130,7 +134,7 @@ export function ThreadPage({
       : null;
   const findTrigger = useRef<HTMLButtonElement>(null);
   const [exported, setExported] = useState<{
-    text: string;
+    capture: ConversationExportSnapshot;
     name: string;
   } | null>(null);
   const host = useRef<HTMLElement>(null);
@@ -391,24 +395,23 @@ export function ThreadPage({
               <button
                 type="button"
                 className="btn btn-ghost"
-                disabled={
-                  !thread ||
-                  saving ||
-                  !thread.items.some(
-                    (item) => item.kind === "user" || item.kind === "agent",
-                  )
-                }
+                disabled={!thread || saving || !hasExportableContent(thread)}
                 onClick={() => {
                   if (!thread) return;
-                  setExported({
-                    text: transcriptMarkdown(
-                      thread,
-                      title,
-                      agents.cards.find((agent) => agent.id === thread.agentId)
-                        ?.name ?? thread.agentId,
-                    ),
-                    name: exportFileName(title),
-                  });
+                  try {
+                    setExported({
+                      capture: captureConversationExport(
+                        thread,
+                        title,
+                        agents.cards.find(
+                          (agent) => agent.id === thread.agentId,
+                        )?.name ?? thread.agentId,
+                      ),
+                      name: exportFileName(title),
+                    });
+                  } catch {
+                    setError(ARCHIVE_STRINGS.errors.tooLarge);
+                  }
                   setMenu(false);
                 }}
               >
@@ -486,8 +489,18 @@ export function ThreadPage({
           </WorkspaceActionMenu>
         )}
         {active && exported && (
-          <ConversationExportDialog
+          <ConversationExportHost
             {...exported}
+            onRegistered={() =>
+              setExported((current) =>
+                current
+                  ? {
+                      ...current,
+                      capture: releasedExportSnapshot(current.capture),
+                    }
+                  : null,
+              )
+            }
             returnFocusRef={menuAnchor}
             onClose={() => setExported(null)}
           />

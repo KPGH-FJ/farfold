@@ -1,0 +1,48 @@
+    Checking farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+error: this `if` statement can be collapsed
+   --> src/file_archive/input.rs:237:9
+    |
+237 | /         if let Some(original) = &c.replaces_candidate_id {
+238 | |             if !uuid(original)
+239 | |                 || original == &c.candidate_id
+240 | |                 || !candidates.contains_key(original.as_str())
+...   |
+259 | |         }
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+237 ~         if let Some(original) = &c.replaces_candidate_id
+238 ~             && (!uuid(original)
+239 |                 || original == &c.candidate_id
+...
+254 |                         )
+255 ~                 }))
+256 |             {
+257 |                 return Err(fail("invalidRequest"));
+258 ~             }
+    |
+
+error: this `if` statement can be collapsed
+  --> src/file_copy_jobs/archive.rs:73:9
+   |
+73 | /         if let Some(hash) = self.seen.get(&key.operation_id) {
+74 | |             if hash != &key.input_sha256 {
+75 | |                 return Err(fail("requestConflict"));
+76 | |             }
+77 | |         }
+   | |_________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.96.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+73 ~         if let Some(hash) = self.seen.get(&key.operation_id)
+74 ~             && hash != &key.input_sha256 {
+75 |                 return Err(fail("requestConflict"));
+76 ~             }
+   |
+
+error: could not compile `farfold` (lib) due to 2 previous errors

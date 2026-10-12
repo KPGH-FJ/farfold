@@ -1,0 +1,244 @@
+{
+  "phase": "frozenSourceControlledEvidenceIndependentlyReviewedNotInstalled",
+  "observedAtUtc": "2026-10-12T07:00:08.787240+00:00",
+  "result": "No remaining blocker identified in the reviewed frozen scope",
+  "source": {
+    "backendOwned": 17,
+    "frontendOwned": 28,
+    "allCheckpointRefsMatchCurrent": true,
+    "rendererRefs": [
+      {
+        "path": "src/runtime/conversation_export.ts",
+        "sha256": "fdda8da649e53006a8905e9e13a10ed2621b353f95e644f6185f6aea13e0e20c"
+      },
+      {
+        "path": "src/runtime/conversation_export.tools.test.ts",
+        "sha256": "81f372070c33cc1685b6a47747569854d6ce63e8bd6de1ee7953fb8c28346c1e"
+      },
+      {
+        "path": "src/runtime/export_strings.ts",
+        "sha256": "7a28dc07504c143f8ed9a0e7db1ff5d8d56518a94f7ef653ac53be68c2eb6032"
+      },
+      {
+        "path": "src/runtime/strings.test.ts",
+        "sha256": "7a9b381f96436cf9a21e788acc23bbe7cfe3dd717156d6f20026ed231cdfc8eb"
+      }
+    ]
+  },
+  "checkedAuthorDirectRefs": {
+    "backend": 49,
+    "frontend": 46,
+    "browser": 32
+  },
+  "reviewedMechanisms": [
+    "Exact operationId/inputSha256 and separate Copy/Archive admission; bounded seen tombstones do not evict live work.",
+    "Ready preparation does not itself authorize a late or status-driven start. Close before registration blocks late picker/hash; close after registration retains the one actual job.",
+    "Selected local/received content only; portable manifest omits automatic source locations. Literal loaded text/diff/terminal rendering remains opt-in; normal Markdown defaults remain unchanged.",
+    "Actual worker cleanup precedes shared slot/exit-permit release; publication claim separates cancellable work from publication, and uncertain filesystem identity remains unknown.",
+    "Anchored source/parent checks and no-replace publication preserve unrelated destination bytes. Source failures abort the unpublished ZIP; no remote fetch or recursive scan.",
+    "Strict Rust canonical/state data is consumed unchanged through the TypeScript parser and real jobs/SSR tests. Safe numeric member names use the shared bounded suffix whitelist."
+  ],
+  "independentAdversarialTests": {
+    "authoredBy": "verification",
+    "executedBy": "architecture",
+    "rerunByReviewer": false,
+    "passed": 4,
+    "cases": [
+      "independent_destination_created_at_archive_claim_is_never_replaced",
+      "independent_parent_replaced_at_claim_is_unknown_and_never_touches_new_parent",
+      "independent_cancelled_real_writer_holds_copy_slot_until_handles_are_closed",
+      "independent_early_cancel_retains_exact_pair_through_capacity_and_copy_calls"
+    ],
+    "containingFinalJobsPass": 22
+  },
+  "authorValidationReadNotRerun": {
+    "backendFinalGroups": [
+      13,
+      22,
+      1,
+      1
+    ],
+    "backendTotal": 37,
+    "frontendFiles": 19,
+    "frontendTests": 249,
+    "actualCanonical": 6,
+    "actualStates": 14,
+    "actualWireTests": 23,
+    "ownedFormatAndTypeAndBackendClippy": 0
+  },
+  "closedFindings": [
+    {
+      "id": "replacement-membership",
+      "originalFailed": 3,
+      "followupPassed": 5,
+      "resolution": "Replacement removal/replacement/original reselection now maintain strict membership; original red preserved."
+    },
+    {
+      "id": "closed-absence-dismissal",
+      "originalFailed": 1,
+      "followupFiles": 2,
+      "followupPassed": 11,
+      "resolution": "Only exact admissionClosed plus explicit acknowledgement and no pending IPC retires local observation without false backend release; ordinary unknown protection retained."
+    }
+  ],
+  "otherFailureBoundaries": [
+    "Optional detail/archive limit red (2) is separately retained by author and repaired; not a new reviewer reproduction.",
+    "Two original backend writer failures were incorrect test expectations, not established publication defects. Compile/lint/evidence-extraction failures remain separately classified.",
+    "Legacy React harness adaptations preserve every prior byte except the one getter line; no assertion weakening.",
+    "Nonfinal WebKit sourcechanged/stale served text is retained as a preliminary browser observation, not counted as final product failure or success."
+  ],
+  "legacyFixtureVerification": [
+    {
+      "path": "src/components/DraftStartup.test.tsx",
+      "beforeSha256": "8385a8a4cb70c4d7928d5a2aa5bc17468d83869874a9302c52e46bf56b59e122",
+      "afterSha256": "b950648c33d353a87e909f5a12f2cab8dfa8b8d98524513c3dfa0c170d574b9f",
+      "onlyGetterLineAdded": true
+    },
+    {
+      "path": "src/components/DraftStartup.restore.test.tsx",
+      "beforeSha256": "239e8c578b66cee27c27e5957c6415367d03c0b2d1b80dcc797489e27c239f81",
+      "afterSha256": "55be074a450c725e971b99a306c42e2daee8f66eecf279e17bea538411122bd6",
+      "onlyGetterLineAdded": true
+    }
+  ],
+  "wireExtraction": "Three unique ASCII-LF stdout markers, original prefix and payload hashes checked; canonical 4+2 and states 14 equal frozen formatted wire.",
+  "browserReview": [
+    {
+      "engine": "webkit",
+      "checksPassed": 23,
+      "observedInputs": 936,
+      "sourceStable": true,
+      "scope": "Full production App/StrictMode, real parents/capture/selection/controller/parser/activity, controlled native picker and IPC. No real source file read, ZIP write, Agent, installed App or database."
+    },
+    {
+      "engine": "chromium",
+      "checksPassed": 23,
+      "observedInputs": 936,
+      "sourceStable": true,
+      "scope": "Full production App/StrictMode, real parents/capture/selection/controller/parser/activity, controlled native picker and IPC. No real source file read, ZIP write, Agent, installed App or database."
+    }
+  ],
+  "pixelReview": {
+    "reviewed": [
+      "webkit-run03-selection-narrow",
+      "webkit-run03-completed",
+      "chromium-run01-selection-narrow",
+      "chromium-run01-completed"
+    ],
+    "observation": "390 px selection content stays inside its scrollable dialog with Save reachable; completed view shows saved receipt, counts and no waiting instruction. Screens are controlled IPC, not real ZIP publication."
+  },
+  "reviewDriverCorrections": [
+    "Initial generic splitlines treated legal U+2028 within JSON as a line boundary; the verifier now uses actual ASCII LF before validating original marker bytes.",
+    "Initial first-it-at-column-zero assumption did not locate restore fixture cases; exact whole-file subtraction proves the sole getter insertion instead.",
+    "One jobs-test line has an interleaved ZipWriter diagnostic prefix; matching the exact test-name/result substring retains that original prefix and all four actual passes."
+  ],
+  "notClaimed": [
+    "No independent rerun of Cargo, frontend suite or browsers",
+    "No formal application, official Agent, user database or configuration access",
+    "No Windows runtime or installed ZIP extraction proof",
+    "No whole P35/P14/H06 completion",
+    "Current root seven-check integration is separate and was not yet reviewed here"
+  ],
+  "refs": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/implementation.json",
+      "sha256": "2a62907e9b62c2f4c4b8dccd34b092931de258cd6f2c1b2e16c1a2c9fbc1ce33"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/source-checkpoint.json",
+      "sha256": "c0691ccaa97a00e5f55aabedcceda09702f39747a8228f1a540c3889f934f1f3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/verification.json",
+      "sha256": "1ae411045d713eb36311dad86123fcb8fba7b86857a5f433ebfe61a90be7ef44"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/implementation.json",
+      "sha256": "98e584d42d162e735fe7bb2df73569ce3ddf36a8d4966d694fd2d4693f4ce318"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/frontend/source-checkpoint.json",
+      "sha256": "dfdd96774e276cce99fe4e54268272b6720966df2665d8fcb28e6b86101a22fd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/actual-wire.json",
+      "sha256": "71450491101bdfd70680942b68f5946e2d9e5ff2ac1cd3e71100409890401b5c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/wire-capture.json",
+      "sha256": "11b5e43272502229f0e231125baf7d831ca5aee0206707cf0c90920a5cd3cb50"
+    },
+    {
+      "path": "src-tauri/src/file_archive_independent_tests.rs",
+      "sha256": "af9b07238a259ca49771e398d3c84f7454b8aac12bcec7d019fb1555a3190163"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-independent/progress.json",
+      "sha256": "5f224b98663269d4514f0ad38f5fc9302489f191fdb7b69d67eaa3360ebabe18"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-independent/closed-absence-review.json",
+      "sha256": "4e3e72622d103f6b6ac7a5903d3f650dd0ad33cc133c1416f1d5a344f60344c4"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/webkit-run03.json",
+      "sha256": "e608bc396e52517502775610ee01d98a813d1673f1d3a29bbc8fb4ae57f5ce37"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/webkit-run03.raw.txt",
+      "sha256": "9dee8ac5a57400fc5e4d8de8e1328afb72ce6ebbf03d06eca1c19f7eea236d73"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/webkit-run03-markdown.png",
+      "sha256": "e5cd0b98dc2ac8b65c007215a8c30f5cf165beff1fca91a3c44a15673af742f2"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/webkit-run03-selection-narrow.png",
+      "sha256": "aa3aecd860664664bebc0a52f996086bab1891580e80d1b550cd6d58a791974f"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/webkit-run03-completed.png",
+      "sha256": "79ff7783a669c470165b62d55c3b271f3f722fbe4e7180d0fc4923ed16d6eb7b"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/webkit-run03-cancelled.png",
+      "sha256": "d601f696802f4b40ed42910ac5d236416eb1d8f101f9a965a843baaaf0e8aeef"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/webkit-run03-library.png",
+      "sha256": "704cf5091508b5b5f6573bc6b45a711d8758a29d0ff39260154ac05a657a0f3d"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/chromium-run01.json",
+      "sha256": "21a88383f046d2466dac0bab6c65f8a519137ae29aaf192ca078d6573ea5e8eb"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/chromium-run01.raw.txt",
+      "sha256": "95611dfdef1a5eb41450fd1d077a71e19c45a609b2da672d8beb79feb25449fa"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/chromium-run01-markdown.png",
+      "sha256": "f648629037c67708c03011881a7c97125e53df493672c495041a1c999ae26d7f"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/chromium-run01-selection-narrow.png",
+      "sha256": "3968ad461d007425ec135aa024e46a9d0df0a061f657d6c922876651589fa5e8"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/chromium-run01-completed.png",
+      "sha256": "c4d8f8dcfd2c45c6c82ae733c6067746511cbd442f8b6a61f227b874574db915"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/chromium-run01-cancelled.png",
+      "sha256": "27f6cff58bad19180aaf477cc101d2dc759f6912599c3db049e1d17a9eeada78"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-browser/chromium-run01-library.png",
+      "sha256": "f31f238e6f34914552dc38fd2277b6051a7b8523cddd9bae13b7104836572ae0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/browser/receipt.json",
+      "sha256": "bd5234189a6858bbc660f318983665efa28d9bd93e10e26ac929420a788d6123"
+    }
+  ]
+}

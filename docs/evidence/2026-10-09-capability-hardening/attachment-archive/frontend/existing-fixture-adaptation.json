@@ -1,0 +1,16 @@
+[
+  {
+    "path": "src/components/DraftStartup.test.tsx",
+    "beforeSha256": "8385a8a4cb70c4d7928d5a2aa5bc17468d83869874a9302c52e46bf56b59e122",
+    "afterSha256": "b950648c33d353a87e909f5a12f2cab8dfa8b8d98524513c3dfa0c170d574b9f",
+    "originalTestBodyUnchanged": true,
+    "change": "Manual hook harness now evaluates the newly added useSyncExternalStore getter; all prior cases and assertions preserved."
+  },
+  {
+    "path": "src/components/DraftStartup.restore.test.tsx",
+    "beforeSha256": "239e8c578b66cee27c27e5957c6415367d03c0b2d1b80dcc797489e27c239f81",
+    "afterSha256": "55be074a450c725e971b99a306c42e2daee8f66eecf279e17bea538411122bd6",
+    "originalTestBodyUnchanged": true,
+    "change": "Manual hook harness now evaluates the newly added useSyncExternalStore getter; all prior cases and assertions preserved."
+  }
+]

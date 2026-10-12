@@ -1,0 +1,23 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/conversation_archive_snapshot.test.ts (3 tests | 2 failed) 16ms
+   × an oversized optional loaded detail cannot disable original ordinary Markdown 6ms
+   × an archive candidate budget cannot disable the unchanged Markdown export 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/conversation_archive_snapshot.test.ts > an oversized optional loaded detail cannot disable original ordinary Markdown
+{ code: 'tooLarge', stacks: [] }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/conversation_archive_snapshot.test.ts > an archive candidate budget cannot disable the unchanged Markdown export
+{ code: 'tooLarge', stacks: [] }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 1 passed (3)
+   Start at  14:29:29
+   Duration  123ms (transform 39ms, setup 0ms, import 51ms, tests 16ms, environment 0ms)
+

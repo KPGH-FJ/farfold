@@ -1,0 +1,141 @@
+{
+  "commands": [
+    {
+      "name": "final-input-writer",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "file_archive",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 4.994,
+      "log": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-input-writer.txt",
+      "logSha256": "2b7526b415ec1475443f31c77960e295c837b416fd5b8710fe32c55fea83b214",
+      "sourceStable": true,
+      "originalLog": "output/2026-10-12-attachment-archive-backend/final-input-writer.txt"
+    },
+    {
+      "name": "final-jobs",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "file_copy_jobs",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.266,
+      "log": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-jobs.txt",
+      "logSha256": "c031c0e902e5fc90d25f5c00a9770e4c98cf93aa84dfa6f9c73b77c5c5a08099",
+      "sourceStable": true,
+      "originalLog": "output/2026-10-12-attachment-archive-backend/final-jobs.txt"
+    },
+    {
+      "name": "final-short-write",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "file_delivery::archive_stream",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.196,
+      "log": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-short-write.txt",
+      "logSha256": "34230016d91def6072658470537b69f0ab5231d77918c54f7a1ba219ffd88ae2",
+      "sourceStable": true,
+      "originalLog": "output/2026-10-12-attachment-archive-backend/final-short-write.txt"
+    },
+    {
+      "name": "final-copy-wire",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--lib",
+        "file_copy_commands",
+        "--",
+        "--nocapture"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.187,
+      "log": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-copy-wire.txt",
+      "logSha256": "9ab2448a659115769765de8e922212494acc592e957f9a80847c1a7cbae9c1d5",
+      "sourceStable": true,
+      "originalLog": "output/2026-10-12-attachment-archive-backend/final-copy-wire.txt"
+    },
+    {
+      "name": "final-owned-format",
+      "argv": [
+        "rustfmt",
+        "--edition",
+        "2024",
+        "--check",
+        "--config",
+        "skip_children=true",
+        "src-tauri/src/file_archive.rs",
+        "src-tauri/src/file_archive_commands.rs",
+        "src-tauri/src/file_archive_jobs_tests.rs",
+        "src-tauri/src/file_archive_independent_tests.rs",
+        "src-tauri/src/file_copy_jobs.rs",
+        "src-tauri/src/file_copy_jobs/archive.rs",
+        "src-tauri/src/file_copy_jobs_tests.rs",
+        "src-tauri/src/file_copy_jobs_independent_tests.rs",
+        "src-tauri/src/file_delivery.rs",
+        "src-tauri/src/file_delivery/archive_stream.rs",
+        "src-tauri/src/file_delivery/archive_write_tests.rs",
+        "src-tauri/src/lib.rs",
+        "src-tauri/src/file_archive/input.rs",
+        "src-tauri/src/file_archive/manifest.rs",
+        "src-tauri/src/file_archive/tests.rs",
+        "src-tauri/src/file_archive/types.rs",
+        "src-tauri/src/file_archive/writer_tests.rs"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.046,
+      "log": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-owned-format.txt",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sourceStable": true,
+      "originalLog": "output/2026-10-12-attachment-archive-backend/final-owned-format.txt"
+    },
+    {
+      "name": "final-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 3.256,
+      "log": "docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/final-clippy.txt",
+      "logSha256": "03ebb7dbb76c754e840ac6441b97ee7d41448f89dfdadfdab5cc4e62745f3da2",
+      "sourceStable": true,
+      "originalLog": "output/2026-10-12-attachment-archive-backend/final-clippy.txt"
+    }
+  ],
+  "allPassed": true,
+  "sourceStable": true,
+  "testsPassed": 37,
+  "scope": "Four targeted/related Rust filters, owned rustfmt and clippy; not the parent integration seven-check sequence."
+}
