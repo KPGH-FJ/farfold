@@ -1,0 +1,98 @@
+{
+  "status": "installationArtifactsAndCapturedDataIndependentlyVerified",
+  "recordedAt": "2026-10-12T14:12:31.374705+00:00",
+  "sourceCommit": "a5a24810fd494a9f31e69881c74c55ca2d1fbd49",
+  "scope": "Read-only verification of the single installation already performed by root, plus actual artifact/evidence stability. This is not an additional installation or installed archive UI acceptance.",
+  "checksPassed": [
+    "exactCommitAndSource",
+    "engineering",
+    "candidateAndPriorNineCheckReceipts",
+    "exactCandidateAndInstalledFiveFiles",
+    "bundleIdentityArchitectureAndSignature",
+    "archiveExactMembersModesPayloadsCRC",
+    "actualNormalExitAndPreviousFormalIdentity",
+    "singleInstallerOperation",
+    "allThreeFreshDataManifests"
+  ],
+  "completedCheckCount": 9,
+  "artifactStabilityFollowupPassed": true,
+  "firstAudit": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/install-independent.json",
+    "sha256": "bbd42776909994ff07c6e6761d41059b5e383c02a73fc9278ad89f35de97acd2"
+  },
+  "firstAuditRawCopy": {
+    "path": "output/2026-10-12-attachment-archive-independent/install-audit-first-result.raw.txt",
+    "sha256": "bbd42776909994ff07c6e6761d41059b5e383c02a73fc9278ad89f35de97acd2"
+  },
+  "finalArtifactStability": {
+    "path": "output/2026-10-12-attachment-archive-independent/install-audit-final-stability.json",
+    "sha256": "2291e5ffde6551973d3460850ed23e6ca0f8f7c6414742f52f60ee6b6da1395a"
+  },
+  "sourceFreezeReleaseGate": {
+    "path": "output/2026-10-12-attachment-archive-independent/installation-source-data-gate.json",
+    "sha256": "8f7e3fdc91baec439d79a2fe83625d64db97e6ad596c42d1dd3ee4a6955c1914"
+  },
+  "finalAssertionBoundary": {
+    "originalResult": "AssertionError after nine recorded successful checks; original failure remains unchanged.",
+    "exactFailedPredicate": "Not isolated from the original inline-driver traceback. No product defect or successful absent-process assertion is inferred.",
+    "followup": "All 26 bound references, candidate/formal five files plus modes, and candidate ZIP are unchanged. Formal processes now exist; process absence is not claimed at closeout.",
+    "observedFormalPids": [89859, 90126],
+    "reviewerStartedOrStoppedProcesses": false
+  },
+  "installationData": {
+    "manifests": 3,
+    "entriesEach": 217400,
+    "allSameSha256": "49669a6f5ca80985b4ac93e76b5cc05bc23204533d6c0604b11519221f70e963",
+    "boundary": "Original before/preinstall/after captures match exactly. This does not assert post-launch user data remains unchanged."
+  },
+  "sourceBoundary": "1542 candidate inputs were compared twice to exact commit and current source before root released source freeze; subsequent authorized edits are outside this historical gate.",
+  "notProven": [
+    "Archive export using installed UI",
+    "Windows behavior",
+    "All Agent end-to-end capability",
+    "OpenCode NEW-01 initialization",
+    "Current formal application is closed",
+    "Public signing, notarization or market release"
+  ],
+  "notExecuted": [
+    "Legacy verify-install helper",
+    "Build or test commands",
+    "SQLite on original or secondary data",
+    "App UI, Agent or official CLI",
+    "Installer or duplicate cleanup"
+  ],
+  "references": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/candidate.json",
+      "sha256": "32a237585cec8085f776f654f094632d829322e02d3c44157b95f01882d8ef69"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/candidate-independent.json",
+      "sha256": "c57644a834fe86ae4ef14ec495ecec423a6d7d53be13e493d4b9c1d0f22e966b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/candidate-inputs.json",
+      "sha256": "ceeede552cb911bedf9a0617d625af1b90d547b9700de655fd553bbe986ac5c9"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/candidate-inputs-after.json",
+      "sha256": "ceeede552cb911bedf9a0617d625af1b90d547b9700de655fd553bbe986ac5c9"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-install/install-operation.json",
+      "sha256": "12f4b49c20faad28617e275a52850ce090b45ba597b3afea8378825830a0e69a"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-install/normal-exit-observation.json",
+      "sha256": "40acacb94f70c0eee3028b9794501638ea8e40dc6f3288bb2f513ee6c76eea49"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-install/metadata-backup-receipt.json",
+      "sha256": "d370fe56492be4e14eb988fc63c5ca76a8091750a7f2ae13e017368b2983ce1e"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-independent/candidate-helpers-review.json",
+      "sha256": "e5834d1e0baf496d29ecc6807939568b945e694f65f832aa959d4b7376caf3fa"
+    }
+  ]
+}

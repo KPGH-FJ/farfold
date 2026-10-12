@@ -1,0 +1,292 @@
+{
+  "sourceCommit": "a5a24810fd494a9f31e69881c74c55ca2d1fbd49",
+  "startedAt": "2026-10-12T14:05:29.671563+00:00",
+  "result": "failed",
+  "failures": [
+    {
+      "afterChecks": 9,
+      "error": ""
+    }
+  ],
+  "checks": {
+    "exactCommitAndSource": {
+      "passed": true,
+      "inputCount": 1542,
+      "scope": "Exact current source and Git commit were independently compared twice in the bound early gate before root released freeze; no claim that later authorized source edits remain unchanged.",
+      "gate": {
+        "path": "output/2026-10-12-attachment-archive-independent/installation-source-data-gate.json",
+        "sha256": "8f7e3fdc91baec439d79a2fe83625d64db97e6ad596c42d1dd3ee4a6955c1914"
+      }
+    },
+    "engineering": {
+      "passed": true,
+      "evidence": {
+        "receipt": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/final-verification.json",
+        "sha256": "39c80a291e591dcb6c83e9b4f5f912e1ac4012c1df990a18c3064b50decd2c7c",
+        "inputCount": 1542,
+        "references": {
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/final-verification.json": "39c80a291e591dcb6c83e9b4f5f912e1ac4012c1df990a18c3064b50decd2c7c",
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/run-01/verification.json": "1fe5be551fd18723c6bffc6bd8df443fcec24af30f8339d84c4273efccca8107",
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/run-01/inputs-before.json": "a7e6f2db02cd15fc97b059849035967e7b5682b884f826631b728888c86e9aab",
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/run-01/inputs-after.json": "a7e6f2db02cd15fc97b059849035967e7b5682b884f826631b728888c86e9aab",
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/inputs-final.json": "ceeede552cb911bedf9a0617d625af1b90d547b9700de655fd553bbe986ac5c9",
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/run-01/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/run-01/frontend.txt": "862038f37243431758a04289e5de1a9379e3cc0d979f0e6b32949f5118f259b9",
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/run-01/build.txt": "2d0ff5cd8163850ab94c44d7f4083b500ac1102e11efe10b5a6ab8665718a67c",
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/run-01/cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/run-01/clippy.txt": "deb6cb4a6c3e79707fe01a80013f10f53ed028864b8a94992b33872d11736be8",
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/run-01/rust.txt": "26e48436263e1ffc5dd42cec40ccc1df0e12540956cf00323d36bf390ee6dae5",
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/format-followup.json": "f8a64f3a131cde438e76c22c9400a99c8af8fb038817416927866ec9550ae525",
+          "docs/evidence/2026-10-09-capability-hardening/attachment-archive-checks/format-followup.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/install-independent-run-01.json": "dc0809a6915a83dc590330b7d4049ac1088746decf21e14ac54f558da299b4ee"
+        },
+        "boundary": "Six source checks reused on identical product inputs; formatting passed after only the recorded .prettierignore change. No commands claimed rerun."
+      },
+      "boundary": "Six original successful commands and exact single-pattern formatter follow-up, not seven reruns."
+    },
+    "candidateAndPriorNineCheckReceipts": {
+      "passed": true,
+      "candidate": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/candidate.json",
+        "sha256": "32a237585cec8085f776f654f094632d829322e02d3c44157b95f01882d8ef69"
+      },
+      "nineChecks": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/candidate-independent.json",
+        "sha256": "c57644a834fe86ae4ef14ec495ecec423a6d7d53be13e493d4b9c1d0f22e966b"
+      }
+    },
+    "exactCandidateAndInstalledFiveFiles": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "51ce4ab02e8001049153738eea912ca7a89ddf38eea4d0b5be90f3262512a94f",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      },
+      "modes": {
+        "Contents/Info.plist": 420,
+        "Contents/MacOS/farfold": 493,
+        "Contents/Resources/icon.icns": 420,
+        "Contents/Resources/release-manifest.json": 420,
+        "Contents/_CodeSignature/CodeResources": 420
+      }
+    },
+    "bundleIdentityArchitectureAndSignature": {
+      "passed": true,
+      "observations": {
+        "candidate": {
+          "architecture": {
+            "argv": [
+              "/usr/bin/lipo",
+              "-archs",
+              "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold"
+            ],
+            "exitCode": 0,
+            "stdout": "arm64",
+            "stderr": ""
+          },
+          "codesignVerify": {
+            "argv": [
+              "/usr/bin/codesign",
+              "--verify",
+              "--deep",
+              "--strict",
+              "--verbose=2",
+              "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app"
+            ],
+            "exitCode": 0,
+            "stdout": "",
+            "stderr": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement"
+          },
+          "codesignDetails": {
+            "argv": [
+              "/usr/bin/codesign",
+              "-d",
+              "--verbose=4",
+              "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app"
+            ],
+            "exitCode": 0,
+            "stdout": "",
+            "stderr": "Executable=/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app/Contents/MacOS/farfold\nIdentifier=ai.farfold.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=262867 flags=0x10002(adhoc,runtime) hashes=8208+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=984320\nHash type=sha256 size=32\nCandidateCDHash sha256=b23db05e011d41544f8befed89cf2fcbeb64e23f\nCandidateCDHashFull sha256=b23db05e011d41544f8befed89cf2fcbeb64e23f1b68254e05eecffbf4ea07b8\nHash choices=sha256\nCMSDigest=b23db05e011d41544f8befed89cf2fcbeb64e23f1b68254e05eecffbf4ea07b8\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=26411008\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=b23db05e011d41544f8befed89cf2fcbeb64e23f\nSignature=adhoc\nInfo.plist entries=15\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources version=2 rules=13 files=2\nInternal requirements count=0 size=12"
+          }
+        },
+        "formal": {
+          "architecture": {
+            "argv": [
+              "/usr/bin/lipo",
+              "-archs",
+              "/Applications/Farfold.app/Contents/MacOS/farfold"
+            ],
+            "exitCode": 0,
+            "stdout": "arm64",
+            "stderr": ""
+          },
+          "codesignVerify": {
+            "argv": [
+              "/usr/bin/codesign",
+              "--verify",
+              "--deep",
+              "--strict",
+              "--verbose=2",
+              "/Applications/Farfold.app"
+            ],
+            "exitCode": 0,
+            "stdout": "",
+            "stderr": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement"
+          },
+          "codesignDetails": {
+            "argv": [
+              "/usr/bin/codesign",
+              "-d",
+              "--verbose=4",
+              "/Applications/Farfold.app"
+            ],
+            "exitCode": 0,
+            "stdout": "",
+            "stderr": "Executable=/Applications/Farfold.app/Contents/MacOS/farfold\nIdentifier=ai.farfold.desktop\nFormat=app bundle with Mach-O thin (arm64)\nCodeDirectory v=20500 size=262867 flags=0x10002(adhoc,runtime) hashes=8208+3 location=embedded\nVersionPlatform=1\nVersionMin=720896\nVersionSDK=984320\nHash type=sha256 size=32\nCandidateCDHash sha256=b23db05e011d41544f8befed89cf2fcbeb64e23f\nCandidateCDHashFull sha256=b23db05e011d41544f8befed89cf2fcbeb64e23f1b68254e05eecffbf4ea07b8\nHash choices=sha256\nCMSDigest=b23db05e011d41544f8befed89cf2fcbeb64e23f1b68254e05eecffbf4ea07b8\nCMSDigestType=2\nExecutable Segment base=0\nExecutable Segment limit=26411008\nExecutable Segment flags=0x1\nPage size=4096\nCDHash=b23db05e011d41544f8befed89cf2fcbeb64e23f\nSignature=adhoc\nInfo.plist entries=15\nTeamIdentifier=not set\nRuntime Version=15.5.0\nSealed Resources version=2 rules=13 files=2\nInternal requirements count=0 size=12"
+          }
+        }
+      },
+      "boundary": "ad-hoc, not notarized/public distribution signing"
+    },
+    "archiveExactMembersModesPayloadsCRC": {
+      "passed": true,
+      "archiveSha256": "1d8854b74f9c91e1ccded7970137f83bb9b0c03f41935d8ffd78b2f5cd097f32",
+      "archiveBytes": 14272869
+    },
+    "actualNormalExitAndPreviousFormalIdentity": {
+      "passed": true,
+      "normalExit": {
+        "path": "output/2026-10-12-attachment-archive-install/normal-exit-observation.json",
+        "sha256": "40acacb94f70c0eee3028b9794501638ea8e40dc6f3288bb2f513ee6c76eea49"
+      },
+      "priorBaseline": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/candidate.json",
+        "sha256": "761230f77c1528b8f21af61d001fa11db930b3ca3c56d2aae8c9761e8568ca8b"
+      },
+      "boundary": "Root operated normal Save and Quit before snapshot/build/install; no permission grant, model send, or forced termination inferred."
+    },
+    "singleInstallerOperation": {
+      "passed": true,
+      "receipt": {
+        "path": "output/2026-10-12-attachment-archive-install/install-operation.json",
+        "sha256": "12f4b49c20faad28617e275a52850ce090b45ba597b3afea8378825830a0e69a"
+      },
+      "recordedStartedAt": "2026-10-12T14:01:23.618784+00:00",
+      "recordedCompletedAt": "2026-10-12T14:01:24.781495+00:00"
+    },
+    "allThreeFreshDataManifests": {
+      "passed": true,
+      "manifests": [
+        {
+          "name": "before",
+          "entries": 217400,
+          "sha256": "49669a6f5ca80985b4ac93e76b5cc05bc23204533d6c0604b11519221f70e963",
+          "counts": {
+            "appData": {
+              "directory": 21360,
+              "file": 195450,
+              "symlink": 328,
+              "special": 0
+            },
+            "webkit": {
+              "directory": 152,
+              "file": 100,
+              "symlink": 0,
+              "special": 0
+            },
+            "cache": {
+              "directory": 8,
+              "file": 2,
+              "symlink": 0,
+              "special": 0
+            }
+          },
+          "summary": {
+            "path": "output/2026-10-12-attachment-archive-install/install-data-before-summary.json",
+            "sha256": "ad6dd9da9a657646241d3cfa3c12ce1dd51c54c9fe74d6de61426eba34986be0"
+          },
+          "raw": {
+            "path": "output/2026-10-12-attachment-archive-install/install-data-before.jsonl",
+            "sha256": "49669a6f5ca80985b4ac93e76b5cc05bc23204533d6c0604b11519221f70e963"
+          }
+        },
+        {
+          "name": "preinstall",
+          "entries": 217400,
+          "sha256": "49669a6f5ca80985b4ac93e76b5cc05bc23204533d6c0604b11519221f70e963",
+          "counts": {
+            "appData": {
+              "directory": 21360,
+              "file": 195450,
+              "symlink": 328,
+              "special": 0
+            },
+            "webkit": {
+              "directory": 152,
+              "file": 100,
+              "symlink": 0,
+              "special": 0
+            },
+            "cache": {
+              "directory": 8,
+              "file": 2,
+              "symlink": 0,
+              "special": 0
+            }
+          },
+          "summary": {
+            "path": "output/2026-10-12-attachment-archive-install/install-data-preinstall-summary.json",
+            "sha256": "ad6dd9da9a657646241d3cfa3c12ce1dd51c54c9fe74d6de61426eba34986be0"
+          },
+          "raw": {
+            "path": "output/2026-10-12-attachment-archive-install/install-data-preinstall.jsonl",
+            "sha256": "49669a6f5ca80985b4ac93e76b5cc05bc23204533d6c0604b11519221f70e963"
+          }
+        },
+        {
+          "name": "after",
+          "entries": 217400,
+          "sha256": "49669a6f5ca80985b4ac93e76b5cc05bc23204533d6c0604b11519221f70e963",
+          "counts": {
+            "appData": {
+              "directory": 21360,
+              "file": 195450,
+              "symlink": 328,
+              "special": 0
+            },
+            "webkit": {
+              "directory": 152,
+              "file": 100,
+              "symlink": 0,
+              "special": 0
+            },
+            "cache": {
+              "directory": 8,
+              "file": 2,
+              "symlink": 0,
+              "special": 0
+            }
+          },
+          "summary": {
+            "path": "output/2026-10-12-attachment-archive-install/install-data-after-summary.json",
+            "sha256": "ad6dd9da9a657646241d3cfa3c12ce1dd51c54c9fe74d6de61426eba34986be0"
+          },
+          "raw": {
+            "path": "output/2026-10-12-attachment-archive-install/install-data-after.jsonl",
+            "sha256": "49669a6f5ca80985b4ac93e76b5cc05bc23204533d6c0604b11519221f70e963"
+          }
+        }
+      ],
+      "allEqual": true,
+      "boundary": "Exact captured installation data trees/bytes; not a native post-use database comparison or all future data protection."
+    }
+  },
+  "readOnly": true,
+  "appLaunchedByReviewer": false,
+  "realAgentInvoked": false,
+  "legacyVerifyInstallExecuted": false,
+  "sequence": "Root prepared candidate, ran its 9-check verifier, completed fresh preinstall snapshot and installed after helper static review; reviewer now independently verifies recorded receipts and actual installed bytes. This is not a second installation.",
+  "completedAt": "2026-10-12T14:05:31.404858+00:00"
+}

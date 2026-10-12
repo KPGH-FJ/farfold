@@ -1,0 +1,25 @@
+{
+  "status": "boundedDirectDesktopPdfPassedOpenCodeInitUnresolved",
+  "checkedAtUtc": "2026-10-12T14:33:44.547181+00:00",
+  "formalSourceCommit": "8cfb2ccb58a4154219505a324e92e1a5af0d4500",
+  "directPdf": "/Users/tw/Desktop/farfold/src/runtime/fixtures/pdf-preview/mixed-two-pages.pdf",
+  "observed": "Formal App displayed actual page 1 of 2, embedded-font text and image; one direct link click without an intermediate picker or temporary copy.",
+  "noNewPromptOrConfigApproval": true,
+  "systemAuthorizationResult": "Not inferred; bounded log query returned no matching events.",
+  "openCodeInitialization": "Not revalidated; old unconsumed initialize and AUTHREQ_PROMPTING evidence remains unresolved.",
+  "notProven": [
+    "A root cause or permanent fix",
+    "OpenCode initialization",
+    "Every Desktop path or permission state"
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-12-desktop-permission-investigation/direct-file-followup.json",
+      "sha256": "ba2c32468b5652f10d90df7785ffbb901b1819b1895eb8909ec89a07a8d9d3e5"
+    },
+    {
+      "path": "output/2026-10-12-desktop-permission-investigation/direct-pdf-tcc-window.json",
+      "sha256": "069842ff22164b141fbe99e3ad19ad0c4cd42858cec990b340d447bd7ad24929"
+    }
+  ]
+}

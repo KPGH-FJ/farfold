@@ -1,0 +1,290 @@
+{
+  "checkedAtUtc": "2026-10-12T14:34:28.705720+00:00",
+  "status": "passedWithinSpecifiedNativeArchiveCloseoutScope",
+  "reviewer": "archive_closeout independent child agent",
+  "formalSourceCommit": "a5a24810fd494a9f31e69881c74c55ca2d1fbd49",
+  "scope": "Read-only actual archive CRC/member/payload/manifest verification; two private completed SQLite backups; formal application and preserved candidate ZIP five files; root-reported native observations separated from independently reread artifacts.",
+  "archives": {
+    "selected-reported-files.zip": {
+      "artifact": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/native/selected-reported-files.zip",
+        "sha256": "fddf5226cafaeeda2214c2221c511d5c6251103d915d32e1ba6a74764bf3f39a",
+        "bytes": 5302
+      },
+      "members": [
+        "conversation.md",
+        "attachments/0001.md",
+        "attachments/0002.md",
+        "manifest.json"
+      ],
+      "crc": "passed",
+      "includedCount": 2,
+      "omittedCount": 1,
+      "attachmentBytes": 44,
+      "includedPayloadsEqualCurrentControlledSources": true,
+      "transcriptSha256": "900490cc13aa6c1c2ac0df453165d0e5d1385f6245f7b3177ed983474acd4a3b",
+      "manifestSha256": "28ec5ab8a10466d315edb2341ecb4b93ba29f03571058f51f92e41b51f86052e",
+      "manifestScope": "selectedLoadedSnapshot",
+      "resumableAgentSession": false,
+      "formatValidation": "notChecked",
+      "mimeValidation": "declarationOnly",
+      "omittedReasons": ["notSelected"]
+    },
+    "replacement-selected.zip": {
+      "artifact": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/native/replacement-selected.zip",
+        "sha256": "4437712345a9dce55b4745f630e1da0f8fc4c271b5b9434ec94656d255c30fff",
+        "bytes": 4727
+      },
+      "members": ["conversation.md", "attachments/0001.txt", "manifest.json"],
+      "crc": "passed",
+      "includedCount": 1,
+      "omittedCount": 3,
+      "attachmentBytes": 44,
+      "includedPayloadsEqualCurrentControlledSources": true,
+      "transcriptSha256": "ebc74393c5d5abb91cc7c68fcea02d728d9f14f861d26bd6ca27997a7135fbdc",
+      "manifestSha256": "016b0f8568ad37f709d03fc737315a6e569bd2db5126f57de1ca6386213f40bf",
+      "manifestScope": "selectedLoadedSnapshot",
+      "resumableAgentSession": false,
+      "formatValidation": "notChecked",
+      "mimeValidation": "declarationOnly",
+      "omittedReasons": [
+        "replacedByUserSelection",
+        "notSelected",
+        "notSelected"
+      ]
+    }
+  },
+  "controlledSources": [
+    {
+      "path": "/private/tmp/farfold-reported-0vgr9upp/alpha.md",
+      "sha256": "5a2f9d43a3244c44d4180ed36120b134a7979087e1c010db92e4e0cfcb4c0509",
+      "bytes": 22
+    },
+    {
+      "path": "/private/tmp/farfold-reported-0vgr9upp/beta.md",
+      "sha256": "fbd015cc2e7b66c416c425e3d296cc6cbee49be1200021d0772f2dcaac7a63b6",
+      "bytes": 22
+    },
+    {
+      "path": "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/farfold-archive-native-37mukgbz/replacement.txt",
+      "sha256": "5ebb66498b3b20f6eb1465983a67ce5bc95e29afb71f003e29eb8899c27ffc8e",
+      "bytes": 44
+    }
+  ],
+  "metadata": {
+    "method": "mode=ro&immutable=1 on two private backups only; zero-length backup WAL checked; full row equality, not counts only; backup main/WAL/SHM hashes unchanged after reads",
+    "backups": [
+      {
+        "path": "output/2026-10-12-attachment-archive-install/metadata-before.sqlite3",
+        "sha256": "e911681b49a69bf9500d2f7a79e39bf01ea38f41e4760e3396582e66f120ad96",
+        "bytes": 405504
+      },
+      {
+        "path": "output/2026-10-12-attachment-archive-install/final-snapshot/metadata-before.sqlite3",
+        "sha256": "aaa0f5581e67c8281c445569001c2ea95da30e8b6c875aec9a929b474eeac0e3",
+        "bytes": 405504
+      }
+    ],
+    "integrity": "ok for both",
+    "sameSchema": true,
+    "tables": {
+      "agents": {
+        "rows": 40,
+        "completeRowsEqual": false,
+        "changedFields": [
+          {
+            "key": "codex",
+            "fields": ["updated_at"]
+          }
+        ],
+        "beforeRowsDigest": "047fa3e9794c5273a8d333b1fd16f8381062bf405a146af4302573a96514319e",
+        "afterRowsDigest": "6251dfad1061ea9d51dba24c58a1768e434bee48dc7b4fbe705caca213559290"
+      },
+      "dismissed_sessions": {
+        "rows": 170,
+        "completeRowsEqual": true,
+        "changedFields": [],
+        "beforeRowsDigest": "6ae32b4add369f13e992290caecb2402792701d5dae6648a4a984ea2b3072840",
+        "afterRowsDigest": "6ae32b4add369f13e992290caecb2402792701d5dae6648a4a984ea2b3072840"
+      },
+      "sessions": {
+        "rows": 133,
+        "completeRowsEqual": true,
+        "changedFields": [],
+        "beforeRowsDigest": "723ea0e7ecd577078fca4ece1f147103cc631771ffe74836add48de0e441bbd5",
+        "afterRowsDigest": "723ea0e7ecd577078fca4ece1f147103cc631771ffe74836add48de0e441bbd5"
+      },
+      "settings": {
+        "rows": 53,
+        "completeRowsEqual": true,
+        "changedFields": [],
+        "beforeRowsDigest": "d0ebf19915dfe0de1f039ccf0a102046f846c4019f37537ea3a3e590d3675c34",
+        "afterRowsDigest": "d0ebf19915dfe0de1f039ccf0a102046f846c4019f37537ea3a3e590d3675c34"
+      }
+    },
+    "entireRetainedSettings": {
+      "unsentWork.v1": {
+        "entireSerializedValueEqual": true,
+        "bytes": 38025,
+        "sha256": "b5a6bbbdaaf577be9b8e9d845425b6c9749079532fdea68e607cac3087ca006a",
+        "jsonKind": "dict",
+        "topLevelKeys": [
+          "activity",
+          "choice",
+          "composers",
+          "feedback",
+          "queues",
+          "version"
+        ]
+      },
+      "worktreeLocations.v1": {
+        "entireSerializedValueEqual": true,
+        "bytes": 25858,
+        "sha256": "82dfeeea888e6cf3b1fa211decfed517531ad425b1f91322075e802173722441",
+        "jsonKind": "dict",
+        "topLevelKeys": [
+          "archives",
+          "locations",
+          "materials",
+          "operation",
+          "recoveries",
+          "version"
+        ]
+      }
+    },
+    "visibleCountBoundary": "133 database session rows verified; a UI visible count of 132 is not treated as the database row count."
+  },
+  "candidateAndFormal": {
+    "archive": {
+      "path": "src-tauri/target/internal-candidate/2026-10-12-a5a24810/Farfold-0.1.7-a5a24810.zip",
+      "sha256": "1d8854b74f9c91e1ccded7970137f83bb9b0c03f41935d8ffd78b2f5cd097f32",
+      "bytes": 14272869
+    },
+    "fiveFiles": {
+      "Contents/Info.plist": {
+        "sha256": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "formalAndZipBytesEqual": true,
+        "mode": "0o644"
+      },
+      "Contents/MacOS/farfold": {
+        "sha256": "51ce4ab02e8001049153738eea912ca7a89ddf38eea4d0b5be90f3262512a94f",
+        "formalAndZipBytesEqual": true,
+        "mode": "0o755"
+      },
+      "Contents/Resources/icon.icns": {
+        "sha256": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "formalAndZipBytesEqual": true,
+        "mode": "0o644"
+      },
+      "Contents/Resources/release-manifest.json": {
+        "sha256": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "formalAndZipBytesEqual": true,
+        "mode": "0o644"
+      },
+      "Contents/_CodeSignature/CodeResources": {
+        "sha256": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+        "formalAndZipBytesEqual": true,
+        "mode": "0o644"
+      }
+    },
+    "duplicateBuildBundleAbsent": true,
+    "noCurrentSourceEqualsOldCommitAssertion": true
+  },
+  "rootReportedNativeObservations": {
+    "savePickerCancelledWithSelectionRetained": true,
+    "selectedArchiveSucceeded": "已保存本次所选内容。",
+    "replacementFileFailureObserved": "本次所选内容未保存完成。",
+    "ownedReplacementRestoredAndSaveSucceeded": "已保存本次所选内容。",
+    "normalExit": "Cmd-Q then 保存并退出; CUA App quit -10005; pgrep exit1 with empty output",
+    "boundary": "Reviewer did not operate App or independently reproduce these native actions; original CUA returns and receipts are the observation source. Current controlled fixture hash and missing target absence verified separately."
+  },
+  "notProven": [
+    "Native writing cancellation",
+    "Unknown cleanup",
+    "Other Agents, formats or platforms",
+    "Unloaded history",
+    "All P35 or market readiness",
+    "All terminal/tool body types from this native case",
+    "Current P32 edited source is the installed a5a24810 candidate"
+  ],
+  "notExecuted": [
+    "App launch or interaction",
+    "Agent or official CLI",
+    "Build or test commands",
+    "Installer or duplicate cleanup",
+    "SQLite open on original data or source captures"
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-12-attachment-archive-native/fixtures.json",
+      "sha256": "1323861263b1105c040ee125f17a0e581c6220be053a868465b87b730bb0abaa",
+      "bytes": 461
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-native/selected-archive-first.json",
+      "sha256": "f345c2b73727510c38f34e7a6c67aa687da1df405908137653ebb6729fa4a946",
+      "bytes": 1594
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-native/replacement-archive.json",
+      "sha256": "4447f020e2247b5034d788bc916ea601abf18f069212b7762d3eebf9e9eb22ac",
+      "bytes": 765
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-native/missing-source.json",
+      "sha256": "3f8f661b29340c7b80d6d1d609d96337dbdb0712afe00446bf0ff7a1c579c9c0",
+      "bytes": 321
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/native/selected-reported-files.zip",
+      "sha256": "fddf5226cafaeeda2214c2221c511d5c6251103d915d32e1ba6a74764bf3f39a",
+      "bytes": 5302
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/native/replacement-selected.zip",
+      "sha256": "4437712345a9dce55b4745f630e1da0f8fc4c271b5b9434ec94656d255c30fff",
+      "bytes": 4727
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/native/selected-manifest.json",
+      "sha256": "28ec5ab8a10466d315edb2341ecb4b93ba29f03571058f51f92e41b51f86052e",
+      "bytes": 1679
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/native/selected-conversation.md",
+      "sha256": "900490cc13aa6c1c2ac0df453165d0e5d1385f6245f7b3177ed983474acd4a3b",
+      "bytes": 3057
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-install/metadata-backup-receipt.json",
+      "sha256": "d370fe56492be4e14eb988fc63c5ca76a8091750a7f2ae13e017368b2983ce1e",
+      "bytes": 636
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-install/final-snapshot/metadata-backup-receipt.json",
+      "sha256": "173e6d0d57ac5c4c6d89793532b5e5c4e2890ed54ace41684aa91b7d1774a891",
+      "bytes": 636
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-install/final-snapshot/data-comparison-first.json",
+      "sha256": "95e416b48850933d04ae15d07b7b3374ef741be752112acd05627f683ffe564d",
+      "bytes": 1063
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/candidate.json",
+      "sha256": "32a237585cec8085f776f654f094632d829322e02d3c44157b95f01882d8ef69",
+      "bytes": 11411
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "4692ab525f502ae9adf3b993f734b298431cc5a4f8480e3c11aa0d1256eb20f0",
+      "bytes": 1210
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/install-independent-final.json",
+      "sha256": "36c533a0b2f020a20d719a11ab4361bbe0e1b4838b3a4142d39def854a5cb2a9",
+      "bytes": 4855
+    }
+  ]
+}

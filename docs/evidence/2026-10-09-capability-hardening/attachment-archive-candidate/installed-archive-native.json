@@ -1,0 +1,98 @@
+{
+  "status": "installedArchiveNativeSubsetIndependentlyVerified",
+  "checkedAtUtc": "2026-10-12T14:32:38.897600+00:00",
+  "formalSourceCommit": "a5a24810fd494a9f31e69881c74c55ca2d1fbd49",
+  "formalVersion": "0.1.7 macOS arm64",
+  "scope": "Existing controlled Codex history; no prompt or configuration approval, native system Open/Save panels, actual ZIP readback. Not whole P35/P14/H06.",
+  "nativeChecks": {
+    "defaultMarkdown": true,
+    "loadedDetailsExplicitOptIn": true,
+    "selectedTwoAttachmentsByteEqual": true,
+    "loadedDiffOldAndNewSidesPresent": true,
+    "savePickerCancelKeepsSelection": true,
+    "replacementExplicitlyDistinctFromOriginal": true,
+    "missingSelectedSourceFailsWithoutPublishedZIP": true,
+    "restoredSelectedReplacementPublishesExact44Bytes": true,
+    "normalSaveAndExit": true
+  },
+  "selectedArchive": {
+    "bytes": 5302,
+    "sha256": "fddf5226cafaeeda2214c2221c511d5c6251103d915d32e1ba6a74764bf3f39a",
+    "includedCount": 2,
+    "omittedCount": 1
+  },
+  "replacementArchive": {
+    "bytes": 4727,
+    "sha256": "4437712345a9dce55b4745f630e1da0f8fc4c271b5b9434ec94656d255c30fff",
+    "includedCount": 1,
+    "omittedCount": 3
+  },
+  "installationData": {
+    "manifests": 3,
+    "entriesEach": 217400,
+    "allSameSha256": "49669a6f5ca80985b4ac93e76b5cc05bc23204533d6c0604b11519221f70e963"
+  },
+  "closedAppData": {
+    "all133CompleteSessionRowsEqual": true,
+    "all170DismissedRowsEqual": true,
+    "all53SettingsOriginalValuesEqual": true,
+    "wholeUnsentWorkAndWorktreeListEqual": true,
+    "all40AgentIdsAndOtherFieldsEqual": true,
+    "onlyDifference": "codex.updated_at",
+    "visibleConversationCount": 132,
+    "dbSessionRows": 133,
+    "noNewRetainedSession": true
+  },
+  "installationVerification": "Nine core check groups passed and artifact stability passed; original final driver assertion failed after the intended later app launch and is retained. It is not counted as ten passed checks.",
+  "notProven": [
+    "Native cancellation during writing",
+    "Unknown cleanup case",
+    "Other Agents or Windows",
+    "Terminal output or every tool text form in this replay",
+    "Unloaded history",
+    "Full original P35/P14/H06",
+    "Public release"
+  ],
+  "references": [
+    {
+      "path": "output/2026-10-12-attachment-archive-native/selected-archive-first.json",
+      "sha256": "f345c2b73727510c38f34e7a6c67aa687da1df405908137653ebb6729fa4a946"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-native/replacement-archive.json",
+      "sha256": "4447f020e2247b5034d788bc916ea601abf18f069212b7762d3eebf9e9eb22ac"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-native/missing-source.json",
+      "sha256": "3f8f661b29340c7b80d6d1d609d96337dbdb0712afe00446bf0ff7a1c579c9c0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/native/selected-reported-files.zip",
+      "sha256": "fddf5226cafaeeda2214c2221c511d5c6251103d915d32e1ba6a74764bf3f39a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/native/replacement-selected.zip",
+      "sha256": "4437712345a9dce55b4745f630e1da0f8fc4c271b5b9434ec94656d255c30fff"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/duplicate-bundle-cleanup.json",
+      "sha256": "4692ab525f502ae9adf3b993f734b298431cc5a4f8480e3c11aa0d1256eb20f0"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-install/final-snapshot/data-comparison-first.json",
+      "sha256": "95e416b48850933d04ae15d07b7b3374ef741be752112acd05627f683ffe564d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-archive-candidate/install-independent-final.json",
+      "sha256": "36c533a0b2f020a20d719a11ab4361bbe0e1b4838b3a4142d39def854a5cb2a9"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-independent/installation-lifecycle-clarification.json",
+      "sha256": "7e5e1bbaf2bb0267a23edda4559b3289f654a44133ecf3d56d067c5d1b9786ea"
+    },
+    {
+      "path": "output/2026-10-12-attachment-archive-native/closeout-independent.json",
+      "sha256": "01fa8041e04990646bc05a5e2a41f5b1429a4502ddb9ff42e64db87d189ccd8c"
+    }
+  ]
+}

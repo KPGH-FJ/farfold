@@ -11,13 +11,13 @@
 - 文件可核验、查看、另存并提出版本意见；文字/Markdown/HTML与其他格式的呈现边界分别处理。网页已有公开页、本地单文件、多文件目录和开发服务器路径，工具声明包含读取、观察、点击和普通输入；生产截图明确不可用，工具实际接入覆盖仍有限。
 - Windows 系统适配已进入源码，实机运行与macOS证据分开；公开分发、正式签名和更新渠道按用户决定延后，不作为本轮开发门槛。
 
-## 所选附件归档与工具正文导出（2026-10-12 源码与受控验证）
+## 所选附件归档与工具正文导出（2026-10-12 已安装分项验证）
 
 `ConversationExportHost`统一工作对话和对话列表入口，打开时冻结已加载内容；`conversation_export`默认Markdown，明确勾选才加入安全文本围栏中的工具文字、差异两侧和终端输出。`conversation_archive_snapshot/selection/input`负责声明附件候选、用户选择和规范输入，`conversation_archive_jobs/parse`跟踪准备、启动、取消及准确状态，`ConversationArchiveJobsStatus`接入共用文件保存活动和退出保护。
 
 后端`file_archive`与`file_copy_jobs/archive`复用实际保存任务槽位和退出许可，五个严格主窗口命令以操作编号和输入摘要匹配。`file_delivery/archive_stream`流式生成正文、清单及选中附件，锚定实际文件和父目录、排他发布并读回核对；单项来源失败不静默省略，清理或发布不确定保留未知。生成的编号成员仅保留有限常见后缀提示，不证明内容格式；清单不自动带本机来源路径，正文内用户已有文字保持且有隐私说明。无历史自动读取、远程抓取、持久正文账本或新Agent循环。
 
-[源码/后端/界面/独立与工程证据](evidence/2026-10-09-capability-hardening/attachment-archive/implementation.json)分别记录：实际Rust输入/状态6/14组、定向后端37项、前端249项、完整App两引擎各23项；全量前端5,071项、Rust1,578项/6忽略，格式为精确保留历史回执后复查。尚未安装，本机正式版本仍为HTTP添加片；原生选取到ZIP产物及Windows需各自实证。
+[源码/后端/界面/独立与工程证据](evidence/2026-10-09-capability-hardening/attachment-archive/implementation.json)分别记录：实际Rust输入/状态6/14组、定向后端37项、前端249项、完整App两引擎各23项；全量前端5,071项、Rust1,578项/6忽略，格式为精确保留历史回执后复查。`a5a24810`已安装并完成[原生选择器到实际ZIP分项](evidence/2026-10-09-capability-hardening/attachment-archive-candidate/installed-archive-native.json)，两项附件和替代文件、清单及字节核对、取消选择器与失效源文件保护已有证据。写入中原生取消、未知清理、其他Agent及Windows仍需各自实证。
 
 ## HTTP MCP添加（2026-10-12 正式分项验证）
 
