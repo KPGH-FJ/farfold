@@ -1,0 +1,66 @@
+"""Publish exact installation receipt, then remove only the verified generated app."""
+import datetime
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import shutil
+import sys
+
+sys.dont_write_bytecode = True
+ROOT = Path('/Users/tw/Desktop/farfold')
+PUBLIC = ROOT / 'docs/evidence/2026-10-09-capability-hardening/docx-search-candidate'
+PRIVATE = ROOT / 'output/2026-10-14-docx-search-install'
+COMMIT = '52d21a3adb64816e868c4146166a7999754422e7'
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def main():
+    independent_path = PUBLIC / 'install-independent-final.json'
+    independent = json.loads(independent_path.read_bytes())
+    assert independent['sourceCommit'] == COMMIT and independent['result'] == 'passed'
+    assert independent['failures'] == [] and len(independent['checks']) == 10
+    assert all(check['passed'] for check in independent['checks'].values())
+    operation = PRIVATE / 'install-operation.json'
+    installed = json.loads(operation.read_bytes())
+    assert installed['candidateCommit'] == COMMIT
+    assert installed['installed'] and installed['phase'] == 'installedVerifiedNotLaunched'
+    assert installed['launched'] is False and installed['realAgentInvoked'] is False
+    target = PUBLIC / 'installation.json'
+    cleanup = PUBLIC / 'duplicate-cleanup.json'
+    assert not target.exists() and not cleanup.exists()
+    spec = importlib.util.spec_from_file_location('docx_cleanup_candidate', PUBLIC / 'verify-candidate.py')
+    checks = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(checks)
+    candidate = json.loads((PUBLIC / 'candidate.json').read_bytes())
+    duplicate = ROOT / 'src-tauri/target/release/bundle/macos/Farfold.app'
+    formal = Path('/Applications/Farfold.app')
+    assert checks.APP == duplicate and candidate['candidateApp'] == str(duplicate)
+    assert duplicate != formal and all(not p.is_symlink() for p in (duplicate, *duplicate.parents))
+    expected = (candidate['candidateFiles'], candidate['candidateModes'])
+    assert checks.bundle(duplicate) == checks.bundle(formal) == expected
+    archive = checks.archive_path(COMMIT)
+    assert digest(archive) == candidate['archiveSha256']
+    checks.zip_matches(archive, *expected)
+    with target.open('xb') as handle:
+        handle.write(operation.read_bytes())
+    assert digest(target) == digest(operation)
+    shutil.rmtree(duplicate)
+    assert not duplicate.exists() and checks.bundle(formal) == expected
+    assert digest(archive) == candidate['archiveSha256']
+    receipt = {'sourceCommit': COMMIT, 'completedAtUtc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+               'removedPath': str(duplicate), 'exactCandidateAndFormalFiveFilesAndModesMatched': True,
+               'formalApplicationPreserved': True, 'archivePreserved': str(archive),
+               'independentInstallation': {'path': str(independent_path.relative_to(ROOT)), 'sha256': digest(independent_path)},
+               'boundary': 'Only the exact verified generated app duplicate was removed; no source, formal app, archive, backup or user data was removed.'}
+    with cleanup.open('x') as handle:
+        json.dump(receipt, handle, indent=2)
+        handle.write('\n')
+    print(json.dumps({'publishedInstallationSha256': digest(target), 'duplicateRemoved': str(duplicate), 'cleanupSha256': digest(cleanup)}))
+
+
+if __name__ == '__main__':
+    main()

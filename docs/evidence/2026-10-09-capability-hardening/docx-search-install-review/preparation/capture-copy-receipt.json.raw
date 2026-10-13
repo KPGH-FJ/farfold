@@ -1,0 +1,16 @@
+{
+  "allNineMatchOnlyNormalExitPinDelta": true,
+  "copiedOrVerified": [
+    "output/2026-10-14-docx-search-install/data_manifest.py",
+    "output/2026-10-14-docx-search-install/observe_normal_exit.py",
+    "output/2026-10-14-docx-search-install/install_data_snapshot.py",
+    "output/2026-10-14-docx-search-install/capture_snapshot.py",
+    "output/2026-10-14-docx-search-install/backup_metadata.py",
+    "output/2026-10-14-docx-search-install/install_verified_candidate.py"
+  ],
+  "priorRootInvocation": {
+    "chunk": "0c3f52",
+    "exitCode": 2,
+    "reason": "Root copy filter matched no full directory; Python could not open absent capture_snapshot.py. No capture script, database operation or output started. Corrected exact parent selection before first actual capture."
+  }
+}

@@ -1,0 +1,80 @@
+"""Pure validators for complete retained-data manifests. Import performs no I/O."""
+import hashlib
+import json
+import os
+from pathlib import PurePosixPath
+import re
+import stat
+
+ROOT_NAMES = ('appData', 'webkit', 'cache')
+KINDS = ('directory', 'file', 'symlink', 'special')
+TYPES = {'directory': stat.S_IFDIR, 'file': stat.S_IFREG, 'symlink': stat.S_IFLNK}
+
+
+def require(ok, message):
+    if not ok:
+        raise RuntimeError(message)
+
+
+def signature(value):
+    return (value.st_dev, value.st_ino, value.st_mode, value.st_size,
+            value.st_mtime_ns, value.st_ctime_ns, value.st_uid)
+
+
+def validate_records(records):
+    counts = {root: dict.fromkeys(KINDS, 0) for root in ROOT_NAMES}
+    entries = {}
+    for item in records:
+        require(type(item) is dict, 'Manifest entry is not an object')
+        common = {'root', 'path', 'kind', 'type', 'mode'}
+        kind, root, name = item.get('kind'), item.get('root'), item.get('path')
+        require(type(root) is str and root in ROOT_NAMES and type(kind) is str and kind in KINDS, 'Manifest root or kind differs')
+        extras = {'file': {'size', 'sha256'}, 'symlink': {'target'}}.get(kind, set())
+        require(set(item) == common | extras, 'Manifest entry fields differ')
+        require(type(name) is str and name and '\x00' not in name, 'Manifest path is invalid')
+        parts = PurePosixPath(name).parts
+        require(name == '.' or (not name.startswith('/') and all(part not in ('', '.', '..') for part in name.split('/')) and str(PurePosixPath(name)) == name), 'Manifest path is not canonical')
+        require(type(item['mode']) is int and 0 <= item['mode'] <= 0o7777 and type(item['type']) is int, 'Manifest mode or type is invalid')
+        if kind == 'special':
+            require(item['type'] in (stat.S_IFIFO, stat.S_IFSOCK, stat.S_IFBLK, stat.S_IFCHR), 'Manifest special type differs')
+        else:
+            require(item['type'] == TYPES[kind], 'Manifest kind and type disagree')
+        if kind == 'file':
+            require(type(item['size']) is int and item['size'] >= 0 and type(item['sha256']) is str and re.fullmatch('[0-9a-f]{64}', item['sha256']), 'Manifest file size or hash differs')
+        if kind == 'symlink':
+            require(type(item['target']) is str and item['target'] and '\x00' not in item['target'], 'Manifest symlink target is invalid')
+        key = root, name
+        require(key not in entries, 'Duplicate manifest entry')
+        if name == '.':
+            require(kind == 'directory', 'Manifest root must be a directory')
+        else:
+            parent = str(PurePosixPath(name).parent)
+            require((root, parent) in entries and entries[(root, parent)]['kind'] == 'directory', 'Manifest parent is absent or not a directory')
+        entries[key] = item
+        counts[root][kind] += 1
+    require(all((root, '.') in entries for root in ROOT_NAMES), 'Complete manifest needs all three roots')
+    return counts, entries
+
+
+def validated_manifest(path):
+    require(all(not p.is_symlink() for p in (path, *path.parents)), 'Manifest ancestor is symbolic')
+    before = path.stat()
+    require(stat.S_ISREG(before.st_mode) and stat.S_IMODE(before.st_mode) == 0o600 and before.st_uid == os.getuid(), 'Manifest must be owner-held 0600')
+    digest = hashlib.sha256()
+    records = []
+    with os.fdopen(os.open(path, os.O_RDONLY | os.O_NOFOLLOW), 'rb') as handle:
+        require(signature(before) == signature(os.fstat(handle.fileno())), 'Manifest changed while opening')
+        for line in handle:
+            require(line.endswith(b'\n') and line.strip(), 'Manifest line is incomplete')
+            digest.update(line)
+            records.append(json.loads(line))
+        require(signature(before) == signature(os.fstat(handle.fileno())) == signature(path.stat()), 'Manifest changed while reading')
+    counts, entries = validate_records(records)
+    return {'counts': counts, 'sha256': digest.hexdigest()}, entries
+
+
+def manifest(path, expected_count=None):
+    summary, _ = validated_manifest(path)
+    if expected_count is not None:
+        require(type(expected_count) is int and expected_count > 0 and sum(sum(c.values()) for c in summary['counts'].values()) == expected_count, 'Manifest count differs')
+    return summary

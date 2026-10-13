@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:46:00.225453+00:00",
+  "result": "PASS_FOR_EXACT_PATH_ADAPTATION_ONLY",
+  "renderBefore": {
+    "path": "output/2026-10-14-docx-search-install-preparation/render-before-engineering-v2.py",
+    "bytes": 11508,
+    "sha256": "d4e8bf96b13c3cd5950980a53100f5e1de6a8ec3ec1358a47c645c427f45f6ff"
+  },
+  "renderCurrent": {
+    "path": "output/2026-10-14-docx-search-install-preparation/render.py",
+    "bytes": 11891,
+    "sha256": "6c385a6d92327af893d2e31be9b5b1f9a5d72008d495e045574da87d0e2b1021"
+  },
+  "exactReverseReproducesPriorBytes": true,
+  "changedBehavior": "Inventory source is inventory-plan-v2.json. A single exact integration-prefixed mapping rewrites checks-run/, checks-freeze/, inventory-plan.json after the existing phase-prefix adaptation. No other renderer bytes changed.",
+  "originChecks": "All nine origin bytes/hashes match origins.json; prefix occurrences statically inspected without running transform or generated tools. No known-baseline assignment overwrites these engineering path variables.",
+  "pathMappings": [
+    {
+      "tool": "verify-candidate.py",
+      "old": "output/2026-10-14-docx-search-integration/checks-run/",
+      "new": "output/2026-10-14-docx-search-integration/checks-run-v2/",
+      "occurrences": 2
+    },
+    {
+      "tool": "verify-candidate.py",
+      "old": "output/2026-10-14-docx-search-integration/checks-freeze/",
+      "new": "output/2026-10-14-docx-search-integration/checks-freeze-v2/",
+      "occurrences": 3
+    },
+    {
+      "tool": "verify-candidate.py",
+      "old": "output/2026-10-14-docx-search-integration/inventory-plan.json",
+      "new": "output/2026-10-14-docx-search-integration/inventory-plan-v2.json",
+      "occurrences": 1
+    }
+  ],
+  "unchangedGates": [
+    "Pin key/type validation and missing-pin refusal in generated configured/require_configured",
+    "Pinned origin/utility validation",
+    "Inventory SHA/count check and candidate/install exact scope equality",
+    "Prior normal-exit raw schema/provenance checks",
+    "Latest NEW26 capture strict2/data provenance and 512000-byte consolidated a700 baseline",
+    "Fresh before/backup/preinstall prerequisites; no data pins populated"
+  ],
+  "savedEvidenceMetadata": [
+    {
+      "path": "output/2026-10-14-docx-search-integration/inventory-plan-v2.json",
+      "bytes": 566400,
+      "sha256": "87de403af8ff7fd3c301daa8271f6cabdb75c5d8d70fc0568b3d8d1dd95f0f51"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-integration/checks-freeze-v2/freeze.json",
+      "bytes": 292525,
+      "sha256": "4b8ddfb51fb85b65c7378e6f84ebded40f59aed6b00f3505877567aea8f4086f"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-integration/checks-run-v2/summary.json",
+      "bytes": 6323,
+      "sha256": "68b117bad0cc9b56ebc8c77ac0e41ffbaf29703e490f885229cfd32f6088e27f"
+    }
+  ],
+  "readmeBefore": {
+    "path": "output/2026-10-14-docx-search-install-preparation/README-before-engineering-v2.md.raw",
+    "bytes": 2735,
+    "sha256": "43c6fb0ae70b86d5669c9da2f7d101bb66baae07e9f3c73c6640bb019a223a8f"
+  },
+  "readmeAfter": {
+    "path": "output/2026-10-14-docx-search-install-preparation/README.md",
+    "bytes": 3446,
+    "sha256": "ace3ac4a444a16d64556bdf41be331ef469e9cff556d485c0a9440f9cd6e9abf"
+  },
+  "stillPending": [
+    "New source commit and actual public/private engineering pins",
+    "Final generated candidate tool review; no new render executed here",
+    "Exact full inventory-to-commit membership including synthetic output inputs",
+    "Fresh normal-process/data receipts before install"
+  ],
+  "boundary": "Read-only script/static metadata audit plus explicitly authorized README update and this new record. No renderer main/generated function/main, build, App, process observation, SQLite/DB bytes, capture or engineering test executed. Old review previews and preparation-freeze remain original bytes; README-before preserves its prior bytes."
+}

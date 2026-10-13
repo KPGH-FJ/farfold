@@ -1,0 +1,179 @@
+{
+  "phase": "PREPARATION_ONLY_NO_GENERATED_MAIN_EXECUTED",
+  "pins": {
+    "SOURCE_COMMIT": "52d21a3adb64816e868c4146166a7999754422e7",
+    "ENGINEERING_SHA": "22b61449409fb94a6e6945bb8dc7c3c4b8a7f610c38c163344376cde93a00eb6",
+    "PRIVATE_ENGINEERING_SHA": "68b117bad0cc9b56ebc8c77ac0e41ffbaf29703e490f885229cfd32f6088e27f",
+    "EXPECTED_INPUT_COUNT": 1799,
+    "INVENTORY_SHA": "87de403af8ff7fd3c301daa8271f6cabdb75c5d8d70fc0568b3d8d1dd95f0f51",
+    "FREEZE_SHA": "4b8ddfb51fb85b65c7378e6f84ebded40f59aed6b00f3505877567aea8f4086f",
+    "NORMAL_EXIT_SHA": "dc80c96b70c604ebb13e860c08f280a408b53ba5317010198eb6d106a848c10b",
+    "BEFORE_SUMMARY_SHA": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+    "BACKUP_RECEIPT_SHA": "07e3f9517feb886b8505304ef1f70299ec513aff7dc12c32a561f64d7771c114"
+  },
+  "inputScopeReady": true,
+  "files": [
+    {
+      "path": "output/2026-10-14-docx-search-install-preparation/review-install/candidate/prepare-candidate.py",
+      "bytes": 4493,
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1",
+      "origin": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/prepare-candidate.py",
+        "bytes": 4493,
+        "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+      },
+      "diff": "output/2026-10-14-docx-search-install-preparation/review-install/diffs/candidate-prepare-candidate.py.diff",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install-preparation/review-install/candidate/verify-candidate.py",
+      "bytes": 59172,
+      "sha256": "c5569619e1995e14c375602669b993c8d6110db74b1b0538f588d02953918fa2",
+      "origin": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/verify-candidate.py",
+        "bytes": 48142,
+        "sha256": "ef20bbbae69a3a495d2cc27ae752337c9c3d4de899aeb088d73dae0f8876edca"
+      },
+      "diff": "output/2026-10-14-docx-search-install-preparation/review-install/diffs/candidate-verify-candidate.py.diff",
+      "diffSha256": "6c6544f82965b664cc2914bf08a788a15cc9ec8abc34e2c853406f0837494f2d"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install-preparation/review-install/install/data_manifest.py",
+      "bytes": 4258,
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "origin": {
+        "path": "output/2026-10-13-attachment-search-install/data_manifest.py",
+        "bytes": 4258,
+        "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+      },
+      "diff": "output/2026-10-14-docx-search-install-preparation/review-install/diffs/install-data_manifest.py.diff",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install-preparation/review-install/install/observe_normal_exit.py",
+      "bytes": 3435,
+      "sha256": "c095f02abfdf7ec21358c5c3d9297f25a7bd0d15d3de154aea9ed4e5bd4d6ff7",
+      "origin": {
+        "path": "output/2026-10-13-attachment-search-install/observe_normal_exit.py",
+        "bytes": 3445,
+        "sha256": "893b5ac8404624e55385eaa378d965eca95430ff55723c3bceac574a365a9504"
+      },
+      "diff": "output/2026-10-14-docx-search-install-preparation/review-install/diffs/install-observe_normal_exit.py.diff",
+      "diffSha256": "3d324b582090c02a1d05932491d6343319ceed67dd0d2cbba767c0710a924979"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install-preparation/review-install/install/install_data_snapshot.py",
+      "bytes": 6222,
+      "sha256": "d3a3c52024630411211dbf7b6f59847c5b428b5b68471b64942444237fb51afc",
+      "origin": {
+        "path": "output/2026-10-13-attachment-search-install/install_data_snapshot.py",
+        "bytes": 6228,
+        "sha256": "739ba3dc1b61d697ed7038a771bb196f9a6c1f1104011d61a1a97efd86b96bfd"
+      },
+      "diff": "output/2026-10-14-docx-search-install-preparation/review-install/diffs/install-install_data_snapshot.py.diff",
+      "diffSha256": "8479a12b94fe7d9fd027a7f26112f959d1fd3e632b631af9b8059f58b5497722"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install-preparation/review-install/install/capture_snapshot.py",
+      "bytes": 2841,
+      "sha256": "ff12a8118e4295cdee3b2b04b84aa80c05253dbc92cd6a82e16ab49fdc7dc27e",
+      "origin": {
+        "path": "output/2026-10-13-attachment-search-install/capture_snapshot.py",
+        "bytes": 2847,
+        "sha256": "a0e34a0dd2bbf4671eb9144fd3cadde1ab4f3f0d0c3bec49273b4d20dbbf1806"
+      },
+      "diff": "output/2026-10-14-docx-search-install-preparation/review-install/diffs/install-capture_snapshot.py.diff",
+      "diffSha256": "d960aaea34a9e25bf5e0bd93f73e133825157dbb223fd733307af460cc1dfe38"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install-preparation/review-install/install/backup_metadata.py",
+      "bytes": 10577,
+      "sha256": "2abca5445040f5dbb7c3513153a86426d5e91c1d3c0a3ea946fcfc4c3ecea15f",
+      "origin": {
+        "path": "output/2026-10-13-attachment-search-install/backup_metadata.py",
+        "bytes": 10583,
+        "sha256": "949bda3311cb0a69143897093707828506b2d8e9b343ecab2c40668d47d0b9ef"
+      },
+      "diff": "output/2026-10-14-docx-search-install-preparation/review-install/diffs/install-backup_metadata.py.diff",
+      "diffSha256": "bfa3a44d9e4455573ce0c87bbbeb9b363e226d0577a6ae7258299deb893631f5"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install-preparation/review-install/install/install_verified_candidate.py",
+      "bytes": 42169,
+      "sha256": "b445dbfbe51c69b62f228afdf2ef5059324894539533dfa70cc0c66f807568b6",
+      "origin": {
+        "path": "output/2026-10-13-attachment-search-install/install_verified_candidate.py",
+        "bytes": 34158,
+        "sha256": "1616ed6f02f635ed13699f2e4c04ac811c094fb0ec31a8123a0b1c79ecb8203c"
+      },
+      "diff": "output/2026-10-14-docx-search-install-preparation/review-install/diffs/install-install_verified_candidate.py.diff",
+      "diffSha256": "3b66f995ac87b149b5c840ccd0fc9e8a0f3da6c9ccd6aec1b028ea233058a644"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install-preparation/review-install/independent/verify_installed_final.py",
+      "bytes": 14247,
+      "sha256": "29779512788bfe7973b604d4b2ae265b842542a0a7ba09168dc05b6497c8f948",
+      "origin": {
+        "path": "output/2026-10-13-attachment-search-independent-install/verify_installed_final.py",
+        "bytes": 14298,
+        "sha256": "09b910593119621ddb2ef67fc4fd971355da0126ec0de85739d2f97b8291ad44"
+      },
+      "diff": "output/2026-10-14-docx-search-install-preparation/review-install/diffs/independent-verify_installed_final.py.diff",
+      "diffSha256": "174b6d4308e4afc0b02816b2741355c1df92dc5a8044c9b83c761065de4bf367"
+    }
+  ],
+  "tools": [
+    {
+      "preparedPath": "output/2026-10-14-docx-search-install-preparation/review-install/candidate/prepare-candidate.py",
+      "preparedSha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1",
+      "finalPath": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/prepare-candidate.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-docx-search-install-preparation/review-install/candidate/verify-candidate.py",
+      "preparedSha256": "c5569619e1995e14c375602669b993c8d6110db74b1b0538f588d02953918fa2",
+      "finalPath": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/verify-candidate.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-docx-search-install-preparation/review-install/install/data_manifest.py",
+      "preparedSha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "finalPath": "output/2026-10-14-docx-search-install/data_manifest.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-docx-search-install-preparation/review-install/install/observe_normal_exit.py",
+      "preparedSha256": "c095f02abfdf7ec21358c5c3d9297f25a7bd0d15d3de154aea9ed4e5bd4d6ff7",
+      "finalPath": "output/2026-10-14-docx-search-install/observe_normal_exit.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-docx-search-install-preparation/review-install/install/install_data_snapshot.py",
+      "preparedSha256": "d3a3c52024630411211dbf7b6f59847c5b428b5b68471b64942444237fb51afc",
+      "finalPath": "output/2026-10-14-docx-search-install/install_data_snapshot.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-docx-search-install-preparation/review-install/install/capture_snapshot.py",
+      "preparedSha256": "ff12a8118e4295cdee3b2b04b84aa80c05253dbc92cd6a82e16ab49fdc7dc27e",
+      "finalPath": "output/2026-10-14-docx-search-install/capture_snapshot.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-docx-search-install-preparation/review-install/install/backup_metadata.py",
+      "preparedSha256": "2abca5445040f5dbb7c3513153a86426d5e91c1d3c0a3ea946fcfc4c3ecea15f",
+      "finalPath": "output/2026-10-14-docx-search-install/backup_metadata.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-docx-search-install-preparation/review-install/install/install_verified_candidate.py",
+      "preparedSha256": "b445dbfbe51c69b62f228afdf2ef5059324894539533dfa70cc0c66f807568b6",
+      "finalPath": "output/2026-10-14-docx-search-install/install_verified_candidate.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-docx-search-install-preparation/review-install/independent/verify_installed_final.py",
+      "preparedSha256": "29779512788bfe7973b604d4b2ae265b842542a0a7ba09168dc05b6497c8f948",
+      "finalPath": "output/2026-10-14-docx-search-independent-install/verify_installed_final.py"
+    }
+  ],
+  "configurationInputs": {
+    "output/2026-10-14-docx-search-install-preparation/render.py": "6c385a6d92327af893d2e31be9b5b1f9a5d72008d495e045574da87d0e2b1021",
+    "output/2026-10-14-docx-search-install-preparation/pins-install.json": "1579438c7780ad7f446ccf2608b71a266ac8afb8fc0660eaed37c3619af22da6",
+    "output/2026-10-14-docx-search-install-preparation/origins.json": "fda3ad3f643e15dec4a9be7b829c7740f21f885d3911393dd743e0e9d9e174a2",
+    "output/2026-10-14-docx-search-install-preparation/known-baseline.json": "129b25b2f37b29ae5d53cff00eb535d6d754f449712f5331ca8fbd9f49bd3465",
+    "output/2026-10-14-docx-search-install-preparation/latest_data.py.inc": "64abb9f16cd5a335cb953a2bfcef2c83a40faff4937242b5623cf47cc163e1d1"
+  }
+}

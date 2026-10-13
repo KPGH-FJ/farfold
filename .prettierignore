@@ -303,3 +303,12 @@ docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/candid
 docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/installation.json
 docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/install-independent-final.json
 docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/duplicate-cleanup.json
+
+# Preserve original DOCX search candidate and installation receipts.
+docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-inputs.json
+docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-inputs-after.json
+docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate.json
+docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-independent.json
+docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/installation.json
+docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/install-independent-final.json
+docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/duplicate-cleanup.json

@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:52:08.018218+00:00",
+  "verdict": "NORMAL_OBSERVATION_AND_CAPTURE_COPY_VERIFIED_NO_BLOCKER",
+  "scope": "Read-only metadata, exact script bytes and two authorized original tool completions. No App, process observation, database bytes or generated tool executed.",
+  "normalObservation": {
+    "path": "output/2026-10-14-docx-search-install/normal-exit-observation.json",
+    "bytes": 4781,
+    "sha256": "dc80c96b70c604ebb13e860c08f280a408b53ba5317010198eb6d106a848c10b"
+  },
+  "normalProcess": {
+    "exactLowercaseExecutable": true,
+    "count": 0,
+    "actualObserverExitCode": 0,
+    "newQuitPerformed": false,
+    "rootContinuityDeclared": true,
+    "unknownWorkMarkedComplete": false,
+    "priorStrictExit2StillUnaccepted": true
+  },
+  "capturePreparation": {
+    "path": "output/2026-10-14-docx-search-install-preparation/review-capture/preparation.json",
+    "bytes": 10378,
+    "sha256": "0d0dc0d67682a981228826739a7d73be645e61a24d40fc05188c64f9c9227b84"
+  },
+  "literalDeltaOnly": true,
+  "nineScripts": [
+    {
+      "path": "candidate/prepare-candidate.py",
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1",
+      "normalPinChanged": false
+    },
+    {
+      "path": "candidate/verify-candidate.py",
+      "sha256": "c5569619e1995e14c375602669b993c8d6110db74b1b0538f588d02953918fa2",
+      "normalPinChanged": false
+    },
+    {
+      "path": "install/data_manifest.py",
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "normalPinChanged": false
+    },
+    {
+      "path": "install/observe_normal_exit.py",
+      "sha256": "c095f02abfdf7ec21358c5c3d9297f25a7bd0d15d3de154aea9ed4e5bd4d6ff7",
+      "normalPinChanged": false
+    },
+    {
+      "path": "install/install_data_snapshot.py",
+      "sha256": "d3a3c52024630411211dbf7b6f59847c5b428b5b68471b64942444237fb51afc",
+      "normalPinChanged": false
+    },
+    {
+      "path": "install/capture_snapshot.py",
+      "sha256": "ff12a8118e4295cdee3b2b04b84aa80c05253dbc92cd6a82e16ab49fdc7dc27e",
+      "normalPinChanged": false
+    },
+    {
+      "path": "install/backup_metadata.py",
+      "sha256": "2abca5445040f5dbb7c3513153a86426d5e91c1d3c0a3ea946fcfc4c3ecea15f",
+      "normalPinChanged": false
+    },
+    {
+      "path": "install/install_verified_candidate.py",
+      "sha256": "9b8e7e9b00c62ad04ae22fa4370b9ae0481f2b0644341d7c51f15ebad4dc4d2d",
+      "normalPinChanged": true
+    },
+    {
+      "path": "independent/verify_installed_final.py",
+      "sha256": "17d0d67b2b9d4c02344b53da5ef3080c7fed6b05671b3c13209d2544d9246978",
+      "normalPinChanged": true
+    }
+  ],
+  "candidateTwoFinalCopiesIdentical": true,
+  "sixInstallHelperFinalCopiesIdentical": true,
+  "copyReceipt": {
+    "path": "output/2026-10-14-docx-search-install-preparation/capture-copy-receipt.json",
+    "bytes": 784,
+    "sha256": "05182aadd11192792facb4f46db379e77852e4bcd9563ea0159e5dcb2656115d"
+  },
+  "originalCompletions": {
+    "6e03fa": {
+      "record": {
+        "path": "output/2026-10-14-docx-search-independent/observe-capture-6e03fa.jsonl.raw",
+        "bytes": 1268,
+        "sha256": "7c80cd11c1a1bce350fade0f840fb23105d61dd1ecaef2323a41d20f0fe182f7"
+      },
+      "byteOffset": 27729245,
+      "timestamp": "2026-10-13T17:49:53.690Z",
+      "actualExitCode": 0
+    },
+    "0c3f52": {
+      "record": {
+        "path": "output/2026-10-14-docx-search-independent/observe-capture-0c3f52.jsonl.raw",
+        "bytes": 1724,
+        "sha256": "049bea0a4f4b6b6c09d283bd3de5f1480280dc22bb0c310ba2e6dd9102c764f0"
+      },
+      "byteOffset": 27748221,
+      "timestamp": "2026-10-13T17:50:15.301Z",
+      "actualExitCode": 2
+    }
+  },
+  "initialCopyMistake": {
+    "actualExitCode": 2,
+    "classification": "Python failed to open missing capture_snapshot.py before any capture code ran; exact copy selection was then corrected. This is not a failed data capture and not a hidden retry of capture.",
+    "recordPreserved": true
+  },
+  "captureReadiness": "Fresh normal SHA is now exact and reviewed. Before/backup/preinstall may proceed under the existing authorization and exclusive destinations. Root reports the first actual before capture is running; this review does not claim its result.",
+  "replacementReadiness": "BLOCKED: BEFORE_SUMMARY_SHA and BACKUP_RECEIPT_SHA remain null; wait actual fresh capture/backup receipts and final pin/seal review.",
+  "safeToPublish": true
+}

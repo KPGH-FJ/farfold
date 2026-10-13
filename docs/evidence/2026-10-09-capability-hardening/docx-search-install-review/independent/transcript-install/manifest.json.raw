@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "scope": "Six authorized original tool completion records copied byte for byte. Two originals contain a fulfilled-wrapper and a sibling same-installation capture observation; the full original line is retained without rewriting.",
+  "entries": [
+    {
+      "path": "output/2026-10-14-docx-search-independent/transcript-install/candidate-build-f8bf5f.jsonl.raw",
+      "bytes": 1098,
+      "sha256": "acf18065097a4b9eea54c8428d66c1485b3cd073cc934f810e6b1152f56ccc31",
+      "chunk": "f8bf5f",
+      "stage": "candidate-build",
+      "actualExitCode": 0,
+      "sourceByteOffset": 27768923,
+      "timestamp": "2026-10-13T17:50:45.911Z",
+      "callId": "call_16d2303c5efc4826af0a4dbe0aa3b233",
+      "ordinal": 9710,
+      "fulfilledWrapper": true
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/transcript-install/candidate-nine-02545e.jsonl.raw",
+      "bytes": 1388,
+      "sha256": "2a4fc930232c0d9edebdcd81384c060b28128a663df254c74d3db58d1b9f7079",
+      "chunk": "02545e",
+      "stage": "candidate-nine",
+      "actualExitCode": 0,
+      "sourceByteOffset": 27792160,
+      "timestamp": "2026-10-13T17:51:08.072Z",
+      "callId": "call_0f7e5d993b0a45f3898b1716a0023069",
+      "ordinal": 9733,
+      "fulfilledWrapper": true
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/transcript-install/installer-49104b.jsonl.raw",
+      "bytes": 822,
+      "sha256": "575a1066784d41b90b189b2f6afb19cc223d9c39369155347465e800a15727e9",
+      "chunk": "49104b",
+      "stage": "installer",
+      "actualExitCode": 0,
+      "sourceByteOffset": 28056366,
+      "timestamp": "2026-10-13T17:56:51.801Z",
+      "callId": "call_3804f8e29fe74602876c678e91e211b2",
+      "ordinal": 9903,
+      "fulfilledWrapper": false
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/transcript-install/after-capture-ea537f.jsonl.raw",
+      "bytes": 1087,
+      "sha256": "5a0f95908c870a20057be1becddd6065581e25f05881a87651d8c46468d9efba",
+      "chunk": "ea537f",
+      "stage": "after-capture",
+      "actualExitCode": 0,
+      "sourceByteOffset": 28106412,
+      "timestamp": "2026-10-13T17:57:33.093Z",
+      "callId": "call_257567bf39434e5da7782213ec8beb20",
+      "ordinal": 9926,
+      "fulfilledWrapper": false
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/transcript-install/installed-ten-184d75.jsonl.raw",
+      "bytes": 1236,
+      "sha256": "b6cadc17ad240b07162d6eb5d9351bf3df96d46e67771d4d8b9256a8234b2aef",
+      "chunk": "184d75",
+      "stage": "installed-ten",
+      "actualExitCode": 0,
+      "sourceByteOffset": 28125774,
+      "timestamp": "2026-10-13T17:58:05.338Z",
+      "callId": "call_cf9583c97a4e4bf185ba38eb45b9b29c",
+      "ordinal": 9941,
+      "fulfilledWrapper": false
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/transcript-install/duplicate-cleanup-7f500a.jsonl.raw",
+      "bytes": 992,
+      "sha256": "cb279b05d4674508f19f7d3c8b445746c25b7c91a88a4caf56ce9e1738dc1f90",
+      "chunk": "7f500a",
+      "stage": "duplicate-cleanup",
+      "actualExitCode": 0,
+      "sourceByteOffset": 28130438,
+      "timestamp": "2026-10-13T17:58:08.621Z",
+      "callId": "call_5d67799cdb994a08a435047639430434",
+      "ordinal": 9946,
+      "fulfilledWrapper": false
+    }
+  ],
+  "extractionBookkeeping": "Initial extractor expected unwrapped tool values, preserved four exact records then stopped on a completeness assertion. It executed no product action; this extraction handles the actual fulfilled-wrapper schema and verifies the four existing bytes unchanged."
+}

@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:56:06.509859+00:00",
+  "verdict": "NO_BLOCKER_FOR_AUTHORIZED_INSTALL_WITH_EXISTING_LIVE_PREFLIGHT_GATES",
+  "scope": "Incremental read-only review: exact final two-pin delta, saved full manifests and saved backup file hashes, candidate receipt and tool seal. No SQLite, live data-root read, App, process observation, generated main or install executed.",
+  "finalPreparation": {
+    "path": "output/2026-10-14-docx-search-install-preparation/review-install/preparation.json",
+    "bytes": 10502,
+    "sha256": "a8105c16f62f9d06a70098cefb0a0d400904ae06080c7dcdb3678acb81ea494d"
+  },
+  "exactTwoDataPinDelta": true,
+  "nineCopiedRuntimeToolsMatch": true,
+  "toolDeltas": [
+    {
+      "path": "candidate/prepare-candidate.py",
+      "changed": false,
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+    },
+    {
+      "path": "candidate/verify-candidate.py",
+      "changed": false,
+      "sha256": "c5569619e1995e14c375602669b993c8d6110db74b1b0538f588d02953918fa2"
+    },
+    {
+      "path": "install/data_manifest.py",
+      "changed": false,
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+    },
+    {
+      "path": "install/observe_normal_exit.py",
+      "changed": false,
+      "sha256": "c095f02abfdf7ec21358c5c3d9297f25a7bd0d15d3de154aea9ed4e5bd4d6ff7"
+    },
+    {
+      "path": "install/install_data_snapshot.py",
+      "changed": false,
+      "sha256": "d3a3c52024630411211dbf7b6f59847c5b428b5b68471b64942444237fb51afc"
+    },
+    {
+      "path": "install/capture_snapshot.py",
+      "changed": false,
+      "sha256": "ff12a8118e4295cdee3b2b04b84aa80c05253dbc92cd6a82e16ab49fdc7dc27e"
+    },
+    {
+      "path": "install/backup_metadata.py",
+      "changed": false,
+      "sha256": "2abca5445040f5dbb7c3513153a86426d5e91c1d3c0a3ea946fcfc4c3ecea15f"
+    },
+    {
+      "path": "install/install_verified_candidate.py",
+      "changed": true,
+      "sha256": "b445dbfbe51c69b62f228afdf2ef5059324894539533dfa70cc0c66f807568b6"
+    },
+    {
+      "path": "independent/verify_installed_final.py",
+      "changed": true,
+      "sha256": "29779512788bfe7973b604d4b2ae265b842542a0a7ba09168dc05b6497c8f948"
+    }
+  ],
+  "seal": {
+    "path": "output/2026-10-14-docx-search-install-preparation/generated-tools.json",
+    "bytes": 5806,
+    "sha256": "734953e5b8226cad089b19feaf3932aa80d487f679fefa027cc729b6df69ca6b"
+  },
+  "sealActualExecution": "Root reported actual exit 0 chunk335881; saved 9-tool seal and all its file/dependency hashes independently verified.",
+  "data": {
+    "beforeAndPreinstallCanonicalEntries": 217400,
+    "beforeAndPreinstallByteEqual": true,
+    "allThreeRootsPresentAndEntrySchemaParentUniquenessValidated": true,
+    "manifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195450,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 152,
+        "file": 100,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "beforeSummary": {
+      "path": "output/2026-10-14-docx-search-install/install-data-before-summary.json",
+      "bytes": 419,
+      "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+    },
+    "preinstallSummary": {
+      "path": "output/2026-10-14-docx-search-install/install-data-preinstall-summary.json",
+      "bytes": 419,
+      "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+    },
+    "beforeAndPreinstallSavedExecutionExitCode": 0,
+    "backupReceipt": {
+      "path": "output/2026-10-14-docx-search-install/metadata-backup-receipt.json",
+      "bytes": 1358,
+      "sha256": "07e3f9517feb886b8505304ef1f70299ec513aff7dc12c32a561f64d7771c114"
+    },
+    "savedRawMainWalShmHashesMatchBeforeAndLatestNew26Metadata": true,
+    "consolidatedSavedBackupBytes": 512000,
+    "consolidatedSavedBackupSha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+    "normalObservation": {
+      "path": "output/2026-10-14-docx-search-install/normal-exit-observation.json",
+      "bytes": 4781,
+      "sha256": "dc80c96b70c604ebb13e860c08f280a408b53ba5317010198eb6d106a848c10b"
+    },
+    "SQLiteConnectionsOpenedByReview": 0
+  },
+  "candidateIndependent": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-independent.json",
+    "bytes": 3060,
+    "sha256": "c50e5a9d3aeb67de91eb48f4701ccc0cba0cde431e5b0e887c525405dafc94c6"
+  },
+  "candidateNineChecksSavedPassed": true,
+  "retainedBoundaries": [
+    "Formal source remains the 9c baseline until actual installer success; no installation is claimed by this preparation report.",
+    "Original NEW26 strict exit2/difference1 and prior differences remain unaccepted.",
+    "Installer retains exact source/candidate/formal-five-file/archive/mode checks, fresh process-zero checks and full before/preinstall equality before copying.",
+    "After installation, a fresh after capture and independent 10-check verification remain required."
+  ],
+  "readiness": {
+    "copy": true,
+    "seal": "Already executed successfully by root; independently matched saved seal",
+    "install": "Ready within existing authorization and retained installer preflight. No bypass or weakened check."
+  },
+  "safeToPublish": true
+}

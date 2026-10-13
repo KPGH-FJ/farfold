@@ -1,0 +1,309 @@
+{
+  "createdAtUtc": "2026-10-13T18:01:41.601128+00:00",
+  "headUnchanged": "52d21a3adb64816e868c4146166a7999754422e7",
+  "before": {
+    "path": "output/2026-10-14-docx-search-install-docs/before.json",
+    "bytes": 3496,
+    "sha256": "ad4c9aa90e3b9c3350ee30891c60b0cf363ba392ad666a5c94a0899d252d290a"
+  },
+  "scope": "Only four current docs DOCX installation paragraphs and P32 progress; plus seven exact immutable receipt paths appended to .prettierignore. No source, receipt, App, Agent or database operation.",
+  "files": [
+    {
+      "path": "docs/status.md",
+      "bytes": 90951,
+      "sha256": "ffa357052f126a5d2c85c10e6a336ed2be16c7165e4dd125245242d938bb762f"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 132590,
+      "sha256": "d77546119625552687a8af704b38c170bba18aff6615fe3613c5092c6d121962"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 155667,
+      "sha256": "af4f229cd3aaddc0cfed98882c8a966acb118920352bad732d46d7b393a99e13"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 88847,
+      "sha256": "2846c6f90c3cccee6194b5281bd9ced2850b1cb411dee7a99a39916db65f330b"
+    },
+    {
+      "path": ".prettierignore",
+      "bytes": 21180,
+      "sha256": "4e7640712942295f27fb45f9e58462bbcbc22c0b3dde4e298484706b26f433aa"
+    }
+  ],
+  "conditions": {
+    "original122IdsTitlesAndConditionsUnchanged": true,
+    "new28IdsTitlesAndConditionsUnchanged": true,
+    "onlyProgressChanged": [
+      "P32"
+    ],
+    "P32": {
+      "before": "文本搜索已安装 9c，正式正例未测；DOCX 源码/双引擎各 60 项已验，尚未安装；整项未完",
+      "after": "文本与 DOCX 搜索已安装 52d21a3；DOCX 双引擎各 60 项已验，正式正例未测；整项未完"
+    },
+    "PRODUCTUnchanged": true
+  },
+  "sourceWorkingTreeDiffEmpty": true,
+  "userReadmesUnchanged": true,
+  "sevenCandidateReceiptsByteIdentical": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-independent.json",
+      "bytes": 3060,
+      "sha256": "c50e5a9d3aeb67de91eb48f4701ccc0cba0cde431e5b0e887c525405dafc94c6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-inputs-after.json",
+      "bytes": 210821,
+      "sha256": "6b62cd4201ec1e12c2f95f4327962bcb08277498108a44530ba3fc074824f7f3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-inputs.json",
+      "bytes": 210821,
+      "sha256": "6b62cd4201ec1e12c2f95f4327962bcb08277498108a44530ba3fc074824f7f3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate.json",
+      "bytes": 51452,
+      "sha256": "3635dff69d1eaa388eca912ade4b575858c1adc7a43088a2b90d8ef8e831267e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/duplicate-cleanup.json",
+      "bytes": 834,
+      "sha256": "a740ec16558e6e2f87f0771e0915dc43818ee0cad2aa1de11ab4e67aa1b5f5f2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/install-independent-final.json",
+      "bytes": 101866,
+      "sha256": "0c3dc48a0a1fedea8f3940780917ad2986eda947b377ec96ae03f2af107c1a46"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/installation.json",
+      "bytes": 3492,
+      "sha256": "6aeba1b78348c8566d65aeb37d2aa9f9f372cd9fef9a9f71603340e1c918db03"
+    }
+  ],
+  "prettierIgnoreExactSevenAppended": true,
+  "links": [
+    {
+      "from": "docs/status.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json",
+        "bytes": 6121,
+        "sha256": "8a366c69b20d36c340e6bdded5f76f500f2d0e31f0babb083f0cb19aecb68226"
+      }
+    },
+    {
+      "from": "docs/status.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-checks/verification.json",
+        "bytes": 7168,
+        "sha256": "22b61449409fb94a6e6945bb8dc7c3c4b8a7f610c38c163344376cde93a00eb6"
+      }
+    },
+    {
+      "from": "docs/status.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-independent.json",
+        "bytes": 3060,
+        "sha256": "c50e5a9d3aeb67de91eb48f4701ccc0cba0cde431e5b0e887c525405dafc94c6"
+      }
+    },
+    {
+      "from": "docs/status.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/install-independent-final.json",
+        "bytes": 101866,
+        "sha256": "0c3dc48a0a1fedea8f3940780917ad2986eda947b377ec96ae03f2af107c1a46"
+      }
+    },
+    {
+      "from": "docs/status.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/installation.json",
+        "bytes": 3492,
+        "sha256": "6aeba1b78348c8566d65aeb37d2aa9f9f372cd9fef9a9f71603340e1c918db03"
+      }
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json",
+        "bytes": 6121,
+        "sha256": "8a366c69b20d36c340e6bdded5f76f500f2d0e31f0babb083f0cb19aecb68226"
+      }
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-checks/verification.json",
+        "bytes": 7168,
+        "sha256": "22b61449409fb94a6e6945bb8dc7c3c4b8a7f610c38c163344376cde93a00eb6"
+      }
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-independent.json",
+        "bytes": 3060,
+        "sha256": "c50e5a9d3aeb67de91eb48f4701ccc0cba0cde431e5b0e887c525405dafc94c6"
+      }
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/install-independent-final.json",
+        "bytes": 101866,
+        "sha256": "0c3dc48a0a1fedea8f3940780917ad2986eda947b377ec96ae03f2af107c1a46"
+      }
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/installation.json",
+        "bytes": 3492,
+        "sha256": "6aeba1b78348c8566d65aeb37d2aa9f9f372cd9fef9a9f71603340e1c918db03"
+      }
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json",
+        "bytes": 6121,
+        "sha256": "8a366c69b20d36c340e6bdded5f76f500f2d0e31f0babb083f0cb19aecb68226"
+      }
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-checks/verification.json",
+        "bytes": 7168,
+        "sha256": "22b61449409fb94a6e6945bb8dc7c3c4b8a7f610c38c163344376cde93a00eb6"
+      }
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-independent.json",
+        "bytes": 3060,
+        "sha256": "c50e5a9d3aeb67de91eb48f4701ccc0cba0cde431e5b0e887c525405dafc94c6"
+      }
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/install-independent-final.json",
+        "bytes": 101866,
+        "sha256": "0c3dc48a0a1fedea8f3940780917ad2986eda947b377ec96ae03f2af107c1a46"
+      }
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/installation.json",
+        "bytes": 3492,
+        "sha256": "6aeba1b78348c8566d65aeb37d2aa9f9f372cd9fef9a9f71603340e1c918db03"
+      }
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json",
+        "bytes": 6121,
+        "sha256": "8a366c69b20d36c340e6bdded5f76f500f2d0e31f0babb083f0cb19aecb68226"
+      }
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-checks/verification.json",
+        "bytes": 7168,
+        "sha256": "22b61449409fb94a6e6945bb8dc7c3c4b8a7f610c38c163344376cde93a00eb6"
+      }
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-independent.json",
+        "bytes": 3060,
+        "sha256": "c50e5a9d3aeb67de91eb48f4701ccc0cba0cde431e5b0e887c525405dafc94c6"
+      }
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/install-independent-final.json",
+        "bytes": 101866,
+        "sha256": "0c3dc48a0a1fedea8f3940780917ad2986eda947b377ec96ae03f2af107c1a46"
+      }
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/installation.json",
+        "bytes": 3492,
+        "sha256": "6aeba1b78348c8566d65aeb37d2aa9f9f372cd9fef9a9f71603340e1c918db03"
+      }
+    }
+  ],
+  "formatReceipts": [
+    {
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--write",
+        "--ignore-unknown",
+        "docs/status.md",
+        "docs/architecture.md",
+        "plans/agent-access.md",
+        "docs/evidence/2026-10-09-capability-hardening/README.md",
+        ".prettierignore"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAtUtc": "2026-10-13T18:00:48.617453+00:00",
+      "completedAtUtc": "2026-10-13T18:00:49.370521+00:00",
+      "actualExitCode": 0,
+      "boundary": "Only four Markdown files formatted/checked; .prettierignore is passed with --ignore-unknown because it has no Prettier parser, and exact append is independently checked."
+    },
+    {
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "--ignore-unknown",
+        "docs/status.md",
+        "docs/architecture.md",
+        "plans/agent-access.md",
+        "docs/evidence/2026-10-09-capability-hardening/README.md",
+        ".prettierignore"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAtUtc": "2026-10-13T18:00:49.370687+00:00",
+      "completedAtUtc": "2026-10-13T18:00:49.945894+00:00",
+      "actualExitCode": 0,
+      "boundary": "Only four Markdown files formatted/checked; .prettierignore is passed with --ignore-unknown because it has no Prettier parser, and exact append is independently checked."
+    }
+  ],
+  "formatOriginalCompletion": {
+    "path": "output/2026-10-14-docx-search-install-docs/format-original.completed.jsonl.raw",
+    "bytes": 3244,
+    "sha256": "270e4b45581b9a136db464994ac6edabfde349b76a988dac7b0bda3ac6237f5b",
+    "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl",
+    "sourceStartByte": 21299812,
+    "sourceEndByte": 21303056,
+    "timestamp": "2026-10-13T18:00:49.948Z",
+    "actualExitCode": 0
+  },
+  "diff": {
+    "path": "output/2026-10-14-docx-search-install-docs/five-files.diff",
+    "bytes": 31644,
+    "sha256": "d31da2d01dc7aa30e5472bd10c5329f8fedee00d479e74600af115dfeb3d43ce"
+  },
+  "boundary": "Installed52d21a3 with candidate9/9 and install10/10; installation not native DOCX search positive. Formal App not launched in this phase; NEW24 and P32 whole conditions remain open."
+}

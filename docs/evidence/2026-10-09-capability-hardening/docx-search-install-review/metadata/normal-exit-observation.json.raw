@@ -1,0 +1,107 @@
+{
+  "sourceCommit": "52d21a3adb64816e868c4146166a7999754422e7",
+  "observedAtUtc": "2026-10-13T17:49:53.655446+00:00",
+  "userAuthorizedContinuousDevelopment": true,
+  "normalQuitObserved": true,
+  "forcedQuit": false,
+  "formalProcessCountAfter": 0,
+  "newQuitPerformed": false,
+  "unconfirmedWorkMarkedComplete": false,
+  "rootConfirmedNoAppRestartSincePriorQuit": true,
+  "originalNormalExit": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/24-call_ZEZOnBmsADcKmAIHpmZgGYZ9.jsonl.raw",
+    "sha256": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad"
+  },
+  "originalQuitContext": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/23-call_uuooA1Gh1QJrWmJl4RZLWkJd.jsonl.raw",
+    "sha256": "b6bb997adbea13389eab605b1b38a50b782ae9a105c04de58b063ed4bfe51d14"
+  },
+  "originalQuitManifest": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/manifest.json",
+    "sha256": "d4a3e377389ac349f7592ac38f112851a44a0f7410659ffc5754ea2b1ed34942"
+  },
+  "originalExactExecutableProcessReceipt": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/01-final-process.json",
+    "sha256": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c"
+  },
+  "originalProcessExecution": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/03-final-process-exec.jsonl.raw",
+    "sha256": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205"
+  },
+  "formalBaselineNative": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/installed-native-scoped.json",
+    "sha256": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96"
+  },
+  "latestClosedDataStage": {
+    "references": {
+      "execution.json": {
+        "path": "output/2026-10-14-file-dialog-data/execution.json",
+        "bytes": 980,
+        "sha256": "803c0790ed7ea0a39f4721241f20f2c6b68fca61cf633df475f9b33ddca89bd6"
+      },
+      "capture-receipt-private.json": {
+        "path": "output/2026-10-14-file-dialog-data/capture-receipt-private.json",
+        "bytes": 10334,
+        "sha256": "7de7a6ad67f60922869b6dd4aea6a128b9030a2ca6d4c65c167cd1bf2bccde99"
+      },
+      "comparison-private.json": {
+        "path": "output/2026-10-14-file-dialog-data/comparison-private.json",
+        "bytes": 3936,
+        "sha256": "a087bc3a57afe2e3fa41039e702e453e7b5ccdb40d9766f5b7b24a50a42592cc"
+      },
+      "final-verification-private.json": {
+        "path": "output/2026-10-14-file-dialog-data/final-verification-private.json",
+        "bytes": 792,
+        "sha256": "dba4b6ac8b53b44f5e8f4447071c67ac5b039cc6534ed893478ec27fa259efd8"
+      },
+      "config.json": {
+        "path": "output/2026-10-14-file-dialog-data/config.json",
+        "bytes": 1321,
+        "sha256": "43356564b8c568dd0a30456c6d0207378df31635b6bc5abe00c9211cbe5f207e"
+      },
+      "stdout.raw": {
+        "path": "output/2026-10-14-file-dialog-data/stdout.raw",
+        "bytes": 93,
+        "sha256": "69f6e60483803dc5a06e45ed88cee6140936c57be9139f63fa673badd4c01ec3"
+      },
+      "stderr.raw": {
+        "path": "output/2026-10-14-file-dialog-data/stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "adapter-review.json": {
+        "path": "output/2026-10-14-file-dialog-data-independent/adapter-review.json",
+        "bytes": 5912,
+        "sha256": "5e32b1c9f2e5331b6b440d5da04c4966d825daf9725a39599ebca4ed9c56b285"
+      }
+    },
+    "sourceFiles": {
+      "farfold.sqlite3": {
+        "sha256": "f7ddc093c95edd33c01bb65146cff52f5570e3b8ebb6fabc6ad95a4cf1eb4da5",
+        "bytes": 512000
+      },
+      "farfold.sqlite3-wal": {
+        "sha256": "6e4974af2c3e869b67234a7b5a2495407d447cd1ba57264dc9f4b92f88cb059e",
+        "bytes": 4169472
+      },
+      "farfold.sqlite3-shm": {
+        "sha256": "bb104a2cbc5e5adcff76748ed2f11654fd46fe86c88220e69437cfe59a57ffb9",
+        "bytes": 32768
+      }
+    },
+    "strictExitCode": 2,
+    "differencesAccepted": false,
+    "boundary": "Latest closed NEW26 provenance only. Preserve capture exit2/difference1 and earlier unaccepted strict2. New installation still requires fresh full manifests and raw backup."
+  },
+  "processCheck": {
+    "argv": [
+      "/bin/ps",
+      "-axo",
+      "pid=,comm="
+    ],
+    "exitCode": 0,
+    "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "matchingPids": []
+  },
+  "boundary": "Actual 9c NEW26 save/quit23/24 and exact-process03 with original execution plus root-confirmed no restart and fresh exact process absence. Prior strict data differences remain recorded; no new quit, launch, data mutation or unknown work completion."
+}

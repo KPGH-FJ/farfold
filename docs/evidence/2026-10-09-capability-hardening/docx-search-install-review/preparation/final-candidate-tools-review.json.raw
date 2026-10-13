@@ -1,0 +1,182 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:48:10.593387+00:00",
+  "result": "PASS_CANDIDATE_TOOLS_MAY_BE_COPIED_AND_ROOT_MAY_EXECUTE_PREPARE",
+  "preparation": {
+    "path": "output/2026-10-14-docx-search-install-preparation/review-build/preparation.json",
+    "bytes": 3468,
+    "sha256": "2e75497ffc6ce63e69ac1b6f320eaf386c949421cbb8d24dc59b878f245aac87"
+  },
+  "files": [
+    {
+      "path": "output/2026-10-14-docx-search-install-preparation/review-build/candidate/prepare-candidate.py",
+      "bytes": 4493,
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install-preparation/review-build/candidate/verify-candidate.py",
+      "bytes": 59172,
+      "sha256": "c5569619e1995e14c375602669b993c8d6110db74b1b0538f588d02953918fa2"
+    }
+  ],
+  "pins": {
+    "SOURCE_COMMIT": "52d21a3adb64816e868c4146166a7999754422e7",
+    "ENGINEERING_SHA": "22b61449409fb94a6e6945bb8dc7c3c4b8a7f610c38c163344376cde93a00eb6",
+    "PRIVATE_ENGINEERING_SHA": "68b117bad0cc9b56ebc8c77ac0e41ffbaf29703e490f885229cfd32f6088e27f",
+    "EXPECTED_INPUT_COUNT": 1799,
+    "INVENTORY_SHA": "87de403af8ff7fd3c301daa8271f6cabdb75c5d8d70fc0568b3d8d1dd95f0f51",
+    "FREEZE_SHA": "4b8ddfb51fb85b65c7378e6f84ebded40f59aed6b00f3505877567aea8f4086f",
+    "NORMAL_EXIT_SHA": null,
+    "BEFORE_SUMMARY_SHA": null,
+    "BACKUP_RECEIPT_SHA": null
+  },
+  "source": {
+    "sourceCommit": "52d21a3adb64816e868c4146166a7999754422e7",
+    "headMatches": true,
+    "inputCount": 1799,
+    "diskCommitInventoryFreezeExact": true,
+    "outputInputCount": 34,
+    "outputInputs": [
+      "output/2026-10-13-attachment-search-frontend/browser/fixture.tsx",
+      "output/2026-10-13-attachment-search-frontend/browser/index.html",
+      "output/2026-10-13-attachment-search-frontend/browser/run.mjs",
+      "output/2026-10-13-attachment-search-frontend/browser/serve.mjs",
+      "output/2026-10-14-audio-cancel-test-race/source-freeze.json",
+      "output/2026-10-14-docx-search-backend/source-freeze.json",
+      "output/2026-10-14-docx-search-browser/author.docx",
+      "output/2026-10-14-docx-search-browser/budget-a.docx",
+      "output/2026-10-14-docx-search-browser/budget-b.docx",
+      "output/2026-10-14-docx-search-browser/budget-captures.json",
+      "output/2026-10-14-docx-search-browser/budget-oracle.json",
+      "output/2026-10-14-docx-search-browser/captures.json",
+      "output/2026-10-14-docx-search-browser/fixture.tsx",
+      "output/2026-10-14-docx-search-browser/generate-budget.py",
+      "output/2026-10-14-docx-search-browser/generate-fixtures.py",
+      "output/2026-10-14-docx-search-browser/index.html",
+      "output/2026-10-14-docx-search-browser/oracle.json",
+      "output/2026-10-14-docx-search-browser/run-v1.mjs",
+      "output/2026-10-14-docx-search-browser/run-v2.mjs",
+      "output/2026-10-14-docx-search-browser/run.mjs",
+      "output/2026-10-14-docx-search-browser/second.docx",
+      "output/2026-10-14-docx-search-browser/serve.mjs",
+      "output/2026-10-14-docx-search-doc-closeout/report.json",
+      "output/2026-10-14-docx-search-frontend/source-freeze-v2.json",
+      "output/2026-10-14-docx-search-independent/backend-review.json",
+      "output/2026-10-14-docx-search-independent/frontend-browser-supplement.json",
+      "output/2026-10-14-docx-search-independent/frontend-source-review.json",
+      "output/2026-10-14-docx-search-independent/image-and-cell-barriers.docx",
+      "output/2026-10-14-docx-search-independent/publication-review.json",
+      "output/2026-10-14-docx-search-independent/supplement-capture.json",
+      "output/2026-10-14-docx-search-independent/supplement-oracle.json",
+      "output/2026-10-14-docx-search-integration/publish_implementation.py",
+      "output/2026-10-14-docx-search-integration/reviewed-files-v2.json",
+      "output/2026-10-14-docx-search-integration/reviewed-files.json"
+    ],
+    "scope": "source() checked every physical member, regular mode and Git blob OID against exact commit; engineering() matched all hashes to v2 frozen 1799 inputs.",
+    "previousCommittedOutputInputCount": 4,
+    "newCommittedOutputInputCount": 30
+  },
+  "engineering": {
+    "receipt": "docs/evidence/2026-10-09-capability-hardening/docx-search-checks/verification.json",
+    "sha256": "22b61449409fb94a6e6945bb8dc7c3c4b8a7f610c38c163344376cde93a00eb6",
+    "referenceCount": 228,
+    "counts": {
+      "frontendSummaryLines": [
+        "Test Files  494 passed (494)",
+        "Tests  5885 passed (5885)"
+      ],
+      "rustSummaryLines": [
+        "test result: ok. 1666 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 119.65s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    "actualSevenReadOnlyVerificationPassed": true
+  },
+  "gateReview": {
+    "prepareExactPriorBytes": true,
+    "configuredInvalidPins": [
+      {
+        "field": "SOURCE_COMMIT",
+        "value": null,
+        "rejected": true
+      },
+      {
+        "field": "ENGINEERING_SHA",
+        "value": null,
+        "rejected": true
+      },
+      {
+        "field": "PRIVATE_ENGINEERING_SHA",
+        "value": null,
+        "rejected": true
+      },
+      {
+        "field": "EXPECTED_INPUT_COUNT",
+        "value": null,
+        "rejected": true
+      },
+      {
+        "field": "EXPECTED_INPUT_COUNT",
+        "value": true,
+        "rejected": true
+      },
+      {
+        "field": "EXPECTED_INPUT_COUNT",
+        "value": 0,
+        "rejected": true
+      },
+      {
+        "field": "INVENTORY_SHA",
+        "value": null,
+        "rejected": true
+      },
+      {
+        "field": "ENGINEERING_PLAN_SHA",
+        "value": null,
+        "rejected": true
+      },
+      {
+        "field": "INPUT_SCOPE_READY",
+        "value": false,
+        "rejected": true
+      }
+    ],
+    "savedNormalExitAndLatestNew26ProvenancePassed": true,
+    "strictExit2Preserved": true,
+    "installationDataPinsStillUnset": true
+  },
+  "executedReadOnlyFunctions": [
+    "configured",
+    "source",
+    "engineering",
+    "prior_exit_evidence"
+  ],
+  "allowedProcesses": [
+    [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    [
+      "git",
+      "ls-tree",
+      "-r",
+      "-z",
+      "52d21a3adb64816e868c4146166a7999754422e7"
+    ]
+  ],
+  "forbiddenOperationsTriggered": [],
+  "didNotExecute": [
+    "prepare/main",
+    "verifier/main",
+    "baseline/formal-App read",
+    "build",
+    "installation",
+    "normal-process observation",
+    "SQLite/database read",
+    "data capture",
+    "engineering tests"
+  ],
+  "boundary": "Only exact-copy these frozen two tools to preparation.tools finalPath. Root may execute one candidate prepare for the pinned commit/proof, then actual independent candidate nine checks. This review is not a candidate build, bundle/signature validation, installation, fresh stopped-state observation or native DOCX acceptance. Fresh data pins and separate installation review remain required."
+}

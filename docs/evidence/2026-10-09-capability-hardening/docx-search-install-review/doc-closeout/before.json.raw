@@ -1,0 +1,90 @@
+{
+  "capturedAtUtc": "2026-10-13T18:00:23.616337+00:00",
+  "head": "52d21a3adb64816e868c4146166a7999754422e7",
+  "files": [
+    {
+      "path": "docs/status.md",
+      "bytes": 89891,
+      "sha256": "733ffee4d877bec18a9ed189299c32d709bd8d9f88838e1a3760fa6a2da846e4",
+      "beforeCopy": "output/2026-10-14-docx-search-install-docs/before-1.raw"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 131530,
+      "sha256": "20989354150b015f4862654af7fac9449e23c0f14584138a058d6d502af67626",
+      "beforeCopy": "output/2026-10-14-docx-search-install-docs/before-2.raw"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 154599,
+      "sha256": "18603e4ba369a1561e0626fb2f5dfdb88dd7548608697e99af1b2e28e09f2a6e",
+      "beforeCopy": "output/2026-10-14-docx-search-install-docs/before-3.raw"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 87951,
+      "sha256": "7a63b3db8876c6900ded57e982b5e6804bc9300b8ebe64688696716536671c23",
+      "beforeCopy": "output/2026-10-14-docx-search-install-docs/before-4.raw"
+    },
+    {
+      "path": ".prettierignore",
+      "bytes": 20470,
+      "sha256": "f663f01884d9c2a8d4241444401cc0023c8874109f389cee48df322222d4e046",
+      "beforeCopy": "output/2026-10-14-docx-search-install-docs/before-5.raw"
+    }
+  ],
+  "protected": [
+    {
+      "path": "PRODUCT.md",
+      "bytes": 35083,
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "bytes": 11543,
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "bytes": 2341,
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+    }
+  ],
+  "immutable": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-independent.json",
+      "bytes": 3060,
+      "sha256": "c50e5a9d3aeb67de91eb48f4701ccc0cba0cde431e5b0e887c525405dafc94c6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-inputs-after.json",
+      "bytes": 210821,
+      "sha256": "6b62cd4201ec1e12c2f95f4327962bcb08277498108a44530ba3fc074824f7f3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-inputs.json",
+      "bytes": 210821,
+      "sha256": "6b62cd4201ec1e12c2f95f4327962bcb08277498108a44530ba3fc074824f7f3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate.json",
+      "bytes": 51452,
+      "sha256": "3635dff69d1eaa388eca912ade4b575858c1adc7a43088a2b90d8ef8e831267e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/duplicate-cleanup.json",
+      "bytes": 834,
+      "sha256": "a740ec16558e6e2f87f0771e0915dc43818ee0cad2aa1de11ab4e67aa1b5f5f2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/install-independent-final.json",
+      "bytes": 101866,
+      "sha256": "0c3dc48a0a1fedea8f3940780917ad2986eda947b377ec96ae03f2af107c1a46"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/installation.json",
+      "bytes": 3492,
+      "sha256": "6aeba1b78348c8566d65aeb37d2aa9f9f372cd9fef9a9f71603340e1c918db03"
+    }
+  ]
+}

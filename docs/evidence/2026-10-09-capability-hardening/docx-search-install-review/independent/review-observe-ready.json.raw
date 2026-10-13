@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:49:34.216019+00:00",
+  "verdict": "OBSERVER_READY_AFTER_EXACT_COPY; CAPTURE_WAITS_FOR_FRESH_NORMAL_PIN; REPLACEMENT_BLOCKED",
+  "scope": "Read-only metadata/hash/AST delta verification against previously reviewed review-v3. No generated module/function/main, observer, capture, process check, App, SQLite or database bytes were executed/read.",
+  "preparation": {
+    "path": "output/2026-10-14-docx-search-install-preparation/review-observe/preparation.json",
+    "bytes": 10314,
+    "sha256": "b1bf990e4fb8d478a4ec0e3c02c77786a67398a62b00fa4d5f5f2ae2b46d1a6f"
+  },
+  "pins": {
+    "SOURCE_COMMIT": "52d21a3adb64816e868c4146166a7999754422e7",
+    "ENGINEERING_SHA": "22b61449409fb94a6e6945bb8dc7c3c4b8a7f610c38c163344376cde93a00eb6",
+    "PRIVATE_ENGINEERING_SHA": "68b117bad0cc9b56ebc8c77ac0e41ffbaf29703e490f885229cfd32f6088e27f",
+    "EXPECTED_INPUT_COUNT": 1799,
+    "INVENTORY_SHA": "87de403af8ff7fd3c301daa8271f6cabdb75c5d8d70fc0568b3d8d1dd95f0f51",
+    "FREEZE_SHA": "4b8ddfb51fb85b65c7378e6f84ebded40f59aed6b00f3505877567aea8f4086f",
+    "NORMAL_EXIT_SHA": null,
+    "BEFORE_SUMMARY_SHA": null,
+    "BACKUP_RECEIPT_SHA": null
+  },
+  "scriptDeltas": [
+    {
+      "path": "candidate/prepare-candidate.py",
+      "changedAllowedAssignments": [],
+      "allOtherAstIdenticalAfterThreeExactV2PathReversal": true,
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+    },
+    {
+      "path": "candidate/verify-candidate.py",
+      "changedAllowedAssignments": [
+        "SOURCE_COMMIT",
+        "ENGINEERING_SHA",
+        "PRIVATE_ENGINEERING_SHA",
+        "EXPECTED_INPUT_COUNT",
+        "ENGINEERING_PLAN_SHA",
+        "INVENTORY_SHA",
+        "TOP",
+        "INPUT_SCOPE_READY"
+      ],
+      "allOtherAstIdenticalAfterThreeExactV2PathReversal": true,
+      "sha256": "c5569619e1995e14c375602669b993c8d6110db74b1b0538f588d02953918fa2"
+    },
+    {
+      "path": "install/data_manifest.py",
+      "changedAllowedAssignments": [],
+      "allOtherAstIdenticalAfterThreeExactV2PathReversal": true,
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+    },
+    {
+      "path": "install/observe_normal_exit.py",
+      "changedAllowedAssignments": [
+        "SOURCE_COMMIT"
+      ],
+      "allOtherAstIdenticalAfterThreeExactV2PathReversal": true,
+      "sha256": "c095f02abfdf7ec21358c5c3d9297f25a7bd0d15d3de154aea9ed4e5bd4d6ff7"
+    },
+    {
+      "path": "install/install_data_snapshot.py",
+      "changedAllowedAssignments": [
+        "SOURCE_COMMIT"
+      ],
+      "allOtherAstIdenticalAfterThreeExactV2PathReversal": true,
+      "sha256": "d3a3c52024630411211dbf7b6f59847c5b428b5b68471b64942444237fb51afc"
+    },
+    {
+      "path": "install/capture_snapshot.py",
+      "changedAllowedAssignments": [
+        "SOURCE_COMMIT"
+      ],
+      "allOtherAstIdenticalAfterThreeExactV2PathReversal": true,
+      "sha256": "ff12a8118e4295cdee3b2b04b84aa80c05253dbc92cd6a82e16ab49fdc7dc27e"
+    },
+    {
+      "path": "install/backup_metadata.py",
+      "changedAllowedAssignments": [
+        "SOURCE_COMMIT"
+      ],
+      "allOtherAstIdenticalAfterThreeExactV2PathReversal": true,
+      "sha256": "2abca5445040f5dbb7c3513153a86426d5e91c1d3c0a3ea946fcfc4c3ecea15f"
+    },
+    {
+      "path": "install/install_verified_candidate.py",
+      "changedAllowedAssignments": [
+        "SOURCE_COMMIT",
+        "EXPECTED_INPUT_COUNT",
+        "TOP",
+        "INPUT_SCOPE_READY"
+      ],
+      "allOtherAstIdenticalAfterThreeExactV2PathReversal": true,
+      "sha256": "3b3ccb1fa355c4c6e149cec14b351000f656bee50c9f9d67825361b9e6065404"
+    },
+    {
+      "path": "independent/verify_installed_final.py",
+      "changedAllowedAssignments": [
+        "SOURCE_COMMIT",
+        "EXPECTED_INPUT_COUNT"
+      ],
+      "allOtherAstIdenticalAfterThreeExactV2PathReversal": true,
+      "sha256": "0e4cbafefc31892c98740885053bcb40ba688f96dbe8994abf8a0bd7efe7f90c"
+    }
+  ],
+  "scopeVerification": {
+    "expectedInputCount": 1799,
+    "candidateAndInstallerTopDerivedExactlyFromV2InventoryComplementOfScopes": true,
+    "sixActualPinsChecked": true,
+    "sourceCommitExistsLocally": true,
+    "remotePush": "Root reported actual successful push; no independent network operation performed."
+  },
+  "retainedBaseline": {
+    "installedSourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+    "normalQuitChain": "Already-reviewed NEW26 original events 23/24 (save-and-quit button 196; completed empty returned text), actual lowercase process execution03 and receipt01. All six original refs remain byte-exact.",
+    "consolidatedMetadataBytes": 512000,
+    "consolidatedMetadataSha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+    "databaseBytesRead": false,
+    "originalCaptureExit": 2,
+    "differenceCount": 1,
+    "differencesAccepted": false,
+    "savedMetadataRefsVerified": 14
+  },
+  "stages": {
+    "observer": {
+      "mayExecute": true,
+      "prerequisites": [
+        "Copy reviewed observer and its exact candidate verifier dependency to their fixed final paths, preserving reviewed hashes.",
+        "Use dedicated owner-held non-symlink 0700 output directory with no prior observation receipt.",
+        "Root continuity confirmation remains valid; pass the exact --root-confirmed-no-app-restart-since-prior-quit argument."
+      ],
+      "effect": "Exactly one fresh /bin/ps -axo pid=,comm= operation; require exact lowercase executable absence; write one exclusive receipt. No new quit or launch."
+    },
+    "captureBeforeBackupPreinstall": {
+      "mayExecuteNow": false,
+      "reason": "NORMAL_EXIT_SHA is null. snapshot.require_ready invokes require_configured and verify_normal_exit before live-root capture.",
+      "enableWhen": "After the observer naturally succeeds, pin its exact original receipt SHA in a new render and independently check/copy the literal-only delta. Before capture must complete, then raw-preserving backup, then preinstall capture. Do not overwrite prior destinations."
+    },
+    "replaceAndFinal": {
+      "mayExecuteNow": false,
+      "reason": "NORMAL_EXIT_SHA, BEFORE_SUMMARY_SHA and BACKUP_RECEIPT_SHA remain null. Installer main calls require_configured(backup=True) before opening an operation receipt or copying the App.",
+      "enableWhen": "All actual fresh data receipts, backup and identical full manifests, final nine-tool seal and candidate nine-check success must be verified; retain strict original differences."
+    }
+  },
+  "safeToPublish": true,
+  "limitations": [
+    "This is preparation review, not a fresh zero-process observation or new data-retention proof.",
+    "No new candidate or installation success inferred here."
+  ]
+}

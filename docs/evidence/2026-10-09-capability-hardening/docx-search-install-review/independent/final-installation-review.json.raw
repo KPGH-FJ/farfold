@@ -1,0 +1,150 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T18:01:59.488778+00:00",
+  "verdict": "INSTALLED_52D21A3A_AND_DATA_RETENTION_CLOSURE_VERIFIED",
+  "sourceCommit": "52d21a3adb64816e868c4146166a7999754422e7",
+  "scope": "Read-only saved reports/manifests, six original root tool completions, exact installed five files and retained archive. No validation tools rerun, App/Agent launch, SQLite connection, live data-root read, process check or test.",
+  "reports": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/installation.json",
+      "bytes": 3492,
+      "sha256": "6aeba1b78348c8566d65aeb37d2aa9f9f372cd9fef9a9f71603340e1c918db03"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/duplicate-cleanup.json",
+      "bytes": 834,
+      "sha256": "a740ec16558e6e2f87f0771e0915dc43818ee0cad2aa1de11ab4e67aa1b5f5f2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/install-independent-final.json",
+      "bytes": 101866,
+      "sha256": "0c3dc48a0a1fedea8f3940780917ad2986eda947b377ec96ae03f2af107c1a46"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-independent.json",
+      "bytes": 3060,
+      "sha256": "c50e5a9d3aeb67de91eb48f4701ccc0cba0cde431e5b0e887c525405dafc94c6"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate.json",
+      "bytes": 51452,
+      "sha256": "3635dff69d1eaa388eca912ade4b575858c1adc7a43088a2b90d8ef8e831267e"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent-install/install-final-review.json",
+      "bytes": 101654,
+      "sha256": "0e37214bc7612a5ff7bddf81ea09b9f063f34b5b5995aebd2f817bf72399f9c3"
+    }
+  ],
+  "currentInstallationReferenceRecordsVerified": 22,
+  "publicPrivateTenChecksMatch": true,
+  "actualCompletionReceipts": {
+    "path": "output/2026-10-14-docx-search-independent/transcript-install/manifest.json",
+    "bytes": 3731,
+    "sha256": "a73a6ee530319cb971228fe7c5a31f445b805fc6999d616df3bd316f4025fb80"
+  },
+  "actualStages": [
+    {
+      "stage": "candidate-build",
+      "chunk": "f8bf5f",
+      "actualExitCode": 0
+    },
+    {
+      "stage": "candidate-nine",
+      "chunk": "02545e",
+      "actualExitCode": 0
+    },
+    {
+      "stage": "installer",
+      "chunk": "49104b",
+      "actualExitCode": 0
+    },
+    {
+      "stage": "after-capture",
+      "chunk": "ea537f",
+      "actualExitCode": 0
+    },
+    {
+      "stage": "installed-ten",
+      "chunk": "184d75",
+      "actualExitCode": 0
+    },
+    {
+      "stage": "duplicate-cleanup",
+      "chunk": "7f500a",
+      "actualExitCode": 0
+    }
+  ],
+  "dataRetention": {
+    "threeSavedCapturesActualExitCode": 0,
+    "threeFullManifestsByteEqual": true,
+    "entriesEach": 217400,
+    "rawBytesEach": 58925641,
+    "sha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195450,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 152,
+        "file": 100,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "schema": "Before/preinstall complete canonical record validation previously passed; after is now independently byte-equal to both.",
+    "privateManifestContentsPublished": false,
+    "priorStrictExit2Differences": "Preserved and unaccepted; this installation byte-retention equality does not retrospectively accept earlier native-UI differences."
+  },
+  "formalAfterCleanup": {
+    "path": "/Applications/Farfold.app",
+    "exactFiveFileHashesMatchCandidate": true,
+    "exactModesMatchCandidate": true,
+    "files": {
+      "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+      "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+      "Contents/MacOS/farfold": "d56c514e51db1550e64bd0eb0d88eb11aaa7a5cb911d29d40acab15b53ff3fe4",
+      "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+      "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+    },
+    "modes": {
+      "Contents/Info.plist": 420,
+      "Contents/_CodeSignature/CodeResources": 420,
+      "Contents/MacOS/farfold": 493,
+      "Contents/Resources/icon.icns": 420,
+      "Contents/Resources/release-manifest.json": 420
+    },
+    "appWasNotLaunchedByReview": true
+  },
+  "retainedArchive": {
+    "path": "src-tauri/target/internal-candidate/2026-10-14-docx-search-52d21a3a/Farfold-0.1.7-52d21a3a.zip",
+    "bytes": 15058182,
+    "sha256": "bbbdfab834bb223135e685795cc3f479e9bcb174e61fe23a6a0a4b428b43e7dd"
+  },
+  "duplicateCleanup": {
+    "exactRemovedPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+    "absentOnReadOnlyCheck": true,
+    "formalAndArchivePreserved": true,
+    "noDeletionPerformedByReview": true
+  },
+  "processBoundary": {
+    "savedFinalGateProcessCount": 0,
+    "savedFinalGateCheckedAt": "2026-10-13T17:57:48.714406+00:00",
+    "currentProcessNotReobserved": true
+  },
+  "historicalReceiptBoundary": "installation.json retains dataRetentionComparisonPending=true from the installer phase. The later actual after capture and successful ten-check receipt close this installation retention check; the original installer receipt is not rewritten.",
+  "remaining": [
+    "New formal native DOCX-search positive acceptance and real Agent behavior are not established by installation.",
+    "P32/P08 whole items and signing/notarization/public release remain outside this proof."
+  ],
+  "safeToPublish": true
+}

@@ -1,0 +1,18 @@
+{
+  "onlyTwoDataPinsChanged": true,
+  "updatedOrCreated": [
+    "output/2026-10-14-docx-search-install/install_verified_candidate.py",
+    "output/2026-10-14-docx-search-independent-install/verify_installed_final.py"
+  ],
+  "unchanged": [
+    "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/prepare-candidate.py",
+    "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/verify-candidate.py",
+    "output/2026-10-14-docx-search-install/data_manifest.py",
+    "output/2026-10-14-docx-search-install/observe_normal_exit.py",
+    "output/2026-10-14-docx-search-install/install_data_snapshot.py",
+    "output/2026-10-14-docx-search-install/capture_snapshot.py",
+    "output/2026-10-14-docx-search-install/backup_metadata.py"
+  ],
+  "priorSourceBytesRetainedIn": "review-capture",
+  "candidateToolsUnchanged": true
+}

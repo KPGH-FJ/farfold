@@ -1,0 +1,168 @@
+"""Render limited adaptations of the actually executed nine attachment-search tools.
+
+Usage: python3 -B render.py pins.json review-v1 candidate|all
+Only writes a new preparation preview and diffs. Never executes generated tools.
+"""
+import ast
+import difflib
+import hashlib
+import importlib.util
+import json
+from pathlib import Path
+import re
+import sys
+
+sys.dont_write_bytecode = True
+ROOT = Path('/Users/tw/Desktop/farfold')
+OUT = ROOT / 'output/2026-10-14-docx-search-install-preparation'
+INTEGRATION = 'output/2026-10-14-docx-search-integration'
+INVENTORY = ROOT / INTEGRATION / 'inventory-plan-v2.json'
+PIN_KEYS = {'SOURCE_COMMIT', 'ENGINEERING_SHA', 'PRIVATE_ENGINEERING_SHA',
+            'EXPECTED_INPUT_COUNT', 'INVENTORY_SHA', 'FREEZE_SHA',
+            'NORMAL_EXIT_SHA', 'BEFORE_SUMMARY_SHA', 'BACKUP_RECEIPT_SHA'}
+
+
+def sha(path):
+    assert all(not p.is_symlink() for p in (path, *path.parents)), 'Symbolic preparation input'
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def transform(text, name, pins, known, util, paths):
+    for old, new in (
+        ('2026-10-13-attachment-search-install-preparation', '2026-10-14-docx-search-install-preparation'),
+        ('2026-10-13-attachment-search-independent-install', '2026-10-14-docx-search-independent-install'),
+        ('2026-10-13-attachment-search-install', '2026-10-14-docx-search-install'),
+        ('hardening/attachment-search-candidate', 'hardening/docx-search-candidate'),
+        ('hardening/attachment-search-checks', 'hardening/docx-search-checks'),
+        ('output/2026-10-13-attachment-search-integration', INTEGRATION),
+        ('internal-candidate/2026-10-13-attachment-search-', 'internal-candidate/2026-10-14-docx-search-'),
+    ):
+        text = text.replace(old, new)
+    # The first full check run failed during test cleanup; preserve its artifacts.
+    # The repaired-source run uses separate immutable evidence paths.
+    for old, new in [('checks-run/', 'checks-run-v2/'), ('checks-freeze/', 'checks-freeze-v2/'), ('inventory-plan.json', 'inventory-plan-v2.json')]:
+        text = text.replace(INTEGRATION + '/' + old, INTEGRATION + '/' + new)
+    values = {key: repr(value) for key, value in {**known, **pins}.items()}
+    values.update({
+        'BASELINE': "BASE / 'attachment-search-candidate/candidate.json'",
+        'BASELINE_INSTALL': "BASE / 'attachment-search-candidate/install-independent-final.json'",
+        'BASELINE_NATIVE': "ROOT / 'docs/evidence/2026-10-09-capability-hardening/file-dialog-native/installed-native-scoped.json'",
+        'ENGINEERING_PLAN_SHA': repr(pins['FREEZE_SHA']),
+    })
+    for key in ('QUIT_CONTEXT', 'QUIT_MANIFEST', 'PRIOR_QUIT', 'PRIOR_PROCESS', 'PRIOR_ACTUAL_PROCESS'):
+        values[key] = 'ROOT / ' + repr(known[key])
+    text = util.assignments(text, values)
+    if name == 'verify-candidate.py':
+        text = util.replace_function(text, 'latest_data_evidence', (OUT / 'latest_data.py.inc').read_text())
+        # Same real completed-event validator; only actual NEW26 identities/schema change.
+        for old, new in (
+            ('call_197e7efb8c3244ee812683f3464afe9c', 'call_uuooA1Gh1QJrWmJl4RZLWkJd'),
+            ('call_0f3f762f921247e7a35609d749cd655d', 'call_ZEZOnBmsADcKmAIHpmZgGYZ9'),
+            ('pdfNativeApp', 'pickerNativeApp'),
+            ('06d02844674c9c6f3c40bbac7e5288e43a0fae27a638c09009a47a87895a3053', 'dce4810b5f67e49bf3126ee5994ae0725502a72b2ddb6eab2f33e33050bb8a8d'),
+            ('97 按钮 保存并退出', '196 按钮 保存并退出'),
+            ('.click(97)', '.click(196)'),
+            ('2026-10-13T14:52:36.263Z', '2026-10-13T16:05:25.650Z'),
+            ('exec-47acc09e-0f4c-4d46-a441-872c9bef3417', 'exec-78cdd4b8-6093-4c70-8d2d-e6fc758e3580'),
+            ('1ad6f25b3d73f8891a0845bd0fe2037d42b8c54ee5b959327b0212f224cc7df0', '384e284af82e031d300cb02b4b4d857063b13e7d038a66928dee30880c89def0'),
+            ("{'formalProcessCount': 0, 'receipt': str(PRIOR_PROCESS.relative_to(ROOT))}", "{'formalProcessCount': 0, 'formalFileCount': 5, 'receipt': str(PRIOR_PROCESS.relative_to(ROOT))}"),
+        ):
+            text = util.once(text, old, new) if text.count(old) == 1 else text.replace(old, new)
+        text = util.once(text, "    need(manifest['sourceThreadId'] == ctx_payload['thread_id'] == quit_payload['thread_id'], 'Quit raw source thread differs')",
+                         "    need(manifest['sourceThreadId'] == ctx_payload['thread_id'] == quit_payload['thread_id'] and manifest['sourceCommit'] == BASELINE_COMMIT, 'Quit raw source thread differs')")
+        anchor = "    payload = process_source.get('payload', {})"
+        extra = """    actual_ref = manifest['finalProcessExecution']
+    need(actual_ref['path'] == str(PRIOR_ACTUAL_PROCESS.relative_to(ROOT))
+         and actual_ref['sha256'] == PRIOR_ACTUAL_PROCESS_SHA
+         and actual_ref['bytes'] == PRIOR_ACTUAL_PROCESS.stat().st_size
+         and actual_ref['executionId'] == 'exec-78cdd4b8-6093-4c70-8d2d-e6fc758e3580'
+         and actual_ref['exitCode'] == 0 and actual_ref['status'] == 'completed'
+         and actual_ref['timestamp'] == process_source['timestamp']
+         and actual_ref['receipt'] == {'path': str(PRIOR_PROCESS.relative_to(ROOT)), 'bytes': PRIOR_PROCESS.stat().st_size, 'sha256': PRIOR_PROCESS_SHA}, 'Actual process manifest differs')
+"""
+        text = util.once(text, anchor, extra + anchor)
+        text = util.once(text, 'def configured():', "def configured():\n    need(INPUT_SCOPE_READY is True, 'Preparation only: final inventory scope is UNSET')")
+        text = text.replace('source36c baseline', 'source9c baseline')
+    if name in ('verify-candidate.py', 'install_verified_candidate.py'):
+        scope_nodes = [node for node in ast.parse(text).body if
+                       (isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id in ('ROOT', 'BASE', 'SCOPES', 'TOP') for t in node.targets))
+                       or (isinstance(node, ast.AugAssign) and isinstance(node.target, ast.Name) and node.target.id in ('SCOPES', 'TOP'))]
+        env = {'Path': Path}
+        exec(compile(ast.Module(body=scope_nodes, type_ignores=[]), '<literal-scope>', 'exec'), env)
+        top = sorted(p for p in paths if not any(p.startswith(s) for s in env['SCOPES'])) if paths is not None else []
+        text = util.once(text, "if __name__ == '__main__':", '\nTOP = ' + repr(top) + '\nINPUT_SCOPE_READY = ' + repr(paths is not None) + "\n\nif __name__ == '__main__':")
+        if paths is not None:
+            assert util.scope(text) == set(paths), 'Full candidate/install membership differs from inventory'
+    if name == 'install_verified_candidate.py':
+        text = util.once(text, 'def require_configured(backup=False):', "def require_configured(backup=False):\n    require(INPUT_SCOPE_READY is True, 'Preparation only: final inventory scope is UNSET')")
+        anchor = "    stage = verify_normal_exit()['latestClosedDataStage']"
+        text = util.once(text, anchor, anchor + "\n    require(receipt['backupSha256'] == " + repr(known['LATEST_DATA_CONSOLIDATED_SHA']) + " and backup.stat().st_size == 512000, 'Fresh consolidated backup differs from latest sealed NEW26 baseline')")
+    if name == 'verify_installed_final.py':
+        text = text.replace("'36c56a827f9bf2146e913bf0d2a2d072f51d89b8'", repr(known['BASELINE_COMMIT']))
+        text = text.replace('this configured selected-attachment search and unavailable-screenshot rejection installation over the actual 36c formal baseline', 'this configured DOCX selected-attachment search installation over the actual 9c formal baseline')
+    for old, new in [('actual 36c PDF save/quit30/31', 'actual 9c NEW26 save/quit23/24'), ('Actual 36c PDF save/quit30/31', 'Actual 9c NEW26 save/quit23/24'), ('original PDF save/quit30/31', 'original NEW26 save/quit23/24'), ('Latest PDF', 'Latest NEW26'), ('latest PDF', 'latest NEW26'), ('latest closed PDF', 'latest closed NEW26')]:
+        text = text.replace(old, new)
+    assert 'output/output/' not in text
+    assert len(text.splitlines()) <= 1500
+    compile(text, name, 'exec')
+    return text
+
+
+def main():
+    assert Path(__file__).absolute() == OUT / 'render.py'
+    assert len(sys.argv) == 4 and sys.argv[3] in ('candidate', 'all')
+    assert re.fullmatch('[a-z0-9][a-z0-9-]*', sys.argv[2])
+    pin_path = OUT / sys.argv[1]
+    assert pin_path.parent == OUT and not pin_path.is_symlink()
+    pins = json.loads(pin_path.read_text())
+    assert set(pins) == PIN_KEYS
+    for key, value in pins.items():
+        assert value is None or (type(value) is int and value > 0 if key == 'EXPECTED_INPUT_COUNT' else isinstance(value, str) and re.fullmatch('[0-9a-f]{' + ('40' if key == 'SOURCE_COMMIT' else '64') + '}', value)), key
+    origins = json.loads((OUT / 'origins.json').read_text())
+    known = json.loads((OUT / 'known-baseline.json').read_text())
+    utility = ROOT / origins['utility']['path']
+    assert sha(utility) == origins['utility']['sha256']
+    spec = importlib.util.spec_from_file_location('prior_renderer_utilities', utility)
+    util = importlib.util.module_from_spec(spec); spec.loader.exec_module(util)
+    paths = None
+    if pins['INVENTORY_SHA'] is not None:
+        assert sha(INVENTORY) == pins['INVENTORY_SHA']
+        inventory = json.loads(INVENTORY.read_bytes())
+        assert inventory['inputCount'] == pins['EXPECTED_INPUT_COUNT'] == len(inventory['paths'])
+        paths = inventory['paths']
+    destination = OUT / sys.argv[2]
+    assert not destination.exists()
+    rendered = []
+    for category, records in origins['scripts'].items():
+        if sys.argv[3] == 'candidate' and category != 'candidate':
+            continue
+        for name, record in records.items():
+            path = ROOT / record['path']; assert sha(path) == record['sha256']
+            source = path.read_text()
+            result = transform(source, name, pins, known, util, paths)
+            rendered.append((category, name, source, result, record))
+    destination.mkdir(mode=0o700)
+    (destination / 'diffs').mkdir()
+    files = []
+    for category, name, source, result, record in rendered:
+        target = destination / category / name; target.parent.mkdir(exist_ok=True)
+        with target.open('x') as handle: handle.write(result)
+        diff = destination / 'diffs' / (category + '-' + name + '.diff')
+        with diff.open('x') as handle:
+            handle.writelines(difflib.unified_diff(source.splitlines(True), result.splitlines(True), fromfile=record['path'], tofile=str(target.relative_to(ROOT))))
+        files.append({'path': str(target.relative_to(ROOT)), 'bytes': target.stat().st_size, 'sha256': sha(target), 'origin': record, 'diff': str(diff.relative_to(ROOT)), 'diffSha256': sha(diff)})
+    finals = {
+        'candidate': 'docs/evidence/2026-10-09-capability-hardening/docx-search-candidate',
+        'install': 'output/2026-10-14-docx-search-install',
+        'independent': 'output/2026-10-14-docx-search-independent-install',
+    }
+    tools = [{'preparedPath': item['path'], 'preparedSha256': item['sha256'],
+              'finalPath': finals[Path(item['path']).parent.name] + '/' + Path(item['path']).name}
+             for item in files]
+    receipt = {'phase': 'PREPARATION_ONLY_NO_GENERATED_MAIN_EXECUTED', 'pins': pins, 'inputScopeReady': paths is not None, 'files': files, 'tools': tools, 'configurationInputs': {str(p.relative_to(ROOT)): sha(p) for p in [Path(__file__), pin_path, OUT / 'origins.json', OUT / 'known-baseline.json', OUT / 'latest_data.py.inc']}}
+    with (destination / 'preparation.json').open('x') as handle: json.dump(receipt, handle, ensure_ascii=False, indent=2); handle.write('\n')
+    print(json.dumps({'path': str(destination.relative_to(ROOT)), 'files': len(files), 'scopeReady': paths is not None, 'preparationSha256': sha(destination / 'preparation.json')}))
+
+
+if __name__ == '__main__':
+    main()

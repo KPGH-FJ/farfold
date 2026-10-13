@@ -8,11 +8,13 @@ NEW-26 的[系统文件面板本机分项](file-dialog-native/installed-native-s
 
 P32 的[所选本地 DOCX 附件临时文字搜索](docx-content-search/implementation.json)已完成本片源码与受控验证：明确开始后只查找作者文字，段落、单元格及文档区域分别匹配，省略内容提示常显；来源变化、取消或迟到返回撤回结果。每源文件 ≤1 MiB、最多 20 个文件，实际 UTF-8 检索文字合计 ≤16 MiB，不建立持久正文索引。
 
-前端 v1 定向 109 项、v2 的可见省略提示及字符串 6 项通过，后端定向 24 项通过。完整 App 的 Chromium/WebKit 最终各 60 项检查、11 个场景通过，使用真实文档 Worker 与受控文件返回，源文件稳定且无页面错误或外部网络请求。原 DOCX 未命中、预取预算、提示折叠及测试脚本错误均保留并区分；本片工程检查另行记录，尚未更新正式应用，当前正式版本仍为 `9c278d82`，不提升 NEW-24 或 P32 整项结论。
+前端 v1 定向 109 项、v2 的可见省略提示及字符串 6 项通过，后端定向 24 项通过。完整 App 的 Chromium/WebKit 最终各 60 项检查、11 个场景通过，使用真实文档 Worker 与受控文件返回，源文件稳定且无页面错误或外部网络请求。原 DOCX 未命中、预取预算、提示折叠及测试脚本错误均保留并区分。[本片七项工程检查](docx-search-checks/verification.json)第二轮在 1,799 个稳定输入上全部实际退出 0：前端 494 文件 / 5,885 项，Rust 1,666 项 / 6 忽略。首轮 Rust 音频取消后清理测试失败保留；仅两份测试改为等待真实取消完成事件，未修改生产取消语义。
+
+源码 `52d21a3` 已推送 main，当前唯一正式应用已更新为该版本 / 0.1.7 arm64；[候选独立检查](docx-search-candidate/candidate-independent.json)9/9、[安装独立检查](docx-search-candidate/install-independent-final.json)10/10。[安装](docx-search-candidate/installation.json)前、替换前和安装后三份 217,400 条完整清单相同（SHA-256 `eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849`），数据库备份保持；重复打包应用已精确移除，正式应用和候选 ZIP 保留。安装后尚未启动；附件读取、匹配及来源跳转正例仍未在正式应用验证。安装与受控通过不提升 NEW-24 或 P32 整项结论。
 
 P27 的[截图不可用请求保护](screenshot-unavailable/implementation.json)已完成源码定向 2 项及相关回归 58 项：`screenshot=true` 按原请求身份拒绝，普通文字路径保持；生产截图能力仍缺少。P32 的[所选本地文本附件临时搜索](attachment-content-search/implementation.json)已完成本片源码与受控验证，明确选择后才读取，不连接 Agent 或建立持久正文索引。前端 v1 定向 6 文件 / 68 项、Chromium 与 WebKit 各 55 项通过；当前 v3 仅累计两处文案修正，v2、v3 各补字符串检查 2/2，未重跑完整浏览器。后端有界读取、来源核验及共用读取池已有定向验证。本片已提交并安装 `9c278d82`；P27 生产截图及 P32 整项仍未完成。
 
-当前正式应用为 `9c278d82` / 0.1.7 arm64，源码已推送 main。[本片七项工程检查](attachment-search-checks/verification.json)在 1,756 个稳定输入上全部实际退出 0：前端 491 文件 / 5,821 项，Rust 1,658 项 / 6 忽略；[候选独立检查](attachment-search-candidate/candidate-independent.json)9/9、[安装独立检查](attachment-search-candidate/install-independent-final.json)10/10。安装前、替换前及安装后三份 217,400 条完整清单相同（SHA-256 `f07c39cbd8bca17c11d9fdf368014d11f44eb21f9b9432b68492c7e8e328a73f`）；唯一正式应用已替换，重复打包应用已精确移除，候选 ZIP 保留。
+此前 P27/P32 正式版本为 `9c278d82` / 0.1.7 arm64，源码已推送 main。[本片七项工程检查](attachment-search-checks/verification.json)在 1,756 个稳定输入上全部实际退出 0：前端 491 文件 / 5,821 项，Rust 1,658 项 / 6 忽略；[候选独立检查](attachment-search-candidate/candidate-independent.json)9/9、[安装独立检查](attachment-search-candidate/install-independent-final.json)10/10。安装前、替换前及安装后三份 217,400 条完整清单相同（SHA-256 `f07c39cbd8bca17c11d9fdf368014d11f44eb21f9b9432b68492c7e8e328a73f`）；唯一正式应用已替换，重复打包应用已精确移除，候选 ZIP 保留。
 
 [本片正式界面有限观察](attachment-search-native/installed-native-scoped.json)核到共用搜索范围与空态：首次 134 个对话未加载，明确打开一条既有专用 XLSX 历史后为 133 个，仍无附件候选。257 个 ASCII 字节关键词显示 256 个 UTF-8 字节上限提示；没有已选文件时开始按钮本已禁用，不作为已选文件长度门禁的独立实证。菜单点击未生效的原事件保留，End/Return 随后完成选择；收尾恢复资料范围，原 33 字节标记、两附件及 Ultra 可见保持。未操作发送或批准权限，不据此宣称官方请求计数为零。已正常保存退出，随后精确正式进程为 0；未知工作不改记完成或停止。实际附件读取、匹配和来源跳转正例尚未正式验证，P27 生产截图与 P32 全部原条件仍开放。
 

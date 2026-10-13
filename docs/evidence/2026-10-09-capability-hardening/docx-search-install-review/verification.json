@@ -1,0 +1,473 @@
+{
+  "sourceCommit": "52d21a3adb64816e868c4146166a7999754422e7",
+  "publishedAtUtc": "2026-10-13T18:02:25.213856+00:00",
+  "candidateChecksPassed": 9,
+  "installedChecksPassed": 10,
+  "applicationVersion": "0.1.7",
+  "architecture": "arm64",
+  "dataManifestEntries": 217400,
+  "beforePreinstallAfterSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+  "formalAppUpdated": true,
+  "appLaunchedForThisSlice": false,
+  "realAgentInvokedForThisSlice": false,
+  "nativePositiveSearchVerified": false,
+  "copies": [
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install-preparation/engineering-v2-path-review.json",
+        "bytes": 3959,
+        "sha256": "9c10c08ed45f18e39f06f1fa95c0a05b3e146aea9b55834712b354253ec73143"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/preparation/engineering-v2-path-review.json.raw",
+        "bytes": 3959,
+        "sha256": "9c10c08ed45f18e39f06f1fa95c0a05b3e146aea9b55834712b354253ec73143"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install-preparation/final-candidate-tools-review.json",
+        "bytes": 7136,
+        "sha256": "fddfd810f72538f841f64e7d392bc477ea4a6cc3818dee2f41eb498bdbe70869"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/preparation/final-candidate-tools-review.json.raw",
+        "bytes": 7136,
+        "sha256": "fddfd810f72538f841f64e7d392bc477ea4a6cc3818dee2f41eb498bdbe70869"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install-preparation/preparation.json",
+        "bytes": 10502,
+        "sha256": "a8105c16f62f9d06a70098cefb0a0d400904ae06080c7dcdb3678acb81ea494d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/preparation/preparation.json.raw",
+        "bytes": 10502,
+        "sha256": "a8105c16f62f9d06a70098cefb0a0d400904ae06080c7dcdb3678acb81ea494d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install-preparation/generated-tools.json",
+        "bytes": 5806,
+        "sha256": "734953e5b8226cad089b19feaf3932aa80d487f679fefa027cc729b6df69ca6b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/preparation/generated-tools.json.raw",
+        "bytes": 5806,
+        "sha256": "734953e5b8226cad089b19feaf3932aa80d487f679fefa027cc729b6df69ca6b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install-preparation/pins-install.json",
+        "bytes": 728,
+        "sha256": "1579438c7780ad7f446ccf2608b71a266ac8afb8fc0660eaed37c3619af22da6"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/preparation/pins-install.json.raw",
+        "bytes": 728,
+        "sha256": "1579438c7780ad7f446ccf2608b71a266ac8afb8fc0660eaed37c3619af22da6"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install-preparation/capture-copy-receipt.json",
+        "bytes": 784,
+        "sha256": "05182aadd11192792facb4f46db379e77852e4bcd9563ea0159e5dcb2656115d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/preparation/capture-copy-receipt.json.raw",
+        "bytes": 784,
+        "sha256": "05182aadd11192792facb4f46db379e77852e4bcd9563ea0159e5dcb2656115d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install-preparation/final-copy-receipt.json",
+        "bytes": 849,
+        "sha256": "9e1848f9ab0c66d56a1edb5cf8265a6a43e2eaac018ed7f0518a668c6bc374c1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/preparation/final-copy-receipt.json.raw",
+        "bytes": 849,
+        "sha256": "9e1848f9ab0c66d56a1edb5cf8265a6a43e2eaac018ed7f0518a668c6bc374c1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install-preparation/publish_and_cleanup.py",
+        "bytes": 3426,
+        "sha256": "b2c4e7679c5f2410f3f49c0721774dc3a2010180f98ddee00044371d1ad59a2c"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/preparation/publish_and_cleanup.py.raw",
+        "bytes": 3426,
+        "sha256": "b2c4e7679c5f2410f3f49c0721774dc3a2010180f98ddee00044371d1ad59a2c"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install-preparation/seal-tools.py",
+        "bytes": 3755,
+        "sha256": "024fc344fa3c78a784df19718be20ddb7b8d0eba524448cc47784a12f1f75e26"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/preparation/seal-tools.py.raw",
+        "bytes": 3755,
+        "sha256": "024fc344fa3c78a784df19718be20ddb7b8d0eba524448cc47784a12f1f75e26"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install-preparation/render.py",
+        "bytes": 11891,
+        "sha256": "6c385a6d92327af893d2e31be9b5b1f9a5d72008d495e045574da87d0e2b1021"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/preparation/render.py.raw",
+        "bytes": 11891,
+        "sha256": "6c385a6d92327af893d2e31be9b5b1f9a5d72008d495e045574da87d0e2b1021"
+      }
+    },
+    {
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/prepare-candidate.py",
+        "bytes": 4493,
+        "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/tools/prepare-candidate.py.raw",
+        "bytes": 4493,
+        "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+      }
+    },
+    {
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/verify-candidate.py",
+        "bytes": 59172,
+        "sha256": "c5569619e1995e14c375602669b993c8d6110db74b1b0538f588d02953918fa2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/tools/verify-candidate.py.raw",
+        "bytes": 59172,
+        "sha256": "c5569619e1995e14c375602669b993c8d6110db74b1b0538f588d02953918fa2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/data_manifest.py",
+        "bytes": 4258,
+        "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/tools/data_manifest.py.raw",
+        "bytes": 4258,
+        "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/observe_normal_exit.py",
+        "bytes": 3435,
+        "sha256": "c095f02abfdf7ec21358c5c3d9297f25a7bd0d15d3de154aea9ed4e5bd4d6ff7"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/tools/observe_normal_exit.py.raw",
+        "bytes": 3435,
+        "sha256": "c095f02abfdf7ec21358c5c3d9297f25a7bd0d15d3de154aea9ed4e5bd4d6ff7"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/install_data_snapshot.py",
+        "bytes": 6222,
+        "sha256": "d3a3c52024630411211dbf7b6f59847c5b428b5b68471b64942444237fb51afc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/tools/install_data_snapshot.py.raw",
+        "bytes": 6222,
+        "sha256": "d3a3c52024630411211dbf7b6f59847c5b428b5b68471b64942444237fb51afc"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/capture_snapshot.py",
+        "bytes": 2841,
+        "sha256": "ff12a8118e4295cdee3b2b04b84aa80c05253dbc92cd6a82e16ab49fdc7dc27e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/tools/capture_snapshot.py.raw",
+        "bytes": 2841,
+        "sha256": "ff12a8118e4295cdee3b2b04b84aa80c05253dbc92cd6a82e16ab49fdc7dc27e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/backup_metadata.py",
+        "bytes": 10577,
+        "sha256": "2abca5445040f5dbb7c3513153a86426d5e91c1d3c0a3ea946fcfc4c3ecea15f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/tools/backup_metadata.py.raw",
+        "bytes": 10577,
+        "sha256": "2abca5445040f5dbb7c3513153a86426d5e91c1d3c0a3ea946fcfc4c3ecea15f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/install_verified_candidate.py",
+        "bytes": 42169,
+        "sha256": "b445dbfbe51c69b62f228afdf2ef5059324894539533dfa70cc0c66f807568b6"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/tools/install_verified_candidate.py.raw",
+        "bytes": 42169,
+        "sha256": "b445dbfbe51c69b62f228afdf2ef5059324894539533dfa70cc0c66f807568b6"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-independent-install/verify_installed_final.py",
+        "bytes": 14247,
+        "sha256": "29779512788bfe7973b604d4b2ae265b842542a0a7ba09168dc05b6497c8f948"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/tools/verify_installed_final.py.raw",
+        "bytes": 14247,
+        "sha256": "29779512788bfe7973b604d4b2ae265b842542a0a7ba09168dc05b6497c8f948"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/normal-exit-observation.json",
+        "bytes": 4781,
+        "sha256": "dc80c96b70c604ebb13e860c08f280a408b53ba5317010198eb6d106a848c10b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/metadata/normal-exit-observation.json.raw",
+        "bytes": 4781,
+        "sha256": "dc80c96b70c604ebb13e860c08f280a408b53ba5317010198eb6d106a848c10b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/metadata-backup-receipt.json",
+        "bytes": 1358,
+        "sha256": "07e3f9517feb886b8505304ef1f70299ec513aff7dc12c32a561f64d7771c114"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/metadata/metadata-backup-receipt.json.raw",
+        "bytes": 1358,
+        "sha256": "07e3f9517feb886b8505304ef1f70299ec513aff7dc12c32a561f64d7771c114"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/snapshot-before-execution.json",
+        "bytes": 619,
+        "sha256": "fa1bc6c022b4ec9bb81a661b8011e821cea1276fd2697d47df8f02e3709a0e0a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/metadata/snapshot-before-execution.json.raw",
+        "bytes": 619,
+        "sha256": "fa1bc6c022b4ec9bb81a661b8011e821cea1276fd2697d47df8f02e3709a0e0a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/install-data-before-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/metadata/install-data-before-summary.json.raw",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/snapshot-preinstall-execution.json",
+        "bytes": 623,
+        "sha256": "1517da74bd4282289ea60db2105cf1821689755048837af7ebbee71f3b56f6f1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/metadata/snapshot-preinstall-execution.json.raw",
+        "bytes": 623,
+        "sha256": "1517da74bd4282289ea60db2105cf1821689755048837af7ebbee71f3b56f6f1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/install-data-preinstall-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/metadata/install-data-preinstall-summary.json.raw",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/snapshot-after-execution.json",
+        "bytes": 618,
+        "sha256": "dd897f6caae60ecdad4f17144da57519070a3115b42364b64717777f30613835"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/metadata/snapshot-after-execution.json.raw",
+        "bytes": 618,
+        "sha256": "dd897f6caae60ecdad4f17144da57519070a3115b42364b64717777f30613835"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-install/install-data-after-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/metadata/install-data-after-summary.json.raw",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-independent/review-observe-ready.json",
+        "bytes": 6732,
+        "sha256": "248a5b37f47c7719703b5ee021e9200028ffb99025de434424b2d35fd77b912c"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/independent/review-observe-ready.json.raw",
+        "bytes": 6732,
+        "sha256": "248a5b37f47c7719703b5ee021e9200028ffb99025de434424b2d35fd77b912c"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-independent/review-capture-ready.json",
+        "bytes": 4460,
+        "sha256": "5da5e2ecf2434436ab0f9fb6e19ac0082f0f11cbfd10c03557782b181fd164a9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/independent/review-capture-ready.json.raw",
+        "bytes": 4460,
+        "sha256": "5da5e2ecf2434436ab0f9fb6e19ac0082f0f11cbfd10c03557782b181fd164a9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-independent/review-install-ready.json",
+        "bytes": 5511,
+        "sha256": "a33ffb1bef88a1c9dd1a8d12b310fa527de42735b33bc23dd9b15acc237b8ad5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/independent/review-install-ready.json.raw",
+        "bytes": 5511,
+        "sha256": "a33ffb1bef88a1c9dd1a8d12b310fa527de42735b33bc23dd9b15acc237b8ad5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-independent/final-installation-review.json",
+        "bytes": 5893,
+        "sha256": "55203aec4b90741291766651cec82e1dc0ec1a05a6b2b2361ee8354af57a5b9e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/independent/final-installation-review.json.raw",
+        "bytes": 5893,
+        "sha256": "55203aec4b90741291766651cec82e1dc0ec1a05a6b2b2361ee8354af57a5b9e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-independent/transcript-install/after-capture-ea537f.jsonl.raw",
+        "bytes": 1087,
+        "sha256": "5a0f95908c870a20057be1becddd6065581e25f05881a87651d8c46468d9efba"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/independent/transcript-install/after-capture-ea537f.jsonl.raw",
+        "bytes": 1087,
+        "sha256": "5a0f95908c870a20057be1becddd6065581e25f05881a87651d8c46468d9efba"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-independent/transcript-install/candidate-build-f8bf5f.jsonl.raw",
+        "bytes": 1098,
+        "sha256": "acf18065097a4b9eea54c8428d66c1485b3cd073cc934f810e6b1152f56ccc31"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/independent/transcript-install/candidate-build-f8bf5f.jsonl.raw",
+        "bytes": 1098,
+        "sha256": "acf18065097a4b9eea54c8428d66c1485b3cd073cc934f810e6b1152f56ccc31"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-independent/transcript-install/candidate-nine-02545e.jsonl.raw",
+        "bytes": 1388,
+        "sha256": "2a4fc930232c0d9edebdcd81384c060b28128a663df254c74d3db58d1b9f7079"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/independent/transcript-install/candidate-nine-02545e.jsonl.raw",
+        "bytes": 1388,
+        "sha256": "2a4fc930232c0d9edebdcd81384c060b28128a663df254c74d3db58d1b9f7079"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-independent/transcript-install/duplicate-cleanup-7f500a.jsonl.raw",
+        "bytes": 992,
+        "sha256": "cb279b05d4674508f19f7d3c8b445746c25b7c91a88a4caf56ce9e1738dc1f90"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/independent/transcript-install/duplicate-cleanup-7f500a.jsonl.raw",
+        "bytes": 992,
+        "sha256": "cb279b05d4674508f19f7d3c8b445746c25b7c91a88a4caf56ce9e1738dc1f90"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-independent/transcript-install/installed-ten-184d75.jsonl.raw",
+        "bytes": 1236,
+        "sha256": "b6cadc17ad240b07162d6eb5d9351bf3df96d46e67771d4d8b9256a8234b2aef"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/independent/transcript-install/installed-ten-184d75.jsonl.raw",
+        "bytes": 1236,
+        "sha256": "b6cadc17ad240b07162d6eb5d9351bf3df96d46e67771d4d8b9256a8234b2aef"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-independent/transcript-install/installer-49104b.jsonl.raw",
+        "bytes": 822,
+        "sha256": "575a1066784d41b90b189b2f6afb19cc223d9c39369155347465e800a15727e9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/independent/transcript-install/installer-49104b.jsonl.raw",
+        "bytes": 822,
+        "sha256": "575a1066784d41b90b189b2f6afb19cc223d9c39369155347465e800a15727e9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-docx-search-independent/transcript-install/manifest.json",
+        "bytes": 3731,
+        "sha256": "a73a6ee530319cb971228fe7c5a31f445b805fc6999d616df3bd316f4025fb80"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-install-review/independent/transcript-install/manifest.json.raw",
+        "bytes": 3731,
+        "sha256": "a73a6ee530319cb971228fe7c5a31f445b805fc6999d616df3bd316f4025fb80"
+      }
+    }
+  ],
+  "boundary": "Installed bundle and data retention only. No native DOCX search positive result, permission recovery, all-Agent or whole-P32 acceptance. Original failed engineering and root missing-script invocation remain preserved; prior closed-data differences are not waived. Raw user-data manifests and database bytes stay private."
+}
