@@ -1,9 +1,22 @@
 import { usesMacShortcuts } from "../runtime/platform_shortcuts";
+import {
+  compareLines,
+  comparisonFor,
+  type LineComparison,
+} from "../runtime/line_diff";
+import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
+import { DiffComparisonNote } from "./DiffComparisonNote";
 /**
  * Transcript item renderers (F 稿 steps/approval/diff/settled/raw).
  * User-facing vocabulary only — see PRODUCT.md §5.
  */
-import { useEffect, useRef, useState, type MouseEventHandler } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type MouseEventHandler,
+} from "react";
 import { CopyIcon } from "@phosphor-icons/react";
 import {
   MessageAttachments,
@@ -101,18 +114,17 @@ function durationLabel(call: ToolCallView): string | null {
   return `${Math.floor(rounded / 60)}m ${rounded % 60}s`;
 }
 
-function diffStats(content: ToolContent[]): {
-  adds: number;
-  dels: number;
-} | null {
-  let adds = 0;
-  let dels = 0;
-  for (const c of content) {
-    if (c.type !== "diff") continue;
-    adds += c.newText.split("\n").filter((l) => l.trim()).length;
-    dels += (c.oldText ?? "").split("\n").filter((l) => l.trim()).length;
-  }
-  return adds || dels ? { adds, dels } : null;
+function diffStats(content: ToolContent[]) {
+  const results = content
+    .filter((c) => c.type === "diff")
+    .map((c) => comparisonFor(c));
+  if (!results.length) return null;
+  return {
+    exact: results.every((r) => r.stats !== null),
+    adds: results.reduce((sum, r) => sum + (r.stats?.adds ?? 0), 0),
+    dels: results.reduce((sum, r) => sum + (r.stats?.removes ?? 0), 0),
+    endings: results.reduce((sum, r) => sum + r.endingChanges.length, 0),
+  };
 }
 
 function hasDetail(call: ToolCallView): boolean {
@@ -144,41 +156,87 @@ export function DiffView({
   path,
   oldText,
   newText,
+  comparison,
+  status,
+  onOpenFile,
 }: {
   path: string;
   oldText: string | null;
   newText: string;
+  comparison?: LineComparison;
+  status?: string;
+  onOpenFile?: OpenMessageFile;
 }) {
   const expansion = useSearchExpansion();
-  const oldLines = oldText === null ? [] : oldText.split("\n");
-  const newLines = newText.split("\n");
-  const clipped = oldLines.length + newLines.length > DIFF_LINE_CAP;
-  const hiddenLines =
-    Math.max(0, oldLines.length - 8) + Math.max(0, newLines.length - 24);
-  const lines = (values: string[], cap: number, kind: "del" | "add") =>
-    values
-      .slice(0, !clipped || expansion.materialized ? values.length : cap)
-      .map((line, index) => (
-        <div
-          key={`${kind}${index}`}
-          className={kind}
-          hidden={clipped && !expansion.open && index >= cap}
-        >
-          {kind === "del" ? "− " : "+ "}
-          <span data-find-block>{line}</span>
-        </div>
-      ));
+  const result = useMemo(
+    () => comparison ?? compareLines(oldText, newText),
+    [comparison, oldText, newText],
+  );
+  const raw = result.precision === "unavailable";
+  const clipped = result.rows.length > DIFF_LINE_CAP;
+  const previewRows = 32;
+  const shown = result.rows.slice(
+    0,
+    !clipped || expansion.materialized ? undefined : previewRows,
+  );
   return (
     <div className="diff" ref={expansion.ref}>
       <div className="h">
-        <span data-find-block>{path}</span>
-        <span>
-          {oldText === null ? STRINGS.thread.diffNew : STRINGS.thread.diffEdit}
+        <span data-find-block>
+          <MessageFileLink path={path} onOpenFile={onOpenFile}>
+            {path}
+          </MessageFileLink>
         </span>
+        <span>{W.diffFragment}</span>
       </div>
-      {lines(oldLines, 8, "del")}
-      {lines(newLines, 24, "add")}
-      {clipped && (
+      <DiffComparisonNote result={result} fragment />
+      {raw
+        ? expansion.materialized && (
+            <div hidden={!expansion.open}>
+              {oldText !== null ? (
+                <>
+                  <span>{W.fileBefore}</span>
+                  <pre data-find-block>{oldText}</pre>
+                </>
+              ) : (
+                <p>{W.missingOriginal}</p>
+              )}
+              <span>{W.fileAfter}</span>
+              <pre data-find-block>{newText}</pre>
+            </div>
+          )
+        : shown.map((row, index) => (
+            <div
+              key={index}
+              className={
+                result.precision !== "aligned"
+                  ? "ctx"
+                  : row.kind === "remove"
+                    ? "del"
+                    : row.kind === "add"
+                      ? "add"
+                      : "ctx"
+              }
+              hidden={clipped && !expansion.open && index >= previewRows}
+            >
+              {result.precision === "replacement" &&
+                row.kind !== "same" &&
+                row.kind !== shown[index - 1]?.kind && (
+                  <div className="diff-side">
+                    {row.kind === "remove" ? W.fileBefore : W.fileAfter}
+                  </div>
+                )}
+              {result.precision !== "aligned"
+                ? "  "
+                : row.kind === "remove"
+                  ? "− "
+                  : row.kind === "add"
+                    ? "+ "
+                    : "  "}
+              <span data-find-block>{row.text}</span>
+            </div>
+          ))}
+      {(clipped || raw) && (
         <div className="more">
           <button
             type="button"
@@ -186,10 +244,28 @@ export function DiffView({
             aria-expanded={expansion.open}
             onClick={expansion.toggle}
           >
-            {expansion.open ? S.collapseDiff : S.expandDiff(hiddenLines)}
+            {expansion.open
+              ? S.collapseDiff
+              : raw
+                ? W.diffShowRaw
+                : S.expandDiff(result.rows.length - previewRows)}
           </button>
         </div>
       )}
+      {status && status !== "completed" && (
+        <p className="diff-status">
+          {status === "failed"
+            ? W.fileFailed
+            : status === "pending" || status === "in_progress"
+              ? W.filePending
+              : W.fileUnknown}
+        </p>
+      )}
+      <details className="diff-provenance">
+        <summary>{W.diffDetails}</summary>
+        <p>{W.fileReported}</p>
+        <p>{W.fragmentNote}</p>
+      </details>
     </div>
   );
 }
@@ -250,9 +326,11 @@ function ToolInput({
 
 function ToolDetail({
   call,
+  activity,
   onOpenFile,
 }: {
   call: ToolCallView;
+  activity?: "active" | "finished" | "unknown";
   onOpenFile?: OpenMessageFile;
 }) {
   return (
@@ -290,6 +368,9 @@ function ToolDetail({
               path={c.path}
               oldText={c.oldText}
               newText={c.newText}
+              comparison={comparisonFor(c)}
+              status={activity === "unknown" ? "unknown" : call.status}
+              onOpenFile={onOpenFile}
             />
           );
         }
@@ -357,7 +438,9 @@ export function ToolStep({
       <div className="step">
         <span className={`g ${glyph.cls}`}>{glyph.ch}</span>
         <span className="cmd">
-          {toolSummary(call.kind)}
+          {call.status === "completed" && activity !== "unknown"
+            ? toolSummary(call.kind)
+            : kindLabel(call.kind)}
           {loc && (
             <span className="loc">
               <MessageFileLink path={loc} onOpenFile={onOpenFile}>
@@ -388,8 +471,17 @@ export function ToolStep({
         <span className="tail">
           {stats && (
             <>
-              <span className="add">+{stats.adds}</span>{" "}
-              <span className="del">−{stats.dels}</span>
+              {stats.exact ? (
+                <span title={W.diffReports}>
+                  <span className="add">+{stats.adds}</span>{" "}
+                  <span className="del">−{stats.dels}</span>
+                </span>
+              ) : (
+                <span>{W.diffPartial}</span>
+              )}
+              {stats.endings > 0 && (
+                <span> · {W.diffEndings(stats.endings)}</span>
+              )}
               {" · "}
             </>
           )}
@@ -402,7 +494,7 @@ export function ToolStep({
       </div>
       {expansion.materialized && (
         <div hidden={!expansion.open}>
-          <ToolDetail call={call} onOpenFile={onOpenFile} />
+          <ToolDetail call={call} activity={activity} onOpenFile={onOpenFile} />
         </div>
       )}
     </div>

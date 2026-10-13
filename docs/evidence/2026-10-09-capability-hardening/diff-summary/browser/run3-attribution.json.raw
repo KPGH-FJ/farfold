@@ -1,0 +1,10 @@
+{
+  "actualExitCode": 1,
+  "chunk": "61bf28",
+  "cause": "Preview pre contains complete multiline file text, so exact single-line getByText is wrong; actual failureVisibleText shows both expected lines. Scope to pre.a-term then assert full text. Also strengthens independent-oracle ending ordering, neutral rows, keyboard precondition and full seven file fields.",
+  "checksPassed": 127,
+  "completeScenarios": 14,
+  "sourceChange": false,
+  "oldRunnerSha256": "e37c77b07a0e5116669838dbd9e849ac8279e86ec4639cffe3cc3fd58c21da83",
+  "newRunnerSha256": "95e0e5a0584a6fcb9396c6af649f86268dd2228e18e2ac1e82f4a977f9b3632c"
+}

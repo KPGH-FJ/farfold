@@ -1,4 +1,12 @@
 import { fileBasename } from "../runtime/file_paths";
+import {
+  comparisonFor,
+  textLines,
+  textLineCount,
+  type LineComparison,
+} from "../runtime/line_diff";
+import { comparisonCopy } from "../runtime/line_diff_presentation";
+import { DiffComparisonNote } from "./DiffComparisonNote";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   CaretDownIcon,
@@ -14,7 +22,6 @@ import remarkGfm from "remark-gfm";
 import {
   canPreviewHtml,
   filePresentation,
-  lineDiff,
   splitDiffRows,
   staticPreviewDocument,
   STATIC_PREVIEW_SANDBOX,
@@ -53,7 +60,7 @@ function feedbackContentId(before: string | null, after: string) {
   const text = `${before ?? ""}\u0000${after}`;
   for (let i = 0; i < text.length; i++)
     hash = Math.imul(hash ^ text.charCodeAt(i), 16777619);
-  return `${text.length}:${hash >>> 0}`;
+  return `physical-lines-v1:${before === null ? "missing" : `known-${before.length}`}:${after.length}:${hash >>> 0}`;
 }
 const PAGE_LINES = 400;
 
@@ -89,7 +96,8 @@ function NumberedText({
   selection: Selection | null;
 }) {
   const [limit, setLimit] = useState(PAGE_LINES);
-  const lines = text.split("\n");
+  const lines = useMemo(() => textLines(text, limit), [text, limit]);
+  const count = useMemo(() => textLineCount(text), [text]);
   return (
     <>
       <div className="artifact-code">
@@ -108,11 +116,11 @@ function NumberedText({
             >
               {index + 1}
             </button>
-            <code>{line || " "}</code>
+            <code>{line.text || " "}</code>
           </div>
         ))}
       </div>
-      {lines.length > limit && (
+      {count > limit && (
         <button
           type="button"
           className="artifact-more"
@@ -130,16 +138,21 @@ export function FileDifference({
   onLine,
   split = false,
   selection = null,
+  comparison,
 }: {
   card: FileArtifact;
   onLine: (selection: Selection) => void;
   split?: boolean;
   selection?: Selection | null;
+  comparison?: LineComparison;
 }) {
-  const rows = useMemo(
-    () => lineDiff(card.oldText, card.newText),
-    [card.oldText, card.newText],
+  const result = useMemo(
+    () => comparison ?? comparisonFor(card),
+    [comparison, card.oldText, card.newText],
   );
+  const rows = result.rows;
+  const rowKind = (row: DiffLine) =>
+    result.precision === "aligned" ? row.kind : "uncompared";
   const [limit, setLimit] = useState(PAGE_LINES);
   const paired = useMemo(
     () => (split ? splitDiffRows(rows) : []),
@@ -151,7 +164,7 @@ export function FileDifference({
     const selected = isSelectedLine(selection, side, line ?? null);
     return (
       <div
-        className={`artifact-split-cell ${row?.kind ?? "gap"}${selected ? " selected-line" : ""}`}
+        className={`artifact-split-cell ${row ? rowKind(row) : "gap"}${selected ? " selected-line" : ""}`}
       >
         <button
           type="button"
@@ -173,7 +186,36 @@ export function FileDifference({
   };
   return (
     <>
-      {split ? (
+      <DiffComparisonNote
+        result={result}
+        fragment={card.scope === "fragment"}
+      />
+      {result.precision === "unavailable" ? (
+        <div className="artifact-raw-comparison">
+          {card.oldText !== null && (
+            <section>
+              <h3>{W.fileBefore}</h3>
+              <NumberedText
+                text={card.oldText}
+                side="before"
+                onLine={onLine}
+                fragment={card.scope === "fragment"}
+                selection={selection}
+              />
+            </section>
+          )}
+          <section>
+            <h3>{W.fileAfter}</h3>
+            <NumberedText
+              text={card.newText}
+              side="after"
+              onLine={onLine}
+              fragment={card.scope === "fragment"}
+              selection={selection}
+            />
+          </section>
+        </div>
+      ) : split ? (
         <div className="artifact-split-code">
           <div className="artifact-split-heading">
             <span>
@@ -192,7 +234,7 @@ export function FileDifference({
         <div className="artifact-code artifact-difference">
           {rows.slice(0, limit).map((row, index) => (
             <div
-              className={`artifact-code-row ${row.kind}${isSelectedLine(selection, "before", row.oldLine) || isSelectedLine(selection, "after", row.newLine) ? " selected-line" : ""}`}
+              className={`artifact-code-row ${rowKind(row)}${isSelectedLine(selection, "before", row.oldLine) || isSelectedLine(selection, "after", row.newLine) ? " selected-line" : ""}`}
               key={index}
             >
               <button
@@ -226,7 +268,13 @@ export function FileDifference({
                 {row.newLine ?? ""}
               </button>
               <span className="artifact-line-sign">
-                {row.kind === "add" ? "+" : row.kind === "remove" ? "−" : " "}
+                {result.precision !== "aligned"
+                  ? " "
+                  : row.kind === "add"
+                    ? "+"
+                    : row.kind === "remove"
+                      ? "−"
+                      : " "}
               </span>
               <code>{row.text || " "}</code>
             </div>
@@ -289,6 +337,18 @@ export function FileArtifactView({
 }) {
   const presentation = filePresentation(card);
   const previewAvailable = canPreviewHtml(card);
+  const comparison = useMemo(
+    () => comparisonFor(card),
+    [card.oldText, card.newText],
+  );
+  const beforeLineCount = useMemo(
+    () => textLineCount(card.oldText ?? ""),
+    [card.oldText],
+  );
+  const afterLineCount = useMemo(
+    () => textLineCount(card.newText),
+    [card.newText],
+  );
   const [requestedMode, setMode] = useState<Mode>("diff");
   const contentId = useMemo(
     () => feedbackContentId(card.oldText, card.newText),
@@ -385,16 +445,12 @@ export function FileArtifactView({
     selection?.side ??
     (copyingBefore ? "before" : "after");
   const lineInput = feedbackDraft.lineInput?.text ?? selectionInput(selection);
-  const lineCount = (
-    lineSide === "before" ? (card.oldText ?? "") : card.newText
-  ).split("\n").length;
+  const lineCount = lineSide === "before" ? beforeLineCount : afterLineCount;
   const lineInvalid = Boolean(
     lineInput.trim() && !parseFeedbackSelection(lineInput, lineSide, lineCount),
   );
   const editLineInput = (text: string, side = lineSide) => {
-    const count = (
-      side === "before" ? (card.oldText ?? "") : card.newText
-    ).split("\n").length;
+    const count = side === "before" ? beforeLineCount : afterLineCount;
     fileFeedbackDrafts.update(threadKey, card.path, {
       ...fileFeedbackDrafts.read(threadKey, card.path, contentId),
       contentId,
@@ -411,12 +467,12 @@ export function FileArtifactView({
       target === "path"
         ? card.path
         : mode === "diff"
-          ? lineDiff(card.oldText, card.newText)
-              .map(
-                (row) =>
-                  `${row.kind === "add" ? "+" : row.kind === "remove" ? "-" : " "}${row.text}`,
-              )
-              .join("\n")
+          ? comparisonCopy(
+              comparison,
+              card.oldText,
+              card.newText,
+              card.scope === "fragment",
+            )
           : copyingBefore
             ? (card.oldText ?? "")
             : card.newText;
@@ -585,6 +641,7 @@ export function FileArtifactView({
             onLine={selectLine}
             split={split}
             selection={selection}
+            comparison={comparison}
           />
         )}
         {(mode === "after" || mode === "before") && (
@@ -729,7 +786,11 @@ export function FileArtifactView({
         {card.status === "failed" ? (
           <span className="failed">{W.fileFailed}</span>
         ) : card.status !== "completed" ? (
-          <span>{W.filePending}</span>
+          <span>
+            {card.status === "pending" || card.status === "in_progress"
+              ? W.filePending
+              : W.fileUnknown}
+          </span>
         ) : null}
         {presentation === "html" && !previewAvailable && (
           <span>{W.incompleteHtml}</span>

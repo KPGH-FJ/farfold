@@ -1,0 +1,264 @@
+{
+  "kind": "manually-authored-independent-oracle",
+  "version": 2,
+  "productionExecuted": false,
+  "algorithmDerivedExpected": false,
+  "lineSemanticsProposal": "LF-delimited physical rows; retain LF/CRLF/no terminator separately, do not trim body or normalize Unicode. A final LF terminates its last physical row, not a phantom extra line. A lone CR without LF remains text. EOL-only changes must remain visible separately from body +/- counts. This is proposed product presentation behavior, not a claim about the current helper.",
+  "cases": [
+    {
+      "id": "unchanged-fragment",
+      "before": "a\nb",
+      "after": "a\nb",
+      "expected": {
+        "bodyAdds": 0,
+        "bodyRemoves": 0,
+        "relativePairs": [
+          [1, 1],
+          [2, 2]
+        ],
+        "wholeFileUnchanged": false
+      }
+    },
+    {
+      "id": "one-replacement",
+      "before": "a\nb",
+      "after": "a\nc",
+      "expected": {
+        "bodyAdds": 1,
+        "bodyRemoves": 1,
+        "sameText": ["a"],
+        "removedText": ["b"],
+        "addedText": ["c"]
+      },
+      "currentStaticCounterexample": "Current message diffStats counts +2/-2 and paints a as removed and added. This is a source deduction, not an executed red."
+    },
+    {
+      "id": "whitespace-is-content",
+      "before": "a\n \nz",
+      "after": "a\n\t\nz",
+      "expected": {
+        "bodyAdds": 1,
+        "bodyRemoves": 1,
+        "removedText": [" "],
+        "addedText": ["\t"]
+      }
+    },
+    {
+      "id": "real-empty-line",
+      "before": "a\nb",
+      "after": "a\n\nb",
+      "expected": {
+        "bodyAdds": 1,
+        "bodyRemoves": 0,
+        "addedText": [""],
+        "relativePairs": [
+          [1, 1],
+          [2, 3]
+        ]
+      }
+    },
+    {
+      "id": "missing-before-not-new-file",
+      "before": null,
+      "after": "a\nb\nc",
+      "expected": {
+        "comparison": "missing-before",
+        "exactStats": null,
+        "afterPreserved": "a\nb\nc",
+        "oldSideHasNoCoordinates": true,
+        "noCreationOrWriteClaim": true
+      }
+    },
+    {
+      "id": "known-empty-before",
+      "before": "",
+      "after": "a\nb\nc",
+      "expected": {
+        "bodyAdds": 3,
+        "bodyRemoves": 0,
+        "newRelativeLines": [1, 2, 3]
+      }
+    },
+    {
+      "id": "both-empty",
+      "before": "",
+      "after": "",
+      "expected": {
+        "bodyAdds": 0,
+        "bodyRemoves": 0,
+        "physicalRows": 0
+      }
+    },
+    {
+      "id": "empty-versus-one-newline",
+      "before": "",
+      "after": "\n",
+      "expected": {
+        "bodyAdds": 1,
+        "bodyRemoves": 0,
+        "addedText": [""],
+        "newPhysicalRows": 1,
+        "afterEndsWith": "LF"
+      }
+    },
+    {
+      "id": "terminal-newline-only",
+      "before": "a\n",
+      "after": "a",
+      "expected": {
+        "bodyAdds": 0,
+        "bodyRemoves": 0,
+        "sameText": ["a"],
+        "endingChange": {
+          "line": 1,
+          "before": "LF",
+          "after": "none"
+        },
+        "mustNotSayNoChanges": true,
+        "noPhantomSecondPhysicalLine": true
+      }
+    },
+    {
+      "id": "crlf-versus-lf",
+      "before": "a\r\nb\r\n",
+      "after": "a\nb\n",
+      "expected": {
+        "bodyAdds": 0,
+        "bodyRemoves": 0,
+        "sameText": ["a", "b"],
+        "endingChangeLines": [1, 2],
+        "beforeEndings": ["CRLF", "CRLF"],
+        "afterEndings": ["LF", "LF"],
+        "mustNotSayNoChanges": true
+      }
+    },
+    {
+      "id": "unicode-not-normalized",
+      "before": "é\n中😀",
+      "after": "é\n中😀",
+      "expected": {
+        "bodyAdds": 1,
+        "bodyRemoves": 1,
+        "removedText": ["é"],
+        "addedText": ["é"],
+        "sameText": ["中😀"]
+      }
+    },
+    {
+      "id": "repeated-anchor",
+      "before": "A\nX\nA\n",
+      "after": "A\nY\nA\n",
+      "expected": {
+        "bodyAdds": 1,
+        "bodyRemoves": 1,
+        "sameRelativePairs": [
+          [1, 1],
+          [3, 3]
+        ],
+        "beforeFinalEnding": "LF",
+        "afterFinalEnding": "LF"
+      }
+    },
+    {
+      "id": "known-uneven-replacement",
+      "before": "one\nold\nextra\nend",
+      "after": "one\nnew\nend",
+      "expected": {
+        "bodyAdds": 1,
+        "bodyRemoves": 2,
+        "splitPairs": [
+          [1, 1],
+          [2, 2],
+          [3, null],
+          [4, 3]
+        ],
+        "sideReconstructionRequired": true
+      }
+    },
+    {
+      "id": "matrix-fallback",
+      "construction": {
+        "before": ["P", "old-0000 ... old-1099", "S"],
+        "after": ["P", "new-0000 ... new-1099", "S"],
+        "notation": "Each numbered range denotes 1100 distinct one-line ASCII strings; not a literal ellipsis in input."
+      },
+      "expected": {
+        "comparison": "replacement",
+        "exactStats": null,
+        "keptPrefix": "P",
+        "keptSuffix": "S",
+        "sideReconstructionRequired": true,
+        "notClaimMinimalEditCounts": true
+      }
+    },
+    {
+      "id": "input-comparison-budget",
+      "construction": {
+        "before": "text exceeding the chosen comparison-character or row bound",
+        "after": "another text exceeding that bound"
+      },
+      "expected": {
+        "comparison": "unavailable",
+        "exactStats": null,
+        "rawInputRetained": true,
+        "noQuadraticAllocation": true,
+        "visibleReasonRequired": true,
+        "searchOrCopyMustNotQuietlyTruncate": true
+      }
+    },
+    {
+      "id": "ending-change-shifted-line",
+      "before": "a\nb",
+      "after": "X\na\r\nb",
+      "expected": {
+        "bodyAdds": 1,
+        "bodyRemoves": 0,
+        "endingChanges": [
+          {
+            "oldLine": 1,
+            "newLine": 2,
+            "before": "LF",
+            "after": "CRLF"
+          }
+        ]
+      }
+    }
+  ],
+  "integrationExpectations": [
+    {
+      "id": "unknown-source-scope",
+      "case": "Official diff fragment with location.line=500",
+      "expected": "Coordinates stay fragment-relative; no whole-file offset 500 inferred; equal fragment does not prove equal file."
+    },
+    {
+      "id": "failure-status",
+      "case": "Same supplied diff under failed/pending/unknown/completed tool status",
+      "expected": "Text preserved in every state. Failed, unfinished and unknown stay distinct; completed report alone still is not current disk verification."
+    },
+    {
+      "id": "input-intent",
+      "case": "Synthesized rawInput write/edit card",
+      "expected": "Retain source=write-input/edit-input and existing full-file/fragment scope; never promote it to official reported output or disk result."
+    },
+    {
+      "id": "aggregate",
+      "case": "One exact diff plus missing-before or fallback diff, including repeated paths",
+      "expected": "Do not sum a precise-looking total across incomparable reports or call it net file changes; either scoped exact per-report stats or one clearly partial/unavailable summary."
+    },
+    {
+      "id": "source-click",
+      "case": "Tool contains only diff.path and no locations",
+      "expected": "Explicit path click uses existing MessageFileLink/onOpenFile verification once; render/search/expansion never triggers disk I/O. File failure keeps original reported text."
+    },
+    {
+      "id": "search",
+      "case": "Collapsed long before/after content with distinct tail needles",
+      "expected": "Both real tails remain findable through existing search expansion; generated range/status/precision labels excluded. Shared unchanged body is not double-painted or double-counted; no fake concatenated cross-line match."
+    },
+    {
+      "id": "feedback-and-copy",
+      "case": "Fragment side-by-side line selection and copy",
+      "expected": "Real before/after coordinates and original bytes preserved. Diff-copy includes explicit precision/ending information or refuses misleading exact-patch output; copying raw before/after is exact."
+    }
+  ]
+}

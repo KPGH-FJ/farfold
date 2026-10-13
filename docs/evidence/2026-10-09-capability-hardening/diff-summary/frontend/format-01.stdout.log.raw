@@ -1,0 +1,15 @@
+src/runtime/line_diff.ts 52ms
+src/runtime/line_diff.test.ts 22ms
+src/runtime/line_diff_presentation.ts 8ms
+src/runtime/artifact_view.ts 8ms
+src/runtime/artifact_view.test.ts 11ms
+src/runtime/workspace_strings.ts 4ms
+src/components/thread-items.tsx 26ms
+src/components/thread-items.diff.test.tsx 6ms
+src/components/thread-items.search.test.tsx 5ms (unchanged)
+src/components/thread-items.search-expansion.test.tsx 8ms (unchanged)
+src/components/FileArtifactView.tsx 26ms
+src/components/FileArtifactView.feedback.test.tsx 17ms
+src/components/DiffComparisonNote.tsx 2ms
+src/styles-thread.css 59ms (unchanged)
+src/runtime/fixtures/line-diff/oracle.json 8ms

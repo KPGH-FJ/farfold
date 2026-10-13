@@ -1,0 +1,124 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/FileArtifactView.feedback.test.tsx > copies only the shown diff, full reported path, or selected side without changing feedback
+AssertionError: expected last "vi.fn()" call to have been called with [ ' same\n-old\n+new' ]
+
+- Expected
++ Received
+
+  [
+-   " same
++   "所示片段 · 新增 1 行、删除 1 行
++  same
+  -old
+  +new",
+  ]
+
+ ❯ src/components/FileArtifactView.feedback.test.tsx:241:31
+    239|   };
+    240|   await click(W.copyDiff);
+    241|   expect(clipboard.writeText).toHaveBeenLastCalledWith(" same\n-old\n+…
+       |                               ^
+    242|   await click(W.copyPath);
+    243|   expect(clipboard.writeText).toHaveBeenLastCalledWith("/p/shared.ts");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  src/components/thread-items.search.test.tsx > retains all old and new diff lines in the same searchable tree including clipped tails
+AssertionError: expected '<div class="diff"><div class="h"><spa…' to match /hidden=""[^>]*>[^<]*<span data-find-b…/
+
+- Expected:
+/hidden=""[^>]*>[^<]*<span data-find-block="true">old-line-29/
+
++ Received:
+"<div class=\"diff\"><div class=\"h\"><span data-find-block=\"true\"><span class=\"message-file-link\">/work/diff-needle</span></span><span>所示片段</span></div><div class=\"diff-comparison-note\" role=\"note\"><span>所示片段 · 新增 55 行、删除 30 行</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-0</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-1</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-2</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-3</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-4</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-5</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-6</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-7</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-8</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-9</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-10</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-11</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-12</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-13</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-14</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-15</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-16</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-17</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-18</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-19</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-20</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-21</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-22</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-23</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-24</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-25</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-26</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-27</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-28</span></div><div class=\"del\">− <span data-find-block=\"true\">old-line-29</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-0</span></div><div class=\"add\">+ <span data-find-block=\"true\">new-line-1</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-2</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-3</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-4</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-5</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-6</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-7</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-8</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-9</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-10</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-11</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-12</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-13</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-14</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-15</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-16</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-17</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-18</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-19</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-20</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-21</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-22</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-23</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-24</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-25</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-26</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-27</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-28</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-29</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-30</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-31</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-32</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-33</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-34</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-35</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-36</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-37</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-38</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-39</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-40</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-41</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-42</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-43</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-44</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-45</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-46</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-47</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-48</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-49</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-50</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-51</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-52</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-53</span></div><div class=\"add\" hidden=\"\">+ <span data-find-block=\"true\">new-line-54</span></div><div class=\"more\"><button type=\"button\" class=\"step-toggle\" aria-expanded=\"false\">展开其余 53 行</button></div><details class=\"diff-provenance\"><summary>比较说明</summary><p>显示 Agent 报告的差异或文件内容，不代表文件当前状态。</p><p>按片段显示，行号从所示内容开头计数，不代表文件中的行号。</p></details></div>"
+
+ ❯ src/components/thread-items.search.test.tsx:74:16
+     72|   expect(html.match(/old-line-29/g)).toHaveLength(1);
+     73|   expect(html.match(/new-line-54/g)).toHaveLength(1);
+     74|   expect(html).toMatch(
+       |                ^
+     75|     /hidden=""[^>]*>[^<]*<span data-find-block="true">old-line-29/,
+     76|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  src/runtime/artifact_view.test.ts > line differences > keeps uneven replacements and unchanged locations honest in side-by-side view
+AssertionError: expected [ { before: null, after: { …(4) } } ] to deeply equal [ { before: null, after: { …(4) } } ]
+
+- Expected
++ Received
+
+@@ -1,9 +1,9 @@
+  [
+    {
+      "after": {
+-       "kind": "add",
++       "kind": "uncompared",
+        "newLine": 1,
+        "oldLine": null,
+        "text": "new",
+      },
+      "before": null,
+
+ ❯ src/runtime/artifact_view.test.ts:161:50
+    159|       rows.flatMap((row) => (row.after ? [row.after.text] : [])).join(…
+    160|     ).toBe("one\nnew\nend");
+    161|     expect(splitDiffRows(lineDiff(null, "new"))).toEqual([
+       |                                                  ^
+    162|       {
+    163|         before: null,
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  src/runtime/artifact_view.test.ts > line differences > aligns unchanged lines while keeping original and updated line numbers
+AssertionError: expected [ { kind: 'uncompared', …(3) } ] to deeply equal [ Array(1) ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "kind": "add",
++     "kind": "uncompared",
+      "newLine": 1,
+      "oldLine": null,
+      "text": "new",
+    },
+  ]
+
+ ❯ src/runtime/artifact_view.test.ts:175:35
+    173|       { kind: "same", oldLine: 3, newLine: 3, text: "three" },
+    174|     ]);
+    175|     expect(lineDiff(null, "new")).toEqual([
+       |                                   ^
+    176|       { kind: "add", oldLine: null, newLine: 1, text: "new" },
+    177|     ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  src/runtime/artifact_view.test.ts > line differences > preserves exact text through large replacement fallback including trailing lines
+AssertionError: expected 'old0\nold1\nold2\nold3\nold4\nold5\no…' to be 'old0\nold1\nold2\nold3\nold4\nold5\no…' // Object.is equality
+
+- Expected
++ Received
+
+@@ -1096,6 +1096,5 @@
+  old1095
+  old1096
+  old1097
+  old1098
+  old1099
+-
+
+ ❯ src/runtime/artifact_view.test.ts:192:7
+    190|         .map((r) => r.text)
+    191|         .join("\n"),
+    192|     ).toBe(old);
+       |       ^
+    193|     expect(
+    194|       rows
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+

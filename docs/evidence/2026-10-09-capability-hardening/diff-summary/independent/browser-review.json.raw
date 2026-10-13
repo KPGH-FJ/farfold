@@ -1,0 +1,233 @@
+{
+  "schemaVersion": 1,
+  "atUtc": "2026-10-13T20:20:45.920422+00:00",
+  "conclusion": "PASS_WITHIN_CONTROLLED_BROWSER_SCOPE",
+  "scope": "Independent static runner/oracle and saved-result review. No additional browser/server/test/App/Agent/database execution.",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-diff-summary-frontend/source-freeze-v1.json",
+    "bytes": 5567,
+    "sha256": "0c8d40b42209f774a957c05bb198412bd5b8d5afdf5d26bea58a220c56e3c793"
+  },
+  "ownedSourcesCurrentMatch": 15,
+  "ownerTargetedEvidence": "Saved actual targeted-final 10 files/117 passed, typecheck and scoped format exit0, all log hashes match freeze; independent helper13/13 recorded separately. No full seven-check result claimed.",
+  "oracle": {
+    "path": "output/2026-10-14-diff-summary-independent/browser-oracle.json",
+    "bytes": 24410,
+    "sha256": "0bb74b49e03a90e81fe30f3cf0d14ac40933e0ce7cd0d0f53dd55c8437a293b9"
+  },
+  "runner": {
+    "path": "output/2026-10-14-diff-summary-browser/run.mjs",
+    "bytes": 14252,
+    "sha256": "ac7b9a3b880c2947691e09d390536295d7ccdd2e3e430bd63aab90d9e6047e17"
+  },
+  "fixture": {
+    "path": "output/2026-10-14-diff-summary-browser/fixture.tsx",
+    "bytes": 8419,
+    "sha256": "aead837e91f21c5f98577a45a4e70345a8b17c9d1b930254f743b53ffdc46a42"
+  },
+  "results": [
+    {
+      "result": {
+        "path": "output/2026-10-14-diff-summary-browser/chromium-run6.json",
+        "bytes": 274469,
+        "sha256": "587e6272d9dc48d6098bf77022a805c5203de1fc2bb16bf92c00a4043738a51e"
+      },
+      "actualExitCode": 0,
+      "checksPassed": 147,
+      "scenariosCompleted": 17,
+      "sourceInputs": 1098,
+      "beforeAfterEqual": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "screenshots": [
+        {
+          "path": "output/2026-10-14-diff-summary-browser/chromium-run6-replace.png",
+          "bytes": 85229,
+          "sha256": "d2f3359cc5c1a00182942d51af72d1ffed4ea179a073d58e7069bfc82404bf49"
+        },
+        {
+          "path": "output/2026-10-14-diff-summary-browser/chromium-run6-missing.png",
+          "bytes": 86279,
+          "sha256": "71680ff140ca7d8e1d6f91d83c2515e0bbec19db70076cef52fdc8111be0809f"
+        },
+        {
+          "path": "output/2026-10-14-diff-summary-browser/chromium-run6-shiftedEndings.png",
+          "bytes": 88488,
+          "sha256": "caaa449d0644b1a27539bcb6fa39b1e6513ad3a439156006283e1e3577862e14"
+        },
+        {
+          "path": "output/2026-10-14-diff-summary-browser/chromium-run6-current-file.png",
+          "bytes": 99193,
+          "sha256": "f0a21efa3217ab28dc80069aa695327debeb122a4db8a00696e1b654ef17e305"
+        }
+      ]
+    },
+    {
+      "result": {
+        "path": "output/2026-10-14-diff-summary-browser/webkit-run1.json",
+        "bytes": 274459,
+        "sha256": "dd790919b7254c10904c3abf43fab27dd766c340c22dadd870c97795cfc781cf"
+      },
+      "actualExitCode": 0,
+      "checksPassed": 147,
+      "scenariosCompleted": 17,
+      "sourceInputs": 1098,
+      "beforeAfterEqual": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "screenshots": [
+        {
+          "path": "output/2026-10-14-diff-summary-browser/webkit-run1-replace.png",
+          "bytes": 108079,
+          "sha256": "8b7d28d8bea9ce4618cb9e9ba4c2b9f47f313e717441fdeaa8af6ae143ccd765"
+        },
+        {
+          "path": "output/2026-10-14-diff-summary-browser/webkit-run1-missing.png",
+          "bytes": 108586,
+          "sha256": "6cd88eb31beef0871e6dcd805ace53353f88362c22d18e13c5ed528928cc6e67"
+        },
+        {
+          "path": "output/2026-10-14-diff-summary-browser/webkit-run1-shiftedEndings.png",
+          "bytes": 111491,
+          "sha256": "8cd6595b4f57697a71c2fe313b72773e78ac0151af13ed362cf38145f48669fa"
+        },
+        {
+          "path": "output/2026-10-14-diff-summary-browser/webkit-run1-current-file.png",
+          "bytes": 130665,
+          "sha256": "7ceadbc1f566d815979ed72dc8b33a506a1123fbff0ea2b329442cbeb792004e"
+        }
+      ]
+    }
+  ],
+  "actualCompletionManifest": {
+    "path": "output/2026-10-14-diff-summary-independent/transcript-browser/manifest.json",
+    "bytes": 4191,
+    "sha256": "60eae4968a5683c7be0efb6a29604777934d5530827dfcfcf04ca616f7d21681"
+  },
+  "rootPixelAndServerRecord": {
+    "path": "output/2026-10-14-diff-summary-browser/root-completion.json",
+    "bytes": 1063,
+    "sha256": "d434c006ccc0fc9837a4653ac870f7209d32fc6efb048655117e28476ff75998"
+  },
+  "retainedFailures": [
+    {
+      "run": 1,
+      "result": {
+        "path": "output/2026-10-14-diff-summary-browser/chromium-run1.json",
+        "bytes": 252844,
+        "sha256": "87e196ed4a61dbcc474aafc63dc74c670c59b40e8e8ae3ff445b2b4f164d8a43"
+      },
+      "runner": {
+        "path": "output/2026-10-14-diff-summary-browser/run1.runner.mjs.raw",
+        "bytes": 12705,
+        "sha256": "7192acf427a4debea13c5712b531a38af3c6badfc02a5404419735e8e2011416"
+      },
+      "attribution": {
+        "path": "output/2026-10-14-diff-summary-browser/run1-attribution.json",
+        "bytes": 399,
+        "sha256": "20015a9b72505bfd1656d62efbcebbc90db03e612967502bc90935bff73f8154"
+      },
+      "actualExitCode": 1
+    },
+    {
+      "run": 2,
+      "result": {
+        "path": "output/2026-10-14-diff-summary-browser/chromium-run2.json",
+        "bytes": 271631,
+        "sha256": "2c59067bf16a7471f817d2373eb8af34c879cd44d4d2dabfde50891591120de0"
+      },
+      "runner": {
+        "path": "output/2026-10-14-diff-summary-browser/run2.runner.mjs.raw",
+        "bytes": 12656,
+        "sha256": "3bc37ab894cbff7dc248db6e7bab1c9d036c584bc137aa51811839874e361442"
+      },
+      "attribution": {
+        "path": "output/2026-10-14-diff-summary-browser/run2-attribution.json",
+        "bytes": 440,
+        "sha256": "5912be0f5d500b10f610ef4b3055835d5dbfd0a5229cf9cdf813d7f2f8f3dd12"
+      },
+      "actualExitCode": 1
+    },
+    {
+      "run": 3,
+      "result": {
+        "path": "output/2026-10-14-diff-summary-browser/chromium-run3.json",
+        "bytes": 270996,
+        "sha256": "3d1c2dec1fd5c40a7c9db4bbec372c15236aad2e590426c20816de1aa9b52b82"
+      },
+      "runner": {
+        "path": "output/2026-10-14-diff-summary-browser/run3.runner.mjs.raw",
+        "bytes": 12707,
+        "sha256": "e37c77b07a0e5116669838dbd9e849ac8279e86ec4639cffe3cc3fd58c21da83"
+      },
+      "attribution": {
+        "path": "output/2026-10-14-diff-summary-browser/run3-attribution.json",
+        "bytes": 619,
+        "sha256": "a0f8a4802644a4d2d36ed576f8e01e075bf86c96fb777b525600bd4616f4c173"
+      },
+      "actualExitCode": 1
+    },
+    {
+      "run": 4,
+      "result": {
+        "path": "output/2026-10-14-diff-summary-browser/chromium-run4.json",
+        "bytes": 287841,
+        "sha256": "b1920f78034088e9e5769386efff929e4ecc89c6e39a4fa1803f980304991b15"
+      },
+      "runner": {
+        "path": "output/2026-10-14-diff-summary-browser/run4.runner.mjs.raw",
+        "bytes": 13888,
+        "sha256": "95e0e5a0584a6fcb9396c6af649f86268dd2228e18e2ac1e82f4a977f9b3632c"
+      },
+      "attribution": {
+        "path": "output/2026-10-14-diff-summary-browser/run4-attribution.json",
+        "bytes": 714,
+        "sha256": "de962409b7dfebec7e145fa58dfef5cda345d7adb802048588fef166a1f70574"
+      },
+      "actualExitCode": 1
+    },
+    {
+      "run": 5,
+      "result": {
+        "path": "output/2026-10-14-diff-summary-browser/chromium-run5.json",
+        "bytes": 287737,
+        "sha256": "011bcccc1e71146902904843fe1bb3f4ba8ad3588b022333134eb00da1684a4b"
+      },
+      "runner": {
+        "path": "output/2026-10-14-diff-summary-browser/run5.runner.mjs.raw",
+        "bytes": 13917,
+        "sha256": "3970d69c9114b08f27f1dd2613fcffa7b0c4958d7b30c4c46b31b46d214088bd"
+      },
+      "attribution": {
+        "path": "output/2026-10-14-diff-summary-browser/run5-attribution.json",
+        "bytes": 676,
+        "sha256": "5538a7336c3075e9935118f4619a1f1092dd43328595db2631f700eddfcff303"
+      },
+      "actualExitCode": 1
+    }
+  ],
+  "failureAssessment": {
+    "run1": "Wrong full-file copy label requested for fragment; current copyFragment control verified statically.",
+    "run2": "Global hidden-needle selector matched both report body and search-result code; bounded .diff selector is correct.",
+    "run3": "Exact line selector did not match actual multiline pre; full controlled47-byte body is now asserted.",
+    "run4": "Actual captured calls are two identical selected-path inspections plus one valid body read. Both src/main and fixture use development StrictMode; OpenedFileView mount effect cleanup invalidates the first operation before body read. This is not a release/native request-count observation.",
+    "run5": "Immediate folded-state assertion raced search-close state update; same precondition passed in run4. Final runner waits for actual collapsed+hidden DOM, then Enter and visible body. No product source change. Static unexecuted failure-label expectation corrected to openFailureNotice safe generic string."
+  },
+  "strengthenedAssertions": [
+    "Exact ordered ending change li for EOF old2/new2 none→LF and shifted old1/new2 LF→CRLF in message view",
+    "Missing/fallback neutral body classes in both views",
+    "Real folded and hidden precondition before keyboard expansion",
+    "Fixed current-file47-byte body and full seven-field read arguments",
+    "Held StrictMode inspections released after owner B is visibly current; no subsequent old-owner body read"
+  ],
+  "claimLimits": [
+    "Synthetic controlled Tauri returns; no native OS file I/O or real Agent action. Returned diff is not evidence of disk write.",
+    "Late owner covers inspection only; already-started body-read/close-pane/revision-change cases are not browser-tested here.",
+    "Ending exact coordinates independently asserted in message view, pane precision/count label covered; shared component source is not a second pane-specific ending assertion.",
+    "Split-view feedback coordinates and formatted comparison copy remain source/targeted-test scope.",
+    "All authored oracle properties are not claimed as browser coverage; original scopeNotYetCovered in runner-review-v1 remains except four explicitly strengthened points.",
+    "All eight final PNGs were visually inspected by root, per root-completion record; this reviewer checked bytes and related DOM evidence, not pixels.",
+    "Formal app remains prior source2a720169 installed and unlaunched; P18 seven engineering checks/candidate/install/real Agent remain pending."
+  ],
+  "server": "Root owned server received SIGTERM; exact completion exit143 retained, not natural success."
+}

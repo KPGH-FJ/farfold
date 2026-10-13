@@ -1,0 +1,19 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/ConversationWorkspace.test.tsx > keeps pending approvals outside collapsed tool steps and keeps the content header independent
+AssertionError: expected '<details class="workspace-steps"><sum…' to contain '查看了文件'
+
+Expected: "查看了文件"
+Received: "<details class="workspace-steps"><summary><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M232,48H160a40,40,0,0,0-32,16A40,40,0,0,0,96,48H24a8,8,0,0,0-8,8V200a8,8,0,0,0,8,8H96a24,24,0,0,1,24,24,8,8,0,0,0,16,0,24,24,0,0,1,24-24h72a8,8,0,0,0,8-8V56A8,8,0,0,0,232,48ZM96,192H32V64H96a24,24,0,0,1,24,24V200A39.81,39.81,0,0,0,96,192Zm128,0H160a39.81,39.81,0,0,0-24,8V88a24,24,0,0,1,24-24h64Z"></path></svg><span>查看处理过程</span><small>1 步</small><span>步骤结果未知</span><svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 256 256" class="workspace-step-caret" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path></svg></summary><div class="steps"><div><div class="step"><span class="g wait">?</span><span class="cmd">读取</span><span class="tail">步骤结果未知</span></div></div></div>"
+
+ ❯ src/components/ConversationWorkspace.test.tsx:45:18
+     43|   // The step row shows the user-language summary; the raw title stays…
+     44|   // the collapsed technical details, which are not rendered while fol…
+     45|   expect(folded).toContain("查看了文件");
+       |                  ^
+     46|   expect(folded).not.toContain("Allow reading notes");
+     47|   expect(html.indexOf("Allow reading notes")).toBeGreaterThan(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

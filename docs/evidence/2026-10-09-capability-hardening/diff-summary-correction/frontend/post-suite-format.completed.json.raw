@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "prettier",
+    "--check",
+    "src/components/ConversationWorkspace.test.tsx"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T20:29:57.833699+00:00",
+  "completedAtUtc": "2026-10-13T20:29:58.098427+00:00",
+  "actualExitCode": 0,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-diff-summary-frontend/post-suite-format.stdout.log",
+    "bytes": 66,
+    "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-diff-summary-frontend/post-suite-format.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

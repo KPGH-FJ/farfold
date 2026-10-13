@@ -58,7 +58,7 @@ it("registers tool fields separately while leaving action labels outside the tex
 });
 
 it("retains all old and new diff lines in the same searchable tree including clipped tails", () => {
-  const oldText = Array.from({ length: 30 }, (_, i) => `old-line-${i}`).join(
+  const oldText = Array.from({ length: 40 }, (_, i) => `old-line-${i}`).join(
     "\n",
   );
   const newText = Array.from({ length: 55 }, (_, i) => `new-line-${i}`).join(
@@ -67,17 +67,17 @@ it("retains all old and new diff lines in the same searchable tree including cli
   const html = render(
     <DiffView path="/work/diff-needle" oldText={oldText} newText={newText} />,
   );
-  expect(html).toContain("old-line-29");
+  expect(html).toContain("old-line-39");
   expect(html).toContain("new-line-54");
-  expect(html.match(/old-line-29/g)).toHaveLength(1);
+  expect(html.match(/old-line-39/g)).toHaveLength(1);
   expect(html.match(/new-line-54/g)).toHaveLength(1);
   expect(html).toMatch(
-    /hidden=""[^>]*>[^<]*<span data-find-block="true">old-line-29/,
+    /hidden=""[^>]*>[^<]*<span data-find-block="true">old-line-39/,
   );
   expect(html).toMatch(
     /hidden=""[^>]*>[^<]*<span data-find-block="true">new-line-54/,
   );
-  expect(html.match(/data-find-block/g)?.length).toBeGreaterThanOrEqual(85);
+  expect(html.match(/data-find-block/g)?.length).toBeGreaterThanOrEqual(95);
 });
 
 it("offers a real expansion control for long diffs outside search", () => {
@@ -88,7 +88,7 @@ it("offers a real expansion control for long diffs outside search", () => {
   );
   expect(html).not.toContain("line-49");
   expect(html).toMatch(/<button[^>]*aria-expanded="false"/);
-  expect(html).toContain("26");
+  expect(html).toContain("18");
 });
 
 it("registers each plan entry without including the generated status glyph or heading", () => {

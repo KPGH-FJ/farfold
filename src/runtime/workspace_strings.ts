@@ -90,6 +90,24 @@ export const WORKSPACE_STRINGS = {
   filePending: "此步骤尚未完成。",
   fileFailed: "此步骤未成功，内容仍保留供查看。",
   missingOriginal: "未提供修改前的文本。",
+  diffDetails: "比较说明",
+  diffShowRaw: "展开两侧原文",
+  diffFragment: "所示片段",
+  diffContent: "所示内容",
+  diffEqual: "正文相同",
+  diffPartial: "未完整比较",
+  diffMissing: "缺少修改前文本，无法比较",
+  diffReplacement: "较大的不同段落按两侧原文显示；增删行数未作精确统计。",
+  diffUnavailable: "内容较长，暂不逐行比较。两侧原文仍可查看和复制。",
+  diffCounts: (adds: number, removes: number) =>
+    `新增 ${adds} 行、删除 ${removes} 行`,
+  diffEndings: (count: number) => `已对齐行的换行变化（${count} 处）`,
+  diffEndingNone: "没有行末换行",
+  diffEndingLF: "换行（LF）",
+  diffEndingCRLF: "回车与换行（CRLF）",
+  diffEndingArrow: " → ",
+  diffReports: "各片段合计；不是文件净变更",
+  fileUnknown: "此步骤结果未知。",
   lineLabel: (line: number) => `第 ${line} 行`,
   fragmentLine: (line: number) => `片段第 ${line} 行`,
   feedbackRange: (range: string, fragment: boolean) =>
@@ -107,7 +125,9 @@ export const WORKSPACE_STRINGS = {
   feedbackFragmentLines: "按所示片段计数，不是文件中的行号。",
   feedbackFileLines: "按当时返回的文件内容计数。",
   feedbackLineInvalid: (count: number) =>
-    `请输入 1–${count} 内的行号或连续范围，例如 1–${Math.min(3, count)}。`,
+    count === 0
+      ? "此侧没有可选的文字行；可清除行号后填写整体意见。"
+      : `请输入 1–${count} 内的行号或连续范围，例如 1–${Math.min(3, count)}。`,
   chooseLatest: "显示这个文件最近一次提供的内容。",
   chooseRoundLatest: "显示这个文件在本轮最后一次提供的内容。",
   roundContent: "本轮产物",

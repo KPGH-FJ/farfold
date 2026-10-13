@@ -15,6 +15,7 @@ const h = vi.hoisted(() => ({
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
   useContext: () => h.active,
+  useMemo: (read: () => unknown) => read(),
   useRef: (initial: unknown) => {
     const slots = h.slots.get(h.scope)!;
     return (slots[h.cursor++] ??= { current: initial });
@@ -94,7 +95,7 @@ it("reveals both the enclosing tool and clipped diff through their real ref regi
   diff.props.ref(diffElement);
   expect(nodes(tool).some((node) => node.props.hidden === true)).toBe(true);
   expect(nodes(diff).filter((node) => node.props.hidden === true)).toHaveLength(
-    36,
+    28,
   );
   const release = revealSearchAncestors(hit, root);
   tool = renderTool();
@@ -111,13 +112,13 @@ it("reveals both the enclosing tool and clipped diff through their real ref regi
   ).toBe(false);
   expect(
     nodes(renderDiff()).filter((node) => node.props.hidden === true),
-  ).toHaveLength(36);
+  ).toHaveLength(28);
   h.active = false;
   expect(
     nodes(renderDiff()).filter(
       (node) => node.props["data-find-block"] === true,
     ),
-  ).toHaveLength(25);
+  ).toHaveLength(33);
 });
 
 it("keeps a user's explicit disclosure changes when the search release arrives", () => {
@@ -165,9 +166,9 @@ it("supports manually expanding and collapsing a long diff when search is closed
     nodes(renderDiff())
       .find((node) => node.type === "button")!
       .props.onClick();
-  expect(count()).toBe(25);
+  expect(count()).toBe(33);
   toggle();
   expect(count()).toBe(51);
   toggle();
-  expect(count()).toBe(25);
+  expect(count()).toBe(33);
 });

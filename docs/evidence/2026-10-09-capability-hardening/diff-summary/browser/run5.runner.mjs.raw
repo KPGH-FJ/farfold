@@ -1,0 +1,194 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { chromium, webkit } = await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base = "output/2026-10-14-diff-summary-browser";
+const [engine, label] = process.argv.slice(2);
+if (!["chromium", "webkit"].includes(engine) || !/^run\d+$/.test(label)) throw Error("Exact engine/run required");
+const hash = file => createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+const scan = dir => fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? scan(dir + "/" + entry.name) : [dir + "/" + entry.name]);
+const inventory = () => Object.fromEntries([
+  ...scan("src"), ...["fixture.tsx", "index.html", "serve.mjs", "run.mjs"].map(name => base + "/" + name),
+  "output/2026-10-14-diff-summary-independent/browser-oracle.json", "package.json", "pnpm-lock.yaml", "vite.config.ts",
+].sort().map(file => [file, hash(file)]));
+const result = { engine, label, scope: "Full production App, controlled synthetic tool reports and Tauri file returns. No native file IO, installed App, real Agent, private data or external network.", before: inventory(), checks: [], scenarios: [], errors: [], externalRequests: [], screenshots: [] };
+const browser = await (engine === "webkit" ? webkit : chromium).launch({ headless: true, executablePath: engine === "webkit" ? path.resolve("output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh") : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" });
+let page, scenario, baseline;
+const check = (name, pass, detail) => {
+  result.checks.push({ scenario, name, pass: Boolean(pass), ...(detail === undefined ? {} : { detail }) });
+  if (!pass) throw Error(name);
+};
+const state = () => page.evaluate(() => window.fixture.current());
+const pane = () => page.locator(".file-artifact-view");
+const note = root => root.locator(".diff-comparison-note");
+const diskText = "CURRENT_DISK_CONTENT\nnot the reported fragment\n";
+const diskBody = () => page.locator("pre.a-term").filter({ hasText: "CURRENT_DISK_CONTENT" });
+const io = s => s.calls.filter(c => c.cmd.startsWith("file_delivery_"));
+async function load(name) {
+  scenario = name;
+  if (page) await page.close();
+  page = await browser.newPage({ viewport: { width: 1280, height: 860 } });
+  page.setDefaultTimeout(10000);
+  page.on("pageerror", error => result.errors.push({ scenario, error: String(error) }));
+  await page.route("**/*", route => {
+    if (route.request().url().startsWith("http://127.0.0.1:1540/")) return route.continue();
+    result.externalRequests.push({ scenario, url: route.request().url() });
+    return route.abort();
+  });
+  await page.addInitScript(value => { window.fixtureSeed = { case: value }; }, name);
+  await page.goto("http://127.0.0.1:1540/" + base + "/index.html");
+  await page.getByText("P18_A", { exact: true }).first().click();
+  if (!await page.getByRole("button", { name: "技术详情", exact: true }).isVisible()) await page.locator(".workspace-steps > summary").click();
+  await page.getByRole("button", { name: "技术详情", exact: true }).click();
+  baseline = await state();
+  check("Opening tool details does not inspect or read a file", io(baseline).length === 0);
+}
+async function openPane(input = false) {
+  await page.locator(".step").getByRole("button", { name: "查看内容", exact: true }).click();
+  await pane().waitFor();
+  check("Opening supplied fragments does not read disk", io(await state()).length === 0);
+  const text = await pane().innerText();
+  check("Fragment coordinates and supplied-source boundary remain visible", text.includes("按片段显示") && text.includes(input ? "拟写入内容" : "不代表文件当前状态"));
+}
+async function copySide(side, expected) {
+  await pane().getByRole("combobox", { name: "查看方式", exact: true }).selectOption(side);
+  const name = "复制修改片段";
+  await pane().getByRole("button", { name, exact: true }).click();
+  const s = await state();
+  check(`Raw ${side} copy preserves exact code units and endings`, s.copied.at(-1) === expected, { bytes: Buffer.byteLength(s.copied.at(-1) ?? "", "utf8") });
+}
+async function shot(name) {
+  const file = `${base}/${engine}-${label}-${name}.png`;
+  await page.screenshot({ path: file });
+  result.screenshots.push({ file, sha256: hash(file) });
+}
+async function finishScenario() {
+  const s = await state();
+  check("No Agent requests or unexpected controlled commands", s.unexpected.length === 0 && !s.calls.some(c => /^(session_prompt|session_open|session_load|session_set_config|history_search_)/.test(c.cmd)), s.unexpected);
+  check("Existing unsent draft and unrelated feedback remain exact", s.protectedUnchanged);
+  result.scenarios.push({ name: scenario, calls: io(s), copyCount: s.copied.length });
+}
+try {
+  for (const [name, summary] of [
+    ["replace", "新增 1 行、删除 1 行"], ["unchanged", "正文相同"],
+    ["missing", "缺少修改前文本，无法比较"], ["empty", "新增 2 行、删除 0 行"],
+    ["whitespace", "新增 1 行、删除 1 行"], ["eof", "正文相同"],
+    ["shiftedEndings", "新增 1 行、删除 0 行"], ["unicode", "新增 2 行、删除 2 行"],
+    ["fallback", "未完整比较"], ["failed", "新增 1 行、删除 1 行"],
+  ]) {
+    await load(name);
+    const diff = page.locator(".diff").first();
+    check("Message comparison agrees with independently expected summary", (await note(diff).innerText()).includes(summary));
+    if (name === "replace") {
+      check("Unchanged message line is neutral", await diff.locator(".ctx").filter({ hasText: /^\s*a\s*$/ }).count() === 1);
+      check("One message insertion and deletion", await diff.locator(":scope > .add").count() === 1 && await diff.locator(":scope > .del").count() === 1);
+    }
+    if (name === "missing") check("Missing original never states a new file", !(await diff.innerText()).includes("新文件"));
+    if (["eof", "shiftedEndings"].includes(name)) {
+      await diff.getByText("已对齐行的换行变化（1 处）", { exact: true }).click();
+      const detail = await note(diff).locator("li").allTextContents();
+      const expected = name === "eof" ? "修改前 片段第 2 行：没有行末换行 → 修改后 片段第 2 行：换行（LF）" : "修改前 片段第 1 行：换行（LF） → 修改后 片段第 2 行：回车与换行（CRLF）";
+      check("Line-ending change carries exact ordered source coordinates and types", JSON.stringify(detail) === JSON.stringify([expected]), detail);
+    }
+    await openPane();
+    check("Content pane shares the same comparison precision and counts", (await note(pane()).innerText()).includes(summary));
+    if (["missing", "fallback"].includes(name)) {
+      check("Uncertain comparison never colors message rows as insertions or deletions", await diff.locator(":scope > .add, :scope > .del").count() === 0);
+      check("Uncertain comparison uses neutral pane rows", await pane().locator(".artifact-code-row.add, .artifact-code-row.remove").count() === 0 && await pane().locator(".artifact-code-row.uncompared").count() > 0);
+    }
+    if (name === "failed") check("Failed tool stays visibly unsuccessful", (await pane().innerText()).includes("此步骤未成功"));
+    const s = await state();
+    if (s.source.before !== null) await copySide("before", s.source.before);
+    await copySide("after", s.source.after);
+    if (name === "replace" || name === "missing" || name === "shiftedEndings") {
+      await pane().getByRole("combobox", { name: "查看方式", exact: true }).selectOption("diff");
+      await page.setViewportSize({ width: 850, height: 820 });
+      check("Content pane fits narrow viewport", await pane().evaluate(e => e.getBoundingClientRect().right <= innerWidth + 1));
+      await shot(name);
+    }
+    await finishScenario();
+  }
+
+  await load("input");
+  check("Input-only intent has no invented returned diff", await page.locator(".diff").count() === 0);
+  await openPane(true);
+  check("Input intent and failed result remain distinct", (await pane().innerText()).includes("拟写入内容") && (await pane().innerText()).includes("此步骤未成功"));
+  check("Input fragment comparison still counts actual rows", (await note(pane()).innerText()).includes("新增 1 行、删除 1 行"));
+  await finishScenario();
+
+  for (const [name, label] of [["pending", "此步骤尚未完成"], ["unknown", "此步骤结果未知"]]) {
+    await load(name);
+    check("Message retains the reported status boundary", (await page.locator(".diff").innerText()).includes(label));
+    await openPane();
+    check("Content pane retains the same status boundary", (await pane().innerText()).includes(label));
+    await finishScenario();
+  }
+
+  await load("long");
+  check("Long diff tail initially stays folded", !await page.locator(".diff").getByText("P18_HIDDEN_NEEDLE", { exact: true }).isVisible());
+  await page.getByRole("button", { name: "查找当前对话", exact: true }).click();
+  const find = page.getByRole("textbox", { name: "查找当前对话", exact: true });
+  await find.fill("P18_HIDDEN_NEEDLE");
+  await page.locator(".search-match").filter({ hasText: "P18_HIDDEN_NEEDLE" }).waitFor();
+  check("Search materializes the exact hidden changed line", await page.locator(".diff").getByText("P18_HIDDEN_NEEDLE", { exact: true }).isVisible());
+  await find.press("Escape");
+  const expand = page.locator(".diff .more").getByRole("button");
+  check("Keyboard starts with folded diff tail", await expand.getAttribute("aria-expanded") === "false" && !await page.locator(".diff").getByText("P18_HIDDEN_NEEDLE", { exact: true }).isVisible());
+  await expand.focus();
+  await expand.press("Enter");
+  check("Keyboard expansion exposes hidden diff tail", await page.locator(".diff").getByText("P18_HIDDEN_NEEDLE", { exact: true }).isVisible());
+  await finishScenario();
+
+  await load("replace");
+  scenario = "explicit-path-current-file";
+  await page.locator(".diff").getByRole("button", { name: "/controlled/result.txt", exact: true }).click();
+  await diskBody().waitFor();
+  let s = await state();
+  check("Development StrictMode replays inspection of the same explicit absolute path", s.calls.filter(c => c.cmd === "file_delivery_inspect_selected").length === 2 && s.calls.filter(c => c.cmd === "file_delivery_inspect_selected").every(c => c.args.path === "/controlled/result.txt"));
+  check("Actual current-file preview is separately read after explicit action", s.calls.filter(c => c.cmd === "file_delivery_read_text").length === 1 && (await diskBody().textContent()) === diskText);
+  const expectedFile = { root: "/controlled", path: "/controlled/result.txt", resolvedPath: "/controlled/result.txt", name: "result.txt", size: 47, sha256: createHash("sha256").update(diskText).digest("hex"), version: "controlled-v1" };
+  check("Body read preserves every inspected file field", JSON.stringify(s.calls.find(c => c.cmd === "file_delivery_read_text").args.file) === JSON.stringify(expectedFile));
+  await shot("current-file");
+  await finishScenario();
+
+  await load("replace");
+  scenario = "explicit-path-missing-file";
+  await page.evaluate(() => window.fixture.mode({ fail: true }));
+  await page.locator(".diff").getByRole("button", { name: "/controlled/result.txt", exact: true }).click();
+  await page.getByText("文件已无法读取，请检查位置和访问权限", { exact: false }).waitFor();
+  s = await state();
+  check("Failed inspection never reads or claims a current file", s.calls.filter(c => c.cmd === "file_delivery_read_text").length === 0 && !await diskBody().isVisible());
+  check("Reported fragment remains available after disk failure", (await page.locator(".diff").innerText()).includes("新增 1 行、删除 1 行"));
+  await finishScenario();
+
+  await load("replace");
+  scenario = "late-inspection-owner-switch";
+  await page.evaluate(() => window.fixture.mode({ hold: true }));
+  await page.locator(".diff").getByRole("button", { name: "/controlled/result.txt", exact: true }).click();
+  await page.waitForFunction(() => window.fixture.current().held === 2);
+  await page.getByText("P18_B", { exact: true }).first().click();
+  await page.getByText("P18_OTHER_OWNER", { exact: true }).waitFor();
+  await page.evaluate(() => window.fixture.release());
+  await page.waitForFunction(() => window.fixture.current().held === 0);
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  s = await state();
+  check("Late old-owner inspection does not start a body read", s.calls.filter(c => c.cmd === "file_delivery_read_text").length === 0);
+  check("Other conversation never shows late old-file body", !await diskBody().isVisible() && await page.getByText("P18_OTHER_OWNER", { exact: true }).isVisible());
+  await finishScenario();
+} catch (error) {
+  result.failure = { scenario, error: String(error), stack: error.stack };
+  if (page) {
+    await shot("failure").catch(() => {});
+    result.failureState = await state().catch(() => null);
+    result.failureVisibleText = await page.locator("body").innerText().catch(() => "unavailable");
+  }
+} finally {
+  result.after = inventory();
+  result.sourceStable = JSON.stringify(result.before) === JSON.stringify(result.after);
+  await browser.close();
+  result.passed = !result.failure && result.sourceStable && result.errors.length === 0 && result.externalRequests.length === 0;
+  const target = `${base}/${engine}-${label}.json`;
+  fs.writeFileSync(target, JSON.stringify(result, null, 2) + "\n", { flag: "wx" });
+  console.log(JSON.stringify({ target, passed: result.passed, checks: result.checks.length, scenarios: result.scenarios.length, sourceStable: result.sourceStable, errors: result.errors, failure: result.failure }));
+  if (!result.passed) process.exitCode = 1;
+}

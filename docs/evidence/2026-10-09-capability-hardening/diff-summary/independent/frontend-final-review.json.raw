@@ -1,0 +1,520 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T20:12:29.809815+00:00",
+  "result": "PASS_WITHIN_REVIEWED_SCOPE_NO_BLOCKING_FINDING",
+  "scope": "Independent final static review of 15 frozen frontend files and one actual full pure line_diff module oracle run. No owner Vitest rerun, browser/App/native/Agent/database/full-seven/build/install execution.",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-diff-summary-frontend/source-freeze-v1.json",
+    "bytes": 5567,
+    "sha256": "0c8d40b42209f774a957c05bb198412bd5b8d5afdf5d26bea58a220c56e3c793"
+  },
+  "ownerSummary": {
+    "path": "output/2026-10-14-diff-summary-frontend/summary.json",
+    "bytes": 11385,
+    "sha256": "b4ae4eccb6680550fffb5076e6d858baf6400182061ece1a7adc7c4dfd19c0f7"
+  },
+  "sourceBeforeAfterFinalChecksMatches": true,
+  "reviewedOwnedFiles": [
+    {
+      "path": "src/runtime/line_diff.ts",
+      "sha256": "d679c0d4e426f21486db078dde2b343000539cf98bc196e390453528191d5c6a",
+      "bytes": 6126,
+      "lines": 211
+    },
+    {
+      "path": "src/runtime/line_diff.test.ts",
+      "sha256": "13f1fb595bf2a9657a70bd1ea03b2dadfde010453b9c05159059ab0299c27bb0",
+      "bytes": 7795,
+      "lines": 233
+    },
+    {
+      "path": "src/runtime/line_diff_presentation.ts",
+      "sha256": "0d1d1ab4a033595d8ac42f494cb2beeb5ff66d5a2a9b56db81912c3e2dcaf53d",
+      "bytes": 2148,
+      "lines": 62
+    },
+    {
+      "path": "src/runtime/artifact_view.ts",
+      "sha256": "70290d69dbcd9d04295dc6add84a7c67a1fc82f008581ef95661f67bb6b8123a",
+      "bytes": 5432,
+      "lines": 142
+    },
+    {
+      "path": "src/runtime/artifact_view.test.ts",
+      "sha256": "b22ee329c16b954e1897f1f996b9a4615e34725e82920adb3eda1cba1dcbdc63",
+      "bytes": 8531,
+      "lines": 260
+    },
+    {
+      "path": "src/runtime/workspace_strings.ts",
+      "sha256": "73686cca07195a19e876a95229967e766de0246d170edc83bc8aa316851e7de2",
+      "bytes": 6778,
+      "lines": 150
+    },
+    {
+      "path": "src/components/thread-items.tsx",
+      "sha256": "e343570d0a17c552652e51c80775fbc0d7966849570329ea2f70319894c362b2",
+      "bytes": 19171,
+      "lines": 667
+    },
+    {
+      "path": "src/components/thread-items.diff.test.tsx",
+      "sha256": "319f43453c7d780ccea48ac6a83310a486628b154e97864c9addab3af1791f1c",
+      "bytes": 6372,
+      "lines": 198
+    },
+    {
+      "path": "src/components/thread-items.search.test.tsx",
+      "sha256": "8db5575a0eb35790c19ecbfdb00e26a33edde6ec600cdcec236e51b2ab16a295",
+      "bytes": 4506,
+      "lines": 126
+    },
+    {
+      "path": "src/components/thread-items.search-expansion.test.tsx",
+      "sha256": "c756a7624073f2a23ac3a5656bd73fcf1d7d165724cd7e70683b151f8b8e9079",
+      "bytes": 5401,
+      "lines": 174
+    },
+    {
+      "path": "src/components/FileArtifactView.tsx",
+      "sha256": "3ccc50a1143b431b93e2650dcefff43af2d41e95ecbcd181fbdce259dd55ab98",
+      "bytes": 25359,
+      "lines": 813
+    },
+    {
+      "path": "src/components/FileArtifactView.feedback.test.tsx",
+      "sha256": "f192bbfe8d234561a0f053db9389c0951b7444c9121ab96de37095bfc78daf79",
+      "bytes": 16191,
+      "lines": 466
+    },
+    {
+      "path": "src/components/DiffComparisonNote.tsx",
+      "sha256": "a479f09201ce625b768bc23541ba2b7fb753852bb25d07d31839ef2284aeb2c7",
+      "bytes": 1614,
+      "lines": 52
+    },
+    {
+      "path": "src/styles-thread.css",
+      "sha256": "ac6de4301ed58fd5d7233e40c0f35d8cdfb0b20ba7e9085814f859a49cb46679",
+      "bytes": 26995,
+      "lines": 1478
+    },
+    {
+      "path": "src/runtime/fixtures/line-diff/oracle.json",
+      "sha256": "d96141762a2de0231bd3ee3afd15a99daa79862777c3deec9d76ec733a723536",
+      "bytes": 7919,
+      "lines": 264
+    }
+  ],
+  "verifiedEvidenceAndSharedInputs": [
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-final.completed.json",
+      "bytes": 1187,
+      "sha256": "81459a3c89bed36f39bedac4729296204a63b161721c5b0d254be2ce2d3538cf"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-final.stdout.log",
+      "bytes": 217,
+      "sha256": "a1298ca79630070f8da5b177690c152e943555e8ab34c38f705e56b06cb1d1aa"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-final.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/typecheck-final.completed.json",
+      "bytes": 684,
+      "sha256": "0c430b087efdcd9e9b80ac96ba91a8832308fa2306b5a3fa42739dcbf067fea4"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/typecheck-final.stdout.log",
+      "bytes": 78,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/typecheck-final.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/format-final.completed.json",
+      "bytes": 1359,
+      "sha256": "025fe59cd3ba2a29021736ae2ebc0c82db460316de8cfe2143329801a5ea151c"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/format-final.stdout.log",
+      "bytes": 66,
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/format-final.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/red-01.completed.json",
+      "bytes": 739,
+      "sha256": "42c19ab60d309f865198aa19caefafe9ae609c3790b206eda2ce7ea350cef1d0"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/red-01.stdout.log",
+      "bytes": 420,
+      "sha256": "423c8928b6516b08b23dccb070595c24f834e575cf013a86c3c5e62c8dfba35b"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/red-01.stderr.log",
+      "bytes": 1970,
+      "sha256": "2e81dcbb2225ed84a7cf6a1707cc9fe3a42942a1d369a890e06869b3c30895a7"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-01.completed.json",
+      "bytes": 1002,
+      "sha256": "0c0d6119988905e375281605feca76eab477c1e2a9de2aad52d345be9c72ff34"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-01.stdout.log",
+      "bytes": 920,
+      "sha256": "e0ba2a4128dd82502cf2de34fbc9c90c25f4aea21dce37ac5e7edca19e78f33c"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-01.stderr.log",
+      "bytes": 11774,
+      "sha256": "ad7afa51bd8f220961c7d369911d9693845d3c28dcdb6e25fa0e89152ad36aca"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-02.completed.json",
+      "bytes": 1184,
+      "sha256": "72e72bc797a508113f30421d9ea502e9dcaa0d82f3af524e7796a88af521abe5"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-02.stdout.log",
+      "bytes": 525,
+      "sha256": "25be13b061e6e292f58e0eb91ff3a311ddec4d73c3dfe6f9062060c3acd60ca6"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-02.stderr.log",
+      "bytes": 3423,
+      "sha256": "fa85236862ded3018f95d78aa318a919bc49eb0b8bd4f8ac629ccb9887fed4cc"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-03.completed.json",
+      "bytes": 1181,
+      "sha256": "a7ccd20ff233e7f5aa37b1a16983d92e2c62cef1088cdcac30fd085279f6a066"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-03.stdout.log",
+      "bytes": 217,
+      "sha256": "11be30f905adbb04b1df23b8ac07b842dadabefc06db3b05782016325912d92f"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-03.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/typecheck-01.completed.json",
+      "bytes": 678,
+      "sha256": "93ce6279ae51916ef17036f068d9de3bee94ea8f75ce2ba921dbc7866905ff6e"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/typecheck-01.stdout.log",
+      "bytes": 78,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/typecheck-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/format-01.completed.json",
+      "bytes": 1354,
+      "sha256": "fcd9c1a91fd832d4cfcf80f0c1ddacf5ed0943816e7cd5de0be2872dd083eb8e"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/format-01.stdout.log",
+      "bytes": 653,
+      "sha256": "7cd319600826f874ef904ff3cb923bc43d2eb08ef1f215683e1059fba49688c3"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/format-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-research/oracle.json",
+      "bytes": 8384,
+      "sha256": "ff5e98d503285f86f6a02c6e153ba056f77e0adc203f69a2df5e634e63a3c7a0"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/oracle-correction.json",
+      "bytes": 528,
+      "sha256": "a9ca5c3a65b753e13ce3fae4fa4844ced1c68a77899917c86ca0b4983d05a230"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/oracle-v2.json",
+      "bytes": 8739,
+      "sha256": "e46e33a808ea287c7caffa88f8dbf2d74318566af36b2157a2a546404f5351e8"
+    },
+    {
+      "path": "src/runtime/fixtures/line-diff/oracle.json",
+      "bytes": 7919,
+      "sha256": "d96141762a2de0231bd3ee3afd15a99daa79862777c3deec9d76ec733a723536"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/source-freeze-v1.json",
+      "bytes": 5567,
+      "sha256": "0c8d40b42209f774a957c05bb198412bd5b8d5afdf5d26bea58a220c56e3c793"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/run.py",
+      "bytes": 863,
+      "sha256": "1b69245ca2d169ae1dd8c503a5ba00a25207d90d67741947e2a895765cfa2228"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/source-before-final.json",
+      "bytes": 2938,
+      "sha256": "2ac26046bd442c759ca985fec21b152661ec940061dc6d8cad9620e7e939fad6"
+    },
+    {
+      "path": "src/runtime/line_diff.ts",
+      "bytes": 6126,
+      "sha256": "d679c0d4e426f21486db078dde2b343000539cf98bc196e390453528191d5c6a"
+    },
+    {
+      "path": "src/runtime/line_diff.test.ts",
+      "bytes": 7795,
+      "sha256": "13f1fb595bf2a9657a70bd1ea03b2dadfde010453b9c05159059ab0299c27bb0"
+    },
+    {
+      "path": "src/runtime/line_diff_presentation.ts",
+      "bytes": 2148,
+      "sha256": "0d1d1ab4a033595d8ac42f494cb2beeb5ff66d5a2a9b56db81912c3e2dcaf53d"
+    },
+    {
+      "path": "src/runtime/artifact_view.ts",
+      "bytes": 5432,
+      "sha256": "70290d69dbcd9d04295dc6add84a7c67a1fc82f008581ef95661f67bb6b8123a"
+    },
+    {
+      "path": "src/runtime/artifact_view.test.ts",
+      "bytes": 8531,
+      "sha256": "b22ee329c16b954e1897f1f996b9a4615e34725e82920adb3eda1cba1dcbdc63"
+    },
+    {
+      "path": "src/runtime/workspace_strings.ts",
+      "bytes": 6778,
+      "sha256": "73686cca07195a19e876a95229967e766de0246d170edc83bc8aa316851e7de2"
+    },
+    {
+      "path": "src/components/thread-items.tsx",
+      "bytes": 19171,
+      "sha256": "e343570d0a17c552652e51c80775fbc0d7966849570329ea2f70319894c362b2"
+    },
+    {
+      "path": "src/components/thread-items.diff.test.tsx",
+      "bytes": 6372,
+      "sha256": "319f43453c7d780ccea48ac6a83310a486628b154e97864c9addab3af1791f1c"
+    },
+    {
+      "path": "src/components/thread-items.search.test.tsx",
+      "bytes": 4506,
+      "sha256": "8db5575a0eb35790c19ecbfdb00e26a33edde6ec600cdcec236e51b2ab16a295"
+    },
+    {
+      "path": "src/components/thread-items.search-expansion.test.tsx",
+      "bytes": 5401,
+      "sha256": "c756a7624073f2a23ac3a5656bd73fcf1d7d165724cd7e70683b151f8b8e9079"
+    },
+    {
+      "path": "src/components/FileArtifactView.tsx",
+      "bytes": 25359,
+      "sha256": "3ccc50a1143b431b93e2650dcefff43af2d41e95ecbcd181fbdce259dd55ab98"
+    },
+    {
+      "path": "src/components/FileArtifactView.feedback.test.tsx",
+      "bytes": 16191,
+      "sha256": "f192bbfe8d234561a0f053db9389c0951b7444c9121ab96de37095bfc78daf79"
+    },
+    {
+      "path": "src/components/DiffComparisonNote.tsx",
+      "bytes": 1614,
+      "sha256": "a479f09201ce625b768bc23541ba2b7fb753852bb25d07d31839ef2284aeb2c7"
+    },
+    {
+      "path": "src/styles-thread.css",
+      "bytes": 26995,
+      "sha256": "ac6de4301ed58fd5d7233e40c0f35d8cdfb0b20ba7e9085814f859a49cb46679"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-independent/verify-line-diff-oracle.mjs",
+      "bytes": 5899,
+      "sha256": "2471e6962c78719b6b852a7262628090fc1df424879445e57721a89c746e9e3b"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-independent/pure-oracle-run-01.stdout.log",
+      "bytes": 1482,
+      "sha256": "fb160c27e372dc01e7a3496af00b97d0daa9d6a050ee7b4d9ea6018460851dfc"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-independent/pure-oracle-run-01.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "src/runtime/artifacts.ts",
+      "bytes": 5891,
+      "sha256": "a839a1f9aaf980f4867750eb889e69b097e6e804d57a909d551c112b15c0ece5"
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "bytes": 26779,
+      "sha256": "5838a98be67147722a5ce1af873f0788135dc7c434fbdc598fdd98837ee418fd"
+    },
+    {
+      "path": "src/runtime/file_feedback.ts",
+      "bytes": 1322,
+      "sha256": "1ffca15a6c1bd3f23d4becc1ec432d1ef4c323cc718ccb1926192e5bde46fa1b"
+    },
+    {
+      "path": "src/components/transcript-search.tsx",
+      "bytes": 1961,
+      "sha256": "81a47ddc1cd7493eac9c64d94b6904d6173ce0da4ede626e2a344d63b2509ee8"
+    },
+    {
+      "path": "src/components/MessageContent.tsx",
+      "bytes": 9858,
+      "sha256": "e1d1642acd7e3631b8f22fea54699895b8c0438400831a64289a1ada5b3bd4f3"
+    }
+  ],
+  "checks": [
+    {
+      "id": "precision-and-limits",
+      "basis": [
+        "src/runtime/line_diff.ts:64",
+        "src/runtime/line_diff.ts:101",
+        "src/runtime/line_diff.ts:155"
+      ],
+      "conclusion": "Map uses exact string equality and integer IDs inside bounded LCS; no hash-only equality. Combined UTF16/physical-row limits precede matrix allocation; over-budget matrix returns replacement with stats=null. Original source text remains retained."
+    },
+    {
+      "id": "line-endings-coordinates",
+      "basis": [
+        "src/runtime/line_diff.ts:34",
+        "src/runtime/line_diff.ts:118",
+        "src/runtime/line_diff_presentation.ts:27"
+      ],
+      "conclusion": "LF/CRLF separate; lone CR remains body; final LF creates no phantom row. Ending changes retain oldLine and newLine. Shifted EOL coordinates, exact whitespace and Unicode were independently executed."
+    },
+    {
+      "id": "views-copy-and-search",
+      "basis": [
+        "src/components/thread-items.tsx:159",
+        "src/components/FileArtifactView.tsx:141",
+        "src/runtime/line_diff_presentation.ts:36"
+      ],
+      "conclusion": "Both views share comparison and neutral missing/replacement bodies. Unavailable raw sides stay expandable/searchable; generated comparison labels are outside data-find-blocks. Human-readable diff copy explains precision/endings; raw-side copy retains original strings."
+    },
+    {
+      "id": "feedback-identity",
+      "basis": [
+        "src/components/FileArtifactView.tsx:58",
+        "src/components/FileArtifactView.tsx:342",
+        "src/runtime/drafts.ts:296"
+      ],
+      "conclusion": "Physical-lines-v1 and missing/known original separate null/empty and old coordinate identity. Existing feedback map keys preserve historical entries. Display counters and input bounds share physical-row convention; no historical feedback deletion/migration introduced."
+    },
+    {
+      "id": "status-main-row",
+      "basis": [
+        "src/components/thread-items.tsx:254",
+        "src/components/thread-items.tsx:441",
+        "src/components/FileArtifactView.tsx:786"
+      ],
+      "conclusion": "Only completed status with activity other than unknown uses completed-tense main summary. Failed/pending/in_progress/arbitrary unknown stay neutral; details and pane distinguish failed/unfinished/unknown. Initial future-status inconsistency is corrected."
+    },
+    {
+      "id": "provenance-and-file-access",
+      "basis": [
+        "src/runtime/artifacts.ts:95",
+        "src/runtime/artifacts.ts:163",
+        "src/components/thread-items.tsx:190"
+      ],
+      "conclusion": "Original fragment/input/report provenance and status retained. diff.path uses existing explicit file-open callback. Pure rendering introduces no disk access and no location offset promoted to full-file or actual-write proof."
+    },
+    {
+      "id": "cache-and-resources",
+      "basis": [
+        "src/runtime/line_diff.ts:187",
+        "src/components/FileArtifactView.tsx:98"
+      ],
+      "conclusion": "WeakMap validates both strings on owner reuse, does not persist comparisons. Raw numbered display is paged. No claim that arbitrary large source rendering has a new complete performance guarantee."
+    },
+    {
+      "id": "old-failure-expectations",
+      "basis": [
+        "src/runtime/artifact_view.test.ts:182",
+        "src/components/thread-items.search-expansion.test.tsx:17",
+        "src/components/FileArtifactView.feedback.test.tsx:121"
+      ],
+      "conclusion": "Reviewed test changes against physical-row/null-neutral/explanatory-copy contract. Hidden-tail search still exercises hidden real source under unified32 preview. Independent literal row/ending test supplements production-parser reconstruction."
+    }
+  ],
+  "executedIndependentValidation": {
+    "receipt": {
+      "path": "output/2026-10-14-diff-summary-independent/pure-oracle-run-01.completed.json",
+      "bytes": 1484,
+      "sha256": "b2154fb5604be9b488eb1273726e4526d5cdf3a5a9446c7fd02a1171c8aca0ee"
+    },
+    "actualExitCode": 0,
+    "passed": 13,
+    "failed": 0,
+    "helperSha256": "d679c0d4e426f21486db078dde2b343000539cf98bc196e390453528191d5c6a",
+    "sourceStable": true,
+    "boundary": "Exact full pure production module transpiled with repository TypeScript; independent hand-written expected values. No component/UI, Agent, disk-file verification, native or full-engineering acceptance."
+  },
+  "ownerValidationVerifiedFromSavedOriginals": {
+    "targetedFiles": 10,
+    "targetedPassed": 117,
+    "targetedFailed": 0,
+    "targetedActualExitCode": 0,
+    "typecheckActualExitCode": 0,
+    "formatActualExitCode": 0,
+    "notIndependentlyRerun": true
+  },
+  "retainedFailureInterpretation": [
+    {
+      "run": "red-01",
+      "actualExitCode": 1,
+      "classification": "Real original product counterexamples: +2/-2 instead of changed-row +1/-1 and null original labeled new file."
+    },
+    {
+      "run": "targeted-01",
+      "actualExitCode": 1,
+      "classification": "Five retained old expectations. Physical rows, null-neutral, explanatory copy and unified32 preview justify reviewed changes; historical failure is not rewritten."
+    },
+    {
+      "run": "targeted-02",
+      "actualExitCode": 1,
+      "classification": "Two existing direct-call hook harness errors at real useMemo with null dispatcher. Added hook stub repairs harness context, not evidence of fixing an actual browser hook bug."
+    },
+    {
+      "run": "research-oracle-v1",
+      "classification": "Original contradictory whitespace literal retained. Separate v2 repairs missing LF and adds shifted EOL coordinates; source fixture is JSON-semantically identical to v2."
+    }
+  ],
+  "openScope": [
+    "Parent full-App Chromium/WebKit lifecycle validation is separate.",
+    "No full seven/candidate/install/native acceptance.",
+    "P18 real tool write, command/log, actual disk verification and all-Agent conditions remain outside this reviewed increment."
+  ],
+  "productionFilesModifiedByReviewer": false,
+  "blockingFindings": [],
+  "priorReview": {
+    "path": "output/2026-10-14-diff-summary-independent/backend-review-initial.json",
+    "bytes": 7832,
+    "sha256": "c2bd611e1ff59766b6126973341361ff6fed7d86d8d919e3316c7c66acfffb30"
+  },
+  "recordPreparationNote": "An initial report-generation read referenced nonexistent src/runtime/projection.ts and exited before writing this report; corrected shared-ref list only. The single pure helper execution was not repeated."
+}

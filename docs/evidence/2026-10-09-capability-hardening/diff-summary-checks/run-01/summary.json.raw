@@ -1,0 +1,156 @@
+{
+  "allPassed": false,
+  "boundary": "Engineering checks only; installed App, native document workflow, actual Agent, P08 or whole plan acceptance are separate.",
+  "capturedAt": "2026-10-13T20:26:42.917384+00:00",
+  "checks": [
+    {
+      "actualStageCompletion": true,
+      "argv": [
+        "corepack",
+        "pnpm",
+        "format:check"
+      ],
+      "completedAt": "2026-10-13T20:25:45.736193+00:00",
+      "cwd": "/Users/tw/Desktop/farfold",
+      "displayCommand": "corepack pnpm format:check",
+      "elapsedSeconds": 31.025253167,
+      "group": "frontend",
+      "monotonicStart": 0.208781333,
+      "name": "format-check",
+      "pid": 16039,
+      "processLaunched": true,
+      "rawExitCode": 0,
+      "startedAt": "2026-10-13T20:25:14.710039+00:00",
+      "state": "COMPLETED",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "actualStageCompletion": true,
+      "argv": [
+        "corepack",
+        "pnpm",
+        "typecheck"
+      ],
+      "completedAt": "2026-10-13T20:25:54.526574+00:00",
+      "cwd": "/Users/tw/Desktop/farfold",
+      "displayCommand": "corepack pnpm typecheck",
+      "elapsedSeconds": 8.789237208000003,
+      "group": "frontend",
+      "monotonicStart": 31.234898375,
+      "name": "typecheck",
+      "pid": 16166,
+      "processLaunched": true,
+      "rawExitCode": 0,
+      "startedAt": "2026-10-13T20:25:45.737096+00:00",
+      "state": "COMPLETED",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdoutSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "actualStageCompletion": true,
+      "argv": [
+        "corepack",
+        "pnpm",
+        "test"
+      ],
+      "completedAt": "2026-10-13T20:26:42.474635+00:00",
+      "cwd": "/Users/tw/Desktop/farfold",
+      "displayCommand": "corepack pnpm test",
+      "elapsedSeconds": 47.94526958299999,
+      "group": "frontend",
+      "monotonicStart": 40.02550475,
+      "name": "frontend-test",
+      "pid": 16236,
+      "processLaunched": true,
+      "rawExitCode": 1,
+      "startedAt": "2026-10-13T20:25:54.527964+00:00",
+      "state": "COMPLETED",
+      "stderrSha256": "2115c42411654c33a19ed4e21e9477abd287a5976b2e6f480988193c2aed1d0f",
+      "stdoutSha256": "3677ca50b816f378d7c16f32739f0e8621b2f94870ab76869e20ac20b953bc79"
+    },
+    {
+      "actualStageCompletion": false,
+      "argv": [
+        "corepack",
+        "pnpm",
+        "build"
+      ],
+      "group": "frontend",
+      "name": "frontend-build",
+      "processLaunched": false,
+      "rawExitCode": null,
+      "state": "NOT_STARTED"
+    },
+    {
+      "actualStageCompletion": false,
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "group": "native",
+      "name": "cargo-fmt",
+      "processLaunched": false,
+      "rawExitCode": null,
+      "state": "NOT_STARTED"
+    },
+    {
+      "actualStageCompletion": false,
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "group": "native",
+      "name": "cargo-clippy",
+      "processLaunched": false,
+      "rawExitCode": null,
+      "state": "NOT_STARTED"
+    },
+    {
+      "actualStageCompletion": false,
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "group": "native",
+      "name": "cargo-test",
+      "processLaunched": false,
+      "rawExitCode": null,
+      "state": "NOT_STARTED"
+    }
+  ],
+  "completedCount": 3,
+  "failed": [
+    "frontend-test"
+  ],
+  "freezeSha256": "d0d3f071c61c56a8a2f28b73586994cd2d940b5e55a4cf13f2d1de1223ce8ede",
+  "inputCount": 2057,
+  "interruptedSignal": null,
+  "launchFailed": [],
+  "notStarted": [
+    "frontend-build",
+    "cargo-fmt",
+    "cargo-clippy",
+    "cargo-test"
+  ],
+  "phase": "ACTUAL_COMMAND_RESULTS",
+  "protectedUnchanged": true,
+  "requiredCommandsExecuted": 3,
+  "runnerErrors": [],
+  "schema": 1,
+  "sourceMembershipStable": true,
+  "sourceStable": true,
+  "testCounts": "Not inferred from status; exact stdout/stderr are authoritative for counts."
+}

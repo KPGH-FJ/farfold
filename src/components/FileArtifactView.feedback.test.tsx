@@ -118,6 +118,93 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
+it("does not reuse missing-original opinions for a known empty original", () => {
+  const missing = { ...card("same"), scope: "fragment" as const };
+  write(missing, "MISSING SOURCE OPINION");
+  const first = structuredClone(
+    Object.values(fileFeedbackDrafts.entries(key))[0],
+  );
+  const known = { ...missing, oldText: "" };
+  write(known, "KNOWN EMPTY OPINION");
+  const entries = Object.values(fileFeedbackDrafts.entries(key));
+  expect(entries).toHaveLength(2);
+  expect(entries.find((e) => e.contentId === first.contentId)).toEqual(first);
+  expect(new Set(entries.map((e) => e.contentId)).size).toBe(2);
+  expect(
+    entries.every((e) => e.contentId?.startsWith("physical-lines-v1:")),
+  ).toBe(true);
+});
+
+it("retains legacy trailing-row opinions without treating them as current coordinates", () => {
+  const value = {
+    ...card(""),
+    oldText: "before\n",
+    newText: "after\n",
+    scope: "fragment" as const,
+  };
+  const originalId = "legacy-row-coordinate";
+  fileFeedbackDrafts.update(key, value.path, {
+    contentId: originalId,
+    scope: "fragment",
+    text: "KEEP LEGACY",
+    selection: { side: "after", line: 2 },
+  });
+  const saved = structuredClone(fileFeedbackDrafts.entries(key));
+  const tree = render(value);
+  expect(
+    tree.find((n) => n.type === FileDifference)?.props.selection,
+  ).toBeNull();
+  expect(
+    tree.find((n) => n.type === FileFeedbackDrafts)?.props.excludeContentId,
+  ).not.toBe(originalId);
+  expect(fileFeedbackDrafts.entries(key)).toEqual(saved);
+  write(value, "CURRENT");
+  changeField(value, W.feedbackLine, "2");
+  expect(
+    render(value).find((n) => n.props["aria-label"] === W.feedbackLine)?.props[
+      "aria-invalid"
+    ],
+  ).toBe(true);
+  changeField(value, W.feedbackLine, "1");
+  expect(
+    render(value).find((n) => n.props["aria-label"] === W.feedbackLine)?.props[
+      "aria-invalid"
+    ],
+  ).toBe(false);
+  expect(
+    Object.values(fileFeedbackDrafts.entries(key)).some(
+      (e) => e.contentId === originalId && e.text === "KEEP LEGACY",
+    ),
+  ).toBe(true);
+});
+
+it("copies both raw sides with their exact terminators while diff copy explains ending changes", async () => {
+  const clipboard = { writeText: vi.fn().mockResolvedValue(undefined) };
+  vi.stubGlobal("navigator", { clipboard });
+  const value = {
+    ...card(""),
+    oldText: "a\r\n",
+    newText: "a",
+    scope: "fragment" as const,
+  };
+  const click = async (label: string) => {
+    const button = render(value).find((n) => n.props["aria-label"] === label)!;
+    await (button.props.onClick as () => Promise<void>)();
+  };
+  await click(W.copyDiff);
+  const diff = clipboard.writeText.mock.calls.at(-1)![0] as string;
+  expect(diff).toContain("正文相同");
+  expect(diff).toContain("CRLF");
+  expect(diff).toContain("没有行末换行");
+  changeField(value, W.viewMode, "before");
+  await click(W.copyFragment);
+  expect(clipboard.writeText).toHaveBeenLastCalledWith("a\r\n");
+  changeField(value, W.viewMode, "after");
+  await click(W.copyFragment);
+  expect(clipboard.writeText).toHaveBeenLastCalledWith("a");
+  expect(h.invoke).not.toHaveBeenCalled();
+});
+
 function changeField(value: FileArtifact, label: string, text: string) {
   const field = render(value).find(
     (node) => node.props["aria-label"] === label,
@@ -238,7 +325,9 @@ it("copies only the shown diff, full reported path, or selected side without cha
     await (button.props.onClick as () => Promise<void>)();
   };
   await click(W.copyDiff);
-  expect(clipboard.writeText).toHaveBeenLastCalledWith(" same\n-old\n+new");
+  expect(clipboard.writeText).toHaveBeenLastCalledWith(
+    "所示片段 · 新增 1 行、删除 1 行\n same\n-old\n+new",
+  );
   await click(W.copyPath);
   expect(clipboard.writeText).toHaveBeenLastCalledWith("/p/shared.ts");
   changeField(value, W.viewMode, "before");

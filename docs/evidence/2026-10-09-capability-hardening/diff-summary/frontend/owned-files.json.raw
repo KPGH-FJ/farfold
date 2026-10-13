@@ -1,0 +1,17 @@
+[
+  "src/runtime/line_diff.ts",
+  "src/runtime/line_diff.test.ts",
+  "src/runtime/line_diff_presentation.ts",
+  "src/runtime/artifact_view.ts",
+  "src/runtime/artifact_view.test.ts",
+  "src/runtime/workspace_strings.ts",
+  "src/components/thread-items.tsx",
+  "src/components/thread-items.diff.test.tsx",
+  "src/components/thread-items.search.test.tsx",
+  "src/components/thread-items.search-expansion.test.tsx",
+  "src/components/FileArtifactView.tsx",
+  "src/components/FileArtifactView.feedback.test.tsx",
+  "src/components/DiffComparisonNote.tsx",
+  "src/styles-thread.css",
+  "src/runtime/fixtures/line-diff/oracle.json"
+]

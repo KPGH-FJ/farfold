@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "atUtc": "2026-10-13T20:16:01.020391+00:00",
+  "scope": "Static delta only; no browser/server/test/source execution or modification. Root run4 in progress when reviewed.",
+  "previousReview": {
+    "path": "output/2026-10-14-diff-summary-independent/runner-review-v1.json",
+    "bytes": 7590,
+    "sha256": "5fc2fc5c2d3e0cf92618d0edaa5496b36abd5daabc1ceca01fbae87413c8f56e"
+  },
+  "reviewedRunner": {
+    "path": "output/2026-10-14-diff-summary-browser/run.mjs",
+    "bytes": 13888,
+    "sha256": "95e0e5a0584a6fcb9396c6af649f86268dd2228e18e2ac1e82f4a977f9b3632c"
+  },
+  "previousRunner": {
+    "path": "output/2026-10-14-diff-summary-browser/run3.runner.mjs.raw",
+    "bytes": 12707,
+    "sha256": "e37c77b07a0e5116669838dbd9e849ac8279e86ec4639cffe3cc3fd58c21da83"
+  },
+  "failureAttribution": {
+    "path": "output/2026-10-14-diff-summary-browser/run3-attribution.json",
+    "bytes": 619,
+    "sha256": "a0f8a4802644a4d2d36ed576f8e01e075bf86c96fb777b525600bd4616f4c173"
+  },
+  "resolvedAssertions": [
+    {
+      "id": "R1",
+      "status": "strengthened in message view",
+      "evidence": "Exact one-element li array includes before/after labels, ordered relative coordinates and both precise terminator types."
+    },
+    {
+      "id": "R2",
+      "status": "strengthened in both views",
+      "evidence": "Missing/fallback requires message zero direct add/del and pane zero add/remove plus actual uncompared rows."
+    },
+    {
+      "id": "R3",
+      "status": "strengthened",
+      "evidence": "Before Enter, disclosure must have aria-expanded=false and hidden actual diff needle; afterwards actual needle must be visible."
+    },
+    {
+      "id": "R4",
+      "status": "strengthened",
+      "evidence": "Reads exact fixed 47-byte body from pre.a-term and checks complete read args.file against independent seven-field literal/SHA."
+    }
+  ],
+  "run3Attribution": "Root reported actual exit1/61bf28 after 127 checks and 14 completed scenarios; full multiline preview existed but exact single-line selector did not match its pre element. This delta corrects selector and compares complete body; it does not alter fixture or product. This review did not independently extract the completion event.",
+  "remainingBoundaries": [
+    "Exact ending li is checked in message view; pane precision label is checked, but pane ending coordinates are not independently opened/asserted by this runner.",
+    "Late-response test covers held inspection across A-to-B switch, not already-started text read, closing pane, revision race or same-path report mutation.",
+    "Split view, formatted comparison copy and every authored oracle property remain outside current browser coverage.",
+    "JSON.stringify file comparison also fixes key order for this deterministic fixture; it is not a general API schema-order requirement."
+  ],
+  "conclusion": "No new execution blocker in the reviewed run4 delta. Pending actual results; no browser success inferred by this static review."
+}

@@ -1,0 +1,209 @@
+{
+  "scope": "Actual first integration failure and sole SSR test assertion correction. Original15 files unchanged; new test was not executed by original browser runs. Run2 full engineering stored separately.",
+  "files": [
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-frontend/source-freeze-v2.json",
+        "bytes": 5624,
+        "sha256": "3e9dec3288b191d5de0439111a8475a18e48f70ad511133401af8cc60d11f4f4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/frontend/source-freeze-v2.json.raw",
+        "bytes": 5624,
+        "sha256": "3e9dec3288b191d5de0439111a8475a18e48f70ad511133401af8cc60d11f4f4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-full-suite-before.json",
+        "bytes": 1263,
+        "sha256": "14e6198396ea1bbc611e2f4b7be7502730c4c407871c9c4573ace6e71cc4d5fb"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/frontend/post-full-suite-before.json.raw",
+        "bytes": 1263,
+        "sha256": "14e6198396ea1bbc611e2f4b7be7502730c4c407871c9c4573ace6e71cc4d5fb"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-full-suite-correction.json",
+        "bytes": 5156,
+        "sha256": "f100c19032eb2d07f5fe45ab3f0bcaa795edcad84a398501e2d6a87707bf3994"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/frontend/post-full-suite-correction.json.raw",
+        "bytes": 5156,
+        "sha256": "f100c19032eb2d07f5fe45ab3f0bcaa795edcad84a398501e2d6a87707bf3994"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-full-suite-test-only.diff",
+        "bytes": 918,
+        "sha256": "2f91d6f1f8963398540d2fabf1e4f817e7685f32a3a86c6a7e7349e598235b55"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/frontend/post-full-suite-test-only.diff.raw",
+        "bytes": 918,
+        "sha256": "2f91d6f1f8963398540d2fabf1e4f817e7685f32a3a86c6a7e7349e598235b55"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-frontend/ConversationWorkspace.test.tsx.before.raw",
+        "bytes": 3233,
+        "sha256": "27b83f5ba62dc3a6a9ecb6f0e5307fe94150de94d312f0d8cb586e97ff0e55a9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/frontend/ConversationWorkspace.test.tsx.before.raw.raw",
+        "bytes": 3233,
+        "sha256": "27b83f5ba62dc3a6a9ecb6f0e5307fe94150de94d312f0d8cb586e97ff0e55a9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-suite-component.completed.json",
+        "bytes": 768,
+        "sha256": "a71bc6d3ede2961107006b637f76e64a13e35b50fe661d47fb6b30371352a121"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/frontend/post-suite-component.completed.json.raw",
+        "bytes": 768,
+        "sha256": "a71bc6d3ede2961107006b637f76e64a13e35b50fe661d47fb6b30371352a121"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-suite-component.stdout.log",
+        "bytes": 209,
+        "sha256": "8713a87cb6b80188edf2aa0988308eb42f2d150e9b9c1c0840638337817addf5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/frontend/post-suite-component.stdout.log.raw",
+        "bytes": 209,
+        "sha256": "8713a87cb6b80188edf2aa0988308eb42f2d150e9b9c1c0840638337817addf5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-suite-component.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/frontend/post-suite-component.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-suite-format.completed.json",
+        "bytes": 767,
+        "sha256": "555b3dbcf42f72053181e5261d59e86705b4f3a028c9b85cc4cc428f2b31668e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/frontend/post-suite-format.completed.json.raw",
+        "bytes": 767,
+        "sha256": "555b3dbcf42f72053181e5261d59e86705b4f3a028c9b85cc4cc428f2b31668e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-suite-format.stdout.log",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/frontend/post-suite-format.stdout.log.raw",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-suite-format.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/frontend/post-suite-format.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/test-only-browser-equivalence.json",
+        "bytes": 8409,
+        "sha256": "91f398b28f083d43c20eaa415712fddb988c261562010e86fdfdc67c717a509b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/independent/test-only-browser-equivalence.json.raw",
+        "bytes": 8409,
+        "sha256": "91f398b28f083d43c20eaa415712fddb988c261562010e86fdfdc67c717a509b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/failed-engineering-review.json",
+        "bytes": 7914,
+        "sha256": "f4912d4e3456a2b5b8c2d6b44d5bf21b74d7959954ef759905ba20f506826e7e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/independent/failed-engineering-review.json.raw",
+        "bytes": 7914,
+        "sha256": "f4912d4e3456a2b5b8c2d6b44d5bf21b74d7959954ef759905ba20f506826e7e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/inventory-review.json",
+        "bytes": 3403,
+        "sha256": "98be18144b6af1a4c9e760c28f24987e8238fb59cd5e00592009493467c75365"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/independent/inventory-review.json.raw",
+        "bytes": 3403,
+        "sha256": "98be18144b6af1a4c9e760c28f24987e8238fb59cd5e00592009493467c75365"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/inventory-run2-review.json",
+        "bytes": 3658,
+        "sha256": "c605e3d7a544bca0ae8ca8a0536015098778652e87e60000224b900d335695a8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/independent/inventory-run2-review.json.raw",
+        "bytes": 3658,
+        "sha256": "c605e3d7a544bca0ae8ca8a0536015098778652e87e60000224b900d335695a8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-integration/prepare_inventory-v3.diff",
+        "bytes": 5091,
+        "sha256": "01362d4847421140c5367ef3456e5fbd2b9d43b3d84b43ddc05319754f9fd8ec"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/integration/prepare_inventory-v3.diff.raw",
+        "bytes": 5091,
+        "sha256": "01362d4847421140c5367ef3456e5fbd2b9d43b3d84b43ddc05319754f9fd8ec"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-integration/root-source-review.json",
+        "bytes": 1649,
+        "sha256": "4153236acf3b03250ccaf00fe45ea995a1ed0762000206e456352c519e1bfec8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/integration/root-source-review.json.raw",
+        "bytes": 1649,
+        "sha256": "4153236acf3b03250ccaf00fe45ea995a1ed0762000206e456352c519e1bfec8"
+      }
+    }
+  ]
+}

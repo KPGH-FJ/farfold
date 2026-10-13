@@ -1,0 +1,10 @@
+{
+  "actualExitCode": 1,
+  "chunk": "efccd5",
+  "cause": "Search returns both body span and result code; root runner must scope body assertions to .diff, not ambiguous full page text.",
+  "checksPassed": 122,
+  "completeScenarios": 13,
+  "sourceChange": false,
+  "oldRunnerSha256": "3bc37ab894cbff7dc248db6e7bab1c9d036c584bc137aa51811839874e361442",
+  "newRunnerSha256": "e37c77b07a0e5116669838dbd9e849ac8279e86ec4639cffe3cc3fd58c21da83"
+}

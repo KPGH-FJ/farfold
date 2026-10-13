@@ -1,0 +1,61 @@
+{
+  "sourcePath": "/Users/tw/Desktop/farfold/src/runtime/line_diff.ts",
+  "sourceSha256": "d679c0d4e426f21486db078dde2b343000539cf98bc196e390453528191d5c6a",
+  "sourceBytes": 6126,
+  "checks": [
+    {
+      "name": "mixed-terminators-lone-cr",
+      "passed": true
+    },
+    {
+      "name": "empty-crlf-then-empty-lf",
+      "passed": true
+    },
+    {
+      "name": "embedded-cr-body",
+      "passed": true
+    },
+    {
+      "name": "empty",
+      "passed": true
+    },
+    {
+      "name": "shifted-eol-coordinates-and-counts",
+      "passed": true
+    },
+    {
+      "name": "known-empty-is-distinct-from-missing",
+      "passed": true
+    },
+    {
+      "name": "whitespace-manual-replacement",
+      "passed": true
+    },
+    {
+      "name": "eof-change-does-not-invent-row",
+      "passed": true
+    },
+    {
+      "name": "unicode-not-normalized",
+      "passed": true
+    },
+    {
+      "name": "physical-line-budget-exact-and-plus-one",
+      "passed": true
+    },
+    {
+      "name": "utf16-character-budget-exact-and-plus-one",
+      "passed": true
+    },
+    {
+      "name": "matrix-exact-boundary-and-fallback",
+      "passed": true
+    },
+    {
+      "name": "owner-mutation-invalidates-weak-cache",
+      "passed": true
+    }
+  ],
+  "count": 13,
+  "boundary": "Exact full pure production module transpiled with repository TypeScript; independent hand-written expected values. No component/UI, Agent, disk-file verification, native or full-engineering acceptance."
+}

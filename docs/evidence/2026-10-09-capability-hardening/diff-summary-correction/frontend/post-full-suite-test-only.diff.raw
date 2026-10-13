@@ -1,0 +1,17 @@
+--- src/components/ConversationWorkspace.test.tsx (before)
++++ src/components/ConversationWorkspace.test.tsx (after)
+@@ -40,9 +40,11 @@
+     html.indexOf('<details class="workspace-steps"'),
+     html.indexOf("</details>"),
+   );
+-  // The step row shows the user-language summary; the raw title stays inside
+-  // the collapsed technical details, which are not rendered while folded.
+-  expect(folded).toContain("查看了文件");
++  // Without an active request or terminal result, this retained step is unknown.
++  // Keep the action neutral; raw details and approval stay outside its summary.
++  expect(folded).toContain('<span class="cmd">读取</span>');
++  expect(folded).toContain("步骤结果未知");
++  expect(folded).not.toContain("查看了文件");
+   expect(folded).not.toContain("Allow reading notes");
+   expect(html.indexOf("Allow reading notes")).toBeGreaterThan(
+     html.indexOf("</details>"),

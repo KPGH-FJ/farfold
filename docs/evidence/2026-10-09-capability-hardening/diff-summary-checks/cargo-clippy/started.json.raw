@@ -1,0 +1,18 @@
+{
+  "argv": [
+    "cargo",
+    "clippy",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "displayCommand": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+  "group": "native",
+  "monotonicStart": 97.370531041,
+  "name": "cargo-clippy",
+  "startedAt": "2026-10-13T20:38:39.844967+00:00"
+}

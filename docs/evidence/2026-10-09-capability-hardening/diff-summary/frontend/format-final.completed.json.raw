@@ -1,0 +1,38 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "prettier",
+    "--check",
+    "src/runtime/line_diff.ts",
+    "src/runtime/line_diff.test.ts",
+    "src/runtime/line_diff_presentation.ts",
+    "src/runtime/artifact_view.ts",
+    "src/runtime/artifact_view.test.ts",
+    "src/runtime/workspace_strings.ts",
+    "src/components/thread-items.tsx",
+    "src/components/thread-items.diff.test.tsx",
+    "src/components/thread-items.search.test.tsx",
+    "src/components/thread-items.search-expansion.test.tsx",
+    "src/components/FileArtifactView.tsx",
+    "src/components/FileArtifactView.feedback.test.tsx",
+    "src/components/DiffComparisonNote.tsx",
+    "src/styles-thread.css",
+    "src/runtime/fixtures/line-diff/oracle.json"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T20:07:48.303239+00:00",
+  "completedAtUtc": "2026-10-13T20:07:49.164634+00:00",
+  "actualExitCode": 0,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-diff-summary-frontend/format-final.stdout.log",
+    "bytes": 66,
+    "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-diff-summary-frontend/format-final.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

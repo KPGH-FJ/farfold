@@ -1,10 +1,12 @@
+import { compareLines, textLines } from "./line_diff";
+const lineDiff = (before: string | null, after: string) =>
+  compareLines(before, after).rows;
 import { describe, expect, it } from "vitest";
 import { applyUpdate, freshThreadState } from "./sessions";
 import { paneCards } from "./artifacts";
 import {
   artifactFiles,
   canPreviewHtml,
-  lineDiff,
   splitDiffRows,
   selectedArtifactFile,
   staticPreviewDocument,
@@ -161,7 +163,7 @@ describe("line differences", () => {
     expect(splitDiffRows(lineDiff(null, "new"))).toEqual([
       {
         before: null,
-        after: { kind: "add", oldLine: null, newLine: 1, text: "new" },
+        after: { kind: "uncompared", oldLine: null, newLine: 1, text: "new" },
       },
     ]);
   });
@@ -173,34 +175,40 @@ describe("line differences", () => {
       { kind: "same", oldLine: 3, newLine: 3, text: "three" },
     ]);
     expect(lineDiff(null, "new")).toEqual([
-      { kind: "add", oldLine: null, newLine: 1, text: "new" },
+      { kind: "uncompared", oldLine: null, newLine: 1, text: "new" },
     ]);
     expect(lineDiff("", "")).toEqual([]);
   });
 
-  it("preserves exact text through large replacement fallback including trailing lines", () => {
+  it("preserves exact sides through large replacement fallback without inventing a trailing row", () => {
     const old =
       Array.from({ length: 1100 }, (_, i) => `old${i}`).join("\n") + "\n";
     const next =
       Array.from({ length: 1100 }, (_, i) => `next${i}`).join("\n") + "\n";
-    const rows = lineDiff(old, next);
-    expect(
-      rows
-        .filter((r) => r.kind !== "add")
-        .map((r) => r.text)
-        .join("\n"),
-    ).toBe(old);
-    expect(
-      rows
-        .filter((r) => r.kind !== "remove")
-        .map((r) => r.text)
-        .join("\n"),
-    ).toBe(next);
-    expect(rows.at(-1)).toMatchObject({
-      kind: "same",
-      oldLine: 1101,
-      newLine: 1101,
-    });
+    const result = compareLines(old, next);
+    expect(result.precision).toBe("replacement");
+    expect(result.stats).toBeNull();
+    for (const [side, text] of [
+      ["oldLine", old],
+      ["newLine", next],
+    ] as const) {
+      const ends = textLines(text);
+      expect(
+        result.rows
+          .filter((r) => r[side] !== null)
+          .map((r) => {
+            const ending = ends[r[side]! - 1].ending;
+            return (
+              r.text +
+              (ending === "LF" ? "\n" : ending === "CRLF" ? "\r\n" : "")
+            );
+          })
+          .join(""),
+      ).toBe(text);
+      expect(result.rows.filter((r) => r[side] !== null).at(-1)?.[side]).toBe(
+        1100,
+      );
+    }
   });
 });
 

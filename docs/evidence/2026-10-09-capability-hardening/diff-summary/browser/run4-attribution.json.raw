@@ -1,0 +1,11 @@
+{
+  "actualExitCode": 1,
+  "chunk": "711d17",
+  "cause": "Production App main and fixture use StrictMode; development effects replay inspect twice, old owner is invalidated before read. Captured run4 state has two exact selected path inspections and one correct body read. Runner expected one inspection incorrectly. Late-owner waits for both replayed inspections before switching and releasing. No installed-build request-count claim.",
+  "checksPassed": 132,
+  "checksTotal": 133,
+  "completeScenarios": 14,
+  "sourceChange": false,
+  "oldRunnerSha256": "95e0e5a0584a6fcb9396c6af649f86268dd2228e18e2ac1e82f4a977f9b3632c",
+  "newRunnerSha256": "3970d69c9114b08f27f1dd2613fcffa7b0c4958d7b30c4c46b31b46d214088bd"
+}

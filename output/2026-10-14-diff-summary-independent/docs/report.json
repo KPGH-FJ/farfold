@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "atUtc": "2026-10-13T20:24:36.743411+00:00",
+  "result": "PASS_SCOPED_PUBLICATION_AND_DOCUMENT_CLOSEOUT",
+  "baseCommit": "522a4f20439976a6cd1b2629be8c7920b9e00c73",
+  "changedDocs": [
+    {
+      "path": "docs/status.md",
+      "bytes": 96405,
+      "sha256": "e7eb2ce8f0f43acdb54c54651ee7ba4a7a701bea83c12a5375b916aca903d588"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 138467,
+      "sha256": "4271b60a6008d651545e2991680d607b0ea7a0e380d9dd7f98f0374f91066976"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 161619,
+      "sha256": "1584dff33140a8ffa07e8fdc1a7fb0ff51235850f0bee190dc7bf30703ea4d4e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 93850,
+      "sha256": "a8b211c32243ecdd39a8a01eea7e2ed16ccac5a0aa0810070881aa9f9404f26e"
+    }
+  ],
+  "originalSnapshots": [
+    {
+      "original": {
+        "path": "docs/status.md",
+        "bytes": 95197,
+        "sha256": "6b58ea904c799f8d45cf92be74960dc21d0107b038686fadb01614fd165a0d4e"
+      },
+      "snapshot": {
+        "path": "output/2026-10-14-diff-summary-independent/docs/docs__status.md.before.raw",
+        "bytes": 95197,
+        "sha256": "6b58ea904c799f8d45cf92be74960dc21d0107b038686fadb01614fd165a0d4e"
+      }
+    },
+    {
+      "original": {
+        "path": "docs/architecture.md",
+        "bytes": 137259,
+        "sha256": "4d8576b17423f893b3d6feaca595c37d250f5a7178171203e608b9526721e785"
+      },
+      "snapshot": {
+        "path": "output/2026-10-14-diff-summary-independent/docs/docs__architecture.md.before.raw",
+        "bytes": 137259,
+        "sha256": "4d8576b17423f893b3d6feaca595c37d250f5a7178171203e608b9526721e785"
+      }
+    },
+    {
+      "original": {
+        "path": "plans/agent-access.md",
+        "bytes": 160182,
+        "sha256": "d045821e13520c78957d053c050aae9b159d44578b08d73f8e08d87bf4806e7e"
+      },
+      "snapshot": {
+        "path": "output/2026-10-14-diff-summary-independent/docs/plans__agent-access.md.before.raw",
+        "bytes": 160182,
+        "sha256": "d045821e13520c78957d053c050aae9b159d44578b08d73f8e08d87bf4806e7e"
+      }
+    },
+    {
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+        "bytes": 92683,
+        "sha256": "56d0ce79feac805c87ef91ee215d92f5b89a75af3eadad11de19876b0b044634"
+      },
+      "snapshot": {
+        "path": "output/2026-10-14-diff-summary-independent/docs/docs__evidence__2026-10-09-capability-hardening__README.md.before.raw",
+        "bytes": 92683,
+        "sha256": "56d0ce79feac805c87ef91ee215d92f5b89a75af3eadad11de19876b0b044634"
+      }
+    }
+  ],
+  "plan": {
+    "originalIds": 122,
+    "titlesAndCompletionConditionsUnchanged": true,
+    "newIds": 28,
+    "allNewRowsUnchanged": true,
+    "normalizedProgressChangesOnly": [
+      "P18"
+    ],
+    "other121OriginalRowsUnchanged": true
+  },
+  "protectedUnchanged": [
+    {
+      "path": "PRODUCT.md",
+      "bytes": 35083,
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "docs/agent-first-release.md",
+      "bytes": 16987,
+      "sha256": "58f9d802793dcb3e369053fb2d94e1dab24c241ebcd055872e820f0e9f185ee7"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "bytes": 11543,
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "bytes": 2341,
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+    }
+  ],
+  "sourceFreeze": {
+    "path": "output/2026-10-14-diff-summary-frontend/source-freeze-v1.json",
+    "bytes": 5567,
+    "sha256": "0c8d40b42209f774a957c05bb198412bd5b8d5afdf5d26bea58a220c56e3c793"
+  },
+  "ownedSourcePinsStillMatch": 15,
+  "entry": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/verification.json",
+    "bytes": 9578,
+    "sha256": "7ef8aa6dada78f489b8d8f389ce3d93f84e82c75b1d85716991f2f46542b2388"
+  },
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/publication.json",
+    "bytes": 50420,
+    "sha256": "9271617de20497baba93702bf05936c226d79578fe9d8f3b0a53821aec564fa8"
+  },
+  "publicRawCopies": 103,
+  "publicMembership": {
+    "exact": true,
+    "totalFiles": 105,
+    "bytes": 4622008
+  },
+  "allOriginalAndPublishedRawBytesEqual": true,
+  "entryEvidenceRefsAllMatch": true,
+  "newDocLinks": [
+    {
+      "document": "docs/status.md",
+      "target": "evidence/2026-10-09-capability-hardening/diff-summary/verification.json",
+      "targetSha256": "7ef8aa6dada78f489b8d8f389ce3d93f84e82c75b1d85716991f2f46542b2388"
+    },
+    {
+      "document": "docs/architecture.md",
+      "target": "evidence/2026-10-09-capability-hardening/diff-summary/verification.json",
+      "targetSha256": "7ef8aa6dada78f489b8d8f389ce3d93f84e82c75b1d85716991f2f46542b2388"
+    },
+    {
+      "document": "plans/agent-access.md",
+      "target": "../docs/evidence/2026-10-09-capability-hardening/diff-summary/verification.json",
+      "targetSha256": "7ef8aa6dada78f489b8d8f389ce3d93f84e82c75b1d85716991f2f46542b2388"
+    },
+    {
+      "document": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": "diff-summary/verification.json",
+      "targetSha256": "7ef8aa6dada78f489b8d8f389ce3d93f84e82c75b1d85716991f2f46542b2388"
+    }
+  ],
+  "scopedFormat": {
+    "path": "output/2026-10-14-diff-summary-independent/docs/format.completed.json",
+    "bytes": 928,
+    "sha256": "231e484133c8ff62587180241ffdaff2d31b47aae428f459557cfe689ba89fba"
+  },
+  "helperParseFailureRetained": {
+    "path": "output/2026-10-14-diff-summary-independent/docs/edit-attempt1.json",
+    "bytes": 365,
+    "sha256": "d5dfb9e8b1c3dd77acf217909fd79a04046f9749e5f8422757e51597a0a6a52c"
+  },
+  "diff": {
+    "path": "output/2026-10-14-diff-summary-independent/docs/four-docs.diff",
+    "bytes": 17696,
+    "sha256": "0f35bbd1a346eb0f73029a5b20b77cda6c7fa3dd3dc1dbf3f165e5a0ac23775e"
+  },
+  "claimBoundary": "Only source and controlled validation recorded; engineering/candidate/install are later receipts. Existing formal source2a720169 remains installed and unlaunched. P18 original condition remains partial; no native/real-Agent disk-write proof or unrelated capability promotion.",
+  "freezeInstruction": "No further writes to these four docs or public diff-summary stage after this report. Root may freeze engineering inputs; no tests were run by this closeout."
+}

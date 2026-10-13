@@ -1,0 +1,12 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/thread-items.diff.test.tsx (2 tests | 2 failed) 9ms
+   × counts the changed fragment rows, not every supplied line 7ms
+   × keeps missing original text distinct from a newly created file 1ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  03:55:37
+   Duration  1.22s (transform 66ms, setup 0ms, import 1.15s, tests 9ms, environment 0ms)
+

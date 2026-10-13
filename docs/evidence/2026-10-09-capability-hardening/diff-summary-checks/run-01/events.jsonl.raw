@@ -1,0 +1,6 @@
+{"at": "2026-10-13T20:25:14.710128+00:00", "monotonic": 0.20886125, "event": "started", "name": "format-check", "group": "frontend"}
+{"at": "2026-10-13T20:25:45.736880+00:00", "monotonic": 31.234685291, "event": "completed", "name": "format-check", "group": "frontend", "rawExitCode": 0, "actualStageCompletion": true}
+{"at": "2026-10-13T20:25:45.737182+00:00", "monotonic": 31.2349845, "event": "started", "name": "typecheck", "group": "frontend"}
+{"at": "2026-10-13T20:25:54.527609+00:00", "monotonic": 40.025150291, "event": "completed", "name": "typecheck", "group": "frontend", "rawExitCode": 0, "actualStageCompletion": true}
+{"at": "2026-10-13T20:25:54.528097+00:00", "monotonic": 40.025637041, "event": "started", "name": "frontend-test", "group": "frontend"}
+{"at": "2026-10-13T20:26:42.475251+00:00", "monotonic": 87.97135325, "event": "completed", "name": "frontend-test", "group": "frontend", "rawExitCode": 1, "actualStageCompletion": true}

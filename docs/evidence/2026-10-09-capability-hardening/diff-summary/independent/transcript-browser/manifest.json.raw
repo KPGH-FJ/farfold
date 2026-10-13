@@ -1,0 +1,118 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "records": [
+    {
+      "name": "chromium-run1",
+      "chunkId": "e99a64",
+      "actualExitCode": 1,
+      "sourceLine": 13617,
+      "sourceByteOffset": 36793967,
+      "sourceByteLength": 1585,
+      "timestamp": "2026-10-13T20:09:38.188Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-browser/chromium-run1.jsonl.raw",
+        "bytes": 1585,
+        "sha256": "fe3557bbaed01017bd02af87c3101932438aa5202de36d64f593d6b15c67242c"
+      }
+    },
+    {
+      "name": "chromium-run2",
+      "chunkId": "efccd5",
+      "actualExitCode": 1,
+      "sourceLine": 13668,
+      "sourceByteOffset": 37365408,
+      "sourceByteLength": 10129,
+      "timestamp": "2026-10-13T20:13:20.417Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-browser/chromium-run2.jsonl.raw",
+        "bytes": 10129,
+        "sha256": "ece47a38b7cf17cf4bf26e7e89b237d80e3740fc73c9e5b97aea863dfe9e2984"
+      }
+    },
+    {
+      "name": "chromium-run3",
+      "chunkId": "61bf28",
+      "actualExitCode": 1,
+      "sourceLine": 13691,
+      "sourceByteOffset": 37519119,
+      "sourceByteLength": 21907,
+      "timestamp": "2026-10-13T20:14:02.469Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-browser/chromium-run3.jsonl.raw",
+        "bytes": 21907,
+        "sha256": "c6a31849c68d45fa4298720e0a71a0bb0f48eef3a8cccb1bd0d4725f00a0a064"
+      }
+    },
+    {
+      "name": "chromium-run4",
+      "chunkId": "711d17",
+      "actualExitCode": 1,
+      "sourceLine": 13751,
+      "sourceByteOffset": 37666952,
+      "sourceByteLength": 9031,
+      "timestamp": "2026-10-13T20:15:32.663Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-browser/chromium-run4.jsonl.raw",
+        "bytes": 9031,
+        "sha256": "c796b80d97fdf7f509f526f471d63083f623c052c8fe97bb1bd69995e8021471"
+      }
+    },
+    {
+      "name": "chromium-run5",
+      "chunkId": "c03208",
+      "actualExitCode": 1,
+      "sourceLine": 13792,
+      "sourceByteOffset": 37790926,
+      "sourceByteLength": 4427,
+      "timestamp": "2026-10-13T20:16:29.873Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-browser/chromium-run5.jsonl.raw",
+        "bytes": 4427,
+        "sha256": "d2e54b7bfa0e14a964e4c8d2832c0271dd5c2798b0d58e7984e0f4e7e9cf61b7"
+      }
+    },
+    {
+      "name": "chromium-run6",
+      "chunkId": "f7135c",
+      "actualExitCode": 0,
+      "sourceLine": 13829,
+      "sourceByteOffset": 37851509,
+      "sourceByteLength": 1010,
+      "timestamp": "2026-10-13T20:17:21.788Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-browser/chromium-run6.jsonl.raw",
+        "bytes": 1010,
+        "sha256": "ad544f86f06e50437bdcea6aeda9978391ec1ce2b64277e0247c328dd6d878c9"
+      }
+    },
+    {
+      "name": "webkit-run1",
+      "chunkId": "2ff6b2",
+      "actualExitCode": 0,
+      "sourceLine": 13860,
+      "sourceByteOffset": 38394979,
+      "sourceByteLength": 858,
+      "timestamp": "2026-10-13T20:18:00.233Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-browser/webkit-run1.jsonl.raw",
+        "bytes": 858,
+        "sha256": "4e1443f4ebb5be83e49b2579b78055ce2c58e5564809a7901fa592f690e1829c"
+      }
+    },
+    {
+      "name": "server-stop",
+      "chunkId": "edb168",
+      "actualExitCode": 143,
+      "sourceLine": 13880,
+      "sourceByteOffset": 39023651,
+      "sourceByteLength": 821,
+      "timestamp": "2026-10-13T20:18:20.499Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-browser/server-stop.jsonl.raw",
+        "bytes": 821,
+        "sha256": "8ca3cd49a6f46e5fbc4c6ea7be77d3da880ade221ab0c757b5ba2e0ccc864ddc"
+      }
+    }
+  ],
+  "boundary": "Eight exact requested root completion events only; initial scan started after the prior PDF installation completion. No unrelated transcript content exported. Server exit143 is requested SIGTERM, not natural success."
+}

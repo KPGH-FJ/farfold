@@ -1,0 +1,162 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T20:36:28.911198+00:00",
+  "result": "pass-explicit-test-only-gap",
+  "testPath": "src/components/ConversationWorkspace.test.tsx",
+  "oldTestSha256": "27b83f5ba62dc3a6a9ecb6f0e5307fe94150de94d312f0d8cb586e97ff0e55a9",
+  "newTestSha256": "6463e6f1fb1deea03849bb427b739a0cdbd38faee8cf848db01f527423609c4f",
+  "oldTest": {
+    "path": "output/2026-10-14-diff-summary-frontend/ConversationWorkspace.test.tsx.before.raw",
+    "bytes": 3233,
+    "sha256": "27b83f5ba62dc3a6a9ecb6f0e5307fe94150de94d312f0d8cb586e97ff0e55a9"
+  },
+  "newTest": {
+    "path": "src/components/ConversationWorkspace.test.tsx",
+    "bytes": 3360,
+    "sha256": "6463e6f1fb1deea03849bb427b739a0cdbd38faee8cf848db01f527423609c4f"
+  },
+  "ownerFreezeV1": {
+    "path": "output/2026-10-14-diff-summary-frontend/source-freeze-v1.json",
+    "bytes": 5567,
+    "sha256": "0c8d40b42209f774a957c05bb198412bd5b8d5afdf5d26bea58a220c56e3c793"
+  },
+  "ownerFreezeV2": {
+    "path": "output/2026-10-14-diff-summary-frontend/source-freeze-v2.json",
+    "bytes": 5624,
+    "sha256": "3e9dec3288b191d5de0439111a8475a18e48f70ad511133401af8cc60d11f4f4"
+  },
+  "exactDiff": {
+    "path": "output/2026-10-14-diff-summary-frontend/post-full-suite-test-only.diff",
+    "bytes": 918,
+    "sha256": "2f91d6f1f8963398540d2fabf1e4f817e7685f32a3a86c6a7e7349e598235b55"
+  },
+  "productionUnchanged": true,
+  "original15ByteIdentical": [
+    {
+      "path": "src/runtime/line_diff.ts",
+      "v1Sha256": "d679c0d4e426f21486db078dde2b343000539cf98bc196e390453528191d5c6a",
+      "v2Sha256": "d679c0d4e426f21486db078dde2b343000539cf98bc196e390453528191d5c6a",
+      "currentSha256": "d679c0d4e426f21486db078dde2b343000539cf98bc196e390453528191d5c6a"
+    },
+    {
+      "path": "src/runtime/line_diff.test.ts",
+      "v1Sha256": "13f1fb595bf2a9657a70bd1ea03b2dadfde010453b9c05159059ab0299c27bb0",
+      "v2Sha256": "13f1fb595bf2a9657a70bd1ea03b2dadfde010453b9c05159059ab0299c27bb0",
+      "currentSha256": "13f1fb595bf2a9657a70bd1ea03b2dadfde010453b9c05159059ab0299c27bb0"
+    },
+    {
+      "path": "src/runtime/line_diff_presentation.ts",
+      "v1Sha256": "0d1d1ab4a033595d8ac42f494cb2beeb5ff66d5a2a9b56db81912c3e2dcaf53d",
+      "v2Sha256": "0d1d1ab4a033595d8ac42f494cb2beeb5ff66d5a2a9b56db81912c3e2dcaf53d",
+      "currentSha256": "0d1d1ab4a033595d8ac42f494cb2beeb5ff66d5a2a9b56db81912c3e2dcaf53d"
+    },
+    {
+      "path": "src/runtime/artifact_view.ts",
+      "v1Sha256": "70290d69dbcd9d04295dc6add84a7c67a1fc82f008581ef95661f67bb6b8123a",
+      "v2Sha256": "70290d69dbcd9d04295dc6add84a7c67a1fc82f008581ef95661f67bb6b8123a",
+      "currentSha256": "70290d69dbcd9d04295dc6add84a7c67a1fc82f008581ef95661f67bb6b8123a"
+    },
+    {
+      "path": "src/runtime/artifact_view.test.ts",
+      "v1Sha256": "b22ee329c16b954e1897f1f996b9a4615e34725e82920adb3eda1cba1dcbdc63",
+      "v2Sha256": "b22ee329c16b954e1897f1f996b9a4615e34725e82920adb3eda1cba1dcbdc63",
+      "currentSha256": "b22ee329c16b954e1897f1f996b9a4615e34725e82920adb3eda1cba1dcbdc63"
+    },
+    {
+      "path": "src/runtime/workspace_strings.ts",
+      "v1Sha256": "73686cca07195a19e876a95229967e766de0246d170edc83bc8aa316851e7de2",
+      "v2Sha256": "73686cca07195a19e876a95229967e766de0246d170edc83bc8aa316851e7de2",
+      "currentSha256": "73686cca07195a19e876a95229967e766de0246d170edc83bc8aa316851e7de2"
+    },
+    {
+      "path": "src/components/thread-items.tsx",
+      "v1Sha256": "e343570d0a17c552652e51c80775fbc0d7966849570329ea2f70319894c362b2",
+      "v2Sha256": "e343570d0a17c552652e51c80775fbc0d7966849570329ea2f70319894c362b2",
+      "currentSha256": "e343570d0a17c552652e51c80775fbc0d7966849570329ea2f70319894c362b2"
+    },
+    {
+      "path": "src/components/thread-items.diff.test.tsx",
+      "v1Sha256": "319f43453c7d780ccea48ac6a83310a486628b154e97864c9addab3af1791f1c",
+      "v2Sha256": "319f43453c7d780ccea48ac6a83310a486628b154e97864c9addab3af1791f1c",
+      "currentSha256": "319f43453c7d780ccea48ac6a83310a486628b154e97864c9addab3af1791f1c"
+    },
+    {
+      "path": "src/components/thread-items.search.test.tsx",
+      "v1Sha256": "8db5575a0eb35790c19ecbfdb00e26a33edde6ec600cdcec236e51b2ab16a295",
+      "v2Sha256": "8db5575a0eb35790c19ecbfdb00e26a33edde6ec600cdcec236e51b2ab16a295",
+      "currentSha256": "8db5575a0eb35790c19ecbfdb00e26a33edde6ec600cdcec236e51b2ab16a295"
+    },
+    {
+      "path": "src/components/thread-items.search-expansion.test.tsx",
+      "v1Sha256": "c756a7624073f2a23ac3a5656bd73fcf1d7d165724cd7e70683b151f8b8e9079",
+      "v2Sha256": "c756a7624073f2a23ac3a5656bd73fcf1d7d165724cd7e70683b151f8b8e9079",
+      "currentSha256": "c756a7624073f2a23ac3a5656bd73fcf1d7d165724cd7e70683b151f8b8e9079"
+    },
+    {
+      "path": "src/components/FileArtifactView.tsx",
+      "v1Sha256": "3ccc50a1143b431b93e2650dcefff43af2d41e95ecbcd181fbdce259dd55ab98",
+      "v2Sha256": "3ccc50a1143b431b93e2650dcefff43af2d41e95ecbcd181fbdce259dd55ab98",
+      "currentSha256": "3ccc50a1143b431b93e2650dcefff43af2d41e95ecbcd181fbdce259dd55ab98"
+    },
+    {
+      "path": "src/components/FileArtifactView.feedback.test.tsx",
+      "v1Sha256": "f192bbfe8d234561a0f053db9389c0951b7444c9121ab96de37095bfc78daf79",
+      "v2Sha256": "f192bbfe8d234561a0f053db9389c0951b7444c9121ab96de37095bfc78daf79",
+      "currentSha256": "f192bbfe8d234561a0f053db9389c0951b7444c9121ab96de37095bfc78daf79"
+    },
+    {
+      "path": "src/components/DiffComparisonNote.tsx",
+      "v1Sha256": "a479f09201ce625b768bc23541ba2b7fb753852bb25d07d31839ef2284aeb2c7",
+      "v2Sha256": "a479f09201ce625b768bc23541ba2b7fb753852bb25d07d31839ef2284aeb2c7",
+      "currentSha256": "a479f09201ce625b768bc23541ba2b7fb753852bb25d07d31839ef2284aeb2c7"
+    },
+    {
+      "path": "src/styles-thread.css",
+      "v1Sha256": "ac6de4301ed58fd5d7233e40c0f35d8cdfb0b20ba7e9085814f859a49cb46679",
+      "v2Sha256": "ac6de4301ed58fd5d7233e40c0f35d8cdfb0b20ba7e9085814f859a49cb46679",
+      "currentSha256": "ac6de4301ed58fd5d7233e40c0f35d8cdfb0b20ba7e9085814f859a49cb46679"
+    },
+    {
+      "path": "src/runtime/fixtures/line-diff/oracle.json",
+      "v1Sha256": "d96141762a2de0231bd3ee3afd15a99daa79862777c3deec9d76ec733a723536",
+      "v2Sha256": "d96141762a2de0231bd3ee3afd15a99daa79862777c3deec9d76ec733a723536",
+      "currentSha256": "d96141762a2de0231bd3ee3afd15a99daa79862777c3deec9d76ec733a723536"
+    }
+  ],
+  "originalBrowsers": [
+    {
+      "result": {
+        "path": "output/2026-10-14-diff-summary-browser/chromium-run6.json",
+        "bytes": 274469,
+        "sha256": "587e6272d9dc48d6098bf77022a805c5203de1fc2bb16bf92c00a4043738a51e"
+      },
+      "inputCount": 1098,
+      "beforeAfterEqual": true,
+      "testBeforeSha256": "27b83f5ba62dc3a6a9ecb6f0e5307fe94150de94d312f0d8cb586e97ff0e55a9",
+      "testAfterSha256": "27b83f5ba62dc3a6a9ecb6f0e5307fe94150de94d312f0d8cb586e97ff0e55a9",
+      "original15Equal": true,
+      "newAssertionsExecuted": false
+    },
+    {
+      "result": {
+        "path": "output/2026-10-14-diff-summary-browser/webkit-run1.json",
+        "bytes": 274459,
+        "sha256": "dd790919b7254c10904c3abf43fab27dd766c340c22dadd870c97795cfc781cf"
+      },
+      "inputCount": 1098,
+      "beforeAfterEqual": true,
+      "testBeforeSha256": "27b83f5ba62dc3a6a9ecb6f0e5307fe94150de94d312f0d8cb586e97ff0e55a9",
+      "testAfterSha256": "27b83f5ba62dc3a6a9ecb6f0e5307fe94150de94d312f0d8cb586e97ff0e55a9",
+      "original15Equal": true,
+      "newAssertionsExecuted": false
+    }
+  ],
+  "changeReview": "One comment/assertion hunk only: unknown in_progress fixture now requires neutral action and unknown result, excludes completed-action wording; fixture and other approval/layout assertions unchanged. Original15 includes production, tests and an oracle, all individually rehashed unchanged.",
+  "boundary": "The old 1098-input browser runs keep their original bytes and old test hash; they did not execute the new SSR assertions. Their product evidence applies to unchanged production. This single test-only correction does not itself require repeating browser runs. Root may start a new whole-seven run with this exact one-file hash exception. No new whole-seven success is claimed.",
+  "priorFailure": {
+    "path": "output/2026-10-14-diff-summary-independent/failed-engineering-review.json",
+    "bytes": 7914,
+    "sha256": "f4912d4e3456a2b5b8c2d6b44d5bf21b74d7959954ef759905ba20f506826e7e"
+  },
+  "safeToPublish": true
+}

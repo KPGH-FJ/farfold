@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "observedAtUtc": "2026-10-13T20:15:19.464140+00:00",
+  "scope": "Read-only static review of root browser runner against independently authored oracle; no browser/server/test/App/Agent/database execution and no source/runner edit.",
+  "reviewedRunner": {
+    "path": "output/2026-10-14-diff-summary-browser/run.mjs",
+    "bytes": 13888,
+    "sha256": "95e0e5a0584a6fcb9396c6af649f86268dd2228e18e2ac1e82f4a977f9b3632c"
+  },
+  "oracle": {
+    "path": "output/2026-10-14-diff-summary-independent/browser-oracle.json",
+    "bytes": 24410,
+    "sha256": "0bb74b49e03a90e81fe30f3cf0d14ac40933e0ce7cd0d0f53dd55c8437a293b9"
+  },
+  "fixture": {
+    "path": "output/2026-10-14-diff-summary-browser/fixture.tsx",
+    "bytes": 8419,
+    "sha256": "aead837e91f21c5f98577a45a4e70345a8b17c9d1b930254f743b53ffdc46a42"
+  },
+  "retainedFailedRuns": [
+    {
+      "runner": {
+        "path": "output/2026-10-14-diff-summary-browser/run1.runner.mjs.raw",
+        "bytes": 12705,
+        "sha256": "7192acf427a4debea13c5712b531a38af3c6badfc02a5404419735e8e2011416"
+      },
+      "result": {
+        "path": "output/2026-10-14-diff-summary-browser/chromium-run1.json",
+        "bytes": 252844,
+        "sha256": "87e196ed4a61dbcc474aafc63dc74c670c59b40e8e8ae3ff445b2b4f164d8a43"
+      },
+      "attribution": {
+        "path": "output/2026-10-14-diff-summary-browser/run1-attribution.json",
+        "bytes": 399,
+        "sha256": "20015a9b72505bfd1656d62efbcebbc90db03e612967502bc90935bff73f8154"
+      },
+      "savedResult": {
+        "passed": false,
+        "sourceStable": true,
+        "checks": 7,
+        "completedScenarios": 0,
+        "pageErrors": 0,
+        "externalRequests": 0
+      },
+      "independentAssessment": "Timeout requested full-file copy label; actual fragment button uses 复制修改片段. Harness selector error, not observed copy implementation failure. Root reported actual exit1/chunk e99a64; this review did not re-extract its completion."
+    },
+    {
+      "runner": {
+        "path": "output/2026-10-14-diff-summary-browser/run2.runner.mjs.raw",
+        "bytes": 12656,
+        "sha256": "3bc37ab894cbff7dc248db6e7bab1c9d036c584bc137aa51811839874e361442"
+      },
+      "result": {
+        "path": "output/2026-10-14-diff-summary-browser/chromium-run2.json",
+        "bytes": 271631,
+        "sha256": "2c59067bf16a7471f817d2373eb8af34c879cd44d4d2dabfde50891591120de0"
+      },
+      "attribution": {
+        "path": "output/2026-10-14-diff-summary-browser/run2-attribution.json",
+        "bytes": 440,
+        "sha256": "5912be0f5d500b10f610ef4b3055835d5dbfd0a5229cf9cdf813d7f2f8f3dd12"
+      },
+      "savedResult": {
+        "passed": false,
+        "sourceStable": true,
+        "checks": 122,
+        "completedScenarios": 13,
+        "pageErrors": 0,
+        "externalRequests": 0
+      },
+      "independentAssessment": "Global exact-text selector resolved actual diff span and search-result code; it cannot establish a failed search. Current runner changes only three needle selectors to .diff scope. Root reported actual exit1/chunk efccd5; this review did not re-extract its completion."
+    }
+  ],
+  "findings": [
+    {
+      "id": "R1",
+      "class": "assertion-strength gap",
+      "lines": "85-88",
+      "issue": "Ending check only tests presence of old/new line-number substrings and an ending substring. Reversing old/new coordinates or an incorrect before ending could still pass.",
+      "minimumRecommendation": "Compare the one exact li in both views. EOF: 修改前 片段第 2 行：没有行末换行 → 修改后 片段第 2 行：换行（LF）. Shifted: 修改前 片段第 1 行：换行（LF） → 修改后 片段第 2 行：回车与换行（CRLF）."
+    },
+    {
+      "id": "R2",
+      "class": "oracle coverage gap",
+      "lines": "79-92",
+      "issue": "Missing/fallback labels are checked but neutral body styling, absence of exact badges and fallback formatted-copy precision are not. A truthful label plus misleading whole-side coloring could pass.",
+      "minimumRecommendation": "For missing/fallback, assert no direct message .add/.del and no pane .artifact-code-row.add/.remove, with actual neutral/uncompared body rows. Scope any remaining formatted-copy/split claims to separate tests."
+    },
+    {
+      "id": "R3",
+      "class": "precondition gap",
+      "lines": "121-131",
+      "issue": "After search/Escape, Enter is pressed without first proving the manual disclosure is collapsed and the needle hidden. This alone cannot establish an independent keyboard collapsed-to-expanded transition.",
+      "minimumRecommendation": "Assert aria-expanded=false plus hidden needle before Enter, or deliberately restore that state, then assert true/visible. The initial pre-search folded assertion is a different point in the lifecycle."
+    },
+    {
+      "id": "R4",
+      "class": "IO assertion-strength gap",
+      "lines": "137-140",
+      "issue": "Read success checks one read command and two body lines; the fixture returns fixed body while echoing any args.file. Incorrect seven-field read arguments could still pass.",
+      "minimumRecommendation": "Compare read_text.args.file against root/path/resolvedPath/name/size47/SHA of the fixed 47-byte body/version controlled-v1. Otherwise only claim explicit selected-path invocation and appearance of controlled body, not seven-field preservation."
+    }
+  ],
+  "correctlyBounded": [
+    "Absolute source click uses inspect_selected({path}) with no invented root requirement; original report has locations=[] so this genuinely exercises the diff-path action.",
+    "No pre-click file IO is checked after details/pane opening. No unexpected commands and protected draft/other-file-feedback values are checked after each completed scenario.",
+    "Held inspection is released only after B and P18_OTHER_OWNER are visible. Zero body reads plus absence of the late body meaningfully checks stale inspection result rejection for this fixture.",
+    "Unknown and active pending are separately represented; pending is registered active, unknown is not.",
+    "Missing failed-file inspection checks no body read and retention of the reported fragment.",
+    "Source/harness before-after inventories and failure exit are real runner gates; a caught failure is retained rather than converted to success."
+  ],
+  "scopeNotYetCoveredByCurrentRunner": [
+    "Late text-read response after inspection has already succeeded",
+    "Close-pane/changed selection while reading",
+    "Changed reported payload and revision monitoring lifecycle",
+    "Seven-field current-file identity, absent R4 strengthening",
+    "Missing/fallback neutral body styles, absent R2 strengthening",
+    "Split-view coordinates and formatted comparison copy",
+    "Failed message status assertion (pane is checked)",
+    "Pending/unknown exact counts and long pane statistics/raw full copy",
+    "All original messages unchanged: protectedUnchanged covers unsent draft and unrelated feedback only",
+    "Every 14-case and 11-lifecycle oracle property: the runner is a subset, not full coverage"
+  ],
+  "conclusion": "No new product defect inferred from the two saved harness failures. The current assertions support their narrow named paths, but R1-R4 should be strengthened before claiming those full oracle properties; otherwise publish the listed coverage limits. Root owns execution and any runner correction.",
+  "execution": {
+    "productionTestsRun": 0,
+    "browsersStarted": 0,
+    "serversStarted": 0,
+    "sourceFilesModified": 0,
+    "runnerFilesModified": 0
+  }
+}

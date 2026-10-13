@@ -1,0 +1,19 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "records": [
+    {
+      "chunkId": "a04fbb",
+      "actualExitCode": 1,
+      "sourceLine": 14118,
+      "sourceByteOffset": 39462758,
+      "sourceByteLength": 1329,
+      "timestamp": "2026-10-13T20:26:52.332Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-engineering-v1/seven-check-failed.jsonl.raw",
+        "bytes": 1329,
+        "sha256": "da0be24ffda2a7835a1bdfacd1109707df4f30e7030383101dafe1c51d8555d3"
+      }
+    }
+  ],
+  "boundary": "Exact requested root completion only. The original runner failed after frontend-test. No unrelated transcript content exported."
+}

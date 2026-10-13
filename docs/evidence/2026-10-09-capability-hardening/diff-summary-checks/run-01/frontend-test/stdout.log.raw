@@ -1,0 +1,16 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/ConversationWorkspace.test.tsx (3 tests | 1 failed) 41ms
+   × keeps pending approvals outside collapsed tool steps and keeps the content header independent 35ms
+
+ Test Files  1 failed | 499 passed (500)
+      Tests  1 failed | 6079 passed (6080)
+   Start at  04:25:55
+   Duration  47.24s (transform 13.33s, setup 0ms, import 252.45s, tests 105.10s, environment 41ms)
+
+ ELIFECYCLE  Test failed. See above for more details.

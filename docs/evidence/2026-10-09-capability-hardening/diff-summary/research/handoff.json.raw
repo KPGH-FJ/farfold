@@ -1,0 +1,170 @@
+{
+  "checkedAtUtc": "2026-10-13T19:51:20.558948+00:00",
+  "scope": "Read-only P18 implementation preparation; wrote only this new output directory. No production tests/helpers, App, Agent, build, dependency or frozen source/docs edits.",
+  "recommendation": "Unify message/tool diff and content-pane comparison in one bounded pure helper, preserving scope, provenance, unknown status and current-disk verification boundary.",
+  "originalP18Row": "| P18 | 工具变更与差异查看                        | 部分；待补齐                  | 差异、命令和日志按真实工具结果展示，整文件与片段、输入意图与实际结果区分；能定位并核验对应磁盘文件，工具失败不呈现为已写成。                                                 |",
+  "fullConditionCoverage": {
+    "thisIncrement": [
+      "accurate per-supplied-fragment line comparison/statistics in both views",
+      "missing original versus known empty original",
+      "full-file/fragment and input-intent/reported-output/status remain distinct",
+      "explicit diff.path reaches existing current-file verification even without locations"
+    ],
+    "reusedNotNew": [
+      "existing command/log outputs and raw details",
+      "existing disk read/version/error handling and file feedback"
+    ],
+    "stillOpen": [
+      "real official Agent tools and command/log journeys not executed by this increment",
+      "cross-platform and whole P18 acceptance not implied by controlled source/browser tests"
+    ]
+  },
+  "confirmedStaticFindings": [
+    "Message counts every nonblank old/new row and marks unchanged rows as edits; simple a/b -> a/c is presently +2/-2 by source deduction.",
+    "Content pane already aligns lines and retains fragment/source/status, but large middle fallback exposes only rows and no precision flag.",
+    "Message oldText=null currently says 新文件; content pane says 未提供修改前的文本。 Local v1 schema uses None for new files, but tolerant decoding/frontend normalization also yield null. At most a reported intent, never proof of creation.",
+    "Content-pane lineDiff splits trailing LF into an extra empty row. Proposed physical-row/EOL distinction prevents terminal-newline-only edits being counted as body changes; update related coordinate/copy tests if adopted."
+  ],
+  "sharedInterfaceProposal": {
+    "module": "src/runtime/line_diff.ts (pure, no I/O, no Agent branch)",
+    "result": "{precision: aligned | replacement | missing-before | unavailable, rows, stats: {adds,removes}|null, endingChanges, reason?}; preserve both exact original strings outside result",
+    "aligned": "Two known sides, bounded exact body-line LCS; stats count actual add/remove rows including whitespace. Body equality with EOL changes is not no-change. Coordinates are relative to supplied text only.",
+    "replacement": "Existing bounded matrix overflow keeps exact prefix/suffix + replace rows for viewing; stats=null, visible concise 未完整比较 label with reason in detail. Never present replacement count as minimal changes.",
+    "missing-before": "After content remains visible and copyable; no deletion side/old coordinates or exact +/-; use existing missingOriginal wording, not 新文件.",
+    "unavailable": "If explicit input character/line comparison budget is exceeded, skip comparison without splitting unbounded arrays; retain raw before/after view and honest reason. No silent truncation or fabricated zero changes.",
+    "budgets": "Retain 1,000,000 LCS cells; proposed separate comparison-only guard is 2 Mi UTF-16 code units combined and 20,000 physical rows combined. These are implementation proposals, not existing product limits; validate boundary cost before freezing. Do not cap stored reported payload or silently narrow text search.",
+    "aggregate": "Tool summary exact +/- only when all counted diff reports are aligned; otherwise precision-aware summary. Do not treat multiple reports for one path as net disk changes. Cache/reuse comparison per immutable content to avoid repeated LCS on unrelated renders.",
+    "lineSemantics": "See manual oracle. Keep body bytes/code units, Unicode and each terminator; do not trim/normalize. Endings change separately; raw copy reconstructs exact source. No imaginary file offsets."
+  },
+  "minimumUI": [
+    "Replace message two-side coloring/stats with shared rows; unchanged rows neutral, changed rows colored, preserve keyboard fold/search behavior.",
+    "Use one compact precision/scope conclusion and existing expandable details, not repeated defensive prose. Preserve failed/unfinished/unknown labels beside available output.",
+    "Wire DiffView.path through existing MessageFileLink + supplied onOpenFile; no automatic reads and no parsing raw code/input into links.",
+    "Content pane uses same precision result for combined/split display and diff-copy; raw before/after copy remains exact. Keep fragment-relative feedback and source/status footer."
+  ],
+  "ownedFilesAfterRelease": {
+    "frontend": [
+      "src/runtime/line_diff.ts + focused test",
+      "src/runtime/artifact_view.ts + artifact_view.test.ts",
+      "src/components/thread-items.tsx + diff/search/file-links focused tests",
+      "src/components/FileArtifactView.tsx + necessary comparison/feedback test",
+      "src/runtime/thread_view_strings.ts and/or workspace_strings.ts; minimal existing diff CSS if neutral state needs it"
+    ],
+    "backend": [],
+    "notNeeded": [
+      "session projection/schema changes",
+      "Agent protocol or adapter changes",
+      "disk authority/version implementation",
+      "new dependency or configuration switch"
+    ]
+  },
+  "acceptanceOrder": [
+    "After explicit source release, first run the small manual one-replacement/missing-before component counterexamples against current behavior and retain actual red.",
+    "Pure helper tests from oracle: unchanged/replacement/blank/EOF/CRLF/Unicode/repeated anchors/known empty versus unknown/fallback/input budget plus exact side reconstruction. No expected values computed with production helper.",
+    "Component integration: matching message/pane precision and counts; statuses and input/report scope; path-only explicit open/no automatic read; hidden-tail search; per-side feedback and exact raw copy.",
+    "Root controlled complete App browser in Chromium/WebKit: same snippets and unknown/failed/fallback states, keyboard expansion/search, narrow layout, explicit file verification success/failure and stale owner handling. No actual Agent request needed; controlled event is not proof of Agent disk write.",
+    "Only later frozen source full engineering/candidate/install as parent authorizes; no additional acceptance ceremony or new platform gate."
+  ],
+  "evidence": [
+    {
+      "path": "PRODUCT.md",
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+      "bytes": 35083,
+      "scope": "§3/§6/§10: one common UI, layered explanation, tools are not disk proof, explicit click verifies selected file"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "b93689dcf6eb3a48e8c276f47e76574880149fa64934d79f439b465e79f95681",
+      "bytes": 159327,
+      "scope": "P18 original row retained verbatim"
+    },
+    {
+      "path": "src/components/thread-items.tsx",
+      "sha256": "abe60e7ef61e34c29dc3a3303d87382705369af1a30033003f77bcf5520bd0b0",
+      "bytes": 16278,
+      "scope": "104-116 full-side nonblank stats; 143-191 whole-side painting/null=>new; ToolDetail and ToolStep"
+    },
+    {
+      "path": "src/runtime/artifact_view.ts",
+      "sha256": "acd31b4c653b663e8273c8d1fc27d1abc6717855d1bb9ab2062b2de30d1dae66",
+      "bytes": 7643,
+      "scope": "lineDiff prefix/suffix/LCS matrix<=1,000,000/fallback; splitDiffRows"
+    },
+    {
+      "path": "src/runtime/artifacts.ts",
+      "sha256": "a839a1f9aaf980f4867750eb889e69b097e6e804d57a909d551c112b15c0ece5",
+      "bytes": 5891,
+      "scope": "synthesizedDiff and paneCards preserve input/report, file/fragment and status"
+    },
+    {
+      "path": "src/components/FileArtifactView.tsx",
+      "sha256": "b20d4122f091a1e379ddd7788f2146e0fb67fd44ec919894e30e0f6340af991d",
+      "bytes": 23395,
+      "scope": "comparison, relative feedback lines, raw/diff copy and existing provenance footer"
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "sha256": "71fb019a5b322c59b0836d5f49a91ccef23ed1e148ada355843c0ec8838eacd5",
+      "bytes": 28936,
+      "scope": "normalizeToolContent maps missing/invalid oldText to null"
+    },
+    {
+      "path": "src/components/MessageContent.tsx",
+      "sha256": "e1d1642acd7e3631b8f22fea54699895b8c0438400831a64289a1ada5b3bd4f3",
+      "bytes": 9858,
+      "scope": "MessageFileLink exact explicit callback; no automatic read"
+    },
+    {
+      "path": "src/components/thread-items.search.test.tsx",
+      "sha256": "f89f8da4bad7ee9c1b99eea2a8a54772179f92f7b8ea44c096f357d99a9f554b",
+      "bytes": 4506,
+      "scope": "hidden searchable tails and generated-label separation"
+    },
+    {
+      "path": "src/components/thread-items.file-links.test.tsx",
+      "sha256": "9fcb642ac46496e11874eaa347513ddfe6d27f53dd34edff3170dd7e5014a07d",
+      "bytes": 5616,
+      "scope": "exact path and no automatic navigation"
+    },
+    {
+      "path": "src/runtime/artifact_view.test.ts",
+      "sha256": "4eecbe3e6f5fa45d87827a759d69fecb2b8ec751b4f48ffa094d50e87efab020",
+      "bytes": 8066,
+      "scope": "line reconstruction/offset/fallback tests"
+    },
+    {
+      "path": "src/runtime/workspace_strings.ts",
+      "sha256": "7992f5f54c6370fdc15ec7c63214a941124f58346e7cbcbb02d6c698069d0279",
+      "bytes": 5798,
+      "scope": "reported/input/fragment/status/missingOriginal existing language"
+    },
+    {
+      "path": "src/runtime/thread_view_strings.ts",
+      "sha256": "b9423afb030600bb12ff8bb4defc1b58f8c21319a966c24b43f80cc14d90acea",
+      "bytes": 1342,
+      "scope": "common tool summaries"
+    },
+    {
+      "path": "src-tauri/Cargo.lock",
+      "sha256": "ffcad4afc42bab386642035337b21f533608620307fda28044d0baf6ee588e08",
+      "bytes": 144545,
+      "scope": "actual local ACP2.2.0/schema1.9.1 dependency pin"
+    },
+    {
+      "path": "/Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/agent-client-protocol-schema-1.9.1/src/v1/tool_call.rs",
+      "sha256": "aff9e70a308758d6926217dde46013f3c5f61b53aea0006a8bd91ec5d493c5b8",
+      "bytes": 30981,
+      "scope": "674-683: old_text None documents new files, but DefaultOnError plus frontend null normalization cannot establish an actually created/full/current file"
+    }
+  ],
+  "oracle": {
+    "path": "output/2026-10-14-diff-summary-research/oracle.json",
+    "sha256": "ff5e98d503285f86f6a02c6e153ba056f77e0adc203f69a2df5e634e63a3c7a0",
+    "bytes": 8384,
+    "scope": "manual expected behavior; never populated from current production output"
+  },
+  "reviewInputs": [
+    "Independent status agent confirmed EOF/CRLF, null versus empty, repeated anchors/fallback, and equal fragment does not imply equal whole file. No tests run."
+  ],
+  "claimBoundary": "Design preparation only. No production modification or successful/failed test run asserted."
+}

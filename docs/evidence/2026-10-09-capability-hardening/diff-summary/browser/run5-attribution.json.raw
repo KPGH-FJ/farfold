@@ -1,0 +1,11 @@
+{
+  "actualExitCode": 1,
+  "chunk": "c03208",
+  "cause": "Run4 folded precondition passed; run5 immediate state check raced search-close React updates. Wait for observable collapsed state and hidden body before keyboard assertion; wait for visible body after Enter. Also static fix unexecuted missing-file expectation to actual generic safe error from openFailureNotice / FILE_OPEN_STRINGS.failed.",
+  "checksPassed": 127,
+  "checksTotal": 128,
+  "completeScenarios": 13,
+  "sourceChange": false,
+  "oldRunnerSha256": "3970d69c9114b08f27f1dd2613fcffa7b0c4958d7b30c4c46b31b46d214088bd",
+  "newRunnerSha256": "ac7b9a3b880c2947691e09d390536295d7ccdd2e3e430bd63aab90d9e6047e17"
+}

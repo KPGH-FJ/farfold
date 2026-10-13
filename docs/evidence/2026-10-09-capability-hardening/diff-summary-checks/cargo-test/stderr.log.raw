@@ -1,0 +1,4 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+ZipWriter drop failed: Io(Custom { kind: Other, error: "archive write stopped" })ZipWriter drop failed: Io(Custom { kind: Other, error: "archive write stopped" })ZipWriter drop failed: Io(Custom { kind: Other, error: "archive write stopped" })ZipWriter drop failed: Io(Custom { kind: Other, error: "archive write stopped" })     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
+   Doc-tests farfold_lib

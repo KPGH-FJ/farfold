@@ -1,0 +1,222 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T20:21:48.795838+00:00",
+  "phase": "SOURCE_AND_CONTROLLED_BROWSER_VERIFIED_BEFORE_FULL_CHECKS",
+  "change": "P18 common bounded comparison of supplied tool fragments: aligned body lines, unknown original and budget fallback, independent line endings, honest input/report/outcome scope and explicit current-file inspection.",
+  "sources": [
+    {
+      "path": "src/runtime/line_diff.ts",
+      "sha256": "d679c0d4e426f21486db078dde2b343000539cf98bc196e390453528191d5c6a",
+      "bytes": 6126,
+      "lines": 211
+    },
+    {
+      "path": "src/runtime/line_diff.test.ts",
+      "sha256": "13f1fb595bf2a9657a70bd1ea03b2dadfde010453b9c05159059ab0299c27bb0",
+      "bytes": 7795,
+      "lines": 233
+    },
+    {
+      "path": "src/runtime/line_diff_presentation.ts",
+      "sha256": "0d1d1ab4a033595d8ac42f494cb2beeb5ff66d5a2a9b56db81912c3e2dcaf53d",
+      "bytes": 2148,
+      "lines": 62
+    },
+    {
+      "path": "src/runtime/artifact_view.ts",
+      "sha256": "70290d69dbcd9d04295dc6add84a7c67a1fc82f008581ef95661f67bb6b8123a",
+      "bytes": 5432,
+      "lines": 142
+    },
+    {
+      "path": "src/runtime/artifact_view.test.ts",
+      "sha256": "b22ee329c16b954e1897f1f996b9a4615e34725e82920adb3eda1cba1dcbdc63",
+      "bytes": 8531,
+      "lines": 260
+    },
+    {
+      "path": "src/runtime/workspace_strings.ts",
+      "sha256": "73686cca07195a19e876a95229967e766de0246d170edc83bc8aa316851e7de2",
+      "bytes": 6778,
+      "lines": 150
+    },
+    {
+      "path": "src/components/thread-items.tsx",
+      "sha256": "e343570d0a17c552652e51c80775fbc0d7966849570329ea2f70319894c362b2",
+      "bytes": 19171,
+      "lines": 667
+    },
+    {
+      "path": "src/components/thread-items.diff.test.tsx",
+      "sha256": "319f43453c7d780ccea48ac6a83310a486628b154e97864c9addab3af1791f1c",
+      "bytes": 6372,
+      "lines": 198
+    },
+    {
+      "path": "src/components/thread-items.search.test.tsx",
+      "sha256": "8db5575a0eb35790c19ecbfdb00e26a33edde6ec600cdcec236e51b2ab16a295",
+      "bytes": 4506,
+      "lines": 126
+    },
+    {
+      "path": "src/components/thread-items.search-expansion.test.tsx",
+      "sha256": "c756a7624073f2a23ac3a5656bd73fcf1d7d165724cd7e70683b151f8b8e9079",
+      "bytes": 5401,
+      "lines": 174
+    },
+    {
+      "path": "src/components/FileArtifactView.tsx",
+      "sha256": "3ccc50a1143b431b93e2650dcefff43af2d41e95ecbcd181fbdce259dd55ab98",
+      "bytes": 25359,
+      "lines": 813
+    },
+    {
+      "path": "src/components/FileArtifactView.feedback.test.tsx",
+      "sha256": "f192bbfe8d234561a0f053db9389c0951b7444c9121ab96de37095bfc78daf79",
+      "bytes": 16191,
+      "lines": 466
+    },
+    {
+      "path": "src/components/DiffComparisonNote.tsx",
+      "sha256": "a479f09201ce625b768bc23541ba2b7fb753852bb25d07d31839ef2284aeb2c7",
+      "bytes": 1614,
+      "lines": 52
+    },
+    {
+      "path": "src/styles-thread.css",
+      "sha256": "ac6de4301ed58fd5d7233e40c0f35d8cdfb0b20ba7e9085814f859a49cb46679",
+      "bytes": 26995,
+      "lines": 1478
+    },
+    {
+      "path": "src/runtime/fixtures/line-diff/oracle.json",
+      "sha256": "d96141762a2de0231bd3ee3afd15a99daa79862777c3deec9d76ec733a723536",
+      "bytes": 7919,
+      "lines": 264
+    }
+  ],
+  "limits": {
+    "lcsCells": 1000000,
+    "comparisonCombinedUtf16CodeUnits": 2097152,
+    "comparisonCombinedPhysicalRows": 20000,
+    "rawReportRetained": true
+  },
+  "validation": {
+    "frontendTargeted": {
+      "files": 10,
+      "passed": 117,
+      "actualExitCode": 0,
+      "sourceStable": true
+    },
+    "typecheckActualExitCode": 0,
+    "scopedFormatActualExitCode": 0,
+    "independentPureHelper": {
+      "checks": 13,
+      "passed": 13,
+      "actualExitCode": 0,
+      "moduleByteStable": true
+    },
+    "browser": [
+      {
+        "engine": "chromium",
+        "run": "run6",
+        "checks": 147,
+        "scenarios": 17,
+        "actualExitCode": 0,
+        "sourceInputs": 1098,
+        "sourceStable": true,
+        "pageErrors": 0,
+        "externalRequests": 0
+      },
+      {
+        "engine": "webkit",
+        "run": "run1",
+        "checks": 147,
+        "scenarios": 17,
+        "actualExitCode": 0,
+        "sourceInputs": 1098,
+        "sourceStable": true,
+        "pageErrors": 0,
+        "externalRequests": 0
+      }
+    ],
+    "ownedServer": {
+      "stopRequested": "SIGTERM",
+      "actualExitCode": 143,
+      "notNaturalSuccess": true
+    }
+  },
+  "evidence": {
+    "sourceFreeze": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/frontend/source-freeze-v1.json.raw",
+      "bytes": 5567,
+      "sha256": "0c8d40b42209f774a957c05bb198412bd5b8d5afdf5d26bea58a220c56e3c793"
+    },
+    "frontendSummary": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/frontend/summary.json.raw",
+      "bytes": 11385,
+      "sha256": "b4ae4eccb6680550fffb5076e6d858baf6400182061ece1a7adc7c4dfd19c0f7"
+    },
+    "sourceIndependentReview": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/independent/frontend-final-review.json.raw",
+      "bytes": 20717,
+      "sha256": "17fe4cfce81bce496deea0f775607a5078f297c57dff3b20c1490f9b999928f0"
+    },
+    "manualOracle": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/independent/browser-oracle.json.raw",
+      "bytes": 24410,
+      "sha256": "0bb74b49e03a90e81fe30f3cf0d14ac40933e0ce7cd0d0f53dd55c8437a293b9"
+    },
+    "browserIndependentReview": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/independent/browser-review.json.raw",
+      "bytes": 10601,
+      "sha256": "aeff0f642de75f2506ac54e617d09425736d44e00710e6a36df5edbe064f1583"
+    },
+    "browserRootRecord": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/browser/root-completion.json.raw",
+      "bytes": 1063,
+      "sha256": "d434c006ccc0fc9837a4653ac870f7209d32fc6efb048655117e28476ff75998"
+    },
+    "rootActualCompletions": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/independent/transcript-browser/manifest.json.raw",
+      "bytes": 4191,
+      "sha256": "60eae4968a5683c7be0efb6a29604777934d5530827dfcfcf04ca616f7d21681"
+    },
+    "independentHelperRun": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/independent/pure-oracle-run-01.completed.json.raw",
+      "bytes": 1484,
+      "sha256": "b2154fb5604be9b488eb1273726e4526d5cdf3a5a9446c7fd02a1171c8aca0ee"
+    },
+    "chromium": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/browser/chromium-run6.json.raw",
+      "bytes": 274469,
+      "sha256": "587e6272d9dc48d6098bf77022a805c5203de1fc2bb16bf92c00a4043738a51e"
+    },
+    "webkit": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/browser/webkit-run1.json.raw",
+      "bytes": 274459,
+      "sha256": "dd790919b7254c10904c3abf43fab27dd766c340c22dadd870c97795cfc781cf"
+    }
+  },
+  "preservedFailures": {
+    "productRed": "Two actual original counterexamples: replacement counted +2/-2 and missing old text labeled new file.",
+    "changedOldExpectations": "Five earlier tests reflected prior line/copy/preview semantics; their failures are retained separately.",
+    "testHarness": "Two direct-call React tests lacked the newly used hook stub; failures retained.",
+    "manualOracle": "Original whitespace input omitted one LF; corrected authored oracle preserved separately, never generated from production output.",
+    "browser": "Five Chromium runs exited1: wrong fragment copy label, ambiguous global search selector, exact-line selector against multiline preview, incorrect one-inspection assumption under development StrictMode, and immediate search-close folded-state race. Original runners, results, screenshots, actual completion events and attribution records retained; none is represented as a passed run."
+  },
+  "boundaries": [
+    "This entry records source and controlled verification only. Full engineering, candidate and installation evidence belong to later receipts.",
+    "Formal app remains source2a720169/0.1.7arm64, installed and not launched; this P18 increment is not installed or a real Agent tool journey.",
+    "Provided fragments, file versus fragment scope, edit-input intent and reported output remain separate. Completed tool report or controlled current-file preview is not proof of a disk write.",
+    "Only aligned comparisons show precise +/- statistics/color. Missing original and fallback are neutral; raw before/after remain available. Exact EOL changes retain separate before/after relative positions.",
+    "Controlled file returns test explicit selected-path invocation, complete seven-field read arguments and47-byte body, failed inspection and held-inspection owner switch. No actual OS file I/O or OS cancellation is asserted.",
+    "Late body-read/close-pane/revision race, pane-specific exact EOL coordinates, split/feedback and formatted-copy assertions are not all covered by these browser runs; source/targeted tests are distinct evidence.",
+    "Eight final screenshots were inspected by root; complete source/browser inventories before and after match. Synthetic fixtures, source and logs only; no user account/history/database or credential export.",
+    "Original122 requirements,28 NEW conditions,29 Agent/eight-standard boundary and NEW-24 remain unchanged; P18 is still partial."
+  ],
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary/publication.json",
+    "exactRawCopies": 103
+  }
+}

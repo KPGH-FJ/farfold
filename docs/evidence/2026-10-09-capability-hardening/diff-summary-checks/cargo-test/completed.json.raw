@@ -1,0 +1,24 @@
+{
+  "actualStageCompletion": true,
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked"
+  ],
+  "completedAt": "2026-10-13T20:40:44.542820+00:00",
+  "cwd": "/Users/tw/Desktop/farfold",
+  "displayCommand": "cargo test --manifest-path src-tauri/Cargo.toml --locked",
+  "elapsedSeconds": 123.896485833,
+  "group": "native",
+  "monotonicStart": 98.168016375,
+  "name": "cargo-test",
+  "pid": 18300,
+  "processLaunched": true,
+  "rawExitCode": 0,
+  "startedAt": "2026-10-13T20:38:40.642476+00:00",
+  "state": "COMPLETED",
+  "stderrSha256": "874c2faea6cc607e6dcb2460e1accc3c6db128ebbe342be0d48cb12785eeb86f",
+  "stdoutSha256": "5e8f2064699e1fe3295b8c3a7e478a8b5dd4d16871d752814eda4cb9fef9b775"
+}

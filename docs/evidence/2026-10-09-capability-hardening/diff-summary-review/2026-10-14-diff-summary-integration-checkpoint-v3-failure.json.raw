@@ -1,0 +1,11 @@
+{
+  "actualExitCode": 1,
+  "chunk": "373c0b",
+  "cause": "First inclusion of two previously untracked shared engineering utilities in P18 AUX; old phase-only prefix whitelist correctly stopped before any index/public write. v4 explicitly allows only their exact paths and independently pinned SHA, completing candidate input commit coverage.",
+  "frozenInputsChanged": false,
+  "indexTouched": false,
+  "sharedTools": {
+    "output/2026-10-13-xlsx-input-checks-preparation/inventory.py": "7784a38803fb1c10da014755cde9901f9deba982ffb01ab1076dfd2060e3e076",
+    "output/2026-10-13-xlsx-input-checks-preparation/runner-v4/run_checks.py": "0cf4b3fd62d3d94f1781119f65d87f68a9fd26a6afb5e95ca7e56bda3f140a0c"
+  }
+}

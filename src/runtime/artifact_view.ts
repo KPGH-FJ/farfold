@@ -2,12 +2,8 @@ import { paneCards, type PaneCard } from "./artifacts";
 import type { ThreadState } from "./session_types";
 
 export type FileArtifact = Extract<PaneCard, { kind: "diff" }>;
-export interface DiffLine {
-  kind: "same" | "remove" | "add";
-  oldLine: number | null;
-  newLine: number | null;
-  text: string;
-}
+import type { DiffLine } from "./line_diff";
+export type { DiffLine } from "./line_diff";
 
 export interface SplitDiffLine {
   before: DiffLine | null;
@@ -29,95 +25,17 @@ export function splitDiffRows(rows: DiffLine[]): SplitDiffLine[] {
     if (row.kind === "same") {
       flush();
       result.push({ before: row, after: row });
+    } else if (row.kind === "uncompared") {
+      flush();
+      result.push({
+        before: row.oldLine === null ? null : row,
+        after: row.newLine === null ? null : row,
+      });
     } else if (row.kind === "remove") before.push(row);
     else after.push(row);
   }
   flush();
   return result;
-}
-
-/** Bounded line alignment; large unrelated middles fall back to exact replace rows. */
-export function lineDiff(before: string | null, after: string): DiffLine[] {
-  const old = before === null || before === "" ? [] : before.split("\n");
-  const next = after === "" ? [] : after.split("\n");
-  const rows: DiffLine[] = [];
-  let prefix = 0;
-  while (
-    prefix < Math.min(old.length, next.length) &&
-    old[prefix] === next[prefix]
-  ) {
-    rows.push({
-      kind: "same",
-      oldLine: prefix + 1,
-      newLine: prefix + 1,
-      text: old[prefix],
-    });
-    prefix++;
-  }
-  let suffix = 0;
-  while (
-    suffix < Math.min(old.length, next.length) - prefix &&
-    old[old.length - suffix - 1] === next[next.length - suffix - 1]
-  )
-    suffix++;
-  const a = old.slice(prefix, old.length - suffix),
-    b = next.slice(prefix, next.length - suffix);
-  const removed = (i: number) =>
-    rows.push({
-      kind: "remove",
-      oldLine: prefix + i + 1,
-      newLine: null,
-      text: a[i],
-    });
-  const added = (j: number) =>
-    rows.push({
-      kind: "add",
-      oldLine: null,
-      newLine: prefix + j + 1,
-      text: b[j],
-    });
-  if ((a.length + 1) * (b.length + 1) <= 1_000_000) {
-    const cols = b.length + 1;
-    const table = new Uint32Array((a.length + 1) * cols);
-    for (let i = a.length - 1; i >= 0; i--)
-      for (let j = b.length - 1; j >= 0; j--)
-        table[i * cols + j] =
-          a[i] === b[j]
-            ? table[(i + 1) * cols + j + 1] + 1
-            : Math.max(table[(i + 1) * cols + j], table[i * cols + j + 1]);
-    let i = 0,
-      j = 0;
-    while (i < a.length || j < b.length) {
-      if (i < a.length && j < b.length && a[i] === b[j]) {
-        rows.push({
-          kind: "same",
-          oldLine: prefix + i + 1,
-          newLine: prefix + j + 1,
-          text: a[i],
-        });
-        i++;
-        j++;
-      } else if (
-        j >= b.length ||
-        (i < a.length && table[(i + 1) * cols + j] >= table[i * cols + j + 1])
-      ) {
-        removed(i++);
-      } else {
-        added(j++);
-      }
-    }
-  } else {
-    a.forEach((_, i) => removed(i));
-    b.forEach((_, j) => added(j));
-  }
-  for (let i = suffix; i > 0; i--)
-    rows.push({
-      kind: "same",
-      oldLine: old.length - i + 1,
-      newLine: next.length - i + 1,
-      text: next[next.length - i],
-    });
-  return rows;
 }
 
 export function filePresentation(

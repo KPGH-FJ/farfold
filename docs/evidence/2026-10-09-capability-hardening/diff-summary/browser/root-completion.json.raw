@@ -1,0 +1,41 @@
+{
+  "phase": "CONTROLLED_BROWSER_VERIFIED_NOT_NATIVE",
+  "sourceInputs": 1098,
+  "engines": [
+    {
+      "engine": "chromium",
+      "checks": 147,
+      "scenarios": 17,
+      "sourceStable": true
+    },
+    {
+      "engine": "webkit",
+      "checks": 147,
+      "scenarios": 17,
+      "sourceStable": true
+    }
+  ],
+  "actualCompletion": [
+    {
+      "session": 56652,
+      "exitCode": 0,
+      "chunk": "f7135c"
+    },
+    {
+      "session": 73403,
+      "exitCode": 0,
+      "chunk": "2ff6b2"
+    }
+  ],
+  "rootPixelReview": "All eight final screenshots observed; 850px pane and 1280px current-file view. Fragment boundaries, neutral missing-before, and separate current body visible. No claim of installed UI.",
+  "ownedServer": {
+    "pid": 14363,
+    "session": 34063,
+    "requestedStop": "SIGTERM after completed browsers; kill actual0 e274c4",
+    "actualSessionExitCode": 143,
+    "actualCompletionChunk": "edb168",
+    "psExitCode": 1,
+    "psOutput": "",
+    "meaning": "Requested server termination, not a successful natural server exit."
+  }
+}

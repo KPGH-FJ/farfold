@@ -1,0 +1,7 @@
+{
+  "original": "output/2026-10-14-diff-summary-research/oracle.json",
+  "originalSha256": "ff5e98d503285f86f6a02c6e153ba056f77e0adc203f69a2df5e634e63a3c7a0",
+  "corrected": "output/2026-10-14-diff-summary-frontend/oracle-v2.json",
+  "correctedSha256": "e46e33a808ea287c7caffa88f8dbf2d74318566af36b2157a2a546404f5351e8",
+  "correction": "whitespace-is-content after omitted LF before z; manually corrected input, expected unchanged. Added manually derived shifted EOL case. Original unchanged. No production red/green claim."
+}

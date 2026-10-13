@@ -1,0 +1,16 @@
+{
+  "phase": "PREPARED_NOT_EXECUTED",
+  "files": {
+    "fixture.tsx": "aead837e91f21c5f98577a45a4e70345a8b17c9d1b930254f743b53ffdc46a42",
+    "index.html": "150fc2e8627c2caae515d9927f6373199f4c4289426e915acfc8f32eab90267e",
+    "serve.mjs": "7a1e37a23c7d7cae17b7985aaf2284b0468ea75544a6ae0a890cb36e5631c6c9",
+    "run.mjs": "7192acf427a4debea13c5712b531a38af3c6badfc02a5404419735e8e2011416"
+  },
+  "changesBeforeFirstRun": [
+    "Absolute-path selected inspection has path-only arguments; relative inspection retains root. Fixed text error matches current legacy inspection command.",
+    "Pending status case explicitly lists its controlled active tool identity; custom unknown status remains unregistered.",
+    "Fourteen synthetic diff/status inputs and explicit-read/missing/late-owner scenarios prepared.",
+    "Node syntax checks only; no browser, App, Agent, generated production helper or source tests run by this preparation."
+  ],
+  "expectedResultsSource": "Independent hand calculations in output/2026-10-14-diff-summary-independent/browser-oracle.json (pending final publication)"
+}

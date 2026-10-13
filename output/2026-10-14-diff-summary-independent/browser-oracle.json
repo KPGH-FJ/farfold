@@ -1,0 +1,794 @@
+{
+  "schemaVersion": 1,
+  "kind": "independent-manually-authored-controlled-browser-oracle",
+  "phase": "preparation-not-executed",
+  "createdAtUtc": "2026-10-13T20:07:48.875585+00:00",
+  "authoringBoundary": {
+    "expectedStatsAndCoordinates": "Human calculation from literal fixture inputs and explicit bounded-comparison design; not derived from production helper or UI output",
+    "allowedUtilityCalculations": "SHA-256, file byte counts, literal UTF-8 lengths only",
+    "productionComparatorExecuted": false,
+    "browserExecuted": false,
+    "appOrAgentOrDatabaseAccessed": false,
+    "productionOrFixtureEdited": false,
+    "writtenFiles": [
+      "output/2026-10-14-diff-summary-independent/browser-oracle.json"
+    ]
+  },
+  "inputs": [
+    {
+      "path": "output/2026-10-14-diff-summary-browser/fixture.tsx",
+      "bytes": 8419,
+      "sha256": "aead837e91f21c5f98577a45a4e70345a8b17c9d1b930254f743b53ffdc46a42"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-research/oracle.json",
+      "bytes": 8384,
+      "sha256": "ff5e98d503285f86f6a02c6e153ba056f77e0adc203f69a2df5e634e63a3c7a0"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-research/handoff.json",
+      "bytes": 11218,
+      "sha256": "0a4c236ab870936f1d74af27ccc06454e0da9bf460d0e9cf77b42b9dae1299c0"
+    }
+  ],
+  "existingIoContractReferences": [
+    {
+      "path": "src/runtime/file_delivery.ts",
+      "bytes": 7202,
+      "sha256": "eaec401ada62b1da686016d811baf267e39726fd8b0292f428042a6011aea468"
+    },
+    {
+      "path": "src/runtime/file_revision_monitor.ts",
+      "bytes": 5192,
+      "sha256": "f917385e2f39e26b2f5f52500d9b24a5255f037f965fdc0e314937c8b67cf451"
+    }
+  ],
+  "lineSemantics": [
+    "LF-delimited physical rows; CRLF/LF/no terminator recorded separately",
+    "A terminal LF does not add a phantom physical row",
+    "A lone CR remains body text",
+    "Whitespace and Unicode are not normalized",
+    "Line positions refer only to supplied fragments; no disk offsets or complete-file scope are inferred",
+    "Precision, source provenance, tool outcome and current disk verification are separate dimensions"
+  ],
+  "caseCount": 14,
+  "cases": [
+    {
+      "id": "replace",
+      "literalBefore": "a\nb",
+      "literalAfter": "a\nc",
+      "expected": {
+        "precision": "aligned",
+        "stats": {
+          "adds": 1,
+          "removes": 1
+        },
+        "neutralRelativePairs": [
+          [
+            1,
+            1
+          ]
+        ],
+        "removed": [
+          {
+            "oldLine": 2,
+            "text": "b"
+          }
+        ],
+        "added": [
+          {
+            "newLine": 2,
+            "text": "c"
+          }
+        ],
+        "endingChanges": [],
+        "scope": "fragment",
+        "provenance": "reported output",
+        "toolOutcome": "completed report; not disk-write proof",
+        "assertInBothMessageAndContentPane": true
+      }
+    },
+    {
+      "id": "unchanged",
+      "literalBefore": "a\nb",
+      "literalAfter": "a\nb",
+      "expected": {
+        "precision": "aligned",
+        "stats": {
+          "adds": 0,
+          "removes": 0
+        },
+        "neutralRelativePairs": [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "removed": [],
+        "added": [],
+        "endingChanges": [],
+        "noWholeFileEqualityClaim": true,
+        "scope": "fragment",
+        "provenance": "reported output",
+        "toolOutcome": "completed report; not disk-write proof",
+        "assertInBothMessageAndContentPane": true
+      }
+    },
+    {
+      "id": "missing",
+      "literalBefore": null,
+      "literalAfter": "a\nb",
+      "expected": {
+        "precision": "missing-before",
+        "stats": null,
+        "physicalRowsBefore": null,
+        "physicalRowsAfter": 2,
+        "oldCoordinates": [],
+        "afterRows": [
+          {
+            "newLine": 1,
+            "text": "a"
+          },
+          {
+            "newLine": 2,
+            "text": "b"
+          }
+        ],
+        "bodyPresentation": "neutral uncompared",
+        "noCreationOrWriteClaim": true,
+        "scope": "fragment",
+        "provenance": "reported output",
+        "toolOutcome": "completed report; not disk-write proof",
+        "assertInBothMessageAndContentPane": true
+      }
+    },
+    {
+      "id": "empty",
+      "literalBefore": "",
+      "literalAfter": "a\nb",
+      "expected": {
+        "precision": "aligned",
+        "stats": {
+          "adds": 2,
+          "removes": 0
+        },
+        "neutralRelativePairs": [],
+        "removed": [],
+        "added": [
+          {
+            "newLine": 1,
+            "text": "a"
+          },
+          {
+            "newLine": 2,
+            "text": "b"
+          }
+        ],
+        "endingChanges": [],
+        "physicalRowsBefore": 0,
+        "physicalRowsAfter": 2,
+        "noCreationOrWriteClaim": true,
+        "scope": "fragment",
+        "provenance": "reported output",
+        "toolOutcome": "completed report; not disk-write proof",
+        "assertInBothMessageAndContentPane": true
+      }
+    },
+    {
+      "id": "whitespace",
+      "literalBefore": "a\n \nz",
+      "literalAfter": "a\n\t\nz",
+      "expected": {
+        "precision": "aligned",
+        "stats": {
+          "adds": 1,
+          "removes": 1
+        },
+        "neutralRelativePairs": [
+          [
+            1,
+            1
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "removed": [
+          {
+            "oldLine": 2,
+            "text": " "
+          }
+        ],
+        "added": [
+          {
+            "newLine": 2,
+            "text": "\t"
+          }
+        ],
+        "endingChanges": [],
+        "doNotTrim": true,
+        "scope": "fragment",
+        "provenance": "reported output",
+        "toolOutcome": "completed report; not disk-write proof",
+        "assertInBothMessageAndContentPane": true
+      }
+    },
+    {
+      "id": "eof",
+      "literalBefore": "a\nb",
+      "literalAfter": "a\nb\n",
+      "expected": {
+        "precision": "aligned",
+        "stats": {
+          "adds": 0,
+          "removes": 0
+        },
+        "neutralRelativePairs": [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "removed": [],
+        "added": [],
+        "endingChanges": [
+          {
+            "oldLine": 2,
+            "newLine": 2,
+            "before": "none",
+            "after": "LF"
+          }
+        ],
+        "physicalRowsBefore": 2,
+        "physicalRowsAfter": 2,
+        "mustNotSayNoChanges": true,
+        "scope": "fragment",
+        "provenance": "reported output",
+        "toolOutcome": "completed report; not disk-write proof",
+        "assertInBothMessageAndContentPane": true
+      }
+    },
+    {
+      "id": "shiftedEndings",
+      "literalBefore": "a\nb",
+      "literalAfter": "X\na\r\nb",
+      "expected": {
+        "precision": "aligned",
+        "stats": {
+          "adds": 1,
+          "removes": 0
+        },
+        "neutralRelativePairs": [
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "removed": [],
+        "added": [
+          {
+            "newLine": 1,
+            "text": "X"
+          }
+        ],
+        "endingChanges": [
+          {
+            "oldLine": 1,
+            "newLine": 2,
+            "before": "LF",
+            "after": "CRLF"
+          }
+        ],
+        "physicalRowsBefore": 2,
+        "physicalRowsAfter": 3,
+        "forbiddenEndingCoordinate": {
+          "oldLine": 1,
+          "newLine": 1
+        },
+        "scope": "fragment",
+        "provenance": "reported output",
+        "toolOutcome": "completed report; not disk-write proof",
+        "assertInBothMessageAndContentPane": true
+      }
+    },
+    {
+      "id": "unicode",
+      "literalBefore": "é\n中\n😀",
+      "literalAfter": "é\n中\n🚀",
+      "expected": {
+        "precision": "aligned",
+        "stats": {
+          "adds": 2,
+          "removes": 2
+        },
+        "neutralRelativePairs": [
+          [
+            2,
+            2
+          ]
+        ],
+        "removed": [
+          {
+            "oldLine": 1,
+            "text": "é"
+          },
+          {
+            "oldLine": 3,
+            "text": "😀"
+          }
+        ],
+        "added": [
+          {
+            "newLine": 1,
+            "text": "é"
+          },
+          {
+            "newLine": 3,
+            "text": "🚀"
+          }
+        ],
+        "endingChanges": [],
+        "doNotNormalizeUnicode": true,
+        "scope": "fragment",
+        "provenance": "reported output",
+        "toolOutcome": "completed report; not disk-write proof",
+        "assertInBothMessageAndContentPane": true
+      }
+    },
+    {
+      "id": "fallback",
+      "construction": {
+        "before": "1100 rows old-0 through old-1099, joined with LF, no terminal LF",
+        "after": "1100 rows next-0 through next-1099, joined with LF, no terminal LF"
+      },
+      "expected": {
+        "precision": "replacement",
+        "stats": null,
+        "physicalRowsBefore": 1100,
+        "physicalRowsAfter": 1100,
+        "commonBodyRows": 0,
+        "middleMatrixCells": 1210000,
+        "bodyPresentation": "neutral replacement region, not exact removal/addition colors or precise +/- badges",
+        "visibleIncompleteComparisonNotice": true,
+        "copyPrecisionHeaderRequired": true,
+        "beforeAndAfterRawRetained": true,
+        "coordinates": "old 1..1100 and new 1..1100, relative to supplied fragments",
+        "noPrefixOrSuffixInThisFixture": true,
+        "scope": "fragment",
+        "provenance": "reported output",
+        "toolOutcome": "completed report; not disk-write proof",
+        "assertInBothMessageAndContentPane": true
+      },
+      "reason": "The bounded matrix contract is 1,000,000 cells. This fixture deliberately exceeds it; even though a human can see every named row differs, the UI must disclose the selected fallback rather than present an exact computed edit summary."
+    },
+    {
+      "id": "failed",
+      "literalBefore": "a\nb",
+      "literalAfter": "a\nc",
+      "expected": {
+        "precision": "aligned",
+        "stats": {
+          "adds": 1,
+          "removes": 1
+        },
+        "neutralRelativePairs": [
+          [
+            1,
+            1
+          ]
+        ],
+        "removed": [
+          {
+            "oldLine": 2,
+            "text": "b"
+          }
+        ],
+        "added": [
+          {
+            "newLine": 2,
+            "text": "c"
+          }
+        ],
+        "endingChanges": [],
+        "toolOutcome": "failed in message and pane",
+        "provenance": "reported output",
+        "scope": "fragment",
+        "noAppliedOrWrittenClaim": true,
+        "assertInBothMessageAndContentPane": true
+      }
+    },
+    {
+      "id": "input",
+      "literalBefore": "a\nb",
+      "literalAfter": "a\nc",
+      "expected": {
+        "precision": "aligned",
+        "stats": {
+          "adds": 1,
+          "removes": 1
+        },
+        "neutralRelativePairs": [
+          [
+            1,
+            1
+          ]
+        ],
+        "removed": [
+          {
+            "oldLine": 2,
+            "text": "b"
+          }
+        ],
+        "added": [
+          {
+            "newLine": 2,
+            "text": "c"
+          }
+        ],
+        "endingChanges": [],
+        "toolOutcome": "failed in message and pane",
+        "provenance": "edit-input intent; content array empty and rawInput oldString/newString",
+        "scope": "fragment",
+        "noReportedOutputOrDiskResultPromotion": true,
+        "assertInBothMessageAndContentPane": true
+      }
+    },
+    {
+      "id": "pending",
+      "literalBefore": "a\nb",
+      "literalAfter": "a\nc",
+      "expected": {
+        "precision": "aligned",
+        "stats": {
+          "adds": 1,
+          "removes": 1
+        },
+        "neutralRelativePairs": [
+          [
+            1,
+            1
+          ]
+        ],
+        "removed": [
+          {
+            "oldLine": 2,
+            "text": "b"
+          }
+        ],
+        "added": [
+          {
+            "newLine": 2,
+            "text": "c"
+          }
+        ],
+        "endingChanges": [],
+        "toolOutcome": "unfinished in message and pane",
+        "activeToolCallId": "comparison-one",
+        "noCompletedOrWrittenClaim": true,
+        "scope": "fragment",
+        "provenance": "reported output",
+        "assertInBothMessageAndContentPane": true
+      }
+    },
+    {
+      "id": "unknown",
+      "literalBefore": "a\nb",
+      "literalAfter": "a\nc",
+      "expected": {
+        "precision": "aligned",
+        "stats": {
+          "adds": 1,
+          "removes": 1
+        },
+        "neutralRelativePairs": [
+          [
+            1,
+            1
+          ]
+        ],
+        "removed": [
+          {
+            "oldLine": 2,
+            "text": "b"
+          }
+        ],
+        "added": [
+          {
+            "newLine": 2,
+            "text": "c"
+          }
+        ],
+        "endingChanges": [],
+        "rawStatus": "controlled-future-status",
+        "toolOutcome": "unknown in message and pane",
+        "activeToolCallIds": [],
+        "mustNotCoerceToPendingOrSucceeded": true,
+        "scope": "fragment",
+        "provenance": "reported output",
+        "assertInBothMessageAndContentPane": true
+      }
+    },
+    {
+      "id": "long",
+      "construction": {
+        "before": "80 rows line-1 through line-80, joined with LF, no terminal LF",
+        "after": "Same 80 rows except relative row 71 is P18_HIDDEN_NEEDLE"
+      },
+      "expected": {
+        "precision": "aligned",
+        "stats": {
+          "adds": 1,
+          "removes": 1
+        },
+        "physicalRowsBefore": 80,
+        "physicalRowsAfter": 80,
+        "neutralRelativePairRanges": [
+          [
+            1,
+            70
+          ],
+          [
+            72,
+            80
+          ]
+        ],
+        "neutralRows": 79,
+        "removed": [
+          {
+            "oldLine": 71,
+            "text": "line-71"
+          }
+        ],
+        "added": [
+          {
+            "newLine": 71,
+            "text": "P18_HIDDEN_NEEDLE"
+          }
+        ],
+        "endingChanges": [],
+        "beforeUtf8Bytes": 630,
+        "afterUtf8Bytes": 640,
+        "searchTail": "P18_HIDDEN_NEEDLE must reveal the actual after row 71 beyond collapsed preview",
+        "oldTail": "line-71 remains real before-side text",
+        "rawCopyRetainsAll80Rows": true,
+        "scope": "fragment",
+        "provenance": "reported output",
+        "toolOutcome": "completed report; not disk-write proof",
+        "assertInBothMessageAndContentPane": true
+      }
+    }
+  ],
+  "fixtureDisk": {
+    "text": "CURRENT_DISK_CONTENT\nnot the reported fragment\n",
+    "utf8Bytes": 47,
+    "sha256": "3fd7379bdccfe485be06005645aa8eb997891b6c47d53cb931f44defabe75b90",
+    "fileFields": [
+      "root",
+      "path",
+      "resolvedPath",
+      "name",
+      "size",
+      "sha256",
+      "version"
+    ],
+    "initialVersion": "controlled-v1",
+    "changedVersion": "controlled-v2",
+    "isSyntheticResponse": true
+  },
+  "lifecycleChecks": [
+    {
+      "id": "pre-click-no-file-io",
+      "steps": [
+        "Render supplied tool report",
+        "Expand/collapse comparison",
+        "Search supplied text",
+        "Open its comparison pane"
+      ],
+      "expected": [
+        "Before any explicit source-file click, no file_delivery inspect/read/revision command occurs",
+        "No Agent command or external request occurs",
+        "Reading controlled in-memory report content does not authorize disk access"
+      ]
+    },
+    {
+      "id": "explicit-absolute-path",
+      "steps": [
+        "Click the displayed diff.path /controlled/result.txt with locations=[]"
+      ],
+      "expected": [
+        "Use file_delivery_inspect_selected with exact {path:/controlled/result.txt}; a root argument is not required for this absolute-path API",
+        "Read only this explicitly selected file through existing verified-file path",
+        "The relative-path inspect API separately requires root and path; inspect_text accepts path only",
+        "File failure preserves the original supplied report and its status"
+      ]
+    },
+    {
+      "id": "current-disk-is-separate",
+      "steps": [
+        "Explicitly open current file and permit controlled inspect/read completion"
+      ],
+      "expected": [
+        "The returned current-file text differs from the tool fragment and remains identified as current file content",
+        "Use the complete seven-field file record and returned body together",
+        "Do not rewrite supplied before/after, input/report provenance, or failed/pending/unknown status",
+        "Successful current-file verification is not proof that this tool caused the bytes"
+      ]
+    },
+    {
+      "id": "read-failure",
+      "steps": [
+        "Set fixture mode.fail=true before the explicit file click"
+      ],
+      "expected": [
+        "The legacy inspect/inspect_selected failure is a user-facing string and is not treated as success",
+        "Original reported comparison remains available",
+        "No automatic retry, prompt, resume, or claim of current disk verification"
+      ]
+    },
+    {
+      "id": "late-owner",
+      "steps": [
+        "Hold the explicit A file request using mode.hold=true",
+        "Switch from P18_A to P18_B while request is pending",
+        "Release the captured A response"
+      ],
+      "expected": [
+        "No A current-file body, notice or reopened pane is applied to B",
+        "P18_KEEP_UNSENT and P18_KEEP_OTHER_FEEDBACK remain exact",
+        "Cancellation invalidates UI result ownership; it does not assert that an OS read stopped"
+      ]
+    },
+    {
+      "id": "late-close-or-selection",
+      "steps": [
+        "Hold an explicitly authorized file request",
+        "Close the content pane or select another source",
+        "Release the old response"
+      ],
+      "expected": [
+        "No late result reopens a closed pane or replaces the new selection",
+        "Old errors are subject to the same ownership gate as success"
+      ]
+    },
+    {
+      "id": "reported-content-change",
+      "steps": [
+        "Hold an explicit file request for A",
+        "Call changeReported with a different before/after on the same path",
+        "Release the response"
+      ],
+      "expected": [
+        "The displayed reported comparison corresponds to the new report, not a captured stale before/after",
+        "The fixture changes report content, not file path or owner: do not infer that every valid same-path current-file view must be revoked",
+        "If changing owner/path is required, use a distinct explicit fixture action rather than claim changeReported tested it"
+      ]
+    },
+    {
+      "id": "revision-lifecycle",
+      "steps": [
+        "Explicitly open a file",
+        "Allow existing revision monitoring while this verified file remains selected"
+      ],
+      "expected": [
+        "After explicit open, existing bounded focus/timer revision checks are permitted; no permanently-one-call assertion",
+        "A verified record with changed version but equal content hash can be a legitimate metadata revision, not necessarily an error",
+        "Each result remains bound to current owner, target and full seven-field identity; stale results cannot apply after close/switch"
+      ]
+    },
+    {
+      "id": "copy-and-coordinates",
+      "steps": [
+        "Inspect both unified and split comparisons",
+        "Copy original before/after where offered",
+        "Copy formatted comparison where offered"
+      ],
+      "expected": [
+        "Coordinates stay relative to supplied fragments, including shifted ending old1/new2",
+        "Raw copies preserve exact CRLF, final LF, whitespace and decomposed Unicode",
+        "Formatted fallback/missing comparison explicitly carries its precision and side meaning, or refuses a misleading exact patch",
+        "Do not require a particular delete/add serialization order when equivalent side reconstruction and relative coordinates are preserved"
+      ]
+    },
+    {
+      "id": "search-and-neutral-style",
+      "steps": [
+        "Search long hidden row",
+        "Inspect aligned neutral bodies and missing/fallback bodies"
+      ],
+      "expected": [
+        "Generated scope/precision labels do not become author text hits",
+        "No fabricated cross-row concatenation hit",
+        "Assert semantic row styling on actual body rows, not every green/red element in the page",
+        "Missing/fallback remains neutral even if internal row tags retain before/remove and after/add for split layout"
+      ]
+    },
+    {
+      "id": "protected-state",
+      "steps": [
+        "Compare fixture.current protected state before and after each lifecycle scenario"
+      ],
+      "expected": [
+        "Unsent draft, other file-feedback draft and original messages remain exact",
+        "No send/resume/retry/cancel-Agent command is used to set up any case",
+        "This is a controlled App harness, not a real Agent, real file OS read, installed native or user-data retention acceptance"
+      ]
+    }
+  ],
+  "reviewNotes": [
+    {
+      "id": "research-whitespace-contradiction",
+      "status": "original retained; independent correction recorded here",
+      "originalResearchCase": "whitespace-is-content",
+      "originalAfterLiteral": "a\n\tz",
+      "originalAfterPhysicalRows": 2,
+      "originalExpectedWas": {
+        "adds": 1,
+        "removes": 1
+      },
+      "humanCorrectForThoseOriginalLiterals": {
+        "adds": 1,
+        "removes": 2,
+        "removed": [
+          " ",
+          "z"
+        ],
+        "added": [
+          "\tz"
+        ]
+      },
+      "browserFixtureAfter": "a\n\t\nz",
+      "browserExpected": {
+        "adds": 1,
+        "removes": 1
+      },
+      "boundary": "The browser fixture is a distinct correct three-row sample. Do not rewrite the historical research oracle or call this a product/browser test failure."
+    },
+    {
+      "id": "absolute-file-inspect-route",
+      "status": "corrected in pinned fixture before any browser run",
+      "observedOriginalIssue": "Absolute path calls inspect_selected({path}); original fixture did not implement it and wrongly demanded root for inspect_text",
+      "currentStaticCheck": "Pinned fixture accepts inspect_selected and checks root only for legacy inspect; legacy inspect failure is a string",
+      "isExecutedFailure": false
+    },
+    {
+      "id": "unknown-versus-active-pending",
+      "status": "included in pinned fixture",
+      "expectation": "Only pending has comparison-one in activeToolCallIds. Unknown status is not active and both views must keep unknown rather than a busy/success assumption."
+    },
+    {
+      "id": "fallback-neutral-policy",
+      "status": "frontend owner confirmed design in conversation; not an execution result",
+      "expectation": "Internal remove/add tags may remain for side pairing; replacement and missing-before bodies are neutral and stats=null. Aligned alone gets exact comparison coloring/statistics."
+    },
+    {
+      "id": "hold-is-captured-payload",
+      "status": "static fixture contract",
+      "expectation": "respond clones its payload at invocation; release resolves that captured value. Changing mode after holding does not retroactively change it. Do not claim a changed-version scenario merely by toggling mode after capture."
+    }
+  ],
+  "notCoveredByTheseFourteenCases": [
+    "Multiple diff reports with mixed precision or repeated paths and aggregate totals",
+    "A standalone lone-CR body case",
+    "Both-empty and empty-versus-single-LF cases",
+    "All-rows CRLF-to-LF case",
+    "Repeated ambiguous anchors",
+    "Input character/row hard-cap unavailable precision",
+    "Known full-file write-input intent",
+    "Real native file I/O or OS cancellation",
+    "Real Agent tool result or actual disk write"
+  ],
+  "claimBoundary": "This JSON defines independent intended assertions only. No case is marked passed or failed. Later browser results must name actual executed cases and source/harness versions; neither this preparation nor controlled returned diff proves a real tool wrote a file."
+}

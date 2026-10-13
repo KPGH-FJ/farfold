@@ -1,0 +1,127 @@
+{
+  "observedAtUtc": "2026-10-13T20:34:23.992561+00:00",
+  "classification": "test expectation correction; no production regression repair",
+  "trigger": {
+    "actualRootSession": 13707,
+    "actualToolCompletionChunk": "a04fbb",
+    "overallActualExitCode": 1,
+    "frontendFiles": 500,
+    "frontendPassed": 6079,
+    "frontendFailed": 1,
+    "frontendTotal": 6080,
+    "originalFailurePreserved": [
+      {
+        "source": "output/2026-10-14-diff-summary-integration/checks-run/frontend-test/completed.json",
+        "preserved": "output/2026-10-14-diff-summary-frontend/full-suite-frontend-failure.completed.json.raw",
+        "bytes": 657,
+        "sha256": "7c744d999457964c9e8c4a74947f255af431e0fe014e71ee8cd5f763a7d80c65"
+      },
+      {
+        "source": "output/2026-10-14-diff-summary-integration/checks-run/frontend-test/stdout.log",
+        "preserved": "output/2026-10-14-diff-summary-frontend/full-suite-frontend-failure.stdout.log.raw",
+        "bytes": 551,
+        "sha256": "3677ca50b816f378d7c16f32739f0e8621b2f94870ab76869e20ac20b953bc79"
+      },
+      {
+        "source": "output/2026-10-14-diff-summary-integration/checks-run/frontend-test/stderr.log",
+        "preserved": "output/2026-10-14-diff-summary-frontend/full-suite-frontend-failure.stderr.log.raw",
+        "bytes": 1914,
+        "sha256": "2115c42411654c33a19ed4e21e9477abd287a5976b2e6f480988193c2aed1d0f"
+      }
+    ]
+  },
+  "cause": "Fixture has read/in_progress but no activeToolCallId or terminal completion. toolActivityState returns unknown; source accurately renders neutral 读取 plus 步骤结果未知. Prior assertion incorrectly required 查看了文件, a completed-action label. Pending approval placement and content header assertions remain intact.",
+  "change": {
+    "onlyFile": "src/components/ConversationWorkspace.test.tsx",
+    "before": {
+      "path": "output/2026-10-14-diff-summary-frontend/ConversationWorkspace.test.tsx.before.raw",
+      "sha256": "27b83f5ba62dc3a6a9ecb6f0e5307fe94150de94d312f0d8cb586e97ff0e55a9",
+      "bytes": 3233
+    },
+    "after": {
+      "path": "src/components/ConversationWorkspace.test.tsx",
+      "sha256": "6463e6f1fb1deea03849bb427b739a0cdbd38faee8cf848db01f527423609c4f",
+      "bytes": 3360,
+      "lines": 99
+    },
+    "diff": {
+      "path": "output/2026-10-14-diff-summary-frontend/post-full-suite-test-only.diff",
+      "sha256": "2f91d6f1f8963398540d2fabf1e4f817e7685f32a3a86c6a7e7349e598235b55",
+      "bytes": 918
+    },
+    "assertions": [
+      "neutral exact cmd 读取",
+      "步骤结果未知 remains visible",
+      "查看了文件 absent"
+    ],
+    "productionEdited": false,
+    "original15ByteIdentical": true
+  },
+  "actualValidation": [
+    {
+      "name": "post-suite-component",
+      "actualExitCode": 0,
+      "actualToolCompletionChunk": "9bf2fa",
+      "receipt": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-suite-component.completed.json",
+        "sha256": "a71bc6d3ede2961107006b637f76e64a13e35b50fe661d47fb6b30371352a121",
+        "bytes": 768
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-suite-component.stdout.log",
+        "sha256": "8713a87cb6b80188edf2aa0988308eb42f2d150e9b9c1c0840638337817addf5",
+        "bytes": 209
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-suite-component.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "name": "post-suite-format",
+      "actualExitCode": 0,
+      "actualToolCompletionChunk": "dc9878",
+      "receipt": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-suite-format.completed.json",
+        "sha256": "555b3dbcf42f72053181e5261d59e86705b4f3a028c9b85cc4cc428f2b31668e",
+        "bytes": 767
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-suite-format.stdout.log",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+        "bytes": 66
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-frontend/post-suite-format.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  ],
+  "freeze": {
+    "path": "output/2026-10-14-diff-summary-frontend/source-freeze-v2.json",
+    "sha256": "3e9dec3288b191d5de0439111a8475a18e48f70ad511133401af8cc60d11f4f4",
+    "bytes": 5624
+  },
+  "preservedPriorRecords": [
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/source-freeze-v1.json",
+      "sha256": "0c8d40b42209f774a957c05bb198412bd5b8d5afdf5d26bea58a220c56e3c793",
+      "bytes": 5567
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/summary.json",
+      "sha256": "b4ae4eccb6680550fffb5076e6d858baf6400182061ece1a7adc7c4dfd19c0f7",
+      "bytes": 11385
+    }
+  ],
+  "notRun": [
+    "full seven engineering checks",
+    "build",
+    "browser",
+    "App",
+    "Agent"
+  ],
+  "next": "Root decides new all-check run; owner files remain frozen. P30 output-only research is resumable, not source work."
+}

@@ -1,0 +1,345 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T20:42:32.081120+00:00",
+  "result": "pass-run2-all-seven-actual-completed",
+  "actualRunner": {
+    "sessionId": 85640,
+    "chunkId": "44b54d",
+    "actualExitCode": 0,
+    "exactCompletionManifest": {
+      "path": "output/2026-10-14-diff-summary-independent/transcript-engineering-v2/manifest.json",
+      "bytes": 778,
+      "sha256": "4fc2cc35b0e000493ecbbcf836c7a8113cfd9a17abf47530113f6dc8f654fe24"
+    }
+  },
+  "run2Summary": {
+    "path": "output/2026-10-14-diff-summary-integration/checks-run-02/summary.json",
+    "bytes": 6313,
+    "sha256": "8788605205218b9dbe599b8dd567d19fb60be087ba6d2ea4d512eeada64abb7e"
+  },
+  "inventoryPlan": {
+    "path": "output/2026-10-14-diff-summary-integration/inventory-plan-02.json",
+    "bytes": 639423,
+    "sha256": "33da2d3702eb3848a15ee36b9e0e8a6b159abdb28677262f505beeb8a96c4283"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-diff-summary-integration/checks-freeze-02/freeze.json",
+    "bytes": 334509,
+    "sha256": "1f443afdb73e4abfe1489a84dd132e2fb8ad289262e873af7bc0a814d2ee289e"
+  },
+  "stages": [
+    {
+      "name": "format-check",
+      "actualExitCode": 0,
+      "argv": [
+        "corepack",
+        "pnpm",
+        "format:check"
+      ],
+      "started": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/format-check/started.json",
+        "bytes": 286,
+        "sha256": "c589fab7d5faf81647562f4662d385073c8f62469fc9722d1acfc3acaa6c9d03"
+      },
+      "completed": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/format-check/completed.json",
+        "bytes": 665,
+        "sha256": "ac9841923dc745ec4d3d42340507929d1a028597a876a1eaa4db95f6cd61df62"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/format-check/stdout.log",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "typecheck",
+      "actualExitCode": 0,
+      "argv": [
+        "corepack",
+        "pnpm",
+        "typecheck"
+      ],
+      "started": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/typecheck/started.json",
+        "bytes": 278,
+        "sha256": "c047dd3f002b6ee6366d0a61995f472b7e36ad2e1203455b16bdfce04996f4c5"
+      },
+      "completed": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/typecheck/completed.json",
+        "bytes": 662,
+        "sha256": "3fc970a74c995ce396aecb1ae24a9a2cd392647a2f605c4f272a20d0789870b5"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/typecheck/stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/typecheck/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "frontend-test",
+      "actualExitCode": 0,
+      "argv": [
+        "corepack",
+        "pnpm",
+        "test"
+      ],
+      "started": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/frontend-test/started.json",
+        "bytes": 274,
+        "sha256": "c60d952d699a16eca582b03b6fdbff89641ad12aedb92dbd3ec1351fc955e43c"
+      },
+      "completed": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/frontend-test/completed.json",
+        "bytes": 653,
+        "sha256": "63e7683e3549e19c423c33e9f1a4b22b840a6b6d8aa7273db202bc530d0a13d6"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/frontend-test/stdout.log",
+        "bytes": 289,
+        "sha256": "bfd0107ceee5e062b441dbe5a9082910981b7c6070844d5e7087e4291a490b28"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/frontend-test/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "frontend-build",
+      "actualExitCode": 0,
+      "argv": [
+        "corepack",
+        "pnpm",
+        "build"
+      ],
+      "started": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/frontend-build/started.json",
+        "bytes": 277,
+        "sha256": "6ff33aa37ff3ff092c01f610463b1680f0d95cd7851d831d752711bbe758bdc8"
+      },
+      "completed": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/frontend-build/completed.json",
+        "bytes": 661,
+        "sha256": "99698bc46d9489ee42174e06f4f05ad892a3feb2c924869ca940b4984ca943a4"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/frontend-build/stdout.log",
+        "bytes": 4560,
+        "sha256": "c3bc0d744ce5c616e94723a2f9134378233b6b8b74fe47f1664528dfe705a1e2"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/frontend-build/stderr.log",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      }
+    },
+    {
+      "name": "cargo-fmt",
+      "actualExitCode": 0,
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "started": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/cargo-fmt/started.json",
+        "bytes": 353,
+        "sha256": "0bdcf98e15118365482a5fefa3b237c54c4d9758f7355f778a22da48310aefc6"
+      },
+      "completed": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/cargo-fmt/completed.json",
+        "bytes": 731,
+        "sha256": "4ad4d80194317547aa814b4694502b915f22fd3f9e6765cd9b3b91a9adc4659c"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "cargo-clippy",
+      "actualExitCode": 0,
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "started": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/cargo-clippy/started.json",
+        "bytes": 416,
+        "sha256": "c9d7ae7b6b5bfad7e2c5c2219661e505c0d0964e1aa62096d8c1a5d7d1884288"
+      },
+      "completed": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/cargo-clippy/completed.json",
+        "bytes": 801,
+        "sha256": "eae30d5400f56e8b25e34a47c1c4c99d4837a02445b92b8fbd86ed1e786f46d1"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/cargo-clippy/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/cargo-clippy/stderr.log",
+        "bytes": 72,
+        "sha256": "182e0273ab1d85020feb801d5e48b162fe456a7158fff856876f75864df8bcb0"
+      }
+    },
+    {
+      "name": "cargo-test",
+      "actualExitCode": 0,
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "started": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/cargo-test/started.json",
+        "bytes": 359,
+        "sha256": "d30739ccc9a7be6874e6f33a7a99759c989d2d8785bb9edd2003677422306c20"
+      },
+      "completed": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/cargo-test/completed.json",
+        "bytes": 739,
+        "sha256": "e34f8974881b72326e9f1bebe7710b61975a586266d797924f48c34747df993b"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/cargo-test/stdout.log",
+        "bytes": 187331,
+        "sha256": "5e8f2064699e1fe3295b8c3a7e478a8b5dd4d16871d752814eda4cb9fef9b775"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/cargo-test/stderr.log",
+        "bytes": 605,
+        "sha256": "874c2faea6cc607e6dcb2460e1accc3c6db128ebbe342be0d48cb12785eeb86f"
+      }
+    }
+  ],
+  "actualCounts": {
+    "frontendFilesPassed": 500,
+    "frontendTestsPassed": 6080,
+    "frontendFailed": 0,
+    "rustLibraryPassed": 1681,
+    "rustLibraryFailed": 0,
+    "rustLibraryIgnored": 6,
+    "additionalRustZeroTestSummaries": 2
+  },
+  "inputVerification": {
+    "count": 2059,
+    "savedBeforeAfterFreezePlanMapsExactlyEqual": true,
+    "currentFrozenFilesHashMatched": 2059,
+    "physicalSourceMembershipMatched": true,
+    "physicalSourceCount": 1586,
+    "protectedBeforeAfterAndCurrentUnchanged": true,
+    "runnerAndHelperHashMatchFreeze": true,
+    "references": [
+      {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/preflight.json",
+        "bytes": 268,
+        "sha256": "99860ac4c30af0b0389d7fa04eca087c1531951bec01338655b463922bc38802"
+      },
+      {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/inputs-before.json",
+        "bytes": 251385,
+        "sha256": "3255b7c9ac6ec71e6cfc260c2a56bca8675946103c3a9366d6ac8223a38098e7"
+      },
+      {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/inputs-after.json",
+        "bytes": 251385,
+        "sha256": "3255b7c9ac6ec71e6cfc260c2a56bca8675946103c3a9366d6ac8223a38098e7"
+      },
+      {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/protected-before.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/protected-after.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run-02/events.jsonl",
+        "bytes": 2219,
+        "sha256": "c09d3d78330b49c4fc23ece96f416c56edd32ef01a9bc6b250b3cd13706cbbe1"
+      }
+    ]
+  },
+  "priorRun": {
+    "actualExitCode": 1,
+    "chunkId": "a04fbb",
+    "stages": [
+      0,
+      0,
+      1,
+      null,
+      null,
+      null,
+      null
+    ],
+    "frontendPassed": 6079,
+    "frontendFailed": 1,
+    "notStarted": [
+      "frontend-build",
+      "cargo-fmt",
+      "cargo-clippy",
+      "cargo-test"
+    ],
+    "summary": {
+      "path": "output/2026-10-14-diff-summary-integration/checks-run/summary.json",
+      "bytes": 4408,
+      "sha256": "6cbe21f9b525111da9a6607c1fe905a9f1ac1eba4394d369f449ae46e05b367d"
+    },
+    "independentReview": {
+      "path": "output/2026-10-14-diff-summary-independent/failed-engineering-review.json",
+      "bytes": 7914,
+      "sha256": "f4912d4e3456a2b5b8c2d6b44d5bf21b74d7959954ef759905ba20f506826e7e"
+    },
+    "exactCompletionManifest": {
+      "path": "output/2026-10-14-diff-summary-independent/transcript-engineering-v1/manifest.json",
+      "bytes": 757,
+      "sha256": "b4effa194b975840e6c40853fb4c023f1d8a8fde9601e2163dc937473dd1a8c6"
+    }
+  },
+  "testOnlyGap": {
+    "review": {
+      "path": "output/2026-10-14-diff-summary-independent/test-only-browser-equivalence.json",
+      "bytes": 8409,
+      "sha256": "91f398b28f083d43c20eaa415712fddb988c261562010e86fdfdc67c717a509b"
+    },
+    "path": "src/components/ConversationWorkspace.test.tsx",
+    "originalBrowserInputsRemain1098": true,
+    "newSsrAssertionWasNotExecutedByOldBrowserRuns": true,
+    "original15FilesRemainByteIdentical": true,
+    "newAssertionExecutedByRun2FullFrontendSuite": true
+  },
+  "nonemptyDiagnostics": "Vite chunk-size warning and Rust ZipWriter drop diagnostics remain in exact stderr. Both commands actually exited 0; logs are not presented as warning-free.",
+  "boundary": "Engineering verification only. First-run failure, old browser inputs, and all original logs remain unchanged. No independent test/browser/App/Agent/DB execution; formal installation and real Agent behavior are separate evidence scopes. New publication copy audit may be recorded separately after root publisher completes.",
+  "safeToPublish": true
+}

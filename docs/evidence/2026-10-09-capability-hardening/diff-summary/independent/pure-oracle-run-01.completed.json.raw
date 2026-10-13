@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "command": [
+    "node",
+    "/Users/tw/Desktop/farfold/output/2026-10-14-diff-summary-independent/verify-line-diff-oracle.mjs"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T20:08:42.557099+00:00",
+  "completedAtUtc": "2026-10-13T20:08:42.770081+00:00",
+  "elapsedSeconds": 0.21288895900000002,
+  "actualExitCode": 0,
+  "sourceBefore": {
+    "path": "src/runtime/line_diff.ts",
+    "bytes": 6126,
+    "sha256": "d679c0d4e426f21486db078dde2b343000539cf98bc196e390453528191d5c6a"
+  },
+  "sourceAfter": {
+    "path": "src/runtime/line_diff.ts",
+    "bytes": 6126,
+    "sha256": "d679c0d4e426f21486db078dde2b343000539cf98bc196e390453528191d5c6a"
+  },
+  "sourceStable": true,
+  "harness": {
+    "path": "output/2026-10-14-diff-summary-independent/verify-line-diff-oracle.mjs",
+    "bytes": 5899,
+    "sha256": "2471e6962c78719b6b852a7262628090fc1df424879445e57721a89c746e9e3b"
+  },
+  "stdout": {
+    "path": "output/2026-10-14-diff-summary-independent/pure-oracle-run-01.stdout.log",
+    "bytes": 1482,
+    "sha256": "fb160c27e372dc01e7a3496af00b97d0daa9d6a050ee7b4d9ea6018460851dfc"
+  },
+  "stderr": {
+    "path": "output/2026-10-14-diff-summary-independent/pure-oracle-run-01.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "One root-authorized pure production helper oracle run; no components, Vitest, browser, App, Agent, database or full engineering tests."
+}

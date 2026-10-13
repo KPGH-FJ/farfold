@@ -1,0 +1,52 @@
+stderr | src/components/thread-items.search-expansion.test.tsx > reveals both the enclosing tool and clipped diff through their real ref registrations, then restores them
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+stderr | src/components/thread-items.search-expansion.test.tsx > supports manually expanding and collapsing a long diff when search is closed
+Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+1. You might have mismatching versions of React and the renderer (such as React DOM)
+2. You might be breaking the Rules of Hooks
+3. You might have more than one copy of React in the same app
+See https://react.dev/link/invalid-hook-call for tips about how to debug and fix this problem.
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/thread-items.search-expansion.test.tsx > reveals both the enclosing tool and clipped diff through their real ref registrations, then restores them
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ Module.DiffView src/components/thread-items.tsx:154:18
+    152| }) {
+    153|   const expansion = useSearchExpansion();
+    154|   const result = useMemo(() => comparison ?? compareLines(oldText, new…
+       |                  ^
+    155|   const raw = result.precision === "unavailable";
+    156|   const clipped = result.rows.length > DIFF_LINE_CAP;
+ ❯ src/components/thread-items.search-expansion.test.tsx:90:26
+ ❯ render src/components/thread-items.search-expansion.test.tsx:53:10
+ ❯ renderDiff src/components/thread-items.search-expansion.test.tsx:90:5
+ ❯ src/components/thread-items.search-expansion.test.tsx:92:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/thread-items.search-expansion.test.tsx > supports manually expanding and collapsing a long diff when search is closed
+TypeError: Cannot read properties of null (reading 'useMemo')
+ ❯ process.env.NODE_ENV.exports.useMemo node_modules/.pnpm/react@19.2.8/node_modules/react/cjs/react.development.js:1251:33
+ ❯ Module.DiffView src/components/thread-items.tsx:154:18
+    152| }) {
+    153|   const expansion = useSearchExpansion();
+    154|   const result = useMemo(() => comparison ?? compareLines(oldText, new…
+       |                  ^
+    155|   const raw = result.precision === "unavailable";
+    156|   const clipped = result.rows.length > DIFF_LINE_CAP;
+ ❯ src/components/thread-items.search-expansion.test.tsx:155:7
+ ❯ render src/components/thread-items.search-expansion.test.tsx:53:10
+ ❯ renderDiff src/components/thread-items.search-expansion.test.tsx:154:5
+ ❯ count src/components/thread-items.search-expansion.test.tsx:162:11
+ ❯ src/components/thread-items.search-expansion.test.tsx:168:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

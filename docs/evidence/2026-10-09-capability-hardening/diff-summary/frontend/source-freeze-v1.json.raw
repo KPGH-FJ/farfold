@@ -1,0 +1,162 @@
+{
+  "observedAtUtc": "2026-10-13T20:09:16.317968+00:00",
+  "scope": "15 frontend owned files, no Rust/docs/PRODUCT/dependencies/App/Agent/build changes. Final targeted/type/format source-before and current hashes equal.",
+  "sourceBefore": {
+    "path": "output/2026-10-14-diff-summary-frontend/source-before-final.json",
+    "sha256": "2ac26046bd442c759ca985fec21b152661ec940061dc6d8cad9620e7e939fad6",
+    "bytes": 2938
+  },
+  "sourceStable": true,
+  "files": [
+    {
+      "path": "src/runtime/line_diff.ts",
+      "sha256": "d679c0d4e426f21486db078dde2b343000539cf98bc196e390453528191d5c6a",
+      "bytes": 6126,
+      "lines": 211
+    },
+    {
+      "path": "src/runtime/line_diff.test.ts",
+      "sha256": "13f1fb595bf2a9657a70bd1ea03b2dadfde010453b9c05159059ab0299c27bb0",
+      "bytes": 7795,
+      "lines": 233
+    },
+    {
+      "path": "src/runtime/line_diff_presentation.ts",
+      "sha256": "0d1d1ab4a033595d8ac42f494cb2beeb5ff66d5a2a9b56db81912c3e2dcaf53d",
+      "bytes": 2148,
+      "lines": 62
+    },
+    {
+      "path": "src/runtime/artifact_view.ts",
+      "sha256": "70290d69dbcd9d04295dc6add84a7c67a1fc82f008581ef95661f67bb6b8123a",
+      "bytes": 5432,
+      "lines": 142
+    },
+    {
+      "path": "src/runtime/artifact_view.test.ts",
+      "sha256": "b22ee329c16b954e1897f1f996b9a4615e34725e82920adb3eda1cba1dcbdc63",
+      "bytes": 8531,
+      "lines": 260
+    },
+    {
+      "path": "src/runtime/workspace_strings.ts",
+      "sha256": "73686cca07195a19e876a95229967e766de0246d170edc83bc8aa316851e7de2",
+      "bytes": 6778,
+      "lines": 150
+    },
+    {
+      "path": "src/components/thread-items.tsx",
+      "sha256": "e343570d0a17c552652e51c80775fbc0d7966849570329ea2f70319894c362b2",
+      "bytes": 19171,
+      "lines": 667
+    },
+    {
+      "path": "src/components/thread-items.diff.test.tsx",
+      "sha256": "319f43453c7d780ccea48ac6a83310a486628b154e97864c9addab3af1791f1c",
+      "bytes": 6372,
+      "lines": 198
+    },
+    {
+      "path": "src/components/thread-items.search.test.tsx",
+      "sha256": "8db5575a0eb35790c19ecbfdb00e26a33edde6ec600cdcec236e51b2ab16a295",
+      "bytes": 4506,
+      "lines": 126
+    },
+    {
+      "path": "src/components/thread-items.search-expansion.test.tsx",
+      "sha256": "c756a7624073f2a23ac3a5656bd73fcf1d7d165724cd7e70683b151f8b8e9079",
+      "bytes": 5401,
+      "lines": 174
+    },
+    {
+      "path": "src/components/FileArtifactView.tsx",
+      "sha256": "3ccc50a1143b431b93e2650dcefff43af2d41e95ecbcd181fbdce259dd55ab98",
+      "bytes": 25359,
+      "lines": 813
+    },
+    {
+      "path": "src/components/FileArtifactView.feedback.test.tsx",
+      "sha256": "f192bbfe8d234561a0f053db9389c0951b7444c9121ab96de37095bfc78daf79",
+      "bytes": 16191,
+      "lines": 466
+    },
+    {
+      "path": "src/components/DiffComparisonNote.tsx",
+      "sha256": "a479f09201ce625b768bc23541ba2b7fb753852bb25d07d31839ef2284aeb2c7",
+      "bytes": 1614,
+      "lines": 52
+    },
+    {
+      "path": "src/styles-thread.css",
+      "sha256": "ac6de4301ed58fd5d7233e40c0f35d8cdfb0b20ba7e9085814f859a49cb46679",
+      "bytes": 26995,
+      "lines": 1478
+    },
+    {
+      "path": "src/runtime/fixtures/line-diff/oracle.json",
+      "sha256": "d96141762a2de0231bd3ee3afd15a99daa79862777c3deec9d76ec733a723536",
+      "bytes": 7919,
+      "lines": 264
+    }
+  ],
+  "validation": [
+    {
+      "name": "targeted-final",
+      "actualExitCode": 0,
+      "receipt": {
+        "path": "output/2026-10-14-diff-summary-frontend/targeted-final.completed.json",
+        "sha256": "81459a3c89bed36f39bedac4729296204a63b161721c5b0d254be2ce2d3538cf",
+        "bytes": 1187
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-frontend/targeted-final.stdout.log",
+        "sha256": "a1298ca79630070f8da5b177690c152e943555e8ab34c38f705e56b06cb1d1aa",
+        "bytes": 217
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-frontend/targeted-final.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "name": "typecheck-final",
+      "actualExitCode": 0,
+      "receipt": {
+        "path": "output/2026-10-14-diff-summary-frontend/typecheck-final.completed.json",
+        "sha256": "0c430b087efdcd9e9b80ac96ba91a8832308fa2306b5a3fa42739dcbf067fea4",
+        "bytes": 684
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-frontend/typecheck-final.stdout.log",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "bytes": 78
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-frontend/typecheck-final.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "name": "format-final",
+      "actualExitCode": 0,
+      "receipt": {
+        "path": "output/2026-10-14-diff-summary-frontend/format-final.completed.json",
+        "sha256": "025fe59cd3ba2a29021736ae2ebc0c82db460316de8cfe2143329801a5ea151c",
+        "bytes": 1359
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-frontend/format-final.stdout.log",
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+        "bytes": 66
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-frontend/format-final.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  ],
+  "maxFileLines": 1478
+}

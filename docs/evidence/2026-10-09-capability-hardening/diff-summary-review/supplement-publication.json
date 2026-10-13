@@ -1,0 +1,77 @@
+{
+  "files": [
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-engineering-v1/manifest.json",
+        "bytes": 757,
+        "sha256": "b4effa194b975840e6c40853fb4c023f1d8a8fde9601e2163dc937473dd1a8c6"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-review/transcript-engineering-v1-manifest.json.raw",
+        "bytes": 757,
+        "sha256": "b4effa194b975840e6c40853fb4c023f1d8a8fde9601e2163dc937473dd1a8c6"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-engineering-v2/manifest.json",
+        "bytes": 778,
+        "sha256": "4fc2cc35b0e000493ecbbcf836c7a8113cfd9a17abf47530113f6dc8f654fe24"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-review/transcript-engineering-v2-manifest.json.raw",
+        "bytes": 778,
+        "sha256": "4fc2cc35b0e000493ecbbcf836c7a8113cfd9a17abf47530113f6dc8f654fe24"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-engineering-v1/seven-check-failed.jsonl.raw",
+        "bytes": 1329,
+        "sha256": "da0be24ffda2a7835a1bdfacd1109707df4f30e7030383101dafe1c51d8555d3"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-review/transcript-engineering-v1-seven-check-failed.jsonl.raw.raw",
+        "bytes": 1329,
+        "sha256": "da0be24ffda2a7835a1bdfacd1109707df4f30e7030383101dafe1c51d8555d3"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-engineering-v2/seven-check-completed.jsonl.raw",
+        "bytes": 1221,
+        "sha256": "9dcf63c4bd930e9398311bfedc35c0c4f3a4dbd67f6a65351556f804d1e24f8d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-review/transcript-engineering-v2-seven-check-completed.jsonl.raw.raw",
+        "bytes": 1221,
+        "sha256": "9dcf63c4bd930e9398311bfedc35c0c4f3a4dbd67f6a65351556f804d1e24f8d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-integration/checkpoint-v3-failure.json",
+        "bytes": 708,
+        "sha256": "badf57a7e0aaa2a087694458a2c69d77423625553fdeae44ddad5c92c587d66d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-review/2026-10-14-diff-summary-integration-checkpoint-v3-failure.json.raw",
+        "bytes": 708,
+        "sha256": "badf57a7e0aaa2a087694458a2c69d77423625553fdeae44ddad5c92c587d66d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-integration/prepare_checkpoint-v3.py",
+        "bytes": 3753,
+        "sha256": "1fc4e8dfd37dbb454a45ea5e2dfd5bdba56a661add057cb3f4ec1f8db7734c74"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-review/2026-10-14-diff-summary-integration-prepare_checkpoint-v3.py.raw",
+        "bytes": 3753,
+        "sha256": "1fc4e8dfd37dbb454a45ea5e2dfd5bdba56a661add057cb3f4ec1f8db7734c74"
+      }
+    }
+  ],
+  "scope": "Exact root actual full-check events and retained pre-checkpoint selection failure; no source or original evidence rewrite."
+}

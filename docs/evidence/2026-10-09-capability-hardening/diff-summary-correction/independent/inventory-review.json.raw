@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "atUtc": "2026-10-13T20:26:49.510852+00:00",
+  "result": "PASS_INVENTORY_AND_FREEZE_NO_ENGINEERING_RESULT_YET",
+  "inventory": {
+    "path": "output/2026-10-14-diff-summary-integration/inventory-plan.json",
+    "bytes": 637659,
+    "sha256": "b544a20bec73c837140e956b09f28254ced4189038964c104ae81b264dc4ffeb"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-diff-summary-integration/checks-freeze/freeze.json",
+    "bytes": 333894,
+    "sha256": "d0d3f071c61c56a8a2f28b73586994cd2d940b5e55a4cf13f2d1de1223ce8ede"
+  },
+  "baselineCommit": "522a4f20439976a6cd1b2629be8c7920b9e00c73",
+  "inputCount": 2057,
+  "baseInputCount": 2029,
+  "addedCount": 28,
+  "removedCount": 0,
+  "fullCurrentInputHashesMatch": true,
+  "physicalSourceMembership": {
+    "count": 1586,
+    "exactMatch": true,
+    "excludedGeneratedOnly": [
+      "src-tauri/target",
+      "src-tauri/gen"
+    ]
+  },
+  "ownerSourceCount": 15,
+  "trackedChangedSourcePaths": [
+    "src/components/FileArtifactView.feedback.test.tsx",
+    "src/components/FileArtifactView.tsx",
+    "src/components/thread-items.search-expansion.test.tsx",
+    "src/components/thread-items.search.test.tsx",
+    "src/components/thread-items.tsx",
+    "src/runtime/artifact_view.test.ts",
+    "src/runtime/artifact_view.ts",
+    "src/runtime/workspace_strings.ts",
+    "src/styles-thread.css"
+  ],
+  "newPhysicalSourcePaths": [
+    "src/components/DiffComparisonNote.tsx",
+    "src/components/thread-items.diff.test.tsx",
+    "src/runtime/fixtures/line-diff/oracle.json",
+    "src/runtime/line_diff.test.ts",
+    "src/runtime/line_diff.ts",
+    "src/runtime/line_diff_presentation.ts"
+  ],
+  "allSourceDeltaCoveredByOwner": true,
+  "ownerFreeze": {
+    "path": "output/2026-10-14-diff-summary-frontend/source-freeze-v1.json",
+    "bytes": 5567,
+    "sha256": "0c8d40b42209f774a957c05bb198412bd5b8d5afdf5d26bea58a220c56e3c793"
+  },
+  "browserToSource": {
+    "engines": [
+      "chromium",
+      "webkit"
+    ],
+    "identicalInputMaps": 1098,
+    "allBrowserInputsInFreezeAtExactHashes": true,
+    "all15OwnerSourcesInBothBrowserMaps": true,
+    "eachChecks": 147,
+    "eachScenarios": 17
+  },
+  "protected": {
+    "PRODUCT.md": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "protectedCurrentMatch": true,
+  "plan": {
+    "originalIdsTitlesConditionsUnchanged": 122,
+    "newRowsEntirelyUnchanged": 28,
+    "onlyProgressRowChanged": "P18"
+  },
+  "fourDocsMatchFinalReportAndFreeze": true,
+  "runnerAndHelperPinsMatch": true,
+  "rawPublicationBoundary": "New implementation verification/publication entry hashes are direct frozen inputs; their103 raw originals are public evidence intended for the checkpoint and mapped by the pinned publication manifest, not individually new functional source members. No claim that2057 equals all public files or that the checkpoint is already committed.",
+  "engineering": "Root session13707 in progress; no stage completion or all-seven success inferred. Await actual final event and receipts.",
+  "operations": "Read-only file/hash/membership/Git-show checks; no tests/App/Agent/DB/frozen edits."
+}

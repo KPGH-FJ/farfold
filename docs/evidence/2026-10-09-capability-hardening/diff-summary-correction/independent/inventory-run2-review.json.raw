@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T20:38:35.622870+00:00",
+  "result": "pass-run2-inventory-closure",
+  "plan": {
+    "path": "output/2026-10-14-diff-summary-integration/inventory-plan-02.json",
+    "bytes": 639423,
+    "sha256": "33da2d3702eb3848a15ee36b9e0e8a6b159abdb28677262f505beeb8a96c4283"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-diff-summary-integration/checks-freeze-02/freeze.json",
+    "bytes": 334509,
+    "sha256": "1f443afdb73e4abfe1489a84dd132e2fb8ad289262e873af7bc0a814d2ee289e"
+  },
+  "baseInputCount": 2029,
+  "run2InputCount": 2059,
+  "deltaFromBase": {
+    "added": 30,
+    "removed": 0
+  },
+  "deltaFromRun1": {
+    "added": [
+      "output/2026-10-14-diff-summary-frontend/post-full-suite-correction.json",
+      "output/2026-10-14-diff-summary-frontend/source-freeze-v2.json",
+      "output/2026-10-14-diff-summary-independent/test-only-browser-equivalence.json",
+      "output/2026-10-14-diff-summary-integration/prepare_checkpoint-v2.py",
+      "output/2026-10-14-diff-summary-integration/prepare_inventory-v3.py",
+      "output/2026-10-14-diff-summary-integration/publish_checks-v2.py"
+    ],
+    "retiredFromCurrentPlanButOriginalFilesPreservedAndHashMatched": [
+      "output/2026-10-14-diff-summary-frontend/source-freeze-v1.json",
+      "output/2026-10-14-diff-summary-integration/prepare_checkpoint.py",
+      "output/2026-10-14-diff-summary-integration/prepare_inventory.py",
+      "output/2026-10-14-diff-summary-integration/publish_checks.py"
+    ],
+    "changedCommonPaths": [
+      "src/components/ConversationWorkspace.test.tsx"
+    ]
+  },
+  "browserGap": {
+    "actualBrowserRunSha256": "27b83f5ba62dc3a6a9ecb6f0e5307fe94150de94d312f0d8cb586e97ff0e55a9",
+    "currentSsrTestSha256": "6463e6f1fb1deea03849bb427b739a0cdbd38faee8cf848db01f527423609c4f",
+    "independentReview": {
+      "path": "output/2026-10-14-diff-summary-independent/test-only-browser-equivalence.json",
+      "sha256": "91f398b28f083d43c20eaa415712fddb988c261562010e86fdfdc67c717a509b"
+    },
+    "path": "src/components/ConversationWorkspace.test.tsx",
+    "scope": "Only the SSR test assertion changed after actual browser execution. All other browser inputs are unchanged. Original browser before/after results are retained; no claim that browser ran this updated test."
+  },
+  "validated": {
+    "planFreezeHashesAndFullMapEqual": true,
+    "sameSourceMembershipAsRun1": true,
+    "original15AndCurrent16OwnedHashesMatch": true,
+    "onlyNamedSsrFileDiffersFromOriginalBrowserMaps": true,
+    "oldBrowserResultHashesUntouched": true,
+    "originalRun1RetiredPlanInputsStillPresentByteExact": true,
+    "protectedCurrentHashesUnchanged": true,
+    "fourDocsCurrentHashesUnchanged": true,
+    "allPinReceiptsPresentInCurrentInputsAndHashMatched": true,
+    "runnerAndHelperOriginalPinsUnchanged": true
+  },
+  "adapterStaticReview": "prepare_inventory-v3 permits only the exact ConversationWorkspace.test.tsx mismatch; both browser maps must remain identical and all other live browser inputs equal. Named test must be in the final 16-file owner freeze. Physical/source-delta/protected/122-title-condition/28-condition gates remain. Its independent-review argument is hash-pinned; this review additionally verifies the pinned report old/new pair matches the actual plan.",
+  "boundary": "Run2 was started by root. No new check command, polling, App, Agent, DB, public edit or frozen-input edit performed. This is inventory readiness only; actual run2 engineering success is pending the root completion event. Six added and four retired run1 auxiliary inputs give net +2; no base member is removed.",
+  "safeToPublish": true
+}

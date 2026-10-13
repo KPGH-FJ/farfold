@@ -1,0 +1,205 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T20:35:15.035574+00:00",
+  "result": "confirmed-original-engineering-failure",
+  "actualRunnerCompletion": {
+    "path": "output/2026-10-14-diff-summary-independent/transcript-engineering-v1/manifest.json",
+    "bytes": 757,
+    "sha256": "b4effa194b975840e6c40853fb4c023f1d8a8fde9601e2163dc937473dd1a8c6"
+  },
+  "summary": {
+    "path": "output/2026-10-14-diff-summary-integration/checks-run/summary.json",
+    "bytes": 4408,
+    "sha256": "6cbe21f9b525111da9a6607c1fe905a9f1ac1eba4394d369f449ae46e05b367d"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-diff-summary-integration/checks-freeze/freeze.json",
+    "bytes": 333894,
+    "sha256": "d0d3f071c61c56a8a2f28b73586994cd2d940b5e55a4cf13f2d1de1223ce8ede"
+  },
+  "stages": [
+    {
+      "name": "format-check",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/format-check/completed.json",
+        "bytes": 667,
+        "sha256": "66f3b559bda33ce3d708450d86538a0c977e11f70726c7da44e5a68224d37092"
+      },
+      "started": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/format-check/started.json",
+        "bytes": 288,
+        "sha256": "bcadd72c3530661506b69987f92aac3a6b000f4e4c48b76799d78a3f0edb7386"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/format-check/stdout.log",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "typecheck",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/typecheck/completed.json",
+        "bytes": 664,
+        "sha256": "047e1b0bba884eccdd19daf1f97b822f2ddbdf96de67d4bd07abdc4dd159a20b"
+      },
+      "started": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/typecheck/started.json",
+        "bytes": 280,
+        "sha256": "c7ac73577568af4c35533fd98878e2b91d2ef443209099f53e3800a116e170a4"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/typecheck/stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/typecheck/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "frontend-test",
+      "actualExitCode": 1,
+      "completion": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/frontend-test/completed.json",
+        "bytes": 657,
+        "sha256": "7c744d999457964c9e8c4a74947f255af431e0fe014e71ee8cd5f763a7d80c65"
+      },
+      "started": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/frontend-test/started.json",
+        "bytes": 273,
+        "sha256": "fc8f8ee5e558cca5a966fcf57f3097bb9aa42064bb584ee9f981c5d44aa99a9c"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/frontend-test/stdout.log",
+        "bytes": 551,
+        "sha256": "3677ca50b816f378d7c16f32739f0e8621b2f94870ab76869e20ac20b953bc79"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/frontend-test/stderr.log",
+        "bytes": 1914,
+        "sha256": "2115c42411654c33a19ed4e21e9477abd287a5976b2e6f480988193c2aed1d0f"
+      }
+    },
+    {
+      "name": "frontend-build",
+      "state": "NOT_STARTED",
+      "actualExitCode": null
+    },
+    {
+      "name": "cargo-fmt",
+      "state": "NOT_STARTED",
+      "actualExitCode": null
+    },
+    {
+      "name": "cargo-clippy",
+      "state": "NOT_STARTED",
+      "actualExitCode": null
+    },
+    {
+      "name": "cargo-test",
+      "state": "NOT_STARTED",
+      "actualExitCode": null
+    }
+  ],
+  "counts": {
+    "testFiles": 500,
+    "testFilesPassed": 499,
+    "testFilesFailed": 1,
+    "testsPassed": 6079,
+    "testsFailed": 1
+  },
+  "savedInputs": {
+    "count": 2057,
+    "beforeAfterEqualToOriginalFreeze": true,
+    "sourceMembershipStableReported": true,
+    "protectedBeforeAfterEqual": true,
+    "references": [
+      {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/inputs-before.json",
+        "bytes": 251080,
+        "sha256": "786f49396661dd97515ba3c51b2494c5f683641b88532a377ff8bdb1775c68e7"
+      },
+      {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/inputs-after.json",
+        "bytes": 251080,
+        "sha256": "786f49396661dd97515ba3c51b2494c5f683641b88532a377ff8bdb1775c68e7"
+      },
+      {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/protected-before.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/protected-after.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      {
+        "path": "output/2026-10-14-diff-summary-integration/checks-run/events.jsonl",
+        "bytes": 954,
+        "sha256": "262df2b706b77c18f66080036cd982bdc6368cca843f9f225486b1943a93f624"
+      }
+    ]
+  },
+  "rootCause": {
+    "testPath": "src/components/ConversationWorkspace.test.tsx",
+    "failedOriginalLine": 45,
+    "originalTestSha256": "27b83f5ba62dc3a6a9ecb6f0e5307fe94150de94d312f0d8cb586e97ff0e55a9",
+    "fixture": "Reported in_progress read tool; fresh activeToolCallIds is empty; approval is pushed separately; there is no terminal result or verified active-tool membership.",
+    "sourceTrace": [
+      {
+        "path": "src/runtime/session_projection.ts",
+        "lines": [
+          54,
+          643,
+          646
+        ],
+        "finding": "Fresh activeToolCallIds=[]; tool_call/update only upserts reported data."
+      },
+      {
+        "path": "src/runtime/session_types.ts",
+        "lines": [
+          321,
+          331
+        ],
+        "finding": "Nonterminal call without active membership renders activity unknown."
+      },
+      {
+        "path": "src/components/ThreadView.tsx",
+        "lines": [
+          865
+        ],
+        "finding": "Passes computed toolActivityState to tool step."
+      },
+      {
+        "path": "src/components/thread-items.tsx",
+        "lines": [
+          435,
+          444
+        ],
+        "finding": "Completed-language summary requires completed status and non-unknown activity; otherwise neutral kind label."
+      }
+    ],
+    "conclusion": "Obsolete completed-tense assertion, not evidence that the read completed. The neutral label and unknown result preserve the actual fixture semantics.",
+    "recommendedMinimalFix": "Only replace the obsolete test expectation with neutral/unknown and absence of completed-language assertions, retaining approval/layout assertions."
+  },
+  "boundaries": [
+    "Original first-run failure and all log bytes remain unchanged.",
+    "Only format/type/frontend-test actually ran: 0/0/1; four later stages were not started.",
+    "No browser or product tests were executed by this independent review.",
+    "The authorized test-only edit occurs after this historical freeze; current full input equality is not claimed.",
+    "Browser test-only equivalence will be recorded separately against the final owner freeze; old browser evidence will not be rewritten."
+  ],
+  "safeToPublish": true,
+  "publicationScope": "Synthetic test diagnostics, code paths, hashes and counts only; no user data."
+}

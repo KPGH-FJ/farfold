@@ -1,0 +1,29 @@
+{
+  "observedAtUtc": "2026-10-13T20:29:20.525798+00:00",
+  "original15Stable": true,
+  "additionalTest": {
+    "path": "src/components/ConversationWorkspace.test.tsx",
+    "bytes": 3233,
+    "sha256": "27b83f5ba62dc3a6a9ecb6f0e5307fe94150de94d312f0d8cb586e97ff0e55a9"
+  },
+  "rootFailure": [
+    {
+      "source": "output/2026-10-14-diff-summary-integration/checks-run/frontend-test/completed.json",
+      "preserved": "output/2026-10-14-diff-summary-frontend/full-suite-frontend-failure.completed.json.raw",
+      "bytes": 657,
+      "sha256": "7c744d999457964c9e8c4a74947f255af431e0fe014e71ee8cd5f763a7d80c65"
+    },
+    {
+      "source": "output/2026-10-14-diff-summary-integration/checks-run/frontend-test/stdout.log",
+      "preserved": "output/2026-10-14-diff-summary-frontend/full-suite-frontend-failure.stdout.log.raw",
+      "bytes": 551,
+      "sha256": "3677ca50b816f378d7c16f32739f0e8621b2f94870ab76869e20ac20b953bc79"
+    },
+    {
+      "source": "output/2026-10-14-diff-summary-integration/checks-run/frontend-test/stderr.log",
+      "preserved": "output/2026-10-14-diff-summary-frontend/full-suite-frontend-failure.stderr.log.raw",
+      "bytes": 1914,
+      "sha256": "2115c42411654c33a19ed4e21e9477abd287a5976b2e6f480988193c2aed1d0f"
+    }
+  ]
+}

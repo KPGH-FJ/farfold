@@ -1,0 +1,22 @@
+{
+  "scope": "Root reviewed shared compareLines/textLines/lineCount, presentation, split alignment, main tool state labels and FileArtifactView diff against HEAD, final controlled browser and all eight pixels; independent final review also examined15files.",
+  "sourceFreeze": "output/2026-10-14-diff-summary-frontend/source-freeze-v1.json",
+  "sourceStable": true,
+  "decisions": [
+    "One bounded shared comparison, no new dependency, backend, protocol or Agent-specific logic.",
+    "Null original is distinguished from known empty, raw-side copies preserve exact strings, only aligned comparison yields exact counts and colored rows.",
+    "LF/CRLF/none retains separate old/new coordinates and whitespace bodies without trimming.",
+    "Diff path is opt-in existing file route; reported fragments stay separate from current file proof.",
+    "No change to actual Agent status, user data, official application, credentials or execution permissions."
+  ],
+  "limitations": [
+    "Browsers run actual UI with synthetic messages and controlled IO, not native filesystem or installed UI.",
+    "Seventeen scenarios cover late inspection after owner switch; not late body read or close.",
+    "Whole P18 and unavailable real-Agent coverage remain open."
+  ],
+  "protectedObserved": {
+    "PRODUCT.md": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  }
+}

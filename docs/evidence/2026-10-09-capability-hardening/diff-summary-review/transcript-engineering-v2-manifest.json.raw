@@ -1,0 +1,19 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "records": [
+    {
+      "chunkId": "44b54d",
+      "actualExitCode": 0,
+      "sourceLine": 14465,
+      "sourceByteOffset": 39964749,
+      "sourceByteLength": 1221,
+      "timestamp": "2026-10-13T20:41:18.274Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-engineering-v2/seven-check-completed.jsonl.raw",
+        "bytes": 1221,
+        "sha256": "9dcf63c4bd930e9398311bfedc35c0c4f3a4dbd67f6a65351556f804d1e24f8d"
+      }
+    }
+  ],
+  "boundary": "Exact requested root run2 completion event only. No unrelated transcript content exported. The prior a04fbb failure remains separately preserved."
+}

@@ -1,0 +1,12 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/thread-items.search-expansion.test.tsx (3 tests | 2 failed) 9ms
+   × reveals both the enclosing tool and clipped diff through their real ref registrations, then restores them 6ms
+   × supports manually expanding and collapsing a long diff when search is closed 1ms
+
+ Test Files  1 failed | 9 passed (10)
+      Tests  2 failed | 112 passed (114)
+   Start at  04:03:52
+   Duration  2.92s (transform 3.12s, setup 0ms, import 18.37s, tests 228ms, environment 0ms)
+

@@ -1,0 +1,35 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/thread-items.diff.test.tsx > counts the changed fragment rows, not every supplied line
+AssertionError: expected '<div><div class="step"><span class="g…' to contain 'class="add">+1</span>'
+
+Expected: "class="add">+1</span>"
+Received: "<div><div class="step"><span class="g ok">✓</span><span class="cmd">修改了文件</span><button type="button" class="step-toggle" aria-expanded="false">技术详情</button><span class="tail"><span class="add">+2</span> <span class="del">−2</span> · &lt;1s</span></div></div>"
+
+ ❯ src/components/thread-items.diff.test.tsx:19:16
+     17| it("counts the changed fragment rows, not every supplied line", () => {
+     18|   const html = renderToStaticMarkup(<ToolStep call={call} />);
+     19|   expect(html).toContain('class="add">+1</span>');
+       |                ^
+     20|   expect(html).toContain('class="del">−1</span>');
+     21| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/thread-items.diff.test.tsx > keeps missing original text distinct from a newly created file
+AssertionError: expected '<div class="diff"><div class="h"><spa…' to contain '未提供修改前的文本'
+
+Expected: "未提供修改前的文本"
+Received: "<div class="diff"><div class="h"><span data-find-block="true">/work/a.txt</span><span>新文件</span></div><div class="add">+ <span data-find-block="true">a\nb</span></div></div>"
+
+ ❯ src/components/thread-items.diff.test.tsx:25:16
+     23| it("keeps missing original text distinct from a newly created file", (…
+     24|   const html = renderToStaticMarkup(<DiffView path="/work/a.txt" oldTe…
+     25|   expect(html).toContain("未提供修改前的文本");
+       |                ^
+     26|   expect(html).not.toContain("新文件");
+     27| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

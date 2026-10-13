@@ -1,0 +1,122 @@
+{
+  "phase": "CHECKPOINT_AFTER_SEVEN",
+  "scope": "Exact P18 shared diff comparison increment, four current docs, scoped evidence and all new synthetic engineering inputs. All new test inputs are committed to satisfy candidate commit-source equality. Existing unrelated dirty evidence is preserved.",
+  "inputCount": 2059,
+  "auxiliaryInputs": [
+    {
+      "path": "output/2026-10-13-xlsx-input-checks-preparation/inventory.py",
+      "bytes": 5533,
+      "sha256": "7784a38803fb1c10da014755cde9901f9deba982ffb01ab1076dfd2060e3e076"
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-checks-preparation/runner-v4/run_checks.py",
+      "bytes": 15448,
+      "sha256": "0cf4b3fd62d3d94f1781119f65d87f68a9fd26a6afb5e95ca7e56bda3f140a0c"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-browser/fixture.tsx",
+      "bytes": 8419,
+      "sha256": "aead837e91f21c5f98577a45a4e70345a8b17c9d1b930254f743b53ffdc46a42"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-browser/index.html",
+      "bytes": 1811,
+      "sha256": "150fc2e8627c2caae515d9927f6373199f4c4289426e915acfc8f32eab90267e"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-browser/run.mjs",
+      "bytes": 14252,
+      "sha256": "ac7b9a3b880c2947691e09d390536295d7ccdd2e3e430bd63aab90d9e6047e17"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-browser/serve.mjs",
+      "bytes": 814,
+      "sha256": "7a1e37a23c7d7cae17b7985aaf2284b0468ea75544a6ae0a890cb36e5631c6c9"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/oracle-correction.json",
+      "bytes": 528,
+      "sha256": "a9ca5c3a65b753e13ce3fae4fa4844ced1c68a77899917c86ca0b4983d05a230"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/oracle-v2.json",
+      "bytes": 8739,
+      "sha256": "e46e33a808ea287c7caffa88f8dbf2d74318566af36b2157a2a546404f5351e8"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/post-full-suite-correction.json",
+      "bytes": 5156,
+      "sha256": "f100c19032eb2d07f5fe45ab3f0bcaa795edcad84a398501e2d6a87707bf3994"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/run.py",
+      "bytes": 863,
+      "sha256": "1b69245ca2d169ae1dd8c503a5ba00a25207d90d67741947e2a895765cfa2228"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/source-freeze-v2.json",
+      "bytes": 5624,
+      "sha256": "3e9dec3288b191d5de0439111a8475a18e48f70ad511133401af8cc60d11f4f4"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-independent/browser-oracle.json",
+      "bytes": 24410,
+      "sha256": "0bb74b49e03a90e81fe30f3cf0d14ac40933e0ce7cd0d0f53dd55c8437a293b9"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-independent/browser-review.json",
+      "bytes": 10601,
+      "sha256": "aeff0f642de75f2506ac54e617d09425736d44e00710e6a36df5edbe064f1583"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-independent/docs/report.json",
+      "bytes": 6587,
+      "sha256": "58afa373ec6b88658628a19e837a7c04c5eada97486baf67fe577131df001698"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-independent/frontend-final-review.json",
+      "bytes": 20717,
+      "sha256": "17fe4cfce81bce496deea0f775607a5078f297c57dff3b20c1490f9b999928f0"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-independent/test-only-browser-equivalence.json",
+      "bytes": 8409,
+      "sha256": "91f398b28f083d43c20eaa415712fddb988c261562010e86fdfdc67c717a509b"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-independent/verify-line-diff-oracle.mjs",
+      "bytes": 5899,
+      "sha256": "2471e6962c78719b6b852a7262628090fc1df424879445e57721a89c746e9e3b"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-integration/prepare_checkpoint-v2.py",
+      "bytes": 3727,
+      "sha256": "bf1595df8ae28717320ae354d708b43eeba6d55028e903f5e5d6afd96410ad3d"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-integration/prepare_inventory-v3.py",
+      "bytes": 12705,
+      "sha256": "fc4778cc12be66ce720860e3dd3eac8b1dfe7e5d97edd84101afb35e5ef7ae27"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-integration/publish_checks-v2.py",
+      "bytes": 3632,
+      "sha256": "b7639de5b28e4ea0adb3e1d4ab2277053fc7ffbe9e0414fb1feb4753329faaff"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-integration/root-source-review.json",
+      "bytes": 1649,
+      "sha256": "4153236acf3b03250ccaf00fe45ea995a1ed0762000206e456352c519e1bfec8"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-research/oracle.json",
+      "bytes": 8384,
+      "sha256": "ff5e98d503285f86f6a02c6e153ba056f77e0adc203f69a2df5e634e63a3c7a0"
+    }
+  ],
+  "engineering": {
+    "path": "output/2026-10-14-diff-summary-integration/checks-run-02/summary.json",
+    "bytes": 6313,
+    "sha256": "8788605205218b9dbe599b8dd567d19fb60be087ba6d2ea4d512eeada64abb7e"
+  }
+}

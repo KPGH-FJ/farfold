@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T20:03:03.665431+00:00",
+  "phase": "PRELIMINARY_DESIGN_AND_SOURCE_REVIEW_NOT_FINAL_FREEZE",
+  "scope": "Independent read only. Frontend owner is still editing/tests; input hashes locate this reading, not stable final acceptance. No production helper/test, App, browser, Agent or database execution.",
+  "inputs": [
+    {
+      "path": "output/2026-10-14-diff-summary-research/handoff.json",
+      "bytes": 11218,
+      "sha256": "0a4c236ab870936f1d74af27ccc06454e0da9bf460d0e9cf77b42b9dae1299c0"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-research/oracle.json",
+      "bytes": 8384,
+      "sha256": "ff5e98d503285f86f6a02c6e153ba056f77e0adc203f69a2df5e634e63a3c7a0"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/oracle-v2.json",
+      "bytes": 8739,
+      "sha256": "e46e33a808ea287c7caffa88f8dbf2d74318566af36b2157a2a546404f5351e8"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/oracle-correction.json",
+      "bytes": 528,
+      "sha256": "a9ca5c3a65b753e13ce3fae4fa4844ced1c68a77899917c86ca0b4983d05a230"
+    },
+    {
+      "path": "src/runtime/line_diff.ts",
+      "bytes": 5734,
+      "sha256": "5dd8daf7af753719f5e850f7157d2101eb4e8f9fafc0c6333acc0b5cc99f4a44"
+    },
+    {
+      "path": "src/runtime/line_diff_presentation.ts",
+      "bytes": 1924,
+      "sha256": "294fa020d9af4e028addca3489b1a63393300219b6d02064a5ee5d3beb1e41f1"
+    },
+    {
+      "path": "src/components/DiffComparisonNote.tsx",
+      "bytes": 1291,
+      "sha256": "b0328506afc4c77f558a55d3fe1bfa8760eefcf1b859c74731d9379909f9377b"
+    },
+    {
+      "path": "src/runtime/artifact_view.ts",
+      "bytes": 5409,
+      "sha256": "e6549c85b96de21bcf0402d1b697d426596046d495d5252d99e6adcd38c6e897"
+    },
+    {
+      "path": "src/components/FileArtifactView.tsx",
+      "bytes": 24590,
+      "sha256": "d50e79f895894f8c474476b8a0e8149d066c6a1dbff56ea8fd998a6ecf54518f"
+    },
+    {
+      "path": "src/components/thread-items.tsx",
+      "bytes": 17595,
+      "sha256": "d9b512ce979397700f7536c60f8035c5a5cc95dbb739caded7087ceabde112ab"
+    },
+    {
+      "path": "src/runtime/workspace_strings.ts",
+      "bytes": 6762,
+      "sha256": "00d76d4106d0eabeb20fbbe32ce6b3cf5dc64aacd75b2b1427693736e1570e0f"
+    },
+    {
+      "path": "src/runtime/session_projection.ts",
+      "bytes": 28936,
+      "sha256": "71fb019a5b322c59b0836d5f49a91ccef23ed1e148ada355843c0ec8838eacd5"
+    },
+    {
+      "path": "src/runtime/artifacts.ts",
+      "bytes": 5891,
+      "sha256": "a839a1f9aaf980f4867750eb889e69b097e6e804d57a909d551c112b15c0ece5"
+    },
+    {
+      "path": "src/runtime/artifact_view.test.ts",
+      "bytes": 8369,
+      "sha256": "7d84ce8dbf0e2d802dc61865472c920f820706fd91ead905da932a0b7c85b5f2"
+    },
+    {
+      "path": "src/components/FileArtifactView.feedback.test.tsx",
+      "bytes": 13054,
+      "sha256": "44f21c25e90c4ff62c218ed4b64af3983fcca00c20e2c443d1f9049832ce7067"
+    },
+    {
+      "path": "src/components/thread-items.search.test.tsx",
+      "bytes": 4506,
+      "sha256": "8db5575a0eb35790c19ecbfdb00e26a33edde6ec600cdcec236e51b2ab16a295"
+    }
+  ],
+  "actualOwnerEvidence": [
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/red-01.stdout.log",
+      "bytes": 420,
+      "sha256": "423c8928b6516b08b23dccb070595c24f834e575cf013a86c3c5e62c8dfba35b"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/red-01.stderr.log",
+      "bytes": 1970,
+      "sha256": "2e81dcbb2225ed84a7cf6a1707cc9fe3a42942a1d369a890e06869b3c30895a7"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/red-01.completed.json",
+      "bytes": 739,
+      "sha256": "42c19ab60d309f865198aa19caefafe9ae609c3790b206eda2ce7ea350cef1d0"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-01.stdout.log",
+      "bytes": 920,
+      "sha256": "e0ba2a4128dd82502cf2de34fbc9c90c25f4aea21dce37ac5e7edca19e78f33c"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-01.stderr.log",
+      "bytes": 11774,
+      "sha256": "ad7afa51bd8f220961c7d369911d9693845d3c28dcdb6e25fa0e89152ad36aca"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-frontend/targeted-01.completed.json",
+      "bytes": 1002,
+      "sha256": "0c0d6119988905e375281605feca76eab477c1e2a9de2aad52d345be9c72ff34"
+    }
+  ],
+  "designReview": {
+    "direction": "Shared bounded comparison, body-only integer-ID LCS and explicit precision are appropriate; no backend or protocol changes required.",
+    "oracleV1Correction": "whitespace-is-content input a\\n\\tz contradicts the intended separate tab line; owner preserved v1 and corrected to a\\n\\t\\nz in v2 plus shifted EOL coordinates. This is fixture correction, not production success.",
+    "recommendationsAdopted": [
+      "physical rows with per-line LF/CRLF/none, no phantom final row",
+      "oldLine and newLine for EOL changes",
+      "precise string interning to integer IDs inside bounded LCS",
+      "all NumberedText/feedback counts/copy path share physical semantics",
+      "feedback ID distinguishes missing and empty and includes physical-lines-v1",
+      "scope remains fragment; explicit diff.path click uses existing single-file verification"
+    ]
+  },
+  "initialSourceAssessment": [
+    "combined characters checked before row allocation, rows capped with +1 sentinel, 1M matrix cells enforced; pure add/remove middles avoid matrix",
+    "prefix/suffix and LCS preserve independent old/new row positions, repeated-anchor tie-break deterministic",
+    "unknown original produces neutral rows and null stats; empty known original produces counted additions",
+    "weak cache verifies both original strings on reused owners; no global string-keyed payload cache",
+    "precision replacement/unavailable keeps stats null; aggregate exact total only when all individual stats are known",
+    "original raw copy remains exact; human-readable diff copy adds precision and EOL information without claiming applyable patch"
+  ],
+  "findings": [
+    {
+      "priority": "P2",
+      "status": "reported_to_frontend",
+      "path": "src/components/thread-items.tsx",
+      "location": "DiffView status conditional",
+      "counterexample": "status=future-status (session_projection.ts keeps arbitrary String status): message selects filePending while FileArtifactView selects fileUnknown.",
+      "recommendation": "Only pending/in_progress map to pending; any other noncompleted/nonfailed value maps to unknown, matching the file view."
+    },
+    {
+      "priority": "test-strength",
+      "status": "recommended_to_frontend",
+      "path": "src/runtime/artifact_view.test.ts",
+      "location": "large replacement reconstruction",
+      "detail": "New reconstruction reads ending from production textLines; retain independent hand-written LF/CRLF/no-ending and shifted-row assertions in pure-helper tests so a shared parser error cannot validate itself."
+    }
+  ],
+  "failureClassification": {
+    "red01": "2 actual failures on prior behavior: inaccurate +2/-2 for one replacement and missing-before called new file. Genuine original behavioral counterexamples.",
+    "targeted01": "36 passed / 5 failed in original receipt. Failures match chosen presentation changes: diff-copy header, unified 32-row collapsed window, two neutral unknown-before expectations, and physical EOF line handling. Current changed expectations inspected; these failures alone do not identify an additional production regression. Original logs preserved."
+  },
+  "remaining": [
+    "Final owner freeze and completed targeted/type/format evidence have not been reviewed.",
+    "Manual independent oracle execution has not occurred; no execution claims from static review.",
+    "Root full-App browser and whole engineering checks are separate."
+  ]
+}

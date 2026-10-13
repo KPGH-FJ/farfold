@@ -1,0 +1,7 @@
+{
+  "failure": "chromium-run1 exit 1 e99a64",
+  "cause": "Root runner expected full-file copy label for a reported fragment; frozen FileArtifactView uses copyFragment for either fragment side.",
+  "sourceChange": false,
+  "oldRunnerSha256": "7192acf427a4debea13c5712b531a38af3c6badfc02a5404419735e8e2011416",
+  "newRunnerSha256": "3bc37ab894cbff7dc248db6e7bab1c9d036c584bc137aa51811839874e361442"
+}

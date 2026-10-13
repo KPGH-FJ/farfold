@@ -376,6 +376,31 @@
 .diff .more {
   color: var(--ink-3);
 }
+.diff-comparison-note {
+  padding: 6px 0;
+  color: var(--ink-2);
+  font-family: var(--sans);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.diff-comparison-note summary,
+.diff-provenance summary {
+  cursor: pointer;
+}
+.diff .h > span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.diff pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.diff-provenance,
+.diff-status {
+  font-family: var(--sans);
+  color: var(--ink-3);
+  font-size: 12px;
+}
 
 /* ── 结束行 ── */
 .settled {
