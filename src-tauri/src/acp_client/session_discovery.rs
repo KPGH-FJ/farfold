@@ -90,6 +90,7 @@ pub(crate) async fn open_import_preview(
             config_check: opened.config_check,
             permission_config_id: opened.permission_config_id,
             permission_state: opened.permission_state,
+            permission_effect: opened.permission_effect,
             modes: (!opened.config_options_modern)
                 .then(|| opened.response.get("modes").cloned())
                 .flatten(),

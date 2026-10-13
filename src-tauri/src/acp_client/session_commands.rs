@@ -135,6 +135,7 @@ pub async fn session_open(
         config_check: opened.config_check,
         permission_config_id: opened.permission_config_id,
         permission_state: opened.permission_state,
+        permission_effect: opened.permission_effect,
         modes: (!opened.config_options_modern)
             .then(|| opened.response.get("modes").cloned())
             .flatten(),
@@ -160,6 +161,7 @@ fn prompt_failure_admission(error: &str) -> PromptAdmission {
         "UNAVAILABLE" | "FAILED: SESSION_UNAVAILABLE" => "unavailable",
         "FAILED:PROMPT_EMBEDDED_CONTEXT_UNKNOWN" => "embedded_context_unknown",
         "FAILED:PROMPT_EMBEDDED_CONTEXT_UNSUPPORTED" => "embedded_context_unsupported",
+        "FAILED: PROMPT_PERMISSION_SCOPE_UNVERIFIED" => "permission_scope_unverified",
         "FAILED: SERVICE_UNAVAILABLE" => "service_unavailable",
         error if error.starts_with("FAILED: CONFIG_") => {
             if error.contains("RECORD_FAILED") {
@@ -182,6 +184,30 @@ fn prompt_failure_admission(error: &str) -> PromptAdmission {
     PromptAdmission {
         status: "rejected",
         reason: Some(reason),
+    }
+}
+
+#[cfg(test)]
+#[test]
+fn permission_scope_rejection_is_definite_only_with_pre_dispatch_failure_prefix() {
+    let rejected = serde_json::to_value(prompt_failure_admission(
+        "FAILED: PROMPT_PERMISSION_SCOPE_UNVERIFIED",
+    ))
+    .unwrap();
+    assert_eq!(
+        rejected,
+        serde_json::json!({"status":"rejected","reason":"permission_scope_unverified"})
+    );
+    for unknown in [
+        "PROMPT_PERMISSION_SCOPE_UNVERIFIED",
+        "lost reply",
+        "timeout",
+    ] {
+        let unknown = serde_json::to_value(prompt_failure_admission(unknown)).unwrap();
+        assert_eq!(
+            unknown,
+            serde_json::json!({"status":"unknown","reason":"uncertain"})
+        );
     }
 }
 

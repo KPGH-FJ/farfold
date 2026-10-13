@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "reviewedAtUtc": "2026-10-13T07:41:26.132781+00:00",
+  "reviewState": "V1_P1_RESOLVED_IN_V2_SOURCE_AND_CONTROLLED_TESTS",
+  "priorReview": "race-independent-review.json",
+  "scope": {
+    "productionWrites": false,
+    "cargoRunByReviewer": false,
+    "newTestsRunByReviewer": false,
+    "backendTestEvidenceIndependentlyRead": true,
+    "liveDatabaseRead": false,
+    "realAgentRun": false
+  },
+  "conclusion": "No new blocking finding in the requested prompt/config race and definite-rejection scope. V1 P1 is fixed by retaining the successfully persisted selection as the guard baseline before draining updates. Backend red and green logs directly reproduce and close the exact second-send bypass. The old review remains unchanged as historical evidence.",
+  "sourceIntegrity": {
+    "manifest": "../2026-10-13-prompt-config-race/v2-regression-inputs-after.json",
+    "checkedInputCount": 439,
+    "changedSinceRegression": [],
+    "all439InputsMatch": true,
+    "greenBeforeAfterEqual": true,
+    "greenAfterEqualsRegressionAfter": true,
+    "regressionBeforeAfterEqual": true,
+    "frozenFiles": [
+      {
+        "path": "src-tauri/src/acp_client/pump.rs",
+        "expectedSha256": "250c3fb6ad7b1d7aefb8907a8633660f01d86e1b9bd618f68167a16a311903df",
+        "actualSha256": "250c3fb6ad7b1d7aefb8907a8633660f01d86e1b9bd618f68167a16a311903df",
+        "matches": true,
+        "lines": 1476
+      },
+      {
+        "path": "src-tauri/src/acp_client/mod.rs",
+        "expectedSha256": "9e31e194d23d4bcc0af965e3b39d159d64df2c8c80e9063086b9c75a65500a7f",
+        "actualSha256": "9e31e194d23d4bcc0af965e3b39d159d64df2c8c80e9063086b9c75a65500a7f",
+        "matches": true,
+        "lines": 132
+      },
+      {
+        "path": "src-tauri/src/acp_client/prompt_config_race_tests.rs",
+        "expectedSha256": "85e995d9301ce69db3b1919c5b0cf4db1efea2956f41cca809a461beb7a603a9",
+        "actualSha256": "85e995d9301ce69db3b1919c5b0cf4db1efea2956f41cca809a461beb7a603a9",
+        "matches": true,
+        "lines": 282
+      }
+    ],
+    "frontendAndContract": [
+      {
+        "path": "src/runtime/sessions.ts",
+        "sha256": "58d9b014fa6948da000b8df3077a5f02254d87dd84553d439d3cf441589b96e4"
+      },
+      {
+        "path": "src/runtime/config_check.ts",
+        "sha256": "2f1472cac8049fc4e551beb70e8f8bdaf1b85fd79341054b9221d85d26aee85c"
+      },
+      {
+        "path": "src/runtime/queue.ts",
+        "sha256": "514003e7f3e8450ed35ec1f16410f8700274ec8a3a8139a1ad4796a60218a377"
+      },
+      {
+        "path": "src/runtime/sessions.permission-scope.test.ts",
+        "sha256": "5786a56f0a08785fe8dec170aebc6999aab1322d0fc4d5d7e00ea7b69029a699"
+      },
+      {
+        "path": "PRODUCT.md",
+        "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+      }
+    ]
+  },
+  "resolvedFinding": {
+    "id": "RACE-P1-01",
+    "status": "RESOLVED_FOR_REVIEWED_V2",
+    "fixRef": "src-tauri/src/acp_client/pump.rs:1174",
+    "explanation": "lock() runs only after a successful save, while guard.current is still exactly the saved snapshot. Draining m2 then compares against expected m1, yields blocked, and retains m1. A second request stops at the pre-save readiness check at line 1149. The ordinary frontend continueQueue also refuses because applyConfigCheck sets modelDrift true (config_check.ts:82; sessions.ts:1100). No repeated save can silently replace m1 with m2.",
+    "regressionRef": "src-tauri/src/acp_client/prompt_config_race_tests.rs:208"
+  },
+  "edgePathReview": [
+    {
+      "case": "Save fails",
+      "refs": [
+        "src-tauri/src/acp_client/pump.rs:1165",
+        "src-tauri/src/acp_client/lifecycle_tests.rs:1010"
+      ],
+      "assessment": "Error returns before lock. Existing record_failed state remains; no wire prompt. Production-path save-failure test is present in the 37-test passing log.",
+      "evidenceLevel": "source plus backend controlled regression log"
+    },
+    {
+      "case": "Successfully saved first request expires or loses receiver",
+      "refs": [
+        "src-tauri/src/acp_client/pump.rs:1189"
+      ],
+      "assessment": "Retains saved baseline and rejects before MCP activation or prompt dispatch; work lease drops on continue. Model locking does not set prompt_in_flight, emit a user message, or alter frontend draft identity.",
+      "evidenceLevel": "source review; this exact newly locked expiry path not separately executed in the supplied race test"
+    },
+    {
+      "case": "Synchronous send returns error",
+      "refs": [
+        "src-tauri/src/acp_client/pump.rs:1213"
+      ],
+      "assessment": "Saved baseline remains protected. Does not begin live tools, transfer prompt lease, or set prompt_in_flight. MCP prompt activity resets in the error branch. Exact rejected frontend queue content remains preserved.",
+      "evidenceLevel": "source review; no dedicated new synchronous transport-failure receipt"
+    },
+    {
+      "case": "is_established caller",
+      "refs": [
+        "src-tauri/src/acp_client/model_guard.rs:107",
+        "src-tauri/src/acp_client/config_change.rs:35"
+      ],
+      "assessment": "Only production caller gates persistence of explicit confirmed configuration changes. After successful first-prompt save but refusal/expiry/failure, it now requires subsequent explicit changes to save the already existing index. This is consistent with the saved restore baseline; it is not the frontend message/session establishment flag.",
+      "evidenceLevel": "complete targeted call-site search plus source review"
+    },
+    {
+      "case": "Draft before any prompt save",
+      "refs": [
+        "src-tauri/src/acp_client/model_guard.rs:94",
+        "src-tauri/src/acp_client/model_guard.rs:338",
+        "src-tauri/src/acp_client/config_change/tests.rs:190"
+      ],
+      "assessment": "Remains unlocked. Explicit pre-send configuration changes keep existing draft behavior and do not acquire an index solely due to this fix. After a saved-but-unsent attempt, valid explicit changes remain allowed and persisted; unsolicited drift requires recheck.",
+      "evidenceLevel": "source review; existing test source inspected, not claimed in the prompt-filtered run"
+    },
+    {
+      "case": "Post-save permission or model drift",
+      "refs": [
+        "src-tauri/src/acp_client/pump/restore_config.rs:263",
+        "src-tauri/src/acp_client/pump.rs:1179",
+        "src-tauri/src/acp_client/permission_guard.rs:94"
+      ],
+      "assessment": "Already routed options update both guards. Permission readiness and model readiness/record equality are checked after drain. Permission invalidation cannot be undone by unsolicited change-back.",
+      "evidenceLevel": "source plus controlled model/permission race cases"
+    },
+    {
+      "case": "Definite admission rejection and draft queue",
+      "refs": [
+        "src-tauri/src/acp_client/session_commands.rs:158",
+        "src/runtime/sessions.ts:1028",
+        "src/runtime/sessions.ts:1087",
+        "src/runtime/queue.ts:55"
+      ],
+      "assessment": "FAILED config/permission errors map to definite rejected; the optimistic message is removed, exact queued content remains, pause persists, and no automatic retry occurs. V2 blocked config status now also prevents explicit continue. Timeout/channel uncertainty remains a different outcome.",
+      "evidenceLevel": "source plus existing frontend test source; no new frontend execution by reviewer"
+    }
+  ],
+  "backendEvidence": [
+    {
+      "receipt": "../2026-10-13-prompt-config-race/v2-red-receipt.json",
+      "log": "../2026-10-13-prompt-config-race/v2-red.log:7",
+      "actualExit": 101,
+      "result": "4 passed, 1 failed. Initial refusal configCheck ready, second request Ok, wire count 1, persisted m2. This is expected red evidence, preserved as failure."
+    },
+    {
+      "receipt": "../2026-10-13-prompt-config-race/v2-green-receipt.json",
+      "log": "../2026-10-13-prompt-config-race/v2-green.log:13",
+      "actualExit": 0,
+      "result": "5 passed. Initial refusal configCheck blocked with expected m1/current m2; retry CONFIG_BLOCKED; wire count 0; persisted m1. Matching first and established requests still send."
+    },
+    {
+      "receipt": "../2026-10-13-prompt-config-race/v2-regression-receipt.json",
+      "log": "../2026-10-13-prompt-config-race/v2-regression.log:50",
+      "actualExit": 0,
+      "result": "37 passed, 1 explicitly ignored real-Agent test. Includes metadata save failure protection."
+    },
+    {
+      "receipt": "../2026-10-13-prompt-config-race/v2-format-receipt.json",
+      "actualExit": 0,
+      "result": "cargo fmt check"
+    }
+  ],
+  "evidenceHashes": [
+    {
+      "path": "output/2026-10-13-prompt-config-race/v2-red-receipt.json",
+      "sha256": "73541445595c4eb59c7ef51910ea649e824f500729ccd29727b6409bec0cf665"
+    },
+    {
+      "path": "output/2026-10-13-prompt-config-race/v2-red.log",
+      "sha256": "9fc7998e843414d10c6eb23867635533b1f16fb44cd8606a4ac3a07c33951562"
+    },
+    {
+      "path": "output/2026-10-13-prompt-config-race/v2-green-receipt.json",
+      "sha256": "8fd94afb4d9dbfc88abb617045036705d9740ab33c5abdc6cce5390d88169517"
+    },
+    {
+      "path": "output/2026-10-13-prompt-config-race/v2-green.log",
+      "sha256": "ddda9e41234abfb13feae182837050c8b0c8797a710280f17d18a9427508f36a"
+    },
+    {
+      "path": "output/2026-10-13-prompt-config-race/v2-regression-receipt.json",
+      "sha256": "9285290b245d781e32b2fecc977f041a78037adcfa18bb308b1656f35cdaa5a6"
+    },
+    {
+      "path": "output/2026-10-13-prompt-config-race/v2-regression.log",
+      "sha256": "86bcbc1d6d4172d70d40546e47d9a20e9eceaae3e2d6c236c902e4715bd60675"
+    },
+    {
+      "path": "output/2026-10-13-prompt-config-race/v2-format-receipt.json",
+      "sha256": "5d381b194813fb43702409dc47850452e7f2d765e6ab81e4b2c87b4f16ef7c2f"
+    },
+    {
+      "path": "output/2026-10-13-prompt-config-race/v2-source-freeze.json",
+      "sha256": "84e451c266c5415e89522f99f85901ce15915b3bede2f9b82e2cb87133732168"
+    }
+  ],
+  "remainingLimits": [
+    "Controlled temporary SQLite and JSON-RPC peer prove these tested schedules. They do not establish installed-app or real-Agent acceptance.",
+    "The local drain covers already routed queue content, not future remote unannounced changes or an atomic cross-process selection guarantee.",
+    "No new full frontend continueQueue end-to-end test was run here; source chain plus backend retry rejection was sufficient to establish the exact safety fix without mirroring implementation.",
+    "Expiry and synchronous send failure retain the saved baseline by inspection; dedicated new execution of those combinations was not supplied.",
+    "Only exact reviewed source hashes and the recorded test environment are covered; root owns final integrated repository checks and broader acceptance."
+  ]
+}

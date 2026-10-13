@@ -358,6 +358,7 @@ pub(crate) async fn open_session_on_connection(
         config_check: ready.check,
         permission_config_id: ready.permission_config_id,
         permission_state: ready.permission_state,
+        permission_effect: ready.permission_effect,
         warnings: ready.warnings,
     })
 }

@@ -7,6 +7,8 @@ import {
 import { normalizeMessageAttachments } from "./message_attachments";
 import { DOCUMENT_INPUT_STRINGS as S } from "./document_input_strings";
 import type { PromptAdmission } from "./queue";
+import { documentMediaFormat } from "./document_media_type";
+import { COMPOSER_CONTROLS as C } from "./composer_strings";
 
 export function promptText(
   blocks: readonly PromptBlock[],
@@ -25,6 +27,8 @@ export function titleFromBlocks(blocks: readonly PromptBlock[]): string {
 }
 export function promptRejectionNotice(result: PromptAdmission): string | null {
   if (result.status !== "rejected") return null;
+  if (result.reason === "permission_scope_unverified")
+    return C.permissionScopeUnverified;
   return result.reason === "embedded_context_unsupported"
     ? S.capabilityUnsupported
     : result.reason === "embedded_context_unknown"
@@ -41,14 +45,14 @@ export function promptRejectionItem(
     : null;
 }
 
-/** Recognizing an old Office text resource only withholds authority. It never
+/** Recognizing an old document text resource only withholds authority. It never
  * invents a verified file or authorizes reading or sending it. */
 function historicalDocumentUri(uri: string): boolean {
   try {
     const value = new URL(uri);
-    return /\.(docx|xlsx)$/i.test(decodeURIComponent(value.pathname));
+    return /\.(docx|xlsx|pdf)$/i.test(decodeURIComponent(value.pathname));
   } catch {
-    return /\.(docx|xlsx)$/i.test(uri);
+    return /\.(docx|xlsx|pdf)$/i.test(uri);
   }
 }
 
@@ -62,10 +66,7 @@ export function resourceDocumentText(
     });
   if (
     historicalDocumentUri(block.resource.uri) ||
-    [
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    ].includes(block.resource.mimeType)
+    documentMediaFormat(block.resource.mimeType) !== undefined
   )
     return parseApprovedDocumentText({
       text: block.resource.text,

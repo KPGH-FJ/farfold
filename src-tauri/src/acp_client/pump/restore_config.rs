@@ -10,6 +10,7 @@ pub(crate) struct OpenState {
     pub check: ConfigCheck,
     pub permission_config_id: Option<String>,
     pub permission_state: &'static str,
+    pub permission_effect: Option<super::super::permission_effect::PermissionEffect>,
     pub warnings: Vec<String>,
 }
 
@@ -35,6 +36,7 @@ impl Opening {
             check: guard.check(),
             permission_config_id: permissions.id(),
             permission_state: permissions.state(),
+            permission_effect: permissions.effect(),
             warnings: self.warnings.clone(),
         }
     }

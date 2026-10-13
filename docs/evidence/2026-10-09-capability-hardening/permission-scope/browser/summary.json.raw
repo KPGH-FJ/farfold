@@ -1,0 +1,354 @@
+{
+  "schema": 1,
+  "status": "CONTROLLED_PERMISSION_UI_AND_ROOT_BUILT_PDF_SMOKE_PASSED",
+  "finishedAtUTC": "2026-10-13T07:45:48.937075+00:00",
+  "productionChanged": false,
+  "didNotRunSecondBuild": true,
+  "formalAppUsed": false,
+  "realAgentUsed": false,
+  "userPrivateDataAccessed": false,
+  "ui": {
+    "stageReceipt": {
+      "path": "output/2026-10-13-permission-pdf-ui-integration/ui-summary.json",
+      "bytes": 4516,
+      "sha256": "00f3a04ca6e38537d2f57f2153cb0df8268ec8e4520878ee21c01b9c146805a5"
+    },
+    "engines": [
+      {
+        "engine": "chromium",
+        "actualExit": 0,
+        "completionChunk": "88a478",
+        "checks": 32,
+        "passed": true,
+        "productionAndHarnessInputs": 581,
+        "testInputs": 480,
+        "stable": true,
+        "testChanges": [],
+        "pageErrors": [],
+        "externalRequests": [],
+        "raw": {
+          "path": "output/2026-10-13-permission-pdf-ui-integration/chromium-run04.json",
+          "bytes": 262843,
+          "sha256": "3fc2a498b810346528fdd30dfe81594af0f779cf21b3ef08f45564da2842187c"
+        }
+      },
+      {
+        "engine": "webkit",
+        "actualExit": 0,
+        "completionChunk": "815b77",
+        "checks": 32,
+        "passed": true,
+        "productionAndHarnessInputs": 581,
+        "testInputs": 480,
+        "stable": true,
+        "testChanges": [],
+        "pageErrors": [],
+        "externalRequests": [],
+        "raw": {
+          "path": "output/2026-10-13-permission-pdf-ui-integration/webkit-run04.json",
+          "bytes": 262841,
+          "sha256": "e1fac61e287b33347fa40d2d6e3e199b8659cbf4fa03b0712ead9602415f68f8"
+        }
+      }
+    ],
+    "scope": "Actual complete production App/StrictMode/controllers/shared PermissionControl with controlled native IPC; real PDF Worker used when retaining approved attachment across rejected commands. 32 checks each engine.",
+    "retainedFailures": [
+      {
+        "raw": {
+          "path": "output/2026-10-13-permission-pdf-ui-integration/chromium-run01.json",
+          "bytes": 267688,
+          "sha256": "fdc4758ef67cb8974501ac95757967ae324cf08283c0975579189722c9641a74"
+        },
+        "causeRecord": {
+          "path": "output/2026-10-13-permission-pdf-ui-integration/run01-correction.json",
+          "bytes": 704,
+          "sha256": "bf0290028a272ea2f7b0c8e78a0345b0a0911c420dbc803eab47bf7904828a76"
+        }
+      },
+      {
+        "raw": {
+          "path": "output/2026-10-13-permission-pdf-ui-integration/chromium-run02.json",
+          "bytes": 245536,
+          "sha256": "7749e25bb3e230851ca7deb3236ee02a135f2415f3c5f8315bbd6ecc3a017f6e"
+        },
+        "causeRecord": {
+          "path": "output/2026-10-13-permission-pdf-ui-integration/run02-correction.json",
+          "bytes": 827,
+          "sha256": "f6a318a400989f5abcd2e01109d9cb9eb6889bcb856d494370f6fc2257610ecd"
+        }
+      },
+      {
+        "raw": {
+          "path": "output/2026-10-13-permission-pdf-ui-integration/chromium-run03.json",
+          "bytes": 285607,
+          "sha256": "1afdb8808928d0138b1c805f591b5b43a22ba6a8cdd67c5fc14455abacef3543"
+        },
+        "causeRecord": {
+          "path": "output/2026-10-13-permission-pdf-ui-integration/run03-correction.json",
+          "bytes": 517,
+          "sha256": "75646912f5f9453a4615294ae4918b108f3181916f623d86745936a27596f224"
+        }
+      }
+    ],
+    "visualInspection": [
+      {
+        "image": {
+          "path": "output/2026-10-13-permission-pdf-ui-integration/chromium-run03-confirmed-scope.png",
+          "bytes": 85936,
+          "sha256": "1834bf621ffe02c88a301bbadad75902360ada9cb64c3392f684463e262f5a35"
+        },
+        "observation": "Selected option visually states next message choice; explanation retains unknown current scope; normal window has no clipping."
+      },
+      {
+        "image": {
+          "path": "output/2026-10-13-permission-pdf-ui-integration/webkit-run04-rejected-review.png",
+          "bytes": 101842,
+          "sha256": "457bcf61c0128d8c5fec3ea24b9198b7fac99d69abbd0a366432f339e9c5d7a8"
+        },
+        "observation": "Exact cannot-send reason shown; original slash command plus PDF attachment remains in paused queue; no optimistic user command presented as sent."
+      }
+    ]
+  },
+  "built": {
+    "rootBuildReady": {
+      "path": "output/2026-10-13-permission-pdf-ui-integration/root-build-ready.json",
+      "bytes": 449,
+      "sha256": "4d1f399412f3720ec8bbc72961274362ff07c8242804532d6b9220af52f63cb4"
+    },
+    "static": {
+      "actualExit": 0,
+      "completionChunk": "da750f",
+      "checks": [
+        {
+          "name": "exactly one bundled PDF coordinator worker",
+          "pass": true
+        },
+        {
+          "name": "exactly one bundled PDF parser worker",
+          "pass": true
+        },
+        {
+          "name": "coordinator points to exact emitted parser JS filename",
+          "pass": true
+        },
+        {
+          "name": "no raw PDF TypeScript worker assets",
+          "pass": true
+        },
+        {
+          "name": "nonempty coordinator/parser JS artifacts",
+          "pass": true
+        }
+      ],
+      "raw": {
+        "path": "output/2026-10-13-permission-pdf-ui-integration/built-static.json",
+        "bytes": 18780,
+        "sha256": "8a00ccfd2e88317c8294e7062f65137890d46bb2c69a4b2fa3008d780ce01376"
+      }
+    },
+    "engines": [
+      {
+        "engine": "chromium",
+        "actualExit": 0,
+        "completionChunk": "6309f2",
+        "passed": true,
+        "checks": [
+          {
+            "name": "01",
+            "expected": "inputReady",
+            "pass": true,
+            "actualKind": "inputReady",
+            "actualPages": 3
+          },
+          {
+            "name": "05",
+            "expected": "incomplete",
+            "pass": true,
+            "actualKind": "error",
+            "actualCode": "incomplete"
+          },
+          {
+            "name": "04",
+            "expected": "encrypted",
+            "pass": true,
+            "actualKind": "error",
+            "actualCode": "encrypted"
+          }
+        ],
+        "servedBuiltBytes": [
+          {
+            "path": "dist/assets/pdf_input.worker-muY3t-JL.js",
+            "status": 200,
+            "sha256": "23b06f45c87e1ff319befd7e56929404b8461286ef1fda48766fbf86a48b81f0"
+          },
+          {
+            "path": "dist/assets/pdf_input_parser.worker-ClIbMFUy.js",
+            "status": 200,
+            "sha256": "05b4c9b77d9e57e0e16755eca631499b593aadb5068e106d4fe25551812028e6"
+          }
+        ],
+        "inputs": 107,
+        "stable": true,
+        "errors": [],
+        "externalRequests": [],
+        "raw": {
+          "path": "output/2026-10-13-permission-pdf-ui-integration/chromium-built-run01.json",
+          "bytes": 25558,
+          "sha256": "0f3f31c9eef2ce3ded33b9f1a827c95ea37651e4bbfc5479f5211f71dfaa86db"
+        }
+      },
+      {
+        "engine": "webkit",
+        "actualExit": 0,
+        "completionChunk": "62a810",
+        "passed": true,
+        "checks": [
+          {
+            "name": "01",
+            "expected": "inputReady",
+            "pass": true,
+            "actualKind": "inputReady",
+            "actualPages": 3
+          },
+          {
+            "name": "05",
+            "expected": "incomplete",
+            "pass": true,
+            "actualKind": "error",
+            "actualCode": "incomplete"
+          },
+          {
+            "name": "04",
+            "expected": "encrypted",
+            "pass": true,
+            "actualKind": "error",
+            "actualCode": "encrypted"
+          }
+        ],
+        "servedBuiltBytes": [
+          {
+            "path": "dist/assets/pdf_input.worker-muY3t-JL.js",
+            "status": 200,
+            "sha256": "23b06f45c87e1ff319befd7e56929404b8461286ef1fda48766fbf86a48b81f0"
+          },
+          {
+            "path": "dist/assets/pdf_input_parser.worker-ClIbMFUy.js",
+            "status": 200,
+            "sha256": "05b4c9b77d9e57e0e16755eca631499b593aadb5068e106d4fe25551812028e6"
+          }
+        ],
+        "inputs": 107,
+        "stable": true,
+        "errors": [],
+        "externalRequests": [],
+        "raw": {
+          "path": "output/2026-10-13-permission-pdf-ui-integration/webkit-built-run01.json",
+          "bytes": 25556,
+          "sha256": "859d7eda3305bee729f0d155f5dc87a7f0885e314050f696958c0cc82718eda0"
+        }
+      }
+    ],
+    "scope": "Unchanged actual root-built coordinator and descendant parser JS. HTTP response bytes equal dist hashes. Fixed 3-page positive fixture, damaged late-page rejection, encrypted rejection. No additional build or Vite transformations."
+  },
+  "finalPermissionSourceFreeze": [
+    {
+      "path": "src/runtime/permission_effect.ts",
+      "matchesFrozen": true,
+      "sha256": "8f0a39804c9902c09dcc51433f6a862bbaef36bb0fdd05603fcd6ec97f2f4b44"
+    },
+    {
+      "path": "src/runtime/permission_effect.test.ts",
+      "matchesFrozen": true,
+      "sha256": "6347e4378f05df41accad8b36df025b300df6fdd0090045e489c0cdb73292685"
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "matchesFrozen": true,
+      "sha256": "5e1a3649c4f7bd6fe5caebf5f3db5a8590286e4f5941fc35f6f04a4563cc8758"
+    },
+    {
+      "path": "src/runtime/session_open_types.ts",
+      "matchesFrozen": true,
+      "sha256": "1df3f61b4468520132e9aff0797999a70f8d27efea4f60cbcee199977e74abfe"
+    },
+    {
+      "path": "src/runtime/session_configuration.ts",
+      "matchesFrozen": true,
+      "sha256": "c6c084ef0ecb6a67e3ac3408893569731e1f696d54d3db2ab880c7a3ec877b29"
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "matchesFrozen": true,
+      "sha256": "58d9b014fa6948da000b8df3077a5f02254d87dd84553d439d3cf441589b96e4"
+    },
+    {
+      "path": "src/runtime/composer_strings.ts",
+      "matchesFrozen": true,
+      "sha256": "bf2f1dcd5e6faa7eead4721a7933ed9fd71d0bd6623818705bba346de68eb223"
+    },
+    {
+      "path": "src/runtime/queue.ts",
+      "matchesFrozen": true,
+      "sha256": "514003e7f3e8450ed35ec1f16410f8700274ec8a3a8139a1ad4796a60218a377"
+    },
+    {
+      "path": "src/runtime/prompt_blocks.ts",
+      "matchesFrozen": true,
+      "sha256": "9b8ba5964e479edcf48dab96603a385a75a65be85fac32a24d68c632fa7b1e9a"
+    },
+    {
+      "path": "src/components/PermissionControl.tsx",
+      "matchesFrozen": true,
+      "sha256": "e346a07f0131cb8338262ec25085cd39c242610d921df6a4880d511deaf9173c"
+    },
+    {
+      "path": "src/components/PermissionControl.permission-effect.test.tsx",
+      "matchesFrozen": true,
+      "sha256": "9815982ef99115896ba4cbda33de91abf765764c1bc328b3f4e6b3e7ff2dfdc7"
+    },
+    {
+      "path": "src/runtime/sessions.permission-scope.test.ts",
+      "matchesFrozen": true,
+      "sha256": "5786a56f0a08785fe8dec170aebc6999aab1322d0fc4d5d7e00ea7b69029a699"
+    }
+  ],
+  "serverCleanup": [
+    {
+      "pid": 85634,
+      "port": 1534,
+      "kind": "owned Vite harness",
+      "requestedSignal": "SIGTERM",
+      "actualExit": 143,
+      "completionChunk": "e3c8be"
+    },
+    {
+      "pid": 93817,
+      "port": 1535,
+      "kind": "owned byte-preserving static built server",
+      "requestedSignal": "SIGTERM",
+      "actualExit": 0,
+      "completionChunk": "b5be21"
+    }
+  ],
+  "oldServer1532Untouched": true,
+  "boundaries": [
+    "Does not establish actual OS/file/network permission restoration or actual backend command handling; backend independent and seven engineering gates remain root-owned.",
+    "Does not establish installed App PDF reading, real Agent receipt, cold restore or user data preservation.",
+    "Prior 45/255 narrow and PDF74 results retain original source/scenario coverage; none reclassified as this new32 UI or3 built smoke evidence.",
+    "Built positive fixture is a smoke check of3pages, tail,partial and warnings; not all PDF semantics or resource-memory certification."
+  ],
+  "reproduction": {
+    "ui": [
+      "node output/2026-10-13-permission-pdf-ui-integration/serve.mjs",
+      "node output/2026-10-13-permission-pdf-ui-integration/run.mjs chromium run05",
+      "node output/2026-10-13-permission-pdf-ui-integration/run.mjs webkit run05"
+    ],
+    "built": [
+      "Use only completed root build referenced by root-build-ready.json; no extra build",
+      "node output/2026-10-13-permission-pdf-ui-integration/serve-built.mjs",
+      "node output/2026-10-13-permission-pdf-ui-integration/built-smoke.mjs chromium run02",
+      "node output/2026-10-13-permission-pdf-ui-integration/built-smoke.mjs webkit run02"
+    ],
+    "outputPolicy": "Each run writes with flag wx and requires a new run label; preserve previous failures and receipts."
+  }
+}

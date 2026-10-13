@@ -5,7 +5,7 @@ import {
   PREVIEW_WAIT_MS,
   VISUAL_PREVIEW_STRINGS as S,
 } from "./visual_preview";
-let activeRenders = 0;
+import { tryAcquirePdfWorkerSlot } from "./pdf_worker_slots";
 
 /** The app receives pixels only. Parsing and drawing both live in the owned
  * worker tree, without a document, app API, annotation DOM or PDF actions. */
@@ -25,8 +25,8 @@ export async function renderPdfPage(
     typeof ImageBitmap === "undefined"
   )
     throw new Error(S.unsupported);
-  if (activeRenders >= 2) throw new Error(S.busy);
-  activeRenders++;
+  const release = tryAcquirePdfWorkerSlot("preview");
+  if (!release) throw new Error(S.busy);
   let worker: Worker | undefined;
   let timer: ReturnType<typeof setTimeout> | undefined;
   let cancel: (() => void) | undefined;
@@ -134,7 +134,7 @@ export async function renderPdfPage(
     try {
       worker?.terminate();
     } finally {
-      activeRenders--;
+      release();
     }
   }
 }

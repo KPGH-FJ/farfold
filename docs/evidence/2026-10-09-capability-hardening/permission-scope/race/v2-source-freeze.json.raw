@@ -1,0 +1,21 @@
+{
+  "frozenAtUtc": "2026-10-13T07:39:10.596068+00:00",
+  "inputCount": 439,
+  "inputsStillMatchRegression": true,
+  "changedInputs": [],
+  "files": {
+    "src-tauri/src/acp_client/pump.rs": {
+      "sha256": "250c3fb6ad7b1d7aefb8907a8633660f01d86e1b9bd618f68167a16a311903df",
+      "lines": 1476
+    },
+    "src-tauri/src/acp_client/mod.rs": {
+      "sha256": "9e31e194d23d4bcc0af965e3b39d159d64df2c8c80e9063086b9c75a65500a7f",
+      "lines": 132
+    },
+    "src-tauri/src/acp_client/prompt_config_race_tests.rs": {
+      "sha256": "85e995d9301ce69db3b1919c5b0cf4db1efea2956f41cca809a461beb7a603a9",
+      "lines": 282
+    }
+  },
+  "sourceWriteOwnership": "released to root; no further source edits"
+}

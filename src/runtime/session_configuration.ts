@@ -11,6 +11,7 @@ import {
 import type { ThreadState } from "./session_types";
 import type { ServiceIdentity } from "./credentials";
 import { STRINGS } from "./strings";
+import { replacePermissionEffect } from "./permission_effect";
 
 interface Change {
   thread: ThreadState;
@@ -26,6 +27,7 @@ export interface ConfirmedConfigUpdate {
   configCheck: ConfigCheck;
   permissionConfigId: string | null;
   permissionState: ThreadState["permissionState"];
+  permissionEffect?: unknown;
   service: ServiceIdentity | null;
 }
 
@@ -189,6 +191,7 @@ export class SessionConfiguration {
           applyConfigCheck(s, updated.configCheck);
           s.service = updated.service ?? undefined;
           s.permissionConfigId = updated.permissionConfigId ?? undefined;
+          replacePermissionEffect(s, updated.permissionEffect);
           if (
             this.hooks.permissionRevision(key) === revision ||
             updated.permissionState !== "ready"

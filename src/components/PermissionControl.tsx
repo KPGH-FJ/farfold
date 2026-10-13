@@ -1,5 +1,4 @@
-import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { pendingPreparationRead } from "../runtime/agent_preparation";
 import { ShieldCheckIcon } from "@phosphor-icons/react";
 import {
@@ -14,6 +13,13 @@ import { LIBRARY } from "../runtime/library_strings";
 import { uiError } from "../runtime/ui_error";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { WorkspacePopover } from "./WorkspacePopover";
+import { hasNextOrdinaryPermissionEffect } from "../runtime/permission_effect";
+
+interface PermissionReview {
+  owner: ThreadState;
+  choice: ConfigChoice;
+  options: string;
+}
 
 /** Only the access layer can identify a verified permission setting. */
 export function PermissionControl({
@@ -25,13 +31,25 @@ export function PermissionControl({
    *  so composer siblings do not reflow (W3-2). */
   inactive?: boolean;
 }) {
-  const [choice, setChoice] = useState<ConfigChoice | null>(null);
-  const [reviewedOptions, setReviewedOptions] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [review, setReview] = useState<PermissionReview | null>(null);
+  const [failure, setFailure] = useState<{
+    owner: ThreadState;
+    message: string;
+  } | null>(null);
+  const owner = useRef(thread);
+  const currentReview = useRef(review);
+  owner.current = thread;
+  const changeReview = (next: PermissionReview | null) => {
+    currentReview.current = next;
+    setReview(next);
+  };
   useEffect(() => {
-    setChoice(null);
-    setError(null);
-  }, [thread.key]);
+    changeReview(null);
+    setFailure(null);
+  }, [thread]);
+  const activeReview = review?.owner === thread ? review : null;
+  const choice = activeReview?.choice;
+  const error = failure?.owner === thread ? failure.message : null;
   const option = thread.configOptions.find(
     (item) => item.id === thread.permissionConfigId,
   );
@@ -42,7 +60,9 @@ export function PermissionControl({
     description: option?.description,
     options: option?.options,
   });
-  const staleChoice = choice && reviewedOptions !== optionsIdentity;
+  const staleChoice = choice && activeReview?.options !== optionsIdentity;
+  const nextMessage = hasNextOrdinaryPermissionEffect(thread);
+  const scopeNote = nextMessage ? C.permissionNextScope : C.permissionScope;
   const blocked =
     inactive ||
     thread.configuring ||
@@ -68,22 +88,39 @@ export function PermissionControl({
             : C.permissionUnknown;
   const apply = async () => {
     if (thread.identity === "draft" && pendingPreparationRead(thread)) return;
-    if (!choice || blocked || !option || unavailable) return;
+    if (
+      !activeReview ||
+      !choice ||
+      blocked ||
+      !option ||
+      unavailable ||
+      threads.thread(thread.key) !== thread
+    )
+      return;
     if (
       staleChoice ||
       !option.options.some((item) => item.value === choice.value)
     ) {
-      setError(C.permissionChanged);
+      setFailure({ owner: thread, message: C.permissionChanged });
       return;
     }
-    setError(null);
+    const stillCurrent = () =>
+      owner.current === thread &&
+      threads.thread(thread.key) === thread &&
+      currentReview.current === activeReview;
+    setFailure(null);
     try {
       await threads.setConfig(thread.key, option.id, choice.value);
-      if (threads.thread(thread.key)?.permissionState !== "ready")
+      if (!stillCurrent()) return;
+      if (thread.permissionState !== "ready")
         throw new Error(C.permissionFailure);
-      setChoice(null);
+      changeReview(null);
     } catch (reason) {
-      setError(uiError(reason, C.permissionFailure));
+      if (stillCurrent())
+        setFailure({
+          owner: thread,
+          message: uiError(reason, C.permissionFailure),
+        });
     }
   };
   return (
@@ -122,12 +159,17 @@ export function PermissionControl({
                   className="btn btn-ghost"
                   disabled={blocked}
                   onClick={() => {
-                    setError(null);
-                    void threads
-                      .reconnect(thread.key)
-                      .catch((reason) =>
-                        setError(uiError(reason, C.permissionFailure)),
-                      );
+                    setFailure(null);
+                    void threads.reconnect(thread.key).catch((reason) => {
+                      if (
+                        owner.current === thread &&
+                        threads.thread(thread.key) === thread
+                      )
+                        setFailure({
+                          owner: thread,
+                          message: uiError(reason, C.permissionFailure),
+                        });
+                    });
                   }}
                 >
                   {C.permissionReconnect}
@@ -152,9 +194,12 @@ export function PermissionControl({
                       item.value === option.currentValue
                     }
                     onClick={() => {
-                      setChoice(item);
-                      setReviewedOptions(optionsIdentity);
-                      setError(null);
+                      changeReview({
+                        owner: thread,
+                        choice: item,
+                        options: optionsIdentity,
+                      });
+                      setFailure(null);
                       close();
                     }}
                   >
@@ -162,21 +207,27 @@ export function PermissionControl({
                       {item.name}
                       {thread.permissionState === "ready" &&
                         item.value === option.currentValue && (
-                          <small> ✓ {R.currentPermission}</small>
+                          <small>
+                            {" "}
+                            ✓{" "}
+                            {nextMessage
+                              ? C.permissionNextMessage
+                              : C.permissionSelected}
+                          </small>
                         )}
                     </strong>
                     {item.description && <span>{item.description}</span>}
                   </button>
                 ))}
             </div>
-            <p className="workspace-control-note">{C.permissionScope}</p>
+            <p className="workspace-control-note">{scopeNote}</p>
           </>
         )}
       </WorkspacePopover>
       {choice && (
         <WorkspaceDialog
           title={C.permissionConfirm}
-          onClose={() => setChoice(null)}
+          onClose={() => changeReview(null)}
         >
           <p>
             <strong>{choice.name}</strong>
@@ -184,7 +235,7 @@ export function PermissionControl({
           {(choice.description ?? option?.description) && (
             <p>{choice.description ?? option?.description}</p>
           )}
-          <p className="workspace-control-note">{C.permissionScope}</p>
+          <p className="workspace-control-note">{scopeNote}</p>
           {(error || staleChoice) && (
             <p role="alert" className="ac-error">
               {staleChoice ? C.permissionChanged : error}
@@ -194,7 +245,7 @@ export function PermissionControl({
             <button
               type="button"
               className="btn btn-ghost"
-              onClick={() => setChoice(null)}
+              onClick={() => changeReview(null)}
             >
               {LIBRARY.cancel}
             </button>
@@ -206,7 +257,9 @@ export function PermissionControl({
             >
               {thread.permissionState === "changing"
                 ? C.permissionChanging
-                : C.permissionApply}
+                : nextMessage
+                  ? C.permissionApplyNext
+                  : C.permissionApply}
             </button>
           </div>
         </WorkspaceDialog>

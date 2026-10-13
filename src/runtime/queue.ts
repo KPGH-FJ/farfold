@@ -26,7 +26,8 @@ export interface PromptAdmission {
     | "config_record_failed"
     | "service_unavailable"
     | "embedded_context_unsupported"
-    | "embedded_context_unknown";
+    | "embedded_context_unknown"
+    | "permission_scope_unverified";
 }
 export function pauseQueue(s: ThreadState, reason: QueuePause): void {
   forgetConfigurationPause(s);

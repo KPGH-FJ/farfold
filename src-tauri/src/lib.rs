@@ -351,6 +351,7 @@ pub fn run() {
                 file_delivery_commands::file_delivery_read_visual,
                 file_delivery_commands::file_delivery_read_workbook,
                 file_delivery_commands::file_delivery_read_docx,
+                file_delivery_commands::file_delivery_read_pdf_input,
                 file_archive_commands::file_archive_prepare,
                 file_archive_commands::file_archive_start,
                 file_archive_commands::file_archive_status,

@@ -1,0 +1,208 @@
+{
+  "schema": 1,
+  "purpose": "Independent raw authoring facts and required semantics. Not generated from production parser or future implementation.",
+  "fixtures": {
+    "01-pages-hidden-crop-ocr.pdf": {
+      "kind": "positiveDecodedTextWithExplicitScope",
+      "pageCount": 3,
+      "sourceTokensByPage": [
+        [
+          "PAGE_ONE_VISIBLE",
+          "INVISIBLE_TR3",
+          "ZERO_ALPHA",
+          "WHITE_ON_WHITE",
+          "LOCAL_CLIP_HIDDEN",
+          "OUTSIDE_CROP",
+          "OFF_LAYER_TEXT"
+        ],
+        [
+          "PAGE_TWO_ROTATED",
+          "OCR_LABEL_NOT_ON_IMAGE"
+        ],
+        [
+          "PAGE_THREE_TAIL"
+        ]
+      ],
+      "pageRotations": [
+        0,
+        90,
+        0
+      ],
+      "visibilityFromAuthoring": {
+        "PAGE_ONE_VISIBLE": "visible",
+        "INVISIBLE_TR3": "Tr=3, invisible",
+        "ZERO_ALPHA": "alpha=0",
+        "WHITE_ON_WHITE": "white on white",
+        "LOCAL_CLIP_HIDDEN": "outside local 1x1 clip",
+        "OUTSIDE_CROP": "inside MediaBox but outside CropBox",
+        "OFF_LAYER_TEXT": "OCG default OFF",
+        "OCR_LABEL_NOT_ON_IMAGE": "invisible saved label, not words depicted by the bitmap"
+      },
+      "rawContentOracle": "All listed tokens are physically saved PDF strings. API extraction may omit OUTSIDE_CROP; do not label the result all stored strings or visible text. No script may execute.",
+      "independentExpectedVisual": [
+        "page1 only PAGE_ONE_VISIBLE",
+        "page2 rotated PAGE_TWO_ROTATED and a colored 8x8 raster; no OCR label",
+        "page3 PAGE_THREE_TAIL"
+      ],
+      "claimLimits": [
+        "No OCR accuracy claim",
+        "No guaranteed visual visibility or human reading order"
+      ],
+      "path": "fixtures/01-pages-hidden-crop-ocr.pdf",
+      "sha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f",
+      "bytes": 2554,
+      "rawContentRefs": [
+        {
+          "path": "raw-content/01-pages-hidden-crop-ocr-page1.bin",
+          "sha256": "5fa57b8776566fbacd58f8a7fd115e8c703b98ac015fe69346314a1460c9cf5b",
+          "bytes": 476
+        },
+        {
+          "path": "raw-content/01-pages-hidden-crop-ocr-page2.bin",
+          "sha256": "607b28b701da4324730f918660c23c8da0f884c8ae419c2af257936dd3c5d1fe",
+          "bytes": 161
+        },
+        {
+          "path": "raw-content/01-pages-hidden-crop-ocr-page3.bin",
+          "sha256": "0869c81a628fce9f0dce9ec03ddaf28165840629e3d587e636655fe8935b6098",
+          "bytes": 60
+        }
+      ]
+    },
+    "02-encoding-ligature-unmapped.pdf": {
+      "kind": "encodedPositiveAndUnknownMapping",
+      "pageCount": 1,
+      "rawCodes": [
+        {
+          "font": "F1",
+          "hex": "41424344",
+          "unicodeMapping": [
+            "fi",
+            "ﬁ",
+            "中",
+            "🚀"
+          ]
+        },
+        {
+          "font": "F2",
+          "hex": "43",
+          "unicodeMapping": null
+        }
+      ],
+      "expectedMappedText": "fiﬁ中🚀",
+      "expectedMappedTextUtf8Bytes": 12,
+      "claimLimits": [
+        "disableNormalization=true preserves mapped ligature if parser does",
+        "F2 has no Unicode map; never assert visual glyph meaning from fallback returned code",
+        "No Unicode normalization, OCR or guessed replacement"
+      ],
+      "path": "fixtures/02-encoding-ligature-unmapped.pdf",
+      "sha256": "d7eddd1a926105af9dc1ae3556d8f528217819be080707218fe110969e794e16",
+      "bytes": 1763,
+      "rawContentRefs": [
+        {
+          "path": "raw-content/02-encoding-ligature-unmapped-page1.bin",
+          "sha256": "da1413d2242e5e8856b6ea1a9f9ad4cf6a02491198dd82655b24fe7bc34b1335",
+          "bytes": 74
+        },
+        {
+          "path": "raw-content/02-encoding-ligature-unmapped-to-unicode.bin",
+          "sha256": "0abf59920de457412fe01da51cb4671009b6cbc68c237e5277445fe5f87b7fbf",
+          "bytes": 374
+        },
+        {
+          "path": "raw-content/02-encoding-ligature-unmapped-glyph.bin",
+          "sha256": "6e0881162708973ed16d687d3da7cdb7c4abb48b70d89d5b07cb9314da4cc896",
+          "bytes": 81
+        }
+      ]
+    },
+    "03-image-only.pdf": {
+      "kind": "noTextNegative",
+      "pageCount": 1,
+      "sourceTokensByPage": [
+        []
+      ],
+      "expectedInputResult": "noText; no confirm; original draft preserved; no OCR invoked",
+      "path": "fixtures/03-image-only.pdf",
+      "sha256": "69cace2daec2442c8704e4bb683011a4ca67144bccca9cf7a218ace6ab764413",
+      "bytes": 700,
+      "rawContentRefs": [
+        {
+          "path": "raw-content/03-image-only-page1.bin",
+          "sha256": "7625720dcc43c73add2dc8ca397740c8e4b430b0975490f94deb88259794c77d",
+          "bytes": 34
+        }
+      ]
+    },
+    "04-encrypted.pdf": {
+      "kind": "encryptionNegative",
+      "path": "fixtures/04-encrypted.pdf",
+      "sha256": "87fd1dfc347a4b9dae8276b1c2691d8fbd73dff5672f14ad246001b813784e01",
+      "bytes": 2998,
+      "pageCount": 3,
+      "expectedInputResult": "encrypted; no password prompt/persistence; original draft preserved",
+      "publicTestOnlyPassword": "fixture-password",
+      "derivedOnlyFromOwnFixture": "01-pages-hidden-crop-ocr.pdf"
+    },
+    "05-late-page-damaged.pdf": {
+      "kind": "lateFailureNegative",
+      "pageCount": 3,
+      "invalidPart": "page2 stream claims FlateDecode but bytes are invalid",
+      "sourceTokensByPage": [
+        [
+          "GOOD_FIRST_PAGE_NOT_SUCCESS"
+        ],
+        [],
+        [
+          "GOOD_THIRD_PAGE_NOT_SUCCESS"
+        ]
+      ],
+      "expectedInputResult": "invalid/incomplete whole read; no prefix/suffix success and no confirm; warning must invalidate even if strict promise resolves",
+      "path": "fixtures/05-late-page-damaged.pdf",
+      "sha256": "06d1431bfaba18c80aa5abc81c3fd6a12da4c453eaca319d49cbe4d6e470828a",
+      "bytes": 1186,
+      "rawContentRefs": [
+        {
+          "path": "raw-content/05-late-page-damaged-page1.bin",
+          "sha256": "b4cd2e186ca2f76959ff0a4101f0c433d9f0e8756b8fd82fe09b910ed5771611",
+          "bytes": 72
+        },
+        {
+          "path": "raw-content/05-late-page-damaged-page2-invalid.bin",
+          "sha256": "caae6ea60258f89d734196d0960e7203598839c7a0009eb127fbc7b1fb49d1a8",
+          "bytes": 23
+        },
+        {
+          "path": "raw-content/05-late-page-damaged-page3.bin",
+          "sha256": "f089735d763abeed86ea74f22e8d971760c1e661e8f2eab63a219bfb280d2d5b",
+          "bytes": 72
+        }
+      ]
+    },
+    "06-whole-utf8-over-limit.pdf": {
+      "kind": "wholeUtf8LimitNegative",
+      "pageCount": 2,
+      "savedASCIITextBytesPerPage": 150000,
+      "savedASCIITextBytesTotal": 300000,
+      "expectedInputResult": "textLimit on global whole text including generated structure; never per-page reset, truncation or first-page success",
+      "independentExpectedVisual": "1500 overlapping same-position lines per page are intentional, not a polished document",
+      "path": "fixtures/06-whole-utf8-over-limit.pdf",
+      "sha256": "90eff15f92b7e56f0c45d29c1f7cbe23d94c8b6719552cdb21bc7904b3325723",
+      "bytes": 435787,
+      "rawContentRefs": [
+        {
+          "path": "raw-content/06-whole-utf8-over-limit-page1.bin",
+          "sha256": "3c52ecfa2940838527f109c486bd908814fdb1b2383cbb44edd90f731d75cc8a",
+          "bytes": 217500
+        },
+        {
+          "path": "raw-content/06-whole-utf8-over-limit-page2.bin",
+          "sha256": "3c52ecfa2940838527f109c486bd908814fdb1b2383cbb44edd90f731d75cc8a",
+          "bytes": 217500
+        }
+      ]
+    }
+  },
+  "appAgentUserDataAccessed": false
+}

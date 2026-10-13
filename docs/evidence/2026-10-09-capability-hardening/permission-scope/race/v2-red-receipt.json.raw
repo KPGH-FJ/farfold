@@ -1,0 +1,20 @@
+{
+  "stage": "v2-red",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "prompt_config_race",
+    "--",
+    "--nocapture"
+  ],
+  "started": "2026-10-13T07:37:40.122886+00:00",
+  "actualExit": 101,
+  "elapsedSeconds": 17.645,
+  "inputCount": 439,
+  "inputsStable": true,
+  "changedInputs": [],
+  "log": "/Users/tw/Desktop/farfold/output/2026-10-13-prompt-config-race/v2-red.log"
+}

@@ -34,6 +34,7 @@ pub mod manager;
 mod model_guard;
 mod mutation;
 mod operations;
+mod permission_effect;
 mod permission_guard;
 pub mod preparation;
 pub mod preparation_actions;
@@ -90,6 +91,15 @@ mod route_registration_tests;
 
 #[cfg(test)]
 mod permission_guard_tests;
+
+#[cfg(test)]
+mod permission_scope_guard_tests;
+
+#[cfg(test)]
+mod permission_effect_tests;
+
+#[cfg(test)]
+mod prompt_config_race_tests;
 
 #[cfg(test)]
 mod permission_request_tests;

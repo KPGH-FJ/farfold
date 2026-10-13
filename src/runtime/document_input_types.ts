@@ -17,6 +17,16 @@ import {
   checkedXlsxInputScope,
   checkedXlsxInputWarnings,
 } from "./xlsx_input_validation";
+import {
+  PDF_INPUT_LIMITS,
+  type PdfInputFailure,
+  type PdfInputScope,
+  type PdfInputWarning,
+} from "./pdf_input_types";
+import {
+  checkedPdfInputScope,
+  checkedPdfInputWarnings,
+} from "./pdf_input_validation";
 
 export const DOCUMENT_INPUT_MAX_BYTES = 256 * 1024;
 /** Retained unknown text remains user input, never dispatch authority. */
@@ -25,6 +35,7 @@ export const DOCUMENT_INPUT_RETAINED_MAX_BYTES = 32 * 1024 * 1024;
 export type DocumentInputFailure =
   | DocxFailure
   | XlsxInputFailure
+  | PdfInputFailure
   | "noText"
   | "textLimit"
   | "sourceUnknown"
@@ -59,7 +70,15 @@ export interface LocalXlsxDocumentText extends LocalDocumentTextBase {
   scope: XlsxInputScope;
   warnings: XlsxInputWarning[];
 }
-export type LocalDocumentText = LocalDocxDocumentText | LocalXlsxDocumentText;
+export interface LocalPdfDocumentText extends LocalDocumentTextBase {
+  format: "pdf";
+  selection: "read-decoded-page-text";
+  partial: true;
+  scope: PdfInputScope;
+  warnings: PdfInputWarning[];
+}
+export type LocalDocumentText =
+  LocalDocxDocumentText | LocalXlsxDocumentText | LocalPdfDocumentText;
 
 export interface ApprovedDocumentText {
   text: string;
@@ -153,6 +172,13 @@ export function parseLocalDocumentText(
     value &&
     typeof value === "object" &&
     "format" in value &&
+    value.format === "pdf"
+  )
+    return parseLocalPdfDocumentText(value);
+  if (
+    value &&
+    typeof value === "object" &&
+    "format" in value &&
     value.format === "xlsx"
   )
     return parseLocalXlsxDocumentText(value);
@@ -209,6 +235,48 @@ export function parseLocalDocumentText(
     warnings,
     imageReferences: integer(item.imageReferences, 0, DOCX_LIMITS.images),
   };
+}
+
+function parseLocalPdfDocumentText(value: unknown): LocalPdfDocumentText {
+  const item = object(value, [
+    "schema",
+    "format",
+    "source",
+    "textSha256",
+    "utf8Bytes",
+    "selection",
+    "partial",
+    "partialSelected",
+    "scope",
+    "warnings",
+  ]);
+  if (
+    item.schema !== 1 ||
+    item.format !== "pdf" ||
+    item.selection !== "read-decoded-page-text" ||
+    item.partial !== true ||
+    typeof item.partialSelected !== "boolean"
+  )
+    invalid();
+  try {
+    const scope = checkedPdfInputScope(item.scope),
+      warnings = checkedPdfInputWarnings(item.warnings);
+    if (warnings.some((warning) => warning.count > scope.pageCount)) invalid();
+    return {
+      schema: 1,
+      format: "pdf",
+      selection: "read-decoded-page-text",
+      source: source(item.source, PDF_INPUT_LIMITS.sourceBytes),
+      textSha256: sha(item.textSha256),
+      utf8Bytes: integer(item.utf8Bytes, 1, DOCUMENT_INPUT_MAX_BYTES),
+      partial: true,
+      partialSelected: item.partialSelected,
+      scope,
+      warnings,
+    };
+  } catch {
+    invalid();
+  }
 }
 
 function parseLocalXlsxDocumentText(value: unknown): LocalXlsxDocumentText {

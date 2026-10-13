@@ -1,0 +1,168 @@
+{
+  "schema": 1,
+  "phase": "THREE_DIFFERENCE_CAUSAL_MECHANISMS_CHECKED_HISTORICAL_WRITERS_STILL_UNKNOWN",
+  "scope": {
+    "liveDatabaseOpened": false,
+    "agentStarted": false,
+    "cargoRun": false,
+    "productionSourceModified": false,
+    "oldEvidenceModified": false,
+    "privateBodyAccountCredentialsEmitted": false,
+    "writeScope": "output/2026-10-13-data-difference-localization"
+  },
+  "method": "systematic-debugging: read exact failure, trace candidate writers, compare historical source, controlled synthetic checks, retain unknown attribution",
+  "findings": [
+    {
+      "difference": "Codex agents.updated_at",
+      "historical": "Only updated_at differs; other columns exact",
+      "mechanism": "A successful non-candidate connection without explicit service calls set_agent_handshake; the SQL advances updated_at even for identical cached handshake. Exact SQL reproduced against synthetic SQLite. set_agent_env can also advance timestamp but current production call search found only tests. Launch replacement and later handshake could leave identical final data as well.",
+      "source": [
+        "src-tauri/src/acp_client/manager.rs:746",
+        "src-tauri/src/meta_store.rs:296",
+        "src-tauri/src/meta_store.rs:327"
+      ],
+      "concreteHistoricalWriter": "UNKNOWN: no per-write trace",
+      "impact": "No old row/config loss observed. Timestamp is not purely decorative: extension_inventory same_selection and history_search Source.current use it to revoke prior source selection. Actual UI disruption from this historical update untested.",
+      "fixDecision": "No corruption fix justified by current evidence; do not globally exempt updated_at. If reducing metadata churn, separately test idempotent handshake persistence with selection ABA/revocation protections."
+    },
+    {
+      "difference": "One new controlled DOCX dismissed_sessions row",
+      "historical": "Old 170 tombstones and 134 session rows exact; new row shares controlled DOCX cwd but its exact native ID matches no before or after indexed session",
+      "mechanism": "EmptyState pair cleanup can call threads.discardDraft; actual discardEmptyDraft close/dismiss IPC verified with synthetic state. Backend dismiss_session inserts an idempotent exact tombstone, does not delete sessions or Agent-owned history. session_list filters the exact tombstone. Explicit history import can remove it.",
+      "source": [
+        "src/components/EmptyState.tsx:503",
+        "src/components/EmptyState.tsx:622",
+        "src/runtime/sessions.ts:1415",
+        "src/runtime/session_draft_cleanup.ts:75",
+        "src-tauri/src/acp_client/session_commands.rs:675",
+        "src-tauri/src/meta_store.rs:590",
+        "src-tauri/src/acp_client/session_commands.rs:474"
+      ],
+      "concreteHistoricalWriter": "UNKNOWN: no native ID tied to actual UI cleanup in existing observations",
+      "impact": "No old indexed session loss. One external-list identity can be hidden. Cannot certify that it was truly never prompted or contained no Agent-owned content without an authoritative record for that exact identity. Synthetic nonstrict close failure still dispatches dismiss, so a tombstone is not close-success evidence.",
+      "fixDecision": "Do not remove tombstone or alter historical database. No data-loss repair justified yet. Retain exact-identity unknown; on a future explicitly controlled new-draft reproduction record metadata-only create/close/dismiss receipts. Nonstrict failed-close behavior is an existing bounded uncertainty, not proven historical cause."
+    },
+    {
+      "difference": "Own DOCX composer sendPending absent to false",
+      "historical": "Exact scalar addition; whole ordinary input unchanged, all old feedback and queues retained",
+      "mechanism": "Actual production parseComposer maps omitted marker to false; serializeComposer writes it on the next dirty snapshot. Actual load and clean flush alone do not issue settings_set. Synthetic absent/false/true inputs passed; pending true remains true; no session dispatch occurs.",
+      "source": [
+        "src/runtime/drafts.ts:542",
+        "src/runtime/drafts.ts:574",
+        "src/runtime/draft_storage.ts:116",
+        "src/runtime/draft_storage.ts:142",
+        "src/components/Composer.tsx:581",
+        "src/components/Composer.tsx:596",
+        "src/components/Composer.tsx:621"
+      ],
+      "concreteHistoricalWriter": "UNKNOWN: normalization plus later save is proven possible, not proven as historical sequence. Source-validation rejection can happen before sendPending=true, so that UI failure alone cannot identify writer.",
+      "impact": "Absent and false carry the same editable/nonpending meaning on this path; true is not silently downgraded. No input loss or new send proven by this scalar.",
+      "fixDecision": "No functional data-loss repair needed for this scalar under tested semantics. Preserve original strict comparison failure; do not normalize old snapshots or quietly add a blanket exception."
+    }
+  ],
+  "verification": {
+    "historicalAndSyntheticSql": {
+      "actualExit": 0,
+      "completionChunk": "5658c6",
+      "cases": 3,
+      "compiledRustExecution": false
+    },
+    "frontendFirst": {
+      "actualExit": 1,
+      "completionChunk": "a8704c",
+      "passed": 12,
+      "failed": 3,
+      "cause": "Synthetic fixture omitted reviewRequired, so unrelated choice normalization invalidated overly broad equality assertion; exact original test/report retained; no production change"
+    },
+    "frontendRun02": {
+      "actualExit": 0,
+      "completionChunk": "733e9c",
+      "passed": 15,
+      "failed": 0,
+      "change": "Synthetic choice now explicitly supplies reviewRequired:false to isolate pending marker"
+    },
+    "finalFrozenReport": {
+      "passed": 15,
+      "failed": 0,
+      "reportSuccess": true,
+      "toolExitCode": "not surfaced by caller output-only wrapper; not asserted as new observed exit",
+      "frontendSourceInputsStable": 1018,
+      "explicitRefsStable": 11
+    },
+    "sameAsInstalled92aaCoreMechanisms": [
+      "drafts.ts",
+      "draft_storage.ts",
+      "session_draft_cleanup.ts",
+      "EmptyState.tsx",
+      "Composer.tsx",
+      "meta_store.rs",
+      "meta_store/schema.rs",
+      "acp_client/manager.rs"
+    ]
+  },
+  "retainedBoundaries": [
+    "Original full comparison exit 2 and three unlocated differences unchanged",
+    "No blanket timestamp/draft/tombstone waiver",
+    "New synthetic successful checks do not identify historical writers",
+    "No actual application or Agent journey performed",
+    "No general guarantee about complete user-data preservation outside captured old rows and reported fields"
+  ],
+  "recommendation": "Proceed with NEW-24 permission closure independently. These three differences currently provide no confirmed destructive data corruption; retain exact historical attribution unknown and improve metadata-only provenance in the next bounded validation, not live database edits.",
+  "refs": [
+    {
+      "path": "output/2026-10-13-data-difference-localization/snapshot-and-sql.json",
+      "sha256": "4585835d02f6feec4a1b3ccd748f4c805b71c6074c5c2672295221ec7768e43a",
+      "bytes": 2484
+    },
+    {
+      "path": "output/2026-10-13-data-difference-localization/frontend-tests.json",
+      "sha256": "1474d04128cbbcf865ae713f007c7e78719aba2745d8675eefbc57642de7b79c",
+      "bytes": 6259
+    },
+    {
+      "path": "output/2026-10-13-data-difference-localization/frontend-tests-run02.json",
+      "sha256": "a9f04d2a4ae2f5d9b97721c9d035ee548c1231b44bd595890b243fce1e1bfee8",
+      "bytes": 4966
+    },
+    {
+      "path": "output/2026-10-13-data-difference-localization/frontend-tests-final.json",
+      "sha256": "f1b4b9e47f106a1de101a418c52a07c62c2df802ff5651f5756f497bda5a91a2",
+      "bytes": 4956
+    },
+    {
+      "path": "output/2026-10-13-data-difference-localization/semantics.initial.test.ts.raw",
+      "sha256": "a915e71d25ba082d1296d0328ca74c11049b3362da68ce7f61eb5db7029dc647",
+      "bytes": 4533
+    },
+    {
+      "path": "output/2026-10-13-data-difference-localization/semantics.test.ts",
+      "sha256": "70404f4a68ffdeb2eaa1d8e6b234a437f78a21066ab275849279bbefdd9b80be",
+      "bytes": 4556
+    },
+    {
+      "path": "output/2026-10-13-data-difference-localization/localize.py",
+      "sha256": "d0c17cad95717d8327845da699c0ad9d011708d459738e16bc9e47b27f3ec1ff",
+      "bytes": 7274
+    },
+    {
+      "path": "output/2026-10-13-data-difference-localization/source-freeze-before.json",
+      "sha256": "5a047e399273f4c3378dc9325daf753424a8e0f5d2c8f264a99c3f1b50227750",
+      "bytes": 156838
+    },
+    {
+      "path": "output/2026-10-13-data-difference-localization/source-freeze-after.json",
+      "sha256": "b00fa0b3d479685a6c99c561351c1ef036e9c68589e51ec306024c002fd9e34b",
+      "bytes": 84
+    },
+    {
+      "path": "src-tauri/src/acp_client/extension_inventory/launch.rs",
+      "sha256": "3aee7124b225f738014c83cec6ee4027957818a63180605d9185a78b3228954f",
+      "bytes": 8561
+    },
+    {
+      "path": "src-tauri/src/acp_client/history_search/source.rs",
+      "sha256": "c06d60c9ba250fd90d2a07151a220d65f88afeeaf499538faaa155c06a554e3a",
+      "bytes": 8579
+    }
+  ]
+}

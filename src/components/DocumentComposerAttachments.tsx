@@ -24,6 +24,8 @@ import { localResourcePath } from "../runtime/file_delivery";
 import type { ApprovedDocumentText } from "../runtime/document_input_types";
 import type { DocumentSourceConfirmation } from "../runtime/document_source_error";
 import type { XlsxInputRequest } from "../runtime/xlsx_input_types";
+import type { PdfInputRequest } from "../runtime/pdf_input_types";
+import { documentMediaFormat } from "../runtime/document_media_type";
 
 type Target = ReturnType<typeof createDocumentInputTarget>;
 type Selection = {
@@ -31,6 +33,8 @@ type Selection = {
   target: Target;
   context: string;
   xlsx?: XlsxInputRequest;
+  pdf?: PdfInputRequest;
+  pdfScopeRequired: boolean;
 };
 const isSpreadsheet = (attachment: DraftAttachment) =>
   attachment.documentText?.local?.format === "xlsx" ||
@@ -43,6 +47,23 @@ function initialXlsxRequest(
   if (local?.format === "xlsx") return { mode: local.scope.mode };
   return isSpreadsheet(attachment)
     ? { mode: "visible-saved-cells" }
+    : undefined;
+}
+const isPdf = (attachment: DraftAttachment) =>
+  attachment.documentText?.local?.format === "pdf" ||
+  documentMediaFormat(attachment.mimeType) === "pdf" ||
+  /\.pdf$/i.test(attachment.name) ||
+  /\.pdf$/i.test(localResourcePath(attachment.uri ?? "") ?? "");
+function initialPdfRequest(
+  attachment: DraftAttachment,
+): PdfInputRequest | undefined {
+  const local = attachment.documentText?.local;
+  return local?.format === "pdf" &&
+    localResourcePath(attachment.uri ?? "") === local.source.path
+    ? {
+        mode: local.scope.mode,
+        includePossiblyInvisibleText: local.scope.includePossiblyInvisibleText,
+      }
     : undefined;
 }
 export function DocumentComposerAttachments({
@@ -63,6 +84,7 @@ export function DocumentComposerAttachments({
   const [selection, setSelection] = useState<Selection | null>(null);
   const [result, setResult] = useState<Review | null>(null);
   const [partialSelected, setPartialSelected] = useState(false);
+  const [pdfScopeSelected, setPdfScopeSelected] = useState(false);
   const [working, setWorking] = useState<"reading" | "confirming" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<DraftAttachment | null>(null);
@@ -71,9 +93,21 @@ export function DocumentComposerAttachments({
     attachmentId: string;
     documentText: ApprovedDocumentText;
   } | null>(null);
-  const live = useRef({ draftKey, context, enabled, selection });
-  live.current = { draftKey, context, enabled, selection };
+  const live = useRef({
+    draftKey,
+    context,
+    enabled,
+    selection,
+    result,
+    working,
+  });
+  live.current = { draftKey, context, enabled, selection, result, working };
+  const updateWorking = (value: typeof working) => {
+    live.current.working = value;
+    setWorking(value);
+  };
   const target = useRef<Target | null>(null);
+  const readsStarted = useRef(new WeakSet<Target>());
   const saveNotice = useRef<ReturnType<typeof watchDraftSave> | null>(null);
   const close = () => {
     saveNotice.current?.retire();
@@ -82,8 +116,9 @@ export function DocumentComposerAttachments({
     target.current = null;
     setSelection(null);
     setResult(null);
-    setWorking(null);
+    updateWorking(null);
     setError(null);
+    setPdfScopeSelected(false);
   };
   useEffect(() => {
     close();
@@ -102,9 +137,44 @@ export function DocumentComposerAttachments({
     if (selection && !selection.target.isCurrent()) close();
     if (view && !items.includes(view)) setView(null);
   }, [items, selection, view]);
-  const read = async (
+  const readSelected = async (selected: Selection) => {
+    const { attachment, target: ticket, xlsx, pdf } = selected;
+    if (
+      target.current !== ticket ||
+      !ticket.isCurrent() ||
+      !attachment.uri ||
+      selected.pdfScopeRequired ||
+      readsStarted.current.has(ticket)
+    )
+      return;
+    readsStarted.current.add(ticket);
+    try {
+      updateWorking("reading");
+      const task = readDocumentInput(
+        { uri: attachment.uri, name: attachment.name },
+        ticket.signal,
+        pdf ? { pdf } : xlsx ? { xlsx } : undefined,
+      );
+      draftPersistence.trackAttachment(task);
+      const readResult = await task;
+      if (target.current === ticket && ticket.isCurrent()) {
+        setResult(readResult);
+        updateWorking(null);
+      }
+    } catch (reason) {
+      // A cancelled read may reject after a newer review has started. Its
+      // callback belongs only to its original ticket, including failures.
+      if (target.current !== ticket) return;
+      if (ticket.isCurrent()) {
+        setError(documentInputFailure(reason));
+        updateWorking(null);
+      } else close();
+    }
+  };
+  const read = (
     attachment: DraftAttachment,
     xlsx: XlsxInputRequest | undefined = initialXlsxRequest(attachment),
+    pdf: PdfInputRequest | undefined = initialPdfRequest(attachment),
   ) => {
     if (!enabled || !attachment.uri || target.current || working) return;
     saveNotice.current?.retire();
@@ -113,39 +183,48 @@ export function DocumentComposerAttachments({
     setError(null);
     setView(null);
     setPartialSelected(false);
-    let ticket: Target | null = null;
+    setPdfScopeSelected(false);
     try {
-      ticket = createDocumentInputTarget(
+      const ticket = createDocumentInputTarget(
         draftKey,
         attachment,
         () => live.current.enabled && live.current.context === context,
       );
       target.current = ticket;
-      const selected = { attachment, target: ticket, context, xlsx };
+      const selected: Selection = {
+        attachment,
+        target: ticket,
+        context,
+        xlsx,
+        pdf,
+        pdfScopeRequired: isPdf(attachment) && !pdf,
+      };
       setSelection(selected);
-      setWorking("reading");
-      const task = readDocumentInput(
-        { uri: attachment.uri, name: attachment.name },
-        ticket.signal,
-        xlsx ? { xlsx } : undefined,
-      );
-      draftPersistence.trackAttachment(task);
-      const readResult = await task;
-      if (target.current === ticket && ticket.isCurrent()) {
-        setResult(readResult);
-        setWorking(null);
-      }
+      // New/unknown PDF sources need an active range choice before any file
+      // inspection or extraction. The existing target protects that choice too.
+      if (!selected.pdfScopeRequired) void readSelected(selected);
     } catch (reason) {
-      // A cancelled read may reject after a newer review has started. Its
-      // callback belongs only to its original ticket, including failures.
-      if (ticket && target.current !== ticket) return;
-      if (ticket?.isCurrent()) {
-        setError(documentInputFailure(reason));
-        setWorking(null);
-      } else if (ticket) close();
-      else if (live.current.enabled && live.current.context === context)
+      if (live.current.enabled && live.current.context === context)
         setError(documentInputFailure(reason));
     }
+  };
+  const readPdfScope = () => {
+    if (
+      !selection?.pdfScopeRequired ||
+      !pdfScopeSelected ||
+      working ||
+      target.current !== selection.target ||
+      !selection.target.isCurrent()
+    )
+      return;
+    const selected: Selection = {
+      ...selection,
+      pdf: { mode: "decoded-page-text", includePossiblyInvisibleText: true },
+      xlsx: undefined,
+      pdfScopeRequired: false,
+    };
+    setSelection(selected);
+    void readSelected(selected);
   };
   const changeXlsxRequest = (request: XlsxInputRequest) => {
     if (!selection?.xlsx || working || !selection.target.isCurrent()) return;
@@ -160,7 +239,7 @@ export function DocumentComposerAttachments({
     if (!selection || !result || working || !selection.target.isCurrent())
       return;
     const ticket = selection.target;
-    setWorking("confirming");
+    updateWorking("confirming");
     setError(null);
     try {
       await draftPersistence.flush();
@@ -181,7 +260,7 @@ export function DocumentComposerAttachments({
       target.current = null;
       setSelection(null);
       setResult(null);
-      setWorking(null);
+      updateWorking(null);
       const generation = composerDrafts.generation(draftKey);
       const choice = JSON.stringify(newConversationChoice);
       const notice = watchDraftSave(
@@ -232,7 +311,7 @@ export function DocumentComposerAttachments({
       if (target.current !== ticket) return;
       if (ticket.isCurrent()) {
         setError(documentInputFailure(reason));
-        setWorking(null);
+        updateWorking(null);
       } else close();
     }
   };
@@ -242,6 +321,7 @@ export function DocumentComposerAttachments({
     (!!item.documentText ||
       /\.docx$/i.test(item.name) ||
       /\.docx$/i.test(localResourcePath(item.uri) ?? "") ||
+      isPdf(item) ||
       isSpreadsheet(item));
   return (
     <>
@@ -299,13 +379,38 @@ export function DocumentComposerAttachments({
           result={result}
           previousText={selection.attachment.documentText?.text}
           partialSelected={partialSelected}
-          onPartialSelected={setPartialSelected}
+          onPartialSelected={(selected) => {
+            if (
+              target.current === selection.target &&
+              live.current.selection === selection &&
+              result !== null &&
+              live.current.result === result &&
+              !live.current.working &&
+              live.current.enabled &&
+              live.current.draftKey === draftKey &&
+              live.current.context === selection.context &&
+              selection.target.isCurrent()
+            )
+              setPartialSelected(selected);
+          }}
           busy={working}
           error={error}
           onConfirm={() => void confirm()}
           onClose={close}
           xlsxRequest={selection.xlsx}
           onXlsxRequest={changeXlsxRequest}
+          pdfRequest={selection.pdf}
+          pdfScopeRequired={selection.pdfScopeRequired}
+          pdfScopeSelected={pdfScopeSelected}
+          onPdfScopeSelected={(selected) => {
+            if (
+              target.current === selection.target &&
+              selection.pdfScopeRequired &&
+              selection.target.isCurrent()
+            )
+              setPdfScopeSelected(selected);
+          }}
+          onReadPdf={readPdfScope}
         />
       )}
       {view?.documentText && (

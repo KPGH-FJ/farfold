@@ -1091,6 +1091,8 @@ pub struct SessionOpenResult {
     pub permission_config_id: Option<String>,
     pub permission_state: &'static str,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub permission_effect: Option<super::permission_effect::PermissionEffect>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub modes: Option<Value>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub models: Option<Value>,

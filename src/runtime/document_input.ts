@@ -12,6 +12,15 @@ import { XlsxError } from "./xlsx_types";
 import { XlsxInputError, type XlsxInputRequest } from "./xlsx_input_types";
 import { xlsxInputText } from "./xlsx_input_text";
 import {
+  PDF_INPUT_LIMITS,
+  PdfInputError,
+  type PdfInputRequest,
+} from "./pdf_input_types";
+import { checkedPdfInputRequest } from "./pdf_input_validation";
+import { readPdfInputCapture } from "./pdf_input_capture";
+import { readPdfInput } from "./pdf_input_read";
+import { pdfInputText } from "./pdf_input_text";
+import {
   DOCUMENT_INPUT_MAX_BYTES,
   DocumentInputError,
   documentTextBytes,
@@ -27,6 +36,10 @@ export interface DocumentInputReview {
   /** Non-whitespace author text only, excluding generated document markers. */
   actualTextChars: number;
 }
+export interface DocumentInputOptions {
+  xlsx?: XlsxInputRequest;
+  pdf?: PdfInputRequest;
+}
 
 function cancelled(signal?: AbortSignal) {
   if (signal?.aborted) throw new DocumentInputError("cancelled");
@@ -36,7 +49,8 @@ function normalized(error: unknown): never {
   if (
     error instanceof DocxError ||
     error instanceof XlsxError ||
-    error instanceof XlsxInputError
+    error instanceof XlsxInputError ||
+    error instanceof PdfInputError
   )
     throw new DocumentInputError(error.code);
   if (error instanceof Error && error.message === D.checkBusy)
@@ -53,6 +67,31 @@ function normalized(error: unknown): never {
   if (code === "pending") throw new DocumentInputError("readPending");
   if (code === "tooLarge") throw new DocumentInputError("limit");
   throw new DocumentInputError("unreadable");
+}
+/** Scope consent is a caller's explicit action, never inferred from a suffix. */
+function checkedReadOptions(
+  path: string,
+  options?: DocumentInputOptions,
+): DocumentInputOptions {
+  if (options !== undefined) {
+    if (!options || typeof options !== "object" || Array.isArray(options))
+      throw new DocumentInputError("invalid");
+    const keys = Object.keys(options);
+    if (
+      keys.length > 1 ||
+      keys.some((key) => !["xlsx", "pdf"].includes(key)) ||
+      (Object.hasOwn(options, "xlsx") &&
+        (!/\.xlsx$/i.test(path) || options.xlsx === undefined))
+    )
+      throw new DocumentInputError("invalid");
+  }
+  return Object.hasOwn(options ?? {}, "pdf") || /\.pdf$/i.test(path)
+    ? {
+        pdf: checkedPdfInputRequest(
+          Object.hasOwn(options ?? {}, "pdf") ? options?.pdf : undefined,
+        ),
+      }
+    : (options ?? {});
 }
 /** Cancels only this wait. Native work retains its existing real OS read slot. */
 async function waitFor<T>(work: Promise<T>, signal?: AbortSignal): Promise<T> {
@@ -120,20 +159,55 @@ async function revision(
 export async function readDocumentInput(
   attachment: { uri: string; name: string },
   signal: AbortSignal,
-  options?: { xlsx: XlsxInputRequest },
+  options?: DocumentInputOptions,
 ): Promise<DocumentInputReview> {
   cancelled(signal);
   const path = selectedPath(attachment.uri);
   try {
+    const request = checkedReadOptions(path, options);
     const source = await waitFor(fileDelivery.inspectSelected(path), signal);
     if (source.path !== path) throw new DocumentInputError("changed");
-    if (source.size > DOCX_LIMITS.archive)
+    if (
+      source.size >
+      (request.pdf ? PDF_INPUT_LIMITS.sourceBytes : DOCX_LIMITS.archive)
+    )
       throw new DocumentInputError("limit");
+    if (request.pdf) {
+      const capture = await readPdfInputCapture(source, signal);
+      const document = await readPdfInput(
+        capture,
+        checkedPdfInputRequest(request.pdf),
+        signal,
+      );
+      cancelled(signal);
+      const converted = pdfInputText(document);
+      if (!converted.actualTextChars) throw new DocumentInputError("noText");
+      const local = parseLocalDocumentText({
+        schema: 1,
+        format: "pdf",
+        source,
+        textSha256: await digest(converted.text, signal),
+        utf8Bytes: documentTextBytes(converted.text, DOCUMENT_INPUT_MAX_BYTES)
+          .byteLength,
+        selection: "read-decoded-page-text",
+        partial: true,
+        partialSelected: false,
+        scope: document.scope,
+        warnings: document.warnings,
+      });
+      if (!local) throw new DocumentInputError("invalid");
+      cancelled(signal);
+      return {
+        text: converted.text,
+        local,
+        actualTextChars: converted.actualTextChars,
+      };
+    }
     if (/\.xlsx$/i.test(path)) {
       const capture = await readWorkbookCapture(source, signal);
       const document = await readWorkbookInput(
         capture,
-        options?.xlsx ?? { mode: "visible-saved-cells" },
+        request.xlsx ?? { mode: "visible-saved-cells" },
         signal,
       );
       cancelled(signal);
@@ -248,7 +322,15 @@ export async function verifyDocumentInput(
         options.signal ?? new AbortController().signal,
         local.format === "xlsx"
           ? { xlsx: { mode: local.scope.mode } }
-          : undefined,
+          : local.format === "pdf"
+            ? {
+                pdf: {
+                  mode: local.scope.mode,
+                  includePossiblyInvisibleText:
+                    local.scope.includePossiblyInvisibleText,
+                },
+              }
+            : undefined,
       );
       if (
         !sameFile(current.local.source, local.source) ||
@@ -261,10 +343,10 @@ export async function verifyDocumentInput(
         (current.local.format === "docx" &&
           local.format === "docx" &&
           current.local.imageReferences !== local.imageReferences) ||
-        (current.local.format === "xlsx" &&
-          local.format === "xlsx" &&
-          JSON.stringify(current.local.scope) !==
-            JSON.stringify(local.scope)) ||
+        ((current.local.format === "xlsx" && local.format === "xlsx") ||
+        (current.local.format === "pdf" && local.format === "pdf")
+          ? JSON.stringify(current.local.scope) !== JSON.stringify(local.scope)
+          : false) ||
         JSON.stringify(current.local.warnings) !==
           JSON.stringify(local.warnings)
       )

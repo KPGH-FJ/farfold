@@ -1,0 +1,35 @@
+import datetime, hashlib, json, pathlib, subprocess, sys, time
+root = pathlib.Path(__file__).resolve().parents[2]
+out = pathlib.Path(__file__).resolve().parent
+stage = sys.argv[1]
+filters = sys.argv[2:]
+command = ['cargo', 'test', '--manifest-path', 'src-tauri/Cargo.toml', '--locked', *filters, '--', '--nocapture']
+def inputs():
+    paths = subprocess.check_output(['rg', '--files', '--hidden', 'src-tauri', '-g', '!src-tauri/target/**', '-g', '*.rs', '-g', '*.toml', '-g', 'Cargo.lock'], cwd=root, text=True).splitlines()
+    return {p: hashlib.sha256((root/p).read_bytes()).hexdigest() for p in sorted(paths)}
+before = inputs()
+(out/(stage+'-inputs-before.json')).write_text(json.dumps(before, indent=2)+'\n')
+started = datetime.datetime.now(datetime.timezone.utc).isoformat()
+start = time.monotonic()
+print(json.dumps({'stage':stage, 'command':command, 'started':started}), flush=True)
+with (out/(stage+'.log')).open('w') as log:
+    process = subprocess.Popen(command, cwd=root, stdout=log, stderr=subprocess.STDOUT)
+    prior = ''
+    while True:
+        try:
+            code = process.wait(timeout=30)
+            break
+        except subprocess.TimeoutExpired:
+            lines = (out/(stage+'.log')).read_text(errors='replace').splitlines()
+            last = lines[-1] if lines else ''
+            if last != prior:
+                print(last, flush=True)
+                prior = last
+after = inputs()
+(out/(stage+'-inputs-after.json')).write_text(json.dumps(after, indent=2)+'\n')
+changed = sorted(k for k in set(before)|set(after) if before.get(k) != after.get(k))
+receipt = {'stage':stage,'command':command,'started':started,'actualExit':code,'elapsedSeconds':round(time.monotonic()-start,3),'inputCount':len(before),'inputsStable':not changed,'changedInputs':changed,'log':str(out/(stage+'.log'))}
+(out/(stage+'-receipt.json')).write_text(json.dumps(receipt,indent=2)+'\n')
+print(json.dumps(receipt), flush=True)
+print('\n'.join((out/(stage+'.log')).read_text(errors='replace').splitlines()[-65:]), flush=True)
+sys.exit(code)

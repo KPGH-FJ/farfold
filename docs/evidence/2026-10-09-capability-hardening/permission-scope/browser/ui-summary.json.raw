@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "stage": "NEW-24 controlled full App browser verification complete; root-built PDF verification pending",
+  "productionChanged": false,
+  "formalAppUsed": false,
+  "realAgentUsed": false,
+  "userDataAccessed": false,
+  "engines": [
+    {
+      "engine": "chromium",
+      "actualExit": 0,
+      "completionChunk": "88a478",
+      "checks": 32,
+      "passed": true,
+      "productionAndHarnessInputs": 581,
+      "testInputs": 480,
+      "stable": true,
+      "testChanges": [],
+      "pageErrors": [],
+      "externalRequests": [],
+      "raw": {
+        "path": "output/2026-10-13-permission-pdf-ui-integration/chromium-run04.json",
+        "bytes": 262843,
+        "sha256": "3fc2a498b810346528fdd30dfe81594af0f779cf21b3ef08f45564da2842187c"
+      }
+    },
+    {
+      "engine": "webkit",
+      "actualExit": 0,
+      "completionChunk": "815b77",
+      "checks": 32,
+      "passed": true,
+      "productionAndHarnessInputs": 581,
+      "testInputs": 480,
+      "stable": true,
+      "testChanges": [],
+      "pageErrors": [],
+      "externalRequests": [],
+      "raw": {
+        "path": "output/2026-10-13-permission-pdf-ui-integration/webkit-run04.json",
+        "bytes": 262841,
+        "sha256": "e1fac61e287b33347fa40d2d6e3e199b8659cbf4fa03b0712ead9602415f68f8"
+      }
+    }
+  ],
+  "retainedFailures": [
+    {
+      "raw": {
+        "path": "output/2026-10-13-permission-pdf-ui-integration/chromium-run01.json",
+        "bytes": 267688,
+        "sha256": "fdc4758ef67cb8974501ac95757967ae324cf08283c0975579189722c9641a74"
+      },
+      "causeRecord": {
+        "path": "output/2026-10-13-permission-pdf-ui-integration/run01-correction.json",
+        "bytes": 704,
+        "sha256": "bf0290028a272ea2f7b0c8e78a0345b0a0911c420dbc803eab47bf7904828a76"
+      }
+    },
+    {
+      "raw": {
+        "path": "output/2026-10-13-permission-pdf-ui-integration/chromium-run02.json",
+        "bytes": 245536,
+        "sha256": "7749e25bb3e230851ca7deb3236ee02a135f2415f3c5f8315bbd6ecc3a017f6e"
+      },
+      "causeRecord": {
+        "path": "output/2026-10-13-permission-pdf-ui-integration/run02-correction.json",
+        "bytes": 827,
+        "sha256": "f6a318a400989f5abcd2e01109d9cb9eb6889bcb856d494370f6fc2257610ecd"
+      }
+    },
+    {
+      "raw": {
+        "path": "output/2026-10-13-permission-pdf-ui-integration/chromium-run03.json",
+        "bytes": 285607,
+        "sha256": "1afdb8808928d0138b1c805f591b5b43a22ba6a8cdd67c5fc14455abacef3543"
+      },
+      "causeRecord": {
+        "path": "output/2026-10-13-permission-pdf-ui-integration/run03-correction.json",
+        "bytes": 517,
+        "sha256": "75646912f5f9453a4615294ae4918b108f3181916f623d86745936a27596f224"
+      }
+    }
+  ],
+  "visualInspection": [
+    {
+      "image": {
+        "path": "output/2026-10-13-permission-pdf-ui-integration/chromium-run03-confirmed-scope.png",
+        "bytes": 85936,
+        "sha256": "1834bf621ffe02c88a301bbadad75902360ada9cb64c3392f684463e262f5a35"
+      },
+      "observation": "Selected option visually states next message choice; explanation retains unknown current scope; normal window has no clipping."
+    },
+    {
+      "image": {
+        "path": "output/2026-10-13-permission-pdf-ui-integration/webkit-run04-rejected-review.png",
+        "bytes": 101842,
+        "sha256": "457bcf61c0128d8c5fec3ea24b9198b7fac99d69abbd0a366432f339e9c5d7a8"
+      },
+      "observation": "Exact cannot-send reason shown; original slash command plus PDF attachment remains in paused queue; no optimistic user command presented as sent."
+    }
+  ],
+  "notProven": [
+    "Actual backend native command classification/execution or permission restoration",
+    "Actual current complete file and network permissions",
+    "Formal installed application, real Agent PDF receipt, cold restoration or user data preservation",
+    "Prior PDF 74-case evidence not reclassified as this 32-case permission increment"
+  ],
+  "next": "Wait root single pnpm build completion then execute built-static and each engine three fixed PDF fixtures",
+  "sourceAdmission": {
+    "path": "output/2026-10-13-permission-pdf-ui-integration/source-admission.json",
+    "bytes": 2831,
+    "sha256": "0b1c6070560c10443d74fb1d53f46a6bfb104cd5b8fbf3923ab8bf170fd2836b"
+  },
+  "reproduction": [
+    "node output/2026-10-13-permission-pdf-ui-integration/serve.mjs",
+    "node output/2026-10-13-permission-pdf-ui-integration/run.mjs chromium run05",
+    "node output/2026-10-13-permission-pdf-ui-integration/run.mjs webkit run05"
+  ]
+}

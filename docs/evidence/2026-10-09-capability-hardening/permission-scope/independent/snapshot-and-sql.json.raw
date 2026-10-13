@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "scope": "historical pinned SECOND copies and synthetic SQLite only; no live database, Agent or Cargo",
+  "historical": {
+    "originalFullCompareExit": 2,
+    "originalReviewSha256": "0c0713bcdd8a796072c7786202eaed50e064aa2d2ccfbc38f43b70d97e8e62d3",
+    "snapshotRefs": [
+      {
+        "path": "output/2026-10-13-xlsx-input-native-closeout-data/baseline-second-copy/metadata-before.sqlite3",
+        "sha256": "3a0ee369edfa4647d980997552b8199f2e7a4e3f50d3e5288e7974f53968f7d2"
+      },
+      {
+        "path": "output/2026-10-13-xlsx-input-native-closeout-data/metadata-after-consolidated.sqlite3",
+        "sha256": "646037597257896884eb91450ff354f9f55c2ae15623d90300865bd03381379a"
+      }
+    ],
+    "snapshotIntegrityBothOk": true,
+    "codexChangedColumns": [
+      "updated_at"
+    ],
+    "codexOtherColumnsExact": true,
+    "allOldSessionsExact": 134,
+    "allOldDismissedExact": 170,
+    "addedTombstones": 1,
+    "addedTombstoneIdSha256": "4d38f686070910a6022f272049cde96ed141dff3c740d983970d12f3f133011d",
+    "addedTombstoneSameControlledDocxLocation": true,
+    "addedTombstoneMatchesAnyOldIndexId": false,
+    "addedTombstoneMatchesAnyNewIndexId": false,
+    "addedTombstoneNativeIdMatchesAnyOldNativeId": false,
+    "addedTombstoneNativeIdMatchesAnyAfterNativeId": false,
+    "sendPendingBeforeAbsentAfterFalse": true,
+    "ownDocxTextExact": true,
+    "feedbackExact": true,
+    "queuesExact": true,
+    "historicalConcreteWriters": [
+      "UNKNOWN",
+      "UNKNOWN",
+      "UNKNOWN"
+    ]
+  },
+  "syntheticSql": [
+    {
+      "case": "identical-handshake",
+      "onlyChangedColumns": [
+        "updated_at"
+      ],
+      "exactSourceStatementSha256": "1614947bde69d7fb3d2419dc9ec1e16e6cff0bbc7e7fd2b013e47fa7cb09fb99"
+    },
+    {
+      "case": "identical-environment",
+      "onlyChangedColumns": [
+        "updated_at"
+      ],
+      "exactSourceStatementSha256": "bf7f263ae102e4dba03bd45f577b3f1bf471ed1dc787aa9d0a825024c49e06b5"
+    },
+    {
+      "case": "tombstone-idempotence-and-index-preservation",
+      "oldSessionRowsExact": true,
+      "secondDismissKeepsOriginalTimestamp": true,
+      "explicitUndismissRemovesExactTombstone": true,
+      "exactSourceStatementSha256": "8bd74dafabfe0e4b2bb40a5dc8c5a315b171b2e805487238dc79ea5075291a8b"
+    }
+  ],
+  "sourceSqlIsNotCompiledRustExecution": true,
+  "historicalWriterAttributionNotPromoted": true,
+  "originalCompareNotRerunOrRewritten": true,
+  "privateRawValuesEmitted": false
+}

@@ -107,6 +107,7 @@ export interface IndexRow {
 }
 
 import type { OpenResult } from "./session_open_types";
+import { replacePermissionEffect } from "./permission_effect";
 export type { OpenResult } from "./session_open_types";
 
 /** External conversation shape accepted by the sidebar grouping helper. */
@@ -413,6 +414,7 @@ class ThreadsStore {
       // event can report state, but never undo an unknown result locally.
       if (typeof e.permissionConfigId === "string")
         s.permissionConfigId = e.permissionConfigId;
+      replacePermissionEffect(s, e.permissionEffect);
       if (e.permissionState === "unknown" || e.permissionState === "required") {
         this.permissionRevisions.set(
           key,
@@ -476,6 +478,7 @@ class ThreadsStore {
           : STRINGS.repair.requestFailed;
       pauseQueue(s, "unavailable");
     } else if (e.kind === "connectionLost") {
+      replacePermissionEffect(s, undefined);
       this.stopConfirmation.clear(key);
       applyConnectionLost(s, e.closeReason);
       this.channels.delete(key);
@@ -743,6 +746,7 @@ class ThreadsStore {
       state.title = savedTitle?.trim() ? savedTitle : (existing?.title ?? null);
       state.configOptions = normalizeConfigOptions(result.configOptions);
       state.permissionConfigId = result.permissionConfigId;
+      replacePermissionEffect(state, result.permissionEffect);
       state.permissionState = result.permissionConfigId
         ? result.resumed
           ? "required"

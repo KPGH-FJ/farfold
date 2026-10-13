@@ -2,6 +2,8 @@ import { DOCUMENT_INPUT_STRINGS as S } from "../runtime/document_input_strings";
 import { documentInputPresentation } from "../runtime/document_input_presentation";
 import type { DocumentInputReview as Review } from "../runtime/document_input";
 import type { XlsxInputRequest } from "../runtime/xlsx_input_types";
+import type { PdfInputRequest } from "../runtime/pdf_input_types";
+import { PdfInputScopeChoice } from "./PdfInputScopeChoice";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import "../document-input.css";
 
@@ -17,6 +19,11 @@ export function DocumentInputReview({
   onClose,
   xlsxRequest,
   onXlsxRequest,
+  pdfRequest,
+  pdfScopeRequired = false,
+  pdfScopeSelected = false,
+  onPdfScopeSelected,
+  onReadPdf,
 }: {
   name: string;
   result: Review | null;
@@ -29,14 +36,32 @@ export function DocumentInputReview({
   onClose: () => void;
   xlsxRequest?: XlsxInputRequest;
   onXlsxRequest?: (request: XlsxInputRequest) => void;
+  pdfRequest?: PdfInputRequest;
+  pdfScopeRequired?: boolean;
+  pdfScopeSelected?: boolean;
+  onPdfScopeSelected?: (selected: boolean) => void;
+  onReadPdf?: () => void;
 }) {
   const presentation = result && documentInputPresentation(result.local);
   return (
     <WorkspaceDialog title={S.title} onClose={onClose}>
       <div className="workspace-dialog-body document-input-review">
         <strong>{name}</strong>
-        <p>{xlsxRequest ? S.xlsxScope : S.scope}</p>
+        <p>
+          {pdfRequest || pdfScopeRequired
+            ? S.pdfScope
+            : xlsxRequest
+              ? S.xlsxScope
+              : S.scope}
+        </p>
         <p>{S.draftOnly}</p>
+        {pdfScopeRequired && onPdfScopeSelected && (
+          <PdfInputScopeChoice
+            selected={pdfScopeSelected}
+            onSelected={onPdfScopeSelected}
+            disabled={!!busy}
+          />
+        )}
         {xlsxRequest && onXlsxRequest && (
           <fieldset disabled={!!busy}>
             <legend>{S.xlsxRange}</legend>
@@ -79,6 +104,7 @@ export function DocumentInputReview({
           <>
             <p>{presentation.count}</p>
             {presentation.sheetCount && <p>{presentation.sheetCount}</p>}
+            {presentation.pageCount && <p>{presentation.pageCount}</p>}
             <p>{S.sourceVersion}</p>
             <details open={result.local.partial}>
               <summary>{S.omissions}</summary>
@@ -114,16 +140,27 @@ export function DocumentInputReview({
         <button type="button" className="btn btn-ghost" onClick={onClose}>
           {S.cancel}
         </button>
-        <button
-          type="button"
-          className="btn btn-primary"
-          disabled={
-            !!busy || !result || (result.local.partial && !partialSelected)
-          }
-          onClick={onConfirm}
-        >
-          {result?.local.partial ? S.confirmPartial : S.confirm}
-        </button>
+        {pdfScopeRequired ? (
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={!!busy || !pdfScopeSelected || !onReadPdf}
+            onClick={onReadPdf}
+          >
+            {S.pdfReadSelected}
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-primary"
+            disabled={
+              !!busy || !result || (result.local.partial && !partialSelected)
+            }
+            onClick={onConfirm}
+          >
+            {result?.local.partial ? S.confirmPartial : S.confirm}
+          </button>
+        )}
       </footer>
     </WorkspaceDialog>
   );

@@ -1,0 +1,194 @@
+{
+  "schema": 1,
+  "status": "SOURCE_AND_CONTROLLED_SCOPED_RESULTS_FRESH_ENGINEERING_BUILD_INSTALL_AGENT_PENDING",
+  "sourceBase": "92aa4a27ca3e642bc260530ce27e36f9bd859566",
+  "installedVersion": "92aa4a27 / 0.1.7 arm64",
+  "implemented": [
+    "明确选择全部已保存页的提取文字范围后才检查和读取；始终部分读取，四条范围说明，全文审阅后单独确认",
+    "完整32MiB字节、七个所选文件字段与完整SHA一致才交付前端；DOCX/XLSX仍16MiB；原focused记录的先读后核对时序误述由单列更正保留",
+    "独立解析工作线程，1000页、100000项、最终UTF8连结构256KiB、全程15秒；错误、解析诊断的警告、加密、XFA、超限或无正文整份拒绝，不截断为已批准前缀",
+    "原项目使用的官方解析库不修改；不OCR、执行动作、读取批注或承诺视觉顺序，保留实际文字项和方向及换行",
+    "历史MIME大小写及参数差异保持未知来源保护；无后缀PDF的明确合法请求仍走完整PDF校验，不退回普通UTF8或链接",
+    "旧审阅回调不能给新结果勾选；另一URI要求新的范围选择，同一路径的百分号编码对照保留已选范围；主动重新读取时仍审阅新的全文并重新同意；已知来源冷恢复沿用原明确范围，完整重读核对原文字及范围，不另增全文弹窗或重新勾选门槛"
+  ],
+  "tested": {
+    "rustByteCapture": {
+      "actualExit": 0,
+      "tests": 6,
+      "completionChunk": "ae8bea",
+      "scope": "完整字节捕获分项，非PDF解析或正式应用"
+    },
+    "parserFocused": {
+      "actualExit": 0,
+      "files": 11,
+      "tests": 85,
+      "scope": "含真实Node解析工作线程，非浏览器完整界面"
+    },
+    "historicalMimeIndependent": {
+      "actualExit": 0,
+      "files": 1,
+      "tests": 4,
+      "completionChunk": "a21fc9",
+      "sourceInputs": 12,
+      "beforeAfterStable": true,
+      "originalThreeRedPreserved": true
+    },
+    "fullAppDevOriginal": {
+      "eachEngineChecks": 71,
+      "engines": [
+        {
+          "engine": "chromium",
+          "actualExit": 0,
+          "completionChunk": "1a5b57",
+          "raw": {
+            "path": "output/2026-10-13-pdf-input-independent/chromium-run04.json",
+            "sha256": "3405a7718725710485a59e8d891b60bcb9bbb150623afdd4d35d63364aa34cfc",
+            "bytes": 259437,
+            "mode": "0o644"
+          }
+        },
+        {
+          "engine": "webkit",
+          "actualExit": 0,
+          "completionChunk": "ec6e1d",
+          "raw": {
+            "path": "output/2026-10-13-pdf-input-independent/webkit-run04.json",
+            "sha256": "e0fd0c770859298eac88507e8aa79af8a7717d735c4c67175a1962815bd8b3da",
+            "bytes": 259423,
+            "mode": "0o644"
+          }
+        }
+      ],
+      "sourceEpoch": "原A/B/C-v2；不冒称覆盖之后MIME、URI或NEW-24变化"
+    },
+    "fullAppMimeUriDelta": {
+      "eachEngineChecks": 74,
+      "sourceEpoch": [
+        {
+          "owner": "A",
+          "path": "output/2026-10-13-pdf-input-a/source-freeze.json",
+          "sha256": "078522c328c0aa8a1d48292095b69e7b28641f353dfedf205703e3ef0a2779bd",
+          "bytes": 13428
+        },
+        {
+          "owner": "B2",
+          "path": "output/2026-10-13-pdf-input-integration/revision-v2/source-freeze.json",
+          "sha256": "7918e64898e4d95326dddbce54b64ebcc855be178265000c14fea9adb1db33e2",
+          "bytes": 8693
+        },
+        {
+          "owner": "C4",
+          "path": "output/2026-10-13-pdf-input-ui/revision-v4/source-freeze-final.json",
+          "sha256": "1a920dda7f339118a1bece54bbb0f996b510c31967181726630e728f7d4af63c",
+          "bytes": 4749
+        }
+      ],
+      "sourceInputsEach": 576,
+      "testInputsEach": 477,
+      "engines": [
+        {
+          "path": "output/2026-10-13-pdf-input-independent/mime-increment/chromium-run01.json",
+          "sha256": "a18dec691064ae757b0de39808afe3567a3170fbb1a7f3256fd44d3ab1bc3914",
+          "bytes": 256751,
+          "actualExit": 0,
+          "completionChunk": "7f393e",
+          "passedChecks": 74,
+          "sourceStable": true,
+          "testChanges": [],
+          "errors": [],
+          "externalRequests": []
+        },
+        {
+          "path": "output/2026-10-13-pdf-input-independent/mime-increment/webkit-run01.json",
+          "sha256": "67e9e4dba5458cb476a6841e358579af5e998e1ef91e6cf2b713dbdb7fd7d627",
+          "bytes": 256749,
+          "actualExit": 0,
+          "completionChunk": "3b1c48",
+          "passedChecks": 74,
+          "sourceStable": true,
+          "testChanges": [],
+          "errors": [],
+          "externalRequests": []
+        }
+      ],
+      "scope": "完整生产界面和实际输入及解析工作线程；原生文件接口、初始数据和Agent接纳为受控替身。实际渲染检查属于原71项范围，不计入新74项。"
+    }
+  },
+  "retainedFailures": [
+    "实际稀疏数组拒绝反例、结构预算作者样本纠正、原类型错误及打包URL静态发现均保留",
+    "旧审阅同意回调、新MIME历史格式、无后缀读取及不同URI范围复用原失败保留；原独立MIME配置误跑整套前端不计工程验收",
+    "原完整界面运行的键盘驱动、预热加载及保存失败注入时点三轮失败保留；不改产品门槛或原固定样本"
+  ],
+  "notProven": [
+    "本片依赖闭合后的七项工程检查及实际输出的解析工作线程验证",
+    "正式应用PDF读取、真实Agent接收、冷恢复与实际数据保留",
+    "完整PDF语义、无声漏字或错误解码、视觉阅读顺序、全部诊断可见性、浏览器完整堆内存界限",
+    "无后缀Office重新读取能力；本片仅补其历史格式未知来源保护",
+    "NEW-24当前完整文件与网络范围及恢复、原3处数据差异具体写入点",
+    "完整P08、122项原条件、29家八项标准、Windows及市场达标"
+  ],
+  "rawEvidence": {
+    "capture": {
+      "path": "output/2026-10-13-pdf-input-backend/rust-focused.json",
+      "bytes": 1120,
+      "sha256": "1df98ae4f0f456802eb6c1b639c3b09ec1fa520b455de0944dfcf0eaea49d8c6"
+    },
+    "captureBoundaryCorrection": {
+      "path": "output/2026-10-13-pdf-input-backend/capture-boundary-clarification.json",
+      "bytes": 1451,
+      "sha256": "9d59d2a0ac2a62a08248c4ca6467100190669251a7d3d1955c8fb81280816487"
+    },
+    "parser": {
+      "path": "output/2026-10-13-pdf-input-a/source-freeze.json",
+      "bytes": 13428,
+      "sha256": "078522c328c0aa8a1d48292095b69e7b28641f353dfedf205703e3ef0a2779bd"
+    },
+    "parserFocused": {
+      "path": "output/2026-10-13-pdf-input-a/implementation-summary.json",
+      "bytes": 5363,
+      "sha256": "01485bdc75f86e40a9d55483c6f8e95a06d07d988916fd193d7698bd0ebf4254"
+    },
+    "commonV2": {
+      "path": "output/2026-10-13-pdf-input-integration/revision-v2/source-freeze.json",
+      "bytes": 8693,
+      "sha256": "7918e64898e4d95326dddbce54b64ebcc855be178265000c14fea9adb1db33e2"
+    },
+    "commonIndependentGreen": {
+      "path": "output/2026-10-13-pdf-input-common-independent/green01/review.json",
+      "bytes": 4957,
+      "sha256": "6f72ebcc5e014dc250b12164cc6c3e7ad2680a8d936bda846ccc3d0d4f3af278"
+    },
+    "uiV4": {
+      "path": "output/2026-10-13-pdf-input-ui/revision-v4/source-freeze-final.json",
+      "bytes": 4749,
+      "sha256": "1a920dda7f339118a1bece54bbb0f996b510c31967181726630e728f7d4af63c"
+    },
+    "devOriginal": {
+      "path": "output/2026-10-13-pdf-input-independent/dev-summary.json",
+      "bytes": 33528,
+      "sha256": "32f581c6c1ffaefeae57d1a366bd061e3290184db9991a7ec05e542d171d67ce"
+    },
+    "devMimeUriDelta": {
+      "path": "output/2026-10-13-pdf-input-independent/mime-increment/summary.json",
+      "bytes": 11809,
+      "sha256": "38ebc2a359961c44efca8ddc7b18ad65540d2fadd98ebfd10222f0c5e7545f68"
+    }
+  },
+  "protection": {
+    "PRODUCT.md": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "recordClarification": {
+    "independentReview": {
+      "path": "output/2026-10-13-pdf-input-record-review/review.json",
+      "sha256": "969e97e3c97dbcd2608bbdfe77a1031d34ca782982ffa86f0e7dec7488a0524c"
+    },
+    "originalPublicReceipt": {
+      "path": "output/2026-10-13-pdf-input-backend/implementation-before-record-review.raw",
+      "bytes": 8097,
+      "sha256": "a8a4b769077a0a705a5b040ee22809f804404d38c46049ffeecf30b010a25a48"
+    },
+    "scope": "只纠正新74项不含渲染、主动重读与已知冷恢复不同确认流程、解析诊断警告和固定范围说明的区别；不改原证据、源码或产品条件"
+  }
+}

@@ -250,6 +250,7 @@ export interface ThreadState extends ReportedDetailsOwner {
   configOptions: ConfigOptionView[];
   permissionConfigId?: string;
   permissionState: "ready" | "required" | "changing" | "unknown";
+  permissionEffect?: import("./permission_effect").PermissionEffect;
   usage: import("./session_usage").ReportedUsage | null;
   sessionTokens: import("./session_usage").ReportedTokens | null;
   availableCommands: AvailableCommand[];

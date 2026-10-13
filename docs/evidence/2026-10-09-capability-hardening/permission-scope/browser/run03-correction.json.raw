@@ -1,0 +1,7 @@
+{
+  "failure": "chromium-run03.json",
+  "cause": "All 26 reached checks passed. Unknown permission correctly paused the queue; Composer.tsx:273-286 changes the action accessible name to 加入待发 while disabled. The old prepared driver searched only 发送 and timed out.",
+  "change": "Assert the actual paused action named 加入待发 is disabled, retaining exact unknown permission and no auto-send checks.",
+  "productChanged": false,
+  "notClaimed": "No product unknown-state protection failure observed."
+}

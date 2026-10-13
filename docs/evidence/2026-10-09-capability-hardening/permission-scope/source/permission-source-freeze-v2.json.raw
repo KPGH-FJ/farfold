@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "at": "2026-10-13T07:40:29.884510+00:00",
+  "phase": "COMBINED_PERMISSION_SOURCE_WITH_PERSISTENT_PROMPT_RACE_PROTECTION",
+  "ownedFiles": [
+    {
+      "path": "src-tauri/src/acp_client/mod.rs",
+      "sha256": "9e31e194d23d4bcc0af965e3b39d159d64df2c8c80e9063086b9c75a65500a7f",
+      "bytes": 2693
+    },
+    {
+      "path": "src-tauri/src/acp_client/permission_effect.rs",
+      "sha256": "0509e0672fc431de16178ceb56972dd06c0d4e45159a6949682942ab4bd8d90e",
+      "bytes": 2077
+    },
+    {
+      "path": "src-tauri/src/acp_client/permission_effect_tests.rs",
+      "sha256": "d29f0f4dea745e0942248b7d9562241d11ce7398ba555ec806dea851440e89eb",
+      "bytes": 15704
+    },
+    {
+      "path": "src-tauri/src/acp_client/permission_guard.rs",
+      "sha256": "1e88b6548cdd7146ba4e4bd98f19d67712c39f3c4415756adb9d989356c1f8bf",
+      "bytes": 6355
+    },
+    {
+      "path": "src-tauri/src/acp_client/permission_scope_guard_tests.rs",
+      "sha256": "8167df82db8edc459eeb2b57a1c0f9f2b38b1619baff61a63e317c0ae03dae55",
+      "bytes": 9569
+    },
+    {
+      "path": "src-tauri/src/acp_client/prompt_config_race_tests.rs",
+      "sha256": "85e995d9301ce69db3b1919c5b0cf4db1efea2956f41cca809a461beb7a603a9",
+      "bytes": 10337
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "sha256": "250c3fb6ad7b1d7aefb8907a8633660f01d86e1b9bd618f68167a16a311903df",
+      "bytes": 74414
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/open.rs",
+      "sha256": "fa9aa78447cffe65368827669897787b0b02a1355c67e5eca9e166ffd2276c9b",
+      "bytes": 13959
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump/restore_config.rs",
+      "sha256": "450711779fbb58dba6b791f54418c803ab74a7c33cd442fc9276cf5891d5a2d6",
+      "bytes": 11398
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "f0fdeba5df2b93424b60c46e7a8c4717bcbde82dbb9e12711c5068f440bf641d",
+      "bytes": 40831
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "f8e83d3b9e4b63ae1135c31e3faaf2f278a4a32f5b6655d680c9220e200ce89f",
+      "bytes": 23155
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_discovery.rs",
+      "sha256": "d8fbec0bbc8f917801919f7474167ab189c1e6c4e83ceb1890486702ec46c8c3",
+      "bytes": 14142
+    },
+    {
+      "path": "src/components/PermissionControl.permission-effect.test.tsx",
+      "sha256": "9815982ef99115896ba4cbda33de91abf765764c1bc328b3f4e6b3e7ff2dfdc7",
+      "bytes": 8069
+    },
+    {
+      "path": "src/components/PermissionControl.tsx",
+      "sha256": "e346a07f0131cb8338262ec25085cd39c242610d921df6a4880d511deaf9173c",
+      "bytes": 8836
+    },
+    {
+      "path": "src/runtime/composer_strings.ts",
+      "sha256": "bf2f1dcd5e6faa7eead4721a7933ed9fd71d0bd6623818705bba346de68eb223",
+      "bytes": 3680
+    },
+    {
+      "path": "src/runtime/permission_effect.test.ts",
+      "sha256": "6347e4378f05df41accad8b36df025b300df6fdd0090045e489c0cdb73292685",
+      "bytes": 2071
+    },
+    {
+      "path": "src/runtime/permission_effect.ts",
+      "sha256": "8f0a39804c9902c09dcc51433f6a862bbaef36bb0fdd05603fcd6ec97f2f4b44",
+      "bytes": 1325
+    },
+    {
+      "path": "src/runtime/prompt_blocks.ts",
+      "sha256": "9b8ba5964e479edcf48dab96603a385a75a65be85fac32a24d68c632fa7b1e9a",
+      "bytes": 5439
+    },
+    {
+      "path": "src/runtime/queue.ts",
+      "sha256": "514003e7f3e8450ed35ec1f16410f8700274ec8a3a8139a1ad4796a60218a377",
+      "bytes": 2554
+    },
+    {
+      "path": "src/runtime/session_configuration.ts",
+      "sha256": "c6c084ef0ecb6a67e3ac3408893569731e1f696d54d3db2ab880c7a3ec877b29",
+      "bytes": 7857
+    },
+    {
+      "path": "src/runtime/session_open_types.ts",
+      "sha256": "1df3f61b4468520132e9aff0797999a70f8d27efea4f60cbcee199977e74abfe",
+      "bytes": 696
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "5e1a3649c4f7bd6fe5caebf5f3db5a8590286e4f5941fc35f6f04a4563cc8758",
+      "bytes": 10471
+    },
+    {
+      "path": "src/runtime/sessions.permission-scope.test.ts",
+      "sha256": "5786a56f0a08785fe8dec170aebc6999aab1322d0fc4d5d7e00ea7b69029a699",
+      "bytes": 9612
+    },
+    {
+      "path": "src/runtime/sessions.ts",
+      "sha256": "58d9b014fa6948da000b8df3077a5f02254d87dd84553d439d3cf441589b96e4",
+      "bytes": 49990
+    }
+  ],
+  "priorPinsChangedOnly": [
+    "src-tauri/src/acp_client/pump.rs",
+    "src-tauri/src/acp_client/mod.rs"
+  ],
+  "priorPins": [
+    {
+      "path": "output/2026-10-13-permission-scope-frontend/source-freeze.json",
+      "sha256": "83a9ee915400ced444c00400dc4f846acb2c0c10fe994950bd02985a8b7e59c2",
+      "bytes": 11374
+    },
+    {
+      "path": "output/2026-10-13-permission-scope-guard/native-source-freeze-root.json",
+      "sha256": "cd939f019113e4b57244cd6d28f57cf48abda31724ff08022859c1049ec2a95a",
+      "bytes": 2644
+    },
+    {
+      "path": "output/2026-10-13-prompt-config-race/source-freeze.json",
+      "sha256": "88bcb0a9880ff3e0993db76f1a57dd2abba7fee69b828cd401734da18fda08de",
+      "bytes": 904
+    },
+    {
+      "path": "output/2026-10-13-prompt-config-race/v2-source-freeze.json",
+      "sha256": "84e451c266c5415e89522f99f85901ce15915b3bede2f9b82e2cb87133732168",
+      "bytes": 702
+    }
+  ],
+  "boundary": "Current source; independent review and seven engineering checks separate. Full permission restoration remains open.",
+  "v2Boundary": "A successful metadata save establishes the saved configuration baseline before queued updates are drained; rejected first prompt retry cannot accept unconfirmed drift."
+}

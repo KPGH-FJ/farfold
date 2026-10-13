@@ -34,8 +34,7 @@ export const COMPOSER_CONTROLS = {
   permissionChanging: "正在确认…",
   permissionRequiredNote: "继续发送前，请重新确认这条对话的权限。",
   permissionUnknownNote: "权限设置结果尚未确认。请重新选择并确认后再发送。",
-  permissionScope:
-    "只调整这条对话的后续操作。待发消息保持暂停，需要另行继续发送。",
+  permissionScope: "确认权限选择后，待发消息仍保持暂停，需要另行继续发送。",
   permissionConfirm: "确认对话权限",
   permissionApply: "确认并应用",
   permissionFailure: "未能确认权限，请重试。",
@@ -43,6 +42,13 @@ export const COMPOSER_CONTROLS = {
     "Agent 暂未提供可确认的权限选项。重新连接后仍需明确确认，也可新开对话。",
   permissionReconnect: "重新连接后确认",
   permissionChanged: "可用权限已变化，请重新选择。",
+  permissionNextMessage: "下次消息的选择",
+  permissionSelected: "已选择",
+  permissionApplyNext: "确认下次消息的权限",
+  permissionNextScope:
+    "权限选择会在下一条普通消息开始时传递。当前完整权限尚无法确认，部分命令暂不能发送。待发消息仍需另行继续。",
+  permissionScopeUnverified:
+    "当前完整权限尚无法确认，此命令暂不能发送。原输入已保留。",
   editQueued: "编辑待发消息",
   resumeQueuedEdit: "继续编辑待发消息",
   queueEditHint: "保存后仍保持暂停，不会自动发送。",

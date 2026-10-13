@@ -274,3 +274,6 @@ docs/evidence/2026-10-09-capability-hardening/xlsx-input-candidate/candidate-inp
 docs/evidence/2026-10-09-capability-hardening/xlsx-input-candidate/candidate.json
 docs/evidence/2026-10-09-capability-hardening/xlsx-input-candidate/candidate-independent.json
 docs/evidence/2026-10-09-capability-hardening/xlsx-input-candidate/install-independent-final.json
+
+# Original authored PDF input oracle is copied and hashed byte-for-byte.
+src/runtime/fixtures/pdf-input/independent-oracle.json

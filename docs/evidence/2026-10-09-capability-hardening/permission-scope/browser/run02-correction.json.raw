@@ -1,0 +1,14 @@
+{
+  "failure": "chromium-run02.json",
+  "cause": "Vite discovered the dynamic official PDF parser dependencies on first PDF read, then its own dev optimizer reloaded the page. The final diagnostic shows a fresh application/new conversation with no fixture target thread and no worker records, not a PDF parse error.",
+  "serverEvidence": {
+    "chunk": "4b1ea4",
+    "lines": [
+      "dependencies optimized: pdfjs-dist/legacy/build/pdf.mjs, pdfjs-dist/legacy/build/pdf.worker.mjs",
+      "optimized dependencies changed. reloading"
+    ]
+  },
+  "change": "Explicitly include these two previously discovered libraries in this owned harness dev optimizer; restart only this owned server. No source or assertion weakening.",
+  "productChanged": false,
+  "notClaimed": "Not a production PDF failure, not a built-worker result."
+}

@@ -266,6 +266,7 @@ pub(crate) struct OpenedSession {
     pub config_check: super::model_guard::ConfigCheck,
     pub permission_config_id: Option<String>,
     pub permission_state: &'static str,
+    pub permission_effect: Option<super::permission_effect::PermissionEffect>,
     pub warnings: Vec<String>,
 }
 
@@ -1050,6 +1051,7 @@ async fn session_pump(
                             "configCheck": model_guard.check(),
                             "permissionConfigId": permission_guard.id(),
                             "permissionState": permission_guard.state(),
+                            "permissionEffect": permission_guard.effect(),
                             "service": match &config_store.service_record {
                                 Some(super::service_connection::ServiceRecord::Configured { identity }) => Some(identity),
                                 _ => None,
@@ -1129,6 +1131,10 @@ async fn session_pump(
                         let _ = result.send(Err("请重新确认权限后再发送".into()));
                         continue;
                     }
+                    if permission_guard.blocks_prompt(&blocks) {
+                        let _ = result.send(Err("PROMPT_PERMISSION_SCOPE_UNVERIFIED".into()));
+                        continue;
+                    }
                     let source_model_ok = config_store.expected_model.as_ref().is_none_or(|expected| {
                         model_guard.single_model_value() == Some(expected)
                     });
@@ -1155,10 +1161,29 @@ async fn session_pump(
                     };
                     // Source/model identity must survive a crash once the Agent has
                     // seen this message. A failed local write is provably unsent.
-                    if config_store.save(&session_id, model_guard.record()).await.is_err() {
+                    let saved_config = model_guard.record();
+                    if config_store.save(&session_id, saved_config.clone()).await.is_err() {
                         model_guard.record_failed();
                         events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                         let _ = result.send(Err("CONFIG_RECORD_FAILED".into()));
+                        continue;
+                    }
+                    // A successful save establishes the selection even if this
+                    // attempt is refused or expires. Lock before queued updates so
+                    // a first-prompt drift cannot become the next retry's baseline.
+                    model_guard.lock();
+                    // Storage yields while the independent incoming actor keeps
+                    // routing updates. Admit only the selection just saved.
+                    restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models,
+                        &mut model_guard, &mut permission_guard, &mut opening, &mut mutation);
+                    if !permission_guard.admissible() {
+                        events(permission_guard.event());
+                        let _ = result.send(Err("请重新确认权限后再发送".into()));
+                        continue;
+                    }
+                    if !model_guard.admissible() || model_guard.record() != saved_config {
+                        events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
+                        let _ = result.send(Err("CONFIG_BLOCKED".into()));
                         continue;
                     }
                     if result.is_closed() || tokio::time::Instant::now() >= deadline {
@@ -1187,7 +1212,6 @@ async fn session_pump(
                         .map_err(describe_acp_error);
                     if sent.is_ok() {
                         ctx.tools.begin_live();
-                        model_guard.lock();
                         events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                         prompt_lease = Some(lease);
                         prompt_in_flight = true;

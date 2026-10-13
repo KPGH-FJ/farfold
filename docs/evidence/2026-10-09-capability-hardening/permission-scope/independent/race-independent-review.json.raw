@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "reviewedAtUtc": "2026-10-13T07:38:12.298470+00:00",
+  "reviewState": "V1_FINDING_OPEN_PENDING_V2_REVIEW_AND_TEST_EVIDENCE",
+  "scope": {
+    "kind": "independent source review",
+    "productionWrites": false,
+    "cargoRun": false,
+    "testsRunByReviewer": false,
+    "liveDatabaseRead": false,
+    "realAgentRun": false,
+    "privateContentIncluded": false
+  },
+  "sourceIntegrity": {
+    "initialManifest": "race-review-before.json",
+    "endChecks": [
+      {
+        "path": "src-tauri/src/acp_client/pump.rs",
+        "sha256": "4840a3d3f80791621173f3861147605f64faa301282a0adac6d71f0c650f2655",
+        "afterSha256": "250c3fb6ad7b1d7aefb8907a8633660f01d86e1b9bd618f68167a16a311903df",
+        "unchanged": false
+      },
+      {
+        "path": "src-tauri/src/acp_client/prompt_config_race_tests.rs",
+        "sha256": "995a697003d660b7a74e0f02b87cf2d2800e809b20f0b5199e71fade20312431",
+        "afterSha256": "85e995d9301ce69db3b1919c5b0cf4db1efea2956f41cca809a461beb7a603a9",
+        "unchanged": false
+      },
+      {
+        "path": "src-tauri/src/acp_client/pump/restore_config.rs",
+        "sha256": "450711779fbb58dba6b791f54418c803ab74a7c33cd442fc9276cf5891d5a2d6",
+        "afterSha256": "450711779fbb58dba6b791f54418c803ab74a7c33cd442fc9276cf5891d5a2d6",
+        "unchanged": true
+      },
+      {
+        "path": "src-tauri/src/acp_client/permission_guard.rs",
+        "sha256": "1e88b6548cdd7146ba4e4bd98f19d67712c39f3c4415756adb9d989356c1f8bf",
+        "afterSha256": "1e88b6548cdd7146ba4e4bd98f19d67712c39f3c4415756adb9d989356c1f8bf",
+        "unchanged": true
+      },
+      {
+        "path": "src-tauri/src/acp_client/model_guard.rs",
+        "sha256": "a2efa610d4b189c2a1788fb9b9f4fae0fcb9274576e2a6643ffcc5f8aeac1999",
+        "afterSha256": "a2efa610d4b189c2a1788fb9b9f4fae0fcb9274576e2a6643ffcc5f8aeac1999",
+        "unchanged": true
+      },
+      {
+        "path": "src-tauri/src/acp_client/session.rs",
+        "sha256": "f0fdeba5df2b93424b60c46e7a8c4717bcbde82dbb9e12711c5068f440bf641d",
+        "afterSha256": "f0fdeba5df2b93424b60c46e7a8c4717bcbde82dbb9e12711c5068f440bf641d",
+        "unchanged": true
+      },
+      {
+        "path": "src-tauri/src/acp_client/session_commands.rs",
+        "sha256": "f8e83d3b9e4b63ae1135c31e3faaf2f278a4a32f5b6655d680c9220e200ce89f",
+        "afterSha256": "f8e83d3b9e4b63ae1135c31e3faaf2f278a4a32f5b6655d680c9220e200ce89f",
+        "unchanged": true
+      },
+      {
+        "path": "src/runtime/sessions.ts",
+        "sha256": "58d9b014fa6948da000b8df3077a5f02254d87dd84553d439d3cf441589b96e4",
+        "afterSha256": "58d9b014fa6948da000b8df3077a5f02254d87dd84553d439d3cf441589b96e4",
+        "unchanged": true
+      },
+      {
+        "path": "src/runtime/queue.ts",
+        "sha256": "514003e7f3e8450ed35ec1f16410f8700274ec8a3a8139a1ad4796a60218a377",
+        "afterSha256": "514003e7f3e8450ed35ec1f16410f8700274ec8a3a8139a1ad4796a60218a377",
+        "unchanged": true
+      },
+      {
+        "path": "src/runtime/prompt_blocks.ts",
+        "sha256": "9b8ba5964e479edcf48dab96603a385a75a65be85fac32a24d68c632fa7b1e9a",
+        "afterSha256": "9b8ba5964e479edcf48dab96603a385a75a65be85fac32a24d68c632fa7b1e9a",
+        "unchanged": true
+      }
+    ],
+    "allOriginalReviewFilesUnchanged": false,
+    "additionalReferences": [
+      {
+        "path": "PRODUCT.md",
+        "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+      },
+      {
+        "path": "src/runtime/config_check.ts",
+        "sha256": "2f1472cac8049fc4e551beb70e8f8bdaf1b85fd79341054b9221d85d26aee85c"
+      },
+      {
+        "path": "src/runtime/sessions.permission-scope.test.ts",
+        "sha256": "5786a56f0a08785fe8dec170aebc6999aab1322d0fc4d5d7e00ea7b69029a699"
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "RACE-P1-01",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "First-prompt drift rejection does not retain the saved model baseline",
+      "proofLevel": "Static causal path in current production source; not independently executed by reviewer",
+      "trigger": "Fresh unlocked model guard begins at m1. While its first prompt is blocked in metadata save, a routed notification changes model to m2. Release metadata save, then explicitly continue the rejected queued input without set_config or confirm_config.",
+      "steps": [
+        {
+          "ref": "src-tauri/src/acp_client/pump.rs:1164",
+          "fact": "Captures and successfully persists m1 before draining the queued update."
+        },
+        {
+          "ref": "src-tauri/src/acp_client/pump.rs:1174",
+          "fact": "Drains current=m2, then record mismatch rejects this attempt as CONFIG_BLOCKED."
+        },
+        {
+          "ref": "src-tauri/src/acp_client/model_guard.rs:217",
+          "fact": "Expected-vs-current comparison is conditional on locked; fresh guard is still unlocked."
+        },
+        {
+          "ref": "src-tauri/src/acp_client/pump.rs:1182",
+          "fact": "Emits guard.check() which remains ready for valid m2. The failure does not lock m1 or latch a blocked state."
+        },
+        {
+          "ref": "src/runtime/config_check.ts:82",
+          "fact": "ready makes modelDrift false."
+        },
+        {
+          "ref": "src/runtime/sessions.ts:1028",
+          "fact": "Known rejection preserves queue and pauses unavailable, but does not independently latch config confirmation."
+        },
+        {
+          "ref": "src/runtime/sessions.ts:1087",
+          "fact": "Explicit continue can clear queue pause because modelDrift is false and other guards may all be ready."
+        },
+        {
+          "ref": "src-tauri/src/acp_client/pump.rs:1164",
+          "fact": "Second attempt captures and saves m2, equal post-drain record allows sending; first successful send only then locks m2 at line 1212."
+        }
+      ],
+      "impact": "A model rejected because it differed from the saved first-request selection can become the next request selection merely by resuming the queue, without explicit model confirmation.",
+      "contractRefs": [
+        "PRODUCT.md:47",
+        "PRODUCT.md:82",
+        "PRODUCT.md:144"
+      ],
+      "minimalProtectionSuggestion": "After a successful save and before drain, retain exactly the saved snapshot as the expected/locked baseline, or equivalently latch a persistent block against it. A cosmetic blocked event or one-attempt rejection is insufficient. Preserve first-draft explicit configuration change paths and saved baseline on expiry or send failure.",
+      "requiredRegression": "After the controlled first-model race rejects, a second ordinary request must remain rejected with zero wire prompts and saved m1. Rechecking/restoring m1 or an explicit supported configuration change with confirmed response and successful persistence may permit a later send. Matching updates, unchanged first sends, existing established-session protection, expired requests and pre-wire send failure require appropriate boundary coverage.",
+      "testGapRef": "src-tauri/src/acp_client/prompt_config_race_tests.rs:234",
+      "testGap": "The v1 first-model test checks only first rejection and persisted m1, not ready/blocked event status or a second request.",
+      "sourceVersion": "V1 only: initial pump 4840a3d3f80791621173f3861147605f64faa301282a0adac6d71f0c650f2655; test 995a697003d660b7a74e0f02b87cf2d2800e809b20f0b5199e71fade20312431"
+    }
+  ],
+  "positiveObservations": [
+    {
+      "ref": "src-tauri/src/acp_client/pump/restore_config.rs:263",
+      "conclusion": "Every currently queued config dispatch updates both model and permission guards before its raw/projection event; malformed config latches model unknown."
+    },
+    {
+      "ref": "src-tauri/src/acp_client/pump.rs:1176",
+      "conclusion": "After save/drain, permission readiness and model readiness/record equality are checked before synchronous prompt dispatch. The covered first attempt cannot send a routed changed selection."
+    },
+    {
+      "ref": "src-tauri/src/acp_client/permission_guard.rs:94",
+      "conclusion": "Unsolicited permission change invalidates readiness and cannot itself re-confirm it, including change-back."
+    },
+    {
+      "ref": "src-tauri/src/acp_client/session.rs:493",
+      "conclusion": "Pump-returned definite pre-wire error is FAILED-prefixed; timeout/channel uncertainty remains distinct."
+    },
+    {
+      "ref": "src-tauri/src/acp_client/session_commands.rs:158",
+      "conclusion": "FAILED CONFIG_* maps to rejected/config_*; other known FAILED permission error remains rejected/failed, not unknown."
+    },
+    {
+      "ref": "src/runtime/sessions.ts:1028",
+      "conclusion": "Known rejection removes optimistic user item and pauses without removing exact queued blocks; finally flush persists pause and queue. Unknown result follows a separate uncertain path."
+    },
+    {
+      "ref": "src/runtime/queue.ts:55",
+      "conclusion": "Paused queue cannot automatically drain."
+    },
+    {
+      "ref": "src/runtime/sessions.permission-scope.test.ts:140",
+      "conclusion": "Existing source test asserts exact input/attachment preservation and no implicit retry after definite permission-scope rejection. Reviewer did not rerun it."
+    }
+  ],
+  "controlledTestDesignReview": {
+    "ref": "src-tauri/src/acp_client/prompt_config_race_tests.rs:136",
+    "assessment": "The SQLite BEGIN IMMEDIATE barrier, initial prompt poll, observed work lease, and incoming-actor fence distinguish an update already routed during storage wait from timing-by-sleep. Assertions cover wire prompt counts and persisted selection. This is meaningful product-path coverage, not a guard-only mirror.",
+    "v1Cases": [
+      "established model change",
+      "established permission change",
+      "first model change",
+      "matching established update"
+    ],
+    "executionStatus": "Not executed by this reviewer; backend owns Cargo and must provide raw exit/result evidence."
+  },
+  "limits": [
+    "drain covers the local queue prefix already routed. It does not provide an atomic protocol guarantee against a remote Agent changing configuration after the final local drain or without a notification.",
+    "No installed-app or real-Agent conclusion is established by this source review or controlled fixture.",
+    "Permission scope checks are based on currently verified capability shape/effect and should not be generalized to all Agents.",
+    "Report intentionally remains OPEN until backend v2 source and controlled regression evidence are independently rechecked."
+  ],
+  "concurrentEditObserved": {
+    "paths": [
+      "src-tauri/src/acp_client/pump.rs",
+      "src-tauri/src/acp_client/prompt_config_race_tests.rs"
+    ],
+    "observation": "End hash verification detected backend v2 edits during report creation. Current pump adds lock after save before drain at line 1174; current first-model test adds blocked-event/second-request/persisted-m1 checks and matching first-prompt case. V1 finding is retained as OPEN pending stable-v2 independent review and execution evidence; it is not asserted as an unchanged current-source defect.",
+    "fullV2ReviewComplete": false
+  }
+}

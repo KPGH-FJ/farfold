@@ -24,9 +24,11 @@ export function DocumentTextDetails({
                 : S.xlsxVisible}
             </p>
           )}
+          {presentation.pdfScope && <p>{S.pdfSavedScope}</p>}
           <p>{presentation.scope}</p>
           <p>{presentation.count}</p>
           {presentation.sheetCount && <p>{presentation.sheetCount}</p>}
+          {presentation.pageCount && <p>{presentation.pageCount}</p>}
           <details open={document.local!.partial}>
             <summary>{S.omissions}</summary>
             {document.local!.partial && <p>{S.scopePartial}</p>}

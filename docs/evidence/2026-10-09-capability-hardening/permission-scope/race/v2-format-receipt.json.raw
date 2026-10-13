@@ -1,0 +1,12 @@
+{
+  "command": [
+    "cargo",
+    "fmt",
+    "--check",
+    "--manifest-path",
+    "src-tauri/Cargo.toml"
+  ],
+  "actualExit": 0,
+  "elapsedSeconds": 1.103,
+  "checkedAt": "2026-10-13T07:38:49.695428+00:00"
+}

@@ -1,0 +1,23 @@
+{
+  "scope": "temporary SQLite + controlled JSON-RPC; no real Agent, app, account or user database",
+  "cause": "First-prompt save succeeded but guard was only locked after wire send, so refusal left ready/m2 and retry replaced persisted m1 without confirmation.",
+  "fix": "Lock saved baseline after successful save and before draining notifications; failed saves remain prior behavior. A saved baseline remains protected on expiry or send failure, matching persistence/restore.",
+  "red": {
+    "receipt": "v2-red-receipt.json",
+    "result": "exit101,4pass1fail; first refusal ready, repeat Ok,1wire,saved m2"
+  },
+  "green": {
+    "receipt": "v2-green-receipt.json",
+    "result": "exit0,5pass; first refusal blocked,repeat blocked,0wire,saved m1; first and established matching positive"
+  },
+  "regression": {
+    "receipt": "v2-regression-receipt.json",
+    "result": "exit0,37pass1ignored real-Agent"
+  },
+  "format": {
+    "receipt": "v2-format-receipt.json",
+    "result": "exit0"
+  },
+  "freeze": "v2-source-freeze.json",
+  "priorEvidence": "all original red/green/regression/freeze receipts preserved"
+}

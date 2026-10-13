@@ -1,0 +1,20 @@
+{
+  "stage": "v2-regression",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "prompt",
+    "--",
+    "--nocapture"
+  ],
+  "started": "2026-10-13T07:38:35.362433+00:00",
+  "actualExit": 0,
+  "elapsedSeconds": 2.432,
+  "inputCount": 439,
+  "inputsStable": true,
+  "changedInputs": [],
+  "log": "/Users/tw/Desktop/farfold/output/2026-10-13-prompt-config-race/v2-regression.log"
+}

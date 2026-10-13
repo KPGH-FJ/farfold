@@ -1,0 +1,138 @@
+{
+  "schema": 1,
+  "sourceCommit": "92aa4a27ca3e642bc260530ce27e36f9bd859566",
+  "appVersion": "0.1.7",
+  "formalApp": "/Applications/Farfold.app",
+  "platform": "macOS arm64",
+  "phase": "NATIVE_CONTENT_INPUT_SCOPED_VERIFIED_DATA_COMPARISON_HAS_THREE_UNLOCATED_DIFFERENCES",
+  "candidateChecksPassed": 9,
+  "installationChecksPassed": 10,
+  "installationDataManifest": {
+    "entries": 217400,
+    "threeWholeByteEqual": true,
+    "sha256": "00676cf166160567cbc2f32b2356874f3c04324bf7031aa2e2e3c06fac91c849"
+  },
+  "nativeXlsx": {
+    "realRequests": 2,
+    "completedRequests": 2,
+    "noThirdRequest": true,
+    "ownNativeSessionId": "01a132bf-ab5b-7291-bace-d89fb6d91119",
+    "independentCellCounts": [20, 25, 1, 1],
+    "allIndependentCellFieldsValuesTypesFormulaCacheAndOrderExact": true,
+    "wholeApprovedInputsMatched": true,
+    "recordedAgentToolCalls": 0,
+    "ordinaryPromptsEachRemovedExactlyOneTerminalLF": true,
+    "coldThreeWholeTextsAndExplicitAllScopesRetained": true,
+    "readonlyDidNotPermitSending": true,
+    "explicitRetainAndPermissionConfirmationDidNotAutoSend": true,
+    "modelBoth": "gpt-6-astra",
+    "reasoningBoth": "ultra",
+    "sourceExistingSelectedAccount": true,
+    "requestApprovalPolicyBoth": "on-request",
+    "requestSandboxBoth": "workspace-write",
+    "requestNetworkAccessBoth": false,
+    "reviewerBefore": "auto_review",
+    "reviewerAfter": "user",
+    "allPermissionSettingsUnchanged": false
+  },
+  "nativeSourceGuards": {
+    "xlsxChangedSourceBlocked": true,
+    "xlsxActualSavedConfirmationClearedOldSourceError": true,
+    "docxChangedSourceBlocked": true,
+    "docxViewAndCancelKeptOldSourceError": true,
+    "docxActualSavedConfirmationClearedOldSourceError": true,
+    "docxSourceOriginalRestored": true,
+    "docxFullRestoredTextBytes": 25744,
+    "docxFullRestoredTextSha256": "8ab725c787bc5419766279f098739c6819457fc45f2b9fb4a815b6231b6a3b13",
+    "docxNewRequests": 0,
+    "sourceBlockedMarkersWereNotDispatched": true
+  },
+  "nativeNew21": {
+    "missingFormulaCacheRemainedMissingWithAbsentValueElement": true,
+    "emptyFormulaCacheRemainedMissingWithPresentEmptyValueElement": true,
+    "cachedFormulaRetainedSavedValueWithoutEvaluation": true
+  },
+  "nativeNew22": {
+    "labelsAndWholeScopeSwitches": true,
+    "ordinaryTabArrowSpaceReturnEscapeActionsObserved": true,
+    "darkAndNarrowLayoutObserved": true,
+    "themeAndSizeReturnedToOriginal": true,
+    "optionTabNotTested": true
+  },
+  "nativeNew23": {
+    "sourceAndControlledVerified": true,
+    "formalFailureRetryNotInjectedNotTested": true
+  },
+  "normalExit": {
+    "forcedQuit": false,
+    "saveAndQuitObserved": true,
+    "exactFormalProcessCount": 0,
+    "unknownExternalWorkNotClassifiedCompletedOrStopped": true
+  },
+  "dataComparison": {
+    "captureActualExit": 0,
+    "captureChunk": "b33286",
+    "originalCompareActualExit": 2,
+    "originalCompareChunk": "ac4a82",
+    "originalCompareKeptUnchanged": true,
+    "independentNarrowCheckActualExit": 0,
+    "independentNarrowCheckChunk": "6bbfd5",
+    "oldWholeSessionsKept": 134,
+    "oldWholeDismissedRowsKept": 170,
+    "otherWholeAgentRowsKept": 39,
+    "otherWholeSettingsRowsKept": 52,
+    "oldFeedbackGroupsKept": 8,
+    "oldQueueGroupsKept": 3,
+    "otherOldComposersKept": 8,
+    "ownDocxOrdinaryTextKept": true,
+    "newOwnXlsxSessionRows": 1,
+    "remainingDifferences": 3,
+    "remainingDifferenceKinds": [
+      "Codex updated_at; exact writer unknown",
+      "one new dismissed row at own DOCX cwd; empty-draft identity attribution inferred only",
+      "own DOCX sendPending absent to false; restore parser and serializer candidate, exact writer unknown"
+    ],
+    "noBlanketRowTimeConfigOrDraftExemption": true,
+    "allOriginalFirstCapturesAndSourceStable": true
+  },
+  "permissionRestoreCounterexample": {
+    "officialDocxOldCompleteBytePrefixKept": true,
+    "onlyAppendedEvent": "thread_settings_applied",
+    "appendedBytes": 764,
+    "permissionProfileBefore": "managed restricted",
+    "permissionProfileAfter": "disabled",
+    "disabledMeaning": "unrestricted filesystem and enabled network in official Codex representation",
+    "exactConfigurationSource": "UNKNOWN",
+    "officialAdapterResumeOmitsConcreteScope": true,
+    "setterConfirmedForNextOrdinaryRequestOnly": true,
+    "nativeSlashCommandsModeTimingRiskSourceOnlyNotRealTested": true,
+    "noNextRealRequestBeforeScopeBoundaryReview": true
+  },
+  "proofRefs": [
+    {
+      "path": "output/2026-10-13-xlsx-input-native-closeout-independent/oracle-final-subreview/result.json",
+      "sha256": "a56491c1e0ac477dff38246bc9501e976e036a541dc29ec5ad5c7d0457ac4223"
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-native-closeout-independent/three-difference-review/review.json",
+      "sha256": "0c0713bcdd8a796072c7786202eaed50e064aa2d2ccfbc38f43b70d97e8e62d3"
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-native/95-own-docx-new20-native-facts.json",
+      "sha256": "718b8b432697968d0b5952b2e2a770124b652e3939e66a8b9195e03d473f045c"
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-native/98-native-end-source-integrity.json",
+      "sha256": "b9f636912292e5b447b41a543cd2a18ec61ff6cf86e8ffc977470ecacfa6dba7"
+    },
+    {
+      "path": "output/2026-10-13-permission-restore-localization/freeze.json",
+      "sha256": "7693587f62b1d6b3da963e1c8e3bfe33462dd39ea11b277b5d5704889811c967"
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-native-closeout-data/final-verification-private.json",
+      "sha256": "deed1cf298fa0bb07d44798e8aca7b52b32fa25c90b639d18312c5ac92ff73a2"
+    }
+  ],
+  "boundary": "Source, controlled browser, native actions, official content oracle and user-data retention are separate proof levels. Whole P08, NEW23 formal failure-Retry, full permissions recovery, all122 original conditions,29 Agent eight standards, Windows and public distribution remain incomplete. Private raw UI/Agent/database evidence is not published."
+}

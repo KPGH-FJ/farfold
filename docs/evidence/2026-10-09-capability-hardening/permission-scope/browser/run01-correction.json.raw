@@ -1,0 +1,12 @@
+{
+  "failure": "chromium-run01.json",
+  "cause": "Prepared inherited fixture preloaded the active ThreadState with ready permission. The only observed session_open was an unrelated preparation with nativeSessionId:null. The driver incorrectly treated any session_open as restore completion.",
+  "evidence": {
+    "actualPermission": "ready",
+    "nativeSessionIdInObservedOpen": null,
+    "sourceStable": true
+  },
+  "change": "Remove active-owner preseed only, retaining saved index and unsent draft; wait for exact native-pdf restoration and resumed field. Use real production restoration normalization.",
+  "productChanged": false,
+  "notClaimed": "No product restore failure established by run01."
+}

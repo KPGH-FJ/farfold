@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+const base='output/2026-10-13-permission-pdf-ui-integration';
+const gate=JSON.parse(fs.readFileSync(base+'/root-build-ready.json','utf8'));
+if(gate.ready!==true)throw Error('root build completion required');
+const scan=p=>fs.readdirSync(p,{withFileTypes:true}).flatMap(e=>e.isDirectory()?scan(p+'/'+e.name):[p+'/'+e.name]);
+const hash=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+const files=scan('dist'),input=files.filter(p=>/\/pdf_input\.worker-[\w-]+\.js$/.test(p)),parser=files.filter(p=>/\/pdf_input_parser\.worker-[\w-]+\.js$/.test(p));
+const checks=[];function check(name,pass){checks.push({name,pass:!!pass});if(!pass)throw Error(name);}
+let failure;
+try{check('exactly one bundled PDF coordinator worker',input.length===1);check('exactly one bundled PDF parser worker',parser.length===1);const text=fs.readFileSync(input[0],'utf8');check('coordinator points to exact emitted parser JS filename',text.includes(path.basename(parser[0])));check('no raw PDF TypeScript worker assets',!files.some(p=>/pdf_input.*\.ts$/.test(p)));check('nonempty coordinator/parser JS artifacts',input.concat(parser).every(p=>fs.statSync(p).size>1000));}catch(e){failure=String(e);}
+const result={schema:1,scope:'Static root-built artifact linkage only; no additional build or execution',rootBuild:gate,checks,failure,passed:!failure,assets:input.concat(parser).map(p=>({path:p,bytes:fs.statSync(p).size,sha256:hash(p)})),dist:files.sort().map(p=>({path:p,bytes:fs.statSync(p).size,sha256:hash(p)}))};
+fs.writeFileSync(base+'/built-static.json',JSON.stringify(result,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({passed:result.passed,checks,failure,assets:result.assets}));process.exitCode=result.passed?0:1;

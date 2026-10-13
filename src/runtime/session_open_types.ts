@@ -17,6 +17,7 @@ export interface OpenResult {
   configCheck?: ConfigCheck;
   permissionConfigId?: string;
   permissionState?: ThreadState["permissionState"];
+  permissionEffect?: unknown;
   service?: import("./credentials").ServiceIdentity | null;
   serviceContext?: string | null;
 }

@@ -1,0 +1,59 @@
+{
+  "status": "CONTROLLED_RACE_REPRODUCED_AND_FIXED",
+  "changes": [
+    "Drain configuration notifications routed during the asynchronous pre-prompt metadata save before sending.",
+    "Recheck the confirmed permission choice and model guard plus exact just-saved model/thinking record.",
+    "Keep initial guard lifetime, native request blocks, pre-wire rejection semantics and cancellation routing unchanged."
+  ],
+  "actualVerification": {
+    "red": {
+      "exit": 101,
+      "passed": 1,
+      "failed": 3,
+      "claim": "Three adverse cases actually dispatched one extra prompt despite the prior-update-routed protocol fence; matching control passed."
+    },
+    "green": {
+      "exit": 0,
+      "passed": 4,
+      "claim": "Three adverse cases reject before wire; matching update still sends. Saved model remains m1 and the work lease is released."
+    },
+    "regression": {
+      "exit": 0,
+      "passed": 36,
+      "ignored": 1,
+      "claim": "Prompt-related tests including save failure, queued expiry, cancellation ordering, context admission and restoration; real-Agent test remained ignored."
+    },
+    "format": {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "actualExit": 0,
+      "elapsedSeconds": 1.28
+    }
+  },
+  "inputStability": {
+    "eachRedGreenRegressionInputCount": 439,
+    "eachRunStable": true,
+    "finalCompiledInputsMatch": true
+  },
+  "limitations": [
+    "Temporary SQLite and owned local JSON-RPC only; no real Agent, installed application or user database.",
+    "Only already routed notifications observed before final synchronous send are checked; no atomic guarantee over future Agent-side changes.",
+    "NEW-24 full permission restore is not solved by this race fix.",
+    "Full seven engineering checks and independent review belong to root integration."
+  ],
+  "receipts": [
+    "red-receipt.json",
+    "red.log",
+    "green-receipt.json",
+    "green.log",
+    "regression-receipt.json",
+    "regression.log",
+    "format-receipt.json",
+    "source-freeze.json"
+  ]
+}

@@ -59,6 +59,18 @@ export const DOCUMENT_INPUT_STRINGS = {
   xlsxCount: (bytes: number) => `文字表示 ${bytes.toLocaleString()} 字节。`,
   xlsxScopeEmpty:
     "所选范围没有可读取的工作表；可明确选择包含隐藏内容后重新读取。",
+  pdfScope: "只加入可提取的页面文字，按文件页序保留提取结果。",
+  pdfRange: "PDF 文字读取范围",
+  pdfDecodedText: "读取可提取的页面文字（可能包含看不见的文字）",
+  pdfInvisibleConsent: "我选择此范围，并同意读取可能在页面上看不见的文字。",
+  pdfReadSelected: "读取此范围的文字",
+  pdfSavedScope: "已确认的 PDF 文字范围",
+  pdfPageCount: (count: number) => `本次处理 ${count} 页的可提取文字。`,
+  pdfCount: (bytes: number) => `文字表示 ${bytes.toLocaleString()} 字节。`,
+  pdfScopeRequired: "请先选择 PDF 文字读取范围。",
+  pdfIncomplete:
+    "未能可靠读取这份 PDF 的文字，原内容已保留。请检查文件后重新读取。",
+  pdfPagesWithoutText: "有页面未提取到文字，没有自动识别图片文字。",
   draftOnly: "确认只更新未发送内容；发送仍需单独操作。",
   allText: "本次拟加入的全部文字",
   previousText: "保留的原文字",
@@ -92,6 +104,9 @@ export function documentInputFailure(error: unknown): string {
       : undefined;
   if (typeof code === "string") {
     if (code === "scopeEmpty") return DOCUMENT_INPUT_STRINGS.xlsxScopeEmpty;
+    if (code === "scopeRequired")
+      return DOCUMENT_INPUT_STRINGS.pdfScopeRequired;
+    if (code === "incomplete") return DOCUMENT_INPUT_STRINGS.pdfIncomplete;
     if (
       [
         "noText",

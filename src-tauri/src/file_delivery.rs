@@ -24,6 +24,8 @@ mod ooxml_archive;
 pub use document::{DocxCapture, DocxReadFailure, read_docx};
 mod workbook;
 pub use workbook::{WorkbookCapture, WorkbookReadFailure, read_workbook};
+mod pdf_input;
+pub use pdf_input::{PdfInputCapture, PdfInputReadFailure, read_pdf_input};
 mod revision;
 pub use revision::{RevisionCheck, RevisionFailure, RevisionMode, check_revision};
 mod stream;

@@ -127,6 +127,21 @@ pub async fn file_delivery_read_docx(
 }
 
 #[tauri::command]
+pub async fn file_delivery_read_pdf_input(
+    webview: Webview,
+    file: VerifiedFile,
+) -> Result<file_delivery::PdfInputCapture, file_delivery::PdfInputReadFailure> {
+    require_main(&webview)
+        .map_err(|_| file_delivery::PdfInputReadFailure { code: "unreadable" })?;
+    // A timed-out IPC reply cannot cancel a started OS read. Its existing
+    // shared check slot stays held until that read actually returns.
+    crate::file_read_check::run(move || Ok(file_delivery::read_pdf_input(&file)))
+        .await
+        .map_err(|message| file_delivery::PdfInputReadFailure::check(&message))?
+        .map_err(Into::into)
+}
+
+#[tauri::command]
 pub async fn file_delivery_export_text(
     webview: Webview,
     text: String,

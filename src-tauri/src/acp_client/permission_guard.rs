@@ -1,11 +1,13 @@
 //! In-memory confirmation of a verified official permission option. Never a
 //! permission policy, Agent configuration source or persistent execution log.
+use super::permission_effect::{PermissionEffect, requires_current_scope};
 use serde_json::{Value, json};
 
 pub(crate) struct PermissionGuard {
     id: Option<String>,
     state: &'static str,
     confirmed: Option<String>,
+    effect: Option<PermissionEffect>,
     update_blocker: Option<crate::managed_update::ActivityPermit>,
 }
 fn selected(options: &Value) -> Option<&str> {
@@ -47,6 +49,7 @@ impl PermissionGuard {
             } else {
                 value.map(str::to_owned)
             },
+            effect: value.map(|_| PermissionEffect::next_ordinary_prompt()),
             update_blocker: None,
         }
     }
@@ -56,6 +59,15 @@ impl PermissionGuard {
     pub(crate) fn state(&self) -> &'static str {
         self.state
     }
+    pub(crate) fn effect(&self) -> Option<PermissionEffect> {
+        self.effect
+    }
+    pub(crate) fn blocks_prompt(
+        &self,
+        blocks: &[agent_client_protocol::schema::v1::ContentBlock],
+    ) -> bool {
+        self.effect.is_some() && requires_current_scope(blocks)
+    }
     pub(crate) fn is_permission(&self, id: &str) -> bool {
         self.id.as_deref() == Some(id)
     }
@@ -63,7 +75,7 @@ impl PermissionGuard {
         self.state == "ready"
     }
     pub(crate) fn event(&self) -> Value {
-        json!({"kind":"permissionState", "permissionConfigId":self.id, "permissionState":self.state})
+        json!({"kind":"permissionState", "permissionConfigId":self.id, "permissionState":self.state, "permissionEffect":self.effect})
     }
     pub(crate) fn begin(&mut self) {
         self.state = "changing";
