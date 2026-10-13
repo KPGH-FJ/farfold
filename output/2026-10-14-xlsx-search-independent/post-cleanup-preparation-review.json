@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T19:02:13.825937+00:00",
+  "result": "separateFinalizerAndPublisherV2ReadyForRootExecution",
+  "preparation": {
+    "path": "output/2026-10-14-xlsx-search-install-preparation/post-cleanup-preparation.json",
+    "bytes": 2318,
+    "sha256": "3902939b585cf32ddb13bfd45ddb5f97c30e764d84f269a1f45dd0247a8aeada"
+  },
+  "tools": [
+    {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/post-cleanup-finalize.py",
+      "bytes": 7996,
+      "sha256": "58bd796b1ad30c96fdf1dcfc9bf008c924d7d9b40ff31f233d5cd2f89936c2da"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/publish_installation_v2.py",
+      "bytes": 5847,
+      "sha256": "c5164b011794b96d91d04a3693c394ecf4f51c4f6581b439c0e395a2408efb3a"
+    }
+  ],
+  "originalFailure": {
+    "actualExitCode": 1,
+    "chunkId": "94984d",
+    "raw": {
+      "path": "output/2026-10-14-xlsx-search-independent/transcript-install/cleanup-failed.jsonl.raw",
+      "bytes": 1655,
+      "sha256": "6de7a2fb3a7eeb94f1b3c3a31bcd97050a488b9924468c9168c6ac493bf06e8c"
+    },
+    "manifest": {
+      "path": "output/2026-10-14-xlsx-search-independent/transcript-install/manifest.json",
+      "bytes": 3185,
+      "sha256": "44f2f7e68318ea63d8ad89608ddfbc7b53ebf892e4e9d34084b64cd25492a0fd"
+    },
+    "removalOccurredInThisFailedRun": true
+  },
+  "failureAnalysis": {
+    "path": "output/2026-10-14-xlsx-search-independent/cleanup-failure-review.json",
+    "bytes": 3312,
+    "sha256": "5661f92876b37c86fd19f89a5d30a76b274b2a019d7bea26c2c035060221d38e"
+  },
+  "checks": {
+    "allPreparationPinsAndTwoPreservedOriginalsMatch": true,
+    "originalFailureManifestUnchanged": true,
+    "savedFailureSchemaValidatorActuallyPassed": true,
+    "neitherNewToolContainsDeletionRenameOrCopyAppCall": true,
+    "neitherNewToolCallsOldZipMatches": true,
+    "pureZipAndFormalHelperHaveNoAPPOrDuplicateDependency": true,
+    "pureZipRequiresFullArchiveHashBytesCRCExactFiveMembersHashesSizesAndModes": true,
+    "finalizerRequiresSaved9And10AndFullThreeManifestGate": true,
+    "finalizerRequiresExactOriginalInstallationCopyAndDuplicateAbsence": true,
+    "formalFiveFilesAndModesRecheckedBeforeAndAfterArchiveValidation": true,
+    "receiptKeepsOriginalExitOneAndSaysFinalizerPerformedDeletionFalse": true,
+    "publisherV2DiffLimitedToOwnEntryNewZipHelperAndTwoAdditionalSafeToolCopies": true,
+    "publisherStillExcludesDBPrivateFullManifestsAndPrivateAX": true
+  },
+  "ownerRamEvidence": {
+    "receipt": {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/post-cleanup-ram-review.json",
+      "bytes": 1686,
+      "sha256": "6eab5e9b0d84ef08d3fe388b81956e22584168f493ff948987b03402ef6407a6"
+    },
+    "cases": 8,
+    "allPassed": true,
+    "notRerunByReviewer": true
+  },
+  "scope": [
+    "Root may now execute post-cleanup-finalize.py once, then publish_installation_v2.py after actual finalizer success. This review did not execute either main, installed_gate, real archive checks or data manifest parsing.",
+    "Original cleanup exit1 remains failure. Its deletion happened before the dependent ZIP recheck failed; the new finalizer only validates absence and surviving formal/archive evidence and writes the previously absent receipt.",
+    "Old publish_and_cleanup.py and publish_installation.py remain unchanged and must not be rerun. Candidate/app recreation is neither required nor performed.",
+    "New ZIP validation supplies sizes from the explicit verified formal bundle and compares complete archive CRC/hash/bytes/members/modes/payload, removing the candidate-APP stat dependency. Actual results and publication membership remain to be observed."
+  ],
+  "operationsByReviewer": {
+    "main": 0,
+    "installedGate": 0,
+    "realArchiveRead": 0,
+    "formalBundleRead": 0,
+    "manifestRead": 0,
+    "App": 0,
+    "processQuery": 0,
+    "SQLite": 0,
+    "databaseBytes": 0,
+    "deletion": 0,
+    "testsRerun": 0
+  }
+}

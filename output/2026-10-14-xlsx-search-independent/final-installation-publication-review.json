@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T19:08:20.332526+00:00",
+  "result": "installationPublicationAndSeparateRecoveryVerified",
+  "verification": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-install-review/verification.json",
+    "bytes": 16486,
+    "sha256": "de423595d52d3cfc224efabb0ac7bb1056dfcee2764f2028a7466398c268dcfc"
+  },
+  "candidate": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate.json",
+    "bytes": 49460,
+    "sha256": "fbdb9a57bad0166620c03b0db429c50231c4fb9670557a61217e85da42c9ba54"
+  },
+  "installed": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/install-independent-final.json",
+    "bytes": 97368,
+    "sha256": "57a740f3fda71de9d47f6254fdcef6d57c9bbfe55065f976fde3c16c25dd53d8"
+  },
+  "operation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/installation.json",
+    "bytes": 3492,
+    "sha256": "882940bd3859d378c771841052998d30dadfadf6d1e114aae3c75f93bd72210e"
+  },
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/duplicate-cleanup.json",
+    "bytes": 2484,
+    "sha256": "1175180597c4bbea1d82bb8010d90ed99da97c2d0d5e090a8bfa21ab874dedd9"
+  },
+  "actualSeparateRecoveryCompletions": [
+    {
+      "phase": "finalizer",
+      "chunkId": "bd5742",
+      "actualExitCode": 0,
+      "timestamp": "2026-10-13T19:05:28.004Z",
+      "sourceLine": 11503,
+      "sourceByteOffset": 32105644,
+      "sourceByteLength": 974,
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-post-cleanup/finalizer.jsonl.raw",
+        "bytes": 974,
+        "sha256": "d7fa5f008f1758e8f677918b356ee78c5f1da79842cf84b639f6eac9a736c102"
+      }
+    },
+    {
+      "phase": "publisher-v2",
+      "chunkId": "076422",
+      "actualExitCode": 0,
+      "timestamp": "2026-10-13T19:05:43.970Z",
+      "sourceLine": 11522,
+      "sourceByteOffset": 32154142,
+      "sourceByteLength": 940,
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-post-cleanup/publisher-v2.jsonl.raw",
+        "bytes": 940,
+        "sha256": "59f01b1e5c3cdb2d68daecbb8238b3d72a4846f6bd5649b0da9147c6b1d6db0e"
+      }
+    }
+  ],
+  "originalFailureManifestUnchanged": {
+    "path": "output/2026-10-14-xlsx-search-independent/transcript-install/manifest.json",
+    "bytes": 3185,
+    "sha256": "44f2f7e68318ea63d8ad89608ddfbc7b53ebf892e4e9d34084b64cd25492a0fd"
+  },
+  "publication": {
+    "exactRawCopies": 29,
+    "exactDirectoryMembers": 30,
+    "everyPairByteExact": true,
+    "originalWhitelistExactlyMatchesReviewedPublisher": true,
+    "databaseBytesOrFullUserManifestOrPrivateAXPublished": false,
+    "symlinkMembers": false
+  },
+  "savedInstallationEvidence": {
+    "candidateChecksPassed": 9,
+    "installedChecksPassed": 10,
+    "installedSourceCommit": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+    "threeActualCaptureSummariesEqual": true,
+    "manifestEntriesEach": 217400,
+    "threeManifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+    "fullManifestValidationPerformedByActualInstallerIndependentAndFinalizer": true,
+    "fullManifestsNotReopenedByReviewer": true,
+    "installationIsExactOperationCopy": true,
+    "originalCleanupActualExitCode": 1,
+    "separateFinalizerActualExitCode": 0,
+    "publisherV2ActualExitCode": 0,
+    "finalizerPerformedDeletion": false,
+    "duplicateCurrentlyAbsent": true,
+    "AppLaunchedForThisSlice": false,
+    "realAgentInvokedForThisSlice": false,
+    "nativePositiveSearchVerified": false
+  },
+  "boundary": [
+    "Source c89 installed with recorded retention and independent10. Separate recovery finalization succeeded while original cleanup remains exit1; original failed raw manifest and scripts unchanged.",
+    "Formal five-file/mode and fullZIP preservation were checked by the reviewed finalizer and v2 publisher with exact actual exit0 records retained. This review did not repeat bundle/ZIP or full data-manifest scans.",
+    "No native positive XLSX search, realAgent, permission recovery, completeP32 or acceptance of prior strict differences is inferred. Subsequent PDF source development is separate and current source equality is not required for these historical gates.",
+    "Only saved metadata/copy/hash verification and duplicate path existence check. No App, ps, SQLite, database byte read, tests or generated main."
+  ]
+}

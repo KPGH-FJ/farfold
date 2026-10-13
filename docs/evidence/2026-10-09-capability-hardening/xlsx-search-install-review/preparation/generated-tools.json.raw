@@ -1,0 +1,111 @@
+{
+  "phase": "fullyConfiguredForVerifiedInstallBeforeAppMutation",
+  "sourceCommit": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+  "notYetKnownPins": [],
+  "preparation": {
+    "path": "output/2026-10-14-xlsx-search-install-preparation/preparation.json",
+    "sha256": "85c8dd21a62dc2cd30f820338c50f8ab56b32dafd5ede6da35c8ffc7b2e6bfae"
+  },
+  "tools": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/prepare-candidate.py",
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1",
+      "pins": {}
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/verify-candidate.py",
+      "sha256": "ab21fa35a8976b4703d09b04fe2ad53ee053733c60a9e139e1787f08191cd38c",
+      "pins": {
+        "BASELINE_SHA": "3635dff69d1eaa388eca912ade4b575858c1adc7a43088a2b90d8ef8e831267e",
+        "SOURCE_COMMIT": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+        "ENGINEERING_SHA": "0694dd37dbb1d54e52529a9ed447f9ce8670fe7f2f381bb85d11c2e7dc993390",
+        "PRIVATE_ENGINEERING_SHA": "f928920ad2a962c445ee4f4d6f657adc6ab5d4a08390536af4c63f0d9569eb36",
+        "BASELINE_INSTALL_SHA": "0c3dc48a0a1fedea8f3940780917ad2986eda947b377ec96ae03f2af107c1a46",
+        "EXPECTED_INPUT_COUNT": 1842,
+        "BASELINE_NATIVE_SHA": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+        "PRIOR_QUIT_SHA": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+        "PRIOR_PROCESS_SHA": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c",
+        "ENGINEERING_PLAN_SHA": "a0ffe1ca43984921663a5b97d021a8363c02d53fd42a45ca4d001e7151d2b205",
+        "QUIT_CONTEXT_SHA": "b6bb997adbea13389eab605b1b38a50b782ae9a105c04de58b063ed4bfe51d14",
+        "QUIT_MANIFEST_SHA": "d4a3e377389ac349f7592ac38f112851a44a0f7410659ffc5754ea2b1ed34942",
+        "PRIOR_ACTUAL_PROCESS_SHA": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205",
+        "LATEST_DATA_CONSOLIDATED_SHA": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+        "INVENTORY_SHA": "32d00ac07782aa18692465eb059252b60f7de67c65a9f73913bca5dd0fe8926a",
+        "PREVIOUS_MANIFEST_SHA": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849"
+      }
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/data_manifest.py",
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "pins": {}
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/observe_normal_exit.py",
+      "sha256": "61b24bacd25903b44e9cad5f5201a5ad18ded14a1a8b24561fbfa1b5dad4e8a2",
+      "pins": {
+        "SOURCE_COMMIT": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea"
+      }
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/install_data_snapshot.py",
+      "sha256": "5b10eb37cc9ea52968bf3c32c12d3f7d2dbf4a23f5b335dbbee7923c1134c64b",
+      "pins": {
+        "SOURCE_COMMIT": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea"
+      }
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/capture_snapshot.py",
+      "sha256": "5f609a0f0c0eeade19bb42c4927d334982047a220690c3d56389c95fdce077e7",
+      "pins": {
+        "SOURCE_COMMIT": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea"
+      }
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/backup_metadata.py",
+      "sha256": "d4e4b08bf9babde19dfa54bd5835092e9824628d01ea77e054b0246f73c3da97",
+      "pins": {
+        "SOURCE_COMMIT": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea"
+      }
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/install_verified_candidate.py",
+      "sha256": "6d7eb986848a06d8867402413ee9d83bbce929bba0b007c5e5a66937ac4b34c8",
+      "pins": {
+        "SOURCE_COMMIT": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+        "NORMAL_EXIT_SHA": "279657b57509fccf21c83f9ce7fc143b6ad725f3620d1935e4f919e89d22e730",
+        "BACKUP_RECEIPT_SHA": "5ffb3bb0e2df8ccd9f55db60c87fe6c40585596ce56b5d71afeaf77ef28a888f",
+        "BEFORE_SUMMARY_SHA": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+        "PRIOR_QUIT_SHA": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+        "EXPECTED_INPUT_COUNT": 1842,
+        "BASELINE_NATIVE_SHA": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+        "PRIOR_PROCESS_SHA": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c",
+        "PRIOR_ACTUAL_PROCESS_SHA": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205"
+      }
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-independent-install/verify_installed_final.py",
+      "sha256": "90f20d31c5d828bef2452abdb7488b000f92a9bda4f5dc8a106645c97a86fe4a",
+      "pins": {
+        "SOURCE_COMMIT": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+        "BEFORE_SUMMARY_SHA": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+        "NORMAL_EXIT_SHA": "279657b57509fccf21c83f9ce7fc143b6ad725f3620d1935e4f919e89d22e730",
+        "PRIOR_QUIT_SHA": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+        "EXPECTED_INPUT_COUNT": 1842,
+        "BASELINE_NATIVE_SHA": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+        "PRIOR_PROCESS_SHA": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c"
+      }
+    }
+  ],
+  "beforeSummary": {
+    "path": "output/2026-10-14-xlsx-search-install/install-data-before-summary.json",
+    "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+  },
+  "backupReceipt": {
+    "path": "output/2026-10-14-xlsx-search-install/metadata-backup-receipt.json",
+    "sha256": "5ffb3bb0e2df8ccd9f55db60c87fe6c40585596ce56b5d71afeaf77ef28a888f"
+  },
+  "normalExit": {
+    "path": "output/2026-10-14-xlsx-search-install/normal-exit-observation.json",
+    "sha256": "279657b57509fccf21c83f9ce7fc143b6ad725f3620d1935e4f919e89d22e730"
+  }
+}

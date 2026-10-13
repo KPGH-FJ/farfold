@@ -1,0 +1,100 @@
+def previous_installation_evidence():
+    """Read saved 52d installation evidence; the last running App was still 9c.
+
+    No process query, DB bytes, SQLite, current data manifest, or App operation.
+    Original 10-check proof binds the saved manifests; fresh captures remain required.
+    """
+    values, refs = {}, {}
+    for name, item in PREVIOUS_INSTALL_REFS.items():
+        path = relative(item['path'])
+        need(path.suffix == '.json' and sha(path) == item['sha256']
+             and path.stat().st_size == item['bytes'], 'Previous installation evidence changed')
+        values[name], refs[name] = read(path), item
+    candidate, checked, independent, operation, backup, normal, tools = [values[k] for k in (
+        'candidate', 'installed', 'candidateIndependent', 'operation', 'backup', 'normal', 'tools')]
+    need(candidate['sourceCommit'] == checked['sourceCommit'] == independent['sourceCommit']
+         == operation['candidateCommit'] == backup['sourceCommit'] == normal['sourceCommit']
+         == tools['sourceCommit'] == BASELINE_COMMIT != LAST_RUNNING_COMMIT,
+         'Installed source and last-running source must be distinct')
+    need(candidate['phase'] == 'internalCandidatePreparedNotInstalled' and candidate['buildExitCode'] == 0
+         and candidate['sourceMatchesCommitBeforeAndAfter'] is True
+         and len(values['inputs']) == candidate['sourceInputCount'] == 1799,
+         'Previous candidate source/build proof differs')
+    for report, count in ((independent, 9), (checked, 10)):
+        need(report['result'] == 'passed' and report['failures'] == []
+             and len(report['checks']) == count
+             and all(row['passed'] is True for row in report['checks'].values()),
+             'Previous candidate/installed proof incomplete')
+    need(independent['inputReceipts']['candidateJsonSha256'] == refs['candidate']['sha256']
+         and independent['inputReceipts']['candidateInputsJsonSha256'] == refs['inputs']['sha256']
+         and operation['receiptHashes'] == {name: refs[key]['sha256'] for name, key in (
+             ('candidate', 'candidate'), ('inputs', 'inputs'), ('independent', 'candidateIndependent'))},
+         'Previous source/candidate receipts differ')
+    need(operation['phase'] == 'installedVerifiedNotLaunched' and operation['installed'] is True
+         and operation['copyStarted'] is True and operation['launched'] is False
+         and operation['realAgentInvoked'] is False and operation['onlyFormalAppReplaced'] is True
+         and operation['installedExactFiveFiles'] is True
+         and operation['formalAppProcessesBefore'] == operation['formalAppProcessesAfter'] == 0
+         and operation['installedFiles'] == candidate['candidateFiles']
+         and checked['checks']['candidateFormalFiveFiles']['files'] == candidate['candidateFiles']
+         and checked['checks']['candidateFormalFiveFiles']['modes'] == candidate['candidateModes'],
+         'Previous installation was not the saved unlaunched candidate')
+    need(all(values['privateInstalled'][key] == checked[key] for key in values['privateInstalled']
+             if key != 'refs') and refs['privateInstalled'] in checked['refs'],
+         'Actual private/public installed proof differs')
+    summaries = []
+    for phase in ('before', 'preinstall', 'after'):
+        summary, execution = values[phase + 'Summary'], values[phase + 'Execution']
+        need(set(summary) == {'counts', 'sha256'} and summary['sha256'] == PREVIOUS_MANIFEST_SHA
+             and sum(sum(counts.values()) for counts in summary['counts'].values()) == 217400
+             and type(execution['exitCode']) is int and execution['exitCode'] == 0
+             and execution['stderr'] == '' and json.loads(execution['stdout']) == summary,
+             'Previous actual snapshot capture differs')
+        need(execution['argv'][1:] == [str(ROOT / 'output/2026-10-14-docx-search-install/install_data_snapshot.py'),
+                                      phase, '--normal-window-close-observed'],
+             'Previous snapshot command differs')
+        manifest_path = 'output/2026-10-14-docx-search-install/install-data-' + phase + '.jsonl'
+        matched = [row for row in checked['refs'] if row['path'] == manifest_path]
+        need(len(matched) == 1 and matched[0]['sha256'] == PREVIOUS_MANIFEST_SHA
+             and matched[0]['bytes'] == operation['beforeSnapshot']['rawBytes'],
+             'Previous installed proof manifest binding differs')
+        summaries.append(summary)
+    need(summaries[0] == summaries[1] == summaries[2]
+         and checked['checks']['retainedDataEquality'] == {
+             'passed': True, 'allThreeManifestsEqual': True, 'entriesEach': 217400, 'sha256': PREVIOUS_MANIFEST_SHA}
+         and operation['beforeSnapshot']['counts'] == summaries[0]['counts']
+         and operation['beforeSnapshot']['sha256'] == PREVIOUS_MANIFEST_SHA
+         and operation['beforeSnapshot']['summarySha256'] == refs['preinstallSummary']['sha256'],
+         'Previous three-manifest equality differs')
+    stage = latest_data_evidence()
+    need(backup['backupSha256'] == LATEST_DATA_CONSOLIDATED_SHA
+         and backup['sourceAndCaptureUnchanged'] is True and backup['integrity'] == 'ok'
+         and backup['sourceBeforeManifestSha256'] == PREVIOUS_MANIFEST_SHA
+         and backup['capturedFiles'] == {name: row['sha256'] for name, row in stage['sourceFiles'].items()}
+         and operation['privateBackup']['receiptSha256'] == refs['backup']['sha256']
+         and operation['privateBackup']['backupSha256'] == LATEST_DATA_CONSOLIDATED_SHA,
+         'Previous backup does not retain the sealed NEW26 bytes')
+    normalization = backup['backupNormalization']
+    need(normalization['integrity'] == 'ok' and normalization['modeAfter'] == 'delete'
+         and normalization['SQLiteOpenScope'] == 'secondWorkingAndNewConsolidatedOnly'
+         and normalization['connectionsClosedVerified'] is True
+         and normalization['sidecarsAbsentAfterClose'] is True
+         and normalization['deletedOrMovedSidecars'] is False, 'Previous backup normalization differs')
+    need(normal['originalNormalExit'] == {'path': str(PRIOR_QUIT.relative_to(ROOT)), 'sha256': PRIOR_QUIT_SHA}
+         and normal['rootConfirmedNoAppRestartSincePriorQuit'] is True and normal['newQuitPerformed'] is False
+         and normal['latestClosedDataStage'] == stage and backup['normalExitSha256'] == refs['normal']['sha256'],
+         'Previous install continuity differs from actual last-running 9c')
+    need(tools['phase'] == 'fullyConfiguredForVerifiedInstallBeforeAppMutation'
+         and tools['notYetKnownPins'] == [] and len(tools['tools']) == 9,
+         'Previous tool seal incomplete')
+    for tool in tools['tools']:
+        path = relative(tool['path'])
+        need(path.suffix == '.py' and sha(path) == tool['sha256'], 'Previous executed tool changed')
+        refs['tool:' + path.name] = {'path': tool['path'], 'bytes': path.stat().st_size, 'sha256': tool['sha256']}
+    need(quit_timestamp(read(PRIOR_QUIT)['timestamp']) <= quit_timestamp(normal['observedAtUtc'])
+         <= quit_timestamp(operation['startedAtUtc']) <= quit_timestamp(operation['completedAtUtc'])
+         <= quit_timestamp(checked['completedAt']), 'Previous install chronology differs')
+    return {'installedSourceCommit': BASELINE_COMMIT, 'lastRunningSourceCommit': LAST_RUNNING_COMMIT,
+            'installedButNotLaunchedAtRecordedGate': True, 'references': refs,
+            'savedThreeManifestSha256': PREVIOUS_MANIFEST_SHA, 'savedBackupSha256': LATEST_DATA_CONSOLIDATED_SHA,
+            'boundary': 'Saved 52d installation over last-running 9c, not a fabricated 52d quit. Root must confirm no later restart and obtain fresh exact process absence, captures, backup, and three-manifest equality.'}

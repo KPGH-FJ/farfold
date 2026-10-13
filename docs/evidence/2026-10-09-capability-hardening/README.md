@@ -8,13 +8,15 @@ NEW-26 的[系统文件面板本机分项](file-dialog-native/installed-native-s
 
 P32 的[所选本地 XLSX 附件临时内容搜索](xlsx-search/verification.json)已完成本片源码与受控验证：明确开始后只查找可见工作表范围内的保存值、公式缓存及实际保存且允许读取的公式文字；各单元格及字段分别匹配，不计算、不补写或展开公式，不搜索显示格式、标签或属性。隐藏、可见性未知及合并覆盖内容不参与，无可见工作表明确拒绝；缓存可能过期及省略范围说明常显。每个完整源文件 ≤1 MiB，与 DOCX、UTF-8 文字共用最多 20 个文件、实际检索文字合计 ≤16 MiB 的预算；来源变化、取消和迟到返回仍撤回结果。
 
-后端定向 40 项、前端定向 190 项通过；完整 App 的 Chromium/WebKit 各 162 项检查、17 个场景通过，使用生产文档 Worker 与受控文件返回，源码稳定、页面错误和外部网络请求均为 0。原未命中及字符串检查、夹具排版失败保留并区分。本片全套七项工程检查与正式应用验证尚未完成；当前正式应用仍为已安装但未启动的 `52d21a3`，不将受控结果提升为正式附件搜索正例，NEW-24 与 P32 整项仍开放。
+后端定向 40 项、前端定向 190 项通过；完整 App 的 Chromium/WebKit 各 162 项检查、17 个场景通过，使用生产文档 Worker 与受控文件返回，源码稳定、页面错误和外部网络请求均为 0。原未命中及字符串检查、夹具排版失败保留并区分。[本片七项工程检查](xlsx-search-checks/verification.json)在 1,842 个稳定输入上全部实际退出 0：前端 496 文件 / 5,962 项，Rust 1,674 项 / 6 忽略。
+
+源码 `c89b8f82` 已推送 main，唯一正式应用已更新为该版本 / 0.1.7 arm64；[候选检查](xlsx-search-candidate/candidate-independent.json)9/9、[安装独立检查](xlsx-search-candidate/install-independent-final.json)10/10。[安装记录](xlsx-search-install-review/verification.json)中，安装前、替换前及安装后三份 217,400 条完整清单相同，数据库备份保持。重复打包应用已移除，正式应用和候选 ZIP 保留。清理脚本在删除后引用已删目录，原退出 1 保留；独立恢复工具未再删除，经正式文件及 ZIP 核对后补齐回执。安装后尚未启动，附件搜索命中与来源跳转仍未在正式窗口验证；NEW-24 与 P32 整项保持开放，下一片补 PDF 附件内容搜索。
 
 P32 的[所选本地 DOCX 附件临时文字搜索](docx-content-search/implementation.json)已完成本片源码与受控验证：明确开始后只查找作者文字，段落、单元格及文档区域分别匹配，省略内容提示常显；来源变化、取消或迟到返回撤回结果。每源文件 ≤1 MiB、最多 20 个文件，实际 UTF-8 检索文字合计 ≤16 MiB，不建立持久正文索引。
 
 前端 v1 定向 109 项、v2 的可见省略提示及字符串 6 项通过，后端定向 24 项通过。完整 App 的 Chromium/WebKit 最终各 60 项检查、11 个场景通过，使用真实文档 Worker 与受控文件返回，源文件稳定且无页面错误或外部网络请求。原 DOCX 未命中、预取预算、提示折叠及测试脚本错误均保留并区分。[本片七项工程检查](docx-search-checks/verification.json)第二轮在 1,799 个稳定输入上全部实际退出 0：前端 494 文件 / 5,885 项，Rust 1,666 项 / 6 忽略。首轮 Rust 音频取消后清理测试失败保留；仅两份测试改为等待真实取消完成事件，未修改生产取消语义。
 
-源码 `52d21a3` 已推送 main，当前唯一正式应用已更新为该版本 / 0.1.7 arm64；[候选独立检查](docx-search-candidate/candidate-independent.json)9/9、[安装独立检查](docx-search-candidate/install-independent-final.json)10/10。[安装](docx-search-candidate/installation.json)前、替换前和安装后三份 217,400 条完整清单相同（SHA-256 `eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849`），数据库备份保持；重复打包应用已精确移除，正式应用和候选 ZIP 保留。安装后尚未启动；附件读取、匹配及来源跳转正例仍未在正式应用验证。安装与受控通过不提升 NEW-24 或 P32 整项结论。
+此前 DOCX 搜索源码 `52d21a3` 已推送 main，并曾安装为 0.1.7 arm64；[候选独立检查](docx-search-candidate/candidate-independent.json)9/9、[安装独立检查](docx-search-candidate/install-independent-final.json)10/10。[安装](docx-search-candidate/installation.json)前、替换前和安装后三份 217,400 条完整清单相同（SHA-256 `eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849`），数据库备份保持；重复打包应用已精确移除，正式应用和候选 ZIP 保留。安装后尚未启动；附件读取、匹配及来源跳转正例仍未在正式应用验证。安装与受控通过不提升 NEW-24 或 P32 整项结论。
 
 P27 的[截图不可用请求保护](screenshot-unavailable/implementation.json)已完成源码定向 2 项及相关回归 58 项：`screenshot=true` 按原请求身份拒绝，普通文字路径保持；生产截图能力仍缺少。P32 的[所选本地文本附件临时搜索](attachment-content-search/implementation.json)已完成本片源码与受控验证，明确选择后才读取，不连接 Agent 或建立持久正文索引。前端 v1 定向 6 文件 / 68 项、Chromium 与 WebKit 各 55 项通过；当前 v3 仅累计两处文案修正，v2、v3 各补字符串检查 2/2，未重跑完整浏览器。后端有界读取、来源核验及共用读取池已有定向验证。本片已提交并安装 `9c278d82`；P27 生产截图及 P32 整项仍未完成。
 

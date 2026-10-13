@@ -1,0 +1,237 @@
+{
+  "sourceCommit": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+  "observedAtUtc": "2026-10-13T18:45:41.203127+00:00",
+  "userAuthorizedContinuousDevelopment": true,
+  "normalQuitObserved": true,
+  "forcedQuit": false,
+  "formalProcessCountAfter": 0,
+  "newQuitPerformed": false,
+  "unconfirmedWorkMarkedComplete": false,
+  "rootConfirmedNoAppRestartSincePriorQuit": true,
+  "originalNormalExit": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/24-call_ZEZOnBmsADcKmAIHpmZgGYZ9.jsonl.raw",
+    "sha256": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad"
+  },
+  "originalQuitContext": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/23-call_uuooA1Gh1QJrWmJl4RZLWkJd.jsonl.raw",
+    "sha256": "b6bb997adbea13389eab605b1b38a50b782ae9a105c04de58b063ed4bfe51d14"
+  },
+  "originalQuitManifest": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/manifest.json",
+    "sha256": "d4a3e377389ac349f7592ac38f112851a44a0f7410659ffc5754ea2b1ed34942"
+  },
+  "originalExactExecutableProcessReceipt": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/01-final-process.json",
+    "sha256": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c"
+  },
+  "originalProcessExecution": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/03-final-process-exec.jsonl.raw",
+    "sha256": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205"
+  },
+  "formalBaselineNative": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/installed-native-scoped.json",
+    "sha256": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96"
+  },
+  "latestClosedDataStage": {
+    "references": {
+      "execution.json": {
+        "path": "output/2026-10-14-file-dialog-data/execution.json",
+        "bytes": 980,
+        "sha256": "803c0790ed7ea0a39f4721241f20f2c6b68fca61cf633df475f9b33ddca89bd6"
+      },
+      "capture-receipt-private.json": {
+        "path": "output/2026-10-14-file-dialog-data/capture-receipt-private.json",
+        "bytes": 10334,
+        "sha256": "7de7a6ad67f60922869b6dd4aea6a128b9030a2ca6d4c65c167cd1bf2bccde99"
+      },
+      "comparison-private.json": {
+        "path": "output/2026-10-14-file-dialog-data/comparison-private.json",
+        "bytes": 3936,
+        "sha256": "a087bc3a57afe2e3fa41039e702e453e7b5ccdb40d9766f5b7b24a50a42592cc"
+      },
+      "final-verification-private.json": {
+        "path": "output/2026-10-14-file-dialog-data/final-verification-private.json",
+        "bytes": 792,
+        "sha256": "dba4b6ac8b53b44f5e8f4447071c67ac5b039cc6534ed893478ec27fa259efd8"
+      },
+      "config.json": {
+        "path": "output/2026-10-14-file-dialog-data/config.json",
+        "bytes": 1321,
+        "sha256": "43356564b8c568dd0a30456c6d0207378df31635b6bc5abe00c9211cbe5f207e"
+      },
+      "stdout.raw": {
+        "path": "output/2026-10-14-file-dialog-data/stdout.raw",
+        "bytes": 93,
+        "sha256": "69f6e60483803dc5a06e45ed88cee6140936c57be9139f63fa673badd4c01ec3"
+      },
+      "stderr.raw": {
+        "path": "output/2026-10-14-file-dialog-data/stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "adapter-review.json": {
+        "path": "output/2026-10-14-file-dialog-data-independent/adapter-review.json",
+        "bytes": 5912,
+        "sha256": "5e32b1c9f2e5331b6b440d5da04c4966d825daf9725a39599ebca4ed9c56b285"
+      }
+    },
+    "sourceFiles": {
+      "farfold.sqlite3": {
+        "sha256": "f7ddc093c95edd33c01bb65146cff52f5570e3b8ebb6fabc6ad95a4cf1eb4da5",
+        "bytes": 512000
+      },
+      "farfold.sqlite3-wal": {
+        "sha256": "6e4974af2c3e869b67234a7b5a2495407d447cd1ba57264dc9f4b92f88cb059e",
+        "bytes": 4169472
+      },
+      "farfold.sqlite3-shm": {
+        "sha256": "bb104a2cbc5e5adcff76748ed2f11654fd46fe86c88220e69437cfe59a57ffb9",
+        "bytes": 32768
+      }
+    },
+    "strictExitCode": 2,
+    "differencesAccepted": false,
+    "boundary": "Latest closed NEW26 provenance only. Preserve capture exit2/difference1 and earlier unaccepted strict2. New installation still requires fresh full manifests and raw backup."
+  },
+  "previousUnlaunchedInstallation": {
+    "installedSourceCommit": "52d21a3adb64816e868c4146166a7999754422e7",
+    "lastRunningSourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+    "installedButNotLaunchedAtRecordedGate": true,
+    "references": {
+      "candidate": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate.json",
+        "bytes": 51452,
+        "sha256": "3635dff69d1eaa388eca912ade4b575858c1adc7a43088a2b90d8ef8e831267e"
+      },
+      "candidateIndependent": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-independent.json",
+        "bytes": 3060,
+        "sha256": "c50e5a9d3aeb67de91eb48f4701ccc0cba0cde431e5b0e887c525405dafc94c6"
+      },
+      "inputs": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-inputs.json",
+        "bytes": 210821,
+        "sha256": "6b62cd4201ec1e12c2f95f4327962bcb08277498108a44530ba3fc074824f7f3"
+      },
+      "installed": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/install-independent-final.json",
+        "bytes": 101866,
+        "sha256": "0c3dc48a0a1fedea8f3940780917ad2986eda947b377ec96ae03f2af107c1a46"
+      },
+      "operation": {
+        "path": "output/2026-10-14-docx-search-install/install-operation.json",
+        "bytes": 3492,
+        "sha256": "6aeba1b78348c8566d65aeb37d2aa9f9f372cd9fef9a9f71603340e1c918db03"
+      },
+      "backup": {
+        "path": "output/2026-10-14-docx-search-install/metadata-backup-receipt.json",
+        "bytes": 1358,
+        "sha256": "07e3f9517feb886b8505304ef1f70299ec513aff7dc12c32a561f64d7771c114"
+      },
+      "normal": {
+        "path": "output/2026-10-14-docx-search-install/normal-exit-observation.json",
+        "bytes": 4781,
+        "sha256": "dc80c96b70c604ebb13e860c08f280a408b53ba5317010198eb6d106a848c10b"
+      },
+      "tools": {
+        "path": "output/2026-10-14-docx-search-install-preparation/generated-tools.json",
+        "bytes": 5806,
+        "sha256": "734953e5b8226cad089b19feaf3932aa80d487f679fefa027cc729b6df69ca6b"
+      },
+      "privateInstalled": {
+        "path": "output/2026-10-14-docx-search-independent-install/install-final-review.json",
+        "bytes": 101654,
+        "sha256": "0e37214bc7612a5ff7bddf81ea09b9f063f34b5b5995aebd2f817bf72399f9c3"
+      },
+      "beforeSummary": {
+        "path": "output/2026-10-14-docx-search-install/install-data-before-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "beforeExecution": {
+        "path": "output/2026-10-14-docx-search-install/snapshot-before-execution.json",
+        "bytes": 619,
+        "sha256": "fa1bc6c022b4ec9bb81a661b8011e821cea1276fd2697d47df8f02e3709a0e0a"
+      },
+      "preinstallSummary": {
+        "path": "output/2026-10-14-docx-search-install/install-data-preinstall-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "preinstallExecution": {
+        "path": "output/2026-10-14-docx-search-install/snapshot-preinstall-execution.json",
+        "bytes": 623,
+        "sha256": "1517da74bd4282289ea60db2105cf1821689755048837af7ebbee71f3b56f6f1"
+      },
+      "afterSummary": {
+        "path": "output/2026-10-14-docx-search-install/install-data-after-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "afterExecution": {
+        "path": "output/2026-10-14-docx-search-install/snapshot-after-execution.json",
+        "bytes": 618,
+        "sha256": "dd897f6caae60ecdad4f17144da57519070a3115b42364b64717777f30613835"
+      },
+      "tool:prepare-candidate.py": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/prepare-candidate.py",
+        "bytes": 4493,
+        "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+      },
+      "tool:verify-candidate.py": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/verify-candidate.py",
+        "bytes": 59172,
+        "sha256": "c5569619e1995e14c375602669b993c8d6110db74b1b0538f588d02953918fa2"
+      },
+      "tool:data_manifest.py": {
+        "path": "output/2026-10-14-docx-search-install/data_manifest.py",
+        "bytes": 4258,
+        "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+      },
+      "tool:observe_normal_exit.py": {
+        "path": "output/2026-10-14-docx-search-install/observe_normal_exit.py",
+        "bytes": 3435,
+        "sha256": "c095f02abfdf7ec21358c5c3d9297f25a7bd0d15d3de154aea9ed4e5bd4d6ff7"
+      },
+      "tool:install_data_snapshot.py": {
+        "path": "output/2026-10-14-docx-search-install/install_data_snapshot.py",
+        "bytes": 6222,
+        "sha256": "d3a3c52024630411211dbf7b6f59847c5b428b5b68471b64942444237fb51afc"
+      },
+      "tool:capture_snapshot.py": {
+        "path": "output/2026-10-14-docx-search-install/capture_snapshot.py",
+        "bytes": 2841,
+        "sha256": "ff12a8118e4295cdee3b2b04b84aa80c05253dbc92cd6a82e16ab49fdc7dc27e"
+      },
+      "tool:backup_metadata.py": {
+        "path": "output/2026-10-14-docx-search-install/backup_metadata.py",
+        "bytes": 10577,
+        "sha256": "2abca5445040f5dbb7c3513153a86426d5e91c1d3c0a3ea946fcfc4c3ecea15f"
+      },
+      "tool:install_verified_candidate.py": {
+        "path": "output/2026-10-14-docx-search-install/install_verified_candidate.py",
+        "bytes": 42169,
+        "sha256": "b445dbfbe51c69b62f228afdf2ef5059324894539533dfa70cc0c66f807568b6"
+      },
+      "tool:verify_installed_final.py": {
+        "path": "output/2026-10-14-docx-search-independent-install/verify_installed_final.py",
+        "bytes": 14247,
+        "sha256": "29779512788bfe7973b604d4b2ae265b842542a0a7ba09168dc05b6497c8f948"
+      }
+    },
+    "savedThreeManifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+    "savedBackupSha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+    "boundary": "Saved 52d installation over last-running 9c, not a fabricated 52d quit. Root must confirm no later restart and obtain fresh exact process absence, captures, backup, and three-manifest equality."
+  },
+  "processCheck": {
+    "argv": [
+      "/bin/ps",
+      "-axo",
+      "pid=,comm="
+    ],
+    "exitCode": 0,
+    "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "matchingPids": []
+  },
+  "boundary": "Actual 9c NEW26 save/quit23/24 and exact-process03 with original execution plus root-confirmed no restart and fresh exact process absence. Saved 52d installation was not launched; prior strict data differences remain recorded; no new quit, launch, data mutation or unknown work completion."
+}

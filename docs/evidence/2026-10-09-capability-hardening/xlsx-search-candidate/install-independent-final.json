@@ -1,0 +1,1667 @@
+{
+  "sourceCommit": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+  "startedAt": "2026-10-13T18:54:02.049199+00:00",
+  "completedAt": "2026-10-13T18:54:14.104550+00:00",
+  "result": "passed",
+  "checks": {
+    "normalExitAndFreshPreparation": {
+      "passed": true,
+      "freshInstallDirectory": "output/2026-10-14-xlsx-search-install",
+      "priorFormalSourceCommit": "52d21a3adb64816e868c4146166a7999754422e7",
+      "lastRunningSourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+      "boundary": "Actual 9c NEW26 save/quit23/24 and exact process03 with original execution; root-confirmed continuity and fresh absence. Prior data differences remain recorded. No newly fabricated quit or unknown work closure."
+    },
+    "candidateReceipts": {
+      "passed": true,
+      "candidateChecks": 9
+    },
+    "exactSourceAndEngineering": {
+      "passed": true,
+      "inputCount": 1842,
+      "engineering": {
+        "receipt": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/verification.json",
+        "sha256": "0694dd37dbb1d54e52529a9ed447f9ce8670fe7f2f381bb85d11c2e7dc993390",
+        "originalPrivateReceipt": {
+          "path": "output/2026-10-14-xlsx-search-integration/checks-run/summary.json",
+          "sha256": "f928920ad2a962c445ee4f4d6f657adc6ab5d4a08390536af4c63f0d9569eb36"
+        },
+        "inputCount": 1842,
+        "references": {
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/verification.json": "0694dd37dbb1d54e52529a9ed447f9ce8670fe7f2f381bb85d11c2e7dc993390",
+          "output/2026-10-14-xlsx-search-integration/checks-run/summary.json": "f928920ad2a962c445ee4f4d6f657adc6ab5d4a08390536af4c63f0d9569eb36",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/summary.json.raw": "f928920ad2a962c445ee4f4d6f657adc6ab5d4a08390536af4c63f0d9569eb36",
+          "output/2026-10-14-xlsx-search-integration/checks-freeze/freeze.json": "a0ffe1ca43984921663a5b97d021a8363c02d53fd42a45ca4d001e7151d2b205",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/freeze.json.raw": "a0ffe1ca43984921663a5b97d021a8363c02d53fd42a45ca4d001e7151d2b205",
+          "output/2026-10-14-xlsx-search-integration/inventory-plan-final.json": "32d00ac07782aa18692465eb059252b60f7de67c65a9f73913bca5dd0fe8926a",
+          "output/2026-10-13-xlsx-input-checks-preparation/inventory.py": "7784a38803fb1c10da014755cde9901f9deba982ffb01ab1076dfd2060e3e076",
+          "output/2026-10-13-xlsx-input-checks-preparation/runner-v4/run_checks.py": "0cf4b3fd62d3d94f1781119f65d87f68a9fd26a6afb5e95ca7e56bda3f140a0c",
+          "output/2026-10-14-xlsx-search-backend/source-freeze.json": "7d1cb900612bfdd732ed8b56d61563f03257cf8dc78453c8f76d7c6401c2ef17",
+          "output/2026-10-14-xlsx-search-frontend/source-freeze-v1.json": "106bd070a18364d1bf9fe0f13563dbefd29c672f1bb61f979c98123f2f51849d",
+          "output/2026-10-14-xlsx-search-integration/prepare_inventory.py": "32137d0dd417c72e0b169dc13b31495ab467e53281c41be4ba6d6eb32964eaf9",
+          "output/2026-10-14-xlsx-search-integration/checks-run/inputs-before.json": "cdb93a3ed74090ea7bf5b68e0fb9af0a86d2e01b22a94a1e5047fa522bbf00c2",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/inputs-before.json.raw": "cdb93a3ed74090ea7bf5b68e0fb9af0a86d2e01b22a94a1e5047fa522bbf00c2",
+          "output/2026-10-14-xlsx-search-integration/checks-run/inputs-after.json": "cdb93a3ed74090ea7bf5b68e0fb9af0a86d2e01b22a94a1e5047fa522bbf00c2",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/inputs-after.json.raw": "cdb93a3ed74090ea7bf5b68e0fb9af0a86d2e01b22a94a1e5047fa522bbf00c2",
+          "output/2026-10-14-xlsx-search-integration/checks-run/protected-before.json": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/protected-before.json.raw": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+          "output/2026-10-14-xlsx-search-integration/checks-run/protected-after.json": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/protected-after.json.raw": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+          "output/2026-10-14-xlsx-search-integration/checks-run/preflight.json": "144a6004fb347903132365c2b609d41ece88577303cab5f94ca66717fb892b2a",
+          "output/2026-10-14-xlsx-search-integration/checks-run/format-check/started.json": "65e4cf394b71f4afe0f3849ab7cb828dbc3399dfe073b303eb0acb26c7f25add",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/format-check/started.json.raw": "65e4cf394b71f4afe0f3849ab7cb828dbc3399dfe073b303eb0acb26c7f25add",
+          "output/2026-10-14-xlsx-search-integration/checks-run/format-check/completed.json": "d76f3ae6899ab2ed08b236f9edeba30d2e9d0de2e4e5dc31d433bef97c3cddbb",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/format-check/completed.json.raw": "d76f3ae6899ab2ed08b236f9edeba30d2e9d0de2e4e5dc31d433bef97c3cddbb",
+          "output/2026-10-14-xlsx-search-integration/checks-run/format-check/stdout.log": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/format-check/stdout.log.raw": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "output/2026-10-14-xlsx-search-integration/checks-run/format-check/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/format-check/stderr.log.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-14-xlsx-search-integration/checks-run/typecheck/started.json": "d60a80580e52a38cac59bb5682c31653e9f5ea476510375dd715f0831b8d6237",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/typecheck/started.json.raw": "d60a80580e52a38cac59bb5682c31653e9f5ea476510375dd715f0831b8d6237",
+          "output/2026-10-14-xlsx-search-integration/checks-run/typecheck/completed.json": "10dbe0ab1d56ccf0afb8ad6550ca4e3a6d9ce2bacb1066d245f221db8c6a0a05",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/typecheck/completed.json.raw": "10dbe0ab1d56ccf0afb8ad6550ca4e3a6d9ce2bacb1066d245f221db8c6a0a05",
+          "output/2026-10-14-xlsx-search-integration/checks-run/typecheck/stdout.log": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/typecheck/stdout.log.raw": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "output/2026-10-14-xlsx-search-integration/checks-run/typecheck/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/typecheck/stderr.log.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-14-xlsx-search-integration/checks-run/frontend-test/started.json": "37b5703f57f138932e26a8188fdeb45babed87b8ab99fab72e8518274378ebec",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-test/started.json.raw": "37b5703f57f138932e26a8188fdeb45babed87b8ab99fab72e8518274378ebec",
+          "output/2026-10-14-xlsx-search-integration/checks-run/frontend-test/completed.json": "8b286c2df84ab180d1e7c3a840134c0f2946337cb5b4bc4e7d82996e06e08abd",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-test/completed.json.raw": "8b286c2df84ab180d1e7c3a840134c0f2946337cb5b4bc4e7d82996e06e08abd",
+          "output/2026-10-14-xlsx-search-integration/checks-run/frontend-test/stdout.log": "3727dd72e1a574d3001d7326cac8f329665d4c4e36e0e3fceed78c49f814a3f0",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-test/stdout.log.raw": "3727dd72e1a574d3001d7326cac8f329665d4c4e36e0e3fceed78c49f814a3f0",
+          "output/2026-10-14-xlsx-search-integration/checks-run/frontend-test/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-test/stderr.log.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-14-xlsx-search-integration/checks-run/frontend-build/started.json": "cf1c9aa9c946772321201d2503ea266830d978ed1688f1b020d295c1ea145ab4",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-build/started.json.raw": "cf1c9aa9c946772321201d2503ea266830d978ed1688f1b020d295c1ea145ab4",
+          "output/2026-10-14-xlsx-search-integration/checks-run/frontend-build/completed.json": "4a8a8de77037acc5400cc44477f8285c46662039f5d4d6928ee249684513a49f",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-build/completed.json.raw": "4a8a8de77037acc5400cc44477f8285c46662039f5d4d6928ee249684513a49f",
+          "output/2026-10-14-xlsx-search-integration/checks-run/frontend-build/stdout.log": "63d4c4d0140919b17cdb8c3e268347b3a75890d5dab03b1ce57a88420d22de92",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-build/stdout.log.raw": "63d4c4d0140919b17cdb8c3e268347b3a75890d5dab03b1ce57a88420d22de92",
+          "output/2026-10-14-xlsx-search-integration/checks-run/frontend-build/stderr.log": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-build/stderr.log.raw": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+          "output/2026-10-14-xlsx-search-integration/checks-run/cargo-fmt/started.json": "946ef01b1c17d26514b01e09b94d0be1ad9a9e10b824edc6ae30173ae90ed0c6",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-fmt/started.json.raw": "946ef01b1c17d26514b01e09b94d0be1ad9a9e10b824edc6ae30173ae90ed0c6",
+          "output/2026-10-14-xlsx-search-integration/checks-run/cargo-fmt/completed.json": "84f52dac4f58dc31b46bb9454c46e25a07f5c4a7f91fa27aa8e7aff075ada0e5",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-fmt/completed.json.raw": "84f52dac4f58dc31b46bb9454c46e25a07f5c4a7f91fa27aa8e7aff075ada0e5",
+          "output/2026-10-14-xlsx-search-integration/checks-run/cargo-fmt/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-fmt/stdout.log.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-14-xlsx-search-integration/checks-run/cargo-fmt/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-fmt/stderr.log.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-14-xlsx-search-integration/checks-run/cargo-clippy/started.json": "1b18cd9a587f75adff4639193a7cf41d18d7a2fc7f9142164ecede043aecb744",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-clippy/started.json.raw": "1b18cd9a587f75adff4639193a7cf41d18d7a2fc7f9142164ecede043aecb744",
+          "output/2026-10-14-xlsx-search-integration/checks-run/cargo-clippy/completed.json": "9823980f13299501d9d3f8f17c23173f7fa265aa6852dda84d0b764c67feefb6",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-clippy/completed.json.raw": "9823980f13299501d9d3f8f17c23173f7fa265aa6852dda84d0b764c67feefb6",
+          "output/2026-10-14-xlsx-search-integration/checks-run/cargo-clippy/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-clippy/stdout.log.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-14-xlsx-search-integration/checks-run/cargo-clippy/stderr.log": "45212cf0d9b72e9c476f768bd0e76311ccd43f2d8433306570713057c77e97a1",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-clippy/stderr.log.raw": "45212cf0d9b72e9c476f768bd0e76311ccd43f2d8433306570713057c77e97a1",
+          "output/2026-10-14-xlsx-search-integration/checks-run/cargo-test/started.json": "b4cd123157bf93d049dab7c4b1866427cf379ff274d09282857fc673f4ecb406",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-test/started.json.raw": "b4cd123157bf93d049dab7c4b1866427cf379ff274d09282857fc673f4ecb406",
+          "output/2026-10-14-xlsx-search-integration/checks-run/cargo-test/completed.json": "03cce34c942a7fb00c929496846de1f6691be94eeb999166d95dad861af477e0",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-test/completed.json.raw": "03cce34c942a7fb00c929496846de1f6691be94eeb999166d95dad861af477e0",
+          "output/2026-10-14-xlsx-search-integration/checks-run/cargo-test/stdout.log": "1d8fc169b0b7990d749e3fec4b7f66bcb82be143364aa2264202fdd02215dcfd",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-test/stdout.log.raw": "1d8fc169b0b7990d749e3fec4b7f66bcb82be143364aa2264202fdd02215dcfd",
+          "output/2026-10-14-xlsx-search-integration/checks-run/cargo-test/stderr.log": "21cb92102057fb2066aa3b335af27420cbd9d3bae25143d9218e1d9543d004ae",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-test/stderr.log.raw": "21cb92102057fb2066aa3b335af27420cbd9d3bae25143d9218e1d9543d004ae",
+          "output/2026-10-13-audio-input-backend/source-freeze-v4.json": "a27b6dfe0ccfc9c56fee97170d2ed42b236551975035280e61b287f8cca19ab8",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/source-freeze-v4.json.raw": "a27b6dfe0ccfc9c56fee97170d2ed42b236551975035280e61b287f8cca19ab8",
+          "output/2026-10-13-audio-input-backend/v4-aggregate-final-receipt.json": "ab572bec3a24404f50f3d5959809ba940b06a2e9af3ef2e3aa38479f3c15fa11",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-receipt.json.raw": "ab572bec3a24404f50f3d5959809ba940b06a2e9af3ef2e3aa38479f3c15fa11",
+          "output/2026-10-13-audio-input-backend/v4-aggregate-final-0.stdout.txt": "b14cd72ac460f7e1b52f14acd1efc8ecb5619038834ad73d5b738f16bc4ab532",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-0.stdout.txt.raw": "b14cd72ac460f7e1b52f14acd1efc8ecb5619038834ad73d5b738f16bc4ab532",
+          "output/2026-10-13-audio-input-backend/v4-aggregate-final-0.stderr.txt": "aa7dd3ceabdc6f55416006a165b60e5b5106821fbbe53dfb47e04b8bdbfc6a1f",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-0.stderr.txt.raw": "aa7dd3ceabdc6f55416006a165b60e5b5106821fbbe53dfb47e04b8bdbfc6a1f",
+          "output/2026-10-13-audio-input-backend/v4-aggregate-final-1.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-1.stdout.txt.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-audio-input-backend/v4-aggregate-final-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-1.stderr.txt.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-audio-input-backend/v2-capture-receipt.json": "15f6cf216768632c89f245afa63db2879be9c7a9db15b8668986a5612d0d3c71",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-receipt.json.raw": "15f6cf216768632c89f245afa63db2879be9c7a9db15b8668986a5612d0d3c71",
+          "output/2026-10-13-audio-input-backend/v2-capture-0.stdout.txt": "9e45a7afe0b56d25919dda3991929421c93469e40cf0fbf5169ab7ef34ac7e23",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-0.stdout.txt.raw": "9e45a7afe0b56d25919dda3991929421c93469e40cf0fbf5169ab7ef34ac7e23",
+          "output/2026-10-13-audio-input-backend/v2-capture-0.stderr.txt": "01bf0ae1117704cf038b3177aca010795f082972b3272f11f36edb1b415095e4",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-0.stderr.txt.raw": "01bf0ae1117704cf038b3177aca010795f082972b3272f11f36edb1b415095e4",
+          "output/2026-10-13-audio-input-backend/v2-capture-1.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-1.stdout.txt.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-audio-input-backend/v2-capture-1.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-1.stderr.txt.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-audio-input-backend/green-receipt.json": "12b393856b0d68ab7116275b7b44fff00599462424ea6c20550f6040387c36a4",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/green-receipt.json.raw": "12b393856b0d68ab7116275b7b44fff00599462424ea6c20550f6040387c36a4",
+          "output/2026-10-13-audio-input-backend/green.stdout.txt": "a0d71f1d3738811d30d7d6f68eed405501bab943f32bc9baff4c9b88b55bd697",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/green.stdout.txt.raw": "a0d71f1d3738811d30d7d6f68eed405501bab943f32bc9baff4c9b88b55bd697",
+          "output/2026-10-13-audio-input-backend/green.stderr.txt": "0d2d77cb9abace45a140dbf2c300673c0bb84a889e25ccc702039c6191e364b9",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/green.stderr.txt.raw": "0d2d77cb9abace45a140dbf2c300673c0bb84a889e25ccc702039c6191e364b9",
+          "output/2026-10-13-audio-input-backend/regression-receipt.json": "ca87f0fd018cf6650e22ea2505991e98f63fcfac10119f47a8c774b08b705576",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-receipt.json.raw": "ca87f0fd018cf6650e22ea2505991e98f63fcfac10119f47a8c774b08b705576",
+          "output/2026-10-13-audio-input-backend/regression-0.stdout.txt": "61675cf24600470a74059e85569fb612136f6e942d2408ef0b92c5a9d4c21c91",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-0.stdout.txt.raw": "61675cf24600470a74059e85569fb612136f6e942d2408ef0b92c5a9d4c21c91",
+          "output/2026-10-13-audio-input-backend/regression-0.stderr.txt": "cdcf0597777ada25cb5318cf78e4db5041865f1ac68c73de803bd144bd80df30",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-0.stderr.txt.raw": "cdcf0597777ada25cb5318cf78e4db5041865f1ac68c73de803bd144bd80df30",
+          "output/2026-10-13-audio-input-backend/regression-1.stdout.txt": "d9f31fe1f04d9ed714495dbbd12abe9088754085a27b64452826c646cbafbe41",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-1.stdout.txt.raw": "d9f31fe1f04d9ed714495dbbd12abe9088754085a27b64452826c646cbafbe41",
+          "output/2026-10-13-audio-input-backend/regression-1.stderr.txt": "2a6b7aee50869f0f0771b20dab120e9e5e385785bffadd68f5366c8669de296b",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-1.stderr.txt.raw": "2a6b7aee50869f0f0771b20dab120e9e5e385785bffadd68f5366c8669de296b",
+          "output/2026-10-13-audio-input-backend/regression-2.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-2.stdout.txt.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-audio-input-backend/regression-2.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-2.stderr.txt.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-audio-input-backend/red-receipt.json": "9d56f300c7892cf648dcdec8029fb642387246d04a73eca92598b75823c74187",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/red-receipt.json.raw": "9d56f300c7892cf648dcdec8029fb642387246d04a73eca92598b75823c74187",
+          "output/2026-10-13-audio-input-backend/red.stdout.txt": "93fef8111b2347346c1a1046b2a075fd746171dc084783e0b422799efe65217c",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/red.stdout.txt.raw": "93fef8111b2347346c1a1046b2a075fd746171dc084783e0b422799efe65217c",
+          "output/2026-10-13-audio-input-backend/red.stderr.txt": "2c3bff693ff3acc88ae5f8447607ae0f80c2cf66b2c14b0410f83e7ac5e5cafa",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/red.stderr.txt.raw": "2c3bff693ff3acc88ae5f8447607ae0f80c2cf66b2c14b0410f83e7ac5e5cafa",
+          "output/2026-10-13-audio-input-backend/v4-aggregate-receipt.json": "4fddd2fa13414e000a307f1a880b2eaca1fc343388b37c4d87dd91444e4426e8",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-receipt.json.raw": "4fddd2fa13414e000a307f1a880b2eaca1fc343388b37c4d87dd91444e4426e8",
+          "output/2026-10-13-audio-input-backend/v4-aggregate-0.stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-0.stdout.txt.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-audio-input-backend/v4-aggregate-0.stderr.txt": "6a9c4a6cec9b7fa3766211677368b8b5d97337d2124a976ed6b5a20f5cdcfb31",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-0.stderr.txt.raw": "6a9c4a6cec9b7fa3766211677368b8b5d97337d2124a976ed6b5a20f5cdcfb31",
+          "output/2026-10-13-audio-input-backend/v4-aggregate-compile-fix-receipt.json": "3562c0c051d2fc7b190ce5688cdcc90fe97587c7582b227c5721d0a9086f3499",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-compile-fix-receipt.json.raw": "3562c0c051d2fc7b190ce5688cdcc90fe97587c7582b227c5721d0a9086f3499",
+          "output/2026-10-13-audio-input-backend/v4-aggregate-compile-fix-0.stdout.txt": "e76751a1f83be574513ea126d2127a048ce0ed70c33c3c3db5f14df0d2da235c",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-compile-fix-0.stdout.txt.raw": "e76751a1f83be574513ea126d2127a048ce0ed70c33c3c3db5f14df0d2da235c",
+          "output/2026-10-13-audio-input-backend/v4-aggregate-compile-fix-0.stderr.txt": "67f5b886f7ba4aad07b172fad69b238f9f377796f5cdcd2150db2286c70d3383",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-compile-fix-0.stderr.txt.raw": "67f5b886f7ba4aad07b172fad69b238f9f377796f5cdcd2150db2286c70d3383",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/publication.json": "f246a37beea3c97917eea18ecb4cecdc0e039aaa632d55112beab6f4ba666051",
+          "output/2026-10-13-audio-input-browser/summary.json": "ed78dc4ba25f348363cbfa0ac7bc1b9e19ed0f9adb26ae3071965e5c0619a7ab",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/summary.json.raw": "ed78dc4ba25f348363cbfa0ac7bc1b9e19ed0f9adb26ae3071965e5c0619a7ab",
+          "output/2026-10-13-audio-input-browser/source-freeze-v1.json": "4586bcd6ada86ea70969148cb21d3a89d6aa82bba27e9f46de0ad11bba992069",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/source-freeze-v1.json.raw": "4586bcd6ada86ea70969148cb21d3a89d6aa82bba27e9f46de0ad11bba992069",
+          "output/2026-10-13-audio-input-browser/source-freeze-v2.json": "5507e7e2269cd1795124e89294df7a1247525077e0bfd6f18380b2d398f615d3",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/source-freeze-v2.json.raw": "5507e7e2269cd1795124e89294df7a1247525077e0bfd6f18380b2d398f615d3",
+          "output/2026-10-13-audio-input-browser/source-v1-to-v2.diff": "2bf80e35601716f6332cdbe3beab07d47dc9b3a19fc5bd248ade39c264ed63e0",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/source-v1-to-v2.diff.raw": "2bf80e35601716f6332cdbe3beab07d47dc9b3a19fc5bd248ade39c264ed63e0",
+          "output/2026-10-13-audio-input-browser/test-format-v2-receipt.json": "f44ba5faed767bf1997f06cd8e2414f6e1074d96a602c06e024bd22e7ddab6da",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/test-format-v2-receipt.json.raw": "f44ba5faed767bf1997f06cd8e2414f6e1074d96a602c06e024bd22e7ddab6da",
+          "output/2026-10-13-audio-input-browser/final-owned-source-check.json": "ece6e6c59c450652bd568b59b355b35c56d97d4bb934e506b41e1d14fe619782",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/final-owned-source-check.json.raw": "ece6e6c59c450652bd568b59b355b35c56d97d4bb934e506b41e1d14fe619782",
+          "output/2026-10-13-audio-input-browser/final-targeted/completed.json": "01655fddd7e6fa72adae2c24bfbf62bb3f6125efd9a6683eaebabe138e5f7eec",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/final-targeted/completed.json.raw": "01655fddd7e6fa72adae2c24bfbf62bb3f6125efd9a6683eaebabe138e5f7eec",
+          "output/2026-10-13-audio-input-browser/final-targeted/stdout.txt": "dba906efa98e7ecaf385dce73e27ab4dd5fe473f034566948855baca248eb685",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/final-targeted/stdout.txt.raw": "dba906efa98e7ecaf385dce73e27ab4dd5fe473f034566948855baca248eb685",
+          "output/2026-10-13-audio-input-browser/chromium-run01.json": "8eb21f6c64e308f0d59b659e504c2e117d0473004b1d627cda341455fe5f1295",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/chromium-run01.json.raw": "8eb21f6c64e308f0d59b659e504c2e117d0473004b1d627cda341455fe5f1295",
+          "output/2026-10-13-audio-input-browser/chromium-run02.json": "14d042c1e4bb97a16f2732f3edf23ac9fdae78f28682141e65248408ab8bc1c1",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/chromium-run02.json.raw": "14d042c1e4bb97a16f2732f3edf23ac9fdae78f28682141e65248408ab8bc1c1",
+          "output/2026-10-13-audio-input-browser/chromium-run03.json": "beb51895b0164acbd07505998f4cd48de14a84d7dd445da9449a73ae40dfcebf",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/chromium-run03.json.raw": "beb51895b0164acbd07505998f4cd48de14a84d7dd445da9449a73ae40dfcebf",
+          "output/2026-10-13-audio-input-browser/webkit-run03.json": "bb04b5f2709a868ac429a7801d274df69ee185a7a3c64a19a1131592e0653fb0",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/webkit-run03.json.raw": "bb04b5f2709a868ac429a7801d274df69ee185a7a3c64a19a1131592e0653fb0",
+          "output/2026-10-13-audio-input-browser/transcript-receipts/manifest.json": "8a4752402371d7edb51e7833b92dd4b62b5eeef58358d6c29543b0f150bfa7d0",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/manifest.json.raw": "8a4752402371d7edb51e7833b92dd4b62b5eeef58358d6c29543b0f150bfa7d0",
+          "output/2026-10-13-audio-input-browser/owned-server-stop-event.json": "82896be56866cd9c220a3f5b11f85c510cfe2495b5a3722355e2aae75da8966c",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/owned-server-stop-event.json.raw": "82896be56866cd9c220a3f5b11f85c510cfe2495b5a3722355e2aae75da8966c",
+          "output/2026-10-13-audio-input-browser/owned-server-stopped.json": "fbcfded5fe7b7a31bdc5831ef7c4524ba4a4133d3940aa33eb3e32edc5bcc7b6",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/owned-server-stopped.json.raw": "fbcfded5fe7b7a31bdc5831ef7c4524ba4a4133d3940aa33eb3e32edc5bcc7b6",
+          "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-initial-red.raw.jsonl": "bdc67bd919c194a356ba9f50533e9188067327284bf60080ff7313fab2acdec0",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/capacity-initial-red.raw.jsonl.raw": "bdc67bd919c194a356ba9f50533e9188067327284bf60080ff7313fab2acdec0",
+          "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-green-with-following-typecheck-failure.raw.jsonl": "bf9a10f360eb61a64cccdc64a01bb873b8059137e934a494b72bdfaf1ecb7f61",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/capacity-green-with-following-typecheck-failure.raw.jsonl.raw": "bf9a10f360eb61a64cccdc64a01bb873b8059137e934a494b72bdfaf1ecb7f61",
+          "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-codec-green-24.raw.jsonl": "a636e09bea7a94e03b4762a5958b063dd5847733ad3dac6e6728d807eb5445d5",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/capacity-codec-green-24.raw.jsonl.raw": "a636e09bea7a94e03b4762a5958b063dd5847733ad3dac6e6728d807eb5445d5",
+          "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-import-green-18.raw.jsonl": "7354a2951c037d0e374c6ce16a9a57ac2eed84a10da3a7917d2af157b1a606b9",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/capacity-import-green-18.raw.jsonl.raw": "7354a2951c037d0e374c6ce16a9a57ac2eed84a10da3a7917d2af157b1a606b9",
+          "output/2026-10-13-audio-input-browser/transcript-receipts/codec-final-budget-red.raw.jsonl": "ee7044144fefa5d9b8b83ed61839cdcbb515586cf939b987b27f134ffade4fdb",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/codec-final-budget-red.raw.jsonl.raw": "ee7044144fefa5d9b8b83ed61839cdcbb515586cf939b987b27f134ffade4fdb",
+          "output/2026-10-13-audio-input-browser/transcript-receipts/codec-final-budget-green.raw.jsonl": "ddcdb103db1c089ec6b3bd9865be12edc8cd547262961aa70e3c72679dfaefb0",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/codec-final-budget-green.raw.jsonl.raw": "ddcdb103db1c089ec6b3bd9865be12edc8cd547262961aa70e3c72679dfaefb0",
+          "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run01-completion.raw.jsonl": "105205c2e320491aa539dc9d2899aac788a6be680eec35984f4bb6a6b30c06ac",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/chromium-run01-completion.raw.jsonl.raw": "105205c2e320491aa539dc9d2899aac788a6be680eec35984f4bb6a6b30c06ac",
+          "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run02-completion.raw.jsonl": "0bc60c33a5bf8332096ac9a84b5e51aa256857f65bacd319b47a8e2c27d386c6",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/chromium-run02-completion.raw.jsonl.raw": "0bc60c33a5bf8332096ac9a84b5e51aa256857f65bacd319b47a8e2c27d386c6",
+          "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run03-completion.raw.jsonl": "72c91da0cd03a367011f0e679842414c765d261836b2abcbf6997c2b46094418",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/chromium-run03-completion.raw.jsonl.raw": "72c91da0cd03a367011f0e679842414c765d261836b2abcbf6997c2b46094418",
+          "output/2026-10-13-audio-input-browser/transcript-receipts/webkit-run03-completion.raw.jsonl": "264978355a99cefbc777f3d92e50162aad7634dcb875b7f82d29771fbd9246fb",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/webkit-run03-completion.raw.jsonl.raw": "264978355a99cefbc777f3d92e50162aad7634dcb875b7f82d29771fbd9246fb",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/publication.json": "e3564bbc744cdb7671f999a6cca2f5e6c3e67230162601fde330d940ace4f383",
+          "output/2026-10-13-audio-input-independent/independent-audio-report.json": "34a4cfddf9be0f061cfc24145932ed7c285fc833cf71e3894fc3e3a22635df7a",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/independent-audio-report.json.raw": "34a4cfddf9be0f061cfc24145932ed7c285fc833cf71e3894fc3e3a22635df7a",
+          "output/2026-10-13-audio-input-independent/backend-v4-peer-evidence-review.json": "98441c6985995af1c21463c1f7383da05a1f196c615934843df097d7a5ded426",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/backend-v4-peer-evidence-review.json.raw": "98441c6985995af1c21463c1f7383da05a1f196c615934843df097d7a5ded426",
+          "output/2026-10-13-audio-input-independent/frontend-final-independent-review.json": "a1cfd52f1def25ba5c7000510ee3b05837dc9861f85df2ce5dbfec2e03489467",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/frontend-final-independent-review.json.raw": "a1cfd52f1def25ba5c7000510ee3b05837dc9861f85df2ce5dbfec2e03489467",
+          "output/2026-10-13-audio-input-independent/frontend-capacity-review-open.json": "71d80fb2d0c9b5a46402c0b23d73df7adb4d19555d9123bc13246a79e0a22662",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/frontend-capacity-review-open.json.raw": "71d80fb2d0c9b5a46402c0b23d73df7adb4d19555d9123bc13246a79e0a22662",
+          "output/2026-10-13-audio-input-independent/frontend-codec-budget-review-open.json": "ef51f4506bc18e305535f6071ca5ae5e58066a3b03c7bcae7b37a9a32822904d",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/frontend-codec-budget-review-open.json.raw": "ef51f4506bc18e305535f6071ca5ae5e58066a3b03c7bcae7b37a9a32822904d",
+          "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/publication.json": "5b95da29ea32dd007c9f270c568952eb2b30c47246d0f12a5d35247e8b0072bd",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/publication.json": "e3403b8e13f0baf6bf884c567e56e2fa74708e21907e1146db708c174e558260",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/preflight.json.raw": "144a6004fb347903132365c2b609d41ece88577303cab5f94ca66717fb892b2a",
+          "output/2026-10-14-xlsx-search-integration/checks-run/events.jsonl": "26b981cd214198fcd99f6dc74401c59320efa339298bce9deb74d25c069a5f40",
+          "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/events.jsonl.raw": "26b981cd214198fcd99f6dc74401c59320efa339298bce9deb74d25c069a5f40"
+        },
+        "counts": {
+          "frontendSummaryLines": [
+            "Test Files  496 passed (496)",
+            "Tests  5962 passed (5962)"
+          ],
+          "rustSummaryLines": [
+            "test result: ok. 1674 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 117.51s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ]
+        },
+        "boundary": "All seven commands actually executed once in this exact new run; every original start/completion/stdout/stderr and complete source/protected manifest is pinned. No reuse, candidate, installed workflow or real Agent acceptance inferred."
+      }
+    },
+    "candidateFormalFiveFiles": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "a6140f9f1cc8d1182fec270748ee0b33217121eca7129670748b37af4567b5ec",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      },
+      "modes": {
+        "Contents/Info.plist": 420,
+        "Contents/MacOS/farfold": 493,
+        "Contents/Resources/icon.icns": 420,
+        "Contents/Resources/release-manifest.json": 420,
+        "Contents/_CodeSignature/CodeResources": 420
+      }
+    },
+    "identityArchitectureSignature": {
+      "passed": true,
+      "candidate": {
+        "identifier": "ai.farfold.desktop",
+        "version": "0.1.7",
+        "architecture": "arm64",
+        "strictCodesign": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement",
+        "signature": "ad-hoc; not notarized"
+      },
+      "formal": {
+        "identifier": "ai.farfold.desktop",
+        "version": "0.1.7",
+        "architecture": "arm64",
+        "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+        "signature": "ad-hoc; not notarized"
+      }
+    },
+    "archive": {
+      "passed": true,
+      "sha256": "53360e391fa12c1b9ea115a226d868117ed4b1d63add4d0e13d3ce890a2532a9",
+      "bytes": 15078184
+    },
+    "installationOperation": {
+      "passed": true,
+      "phase": "installedVerifiedNotLaunched",
+      "rootInstallerReportedLaunched": false
+    },
+    "snapshotCaptures": {
+      "backup": {
+        "receiptSha256": "5ffb3bb0e2df8ccd9f55db60c87fe6c40585596ce56b5d71afeaf77ef28a888f",
+        "backupSha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+        "capturedFiles": {
+          "farfold.sqlite3": "f7ddc093c95edd33c01bb65146cff52f5570e3b8ebb6fabc6ad95a4cf1eb4da5",
+          "farfold.sqlite3-wal": "6e4974af2c3e869b67234a7b5a2495407d447cd1ba57264dc9f4b92f88cb059e",
+          "farfold.sqlite3-shm": "bb104a2cbc5e5adcff76748ed2f11654fd46fe86c88220e69437cfe59a57ffb9"
+        },
+        "boundary": "Verified only retained private evidence; no live database was opened by this check."
+      },
+      "passed": true,
+      "actualSuccessfulCaptures": 3,
+      "rawMode": "0600",
+      "entriesEach": 217400
+    },
+    "retainedDataEquality": {
+      "passed": true,
+      "allThreeManifestsEqual": true,
+      "entriesEach": 217400,
+      "sha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849"
+    },
+    "finalStableAndProcessAbsent": {
+      "passed": true,
+      "checkedAt": "2026-10-13T18:54:14.104536+00:00",
+      "formalProcessCount": 0,
+      "sourceInputCount": 1842
+    }
+  },
+  "failures": [],
+  "reviewerLaunchedApp": false,
+  "reviewerReadLiveDatabase": false,
+  "boundary": "Single read-only installed gate. Snapshot manifests and retained backup receipts were read, not live user files or SQLite. This gate concerns only this configured XLSX selected-attachment search installation over the actual unlaunched 52d formal baseline; last-running and last-normal-quit provenance remains 9c. All seven engineering commands must actually execute in this exact new slice; no reuse is accepted. Gate applies at the recorded time before root intentional native testing; no later process/source recheck is implied. Ad-hoc signature is not notarization or distribution approval.",
+  "refs": [
+    {
+      "path": "output/2026-10-14-xlsx-search-independent-install/install-final-review.json",
+      "sha256": "f64efbc3092019ee891c0197aa0fe17afc0b1ec930c4aea72b06f292115d7d5b",
+      "bytes": 97157
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/verification.json",
+      "sha256": "0694dd37dbb1d54e52529a9ed447f9ce8670fe7f2f381bb85d11c2e7dc993390",
+      "bytes": 7157
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/summary.json",
+      "sha256": "f928920ad2a962c445ee4f4d6f657adc6ab5d4a08390536af4c63f0d9569eb36",
+      "bytes": 6315
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/summary.json.raw",
+      "sha256": "f928920ad2a962c445ee4f4d6f657adc6ab5d4a08390536af4c63f0d9569eb36",
+      "bytes": 6315
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-freeze/freeze.json",
+      "sha256": "a0ffe1ca43984921663a5b97d021a8363c02d53fd42a45ca4d001e7151d2b205",
+      "bytes": 297778
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/freeze.json.raw",
+      "sha256": "a0ffe1ca43984921663a5b97d021a8363c02d53fd42a45ca4d001e7151d2b205",
+      "bytes": 297778
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/inventory-plan-final.json",
+      "sha256": "32d00ac07782aa18692465eb059252b60f7de67c65a9f73913bca5dd0fe8926a",
+      "bytes": 581824
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-checks-preparation/inventory.py",
+      "sha256": "7784a38803fb1c10da014755cde9901f9deba982ffb01ab1076dfd2060e3e076",
+      "bytes": 5533
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-checks-preparation/runner-v4/run_checks.py",
+      "sha256": "0cf4b3fd62d3d94f1781119f65d87f68a9fd26a6afb5e95ca7e56bda3f140a0c",
+      "bytes": 15448
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-backend/source-freeze.json",
+      "sha256": "7d1cb900612bfdd732ed8b56d61563f03257cf8dc78453c8f76d7c6401c2ef17",
+      "bytes": 11423
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/source-freeze-v1.json",
+      "sha256": "106bd070a18364d1bf9fe0f13563dbefd29c672f1bb61f979c98123f2f51849d",
+      "bytes": 2977
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/prepare_inventory.py",
+      "sha256": "32137d0dd417c72e0b169dc13b31495ab467e53281c41be4ba6d6eb32964eaf9",
+      "bytes": 9335
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/inputs-before.json",
+      "sha256": "cdb93a3ed74090ea7bf5b68e0fb9af0a86d2e01b22a94a1e5047fa522bbf00c2",
+      "bytes": 216308
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/inputs-before.json.raw",
+      "sha256": "cdb93a3ed74090ea7bf5b68e0fb9af0a86d2e01b22a94a1e5047fa522bbf00c2",
+      "bytes": 216308
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/inputs-after.json",
+      "sha256": "cdb93a3ed74090ea7bf5b68e0fb9af0a86d2e01b22a94a1e5047fa522bbf00c2",
+      "bytes": 216308
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/inputs-after.json.raw",
+      "sha256": "cdb93a3ed74090ea7bf5b68e0fb9af0a86d2e01b22a94a1e5047fa522bbf00c2",
+      "bytes": 216308
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/protected-before.json",
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+      "bytes": 357
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/protected-before.json.raw",
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+      "bytes": 357
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/protected-after.json",
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+      "bytes": 357
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/protected-after.json.raw",
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+      "bytes": 357
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/preflight.json",
+      "sha256": "144a6004fb347903132365c2b609d41ece88577303cab5f94ca66717fb892b2a",
+      "bytes": 264
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/format-check/started.json",
+      "sha256": "65e4cf394b71f4afe0f3849ab7cb828dbc3399dfe073b303eb0acb26c7f25add",
+      "bytes": 288
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/format-check/started.json.raw",
+      "sha256": "65e4cf394b71f4afe0f3849ab7cb828dbc3399dfe073b303eb0acb26c7f25add",
+      "bytes": 288
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/format-check/completed.json",
+      "sha256": "d76f3ae6899ab2ed08b236f9edeba30d2e9d0de2e4e5dc31d433bef97c3cddbb",
+      "bytes": 667
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/format-check/completed.json.raw",
+      "sha256": "d76f3ae6899ab2ed08b236f9edeba30d2e9d0de2e4e5dc31d433bef97c3cddbb",
+      "bytes": 667
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/format-check/stdout.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "bytes": 144
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/format-check/stdout.log.raw",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "bytes": 144
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/format-check/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/format-check/stderr.log.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/typecheck/started.json",
+      "sha256": "d60a80580e52a38cac59bb5682c31653e9f5ea476510375dd715f0831b8d6237",
+      "bytes": 277
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/typecheck/started.json.raw",
+      "sha256": "d60a80580e52a38cac59bb5682c31653e9f5ea476510375dd715f0831b8d6237",
+      "bytes": 277
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/typecheck/completed.json",
+      "sha256": "10dbe0ab1d56ccf0afb8ad6550ca4e3a6d9ce2bacb1066d245f221db8c6a0a05",
+      "bytes": 655
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/typecheck/completed.json.raw",
+      "sha256": "10dbe0ab1d56ccf0afb8ad6550ca4e3a6d9ce2bacb1066d245f221db8c6a0a05",
+      "bytes": 655
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/typecheck/stdout.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/typecheck/stdout.log.raw",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/typecheck/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/typecheck/stderr.log.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-test/started.json",
+      "sha256": "37b5703f57f138932e26a8188fdeb45babed87b8ab99fab72e8518274378ebec",
+      "bytes": 274
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-test/started.json.raw",
+      "sha256": "37b5703f57f138932e26a8188fdeb45babed87b8ab99fab72e8518274378ebec",
+      "bytes": 274
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-test/completed.json",
+      "sha256": "8b286c2df84ab180d1e7c3a840134c0f2946337cb5b4bc4e7d82996e06e08abd",
+      "bytes": 653
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-test/completed.json.raw",
+      "sha256": "8b286c2df84ab180d1e7c3a840134c0f2946337cb5b4bc4e7d82996e06e08abd",
+      "bytes": 653
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-test/stdout.log",
+      "sha256": "3727dd72e1a574d3001d7326cac8f329665d4c4e36e0e3fceed78c49f814a3f0",
+      "bytes": 289
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-test/stdout.log.raw",
+      "sha256": "3727dd72e1a574d3001d7326cac8f329665d4c4e36e0e3fceed78c49f814a3f0",
+      "bytes": 289
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-test/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-test/stderr.log.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-build/started.json",
+      "sha256": "cf1c9aa9c946772321201d2503ea266830d978ed1688f1b020d295c1ea145ab4",
+      "bytes": 277
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-build/started.json.raw",
+      "sha256": "cf1c9aa9c946772321201d2503ea266830d978ed1688f1b020d295c1ea145ab4",
+      "bytes": 277
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-build/completed.json",
+      "sha256": "4a8a8de77037acc5400cc44477f8285c46662039f5d4d6928ee249684513a49f",
+      "bytes": 655
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-build/completed.json.raw",
+      "sha256": "4a8a8de77037acc5400cc44477f8285c46662039f5d4d6928ee249684513a49f",
+      "bytes": 655
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-build/stdout.log",
+      "sha256": "63d4c4d0140919b17cdb8c3e268347b3a75890d5dab03b1ce57a88420d22de92",
+      "bytes": 4560
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-build/stdout.log.raw",
+      "sha256": "63d4c4d0140919b17cdb8c3e268347b3a75890d5dab03b1ce57a88420d22de92",
+      "bytes": 4560
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-build/stderr.log",
+      "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+      "bytes": 360
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/frontend-build/stderr.log.raw",
+      "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+      "bytes": 360
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-fmt/started.json",
+      "sha256": "946ef01b1c17d26514b01e09b94d0be1ad9a9e10b824edc6ae30173ae90ed0c6",
+      "bytes": 354
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-fmt/started.json.raw",
+      "sha256": "946ef01b1c17d26514b01e09b94d0be1ad9a9e10b824edc6ae30173ae90ed0c6",
+      "bytes": 354
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-fmt/completed.json",
+      "sha256": "84f52dac4f58dc31b46bb9454c46e25a07f5c4a7f91fa27aa8e7aff075ada0e5",
+      "bytes": 739
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-fmt/completed.json.raw",
+      "sha256": "84f52dac4f58dc31b46bb9454c46e25a07f5c4a7f91fa27aa8e7aff075ada0e5",
+      "bytes": 739
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-fmt/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-fmt/stdout.log.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-fmt/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-fmt/stderr.log.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-clippy/started.json",
+      "sha256": "1b18cd9a587f75adff4639193a7cf41d18d7a2fc7f9142164ecede043aecb744",
+      "bytes": 416
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-clippy/started.json.raw",
+      "sha256": "1b18cd9a587f75adff4639193a7cf41d18d7a2fc7f9142164ecede043aecb744",
+      "bytes": 416
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-clippy/completed.json",
+      "sha256": "9823980f13299501d9d3f8f17c23173f7fa265aa6852dda84d0b764c67feefb6",
+      "bytes": 800
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-clippy/completed.json.raw",
+      "sha256": "9823980f13299501d9d3f8f17c23173f7fa265aa6852dda84d0b764c67feefb6",
+      "bytes": 800
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-clippy/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-clippy/stdout.log.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-clippy/stderr.log",
+      "sha256": "45212cf0d9b72e9c476f768bd0e76311ccd43f2d8433306570713057c77e97a1",
+      "bytes": 138
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-clippy/stderr.log.raw",
+      "sha256": "45212cf0d9b72e9c476f768bd0e76311ccd43f2d8433306570713057c77e97a1",
+      "bytes": 138
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-test/started.json",
+      "sha256": "b4cd123157bf93d049dab7c4b1866427cf379ff274d09282857fc673f4ecb406",
+      "bytes": 360
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-test/started.json.raw",
+      "sha256": "b4cd123157bf93d049dab7c4b1866427cf379ff274d09282857fc673f4ecb406",
+      "bytes": 360
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-test/completed.json",
+      "sha256": "03cce34c942a7fb00c929496846de1f6691be94eeb999166d95dad861af477e0",
+      "bytes": 745
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-test/completed.json.raw",
+      "sha256": "03cce34c942a7fb00c929496846de1f6691be94eeb999166d95dad861af477e0",
+      "bytes": 745
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-test/stdout.log",
+      "sha256": "1d8fc169b0b7990d749e3fec4b7f66bcb82be143364aa2264202fdd02215dcfd",
+      "bytes": 186462
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-test/stdout.log.raw",
+      "sha256": "1d8fc169b0b7990d749e3fec4b7f66bcb82be143364aa2264202fdd02215dcfd",
+      "bytes": 186462
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-test/stderr.log",
+      "sha256": "21cb92102057fb2066aa3b335af27420cbd9d3bae25143d9218e1d9543d004ae",
+      "bytes": 671
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/cargo-test/stderr.log.raw",
+      "sha256": "21cb92102057fb2066aa3b335af27420cbd9d3bae25143d9218e1d9543d004ae",
+      "bytes": 671
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/source-freeze-v4.json",
+      "sha256": "a27b6dfe0ccfc9c56fee97170d2ed42b236551975035280e61b287f8cca19ab8",
+      "bytes": 6491
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/source-freeze-v4.json.raw",
+      "sha256": "a27b6dfe0ccfc9c56fee97170d2ed42b236551975035280e61b287f8cca19ab8",
+      "bytes": 6491
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-final-receipt.json",
+      "sha256": "ab572bec3a24404f50f3d5959809ba940b06a2e9af3ef2e3aa38479f3c15fa11",
+      "bytes": 1486
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-receipt.json.raw",
+      "sha256": "ab572bec3a24404f50f3d5959809ba940b06a2e9af3ef2e3aa38479f3c15fa11",
+      "bytes": 1486
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-final-0.stdout.txt",
+      "sha256": "b14cd72ac460f7e1b52f14acd1efc8ecb5619038834ad73d5b738f16bc4ab532",
+      "bytes": 2262
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-0.stdout.txt.raw",
+      "sha256": "b14cd72ac460f7e1b52f14acd1efc8ecb5619038834ad73d5b738f16bc4ab532",
+      "bytes": 2262
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-final-0.stderr.txt",
+      "sha256": "aa7dd3ceabdc6f55416006a165b60e5b5106821fbbe53dfb47e04b8bdbfc6a1f",
+      "bytes": 323
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-0.stderr.txt.raw",
+      "sha256": "aa7dd3ceabdc6f55416006a165b60e5b5106821fbbe53dfb47e04b8bdbfc6a1f",
+      "bytes": 323
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-final-1.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-1.stdout.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-final-1.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-1.stderr.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v2-capture-receipt.json",
+      "sha256": "15f6cf216768632c89f245afa63db2879be9c7a9db15b8668986a5612d0d3c71",
+      "bytes": 1115
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-receipt.json.raw",
+      "sha256": "15f6cf216768632c89f245afa63db2879be9c7a9db15b8668986a5612d0d3c71",
+      "bytes": 1115
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v2-capture-0.stdout.txt",
+      "sha256": "9e45a7afe0b56d25919dda3991929421c93469e40cf0fbf5169ab7ef34ac7e23",
+      "bytes": 2112
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-0.stdout.txt.raw",
+      "sha256": "9e45a7afe0b56d25919dda3991929421c93469e40cf0fbf5169ab7ef34ac7e23",
+      "bytes": 2112
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v2-capture-0.stderr.txt",
+      "sha256": "01bf0ae1117704cf038b3177aca010795f082972b3272f11f36edb1b415095e4",
+      "bytes": 323
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-0.stderr.txt.raw",
+      "sha256": "01bf0ae1117704cf038b3177aca010795f082972b3272f11f36edb1b415095e4",
+      "bytes": 323
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v2-capture-1.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-1.stdout.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v2-capture-1.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-1.stderr.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/green-receipt.json",
+      "sha256": "12b393856b0d68ab7116275b7b44fff00599462424ea6c20550f6040387c36a4",
+      "bytes": 490
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/green-receipt.json.raw",
+      "sha256": "12b393856b0d68ab7116275b7b44fff00599462424ea6c20550f6040387c36a4",
+      "bytes": 490
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/green.stdout.txt",
+      "sha256": "a0d71f1d3738811d30d7d6f68eed405501bab943f32bc9baff4c9b88b55bd697",
+      "bytes": 1978
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/green.stdout.txt.raw",
+      "sha256": "a0d71f1d3738811d30d7d6f68eed405501bab943f32bc9baff4c9b88b55bd697",
+      "bytes": 1978
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/green.stderr.txt",
+      "sha256": "0d2d77cb9abace45a140dbf2c300673c0bb84a889e25ccc702039c6191e364b9",
+      "bytes": 323
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/green.stderr.txt.raw",
+      "sha256": "0d2d77cb9abace45a140dbf2c300673c0bb84a889e25ccc702039c6191e364b9",
+      "bytes": 323
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/regression-receipt.json",
+      "sha256": "ca87f0fd018cf6650e22ea2505991e98f63fcfac10119f47a8c774b08b705576",
+      "bytes": 1619
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-receipt.json.raw",
+      "sha256": "ca87f0fd018cf6650e22ea2505991e98f63fcfac10119f47a8c774b08b705576",
+      "bytes": 1619
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/regression-0.stdout.txt",
+      "sha256": "61675cf24600470a74059e85569fb612136f6e942d2408ef0b92c5a9d4c21c91",
+      "bytes": 6614
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-0.stdout.txt.raw",
+      "sha256": "61675cf24600470a74059e85569fb612136f6e942d2408ef0b92c5a9d4c21c91",
+      "bytes": 6614
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/regression-0.stderr.txt",
+      "sha256": "cdcf0597777ada25cb5318cf78e4db5041865f1ac68c73de803bd144bd80df30",
+      "bytes": 256
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-0.stderr.txt.raw",
+      "sha256": "cdcf0597777ada25cb5318cf78e4db5041865f1ac68c73de803bd144bd80df30",
+      "bytes": 256
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/regression-1.stdout.txt",
+      "sha256": "d9f31fe1f04d9ed714495dbbd12abe9088754085a27b64452826c646cbafbe41",
+      "bytes": 1110
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-1.stdout.txt.raw",
+      "sha256": "d9f31fe1f04d9ed714495dbbd12abe9088754085a27b64452826c646cbafbe41",
+      "bytes": 1110
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/regression-1.stderr.txt",
+      "sha256": "2a6b7aee50869f0f0771b20dab120e9e5e385785bffadd68f5366c8669de296b",
+      "bytes": 256
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-1.stderr.txt.raw",
+      "sha256": "2a6b7aee50869f0f0771b20dab120e9e5e385785bffadd68f5366c8669de296b",
+      "bytes": 256
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/regression-2.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-2.stdout.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/regression-2.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-2.stderr.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/red-receipt.json",
+      "sha256": "9d56f300c7892cf648dcdec8029fb642387246d04a73eca92598b75823c74187",
+      "bytes": 499
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/red-receipt.json.raw",
+      "sha256": "9d56f300c7892cf648dcdec8029fb642387246d04a73eca92598b75823c74187",
+      "bytes": 499
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/red.stdout.txt",
+      "sha256": "93fef8111b2347346c1a1046b2a075fd746171dc084783e0b422799efe65217c",
+      "bytes": 829
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/red.stdout.txt.raw",
+      "sha256": "93fef8111b2347346c1a1046b2a075fd746171dc084783e0b422799efe65217c",
+      "bytes": 829
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/red.stderr.txt",
+      "sha256": "2c3bff693ff3acc88ae5f8447607ae0f80c2cf66b2c14b0410f83e7ac5e5cafa",
+      "bytes": 959
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/red.stderr.txt.raw",
+      "sha256": "2c3bff693ff3acc88ae5f8447607ae0f80c2cf66b2c14b0410f83e7ac5e5cafa",
+      "bytes": 959
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-receipt.json",
+      "sha256": "4fddd2fa13414e000a307f1a880b2eaca1fc343388b37c4d87dd91444e4426e8",
+      "bytes": 1024
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-receipt.json.raw",
+      "sha256": "4fddd2fa13414e000a307f1a880b2eaca1fc343388b37c4d87dd91444e4426e8",
+      "bytes": 1024
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-0.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-0.stdout.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-0.stderr.txt",
+      "sha256": "6a9c4a6cec9b7fa3766211677368b8b5d97337d2124a976ed6b5a20f5cdcfb31",
+      "bytes": 1350
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-0.stderr.txt.raw",
+      "sha256": "6a9c4a6cec9b7fa3766211677368b8b5d97337d2124a976ed6b5a20f5cdcfb31",
+      "bytes": 1350
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-compile-fix-receipt.json",
+      "sha256": "3562c0c051d2fc7b190ce5688cdcc90fe97587c7582b227c5721d0a9086f3499",
+      "bytes": 991
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-compile-fix-receipt.json.raw",
+      "sha256": "3562c0c051d2fc7b190ce5688cdcc90fe97587c7582b227c5721d0a9086f3499",
+      "bytes": 991
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-compile-fix-0.stdout.txt",
+      "sha256": "e76751a1f83be574513ea126d2127a048ce0ed70c33c3c3db5f14df0d2da235c",
+      "bytes": 2321
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-compile-fix-0.stdout.txt.raw",
+      "sha256": "e76751a1f83be574513ea126d2127a048ce0ed70c33c3c3db5f14df0d2da235c",
+      "bytes": 2321
+    },
+    {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-compile-fix-0.stderr.txt",
+      "sha256": "67f5b886f7ba4aad07b172fad69b238f9f377796f5cdcd2150db2286c70d3383",
+      "bytes": 713
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-compile-fix-0.stderr.txt.raw",
+      "sha256": "67f5b886f7ba4aad07b172fad69b238f9f377796f5cdcd2150db2286c70d3383",
+      "bytes": 713
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/publication.json",
+      "sha256": "f246a37beea3c97917eea18ecb4cecdc0e039aaa632d55112beab6f4ba666051",
+      "bytes": 20501
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/summary.json",
+      "sha256": "ed78dc4ba25f348363cbfa0ac7bc1b9e19ed0f9adb26ae3071965e5c0619a7ab",
+      "bytes": 13852
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/summary.json.raw",
+      "sha256": "ed78dc4ba25f348363cbfa0ac7bc1b9e19ed0f9adb26ae3071965e5c0619a7ab",
+      "bytes": 13852
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/source-freeze-v1.json",
+      "sha256": "4586bcd6ada86ea70969148cb21d3a89d6aa82bba27e9f46de0ad11bba992069",
+      "bytes": 6214
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/source-freeze-v1.json.raw",
+      "sha256": "4586bcd6ada86ea70969148cb21d3a89d6aa82bba27e9f46de0ad11bba992069",
+      "bytes": 6214
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/source-freeze-v2.json",
+      "sha256": "5507e7e2269cd1795124e89294df7a1247525077e0bfd6f18380b2d398f615d3",
+      "bytes": 6449
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/source-freeze-v2.json.raw",
+      "sha256": "5507e7e2269cd1795124e89294df7a1247525077e0bfd6f18380b2d398f615d3",
+      "bytes": 6449
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/source-v1-to-v2.diff",
+      "sha256": "2bf80e35601716f6332cdbe3beab07d47dc9b3a19fc5bd248ade39c264ed63e0",
+      "bytes": 1392
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/source-v1-to-v2.diff.raw",
+      "sha256": "2bf80e35601716f6332cdbe3beab07d47dc9b3a19fc5bd248ade39c264ed63e0",
+      "bytes": 1392
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/test-format-v2-receipt.json",
+      "sha256": "f44ba5faed767bf1997f06cd8e2414f6e1074d96a602c06e024bd22e7ddab6da",
+      "bytes": 1024
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/test-format-v2-receipt.json.raw",
+      "sha256": "f44ba5faed767bf1997f06cd8e2414f6e1074d96a602c06e024bd22e7ddab6da",
+      "bytes": 1024
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/final-owned-source-check.json",
+      "sha256": "ece6e6c59c450652bd568b59b355b35c56d97d4bb934e506b41e1d14fe619782",
+      "bytes": 8626
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/final-owned-source-check.json.raw",
+      "sha256": "ece6e6c59c450652bd568b59b355b35c56d97d4bb934e506b41e1d14fe619782",
+      "bytes": 8626
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/final-targeted/completed.json",
+      "sha256": "01655fddd7e6fa72adae2c24bfbf62bb3f6125efd9a6683eaebabe138e5f7eec",
+      "bytes": 1505
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/final-targeted/completed.json.raw",
+      "sha256": "01655fddd7e6fa72adae2c24bfbf62bb3f6125efd9a6683eaebabe138e5f7eec",
+      "bytes": 1505
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/final-targeted/stdout.txt",
+      "sha256": "dba906efa98e7ecaf385dce73e27ab4dd5fe473f034566948855baca248eb685",
+      "bytes": 1227
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/final-targeted/stdout.txt.raw",
+      "sha256": "dba906efa98e7ecaf385dce73e27ab4dd5fe473f034566948855baca248eb685",
+      "bytes": 1227
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/chromium-run01.json",
+      "sha256": "8eb21f6c64e308f0d59b659e504c2e117d0473004b1d627cda341455fe5f1295",
+      "bytes": 246869
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/chromium-run01.json.raw",
+      "sha256": "8eb21f6c64e308f0d59b659e504c2e117d0473004b1d627cda341455fe5f1295",
+      "bytes": 246869
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/chromium-run02.json",
+      "sha256": "14d042c1e4bb97a16f2732f3edf23ac9fdae78f28682141e65248408ab8bc1c1",
+      "bytes": 273900
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/chromium-run02.json.raw",
+      "sha256": "14d042c1e4bb97a16f2732f3edf23ac9fdae78f28682141e65248408ab8bc1c1",
+      "bytes": 273900
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/chromium-run03.json",
+      "sha256": "beb51895b0164acbd07505998f4cd48de14a84d7dd445da9449a73ae40dfcebf",
+      "bytes": 247674
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/chromium-run03.json.raw",
+      "sha256": "beb51895b0164acbd07505998f4cd48de14a84d7dd445da9449a73ae40dfcebf",
+      "bytes": 247674
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/webkit-run03.json",
+      "sha256": "bb04b5f2709a868ac429a7801d274df69ee185a7a3c64a19a1131592e0653fb0",
+      "bytes": 247668
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/webkit-run03.json.raw",
+      "sha256": "bb04b5f2709a868ac429a7801d274df69ee185a7a3c64a19a1131592e0653fb0",
+      "bytes": 247668
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/manifest.json",
+      "sha256": "8a4752402371d7edb51e7833b92dd4b62b5eeef58358d6c29543b0f150bfa7d0",
+      "bytes": 4530
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/manifest.json.raw",
+      "sha256": "8a4752402371d7edb51e7833b92dd4b62b5eeef58358d6c29543b0f150bfa7d0",
+      "bytes": 4530
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/owned-server-stop-event.json",
+      "sha256": "82896be56866cd9c220a3f5b11f85c510cfe2495b5a3722355e2aae75da8966c",
+      "bytes": 485
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/owned-server-stop-event.json.raw",
+      "sha256": "82896be56866cd9c220a3f5b11f85c510cfe2495b5a3722355e2aae75da8966c",
+      "bytes": 485
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/owned-server-stopped.json",
+      "sha256": "fbcfded5fe7b7a31bdc5831ef7c4524ba4a4133d3940aa33eb3e32edc5bcc7b6",
+      "bytes": 816
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/owned-server-stopped.json.raw",
+      "sha256": "fbcfded5fe7b7a31bdc5831ef7c4524ba4a4133d3940aa33eb3e32edc5bcc7b6",
+      "bytes": 816
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-initial-red.raw.jsonl",
+      "sha256": "bdc67bd919c194a356ba9f50533e9188067327284bf60080ff7313fab2acdec0",
+      "bytes": 12385
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/capacity-initial-red.raw.jsonl.raw",
+      "sha256": "bdc67bd919c194a356ba9f50533e9188067327284bf60080ff7313fab2acdec0",
+      "bytes": 12385
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-green-with-following-typecheck-failure.raw.jsonl",
+      "sha256": "bf9a10f360eb61a64cccdc64a01bb873b8059137e934a494b72bdfaf1ecb7f61",
+      "bytes": 3071
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/capacity-green-with-following-typecheck-failure.raw.jsonl.raw",
+      "sha256": "bf9a10f360eb61a64cccdc64a01bb873b8059137e934a494b72bdfaf1ecb7f61",
+      "bytes": 3071
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-codec-green-24.raw.jsonl",
+      "sha256": "a636e09bea7a94e03b4762a5958b063dd5847733ad3dac6e6728d807eb5445d5",
+      "bytes": 14394
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/capacity-codec-green-24.raw.jsonl.raw",
+      "sha256": "a636e09bea7a94e03b4762a5958b063dd5847733ad3dac6e6728d807eb5445d5",
+      "bytes": 14394
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-import-green-18.raw.jsonl",
+      "sha256": "7354a2951c037d0e374c6ce16a9a57ac2eed84a10da3a7917d2af157b1a606b9",
+      "bytes": 18105
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/capacity-import-green-18.raw.jsonl.raw",
+      "sha256": "7354a2951c037d0e374c6ce16a9a57ac2eed84a10da3a7917d2af157b1a606b9",
+      "bytes": 18105
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/codec-final-budget-red.raw.jsonl",
+      "sha256": "ee7044144fefa5d9b8b83ed61839cdcbb515586cf939b987b27f134ffade4fdb",
+      "bytes": 4238
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/codec-final-budget-red.raw.jsonl.raw",
+      "sha256": "ee7044144fefa5d9b8b83ed61839cdcbb515586cf939b987b27f134ffade4fdb",
+      "bytes": 4238
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/codec-final-budget-green.raw.jsonl",
+      "sha256": "ddcdb103db1c089ec6b3bd9865be12edc8cd547262961aa70e3c72679dfaefb0",
+      "bytes": 2977
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/codec-final-budget-green.raw.jsonl.raw",
+      "sha256": "ddcdb103db1c089ec6b3bd9865be12edc8cd547262961aa70e3c72679dfaefb0",
+      "bytes": 2977
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run01-completion.raw.jsonl",
+      "sha256": "105205c2e320491aa539dc9d2899aac788a6be680eec35984f4bb6a6b30c06ac",
+      "bytes": 23004
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/chromium-run01-completion.raw.jsonl.raw",
+      "sha256": "105205c2e320491aa539dc9d2899aac788a6be680eec35984f4bb6a6b30c06ac",
+      "bytes": 23004
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run02-completion.raw.jsonl",
+      "sha256": "0bc60c33a5bf8332096ac9a84b5e51aa256857f65bacd319b47a8e2c27d386c6",
+      "bytes": 8008
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/chromium-run02-completion.raw.jsonl.raw",
+      "sha256": "0bc60c33a5bf8332096ac9a84b5e51aa256857f65bacd319b47a8e2c27d386c6",
+      "bytes": 8008
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run03-completion.raw.jsonl",
+      "sha256": "72c91da0cd03a367011f0e679842414c765d261836b2abcbf6997c2b46094418",
+      "bytes": 10320
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/chromium-run03-completion.raw.jsonl.raw",
+      "sha256": "72c91da0cd03a367011f0e679842414c765d261836b2abcbf6997c2b46094418",
+      "bytes": 10320
+    },
+    {
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/webkit-run03-completion.raw.jsonl",
+      "sha256": "264978355a99cefbc777f3d92e50162aad7634dcb875b7f82d29771fbd9246fb",
+      "bytes": 5788
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/webkit-run03-completion.raw.jsonl.raw",
+      "sha256": "264978355a99cefbc777f3d92e50162aad7634dcb875b7f82d29771fbd9246fb",
+      "bytes": 5788
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/publication.json",
+      "sha256": "e3564bbc744cdb7671f999a6cca2f5e6c3e67230162601fde330d940ace4f383",
+      "bytes": 13025
+    },
+    {
+      "path": "output/2026-10-13-audio-input-independent/independent-audio-report.json",
+      "sha256": "34a4cfddf9be0f061cfc24145932ed7c285fc833cf71e3894fc3e3a22635df7a",
+      "bytes": 6382
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/independent-audio-report.json.raw",
+      "sha256": "34a4cfddf9be0f061cfc24145932ed7c285fc833cf71e3894fc3e3a22635df7a",
+      "bytes": 6382
+    },
+    {
+      "path": "output/2026-10-13-audio-input-independent/backend-v4-peer-evidence-review.json",
+      "sha256": "98441c6985995af1c21463c1f7383da05a1f196c615934843df097d7a5ded426",
+      "bytes": 2031
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/backend-v4-peer-evidence-review.json.raw",
+      "sha256": "98441c6985995af1c21463c1f7383da05a1f196c615934843df097d7a5ded426",
+      "bytes": 2031
+    },
+    {
+      "path": "output/2026-10-13-audio-input-independent/frontend-final-independent-review.json",
+      "sha256": "a1cfd52f1def25ba5c7000510ee3b05837dc9861f85df2ce5dbfec2e03489467",
+      "bytes": 17918
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/frontend-final-independent-review.json.raw",
+      "sha256": "a1cfd52f1def25ba5c7000510ee3b05837dc9861f85df2ce5dbfec2e03489467",
+      "bytes": 17918
+    },
+    {
+      "path": "output/2026-10-13-audio-input-independent/frontend-capacity-review-open.json",
+      "sha256": "71d80fb2d0c9b5a46402c0b23d73df7adb4d19555d9123bc13246a79e0a22662",
+      "bytes": 3364
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/frontend-capacity-review-open.json.raw",
+      "sha256": "71d80fb2d0c9b5a46402c0b23d73df7adb4d19555d9123bc13246a79e0a22662",
+      "bytes": 3364
+    },
+    {
+      "path": "output/2026-10-13-audio-input-independent/frontend-codec-budget-review-open.json",
+      "sha256": "ef51f4506bc18e305535f6071ca5ae5e58066a3b03c7bcae7b37a9a32822904d",
+      "bytes": 1557
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/frontend-codec-budget-review-open.json.raw",
+      "sha256": "ef51f4506bc18e305535f6071ca5ae5e58066a3b03c7bcae7b37a9a32822904d",
+      "bytes": 1557
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/publication.json",
+      "sha256": "5b95da29ea32dd007c9f270c568952eb2b30c47246d0f12a5d35247e8b0072bd",
+      "bytes": 2979
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/publication.json",
+      "sha256": "e3403b8e13f0baf6bf884c567e56e2fa74708e21907e1146db708c174e558260",
+      "bytes": 17912
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/preflight.json.raw",
+      "sha256": "144a6004fb347903132365c2b609d41ece88577303cab5f94ca66717fb892b2a",
+      "bytes": 264
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/checks-run/events.jsonl",
+      "sha256": "26b981cd214198fcd99f6dc74401c59320efa339298bce9deb74d25c069a5f40",
+      "bytes": 2222
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/events.jsonl.raw",
+      "sha256": "26b981cd214198fcd99f6dc74401c59320efa339298bce9deb74d25c069a5f40",
+      "bytes": 2222
+    },
+    {
+      "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/24-call_ZEZOnBmsADcKmAIHpmZgGYZ9.jsonl.raw",
+      "sha256": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+      "bytes": 808
+    },
+    {
+      "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/23-call_uuooA1Gh1QJrWmJl4RZLWkJd.jsonl.raw",
+      "sha256": "b6bb997adbea13389eab605b1b38a50b782ae9a105c04de58b063ed4bfe51d14",
+      "bytes": 1724
+    },
+    {
+      "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/manifest.json",
+      "sha256": "d4a3e377389ac349f7592ac38f112851a44a0f7410659ffc5754ea2b1ed34942",
+      "bytes": 16670
+    },
+    {
+      "path": "output/2026-10-13-file-dialog-investigation/native-run/01-final-process.json",
+      "sha256": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c",
+      "bytes": 320
+    },
+    {
+      "path": "output/2026-10-13-file-dialog-investigation/native-run/03-final-process-exec.jsonl.raw",
+      "sha256": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205",
+      "bytes": 3385
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-data/execution.json",
+      "sha256": "803c0790ed7ea0a39f4721241f20f2c6b68fca61cf633df475f9b33ddca89bd6",
+      "bytes": 980
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-data/capture-receipt-private.json",
+      "sha256": "7de7a6ad67f60922869b6dd4aea6a128b9030a2ca6d4c65c167cd1bf2bccde99",
+      "bytes": 10334
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-data/comparison-private.json",
+      "sha256": "a087bc3a57afe2e3fa41039e702e453e7b5ccdb40d9766f5b7b24a50a42592cc",
+      "bytes": 3936
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-data/final-verification-private.json",
+      "sha256": "dba4b6ac8b53b44f5e8f4447071c67ac5b039cc6534ed893478ec27fa259efd8",
+      "bytes": 792
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-data/config.json",
+      "sha256": "43356564b8c568dd0a30456c6d0207378df31635b6bc5abe00c9211cbe5f207e",
+      "bytes": 1321
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-data/stdout.raw",
+      "sha256": "69f6e60483803dc5a06e45ed88cee6140936c57be9139f63fa673badd4c01ec3",
+      "bytes": 93
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-data/stderr.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-data-independent/adapter-review.json",
+      "sha256": "5e32b1c9f2e5331b6b440d5da04c4966d825daf9725a39599ebca4ed9c56b285",
+      "bytes": 5912
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate.json",
+      "sha256": "3635dff69d1eaa388eca912ade4b575858c1adc7a43088a2b90d8ef8e831267e",
+      "bytes": 51452
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-independent.json",
+      "sha256": "c50e5a9d3aeb67de91eb48f4701ccc0cba0cde431e5b0e887c525405dafc94c6",
+      "bytes": 3060
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-inputs.json",
+      "sha256": "6b62cd4201ec1e12c2f95f4327962bcb08277498108a44530ba3fc074824f7f3",
+      "bytes": 210821
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/install-independent-final.json",
+      "sha256": "0c3dc48a0a1fedea8f3940780917ad2986eda947b377ec96ae03f2af107c1a46",
+      "bytes": 101866
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/install-operation.json",
+      "sha256": "6aeba1b78348c8566d65aeb37d2aa9f9f372cd9fef9a9f71603340e1c918db03",
+      "bytes": 3492
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/metadata-backup-receipt.json",
+      "sha256": "07e3f9517feb886b8505304ef1f70299ec513aff7dc12c32a561f64d7771c114",
+      "bytes": 1358
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/normal-exit-observation.json",
+      "sha256": "dc80c96b70c604ebb13e860c08f280a408b53ba5317010198eb6d106a848c10b",
+      "bytes": 4781
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install-preparation/generated-tools.json",
+      "sha256": "734953e5b8226cad089b19feaf3932aa80d487f679fefa027cc729b6df69ca6b",
+      "bytes": 5806
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent-install/install-final-review.json",
+      "sha256": "0e37214bc7612a5ff7bddf81ea09b9f063f34b5b5995aebd2f817bf72399f9c3",
+      "bytes": 101654
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/install-data-before-summary.json",
+      "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/snapshot-before-execution.json",
+      "sha256": "fa1bc6c022b4ec9bb81a661b8011e821cea1276fd2697d47df8f02e3709a0e0a",
+      "bytes": 619
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/install-data-preinstall-summary.json",
+      "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/snapshot-preinstall-execution.json",
+      "sha256": "1517da74bd4282289ea60db2105cf1821689755048837af7ebbee71f3b56f6f1",
+      "bytes": 623
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/install-data-after-summary.json",
+      "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/snapshot-after-execution.json",
+      "sha256": "dd897f6caae60ecdad4f17144da57519070a3115b42364b64717777f30613835",
+      "bytes": 618
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/prepare-candidate.py",
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1",
+      "bytes": 4493
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/verify-candidate.py",
+      "sha256": "c5569619e1995e14c375602669b993c8d6110db74b1b0538f588d02953918fa2",
+      "bytes": 59172
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/data_manifest.py",
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "bytes": 4258
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/observe_normal_exit.py",
+      "sha256": "c095f02abfdf7ec21358c5c3d9297f25a7bd0d15d3de154aea9ed4e5bd4d6ff7",
+      "bytes": 3435
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/install_data_snapshot.py",
+      "sha256": "d3a3c52024630411211dbf7b6f59847c5b428b5b68471b64942444237fb51afc",
+      "bytes": 6222
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/capture_snapshot.py",
+      "sha256": "ff12a8118e4295cdee3b2b04b84aa80c05253dbc92cd6a82e16ab49fdc7dc27e",
+      "bytes": 2841
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/backup_metadata.py",
+      "sha256": "2abca5445040f5dbb7c3513153a86426d5e91c1d3c0a3ea946fcfc4c3ecea15f",
+      "bytes": 10577
+    },
+    {
+      "path": "output/2026-10-14-docx-search-install/install_verified_candidate.py",
+      "sha256": "b445dbfbe51c69b62f228afdf2ef5059324894539533dfa70cc0c66f807568b6",
+      "bytes": 42169
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent-install/verify_installed_final.py",
+      "sha256": "29779512788bfe7973b604d4b2ae265b842542a0a7ba09168dc05b6497c8f948",
+      "bytes": 14247
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/install-data-before-summary.json",
+      "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/snapshot-before-execution.json",
+      "sha256": "565e194895017ed7f04f4f4eb0f4a7cdd224e02349b769e49eccfa594c023ba3",
+      "bytes": 619
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/install-data-before.jsonl",
+      "sha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+      "bytes": 58925641
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/install-data-preinstall-summary.json",
+      "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/snapshot-preinstall-execution.json",
+      "sha256": "ef67ec06a7a342c7309ef875703767461974668394be0d4ea83f7bb0c958858d",
+      "bytes": 623
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/install-data-preinstall.jsonl",
+      "sha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+      "bytes": 58925641
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/install-data-after-summary.json",
+      "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/snapshot-after-execution.json",
+      "sha256": "76defed222fe21c7b7a863982dc8496f78d6301540f9d78992620e149335384c",
+      "bytes": 618
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/install-data-after.jsonl",
+      "sha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+      "bytes": 58925641
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-independent-install/verify_installed_final.py",
+      "sha256": "90f20d31c5d828bef2452abdb7488b000f92a9bda4f5dc8a106645c97a86fe4a",
+      "bytes": 14610
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/install_verified_candidate.py",
+      "sha256": "6d7eb986848a06d8867402413ee9d83bbce929bba0b007c5e5a66937ac4b34c8",
+      "bytes": 33883
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/install_data_snapshot.py",
+      "sha256": "5b10eb37cc9ea52968bf3c32c12d3f7d2dbf4a23f5b335dbbee7923c1134c64b",
+      "bytes": 6222
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/capture_snapshot.py",
+      "sha256": "5f609a0f0c0eeade19bb42c4927d334982047a220690c3d56389c95fdce077e7",
+      "bytes": 2841
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/normal-exit-observation.json",
+      "sha256": "279657b57509fccf21c83f9ce7fc143b6ad725f3620d1935e4f919e89d22e730",
+      "bytes": 11215
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/install-operation.json",
+      "sha256": "882940bd3859d378c771841052998d30dadfadf6d1e114aae3c75f93bd72210e",
+      "bytes": 3492
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/generated-tools.json",
+      "sha256": "eaaec47a93bc5e48c2e88a30a4d8fed77619c38247659e6df42007714d200060",
+      "bytes": 5907
+    },
+    {
+      "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/24-call_ZEZOnBmsADcKmAIHpmZgGYZ9.jsonl.raw",
+      "sha256": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+      "bytes": 808
+    },
+    {
+      "path": "output/2026-10-13-file-dialog-investigation/native-run/01-final-process.json",
+      "sha256": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c",
+      "bytes": 320
+    },
+    {
+      "path": "output/2026-10-13-file-dialog-investigation/native-run/03-final-process-exec.jsonl.raw",
+      "sha256": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205",
+      "bytes": 3385
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/installed-native-scoped.json",
+      "sha256": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+      "bytes": 6167
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate.json",
+      "sha256": "fbdb9a57bad0166620c03b0db429c50231c4fb9670557a61217e85da42c9ba54",
+      "bytes": 49460
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate-independent.json",
+      "sha256": "bc8387facb6d347559199d81ba259e0b55a29f2173752307bef5d5229066d50d",
+      "bytes": 3060
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate-inputs.json",
+      "sha256": "cdb93a3ed74090ea7bf5b68e0fb9af0a86d2e01b22a94a1e5047fa522bbf00c2",
+      "bytes": 216308
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/backup_metadata.py",
+      "sha256": "d4e4b08bf9babde19dfa54bd5835092e9824628d01ea77e054b0246f73c3da97",
+      "bytes": 10577
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/data_manifest.py",
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "bytes": 4258
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/metadata-backup-receipt.json",
+      "sha256": "5ffb3bb0e2df8ccd9f55db60c87fe6c40585596ce56b5d71afeaf77ef28a888f",
+      "bytes": 1358
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install/metadata-before.sqlite3",
+      "sha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+      "bytes": 512000
+    }
+  ]
+}

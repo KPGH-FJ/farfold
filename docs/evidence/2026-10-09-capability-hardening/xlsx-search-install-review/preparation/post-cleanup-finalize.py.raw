@@ -1,0 +1,129 @@
+"""Finalize an already removed duplicate after the preserved cleanup exit 1.
+
+Never delete, copy an App, launch, query processes, or open SQLite/live data.
+Saved-manifest validation is reused; ZIP checks depend only on explicit formal files.
+"""
+import datetime
+import hashlib
+import importlib.util
+import io
+import json
+from pathlib import Path
+import stat
+import sys
+import zipfile
+
+sys.dont_write_bytecode = True
+ROOT = Path('/Users/tw/Desktop/farfold')
+PREP = ROOT / 'output/2026-10-14-xlsx-search-install-preparation'
+FAILURE = ROOT / 'output/2026-10-14-xlsx-search-independent/transcript-install/cleanup-failed.jsonl.raw'
+FAILURE_SHA = '6de7a2fb3a7eeb94f1b3c3a31bcd97050a488b9924468c9168c6ac493bf06e8c'
+FAILURE_MANIFEST = FAILURE.parent / 'manifest.json'
+FAILURE_MANIFEST_SHA = '44f2f7e68318ea63d8ad89608ddfbc7b53ebf892e4e9d34084b64cd25492a0fd'
+ORIGINAL_CLEANUP_SHA = 'e823334e7bf3676d5292d279ca032135acb5f1f21473d05bd9e4fc9c2fb58576'
+COMMIT = 'c89b8f824357fa95e4e72ffdd2979feb8bfb47ea'
+
+
+def inspect_zip(raw, files, modes, sizes, expected_sha, expected_bytes):
+    """Pure byte verification; callers supply sizes from the verified formal bundle."""
+    assert len(raw) == expected_bytes and hashlib.sha256(raw).hexdigest() == expected_sha
+    assert len(files) == 5 and set(files) == set(modes) == set(sizes)
+    with zipfile.ZipFile(io.BytesIO(raw)) as zipped:
+        assert zipped.testzip() is None, 'Archive CRC failure'
+        entries = zipped.infolist()
+        assert len(entries) == len({entry.filename for entry in entries}) == 5
+        assert {entry.filename for entry in entries} == {'Farfold.app/' + name for name in files}
+        for entry in entries:
+            name = entry.filename[len('Farfold.app/'):]
+            mode = entry.external_attr >> 16
+            assert stat.S_ISREG(mode) and stat.S_IMODE(mode) == modes[name], 'ZIP mode differs'
+            assert entry.file_size == sizes[name], 'ZIP/formal size differs'
+            data = zipped.read(entry)
+            assert len(data) == sizes[name] and hashlib.sha256(data).hexdigest() == files[name], 'ZIP payload differs'
+    return {'archiveSha256': expected_sha, 'archiveBytes': expected_bytes}
+
+
+def zip_matches_formal(path, files, modes, formal, expected_sha, expected_bytes):
+    assert formal == Path('/Applications/Farfold.app')
+    assert all(not p.is_symlink() for p in (path, *path.parents, formal, *formal.parents))
+    assert path.is_file()
+    sizes = {}
+    for name in files:
+        assert not Path(name).is_absolute() and '..' not in Path(name).parts
+        item = formal / name
+        assert all(not p.is_symlink() for p in (item, *item.parents))
+        value = item.stat()
+        assert stat.S_ISREG(value.st_mode) and stat.S_IMODE(value.st_mode) == modes[name]
+        sizes[name] = value.st_size
+    return inspect_zip(path.read_bytes(), files, modes, sizes, expected_sha, expected_bytes)
+
+
+def verify_failure(gate):
+    assert gate.digest(FAILURE) == FAILURE_SHA and FAILURE.stat().st_size == 1655
+    assert gate.digest(FAILURE_MANIFEST) == FAILURE_MANIFEST_SHA
+    event, manifest = gate.read(FAILURE), gate.read(FAILURE_MANIFEST)
+    assert event['type'] == 'response_item' and event['timestamp'] == '2026-10-13T18:54:46.447Z'
+    payload = event['payload']
+    assert payload['type'] == 'custom_tool_call_output' and payload['call_id'] == 'call_845470408bbd4c788500f123ea154105'
+    results = []
+    for block in payload['output']:
+        if block['type'] == 'input_text' and block['text'].startswith('{'):
+            results.append(json.loads(block['text']))
+    result, = [item for item in results if item.get('chunk_id') == '94984d']
+    assert type(result['exit_code']) is int and result['exit_code'] == 1
+    assert 'publish_and_cleanup.py", line 124, in main' in result['output']
+    assert 'verify-candidate.py", line 303, in zip_matches' in result['output']
+    assert 'FileNotFoundError:' in result['output'] and str(gate.DUPLICATE / 'Contents/Info.plist') in result['output']
+    entry, = [row for row in manifest['entries'] if row['phase'] == 'cleanup-failed']
+    assert entry['chunkId'] == '94984d' and entry['actualExitCode'] == 1
+    assert entry['sourceByteOffset'] == 31518246 and entry['sourceLine'] == 11347
+    assert entry['raw'] == gate.ref(FAILURE) and entry['timestamp'] == event['timestamp']
+    return {'actualExitCode': 1, 'chunkId': '94984d', 'raw': gate.ref(FAILURE),
+            'manifest': gate.ref(FAILURE_MANIFEST), 'removalOccurredInThisFailedRun': True}
+
+
+def main():
+    assert Path(__file__).absolute() == PREP / 'post-cleanup-finalize.py'
+    original = PREP / 'publish_and_cleanup.py'
+    assert hashlib.sha256(original.read_bytes()).hexdigest() == ORIGINAL_CLEANUP_SHA
+    spec = importlib.util.spec_from_file_location('xlsx_saved_cleanup_gates', original)
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+    assert gate.COMMIT == COMMIT and gate.DUPLICATE == ROOT / 'src-tauri/target/release/bundle/macos/Farfold.app'
+    cleanup = gate.PUBLIC / 'duplicate-cleanup.json'
+    assert not cleanup.exists() and not cleanup.is_symlink()
+    failure = verify_failure(gate)
+    final, candidate, summary, count = gate.installed_gate()
+    target = gate.PUBLIC / 'installation.json'
+    assert gate.digest(target) == gate.digest(gate.PRIVATE / 'install-operation.json')
+    assert not gate.DUPLICATE.exists() and not gate.DUPLICATE.is_symlink()
+    assert all(not p.is_symlink() for p in gate.DUPLICATE.parents)
+    checks = gate.load('xlsx_finalization_candidate', gate.PUBLIC / 'verify-candidate.py')
+    assert checks.SOURCE_COMMIT == COMMIT and candidate['candidateApp'] == str(gate.DUPLICATE)
+    expected = candidate['candidateFiles'], candidate['candidateModes']
+    assert final['checks']['candidateFormalFiveFiles']['files'] == expected[0]
+    assert final['checks']['candidateFormalFiveFiles']['modes'] == expected[1]
+    assert checks.bundle(gate.FORMAL) == expected
+    archive = checks.archive_path(COMMIT)
+    assert str(archive) == candidate['archive']
+    zip_matches_formal(archive, *expected, gate.FORMAL, candidate['archiveSha256'], candidate['archiveBytes'])
+    assert checks.bundle(gate.FORMAL) == expected and not gate.DUPLICATE.exists() and not gate.DUPLICATE.is_symlink()
+    assert gate.digest(archive) == candidate['archiveSha256']
+    receipt = {'sourceCommit': COMMIT, 'completedAtUtc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+               'removedPath': str(gate.DUPLICATE), 'exactCandidateAndFormalFiveFilesAndModesMatched': True,
+               'candidateMatchEvidence': 'Actual installed 10-check proof and preserved failed cleanup path before rmtree; no candidate bundle was re-created or re-read by finalizer.',
+               'formalApplicationPreserved': True, 'archivePreserved': str(archive),
+               'independentInstallation': gate.ref(gate.PUBLIC / 'install-independent-final.json'),
+               'threeManifestSha256': summary['sha256'], 'manifestEntriesEach': count,
+               'publishedInstallation': gate.ref(target), 'earlierCleanupFailure': failure,
+               'finalizerPerformedDeletion': False, 'finalizer': gate.ref(Path(__file__)),
+               'boundary': 'Original cleanup remains exit 1: its rmtree completed before an invalid APP-dependent ZIP check. This separate finalization performed no deletion, verified the already-absent exact duplicate, formal five-file hashes/modes, ZIP bytes/modes/sizes and original installation/retention gates, and only wrote this previously missing receipt. Formal App, archive, backups and user data remain preserved.'}
+    with cleanup.open('x') as handle:
+        json.dump(receipt, handle, indent=2)
+        handle.write('\n')
+    print(json.dumps({'finalized': True, 'earlierCleanupExitCode': 1, 'deletionPerformed': False,
+                      'publishedInstallationSha256': gate.digest(target), 'cleanupSha256': gate.digest(cleanup)}))
+
+
+if __name__ == '__main__':
+    main()

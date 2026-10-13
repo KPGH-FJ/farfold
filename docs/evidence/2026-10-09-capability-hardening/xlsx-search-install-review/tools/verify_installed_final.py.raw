@@ -1,0 +1,189 @@
+"""One read-only installed gate. Never launch an app or read live user data."""
+import datetime
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import stat
+import sys
+import zipfile
+
+sys.dont_write_bytecode = True
+ROOT = Path('/Users/tw/Desktop/farfold')
+PRIVATE = ROOT / 'output/2026-10-14-xlsx-search-independent-install'
+INSTALL = ROOT / 'output/2026-10-14-xlsx-search-install'
+RETRY = INSTALL
+PUBLIC = ROOT / 'docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate'
+SOURCE_COMMIT = 'c89b8f824357fa95e4e72ffdd2979feb8bfb47ea'
+COMMIT = SOURCE_COMMIT
+BEFORE_SUMMARY_SHA = 'e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af'
+NORMAL_EXIT_SHA = '279657b57509fccf21c83f9ce7fc143b6ad725f3620d1935e4f919e89d22e730'
+PRIOR_QUIT = ROOT / 'output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/24-call_ZEZOnBmsADcKmAIHpmZgGYZ9.jsonl.raw'
+PRIOR_QUIT_SHA = '580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad'
+
+
+def now():
+    return datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+
+def sha(path):
+    value = hashlib.sha256()
+    with path.open('rb') as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b''):
+            value.update(chunk)
+    return value.hexdigest()
+
+
+def read(path):
+    return json.loads(path.read_text())
+
+
+def ref(path):
+    return {'path': str(path.relative_to(ROOT)), 'sha256': sha(path), 'bytes': path.stat().st_size}
+
+
+def load(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def write(path, value, mode):
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, mode)
+    with os.fdopen(fd, 'w') as handle:
+        json.dump(value, handle, ensure_ascii=False, indent=2)
+        handle.write('\n')
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
+def manifest(path, expected_count):
+    return load('docx_installed_manifest_helpers', INSTALL / 'data_manifest.py').manifest(path, expected_count)
+
+
+def main():
+    assert isinstance(COMMIT, str) and len(COMMIT) == 40 and all(c in '0123456789abcdef' for c in COMMIT), 'Preparation only: exact source commit not pinned'
+    assert isinstance(BEFORE_SUMMARY_SHA, str) and len(BEFORE_SUMMARY_SHA) == 64 and all(c in '0123456789abcdef' for c in BEFORE_SUMMARY_SHA), 'Preparation only: fresh baseline summary not pinned'
+    assert isinstance(NORMAL_EXIT_SHA, str) and len(NORMAL_EXIT_SHA) == 64 and all(c in '0123456789abcdef' for c in NORMAL_EXIT_SHA), 'Preparation only: fresh normal-exit receipt not pinned'
+    private_path = PRIVATE / 'install-final-review.json'
+    public_path = PUBLIC / 'install-independent-final.json'
+    assert not private_path.exists() and not public_path.exists()
+    report = {'sourceCommit': COMMIT, 'startedAt': now(), 'result': 'running', 'checks': {}, 'failures': [], 'reviewerLaunchedApp': False, 'reviewerReadLiveDatabase': False}
+    references = []
+    checked = report['checks']
+    try:
+        sys.argv = [str(RETRY / 'install_verified_candidate.py'), COMMIT]
+        installer = load('history_installed_helpers', RETRY / 'install_verified_candidate.py')
+        verifier = load('history_candidate_helpers', PUBLIC / 'verify-candidate.py')
+        candidate, independent, inputs = [read(PUBLIC / name) for name in ('candidate.json', 'candidate-independent.json', 'candidate-inputs.json')]
+        operation = read(RETRY / 'install-operation.json')
+        normal = read(RETRY / 'normal-exit-observation.json')
+        assert sha(RETRY / 'normal-exit-observation.json') == NORMAL_EXIT_SHA
+        installer.require_configured(backup=True)
+        assert installer.SOURCE_COMMIT == COMMIT and installer.NORMAL_EXIT_SHA == NORMAL_EXIT_SHA and installer.BEFORE_SUMMARY_SHA == BEFORE_SUMMARY_SHA, 'Tool envelope pins differ'
+        installer.verify_normal_exit()
+        assert normal['normalQuitObserved'] is True and normal['forcedQuit'] is False and normal['formalProcessCountAfter'] == 0
+        assert normal['originalNormalExit'] == {'path': str(PRIOR_QUIT.relative_to(ROOT)), 'sha256': PRIOR_QUIT_SHA} and sha(PRIOR_QUIT) == PRIOR_QUIT_SHA and normal['newQuitPerformed'] is False
+        assert normal['originalExactExecutableProcessReceipt'] == {'path': str(PRIOR_PROCESS.relative_to(ROOT)), 'sha256': PRIOR_PROCESS_SHA} and sha(PRIOR_PROCESS) == PRIOR_PROCESS_SHA
+        assert read(BASELINE_NATIVE)['sourceCommit'] == verifier.LAST_RUNNING_COMMIT and sha(BASELINE_NATIVE) == BASELINE_NATIVE_SHA
+        assert candidate['formalBaseline']['sourceCommit'] == verifier.BASELINE_COMMIT
+        assert normal['previousUnlaunchedInstallation'] == verifier.previous_installation_evidence()
+        checked['normalExitAndFreshPreparation'] = {'passed': True, 'freshInstallDirectory': str(INSTALL.relative_to(ROOT)), 'priorFormalSourceCommit': verifier.BASELINE_COMMIT, 'lastRunningSourceCommit': verifier.LAST_RUNNING_COMMIT, 'boundary': 'Actual 9c NEW26 save/quit23/24 and exact process03 with original execution; root-confirmed continuity and fresh absence. Prior data differences remain recorded. No newly fabricated quit or unknown work closure.'}
+        assert candidate['sourceCommit'] == independent['sourceCommit'] == COMMIT and candidate['phase'] == 'internalCandidatePreparedNotInstalled' and candidate['buildExitCode'] == 0
+        assert independent['result'] == 'passed' and independent['failures'] == [] and len(independent['checks']) == 9 and all(x['passed'] for x in independent['checks'].values())
+        assert independent['inputReceipts']['candidateJsonSha256'] == sha(PUBLIC / 'candidate.json')
+        assert independent['inputReceipts']['candidateInputsJsonSha256'] == sha(PUBLIC / 'candidate-inputs.json')
+        checked['candidateReceipts'] = {'passed': True, 'candidateChecks': 9}
+        assert candidate['sourceInputCount'] == len(inputs) == EXPECTED_INPUT_COUNT and len(inputs) > 0
+        installer.verify_source(inputs)
+        engineering = verifier.engineering(verifier.ENGINEERING_PATH, inputs)
+        assert engineering == candidate['engineeringVerification'], 'Installed candidate engineering evidence differs'
+        references.extend(ref(ROOT / p) for p in engineering['references'])
+
+        for key, item in normal.items():
+            if key.startswith('original') and isinstance(item, dict) and set(item) == {'path', 'sha256'}:
+                assert sha(ROOT / item['path']) == item['sha256']
+                references.append(ref(ROOT / item['path']))
+        references.extend(ref(ROOT / item['path']) for item in normal['latestClosedDataStage']['references'].values())
+        references.extend(ref(ROOT / item['path']) for item in normal['previousUnlaunchedInstallation']['references'].values())
+        checked['exactSourceAndEngineering'] = {'passed': True, 'inputCount': len(inputs), 'engineering': engineering}
+        expected = candidate['candidateFiles']
+        assert installer.files(installer.CANDIDATE) == installer.files(installer.FORMAL) == expected
+        for location in (installer.CANDIDATE, installer.FORMAL):
+            assert {p: stat.S_IMODE((location / p).stat().st_mode) for p in expected} == candidate['candidateModes']
+        checked['candidateFormalFiveFiles'] = {'passed': True, 'files': expected, 'modes': candidate['candidateModes']}
+        verifications = [installer.verify_bundle(p) for p in (installer.CANDIDATE, installer.FORMAL)]
+        for location in (installer.CANDIDATE, installer.FORMAL):
+            embedded = location / 'Contents/Resources/release-manifest.json'
+            assert sha(embedded) == sha(ROOT / 'src-tauri/resources/release-manifest.json') and read(embedded)['version'] == '0.1.7'
+        checked['identityArchitectureSignature'] = {'passed': True, 'candidate': verifications[0], 'formal': verifications[1]}
+        archive = installer.ARCHIVE
+        assert str(archive) == candidate['archive'] and sha(archive) == candidate['archiveSha256'] and archive.stat().st_size == candidate['archiveBytes']
+        with zipfile.ZipFile(archive) as zipped:
+            assert zipped.testzip() is None
+            entries = zipped.infolist()
+            assert len(entries) == 5 and len({x.filename for x in entries}) == 5 and all(x.filename.startswith('Farfold.app/') for x in entries)
+            assert {x.filename.removeprefix('Farfold.app/'): hashlib.sha256(zipped.read(x)).hexdigest() for x in entries} == expected
+            assert {x.filename.removeprefix('Farfold.app/'): stat.S_IMODE(x.external_attr >> 16) for x in entries} == candidate['candidateModes']
+            assert all(stat.S_ISREG(x.external_attr >> 16) for x in entries)
+        checked['archive'] = {'passed': True, 'sha256': candidate['archiveSha256'], 'bytes': candidate['archiveBytes']}
+        assert operation['candidateCommit'] == COMMIT and operation['phase'] == 'installedVerifiedNotLaunched' and operation['installed'] and operation['copyStarted'] and not operation['launched'] and not operation['realAgentInvoked']
+        assert operation['formalAppProcessesBefore'] == operation['formalAppProcessesAfter'] == 0 and operation['installedFiles'] == expected and operation['sourceInputsVerified'] == len(inputs)
+        assert operation['receiptHashes'] == {'candidate': sha(PUBLIC / 'candidate.json'), 'inputs': sha(PUBLIC / 'candidate-inputs.json'), 'independent': sha(PUBLIC / 'candidate-independent.json')}
+        checked['installationOperation'] = {'passed': True, 'phase': operation['phase'], 'rootInstallerReportedLaunched': False}
+        assert sha(RETRY / 'install-data-before-summary.json') == BEFORE_SUMMARY_SHA
+        expected_count = sum(sum(c.values()) for c in read(RETRY / 'install-data-before-summary.json')['counts'].values())
+        assert expected_count > 0
+        summaries = []
+        for phase in ('before', 'preinstall', 'after'):
+            summary_path = RETRY / f'install-data-{phase}-summary.json'
+            execution_path = RETRY / f'snapshot-{phase}-execution.json'
+            summary, execution = read(summary_path), read(execution_path)
+            assert set(summary) == {'counts', 'sha256'} and execution['exitCode'] == 0 and execution['stderr'] == '' and json.loads(execution['stdout']) == summary
+            assert stat.S_IMODE(summary_path.stat().st_mode) == stat.S_IMODE(execution_path.stat().st_mode) == 0o600
+            assert installer.manifest(RETRY / f'install-data-{phase}.jsonl', expected_count) == summary
+            summaries.append(summary)
+            references.extend([ref(summary_path), ref(execution_path), ref(RETRY / f'install-data-{phase}.jsonl')])
+        backup = installer.verify_backup()
+        checked['snapshotCaptures'] = {'backup': backup, 'passed': True, 'actualSuccessfulCaptures': 3, 'rawMode': '0600', 'entriesEach': expected_count}
+        assert summaries[0] == summaries[1] == summaries[2]
+        assert operation['beforeSnapshot']['counts'] == summaries[1]['counts'] and operation['beforeSnapshot']['sha256'] == summaries[1]['sha256']
+        assert operation['beforeSnapshot']['summarySha256'] == sha(RETRY / 'install-data-preinstall-summary.json')
+        checked['retainedDataEquality'] = {'passed': True, 'allThreeManifestsEqual': True, 'entriesEach': expected_count, 'sha256': summaries[0]['sha256']}
+        for p in [Path(__file__), RETRY / 'install_verified_candidate.py', RETRY / 'install_data_snapshot.py', RETRY / 'capture_snapshot.py', RETRY / 'normal-exit-observation.json', RETRY / 'install-operation.json', ROOT / 'output/2026-10-14-xlsx-search-install-preparation/generated-tools.json', PRIOR_QUIT, PRIOR_PROCESS, installer.PRIOR_ACTUAL_PROCESS, BASELINE_NATIVE, PUBLIC / 'candidate.json', PUBLIC / 'candidate-independent.json', PUBLIC / 'candidate-inputs.json']:
+            references.append(ref(p))
+        for p in (RETRY / 'backup_metadata.py', RETRY / 'data_manifest.py', RETRY / 'metadata-backup-receipt.json', RETRY / 'metadata-before.sqlite3'):
+            references.append(ref(p))
+        # This is the final bounded check, before root intentionally launches.
+        installer.verify_source(inputs)
+        assert installer.files(installer.CANDIDATE) == installer.files(installer.FORMAL) == expected
+        for value in references:
+            assert sha(ROOT / value['path']) == value['sha256']
+        count = installer.process_count()
+        assert count == 0
+        checked['finalStableAndProcessAbsent'] = {'passed': True, 'checkedAt': now(), 'formalProcessCount': count, 'sourceInputCount': len(inputs)}
+        report['result'] = 'passed'
+    except BaseException as error:
+        report['result'] = 'failed'
+        report['failures'].append({'type': type(error).__name__, 'message': str(error)})
+    report.update(completedAt=now(), refs=references, boundary='Single read-only installed gate. Snapshot manifests and retained backup receipts were read, not live user files or SQLite. This gate concerns only this configured XLSX selected-attachment search installation over the actual unlaunched 52d formal baseline; last-running and last-normal-quit provenance remains 9c. All seven engineering commands must actually execute in this exact new slice; no reuse is accepted. Gate applies at the recorded time before root intentional native testing; no later process/source recheck is implied. Ad-hoc signature is not notarization or distribution approval.')
+    write(private_path, report, 0o600)
+    public = {k: report[k] for k in ('sourceCommit', 'startedAt', 'completedAt', 'result', 'checks', 'failures', 'reviewerLaunchedApp', 'reviewerReadLiveDatabase', 'boundary')}
+    public['refs'] = [ref(private_path), *references]
+    write(public_path, public, 0o644)
+    print(json.dumps({'result': report['result'], 'checksPassed': sum(x['passed'] for x in checked.values()), 'private': ref(private_path), 'public': ref(public_path), 'failures': report['failures']}))
+    return 0 if report['result'] == 'passed' else 1
+
+
+
+EXPECTED_INPUT_COUNT = 1842
+BASELINE_NATIVE = ROOT / 'docs/evidence/2026-10-09-capability-hardening/file-dialog-native/installed-native-scoped.json'
+BASELINE_NATIVE_SHA = '663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96'
+PRIOR_PROCESS = ROOT / 'output/2026-10-13-file-dialog-investigation/native-run/01-final-process.json'
+PRIOR_PROCESS_SHA = '4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c'
+GENERATED_TOOLS = ROOT / 'output/2026-10-14-xlsx-search-install-preparation/generated-tools.json'
+
+if __name__ == '__main__':
+    raise SystemExit(main())

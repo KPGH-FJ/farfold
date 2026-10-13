@@ -1,0 +1,40 @@
+{
+  "phase": "XLSX installed documentation closeout",
+  "head": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+  "files": [
+    {
+      "path": ".prettierignore",
+      "sha256": "b1c5514eb4493b4177fafdd8019c1b7e7a12a397597f098f74a398c4e7a0ed28"
+    },
+    {
+      "path": "docs/status.md",
+      "sha256": "93f0c314ee55941a57f85e96753152984cb667010bbb57448c1c9df0f798f2a3"
+    },
+    {
+      "path": "docs/architecture.md",
+      "sha256": "39fb10166ef966436c5cab2c67b672fd22df5549847aa71fbc9405065b4753e7"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "sha256": "752e9a996de235ba8c6187d2e0e8aa5bdeda5d5f385417302cfc0456d90408de"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "sha256": "829b1ea015e774e953d3fdf4080bad55bc2252dcb1a489bfc19334a4c238523c"
+    }
+  ],
+  "originalConditionsPreserved": 122,
+  "newConditionsPreserved": 28,
+  "progressChanged": [
+    "P32"
+  ],
+  "formatWriteActualExitCode": 0,
+  "formatCheckActualExitCode": 0,
+  "formatWriteChunk": "44dd98",
+  "formatCheckChunk": "ea3056",
+  "priorVerificationError": {
+    "chunk": "78ae80",
+    "actualExitCode": 1,
+    "reason": "Root table helper incorrectly required four columns for all entries; NEW entries have three. No doc change; corrected parser verified all 150 rows."
+  }
+}

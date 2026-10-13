@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T18:56:59.659194+00:00",
+  "result": "confirmedCleanupPostDeletionValidationFailureAwaitSeparateFinalizer",
+  "originalCompletions": {
+    "path": "output/2026-10-14-xlsx-search-independent/transcript-install/manifest.json",
+    "bytes": 3185,
+    "sha256": "44f2f7e68318ea63d8ad89608ddfbc7b53ebf892e4e9d34084b64cd25492a0fd"
+  },
+  "failureRaw": {
+    "path": "output/2026-10-14-xlsx-search-independent/transcript-install/cleanup-failed.jsonl.raw",
+    "bytes": 1655,
+    "sha256": "6de7a2fb3a7eeb94f1b3c3a31bcd97050a488b9924468c9168c6ac493bf06e8c"
+  },
+  "cleanupTool": {
+    "path": "output/2026-10-14-xlsx-search-install-preparation/publish_and_cleanup.py",
+    "bytes": 7797,
+    "sha256": "e823334e7bf3676d5292d279ca032135acb5f1f21473d05bd9e4fc9c2fb58576"
+  },
+  "candidateVerifier": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/verify-candidate.py",
+    "bytes": 62564,
+    "sha256": "ab21fa35a8976b4703d09b04fe2ad53ee053733c60a9e139e1787f08191cd38c"
+  },
+  "priorStaticReviewUnmodified": {
+    "path": "output/2026-10-14-xlsx-search-independent/publish-cleanup-review.json",
+    "bytes": 3406,
+    "sha256": "0f91107a81d2a05a60bf74f04901da9a9bbdc23cab310332772820e132c70d5d"
+  },
+  "actualCompletionCodes": {
+    "candidateBuild": 0,
+    "candidateIndependent": 0,
+    "installer": 0,
+    "afterCapture": 0,
+    "installedIndependent": 0,
+    "cleanup": 1
+  },
+  "causalChain": [
+    {
+      "file": "output/2026-10-14-xlsx-search-install-preparation/publish_and_cleanup.py",
+      "line": 121,
+      "fact": "The fixed duplicate removal precedes the final archive recheck."
+    },
+    {
+      "file": "output/2026-10-14-xlsx-search-install-preparation/publish_and_cleanup.py",
+      "line": 124,
+      "fact": "After deletion, main calls the inherited candidate zip_matches helper."
+    },
+    {
+      "file": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/verify-candidate.py",
+      "line": 303,
+      "fact": "zip_matches reads each payload size from the global candidate APP directory. After intended removal that path no longer exists, causing the recorded FileNotFoundError."
+    }
+  ],
+  "reviewCorrection": "The earlier static cleanup review checked the caller gates but missed the callee dependency on the duplicate directory after deletion. Its original bytes remain unchanged; this record explicitly corrects that conclusion.",
+  "scope": [
+    "The installed App and independent10 passed before cleanup. Cleanup was not an all-success operation: operation publication and duplicate deletion occurred before the final check failed, leaving cleanup receipt absent.",
+    "Do not rerun cleanup or its deletion. A separately reviewed finalizer must verify current formal five files/modes and archive payloads without relying on removed APP, preserve the original exit1, confirm duplicate absence, and write only new recovery metadata.",
+    "No conclusion about current formal/archive bytes beyond prior recorded successes is asserted by this failure review. Those must be independently rechecked by the separate finalizer."
+  ],
+  "operationsByReviewer": {
+    "main": 0,
+    "delete": 0,
+    "App": 0,
+    "processQuery": 0,
+    "SQLite": 0,
+    "databaseBytes": 0,
+    "tests": 0
+  }
+}

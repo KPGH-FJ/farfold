@@ -1,0 +1,43 @@
+{
+  "sourceCommit": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+  "completedAtUtc": "2026-10-13T19:05:22.263467+00:00",
+  "removedPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "exactCandidateAndFormalFiveFilesAndModesMatched": true,
+  "candidateMatchEvidence": "Actual installed 10-check proof and preserved failed cleanup path before rmtree; no candidate bundle was re-created or re-read by finalizer.",
+  "formalApplicationPreserved": true,
+  "archivePreserved": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-14-xlsx-search-c89b8f82/Farfold-0.1.7-c89b8f82.zip",
+  "independentInstallation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/install-independent-final.json",
+    "bytes": 97368,
+    "sha256": "57a740f3fda71de9d47f6254fdcef6d57c9bbfe55065f976fde3c16c25dd53d8"
+  },
+  "threeManifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+  "manifestEntriesEach": 217400,
+  "publishedInstallation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/installation.json",
+    "bytes": 3492,
+    "sha256": "882940bd3859d378c771841052998d30dadfadf6d1e114aae3c75f93bd72210e"
+  },
+  "earlierCleanupFailure": {
+    "actualExitCode": 1,
+    "chunkId": "94984d",
+    "raw": {
+      "path": "output/2026-10-14-xlsx-search-independent/transcript-install/cleanup-failed.jsonl.raw",
+      "bytes": 1655,
+      "sha256": "6de7a2fb3a7eeb94f1b3c3a31bcd97050a488b9924468c9168c6ac493bf06e8c"
+    },
+    "manifest": {
+      "path": "output/2026-10-14-xlsx-search-independent/transcript-install/manifest.json",
+      "bytes": 3185,
+      "sha256": "44f2f7e68318ea63d8ad89608ddfbc7b53ebf892e4e9d34084b64cd25492a0fd"
+    },
+    "removalOccurredInThisFailedRun": true
+  },
+  "finalizerPerformedDeletion": false,
+  "finalizer": {
+    "path": "output/2026-10-14-xlsx-search-install-preparation/post-cleanup-finalize.py",
+    "bytes": 7996,
+    "sha256": "58bd796b1ad30c96fdf1dcfc9bf008c924d7d9b40ff31f233d5cd2f89936c2da"
+  },
+  "boundary": "Original cleanup remains exit 1: its rmtree completed before an invalid APP-dependent ZIP check. This separate finalization performed no deletion, verified the already-absent exact duplicate, formal five-file hashes/modes, ZIP bytes/modes/sizes and original installation/retention gates, and only wrote this previously missing receipt. Formal App, archive, backups and user data remain preserved."
+}

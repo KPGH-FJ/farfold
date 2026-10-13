@@ -1,0 +1,211 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T19:10:59.161161+00:00",
+  "result": "docsAndExactPublicCloseoutScopeVerified",
+  "baseline": {
+    "path": "output/2026-10-14-xlsx-search-install-docs/before.json",
+    "bytes": 1359,
+    "sha256": "c8047a5261bdbbe06198153a26c2b923139d98f8603628ed9d4d30b2caee7cf9"
+  },
+  "baselineCommit": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+  "currentDocs": [
+    {
+      "path": "docs/status.md",
+      "bytes": 93085,
+      "sha256": "93f0c314ee55941a57f85e96753152984cb667010bbb57448c1c9df0f798f2a3"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 135028,
+      "sha256": "39fb10166ef966436c5cab2c67b672fd22df5549847aa71fbc9405065b4753e7"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 157959,
+      "sha256": "752e9a996de235ba8c6187d2e0e8aa5bdeda5d5f385417302cfc0456d90408de"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 90776,
+      "sha256": "829b1ea015e774e953d3fdf4080bad55bc2252dcb1a489bfc19334a4c238523c"
+    }
+  ],
+  "prettierIgnore": {
+    "path": ".prettierignore",
+    "bytes": 21890,
+    "sha256": "b1c5514eb4493b4177fafdd8019c1b7e7a12a397597f098f74a398c4e7a0ed28"
+  },
+  "conditions": {
+    "originalIds": 122,
+    "originalIdsTitlesAndConditionsUnchanged": true,
+    "onlyOriginalProgressChanged": [
+      "P32"
+    ],
+    "newIds": 28,
+    "allNewRowsUnchanged": true
+  },
+  "protected": [
+    {
+      "path": "PRODUCT.md",
+      "bytes": 35083,
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "bytes": 11543,
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "bytes": 2341,
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+    }
+  ],
+  "links": [
+    {
+      "from": "docs/status.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/verification.json",
+        "bytes": 7157,
+        "sha256": "0694dd37dbb1d54e52529a9ed447f9ce8670fe7f2f381bb85d11c2e7dc993390"
+      }
+    },
+    {
+      "from": "docs/status.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate-independent.json",
+        "bytes": 3060,
+        "sha256": "bc8387facb6d347559199d81ba259e0b55a29f2173752307bef5d5229066d50d"
+      }
+    },
+    {
+      "from": "docs/status.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/install-independent-final.json",
+        "bytes": 97368,
+        "sha256": "57a740f3fda71de9d47f6254fdcef6d57c9bbfe55065f976fde3c16c25dd53d8"
+      }
+    },
+    {
+      "from": "docs/status.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-install-review/verification.json",
+        "bytes": 16486,
+        "sha256": "de423595d52d3cfc224efabb0ac7bb1056dfcee2764f2028a7466398c268dcfc"
+      }
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/verification.json",
+        "bytes": 7157,
+        "sha256": "0694dd37dbb1d54e52529a9ed447f9ce8670fe7f2f381bb85d11c2e7dc993390"
+      }
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate-independent.json",
+        "bytes": 3060,
+        "sha256": "bc8387facb6d347559199d81ba259e0b55a29f2173752307bef5d5229066d50d"
+      }
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/install-independent-final.json",
+        "bytes": 97368,
+        "sha256": "57a740f3fda71de9d47f6254fdcef6d57c9bbfe55065f976fde3c16c25dd53d8"
+      }
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-install-review/verification.json",
+        "bytes": 16486,
+        "sha256": "de423595d52d3cfc224efabb0ac7bb1056dfcee2764f2028a7466398c268dcfc"
+      }
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/verification.json",
+        "bytes": 7157,
+        "sha256": "0694dd37dbb1d54e52529a9ed447f9ce8670fe7f2f381bb85d11c2e7dc993390"
+      }
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate-independent.json",
+        "bytes": 3060,
+        "sha256": "bc8387facb6d347559199d81ba259e0b55a29f2173752307bef5d5229066d50d"
+      }
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/install-independent-final.json",
+        "bytes": 97368,
+        "sha256": "57a740f3fda71de9d47f6254fdcef6d57c9bbfe55065f976fde3c16c25dd53d8"
+      }
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-install-review/verification.json",
+        "bytes": 16486,
+        "sha256": "de423595d52d3cfc224efabb0ac7bb1056dfcee2764f2028a7466398c268dcfc"
+      }
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/verification.json",
+        "bytes": 7157,
+        "sha256": "0694dd37dbb1d54e52529a9ed447f9ce8670fe7f2f381bb85d11c2e7dc993390"
+      }
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate-independent.json",
+        "bytes": 3060,
+        "sha256": "bc8387facb6d347559199d81ba259e0b55a29f2173752307bef5d5229066d50d"
+      }
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/install-independent-final.json",
+        "bytes": 97368,
+        "sha256": "57a740f3fda71de9d47f6254fdcef6d57c9bbfe55065f976fde3c16c25dd53d8"
+      }
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-install-review/verification.json",
+        "bytes": 16486,
+        "sha256": "de423595d52d3cfc224efabb0ac7bb1056dfcee2764f2028a7466398c268dcfc"
+      }
+    }
+  ],
+  "claims": "Seven actualchecks1842/front496files5962/Rust1674+6, candidate9/installed10,3 equal217400 manifests,installedc89notlaunched,originalcleanup1+separatefinalizationnodeletion accurately scoped.52d phrased as prior installation. NEW24/P32 and nativepositive remain open.",
+  "ignoreDelta": "Exactly seven immutable current candidate/installation JSON paths added; no broad exclusion.",
+  "safeStagePaths": {
+    "path": "output/2026-10-14-xlsx-search-independent/install-closeout-reviewed-paths.json",
+    "bytes": 10783,
+    "sha256": "66bb9d9fcfff49f82a4b6b5692d5c1b9fb4c1e245ad1bbca35a7a8fc0bfb43e5"
+  },
+  "safeForPublicRaw": true,
+  "reviewerOperations": {
+    "sourceTests": 0,
+    "App": 0,
+    "databaseRead": 0,
+    "fullManifestScan": 0,
+    "sourceOrDocsMutation": 0
+  },
+  "sourceBoundary": "CurrentPDF development is separate; this review uses savedXLSX engineering/installation evidence and does not demand current source equality.",
+  "reviewScriptCorrection": "Initial read-only row-count assertion omitted the ARCH-xx prefix. Corrected enumeration includes all50ARCH+50P+22H original rows; source/docs were never changed by the review."
+}

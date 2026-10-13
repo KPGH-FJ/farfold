@@ -1,0 +1,364 @@
+"""Install the approved, verified candidate only. Never launch or quit an app."""
+
+import hashlib
+import importlib.util
+import json
+import os
+import plistlib
+import stat
+import sys
+import subprocess
+import zipfile
+from datetime import datetime, timezone
+from pathlib import Path
+
+sys.dont_write_bytecode = True
+ROOT = Path('/Users/tw/Desktop/farfold')
+OUT = ROOT / 'output/2026-10-14-xlsx-search-install'
+EVIDENCE = ROOT / 'docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate'
+COMMIT = sys.argv[1] if len(sys.argv) > 1 else None
+SOURCE_COMMIT = 'c89b8f824357fa95e4e72ffdd2979feb8bfb47ea'
+EXPECTED_COMMIT = SOURCE_COMMIT
+NORMAL_EXIT_SHA = '279657b57509fccf21c83f9ce7fc143b6ad725f3620d1935e4f919e89d22e730'
+BACKUP_RECEIPT_SHA = '5ffb3bb0e2df8ccd9f55db60c87fe6c40585596ce56b5d71afeaf77ef28a888f'
+BEFORE_SUMMARY_SHA = 'e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af'
+PRIOR_QUIT = ROOT / 'output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/24-call_ZEZOnBmsADcKmAIHpmZgGYZ9.jsonl.raw'
+PRIOR_QUIT_SHA = '580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad'
+CANDIDATE = ROOT / 'src-tauri/target/release/bundle/macos/Farfold.app'
+FORMAL = Path('/Applications/Farfold.app')
+ARCHIVE = ROOT / f'src-tauri/target/internal-candidate/2026-10-14-xlsx-search-{COMMIT[:8]}/Farfold-0.1.7-{COMMIT[:8]}.zip' if isinstance(COMMIT, str) else None
+EXECUTABLE = FORMAL / 'Contents/MacOS/farfold'
+SCOPES = ['src/', 'assets/', 'public/', 'scripts/', 'src-tauri/src/', 'src-tauri/native/', 'src-tauri/capabilities/', 'src-tauri/icons/', 'src-tauri/resources/', 'docs/evidence/2026-10-09-capability-hardening/docx-fixtures/', 'docs/evidence/2026-10-09-capability-hardening/docx/public-samples/']
+
+
+
+
+
+
+
+SCOPES += ['docs/evidence/2026-10-09-capability-hardening/workbook-range/fixtures/', 'docs/evidence/2026-10-09-capability-hardening/visual-area/fixtures/']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BUNDLE_FILES = {'Contents/Info.plist', 'Contents/MacOS/farfold', 'Contents/Resources/icon.icns', 'Contents/Resources/release-manifest.json', 'Contents/_CodeSignature/CodeResources'}
+
+
+
+# P08 fixed source inputs; checked against the complete engineering inventory.
+
+
+def require(condition, message):
+    if not condition:
+        raise RuntimeError(message)
+
+
+def nonsymlink(path, directory=False):
+    for parent in (path, *path.parents):
+        require(not parent.is_symlink(), 'Unexpected symbolic link in a verified path')
+    mode = path.lstat().st_mode
+    require(stat.S_ISDIR(mode) if directory else stat.S_ISREG(mode), 'Unexpected verified file type')
+
+
+def sha(path):
+    nonsymlink(path)
+    value = hashlib.sha256()
+    with path.open('rb') as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b''):
+            value.update(chunk)
+    return value.hexdigest()
+
+
+def read_json(path):
+    nonsymlink(path)
+    return json.loads(path.read_text())
+
+
+def run(args):
+    result = subprocess.run(args, cwd=ROOT, capture_output=True, text=True)
+    require(result.returncode == 0, f'{args[0]} failed with exit {result.returncode}: {result.stderr[-1200:]}')
+    return (result.stdout + result.stderr).strip()
+
+
+def files(base):
+    nonsymlink(base, directory=True)
+    result = {}
+    for path in sorted(base.rglob('*')):
+        require(not path.is_symlink(), 'Unexpected bundle symbolic link')
+        mode = path.lstat().st_mode
+        require(stat.S_ISDIR(mode) or stat.S_ISREG(mode), 'Unexpected bundle entry type')
+        if stat.S_ISREG(mode):
+            result[str(path.relative_to(base))] = sha(path)
+    require(set(result) == BUNDLE_FILES, 'Bundle does not contain exactly the approved five files')
+    return result
+
+
+def process_count():
+    output = run(['/bin/ps', '-axo', 'pid=,comm='])
+    return sum(fields[1] == str(EXECUTABLE) for line in output.splitlines() if len(fields := line.split(None, 1)) == 2)
+
+
+def verify_bundle(path):
+    info = plistlib.loads((path / 'Contents/Info.plist').read_bytes())
+    require(info.get('CFBundleIdentifier') == 'ai.farfold.desktop', 'Bundle identifier differs')
+    require(info.get('CFBundleShortVersionString') == '0.1.7', 'Bundle version differs')
+    require(info.get('CFBundleExecutable') == 'farfold', 'Bundle executable differs')
+    require(info.get('CFBundleDevelopmentRegion') == 'zh_CN' and 'zh-Hans' in info.get('CFBundleLocalizations', []), 'Bundle localization differs')
+    architecture = run(['/usr/bin/lipo', '-archs', str(path / 'Contents/MacOS/farfold')])
+    require(architecture == 'arm64', 'Bundle architecture differs')
+    verified = run(['/usr/bin/codesign', '--verify', '--deep', '--strict', '--verbose=2', str(path)])
+    details = run(['/usr/bin/codesign', '-d', '--verbose=4', str(path)])
+    require('Signature=adhoc' in details and 'Identifier=ai.farfold.desktop' in details, 'Bundle signature differs')
+    return {'identifier': info['CFBundleIdentifier'], 'version': info['CFBundleShortVersionString'], 'architecture': architecture, 'strictCodesign': verified, 'signature': 'ad-hoc; not notarized'}
+
+
+def verify_source(inputs):
+    output = subprocess.run(['/usr/bin/git', 'ls-tree', '-r', '-z', COMMIT], cwd=ROOT, capture_output=True, check=True).stdout
+    tracked = {}
+    for entry in output.split(b'\0'):
+        if not entry:
+            continue
+        metadata, name = entry.split(b'\t', 1)
+        mode, kind, oid = metadata.split()
+        name = name.decode()
+        if kind == b'blob' and (name in TOP or any(name.startswith(scope) for scope in SCOPES)):
+            tracked[name] = (mode.decode(), oid.decode())
+    disk = set(TOP)
+    for scope in SCOPES:
+        disk.update(str(path.relative_to(ROOT)) for path in (ROOT / scope).rglob('*') if path.is_file() and path.name != '.DS_Store' and '__pycache__' not in path.parts)
+    require(set(inputs) == set(tracked) == disk and len(inputs) == EXPECTED_INPUT_COUNT, 'Source input inventory differs from approved commit')
+    for name, expected in inputs.items():
+        path = ROOT / name
+        nonsymlink(path)
+        raw = path.read_bytes()
+        require(hashlib.sha256(raw).hexdigest() == expected, 'Source input differs from candidate receipt')
+        blob = hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
+        require(tracked[name][0] in ('100644', '100755') and blob == tracked[name][1], 'Source input differs from approved commit')
+
+
+def verify_before_snapshot():
+    summaries = []
+    for phase in ('before', 'preinstall'):
+        summary_path = OUT / f'install-data-{phase}-summary.json'
+        raw_path = OUT / f'install-data-{phase}.jsonl'
+        summary = read_json(summary_path)
+        execution = read_json(OUT / f'snapshot-{phase}-execution.json')
+        require(set(summary) == {'counts', 'sha256'} and execution['exitCode'] == 0 and execution['stderr'] == '' and json.loads(execution['stdout']) == summary, 'Before capture lacks an actual successful execution')
+        require(manifest(raw_path) == summary, 'Before full manifest hash/schema/counts differ')
+        for item in (summary_path, OUT / f'snapshot-{phase}-execution.json'):
+            require(stat.S_IMODE(item.stat().st_mode) == 0o600 and item.stat().st_uid == os.getuid(), 'Capture receipt must be owner-held 0600')
+        summaries.append(summary)
+    require(sha(OUT / 'install-data-before-summary.json') == BEFORE_SUMMARY_SHA and summaries[0] == summaries[1], 'Data changed between complete before and preinstall snapshots')
+    return {**summaries[1], 'rawMode': '0600', 'rawBytes': (OUT / 'install-data-preinstall.jsonl').stat().st_size, 'summarySha256': sha(OUT / 'install-data-preinstall-summary.json')}
+
+
+def retention_helpers():
+    spec = importlib.util.spec_from_file_location('docx_retention_helpers', Path(__file__).with_name('data_manifest.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def verify_candidate_engineering(candidate, inputs):
+    spec = importlib.util.spec_from_file_location('xlsx_install_engineering_helpers', EVIDENCE / 'verify-candidate.py')
+    verifier = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(verifier)
+    require(verifier.SOURCE_COMMIT == SOURCE_COMMIT, 'Engineering verifier source pin differs')
+    actual = verifier.engineering(verifier.ENGINEERING_PATH, inputs)
+    require(actual == candidate['engineeringVerification'], 'Candidate engineering evidence changed before installation')
+    return actual
+
+
+def manifest(path, expected_count=None):
+    return retention_helpers().manifest(path, expected_count)
+
+
+
+def require_configured(backup=False):
+    require(INPUT_SCOPE_READY is True, 'Preparation only: final inventory scope is UNSET')
+    require(isinstance(EXPECTED_INPUT_COUNT, int) and not isinstance(EXPECTED_INPUT_COUNT, bool) and EXPECTED_INPUT_COUNT > 0, 'Preparation only: final closed input count is UNSET')
+    require(isinstance(SOURCE_COMMIT, str) and len(SOURCE_COMMIT) == 40 and all(c in '0123456789abcdef' for c in SOURCE_COMMIT), 'Preparation only: SOURCE_COMMIT is UNSET')
+    require(isinstance(NORMAL_EXIT_SHA, str) and len(NORMAL_EXIT_SHA) == 64 and all(c in '0123456789abcdef' for c in NORMAL_EXIT_SHA), 'Preparation only: fresh normal-exit SHA is UNSET')
+    if backup:
+        require(isinstance(BACKUP_RECEIPT_SHA, str) and len(BACKUP_RECEIPT_SHA) == 64 and all(c in '0123456789abcdef' for c in BACKUP_RECEIPT_SHA), 'Preparation only: verified backup SHA is UNSET')
+        require(isinstance(BEFORE_SUMMARY_SHA, str) and len(BEFORE_SUMMARY_SHA) == 64 and all(c in '0123456789abcdef' for c in BEFORE_SUMMARY_SHA), 'Preparation only: exact before summary SHA is UNSET')
+        verify_generated_tools()
+
+
+def modes(base):
+    return {name: stat.S_IMODE((base / name).stat().st_mode) for name in files(base)}
+
+
+def verify_normal_exit():
+    require_configured()
+    path = OUT / 'normal-exit-observation.json'
+    require(sha(path) == NORMAL_EXIT_SHA, 'Fresh normal-exit observation changed')
+    spec = importlib.util.spec_from_file_location('audio_normal_exit_helpers', EVIDENCE / 'verify-candidate.py')
+    verifier = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(verifier)
+    require(verifier.SOURCE_COMMIT == SOURCE_COMMIT, 'Normal-exit helper source pin differs')
+    return verifier.validate_normal_observation(read_json(path))
+
+
+def verify_backup():
+    require_configured(backup=True)
+    path = OUT / 'metadata-backup-receipt.json'
+    require(sha(path) == BACKUP_RECEIPT_SHA, 'Pinned private backup receipt changed')
+    receipt = read_json(path)
+    require(receipt['sourceCommit'] == SOURCE_COMMIT and receipt['normalExitSha256'] == NORMAL_EXIT_SHA and receipt['sourceAndCaptureUnchanged'] is True and receipt['integrity'] == 'ok' and receipt['privateMode'] == '0600', 'Private backup incomplete or source pins differ')
+    require(stat.S_IMODE(path.stat().st_mode) == 0o600 and path.stat().st_uid == os.getuid(), 'Private backup receipt owner or mode differs')
+    backup = OUT / 'metadata-before.sqlite3'
+    require(stat.S_IMODE(backup.stat().st_mode) == 0o600 and backup.stat().st_uid == os.getuid() and sha(backup) == receipt['backupSha256'], 'Private backup digest, mode or owner differs')
+    require('farfold.sqlite3' in receipt['capturedFiles'] and set(receipt['capturedFiles']) <= {'farfold.sqlite3', 'farfold.sqlite3-wal', 'farfold.sqlite3-shm'}, 'Captured SQLite set differs')
+    capture = OUT / 'metadata-source'
+    nonsymlink(capture, True)
+    require(stat.S_IMODE(capture.stat().st_mode) == 0o700 and capture.stat().st_uid == os.getuid(), 'Captured SQLite directory must be private')
+    for name, expected in receipt['capturedFiles'].items():
+        captured = capture / name
+        require(stat.S_IMODE(captured.stat().st_mode) == 0o600 and captured.stat().st_uid == os.getuid() and sha(captured) == expected, 'Captured original SQLite bytes or private owner/mode differ')
+    require(set(p.name for p in capture.iterdir()) == set(receipt['capturedFiles']), 'Captured SQLite inventory differs')
+
+    # The latest NEW26 phase remains strict exit 2. These are byte identities only;
+    # the current installation still requires its own fresh full manifests/backup.
+    stage = verify_normal_exit()['latestClosedDataStage']
+    require(receipt['backupSha256'] == 'a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24' and backup.stat().st_size == 512000, 'Fresh consolidated backup differs from latest sealed NEW26 baseline')
+    require(stage['strictExitCode'] == 2 and stage['differencesAccepted'] is False, 'Prior strict data result changed')
+    require(receipt['capturedFiles'] == {name: item['sha256'] for name, item in stage['sourceFiles'].items()}
+            and all((capture / name).stat().st_size == item['bytes'] for name, item in stage['sourceFiles'].items()),
+            'Fresh installation backup differs from latest closed NEW26 source bytes')
+    before, entries = retention_helpers().validated_manifest(OUT / 'install-data-before.jsonl')
+    require(before == read_json(OUT / 'install-data-before-summary.json') and before['sha256'] == receipt['sourceBeforeManifestSha256'] and sha(OUT / 'install-data-before-summary.json') == BEFORE_SUMMARY_SHA, 'Backup and complete before manifest differ')
+    expected_names = {'farfold.sqlite3', 'farfold.sqlite3-wal', 'farfold.sqlite3-shm'}
+    require({name for name in expected_names if ('appData', name) in entries} == set(receipt['capturedFiles']), 'Backup SQLite presence differs from before manifest')
+    require(all(entries[('appData', name)]['kind'] == 'file' and entries[('appData', name)]['sha256'] == digest and entries[('appData', name)]['size'] == (capture / name).stat().st_size for name, digest in receipt['capturedFiles'].items()), 'Backup bytes differ from before manifest')
+    return {'receiptSha256': sha(path), 'backupSha256': sha(backup), 'capturedFiles': receipt['capturedFiles'], 'boundary': 'Verified only retained private evidence; no live database was opened by this check.'}
+
+
+def main():
+    require_configured(backup=True)
+    require(isinstance(EXPECTED_COMMIT, str) and len(EXPECTED_COMMIT) == 40 and all(c in '0123456789abcdef' for c in EXPECTED_COMMIT) and COMMIT == EXPECTED_COMMIT, 'Approved exact commit has not been configured; installation is disabled')
+    require(Path(__file__).absolute() == OUT / 'install_verified_candidate.py', 'Installer path differs from the approved location')
+    nonsymlink(OUT, directory=True)
+    require(OUT.stat().st_uid == os.getuid(), 'Output directory owner differs')
+    # Exclusive ownership is obtained before any validation or copy; never replace
+    # an earlier success/failure receipt, including through a symbolic link.
+    descriptor = os.open(OUT / 'install-operation.json', os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    record = {'startedAtUtc': datetime.now(timezone.utc).isoformat(), 'candidateCommit': COMMIT, 'phase': 'preflight', 'userAuthorizedContinuousDevelopment': True, 'normalQuitObservedByRootAgent': False, 'forcedQuit': False, 'copyStarted': False, 'installed': False, 'launched': False, 'realAgentInvoked': False, 'dataRetentionComparisonPending': True}
+    with os.fdopen(descriptor, 'w') as receipt_handle:
+        try:
+            exit_observation = verify_normal_exit()
+            record['privateBackup'] = verify_backup()
+            candidate_path = EVIDENCE / 'candidate.json'
+            inputs_path = EVIDENCE / 'candidate-inputs.json'
+            independent_path = EVIDENCE / 'candidate-independent.json'
+            candidate = read_json(candidate_path)
+            independent = read_json(independent_path)
+            inputs = read_json(inputs_path)
+            require(candidate['sourceCommit'] == COMMIT and candidate['phase'] == 'internalCandidatePreparedNotInstalled' and candidate['buildExitCode'] == 0, 'Candidate receipt is not an approved completed build')
+            require(independent['sourceCommit'] == COMMIT and independent['result'] == 'passed' and independent['failures'] == [] and len(independent['checks']) == 9 and all(item['passed'] for item in independent['checks'].values()), 'Independent candidate verification did not pass')
+            require(independent['inputReceipts']['candidateJsonSha256'] == sha(candidate_path) and independent['inputReceipts']['candidateInputsJsonSha256'] == sha(inputs_path), 'Candidate inputs changed after independent verification')
+            require(candidate['candidateApp'] == str(CANDIDATE) and candidate['archive'] == str(ARCHIVE), 'Candidate paths differ from fixed approved locations')
+            verify_source(inputs)
+            engineering = verify_candidate_engineering(candidate, inputs)
+            candidate_refs = {str(p.relative_to(ROOT)): sha(p) for p in (candidate_path, inputs_path, independent_path)}
+            expected_files = candidate['candidateFiles']
+            require(files(CANDIDATE) == expected_files and modes(CANDIDATE) == candidate['candidateModes'], 'Candidate bundle or modes differ from receipt')
+            require(files(FORMAL) == candidate['formalFiles'] and modes(FORMAL) == candidate['formalModes'], 'Formal app or modes differ from pre-build receipt')
+            record['candidateVerification'] = verify_bundle(CANDIDATE)
+            require(sha(ARCHIVE) == candidate['archiveSha256'] and ARCHIVE.stat().st_size == candidate['archiveBytes'], 'Candidate archive differs')
+            with zipfile.ZipFile(ARCHIVE) as archive:
+                require(archive.testzip() is None, 'Candidate archive CRC failed')
+                entries = archive.infolist()
+                require(len(entries) == 5 and all(not entry.is_dir() and stat.S_ISREG(entry.external_attr >> 16) for entry in entries), 'Archive must contain only the exact five regular files')
+                names = [entry.filename for entry in entries]
+                require(len(names) == len(set(names)) and all(name.startswith('Farfold.app/') for name in names), 'Candidate archive members differ')
+                archived = {entry.filename.removeprefix('Farfold.app/'): hashlib.sha256(archive.read(entry)).hexdigest() for entry in entries}
+                require(archived == expected_files and {entry.filename.removeprefix('Farfold.app/'): stat.S_IMODE(entry.external_attr >> 16) for entry in entries} == candidate['candidateModes'], 'Candidate archive contents or modes differ')
+            record['beforeSnapshot'] = verify_before_snapshot()
+            record['formalAppProcessesBefore'] = process_count()
+            require(record['formalAppProcessesBefore'] == 0, 'Formal app is still running; normal exit is required')
+            record['normalQuitObservedByRootAgent'] = True
+            # Recheck both exact app identities immediately before the only mutation.
+            require(files(CANDIDATE) == expected_files and modes(CANDIDATE) == candidate['candidateModes'] and files(FORMAL) == candidate['formalFiles'] and modes(FORMAL) == candidate['formalModes'], 'An application bundle or mode changed during preflight')
+            require(all(sha(ROOT / p) == value for p, value in {**candidate_refs, **engineering['references']}.items()), 'Candidate or actual-seven evidence changed during preflight')
+            require(process_count() == 0, 'Formal app restarted during preflight')
+            record.update(phase='copying', copyStarted=True)
+            run(['/usr/bin/ditto', str(CANDIDATE), str(FORMAL)])
+            record['phase'] = 'verification'
+            installed_files = files(FORMAL)
+            require(installed_files == expected_files and modes(FORMAL) == candidate['candidateModes'], 'Installed bundle or modes differ from verified candidate')
+            record['installedVerification'] = verify_bundle(FORMAL)
+            record['formalAppProcessesAfter'] = process_count()
+            require(record['formalAppProcessesAfter'] == 0, 'Formal app started during installation; stop for review')
+            record.update(phase='installedVerifiedNotLaunched', installed=True, onlyFormalAppReplaced=True, installedExactFiveFiles=True, installedFiles=installed_files, archiveSha256=candidate['archiveSha256'], sourceInputsVerified=len(inputs), receiptHashes={'candidate': sha(candidate_path), 'inputs': sha(inputs_path), 'independent': sha(independent_path)})
+        except BaseException as error:
+            record.update(failedDuring=record['phase'], phase='failed', error=f'{type(error).__name__}: {error}')
+            raise
+        finally:
+            record['completedAtUtc'] = datetime.now(timezone.utc).isoformat()
+            receipt_handle.write(json.dumps(record, ensure_ascii=False, indent=2) + '\n')
+            receipt_handle.flush()
+            os.fsync(receipt_handle.fileno())
+    print(json.dumps({'phase': record['phase'], 'installed': record['installed'], 'launched': False, 'dataRetentionComparisonPending': True}), flush=True)
+
+
+
+SCOPES += ['docs/evidence/2026-10-09-capability-hardening/xlsx-input/fixtures/']
+SCOPES += ['docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/']
+
+
+EXPECTED_INPUT_COUNT = 1842
+BASELINE_NATIVE = ROOT / 'docs/evidence/2026-10-09-capability-hardening/file-dialog-native/installed-native-scoped.json'
+BASELINE_NATIVE_SHA = '663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96'
+PRIOR_PROCESS = ROOT / 'output/2026-10-13-file-dialog-investigation/native-run/01-final-process.json'
+PRIOR_PROCESS_SHA = '4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c'
+PRIOR_ACTUAL_PROCESS = ROOT / 'output/2026-10-13-file-dialog-investigation/native-run/03-final-process-exec.jsonl.raw'
+PRIOR_ACTUAL_PROCESS_SHA = '5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205'
+GENERATED_TOOLS = ROOT / 'output/2026-10-14-xlsx-search-install-preparation/generated-tools.json'
+
+def verify_generated_tools():
+    generated = read_json(GENERATED_TOOLS)
+    require(generated['phase'] == 'fullyConfiguredForVerifiedInstallBeforeAppMutation' and generated['sourceCommit'] == SOURCE_COMMIT and generated['notYetKnownPins'] == [], 'Final runtime tools not fully pinned')
+    preparation = GENERATED_TOOLS.parent / 'preparation.json'
+    require(generated['preparation'] == {'path': str(preparation.relative_to(ROOT)), 'sha256': sha(preparation)}, 'Final runtime tool preparation pointer differs')
+    expected = {str((EVIDENCE / name).relative_to(ROOT)) for name in ('prepare-candidate.py', 'verify-candidate.py')}
+    expected |= {str((OUT / name).relative_to(ROOT)) for name in ('install_verified_candidate.py', 'install_data_snapshot.py', 'capture_snapshot.py', 'data_manifest.py', 'backup_metadata.py', 'observe_normal_exit.py')}
+    expected.add('output/2026-10-14-xlsx-search-independent-install/verify_installed_final.py')
+    require(len(generated['tools']) == 9 and {item['path'] for item in generated['tools']} == expected, 'Final runtime tool membership differs')
+    for item in generated['tools']:
+        require(sha(ROOT / item['path']) == item['sha256'] and all(value != 'UNSET' for value in item['pins'].values()), 'Configured runtime tool changed or unknown pins remain')
+        if 'SOURCE_COMMIT' in item['pins']:
+            require(item['pins']['SOURCE_COMMIT'] == SOURCE_COMMIT, 'Runtime tool source differs')
+        for name in ('NORMAL_EXIT_SHA', 'BEFORE_SUMMARY_SHA', 'BACKUP_RECEIPT_SHA'):
+            if name in item['pins']:
+                require(item['pins'][name] == globals()[name], 'Runtime data pin differs')
+    require(generated['beforeSummary']['sha256'] == BEFORE_SUMMARY_SHA and generated['backupReceipt']['sha256'] == BACKUP_RECEIPT_SHA and generated['normalExit']['sha256'] == NORMAL_EXIT_SHA, 'Generated-tool dependency pins differ')
+    require(all(generated[field]['path'] == str((OUT / filename).relative_to(ROOT)) for field, filename in (('beforeSummary', 'install-data-before-summary.json'), ('backupReceipt', 'metadata-backup-receipt.json'), ('normalExit', 'normal-exit-observation.json'))), 'Generated-tool dependency paths differ')
+    require(sha(OUT / 'install-data-before-summary.json') == BEFORE_SUMMARY_SHA and sha(OUT / 'metadata-backup-receipt.json') == BACKUP_RECEIPT_SHA, 'Generated-tool dependency receipts changed')
+    return generated
+
+
+SCOPES += ['src-tauri/test-fixtures/audio-input/']
+
+
+
+
+
+
+
+INPUT_SCOPE_READY = True
+
+TOP = ['.prettierignore', 'docs/architecture.md', 'docs/evidence/2026-10-09-capability-hardening/README.md', 'docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/actual-wire.json', 'docs/evidence/2026-10-09-capability-hardening/attachment-archive/backend/canonical-wire.json', 'docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/publication.json', 'docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/publication.json', 'docs/evidence/2026-10-09-capability-hardening/attachment-content-search/implementation.json', 'docs/evidence/2026-10-09-capability-hardening/attachment-content-search/independent/publication.json', 'docs/evidence/2026-10-09-capability-hardening/audio-input/backend/publication.json', 'docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/publication.json', 'docs/evidence/2026-10-09-capability-hardening/audio-input/implementation.json', 'docs/evidence/2026-10-09-capability-hardening/audio-input/independent/publication.json', 'docs/evidence/2026-10-09-capability-hardening/claude-history/backend/actual-wire.json', 'docs/evidence/2026-10-09-capability-hardening/docx-compatibility/01-unicode-lists.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-compatibility/02-table-images-stories.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-compatibility/03-sections.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-compatibility/expectations.json', 'docs/evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json', 'docs/evidence/2026-10-09-capability-hardening/docx-content-search/publication.json', 'docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/oracle.json', 'docs/evidence/2026-10-09-capability-hardening/docx-feedback/fixtures/repeated-locations.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/hidden-notice-boundaries.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/nested-choice-fallback.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/oracle-supplement.json', 'docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/supported-choice-markers.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/window-boundaries.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-feedback/independent/window-oracle.json', 'docs/evidence/2026-10-09-capability-hardening/docx-input/fixtures/active-object.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-input/fixtures/complete.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-input/fixtures/image-empty-note.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-input/fixtures/literal-marker.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-input/fixtures/oracle.json', 'docs/evidence/2026-10-09-capability-hardening/docx-input/fixtures/partial-hidden.docx', 'docs/evidence/2026-10-09-capability-hardening/docx-input/make-fixtures.py', 'docs/evidence/2026-10-09-capability-hardening/docx/browser/authored-portrait.jpg', 'docs/evidence/2026-10-09-capability-hardening/extension-inventory/backend/actual-wire.json', 'docs/evidence/2026-10-09-capability-hardening/history-search/backend/actual-wire.json', 'docs/evidence/2026-10-09-capability-hardening/history-search/backend/final-wire.json', 'docs/evidence/2026-10-09-capability-hardening/large-file-segments/copy-status-wire.json', 'docs/evidence/2026-10-09-capability-hardening/large-file-segments/text-block-wire.json', 'docs/evidence/2026-10-09-capability-hardening/mcp-add/backend/actual-wire.json', 'docs/evidence/2026-10-09-capability-hardening/mcp-http-add/backend/actual-wire.json', 'docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/actual-wire.json', 'docs/evidence/2026-10-09-capability-hardening/mcp-management/backend/final-wire.json', 'docs/evidence/2026-10-09-capability-hardening/mcp-remove/backend/actual-wire.json', 'docs/evidence/2026-10-09-capability-hardening/pdf-input/implementation.json', 'docs/evidence/2026-10-09-capability-hardening/project-file-selection/backend/actual-wire.json', 'docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/implementation.json', 'docs/evidence/2026-10-09-capability-hardening/skill-management/backend/actual-wire.json', 'docs/evidence/2026-10-09-capability-hardening/skills-inventory/backend/actual-wire.json', 'docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/oracle.json', 'docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v1-nonordinal-ids.xlsx', 'docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v1.xlsx', 'docs/evidence/2026-10-09-capability-hardening/workbook-feedback/fixtures/positions-v2.xlsx', 'docs/evidence/2026-10-09-capability-hardening/worktree-preparation/backend/preparation-wire.json', 'docs/evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/actual-wire.json', 'docs/evidence/2026-10-09-capability-hardening/xlsx-input-candidate/installed-native-scoped.json', 'docs/evidence/2026-10-09-capability-hardening/xlsx-search/publication.json', 'docs/evidence/2026-10-09-capability-hardening/xlsx-search/verification.json', 'docs/status.md', 'index.html', 'output/2026-10-13-attachment-search-frontend/browser/fixture.tsx', 'output/2026-10-13-attachment-search-frontend/browser/index.html', 'output/2026-10-13-attachment-search-frontend/browser/run.mjs', 'output/2026-10-13-attachment-search-frontend/browser/serve.mjs', 'output/2026-10-14-audio-cancel-test-race/source-freeze.json', 'output/2026-10-14-docx-search-backend/source-freeze.json', 'output/2026-10-14-docx-search-browser/author.docx', 'output/2026-10-14-docx-search-browser/budget-a.docx', 'output/2026-10-14-docx-search-browser/budget-b.docx', 'output/2026-10-14-docx-search-browser/budget-captures.json', 'output/2026-10-14-docx-search-browser/budget-oracle.json', 'output/2026-10-14-docx-search-browser/captures.json', 'output/2026-10-14-docx-search-browser/fixture.tsx', 'output/2026-10-14-docx-search-browser/generate-budget.py', 'output/2026-10-14-docx-search-browser/generate-fixtures.py', 'output/2026-10-14-docx-search-browser/index.html', 'output/2026-10-14-docx-search-browser/oracle.json', 'output/2026-10-14-docx-search-browser/run-v1.mjs', 'output/2026-10-14-docx-search-browser/run-v2.mjs', 'output/2026-10-14-docx-search-browser/run.mjs', 'output/2026-10-14-docx-search-browser/second.docx', 'output/2026-10-14-docx-search-browser/serve.mjs', 'output/2026-10-14-docx-search-doc-closeout/report.json', 'output/2026-10-14-docx-search-frontend/source-freeze-v2.json', 'output/2026-10-14-docx-search-independent/backend-review.json', 'output/2026-10-14-docx-search-independent/frontend-browser-supplement.json', 'output/2026-10-14-docx-search-independent/frontend-source-review.json', 'output/2026-10-14-docx-search-independent/image-and-cell-barriers.docx', 'output/2026-10-14-docx-search-independent/publication-review.json', 'output/2026-10-14-docx-search-independent/supplement-capture.json', 'output/2026-10-14-docx-search-independent/supplement-oracle.json', 'output/2026-10-14-docx-search-integration/publish_implementation.py', 'output/2026-10-14-docx-search-integration/reviewed-files-v2.json', 'output/2026-10-14-docx-search-integration/reviewed-files.json', 'output/2026-10-14-xlsx-search-backend/run_check.py', 'output/2026-10-14-xlsx-search-backend/source-freeze.json', 'output/2026-10-14-xlsx-search-browser/author.xlsx', 'output/2026-10-14-xlsx-search-browser/budget-a.xlsx', 'output/2026-10-14-xlsx-search-browser/budget-b.xlsx', 'output/2026-10-14-xlsx-search-browser/budget-captures.json', 'output/2026-10-14-xlsx-search-browser/budget-oracle.json', 'output/2026-10-14-xlsx-search-browser/captures.json', 'output/2026-10-14-xlsx-search-browser/fixture.tsx', 'output/2026-10-14-xlsx-search-browser/generate-fixtures.py', 'output/2026-10-14-xlsx-search-browser/index.html', 'output/2026-10-14-xlsx-search-browser/oracle.json', 'output/2026-10-14-xlsx-search-browser/run.mjs', 'output/2026-10-14-xlsx-search-browser/second.xlsx', 'output/2026-10-14-xlsx-search-browser/serve.mjs', 'output/2026-10-14-xlsx-search-frontend/run.py', 'output/2026-10-14-xlsx-search-frontend/source-freeze-v1.json', 'output/2026-10-14-xlsx-search-independent/captures.json', 'output/2026-10-14-xlsx-search-independent/decoding-fields.xlsx', 'output/2026-10-14-xlsx-search-independent/fixture-freeze.json', 'output/2026-10-14-xlsx-search-independent/generate-supplement.py', 'output/2026-10-14-xlsx-search-independent/hidden-only.xlsx', 'output/2026-10-14-xlsx-search-independent/oracle.json', 'output/2026-10-14-xlsx-search-independent/scope-barriers.xlsx', 'output/2026-10-14-xlsx-search-independent/verify-fixtures.py', 'output/2026-10-14-xlsx-search-integration/prepare_checkpoint.py', 'output/2026-10-14-xlsx-search-integration/prepare_inventory.py', 'output/2026-10-14-xlsx-search-integration/publish_checks.py', 'output/2026-10-14-xlsx-search-integration/publish_implementation.py', 'package.json', 'plans/agent-access.md', 'pnpm-lock.yaml', 'src-tauri/Cargo.lock', 'src-tauri/Cargo.toml', 'src-tauri/Info.plist', 'src-tauri/build.rs', 'src-tauri/examples/windows_process_fixture.rs', 'src-tauri/tauri.conf.json', 'src-tauri/tauri.windows.conf.json', 'src-tauri/testdata/signed-update-metadata.json', 'tsconfig.app.json', 'tsconfig.json', 'tsconfig.node.json', 'vite.config.ts', 'vitest.config.ts']
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,188 @@
+{
+  "phase": "PREPARATION_ONLY_NO_GENERATED_MAIN_EXECUTED",
+  "pins": {
+    "SOURCE_COMMIT": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+    "ENGINEERING_SHA": "0694dd37dbb1d54e52529a9ed447f9ce8670fe7f2f381bb85d11c2e7dc993390",
+    "PRIVATE_ENGINEERING_SHA": "f928920ad2a962c445ee4f4d6f657adc6ab5d4a08390536af4c63f0d9569eb36",
+    "EXPECTED_INPUT_COUNT": 1842,
+    "INVENTORY_SHA": "32d00ac07782aa18692465eb059252b60f7de67c65a9f73913bca5dd0fe8926a",
+    "FREEZE_SHA": "a0ffe1ca43984921663a5b97d021a8363c02d53fd42a45ca4d001e7151d2b205",
+    "NORMAL_EXIT_SHA": "279657b57509fccf21c83f9ce7fc143b6ad725f3620d1935e4f919e89d22e730",
+    "BEFORE_SUMMARY_SHA": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+    "BACKUP_RECEIPT_SHA": "5ffb3bb0e2df8ccd9f55db60c87fe6c40585596ce56b5d71afeaf77ef28a888f"
+  },
+  "inputScopeReady": true,
+  "files": [
+    {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/review-install/candidate/prepare-candidate.py",
+      "bytes": 4493,
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1",
+      "origin": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/prepare-candidate.py",
+        "bytes": 4493,
+        "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+      },
+      "diff": "output/2026-10-14-xlsx-search-install-preparation/review-install/diffs/candidate-prepare-candidate.py.diff",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "finalPath": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/prepare-candidate.py"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/review-install/candidate/verify-candidate.py",
+      "bytes": 62564,
+      "sha256": "ab21fa35a8976b4703d09b04fe2ad53ee053733c60a9e139e1787f08191cd38c",
+      "origin": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/verify-candidate.py",
+        "bytes": 59172,
+        "sha256": "c5569619e1995e14c375602669b993c8d6110db74b1b0538f588d02953918fa2"
+      },
+      "diff": "output/2026-10-14-xlsx-search-install-preparation/review-install/diffs/candidate-verify-candidate.py.diff",
+      "diffSha256": "a0fcdf63c4646c5605b7954179484b51a7e3d61a4c7407226413649e55bb9658",
+      "finalPath": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/verify-candidate.py"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/review-install/install/data_manifest.py",
+      "bytes": 4258,
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "origin": {
+        "path": "output/2026-10-14-docx-search-install/data_manifest.py",
+        "bytes": 4258,
+        "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+      },
+      "diff": "output/2026-10-14-xlsx-search-install-preparation/review-install/diffs/install-data_manifest.py.diff",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "finalPath": "output/2026-10-14-xlsx-search-install/data_manifest.py"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/review-install/install/observe_normal_exit.py",
+      "bytes": 3476,
+      "sha256": "61b24bacd25903b44e9cad5f5201a5ad18ded14a1a8b24561fbfa1b5dad4e8a2",
+      "origin": {
+        "path": "output/2026-10-14-docx-search-install/observe_normal_exit.py",
+        "bytes": 3435,
+        "sha256": "c095f02abfdf7ec21358c5c3d9297f25a7bd0d15d3de154aea9ed4e5bd4d6ff7"
+      },
+      "diff": "output/2026-10-14-xlsx-search-install-preparation/review-install/diffs/install-observe_normal_exit.py.diff",
+      "diffSha256": "a26251ff132570fe29ab0bd1cf77d648554461692946170ad6c2d1e57f72eb36",
+      "finalPath": "output/2026-10-14-xlsx-search-install/observe_normal_exit.py"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/review-install/install/install_data_snapshot.py",
+      "bytes": 6222,
+      "sha256": "5b10eb37cc9ea52968bf3c32c12d3f7d2dbf4a23f5b335dbbee7923c1134c64b",
+      "origin": {
+        "path": "output/2026-10-14-docx-search-install/install_data_snapshot.py",
+        "bytes": 6222,
+        "sha256": "d3a3c52024630411211dbf7b6f59847c5b428b5b68471b64942444237fb51afc"
+      },
+      "diff": "output/2026-10-14-xlsx-search-install-preparation/review-install/diffs/install-install_data_snapshot.py.diff",
+      "diffSha256": "a10d9a4ac006fb12b9c755b6f5d6c2cddd24a391ba8cf61b470482a455dee615",
+      "finalPath": "output/2026-10-14-xlsx-search-install/install_data_snapshot.py"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/review-install/install/capture_snapshot.py",
+      "bytes": 2841,
+      "sha256": "5f609a0f0c0eeade19bb42c4927d334982047a220690c3d56389c95fdce077e7",
+      "origin": {
+        "path": "output/2026-10-14-docx-search-install/capture_snapshot.py",
+        "bytes": 2841,
+        "sha256": "ff12a8118e4295cdee3b2b04b84aa80c05253dbc92cd6a82e16ab49fdc7dc27e"
+      },
+      "diff": "output/2026-10-14-xlsx-search-install-preparation/review-install/diffs/install-capture_snapshot.py.diff",
+      "diffSha256": "2136ebd16de05672b9cf5a5b61a1c1982d611d4a36c061f1762823911da74e4c",
+      "finalPath": "output/2026-10-14-xlsx-search-install/capture_snapshot.py"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/review-install/install/backup_metadata.py",
+      "bytes": 10577,
+      "sha256": "d4e4b08bf9babde19dfa54bd5835092e9824628d01ea77e054b0246f73c3da97",
+      "origin": {
+        "path": "output/2026-10-14-docx-search-install/backup_metadata.py",
+        "bytes": 10577,
+        "sha256": "2abca5445040f5dbb7c3513153a86426d5e91c1d3c0a3ea946fcfc4c3ecea15f"
+      },
+      "diff": "output/2026-10-14-xlsx-search-install-preparation/review-install/diffs/install-backup_metadata.py.diff",
+      "diffSha256": "4ec221cfeddbf708bfffbd196f8948d32fc6f7d9291c3d3cc45faecbe72d74e8",
+      "finalPath": "output/2026-10-14-xlsx-search-install/backup_metadata.py"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/review-install/install/install_verified_candidate.py",
+      "bytes": 33883,
+      "sha256": "6d7eb986848a06d8867402413ee9d83bbce929bba0b007c5e5a66937ac4b34c8",
+      "origin": {
+        "path": "output/2026-10-14-docx-search-install/install_verified_candidate.py",
+        "bytes": 42169,
+        "sha256": "b445dbfbe51c69b62f228afdf2ef5059324894539533dfa70cc0c66f807568b6"
+      },
+      "diff": "output/2026-10-14-xlsx-search-install-preparation/review-install/diffs/install-install_verified_candidate.py.diff",
+      "diffSha256": "fd462ff4b4fb4802107c7bffce71c72414ae5fe405093f40d665082444b0cfb2",
+      "finalPath": "output/2026-10-14-xlsx-search-install/install_verified_candidate.py"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-install-preparation/review-install/independent/verify_installed_final.py",
+      "bytes": 14610,
+      "sha256": "90f20d31c5d828bef2452abdb7488b000f92a9bda4f5dc8a106645c97a86fe4a",
+      "origin": {
+        "path": "output/2026-10-14-docx-search-independent-install/verify_installed_final.py",
+        "bytes": 14247,
+        "sha256": "29779512788bfe7973b604d4b2ae265b842542a0a7ba09168dc05b6497c8f948"
+      },
+      "diff": "output/2026-10-14-xlsx-search-install-preparation/review-install/diffs/independent-verify_installed_final.py.diff",
+      "diffSha256": "305039a734054c738c6765a632225ea64308eb44da593f2e3a19052ee3cf8a81",
+      "finalPath": "output/2026-10-14-xlsx-search-independent-install/verify_installed_final.py"
+    }
+  ],
+  "tools": [
+    {
+      "preparedPath": "output/2026-10-14-xlsx-search-install-preparation/review-install/candidate/prepare-candidate.py",
+      "preparedSha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1",
+      "finalPath": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/prepare-candidate.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-xlsx-search-install-preparation/review-install/candidate/verify-candidate.py",
+      "preparedSha256": "ab21fa35a8976b4703d09b04fe2ad53ee053733c60a9e139e1787f08191cd38c",
+      "finalPath": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/verify-candidate.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-xlsx-search-install-preparation/review-install/install/data_manifest.py",
+      "preparedSha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "finalPath": "output/2026-10-14-xlsx-search-install/data_manifest.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-xlsx-search-install-preparation/review-install/install/observe_normal_exit.py",
+      "preparedSha256": "61b24bacd25903b44e9cad5f5201a5ad18ded14a1a8b24561fbfa1b5dad4e8a2",
+      "finalPath": "output/2026-10-14-xlsx-search-install/observe_normal_exit.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-xlsx-search-install-preparation/review-install/install/install_data_snapshot.py",
+      "preparedSha256": "5b10eb37cc9ea52968bf3c32c12d3f7d2dbf4a23f5b335dbbee7923c1134c64b",
+      "finalPath": "output/2026-10-14-xlsx-search-install/install_data_snapshot.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-xlsx-search-install-preparation/review-install/install/capture_snapshot.py",
+      "preparedSha256": "5f609a0f0c0eeade19bb42c4927d334982047a220690c3d56389c95fdce077e7",
+      "finalPath": "output/2026-10-14-xlsx-search-install/capture_snapshot.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-xlsx-search-install-preparation/review-install/install/backup_metadata.py",
+      "preparedSha256": "d4e4b08bf9babde19dfa54bd5835092e9824628d01ea77e054b0246f73c3da97",
+      "finalPath": "output/2026-10-14-xlsx-search-install/backup_metadata.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-xlsx-search-install-preparation/review-install/install/install_verified_candidate.py",
+      "preparedSha256": "6d7eb986848a06d8867402413ee9d83bbce929bba0b007c5e5a66937ac4b34c8",
+      "finalPath": "output/2026-10-14-xlsx-search-install/install_verified_candidate.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-xlsx-search-install-preparation/review-install/independent/verify_installed_final.py",
+      "preparedSha256": "90f20d31c5d828bef2452abdb7488b000f92a9bda4f5dc8a106645c97a86fe4a",
+      "finalPath": "output/2026-10-14-xlsx-search-independent-install/verify_installed_final.py"
+    }
+  ],
+  "configurationInputs": {
+    "output/2026-10-14-xlsx-search-install-preparation/render.py": "518da37616f1e2a0c1a25ae2f77160fd369d81f3a61720cc9eb8d01dd66e4d6d",
+    "output/2026-10-14-xlsx-search-install-preparation/pins-install.json": "4e4afc1cfb691c5f51ad3bb62b363303ac9479e4a0b3e7f7cf383533b8b428ae",
+    "output/2026-10-14-xlsx-search-install-preparation/origins.json": "323ca171d568e5b085dd039bab0b4576a62b88bb4013328a81ffc1fa76b1d944",
+    "output/2026-10-14-xlsx-search-install-preparation/known-baseline.json": "052daae6aa140173935ef542b6e19a5d8e3ccbac6d9464606ca8eb48f9fd2f17",
+    "output/2026-10-14-xlsx-search-install-preparation/installation_bridge.py.inc": "10d6c40bcdbef32b9e2cce41ab66387e761df33aaca066506016b6d3816f34a8"
+  }
+}

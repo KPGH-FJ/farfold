@@ -1,0 +1,90 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "entries": [
+    {
+      "phase": "candidate-build",
+      "chunkId": "5c0415",
+      "actualExitCode": 0,
+      "sourceLine": 11104,
+      "sourceByteOffset": 31178970,
+      "sourceByteLength": 1258,
+      "timestamp": "2026-10-13T18:45:56.722Z",
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-install/candidate-build.jsonl.raw",
+        "bytes": 1258,
+        "sha256": "c92f61a94b27c2f7dea7892f55a994de35370ba1e92e59eb1c30a4603d0b4547"
+      }
+    },
+    {
+      "phase": "candidate-verify",
+      "chunkId": "8c76f2",
+      "actualExitCode": 0,
+      "sourceLine": 11109,
+      "sourceByteOffset": 31183884,
+      "sourceByteLength": 746,
+      "timestamp": "2026-10-13T18:46:01.765Z",
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-install/candidate-verify.jsonl.raw",
+        "bytes": 746,
+        "sha256": "a06e2405a4df3874d97e1172141f689074fd4b969caaf9e037d927e210f891c2"
+      }
+    },
+    {
+      "phase": "installation",
+      "chunkId": "3137fc",
+      "actualExitCode": 0,
+      "sourceLine": 11292,
+      "sourceByteOffset": 31435848,
+      "sourceByteLength": 971,
+      "timestamp": "2026-10-13T18:52:50.036Z",
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-install/installation.jsonl.raw",
+        "bytes": 971,
+        "sha256": "e8d2ef6434f5e04264bf9a7312bb4c093872a9891865f9d3578d4e1aa4bb824c"
+      }
+    },
+    {
+      "phase": "after-capture",
+      "chunkId": "88e333",
+      "actualExitCode": 0,
+      "sourceLine": 11322,
+      "sourceByteOffset": 31485343,
+      "sourceByteLength": 1088,
+      "timestamp": "2026-10-13T18:53:58.202Z",
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-install/after-capture.jsonl.raw",
+        "bytes": 1088,
+        "sha256": "2d0a1c30bc2933c0d91955b7ec926544213ea9975e4f24bf7617272abaa324a7"
+      }
+    },
+    {
+      "phase": "installed-final",
+      "chunkId": "c328b8",
+      "actualExitCode": 0,
+      "sourceLine": 11334,
+      "sourceByteOffset": 31501616,
+      "sourceByteLength": 1387,
+      "timestamp": "2026-10-13T18:54:22.453Z",
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-install/installed-final.jsonl.raw",
+        "bytes": 1387,
+        "sha256": "dbf16c184d3f4f7b2dcee6f6fd35b88c66849fdaa3f8e218a8c8d9e944e58b16"
+      }
+    },
+    {
+      "phase": "cleanup-failed",
+      "chunkId": "94984d",
+      "actualExitCode": 1,
+      "sourceLine": 11347,
+      "sourceByteOffset": 31518246,
+      "sourceByteLength": 1655,
+      "timestamp": "2026-10-13T18:54:46.447Z",
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-install/cleanup-failed.jsonl.raw",
+        "bytes": 1655,
+        "sha256": "6de7a2fb3a7eeb94f1b3c3a31bcd97050a488b9924468c9168c6ac493bf06e8c"
+      }
+    }
+  ],
+  "boundary": "Exact six authorized root completion records. Original cleanup exit1 retained; duplicate deletion occurred before failure, so no rerun is implied."
+}

@@ -312,3 +312,12 @@ docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-in
 docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/installation.json
 docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/install-independent-final.json
 docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/duplicate-cleanup.json
+
+# Preserve original XLSX search candidate and installation receipts.
+docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate-independent.json
+docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate-inputs-after.json
+docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate-inputs.json
+docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate.json
+docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/duplicate-cleanup.json
+docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/install-independent-final.json
+docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/installation.json

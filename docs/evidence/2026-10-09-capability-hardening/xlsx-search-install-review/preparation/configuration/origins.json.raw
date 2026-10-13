@@ -1,0 +1,55 @@
+{
+  "scripts": {
+    "candidate": {
+      "prepare-candidate.py": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/prepare-candidate.py",
+        "bytes": 4493,
+        "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+      },
+      "verify-candidate.py": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/docx-search-candidate/verify-candidate.py",
+        "bytes": 59172,
+        "sha256": "c5569619e1995e14c375602669b993c8d6110db74b1b0538f588d02953918fa2"
+      }
+    },
+    "install": {
+      "data_manifest.py": {
+        "path": "output/2026-10-14-docx-search-install/data_manifest.py",
+        "bytes": 4258,
+        "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+      },
+      "observe_normal_exit.py": {
+        "path": "output/2026-10-14-docx-search-install/observe_normal_exit.py",
+        "bytes": 3435,
+        "sha256": "c095f02abfdf7ec21358c5c3d9297f25a7bd0d15d3de154aea9ed4e5bd4d6ff7"
+      },
+      "install_data_snapshot.py": {
+        "path": "output/2026-10-14-docx-search-install/install_data_snapshot.py",
+        "bytes": 6222,
+        "sha256": "d3a3c52024630411211dbf7b6f59847c5b428b5b68471b64942444237fb51afc"
+      },
+      "capture_snapshot.py": {
+        "path": "output/2026-10-14-docx-search-install/capture_snapshot.py",
+        "bytes": 2841,
+        "sha256": "ff12a8118e4295cdee3b2b04b84aa80c05253dbc92cd6a82e16ab49fdc7dc27e"
+      },
+      "backup_metadata.py": {
+        "path": "output/2026-10-14-docx-search-install/backup_metadata.py",
+        "bytes": 10577,
+        "sha256": "2abca5445040f5dbb7c3513153a86426d5e91c1d3c0a3ea946fcfc4c3ecea15f"
+      },
+      "install_verified_candidate.py": {
+        "path": "output/2026-10-14-docx-search-install/install_verified_candidate.py",
+        "bytes": 42169,
+        "sha256": "b445dbfbe51c69b62f228afdf2ef5059324894539533dfa70cc0c66f807568b6"
+      }
+    },
+    "independent": {
+      "verify_installed_final.py": {
+        "path": "output/2026-10-14-docx-search-independent-install/verify_installed_final.py",
+        "bytes": 14247,
+        "sha256": "29779512788bfe7973b604d4b2ae265b842542a0a7ba09168dc05b6497c8f948"
+      }
+    }
+  }
+}
