@@ -1,0 +1,86 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--lib",
+    "--",
+    "--nocapture"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-10-13T22:32:46.026328+00:00",
+  "completedAt": "2026-10-13T22:35:19.468582+00:00",
+  "actualStageCompletion": true,
+  "rawExitCode": 0,
+  "elapsedSeconds": 153.444301,
+  "logs": [
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/stdout.log",
+      "bytes": 637948,
+      "sha256": "606e446ddf1548f7bdec19dffd4c9278e5d952cb084ed07947112288c54a50e4"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/stderr.log",
+      "bytes": 74390,
+      "sha256": "2762b161f5807f27f0e0af386b729f85fe667aff57db310bb90aba60fdec0d49"
+    }
+  ],
+  "observations": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/diagnostic-observations.json",
+    "bytes": 3137,
+    "sha256": "d2e821087c6517846e89bece3b593f1844f105d142c87264fe700fa4d0380e25"
+  },
+  "sourceRestoration": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/source-restored.json",
+    "bytes": 485,
+    "sha256": "b29d0f2c8c2830d6904a21744b42d4fc2cb7a739db9caf2a9170fd1fe7da2897"
+  },
+  "productionStable": true,
+  "summaryLines": [
+    "test acp_client::preparation_actions::tests::service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap ... ok",
+    "test result: ok. 1692 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 132.54s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 2.78s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 4.28s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 4.31s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 4.32s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 4.16s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 4.48s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 4.46s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 9.60s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 6.53s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 6.62s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 10.52s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 10.90s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 0.01s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 11.11s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 11.08s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 8.39s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 8.40s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 2.42s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 2.56s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 2.56s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 2.70s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 3.18s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 6.23s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 3.05s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 2.71s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 3.03s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 3.91s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 3.69s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 17.99s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 3.91s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 9.42s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 4.53s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 10.67s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 6.32s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 7.94s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 6.94s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 7.67s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 7.08s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 9.74s",
+    "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 12.21s"
+  ],
+  "boundary": "This temporary-instrumentation run cannot turn the original frozen full-check failure into success. No timeout or production changes retained."
+}

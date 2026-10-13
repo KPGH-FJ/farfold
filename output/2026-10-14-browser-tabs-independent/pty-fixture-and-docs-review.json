@@ -1,0 +1,85 @@
+{
+  "scope": "Independent static review only: one PTY fixture change and four document delta; no tests, App, Agent, source/document edits or new diagnosis.",
+  "reviewedAtUtc": "2026-10-13T23:15:03.755088+00:00",
+  "verdict": "No product requirement lowered by this test-contract choice. Original READY failures remain unlocalized; full seven checks are still required.",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 24956,
+      "sha256": "f9dbfb30857dc1ef6d1cc228e373949aaf120d40b1b055fbe727e6caf772dd37"
+    },
+    {
+      "path": "docs/status.md",
+      "bytes": 99210,
+      "sha256": "8514724cfeda5d892b1dbe70039464780501b3230267a3727ce9d6debf474f2e"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 141716,
+      "sha256": "5c60aabb755f5d334c827177eb55496ed89313c752b1f617d0c3ab75310721fc"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 164335,
+      "sha256": "5cfdb5f8cacb445ed3bd78fac55167277b8f5602a509f78714e63a4bcf13004a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 96450,
+      "sha256": "f644a7fb560b01486b0bc8c4478cf43b5e96ad62e246fa9b709754cb8bf133d2"
+    }
+  ],
+  "testBase": {
+    "revision": "a45112856a44c4a16f83ebdd079ab6d5c4876907",
+    "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96",
+    "exactSingleReplacementVerified": true
+  },
+  "testFindings": {
+    "startupBudget": "3s -> 10s only for fixture READY. It is not a product startup SLA and is not asserted to repair the original unexplained failures.",
+    "readiness": "Same child script, same complete READY marker and same real PTY channel callback unchanged. Only Ok(Ok(())) succeeds; timeout and channel-closed remain failures with their nested Result debug category in the message.",
+    "panicLock": "Cloned String is assigned in a completed let statement before assert; its temporary MutexGuard is dropped before panic formatting, removing this assertion-induced output-mutex poison path.",
+    "exactUnchanged": "All source outside the single replacement is byte-identical to HEAD: child shell/traps/PATH/read loop, early cancellation, duplicate attempt rejection, API ownership, 10ms cancellation guard hold, 6s exact-id await_exit, 1s post-reap guard, renewed attempt/API, unchanged settings/Agent/manager assertions, exact cleanup and panic guard.",
+    "limits": "Static review does not claim runtime success or prove why either original READY wait failed. It does not generally prove that no unrelated mutex can be poisoned."
+  },
+  "documents": [
+    {
+      "path": "docs/status.md",
+      "onlyDeltaFromPriorReviewedV5": "One same PTY evidence/budget paragraph inserted; all other bytes identical.",
+      "priorSha256": "51da66f3b9aba35063fc86a824512d8a0a82300de9ff0563cd0ec7347c4f8f9b"
+    },
+    {
+      "path": "docs/architecture.md",
+      "onlyDeltaFromPriorReviewedV5": "One same PTY evidence/budget paragraph inserted; all other bytes identical.",
+      "priorSha256": "3e373481657b79171448cf5903395840312170bfca82acf04ad25ddb8c1337b4"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "onlyDeltaFromPriorReviewedV5": "One same PTY evidence/budget paragraph inserted; all other bytes identical.",
+      "priorSha256": "4a3166aac464ce046eaa01eb5519aa1f6f6a4098c96cd726e6194ec41fbae71b"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "onlyDeltaFromPriorReviewedV5": "One same PTY evidence/budget paragraph inserted; all other bytes identical.",
+      "priorSha256": "0e5f047ca6407168abcef457e802abbe8093c84c499f856ee5185947b153bb53"
+    }
+  ],
+  "conditions": {
+    "original122IdsTitlesConditionsExact": true,
+    "onlyProgressChangedFromHEAD": [
+      "P30"
+    ],
+    "all28NewRowsExact": true,
+    "PRODUCT29x8ContractUnchangedSha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+    "P30AndNEW24RemainOpen": true,
+    "prior138GapAndLaterFailuresRetained": true
+  },
+  "priorReviewedDocsReport": {
+    "path": "output/2026-10-14-browser-tabs-frontend/docs-report-v5.json",
+    "sha256": "790b0495db7f25c6a87fd7d455fa8c5081edadb6cef7718f2666fcf0d31cb893"
+  },
+  "actionsNotTaken": [
+    "No tests or full engineering checks",
+    "No source or document modification",
+    "No App/Agent/process diagnosis"
+  ]
+}

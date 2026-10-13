@@ -1,0 +1,200 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-13T23:14:22.583396+00:00",
+  "sourceBaseline": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+  "currentHead": "a45112856a44c4a16f83ebdd079ab6d5c4876907",
+  "files": [
+    {
+      "path": "src-tauri/src/browser_workspace.rs",
+      "bytes": 13572,
+      "sha256": "8de74808942eed88637f0a7c42314d1620f198703c630f3c87b0f2bf59b63dfe"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_store.rs",
+      "bytes": 18493,
+      "sha256": "890d50bcd60bcdb65cc1e4c012ad9e915b8a7f2aaa07a780771aa09b766bc24c"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tab_commands.rs",
+      "bytes": 13395,
+      "sha256": "3badf904f93d482dd3be8b9734c16ae76ae33a8c1e4b452c80a5c735037a2dc2"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tab_tests.rs",
+      "bytes": 16590,
+      "sha256": "2cd237e6e403be106ebcabd028d273d1536cf45860a71a957a6fbdb04e7ee8c5"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_read.rs",
+      "bytes": 9136,
+      "sha256": "fd4aa35546241c27e84e9befb7b4381c782672349f7a8637540655a642ff6923"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_read_tests.rs",
+      "bytes": 11018,
+      "sha256": "01c67aab8541d060a55bffafe9a44d5effb7e29821ac64c40ae1539093d41b19"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/preview_commands.rs",
+      "bytes": 5611,
+      "sha256": "0701ddb99b6fcf0b16f943576dc50b305d829494e988249af9d6ed30ed870e64"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/native.rs",
+      "bytes": 27396,
+      "sha256": "7a4d31535f68d6f31771fb288d5ed78c07e4c172f7ebdea281638b5c7d4071f7"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/windows/mod.rs",
+      "bytes": 26491,
+      "sha256": "7fcdc0b62c6d31c365ade83a41918ff9b7a6a208f198641a37cb0b5a7ec8bd90"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tests.rs",
+      "bytes": 18638,
+      "sha256": "98334f55b06370f2f480d10600636f0735589ff709ecc0872acdd09b39d52f2b"
+    },
+    {
+      "path": "src-tauri/native/BrowserWorkspace.m",
+      "bytes": 46155,
+      "sha256": "c977434fca857d93c3f15db77e2dfbf4c948b6974cce4d0f29fdb3abca084b0c"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21954,
+      "sha256": "f0d524c74d445ac5a1a5fffec88feb17112eab2dd1fb92d904a51a2f37046bc1"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/permission.rs",
+      "bytes": 9046,
+      "sha256": "dd44b023032239ed0831314e40b1ddb5d80b3e667dd9b10d7341f4e9c34ced91"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/permission_tests.rs",
+      "bytes": 10244,
+      "sha256": "e55e9a126f82642d89b88eada539d5ae1bd5d78c3d63e9355993c848f71dc4b1"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 24956,
+      "sha256": "f9dbfb30857dc1ef6d1cc228e373949aaf120d40b1b055fbe727e6caf772dd37"
+    }
+  ],
+  "ownedFileCount": 15,
+  "unchangedShared": [
+    {
+      "path": "src-tauri/src/browser_workspace/browser_tools.rs",
+      "bytes": 24847,
+      "sha256": "38190051172b771756713fb30f22fce3ddada44a667f37714f3eadaa52623f6c"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/native_request.rs",
+      "bytes": 7209,
+      "sha256": "c7e1c06c018909dab579403af0cddcd61c2d465a49a003ff0b583c113f60a6ae"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing.rs",
+      "bytes": 24288,
+      "sha256": "53862ae2b22a59873f17468a19d3f14537271ec943f2d84aca9303d997f60b03"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/transport.rs",
+      "bytes": 53942,
+      "sha256": "daf4ecaedb66111c1d8ea556e2aa8202fad820fe7535124bd470020c1e0e9197"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/state_tests.rs",
+      "bytes": 9929,
+      "sha256": "e58f806d3b67154f85104b7ba3d248a3ea732c4bfd9161845ea57346aca23797"
+    }
+  ],
+  "unchangedReadinessProductionSources": [
+    {
+      "path": "src-tauri/src/pty.rs",
+      "bytes": 28407,
+      "sha256": "f2c7fb13de618e2f1a90d1569bcadb70688f039a23fa9746a0acd15aabac3174"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions.rs",
+      "bytes": 10920,
+      "sha256": "84ad7a0d5ab500aa3ed7309271ab24b1fcf2dc0045bb8200889405d7cd7b610a"
+    },
+    {
+      "path": "src-tauri/src/auth.rs",
+      "bytes": 47716,
+      "sha256": "fcb20dc1835a5159bfcf935ce39f6794ac1623ef1598b54ddc9c4f6b189e53d9"
+    },
+    {
+      "path": "src-tauri/src/auth/attempts.rs",
+      "bytes": 6922,
+      "sha256": "63271922c5b04cc8dfeecc27e99f0f575115d4dfb05b66ec89629e01c16839c4"
+    },
+    {
+      "path": "src-tauri/src/shell_env/unix.rs",
+      "bytes": 8844,
+      "sha256": "97d6e2a0ab1f97d42e2e05b57cf03d2aecbd8615861e0b0449b6605be27d257e"
+    }
+  ],
+  "priorFreeze": {
+    "path": "output/2026-10-14-browser-tabs-backend/source-freeze-v2.json",
+    "bytes": 17066,
+    "sha256": "d55be973509726b8298e220624a732a55a0f027d82a8365dca18435b227e149a"
+  },
+  "sourceDiff": {
+    "path": "output/2026-10-14-browser-tabs-backend/source-v3-test-only.diff",
+    "bytes": 1204,
+    "sha256": "b039f496af10458f3d18eebc485eb92c8f340f939c9ccc944902ea0b7343ba96"
+  },
+  "staticReview": {
+    "path": "output/2026-10-14-browser-tabs-backend/v3-readiness-review.json",
+    "bytes": 4589,
+    "sha256": "1d3bb5ab138d472cf19d3e8bbe4dca8b6e3bc72b18771a090db960226bb53713"
+  },
+  "receipts": {
+    "priorBrowserTargetedValidation": {
+      "path": "output/2026-10-14-browser-tabs-backend/source-freeze-v2.json",
+      "bytes": 17066,
+      "sha256": "d55be973509726b8298e220624a732a55a0f027d82a8365dca18435b227e149a"
+    },
+    "formalFailures": [
+      {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/completed.json",
+        "bytes": 741,
+        "sha256": "9f91198689311e3f06b6bb890df6ba3a1e6a3113dc3bdcf85016fc08c8283ddb"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/completed.json",
+        "bytes": 740,
+        "sha256": "e84f9969ea34f83bfdbb601f776deb1e5cc3d84d41b92a130285656b111f2f8e"
+      }
+    ],
+    "temporaryDiagnosticsRestored": [
+      {
+        "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/conclusion.json",
+        "bytes": 2658,
+        "sha256": "717b2a826720756010fbcb0bfe1e7611b4c7c2aaad6b2a80ca02f566def4bc16"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/conclusion.json",
+        "bytes": 9348,
+        "sha256": "87624a764911deb2ea7a6a9791dfcdccbbf892669e72bd589056c7135422c62a"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/conclusion.json",
+        "bytes": 6858,
+        "sha256": "99958d96e2c5e30ffb639e940fe25209b711aae36df13fca1df56fd03bb1a834"
+      }
+    ]
+  },
+  "postChangeValidation": {
+    "status": "PENDING_PARENT_FORMAL_SEVEN_CHECKS",
+    "targetedTestsRunOnThisRevision": false
+  },
+  "boundaries": [
+    "P30 original14 owned source/test files unchanged. This version adds only the root-edited preparation_actions_tests.rs as the15th owned input.",
+    "Only fixture readiness budget3→10seconds, explicit Result diagnostics and pre-panic cloned trace differ. Original child bytes and all subsequent ownership/cancel/reap/data assertions remain exact.",
+    "Test-only robustness choice; original failure cause unresolved. No claim of production repair or product3/10second startup SLA.",
+    "Three diagnostic passes used temporary observation code, restored afterward. They do not retrospectively pass either failed formal run and do not prove the new uninstrumented revision.",
+    "No additional test, App, Agent, user-data, installation or Git mutation performed for this freeze."
+  ]
+}

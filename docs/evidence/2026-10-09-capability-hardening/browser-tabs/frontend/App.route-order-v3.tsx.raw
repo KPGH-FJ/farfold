@@ -1,0 +1,1292 @@
+import {
+  attachmentSearchSourceCurrent,
+  type AttachmentSearchLocation,
+} from "./runtime/attachment_search_source";
+import type { AttachmentSearchRequest } from "./components/AttachmentSearchJump";
+import { currentWorkLocationGuidance } from "./runtime/archived_work_location";
+import { OpeningElicitationList } from "./components/OpeningElicitationList";
+import { openingInquiries } from "./runtime/opening_inquiries";
+import { REDESIGN as R } from "./runtime/redesign_strings";
+import { browserSurfaceGuard } from "./runtime/browser_surface";
+import { BrowserSurfaceNotice } from "./components/BrowserSurfaceNotice";
+import { replacesDraftChoice } from "./runtime/draft_choice";
+import { startWorkEvents } from "./runtime/work_policy";
+import { startAutoArchive } from "./runtime/auto_archive";
+import { notificationNavigation } from "./runtime/notification_navigation";
+import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { SidebarSimpleIcon } from "@phosphor-icons/react";
+import { CommandPalette } from "./components/CommandPalette";
+import {
+  loadedSearchHitIsCurrent,
+  type LoadedSearchHit,
+} from "./runtime/loaded_search";
+import type { LoadedSearchRequest } from "./components/LoadedSearchJump";
+import { EmptyState } from "./components/EmptyState";
+import { SettingsPage, type SettingsTab } from "./components/SettingsPage";
+import { CustomAgentDialog } from "./components/CustomAgentDialog";
+import { Sidebar } from "./components/Sidebar";
+import { ThreadPage } from "./components/ThreadPage";
+import {
+  AgentHub,
+  type AgentHubSurface,
+  type AgentPreparationContext,
+} from "./components/AgentHub";
+import type { ServiceChoice } from "./components/ServicePicker";
+import { ConversationLibrary } from "./components/ConversationLibrary";
+import { WorkspaceDialog } from "./components/WorkspaceDialog";
+import { ImportConversations } from "./components/ImportConversations";
+import { useAgents } from "./runtime/agents";
+import { useConversationAgentReadiness } from "./runtime/agent_readiness";
+import { isMyAgent } from "./runtime/my_agents";
+import { allowAutomaticConnection } from "./runtime/connection_intent";
+import {
+  collections,
+  normalizeLibraryFilter,
+  type LibraryFilter,
+} from "./runtime/collections";
+import {
+  composerDrafts,
+  newConversationChoice,
+  type DraftAttachment,
+} from "./runtime/drafts";
+import { userMessageDraftAttachments } from "./runtime/message_actions";
+import { LIBRARY } from "./runtime/library_strings";
+import { IMPORT_STRINGS } from "./runtime/import_strings";
+import { ACCESS_STRINGS } from "./runtime/access_strings";
+import { traceAfterPaint } from "./runtime/performance-trace";
+import {
+  threads,
+  type Attachment,
+  type IndexRow,
+  type SidebarRow,
+  type ThreadState,
+} from "./runtime/sessions";
+import { STRINGS } from "./runtime/strings";
+import { WORKSPACE_STRINGS as W } from "./runtime/workspace_strings";
+import {
+  historicalSelectionNeedsReview,
+  storedConversationSelection,
+} from "./runtime/conversation_actions";
+import { listCredentials } from "./runtime/credentials";
+import { historyFailureKey } from "./runtime/session_recovery";
+import { useThemePreference } from "./runtime/theme";
+import {
+  authenticationRequired,
+  useAuthentication,
+} from "./runtime/authentication";
+import {
+  agentRepairPanel,
+  draftPreparationRequired,
+  draftPreparationSelection,
+  conversationRepairContext,
+  type AgentRepairRequest,
+} from "./runtime/agent_repair";
+
+type View = (
+  | { kind: "start" }
+  | { kind: "thread"; key: string }
+  | { kind: "library" }
+  | {
+      kind: "agents";
+      entry?: {
+        target: string | null;
+        intent: "use" | "manage";
+        directoryView: "discover" | "added";
+        context?: AgentPreparationContext;
+        surface?: AgentHubSurface;
+        draft: ReturnType<typeof composerDrafts.read> | null;
+      };
+    }
+  | { kind: "settings"; tab?: SettingsTab }
+) & { historyImport?: true };
+type PreparedSelection = {
+  requiresReview?: boolean;
+  service: ServiceChoice | null;
+  config: Record<string, unknown>;
+};
+function afterBrowserClose<Args extends unknown[]>(
+  action: (...args: Args) => void,
+) {
+  return (...args: Args) =>
+    browserSurfaceGuard.runLatest(() => action(...args));
+}
+
+export default function App() {
+  const [themeMode, setThemeMode, themeStatus] = useThemePreference();
+  const agents = useAgents();
+  const readyForConversation = useConversationAgentReadiness(agents.cards);
+  const index = useSyncExternalStore(
+    threads.subscribe,
+    () => threads.getSnapshot().index,
+  );
+  const historyAgents = new Set(index.map((row) => row.agentId));
+  const currentReadiness = useRef(readyForConversation);
+  currentReadiness.current = readyForConversation;
+  const currentAgentCards = useRef(agents.cards);
+  currentAgentCards.current = agents.cards;
+  const unreadyCandidate = (id: string) =>
+    !currentAgentCards.current.some(
+      (card) => card.id === id && currentReadiness.current(id),
+    );
+  const authentication = useAuthentication();
+  useEffect(startWorkEvents, []);
+  useEffect(startAutoArchive, []);
+  const [view, updateView] = useState<View>(() =>
+    window.location.hash === "#settings"
+      ? { kind: "settings" }
+      : { kind: "start" },
+  );
+  const currentView = useRef(view);
+  const [attachmentSearchRequest, setAttachmentSearchRequest] =
+    useState<AttachmentSearchRequest | null>(null);
+  const [loadedSearchRequest, setLoadedSearchRequest] =
+    useState<LoadedSearchRequest | null>(null);
+  const historyOpen = useRef(0);
+  const setView = (next: View) => {
+    setLoadedSearchRequest(null);
+    setAttachmentSearchRequest(null);
+    openingInquiries.retireAll();
+    currentView.current = next;
+    updateView(next);
+  };
+  const routeHistory = useRef<View[]>([]);
+  const [threadKey, setThreadKey] = useState<string | null>(null);
+  const [notificationOnlyKey, setNotificationOnlyKey] = useState<string | null>(
+    null,
+  );
+  const [preparedDraftKey, setPreparedDraftKey] = useState<string | null>(null);
+  const currentPreparedDraftKey = useRef(preparedDraftKey);
+  currentPreparedDraftKey.current = preparedDraftKey;
+  const [draftComposerTarget, setDraftComposerTarget] =
+    useState<HTMLDivElement | null>(null);
+  const visiblePageKey =
+    view.kind === "thread"
+      ? threadKey
+      : view.kind === "start"
+        ? preparedDraftKey
+        : null;
+  // Retain every task with a live or pending page, including hidden siblings.
+  const [browserOwners, setBrowserOwners] = useState<ReadonlySet<string>>(
+    new Set(),
+  );
+  const observeBrowserOwners = (taskKey: string, ownsPages: boolean) => {
+    setBrowserOwners((previous) => {
+      if (previous.has(taskKey) === ownsPages) return previous;
+      if (
+        ownsPages &&
+        !previous.has(taskKey) &&
+        (currentView.current.kind === "thread"
+          ? currentView.current.key !== taskKey
+          : currentView.current.kind !== "start" ||
+            currentPreparedDraftKey.current !== taskKey)
+      )
+        return previous;
+      const next = new Set(previous);
+      if (ownsPages) next.add(taskKey);
+      else next.delete(taskKey);
+      return next;
+    });
+  };
+  const pendingCanonical = useRef<string | null>(null);
+  useEffect(() => {
+    let mounted = true;
+    const stop = browserSurfaceGuard.subscribe(() => {
+      // Notifications precede the queued action. Reconcile afterwards so a
+      // layout-only intent cannot strand the view under its old history key.
+      queueMicrotask(() => {
+        const state = browserSurfaceGuard.getSnapshot();
+        if (
+          !mounted ||
+          state.busy ||
+          state.failed ||
+          browserSurfaceGuard.hasPendingNavigation
+        )
+          return;
+        const key = pendingCanonical.current;
+        if (!key) return;
+        pendingCanonical.current = null;
+        if (
+          currentView.current.kind === "thread" &&
+          currentView.current.key === key
+        ) {
+          setThreadKey(key);
+          updateView(currentView.current);
+        }
+      });
+    });
+    return () => {
+      mounted = false;
+      stop();
+    };
+  }, []);
+  const [filter, setFilter] = useState<LibraryFilter>({ kind: "all" });
+  const [settingsTab, setSettingsTab] = useState<SettingsTab>("general");
+  const generalRequestId = useRef(0);
+  const [generalRequest, setGeneralRequest] = useState<{
+    kind: "update" | "shortcuts" | "privacy";
+    request: number;
+  } | null>(null);
+  const requestGeneralPanel = (kind: "update" | "shortcuts" | "privacy") =>
+    setGeneralRequest({ kind, request: ++generalRequestId.current });
+  const [settingsMounted, setSettingsMounted] = useState(
+    view.kind === "settings",
+  );
+  const [customAgentOpen, setCustomAgentOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const searchReturnFocus = useRef<HTMLElement | null>(null);
+  const importReturnFocus = useRef<HTMLElement | null>(null);
+  const customReturnFocus = useRef<HTMLElement | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [defaultCwd, setDefaultCwd] = useState<string | null>(null);
+  const [cwdError, setCwdError] = useState(false);
+  const [newAgent, setNewAgent] = useState<string | null>(null);
+  const [agentRequest, setAgentRequest] = useState(0);
+  const [preparedSelection, setPreparedSelection] = useState<
+    PreparedSelection | undefined
+  >();
+  const [pendingAgent, setPendingAgent] = useState<{
+    id: string;
+    selection?: PreparedSelection;
+    cwd?: string;
+    /** W3-6：从某条消息开新对话时，待回填为新草稿的文字与附件。 */
+    seed?: { text: string; attachments: DraftAttachment[] };
+    history?: boolean;
+  } | null>(null);
+  const [preservingDraft, setPreservingDraft] = useState(false);
+  const [draftActionError, setDraftActionError] = useState<string | null>(null);
+  const [importOpen, setImportOpen] = useState(false);
+  const [importMounted, setImportMounted] = useState(false);
+  const [importAgent, setImportAgent] = useState<string | null>(null);
+  const [importRequest, setImportRequest] = useState(0);
+  const openImport = afterBrowserClose(
+    (agentId: string | null = null, opener?: HTMLElement) => {
+      importReturnFocus.current = opener ?? null;
+      setImportAgent(agentId);
+      setImportRequest((n) => n + 1);
+      setImportMounted(true);
+      setImportOpen(true);
+    },
+  );
+  const [hubMounted, setHubMounted] = useState(false);
+  const [hubTarget, setHubTarget] = useState<string | null>(null);
+  const [hubIntent, setHubIntent] = useState<"use" | "manage">("use");
+  const [hubView, setHubView] = useState<"discover" | "added">("discover");
+  const [hubRequest, setHubRequest] = useState(0);
+  const [hubRestoredState, setHubRestoredState] = useState<AgentHubSurface>();
+  const hubSurface = useRef<AgentHubSurface | undefined>(undefined);
+  const originatingDraft = useRef<ReturnType<
+    typeof composerDrafts.read
+  > | null>(null);
+  const [hubContext, setHubContext] = useState<AgentPreparationContext>();
+  const [actionError, setActionError] = useState<string | null>(null);
+  const loadDirectory = () => {
+    setCwdError(false);
+    void invoke<string>("app_default_working_directory")
+      .then(setDefaultCwd)
+      .catch(() => setCwdError(true));
+  };
+  useEffect(() => {
+    loadDirectory();
+    void threads.refreshIndex();
+  }, []);
+  const connectedKey = agents.cards
+    .filter((c) => c.status === "connected")
+    .map((c) => c.id)
+    .sort()
+    .join(",");
+  useEffect(() => {
+    void threads.refreshIndex();
+  }, [connectedKey]);
+  useEffect(() => {
+    const timer = setInterval(() => void threads.refreshIndex(), 60_000);
+    return () => clearInterval(timer);
+  }, []);
+  useEffect(() => {
+    if (!agents.loading) traceAfterPaint("shell_ready");
+  }, [agents.loading]);
+  const showLibrary = afterBrowserClose((next: LibraryFilter) => {
+    routeHistory.current = [];
+    setFilter((current) =>
+      next.kind === "agent" || next.kind === "group"
+        ? {
+            ...normalizeLibraryFilter(current),
+            kind: "selection",
+            favorites: false,
+            [next.kind]: next.id,
+          }
+        : next,
+    );
+    setView({ kind: "library" });
+  });
+  const goNew = afterBrowserClose(() => {
+    routeHistory.current = [];
+    setView({ kind: "start" });
+  });
+  const rememberOrigin = (historyImport = false) => {
+    const originView = currentView.current;
+    const origin: View =
+      originView.kind === "settings"
+        ? { ...originView, tab: settingsTab }
+        : originView.kind === "agents"
+          ? {
+              kind: "agents",
+              entry: {
+                target: hubTarget,
+                intent: hubIntent,
+                directoryView: hubView,
+                context: hubContext,
+                surface: hubSurface.current,
+                draft: originatingDraft.current,
+              },
+            }
+          : originView;
+    routeHistory.current.push(
+      historyImport ? { ...origin, historyImport: true } : origin,
+    );
+  };
+  const returnToOrigin = afterBrowserClose(() => {
+    const { historyImport, ...previous } = routeHistory.current.pop() ?? {
+      kind: "start",
+    };
+    if (previous.kind === "thread") setThreadKey(previous.key);
+    if (previous.kind === "agents" && previous.entry) {
+      setHubTarget(previous.entry.target);
+      setHubIntent(previous.entry.intent);
+      setHubView(previous.entry.directoryView);
+      setHubContext(previous.entry.context);
+      setHubRestoredState(previous.entry.surface);
+      originatingDraft.current = previous.entry.draft;
+      setHubRequest((revision) => revision + 1);
+    }
+    if (previous.kind === "settings" && previous.tab)
+      setSettingsTab(previous.tab);
+    setView(previous);
+    if (historyImport) setImportOpen(true);
+  });
+  const openSettings = afterBrowserClose((tab: SettingsTab = "general") => {
+    if (view.kind !== "settings") rememberOrigin();
+    setSettingsTab(tab);
+    setSettingsMounted(true);
+    setView({ kind: "settings" });
+  });
+  const openAgents = afterBrowserClose(
+    (
+      agentId?: string,
+      intent: "use" | "manage" = "use",
+      repair?: AgentRepairRequest,
+    ) => {
+      if (view.kind !== "agents") rememberOrigin();
+      setHubTarget(agentId ?? null);
+      setHubRestoredState(undefined);
+      setHubIntent(intent);
+      setHubView(intent === "manage" ? "added" : "discover");
+      setHubRequest((revision) => revision + 1);
+      originatingDraft.current =
+        view.kind === "start" ? composerDrafts.read("new") : null;
+      setHubContext(
+        view.kind === "start" && defaultCwd
+          ? {
+              agentId: newConversationChoice.agentId ?? undefined,
+              cwd: newConversationChoice.cwd ?? defaultCwd,
+              locationLabel: newConversationChoice.cwd ?? LIBRARY.ordinary,
+              selection: {
+                service: newConversationChoice.service,
+                config: { ...newConversationChoice.config },
+              },
+              repair,
+            }
+          : view.kind === "thread" &&
+              intent === "manage" &&
+              agentId === threads.thread(view.key)?.agentId
+            ? {
+                agentId: threads.thread(view.key)!.agentId,
+                cwd: threads.thread(view.key)!.cwd,
+                returnLabel: ACCESS_STRINGS.returnConversation,
+                ...(draftPreparationRequired(threads.thread(view.key)) &&
+                repair?.panel === "model"
+                  ? {
+                      preserveOrigin: true,
+                      selection: draftPreparationSelection(
+                        threads.thread(view.key)!,
+                      ),
+                    }
+                  : {
+                      conversation: conversationRepairContext(
+                        threads.thread(view.key)!,
+                      ),
+                    }),
+                repair,
+              }
+            : undefined,
+      );
+      setHubMounted(true);
+      setView({ kind: "agents" });
+    },
+  );
+  const prepareHistoryAgent = afterBrowserClose(
+    (agentId: string | undefined, cwd: string | null) => {
+      rememberOrigin(true);
+      setImportOpen(false);
+      setHubTarget(agentId ?? null);
+      setHubRestoredState(undefined);
+      setHubIntent("manage");
+      setHubView("added");
+      setHubRequest((revision) => revision + 1);
+      originatingDraft.current = null;
+      setHubContext(
+        cwd || defaultCwd
+          ? {
+              agentId,
+              cwd: cwd ?? defaultCwd!,
+              returnLabel: IMPORT_STRINGS.returnToHistory,
+              locationLabel: cwd ?? IMPORT_STRINGS.defaultScope,
+            }
+          : undefined,
+      );
+      setHubMounted(true);
+      setView({ kind: "agents" });
+    },
+  );
+  const opened = afterBrowserClose((key: string) => {
+    setThreadKey(key);
+    setView({ kind: "thread", key });
+  });
+  const followRecovery = (
+    originalKey: string,
+    request: number,
+    canonicalKey?: string,
+  ) => {
+    if (!canonicalKey || request !== historyOpen.current) return;
+    // Repair this open's existing return path without navigating away from
+    // settings or preparation. No global native-id lookup or alias storage.
+    routeHistory.current = routeHistory.current.map((origin) =>
+      origin.kind === "thread" && origin.key === originalKey
+        ? { ...origin, key: canonicalKey }
+        : origin,
+    );
+    if (
+      currentView.current.kind === "thread" &&
+      currentView.current.key === originalKey
+    ) {
+      if (!browserSurfaceGuard.hasPendingNavigation) opened(canonicalKey);
+      else {
+        // A newer route is still waiting for native close. Repair the identity
+        // used by rememberOrigin without replacing that queued destination.
+        currentView.current = { kind: "thread", key: canonicalKey };
+        pendingCanonical.current = canonicalKey;
+      }
+    }
+  };
+  const recover = async (key: string) => {
+    if (
+      currentView.current.kind !== "thread" ||
+      currentView.current.key !== key
+    )
+      return;
+    const target = threads.thread(key);
+    if (target && currentWorkLocationGuidance(target.cwd)?.kind === "archive")
+      return;
+    if (target) allowAutomaticConnection(target.agentId);
+    const request = ++historyOpen.current;
+    try {
+      const state = await threads.reconnect(key);
+      followRecovery(key, request, state?.key);
+    } catch (error) {
+      followRecovery(key, request, historyFailureKey(error));
+    }
+  };
+  const openRow = afterBrowserClose((row: IndexRow | SidebarRow) => {
+    setNotificationOnlyKey(null);
+    const request = ++historyOpen.current;
+    routeHistory.current = [];
+    setPaletteOpen(false);
+    const key = "key" in row ? row.key : row.id;
+    const existing = threads.thread(key);
+    if (existing) traceAfterPaint("thread_switch", Date.now());
+    opened(key);
+    if (currentWorkLocationGuidance(row.cwd)?.kind === "archive") {
+      if (!existing)
+        threads.markOpenFailed(
+          key,
+          row.agentId,
+          row.cwd,
+          row.nativeSessionId ?? "",
+          STRINGS.thread.connectionIdle,
+        );
+      return;
+    }
+    allowAutomaticConnection(row.agentId);
+    if (!row.nativeSessionId) {
+      threads.markOpenFailed(
+        key,
+        row.agentId,
+        row.cwd,
+        "",
+        STRINGS.thread.notResumable,
+        true,
+      );
+      return;
+    }
+    if (existing && !existing.connectionLost && !existing.openError) return;
+    void threads
+      .open({
+        agentId: row.agentId,
+        cwd: row.cwd,
+        nativeSessionId: row.nativeSessionId,
+      })
+      .then(
+        (state) => followRecovery(key, request, state.key),
+        (error) => followRecovery(key, request, historyFailureKey(error)),
+      );
+  });
+  const openLoadedSearch = afterBrowserClose(
+    (hit: LoadedSearchHit, current: () => boolean) => {
+      if (!current()) return;
+      const snapshot = threads.getSnapshot();
+      const row = snapshot.index.find((row) => row.id === hit.threadKey);
+      const state = snapshot.threads.get(hit.threadKey);
+      if (
+        !row ||
+        !state ||
+        row.agentId !== state.agentId ||
+        row.cwd !== state.cwd ||
+        row.nativeSessionId !== state.nativeSessionId ||
+        !loadedSearchHitIsCurrent(hit, snapshot.threads)
+      )
+        return;
+      ++historyOpen.current;
+      routeHistory.current = [];
+      setPaletteOpen(false);
+      setNotificationOnlyKey(null);
+      // A search result selects its existing display only. It never admits a
+      // cold open, recovery, configuration change or model request.
+      setThreadKey(hit.threadKey);
+      setView({ kind: "thread", key: hit.threadKey });
+      setAttachmentSearchRequest(null);
+      setLoadedSearchRequest({ hit, token: {} });
+    },
+  );
+  const openAttachmentSearch = afterBrowserClose(
+    (source: AttachmentSearchLocation, current: () => boolean) => {
+      if (!current()) return;
+      const snapshot = threads.getSnapshot(),
+        row = snapshot.index.find((r) => r.id === source.threadKey),
+        state = snapshot.threads.get(source.threadKey);
+      if (
+        !row ||
+        !state ||
+        row.agentId !== state.agentId ||
+        row.cwd !== state.cwd ||
+        row.nativeSessionId !== state.nativeSessionId ||
+        !attachmentSearchSourceCurrent(source, snapshot.threads)
+      )
+        return;
+      ++historyOpen.current;
+      routeHistory.current = [];
+      setPaletteOpen(false);
+      setNotificationOnlyKey(null);
+      setLoadedSearchRequest(null);
+      setThreadKey(source.threadKey);
+      setView({ kind: "thread", key: source.threadKey });
+      setAttachmentSearchRequest({ source, token: {} });
+    },
+  );
+  const notificationSelection = useRef<(key: string) => void>(() => {});
+  notificationSelection.current = (key) => {
+    // A click is a navigation request, never permission to recover or send.
+    if (!threads.getSnapshot().index.some((row) => row.id === key)) return;
+    browserSurfaceGuard.runLatest(() => {
+      if (!threads.getSnapshot().index.some((row) => row.id === key)) return;
+      ++historyOpen.current;
+      routeHistory.current = [];
+      setPaletteOpen(false);
+      setNotificationOnlyKey(threads.thread(key) ? null : key);
+      opened(key);
+    });
+  };
+  useEffect(() => {
+    let disposed = false;
+    let stop: (() => void) | undefined;
+    void notificationNavigation(async (key) => {
+      await threads.refreshIndex();
+      if (!disposed) notificationSelection.current(key);
+    })
+      .then((off) => {
+        if (disposed) off();
+        else stop = off;
+      })
+      .catch(() => {});
+    return () => {
+      disposed = true;
+      stop?.();
+    };
+  }, []);
+  const useAgent = afterBrowserClose(
+    (
+      agentId: string,
+      selection?: PreparedSelection,
+      destination?: "new-conversation",
+    ) => {
+      if (
+        routeHistory.current.at(-1)?.historyImport ||
+        (destination !== "new-conversation" &&
+          routeHistory.current.at(-1)?.kind === "thread")
+      ) {
+        returnToOrigin();
+        return;
+      }
+      if (unreadyCandidate(agentId)) return;
+      const draft = composerDrafts.read("new");
+      if (
+        (draft.text.trim() || draft.attachments.length) &&
+        draft !== originatingDraft.current &&
+        replacesDraftChoice(newConversationChoice, agentId, selection)
+      ) {
+        setPendingAgent({ id: agentId, selection });
+        return;
+      }
+      allowAutomaticConnection(agentId);
+      setNewAgent(agentId);
+      setPreparedSelection(selection);
+      setAgentRequest((n) => n + 1);
+      goNew();
+    },
+  );
+  /** W3-9：用相同 Agent 与设置再开一段。服务与配置来自索引行里已保存的
+   *  记录，随后沿用既有的草稿/准备流程，不复制第二套设置入口。 */
+  const reopenSame = afterBrowserClose(
+    (row: { agentId: string; cwd: string; id?: string; key?: string }) => {
+      const rowId = row.id ?? row.key;
+      const indexRow = threads
+        .getSnapshot()
+        .index.find((item) => item.id === rowId);
+      void listCredentials()
+        .catch(() => [])
+        .then((credentials) => {
+          if (unreadyCandidate(row.agentId)) return;
+          const selection = {
+            ...storedConversationSelection(
+              indexRow?.configOptions ?? null,
+              credentials,
+            ),
+            requiresReview: historicalSelectionNeedsReview(
+              indexRow?.configOptions,
+              credentials,
+            ),
+          };
+
+          setDraftActionError(null);
+          setPendingAgent({
+            id: row.agentId,
+            selection,
+            cwd: row.cwd,
+            history: true,
+          });
+        });
+    },
+  );
+  /** W3-6：消息文字与附件追加进"new"草稿，不覆盖已有未发送内容。 */
+  const seedMessageDraft = (seed: {
+    text: string;
+    attachments: DraftAttachment[];
+  }) =>
+    composerDrafts.update("new", (draft) => ({
+      ...draft,
+      text: draft.text
+        ? `${draft.text}${draft.text.endsWith("\n") ? "" : "\n"}${seed.text}`
+        : seed.text,
+      attachments: [...draft.attachments, ...seed.attachments],
+    }));
+  /** W3-6：从某条消息开新对话——预填同 Agent、同工作位置与已保存设置，
+   *  消息内容回填为草稿（不直接发送），沿用草稿冲突保护。 */
+  const newFromMessage = afterBrowserClose(
+    (
+      thread: ThreadState,
+      item: { text: string; attachments: Attachment[] },
+    ) => {
+      const indexRow = threads
+        .getSnapshot()
+        .index.find((entry) => entry.id === thread.key);
+      const seed = {
+        text: item.text,
+        attachments: userMessageDraftAttachments(item.attachments),
+      };
+      void listCredentials()
+        .catch(() => [])
+        .then((credentials) => {
+          if (unreadyCandidate(thread.agentId)) return;
+          // 索引行带已保存的服务与配置记录；尚无索引的草稿退回线程自带的
+          // 服务身份（revision 置空，沿用与 stale 记录相同的可见语义）。
+          const selection: PreparedSelection = indexRow
+            ? storedConversationSelection(
+                indexRow.configOptions ?? null,
+                credentials,
+              )
+            : {
+                service: thread.service
+                  ? {
+                      id: thread.service.id,
+                      model: thread.service.model,
+                      revision: "",
+                    }
+                  : null,
+                config: {},
+              };
+          setDraftActionError(null);
+          setPendingAgent({
+            id: thread.agentId,
+            selection: {
+              ...selection,
+              requiresReview: historicalSelectionNeedsReview(
+                indexRow?.configOptions,
+                credentials,
+              ),
+            },
+            cwd: thread.cwd,
+            seed,
+            history: true,
+          });
+        });
+    },
+  );
+  const runAppCommand = (action: string) => {
+    if (
+      typeof document !== "undefined" &&
+      document.querySelector("dialog[open], .workspace-action-menu")
+    )
+      return;
+    if (action === "search") {
+      if (!paletteOpen)
+        searchReturnFocus.current =
+          typeof document !== "undefined" &&
+          document.activeElement instanceof HTMLElement
+            ? document.activeElement
+            : null;
+      browserSurfaceGuard.runLatest(() => setPaletteOpen((v) => !v));
+    } else if (action === "settings") {
+      setPaletteOpen(false);
+      openSettings();
+    } else if (action === "new") {
+      goNew();
+    } else if (action === "toggleSidebar") {
+      browserSurfaceGuard.runLatest(() => setSidebarOpen((v) => !v));
+    } else if (
+      action === "checkUpdates" ||
+      action === "shortcuts" ||
+      action === "privacy"
+    ) {
+      setPaletteOpen(false);
+      openSettings("general");
+      requestGeneralPanel(action === "checkUpdates" ? "update" : action);
+    }
+  };
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.isComposing) return;
+      const meta = event.metaKey || event.ctrlKey;
+      const key = event.key.toLowerCase();
+      const action =
+        meta && (key === "k" || (event.shiftKey && key === "p"))
+          ? "search"
+          : meta && key === ","
+            ? "settings"
+            : meta && key === "n"
+              ? "new"
+              : null;
+      if (action) {
+        event.preventDefault();
+        runAppCommand(action);
+        return;
+      }
+      if (event.key === "Escape") {
+        if (
+          typeof document !== "undefined" &&
+          document.querySelector("dialog[open], .workspace-action-menu")
+        )
+          return;
+        if (paletteOpen) setPaletteOpen(false);
+        else if (view.kind === "settings" || view.kind === "agents")
+          returnToOrigin();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    let disposed = false;
+    let unlisten: (() => void) | undefined;
+    void listen<{ action: string }>("app-menu", (event) =>
+      runAppCommand(event.payload.action),
+    )
+      .then((off) => {
+        if (disposed) off();
+        else unlisten = off;
+      })
+      .catch(() => undefined);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      disposed = true;
+      unlisten?.();
+    };
+  }, [paletteOpen, view.kind]);
+  const navToggle = !sidebarOpen ? (
+    <button
+      type="button"
+      className="icon-button"
+      aria-label={LIBRARY.expandNav}
+      onClick={() => browserSurfaceGuard.runLatest(() => setSidebarOpen(true))}
+    >
+      <SidebarSimpleIcon size={20} />
+    </button>
+  ) : null;
+  return (
+    <div className="app product-app">
+      <BrowserSurfaceNotice />
+      <div className="body-row">
+        {sidebarOpen && (
+          <Sidebar
+            agents={agents.cards.filter((card) =>
+              isMyAgent(card, historyAgents),
+            )}
+            active={view.kind}
+            filter={filter}
+            currentKey={view.kind === "thread" ? threadKey : null}
+            onNew={goNew}
+            onLibrary={showLibrary}
+            onOpenRow={openRow}
+            onSearch={(opener) => {
+              searchReturnFocus.current = opener;
+              browserSurfaceGuard.runLatest(() => setPaletteOpen(true));
+            }}
+            onSettings={() => openSettings()}
+            onExplore={() => openAgents()}
+            onAllAgents={() => openAgents(undefined, "manage")}
+            onCollapse={() =>
+              browserSurfaceGuard.runLatest(() => setSidebarOpen(false))
+            }
+          />
+        )}
+        {!sidebarOpen &&
+          (view.kind === "agents" || view.kind === "settings") && (
+            <div className="collapsed-nav">{navToggle}</div>
+          )}
+        <div
+          className="workspace-route"
+          hidden={view.kind !== "start" || !!preparedDraftKey}
+        >
+          {cwdError ? (
+            <main className="main">
+              <header className="workspace-topbar">{navToggle}</header>
+              <div className="library-empty">
+                <p role="alert">{LIBRARY.defaultDirectoryError}</p>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={loadDirectory}
+                >
+                  {LIBRARY.retry}
+                </button>
+              </div>
+            </main>
+          ) : agents.loading || !defaultCwd ? (
+            <main className="main">
+              <div className="library-empty">{LIBRARY.loading}</div>
+            </main>
+          ) : agents.loadError ? (
+            <main className="main">
+              <div className="library-empty">
+                <p role="alert">{agents.loadError}</p>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={() => void agents.refresh()}
+                >
+                  {LIBRARY.retry}
+                </button>
+              </div>
+            </main>
+          ) : (
+            <EmptyState
+              agents={agents.cards}
+              historyAgentIds={historyAgents}
+              initialAgentId={newAgent}
+              initialAgentRevision={agentRequest}
+              initialSelection={preparedSelection}
+              active={view.kind === "start" && !paletteOpen && !importOpen}
+              onPreparedKey={setPreparedDraftKey}
+              composerTarget={draftComposerTarget}
+              header={
+                <header className="workspace-topbar start-context">
+                  {navToggle}
+                  <h1>{LIBRARY.newChat}</h1>
+                </header>
+              }
+              onProjectChange={() => undefined}
+              onGoSettings={(agentId, repair) =>
+                openAgents(agentId, "use", repair)
+              }
+              onManageServices={() => openSettings("keys")}
+              onRestoreDraft={async (key) => {
+                await composerDrafts.restorePreserved(key);
+              }}
+              onStarted={opened}
+            />
+          )}
+        </div>
+        <div className="workspace-route" hidden={view.kind !== "library"}>
+          <ConversationLibrary
+            agentOwners={agents.extensionOwners}
+            active={view.kind === "library" && !paletteOpen && !importOpen}
+            agents={agents.cards}
+            filter={filter}
+            onFilter={setFilter}
+            onOpen={openRow}
+            onSelectLoaded={openLoadedSearch}
+            onSelectAttachment={openAttachmentSearch}
+            onImport={(opener) => openImport(null, opener)}
+            onNew={goNew}
+            onReopen={reopenSame}
+            defaultCwd={defaultCwd}
+            header={navToggle}
+          />
+        </div>
+        {[
+          ...new Set(
+            [threadKey, preparedDraftKey, ...browserOwners].filter(
+              (key): key is string => !!key,
+            ),
+          ),
+        ].map((pageKey) => (
+          <div
+            key={pageKey}
+            className="workspace-route"
+            hidden={pageKey !== visiblePageKey}
+          >
+            <ThreadPage
+              viewKey={pageKey}
+              attachmentSearchRequest={
+                attachmentSearchRequest?.source.threadKey === pageKey
+                  ? attachmentSearchRequest
+                  : null
+              }
+              searchRequest={
+                loadedSearchRequest?.hit.threadKey === pageKey
+                  ? loadedSearchRequest
+                  : null
+              }
+              onManualOpen={
+                notificationOnlyKey === pageKey
+                  ? () => {
+                      const row = threads
+                        .getSnapshot()
+                        .index.find((item) => item.id === pageKey);
+                      if (row) openRow(row);
+                    }
+                  : undefined
+              }
+              active={pageKey === visiblePageKey && !paletteOpen && !importOpen}
+              onBrowserOwnersChange={observeBrowserOwners}
+              draftComposerRef={
+                pageKey === preparedDraftKey
+                  ? setDraftComposerTarget
+                  : undefined
+              }
+              agents={agents}
+              onNew={goNew}
+              onReopenSame={reopenSame}
+              onNewFromMessage={newFromMessage}
+              onGoSettings={() => {
+                const current = threads.thread(pageKey);
+                const sourceContext = current
+                  ? conversationRepairContext(current).sourceContext
+                  : undefined;
+                const needsAuthentication =
+                  !!current &&
+                  authenticationRequired(
+                    authentication,
+                    current.agentId,
+                    current.cwd,
+                    sourceContext,
+                  );
+                openAgents(current?.agentId, "manage", {
+                  panel: draftPreparationRequired(current)
+                    ? "model"
+                    : agentRepairPanel(current, needsAuthentication),
+                  needsAuthentication,
+                  sourceContext,
+                });
+              }}
+              onOpened={opened}
+              onRecover={recover}
+              onBack={() =>
+                routeHistory.current.length
+                  ? returnToOrigin()
+                  : showLibrary(filter)
+              }
+              navToggle={navToggle}
+              defaultCwd={defaultCwd}
+            />
+          </div>
+        ))}
+        {hubMounted && (
+          <div className="workspace-route" hidden={view.kind !== "agents"}>
+            <AgentHub
+              agents={agents}
+              historyAgentIds={historyAgents}
+              active={view.kind === "agents" && !importOpen && !paletteOpen}
+              initialAgentId={hubTarget}
+              initialIntent={hubIntent}
+              initialView={hubView}
+              requestRevision={hubRequest}
+              restoredState={hubRestoredState}
+              onStateChange={(state) => {
+                hubSurface.current = state;
+              }}
+              returnLabel={
+                routeHistory.current.at(-1)?.historyImport
+                  ? IMPORT_STRINGS.returnToHistory
+                  : routeHistory.current.at(-1)?.kind === "settings"
+                    ? ACCESS_STRINGS.returnSettings
+                    : routeHistory.current.at(-1)?.kind === "library"
+                      ? ACCESS_STRINGS.returnLibrary
+                      : ACCESS_STRINGS.returnConversation
+              }
+              preparationContext={hubContext}
+              onReturn={returnToOrigin}
+              onStart={useAgent}
+              onOpenConversation={(key) => {
+                rememberOrigin();
+                opened(key);
+              }}
+              onOpenApi={() => openSettings("keys")}
+              onResumeDraft={goNew}
+              onCustom={(opener) => {
+                customReturnFocus.current = opener;
+                setCustomAgentOpen(true);
+              }}
+              onImport={openImport}
+            />
+          </div>
+        )}
+        {settingsMounted && (
+          <SettingsPage
+            active={view.kind === "settings"}
+            tab={settingsTab}
+            generalRequest={generalRequest}
+            onGeneralRequestHandled={() => setGeneralRequest(null)}
+            onTabChange={setSettingsTab}
+            onReturn={returnToOrigin}
+            onManageAgent={(agentId) => openAgents(agentId, "manage")}
+            onOpenAgents={() => openAgents(undefined, "manage")}
+            onResumeDraft={goNew}
+            onOpenConversation={(key) => {
+              rememberOrigin();
+              opened(key);
+            }}
+            onOpenArchived={() =>
+              showLibrary({
+                kind: "selection",
+                agent: "",
+                group: "",
+                favorites: false,
+                state: "archived",
+                query: "",
+              })
+            }
+            initialCwd={defaultCwd}
+            agents={agents}
+            themeMode={themeMode}
+            themeStatus={themeStatus}
+            onThemeMode={setThemeMode}
+          />
+        )}
+      </div>
+      <OpeningElicitationList agents={agents.cards} />
+      {customAgentOpen && (
+        <CustomAgentDialog
+          agents={agents}
+          returnFocusRef={customReturnFocus}
+          onClose={() => setCustomAgentOpen(false)}
+          onAdded={(agentId) => {
+            setCustomAgentOpen(false);
+            setHubTarget(agentId);
+            setHubRestoredState(undefined);
+            setHubIntent("use");
+            setHubView("added");
+            setHubRequest((revision) => revision + 1);
+            // Adding inside the directory keeps its originating draft and return path.
+            // An established conversation is only a return destination for this new Agent.
+            if (hubContext?.conversation) setHubContext(undefined);
+          }}
+        />
+      )}
+      {paletteOpen && (
+        <CommandPalette
+          agents={agents.cards}
+          returnFocusRef={searchReturnFocus}
+          onClose={() => setPaletteOpen(false)}
+          onSelect={openRow}
+          onSelectLoaded={openLoadedSearch}
+        />
+      )}
+      {importMounted && (
+        <ImportConversations
+          agents={agents.cards}
+          returnFocusRef={importReturnFocus}
+          open={importOpen}
+          initialAgentId={importAgent}
+          requestRevision={importRequest}
+          defaultCwd={defaultCwd}
+          onPrepare={prepareHistoryAgent}
+          onClose={() => setImportOpen(false)}
+          onNew={(agentId) => {
+            setImportOpen(false);
+            routeHistory.current = [];
+            originatingDraft.current = null;
+            useAgent(
+              agentId,
+              newConversationChoice.agentId === agentId
+                ? {
+                    service: newConversationChoice.service,
+                    config: { ...newConversationChoice.config },
+                  }
+                : undefined,
+              "new-conversation",
+            );
+          }}
+          onOpen={(row) => {
+            setImportOpen(false);
+            openRow(row);
+          }}
+        />
+      )}
+      {actionError && (
+        <WorkspaceDialog
+          title={LIBRARY.error}
+          onClose={() => setActionError(null)}
+        >
+          <div className="workspace-dialog-body">
+            <p role="alert">{actionError}</p>
+          </div>
+        </WorkspaceDialog>
+      )}
+      {pendingAgent && (
+        <WorkspaceDialog
+          title={
+            pendingAgent.history ? R.newWithSettings : LIBRARY.draftConflict
+          }
+          busy={preservingDraft}
+          onClose={() => {
+            if (!preservingDraft) {
+              setPendingAgent(null);
+              setDraftActionError(null);
+            }
+          }}
+        >
+          <div className="workspace-dialog-body new-draft-review">
+            <p>{R.newWithSettingsHint}</p>
+            <section>
+              <h3>{R.nextDraft}</h3>
+              <strong>
+                {agents.cards.find((card) => card.id === pendingAgent.id)
+                  ?.name ?? pendingAgent.id}
+              </strong>
+              <dl>
+                <dt>{R.source}</dt>
+                <dd>
+                  {pendingAgent.selection?.requiresReview
+                    ? R.unknownSource
+                    : pendingAgent.selection?.service
+                      ? `${W.savedSource} · ${pendingAgent.selection.service.model}`
+                      : R.existing}
+                </dd>
+                <dt>{R.folder}</dt>
+                <dd>
+                  {pendingAgent.cwd ?? newConversationChoice.cwd ?? R.noFolder}
+                </dd>
+              </dl>
+              <p>{R.savedConfig}</p>
+            </section>
+            {(composerDrafts.read("new").text ||
+              composerDrafts.read("new").attachments.length > 0) && (
+              <section>
+                <h3>{R.currentDraft}</h3>
+                <p className="new-draft-preview">
+                  {composerDrafts.read("new").text}
+                </p>
+                <p>
+                  {R.attachmentCount(
+                    composerDrafts.read("new").attachments.length,
+                  )}
+                </p>
+                <p>{R.preserveHint}</p>
+              </section>
+            )}
+            {pendingAgent.seed && (
+              <section>
+                <h3>{R.includedMessage}</h3>
+                <p className="new-draft-preview">{pendingAgent.seed.text}</p>
+                <p>{R.attachmentCount(pendingAgent.seed.attachments.length)}</p>
+              </section>
+            )}
+            {draftActionError && <p role="alert">{draftActionError}</p>}
+          </div>
+          <footer>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={preservingDraft}
+              onClick={() => {
+                setPendingAgent(null);
+                setDraftActionError(null);
+                goNew();
+              }}
+            >
+              {LIBRARY.returnDraft}
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              disabled={preservingDraft || unreadyCandidate(pendingAgent.id)}
+              onClick={async () => {
+                if (preservingDraft || unreadyCandidate(pendingAgent.id))
+                  return;
+                setPreservingDraft(true);
+                setDraftActionError(null);
+                try {
+                  const preserved = await composerDrafts.preserveNew();
+                  if (unreadyCandidate(pendingAgent.id))
+                    throw new Error(R.restoreUnavailable);
+                  composerDrafts.clearPreservedNew(preserved);
+                  allowAutomaticConnection(pendingAgent.id);
+                  if (pendingAgent.seed) seedMessageDraft(pendingAgent.seed);
+                  if (pendingAgent.cwd !== undefined)
+                    newConversationChoice.cwd = pendingAgent.cwd;
+                  newConversationChoice.reviewRequired =
+                    pendingAgent.selection?.requiresReview === true;
+                  setNewAgent(pendingAgent.id);
+                  setPreparedSelection(pendingAgent.selection);
+                  setAgentRequest((n) => n + 1);
+                  setPendingAgent(null);
+                  goNew();
+                } catch (reason) {
+                  setDraftActionError(
+                    reason instanceof Error ? reason.message : R.saveFailed,
+                  );
+                } finally {
+                  setPreservingDraft(false);
+                }
+              }}
+            >
+              {preservingDraft
+                ? R.preservingDraft
+                : composerDrafts.read("new").text ||
+                    composerDrafts.read("new").attachments.length
+                  ? R.preserveDraft
+                  : R.newDraftReady}
+            </button>
+          </footer>
+        </WorkspaceDialog>
+      )}
+    </div>
+  );
+}

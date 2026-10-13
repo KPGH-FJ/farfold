@@ -1,0 +1,284 @@
+{
+  "scope": "P30 runtime tabs frontend; source and controlled unit tests only; no App, Agent, native, server, full engineering suite, build, install or git mutations. No persistent tabs list or page body storage. No arbitrary three-page cap.",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze.json",
+    "bytes": 4027,
+    "sha256": "f3d9c987d0d8a80495337c4d5e95366f1520d816d922d420abbbafd3561f3477"
+  },
+  "final": {
+    "testFiles": 10,
+    "testsPassed": 232,
+    "typecheck": 0,
+    "scopedFormat": 0,
+    "sourceStable": true,
+    "maximumOwnedFileLines": 1462
+  },
+  "stages": [
+    {
+      "name": "red-01",
+      "actualExitCode": 1,
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/red-01.completed.json",
+        "bytes": 743,
+        "sha256": "460e79492078457a8e815f7952c7882bf98602cdd2fd36841dda310330be05e0"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/red-01.stdout.log",
+        "bytes": 430,
+        "sha256": "2333e01c94ffa52499eb7b2bdc881dc145cfd4b6328f34698edc14b5291956ac"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/red-01.stderr.log",
+        "bytes": 5552,
+        "sha256": "d5c0412e615ee7309e5c5999d4e8804303613fd4dd87f90966d9bd0a13230f59"
+      }
+    },
+    {
+      "name": "targeted-01",
+      "actualExitCode": 1,
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/targeted-01.completed.json",
+        "bytes": 889,
+        "sha256": "c982ff973c995ae35553e8f5e19770b592a23ef379ef125bb22f9402d1dd900e"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-01.stdout.log",
+        "bytes": 4049,
+        "sha256": "6ae5c832f01d0fb922f3548c827d5412835962842e636c01f0701e15e7f5989e"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-01.stderr.log",
+        "bytes": 170073,
+        "sha256": "9bb2eae80d0d187157307fe33a242b7f16fe70a75b77e6119f5997ad31cb7312"
+      }
+    },
+    {
+      "name": "targeted-02",
+      "actualExitCode": 1,
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/targeted-02.completed.json",
+        "bytes": 973,
+        "sha256": "a5db450514106d6d5351ba476e48c4ed4f9b944aadf3a48fb1e752f9071f5377"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-02.stdout.log",
+        "bytes": 548,
+        "sha256": "06e622ff22cd5720be1fc13569fa8fcefee59878d790359314bfc60dfa67554c"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-02.stderr.log",
+        "bytes": 1814,
+        "sha256": "a2f39e59889758fa8f7edc09a257c8628b0ceb1c3cc959f177c8c7a1e708e90d"
+      }
+    },
+    {
+      "name": "hidden-select-red",
+      "actualExitCode": 1,
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/hidden-select-red.completed.json",
+        "bytes": 813,
+        "sha256": "a155f484a4a8750f674ade485f82358aa0cbc0a8ac523a290faf2dc680bd5bea"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/hidden-select-red.stdout.log",
+        "bytes": 385,
+        "sha256": "7bf608b337d99f53a66ccd58e52ad303d6a12f6b6a4cc1da82629a9ec2bf0e90"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/hidden-select-red.stderr.log",
+        "bytes": 838,
+        "sha256": "5f76c186ac40bab0bc4fee7d33648106e06d98b7575261f055b3232c3da89d64"
+      }
+    },
+    {
+      "name": "targeted-03",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/targeted-03.completed.json",
+        "bytes": 970,
+        "sha256": "7fe5e12907fd75a01107a1ea8b023ccac2ea089b12a5f56f2c02bcc74c0df902"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-03.stdout.log",
+        "bytes": 214,
+        "sha256": "9729a2d93ce7ab00da4c76a3dce8d1a03feffeee4424846f0a3c6a48464dfb73"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-03.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "targeted-04",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/targeted-04.completed.json",
+        "bytes": 1150,
+        "sha256": "760d2212438058a6447041ed239385f271848f49e91e26df46fc2b2922449f7b"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-04.stdout.log",
+        "bytes": 216,
+        "sha256": "e022c2eb799645a638b7822bc514217e4a78c304594caa3ee73a8734e1d2761d"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-04.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "targeted-final",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/targeted-final.completed.json",
+        "bytes": 1156,
+        "sha256": "05c8c5898f71285792c5718cdf06a0bcc3379d730bf89b25f7835a71af756b3f"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-final.stdout.log",
+        "bytes": 217,
+        "sha256": "b29d6c919183a461af1da472682268ecf2ce8c62814e21127b499e523cd6294e"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "typecheck-01",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/typecheck-01.completed.json",
+        "bytes": 678,
+        "sha256": "8adb7fedd01349cc28d1a1b8b498137866b8ff58c08b5c79fbcfeb676e8126f6"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/typecheck-01.stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/typecheck-01.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "typecheck-final",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/typecheck-final.completed.json",
+        "bytes": 684,
+        "sha256": "3f624c1b32dee60b9ae114d76a64c5dbc45929d38dcae197a2dd9ed785c738eb"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/typecheck-final.stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/typecheck-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "format-01",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/format-01.completed.json",
+        "bytes": 1336,
+        "sha256": "3a5a600cddc14601e02ef722e697d5d0fc8d6049c7bdb11de8174c6b4db18373"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/format-01.stdout.log",
+        "bytes": 662,
+        "sha256": "1bc425a008526573072bf0fc081100595342fd7fc87dbf5394a11ea621ad77f0"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/format-01.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "format-02",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/format-02.completed.json",
+        "bytes": 912,
+        "sha256": "23521e4bcef81c472eb9b8b0f66149b317e10b6370c46448ef794e3e82b9857c"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/format-02.stdout.log",
+        "bytes": 238,
+        "sha256": "c2630820b2a864b1d756d1d22d8079b84607b1063b95a60437e1d9a9d5609292"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/format-02.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "format-final",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/format-final.completed.json",
+        "bytes": 1341,
+        "sha256": "6298d5fa7414e1e9fa5c7b64f55800004dd90f645065050c8ec11cb54d2e4fff"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/format-final.stdout.log",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/format-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "failureAttribution": {
+    "red-01": "Real old functionality gaps: accessible tab list and explicit select bridge absent (2 failed).",
+    "targeted-01": "39 Page failures and 55 errors from hook harness treating its first ref as the DOM surface; newly inserted first metadata ref received a mock DOM object. Stable surface-first ref ordering restored without changing product semantics. 62 passed.",
+    "targeted-02": "158 passed, 2 failed: App retention case used an unseeded task/wrong Agent fixture; Page hide-ACK case caught extra microtask hop introduced by stale-show catch before visibility queue. Corrected scope error chaining to retain original queue scheduling while only selection-changed errors can recover. Raw failures retained.",
+    "hidden-select-red": "Real new controller defect: explicit select pending then task hide changed intent and left changing=true forever. One selected test failed. Corrected completion to clear busy and retain acknowledged explicit choice while still hidden; no permission restored.",
+    "targeted-03": "161 passed after fixes.",
+    "targeted-04": "230 passed; before final listener/ownership cleanup and final shown-but-unselected notice."
+  },
+  "interaction": {
+    "tablist": "网页标签",
+    "newTab": "新建网页",
+    "empty": "新网页",
+    "close": "关闭网页：<local filename or URL>",
+    "retry": "重试切换",
+    "lateHiddenOpen": "此网页尚未显示。 / 显示此网页",
+    "keyboard": "ArrowLeft/ArrowRight/Home/End move focus only; Enter/Space uses explicit tab button activation."
+  },
+  "verifiedBoundaries": [
+    "Three and five real-owner objects retained without navigating/closing siblings; controlled protocol objects, not real native pages.",
+    "Reservation tabs event before held open reply does not duplicate ownership; rejected open orphan recovered by exact backend label.",
+    "Tab selection waits native-select acknowledgement; failed transitions keep owner, block presentation, and require explicit retry.",
+    "Ordinary hide/task navigation preserves selection; manual snapshots reject selection ABA.",
+    "Real scope native show failure still retires and retains close ownership; obsolete presentation intent does not close a retained tab.",
+    "Pending ownership notifies parent synchronously; all page-owning tasks stay mounted; completed close removes only its tab.",
+    "Late open remains owned by PageScope through a failed close and explicit retry.",
+    "Listener failure and StrictMode-style late registration have bounded explicit recovery."
+  ],
+  "remaining": [
+    "Root full App Chromium/WebKit and formal native validation pending.",
+    "Runtime-only tabs: restart metadata recovery remains P30 work.",
+    "No new Agent requests, no pixels capability or NEW24 closure.",
+    "Windows/native page creation not exercised by frontend tests."
+  ],
+  "researchCorrection": {
+    "path": "output/2026-10-14-browser-tabs-research/revision-v2.json",
+    "bytes": 1616,
+    "sha256": "f021f09e7d864b6f4adf3ee6b0a3e510b3c9e0b20e58d61658f5d6d5316e4aa6"
+  }
+}

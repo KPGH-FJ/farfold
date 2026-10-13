@@ -1,0 +1,10 @@
+{
+  "pid": 45585,
+  "port": 1540,
+  "execSession": 75404,
+  "startedToolChunk": "c93ef5",
+  "actualServerAnnouncement": true,
+  "capturedAt": "2026-10-13T21:23:07.175756+00:00",
+  "process": "45585 47488 node output/2026-10-14-browser-tabs-browser/serve.mjs",
+  "scope": "Only root-owned loopback controlled App fixture"
+}

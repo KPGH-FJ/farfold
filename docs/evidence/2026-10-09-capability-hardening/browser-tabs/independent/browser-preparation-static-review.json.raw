@@ -1,0 +1,179 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T21:12:00.707450+00:00",
+  "result": "authored-not-executed-basic-four-scenario-harness-sound-but-lifecycle-coverage-incomplete",
+  "inputs": [
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/fixture.tsx",
+      "bytes": 5003,
+      "sha256": "204d9d9eaec98e19fde7e49ae64e7c27e6c936068c0edf4b0f8cde7f7062ee78"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/transport.ts",
+      "bytes": 8695,
+      "sha256": "fdf0a6a2427bdfb1adfb20c247b559473da6a54c6c30fc5ccce539b668174b35"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/run.mjs",
+      "bytes": 10021,
+      "sha256": "b85d80fdf5cbfaffd154d8869f6eef6fd7b2a440294ec311c3aeb783d61f1b24"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/index.html",
+      "bytes": 1882,
+      "sha256": "bf0ca48efb3b608840f7b2f1b0009a3ddfac2520cad43598aec8b62188629708"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/page-oracle.json",
+      "bytes": 1689,
+      "sha256": "ffc7eaaebe2f11b7970fd5d25f90d7d317577a17ef660f7b07a48fc19bb96a1d"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/preparation.json",
+      "bytes": 3409,
+      "sha256": "a6edb7a2533a1b9290e3fefa132e607779d06d6de92bb8ea4efecca6674c97c6"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/pages/a.html",
+      "bytes": 747,
+      "sha256": "c8b5bdfefde1f27f703663252270afc598325872fe08ce454d8a24c28e810aaa"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/pages/b.html",
+      "bytes": 747,
+      "sha256": "de28854dd0a43aa892391686091211dbd25dc33eb4c4ef6081b3840f3ba9ccfb"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/pages/c.html",
+      "bytes": 747,
+      "sha256": "b1489dda9f8d58df4db74507339d59bccd7199fefb00e786e9c466781b405199"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-research/manual-oracle-v2.json",
+      "bytes": 11085,
+      "sha256": "ddc1d6032464734f7608176177d3942846ed68693607121bc82878644237afb4"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-research/revision-v2.json",
+      "bytes": 1616,
+      "sha256": "f021f09e7d864b6f4adf3ee6b0a3e510b3c9e0b20e58d61658f5d6d5316e4aa6"
+    }
+  ],
+  "preparationReferenceDrift": [
+    {
+      "recorded": {
+        "path": "output/2026-10-14-browser-tabs-browser/fixture.tsx",
+        "bytes": 4969,
+        "sha256": "611517dfc5692815957ba1242d29bd73b872f43fc6a51a975855eacb995bfd95"
+      },
+      "current": {
+        "path": "output/2026-10-14-browser-tabs-browser/fixture.tsx",
+        "bytes": 5003,
+        "sha256": "204d9d9eaec98e19fde7e49ae64e7c27e6c936068c0edf4b0f8cde7f7062ee78"
+      }
+    }
+  ],
+  "scenarioNamesAtReview": [
+    "three-independent-instances",
+    "keyboard-focus-is-not-selection",
+    "close-hidden-sibling-only",
+    "narrow-layout"
+  ],
+  "independentOracleCases": 12,
+  "verifiedStaticFacts": [
+    "Each iframe owns a separate authored counter/input/scroll state; initial page labels and zero counters match page-oracle. No storage, external resources, account or Agent operations occur in these pages.",
+    "Fixture imports production App with controlled IPC and synthetic threads/drafts. Controlled commands are logged, unsupported commands throw, protected values compared; this is not native backend or installed-product proof.",
+    "revision-v2 removes numeric page cap; transport has no page count admission limit. Three pages is coverage, not capacity.",
+    "Runner explicitly disclaims native permission/ACK safety and has source hashes plus request/pageerror gates. No browser or server was executed in this review."
+  ],
+  "findings": [
+    {
+      "id": "R1",
+      "priority": "high-before-claiming-preparation-lifecycle-coverage",
+      "path": "output/2026-10-14-browser-tabs-browser/run.mjs",
+      "lines": [
+        83,
+        129
+      ],
+      "issue": "Current executable runner implements four scenarios only; fixture.configure and release are never invoked. preparation manualScenarios lists ten, including unimplemented failure, late-owner, ABA and task-switch behaviors.",
+      "action": "Add scoped scenarios before claiming those behaviors, or explicitly mark them untested. Minimum for frontend runtime-tabs: delayed select completion with no premature show, select/close failure and exact retry ownership, same-page collapse/task-switch retention, pending hidden create across owners, and A-B-A stale result rejection. Native locking and ACK safety remain backend/native proof."
+    },
+    {
+      "id": "R2",
+      "priority": "medium-harness-capability",
+      "path": "output/2026-10-14-browser-tabs-browser/transport.ts",
+      "lines": [
+        140,
+        146
+      ],
+      "issue": "release(stage) resolves every held operation of that stage together. It cannot author two owners with reversed native-create completion order.",
+      "action": "Permit selecting a held operation by exact label (or return a stable reservation ID) and release only that owner. Exercise C-before-B and B-before-C while late hidden owner cannot steal latest route."
+    },
+    {
+      "id": "R3",
+      "priority": "high-evidence-boundary",
+      "path": "output/2026-10-14-browser-tabs-browser/transport.ts",
+      "lines": [
+        117,
+        132
+      ],
+      "issue": "snapshot captures a gate and mock itself throws after revocation; browser_share_allow completes synchronously and has no queued approval capture. Therefore a future snapshot-only test would not prove UI dropping a successfully returned late value or old approval rejection.",
+      "action": "Keep mock-rejection scenario separate from a deliberate delayed-success stale-result scenario for the frontend owner check; add held approval with captured original authority if frontend actually owns such pending action. Do not claim backend queued-approval safety from this transport."
+    },
+    {
+      "id": "R4",
+      "priority": "medium-oracle-scope",
+      "path": "output/2026-10-14-browser-tabs-browser/run.mjs",
+      "lines": [
+        84,
+        128
+      ],
+      "issue": "A/B memory returns are checked; C assigned memory is not checked on return. page-oracle promises reopening B resets its state, but runner only closes B. Narrow layout checks tablist width and button visibility, not iframe bounds overlapping controls.",
+      "action": "At C return verify counter3/noteC/scroll0; reopen closed B and require new identity plus initial state. For non-overlap claim compare iframe rect with toolbar/tablist rect. Otherwise narrow claims to actual checks."
+    },
+    {
+      "id": "R5",
+      "priority": "medium-failure-model",
+      "path": "output/2026-10-14-browser-tabs-browser/transport.ts",
+      "lines": [
+        94,
+        101
+      ],
+      "issue": "show failure happens before changing frame display and leaves no global unknown-presentation state in the mock. It can therefore allow later show although oracle-v2 says uncertain visibility stays blocked.",
+      "action": "Model an explicit uncertain presentation owner only if testing that frontend error path; keep backend global barrier proof delegated to actual backend tests. A passing mocked show retry alone cannot establish the real safety invariant."
+    },
+    {
+      "id": "R6",
+      "priority": "low-wait-precision",
+      "path": "output/2026-10-14-browser-tabs-browser/run.mjs",
+      "lines": [
+        49,
+        63
+      ],
+      "issue": "open/activate wait for any one visible page rather than exact target identity. Under future delayed show scenarios the old visible page may satisfy the wait before intended presentation.",
+      "action": "Wait for expected selected label or a newly allocated label with the requested URL, then require shown label matches. Keep the later explicit equality assertions."
+    },
+    {
+      "id": "R7",
+      "priority": "low-input-membership",
+      "path": "output/2026-10-14-browser-tabs-browser/run.mjs",
+      "lines": [
+        12,
+        13
+      ],
+      "issue": "The after inventory rehashes the initial inputFiles list; it does not independently rediscover added/removed source membership.",
+      "action": "When reporting all physical source membership stable, rescan or use owner freeze membership check. Current inputsStable only proves listed files unchanged."
+    }
+  ],
+  "earlyReservationCounterexamples": [
+    "While open ACK is held, require exact new label remains tracked and hidden; navigate away without manufacturing new permission, then resolve late ACK and confirm only its owner updates.",
+    "On open timeout/uncertain creation, preserve failed owner until exact close ACK; opening another page must not erase that ownership or turn absence of a Promise result into absence of a native page.",
+    "No numeric cap is adopted. A fourth explicit page may be created; unknown close/presentation blocks display for ownership reasons, never capacity."
+  ],
+  "abaCounterexamples": [
+    "Use distinct A/B native labels with identical URL; capture old selection revision before A-B-A and require rejection after return to label A. URL equality is insufficient.",
+    "Same-selected-page focus, collapse and task navigation must not advance task-local selection revision or revoke grant; a true different-label selection attempt advances revision even if withdrawal or hide fails."
+  ],
+  "scope": "Read-only fixture/oracle/runner review before source freeze. No production review conclusion, test execution, App, Agent, DB, process query, server start, or source/document edits.",
+  "safeToPublish": true
+}

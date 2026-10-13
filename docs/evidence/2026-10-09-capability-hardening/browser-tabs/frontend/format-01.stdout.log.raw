@@ -1,0 +1,16 @@
+src/runtime/browser_tabs.ts 58ms
+src/runtime/browser_tabs.test.ts 41ms
+src/runtime/browser_workspace.ts 19ms
+src/runtime/browser_workspace.test.ts 25ms (unchanged)
+src/runtime/browser_surface.ts 2ms (unchanged)
+src/runtime/browser_workspace_strings.ts 3ms (unchanged)
+src/components/BrowserWorkspace.tsx 10ms
+src/components/BrowserWorkspacePage.tsx 39ms
+src/components/BrowserWorkspace.tabs.test.tsx 3ms
+src/components/BrowserWorkspace.test.tsx 56ms (unchanged)
+src/components/ArtifactPane.tsx 22ms (unchanged)
+src/components/ThreadView.tsx 36ms
+src/components/ThreadPage.tsx 17ms
+src/App.tsx 33ms
+src/App.navigation.test.tsx 38ms
+src/browser-workspace.css 27ms

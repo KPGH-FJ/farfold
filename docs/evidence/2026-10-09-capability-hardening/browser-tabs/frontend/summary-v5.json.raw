@@ -1,0 +1,55 @@
+{
+  "sourceFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v5.json",
+    "bytes": 6034,
+    "sha256": "5752c0d4e41537cab2c86301c63f3fcdf87f1c43883ac4ddde4586ac51b1d553"
+  },
+  "previousSummary": {
+    "path": "output/2026-10-14-browser-tabs-frontend/summary-v4.json",
+    "bytes": 6405,
+    "sha256": "b202897c116c1b2ca1ed80b5adb5b1e652ed0782011579db8966dff2a7945291"
+  },
+  "scope": "Preserve every v1-v4 original; v5 is only guard-notification resume fix.",
+  "checks": [
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/guard-resume-red-v5.completed.json",
+      "bytes": 806,
+      "sha256": "2240af6e98697953cd3a9209c21cc762cd14e35a8b35721c1546e24c6d0715a3",
+      "actualExitCode": 1
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/guard-resume-green-v5.completed.json",
+      "bytes": 875,
+      "sha256": "60fdfcd9c5de6f4547078721b8ae3d11e6ee67353ab4e5a4ec4cf40cb3aa37a9",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/typecheck-v5.completed.json",
+      "bytes": 678,
+      "sha256": "a6614e82adec96e9ab7ed721611449dd69d35adaba9f542ef7d478680d3eb748",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/format-check-v5.completed.json",
+      "bytes": 818,
+      "sha256": "08861089b0f74b92759e87de7b262b420e1432d9c09f17a4f45d1b741f0e69b6",
+      "actualExitCode": 0
+    }
+  ],
+  "targeted": {
+    "files": 3,
+    "tests": 74,
+    "actualExitCode": 0,
+    "contents": "Page51 + presentation6 + guard17; not a rerun of the v4 full241 target set."
+  },
+  "cause": "A prior frame can observe immediate guard.blocked=true and stop, while React coalesces hold/release notifications to final blocked=false. The old effect depended only on that boolean and did not restart.",
+  "red": "Real BrowserSurfaceGuard with manually batched component render: expected next RAF scheduling after release, got unchanged1; actual1,1fail/5skipped.",
+  "fix": "Include existing guardRevision notification counter in the RAF effect dependencies. Every completed/released guard transition can restart synchronization even if blocked returns to the same value. Closing/visibility/permission guard semantics remain intact.",
+  "priorBrowserScope": "Chromiumrun8/WebKitrun4 each141/13 succeeded on v4 and closed the bidirectional-retention regression; not claimed as v5 tests. Root chooses the new final controlled browser validation.",
+  "receiptPreparation": "First freeze-writing command exited1 on reconstructing old test with an extra trailing newline, before any freeze/raw output write. Corrected byte reconstruction matches v4 SHA before saving original; source and validation unchanged.",
+  "boundaries": [
+    "No native/App/Agent/Windows proof",
+    "No full7 or installation",
+    "No docs/publication/Git mutation; P30 restart persistence and NEW24 remain open"
+  ]
+}

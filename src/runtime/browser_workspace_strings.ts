@@ -1,5 +1,13 @@
 export const BROWSER_WORKSPACE_STRINGS = {
   title: "网页",
+  tabs: "网页标签",
+  newTab: "新网页",
+  addTab: "新建网页",
+  closeTab: (title: string) => `关闭网页：${title}`,
+  selectionFailed: "未能确认网页切换。原页面仍保留，请重试切换或关闭。",
+  retrySelection: "重试切换",
+  waitingSelection: "此网页尚未显示。",
+  showSelected: "显示此网页",
   source: "打开来源",
   development: "本机服务",
   openDirectory: "打开项目网页…",

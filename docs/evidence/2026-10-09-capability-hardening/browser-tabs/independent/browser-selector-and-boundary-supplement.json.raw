@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T21:13:36.561788+00:00",
+  "prior": {
+    "path": "output/2026-10-14-browser-tabs-independent/browser-preparation-static-review.json",
+    "bytes": 9614,
+    "sha256": "8c288bcecafd4e889bce4be2e50c7bb1682d26f3dcee59c4a75bf2dde3a32530"
+  },
+  "rootClarification": "The four scenarios are the intentionally authored basic driver. Preparation ten scenarios are a to-do list, not an execution/coverage claim. R1 in the prior report is a future coverage requirement, not a finding that root overclaimed prior execution.",
+  "currentSourceBoundary": "Only current UI control layout and snapshot target were read to propose selectors. Owners have not frozen source; these are selector suggestions, not final source review.",
+  "sourceLayout": [
+    {
+      "path": "src/components/BrowserWorkspace.tsx",
+      "bytes": 5253,
+      "sha256": "b90f146dfa16c0ad87f69b06b23ef3feb36f9b16d19e9f00ef3fe010fc71e808"
+    },
+    {
+      "path": "src/components/BrowserWorkspacePage.tsx",
+      "bytes": 42333,
+      "sha256": "c156bfc41906f297541afd5193f589bd6283e7f3267a98b53e403ead10ebad95"
+    },
+    {
+      "path": "src/components/BrowserShareControls.tsx",
+      "bytes": 5274,
+      "sha256": "03192a4fc3886b5f73ee605e4851121207401c34c3edb8b4159d88108d0c5806"
+    },
+    {
+      "path": "src/runtime/browser_workspace_strings.ts",
+      "bytes": 4591,
+      "sha256": "dae4a00a8952841a18762953e98f786f1f34652a594d81e91e39d2502db58796"
+    },
+    {
+      "path": "src/runtime/browser_sharing_strings.ts",
+      "bytes": 3820,
+      "sha256": "80dd72d5b08a25c353412dbfaf55dbce7c0444279a5eb9186e278940fa56517e"
+    },
+    {
+      "path": "src/runtime/workspace_strings.ts",
+      "bytes": 6778,
+      "sha256": "73686cca07195a19e876a95229967e766de0246d170edc83bc8aa316851e7de2"
+    }
+  ],
+  "selectors": [
+    {
+      "purpose": "Active content pane and current page",
+      "recommendation": "Use .artifact-pane:visible, then getByRole('tabpanel') with default visible filtering. BrowserWorkspace maps each tab aria-controls to its exact panel; avoid assuming one global textbox or close button."
+    },
+    {
+      "purpose": "Tab activation / same-URL identities",
+      "recommendation": "getByRole('tablist',{name:'网页标签',exact:true}).getByRole('tab'); capture each tab aria-controls at creation, retain identity map, and correlate browser_workspace_select label with controlled page ID. Duplicate URL text is not an identity selector."
+    },
+    {
+      "purpose": "Explicit snapshot and success-late result",
+      "recommendation": "Within visible tabpanel, getByRole('button',{name:'读取文字快照',exact:true}). After explicit A-B-A and held success release, assert no unique stale marker in .browser-workspace-snapshot[aria-label='文字快照'] pre of the visible panel. Re-read explicitly and require the new marker. Do not reject at the mock gate in this separate adversarial scenario."
+    },
+    {
+      "purpose": "Collapse without closure",
+      "recommendation": "Within current pane use button name '收起对话内容'; reopening in active thread uses '查看对话内容'. Await page-hide ACK and pane state before reopening, then verify exact native-label memory plus no new create/revoke, rather than just presence of tab text."
+    },
+    {
+      "purpose": "Selection failure retry",
+      "recommendation": "Use .browser-tabs-error[role='alert'] and its button '重试切换'. Verify failed select's captured expected revision is not automatically replayed; only explicit retry can use latest state."
+    },
+    {
+      "purpose": "Permission UI if actually available in fixture",
+      "recommendation": "Within the active pane .browser-share-controls, expand '读取权限' then click exact '允许读取', or '停止共享'. Do not fabricate a real connection or claim real grant. If seeded shared state is needed, label it explicitly as a controlled precondition; assert presentation-only hide preserves that precondition without claiming real authorization."
+    }
+  ],
+  "adversarialCases": [
+    {
+      "id": "UI-late-success",
+      "transport": "snapshot holds immutable captured response including old label/page revision/unique text; release successfully even after mock page gate changes, solely as an adversarial frontend-return test",
+      "actions": "Start snapshot A; select B; select A; release captured response; assert no current snapshot body; explicit new snapshot works.",
+      "proves": "Frontend request/selection ownership invalidates old successful result across ABA.",
+      "doesNotProve": "Native gate/read delivery safety, real Agent or authorization."
+    },
+    {
+      "id": "backend-rejection-presented",
+      "transport": "Existing gate comparison throws after switch",
+      "actions": "Start snapshot A, select B then A, release so mock rejects; require no old body and honest current UI.",
+      "proves": "Frontend handles controlled backend rejection.",
+      "doesNotProve": "Frontend independently rejects successful stale data."
+    },
+    {
+      "id": "two-owner-create",
+      "transport": "Reserve/append hidden per-owner ID before asynchronous native create returns; release(stage,label) completes one exact owner.",
+      "actions": "Start T1/B then change task to T2/C; release C then B. Repeat opposite release order. Do not delete hidden-but-live owners as though they were discarded.",
+      "proves": "UI routes exact captured owners and no delayed hidden owner steals current route.",
+      "doesNotProve": "Real native allocation/closure acknowledgements or unbounded-resource behavior."
+    }
+  ],
+  "scope": "No source, root fixture, runner, document or oracle changed. No browser/server/test/Agent/App/DB/process action.",
+  "safeToPublish": true
+}

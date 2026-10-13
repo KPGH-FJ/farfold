@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "status": "NO_STATIC_BLOCKER_PREPARED_NOT_EXECUTED",
+  "script": {
+    "path": "output/2026-10-14-browser-tabs-integration/publish_checks.py",
+    "bytes": 5923,
+    "sha256": "9bf92bc51c93956e85d5a33dd35ba61372d4eceea035e6857d2ba5f4e2aba921"
+  },
+  "method": "Read source and ast.parse only; never import/main or run checks.",
+  "closedGap": "Initial script checked equal input counts but did not bind summary to exact freeze/actual maps. Root added freezeSha256, both inputs==freeze.inputs, both protected==freeze.protected and three current protected-file hashes before any public write.",
+  "verified": [
+    "Only exact seven command identities/completed states/processLaunched/actualStageCompletion/rawExit0 accepted; actual saved completed objects must equal summary items.",
+    "Current frozen inputs and protected files rehashed; each stdout/stderr must match actual stage digest.",
+    "Explicit36 original records are fully prehashed before mkdir; exclusive new output and byte-exact copy verification. No recursive evidence sweep, source/app/DB command or deletion.",
+    "Verification preserves original summary and separately labels current P30 scope; reused old raw boundary remains unedited.",
+    "retainedPriorRun=null is restricted to this first completed P30 engineering attempt. If first attempt fails, this script must be explicitly adapted to retain it; no automatic overwrite/skip.",
+    "Publication emits files[{original,published}] compatible with checkpoint selector."
+  ],
+  "scope": "Prepared publisher, not evidence engineering passed or publication ran. Final exact stage/source/evidence review remains separate."
+}

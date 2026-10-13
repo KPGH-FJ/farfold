@@ -1,0 +1,11 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/BrowserWorkspace.presentation.test.tsx (5 tests | 1 failed) 325ms
+   × ignores an old resize rejection after the owner has become inactive 57ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  05:41:30
+   Duration  1.32s (transform 59ms, setup 0ms, import 929ms, tests 325ms, environment 0ms)
+

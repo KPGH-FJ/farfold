@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "test"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "displayCommand": "corepack pnpm test",
+  "group": "frontend",
+  "monotonicStart": 40.269041416,
+  "name": "frontend-test",
+  "startedAt": "2026-10-13T23:19:13.128648+00:00"
+}

@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/components/BrowserWorkspace.presentation.test.tsx",
+    "src/components/BrowserWorkspace.test.tsx",
+    "src/runtime/browser_surface_guard.test.ts"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T21:56:31.925026+00:00",
+  "completedAtUtc": "2026-10-13T21:56:37.886871+00:00",
+  "actualExitCode": 0,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/guard-resume-green-v5.stdout.log",
+    "bytes": 212,
+    "sha256": "1cc8f8c134f0a8c84b4bb624098d712a4fb9aa1b83040133b79abac34472ba0a"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/guard-resume-green-v5.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

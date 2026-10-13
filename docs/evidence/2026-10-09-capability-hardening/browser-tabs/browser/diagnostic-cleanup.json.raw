@@ -1,0 +1,15 @@
+{
+  "scope": "Removed only temporary Scope.close and dispatch stack diagnostics; before/used variants and run6/7 retained",
+  "restored": [
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/fixture.tsx",
+      "sha256": "204d9d9eaec98e19fde7e49ae64e7c27e6c936068c0edf4b0f8cde7f7062ee78"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/transport.ts",
+      "sha256": "55f71153703d56dce60cab881a9cafdde9db7467c27b213e6721e0328d569eea"
+    }
+  ],
+  "runnerUnchanged": "c0d669b8a2ff32119b4032373dd5afa044b98eb1705f51241d4f99147a07343e",
+  "nativeExecuted": false
+}

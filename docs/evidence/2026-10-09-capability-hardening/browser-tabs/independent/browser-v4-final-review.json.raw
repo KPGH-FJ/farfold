@@ -1,0 +1,198 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS_V4_CONTROLLED_BROWSER_SCOPE_WITH_SEPARATE_GUARD_TIMING_INVESTIGATION",
+  "rootVerification": {
+    "path": "output/2026-10-14-browser-tabs-browser/root-verification-final.json",
+    "bytes": 4471,
+    "sha256": "2485e298fa36ac3288217ba8211d6fb3b5b2e31e4b4b2582fbf9cb52638d9e21"
+  },
+  "frontendFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v4.json",
+    "bytes": 6376,
+    "sha256": "06c5160af56f70c061135999e5d5964c76a197ef15795c48d4ade4f6a533afc2"
+  },
+  "runs": [
+    {
+      "result": {
+        "path": "output/2026-10-14-browser-tabs-browser/chromium-run8.json",
+        "bytes": 976008,
+        "sha256": "cc35833f2f89f402adb4dbf493a30c2c5f2bb3ecc9e7ac1969bd9466f2568d5c"
+      },
+      "actualExitCode": 0,
+      "completionChunk": "04773f",
+      "checks": 141,
+      "completedScenarios": 13,
+      "inputCount": 1109,
+      "beforeAfterEqual": true,
+      "v4Frontend17Match": true,
+      "reverseRetention": {
+        "pages": [
+          {
+            "taskKey": "tabs-A",
+            "label": "controlled-page-1",
+            "visible": false,
+            "closed": false,
+            "state": {
+              "counter": "0",
+              "note": "A_INITIAL",
+              "scrollY": 0
+            }
+          },
+          {
+            "taskKey": "tabs-B",
+            "label": "controlled-page-2",
+            "visible": true,
+            "closed": false,
+            "state": {
+              "counter": "1",
+              "note": "B_RETURN_RETAINED",
+              "scrollY": 123
+            }
+          }
+        ],
+        "createCount": 2,
+        "closeCount": 0,
+        "sameInstanceAndMemory": true
+      },
+      "screenshots": [
+        {
+          "path": "output/2026-10-14-browser-tabs-browser/chromium-run8-three-pages.png",
+          "bytes": 87679,
+          "sha256": "b3fe355c6fbba1fe0b863a9d1f03944027ea6adceec496745a54ac44fc1c77ff"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-browser/chromium-run8-narrow-pages.png",
+          "bytes": 73960,
+          "sha256": "f739c51542b2be43da56f6cd82348af92866f59c8dc1e4ad2926bbaa1180a23e"
+        }
+      ]
+    },
+    {
+      "result": {
+        "path": "output/2026-10-14-browser-tabs-browser/webkit-run4.json",
+        "bytes": 976694,
+        "sha256": "427afed5d514d4ce50ff05670d42199f3083aa3046bb31cfc02cbeca72463937"
+      },
+      "actualExitCode": 0,
+      "completionChunk": "34c933",
+      "checks": 141,
+      "completedScenarios": 13,
+      "inputCount": 1109,
+      "beforeAfterEqual": true,
+      "v4Frontend17Match": true,
+      "reverseRetention": {
+        "pages": [
+          {
+            "taskKey": "tabs-A",
+            "label": "controlled-page-1",
+            "visible": false,
+            "closed": false,
+            "state": {
+              "counter": "0",
+              "note": "A_INITIAL",
+              "scrollY": 0
+            }
+          },
+          {
+            "taskKey": "tabs-B",
+            "label": "controlled-page-2",
+            "visible": true,
+            "closed": false,
+            "state": {
+              "counter": "1",
+              "note": "B_RETURN_RETAINED",
+              "scrollY": 123
+            }
+          }
+        ],
+        "createCount": 2,
+        "closeCount": 0,
+        "sameInstanceAndMemory": true
+      },
+      "screenshots": [
+        {
+          "path": "output/2026-10-14-browser-tabs-browser/webkit-run4-three-pages.png",
+          "bytes": 194909,
+          "sha256": "72503ac3842db137d44b5c5d07145944eab20e21ffffc7202b3859d630337779"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-browser/webkit-run4-narrow-pages.png",
+          "bytes": 143333,
+          "sha256": "e0b18fe4f945efdd323bf2cc4e75ea276d70add0f3882b041ec5d3bbdb246922"
+        }
+      ]
+    }
+  ],
+  "sharedInputMapsEqual": true,
+  "actualCommandExecutionEvidence": {
+    "manifest": {
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-final/manifest.json",
+      "bytes": 1026,
+      "sha256": "d5246dc03b03cb6fad349299eb110b255afc725eefd7b33c162896d49544c567"
+    },
+    "records": [
+      {
+        "run": "chromium-run8",
+        "path": "output/2026-10-14-browser-tabs-browser/transcript-final/chromium-run8-16485.jsonl.raw",
+        "sourceLine": 16485,
+        "exitCode": 0,
+        "bytes": 1972,
+        "sha256": "8a00c4a68f3a1fedcc2b9534ccddf7d8cf5c762780fb06b6c333f646405419ad",
+        "sourceByteOffset": 46508207,
+        "originalByteExact": true,
+        "actualItemStatus": "completed"
+      },
+      {
+        "run": "webkit-run4",
+        "path": "output/2026-10-14-browser-tabs-browser/transcript-final/webkit-run4-16488.jsonl.raw",
+        "sourceLine": 16488,
+        "exitCode": 0,
+        "bytes": 894,
+        "sha256": "b5626e36de986438f5987557ad195d1f4e9749ad2f9a4f6b1e3faf318d4b6301",
+        "sourceByteOffset": 46511758,
+        "originalByteExact": true,
+        "actualItemStatus": "completed"
+      },
+      {
+        "run": "server-2",
+        "path": "output/2026-10-14-browser-tabs-browser/transcript-final/server-2-16516.jsonl.raw",
+        "sourceLine": 16516,
+        "exitCode": 143,
+        "bytes": 1358,
+        "sha256": "6fe9aa850a30f1bc4af40b656c7ba3809331f6f6f3751ea82e26aa81879efbb4",
+        "sourceByteOffset": 47210090,
+        "originalByteExact": true,
+        "actualItemStatus": "failed"
+      }
+    ],
+    "readScope": "Only these three specified transcript records parsed and compared byte-for-byte; other content not reported."
+  },
+  "verifiedBoundary": [
+    "Full production frontend App in development StrictMode, controlled Tauri responses and authored iframe proxies. Neither native WebViews nor backend execution appears in these 1109 input maps.",
+    "Bidirectional task A/B retention now has exact B identity, input/counter/scroll state, exactly two creates and zero closes in both traces. The previously missed case is actually exercised.",
+    "All13 scenarios preserve controlled drafts/unrelated feedback, no unexpected IPC or external requests, at most one simulated visible surface.",
+    "ABA captured-success late response exercises frontend stale-result rejection separately from mocked current-selection rejection. Mocked grants, revoke ordering, close/hide acknowledgements do not prove real native enforcement.",
+    "Narrow viewport geometry, iframe hit target and real pointer counter assertions pass. Final screenshots are byte-identical to the four earlier independently viewed images; geometry and screenshot scope remain authored proxies.",
+    "Diagnostic method wrappers were removed before these runs; result input hashes exactly match restored fixture/transport and unchanged strengthened runner."
+  ],
+  "serverStop": {
+    "receipt": {
+      "path": "output/2026-10-14-browser-tabs-browser/server-stopped-2.json",
+      "bytes": 455,
+      "sha256": "6f8e73afa34e56efbc080998e72aa80f9de54b4ac584d7ba5e009d673cd7da97"
+    },
+    "actualExitCode": 143,
+    "reason": "Intentional SIGTERM of owned development server, not natural success exit0; no fresh process call made by this review."
+  },
+  "historicalPreservation": "Old138 greens remain limited and unchanged. Run5 true failure, RAF-only run6 failure and run7 diagnostic failure remain original; v4 success does not rewrite them.",
+  "pendingSeparateQuestion": "Root authorized a controlled batched guard hold/release investigation after v4 runs finished. These two actual passes neither test nor resolve that schedule; any later source version must get its own evidence.",
+  "notAccepted": [
+    "P30 full completion",
+    "Installed/native page retention",
+    "Windows hardware",
+    "Restart persistence",
+    "Real Agent permission or queued approval",
+    "NEW24 closure"
+  ],
+  "sideEffects": "Only this independent report. No browser/server/tests/App/DB executed; no current-source equivalence required after authorized source unfreeze."
+}

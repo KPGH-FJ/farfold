@@ -1,0 +1,79 @@
+{
+  "phase": "AUTHORED_NOT_EXECUTED",
+  "supersedes": "preparation-v5.json; both prior engines 133/13 actual0 with stable inputs, but visual QA requires source minor fixes and proper layout-settled screenshots",
+  "scope": "Complete App controlled IPC and separate iframe memory; no native/real-Agent/user-data proof",
+  "sourceFreezeRequiredBeforeRun": true,
+  "files": {
+    "fixture.tsx": {
+      "bytes": 5003,
+      "sha256": "204d9d9eaec98e19fde7e49ae64e7c27e6c936068c0edf4b0f8cde7f7062ee78"
+    },
+    "transport.ts": {
+      "bytes": 10861,
+      "sha256": "0fafacd112ff503d606d2dbb81a842656b22acb36c499f2c4c96219a0da4dab0"
+    },
+    "run.mjs": {
+      "bytes": 24134,
+      "sha256": "533ff41b3a8e2b332a109f1e429e35b8f041d95b74cf30f8dcce52778a677a90"
+    },
+    "index.html": {
+      "bytes": 1882,
+      "sha256": "bf0ca48efb3b608840f7b2f1b0009a3ddfac2520cad43598aec8b62188629708"
+    },
+    "serve.mjs": {
+      "bytes": 808,
+      "sha256": "4f58d879073143a55d903b7b224e5bf55b5b0a0db345cba566487c8e2a8d1736"
+    },
+    "page-oracle.json": {
+      "bytes": 1689,
+      "sha256": "ffc7eaaebe2f11b7970fd5d25f90d7d317577a17ef660f7b07a48fc19bb96a1d"
+    },
+    "pages/a.html": {
+      "bytes": 747,
+      "sha256": "c8b5bdfefde1f27f703663252270afc598325872fe08ce454d8a24c28e810aaa"
+    },
+    "pages/b.html": {
+      "bytes": 747,
+      "sha256": "de28854dd0a43aa892391686091211dbd25dc33eb4c4ef6081b3840f3ba9ccfb"
+    },
+    "pages/c.html": {
+      "bytes": 747,
+      "sha256": "b1489dda9f8d58df4db74507339d59bccd7199fefb00e786e9c466781b405199"
+    }
+  },
+  "cases": [
+    "three-independent-instances",
+    "keyboard-focus-is-not-selection",
+    "close-hidden-sibling-only-and-reopen",
+    "narrow-layout",
+    "withdraw-quiesce-hide-before-show",
+    "failed-hide-preserves-owner-and-explicit-retry",
+    "same-page-collapse-and-task-switch-retain-scope",
+    "task-route-waits-for-late-open-hide-ACK",
+    "selection-completes-while-task-hidden",
+    "failed-hidden-close-keeps-owner-for-retry",
+    "task-route-waits-for-selected-close-ACK",
+    "ABA-stale-snapshot-captured-success",
+    "ABA-stale-snapshot-validate-current"
+  ],
+  "notCovered": [
+    "real native create/show/hide/close ACK",
+    "real Agent pending approvals or read",
+    "Windows hardware",
+    "persistent tab restore",
+    "queued sharing approval in controlled browser driver",
+    "uncertain create UI recovery in controlled driver",
+    "Full-App cross-task simultaneous native creates/reversed completion; current route guard makes old driver premise unreachable"
+  ],
+  "validation": "Authoring only; root-owned Vite server started (server-owned.json), no browser run yet. Source v2 fix/freeze pending.",
+  "retainedV1": [
+    "authored-v1/fixture.tsx.raw",
+    "authored-v1/transport.ts.raw",
+    "authored-v1/run.mjs.raw"
+  ],
+  "knownPreviousPreparationDrift": "artifactPaneOpen=true added after original preparation pin, before any run; original preparation retained",
+  "staticCorrection": "Same selected label can no-op only with no pending withdrawal or uncertain presentation; explicit retry must acknowledge hide again, without restoring prior permission.",
+  "lateOpenBoundary": "Separate iframes are already created hidden; only their IPC returns are held. This proves UI owner routing, not native creation_pending global visibility safety.",
+  "correction": "Full App route guard waits for pending open and hide ACK. Old driver wrongly assumed it entered B before ACK and tried to fill disabled A. Now assert route remains A and no B open, release exact open then exact hide, await actual B title before opening B. Selected close route similarly waits ACK. Blank label sharing query now returns controlled owner state like protocol instead of fixture exception.",
+  "layoutCorrection": "Before screenshots await exact iframe bounds equal currently visible surface, fully contained in viewport with useful nonzero size; record both rectangles. Production uses animation-frame bounds tracking, not ResizeObserver alone. Source visual fixes pending frontend v3 freeze."
+}

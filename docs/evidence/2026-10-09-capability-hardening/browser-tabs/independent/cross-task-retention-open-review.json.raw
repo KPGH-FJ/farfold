@@ -1,0 +1,341 @@
+{
+  "schemaVersion": 1,
+  "status": "OPEN",
+  "finding": "Task B page is closed on returning to task A without an explicit page-close action.",
+  "severity": "P1",
+  "scope": "Read-only independent review of controlled full production App browser results and source; no native App, Agent, DB or new test execution.",
+  "evidence": [
+    {
+      "record": {
+        "path": "output/2026-10-14-browser-tabs-browser/chromium-run4.json",
+        "bytes": 978556,
+        "sha256": "c94d81cf69db725886a002f5c768afa1a8f6d247e09633c2a89f143c17ae6e1d"
+      },
+      "reportedPassed": true,
+      "inputMapsEqual": true,
+      "inputsStable": true,
+      "checks": 138,
+      "completedScenarios": 13,
+      "finalPages": [
+        {
+          "taskKey": "tabs-A",
+          "label": "controlled-page-1",
+          "closed": false,
+          "visible": true
+        },
+        {
+          "taskKey": "tabs-B",
+          "label": "controlled-page-2",
+          "closed": true,
+          "visible": false
+        }
+      ],
+      "tailTrace": [
+        {
+          "stage": "show",
+          "label": "controlled-page-2",
+          "event": "ack"
+        },
+        {
+          "stage": "hide",
+          "label": "controlled-page-2",
+          "event": "requested"
+        },
+        {
+          "stage": "hide",
+          "label": "controlled-page-2",
+          "event": "ack"
+        },
+        {
+          "stage": "hide",
+          "label": "controlled-page-1",
+          "event": "requested"
+        },
+        {
+          "stage": "hide",
+          "label": "controlled-page-1",
+          "event": "ack"
+        },
+        {
+          "stage": "show",
+          "label": "controlled-page-1",
+          "event": "requested"
+        },
+        {
+          "stage": "show",
+          "label": "controlled-page-1",
+          "event": "ack"
+        },
+        {
+          "stage": "revoke",
+          "label": "controlled-page-2",
+          "gate": 1
+        },
+        {
+          "stage": "close",
+          "label": "controlled-page-2",
+          "event": "requested"
+        },
+        {
+          "stage": "close",
+          "label": "controlled-page-2",
+          "event": "ack"
+        },
+        {
+          "stage": "show",
+          "label": "controlled-page-1",
+          "event": "requested"
+        },
+        {
+          "stage": "show",
+          "label": "controlled-page-1",
+          "event": "ack"
+        }
+      ],
+      "browserCloseCalls": [
+        {
+          "cmd": "browser_workspace_close",
+          "args": {
+            "taskKey": "tabs-B",
+            "label": "controlled-page-2"
+          }
+        }
+      ],
+      "failure": null
+    },
+    {
+      "record": {
+        "path": "output/2026-10-14-browser-tabs-browser/webkit-run3.json",
+        "bytes": 978901,
+        "sha256": "72b7815cd719aa7411c2a377babd739f2a3e2b9f370a2a2e315e626ddfe7b779"
+      },
+      "reportedPassed": true,
+      "inputMapsEqual": true,
+      "inputsStable": true,
+      "checks": 138,
+      "completedScenarios": 13,
+      "finalPages": [
+        {
+          "taskKey": "tabs-A",
+          "label": "controlled-page-1",
+          "closed": false,
+          "visible": true
+        },
+        {
+          "taskKey": "tabs-B",
+          "label": "controlled-page-2",
+          "closed": true,
+          "visible": false
+        }
+      ],
+      "tailTrace": [
+        {
+          "stage": "show",
+          "label": "controlled-page-2",
+          "event": "ack"
+        },
+        {
+          "stage": "hide",
+          "label": "controlled-page-2",
+          "event": "requested"
+        },
+        {
+          "stage": "hide",
+          "label": "controlled-page-2",
+          "event": "ack"
+        },
+        {
+          "stage": "hide",
+          "label": "controlled-page-1",
+          "event": "requested"
+        },
+        {
+          "stage": "hide",
+          "label": "controlled-page-1",
+          "event": "ack"
+        },
+        {
+          "stage": "show",
+          "label": "controlled-page-1",
+          "event": "requested"
+        },
+        {
+          "stage": "show",
+          "label": "controlled-page-1",
+          "event": "ack"
+        },
+        {
+          "stage": "revoke",
+          "label": "controlled-page-2",
+          "gate": 1
+        },
+        {
+          "stage": "close",
+          "label": "controlled-page-2",
+          "event": "requested"
+        },
+        {
+          "stage": "close",
+          "label": "controlled-page-2",
+          "event": "ack"
+        },
+        {
+          "stage": "show",
+          "label": "controlled-page-1",
+          "event": "requested"
+        },
+        {
+          "stage": "show",
+          "label": "controlled-page-1",
+          "event": "ack"
+        }
+      ],
+      "browserCloseCalls": [
+        {
+          "cmd": "browser_workspace_close",
+          "args": {
+            "taskKey": "tabs-B",
+            "label": "controlled-page-2"
+          }
+        }
+      ],
+      "failure": null
+    },
+    {
+      "record": {
+        "path": "output/2026-10-14-browser-tabs-browser/chromium-run5.json",
+        "bytes": 728400,
+        "sha256": "bfdfb64cf8e1d30e98a91e1766cc119c064af4cfd4ce08a9b5a21ef7d646fefa"
+      },
+      "reportedPassed": false,
+      "inputMapsEqual": true,
+      "inputsStable": true,
+      "checks": 82,
+      "completedScenarios": 7,
+      "finalPages": [
+        {
+          "taskKey": "tabs-A",
+          "label": "controlled-page-1",
+          "closed": false,
+          "visible": true
+        },
+        {
+          "taskKey": "tabs-B",
+          "label": "controlled-page-2",
+          "closed": true,
+          "visible": false
+        }
+      ],
+      "tailTrace": [
+        {
+          "stage": "show",
+          "label": "controlled-page-2",
+          "event": "ack"
+        },
+        {
+          "stage": "hide",
+          "label": "controlled-page-2",
+          "event": "requested"
+        },
+        {
+          "stage": "hide",
+          "label": "controlled-page-2",
+          "event": "ack"
+        },
+        {
+          "stage": "hide",
+          "label": "controlled-page-1",
+          "event": "requested"
+        },
+        {
+          "stage": "hide",
+          "label": "controlled-page-1",
+          "event": "ack"
+        },
+        {
+          "stage": "show",
+          "label": "controlled-page-1",
+          "event": "requested"
+        },
+        {
+          "stage": "show",
+          "label": "controlled-page-1",
+          "event": "ack"
+        },
+        {
+          "stage": "revoke",
+          "label": "controlled-page-2",
+          "gate": 1
+        },
+        {
+          "stage": "close",
+          "label": "controlled-page-2",
+          "event": "requested"
+        },
+        {
+          "stage": "close",
+          "label": "controlled-page-2",
+          "event": "ack"
+        },
+        {
+          "stage": "show",
+          "label": "controlled-page-1",
+          "event": "requested"
+        },
+        {
+          "stage": "show",
+          "label": "controlled-page-1",
+          "event": "ack"
+        }
+      ],
+      "browserCloseCalls": [
+        {
+          "cmd": "browser_workspace_close",
+          "args": {
+            "taskKey": "tabs-B",
+            "label": "controlled-page-2"
+          }
+        }
+      ],
+      "failure": "Error: Returning to A also retains B instead of closing it\n    at check (file:///Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-browser/run.mjs:19:20)\n    at file:///Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-browser/run.mjs:279:3"
+    }
+  ],
+  "sourceAtFailure": {
+    "path": "src/components/BrowserWorkspacePage.tsx",
+    "sha256": "e2fc0c119e9ee5ffc281dce13d803ddb29f1c9e3924620f12ee1d3c6740b1ae8"
+  },
+  "verifiedDriver": {
+    "path": "output/2026-10-14-browser-tabs-browser/run.mjs",
+    "bytes": 25349,
+    "sha256": "c0d669b8a2ff32119b4032373dd5afa044b98eb1705f51241d4f99147a07343e"
+  },
+  "observations": [
+    "Both previously green results already contain task B revoke/close ACK and closed:true; their assertions proved return-to-A but omitted reverse retention.",
+    "The strengthened run5 assertion fails exactly at B-not-closed after returning to A.",
+    "The run5 call list unsubscribes the B state/tabs/sharing/drag listeners, installs new listeners, then closes B. This is consistent with a remount/cleanup path but does not identify the actual caller."
+  ],
+  "sourceHypotheses": [
+    {
+      "location": "src/components/BrowserWorkspacePage.tsx:867",
+      "hypothesis": "Old resize RAF can observe a removed/hidden surface before passive cleanup and call closeOwner; late resize rejection also closes without current active/visible admission.",
+      "status": "Independent local defect reproduction reported by frontend; not yet confirmed as unique whole-App cause."
+    },
+    {
+      "location": "src/components/BrowserWorkspacePage.tsx:305",
+      "hypothesis": "Owner effect cleanup requests exact registered-owner close when component/client scope is unmounted or replaced. Listener turnover makes this a relevant alternative.",
+      "status": "Needs actual close caller or successful minimal correction, not assumed proven."
+    }
+  ],
+  "actualProcessExit": {
+    "run5": 1,
+    "chunk": "e3fe1b",
+    "evidenceCarrier": "root agent actual tool observation reported in conversation; original event not extracted in this report"
+  },
+  "requiredFollowup": [
+    "Retain all original green/red outputs.",
+    "Resolve actual whole-App close source; verify returning A preserves B and returning B preserves exact identity, page memory and absence of extra create/close.",
+    "Run final two engines only after owner final source freeze; do not call controlled transport grant/close acknowledgements real native validation."
+  ],
+  "claimRestriction": "Cross-task bidirectional page retention and final P30 browser convergence are not established by the old 138-check green runs.",
+  "mutations": "Only this new independent JSON; no source/docs/root harness or original evidence changed."
+}

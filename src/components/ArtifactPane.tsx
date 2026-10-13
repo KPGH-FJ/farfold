@@ -94,6 +94,7 @@ export function ArtifactPane({
   contentMode: requestedMode,
   onContentModeChange,
   onBrowserStateChange,
+  onBrowserOwnersChange,
   browserToolbar,
   fileRequest,
   returnFocusRef,
@@ -104,6 +105,7 @@ export function ArtifactPane({
   contentMode?: "files" | "browser";
   onContentModeChange?: (mode: "files" | "browser") => void;
   onBrowserStateChange?: (state: BrowserWorkspaceState | null) => void;
+  onBrowserOwnersChange?: (ownsPages: boolean) => void;
   browserToolbar?: ReactNode;
   fileRequest?: OpenedFileRequest | null;
   returnFocusRef?: RefObject<HTMLElement | null>;
@@ -536,6 +538,7 @@ export function ArtifactPane({
           visible={active && open && contentMode === "browser"}
           onVisibilityChange={setNativeVisible}
           onStateChange={onBrowserStateChange}
+          onOwnersChange={onBrowserOwnersChange}
           toolbar={browserToolbar}
           htmlRequest={htmlRequest?.taskKey === thread.key ? htmlRequest : null}
           onHtmlRequestConsumed={() => setHtmlRequest(null)}

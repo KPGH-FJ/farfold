@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "preparedAtUtc": "2026-10-13T22:24:55.103096+00:00",
+  "status": "PATCH_PREPARED_NOT_EXECUTED",
+  "originalSource": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/preparation_actions_tests.rs.original.raw",
+    "bytes": 24547,
+    "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96"
+  },
+  "diagnosticSource": {
+    "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+    "bytes": 29274,
+    "sha256": "731aa881869da78c635aefc458c4f2eedeaec5fc9a62e02c465fa699f14d5522"
+  },
+  "patch": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/diagnostic.patch",
+    "bytes": 7350,
+    "sha256": "adfde52c481fbdffc0bd957732c0c3dafa05b2a4123423357ed1404bec851913"
+  },
+  "onlyTargetFunctionChanged": true,
+  "unchangedProductionSources": [
+    {
+      "path": "src-tauri/src/pty.rs",
+      "bytes": 28407,
+      "sha256": "f2c7fb13de618e2f1a90d1569bcadb70688f039a23fa9746a0acd15aabac3174"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions.rs",
+      "bytes": 10920,
+      "sha256": "84ad7a0d5ab500aa3ed7309271ab24b1fcf2dc0045bb8200889405d7cd7b610a"
+    },
+    {
+      "path": "src-tauri/src/auth.rs",
+      "bytes": 47716,
+      "sha256": "fcb20dc1835a5159bfcf935ce39f6794ac1623ef1598b54ddc9c4f6b189e53d9"
+    },
+    {
+      "path": "src-tauri/src/auth/attempts.rs",
+      "bytes": 6922,
+      "sha256": "63271922c5b04cc8dfeecc27e99f0f575115d4dfb05b66ec89629e01c16839c4"
+    },
+    {
+      "path": "src-tauri/src/shell_env/unix.rs",
+      "bytes": 8844,
+      "sha256": "97d6e2a0ab1f97d42e2e05b57cf03d2aecbd8615861e0b0449b6605be27d257e"
+    }
+  ],
+  "format": {
+    "command": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "src-tauri/src/acp_client/preparation_actions_tests.rs"
+    ],
+    "actualExitCode": 0,
+    "scope": "Syntax/format preparation only, not a cargo/test run."
+  },
+  "observations": [
+    "monotonic origin immediately before run_terminal; afterSpawn snapshot and original wait start offset in nanoseconds",
+    "exclusively created empty temporary trap/printf marker files; shell builtin printf after trap installation and after PTY printf; samples record read success, exact literal match, size",
+    "Channel frame reception nanoseconds and exact fixture data/exit JSON for first 64 frames, existing trace capped at 8192 bytes",
+    "original ready result after unchanged three-second deadline; timeout keeps original failed verdict even if extra bounded two-second observation receives READY",
+    "failure snapshots before and after exact PtyManager.close(id), including actual close Result; existing ReapFixture remains the cleanup guard",
+    "success follows every original cancellation/ownership/exit assertion and adds a final snapshot after original cleanup, including exit-frame receipt",
+    "failure_trace is cloned before assert, so panic does not hold/poison callback trace mutex"
+  ],
+  "interpretation": {
+    "trapEmpty": "No observed trap marker yet; cannot distinguish unscheduled/stopped shell or marker I/O without further evidence.",
+    "trapPresentPrintfEmpty": "Trap ran; later stdout printf or file operation not yet observed.",
+    "bothPresentPtyEmpty": "Shell reached both markers but READY has not reached Channel. Narrows to PTY/read/callback path; no errno evidence.",
+    "readyAfterThreeSeconds": "Proves late READY for this diagnostic run only; original verdict remains failure.",
+    "exitFrameOnly": "Not evidence that READY arrived late.",
+    "diagnosticGreen": "Does not repair or pass the original frozen seven checks; instrumentation may perturb scheduling."
+  },
+  "nextCommandProposedOnly": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--lib",
+    "--",
+    "--nocapture"
+  ],
+  "executionAuthorization": "Pending root review; no cargo/test command has been run on the diagnostic source.",
+  "restoration": "After the single authorized diagnostic run naturally completes, verify diagnosticSource SHA, restore the exact originalSource bytes, and verify original SHA before any formal engineering check. Preserve all diagnostic receipts and failures."
+}

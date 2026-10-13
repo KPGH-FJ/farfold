@@ -1,0 +1,13 @@
+{
+  "restoredAt": "2026-10-13T22:35:19.471563+00:00",
+  "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+  "bytes": 24547,
+  "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96",
+  "exactOriginalBytes": true,
+  "previousDiagnosticSource": {
+    "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+    "bytes": 29274,
+    "sha256": "731aa881869da78c635aefc458c4f2eedeaec5fc9a62e02c465fa699f14d5522"
+  },
+  "productionStable": true
+}

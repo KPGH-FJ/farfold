@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T23:12:42.032503+00:00",
+  "status": "DIAGNOSTIC_03_PASSED_ORIGINAL_FAILURE_NOT_REPRODUCED_SOURCES_RESTORED",
+  "execution": {
+    "sessionId": 92002,
+    "startChunk": "e56e16",
+    "completionChunk": "fb6c2b",
+    "actualExitCode": 0,
+    "naturalCompletion": true,
+    "argv": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "--",
+      "--show-output"
+    ],
+    "topLevelSummary": "test result: ok. 1692 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 121.11s",
+    "counts": {
+      "passed": 1692,
+      "failed": 0,
+      "ignored": 6
+    },
+    "subprocessFixtureResultsNotAdded": true,
+    "wrapper": "Inline Python orchestration in the tool invocation; no separate runner file and no retry."
+  },
+  "observations": {
+    "originalReadyState": "timeout-returned-ready",
+    "originalVerdict": "passed",
+    "waitStartedNsFromBeforeSpawn": 1995959,
+    "waitReturnedNsFromBeforeSpawn": 1411302625,
+    "readyReceivedNsFromBeforeSpawn": 1411147167,
+    "readyReceptionMinusWaitStartNs": 1409151208,
+    "firstReadStartNsFromBeforeSpawn": 2033875,
+    "firstReadReturn": {
+      "phase": "read-return",
+      "observedAtNsFromBeforeSpawn": 1410979084,
+      "stop": false,
+      "count": 29,
+      "errorKind": null,
+      "rawOsError": null,
+      "zeroReadMeaning": null
+    },
+    "firstReadDurationNs": 1408945209,
+    "channelReceiptMinusReadReturnNs": 168083,
+    "readErrorEvents": [],
+    "finalReadReturn": {
+      "phase": "read-return",
+      "observedAtNsFromBeforeSpawn": 3437967042,
+      "stop": true,
+      "count": 0,
+      "errorKind": null,
+      "rawOsError": null,
+      "zeroReadMeaning": "EOF-or-mapped-EIO"
+    },
+    "exitFrames": [
+      {
+        "receivedAtNsFromBeforeSpawn": 3538274000,
+        "kind": "exit",
+        "frame": {
+          "id": "pty-1791932998089-1",
+          "exit": 1
+        }
+      }
+    ],
+    "extraSevenSecondWindowUsed": false,
+    "lateReadyBetweenThreeAndTenSecondsObserved": false
+  },
+  "interpretation": [
+    "The child script construction was byte-identical to the original, with no marker writes or sampling. This one instrumented run returned Ready; READY arrived1.409151208s after wait start. The original3s verdict passed, so no extra7s window ran.",
+    "First read began near2.034ms and returned29 bytes near1.410979s. Channel reception followed168,083ns later. No observed read error, closed channel, or3–10s late READY occurred. During cleanup stop=true/count0 only proves EOF-or-mapped-EIO; it does not expose an errno.",
+    "This run provides no observation supporting extension of the fixture budget to10s. No production startup SLA or error cause is inferred from this passing sample. The two original formal readiness failures remain unlocated and are not retrospectively passed.",
+    "Only the temporary diagnostic patches were applied and then removed. Both exact originals and all2457 original frozen inputs are restored; no formal test budget or production behavior was changed.",
+    "Instrumentation may affect scheduling. Per parent instruction there will be no additional diagnostic iteration; any test-only failure-reporting/cleanup change is a separate subsequent decision."
+  ],
+  "restoration": {
+    "receipt": {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/source-restored.json",
+      "bytes": 1936,
+      "sha256": "b8a2a4bfee2721e31d9b0926ff6bd9c6894e74a8a20a2ec33535f6af88f0a43b"
+    },
+    "originalSourceCount": 2,
+    "allOriginalBytesRestored": true,
+    "inputCount": 2457,
+    "allOriginalInputsRestored": true,
+    "differenceCount": 0,
+    "errorCount": 0
+  },
+  "retainedOriginalFailureCompleted": [
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/completed.json",
+      "bytes": 741,
+      "sha256": "9f91198689311e3f06b6bb890df6ba3a1e6a3113dc3bdcf85016fc08c8283ddb"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/completed.json",
+      "bytes": 740,
+      "sha256": "e84f9969ea34f83bfdbb601f776deb1e5cc3d84d41b92a130285656b111f2f8e"
+    }
+  ],
+  "files": [
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/original-sources.json",
+      "bytes": 591,
+      "sha256": "a7fc39eddca255caf999e6120276f0d68aa99e93fba2af98687dc3212d5a5058"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/preparation_actions_tests.rs.original.raw",
+      "bytes": 24547,
+      "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/pty.rs.original.raw",
+      "bytes": 28407,
+      "sha256": "f2c7fb13de618e2f1a90d1569bcadb70688f039a23fa9746a0acd15aabac3174"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/preparation_actions_tests.rs.patch",
+      "bytes": 5330,
+      "sha256": "f8a2ca8df8f41659af01629bb206c7460695c1a6e4e3979af7e5bb069ba61776"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/pty.rs.patch",
+      "bytes": 3965,
+      "sha256": "68e4a5c934cde2883a4097867da8607e85766a25b7818430f8e0b3ab90fec5d8"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/preparation.json",
+      "bytes": 3470,
+      "sha256": "86495251a685647de52afba8d8c029686aa711af375316cd5509d2941be140b4"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/started.json",
+      "bytes": 1835,
+      "sha256": "b96de35f0920b3af83df4566c05e92f0e1414f2cf5691fc05daccb887b1086e4"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/completed.json",
+      "bytes": 852,
+      "sha256": "deb710578ded9238a1821bdf782a2482c3e1192bf6968f76592e06486baab9ea"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/stdout.log",
+      "bytes": 901342,
+      "sha256": "5c824457b96067551e35536f542e80da68898f1220fd339472cb04f5485555af"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/stderr.log",
+      "bytes": 557,
+      "sha256": "f9f6655fedfa6eae8593846b4c98c863ca479e188cd04a8dca237d949416c909"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/source-restored.json",
+      "bytes": 1936,
+      "sha256": "b8a2a4bfee2721e31d9b0926ff6bd9c6894e74a8a20a2ec33535f6af88f0a43b"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/diagnostic-observations.json",
+      "bytes": 6612,
+      "sha256": "acb748e049f9597139adf631447ef31f424128f386bf20dcd9d964fda4be2dc8"
+    }
+  ]
+}

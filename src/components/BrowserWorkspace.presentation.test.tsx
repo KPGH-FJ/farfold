@@ -1,0 +1,205 @@
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import type { BrowserWorkspacePageClient } from "../runtime/browser_workspace";
+
+// Model the commit-to-passive-cleanup window: React has removed/hidden the DOM,
+// while a frame or rejected resize from the preceding presentation can return.
+const h = vi.hoisted(() => ({
+  stateCursor: 0,
+  refCursor: 0,
+  effectCursor: 0,
+  states: [] as unknown[],
+  refs: [] as { current: unknown }[],
+  effects: [] as { deps: unknown[]; cleanup?: () => void }[],
+  pending: [] as (() => void)[],
+  host: {
+    getBoundingClientRect: () => ({ x: 600, y: 200, width: 400, height: 500 }),
+  },
+}));
+
+vi.mock("react", async (original) => {
+  const actual = await original<typeof import("react")>();
+  const effect = (callback: () => (() => void) | void, deps: unknown[]) => {
+    const index = h.effectCursor++;
+    const previous = h.effects[index];
+    if (
+      !previous ||
+      deps.some((value, i) => !Object.is(value, previous.deps[i]))
+    ) {
+      const next = { deps } as typeof previous;
+      h.effects[index] = next;
+      h.pending.push(() => {
+        previous?.cleanup?.();
+        next.cleanup = callback() || undefined;
+      });
+    }
+  };
+  return {
+    ...actual,
+    useId: () => "presentation-test",
+    useState: (initial: unknown) => {
+      const index = h.stateCursor++;
+      if (index >= h.states.length) h.states[index] = initial;
+      return [
+        h.states[index],
+        (next: unknown) => {
+          h.states[index] =
+            typeof next === "function" ? next(h.states[index]) : next;
+        },
+      ];
+    },
+    useRef: (initial: unknown) => {
+      const index = h.refCursor++;
+      return (h.refs[index] ??= { current: index === 0 ? h.host : initial });
+    },
+    useEffect: effect,
+    useLayoutEffect: effect,
+  };
+});
+
+import { BrowserWorkspacePage } from "./BrowserWorkspacePage";
+import { BrowserSurfaceGuard } from "../runtime/browser_surface_guard";
+
+const page = {
+  taskKey: "task-b",
+  label: "page-b",
+  revision: 1,
+  phase: "ready" as const,
+  url: "https://example.com/b",
+};
+type Props = Parameters<typeof BrowserWorkspacePage>[0];
+function render(props: Props, flush = true) {
+  h.stateCursor = h.refCursor = h.effectCursor = 0;
+  BrowserWorkspacePage(props);
+  if (flush) for (const effect of h.pending.splice(0)) effect();
+}
+function frame() {
+  const callback = vi.mocked(requestAnimationFrame).mock.lastCall?.[0];
+  expect(callback).toBeTypeOf("function");
+  callback!(0);
+}
+async function mounted() {
+  const client: BrowserWorkspacePageClient = {
+    open: vi.fn(async () => page),
+    openHtml: vi.fn(async () => page),
+    navigate: vi.fn(async () => page),
+    resize: vi.fn(async () => {}),
+    setVisible: vi.fn(async () => {}),
+    close: vi.fn(async () => {}),
+    clearHtmlStorage: vi.fn(async () => {}),
+    snapshot: vi.fn(async () => ({
+      ...page,
+      title: "B",
+      text: "B",
+      observedAtMs: 1,
+    })),
+    listenState: vi.fn(async () => () => {}),
+  };
+  const props: Props = {
+    taskKey: page.taskKey,
+    active: true,
+    client,
+    initialPage: page,
+    guard: new BrowserSurfaceGuard(),
+  };
+  render(props);
+  await Promise.resolve();
+  render(props);
+  await vi.waitFor(() =>
+    expect(client.setVisible).toHaveBeenCalledWith(
+      expect.objectContaining({ label: page.label, visible: true }),
+    ),
+  );
+  return { props, client };
+}
+beforeEach(() => {
+  h.states = [];
+  h.refs = [];
+  h.effects = [];
+  h.pending = [];
+  vi.stubGlobal(
+    "requestAnimationFrame",
+    vi.fn(() => 1),
+  );
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
+});
+afterEach(() => {
+  for (const effect of h.effects) effect.cleanup?.();
+  vi.unstubAllGlobals();
+});
+
+it.each([
+  { active: false },
+  { visible: false },
+  { presentationSuspended: true },
+])(
+  "does not close a retained owner from an obsolete frame after %j",
+  async (hidden) => {
+    const { props, client } = await mounted();
+    render({ ...props, ...hidden }, false);
+    h.refs[0].current = null;
+    frame();
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    expect(client.close).not.toHaveBeenCalled();
+    expect(client.resize).not.toHaveBeenCalled();
+    for (const effect of h.pending.splice(0)) effect();
+    h.refs[0].current = h.host;
+    render(props);
+    await vi.waitFor(() =>
+      expect(client.setVisible).toHaveBeenLastCalledWith(
+        expect.objectContaining({ label: page.label, visible: true }),
+      ),
+    );
+    expect(client.open).not.toHaveBeenCalled();
+  },
+);
+
+it("ignores an old resize rejection after the owner has become inactive", async () => {
+  const { props, client } = await mounted();
+  let reject!: (error: Error) => void;
+  vi.mocked(client.resize).mockReturnValue(
+    new Promise((_, fail) => {
+      reject = fail;
+    }),
+  );
+  frame();
+  await vi.waitFor(() => expect(client.resize).toHaveBeenCalledOnce());
+  render({ ...props, active: false }, false);
+  h.refs[0].current = null;
+  reject(new Error("previous presentation resize failed"));
+  await new Promise<void>((resolve) => setTimeout(resolve, 0));
+  expect(client.close).not.toHaveBeenCalled();
+});
+
+it("still closes the exact active owner if its current presentation loses bounds", async () => {
+  const { client } = await mounted();
+  h.refs[0].current = null;
+  frame();
+  await vi.waitFor(() =>
+    expect(client.close).toHaveBeenCalledWith({
+      taskKey: page.taskKey,
+      label: page.label,
+    }),
+  );
+});
+
+it("restarts bounds synchronization after batched hold and release notifications", async () => {
+  const { props, client } = await mounted();
+  const guard = props.guard!;
+  const scheduled = vi.mocked(requestAnimationFrame).mock.calls.length;
+  const hold = guard.hold();
+  expect(guard.getSnapshot().blocked).toBe(true);
+  // No intermediate render: the preceding frame observes the guard immediately,
+  // while React can coalesce the blocked=true and blocked=false notifications.
+  frame();
+  expect(vi.mocked(requestAnimationFrame).mock.calls.length).toBe(scheduled);
+  await vi.waitFor(() => expect(hold.ready).toBe(true));
+  hold.release();
+  expect(guard.getSnapshot().blocked).toBe(false);
+  render(props);
+  expect(vi.mocked(requestAnimationFrame).mock.calls.length).toBeGreaterThan(
+    scheduled,
+  );
+  frame();
+  await vi.waitFor(() => expect(client.resize).toHaveBeenCalledOnce());
+  expect(client.close).not.toHaveBeenCalled();
+});

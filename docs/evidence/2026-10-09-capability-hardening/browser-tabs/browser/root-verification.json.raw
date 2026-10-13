@@ -1,0 +1,109 @@
+{
+  "phase": "CONTROLLED_FULL_APP_BROWSERS_PASSED",
+  "at": "2026-10-13T21:35:35.450460+00:00",
+  "sourceFrontendFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v3.json",
+    "bytes": 4994,
+    "sha256": "a7fa3b066b5b7c98de5b673732fe770849b0b325e8c9470975a1577ea32b9f65"
+  },
+  "sourceBackendFreeze": {
+    "path": "output/2026-10-14-browser-tabs-backend/source-freeze-v2.json",
+    "bytes": 17066,
+    "sha256": "d55be973509726b8298e220624a732a55a0f027d82a8365dca18435b227e149a"
+  },
+  "finalResults": [
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/chromium-run4.json",
+      "bytes": 978556,
+      "sha256": "c94d81cf69db725886a002f5c768afa1a8f6d247e09633c2a89f143c17ae6e1d"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/webkit-run3.json",
+      "bytes": 978901,
+      "sha256": "72b7815cd719aa7411c2a377babd739f2a3e2b9f370a2a2e315e626ddfe7b779"
+    }
+  ],
+  "actualToolCompletions": [
+    {
+      "run": "chromium-run4.json",
+      "session": 23327,
+      "chunk": "60565a",
+      "exitCode": 0
+    },
+    {
+      "run": "webkit-run3.json",
+      "session": 37131,
+      "chunk": "6d7818",
+      "exitCode": 0
+    }
+  ],
+  "perEngine": {
+    "checks": 138,
+    "scenarios": 13,
+    "inputCount": 1108,
+    "sameInputMaps": true,
+    "noPageErrorsOrExternalRequests": true
+  },
+  "rootVisualInspection": {
+    "fourFinalImagesViewed": true,
+    "narrowBoth": "Authored B heading/note/counter1 visible; actual pointer/hit test pass; tabs and controls above content, no overlap.",
+    "wideBoth": "Selected B remains scrolled350 in authored blank gradient spacer; exact counter/note/scroll retained in raw state. Tabs no exposed numeric screen-reader spans; plus uses existing icon style.",
+    "images": [
+      {
+        "path": "output/2026-10-14-browser-tabs-browser/chromium-run4-three-pages.png",
+        "bytes": 87679,
+        "sha256": "b3fe355c6fbba1fe0b863a9d1f03944027ea6adceec496745a54ac44fc1c77ff"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-browser/chromium-run4-narrow-pages.png",
+        "bytes": 73960,
+        "sha256": "f739c51542b2be43da56f6cd82348af92866f59c8dc1e4ad2926bbaa1180a23e"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-browser/webkit-run3-three-pages.png",
+        "bytes": 194909,
+        "sha256": "72503ac3842db137d44b5c5d07145944eab20e21ffffc7202b3859d630337779"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-browser/webkit-run3-narrow-pages.png",
+        "bytes": 143333,
+        "sha256": "e0b18fe4f945efdd323bf2cc4e75ea276d70add0f3882b041ec5d3bbdb246922"
+      }
+    ]
+  },
+  "retainedRuns": [
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/chromium-run1.json",
+      "bytes": 705487,
+      "sha256": "46f688ec749671fbe20b468a9638134be36b729e2c753bd0c0f0876b1b0aeb70"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/chromium-run2.json",
+      "bytes": 976947,
+      "sha256": "a714e4f8e3f6fa3f7cc5214a2c3b09a2b0d195bfd12ab2dcea19a87ca98e52a6"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/webkit-run1.json",
+      "bytes": 975921,
+      "sha256": "532866632d5ee2bbd81dd4620f65aff19d4c8832d2d1f8e87ccdb2d39c152d3f"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/chromium-run3.json",
+      "bytes": 978301,
+      "sha256": "b80257f2b57504806eaa03a3ec3bf9c6bc52769d59dfbfc0d86b64a0ae5d5acc"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/webkit-run2.json",
+      "bytes": 978653,
+      "sha256": "4033a66a85d380122df21e2fc8118c90e9ff9817f9ad22567c554091e5c42193"
+    }
+  ],
+  "history": "run1 failed driver unreachable cross-task pending-open premise; original68/7 preserved. Prior greens133/13 then135/13 retained but did not establish final narrow visual coverage. v7 proxy stack fixes and pointer checks yield final138/13. No production safety guard relaxed.",
+  "boundaries": [
+    "Controlled IPC + authored iframe memory only; not real WKWebView or Agent acceptance",
+    "No persisted tab restore, no maximum tab count inferred",
+    "Windows static source only; no Windows hardware claim",
+    "No new formal App launch or real Agent request",
+    "Queued real approval + global native creation safety covered only where backend exact tests exist, not browser proxy"
+  ]
+}

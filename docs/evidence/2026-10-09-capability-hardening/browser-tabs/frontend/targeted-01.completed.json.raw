@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/browser_tabs.test.ts",
+    "src/runtime/browser_workspace.test.ts",
+    "src/components/BrowserWorkspace.test.tsx",
+    "src/components/BrowserWorkspace.tabs.test.tsx"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T21:12:03.158691+00:00",
+  "completedAtUtc": "2026-10-13T21:12:43.501224+00:00",
+  "actualExitCode": 1,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-01.stdout.log",
+    "bytes": 4049,
+    "sha256": "6ae5c832f01d0fb922f3548c827d5412835962842e636c01f0701e15e7f5989e"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-01.stderr.log",
+    "bytes": 170073,
+    "sha256": "9bb2eae80d0d187157307fe33a242b7f16fe70a75b77e6119f5997ad31cb7312"
+  }
+}

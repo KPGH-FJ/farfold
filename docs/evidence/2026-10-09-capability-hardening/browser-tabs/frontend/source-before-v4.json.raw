@@ -1,0 +1,107 @@
+{
+  "observedAtUtc": "2026-10-13T21:52:12.786688+00:00",
+  "files": [
+    {
+      "path": "src/runtime/browser_tabs.ts",
+      "bytes": 13221,
+      "sha256": "7c00e8a03b57eb46f4105d749a74871e61c527f0485bb20998f29dbb373dc602",
+      "lines": 392
+    },
+    {
+      "path": "src/runtime/browser_tabs.test.ts",
+      "bytes": 19933,
+      "sha256": "9e82603e2d5f9123c67f27719479ebe3f35a8b88d0482ba0ae1d56391be85e69",
+      "lines": 572
+    },
+    {
+      "path": "src/runtime/browser_workspace.ts",
+      "bytes": 14716,
+      "sha256": "c039667dfc532cb72a7255d7b06045ab41cf3adc6ef1a13c2ff0bbb5dfde460e",
+      "lines": 476
+    },
+    {
+      "path": "src/runtime/browser_workspace.test.ts",
+      "bytes": 21701,
+      "sha256": "8171a98b14a40ceaa68564ac3a1dd8e6dfb4df3e3ffbf2286cac90bdaec878f9",
+      "lines": 587
+    },
+    {
+      "path": "src/runtime/browser_surface.ts",
+      "bytes": 1536,
+      "sha256": "85c78767262cbea94a047925a5eb6ee8585d9453fe57987d216215c62fb65ade",
+      "lines": 46
+    },
+    {
+      "path": "src/runtime/browser_workspace_strings.ts",
+      "bytes": 4674,
+      "sha256": "f729602c01e64a92129f5e5e4bd1414586ff1a793b2d0f6b271e777f085c737e",
+      "lines": 89
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tsx",
+      "bytes": 7822,
+      "sha256": "1cc81249dc58fc8392b38e90ca643ff2d710e80f547091a8581b3e59dc9b872a",
+      "lines": 227
+    },
+    {
+      "path": "src/components/BrowserWorkspacePage.tsx",
+      "bytes": 42999,
+      "sha256": "697681ad8be4059ef0910a85e5f6d653e74f428c821fa3f8c281704699661fd8",
+      "lines": 1322
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tabs.test.tsx",
+      "bytes": 1244,
+      "sha256": "4c4ba561051e59e2a8fe9e27306d13daea211c2d24e383570f6e5b63e00b7cb2",
+      "lines": 34
+    },
+    {
+      "path": "src/components/BrowserWorkspace.test.tsx",
+      "bytes": 46932,
+      "sha256": "b5cedeb8ebf8d018a7c835f4692f40be7c497467d3f796172aa7955c992038bb",
+      "lines": 1462
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "bytes": 21232,
+      "sha256": "c1ebc570aa7d671a48fb003bd63e1aa6317652d489c0e9a17b36e02b8f8da680",
+      "lines": 641
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "bytes": 52082,
+      "sha256": "3e3228c1bb8ef33561330b0da386a4ccbde81f2cb972b6f58def4dde6df0e929",
+      "lines": 1403
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "bytes": 20383,
+      "sha256": "9c0047eea46b3c94a83e6c8efc63edf4c29ca3420a7eb0bdca3a72bbd8050e93",
+      "lines": 607
+    },
+    {
+      "path": "src/App.tsx",
+      "bytes": 46688,
+      "sha256": "3d87edb53d95ae0ecd4c28cc00cbd7e12299d0bf9057787c6524674e62324224",
+      "lines": 1295
+    },
+    {
+      "path": "src/App.navigation.test.tsx",
+      "bytes": 44562,
+      "sha256": "ef6cb92b397a5fedb0507cf2d5c03de4b7e386abe9f3e57e55c68c566c59cb9c",
+      "lines": 1263
+    },
+    {
+      "path": "src/browser-workspace.css",
+      "bytes": 7782,
+      "sha256": "0eb0e2d4dc6882560a7dfb3ab27791b51094b5c7820589a970da14aaed6d3e12",
+      "lines": 421
+    },
+    {
+      "path": "src/components/BrowserWorkspace.presentation.test.tsx",
+      "bytes": 5468,
+      "sha256": "387afa86e7ee491fe5d6d6a74299ae4b874a824e5ed9209128e581a7c3a46895",
+      "lines": 183
+    }
+  ]
+}

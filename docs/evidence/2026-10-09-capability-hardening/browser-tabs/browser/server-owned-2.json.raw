@@ -1,0 +1,8 @@
+{
+  "pid": 47583,
+  "execSession": 18561,
+  "port": 1540,
+  "announcementChunk": "bddc1a",
+  "exactCommand": "47583 47488 node output/2026-10-14-browser-tabs-browser/serve.mjs",
+  "purpose": "New isolated server after prior verified stop, for added bidirectional retention counterexample"
+}

@@ -340,3 +340,82 @@
   background: var(--bg-secondary);
   font: inherit;
 }
+
+.browser-workspace-tabs-shell,
+.browser-workspace-tab-panel,
+.browser-workspace-tab-controls {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+.browser-workspace-tab-panel[hidden] {
+  display: none;
+}
+.browser-workspace-tab-controls {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.browser-workspace-tabs-row {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--line);
+}
+.browser-workspace-tabs {
+  display: flex;
+  min-width: 0;
+  overflow-x: auto;
+  gap: 3px;
+}
+.browser-workspace-tab {
+  display: flex;
+  align-items: center;
+  max-width: 200px;
+  border-radius: 5px;
+  background: var(--card);
+}
+.browser-workspace-tab:has([aria-selected="true"]) {
+  background: var(--row-hover);
+}
+.browser-workspace-tab button {
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font: inherit;
+  cursor: pointer;
+  padding: 5px 7px;
+}
+.browser-workspace-tab [role="tab"] {
+  min-width: 0;
+}
+.browser-workspace-tab [role="tab"] span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.browser-workspace-tab [aria-selected="true"] {
+  color: var(--ink);
+}
+.browser-workspace-tab .browser-workspace-tab-close {
+  flex: none;
+}
+.browser-workspace-tabs-row button:focus-visible {
+  outline: 2px solid var(--ink-2);
+  outline-offset: -2px;
+}
+.browser-tabs-error {
+  flex: none;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: var(--ink);
+}
+.browser-tabs-error button {
+  margin-left: 8px;
+}

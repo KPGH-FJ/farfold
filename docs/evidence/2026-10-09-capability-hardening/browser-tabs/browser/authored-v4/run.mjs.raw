@@ -1,0 +1,340 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { chromium, webkit } = await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base = "output/2026-10-14-browser-tabs-browser";
+const [engine, label] = process.argv.slice(2);
+if (!["chromium", "webkit"].includes(engine) || !/^run\d+$/.test(label)) throw Error("Exact engine/run required");
+const destination = `${base}/${engine}-${label}.json`;
+if (fs.existsSync(destination)) throw Error("Retain previous run; choose a new label");
+const hash = file => createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+const scan = dir => fs.readdirSync(dir, { withFileTypes: true }).flatMap(item => item.isDirectory() ? scan(dir + "/" + item.name) : [dir + "/" + item.name]);
+const inputFiles = () => [...scan("src"), ...["fixture.tsx", "transport.ts", "index.html", "serve.mjs", "run.mjs", "page-oracle.json", "pages/a.html", "pages/b.html", "pages/c.html"].map(name => base + "/" + name), "output/2026-10-14-browser-tabs-research/manual-oracle-v2.json", "output/2026-10-14-browser-tabs-research/revision-v2.json", "package.json", "pnpm-lock.yaml", "vite.config.ts"].sort();
+const inventory = () => Object.fromEntries(inputFiles().map(file => [file, hash(file)]));
+const result = { engine, label, scope: "Full production App with controlled Tauri lifecycle and authored iframe pages. No real native view, installed App, user data, Agent, or external network. Backend permission/ACK safety is not established by controlled responses.", before: inventory(), checks: [], scenarios: [], errors: [], externalRequests: [], screenshots: [] };
+const browser = await (engine === "webkit" ? webkit : chromium).launch({ headless: true, executablePath: engine === "webkit" ? path.resolve("output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh") : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" });
+let page, scenario;
+const check = (name, pass, detail) => {
+  result.checks.push({ scenario, name, pass: Boolean(pass), ...(detail === undefined ? {} : { detail }) });
+  if (!pass) throw Error(name);
+};
+const state = () => page.evaluate(() => window.fixture.current());
+const pane = () => page.locator(".artifact-pane:visible");
+const tablist = () => pane().getByRole("tablist", { name: "网页标签", exact: true });
+const live = value => value.pages.filter(item => !item.closed);
+const shown = value => live(value).filter(item => item.visible);
+async function waitState(predicate, data) {
+  await page.waitForFunction(({source, data}) => {
+    const predicate = new Function("s", "d", "return (" + source + ")(s,d)");
+    return predicate(window.fixture.current(), data);
+  }, {source: predicate.toString(), data});
+}
+async function load(name) {
+  scenario = name;
+  if (page) await page.close();
+  page = await browser.newPage({ viewport: { width: 1280, height: 860 } });
+  page.setDefaultTimeout(12000);
+  page.on("pageerror", error => result.errors.push({ scenario, error: String(error) }));
+  await page.route("**/*", route => {
+    if (route.request().url().startsWith("http://127.0.0.1:1540/")) return route.continue();
+    result.externalRequests.push({ scenario, url: route.request().url() });
+    return route.abort();
+  });
+  await page.goto("http://127.0.0.1:1540/" + base + "/index.html");
+  await page.getByText("P30_TASK_A", { exact: true }).first().click();
+  await pane().getByRole("button", { name: "网页", exact: true }).click();
+  await tablist().waitFor();
+  check("Fixture begins with zero page instances", live(await state()).length === 0);
+}
+const panel = () => pane().getByRole("tabpanel");
+const configure = values => page.evaluate(values => window.fixture.configure(values), values);
+const release = (stage, label, fail = false) => page.evaluate(({stage,label,fail}) => window.fixture.release(stage, {label,fail}), {stage,label,fail});
+const waitShown = id => waitState((s,id) => s.pages.filter(p=>!p.closed && p.visible).length === 1 && s.pages.some(p=>p.label===id && p.visible), id);
+async function startOpen(letter, fresh = true) {
+  const existing = (await state()).pages.map(p=>p.label);
+  if (fresh) await pane().getByRole("button", { name: "新建网页", exact: true }).click();
+  await panel().getByRole("textbox", { name: "公开网页地址", exact: true }).fill("https://example.org/" + letter.toLowerCase());
+  await panel().getByRole("button", { name: "打开", exact: true }).click();
+  await waitState((s,old) => s.pages.some(p=>!old.includes(p.label)), existing);
+  const created = (await state()).pages.filter(p=>!existing.includes(p.label));
+  check("One exact owner reserved by open", created.length === 1);
+  return created[0].label;
+}
+async function open(letter, fresh = true) {
+  const id = await startOpen(letter, fresh);
+  await waitShown(id);
+  await page.frameLocator(`iframe[data-controlled-page="${id}"]`).getByRole("heading", { name: "P30_PAGE_" + letter, exact: true }).waitFor();
+  return id;
+}
+async function activate(index, id) {
+  const tab = tablist().getByRole("tab").nth(index);
+  const panelId = await tab.getAttribute("aria-controls");
+  await tab.click();
+  await waitShown(id);
+  check("Exact tab and panel selected", await tab.getAttribute("aria-selected") === "true" && await panel().getAttribute("id") === panelId);
+}
+async function task(letter) {
+  await page.getByText("P30_TASK_" + letter, {exact:true}).first().click();
+  const web = pane().getByRole("button", {name:"网页",exact:true});
+  await web.click();
+  await tablist().waitFor();
+}
+async function grant() {
+  await pane().getByRole("button", {name:"读取权限",exact:true}).click();
+  await pane().getByRole("button", {name:"允许读取",exact:true}).click();
+  await waitState(s=>s.pages.some(p=>p.visible&&p.shared));
+}
+async function memory(id, clicks, note, scrollY) {
+  const frame = page.frameLocator(`iframe[data-controlled-page="${id}"]`);
+  for (let i = 0; i < clicks; i++) await frame.getByRole("button", { name: "增加计数", exact: true }).click();
+  await frame.getByRole("textbox", { name: "页面笔记", exact: true }).fill(note);
+  await page.locator(`iframe[data-controlled-page="${id}"]`).evaluate((element, value) => element.contentWindow.scrollTo(0, value), scrollY);
+}
+async function shot(name) {
+  const file = `${base}/${engine}-${label}-${name}.png`;
+  await page.screenshot({ path: file });
+  result.screenshots.push({ file, sha256: hash(file) });
+}
+async function finish() {
+  const current = await state();
+  check("No real Agent commands or unexpected IPC", current.unexpected.length === 0 && !current.calls.some(call => /^(session_prompt|session_open|session_load|session_set_config)/.test(call.cmd)), current.unexpected);
+  check("Existing drafts and unrelated file feedback are unchanged", current.protectedUnchanged);
+  check("At most one simulated native page is visible", current.maximumVisible <= 1);
+  result.scenarios.push({ name: scenario, evidence: current });
+}
+try {
+  await load("three-independent-instances");
+  const ids = [];
+  for (const [letter, clicks, note, scrollY] of [["A", 2, "A_RETAINED", 700], ["B", 1, "B_RETAINED", 350], ["C", 3, "C_RETAINED", 0]]) {
+    const id = await open(letter, ids.length > 0);
+    ids.push(id);
+    await memory(id, clicks, note, scrollY);
+  }
+  let current = await state();
+  check("Three distinct living pages exist", live(current).length === 3 && new Set(ids).size === 3);
+  await activate(0, ids[0]);
+  current = await state();
+  check("Returning A retains its exact instance and memory", shown(current)[0].label === ids[0] && shown(current)[0].state.counter === "2" && shown(current)[0].state.note === "A_RETAINED" && shown(current)[0].state.scrollY === 700, shown(current)[0]);
+  await activate(1, ids[1]);
+  current = await state();
+  check("Returning B retains its independent memory", shown(current)[0].label === ids[1] && shown(current)[0].state.counter === "1" && shown(current)[0].state.note === "B_RETAINED" && shown(current)[0].state.scrollY === 350, shown(current)[0]);
+  await activate(2, ids[2]);
+  current = await state();
+  check("Returning C retains its independent memory", shown(current)[0].state.counter === "3" && shown(current)[0].state.note === "C_RETAINED" && shown(current)[0].state.scrollY === 0, shown(current)[0]);
+  await activate(1, ids[1]);
+  check("Switches do not destroy and recreate pages", current.trace.filter(item => item.stage === "create-hidden").length === 3 && !current.trace.some(item => item.stage === "close"));
+  await shot("three-pages");
+  await finish();
+
+  scenario = "keyboard-focus-is-not-selection";
+  const beforeSelectionCalls = (await state()).calls.filter(call => call.cmd === "browser_workspace_select").length;
+  await tablist().getByRole("tab").nth(1).focus();
+  await page.keyboard.press("ArrowRight");
+  current = await state();
+  check("Arrow focus leaves selected page and permission scope unchanged", current.calls.filter(call => call.cmd === "browser_workspace_select").length === beforeSelectionCalls && shown(current)[0].label === ids[1]);
+  await page.keyboard.press("Enter");
+  await waitState(s => s.pages.some(p => p.url.endsWith("/c") && p.visible));
+  check("Enter activates focused page", shown(await state())[0].label === ids[2]);
+  await finish();
+
+  scenario = "close-hidden-sibling-only";
+  const closeButtons = pane().getByRole("button", { name: /^关闭网页：/ });
+  await closeButtons.nth(1).click();
+  await waitState(s => s.pages.filter(p => !p.closed).length === 2);
+  current = await state();
+  check("Only hidden B closed; A and selected C remain", current.pages.find(p => p.label === ids[1]).closed && !current.pages.find(p => p.label === ids[0]).closed && shown(current)[0].label === ids[2]);
+  check("Exactly the hidden sibling receives close acknowledgement", current.trace.filter(item => item.stage === "close" && item.event === "ack").every(item => item.label === ids[1]));
+  const reopened = await open("B");
+  current = await state();
+  check("Reopened B is a fresh instance with initial state", reopened !== ids[1] && shown(current)[0].state.counter === "0" && shown(current)[0].state.note === "B_INITIAL");
+  check("Closed B is never reused", current.pages.find(p=>p.label===ids[1]).closed);
+  await finish();
+
+  scenario = "narrow-layout";
+  await page.setViewportSize({ width: 780, height: 840 });
+  await tablist().waitFor();
+  check("Tab controls fit narrow viewport", await tablist().evaluate(element => { const rect = element.getBoundingClientRect(); return rect.left >= 0 && rect.right <= innerWidth + 1; }));
+  check("New-page control remains operable", await pane().getByRole("button", { name: "新建网页", exact: true }).isVisible());
+  check("Page view does not cover tabs or controls", await page.evaluate(() => {
+    const pane = document.querySelector(".artifact-pane:not([hidden])");
+    const frame = [...document.querySelectorAll("iframe[data-controlled-page]")].find(el=>el.style.display!=="none");
+    if (!pane || !frame) return false;
+    const r = frame.getBoundingClientRect();
+    const controls = [...pane.querySelectorAll(".browser-workspace-tabs-row, .browser-workspace-controls")].filter(el=>el.getClientRects().length);
+    return controls.length >= 2 && controls.every(el=> { const c=el.getBoundingClientRect(); return r.top>=c.bottom-1 || r.bottom<=c.top+1 || r.right<=c.left || r.left>=c.right; });
+  }));
+  await shot("narrow-pages");
+  await finish();
+
+  await load("withdraw-quiesce-hide-before-show");
+  const qa = await open("A", false);
+  const qb = await open("B");
+  await activate(0, qa);
+  await grant();
+  const qBefore = (await state()).trace.length;
+  await configure({hold:"select-quiesce"});
+  await tablist().getByRole("tab").nth(1).click();
+  await waitState((s,id)=>s.held.some(h=>h.stage==="select-quiesce"&&h.label===id),qa);
+  current = await state();
+  check("Old grant withdrawn while new page remains hidden", !current.pages.find(p=>p.label===qa).shared && !current.pages.find(p=>p.label===qb).visible);
+  check("Quiescing cannot select or show B", current.selections["tabs-A"].label===qa && !current.trace.slice(qBefore).some(t=>t.stage==="show"&&t.label===qb));
+  await configure({hold:"select-hide"});
+  check("Release only exact old owner quiesce", await release("select-quiesce",qa)===1);
+  await waitState((s,id)=>s.held.some(h=>h.stage==="select-hide"&&h.label===id),qa);
+  check("Hide ACK is still required before B presentation", !(await state()).pages.find(p=>p.label===qb).visible);
+  await configure({hold:""});
+  check("Release exact old owner hide", await release("select-hide",qa)===1);
+  await waitShown(qb);
+  current = await state();
+  const qt = current.trace.slice(qBefore);
+  const qi = (stage,event,label) => qt.findIndex(t=>t.stage===stage && (!event||t.event===event) && t.label===label);
+  check("Observed withdrawal and ACK ordering", qi("revoke",null,qa)<qi("select-quiesce","ack",qa) && qi("select-quiesce","ack",qa)<qi("select-hide","ack",qa) && qi("select-hide","ack",qa)<qi("show","ack",qb));
+  await finish();
+
+  await load("failed-hide-preserves-owner-and-explicit-retry");
+  const fa=await open("A",false), fb=await open("B");
+  await activate(0,fa);
+  await grant();
+  await configure({fail:"select-hide"});
+  await tablist().getByRole("tab").nth(1).click();
+  await pane().locator(".browser-tabs-error[role=alert]").waitFor();
+  current=await state();
+  check("Failed hide retains both owners and never displays B", live(current).length===2 && !current.pages.find(p=>p.label===fb).visible && !current.pages.find(p=>p.label===fa).shared && current.uncertainPresentation.includes(fa));
+  await configure({fail:""});
+  // The explicit retry restores a confirmed selected presentation. Selecting B
+  // remains a separate user action; it must not resurrect the old grant.
+  await pane().getByRole("button",{name:"重试切换",exact:true}).click();
+  await pane().locator(".browser-tabs-error[role=alert]").waitFor({state:"hidden"});
+  await activate(1,fb);
+  check("Explicit recovery keeps withdrawn permission revoked", !(await state()).pages.find(p=>p.label===fa).shared);
+  await finish();
+
+  await load("same-page-collapse-and-task-switch-retain-scope");
+  const ha=await open("A",false);
+  await memory(ha,2,"HIDE_RETAINED",400);
+  await grant();
+  const hBefore=await state();
+  await pane().getByRole("button",{name:"收起对话内容",exact:true}).click();
+  await waitState(s=>s.pages.every(p=>!p.visible));
+  check("Collapse retains exact page grant", (await state()).pages.find(p=>p.label===ha).shared);
+  await page.getByRole("button",{name:"查看对话内容",exact:true}).click();
+  await waitShown(ha);
+  await task("B");
+  await waitState(s=>s.pages.every(p=>!p.visible));
+  await task("A");
+  await waitShown(ha);
+  current=await state();
+  check("Same page returns with grant and memory", shown(current)[0].shared && shown(current)[0].state.note==="HIDE_RETAINED" && shown(current)[0].state.counter==="2" && shown(current)[0].state.scrollY===400);
+  check("Presentation-only changes neither recreate nor revoke", current.trace.filter(t=>t.stage==="create-hidden").length===hBefore.trace.filter(t=>t.stage==="create-hidden").length && current.trace.filter(t=>t.stage==="revoke").length===hBefore.trace.filter(t=>t.stage==="revoke").length);
+  await finish();
+
+  for (const order of ["A-first","B-first"]) {
+    await load("late-open-exact-owner-"+order);
+    await configure({hold:"open"});
+    const la=await startOpen("A",false);
+    await task("B");
+    const lb=await startOpen("B",false);
+    check("Both pending creates have distinct hidden owners", new Set([la,lb]).size===2 && shown(await state()).length===0);
+    await configure({hold:""});
+    const releases=order==="A-first"?[la,lb]:[lb,la];
+    check("First exact owner released",await release("open",releases[0])===1);
+    await waitState((s,id)=>s.trace.some(t=>t.stage==="open"&&t.event==="ack"&&t.label===id),releases[0]);
+    if (order==="B-first") await waitShown(lb);
+    else check("A completion stays hidden while B remains pending",shown(await state()).length===0 && (await state()).held.some(h=>h.label===lb));
+    check("Second exact owner released",await release("open",releases[1])===1);
+    await waitShown(lb);
+    current=await state();
+    check("Late hidden A cannot steal B presentation", current.pages.find(p=>p.label===la).taskKey==="tabs-A" && !current.pages.find(p=>p.label===la).closed && !current.pages.find(p=>p.label===la).visible && shown(current)[0].taskKey==="tabs-B");
+    await task("A");
+    await pane().getByRole("button",{name:"显示此网页",exact:true}).click();
+    await waitShown(la);
+    check("User can explicitly display retained delayed owner", !(await state()).pages.find(p=>p.label===la).closed);
+    await finish();
+  }
+
+  await load("selection-completes-while-task-hidden");
+  const ta=await open("A",false), tb=await open("B");
+  await activate(0,ta);
+  await configure({hold:"select-hide"});
+  await tablist().getByRole("tab").nth(1).click();
+  await waitState((s,id)=>s.held.some(h=>h.stage==="select-hide"&&h.label===id),ta);
+  await task("B");
+  await configure({hold:""});
+  check("Hidden selection hide ACK released",await release("select-hide",ta)===1);
+  await waitState((s,id)=>s.selections["tabs-A"].label===id,tb);
+  check("Completing selection cannot show inactive task page",!(await state()).pages.find(p=>p.label===tb).visible);
+  await task("A");
+  await waitShown(tb);
+  check("Completed hidden selection leaves controls operable",await tablist().getByRole("tab").nth(0).isEnabled());
+  await activate(0,ta);
+  await finish();
+
+  await load("failed-hidden-close-keeps-owner-for-retry");
+  const ca=await open("A",false), cb=await open("B");
+  await configure({fail:"close"});
+  await pane().getByRole("button",{name:/^关闭网页：/}).nth(0).click();
+  await pane().locator(".browser-tabs-error[role=alert]").waitFor();
+  current=await state();
+  check("Close failure retains exact hidden owner",live(current).length===2 && !current.pages.find(p=>p.label===ca).closed);
+  await configure({fail:""});
+  await pane().getByRole("button",{name:/^关闭网页：/}).nth(0).click();
+  await waitState((s,id)=>s.pages.find(p=>p.label===id)?.closed,ca);
+  current=await state();
+  check("Explicit close retry only destroys chosen owner",live(current).length===1 && !current.pages.find(p=>p.label===cb).closed && current.trace.filter(t=>t.stage==="close"&&t.event==="ack").every(t=>t.label===ca));
+  await finish();
+
+  await load("selected-close-ACK-while-task-hidden");
+  const xa=await open("A",false), xb=await open("B");
+  await configure({hold:"close"});
+  await pane().getByRole("button",{name:/^关闭网页：/}).nth(1).click();
+  await waitState((s,id)=>s.held.some(h=>h.stage==="close"&&h.label===id),xb);
+  await task("B");
+  await configure({hold:""});
+  check("Selected hidden owner close ACK released",await release("close",xb)===1);
+  await waitState((s,id)=>s.pages.find(p=>p.label===id)?.closed,xb);
+  check("Close successor is not displayed in inactive task",!(await state()).pages.find(p=>p.label===xa).visible);
+  await task("A");
+  await waitShown(xa);
+  check("Returning task has a selected successor panel",await tablist().getByRole("tab",{selected:true}).count()===1 && await panel().count()===1);
+  check("Close removed only explicit page B",! (await state()).pages.find(p=>p.label===xa).closed);
+  await finish();
+
+  for (const delivery of ["captured-success","validate-current"]) {
+    await load("ABA-stale-snapshot-"+delivery);
+    const sa=await open("A",false), sb=await open("B");
+    await activate(0,sa);
+    await page.locator(`iframe[data-controlled-page="${sa}"]`).evaluate(frame=>{const p=frame.contentDocument.createElement("p");p.id="snapshot-marker";p.textContent="P30_OLD_CAPTURED_MARKER";frame.contentDocument.body.prepend(p);});
+    const stage=delivery==="captured-success"?"snapshot-delivery":"snapshot";
+    await configure({hold:stage,snapshotDelivery:delivery});
+    await panel().getByRole("button",{name:"读取文字快照",exact:true}).click();
+    await waitState((s,d)=>s.held.some(h=>h.stage===d.stage&&h.label===d.id),{stage,id:sa});
+    await activate(1,sb);
+    await activate(0,sa);
+    await page.locator(`iframe[data-controlled-page="${sa}"]`).evaluate(frame=>{frame.contentDocument.getElementById("snapshot-marker").textContent="P30_NEW_EXPLICIT_MARKER";});
+    await configure({hold:"",snapshotDelivery:"validate-current"});
+    check("Old snapshot response released for exact page",await release(stage,sa)===1);
+    await waitState((s,d)=>s.trace.some(t=>t.stage===d.stage&&t.label===d.id&&t.event==="ack"),{stage,id:sa});
+    // Await render frames, without issuing another read that could hide stale UI.
+    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    check("Stale result never populates current snapshot", !(await panel().locator(".browser-workspace-snapshot").allTextContents()).join(" ").includes("P30_OLD_CAPTURED_MARKER"));
+    await panel().getByRole("button",{name:"读取文字快照",exact:true}).click();
+    await panel().locator(".browser-workspace-snapshot").getByText(/P30_NEW_EXPLICIT_MARKER/).waitFor();
+    check("Fresh explicit read alone presents new content",!(await panel().locator(".browser-workspace-snapshot").innerText()).includes("P30_OLD_CAPTURED_MARKER"));
+    await finish();
+  }
+} catch (error) {
+  result.failure = String(error?.stack ?? error);
+  if (page) {
+    result.lastState = await state().catch(() => null);
+    result.lastVisibleText = await page.locator("body").innerText().catch(() => "");
+  }
+  process.exitCode = 1;
+} finally {
+  result.after = inventory();
+  result.inputsStable = JSON.stringify(result.before) === JSON.stringify(result.after);
+  result.passed = !result.failure && result.inputsStable && result.errors.length === 0 && result.externalRequests.length === 0 && result.checks.every(check => check.pass);
+  if (!result.passed) process.exitCode = 1;
+  fs.writeFileSync(destination, JSON.stringify(result, null, 2) + "\n", { flag: "wx" });
+  await browser.close();
+  console.log(JSON.stringify({ path: destination, passed: result.passed, checks: result.checks.length, scenarios: result.scenarios.length, inputsStable: result.inputsStable, error: result.failure?.split("\n")[0] }));
+}

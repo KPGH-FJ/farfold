@@ -200,6 +200,8 @@ pub fn run() {
                 browser_sharing::browser_share_allow,
                 browser_sharing::browser_share_respond,
                 browser_sharing::browser_share_stop,
+                browser_workspace::tab_commands::browser_workspace_tabs,
+                browser_workspace::tab_commands::browser_workspace_select,
                 browser_workspace::browser_workspace_open,
                 browser_workspace::browser_workspace_open_html,
                 browser_workspace::preview_commands::browser_workspace_open_directory,

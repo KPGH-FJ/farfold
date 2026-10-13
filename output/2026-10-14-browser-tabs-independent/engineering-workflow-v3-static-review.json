@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "scope": "Authored output-only preparation, reviewed statically with AST/text and exact historical receipt hashes. No publisher, selector, renderer function/main or tests executed.",
+  "status": "READY_FOR_PARENT_STATIC_REVIEW_THIRD_RESULT_UNKNOWN",
+  "files": [
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/publish_checks-v3.py",
+      "bytes": 9179,
+      "sha256": "616a0ef24a7b669a95216bf546cde4238721934db2633141e463048134f1af54"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/publish_checks-v2-to-v3.diff",
+      "bytes": 14816,
+      "sha256": "076249656c2341b02892703d4a4b4cd3a54e973369c1dbab1e7aa417426afd95"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checkpoint-argv-03-prepared.json",
+      "bytes": 33345,
+      "sha256": "b9f040d65a7c34083c48d85f37c3c8135701517813c544f7285a4d4e926f5c3f"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/workflow-v3-preparation.json",
+      "bytes": 4953,
+      "sha256": "c0d96e789a0618453c05d663fad9c1f661c5154ed7ad5c566868e46976a841ac"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-install-preparation/render.py",
+      "bytes": 23872,
+      "sha256": "c5cbd92bbd8639ae14e4778b7cb09526f2ab4f36fe701a9c69dc3478f19ada38"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-install-preparation/render-before-retained-list.py.raw",
+      "bytes": 20283,
+      "sha256": "a94cb1f38215b01c50826b5f4b5532a001daecfc91827eba515ba1e349b6bf7d"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-install-preparation/render-retained-list.diff",
+      "bytes": 4430,
+      "sha256": "e11550769c63ae64a06b93127cace2ff8b16be14d9fed9496fb92abb0c9ebc54"
+    }
+  ],
+  "publisher": {
+    "currentRun": "checks-run-03",
+    "currentFreeze": "checks-freeze-03/freeze.json",
+    "currentSuccessUnknown": true,
+    "priorRuns": [
+      {
+        "run": "checks-run",
+        "summarySha256": "cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685",
+        "freezeSha256": "424053c3ebbae4e6041cea3344a0f8e4dbab9fd8f2914d80887ca608f151918f",
+        "actualRootChunk": "a9baaa",
+        "actualRootExitCode": 1
+      },
+      {
+        "run": "checks-run-02",
+        "summarySha256": "9b830d61a4a44a7130dd7821f18af0e3128b55f34b0d38b945b09755d9236ee5",
+        "freezeSha256": "3c498f0e173aa83292014037a729e167873a2ab9748f4adbb8964830f91a135b",
+        "actualRootChunk": "174aac",
+        "actualRootExitCode": 1
+      }
+    ],
+    "expectedCopiesIfSuccess": 108,
+    "allCurrentAndHistoricalGatesBeforeFirstPublicWrite": true,
+    "allSevenExactCommandsAndActualCompletedRecordsRequired": true,
+    "currentInputAndProtectedBytesRequired": true,
+    "priorSummaryFreezePinsAndBeforeAfterProtectedEqualityRequired": true,
+    "bothPriorFailuresPreservedByteExact": true,
+    "noThirdRunNumericPassCountPrewritten": true
+  },
+  "renderer": {
+    "newMode": "retainedPriorRuns",
+    "listMinimum": 2,
+    "listOrderExact": true,
+    "privatePublicSummaryPathUniqueness": true,
+    "perItemValidationReusesExistingSingleFailureHelper": true,
+    "existingNoneAndSingleBranchAstUnchangedAfterNewDispatch": true,
+    "otherFunctionsUnchanged": [
+      "sha",
+      "once",
+      "assignments",
+      "function",
+      "scope",
+      "set_scope",
+      "transform",
+      "configuration",
+      "main"
+    ],
+    "noHistoricalQuitDataInstallSourceGatesChanged": true,
+    "embeddedTemplatesParseAsPython": true,
+    "runtimeBranchesOrGeneratedToolsExecuted": false
+  },
+  "checkpoint": {
+    "selectorUnmodified": {
+      "path": "output/2026-10-14-browser-tabs-integration/prepare_checkpoint.py",
+      "bytes": 13313,
+      "sha256": "6c72832cd876743afb7f53831faf3a9cb5f82d5957b8d01328010dbd929da343"
+    },
+    "twoPriorRunsRequiredCopyCount": 72,
+    "backendOwnerPathHashCountExplicitPending": true,
+    "frontendOwnerCount": 17,
+    "sourceCoverageCannotExcludeFutureTestChange": true,
+    "threeProtectedPathsStillExcluded": true,
+    "futureInputCountAndSummaryPinsUnknown": true
+  },
+  "boundary": "Both real formal runs remain failures; diagnostic passes are not a repair. Later execution remains contingent on actual run03 success and a newly reviewed final inventory/owner set. No current public evidence or source/docs/contract changed.",
+  "safeForPublicCopy": true
+}

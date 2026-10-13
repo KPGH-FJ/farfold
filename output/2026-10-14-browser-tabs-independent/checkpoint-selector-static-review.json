@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "status": "NO_STATIC_BLOCKER_PENDING_REAL_FINAL_RECEIPTS",
+  "script": {
+    "path": "output/2026-10-14-browser-tabs-integration/prepare_checkpoint.py",
+    "bytes": 13313,
+    "sha256": "6c72832cd876743afb7f53831faf3a9cb5f82d5957b8d01328010dbd929da343"
+  },
+  "reviewMethod": "Read-only source/AST; did not import or execute the script or its Git functions.",
+  "verifiedGuards": [
+    "Current exact HEAD and empty index before/after; script only writes two exclusive output plan files.",
+    "Explicit final inventory/freeze/summary/public verification hashes; seven original completion objects, exact argv/cwd/raw exits and both log hashes required.",
+    "Physical source membership equals freeze; all changed/untracked source covered by two disjoint exact owner manifests, with explicit actual owner counts.",
+    "All frozen bytes and PRODUCT/two original dirty README hashes verified again; protected paths excluded from selection.",
+    "Only exact public manifest destinations/metadata and explicit reviewed auxiliary frozen inputs selected; no recursive evidence copying or directory-wide staging.",
+    "All frozen inputs must match Git base blob+mode or join this exact checkpoint; changed tracked auxiliary inputs cannot silently escape closure.",
+    "Publication original/published pairs byte/hash equal; caller required failures and final seven original receipts must have exact public copies."
+  ],
+  "executionPrerequisites": [
+    "Supply newly fixed frontend freeze and final browser evidence after current retention defect is resolved; old138 cannot close it.",
+    "Actual seven-check completion and public manifests do not yet exist for final P30 scope; no execution permission implied by static review.",
+    "Final explicit --required-copy list and publication/aux-root lists need privacy and historical-failure review; this generic selector validates bytes, not semantic privacy.",
+    "Include prepare_checkpoint.py itself among final frozen inputs via explicit inventory extra; script adds itself to selection but does not require membership internally."
+  ],
+  "scope": "No source/docs/input changes, no stage/copy/tests/App/Agent/DB. Existing unrelated dirty files stay outside explicit selection."
+}

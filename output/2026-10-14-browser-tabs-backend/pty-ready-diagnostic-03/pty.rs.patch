@@ -1,0 +1,101 @@
+--- a/src-tauri/src/pty.rs
++++ b/src-tauri/src/pty.rs
+@@ -26,6 +26,19 @@
+ /// Output sink: the command layer wraps the frontend `Channel`; tests pass a
+ /// collecting closure. Receives `{id, data?}` (base64) and `{id, exit}` frames.
+ pub(crate) type PtySink = Arc<dyn Fn(serde_json::Value) + Send + Sync>;
++
++// Temporary diagnostic observation, confined to the one opted-in test instance.
++#[cfg(test)]
++pub(crate) struct PtyReadObservation {
++    pub phase: &'static str,
++    pub observed_at: Instant,
++    pub stop: bool,
++    pub count: Option<usize>,
++    pub error_kind: Option<std::io::ErrorKind>,
++    pub raw_os_error: Option<i32>,
++}
++#[cfg(test)]
++type PtyReadObserver = Arc<dyn Fn(PtyReadObservation) + Send + Sync>;
+ 
+ fn now_millis() -> u64 {
+     SystemTime::now()
+@@ -54,6 +67,8 @@
+     sessions: Mutex<HashMap<String, Arc<PtySession>>>,
+     counter: AtomicU64,
+     shutting_down: AtomicBool,
++    #[cfg(test)]
++    read_observer: Mutex<Option<PtyReadObserver>>,
+ }
+ 
+ impl PtyManager {
+@@ -62,7 +77,14 @@
+             sessions: Mutex::new(HashMap::new()),
+             counter: AtomicU64::new(1),
+             shutting_down: AtomicBool::new(false),
+-        }
++            #[cfg(test)]
++            read_observer: Mutex::new(None),
++        }
++    }
++
++    #[cfg(test)]
++    pub(crate) fn set_read_observer_for_test(&self, observer: PtyReadObserver) {
++        *self.read_observer.lock().unwrap() = Some(observer);
+     }
+ 
+     fn lock(&self) -> Result<std::sync::MutexGuard<'_, HashMap<String, Arc<PtySession>>>, String> {
+@@ -244,19 +266,52 @@
+         // Reader thread: streams master output to the frontend channel.
+         {
+             let id = id.clone();
++            #[cfg(test)]
++            let read_observer = self.read_observer.lock().unwrap().clone();
++            #[cfg(test)]
++            let reader_stop = stop.clone();
+             thread::spawn(move || {
+                 let mut buffer = [0u8; 8192];
++                #[cfg(test)]
++                let observe = |phase, outcome: Option<&std::io::Result<usize>>| {
++                    if let Some(observer) = &read_observer {
++                        observer(PtyReadObservation {
++                            phase,
++                            observed_at: Instant::now(),
++                            stop: reader_stop.load(Ordering::SeqCst),
++                            count: outcome.and_then(|result| result.as_ref().ok().copied()),
++                            error_kind: outcome
++                                .and_then(|result| result.as_ref().err().map(|error| error.kind())),
++                            raw_os_error: outcome.and_then(|result| {
++                                result.as_ref().err().and_then(|error| error.raw_os_error())
++                            }),
++                        });
++                    }
++                };
++                #[cfg(test)]
++                observe("reader-enter", None);
+                 loop {
+-                    match reader.read(&mut buffer) {
++                    #[cfg(test)]
++                    observe("read-start", None);
++                    let outcome = reader.read(&mut buffer);
++                    #[cfg(test)]
++                    observe("read-return", Some(&outcome));
++                    match outcome {
+                         Ok(0) | Err(_) => break,
+                         Ok(count) => {
++                            #[cfg(test)]
++                            observe("sink-start", None);
+                             on_output(serde_json::json!({
+                                 "id": id,
+                                 "data": BASE64.encode(&buffer[..count]),
+                             }));
++                            #[cfg(test)]
++                            observe("sink-return", None);
+                         }
+                     }
+                 }
++                #[cfg(test)]
++                observe("reader-exit", None);
+             });
+         }
+ 

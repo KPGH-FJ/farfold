@@ -1,0 +1,22 @@
+{
+  "source": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "scope": "Exact failed browser command records during bidirectional retention diagnosis; diagnostic wrappers transparent; not final acceptance",
+  "records": [
+    {
+      "run": "chromium-run6",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-diagnostics/chromium-run6-16298.jsonl.raw",
+      "sourceLine": 16298,
+      "exitCode": 1,
+      "bytes": 2688,
+      "sha256": "a9fa38b38163f36aa5ee28b94db030ae719b8018d1748aea0257e3bd82acb5b7"
+    },
+    {
+      "run": "chromium-run7",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-diagnostics/chromium-run7-16334.jsonl.raw",
+      "sourceLine": 16334,
+      "exitCode": 1,
+      "bytes": 4066,
+      "sha256": "2ae58250a53453883eed3b517004566ce3fbbd6204108cac3dd363d7229b6e64"
+    }
+  ]
+}

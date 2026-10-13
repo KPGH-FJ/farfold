@@ -1,0 +1,186 @@
+{
+  "scope": "Independent static frontend review plus saved completion/log and final-source hash verification. No tests/browser/native/App/Agent/database execution.",
+  "observedAtUtc": "2026-10-13T21:26:46.368167+00:00",
+  "verdict": "No remaining identified frontend blocker in the reviewed scope at frozen v2. Backend ownership/ACK review and root full-App execution are separate.",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v2.json",
+    "bytes": 5092,
+    "sha256": "ac769fb970af141ae56ab03e77b159de651ef76511f1b1ec658d0f63120cecbb"
+  },
+  "summary": {
+    "path": "output/2026-10-14-browser-tabs-frontend/summary-v2.json",
+    "bytes": 2280,
+    "sha256": "33d5d2ae14773246eeef3dc6801a2dac594e4c06e3e66c3277cf9a1f426e369c"
+  },
+  "all16CurrentFilesMatchFreeze": true,
+  "v1ToV2ChangedFiles": [
+    "src/runtime/browser_tabs.ts",
+    "src/runtime/browser_tabs.test.ts"
+  ],
+  "other14ByteExact": true,
+  "checks": [
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/hidden-close-red.completed.json",
+        "bytes": 803,
+        "sha256": "7f1d127bb7a173e6826fa106a33af2d3d4c20b95e560320c34305aabcefd7e78"
+      },
+      "actualExitCode": 1,
+      "logs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-frontend/hidden-close-red.stdout.log",
+          "bytes": 462,
+          "sha256": "4e3b9a0deff174f0ccaf1701e82177f89d63069e83f25be0e13c088bdfe1ab69"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-frontend/hidden-close-red.stderr.log",
+          "bytes": 985,
+          "sha256": "f3b832263738c995812a7af619129c0f190a0d554de2cb34f0cb646befc75b7d"
+        }
+      ]
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/format-v2.completed.json",
+        "bytes": 773,
+        "sha256": "986f6980183f9719b8adcb9880d0bf954cecf9296bbfe4825389500e8943a979"
+      },
+      "actualExitCode": 0,
+      "logs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-frontend/format-v2.stdout.log",
+          "bytes": 84,
+          "sha256": "75265e8f2f7b35f27413936f4f422af3f8d3d22403579cab4d6387840b75ef09"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-frontend/format-v2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/targeted-v2.completed.json",
+        "bytes": 1150,
+        "sha256": "d9d221674c03fab1d5e3897b6178d4ff489397dc2ab9d4294c3465e04f9fb57d"
+      },
+      "actualExitCode": 0,
+      "logs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-frontend/targeted-v2.stdout.log",
+          "bytes": 216,
+          "sha256": "6834a5298d68ba8b365bfcee2aad5854cbefdf9dd536b6b14e54e5541b355b7b"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-frontend/targeted-v2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/typecheck-v2.completed.json",
+        "bytes": 678,
+        "sha256": "713bed4565c90c05d88dd692b6b97402119c53c6b6666a773f328b3fda2c4d47"
+      },
+      "actualExitCode": 0,
+      "logs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-frontend/typecheck-v2.stdout.log",
+          "bytes": 78,
+          "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-frontend/typecheck-v2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/format-check-v2.completed.json",
+        "bytes": 785,
+        "sha256": "5fa1f0a396ee90417759be49d3b46af69ba4044f2b049859d3c966412f416c14"
+      },
+      "actualExitCode": 0,
+      "logs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-frontend/format-check-v2.stdout.log",
+          "bytes": 66,
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-frontend/format-check-v2.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "results": {
+    "targetedFiles": 10,
+    "targetedTestsPassed": 235,
+    "hiddenSelectedCloseOriginalRedFailures": 2,
+    "typecheckActualExitCode": 0,
+    "changedFilesFormatCheckActualExitCode": 0
+  },
+  "reviewedBehavior": [
+    {
+      "path": "src/runtime/browser_tabs.ts",
+      "lines": [
+        172,
+        202
+      ],
+      "result": "Explicit selection ACK commits while task hidden; finally clears changing. Active visibility remains separately gated."
+    },
+    {
+      "path": "src/runtime/browser_tabs.ts",
+      "lines": [
+        227,
+        268
+      ],
+      "result": "Selected-close ACK now publishes a valid successor and retains changing through native successor selection. Hidden task completes that prior explicit action without show. Failure retains failed presentation gate and an extant local tab."
+    },
+    {
+      "path": "src/runtime/browser_tabs.ts",
+      "lines": [
+        330,
+        365
+      ],
+      "result": "Show intent checks active/selected/selection revision before and after await. Snapshot response re-reads current backend selection and rejects ABA or inactive owner. A successful old response is not accepted solely because label returned to A."
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tsx",
+      "lines": [
+        69,
+        81
+      ],
+      "result": "Layout-installed subscription publishes ownership synchronously for pending open; active tab panel visibility remains separate from all mounted page scopes."
+    },
+    {
+      "path": "src/runtime/browser_workspace.ts",
+      "lines": [
+        302,
+        341
+      ],
+      "result": "SelectionChanged is a withdrawn intent and does not retire the surface. Other native visibility failure retires while preserving exact owner for close retry."
+    },
+    {
+      "path": "src/components/BrowserWorkspacePage.tsx",
+      "lines": [
+        236,
+        322
+      ],
+      "result": "One-time exact initial owner adoption is deferred past discarded StrictMode setup. Delayed listeners are cleaned up and do not replace newer scope."
+    }
+  ],
+  "evidenceLimitations": [
+    "V2 final freeze explicitly records that no separate pre-run hash manifest was captured for the two changed files. Current final bytes and saved v2 results are verified; this report does not invent pre-run stability proof for those two files.",
+    "V1 original failures remain in owner output, including genuine hidden-select defect and harness/fixture mistakes distinguished by summary. The two hidden-close red failures remain and are not rewritten.",
+    "Root browser runs are separate and were not yet read as completed in this review. No installed-product, real native ACK, Windows, Agent or restart tab-list recovery acceptance."
+  ],
+  "openBackendReview": "Creation_pending barrier and Windows exact owner retention are currently under backend owner review; no backend final verdict is made here."
+}

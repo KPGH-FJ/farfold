@@ -1,0 +1,13 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/App.navigation.test.tsx (56 tests | 1 failed) 320ms
+   × retains every page-owning task while each exact task can release only itself 10ms
+ ❯ src/components/BrowserWorkspace.test.tsx (51 tests | 1 failed) 5448ms
+   × keeps the exact page alive when collapsed and reports only actual hide ACK 1074ms
+
+ Test Files  2 failed | 4 passed (6)
+      Tests  2 failed | 158 passed (160)
+   Start at  05:13:24
+   Duration  6.79s (transform 1.15s, setup 0ms, import 5.85s, tests 6.17s, environment 0ms)
+

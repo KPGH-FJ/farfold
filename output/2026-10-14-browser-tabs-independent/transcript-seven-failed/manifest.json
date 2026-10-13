@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "scope": "Only exact root session69704 command completion and a9baaa original tool output; no other history copied.",
+  "records": [
+    {
+      "sourceLine": 17030,
+      "sourceByteOffset": 48054194,
+      "sourceByteLength": 3853,
+      "path": "output/2026-10-14-browser-tabs-independent/transcript-seven-failed/seven-check-command-completed.jsonl.raw",
+      "bytes": 3853,
+      "sha256": "16b54bc36ace6af3bff05a7d8775fdab217e6bc5db41cbb6dc442e2f6efa6966",
+      "actualExitCode": 1
+    },
+    {
+      "sourceLine": 17038,
+      "sourceByteOffset": 48067105,
+      "sourceByteLength": 1241,
+      "path": "output/2026-10-14-browser-tabs-independent/transcript-seven-failed/seven-check-tool-output.jsonl.raw",
+      "bytes": 1241,
+      "sha256": "315ea46bc4e1febaf18b9bdb7f1e9b2a6587a47841e130c592308ef02ac17d8a",
+      "actualExitCode": 1
+    }
+  ]
+}

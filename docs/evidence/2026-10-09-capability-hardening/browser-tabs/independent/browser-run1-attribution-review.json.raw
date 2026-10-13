@@ -1,0 +1,25 @@
+{
+  "scope": "Read-only attribution of existing controlled Chromium run1; no rerun, source change or guard relaxation.",
+  "observedAtUtc": "2026-10-13T21:29:08.024410+00:00",
+  "result": {
+    "path": "output/2026-10-14-browser-tabs-browser/chromium-run1.json",
+    "bytes": 705487,
+    "sha256": "46f688ec749671fbe20b468a9638134be36b729e2c753bd0c0f0876b1b0aeb70"
+  },
+  "passed": false,
+  "actualProcessExit": "1 reported by root; this report independently reads saved failed browser result, not a new command execution.",
+  "completedScenarios": 7,
+  "recordedChecks": 68,
+  "inputsStable": true,
+  "pageErrors": 0,
+  "externalRequests": 0,
+  "classification": "Harness assumes a task route completed before the existing native-surface hide guard could acknowledge it.",
+  "evidence": [
+    "Only task A page exists; its open response is held, selection map empty, no B page was created.",
+    "Visible UI remains P30_TASK_A with transition notice; failing fill resolves the disabled A address field.",
+    "App afterBrowserClose uses browserSurfaceGuard.runLatest; guard hides registered owner before route callback. Scope.setVisible(false) waits pending opening first."
+  ],
+  "minimumCorrection": "Observe route pending, release the exact open response, await hide ACK and actual task-B identity before operating B. Keep opposite-order multi-owner delivery as a controller/transport-level case unless a genuine whole-App path provides that precondition.",
+  "relatedCaution": "A pending selected-close can likewise block App navigation until the exact close/guard transition settles. Its controller hidden-state red/green remains valid at that direct controller boundary; do not label it an already-reached full-App route.",
+  "reviewCorrection": "Earlier v3/v4 static harness reviews did not identify this route guard precondition. Those reports remain unchanged; their no-identified-startup-blocker conclusion does not override this observed failed run."
+}

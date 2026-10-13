@@ -1,0 +1,35 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/BrowserWorkspace.tabs.test.tsx > offers an accessible tab list and explicit new-page action
+AssertionError: expected '<section class="browser-workspace" ar…' to contain 'role="tablist"'
+
+Expected: "role="tablist""
+Received: "<section class="browser-workspace" aria-label="网页"><div class="browser-workspace-controls"><form noValidate=""><label class="browser-workspace-sr-only" for="_R_0_">公开网页地址</label><div class="browser-workspace-address-row"><button type="button" class="browser-workspace-icon" title="重新加载网页" aria-label="重新加载网页" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M240,56v48a8,8,0,0,1-8,8H184a8,8,0,0,1,0-16H211.4L184.81,71.64l-.25-.24a80,80,0,1,0-1.67,114.78,8,8,0,0,1,11,11.63A95.44,95.44,0,0,1,128,224h-1.32A96,96,0,1,1,195.75,60L224,85.8V56a8,8,0,1,1,16,0Z"></path></svg></button><div class="browser-workspace-address-box"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><input id="_R_0_" type="url" placeholder="https://example.com" autoComplete="off" autoCapitalize="none" spellCheck="false" aria-describedby="_R_0H1_" value=""/></div><button type="submit" class="browser-workspace-icon" title="打开" aria-label="打开" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path></svg></button><button type="button" class="browser-workspace-icon" title="读取文字快照" aria-label="读取文字快照" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M32,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H40A8,8,0,0,1,32,64Zm8,48H168a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16Zm176,24H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm-48,40H40a8,8,0,0,0,0,16H168a8,8,0,0,0,0-16Z"></path></svg></button><button type="button" class="browser-workspace-icon" title="关闭网页" aria-label="关闭网页" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button></div><p id="_R_0H1_" class="browser-workspace-sr-only">输入完整的 HTTPS 网址。</p></form><div class="browser-workspace-access-row"><span class="browser-workspace-sharing">未向 Agent 分享</span><div class="browser-workspace-file-actions"><select aria-label="打开来源"><option value="public" selected="">公开网页</option><option value="development">本机服务</option></select><button type="button" disabled="">打开项目网页…</button><button type="button" disabled="">打开 HTML…</button><details class="browser-workspace-help"><summary>公开网页</summary><p>仅用于公开网页。请勿登录、切换账号或输入密码等秘密信息。</p></details></div></div></div><div class="browser-workspace-surface" aria-label="网页"><div class="browser-workspace-empty"><strong>在这里查看网页</strong><p>输入网址或本机服务地址，也可打开项目网页。内容不会自动发给 Agent。</p></div></div></section>"
+
+ ❯ src/components/BrowserWorkspace.tabs.test.tsx:11:16
+      9|     <BrowserWorkspace taskKey="task-a" active client={client} />,
+     10|   );
+     11|   expect(html).toContain('role="tablist"');
+       |                ^
+     12|   expect(html).toContain('aria-label="网页标签"');
+     13|   expect(html).toContain('aria-label="新建网页"');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/BrowserWorkspace.tabs.test.tsx > bridges explicit page selection independently of page navigation
+AssertionError: expected 'undefined' to be 'function' // Object.is equality
+
+Expected: "function"
+Received: "undefined"
+
+ ❯ src/components/BrowserWorkspace.tabs.test.tsx:19:32
+     17|   const invoke = vi.fn(async () => ({}));
+     18|   const client = createBrowserWorkspaceClient(invoke as any, vi.fn()) …
+     19|   expect(typeof client.select).toBe("function");
+       |                                ^
+     20|   await client.select({
+     21|     taskKey: "task-a",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

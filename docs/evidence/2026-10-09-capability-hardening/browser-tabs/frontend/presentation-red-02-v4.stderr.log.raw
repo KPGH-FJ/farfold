@@ -1,0 +1,59 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/BrowserWorkspace.presentation.test.tsx > does not close a retained owner from an obsolete frame after {"active":false}
+ FAIL  src/components/BrowserWorkspace.presentation.test.tsx > does not close a retained owner from an obsolete frame after {"visible":false}
+ FAIL  src/components/BrowserWorkspace.presentation.test.tsx > does not close a retained owner from an obsolete frame after {"presentationSuspended":true}
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "label": "page-b",
+        "taskKey": "task-b",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/BrowserWorkspace.presentation.test.tsx:109:28
+    107|   frame();
+    108|   await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    109|   expect(client.close).not.toHaveBeenCalled();
+       |                            ^
+    110|   expect(client.resize).not.toHaveBeenCalled();
+    111|   for (const effect of h.pending.splice(0)) effect();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/components/BrowserWorkspace.presentation.test.tsx > ignores an old resize rejection after the owner has become inactive
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "label": "page-b",
+        "taskKey": "task-b",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/BrowserWorkspace.presentation.test.tsx:130:28
+    128|   reject(new Error("previous presentation resize failed"));
+    129|   await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    130|   expect(client.close).not.toHaveBeenCalled();
+       |                            ^
+    131| });
+    132|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+

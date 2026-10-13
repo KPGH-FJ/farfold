@@ -1,0 +1,57 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.navigation.test.tsx > retains every page-owning task while each exact task can release only itself
+TypeError: Cannot read properties of undefined (reading 'then')
+ ❯ src/App.tsx:529:9
+    527|         cwd: row.cwd,
+    528|         nativeSessionId: row.nativeSessionId,
+    529|       })
+       |         ^
+    530|       .then(
+    531|         (state) => followRecovery(key, request, state.key),
+ ❯ Object.action src/App.tsx:113:41
+ ❯ BrowserSurfaceGuard.advance src/runtime/browser_surface_guard.ts:179:70
+ ❯ BrowserSurfaceGuard.runLatest src/runtime/browser_surface_guard.ts:112:10
+ ❯ Object.onOpen src/App.tsx:113:25
+ ❯ call src/App.test-harness.ts:258:26
+ ❯ open src/App.navigation.test.tsx:1053:33
+ ❯ src/App.navigation.test.tsx:1061:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > keeps the exact page alive when collapsed and reports only actual hide ACK
+AssertionError: expected "vi.fn()" to be called with arguments: [ { taskKey: 'task-a', …(2) } ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    {
++     "bounds": {
++       "height": 500,
++       "width": 400,
++       "x": 600,
++       "y": 200,
++     },
+      "label": "page-a",
+      "taskKey": "task-a",
+-     "visible": false,
++     "visible": true,
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ src/components/BrowserWorkspace.test.tsx:425:32
+    423|   render({ ...props, visible: false });
+    424|   await vi.waitFor(() =>
+    425|     expect(backend.setVisible).toHaveBeenCalledWith({
+       |                                ^
+    426|       taskKey: "task-a",
+    427|       label: "page-a",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

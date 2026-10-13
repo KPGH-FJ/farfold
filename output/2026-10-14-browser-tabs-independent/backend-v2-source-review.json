@@ -1,0 +1,129 @@
+{
+  "scope": "Independent static review of backend runtime tabs, saved controlled red/green and final freeze. No generated main, cargo, native, Windows, App, process, Agent or database execution.",
+  "observedAtUtc": "2026-10-13T21:28:42.900124+00:00",
+  "verdict": "No remaining identified blocker in the reviewed backend source scope at frozen v2. Windows owner preservation is source-only evidence; native installation/interaction remains untested.",
+  "freeze": {
+    "path": "output/2026-10-14-browser-tabs-backend/source-freeze-v2.json",
+    "bytes": 17066,
+    "sha256": "d55be973509726b8298e220624a732a55a0f027d82a8365dca18435b227e149a"
+  },
+  "handoff": {
+    "path": "output/2026-10-14-browser-tabs-backend/handoff-v2.json",
+    "bytes": 2266,
+    "sha256": "04097652c4271821838bf146a78ada79b3bdca2dc9fb8bffbcde2899dac476d9"
+  },
+  "currentOwnedFilesVerified": 14,
+  "unchangedSharedFilesVerified": 5,
+  "allSavedStageRefsVerified": 42,
+  "selectedActualReceipts": [
+    {
+      "stage": "review-red-01",
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-backend/review-red-01/completed.json",
+        "bytes": 3657,
+        "sha256": "e8fd0373b00c76ba0772b959344022b7d8906e5cfbfefe8b57942148e494e912"
+      },
+      "actualExitCode": 101,
+      "testSummary": "test result: FAILED. 0 passed; 2 failed;",
+      "sourceStable": true
+    },
+    {
+      "stage": "review-green-01",
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-backend/review-green-01/completed.json",
+        "bytes": 3658,
+        "sha256": "1843ef8b05f1429afabcd29bac3ac58fa237a694a38d1db61c812736e6c8b6eb"
+      },
+      "actualExitCode": 0,
+      "testSummary": "test result: ok. 2 passed; 0 failed;",
+      "sourceStable": true
+    },
+    {
+      "stage": "review-red-02",
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-backend/review-red-02/completed.json",
+        "bytes": 3661,
+        "sha256": "45655d5c465b0da5028c4620f13134e3dc93154a23239c5168892ca160beebe1"
+      },
+      "actualExitCode": 101,
+      "testSummary": "test result: FAILED. 8 passed; 2 failed;",
+      "sourceStable": true
+    },
+    {
+      "stage": "review-green-02",
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-backend/review-green-02/completed.json",
+        "bytes": 3666,
+        "sha256": "1b3449c9587849733d688ecaa4147cc4cecea1d57f69ca8d337a87518434b8c6"
+      },
+      "actualExitCode": 0,
+      "testSummary": "test result: ok. 10 passed; 0 failed;",
+      "sourceStable": true
+    },
+    {
+      "stage": "browser-regression-03",
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-backend/browser-regression-03/completed.json",
+        "bytes": 3659,
+        "sha256": "e986f976b75c69d69d4b4e68b47867ae3770ae81df7a98f9b75548ecf32510a2"
+      },
+      "actualExitCode": 0,
+      "testSummary": "test result: ok. 178 passed; 0 failed;",
+      "sourceStable": true
+    },
+    {
+      "stage": "fmt-check-02",
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-backend/fmt-check-02/completed.json",
+        "bytes": 3603,
+        "sha256": "47ef79b3d69f2b03f60d213c377f3f7da3ecce955d5373fa3e0517cd4263f300"
+      },
+      "actualExitCode": 0,
+      "testSummary": null,
+      "sourceStable": true
+    }
+  ],
+  "reviewedMechanisms": [
+    {
+      "path": "src-tauri/src/browser_workspace/tab_commands.rs",
+      "subject": "Selection transaction",
+      "conclusion": "Exact task/label/revision admission; old control revision advances before async work, page read gate is revoked before actual stop/quiesce then hide ACK; selected page changes only after those ACKs. Failed selection retains exact owner, withdrawn authority and retry state."
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_read.rs",
+      "subject": "Read authority and lock order",
+      "conclusion": "Captured ticket pins selection revision as well as page/navigation identity, and retains nonrevivable page gate. Validated read lock order page gate -> grant/action lease -> Store; withdrawal clones under Store and revokes after dropping Store. Returning A does not revive a prior captured gate."
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/permission.rs",
+      "subject": "Hidden sibling and delayed approval",
+      "conclusion": "Pending permission invalidation now requires exact same label before revision/url/phase mismatch. Production page_changed/waiter test preserves another page request; exact owner change still cancels. Delayed unadmitted allow fails old page revision after A-B-A through actual capture_read_scope."
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_store.rs",
+      "subject": "Ownership/creation/close",
+      "conclusion": "Every reservation retains owner with creation_pending; only acknowledged hidden create or hide clears it, exact close ACK removes it. Visibility admission and native show check reject any unconfirmed creation. Failed close retains owner, shutdown revokes all gates before native teardown. Same local-storage partition sibling prevents destructive clear before sibling close ACK."
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/windows/mod.rs",
+      "subject": "Windows source-only owner retention",
+      "conclusion": "CREATING tracks async callbacks; UNFINISHED retains returned controller before fallible initialization; successful View adoption is registered before event/resource installation. close refuses unfinished creation and removes each controller/View only after Close succeeds; failure and late completion reuse exact-id cleanup. No ignored Close is treated as acknowledged removal."
+    },
+    {
+      "path": "src-tauri/native/BrowserWorkspace.m",
+      "subject": "macOS initial visibility",
+      "conclusion": "WK view begins hidden; selected-page guarded show is explicit. This source behavior was compiled by owner macOS checks but actual native presentation was not observed here."
+    }
+  ],
+  "preservedFailures": [
+    "Original second-reservation red 101 remains.",
+    "review-red-01 retains two genuine permission/ABA failures; green-01 covers those actual production boundaries.",
+    "review-red-02 retains two failures among 10, for stale selection error and unconfirmed creation; green-02 is separate."
+  ],
+  "limits": [
+    "No Windows build or runtime verification.",
+    "Controlled stop/hide futures prove production transaction order and state behavior, not real OS ACK or transport recall of already delivered data.",
+    "Final 178 tests are browser-related targeted regression, not full seven-check engineering.",
+    "Runtime-only tab ownership does not implement durable restart tab recovery or establish complete P30 acceptance."
+  ]
+}

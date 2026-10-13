@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "preparedAtUtc": "2026-10-13T23:08:55.267575+00:00",
+  "originalSources": [
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 24547,
+      "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96",
+      "backup": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/preparation_actions_tests.rs.original.raw"
+    },
+    {
+      "path": "src-tauri/src/pty.rs",
+      "bytes": 28407,
+      "sha256": "f2c7fb13de618e2f1a90d1569bcadb70688f039a23fa9746a0acd15aabac3174",
+      "backup": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/pty.rs.original.raw"
+    }
+  ],
+  "temporarySources": [
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 28068,
+      "sha256": "707d923cc023dac8201d2541f1f0a1f086c2d85e397420b9bc2eeab8fbc53536"
+    },
+    {
+      "path": "src-tauri/src/pty.rs",
+      "bytes": 30753,
+      "sha256": "3da5ce60cd20a211e3307ef42df5f37f8b8dc1e4670003bac6d9eba6f9418c00"
+    }
+  ],
+  "patches": [
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/preparation_actions_tests.rs.patch",
+      "bytes": 5330,
+      "sha256": "f8a2ca8df8f41659af01629bb206c7460695c1a6e4e3979af7e5bb069ba61776"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/pty.rs.patch",
+      "bytes": 3965,
+      "sha256": "68e4a5c934cde2883a4097867da8607e85766a25b7818430f8e0b3ab90fec5d8"
+    }
+  ],
+  "unchangedRelatedProductionSources": [
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions.rs",
+      "bytes": 10920,
+      "sha256": "84ad7a0d5ab500aa3ed7309271ab24b1fcf2dc0045bb8200889405d7cd7b610a"
+    },
+    {
+      "path": "src-tauri/src/auth.rs",
+      "bytes": 47716,
+      "sha256": "fcb20dc1835a5159bfcf935ce39f6794ac1623ef1598b54ddc9c4f6b189e53d9"
+    },
+    {
+      "path": "src-tauri/src/auth/attempts.rs",
+      "bytes": 6922,
+      "sha256": "63271922c5b04cc8dfeecc27e99f0f575115d4dfb05b66ec89629e01c16839c4"
+    },
+    {
+      "path": "src-tauri/src/shell_env/unix.rs",
+      "bytes": 8844,
+      "sha256": "97d6e2a0ab1f97d42e2e05b57cf03d2aecbd8615861e0b0449b6605be27d257e"
+    }
+  ],
+  "scriptConstructionSourceBlock": {
+    "bytes": 259,
+    "sha256": "8b8524724459c6689bb7ebca671d834da583ccefbc981327830c52bf17b4ed94",
+    "byteExactToOriginal": true
+  },
+  "scope": [
+    "Original child script construction block byte-identical; no marker files, writes, or sampling.",
+    "Same per-instance cfg(test) PTY reader observer as diagnostic2, read branches unchanged. Bounded memory only (64 observations and frames,8192 trace).",
+    "Original3s verdict explicitly classifies Ready/ClosedChannel/Elapsed; READY timestamp recorded independently.",
+    "If original wait fails, observe exactly one extra7s window; original verdict remains failed. Exactclose/reap before cloned-trace assertion; no mutex poisoning.",
+    "Original ownership/cancel/reap assertions unchanged on readiness success.",
+    "Restore both exact originals after the one authorized natural completion and verify all2457 original inputs."
+  ],
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--lib",
+    "--",
+    "--show-output"
+  ],
+  "authorization": "Root explicitly authorized this single diagnostic without another patch approval. No repeated run, production repair, or formal timeout change."
+}

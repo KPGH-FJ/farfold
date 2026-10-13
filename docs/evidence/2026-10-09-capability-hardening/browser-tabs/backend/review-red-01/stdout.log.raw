@@ -1,0 +1,26 @@
+
+running 2 tests
+test browser_workspace::tab_tests::tab_review_regression_delayed_allow_cannot_regrant_after_returning_to_same_page ... FAILED
+test browser_sharing::permission::tests::tab_review_regression_hidden_sibling_events_preserve_exact_pending_request ... FAILED
+
+failures:
+
+---- browser_workspace::tab_tests::tab_review_regression_delayed_allow_cannot_regrant_after_returning_to_same_page stdout ----
+
+thread 'browser_workspace::tab_tests::tab_review_regression_delayed_allow_cannot_regrant_after_returning_to_same_page' (29781144) panicked at src/browser_workspace/tab_tests.rs:381:9:
+assertion failed: state.capture_read_scope("task", &user_saw.label, user_saw.revision,
+        PageReadLease::new()).is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- browser_sharing::permission::tests::tab_review_regression_hidden_sibling_events_preserve_exact_pending_request stdout ----
+
+thread 'browser_sharing::permission::tests::tab_review_regression_hidden_sibling_events_preserve_exact_pending_request' (29781143) panicked at src/browser_sharing/permission_tests.rs:296:9:
+sibling loading must not cancel the selected page request
+
+
+failures:
+    browser_sharing::permission::tests::tab_review_regression_hidden_sibling_events_preserve_exact_pending_request
+    browser_workspace::tab_tests::tab_review_regression_delayed_allow_cannot_regrant_after_returning_to_same_page
+
+test result: FAILED. 0 passed; 2 failed; 0 ignored; 0 measured; 1695 filtered out; finished in 0.01s
+

@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "preparedAtUtc": "2026-10-13T22:53:18.023121+00:00",
+  "status": "DIAGNOSTIC_02_PREPARED_NOT_COMPILED_OR_RUN",
+  "originalSources": [
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 24547,
+      "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96",
+      "backup": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/preparation_actions_tests.rs.original.raw"
+    },
+    {
+      "path": "src-tauri/src/pty.rs",
+      "bytes": 28407,
+      "sha256": "f2c7fb13de618e2f1a90d1569bcadb70688f039a23fa9746a0acd15aabac3174",
+      "backup": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/pty.rs.original.raw"
+    }
+  ],
+  "temporarySources": [
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 34228,
+      "sha256": "4e1999acc98405ce31f7c925c0deb8eebe8fe4f451626057be2bddfc06944d6a",
+      "lineCount": 910
+    },
+    {
+      "path": "src-tauri/src/pty.rs",
+      "bytes": 30753,
+      "sha256": "3da5ce60cd20a211e3307ef42df5f37f8b8dc1e4670003bac6d9eba6f9418c00",
+      "lineCount": 841
+    }
+  ],
+  "patches": [
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/preparation_actions_tests.rs.patch",
+      "bytes": 12402,
+      "sha256": "6853ec861e265de1bac06b06eff735f776c9114ba65c4442f2e8750ec41aeaa6"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/pty.rs.patch",
+      "bytes": 3965,
+      "sha256": "68e4a5c934cde2883a4097867da8607e85766a25b7818430f8e0b3ab90fec5d8"
+    }
+  ],
+  "unchangedRelatedProductionSources": [
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions.rs",
+      "bytes": 10920,
+      "sha256": "84ad7a0d5ab500aa3ed7309271ab24b1fcf2dc0045bb8200889405d7cd7b610a"
+    },
+    {
+      "path": "src-tauri/src/auth.rs",
+      "bytes": 47716,
+      "sha256": "fcb20dc1835a5159bfcf935ce39f6794ac1623ef1598b54ddc9c4f6b189e53d9"
+    },
+    {
+      "path": "src-tauri/src/auth/attempts.rs",
+      "bytes": 6922,
+      "sha256": "63271922c5b04cc8dfeecc27e99f0f575115d4dfb05b66ec89629e01c16839c4"
+    },
+    {
+      "path": "src-tauri/src/shell_env/unix.rs",
+      "bytes": 8844,
+      "sha256": "97d6e2a0ab1f97d42e2e05b57cf03d2aecbd8615861e0b0449b6605be27d257e"
+    }
+  ],
+  "scope": {
+    "test": "Only service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap body changed; surrounding file bytes identical.",
+    "pty": "Temporary cfg(test) observer stored per PtyManager, None in every fresh manager and set only on the target test instance. No global hook, env switch or production retry/error change. Original read call is named outcome for observation; the same Ok(0)/Err break and Ok(count) delivery remain.",
+    "handler": "At most 64 in-memory read observations. No file/log/blocking I/O in the observer. Channel frame collection also capped64 and text8192; marker observer keeps only last-empty/first-nonempty for two owned files."
+  },
+  "observedFields": [
+    "Original timeout return explicitly distinguishes Ready, ClosedChannel, Elapsed; READY Channel reception and wait start/return times remain separate. No strict 3s latency SLA inferred from a future result.",
+    "Per-instance reader-enter/read-start/read-return/sink-start/sink-return/reader-exit: monotonic Instant, stop bool, count or ErrorKind/raw_os_error. Ok(0) is only EOF-or-mapped-EIO because portable-pty masks EIO.",
+    "Two exclusive marker files still written by /bin/sh builtin printf after traps and after stdout printf. Before spawn records initial empty state/mtime; snapshots pair SystemTime Unix ns with Instant brackets.",
+    "While the original timeout future is pending, nominal 10ms bounded sampling records marker content/mtime and the last empty / first nonempty sample. Scheduling and filesystem sampling uncertainty remain explicit; mtime is a kernel file-write observation, not child monotonic instruction time.",
+    "If original elapsed, extra bounded2s records observations but does not change failed verdict. Exact-owner close result/exit frame remain, cloned trace avoids panic while holding its mutex.",
+    "If original ready, every original account/configuration/duplicate/cancel/reap assertion stays and final snapshot follows original cleanup."
+  ],
+  "fixedIdReview": {
+    "finding": "No cross-test cancellation path found for registry:goose. Shared fixture id alone is insufficient evidence.",
+    "evidence": [
+      "Goose fixture tempdirs/MetaStore/program paths are independent; only this test reserves/cancels Goose attempts. Other Goose tests inspect actions/receipts.",
+      "Second preparation terminal test uses registry:cline, Copilot uses registry:github-copilot-cli, auth/terminal tests use distinct dedicated IDs.",
+      "attempts auth_cancel checks both agent and attempt; mismatched attempt errors. configuration_guard is a keyed mutex acquired before readiness wait, not a PTY stop source. install_job cancellation changes a separate Job state.",
+      "AccountAdmission and retire ownership belong to each AcpManager; PtyManager shutdown iterates only its own sessions. Global managed_update admission cannot cancel an already held activity permit."
+    ],
+    "sourceAnchors": [
+      "src-tauri/src/acp_client/preparation_actions_tests.rs:24",
+      "src-tauri/src/auth/attempts.rs:77",
+      "src-tauri/src/auth/attempts.rs:107",
+      "src-tauri/src/install_job.rs:331",
+      "src-tauri/src/install_job.rs:359",
+      "src-tauri/src/acp_client/account_scope.rs:246",
+      "src-tauri/src/acp_client/manager.rs:189",
+      "src-tauri/src/pty.rs:361"
+    ]
+  },
+  "controlledVariables": {
+    "shell": "Keep executing the new temporary script directly with its /bin/sh shebang; do not switch this probe to /bin/sh -c. The neighboring direct-shell fixture is a comparison, not an observed cause.",
+    "capture": "Propose default libtest capture and --show-output afterward; do not use --nocapture because both formal failures used capture. No claim that capture itself caused the failure.",
+    "deadline": "Original3s timeout expression remains; no product startup SLA added. Extra2s remains evidence-only.",
+    "failures": "Both original formal runs show unsuccessful readiness wait with empty trace; original assert did not distinguish Elapsed from ClosedChannel. Do not relabel them as observed timeouts."
+  },
+  "proposedCommandPendingApproval": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--lib",
+    "--",
+    "--show-output"
+  ],
+  "format": {
+    "command": [
+      "rustfmt",
+      "--edition",
+      "2024",
+      "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "src-tauri/src/pty.rs"
+    ],
+    "actualExitCode": 0,
+    "toolChunk": "e3cdb2",
+    "boundary": "Preparation only; no cargo compile/test executed."
+  },
+  "requiredAfterSingleApprovedRun": "After natural completion, verify each temporary source hash and restore both exact original raw bytes; verify originals before formal engineering. Preserve every raw failure/result. No repeat run or production fix is authorized by this preparation.",
+  "evidenceLimits": [
+    "No read errno or child-start delay has yet been observed in the two failed formal runs.",
+    "Previous instrumented --nocapture run delivered READY about2.482s after wait start; it did not isolate which process/read/callback step consumed that time.",
+    "Observer and sampling can perturb scheduling. Passing diagnostic2 would still not repair or retrospectively pass original checks."
+  ]
+}

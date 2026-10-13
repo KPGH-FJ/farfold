@@ -1,0 +1,18 @@
+{
+  "phase": "PREVIOUS_GREEN_SCOPE_REOPENED_FOR_COUNTEREXAMPLE",
+  "finding": "Independent raw trace review observed B exact owner closed on return to A without explicit close. Prior138 assertions did not cover reverse retained owner.",
+  "source": "frontend v3 remains frozen for actual red",
+  "runner": {
+    "path": "output/2026-10-14-browser-tabs-browser/run.mjs",
+    "sha256": "c0d669b8a2ff32119b4032373dd5afa044b98eb1705f51241d4f99147a07343e"
+  },
+  "priorRawRunner": "authored-v7/run.mjs.raw",
+  "newAssertions": [
+    "B note/counter/scroll before switch",
+    "B not closed after A return",
+    "B exact id/memory on second return",
+    "both live and no close request"
+  ],
+  "serverPortAvailable": true,
+  "notExecuted": true
+}

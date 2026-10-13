@@ -1,0 +1,15 @@
+
+running 10 tests
+test browser_workspace::tab_tests::second_page_reservation_keeps_first_page_owned ... ok
+test browser_workspace::tab_tests::clearing_storage_refuses_a_sibling_in_the_same_partition_until_close_ack ... ok
+test browser_workspace::tab_tests::unconfirmed_creation_blocks_other_show_until_its_exact_close_ack ... ok
+test browser_workspace::tab_tests::hiding_same_selected_page_retains_scopes_and_selection_across_tasks ... ok
+test browser_workspace::tab_tests::hide_failure_retains_global_barrier_and_failed_owner_without_a_page_cap ... ok
+test browser_workspace::tab_tests::loading_sibling_finishes_without_stealing_selection_or_reviving_old_reads ... ok
+test browser_workspace::tab_tests::tab_review_regression_delayed_allow_cannot_regrant_after_returning_to_same_page ... ok
+test browser_workspace::tab_tests::stop_failure_keeps_owner_and_revoked_scope_until_explicit_retry ... ok
+test browser_workspace::tab_tests::shutdown_keeps_every_owner_until_native_ack_and_refuses_late_creation ... ok
+test browser_workspace::tab_tests::selection_waits_for_stop_and_hide_ack_without_changing_navigation ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 1688 filtered out; finished in 0.01s
+

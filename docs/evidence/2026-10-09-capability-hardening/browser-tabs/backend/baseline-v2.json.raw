@@ -1,0 +1,84 @@
+{
+  "ownedBefore": [
+    {
+      "path": "src-tauri/src/browser_workspace.rs",
+      "bytes": 28867,
+      "sha256": "62523e9c1784c70e16d2f547fd6d7a314c6bca8929e1ea0e523826f4ac1d6642"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tab_tests.rs",
+      "bytes": 617,
+      "sha256": "cdc1646180d72e987b9a871097cd403e58eb18351a3c04659502ab0dd6b1c211"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_store.rs",
+      "exists": false
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tab_commands.rs",
+      "exists": false
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_read.rs",
+      "bytes": 8371,
+      "sha256": "a031b036bd1eca1dd7454232445459b42da89cc7f79c2dab38e14a5a56ffdee6"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/preview_commands.rs",
+      "bytes": 5922,
+      "sha256": "c1484d7f144e47adee24938c4c90d7ba18c85e8d3acee1b4d7bbadd011bfff8c"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/native.rs",
+      "bytes": 27345,
+      "sha256": "f2ff09ea80f30157bcee19d400dda1ec9bc67145160e8a752f0699c62661620a"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/windows/mod.rs",
+      "bytes": 24919,
+      "sha256": "827c2550f96429e6bf395e22b6cff95dcfea1114443d4160e7f854aa36998ab8"
+    },
+    {
+      "path": "src-tauri/native/BrowserWorkspace.m",
+      "bytes": 46040,
+      "sha256": "bc07aeb36518a4bde9f0f21ac0749256c430d03e36c80cb7eb2f2cb621c3c593"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21806,
+      "sha256": "8a540b54f086599e66a9a513679262663bc1115f31568929209d6d23c654b475"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/browser_tools.rs",
+      "bytes": 24847,
+      "sha256": "38190051172b771756713fb30f22fce3ddada44a667f37714f3eadaa52623f6c"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tests.rs",
+      "bytes": 18489,
+      "sha256": "e74ece2cab9a67387e035f5ebbe7a8ba8c7b71e0d2f19683380d0566441425d4"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_read_tests.rs",
+      "bytes": 10838,
+      "sha256": "8ca914595ef11a4ef938d8d177aefe6d1051e237087d86e1a53ac42027a086cb"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/permission.rs",
+      "bytes": 9050,
+      "sha256": "cf6ac4de82bf2cc99ad3195d66ae442029fa573e793544cc857c69c422df0a24"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/permission_tests.rs",
+      "bytes": 10188,
+      "sha256": "82f7c0e836961d537834b20ef7c8c4271c7cf9fcf9ab67730aced31cf2eef4ac"
+    }
+  ],
+  "unchangedShared": [
+    {
+      "path": "src-tauri/src/browser_sharing.rs",
+      "bytes": 24288,
+      "sha256": "53862ae2b22a59873f17468a19d3f14537271ec943f2d84aca9303d997f60b03"
+    }
+  ]
+}

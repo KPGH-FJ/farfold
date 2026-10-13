@@ -41,7 +41,9 @@ impl PageReadLease {
 pub(crate) struct FixedPageReadScope {
     workspace: BrowserWorkspace,
     ticket: ReadTicket,
-    // Only the private manual constructor omits a lease.
+    // Every captured scope retains the page gate, including manual reads.
+    page_gate: PageReadLease,
+    // Only the private manual constructor omits a grant lease.
     lease: Option<PageReadLease>,
     expected_url: Option<String>,
     pub(super) observation: Arc<Mutex<Option<super::browser_tools::Observation>>>,
@@ -58,13 +60,14 @@ impl BrowserWorkspace {
         expected_revision: u64,
         lease: PageReadLease,
     ) -> Result<FixedPageReadScope, String> {
-        let (ticket, expected_url) = {
+        let (ticket, expected_url, page_gate) = {
             let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
             let active = store
-                .active
-                .as_ref()
+                .pages
+                .values()
+                .find(|page| page.info.task_key == task && page.info.label == label)
                 .filter(|active| {
-                    !store.shutting_down
+                    store.selected_page(active)
                         && active.info.task_key == task
                         && active.info.label == label
                         && active.info.revision == expected_revision
@@ -79,13 +82,16 @@ impl BrowserWorkspace {
                     task_key: active.info.task_key.clone(),
                     label: active.info.label.clone(),
                     navigation: active.navigation,
+                    selection_revision: store.selections.get(task).ok_or("网页已变化")?.revision,
                 },
                 active.info.url.clone(),
+                active.read_gate.clone(),
             )
         };
         let scope = FixedPageReadScope {
             workspace: self.clone(),
             ticket,
+            page_gate,
             lease: Some(lease),
             expected_url: Some(expected_url),
             observation: Arc::new(Mutex::new(None)),
@@ -100,9 +106,20 @@ impl BrowserWorkspace {
         task: &str,
         label: &str,
     ) -> Result<FixedPageReadScope, String> {
+        let ticket = self.read_ticket(task, label)?;
+        let page_gate = self
+            .0
+            .lock()
+            .map_err(|_| "网页状态暂时不可用")?
+            .pages
+            .get(&ticket.id)
+            .ok_or("网页已关闭")?
+            .read_gate
+            .clone();
         Ok(FixedPageReadScope {
             workspace: self.clone(),
-            ticket: self.read_ticket(task, label)?,
+            ticket,
+            page_gate,
             lease: None,
             expected_url: None,
             observation: Arc::new(Mutex::new(None)),
@@ -127,10 +144,10 @@ impl FixedPageReadScope {
             Some(lease) => lease.with_live(action),
             None => action(),
         };
-        match &self.lease {
+        self.page_gate.with_live(|| match &self.lease {
             Some(lease) => lease.with_live(with_action),
             None => with_action(),
-        }
+        })
     }
 
     // Called inside the actual main-thread closure, immediately around ff_browser_read.
@@ -184,11 +201,12 @@ impl FixedPageReadScope {
 
     pub(crate) fn grant_is_valid(&self) -> bool {
         let action = || self.workspace.with_read_ticket(&self.ticket, |_| Ok(()));
-        match &self.lease {
-            Some(lease) => lease.with_live(action),
-            None => action(),
-        }
-        .is_ok()
+        self.page_gate
+            .with_live(|| match &self.lease {
+                Some(lease) => lease.with_live(action),
+                None => action(),
+            })
+            .is_ok()
     }
 
     pub(crate) fn cancel_action(&self) {

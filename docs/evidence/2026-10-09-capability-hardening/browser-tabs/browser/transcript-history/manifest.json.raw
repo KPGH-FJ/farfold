@@ -1,0 +1,78 @@
+{
+  "source": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "scope": "Exact completed command records for each performed controlled P30 browser run; 138-green coverage limitation retained, run5 is the actual added counterexample red",
+  "records": [
+    {
+      "run": "chromium-run1",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-history/chromium-run1-15760.jsonl.raw",
+      "sourceLine": 15760,
+      "exitCode": 1,
+      "status": "failed",
+      "bytes": 2253,
+      "sha256": "902540a0bc02e336702baec1b3e9b590d0787b7647480d20ac842c948d23a03e"
+    },
+    {
+      "run": "chromium-run2",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-history/chromium-run2-15855.jsonl.raw",
+      "sourceLine": 15855,
+      "exitCode": 0,
+      "status": "completed",
+      "bytes": 900,
+      "sha256": "174ff1a0e178ad5ef9d8566f40568ebea1cc763660203e984ea325a9f9bd1c62"
+    },
+    {
+      "run": "webkit-run1",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-history/webkit-run1-15883.jsonl.raw",
+      "sourceLine": 15883,
+      "exitCode": 0,
+      "status": "completed",
+      "bytes": 894,
+      "sha256": "329b0bef247e0c58d070bc3d423225ec18ea24a1c8f189ae0088788b2cb40f4f"
+    },
+    {
+      "run": "webkit-run2",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-history/webkit-run2-15975.jsonl.raw",
+      "sourceLine": 15975,
+      "exitCode": 0,
+      "status": "completed",
+      "bytes": 894,
+      "sha256": "9096cd48ee02339fe40c729f4f565ff4877802fc61f154954c0d39759fd0e300"
+    },
+    {
+      "run": "chromium-run3",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-history/chromium-run3-15976.jsonl.raw",
+      "sourceLine": 15976,
+      "exitCode": 0,
+      "status": "completed",
+      "bytes": 900,
+      "sha256": "4f30a2b9c8dfacaa287d0ddca10943dcb6e65a3b634c673986f0dfcd97b1b6b1"
+    },
+    {
+      "run": "webkit-run3",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-history/webkit-run3-16021.jsonl.raw",
+      "sourceLine": 16021,
+      "exitCode": 0,
+      "status": "completed",
+      "bytes": 894,
+      "sha256": "e0000f411c1d41be06c44145c12b53ca136bac72212c2e72a557bed1b0bb2dec"
+    },
+    {
+      "run": "chromium-run4",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-history/chromium-run4-16027.jsonl.raw",
+      "sourceLine": 16027,
+      "exitCode": 0,
+      "status": "completed",
+      "bytes": 900,
+      "sha256": "e9ce4c471b081d35267ab13a2f9cc67e47708f8176a103900519d2e3c59aaaeb"
+    },
+    {
+      "run": "chromium-run5",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-history/chromium-run5-16174.jsonl.raw",
+      "sourceLine": 16174,
+      "exitCode": 1,
+      "status": "failed",
+      "bytes": 2196,
+      "sha256": "dcfcc336d516345cd9983aa816e3de5166f46a4f915a709f83acf885f36df337"
+    }
+  ]
+}

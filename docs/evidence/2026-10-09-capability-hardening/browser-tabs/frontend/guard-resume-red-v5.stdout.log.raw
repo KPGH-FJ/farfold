@@ -1,0 +1,11 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/BrowserWorkspace.presentation.test.tsx (6 tests | 1 failed | 5 skipped) 111ms
+   × restarts bounds synchronization after batched hold and release notifications 110ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 skipped (6)
+   Start at  05:56:08
+   Duration  1.05s (transform 57ms, setup 0ms, import 877ms, tests 111ms, environment 0ms)
+

@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "restoredAtUtc": "2026-10-13T22:59:50.784580+00:00",
+  "temporaryAfter": [
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 34228,
+      "sha256": "4e1999acc98405ce31f7c925c0deb8eebe8fe4f451626057be2bddfc06944d6a"
+    },
+    {
+      "path": "src-tauri/src/pty.rs",
+      "bytes": 30753,
+      "sha256": "3da5ce60cd20a211e3307ef42df5f37f8b8dc1e4670003bac6d9eba6f9418c00"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions.rs",
+      "bytes": 10920,
+      "sha256": "84ad7a0d5ab500aa3ed7309271ab24b1fcf2dc0045bb8200889405d7cd7b610a"
+    },
+    {
+      "path": "src-tauri/src/auth.rs",
+      "bytes": 47716,
+      "sha256": "fcb20dc1835a5159bfcf935ce39f6794ac1623ef1598b54ddc9c4f6b189e53d9"
+    },
+    {
+      "path": "src-tauri/src/auth/attempts.rs",
+      "bytes": 6922,
+      "sha256": "63271922c5b04cc8dfeecc27e99f0f575115d4dfb05b66ec89629e01c16839c4"
+    },
+    {
+      "path": "src-tauri/src/shell_env/unix.rs",
+      "bytes": 8844,
+      "sha256": "97d6e2a0ab1f97d42e2e05b57cf03d2aecbd8615861e0b0449b6605be27d257e"
+    }
+  ],
+  "originalsRestored": [
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 24547,
+      "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96"
+    },
+    {
+      "path": "src-tauri/src/pty.rs",
+      "bytes": 28407,
+      "sha256": "f2c7fb13de618e2f1a90d1569bcadb70688f039a23fa9746a0acd15aabac3174"
+    }
+  ],
+  "allOriginalBytesRestored": true,
+  "engineeringFreeze": {
+    "path": "output/2026-10-14-browser-tabs-integration/checks-freeze-02/freeze.json",
+    "bytes": 401759,
+    "sha256": "3c498f0e173aa83292014037a729e167873a2ab9748f4adbb8964830f91a135b"
+  },
+  "inputCount": 2457,
+  "differences": [],
+  "errors": [],
+  "all2457OriginalInputsRestored": true,
+  "boundary": "Exact raw source restoration after the single natural completion; no follow-up test run."
+}

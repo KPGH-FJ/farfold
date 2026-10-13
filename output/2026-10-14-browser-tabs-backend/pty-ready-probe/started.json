@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--lib",
+    "acp_client::preparation_actions::tests::service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap",
+    "--",
+    "--exact",
+    "--nocapture"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-10-13T22:19:51.174788+00:00",
+  "sourceBefore": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-probe/source-before.json",
+    "bytes": 1036,
+    "sha256": "6d555890f30677ee88f15be1caff554589bf7fb1d883fa60d66f2e6f3a84f52c"
+  },
+  "scope": "One unchanged exact synthetic PTY test; no full suite, real Agent or application invocation."
+}

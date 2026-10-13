@@ -1,0 +1,210 @@
+{
+  "schema": 1,
+  "records": [
+    {
+      "source": {
+        "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/stdout.log",
+        "bytes": 901342,
+        "sha256": "5c824457b96067551e35536f542e80da68898f1220fd339472cb04f5485555af"
+      },
+      "line": 1809,
+      "sourceByteOffset": 244674,
+      "lineBytes": 1570,
+      "lineSha256": "ace297bdd688b04584af53434a7f9745ecf9747153fc9a5c6f306d383f4b07cd",
+      "observation": {
+        "afterSpawn": {
+          "phase": "after-spawn",
+          "observedAtNsFromBeforeSpawn": 1990417,
+          "readEvents": [],
+          "frames": [],
+          "trace": ""
+        },
+        "readyWaitStartedNsFromBeforeSpawn": 1995959,
+        "readyWaitReturnedNsFromBeforeSpawn": 1411302625,
+        "originalReadyState": "timeout-returned-ready",
+        "afterOriginalWait": {
+          "phase": "after-original-wait",
+          "observedAtNsFromBeforeSpawn": 1411333000,
+          "readEvents": [
+            {
+              "phase": "reader-enter",
+              "observedAtNsFromBeforeSpawn": 2020792,
+              "stop": false,
+              "count": null,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            },
+            {
+              "phase": "read-start",
+              "observedAtNsFromBeforeSpawn": 2033875,
+              "stop": false,
+              "count": null,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            },
+            {
+              "phase": "read-return",
+              "observedAtNsFromBeforeSpawn": 1410979084,
+              "stop": false,
+              "count": 29,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            },
+            {
+              "phase": "sink-start",
+              "observedAtNsFromBeforeSpawn": 1411039375,
+              "stop": false,
+              "count": null,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            },
+            {
+              "phase": "sink-return",
+              "observedAtNsFromBeforeSpawn": 1411237250,
+              "stop": false,
+              "count": null,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            },
+            {
+              "phase": "read-start",
+              "observedAtNsFromBeforeSpawn": 1411254084,
+              "stop": false,
+              "count": null,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            }
+          ],
+          "frames": [
+            {
+              "receivedAtNsFromBeforeSpawn": 1411147167,
+              "kind": "data",
+              "frame": {
+                "id": "pty-1791932998089-1",
+                "data": "Zml4dHVyZS1jb25maWd1cmF0aW9uLXJlYWR5DQo="
+              }
+            }
+          ],
+          "trace": "fixture-configuration-ready\r\n"
+        },
+        "originalVerdict": "passed",
+        "childScript": "Original script bytes unchanged; no marker writes or sampling."
+      }
+    },
+    {
+      "source": {
+        "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/stdout.log",
+        "bytes": 901342,
+        "sha256": "5c824457b96067551e35536f542e80da68898f1220fd339472cb04f5485555af"
+      },
+      "line": 1810,
+      "sourceByteOffset": 246244,
+      "lineBytes": 1655,
+      "lineSha256": "0de45164f8251e4534dc037bc11484b84ab394e27bc2d81c7d24f771dbaaf427",
+      "observation": {
+        "phase": "after-original-success-cleanup",
+        "observedAtNsFromBeforeSpawn": 3538442959,
+        "readEvents": [
+          {
+            "phase": "reader-enter",
+            "observedAtNsFromBeforeSpawn": 2020792,
+            "stop": false,
+            "count": null,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          },
+          {
+            "phase": "read-start",
+            "observedAtNsFromBeforeSpawn": 2033875,
+            "stop": false,
+            "count": null,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          },
+          {
+            "phase": "read-return",
+            "observedAtNsFromBeforeSpawn": 1410979084,
+            "stop": false,
+            "count": 29,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          },
+          {
+            "phase": "sink-start",
+            "observedAtNsFromBeforeSpawn": 1411039375,
+            "stop": false,
+            "count": null,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          },
+          {
+            "phase": "sink-return",
+            "observedAtNsFromBeforeSpawn": 1411237250,
+            "stop": false,
+            "count": null,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          },
+          {
+            "phase": "read-start",
+            "observedAtNsFromBeforeSpawn": 1411254084,
+            "stop": false,
+            "count": null,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          },
+          {
+            "phase": "read-return",
+            "observedAtNsFromBeforeSpawn": 3437967042,
+            "stop": true,
+            "count": 0,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": "EOF-or-mapped-EIO"
+          },
+          {
+            "phase": "reader-exit",
+            "observedAtNsFromBeforeSpawn": 3437976667,
+            "stop": true,
+            "count": null,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          }
+        ],
+        "frames": [
+          {
+            "receivedAtNsFromBeforeSpawn": 1411147167,
+            "kind": "data",
+            "frame": {
+              "id": "pty-1791932998089-1",
+              "data": "Zml4dHVyZS1jb25maWd1cmF0aW9uLXJlYWR5DQo="
+            }
+          },
+          {
+            "receivedAtNsFromBeforeSpawn": 3538274000,
+            "kind": "exit",
+            "frame": {
+              "id": "pty-1791932998089-1",
+              "exit": 1
+            }
+          }
+        ],
+        "trace": "fixture-configuration-ready\r\n{\"id\":\"pty-1791932998089-1\",\"exit\":1}"
+      }
+    }
+  ],
+  "boundary": "Two actual saved stdout diagnostic lines parsed; raw files unchanged."
+}

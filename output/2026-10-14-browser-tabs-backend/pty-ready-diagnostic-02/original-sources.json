@@ -1,0 +1,17 @@
+{
+  "savedAtUtc": "2026-10-13T22:49:45.643156+00:00",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 24547,
+      "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96",
+      "backup": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/preparation_actions_tests.rs.original.raw"
+    },
+    {
+      "path": "src-tauri/src/pty.rs",
+      "bytes": 28407,
+      "sha256": "f2c7fb13de618e2f1a90d1569bcadb70688f039a23fa9746a0acd15aabac3174",
+      "backup": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/pty.rs.original.raw"
+    }
+  ]
+}

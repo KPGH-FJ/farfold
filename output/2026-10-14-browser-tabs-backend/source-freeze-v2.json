@@ -1,0 +1,458 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-13T21:27:02.510898+00:00",
+  "sourceBaseline": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+  "currentHead": "a45112856a44c4a16f83ebdd079ab6d5c4876907",
+  "files": [
+    {
+      "path": "src-tauri/src/browser_workspace.rs",
+      "bytes": 13572,
+      "sha256": "8de74808942eed88637f0a7c42314d1620f198703c630f3c87b0f2bf59b63dfe"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_store.rs",
+      "bytes": 18493,
+      "sha256": "890d50bcd60bcdb65cc1e4c012ad9e915b8a7f2aaa07a780771aa09b766bc24c"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tab_commands.rs",
+      "bytes": 13395,
+      "sha256": "3badf904f93d482dd3be8b9734c16ae76ae33a8c1e4b452c80a5c735037a2dc2"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tab_tests.rs",
+      "bytes": 16590,
+      "sha256": "2cd237e6e403be106ebcabd028d273d1536cf45860a71a957a6fbdb04e7ee8c5"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_read.rs",
+      "bytes": 9136,
+      "sha256": "fd4aa35546241c27e84e9befb7b4381c782672349f7a8637540655a642ff6923"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_read_tests.rs",
+      "bytes": 11018,
+      "sha256": "01c67aab8541d060a55bffafe9a44d5effb7e29821ac64c40ae1539093d41b19"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/preview_commands.rs",
+      "bytes": 5611,
+      "sha256": "0701ddb99b6fcf0b16f943576dc50b305d829494e988249af9d6ed30ed870e64"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/native.rs",
+      "bytes": 27396,
+      "sha256": "7a4d31535f68d6f31771fb288d5ed78c07e4c172f7ebdea281638b5c7d4071f7"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/windows/mod.rs",
+      "bytes": 26491,
+      "sha256": "7fcdc0b62c6d31c365ade83a41918ff9b7a6a208f198641a37cb0b5a7ec8bd90"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tests.rs",
+      "bytes": 18638,
+      "sha256": "98334f55b06370f2f480d10600636f0735589ff709ecc0872acdd09b39d52f2b"
+    },
+    {
+      "path": "src-tauri/native/BrowserWorkspace.m",
+      "bytes": 46155,
+      "sha256": "c977434fca857d93c3f15db77e2dfbf4c948b6974cce4d0f29fdb3abca084b0c"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21954,
+      "sha256": "f0d524c74d445ac5a1a5fffec88feb17112eab2dd1fb92d904a51a2f37046bc1"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/permission.rs",
+      "bytes": 9046,
+      "sha256": "dd44b023032239ed0831314e40b1ddb5d80b3e667dd9b10d7341f4e9c34ced91"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/permission_tests.rs",
+      "bytes": 10244,
+      "sha256": "e55e9a126f82642d89b88eada539d5ae1bd5d78c3d63e9355993c848f71dc4b1"
+    }
+  ],
+  "unchangedShared": [
+    {
+      "path": "src-tauri/src/browser_workspace/browser_tools.rs",
+      "bytes": 24847,
+      "sha256": "38190051172b771756713fb30f22fce3ddada44a667f37714f3eadaa52623f6c"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/native_request.rs",
+      "bytes": 7209,
+      "sha256": "c7e1c06c018909dab579403af0cddcd61c2d465a49a003ff0b583c113f60a6ae"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing.rs",
+      "bytes": 24288,
+      "sha256": "53862ae2b22a59873f17468a19d3f14537271ec943f2d84aca9303d997f60b03"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/transport.rs",
+      "bytes": 53942,
+      "sha256": "daf4ecaedb66111c1d8ea556e2aa8202fad820fe7535124bd470020c1e0e9197"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/state_tests.rs",
+      "bytes": 9929,
+      "sha256": "e58f806d3b67154f85104b7ba3d248a3ea732c4bfd9161845ea57346aca23797"
+    }
+  ],
+  "priorFreeze": {
+    "path": "output/2026-10-14-browser-tabs-backend/source-freeze.json",
+    "bytes": 8592,
+    "sha256": "848ec838f972b35d1f1d8f770a373bb63ecef4b26a201f1577de7822a8dae28e"
+  },
+  "sourceDiff": {
+    "path": "output/2026-10-14-browser-tabs-backend/source-v2.diff",
+    "bytes": 93484,
+    "sha256": "fbf55b661a2047a987afdabf21d153a5a3014407eaf7bff45b7a710c936f6d23"
+  },
+  "interface": {
+    "path": "output/2026-10-14-browser-tabs-backend/interface.json",
+    "bytes": 1745,
+    "sha256": "28b2f7dc239973b8378977300ea324fd84ab03b58f8dd27985b9125a67b1d54f"
+  },
+  "receipts": [
+    {
+      "stage": "red-01",
+      "actualExitCode": 101,
+      "testsPassed": 0,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/red-01/completed.json",
+          "bytes": 3369,
+          "sha256": "bf0b77a82bb65d0d36a56a703e74549dc5defbd558f79c7018b861698334c709"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/red-01/stdout.log",
+          "bytes": 746,
+          "sha256": "931b64572f2156912e9f41752fa27dbe0320b91fc13389185dc34633fdf10517"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/red-01/stderr.log",
+          "bytes": 275,
+          "sha256": "5dbca8c589bbb7554ef575a777f432d206c79ba86c40ea1575a25ed05825618c"
+        }
+      ]
+    },
+    {
+      "stage": "green-01",
+      "actualExitCode": 0,
+      "testsPassed": 100,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/green-01/completed.json",
+          "bytes": 3459,
+          "sha256": "af63b967cd29dc7f5c198fed9df22d20bdff2ca8c0926bfe8c10146216ab527a"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/green-01/stdout.log",
+          "bytes": 11036,
+          "sha256": "98de80bb975ead6f680b50b3724d951426ae61b3bfcd214b17f3eadbe4f33d7d"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/green-01/stderr.log",
+          "bytes": 233,
+          "sha256": "00222bb4b008a1a00d14028082849b86d78feb2310dd96706c5a6f04d64dd71f"
+        }
+      ]
+    },
+    {
+      "stage": "browser-regression-01",
+      "actualExitCode": 0,
+      "testsPassed": 175,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/browser-regression-01/completed.json",
+          "bytes": 3472,
+          "sha256": "b689406c14522cb8de26053e34d080103eb262c73d486bc0219e5afc2a2cd7ce"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/browser-regression-01/stdout.log",
+          "bytes": 19311,
+          "sha256": "1227421dd8f182131584688447810367940eda47bbdc0fd056c36951342a6193"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/browser-regression-01/stderr.log",
+          "bytes": 233,
+          "sha256": "3b9f8133700cd24e2f31f353d781349c710c06b5ce16669ef5dbb0c195164166"
+        }
+      ]
+    },
+    {
+      "stage": "fmt-check-01",
+      "actualExitCode": 0,
+      "testsPassed": null,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/fmt-check-01/completed.json",
+          "bytes": 3418,
+          "sha256": "3310ca940dc99230d1ee7f8277e35faabf6d50fdb7330fb8cb155e3dcbe83d49"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/fmt-check-01/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/fmt-check-01/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "stage": "format-write-01",
+      "actualExitCode": 0,
+      "testsPassed": null,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/format-write-01/completed.json",
+          "bytes": 780,
+          "sha256": "fda1da8319f79869e349cfb6f75bd7100ff82ba452b4df138a1178a159a8f2bd"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/format-write-01/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/format-write-01/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "stage": "review-red-01",
+      "actualExitCode": 101,
+      "testsPassed": 0,
+      "testsFailed": 2,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/review-red-01/completed.json",
+          "bytes": 3657,
+          "sha256": "e8fd0373b00c76ba0772b959344022b7d8906e5cfbfefe8b57942148e494e912"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/review-red-01/stdout.log",
+          "bytes": 1520,
+          "sha256": "1b8ca8feeef94ec49342108cce9f43fc5b083db9cca5858b5d036caae6280001"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/review-red-01/stderr.log",
+          "bytes": 275,
+          "sha256": "4d7d55acd7fe38aa05bf765b7a436a099540effc00e9fc0ee28964c4e7649444"
+        }
+      ]
+    },
+    {
+      "stage": "review-green-01",
+      "actualExitCode": 0,
+      "testsPassed": 2,
+      "testsFailed": 0,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/review-green-01/completed.json",
+          "bytes": 3658,
+          "sha256": "1843ef8b05f1429afabcd29bac3ac58fa237a694a38d1db61c812736e6c8b6eb"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/review-green-01/stdout.log",
+          "bytes": 361,
+          "sha256": "6cc3467b0700823b5a844c5ca60638bd677fdab35367c72f8293404e3f3f9575"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/review-green-01/stderr.log",
+          "bytes": 233,
+          "sha256": "c6b30c2c855c66979f2cb76aa98c0f153af819fd19decaddf1a87106074fa8ff"
+        }
+      ]
+    },
+    {
+      "stage": "browser-regression-02",
+      "actualExitCode": 0,
+      "testsPassed": 177,
+      "testsFailed": 0,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/browser-regression-02/completed.json",
+          "bytes": 3659,
+          "sha256": "ef5b841848bab6f17bf598877d7279901985ed1b5acea0a7859583aa6cb3bf77"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/browser-regression-02/stdout.log",
+          "bytes": 19556,
+          "sha256": "d0d707a253d14449ed56104c920a6729e8b757f0a57b162eae015f74b1ece92b"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/browser-regression-02/stderr.log",
+          "bytes": 233,
+          "sha256": "e39bf55d769da736b33fd939ec88ff04afb0493d59ffc5f60b37307eadcfaab3"
+        }
+      ]
+    },
+    {
+      "stage": "review-red-02",
+      "actualExitCode": 101,
+      "testsPassed": 8,
+      "testsFailed": 2,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/review-red-02/completed.json",
+          "bytes": 3661,
+          "sha256": "45655d5c465b0da5028c4620f13134e3dc93154a23239c5168892ca160beebe1"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/review-red-02/stdout.log",
+          "bytes": 2219,
+          "sha256": "f2f546a48a76697ba715afd1e980215a5268676405c61e958c13f3cb892f9922"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/review-red-02/stderr.log",
+          "bytes": 275,
+          "sha256": "b14fa3c01af357f7555d1b7d09fa460fd0cec7c45c02a2261678cbcc9108f27f"
+        }
+      ]
+    },
+    {
+      "stage": "review-green-02",
+      "actualExitCode": 0,
+      "testsPassed": 10,
+      "testsFailed": 0,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/review-green-02/completed.json",
+          "bytes": 3666,
+          "sha256": "1b3449c9587849733d688ecaa4147cc4cecea1d57f69ca8d337a87518434b8c6"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/review-green-02/stdout.log",
+          "bytes": 1217,
+          "sha256": "1fdf159918141fbf2b733e5a3d090d08aeaa7a5cdb3f405dff087f1a1ebf1848"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/review-green-02/stderr.log",
+          "bytes": 233,
+          "sha256": "db4e97a11a29d5a122dc059348e6bbe9d27a7d53878cd47fb2d5a1175d46ac0b"
+        }
+      ]
+    },
+    {
+      "stage": "browser-regression-03",
+      "actualExitCode": 0,
+      "testsPassed": 178,
+      "testsFailed": 0,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/browser-regression-03/completed.json",
+          "bytes": 3659,
+          "sha256": "e986f976b75c69d69d4b4e68b47867ae3770ae81df7a98f9b75548ecf32510a2"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/browser-regression-03/stdout.log",
+          "bytes": 19663,
+          "sha256": "7f7ff2d05d0f5a466113465227968fd0b9c5baa03585f624159c0f261954d97c"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/browser-regression-03/stderr.log",
+          "bytes": 233,
+          "sha256": "b66aa956a676d80512d070910bef3abc887a1d18f587464d0e93a3254ee43c67"
+        }
+      ]
+    },
+    {
+      "stage": "fmt-check-02",
+      "actualExitCode": 0,
+      "testsPassed": null,
+      "testsFailed": null,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/fmt-check-02/completed.json",
+          "bytes": 3603,
+          "sha256": "47ef79b3d69f2b03f60d213c377f3f7da3ecce955d5373fa3e0517cd4263f300"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/fmt-check-02/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/fmt-check-02/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "stage": "format-write-02",
+      "actualExitCode": 0,
+      "testsPassed": null,
+      "testsFailed": null,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/format-write-02/completed.json",
+          "bytes": 780,
+          "sha256": "d9e6e47db76f982de6256b7a0d3277ff0052573104a7d5b1054f13bb26c88870"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/format-write-02/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/format-write-02/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "stage": "format-write-03",
+      "actualExitCode": 0,
+      "testsPassed": null,
+      "testsFailed": null,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/format-write-03/completed.json",
+          "bytes": 780,
+          "sha256": "5a3b585bbe685a6808343249b1add0c6be2b06b7bbdff79415101d45a3fb3f25"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/format-write-03/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-backend/format-write-03/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "finalValidationStages": [
+    "browser-regression-03",
+    "fmt-check-02"
+  ],
+  "boundaries": [
+    "Red asserts new second-page reservation against actual old single-page implementation; source baseline includes test registration and new test only at red.",
+    "All earlier runs retained. Final formatted bytes exercised by browser-regression-03: 178 passed, and fmt-check-02 actual 0, source stable.",
+    "Selection tests execute the production transaction with controlled stop/hide futures, not a running WebView. Existing sharing permission/transport/quiesce tests also ran.",
+    "macOS Objective-C bridge compiled during targeted cargo. Hidden create and guarded visibility are source changes, not installed native UI observations.",
+    "Windows code changed but no Windows build/runtime executed.",
+    "No Agent, App, account, database, installation, full seven checks, dependency changes or Git mutation."
+  ],
+  "reviewCorrections": [
+    "Hidden sibling events no longer cancel another selected page pending approval; real BrowserSharing.page_changed/ToolSession waiter red and green.",
+    "Advancing the retired page control revision rejects an unadmitted delayed allow after A-B-A, without inventing native navigation; actual capture_read_scope red and green.",
+    "Confirmed retry clears only the previous selection error; page gate remains withdrawn.",
+    "Unconfirmed creation prevents global show until exact hidden or close ACK; controlled store red and green.",
+    "Windows in-flight creations and returned controllers retain native ownership until Close ACK, including late completion; source review only, not a Windows execution."
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "startedAtUtc": "2026-10-13T22:57:23.080408+00:00",
+  "cwd": "/Users/tw/Desktop/farfold",
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--lib",
+    "--",
+    "--show-output"
+  ],
+  "preparation": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/preparation.json",
+    "bytes": 7616,
+    "sha256": "b0078ddc2f7db932469d270c78a1aa6df43173ea9b0c55cf7071c560b8cfea75"
+  },
+  "sourceBefore": [
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 34228,
+      "sha256": "4e1999acc98405ce31f7c925c0deb8eebe8fe4f451626057be2bddfc06944d6a"
+    },
+    {
+      "path": "src-tauri/src/pty.rs",
+      "bytes": 30753,
+      "sha256": "3da5ce60cd20a211e3307ef42df5f37f8b8dc1e4670003bac6d9eba6f9418c00"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions.rs",
+      "bytes": 10920,
+      "sha256": "84ad7a0d5ab500aa3ed7309271ab24b1fcf2dc0045bb8200889405d7cd7b610a"
+    },
+    {
+      "path": "src-tauri/src/auth.rs",
+      "bytes": 47716,
+      "sha256": "fcb20dc1835a5159bfcf935ce39f6794ac1623ef1598b54ddc9c4f6b189e53d9"
+    },
+    {
+      "path": "src-tauri/src/auth/attempts.rs",
+      "bytes": 6922,
+      "sha256": "63271922c5b04cc8dfeecc27e99f0f575115d4dfb05b66ec89629e01c16839c4"
+    },
+    {
+      "path": "src-tauri/src/shell_env/unix.rs",
+      "bytes": 8844,
+      "sha256": "97d6e2a0ab1f97d42e2e05b57cf03d2aecbd8615861e0b0449b6605be27d257e"
+    }
+  ],
+  "freeze": {
+    "path": "output/2026-10-14-browser-tabs-integration/checks-freeze-02/freeze.json",
+    "bytes": 401759,
+    "sha256": "3c498f0e173aa83292014037a729e167873a2ab9748f4adbb8964830f91a135b"
+  },
+  "boundary": "One authorized diagnostic run, default libtest capture, no retry; not formal engineering acceptance."
+}

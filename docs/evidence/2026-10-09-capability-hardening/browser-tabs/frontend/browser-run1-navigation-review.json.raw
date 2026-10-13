@@ -1,0 +1,71 @@
+{
+  "observedAtUtc": "2026-10-13T21:28:11.049460+00:00",
+  "mode": "read-only source review; no tests or UI repeated; source unchanged",
+  "reportedRun": {
+    "engine": "Chromium",
+    "run": 1,
+    "actualExitCode": 1,
+    "completionChunk": "5455ed",
+    "completedChecks": 68,
+    "completedScenarios": 7,
+    "inputsStable": true,
+    "attribution": "reported by root; this note independently checks the source precondition, not a rerun"
+  },
+  "finding": "The full App cannot enter task B while task A native create reply is still held. The task switch is intentionally queued behind every registered owner hide/close acknowledgement. Filling B before releasing A targets the still-disabled A form. This is a driver reachability error, not evidence that page ownership or switching failed.",
+  "sourceRefs": [
+    {
+      "path": "src/App.tsx",
+      "bytes": 46453,
+      "sha256": "437bb0195d243cb8276eaaaeedbdbe9fe7ac65615d331a642eae2a89127d5a76"
+    },
+    {
+      "path": "src/runtime/browser_surface_guard.ts",
+      "bytes": 6793,
+      "sha256": "65183ec683c101968fa3090927f2d46d06bdfabf3f408725badb753516ab9a3e"
+    },
+    {
+      "path": "src/runtime/browser_workspace.ts",
+      "bytes": 14716,
+      "sha256": "c039667dfc532cb72a7255d7b06045ab41cf3adc6ef1a13c2ff0bbb5dfde460e"
+    },
+    {
+      "path": "src/components/BrowserWorkspacePage.tsx",
+      "bytes": 42454,
+      "sha256": "e2fc0c119e9ee5ffc281dce13d803ddb29f1c9e3924620f12ee1d3c6740b1ae8"
+    }
+  ],
+  "callChain": [
+    {
+      "path": "src/App.tsx",
+      "lines": "109-113,500",
+      "meaning": "openRow routes through afterBrowserClose and guard.runLatest"
+    },
+    {
+      "path": "src/runtime/browser_surface_guard.ts",
+      "lines": "156-179,188-211",
+      "meaning": "registered unhidden owners must finish hide or close; only then run queued navigation"
+    },
+    {
+      "path": "src/components/BrowserWorkspacePage.tsx",
+      "lines": "217-229,423-449",
+      "meaning": "register exact owner before create; hide calls owner.setVisible(false)"
+    },
+    {
+      "path": "src/runtime/browser_workspace.ts",
+      "lines": "270-295,312-331",
+      "meaning": "visibility operation waits this scope opening and then dispatches exact native hide"
+    }
+  ],
+  "driverCorrection": [
+    "Keep A create reply held and request B; assert task A and global busy remain, with no B create.",
+    "Release the exact A reply, wait real A hide ACK and actual task-B view, then fill B.",
+    "Do not bypass the native-presentation guard or infer hidden ACK from reservation metadata.",
+    "Two owners creating concurrently with reverse replies is a separate internal controller/backend adversarial boundary, not a reachable full App scenario under this navigation sequence.",
+    "The same caveat applies to task-switch attempts while a selected-page close ACK is held. Existing direct setActive(false) unit red/green proves a narrower controller completion boundary."
+  ],
+  "scopeNotClaimed": [
+    "No UI rerun or native proof",
+    "No product guard change",
+    "No two-owner reverse-order frontend controller test claimed"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "pid": 45585,
+  "session": 75404,
+  "observedCommand": "45585 47488 node output/2026-10-14-browser-tabs-browser/serve.mjs",
+  "signal": "SIGTERM",
+  "scope": "Root owned controlled loopback server only"
+}

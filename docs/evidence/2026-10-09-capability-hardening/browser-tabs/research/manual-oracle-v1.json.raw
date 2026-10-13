@@ -1,0 +1,278 @@
+{
+  "authoredAtUtc": "2026-10-13T20:41:26.856617+00:00",
+  "provenance": "Hand-authored from approved PRODUCT scope and explicit lifecycle requirements before implementing multi-tabs. No current parser/controller/test output defines expected values. These are proposed red cases, not claimed observed failures.",
+  "cases": [
+    {
+      "id": "P30-01",
+      "title": "Three real instances, not three labels",
+      "given": {
+        "task": "T1",
+        "pages": [
+          "A",
+          "B",
+          "C"
+        ],
+        "initial": "No pages"
+      },
+      "actions": [
+        "Create/open A, B, C by explicit actions, select each and set independent fixture counter/scroll",
+        "Return A then B"
+      ],
+      "expected": {
+        "nativeLive": 3,
+        "distinctNativeIds": 3,
+        "maxVisible": 1,
+        "pageState": "A/B/C counters and scroll remain their own",
+        "grant": "No grant inherited from another tab",
+        "forbidden": "Destroy/recreate old pages as the tab switch implementation"
+      },
+      "evidenceBoundary": "Current open closes active; red must be recorded before implementation, not inferred as executed here."
+    },
+    {
+      "id": "P30-02",
+      "title": "Revoke and quiesce before new presentation",
+      "given": {
+        "selected": "A",
+        "target": "B",
+        "sharing": "A grant active",
+        "read": "A undelivered read pending",
+        "barriers": [
+          "quiesce",
+          "hide"
+        ]
+      },
+      "actions": [
+        "Start select B",
+        "Resolve revocation, delay quiesce; then resolve quiesce, delay hide; finally resolve hide"
+      ],
+      "expected": {
+        "beforeQuiesce": "No B show and no new A dispatch/delivery after revoke linearizes",
+        "beforeHideAck": "B still hidden",
+        "after": "B can be shown only after true hide ACK; B unshared",
+        "alreadyDelivered": "Existing delivered bytes cannot be recalled"
+      },
+      "evidenceBoundary": "Controlled transport and real-native presentation require separate proof."
+    },
+    {
+      "id": "P30-03",
+      "title": "Withdrawal failure cannot rollback permission",
+      "given": {
+        "selected": "A",
+        "target": "B",
+        "revoke": "local gate revoked",
+        "quiesce": "fails"
+      },
+      "actions": [
+        "Select B",
+        "Return quiesce error",
+        "Explicitly retry or close exact A later"
+      ],
+      "expected": {
+        "selected": "A remains selected or clearly blocked; never false B success",
+        "Agrant": "Stays revoked; UI stop-failed/unknown retained",
+        "B": "No show/new grant",
+        "retry": "Uses actual current retiring scope, not old success receipt"
+      },
+      "evidenceBoundary": "Manual expected state; no product output used."
+    },
+    {
+      "id": "P30-04",
+      "title": "Hide/show failure stays globally blocked",
+      "given": {
+        "selected": "A",
+        "target": "B",
+        "revoke": "success"
+      },
+      "actions": [
+        "Variant1 hide A ACK fails",
+        "Variant2 hide A succeeds but show B ACK fails"
+      ],
+      "expected": {
+        "variant1": "No B show, A permission remains withdrawn, A native visibility unknown",
+        "variant2": "B may be selected but presentation unknown; no C or old A auto-show",
+        "resolution": "Exact failed-owner close/retry ACK needed; no UI-only success"
+      },
+      "evidenceBoundary": "Do not turn native timeout into closed/hidden."
+    },
+    {
+      "id": "P30-05",
+      "title": "Presentation-only hiding preserves same-page grant",
+      "given": {
+        "task1": "T1/A selected+shared",
+        "task2": "T2/C selected+unshared"
+      },
+      "actions": [
+        "Focus and activate already-selected A without changing page",
+        "Collapse and reopen T1/A",
+        "Switch task to T2/C and back to T1/A without selecting another T1 tab"
+      ],
+      "expected": {
+        "grantA": "Preserved if no navigation/close/revoke occurred",
+        "pendingA": "Same request can complete while hidden; receipts observed",
+        "grantC": "Not granted from A",
+        "maxVisible": 1,
+        "noSelectedChange": "Task navigation is not same-task tab selection",
+        "sameTabNoop": "Does not revoke/recreate page or grant"
+      },
+      "evidenceBoundary": "Counterexample to over-broad revoke-on-any-hide implementation."
+    },
+    {
+      "id": "P30-06",
+      "title": "Two owners and reversed late creation",
+      "given": {
+        "owners": [
+          "T1/B",
+          "T2/C"
+        ],
+        "nativeCreate": "Both late; most recent route T2"
+      },
+      "actions": [
+        "Start T1/B hidden create",
+        "Navigate to T2 and start C",
+        "Deliver C ACK then late B ACK, and repeat reverse order"
+      ],
+      "expected": {
+        "visible": "Only eligible latest route selected page; B cannot steal focus",
+        "scope": "Each reply updates exact owner only",
+        "retired": "A discarded owner closes its exact late page; merely hidden task retains hidden page",
+        "grant": "No restoration by create completion"
+      },
+      "evidenceBoundary": "Independent cross-owner oracle, not source-derived output."
+    },
+    {
+      "id": "P30-07",
+      "title": "Close one tab and failed close capacity",
+      "given": {
+        "tabs": [
+          "A selected",
+          "B hidden",
+          "C hidden"
+        ],
+        "Bclose": "native ACK delayed/fails"
+      },
+      "actions": [
+        "Close B",
+        "Attempt new D before B close confirms",
+        "Confirm B close then explicitly open D"
+      ],
+      "expected": {
+        "A": "Unchanged with its grant",
+        "C": "Unchanged",
+        "beforeAck": "B row/owner remains and D rejects capacity; no silent eviction",
+        "afterAck": "Only B removed; slot released once",
+        "lateClose": "Old B close cannot remove D"
+      },
+      "evidenceBoundary": "Reservation and uncertain-close owners count toward global3 bound."
+    },
+    {
+      "id": "P30-08",
+      "title": "Queued approval and A→B→A ABA",
+      "given": {
+        "task": "T1",
+        "A": "public URL U",
+        "B": "same URL U but distinct native ID",
+        "pending": "A approval + manual read captured before switch"
+      },
+      "actions": [
+        "Switch A→B→A",
+        "Deliver old approval allow and old read result"
+      ],
+      "expected": {
+        "oldGrant": "Rejected; old gate permanently withdrawn",
+        "manualOld": "No old snapshot published as current A",
+        "newA": "No automatic approval; explicit new user grant only",
+        "sameURL": "Does not imply same instance or valid authority"
+      },
+      "evidenceBoundary": "Does not use source revision labels as author expected output."
+    },
+    {
+      "id": "P30-09",
+      "title": "Navigation callbacks remain per-page",
+      "given": {
+        "A": "loading on navigation n",
+        "selected": "B",
+        "B": "ready"
+      },
+      "actions": [
+        "A navigation n completes while hidden",
+        "Old n-1 event arrives",
+        "A performs permitted navigation then emit stale old read"
+      ],
+      "expected": {
+        "A": "Current n may become ready hidden; n-1 ignored",
+        "B": "State/URL/title unchanged",
+        "switch": "Must not fabricate a navigation n+1 just to invalidate reads",
+        "staleRead": "Rejected by captured page gate/navigation"
+      },
+      "evidenceBoundary": "Key distinction between selection invalidation and real navigation."
+    },
+    {
+      "id": "P30-10",
+      "title": "Create uncertainty remains owned",
+      "given": {
+        "tab": "B explicit open",
+        "create": "return/ACK uncertain; native may exist"
+      },
+      "actions": [
+        "Reserve B then create timeout",
+        "Cancel/discard B owner",
+        "Deliver late actual creation"
+      ],
+      "expected": {
+        "B": "Hidden from creation; exact reserved identity retained until close ACK",
+        "count": "Uncertain B still consumes slot",
+        "shutdown": "Queued native closure cannot create visible orphan",
+        "others": "No sibling close or grant change"
+      },
+      "evidenceBoundary": "No assumption that rejected JS Promise means native object absent."
+    },
+    {
+      "id": "P30-11",
+      "title": "Existing local scopes and partition clear",
+      "given": {
+        "pages": [
+          "Public A",
+          "offline HTML B",
+          "same-partition local sibling C or rejected duplicate"
+        ]
+      },
+      "actions": [
+        "Switch public/local pages",
+        "Attempt clear B store with live same-partition peer",
+        "Close peer, explicitly clear B"
+      ],
+      "expected": {
+        "publicPolicy": "HTTPS policy and temporary environment unchanged",
+        "offline": "No new filesystem/network or Agent sharing authority",
+        "clearWithPeer": "Reject until peers close; never silently clear running peer",
+        "clearAfter": "Only exact project/file store affected; original HTML and other pages untouched"
+      },
+      "evidenceBoundary": "If duplicates are forbidden before creation, test that refusal instead; no new persistent browser list."
+    },
+    {
+      "id": "P30-12",
+      "title": "Exit all pages and no restart restoration",
+      "given": {
+        "pages": [
+          "A visible",
+          "B hidden",
+          "C opening"
+        ],
+        "shutdown": "Normal exit"
+      },
+      "actions": [
+        "Begin shutdown",
+        "Deliver late C native creation",
+        "Return all close ACKs",
+        "Start fresh workspace instance"
+      ],
+      "expected": {
+        "during": "No fresh capture/grant or visible late C",
+        "closed": "All3 only marked closed after native acknowledgement",
+        "fresh": "Empty tab list, no auto load/share/request",
+        "P30": "Restart tab-list restoration remains explicitly unimplemented"
+      },
+      "evidenceBoundary": "No real App/Agent action executed during this research."
+    }
+  ]
+}

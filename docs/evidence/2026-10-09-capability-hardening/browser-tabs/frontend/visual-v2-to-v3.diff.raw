@@ -1,0 +1,21 @@
+--- v2/BrowserWorkspace.tsx
++++ v3/BrowserWorkspace.tsx
+@@ -145,14 +145,16 @@
+                     >
+                       <XIcon size={12} aria-hidden="true" />
+                     </button>
+-                    <span className="sr-only">{index + 1}</span>
++                    <span className="browser-workspace-sr-only">
++                      {index + 1}
++                    </span>
+                   </div>
+                 );
+               })}
+             </div>
+             <button
+               type="button"
+-              className="browser-workspace-icon"
++              className="icon-button"
+               aria-label={S.addTab}
+               title={S.addTab}
+               disabled={state.changing || !state.ready}

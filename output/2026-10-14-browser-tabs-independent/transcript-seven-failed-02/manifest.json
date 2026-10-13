@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "processId": "14309",
+  "toolChunk": "174aac",
+  "actualOuterExitCode": 1,
+  "records": [
+    {
+      "path": "output/2026-10-14-browser-tabs-independent/transcript-seven-failed-02/seven-check-command-completed.jsonl.raw",
+      "bytes": 3862,
+      "sha256": "f151a78abeb6ab1bc72f9d5f41d07656fe207fcbf52e4f12fa7d32a08eef7c8e",
+      "sourceLine": 17640,
+      "sourceByteOffset": 49631563,
+      "sourceByteLength": 3862,
+      "eventTimestamp": "2026-10-13T22:43:35.388Z"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-independent/transcript-seven-failed-02/seven-check-tool-output.jsonl.raw",
+      "bytes": 1241,
+      "sha256": "4e75d4d7d782153c3de3c9643158a5d3292ea8e2a97a895586370f4ec334b890",
+      "sourceLine": 17641,
+      "sourceByteOffset": 49635425,
+      "sourceByteLength": 1241,
+      "eventTimestamp": "2026-10-13T22:43:35.389Z"
+    }
+  ],
+  "boundary": "Exact two recorded completion events; no reconstructed execution and no unrelated transcript content."
+}

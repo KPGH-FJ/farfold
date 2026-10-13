@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS_FINAL_V5_CONTROLLED_SCOPE_NO_KNOWN_BLOCKER",
+  "verification": {
+    "path": "output/2026-10-14-browser-tabs-browser/root-verification-final-v5.json",
+    "bytes": 4867,
+    "sha256": "b48df51448a1fd1177550cfe7bba4628b1666153eb239fca0fb22ccae618ad8b"
+  },
+  "sourceFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v5.json",
+    "bytes": 6034,
+    "sha256": "5752c0d4e41537cab2c86301c63f3fcdf87f1c43883ac4ddde4586ac51b1d553"
+  },
+  "runs": [
+    {
+      "result": {
+        "path": "output/2026-10-14-browser-tabs-browser/chromium-run9.json",
+        "bytes": 976349,
+        "sha256": "b2b4d5207926ebb4d43d474cdbab2e12faf614bd4c473d80061242a818cf56dd"
+      },
+      "actualExitCode": 0,
+      "chunk": "9f3b2f",
+      "assertions": 141,
+      "scenarios": 13,
+      "stableInputs": 1109,
+      "inputDeltaFromV4": [
+        "src/components/BrowserWorkspace.presentation.test.tsx",
+        "src/components/BrowserWorkspacePage.tsx"
+      ],
+      "frontendV5Freeze17Matched": true,
+      "reverseRetention": {
+        "AAndBRemainLive": true,
+        "sameBIdentity": "controlled-page-2",
+        "memory": {
+          "counter": "1",
+          "note": "B_RETURN_RETAINED",
+          "scrollY": 123
+        },
+        "createCount": 2,
+        "closeCount": 0
+      },
+      "screenshots": [
+        {
+          "path": "output/2026-10-14-browser-tabs-browser/chromium-run9-three-pages.png",
+          "bytes": 87679,
+          "sha256": "b3fe355c6fbba1fe0b863a9d1f03944027ea6adceec496745a54ac44fc1c77ff"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-browser/chromium-run9-narrow-pages.png",
+          "bytes": 73960,
+          "sha256": "f739c51542b2be43da56f6cd82348af92866f59c8dc1e4ad2926bbaa1180a23e"
+        }
+      ],
+      "screenshotsByteIdenticalToV4": true
+    },
+    {
+      "result": {
+        "path": "output/2026-10-14-browser-tabs-browser/webkit-run5.json",
+        "bytes": 976694,
+        "sha256": "1be01615c1df2e603b8b6d98028bac8f1c3c0d7ecc353d1e2945a0e51fc7780f"
+      },
+      "actualExitCode": 0,
+      "chunk": "076e42",
+      "assertions": 141,
+      "scenarios": 13,
+      "stableInputs": 1109,
+      "inputDeltaFromV4": [
+        "src/components/BrowserWorkspace.presentation.test.tsx",
+        "src/components/BrowserWorkspacePage.tsx"
+      ],
+      "frontendV5Freeze17Matched": true,
+      "reverseRetention": {
+        "AAndBRemainLive": true,
+        "sameBIdentity": "controlled-page-2",
+        "memory": {
+          "counter": "1",
+          "note": "B_RETURN_RETAINED",
+          "scrollY": 123
+        },
+        "createCount": 2,
+        "closeCount": 0
+      },
+      "screenshots": [
+        {
+          "path": "output/2026-10-14-browser-tabs-browser/webkit-run5-three-pages.png",
+          "bytes": 194909,
+          "sha256": "72503ac3842db137d44b5c5d07145944eab20e21ffffc7202b3859d630337779"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-browser/webkit-run5-narrow-pages.png",
+          "bytes": 143333,
+          "sha256": "e0b18fe4f945efdd323bf2cc4e75ea276d70add0f3882b041ec5d3bbdb246922"
+        }
+      ],
+      "screenshotsByteIdenticalToV4": true
+    }
+  ],
+  "commonBeforeAfterInputMapsEqual": true,
+  "actualCompletions": {
+    "manifest": {
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-final-v5/manifest.json",
+      "bytes": 1034,
+      "sha256": "469b5b127ed4f190951dd54dc173891948a71707b6ff15f003268d0bd5c8a727"
+    },
+    "records": [
+      {
+        "run": "webkit-run5",
+        "path": "output/2026-10-14-browser-tabs-browser/transcript-final-v5/webkit-run5-16645.jsonl.raw",
+        "sourceLine": 16645,
+        "exitCode": 0,
+        "bytes": 894,
+        "sha256": "9726c31a66126f181164c461bc9260596453e1c937cc200595823f1ca9f005bf",
+        "sourceByteOffset": 47427745,
+        "byteExactToOriginal": true,
+        "actualStatus": "completed"
+      },
+      {
+        "run": "chromium-run9",
+        "path": "output/2026-10-14-browser-tabs-browser/transcript-final-v5/chromium-run9-16646.jsonl.raw",
+        "sourceLine": 16646,
+        "exitCode": 0,
+        "bytes": 900,
+        "sha256": "7375d15e7ccfa0ae01eeadea81dbb8d8a599d84687015b17036ebde20f31c370",
+        "sourceByteOffset": 47428639,
+        "byteExactToOriginal": true,
+        "actualStatus": "completed"
+      },
+      {
+        "run": "server-3",
+        "path": "output/2026-10-14-browser-tabs-browser/transcript-final-v5/server-3-16658.jsonl.raw",
+        "sourceLine": 16658,
+        "exitCode": 143,
+        "bytes": 2068,
+        "sha256": "834edd042352c3cc502124c5fe5702ea3e4938f4f918d956fd100e379174fa6e",
+        "sourceByteOffset": 47445762,
+        "byteExactToOriginal": true,
+        "actualStatus": "failed"
+      }
+    ],
+    "scope": "Only specified three original transcript records parsed/compared."
+  },
+  "guardTimingClosure": {
+    "sourceReview": {
+      "path": "output/2026-10-14-browser-tabs-independent/frontend-v5-source-review.json",
+      "bytes": 6089,
+      "sha256": "fb25bf17a9045d948971e11801951fd4c8d863773495115fd10164acca54d097"
+    },
+    "conclusion": "Local real-guard synthetic batched-render red and 74 green establish the resume fix for that schedule. New final two-engine runs exercise actual frontend v5; v4 browser results are not relabeled."
+  },
+  "proofBoundary": "Production frontend full App development StrictMode with controlled Tauri/iframe pages. Backend source-v2 has separate Rust/source evidence; these1109 frontend maps exclude src-tauri. No native WebView/App, Windows, real Agent, restart persistence or full P30/NEW24 acceptance.",
+  "rawTraceReview": "Both engines preserve exact B instance and counter/input/scroll across A→B→A→B, exactly2 creates and0 close in the formerly failing scenario. Failed-close/hide, selection, late-open and ABA cases pass within controlled transport scope. Mock permission/ACK success is not native safety proof.",
+  "visualBoundary": "Final4 PNGs hash-match the prior four inspected images; pointer and rectangle assertions run anew. No unnecessary duplicate image observation claimed.",
+  "server": "Original CommandExecution confirms intentional SIGTERM143 for server3; saved stop receipt reports absence. No independent ps or live inspection repeated.",
+  "preservedFailures": "All earlier driver/visual harness errors, 138 assertion gap, whole-App run5/6/7 and local source reds remain original. No result overwritten.",
+  "next": "Ready for final publication/explicit source inventory/full seven engineering; no further speculative expansion requested.",
+  "scope": "Only this new safe independent report; no source/docs/test/browser/App/DB mutations or executions."
+}

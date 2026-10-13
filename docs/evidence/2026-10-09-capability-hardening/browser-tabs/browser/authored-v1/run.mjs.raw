@@ -1,0 +1,145 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { chromium, webkit } = await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base = "output/2026-10-14-browser-tabs-browser";
+const [engine, label] = process.argv.slice(2);
+if (!["chromium", "webkit"].includes(engine) || !/^run\d+$/.test(label)) throw Error("Exact engine/run required");
+const destination = `${base}/${engine}-${label}.json`;
+if (fs.existsSync(destination)) throw Error("Retain previous run; choose a new label");
+const hash = file => createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+const scan = dir => fs.readdirSync(dir, { withFileTypes: true }).flatMap(item => item.isDirectory() ? scan(dir + "/" + item.name) : [dir + "/" + item.name]);
+const inputFiles = [...scan("src"), ...["fixture.tsx", "transport.ts", "index.html", "serve.mjs", "run.mjs", "page-oracle.json", "pages/a.html", "pages/b.html", "pages/c.html"].map(name => base + "/" + name), "output/2026-10-14-browser-tabs-research/manual-oracle-v2.json", "output/2026-10-14-browser-tabs-research/revision-v2.json", "package.json", "pnpm-lock.yaml", "vite.config.ts"].sort();
+const inventory = () => Object.fromEntries(inputFiles.map(file => [file, hash(file)]));
+const result = { engine, label, scope: "Full production App with controlled Tauri lifecycle and authored iframe pages. No real native view, installed App, user data, Agent, or external network. Backend permission/ACK safety is not established by controlled responses.", before: inventory(), checks: [], scenarios: [], errors: [], externalRequests: [], screenshots: [] };
+const browser = await (engine === "webkit" ? webkit : chromium).launch({ headless: true, executablePath: engine === "webkit" ? path.resolve("output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh") : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" });
+let page, scenario;
+const check = (name, pass, detail) => {
+  result.checks.push({ scenario, name, pass: Boolean(pass), ...(detail === undefined ? {} : { detail }) });
+  if (!pass) throw Error(name);
+};
+const state = () => page.evaluate(() => window.fixture.current());
+const pane = () => page.locator(".artifact-pane:visible");
+const tablist = () => pane().getByRole("tablist", { name: "网页标签", exact: true });
+const live = value => value.pages.filter(item => !item.closed);
+const shown = value => live(value).filter(item => item.visible);
+async function waitState(predicate) {
+  await page.waitForFunction(source => {
+    const predicate = new Function("s", "return (" + source + ")(s)");
+    return predicate(window.fixture.current());
+  }, predicate.toString());
+}
+async function load(name) {
+  scenario = name;
+  if (page) await page.close();
+  page = await browser.newPage({ viewport: { width: 1280, height: 860 } });
+  page.setDefaultTimeout(12000);
+  page.on("pageerror", error => result.errors.push({ scenario, error: String(error) }));
+  await page.route("**/*", route => {
+    if (route.request().url().startsWith("http://127.0.0.1:1540/")) return route.continue();
+    result.externalRequests.push({ scenario, url: route.request().url() });
+    return route.abort();
+  });
+  await page.goto("http://127.0.0.1:1540/" + base + "/index.html");
+  await page.getByText("P30_TASK_A", { exact: true }).first().click();
+  await pane().getByRole("button", { name: "网页", exact: true }).click();
+  await tablist().waitFor();
+  check("Fixture begins with zero page instances", live(await state()).length === 0);
+}
+async function open(letter, fresh = true) {
+  if (fresh) await pane().getByRole("button", { name: "新建网页", exact: true }).click();
+  await pane().getByRole("textbox", { name: "公开网页地址", exact: true }).fill("https://example.org/" + letter.toLowerCase());
+  await pane().getByRole("button", { name: "打开", exact: true }).click();
+  await waitState(s => s.pages.filter(p => !p.closed && p.visible).length === 1);
+  const value = await state();
+  const current = shown(value)[0];
+  check("Opening selects the explicit source", current.url === "https://example.org/" + letter.toLowerCase());
+  await page.frameLocator(`iframe[data-controlled-page="${current.label}"]`).getByRole("heading", { name: "P30_PAGE_" + letter, exact: true }).waitFor();
+  return current.label;
+}
+async function activate(index) {
+  await tablist().getByRole("tab").nth(index).click();
+  await page.waitForFunction(index => document.querySelectorAll('[role="tablist"][aria-label="网页标签"] [role="tab"]')[index]?.getAttribute("aria-selected") === "true", index);
+  await waitState(s => s.pages.filter(p => !p.closed && p.visible).length === 1);
+}
+async function memory(id, clicks, note, scrollY) {
+  const frame = page.frameLocator(`iframe[data-controlled-page="${id}"]`);
+  for (let i = 0; i < clicks; i++) await frame.getByRole("button", { name: "增加计数", exact: true }).click();
+  await frame.getByRole("textbox", { name: "页面笔记", exact: true }).fill(note);
+  await page.locator(`iframe[data-controlled-page="${id}"]`).evaluate((element, value) => element.contentWindow.scrollTo(0, value), scrollY);
+}
+async function shot(name) {
+  const file = `${base}/${engine}-${label}-${name}.png`;
+  await page.screenshot({ path: file });
+  result.screenshots.push({ file, sha256: hash(file) });
+}
+async function finish() {
+  const current = await state();
+  check("No real Agent commands or unexpected IPC", current.unexpected.length === 0 && !current.calls.some(call => /^(session_prompt|session_open|session_load|session_set_config)/.test(call.cmd)), current.unexpected);
+  check("Existing drafts and unrelated file feedback are unchanged", current.protectedUnchanged);
+  check("At most one simulated native page is visible", current.maximumVisible <= 1);
+  result.scenarios.push({ name: scenario, evidence: current });
+}
+try {
+  await load("three-independent-instances");
+  const ids = [];
+  for (const [letter, clicks, note, scrollY] of [["A", 2, "A_RETAINED", 700], ["B", 1, "B_RETAINED", 350], ["C", 3, "C_RETAINED", 0]]) {
+    const id = await open(letter, ids.length > 0);
+    ids.push(id);
+    await memory(id, clicks, note, scrollY);
+  }
+  let current = await state();
+  check("Three distinct living pages exist", live(current).length === 3 && new Set(ids).size === 3);
+  await activate(0);
+  current = await state();
+  check("Returning A retains its exact instance and memory", shown(current)[0].label === ids[0] && shown(current)[0].state.counter === "2" && shown(current)[0].state.note === "A_RETAINED" && shown(current)[0].state.scrollY === 700, shown(current)[0]);
+  await activate(1);
+  current = await state();
+  check("Returning B retains its independent memory", shown(current)[0].label === ids[1] && shown(current)[0].state.counter === "1" && shown(current)[0].state.note === "B_RETAINED" && shown(current)[0].state.scrollY === 350, shown(current)[0]);
+  check("Switches do not destroy and recreate pages", current.trace.filter(item => item.stage === "create-hidden").length === 3 && !current.trace.some(item => item.stage === "close"));
+  await shot("three-pages");
+  await finish();
+
+  scenario = "keyboard-focus-is-not-selection";
+  const beforeSelectionCalls = (await state()).calls.filter(call => call.cmd === "browser_workspace_select").length;
+  await tablist().getByRole("tab").nth(1).focus();
+  await page.keyboard.press("ArrowRight");
+  current = await state();
+  check("Arrow focus leaves selected page and permission scope unchanged", current.calls.filter(call => call.cmd === "browser_workspace_select").length === beforeSelectionCalls && shown(current)[0].label === ids[1]);
+  await page.keyboard.press("Enter");
+  await waitState(s => s.pages.some(p => p.url.endsWith("/c") && p.visible));
+  check("Enter activates focused page", shown(await state())[0].label === ids[2]);
+  await finish();
+
+  scenario = "close-hidden-sibling-only";
+  const closeButtons = pane().getByRole("button", { name: /^关闭网页：/ });
+  await closeButtons.nth(1).click();
+  await waitState(s => s.pages.filter(p => !p.closed).length === 2);
+  current = await state();
+  check("Only hidden B closed; A and selected C remain", current.pages.find(p => p.label === ids[1]).closed && !current.pages.find(p => p.label === ids[0]).closed && shown(current)[0].label === ids[2]);
+  check("Exactly the hidden sibling receives close acknowledgement", current.trace.filter(item => item.stage === "close" && item.event === "ack").every(item => item.label === ids[1]));
+  await finish();
+
+  scenario = "narrow-layout";
+  await page.setViewportSize({ width: 780, height: 840 });
+  await tablist().waitFor();
+  check("Tab controls fit narrow viewport", await tablist().evaluate(element => { const rect = element.getBoundingClientRect(); return rect.left >= 0 && rect.right <= innerWidth + 1; }));
+  check("New-page control remains operable", await pane().getByRole("button", { name: "新建网页", exact: true }).isVisible());
+  await shot("narrow-pages");
+  await finish();
+} catch (error) {
+  result.failure = String(error?.stack ?? error);
+  if (page) {
+    result.lastState = await state().catch(() => null);
+    result.lastVisibleText = await page.locator("body").innerText().catch(() => "");
+  }
+  process.exitCode = 1;
+} finally {
+  result.after = inventory();
+  result.inputsStable = JSON.stringify(result.before) === JSON.stringify(result.after);
+  result.passed = !result.failure && result.inputsStable && result.errors.length === 0 && result.externalRequests.length === 0 && result.checks.every(check => check.pass);
+  if (!result.passed) process.exitCode = 1;
+  fs.writeFileSync(destination, JSON.stringify(result, null, 2) + "\n", { flag: "wx" });
+  await browser.close();
+  console.log(JSON.stringify({ path: destination, passed: result.passed, checks: result.checks.length, scenarios: result.scenarios.length, inputsStable: result.inputsStable, error: result.failure?.split("\n")[0] }));
+}

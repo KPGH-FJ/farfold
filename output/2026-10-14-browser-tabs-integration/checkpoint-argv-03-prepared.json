@@ -1,0 +1,619 @@
+{
+  "schema": 1,
+  "phase": "CHECKPOINT_ARGV_TEMPLATE_ONLY_THIRD_RUN_UNKNOWN",
+  "selector": {
+    "path": "output/2026-10-14-browser-tabs-integration/prepare_checkpoint.py",
+    "bytes": 13313,
+    "sha256": "6c72832cd876743afb7f53831faf3a9cb5f82d5957b8d01328010dbd929da343"
+  },
+  "previousTemplatePreserved": {
+    "path": "output/2026-10-14-browser-tabs-independent/checkpoint-argv-02-prepared.json",
+    "bytes": 12041,
+    "sha256": "bd8249bdaf21196e29d11cfb22061163c5764a24058b9c124be48af58681f5f4"
+  },
+  "argvTemplate": [
+    "python3",
+    "-B",
+    "output/2026-10-14-browser-tabs-integration/prepare_checkpoint.py",
+    "--base",
+    "a45112856a44c4a16f83ebdd079ab6d5c4876907",
+    "--inventory",
+    "output/2026-10-14-browser-tabs-integration/inventory-plan-03.json=<FINAL_INVENTORY03_SHA256>",
+    "--freeze",
+    "output/2026-10-14-browser-tabs-integration/checks-freeze-03/freeze.json=<FINAL_FREEZE03_SHA256>",
+    "--summary",
+    "output/2026-10-14-browser-tabs-integration/checks-run-03/summary.json=<ACTUAL_RUN03_SUMMARY_SHA256>",
+    "--verification",
+    "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/verification.json=<ACTUAL_PUBLIC_CHECKS_VERIFICATION_SHA256>",
+    "--owner",
+    "<FINAL_BACKEND_OWNER_PATH>=<FINAL_BACKEND_OWNER_SHA256>",
+    "--owner-count",
+    "<FINAL_BACKEND_OWNER_COUNT>",
+    "--owner",
+    "output/2026-10-14-browser-tabs-frontend/source-freeze-v5.json=5752c0d4e41537cab2c86301c63f3fcdf87f1c43883ac4ddde4586ac51b1d553",
+    "--owner-count",
+    "17",
+    "--publication",
+    "docs/evidence/2026-10-09-capability-hardening/browser-tabs/publication.json=a576554403f265e6202b46479f9497f140ca691dd42cb1a3286b79c4d7361e6f",
+    "--publication",
+    "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/publication.json=<ACTUAL_PUBLIC_CHECKS_PUBLICATION_SHA256>",
+    "--record",
+    "docs/evidence/2026-10-09-capability-hardening/browser-tabs/verification.json=c332e5b0c80844c77a0283ca1f1b8847ae968d41691217ad10a106ec9c27aba7",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/summary.json=cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/inputs-before.json=ae85f2b8ced81de254ef65a2399ef02ed3e3cdbe4638821349dc7ca477d585d7",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/inputs-after.json=ae85f2b8ced81de254ef65a2399ef02ed3e3cdbe4638821349dc7ca477d585d7",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/protected-before.json=aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/protected-after.json=aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/preflight.json=160f7d5d345ff1a9317817844cd92e7f405b2dc7d43be5d3f1626ab4e63d5a9e",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/events.jsonl=9a870b97571493eca5b28ab6cf21df84e419fd1944255a36a7226ab4883ed121",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-freeze/freeze.json=424053c3ebbae4e6041cea3344a0f8e4dbab9fd8f2914d80887ca608f151918f",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/format-check/started.json=194af51521af21e7c7806efa0d4240150935d564c7761dd37dc7e5b459c5a85f",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/format-check/completed.json=6217cf8c2857821f6131694b6cba535d4652699abccf481474585a54baf935b0",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/format-check/stdout.log=30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/format-check/stderr.log=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/started.json=449e158f6df2dc5c81237d616fc8dd14a079b3c51f684d149f54cf734279e8bf",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/completed.json=72c444e164860f48fc8279954824947b0fb62a580e442e5cc9868bd9bf64ae9a",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/stdout.log=5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/stderr.log=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/started.json=2d7659daca68ec29a4517b4f6a5ca679e903aa5b096375699dfeb719ebc72c3c",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/completed.json=b35e917c7055cf0096557bc36fde5773a7b05ea45e0de98f58d534fde13bc57a",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/stdout.log=c2491415782f2c8aabafccbb4c3dad86491bd33a436dd9b935443f23645396d6",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/stderr.log=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/started.json=07a90355260fe6932ee3531b57681a24381f9e876d9cb1a6bbf4ee91fa0c14a5",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/completed.json=63d442f8ece8d18a7e592c563f952dc3ff10f9d8204ac9fd2da2b3df0dfcc214",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/stdout.log=cdbdda6d522b061db58953181bff7f94799b61823087e8e8892543a00d523975",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/stderr.log=351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/started.json=6b436f4e834ec9fc2d8da17e3f6c48a2e67e75d1a22911eea78f56a972a0bb09",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/completed.json=dbd7ab9746e770401ae3e6f75cda9a3aa1c5bf7f23ab265ba466ee41fe3ba67b",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/stdout.log=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/stderr.log=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/started.json=3bb14a3dce1518a23c68844ab722670febcfc4c465388b58dfdb000fdce4dcf1",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/completed.json=78527ff8cabba1123baf01891a9fc807ceb523b99bd26a3a1d3e4517a4f8d698",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/stdout.log=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/stderr.log=fd4cf15fe99a40012e54de1d69de2f9c6c0997448d738b4b9dd4eb5512fae8d1",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/started.json=3721b1d3364d7bdce855b9759ea1b9a16b11685a2705ac1bcf7f7da0f5b30133",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/completed.json=9f91198689311e3f06b6bb890df6ba3a1e6a3113dc3bdcf85016fc08c8283ddb",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/stdout.log=8ed07a9a7cce689922b38f19aeb5e1f6cddef1eddb2676c9c0d0d10771351be5",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/stderr.log=625851aaedaa3bc9c1dd6fc0383e64657889e89b6be5ad8970d12a40cd8f99a1",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/summary.json=9b830d61a4a44a7130dd7821f18af0e3128b55f34b0d38b945b09755d9236ee5",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/inputs-before.json=888d327530dda4cea27f9daadbdeb6d294ae1a8260162af0529f0a6403bd1d11",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/inputs-after.json=888d327530dda4cea27f9daadbdeb6d294ae1a8260162af0529f0a6403bd1d11",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/protected-before.json=aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/protected-after.json=aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/preflight.json=f417f22d01f56b178a6d4dfbdece9aace7605b201ee979891e6bc5b8dd464b04",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/events.jsonl=2e0aec9e9b3cd46f2a2e5c4c4c6b95b6fae9ece4b6513e42d17a31a33b977c51",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-freeze-02/freeze.json=3c498f0e173aa83292014037a729e167873a2ab9748f4adbb8964830f91a135b",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/started.json=c71a4dcc0c0574c0a233913352311c8ac9d98b82c0a961a9cc89600633c2e719",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/completed.json=56f52934bd59c92c2996daad3a8f139e206ecfbcca4fe2600d36a6e2937d5f6f",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/stdout.log=30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/stderr.log=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/started.json=66dc7caa73ae6857811292c15ae629081772faffc5f4285fc727ee6e76a0e762",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/completed.json=ad36ca95f7fc99fe1d85f185b9038c23bfa2021e7f3ba71ad9040e3c0cc4ae1d",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/stdout.log=5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/stderr.log=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/started.json=c1efb59314b249a5dd0cf23c15b19e12ae336e5f86f05f1485b4425a56ff219a",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/completed.json=896915a1ad657f688f072ab99088935160b29a074d9b3b428cfffcda1fcc0e8c",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/stdout.log=c7804324590d9cc0b1b14c265312fe8b9a016f2fee5182340074cf03d5b977a2",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/stderr.log=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/started.json=7b4f3bef4ff5e3faf07be8e90cf3d9f4de3fb2af594d0791f2b3ee5e406522a8",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/completed.json=5443448093c7550f05303ca468a2dc8bdda13e128defbb409bb8fcd70300afc0",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/stdout.log=84f5f70ba80a66cc4da40e7831f01f0e94be37a4faad8adc50fc8ff606afe077",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/stderr.log=351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/started.json=97e3bb2ed76fb7e55b2f7087effde75dea9174cce57999ad6028adfc720aeba4",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/completed.json=75e648a2629e53f8daec77da37810174dfe99fcb6089074d7cab7bb5536db51f",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/stdout.log=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/stderr.log=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/started.json=da2f6307c1823646a82ac2057d7992b2385b444b6b1f23ff468742dcdffebbc1",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/completed.json=cd2504f5dffeb485d50ece87f9d0478f08c2f1a970dad8b9fa249d36e5b95c84",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/stdout.log=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/stderr.log=d45006197a58d3591511e8220a2f4a8bd039e9a092cd6a66dbadf79d6dc77af2",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/started.json=3605a5f7254a9277f54c2362bded944c09e02f15e92d90d508caa301790feaea",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/completed.json=e84f9969ea34f83bfdbb601f776deb1e5cc3d84d41b92a130285656b111f2f8e",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/stdout.log=2317b00728333088b5515e5a425e77bd66bb623ce07cde03f0aa01d4dfc1196d",
+    "--required-copy",
+    "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/stderr.log=59ceb0f6cac346e2214537e5e6a1c363177a73863493e409d3b36527b1da7dfc",
+    "--aux-root",
+    "output/2026-10-14-browser-tabs-backend",
+    "--aux-root",
+    "output/2026-10-14-browser-tabs-frontend",
+    "--aux-root",
+    "output/2026-10-14-browser-tabs-browser",
+    "--aux-root",
+    "output/2026-10-14-browser-tabs-research",
+    "--aux-root",
+    "output/2026-10-14-browser-tabs-independent",
+    "--aux-root",
+    "output/2026-10-14-browser-tabs-integration",
+    "--out",
+    "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-integration/source-stage-plan-03.json"
+  ],
+  "pendingPins": {
+    "FINAL_INVENTORY03_SHA256": {
+      "path": "output/2026-10-14-browser-tabs-integration/inventory-plan-03.json",
+      "sha256": null
+    },
+    "FINAL_FREEZE03_SHA256": {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-freeze-03/freeze.json",
+      "sha256": null
+    },
+    "ACTUAL_RUN03_SUMMARY_SHA256": {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/summary.json",
+      "sha256": null
+    },
+    "ACTUAL_PUBLIC_CHECKS_VERIFICATION_SHA256": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/verification.json",
+      "sha256": null
+    },
+    "ACTUAL_PUBLIC_CHECKS_PUBLICATION_SHA256": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/publication.json",
+      "sha256": null
+    },
+    "FINAL_BACKEND_OWNER_SHA256": {
+      "path": null,
+      "sha256": null,
+      "count": null,
+      "boundary": "Use the final reviewed backend freeze containing any newly changed preparation_actions_tests.rs; expected 14 if no lasting change or 15 if folded into this owner, never assume either."
+    }
+  },
+  "selectionScope": {
+    "backendOwnerCount": null,
+    "frontendOwnerCount": 17,
+    "ownedSourcesTotal": null,
+    "mainDocs": 4,
+    "implementationCopies": 297,
+    "implementationMetadata": 2,
+    "futureEngineeringCopiesExpected": 108,
+    "futureEngineeringMetadataExpected": 2,
+    "retainedFormalFailures": 2,
+    "requiredPriorRawCopies": 72,
+    "allChangedOrNewFrozenAuxiliaryMustBeSelected": true,
+    "existingTwoOwnerSelectorRequiresNewTestInReviewedBackendOwnerOrAnExplicitlyReviewedSelectorChange": true,
+    "noMutableInstallPreparationConfigurationByDefault": true,
+    "protectedPathsExcluded": [
+      "PRODUCT.md",
+      "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md"
+    ]
+  },
+  "requiredPriorCopies": [
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/summary.json",
+      "bytes": 6358,
+      "sha256": "cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/inputs-before.json",
+      "bytes": 307153,
+      "sha256": "ae85f2b8ced81de254ef65a2399ef02ed3e3cdbe4638821349dc7ca477d585d7"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/inputs-after.json",
+      "bytes": 307153,
+      "sha256": "ae85f2b8ced81de254ef65a2399ef02ed3e3cdbe4638821349dc7ca477d585d7"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/protected-before.json",
+      "bytes": 357,
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/protected-after.json",
+      "bytes": 357,
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/preflight.json",
+      "bytes": 265,
+      "sha256": "160f7d5d345ff1a9317817844cd92e7f405b2dc7d43be5d3f1626ab4e63d5a9e"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/events.jsonl",
+      "bytes": 2225,
+      "sha256": "9a870b97571493eca5b28ab6cf21df84e419fd1944255a36a7226ab4883ed121"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-freeze/freeze.json",
+      "bytes": 391819,
+      "sha256": "424053c3ebbae4e6041cea3344a0f8e4dbab9fd8f2914d80887ca608f151918f"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/format-check/started.json",
+      "bytes": 288,
+      "sha256": "194af51521af21e7c7806efa0d4240150935d564c7761dd37dc7e5b459c5a85f"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/format-check/completed.json",
+      "bytes": 673,
+      "sha256": "6217cf8c2857821f6131694b6cba535d4652699abccf481474585a54baf935b0"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/format-check/stdout.log",
+      "bytes": 144,
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/format-check/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/started.json",
+      "bytes": 280,
+      "sha256": "449e158f6df2dc5c81237d616fc8dd14a079b3c51f684d149f54cf734279e8bf"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/completed.json",
+      "bytes": 664,
+      "sha256": "72c444e164860f48fc8279954824947b0fb62a580e442e5cc9868bd9bf64ae9a"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/stdout.log",
+      "bytes": 78,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/started.json",
+      "bytes": 274,
+      "sha256": "2d7659daca68ec29a4517b4f6a5ca679e903aa5b096375699dfeb719ebc72c3c"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/completed.json",
+      "bytes": 658,
+      "sha256": "b35e917c7055cf0096557bc36fde5773a7b05ea45e0de98f58d534fde13bc57a"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/stdout.log",
+      "bytes": 289,
+      "sha256": "c2491415782f2c8aabafccbb4c3dad86491bd33a436dd9b935443f23645396d6"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/started.json",
+      "bytes": 277,
+      "sha256": "07a90355260fe6932ee3531b57681a24381f9e876d9cb1a6bbf4ee91fa0c14a5"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/completed.json",
+      "bytes": 661,
+      "sha256": "63d442f8ece8d18a7e592c563f952dc3ff10f9d8204ac9fd2da2b3df0dfcc214"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/stdout.log",
+      "bytes": 4560,
+      "sha256": "cdbdda6d522b061db58953181bff7f94799b61823087e8e8892543a00d523975"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/stderr.log",
+      "bytes": 360,
+      "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/started.json",
+      "bytes": 354,
+      "sha256": "6b436f4e834ec9fc2d8da17e3f6c48a2e67e75d1a22911eea78f56a972a0bb09"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/completed.json",
+      "bytes": 738,
+      "sha256": "dbd7ab9746e770401ae3e6f75cda9a3aa1c5bf7f23ab265ba466ee41fe3ba67b"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/started.json",
+      "bytes": 416,
+      "sha256": "3bb14a3dce1518a23c68844ab722670febcfc4c465388b58dfdb000fdce4dcf1"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/completed.json",
+      "bytes": 801,
+      "sha256": "78527ff8cabba1123baf01891a9fc807ceb523b99bd26a3a1d3e4517a4f8d698"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/stderr.log",
+      "bytes": 139,
+      "sha256": "fd4cf15fe99a40012e54de1d69de2f9c6c0997448d738b4b9dd4eb5512fae8d1"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/started.json",
+      "bytes": 360,
+      "sha256": "3721b1d3364d7bdce855b9759ea1b9a16b11685a2705ac1bcf7f7da0f5b30133"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/completed.json",
+      "bytes": 741,
+      "sha256": "9f91198689311e3f06b6bb890df6ba3a1e6a3113dc3bdcf85016fc08c8283ddb"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/stdout.log",
+      "bytes": 189007,
+      "sha256": "8ed07a9a7cce689922b38f19aeb5e1f6cddef1eddb2676c9c0d0d10771351be5"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/stderr.log",
+      "bytes": 599,
+      "sha256": "625851aaedaa3bc9c1dd6fc0383e64657889e89b6be5ad8970d12a40cd8f99a1"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/summary.json",
+      "bytes": 6351,
+      "sha256": "9b830d61a4a44a7130dd7821f18af0e3128b55f34b0d38b945b09755d9236ee5"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/inputs-before.json",
+      "bytes": 316960,
+      "sha256": "888d327530dda4cea27f9daadbdeb6d294ae1a8260162af0529f0a6403bd1d11"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/inputs-after.json",
+      "bytes": 316960,
+      "sha256": "888d327530dda4cea27f9daadbdeb6d294ae1a8260162af0529f0a6403bd1d11"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/protected-before.json",
+      "bytes": 357,
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/protected-after.json",
+      "bytes": 357,
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/preflight.json",
+      "bytes": 268,
+      "sha256": "f417f22d01f56b178a6d4dfbdece9aace7605b201ee979891e6bc5b8dd464b04"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/events.jsonl",
+      "bytes": 2222,
+      "sha256": "2e0aec9e9b3cd46f2a2e5c4c4c6b95b6fae9ece4b6513e42d17a31a33b977c51"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-freeze-02/freeze.json",
+      "bytes": 401759,
+      "sha256": "3c498f0e173aa83292014037a729e167873a2ab9748f4adbb8964830f91a135b"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/started.json",
+      "bytes": 288,
+      "sha256": "c71a4dcc0c0574c0a233913352311c8ac9d98b82c0a961a9cc89600633c2e719"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/completed.json",
+      "bytes": 666,
+      "sha256": "56f52934bd59c92c2996daad3a8f139e206ecfbcca4fe2600d36a6e2937d5f6f"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/stdout.log",
+      "bytes": 144,
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/started.json",
+      "bytes": 280,
+      "sha256": "66dc7caa73ae6857811292c15ae629081772faffc5f4285fc727ee6e76a0e762"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/completed.json",
+      "bytes": 664,
+      "sha256": "ad36ca95f7fc99fe1d85f185b9038c23bfa2021e7f3ba71ad9040e3c0cc4ae1d"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/stdout.log",
+      "bytes": 78,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/started.json",
+      "bytes": 274,
+      "sha256": "c1efb59314b249a5dd0cf23c15b19e12ae336e5f86f05f1485b4425a56ff219a"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/completed.json",
+      "bytes": 658,
+      "sha256": "896915a1ad657f688f072ab99088935160b29a074d9b3b428cfffcda1fcc0e8c"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/stdout.log",
+      "bytes": 289,
+      "sha256": "c7804324590d9cc0b1b14c265312fe8b9a016f2fee5182340074cf03d5b977a2"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/started.json",
+      "bytes": 277,
+      "sha256": "7b4f3bef4ff5e3faf07be8e90cf3d9f4de3fb2af594d0791f2b3ee5e406522a8"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/completed.json",
+      "bytes": 661,
+      "sha256": "5443448093c7550f05303ca468a2dc8bdda13e128defbb409bb8fcd70300afc0"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/stdout.log",
+      "bytes": 4560,
+      "sha256": "84f5f70ba80a66cc4da40e7831f01f0e94be37a4faad8adc50fc8ff606afe077"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/stderr.log",
+      "bytes": 360,
+      "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/started.json",
+      "bytes": 354,
+      "sha256": "97e3bb2ed76fb7e55b2f7087effde75dea9174cce57999ad6028adfc720aeba4"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/completed.json",
+      "bytes": 739,
+      "sha256": "75e648a2629e53f8daec77da37810174dfe99fcb6089074d7cab7bb5536db51f"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/started.json",
+      "bytes": 416,
+      "sha256": "da2f6307c1823646a82ac2057d7992b2385b444b6b1f23ff468742dcdffebbc1"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/completed.json",
+      "bytes": 801,
+      "sha256": "cd2504f5dffeb485d50ece87f9d0478f08c2f1a970dad8b9fa249d36e5b95c84"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/stderr.log",
+      "bytes": 72,
+      "sha256": "d45006197a58d3591511e8220a2f4a8bd039e9a092cd6a66dbadf79d6dc77af2"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/started.json",
+      "bytes": 360,
+      "sha256": "3605a5f7254a9277f54c2362bded944c09e02f15e92d90d508caa301790feaea"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/completed.json",
+      "bytes": 740,
+      "sha256": "e84f9969ea34f83bfdbb601f776deb1e5cc3d84d41b92a130285656b111f2f8e"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/stdout.log",
+      "bytes": 189007,
+      "sha256": "2317b00728333088b5515e5a425e77bd66bb623ce07cde03f0aa01d4dfc1196d"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/stderr.log",
+      "bytes": 599,
+      "sha256": "59ceb0f6cac346e2214537e5e6a1c363177a73863493e409d3b36527b1da7dfc"
+    }
+  ],
+  "gatesBeforeUse": [
+    "Third-run result is unknown. Do not execute publication or selection before a real natural completion with seven zero stages, original raw logs, full frozen input/membership/protected stability.",
+    "Use the actual final inventory/freeze, not the failed 2457-run hash as a future pin. Include this publisher and the chosen new workflow/review/diagnostic auxiliary paths explicitly in the new inventory.",
+    "Use final reviewed owner freezes; any lasting test/source delta must be owned and pinned. Controlled browser evidence retains its original scope and is not rewritten to claim a new backend test was included.",
+    "Publisher-v3 must produce 108 exact raw copies, preserving run-01 and run-02 original failures and a distinct successful current run. Fill all placeholders only from actual receipts.",
+    "Prepare checkpoint once after publication and independent verification, then review exact selected membership. This template does not stage/commit."
+  ],
+  "boundary": "No third-run success or input count claimed. Template only; no publisher/checkpoint/render/check/App/Agent/DB execution."
+}

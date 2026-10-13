@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/browser_tabs.test.ts",
+    "-t",
+    "finishes the explicit selection while hidden"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T21:14:30.365512+00:00",
+  "completedAtUtc": "2026-10-13T21:14:30.799458+00:00",
+  "actualExitCode": 1,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/hidden-select-red.stdout.log",
+    "bytes": 385,
+    "sha256": "7bf608b337d99f53a66ccd58e52ad303d6a12f6b6a4cc1da82629a9ec2bf0e90"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/hidden-select-red.stderr.log",
+    "bytes": 838,
+    "sha256": "5f76c186ac40bab0bc4fee7d33648106e06d98b7575261f055b3232c3da89d64"
+  }
+}

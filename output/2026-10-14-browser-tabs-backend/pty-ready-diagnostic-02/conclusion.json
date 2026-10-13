@@ -1,0 +1,216 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T23:01:49.485409+00:00",
+  "status": "DIAGNOSTIC_PASSED_ORIGINAL_FAILURE_NOT_REPRODUCED_SOURCES_RESTORED",
+  "execution": {
+    "sessionId": 61890,
+    "startChunk": "9e14b2",
+    "completionChunk": "526956",
+    "actualExitCode": 0,
+    "naturalCompletion": true,
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "--",
+      "--show-output"
+    ],
+    "topLevelSummary": "test result: ok. 1692 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 120.00s",
+    "counts": {
+      "passed": 1692,
+      "failed": 0,
+      "ignored": 6
+    },
+    "subprocessFixtureSummariesNotAdded": true,
+    "wrapper": "Inline Python in the tool invocation; no standalone runner file was created. No repeat invocation."
+  },
+  "observations": {
+    "originalReadyState": "timeout-returned-ready",
+    "originalVerdict": "passed",
+    "readyWaitStartedNsFromBeforeSpawn": 2188542,
+    "readyWaitReturnedNsFromBeforeSpawn": 1222085167,
+    "readyReceivedNsFromBeforeSpawn": 1221985125,
+    "readyReceptionMinusWaitStartNs": 1219796583,
+    "firstReadStartedNsFromBeforeSpawn": 2061083,
+    "firstReadReturn": {
+      "phase": "read-return",
+      "observedAtNsFromBeforeSpawn": 1221913708,
+      "stop": false,
+      "count": 29,
+      "errorKind": null,
+      "rawOsError": null,
+      "zeroReadMeaning": null
+    },
+    "firstReadDurationNs": 1219852625,
+    "channelReceiptMinusFirstReadReturnNs": 71417,
+    "markerSampleCount": 96,
+    "trapLastEmptySamplingBracketNs": [
+      1213712167,
+      1213893417
+    ],
+    "trapFirstNonemptySamplingBracketNs": [
+      1222085625,
+      1222171708
+    ],
+    "printfLastEmptySamplingBracketNs": [
+      1213918125,
+      1214033042
+    ],
+    "printfFirstNonemptySamplingBracketNs": [
+      1222184333,
+      1222241625
+    ],
+    "markerModifiedUnixNs": {
+      "trap": 1791932283454447670,
+      "printf": 1791932283454634042
+    },
+    "readErrorEvents": [],
+    "finalReadReturn": {
+      "phase": "read-return",
+      "observedAtNsFromBeforeSpawn": 3264926708,
+      "stop": true,
+      "count": 0,
+      "errorKind": null,
+      "rawOsError": null,
+      "zeroReadMeaning": "EOF-or-mapped-EIO"
+    },
+    "exitFrames": [
+      {
+        "receivedAtNsFromBeforeSpawn": 3365019875,
+        "kind": "exit",
+        "frame": {
+          "id": "pty-1791932282234-1",
+          "exit": 1
+        }
+      }
+    ],
+    "extraObservationWindowUsed": false
+  },
+  "interpretation": [
+    "In this passing sample the reader entered its first read near2ms, while both shell-written markers remained empty during the sampling brackets near1.214s. The first marker became nonempty near1.222s, the same interval as the first29-byte read and READY delivery. Most observed waiting therefore preceded the first shell marker write; no long delay carrying already-observed READY bytes from reader to Channel occurred.",
+    "The first read returned29 bytes with no ErrorKind/raw_os_error; data receipt followed71,417ns later. During cleanup the second read returned0 with stop=true. The dependency may map EIO to0, so this is only EOF-or-mapped-EIO and is not evidence of EIO or EINTR.",
+    "Marker mtime is a filesystem timestamp. Paired wall/monotonic brackets and sampling are retained; neither mtime nor sample endpoints are exact child instruction timestamps. Instrumentation/sampling may alter scheduling.",
+    "The two original formal failures were not reproduced. This passing sample cannot establish their cause or assign the delay to OS policy, scheduling, shebang processing, libtest capture, or PTY errors. No production repair or timeout-budget change was made.",
+    "The original3s timeout verdict remains separate from the measured reception time; it is a fixture readiness guard, not an established product startup SLA. All original ownership/cancel/reap assertions passed only in this diagnostic execution.",
+    "Do not replace either failed formal seven-check run with this instrumented result. No new uninstrumented full check was run."
+  ],
+  "restoration": {
+    "receipt": {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/source-restored.json",
+      "bytes": 1950,
+      "sha256": "42a150feb7574242afdb08985f366e693aeecac41785892ab954478d88e9a844"
+    },
+    "twoOriginalFilesByteExact": true,
+    "inputCount": 2457,
+    "allOriginalInputsRestored": true,
+    "differenceCount": 0,
+    "errorCount": 0,
+    "productionChangesRemaining": false
+  },
+  "retainedOriginalFailures": [
+    {
+      "stage": "checks-run",
+      "completed": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/completed.json",
+        "bytes": 741,
+        "sha256": "9f91198689311e3f06b6bb890df6ba3a1e6a3113dc3bdcf85016fc08c8283ddb"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/stdout.log",
+        "bytes": 189007,
+        "sha256": "8ed07a9a7cce689922b38f19aeb5e1f6cddef1eddb2676c9c0d0d10771351be5"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/stderr.log",
+        "bytes": 599,
+        "sha256": "625851aaedaa3bc9c1dd6fc0383e64657889e89b6be5ad8970d12a40cd8f99a1"
+      },
+      "boundary": "Original readiness wait unsuccessful with empty PTY trace; original assertion did not distinguish timeout elapsed from closed channel. These failures are retained."
+    },
+    {
+      "stage": "checks-run-02",
+      "completed": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/completed.json",
+        "bytes": 740,
+        "sha256": "e84f9969ea34f83bfdbb601f776deb1e5cc3d84d41b92a130285656b111f2f8e"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/stdout.log",
+        "bytes": 189007,
+        "sha256": "2317b00728333088b5515e5a425e77bd66bb623ce07cde03f0aa01d4dfc1196d"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/stderr.log",
+        "bytes": 599,
+        "sha256": "59ceb0f6cac346e2214537e5e6a1c363177a73863493e409d3b36527b1da7dfc"
+      },
+      "boundary": "Original readiness wait unsuccessful with empty PTY trace; original assertion did not distinguish timeout elapsed from closed channel. These failures are retained."
+    }
+  ],
+  "files": [
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/original-sources.json",
+      "bytes": 643,
+      "sha256": "f9dc040895460c45288ac447f98790f04ceeb6ebc23ed7b93a14e6f78fd4b329"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/preparation_actions_tests.rs.original.raw",
+      "bytes": 24547,
+      "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/pty.rs.original.raw",
+      "bytes": 28407,
+      "sha256": "f2c7fb13de618e2f1a90d1569bcadb70688f039a23fa9746a0acd15aabac3174"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/preparation_actions_tests.rs.patch",
+      "bytes": 12402,
+      "sha256": "6853ec861e265de1bac06b06eff735f776c9114ba65c4442f2e8750ec41aeaa6"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/pty.rs.patch",
+      "bytes": 3965,
+      "sha256": "68e4a5c934cde2883a4097867da8607e85766a25b7818430f8e0b3ab90fec5d8"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/preparation.json",
+      "bytes": 7616,
+      "sha256": "b0078ddc2f7db932469d270c78a1aa6df43173ea9b0c55cf7071c560b8cfea75"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/started.json",
+      "bytes": 1847,
+      "sha256": "19e612d11b37f9dfa73ae25d31cb2a16618ec58ef61c6f47f1ef8c1112ace695"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/completed.json",
+      "bytes": 856,
+      "sha256": "af171f706054c88fb077c82f3838f1185566fff9c26e89933d2b84bb08ea83b5"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/stdout.log",
+      "bytes": 908891,
+      "sha256": "5942efb8490fa92876d3a88a02c7644254790e3b24ccea39dd7bc611c2cf326d"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/stderr.log",
+      "bytes": 557,
+      "sha256": "df31cb960871f305c342002a3e2801398e293c8c8ee526b76280d84963b2ca46"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/source-restored.json",
+      "bytes": 1950,
+      "sha256": "42a150feb7574242afdb08985f366e693aeecac41785892ab954478d88e9a844"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/diagnostic-observations.json",
+      "bytes": 20453,
+      "sha256": "1ec2d044b83a19e8bd094ed9037841bb622dd016fafee4c77a6414244df0ce14"
+    }
+  ],
+  "nextStep": "Parent may use the saved evidence to choose a bounded follow-up or fixture design decision. This task stops with original sources restored; no repeated test, budget change, production edit, App, Agent, or user-data action."
+}

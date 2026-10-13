@@ -1,0 +1,14 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/BrowserWorkspace.presentation.test.tsx (5 tests | 4 failed) 322ms
+   × does not close a retained owner from an obsolete frame after {"active":false} 60ms
+   × does not close a retained owner from an obsolete frame after {"visible":false} 54ms
+   × does not close a retained owner from an obsolete frame after {"presentationSuspended":true} 53ms
+   × ignores an old resize rejection after the owner has become inactive 51ms
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 1 passed (5)
+   Start at  05:42:12
+   Duration  1.24s (transform 57ms, setup 0ms, import 858ms, tests 322ms, environment 0ms)
+

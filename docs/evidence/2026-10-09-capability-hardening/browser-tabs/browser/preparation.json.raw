@@ -1,0 +1,85 @@
+{
+  "phase": "AUTHORED_NOT_EXECUTED",
+  "sourceFreezeRequiredBeforeBrowserRuns": true,
+  "scope": "Full production App + controlled Tauri browser contract backed by real iframe page memory. No native views, Agent calls, external requests or persisted user data.",
+  "files": [
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/fixture.tsx",
+      "bytes": 4969,
+      "sha256": "611517dfc5692815957ba1242d29bd73b872f43fc6a51a975855eacb995bfd95"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/transport.ts",
+      "bytes": 8695,
+      "sha256": "fdf0a6a2427bdfb1adfb20c247b559473da6a54c6c30fc5ccce539b668174b35"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/index.html",
+      "bytes": 1882,
+      "sha256": "bf0ca48efb3b608840f7b2f1b0009a3ddfac2520cad43598aec8b62188629708"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/serve.mjs",
+      "bytes": 808,
+      "sha256": "4f58d879073143a55d903b7b224e5bf55b5b0a0db345cba566487c8e2a8d1736"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/page-oracle.json",
+      "bytes": 1689,
+      "sha256": "ffc7eaaebe2f11b7970fd5d25f90d7d317577a17ef660f7b07a48fc19bb96a1d"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/pages/a.html",
+      "bytes": 747,
+      "sha256": "c8b5bdfefde1f27f703663252270afc598325872fe08ce454d8a24c28e810aaa"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/pages/b.html",
+      "bytes": 747,
+      "sha256": "de28854dd0a43aa892391686091211dbd25dc33eb4c4ef6081b3840f3ba9ccfb"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/pages/c.html",
+      "bytes": 747,
+      "sha256": "b1489dda9f8d58df4db74507339d59bccd7199fefb00e786e9c466781b405199"
+    }
+  ],
+  "interfaces": {
+    "tabs": {
+      "command": "browser_workspace_tabs",
+      "args": [
+        "taskKey"
+      ],
+      "returns": "{taskKey,pages,selection:{label,revision}}"
+    },
+    "select": {
+      "command": "browser_workspace_select",
+      "args": [
+        "taskKey",
+        "label",
+        "expectedSelected:{label,revision}"
+      ],
+      "returns": "TabsState"
+    }
+  },
+  "manualScenarios": [
+    "three pages retain unique counters, input, scroll",
+    "explicit switch waits revoke/quiesce/hide before show; focus-only keyboard does not select",
+    "same-page collapse/taskswitch retains page and shared status",
+    "close one hidden sibling only; close failure stays owned and retryable",
+    "reversed late creation never steals route; retired owner exactclose",
+    "A to B to A rejects old snapshot and approval",
+    "780px tab navigation/toolbar visible, no overlap with active native-simulated view",
+    "open failure and unknown native owner stay visible/actionable",
+    "taskA pages and taskB pages remain separate",
+    "all fixture actions leave existing unsent drafts and unrelated feedback exact"
+  ],
+  "forbiddenClaims": [
+    "Backend transport safety proof from simulated responses",
+    "Native WKWebView success from iframes",
+    "Three tested pages means maximum allowed pages",
+    "Any real Agent shared-read acceptance",
+    "Whole P30 complete or restart restoration implemented"
+  ],
+  "next": "Await frontend source+interface freeze; author runner against reviewed accessible controls, run both engines with exact before/after source inventory, retain every failure and runner revision."
+}

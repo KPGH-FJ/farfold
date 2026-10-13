@@ -1,0 +1,12 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/BrowserWorkspace.tabs.test.tsx (2 tests | 2 failed) 11ms
+   × offers an accessible tab list and explicit new-page action 10ms
+   × bridges explicit page selection independently of page navigation 1ms
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  05:02:48
+   Duration  1.10s (transform 65ms, setup 0ms, import 1.03s, tests 11ms, environment 0ms)
+

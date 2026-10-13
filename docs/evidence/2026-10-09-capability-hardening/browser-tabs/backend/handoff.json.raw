@@ -1,0 +1,34 @@
+{
+  "scope": "P30 runtime multiple browser pages, no persistence or product page cap",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-browser-tabs-backend/source-freeze.json",
+    "bytes": 8592,
+    "sha256": "848ec838f972b35d1f1d8f770a373bb63ecef4b26a201f1577de7822a8dae28e"
+  },
+  "implemented": [
+    "Owned page map and per-task compare-and-select revision; opens reserve independent hidden pages.",
+    "Explicit tab selection revokes page-scoped read gate and waits for existing stop_page/quiesce then native hide ACK.",
+    "Same selected page collapse/task-hide preserves scopes; old manual/granted scopes never revive after tab selection.",
+    "Unknown visibility blocks any new show; exact owner retained across failed close until native ACK; all owners revoked on shutdown.",
+    "macOS hidden-before-attach, Windows hidden-before-install/navigation; guarded native show.",
+    "Sibling storage clear denied until all same-partition siblings closed."
+  ],
+  "validation": {
+    "red": 101,
+    "workspaceTests": 100,
+    "finalBrowserRelatedTests": 175,
+    "fmtCheck": 0
+  },
+  "next": [
+    "Independent backend review against final source-freeze.",
+    "Frontend integration and root controlled browser/full seven checks."
+  ],
+  "limitations": [
+    "Red asserts new second-page reservation against actual old single-page implementation; source baseline includes test registration and new test only at red.",
+    "Green-01 runs 100 browser workspace tests before formatter. Final formatted bytes are exercised by browser-regression-01 (175 filtered browser-related tests) and fmt-check-01.",
+    "Selection tests execute the production transaction with controlled stop/hide futures, not a running WebView. Existing sharing permission/transport/quiesce tests also ran.",
+    "macOS Objective-C bridge compiled during targeted cargo. Hidden create and guarded visibility are source changes, not installed native UI observations.",
+    "Windows code changed but no Windows build/runtime executed.",
+    "No Agent, App, account, database, installation, full seven checks, dependency changes or Git mutation."
+  ]
+}

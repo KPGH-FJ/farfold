@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "scope": "Independent read-only audit of diagnostic 02 saved sources/patches/receipts and the two exact stdout observation lines. No tests or source edits.",
+  "conclusion": "DIAGNOSTIC_PASS_ORIGINAL_TWO_FORMAL_FAILURES_UNRESOLVED",
+  "backendConclusion": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/conclusion.json",
+    "bytes": 9348,
+    "sha256": "87624a764911deb2ea7a6a9791dfcdccbbf892669e72bd589056c7135422c62a"
+  },
+  "verifiedDiagnosticRefs": 12,
+  "completed": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/completed.json",
+    "bytes": 856,
+    "sha256": "af171f706054c88fb077c82f3838f1185566fff9c26e89933d2b84bb08ea83b5"
+  },
+  "actualCounts": {
+    "topLevelPassed": 1692,
+    "failed": 0,
+    "ignored": 6,
+    "nestedSummariesNotAdded": true
+  },
+  "originalCommand": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--lib",
+    "--",
+    "--show-output"
+  ],
+  "executionCarrier": "Saved started/completed receipts; backend reported actual session61890/chunk526956. Exact tool event will be recorded separately if supplied.",
+  "observations": {
+    "rawRecords": {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/diagnostic-observations.json",
+      "bytes": 20453,
+      "sha256": "1ec2d044b83a19e8bd094ed9037841bb622dd016fafee4c77a6414244df0ce14"
+    },
+    "bothRawLogOffsetsAndLineHashesMatched": true,
+    "readerStartedNs": 2061083,
+    "firstReadReturnedNs": 1221913708,
+    "firstReadBytes": 29,
+    "readyWaitToReceiptNs": 1219796583,
+    "readReturnToChannelNs": 71417,
+    "readErrorEventsObserved": 0,
+    "near1214msMarkersStillEmpty": true,
+    "near1222msMarkersNonempty": true,
+    "extraWindowUsed": false,
+    "cleanupZeroReadMeaning": "EOF-or-dependency-mapped-EIO; no errno distinguishes these."
+  },
+  "interpretation": [
+    "This passing instrumented sample waited mainly before the first observable shell marker write, not between a successful read and Channel receipt. Sampling brackets and filesystem mtime do not pinpoint child instructions.",
+    "No read error occurred in this sample. It neither reproduces nor rules out Interrupted or other read errors in the two uninstrumented failures.",
+    "Original 3-second guard failed its Ok(Ok(())) match; original logs do not distinguish elapsed timeout from a closed ready channel. The exact failure category remains unknown.",
+    "No uninstrumented full check, production fix, timeout relaxation, App or real-Agent proof is established."
+  ],
+  "restoration": {
+    "receipt": {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/source-restored.json",
+      "bytes": 1950,
+      "sha256": "42a150feb7574242afdb08985f366e693aeecac41785892ab954478d88e9a844"
+    },
+    "bothCurrentSourceBytesEqualOriginalRaw": true,
+    "fourOtherRelatedCurrentFilesEqualStartedHashes": true,
+    "bothPatchesReconstructTestedInstrumentedBytesInRam": true,
+    "backendSavedRestorationStatesAll2457Match": true,
+    "independentRescannedAll2457": false
+  },
+  "priorOriginals": {
+    "run1Summary": {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/summary.json",
+      "bytes": 6358,
+      "sha256": "cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685"
+    },
+    "run2Summary": {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/summary.json",
+      "bytes": 6351,
+      "sha256": "9b830d61a4a44a7130dd7821f18af0e3128b55f34b0d38b945b09755d9236ee5"
+    },
+    "bothOriginalCargoCompletionsAndLogsMatchConclusionRefs": true
+  },
+  "gates": {
+    "formalEngineeringPassed": false,
+    "successPublicationAllowed": false,
+    "checkpointAllowed": false,
+    "installationAllowed": false
+  },
+  "safeForPublicCopy": true
+}

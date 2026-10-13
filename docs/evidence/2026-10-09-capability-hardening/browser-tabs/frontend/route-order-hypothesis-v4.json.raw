@@ -1,0 +1,30 @@
+{
+  "observedAtUtc": "2026-10-13T21:48:19.946108+00:00",
+  "status": "hypothesis pending root Scope.close origin stack; source writes paused",
+  "installedDependency": {
+    "path": "node_modules/react-dom/cjs/react-dom-client.development.js",
+    "sha256": "261c3275492d8f0b1f9b76f78268882316c8435217c39c78c65853bdcd89d500",
+    "bytes": 1065698,
+    "version": "19.2.8"
+  },
+  "sourceRanges": [
+    {
+      "start": 6201,
+      "end": 6214,
+      "text": "      function placeChild(newFiber, lastPlacedIndex, newIndex) {\n        newFiber.index = newIndex;\n        if (!shouldTrackSideEffects)\n          return (newFiber.flags |= 1048576), lastPlacedIndex;\n        newIndex = newFiber.alternate;\n        if (null !== newIndex)\n          return (\n            (newIndex = newIndex.index),\n            newIndex < lastPlacedIndex\n              ? ((newFiber.flags |= 67108866), lastPlacedIndex)\n              : newIndex\n          );\n        newFiber.flags |= 67108866;\n        return lastPlacedIndex;"
+    },
+    {
+      "start": 18653,
+      "end": 18708,
+      "text": "    function recursivelyTraverseAndDoubleInvokeEffectsInDEV(\n      root$jscomp$0,\n      parentFiber,\n      isInStrictMode\n    ) {\n      if (0 !== (parentFiber.subtreeFlags & 67117056))\n        for (parentFiber = parentFiber.child; null !== parentFiber; ) {\n          var root = root$jscomp$0,\n            fiber = parentFiber,\n            isStrictModeFiber = fiber.type === REACT_STRICT_MODE_TYPE;\n          isStrictModeFiber = isInStrictMode || isStrictModeFiber;\n          22 !== fiber.tag\n            ? fiber.flags & 67108864\n              ? isStrictModeFiber &&\n                runWithFiberInDEV(\n                  fiber,\n                  doubleInvokeEffectsOnFiber,\n                  root,\n                  fiber\n                )\n              : recursivelyTraverseAndDoubleInvokeEffectsInDEV(\n                  root,\n                  fiber,\n                  isStrictModeFiber\n                )\n            : null === fiber.memoizedState &&\n              (isStrictModeFiber && fiber.flags & 8192\n                ? runWithFiberInDEV(\n                    fiber,\n                    doubleInvokeEffectsOnFiber,\n                    root,\n                    fiber\n                  )\n                : fiber.subtreeFlags & 67108864 &&\n                  runWithFiberInDEV(\n                    fiber,\n                    recursivelyTraverseAndDoubleInvokeEffectsInDEV,\n                    root,\n                    fiber,\n                    isStrictModeFiber\n                  ));\n          parentFiber = parentFiber.sibling;\n        }\n    }\n    function doubleInvokeEffectsOnFiber(root, fiber) {\n      setIsStrictModeForDevtools(!0);\n      try {\n        disappearLayoutEffects(fiber),\n          disconnectPassiveEffect(fiber),\n          reappearLayoutEffects(root, fiber.alternate, fiber, !1),\n          reconnectPassiveEffects(root, fiber, 0, null, !1, 0);\n      } finally {\n        setIsStrictModeForDevtools(!1);\n      }\n    }\n    function commitDoubleInvokeEffectsInDEV(root) {"
+    }
+  ],
+  "chain": [
+    "App currently orders route slots from current thread first, then retained owners.",
+    "After A→B the slots are B,A. Returning to A makes them A,B.",
+    "The existing B fiber moves from earlier to later index, setting dev Placement flag 67108864.",
+    "StrictMode dev recursively traverses that flag and disconnects/reconnects layout/passive effects. Page layout cleanup requests close on registered owners."
+  ],
+  "proposal": "Place retained browserOwners in their stable insertion order first, then unowned prepared/current route keys. Selection controls active/hidden, not existing owners order.",
+  "boundary": "Observed controlled development StrictMode behavior. Do not claim installed/release run reproduced this defect."
+}

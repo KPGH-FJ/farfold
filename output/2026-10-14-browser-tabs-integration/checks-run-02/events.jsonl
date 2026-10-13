@@ -1,0 +1,14 @@
+{"at": "2026-10-13T22:39:33.928972+00:00", "monotonic": 0.253445708, "event": "started", "name": "format-check", "group": "frontend"}
+{"at": "2026-10-13T22:40:05.346520+00:00", "monotonic": 31.671468833, "event": "completed", "name": "format-check", "group": "frontend", "rawExitCode": 0, "actualStageCompletion": true}
+{"at": "2026-10-13T22:40:05.346851+00:00", "monotonic": 31.671799125, "event": "started", "name": "typecheck", "group": "frontend"}
+{"at": "2026-10-13T22:40:13.975496+00:00", "monotonic": 40.3005765, "event": "completed", "name": "typecheck", "group": "frontend", "rawExitCode": 0, "actualStageCompletion": true}
+{"at": "2026-10-13T22:40:13.975874+00:00", "monotonic": 40.300951541, "event": "started", "name": "frontend-test", "group": "frontend"}
+{"at": "2026-10-13T22:41:02.268934+00:00", "monotonic": 88.594743666, "event": "completed", "name": "frontend-test", "group": "frontend", "rawExitCode": 0, "actualStageCompletion": true}
+{"at": "2026-10-13T22:41:02.269273+00:00", "monotonic": 88.595079083, "event": "started", "name": "frontend-build", "group": "frontend"}
+{"at": "2026-10-13T22:41:12.183429+00:00", "monotonic": 98.509386666, "event": "completed", "name": "frontend-build", "group": "frontend", "rawExitCode": 0, "actualStageCompletion": true}
+{"at": "2026-10-13T22:41:12.183807+00:00", "monotonic": 98.5097645, "event": "started", "name": "cargo-fmt", "group": "native"}
+{"at": "2026-10-13T22:41:13.490687+00:00", "monotonic": 99.816664208, "event": "completed", "name": "cargo-fmt", "group": "native", "rawExitCode": 0, "actualStageCompletion": true}
+{"at": "2026-10-13T22:41:13.490890+00:00", "monotonic": 99.816865541, "event": "started", "name": "cargo-clippy", "group": "native"}
+{"at": "2026-10-13T22:41:14.223971+00:00", "monotonic": 100.549967875, "event": "completed", "name": "cargo-clippy", "group": "native", "rawExitCode": 0, "actualStageCompletion": true}
+{"at": "2026-10-13T22:41:14.224655+00:00", "monotonic": 100.550647, "event": "started", "name": "cargo-test", "group": "native"}
+{"at": "2026-10-13T22:43:34.816170+00:00", "monotonic": 241.144282958, "event": "completed", "name": "cargo-test", "group": "native", "rawExitCode": 101, "actualStageCompletion": true}

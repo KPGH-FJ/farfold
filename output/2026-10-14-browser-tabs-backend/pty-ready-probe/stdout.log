@@ -1,0 +1,6 @@
+
+running 1 test
+test acp_client::preparation_actions::tests::service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1697 filtered out; finished in 3.28s
+

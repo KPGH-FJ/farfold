@@ -1,0 +1,66 @@
+{
+  "phase": "P30 runtime browser tabs, frontend v5/backend v2",
+  "scope": "No native WebView/App/Agent/Windows test, no persisted restart recovery, no whole seven or installation claim. P30 and NEW24 open.",
+  "frontend": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs/frontend/source-freeze-v5.json.raw",
+    "bytes": 6034,
+    "sha256": "5752c0d4e41537cab2c86301c63f3fcdf87f1c43883ac4ddde4586ac51b1d553"
+  },
+  "backend": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs/backend/source-freeze-v2.json.raw",
+    "bytes": 17066,
+    "sha256": "d55be973509726b8298e220624a732a55a0f027d82a8365dca18435b227e149a"
+  },
+  "browser": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs/browser/root-verification-final-v5.json.raw",
+    "bytes": 4867,
+    "sha256": "b48df51448a1fd1177550cfe7bba4628b1666153eb239fca0fb22ccae618ad8b"
+  },
+  "serverStopped": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs/browser/server-stopped-3.json.raw",
+    "bytes": 458,
+    "sha256": "200ebfd956cefcebc8222b58f49bf6a277ff1d19d5f7c2f23394ea295f533877"
+  },
+  "validation": {
+    "backend": {
+      "tests": 178,
+      "actualExitCode": 0
+    },
+    "frontendV4": {
+      "files": 11,
+      "tests": 241,
+      "actualExitCode": 0
+    },
+    "frontendV5Delta": {
+      "files": 3,
+      "tests": 74,
+      "actualExitCode": 0,
+      "scope": "one guard dependency and regression; v4 target set not rerun"
+    },
+    "browser": [
+      {
+        "engine": "chromium",
+        "checks": 141,
+        "scenarios": 13,
+        "inputs": 1109,
+        "actualExitCode": 0
+      },
+      {
+        "engine": "webkit",
+        "checks": 141,
+        "scenarios": 13,
+        "inputs": 1109,
+        "actualExitCode": 0
+      }
+    ]
+  },
+  "historicalCorrection": "Original 138 green omitted reverse task B preservation; run5-7 true product failures and diagnostic cause remain raw. v4/v5 141 results are separate. Early driver assumptions, visual defects, test fixture errors and source defects retain their original classifications.",
+  "publication": "publication.json",
+  "notComplete": [
+    "P30 restart browser state restoration",
+    "Native WebView/installed App acceptance",
+    "Real Agent and NEW24",
+    "Windows execution",
+    "Whole seven checks and install for this slice"
+  ]
+}

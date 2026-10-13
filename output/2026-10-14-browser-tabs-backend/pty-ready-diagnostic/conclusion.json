@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "status": "diagnostic_completed_original_bytes_restored_cause_unknown",
+  "actualExecution": {
+    "sessionId": 61234,
+    "naturalCompletionChunk": "31d60f",
+    "exitCode": 0,
+    "command": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "src-tauri/Cargo.toml",
+      "--locked",
+      "--lib",
+      "--",
+      "--nocapture"
+    ],
+    "topLevelCounts": {
+      "passed": 1692,
+      "failed": 0,
+      "ignored": 6
+    },
+    "topLevelElapsedSeconds": 132.54,
+    "nestedFixtureCountsNotAdded": true
+  },
+  "readyObservation": {
+    "beforeSpawnToReadyMilliseconds": 2484.436584,
+    "originalWaitToReadyMilliseconds": 2482.412875,
+    "remainingThreeSecondDeadlineMilliseconds": 517.587125,
+    "beforeSpawnToExitFrameMilliseconds": 4617.86075,
+    "afterSpawnBothMarkersEmpty": true,
+    "afterReadyBothMarkersExact": true,
+    "extraTwoSecondObservationUsed": false
+  },
+  "conclusion": "This instrumented full run passed, but did not reproduce the original timeout. Sampling cannot divide the 2.482s delay between shell startup/scheduling and PTY/read/callback delivery. Root cause remains unknown; neither environmental contention nor Interrupted/EIO is established.",
+  "retainedFailure": "Original frozen seven-check run remains cargo-test101 / 1691 passed, 1 failed, 6 ignored. This diagnostic run does not retroactively pass that run or prove a repair. No production or timeout change is retained.",
+  "restoration": {
+    "testPath": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+    "bytes": 24547,
+    "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96",
+    "exactOriginalBytes": true,
+    "fiveProductionSourcesStable": true,
+    "rootIndependentlyReported2392OriginalInputsRestored": true
+  },
+  "evidence": [
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/completed.json",
+      "bytes": 5879,
+      "sha256": "4468a5e5408d678868327d74f33b71360741ee19674490b5c51d59e0119bb900"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/diagnostic-observations.json",
+      "bytes": 3137,
+      "sha256": "d2e821087c6517846e89bece3b593f1844f105d142c87264fe700fa4d0380e25"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/source-restored.json",
+      "bytes": 485,
+      "sha256": "b29d0f2c8c2830d6904a21744b42d4fc2cb7a739db9caf2a9170fd1fe7da2897"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/summary.json",
+      "bytes": 7622,
+      "sha256": "b4acf396211c699a485dc2f42da500fd65f023adbed3733e30968afb9fbc1839"
+    }
+  ]
+}

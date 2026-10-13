@@ -18,6 +18,10 @@ export const browserWorkspaceClient = createBrowserWorkspaceClient(
     listen<BrowserWorkspaceState>("browser-workspace:state", (event) =>
       callback(event.payload),
     ),
+  (callback) =>
+    listen<{ taskKey: string }>("browser-workspace:tabs-changed", (event) =>
+      callback(event.payload),
+    ),
 );
 
 /** Keep covering DOM hidden until the exact native surface has acknowledged hide. */

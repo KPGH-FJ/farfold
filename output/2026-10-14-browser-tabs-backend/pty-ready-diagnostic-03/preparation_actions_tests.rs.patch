@@ -1,0 +1,122 @@
+--- a/src-tauri/src/acp_client/preparation_actions_tests.rs
++++ b/src-tauri/src/acp_client/preparation_actions_tests.rs
+@@ -291,7 +291,35 @@
+     // as `touch` could start. Observe the same PTY path the action actually uses.
+     let output = Arc::new(Mutex::new(String::new()));
+     let observed = output.clone();
+-    let (ready_tx, ready_rx) = tokio::sync::oneshot::channel();
++    let monotonic_origin = std::time::Instant::now();
++    let read_events = Arc::new(Mutex::new(Vec::<serde_json::Value>::new()));
++    let observed_reads = read_events.clone();
++    pty.set_read_observer_for_test(Arc::new(move |event| {
++        let mut events = observed_reads.lock().unwrap();
++        if events.len() < 64 {
++            events.push(serde_json::json!({
++                "phase": event.phase,
++                "observedAtNsFromBeforeSpawn": event.observed_at.duration_since(monotonic_origin).as_nanos(),
++                "stop": event.stop,
++                "count": event.count,
++                "errorKind": event.error_kind.map(|kind| format!("{kind:?}")),
++                "rawOsError": event.raw_os_error,
++                "zeroReadMeaning": if event.count == Some(0) { Some("EOF-or-mapped-EIO") } else { None },
++            }));
++        }
++    }));
++    let frames = Arc::new(Mutex::new(Vec::<serde_json::Value>::new()));
++    let observed_frames = frames.clone();
++    let snapshot = |phase: &str| {
++        serde_json::json!({
++            "phase": phase,
++            "observedAtNsFromBeforeSpawn": monotonic_origin.elapsed().as_nanos(),
++            "readEvents": read_events.lock().unwrap().clone(),
++            "frames": frames.lock().unwrap().clone(),
++            "trace": output.lock().unwrap().clone(),
++        })
++    };
++    let (ready_tx, mut ready_rx) = tokio::sync::oneshot::channel();
+     let ready_tx = Mutex::new(Some(ready_tx));
+     let id = run_terminal(
+         &manager,
+@@ -305,6 +333,17 @@
+             output: Channel::new(move |body| {
+                 use base64::Engine;
+                 let frame: serde_json::Value = body.deserialize()?;
++                let received_at = monotonic_origin.elapsed().as_nanos();
++                {
++                    let mut frames = observed_frames.lock().unwrap();
++                    if frames.len() < 64 {
++                        frames.push(serde_json::json!({
++                            "receivedAtNsFromBeforeSpawn": received_at,
++                            "kind": if frame.get("data").is_some() { "data" } else if frame.get("exit").is_some() { "exit" } else { "unknown" },
++                            "frame": frame,
++                        }));
++                    }
++                }
+                 let bytes = frame
+                     .get("data")
+                     .and_then(|data| data.as_str())
+@@ -329,14 +368,45 @@
+         pty: pty.clone(),
+         id: id.clone(),
+     };
+-    assert!(
+-        matches!(
+-            tokio::time::timeout(Duration::from_secs(3), ready_rx).await,
+-            Ok(Ok(()))
+-        ),
+-        "fixture did not become ready; PTY output: {:?}",
+-        output.lock().unwrap()
+-    );
++    let after_spawn = snapshot("after-spawn");
++    let wait_started = monotonic_origin.elapsed().as_nanos();
++    let ready_result = tokio::time::timeout(Duration::from_secs(3), &mut ready_rx).await;
++    let wait_returned = monotonic_origin.elapsed().as_nanos();
++    let ready = matches!(&ready_result, Ok(Ok(())));
++    let ready_state = match &ready_result {
++        Ok(Ok(())) => "timeout-returned-ready",
++        Ok(Err(_)) => "timeout-returned-closed-channel",
++        Err(_) => "timeout-returned-elapsed",
++    };
++    eprintln!(
++        "PTY_READY_DIAGNOSTIC {}",
++        serde_json::json!({
++            "afterSpawn": after_spawn,
++            "readyWaitStartedNsFromBeforeSpawn": wait_started,
++            "readyWaitReturnedNsFromBeforeSpawn": wait_returned,
++            "originalReadyState": ready_state,
++            "afterOriginalWait": snapshot("after-original-wait"),
++            "originalVerdict": if ready { "passed" } else { "failed" },
++            "childScript": "Original script bytes unchanged; no marker writes or sampling.",
++        })
++    );
++    if !ready {
++        tokio::time::sleep(Duration::from_secs(7)).await;
++        eprintln!(
++            "PTY_READY_DIAGNOSTIC {}",
++            snapshot("after-extra-seven-seconds-original-verdict-still-failed")
++        );
++        let close_result = pty.close(&id);
++        eprintln!(
++            "PTY_READY_DIAGNOSTIC {}",
++            serde_json::json!({
++                "closeResult": close_result,
++                "afterExactClose": snapshot("after-exact-close-original-verdict-still-failed"),
++            })
++        );
++        let trace = output.lock().unwrap().clone();
++        assert!(ready, "fixture did not become ready; PTY output: {trace:?}");
++    }
+     assert!(api.work().is_err());
+     assert!(attempts::reserve(&row.id, "duplicate").is_err());
+     attempts::auth_cancel(row.id.clone(), "service-running".into()).unwrap();
+@@ -372,6 +442,10 @@
+     assert_eq!(manager.status(&row.id).unwrap().len(), 1);
+     drop(configuration);
+     pty.close(&id).unwrap();
++    eprintln!(
++        "PTY_READY_DIAGNOSTIC {}",
++        snapshot("after-original-success-cleanup")
++    );
+ }
+ 
+ #[test]

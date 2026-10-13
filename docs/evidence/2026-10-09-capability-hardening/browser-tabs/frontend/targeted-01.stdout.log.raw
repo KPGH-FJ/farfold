@@ -1,0 +1,50 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/BrowserWorkspace.test.tsx (51 tests | 39 failed) 38828ms
+   × suppresses old address and snapshot on the first render of a different task 1010ms
+   × hides an inactive task without closing its page, then restores the same owner 1010ms
+   × registers an in-flight open before navigation and waits for its exact hide ACK 1014ms
+   × keeps a covering panel pending on hide failure, then explicitly retries closure before showing it 1008ms
+   × offers a working local close retry after the first close fails 1008ms
+   × keeps the exact page alive when collapsed and reports only actual hide ACK 1005ms
+   × keeps the pane footprint after failed hide until a retried close really confirms 1008ms
+   × reloads through navigation even for the same URL and clears an earlier snapshot 1010ms
+   × holds the pane from open start until a collapsed late page really hides 7ms
+   × holds a restoring page even when collapsed again before the show ACK 1007ms
+   × releases held layout after an unreserved open is rejected and retains its error 1011ms
+   × opens a picked, verified local HTML without sharing controls or a public snapshot action 1008ms
+   × recovers HTML after 'opening' rejects with '文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工…' 1067ms
+   × recovers HTML after 'opening' rejects with '已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后…' 1068ms
+   × recovers HTML after 'opening' rejects with 'UNKNOWN_ERROR_WITH_PRIVATE_PATH' 1061ms
+   × rechecks the same local file on explicit reload and waits for old-page closure before opening its new revision 1005ms
+   × keeps a local page visible when rechecking its changed source fails 1009ms
+   × releases local HTML before showing the public URL entry, without navigating the local owner 1008ms
+   × consumes a verified-file request once for the same visible task without reopening a picker 1009ms
+   × clears a closed old local page when the replacement open fails, and permits explicit reselection 1004ms
+   × opens only the exact displayed local file receipt in the browser without reopening or navigating the embedded page 1005ms
+   × keeps the embedded document and reports a failed browser open without substituting a new file 1005ms
+   × a hidden local page cannot launch the external browser 1008ms
+   × restores the same page after a sidebar layout transition without navigation or reopening 1008ms
+   × observes a real close while inactive and never restores that departed page 1008ms
+   × uses the actual true storage receipt for local hints 1006ms
+   × uses the actual false storage receipt for local hints 1009ms
+   × uses the actual unknown storage receipt for local hints 1007ms
+   × asks about this file before clearing, supports keeping it, and reports success only after the real receipt 1008ms
+   × does not report deletion success when closing succeeds but clearing fails 1006ms
+   × invalidates a clear confirmation after hide and ignores its stale action 1007ms
+   × invalidates a clear confirmation after inactive and ignores its stale action 1009ms
+   × invalidates a clear confirmation after project and ignores its stale action 1006ms
+   × invalidates a clear confirmation after task and ignores its stale action 1006ms
+   × a late clear receipt cannot show success or clear state for another task 1004ms
+   × never offers clear for public pages 1003ms
+   × closes the current HTML owner on unmount after replacing an earlier page 1005ms
+   × reloads directory in its existing owner without a picker or replacement store 1004ms
+   × reloads development in its existing owner without a picker or replacement store 1005ms
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  39 failed | 62 passed (101)
+     Errors  55 errors
+   Start at  05:12:03
+   Duration  39.98s (transform 289ms, setup 0ms, import 2.27s, tests 39.22s, environment 0ms)
+

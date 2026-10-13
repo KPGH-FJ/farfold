@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "status": "PASS_FOR_ORIGINAL_RUN_SCOPE_ONLY",
+  "manifest": {
+    "path": "output/2026-10-14-browser-tabs-browser/transcript-receipts/manifest.json",
+    "sha256": "f8cf72e99eff89cb81fb5aae17a87b97cb12169338cdd03da7f404a163f21c7f"
+  },
+  "records": [
+    {
+      "kind": "tool-output",
+      "chunks": [
+        "285fe9",
+        "c4e30c"
+      ],
+      "callId": "call_efac4e8494ac41068a1513a27ffc9f0d",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-receipts/record-16017.jsonl.raw",
+      "sourceLine": 16017,
+      "bytes": 920,
+      "sha256": "4ee573da215c52ee240885d7630b85e58893151d002d644a76ca0b9915312fc9",
+      "sourceByteOffset": 44534091,
+      "exactOriginalLine": true
+    },
+    {
+      "kind": "CommandExecution",
+      "command": "node output/2026-10-14-browser-tabs-browser/run.mjs webkit run3",
+      "status": "completed",
+      "exitCode": 0,
+      "processId": "37131",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-receipts/record-16021.jsonl.raw",
+      "sourceLine": 16021,
+      "bytes": 894,
+      "sha256": "e0000f411c1d41be06c44145c12b53ca136bac72212c2e72a557bed1b0bb2dec",
+      "sourceByteOffset": 44539683,
+      "exactOriginalLine": true
+    },
+    {
+      "kind": "CommandExecution",
+      "command": "node output/2026-10-14-browser-tabs-browser/run.mjs chromium run4",
+      "status": "completed",
+      "exitCode": 0,
+      "processId": "23327",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-receipts/record-16027.jsonl.raw",
+      "sourceLine": 16027,
+      "bytes": 900,
+      "sha256": "e9ce4c471b081d35267ab13a2f9cc67e47708f8176a103900519d2e3c59aaaeb",
+      "sourceByteOffset": 44545002,
+      "exactOriginalLine": true
+    },
+    {
+      "kind": "tool-output",
+      "chunks": [
+        "60565a",
+        "6d7818"
+      ],
+      "callId": "call_df8f5495354f49bdabc20f7da404de39",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-receipts/record-16039.jsonl.raw",
+      "sourceLine": 16039,
+      "bytes": 1248,
+      "sha256": "8e2c3d30a6fd484a499575669a26f8eecb41d5ffcb33d93b74bcaa955c174725",
+      "sourceByteOffset": 44557780,
+      "exactOriginalLine": true
+    },
+    {
+      "kind": "CommandExecution",
+      "command": "node output/2026-10-14-browser-tabs-browser/serve.mjs",
+      "status": "failed",
+      "exitCode": 143,
+      "processId": "75404",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-receipts/record-16058.jsonl.raw",
+      "sourceLine": 16058,
+      "bytes": 1196,
+      "sha256": "8aa598547c692d1ab57ab493e05c210c395cae496110ab0e5036cab76cd79532",
+      "sourceByteOffset": 45247525,
+      "exactOriginalLine": true
+    }
+  ],
+  "qualification": "Actual completion records authenticate the old 138-check controlled runs and server intentional SIGTERM143 only. They do not override the later cross-task B-retention defect or authorize final convergence/native claims.",
+  "sideEffects": "Read exactly the five selected original records, without parsing or reporting other transcript content. No execution, App or DB."
+}

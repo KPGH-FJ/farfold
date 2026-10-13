@@ -1,0 +1,181 @@
+/** Controlled IPC contract only. Iframes simulate child views; this is not native proof. */
+import pageA from "./pages/a.html?raw";
+import pageB from "./pages/b.html?raw";
+import pageC from "./pages/c.html?raw";
+
+const copy = <T,>(value: T): T => structuredClone(value);
+type Info = { taskKey: string; label: string; url: string; phase: string; revision: number };
+type Selection = { label: string | null; revision: number };
+type Page = { info: Info; frame: HTMLIFrameElement; shared: boolean; gate: number; closed: boolean };
+type Bounds = { x: number; y: number; width: number; height: number };
+
+export function controlledBrowser(emit: (event: string, payload: unknown) => void) {
+  const pages = new Map<string, Page>();
+  const selection = new Map<string, Selection>();
+  const trace: Record<string, unknown>[] = [];
+  const held: { stage: string; label: string; resolve: () => void; reject: (error: Error) => void }[] = [];
+  const mode = { hold: "", fail: "", snapshotDelivery: "validate-current" };
+  const uncertainPresentation = new Set<string>();
+  const pendingWithdrawal = new Set<string>();
+  let nextId = 0;
+  let maximumVisible = 0;
+  const selected = (taskKey: string) => selection.get(taskKey) ?? { label: null, revision: 0 };
+  const activePages = () => [...pages.values()].filter(page => !page.closed);
+  const tabs = (taskKey: string) => copy({ taskKey, pages: activePages().filter(page => page.info.taskKey === taskKey).map(page => page.info), selection: selected(taskKey) });
+  const stateChanged = (taskKey: string) => emit("browser-workspace:tabs-changed", { taskKey });
+  const owned = (args: { taskKey: string; label: string }) => {
+    const page = pages.get(args.label);
+    if (!page || page.closed || page.info.taskKey !== args.taskKey) throw Error("Controlled wrong page owner");
+    return page;
+  };
+  const sharing = (page: Page) => ({ taskKey: page.info.taskKey, label: page.info.label, agentId: "tabs-fixture", phase: page.shared ? "shared" : "unshared", revision: page.gate, reason: null, pendingRequest: null });
+  const barrier = async (stage: string, label: string) => {
+    trace.push({ stage, label, event: "requested" });
+    if (mode.fail === stage) { trace.push({ stage, label, event: "failed" }); throw Error("Controlled " + stage + " failure"); }
+    if (mode.hold === stage) await new Promise<void>((resolve, reject) => held.push({ stage, label, resolve, reject }));
+    trace.push({ stage, label, event: "ack" });
+  };
+  const layout = (page: Page, bounds: Bounds) => {
+    Object.assign(page.frame.style, { left: bounds.x + "px", top: bounds.y + "px", width: bounds.width + "px", height: bounds.height + "px" });
+  };
+  const visible = () => activePages().filter(page => page.frame.style.display !== "none");
+  const recordVisible = () => { maximumVisible = Math.max(maximumVisible, visible().length); };
+  const hide = async (page: Page, stage: string) => {
+    try { await barrier(stage, page.info.label); }
+    catch (error) { uncertainPresentation.add(page.info.label); throw error; }
+    page.frame.style.display = "none";
+    uncertainPresentation.delete(page.info.label);
+    recordVisible();
+  };
+  const revoke = (page: Page) => {
+    page.gate++;
+    page.shared = false;
+    trace.push({ stage: "revoke", label: page.info.label, gate: page.gate });
+    emit("browser-sharing:changed", { taskKey: page.info.taskKey });
+  };
+  async function invoke(command: string, args: any): Promise<any> {
+    if (command === "browser_workspace_tabs") return tabs(args.taskKey);
+    if (command === "browser_workspace_select") {
+      const previous = selected(args.taskKey);
+      if (JSON.stringify(previous) !== JSON.stringify(args.expectedSelected)) throw Error("Controlled stale selection");
+      if (args.label !== null) owned(args);
+      if (args.label === previous.label && (previous.label === null || (!pendingWithdrawal.has(previous.label) && !uncertainPresentation.has(previous.label)))) return tabs(args.taskKey);
+      selection.set(args.taskKey, { ...previous, revision: previous.revision + 1 });
+      stateChanged(args.taskKey);
+      if (previous.label !== null) {
+        const old = owned({ taskKey: args.taskKey, label: previous.label });
+        pendingWithdrawal.add(old.info.label);
+        revoke(old);
+        old.info.revision++;
+        emit("browser-workspace:state", copy(old.info));
+        await barrier("select-quiesce", old.info.label);
+        await hide(old, "select-hide");
+        pendingWithdrawal.delete(old.info.label);
+      }
+      selection.set(args.taskKey, { label: args.label, revision: previous.revision + 1 });
+      stateChanged(args.taskKey);
+      return tabs(args.taskKey);
+    }
+    if (command === "browser_workspace_open") {
+      const letter = new URL(args.url).pathname.split("/").filter(Boolean).at(-1)?.toUpperCase();
+      const html = ({ A: pageA, B: pageB, C: pageC } as Record<string, string>)[letter ?? ""];
+      if (!html) throw Error("Controlled fixture only accepts /a /b /c");
+      const info: Info = { taskKey: args.taskKey, label: "controlled-page-" + ++nextId, url: args.url, phase: "ready", revision: 1 };
+      const frame = document.createElement("iframe");
+      frame.title = "Controlled page " + letter;
+      frame.dataset.controlledPage = info.label;
+      Object.assign(frame.style, { display: "none", position: "fixed", zIndex: "10", border: "0" });
+      frame.srcdoc = html;
+      const page: Page = { info, frame, shared: false, gate: 0, closed: false };
+      layout(page, args.bounds);
+      pages.set(info.label, page);
+      document.body.append(frame);
+      trace.push({ stage: "create-hidden", label: info.label, taskKey: info.taskKey });
+      stateChanged(args.taskKey);
+      await barrier("open", info.label);
+      if (page.closed) throw Error("Controlled page closed during open");
+      emit("browser-workspace:state", copy(info));
+      return copy(info);
+    }
+    if (command === "browser_share_status" && args.label === "") {
+      // A controlled ready tool queried without a page is a valid owner query,
+      // not an unknown-page exception. This remains a synthetic precondition.
+      const shared = activePages().find(page => page.info.taskKey === args.taskKey && page.shared);
+      return shared ? sharing(shared) : { taskKey: args.taskKey, label: "", agentId: "tabs-fixture", phase: "unshared", revision: 0, reason: null, pendingRequest: null };
+    }
+    const page = owned(args);
+    if (command === "browser_workspace_resize") { layout(page, args.bounds); return; }
+    if (command === "browser_workspace_set_visible") {
+      if (!args.visible) return hide(page, "hide");
+      if (selected(args.taskKey).label !== args.label) throw Error("Controlled show unselected page");
+      if (uncertainPresentation.size) throw Error("Controlled presentation still unconfirmed");
+      if (visible().some(other => other !== page)) throw Error("Controlled second visible page");
+      try { await barrier("show", args.label); }
+      catch (error) { uncertainPresentation.add(args.label); throw error; }
+      layout(page, args.bounds);
+      page.frame.style.display = "block";
+      recordVisible();
+      return;
+    }
+    if (command === "browser_workspace_close") {
+      const previous = selected(args.taskKey);
+      if (previous.label === args.label) selection.set(args.taskKey, { ...previous, revision: previous.revision + 1 });
+      revoke(page);
+      await barrier("close", args.label);
+      page.closed = true;
+      page.frame.remove();
+      uncertainPresentation.delete(args.label);
+      pendingWithdrawal.delete(args.label);
+      page.info = { ...page.info, phase: "closed", revision: page.info.revision + 1 };
+      if (selected(args.taskKey).label === args.label) selection.set(args.taskKey, { label: null, revision: selected(args.taskKey).revision });
+      emit("browser-workspace:state", copy(page.info));
+      stateChanged(args.taskKey);
+      return;
+    }
+    if (command === "browser_workspace_snapshot") {
+      if (selected(args.taskKey).label !== args.label) throw Error("Controlled snapshot unselected");
+      const gate = page.gate;
+      const doc = page.frame.contentDocument!;
+      const snapshot = { ...args, url: page.info.url, title: doc.title, text: doc.body.innerText, observedAtMs: Date.now(), revision: page.info.revision };
+      if (mode.snapshotDelivery === "captured-success") {
+        // Model a valid response completed BEFORE later withdrawal, but delivered
+        // to its frontend promise late. This tests UI ownership, not backend gates.
+        trace.push({ stage: "snapshot-response-completed", label: args.label, gate });
+        await barrier("snapshot-delivery", args.label);
+        return snapshot;
+      }
+      await barrier("snapshot", args.label);
+      if (page.closed || page.gate !== gate) throw Error("Controlled snapshot revoked");
+      return snapshot;
+    }
+    if (command === "browser_share_status") return sharing(page);
+    if (command === "browser_share_allow") {
+      if (selected(args.taskKey).label !== args.label) throw Error("Controlled grant unselected");
+      const gate = page.gate;
+      await barrier("allow", args.label);
+      if (page.closed || page.gate !== gate || selected(args.taskKey).label !== args.label) throw Error("Controlled approval withdrawn");
+      page.shared = true;
+      page.gate++;
+      emit("browser-sharing:changed", { taskKey: args.taskKey });
+      return sharing(page);
+    }
+    if (command === "browser_share_stop") { revoke(page); return sharing(page); }
+    throw Error("Unsupported controlled browser command: " + command);
+  }
+  return {
+    invoke,
+    configure: (next: Partial<typeof mode>) => Object.assign(mode, next),
+    release: (stage: string, options: { label?: string; fail?: boolean } = {}) => {
+      const chosen = held.filter(item => item.stage === stage && (options.label === undefined || options.label === item.label));
+      for (const item of chosen) {
+        held.splice(held.indexOf(item), 1);
+        if (options.fail) item.reject(Error("Controlled delayed failure")); else item.resolve();
+      }
+      return chosen.length;
+    },
+    current: () => ({
+      pages: [...pages.values()].map(page => ({ ...copy(page.info), closed: page.closed, shared: page.shared, gate: page.gate, visible: !page.closed && page.frame.style.display !== "none", state: page.closed ? null : { counter: page.frame.contentDocument?.getElementById("count")?.textContent, note: (page.frame.contentDocument?.getElementById("note") as HTMLInputElement | null)?.value, scrollY: page.frame.contentWindow?.scrollY } })),
+      selections: Object.fromEntries(selection), maximumVisible, pendingWithdrawal: [...pendingWithdrawal], uncertainPresentation: [...uncertainPresentation], held: held.map(({ stage, label }) => ({ stage, label })), trace: copy(trace),
+    }),
+  };
+}

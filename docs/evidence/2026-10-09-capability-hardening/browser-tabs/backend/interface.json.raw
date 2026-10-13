@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "commands": {
+    "browser_workspace_tabs": {
+      "args": {
+        "taskKey": "string"
+      },
+      "returns": "BrowserTabs"
+    },
+    "browser_workspace_select": {
+      "args": {
+        "taskKey": "string",
+        "label": "string|null",
+        "expectedSelected": {
+          "label": "string|null",
+          "revision": "number"
+        }
+      },
+      "returns": "BrowserTabs"
+    }
+  },
+  "BrowserTabs": {
+    "taskKey": "string",
+    "pages": "BrowserInfo[]",
+    "selection": {
+      "label": "string|null",
+      "revision": "number"
+    }
+  },
+  "event": {
+    "name": "browser-workspace:tabs-changed",
+    "payload": {
+      "taskKey": "string"
+    }
+  },
+  "rules": [
+    "Runtime-only page map and per-task selection; no persistent tab list or arbitrary page-count cap.",
+    "Open reserves and creates a hidden independent view; explicit select does not show it.",
+    "A different selection increments control revision at begin; failure does not roll it back.",
+    "Revoke page gate, await existing stop_page/quiesce, await hide ACK, commit selection, then frontend guarded visibility can show.",
+    "Same-page hide or task switch preserves selection and grant.",
+    "Failure retains old exact owner and error; retry or close must clear unknown visibility before another view can show.",
+    "Read tickets include the selection revision; manual and granted scopes retain a non-revivable page gate.",
+    "Close retains owner until native ACK, and shutdown marks every owner closed before late callbacks can act."
+  ],
+  "boundaries": [
+    "Controlled backend state/future tests are distinct from actual native App observation.",
+    "Windows source parity is not Windows runtime evidence."
+  ]
+}

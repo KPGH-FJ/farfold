@@ -1,0 +1,64 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "scope": "Exact final controlled browser launch/completion and owned server execution records",
+  "priorExtractionFailure": "4d4d00 actual1 filtered wrong record type and wrote no receipts; no test command rerun",
+  "records": [
+    {
+      "kind": "tool-output",
+      "chunks": [
+        "285fe9",
+        "c4e30c"
+      ],
+      "callId": "call_efac4e8494ac41068a1513a27ffc9f0d",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-receipts/record-16017.jsonl.raw",
+      "sourceLine": 16017,
+      "bytes": 920,
+      "sha256": "4ee573da215c52ee240885d7630b85e58893151d002d644a76ca0b9915312fc9"
+    },
+    {
+      "kind": "CommandExecution",
+      "command": "node output/2026-10-14-browser-tabs-browser/run.mjs webkit run3",
+      "status": "completed",
+      "exitCode": 0,
+      "processId": "37131",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-receipts/record-16021.jsonl.raw",
+      "sourceLine": 16021,
+      "bytes": 894,
+      "sha256": "e0000f411c1d41be06c44145c12b53ca136bac72212c2e72a557bed1b0bb2dec"
+    },
+    {
+      "kind": "CommandExecution",
+      "command": "node output/2026-10-14-browser-tabs-browser/run.mjs chromium run4",
+      "status": "completed",
+      "exitCode": 0,
+      "processId": "23327",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-receipts/record-16027.jsonl.raw",
+      "sourceLine": 16027,
+      "bytes": 900,
+      "sha256": "e9ce4c471b081d35267ab13a2f9cc67e47708f8176a103900519d2e3c59aaaeb"
+    },
+    {
+      "kind": "tool-output",
+      "chunks": [
+        "60565a",
+        "6d7818"
+      ],
+      "callId": "call_df8f5495354f49bdabc20f7da404de39",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-receipts/record-16039.jsonl.raw",
+      "sourceLine": 16039,
+      "bytes": 1248,
+      "sha256": "8e2c3d30a6fd484a499575669a26f8eecb41d5ffcb33d93b74bcaa955c174725"
+    },
+    {
+      "kind": "CommandExecution",
+      "command": "node output/2026-10-14-browser-tabs-browser/serve.mjs",
+      "status": "failed",
+      "exitCode": 143,
+      "processId": "75404",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-receipts/record-16058.jsonl.raw",
+      "sourceLine": 16058,
+      "bytes": 1196,
+      "sha256": "8aa598547c692d1ab57ab493e05c210c395cae496110ab0e5036cab76cd79532"
+    }
+  ]
+}

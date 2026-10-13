@@ -1,0 +1,44 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--lib",
+    "acp_client::preparation_actions::tests::service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap",
+    "--",
+    "--exact",
+    "--nocapture"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-10-13T22:19:51.174788+00:00",
+  "completedAt": "2026-10-13T22:19:55.161185+00:00",
+  "actualStageCompletion": true,
+  "rawExitCode": 0,
+  "elapsedSeconds": 3.986270583,
+  "sourceBefore": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-probe/source-before.json",
+    "bytes": 1036,
+    "sha256": "6d555890f30677ee88f15be1caff554589bf7fb1d883fa60d66f2e6f3a84f52c"
+  },
+  "sourceAfter": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-probe/source-after.json",
+    "bytes": 1036,
+    "sha256": "6d555890f30677ee88f15be1caff554589bf7fb1d883fa60d66f2e6f3a84f52c"
+  },
+  "sourceStable": true,
+  "logs": [
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-probe/stdout.log",
+      "bytes": 239,
+      "sha256": "8a91321cd7527b7db0bed44cea5eea3f5e5084cc4f084e835940f6d15133407b"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-probe/stderr.log",
+      "bytes": 166,
+      "sha256": "93473ddd17afb399392b76c1a54e81cc505e47af62d1fae636465fec836fc2fc"
+    }
+  ],
+  "boundary": "Original full-suite failure retained. Passing this isolated run would not establish cause or repair."
+}

@@ -1,0 +1,11 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/App.navigation.test.tsx (57 tests | 1 failed | 56 skipped) 9ms
+   × keeps retained browser route slots in the same order across both task directions 9ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 56 skipped (57)
+   Start at  05:50:43
+   Duration  1.49s (transform 353ms, setup 0ms, import 1.41s, tests 9ms, environment 0ms)
+

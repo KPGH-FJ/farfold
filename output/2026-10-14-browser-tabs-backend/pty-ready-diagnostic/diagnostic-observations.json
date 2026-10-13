@@ -1,0 +1,105 @@
+{
+  "originLogs": [
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/stdout.log",
+      "bytes": 637948,
+      "sha256": "606e446ddf1548f7bdec19dffd4c9278e5d952cb084ed07947112288c54a50e4"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/stderr.log",
+      "bytes": 74390,
+      "sha256": "2762b161f5807f27f0e0af386b729f85fe667aff57db310bb90aba60fdec0d49"
+    }
+  ],
+  "parsed": [
+    {
+      "rawPath": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/stderr.log",
+      "line": 32,
+      "value": {
+        "afterSpawn": {
+          "phase": "after-spawn",
+          "observedAtNsFromBeforeSpawn": 1989667,
+          "trapMarker": {
+            "readOk": true,
+            "bytes": 0,
+            "expectedContent": false
+          },
+          "printfMarker": {
+            "readOk": true,
+            "bytes": 0,
+            "expectedContent": false
+          },
+          "frames": [],
+          "trace": ""
+        },
+        "readyWaitStartedNsFromBeforeSpawn": 2023709,
+        "originalReadyState": "ready-within-original-deadline",
+        "afterOriginalWait": {
+          "phase": "after-original-wait",
+          "observedAtNsFromBeforeSpawn": 2484580709,
+          "trapMarker": {
+            "readOk": true,
+            "bytes": 15,
+            "expectedContent": true
+          },
+          "printfMarker": {
+            "readOk": true,
+            "bytes": 21,
+            "expectedContent": true
+          },
+          "frames": [
+            {
+              "receivedAtNsFromBeforeSpawn": 2484436584,
+              "kind": "data",
+              "frame": {
+                "id": "pty-1791930802513-1",
+                "data": "Zml4dHVyZS1jb25maWd1cmF0aW9uLXJlYWR5DQo="
+              }
+            }
+          ],
+          "trace": "fixture-configuration-ready\r\n"
+        },
+        "originalVerdict": "passed"
+      }
+    },
+    {
+      "rawPath": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/stderr.log",
+      "line": 33,
+      "value": {
+        "phase": "after-original-success-cleanup",
+        "observedAtNsFromBeforeSpawn": 4618052042,
+        "trapMarker": {
+          "readOk": true,
+          "bytes": 15,
+          "expectedContent": true
+        },
+        "printfMarker": {
+          "readOk": true,
+          "bytes": 21,
+          "expectedContent": true
+        },
+        "frames": [
+          {
+            "receivedAtNsFromBeforeSpawn": 2484436584,
+            "kind": "data",
+            "frame": {
+              "id": "pty-1791930802513-1",
+              "data": "Zml4dHVyZS1jb25maWd1cmF0aW9uLXJlYWR5DQo="
+            }
+          },
+          {
+            "receivedAtNsFromBeforeSpawn": 4617860750,
+            "kind": "exit",
+            "frame": {
+              "id": "pty-1791930802513-1",
+              "exit": 1
+            }
+          }
+        ],
+        "trace": "fixture-configuration-ready\r\n{\"id\":\"pty-1791930802513-1\",\"exit\":1}"
+      }
+    }
+  ],
+  "unparsed": [],
+  "scope": "Extraction of actual raw diagnostic records; no inferred timestamps/errno beyond recorded fields."
+}

@@ -30,6 +30,9 @@ type CompletionReply = Rc<RefCell<Option<oneshot::Sender<Result<(), String>>>>>;
 use super::native_request::PendingOperation;
 thread_local! {
     static VIEWS:RefCell<HashMap<u64,Rc<View>>>=RefCell::new(HashMap::new());
+    // A close cannot acknowledge an async creation whose controller is not back.
+    static CREATING:RefCell<HashSet<u64>>=RefCell::new(HashSet::new());
+    static UNFINISHED:RefCell<HashMap<u64,ICoreWebView2Controller>>=RefCell::new(HashMap::new());
     static SHUTDOWN:Cell<bool>=const{Cell::new(false)};
     static CLEARING:RefCell<HashSet<String>>=RefCell::new(HashSet::new());
 }
@@ -364,17 +367,21 @@ async fn create_content(
                             let done = CreateCoreWebView2ControllerCompletedHandler::create(
                                 Box::new(move |result, controller| {
                                     let result = (|| -> Result<(), String> {
+                                        if let Some(controller) = &controller {
+                                            UNFINISHED.with(|owners| {
+                                                owners.borrow_mut().insert(id, controller.clone())
+                                            });
+                                        }
                                         result.map_err(|_| "网页视图未能创建")?;
                                         let controller = controller.ok_or("网页视图未能创建")?;
+                                        unsafe { controller.SetIsVisible(false) }
+                                            .map_err(|_| "无法隐藏新网页")?;
                                         if done_reply
                                             .borrow()
                                             .as_ref()
                                             .is_none_or(|r| r.is_closed())
                                             || !state.can_operate(id, Some(1))
                                         {
-                                            unsafe {
-                                                let _ = controller.Close();
-                                            }
                                             return Err("网页打开已取消".into());
                                         }
                                         let core = unsafe { controller.CoreWebView2() }
@@ -390,7 +397,7 @@ async fn create_content(
                                             _temporary: temporary,
                                             closed: Cell::new(false),
                                             close_complete: Cell::new(false),
-                                            visible: Cell::new(true),
+                                            visible: Cell::new(false),
                                             loading: Cell::new(true),
                                             navigation: Cell::new(1),
                                             requested: RefCell::new(None),
@@ -406,23 +413,23 @@ async fn create_content(
                                             scale: Cell::new(1.0),
                                             bounds: Cell::new(bounds),
                                         });
-                                        if let Err(error) = events::install(&view)
-                                            .and_then(|_| preview::install(&view))
-                                            .and_then(|_| view.resize(bounds))
-                                        {
-                                            view.close();
-                                            return Err(error);
-                                        }
+                                        // Transfer ownership before any fallible event/resource setup.
                                         VIEWS.with(|views| {
-                                            views.borrow_mut().insert(id, view.clone());
+                                            views.borrow_mut().insert(id, view.clone())
                                         });
-                                        if let Err(error) = view.navigate(1, view.content.url()) {
-                                            view.close();
-                                            VIEWS.with(|views| views.borrow_mut().remove(&id));
-                                            return Err(error);
-                                        }
+                                        UNFINISHED.with(|owners| owners.borrow_mut().remove(&id));
+                                        events::install(&view)?;
+                                        preview::install(&view)?;
+                                        view.resize(bounds)?;
+                                        view.navigate(1, view.content.url())?;
                                         Ok(())
                                     })();
+                                    CREATING.with(|ids| ids.borrow_mut().remove(&id));
+                                    if result.is_err() {
+                                        // Failure remains a failure; an unacknowledged close retains
+                                        // its exact native owner for close/close_all to retry.
+                                        close_native_owner(id);
+                                    }
                                     finish_create(&done_reply, result);
                                     Ok(())
                                 }),
@@ -438,11 +445,13 @@ async fn create_content(
                             Ok(())
                         })();
                         if let Err(error) = result {
+                            CREATING.with(|ids| ids.borrow_mut().remove(&id));
                             finish_create(&callback_reply, Err(error));
                         }
                         Ok(())
                     },
                 ));
+                CREATING.with(|ids| ids.borrow_mut().insert(id));
                 unsafe {
                     CreateCoreWebView2EnvironmentWithOptions(
                         PCWSTR::null(),
@@ -455,6 +464,7 @@ async fn create_content(
                 Ok(())
             })();
             if let Err(error) = result {
+                CREATING.with(|ids| ids.borrow_mut().remove(&id));
                 finish_create(&reply, Err(error));
             }
         })
@@ -505,7 +515,7 @@ pub(super) async fn set_visible(
     bounds: Option<Bounds>,
 ) -> Result<(), String> {
     main(app, move || {
-        if !state.can_operate(id, None) {
+        if !state.can_operate(id, None) || (visible && !state.can_present(id)) {
             return Err("网页已关闭".into());
         }
         let view = lookup(id)?;
@@ -520,28 +530,44 @@ pub(super) async fn set_visible(
     })
     .await
 }
+// This runs only on the WebView main thread. No missing-map success while an
+// async creation can still return a controller, and no dropping a failed Close.
+fn close_native_owner(id: u64) -> bool {
+    if CREATING.with(|ids| ids.borrow().contains(&id)) {
+        return false;
+    }
+    if let Some(view) = VIEWS.with(|views| views.borrow().get(&id).cloned()) {
+        if !view.close() {
+            return false;
+        }
+        VIEWS.with(|views| views.borrow_mut().remove(&id));
+    }
+    if let Some(controller) = UNFINISHED.with(|owners| owners.borrow().get(&id).cloned()) {
+        if unsafe { controller.Close() }.is_err() {
+            return false;
+        }
+        UNFINISHED.with(|owners| owners.borrow_mut().remove(&id));
+    }
+    true
+}
 pub(super) async fn close(app: &AppHandle, id: u64) -> Result<(), String> {
     main(app, move || {
-        let view = VIEWS.with(|views| views.borrow().get(&id).cloned());
-        if let Some(view) = view {
-            if !view.close() {
-                return Err("网页关闭尚未确认，请重试".into());
-            }
-            VIEWS.with(|views| views.borrow_mut().remove(&id));
+        if close_native_owner(id) {
+            Ok(())
+        } else {
+            Err("网页关闭尚未确认，请重试".into())
         }
-        Ok(())
     })
     .await
 }
 pub(super) fn close_all_on_main_thread() -> bool {
     SHUTDOWN.set(true);
-    let views = VIEWS.with(|views| views.borrow().values().cloned().collect::<Vec<_>>());
+    let mut ids = CREATING.with(|ids| ids.borrow().clone());
+    VIEWS.with(|views| ids.extend(views.borrow().keys().copied()));
+    UNFINISHED.with(|owners| ids.extend(owners.borrow().keys().copied()));
     let mut closed = true;
-    for view in views {
-        closed &= view.close();
-    }
-    if closed {
-        VIEWS.with(|views| views.borrow_mut().clear());
+    for id in ids {
+        closed &= close_native_owner(id);
     }
     closed
 }

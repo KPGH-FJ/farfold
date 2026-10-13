@@ -1,0 +1,27 @@
+{
+  "status": "supersedes cap-related research proposals; root released runtime-tabs implementation",
+  "atUtc": "2026-10-13T21:00:45.870898+00:00",
+  "oldOracle": {
+    "path": "output/2026-10-14-browser-tabs-research/manual-oracle-v1.json.raw",
+    "bytes": 10059,
+    "sha256": "e45d400b5143f0af7efb048d38b19c4a7d047cca47a5cfa5a7f482ee266534c4"
+  },
+  "newOracle": {
+    "path": "output/2026-10-14-browser-tabs-research/manual-oracle-v2.json",
+    "sha256": "ddc1d6032464734f7608176177d3942846ed68693607121bc82878644237afb4",
+    "bytes": 11085
+  },
+  "interfaceFinal": {
+    "tabs": "browser_workspace_tabs({taskKey})->{taskKey,pages:BrowserInfo[],selection:{label:string|null,revision:number}}",
+    "select": "browser_workspace_select({taskKey,label:string|null,expectedSelected:{label:string|null,revision:number}})->same TabsState",
+    "event": "browser-workspace:tabs-changed payload {taskKey}",
+    "selectionRevision": "task-local ephemeral; advance at different-label select begin even on failure and selected close begin; hide does not advance; never changes native navigation",
+    "selectionBlockedField": false
+  },
+  "superseded": [
+    "global3 proposed limits in interfaces.json/handoff.json/manual-oracle-v1",
+    "optional4/8 suggestion in implementation-assignment.json not adopted",
+    "ExpectedSelection tied to BrowserInfo.revision in original interfaces.json"
+  ],
+  "current": "No numeric page cap. 2–3 pages is first test coverage. Closing uncertain owner remains tracked; creation D may proceed but cannot bypass failed presentation guards. Runtime tabs only; no persistent list."
+}

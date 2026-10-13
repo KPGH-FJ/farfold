@@ -1,0 +1,38 @@
+--- a/src/components/BrowserWorkspacePage.tsx
++++ b/src/components/BrowserWorkspacePage.tsx
+@@ -949,6 +949,7 @@
+     hasPage,
+     visibleState?.label,
+     blocked,
++    guardRevision,
+     presentationSuspended,
+   ]);
+ 
+--- a/src/components/BrowserWorkspace.presentation.test.tsx
++++ b/src/components/BrowserWorkspace.presentation.test.tsx
+@@ -181,3 +181,25 @@
+     }),
+   );
+ });
++
++it("restarts bounds synchronization after batched hold and release notifications", async () => {
++  const { props, client } = await mounted();
++  const guard = props.guard!;
++  const scheduled = vi.mocked(requestAnimationFrame).mock.calls.length;
++  const hold = guard.hold();
++  expect(guard.getSnapshot().blocked).toBe(true);
++  // No intermediate render: the preceding frame observes the guard immediately,
++  // while React can coalesce the blocked=true and blocked=false notifications.
++  frame();
++  expect(vi.mocked(requestAnimationFrame).mock.calls.length).toBe(scheduled);
++  await vi.waitFor(() => expect(hold.ready).toBe(true));
++  hold.release();
++  expect(guard.getSnapshot().blocked).toBe(false);
++  render(props);
++  expect(vi.mocked(requestAnimationFrame).mock.calls.length).toBeGreaterThan(
++    scheduled,
++  );
++  frame();
++  await vi.waitFor(() => expect(client.resize).toHaveBeenCalledOnce());
++  expect(client.close).not.toHaveBeenCalled();
++});

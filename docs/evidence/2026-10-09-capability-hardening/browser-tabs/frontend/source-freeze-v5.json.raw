@@ -1,0 +1,176 @@
+{
+  "observedAtUtc": "2026-10-13T21:58:23.215309+00:00",
+  "previousFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v4.json",
+    "bytes": 6376,
+    "sha256": "06c5160af56f70c061135999e5d5964c76a197ef15795c48d4ade4f6a533afc2"
+  },
+  "files": [
+    {
+      "path": "src/runtime/browser_tabs.ts",
+      "bytes": 13221,
+      "sha256": "7c00e8a03b57eb46f4105d749a74871e61c527f0485bb20998f29dbb373dc602",
+      "lines": 392
+    },
+    {
+      "path": "src/runtime/browser_tabs.test.ts",
+      "bytes": 19933,
+      "sha256": "9e82603e2d5f9123c67f27719479ebe3f35a8b88d0482ba0ae1d56391be85e69",
+      "lines": 572
+    },
+    {
+      "path": "src/runtime/browser_workspace.ts",
+      "bytes": 14716,
+      "sha256": "c039667dfc532cb72a7255d7b06045ab41cf3adc6ef1a13c2ff0bbb5dfde460e",
+      "lines": 476
+    },
+    {
+      "path": "src/runtime/browser_workspace.test.ts",
+      "bytes": 21701,
+      "sha256": "8171a98b14a40ceaa68564ac3a1dd8e6dfb4df3e3ffbf2286cac90bdaec878f9",
+      "lines": 587
+    },
+    {
+      "path": "src/runtime/browser_surface.ts",
+      "bytes": 1536,
+      "sha256": "85c78767262cbea94a047925a5eb6ee8585d9453fe57987d216215c62fb65ade",
+      "lines": 46
+    },
+    {
+      "path": "src/runtime/browser_workspace_strings.ts",
+      "bytes": 4674,
+      "sha256": "f729602c01e64a92129f5e5e4bd1414586ff1a793b2d0f6b271e777f085c737e",
+      "lines": 89
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tsx",
+      "bytes": 7822,
+      "sha256": "1cc81249dc58fc8392b38e90ca643ff2d710e80f547091a8581b3e59dc9b872a",
+      "lines": 227
+    },
+    {
+      "path": "src/components/BrowserWorkspacePage.tsx",
+      "bytes": 43018,
+      "sha256": "5aeb8db9f11e50dabf65d4b5af8b4e3636d917e509dad42c6c11a62039ee539c",
+      "lines": 1323
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tabs.test.tsx",
+      "bytes": 1244,
+      "sha256": "4c4ba561051e59e2a8fe9e27306d13daea211c2d24e383570f6e5b63e00b7cb2",
+      "lines": 34
+    },
+    {
+      "path": "src/components/BrowserWorkspace.test.tsx",
+      "bytes": 46932,
+      "sha256": "b5cedeb8ebf8d018a7c835f4692f40be7c497467d3f796172aa7955c992038bb",
+      "lines": 1462
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "bytes": 21232,
+      "sha256": "c1ebc570aa7d671a48fb003bd63e1aa6317652d489c0e9a17b36e02b8f8da680",
+      "lines": 641
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "bytes": 52082,
+      "sha256": "3e3228c1bb8ef33561330b0da386a4ccbde81f2cb972b6f58def4dde6df0e929",
+      "lines": 1403
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "bytes": 20383,
+      "sha256": "9c0047eea46b3c94a83e6c8efc63edf4c29ca3420a7eb0bdca3a72bbd8050e93",
+      "lines": 607
+    },
+    {
+      "path": "src/App.tsx",
+      "bytes": 46688,
+      "sha256": "3d87edb53d95ae0ecd4c28cc00cbd7e12299d0bf9057787c6524674e62324224",
+      "lines": 1295
+    },
+    {
+      "path": "src/App.navigation.test.tsx",
+      "bytes": 44562,
+      "sha256": "ef6cb92b397a5fedb0507cf2d5c03de4b7e386abe9f3e57e55c68c566c59cb9c",
+      "lines": 1263
+    },
+    {
+      "path": "src/browser-workspace.css",
+      "bytes": 7782,
+      "sha256": "0eb0e2d4dc6882560a7dfb3ab27791b51094b5c7820589a970da14aaed6d3e12",
+      "lines": 421
+    },
+    {
+      "path": "src/components/BrowserWorkspace.presentation.test.tsx",
+      "bytes": 6417,
+      "sha256": "5677ba3f74d3a0fc97fdfb5af3f632f0d3020aa3e53a387b3a41e967c546228e",
+      "lines": 205
+    }
+  ],
+  "changedFiles": [
+    {
+      "before": {
+        "path": "src/components/BrowserWorkspacePage.tsx",
+        "bytes": 42999,
+        "sha256": "697681ad8be4059ef0910a85e5f6d653e74f428c821fa3f8c281704699661fd8",
+        "lines": 1322
+      },
+      "after": {
+        "path": "src/components/BrowserWorkspacePage.tsx",
+        "bytes": 43018,
+        "sha256": "5aeb8db9f11e50dabf65d4b5af8b4e3636d917e509dad42c6c11a62039ee539c",
+        "lines": 1323
+      }
+    },
+    {
+      "before": {
+        "path": "src/components/BrowserWorkspace.presentation.test.tsx",
+        "bytes": 5468,
+        "sha256": "387afa86e7ee491fe5d6d6a74299ae4b874a824e5ed9209128e581a7c3a46895",
+        "lines": 183
+      },
+      "after": {
+        "path": "src/components/BrowserWorkspace.presentation.test.tsx",
+        "bytes": 6417,
+        "sha256": "5677ba3f74d3a0fc97fdfb5af3f632f0d3020aa3e53a387b3a41e967c546228e",
+        "lines": 205
+      }
+    }
+  ],
+  "other15ByteExact": true,
+  "diff": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-v4-to-v5.diff",
+    "bytes": 1355,
+    "sha256": "a70cec272065151c3b5b68c93ff3ddc26e275ae57eec9faa920f976198528f3c"
+  },
+  "checks": [
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/guard-resume-red-v5.completed.json",
+      "bytes": 806,
+      "sha256": "2240af6e98697953cd3a9209c21cc762cd14e35a8b35721c1546e24c6d0715a3",
+      "actualExitCode": 1
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/guard-resume-green-v5.completed.json",
+      "bytes": 875,
+      "sha256": "60fdfcd9c5de6f4547078721b8ae3d11e6ee67353ab4e5a4ec4cf40cb3aa37a9",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/typecheck-v5.completed.json",
+      "bytes": 678,
+      "sha256": "a6614e82adec96e9ab7ed721611449dd69d35adaba9f542ef7d478680d3eb748",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/format-check-v5.completed.json",
+      "bytes": 818,
+      "sha256": "08861089b0f74b92759e87de7b262b420e1432d9c09f17a4f45d1b741f0e69b6",
+      "actualExitCode": 0
+    }
+  ],
+  "sourceObservation": "17 current source hashes after scoped validation; 15 unchanged from v4. The one production dependency addition and new test were not edited between green/type/format and this freeze. No separate pre-run source manifest was captured for these scoped v5 commands.",
+  "changeScope": "One RAF dependency (guardRevision) and one batched guard hold/release regression test; no other production behavior changes."
+}

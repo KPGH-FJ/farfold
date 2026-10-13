@@ -604,6 +604,7 @@ pub(super) async fn set_visible(
             height: 0.0,
         });
         if state.can_operate(id, None)
+            && (!visible || state.can_present(id))
             && unsafe { ff_browser_set_visible(id, visible, x, y, width, height) }
         {
             Ok(())

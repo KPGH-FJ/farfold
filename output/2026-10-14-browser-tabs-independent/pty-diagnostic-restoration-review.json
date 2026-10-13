@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "phase": "PTY_DIAGNOSIS_AND_EXACT_RESTORATION_REVIEW",
+  "conclusion": "Cause unresolved; isolated unchanged test and temporary-instrumented full library run passed but neither repairs or retroactively passes the original frozen seven-check failure.",
+  "probe": {
+    "receipt": {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-probe/completed.json",
+      "bytes": 1497,
+      "sha256": "b1b4dd020db4fc586cf377e7441510b9251cde668bd454a0da3b1d7dac30d24f"
+    },
+    "passed": 1,
+    "filtered": 1697,
+    "sixRelatedSourcePinsStable": true
+  },
+  "diagnostic": {
+    "receipt": {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/completed.json",
+      "bytes": 5879,
+      "sha256": "4468a5e5408d678868327d74f33b71360741ee19674490b5c51d59e0119bb900"
+    },
+    "summary": {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/summary.json",
+      "bytes": 7622,
+      "sha256": "b4acf396211c699a485dc2f42da500fd65f023adbed3733e30968afb9fbc1839"
+    },
+    "conclusion": {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/conclusion.json",
+      "bytes": 2658,
+      "sha256": "717b2a826720756010fbcb0bfe1e7611b4c7c2aaad6b2a80ca02f566def4bc16"
+    },
+    "actualExitCode": 0,
+    "topLevelPassed": 1692,
+    "failed": 0,
+    "ignored": 6,
+    "topLevelSeconds": 132.54,
+    "nestedSubprocessFixtureCountsNotAdded": true,
+    "exactCommand": "cargo test --manifest-path src-tauri/Cargo.toml --locked --lib -- --nocapture",
+    "inlineRunner": "Owner used one inline Python wrapper; actual argv, started and command-completed/stdio retained. No executed .py runner is invented."
+  },
+  "observations": {
+    "twoRawRecordsExactlyMatchSavedParsedValues": true,
+    "readyNsFromBeforeSpawn": 2484436584,
+    "readyNsFromOriginalWaitStart": 2482412875,
+    "threeSecondWaitUnchanged": true,
+    "extraTwoSecondObservationUsed": false,
+    "cannotSplitShellSchedulingStartupFromPtyReadCallbackLatency": true,
+    "noErrnoCpuOrLoadCausalityEvidence": true
+  },
+  "restoration": {
+    "currentTest": {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 24547,
+      "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96"
+    },
+    "equalsSavedOriginalAndFirstFreeze": true,
+    "temporaryPatchReconstructsRecordedDiagnosticSourceShaInRam": true,
+    "fiveProductionSourcesUnchanged": true,
+    "p30Backend14Frontend17AndFourDocsPinsStillMatch": true
+  },
+  "retainedFailure": {
+    "path": "output/2026-10-14-browser-tabs-independent/failed-engineering-review.json",
+    "bytes": 11136,
+    "sha256": "04ca07e82c3703561bcd691182c156d67c7e91e2520904dfbd35ae9798c04a23"
+  },
+  "boundary": "Only local synthetic test observations and saved metadata/source hashes. No rerun, source edit, App, Agent, DB or process action by reviewer. Formal second full engineering run is not executed or claimed here.",
+  "sourceRecords": [
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/preparation.json",
+      "bytes": 4207,
+      "sha256": "ee8e26c047925f5484e41235ba2c13200ad8c5dedb504365351e3637df626aa4"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/diagnostic.patch",
+      "bytes": 7350,
+      "sha256": "adfde52c481fbdffc0bd957732c0c3dafa05b2a4123423357ed1404bec851913"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/preparation_actions_tests.rs.original.raw",
+      "bytes": 24547,
+      "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/started.json",
+      "bytes": 570,
+      "sha256": "89a963c813d963bf648c88081b390391e465006bab51e4bc8822b0dd8c994e77"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/command-completed.json",
+      "bytes": 809,
+      "sha256": "5e98f20f38e8e5218c26d5511ab477bef5092de9954f507b025038ee97c44e8f"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/source-before.json",
+      "bytes": 1284,
+      "sha256": "31033749d39efc62d4aae11daea6afffa5dc93982ca04c3a529fdff18c525c29"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/source-after-diagnostic.json",
+      "bytes": 1073,
+      "sha256": "7f54d43a2e11d83f7870c7c1c27dcc507e07deaaa6a7471f4af186f5f027b247"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/source-restored.json",
+      "bytes": 485,
+      "sha256": "b29d0f2c8c2830d6904a21744b42d4fc2cb7a739db9caf2a9170fd1fe7da2897"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/diagnostic-observations.json",
+      "bytes": 3137,
+      "sha256": "d2e821087c6517846e89bece3b593f1844f105d142c87264fe700fa4d0380e25"
+    }
+  ]
+}

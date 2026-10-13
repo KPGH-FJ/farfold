@@ -258,9 +258,11 @@ export function ThreadView({
   contentMode,
   onContentModeChange,
   onBrowserStateChange,
+  onBrowserOwnersChange,
   draftComposerRef,
 }: {
   draftComposerRef?: React.Ref<HTMLDivElement>;
+  onBrowserOwnersChange?: (taskKey: string, ownsPages: boolean) => void;
   onBrowserStateChange?: (
     taskKey: string,
     page: BrowserWorkspaceState | null,
@@ -1382,6 +1384,9 @@ export function ThreadView({
           contentMode={contentMode}
           onContentModeChange={onContentModeChange}
           onBrowserStateChange={setBrowserPage}
+          onBrowserOwnersChange={(owns) =>
+            onBrowserOwnersChange?.(thread.key, owns)
+          }
           fileRequest={fileRequest}
           browserToolbar={
             <BrowserShareControls

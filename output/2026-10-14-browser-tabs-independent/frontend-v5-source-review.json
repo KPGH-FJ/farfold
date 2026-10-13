@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "status": "NO_STATIC_BLOCKER_V5_LOCAL_GUARD_RESUME_FIX_VERIFIED",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v5.json",
+    "bytes": 6034,
+    "sha256": "5752c0d4e41537cab2c86301c63f3fcdf87f1c43883ac4ddde4586ac51b1d553"
+  },
+  "summary": {
+    "path": "output/2026-10-14-browser-tabs-frontend/summary-v5.json",
+    "bytes": 2916,
+    "sha256": "79e971f9bb64bf2a06bfe1730df8eddd4fa475f63d9da84648a75c5b9dbc0026"
+  },
+  "diff": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-v4-to-v5.diff",
+    "bytes": 1355,
+    "sha256": "a70cec272065151c3b5b68c93ff3ddc26e275ae57eec9faa920f976198528f3c"
+  },
+  "exactCurrentSourceCount": 17,
+  "unchangedSourceCountFromV4": 15,
+  "changed": [
+    "src/components/BrowserWorkspacePage.tsx",
+    "src/components/BrowserWorkspace.presentation.test.tsx"
+  ],
+  "productionDelta": "Only guardRevision was added to the resize effect dependencies; removing exactly the final dependency occurrence reconstructs v4 Page bytes and SHA. The earlier layout-effect dependency remains unchanged.",
+  "cause": "The old frame could stop on immediate guard.blocked=true while React batched hold/release to final blocked=false. The unchanged boolean dependency did not restart the loop. Existing notification revision now invalidates the effect on release even when the final boolean is unchanged.",
+  "evidence": [
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/guard-resume-red-v5.completed.json",
+        "bytes": 806,
+        "sha256": "2240af6e98697953cd3a9209c21cc762cd14e35a8b35721c1546e24c6d0715a3"
+      },
+      "actualExitCode": 1,
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/guard-resume-red-v5.stdout.log",
+        "bytes": 408,
+        "sha256": "7f125b86520f516afc1ff77521d3430e02e0a149f4dfbde5f15b5df6617e9fae"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/guard-resume-red-v5.stderr.log",
+        "bytes": 677,
+        "sha256": "334e41f69efa6573e92a0898c1a46e13086de6496213c7fa63367454a87ab64d"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/guard-resume-green-v5.completed.json",
+        "bytes": 875,
+        "sha256": "60fdfcd9c5de6f4547078721b8ae3d11e6ee67353ab4e5a4ec4cf40cb3aa37a9"
+      },
+      "actualExitCode": 0,
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/guard-resume-green-v5.stdout.log",
+        "bytes": 212,
+        "sha256": "1cc8f8c134f0a8c84b4bb624098d712a4fb9aa1b83040133b79abac34472ba0a"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/guard-resume-green-v5.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/typecheck-v5.completed.json",
+        "bytes": 678,
+        "sha256": "a6614e82adec96e9ab7ed721611449dd69d35adaba9f542ef7d478680d3eb748"
+      },
+      "actualExitCode": 0,
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/typecheck-v5.stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/typecheck-v5.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/format-check-v5.completed.json",
+        "bytes": 818,
+        "sha256": "08861089b0f74b92759e87de7b262b420e1432d9c09f17a4f45d1b741f0e69b6"
+      },
+      "actualExitCode": 0,
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/format-check-v5.stdout.log",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/format-check-v5.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "redGreen": "Actual BrowserSurfaceGuard, synthetic batching of component render. Red1 fail/5 skipped; fix green3 files74 (Page51+presentation6+guard17), typecheck0, scopedformat0. No full241 rerun claimed.",
+  "testBoundary": "Test invokes the real guard and models the commit/render scheduling window; it is not a browser or native WebView run.",
+  "sourceEvidenceBoundary": "17 current source hashes after scoped validation; 15 unchanged from v4. The one production dependency addition and new test were not edited between green/type/format and this freeze. No separate pre-run source manifest was captured for these scoped v5 commands.",
+  "preserves": [
+    "Exact active-surface missing-bounds close",
+    "True owner unmount close/failed cleanup retention",
+    "Native permission/selection ACK behavior",
+    "Stable v4 owner-slot order"
+  ],
+  "historicalEvidence": "v4 Chromiumrun8/WebKitrun4 each141 remain correct v4 proofs. New v5 source must receive separate final browser/input evidence; neither old greens nor old failures were rewritten.",
+  "remaining": "No known static blocker from this delta; final v5 full-App and full engineering still separately recorded by root.",
+  "reviewPreparationCorrection": "Initial read-only reconstruction assertion expected one dependency pattern but there are two including the unchanged layout effect; exited1 before report write. This corrected last-occurrence reconstruction exactly matches v4 hash. No source/tests or validation receipts changed.",
+  "scope": "Only this new independent report; no source, docs, tests, App, DB or original evidence mutation."
+}

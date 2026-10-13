@@ -279,3 +279,32 @@ fn explicit_operation_grant_is_one_shot_and_does_not_replace_the_read_grant() {
             .is_err()
     );
 }
+
+#[test]
+fn tab_review_regression_hidden_sibling_events_preserve_exact_pending_request() {
+    let (owner, page, _) = fixture();
+    let wait = owner.request_permission(page.clone()).unwrap();
+    let request_id = pending_id(&owner);
+    let sharing = crate::browser_sharing::BrowserSharing(Arc::new(Mutex::new(vec![owner.clone()])));
+    for phase in ["loading", "ready", "error", "closed"] {
+        let mut sibling = page.clone();
+        sibling.label = "hidden-sibling".into();
+        sibling.url = "https://example.com/sibling".into();
+        sibling.revision += 10;
+        sibling.phase = phase.into();
+        sharing.page_changed(&sibling);
+        assert!(
+            wait.poll().is_none(),
+            "sibling {phase} must not cancel the selected page request"
+        );
+        assert_eq!(pending_id(&owner), request_id);
+    }
+    let mut changed_owner = page.clone();
+    changed_owner.revision += 1;
+    sharing.page_changed(&changed_owner);
+    assert!(
+        wait.poll().unwrap().is_err(),
+        "the exact owner change still cancels"
+    );
+    assert!(owner.page.lock().unwrap().is_none());
+}

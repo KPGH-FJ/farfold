@@ -1,0 +1,62 @@
+{
+  "observedAtUtc": "2026-10-13T21:45:52.000957+00:00",
+  "status": "investigating; not final freeze; publication paused",
+  "scope": "No App, Agent, native view or user data access. Five synthetic page-component callback tests with manual commit/passive-cleanup timing.",
+  "currentSource": [
+    {
+      "path": "src/components/BrowserWorkspacePage.tsx",
+      "bytes": 42999,
+      "sha256": "697681ad8be4059ef0910a85e5f6d653e74f428c821fa3f8c281704699661fd8"
+    },
+    {
+      "path": "src/components/BrowserWorkspace.presentation.test.tsx",
+      "bytes": 5225,
+      "sha256": "ab71c4fd3544490f0f0612b5137037d0a8c5fc2c590487f8c7e6f2c4b2bb07c7"
+    }
+  ],
+  "refs": [
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v3.json",
+      "bytes": 4994,
+      "sha256": "a7fa3b066b5b7c98de5b673732fe770849b0b325e8c9470975a1577ea32b9f65"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/presentation-red-v4.completed.json",
+      "bytes": 776,
+      "sha256": "cc24a4382fea203c32f8029814bd94e9d2de1c634fde2f51ea869ba4c99874c3"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/presentation-red-02-v4.completed.json",
+      "bytes": 783,
+      "sha256": "86881a9afc5112ab29183afa02f19176e2f872a47cdb79fd5db8e01fc92812ed"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/presentation-green-v4.completed.json",
+      "bytes": 826,
+      "sha256": "c832f1d65080ded19af89c5282d7956597b9e2bdb3e17017cc9bc80985647bb8"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/BrowserWorkspacePage.presentation-v3.tsx.raw",
+      "bytes": 42454,
+      "sha256": "e2fc0c119e9ee5ffc281dce13d803ddb29f1c9e3924620f12ee1d3c6740b1ae8"
+    }
+  ],
+  "browserFailure": {
+    "path": "output/2026-10-14-browser-tabs-browser/chromium-run5.json",
+    "bytes": 728400,
+    "sha256": "bfdfb64cf8e1d30e98a91e1766cc119c064af4cfd4ce08a9b5a21ef7d646fefa"
+  },
+  "facts": [
+    "Root controlled App run5 fails reverse task B preservation after returning to A; before/after production input maps stable.",
+    "First narrow run red: late resize rejection fails; three RAF assertions waited only two microtasks and ran before queued close, so their apparent passes do not prove preservation.",
+    "Second narrow run waits one event-loop turn: all three stale RAF cases and late resize rejection fail (4/5); still-active missing-bounds close passes.",
+    "Page now reads current render intent for the frame and rejected-resize callbacks. Five new cases and 51 existing Page cases pass (56/56).",
+    "App route div uses pageKey, ArtifactPane always contains BrowserWorkspace, and per-tab client is cached. No direct active branch unmount found.",
+    "Actual B call sequence also unlistens state/tabs/sharing/drag then resubscribes before close. This remains a separate unmount/reinitialization lead until exact caller stack is captured."
+  ],
+  "notClaimed": [
+    "The Page callback fix is not yet established as sole cause or complete repair for run5.",
+    "No final browser validation or native acceptance.",
+    "No current public evidence or main document edits."
+  ]
+}

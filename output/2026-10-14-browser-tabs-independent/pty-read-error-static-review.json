@@ -1,0 +1,138 @@
+{
+  "schema": 1,
+  "scope": "Read-only local pinned dependency and application-source analysis after two original P30 full-seven failures. No instrumentation, tests, generated tools, App, Agent or database actions.",
+  "conclusion": "A concrete conditional interrupted-read failure path exists; occurrence and causal attribution for either recorded failure remain unproved.",
+  "sourceReferences": {
+    "farfoldReader": {
+      "path": "src-tauri/src/pty.rs",
+      "bytes": 28407,
+      "sha256": "f2c7fb13de618e2f1a90d1569bcadb70688f039a23fa9746a0acd15aabac3174",
+      "lines": [
+        151,
+        165,
+        190,
+        241,
+        244,
+        272
+      ]
+    },
+    "test": {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 24547,
+      "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96",
+      "lines": [
+        275,
+        341
+      ]
+    },
+    "caller": {
+      "path": "src-tauri/src/acp_client/preparation_actions.rs",
+      "bytes": 10920,
+      "sha256": "84ad7a0d5ab500aa3ed7309271ab24b1fcf2dc0045bb8200889405d7cd7b610a",
+      "lines": [
+        237,
+        287
+      ]
+    },
+    "portablePty": {
+      "path": "/Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/portable-pty-0.9.0/src/unix.rs",
+      "bytes": 12978,
+      "sha256": "14c85213b32074d71c8af334531fd027d6a0558dee830282620c88bab056c4b3",
+      "lines": [
+        93,
+        105,
+        234,
+        275,
+        352,
+        355
+      ]
+    },
+    "filedescriptor": {
+      "path": "/Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/filedescriptor-0.8.3/src/unix.rs",
+      "bytes": 17395,
+      "sha256": "51d2dccead3d7ea917d8d6bb7d534fab8f17a2e165c1839bcc5ebe4c0e59f89a",
+      "lines": [
+        208,
+        217
+      ]
+    },
+    "signalHook": {
+      "path": "/Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/signal-hook-registry-1.4.8/src/lib.rs",
+      "bytes": 34447,
+      "sha256": "71c67afdcaab442cc75955a6a17e5eb4e17fb725e0db7f8d1930023c680a7204",
+      "lines": [
+        163,
+        200
+      ]
+    },
+    "cargoLock": {
+      "path": "src-tauri/Cargo.lock",
+      "bytes": 144545,
+      "sha256": "ffcad4afc42bab386642035337b21f533608620307fda28044d0baf6ee588e08",
+      "lines": [
+        1166,
+        1174,
+        2961,
+        2981,
+        3753,
+        3760
+      ]
+    }
+  },
+  "readChain": [
+    {
+      "step": 1,
+      "location": "portable-pty unix.rs:352–355",
+      "fact": "try_clone_reader returns PtyFd over a cloned FileDescriptor."
+    },
+    {
+      "step": 2,
+      "location": "filedescriptor unix.rs:208–217",
+      "fact": "Calls libc::read exactly once; -1 becomes last_os_error without retry."
+    },
+    {
+      "step": 3,
+      "location": "portable-pty unix.rs:93–105",
+      "fact": "Only EIO is converted to Ok(0); other errors are returned unchanged."
+    },
+    {
+      "step": 4,
+      "location": "farfold pty.rs:247–260",
+      "fact": "Ok(0) and every Err permanently end the reader loop. No retry, errno record, terminal read-error frame or restart is emitted."
+    }
+  ],
+  "conditionalMechanism": {
+    "precondition": "libc::read returns EINTR on this specific reader thread before it delivers the READY bytes.",
+    "consequence": "Interrupted propagates unchanged through both dependencies, the reader thread exits, and later child output is not streamed. If the child remains alive until the test timeout, the collected trace can stay empty.",
+    "status": "Static path proven; precondition not observed in either failed run.",
+    "nonInterruptedErrors": "Any returned non-EIO error also breaks silently; no particular errno is established. EIO is deliberately mapped to EOF by portable-pty, not evidence of EINTR."
+  },
+  "counterevidenceAndLimits": [
+    "Pinned signal-hook-registry 1.4.8 registers Unix handlers with SA_RESTART. This prevents inferring that routine SIGCHLD activity necessarily interrupted this read; runtime signal disposition/delivery was not captured.",
+    "portable-pty signal-default/reset code is inside child pre_exec; it is not a parent-reader signal observation.",
+    "The inspected PTY open/clone/read path does not enable O_NONBLOCK; EAGAIN is not established.",
+    "The existing waiter thread owns child/group cleanup independently of reader termination. Silent reader exit does not itself confirm that a child stopped.",
+    "The failing tests record an empty collected trace, not read-thread start/exit, errno, child READY write time or signal delivery. Scheduling/startup/streaming/ownership alternatives remain unresolved.",
+    "The instrumented full test passed with READY 2482.412875 ms after original wait start, within 3 seconds. That run neither reproduced an errno nor establishes the cause of either original timeout."
+  ],
+  "secondaryPoison": {
+    "location": "preparation_actions_tests.rs:332–340 then callback:313",
+    "finding": "The failed assert formats output.lock().unwrap() while panicking; the subsequent callback unwrap encounters the poisoned mutex. The recorded order supports poison as secondary, not the initial absence of READY.",
+    "notRepaired": true
+  },
+  "nextEvidenceIfAuthorized": [
+    "Observe reader start, each read error kind/raw_os_error, EOF and reader exit using counters/timestamps only; avoid terminal payload logging.",
+    "Correlate the child marker time with read callback time and exact owner identity.",
+    "If treating Interrupted robustness separately, require a controlled Interrupted-then-bytes counterexample and keep both original failures classified unresolved until an actual causal observation."
+  ],
+  "execution": {
+    "sourceChanged": false,
+    "testsRun": 0,
+    "liveProcessQueries": 0,
+    "appActions": 0,
+    "databaseReads": 0,
+    "networkRequests": 0
+  },
+  "safeForPublicCopy": true,
+  "privacy": "Source/dependency paths, hashes, line references and synthetic-test reasoning only; no user terminal content, credentials or user database values."
+}

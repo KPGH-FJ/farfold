@@ -1,0 +1,266 @@
+{
+  "schema": 1,
+  "scope": "Read-only independent verification of second official P30 full-seven failure; no commands rerun.",
+  "conclusion": "FAILED_UNREPAIRED",
+  "actualOuterExitCode": 1,
+  "toolChunk": "174aac",
+  "processId": "14309",
+  "summary": {
+    "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/summary.json",
+    "bytes": 6351,
+    "sha256": "9b830d61a4a44a7130dd7821f18af0e3128b55f34b0d38b945b09755d9236ee5"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-browser-tabs-integration/checks-freeze-02/freeze.json",
+    "bytes": 401759,
+    "sha256": "3c498f0e173aa83292014037a729e167873a2ab9748f4adbb8964830f91a135b"
+  },
+  "completionManifest": {
+    "path": "output/2026-10-14-browser-tabs-independent/transcript-seven-failed-02/manifest.json",
+    "bytes": 1142,
+    "sha256": "c28502d581ab6b4a0560cbbe31780dde5a96a447aff15031e9c3fd54359984e4"
+  },
+  "stages": [
+    {
+      "name": "format-check",
+      "actualExitCode": 0,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/started.json",
+          "bytes": 288,
+          "sha256": "c71a4dcc0c0574c0a233913352311c8ac9d98b82c0a961a9cc89600633c2e719"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/completed.json",
+          "bytes": 666,
+          "sha256": "56f52934bd59c92c2996daad3a8f139e206ecfbcca4fe2600d36a6e2937d5f6f"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/stdout.log",
+          "bytes": 144,
+          "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "typecheck",
+      "actualExitCode": 0,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/started.json",
+          "bytes": 280,
+          "sha256": "66dc7caa73ae6857811292c15ae629081772faffc5f4285fc727ee6e76a0e762"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/completed.json",
+          "bytes": 664,
+          "sha256": "ad36ca95f7fc99fe1d85f185b9038c23bfa2021e7f3ba71ad9040e3c0cc4ae1d"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/stdout.log",
+          "bytes": 78,
+          "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "frontend-test",
+      "actualExitCode": 0,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/started.json",
+          "bytes": 274,
+          "sha256": "c1efb59314b249a5dd0cf23c15b19e12ae336e5f86f05f1485b4425a56ff219a"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/completed.json",
+          "bytes": 658,
+          "sha256": "896915a1ad657f688f072ab99088935160b29a074d9b3b428cfffcda1fcc0e8c"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/stdout.log",
+          "bytes": 289,
+          "sha256": "c7804324590d9cc0b1b14c265312fe8b9a016f2fee5182340074cf03d5b977a2"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "frontend-build",
+      "actualExitCode": 0,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/started.json",
+          "bytes": 277,
+          "sha256": "7b4f3bef4ff5e3faf07be8e90cf3d9f4de3fb2af594d0791f2b3ee5e406522a8"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/completed.json",
+          "bytes": 661,
+          "sha256": "5443448093c7550f05303ca468a2dc8bdda13e128defbb409bb8fcd70300afc0"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/stdout.log",
+          "bytes": 4560,
+          "sha256": "84f5f70ba80a66cc4da40e7831f01f0e94be37a4faad8adc50fc8ff606afe077"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/stderr.log",
+          "bytes": 360,
+          "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+        }
+      ]
+    },
+    {
+      "name": "cargo-fmt",
+      "actualExitCode": 0,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/started.json",
+          "bytes": 354,
+          "sha256": "97e3bb2ed76fb7e55b2f7087effde75dea9174cce57999ad6028adfc720aeba4"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/completed.json",
+          "bytes": 739,
+          "sha256": "75e648a2629e53f8daec77da37810174dfe99fcb6089074d7cab7bb5536db51f"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "cargo-clippy",
+      "actualExitCode": 0,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/started.json",
+          "bytes": 416,
+          "sha256": "da2f6307c1823646a82ac2057d7992b2385b444b6b1f23ff468742dcdffebbc1"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/completed.json",
+          "bytes": 801,
+          "sha256": "cd2504f5dffeb485d50ece87f9d0478f08c2f1a970dad8b9fa249d36e5b95c84"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/stderr.log",
+          "bytes": 72,
+          "sha256": "d45006197a58d3591511e8220a2f4a8bd039e9a092cd6a66dbadf79d6dc77af2"
+        }
+      ]
+    },
+    {
+      "name": "cargo-test",
+      "actualExitCode": 101,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/started.json",
+          "bytes": 360,
+          "sha256": "3605a5f7254a9277f54c2362bded944c09e02f15e92d90d508caa301790feaea"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/completed.json",
+          "bytes": 740,
+          "sha256": "e84f9969ea34f83bfdbb601f776deb1e5cc3d84d41b92a130285656b111f2f8e"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/stdout.log",
+          "bytes": 189007,
+          "sha256": "2317b00728333088b5515e5a425e77bd66bb623ce07cde03f0aa01d4dfc1196d"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/stderr.log",
+          "bytes": 599,
+          "sha256": "59ceb0f6cac346e2214537e5e6a1c363177a73863493e409d3b36527b1da7dfc"
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "frontend": {
+      "filesPassed": 503,
+      "testsPassed": 6116
+    },
+    "rustTopLevel": {
+      "passed": 1691,
+      "failed": 1,
+      "ignored": 6
+    }
+  },
+  "stability": {
+    "frozenInputs": 2457,
+    "beforeEqualsAfterEqualsFreeze": true,
+    "protectedBeforeEqualsAfterEqualsFreeze": true,
+    "sourceMembershipStableAsRecorded": true
+  },
+  "failure": {
+    "test": "acp_client::preparation_actions::tests::service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap",
+    "firstPanic": "src/acp_client/preparation_actions_tests.rs:332:5",
+    "recordedPtyOutputBytes": 0,
+    "followingPanic": "src/acp_client/preparation_actions_tests.rs:313:49 PoisonError",
+    "cause": "Not established. The test did not reach its post-readiness attempt/scope/reap assertions."
+  },
+  "priorFailure": {
+    "summary": {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/summary.json",
+      "bytes": 6358,
+      "sha256": "cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685"
+    },
+    "independentReview": {
+      "path": "output/2026-10-14-browser-tabs-independent/failed-engineering-review.json",
+      "bytes": 11136,
+      "sha256": "04ca07e82c3703561bcd691182c156d67c7e91e2520904dfbd35ae9798c04a23"
+    },
+    "completionManifest": {
+      "path": "output/2026-10-14-browser-tabs-independent/transcript-seven-failed/manifest.json",
+      "bytes": 1010,
+      "sha256": "ebf2ccef05c8a55ad4c615be915a9fd442d62cfdb773bf183537c9e111e69c4b"
+    },
+    "preservedUnchanged": true
+  },
+  "diagnosticBoundary": {
+    "review": {
+      "path": "output/2026-10-14-browser-tabs-independent/pty-diagnostic-restoration-review.json",
+      "bytes": 4941,
+      "sha256": "4f51e56ed3c509408405c05643c219864438ce13344b9e07ed728053b2c077f9"
+    },
+    "isolatedAndInstrumentedPassesDoNotReplaceEitherOfficialFailure": true,
+    "temporaryTestRestoredBeforeRun02": true
+  },
+  "gates": {
+    "successPublicationAllowed": false,
+    "checkpointAllowed": false,
+    "installationAllowed": false,
+    "publisherAndCheckpointTemplatesNotModifiedOrExecuted": true
+  },
+  "safeForPublicCopy": true,
+  "privacy": "Only repository paths, hashes, counts, synthetic test diagnostics and tool-completion provenance; no database/user message/account/credential content."
+}

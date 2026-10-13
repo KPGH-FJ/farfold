@@ -329,13 +329,16 @@ async fn service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap
         pty: pty.clone(),
         id: id.clone(),
     };
+    // This bounds fixture startup, not product latency. Leave headroom for
+    // process startup during the full suite; ownership is tested only after
+    // the exact readiness marker has arrived through the real PTY channel.
+    let readiness = tokio::time::timeout(Duration::from_secs(10), ready_rx).await;
+    // Release the mutex before any assertion panic so reader/exit callbacks
+    // can still run and the fixture guard can reap the exact child.
+    let trace = output.lock().unwrap().clone();
     assert!(
-        matches!(
-            tokio::time::timeout(Duration::from_secs(3), ready_rx).await,
-            Ok(Ok(()))
-        ),
-        "fixture did not become ready; PTY output: {:?}",
-        output.lock().unwrap()
+        matches!(readiness, Ok(Ok(()))),
+        "fixture did not become ready: {readiness:?}; PTY output: {trace:?}"
     );
     assert!(api.work().is_err());
     assert!(attempts::reserve(&row.id, "duplicate").is_err());

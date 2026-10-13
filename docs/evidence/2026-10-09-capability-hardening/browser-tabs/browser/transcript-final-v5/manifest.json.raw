@@ -1,0 +1,29 @@
+{
+  "source": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "records": [
+    {
+      "run": "server-3",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-final-v5/server-3-16658.jsonl.raw",
+      "sourceLine": 16658,
+      "exitCode": 143,
+      "bytes": 2068,
+      "sha256": "834edd042352c3cc502124c5fe5702ea3e4938f4f918d956fd100e379174fa6e"
+    },
+    {
+      "run": "webkit-run5",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-final-v5/webkit-run5-16645.jsonl.raw",
+      "sourceLine": 16645,
+      "exitCode": 0,
+      "bytes": 894,
+      "sha256": "9726c31a66126f181164c461bc9260596453e1c937cc200595823f1ca9f005bf"
+    },
+    {
+      "run": "chromium-run9",
+      "path": "output/2026-10-14-browser-tabs-browser/transcript-final-v5/chromium-run9-16646.jsonl.raw",
+      "sourceLine": 16646,
+      "exitCode": 0,
+      "bytes": 900,
+      "sha256": "7375d15e7ccfa0ae01eeadea81dbb8d8a599d84687015b17036ebde20f31c370"
+    }
+  ]
+}

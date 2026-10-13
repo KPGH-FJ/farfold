@@ -1,0 +1,3803 @@
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 39 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > suppresses old address and snapshot on the first render of a different task
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/BrowserWorkspace.test.tsx:200:47
+    198|     preventDefault() {},
+    199|   });
+    200|   await vi.waitFor(() => expect(backend.open).toHaveBeenCalledOnce());
+       |                                               ^
+    201|   view = render(props);
+    202|   find(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/39]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > hides an inactive task without closing its page, then restores the same owner
+ FAIL  src/components/BrowserWorkspace.test.tsx > keeps the exact page alive when collapsed and reports only actual hide ACK
+ FAIL  src/components/BrowserWorkspace.test.tsx > keeps the pane footprint after failed hide until a retried close really confirms
+ FAIL  src/components/BrowserWorkspace.test.tsx > reloads through navigation even for the same URL and clears an earlier snapshot
+ FAIL  src/components/BrowserWorkspace.test.tsx > holds a restoring page even when collapsed again before the show ACK
+ FAIL  src/components/BrowserWorkspace.test.tsx > releases held layout after an unreserved open is rejected and retains its error
+ FAIL  src/components/BrowserWorkspace.test.tsx > restores the same page after a sidebar layout transition without navigation or reopening
+ FAIL  src/components/BrowserWorkspace.test.tsx > observes a real close while inactive and never restores that departed page
+ FAIL  src/components/BrowserWorkspace.test.tsx > never offers clear for public pages
+ FAIL  src/components/BrowserWorkspace.test.tsx > closes the current HTML owner on unmount after replacing an earlier page
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/BrowserWorkspace.test.tsx:400:52
+    398|     preventDefault() {},
+    399|   });
+    400|   await vi.waitFor(() => expect(props.client.open).toHaveBeenCalledOnc…
+       |                                                    ^
+    401|   render(props);
+    402|   await Promise.resolve();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/39]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > registers an in-flight open before navigation and waits for its exact hide ACK
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/BrowserWorkspace.test.tsx:290:47
+    288|     preventDefault() {},
+    289|   });
+    290|   await vi.waitFor(() => expect(backend.open).toHaveBeenCalledOnce());
+       |                                               ^
+    291|   const navigate = vi.fn();
+    292|   guard.runLatest(navigate);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/39]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > keeps a covering panel pending on hide failure, then explicitly retries closure before showing it
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/BrowserWorkspace.test.tsx:334:47
+    332|     preventDefault() {},
+    333|   });
+    334|   await vi.waitFor(() => expect(backend.open).toHaveBeenCalledOnce());
+       |                                               ^
+    335|   vi.mocked(backend.setVisible).mockRejectedValueOnce(
+    336|     new Error("fixture hide failure"),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/39]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > offers a working local close retry after the first close fails
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/BrowserWorkspace.test.tsx:371:47
+    369|     preventDefault() {},
+    370|   });
+    371|   await vi.waitFor(() => expect(backend.open).toHaveBeenCalledOnce());
+       |                                               ^
+    372|   vi.mocked(backend.close).mockRejectedValueOnce(new Error("fixture"));
+    373|   view = render(props);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/39]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > holds the pane from open start until a collapsed late page really hides
+AssertionError: expected last "vi.fn()" call to have been called with [ true ]
+
+- Expected:
+[
+  true,
+]
+
++ Received:
+undefined
+
+ ❯ src/components/BrowserWorkspace.test.tsx:546:30
+    544|     preventDefault() {},
+    545|   });
+    546|   expect(onVisibilityChange).toHaveBeenLastCalledWith(true);
+       |                              ^
+    547|   render({ ...props, visible: false });
+    548|   expect(onVisibilityChange).not.toHaveBeenCalledWith(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/39]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > opens a picked, verified local HTML without sharing controls or a public snapshot action
+ FAIL  src/components/BrowserWorkspace.test.tsx > rechecks the same local file on explicit reload and waits for old-page closure before opening its new revision
+ FAIL  src/components/BrowserWorkspace.test.tsx > keeps a local page visible when rechecking its changed source fails
+ FAIL  src/components/BrowserWorkspace.test.tsx > releases local HTML before showing the public URL entry, without navigating the local owner
+ FAIL  src/components/BrowserWorkspace.test.tsx > clears a closed old local page when the replacement open fails, and permits explicit reselection
+ FAIL  src/components/BrowserWorkspace.test.tsx > opens only the exact displayed local file receipt in the browser without reopening or navigating the embedded page
+ FAIL  src/components/BrowserWorkspace.test.tsx > keeps the embedded document and reports a failed browser open without substituting a new file
+ FAIL  src/components/BrowserWorkspace.test.tsx > a hidden local page cannot launch the external browser
+ FAIL  src/components/BrowserWorkspace.test.tsx > uses the actual true storage receipt for local hints
+ FAIL  src/components/BrowserWorkspace.test.tsx > uses the actual false storage receipt for local hints
+ FAIL  src/components/BrowserWorkspace.test.tsx > uses the actual unknown storage receipt for local hints
+ FAIL  src/components/BrowserWorkspace.test.tsx > asks about this file before clearing, supports keeping it, and reports success only after the real receipt
+ FAIL  src/components/BrowserWorkspace.test.tsx > does not report deletion success when closing succeeds but clearing fails
+ FAIL  src/components/BrowserWorkspace.test.tsx > invalidates a clear confirmation after hide and ignores its stale action
+ FAIL  src/components/BrowserWorkspace.test.tsx > invalidates a clear confirmation after inactive and ignores its stale action
+ FAIL  src/components/BrowserWorkspace.test.tsx > invalidates a clear confirmation after project and ignores its stale action
+ FAIL  src/components/BrowserWorkspace.test.tsx > invalidates a clear confirmation after task and ignores its stale action
+ FAIL  src/components/BrowserWorkspace.test.tsx > a late clear receipt cannot show success or clear state for another task
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/BrowserWorkspace.test.tsx:660:56
+    658|   await Promise.resolve();
+    659|   clickLabel(render(props).tree, "打开 HTML…");
+    660|   await vi.waitFor(() => expect(props.client.openHtml).toHaveBeenCalle…
+       |                                                        ^
+    661|   await vi.waitFor(() => expect(render(props).html).toContain("game.ht…
+    662| }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/39]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > recovers HTML after 'opening' rejects with '文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工…'
+AssertionError: expected '<section class="browser-workspace" ar…' to contain '文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工…'
+
+Expected: "文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工作后退出重开。"
+Received: "<section class="browser-workspace" aria-label="网页"><div class="browser-workspace-controls"><form noValidate=""><label class="browser-workspace-sr-only" for="test-address">公开网页地址</label><div class="browser-workspace-address-row"><button type="button" class="browser-workspace-icon" title="重新加载网页" aria-label="重新加载网页" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M240,56v48a8,8,0,0,1-8,8H184a8,8,0,0,1,0-16H211.4L184.81,71.64l-.25-.24a80,80,0,1,0-1.67,114.78,8,8,0,0,1,11,11.63A95.44,95.44,0,0,1,128,224h-1.32A96,96,0,1,1,195.75,60L224,85.8V56a8,8,0,1,1,16,0Z"></path></svg></button><div class="browser-workspace-address-box"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><input id="test-address" type="url" placeholder="https://example.com" autoComplete="off" autoCapitalize="none" spellCheck="false" aria-describedby="test-address" value=""/></div><button type="submit" class="browser-workspace-icon" title="打开" aria-label="打开" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path></svg></button><button type="button" class="browser-workspace-icon" title="读取文字快照" aria-label="读取文字快照" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M32,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H40A8,8,0,0,1,32,64Zm8,48H168a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16Zm176,24H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm-48,40H40a8,8,0,0,0,0,16H168a8,8,0,0,0,0-16Z"></path></svg></button><button type="button" class="browser-workspace-icon" title="关闭网页" aria-label="关闭网页" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button></div><p id="test-address" class="browser-workspace-sr-only">输入完整的 HTTPS 网址。</p></form><div class="browser-workspace-access-row"><span class="browser-workspace-sharing">未向 Agent 分享</span><div class="browser-workspace-file-actions"><button type="button">打开 HTML…</button><details class="browser-workspace-help"><summary>公开网页</summary><p>仅用于公开网页。请勿登录、切换账号或输入密码等秘密信息。</p></details></div></div><p class="browser-workspace-status browser-workspace-error" role="status" aria-live="polite">网页区域尚不可见，请展开内容栏后重试。</p></div><div class="browser-workspace-surface" aria-label="网页"><div class="browser-workspace-empty"><strong>在这里查看网页</strong><p>输入网址或本机服务地址，也可打开项目网页。内容不会自动发给 Agent。</p></div></div></section>"
+
+ ❯ src/components/BrowserWorkspace.test.tsx:755:55
+    753|     clickLabel(render(props).tree, S.openHtml);
+    754|     await vi.waitFor(() => expect(h.inspectSelected).toHaveBeenCalledO…
+    755|     await vi.waitFor(() => expect(render(props).html).toContain(messag…
+       |                                                       ^
+    756|     const view = render(props);
+    757|     expect(view.html).not.toContain(S.choosingHtml);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/39]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > recovers HTML after 'opening' rejects with '已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后…'
+AssertionError: expected '<section class="browser-workspace" ar…' to contain '已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后…'
+
+Expected: "已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后退出重开。"
+Received: "<section class="browser-workspace" aria-label="网页"><div class="browser-workspace-controls"><form noValidate=""><label class="browser-workspace-sr-only" for="test-address">公开网页地址</label><div class="browser-workspace-address-row"><button type="button" class="browser-workspace-icon" title="重新加载网页" aria-label="重新加载网页" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M240,56v48a8,8,0,0,1-8,8H184a8,8,0,0,1,0-16H211.4L184.81,71.64l-.25-.24a80,80,0,1,0-1.67,114.78,8,8,0,0,1,11,11.63A95.44,95.44,0,0,1,128,224h-1.32A96,96,0,1,1,195.75,60L224,85.8V56a8,8,0,1,1,16,0Z"></path></svg></button><div class="browser-workspace-address-box"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><input id="test-address" type="url" placeholder="https://example.com" autoComplete="off" autoCapitalize="none" spellCheck="false" aria-describedby="test-address" value=""/></div><button type="submit" class="browser-workspace-icon" title="打开" aria-label="打开" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path></svg></button><button type="button" class="browser-workspace-icon" title="读取文字快照" aria-label="读取文字快照" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M32,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H40A8,8,0,0,1,32,64Zm8,48H168a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16Zm176,24H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm-48,40H40a8,8,0,0,0,0,16H168a8,8,0,0,0,0-16Z"></path></svg></button><button type="button" class="browser-workspace-icon" title="关闭网页" aria-label="关闭网页" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button></div><p id="test-address" class="browser-workspace-sr-only">输入完整的 HTTPS 网址。</p></form><div class="browser-workspace-access-row"><span class="browser-workspace-sharing">未向 Agent 分享</span><div class="browser-workspace-file-actions"><button type="button">打开 HTML…</button><details class="browser-workspace-help"><summary>公开网页</summary><p>仅用于公开网页。请勿登录、切换账号或输入密码等秘密信息。</p></details></div></div><p class="browser-workspace-status browser-workspace-error" role="status" aria-live="polite">网页区域尚不可见，请展开内容栏后重试。</p></div><div class="browser-workspace-surface" aria-label="网页"><div class="browser-workspace-empty"><strong>在这里查看网页</strong><p>输入网址或本机服务地址，也可打开项目网页。内容不会自动发给 Agent。</p></div></div></section>"
+
+ ❯ src/components/BrowserWorkspace.test.tsx:755:55
+    753|     clickLabel(render(props).tree, S.openHtml);
+    754|     await vi.waitFor(() => expect(h.inspectSelected).toHaveBeenCalledO…
+    755|     await vi.waitFor(() => expect(render(props).html).toContain(messag…
+       |                                                       ^
+    756|     const view = render(props);
+    757|     expect(view.html).not.toContain(S.choosingHtml);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/39]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > recovers HTML after 'opening' rejects with 'UNKNOWN_ERROR_WITH_PRIVATE_PATH'
+AssertionError: expected '<section class="browser-workspace" ar…' to contain '未能打开 HTML。请重新选择可读取的单文件 HTML 后重试。'
+
+Expected: "未能打开 HTML。请重新选择可读取的单文件 HTML 后重试。"
+Received: "<section class="browser-workspace" aria-label="网页"><div class="browser-workspace-controls"><form noValidate=""><label class="browser-workspace-sr-only" for="test-address">公开网页地址</label><div class="browser-workspace-address-row"><button type="button" class="browser-workspace-icon" title="重新加载网页" aria-label="重新加载网页" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M240,56v48a8,8,0,0,1-8,8H184a8,8,0,0,1,0-16H211.4L184.81,71.64l-.25-.24a80,80,0,1,0-1.67,114.78,8,8,0,0,1,11,11.63A95.44,95.44,0,0,1,128,224h-1.32A96,96,0,1,1,195.75,60L224,85.8V56a8,8,0,1,1,16,0Z"></path></svg></button><div class="browser-workspace-address-box"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M128,24h0A104,104,0,1,0,232,128,104.12,104.12,0,0,0,128,24Zm88,104a87.61,87.61,0,0,1-3.33,24H174.16a157.44,157.44,0,0,0,0-48h38.51A87.61,87.61,0,0,1,216,128ZM102,168H154a115.11,115.11,0,0,1-26,45A115.27,115.27,0,0,1,102,168Zm-3.9-16a140.84,140.84,0,0,1,0-48h59.88a140.84,140.84,0,0,1,0,48ZM40,128a87.61,87.61,0,0,1,3.33-24H81.84a157.44,157.44,0,0,0,0,48H43.33A87.61,87.61,0,0,1,40,128ZM154,88H102a115.11,115.11,0,0,1,26-45A115.27,115.27,0,0,1,154,88Zm52.33,0H170.71a135.28,135.28,0,0,0-22.3-45.6A88.29,88.29,0,0,1,206.37,88ZM107.59,42.4A135.28,135.28,0,0,0,85.29,88H49.63A88.29,88.29,0,0,1,107.59,42.4ZM49.63,168H85.29a135.28,135.28,0,0,0,22.3,45.6A88.29,88.29,0,0,1,49.63,168Zm98.78,45.6a135.28,135.28,0,0,0,22.3-45.6h35.66A88.29,88.29,0,0,1,148.41,213.6Z"></path></svg><input id="test-address" type="url" placeholder="https://example.com" autoComplete="off" autoCapitalize="none" spellCheck="false" aria-describedby="test-address" value=""/></div><button type="submit" class="browser-workspace-icon" title="打开" aria-label="打开" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path></svg></button><button type="button" class="browser-workspace-icon" title="读取文字快照" aria-label="读取文字快照" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M32,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H40A8,8,0,0,1,32,64Zm8,48H168a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16Zm176,24H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm-48,40H40a8,8,0,0,0,0,16H168a8,8,0,0,0,0-16Z"></path></svg></button><button type="button" class="browser-workspace-icon" title="关闭网页" aria-label="关闭网页" disabled=""><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" viewBox="0 0 256 256" aria-hidden="true"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg></button></div><p id="test-address" class="browser-workspace-sr-only">输入完整的 HTTPS 网址。</p></form><div class="browser-workspace-access-row"><span class="browser-workspace-sharing">未向 Agent 分享</span><div class="browser-workspace-file-actions"><button type="button">打开 HTML…</button><details class="browser-workspace-help"><summary>公开网页</summary><p>仅用于公开网页。请勿登录、切换账号或输入密码等秘密信息。</p></details></div></div><p class="browser-workspace-status browser-workspace-error" role="status" aria-live="polite">网页区域尚不可见，请展开内容栏后重试。</p></div><div class="browser-workspace-surface" aria-label="网页"><div class="browser-workspace-empty"><strong>在这里查看网页</strong><p>输入网址或本机服务地址，也可打开项目网页。内容不会自动发给 Agent。</p></div></div></section>"
+
+ ❯ src/components/BrowserWorkspace.test.tsx:755:55
+    753|     clickLabel(render(props).tree, S.openHtml);
+    754|     await vi.waitFor(() => expect(h.inspectSelected).toHaveBeenCalledO…
+    755|     await vi.waitFor(() => expect(render(props).html).toContain(messag…
+       |                                                       ^
+    756|     const view = render(props);
+    757|     expect(view.html).not.toContain(S.choosingHtml);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/39]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > consumes a verified-file request once for the same visible task without reopening a picker
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/BrowserWorkspace.test.tsx:892:51
+    890|   await Promise.resolve();
+    891|   render(props);
+    892|   await vi.waitFor(() => expect(backend.openHtml).toHaveBeenCalledOnce…
+       |                                                   ^
+    893|   render(props);
+    894|   expect(consumed).toHaveBeenCalledOnce();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/39]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > reloads directory in its existing owner without a picker or replacement store
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/BrowserWorkspace.test.tsx:1422:39
+    1420|       clickLabel(render(props).tree, "打开项目网页…");
+    1421|       await vi.waitFor(() =>
+    1422|         expect(backend.openDirectory).toHaveBeenCalledOnce(),
+       |                                       ^
+    1423|       );
+    1424|     } else {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/39]⎯
+
+ FAIL  src/components/BrowserWorkspace.test.tsx > reloads development in its existing owner without a picker or replacement store
+AssertionError: expected "vi.fn()" to be called once, but got 0 times
+ ❯ src/components/BrowserWorkspace.test.tsx:1435:41
+    1433|       });
+    1434|       await vi.waitFor(() =>
+    1435|         expect(backend.openDevelopment).toHaveBeenCalledOnce(),
+       |                                         ^
+    1436|       );
+    1437|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/39]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 55 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:103:5)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'does not open or read a page on mount, and renders the unshared boundary',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    },
+    {
+      method: 'processTicksAndRejections',
+      file: 'node:internal/process/task_queues',
+      line: 103,
+      column: 5
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+ ❯ processTicksAndRejections node:internal/process/task_queues:103:5
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "does not open or read a page on mount, and renders the unshared boundary". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)\n' +
+    '    at processTicksAndRejections (node:internal/process/task_queues:103:5)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'suppresses old address and snapshot on the first render of a different task',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    },
+    {
+      method: 'processTicksAndRejections',
+      file: 'node:internal/process/task_queues',
+      line: 103,
+      column: 5
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+ ❯ processTicksAndRejections node:internal/process/task_queues:103:5
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "suppresses old address and snapshot on the first render of a different task". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'hides an inactive task without closing its page, then restores the same owner',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "hides an inactive task without closing its page, then restores the same owner". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'registers an in-flight open before navigation and waits for its exact hide ACK',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "registers an in-flight open before navigation and waits for its exact hide ACK". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'keeps a covering panel pending on hide failure, then explicitly retries closure before showing it',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "keeps a covering panel pending on hide failure, then explicitly retries closure before showing it". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'offers a working local close retry after the first close fails',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "offers a working local close retry after the first close fails". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'keeps the exact page alive when collapsed and reports only actual hide ACK',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "keeps the exact page alive when collapsed and reports only actual hide ACK". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'keeps the pane footprint after failed hide until a retried close really confirms',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "keeps the pane footprint after failed hide until a retried close really confirms". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'reloads through navigation even for the same URL and clears an earlier snapshot',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "reloads through navigation even for the same URL and clears an earlier snapshot". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'holds the pane from open start until a collapsed late page really hides',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "holds the pane from open start until a collapsed late page really hides". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'holds a restoring page even when collapsed again before the show ACK',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "holds a restoring page even when collapsed again before the show ACK". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'releases held layout after an unreserved open is rejected and retains its error',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "releases held layout after an unreserved open is rejected and retains its error". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'opens a picked, verified local HTML without sharing controls or a public snapshot action',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "opens a picked, verified local HTML without sharing controls or a public snapshot action". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'ignores a cancel HTML picker result before even inspecting the selected path',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "ignores a cancel HTML picker result before even inspecting the selected path". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'ignores a hidden HTML picker result before even inspecting the selected path',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "ignores a hidden HTML picker result before even inspecting the selected path". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'ignores a task HTML picker result before even inspecting the selected path',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "ignores a task HTML picker result before even inspecting the selected path". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'ignores a task HTML picker result before even inspecting the selected path',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "ignores a task HTML picker result before even inspecting the selected path". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: "recovers HTML after 'inspection' rejects with '文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工…'",
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "recovers HTML after 'inspection' rejects with '文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工…'". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: "recovers HTML after 'opening' rejects with '文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工…'",
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "recovers HTML after 'opening' rejects with '文件检查尚未返回，后台可能仍在检查。请查看系统访问提示；仍无响应时，保存工…'". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: "recovers HTML after 'inspection' rejects with '已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后…'",
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "recovers HTML after 'inspection' rejects with '已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后…'". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: "recovers HTML after 'opening' rejects with '已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后…'",
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "recovers HTML after 'opening' rejects with '已有文件检查尚未结束，本次未开始新检查。请稍后重试；仍无响应时，保存工作后…'". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: "recovers HTML after 'inspection' rejects with 'UNKNOWN_ERROR_WITH_PRIVATE_PATH'",
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "recovers HTML after 'inspection' rejects with 'UNKNOWN_ERROR_WITH_PRIVATE_PATH'". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: "recovers HTML after 'opening' rejects with 'UNKNOWN_ERROR_WITH_PRIVATE_PATH'",
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "recovers HTML after 'opening' rejects with 'UNKNOWN_ERROR_WITH_PRIVATE_PATH'". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'does not open after file verification completes for a hidden pane',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "does not open after file verification completes for a hidden pane". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'rechecks the same local file on explicit reload and waits for old-page closure before opening its new revision',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "rechecks the same local file on explicit reload and waits for old-page closure before opening its new revision". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'keeps a local page visible when rechecking its changed source fails',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "keeps a local page visible when rechecking its changed source fails". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'releases local HTML before showing the public URL entry, without navigating the local owner',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "releases local HTML before showing the public URL entry, without navigating the local owner". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'consumes a verified-file request once for the same visible task without reopening a picker',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "consumes a verified-file request once for the same visible task without reopening a picker". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'clears a closed old local page when the replacement open fails, and permits explicit reselection',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "clears a closed old local page when the replacement open fails, and permits explicit reselection". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'discards a hidden verified-file request without reopening it later',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "discards a hidden verified-file request without reopening it later". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'discards a other-task verified-file request without reopening it later',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "discards a other-task verified-file request without reopening it later". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'discards a other-task verified-file request without reopening it later',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "discards a other-task verified-file request without reopening it later". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'does not let a late HTML verification clear a newer picker after leaving and returning to the task',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "does not let a late HTML verification clear a newer picker after leaving and returning to the task". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'does not let a late HTML verification clear a newer picker after leaving and returning to the task',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "does not let a late HTML verification clear a newer picker after leaving and returning to the task". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'does not let a late HTML verification clear a newer picker after leaving and returning to the task',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "does not let a late HTML verification clear a newer picker after leaving and returning to the task". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'opens only the exact displayed local file receipt in the browser without reopening or navigating the embedded page',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "opens only the exact displayed local file receipt in the browser without reopening or navigating the embedded page". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'keeps the embedded document and reports a failed browser open without substituting a new file',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "keeps the embedded document and reports a failed browser open without substituting a new file". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'a hidden local page cannot launch the external browser',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "a hidden local page cannot launch the external browser". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'restores the same page after a sidebar layout transition without navigation or reopening',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "restores the same page after a sidebar layout transition without navigation or reopening". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'observes a real close while inactive and never restores that departed page',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "observes a real close while inactive and never restores that departed page". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'uses the actual true storage receipt for local hints',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "uses the actual true storage receipt for local hints". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'uses the actual false storage receipt for local hints',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "uses the actual false storage receipt for local hints". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'uses the actual unknown storage receipt for local hints',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "uses the actual unknown storage receipt for local hints". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'asks about this file before clearing, supports keeping it, and reports success only after the real receipt',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "asks about this file before clearing, supports keeping it, and reports success only after the real receipt". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'does not report deletion success when closing succeeds but clearing fails',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "does not report deletion success when closing succeeds but clearing fails". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'invalidates a clear confirmation after hide and ignores its stale action',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "invalidates a clear confirmation after hide and ignores its stale action". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'invalidates a clear confirmation after inactive and ignores its stale action',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "invalidates a clear confirmation after inactive and ignores its stale action". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'invalidates a clear confirmation after project and ignores its stale action',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "invalidates a clear confirmation after project and ignores its stale action". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'invalidates a clear confirmation after task and ignores its stale action',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "invalidates a clear confirmation after task and ignores its stale action". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'a late clear receipt cannot show success or clear state for another task',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "a late clear receipt cannot show success or clear state for another task". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'requires the task project for HTML instead of using the file access root',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "requires the task project for HTML instead of using the file access root". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'never offers clear for public pages',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "never offers clear for public pages". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'closes the current HTML owner on unmount after replacing an earlier page',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "closes the current HTML owner on unmount after replacing an earlier page". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'reloads directory in its existing owner without a picker or replacement store',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "reloads directory in its existing owner without a picker or replacement store". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+{
+  stack: 'Error: \n' +
+    '    at BrowserWorkspaceScope.adopt (/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts:171:13)\n' +
+    '    at /Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx:253:13\n' +
+    '    at node:internal/process/task_queues:149:7\n' +
+    '    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)\n' +
+    '    at AsyncResource.runMicrotask (node:internal/process/task_queues:146:8)',
+  constructor: 'Function<BrowserWorkspaceRetiredError>',
+  name: 'Error',
+  message: '',
+  toString: 'Function<toString>',
+  VITEST_TEST_NAME: 'reloads development in its existing owner without a picker or replacement store',
+  VITEST_TEST_PATH: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspace.test.tsx',
+  type: 'Uncaught Exception',
+  stacks: [
+    {
+      method: 'BrowserWorkspaceScope.adopt',
+      file: '/Users/tw/Desktop/farfold/src/runtime/browser_workspace.ts',
+      line: 171,
+      column: 13
+    },
+    {
+      method: '',
+      file: '/Users/tw/Desktop/farfold/src/components/BrowserWorkspacePage.tsx',
+      line: 253,
+      column: 13
+    },
+    {
+      method: '',
+      file: 'node:internal/process/task_queues',
+      line: 149,
+      column: 7
+    },
+    {
+      method: 'AsyncResource.runInAsyncScope',
+      file: 'node:async_hooks',
+      line: 214,
+      column: 14
+    },
+    {
+      method: 'AsyncResource.runMicrotask',
+      file: 'node:internal/process/task_queues',
+      line: 146,
+      column: 8
+    }
+  ]
+}
+ ❯ BrowserWorkspaceScope.adopt src/runtime/browser_workspace.ts:171:13
+    169|   adopt(state: BrowserWorkspaceState) {
+    170|     if (this.retired || this.opening || this.state || state.taskKey !=…
+    171|       throw new BrowserWorkspaceRetiredError();
+       |             ^
+    172|     this.state = state;
+    173|   }
+ ❯ src/components/BrowserWorkspacePage.tsx:253:13
+ ❯ node:internal/process/task_queues:149:7
+ ❯ AsyncResource.runInAsyncScope node:async_hooks:214:14
+ ❯ AsyncResource.runMicrotask node:internal/process/task_queues:146:8
+
+This error originated in "src/components/BrowserWorkspace.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "reloads development in its existing owner without a picker or replacement store". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+

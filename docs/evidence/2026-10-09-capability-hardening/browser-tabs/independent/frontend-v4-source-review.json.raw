@@ -1,0 +1,309 @@
+{
+  "schemaVersion": 1,
+  "status": "NO_STATIC_BLOCKER_V4_FINAL_WHOLE_APP_PENDING",
+  "freeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v4.json",
+    "bytes": 6376,
+    "sha256": "06c5160af56f70c061135999e5d5964c76a197ef15795c48d4ade4f6a533afc2"
+  },
+  "summary": {
+    "path": "output/2026-10-14-browser-tabs-frontend/summary-v4.json",
+    "bytes": 6405,
+    "sha256": "b202897c116c1b2ca1ed80b5adb5b1e652ed0782011579db8966dff2a7945291"
+  },
+  "diff": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-v3-to-v4.diff",
+    "bytes": 10866,
+    "sha256": "e533be44362c2be96556146e16ec5a8d0427b81ade60f6ae68800542fcc1f04a"
+  },
+  "verifiedSourceFiles": [
+    {
+      "path": "src/runtime/browser_tabs.ts",
+      "bytes": 13221,
+      "sha256": "7c00e8a03b57eb46f4105d749a74871e61c527f0485bb20998f29dbb373dc602"
+    },
+    {
+      "path": "src/runtime/browser_tabs.test.ts",
+      "bytes": 19933,
+      "sha256": "9e82603e2d5f9123c67f27719479ebe3f35a8b88d0482ba0ae1d56391be85e69"
+    },
+    {
+      "path": "src/runtime/browser_workspace.ts",
+      "bytes": 14716,
+      "sha256": "c039667dfc532cb72a7255d7b06045ab41cf3adc6ef1a13c2ff0bbb5dfde460e"
+    },
+    {
+      "path": "src/runtime/browser_workspace.test.ts",
+      "bytes": 21701,
+      "sha256": "8171a98b14a40ceaa68564ac3a1dd8e6dfb4df3e3ffbf2286cac90bdaec878f9"
+    },
+    {
+      "path": "src/runtime/browser_surface.ts",
+      "bytes": 1536,
+      "sha256": "85c78767262cbea94a047925a5eb6ee8585d9453fe57987d216215c62fb65ade"
+    },
+    {
+      "path": "src/runtime/browser_workspace_strings.ts",
+      "bytes": 4674,
+      "sha256": "f729602c01e64a92129f5e5e4bd1414586ff1a793b2d0f6b271e777f085c737e"
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tsx",
+      "bytes": 7822,
+      "sha256": "1cc81249dc58fc8392b38e90ca643ff2d710e80f547091a8581b3e59dc9b872a"
+    },
+    {
+      "path": "src/components/BrowserWorkspacePage.tsx",
+      "bytes": 42999,
+      "sha256": "697681ad8be4059ef0910a85e5f6d653e74f428c821fa3f8c281704699661fd8"
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tabs.test.tsx",
+      "bytes": 1244,
+      "sha256": "4c4ba561051e59e2a8fe9e27306d13daea211c2d24e383570f6e5b63e00b7cb2"
+    },
+    {
+      "path": "src/components/BrowserWorkspace.test.tsx",
+      "bytes": 46932,
+      "sha256": "b5cedeb8ebf8d018a7c835f4692f40be7c497467d3f796172aa7955c992038bb"
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "bytes": 21232,
+      "sha256": "c1ebc570aa7d671a48fb003bd63e1aa6317652d489c0e9a17b36e02b8f8da680"
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "bytes": 52082,
+      "sha256": "3e3228c1bb8ef33561330b0da386a4ccbde81f2cb972b6f58def4dde6df0e929"
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "bytes": 20383,
+      "sha256": "9c0047eea46b3c94a83e6c8efc63edf4c29ca3420a7eb0bdca3a72bbd8050e93"
+    },
+    {
+      "path": "src/App.tsx",
+      "bytes": 46688,
+      "sha256": "3d87edb53d95ae0ecd4c28cc00cbd7e12299d0bf9057787c6524674e62324224"
+    },
+    {
+      "path": "src/App.navigation.test.tsx",
+      "bytes": 44562,
+      "sha256": "ef6cb92b397a5fedb0507cf2d5c03de4b7e386abe9f3e57e55c68c566c59cb9c"
+    },
+    {
+      "path": "src/browser-workspace.css",
+      "bytes": 7782,
+      "sha256": "0eb0e2d4dc6882560a7dfb3ab27791b51094b5c7820589a970da14aaed6d3e12"
+    },
+    {
+      "path": "src/components/BrowserWorkspace.presentation.test.tsx",
+      "bytes": 5468,
+      "sha256": "387afa86e7ee491fe5d6d6a74299ae4b874a824e5ed9209128e581a7c3a46895"
+    }
+  ],
+  "sourceBeforeFinalChecks": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-before-v4.json",
+    "bytes": 3285,
+    "sha256": "32964bb5768e04a666dd8e9f19541d0c31c4562ddf2430fc0aadce8125c8fab9"
+  },
+  "sourceBeforeFinalChecksEqualsCurrent17": true,
+  "unchangedFromV3": 13,
+  "changedFromV3": [
+    "src/components/BrowserWorkspacePage.tsx",
+    "src/App.tsx",
+    "src/App.navigation.test.tsx"
+  ],
+  "added": [
+    "src/components/BrowserWorkspace.presentation.test.tsx"
+  ],
+  "receipts": [
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/presentation-red-v4.completed.json",
+        "bytes": 776,
+        "sha256": "cc24a4382fea203c32f8029814bd94e9d2de1c634fde2f51ea869ba4c99874c3",
+        "actualExitCode": 1
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/presentation-red-v4.stdout.log",
+        "bytes": 385,
+        "sha256": "e91bef5531e93c1bfa2f13834c61baca119cbe14313dac968261a478dffb68f0"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/presentation-red-v4.stderr.log",
+        "bytes": 845,
+        "sha256": "aa7b82b76ce8724c28e9aec7fc62b3b33c2f9ef1b399ac071de7ffa483ebf54f"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/presentation-red-02-v4.completed.json",
+        "bytes": 783,
+        "sha256": "86881a9afc5112ab29183afa02f19176e2f872a47cdb79fd5db8e01fc92812ed",
+        "actualExitCode": 1
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/presentation-red-02-v4.stdout.log",
+        "bytes": 667,
+        "sha256": "c42583296db70a6f7c65e4c1533d42193be472d981d0815e0360f5eac14a69d2"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/presentation-red-02-v4.stderr.log",
+        "bytes": 1985,
+        "sha256": "1f7b97468bcd58cc39d083f4f066fe1b48745149fa9ad9d72de30870dec17422"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/presentation-green-v4.completed.json",
+        "bytes": 826,
+        "sha256": "c832f1d65080ded19af89c5282d7956597b9e2bdb3e17017cc9bc80985647bb8",
+        "actualExitCode": 0
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/presentation-green-v4.stdout.log",
+        "bytes": 212,
+        "sha256": "f4a1b3fb2e48cc66b5a0aef7e0ccf64cc5fb6a9f790b677aa459d419c0e6add7"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/presentation-green-v4.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/route-order-red-v4.completed.json",
+        "bytes": 800,
+        "sha256": "40de5df019c59fde9e17ceef6d4a25b33c8caaf551978c2aaad2d8a8f4340f29",
+        "actualExitCode": 1
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/route-order-red-v4.stdout.log",
+        "bytes": 385,
+        "sha256": "b4e9fc555d5af27caa979b0281fdc3c6984c9da9a2e1cba529d9ebac708b0025"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/route-order-red-v4.stderr.log",
+        "bytes": 779,
+        "sha256": "3c14355919bdcb83bd15d07605a9da49b411c47f0ec6ed4fd78000652a38c5fd"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/route-order-green-v4.completed.json",
+        "bytes": 750,
+        "sha256": "2239f18163e17cf634edf4e21ffdb4b22777e1a82613428f0480d4900493f106",
+        "actualExitCode": 0
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/route-order-green-v4.stdout.log",
+        "bytes": 212,
+        "sha256": "7a0a6b0db94ec4d3386629a563f7c376a6b4ab0ed2bc3674a3bae91071d4b0ee"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/route-order-green-v4.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/format-write-v4.completed.json",
+        "bytes": 873,
+        "sha256": "d0baae370cee836510eda3e8a18e77d100ee8a6ba35da33f28be9a968be71b84",
+        "actualExitCode": 0
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/format-write-v4.stdout.log",
+        "bytes": 190,
+        "sha256": "607fc5b46ff9b3831e5fb0ce1e5232b96a2b7adc9498abb60704a37cbc1fb06d"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/format-write-v4.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/targeted-v4.completed.json",
+        "bytes": 1211,
+        "sha256": "bb8919e4404707a3b56738362149b1d82887eb910b0f145f98703f39013341f4",
+        "actualExitCode": 0
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-v4.stdout.log",
+        "bytes": 217,
+        "sha256": "39ffd30a6dcfbcf7055af823034f9703601e2be1dde0cc12ff82b024e3c89d91"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/targeted-v4.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/typecheck-v4.completed.json",
+        "bytes": 678,
+        "sha256": "04a48b8f927b763c65e2ee94c69b6cbcb12be2b0efd7b829bfab24a63baaa6a9",
+        "actualExitCode": 0
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/typecheck-v4.stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/typecheck-v4.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/format-check-v4.completed.json",
+        "bytes": 872,
+        "sha256": "339d829db1062d69db0858a08bcf534056ba67c84413a00616cca9872c2a0b5c",
+        "actualExitCode": 0
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/format-check-v4.stdout.log",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/format-check-v4.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "reviewedBehavior": [
+    {
+      "file": "src/App.tsx",
+      "line": 954,
+      "conclusion": "Retained browserOwners precede prepared/current unowned keys, preserving live-owner insertion order across task selection. Selection only changes active/hidden. It leaves actual unmount requestClose and guard/native ACK behavior intact."
+    },
+    {
+      "file": "src/components/BrowserWorkspacePage.tsx",
+      "line": 875,
+      "conclusion": "Old frame and resize rejection check exact current live scope/task, mounted state, current active/visible/suspended intent and guard block before destructive error handling. An active current presentation without bounds still closes its exact owner."
+    }
+  ],
+  "redGreenBoundaries": {
+    "pageCallbacks": "First red1/5 under-awaited queued RAF close, then corrected event-loop wait produced true red4/5; production correction green5 new+51 existing=56. Both reds retained.",
+    "routeOrder": "Actual whole-App run5/6/7 red plus run7 captured close initiator support route cleanup cause. Independent explicit slot-order unit red1 with56skipped, then full navigation57 green.",
+    "finalTargeted": "11 files/241 tests, typecheck and scoped formatting actual0; exact17 source before and after."
+  },
+  "notClaimed": [
+    "Whole-App v4 browser success pending root execution; original 138 greens missed reverse retention and remain limited.",
+    "Component callback tests use a deliberate synthetic commit/passive-cleanup window; they are not real native WebView tests.",
+    "No installed/release/Windows/Agent or restart persistence result."
+  ],
+  "remainingObservation": "A transient guard-block/release collapsed into a single React render could stop the new frame loop without changed effect dependency; this is an unproven timing question sent to owner, not a reproduced blocker. Final browser includes guarded presentation transitions, with coverage limited to actual schedule.",
+  "mutationBoundary": "Only new independent report; no tests rerun, no source/root harness/docs/DB/App changes."
+}

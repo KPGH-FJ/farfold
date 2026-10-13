@@ -242,8 +242,8 @@ impl ToolSession {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
         if state.pending_request.as_ref().is_some_and(|p| {
             p.info.task_key == info.task_key
-                && (p.info.label != info.label
-                    || p.info.page_revision != info.revision
+                && p.info.label == info.label
+                && (p.info.page_revision != info.revision
                     || p.info.url != info.url
                     || info.phase != "ready")
         }) && state.cancel_permission("网页已变化，本次读取已取消")

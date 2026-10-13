@@ -1,0 +1,79 @@
+{
+  "sourceFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v3.json",
+    "bytes": 4994,
+    "sha256": "a7fa3b066b5b7c98de5b673732fe770849b0b325e8c9470975a1577ea32b9f65"
+  },
+  "previousSummary": {
+    "path": "output/2026-10-14-browser-tabs-frontend/summary-v2.json",
+    "bytes": 2280,
+    "sha256": "33d5d2ae14773246eeef3dc6801a2dac594e4c06e3e66c3277cf9a1f426e369c"
+  },
+  "diff": {
+    "path": "output/2026-10-14-browser-tabs-frontend/visual-v2-to-v3.diff",
+    "bytes": 740,
+    "sha256": "d8fcf76c5f14c7e0eedd180d350221a7f49f62060068b1dd4915b6e57a58861b"
+  },
+  "observedProblem": {
+    "screenshots": [
+      {
+        "path": "output/2026-10-14-browser-tabs-browser/chromium-run2-three-pages.png",
+        "bytes": 87952,
+        "sha256": "491f60f7f529665fb8718c75b3f795d8fd4dea533029680518326a53d408f01c"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-browser/chromium-run2-narrow-pages.png",
+        "bytes": 49778,
+        "sha256": "c90c9d9708d6ee3f543f6b8e40d4d821645bba302dca0fcd0d2ceb9e2542bcb0"
+      }
+    ],
+    "cause": "Tab ordinal used .sr-only, whose only existing definition was scoped to .thread-find; plus button browser-workspace-icon was outside the .browser-workspace ancestor required by its rule.",
+    "fix": "Use existing .browser-workspace-sr-only for tab ordinals and global .icon-button for the new-tab action. No CSS duplication or tab behavior change."
+  },
+  "checks": [
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/visual-format-v3.completed.json",
+      "bytes": 790,
+      "sha256": "c81becbf5deb31db4bdeee52150eea80fcf31c473e8ef27dc143b19a3ef4957b",
+      "actualExitCode": 1
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/visual-targeted-v3.completed.json",
+      "bytes": 851,
+      "sha256": "46e0a3c932de001231a3ba9627a1917c6227729bd8f549f0c7c25453a3c498c4",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/visual-format-write-v3.completed.json",
+      "bytes": 767,
+      "sha256": "c031b722552c4b6791b1b82a6a7a24124a5e71890fe1721c30b48e54c6957566",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/visual-typecheck-v3.completed.json",
+      "bytes": 692,
+      "sha256": "e7a9ea657ef6779fdd5740a68429d2dae1a6f5ab618d1e6e408367ebb9425b5e",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/visual-format-check-v3.completed.json",
+      "bytes": 800,
+      "sha256": "ee3bc43391c83b17e44897137cbcdc0afe9220e2fde22226bfbcc3f918b2c3f6",
+      "actualExitCode": 0
+    }
+  ],
+  "targetedScope": {
+    "files": 3,
+    "tests": 7,
+    "timing": "The class change passed before Prettier wrapped only the longer span JSX across lines; typecheck and final format check used the final bytes. Root will rerun both full App engines against v3."
+  },
+  "preserved": [
+    "v2 235 tests/source freeze unchanged",
+    "Chromium run2 and WebKit run1 old source evidence unchanged",
+    "Initial visual-format-v3 exit1 retained; only necessary JSX wrapping corrected"
+  ],
+  "notClaimed": [
+    "No new native/Agent/Windows evidence",
+    "No result about the narrow simulated iframe pending layout; root owns that driver check"
+  ]
+}

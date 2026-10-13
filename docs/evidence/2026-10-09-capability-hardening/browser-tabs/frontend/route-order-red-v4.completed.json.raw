@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/App.navigation.test.tsx",
+    "-t",
+    "keeps retained browser route slots"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T21:50:43.477870+00:00",
+  "completedAtUtc": "2026-10-13T21:50:45.322395+00:00",
+  "actualExitCode": 1,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/route-order-red-v4.stdout.log",
+    "bytes": 385,
+    "sha256": "b4e9fc555d5af27caa979b0281fdc3c6984c9da9a2e1cba529d9ebac708b0025"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/route-order-red-v4.stderr.log",
+    "bytes": 779,
+    "sha256": "3c14355919bdcb83bd15d07605a9da49b411c47f0ec6ed4fd78000652a38c5fd"
+  }
+}

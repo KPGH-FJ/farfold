@@ -1,0 +1,2049 @@
+--- a/src-tauri/src/browser_workspace.rs
++++ b/src-tauri/src/browser_workspace.rs
+@@ -1,4 +1,4 @@
+-//! Public pages and verified local HTML share one independent WK view without a Tauri bridge.
++//! Public pages and verified local HTML own independent views without a Tauri bridge.
+ //! Public pages stay temporary; offline HTML has isolated, per-project/file storage.
+ //! Tools receive only a fixed, revocable public-page read scope.
+ #[path = "browser_workspace/browser_tools.rs"]
+@@ -20,13 +20,21 @@
+ mod native_request;
+ #[path = "browser_workspace/page_read.rs"]
+ mod page_read;
++#[path = "browser_workspace/page_store.rs"]
++mod page_store;
+ #[path = "browser_workspace/policy.rs"]
+ mod policy;
++#[path = "browser_workspace/tab_commands.rs"]
++pub(crate) mod tab_commands;
++#[cfg(test)]
++#[path = "browser_workspace/tab_tests.rs"]
++mod tab_tests;
+ #[cfg(test)]
+ #[path = "browser_workspace/tests.rs"]
+ mod tests;
+ 
+ use serde::{Deserialize, Serialize};
++use std::collections::BTreeMap;
+ use std::sync::{Arc, Mutex};
+ use std::time::{SystemTime, UNIX_EPOCH};
+ use tauri::{AppHandle, Emitter, EventTarget, Manager, State, Url, Webview};
+@@ -45,7 +53,10 @@
+ #[derive(Default)]
+ struct Store {
+     next: u64,
+-    active: Option<Active>,
++    pages: BTreeMap<u64, Active>,
++    selections: BTreeMap<String, tab_commands::SelectionState>,
++    presented: Option<u64>,
++    presentation_uncertain: Option<u64>,
+     shutting_down: bool,
+ }
+ 
+@@ -57,6 +68,8 @@
+     preview: Option<PreviewSource>,
+     navigation: u64,
+     closing: bool,
++    withdrawing: bool,
++    read_gate: PageReadLease,
+ }
+ 
+ #[derive(Clone, Debug, Serialize, Deserialize)]
+@@ -83,6 +96,7 @@
+     task_key: String,
+     label: String,
+     navigation: u64,
++    selection_revision: u64,
+ }
+ 
+ #[derive(Serialize)]
+@@ -108,415 +122,6 @@
+     text: String,
+ }
+ 
+-impl BrowserWorkspace {
+-    fn reserve(&self, task: &str, url: Url) -> Result<(u64, Option<u64>, BrowserInfo), String> {
+-        self.reserve_page(task, url, None, None)
+-    }
+-
+-    fn reserve_html(
+-        &self,
+-        task: &str,
+-        name: String,
+-        storage: local_html::StoragePartition,
+-    ) -> Result<(u64, Option<u64>, BrowserInfo), String> {
+-        self.reserve_page(task, storage.origin.clone(), Some(name), Some(storage))
+-    }
+-
+-    fn reserve_page(
+-        &self,
+-        task: &str,
+-        url: Url,
+-        local_file_name: Option<String>,
+-        local_storage: Option<local_html::StoragePartition>,
+-    ) -> Result<(u64, Option<u64>, BrowserInfo), String> {
+-        policy::validate_task_key(task)?;
+-        let mut store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        if store.shutting_down {
+-            return Err("应用页面正在关闭，请重新打开后再试".into());
+-        }
+-        if store.active.is_some() {
+-            return Err("请等待原网页关闭确认后再打开".into());
+-        }
+-        store.next = store.next.checked_add(1).ok_or("请重开应用后再试")?;
+-        let id = store.next;
+-        let old = None;
+-        let info = BrowserInfo {
+-            task_key: task.into(),
+-            label: if local_file_name.is_some() {
+-                format!("local-html-{id}")
+-            } else {
+-                format!("public-page-{id}")
+-            },
+-            url: local_file_name.clone().unwrap_or_else(|| url.to_string()),
+-            local_storage_persistent: local_storage
+-                .as_ref()
+-                .map(|_| native::persistent_html_supported()),
+-            local_file_name,
+-            preview_mode: None,
+-            phase: "loading".into(),
+-            revision: 1,
+-            error: None,
+-        };
+-        store.active = Some(Active {
+-            id,
+-            info: info.clone(),
+-            origin: url,
+-            local_storage,
+-            preview: None,
+-            navigation: 1,
+-            closing: false,
+-        });
+-        Ok((id, old, info))
+-    }
+-
+-    fn info(&self, id: u64) -> Result<BrowserInfo, String> {
+-        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        Ok(store
+-            .active
+-            .as_ref()
+-            .filter(|a| a.id == id)
+-            .ok_or("网页已关闭或已更换")?
+-            .info
+-            .clone())
+-    }
+-
+-    /// Permission requests capture only safe metadata for this exact ready page.
+-    pub(crate) fn permission_page(&self, task: &str) -> Result<BrowserInfo, String> {
+-        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        store
+-            .active
+-            .as_ref()
+-            .filter(|active| {
+-                !store.shutting_down
+-                    && !active.closing
+-                    && active.info.task_key == task
+-                    && active.info.phase == "ready"
+-                    && active.shareable()
+-            })
+-            .map(|active| active.info.clone())
+-            .ok_or_else(|| "请先打开此对话的公开网页".into())
+-    }
+-
+-    fn identity(&self, task: &str, label: &str) -> Result<u64, String> {
+-        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        let active = store.active.as_ref().ok_or("请先打开公开网页")?;
+-        if active.info.task_key != task || active.info.label != label {
+-            return Err("网页已关闭或已更换，请重新打开".into());
+-        }
+-        Ok(active.id)
+-    }
+-
+-    fn local_storage(
+-        &self,
+-        task: &str,
+-        label: &str,
+-    ) -> Result<local_html::StoragePartition, String> {
+-        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        store
+-            .active
+-            .as_ref()
+-            .filter(|a| !a.closing && a.info.task_key == task && a.info.label == label)
+-            .and_then(|a| a.local_storage.clone())
+-            .ok_or_else(|| "请先打开要清除存档的本地网页".into())
+-    }
+-
+-    fn navigate(&self, id: u64, url: Url) -> Result<BrowserInfo, String> {
+-        let mut store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        let active = store
+-            .active
+-            .as_mut()
+-            .filter(|a| a.id == id)
+-            .ok_or("网页已关闭或已更换")?;
+-        if active.closing {
+-            return Err("网页正在关闭，请重试关闭后再打开".into());
+-        }
+-        if active.preview.is_some() {
+-            if active.allowed_url(url.as_str()).is_none() {
+-                return Err("此跳转不在已选择的网页范围内".into());
+-            }
+-        } else if active.info.local_file_name.is_some() {
+-            return Err("本地网页不能跳转到网站，请关闭后从网页入口打开".into());
+-        }
+-        // Only this explicit user command may authorize a different origin.
+-        if active.preview.is_none() {
+-            active.origin = url.clone();
+-        }
+-        active.navigation += 1;
+-        active.info.revision += 1;
+-        active.info.url = url.to_string();
+-        active.info.phase = "loading".into();
+-        active.info.error = None;
+-        Ok(active.info.clone())
+-    }
+-
+-    pub(super) fn is_preview(&self, id: u64) -> bool {
+-        self.0.lock().is_ok_and(|s| {
+-            s.active
+-                .as_ref()
+-                .is_some_and(|a| a.id == id && a.preview.is_some())
+-        })
+-    }
+-
+-    fn can_operate(&self, id: u64, navigation: Option<u64>) -> bool {
+-        self.0.lock().ok().is_some_and(|store| {
+-            store.active.as_ref().is_some_and(|a| {
+-                a.id == id && !a.closing && navigation.is_none_or(|n| n == a.navigation)
+-            })
+-        })
+-    }
+-
+-    /// User input takes control back without inspecting its contents. Keep the
+-    /// page visible, but invalidate every outstanding observation/operation.
+-    pub(super) fn manual_activity(&self, id: u64) -> Option<(u64, BrowserInfo)> {
+-        let mut store = self.0.lock().ok()?;
+-        let active = store
+-            .active
+-            .as_mut()
+-            .filter(|a| a.id == id && !a.closing && a.info.phase == "ready")?;
+-        active.navigation = active.navigation.checked_add(1)?;
+-        active.info.revision = active.info.revision.checked_add(1)?;
+-        Some((active.navigation, active.info.clone()))
+-    }
+-
+-    fn navigation(&self, id: u64) -> Result<u64, String> {
+-        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        Ok(store
+-            .active
+-            .as_ref()
+-            .filter(|a| a.id == id && !a.closing)
+-            .ok_or("网页已关闭或正在关闭")?
+-            .navigation)
+-    }
+-
+-    fn policy(&self, id: u64, text: &str) -> bool {
+-        let Ok(store) = self.0.lock() else {
+-            return false;
+-        };
+-        let Some(active) = store.active.as_ref().filter(|a| a.id == id && !a.closing) else {
+-            return false;
+-        };
+-        if active.preview.is_some() {
+-            return active.allowed_url(text).is_some();
+-        }
+-        if active.info.local_file_name.is_some() {
+-            // Only the exact initial in-memory load is admitted. No local path,
+-            // subframe or later same-origin navigation acquires a file grant.
+-            return active.info.phase == "loading" && text == active.origin.as_str();
+-        }
+-        policy::validate_public_url(text).is_ok_and(|url| policy::same_origin(&active.origin, &url))
+-    }
+-
+-    // A link is claimed BEFORE native loadRequest; didStart never invents a token.
+-    fn link_navigation(&self, id: u64, text: &str) -> Option<(u64, BrowserInfo)> {
+-        let mut store = self.0.lock().ok()?;
+-        let a = store.active.as_mut().filter(|a| a.id == id && !a.closing)?;
+-        if !a.shareable() {
+-            return None;
+-        }
+-        let url = a.allowed_url(text)?;
+-        a.navigation = a.navigation.checked_add(1)?;
+-        a.info.revision += 1;
+-        a.info.url = url.to_string();
+-        a.info.phase = "loading".into();
+-        a.info.error = None;
+-        Some((a.navigation, a.info.clone()))
+-    }
+-
+-    fn event(&self, id: u64, navigation: u64, kind: i32, raw_url: &str) -> Option<BrowserInfo> {
+-        let mut store = self.0.lock().ok()?;
+-        let active = store
+-            .active
+-            .as_mut()
+-            .filter(|a| a.id == id && !a.closing && a.navigation == navigation)?;
+-        // Navigation terminal callbacks cannot revive ready/blocked/error states.
+-        if matches!(kind, 0..=2) && active.info.phase != "loading" {
+-            return None;
+-        }
+-        match kind {
+-            0 => {}
+-            1 => {
+-                let valid = active.allowed_url(raw_url);
+-                if let Some(url) = valid {
+-                    if active.shareable() {
+-                        active.info.url = url.to_string();
+-                    }
+-                    active.info.phase = "ready".into();
+-                    active.info.error = None;
+-                } else {
+-                    active.info.phase = "blocked".into();
+-                    active.info.error = Some("此页面未获准读取，请输入公开网页地址".into());
+-                }
+-            }
+-            2 | 5 => {
+-                active.info.phase = "error".into();
+-                active.info.error = Some("网页未能加载，请重新打开后再试".into());
+-            }
+-            3 => {
+-                active.info.phase = "blocked".into();
+-                active.info.error =
+-                    Some("此跳转未打开；请明确输入公开网页地址。脚本和表单跳转暂不支持".into());
+-            }
+-            _ => return None,
+-        }
+-        active.info.revision += 1;
+-        Some(active.info.clone())
+-    }
+-
+-    fn read_ticket(&self, task: &str, label: &str) -> Result<ReadTicket, String> {
+-        let id = self.identity(task, label)?;
+-        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        let active = store
+-            .active
+-            .as_ref()
+-            .filter(|a| a.id == id)
+-            .ok_or("网页已关闭或已更换")?;
+-        if !active.shareable() {
+-            return Err("本地网页暂不提供网页读取或分享".into());
+-        }
+-        if active.closing || active.info.phase != "ready" {
+-            return Err("请等待公开网页加载完成后再读取".into());
+-        }
+-        Ok(ReadTicket {
+-            id,
+-            task_key: task.into(),
+-            label: label.into(),
+-            navigation: active.navigation,
+-        })
+-    }
+-
+-    fn complete_read(&self, ticket: &ReadTicket, raw: &str) -> Result<PageSnapshot, String> {
+-        if raw.len() > 300_000 {
+-            return Err("网页返回内容过大".into());
+-        }
+-        let page: NativeSnapshot = serde_json::from_str(raw).map_err(|_| "未能读取网页内容")?;
+-        self.with_read_ticket(ticket, |active| {
+-            if page.blocked {
+-                return Err("页面含登录输入，已停止读取；请关闭并改用公开网页".into());
+-            }
+-            let url = active
+-                .allowed_url(&page.url)
+-                .ok_or("网页已变化，本次读取已取消")?;
+-            if page.title.chars().count() > 512 || page.text.chars().count() > 65_536 {
+-                return Err("网页返回内容过大".into());
+-            }
+-            Ok(PageSnapshot {
+-                task_key: ticket.task_key.clone(),
+-                label: ticket.label.clone(),
+-                url: url.to_string(),
+-                title: page.title,
+-                text: page.text,
+-                revision: active.info.revision,
+-                observed_at_ms: SystemTime::now()
+-                    .duration_since(UNIX_EPOCH)
+-                    .unwrap_or_default()
+-                    .as_millis()
+-                    .min(u64::MAX as u128) as u64,
+-            })
+-        })
+-    }
+-
+-    fn with_read_ticket<T>(
+-        &self,
+-        ticket: &ReadTicket,
+-        action: impl FnOnce(&Active) -> Result<T, String>,
+-    ) -> Result<T, String> {
+-        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        let active = store
+-            .active
+-            .as_ref()
+-            .filter(|a| {
+-                !store.shutting_down
+-                    && a.id == ticket.id
+-                    && a.info.task_key == ticket.task_key
+-                    && a.info.label == ticket.label
+-                    && !a.closing
+-                    && a.navigation == ticket.navigation
+-                    && a.info.phase == "ready"
+-                    && a.shareable()
+-            })
+-            .ok_or("网页已变化，本次读取已取消，请重新读取")?;
+-        // Keep ownership/navigation stable through a fast nonblocking action.
+-        action(active)
+-    }
+-
+-    fn close(&self, task: &str, label: &str) -> Result<Option<(u64, BrowserInfo)>, String> {
+-        let mut store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        if !store
+-            .active
+-            .as_ref()
+-            .is_some_and(|a| a.info.task_key == task && a.info.label == label)
+-        {
+-            return Ok(None);
+-        }
+-        let active = store.active.as_mut().ok_or("网页已关闭")?;
+-        active.closing = true;
+-        if let Some(preview) = &active.preview {
+-            preview.revoke();
+-        }
+-        active.info.phase = "loading".into();
+-        active.info.revision += 1;
+-        active.info.error = None;
+-        Ok(Some((active.id, active.info.clone())))
+-    }
+-
+-    fn acknowledge_close(&self, id: u64) -> Option<BrowserInfo> {
+-        let mut store = self.0.lock().ok()?;
+-        if !store
+-            .active
+-            .as_ref()
+-            .is_some_and(|a| a.id == id && a.closing)
+-        {
+-            return None;
+-        }
+-        let mut active = store.active.take()?;
+-        active.info.phase = "closed".into();
+-        active.info.revision += 1;
+-        active.info.error = None;
+-        Some(active.info)
+-    }
+-
+-    fn close_failed(&self, id: u64) -> Option<BrowserInfo> {
+-        let mut store = self.0.lock().ok()?;
+-        let active = store.active.as_mut().filter(|a| a.id == id && a.closing)?;
+-        active.info.phase = "error".into();
+-        active.info.error = Some("网页关闭未确认，请重试关闭".into());
+-        active.info.revision += 1;
+-        Some(active.info.clone())
+-    }
+-
+-    fn active_info(&self) -> Result<Option<BrowserInfo>, String> {
+-        Ok(self
+-            .0
+-            .lock()
+-            .map_err(|_| "网页状态暂时不可用")?
+-            .active
+-            .as_ref()
+-            .map(|a| a.info.clone()))
+-    }
+-
+-    /// Revoke before synchronous native teardown. Pending main-thread creation
+-    /// and observation completions must no longer be allowed to act or deliver.
+-    fn begin_shutdown(&self) {
+-        let mut store = self.0.lock().unwrap_or_else(|error| error.into_inner());
+-        store.shutting_down = true;
+-        if let Some(active) = store.active.as_mut() {
+-            active.closing = true;
+-            if let Some(preview) = &active.preview {
+-                preview.revoke();
+-            }
+-            active.info.phase = "loading".into();
+-            active.info.revision = active.info.revision.saturating_add(1);
+-        }
+-    }
+-
+-    fn acknowledge_shutdown(&self) {
+-        let mut store = self.0.lock().unwrap_or_else(|error| error.into_inner());
+-        if store.shutting_down {
+-            store.active = None;
+-        }
+-    }
+-}
+-
+ /// Tauri invokes its run-event callback on the application's main event loop.
+ /// Never wait for async command serialization during window destruction/exit.
+ fn should_close_for_event(event: &tauri::RunEvent) -> bool {
+@@ -545,6 +150,7 @@
+ }
+ 
+ fn publish(app: &AppHandle, info: BrowserInfo) {
++    tab_commands::publish_tabs(app, &info.task_key);
+     if let Some(sharing) = app.try_state::<crate::browser_sharing::BrowserSharing>() {
+         sharing.page_changed(&info);
+     }
+@@ -608,9 +214,6 @@
+     let url = policy::validate_public_url(&url)?;
+     policy::validate_task_key(&task_key)?;
+     let _operation = state.1.lock().await;
+-    if let Some(old) = state.active_info()? {
+-        close_owned(&app, &state, &old.task_key, &old.label).await?;
+-    }
+     let (id, _, _) = state.reserve(&task_key, url.clone())?;
+     let shared = state.inner().clone();
+     let creation = native::create(&app, shared.clone(), id, bounds, url.to_string()).await;
+@@ -648,9 +251,6 @@
+     })
+     .await?;
+     let _operation = state.1.lock().await;
+-    if let Some(old) = state.active_info()? {
+-        close_owned(&app, &state, &old.task_key, &old.label).await?;
+-    }
+     let (id, _, _) = state.reserve_html(&task_key, document.name, document.storage.clone())?;
+     let shared = state.inner().clone();
+     let creation = native::create_html(
+@@ -687,11 +287,7 @@
+     let id = state.identity(&task_key, &label)?;
+     let url = {
+         let store = state.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        let active = store
+-            .active
+-            .as_ref()
+-            .filter(|a| a.id == id)
+-            .ok_or("网页已关闭")?;
++        let active = store.pages.get(&id).ok_or("网页已关闭")?;
+         if active.preview.is_some() {
+             active
+                 .allowed_url(&url)
+@@ -766,7 +362,7 @@
+         return Err("网页正在关闭".into());
+     }
+     // Presentation only: no navigation revision or permission is changed.
+-    native::set_visible(&app, state.inner().clone(), id, visible, bounds).await
++    tab_commands::set_visibility_owned(&app, &state, id, visible, bounds).await
+ }
+ 
+ #[tauri::command]
+--- a/src-tauri/src/browser_workspace/page_store.rs
++++ b/src-tauri/src/browser_workspace/page_store.rs
+@@ -0,0 +1,483 @@
++use super::*;
++
++impl BrowserWorkspace {
++    pub(super) fn reserve(
++        &self,
++        task: &str,
++        url: Url,
++    ) -> Result<(u64, Option<u64>, BrowserInfo), String> {
++        self.reserve_page(task, url, None, None)
++    }
++
++    pub(super) fn reserve_html(
++        &self,
++        task: &str,
++        name: String,
++        storage: local_html::StoragePartition,
++    ) -> Result<(u64, Option<u64>, BrowserInfo), String> {
++        self.reserve_page(task, storage.origin.clone(), Some(name), Some(storage))
++    }
++
++    pub(super) fn reserve_page(
++        &self,
++        task: &str,
++        url: Url,
++        local_file_name: Option<String>,
++        local_storage: Option<local_html::StoragePartition>,
++    ) -> Result<(u64, Option<u64>, BrowserInfo), String> {
++        policy::validate_task_key(task)?;
++        let mut store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++        if store.shutting_down {
++            return Err("应用页面正在关闭，请重新打开后再试".into());
++        }
++        store.next = store.next.checked_add(1).ok_or("请重开应用后再试")?;
++        let id = store.next;
++        let old = None;
++        let info = BrowserInfo {
++            task_key: task.into(),
++            label: if local_file_name.is_some() {
++                format!("local-html-{id}")
++            } else {
++                format!("public-page-{id}")
++            },
++            url: local_file_name.clone().unwrap_or_else(|| url.to_string()),
++            local_storage_persistent: local_storage
++                .as_ref()
++                .map(|_| native::persistent_html_supported()),
++            local_file_name,
++            preview_mode: None,
++            phase: "loading".into(),
++            revision: 1,
++            error: None,
++        };
++        store.selections.entry(task.into()).or_default();
++        store.pages.insert(
++            id,
++            Active {
++                id,
++                info: info.clone(),
++                origin: url,
++                local_storage,
++                preview: None,
++                navigation: 1,
++                closing: false,
++                withdrawing: false,
++                read_gate: PageReadLease::new(),
++            },
++        );
++        Ok((id, old, info))
++    }
++
++    pub(super) fn info(&self, id: u64) -> Result<BrowserInfo, String> {
++        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++        Ok(store
++            .pages
++            .get(&id)
++            .ok_or("网页已关闭或已更换")?
++            .info
++            .clone())
++    }
++
++    /// Permission requests capture only safe metadata for this exact ready page.
++    pub(crate) fn permission_page(&self, task: &str) -> Result<BrowserInfo, String> {
++        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++        store
++            .pages
++            .values()
++            .find(|page| {
++                store.selected_page(page)
++                    && page.info.task_key == task
++                    && page.info.phase == "ready"
++                    && page.shareable()
++            })
++            .map(|page| page.info.clone())
++            .ok_or_else(|| "请先打开此对话的公开网页".into())
++    }
++
++    pub(super) fn identity(&self, task: &str, label: &str) -> Result<u64, String> {
++        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++        store
++            .pages
++            .values()
++            .find(|page| page.info.task_key == task && page.info.label == label)
++            .map(|page| page.id)
++            .ok_or_else(|| "网页已关闭或已更换，请重新打开".into())
++    }
++
++    pub(super) fn local_storage(
++        &self,
++        task: &str,
++        label: &str,
++    ) -> Result<local_html::StoragePartition, String> {
++        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++        let page = store
++            .pages
++            .values()
++            .find(|page| !page.closing && page.info.task_key == task && page.info.label == label)
++            .ok_or("请先打开要清除存档的本地网页")?;
++        let storage = page
++            .local_storage
++            .clone()
++            .ok_or("请先打开要清除存档的本地网页")?;
++        if store.pages.values().any(|other| {
++            other.id != page.id
++                && other
++                    .local_storage
++                    .as_ref()
++                    .is_some_and(|s| s.identifier == storage.identifier)
++        }) {
++            return Err("此文件还有其他网页标签，请先关闭后再清除存档".into());
++        }
++        Ok(storage)
++    }
++
++    pub(super) fn navigate(&self, id: u64, url: Url) -> Result<BrowserInfo, String> {
++        let mut store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++        let active = store.pages.get_mut(&id).ok_or("网页已关闭或已更换")?;
++        if active.closing {
++            return Err("网页正在关闭，请重试关闭后再打开".into());
++        }
++        if active.preview.is_some() {
++            if active.allowed_url(url.as_str()).is_none() {
++                return Err("此跳转不在已选择的网页范围内".into());
++            }
++        } else if active.info.local_file_name.is_some() {
++            return Err("本地网页不能跳转到网站，请关闭后从网页入口打开".into());
++        }
++        // Only this explicit user command may authorize a different origin.
++        if active.preview.is_none() {
++            active.origin = url.clone();
++        }
++        active.navigation += 1;
++        active.info.revision += 1;
++        active.info.url = url.to_string();
++        active.info.phase = "loading".into();
++        active.info.error = None;
++        Ok(active.info.clone())
++    }
++
++    pub(super) fn is_preview(&self, id: u64) -> bool {
++        self.0
++            .lock()
++            .is_ok_and(|s| s.pages.get(&id).is_some_and(|a| a.preview.is_some()))
++    }
++
++    pub(super) fn can_operate(&self, id: u64, navigation: Option<u64>) -> bool {
++        self.0.lock().ok().is_some_and(|store| {
++            !store.shutting_down
++                && store
++                    .pages
++                    .get(&id)
++                    .is_some_and(|a| !a.closing && navigation.is_none_or(|n| n == a.navigation))
++        })
++    }
++
++    pub(super) fn manual_activity(&self, id: u64) -> Option<(u64, BrowserInfo)> {
++        let mut store = self.0.lock().ok()?;
++        let active = store
++            .pages
++            .get_mut(&id)
++            .filter(|a| !a.closing && a.info.phase == "ready")?;
++        active.navigation = active.navigation.checked_add(1)?;
++        active.info.revision = active.info.revision.checked_add(1)?;
++        Some((active.navigation, active.info.clone()))
++    }
++
++    pub(super) fn navigation(&self, id: u64) -> Result<u64, String> {
++        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++        Ok(store
++            .pages
++            .get(&id)
++            .filter(|a| !a.closing)
++            .ok_or("网页已关闭或正在关闭")?
++            .navigation)
++    }
++
++    pub(super) fn policy(&self, id: u64, text: &str) -> bool {
++        let Ok(store) = self.0.lock() else {
++            return false;
++        };
++        let Some(active) = store.pages.get(&id).filter(|a| !a.closing) else {
++            return false;
++        };
++        if active.preview.is_some() {
++            return active.allowed_url(text).is_some();
++        }
++        if active.info.local_file_name.is_some() {
++            // Only the exact initial in-memory load is admitted. No local path,
++            // subframe or later same-origin navigation acquires a file grant.
++            return active.info.phase == "loading" && text == active.origin.as_str();
++        }
++        policy::validate_public_url(text).is_ok_and(|url| policy::same_origin(&active.origin, &url))
++    }
++
++    // A link is claimed BEFORE native loadRequest; didStart never invents a token.
++    pub(super) fn link_navigation(&self, id: u64, text: &str) -> Option<(u64, BrowserInfo)> {
++        let mut store = self.0.lock().ok()?;
++        let a = store.pages.get_mut(&id).filter(|a| !a.closing)?;
++        if !a.shareable() {
++            return None;
++        }
++        let url = a.allowed_url(text)?;
++        a.navigation = a.navigation.checked_add(1)?;
++        a.info.revision += 1;
++        a.info.url = url.to_string();
++        a.info.phase = "loading".into();
++        a.info.error = None;
++        Some((a.navigation, a.info.clone()))
++    }
++
++    pub(super) fn event(
++        &self,
++        id: u64,
++        navigation: u64,
++        kind: i32,
++        raw_url: &str,
++    ) -> Option<BrowserInfo> {
++        let mut store = self.0.lock().ok()?;
++        let active = store
++            .pages
++            .get_mut(&id)
++            .filter(|a| !a.closing && a.navigation == navigation)?;
++        // Navigation terminal callbacks cannot revive ready/blocked/error states.
++        if matches!(kind, 0..=2) && active.info.phase != "loading" {
++            return None;
++        }
++        match kind {
++            0 => {}
++            1 => {
++                let valid = active.allowed_url(raw_url);
++                if let Some(url) = valid {
++                    if active.shareable() {
++                        active.info.url = url.to_string();
++                    }
++                    active.info.phase = "ready".into();
++                    active.info.error = None;
++                } else {
++                    active.info.phase = "blocked".into();
++                    active.info.error = Some("此页面未获准读取，请输入公开网页地址".into());
++                }
++            }
++            2 | 5 => {
++                active.info.phase = "error".into();
++                active.info.error = Some("网页未能加载，请重新打开后再试".into());
++            }
++            3 => {
++                active.info.phase = "blocked".into();
++                active.info.error =
++                    Some("此跳转未打开；请明确输入公开网页地址。脚本和表单跳转暂不支持".into());
++            }
++            _ => return None,
++        }
++        if active.withdrawing {
++            active.info.error = Some("网页切换尚未确认，请重试或关闭原网页".into());
++        }
++        active.info.revision += 1;
++        Some(active.info.clone())
++    }
++
++    pub(super) fn read_ticket(&self, task: &str, label: &str) -> Result<ReadTicket, String> {
++        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++        let page = store
++            .pages
++            .values()
++            .find(|page| {
++                page.info.task_key == task
++                    && page.info.label == label
++                    && store.selected_page(page)
++                    && page.info.phase == "ready"
++                    && page.shareable()
++            })
++            .ok_or("请等待此对话选中的公开网页加载完成后再读取")?;
++        Ok(ReadTicket {
++            id: page.id,
++            task_key: task.into(),
++            label: label.into(),
++            navigation: page.navigation,
++            selection_revision: store.selections.get(task).ok_or("网页已变化")?.revision,
++        })
++    }
++
++    pub(super) fn complete_read(
++        &self,
++        ticket: &ReadTicket,
++        raw: &str,
++    ) -> Result<PageSnapshot, String> {
++        if raw.len() > 300_000 {
++            return Err("网页返回内容过大".into());
++        }
++        let page: NativeSnapshot = serde_json::from_str(raw).map_err(|_| "未能读取网页内容")?;
++        self.with_read_ticket(ticket, |active| {
++            if page.blocked {
++                return Err("页面含登录输入，已停止读取；请关闭并改用公开网页".into());
++            }
++            let url = active
++                .allowed_url(&page.url)
++                .ok_or("网页已变化，本次读取已取消")?;
++            if page.title.chars().count() > 512 || page.text.chars().count() > 65_536 {
++                return Err("网页返回内容过大".into());
++            }
++            Ok(PageSnapshot {
++                task_key: ticket.task_key.clone(),
++                label: ticket.label.clone(),
++                url: url.to_string(),
++                title: page.title,
++                text: page.text,
++                revision: active.info.revision,
++                observed_at_ms: SystemTime::now()
++                    .duration_since(UNIX_EPOCH)
++                    .unwrap_or_default()
++                    .as_millis()
++                    .min(u64::MAX as u128) as u64,
++            })
++        })
++    }
++
++    pub(super) fn with_read_ticket<T>(
++        &self,
++        ticket: &ReadTicket,
++        action: impl FnOnce(&Active) -> Result<T, String>,
++    ) -> Result<T, String> {
++        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++        let page = store
++            .pages
++            .get(&ticket.id)
++            .filter(|page| {
++                store.selected_page(page)
++                    && page.info.task_key == ticket.task_key
++                    && page.info.label == ticket.label
++                    && page.navigation == ticket.navigation
++                    && page.info.phase == "ready"
++                    && page.shareable()
++                    && store
++                        .selections
++                        .get(&ticket.task_key)
++                        .is_some_and(|s| s.revision == ticket.selection_revision)
++            })
++            .ok_or("网页已变化，本次读取已取消，请重新读取")?;
++        action(page)
++    }
++
++    pub(super) fn close(
++        &self,
++        task: &str,
++        label: &str,
++    ) -> Result<Option<(u64, BrowserInfo)>, String> {
++        let (id, info, gate, preview) = {
++            let mut store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++            let Some(id) = store
++                .pages
++                .values()
++                .find(|p| p.info.task_key == task && p.info.label == label)
++                .map(|p| p.id)
++            else {
++                return Ok(None);
++            };
++            let first = !store.pages[&id].closing;
++            if first
++                && let Some(selected) = store.selections.get_mut(task)
++                && selected.label.as_deref() == Some(label)
++            {
++                selected.revision = selected.revision.checked_add(1).ok_or("请重开应用后再试")?;
++                selected.switching = false;
++            }
++            let page = store.pages.get_mut(&id).ok_or("网页已关闭")?;
++            page.closing = true;
++            page.withdrawing = true;
++            page.info.phase = "loading".into();
++            page.info.revision += 1;
++            page.info.error = None;
++            (
++                id,
++                page.info.clone(),
++                page.read_gate.clone(),
++                page.preview.clone(),
++            )
++        };
++        // Lease -> Store is the read lock order; never revoke while holding Store.
++        gate.revoke();
++        if let Some(preview) = preview {
++            preview.revoke();
++        }
++        Ok(Some((id, info)))
++    }
++
++    pub(super) fn acknowledge_close(&self, id: u64) -> Option<BrowserInfo> {
++        let mut store = self.0.lock().ok()?;
++        if !store.pages.get(&id).is_some_and(|a| a.closing) {
++            return None;
++        }
++        let mut page = store.pages.remove(&id)?;
++        if let Some(selected) = store.selections.get_mut(&page.info.task_key)
++            && selected.label.as_deref() == Some(&page.info.label)
++        {
++            selected.label = None;
++            selected.switching = false;
++        }
++        if store.presented == Some(id) {
++            store.presented = None;
++        }
++        if store.presentation_uncertain == Some(id) {
++            store.presentation_uncertain = None;
++        }
++        page.info.phase = "closed".into();
++        page.info.revision += 1;
++        page.info.error = None;
++        Some(page.info)
++    }
++
++    pub(super) fn close_failed(&self, id: u64) -> Option<BrowserInfo> {
++        let mut store = self.0.lock().ok()?;
++        let page = store.pages.get_mut(&id).filter(|a| a.closing)?;
++        page.info.phase = "error".into();
++        page.info.error = Some("网页关闭未确认，请重试关闭".into());
++        page.info.revision += 1;
++        Some(page.info.clone())
++    }
++
++    #[cfg(test)]
++    pub(super) fn active_info(&self) -> Result<Option<BrowserInfo>, String> {
++        Ok(self
++            .0
++            .lock()
++            .map_err(|_| "网页状态暂时不可用")?
++            .pages
++            .values()
++            .next()
++            .map(|p| p.info.clone()))
++    }
++
++    pub(super) fn begin_shutdown(&self) {
++        let retiring = {
++            let mut store = self.0.lock().unwrap_or_else(|error| error.into_inner());
++            store.shutting_down = true;
++            store
++                .pages
++                .values_mut()
++                .map(|page| {
++                    page.closing = true;
++                    page.withdrawing = true;
++                    page.info.phase = "loading".into();
++                    page.info.revision = page.info.revision.saturating_add(1);
++                    (page.read_gate.clone(), page.preview.clone())
++                })
++                .collect::<Vec<_>>()
++        };
++        for (gate, preview) in retiring {
++            gate.revoke();
++            if let Some(preview) = preview {
++                preview.revoke();
++            }
++        }
++    }
++
++    pub(super) fn acknowledge_shutdown(&self) {
++        let mut store = self.0.lock().unwrap_or_else(|error| error.into_inner());
++        if store.shutting_down {
++            store.pages.clear();
++            store.selections.clear();
++            store.presented = None;
++            store.presentation_uncertain = None;
++        }
++    }
++}
+--- a/src-tauri/src/browser_workspace/tab_commands.rs
++++ b/src-tauri/src/browser_workspace/tab_commands.rs
+@@ -0,0 +1,338 @@
++//! Runtime-only page ownership and explicit selection. Hiding is not selection.
++use super::*;
++use std::future::Future;
++
++#[derive(Clone, Default)]
++pub(super) struct SelectionState {
++    pub(super) label: Option<String>,
++    pub(super) revision: u64,
++    pub(super) switching: bool,
++}
++#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
++#[serde(rename_all = "camelCase")]
++pub struct BrowserSelection {
++    pub label: Option<String>,
++    pub revision: u64,
++}
++#[derive(Clone, Serialize)]
++#[serde(rename_all = "camelCase")]
++pub struct BrowserTabs {
++    pub task_key: String,
++    pub pages: Vec<BrowserInfo>,
++    pub selection: BrowserSelection,
++}
++pub(super) struct SelectionMove {
++    task: String,
++    revision: u64,
++    target: Option<u64>,
++    old: Option<(u64, String, PageReadLease)>,
++}
++impl Store {
++    pub(super) fn selected_page(&self, page: &Active) -> bool {
++        !self.shutting_down
++            && !page.closing
++            && !page.withdrawing
++            && self
++                .selections
++                .get(&page.info.task_key)
++                .is_some_and(|selected| {
++                    !selected.switching && selected.label.as_deref() == Some(&page.info.label)
++                })
++    }
++}
++impl BrowserWorkspace {
++    pub(super) fn tabs(&self, task: &str) -> Result<BrowserTabs, String> {
++        policy::validate_task_key(task)?;
++        let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++        let selected = store.selections.get(task).cloned().unwrap_or_default();
++        Ok(BrowserTabs {
++            task_key: task.into(),
++            pages: store
++                .pages
++                .values()
++                .filter(|p| p.info.task_key == task)
++                .map(|p| p.info.clone())
++                .collect(),
++            selection: BrowserSelection {
++                label: selected.label,
++                revision: selected.revision,
++            },
++        })
++    }
++    pub(super) fn begin_select(
++        &self,
++        task: &str,
++        label: Option<&str>,
++        expected: &BrowserSelection,
++    ) -> Result<Option<SelectionMove>, String> {
++        policy::validate_task_key(task)?;
++        let mut store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++        if store.shutting_down {
++            return Err("应用页面正在关闭，请重新打开后再试".into());
++        }
++        let selected = store.selections.get(task).cloned().unwrap_or_default();
++        if selected.switching
++            || selected.label != expected.label
++            || selected.revision != expected.revision
++        {
++            return Err("网页选择已变化，请查看当前标签后重试".into());
++        }
++        let target = label
++            .map(|label| {
++                store
++                    .pages
++                    .values()
++                    .find(|p| p.info.task_key == task && p.info.label == label && !p.closing)
++                    .map(|p| p.id)
++                    .ok_or_else(|| "要打开的网页标签已变化".to_string())
++            })
++            .transpose()?;
++        let old_id = selected.label.as_ref().and_then(|label| {
++            store
++                .pages
++                .values()
++                .find(|p| p.info.task_key == task && &p.info.label == label)
++                .map(|p| p.id)
++        });
++        if old_id.is_some_and(|id| store.pages[&id].closing) {
++            return Err("原网页正在关闭，请等待确认或重试关闭".into());
++        }
++        if selected.label.as_deref() == label
++            && old_id.is_none_or(|id| {
++                !store.pages[&id].withdrawing && store.presentation_uncertain != Some(id)
++            })
++        {
++            return Ok(None);
++        }
++        let revision = selected.revision.checked_add(1).ok_or("请重开应用后再试")?;
++        store.selections.insert(
++            task.into(),
++            SelectionState {
++                label: selected.label,
++                revision,
++                switching: true,
++            },
++        );
++        let old = old_id.map(|id| {
++            let page = store.pages.get_mut(&id).expect("owned old page");
++            page.withdrawing = true;
++            (id, page.info.label.clone(), page.read_gate.clone())
++        });
++        Ok(Some(SelectionMove {
++            task: task.into(),
++            revision,
++            target,
++            old,
++        }))
++    }
++    fn selection_failed(&self, movement: &SelectionMove) {
++        let Ok(mut store) = self.0.lock() else { return };
++        if let Some(selected) = store.selections.get_mut(&movement.task)
++            && selected.revision == movement.revision
++        {
++            selected.switching = false;
++        }
++        if let Some((id, _, _)) = &movement.old
++            && let Some(page) = store.pages.get_mut(id)
++        {
++            page.info.error = Some("网页切换尚未确认，请重试或关闭原网页".into());
++            page.info.revision = page.info.revision.saturating_add(1);
++        }
++    }
++    fn finish_select(&self, movement: &SelectionMove) -> Result<BrowserTabs, String> {
++        {
++            let mut store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++            if store.shutting_down
++                || !store
++                    .selections
++                    .get(&movement.task)
++                    .is_some_and(|s| s.switching && s.revision == movement.revision)
++            {
++                return Err("网页选择已变化，请重新打开".into());
++            }
++            let label = if let Some(id) = movement.target {
++                let page = store
++                    .pages
++                    .get_mut(&id)
++                    .filter(|p| p.info.task_key == movement.task && !p.closing)
++                    .ok_or("网页已关闭")?;
++                if page.withdrawing {
++                    page.read_gate = PageReadLease::new();
++                }
++                page.withdrawing = false;
++                // Only the selection error is cleared; loading/network errors remain.
++                if page.info.error.as_deref() == Some("网页切换尚未确认，请重试或关闭原网页")
++                {
++                    page.info.error = None;
++                }
++                Some(page.info.label.clone())
++            } else {
++                None
++            };
++            let selected = store
++                .selections
++                .get_mut(&movement.task)
++                .ok_or("网页已变化")?;
++            selected.label = label;
++            selected.switching = false;
++        }
++        self.tabs(&movement.task)
++    }
++    /// Production transaction, with actual stop/hide futures supplied by the IPC
++    /// facade. Controlled tests drive these exact boundaries without a WebView.
++    pub(super) async fn execute_selection<S, SF, H, HF>(
++        &self,
++        movement: SelectionMove,
++        stop: S,
++        hide: H,
++    ) -> Result<BrowserTabs, String>
++    where
++        S: FnOnce(String, String) -> SF,
++        SF: Future<Output = Result<(), String>>,
++        H: FnOnce(u64) -> HF,
++        HF: Future<Output = Result<(), String>>,
++    {
++        let result = async {
++            if let Some((id, label, gate)) = &movement.old {
++                gate.revoke();
++                stop(movement.task.clone(), label.clone()).await?;
++                self.visibility_start(*id, false)?;
++                let hidden = hide(*id).await;
++                self.visibility_finished(*id, false, hidden.is_ok());
++                hidden?;
++            }
++            self.finish_select(&movement)
++        }
++        .await;
++        if result.is_err() {
++            self.selection_failed(&movement);
++        }
++        result
++    }
++    pub(super) fn visibility_start(&self, id: u64, visible: bool) -> Result<(), String> {
++        let mut store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
++        let page = store
++            .pages
++            .get(&id)
++            .filter(|p| !p.closing)
++            .ok_or("网页正在关闭")?;
++        if store.shutting_down {
++            return Err("应用页面正在关闭".into());
++        }
++        if visible
++            && (!store.selected_page(page)
++                || store.presentation_uncertain.is_some()
++                || store.presented.is_some_and(|p| p != id))
++        {
++            return Err("请先确认原网页已隐藏，再显示当前标签".into());
++        }
++        // A different unknown surface must remain the owner of the barrier.
++        if store.presentation_uncertain.is_some_and(|p| p != id) {
++            return Err("原网页显示状态未确认，请先重试隐藏或关闭".into());
++        }
++        store.presentation_uncertain = Some(id);
++        Ok(())
++    }
++    pub(super) fn can_present(&self, id: u64) -> bool {
++        self.0.lock().is_ok_and(|s| {
++            s.presentation_uncertain == Some(id)
++                && s.presented.is_none_or(|p| p == id)
++                && s.pages.get(&id).is_some_and(|p| s.selected_page(p))
++        })
++    }
++    pub(super) fn visibility_finished(&self, id: u64, visible: bool, success: bool) {
++        let Ok(mut store) = self.0.lock() else { return };
++        if store.presentation_uncertain != Some(id) {
++            return;
++        }
++        if success {
++            store.presentation_uncertain = None;
++            if let Some(page) = store.pages.get_mut(&id)
++                && page.info.error.as_deref() == Some("网页显示状态未确认，请重试隐藏或关闭")
++            {
++                page.info.error = None;
++                page.info.revision = page.info.revision.saturating_add(1);
++            }
++            if visible {
++                store.presented = Some(id);
++            } else if store.presented == Some(id) {
++                store.presented = None;
++            }
++        } else if let Some(page) = store.pages.get_mut(&id) {
++            page.info.error = Some("网页显示状态未确认，请重试隐藏或关闭".into());
++            page.info.revision = page.info.revision.saturating_add(1);
++        }
++    }
++}
++
++pub(super) fn publish_tabs(app: &AppHandle, task: &str) {
++    let _ = app.emit_to(
++        EventTarget::webview("main"),
++        "browser-workspace:tabs-changed",
++        serde_json::json!({"taskKey": task}),
++    );
++}
++#[tauri::command]
++pub(crate) fn browser_workspace_tabs(
++    webview: Webview,
++    state: State<'_, BrowserWorkspace>,
++    task_key: String,
++) -> Result<BrowserTabs, String> {
++    require_main(&webview)?;
++    state.tabs(&task_key)
++}
++#[tauri::command]
++pub(crate) async fn browser_workspace_select(
++    webview: Webview,
++    app: AppHandle,
++    state: State<'_, BrowserWorkspace>,
++    task_key: String,
++    label: Option<String>,
++    expected_selected: BrowserSelection,
++) -> Result<BrowserTabs, String> {
++    require_main(&webview)?;
++    let _operation = state.1.lock().await;
++    let Some(movement) = state.begin_select(&task_key, label.as_deref(), &expected_selected)?
++    else {
++        return state.tabs(&task_key);
++    };
++    publish_tabs(&app, &task_key);
++    let stop_app = app.clone();
++    let result = state
++        .execute_selection(
++            movement,
++            |task, label| async move {
++                if let Some(sharing) =
++                    stop_app.try_state::<crate::browser_sharing::BrowserSharing>()
++                {
++                    sharing.stop_page(&task, &label).await
++                } else {
++                    Ok(())
++                }
++            },
++            |id| native::set_visible(&app, state.inner().clone(), id, false, None),
++        )
++        .await;
++    if let Ok(tabs) = state.tabs(&task_key) {
++        for page in tabs.pages {
++            publish(&app, page);
++        }
++    }
++    publish_tabs(&app, &task_key);
++    result
++}
++pub(super) async fn set_visibility_owned(
++    app: &AppHandle,
++    state: &BrowserWorkspace,
++    id: u64,
++    visible: bool,
++    bounds: Option<Bounds>,
++) -> Result<(), String> {
++    state.visibility_start(id, visible)?;
++    let result = native::set_visible(app, state.clone(), id, visible, bounds).await;
++    state.visibility_finished(id, visible, result.is_ok());
++    if let Ok(info) = state.info(id) {
++        publish(app, info);
++    }
++    result
++}
+--- a/src-tauri/src/browser_workspace/tab_tests.rs
++++ b/src-tauri/src/browser_workspace/tab_tests.rs
+@@ -0,0 +1,367 @@
++use super::*;
++
++#[test]
++fn second_page_reservation_keeps_first_page_owned() {
++    let state = BrowserWorkspace::default();
++    let (first, _, first_info) = state
++        .reserve("task-a", Url::parse("https://example.com/a").unwrap())
++        .unwrap();
++    let (second, _, second_info) = state
++        .reserve("task-a", Url::parse("https://example.com/b").unwrap())
++        .expect("a second page must be reserved without closing its sibling");
++    assert_ne!(first, second);
++    assert_eq!(state.info(first).unwrap().label, first_info.label);
++    assert_eq!(state.info(second).unwrap().label, second_info.label);
++}
++
++/// Old fixtures now explicitly select their first hidden page. Even here the
++/// production transaction runs; no stop/hide may occur without an old page.
++pub(super) fn select_initial(state: &BrowserWorkspace, task: &str, label: &str) {
++    let expected = state.tabs(task).unwrap().selection;
++    assert!(expected.label.is_none());
++    let movement = state
++        .begin_select(task, Some(label), &expected)
++        .unwrap()
++        .unwrap();
++    futures_lite::future::block_on(state.execute_selection(
++        movement,
++        |_, _| async { panic!("initial selection has no retiring grant") },
++        |_| async { panic!("initial selection has no visible page") },
++    ))
++    .unwrap();
++}
++
++fn page(state: &BrowserWorkspace, task: &str, path: &str) -> (u64, BrowserInfo) {
++    let url = format!("https://example.com/{path}");
++    let (id, _, _) = state.reserve(task, Url::parse(&url).unwrap()).unwrap();
++    (id, state.event(id, 1, 1, &url).unwrap())
++}
++
++async fn select(state: &BrowserWorkspace, task: &str, label: Option<&str>) {
++    let expected = state.tabs(task).unwrap().selection;
++    if let Some(movement) = state.begin_select(task, label, &expected).unwrap() {
++        state
++            .execute_selection(movement, |_, _| async { Ok(()) }, |_| async { Ok(()) })
++            .await
++            .unwrap();
++    }
++}
++
++fn runtime() -> tokio::runtime::Runtime {
++    tokio::runtime::Builder::new_current_thread()
++        .enable_time()
++        .build()
++        .unwrap()
++}
++
++#[test]
++fn selection_waits_for_stop_and_hide_ack_without_changing_navigation() {
++    runtime().block_on(async {
++        let state = BrowserWorkspace::default();
++        let (a, first) = page(&state, "task", "a");
++        let (_, second) = page(&state, "task", "b");
++        select_initial(&state, "task", &first.label);
++        state.visibility_start(a, true).unwrap();
++        assert!(state.can_present(a));
++        state.visibility_finished(a, true, true);
++        let manual = state.manual_read_scope("task", &first.label).unwrap();
++        let granted = state
++            .capture_read_scope("task", &first.label, first.revision, PageReadLease::new())
++            .unwrap();
++        let original = state.tabs("task").unwrap().selection;
++        let movement = state
++            .begin_select("task", Some(&second.label), &original)
++            .unwrap()
++            .unwrap();
++        assert!(!manual.is_valid());
++        assert!(!granted.is_valid());
++        assert_eq!(state.navigation(a).unwrap(), 1);
++        let (stopped_tx, stopped_rx) = tokio::sync::oneshot::channel();
++        let (hidden_tx, hidden_rx) = tokio::sync::oneshot::channel();
++        let (stop_started_tx, stop_started_rx) = tokio::sync::oneshot::channel();
++        let (hide_started_tx, mut hide_started_rx) = tokio::sync::oneshot::channel();
++        let worker_state = state.clone();
++        let owner = first.label.clone();
++        let pending = tokio::spawn(async move {
++            worker_state
++                .execute_selection(
++                    movement,
++                    |task, label| async move {
++                        assert_eq!((task.as_str(), label.as_str()), ("task", owner.as_str()));
++                        stop_started_tx.send(()).unwrap();
++                        stopped_rx.await.unwrap()
++                    },
++                    |id| async move {
++                        assert_eq!(id, a);
++                        hide_started_tx.send(()).unwrap();
++                        hidden_rx.await.unwrap()
++                    },
++                )
++                .await
++        });
++        stop_started_rx.await.unwrap();
++        assert!(matches!(
++            hide_started_rx.try_recv(),
++            Err(tokio::sync::oneshot::error::TryRecvError::Empty)
++        ));
++        assert_eq!(
++            state.tabs("task").unwrap().selection.label.as_deref(),
++            Some(first.label.as_str())
++        );
++        assert!(state.read_ticket("task", &second.label).is_err());
++        assert!(state.visibility_start(a, true).is_err());
++        stopped_tx.send(Ok(())).unwrap();
++        hide_started_rx.await.unwrap();
++        assert_eq!(
++            state.tabs("task").unwrap().selection.label.as_deref(),
++            Some(first.label.as_str())
++        );
++        hidden_tx.send(Ok(())).unwrap();
++        let selected = pending.await.unwrap().unwrap();
++        assert_eq!(
++            selected.selection.label.as_deref(),
++            Some(second.label.as_str())
++        );
++        assert_eq!(selected.selection.revision, original.revision + 1);
++        assert_eq!(state.navigation(a).unwrap(), 1);
++        assert!(
++            state.0.lock().unwrap().presented.is_none(),
++            "select never shows a page"
++        );
++        assert!(
++            state.visibility_start(a, true).is_err(),
++            "late old-label show is rejected"
++        );
++        assert!(!manual.is_valid());
++    });
++}
++
++#[test]
++fn stop_failure_keeps_owner_and_revoked_scope_until_explicit_retry() {
++    runtime().block_on(async {
++        let state = BrowserWorkspace::default();
++        let (a, first) = page(&state, "task", "a");
++        let (_, second) = page(&state, "task", "b");
++        select_initial(&state, "task", &first.label);
++        let old = state.manual_read_scope("task", &first.label).unwrap();
++        let original = state.tabs("task").unwrap().selection;
++        let movement = state
++            .begin_select("task", Some(&second.label), &original)
++            .unwrap()
++            .unwrap();
++        let result = state
++            .execute_selection(
++                movement,
++                |_, _| async { Err("stop was not acknowledged".into()) },
++                |_| async { panic!("hide must wait for stop ACK") },
++            )
++            .await;
++        assert!(result.is_err());
++        assert_eq!(state.tabs("task").unwrap().pages.len(), 2);
++        assert_eq!(state.tabs("task").unwrap().selection.label, original.label);
++        assert!(
++            state
++                .info(a)
++                .unwrap()
++                .error
++                .unwrap()
++                .contains("切换尚未确认")
++        );
++        assert!(state.visibility_start(a, true).is_err());
++        assert!(!old.is_valid());
++        select(&state, "task", Some(&second.label)).await;
++        select(&state, "task", Some(&first.label)).await;
++        assert!(!old.is_valid(), "A-B-A never restores an old page gate");
++        assert!(
++            state
++                .manual_read_scope("task", &first.label)
++                .unwrap()
++                .is_valid()
++        );
++        assert!(
++            state
++                .begin_select("task", Some(&second.label), &original)
++                .is_err(),
++            "old selection serial cannot replay after A-B-A"
++        );
++        let writes = std::cell::Cell::new(0);
++        assert!(
++            old.with_valid(|| {
++                writes.set(writes.get() + 1);
++                Ok(())
++            })
++            .is_err()
++        );
++        assert_eq!(writes.get(), 0);
++    });
++}
++
++#[test]
++fn hide_failure_retains_global_barrier_and_failed_owner_without_a_page_cap() {
++    runtime().block_on(async {
++        let state = BrowserWorkspace::default();
++        let (a, first) = page(&state, "task", "a");
++        let (_, second) = page(&state, "task", "b");
++        let (c, third) = page(&state, "other", "c");
++        select_initial(&state, "task", &first.label);
++        select_initial(&state, "other", &third.label);
++        let original = state.tabs("task").unwrap().selection;
++        let movement = state
++            .begin_select("task", Some(&second.label), &original)
++            .unwrap()
++            .unwrap();
++        assert!(
++            state
++                .execute_selection(
++                    movement,
++                    |_, _| async { Ok(()) },
++                    |_| async { Err("hide timeout".into()) }
++                )
++                .await
++                .is_err()
++        );
++        let (d, _) = page(&state, "other", "d");
++        assert_eq!(
++            state.0.lock().unwrap().pages.len(),
++            4,
++            "validation examples are not a product cap"
++        );
++        assert!(state.visibility_start(c, true).is_err());
++        assert!(
++            state.visibility_start(d, false).is_err(),
++            "another owner cannot clear the unknown surface"
++        );
++        assert!(state.visibility_start(a, true).is_err());
++        state.close("task", &first.label).unwrap();
++        state.close_failed(a).unwrap();
++        assert_eq!(state.tabs("task").unwrap().pages.len(), 2);
++        assert!(state.visibility_start(c, true).is_err());
++        assert!(state.acknowledge_close(d).is_none());
++        assert!(state.info(a).is_ok());
++        state.acknowledge_close(a).unwrap();
++        state.visibility_start(c, true).unwrap();
++        assert!(state.can_present(c));
++        state.visibility_finished(c, true, true);
++        assert!(state.info(d).is_ok());
++    });
++}
++
++#[test]
++fn hiding_same_selected_page_retains_scopes_and_selection_across_tasks() {
++    let state = BrowserWorkspace::default();
++    let (a, first) = page(&state, "one", "a");
++    let (b, second) = page(&state, "two", "b");
++    select_initial(&state, "one", &first.label);
++    select_initial(&state, "two", &second.label);
++    let before = state.tabs("one").unwrap().selection;
++    let manual = state.manual_read_scope("one", &first.label).unwrap();
++    let grant = state
++        .capture_read_scope("one", &first.label, first.revision, PageReadLease::new())
++        .unwrap();
++    state.visibility_start(a, true).unwrap();
++    state.visibility_finished(a, true, true);
++    assert!(state.visibility_start(b, true).is_err());
++    state.visibility_start(a, false).unwrap();
++    state.visibility_finished(a, false, true);
++    state.visibility_start(b, true).unwrap();
++    state.visibility_finished(b, true, true);
++    assert!(manual.is_valid());
++    assert!(grant.is_valid());
++    assert_eq!(state.tabs("one").unwrap().selection, before);
++    assert_eq!(state.navigation(a).unwrap(), 1);
++    assert!(
++        state
++            .begin_select(
++                "two",
++                Some(&first.label),
++                &state.tabs("two").unwrap().selection
++            )
++            .is_err()
++    );
++}
++
++#[test]
++fn loading_sibling_finishes_without_stealing_selection_or_reviving_old_reads() {
++    runtime().block_on(async {
++        let state = BrowserWorkspace::default();
++        let (a, first) = page(&state, "task", "a");
++        let (_, second) = page(&state, "task", "b");
++        select_initial(&state, "task", &first.label);
++        let old = state.manual_read_scope("task", &first.label).unwrap();
++        state
++            .navigate(a, Url::parse("https://example.com/next").unwrap())
++            .unwrap();
++        select(&state, "task", Some(&second.label)).await;
++        assert_eq!(
++            state
++                .event(a, 2, 1, "https://example.com/next")
++                .unwrap()
++                .phase,
++            "ready"
++        );
++        assert_eq!(
++            state.tabs("task").unwrap().selection.label.as_deref(),
++            Some(second.label.as_str())
++        );
++        select(&state, "task", Some(&first.label)).await;
++        assert!(!old.is_valid());
++        assert!(
++            state
++                .manual_read_scope("task", &first.label)
++                .unwrap()
++                .is_valid()
++        );
++    });
++}
++
++#[test]
++fn shutdown_keeps_every_owner_until_native_ack_and_refuses_late_creation() {
++    let state = BrowserWorkspace::default();
++    let (a, first) = page(&state, "one", "a");
++    let (b, second) = page(&state, "two", "b");
++    let (c, _) = state
++        .reserve("one", Url::parse("https://example.com/creating").unwrap())
++        .map(|(id, _, info)| (id, info))
++        .unwrap();
++    select_initial(&state, "one", &first.label);
++    select_initial(&state, "two", &second.label);
++    let one = state.manual_read_scope("one", &first.label).unwrap();
++    let two = state.manual_read_scope("two", &second.label).unwrap();
++    state.begin_shutdown();
++    for id in [a, b, c] {
++        assert!(state.info(id).is_ok());
++        assert!(!state.can_operate(id, Some(1)));
++        assert!(state.event(id, 1, 1, "https://example.com/").is_none());
++    }
++    assert!(!one.is_valid());
++    assert!(!two.is_valid());
++    assert!(
++        state
++            .reserve("three", Url::parse("https://example.com/").unwrap())
++            .is_err()
++    );
++    state.acknowledge_shutdown();
++    assert!(state.tabs("one").unwrap().pages.is_empty());
++    assert!(state.tabs("two").unwrap().pages.is_empty());
++    assert!(state.acknowledge_close(a).is_none());
++}
++
++#[test]
++fn clearing_storage_refuses_a_sibling_in_the_same_partition_until_close_ack() {
++    let state = BrowserWorkspace::default();
++    let storage = local_html::StoragePartition {
++        identifier: "bb96ceef-5927-8d53-b974-c5ad6f7a1108".into(),
++        origin: Url::parse("https://file-one.invalid/").unwrap(),
++    };
++    let (_, _, first) = state
++        .reserve_html("one", "game.html".into(), storage.clone())
++        .unwrap();
++    let (other, _, second) = state
++        .reserve_html("one", "game.html".into(), storage)
++        .unwrap();
++    assert!(state.local_storage("one", &first.label).is_err());
++    state.close("one", &second.label).unwrap();
++    assert!(state.local_storage("one", &first.label).is_err());
++    state.acknowledge_close(other).unwrap();
++    assert!(state.local_storage("one", &first.label).is_ok());
++}
+--- a/src-tauri/src/browser_workspace/page_read.rs
++++ b/src-tauri/src/browser_workspace/page_read.rs
+@@ -41,7 +41,9 @@
+ pub(crate) struct FixedPageReadScope {
+     workspace: BrowserWorkspace,
+     ticket: ReadTicket,
+-    // Only the private manual constructor omits a lease.
++    // Every captured scope retains the page gate, including manual reads.
++    page_gate: PageReadLease,
++    // Only the private manual constructor omits a grant lease.
+     lease: Option<PageReadLease>,
+     expected_url: Option<String>,
+     pub(super) observation: Arc<Mutex<Option<super::browser_tools::Observation>>>,
+@@ -58,13 +60,14 @@
+         expected_revision: u64,
+         lease: PageReadLease,
+     ) -> Result<FixedPageReadScope, String> {
+-        let (ticket, expected_url) = {
++        let (ticket, expected_url, page_gate) = {
+             let store = self.0.lock().map_err(|_| "网页状态暂时不可用")?;
+             let active = store
+-                .active
+-                .as_ref()
++                .pages
++                .values()
++                .find(|page| page.info.task_key == task && page.info.label == label)
+                 .filter(|active| {
+-                    !store.shutting_down
++                    store.selected_page(active)
+                         && active.info.task_key == task
+                         && active.info.label == label
+                         && active.info.revision == expected_revision
+@@ -79,13 +82,16 @@
+                     task_key: active.info.task_key.clone(),
+                     label: active.info.label.clone(),
+                     navigation: active.navigation,
++                    selection_revision: store.selections.get(task).ok_or("网页已变化")?.revision,
+                 },
+                 active.info.url.clone(),
++                active.read_gate.clone(),
+             )
+         };
+         let scope = FixedPageReadScope {
+             workspace: self.clone(),
+             ticket,
++            page_gate,
+             lease: Some(lease),
+             expected_url: Some(expected_url),
+             observation: Arc::new(Mutex::new(None)),
+@@ -100,9 +106,20 @@
+         task: &str,
+         label: &str,
+     ) -> Result<FixedPageReadScope, String> {
++        let ticket = self.read_ticket(task, label)?;
++        let page_gate = self
++            .0
++            .lock()
++            .map_err(|_| "网页状态暂时不可用")?
++            .pages
++            .get(&ticket.id)
++            .ok_or("网页已关闭")?
++            .read_gate
++            .clone();
+         Ok(FixedPageReadScope {
+             workspace: self.clone(),
+-            ticket: self.read_ticket(task, label)?,
++            ticket,
++            page_gate,
+             lease: None,
+             expected_url: None,
+             observation: Arc::new(Mutex::new(None)),
+@@ -127,10 +144,10 @@
+             Some(lease) => lease.with_live(action),
+             None => action(),
+         };
+-        match &self.lease {
++        self.page_gate.with_live(|| match &self.lease {
+             Some(lease) => lease.with_live(with_action),
+             None => with_action(),
+-        }
++        })
+     }
+ 
+     // Called inside the actual main-thread closure, immediately around ff_browser_read.
+@@ -184,11 +201,12 @@
+ 
+     pub(crate) fn grant_is_valid(&self) -> bool {
+         let action = || self.workspace.with_read_ticket(&self.ticket, |_| Ok(()));
+-        match &self.lease {
+-            Some(lease) => lease.with_live(action),
+-            None => action(),
+-        }
+-        .is_ok()
++        self.page_gate
++            .with_live(|| match &self.lease {
++                Some(lease) => lease.with_live(action),
++                None => action(),
++            })
++            .is_ok()
+     }
+ 
+     pub(crate) fn cancel_action(&self) {
+--- a/src-tauri/src/browser_workspace/page_read_tests.rs
++++ b/src-tauri/src/browser_workspace/page_read_tests.rs
+@@ -9,6 +9,7 @@
+         .unwrap();
+     state.event(id, 1, 1, "https://example.com/").unwrap();
+     let info = state.info(id).unwrap();
++    crate::browser_workspace::tab_tests::select_initial(&state, "task-a", &info.label);
+     (state, id, info)
+ }
+ 
+@@ -177,6 +178,7 @@
+         .reserve("task-a", Url::parse("https://example.com/").unwrap())
+         .unwrap();
+     state.event(new_id, 1, 1, "https://example.com/").unwrap();
++    crate::browser_workspace::tab_tests::select_initial(&state, "task-a", &new_info.label);
+     assert_ne!(info.label, new_info.label);
+     assert!(!current.is_valid());
+     assert!(scope(&state, &state.info(new_id).unwrap()).1.is_valid());
+--- a/src-tauri/src/browser_workspace/preview_commands.rs
++++ b/src-tauri/src/browser_workspace/preview_commands.rs
+@@ -1,7 +1,7 @@
+ //! The main view selects an explicit local source. A project path is never an
+ //! ambient WebKit filesystem permission, and a server is never auto-discovered.
+ use super::{
+-    Bounds, BrowserInfo, BrowserWorkspace, close_owned,
++    Bounds, BrowserInfo, BrowserWorkspace,
+     local_html::StoragePartition,
+     local_preview::{DevServerOrigin, DirectoryPreview},
+     native, policy, publish, require_main,
+@@ -80,9 +80,6 @@
+     .await
+     .map_err(|_| "网页资源无法读取")??;
+     let _operation = state.1.lock().await;
+-    if let Some(old) = state.active_info()? {
+-        close_owned(&app, &state, &old.task_key, &old.label).await?;
+-    }
+     let (id, _, _) = state.reserve(
+         &task_key,
+         Url::parse("https://preview.invalid/").expect("fixed temporary URL"),
+@@ -95,11 +92,7 @@
+     .map_err(|_| "网页入口无效")?;
+     {
+         let mut store = state.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        let active = store
+-            .active
+-            .as_mut()
+-            .filter(|a| a.id == id)
+-            .ok_or("网页已关闭")?;
++        let active = store.pages.get_mut(&id).ok_or("网页已关闭")?;
+         active.origin = origin.clone();
+         active.local_storage = Some(StoragePartition {
+             identifier: preview.storage_identifier().into(),
+@@ -139,17 +132,10 @@
+     policy::validate_task_key(&task_key)?;
+     let origin = DevServerOrigin::select(Path::new(&project_directory), &url)?;
+     let _operation = state.1.lock().await;
+-    if let Some(old) = state.active_info()? {
+-        close_owned(&app, &state, &old.task_key, &old.label).await?;
+-    }
+     let (id, _, _) = state.reserve(&task_key, origin.start_url().clone())?;
+     {
+         let mut store = state.0.lock().map_err(|_| "网页状态暂时不可用")?;
+-        let active = store
+-            .active
+-            .as_mut()
+-            .filter(|a| a.id == id)
+-            .ok_or("网页已关闭")?;
++        let active = store.pages.get_mut(&id).ok_or("网页已关闭")?;
+         active.local_storage = None;
+         active.preview = Some(PreviewSource::Development(origin.clone()));
+         active.info.preview_mode = Some("development".into());
+--- a/src-tauri/src/browser_workspace/native.rs
++++ b/src-tauri/src/browser_workspace/native.rs
+@@ -604,6 +604,7 @@
+             height: 0.0,
+         });
+         if state.can_operate(id, None)
++            && (!visible || state.can_present(id))
+             && unsafe { ff_browser_set_visible(id, visible, x, y, width, height) }
+         {
+             Ok(())
+--- a/src-tauri/src/browser_workspace/windows/mod.rs
++++ b/src-tauri/src/browser_workspace/windows/mod.rs
+@@ -366,6 +366,12 @@
+                                     let result = (|| -> Result<(), String> {
+                                         result.map_err(|_| "网页视图未能创建")?;
+                                         let controller = controller.ok_or("网页视图未能创建")?;
++                                        if unsafe { controller.SetIsVisible(false) }.is_err() {
++                                            unsafe {
++                                                let _ = controller.Close();
++                                            }
++                                            return Err("无法隐藏新网页".into());
++                                        }
+                                         if done_reply
+                                             .borrow()
+                                             .as_ref()
+@@ -390,7 +396,7 @@
+                                             _temporary: temporary,
+                                             closed: Cell::new(false),
+                                             close_complete: Cell::new(false),
+-                                            visible: Cell::new(true),
++                                            visible: Cell::new(false),
+                                             loading: Cell::new(true),
+                                             navigation: Cell::new(1),
+                                             requested: RefCell::new(None),
+@@ -505,7 +511,7 @@
+     bounds: Option<Bounds>,
+ ) -> Result<(), String> {
+     main(app, move || {
+-        if !state.can_operate(id, None) {
++        if !state.can_operate(id, None) || (visible && !state.can_present(id)) {
+             return Err("网页已关闭".into());
+         }
+         let view = lookup(id)?;
+--- a/src-tauri/src/browser_workspace/tests.rs
++++ b/src-tauri/src/browser_workspace/tests.rs
+@@ -6,6 +6,7 @@
+         .reserve(task, Url::parse("https://www.rust-lang.org/").unwrap())
+         .unwrap();
+     state.event(id, 1, 1, "https://www.rust-lang.org/").unwrap();
++    super::tab_tests::select_initial(&state, task, &info.label);
+     (id, info)
+ }
+ fn result() -> &'static str {
+@@ -114,13 +115,13 @@
+     );
+ }
+ #[test]
+-fn replacement_cannot_discard_owner_before_close_ack() {
++fn new_page_does_not_discard_another_tasks_owner() {
+     let state = BrowserWorkspace::default();
+     let (id, _) = ready(&state, "a");
+     assert!(
+         state
+             .reserve("b", Url::parse("https://www.mozilla.org/").unwrap())
+-            .is_err()
++            .is_ok()
+     );
+     assert_eq!(state.info(id).unwrap().task_key, "a");
+ }
+@@ -140,7 +141,7 @@
+ }
+ 
+ #[test]
+-fn failed_close_ack_blocks_replacement_and_is_retryable() {
++fn failed_close_ack_retains_owner_while_new_pages_are_reserved() {
+     let state = BrowserWorkspace::default();
+     let (id, info) = ready(&state, "a");
+     let ticket = state.read_ticket("a", &info.label).unwrap();
+@@ -152,7 +153,7 @@
+     assert!(
+         state
+             .reserve("b", Url::parse("https://www.mozilla.org/").unwrap())
+-            .is_err()
++            .is_ok()
+     );
+     assert!(state.close("a", &info.label).unwrap().is_some());
+     assert_eq!(state.acknowledge_close(id).unwrap().phase, "closed");
+@@ -346,15 +347,11 @@
+ ) -> (FixedPageReadScope, FixedPageReadScope) {
+     let workspace = BrowserWorkspace::default();
+     let (id, _) = ready(&workspace, task);
+-    workspace
+-        .0
+-        .lock()
+-        .unwrap()
+-        .active
+-        .as_mut()
+-        .unwrap()
+-        .info
+-        .label = label.into();
++    {
++        let mut store = workspace.0.lock().unwrap();
++        store.pages.get_mut(&id).unwrap().info.label = label.into();
++        store.selections.get_mut(task).unwrap().label = Some(label.into());
++    }
+     let revision = workspace.info(id).unwrap().revision;
+     let one = workspace
+         .capture_read_scope(task, label, revision, PageReadLease::new())
+@@ -423,6 +420,7 @@
+         task_key: "a".into(),
+         label: initial.label.clone(),
+         navigation: 1,
++        selection_revision: 0,
+     };
+     assert!(state.with_read_ticket(&forged_ticket, |_| Ok(())).is_err());
+     assert!(state.can_operate(id, None), "hide/show remains available");
+@@ -430,13 +428,13 @@
+     assert!(
+         state
+             .reserve_html("b", "new.html".into(), html_storage("b"))
+-            .is_err()
++            .is_ok()
+     );
+     state.close_failed(id);
+     assert!(
+         state
+             .reserve_html("b", "new.html".into(), html_storage("b"))
+-            .is_err()
++            .is_ok()
+     );
+     state.close("a", &initial.label).unwrap();
+     state.acknowledge_close(id);
+--- a/src-tauri/native/BrowserWorkspace.m
++++ b/src-tauri/native/BrowserWorkspace.m
+@@ -411,6 +411,8 @@
+     browser.parent = parent;
+     browser.localHTML = storageIdentifier != nil && !browser.preview;
+     browser.view = [[WKWebView alloc] initWithFrame:NSZeroRect configuration:configuration];
++    // Creation never presents a page. Explicit selected-page show owns visibility.
++    browser.view.hidden = YES;
+     browser.view.navigationDelegate = browser;
+     browser.view.UIDelegate = browser;
+     browser.context = context;
+--- a/src-tauri/src/lib.rs
++++ b/src-tauri/src/lib.rs
+@@ -200,6 +200,8 @@
+                 browser_sharing::browser_share_allow,
+                 browser_sharing::browser_share_respond,
+                 browser_sharing::browser_share_stop,
++                browser_workspace::tab_commands::browser_workspace_tabs,
++                browser_workspace::tab_commands::browser_workspace_select,
+                 browser_workspace::browser_workspace_open,
+                 browser_workspace::browser_workspace_open_html,
+                 browser_workspace::preview_commands::browser_workspace_open_directory,

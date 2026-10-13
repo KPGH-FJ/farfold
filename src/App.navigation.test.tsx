@@ -1048,7 +1048,54 @@ it("keeps a pending layout action and then follows the repaired history key", as
   }
 });
 
-it("parks only the page-owning conversation across task switches and keeps exact ownership", () => {
+it("retains every page-owning task while each exact task can release only itself", () => {
+  const pages = () =>
+    render()
+      .filter(
+        (node) =>
+          typeof node.type === "function" && node.type.name === "ThreadPage",
+      )
+      .map((node) => node.props);
+  const open = (key: string) =>
+    call("ConversationLibrary", "onOpen", {
+      id: key,
+      agentId: key === "old-A" ? "A" : "B",
+      cwd: `/${key}`,
+      nativeSessionId: key,
+    });
+  h.threads.set("test-C", {
+    ...h.threads.get("test-B")!,
+    key: "test-C",
+    cwd: "/test-C",
+    nativeSessionId: "test-C",
+  });
+  open("old-A");
+  const notify = component("ThreadPage").onBrowserOwnersChange as (
+    key: string,
+    owns: boolean,
+  ) => void;
+  notify("old-A", true);
+  call("Sidebar", "onLibrary", { kind: "all" });
+  expect(pages()).toMatchObject([{ viewKey: "old-A", active: false }]);
+  open("test-B");
+  call("ThreadPage", "onBrowserOwnersChange", "test-B", true);
+  open("test-C");
+  expect(pages()).toMatchObject([
+    { viewKey: "old-A", active: false },
+    { viewKey: "test-B", active: false },
+    { viewKey: "test-C", active: true },
+  ]);
+  notify("old-A", false);
+  expect(pages().map((page) => page.viewKey)).toEqual(["test-B", "test-C"]);
+  // A late callback cannot newly retain an already departed inactive task.
+  notify("old-A", true);
+  expect(pages().map((page) => page.viewKey)).toEqual(["test-B", "test-C"]);
+  notify("test-B", false);
+  expect(pages().map((page) => page.viewKey)).toEqual(["test-C"]);
+  expect(h.open).not.toHaveBeenCalled();
+});
+
+it("keeps retained browser route slots in the same order across both task directions", () => {
   const pages = () =>
     render()
       .filter(
@@ -1064,67 +1111,26 @@ it("parks only the page-owning conversation across task switches and keeps exact
       nativeSessionId: key,
     });
   open("old-A");
-  const notifyA = component("ThreadPage").onBrowserStateChange as (
+  const notify = component("ThreadPage").onBrowserOwnersChange as (
     key: string,
-    state: unknown,
+    owns: boolean,
   ) => void;
-  notifyA("old-A", {
-    taskKey: "old-A",
-    label: "page-a",
-    phase: "ready",
-    revision: 1,
-    url: "https://example.com/",
-  });
-  call("Sidebar", "onLibrary", { kind: "state", value: "attention" });
-  expect(pages()).toMatchObject([{ viewKey: "old-A", active: false }]);
+  notify("old-A", true);
   open("test-B");
-  expect(pages()).toMatchObject([
-    { viewKey: "test-B", active: true },
-    { viewKey: "old-A", active: false },
-  ]);
-  // A task with no page cannot clear the parked owner's identity.
-  call("ThreadPage", "onBrowserStateChange", "test-B", null);
-  expect(pages()).toHaveLength(2);
-  open("old-A");
-  expect(pages()).toMatchObject([{ viewKey: "old-A", active: true }]);
+  notify("test-B", true);
+  const ownedOrder = pages().map((page) => page.viewKey);
+  for (const key of ["old-A", "test-B", "old-A"]) {
+    open(key);
+    expect(pages().map((page) => page.viewKey)).toEqual(ownedOrder);
+    expect(pages().find((page) => page.active)?.viewKey).toBe(key);
+  }
+  // Removing one owner's last page must preserve the remaining owner's slot;
+  // a subsequently opened page is appended without moving that retained owner.
+  notify("old-A", false);
+  expect(pages()[0].viewKey).toBe("test-B");
+  notify("old-A", true);
   open("test-B");
-  call("ThreadPage", "onBrowserStateChange", "test-B", {
-    taskKey: "test-B",
-    label: "page-b",
-    phase: "ready",
-    revision: 1,
-    url: "https://example.org/",
-  });
-  // An old close/loading callback cannot release or replace the new page.
-  notifyA("old-A", {
-    taskKey: "old-A",
-    label: "page-a",
-    phase: "closed",
-    revision: 2,
-    url: "https://example.com/",
-  });
-  notifyA("old-A", {
-    taskKey: "old-A",
-    label: "page-a",
-    phase: "loading",
-    revision: 1,
-    url: "https://example.com/",
-  });
-  expect(pages()).toMatchObject([{ viewKey: "test-B", active: true }]);
-  open("old-A");
-  expect(pages()).toMatchObject([
-    { viewKey: "old-A", active: true },
-    { viewKey: "test-B", active: false },
-  ]);
-  notifyA("test-B", {
-    taskKey: "test-B",
-    label: "page-b",
-    phase: "closed",
-    revision: 2,
-    url: "https://example.org/",
-  });
-  expect(pages()).toMatchObject([{ viewKey: "old-A", active: true }]);
-  expect(h.open).not.toHaveBeenCalled();
+  expect(pages().map((page) => page.viewKey)).toEqual(["test-B", "old-A"]);
 });
 
 it("keeps the prepared new draft reachable without starting or indexing it", () => {
@@ -1155,13 +1161,7 @@ it("keeps the prepared new draft reachable without starting or indexing it", () 
 
 it("keeps the same page key through first-message admission and waits only for native hide", async () => {
   call("EmptyState", "onPreparedKey", "prepared-A");
-  call("ThreadPage", "onBrowserStateChange", "prepared-A", {
-    taskKey: "prepared-A",
-    label: "draft-page",
-    phase: "ready",
-    revision: 1,
-    url: "https://example.com/",
-  });
+  call("ThreadPage", "onBrowserOwnersChange", "prepared-A", true);
   const pageRoutes = () =>
     render().filter((node) => node.type === "div" && node.key === "prepared-A");
   const close = vi.fn(async () => {});
@@ -1196,21 +1196,10 @@ it("keeps the same page key through first-message admission and waits only for n
 
 it("ignores an old prepared draft's page callback after a new draft became current", () => {
   call("EmptyState", "onPreparedKey", "draft-A");
-  const stale = component("ThreadPage").onBrowserStateChange as Function;
+  const stale = component("ThreadPage").onBrowserOwnersChange as Function;
   call("EmptyState", "onPreparedKey", "draft-B");
-  call("ThreadPage", "onBrowserStateChange", "draft-B", {
-    taskKey: "draft-B",
-    label: "page-b",
-    phase: "ready",
-    revision: 1,
-    url: "https://example.com/",
-  });
-  stale("draft-A", {
-    taskKey: "draft-A",
-    label: "page-a",
-    phase: "loading",
-    revision: 1,
-  });
+  call("ThreadPage", "onBrowserOwnersChange", "draft-B", true);
+  stale("draft-A", true);
   expect(
     render()
       .filter(

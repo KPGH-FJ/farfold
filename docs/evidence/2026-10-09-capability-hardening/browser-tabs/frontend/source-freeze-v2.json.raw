@@ -1,0 +1,156 @@
+{
+  "observedAtUtc": "2026-10-13T21:25:32.983271+00:00",
+  "baseCommitReportedByRoot": "a45112856a44c4a16f83ebdd079ab6d5c4876907",
+  "previousFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze.json",
+    "bytes": 4027,
+    "sha256": "f3d9c987d0d8a80495337c4d5e95366f1520d816d922d420abbbafd3561f3477"
+  },
+  "files": [
+    {
+      "path": "src/runtime/browser_tabs.ts",
+      "bytes": 13221,
+      "sha256": "7c00e8a03b57eb46f4105d749a74871e61c527f0485bb20998f29dbb373dc602",
+      "lines": 392
+    },
+    {
+      "path": "src/runtime/browser_tabs.test.ts",
+      "bytes": 19933,
+      "sha256": "9e82603e2d5f9123c67f27719479ebe3f35a8b88d0482ba0ae1d56391be85e69",
+      "lines": 572
+    },
+    {
+      "path": "src/runtime/browser_workspace.ts",
+      "bytes": 14716,
+      "sha256": "c039667dfc532cb72a7255d7b06045ab41cf3adc6ef1a13c2ff0bbb5dfde460e",
+      "lines": 476
+    },
+    {
+      "path": "src/runtime/browser_workspace.test.ts",
+      "bytes": 21701,
+      "sha256": "8171a98b14a40ceaa68564ac3a1dd8e6dfb4df3e3ffbf2286cac90bdaec878f9",
+      "lines": 587
+    },
+    {
+      "path": "src/runtime/browser_surface.ts",
+      "bytes": 1536,
+      "sha256": "85c78767262cbea94a047925a5eb6ee8585d9453fe57987d216215c62fb65ade",
+      "lines": 46
+    },
+    {
+      "path": "src/runtime/browser_workspace_strings.ts",
+      "bytes": 4674,
+      "sha256": "f729602c01e64a92129f5e5e4bd1414586ff1a793b2d0f6b271e777f085c737e",
+      "lines": 89
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tsx",
+      "bytes": 7771,
+      "sha256": "fb818167d2edae7744e44a1ad70610d3aebf1a410eb5776c1d76684728f8f704",
+      "lines": 225
+    },
+    {
+      "path": "src/components/BrowserWorkspacePage.tsx",
+      "bytes": 42454,
+      "sha256": "e2fc0c119e9ee5ffc281dce13d803ddb29f1c9e3924620f12ee1d3c6740b1ae8",
+      "lines": 1310
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tabs.test.tsx",
+      "bytes": 1244,
+      "sha256": "4c4ba561051e59e2a8fe9e27306d13daea211c2d24e383570f6e5b63e00b7cb2",
+      "lines": 34
+    },
+    {
+      "path": "src/components/BrowserWorkspace.test.tsx",
+      "bytes": 46932,
+      "sha256": "b5cedeb8ebf8d018a7c835f4692f40be7c497467d3f796172aa7955c992038bb",
+      "lines": 1462
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "bytes": 21232,
+      "sha256": "c1ebc570aa7d671a48fb003bd63e1aa6317652d489c0e9a17b36e02b8f8da680",
+      "lines": 641
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "bytes": 52082,
+      "sha256": "3e3228c1bb8ef33561330b0da386a4ccbde81f2cb972b6f58def4dde6df0e929",
+      "lines": 1403
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "bytes": 20383,
+      "sha256": "9c0047eea46b3c94a83e6c8efc63edf4c29ca3420a7eb0bdca3a72bbd8050e93",
+      "lines": 607
+    },
+    {
+      "path": "src/App.tsx",
+      "bytes": 46453,
+      "sha256": "437bb0195d243cb8276eaaaeedbdbe9fe7ac65615d331a642eae2a89127d5a76",
+      "lines": 1292
+    },
+    {
+      "path": "src/App.navigation.test.tsx",
+      "bytes": 43264,
+      "sha256": "99f3278329b7cb3453c5873e58cf1ab103e278ce31915bab67e8ddca9604434d",
+      "lines": 1225
+    },
+    {
+      "path": "src/browser-workspace.css",
+      "bytes": 7782,
+      "sha256": "0eb0e2d4dc6882560a7dfb3ab27791b51094b5c7820589a970da14aaed6d3e12",
+      "lines": 421
+    }
+  ],
+  "changedFiles": [
+    {
+      "before": {
+        "path": "src/runtime/browser_tabs.ts",
+        "bytes": 12813,
+        "sha256": "3fa5427eb5fd670c3b6c5d2de59b5c5b3bb07da857e75a29efb45fe78c1d947d",
+        "lines": 386
+      },
+      "after": {
+        "path": "src/runtime/browser_tabs.ts",
+        "bytes": 13221,
+        "sha256": "7c00e8a03b57eb46f4105d749a74871e61c527f0485bb20998f29dbb373dc602",
+        "lines": 392
+      }
+    },
+    {
+      "before": {
+        "path": "src/runtime/browser_tabs.test.ts",
+        "bytes": 17713,
+        "sha256": "411a48fbc289bd88627e266c87b0b406e1499ad32500651a173a75c67a06536f",
+        "lines": 506
+      },
+      "after": {
+        "path": "src/runtime/browser_tabs.test.ts",
+        "bytes": 19933,
+        "sha256": "9e82603e2d5f9123c67f27719479ebe3f35a8b88d0482ba0ae1d56391be85e69",
+        "lines": 572
+      }
+    }
+  ],
+  "other14ByteExact": true,
+  "checks": [
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/targeted-v2.completed.json",
+      "bytes": 1150,
+      "sha256": "d9d221674c03fab1d5e3897b6178d4ff489397dc2ab9d4294c3465e04f9fb57d"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/typecheck-v2.completed.json",
+      "bytes": 678,
+      "sha256": "713bed4565c90c05d88dd692b6b97402119c53c6b6666a773f328b3fda2c4d47"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/format-check-v2.completed.json",
+      "bytes": 785,
+      "sha256": "5fa1f0a396ee90417759be49d3b46af69ba4044f2b049859d3c966412f416c14"
+    }
+  ],
+  "stabilityScope": "Final freeze after the v2 targeted checks. Other14 verified equal to v1. No separate pre-run byte manifest for the two v2 changed files; root browser/full engineering will pin this freeze."
+}

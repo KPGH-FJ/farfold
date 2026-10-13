@@ -1,0 +1,11 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/browser_tabs.test.ts (19 tests | 1 failed | 18 skipped) 5ms
+   × finishes the explicit selection while hidden without stranding its busy state 4ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 18 skipped (19)
+   Start at  05:14:30
+   Duration  101ms (transform 31ms, setup 0ms, import 39ms, tests 5ms, environment 0ms)
+

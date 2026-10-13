@@ -1,0 +1,53 @@
+{
+  "previousSummary": {
+    "path": "output/2026-10-14-browser-tabs-frontend/summary.json",
+    "bytes": 13035,
+    "sha256": "e4bae5f584b278217c391ab4d60ea9fc47f050b3665a2596dcd83773b4a581a4"
+  },
+  "sourceFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v2.json",
+    "bytes": 5092,
+    "sha256": "ac769fb970af141ae56ab03e77b159de651ef76511f1b1ec658d0f63120cecbb"
+  },
+  "change": "Selected-page close ACK while hidden previously removed its tab but left selected pointing at deleted id. Preserve real red for last-page and sibling-page cases. Close now commits a valid successor locally and keeps transition locked through explicit successor selection ACK even when hidden; it never shows while hidden. Later explicit choice after the transaction wins.",
+  "final": {
+    "testFiles": 10,
+    "testsPassed": 235,
+    "typecheckActualExitCode": 0,
+    "changedFilesFormatActualExitCode": 0,
+    "other14ByteExact": true
+  },
+  "receipts": [
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/hidden-close-red.completed.json",
+      "bytes": 803,
+      "sha256": "7f1d127bb7a173e6826fa106a33af2d3d4c20b95e560320c34305aabcefd7e78",
+      "actualExitCode": 1
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/format-v2.completed.json",
+      "bytes": 773,
+      "sha256": "986f6980183f9719b8adcb9880d0bf954cecf9296bbfe4825389500e8943a979",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/targeted-v2.completed.json",
+      "bytes": 1150,
+      "sha256": "d9d221674c03fab1d5e3897b6178d4ff489397dc2ab9d4294c3465e04f9fb57d",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/typecheck-v2.completed.json",
+      "bytes": 678,
+      "sha256": "713bed4565c90c05d88dd692b6b97402119c53c6b6666a773f328b3fda2c4d47",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/format-check-v2.completed.json",
+      "bytes": 785,
+      "sha256": "5fa1f0a396ee90417759be49d3b46af69ba4044f2b049859d3c966412f416c14",
+      "actualExitCode": 0
+    }
+  ],
+  "remainingScope": "No fullApp/native/Agent/Windows proof added; runtime-only, restart metadata recovery still pending. Old v1 red/green/freeze unchanged."
+}

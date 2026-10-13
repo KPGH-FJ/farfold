@@ -1,0 +1,650 @@
+{
+  "schema": 1,
+  "records": [
+    {
+      "source": {
+        "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/stdout.log",
+        "bytes": 908891,
+        "sha256": "5942efb8490fa92876d3a88a02c7644254790e3b24ccea39dd7bc611c2cf326d"
+      },
+      "line": 1805,
+      "sourceByteOffset": 244380,
+      "lineBytes": 6459,
+      "lineSha256": "33c17122e68246a32d1c52809ce42e7ddc8d49517baabe67c3f65318d34a335d",
+      "observation": {
+        "afterSpawn": {
+          "phase": "after-spawn",
+          "observedAtNsFromBeforeSpawn": 2084125,
+          "clockAnchor": {
+            "instantBeforeNs": 2084625,
+            "unixNs": 1791932282234736000,
+            "instantAfterNs": 2085708
+          },
+          "initialMarkers": {
+            "trap": {
+              "clockBefore": {
+                "instantBeforeNs": 14375,
+                "unixNs": 1791932282232666000,
+                "instantAfterNs": 17375
+              },
+              "body": {
+                "readOk": true,
+                "bytes": 0,
+                "expectedContent": false
+              },
+              "modifiedUnixNs": 1791932282232520495,
+              "clockAfter": {
+                "instantBeforeNs": 40083,
+                "unixNs": 1791932282232691000,
+                "instantAfterNs": 41417
+              }
+            },
+            "printf": {
+              "clockBefore": {
+                "instantBeforeNs": 53167,
+                "unixNs": 1791932282232704000,
+                "instantAfterNs": 54250
+              },
+              "body": {
+                "readOk": true,
+                "bytes": 0,
+                "expectedContent": false
+              },
+              "modifiedUnixNs": 1791932282232575494,
+              "clockAfter": {
+                "instantBeforeNs": 71833,
+                "unixNs": 1791932282232723000,
+                "instantAfterNs": 73042
+              }
+            }
+          },
+          "trapMarker": {
+            "clockBefore": {
+              "instantBeforeNs": 2102667,
+              "unixNs": 1791932282234754000,
+              "instantAfterNs": 2103875
+            },
+            "body": {
+              "readOk": true,
+              "bytes": 0,
+              "expectedContent": false
+            },
+            "modifiedUnixNs": 1791932282232520495,
+            "clockAfter": {
+              "instantBeforeNs": 2120625,
+              "unixNs": 1791932282234772000,
+              "instantAfterNs": 2121708
+            }
+          },
+          "printfMarker": {
+            "clockBefore": {
+              "instantBeforeNs": 2132500,
+              "unixNs": 1791932282234784000,
+              "instantAfterNs": 2133625
+            },
+            "body": {
+              "readOk": true,
+              "bytes": 0,
+              "expectedContent": false
+            },
+            "modifiedUnixNs": 1791932282232575494,
+            "clockAfter": {
+              "instantBeforeNs": 2150000,
+              "unixNs": 1791932282234801000,
+              "instantAfterNs": 2151042
+            }
+          },
+          "markerSampleCount": 1,
+          "lastEmptyTrapObservation": {
+            "clockBefore": {
+              "instantBeforeNs": 1976667,
+              "unixNs": 1791932282234628000,
+              "instantAfterNs": 1979333
+            },
+            "body": {
+              "readOk": true,
+              "bytes": 0,
+              "expectedContent": false
+            },
+            "modifiedUnixNs": 1791932282232520495,
+            "clockAfter": {
+              "instantBeforeNs": 2001125,
+              "unixNs": 1791932282234652000,
+              "instantAfterNs": 2002208
+            }
+          },
+          "firstNonemptyTrapObservation": null,
+          "lastEmptyPrintfObservation": {
+            "clockBefore": {
+              "instantBeforeNs": 2006042,
+              "unixNs": 1791932282234657000,
+              "instantAfterNs": 2007208
+            },
+            "body": {
+              "readOk": true,
+              "bytes": 0,
+              "expectedContent": false
+            },
+            "modifiedUnixNs": 1791932282232575494,
+            "clockAfter": {
+              "instantBeforeNs": 2024833,
+              "unixNs": 1791932282234676000,
+              "instantAfterNs": 2025958
+            }
+          },
+          "firstNonemptyPrintfObservation": null,
+          "readEvents": [
+            {
+              "phase": "reader-enter",
+              "observedAtNsFromBeforeSpawn": 2009917,
+              "stop": false,
+              "count": null,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            },
+            {
+              "phase": "read-start",
+              "observedAtNsFromBeforeSpawn": 2061083,
+              "stop": false,
+              "count": null,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            }
+          ],
+          "frames": [],
+          "trace": ""
+        },
+        "readyWaitStartedNsFromBeforeSpawn": 2188542,
+        "readyWaitReturnedNsFromBeforeSpawn": 1222085167,
+        "originalReadyState": "timeout-returned-ready",
+        "afterOriginalWait": {
+          "phase": "after-original-wait",
+          "observedAtNsFromBeforeSpawn": 1222316083,
+          "clockAnchor": {
+            "instantBeforeNs": 1222317583,
+            "unixNs": 1791932283454950000,
+            "instantAfterNs": 1222321375
+          },
+          "initialMarkers": {
+            "trap": {
+              "clockBefore": {
+                "instantBeforeNs": 14375,
+                "unixNs": 1791932282232666000,
+                "instantAfterNs": 17375
+              },
+              "body": {
+                "readOk": true,
+                "bytes": 0,
+                "expectedContent": false
+              },
+              "modifiedUnixNs": 1791932282232520495,
+              "clockAfter": {
+                "instantBeforeNs": 40083,
+                "unixNs": 1791932282232691000,
+                "instantAfterNs": 41417
+              }
+            },
+            "printf": {
+              "clockBefore": {
+                "instantBeforeNs": 53167,
+                "unixNs": 1791932282232704000,
+                "instantAfterNs": 54250
+              },
+              "body": {
+                "readOk": true,
+                "bytes": 0,
+                "expectedContent": false
+              },
+              "modifiedUnixNs": 1791932282232575494,
+              "clockAfter": {
+                "instantBeforeNs": 71833,
+                "unixNs": 1791932282232723000,
+                "instantAfterNs": 73042
+              }
+            }
+          },
+          "trapMarker": {
+            "clockBefore": {
+              "instantBeforeNs": 1222372458,
+              "unixNs": 1791932283455005000,
+              "instantAfterNs": 1222375875
+            },
+            "body": {
+              "readOk": true,
+              "bytes": 15,
+              "expectedContent": true
+            },
+            "modifiedUnixNs": 1791932283454447670,
+            "clockAfter": {
+              "instantBeforeNs": 1222425208,
+              "unixNs": 1791932283455058000,
+              "instantAfterNs": 1222428458
+            }
+          },
+          "printfMarker": {
+            "clockBefore": {
+              "instantBeforeNs": 1222463875,
+              "unixNs": 1791932283455097000,
+              "instantAfterNs": 1222467250
+            },
+            "body": {
+              "readOk": true,
+              "bytes": 21,
+              "expectedContent": true
+            },
+            "modifiedUnixNs": 1791932283454634042,
+            "clockAfter": {
+              "instantBeforeNs": 1222515083,
+              "unixNs": 1791932283455148000,
+              "instantAfterNs": 1222518292
+            }
+          },
+          "markerSampleCount": 96,
+          "lastEmptyTrapObservation": {
+            "clockBefore": {
+              "instantBeforeNs": 1213712167,
+              "unixNs": 1791932283446346000,
+              "instantAfterNs": 1213734875
+            },
+            "body": {
+              "readOk": true,
+              "bytes": 0,
+              "expectedContent": false
+            },
+            "modifiedUnixNs": 1791932282232520495,
+            "clockAfter": {
+              "instantBeforeNs": 1213878250,
+              "unixNs": 1791932283446511000,
+              "instantAfterNs": 1213893417
+            }
+          },
+          "firstNonemptyTrapObservation": {
+            "clockBefore": {
+              "instantBeforeNs": 1222085625,
+              "unixNs": 1791932283454719000,
+              "instantAfterNs": 1222102708
+            },
+            "body": {
+              "readOk": true,
+              "bytes": 15,
+              "expectedContent": true
+            },
+            "modifiedUnixNs": 1791932283454447670,
+            "clockAfter": {
+              "instantBeforeNs": 1222167208,
+              "unixNs": 1791932283454800000,
+              "instantAfterNs": 1222171708
+            }
+          },
+          "lastEmptyPrintfObservation": {
+            "clockBefore": {
+              "instantBeforeNs": 1213918125,
+              "unixNs": 1791932283446551000,
+              "instantAfterNs": 1213924875
+            },
+            "body": {
+              "readOk": true,
+              "bytes": 0,
+              "expectedContent": false
+            },
+            "modifiedUnixNs": 1791932282232575494,
+            "clockAfter": {
+              "instantBeforeNs": 1214026208,
+              "unixNs": 1791932283446659000,
+              "instantAfterNs": 1214033042
+            }
+          },
+          "firstNonemptyPrintfObservation": {
+            "clockBefore": {
+              "instantBeforeNs": 1222184333,
+              "unixNs": 1791932283454817000,
+              "instantAfterNs": 1222187750
+            },
+            "body": {
+              "readOk": true,
+              "bytes": 21,
+              "expectedContent": true
+            },
+            "modifiedUnixNs": 1791932283454634042,
+            "clockAfter": {
+              "instantBeforeNs": 1222238292,
+              "unixNs": 1791932283454871000,
+              "instantAfterNs": 1222241625
+            }
+          },
+          "readEvents": [
+            {
+              "phase": "reader-enter",
+              "observedAtNsFromBeforeSpawn": 2009917,
+              "stop": false,
+              "count": null,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            },
+            {
+              "phase": "read-start",
+              "observedAtNsFromBeforeSpawn": 2061083,
+              "stop": false,
+              "count": null,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            },
+            {
+              "phase": "read-return",
+              "observedAtNsFromBeforeSpawn": 1221913708,
+              "stop": false,
+              "count": 29,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            },
+            {
+              "phase": "sink-start",
+              "observedAtNsFromBeforeSpawn": 1221946917,
+              "stop": false,
+              "count": null,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            },
+            {
+              "phase": "sink-return",
+              "observedAtNsFromBeforeSpawn": 1222060458,
+              "stop": false,
+              "count": null,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            },
+            {
+              "phase": "read-start",
+              "observedAtNsFromBeforeSpawn": 1222073750,
+              "stop": false,
+              "count": null,
+              "errorKind": null,
+              "rawOsError": null,
+              "zeroReadMeaning": null
+            }
+          ],
+          "frames": [
+            {
+              "receivedAtNsFromBeforeSpawn": 1221985125,
+              "kind": "data",
+              "frame": {
+                "id": "pty-1791932282234-1",
+                "data": "Zml4dHVyZS1jb25maWd1cmF0aW9uLXJlYWR5DQo="
+              }
+            }
+          ],
+          "trace": "fixture-configuration-ready\r\n"
+        },
+        "originalVerdict": "passed"
+      }
+    },
+    {
+      "source": {
+        "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/stdout.log",
+        "bytes": 908891,
+        "sha256": "5942efb8490fa92876d3a88a02c7644254790e3b24ccea39dd7bc611c2cf326d"
+      },
+      "line": 1806,
+      "sourceByteOffset": 250839,
+      "lineBytes": 4315,
+      "lineSha256": "9d5b54f83ee6cda8d399dc36b17b9996293bac204eb813fe2a1e7dc65143f7ad",
+      "observation": {
+        "phase": "after-original-success-cleanup",
+        "observedAtNsFromBeforeSpawn": 3365251250,
+        "clockAnchor": {
+          "instantBeforeNs": 3365251750,
+          "unixNs": 1791932285597852000,
+          "instantAfterNs": 3365254333
+        },
+        "initialMarkers": {
+          "trap": {
+            "clockBefore": {
+              "instantBeforeNs": 14375,
+              "unixNs": 1791932282232666000,
+              "instantAfterNs": 17375
+            },
+            "body": {
+              "readOk": true,
+              "bytes": 0,
+              "expectedContent": false
+            },
+            "modifiedUnixNs": 1791932282232520495,
+            "clockAfter": {
+              "instantBeforeNs": 40083,
+              "unixNs": 1791932282232691000,
+              "instantAfterNs": 41417
+            }
+          },
+          "printf": {
+            "clockBefore": {
+              "instantBeforeNs": 53167,
+              "unixNs": 1791932282232704000,
+              "instantAfterNs": 54250
+            },
+            "body": {
+              "readOk": true,
+              "bytes": 0,
+              "expectedContent": false
+            },
+            "modifiedUnixNs": 1791932282232575494,
+            "clockAfter": {
+              "instantBeforeNs": 71833,
+              "unixNs": 1791932282232723000,
+              "instantAfterNs": 73042
+            }
+          }
+        },
+        "trapMarker": {
+          "clockBefore": {
+            "instantBeforeNs": 3365273375,
+            "unixNs": 1791932285597874000,
+            "instantAfterNs": 3365274500
+          },
+          "body": {
+            "readOk": true,
+            "bytes": 15,
+            "expectedContent": true
+          },
+          "modifiedUnixNs": 1791932283454447670,
+          "clockAfter": {
+            "instantBeforeNs": 3365319083,
+            "unixNs": 1791932285597920000,
+            "instantAfterNs": 3365320333
+          }
+        },
+        "printfMarker": {
+          "clockBefore": {
+            "instantBeforeNs": 3365332167,
+            "unixNs": 1791932285597933000,
+            "instantAfterNs": 3365333292
+          },
+          "body": {
+            "readOk": true,
+            "bytes": 21,
+            "expectedContent": true
+          },
+          "modifiedUnixNs": 1791932283454634042,
+          "clockAfter": {
+            "instantBeforeNs": 3365360708,
+            "unixNs": 1791932285597961000,
+            "instantAfterNs": 3365361833
+          }
+        },
+        "markerSampleCount": 96,
+        "lastEmptyTrapObservation": {
+          "clockBefore": {
+            "instantBeforeNs": 1213712167,
+            "unixNs": 1791932283446346000,
+            "instantAfterNs": 1213734875
+          },
+          "body": {
+            "readOk": true,
+            "bytes": 0,
+            "expectedContent": false
+          },
+          "modifiedUnixNs": 1791932282232520495,
+          "clockAfter": {
+            "instantBeforeNs": 1213878250,
+            "unixNs": 1791932283446511000,
+            "instantAfterNs": 1213893417
+          }
+        },
+        "firstNonemptyTrapObservation": {
+          "clockBefore": {
+            "instantBeforeNs": 1222085625,
+            "unixNs": 1791932283454719000,
+            "instantAfterNs": 1222102708
+          },
+          "body": {
+            "readOk": true,
+            "bytes": 15,
+            "expectedContent": true
+          },
+          "modifiedUnixNs": 1791932283454447670,
+          "clockAfter": {
+            "instantBeforeNs": 1222167208,
+            "unixNs": 1791932283454800000,
+            "instantAfterNs": 1222171708
+          }
+        },
+        "lastEmptyPrintfObservation": {
+          "clockBefore": {
+            "instantBeforeNs": 1213918125,
+            "unixNs": 1791932283446551000,
+            "instantAfterNs": 1213924875
+          },
+          "body": {
+            "readOk": true,
+            "bytes": 0,
+            "expectedContent": false
+          },
+          "modifiedUnixNs": 1791932282232575494,
+          "clockAfter": {
+            "instantBeforeNs": 1214026208,
+            "unixNs": 1791932283446659000,
+            "instantAfterNs": 1214033042
+          }
+        },
+        "firstNonemptyPrintfObservation": {
+          "clockBefore": {
+            "instantBeforeNs": 1222184333,
+            "unixNs": 1791932283454817000,
+            "instantAfterNs": 1222187750
+          },
+          "body": {
+            "readOk": true,
+            "bytes": 21,
+            "expectedContent": true
+          },
+          "modifiedUnixNs": 1791932283454634042,
+          "clockAfter": {
+            "instantBeforeNs": 1222238292,
+            "unixNs": 1791932283454871000,
+            "instantAfterNs": 1222241625
+          }
+        },
+        "readEvents": [
+          {
+            "phase": "reader-enter",
+            "observedAtNsFromBeforeSpawn": 2009917,
+            "stop": false,
+            "count": null,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          },
+          {
+            "phase": "read-start",
+            "observedAtNsFromBeforeSpawn": 2061083,
+            "stop": false,
+            "count": null,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          },
+          {
+            "phase": "read-return",
+            "observedAtNsFromBeforeSpawn": 1221913708,
+            "stop": false,
+            "count": 29,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          },
+          {
+            "phase": "sink-start",
+            "observedAtNsFromBeforeSpawn": 1221946917,
+            "stop": false,
+            "count": null,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          },
+          {
+            "phase": "sink-return",
+            "observedAtNsFromBeforeSpawn": 1222060458,
+            "stop": false,
+            "count": null,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          },
+          {
+            "phase": "read-start",
+            "observedAtNsFromBeforeSpawn": 1222073750,
+            "stop": false,
+            "count": null,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          },
+          {
+            "phase": "read-return",
+            "observedAtNsFromBeforeSpawn": 3264926708,
+            "stop": true,
+            "count": 0,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": "EOF-or-mapped-EIO"
+          },
+          {
+            "phase": "reader-exit",
+            "observedAtNsFromBeforeSpawn": 3264934750,
+            "stop": true,
+            "count": null,
+            "errorKind": null,
+            "rawOsError": null,
+            "zeroReadMeaning": null
+          }
+        ],
+        "frames": [
+          {
+            "receivedAtNsFromBeforeSpawn": 1221985125,
+            "kind": "data",
+            "frame": {
+              "id": "pty-1791932282234-1",
+              "data": "Zml4dHVyZS1jb25maWd1cmF0aW9uLXJlYWR5DQo="
+            }
+          },
+          {
+            "receivedAtNsFromBeforeSpawn": 3365019875,
+            "kind": "exit",
+            "frame": {
+              "id": "pty-1791932282234-1",
+              "exit": 1
+            }
+          }
+        ],
+        "trace": "fixture-configuration-ready\r\n{\"id\":\"pty-1791932282234-1\",\"exit\":1}"
+      }
+    }
+  ],
+  "boundary": "Parsed copies of two actual diagnostic JSON lines; source raw logs remain unchanged."
+}

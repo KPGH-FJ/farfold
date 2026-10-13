@@ -1,0 +1,109 @@
+{
+  "scope": "Production full-App dev StrictMode with controlled Tauri and authored iframe page proxies; no native WebView/App/Agent/Windows run. Final source17+14.",
+  "supersedesScopeOf": {
+    "path": "output/2026-10-14-browser-tabs-browser/root-verification.json",
+    "bytes": 4336,
+    "sha256": "cc31deb9e9eb31d2d13b17c240e9b42d1be9517250f8b314abf364e48accae89"
+  },
+  "historicalFailures": [
+    "chromium-run1.json (incorrect driver navigation expectation)",
+    "chromium-run5.json (true B close counterexample)",
+    "chromium-run6.json (adjacent RAF fix insufficient)",
+    "chromium-run7.json (true failure with origin stack)"
+  ],
+  "historicalGreenLimitation": "Prior Chromium run4 and WebKit run3 138 passes omitted reverse B ownership preservation. Original results retained.",
+  "runs": [
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/chromium-run8.json",
+      "bytes": 976008,
+      "sha256": "cc35833f2f89f402adb4dbf493a30c2c5f2bb3ecc9e7ac1969bd9466f2568d5c",
+      "actualExitCode": 0,
+      "completionChunk": "04773f",
+      "completedCommand": {
+        "run": "chromium-run8",
+        "path": "output/2026-10-14-browser-tabs-browser/transcript-final/chromium-run8-16485.jsonl.raw",
+        "sourceLine": 16485,
+        "exitCode": 0,
+        "bytes": 1972,
+        "sha256": "8a00c4a68f3a1fedcc2b9534ccddf7d8cf5c762780fb06b6c333f646405419ad"
+      },
+      "checks": 141,
+      "scenarios": 13,
+      "inputs": 1109,
+      "allAssertionsPassed": true,
+      "inputsStable": true,
+      "screenshots": [
+        {
+          "path": "output/2026-10-14-browser-tabs-browser/chromium-run8-three-pages.png",
+          "bytes": 87679,
+          "sha256": "b3fe355c6fbba1fe0b863a9d1f03944027ea6adceec496745a54ac44fc1c77ff"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-browser/chromium-run8-narrow-pages.png",
+          "bytes": 73960,
+          "sha256": "f739c51542b2be43da56f6cd82348af92866f59c8dc1e4ad2926bbaa1180a23e"
+        }
+      ]
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/webkit-run4.json",
+      "bytes": 976694,
+      "sha256": "427afed5d514d4ce50ff05670d42199f3083aa3046bb31cfc02cbeca72463937",
+      "actualExitCode": 0,
+      "completionChunk": "34c933",
+      "completedCommand": {
+        "run": "webkit-run4",
+        "path": "output/2026-10-14-browser-tabs-browser/transcript-final/webkit-run4-16488.jsonl.raw",
+        "sourceLine": 16488,
+        "exitCode": 0,
+        "bytes": 894,
+        "sha256": "b5626e36de986438f5987557ad195d1f4e9749ad2f9a4f6b1e3faf318d4b6301"
+      },
+      "checks": 141,
+      "scenarios": 13,
+      "inputs": 1109,
+      "allAssertionsPassed": true,
+      "inputsStable": true,
+      "screenshots": [
+        {
+          "path": "output/2026-10-14-browser-tabs-browser/webkit-run4-three-pages.png",
+          "bytes": 194909,
+          "sha256": "72503ac3842db137d44b5c5d07145944eab20e21ffffc7202b3859d630337779"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-browser/webkit-run4-narrow-pages.png",
+          "bytes": 143333,
+          "sha256": "e0b18fe4f945efdd323bf2cc4e75ea276d70add0f3882b041ec5d3bbdb246922"
+        }
+      ]
+    }
+  ],
+  "beforeAfterMapsIdentical": true,
+  "allInputsCurrentlyMatched": true,
+  "noPageErrorsOrExternalRequests": true,
+  "sourceFix": "Stable owner route ordering avoids observed StrictMode effect replay. Independently tested obsolete presentation callbacks also protected. Actual unmount/close/permissions unchanged.",
+  "visualReview": {
+    "rootViewedAll4": true,
+    "wide": "Three ordinary tabs and selected B visible; page intentionally at scroll350 so viewport shows authored spacer",
+    "narrow": "Tabs, add/close icons, controls and authored B heading/input/counter visible; pointer hit and bounds assertions pass",
+    "noVisibleNumericA11yLabels": true
+  },
+  "diagnosticsRemoved": {
+    "path": "output/2026-10-14-browser-tabs-browser/diagnostic-cleanup.json",
+    "bytes": 590,
+    "sha256": "7df8d36d0573d2f27c6c5d2cd99098f111e55620a1b787d70b30347aaafe9f2f"
+  },
+  "serverStopped": {
+    "path": "output/2026-10-14-browser-tabs-browser/server-stopped-2.json",
+    "bytes": 455,
+    "sha256": "6f8e73afa34e56efbc080998e72aa80f9de54b4ac584d7ba5e009d673cd7da97"
+  },
+  "notClaimed": [
+    "Native page retention",
+    "Persistent restart recovery",
+    "Real Agent sharing/queued approval",
+    "Windows hardware",
+    "P30 complete",
+    "NEW24 complete"
+  ]
+}

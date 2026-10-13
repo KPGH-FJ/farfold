@@ -75,6 +75,7 @@ export function ThreadPage({
   navToggle,
   defaultCwd,
   onBrowserStateChange,
+  onBrowserOwnersChange,
   draftComposerRef,
   searchRequest,
   attachmentSearchRequest,
@@ -83,6 +84,7 @@ export function ThreadPage({
   searchRequest?: LoadedSearchRequest | null;
   attachmentSearchRequest?: AttachmentSearchRequest | null;
   draftComposerRef?: React.Ref<HTMLDivElement>;
+  onBrowserOwnersChange?: (taskKey: string, ownsPages: boolean) => void;
   onBrowserStateChange?: (
     taskKey: string,
     page: BrowserWorkspaceState | null,
@@ -110,8 +112,11 @@ export function ThreadPage({
   useEffect(() => {
     // A discarded empty draft no longer needs a retained render slot. Its
     // native close still belongs to the existing guard, including retries.
-    if (!thread) onBrowserStateChange?.(viewKey, null);
-  }, [thread, viewKey, onBrowserStateChange]);
+    if (!thread) {
+      onBrowserStateChange?.(viewKey, null);
+      onBrowserOwnersChange?.(viewKey, false);
+    }
+  }, [thread, viewKey, onBrowserStateChange, onBrowserOwnersChange]);
   useVisibleConversation(
     active && thread ? viewKey : null,
     canMarkConversationRead(thread),
@@ -328,6 +333,7 @@ export function ThreadPage({
             header={header}
             artifactReturnFocusRef={artifactReturnFocus}
             onBrowserStateChange={onBrowserStateChange}
+            onBrowserOwnersChange={onBrowserOwnersChange}
             draftComposerRef={draftComposerRef}
           />
         ) : (

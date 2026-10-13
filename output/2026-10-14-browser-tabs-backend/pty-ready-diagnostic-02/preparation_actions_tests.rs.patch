@@ -1,0 +1,276 @@
+--- a/src-tauri/src/acp_client/preparation_actions_tests.rs
++++ b/src-tauri/src/acp_client/preparation_actions_tests.rs
+@@ -276,11 +276,26 @@
+     assert!(api.work().is_ok());
+ 
+     const READY: &str = "fixture-configuration-ready";
++    // Temporary, test-only diagnosis. Both paths are exclusively created in
++    // this fixture; the child uses shell builtins rather than external tools.
++    let trap_marker = data.path().join("diagnostic-trap-installed");
++    let output_marker = data.path().join("diagnostic-pty-printf-completed");
++    for marker in [&trap_marker, &output_marker] {
++        std::fs::OpenOptions::new()
++            .write(true)
++            .create_new(true)
++            .open(marker)
++            .unwrap();
++    }
++    let quote_path =
++        |path: &std::path::Path| format!("'{}'", path.display().to_string().replace('\'', "'\\''"));
+     std::fs::write(
+         &row.command,
+         format!(
+-            "#!/bin/sh\ntrap '' HUP TERM\nPATH='{}'\nprintf '{READY}\\n'\nwhile :; do read token; done\n",
+-            data.path().join("no-external-tools").display()
++            "#!/bin/sh\ntrap '' HUP TERM\nprintf 'trap-installed\\n' > {}\nPATH='{}'\nprintf '{READY}\\n'\nprintf 'pty-printf-completed\\n' > {}\nwhile :; do read token; done\n",
++            quote_path(&trap_marker),
++            data.path().join("no-external-tools").display(),
++            quote_path(&output_marker),
+         ),
+     )
+     .unwrap();
+@@ -291,7 +306,65 @@
+     // as `touch` could start. Observe the same PTY path the action actually uses.
+     let output = Arc::new(Mutex::new(String::new()));
+     let observed = output.clone();
+-    let (ready_tx, ready_rx) = tokio::sync::oneshot::channel();
++    let frames = Arc::new(Mutex::new(Vec::<serde_json::Value>::new()));
++    let observed_frames = frames.clone();
++    let monotonic_origin = std::time::Instant::now();
++    let clock_anchor = || {
++        let before_ns = monotonic_origin.elapsed().as_nanos();
++        let unix_ns = std::time::SystemTime::now()
++            .duration_since(std::time::UNIX_EPOCH)
++            .ok()
++            .map(|duration| duration.as_nanos());
++        serde_json::json!({
++            "instantBeforeNs": before_ns,
++            "unixNs": unix_ns,
++            "instantAfterNs": monotonic_origin.elapsed().as_nanos(),
++        })
++    };
++    let marker_state = |path: &std::path::Path, expected: &[u8]| {
++        let clock_before = clock_anchor();
++        let body = match std::fs::read(path) {
++            Ok(bytes) => serde_json::json!({
++                "readOk": true, "bytes": bytes.len(), "expectedContent": bytes == expected,
++            }),
++            Err(error) => serde_json::json!({
++                "readOk": false, "errorKind": format!("{:?}", error.kind()),
++            }),
++        };
++        let modified = std::fs::metadata(path)
++            .and_then(|metadata| metadata.modified())
++            .ok()
++            .and_then(|modified| modified.duration_since(std::time::UNIX_EPOCH).ok())
++            .map(|duration| duration.as_nanos());
++        serde_json::json!({
++            "clockBefore": clock_before,
++            "body": body,
++            "modifiedUnixNs": modified,
++            "clockAfter": clock_anchor(),
++        })
++    };
++    let initial_markers = serde_json::json!({
++        "trap": marker_state(&trap_marker, b"trap-installed\n"),
++        "printf": marker_state(&output_marker, b"pty-printf-completed\n"),
++    });
++    let read_events = Arc::new(Mutex::new(Vec::<serde_json::Value>::new()));
++    let observed_reads = read_events.clone();
++    pty.set_read_observer_for_test(Arc::new(move |event| {
++        // Bounded in-memory collection only: no logging, files or blocking I/O.
++        let mut events = observed_reads.lock().unwrap();
++        if events.len() < 64 {
++            events.push(serde_json::json!({
++                "phase": event.phase,
++                "observedAtNsFromBeforeSpawn": event.observed_at.duration_since(monotonic_origin).as_nanos(),
++                "stop": event.stop,
++                "count": event.count,
++                "errorKind": event.error_kind.map(|kind| format!("{kind:?}")),
++                "rawOsError": event.raw_os_error,
++                "zeroReadMeaning": (event.count == Some(0)).then_some("EOF-or-mapped-EIO"),
++            }));
++        }
++    }));
++    let (ready_tx, mut ready_rx) = tokio::sync::oneshot::channel();
+     let ready_tx = Mutex::new(Some(ready_tx));
+     let id = run_terminal(
+         &manager,
+@@ -304,12 +377,23 @@
+             attempt,
+             output: Channel::new(move |body| {
+                 use base64::Engine;
++                let received_at_ns = monotonic_origin.elapsed().as_nanos();
+                 let frame: serde_json::Value = body.deserialize()?;
+                 let bytes = frame
+                     .get("data")
+                     .and_then(|data| data.as_str())
+                     .and_then(|data| base64::engine::general_purpose::STANDARD.decode(data).ok())
+                     .unwrap_or_else(|| frame.to_string().into_bytes());
++                {
++                    let mut frames = observed_frames.lock().unwrap();
++                    if frames.len() < 64 {
++                        frames.push(serde_json::json!({
++                            "receivedAtNsFromBeforeSpawn": received_at_ns,
++                            "kind": if frame.get("exit").is_some() { "exit" } else { "data" },
++                            "frame": frame,
++                        }));
++                    }
++                }
+                 let mut trace = observed.lock().unwrap();
+                 let remaining = 8192usize.saturating_sub(trace.len());
+                 trace.push_str(&String::from_utf8_lossy(
+@@ -329,13 +413,137 @@
+         pty: pty.clone(),
+         id: id.clone(),
+     };
++    #[derive(Clone, Default)]
++    struct MarkerObservations {
++        samples: u32,
++        last_empty_trap: Option<serde_json::Value>,
++        first_nonempty_trap: Option<serde_json::Value>,
++        last_empty_printf: Option<serde_json::Value>,
++        first_nonempty_printf: Option<serde_json::Value>,
++    }
++    let marker_observations = Mutex::new(MarkerObservations::default());
++    let sample_markers = || {
++        let trap = marker_state(&trap_marker, b"trap-installed\n");
++        let printed = marker_state(&output_marker, b"pty-printf-completed\n");
++        let mut observations = marker_observations.lock().unwrap();
++        observations.samples = observations.samples.saturating_add(1);
++        if observations.first_nonempty_trap.is_none() {
++            match trap["body"]["bytes"].as_u64() {
++                Some(0) => observations.last_empty_trap = Some(trap),
++                Some(_) => observations.first_nonempty_trap = Some(trap),
++                None => {}
++            }
++        }
++        if observations.first_nonempty_printf.is_none() {
++            match printed["body"]["bytes"].as_u64() {
++                Some(0) => observations.last_empty_printf = Some(printed),
++                Some(_) => observations.first_nonempty_printf = Some(printed),
++                None => {}
++            }
++        }
++    };
++    let diagnostic = |phase: &str| {
++        let trace = output.lock().unwrap().clone();
++        let frames = frames.lock().unwrap().clone();
++        let reads = read_events.lock().unwrap().clone();
++        let observations = marker_observations.lock().unwrap().clone();
++        serde_json::json!({
++            "phase": phase,
++            "observedAtNsFromBeforeSpawn": monotonic_origin.elapsed().as_nanos(),
++            "clockAnchor": clock_anchor(),
++            "initialMarkers": initial_markers,
++            "trapMarker": marker_state(&trap_marker, b"trap-installed\n"),
++            "printfMarker": marker_state(&output_marker, b"pty-printf-completed\n"),
++            "markerSampleCount": observations.samples,
++            "lastEmptyTrapObservation": observations.last_empty_trap,
++            "firstNonemptyTrapObservation": observations.first_nonempty_trap,
++            "lastEmptyPrintfObservation": observations.last_empty_printf,
++            "firstNonemptyPrintfObservation": observations.first_nonempty_printf,
++            "readEvents": reads,
++            "frames": frames,
++            "trace": trace,
++        })
++    };
++    sample_markers();
++    let after_spawn = diagnostic("after-spawn");
++    let ready_wait_started_ns = monotonic_origin.elapsed().as_nanos();
++    let original_ready = {
++        let waiting = tokio::time::timeout(Duration::from_secs(3), &mut ready_rx);
++        tokio::pin!(waiting);
++        loop {
++            tokio::select! {
++                result = &mut waiting => break result,
++                _ = tokio::time::sleep(Duration::from_millis(10)) => sample_markers(),
++            }
++        }
++    };
++    let ready_wait_returned_ns = monotonic_origin.elapsed().as_nanos();
++    sample_markers();
++    let original_ready_state = match &original_ready {
++        Ok(Ok(())) => "timeout-returned-ready",
++        Ok(Err(_)) => "timeout-returned-closed-channel",
++        Err(_) => "timeout-returned-elapsed",
++    };
++    let after_original_wait = diagnostic("after-original-wait");
++    let original_ready_passed = matches!(&original_ready, Ok(Ok(())));
++    if !original_ready_passed {
++        // Additional observation never changes the original failed verdict.
++        let extra_observation = if original_ready.is_err() {
++            let extra_ready = {
++                let waiting = tokio::time::timeout(Duration::from_secs(2), &mut ready_rx);
++                tokio::pin!(waiting);
++                loop {
++                    tokio::select! {
++                        result = &mut waiting => break result,
++                        _ = tokio::time::sleep(Duration::from_millis(10)) => sample_markers(),
++                    }
++                }
++            };
++            sample_markers();
++            match extra_ready {
++                Ok(Ok(())) => "extra-timeout-returned-ready",
++                Ok(Err(_)) => "extra-timeout-returned-closed-channel",
++                Err(_) => "extra-observation-timeout",
++            }
++        } else {
++            "not-waited-closed-channel"
++        };
++        let before_close = diagnostic("before-exact-owner-close");
++        let cleanup = pty.close(&id);
++        eprintln!(
++            "PTY_READY_DIAGNOSTIC {}",
++            serde_json::json!({
++                "afterSpawn": after_spawn,
++                "readyWaitStartedNsFromBeforeSpawn": ready_wait_started_ns,
++                "readyWaitReturnedNsFromBeforeSpawn": ready_wait_returned_ns,
++                "originalReadyState": original_ready_state,
++                "afterOriginalWait": after_original_wait,
++                "extraObservation": extra_observation,
++                "beforeClose": before_close,
++                "exactOwnerCloseResult": cleanup,
++                "afterClose": diagnostic("after-exact-owner-close"),
++                "originalVerdict": "failed",
++            })
++        );
++    } else {
++        eprintln!(
++            "PTY_READY_DIAGNOSTIC {}",
++            serde_json::json!({
++                "afterSpawn": after_spawn,
++                "readyWaitStartedNsFromBeforeSpawn": ready_wait_started_ns,
++                "readyWaitReturnedNsFromBeforeSpawn": ready_wait_returned_ns,
++                "originalReadyState": original_ready_state,
++                "afterOriginalWait": after_original_wait,
++                "originalVerdict": "passed",
++            })
++        );
++    }
++    // Clone before asserting so failure cannot poison the callback's mutex.
++    let failure_trace = output.lock().unwrap().clone();
+     assert!(
+-        matches!(
+-            tokio::time::timeout(Duration::from_secs(3), ready_rx).await,
+-            Ok(Ok(()))
+-        ),
++        original_ready_passed,
+         "fixture did not become ready; PTY output: {:?}",
+-        output.lock().unwrap()
++        failure_trace
+     );
+     assert!(api.work().is_err());
+     assert!(attempts::reserve(&row.id, "duplicate").is_err());
+@@ -372,6 +580,10 @@
+     assert_eq!(manager.status(&row.id).unwrap().len(), 1);
+     drop(configuration);
+     pty.close(&id).unwrap();
++    eprintln!(
++        "PTY_READY_DIAGNOSTIC {}",
++        diagnostic("after-original-success-cleanup")
++    );
+ }
+ 
+ #[test]

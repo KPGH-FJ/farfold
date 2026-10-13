@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-00-57-01a13410-7925-7423-835b-1ffa794f282f.jsonl",
+  "actualProcessId": "61890",
+  "actualToolChunk": "526956",
+  "actualOuterExitCode": 0,
+  "records": [
+    {
+      "path": "output/2026-10-14-browser-tabs-independent/transcript-pty-diagnostic-02/command-completed.jsonl.raw",
+      "bytes": 8837,
+      "sha256": "3b01407423d6041a82c14e64be572d71f1816a91016a7b5959bf494dce08654f",
+      "sourceLine": 8998,
+      "sourceByteOffset": 38382157,
+      "sourceByteLength": 8837,
+      "timestamp": "2026-10-13T22:59:50.790Z"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-independent/transcript-pty-diagnostic-02/tool-completed.jsonl.raw",
+      "bytes": 867,
+      "sha256": "358cfea6d12f02c2f67b495a280d361559f1d369f468ab9599abd75689b2fda5",
+      "sourceLine": 9003,
+      "sourceByteOffset": 38394738,
+      "sourceByteLength": 867,
+      "timestamp": "2026-10-13T22:59:53.625Z"
+    }
+  ],
+  "boundary": "Exact diagnostic-only completion events; no original formal engineering failure overwritten or reclassified."
+}

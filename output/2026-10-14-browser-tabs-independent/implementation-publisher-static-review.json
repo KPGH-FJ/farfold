@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "phase": "STATIC_PUBLISHER_REVIEW_PASS_NOT_EXECUTED_BY_REVIEWER",
+  "publisher": {
+    "path": "output/2026-10-14-browser-tabs-frontend/publish-evidence.py",
+    "bytes": 8261,
+    "sha256": "309eee80726e4ed6f12022b2d2afa0b48255cd30de6e0a3e11735c20e0468a26"
+  },
+  "selection": {
+    "path": "output/2026-10-14-browser-tabs-frontend/publication-selection-v2.json",
+    "bytes": 121941,
+    "sha256": "fb1527f65ea029f231c6c8dae3e80969232aef5940982be28e97fcf56041f34a"
+  },
+  "records": 297,
+  "exactSourceBytes": 15155711,
+  "rawRecords": 287,
+  "pngRecords": 10,
+  "checks": {
+    "explicitAllowedRootsAndUniquePaths": true,
+    "allSelectedSourcePinsMatch": true,
+    "onlyTwoExactResearchInputsAddedToFinalMapAllowlist": true,
+    "nestedFilesOriginalPublishedSchemaMatchesCheckpointConsumer": true,
+    "source17FrontendAnd14BackendGates": true,
+    "twoFinalBrowsersActual0And1109StableMapsAreRequiredBeforeWrite": true,
+    "savedServerSIGTERM143AndAbsenceRequiredBeforeWrite": true,
+    "newDestinationOnlyAndByteExactCopies": true
+  },
+  "ownerPreflights": [
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/publication-check-01.completed.json",
+      "bytes": 827,
+      "sha256": "d3de936cd1a7a0c6c64bbfb8772c7260364a8ff81132cbdb12ccfb50722d90d2"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/publication-check-02.completed.json",
+      "bytes": 827,
+      "sha256": "14c3ba5e8991cd4cc0621ad03e0b57af2ec9bce787d09f7f37d2e6c0a325d732"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/publication-check-03.completed.json",
+      "bytes": 827,
+      "sha256": "7af2cb6945b7cebba295f1b43ea2080de13405a6b1bd376dc73df10ec9114642"
+    }
+  ],
+  "preflightOutcome": [
+    {
+      "run": 1,
+      "actualExitCode": 1,
+      "reason": "manual-oracle-v2 exact input omitted from initial allowlist; before public writes"
+    },
+    {
+      "run": 2,
+      "actualExitCode": 1,
+      "reason": "revision-v2 exact input omitted from initial allowlist; before public writes"
+    },
+    {
+      "run": 3,
+      "actualExitCode": 0,
+      "scope": "owner default checked-only, 297 explicit records; no publication"
+    }
+  ],
+  "sourceAndBrowserReviews": [
+    {
+      "path": "output/2026-10-14-browser-tabs-independent/frontend-v5-source-review.json",
+      "bytes": 6089,
+      "sha256": "fb25bf17a9045d948971e11801951fd4c8d863773495115fd10164acca54d097"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-independent/browser-v5-final-review.json",
+      "bytes": 6746,
+      "sha256": "98f3e010241d56b1ee4be2647efdf35b9eaaca88287a9dbf96b8da952c47335e"
+    }
+  ],
+  "boundary": "Only authored fixtures, source/test receipts and controlled full-App evidence; no DB, private user body or private native AX. PNG records keep original bytes. Mock grants/hide/close are not actual native WebView proof. No real Agent, Windows execution, installed acceptance, restart restoration, P30 completion or NEW24 closure. Whole engineering remains separate.",
+  "blockingFindings": [],
+  "reviewerActions": {
+    "astOnly": true,
+    "publisherExecuted": false,
+    "testBrowserAppProcessDatabaseActions": false
+  }
+}

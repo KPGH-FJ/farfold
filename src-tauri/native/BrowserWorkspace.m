@@ -411,6 +411,8 @@ static bool createBrowser(uint64_t browserID, void *parent_wk_view, double x, do
     browser.parent = parent;
     browser.localHTML = storageIdentifier != nil && !browser.preview;
     browser.view = [[WKWebView alloc] initWithFrame:NSZeroRect configuration:configuration];
+    // Creation never presents a page. Explicit selected-page show owns visibility.
+    browser.view.hidden = YES;
     browser.view.navigationDelegate = browser;
     browser.view.UIDelegate = browser;
     browser.context = context;

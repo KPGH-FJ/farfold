@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/browser_tabs.test.ts",
+    "-t",
+    "finishes selected close while hidden"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T21:24:11.888289+00:00",
+  "completedAtUtc": "2026-10-13T21:24:12.721076+00:00",
+  "actualExitCode": 1,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/hidden-close-red.stdout.log",
+    "bytes": 462,
+    "sha256": "4e3b9a0deff174f0ccaf1701e82177f89d63069e83f25be0e13c088bdfe1ab69"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-frontend/hidden-close-red.stderr.log",
+    "bytes": 985,
+    "sha256": "f3b832263738c995812a7af619129c0f190a0d554de2cb34f0cb646befc75b7d"
+  }
+}

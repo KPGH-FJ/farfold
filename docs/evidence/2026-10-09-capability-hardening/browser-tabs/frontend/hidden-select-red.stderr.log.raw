@@ -1,0 +1,22 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/browser_tabs.test.ts > finishes the explicit selection while hidden without stranding its busy state
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ src/runtime/browser_tabs.test.ts:134:41
+    132|   const adding = f.tabs.add(); await Promise.resolve(); await Promise.…
+    133|   f.state.selection = { label: null, revision: 2 }; held.resolve(f.clo…
+    134|   expect(f.tabs.getSnapshot().changing).toBe(false);
+       |                                         ^
+    135|   expect(f.tabs.getSnapshot().selected).toBe(f.tabs.getSnapshot().tabs…
+    136|   expect(f.client.setVisible).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

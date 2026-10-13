@@ -1,0 +1,17 @@
+{
+  "scope": "All297 explicit copies byte matched original refs; raw failures retained; source publication only",
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs/publication.json",
+    "bytes": 266800,
+    "sha256": "a576554403f265e6202b46479f9497f140ca691dd42cb1a3286b79c4d7361e6f"
+  },
+  "verification": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs/verification.json",
+    "bytes": 2371,
+    "sha256": "c332e5b0c80844c77a0283ca1f1b8847ae968d41691217ad10a106ec9c27aba7"
+  },
+  "actualPublishExit": 0,
+  "actualPublishChunk": "7191e5",
+  "copies": 297,
+  "allMatched": true
+}

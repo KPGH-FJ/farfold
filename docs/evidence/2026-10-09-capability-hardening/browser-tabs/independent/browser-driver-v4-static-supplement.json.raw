@@ -1,0 +1,35 @@
+{
+  "scope": "Static delta to browser-driver-v3-static-review.json. No product, browser or test execution.",
+  "observedAtUtc": "2026-10-13T21:25:57.722790+00:00",
+  "files": [
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/preparation-v4.json",
+      "bytes": 3137,
+      "sha256": "4ba2e081956b504bf04a4a3188643e4953ef1e5a3e5d43f4964cb43f7c092584"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/run.mjs",
+      "bytes": 22439,
+      "sha256": "82c8a1d8cb72d5f7d112d0b643aeccb03e5e008d91c797c4829807ac5723acb6"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/transport.ts",
+      "bytes": 10358,
+      "sha256": "30e3dc2dbc4cecc709ea49f6d9978ff44c2e9b5befe9b3b1d706f9e72508a800"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/fixture.tsx",
+      "bytes": 5003,
+      "sha256": "204d9d9eaec98e19fde7e49ae64e7c27e6c936068c0edf4b0f8cde7f7062ee78"
+    }
+  ],
+  "allPreparationFilePinsMatch": true,
+  "authoredScenarios": 14,
+  "verdict": "No new identified static startup blocker in this harness delta.",
+  "delta": [
+    "Added selected-close ACK after task hiding, distinct from hidden sibling close retry.",
+    "Late-open proof now expressly limited to an already-created hidden iframe and delayed IPC reply; no native creation_pending conclusion.",
+    "Same-label failed withdrawal retry correction unchanged and retained."
+  ],
+  "sourceStatus": "Frontend owner is repairing selected-close hidden ACK with a new freeze after controlled red. Backend Windows pending-controller/unknown-create repair remains in progress. This harness review does not approve pre-repair freezes or claim tests passed."
+}

@@ -1,0 +1,56 @@
+{
+  "scope": "Independent authored page memory samples for controlled browser and later actual native presentation; no execution claimed. No external resources, storage, credentials or Agent requests.",
+  "pages": [
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/pages/a.html",
+      "bytes": 747,
+      "sha256": "c8b5bdfefde1f27f703663252270afc598325872fe08ce454d8a24c28e810aaa",
+      "expectedInitial": {
+        "title": "P30_PAGE_A",
+        "counter": 0,
+        "note": "A_INITIAL"
+      }
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/pages/b.html",
+      "bytes": 747,
+      "sha256": "de28854dd0a43aa892391686091211dbd25dc33eb4c4ef6081b3840f3ba9ccfb",
+      "expectedInitial": {
+        "title": "P30_PAGE_B",
+        "counter": 0,
+        "note": "B_INITIAL"
+      }
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-browser/pages/c.html",
+      "bytes": 747,
+      "sha256": "b1489dda9f8d58df4db74507339d59bccd7199fefb00e786e9c466781b405199",
+      "expectedInitial": {
+        "title": "P30_PAGE_C",
+        "counter": 0,
+        "note": "C_INITIAL"
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "page": "A",
+      "clicks": 2,
+      "note": "A_RETAINED",
+      "scrollY": 700
+    },
+    {
+      "page": "B",
+      "clicks": 1,
+      "note": "B_RETAINED",
+      "scrollY": 350
+    },
+    {
+      "page": "C",
+      "clicks": 3,
+      "note": "C_RETAINED",
+      "scrollY": 0
+    }
+  ],
+  "expected": "On explicit tab return, the same instance keeps its own counter/input/scroll. Closing B removes only B; reopening B starts from initial values. This fixture does not prove sharing transport or native view lifecycle by itself."
+}

@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "startedAtUtc": "2026-10-13T23:09:19.708447+00:00",
+  "completedAtUtc": "2026-10-13T23:11:46.046264+00:00",
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--lib",
+    "--",
+    "--show-output"
+  ],
+  "pid": 45395,
+  "actualExitCode": 0,
+  "elapsedSeconds": 146.339990833,
+  "stdout": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/stdout.log",
+    "bytes": 901342,
+    "sha256": "5c824457b96067551e35536f542e80da68898f1220fd339472cb04f5485555af"
+  },
+  "stderr": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/stderr.log",
+    "bytes": 557,
+    "sha256": "f9f6655fedfa6eae8593846b4c98c863ca479e188cd04a8dca237d949416c909"
+  },
+  "boundary": "Diagnostic result only; previous failed formal checks retained."
+}

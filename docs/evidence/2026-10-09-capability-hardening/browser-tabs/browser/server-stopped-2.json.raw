@@ -1,0 +1,17 @@
+{
+  "pid": 47583,
+  "session": 18561,
+  "stopSignal": "SIGTERM",
+  "actualExitCode": 143,
+  "toolChunk": "4c4887",
+  "processAbsent": true,
+  "listenerAbsent": true,
+  "completion": {
+    "run": "server-2",
+    "path": "output/2026-10-14-browser-tabs-browser/transcript-final/server-2-16516.jsonl.raw",
+    "sourceLine": 16516,
+    "exitCode": 143,
+    "bytes": 1358,
+    "sha256": "6fe9aa850a30f1bc4af40b656c7ba3809331f6f6f3751ea82e26aa81879efbb4"
+  }
+}

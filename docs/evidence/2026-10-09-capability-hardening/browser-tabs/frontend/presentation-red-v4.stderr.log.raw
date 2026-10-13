@@ -1,0 +1,30 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/BrowserWorkspace.presentation.test.tsx > ignores an old resize rejection after the owner has become inactive
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "label": "page-b",
+        "taskKey": "task-b",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/components/BrowserWorkspace.presentation.test.tsx:131:28
+    129|   reject(new Error("previous presentation resize failed"));
+    130|   await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    131|   expect(client.close).not.toHaveBeenCalled();
+       |                            ^
+    132| });
+    133|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

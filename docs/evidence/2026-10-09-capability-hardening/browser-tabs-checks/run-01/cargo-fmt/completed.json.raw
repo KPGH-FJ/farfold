@@ -1,0 +1,24 @@
+{
+  "actualStageCompletion": true,
+  "argv": [
+    "cargo",
+    "fmt",
+    "--check",
+    "--manifest-path",
+    "src-tauri/Cargo.toml"
+  ],
+  "completedAt": "2026-10-13T22:13:00.991289+00:00",
+  "cwd": "/Users/tw/Desktop/farfold",
+  "displayCommand": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+  "elapsedSeconds": 1.313423333000003,
+  "group": "native",
+  "monotonicStart": 96.833364625,
+  "name": "cargo-fmt",
+  "pid": 50877,
+  "processLaunched": true,
+  "rawExitCode": 0,
+  "startedAt": "2026-10-13T22:12:59.677916+00:00",
+  "state": "COMPLETED",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

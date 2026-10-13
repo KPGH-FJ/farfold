@@ -1,0 +1,23 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/browser_tabs.test.ts > finishes selected close while hidden with a valid successor (last=false)
+ FAIL  src/runtime/browser_tabs.test.ts > finishes selected close while hidden with a valid successor (last=true)
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/browser_tabs.test.ts:516:59
+    514|   const closing = f.tabs.close(selected); await Promise.resolve(); f.t…
+    515|   f.tabs.setActive(true); const next = f.tabs.getSnapshot();
+    516|   expect(next.tabs.some(tab => tab.id === next.selected)).toBe(true);
+       |                                                           ^
+    517|   expect(next.selected).not.toBe(selected); expect(next.changing).toBe…
+    518|   expect(f.state.selection.label).toBe(last ? null : a.result.label);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+

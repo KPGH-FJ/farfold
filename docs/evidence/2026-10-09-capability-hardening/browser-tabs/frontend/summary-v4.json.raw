@@ -1,0 +1,135 @@
+{
+  "sourceFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v4.json",
+    "bytes": 6376,
+    "sha256": "06c5160af56f70c061135999e5d5964c76a197ef15795c48d4ade4f6a533afc2"
+  },
+  "previousSummary": {
+    "path": "output/2026-10-14-browser-tabs-frontend/summary-v3.json",
+    "bytes": 3284,
+    "sha256": "66f3513f2b6761a637ee0b07440e13247f7d88cf0a0004435299d1b45a8fe683"
+  },
+  "diff": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-v3-to-v4.diff",
+    "bytes": 10866,
+    "sha256": "e533be44362c2be96556146e16ec5a8d0427b81ade60f6ae68800542fcc1f04a"
+  },
+  "finalChecks": {
+    "files": 11,
+    "tests": 241,
+    "targetedActualExitCode": 0,
+    "typecheckActualExitCode": 0,
+    "formatActualExitCode": 0,
+    "sourceStable17": true
+  },
+  "checks": [
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/presentation-red-v4.completed.json",
+      "bytes": 776,
+      "sha256": "cc24a4382fea203c32f8029814bd94e9d2de1c634fde2f51ea869ba4c99874c3",
+      "actualExitCode": 1
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/presentation-red-02-v4.completed.json",
+      "bytes": 783,
+      "sha256": "86881a9afc5112ab29183afa02f19176e2f872a47cdb79fd5db8e01fc92812ed",
+      "actualExitCode": 1
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/presentation-green-v4.completed.json",
+      "bytes": 826,
+      "sha256": "c832f1d65080ded19af89c5282d7956597b9e2bdb3e17017cc9bc80985647bb8",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/route-order-red-v4.completed.json",
+      "bytes": 800,
+      "sha256": "40de5df019c59fde9e17ceef6d4a25b33c8caaf551978c2aaad2d8a8f4340f29",
+      "actualExitCode": 1
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/route-order-green-v4.completed.json",
+      "bytes": 750,
+      "sha256": "2239f18163e17cf634edf4e21ffdb4b22777e1a82613428f0480d4900493f106",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/format-write-v4.completed.json",
+      "bytes": 873,
+      "sha256": "d0baae370cee836510eda3e8a18e77d100ee8a6ba35da33f28be9a968be71b84",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/targeted-v4.completed.json",
+      "bytes": 1211,
+      "sha256": "bb8919e4404707a3b56738362149b1d82887eb910b0f145f98703f39013341f4",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/typecheck-v4.completed.json",
+      "bytes": 678,
+      "sha256": "04a48b8f927b763c65e2ee94c69b6cbcb12be2b0efd7b829bfab24a63baaa6a9",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/format-check-v4.completed.json",
+      "bytes": 872,
+      "sha256": "339d829db1062d69db0858a08bcf534056ba67c84413a00616cca9872c2a0b5c",
+      "actualExitCode": 0
+    }
+  ],
+  "primaryFix": {
+    "evidence": [
+      {
+        "path": "output/2026-10-14-browser-tabs-browser/chromium-run5.json",
+        "bytes": 728400,
+        "sha256": "bfdfb64cf8e1d30e98a91e1766cc119c064af4cfd4ce08a9b5a21ef7d646fefa"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-browser/chromium-run6.json",
+        "bytes": 731257,
+        "sha256": "8342fd1f1d4e1cd3569a1ade97e04b1085a0a6566ff4d5834faaca1a8de2d640"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-browser/chromium-run7.json",
+        "bytes": 752697,
+        "sha256": "15abd4662be99c995d5c107f960a398d966590d781309cb637322dd04180cc1b"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-browser/transcript-history/manifest.json",
+        "bytes": 2930,
+        "sha256": "3f4a88f3651fe45c3a5aaae6cc0fd4e1b7b4eb79bb66aa5169c49e8b35a403ab"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-browser/transcript-diagnostics/manifest.json",
+        "bytes": 900,
+        "sha256": "e6dd8d858b22b5c3682e67208f2813987c4c3f3310293e98b376148aec8adf0a"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-frontend/route-order-hypothesis-v4.json",
+        "bytes": 3890,
+        "sha256": "ccf1b7a468508130394ac08c4233fad206e23fe958f79a093c09c69ad22e9387"
+      }
+    ],
+    "cause": "The current-first App route list reverses retained A/B order on return to A. React 19.2.8 development StrictMode replays effects for the moved B fiber. Run7 exact B label close initiator originates at Page mount-effect cleanup registration.requestClose (source line315), through guard, not the RAF callback.",
+    "fix": "Retained browserOwners stay in insertion order before prepared/current unowned keys. Switching changes active/hidden only; actual removal/unmount still requests exact close and waits for ACK.",
+    "unit": "One explicit bidirectional stable-slot test red→green, includes remove A then re-add A with B stable. Existing ownership test updated only for correct stable order.",
+    "boundary": "Observed in controlled development StrictMode. No installed/release reproduction claimed; final browser on v4 pending root."
+  },
+  "adjacentFix": {
+    "evidence": {
+      "path": "output/2026-10-14-browser-tabs-frontend/presentation-investigation-v4.json",
+      "bytes": 3140,
+      "sha256": "eab16b3e5100bcabdbc462ca7ea3591e7f0314867662aaf88419ffd4a239943a"
+    },
+    "cause": "An old RAF or resize rejection can arrive after a hidden/suspended commit and before passive cleanup; null surface must not close a deliberately retained owner.",
+    "fix": "Both callbacks check latest active/visible/suspended/task/guard intent plus exact live scope. Active current missing bounds still closes exact owner.",
+    "tests": "Second narrow red4/5; green5/5 plus existingPage51=56. First narrow red1/5 retained: initial 3 RAF assertions waited only two microtasks and missed queued close; event-loop wait corrected the test, not production."
+  },
+  "historicalScopeCorrection": "Original Chromium run4/WebKit run3 each138 green missed reverse B preservation. Their receipts remain unchanged and are not complete bidirectional retention proof. Root strengthened driver produced run5 actual1; RAF-only run6 and origin-stack run7 actual1 preserved. No final v4 browser pass claimed here.",
+  "notClaimed": [
+    "No native WebView/App/Agent/account/Windows run",
+    "No restart persistence implementation",
+    "No docs/publication/Git mutation; P30 and NEW24 remain open"
+  ]
+}

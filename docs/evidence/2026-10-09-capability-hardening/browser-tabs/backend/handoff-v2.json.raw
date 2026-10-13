@@ -1,0 +1,37 @@
+{
+  "scope": "P30 runtime browser tabs",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-browser-tabs-backend/source-freeze-v2.json",
+    "bytes": 17066,
+    "sha256": "d55be973509726b8298e220624a732a55a0f027d82a8365dca18435b227e149a"
+  },
+  "ownedFiles": 14,
+  "maxLines": 827,
+  "redRuns": [
+    "red-01: actual101/0pass1fail",
+    "review-red-01: actual101/0pass2fail",
+    "review-red-02: actual101/8pass2fail"
+  ],
+  "finalValidation": {
+    "browserRelatedTests": 178,
+    "actualExitCode": 0,
+    "fmtCheck": 0,
+    "sourceStable": true
+  },
+  "reviewCorrections": [
+    "Hidden sibling events no longer cancel another selected page pending approval; real BrowserSharing.page_changed/ToolSession waiter red and green.",
+    "Advancing the retired page control revision rejects an unadmitted delayed allow after A-B-A, without inventing native navigation; actual capture_read_scope red and green.",
+    "Confirmed retry clears only the previous selection error; page gate remains withdrawn.",
+    "Unconfirmed creation prevents global show until exact hidden or close ACK; controlled store red and green.",
+    "Windows in-flight creations and returned controllers retain native ownership until Close ACK, including late completion; source review only, not a Windows execution."
+  ],
+  "boundaries": [
+    "Red asserts new second-page reservation against actual old single-page implementation; source baseline includes test registration and new test only at red.",
+    "All earlier runs retained. Final formatted bytes exercised by browser-regression-03: 178 passed, and fmt-check-02 actual 0, source stable.",
+    "Selection tests execute the production transaction with controlled stop/hide futures, not a running WebView. Existing sharing permission/transport/quiesce tests also ran.",
+    "macOS Objective-C bridge compiled during targeted cargo. Hidden create and guarded visibility are source changes, not installed native UI observations.",
+    "Windows code changed but no Windows build/runtime executed.",
+    "No Agent, App, account, database, installation, full seven checks, dependency changes or Git mutation."
+  ],
+  "next": "Backend source paused; independent final review, frontend integration, root controlled browser/full seven checks."
+}

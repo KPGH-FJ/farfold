@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "phase": "RUN02_PUBLICATION_STATIC_PREPARATION_REVIEW",
+  "publisher": {
+    "path": "output/2026-10-14-browser-tabs-integration/publish_checks-v2.py",
+    "bytes": 8649,
+    "sha256": "22718ca49fa9cde3c3b09bf4cfdbe55ee8ca266cbcd0cd431f04dad57699d597"
+  },
+  "originalPublisherPreserved": {
+    "path": "output/2026-10-14-browser-tabs-integration/publish_checks.py",
+    "bytes": 5923,
+    "sha256": "9bf92bc51c93956e85d5a33dd35ba61372d4eceea035e6857d2ba5f4e2aba921"
+  },
+  "currentRendererReviewed": {
+    "path": "output/2026-10-14-browser-tabs-install-preparation/render.py",
+    "bytes": 19324,
+    "sha256": "89a3655106247b9fb3d56861b01ec33f0c77a898ee1b6438a16ae346f49f81da"
+  },
+  "checks": {
+    "astParsedNotImportedOrExecuted": true,
+    "successPreflightAndCopyLoopByteIdenticalToOriginal": true,
+    "currentRun02RequiresActualSevenZeroAndFreezeBindingsBeforeWrite": true,
+    "oldRunRequiresActualSevenCompletionsSixZeroThen101": true,
+    "oldRunRequires2392AndExactSavedFreezeManifests": true,
+    "oldAndNewProtectedMatch": true,
+    "preparedExplicitCopies": 72,
+    "currentCopies": 36,
+    "retainedP30Copies": 36,
+    "copiesUseExclusiveFilesAndNoExistingPublicDirectory": true,
+    "retainedFailureIsP30NotP18": true
+  },
+  "retainedOriginal": {
+    "path": "output/2026-10-14-browser-tabs-integration/checks-run/summary.json",
+    "bytes": 6358,
+    "sha256": "cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685"
+  },
+  "historyStatement": "Isolated unchanged exact test pass does not constitute a fix or erase the first full failure. Root reports1pass/1697filtered on session76401; separate diagnostic proof remains outside the72 engineering copies. No run02 completion is asserted here.",
+  "interfaceFinding": {
+    "status": "REQUIRES_RENDERER_ADAPTATION_BEFORE_CANDIDATE",
+    "detail": "Current renderer retainedPriorRun branch keeps old metadata whitelist without currentScope or runHistoryBoundary. This v2 publisher emits both, so candidate engineering validation will reject the new verification schema.",
+    "minimalAction": "Add both fields only to retained branch whitelist and require exact P30 currentScope plus this v2 retained-run history literal. Configure privateSummary/public metadata from actual first P30 summary and a9baaa, preserving all current seven/source/publication gates. Do not select none or reuse P18 failure."
+  },
+  "actions": "Static Python AST/text, original failed summary/hash only. No publisher, renderer, generated function, checks, App, Agent, process or database operation.",
+  "remaining": "Wait for diagnosis decision, any exact restoration and authorized later full-run actual completion. Freeze final v2 publisher and adapted renderer before use."
+}

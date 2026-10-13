@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-13T21:21:54.553434+00:00",
+  "argv": [
+    "lsof",
+    "-nP",
+    "-iTCP:1540",
+    "-sTCP:LISTEN"
+  ],
+  "exitCode": 1,
+  "stdout": "",
+  "stderr": "",
+  "available": true
+}

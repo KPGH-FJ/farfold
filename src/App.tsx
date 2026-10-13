@@ -7,7 +7,6 @@ import { currentWorkLocationGuidance } from "./runtime/archived_work_location";
 import { OpeningElicitationList } from "./components/OpeningElicitationList";
 import { openingInquiries } from "./runtime/opening_inquiries";
 import { REDESIGN as R } from "./runtime/redesign_strings";
-import type { BrowserWorkspaceState } from "./runtime/browser_workspace";
 import { browserSurfaceGuard } from "./runtime/browser_surface";
 import { BrowserSurfaceNotice } from "./components/BrowserSurfaceNotice";
 import { replacesDraftChoice } from "./runtime/draft_choice";
@@ -168,35 +167,26 @@ export default function App() {
       : view.kind === "start"
         ? preparedDraftKey
         : null;
-  // One native page exists. Keep only its existing conversation mounted while
-  // visiting another task so real permission/timeout receipts remain observed.
-  const [browserOwner, setBrowserOwner] = useState<{
-    taskKey: string;
-    label: string;
-  } | null>(null);
-  const observeBrowserPage = (
-    taskKey: string,
-    page: BrowserWorkspaceState | null,
-  ) => {
-    setBrowserOwner((previous) => {
-      if (!page || page.phase === "closed")
-        return previous?.taskKey === taskKey &&
-          (!page || previous.label === page.label)
-          ? null
-          : previous;
+  // Retain every task with a live or pending page, including hidden siblings.
+  const [browserOwners, setBrowserOwners] = useState<ReadonlySet<string>>(
+    new Set(),
+  );
+  const observeBrowserOwners = (taskKey: string, ownsPages: boolean) => {
+    setBrowserOwners((previous) => {
+      if (previous.has(taskKey) === ownsPages) return previous;
       if (
-        page.taskKey !== taskKey ||
-        (previous &&
-          previous.taskKey !== taskKey &&
-          (currentView.current.kind === "thread"
-            ? currentView.current.key !== taskKey
-            : currentView.current.kind !== "start" ||
-              currentPreparedDraftKey.current !== taskKey))
+        ownsPages &&
+        !previous.has(taskKey) &&
+        (currentView.current.kind === "thread"
+          ? currentView.current.key !== taskKey
+          : currentView.current.kind !== "start" ||
+            currentPreparedDraftKey.current !== taskKey)
       )
         return previous;
-      return previous?.taskKey === taskKey && previous.label === page.label
-        ? previous
-        : { taskKey, label: page.label };
+      const next = new Set(previous);
+      if (ownsPages) next.add(taskKey);
+      else next.delete(taskKey);
+      return next;
     });
   };
   const pendingCanonical = useRef<string | null>(null);
@@ -961,7 +951,10 @@ export default function App() {
         </div>
         {[
           ...new Set(
-            [threadKey, preparedDraftKey, browserOwner?.taskKey].filter(
+            // Keep live owner slots in insertion order. Reordering retained
+            // routes for selection replays their cleanup in React StrictMode.
+            // Only active/hidden should change when another task is selected.
+            [...browserOwners, preparedDraftKey, threadKey].filter(
               (key): key is string => !!key,
             ),
           ),
@@ -994,7 +987,7 @@ export default function App() {
                   : undefined
               }
               active={pageKey === visiblePageKey && !paletteOpen && !importOpen}
-              onBrowserStateChange={observeBrowserPage}
+              onBrowserOwnersChange={observeBrowserOwners}
               draftComposerRef={
                 pageKey === preparedDraftKey
                   ? setDraftComposerTarget

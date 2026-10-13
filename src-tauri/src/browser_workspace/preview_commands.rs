@@ -1,7 +1,7 @@
 //! The main view selects an explicit local source. A project path is never an
 //! ambient WebKit filesystem permission, and a server is never auto-discovered.
 use super::{
-    Bounds, BrowserInfo, BrowserWorkspace, close_owned,
+    Bounds, BrowserInfo, BrowserWorkspace,
     local_html::StoragePartition,
     local_preview::{DevServerOrigin, DirectoryPreview},
     native, policy, publish, require_main,
@@ -80,9 +80,6 @@ pub(crate) async fn browser_workspace_open_directory(
     .await
     .map_err(|_| "网页资源无法读取")??;
     let _operation = state.1.lock().await;
-    if let Some(old) = state.active_info()? {
-        close_owned(&app, &state, &old.task_key, &old.label).await?;
-    }
     let (id, _, _) = state.reserve(
         &task_key,
         Url::parse("https://preview.invalid/").expect("fixed temporary URL"),
@@ -95,11 +92,7 @@ pub(crate) async fn browser_workspace_open_directory(
     .map_err(|_| "网页入口无效")?;
     {
         let mut store = state.0.lock().map_err(|_| "网页状态暂时不可用")?;
-        let active = store
-            .active
-            .as_mut()
-            .filter(|a| a.id == id)
-            .ok_or("网页已关闭")?;
+        let active = store.pages.get_mut(&id).ok_or("网页已关闭")?;
         active.origin = origin.clone();
         active.local_storage = Some(StoragePartition {
             identifier: preview.storage_identifier().into(),
@@ -114,9 +107,10 @@ pub(crate) async fn browser_workspace_open_directory(
     let shared = state.inner().clone();
     if native::create_directory(&app, shared.clone(), id, bounds, preview, origin)
         .await
-        .is_err()
-        && let Some(info) = shared.event(id, 1, 2, "")
+        .is_ok()
     {
+        shared.creation_confirmed(id)?;
+    } else if let Some(info) = shared.event(id, 1, 2, "") {
         publish(&app, info);
     }
     let info = shared.info(id)?;
@@ -139,17 +133,10 @@ pub(crate) async fn browser_workspace_open_development(
     policy::validate_task_key(&task_key)?;
     let origin = DevServerOrigin::select(Path::new(&project_directory), &url)?;
     let _operation = state.1.lock().await;
-    if let Some(old) = state.active_info()? {
-        close_owned(&app, &state, &old.task_key, &old.label).await?;
-    }
     let (id, _, _) = state.reserve(&task_key, origin.start_url().clone())?;
     {
         let mut store = state.0.lock().map_err(|_| "网页状态暂时不可用")?;
-        let active = store
-            .active
-            .as_mut()
-            .filter(|a| a.id == id)
-            .ok_or("网页已关闭")?;
+        let active = store.pages.get_mut(&id).ok_or("网页已关闭")?;
         active.local_storage = None;
         active.preview = Some(PreviewSource::Development(origin.clone()));
         active.info.preview_mode = Some("development".into());
@@ -158,9 +145,10 @@ pub(crate) async fn browser_workspace_open_development(
     let shared = state.inner().clone();
     if native::create_development(&app, shared.clone(), id, bounds, origin)
         .await
-        .is_err()
-        && let Some(info) = shared.event(id, 1, 2, "")
+        .is_ok()
     {
+        shared.creation_confirmed(id)?;
+    } else if let Some(info) = shared.event(id, 1, 2, "") {
         publish(&app, info);
     }
     let info = shared.info(id)?;

@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-13T21:36:59.215544+00:00",
+  "pid": 45585,
+  "session": 75404,
+  "requestedSignal": "SIGTERM",
+  "observedExecExit": 143,
+  "completionChunk": "b0b5ca",
+  "processAbsent": true,
+  "port1540NoListener": true,
+  "scope": "Intentional shutdown of root-owned fixture server; browser processes had already completed naturally with exit0",
+  "ps": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "lsof": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": ""
+  }
+}

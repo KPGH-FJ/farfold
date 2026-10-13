@@ -1,0 +1,25 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.navigation.test.tsx > keeps retained browser route slots in the same order across both task directions
+AssertionError: expected [ 'old-A', 'test-B' ] to deeply equal [ 'test-B', 'old-A' ]
+
+- Expected
++ Received
+
+  [
+-   "test-B",
+    "old-A",
++   "test-B",
+  ]
+
+ ❯ src/App.navigation.test.tsx:1124:49
+    1122|   for (const key of ["old-A", "test-B", "old-A"]) {
+    1123|     open(key);
+    1124|     expect(pages().map((page) => page.viewKey)).toEqual(ownedOrder);
+       |                                                 ^
+    1125|     expect(pages().find((page) => page.active)?.viewKey).toBe(key);
+    1126|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

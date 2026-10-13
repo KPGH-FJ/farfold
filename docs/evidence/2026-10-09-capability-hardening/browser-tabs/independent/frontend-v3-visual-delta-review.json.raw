@@ -1,0 +1,119 @@
+{
+  "scope": "Static visual delta and saved receipt/hash review only; no test, browser, App or source write.",
+  "observedAtUtc": "2026-10-13T21:32:51.765520+00:00",
+  "verdict": "No identified blocker in v3 two-class visual correction. Actual final visual approval remains root screenshot/browser evidence.",
+  "freeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v3.json",
+    "bytes": 4994,
+    "sha256": "a7fa3b066b5b7c98de5b673732fe770849b0b325e8c9470975a1577ea32b9f65"
+  },
+  "summary": {
+    "path": "output/2026-10-14-browser-tabs-frontend/summary-v3.json",
+    "bytes": 3284,
+    "sha256": "66f3513f2b6761a637ee0b07440e13247f7d88cf0a0004435299d1b45a8fe683"
+  },
+  "diff": {
+    "path": "output/2026-10-14-browser-tabs-frontend/visual-v2-to-v3.diff",
+    "bytes": 740,
+    "sha256": "d8fcf76c5f14c7e0eedd180d350221a7f49f62060068b1dd4915b6e57a58861b"
+  },
+  "current16HashesMatch": true,
+  "onlyChangedSource": "src/components/BrowserWorkspace.tsx",
+  "other15ByteExact": true,
+  "mechanism": "Tab ordinal switches from nonexistent global sr-only to existing globally defined browser-workspace-sr-only; new-tab plus switches from ancestor-dependent browser-workspace-icon to existing global icon-button. JSX line wrapping is formatting only. No controller/permission/native/CSS behavior code changed.",
+  "checks": [
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-format-v3.completed.json",
+        "bytes": 790,
+        "sha256": "c81becbf5deb31db4bdeee52150eea80fcf31c473e8ef27dc143b19a3ef4957b",
+        "actualExitCode": 1
+      },
+      "stdout": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-format-v3.stdout.log",
+        "bytes": 23,
+        "sha256": "ebe82dad128d5e5d8936334ceac09492f3c60bd9e0b4a16cc7fd7075513b33de"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-format-v3.stderr.log",
+        "bytes": 127,
+        "sha256": "3122cee878550285369808376ce05506536a5a19fa6fb0df7a1a904cc098e36b"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-targeted-v3.completed.json",
+        "bytes": 851,
+        "sha256": "46e0a3c932de001231a3ba9627a1917c6227729bd8f549f0c7c25453a3c498c4",
+        "actualExitCode": 0
+      },
+      "stdout": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-targeted-v3.stdout.log",
+        "bytes": 209,
+        "sha256": "a9bd110f5d69996411b25b8c03dc8a3f316aa3f01bef06c79661370d66fb01f0"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-targeted-v3.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-format-write-v3.completed.json",
+        "bytes": 767,
+        "sha256": "c031b722552c4b6791b1b82a6a7a24124a5e71890fe1721c30b48e54c6957566",
+        "actualExitCode": 0
+      },
+      "stdout": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-format-write-v3.stdout.log",
+        "bytes": 41,
+        "sha256": "2061ec1d70d7e02e63646bd2022e758e67bf95caa1ef59a541e86518ca90c544"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-format-write-v3.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-typecheck-v3.completed.json",
+        "bytes": 692,
+        "sha256": "e7a9ea657ef6779fdd5740a68429d2dae1a6f5ab618d1e6e408367ebb9425b5e",
+        "actualExitCode": 0
+      },
+      "stdout": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-typecheck-v3.stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-typecheck-v3.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "completion": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-format-check-v3.completed.json",
+        "bytes": 800,
+        "sha256": "ee3bc43391c83b17e44897137cbcdc0afe9220e2fde22226bfbcc3f918b2c3f6",
+        "actualExitCode": 0
+      },
+      "stdout": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-format-check-v3.stdout.log",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-browser-tabs-frontend/visual-format-check-v3.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "testScope": "3 files/7 presentation-and-strings tests ran on class correction before Prettier wrapped JSX. Final type and format use v3 final bytes. Earlier v2 235 tests and 133-check browsers keep their old input scope.",
+  "originalFailure": "visual-format-v3 exit1 remains; separate write and final format check succeeded.",
+  "finalBrowserStatus": "Awaiting final results with exact current iframe/surface rectangle and viewport assertions; narrow old screenshot is not accepted as visual proof."
+}

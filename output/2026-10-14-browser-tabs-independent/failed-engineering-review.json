@@ -1,0 +1,265 @@
+{
+  "schema": 1,
+  "phase": "FIRST_P30_ENGINEERING_FAILED_REVIEW",
+  "result": "failed",
+  "rootRunnerActualExitCode": 1,
+  "rootSession": 69704,
+  "rootChunk": "a9baaa",
+  "originalCompletion": {
+    "path": "output/2026-10-14-browser-tabs-independent/transcript-seven-failed/manifest.json",
+    "bytes": 1010,
+    "sha256": "ebf2ccef05c8a55ad4c615be915a9fd442d62cfdb773bf183537c9e111e69c4b"
+  },
+  "summary": {
+    "path": "output/2026-10-14-browser-tabs-integration/checks-run/summary.json",
+    "bytes": 6358,
+    "sha256": "cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-browser-tabs-integration/checks-freeze/freeze.json",
+    "bytes": 391819,
+    "sha256": "424053c3ebbae4e6041cea3344a0f8e4dbab9fd8f2914d80887ca608f151918f"
+  },
+  "stages": [
+    {
+      "name": "format-check",
+      "actualExitCode": 0,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/format-check/started.json",
+          "bytes": 288,
+          "sha256": "194af51521af21e7c7806efa0d4240150935d564c7761dd37dc7e5b459c5a85f"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/format-check/completed.json",
+          "bytes": 673,
+          "sha256": "6217cf8c2857821f6131694b6cba535d4652699abccf481474585a54baf935b0"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/format-check/stdout.log",
+          "bytes": 144,
+          "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/format-check/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "typecheck",
+      "actualExitCode": 0,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/started.json",
+          "bytes": 280,
+          "sha256": "449e158f6df2dc5c81237d616fc8dd14a079b3c51f684d149f54cf734279e8bf"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/completed.json",
+          "bytes": 664,
+          "sha256": "72c444e164860f48fc8279954824947b0fb62a580e442e5cc9868bd9bf64ae9a"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/stdout.log",
+          "bytes": 78,
+          "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "frontend-test",
+      "actualExitCode": 0,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/started.json",
+          "bytes": 274,
+          "sha256": "2d7659daca68ec29a4517b4f6a5ca679e903aa5b096375699dfeb719ebc72c3c"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/completed.json",
+          "bytes": 658,
+          "sha256": "b35e917c7055cf0096557bc36fde5773a7b05ea45e0de98f58d534fde13bc57a"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/stdout.log",
+          "bytes": 289,
+          "sha256": "c2491415782f2c8aabafccbb4c3dad86491bd33a436dd9b935443f23645396d6"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "frontend-build",
+      "actualExitCode": 0,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/started.json",
+          "bytes": 277,
+          "sha256": "07a90355260fe6932ee3531b57681a24381f9e876d9cb1a6bbf4ee91fa0c14a5"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/completed.json",
+          "bytes": 661,
+          "sha256": "63d442f8ece8d18a7e592c563f952dc3ff10f9d8204ac9fd2da2b3df0dfcc214"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/stdout.log",
+          "bytes": 4560,
+          "sha256": "cdbdda6d522b061db58953181bff7f94799b61823087e8e8892543a00d523975"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/stderr.log",
+          "bytes": 360,
+          "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+        }
+      ]
+    },
+    {
+      "name": "cargo-fmt",
+      "actualExitCode": 0,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/started.json",
+          "bytes": 354,
+          "sha256": "6b436f4e834ec9fc2d8da17e3f6c48a2e67e75d1a22911eea78f56a972a0bb09"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/completed.json",
+          "bytes": 738,
+          "sha256": "dbd7ab9746e770401ae3e6f75cda9a3aa1c5bf7f23ab265ba466ee41fe3ba67b"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "cargo-clippy",
+      "actualExitCode": 0,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/started.json",
+          "bytes": 416,
+          "sha256": "3bb14a3dce1518a23c68844ab722670febcfc4c465388b58dfdb000fdce4dcf1"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/completed.json",
+          "bytes": 801,
+          "sha256": "78527ff8cabba1123baf01891a9fc807ceb523b99bd26a3a1d3e4517a4f8d698"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/stderr.log",
+          "bytes": 139,
+          "sha256": "fd4cf15fe99a40012e54de1d69de2f9c6c0997448d738b4b9dd4eb5512fae8d1"
+        }
+      ]
+    },
+    {
+      "name": "cargo-test",
+      "actualExitCode": 101,
+      "records": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/started.json",
+          "bytes": 360,
+          "sha256": "3721b1d3364d7bdce855b9759ea1b9a16b11685a2705ac1bcf7f7da0f5b30133"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/completed.json",
+          "bytes": 741,
+          "sha256": "9f91198689311e3f06b6bb890df6ba3a1e6a3113dc3bdcf85016fc08c8283ddb"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/stdout.log",
+          "bytes": 189007,
+          "sha256": "8ed07a9a7cce689922b38f19aeb5e1f6cddef1eddb2676c9c0d0d10771351be5"
+        },
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/stderr.log",
+          "bytes": 599,
+          "sha256": "625851aaedaa3bc9c1dd6fc0383e64657889e89b6be5ad8970d12a40cd8f99a1"
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "frontendFilesPassed": 503,
+    "frontendTestsPassed": 6116,
+    "rustPassed": 1691,
+    "rustFailed": 1,
+    "rustIgnored": 6,
+    "completedStages": 7,
+    "passedStages": 6,
+    "notStarted": []
+  },
+  "recordedInputProof": {
+    "inputCount": 2392,
+    "beforeAfterExactlyEqualFreeze": true,
+    "sourceMembershipStable": true,
+    "protectedThreeExactlyEqualFreeze": true,
+    "manifests": [
+      {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/inputs-before.json",
+        "bytes": 307153,
+        "sha256": "ae85f2b8ced81de254ef65a2399ef02ed3e3cdbe4638821349dc7ca477d585d7"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/inputs-after.json",
+        "bytes": 307153,
+        "sha256": "ae85f2b8ced81de254ef65a2399ef02ed3e3cdbe4638821349dc7ca477d585d7"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/protected-before.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/protected-after.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/events.jsonl",
+        "bytes": 2225,
+        "sha256": "9a870b97571493eca5b28ab6cf21df84e419fd1944255a36a7226ab4883ed121"
+      }
+    ]
+  },
+  "failure": {
+    "test": "acp_client::preparation_actions::tests::service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap",
+    "source": {
+      "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+      "bytes": 24547,
+      "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96"
+    },
+    "primary": "src/acp_client/preparation_actions_tests.rs:332: readiness oneshot did not succeed within3seconds; captured PTY output empty",
+    "secondary": "reader callback at313 attempted poisoned Mutex after primary assertion panic; not an independent failed test",
+    "laterAssertions": "This invocation did not reach post-readiness attempt/scope retention and exact-reap assertions.",
+    "cause": "Unresolved by this evidence; no attribution to scheduling, system load, PTY delivery or P30 product changes."
+  },
+  "scope": "Original failure is retained and not waived. Earlier controlled141 browser results and178 backend target results retain their exact separate scopes; neither makes this full engineering successful. No product/root commands rerun by reviewer. Raw runner old P08 boundary remains unchanged; this report identifies P30 scope.",
+  "publicationGate": "Do not execute first-run-none success publisher or candidate from this failed summary. A future actually successful run must preserve this actual P30 failed run under explicit retainedPriorRun, not reuse P18 failure metadata.",
+  "reviewerActions": "Read saved summaries/stages/logs/freeze and the specific failing test. Extract only two exact root transcript records. No source edits, tests, App, Agent, DB or process actions."
+}

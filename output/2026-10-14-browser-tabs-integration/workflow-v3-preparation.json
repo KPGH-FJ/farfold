@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "phase": "PREPARATION_ONLY_THIRD_FORMAL_RESULT_UNKNOWN",
+  "publisher": {
+    "path": "output/2026-10-14-browser-tabs-integration/publish_checks-v3.py",
+    "bytes": 9179,
+    "sha256": "616a0ef24a7b669a95216bf546cde4238721934db2633141e463048134f1af54"
+  },
+  "renderer": {
+    "path": "output/2026-10-14-browser-tabs-install-preparation/render.py",
+    "bytes": 23872,
+    "sha256": "c5cbd92bbd8639ae14e4778b7cb09526f2ab4f36fe701a9c69dc3478f19ada38"
+  },
+  "checkpointArgv": {
+    "path": "output/2026-10-14-browser-tabs-integration/checkpoint-argv-03-prepared.json",
+    "bytes": 33345,
+    "sha256": "b9f040d65a7c34083c48d85f37c3c8135701517813c544f7285a4d4e926f5c3f"
+  },
+  "currentProofTemplate": {
+    "schema": 1,
+    "mode": "retainedPriorRuns",
+    "retainedPriorRuns": [
+      {
+        "privateSummary": {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run/summary.json",
+          "bytes": 6358,
+          "sha256": "cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685"
+        },
+        "metadata": {
+          "summary": {
+            "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/summary.json.raw",
+            "bytes": 6358,
+            "sha256": "cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685"
+          },
+          "actualRootExitCode": 1,
+          "actualRootChunk": "a9baaa",
+          "reason": "Original P30 formal run 01 failed its three-second readiness guard with empty collected PTY output. The assertion did not distinguish elapsed timeout from a closed ready channel. Cause remains unresolved; the following mutex poison is secondary to the panic."
+        }
+      },
+      {
+        "privateSummary": {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/summary.json",
+          "bytes": 6351,
+          "sha256": "9b830d61a4a44a7130dd7821f18af0e3128b55f34b0d38b945b09755d9236ee5"
+        },
+        "metadata": {
+          "summary": {
+            "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/summary.json.raw",
+            "bytes": 6351,
+            "sha256": "9b830d61a4a44a7130dd7821f18af0e3128b55f34b0d38b945b09755d9236ee5"
+          },
+          "actualRootExitCode": 1,
+          "actualRootChunk": "174aac",
+          "reason": "Original P30 formal run 02 failed the same readiness guard after original sources were restored. Empty collected PTY output and the subsequent poison remain original failures; passing isolated or instrumented diagnoses do not establish a repair or their cause."
+        }
+      }
+    ]
+  },
+  "proofTemplateBoundary": "Public summary refs are expected future exact-copy destinations, not assertions that publication exists. Root may write this current-proof config only after actual successful publication matches every pin.",
+  "sharedExactCurrentScope": "P30 engineering checks only; native browser pages, real Agent sharing, restart recovery and whole-plan acceptance remain separate. The reused runner raw boundary text is preserved unchanged.",
+  "sharedExactRunHistoryBoundary": "The successful current P30 run is separate from every retained failed formal run listed in retainedPriorRuns. Each original result remains unchanged; isolated or instrumented diagnoses are not repairs or substitutes for formal engineering. P18 historical failures are not relabeled as P30.",
+  "minimumLaterCommands": [
+    {
+      "when": "Only after run03 actually passes all seven, source/membership/protected stable and reviewed",
+      "argv": [
+        "python3",
+        "-B",
+        "output/2026-10-14-browser-tabs-integration/publish_checks-v3.py"
+      ]
+    },
+    {
+      "when": "After actual publication; formatting only the two derived metadata files, never raw",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--write",
+        "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/verification.json",
+        "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/publication.json"
+      ]
+    },
+    {
+      "when": "Fill real pending pins and final reviewed owner count/path; execute the prepared argv exactly once",
+      "argvTemplateFile": "output/2026-10-14-browser-tabs-integration/checkpoint-argv-03-prepared.json"
+    },
+    {
+      "when": "After exact source checkpoint commit, actual engineering pins/config and prior-list publication are reviewed; filenames and destination are placeholders",
+      "argvTemplate": [
+        "python3",
+        "-B",
+        "output/2026-10-14-browser-tabs-install-preparation/render.py",
+        "<ACTUAL_PINS_FILENAME>",
+        "<ACTUAL_ENGINEERING_PATHS_FILENAME>",
+        "<NEW_REVIEW_DIRECTORY_NAME>",
+        "candidate"
+      ]
+    }
+  ],
+  "notExecuted": [
+    "publisher",
+    "checkpoint",
+    "renderer",
+    "tests",
+    "build",
+    "App",
+    "Agent",
+    "database"
+  ]
+}

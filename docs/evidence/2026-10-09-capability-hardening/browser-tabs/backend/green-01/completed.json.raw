@@ -1,0 +1,105 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--lib",
+    "browser_workspace::"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T21:11:04.958646+00:00",
+  "completedAtUtc": "2026-10-13T21:11:33.577939+00:00",
+  "pid": 44307,
+  "actualExitCode": 0,
+  "elapsedSeconds": 28.619186083,
+  "sourceStable": true,
+  "files": [
+    {
+      "path": "src-tauri/native/BrowserWorkspace.m",
+      "bytes": 46155,
+      "sha256": "c977434fca857d93c3f15db77e2dfbf4c948b6974cce4d0f29fdb3abca084b0c"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing.rs",
+      "bytes": 24288,
+      "sha256": "53862ae2b22a59873f17468a19d3f14537271ec943f2d84aca9303d997f60b03"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/permission.rs",
+      "bytes": 9050,
+      "sha256": "cf6ac4de82bf2cc99ad3195d66ae442029fa573e793544cc857c69c422df0a24"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace.rs",
+      "bytes": 13511,
+      "sha256": "4a7b5377fd5c62bb343c0577d02db2d9ba8cd5c2aa242367ff315fcf3296e53a"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/browser_tools.rs",
+      "bytes": 24847,
+      "sha256": "38190051172b771756713fb30f22fce3ddada44a667f37714f3eadaa52623f6c"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/native.rs",
+      "bytes": 27396,
+      "sha256": "7a4d31535f68d6f31771fb288d5ed78c07e4c172f7ebdea281638b5c7d4071f7"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_read.rs",
+      "bytes": 9003,
+      "sha256": "85ab4a7be4d1cdbf21072aa0fd58fe82f98e21e1225a426d9516ec35ed978873"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_read_tests.rs",
+      "bytes": 11018,
+      "sha256": "01c67aab8541d060a55bffafe9a44d5effb7e29821ac64c40ae1539093d41b19"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_store.rs",
+      "bytes": 15950,
+      "sha256": "f01332ed13fbfa6a4f1a00d922f185d7f43e397d618743003c32c1baf7de25e0"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/preview_commands.rs",
+      "bytes": 5601,
+      "sha256": "8b13e027c7980818d5c287b90afe65533efddefdf5fdb24985e9dd093e16e15e"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tab_commands.rs",
+      "bytes": 10271,
+      "sha256": "d2b5d2cb210cc86cd988671b8bba2abb2342c3f0d95e8ee85670865f06ebe8dc"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tab_tests.rs",
+      "bytes": 12332,
+      "sha256": "39ea1ea5a2aefe1746ce65380c62fc14a34ff3da8c3303d088ff8277c804f2c9"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tests.rs",
+      "bytes": 18638,
+      "sha256": "98334f55b06370f2f480d10600636f0735589ff709ecc0872acdd09b39d52f2b"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/windows/mod.rs",
+      "bytes": 25268,
+      "sha256": "d76ab6dba1a5dda4b5c4fcd89fc6cae4b9e6557b68a7d1533d525130ff5a483f"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21954,
+      "sha256": "f0d524c74d445ac5a1a5fffec88feb17112eab2dd1fb92d904a51a2f37046bc1"
+    }
+  ],
+  "stdout": {
+    "path": "output/2026-10-14-browser-tabs-backend/green-01/stdout.log",
+    "bytes": 11036,
+    "sha256": "98de80bb975ead6f680b50b3724d951426ae61b3bfcd214b17f3eadbe4f33d7d"
+  },
+  "stderr": {
+    "path": "output/2026-10-14-browser-tabs-backend/green-01/stderr.log",
+    "bytes": 233,
+    "sha256": "00222bb4b008a1a00d14028082849b86d78feb2310dd96706c5a6f04d64dd71f"
+  }
+}

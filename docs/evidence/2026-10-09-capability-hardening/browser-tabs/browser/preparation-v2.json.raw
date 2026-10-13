@@ -1,0 +1,74 @@
+{
+  "phase": "AUTHORED_NOT_EXECUTED",
+  "supersedes": "preparation.json (retained authored-only draft)",
+  "scope": "Complete App controlled IPC and separate iframe memory; no native/real-Agent/user-data proof",
+  "sourceFreezeRequiredBeforeRun": true,
+  "files": {
+    "fixture.tsx": {
+      "bytes": 5003,
+      "sha256": "204d9d9eaec98e19fde7e49ae64e7c27e6c936068c0edf4b0f8cde7f7062ee78"
+    },
+    "transport.ts": {
+      "bytes": 10008,
+      "sha256": "8b73e68cc8ec9b1fa21abd91d452d4251e30d5feeba660f9a1755a920da3f111"
+    },
+    "run.mjs": {
+      "bytes": 21515,
+      "sha256": "1fd6e8609109d3688ed04b73b635d0d3c043a6465d29f4d82f84e5c0a845ec7d"
+    },
+    "index.html": {
+      "bytes": 1882,
+      "sha256": "bf0ca48efb3b608840f7b2f1b0009a3ddfac2520cad43598aec8b62188629708"
+    },
+    "serve.mjs": {
+      "bytes": 808,
+      "sha256": "4f58d879073143a55d903b7b224e5bf55b5b0a0db345cba566487c8e2a8d1736"
+    },
+    "page-oracle.json": {
+      "bytes": 1689,
+      "sha256": "ffc7eaaebe2f11b7970fd5d25f90d7d317577a17ef660f7b07a48fc19bb96a1d"
+    },
+    "pages/a.html": {
+      "bytes": 747,
+      "sha256": "c8b5bdfefde1f27f703663252270afc598325872fe08ce454d8a24c28e810aaa"
+    },
+    "pages/b.html": {
+      "bytes": 747,
+      "sha256": "de28854dd0a43aa892391686091211dbd25dc33eb4c4ef6081b3840f3ba9ccfb"
+    },
+    "pages/c.html": {
+      "bytes": 747,
+      "sha256": "b1489dda9f8d58df4db74507339d59bccd7199fefb00e786e9c466781b405199"
+    }
+  },
+  "cases": [
+    "three-independent-instances",
+    "keyboard-focus-is-not-selection",
+    "close-hidden-sibling-only-and-reopen",
+    "narrow-layout",
+    "withdraw-quiesce-hide-before-show",
+    "failed-hide-preserves-owner-and-explicit-retry",
+    "same-page-collapse-and-task-switch-retain-scope",
+    "late-open-A-first",
+    "late-open-B-first",
+    "selection-completes-while-task-hidden",
+    "failed-hidden-close-keeps-owner-for-retry",
+    "ABA-stale-snapshot-captured-success",
+    "ABA-stale-snapshot-validate-current"
+  ],
+  "notCovered": [
+    "real native create/show/hide/close ACK",
+    "real Agent pending approvals or read",
+    "Windows hardware",
+    "persistent tab restore",
+    "queued sharing approval in controlled browser driver",
+    "uncertain create UI recovery in controlled driver"
+  ],
+  "validation": "node --check run.mjs actual0 twice; no browser/server launched",
+  "retainedV1": [
+    "authored-v1/fixture.tsx.raw",
+    "authored-v1/transport.ts.raw",
+    "authored-v1/run.mjs.raw"
+  ],
+  "knownPreviousPreparationDrift": "artifactPaneOpen=true added after original preparation pin, before any run; original preparation retained"
+}

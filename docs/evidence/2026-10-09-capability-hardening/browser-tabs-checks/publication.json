@@ -1,0 +1,1303 @@
+{
+  "schema": 1,
+  "publishedAtUtc": "2026-10-13T23:24:33.438428+00:00",
+  "files": [
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/summary.json",
+        "bytes": 6324,
+        "sha256": "a1e8f815723a6a43f2187e6c15f99ba9cf82d1b706be7aef5e47154efae4b2f3"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/summary.json.raw",
+        "bytes": 6324,
+        "sha256": "a1e8f815723a6a43f2187e6c15f99ba9cf82d1b706be7aef5e47154efae4b2f3"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/inputs-before.json",
+        "bytes": 329444,
+        "sha256": "d2cfc43c19a99b2fea015ebd0dcb689bbeb7bcebe8c77c27a708846615e846aa"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/inputs-before.json.raw",
+        "bytes": 329444,
+        "sha256": "d2cfc43c19a99b2fea015ebd0dcb689bbeb7bcebe8c77c27a708846615e846aa"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/inputs-after.json",
+        "bytes": 329444,
+        "sha256": "d2cfc43c19a99b2fea015ebd0dcb689bbeb7bcebe8c77c27a708846615e846aa"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/inputs-after.json.raw",
+        "bytes": 329444,
+        "sha256": "d2cfc43c19a99b2fea015ebd0dcb689bbeb7bcebe8c77c27a708846615e846aa"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/protected-before.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/protected-before.json.raw",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/protected-after.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/protected-after.json.raw",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/preflight.json",
+        "bytes": 268,
+        "sha256": "365ea0a62072deebfa10a19549e9a2832176ed3173c2731a98320323053b08c8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/preflight.json.raw",
+        "bytes": 268,
+        "sha256": "365ea0a62072deebfa10a19549e9a2832176ed3173c2731a98320323053b08c8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/events.jsonl",
+        "bytes": 2231,
+        "sha256": "2efff516365686b46c5861c0a196bf567bbc411916f09bdb91d8841fb13154f4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/events.jsonl.raw",
+        "bytes": 2231,
+        "sha256": "2efff516365686b46c5861c0a196bf567bbc411916f09bdb91d8841fb13154f4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-freeze-03/freeze.json",
+        "bytes": 414405,
+        "sha256": "85b63764754d11ea39f81bfeb50cd29766d42c04121523f0618cff1425365c53"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/freeze.json.raw",
+        "bytes": 414405,
+        "sha256": "85b63764754d11ea39f81bfeb50cd29766d42c04121523f0618cff1425365c53"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/format-check/started.json",
+        "bytes": 288,
+        "sha256": "b45a365df3c3c30f1c3784afe084cc2ef7eb2dd3bf9902bdfd3a83a254f5e79f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/format-check/started.json.raw",
+        "bytes": 288,
+        "sha256": "b45a365df3c3c30f1c3784afe084cc2ef7eb2dd3bf9902bdfd3a83a254f5e79f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/format-check/completed.json",
+        "bytes": 667,
+        "sha256": "afa19fc0b172284b40782670d49c3f9ccdbf246f7699088fb0afa5fd32372385"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/format-check/completed.json.raw",
+        "bytes": 667,
+        "sha256": "afa19fc0b172284b40782670d49c3f9ccdbf246f7699088fb0afa5fd32372385"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/format-check/stdout.log",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/format-check/stdout.log.raw",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/format-check/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/typecheck/started.json",
+        "bytes": 280,
+        "sha256": "aff9d51a5b3e919a5b003e67d6d2cd09dc8eece566db4018e6f7f1fe320d68a1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/typecheck/started.json.raw",
+        "bytes": 280,
+        "sha256": "aff9d51a5b3e919a5b003e67d6d2cd09dc8eece566db4018e6f7f1fe320d68a1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/typecheck/completed.json",
+        "bytes": 664,
+        "sha256": "da6a4e75e89d25e06f197dfd07cffa74a3ae5c88ce1f223854f1b45f3c9a5e45"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/typecheck/completed.json.raw",
+        "bytes": 664,
+        "sha256": "da6a4e75e89d25e06f197dfd07cffa74a3ae5c88ce1f223854f1b45f3c9a5e45"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/typecheck/stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/typecheck/stdout.log.raw",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/typecheck/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/typecheck/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/frontend-test/started.json",
+        "bytes": 274,
+        "sha256": "31c293ac05ac2d3fe8fceaea1ccb3c112474ac1113d2332ee5f39713a0a82027"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/frontend-test/started.json.raw",
+        "bytes": 274,
+        "sha256": "31c293ac05ac2d3fe8fceaea1ccb3c112474ac1113d2332ee5f39713a0a82027"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/frontend-test/completed.json",
+        "bytes": 653,
+        "sha256": "208693a9f60c3f7570560ae2887e56e5833171c6acb60809f7167af797ab1017"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/frontend-test/completed.json.raw",
+        "bytes": 653,
+        "sha256": "208693a9f60c3f7570560ae2887e56e5833171c6acb60809f7167af797ab1017"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/frontend-test/stdout.log",
+        "bytes": 289,
+        "sha256": "d1251705ba65dc6acdda0ece0f1e6c8dd9da043e2d3e81e6ee4ff94be8914224"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/frontend-test/stdout.log.raw",
+        "bytes": 289,
+        "sha256": "d1251705ba65dc6acdda0ece0f1e6c8dd9da043e2d3e81e6ee4ff94be8914224"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/frontend-test/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/frontend-test/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/frontend-build/started.json",
+        "bytes": 278,
+        "sha256": "acdf2b949af889afb8fb2cb16953ad28d57835f0620a436b2dc0824c17678911"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/frontend-build/started.json.raw",
+        "bytes": 278,
+        "sha256": "acdf2b949af889afb8fb2cb16953ad28d57835f0620a436b2dc0824c17678911"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/frontend-build/completed.json",
+        "bytes": 657,
+        "sha256": "bfd4540bd64d01b22be802f25623b4c708ff1bb040085f2c1116834058fe14c2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/frontend-build/completed.json.raw",
+        "bytes": 657,
+        "sha256": "bfd4540bd64d01b22be802f25623b4c708ff1bb040085f2c1116834058fe14c2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/frontend-build/stdout.log",
+        "bytes": 4560,
+        "sha256": "bc715b3b30006053e5e300cf4ee908de5635400d32759a358cf73ee6c5e91e22"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/frontend-build/stdout.log.raw",
+        "bytes": 4560,
+        "sha256": "bc715b3b30006053e5e300cf4ee908de5635400d32759a358cf73ee6c5e91e22"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/frontend-build/stderr.log",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/frontend-build/stderr.log.raw",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/cargo-fmt/started.json",
+        "bytes": 352,
+        "sha256": "99aa968ab3e428aaae3557ccefa41a4e114074e597b6d833b558cfed3ad7e220"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/cargo-fmt/started.json.raw",
+        "bytes": 352,
+        "sha256": "99aa968ab3e428aaae3557ccefa41a4e114074e597b6d833b558cfed3ad7e220"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/cargo-fmt/completed.json",
+        "bytes": 737,
+        "sha256": "e829432bb8434b2c70728cc3f22147f2fbd36e7c791853764d3b275b04cdef75"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/cargo-fmt/completed.json.raw",
+        "bytes": 737,
+        "sha256": "e829432bb8434b2c70728cc3f22147f2fbd36e7c791853764d3b275b04cdef75"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/cargo-fmt/stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/cargo-fmt/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/cargo-clippy/started.json",
+        "bytes": 417,
+        "sha256": "afd1d4a785f47cbd74e5abb82165fd8e37b041721fdb3d6617fcb618b663e1c1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/cargo-clippy/started.json.raw",
+        "bytes": 417,
+        "sha256": "afd1d4a785f47cbd74e5abb82165fd8e37b041721fdb3d6617fcb618b663e1c1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/cargo-clippy/completed.json",
+        "bytes": 800,
+        "sha256": "89da1af8d996f4eb236bff89757b0aea09eadeffcbe899dee570a453ad966bec"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/cargo-clippy/completed.json.raw",
+        "bytes": 800,
+        "sha256": "89da1af8d996f4eb236bff89757b0aea09eadeffcbe899dee570a453ad966bec"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/cargo-clippy/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/cargo-clippy/stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/cargo-clippy/stderr.log",
+        "bytes": 138,
+        "sha256": "d383c082e3f4b0d62b4042ba45a854ae96262c3ecba941a5a4f9fa02789d3ed8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/cargo-clippy/stderr.log.raw",
+        "bytes": 138,
+        "sha256": "d383c082e3f4b0d62b4042ba45a854ae96262c3ecba941a5a4f9fa02789d3ed8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/cargo-test/started.json",
+        "bytes": 360,
+        "sha256": "dd4f890129e99c240fde7a8ce5161fc7282f8dfa94c76447232e1ac054d39cc2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/cargo-test/started.json.raw",
+        "bytes": 360,
+        "sha256": "dd4f890129e99c240fde7a8ce5161fc7282f8dfa94c76447232e1ac054d39cc2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/cargo-test/completed.json",
+        "bytes": 745,
+        "sha256": "1ca9de137f361d2af35c15db758399d8d6392d83014e478262dea6a81c548889"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/cargo-test/completed.json.raw",
+        "bytes": 745,
+        "sha256": "1ca9de137f361d2af35c15db758399d8d6392d83014e478262dea6a81c548889"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/cargo-test/stdout.log",
+        "bytes": 188556,
+        "sha256": "f5a36675a1aeab5fbef5429119969964db0790e316d89d24691432e74d077ddc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/cargo-test/stdout.log.raw",
+        "bytes": 188556,
+        "sha256": "f5a36675a1aeab5fbef5429119969964db0790e316d89d24691432e74d077ddc"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/cargo-test/stderr.log",
+        "bytes": 672,
+        "sha256": "5ca6b8752aa4fc4769ced59c8d613e68bca2c8debf163617974b61a7da348b32"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/cargo-test/stderr.log.raw",
+        "bytes": 672,
+        "sha256": "5ca6b8752aa4fc4769ced59c8d613e68bca2c8debf163617974b61a7da348b32"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/summary.json",
+        "bytes": 6358,
+        "sha256": "cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/summary.json.raw",
+        "bytes": 6358,
+        "sha256": "cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/inputs-before.json",
+        "bytes": 307153,
+        "sha256": "ae85f2b8ced81de254ef65a2399ef02ed3e3cdbe4638821349dc7ca477d585d7"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/inputs-before.json.raw",
+        "bytes": 307153,
+        "sha256": "ae85f2b8ced81de254ef65a2399ef02ed3e3cdbe4638821349dc7ca477d585d7"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/inputs-after.json",
+        "bytes": 307153,
+        "sha256": "ae85f2b8ced81de254ef65a2399ef02ed3e3cdbe4638821349dc7ca477d585d7"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/inputs-after.json.raw",
+        "bytes": 307153,
+        "sha256": "ae85f2b8ced81de254ef65a2399ef02ed3e3cdbe4638821349dc7ca477d585d7"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/protected-before.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/protected-before.json.raw",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/protected-after.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/protected-after.json.raw",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/preflight.json",
+        "bytes": 265,
+        "sha256": "160f7d5d345ff1a9317817844cd92e7f405b2dc7d43be5d3f1626ab4e63d5a9e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/preflight.json.raw",
+        "bytes": 265,
+        "sha256": "160f7d5d345ff1a9317817844cd92e7f405b2dc7d43be5d3f1626ab4e63d5a9e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/events.jsonl",
+        "bytes": 2225,
+        "sha256": "9a870b97571493eca5b28ab6cf21df84e419fd1944255a36a7226ab4883ed121"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/events.jsonl.raw",
+        "bytes": 2225,
+        "sha256": "9a870b97571493eca5b28ab6cf21df84e419fd1944255a36a7226ab4883ed121"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-freeze/freeze.json",
+        "bytes": 391819,
+        "sha256": "424053c3ebbae4e6041cea3344a0f8e4dbab9fd8f2914d80887ca608f151918f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/freeze.json.raw",
+        "bytes": 391819,
+        "sha256": "424053c3ebbae4e6041cea3344a0f8e4dbab9fd8f2914d80887ca608f151918f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/format-check/started.json",
+        "bytes": 288,
+        "sha256": "194af51521af21e7c7806efa0d4240150935d564c7761dd37dc7e5b459c5a85f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/format-check/started.json.raw",
+        "bytes": 288,
+        "sha256": "194af51521af21e7c7806efa0d4240150935d564c7761dd37dc7e5b459c5a85f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/format-check/completed.json",
+        "bytes": 673,
+        "sha256": "6217cf8c2857821f6131694b6cba535d4652699abccf481474585a54baf935b0"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/format-check/completed.json.raw",
+        "bytes": 673,
+        "sha256": "6217cf8c2857821f6131694b6cba535d4652699abccf481474585a54baf935b0"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/format-check/stdout.log",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/format-check/stdout.log.raw",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/format-check/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/started.json",
+        "bytes": 280,
+        "sha256": "449e158f6df2dc5c81237d616fc8dd14a079b3c51f684d149f54cf734279e8bf"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/typecheck/started.json.raw",
+        "bytes": 280,
+        "sha256": "449e158f6df2dc5c81237d616fc8dd14a079b3c51f684d149f54cf734279e8bf"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/completed.json",
+        "bytes": 664,
+        "sha256": "72c444e164860f48fc8279954824947b0fb62a580e442e5cc9868bd9bf64ae9a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/typecheck/completed.json.raw",
+        "bytes": 664,
+        "sha256": "72c444e164860f48fc8279954824947b0fb62a580e442e5cc9868bd9bf64ae9a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/typecheck/stdout.log.raw",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/typecheck/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/typecheck/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/started.json",
+        "bytes": 274,
+        "sha256": "2d7659daca68ec29a4517b4f6a5ca679e903aa5b096375699dfeb719ebc72c3c"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/frontend-test/started.json.raw",
+        "bytes": 274,
+        "sha256": "2d7659daca68ec29a4517b4f6a5ca679e903aa5b096375699dfeb719ebc72c3c"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/completed.json",
+        "bytes": 658,
+        "sha256": "b35e917c7055cf0096557bc36fde5773a7b05ea45e0de98f58d534fde13bc57a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/frontend-test/completed.json.raw",
+        "bytes": 658,
+        "sha256": "b35e917c7055cf0096557bc36fde5773a7b05ea45e0de98f58d534fde13bc57a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/stdout.log",
+        "bytes": 289,
+        "sha256": "c2491415782f2c8aabafccbb4c3dad86491bd33a436dd9b935443f23645396d6"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/frontend-test/stdout.log.raw",
+        "bytes": 289,
+        "sha256": "c2491415782f2c8aabafccbb4c3dad86491bd33a436dd9b935443f23645396d6"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-test/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/frontend-test/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/started.json",
+        "bytes": 277,
+        "sha256": "07a90355260fe6932ee3531b57681a24381f9e876d9cb1a6bbf4ee91fa0c14a5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/frontend-build/started.json.raw",
+        "bytes": 277,
+        "sha256": "07a90355260fe6932ee3531b57681a24381f9e876d9cb1a6bbf4ee91fa0c14a5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/completed.json",
+        "bytes": 661,
+        "sha256": "63d442f8ece8d18a7e592c563f952dc3ff10f9d8204ac9fd2da2b3df0dfcc214"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/frontend-build/completed.json.raw",
+        "bytes": 661,
+        "sha256": "63d442f8ece8d18a7e592c563f952dc3ff10f9d8204ac9fd2da2b3df0dfcc214"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/stdout.log",
+        "bytes": 4560,
+        "sha256": "cdbdda6d522b061db58953181bff7f94799b61823087e8e8892543a00d523975"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/frontend-build/stdout.log.raw",
+        "bytes": 4560,
+        "sha256": "cdbdda6d522b061db58953181bff7f94799b61823087e8e8892543a00d523975"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/frontend-build/stderr.log",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/frontend-build/stderr.log.raw",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/started.json",
+        "bytes": 354,
+        "sha256": "6b436f4e834ec9fc2d8da17e3f6c48a2e67e75d1a22911eea78f56a972a0bb09"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/cargo-fmt/started.json.raw",
+        "bytes": 354,
+        "sha256": "6b436f4e834ec9fc2d8da17e3f6c48a2e67e75d1a22911eea78f56a972a0bb09"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/completed.json",
+        "bytes": 738,
+        "sha256": "dbd7ab9746e770401ae3e6f75cda9a3aa1c5bf7f23ab265ba466ee41fe3ba67b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/cargo-fmt/completed.json.raw",
+        "bytes": 738,
+        "sha256": "dbd7ab9746e770401ae3e6f75cda9a3aa1c5bf7f23ab265ba466ee41fe3ba67b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/cargo-fmt/stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/cargo-fmt/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/started.json",
+        "bytes": 416,
+        "sha256": "3bb14a3dce1518a23c68844ab722670febcfc4c465388b58dfdb000fdce4dcf1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/cargo-clippy/started.json.raw",
+        "bytes": 416,
+        "sha256": "3bb14a3dce1518a23c68844ab722670febcfc4c465388b58dfdb000fdce4dcf1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/completed.json",
+        "bytes": 801,
+        "sha256": "78527ff8cabba1123baf01891a9fc807ceb523b99bd26a3a1d3e4517a4f8d698"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/cargo-clippy/completed.json.raw",
+        "bytes": 801,
+        "sha256": "78527ff8cabba1123baf01891a9fc807ceb523b99bd26a3a1d3e4517a4f8d698"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/cargo-clippy/stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-clippy/stderr.log",
+        "bytes": 139,
+        "sha256": "fd4cf15fe99a40012e54de1d69de2f9c6c0997448d738b4b9dd4eb5512fae8d1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/cargo-clippy/stderr.log.raw",
+        "bytes": 139,
+        "sha256": "fd4cf15fe99a40012e54de1d69de2f9c6c0997448d738b4b9dd4eb5512fae8d1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/started.json",
+        "bytes": 360,
+        "sha256": "3721b1d3364d7bdce855b9759ea1b9a16b11685a2705ac1bcf7f7da0f5b30133"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/cargo-test/started.json.raw",
+        "bytes": 360,
+        "sha256": "3721b1d3364d7bdce855b9759ea1b9a16b11685a2705ac1bcf7f7da0f5b30133"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/completed.json",
+        "bytes": 741,
+        "sha256": "9f91198689311e3f06b6bb890df6ba3a1e6a3113dc3bdcf85016fc08c8283ddb"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/cargo-test/completed.json.raw",
+        "bytes": 741,
+        "sha256": "9f91198689311e3f06b6bb890df6ba3a1e6a3113dc3bdcf85016fc08c8283ddb"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/stdout.log",
+        "bytes": 189007,
+        "sha256": "8ed07a9a7cce689922b38f19aeb5e1f6cddef1eddb2676c9c0d0d10771351be5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/cargo-test/stdout.log.raw",
+        "bytes": 189007,
+        "sha256": "8ed07a9a7cce689922b38f19aeb5e1f6cddef1eddb2676c9c0d0d10771351be5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/stderr.log",
+        "bytes": 599,
+        "sha256": "625851aaedaa3bc9c1dd6fc0383e64657889e89b6be5ad8970d12a40cd8f99a1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/cargo-test/stderr.log.raw",
+        "bytes": 599,
+        "sha256": "625851aaedaa3bc9c1dd6fc0383e64657889e89b6be5ad8970d12a40cd8f99a1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/summary.json",
+        "bytes": 6351,
+        "sha256": "9b830d61a4a44a7130dd7821f18af0e3128b55f34b0d38b945b09755d9236ee5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/summary.json.raw",
+        "bytes": 6351,
+        "sha256": "9b830d61a4a44a7130dd7821f18af0e3128b55f34b0d38b945b09755d9236ee5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/inputs-before.json",
+        "bytes": 316960,
+        "sha256": "888d327530dda4cea27f9daadbdeb6d294ae1a8260162af0529f0a6403bd1d11"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/inputs-before.json.raw",
+        "bytes": 316960,
+        "sha256": "888d327530dda4cea27f9daadbdeb6d294ae1a8260162af0529f0a6403bd1d11"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/inputs-after.json",
+        "bytes": 316960,
+        "sha256": "888d327530dda4cea27f9daadbdeb6d294ae1a8260162af0529f0a6403bd1d11"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/inputs-after.json.raw",
+        "bytes": 316960,
+        "sha256": "888d327530dda4cea27f9daadbdeb6d294ae1a8260162af0529f0a6403bd1d11"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/protected-before.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/protected-before.json.raw",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/protected-after.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/protected-after.json.raw",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/preflight.json",
+        "bytes": 268,
+        "sha256": "f417f22d01f56b178a6d4dfbdece9aace7605b201ee979891e6bc5b8dd464b04"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/preflight.json.raw",
+        "bytes": 268,
+        "sha256": "f417f22d01f56b178a6d4dfbdece9aace7605b201ee979891e6bc5b8dd464b04"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/events.jsonl",
+        "bytes": 2222,
+        "sha256": "2e0aec9e9b3cd46f2a2e5c4c4c6b95b6fae9ece4b6513e42d17a31a33b977c51"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/events.jsonl.raw",
+        "bytes": 2222,
+        "sha256": "2e0aec9e9b3cd46f2a2e5c4c4c6b95b6fae9ece4b6513e42d17a31a33b977c51"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-freeze-02/freeze.json",
+        "bytes": 401759,
+        "sha256": "3c498f0e173aa83292014037a729e167873a2ab9748f4adbb8964830f91a135b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/freeze.json.raw",
+        "bytes": 401759,
+        "sha256": "3c498f0e173aa83292014037a729e167873a2ab9748f4adbb8964830f91a135b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/started.json",
+        "bytes": 288,
+        "sha256": "c71a4dcc0c0574c0a233913352311c8ac9d98b82c0a961a9cc89600633c2e719"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/format-check/started.json.raw",
+        "bytes": 288,
+        "sha256": "c71a4dcc0c0574c0a233913352311c8ac9d98b82c0a961a9cc89600633c2e719"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/completed.json",
+        "bytes": 666,
+        "sha256": "56f52934bd59c92c2996daad3a8f139e206ecfbcca4fe2600d36a6e2937d5f6f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/format-check/completed.json.raw",
+        "bytes": 666,
+        "sha256": "56f52934bd59c92c2996daad3a8f139e206ecfbcca4fe2600d36a6e2937d5f6f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/stdout.log",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/format-check/stdout.log.raw",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/format-check/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/started.json",
+        "bytes": 280,
+        "sha256": "66dc7caa73ae6857811292c15ae629081772faffc5f4285fc727ee6e76a0e762"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/typecheck/started.json.raw",
+        "bytes": 280,
+        "sha256": "66dc7caa73ae6857811292c15ae629081772faffc5f4285fc727ee6e76a0e762"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/completed.json",
+        "bytes": 664,
+        "sha256": "ad36ca95f7fc99fe1d85f185b9038c23bfa2021e7f3ba71ad9040e3c0cc4ae1d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/typecheck/completed.json.raw",
+        "bytes": 664,
+        "sha256": "ad36ca95f7fc99fe1d85f185b9038c23bfa2021e7f3ba71ad9040e3c0cc4ae1d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/typecheck/stdout.log.raw",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/typecheck/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/typecheck/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/started.json",
+        "bytes": 274,
+        "sha256": "c1efb59314b249a5dd0cf23c15b19e12ae336e5f86f05f1485b4425a56ff219a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/frontend-test/started.json.raw",
+        "bytes": 274,
+        "sha256": "c1efb59314b249a5dd0cf23c15b19e12ae336e5f86f05f1485b4425a56ff219a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/completed.json",
+        "bytes": 658,
+        "sha256": "896915a1ad657f688f072ab99088935160b29a074d9b3b428cfffcda1fcc0e8c"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/frontend-test/completed.json.raw",
+        "bytes": 658,
+        "sha256": "896915a1ad657f688f072ab99088935160b29a074d9b3b428cfffcda1fcc0e8c"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/stdout.log",
+        "bytes": 289,
+        "sha256": "c7804324590d9cc0b1b14c265312fe8b9a016f2fee5182340074cf03d5b977a2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/frontend-test/stdout.log.raw",
+        "bytes": 289,
+        "sha256": "c7804324590d9cc0b1b14c265312fe8b9a016f2fee5182340074cf03d5b977a2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-test/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/frontend-test/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/started.json",
+        "bytes": 277,
+        "sha256": "7b4f3bef4ff5e3faf07be8e90cf3d9f4de3fb2af594d0791f2b3ee5e406522a8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/frontend-build/started.json.raw",
+        "bytes": 277,
+        "sha256": "7b4f3bef4ff5e3faf07be8e90cf3d9f4de3fb2af594d0791f2b3ee5e406522a8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/completed.json",
+        "bytes": 661,
+        "sha256": "5443448093c7550f05303ca468a2dc8bdda13e128defbb409bb8fcd70300afc0"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/frontend-build/completed.json.raw",
+        "bytes": 661,
+        "sha256": "5443448093c7550f05303ca468a2dc8bdda13e128defbb409bb8fcd70300afc0"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/stdout.log",
+        "bytes": 4560,
+        "sha256": "84f5f70ba80a66cc4da40e7831f01f0e94be37a4faad8adc50fc8ff606afe077"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/frontend-build/stdout.log.raw",
+        "bytes": 4560,
+        "sha256": "84f5f70ba80a66cc4da40e7831f01f0e94be37a4faad8adc50fc8ff606afe077"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/frontend-build/stderr.log",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/frontend-build/stderr.log.raw",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/started.json",
+        "bytes": 354,
+        "sha256": "97e3bb2ed76fb7e55b2f7087effde75dea9174cce57999ad6028adfc720aeba4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/cargo-fmt/started.json.raw",
+        "bytes": 354,
+        "sha256": "97e3bb2ed76fb7e55b2f7087effde75dea9174cce57999ad6028adfc720aeba4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/completed.json",
+        "bytes": 739,
+        "sha256": "75e648a2629e53f8daec77da37810174dfe99fcb6089074d7cab7bb5536db51f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/cargo-fmt/completed.json.raw",
+        "bytes": 739,
+        "sha256": "75e648a2629e53f8daec77da37810174dfe99fcb6089074d7cab7bb5536db51f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/cargo-fmt/stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/cargo-fmt/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/started.json",
+        "bytes": 416,
+        "sha256": "da2f6307c1823646a82ac2057d7992b2385b444b6b1f23ff468742dcdffebbc1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/cargo-clippy/started.json.raw",
+        "bytes": 416,
+        "sha256": "da2f6307c1823646a82ac2057d7992b2385b444b6b1f23ff468742dcdffebbc1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/completed.json",
+        "bytes": 801,
+        "sha256": "cd2504f5dffeb485d50ece87f9d0478f08c2f1a970dad8b9fa249d36e5b95c84"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/cargo-clippy/completed.json.raw",
+        "bytes": 801,
+        "sha256": "cd2504f5dffeb485d50ece87f9d0478f08c2f1a970dad8b9fa249d36e5b95c84"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/cargo-clippy/stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-clippy/stderr.log",
+        "bytes": 72,
+        "sha256": "d45006197a58d3591511e8220a2f4a8bd039e9a092cd6a66dbadf79d6dc77af2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/cargo-clippy/stderr.log.raw",
+        "bytes": 72,
+        "sha256": "d45006197a58d3591511e8220a2f4a8bd039e9a092cd6a66dbadf79d6dc77af2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/started.json",
+        "bytes": 360,
+        "sha256": "3605a5f7254a9277f54c2362bded944c09e02f15e92d90d508caa301790feaea"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/cargo-test/started.json.raw",
+        "bytes": 360,
+        "sha256": "3605a5f7254a9277f54c2362bded944c09e02f15e92d90d508caa301790feaea"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/completed.json",
+        "bytes": 740,
+        "sha256": "e84f9969ea34f83bfdbb601f776deb1e5cc3d84d41b92a130285656b111f2f8e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/cargo-test/completed.json.raw",
+        "bytes": 740,
+        "sha256": "e84f9969ea34f83bfdbb601f776deb1e5cc3d84d41b92a130285656b111f2f8e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/stdout.log",
+        "bytes": 189007,
+        "sha256": "2317b00728333088b5515e5a425e77bd66bb623ce07cde03f0aa01d4dfc1196d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/cargo-test/stdout.log.raw",
+        "bytes": 189007,
+        "sha256": "2317b00728333088b5515e5a425e77bd66bb623ce07cde03f0aa01d4dfc1196d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/stderr.log",
+        "bytes": 599,
+        "sha256": "59ceb0f6cac346e2214537e5e6a1c363177a73863493e409d3b36527b1da7dfc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/cargo-test/stderr.log.raw",
+        "bytes": 599,
+        "sha256": "59ceb0f6cac346e2214537e5e6a1c363177a73863493e409d3b36527b1da7dfc"
+      }
+    }
+  ],
+  "boundary": "Engineering checks only; installed App, native document workflow, actual Agent, P08 or whole plan acceptance are separate."
+}

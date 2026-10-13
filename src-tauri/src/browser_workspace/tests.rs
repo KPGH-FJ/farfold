@@ -6,6 +6,7 @@ fn ready(state: &BrowserWorkspace, task: &str) -> (u64, BrowserInfo) {
         .reserve(task, Url::parse("https://www.rust-lang.org/").unwrap())
         .unwrap();
     state.event(id, 1, 1, "https://www.rust-lang.org/").unwrap();
+    super::tab_tests::select_initial(&state, task, &info.label);
     (id, info)
 }
 fn result() -> &'static str {
@@ -114,13 +115,13 @@ fn close_pending_retains_owner_for_failed_dispatch_retry() {
     );
 }
 #[test]
-fn replacement_cannot_discard_owner_before_close_ack() {
+fn new_page_does_not_discard_another_tasks_owner() {
     let state = BrowserWorkspace::default();
     let (id, _) = ready(&state, "a");
     assert!(
         state
             .reserve("b", Url::parse("https://www.mozilla.org/").unwrap())
-            .is_err()
+            .is_ok()
     );
     assert_eq!(state.info(id).unwrap().task_key, "a");
 }
@@ -140,7 +141,7 @@ fn old_navigation_finish_cannot_replace_new_requested_url() {
 }
 
 #[test]
-fn failed_close_ack_blocks_replacement_and_is_retryable() {
+fn failed_close_ack_retains_owner_while_new_pages_are_reserved() {
     let state = BrowserWorkspace::default();
     let (id, info) = ready(&state, "a");
     let ticket = state.read_ticket("a", &info.label).unwrap();
@@ -152,7 +153,7 @@ fn failed_close_ack_blocks_replacement_and_is_retryable() {
     assert!(
         state
             .reserve("b", Url::parse("https://www.mozilla.org/").unwrap())
-            .is_err()
+            .is_ok()
     );
     assert!(state.close("a", &info.label).unwrap().is_some());
     assert_eq!(state.acknowledge_close(id).unwrap().phase, "closed");
@@ -346,15 +347,11 @@ pub(crate) fn sharing_scope_fixture(
 ) -> (FixedPageReadScope, FixedPageReadScope) {
     let workspace = BrowserWorkspace::default();
     let (id, _) = ready(&workspace, task);
-    workspace
-        .0
-        .lock()
-        .unwrap()
-        .active
-        .as_mut()
-        .unwrap()
-        .info
-        .label = label.into();
+    {
+        let mut store = workspace.0.lock().unwrap();
+        store.pages.get_mut(&id).unwrap().info.label = label.into();
+        store.selections.get_mut(task).unwrap().label = Some(label.into());
+    }
     let revision = workspace.info(id).unwrap().revision;
     let one = workspace
         .capture_read_scope(task, label, revision, PageReadLease::new())
@@ -423,6 +420,7 @@ fn local_html_is_owned_but_cannot_be_shared_read_or_navigated() {
         task_key: "a".into(),
         label: initial.label.clone(),
         navigation: 1,
+        selection_revision: 0,
     };
     assert!(state.with_read_ticket(&forged_ticket, |_| Ok(())).is_err());
     assert!(state.can_operate(id, None), "hide/show remains available");
@@ -430,13 +428,13 @@ fn local_html_is_owned_but_cannot_be_shared_read_or_navigated() {
     assert!(
         state
             .reserve_html("b", "new.html".into(), html_storage("b"))
-            .is_err()
+            .is_ok()
     );
     state.close_failed(id);
     assert!(
         state
             .reserve_html("b", "new.html".into(), html_storage("b"))
-            .is_err()
+            .is_ok()
     );
     state.close("a", &initial.label).unwrap();
     state.acknowledge_close(id);

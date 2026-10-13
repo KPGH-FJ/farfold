@@ -9,6 +9,7 @@ fn ready() -> (BrowserWorkspace, u64, BrowserInfo) {
         .unwrap();
     state.event(id, 1, 1, "https://example.com/").unwrap();
     let info = state.info(id).unwrap();
+    crate::browser_workspace::tab_tests::select_initial(&state, "task-a", &info.label);
     (state, id, info)
 }
 
@@ -177,6 +178,7 @@ fn ready_after_navigation_or_reopening_never_revives_an_old_scope() {
         .reserve("task-a", Url::parse("https://example.com/").unwrap())
         .unwrap();
     state.event(new_id, 1, 1, "https://example.com/").unwrap();
+    crate::browser_workspace::tab_tests::select_initial(&state, "task-a", &new_info.label);
     assert_ne!(info.label, new_info.label);
     assert!(!current.is_valid());
     assert!(scope(&state, &state.info(new_id).unwrap()).1.is_valid());

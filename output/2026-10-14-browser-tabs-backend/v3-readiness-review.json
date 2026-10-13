@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T23:14:22.583063+00:00",
+  "result": "NO_STATIC_BLOCKER_FOR_TEST_ONLY_FIXTURE_ROBUSTNESS_CHANGE",
+  "implementationOwner": "Root applied the one test-file edit; this review wrote output evidence only.",
+  "file": {
+    "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+    "bytes": 24956,
+    "sha256": "f9dbfb30857dc1ef6d1cc228e373949aaf120d40b1b055fbe727e6caf772dd37"
+  },
+  "original": {
+    "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/preparation_actions_tests.rs.original.raw",
+    "bytes": 24547,
+    "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96"
+  },
+  "diff": {
+    "path": "output/2026-10-14-browser-tabs-backend/source-v3-test-only.diff",
+    "bytes": 1204,
+    "sha256": "b039f496af10458f3d18eebc485eb92c8f340f939c9ccc944902ea0b7343ba96"
+  },
+  "exactDeltaProof": "Replacing exactly the one original readiness assertion block with the reviewed current block reproduces the entire current file byte-for-byte. All remaining bytes, including child script and ownership/reap assertions, are unchanged.",
+  "findings": [
+    "Readiness remains successful only on the exact READY marker received through the real PTY Channel. The10s cap is a test fixture startup budget chosen by root, not a product startup requirement or diagnosed repair.",
+    "Saving Result preserves Debug distinction between timeout Elapsed and receiver RecvError on failure. Cloning the trace in a completed statement releases its mutex guard before assertion panic; this removes the known failure-reporting lock poisoning mechanism.",
+    "After READY, duplicate-attempt rejection, cancellation,10ms configuration-lock-held assertion,6s exact child/group await_exit,1s configuration reacquisition and unchanged settings/agent/manager assertions remain byte-identical. ReapFixture remains installed before waiting.",
+    "All14 prior P30 owned files and5 shared files retain their previous byte/hash values. PTY observer code is fully removed; original pty.rs and4 related production source files match originals."
+  ],
+  "causeStatus": "Original two formal readiness failures remain unresolved. The three instrumented passing runs did not observe READY between3 and10seconds and do not establish startup, scheduling, errno or transport cause.",
+  "validationBoundary": "Static review only for this exact new test revision. No new targeted/cargo test was run. Parent must execute the next formal seven-check run; older green diagnostic results are not acceptance for this revision.",
+  "retainedFormalFailures": [
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run/cargo-test/completed.json",
+      "bytes": 741,
+      "sha256": "9f91198689311e3f06b6bb890df6ba3a1e6a3113dc3bdcf85016fc08c8283ddb"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/cargo-test/completed.json",
+      "bytes": 740,
+      "sha256": "e84f9969ea34f83bfdbb601f776deb1e5cc3d84d41b92a130285656b111f2f8e"
+    }
+  ],
+  "diagnosticConclusions": [
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic/conclusion.json",
+      "bytes": 2658,
+      "sha256": "717b2a826720756010fbcb0bfe1e7611b4c7c2aaad6b2a80ca02f566def4bc16"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-02/conclusion.json",
+      "bytes": 9348,
+      "sha256": "87624a764911deb2ea7a6a9791dfcdccbbf892669e72bd589056c7135422c62a"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-backend/pty-ready-diagnostic-03/conclusion.json",
+      "bytes": 6858,
+      "sha256": "99958d96e2c5e30ffb639e940fe25209b711aae36df13fca1df56fd03bb1a834"
+    }
+  ],
+  "unchangedRelatedProductionSources": [
+    {
+      "path": "src-tauri/src/pty.rs",
+      "bytes": 28407,
+      "sha256": "f2c7fb13de618e2f1a90d1569bcadb70688f039a23fa9746a0acd15aabac3174"
+    },
+    {
+      "path": "src-tauri/src/acp_client/preparation_actions.rs",
+      "bytes": 10920,
+      "sha256": "84ad7a0d5ab500aa3ed7309271ab24b1fcf2dc0045bb8200889405d7cd7b610a"
+    },
+    {
+      "path": "src-tauri/src/auth.rs",
+      "bytes": 47716,
+      "sha256": "fcb20dc1835a5159bfcf935ce39f6794ac1623ef1598b54ddc9c4f6b189e53d9"
+    },
+    {
+      "path": "src-tauri/src/auth/attempts.rs",
+      "bytes": 6922,
+      "sha256": "63271922c5b04cc8dfeecc27e99f0f575115d4dfb05b66ec89629e01c16839c4"
+    },
+    {
+      "path": "src-tauri/src/shell_env/unix.rs",
+      "bytes": 8844,
+      "sha256": "97d6e2a0ab1f97d42e2e05b57cf03d2aecbd8615861e0b0449b6605be27d257e"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/BrowserWorkspace.presentation.test.tsx > restarts bounds synchronization after batched hold and release notifications
+AssertionError: expected 1 to be greater than 1
+ ❯ src/components/BrowserWorkspace.presentation.test.tsx:199:62
+    197|   expect(guard.getSnapshot().blocked).toBe(false);
+    198|   render(props);
+    199|   expect(vi.mocked(requestAnimationFrame).mock.calls.length).toBeGreat…
+       |                                                              ^
+    200|     scheduled,
+    201|   );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

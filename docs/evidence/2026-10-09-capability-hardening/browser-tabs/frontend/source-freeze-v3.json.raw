@@ -1,0 +1,151 @@
+{
+  "observedAtUtc": "2026-10-13T21:31:48.907640+00:00",
+  "previousFreeze": {
+    "path": "output/2026-10-14-browser-tabs-frontend/source-freeze-v2.json",
+    "bytes": 5092,
+    "sha256": "ac769fb970af141ae56ab03e77b159de651ef76511f1b1ec658d0f63120cecbb"
+  },
+  "files": [
+    {
+      "path": "src/runtime/browser_tabs.ts",
+      "bytes": 13221,
+      "sha256": "7c00e8a03b57eb46f4105d749a74871e61c527f0485bb20998f29dbb373dc602",
+      "lines": 392
+    },
+    {
+      "path": "src/runtime/browser_tabs.test.ts",
+      "bytes": 19933,
+      "sha256": "9e82603e2d5f9123c67f27719479ebe3f35a8b88d0482ba0ae1d56391be85e69",
+      "lines": 572
+    },
+    {
+      "path": "src/runtime/browser_workspace.ts",
+      "bytes": 14716,
+      "sha256": "c039667dfc532cb72a7255d7b06045ab41cf3adc6ef1a13c2ff0bbb5dfde460e",
+      "lines": 476
+    },
+    {
+      "path": "src/runtime/browser_workspace.test.ts",
+      "bytes": 21701,
+      "sha256": "8171a98b14a40ceaa68564ac3a1dd8e6dfb4df3e3ffbf2286cac90bdaec878f9",
+      "lines": 587
+    },
+    {
+      "path": "src/runtime/browser_surface.ts",
+      "bytes": 1536,
+      "sha256": "85c78767262cbea94a047925a5eb6ee8585d9453fe57987d216215c62fb65ade",
+      "lines": 46
+    },
+    {
+      "path": "src/runtime/browser_workspace_strings.ts",
+      "bytes": 4674,
+      "sha256": "f729602c01e64a92129f5e5e4bd1414586ff1a793b2d0f6b271e777f085c737e",
+      "lines": 89
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tsx",
+      "bytes": 7822,
+      "sha256": "1cc81249dc58fc8392b38e90ca643ff2d710e80f547091a8581b3e59dc9b872a",
+      "lines": 227
+    },
+    {
+      "path": "src/components/BrowserWorkspacePage.tsx",
+      "bytes": 42454,
+      "sha256": "e2fc0c119e9ee5ffc281dce13d803ddb29f1c9e3924620f12ee1d3c6740b1ae8",
+      "lines": 1310
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tabs.test.tsx",
+      "bytes": 1244,
+      "sha256": "4c4ba561051e59e2a8fe9e27306d13daea211c2d24e383570f6e5b63e00b7cb2",
+      "lines": 34
+    },
+    {
+      "path": "src/components/BrowserWorkspace.test.tsx",
+      "bytes": 46932,
+      "sha256": "b5cedeb8ebf8d018a7c835f4692f40be7c497467d3f796172aa7955c992038bb",
+      "lines": 1462
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "bytes": 21232,
+      "sha256": "c1ebc570aa7d671a48fb003bd63e1aa6317652d489c0e9a17b36e02b8f8da680",
+      "lines": 641
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "bytes": 52082,
+      "sha256": "3e3228c1bb8ef33561330b0da386a4ccbde81f2cb972b6f58def4dde6df0e929",
+      "lines": 1403
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "bytes": 20383,
+      "sha256": "9c0047eea46b3c94a83e6c8efc63edf4c29ca3420a7eb0bdca3a72bbd8050e93",
+      "lines": 607
+    },
+    {
+      "path": "src/App.tsx",
+      "bytes": 46453,
+      "sha256": "437bb0195d243cb8276eaaaeedbdbe9fe7ac65615d331a642eae2a89127d5a76",
+      "lines": 1292
+    },
+    {
+      "path": "src/App.navigation.test.tsx",
+      "bytes": 43264,
+      "sha256": "99f3278329b7cb3453c5873e58cf1ab103e278ce31915bab67e8ddca9604434d",
+      "lines": 1225
+    },
+    {
+      "path": "src/browser-workspace.css",
+      "bytes": 7782,
+      "sha256": "0eb0e2d4dc6882560a7dfb3ab27791b51094b5c7820589a970da14aaed6d3e12",
+      "lines": 421
+    }
+  ],
+  "changedFiles": [
+    {
+      "before": {
+        "path": "src/components/BrowserWorkspace.tsx",
+        "bytes": 7771,
+        "sha256": "fb818167d2edae7744e44a1ad70610d3aebf1a410eb5776c1d76684728f8f704",
+        "lines": 225
+      },
+      "after": {
+        "path": "src/components/BrowserWorkspace.tsx",
+        "bytes": 7822,
+        "sha256": "1cc81249dc58fc8392b38e90ca643ff2d710e80f547091a8581b3e59dc9b872a",
+        "lines": 227
+      }
+    }
+  ],
+  "other15ByteExact": true,
+  "changeScope": "Two existing CSS class substitutions in BrowserWorkspace plus Prettier JSX wrapping. browser-workspace.css and all controller behavior unchanged.",
+  "checks": [
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/visual-format-v3.completed.json",
+      "bytes": 790,
+      "sha256": "c81becbf5deb31db4bdeee52150eea80fcf31c473e8ef27dc143b19a3ef4957b"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/visual-targeted-v3.completed.json",
+      "bytes": 851,
+      "sha256": "46e0a3c932de001231a3ba9627a1917c6227729bd8f549f0c7c25453a3c498c4"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/visual-format-write-v3.completed.json",
+      "bytes": 767,
+      "sha256": "c031b722552c4b6791b1b82a6a7a24124a5e71890fe1721c30b48e54c6957566"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/visual-typecheck-v3.completed.json",
+      "bytes": 692,
+      "sha256": "e7a9ea657ef6779fdd5740a68429d2dae1a6f5ab618d1e6e408367ebb9425b5e"
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-frontend/visual-format-check-v3.completed.json",
+      "bytes": 800,
+      "sha256": "ee3bc43391c83b17e44897137cbcdc0afe9220e2fde22226bfbcc3f918b2c3f6"
+    }
+  ]
+}

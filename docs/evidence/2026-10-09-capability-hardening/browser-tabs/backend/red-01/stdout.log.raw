@@ -1,0 +1,18 @@
+
+running 1 test
+test browser_workspace::tab_tests::second_page_reservation_keeps_first_page_owned ... FAILED
+
+failures:
+
+---- browser_workspace::tab_tests::second_page_reservation_keeps_first_page_owned stdout ----
+
+thread 'browser_workspace::tab_tests::second_page_reservation_keeps_first_page_owned' (29760146) panicked at src/browser_workspace/tab_tests.rs:11:10:
+a second page must be reserved without closing its sibling: "请等待原网页关闭确认后再打开"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    browser_workspace::tab_tests::second_page_reservation_keeps_first_page_owned
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 1687 filtered out; finished in 0.00s
+

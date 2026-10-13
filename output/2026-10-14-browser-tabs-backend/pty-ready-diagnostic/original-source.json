@@ -1,0 +1,7 @@
+{
+  "path": "src-tauri/src/acp_client/preparation_actions_tests.rs",
+  "bytes": 24547,
+  "sha256": "6863a327188767cb9ee1bf696ab3852076c5376e0c0888a37aa53dd579d82f96",
+  "savedAtUtc": "2026-10-13T22:22:31.692083+00:00",
+  "scope": "Temporary instrumentation only in service_configuration_terminal_keeps_attempt_and_scope_until_exact_reap; no test executed."
+}

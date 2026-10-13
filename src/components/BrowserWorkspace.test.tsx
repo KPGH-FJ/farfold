@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { ReactElement } from "react";
-import type { BrowserWorkspaceClient } from "../runtime/browser_workspace";
+import type { BrowserWorkspacePageClient as BrowserWorkspaceClient } from "../runtime/browser_workspace";
 import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
 import { BROWSER_WORKSPACE_STRINGS as S } from "../runtime/browser_workspace_strings";
 
@@ -71,7 +71,7 @@ vi.mock("react", async (original) => {
   };
 });
 
-import { BrowserWorkspace } from "./BrowserWorkspace";
+import { BrowserWorkspacePage as BrowserWorkspace } from "./BrowserWorkspacePage";
 import { BrowserSurfaceGuard } from "../runtime/browser_surface_guard";
 
 function client(): BrowserWorkspaceClient {

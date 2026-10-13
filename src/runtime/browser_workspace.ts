@@ -34,7 +34,7 @@ export interface BrowserWorkspaceSnapshot extends BrowserWorkspaceIdentity {
   revision: number;
 }
 
-export interface BrowserWorkspaceClient {
+export interface BrowserWorkspacePageClient {
   open(input: {
     taskKey: string;
     url: string;
@@ -79,6 +79,30 @@ export interface BrowserWorkspaceClient {
   ): Promise<() => void>;
 }
 
+export interface BrowserWorkspaceSelection {
+  label: string | null;
+  /** Task-local selection fence; never a native navigation or page revision. */
+  revision: number;
+}
+
+export interface BrowserWorkspaceTabsState {
+  taskKey: string;
+  pages: BrowserWorkspaceState[];
+  selection: BrowserWorkspaceSelection;
+}
+
+export interface BrowserWorkspaceClient extends BrowserWorkspacePageClient {
+  tabs(input: { taskKey: string }): Promise<BrowserWorkspaceTabsState>;
+  select(input: {
+    taskKey: string;
+    label: string | null;
+    expectedSelected: BrowserWorkspaceSelection;
+  }): Promise<BrowserWorkspaceTabsState>;
+  listenTabsChanged(
+    listener: (event: { taskKey: string }) => void,
+  ): Promise<() => void>;
+}
+
 export type BrowserWorkspaceInvoke = <T>(
   command: string,
   args: Record<string, unknown>,
@@ -88,8 +112,12 @@ export type BrowserWorkspaceInvoke = <T>(
 export function createBrowserWorkspaceClient(
   invoke: BrowserWorkspaceInvoke,
   listenState: BrowserWorkspaceClient["listenState"],
+  listenTabsChanged: BrowserWorkspaceClient["listenTabsChanged"],
 ): BrowserWorkspaceClient {
   return {
+    tabs: (input) => invoke("browser_workspace_tabs", input),
+    select: (input) => invoke("browser_workspace_select", { ...input }),
+    listenTabsChanged,
     open: (input) => invoke("browser_workspace_open", input),
     openHtml: (input) => invoke("browser_workspace_open_html", input),
     openDirectory: (input) => invoke("browser_workspace_open_directory", input),
@@ -108,6 +136,8 @@ export function createBrowserWorkspaceClient(
 }
 
 export class BrowserWorkspaceRetiredError extends Error {}
+/** A stale presentation intent is withdrawn, not a failed native hide ACK. */
+export class BrowserWorkspaceSelectionChangedError extends BrowserWorkspaceRetiredError {}
 
 /**
  * Owns only a live native surface identity, never page text or persistent state.
@@ -124,7 +154,7 @@ export class BrowserWorkspaceScope {
   private readonly pendingStates = new Map<string, BrowserWorkspaceState>();
 
   constructor(
-    readonly client: BrowserWorkspaceClient,
+    readonly client: BrowserWorkspacePageClient,
     readonly taskKey: string,
     private readonly predecessor?: BrowserWorkspaceScope,
   ) {}
@@ -135,6 +165,19 @@ export class BrowserWorkspaceScope {
 
   get isRetired(): boolean {
     return this.retired;
+  }
+
+  /** Adopt only an exact backend-listed owner after an unacknowledged create. */
+  adopt(state: BrowserWorkspaceState) {
+    if (
+      this.retired ||
+      this.opening ||
+      this.state ||
+      state.taskKey !== this.taskKey ||
+      !state.label
+    )
+      throw new BrowserWorkspaceRetiredError();
+    this.state = state;
   }
 
   accept(next: BrowserWorkspaceState): boolean {
@@ -290,11 +333,12 @@ export class BrowserWorkspaceScope {
     // An unconfirmed hide/show is unsafe to recover by a later show. Closing the
     // same owner remains available and is coordinated by the application guard.
     this.visibility = operation.catch((failure) => {
+      if (failure instanceof BrowserWorkspaceSelectionChangedError) return;
       this.retired = true;
       throw failure;
     });
     void this.visibility.catch(() => {});
-    return this.visibility;
+    return operation;
   }
 
   async snapshot() {

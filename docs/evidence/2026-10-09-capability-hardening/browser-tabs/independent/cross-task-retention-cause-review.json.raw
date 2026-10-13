@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "status": "CAUSE_SUPPORTED_REPAIR_PENDING",
+  "result": {
+    "path": "output/2026-10-14-browser-tabs-browser/chromium-run7.json",
+    "bytes": 752697,
+    "sha256": "15abd4662be99c995d5c107f960a398d966590d781309cb637322dd04180cc1b"
+  },
+  "actualExit": {
+    "code": 1,
+    "chunk": "412a63",
+    "carrier": "Root actual completion reported in conversation; result JSON independently inspected."
+  },
+  "checks": 82,
+  "completedScenarios": 7,
+  "exactBeforeAfterInputMapsEqual": true,
+  "failure": "Error: Returning to A also retains B instead of closing it\n    at check (file:///Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-browser/run.mjs:19:20)\n    at file:///Users/tw/Desktop/farfold/output/2026-10-14-browser-tabs-browser/run.mjs:279:3",
+  "capturedRealLabelCloseInitiator": {
+    "taskKey": "tabs-B",
+    "label": "controlled-page-2",
+    "stack": "Error: Scope close initiator diagnosis\n    at BrowserWorkspaceScope.close (http://127.0.0.1:1540/output/2026-10-14-browser-tabs-browser/fixture.tsx?t=1791927989891:43:10)\n    at closeOwner (http://127.0.0.1:1540/src/components/BrowserWorkspacePage.tsx?t=1791927787197:101:16)\n    at Object.close (http://127.0.0.1:1540/src/components/BrowserWorkspacePage.tsx?t=1791927787197:119:96)\n    at http://127.0.0.1:1540/src/runtime/browser_surface_guard.ts:145:33\n    at Array.map (<anonymous>)\n    at BrowserSurfaceGuard.startTransition (http://127.0.0.1:1540/src/runtime/browser_surface_guard.ts:141:26)\n    at BrowserSurfaceGuard.advance (http://127.0.0.1:1540/src/runtime/browser_surface_guard.ts:119:9)\n    at Object.requestClose (http://127.0.0.1:1540/src/runtime/browser_surface_guard.ts:63:10)\n    at http://127.0.0.1:1540/src/components/BrowserWorkspacePage.tsx?t=1791927787197:191:81\n    at Object.react_stack_bottom_frame (http://127.0.0.1:1540/output/2026-10-14-browser-tabs-browser/.vite/deps/react-dom_client.js?v=77df875c:12944:5)"
+  },
+  "diagnosticHarness": {
+    "path": "output/2026-10-14-browser-tabs-browser/fixture.tsx",
+    "bytes": 5003,
+    "sha256": "204d9d9eaec98e19fde7e49ae64e7c27e6c936068c0edf4b0f8cde7f7062ee78"
+  },
+  "diagnosticSemantics": "Output-only transparent wrapper captures synchronous Scope.close stack, then calls the original method with original receiver and arguments. No fake native success is inferred. Remove wrapper for final acceptance runs.",
+  "sourceAtRun": {
+    "src/App.tsx": "437bb0195d243cb8276eaaaeedbdbe9fe7ac65615d331a642eae2a89127d5a76",
+    "src/components/BrowserWorkspacePage.tsx": "697681ad8be4059ef0910a85e5f6d653e74f428c821fa3f8c281704699661fd8",
+    "src/runtime/browser_surface_guard.ts": "65183ec683c101968fa3090927f2d46d06bdfabf3f408725badb753516ab9a3e"
+  },
+  "sourceChain": [
+    {
+      "path": "src/components/BrowserWorkspacePage.tsx",
+      "lines": "305-316",
+      "meaning": "Owner layout-effect cleanup unlistens and calls requestClose on registered owners. Genuine unmount cleanup must remain."
+    },
+    {
+      "path": "src/App.tsx",
+      "lines": "951-958",
+      "meaning": "Current-task-first keyed list changes [B,A] to [A,B] on return to A even while both pages remain owned."
+    },
+    {
+      "path": "node_modules/.pnpm/react-dom@19.2.8_react@19.2.8/node_modules/react-dom/cjs/react-dom-client.development.js",
+      "lines": "6201-6214,18653-18707",
+      "meaning": "Existing moved fiber receives placement-dev bit; StrictMode dev path disconnects/reconnects layout/passive effects."
+    }
+  ],
+  "attribution": "The actual B close follows registered-owner requestClose and React effect cleanup, distinct from direct RAF closeOwner. Listener teardown/reinstallation and local React implementation support keyed movement replay as cause; final owner correction and whole-App reproduction still required. Empty-label predecessor close stacks are initialization cleanup, not this live-page loss.",
+  "minimalRepairBoundary": [
+    "Keep retained owner insertion order stable; active/current selection must not reorder live-owner slots.",
+    "Retain exact real-unmount close, failed-close retry, permission withdrawal and native ACK guards.",
+    "Do not disable StrictMode, relax the B-retention assertion or suppress arbitrary close errors."
+  ],
+  "proofBoundary": "This is the observed development StrictMode controlled App. A released native App/Windows/real Agent reproduction is not claimed.",
+  "preservation": "Old 138-check greens and all new failures remain original bytes."
+}

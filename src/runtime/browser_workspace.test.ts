@@ -5,7 +5,7 @@ import {
   BrowserWorkspaceScope,
   browserWorkspaceBounds,
   publicBrowserUrl,
-  type BrowserWorkspaceClient,
+  type BrowserWorkspacePageClient as BrowserWorkspaceClient,
   type BrowserWorkspaceSnapshot,
   type BrowserWorkspaceState,
 } from "./browser_workspace";
@@ -363,7 +363,7 @@ const verifiedHtml = {
 
 it("passes the exact verified HTML receipt to the isolated native command", async () => {
   const invoke = vi.fn(async () => ({ ...page(), localFileName: "game.html" }));
-  const client = createBrowserWorkspaceClient(invoke as any, vi.fn());
+  const client = createBrowserWorkspaceClient(invoke as any, vi.fn(), vi.fn());
   await client.openHtml({
     taskKey: "task-a",
     file: verifiedHtml,
@@ -498,7 +498,7 @@ it("does not clear public-page data and retains exact closure after a failed loc
 
 it("maps an explicit clear to the identity-only trusted command", async () => {
   const invoke = vi.fn(async () => undefined);
-  const client = createBrowserWorkspaceClient(invoke as any, vi.fn());
+  const client = createBrowserWorkspaceClient(invoke as any, vi.fn(), vi.fn());
   await client.clearHtmlStorage({ taskKey: "task-a", label: "local-a" });
   expect(invoke).toHaveBeenCalledExactlyOnceWith(
     "browser_workspace_clear_html_storage",
