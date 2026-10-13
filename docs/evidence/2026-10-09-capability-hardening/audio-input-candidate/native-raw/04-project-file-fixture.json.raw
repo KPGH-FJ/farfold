@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-13T10:33:27.931738+00:00",
+  "source": "/Users/tw/Desktop/farfold/src-tauri/test-fixtures/audio-input/valid-metadata-odd-before-and-after.wav",
+  "destination": "/Users/tw/Desktop/farfold/output/2026-10-13-xlsx-input-native-workspace/FarfoldAudioMetadata140.wav",
+  "bytes": 140,
+  "sha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b",
+  "exclusiveCreation": true,
+  "purpose": "Normal at-mention project file selection, no Agent send"
+}

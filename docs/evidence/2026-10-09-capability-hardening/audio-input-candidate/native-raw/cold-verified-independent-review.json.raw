@@ -1,0 +1,212 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T14:11:40.654854+00:00",
+  "sourceCommit": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+  "scope": "Only new post-unlock six-event native cold restoration for dedicated140-byte WAV and33-byte marker. Read-only independent review; no App/UI/Agent action or data capture by reviewer.",
+  "result": "Verified cold-start UI restoration in this new phase: correct lowercase executable process count0 before getApp; restored audio and marker after launch; recovery gate required explicit retention; Send remained disabled; current SaveAndQuit returned and later correct lowercase process check was0.",
+  "priorEvidencePreserved": {
+    "review": {
+      "path": "output/2026-10-13-audio-input-native/at-route-independent-review.json",
+      "bytes": 19918,
+      "sha256": "82d3947a7d444c8cc0ac06938e9fbb3ad076cc2684108a694550bd795bd57340"
+    },
+    "strictColdNotProvenForEarlier1035Route": true,
+    "wrongCase05And06Unchanged": true,
+    "lockedReopenFailureUnchanged": true
+  },
+  "preLaunch": {
+    "finalVerification": {
+      "path": "output/2026-10-13-audio-input-native-data/final-verification-private.json",
+      "bytes": 792,
+      "sha256": "48c50186875637eb30558df0b933d90fe25ebb9377e76837f741878c2c908438"
+    },
+    "process": {
+      "checkedAtUtc": "2026-10-13T14:06:37.642572+00:00",
+      "formalProcessCount": 0,
+      "exactExecutableSha256": "8abd4e1adf11e1d90f7d3797a7dc47064e1cd8fcc575b4be2d7be6c0e56448ec"
+    },
+    "resolvedExactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "pathHashIndependentlyMatched": true,
+    "processImplementation": {
+      "ref": {
+        "path": "output/2026-10-13-audio-input-native-data-preparation/io_support.py",
+        "bytes": 8264,
+        "sha256": "2f88e49076794c9e3a164e0e425dab4f4758f45244442673b96b05b417f34ca9"
+      },
+      "lines": [
+        15,
+        102,
+        107
+      ],
+      "behavior": "ps -axo pid=,comm= must exit0 and exact lowercase executable count must equal0 before receipt is returned."
+    },
+    "captureResultSeparate": {
+      "result": "differencesRequireReview",
+      "differenceCount": 2,
+      "meaning": "First capture has two differences requiring separate review; native UI evidence does not accept or normalize them."
+    }
+  },
+  "rawEvents": {
+    "manifest": {
+      "path": "output/2026-10-13-audio-input-native/transcript-receipts-cold-verified/manifest.json",
+      "bytes": 3959,
+      "sha256": "49ac690fcd2eedaf0177f2a47987969f1815dd3d2d8bcbf71f0111e5f1cbe43a"
+    },
+    "records": 6,
+    "byteExactAgainstSourceOffsets": true,
+    "allHashesMatch": true,
+    "allStatusesCompleted": true,
+    "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+    "entries": [
+      {
+        "path": "output/2026-10-13-audio-input-native/transcript-receipts-cold-verified/01-call_wswuFq1MdoFlZ74uad3NRu5F.jsonl.raw",
+        "bytes": 2993,
+        "sha256": "cf098e19b3f9d007b298a9dbc294dd2f9546eb6936ef6a2c9027e3b77484169d",
+        "sourceByteOffset": 12795647,
+        "timestamp": "2026-10-13T14:07:19.130Z",
+        "callId": "call_wswuFq1MdoFlZ74uad3NRu5F",
+        "status": "completed",
+        "code": "var audioNativeApp = await cua.getApp('/Applications/Farfold.app');",
+        "resultContentTypes": [
+          "text"
+        ]
+      },
+      {
+        "path": "output/2026-10-13-audio-input-native/transcript-receipts-cold-verified/02-call_DrscNiKi01hABbOAxZ7vVbYz.jsonl.raw",
+        "bytes": 3523,
+        "sha256": "53e0666fd147cc4472520563c3dc90c7acb216a9594df908c61b1604f3f86ac5",
+        "sourceByteOffset": 12803635,
+        "timestamp": "2026-10-13T14:07:27.049Z",
+        "callId": "call_DrscNiKi01hABbOAxZ7vVbYz",
+        "status": "completed",
+        "code": "await audioNativeApp.performSecondaryAction(0,'Raise'); await audioNativeApp.getAXState();",
+        "resultContentTypes": [
+          "text"
+        ]
+      },
+      {
+        "path": "output/2026-10-13-audio-input-native/transcript-receipts-cold-verified/03-call_FWCB6cWNBiShTdAOIIkUy1eI.jsonl.raw",
+        "bytes": 2256,
+        "sha256": "724e5c36955a99ad62af5c64d36206dd6608d7bdf9eeac70a5cd9291d027c02b",
+        "sourceByteOffset": 12815360,
+        "timestamp": "2026-10-13T14:07:33.868Z",
+        "callId": "call_FWCB6cWNBiShTdAOIIkUy1eI",
+        "status": "completed",
+        "code": "await audioNativeApp.click(71); await audioNativeApp.getAXState();",
+        "resultContentTypes": [
+          "text"
+        ]
+      },
+      {
+        "path": "output/2026-10-13-audio-input-native/transcript-receipts-cold-verified/04-call_UPMeSK9C7WvJb2l3ryumKqUZ.jsonl.raw",
+        "bytes": 5035,
+        "sha256": "8d0759f21b7438b31ba3ec1c985f3628500bc8a873b3e884d0a2c620a896733f",
+        "sourceByteOffset": 12821855,
+        "timestamp": "2026-10-13T14:07:40.597Z",
+        "callId": "call_UPMeSK9C7WvJb2l3ryumKqUZ",
+        "status": "completed",
+        "code": "await audioNativeApp.click(76); await audioNativeApp.getAXState();",
+        "resultContentTypes": [
+          "text"
+        ]
+      },
+      {
+        "path": "output/2026-10-13-audio-input-native/transcript-receipts-cold-verified/05-call_bAXwtZs5hiRrxjDqRHEsfQ0j.jsonl.raw",
+        "bytes": 1654,
+        "sha256": "8a7e66a094b7c13846610104135930474143095bbc9f220b458a6d41e83fac1f",
+        "sourceByteOffset": 12833917,
+        "timestamp": "2026-10-13T14:07:48.022Z",
+        "callId": "call_bAXwtZs5hiRrxjDqRHEsfQ0j",
+        "status": "completed",
+        "code": "await audioNativeApp.pressKey('super+q'); await audioNativeApp.getAXState();",
+        "resultContentTypes": [
+          "text"
+        ]
+      },
+      {
+        "path": "output/2026-10-13-audio-input-native/transcript-receipts-cold-verified/06-call_2pm2N8TzA40bcFy7jNXX0gWJ.jsonl.raw",
+        "bytes": 962,
+        "sha256": "da03146e816ee143698d58d88bc3b2b095e608420920aae3fe3891efb89d3a6b",
+        "sourceByteOffset": 12838341,
+        "timestamp": "2026-10-13T14:07:54.265Z",
+        "callId": "call_2pm2N8TzA40bcFy7jNXX0gWJ",
+        "status": "completed",
+        "code": "await audioNativeApp.click(57); nodeRepl.write({audioVerifiedColdQuitReturned:true,at:new Date().toISOString()});",
+        "resultContentTypes": [
+          "text"
+        ]
+      }
+    ]
+  },
+  "tested": [
+    {
+      "events": [
+        1,
+        2
+      ],
+      "result": "After earlier exact process absence, getApp succeeded and Raise/read showed full-audio chip, exact marker, recovery gate and disabled Send. Initial getApp rendering alone did not yet include loaded composer; event2 is loaded-state evidence."
+    },
+    {
+      "events": [
+        3
+      ],
+      "result": "Recovery review showed selected dedicated140-byte WAV,0.003s mono11,025Hz8-bit integer PCM."
+    },
+    {
+      "events": [
+        4
+      ],
+      "result": "Explicit KeepSelected succeeded, full-audio and marker retained, checked/selection-retained notice appeared; capability refusal and disabled Send remained."
+    },
+    {
+      "events": [
+        5,
+        6
+      ],
+      "result": "Current quit modal offered SaveAndQuit57; click57 returned audioVerifiedColdQuitReturned true at14:07:54.263Z. Unknown work not classified completed/stopped; no forced quit action."
+    }
+  ],
+  "marker": {
+    "text": "FARFOLD_PDF_LOCAL_REVIEW_20261013",
+    "bytes": 33,
+    "sha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf"
+  },
+  "audio": {
+    "filename": "FarfoldAudioMetadata140.wav",
+    "completeFixtureBytes": 140,
+    "completeFixtureSha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b",
+    "uiApprovedAudioRestored": true,
+    "storedPayloadAndSourceFieldsNotReadOrAcceptedByReviewer": true
+  },
+  "finalProcess": {
+    "receipt": {
+      "path": "output/2026-10-13-audio-input-native/09-after-verified-cold-quit-process.json",
+      "bytes": 429,
+      "sha256": "aca24352aee4cd77d5aaaf74bd4d5dcf3803b52a7c5c1d124c5f370bcc381c5d"
+    },
+    "observedAtUtc": "2026-10-13T14:08:08.912154+00:00",
+    "actualExitCode": 0,
+    "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "exactFormalProcesses": [],
+    "commandCompletedRaw": {
+      "path": "output/2026-10-13-audio-input-native/09-after-verified-cold-quit-process-command.jsonl.raw",
+      "bytes": 3322,
+      "sha256": "affe59460f5f4629f3e25f045af2edb1a2e0472b6d0c7e3f1d55be3888b67418",
+      "sourceByteOffset": 12843192,
+      "timestamp": "2026-10-13T14:08:08.935Z",
+      "naturalExitCode": 0,
+      "returnedJsonEqualsReceipt": true
+    }
+  },
+  "boundaries": {
+    "onlyThisNewPhaseStrictColdUiVerified": true,
+    "nativePickerFailureStillUnresolved": true,
+    "noSendQueueContinueSlashAccountModelServicePermissionActionInSixRecords": true,
+    "noOfficialZeroRequestClaim": true,
+    "noRealAgentAudioComprehensionClaim": true,
+    "noSavedDataEqualityClaim": "Separate post-cold private capture/review still required.",
+    "noNewScreenshotsClaim": true,
+    "noFurtherAppActionByReviewer": true
+  },
+  "next": "Return raw quit/manifest and report to root/status for separately authorized post-cold capture. Resume source-only P32 review; await root document closeout for original-plan preservation check."
+}

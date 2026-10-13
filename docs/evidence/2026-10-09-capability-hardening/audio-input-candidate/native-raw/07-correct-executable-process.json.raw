@@ -1,0 +1,18 @@
+{
+  "observedAtUtc": "2026-10-13T10:37:57.557079+00:00",
+  "sourceCommit": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+  "command": [
+    "/bin/ps",
+    "-axo",
+    "pid=,comm="
+  ],
+  "actualExitCode": 0,
+  "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+  "exactFormalProcesses": [],
+  "stderr": "",
+  "correctsScopeOnly": [
+    "05-cold-quit-exact-process.json",
+    "06-final-quit-exact-process.json"
+  ],
+  "priorWrongCaseReceiptsRetained": true
+}

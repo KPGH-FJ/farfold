@@ -285,3 +285,12 @@ docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/candidate
 docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/candidate-independent.json
 docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/install-independent-final.json
 docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/duplicate-app-cleanup.json
+
+# Exact audio candidate and installation receipts retain their verified bytes.
+docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/candidate-inputs.json
+docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/candidate-inputs-after.json
+docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/candidate.json
+docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/candidate-independent.json
+docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/installation.json
+docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/install-independent-final.json
+docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/duplicate-cleanup.json

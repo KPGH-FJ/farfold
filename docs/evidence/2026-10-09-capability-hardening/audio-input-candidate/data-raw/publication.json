@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "scope": "Exact counts/hashes/field names and technical outcomes only; private database bodies excluded. Both original strict exit2 outcomes remain unaccepted.",
+  "entries": [
+    {
+      "source": "output/2026-10-13-audio-input-native-data/comparison-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/data-raw/before-verified-cold-comparison-private.json.raw",
+      "bytes": 5260,
+      "sha256": "9e66d392d07e57b57e62ee63ed592f0c5223f3b0ea2542eeaec311e91b2fd3f5"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native-data/final-verification-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/data-raw/before-verified-cold-final-verification-private.json.raw",
+      "bytes": 792,
+      "sha256": "48c50186875637eb30558df0b933d90fe25ebb9377e76837f741878c2c908438"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native-data/stdout.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/data-raw/before-verified-cold-stdout.raw",
+      "bytes": 93,
+      "sha256": "a67fa174ace9ef780e83b02655a50abd17a83378018d79d92b110937c605b189"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native-data/stderr.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/data-raw/before-verified-cold-stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native-data-post-cold/comparison-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/data-raw/after-verified-cold-comparison-private.json.raw",
+      "bytes": 5260,
+      "sha256": "0f29eeec0db46dd710b342aa3a6d5ebdd8fb3ec4e8e2f798277c2357ccb40c1b"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native-data-post-cold/final-verification-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/data-raw/after-verified-cold-final-verification-private.json.raw",
+      "bytes": 792,
+      "sha256": "86ebd5b7d0cee6b57fa159b6004e042c9c4d8dc4b49a2a1a5f5fd52ca33c91c2"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native-data-post-cold/stdout.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/data-raw/after-verified-cold-stdout.raw",
+      "bytes": 93,
+      "sha256": "a67fa174ace9ef780e83b02655a50abd17a83378018d79d92b110937c605b189"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native-data-post-cold/stderr.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/data-raw/after-verified-cold-stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native-data-post-cold/localization-summary.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/data-raw/localization-summary.json.raw",
+      "bytes": 4580,
+      "sha256": "7d73bbb9b6d49102ac458e762330c75a5872fc90f826edf40479a53569d3500a"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native-data-post-cold/public-summary.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/data-raw/public-summary.json.raw",
+      "bytes": 4469,
+      "sha256": "5808e510d09c7d43edcb12c74d371b81325d446a8082723b57f588ca27909b0f"
+    }
+  ]
+}

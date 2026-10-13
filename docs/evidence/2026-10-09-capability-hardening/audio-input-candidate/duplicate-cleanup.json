@@ -1,0 +1,13 @@
+{
+  "sourceCommit": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+  "completedAtUtc": "2026-10-13T10:10:01.553462+00:00",
+  "removedPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "exactCandidateAndFormalFiveFilesAndModesMatched": true,
+  "formalApplicationPreserved": true,
+  "archivePreserved": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-13-audio-input-36c56a82/Farfold-0.1.7-36c56a82.zip",
+  "independentInstallation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/install-independent-final.json",
+    "sha256": "77fbaaf786a7d4da5595c63abaf0c6f2ede556a45bbc6afbc256f42c0ccf919a"
+  },
+  "boundary": "Only the exact verified generated app duplicate was removed; no source, formal app, archive, backup or user data was removed."
+}

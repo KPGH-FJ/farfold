@@ -1,0 +1,132 @@
+{
+  "phase": "postColdStrictDifferenceLocalizationNotAcceptance",
+  "recordedAtUtc": "2026-10-13T14:19:22.927278+00:00",
+  "sourceCommit": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+  "originalInstallBaselineComparison": {
+    "result": "differencesRequireReview",
+    "tables": {
+      "agents": {
+        "count": 40,
+        "wholeRowsUnchanged": 39
+      },
+      "dismissed_sessions": {
+        "count": 171,
+        "wholeRowsUnchanged": 171
+      },
+      "sessions": {
+        "count": 135,
+        "wholeRowsUnchanged": 135
+      },
+      "settings": {
+        "count": 53,
+        "wholeRowsUnchanged": 52
+      }
+    },
+    "differences": [
+      {
+        "table": "agents",
+        "rowKeySha256": "08f6b585592467d20717e8abd8dd02b9fb430ba65eb4b745c373ce3001ef5dae",
+        "columns": [
+          {
+            "column": "updated_at",
+            "beforeSha256": "a26955cf0f955b51da3ac9409732d2929a8909d8062c37ebc3d5f9d844784ea8",
+            "afterSha256": "899a0ecc64739ba529ccefcec1a45fe8695b653e5b1cd36cd00a9d4039064be0"
+          }
+        ]
+      },
+      {
+        "table": "settings",
+        "rowKeySha256": "0ca5ab37ef0c73593f6d671e42c6089ce519b8c0e4c479fad075b3301b95a188",
+        "columns": [
+          {
+            "column": "value",
+            "beforeSha256": "eedc468116acf34c3369424dc31175699562378002bc9788460bc1c75bb17185",
+            "afterSha256": "82f57a06401447946e35848192ec908c41bed94d2dc192587460b8eb37ed458d"
+          }
+        ]
+      }
+    ],
+    "differenceCount": 2,
+    "schemaAndVersionEqual": true,
+    "acceptedDifferences": []
+  },
+  "firstCaptureToPostColdComparison": {
+    "result": "differencesRequireReview",
+    "tables": {
+      "agents": {
+        "count": 40,
+        "wholeRowsUnchanged": 39
+      },
+      "dismissed_sessions": {
+        "count": 171,
+        "wholeRowsUnchanged": 171
+      },
+      "sessions": {
+        "count": 135,
+        "wholeRowsUnchanged": 135
+      },
+      "settings": {
+        "count": 53,
+        "wholeRowsUnchanged": 53
+      }
+    },
+    "differences": [
+      {
+        "table": "agents",
+        "rowKeySha256": "08f6b585592467d20717e8abd8dd02b9fb430ba65eb4b745c373ce3001ef5dae",
+        "columns": [
+          {
+            "column": "updated_at",
+            "beforeSha256": "8e6c690ce3fdc685d075be74566a1594cb96a93145072a877a2730cd301c3461",
+            "afterSha256": "899a0ecc64739ba529ccefcec1a45fe8695b653e5b1cd36cd00a9d4039064be0"
+          }
+        ]
+      }
+    ],
+    "differenceCount": 1,
+    "schemaAndVersionEqual": true,
+    "acceptedDifferences": []
+  },
+  "originalStrictExitCodes": [
+    2,
+    2
+  ],
+  "originalOutputsPreserved": true,
+  "snapshotsStableAfterRead": true,
+  "readScope": "Three retained immutable second-copy databases only",
+  "liveDatabaseOpened": false,
+  "firstOrOriginalDatabaseOpened": false,
+  "draft": {
+    "composerKeySha256": "80270e39ab5a8e50f949b1287e9432cef723e843964056ef04e1f185a4d3b301",
+    "composerCount": 10,
+    "markerBytes": 33,
+    "markerSha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf",
+    "markerUnchangedFromInstallBaseline": true,
+    "firstToPostColdEntireUnsentWorkRawValueEqual": true,
+    "attachmentsBeforeInstall": 0,
+    "attachmentsAfter": 1,
+    "sendPendingDifferenceFromInstall": "absent -> false",
+    "audioEncodingPresent": false,
+    "completeAudioBytes": 140,
+    "completeAudioSha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b",
+    "base64Sha256": "30ec54ee1c0d56ee56905e2f7f3596f67d2fd871b4a4bf0e2d7c55ee25fe3831",
+    "exactOriginalAndCopiedSyntheticFixtureBytes": true,
+    "sourceUriAndResolvedPathMatchSyntheticCopy": true,
+    "sourceUriSha256": "394e9fc8a0692a1cf6f2d630fde71f95114b777e33b4471943366ae86cca40d8",
+    "allSevenVerifiedFileFieldsUnchangedAcrossCold": true,
+    "verifiedFileSha256": "755d27a8243827ad7b69996748ad50192adda134dbd2234c25dff87375b162d9",
+    "localAudioMetadata": {
+      "channels": 1,
+      "sampleRate": 11025,
+      "bitsPerSample": 8,
+      "frames": 23,
+      "durationMs": 3
+    },
+    "otherComposersAndChoiceFeedbackQueuesActivityExact": true
+  },
+  "unknown": [
+    "Exact historical writer of Agent.updated_at remains unproven"
+  ],
+  "scopeConclusion": "One complete synthetic audio attachment and original marker survive this verified cold UI phase. Raw unsentWork matches the first capture exactly. Both install-baseline strict comparisons remain exit 2; timestamp differences are unaccepted. No real Agent prompt/audio comprehension proof.",
+  "privateTextOrAccountValuesIncluded": false
+}

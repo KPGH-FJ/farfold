@@ -1,0 +1,15 @@
+{
+  "observedAtUtc": "2026-10-13T10:40:04.654970+00:00",
+  "sourceCommit": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+  "command": [
+    "/bin/ps",
+    "-axo",
+    "pid=,comm="
+  ],
+  "actualExitCode": 0,
+  "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+  "exactFormalProcesses": [],
+  "stderr": "",
+  "context": "CUA launch after07 was rejected because Mac locked; no later UI action. Original05/06 wrong-case results remain invalid as zero-process proof.",
+  "noFurtherAppActionUntilCaptureFinishes": true
+}

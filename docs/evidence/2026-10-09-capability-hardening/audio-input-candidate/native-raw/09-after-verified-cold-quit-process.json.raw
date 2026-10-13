@@ -1,0 +1,15 @@
+{
+  "observedAtUtc": "2026-10-13T14:08:08.912154+00:00",
+  "sourceCommit": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+  "command": [
+    "/bin/ps",
+    "-axo",
+    "pid=,comm="
+  ],
+  "actualExitCode": 0,
+  "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+  "exactFormalProcesses": [],
+  "stderr": "",
+  "normalQuitActionUtc": "2026-10-13T14:07:54.263Z",
+  "noFurtherAppActionUntilCaptureFinishes": true
+}

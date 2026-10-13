@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-13T10:36:23.973038+00:00",
+  "command": [
+    "ps",
+    "-axo",
+    "pid=,comm="
+  ],
+  "actualExitCode": 0,
+  "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/Farfold",
+  "matchingLines": [],
+  "stderr": "",
+  "normalQuitActionUtc": "2026-10-13T10:36:15.427Z"
+}

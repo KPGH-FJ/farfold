@@ -2,7 +2,11 @@
 
 ## 当前架构摘要（2026-10-13）
 
-PCM WAV 输入沿用共用附件：`draft_attachment/audio.rs` 识别候选，`file_delivery/audio_input.rs` 验证完整文件及来源，实际发送连接核音频能力和每条消息 16 MiB 总量；前端负责明确审阅、确认、保存归属与恢复复核，发送仅含官方音频字段。`draft_audio_encoding.ts` 在单次既有草稿快照内去重相同音频字符串，保持原子写入、旧格式兼容及 32 MiB 保存限制，并限制 256 处引用与 96 MiB 展开量。[前端](evidence/2026-10-09-capability-hardening/audio-input/frontend/publication.json)、[后端](evidence/2026-10-09-capability-hardening/audio-input/backend/publication.json)及[独立复核](evidence/2026-10-09-capability-hardening/audio-input/independent/publication.json)已完成本片受控验证；当前 v2 只比受测 v1 多一份测试排版变化。七项工程、候选、正式安装和真实 Agent 接收仍待验。
+PCM WAV 输入沿用共用附件：`draft_attachment/audio.rs` 识别候选，`file_delivery/audio_input.rs` 验证完整文件及来源，实际发送连接核音频能力和每条消息 16 MiB 总量；前端负责明确审阅、确认、保存归属与恢复复核，发送仅含官方音频字段。`draft_audio_encoding.ts` 在单次既有草稿快照内去重相同音频字符串，保持原子写入、旧格式兼容及 32 MiB 保存限制，并限制 256 处引用与 96 MiB 展开量。[前端](evidence/2026-10-09-capability-hardening/audio-input/frontend/publication.json)、[后端](evidence/2026-10-09-capability-hardening/audio-input/backend/publication.json)及[独立复核](evidence/2026-10-09-capability-hardening/audio-input/independent/publication.json)已完成本片受控验证；当前 v2 只比受测 v1 多一份测试排版变化。本片工程、安装及有限正式分项见下文；真实 Agent 接收仍待验。
+
+当前正式应用为 `36c56a82` / 0.1.7 arm64，源码已推送 main。[音频七项工程检查](evidence/2026-10-09-capability-hardening/audio-input-checks/verification.json)在 1,736 个稳定输入上全部通过：前端 488 文件 / 5,763 项，Rust 1,650 项 / 6 忽略；[候选](evidence/2026-10-09-capability-hardening/audio-input-candidate/candidate-independent.json)9/9、[安装独立检查](evidence/2026-10-09-capability-hardening/audio-input-candidate/install-independent-final.json)10/10。安装前、替换前及安装后三份 217,400 条完整清单字节一致，重复打包应用已精确移除，唯一正式应用与候选 ZIP 保留。
+
+[正式音频分项](evidence/2026-10-09-capability-hardening/audio-input-candidate/installed-native-scoped.json)通过 `@` 项目文件入口完成 140 字节合成 PCM WAV 的完整预览、取消保留文件位置、明确确认并保存，以及有正确进程退出证据的冷恢复与重新核对。当前连接未声明音频输入，附件保持完整音频且发送禁用；未向真实 Agent 发送。系统文件面板的 WAV“打开”仍不可用，NEW-26 未关闭；`@` 入口成功不证明系统面板已修复。早期两份进程检查误用了可执行文件名大小写，原失败保留，后补的正确检查不追认此前冷恢复；用户解锁后已另做真实冷恢复。两次运行后的严格数据比较均实际退出 2，原结果和两处差异保留：一条 Agent 的更新时间，以及本轮原有草稿新增完整音频与 `sendPending` 缺省变为 `false`，具体历史写入者未证。独立第二副本核到原 135 条会话、171 条屏蔽、39 条其他 Agent、52 项其他设置及其他 9 份草稿不变；两次捕获之间，53 项设置逐原值相同，整个草稿原始字符串、33 字节标记、140 字节音频全文件哈希及 7 项来源字段跨真实冷恢复完全一致，仅同一 Agent 更新时间再变。这两轮捕获与独立核对仅通过 SQLite 打开第二工作副本及新合并副本，不把局部保持写成全部数据不变。NEW-27 的 16 MiB 发送/待发容量及 NEW-28 的错误归属全路径仍只有受控证据，有限正式分项不替代这些完成条件。
 
 原型 07 已接入正式工作台，最近安装与有限实机核对见 [当前状态](status.md)；原型示例、工程检查和真实 Agent 工作仍分开记证。本文的模块职责以当前源码为准，带日期小节保留当时实现的范围；其中“本片”“首片”“当时未安装”等不是新的执行指令，也不能覆盖后续已实现能力。
 
@@ -21,7 +25,7 @@ PCM WAV 输入沿用共用附件：`draft_attachment/audio.rs` 识别候选，`f
 
 [当前修正证据](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json)保留63f正式有界读取的失败：候选9项、安装10项已过，三份217,400条清单一致，实际1页/1段文字，但已知用户文字及前缀均0匹配，预览/打开未执行。来源过滤真红后Node19项、Rust类12项、独立23项通过；选择器仅追加一个既有共用样式选择器，双浏览器各23项通过，原生空白原因未唯一定位，后续候选的本片正式效果另见下段。三处修正的原七项工程全部实际通过；[追加范围说明的复查](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/verification.json)在1,578稳定输入上实际执行四项前端并通过（442文件/5,203项），三项后端因相关输入未变明确复用原结果（Rust1,610项/6忽略），本轮未再执行，不算新安装验证。63f原轮正常退出后数据按完整字段保持，仅Claude providers缺失→空对象及更新时间变化获接受，具体写入者未证。原源码25项引用已转为历史引用，旧失败及原记录保持；P32整体与29家原标准未完成。
 
-当前正式应用已更新为 `e5995b219` / 0.1.7 arm64，源码已推送 main。[PDF 与权限保护整合检查](evidence/2026-10-09-capability-hardening/pdf-permission-checks/verification.json)在 1,703 个稳定输入上七项全部实际通过：前端 481 文件 / 5,643 项，Rust 1,634 项 / 6 忽略。保存配置期间漂移及首发拒绝后重试绕过确认的两轮原始失败均保留，5 项竞态对照与 37 项发送回归通过。[正式安装](evidence/2026-10-09-capability-hardening/pdf-permission-candidate/installation.json)独立候选 9/9、安装 10/10；安装前、替换前、安装后三份 217,400 条完整清单字节一致。重复打包应用已精确移除，唯一正式应用与候选 ZIP 保留；这只证明安装时的数据保持，正式界面运行后的核对另记。
+此前 PDF/权限版本为 `e5995b219` / 0.1.7 arm64，源码已推送 main。[PDF 与权限保护整合检查](evidence/2026-10-09-capability-hardening/pdf-permission-checks/verification.json)在 1,703 个稳定输入上七项全部实际通过：前端 481 文件 / 5,643 项，Rust 1,634 项 / 6 忽略。保存配置期间漂移及首发拒绝后重试绕过确认的两轮原始失败均保留，5 项竞态对照与 37 项发送回归通过。[正式安装](evidence/2026-10-09-capability-hardening/pdf-permission-candidate/installation.json)独立候选 9/9、安装 10/10；安装前、替换前、安装后三份 217,400 条完整清单字节一致。重复打包应用已精确移除，唯一正式应用与候选 ZIP 保留；这只证明安装时的数据保持，正式界面运行后的核对另记。
 
 完整 App 的权限/PDF 组合受控检查在 Chromium、WebKit 各 32 项通过；实际打包的两级 PDF 工作线程在纯静态服务各 3 个样本通过，服务字节与产物哈希一致。正式界面已核到权限“下次消息的选择”、当前完整权限未知说明和取消后原选择保留；文件面板选中 PDF 后“打开”不可用，XLSX 对照相同，来源尚未定位，尚无 PDF 路径交到解析器。PDF 正式读取、附件冷恢复、真实 Agent 接收仍未验证。新的真实请求继续暂停，NEW-24 完整权限恢复、P08 全项和其余计划条件保持未完成。
 

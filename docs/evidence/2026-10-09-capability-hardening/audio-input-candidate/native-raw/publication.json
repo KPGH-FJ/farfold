@@ -1,0 +1,111 @@
+{
+  "schema": 1,
+  "scope": "Selected exact native events without history/sidebar or private database contents. Wrong-case process receipts remain invalid as proof; later correct observations do not retroactively prove cold exit. Original full events remain private. Separate later cold phase followed a correctly verified zero process and has its own retained evidence.",
+  "entries": [
+    {
+      "source": "output/2026-10-13-audio-input-native/transcript-receipts-at-route/08-call_fd660d70463e493c9b5e95340681bbeb.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/08-call_fd660d70463e493c9b5e95340681bbeb.jsonl.raw",
+      "sha256": "4f4f999563395ebefeff9e2dbcae8d75a1770a562d34e5d1e2f6884da9169ec2",
+      "bytes": 2390,
+      "sourceTimestamp": "2026-10-13T10:34:29.211Z"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/transcript-receipts-at-route/17-call_03b08b93b77c471286fd4730a46065cb.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/17-call_03b08b93b77c471286fd4730a46065cb.jsonl.raw",
+      "sha256": "f3236ef0c3584049c97a0650210e7796c0efeb099f014b3d592d653d53f0589d",
+      "bytes": 2275,
+      "sourceTimestamp": "2026-10-13T10:35:31.345Z"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/transcript-receipts-at-route/23-call_5d6236be44b940b99f50b8cb7b79f077.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/23-call_5d6236be44b940b99f50b8cb7b79f077.jsonl.raw",
+      "sha256": "6ecb40b569c2f51a605c7457b9e1ff47a90d4210154e80572f063871a815710a",
+      "bytes": 1709,
+      "sourceTimestamp": "2026-10-13T10:36:09.814Z"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/transcript-receipts-at-route/24-call_2ce57cce74544e4dbcc5f935734eb8a3.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/24-call_2ce57cce74544e4dbcc5f935734eb8a3.jsonl.raw",
+      "sha256": "238035e9cbae582ed8330ac1ed8562ceeeca0aaf76a35ad129623a863bc8c0f4",
+      "bytes": 980,
+      "sourceTimestamp": "2026-10-13T10:36:15.428Z"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/04-project-file-fixture.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/04-project-file-fixture.json.raw",
+      "sha256": "d273601f0ff2f33779d701bb0db17e70a75b5cd0eb4c77f7b4dc60d768cb3ebe",
+      "bytes": 481
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/05-cold-quit-exact-process.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/05-cold-quit-exact-process.json.raw",
+      "sha256": "715f3c4ad1c17c4ba1b56b189521e418b7fcb1c3ab47918628307c195afbcf55",
+      "bytes": 294
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/06-final-quit-exact-process.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/06-final-quit-exact-process.json.raw",
+      "sha256": "4c2e9652b6798bc3ede2b544eb8453b9af943765a3ea28e8a7155a082b8e57e1",
+      "bytes": 294
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/07-correct-executable-process.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/07-correct-executable-process.json.raw",
+      "sha256": "d3919120ef2cb4b6e2a41b47b735f40f6d5f5533a078af3486ef17b09cbdf706",
+      "bytes": 476
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/08-before-data-capture-process.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/08-before-data-capture-process.json.raw",
+      "sha256": "30cd862cfa145755bc404d1126415f027ce14521a3b394fa919007e60247c597",
+      "bytes": 535
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/08-locked-reopen-call_0f159eeca38643d18ca52d769ca6d13a.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/08-locked-reopen-call_0f159eeca38643d18ca52d769ca6d13a.jsonl.raw",
+      "sha256": "c1624ba47c5b97c900d1ee6f828cdfbcf8d70b90511d2f8b82be6bca01a0ab9b",
+      "bytes": 990
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/transcript-receipts-cold-verified/03-call_FWCB6cWNBiShTdAOIIkUy1eI.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/cold-03-call_FWCB6cWNBiShTdAOIIkUy1eI.jsonl.raw",
+      "sha256": "724e5c36955a99ad62af5c64d36206dd6608d7bdf9eeac70a5cd9291d027c02b",
+      "bytes": 2256,
+      "sourceTimestamp": "2026-10-13T14:07:33.868Z"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/transcript-receipts-cold-verified/05-call_bAXwtZs5hiRrxjDqRHEsfQ0j.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/cold-05-call_bAXwtZs5hiRrxjDqRHEsfQ0j.jsonl.raw",
+      "sha256": "8a7e66a094b7c13846610104135930474143095bbc9f220b458a6d41e83fac1f",
+      "bytes": 1654,
+      "sourceTimestamp": "2026-10-13T14:07:48.022Z"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/transcript-receipts-cold-verified/06-call_2pm2N8TzA40bcFy7jNXX0gWJ.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/cold-06-call_2pm2N8TzA40bcFy7jNXX0gWJ.jsonl.raw",
+      "sha256": "da03146e816ee143698d58d88bc3b2b095e608420920aae3fe3891efb89d3a6b",
+      "bytes": 962,
+      "sourceTimestamp": "2026-10-13T14:07:54.265Z"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/09-after-verified-cold-quit-process.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/09-after-verified-cold-quit-process.json.raw",
+      "sha256": "aca24352aee4cd77d5aaaf74bd4d5dcf3803b52a7c5c1d124c5f370bcc381c5d",
+      "bytes": 429
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/at-route-independent-review.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/at-route-independent-review.json.raw",
+      "sha256": "82d3947a7d444c8cc0ac06938e9fbb3ad076cc2684108a694550bd795bd57340",
+      "bytes": 19918,
+      "type": "Independent scoped review; original unchanged"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-native/cold-verified-independent-review.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/cold-verified-independent-review.json.raw",
+      "sha256": "87b67da84375cdefb509b680b8b4b1c6981cf0117a0a3466433290c21580bd51",
+      "bytes": 9306,
+      "type": "Independent scoped review; original unchanged"
+    }
+  ]
+}

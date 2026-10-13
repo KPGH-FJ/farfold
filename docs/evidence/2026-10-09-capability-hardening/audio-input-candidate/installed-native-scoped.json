@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T14:18:01.005593+00:00",
+  "sourceCommit": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+  "scope": "Bounded PCM WAV content input, installed arm64 app, one140-byte synthetic WAV; no real Agent audio request.",
+  "engineering": {
+    "sevenCommandsActualExit0": true,
+    "stableInputs": 1736,
+    "frontendFiles": 488,
+    "frontendTestsPassed": 5763,
+    "rustPassed": 1650,
+    "rustIgnored": 6,
+    "evidence": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/verification.json",
+      "sha256": "e890ba610c467238a839dc9f84f1d759a2c29b0e6b5d225a50e5836011a6c614",
+      "bytes": 7162
+    }
+  },
+  "installation": {
+    "version": "0.1.7",
+    "identifier": "ai.farfold.desktop",
+    "architecture": "arm64",
+    "signature": "ad-hoc; not notarized or public distribution",
+    "candidateChecksPassed": 9,
+    "installedChecksPassed": 10,
+    "threeCompleteInstallManifestsEntries": 217400,
+    "threeManifestsByteEqualSha256": "de71dbcb899c71947ef22b38b056f3e36b1a5147691f278de61cb47376623cb6",
+    "evidence": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/candidate-independent.json",
+        "sha256": "1a151333ffd8cf75ce2d49b68e6c93032e04e3ac5588641f681d1fa02953df26",
+        "bytes": 3060
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/installation.json",
+        "sha256": "e6dee976730601dd8fc7d6a6f5518fc3af7f47bf2009a473468ff169e401a954",
+        "bytes": 3492
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/install-independent-final.json",
+        "sha256": "77fbaaf786a7d4da5595c63abaf0c6f2ede556a45bbc6afbc256f42c0ccf919a",
+        "bytes": 88884
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/duplicate-cleanup.json",
+        "sha256": "6be13d23f600e5d28626f2da5d4d6c11bc803ceac58db35a51ef2bbc9594d223",
+        "bytes": 834
+      }
+    ]
+  },
+  "native": {
+    "projectFileRoute": "Normal at-mention project-file search in existing dedicated workspace; no injected app state.",
+    "fixture": {
+      "bytes": 140,
+      "sha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b",
+      "channels": 1,
+      "sampleRate": 11025,
+      "bitsPerSample": 8,
+      "displaySeconds": "0.003"
+    },
+    "verified": [
+      "Default selected attachment remains file-position mode.",
+      "Complete PCM metadata preview and cancel retain file-position mode.",
+      "Explicit full-audio confirmation displays successful persistence.",
+      "Capability unavailable notice retains full audio and disables send.",
+      "Separate correctly bounded cold phase restores full audio plus original33-byte marker and requires recovery review.",
+      "Explicit recovery review checks complete file metadata and retains selected audio; send remains disabled.",
+      "Normal save-and-quit followed by correct lowercase executable process-zero observation."
+    ],
+    "markerBytes": 33,
+    "markerSha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf",
+    "uiActionAudit": "No send/queue-continue/slash/account/model/service/permission-changing action in reviewed native records. This is not an official Agent request-counter assertion.",
+    "earlierErrorsRetained": [
+      "System file picker Open disabled for WAV; earlier PDF/XLSX comparison same; coordinate click noWindowsAvailable. Root cause unresolved NEW-26.",
+      "At-route05/06 process receipts used incorrect uppercase executable. Empty matches do not prove actual app exit. Later observations do not retroactively prove that cold boundary.",
+      "One invalid element, paste-position correction and one CUA state-guard rejection remain in original events.",
+      "Mac-lock launch rejection preserved. User unlocked; a separate correct process-zero cold cycle then passed."
+    ],
+    "coldReview": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/cold-verified-independent-review.json.raw",
+      "sha256": "87b67da84375cdefb509b680b8b4b1c6981cf0117a0a3466433290c21580bd51",
+      "bytes": 9306
+    },
+    "atRouteReview": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/at-route-independent-review.json.raw",
+      "sha256": "82d3947a7d444c8cc0ac06938e9fbb3ad076cc2684108a694550bd795bd57340",
+      "bytes": 19918
+    },
+    "selectedRawPublication": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/native-raw/publication.json",
+      "sha256": "9e9d4f74084bdba207f4969ef8f4a0eb824d76596ff8e1ca983e79ba7df96a69",
+      "bytes": 6881
+    },
+    "pixels": "Root visually viewed the native modal; transcript image payload is truncated and is not a complete archived screenshot. No exported-pixel proof claimed."
+  },
+  "postUiMetadata": {
+    "phase": "twoScopedCapturesLocalizedStrictDifferencesRemain",
+    "captures": [
+      {
+        "stage": "beforeVerifiedCold",
+        "actualExitCode": 2,
+        "runCount": 1,
+        "completedAtUtc": "2026-10-13T14:06:37.646561+00:00",
+        "strictResult": "differencesRequireReview",
+        "differenceCount": 2,
+        "acceptedDifferenceCount": 0,
+        "newPdfDraftCandidateCount": 0,
+        "executionReceiptSha256": "f046d2721f4a5b7f50d22127690a2cfb21b2a4cd00174118843b2ad5eed3bd18",
+        "strictComparisonSha256": "9e66d392d07e57b57e62ee63ed592f0c5223f3b0ea2542eeaec311e91b2fd3f5",
+        "finalVerificationSha256": "48c50186875637eb30558df0b933d90fe25ebb9377e76837f741878c2c908438",
+        "sourceFirstAndBaselineStable": true,
+        "frozenInputsStable": true,
+        "finalExactProcessCount": 0,
+        "stdoutSha256": "a67fa174ace9ef780e83b02655a50abd17a83378018d79d92b110937c605b189",
+        "stderrBytes": 0
+      },
+      {
+        "stage": "afterVerifiedCold",
+        "actualExitCode": 2,
+        "runCount": 1,
+        "completedAtUtc": "2026-10-13T14:16:38.698288+00:00",
+        "strictResult": "differencesRequireReview",
+        "differenceCount": 2,
+        "acceptedDifferenceCount": 0,
+        "newPdfDraftCandidateCount": 0,
+        "executionReceiptSha256": "4772419cc9e61f03072c7f88083e86f67589952f4aa3fe2066b5c210517b61f2",
+        "strictComparisonSha256": "0f29eeec0db46dd710b342aa3a6d5ebdd8fb3ec4e8e2f798277c2357ccb40c1b",
+        "finalVerificationSha256": "86ebd5b7d0cee6b57fa159b6004e042c9c4d8dc4b49a2a1a5f5fd52ca33c91c2",
+        "sourceFirstAndBaselineStable": true,
+        "frozenInputsStable": true,
+        "finalExactProcessCount": 0,
+        "stdoutSha256": "a67fa174ace9ef780e83b02655a50abd17a83378018d79d92b110937c605b189",
+        "stderrBytes": 0
+      }
+    ],
+    "postColdAgainstInstallBaseline": {
+      "differenceCount": 2,
+      "unchangedWholeRows": {
+        "agents": 39,
+        "settings": 52,
+        "sessions": 135,
+        "dismissed_sessions": 171
+      },
+      "changedFields": [
+        "agents.updated_at",
+        "settings.unsentWork.v1.composers.<hashed-key>.attachments[0]",
+        "settings.unsentWork.v1.composers.<hashed-key>.sendPending"
+      ],
+      "composerCountBeforeAndAfter": 10,
+      "noAddedOrRemovedComposer": true
+    },
+    "postColdAgainstFirstCapture": {
+      "differenceCount": 1,
+      "changedFields": ["agents.updated_at"],
+      "unchangedWholeRows": {
+        "agents": 39,
+        "settings": 53,
+        "sessions": 135,
+        "dismissed_sessions": 171
+      },
+      "entireUnsentWorkRawValueEqual": true
+    },
+    "audioDraft": {
+      "markerUtf8Bytes": 33,
+      "markerSha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf",
+      "markerUnchangedFromInstallBaseline": true,
+      "completeAudioBytes": 140,
+      "completeAudioSha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b",
+      "base64Sha256": "30ec54ee1c0d56ee56905e2f7f3596f67d2fd871b4a4bf0e2d7c55ee25fe3831",
+      "sourceUriSha256": "394e9fc8a0692a1cf6f2d630fde71f95114b777e33b4471943366ae86cca40d8",
+      "verifiedFileSha256": "755d27a8243827ad7b69996748ad50192adda134dbd2234c25dff87375b162d9",
+      "metadata": {
+        "channels": 1,
+        "sampleRate": 11025,
+        "bitsPerSample": 8,
+        "frames": 23,
+        "durationMs": 3
+      },
+      "audioEncodingPresent": false,
+      "completeBytesEqualOriginalAndCopiedSyntheticWav": true,
+      "sourceUriAndResolvedPathEqualSyntheticCopy": true,
+      "allSevenSourceFieldsEqualAcrossCold": true,
+      "sendPendingInstallDifference": {
+        "before": "absent",
+        "after": false,
+        "stillStrictDifference": true
+      }
+    },
+    "unknown": [
+      "The specific historical writer of Agent.updated_at has not been established."
+    ],
+    "boundary": [
+      "Original strict exit 2 results are preserved; no difference is exempted or accepted.",
+      "Only retained second copies were opened with SQLite for localization. No live/original/first-capture database was opened with SQLite.",
+      "Proves this synthetic WAV and marker persisted through the separately evidenced cold UI phase; no real Agent audio request or audio comprehension proof.",
+      "Earlier uppercase-path process receipts remain invalid as process-absence proof; later corrected observations are not backdated."
+    ],
+    "summary": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/data-raw/public-summary.json.raw",
+      "sha256": "5808e510d09c7d43edcb12c74d371b81325d446a8082723b57f588ca27909b0f"
+    },
+    "publication": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/data-raw/publication.json",
+      "sha256": "c0f8ef241971c84ae18574fcde73e7a4ff6217dc18618a8073a6d5d0643156b1"
+    }
+  },
+  "openBoundaries": [
+    "Real Agent audio use remains unverified; current declared capability does not support it.",
+    "Native16MiB send/queue lifecycle and complete NEW-27/28 paths remain unverified.",
+    "NEW-24 current full permission restoration remains open; no new ordinary/slash Agent request.",
+    "NEW-26 native system picker remains unresolved despite independent at-mention route success.",
+    "Full P08, original122 conditions,29 Agent eight standards and Windows remain incomplete.",
+    "Existing H17 unknown result was not confirmed, retried, classified completed or stopped."
+  ]
+}

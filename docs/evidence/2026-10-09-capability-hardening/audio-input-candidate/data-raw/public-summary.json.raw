@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "sourceCommit": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+  "phase": "twoScopedCapturesLocalizedStrictDifferencesRemain",
+  "captures": [
+    {
+      "stage": "beforeVerifiedCold",
+      "actualExitCode": 2,
+      "runCount": 1,
+      "completedAtUtc": "2026-10-13T14:06:37.646561+00:00",
+      "strictResult": "differencesRequireReview",
+      "differenceCount": 2,
+      "acceptedDifferenceCount": 0,
+      "newPdfDraftCandidateCount": 0,
+      "executionReceiptSha256": "f046d2721f4a5b7f50d22127690a2cfb21b2a4cd00174118843b2ad5eed3bd18",
+      "strictComparisonSha256": "9e66d392d07e57b57e62ee63ed592f0c5223f3b0ea2542eeaec311e91b2fd3f5",
+      "finalVerificationSha256": "48c50186875637eb30558df0b933d90fe25ebb9377e76837f741878c2c908438",
+      "sourceFirstAndBaselineStable": true,
+      "frozenInputsStable": true,
+      "finalExactProcessCount": 0,
+      "stdoutSha256": "a67fa174ace9ef780e83b02655a50abd17a83378018d79d92b110937c605b189",
+      "stderrBytes": 0
+    },
+    {
+      "stage": "afterVerifiedCold",
+      "actualExitCode": 2,
+      "runCount": 1,
+      "completedAtUtc": "2026-10-13T14:16:38.698288+00:00",
+      "strictResult": "differencesRequireReview",
+      "differenceCount": 2,
+      "acceptedDifferenceCount": 0,
+      "newPdfDraftCandidateCount": 0,
+      "executionReceiptSha256": "4772419cc9e61f03072c7f88083e86f67589952f4aa3fe2066b5c210517b61f2",
+      "strictComparisonSha256": "0f29eeec0db46dd710b342aa3a6d5ebdd8fb3ec4e8e2f798277c2357ccb40c1b",
+      "finalVerificationSha256": "86ebd5b7d0cee6b57fa159b6004e042c9c4d8dc4b49a2a1a5f5fd52ca33c91c2",
+      "sourceFirstAndBaselineStable": true,
+      "frozenInputsStable": true,
+      "finalExactProcessCount": 0,
+      "stdoutSha256": "a67fa174ace9ef780e83b02655a50abd17a83378018d79d92b110937c605b189",
+      "stderrBytes": 0
+    }
+  ],
+  "postColdAgainstInstallBaseline": {
+    "differenceCount": 2,
+    "unchangedWholeRows": {
+      "agents": 39,
+      "settings": 52,
+      "sessions": 135,
+      "dismissed_sessions": 171
+    },
+    "changedFields": [
+      "agents.updated_at",
+      "settings.unsentWork.v1.composers.<hashed-key>.attachments[0]",
+      "settings.unsentWork.v1.composers.<hashed-key>.sendPending"
+    ],
+    "composerCountBeforeAndAfter": 10,
+    "noAddedOrRemovedComposer": true
+  },
+  "postColdAgainstFirstCapture": {
+    "differenceCount": 1,
+    "changedFields": [
+      "agents.updated_at"
+    ],
+    "unchangedWholeRows": {
+      "agents": 39,
+      "settings": 53,
+      "sessions": 135,
+      "dismissed_sessions": 171
+    },
+    "entireUnsentWorkRawValueEqual": true
+  },
+  "audioDraft": {
+    "markerUtf8Bytes": 33,
+    "markerSha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf",
+    "markerUnchangedFromInstallBaseline": true,
+    "completeAudioBytes": 140,
+    "completeAudioSha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b",
+    "base64Sha256": "30ec54ee1c0d56ee56905e2f7f3596f67d2fd871b4a4bf0e2d7c55ee25fe3831",
+    "sourceUriSha256": "394e9fc8a0692a1cf6f2d630fde71f95114b777e33b4471943366ae86cca40d8",
+    "verifiedFileSha256": "755d27a8243827ad7b69996748ad50192adda134dbd2234c25dff87375b162d9",
+    "metadata": {
+      "channels": 1,
+      "sampleRate": 11025,
+      "bitsPerSample": 8,
+      "frames": 23,
+      "durationMs": 3
+    },
+    "audioEncodingPresent": false,
+    "completeBytesEqualOriginalAndCopiedSyntheticWav": true,
+    "sourceUriAndResolvedPathEqualSyntheticCopy": true,
+    "allSevenSourceFieldsEqualAcrossCold": true,
+    "sendPendingInstallDifference": {
+      "before": "absent",
+      "after": false,
+      "stillStrictDifference": true
+    }
+  },
+  "unknown": [
+    "The specific historical writer of Agent.updated_at has not been established."
+  ],
+  "boundary": [
+    "Original strict exit 2 results are preserved; no difference is exempted or accepted.",
+    "Only retained second copies were opened with SQLite for localization. No live/original/first-capture database was opened with SQLite.",
+    "Proves this synthetic WAV and marker persisted through the separately evidenced cold UI phase; no real Agent audio request or audio comprehension proof.",
+    "Earlier uppercase-path process receipts remain invalid as process-absence proof; later corrected observations are not backdated."
+  ],
+  "localizationSummarySha256": "7d73bbb9b6d49102ac458e762330c75a5872fc90f826edf40479a53569d3500a",
+  "containsPrivateTextAccountValuesOrDatabaseFiles": false
+}
