@@ -1,0 +1,27 @@
+{
+  "sourceCommit": "e5995b219d2f3ed543d9a054911240122358d76b",
+  "observedAtUtc": "2026-10-13T08:21:48.140Z",
+  "normalExitVia": "CUA 保存并退出",
+  "forcedQuit": false,
+  "unknownWorkNotClassifiedCompletedOrStopped": true,
+  "action": {
+    "api": "app.click",
+    "elementIndex": 12,
+    "label": "保存并退出",
+    "requestedAtUtc": "2026-10-13T08:21:36.550Z",
+    "preActionEvidence": "44-final-normal-save-quit-confirmation.txt",
+    "returnedAtUtc": "2026-10-13T08:21:36.584Z",
+    "returnedSuccessfully": true
+  },
+  "postActionObservation": {
+    "method": "cua.listApps",
+    "apps": []
+  },
+  "preExitEvidence": [
+    "42-final-global-status.txt",
+    "43-final-own-unsent-state.txt",
+    "44-final-normal-save-quit-confirmation.txt"
+  ],
+  "historicalUnknownResultPreserved": true,
+  "noSendActionPerformed": true
+}

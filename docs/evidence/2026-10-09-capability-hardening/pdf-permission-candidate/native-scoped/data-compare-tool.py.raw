@@ -1,0 +1,170 @@
+"""Exact scalar/JSON-field metadata comparison. No normalization or exemptions.
+
+Only snapshot_readonly opens SQLite, on exact second-copy paths. Reports contain
+hashes and counts, never row keys, settings values, draft bodies or credentials.
+"""
+import base64
+import hashlib
+import json
+from pathlib import Path
+import sqlite3
+from contextlib import closing
+
+OUT = Path('/Users/tw/Desktop/farfold/output/2026-10-13-pdf-permission-native-data')
+KEYS = {'agents': 'id', 'dismissed_sessions': 'id', 'sessions': 'id', 'settings': 'key'}
+ABSENT = object()
+
+
+def require(value, code):
+    if not value:
+        raise RuntimeError(code)
+
+
+def typed(value):
+    if isinstance(value, bytes):
+        return {'sqliteBlobBase64': base64.b64encode(value).decode('ascii')}
+    if isinstance(value, (list, tuple)):
+        return [typed(v) for v in value]
+    if isinstance(value, dict):
+        return {k: typed(v) for k, v in value.items()}
+    return value
+
+
+def digest(value):
+    return hashlib.sha256(json.dumps(typed(value), ensure_ascii=False, sort_keys=True,
+        separators=(',', ':'), allow_nan=False).encode()).hexdigest()
+
+
+def pin(value):
+    return None if value is ABSENT else digest(value)
+
+
+def quoted(name):
+    return '"' + name.replace('"', '""') + '"'
+
+
+def snapshot_readonly(path):
+    require(path in (OUT / 'baseline-second-copy/metadata-before.sqlite3',
+                    OUT / 'metadata-after-consolidated.sqlite3'), 'exact-second-inspection-path')
+    require(not any(Path(str(path) + suffix).exists() or Path(str(path) + suffix).is_symlink()
+                    for suffix in ('-wal', '-shm')), 'sealed-inspection-sidecars')
+    with closing(sqlite3.connect(path.as_uri() + '?mode=ro&immutable=1', uri=True)) as db:
+        db.execute('PRAGMA query_only=ON')
+        require(db.execute('PRAGMA integrity_check').fetchall() == [('ok',)], 'private-inspection-integrity')
+        schema = db.execute("SELECT type,name,tbl_name,sql FROM sqlite_schema WHERE name NOT LIKE 'sqlite_%' ORDER BY type,name").fetchall()
+        tables = {}
+        for name, in db.execute("SELECT name FROM sqlite_schema WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"):
+            columns = [r[1] for r in db.execute('PRAGMA table_info(' + quoted(name) + ')')]
+            tables[name] = {'columns': columns, 'rows': [list(row) for row in db.execute('SELECT * FROM ' + quoted(name))]}
+        return {'tables': tables, 'schema': [list(r) for r in schema],
+                'userVersion': db.execute('PRAGMA user_version').fetchone()[0]}
+
+
+def rows(table, key):
+    cols = table['columns']
+    require(type(cols) is list and len(cols) == len(set(cols)) and key in cols, 'table-column-shape')
+    result = {}
+    for row in table['rows']:
+        require(type(row) is list and len(row) == len(cols), 'table-row-shape')
+        identity = row[cols.index(key)]
+        require(type(identity) is str and identity not in result, 'table-key-shape-or-duplicate')
+        result[identity] = row
+    return result
+
+
+def tree_changes(before, after, path=()):
+    if pin(before) == pin(after):
+        return []
+    if type(before) is dict and type(after) is dict:
+        return [v for key in sorted(set(before) | set(after)) for v in
+                tree_changes(before.get(key, ABSENT), after.get(key, ABSENT), path + (key,))]
+    if type(before) is list and type(after) is list:
+        return [v for n in range(max(len(before), len(after))) for v in
+                tree_changes(before[n] if n < len(before) else ABSENT,
+                             after[n] if n < len(after) else ABSENT, path + (str(n),))]
+    return [{'pathSha256': digest(path), 'beforeSha256': pin(before), 'afterSha256': pin(after),
+             'kind': 'new' if before is ABSENT else 'missing' if after is ABSENT else 'changed'}]
+
+
+def decoded(raw):
+    if type(raw) is not str:
+        return ABSENT
+    try:
+        return json.loads(raw, parse_constant=lambda _: (_ for _ in ()).throw(ValueError()))
+    except (ValueError, TypeError):
+        return ABSENT
+
+
+def summary(snapshot):
+    return {'schemaSha256': digest(snapshot['schema']), 'userVersion': snapshot['userVersion'],
+            'tables': {name: {'count': len(table['rows']), 'columnsSha256': digest(table['columns']),
+                             'wholeRowsSha256': digest(sorted(digest(row) for row in table['rows']))}
+                       for name, table in snapshot['tables'].items()}}
+
+
+def contains_pdf(value):
+    if type(value) is dict:
+        return value.get('format') == 'pdf' or any(contains_pdf(v) for v in value.values())
+    return type(value) is list and any(contains_pdf(v) for v in value)
+
+
+def compare_complete(before, after):
+    require(set(KEYS) <= set(before['tables']) and set(KEYS) <= set(after['tables']), 'required-metadata-tables')
+    differences = []
+    report = {'phase': 'exactComparisonNoDifferencesAccepted', 'before': summary(before),
+              'after': summary(after), 'tables': {}, 'differences': differences,
+              'newPdfDraftCandidates': [], 'acceptedDifferences': []}
+    if digest(before['schema']) != digest(after['schema']) or before['userVersion'] != after['userVersion']:
+        differences.append({'kind': 'schemaOrVersionChanged'})
+    for name in sorted(set(before['tables']) | set(after['tables'])):
+        if name not in before['tables'] or name not in after['tables']:
+            differences.append({'table': name, 'kind': 'tableSetChanged'})
+            continue
+        b, a = before['tables'][name], after['tables'][name]
+        if b['columns'] != a['columns']:
+            differences.append({'table': name, 'kind': 'columnsChanged'})
+            continue
+        if name not in KEYS:
+            same = sorted(digest(v) for v in b['rows']) == sorted(digest(v) for v in a['rows'])
+            report['tables'][name] = {'unknownTable': True, 'wholeRowsEqual': same}
+            if not same:
+                differences.append({'table': name, 'kind': 'unknownTableRowsChanged'})
+            continue
+        old, new = rows(b, KEYS[name]), rows(a, KEYS[name])
+        unchanged = 0
+        for key in sorted(set(old) | set(new)):
+            previous, current = old.get(key, ABSENT), new.get(key, ABSENT)
+            if pin(previous) == pin(current):
+                unchanged += 1
+                continue
+            item = {'table': name, 'rowKeySha256': digest(key), 'beforeSha256': pin(previous),
+                    'afterSha256': pin(current), 'kind': 'newRow' if previous is ABSENT else
+                    'missingOldRow' if current is ABSENT else 'changedOldRow', 'columns': []}
+            for n, col in enumerate(b['columns']):
+                x = previous[n] if previous is not ABSENT else ABSENT
+                y = current[n] if current is not ABSENT else ABSENT
+                if pin(x) == pin(y):
+                    continue
+                field = {'column': col, 'beforeSha256': pin(x), 'afterSha256': pin(y)}
+                if name == 'settings' and col == 'value':
+                    parsed_before, parsed_after = decoded(x), decoded(y)
+                    if parsed_before is not ABSENT and parsed_after is not ABSENT:
+                        field['jsonFieldChanges'] = tree_changes(parsed_before, parsed_after)
+                        field['rawChangedButDecodedEqual'] = digest(parsed_before) == digest(parsed_after)
+                    field['category'] = 'draftsFeedbackQueuesActivityChoice' if key == 'unsentWork.v1' else \
+                        'worktrees' if key == 'worktreeLocations.v1' else 'otherSettings'
+                    if key == 'unsentWork.v1' and type(parsed_before) is dict and type(parsed_after) is dict:
+                        old_composers, new_composers = parsed_before.get('composers'), parsed_after.get('composers')
+                        if type(old_composers) is dict and type(new_composers) is dict:
+                            for draft in sorted(set(new_composers) - set(old_composers)):
+                                if contains_pdf(new_composers[draft]):
+                                    report['newPdfDraftCandidates'].append({'composerKeySha256': digest(draft),
+                                        'afterSha256': digest(new_composers[draft]), 'ownershipVerified': False,
+                                        'accepted': False, 'status': 'requiresOwnUiEvidenceAndReview'})
+                item['columns'].append(field)
+            differences.append(item)
+        report['tables'][name] = {'beforeCount': len(old), 'afterCount': len(new),
+                                'oldWholeRowsUnchanged': unchanged}
+    report['result'] = 'equal' if not differences else 'differencesRequireReview'
+    report['boundary'] = 'All raw SQLite fields compared without normalization. JSON leaf hashes are diagnostic only; raw serialization differences remain differences. New PDF drafts are unaccepted candidates. No old session, dismissed row, Agent, timestamp, settings, draft, queue, feedback, worktree or choice exemption. Hashes/counts only; no private text emitted.'
+    return report

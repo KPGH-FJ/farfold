@@ -1,0 +1,14 @@
+{
+  "sourceCommit": "e5995b219d2f3ed543d9a054911240122358d76b",
+  "observedAtUtc": "2026-10-13T08:22:01.572999+00:00",
+  "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+  "command": [
+    "/bin/ps",
+    "-axo",
+    "pid=,comm="
+  ],
+  "actualExitCode": 0,
+  "exactFormalProcesses": [],
+  "normalQuitEventPath": "output/2026-10-13-pdf-permission-native/46-final-normal-quit-event.json",
+  "normalQuitEventSha256": "9a8e70e8dd6e5abea0bd2367619c1a9c805dc72070f7131812b87034e04b8f75"
+}

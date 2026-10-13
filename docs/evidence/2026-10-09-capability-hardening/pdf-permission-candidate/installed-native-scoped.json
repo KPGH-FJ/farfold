@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "sourceCommit": "e5995b219d2f3ed543d9a054911240122358d76b",
+  "status": "PARTIAL_NATIVE_PASS_PDF_ENTRY_BLOCKED",
+  "installationSummary": "installation.json",
+  "nativePassed": [
+    "permission next-message label and unknown current scope",
+    "cancel permission confirmation preserves original selected option",
+    "own unsent 33-byte marker exact cold restore",
+    "normal save and quit with exact process count zero"
+  ],
+  "nativePdf": "NOT_VERIFIED: selected PDF cannot be opened in native file panel; XLSX control also disabled; attribution unknown",
+  "pdfFullTextSha256": null,
+  "pdfAttachmentColdRecovery": "NOT_TESTED",
+  "fullPermissionRestore": "OPEN",
+  "ordinaryOrSlashSendActions": 0,
+  "officialRequestCount": "NOT_ESTABLISHED_BY_UI",
+  "postUiData": {
+    "actualStrictComparisonExitCode": 2,
+    "originalAcceptedDifferences": [],
+    "exactOldSessions": 135,
+    "exactOldDismissedRows": 171,
+    "exactOtherAgentRows": 39,
+    "exactOtherSettingsRows": 52,
+    "oldComposersUnchanged": 9,
+    "newOwnComposer": {
+      "utf8Bytes": 33,
+      "sha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf",
+      "attachments": 0,
+      "onlyFields": ["text", "attachments"],
+      "matchesNativeColdMarker": true
+    },
+    "otherDifference": "One Agent updated_at; all other columns unchanged; specific writer unknown",
+    "allRowsUnchanged": false,
+    "noNormalizationOrBlanketExemption": true,
+    "sqliteOpenedOnlyOnSecondCopies": true,
+    "rawDatabasesPublished": false,
+    "scope": "Metadata and unsent work only, not post-UI WebKit/cache trees or working-directory files"
+  },
+  "historicalH17Result": "Preserved as unknown, not acknowledged, rechecked, retried or classified as success/stopped",
+  "uiEvidencePrivacy": {
+    "rawUiPublished": false,
+    "privateManifestPath": "output/2026-10-13-pdf-permission-native/manifest.json",
+    "privateManifestSha256": "687a1cbdb050860d688590120c5c637764324c888849a90871be39d498f450d7"
+  },
+  "references": [
+    {
+      "originalPath": "output/2026-10-13-pdf-permission-native/summary.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/native-scoped/ui-summary.json.raw",
+      "sha256": "7a98ad1144bcfad993bfcea9915be6d5f9d79fcb2c9c029657925e314812d16d",
+      "bytes": 5868
+    },
+    {
+      "originalPath": "output/2026-10-13-pdf-permission-native/46-final-normal-quit-event.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/native-scoped/final-normal-quit.json.raw",
+      "sha256": "9a8e70e8dd6e5abea0bd2367619c1a9c805dc72070f7131812b87034e04b8f75",
+      "bytes": 837
+    },
+    {
+      "originalPath": "output/2026-10-13-pdf-permission-native/47-final-exact-process-receipt.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/native-scoped/final-process.json.raw",
+      "sha256": "426466502c2b4e018302576906cd2564a9c825858caef87b53a01cea7bdf9a5a",
+      "bytes": 505
+    },
+    {
+      "originalPath": "output/2026-10-13-pdf-permission-native-data/execution.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/native-scoped/data-execution.json.raw",
+      "sha256": "a21b0ad972057097de2ceec9414504cfe95a5ab7846bb6f2ec69f5c57c491499",
+      "bytes": 593
+    },
+    {
+      "originalPath": "output/2026-10-13-pdf-permission-native-data/capture-receipt-private.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/native-scoped/data-capture.json.raw",
+      "sha256": "75b5883ee907655f50aa757495b03684e8c997f0416f6d2babe813afb912b0f3",
+      "bytes": 8508
+    },
+    {
+      "originalPath": "output/2026-10-13-pdf-permission-native-data/comparison-private.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/native-scoped/data-comparison.json.raw",
+      "sha256": "ed53f9522f28bca28c1bee04208d497ddd374d541cdf9143c3a71247ef237bdf",
+      "bytes": 4974
+    },
+    {
+      "originalPath": "output/2026-10-13-pdf-permission-native-data/final-verification-private.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/native-scoped/data-final-verification.json.raw",
+      "sha256": "8d69798f7bacd6ca0eb5dcfead1aacc6eb10ac703a047c24131bdc3b4ca7fa45",
+      "bytes": 792
+    },
+    {
+      "originalPath": "output/2026-10-13-data-difference-localization/pdf-native-data-independent-localization.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/native-scoped/data-independent-localization.json.raw",
+      "sha256": "da47ed9ca62fc6e85e3536e5ccdd72b87196ed1c5d342426111d02d3019fbb5f",
+      "bytes": 5329
+    },
+    {
+      "originalPath": "output/2026-10-13-pdf-permission-native-data-preparation/freeze.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/native-scoped/data-preparation-freeze.json.raw",
+      "sha256": "af9e0599c0094da99309d84c3f587be7f41bc24ac4ca7bacd36c71d46b70b8be",
+      "bytes": 1473
+    },
+    {
+      "originalPath": "output/2026-10-13-pdf-permission-native-data-preparation/capture_compare.py",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/native-scoped/data-capture-tool.py.raw",
+      "sha256": "ba8805619a7fd2924bbbce252860455b475044019a816ca79b372c755278be9a",
+      "bytes": 14668
+    },
+    {
+      "originalPath": "output/2026-10-13-pdf-permission-native-data-preparation/io_support.py",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/native-scoped/data-io-tool.py.raw",
+      "sha256": "d284522a9f35556b921de32ac983882f0e92b3746ed6042cf942c5fb64a23e52",
+      "bytes": 8270
+    },
+    {
+      "originalPath": "output/2026-10-13-pdf-permission-native-data-preparation/data_compare.py",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/native-scoped/data-compare-tool.py.raw",
+      "sha256": "08b53554122fb4b676728d399b3919128cd79737603d941663a5d96ed5931960",
+      "bytes": 9070
+    }
+  ],
+  "boundaries": [
+    "No real Agent PDF validation.",
+    "No full P08, NEW-24, 29 by 8, Windows or product acceptance.",
+    "Original native picker failure and strict data comparison exit 2 retained."
+  ]
+}

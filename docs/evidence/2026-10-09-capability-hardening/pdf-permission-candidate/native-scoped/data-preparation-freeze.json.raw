@@ -1,0 +1,20 @@
+{
+  "phase": "PREPARATION_FROZEN_NO_CAPTURE",
+  "atUtc": "2026-10-13T08:08:29.269019+00:00",
+  "files": {
+    "output/2026-10-13-pdf-permission-native-data-preparation/README.md": "c6e7b6a98663f1152b070725096da219c96d471fceec13cb023f23ae6b60bc73",
+    "output/2026-10-13-pdf-permission-native-data-preparation/capture_compare.py": "ba8805619a7fd2924bbbce252860455b475044019a816ca79b372c755278be9a",
+    "output/2026-10-13-pdf-permission-native-data-preparation/config.template.json": "060974f29a5872ef1eaf4959cfc293283ec480f8ccbaab13a266659def3067e9",
+    "output/2026-10-13-pdf-permission-native-data-preparation/data_compare.py": "08b53554122fb4b676728d399b3919128cd79737603d941663a5d96ed5931960",
+    "output/2026-10-13-pdf-permission-native-data-preparation/io_support.py": "d284522a9f35556b921de32ac983882f0e92b3746ed6042cf942c5fb64a23e52",
+    "output/2026-10-13-pdf-permission-native-data-preparation/preparation.json": "2c70cc67ab6794636a7876fa629c35aee96af0117e37cb00f8c8f24a44796237",
+    "output/2026-10-13-pdf-permission-native-data-preparation/selfcheck-receipt.json": "2a9e841d62846f01639e36b34abb74595eb99d21b952948a6a96cf0e47506a6d",
+    "output/2026-10-13-pdf-permission-native-data-preparation/selfcheck.py": "bf32288c3d8a871e7bd123e8618ceef0ba3041382def263e6be51f3090047bb3"
+  },
+  "futureNormalExitPins": "UNSET",
+  "pureRamChecks": 13,
+  "databaseConnections": 0,
+  "liveDatabaseRead": false,
+  "captureExecuted": false,
+  "appOrAgentActions": false
+}

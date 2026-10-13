@@ -1,0 +1,737 @@
+{
+  "sourceCommit": "e5995b219d2f3ed543d9a054911240122358d76b",
+  "startedAt": "2026-10-13T08:00:36.431711+00:00",
+  "completedAt": "2026-10-13T08:00:48.841693+00:00",
+  "result": "passed",
+  "checks": {
+    "normalExitAndFreshPreparation": {
+      "passed": true,
+      "freshInstallDirectory": "output/2026-10-13-pdf-permission-install",
+      "priorFormalSourceCommit": "92aa4a27ca3e642bc260530ce27e36f9bd859566",
+      "boundary": "Actual 92aa save/quit90 plus exact executable91 and path-only adapter94 with native scoped normalExit; fresh process absence, no newly fabricated quit or unknown work closure."
+    },
+    "candidateReceipts": {
+      "passed": true,
+      "candidateChecks": 9
+    },
+    "exactSourceAndEngineering": {
+      "passed": true,
+      "inputCount": 1703,
+      "engineering": {
+        "receipt": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/verification.json",
+        "sha256": "2f1b9c8257a6db5db4e32bd86cc4ce8a2faa9b863f3f8a0cc833919fee8cebbc",
+        "originalPrivateReceipt": {
+          "path": "output/2026-10-13-pdf-permission-integration/run-01/summary.json",
+          "sha256": "cccfdc5abfb6b856ac126f4640e79736d05947b257f8c6de22e86a3b9b28fa45"
+        },
+        "inputCount": 1703,
+        "references": {
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/verification.json": "2f1b9c8257a6db5db4e32bd86cc4ce8a2faa9b863f3f8a0cc833919fee8cebbc",
+          "output/2026-10-13-pdf-permission-integration/run-01/summary.json": "cccfdc5abfb6b856ac126f4640e79736d05947b257f8c6de22e86a3b9b28fa45",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/verification-original.json.raw": "cccfdc5abfb6b856ac126f4640e79736d05947b257f8c6de22e86a3b9b28fa45",
+          "output/2026-10-13-pdf-permission-integration/execution-plan.json": "1145aa0b0a6b5ef0604b5e22e97addb1e0ad6785bab38558066d83bcf09c1f15",
+          "output/2026-10-13-pdf-permission-integration/final-freeze/freeze.json": "df94a8ff483a7e00bfa91a5051e86671f48f9eed34fb53b6ff4e7f33f765eaa5",
+          "output/2026-10-13-pdf-permission-integration/inventory-plan.json": "8e552d786582473f04cf03857a52b83b08e0f6e8887c0704686f2407997f7381",
+          "output/2026-10-13-xlsx-input-checks-preparation/inventory.py": "7784a38803fb1c10da014755cde9901f9deba982ffb01ab1076dfd2060e3e076",
+          "output/2026-10-13-xlsx-input-checks-preparation/runner-v4/run_checks.py": "0cf4b3fd62d3d94f1781119f65d87f68a9fd26a6afb5e95ca7e56bda3f140a0c",
+          "output/2026-10-13-pdf-input-a/source-freeze.json": "078522c328c0aa8a1d48292095b69e7b28641f353dfedf205703e3ef0a2779bd",
+          "output/2026-10-13-pdf-input-backend/source-freeze.json": "32ee01ab0512f02ce1af5021366c4a6a89c541d870d359f977b829ab90baf948",
+          "output/2026-10-13-pdf-input-checks-preparation/make_inventory.py": "27b292dc64c86855f35d0452cd07616f1a6f3f04025665eedb25b62f32c51715",
+          "output/2026-10-13-pdf-input-integration/revision-v2/source-freeze.json": "7918e64898e4d95326dddbce54b64ebcc855be178265000c14fea9adb1db33e2",
+          "output/2026-10-13-pdf-input-ui/revision-v4/source-freeze-final.json": "1a920dda7f339118a1bece54bbb0f996b510c31967181726630e728f7d4af63c",
+          "output/2026-10-13-pdf-permission-integration/permission-source-freeze-v2.json": "3b9d38fd68d4dc4e19fa5e57783795fb25b37d69ed4949daaa9c7e9ec47ceac6",
+          "output/2026-10-13-pdf-permission-integration/run-01/inputs-before.json": "9d491cd04239210727689931606ab9d2bbaf04ecbb69ee5b3aa1b40e9998bd0a",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/inputs-before.json.raw": "9d491cd04239210727689931606ab9d2bbaf04ecbb69ee5b3aa1b40e9998bd0a",
+          "output/2026-10-13-pdf-permission-integration/run-01/inputs-after.json": "9d491cd04239210727689931606ab9d2bbaf04ecbb69ee5b3aa1b40e9998bd0a",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/inputs-after.json.raw": "9d491cd04239210727689931606ab9d2bbaf04ecbb69ee5b3aa1b40e9998bd0a",
+          "output/2026-10-13-pdf-permission-integration/run-01/protected-before.json": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/protected-before.json.raw": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+          "output/2026-10-13-pdf-permission-integration/run-01/protected-after.json": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/protected-after.json.raw": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+          "output/2026-10-13-pdf-permission-integration/run-01/preflight.json": "6d0fbbdf6c805cca3e832d5425bebbc683c46f3bc6f5aecdd2c15b3308d66008",
+          "output/2026-10-13-pdf-permission-integration/run-01/format-check/started.json": "b7674377b1632da41f273ec00830160b1cd5a4b83625cda1cab43b32af62d2e5",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/format-check/started.json.raw": "b7674377b1632da41f273ec00830160b1cd5a4b83625cda1cab43b32af62d2e5",
+          "output/2026-10-13-pdf-permission-integration/run-01/format-check/completed.json": "de0c7aea6eb30feb036c316a42ced2437482be46bd3face360eed3f2cc03e048",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/format-check/completed.json.raw": "de0c7aea6eb30feb036c316a42ced2437482be46bd3face360eed3f2cc03e048",
+          "output/2026-10-13-pdf-permission-integration/run-01/format-check/stdout.log": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/format-check/stdout.log": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "output/2026-10-13-pdf-permission-integration/run-01/format-check/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/format-check/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-pdf-permission-integration/run-01/typecheck/started.json": "a8cf73891a200ca71f820f14a626c65e579a0e9e15f99fe4e0546b6f31cf827f",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/typecheck/started.json.raw": "a8cf73891a200ca71f820f14a626c65e579a0e9e15f99fe4e0546b6f31cf827f",
+          "output/2026-10-13-pdf-permission-integration/run-01/typecheck/completed.json": "2e823a1c1715377ef47e09a0f9ad1135f2058c4854210c04ef1d5338844120fd",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/typecheck/completed.json.raw": "2e823a1c1715377ef47e09a0f9ad1135f2058c4854210c04ef1d5338844120fd",
+          "output/2026-10-13-pdf-permission-integration/run-01/typecheck/stdout.log": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/typecheck/stdout.log": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "output/2026-10-13-pdf-permission-integration/run-01/typecheck/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/typecheck/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-pdf-permission-integration/run-01/frontend-test/started.json": "fa4b8fd1c3658eebf5b151724770792946dbbddb4ed68ee6a46311791b910a05",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-test/started.json.raw": "fa4b8fd1c3658eebf5b151724770792946dbbddb4ed68ee6a46311791b910a05",
+          "output/2026-10-13-pdf-permission-integration/run-01/frontend-test/completed.json": "76137fc9a1f599d7bb9de523092444252695dc867cc73d3fed331274d722b79f",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-test/completed.json.raw": "76137fc9a1f599d7bb9de523092444252695dc867cc73d3fed331274d722b79f",
+          "output/2026-10-13-pdf-permission-integration/run-01/frontend-test/stdout.log": "2d39a3dc1d57cce0bf711ca882b4f9e6b46e8adce713a2fd1bd7d9ff2b5dd6e8",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-test/stdout.log": "2d39a3dc1d57cce0bf711ca882b4f9e6b46e8adce713a2fd1bd7d9ff2b5dd6e8",
+          "output/2026-10-13-pdf-permission-integration/run-01/frontend-test/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-test/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-pdf-permission-integration/run-01/frontend-build/started.json": "3d0eabaea655b24d5fe2ca308f55678ff0c30960201faeb9fcff6b4f5c346c5f",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-build/started.json.raw": "3d0eabaea655b24d5fe2ca308f55678ff0c30960201faeb9fcff6b4f5c346c5f",
+          "output/2026-10-13-pdf-permission-integration/run-01/frontend-build/completed.json": "74b675e06d26d3210ac144607840178800922d6659dd4471c7fadb6a90877d2e",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-build/completed.json.raw": "74b675e06d26d3210ac144607840178800922d6659dd4471c7fadb6a90877d2e",
+          "output/2026-10-13-pdf-permission-integration/run-01/frontend-build/stdout.log": "6d13c95d25b694e144bb7403a52a1608b8dce55284e83843adc81f0a53b835aa",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-build/stdout.log": "6d13c95d25b694e144bb7403a52a1608b8dce55284e83843adc81f0a53b835aa",
+          "output/2026-10-13-pdf-permission-integration/run-01/frontend-build/stderr.log": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-build/stderr.log": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+          "output/2026-10-13-pdf-permission-integration/run-01/cargo-fmt/started.json": "4042222fe2e3edefb4960d772e9136a235df1d78437a52eeba6daf273e46c1ed",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-fmt/started.json.raw": "4042222fe2e3edefb4960d772e9136a235df1d78437a52eeba6daf273e46c1ed",
+          "output/2026-10-13-pdf-permission-integration/run-01/cargo-fmt/completed.json": "c1c5188060c494c05c3a215fc7ae775bbdf78e3ed16a7ba338b4bf56c8035417",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-fmt/completed.json.raw": "c1c5188060c494c05c3a215fc7ae775bbdf78e3ed16a7ba338b4bf56c8035417",
+          "output/2026-10-13-pdf-permission-integration/run-01/cargo-fmt/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-fmt/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-pdf-permission-integration/run-01/cargo-fmt/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-fmt/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-pdf-permission-integration/run-01/cargo-clippy/started.json": "c36e4964853d0be31ddf2c6ed8de7cc6710d6726b90c29d32b7f2f8cd2da484e",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-clippy/started.json.raw": "c36e4964853d0be31ddf2c6ed8de7cc6710d6726b90c29d32b7f2f8cd2da484e",
+          "output/2026-10-13-pdf-permission-integration/run-01/cargo-clippy/completed.json": "12899cc07ac448281a1d08466732ce621aaa407ff98c5d9432dd829d510229d0",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-clippy/completed.json.raw": "12899cc07ac448281a1d08466732ce621aaa407ff98c5d9432dd829d510229d0",
+          "output/2026-10-13-pdf-permission-integration/run-01/cargo-clippy/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-clippy/stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-pdf-permission-integration/run-01/cargo-clippy/stderr.log": "ad9e4784fd775c98f2f5850a9b057c1ad79a1c9bda9f3b50199db908220518d2",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-clippy/stderr.log": "ad9e4784fd775c98f2f5850a9b057c1ad79a1c9bda9f3b50199db908220518d2",
+          "output/2026-10-13-pdf-permission-integration/run-01/cargo-test/started.json": "3fbbdb9d18aca4be50323497d603f99f7b10d3a490ea032a7421af0bfcb25b8c",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-test/started.json.raw": "3fbbdb9d18aca4be50323497d603f99f7b10d3a490ea032a7421af0bfcb25b8c",
+          "output/2026-10-13-pdf-permission-integration/run-01/cargo-test/completed.json": "2ea63726f86507b4779c1ad75fe7e6c245395bd45da387de9299b3bd9d495866",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-test/completed.json.raw": "2ea63726f86507b4779c1ad75fe7e6c245395bd45da387de9299b3bd9d495866",
+          "output/2026-10-13-pdf-permission-integration/run-01/cargo-test/stdout.log": "fbc2f1cc16bf7be40f41fadac4d504d7a36c288c290b0fc96701185a897eb477",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-test/stdout.log": "fbc2f1cc16bf7be40f41fadac4d504d7a36c288c290b0fc96701185a897eb477",
+          "output/2026-10-13-pdf-permission-integration/run-01/cargo-test/stderr.log": "35a3f380f3ad1d0540e77e9680ab79cb2ba0465c69a1c867b648241f1def97b4",
+          "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-test/stderr.log": "35a3f380f3ad1d0540e77e9680ab79cb2ba0465c69a1c867b648241f1def97b4"
+        },
+        "counts": {
+          "frontend": [
+            "Test Files  481 passed (481)",
+            "Tests  5643 passed (5643)"
+          ],
+          "rust": [
+            "test result: ok. 1634 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 112.83s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ]
+        },
+        "boundary": "All seven commands actually executed once in this exact new run; every original start/completion/stdout/stderr and complete source/protected manifest is pinned. No reuse, candidate, installed workflow or real Agent acceptance inferred."
+      }
+    },
+    "candidateFormalFiveFiles": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "a33cd3b7d1f9d03abe2e17ebdce244c97468e3ecdee1b18e93c2af5ef10d7e69",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      },
+      "modes": {
+        "Contents/Info.plist": 420,
+        "Contents/MacOS/farfold": 493,
+        "Contents/Resources/icon.icns": 420,
+        "Contents/Resources/release-manifest.json": 420,
+        "Contents/_CodeSignature/CodeResources": 420
+      }
+    },
+    "identityArchitectureSignature": {
+      "passed": true,
+      "candidate": {
+        "identifier": "ai.farfold.desktop",
+        "version": "0.1.7",
+        "architecture": "arm64",
+        "strictCodesign": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement",
+        "signature": "ad-hoc; not notarized"
+      },
+      "formal": {
+        "identifier": "ai.farfold.desktop",
+        "version": "0.1.7",
+        "architecture": "arm64",
+        "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+        "signature": "ad-hoc; not notarized"
+      }
+    },
+    "archive": {
+      "passed": true,
+      "sha256": "020f06a7919faed7ed20110196cca08d92f05950fd935db795d18fd5e894bd1b",
+      "bytes": 14995102
+    },
+    "installationOperation": {
+      "passed": true,
+      "phase": "installedVerifiedNotLaunched",
+      "rootInstallerReportedLaunched": false
+    },
+    "snapshotCaptures": {
+      "backup": {
+        "receiptSha256": "5111662fffd2a39d4c3bfe4ea312f3150f268619e9ec9a1269becc9da6b207fc",
+        "backupSha256": "a7e813e34e42471f1e0afea250d5b1c04d902fe1178faf6100d57b2f6843b4a6",
+        "capturedFiles": {
+          "farfold.sqlite3": "7399a346648b8a1810ad1e79f9df7be88fd02a17b8a5258730f1b262f1a960c6",
+          "farfold.sqlite3-wal": "348769d30aa8f676667c64265bd6c52b15562f94018ad81d595e1c7316b7b602",
+          "farfold.sqlite3-shm": "a73ebac43803154a53c8d0e50f547f6d28bac958997dfa354a76e132b626b392"
+        },
+        "boundary": "Verified only retained private evidence; no live database was opened by this check."
+      },
+      "passed": true,
+      "actualSuccessfulCaptures": 3,
+      "rawMode": "0600",
+      "entriesEach": 217400
+    },
+    "retainedDataEquality": {
+      "passed": true,
+      "allThreeManifestsEqual": true,
+      "entriesEach": 217400,
+      "sha256": "ac5f6ad4d804d334eddf9bb876061d0c9c1ba74ad720831f978e239653beb518"
+    },
+    "finalStableAndProcessAbsent": {
+      "passed": true,
+      "checkedAt": "2026-10-13T08:00:48.841668+00:00",
+      "formalProcessCount": 0,
+      "sourceInputCount": 1703
+    }
+  },
+  "failures": [],
+  "reviewerLaunchedApp": false,
+  "reviewerReadLiveDatabase": false,
+  "boundary": "Single read-only installed gate. Snapshot manifests and retained backup receipts were read, not live user files or SQLite. This gate concerns only this configured PDF input and permission/prompt-configuration protection installation over the actual 92aa formal baseline. All seven engineering commands must actually execute in this exact new slice; no reuse is accepted. Gate applies at the recorded time before root intentional native testing; no later process/source recheck is implied. Ad-hoc signature is not notarization or distribution approval.",
+  "refs": [
+    {
+      "path": "output/2026-10-13-pdf-permission-independent-install/install-final-review.json",
+      "sha256": "fa91547bf41c67662affaf412409a25f93770996548be5ef1ccfa66a944b6ad4",
+      "bytes": 41456
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/verification.json",
+      "sha256": "2f1b9c8257a6db5db4e32bd86cc4ce8a2faa9b863f3f8a0cc833919fee8cebbc",
+      "bytes": 7074
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/summary.json",
+      "sha256": "cccfdc5abfb6b856ac126f4640e79736d05947b257f8c6de22e86a3b9b28fa45",
+      "bytes": 6333
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/verification-original.json.raw",
+      "sha256": "cccfdc5abfb6b856ac126f4640e79736d05947b257f8c6de22e86a3b9b28fa45",
+      "bytes": 6333
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/execution-plan.json",
+      "sha256": "1145aa0b0a6b5ef0604b5e22e97addb1e0ad6785bab38558066d83bcf09c1f15",
+      "bytes": 2448
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/final-freeze/freeze.json",
+      "sha256": "df94a8ff483a7e00bfa91a5051e86671f48f9eed34fb53b6ff4e7f33f765eaa5",
+      "bytes": 276625
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/inventory-plan.json",
+      "sha256": "8e552d786582473f04cf03857a52b83b08e0f6e8887c0704686f2407997f7381",
+      "bytes": 374760
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-checks-preparation/inventory.py",
+      "sha256": "7784a38803fb1c10da014755cde9901f9deba982ffb01ab1076dfd2060e3e076",
+      "bytes": 5533
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-checks-preparation/runner-v4/run_checks.py",
+      "sha256": "0cf4b3fd62d3d94f1781119f65d87f68a9fd26a6afb5e95ca7e56bda3f140a0c",
+      "bytes": 15448
+    },
+    {
+      "path": "output/2026-10-13-pdf-input-a/source-freeze.json",
+      "sha256": "078522c328c0aa8a1d48292095b69e7b28641f353dfedf205703e3ef0a2779bd",
+      "bytes": 13428
+    },
+    {
+      "path": "output/2026-10-13-pdf-input-backend/source-freeze.json",
+      "sha256": "32ee01ab0512f02ce1af5021366c4a6a89c541d870d359f977b829ab90baf948",
+      "bytes": 1621
+    },
+    {
+      "path": "output/2026-10-13-pdf-input-checks-preparation/make_inventory.py",
+      "sha256": "27b292dc64c86855f35d0452cd07616f1a6f3f04025665eedb25b62f32c51715",
+      "bytes": 7593
+    },
+    {
+      "path": "output/2026-10-13-pdf-input-integration/revision-v2/source-freeze.json",
+      "sha256": "7918e64898e4d95326dddbce54b64ebcc855be178265000c14fea9adb1db33e2",
+      "bytes": 8693
+    },
+    {
+      "path": "output/2026-10-13-pdf-input-ui/revision-v4/source-freeze-final.json",
+      "sha256": "1a920dda7f339118a1bece54bbb0f996b510c31967181726630e728f7d4af63c",
+      "bytes": 4749
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/permission-source-freeze-v2.json",
+      "sha256": "3b9d38fd68d4dc4e19fa5e57783795fb25b37d69ed4949daaa9c7e9ec47ceac6",
+      "bytes": 5577
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/inputs-before.json",
+      "sha256": "9d491cd04239210727689931606ab9d2bbaf04ecbb69ee5b3aa1b40e9998bd0a",
+      "bytes": 198434
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/inputs-before.json.raw",
+      "sha256": "9d491cd04239210727689931606ab9d2bbaf04ecbb69ee5b3aa1b40e9998bd0a",
+      "bytes": 198434
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/inputs-after.json",
+      "sha256": "9d491cd04239210727689931606ab9d2bbaf04ecbb69ee5b3aa1b40e9998bd0a",
+      "bytes": 198434
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/inputs-after.json.raw",
+      "sha256": "9d491cd04239210727689931606ab9d2bbaf04ecbb69ee5b3aa1b40e9998bd0a",
+      "bytes": 198434
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/protected-before.json",
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+      "bytes": 357
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/protected-before.json.raw",
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+      "bytes": 357
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/protected-after.json",
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+      "bytes": 357
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/protected-after.json.raw",
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814",
+      "bytes": 357
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/preflight.json",
+      "sha256": "6d0fbbdf6c805cca3e832d5425bebbc683c46f3bc6f5aecdd2c15b3308d66008",
+      "bytes": 266
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/format-check/started.json",
+      "sha256": "b7674377b1632da41f273ec00830160b1cd5a4b83625cda1cab43b32af62d2e5",
+      "bytes": 288
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/format-check/started.json.raw",
+      "sha256": "b7674377b1632da41f273ec00830160b1cd5a4b83625cda1cab43b32af62d2e5",
+      "bytes": 288
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/format-check/completed.json",
+      "sha256": "de0c7aea6eb30feb036c316a42ced2437482be46bd3face360eed3f2cc03e048",
+      "bytes": 667
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/format-check/completed.json.raw",
+      "sha256": "de0c7aea6eb30feb036c316a42ced2437482be46bd3face360eed3f2cc03e048",
+      "bytes": 667
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/format-check/stdout.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "bytes": 144
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/format-check/stdout.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "bytes": 144
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/format-check/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/format-check/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/typecheck/started.json",
+      "sha256": "a8cf73891a200ca71f820f14a626c65e579a0e9e15f99fe4e0546b6f31cf827f",
+      "bytes": 280
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/typecheck/started.json.raw",
+      "sha256": "a8cf73891a200ca71f820f14a626c65e579a0e9e15f99fe4e0546b6f31cf827f",
+      "bytes": 280
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/typecheck/completed.json",
+      "sha256": "2e823a1c1715377ef47e09a0f9ad1135f2058c4854210c04ef1d5338844120fd",
+      "bytes": 664
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/typecheck/completed.json.raw",
+      "sha256": "2e823a1c1715377ef47e09a0f9ad1135f2058c4854210c04ef1d5338844120fd",
+      "bytes": 664
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/typecheck/stdout.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/typecheck/stdout.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/typecheck/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/typecheck/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/frontend-test/started.json",
+      "sha256": "fa4b8fd1c3658eebf5b151724770792946dbbddb4ed68ee6a46311791b910a05",
+      "bytes": 274
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-test/started.json.raw",
+      "sha256": "fa4b8fd1c3658eebf5b151724770792946dbbddb4ed68ee6a46311791b910a05",
+      "bytes": 274
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/frontend-test/completed.json",
+      "sha256": "76137fc9a1f599d7bb9de523092444252695dc867cc73d3fed331274d722b79f",
+      "bytes": 659
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-test/completed.json.raw",
+      "sha256": "76137fc9a1f599d7bb9de523092444252695dc867cc73d3fed331274d722b79f",
+      "bytes": 659
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/frontend-test/stdout.log",
+      "sha256": "2d39a3dc1d57cce0bf711ca882b4f9e6b46e8adce713a2fd1bd7d9ff2b5dd6e8",
+      "bytes": 289
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-test/stdout.log",
+      "sha256": "2d39a3dc1d57cce0bf711ca882b4f9e6b46e8adce713a2fd1bd7d9ff2b5dd6e8",
+      "bytes": 289
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/frontend-test/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-test/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/frontend-build/started.json",
+      "sha256": "3d0eabaea655b24d5fe2ca308f55678ff0c30960201faeb9fcff6b4f5c346c5f",
+      "bytes": 278
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-build/started.json.raw",
+      "sha256": "3d0eabaea655b24d5fe2ca308f55678ff0c30960201faeb9fcff6b4f5c346c5f",
+      "bytes": 278
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/frontend-build/completed.json",
+      "sha256": "74b675e06d26d3210ac144607840178800922d6659dd4471c7fadb6a90877d2e",
+      "bytes": 662
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-build/completed.json.raw",
+      "sha256": "74b675e06d26d3210ac144607840178800922d6659dd4471c7fadb6a90877d2e",
+      "bytes": 662
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/frontend-build/stdout.log",
+      "sha256": "6d13c95d25b694e144bb7403a52a1608b8dce55284e83843adc81f0a53b835aa",
+      "bytes": 4560
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-build/stdout.log",
+      "sha256": "6d13c95d25b694e144bb7403a52a1608b8dce55284e83843adc81f0a53b835aa",
+      "bytes": 4560
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/frontend-build/stderr.log",
+      "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+      "bytes": 360
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/frontend-build/stderr.log",
+      "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4",
+      "bytes": 360
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/cargo-fmt/started.json",
+      "sha256": "4042222fe2e3edefb4960d772e9136a235df1d78437a52eeba6daf273e46c1ed",
+      "bytes": 355
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-fmt/started.json.raw",
+      "sha256": "4042222fe2e3edefb4960d772e9136a235df1d78437a52eeba6daf273e46c1ed",
+      "bytes": 355
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/cargo-fmt/completed.json",
+      "sha256": "c1c5188060c494c05c3a215fc7ae775bbdf78e3ed16a7ba338b4bf56c8035417",
+      "bytes": 740
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-fmt/completed.json.raw",
+      "sha256": "c1c5188060c494c05c3a215fc7ae775bbdf78e3ed16a7ba338b4bf56c8035417",
+      "bytes": 740
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/cargo-fmt/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-fmt/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/cargo-fmt/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-fmt/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/cargo-clippy/started.json",
+      "sha256": "c36e4964853d0be31ddf2c6ed8de7cc6710d6726b90c29d32b7f2f8cd2da484e",
+      "bytes": 417
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-clippy/started.json.raw",
+      "sha256": "c36e4964853d0be31ddf2c6ed8de7cc6710d6726b90c29d32b7f2f8cd2da484e",
+      "bytes": 417
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/cargo-clippy/completed.json",
+      "sha256": "12899cc07ac448281a1d08466732ce621aaa407ff98c5d9432dd829d510229d0",
+      "bytes": 795
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-clippy/completed.json.raw",
+      "sha256": "12899cc07ac448281a1d08466732ce621aaa407ff98c5d9432dd829d510229d0",
+      "bytes": 795
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/cargo-clippy/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-clippy/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/cargo-clippy/stderr.log",
+      "sha256": "ad9e4784fd775c98f2f5850a9b057c1ad79a1c9bda9f3b50199db908220518d2",
+      "bytes": 8937
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-clippy/stderr.log",
+      "sha256": "ad9e4784fd775c98f2f5850a9b057c1ad79a1c9bda9f3b50199db908220518d2",
+      "bytes": 8937
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/cargo-test/started.json",
+      "sha256": "3fbbdb9d18aca4be50323497d603f99f7b10d3a490ea032a7421af0bfcb25b8c",
+      "bytes": 360
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-test/started.json.raw",
+      "sha256": "3fbbdb9d18aca4be50323497d603f99f7b10d3a490ea032a7421af0bfcb25b8c",
+      "bytes": 360
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/cargo-test/completed.json",
+      "sha256": "2ea63726f86507b4779c1ad75fe7e6c245395bd45da387de9299b3bd9d495866",
+      "bytes": 745
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-test/completed.json.raw",
+      "sha256": "2ea63726f86507b4779c1ad75fe7e6c245395bd45da387de9299b3bd9d495866",
+      "bytes": 745
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/cargo-test/stdout.log",
+      "sha256": "fbc2f1cc16bf7be40f41fadac4d504d7a36c288c290b0fc96701185a897eb477",
+      "bytes": 181633
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-test/stdout.log",
+      "sha256": "fbc2f1cc16bf7be40f41fadac4d504d7a36c288c290b0fc96701185a897eb477",
+      "bytes": 181633
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-integration/run-01/cargo-test/stderr.log",
+      "sha256": "35a3f380f3ad1d0540e77e9680ab79cb2ba0465c69a1c867b648241f1def97b4",
+      "bytes": 671
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-checks/cargo-test/stderr.log",
+      "sha256": "35a3f380f3ad1d0540e77e9680ab79cb2ba0465c69a1c867b648241f1def97b4",
+      "bytes": 671
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/install-data-before-summary.json",
+      "sha256": "34c21d7d7b3b79d33dc77daf74384d3750d48af49b171c69e8dd19dc98a66d02",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/snapshot-before-execution.json",
+      "sha256": "295780b2ab3da38159f7b207b716dcd10ab605fb0dda682febdc9c49edc1a0d2",
+      "bytes": 622
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/install-data-before.jsonl",
+      "sha256": "ac5f6ad4d804d334eddf9bb876061d0c9c1ba74ad720831f978e239653beb518",
+      "bytes": 58925641
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/install-data-preinstall-summary.json",
+      "sha256": "34c21d7d7b3b79d33dc77daf74384d3750d48af49b171c69e8dd19dc98a66d02",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/snapshot-preinstall-execution.json",
+      "sha256": "e40a50011e2af7361e6a84f6e60ca24acc23ba4a9daaf9ed9c536434b3597466",
+      "bytes": 626
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/install-data-preinstall.jsonl",
+      "sha256": "ac5f6ad4d804d334eddf9bb876061d0c9c1ba74ad720831f978e239653beb518",
+      "bytes": 58925641
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/install-data-after-summary.json",
+      "sha256": "34c21d7d7b3b79d33dc77daf74384d3750d48af49b171c69e8dd19dc98a66d02",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/snapshot-after-execution.json",
+      "sha256": "b18ea08264940b4a4ba03e879909dcbb9d338a8cec9af2268aaaa4b058f0f087",
+      "bytes": 621
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/install-data-after.jsonl",
+      "sha256": "ac5f6ad4d804d334eddf9bb876061d0c9c1ba74ad720831f978e239653beb518",
+      "bytes": 58925641
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-independent-install/verify_installed_final.py",
+      "sha256": "1143ff4f4611cd9a8d222ef9ac03c6c3028244a69109efefaddf398ccfe8720a",
+      "bytes": 14004
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/install_verified_candidate.py",
+      "sha256": "00227af0ebc3cc15fec0e51277724bc5d4830dc3de2681897704bea49346c9b5",
+      "bytes": 30208
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/install_data_snapshot.py",
+      "sha256": "4213b1057f1b2e635f496fb321b434490ee6b0ca154656c3e2ecb21e2d529b41",
+      "bytes": 6225
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/capture_snapshot.py",
+      "sha256": "c0075c1bb73d5ca9cee151aeaf4f27329e81344a3c7d0328e22e2bb3285addf6",
+      "bytes": 2844
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/normal-exit-observation.json",
+      "sha256": "ae1bfb38147f659a9e0379e74c8d3d1e7a7ba49fb7c5c990ed602235c3edb460",
+      "bytes": 1596
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/install-operation.json",
+      "sha256": "52dbba3ef77eb14ebef296622e6b3fe4b233f3aeee3a3b549d07d3b2649d3c15",
+      "bytes": 3492
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install-preparation/generated-tools.json",
+      "sha256": "f98392a31fbd537ba978f1f15d69a9e7da5821140e5d33b54b31137cb0ddec6c",
+      "bytes": 5715
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-native/90-final-native-normal-quit-event.json",
+      "sha256": "af644bd1c09482fb5cf0713f6f89136403b6e150d5dd2d878e49867e443e70d3",
+      "bytes": 361
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-native/94-final-native-process-path-adapter.json",
+      "sha256": "824ae9aded5dab0b471d5900ad2fdd0eab9c2f2f0365d614ab4ecbbe9d530bfc",
+      "bytes": 853
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-native/91-final-native-process-check.json",
+      "sha256": "41bf4613c78abc5c4af39462cc57b7581e402d6b47c74721be1b8280c9578d27",
+      "bytes": 534
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-input-candidate/installed-native-scoped.json",
+      "sha256": "c118391202d7f79afd9d46b99c6a21ae7b22d9dd7e9863b259f4e5f21d5b134d",
+      "bytes": 5958
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/candidate.json",
+      "sha256": "8f5903a3a293ceef90f734f3a5ba7e74be41b361762f508d57cd1b68c4703b9e",
+      "bytes": 23785
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/candidate-independent.json",
+      "sha256": "9e1f8130ec4a83c3444d8ed3aa745e52d238b8fbc7b0b8068522325e3da3d98f",
+      "bytes": 3060
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/candidate-inputs.json",
+      "sha256": "9d491cd04239210727689931606ab9d2bbaf04ecbb69ee5b3aa1b40e9998bd0a",
+      "bytes": 198434
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/backup_metadata.py",
+      "sha256": "767fed0744ec14ed80cf680976c91b4042c56c9bd61ed76b27ea485000b469fe",
+      "bytes": 10580
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/data_manifest.py",
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "bytes": 4258
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/metadata-backup-receipt.json",
+      "sha256": "5111662fffd2a39d4c3bfe4ea312f3150f268619e9ec9a1269becc9da6b207fc",
+      "bytes": 1358
+    },
+    {
+      "path": "output/2026-10-13-pdf-permission-install/metadata-before.sqlite3",
+      "sha256": "a7e813e34e42471f1e0afea250d5b1c04d902fe1178faf6100d57b2f6843b4a6",
+      "bytes": 512000
+    }
+  ]
+}

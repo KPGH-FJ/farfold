@@ -1,0 +1,111 @@
+{
+  "phase": "independentSecondCopyLocalizationNoAcceptance",
+  "sourceCommit": "e5995b219d2f3ed543d9a054911240122358d76b",
+  "checkedAtUtc": "2026-10-13T08:26:20.990423+00:00",
+  "originalActualExitCode": 2,
+  "originalAcceptedDifferences": [],
+  "executionSha256": "a21b0ad972057097de2ceec9414504cfe95a5ab7846bb6f2ec69f5c57c491499",
+  "originalComparisonSha256": "ed53f9522f28bca28c1bee04208d497ddd374d541cdf9143c3a71247ef237bdf",
+  "originalFinalVerificationSha256": "8d69798f7bacd6ca0eb5dcfead1aacc6eb10ac703a047c24131bdc3b4ca7fa45",
+  "preparationFreezeSha256": "af9e0599c0094da99309d84c3f587be7f41bc24ac4ca7bacd36c71d46b70b8be",
+  "frozenFilesVerified": 8,
+  "configSha256": "60ae3baab2dec6f48801ef22a9eaa21924727050d8989ef68fde29987d8b5f55",
+  "freshNormalQuitSha256": "9a8e70e8dd6e5abea0bd2367619c1a9c805dc72070f7131812b87034e04b8f75",
+  "freshProcessReceiptSha256": "426466502c2b4e018302576906cd2564a9c825858caef87b53a01cea7bdf9a5a",
+  "receiptChronologyVerified": true,
+  "originalSourceFirstStableClaimVerifiedFromRetainedReceipts": true,
+  "originalFirstNotReread": true,
+  "liveDatabaseNotAccessed": true,
+  "SqliteOpenPaths": [
+    "/Users/tw/Desktop/farfold/output/2026-10-13-data-difference-localization/pdf-native-independent-second-copy/before.sqlite3",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-data-difference-localization/pdf-native-independent-second-copy/after.sqlite3"
+  ],
+  "secondOnlyReadOnlyImmutable": true,
+  "secondCopiesIntegrityOk": true,
+  "derivedInputBytesAndSignaturesStable": true,
+  "sourceBytePins": {
+    "before.sqlite3": "a7e813e34e42471f1e0afea250d5b1c04d902fe1178faf6100d57b2f6843b4a6",
+    "after.sqlite3": "2ff8623bed6aeedd93ca61a4dc0820e548d92e5088e0a16cadcecd49f7cfd0e2"
+  },
+  "schemaSha256": "c5f17339be1ec29106c215dfaf090a033ea610d595df24e9715caad607efa241",
+  "schemaAndUserVersionUnchanged": true,
+  "tables": {
+    "agents": {
+      "beforeCount": 40,
+      "afterCount": 40,
+      "wholeRowsUnchanged": 39,
+      "changes": [
+        {
+          "rowKeySha256": "08f6b585592467d20717e8abd8dd02b9fb430ba65eb4b745c373ce3001ef5dae",
+          "columns": [
+            {
+              "column": "updated_at",
+              "beforeSha256": "fc2e8f428caf13f2c757c8a0d940d5c2125573e65eb54f6bf375632715dc2180",
+              "afterSha256": "a26955cf0f955b51da3ac9409732d2929a8909d8062c37ebc3d5f9d844784ea8"
+            }
+          ]
+        }
+      ],
+      "beforeWholeRowsSha256": "235edf1dad519e7fdb79e9730711eb07a4847ad52ad96236448d8579a51880c6",
+      "afterWholeRowsSha256": "cf0fec2d51bec0df6cc6116af10c048333fa3096c5cee5f477dad39a50a133dd"
+    },
+    "dismissed_sessions": {
+      "beforeCount": 171,
+      "afterCount": 171,
+      "wholeRowsUnchanged": 171,
+      "changes": [],
+      "beforeWholeRowsSha256": "85d6a5d94f52909d1998494eb674735f43780fc64c257e108122992c28390072",
+      "afterWholeRowsSha256": "85d6a5d94f52909d1998494eb674735f43780fc64c257e108122992c28390072"
+    },
+    "sessions": {
+      "beforeCount": 135,
+      "afterCount": 135,
+      "wholeRowsUnchanged": 135,
+      "changes": [],
+      "beforeWholeRowsSha256": "528cc12d55c599feb0604691fb96cf1015edffea02366ec87e14659780acfa76",
+      "afterWholeRowsSha256": "528cc12d55c599feb0604691fb96cf1015edffea02366ec87e14659780acfa76"
+    },
+    "settings": {
+      "beforeCount": 53,
+      "afterCount": 53,
+      "wholeRowsUnchanged": 52,
+      "changes": [
+        {
+          "rowKeySha256": "0ca5ab37ef0c73593f6d671e42c6089ce519b8c0e4c479fad075b3301b95a188",
+          "columns": [
+            {
+              "column": "value",
+              "beforeSha256": "840be499ec1e17cde8fee3bba8e7f7ab1636757e1110a5dfbccd67cb6fb93891",
+              "afterSha256": "eedc468116acf34c3369424dc31175699562378002bc9788460bc1c75bb17185"
+            }
+          ]
+        }
+      ],
+      "beforeWholeRowsSha256": "70f6c3a2a3ffc0cbaa8d1796439b4685c8033c0cfc583905d97ae93c49f46819",
+      "afterWholeRowsSha256": "5daa3c95f26267bb10166f7482c8c0644837a6a0ec2680f5d10b26dbaaafa656"
+    }
+  },
+  "draftLocalization": {
+    "composerKeySha256": "80270e39ab5a8e50f949b1287e9432cef723e843964056ef04e1f185a4d3b301",
+    "composerSha256": "6e23036cfbaa3b2a7a014dff4d8f171a5eb436fe389ebafb767259c4f80a5bd4",
+    "fieldNames": [
+      "attachments",
+      "text"
+    ],
+    "textUtf8Bytes": 33,
+    "textSha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf",
+    "markerColdEvidenceSha256": "5850493a532540e0107352f73b7b4689787b54cb976f2bd09cd8353c9c474799",
+    "exactColdMarkerMatch": true,
+    "attachmentCount": 0,
+    "otherFields": {},
+    "noFieldsOtherThanTextAndAttachments": true,
+    "oldComposerCount": 9,
+    "afterComposerCount": 10,
+    "allOldComposersUnchangedDecoded": true,
+    "allOtherTopFieldsUnchangedDecoded": true,
+    "rawValueDifferenceRetained": true
+  },
+  "agentTimestampSpecificWriter": "unknown; field equality cannot establish call-site identity",
+  "acceptance": "No automatic exemption; original exit2 and acceptedDifferences remain unchanged. New composer matches own UI marker, not a PDF attachment.",
+  "boundaries": "Only retained JSON/source receipts and two derived source database files read; SQLite only newly created private immutable copies. No live/first raw capture access, no App/UI/process/Agent action, no private text or account values output."
+}

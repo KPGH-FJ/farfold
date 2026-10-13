@@ -1,0 +1,121 @@
+{
+  "sourceCommit": "e5995b219d2f3ed543d9a054911240122358d76b",
+  "status": "partial: formal native file picker blocked; app normally exited",
+  "actualScope": {
+    "application": "/Applications/Farfold.app",
+    "method": "CUA native UI and read-only exact process receipts",
+    "ownDraft": "FARFOLD_PDF_LOCAL_REVIEW_20261013",
+    "sourceModified": false,
+    "browserDevServerLaunched": false,
+    "otherUserDraftEdited": false,
+    "ordinaryOrSlashSendActionCount": 0,
+    "sendQueueContinueActionCount": 0,
+    "permissionApplyActionCount": 0,
+    "agentServiceModelReasoningChanged": false,
+    "officialAgentRequestCount": "not established by UI evidence"
+  },
+  "passed": [
+    {
+      "case": "own unsent marker survives cancellation",
+      "evidence": [
+        "02-own-draft-attachment-menu.txt",
+        "15-picker-cancelled-draft-preserved.txt",
+        "26-control-cancelled-draft-retained.txt"
+      ],
+      "result": "Own marker retained; no attachment added."
+    },
+    {
+      "case": "permission timing and cancelled confirmation",
+      "evidence": [
+        "16-permission-timing.txt",
+        "17-permission-confirmation-not-applied.txt",
+        "18-permission-cancel-keeps-selection.txt",
+        "19-permission-selection-unchanged.txt",
+        "40-cold-permission-unchanged.txt"
+      ],
+      "result": "Existing option labeled next-message choice. Next ordinary timing, unknown complete scope and separate queue continuation visible. Confirmation action identified next-message permission; cancelling left original option selected."
+    },
+    {
+      "case": "cold marker only",
+      "evidence": [
+        "35-cold-normal-save-quit-confirmation.txt",
+        "36-cold-normal-quit-event.json",
+        "37-cold-quit-process-observation.json",
+        "38-cold-marker-restored.txt",
+        "39-marker-cold-verification.json"
+      ],
+      "result": "First normal quit confirmed by exact process observation; complete marker restored; UI still says first message starts conversation."
+    },
+    {
+      "case": "fresh global status and historical unknown preserved",
+      "evidence": [
+        "27-worktree-operations-readonly.txt",
+        "28-unknown-worktree-explanation.txt",
+        "30-global-conversation-status-readonly.txt",
+        "33-pre-cold-global-status.txt",
+        "42-final-global-status.txt"
+      ],
+      "result": "Global pending-response 0 and in-progress 0, no login visible. Historical H17 unknown result explanation read only; no acknowledgement/recheck/stop/retry."
+    },
+    {
+      "case": "final normal save and quit",
+      "evidence": [
+        "43-final-own-unsent-state.txt",
+        "44-final-normal-save-quit-confirmation.txt",
+        "45-final-normal-quit-action.json",
+        "46-final-normal-quit-event.json",
+        "47-final-exact-process-receipt.json"
+      ],
+      "result": "Actual Save and quit action returned; later CUA inventory had no Farfold; exact ps exited 0 with no formal executable processes. No force quit.",
+      "eventSha256": "9a8e70e8dd6e5abea0bd2367619c1a9c805dc72070f7131812b87034e04b8f75"
+    }
+  ],
+  "blocked": {
+    "case": "native file picker entry",
+    "evidence": [
+      "05-positive-pdf-selected.txt",
+      "06-positive-native-dialog-stable.png",
+      "07-positive-file-explicit-selection.txt",
+      "13-keyboard-file-selection.txt",
+      "14-positive-reselected.txt",
+      "25-xlsx-control-selected-not-opened.txt"
+    ],
+    "result": "01 PDF shows selected after Go To/AX selection, Open remains disabled. Existing XLSX selection-only control also disabled; neither file opened.",
+    "attribution": "Unresolved. Not a PDF-only filtering observation; does not establish NSOpenPanel selectedURLs or selection callback state.",
+    "pointerAttempt": "app.click([695,692]) failed with noWindowsAvailable. Exact process metadata identifies main plus same-executable browser helper, not two independently launched main apps."
+  },
+  "notTested": [
+    "formal PDF addition",
+    "explicit PDF scope before reading bytes",
+    "formal full 3-page extracted text, rotation and tail",
+    "formal PDF partial warnings/approval/cancel",
+    "formal damaged05 rejection",
+    "formal encrypted04 rejection",
+    "formal approved PDF text hash equality",
+    "formal PDF attachment cold recovery/re-read",
+    "ordinary, review, compact or goal dispatch",
+    "complete permission restoration",
+    "official zero requests/external service effects"
+  ],
+  "fullDedicatedPdfText": {
+    "status": "not obtained; picker blocked before attachment",
+    "utf8Bytes": null,
+    "sha256": null,
+    "matchesExpected": null
+  },
+  "markerColdText": {
+    "utf8Bytes": 33,
+    "sha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf",
+    "matches": true
+  },
+  "dataIntegrity": "Parent owns independent post-final-exit data capture and comparison; not established here.",
+  "rawPrivacy": "Directory 0700, files 0600. Raw AX/screenshots can contain old private UI; public reporting limited to summary/hashes and dedicated test content.",
+  "boundary": "No send action and no visible new message are UI observations, not official zero-request proof. Marker cold success is not PDF cold success. Unknown historical work is not classified completed or stopped.",
+  "additionalActionEvidence": {
+    "36-cold-normal-quit-event.json": "Immediate inventory still running after click; use 37 process0 as actual first exit proof.",
+    "39-cold-own-marker-entire-selection.txt": "app.click(56), app.pressKey('super+a'), full AX Selected text",
+    "45-final-normal-quit-action.json": "app.click(12) Save and quit returned successfully",
+    "46-final-normal-quit-event.json": "cua.listApps after final quit observed no Farfold",
+    "47-final-exact-process-receipt.json": "/bin/ps -axo pid=,comm= later exit0 and exact formal process list empty"
+  }
+}

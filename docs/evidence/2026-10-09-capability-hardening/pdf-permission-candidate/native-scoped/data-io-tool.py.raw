@@ -1,0 +1,142 @@
+"""Pinned byte I/O and proven private SQLite seal; no import-time I/O."""
+import datetime
+import hashlib
+import json
+import os
+from pathlib import Path
+import sqlite3
+import stat
+import subprocess
+from contextlib import closing
+ROOT = Path('/Users/tw/Desktop/farfold')
+PREPARATION = ROOT / 'output/2026-10-13-pdf-permission-native-data-preparation'
+OUT = ROOT / 'output/2026-10-13-pdf-permission-native-data'
+SOURCE = Path('/Users/tw/Library/Application Support/ai.farfold.desktop')
+EXECUTABLE = '/Applications/Farfold.app/Contents/MacOS/farfold'
+NAMES = ('farfold.sqlite3', 'farfold.sqlite3-wal', 'farfold.sqlite3-shm')
+DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+
+
+def require(ok, code):
+    if not ok:
+        raise RuntimeError(code)
+
+def now():
+    return datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+def open_directory(path):
+    require(path.is_absolute() and '..' not in path.parts, 'directory-path')
+    fd = os.open('/', DIR_FLAGS)
+    try:
+        for component in path.parts[1:]:
+            child = os.open(component, DIR_FLAGS, dir_fd=fd)
+            os.close(fd); fd = child
+        return fd
+    except BaseException:
+        os.close(fd)
+        raise
+
+def signature(value):
+    return [value.st_dev, value.st_ino, value.st_mode, value.st_size, value.st_mtime_ns, value.st_ctime_ns, value.st_uid]
+
+def read_file(directory, name, collect=False):
+    before = os.stat(name, dir_fd=directory, follow_symlinks=False)
+    require(stat.S_ISREG(before.st_mode) and before.st_uid == os.getuid(), 'regular-owner-file-required')
+    fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory)
+    digest = hashlib.sha256(); contents = []
+    with os.fdopen(fd, 'rb') as stream:
+        require(signature(before) == signature(os.fstat(stream.fileno())), 'file-changed-on-open')
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(chunk)
+            if collect:
+                require(before.st_size <= 256 * 1024 * 1024, 'json-size-limit')
+                contents.append(chunk)
+        require(signature(before) == signature(os.fstat(stream.fileno())) == signature(os.stat(name, dir_fd=directory, follow_symlinks=False)), 'file-changed-on-read')
+    result = {'signature': signature(before), 'sha256': digest.hexdigest(), 'bytes': before.st_size}
+    return (result, b''.join(contents)) if collect else result
+
+def pinned_file(path, expected_sha, collect=False):
+    require(type(expected_sha) is str and len(expected_sha) == 64 and all(c in '0123456789abcdef' for c in expected_sha), 'sha-pin-unset')
+    fd = open_directory(path.parent)
+    try:
+        result = read_file(fd, path.name, collect)
+        info = result[0] if collect else result
+        require(info['sha256'] == expected_sha, 'pinned-file-changed')
+        return result
+    finally:
+        os.close(fd)
+
+def inventory(directory):
+    present = set(os.listdir(directory)) & set(NAMES)
+    require(NAMES[0] in present, 'main-database-absent')
+    return {name: read_file(directory, name) for name in NAMES if name in present}
+
+def same_bytes(first, second):
+    return set(first) == set(second) and all((first[k]['sha256'], first[k]['bytes']) == (second[k]['sha256'], second[k]['bytes']) for k in first)
+
+def write_bytes(directory, name, raw):
+    fd = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=directory)
+    with os.fdopen(fd, 'wb') as stream:
+        stream.write(raw); stream.flush(); os.fsync(stream.fileno())
+    os.fsync(directory)
+
+def write_json(directory, name, value):
+    write_bytes(directory, name, (json.dumps(value, ensure_ascii=False, indent=2) + '\n').encode())
+
+def copy_file(source, target, name, expected):
+    initial = os.stat(name, dir_fd=source, follow_symlinks=False)
+    require(signature(initial) == expected['signature'] and stat.S_ISREG(initial.st_mode), 'source-changed-before-copy')
+    fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=source)
+    with os.fdopen(fd, 'rb') as stream:
+        require(signature(os.fstat(stream.fileno())) == expected['signature'], 'source-changed-on-copy-open')
+        output = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=target)
+        digest = hashlib.sha256(); size = 0
+        with os.fdopen(output, 'wb') as writer:
+            for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+                writer.write(chunk); digest.update(chunk); size += len(chunk)
+            writer.flush(); os.fsync(writer.fileno())
+        require(digest.hexdigest() == expected['sha256'] and size == expected['bytes'], 'copied-bytes-differ')
+        require(signature(os.fstat(stream.fileno())) == expected['signature'] == signature(os.stat(name, dir_fd=source, follow_symlinks=False)), 'source-changed-during-copy')
+    os.fsync(target)
+
+def process_zero():
+    result = subprocess.run(['/bin/ps', '-axo', 'pid=,comm='], capture_output=True, text=True)
+    require(result.returncode == 0, 'process-observation-failed')
+    count = sum(fields[1] == EXECUTABLE for line in result.stdout.splitlines() if len(fields := line.split(None, 1)) == 2)
+    require(count == 0, 'formal-process-present')
+    return {'checkedAtUtc': now(), 'formalProcessCount': 0, 'exactExecutableSha256': hashlib.sha256(EXECUTABLE.encode()).hexdigest()}
+
+def private_directory(fd):
+    value = os.fstat(fd)
+    require(value.st_uid == os.getuid() and stat.S_IMODE(value.st_mode) == 0o700, 'capture-directory-private-mode')
+
+def private_standalone_backup(working_path, consolidated_path):
+    require(working_path == OUT / 'second-working-copy' / NAMES[0] and consolidated_path == OUT / 'metadata-after-consolidated.sqlite3', 'exact-private-backup-paths')
+    # SQLite connects exclusively to the second working copy and new target.
+    with closing(sqlite3.connect(working_path)) as work_db:
+        with closing(sqlite3.connect(consolidated_path)) as merged_db:
+            # This new private target has no other reader or writer. Set this
+            # before backup imports WAL header pages: SQLite WAL section 8 then
+            # keeps its target wal-index in memory, never creating target SHM.
+            locking_before = merged_db.execute('PRAGMA locking_mode=EXCLUSIVE').fetchone()[0]
+            require(locking_before == 'exclusive', 'private-backup-not-exclusive-before-wal')
+            work_db.backup(merged_db)
+            require(not merged_db.in_transaction, 'private-backup-transaction-open')
+            mode_before = merged_db.execute('PRAGMA journal_mode').fetchone()[0]
+            checkpoint_before = merged_db.execute('PRAGMA wal_checkpoint(TRUNCATE)').fetchone()
+            require(len(checkpoint_before) == 3 and checkpoint_before[0] == 0 and checkpoint_before[1] == checkpoint_before[2], 'private-backup-checkpoint-incomplete')
+            require(merged_db.execute('PRAGMA journal_mode=DELETE').fetchone() == ('delete',), 'private-backup-delete-mode-failed')
+            checkpoint_after = merged_db.execute('PRAGMA wal_checkpoint(TRUNCATE)').fetchone()
+            require(checkpoint_after == (0, -1, -1), 'private-backup-still-has-wal')
+            mode_after = merged_db.execute('PRAGMA journal_mode').fetchone()[0]
+            require(mode_after == 'delete', 'private-backup-mode-not-delete')
+            require(merged_db.execute('PRAGMA integrity_check').fetchall() == [('ok',)], 'after-private-integrity')
+    for closed_db in (work_db, merged_db):
+        try:
+            closed_db.execute('SELECT 1')
+        except sqlite3.ProgrammingError:
+            pass
+        else:
+            raise RuntimeError('private-backup-connection-still-open')
+    require(not any(Path(str(consolidated_path) + suffix).exists() or Path(str(consolidated_path) + suffix).is_symlink() for suffix in ('-wal', '-shm')), 'private-backup-sidecars-after-close')
+    return {'lockingBeforeBackupOrFirstWalAccess': locking_before, 'modeBefore': mode_before, 'checkpointBeforeDelete': list(checkpoint_before), 'modeAfter': mode_after, 'checkpointAfterDelete': list(checkpoint_after), 'integrity': 'ok', 'connectionsClosedVerified': True, 'sidecarsAbsentAfterClose': True, 'deletedOrMovedSidecars': False, 'SQLiteOpenScope': 'secondWorkingAndNewConsolidatedOnly'}

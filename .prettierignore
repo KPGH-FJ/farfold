@@ -277,3 +277,11 @@ docs/evidence/2026-10-09-capability-hardening/xlsx-input-candidate/install-indep
 
 # Original authored PDF input oracle is copied and hashed byte-for-byte.
 src/runtime/fixtures/pdf-input/independent-oracle.json
+
+# Exact PDF/permission candidate and installation receipts retain their verified bytes.
+docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/candidate-inputs.json
+docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/candidate-inputs-after.json
+docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/candidate.json
+docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/candidate-independent.json
+docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/install-independent-final.json
+docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/duplicate-app-cleanup.json

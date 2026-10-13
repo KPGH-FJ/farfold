@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "status": "INSTALLED_AND_BYTE_EXACT_RETENTION_VERIFIED_BEFORE_NATIVE_UI",
+  "sourceCommit": "e5995b219d2f3ed543d9a054911240122358d76b",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "officialApp": "/Applications/Farfold.app",
+  "sourcePushedTo": "origin/main",
+  "candidateChecksPassed": 9,
+  "installationChecksPassed": 10,
+  "sourceInputsVerified": 1703,
+  "frontendTestsPassed": 5643,
+  "rustTestsPassed": 1634,
+  "rustTestsIgnored": 6,
+  "installationData": {
+    "entriesPerManifest": 217400,
+    "threeManifestsEqual": true,
+    "sha256": "ac5f6ad4d804d334eddf9bb876061d0c9c1ba74ad720831f978e239653beb518",
+    "rawPrivateManifestsPublished": false,
+    "originalMetadataBytesPreserved": true,
+    "SQLiteOpenedOnlyOnSecondCopies": true
+  },
+  "verifiedBeforeAnyAppLaunch": true,
+  "nativeUiValidation": "SEPARATE_PENDING",
+  "realAgentPdfReceipt": "NOT_VERIFIED",
+  "fullPermissionRestore": "OPEN",
+  "references": [
+    {
+      "original": {
+        "path": "output/2026-10-13-pdf-permission-install/install-operation.json",
+        "sha256": "52dbba3ef77eb14ebef296622e6b3fe4b233f3aeee3a3b549d07d3b2649d3c15",
+        "bytes": 3492
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/install-operation.json.raw",
+        "sha256": "52dbba3ef77eb14ebef296622e6b3fe4b233f3aeee3a3b549d07d3b2649d3c15",
+        "bytes": 3492
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-pdf-permission-install/normal-exit-observation.json",
+        "sha256": "ae1bfb38147f659a9e0379e74c8d3d1e7a7ba49fb7c5c990ed602235c3edb460",
+        "bytes": 1596
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/normal-exit-observation.json.raw",
+        "sha256": "ae1bfb38147f659a9e0379e74c8d3d1e7a7ba49fb7c5c990ed602235c3edb460",
+        "bytes": 1596
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-pdf-permission-install/install-data-before-summary.json",
+        "sha256": "34c21d7d7b3b79d33dc77daf74384d3750d48af49b171c69e8dd19dc98a66d02",
+        "bytes": 419
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/install-data-before-summary.json.raw",
+        "sha256": "34c21d7d7b3b79d33dc77daf74384d3750d48af49b171c69e8dd19dc98a66d02",
+        "bytes": 419
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-pdf-permission-install/install-data-preinstall-summary.json",
+        "sha256": "34c21d7d7b3b79d33dc77daf74384d3750d48af49b171c69e8dd19dc98a66d02",
+        "bytes": 419
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/install-data-preinstall-summary.json.raw",
+        "sha256": "34c21d7d7b3b79d33dc77daf74384d3750d48af49b171c69e8dd19dc98a66d02",
+        "bytes": 419
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-pdf-permission-install/install-data-after-summary.json",
+        "sha256": "34c21d7d7b3b79d33dc77daf74384d3750d48af49b171c69e8dd19dc98a66d02",
+        "bytes": 419
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/install-data-after-summary.json.raw",
+        "sha256": "34c21d7d7b3b79d33dc77daf74384d3750d48af49b171c69e8dd19dc98a66d02",
+        "bytes": 419
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-pdf-permission-install/metadata-backup-receipt.json",
+        "sha256": "5111662fffd2a39d4c3bfe4ea312f3150f268619e9ec9a1269becc9da6b207fc",
+        "bytes": 1358
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/metadata-backup-receipt.json.raw",
+        "sha256": "5111662fffd2a39d4c3bfe4ea312f3150f268619e9ec9a1269becc9da6b207fc",
+        "bytes": 1358
+      }
+    },
+    {
+      "candidate": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/candidate.json",
+        "sha256": "8f5903a3a293ceef90f734f3a5ba7e74be41b361762f508d57cd1b68c4703b9e",
+        "bytes": 23785
+      },
+      "independentCandidate": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/candidate-independent.json",
+        "sha256": "9e1f8130ec4a83c3444d8ed3aa745e52d238b8fbc7b0b8068522325e3da3d98f",
+        "bytes": 3060
+      },
+      "independentInstall": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/install-independent-final.json",
+        "sha256": "e859b9a752eacf7b0dfeed43f54341c909bba22dfe618e39881471f2594298e9",
+        "bytes": 41670
+      },
+      "duplicateAppCleanup": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-permission-candidate/duplicate-app-cleanup.json",
+        "sha256": "e5435a585a52732a0f9bf983e6c83cc039fc8959be2d9f85cf8e845cecafe767",
+        "bytes": 1077
+      }
+    }
+  ],
+  "boundaries": [
+    "Exact installation-time data identity; subsequent UI actions require their own retention comparison.",
+    "Ad-hoc local bundle only; notarization, public signing and distribution remain deferred.",
+    "Does not close P08, NEW-24 full permission restoration, 29 by 8 standards, Windows, or the complete plan."
+  ]
+}

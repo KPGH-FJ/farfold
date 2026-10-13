@@ -1,0 +1,17 @@
+{
+  "at": "2026-10-13T08:02:05.934850+00:00",
+  "removedExactPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "generatedBytesRemoved": 35092310,
+  "candidateIndependentPassed": 9,
+  "installedIndependentPassed": 10,
+  "formalFilesKept": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "a33cd3b7d1f9d03abe2e17ebdce244c97468e3ecdee1b18e93c2af5ef10d7e69",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "archiveKept": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-13-pdf-permission-e5995b21/Farfold-0.1.7-e5995b21.zip",
+  "archiveSha256": "020f06a7919faed7ed20110196cca08d92f05950fd935db795d18fd5e894bd1b",
+  "sourceAndUserDataTouched": false
+}

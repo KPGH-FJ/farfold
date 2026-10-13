@@ -1,0 +1,221 @@
+"""Future root-authorized closed-app capture and exact comparison; import-safe.
+
+No App/Agent action. Original main/WAL/SHM and first capture are byte-only.
+SQLite opens only second working/baseline copies and the new consolidated copy.
+"""
+import argparse
+import datetime
+import json
+import os
+from pathlib import Path
+import stat
+import sys
+sys.dont_write_bytecode = True
+import io_support as io
+import data_compare as compare
+
+ROOT, PREPARATION, OUT = io.ROOT, io.PREPARATION, io.OUT
+INSTALL = ROOT / 'output/2026-10-13-pdf-permission-install'
+NATIVE_REL = Path('output/2026-10-13-pdf-permission-native')
+COMMIT = 'e5995b219d2f3ed543d9a054911240122358d76b'
+BASELINE = INSTALL / 'metadata-before.sqlite3'
+BASELINE_SHA = 'a7e813e34e42471f1e0afea250d5b1c04d902fe1178faf6100d57b2f6843b4a6'
+BACKUP_SHA = '5111662fffd2a39d4c3bfe4ea312f3150f268619e9ec9a1269becc9da6b207fc'
+INSTALL_SHA = '52dbba3ef77eb14ebef296622e6b3fe4b233f3aeee3a3b549d07d3b2649d3c15'
+TOOLS = ('capture_compare.py', 'io_support.py', 'data_compare.py')
+CONFIG_FIELDS = {'schema', 'installedSourceCommit', 'normalQuitEventPath', 'normalQuitEventSha256',
+                 'exactProcessReceiptPath', 'exactProcessReceiptSha256', 'toolSha256'}
+
+
+def hash_literal(value):
+    return type(value) is str and len(value) == 64 and all(c in '0123456789abcdef' for c in value)
+
+
+def native_path(value):
+    io.require(type(value) is str, 'new-native-path-unset')
+    p = Path(value)
+    io.require(not p.is_absolute() and p.parent == NATIVE_REL and p.suffix == '.json'
+               and p.name not in ('UNSET.json', 'UNKNOWN.json') and '..' not in p.parts, 'exact-new-native-receipt-path')
+    return ROOT / p
+
+
+def validate_literals(config):
+    io.require(type(config) is dict and set(config) == CONFIG_FIELDS and config['schema'] == 1, 'config-shape')
+    io.require(config['installedSourceCommit'] == COMMIT, 'exact-installed-commit')
+    native_path(config['normalQuitEventPath']); native_path(config['exactProcessReceiptPath'])
+    io.require(config['normalQuitEventPath'] != config['exactProcessReceiptPath'], 'distinct-quit-process-evidence')
+    io.require(all(hash_literal(config[k]) for k in ('normalQuitEventSha256', 'exactProcessReceiptSha256')), 'new-evidence-pin-unset')
+    io.require(type(config['toolSha256']) is dict and set(config['toolSha256']) == set(TOOLS)
+               and all(hash_literal(v) for v in config['toolSha256'].values()), 'tool-pin-unset')
+
+
+def timestamp(value):
+    io.require(type(value) is str, 'receipt-time-shape')
+    value = datetime.datetime.fromisoformat(value.replace('Z', '+00:00'))
+    io.require(value.tzinfo is not None and value <= datetime.datetime.now(datetime.timezone.utc), 'receipt-time-future-or-unzoned')
+    return value
+
+
+def validate_receipts(config, installed, backup, quit_event, process):
+    io.require(installed.get('candidateCommit') == COMMIT and installed.get('phase') == 'installedVerifiedNotLaunched'
+               and installed.get('installed') is True and installed.get('onlyFormalAppReplaced') is True
+               and installed.get('forcedQuit') is False and installed.get('sourceInputsVerified') == 1703, 'installed-receipt-scope')
+    io.require(installed['privateBackup']['backupSha256'] == BASELINE_SHA
+               and installed['privateBackup']['receiptSha256'] == BACKUP_SHA, 'installed-backup-link')
+    n = backup.get('backupNormalization', {})
+    io.require(backup.get('sourceCommit') == COMMIT and backup.get('backupSha256') == BASELINE_SHA
+               and backup.get('sourceAndCaptureUnchanged') is True and backup.get('integrity') == 'ok'
+               and n.get('modeAfter') == 'delete' and n.get('connectionsClosedVerified') is True
+               and n.get('sidecarsAbsentAfterClose') is True and n.get('deletedOrMovedSidecars') is False
+               and n.get('SQLiteOpenScope') == 'secondWorkingAndNewConsolidatedOnly', 'sealed-installation-backup')
+    io.require(quit_event.get('sourceCommit') == COMMIT and quit_event.get('normalExitVia') == 'CUA 保存并退出'
+               and quit_event.get('forcedQuit') is False and quit_event.get('unknownWorkNotClassifiedCompletedOrStopped') is True,
+               'fresh-normal-save-quit-not-confirmed')
+    io.require(process.get('sourceCommit') == COMMIT and process.get('exactExecutable') == io.EXECUTABLE
+               and process.get('command') == ['/bin/ps', '-axo', 'pid=,comm=']
+               and type(process.get('actualExitCode')) is int and process['actualExitCode'] == 0
+               and process.get('exactFormalProcesses') == []
+               and process.get('normalQuitEventPath') == config['normalQuitEventPath']
+               and process.get('normalQuitEventSha256') == config['normalQuitEventSha256'], 'fresh-exact-post-quit-process')
+    io.require(timestamp(installed['completedAtUtc']) <= timestamp(quit_event['observedAtUtc'])
+               <= timestamp(process['observedAtUtc']), 'quit-before-install-or-process-before-quit')
+
+
+def sidecars_absent(path):
+    io.require(not any(Path(str(path) + suffix).exists() or Path(str(path) + suffix).is_symlink()
+                       for suffix in ('-wal', '-shm')), 'sealed-database-sidecars')
+
+
+def load_config(path, pin):
+    io.require(Path(__file__).absolute().parent == PREPARATION and path == OUT / 'config.json', 'exact-tool-config-path')
+    info, raw = io.pinned_file(path, pin, True)
+    io.require(stat.S_IMODE(os.stat(path, follow_symlinks=False).st_mode) == 0o600, 'private-config-mode')
+    config = json.loads(raw)
+    validate_literals(config)  # All future pins checked before database byte I/O.
+    refs = {INSTALL / 'install-operation.json': INSTALL_SHA,
+            INSTALL / 'metadata-backup-receipt.json': BACKUP_SHA,
+            native_path(config['normalQuitEventPath']): config['normalQuitEventSha256'],
+            native_path(config['exactProcessReceiptPath']): config['exactProcessReceiptSha256'],
+            **{PREPARATION / name: pin for name, pin in config['toolSha256'].items()}}
+    receipts, signatures = {}, {}
+    for p, expected in refs.items():
+        if p.suffix == '.json':
+            signature, content = io.pinned_file(p, expected, True)
+            receipts[p] = json.loads(content)
+        else:
+            signature = io.pinned_file(p, expected)
+        signatures[p] = signature
+    validate_receipts(config, receipts[INSTALL / 'install-operation.json'], receipts[INSTALL / 'metadata-backup-receipt.json'],
+                      receipts[native_path(config['normalQuitEventPath'])], receipts[native_path(config['exactProcessReceiptPath'])])
+    return config, info, refs, signatures, receipts[INSTALL / 'metadata-backup-receipt.json']
+
+
+def main():
+    parser = argparse.ArgumentParser(description='After root confirms normal exit: private byte capture and exact metadata comparison.')
+    parser.add_argument('--config', type=Path, required=True)
+    parser.add_argument('--config-sha', required=True)
+    args = parser.parse_args()
+    output = source = first = working = baseline_source = baseline_second = baseline_raw = None
+    stage = 'configuration'
+    try:
+        config, config_info, refs, signatures, backup = load_config(args.config, args.config_sha)
+        output = io.open_directory(OUT); io.private_directory(output)
+        destinations = {'operation-private.json', 'raw-capture', 'second-working-copy', 'baseline-second-copy',
+                        'metadata-after-consolidated.sqlite3', 'capture-receipt-private.json',
+                        'comparison-private.json', 'final-verification-private.json', 'failure-private.json'}
+        io.require(not set(os.listdir(output)) & destinations, 'destination-exists-preserve-no-retry')
+        io.write_json(output, 'operation-private.json', {'phase': 'started', 'sourceCommit': COMMIT, 'startedAtUtc': io.now()})
+        observations = [io.process_zero()]
+        stage = 'validate-original-baseline-bytes'
+        sidecars_absent(BASELINE)
+        baseline_info = io.pinned_file(BASELINE, BASELINE_SHA)
+        # Verify the original installation raw capture, never open it with SQLite.
+        baseline_raw = io.open_directory(INSTALL / 'metadata-source'); io.private_directory(baseline_raw)
+        baseline_raw_info = io.inventory(baseline_raw)
+        io.require(set(os.listdir(baseline_raw)) == set(backup['capturedFiles'])
+                   and {name: value['sha256'] for name, value in baseline_raw_info.items()} == backup['capturedFiles'], 'baseline-raw-capture-pins')
+        manifest_info = io.pinned_file(INSTALL / 'install-data-before.jsonl', backup['sourceBeforeManifestSha256'])
+        baseline_source = io.open_directory(BASELINE.parent)
+        os.mkdir('baseline-second-copy', mode=0o700, dir_fd=output)
+        baseline_second = os.open('baseline-second-copy', io.DIR_FLAGS, dir_fd=output); io.private_directory(baseline_second)
+        io.copy_file(baseline_source, baseline_second, BASELINE.name, baseline_info)
+        baseline_second_info = io.read_file(baseline_second, BASELINE.name)
+        io.require(baseline_second_info['sha256'] == BASELINE_SHA, 'baseline-second-bytes')
+        stage = 'raw-byte-capture'
+        source = io.open_directory(io.SOURCE)
+        io.require(os.fstat(source).st_uid == os.getuid(), 'source-directory-owner')
+        initial = io.inventory(source)
+        os.mkdir('raw-capture', mode=0o700, dir_fd=output)
+        first = os.open('raw-capture', io.DIR_FLAGS, dir_fd=output); io.private_directory(first)
+        for name, entry in initial.items():
+            io.copy_file(source, first, name, entry)
+        first_info = io.inventory(first)
+        io.require(io.same_bytes(initial, first_info) and io.inventory(source) == initial, 'raw-copy-or-source-drift')
+        observations.append(io.process_zero())
+        stage = 'second-byte-copy'
+        os.mkdir('second-working-copy', mode=0o700, dir_fd=output)
+        working = os.open('second-working-copy', io.DIR_FLAGS, dir_fd=output); io.private_directory(working)
+        for name, entry in first_info.items():
+            io.copy_file(first, working, name, entry)
+        io.require(io.same_bytes(first_info, io.inventory(working)) and io.inventory(first) == first_info
+                   and io.inventory(source) == initial, 'second-copy-or-source-drift')
+        consolidated = OUT / 'metadata-after-consolidated.sqlite3'
+        io.write_bytes(output, consolidated.name, b'')
+        stage = 'second-only-sqlite-consolidation'
+        normalization = io.private_standalone_backup(OUT / 'second-working-copy' / io.NAMES[0], consolidated)
+        after_info = io.read_file(output, consolidated.name)
+        baseline_path = OUT / 'baseline-second-copy' / BASELINE.name
+
+        def stable():
+            for p in (BASELINE, baseline_path, consolidated):
+                sidecars_absent(p)
+            io.require(io.pinned_file(BASELINE, BASELINE_SHA) == baseline_info
+                       and io.inventory(baseline_raw) == baseline_raw_info
+                       and io.pinned_file(INSTALL / 'install-data-before.jsonl', backup['sourceBeforeManifestSha256']) == manifest_info
+                       and io.read_file(baseline_second, BASELINE.name) == baseline_second_info
+                       and io.inventory(source) == initial and io.inventory(first) == first_info
+                       and io.read_file(output, consolidated.name) == after_info, 'data-or-baseline-drift')
+            io.require(io.pinned_file(args.config, args.config_sha) == config_info
+                       and all(io.pinned_file(p, pin) == signatures[p] for p, pin in refs.items()), 'config-tools-or-evidence-drift')
+
+        stable()
+        stage = 'second-only-field-comparison'
+        before, after = compare.snapshot_readonly(baseline_path), compare.snapshot_readonly(consolidated)
+        result = compare.compare_complete(before, after)
+        stable(); observations.append(io.process_zero())
+        capture = {'phase': 'capturedExactBytesNotAccepted', 'sourceCommit': COMMIT, 'checkedAtUtc': io.now(),
+                   'baselineOriginal': baseline_info, 'baselineOriginalRaw': baseline_raw_info,
+                   'baselineSourceManifest': manifest_info, 'baselineSecondCopy': baseline_second_info,
+                   'sourceBefore': initial, 'sourceAfter': io.inventory(source),
+                   'firstRawCaptureBefore': first_info, 'firstRawCaptureAfter': io.inventory(first),
+                   'consolidated': after_info, 'backupNormalization': normalization,
+                   'configSha256': args.config_sha, 'evidencePins': {str(p): pin for p, pin in refs.items()},
+                   'sourceFirstAndBaselineStable': True, 'processObservations': observations}
+        io.write_json(output, 'capture-receipt-private.json', capture)
+        result.update(sourceCommit=COMMIT, checkedAtUtc=io.now())
+        io.write_json(output, 'comparison-private.json', result)
+        stable()
+        io.write_json(output, 'final-verification-private.json', {'result': result['result'], 'sourceCommit': COMMIT,
+            'checkedAtUtc': io.now(), 'captureSha256': io.read_file(output, 'capture-receipt-private.json')['sha256'],
+            'comparisonSha256': io.read_file(output, 'comparison-private.json')['sha256'],
+            'differenceCount': len(result['differences']), 'newPdfDraftCandidateCount': len(result['newPdfDraftCandidates']),
+            'sourceFirstAndBaselineStableAtFinalCheck': True, 'finalProcess': io.process_zero(),
+            'boundary': 'Private capture/field comparison only. No difference accepted or normalized, no private body emitted, no App/Agent action.'})
+        print(json.dumps({'result': result['result'], 'differenceCount': len(result['differences']),
+                          'newPdfDraftCandidateCount': len(result['newPdfDraftCandidates'])}))
+        return 0 if result['result'] == 'equal' else 2
+    except BaseException as error:
+        if output is not None and 'failure-private.json' not in os.listdir(output):
+            io.write_json(output, 'failure-private.json', {'result': 'failed', 'stage': stage, 'checkedAtUtc': io.now(),
+                'errorCode': str(error) if type(error) is RuntimeError else type(error).__name__,
+                'boundary': 'Preserve partial captures/receipts. No automatic retry, overwrite or private exception payload.'})
+        print('Private capture/comparison failed; preserve partial evidence. No automatic retry.')
+        return 1
+    finally:
+        for fd in (working, first, source, baseline_source, baseline_second, baseline_raw, output):
+            if fd is not None:
+                os.close(fd)
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

@@ -1,0 +1,37 @@
+{
+  "sourceCommit": "e5995b219d2f3ed543d9a054911240122358d76b",
+  "observedAtUtc": "2026-10-13T07:52:05.794595+00:00",
+  "userAuthorizedContinuousDevelopment": true,
+  "normalQuitObserved": true,
+  "forcedQuit": false,
+  "formalProcessCountAfter": 0,
+  "newQuitPerformed": false,
+  "unconfirmedWorkMarkedComplete": false,
+  "originalNormalExit": {
+    "path": "output/2026-10-13-xlsx-input-native/90-final-native-normal-quit-event.json",
+    "sha256": "af644bd1c09482fb5cf0713f6f89136403b6e150d5dd2d878e49867e443e70d3"
+  },
+  "originalExactExecutableProcessReceipt": {
+    "path": "output/2026-10-13-xlsx-input-native/91-final-native-process-check.json",
+    "sha256": "41bf4613c78abc5c4af39462cc57b7581e402d6b47c74721be1b8280c9578d27"
+  },
+  "correctExactExecutableProcessReceipt": {
+    "path": "output/2026-10-13-xlsx-input-native/94-final-native-process-path-adapter.json",
+    "sha256": "824ae9aded5dab0b471d5900ad2fdd0eab9c2f2f0365d614ab4ecbbe9d530bfc"
+  },
+  "formalBaselineNative": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-input-candidate/installed-native-scoped.json",
+    "sha256": "c118391202d7f79afd9d46b99c6a21ae7b22d9dd7e9863b259f4e5f21d5b134d"
+  },
+  "processCheck": {
+    "argv": [
+      "/bin/ps",
+      "-axo",
+      "pid=,comm="
+    ],
+    "exitCode": 0,
+    "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "matchingPids": []
+  },
+  "boundary": "Preserved actual 92aa save/quit, exact process receipt91 and path-only adapter94 plus current absence only. No new quit, launch, Agent, data change or unknown work completion."
+}
