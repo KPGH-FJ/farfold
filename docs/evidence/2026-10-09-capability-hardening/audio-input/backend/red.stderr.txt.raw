@@ -1,0 +1,15 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 18.83s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+thread 'acp_client::session::prompt_context_tests::audio_tests::prompt_audio_missing_actual_handshake_rejects_without_sending' (28775719) panicked at src/acp_client/session/prompt_audio_tests.rs:44:5:
+assertion `left == right` failed
+  left: Ok(())
+ right: Err("FAILED:PROMPT_AUDIO_UNKNOWN")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'acp_client::session::prompt_context_tests::audio_tests::prompt_audio_false_missing_and_malformed_reject_despite_preparation_and_cache' (28775718) panicked at src/acp_client/session/prompt_audio_tests.rs:31:9:
+assertion `left == right` failed
+  left: Ok(())
+ right: Err("FAILED:PROMPT_AUDIO_UNSUPPORTED")
+error: test failed, to rerun pass `--lib`

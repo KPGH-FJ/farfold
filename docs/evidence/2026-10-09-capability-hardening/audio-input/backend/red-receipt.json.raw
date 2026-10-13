@@ -1,0 +1,19 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "prompt_audio",
+    "--",
+    "--nocapture"
+  ],
+  "started": "2026-10-13T08:37:00.949798+00:00",
+  "completed": "2026-10-13T08:37:21.382382+00:00",
+  "actualExitCode": 101,
+  "inputCount": 436,
+  "inputsStable": true,
+  "stdoutSHA": "93fef8111b2347346c1a1046b2a075fd746171dc084783e0b422799efe65217c",
+  "stderrSHA": "2c3bff693ff3acc88ae5f8447607ae0f80c2cf66b2c14b0410f83e7ac5e5cafa"
+}

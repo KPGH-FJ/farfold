@@ -1,0 +1,36 @@
+{
+  "status": "READ_ONLY_FINAL_RECEIPT_AND_SCOPE_MATCH",
+  "receiptSha256": "ab572bec3a24404f50f3d5959809ba940b06a2e9af3ef2e3aa38479f3c15fa11",
+  "fixtureFreezeSha256": "2f52ce3df7e825c54f5a79cbe4b35029ca729a6a2ad07ed4032f36a703814ea4",
+  "allFixtureHashesMatch": true,
+  "seedByteIdenticalToIndependentSource": true,
+  "expectedSamplesEqualIndependentReconstruction": true,
+  "sourceSha256": {
+    "src-tauri/src/acp_client/session/prompt_audio_tests.rs": "c17a16b5c42ee9953ab79e55da98458e7df9077ed8e99257e980f5d885898e11",
+    "src-tauri/src/acp_client/session/prompt_context_tests.rs": "35af39dcc9c75004e779943ed985e956f44f16225361e159abc0910e7fe52dae"
+  },
+  "scope": [
+    {
+      "source": "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+      "line": 54,
+      "claim": "A+B whole files total exactly16MiB, actual same-owner session_prompt and JSONRPC peer record two official3-field audio blocks; decoded bytes and order equal independent fixtures."
+    },
+    {
+      "source": "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+      "line": 88,
+      "claim": "A+C total16MiB+2 while data-only16MiB-86; actual connection session_prompt rejects prior to control, intercepted prompt control empty and wire file absent."
+    },
+    {
+      "source": "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+      "line": 121,
+      "claim": "Aggregate successful-peer cleanup waits for cancelled result rather than treating cancel acknowledgement as end."
+    }
+  ],
+  "reviewerExecution": "No cargo, capture, SQLite or peer executed by this reviewer; independently verified frozen seed/samples, source route, final receipt actualexit0 and output hashes. Backend performed controlled tests.",
+  "originalEvidencePreserved": "Initial independent parser59/60 exit2 remains unchanged. Earlier backend compile/cleanup failures not overwritten.",
+  "notProven": [
+    "Installed App audio UI",
+    "Real Agent authentication or sound understanding",
+    "Whole project seven checks at this source state"
+  ]
+}

@@ -25,6 +25,12 @@ export interface PromptAdmission {
     | "config_confirmation_required"
     | "config_record_failed"
     | "service_unavailable"
+    | "audio_unknown"
+    | "audio_unsupported"
+    | "audio_limit"
+    | "audio_invalid"
+    | "audio_format_unsupported"
+    | "audio_duration_limit"
     | "embedded_context_unsupported"
     | "embedded_context_unknown"
     | "permission_scope_unverified";

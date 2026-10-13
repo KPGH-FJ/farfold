@@ -1,0 +1,93 @@
+{
+  "kind": "Small committed reconstruction subset of independently frozen aggregate fixtures",
+  "source": {
+    "path": "output/2026-10-13-audio-input-independent/aggregate-reconstruction.json",
+    "sha256": "a025c6f3fd50296e1d55d8ed7ad94c90225c92051d078a369e86582b551edd97",
+    "originalProtocolOracleSha256": "b86529dd1f8e766eda18ad67d1f3ce1fd5bf5559c011be88eef620818480899f",
+    "originalGeneratorSha256": "9b884485e290e46a79d4973ffa4ca872b9730295d636e67be9b682ad4b0aa7b3"
+  },
+  "seed": {
+    "path": "aggregate-pcm-seed-1024.bin",
+    "bytes": 1024,
+    "sha256": "f6cf849305c65644140df883a8ee08fdf5605413fe5692dfdb0d5ee9a6164a4d",
+    "origin": "Exact authored samples(2,8,512) from original independent generator; checked against all frozen complete files."
+  },
+  "reconstruction": "44-byte classic PCM header (tag1/channels2/96000Hz/192000bytesPerSec/blockAlign2/bits8). Repeat1024-byte seed to dataBytes; for B invert each byte as255-value before repeating. RIFF size=wholefilebytes-8; data size=wholefilebytes-44. All payload lengths even.",
+  "samples": [
+    {
+      "id": "valid-half-16mib-a",
+      "path": "aggregate-fixtures/valid-half-16mib-a.wav",
+      "bytes": 8388608,
+      "sha256": "0570db5d9e9da92be8a1e0e1f82aefd9a42ce60646c63050632c0ec11038f24d",
+      "pcmSha256": "ea6221ad3f1fe85aa35e450a71f919c0e7e0eab914b785d67dfa5dccd975ef07",
+      "audio": {
+        "channels": 2,
+        "sampleRate": 96000,
+        "bitsPerSample": 8,
+        "frames": 4194282,
+        "durationMs": 43691,
+        "durationFractionSeconds": {
+          "numerator": 4194282,
+          "denominator": 96000
+        },
+        "blockAlign": 2,
+        "byteRate": 192000
+      },
+      "expectedIndividual": "accept",
+      "base64Sha256": "1ccfe99f9fc4182096129f906eca02cc964fbdece915cf39e9e69409a591e239",
+      "base64Length": 11184812,
+      "seedMode": "identity",
+      "dataBytes": 8388564
+    },
+    {
+      "id": "valid-half-16mib-b",
+      "path": "aggregate-fixtures/valid-half-16mib-b.wav",
+      "bytes": 8388608,
+      "sha256": "b1ee43ef673d4657500f9edc435db5e59542cb385b2ee3d652b22686c38b5f92",
+      "pcmSha256": "a4493c04851f9d81ff0ee1380407168dd59e43c1cff6d0ed9dd971518e643bdd",
+      "audio": {
+        "channels": 2,
+        "sampleRate": 96000,
+        "bitsPerSample": 8,
+        "frames": 4194282,
+        "durationMs": 43691,
+        "durationFractionSeconds": {
+          "numerator": 4194282,
+          "denominator": 96000
+        },
+        "blockAlign": 2,
+        "byteRate": 192000
+      },
+      "expectedIndividual": "accept",
+      "base64Sha256": "e42c72a86c5b2a4856c224f548aef764da60fafee1c6f300fa188e101a09fce8",
+      "base64Length": 11184812,
+      "seedMode": "invert-each-byte-255-minus-value",
+      "dataBytes": 8388564
+    },
+    {
+      "id": "valid-half-plus-two",
+      "path": "aggregate-fixtures/valid-half-plus-two.wav",
+      "bytes": 8388610,
+      "sha256": "d65483cf5880ba40e20c82341c843022309a3a0a8846277a3e375ad02f63bab7",
+      "pcmSha256": "de99b26e73ea48a7d55a2500099b356284fda7c36109bddd68c9c21baa783d9e",
+      "audio": {
+        "channels": 2,
+        "sampleRate": 96000,
+        "bitsPerSample": 8,
+        "frames": 4194283,
+        "durationMs": 43691,
+        "durationFractionSeconds": {
+          "numerator": 4194283,
+          "denominator": 96000
+        },
+        "blockAlign": 2,
+        "byteRate": 192000
+      },
+      "expectedIndividual": "accept",
+      "base64Sha256": "dc2b24cac57fb5fb5872948ef23fc7b3d58787d5216a61bd8884339610c6b73a",
+      "base64Length": 11184816,
+      "seedMode": "identity",
+      "dataBytes": 8388566
+    }
+  ]
+}

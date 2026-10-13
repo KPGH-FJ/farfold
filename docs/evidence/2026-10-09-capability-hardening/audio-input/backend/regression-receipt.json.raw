@@ -1,0 +1,57 @@
+{
+  "started": "2026-10-13T08:44:45.197507+00:00",
+  "completed": "2026-10-13T08:44:49.199294+00:00",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "prompt",
+        "--",
+        "--nocapture"
+      ],
+      "actualExitCode": 0,
+      "stdout": "regression-0.stdout.txt",
+      "stdoutSHA": "61675cf24600470a74059e85569fb612136f6e942d2408ef0b92c5a9d4c21c91",
+      "stderr": "regression-0.stderr.txt",
+      "stderrSHA": "cdcf0597777ada25cb5318cf78e4db5041865f1ac68c73de803bd144bd80df30"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "draft_attachment",
+        "--",
+        "--nocapture"
+      ],
+      "actualExitCode": 0,
+      "stdout": "regression-1.stdout.txt",
+      "stdoutSHA": "d9f31fe1f04d9ed714495dbbd12abe9088754085a27b64452826c646cbafbe41",
+      "stderr": "regression-1.stderr.txt",
+      "stderrSHA": "2a6b7aee50869f0f0771b20dab120e9e5e385785bffadd68f5366c8669de296b"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "actualExitCode": 0,
+      "stdout": "regression-2.stdout.txt",
+      "stdoutSHA": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "regression-2.stderr.txt",
+      "stderrSHA": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "allPassed": true,
+  "inputCount": 439,
+  "inputsStable": true
+}

@@ -1,0 +1,313 @@
+{
+  "schemaVersion": 1,
+  "provenance": "Synthetic independent PCM samples and authored byte/metadata oracle, frozen before subject parser execution; CPython wave writer and manually framed RIFF chunks. No production parser used to derive expectations.",
+  "sourceOracleSha256": "a361df2245222539927a2e649717f351bb303d949ecf980add218c7d9f6e03cb",
+  "sourceGeneratorSha256": "9b884485e290e46a79d4973ffa4ca872b9730295d636e67be9b682ad4b0aa7b3",
+  "sourceParserResultsSha256": "0011f844f94714f8d0dccbfba2e561083786e6c67f432b6a6fc6b91d700b8a60",
+  "originalParserResult": "59/60 ordinary checks; the unrelated legacy-writer missing-pad mismatch remains preserved. These seven samples individually passed.",
+  "waveWriter": {
+    "pythonVersion": "3.9.6",
+    "moduleSha256": "2d6ddc0c5e408bb993274ad4f7806252158fec7c569e5a78a50a06ecf02e681d"
+  },
+  "samples": [
+    {
+      "id": "valid-wave-c1-b8-r8000",
+      "path": "valid-wave-c1-b8-r8000.wav",
+      "bytes": 636,
+      "sha256": "eb2ff3091658e70d7364f6350c88c37321b0aac4000586fe62532054bd8b6574",
+      "base64Sha256": "5881113479b2dc90b33fc55f92754e2bc8f8fe8b9edde3edb0d931ab03883d2d",
+      "base64Length": 848,
+      "expected": "accept",
+      "expectationBasis": "Classic integer PCM within requested limits",
+      "writer": "CPython3.9 wave writer",
+      "audio": {
+        "channels": 1,
+        "sampleRate": 8000,
+        "bitsPerSample": 8,
+        "frames": 592,
+        "durationMs": 74,
+        "durationFractionSeconds": {
+          "numerator": 592,
+          "denominator": 8000
+        },
+        "blockAlign": 1,
+        "byteRate": 8000,
+        "firstFrames": [[67], [69], [72], [74], [77], [79], [82], [84]],
+        "sampleExtrema": [[37, 217]]
+      },
+      "pcmBytes": 592,
+      "pcmSha256": "58809cc0d660c2e79691588e81d4bc0b7bc9263209825be15093f32d8b3738f8",
+      "stdlibRead": {
+        "opened": true,
+        "channels": 1,
+        "sampleRate": 8000,
+        "bitsPerSample": 8,
+        "frames": 592,
+        "actualPcmBytes": 592,
+        "actualPcmSha256": "58809cc0d660c2e79691588e81d4bc0b7bc9263209825be15093f32d8b3738f8"
+      },
+      "sourcePath": "fixtures/valid-wave-c1-b8-r8000.wav"
+    },
+    {
+      "id": "valid-wave-c1-b16-r8000",
+      "path": "valid-wave-c1-b16-r8000.wav",
+      "bytes": 1228,
+      "sha256": "e2303a4fb1c658cd78f9ba2cade7fa1eb1b8d4d7aabd525c89714adc2166f5ad",
+      "base64Sha256": "9a4925abec199d5e40c599d422c1255cadb9f963086e44b920e9f08a4abeebf2",
+      "base64Length": 1640,
+      "expected": "accept",
+      "expectationBasis": "Classic integer PCM within requested limits",
+      "writer": "CPython3.9 wave writer",
+      "audio": {
+        "channels": 1,
+        "sampleRate": 8000,
+        "bitsPerSample": 16,
+        "frames": 592,
+        "durationMs": 74,
+        "durationFractionSeconds": {
+          "numerator": 592,
+          "denominator": 8000
+        },
+        "blockAlign": 2,
+        "byteRate": 16000,
+        "firstFrames": [
+          [-14668],
+          [-14063],
+          [-13458],
+          [-12854],
+          [-12248],
+          [-11644],
+          [-11039],
+          [-10434]
+        ],
+        "sampleExtrema": [[-22001, 21547]]
+      },
+      "pcmBytes": 1184,
+      "pcmSha256": "6991ba2bc97125ebfb2d47510ecfbc2c1a1e97f6006ccf0380a9187335fbd0ff",
+      "stdlibRead": {
+        "opened": true,
+        "channels": 1,
+        "sampleRate": 8000,
+        "bitsPerSample": 16,
+        "frames": 592,
+        "actualPcmBytes": 1184,
+        "actualPcmSha256": "6991ba2bc97125ebfb2d47510ecfbc2c1a1e97f6006ccf0380a9187335fbd0ff"
+      },
+      "sourcePath": "fixtures/valid-wave-c1-b16-r8000.wav"
+    },
+    {
+      "id": "valid-wave-c2-b8-r8000",
+      "path": "valid-wave-c2-b8-r8000.wav",
+      "bytes": 1228,
+      "sha256": "e6caabc49b4cc28068d468e75a4d05689fedfd489abde38d0784b1f1ba5f6db0",
+      "base64Sha256": "6e6beb6059a0e3e6cb907c658203cabfbe659c25fc7052dbd48ab05a36bc538e",
+      "base64Length": 1640,
+      "expected": "accept",
+      "expectationBasis": "Classic integer PCM within requested limits",
+      "writer": "CPython3.9 wave writer",
+      "audio": {
+        "channels": 2,
+        "sampleRate": 8000,
+        "bitsPerSample": 8,
+        "frames": 592,
+        "durationMs": 74,
+        "durationFractionSeconds": {
+          "numerator": 592,
+          "denominator": 8000
+        },
+        "blockAlign": 2,
+        "byteRate": 16000,
+        "firstFrames": [
+          [67, 82],
+          [69, 83],
+          [72, 84],
+          [74, 85],
+          [77, 86],
+          [79, 88],
+          [82, 88],
+          [84, 90]
+        ],
+        "sampleExtrema": [
+          [37, 217],
+          [37, 218]
+        ]
+      },
+      "pcmBytes": 1184,
+      "pcmSha256": "4810a2d9563626fbb4c4b0981ca6a8306d02ea36c7390617733d43ae0f8980ce",
+      "stdlibRead": {
+        "opened": true,
+        "channels": 2,
+        "sampleRate": 8000,
+        "bitsPerSample": 8,
+        "frames": 592,
+        "actualPcmBytes": 1184,
+        "actualPcmSha256": "4810a2d9563626fbb4c4b0981ca6a8306d02ea36c7390617733d43ae0f8980ce"
+      },
+      "sourcePath": "fixtures/valid-wave-c2-b8-r8000.wav"
+    },
+    {
+      "id": "valid-wave-c2-b16-r8000",
+      "path": "valid-wave-c2-b16-r8000.wav",
+      "bytes": 2412,
+      "sha256": "990ed0a4494092feffe175909f3c0d972a89790f8d0e9f29e39d37f822f19053",
+      "base64Sha256": "88ebba0c57035d6070fb739f6cace97de36f033ab379bedabd43cfd8e41cdb94",
+      "base64Length": 3216,
+      "expected": "accept",
+      "expectationBasis": "Classic integer PCM within requested limits",
+      "writer": "CPython3.9 wave writer",
+      "audio": {
+        "channels": 2,
+        "sampleRate": 8000,
+        "bitsPerSample": 16,
+        "frames": 592,
+        "durationMs": 74,
+        "durationFractionSeconds": {
+          "numerator": 592,
+          "denominator": 8000
+        },
+        "blockAlign": 4,
+        "byteRate": 32000,
+        "firstFrames": [
+          [-14668, -11053],
+          [-14063, -10775],
+          [-13458, -10497],
+          [-12854, -10219],
+          [-12248, -9941],
+          [-11644, -9663],
+          [-11039, -9385],
+          [-10434, -9107]
+        ],
+        "sampleExtrema": [
+          [-22001, 21547],
+          [-22001, 21792]
+        ]
+      },
+      "pcmBytes": 2368,
+      "pcmSha256": "8da0b7fbb3f23814b4450e64b9d9040851cde90fc3c8f184f3c2708fa70142f4",
+      "stdlibRead": {
+        "opened": true,
+        "channels": 2,
+        "sampleRate": 8000,
+        "bitsPerSample": 16,
+        "frames": 592,
+        "actualPcmBytes": 2368,
+        "actualPcmSha256": "8da0b7fbb3f23814b4450e64b9d9040851cde90fc3c8f184f3c2708fa70142f4"
+      },
+      "sourcePath": "fixtures/valid-wave-c2-b16-r8000.wav"
+    },
+    {
+      "id": "valid-odd-mono8-data",
+      "path": "valid-odd-mono8-data.wav",
+      "bytes": 68,
+      "sha256": "501be805f4cc755a74122fb793faaa220798fde6b0ec69ee724c35310a10b12f",
+      "base64Sha256": "f707d8c24cfc1f4bd58e3fa1c9278bc0004b53ff6547b987a5d141643283bd03",
+      "base64Length": 92,
+      "expected": "accept",
+      "expectationBasis": "23 bytes PCM with excluded RIFF word pad",
+      "writer": "manual RIFF chunks",
+      "audio": {
+        "channels": 1,
+        "sampleRate": 11025,
+        "bitsPerSample": 8,
+        "frames": 23,
+        "durationMs": 3,
+        "durationFractionSeconds": {
+          "numerator": 23,
+          "denominator": 11025
+        },
+        "blockAlign": 1,
+        "byteRate": 11025,
+        "firstFrames": [[67], [69], [72], [74], [77], [79], [82], [84]],
+        "sampleExtrema": [[67, 122]]
+      },
+      "pcmBytes": 23,
+      "pcmSha256": "7919bd5aca7d2bf89920c2edc7533fa4eec8162c4235da520236b2ff3682aae6",
+      "stdlibRead": {
+        "opened": true,
+        "channels": 1,
+        "sampleRate": 11025,
+        "bitsPerSample": 8,
+        "frames": 23,
+        "actualPcmBytes": 23,
+        "actualPcmSha256": "7919bd5aca7d2bf89920c2edc7533fa4eec8162c4235da520236b2ff3682aae6"
+      },
+      "sourcePath": "fixtures/valid-odd-mono8-data.wav"
+    },
+    {
+      "id": "valid-metadata-odd-before-and-after",
+      "path": "valid-metadata-odd-before-and-after.wav",
+      "bytes": 140,
+      "sha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b",
+      "base64Sha256": "30ec54ee1c0d56ee56905e2f7f3596f67d2fd871b4a4bf0e2d7c55ee25fe3831",
+      "base64Length": 188,
+      "expected": "accept",
+      "expectationBasis": "Unknown and INFO chunks before/after data; odd padding outside data lengths",
+      "writer": "manual RIFF chunks",
+      "audio": {
+        "channels": 1,
+        "sampleRate": 11025,
+        "bitsPerSample": 8,
+        "frames": 23,
+        "durationMs": 3,
+        "durationFractionSeconds": {
+          "numerator": 23,
+          "denominator": 11025
+        },
+        "blockAlign": 1,
+        "byteRate": 11025,
+        "firstFrames": [[67], [69], [72], [74], [77], [79], [82], [84]],
+        "sampleExtrema": [[67, 122]]
+      },
+      "pcmBytes": 23,
+      "pcmSha256": "7919bd5aca7d2bf89920c2edc7533fa4eec8162c4235da520236b2ff3682aae6",
+      "stdlibRead": {
+        "opened": true,
+        "channels": 1,
+        "sampleRate": 11025,
+        "bitsPerSample": 8,
+        "frames": 23,
+        "actualPcmBytes": 23,
+        "actualPcmSha256": "7919bd5aca7d2bf89920c2edc7533fa4eec8162c4235da520236b2ff3682aae6"
+      },
+      "sourcePath": "fixtures/valid-metadata-odd-before-and-after.wav"
+    },
+    {
+      "id": "valid-pcm-fmt18-zero-extension",
+      "path": "valid-pcm-fmt18-zero-extension.wav",
+      "bytes": 70,
+      "sha256": "271c20d8a51ed86204a0ae59d51245b0326b031db49b03a1cabe346a1ac63606",
+      "base64Sha256": "e8a0633272fa89f56ce6e8ce845f2102ce4e0f9246f3d823cb711d0874fb3cfc",
+      "base64Length": 96,
+      "expected": "accept",
+      "expectationBasis": "PCM WAVEFORMATEX cbSize0 as documented by Microsoft",
+      "writer": "manual RIFF chunks",
+      "audio": {
+        "channels": 1,
+        "sampleRate": 11025,
+        "bitsPerSample": 8,
+        "frames": 23,
+        "durationMs": 3,
+        "durationFractionSeconds": {
+          "numerator": 23,
+          "denominator": 11025
+        },
+        "blockAlign": 1,
+        "byteRate": 11025,
+        "firstFrames": [[67], [69], [72], [74], [77], [79], [82], [84]],
+        "sampleExtrema": [[67, 122]]
+      },
+      "pcmBytes": 23,
+      "pcmSha256": "7919bd5aca7d2bf89920c2edc7533fa4eec8162c4235da520236b2ff3682aae6",
+      "stdlibRead": {
+        "opened": true,
+        "channels": 1,
+        "sampleRate": 11025,
+        "bitsPerSample": 8,
+        "frames": 23,
+        "actualPcmBytes": 23,
+        "actualPcmSha256": "7919bd5aca7d2bf89920c2edc7533fa4eec8162c4235da520236b2ff3682aae6"
+      },
+      "sourcePath": "fixtures/valid-pcm-fmt18-zero-extension.wav"
+    }
+  ]
+}

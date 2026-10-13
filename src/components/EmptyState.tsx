@@ -1,3 +1,4 @@
+import { audioCapability } from "../runtime/audio_input";
 /**
  * 空态/开始页（F-start-empty）：项目选择 + Agent 选择 + 模型选择 +
  * 消息栏。Agent 选定后预开草稿会话以拿到模型选项；发送即把草稿变成
@@ -1303,6 +1304,9 @@ export function EmptyState({
         draftKey="new"
         errorContextKey={pair}
         imageEnabled={imageOk}
+        audioEnabled={audioCapability(
+          agents.find((a) => a.id === agentId)?.handshake,
+        )}
         embedContext={caps.embeddedContext}
         onGoSettings={openRepair}
         onSend={sendOrPickFolder}

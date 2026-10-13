@@ -1,3 +1,10 @@
+import { audioSourceError } from "./audio_source_error";
+import {
+  audioNameCandidate,
+  AudioInputError,
+  addAudioBytes,
+  verifyAudioInput,
+} from "./audio_input";
 import { invoke } from "@tauri-apps/api/core";
 import type { DraftAttachment } from "./drafts";
 import type { PromptBlock } from "./session_types";
@@ -29,7 +36,13 @@ export async function validateQueuedAttachments(
   blocks: PromptBlock[],
   options: { reparseDocuments?: boolean; signal?: AbortSignal } = {},
 ): Promise<void> {
+  let audioBytes = 0;
   for (const block of blocks) {
+    if (block.type === "audio") {
+      const capture = await verifyAudioInput(block);
+      audioBytes = addAudioBytes(audioBytes, capture.file.size);
+      continue;
+    }
     if (block.type === "resource_link" && block.uri.startsWith("file:"))
       await checkFile(block.uri, false);
     if (block.type === "resource") {
@@ -60,9 +73,28 @@ export async function prepareDraftAttachments(
   options: { reparseDocuments?: boolean; signal?: AbortSignal } = {},
 ) {
   const prepared: DraftAttachment[] = [];
+  let audioBytes = 0;
   // Native checks have a shared limit on genuinely unfinished OS work. Read
   // this one message in order rather than filling every slot at once.
   for (const attachment of attachments) {
+    if (attachment.audioClassificationFailed)
+      throw new AudioInputError("classificationFailed");
+    if (attachment.kind === "audio") {
+      try {
+        if (!attachment.localAudio)
+          throw new AudioInputError(
+            attachment.data ? "sourceUnknown" : "approvalRequired",
+          );
+        if (attachment.recovered && !options.reparseDocuments)
+          throw new AudioInputError("recoveryRequired");
+        const capture = await verifyAudioInput(attachment);
+        audioBytes = addAudioBytes(audioBytes, capture.file.size);
+        prepared.push({ ...attachment, recovered: false, loading: false });
+      } catch (error) {
+        throw audioSourceError(error, attachment);
+      }
+      continue;
+    }
     if (attachment.kind === "image") {
       const image = attachment.uri
         ? await readFileImage(attachment.uri)
@@ -94,7 +126,9 @@ export async function prepareDraftAttachments(
     }
     const content = await checkFile(
       attachment.uri,
-      embed && !isBitmapMime(attachment.mimeType),
+      embed &&
+        !isBitmapMime(attachment.mimeType) &&
+        !audioNameCandidate(attachment.name, attachment.mimeType),
     );
     prepared.push({
       ...attachment,
@@ -115,8 +149,26 @@ export function attachmentPromptBlocks(
 ): PromptBlock[] {
   const out: PromptBlock[] = [];
   if (text.trim()) out.push({ type: "text", text: text.trim() });
+  let audioBytes = 0;
   for (const attachment of attachments) {
-    if (attachment.kind === "image" && attachment.data) {
+    if (attachment.audioClassificationFailed)
+      throw new AudioInputError("classificationFailed");
+    if (attachment.kind === "audio") {
+      if (
+        !attachment.localAudio ||
+        !attachment.data ||
+        attachment.mimeType !== "audio/wav"
+      )
+        throw new AudioInputError("sourceUnknown");
+      audioBytes = addAudioBytes(audioBytes, attachment.localAudio.file.size);
+      out.push({
+        type: "audio",
+        data: attachment.data,
+        mimeType: attachment.mimeType,
+        uri: attachment.uri,
+        localAudio: structuredClone(attachment.localAudio),
+      });
+    } else if (attachment.kind === "image" && attachment.data) {
       out.push({
         type: "image",
         data: attachment.data,
@@ -140,6 +192,7 @@ export function attachmentPromptBlocks(
       } else if (
         embed &&
         !isBitmapMime(attachment.mimeType) &&
+        !audioNameCandidate(attachment.name, attachment.mimeType) &&
         attachment.content !== undefined
       )
         out.push({

@@ -1,0 +1,24 @@
+
+running 14 tests
+test draft_attachment::audio::tests::audio_candidate_sniffs_disguised_wave_and_preserves_unsupported_audio_identity ... ok
+test file_delivery::audio_input::tests::audio_input_rejects_unsupported_encoding_and_invalid_alignment_or_rates ... ok
+test file_delivery::audio_input::tests::audio_input_rejects_whole_length_duplicates_missing_order_and_truncated_chunks ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_does_not_change_non_audio_admission ... ok
+test file_delivery::audio_input::tests::audio_input_walks_unknown_chunks_and_padding_before_and_after_data ... ok
+test draft_attachment::audio::tests::audio_candidate_only_reads_a_prefix_of_the_explicit_selected_file ... ok
+test file_delivery::audio_input::tests::audio_input_recheck_detects_same_bytes_replacement_and_symlink_redirect ... ok
+test file_delivery::audio_input::tests::audio_input_recheck_binds_all_source_fields_and_cannot_switch_selected_path ... ok
+test file_delivery::audio_input::tests::audio_input_valid_pcm_preserves_every_byte_and_exact_source ... ok
+test file_delivery::audio_input::tests::audio_input_limits_are_inclusive_and_do_not_truncate_or_approximate_duration ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_missing_actual_handshake_rejects_without_sending ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_actual_supported_wire_preserves_original_bytes_and_busy_guard ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_total_and_invalid_payload_reject_before_control_without_fallback ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_false_missing_and_malformed_reject_despite_preparation_and_cache ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 1640 filtered out; finished in 1.01s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

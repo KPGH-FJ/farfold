@@ -1,0 +1,296 @@
+{
+  "schema": 1,
+  "observedAtUtc": "2026-10-13T09:36:29.201478+00:00",
+  "scope": "P08_AUDIO_WAV_FIRST common frontend implementation, targeted unit/lifecycle checks, complete production App under controlled Tauri replies in Chromium and WebKit. Browser uses independent original fixture WAV bytes; it does not perform actual Rust capture, installed App or real Agent/model validation.",
+  "source": {
+    "baseCommit": "afd89d7832895c0cb1abbbfadf19201be5842899",
+    "targetedAndBrowserFreeze": {
+      "path": "output/2026-10-13-audio-input-browser/source-freeze-v1.json",
+      "bytes": 6214,
+      "sha256": "4586bcd6ada86ea70969148cb21d3a89d6aa82bba27e9f46de0ad11bba992069"
+    },
+    "handoffFreeze": {
+      "path": "output/2026-10-13-audio-input-browser/source-freeze-v2.json",
+      "bytes": 6449,
+      "sha256": "5507e7e2269cd1795124e89294df7a1247525077e0bfd6f18380b2d398f615d3"
+    },
+    "ownedFiles": 35,
+    "allCurrentFilesMatchV2": true,
+    "v1ToV2": "Only src/runtime/audio_input_draft.test.ts Prettier line wrapping; all production source, fixtures and harness bytes unchanged. 265 targeted tests and final browser runs measured v1. Full seven engineering checks of v2 remain for root.",
+    "formatDiff": {
+      "path": "output/2026-10-13-audio-input-browser/source-v1-to-v2.diff",
+      "bytes": 1392,
+      "sha256": "2bf80e35601716f6332cdbe3beab07d47dc9b3a19fc5bd248ade39c264ed63e0"
+    },
+    "originalOwnedFormatFailure": {
+      "path": "output/2026-10-13-audio-input-browser/final-owned-source-check.json",
+      "bytes": 8626,
+      "sha256": "ece6e6c59c450652bd568b59b355b35c56d97d4bb934e506b41e1d14fe619782"
+    },
+    "testOnlyFormatReceipt": {
+      "path": "output/2026-10-13-audio-input-browser/test-format-v2-receipt.json",
+      "bytes": 1024,
+      "sha256": "f44ba5faed767bf1997f06cd8e2414f6e1074d96a602c06e024bd22e7ddab6da"
+    }
+  },
+  "targeted": {
+    "filesPassed": 22,
+    "testsPassed": 265,
+    "actualExitCode": 0,
+    "completion": {
+      "path": "output/2026-10-13-audio-input-browser/final-targeted/completed.json",
+      "bytes": 1505,
+      "sha256": "01655fddd7e6fa72adae2c24bfbf62bb3f6125efd9a6683eaebabe138e5f7eec"
+    },
+    "stdout": {
+      "path": "output/2026-10-13-audio-input-browser/final-targeted/stdout.txt",
+      "bytes": 1227,
+      "sha256": "dba906efa98e7ecaf385dce73e27ab4dd5fe473f034566948855baca248eb685"
+    },
+    "stderr": {
+      "path": "output/2026-10-13-audio-input-browser/final-targeted/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "browserRuns": [
+    {
+      "engine": "chromium",
+      "run": "run01",
+      "actualExitCode": 0,
+      "completedAtUtc": "2026-10-13T09:22:30.052Z",
+      "passed": 33,
+      "failed": 0,
+      "totalExecuted": 33,
+      "sourceAndFixtureStableDuringRun": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "result": {
+        "path": "output/2026-10-13-audio-input-browser/chromium-run01.json",
+        "bytes": 246869,
+        "sha256": "8eb21f6c64e308f0d59b659e504c2e117d0473004b1d627cda341455fe5f1295"
+      },
+      "originalCompletion": {
+        "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run01-completion.raw.jsonl",
+        "bytes": 23004,
+        "sha256": "105205c2e320491aa539dc9d2899aac788a6be680eec35984f4bb6a6b30c06ac"
+      },
+      "sourceScope": "original run-specific before/after source hashes retained in result",
+      "failure": null
+    },
+    {
+      "engine": "chromium",
+      "run": "run02",
+      "actualExitCode": 1,
+      "completedAtUtc": "2026-10-13T09:24:26.959Z",
+      "passed": 32,
+      "failed": 1,
+      "totalExecuted": 33,
+      "sourceAndFixtureStableDuringRun": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "result": {
+        "path": "output/2026-10-13-audio-input-browser/chromium-run02.json",
+        "bytes": 273900,
+        "sha256": "14d042c1e4bb97a16f2732f3edf23ac9fdae78f28682141e65248408ab8bc1c1"
+      },
+      "originalCompletion": {
+        "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run02-completion.raw.jsonl",
+        "bytes": 8008,
+        "sha256": "0bc60c33a5bf8332096ac9a84b5e51aa256857f65bacd319b47a8e2c27d386c6"
+      },
+      "sourceScope": "original run-specific before/after source hashes retained in result",
+      "failure": "Error: Successful fresh approval retires only its old source-change notice"
+    },
+    {
+      "engine": "chromium",
+      "run": "run03",
+      "actualExitCode": 0,
+      "completedAtUtc": "2026-10-13T09:27:09.545Z",
+      "passed": 35,
+      "failed": 0,
+      "totalExecuted": 35,
+      "sourceAndFixtureStableDuringRun": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "result": {
+        "path": "output/2026-10-13-audio-input-browser/chromium-run03.json",
+        "bytes": 247674,
+        "sha256": "beb51895b0164acbd07505998f4cd48de14a84d7dd445da9449a73ae40dfcebf"
+      },
+      "originalCompletion": {
+        "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run03-completion.raw.jsonl",
+        "bytes": 10320,
+        "sha256": "72c91da0cd03a367011f0e679842414c765d261836b2abcbf6997c2b46094418"
+      },
+      "sourceScope": "final v1",
+      "failure": null
+    },
+    {
+      "engine": "webkit",
+      "run": "run03",
+      "actualExitCode": 0,
+      "completedAtUtc": "2026-10-13T09:28:24.834Z",
+      "passed": 35,
+      "failed": 0,
+      "totalExecuted": 35,
+      "sourceAndFixtureStableDuringRun": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "result": {
+        "path": "output/2026-10-13-audio-input-browser/webkit-run03.json",
+        "bytes": 247668,
+        "sha256": "bb04b5f2709a868ac429a7801d274df69ee185a7a3c64a19a1131592e0653fb0"
+      },
+      "originalCompletion": {
+        "path": "output/2026-10-13-audio-input-browser/transcript-receipts/webkit-run03-completion.raw.jsonl",
+        "bytes": 5788,
+        "sha256": "264978355a99cefbc777f3d92e50162aad7634dcb875b7f82d29771fbd9246fb"
+      },
+      "sourceScope": "final v1",
+      "failure": null
+    }
+  ],
+  "finalControlledCoverage": [
+    "Generic selected WAV visibly remains file position; explicit content preview/cancel keeps original attachment.",
+    "Explicit whole-audio confirmation, PCM metadata and full-file aggregate limit wording; keyboard Escape and 780px modal layout.",
+    "Common UI sends complete original bytes through mocked session_prompt as exactly type/data/mimeType; official echo dedup preserves local source.",
+    "Cold restore keeps bytes and requires explicit recheck; no automatic read/send.",
+    "Actual strict capability false/null/string true refusal; backend rejection preserves queued bytes/source without fallback.",
+    "Actual save failure and successful retry; late cancel/edit ownership protections.",
+    "Historical missing source cannot read arbitrary URI; same-path explicit reselection remains reachable.",
+    "Invalid/unsupported/byte limit/duration/source changed/unreadable read failures keep file position and do not submit prompt.",
+    "Pre-send source changed retains bytes; only same attachment fresh approval and completed save clears its previous source notice.",
+    "Independent complete 16MiB fixture survives actual controlled UI draft-to-queue persistence below unchanged 32MiB storage bound."
+  ],
+  "largeFixture": {
+    "originalFileBytes": 16777216,
+    "originalFileSha256": "2aa96f22539756ff5af208c5cd9ae1ed2b2307faa03a13f185cf64b234a7bcad",
+    "completeBase64Chars": 22369624,
+    "persistedSnapshotBytes": 22370478,
+    "persistedStatus": {
+      "ready": true,
+      "saving": false,
+      "error": null
+    },
+    "queuedFullShaMatches": true,
+    "controlledPromptCountForLargeQueueScenario": 0,
+    "wording": "独立完整 16 MiB 样本 / 受控 UI → 队列；不是正式应用或用户音频。"
+  },
+  "failuresAndCorrections": [
+    {
+      "evidence": {
+        "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-initial-red.raw.jsonl",
+        "bytes": 12385,
+        "sha256": "bdc67bd919c194a356ba9f50533e9188067327284bf60080ff7313fab2acdec0"
+      },
+      "observed": "Initial real persistence 1/3 passed, 2 failed: complete 16MiB data duplicated across draft/queue-edit exceeded existing 32MiB serialized limit. Initial queue fixture also used wrong draftQueues.write shape; this does not negate two-copy editor storage failure.",
+      "change": "Snapshot-local exact-string audio dedup inside same atomic settings_set; encoded32MiB, expanded96MiB,256refs. Queue fixture shape corrected; 3-copy and send lifecycle then covered.",
+      "green": [
+        {
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-codec-green-24.raw.jsonl",
+          "bytes": 14394,
+          "sha256": "a636e09bea7a94e03b4762a5958b063dd5847733ad3dac6e6728d807eb5445d5"
+        },
+        {
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-import-green-18.raw.jsonl",
+          "bytes": 18105,
+          "sha256": "7354a2951c037d0e374c6ce16a9a57ac2eed84a10da3a7917d2af157b1a606b9"
+        }
+      ],
+      "intermediateCaution": "capacity-green-with-following-typecheck-failure raw has 3 tests passed but whole command exit1 due subsequent typecheck; never counted as overall successful command."
+    },
+    {
+      "evidence": {
+        "path": "output/2026-10-13-audio-input-browser/transcript-receipts/codec-final-budget-red.raw.jsonl",
+        "bytes": 4238,
+        "sha256": "ee7044144fefa5d9b8b83ed61839cdcbb515586cf939b987b27f134ffade4fdb"
+      },
+      "observed": "21/22 passed: final 96MiB expansion budget was incorrectly checked during partial replacement, rejecting a legal large-plus-empty historical string ordering.",
+      "change": "Accumulate exact final UTF-8 JSON byte delta for all bounded refs before expansion; both ordering directions covered.",
+      "green": {
+        "path": "output/2026-10-13-audio-input-browser/transcript-receipts/codec-final-budget-green.raw.jsonl",
+        "bytes": 2977,
+        "sha256": "ddcdb103db1c089ec6b3bd9865be12edc8cd547262961aa70e3c72679dfaefb0"
+      }
+    },
+    {
+      "evidence": {
+        "path": "output/2026-10-13-audio-input-browser/chromium-run02.json",
+        "bytes": 273900,
+        "sha256": "14d042c1e4bb97a16f2732f3edf23ac9fdae78f28682141e65248408ab8bc1c1"
+      },
+      "observed": "32/33 passed; source changed error remained after successful new audio approval and save.",
+      "change": "Scoped AudioSourceError ownership by draft/context/original attachment/id/source/data; only actual successful save of fresh replacement clears its own source notice.",
+      "green": [
+        "chromium run03 35/35",
+        "webkit run03 35/35"
+      ],
+      "oldScopePreserved": true
+    }
+  ],
+  "visualReview": {
+    "observedAtUtc": "2026-10-13T09:36:29.202802+00:00",
+    "screenshotsRead": [
+      "chromium-run03-pcm-review-narrow.png",
+      "webkit-run03-pcm-review-narrow.png",
+      "webkit-run03-large-queued.png"
+    ],
+    "finding": "Shared modal fits 780px viewport; full-file limits and PCM details are readable, actions remain visible, WebKit focus indicator visible. Queue screenshot shows one retained pending message. No autoplay/player was introduced.",
+    "refs": [
+      {
+        "path": "output/2026-10-13-audio-input-browser/chromium-run03-pcm-review-narrow.png",
+        "bytes": 136514,
+        "sha256": "791ef6e9c8d8990a3f8478811cbbb4cec16d29d47fe5a37362a6b11537af865f"
+      },
+      {
+        "path": "output/2026-10-13-audio-input-browser/webkit-run03-pcm-review-narrow.png",
+        "bytes": 143216,
+        "sha256": "5c5975d445ccfa96b56fd6cfae4fae4e1b28f0f2856dd535a12ac9c2f2fcbf06"
+      },
+      {
+        "path": "output/2026-10-13-audio-input-browser/webkit-run03-large-queued.png",
+        "bytes": 90819,
+        "sha256": "cbdd0e477c2d8efa7d75cfb9b1b061c3a85cfb170e76fb4b542d1d2f8b20301b"
+      }
+    ]
+  },
+  "fixtures": {
+    "stableDuringBothFinalRuns": true,
+    "unchangedAtHandoff": true,
+    "refs": [
+      {
+        "path": "output/2026-10-13-audio-input-browser/fixtures/small.json",
+        "bytes": 5537,
+        "sha256": "5273dd97b0c70184c878669b54eba4973ac90cf50c708ac6ffbc1228b124152e"
+      },
+      {
+        "path": "output/2026-10-13-audio-input-browser/fixtures/metadata.json",
+        "bytes": 586,
+        "sha256": "152d701bd404418473bd7d16d71366665d6b2f24c4f498c2e4e48262788639ee"
+      },
+      {
+        "path": "output/2026-10-13-audio-input-browser/fixtures/large.json",
+        "bytes": 22370027,
+        "sha256": "c9595e4e64a1418bc3a7999fc32510be7e32d1cfe835fc1a9911ccd303f029a3"
+      }
+    ],
+    "largeFixturePublishing": "Keep 22MiB JSON fixture in local output; publish only summary/hash/original small receipts."
+  },
+  "serverCleanup": {
+    "path": "output/2026-10-13-audio-input-browser/owned-server-stopped.json",
+    "bytes": 816,
+    "sha256": "fbcfded5fe7b7a31bdc5831ef7c4524ba4a4133d3940aa33eb3e32edc5bcc7b6"
+  },
+  "originalTranscriptReceiptIndex": {
+    "path": "output/2026-10-13-audio-input-browser/transcript-receipts/manifest.json",
+    "bytes": 4530,
+    "sha256": "8a4752402371d7edb51e7833b92dd4b62b5eeef58358d6c29543b0f150bfa7d0"
+  },
+  "limitations": [
+    "No official App launch/replacement, real Agent request, account/model/service change, actual microphone or audio playback.",
+    "Browser Tauri replies are controlled fixtures, separate from independently tested real Rust file capture and protocol admission.",
+    "Protocol bytes, frontend UI and fixture success do not establish real model audio understanding.",
+    "No full seven-check engineering run, build or installation performed by frontend owner after final v2; root owns next stage."
+  ]
+}

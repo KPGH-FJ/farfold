@@ -1,3 +1,8 @@
+// Image/project fixtures isolate audio classification; audio input tests cover the real IPC boundary.
+vi.mock("./audio_input", async (original) => ({
+  ...(await original<typeof import("./audio_input")>()),
+  selectedAudioCandidate: vi.fn().mockResolvedValue(null),
+}));
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 const h = vi.hoisted(() => ({ invoke: vi.fn() }));
 vi.mock("@tauri-apps/api/core", () => ({

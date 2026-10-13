@@ -1,0 +1,378 @@
+{
+  "status": "NO_NEW_BLOCKING_FINDING_IN_FROZEN_FRONTEND_SCOPE",
+  "createdAtUtc": "2026-10-13T09:36:58.799258+00:00",
+  "reviewerScope": "Read-only production source, independent synthetic WAV origins, exact original tool completion records and controlled test artifacts. No source edits, test reruns, UI, SQLite, native capture, real Agent or installed App execution by reviewer.",
+  "source": {
+    "testedV1": {
+      "path": "output/2026-10-13-audio-input-browser/source-freeze-v1.json",
+      "bytes": 6214,
+      "sha256": "4586bcd6ada86ea70969148cb21d3a89d6aa82bba27e9f46de0ad11bba992069"
+    },
+    "currentV2": {
+      "path": "output/2026-10-13-audio-input-browser/source-freeze-v2.json",
+      "bytes": 6449,
+      "sha256": "5507e7e2269cd1795124e89294df7a1247525077e0bfd6f18380b2d398f615d3"
+    },
+    "ownedFilesVerified": 35,
+    "currentAllV2HashesMatch": true,
+    "v1ToV2OnlyChange": [
+      "src/runtime/audio_input_draft.test.ts"
+    ],
+    "v1TestReconstructedFromCurrentPlusExactDiffHashMatches": true,
+    "v1ToV2TestNonWhitespaceBytesEqual": true,
+    "allProductionAndBrowserFixtureBytesUnchanged": true,
+    "formatReceipt": {
+      "path": "output/2026-10-13-audio-input-browser/test-format-v2-receipt.json",
+      "bytes": 1024,
+      "sha256": "f44ba5faed767bf1997f06cd8e2414f6e1074d96a602c06e024bd22e7ddab6da"
+    },
+    "diff": {
+      "path": "output/2026-10-13-audio-input-browser/source-v1-to-v2.diff",
+      "bytes": 1392,
+      "sha256": "2bf80e35601716f6332cdbe3beab07d47dc9b3a19fc5bd248ade39c264ed63e0"
+    },
+    "testedVersionBoundary": "265 targeted tests and both 35-check browsers ran v1. V2 only changes one test formatting; full seven checks on v2 belong to root and are not claimed here."
+  },
+  "evidence": {
+    "targeted": {
+      "path": "output/2026-10-13-audio-input-browser/final-targeted/completed.json",
+      "bytes": 1505,
+      "sha256": "01655fddd7e6fa72adae2c24bfbf62bb3f6125efd9a6683eaebabe138e5f7eec",
+      "actualExitCode": 0,
+      "testFiles": 22,
+      "tests": 265,
+      "stdout": {
+        "path": "output/2026-10-13-audio-input-browser/final-targeted/stdout.txt",
+        "bytes": 1227,
+        "sha256": "dba906efa98e7ecaf385dce73e27ab4dd5fe473f034566948855baca248eb685"
+      },
+      "stderr": {
+        "path": "output/2026-10-13-audio-input-browser/final-targeted/stderr.txt",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "browsers": [
+      {
+        "path": "src/runtime/uncertain_prompt.ts",
+        "bytes": 1335,
+        "sha256": "cc148da725d4b171760eea564dbd3b2807611f0a71361d5e00ee33244e69e1d5",
+        "checksPassed": 35,
+        "checksTotal": 35,
+        "actualExitCode": 0,
+        "completionEvidence": {
+          "name": "chromium-run03-completion",
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run03-completion.raw.jsonl",
+          "sourceLine": 1919,
+          "originalTimestampUtc": "2026-10-13T09:27:09.545Z",
+          "actualExitCode": 0,
+          "status": "completed",
+          "bytes": 10320,
+          "sha256": "72c91da0cd03a367011f0e679842414c765d261836b2abcbf6997c2b46094418"
+        },
+        "inputCount": 1062,
+        "beforeAfterByteHashesIdentical": true,
+        "currentDifferenceOnlyV2TestFormatting": [
+          "src/runtime/audio_input_draft.test.ts"
+        ],
+        "unexpectedBrowserErrors": 0,
+        "externalRequests": 0
+      },
+      {
+        "path": "src/runtime/uncertain_prompt.ts",
+        "bytes": 1335,
+        "sha256": "cc148da725d4b171760eea564dbd3b2807611f0a71361d5e00ee33244e69e1d5",
+        "checksPassed": 35,
+        "checksTotal": 35,
+        "actualExitCode": 0,
+        "completionEvidence": {
+          "name": "webkit-run03-completion",
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/webkit-run03-completion.raw.jsonl",
+          "sourceLine": 1953,
+          "originalTimestampUtc": "2026-10-13T09:28:24.834Z",
+          "actualExitCode": 0,
+          "status": "completed",
+          "bytes": 5788,
+          "sha256": "264978355a99cefbc777f3d92e50162aad7634dcb875b7f82d29771fbd9246fb"
+        },
+        "inputCount": 1062,
+        "beforeAfterByteHashesIdentical": true,
+        "currentDifferenceOnlyV2TestFormatting": [
+          "src/runtime/audio_input_draft.test.ts"
+        ],
+        "unexpectedBrowserErrors": 0,
+        "externalRequests": 0
+      }
+    ],
+    "historicalCompletions": {
+      "manifest": {
+        "path": "output/2026-10-13-audio-input-browser/transcript-receipts/manifest.json",
+        "bytes": 4530,
+        "sha256": "8a4752402371d7edb51e7833b92dd4b62b5eeef58358d6c29543b0f150bfa7d0"
+      },
+      "allTenRawByteCopiesVerifiedAgainstExactSourceLines": true,
+      "sourceThreadId": "01a13410-a021-7660-b316-4a5e2c3de35f",
+      "records": [
+        {
+          "name": "capacity-initial-red",
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-initial-red.raw.jsonl",
+          "sourceLine": 1599,
+          "originalTimestampUtc": "2026-10-13T09:04:27.869Z",
+          "actualExitCode": 1,
+          "status": "failed",
+          "bytes": 12385,
+          "sha256": "bdc67bd919c194a356ba9f50533e9188067327284bf60080ff7313fab2acdec0"
+        },
+        {
+          "name": "capacity-green-with-following-typecheck-failure",
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-green-with-following-typecheck-failure.raw.jsonl",
+          "sourceLine": 1653,
+          "originalTimestampUtc": "2026-10-13T09:07:53.414Z",
+          "actualExitCode": 1,
+          "status": "failed",
+          "bytes": 3071,
+          "sha256": "bf9a10f360eb61a64cccdc64a01bb873b8059137e934a494b72bdfaf1ecb7f61"
+        },
+        {
+          "name": "capacity-codec-green-24",
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-codec-green-24.raw.jsonl",
+          "sourceLine": 1664,
+          "originalTimestampUtc": "2026-10-13T09:09:29.199Z",
+          "actualExitCode": 0,
+          "status": "completed",
+          "bytes": 14394,
+          "sha256": "a636e09bea7a94e03b4762a5958b063dd5847733ad3dac6e6728d807eb5445d5"
+        },
+        {
+          "name": "capacity-import-green-18",
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-import-green-18.raw.jsonl",
+          "sourceLine": 1705,
+          "originalTimestampUtc": "2026-10-13T09:12:49.496Z",
+          "actualExitCode": 0,
+          "status": "completed",
+          "bytes": 18105,
+          "sha256": "7354a2951c037d0e374c6ce16a9a57ac2eed84a10da3a7917d2af157b1a606b9"
+        },
+        {
+          "name": "codec-final-budget-red",
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/codec-final-budget-red.raw.jsonl",
+          "sourceLine": 1751,
+          "originalTimestampUtc": "2026-10-13T09:15:34.241Z",
+          "actualExitCode": 1,
+          "status": "failed",
+          "bytes": 4238,
+          "sha256": "ee7044144fefa5d9b8b83ed61839cdcbb515586cf939b987b27f134ffade4fdb"
+        },
+        {
+          "name": "codec-final-budget-green",
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/codec-final-budget-green.raw.jsonl",
+          "sourceLine": 1763,
+          "originalTimestampUtc": "2026-10-13T09:15:50.436Z",
+          "actualExitCode": 0,
+          "status": "completed",
+          "bytes": 2977,
+          "sha256": "ddcdb103db1c089ec6b3bd9865be12edc8cd547262961aa70e3c72679dfaefb0"
+        },
+        {
+          "name": "chromium-run01-completion",
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run01-completion.raw.jsonl",
+          "sourceLine": 1842,
+          "originalTimestampUtc": "2026-10-13T09:22:30.052Z",
+          "actualExitCode": 0,
+          "status": "completed",
+          "bytes": 23004,
+          "sha256": "105205c2e320491aa539dc9d2899aac788a6be680eec35984f4bb6a6b30c06ac"
+        },
+        {
+          "name": "chromium-run02-completion",
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run02-completion.raw.jsonl",
+          "sourceLine": 1889,
+          "originalTimestampUtc": "2026-10-13T09:24:26.959Z",
+          "actualExitCode": 1,
+          "status": "failed",
+          "bytes": 8008,
+          "sha256": "0bc60c33a5bf8332096ac9a84b5e51aa256857f65bacd319b47a8e2c27d386c6"
+        },
+        {
+          "name": "chromium-run03-completion",
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run03-completion.raw.jsonl",
+          "sourceLine": 1919,
+          "originalTimestampUtc": "2026-10-13T09:27:09.545Z",
+          "actualExitCode": 0,
+          "status": "completed",
+          "bytes": 10320,
+          "sha256": "72c91da0cd03a367011f0e679842414c765d261836b2abcbf6997c2b46094418"
+        },
+        {
+          "name": "webkit-run03-completion",
+          "path": "output/2026-10-13-audio-input-browser/transcript-receipts/webkit-run03-completion.raw.jsonl",
+          "sourceLine": 1953,
+          "originalTimestampUtc": "2026-10-13T09:28:24.834Z",
+          "actualExitCode": 0,
+          "status": "completed",
+          "bytes": 5788,
+          "sha256": "264978355a99cefbc777f3d92e50162aad7634dcb875b7f82d29771fbd9246fb"
+        }
+      ],
+      "attribution": "Frontend executed all listed commands. Reviewer compared only the ten specified original transcript lines byte-for-byte to extracted raw JSONL records; no surrounding history was inspected. Root did not execute or await these browser sessions. These are preserved original completion records extracted later, not reconstructed run receipts."
+    }
+  },
+  "findingsDisposition": [
+    {
+      "id": "AUDIO-REVIEW-001",
+      "plan": "NEW-27",
+      "original": {
+        "path": "output/2026-10-13-audio-input-independent/frontend-capacity-review-open.json",
+        "bytes": 3364,
+        "sha256": "71d80fb2d0c9b5a46402c0b23d73df7adb4d19555d9123bc13246a79e0a22662"
+      },
+      "originalStateRetained": true,
+      "currentAssessment": "Fixed in reviewed production source and verified in controlled lifecycle at v1; not installed acceptance.",
+      "red": "Original capacity command exit1: 1/3 pass, send-pending handoff and queue-edit save fail. First 3/3 green followed by typecheck error; whole command remains exit1. Later 24/24 and 18/18 commands exit0. Final targeted includes expanded capacity cases.",
+      "green": "Snapshot-local dedup permits exact16MiB source handoff and queue-edit copies without changing32MiB atomic settings write. Controlled unit actual shared drain accepted one minimal wire; both App browsers preserved exact16MiB into paused queue with saved JSON22370478bytes and zero prompt calls."
+    },
+    {
+      "id": "AUDIO-REVIEW-002",
+      "plan": "NEW-27 subcase",
+      "original": {
+        "path": "output/2026-10-13-audio-input-independent/frontend-codec-budget-review-open.json",
+        "bytes": 1557,
+        "sha256": "ef51f4506bc18e305535f6071ca5ae5e58066a3b03c7bcae7b37a9a32822904d"
+      },
+      "originalStateRetained": true,
+      "currentAssessment": "Fixed in reviewed two-pass codec, controlled red21/22 exit1 then22/22 exit0; final265 includes regression.",
+      "reason": "All bounded references are validated and exact UTF8 JSON replacement deltas summed before final96MiB comparison. Opposite traversal orders at limit-1 pass and limit+1 reject."
+    },
+    {
+      "id": "NEW-28 scoped frontend ownership",
+      "currentAssessment": "Source and controlled v1 evidence support saved-notice owner and historical source restrictions; no whole-plan closure claim.",
+      "red": "Chromium run02 had32/33 checks and originalexit1: fresh source approval saved but old source-change notice remained. Original failureJSON/completion retained.",
+      "green": "Run03 both engines35/35 and source-error ownership tests: only corresponding original attachment/id/data/local source plus new applied object, current draft/context, successful saved revision and no pending send can clear source notice. Cancel, other attachment/context, ordinary send errors and later in-place mutation cannot falsely resolve it."
+    }
+  ],
+  "sourceReview": [
+    {
+      "path": "src/runtime/draft_audio_encoding.ts",
+      "lines": [
+        5,
+        23,
+        80,
+        120
+      ],
+      "conclusion": "Single snapshot-local version1 dictionary keyed by exact audio.data equality; only composer attachments, queue-edit original and queued audio blocks traversed.256 refs;32MiB encoded and96MiB exact UTF8 expanded limits; whole unknown/malformed/mixed/dangling/unused references fail before publication. Independent metadata clones; no file authority, new store or queue owner changes."
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "lines": [
+        623,
+        640,
+        763
+      ],
+      "conclusion": "Legacy v1 without encoding remains in original full validator. Decode and all field parsing complete before restoration publishes; saving still calls original snapshot persistence."
+    },
+    {
+      "path": "src/runtime/draft_storage.ts",
+      "lines": [
+        108,
+        143,
+        147,
+        149,
+        153
+      ],
+      "conclusion": "Existing32MiB guard and one atomic settings_set retained. Failed encoding/load/save does not replace previously saved snapshot; in-memory unsent content remains with error."
+    },
+    {
+      "path": "src/runtime/audio_input.ts",
+      "lines": [
+        277,
+        305,
+        326,
+        340
+      ],
+      "conclusion": "Complete canonical base64/SHA plus seven VerifiedFile fields checked; same-version reread before send. Historical URI/data alone cannot grant reread. Whole-file bytes counted per block including duplicates and metadata."
+    },
+    {
+      "path": "src/components/useAudioComposerAttachments.tsx",
+      "lines": [
+        72,
+        118,
+        125,
+        139,
+        141,
+        155,
+        205
+      ],
+      "conclusion": "Explicit read/review/reconfirm uses cancellable current draft owner; second expected-source capture then watchDraftSave. Saved notification and audio source-error callback only after successful matching revision with current applied attachment; canceled/late/stale/other selections ignored."
+    },
+    {
+      "path": "src/runtime/audio_source_error.ts",
+      "lines": [
+        19,
+        42
+      ],
+      "conclusion": "Only changed/sourceUnknown/recoveryRequired/unreadable have transient source owner. Notice resolution matches old attachment object/id/data/localAudio, new applied object/localAudio, current draft/context and nonpending state."
+    },
+    {
+      "path": "src/components/useComposerSourceError.ts",
+      "lines": [
+        31,
+        48,
+        77
+      ],
+      "conclusion": "New ordinary failure resets audio owner; audio save cannot erase unrelated error or a notice belonging to a different attachment/context."
+    },
+    {
+      "path": "src/runtime/draft_attachments.ts",
+      "lines": [
+        35,
+        70,
+        82
+      ],
+      "conclusion": "Direct preparation and queued dispatch reverify approved source; recovered content requires review. Source failures and aggregate overlimit stop before wire; queued rejected/unknown outcomes preserve pause/ownership."
+    },
+    {
+      "path": "src/runtime/prompt_blocks.ts",
+      "lines": [
+        124,
+        131
+      ],
+      "conclusion": "Audio wire is only type/data/mimeType. Local file URI and localAudio remain frontend metadata; outgoing echo merges using official content rather than duplicating or manufacturing local authority."
+    }
+  ],
+  "independentFixture": {
+    "id": "valid-exact-16mib",
+    "wholeFileBytes": 16777216,
+    "sha256": "2aa96f22539756ff5af208c5cd9ae1ed2b2307faa03a13f185cf64b234a7bcad",
+    "base64Length": 22369624,
+    "origin": "Original pre-parser independent waveform fixture; test-support header/repeated seed reconstructed and byte-identical checked. Browserfixture large SHA/source reviewed."
+  },
+  "earlierIndependentEvidence": {
+    "independent-audio-report.json": {
+      "path": "output/2026-10-13-audio-input-independent/independent-audio-report.json",
+      "bytes": 6382,
+      "sha256": "34a4cfddf9be0f061cfc24145932ed7c285fc833cf71e3894fc3e3a22635df7a"
+    },
+    "frontend-capacity-review-open.json": {
+      "path": "output/2026-10-13-audio-input-independent/frontend-capacity-review-open.json",
+      "bytes": 3364,
+      "sha256": "71d80fb2d0c9b5a46402c0b23d73df7adb4d19555d9123bc13246a79e0a22662"
+    },
+    "frontend-codec-budget-review-open.json": {
+      "path": "output/2026-10-13-audio-input-independent/frontend-codec-budget-review-open.json",
+      "bytes": 1557,
+      "sha256": "ef51f4506bc18e305535f6071ca5ae5e58066a3b03c7bcae7b37a9a32822904d"
+    },
+    "backend-v4-peer-evidence-review.json": {
+      "path": "output/2026-10-13-audio-input-independent/backend-v4-peer-evidence-review.json",
+      "bytes": 2031,
+      "sha256": "98441c6985995af1c21463c1f7383da05a1f196c615934843df097d7a5ded426"
+    }
+  },
+  "limits": [
+    "Original parser59/60 exit2 remains unchanged: local Python3.9 writer missing odd pad was our initial fixture/oracle error; separately padded derivative passed without rewriting old result.",
+    "Browser interfaces are controlled Tauri replies.265 tests use controlled source/settings/transport; neither proves native IPC or installed App UI.",
+    "Backendv4 controlled actual JSONRPC peer and safe file capture evidence are reviewed separately, not replaced by browser tests.",
+    "No real Agent account/model audio understanding, recording/playback, non-WAV formats, whole P08 acceptance, installed-app data retention or seven-check completion asserted here."
+  ],
+  "remainingBlockersInThisReview": []
+}

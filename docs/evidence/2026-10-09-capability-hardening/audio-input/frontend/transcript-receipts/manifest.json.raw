@@ -1,0 +1,107 @@
+{
+  "extractedAtUtc": "2026-10-13T09:34:11.977045+00:00",
+  "sourceThreadId": "01a13410-a021-7660-b316-4a5e2c3de35f",
+  "provenance": "Exact complete original item_completed JSONL records copied byte-for-byte from this subagent own local transcript; not rerun or reconstructed output. Browser commands can include immediately preceding preparation commands, all exact originals retained.",
+  "receipts": [
+    {
+      "name": "capacity-initial-red",
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-initial-red.raw.jsonl",
+      "sourceLine": 1599,
+      "originalTimestampUtc": "2026-10-13T09:04:27.869Z",
+      "actualExitCode": 1,
+      "status": "failed",
+      "bytes": 12385,
+      "sha256": "bdc67bd919c194a356ba9f50533e9188067327284bf60080ff7313fab2acdec0"
+    },
+    {
+      "name": "capacity-green-with-following-typecheck-failure",
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-green-with-following-typecheck-failure.raw.jsonl",
+      "sourceLine": 1653,
+      "originalTimestampUtc": "2026-10-13T09:07:53.414Z",
+      "actualExitCode": 1,
+      "status": "failed",
+      "bytes": 3071,
+      "sha256": "bf9a10f360eb61a64cccdc64a01bb873b8059137e934a494b72bdfaf1ecb7f61"
+    },
+    {
+      "name": "capacity-codec-green-24",
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-codec-green-24.raw.jsonl",
+      "sourceLine": 1664,
+      "originalTimestampUtc": "2026-10-13T09:09:29.199Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "bytes": 14394,
+      "sha256": "a636e09bea7a94e03b4762a5958b063dd5847733ad3dac6e6728d807eb5445d5"
+    },
+    {
+      "name": "capacity-import-green-18",
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-import-green-18.raw.jsonl",
+      "sourceLine": 1705,
+      "originalTimestampUtc": "2026-10-13T09:12:49.496Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "bytes": 18105,
+      "sha256": "7354a2951c037d0e374c6ce16a9a57ac2eed84a10da3a7917d2af157b1a606b9"
+    },
+    {
+      "name": "codec-final-budget-red",
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/codec-final-budget-red.raw.jsonl",
+      "sourceLine": 1751,
+      "originalTimestampUtc": "2026-10-13T09:15:34.241Z",
+      "actualExitCode": 1,
+      "status": "failed",
+      "bytes": 4238,
+      "sha256": "ee7044144fefa5d9b8b83ed61839cdcbb515586cf939b987b27f134ffade4fdb"
+    },
+    {
+      "name": "codec-final-budget-green",
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/codec-final-budget-green.raw.jsonl",
+      "sourceLine": 1763,
+      "originalTimestampUtc": "2026-10-13T09:15:50.436Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "bytes": 2977,
+      "sha256": "ddcdb103db1c089ec6b3bd9865be12edc8cd547262961aa70e3c72679dfaefb0"
+    },
+    {
+      "name": "chromium-run01-completion",
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run01-completion.raw.jsonl",
+      "sourceLine": 1842,
+      "originalTimestampUtc": "2026-10-13T09:22:30.052Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "bytes": 23004,
+      "sha256": "105205c2e320491aa539dc9d2899aac788a6be680eec35984f4bb6a6b30c06ac"
+    },
+    {
+      "name": "chromium-run02-completion",
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run02-completion.raw.jsonl",
+      "sourceLine": 1889,
+      "originalTimestampUtc": "2026-10-13T09:24:26.959Z",
+      "actualExitCode": 1,
+      "status": "failed",
+      "bytes": 8008,
+      "sha256": "0bc60c33a5bf8332096ac9a84b5e51aa256857f65bacd319b47a8e2c27d386c6"
+    },
+    {
+      "name": "chromium-run03-completion",
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run03-completion.raw.jsonl",
+      "sourceLine": 1919,
+      "originalTimestampUtc": "2026-10-13T09:27:09.545Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "bytes": 10320,
+      "sha256": "72c91da0cd03a367011f0e679842414c765d261836b2abcbf6997c2b46094418"
+    },
+    {
+      "name": "webkit-run03-completion",
+      "path": "output/2026-10-13-audio-input-browser/transcript-receipts/webkit-run03-completion.raw.jsonl",
+      "sourceLine": 1953,
+      "originalTimestampUtc": "2026-10-13T09:28:24.834Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "bytes": 5788,
+      "sha256": "264978355a99cefbc777f3d92e50162aad7634dcb875b7f82d29771fbd9246fb"
+    }
+  ]
+}

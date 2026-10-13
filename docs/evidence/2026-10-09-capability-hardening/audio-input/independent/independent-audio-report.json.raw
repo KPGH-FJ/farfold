@@ -1,0 +1,111 @@
+{
+  "status": "SCOPED_COMPLETED_WITH_ORIGINAL_ORACLE_MISMATCH_PRESERVED",
+  "createdAtUtc": "2026-10-13T08:57:40.653274+00:00",
+  "authority": "Output-only independent protocol/fixture verification. No source edits, App, UI, SQLite, real Agent, recording, playback, installation or package additions.",
+  "officialProtocol": {
+    "repoDependency": "agent-client-protocol 2.2.0; schema 1.9.1 v1",
+    "wireRequiredFields": [
+      "type=audio",
+      "data=base64 of complete original file",
+      "mimeType=audio/wav"
+    ],
+    "optionalFieldsNotNeeded": [
+      "annotations",
+      "_meta"
+    ],
+    "capability": "v1 agentCapabilities.promptCapabilities.audio must be true. False, missing or malformed does not authorize. v2 website capability objects are not the linked v1 Rust schema.",
+    "primaryUrl": "https://agentclientprotocol.com/protocol/v1/content",
+    "localSources": [
+      {
+        "path": "/Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/agent-client-protocol-schema-1.9.1/src/v1/content.rs",
+        "sha256": "8a98ab0c0d94741c6c7edaa906f0f37eed6ea5d4c5019b67e56d8d9d4b495279"
+      },
+      {
+        "path": "/Users/tw/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/agent-client-protocol-schema-1.9.1/src/v1/agent.rs",
+        "sha256": "4be53f96a87b9074214cc999e76c2bbc487c62fe7b0d8eb9f4002f9b4d6416ad"
+      },
+      {
+        "path": "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/wave.py",
+        "sha256": "2d6ddc0c5e408bb993274ad4f7806252158fec7c569e5a78a50a06ecf02e681d"
+      },
+      {
+        "path": "src-tauri/Cargo.lock",
+        "sha256": "ffcad4afc42bab386642035337b21f533608620307fda28044d0baf6ee588e08"
+      }
+    ]
+  },
+  "riffBasis": {
+    "primarySources": [
+      "https://learn.microsoft.com/en-us/windows/win32/xaudio2/resource-interchange-file-format--riff-",
+      "https://learn.microsoft.com/en-us/windows/win32/api/mmeapi/ns-mmeapi-waveformatex",
+      "https://learn.microsoft.com/en-us/windows/win32/api/mmreg/ns-mmreg-waveformatex",
+      "https://learn.microsoft.com/en-us/windows/win32/multimedia/devices-and-data-types"
+    ],
+    "facts": [
+      "RIFF size includes form identifier plus chunks and their padding, excludes outer eight bytes. Chunk size excludes header and padding; odd payload must reach WORD boundary.",
+      "PCM blockAlign=channels*bits/8 and averageBytesPerSecond=sampleRate*blockAlign; 8-bit integer samples unsigned, 16-bit signed, channels interleaved.",
+      "PCM WAVEFORMATEX documents ignored cbSize. fmt18 cbSize0 is a valid conservative input; nonzero cbSize remains an explicit narrow compatibility decision."
+    ],
+    "matureWriterObservation": "Local Python3.9 wave does not emit final odd pad and permissive reader does not validate all structural conditions. It supplies waveform/metadata independent readback, not malformed-file truth.",
+    "upstreamFix": "https://github.com/python/cpython/pull/145237"
+  },
+  "initialRun": {
+    "actualExitCode": 2,
+    "report": "parser-independent-results.json",
+    "reportSha256": "0011f844f94714f8d0dccbfba2e561083786e6c67f432b6a6fc6b91d700b8a60",
+    "ordinaryPassed": 59,
+    "ordinaryCases": 60,
+    "unratedPolicyProbes": 3,
+    "failure": "Our generator incorrectly called 953 mono8 bytes even and gave invalid CPython output an accept expectation. Production rejects missing mandatory pad. Original fixture, oracle, result and exit2 retained."
+  },
+  "separateDerivedCheck": {
+    "oracle": "padding-derivative-oracle.json",
+    "result": "padding-derivative-result.json",
+    "passed": true,
+    "originalSampleRerun": false,
+    "changes": "New file only: one zero pad + RIFF size increment. Authored PCM unchanged."
+  },
+  "coverage": {
+    "wave_info": "Exact verbatim production function/helpers and constants directly compiled; format/length/metadata behavior exercised over authored fixtures.",
+    "prompt_audio_bytes": "Exact verbatim production function; complete file base64 validated and byte count returned. MIME/base64 invalidity exercised.",
+    "aggregate": "Three independently authored large WAVs each passed per-file checks. A+B=16777216; A+C=16777218. Arithmetic/fixtures prepared, production total gate and dispatch not executed here.",
+    "notExecuted": [
+      "read_audio_input safe file capture",
+      "Tauri IPC",
+      "actual connection identity and audio capability admission",
+      "session_prompt/actual control peer",
+      "draft/composer lifecycle",
+      "installed app",
+      "real Agent sound understanding"
+    ]
+  },
+  "policyObservations": [
+    {
+      "id": "probe-data-before-fmt",
+      "observed": "rejected invalid",
+      "judgment": "Unrated. Narrow order rule; generic RIFF permits arbitrary chunk order, mature WAV reader requires format before data."
+    },
+    {
+      "id": "probe-nonzero-pad",
+      "observed": "accepted; original bytes retained",
+      "judgment": "Unrated compatibility behavior. Do not call arbitrary nonzero padding strictly conformant; RIFF original spec quoted by CPython says zero."
+    },
+    {
+      "id": "probe-pcm-fmt18-nonzero-cbsize",
+      "observed": "rejected unsupported",
+      "judgment": "Unrated conservative supported subset; Microsoft PCM ignored cbSize semantics broader than current parser."
+    }
+  ],
+  "sourceRangeStability": {
+    "initialFullSourceSha256": "37fb2d5f7779607377cecfb471a12029e87fab1ac51dd0ed92220e2b99351096",
+    "currentFullSourceSha256": "3c9ea33d350217d923658fd093d2b46d97b97e9be62716c2e489835ef932b3b6",
+    "allExtractedProductionRangesStillByteIdentical": true,
+    "reasonFullFileChanged": "Backend appended cfg(test) fixture module registration after initial completed run."
+  },
+  "followupRecommendations": [
+    "Backend real read_audio_input against seven frozen pass samples, exact complete-file and base64 SHA plus expected version reread.",
+    "Actual session_prompt control peer: owned connection true allows; absent/false/malformed or other connection capability does not; rejected frame count stays zero.",
+    "Aggregate actual admission with A+B exactly16MiB and A+C above by2, count all headers/metadata and preserve input on rejection.",
+    "Shared frontend flows: explicit review, source/version recheck, stale async invalidation, restored approval, queue continue/retry/resend, minimal wire fields."
+  ]
+}

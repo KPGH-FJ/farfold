@@ -1,4 +1,11 @@
 import {
+  AUDIO_INPUT,
+  AudioInputError,
+  parseLocalAudio,
+  type LocalAudio,
+  addAudioBytes,
+} from "./audio_input";
+import {
   composerDrafts,
   draftPersistence,
   type ComposerDraft,
@@ -28,6 +35,7 @@ export interface AttachmentReviewEntry {
   locked?: string;
   /** Transient complete retained text/scope for explicit recovery inspection. */
   documentText?: ApprovedDocumentText;
+  audio?: LocalAudio | null;
 }
 export interface AttachmentReview {
   draftKey: string;
@@ -55,10 +63,20 @@ function queueLocked(
 }
 function blockLabel(block: PromptBlock) {
   if (block.type === "image") return S.image;
+  if (block.type === "audio")
+    return block.localAudio?.file.name ?? AUDIO_INPUT.title;
   if (block.type === "resource_link") return block.name;
   if (block.type === "resource")
     return block.resource.uri.split("/").pop() || block.resource.uri;
   return "";
+}
+
+function safeAudio(value: unknown) {
+  try {
+    return parseLocalAudio(value);
+  } catch {
+    return null;
+  }
 }
 
 export function attachmentReviewEntries(
@@ -73,6 +91,9 @@ export function attachmentReviewEntries(
               id: draftId(index),
               label: item.name,
               group: S.draft,
+              ...(item.kind === "audio"
+                ? { audio: item.localAudio ?? null }
+                : {}),
               locked: draftLocked(draft),
               ...(item.documentText !== undefined
                 ? { documentText: structuredClone(item.documentText) }
@@ -91,6 +112,9 @@ export function attachmentReviewEntries(
           id: queueId(index, blockIndex),
           label: blockLabel(block),
           group: S.queue(index),
+          ...(block.type === "audio"
+            ? { audio: safeAudio(block.localAudio) }
+            : {}),
           locked: queueLocked(thread, blocks, index),
           ...(documentText !== undefined
             ? { documentText: structuredClone(documentText) }
@@ -182,11 +206,23 @@ export async function confirmAttachmentReview(
       attachments.push({ ...checked, recovered: false });
     } catch (error) {
       if (!isCurrent()) return false;
-      if (error instanceof DocumentInputError) throw error;
+      if (
+        error instanceof DocumentInputError ||
+        error instanceof AudioInputError
+      )
+        throw error;
       throw new Error(S.unreadable(entry.label));
     }
     if (!isCurrent()) return false;
   }
+  attachments.reduce(
+    (total, item) =>
+      addAudioBytes(
+        total,
+        item.kind === "audio" ? (item.localAudio?.file.size ?? 0) : 0,
+      ),
+    0,
+  );
   const replacements = new Map<number, PromptBlock[]>();
   for (const [index, blocks] of review.queue.entries()) {
     if (
@@ -208,12 +244,24 @@ export async function confirmAttachmentReview(
         await validateQueuedAttachments([checked], { reparseDocuments: true });
       } catch (error) {
         if (!isCurrent()) return false;
-        if (error instanceof DocumentInputError) throw error;
+        if (
+          error instanceof DocumentInputError ||
+          error instanceof AudioInputError
+        )
+          throw error;
         throw new Error(S.unreadable(entry.label));
       }
       if (!isCurrent()) return false;
       replacement.push(checked);
     }
+    replacement.reduce(
+      (total, block) =>
+        addAudioBytes(
+          total,
+          block.type === "audio" ? (block.localAudio?.file.size ?? 0) : 0,
+        ),
+      0,
+    );
     replacements.set(index, replacement);
   }
   if (!isCurrent()) return false;

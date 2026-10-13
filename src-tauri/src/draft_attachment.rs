@@ -4,7 +4,42 @@ use std::path::{Path, PathBuf};
 
 use crate::file_delivery::{self, DeliveryError};
 
+mod audio;
 mod images;
+
+/// Classify one selected file without loading its full audio payload.
+#[tauri::command]
+pub async fn draft_attachment_audio_candidate(
+    webview: tauri::Webview,
+    uri: String,
+) -> Result<Option<audio::AudioCandidate>, file_delivery::AudioReadFailure> {
+    if !crate::browser_workspace::caller_allowed(&webview) {
+        return Err(file_delivery::AudioReadFailure { code: "unreadable" });
+    }
+    let path = attachment_path(&uri)
+        .map_err(|_| file_delivery::AudioReadFailure { code: "unreadable" })?;
+    crate::file_read_check::run(move || Ok(audio::candidate(&path)))
+        .await
+        .map_err(|message| file_delivery::AudioReadFailure::check(&message))?
+}
+
+#[tauri::command]
+pub async fn draft_attachment_audio(
+    webview: tauri::Webview,
+    uri: String,
+    expected: Option<file_delivery::VerifiedFile>,
+) -> Result<file_delivery::AudioCapture, file_delivery::AudioReadFailure> {
+    if !crate::browser_workspace::caller_allowed(&webview) {
+        return Err(file_delivery::AudioReadFailure { code: "unreadable" });
+    }
+    let path = attachment_path(&uri)
+        .map_err(|_| file_delivery::AudioReadFailure { code: "unreadable" })?;
+    crate::file_read_check::run(move || {
+        Ok(file_delivery::read_audio_input(&path, expected.as_ref()))
+    })
+    .await
+    .map_err(|message| file_delivery::AudioReadFailure::check(&message))?
+}
 
 fn check(path: &Path, embed: bool) -> Result<Option<String>, String> {
     // The parent only bounds this exact selected file; it is not a reusable

@@ -1,0 +1,17 @@
+{
+  "observedAtUtc": "2026-10-13T09:31:46.981463+00:00",
+  "ownerPid": 30799,
+  "command": [
+    "/bin/ps",
+    "-p",
+    "30799",
+    "-o",
+    "pid=,ppid=,command="
+  ],
+  "identityActualExitCode": 0,
+  "identityStdout": "30799 47488 node output/2026-10-13-audio-input-browser/serve.mjs\n",
+  "identityStderr": "",
+  "stopSignal": "SIGINT",
+  "stopScope": "Only verified owned node serve.mjs PID; no other process targeted",
+  "signalSentAtUtc": "2026-10-13T09:31:46.981749+00:00"
+}

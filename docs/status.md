@@ -4,6 +4,8 @@
 
 ## 当前基线与证据边界
 
+P08 的完整 PCM WAV 音频输入已完成本片源码与受控验证：明确确认并复核来源，每条消息完整文件合计 ≤16 MiB、每段 ≤10 分钟；失败不自动改发文件位置。[前端](evidence/2026-10-09-capability-hardening/audio-input/frontend/publication.json)定向 265 项、完整 App 的 Chromium/WebKit 各 35 项通过；[后端](evidence/2026-10-09-capability-hardening/audio-input/backend/publication.json)16 项通过，实际受控连接核到完整文件合计恰好 16 MiB 可发送、超出 2 字节在提交消息前拒绝。[独立复核](evidence/2026-10-09-capability-hardening/audio-input/independent/publication.json)无新增阻断；NEW-27/28 已修复并通过受控复验，原失败保留。前端受测为 v1，当前 v2 仅一份测试排版变化；本片七项工程、候选、正式安装与真实 Agent 接收仍待验证，P08 整项未完成。
+
 当前正式应用已更新为 `e5995b219` / 0.1.7 arm64，源码已推送 main。[PDF 与权限保护整合检查](evidence/2026-10-09-capability-hardening/pdf-permission-checks/verification.json)在 1,703 个稳定输入上七项全部实际通过：前端 481 文件 / 5,643 项，Rust 1,634 项 / 6 忽略。保存配置期间漂移及首发拒绝后重试绕过确认的两轮原始失败均保留，5 项竞态对照与 37 项发送回归通过。[正式安装](evidence/2026-10-09-capability-hardening/pdf-permission-candidate/installation.json)独立候选 9/9、安装 10/10；安装前、替换前、安装后三份 217,400 条完整清单字节一致。重复打包应用已精确移除，唯一正式应用与候选 ZIP 保留；这只证明安装时的数据保持，正式界面运行后的核对另记。
 
 完整 App 的权限/PDF 组合受控检查在 Chromium、WebKit 各 32 项通过；实际打包的两级 PDF 工作线程在纯静态服务各 3 个样本通过，服务字节与产物哈希一致。正式界面已核到权限“下次消息的选择”、当前完整权限未知说明和取消后原选择保留；文件面板选中 PDF 后“打开”不可用，XLSX 对照相同，来源尚未定位，尚无 PDF 路径交到解析器。PDF 正式读取、附件冷恢复、真实 Agent 接收仍未验证。新的真实请求继续暂停，NEW-24 完整权限恢复、P08 全项和其余计划条件保持未完成。

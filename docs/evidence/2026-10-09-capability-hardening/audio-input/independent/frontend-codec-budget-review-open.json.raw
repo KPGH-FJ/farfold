@@ -1,0 +1,23 @@
+{
+  "id": "AUDIO-REVIEW-002",
+  "state": "OPEN_REVIEWER_ARITHMETIC_NOT_PRODUCTION_EXECUTION",
+  "priority": "P3",
+  "title": "Incremental expansion budget can reject an under-limit final snapshot when a short historical value follows long values",
+  "source": "src/runtime/draft_audio_encoding.ts",
+  "sourceSha256": "4117a9e089b86adf6fbca9f54dbbfb60e5fa9ca7c4b5ae83d5f3dd5a18730df5",
+  "reason": "JSON audioRef object is14bytes, empty retained string is2bytes. Replacement deltas can be negative. The implementation checks budget after every replacement, so acceptance depends on reference traversal order although final UTF-8 JSON size is equal.",
+  "example": {
+    "bigValue": "ASCII A repeated2097088 times",
+    "bigReferences": 48,
+    "finalReferenceValue": "empty string",
+    "references": 49,
+    "encodedWithoutDictionaryJsonBytes": 3659,
+    "after48LargeRefsBytes": 100663307,
+    "afterFinalEmptyRefBytes": 100663295,
+    "maxExpandedBytes": 100663296,
+    "encodingDictionaryUnder32MiB": true
+  },
+  "impact": "Conservative false rejection near exact budget; not a memory amplification bypass or data corruption finding. Legacy audio.data strings are preserved even if they are not currently sendable WAV.",
+  "recommendation": "Validate all bounded references and accumulate total exact replacement delta before the final budget comparison and expansion. Test opposite traversal orders near the boundary.",
+  "scope": "Numerical model and source review only; no codec/module execution, source edits or source tests run by this reviewer."
+}

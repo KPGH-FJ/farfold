@@ -1,0 +1,28 @@
+{
+  "started": "2026-10-13T09:16:10.095413+00:00",
+  "completed": "2026-10-13T09:16:15.242664+00:00",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "audio",
+        "--",
+        "--nocapture"
+      ],
+      "actualExitCode": 101,
+      "stdout": "v4-aggregate-0.stdout.txt",
+      "stdoutSHA": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "v4-aggregate-0.stderr.txt",
+      "stderrSHA": "6a9c4a6cec9b7fa3766211677368b8b5d97337d2124a976ed6b5a20f5cdcfb31"
+    }
+  ],
+  "allPassed": false,
+  "inputCount": 451,
+  "inputsStable": true,
+  "fixtureFreezeSHA": "2f52ce3df7e825c54f5a79cbe4b35029ca729a6a2ad07ed4032f36a703814ea4",
+  "boundary": "Actual temporary SQLite and controlled JSONRPC peer only; no real Agent/live DB/UI/install. Exact16MiB accepted to wire; wholefile16MiB+2 rejected before prompt control is the new test assertion; original v1-v3 receipts unchanged."
+}

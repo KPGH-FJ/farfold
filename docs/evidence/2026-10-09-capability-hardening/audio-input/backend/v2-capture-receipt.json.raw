@@ -1,0 +1,40 @@
+{
+  "started": "2026-10-13T08:55:19.690559+00:00",
+  "completed": "2026-10-13T08:55:38.252047+00:00",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "audio",
+        "--",
+        "--nocapture"
+      ],
+      "actualExitCode": 0,
+      "stdout": "v2-capture-0.stdout.txt",
+      "stdoutSHA": "9e45a7afe0b56d25919dda3991929421c93469e40cf0fbf5169ab7ef34ac7e23",
+      "stderr": "v2-capture-0.stderr.txt",
+      "stderrSHA": "01bf0ae1117704cf038b3177aca010795f082972b3272f11f36edb1b415095e4"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "actualExitCode": 0,
+      "stdout": "v2-capture-1.stdout.txt",
+      "stdoutSHA": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "v2-capture-1.stderr.txt",
+      "stderrSHA": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "allPassed": true,
+  "inputCount": 448,
+  "inputsStable": true
+}

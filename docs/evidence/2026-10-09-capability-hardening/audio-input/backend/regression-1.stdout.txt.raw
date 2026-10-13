@@ -1,0 +1,19 @@
+
+running 9 tests
+test draft_attachment::audio::tests::audio_candidate_sniffs_disguised_wave_and_preserves_unsupported_audio_identity ... ok
+test draft_attachment::tests::rejects_non_local_and_ambiguous_attachment_addresses ... ok
+test draft_attachment::audio::tests::audio_candidate_only_reads_a_prefix_of_the_explicit_selected_file ... ok
+test draft_attachment::tests::rechecks_missing_changed_and_non_file_attachments ... ok
+test draft_attachment::tests::rejects_a_selected_link_redirected_outside_its_parent ... ok
+test draft_attachment::images::tests::reads_actual_bitmap_bytes_without_trusting_the_file_name ... ok
+test draft_attachment::tests::encoded_file_names_read_the_exact_selected_file ... ok
+test draft_attachment::images::tests::never_loads_ordinary_large_files_or_svg_as_bitmap_data ... ok
+test draft_attachment::tests::keeps_binary_links_and_the_existing_embedded_text_limit ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 1645 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

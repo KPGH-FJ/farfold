@@ -1,6 +1,6 @@
 import type { Attachment, PromptBlock } from "./session_types";
 import type { DraftAttachment } from "./drafts";
-import { resourceDraftAttachment } from "./prompt_blocks";
+import { resourceDraftAttachment, audioDraftAttachment } from "./prompt_blocks";
 
 /**
  * W3-6 用户消息操作：把一条已发送的用户消息还原为输入块或草稿附件。
@@ -14,7 +14,15 @@ export function userMessageBlocks(
   const blocks: PromptBlock[] = [];
   if (text.trim()) blocks.push({ type: "text", text: text.trim() });
   for (const item of attachments) {
-    if (item.kind === "image" && item.data)
+    if (item.kind === "audio" && item.data)
+      blocks.push({
+        type: "audio",
+        data: item.data,
+        mimeType: item.mimeType ?? "audio/wav",
+        localAudio: structuredClone(item.localAudio ?? null),
+        ...(item.localAudio && item.uri ? { uri: item.uri } : {}),
+      });
+    else if (item.kind === "image" && item.data)
       blocks.push({
         type: "image",
         data: item.data,
@@ -50,7 +58,11 @@ export function userMessageDraftAttachments(
 ): DraftAttachment[] {
   const out: DraftAttachment[] = [];
   for (const item of attachments) {
-    if (item.kind === "image" && item.data)
+    if (item.kind === "audio" && item.data) {
+      const [block] = userMessageBlocks("", [item]);
+      if (block?.type === "audio")
+        out.push(audioDraftAttachment(block, { name: item.name }));
+    } else if (item.kind === "image" && item.data)
       out.push({
         id: crypto.randomUUID(),
         kind: "image",

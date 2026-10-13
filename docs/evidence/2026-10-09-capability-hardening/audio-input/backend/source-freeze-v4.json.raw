@@ -1,0 +1,167 @@
+{
+  "recordedAt": "2026-10-13T09:20:31.557420+00:00",
+  "phase": "BACKEND_V4_FINAL_FREEZE_EXACT_AGGREGATE_ACTUAL_CONNECTION_TESTS_FULL_SEVEN_PENDING",
+  "predecessor": {
+    "path": "output/2026-10-13-audio-input-backend/source-freeze-v3.json",
+    "sha256": "240ee37811a58f6746926e04615e723ca1baa0ec7c694d4a62cad94a45c7cb4a"
+  },
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "sha256": "c4c4ed2ca728a18ffb4fbf3df3a7ee33ce910d89357f2b867862fc503affea19",
+      "bytes": 42074,
+      "lines": 1154
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "sha256": "c798fdc4b9482285a07163a95c0aee08ecd97ac798c0d2b29679c41bae27b69a",
+      "bytes": 24002,
+      "lines": 709
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_context_tests.rs",
+      "sha256": "35af39dcc9c75004e779943ed985e956f44f16225361e159abc0910e7fe52dae",
+      "bytes": 11278,
+      "lines": 311
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+      "sha256": "c17a16b5c42ee9953ab79e55da98458e7df9077ed8e99257e980f5d885898e11",
+      "bytes": 11398,
+      "lines": 289
+    },
+    {
+      "path": "src-tauri/src/draft_attachment.rs",
+      "sha256": "6cd85099a551632f4f1e8f930e5a888bf033a983a9e1d32d41c6e83c96bd0329",
+      "bytes": 7486,
+      "lines": 193
+    },
+    {
+      "path": "src-tauri/src/draft_attachment/audio.rs",
+      "sha256": "6c56a5f6f1ba7af696a6ef1dbc1a12ec1fad8f5e44a4d652bf07d6af20707359",
+      "bytes": 3436,
+      "lines": 100
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "sha256": "24e1236aa084619798b312fc1b4855adecef643df811891ea7e7ce66b883dbe4",
+      "bytes": 17609,
+      "lines": 506
+    },
+    {
+      "path": "src-tauri/src/file_delivery/audio_input.rs",
+      "sha256": "3c9ea33d350217d923658fd093d2b46d97b97e9be62716c2e489835ef932b3b6",
+      "bytes": 7027,
+      "lines": 213
+    },
+    {
+      "path": "src-tauri/src/file_delivery/audio_input_tests.rs",
+      "sha256": "575c3d1b1dad12e75874329f02eb5c06244d323394723e319ccee62469565d35",
+      "bytes": 9008,
+      "lines": 261
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "c5c76f8117f9345793ac47e6ba9b85d5e1a60429e5e7c51541d3db63faac937b",
+      "bytes": 21444,
+      "lines": 466
+    },
+    {
+      "path": "src-tauri/src/file_delivery/audio_input_fixture_tests.rs",
+      "sha256": "ef434ca5d33d00c858f9867db0817c298bf17378eea096cb46da1694d30fc6c0",
+      "bytes": 4251,
+      "lines": 116
+    },
+    {
+      "path": "src-tauri/test-fixtures/audio-input/expected.json",
+      "sha256": "71be20dee94ad73a5bc725e61f2da3818d0d8dc2e442ba40d8b3abba28431cde",
+      "bytes": 10795
+    },
+    {
+      "path": "src-tauri/test-fixtures/audio-input/valid-metadata-odd-before-and-after.wav",
+      "sha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b",
+      "bytes": 140
+    },
+    {
+      "path": "src-tauri/test-fixtures/audio-input/valid-odd-mono8-data.wav",
+      "sha256": "501be805f4cc755a74122fb793faaa220798fde6b0ec69ee724c35310a10b12f",
+      "bytes": 68
+    },
+    {
+      "path": "src-tauri/test-fixtures/audio-input/valid-pcm-fmt18-zero-extension.wav",
+      "sha256": "271c20d8a51ed86204a0ae59d51245b0326b031db49b03a1cabe346a1ac63606",
+      "bytes": 70
+    },
+    {
+      "path": "src-tauri/test-fixtures/audio-input/valid-wave-c1-b16-r8000.wav",
+      "sha256": "e2303a4fb1c658cd78f9ba2cade7fa1eb1b8d4d7aabd525c89714adc2166f5ad",
+      "bytes": 1228
+    },
+    {
+      "path": "src-tauri/test-fixtures/audio-input/valid-wave-c1-b8-r8000.wav",
+      "sha256": "eb2ff3091658e70d7364f6350c88c37321b0aac4000586fe62532054bd8b6574",
+      "bytes": 636
+    },
+    {
+      "path": "src-tauri/test-fixtures/audio-input/valid-wave-c2-b16-r8000.wav",
+      "sha256": "990ed0a4494092feffe175909f3c0d972a89790f8d0e9f29e39d37f822f19053",
+      "bytes": 2412
+    },
+    {
+      "path": "src-tauri/test-fixtures/audio-input/valid-wave-c2-b8-r8000.wav",
+      "sha256": "e6caabc49b4cc28068d468e75a4d05689fedfd489abde38d0784b1f1ba5f6db0",
+      "bytes": 1228
+    },
+    {
+      "path": "src-tauri/test-fixtures/audio-input/aggregate-pcm-seed-1024.bin",
+      "sha256": "f6cf849305c65644140df883a8ee08fdf5605413fe5692dfdb0d5ee9a6164a4d",
+      "bytes": 1024
+    },
+    {
+      "path": "src-tauri/test-fixtures/audio-input/aggregate-expected.json",
+      "sha256": "8da18f61bbe56336fca738f29c9a0c3fc63df984a4c1ff0a12e9b379dfcb0fa1",
+      "bytes": 3633
+    }
+  ],
+  "changes": [
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+      "v3SHA": "87f481a75a40d8ec4274f9fb3a7de031c2c8cc2b2ea0ba78e747078ba021cda0",
+      "v4SHA": "c17a16b5c42ee9953ab79e55da98458e7df9077ed8e99257e980f5d885898e11"
+    }
+  ],
+  "newFixturePaths": [
+    "src-tauri/test-fixtures/audio-input/aggregate-pcm-seed-1024.bin",
+    "src-tauri/test-fixtures/audio-input/aggregate-expected.json"
+  ],
+  "validation": {
+    "receipt": {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-final-receipt.json",
+      "sha256": "ab572bec3a24404f50f3d5959809ba940b06a2e9af3ef2e3aa38479f3c15fa11"
+    },
+    "actualSessionId": 7898,
+    "naturalExitCode": 0,
+    "completionChunk": "5032fd",
+    "audioTestsPassed": 16,
+    "cargoFmtCheckExitCode": 0,
+    "all451FrozenRustAndFixtureInputsStable": true,
+    "samplesFrozenBeforeTest": {
+      "path": "output/2026-10-13-audio-input-backend/v4-aggregate-fixture-freeze.json",
+      "sha256": "2f52ce3df7e825c54f5a79cbe4b35029ca729a6a2ad07ed4032f36a703814ea4"
+    },
+    "wholeFileBytesAplusB": 16777216,
+    "wholeFileBytesAplusC": 16777218,
+    "pcmDataOnlyBytesAplusC": 16777130,
+    "actualConnectionAplusCRejectedBeforeControlAndNoPeerWire": true,
+    "actualPeerAplusBHasTwoOrderedFullByteExactAudioBlocksOnlyThreeFieldsEach": true,
+    "controlledPeerCancellationConfirmedByTurnEndCancelled": true,
+    "priorFailuresPreserved": [
+      "v4-aggregate-receipt.json",
+      "v4-aggregate-compile-fix-receipt.json"
+    ],
+    "corrections": "Test-only sha2 hex formatting and waiting for remote cancelled turnEnd before disconnect; no product fix claimed.",
+    "fullSevenExecuted": false
+  },
+  "productionAndV3SevenFixtureBytesUnchanged": true,
+  "scope": "Only one test source and two small fixtures added since v3; no production/pump/lockfile/frontend/docs change. Controlled peer and temporary SQLite only; not real-Agent/installed acceptance. Source is now frozen and Rust compiler released to root."
+}

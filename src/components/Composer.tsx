@@ -1,3 +1,4 @@
+import { AUDIO_INPUT, audioCapabilityNotice } from "../runtime/audio_input";
 import { useProjectFiles } from "./useProjectFiles";
 import { ProjectFileScanNotice } from "./ProjectFileScanNotice";
 import { useComposerFileDrop } from "./useComposerFileDrop";
@@ -12,6 +13,7 @@ import {
 import { PromptTemplatesDialog } from "./PromptTemplatesDialog";
 import { usePromptTemplates } from "../runtime/prompt_templates";
 import { CONVERSATION_REDESIGN as R } from "../runtime/conversation_redesign_strings";
+import { localResourcePath as uriToSelectedPath } from "../runtime/file_delivery";
 import { projectFileUri } from "../runtime/file_paths";
 import { useBrowserSurfaceBarrier } from "../runtime/browser_surface";
 import { COMPOSER_CONTROLS as C } from "../runtime/composer_strings";
@@ -89,6 +91,7 @@ import {
 export function Composer({
   thread,
   imageEnabled,
+  audioEnabled,
   embedContext = false,
   onGoSettings,
   onSend,
@@ -118,6 +121,7 @@ export function Composer({
 }: {
   thread: ThreadState | null;
   imageEnabled: boolean;
+  audioEnabled?: boolean;
   /** `promptCapabilities.embeddedContext` — `@` picks embed file text. */
   embedContext?: boolean;
   onGoSettings: () => void;
@@ -200,7 +204,7 @@ export function Composer({
   const shortcutOwner = useRef<string | null>(null);
   const shortcutOpen = active && shortcutScope === storageKey;
   shortcutOwner.current = shortcutOpen ? storageKey : null;
-  const { sendError, setSendError, setSendFailure, documentSaved } =
+  const { sendError, setSendError, setSendFailure, documentSaved, audioSaved } =
     useComposerSourceError(storageKey, errorContext);
   const [recoveringPending, setRecoveringPending] = useState(false);
   const [abandonPending, setAbandonPending] =
@@ -469,40 +473,15 @@ export function Composer({
       setSendError({ message: STRINGS.repair.requestFailed });
       return;
     }
-    const id = crypto.randomUUID();
-    setChips((prev) => [
-      ...prev,
-      {
-        id,
-        kind: "file" as const,
-        name: basename(rel),
-        uri,
-        loading: embedContext,
+    void addPickedAttachments(
+      storageKey,
+      [uriToSelectedPath(uri)!],
+      imageEnabled,
+      (message) => {
+        if (liveKey.current === storageKey) setSendError({ message });
       },
-    ]);
-    if (embedContext) {
-      // Agents that accept embedded context get the file text, not just a
-      // link — read failures degrade to the link, never block the pick.
-      invoke<string>("project_file_read", { cwd, path: rel })
-        .then((content) =>
-          setChips((prev) =>
-            prev.map((chip) =>
-              chip.id === id && chip.uri === uri
-                ? { ...chip, content, loading: false }
-                : chip,
-            ),
-          ),
-        )
-        .catch(() =>
-          setChips((prev) =>
-            prev.map((chip) =>
-              chip.id === id && chip.uri === uri
-                ? { ...chip, loading: false }
-                : chip,
-            ),
-          ),
-        );
-    }
+      { cwd, path: rel, embed: embedContext },
+    );
     setText((prev) => prev.slice(0, mentionAt));
     setMentionAt(-1);
     areaRef.current?.focus();
@@ -511,6 +490,14 @@ export function Composer({
 
   const unsupportedImages =
     !imageEnabled && chips.some((chip) => chip.kind === "image");
+  const audioNotice = chips.some((chip) => chip.audioClassificationFailed)
+    ? AUDIO_INPUT.classificationFailed
+    : chips.some((chip) => chip.kind === "audio")
+      ? (audioCapabilityNotice(audioEnabled) ??
+        (chips.some((chip) => chip.kind === "audio" && !chip.localAudio)
+          ? AUDIO_INPUT.approvalRequired
+          : null))
+      : null;
   const canSend =
     Boolean(text.trim() || chips.length > 0) &&
     active &&
@@ -521,6 +508,7 @@ export function Composer({
     !input.pendingConversation &&
     !chips.some((chip) => chip.recovered) &&
     !unsupportedImages &&
+    !audioNotice &&
     !chips.some((chip) => chip.loading);
   useEffect(() => {
     if (inputDisabled) setShortcutScope(null);
@@ -753,6 +741,7 @@ export function Composer({
   const notes: [string | null | undefined, boolean, string?][] = [
     [permissionNote, false],
     [unsupportedImages ? W.imageUnsupported : null, false],
+    [audioNotice, false],
     [suppressThreadOpenError ? null : thread?.openError, true],
     [thread?.configError, false],
     [sendError?.message, false, sendError?.detail],
@@ -946,6 +935,7 @@ export function Composer({
             draftKey={editingKey}
             queueEditing
             imageEnabled={imageEnabled}
+            audioEnabled={audioEnabled}
             embedContext={embedContext}
             onGoSettings={onGoSettings}
             disabled={!queueEditorTarget(editingDraft, queued)}
@@ -994,9 +984,11 @@ export function Composer({
           .map((b) =>
             b.type === "text"
               ? b.text
-              : b.type === "image"
-                ? STRINGS.composer.imageChip
-                : `[${b.type === "resource" ? basename(b.resource.uri) : b.name}]`,
+              : b.type === "audio"
+                ? AUDIO_INPUT.title
+                : b.type === "image"
+                  ? STRINGS.composer.imageChip
+                  : `[${b.type === "resource" ? basename(b.resource.uri) : b.name}]`,
           )
           .join(" ")
           .slice(0, 60);
@@ -1075,11 +1067,13 @@ export function Composer({
                   <pre key={index}>{block.text}</pre>
                 ) : (
                   <p key={index}>
-                    {block.type === "image"
-                      ? STRINGS.composer.imageChip
-                      : block.type === "resource"
-                        ? basename(block.resource.uri)
-                        : block.name}
+                    {block.type === "audio"
+                      ? AUDIO_INPUT.title
+                      : block.type === "image"
+                        ? STRINGS.composer.imageChip
+                        : block.type === "resource"
+                          ? basename(block.resource.uri)
+                          : block.name}
                   </p>
                 ),
               )}
@@ -1285,8 +1279,10 @@ export function Composer({
             !input.sendPending &&
             !input.pendingConversation
           }
+          audioCapability={audioEnabled}
           items={chips}
           onSaved={documentSaved}
+          onAudioSaved={audioSaved}
           onRemove={(id) =>
             setChips((previous) => previous.filter((chip) => chip.id !== id))
           }

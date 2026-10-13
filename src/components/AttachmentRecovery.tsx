@@ -1,3 +1,4 @@
+import { AudioInputDetails } from "./AudioInputDetails";
 import { useEffect, useRef, useState } from "react";
 import { useComposerDraft } from "../runtime/drafts";
 import {
@@ -130,6 +131,9 @@ export function AttachmentRecovery({
                         {entry.locked && <small>{entry.locked}</small>}
                       </span>
                     </label>
+                    {entry.audio !== undefined && (
+                      <AudioInputDetails audio={entry.audio} />
+                    )}
                     {entry.documentText && (
                       <details className="attachment-review-document">
                         <summary>{D.view}</summary>

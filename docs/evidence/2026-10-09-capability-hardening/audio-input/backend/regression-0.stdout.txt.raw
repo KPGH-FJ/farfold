@@ -1,0 +1,59 @@
+
+running 43 tests
+test acp_client::manager::e2e_tests::e2e_prompt_tool_diff_and_replay ... ignored, requires a real agent binary; run manually
+test acp_client::failures::tests::warnings_replay_and_old_incidents_do_not_fail_a_new_prompt ... ok
+test acp_client::elicitation_wire_tests::accepted_url_without_completion_expires_when_the_prompt_ends ... ok
+test acp_client::lifecycle_tests::first_prompt_never_reaches_agent_when_source_metadata_cannot_be_saved ... ok
+test acp_client::cancel_starvation_tests::a_later_explicit_prompt_does_not_overtake_queued_cancellation ... ok
+test acp_client::lifecycle_tests::expired_queued_prompt_never_reaches_the_agent ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_does_not_change_non_audio_admission ... ok
+test acp_client::cancel_starvation_tests::cancellation_does_not_overtake_an_earlier_queued_prompt ... ok
+test acp_client::lifecycle_tests::local_close_checks_live_prompt_in_pump_before_releasing_route ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_actual_supported_wire_preserves_original_bytes_and_busy_guard ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_missing_actual_handshake_rejects_without_sending ... ok
+test acp_client::session::prompt_context_tests::prompt_context_baseline_text_and_link_need_no_embedded_handshake ... ok
+test acp_client::session::prompt_context_tests::prompt_context_gate_requires_typed_true_only_for_resource_variant ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_total_and_invalid_payload_reject_before_control_without_fallback ... ok
+{"case":"model","established":true,"inboxFence":"prior-update-routed","result":{"Err":"FAILED: CONFIG_BLOCKED"},"baselinePrompts":1,"actualPrompts":1}
+test acp_client::session::prompt_context_tests::prompt_context_missing_actual_handshake_rejects_before_control_send ... ok
+test acp_client::prompt_config_race_tests::prompt_config_race_established_model_update_during_save_is_not_sent ... ok
+test acp_client::session::recheck_tests::configuration_recheck_rejects_a_real_in_flight_prompt_and_keeps_its_owner ... ok
+test acp_client::session_commands::prompt_context_admission_tests::exact_unsent_reasons_and_existing_rejections_keep_their_public_classification ... ok
+test acp_client::pump::restore_tests::configuration_restore_rejected_or_wrong_reply_keeps_saved_baseline_and_blocks_prompt ... ok
+test acp_client::session::prompt_context_tests::prompt_context_supported_does_not_bypass_existing_preview_protection ... ok
+test acp_client::session_config::transport_tests::modern_transport_rejects_old_mode_but_confirms_and_saves_thinking_before_next_prompt ... ok
+test acp_client::transient_mcp::tests::prompt_callback_handles_do_not_own_or_revoke_the_route ... ok
+test acp_client::session::prompt_context_tests::prompt_context_supported_actual_wire_preserves_content_and_pump_busy_guard ... ok
+test acp_client::session::prompt_context_tests::prompt_context_false_or_omitted_actual_session_rejects_despite_supported_preparation_and_cache ... ok
+{"case":"model","established":false,"inboxFence":"prior-update-routed","result":{"Err":"FAILED: CONFIG_BLOCKED"},"baselinePrompts":0,"actualPrompts":0}
+{"case":"first-model-immediate-retry","checkAfterRefusal":{"status":"blocked","issues":[{"category":"model","reason":"changed","id":"model","expected":"m1","current":"m2"}],"current":{"choices":[{"id":"model","category":"model","type":"select","value":"m2"}]},"protectedIds":["model"]},"retryResult":{"Err":"FAILED: CONFIG_BLOCKED"},"actualPrompts":0,"saved":{"choices":[{"id":"model","category":"model","type":"select","value":"m1"}],"_farfoldConfig":2,"_farfoldService":{"kind":"existing"}}}
+test acp_client::usage_wire_tests::missing_invalid_and_failed_reports_never_reuse_prior_prompt_usage ... ok
+test browser_sharing::prompt_tests::ending_one_prompt_keeps_other_owner_and_explicit_page_grant ... ok
+test browser_sharing::prompt_tests::next_prompt_can_request_and_approve_after_old_wait_is_dropped ... ok
+test browser_sharing::prompt_tests::stopped_prompt_cancels_its_decision_without_mcp_notification_and_rejects_late_requests ... ok
+test meta_store::prompt_templates::tests::template_cas_creates_updates_and_preserves_unrelated_settings ... ok
+test meta_store::prompt_templates::tests::template_cas_only_one_concurrent_writer_can_use_the_same_baseline ... ok
+test meta_store::prompt_templates::tests::template_cas_protects_future_malformed_and_null_stored_values ... ok
+test meta_store::prompt_templates::tests::template_cas_read_only_failure_preserves_saved_content ... ok
+test meta_store::prompt_templates::tests::template_cas_rejects_late_or_missing_baseline_without_overwriting ... ok
+test acp_client::prompt_config_race_tests::prompt_config_race_first_model_update_during_save_is_not_sent ... ok
+test acp_client::usage_wire_tests::official_prompt_usage_and_context_cost_keep_every_field_and_metadata ... ok
+test meta_store::prompt_templates::tests::template_cas_validates_limits_and_complete_schema_before_writing ... ok
+test acp_client::session_config::transport_tests::legacy_transport_empty_ack_updates_original_session_and_cold_restores_before_next_prompt ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_false_missing_and_malformed_reject_despite_preparation_and_cache ... ok
+test acp_client::transient_mcp_route_tests::transient_mcp_prompt_lifecycle_without_mcp_cancel_is_scoped_to_its_route ... ok
+{"case":"matching","established":false,"inboxFence":"prior-update-routed","result":{"Ok":null},"baselinePrompts":0,"actualPrompts":1}
+test acp_client::prompt_config_race_tests::prompt_config_race_matching_update_keeps_first_prompt_working ... ok
+{"case":"matching","established":true,"inboxFence":"prior-update-routed","result":{"Ok":null},"baselinePrompts":1,"actualPrompts":2}
+test acp_client::prompt_config_race_tests::prompt_config_race_matching_update_keeps_ordinary_prompt_working ... ok
+{"case":"permission","established":true,"inboxFence":"prior-update-routed","result":{"Err":"FAILED: 请重新确认权限后再发送"},"baselinePrompts":1,"actualPrompts":1}
+test acp_client::tool_activity_tests::configuration_change_tool_tail_retains_work_after_stop_without_blocking_later_prompts ... ok
+test acp_client::prompt_config_race_tests::prompt_config_race_permission_update_during_save_is_not_sent ... ok
+
+test result: ok. 42 passed; 0 failed; 1 ignored; 0 measured; 1611 filtered out; finished in 2.13s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

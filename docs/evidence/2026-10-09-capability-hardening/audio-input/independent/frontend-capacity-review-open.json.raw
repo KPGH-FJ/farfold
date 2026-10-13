@@ -1,0 +1,61 @@
+{
+  "id": "AUDIO-REVIEW-001",
+  "state": "OPEN_PENDING_PRODUCTION_LIFECYCLE_COUNTEREXAMPLE",
+  "priority": "P2",
+  "title": "A valid maximum-sized audio message exceeds existing draft limit during composer-to-queue handoff",
+  "createdAtUtc": "2026-10-13T09:01:41.516415+00:00",
+  "evidenceKind": "Read-only source path and exact frozen fixture byte arithmetic. No production frontend executed in this observation.",
+  "sourceSha256": {
+    "src/components/Composer.tsx": "e1db1480dbf0153187b38ce19a1c81b07e6043783e60a129f1f3fa2a33dc167f",
+    "src/runtime/sessions.ts": "58d9b014fa6948da000b8df3077a5f02254d87dd84553d439d3cf441589b96e4",
+    "src/runtime/drafts.ts": "3d901a3018c38bd68fa9d83e8a113f4d100b6ebf7eea3c053de2c961ce445f9d",
+    "src/runtime/draft_storage.ts": "dfcddc5a36611bb2a75b5e967d4e701f52149ea6d2dc940fcb7bdeaafd925354",
+    "src/runtime/audio_input.ts": "96546d059e2859341efab18a8a9c82337ed51398669d06e3581e622eedd1337c"
+  },
+  "sourceChain": [
+    {
+      "file": "src/components/Composer.tsx",
+      "line": 574,
+      "finding": "Preparation creates payload; composer remains saved as sendPending until await threads.send/onSend returns."
+    },
+    {
+      "file": "src/runtime/sessions.ts",
+      "line": 924,
+      "finding": "send pushes same base64 into queue then emit persists queue snapshot."
+    },
+    {
+      "file": "src/runtime/sessions.ts",
+      "line": 988,
+      "finding": "drainQueue flushes in-flight queue before invoke session_prompt."
+    },
+    {
+      "file": "src/runtime/drafts.ts",
+      "line": 754,
+      "finding": "snapshot includes every eligible composer and all queues; no handoff de-duplication."
+    },
+    {
+      "file": "src/runtime/draft_storage.ts",
+      "line": 147,
+      "finding": "UTF-8 serialized whole snapshot above32MiB is rejected before settings_set."
+    }
+  ],
+  "fixture": {
+    "id": "valid-exact-16mib",
+    "sha256": "2aa96f22539756ff5af208c5cd9ae1ed2b2307faa03a13f185cf64b234a7bcad",
+    "originalWholeFileBytes": 16777216,
+    "base64AsciiBytes": 22369624,
+    "base64Sha256": "bf34e9e387f7c691d9cf60fec83fd821c7b3eb70684f4d126cd222eb9a93dafe"
+  },
+  "lowerBound": {
+    "composerAndQueuePayloadCopies": 2,
+    "payloadAloneUtf8Bytes": 44739248,
+    "existingStorageMaxBytes": 33554432,
+    "excessWithoutJsonMetadata": 11184816,
+    "MiB": 42.66667175292969
+  },
+  "impact": "Even an otherwise empty established conversation with one16MiB approved WAV cannot pass first in-flight flush. send returns rejected/failed and pauses queue before wire; retained queue/draft behavior must be confirmed by actual lifecycle regression. Parser and total-audio limit unit checks do not cover this transition.",
+  "dataLoss": "No data-loss finding; existing code retains queued content and failure state. This has not yet been executed under production lifecycle by this reviewer.",
+  "requestedVerification": "Use actual shared Composer or equivalent real draft+threads.send ownership flow, frozen16MiB fixture and mocked transport/settings. Confirm pre-fix0wire/storage limit; after fix accepted once, restart safety and draft/queue contents preserved. No real Agent.",
+  "recommendation": "Resolve duplicate in-flight storage or adopt an explicit safe capacity design; retain audio16MiB contract and do not silently bypass failed persistence.",
+  "originalParserResultUnaffected": true
+}

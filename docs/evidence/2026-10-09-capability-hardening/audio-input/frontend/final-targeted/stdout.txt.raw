@@ -1,0 +1,13 @@
+
+> farfold@0.1.7 test /Users/tw/Desktop/farfold
+> vitest run "src/runtime/audio_input.test.ts" "src/runtime/audio_input_draft.test.ts" "src/runtime/audio_source_error.test.ts" "src/components/AudioComposerAttachments.test.tsx" "src/runtime/draft_audio_encoding.test.ts" "src/runtime/composer_audio_import.test.ts" "src/runtime/sessions.audio-capacity.test.ts" "src/runtime/composer_attachment_import.test.ts" "src/runtime/draft_attachments.test.ts" "src/runtime/message_actions.test.ts" "src/runtime/queue_edit.test.ts" "src/runtime/drafts.test.ts" "src/components/DocumentComposerAttachments.save.test.tsx" "src/components/DocumentComposerAttachments.pdf.test.tsx" "src/components/Composer.project-files.test.tsx" "src/components/AttachmentRecovery.test.tsx" "src/runtime/draft_storage.test.ts" "src/runtime/sessions.docx-input.test.ts" "src/runtime/sessions.queue-images.test.ts" "src/runtime/document_source_error.test.ts" "src/runtime/new_conversation.test.ts" "src/runtime/pending_conversation.test.ts"
+
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+
+ Test Files  22 passed (22)
+      Tests  265 passed (265)
+   Start at  17:27:10
+   Duration  12.98s (transform 2.64s, setup 0ms, import 5.23s, tests 18.80s, environment 1ms)
+

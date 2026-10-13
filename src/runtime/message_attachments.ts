@@ -71,8 +71,13 @@ export function normalizeMessageAttachments(
 /** Match only official declared content. Local approval metadata cannot come
  * from an echoed notification and must not make an exact echo a new message. */
 export function sameOfficialAttachment(a: Attachment, b: Attachment): boolean {
-  const { localDocumentText: _localA, ...officialA } = a;
-  const { localDocumentText: _localB, ...officialB } = b;
+  const { localDocumentText: _localA, localAudio: _audioA, ...officialA } = a;
+  const { localDocumentText: _localB, localAudio: _audioB, ...officialB } = b;
+  if (a.kind === "audio" && b.kind === "audio") {
+    const { uri: _uriA, ...audioA } = officialA;
+    const { uri: _uriB, ...audioB } = officialB;
+    return JSON.stringify(audioA) === JSON.stringify(audioB);
+  }
   return JSON.stringify(officialA) === JSON.stringify(officialB);
 }
 

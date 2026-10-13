@@ -1,0 +1,47 @@
+--- src/runtime/audio_input_draft.test.ts@v1
++++ src/runtime/audio_input_draft.test.ts@v2
+@@ -200,26 +200,24 @@
+     uri: "file:///chosen/sample.wav",
+   };
+   vi.resetModules();
+-  h.invoke
+-    .mockReset()
+-    .mockImplementation(async (cmd) =>
+-      cmd === "settings_get"
+-        ? {
+-            version: 1,
+-            composers: { new: { text: "KEEP", attachments: [original] } },
+-            choice: {
+-              agentId: "chosen",
+-              cwd: "/chosen",
+-              service: null,
+-              config: {},
+-            },
+-            feedback: {},
+-            queues: {},
+-          }
+-        : cmd === "draft_attachment_audio_candidate"
+-          ? { mimeType: "audio/wav" }
+-          : undefined,
+-    );
++  h.invoke.mockReset().mockImplementation(async (cmd) =>
++    cmd === "settings_get"
++      ? {
++          version: 1,
++          composers: { new: { text: "KEEP", attachments: [original] } },
++          choice: {
++            agentId: "chosen",
++            cwd: "/chosen",
++            service: null,
++            config: {},
++          },
++          feedback: {},
++          queues: {},
++        }
++      : cmd === "draft_attachment_audio_candidate"
++        ? { mimeType: "audio/wav" }
++        : undefined,
++  );
+   d = await import("./drafts");
+   await d.draftPersistence.load();
+   const old = d.composerDrafts.read("new").attachments[0];

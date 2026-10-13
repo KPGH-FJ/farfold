@@ -12,6 +12,7 @@ import { Composer } from "./Composer";
 export function MessageResendDialog({
   thread,
   imageEnabled,
+  audioEnabled,
   embedContext,
   continued,
   onClose,
@@ -19,6 +20,7 @@ export function MessageResendDialog({
 }: {
   thread: ThreadState;
   imageEnabled: boolean;
+  audioEnabled?: boolean;
   embedContext: boolean;
   continued: boolean;
   onClose: () => void;
@@ -42,6 +44,7 @@ export function MessageResendDialog({
           thread={thread}
           draftKey={key}
           imageEnabled={imageEnabled}
+          audioEnabled={audioEnabled}
           embedContext={embedContext}
           onGoSettings={onGoSettings}
           fit

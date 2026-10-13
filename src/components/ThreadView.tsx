@@ -1,3 +1,4 @@
+import { audioCapability } from "../runtime/audio_input";
 import { SearchDisclosure, TranscriptSearchContext } from "./transcript-search";
 import { ConfigurationChangeReview } from "./ConfigurationChangeReview";
 import { AsyncTasks } from "./AsyncTasks";
@@ -1227,6 +1228,7 @@ export function ThreadView({
               autofocus={active}
               draftKey={`session:${thread.key}`}
               imageEnabled={imageOk}
+              audioEnabled={audioCapability(agent?.handshake)}
               embedContext={embedContext}
               onGoSettings={onGoSettings}
               suppressThreadOpenError={
@@ -1365,6 +1367,7 @@ export function ThreadView({
         <MessageResendDialog
           thread={thread}
           imageEnabled={imageOk}
+          audioEnabled={audioCapability(agent?.handshake)}
           embedContext={embedContext}
           continued={resendContinued}
           onClose={() => setResendOpen(false)}

@@ -1,0 +1,30 @@
+{
+  "observedAtUtc": "2026-10-13T09:34:49.850106+00:00",
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "prettier",
+    "--write",
+    "src/runtime/audio_input_draft.test.ts"
+  ],
+  "actualExitCode": 0,
+  "stdout": "src/runtime/audio_input_draft.test.ts 47ms\n",
+  "stderr": "",
+  "changedFiles": [
+    "src/runtime/audio_input_draft.test.ts"
+  ],
+  "onlyTestFormatting": true,
+  "productionSourceUnchanged": true,
+  "diffPath": "output/2026-10-13-audio-input-browser/source-v1-to-v2.diff",
+  "diffSha256": "2bf80e35601716f6332cdbe3beab07d47dc9b3a19fc5bd248ade39c264ed63e0",
+  "sourceV1Sha256": "4586bcd6ada86ea70969148cb21d3a89d6aa82bba27e9f46de0ad11bba992069",
+  "sourceV2Sha256": "5507e7e2269cd1795124e89294df7a1247525077e0bfd6f18380b2d398f615d3",
+  "ownedPrettierCheck": {
+    "actualExitCode": 0,
+    "stdout": "Checking formatting...\nAll matched files use Prettier code style!\n",
+    "stderr": ""
+  },
+  "maxOwnedLines": 1491,
+  "fullEngineeringChecks": "not executed by frontend owner; root will run"
+}

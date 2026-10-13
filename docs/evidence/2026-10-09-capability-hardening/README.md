@@ -2,6 +2,8 @@
 
 目标与完整条目仍见[唯一活动计划](../../../plans/agent-access.md)。本目录保存本轮代码、受控验证和官方接口核查，不代表全部能力已在安装版通过或 29 家真实接入已通过。
 
+P08 PCM WAV 音频输入已完成本片源码及受控验证：[前端](audio-input/frontend/publication.json)定向 265 项、双完整 App 各 35 项通过；[后端](audio-input/backend/publication.json)16 项及实际受控连接的 16 MiB／超出 2 字节边界通过；[独立复核](audio-input/independent/publication.json)保留原解析 59/60、exit 2 与容量/归属反例。NEW-27/28 修复已受控复验；前端验证对应 v1，v2 仅一份测试排版变化。本片七项工程、候选、正式安装及真实 Agent 接收仍待验证，不宣称 P08 完成，也不复用下文 e599 PDF/权限证明。
+
 ## 当前衔接：PDF与权限保护已安装，正式读取入口继续排查
 
 当前正式应用已更新为 `e5995b219` / 0.1.7 arm64，源码已推送 main。[PDF 与权限保护整合检查](pdf-permission-checks/verification.json)在 1,703 个稳定输入上七项全部实际通过：前端 481 文件 / 5,643 项，Rust 1,634 项 / 6 忽略。保存配置期间漂移及首发拒绝后重试绕过确认的两轮原始失败均保留，5 项竞态对照与 37 项发送回归通过。[正式安装](pdf-permission-candidate/installation.json)独立候选 9/9、安装 10/10；安装前、替换前、安装后三份 217,400 条完整清单字节一致。重复打包应用已精确移除，唯一正式应用与候选 ZIP 保留；这只证明安装时的数据保持，正式界面运行后的核对另记。

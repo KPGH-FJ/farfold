@@ -1,0 +1,439 @@
+{
+  "schema": 1,
+  "publishedAtUtc": "2026-10-13T09:47:48.537438+00:00",
+  "files": [
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/summary.json",
+        "bytes": 6324,
+        "sha256": "b1b03447754856c16eae8290880eec482e1a3f60b5bec0b10d20345b1ff46713"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/summary.json.raw",
+        "bytes": 6324,
+        "sha256": "b1b03447754856c16eae8290880eec482e1a3f60b5bec0b10d20345b1ff46713"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/inputs-before.json",
+        "bytes": 202594,
+        "sha256": "e73b1af11450ff866d0ffd58418c3eedc6660c829882a714d66f2a4e1b90addb"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/inputs-before.json.raw",
+        "bytes": 202594,
+        "sha256": "e73b1af11450ff866d0ffd58418c3eedc6660c829882a714d66f2a4e1b90addb"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/inputs-after.json",
+        "bytes": 202594,
+        "sha256": "e73b1af11450ff866d0ffd58418c3eedc6660c829882a714d66f2a4e1b90addb"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/inputs-after.json.raw",
+        "bytes": 202594,
+        "sha256": "e73b1af11450ff866d0ffd58418c3eedc6660c829882a714d66f2a4e1b90addb"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/protected-before.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/protected-before.json.raw",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/protected-after.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/protected-after.json.raw",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/preflight.json",
+        "bytes": 263,
+        "sha256": "a719e4756d5a34b1d69c095d5405cb1e3b7ffdc2e2a1c804195c7eea26c39fc4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/preflight.json.raw",
+        "bytes": 263,
+        "sha256": "a719e4756d5a34b1d69c095d5405cb1e3b7ffdc2e2a1c804195c7eea26c39fc4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/events.jsonl",
+        "bytes": 2224,
+        "sha256": "cab6d92d5195bb68ae0080927fb126d4408a0d045ff2a8d4da71f067d714976b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/events.jsonl.raw",
+        "bytes": 2224,
+        "sha256": "cab6d92d5195bb68ae0080927fb126d4408a0d045ff2a8d4da71f067d714976b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/final-freeze/freeze.json",
+        "bytes": 282345,
+        "sha256": "a9c357458d99b0ad0e40afaca1ab8a872f8e2fea66d1b9f6eb9ca8fb2aab985c"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/freeze.json.raw",
+        "bytes": 282345,
+        "sha256": "a9c357458d99b0ad0e40afaca1ab8a872f8e2fea66d1b9f6eb9ca8fb2aab985c"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/format-check/started.json",
+        "bytes": 288,
+        "sha256": "2d8d27e425ccb145d49bfa2594a285f2cfd905638a19493ce8fb2e88be758f3b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/format-check/started.json.raw",
+        "bytes": 288,
+        "sha256": "2d8d27e425ccb145d49bfa2594a285f2cfd905638a19493ce8fb2e88be758f3b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/format-check/completed.json",
+        "bytes": 667,
+        "sha256": "7cc6cb4b9b290a7198101207a76ec987b3715cdaa4b0cf91ac9e3e7948447467"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/format-check/completed.json.raw",
+        "bytes": 667,
+        "sha256": "7cc6cb4b9b290a7198101207a76ec987b3715cdaa4b0cf91ac9e3e7948447467"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/format-check/stdout.log",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/format-check/stdout.log.raw",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/format-check/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/typecheck/started.json",
+        "bytes": 280,
+        "sha256": "876184049b58486c2e491b8739b831bf5be14b4873f3420d2c53563e7235b5c3"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/typecheck/started.json.raw",
+        "bytes": 280,
+        "sha256": "876184049b58486c2e491b8739b831bf5be14b4873f3420d2c53563e7235b5c3"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/typecheck/completed.json",
+        "bytes": 664,
+        "sha256": "489887afa42b33f33c47af752a96b165929498bca2032a30ec824201b8aa07d0"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/typecheck/completed.json.raw",
+        "bytes": 664,
+        "sha256": "489887afa42b33f33c47af752a96b165929498bca2032a30ec824201b8aa07d0"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/typecheck/stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/typecheck/stdout.log.raw",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/typecheck/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/typecheck/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/frontend-test/started.json",
+        "bytes": 274,
+        "sha256": "9b3d144768c0949ce2fca06810747e30e778c14f7ab2eb377bc287d3ddb8d3ec"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/frontend-test/started.json.raw",
+        "bytes": 274,
+        "sha256": "9b3d144768c0949ce2fca06810747e30e778c14f7ab2eb377bc287d3ddb8d3ec"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/frontend-test/completed.json",
+        "bytes": 653,
+        "sha256": "41d79a1ba3e6e528c96cfe43d107d375f204d1262f7e1ae5b7d08cfde259a152"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/frontend-test/completed.json.raw",
+        "bytes": 653,
+        "sha256": "41d79a1ba3e6e528c96cfe43d107d375f204d1262f7e1ae5b7d08cfde259a152"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/frontend-test/stdout.log",
+        "bytes": 289,
+        "sha256": "76c899c7e569d2a4d674ef7385ab023c3773d28d42af8e85dcb123c2b78279f6"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/frontend-test/stdout.log.raw",
+        "bytes": 289,
+        "sha256": "76c899c7e569d2a4d674ef7385ab023c3773d28d42af8e85dcb123c2b78279f6"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/frontend-test/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/frontend-test/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/frontend-build/started.json",
+        "bytes": 277,
+        "sha256": "0a2ceca7c5c64961039e2431319deccb6fb296c2b69adc4eca1248ca150a39ad"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/frontend-build/started.json.raw",
+        "bytes": 277,
+        "sha256": "0a2ceca7c5c64961039e2431319deccb6fb296c2b69adc4eca1248ca150a39ad"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/frontend-build/completed.json",
+        "bytes": 661,
+        "sha256": "f626a54f487f7a38bcaae6344320bdc8a4a50e58f94948ba845ab7a5b6730da4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/frontend-build/completed.json.raw",
+        "bytes": 661,
+        "sha256": "f626a54f487f7a38bcaae6344320bdc8a4a50e58f94948ba845ab7a5b6730da4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/frontend-build/stdout.log",
+        "bytes": 4560,
+        "sha256": "be6faf86f72af4e1d91294784d32b32da45ae58d6cadbe2885b1b20f81e1d41d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/frontend-build/stdout.log.raw",
+        "bytes": 4560,
+        "sha256": "be6faf86f72af4e1d91294784d32b32da45ae58d6cadbe2885b1b20f81e1d41d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/frontend-build/stderr.log",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/frontend-build/stderr.log.raw",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/cargo-fmt/started.json",
+        "bytes": 354,
+        "sha256": "6717deabb1ed75797e03605080661de7450eabc25eeb8223d02586bacfb4a339"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/cargo-fmt/started.json.raw",
+        "bytes": 354,
+        "sha256": "6717deabb1ed75797e03605080661de7450eabc25eeb8223d02586bacfb4a339"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/cargo-fmt/completed.json",
+        "bytes": 738,
+        "sha256": "77c0cdedf5ce992d9b2db4bccd079d6e6dd6989e003c4211237b9f4240d1f7c1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/cargo-fmt/completed.json.raw",
+        "bytes": 738,
+        "sha256": "77c0cdedf5ce992d9b2db4bccd079d6e6dd6989e003c4211237b9f4240d1f7c1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/cargo-fmt/stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/cargo-fmt/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/cargo-clippy/started.json",
+        "bytes": 416,
+        "sha256": "8d5ff516763fb10e96f79133b0e67c263014b60c95700bd9d26a78b619777212"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/cargo-clippy/started.json.raw",
+        "bytes": 416,
+        "sha256": "8d5ff516763fb10e96f79133b0e67c263014b60c95700bd9d26a78b619777212"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/cargo-clippy/completed.json",
+        "bytes": 800,
+        "sha256": "db6158b01d4455bbe234661ef270fa03641f6e4887b10a14943eac8865222df9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/cargo-clippy/completed.json.raw",
+        "bytes": 800,
+        "sha256": "db6158b01d4455bbe234661ef270fa03641f6e4887b10a14943eac8865222df9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/cargo-clippy/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/cargo-clippy/stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/cargo-clippy/stderr.log",
+        "bytes": 138,
+        "sha256": "6ccc2b3d1bc48a606eee9ed8312acaf28bf9f770d2c82130c42d40d946af8744"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/cargo-clippy/stderr.log.raw",
+        "bytes": 138,
+        "sha256": "6ccc2b3d1bc48a606eee9ed8312acaf28bf9f770d2c82130c42d40d946af8744"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/cargo-test/started.json",
+        "bytes": 360,
+        "sha256": "31482704edd5787363abe67d8ff235da2d12fc9a6437edb77fa910146bf954ae"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/cargo-test/started.json.raw",
+        "bytes": 360,
+        "sha256": "31482704edd5787363abe67d8ff235da2d12fc9a6437edb77fa910146bf954ae"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/cargo-test/completed.json",
+        "bytes": 740,
+        "sha256": "186b86998dfc5f6c5556a9087c8d5a3239d8cfad9180753eb2dcd7cc579b6235"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/cargo-test/completed.json.raw",
+        "bytes": 740,
+        "sha256": "186b86998dfc5f6c5556a9087c8d5a3239d8cfad9180753eb2dcd7cc579b6235"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/cargo-test/stdout.log",
+        "bytes": 183664,
+        "sha256": "8d07f784adfd78759301bc5d6ca18b3accbb92304585d5eee28d519c74408a6e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/cargo-test/stdout.log.raw",
+        "bytes": 183664,
+        "sha256": "8d07f784adfd78759301bc5d6ca18b3accbb92304585d5eee28d519c74408a6e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-audio-input-integration/run-01/cargo-test/stderr.log",
+        "bytes": 671,
+        "sha256": "ca47acaadfb05f54a59e8144c9b27cb46055de2ca56516ed89d7b0af0abb73c4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-checks/cargo-test/stderr.log.raw",
+        "bytes": 671,
+        "sha256": "ca47acaadfb05f54a59e8144c9b27cb46055de2ca56516ed89d7b0af0abb73c4"
+      }
+    }
+  ],
+  "boundary": "Engineering checks only; installed App, native document workflow, actual Agent, P08 or whole plan acceptance are separate."
+}

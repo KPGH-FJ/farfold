@@ -1,0 +1,28 @@
+{
+  "started": "2026-10-13T09:17:23.608738+00:00",
+  "completed": "2026-10-13T09:17:41.418334+00:00",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "audio",
+        "--",
+        "--nocapture"
+      ],
+      "actualExitCode": 101,
+      "stdout": "v4-aggregate-compile-fix-0.stdout.txt",
+      "stdoutSHA": "e76751a1f83be574513ea126d2127a048ce0ed70c33c3c3db5f14df0d2da235c",
+      "stderr": "v4-aggregate-compile-fix-0.stderr.txt",
+      "stderrSHA": "67f5b886f7ba4aad07b172fad69b238f9f377796f5cdcd2150db2286c70d3383"
+    }
+  ],
+  "allPassed": false,
+  "inputCount": 451,
+  "inputsStable": true,
+  "fixtureFreezeSHA": "2f52ce3df7e825c54f5a79cbe4b35029ca729a6a2ad07ed4032f36a703814ea4",
+  "boundary": "Temporary SQLite and controlled JSONRPC peer only. Original failed compilation receipt preserved. Test-only hex formatting fix; production and independent samples unchanged."
+}

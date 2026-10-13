@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "publishedAtUtc": "2026-10-13T09:41:10.486836+00:00",
+  "scope": "P08_AUDIO_WAV_FIRST frontend implementation evidence. Controlled complete production App with fixture Tauri replies, targeted lifecycle tests, preserved earlier failures, source freezes, test-only format mapping and owned-server shutdown.",
+  "copyPolicy": "Each .raw file is byte-for-byte identical to its enumerated local original. Transcript excerpts are the ten exact original completion JSONL records, not the full transcript and not reconstructed output.",
+  "testedSource": "source-freeze-v1.json: 22 files / 265 tests; Chromium run03 35/35 and WebKit run03 35/35, actual exit0. Earlier run01/run02 keep their own source hashes and outcomes.",
+  "handoffSource": "source-freeze-v2.json differs only by formatting src/runtime/audio_input_draft.test.ts. Production source and controlled fixtures match tested v1. Root owns all full seven-check results; this publication makes no claim about that separate run.",
+  "notIncluded": [
+    "22MiB browser audio fixture JSON and all WAV binaries",
+    "Full agent transcript or prior private UI evidence",
+    "Screenshots or unrelated output",
+    "Any official App, real Agent or model audio-understanding acceptance claim"
+  ],
+  "rawFileCount": 25,
+  "totalRawBytes": 1164521,
+  "entries": [
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/summary.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/summary.json.raw",
+      "bytes": 13852,
+      "sha256": "ed78dc4ba25f348363cbfa0ac7bc1b9e19ed0f9adb26ae3071965e5c0619a7ab",
+      "scope": "Derived frontend scope summary; original v1 targeted/browser results and v2 test-format-only distinction."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/source-freeze-v1.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/source-freeze-v1.json.raw",
+      "bytes": 6214,
+      "sha256": "4586bcd6ada86ea70969148cb21d3a89d6aa82bba27e9f46de0ad11bba992069",
+      "scope": "35 owned frontend files at exact tested source; final 265 targeted and both run03 browsers."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/source-freeze-v2.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/source-freeze-v2.json.raw",
+      "bytes": 6449,
+      "sha256": "5507e7e2269cd1795124e89294df7a1247525077e0bfd6f18380b2d398f615d3",
+      "scope": "Handoff freeze with only one test file formatted; production and fixtures unchanged from v1."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/source-v1-to-v2.diff",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/source-v1-to-v2.diff.raw",
+      "bytes": 1392,
+      "sha256": "2bf80e35601716f6332cdbe3beab07d47dc9b3a19fc5bd248ade39c264ed63e0",
+      "scope": "Exact diff: audio_input_draft.test.ts formatting only."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/test-format-v2-receipt.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/test-format-v2-receipt.json.raw",
+      "bytes": 1024,
+      "sha256": "f44ba5faed767bf1997f06cd8e2414f6e1074d96a602c06e024bd22e7ddab6da",
+      "scope": "Authorized test-only Prettier write and owned-file format check, actual exit0."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/final-owned-source-check.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/final-owned-source-check.json.raw",
+      "bytes": 8626,
+      "sha256": "ece6e6c59c450652bd568b59b355b35c56d97d4bb934e506b41e1d14fe619782",
+      "scope": "Preserved original v1 owned-file format failure; source hashes and line limits passed."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/final-targeted/completed.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/final-targeted/completed.json.raw",
+      "bytes": 1505,
+      "sha256": "01655fddd7e6fa72adae2c24bfbf62bb3f6125efd9a6683eaebabe138e5f7eec",
+      "scope": "Original actual exit0 of 22-file / 265-test targeted command on v1."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/final-targeted/stdout.txt",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/final-targeted/stdout.txt.raw",
+      "bytes": 1227,
+      "sha256": "dba906efa98e7ecaf385dce73e27ab4dd5fe473f034566948855baca248eb685",
+      "scope": "Original stdout for 22-file / 265-test targeted command on v1."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/chromium-run01.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/chromium-run01.json.raw",
+      "bytes": 246869,
+      "sha256": "8eb21f6c64e308f0d59b659e504c2e117d0473004b1d627cda341455fe5f1295",
+      "scope": "Original controlled complete-App browser 33/33, prior source scope, exact before/after hashes retained."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/chromium-run02.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/chromium-run02.json.raw",
+      "bytes": 273900,
+      "sha256": "14d042c1e4bb97a16f2732f3edf23ac9fdae78f28682141e65248408ab8bc1c1",
+      "scope": "Original controlled complete-App browser 32/33; source error not cleared after fresh saved approval."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/chromium-run03.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/chromium-run03.json.raw",
+      "bytes": 247674,
+      "sha256": "beb51895b0164acbd07505998f4cd48de14a84d7dd445da9449a73ae40dfcebf",
+      "scope": "Final controlled complete-App Chromium 35/35 on v1; fixture replies, no real Agent."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/webkit-run03.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/webkit-run03.json.raw",
+      "bytes": 247668,
+      "sha256": "bb04b5f2709a868ac429a7801d274df69ee185a7a3c64a19a1131592e0653fb0",
+      "scope": "Final controlled complete-App WebKit 35/35 on v1; fixture replies, no real Agent."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/transcript-receipts/manifest.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/manifest.json.raw",
+      "bytes": 4530,
+      "sha256": "8a4752402371d7edb51e7833b92dd4b62b5eeef58358d6c29543b0f150bfa7d0",
+      "scope": "Index of ten byte-exact command-completion records extracted from only this subagent own transcript."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/owned-server-stop-event.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/owned-server-stop-event.json.raw",
+      "bytes": 485,
+      "sha256": "82896be56866cd9c220a3f5b11f85c510cfe2495b5a3722355e2aae75da8966c",
+      "scope": "Exact owned PID identity checked before SIGINT; only test server targeted."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/owned-server-stopped.json",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/owned-server-stopped.json.raw",
+      "bytes": 816,
+      "sha256": "fbcfded5fe7b7a31bdc5831ef7c4524ba4a4133d3940aa33eb3e32edc5bcc7b6",
+      "scope": "Owned server actual exit0 and subsequent exact PID / port1536 absence."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-initial-red.raw.jsonl",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/capacity-initial-red.raw.jsonl.raw",
+      "bytes": 12385,
+      "sha256": "bdc67bd919c194a356ba9f50533e9188067327284bf60080ff7313fab2acdec0",
+      "scope": "Exact original CommandExecution completion record; capacity-initial-red. Original timestamp and actual exit retained."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-green-with-following-typecheck-failure.raw.jsonl",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/capacity-green-with-following-typecheck-failure.raw.jsonl.raw",
+      "bytes": 3071,
+      "sha256": "bf9a10f360eb61a64cccdc64a01bb873b8059137e934a494b72bdfaf1ecb7f61",
+      "scope": "Exact original CommandExecution completion record; capacity-green-with-following-typecheck-failure. Original timestamp and actual exit retained."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-codec-green-24.raw.jsonl",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/capacity-codec-green-24.raw.jsonl.raw",
+      "bytes": 14394,
+      "sha256": "a636e09bea7a94e03b4762a5958b063dd5847733ad3dac6e6728d807eb5445d5",
+      "scope": "Exact original CommandExecution completion record; capacity-codec-green-24. Original timestamp and actual exit retained."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/transcript-receipts/capacity-import-green-18.raw.jsonl",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/capacity-import-green-18.raw.jsonl.raw",
+      "bytes": 18105,
+      "sha256": "7354a2951c037d0e374c6ce16a9a57ac2eed84a10da3a7917d2af157b1a606b9",
+      "scope": "Exact original CommandExecution completion record; capacity-import-green-18. Original timestamp and actual exit retained."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/transcript-receipts/codec-final-budget-red.raw.jsonl",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/codec-final-budget-red.raw.jsonl.raw",
+      "bytes": 4238,
+      "sha256": "ee7044144fefa5d9b8b83ed61839cdcbb515586cf939b987b27f134ffade4fdb",
+      "scope": "Exact original CommandExecution completion record; codec-final-budget-red. Original timestamp and actual exit retained."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/transcript-receipts/codec-final-budget-green.raw.jsonl",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/codec-final-budget-green.raw.jsonl.raw",
+      "bytes": 2977,
+      "sha256": "ddcdb103db1c089ec6b3bd9865be12edc8cd547262961aa70e3c72679dfaefb0",
+      "scope": "Exact original CommandExecution completion record; codec-final-budget-green. Original timestamp and actual exit retained."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run01-completion.raw.jsonl",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/chromium-run01-completion.raw.jsonl.raw",
+      "bytes": 23004,
+      "sha256": "105205c2e320491aa539dc9d2899aac788a6be680eec35984f4bb6a6b30c06ac",
+      "scope": "Exact original CommandExecution completion record; chromium-run01-completion. Original timestamp and actual exit retained."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run02-completion.raw.jsonl",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/chromium-run02-completion.raw.jsonl.raw",
+      "bytes": 8008,
+      "sha256": "0bc60c33a5bf8332096ac9a84b5e51aa256857f65bacd319b47a8e2c27d386c6",
+      "scope": "Exact original CommandExecution completion record; chromium-run02-completion. Original timestamp and actual exit retained."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/transcript-receipts/chromium-run03-completion.raw.jsonl",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/chromium-run03-completion.raw.jsonl.raw",
+      "bytes": 10320,
+      "sha256": "72c91da0cd03a367011f0e679842414c765d261836b2abcbf6997c2b46094418",
+      "scope": "Exact original CommandExecution completion record; chromium-run03-completion. Original timestamp and actual exit retained."
+    },
+    {
+      "sourcePath": "output/2026-10-13-audio-input-browser/transcript-receipts/webkit-run03-completion.raw.jsonl",
+      "publishedPath": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/transcript-receipts/webkit-run03-completion.raw.jsonl.raw",
+      "bytes": 5788,
+      "sha256": "264978355a99cefbc777f3d92e50162aad7634dcb875b7f82d29771fbd9246fb",
+      "scope": "Exact original CommandExecution completion record; webkit-run03-completion. Original timestamp and actual exit retained."
+    }
+  ]
+}

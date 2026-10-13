@@ -2,6 +2,8 @@
 
 ## 当前架构摘要（2026-10-13）
 
+PCM WAV 输入沿用共用附件：`draft_attachment/audio.rs` 识别候选，`file_delivery/audio_input.rs` 验证完整文件及来源，实际发送连接核音频能力和每条消息 16 MiB 总量；前端负责明确审阅、确认、保存归属与恢复复核，发送仅含官方音频字段。`draft_audio_encoding.ts` 在单次既有草稿快照内去重相同音频字符串，保持原子写入、旧格式兼容及 32 MiB 保存限制，并限制 256 处引用与 96 MiB 展开量。[前端](evidence/2026-10-09-capability-hardening/audio-input/frontend/publication.json)、[后端](evidence/2026-10-09-capability-hardening/audio-input/backend/publication.json)及[独立复核](evidence/2026-10-09-capability-hardening/audio-input/independent/publication.json)已完成本片受控验证；当前 v2 只比受测 v1 多一份测试排版变化。七项工程、候选、正式安装和真实 Agent 接收仍待验。
+
 原型 07 已接入正式工作台，最近安装与有限实机核对见 [当前状态](status.md)；原型示例、工程检查和真实 Agent 工作仍分开记证。本文的模块职责以当前源码为准，带日期小节保留当时实现的范围；其中“本片”“首片”“当时未安装”等不是新的执行指令，也不能覆盖后续已实现能力。
 
 - React/Tauri 共用一套工作台，官方 ACP 接入层连接外部 Agent。Agent 拥有推理、工具、账号、模型、历史与技能；Farfold 不建立第二个循环，配置变更经官方接口，不直接改写其配置文件。当前没有声明客户端文件/终端能力；未来是否需要承接官方回调由活动计划 ARCH-44 逐项核实，不能把这类回调一概等同第二个循环。

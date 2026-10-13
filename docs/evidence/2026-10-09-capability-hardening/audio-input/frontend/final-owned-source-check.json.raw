@@ -1,0 +1,262 @@
+{
+  "observedAtUtc": "2026-10-13T09:32:23.603604+00:00",
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "prettier",
+    "--check",
+    "src/components/AttachmentRecovery.tsx",
+    "src/components/AudioComposerAttachments.test.tsx",
+    "src/components/AudioInputDetails.tsx",
+    "src/components/Composer.project-files.test.tsx",
+    "src/components/Composer.tsx",
+    "src/components/DocumentComposerAttachments.tsx",
+    "src/components/EmptyState.tsx",
+    "src/components/MessageResendDialog.tsx",
+    "src/components/ThreadView.tsx",
+    "src/components/useAudioComposerAttachments.tsx",
+    "src/components/useComposerSourceError.ts",
+    "src/document-input.css",
+    "src/runtime/attachment_review.ts",
+    "src/runtime/audio_input.test-support.ts",
+    "src/runtime/audio_input.test.ts",
+    "src/runtime/audio_input.ts",
+    "src/runtime/audio_input_draft.test.ts",
+    "src/runtime/audio_input_draft.ts",
+    "src/runtime/audio_source_error.test.ts",
+    "src/runtime/audio_source_error.ts",
+    "src/runtime/composer_attachment_import.test.ts",
+    "src/runtime/composer_attachment_import.ts",
+    "src/runtime/composer_audio_import.test.ts",
+    "src/runtime/draft_attachments.ts",
+    "src/runtime/draft_audio_encoding.test.ts",
+    "src/runtime/draft_audio_encoding.ts",
+    "src/runtime/drafts.ts",
+    "src/runtime/message_actions.ts",
+    "src/runtime/message_attachments.ts",
+    "src/runtime/prompt_blocks.ts",
+    "src/runtime/queue.ts",
+    "src/runtime/queue_edit.ts",
+    "src/runtime/session_types.ts",
+    "src/runtime/sessions.audio-capacity.test.ts",
+    "src/runtime/uncertain_prompt.ts"
+  ],
+  "actualExitCode": 1,
+  "stdout": "Checking formatting...\n",
+  "stderr": "[warn] src/runtime/audio_input_draft.test.ts\n[warn] Code style issues found in the above file. Run Prettier with --write to fix.\n",
+  "ownedFiles": [
+    {
+      "path": "src/components/AttachmentRecovery.tsx",
+      "sha256": "6b5728d5970789e876e7b606cebf468cd38d61a2b2f22b8fed44fad01789e137",
+      "matches": true,
+      "lines": 171
+    },
+    {
+      "path": "src/components/AudioComposerAttachments.test.tsx",
+      "sha256": "6f81ca6f5e1d57543803c066c29f2d4d025e9cb23e0a8911169d2b14e544b9c1",
+      "matches": true,
+      "lines": 321
+    },
+    {
+      "path": "src/components/AudioInputDetails.tsx",
+      "sha256": "f1d0790d8c02df9628d706571f620a6953918481ffe406f9fa13a0d9536d073b",
+      "matches": true,
+      "lines": 26
+    },
+    {
+      "path": "src/components/Composer.project-files.test.tsx",
+      "sha256": "795ef751ced3e7aa7f8b76f5bba59fbf7c647d972a02c51616bc047b69d2b739",
+      "matches": true,
+      "lines": 934
+    },
+    {
+      "path": "src/components/Composer.tsx",
+      "sha256": "0c2ccb8180e12878dc0c1dc73278caa97fdd23c272a105f77f97eb54d486713f",
+      "matches": true,
+      "lines": 1486
+    },
+    {
+      "path": "src/components/DocumentComposerAttachments.tsx",
+      "sha256": "2130449eda4091f4f59e3b7295aaa0787198220733e3cb5ac2d26b48efc3d12a",
+      "matches": true,
+      "lines": 451
+    },
+    {
+      "path": "src/components/EmptyState.tsx",
+      "sha256": "0f2572012f37fa18d74b40fb6334e5d873462be2384faf1b958dcee9a60c137e",
+      "matches": true,
+      "lines": 1491
+    },
+    {
+      "path": "src/components/MessageResendDialog.tsx",
+      "sha256": "f789f168dff1fb437aea52d21d2083d56de85ae2ff2374c08000aac008c7083d",
+      "matches": true,
+      "lines": 90
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "sha256": "30c0b584828d9648137f2bf14b5e43fc33cb0761cd1027627af4f0fe9d2fc94d",
+      "matches": true,
+      "lines": 1398
+    },
+    {
+      "path": "src/components/useAudioComposerAttachments.tsx",
+      "sha256": "61f1a2edaa63b98cf7fe30ed29b69356453a9475f317c80221ea03035f1b98c1",
+      "matches": true,
+      "lines": 265
+    },
+    {
+      "path": "src/components/useComposerSourceError.ts",
+      "sha256": "2faacf7e74fa3447310b4ac0808ce81c7d8ce75750e84f1356b4a92c52fff24e",
+      "matches": true,
+      "lines": 104
+    },
+    {
+      "path": "src/document-input.css",
+      "sha256": "9d3eda657a652cc3e0450866d911295e36c8c6ac388c675eacda6c1e1abd0ec8",
+      "matches": true,
+      "lines": 82
+    },
+    {
+      "path": "src/runtime/attachment_review.ts",
+      "sha256": "8a463071ea7562602ff2d0205d790c00bc49a0aa2b20bb77e21292e85a019d1c",
+      "matches": true,
+      "lines": 290
+    },
+    {
+      "path": "src/runtime/audio_input.test-support.ts",
+      "sha256": "e2dac44953747ce7b7a947c469516309adb66c316e8ef552912190a4f01de240",
+      "matches": true,
+      "lines": 72
+    },
+    {
+      "path": "src/runtime/audio_input.test.ts",
+      "sha256": "cabe89108cc3c3c9a157fd6f7793db350465370aad10884c976f9d3ef56124de",
+      "matches": true,
+      "lines": 300
+    },
+    {
+      "path": "src/runtime/audio_input.ts",
+      "sha256": "cb2941001a3560f1e083a9f87a1af86e7bef9c5b8a2bb032d3a28edee13b1b9a",
+      "matches": true,
+      "lines": 353
+    },
+    {
+      "path": "src/runtime/audio_input_draft.test.ts",
+      "sha256": "2ff942849a3b0ec912f29f09e35b0867270ff94f67d0354abbe924ac0a4b9e7f",
+      "matches": true,
+      "lines": 240
+    },
+    {
+      "path": "src/runtime/audio_input_draft.ts",
+      "sha256": "71fe6b0c833879c6824b3d8266e2322c645ed05d538508ef53f793788c8c2a57",
+      "matches": true,
+      "lines": 125
+    },
+    {
+      "path": "src/runtime/audio_source_error.test.ts",
+      "sha256": "418d209d7ba40d93fb12e63685842f1fbf9978d16fd36ecdaba1d060c52ac9f0",
+      "matches": true,
+      "lines": 113
+    },
+    {
+      "path": "src/runtime/audio_source_error.ts",
+      "sha256": "3e59273d5315a5b9d731f28b40ea3f0cd4c78d926ca5bd9eceaee9c6054bee7a",
+      "matches": true,
+      "lines": 66
+    },
+    {
+      "path": "src/runtime/composer_attachment_import.test.ts",
+      "sha256": "8db718bc71924cc6120ecae0f5fbd9b81242dcc93d6190181e4f467ae621b713",
+      "matches": true,
+      "lines": 177
+    },
+    {
+      "path": "src/runtime/composer_attachment_import.ts",
+      "sha256": "597311ea7fed025ec2817ad9ab6778cd37312af12f7bcb98d3b51abc479486e0",
+      "matches": true,
+      "lines": 234
+    },
+    {
+      "path": "src/runtime/composer_audio_import.test.ts",
+      "sha256": "2c21258ce43e91f4c8602e5b3a559777389a9372c4b5b464c406a6cadde8b69c",
+      "matches": true,
+      "lines": 101
+    },
+    {
+      "path": "src/runtime/draft_attachments.ts",
+      "sha256": "2652afd5cb545dfa09f5090648ccd3c15a990bd99146dcd178156214f17b323c",
+      "matches": true,
+      "lines": 216
+    },
+    {
+      "path": "src/runtime/draft_audio_encoding.test.ts",
+      "sha256": "235b7823f258db21d7a79a09c82202a05cc805a2b921c7949cfe904c4907791e",
+      "matches": true,
+      "lines": 224
+    },
+    {
+      "path": "src/runtime/draft_audio_encoding.ts",
+      "sha256": "15c049a4a3344bebb3c0721f93193f58773853538486e368edd014db9ffd5427",
+      "matches": true,
+      "lines": 169
+    },
+    {
+      "path": "src/runtime/drafts.ts",
+      "sha256": "5838a98be67147722a5ce1af873f0788135dc7c434fbdc598fdd98837ee418fd",
+      "matches": true,
+      "lines": 813
+    },
+    {
+      "path": "src/runtime/message_actions.ts",
+      "sha256": "fc4d167933b6c50975370b33fa75f19c3eecb43732fb92c738054dd3bf7825f8",
+      "matches": true,
+      "lines": 86
+    },
+    {
+      "path": "src/runtime/message_attachments.ts",
+      "sha256": "9144ceb797d53c5deb31ade7d5e71d32eb42dd06b21aabfc9197fdf8c8c2840d",
+      "matches": true,
+      "lines": 113
+    },
+    {
+      "path": "src/runtime/prompt_blocks.ts",
+      "sha256": "c867a6cb70087f274c4c8e0517e9861fa1a3d2bb374e08f51db41909abf434d8",
+      "matches": true,
+      "lines": 205
+    },
+    {
+      "path": "src/runtime/queue.ts",
+      "sha256": "93058937973b5b25cc1623ccca0123bafdd134d23ec368269732f13ac75a00e3",
+      "matches": true,
+      "lines": 100
+    },
+    {
+      "path": "src/runtime/queue_edit.ts",
+      "sha256": "bab742539f1b8aa8f8bcdf827e388711b175788e3561b6a0586287384626c839",
+      "matches": true,
+      "lines": 83
+    },
+    {
+      "path": "src/runtime/session_types.ts",
+      "sha256": "22db5df91279b53ceb8bb0d54e0dcd80f4a515515f4e9132de7f97487faa9766",
+      "matches": true,
+      "lines": 331
+    },
+    {
+      "path": "src/runtime/sessions.audio-capacity.test.ts",
+      "sha256": "6694b94bfdbdfc3ac7a70f027ef51c127c980a794632a0659b982a07f126b0d7",
+      "matches": true,
+      "lines": 247
+    },
+    {
+      "path": "src/runtime/uncertain_prompt.ts",
+      "sha256": "cc148da725d4b171760eea564dbd3b2807611f0a71361d5e00ee33244e69e1d5",
+      "matches": true,
+      "lines": 38
+    }
+  ],
+  "allMatchFrozenSource": true,
+  "allAtMost1500Lines": true
+}

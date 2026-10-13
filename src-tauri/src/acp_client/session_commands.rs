@@ -161,6 +161,12 @@ fn prompt_failure_admission(error: &str) -> PromptAdmission {
         "UNAVAILABLE" | "FAILED: SESSION_UNAVAILABLE" => "unavailable",
         "FAILED:PROMPT_EMBEDDED_CONTEXT_UNKNOWN" => "embedded_context_unknown",
         "FAILED:PROMPT_EMBEDDED_CONTEXT_UNSUPPORTED" => "embedded_context_unsupported",
+        "FAILED:PROMPT_AUDIO_UNKNOWN" => "audio_unknown",
+        "FAILED:PROMPT_AUDIO_UNSUPPORTED" => "audio_unsupported",
+        "FAILED:PROMPT_AUDIO_LIMIT" => "audio_limit",
+        "FAILED:PROMPT_AUDIO_DURATION_LIMIT" => "audio_duration_limit",
+        "FAILED:PROMPT_AUDIO_FORMAT_UNSUPPORTED" => "audio_format_unsupported",
+        "FAILED:PROMPT_AUDIO_INVALID" => "audio_invalid",
         "FAILED: PROMPT_PERMISSION_SCOPE_UNVERIFIED" => "permission_scope_unverified",
         "FAILED: SERVICE_UNAVAILABLE" => "service_unavailable",
         error if error.starts_with("FAILED: CONFIG_") => {
@@ -271,6 +277,15 @@ mod prompt_context_admission_tests {
     #[test]
     fn exact_unsent_reasons_and_existing_rejections_keep_their_public_classification() {
         for (error, reason) in [
+            ("FAILED:PROMPT_AUDIO_UNKNOWN", "audio_unknown"),
+            ("FAILED:PROMPT_AUDIO_UNSUPPORTED", "audio_unsupported"),
+            ("FAILED:PROMPT_AUDIO_LIMIT", "audio_limit"),
+            ("FAILED:PROMPT_AUDIO_DURATION_LIMIT", "audio_duration_limit"),
+            (
+                "FAILED:PROMPT_AUDIO_FORMAT_UNSUPPORTED",
+                "audio_format_unsupported",
+            ),
+            ("FAILED:PROMPT_AUDIO_INVALID", "audio_invalid"),
             (
                 "FAILED:PROMPT_EMBEDDED_CONTEXT_UNKNOWN",
                 "embedded_context_unknown",

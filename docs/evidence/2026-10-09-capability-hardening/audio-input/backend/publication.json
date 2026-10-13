@@ -1,0 +1,480 @@
+{
+  "publishedAt": "2026-10-13T09:33:54.622346+00:00",
+  "status": "BYTE_EXACT_CONTROLLED_BACKEND_ORIGINALS_PUBLISHED_NO_NEW_TEST_EXECUTION",
+  "sourceRoot": "output/2026-10-13-audio-input-backend",
+  "rawFileCount": 30,
+  "rawBytes": 35444,
+  "references": [
+    {
+      "source": "output/2026-10-13-audio-input-backend/source-freeze-v4.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/source-freeze-v4.json.raw",
+      "sha256": "a27b6dfe0ccfc9c56fee97170d2ed42b236551975035280e61b287f8cca19ab8",
+      "bytes": 6491,
+      "kind": "source-freeze"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v4-aggregate-final-receipt.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-receipt.json.raw",
+      "sha256": "ab572bec3a24404f50f3d5959809ba940b06a2e9af3ef2e3aa38479f3c15fa11",
+      "bytes": 1486,
+      "kind": "execution-receipt",
+      "actualExitCode": [0, 0]
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v4-aggregate-final-0.stdout.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-0.stdout.txt.raw",
+      "sha256": "b14cd72ac460f7e1b52f14acd1efc8ecb5619038834ad73d5b738f16bc4ab532",
+      "bytes": 2262,
+      "kind": "stdout",
+      "actualExitCode": 0,
+      "associatedReceipt": "v4-aggregate-final-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v4-aggregate-final-0.stderr.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-0.stderr.txt.raw",
+      "sha256": "aa7dd3ceabdc6f55416006a165b60e5b5106821fbbe53dfb47e04b8bdbfc6a1f",
+      "bytes": 323,
+      "kind": "stderr",
+      "actualExitCode": 0,
+      "associatedReceipt": "v4-aggregate-final-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v4-aggregate-final-1.stdout.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-1.stdout.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "kind": "stdout",
+      "actualExitCode": 0,
+      "associatedReceipt": "v4-aggregate-final-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v4-aggregate-final-1.stderr.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-final-1.stderr.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "kind": "stderr",
+      "actualExitCode": 0,
+      "associatedReceipt": "v4-aggregate-final-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v2-capture-receipt.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-receipt.json.raw",
+      "sha256": "15f6cf216768632c89f245afa63db2879be9c7a9db15b8668986a5612d0d3c71",
+      "bytes": 1115,
+      "kind": "execution-receipt",
+      "actualExitCode": [0, 0]
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v2-capture-0.stdout.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-0.stdout.txt.raw",
+      "sha256": "9e45a7afe0b56d25919dda3991929421c93469e40cf0fbf5169ab7ef34ac7e23",
+      "bytes": 2112,
+      "kind": "stdout",
+      "actualExitCode": 0,
+      "associatedReceipt": "v2-capture-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v2-capture-0.stderr.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-0.stderr.txt.raw",
+      "sha256": "01bf0ae1117704cf038b3177aca010795f082972b3272f11f36edb1b415095e4",
+      "bytes": 323,
+      "kind": "stderr",
+      "actualExitCode": 0,
+      "associatedReceipt": "v2-capture-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v2-capture-1.stdout.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-1.stdout.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "kind": "stdout",
+      "actualExitCode": 0,
+      "associatedReceipt": "v2-capture-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v2-capture-1.stderr.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v2-capture-1.stderr.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "kind": "stderr",
+      "actualExitCode": 0,
+      "associatedReceipt": "v2-capture-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/green-receipt.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/green-receipt.json.raw",
+      "sha256": "12b393856b0d68ab7116275b7b44fff00599462424ea6c20550f6040387c36a4",
+      "bytes": 490,
+      "kind": "execution-receipt",
+      "actualExitCode": 0
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/green.stdout.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/green.stdout.txt.raw",
+      "sha256": "a0d71f1d3738811d30d7d6f68eed405501bab943f32bc9baff4c9b88b55bd697",
+      "bytes": 1978,
+      "kind": "stdout",
+      "actualExitCode": 0,
+      "associatedReceipt": "green-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/green.stderr.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/green.stderr.txt.raw",
+      "sha256": "0d2d77cb9abace45a140dbf2c300673c0bb84a889e25ccc702039c6191e364b9",
+      "bytes": 323,
+      "kind": "stderr",
+      "actualExitCode": 0,
+      "associatedReceipt": "green-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/regression-receipt.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-receipt.json.raw",
+      "sha256": "ca87f0fd018cf6650e22ea2505991e98f63fcfac10119f47a8c774b08b705576",
+      "bytes": 1619,
+      "kind": "execution-receipt",
+      "actualExitCode": [0, 0, 0]
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/regression-0.stdout.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-0.stdout.txt.raw",
+      "sha256": "61675cf24600470a74059e85569fb612136f6e942d2408ef0b92c5a9d4c21c91",
+      "bytes": 6614,
+      "kind": "stdout",
+      "actualExitCode": 0,
+      "associatedReceipt": "regression-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/regression-0.stderr.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-0.stderr.txt.raw",
+      "sha256": "cdcf0597777ada25cb5318cf78e4db5041865f1ac68c73de803bd144bd80df30",
+      "bytes": 256,
+      "kind": "stderr",
+      "actualExitCode": 0,
+      "associatedReceipt": "regression-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/regression-1.stdout.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-1.stdout.txt.raw",
+      "sha256": "d9f31fe1f04d9ed714495dbbd12abe9088754085a27b64452826c646cbafbe41",
+      "bytes": 1110,
+      "kind": "stdout",
+      "actualExitCode": 0,
+      "associatedReceipt": "regression-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/regression-1.stderr.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-1.stderr.txt.raw",
+      "sha256": "2a6b7aee50869f0f0771b20dab120e9e5e385785bffadd68f5366c8669de296b",
+      "bytes": 256,
+      "kind": "stderr",
+      "actualExitCode": 0,
+      "associatedReceipt": "regression-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/regression-2.stdout.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-2.stdout.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "kind": "stdout",
+      "actualExitCode": 0,
+      "associatedReceipt": "regression-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/regression-2.stderr.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/regression-2.stderr.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "kind": "stderr",
+      "actualExitCode": 0,
+      "associatedReceipt": "regression-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/red-receipt.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/red-receipt.json.raw",
+      "sha256": "9d56f300c7892cf648dcdec8029fb642387246d04a73eca92598b75823c74187",
+      "bytes": 499,
+      "kind": "execution-receipt",
+      "actualExitCode": 101
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/red.stdout.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/red.stdout.txt.raw",
+      "sha256": "93fef8111b2347346c1a1046b2a075fd746171dc084783e0b422799efe65217c",
+      "bytes": 829,
+      "kind": "stdout",
+      "actualExitCode": 101,
+      "associatedReceipt": "red-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/red.stderr.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/red.stderr.txt.raw",
+      "sha256": "2c3bff693ff3acc88ae5f8447607ae0f80c2cf66b2c14b0410f83e7ac5e5cafa",
+      "bytes": 959,
+      "kind": "stderr",
+      "actualExitCode": 101,
+      "associatedReceipt": "red-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v4-aggregate-receipt.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-receipt.json.raw",
+      "sha256": "4fddd2fa13414e000a307f1a880b2eaca1fc343388b37c4d87dd91444e4426e8",
+      "bytes": 1024,
+      "kind": "execution-receipt",
+      "actualExitCode": 101
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v4-aggregate-0.stdout.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-0.stdout.txt.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "kind": "stdout",
+      "actualExitCode": 101,
+      "associatedReceipt": "v4-aggregate-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v4-aggregate-0.stderr.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-0.stderr.txt.raw",
+      "sha256": "6a9c4a6cec9b7fa3766211677368b8b5d97337d2124a976ed6b5a20f5cdcfb31",
+      "bytes": 1350,
+      "kind": "stderr",
+      "actualExitCode": 101,
+      "associatedReceipt": "v4-aggregate-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v4-aggregate-compile-fix-receipt.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-compile-fix-receipt.json.raw",
+      "sha256": "3562c0c051d2fc7b190ce5688cdcc90fe97587c7582b227c5721d0a9086f3499",
+      "bytes": 991,
+      "kind": "execution-receipt",
+      "actualExitCode": 101
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v4-aggregate-compile-fix-0.stdout.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-compile-fix-0.stdout.txt.raw",
+      "sha256": "e76751a1f83be574513ea126d2127a048ce0ed70c33c3c3db5f14df0d2da235c",
+      "bytes": 2321,
+      "kind": "stdout",
+      "actualExitCode": 101,
+      "associatedReceipt": "v4-aggregate-compile-fix-receipt.json.raw"
+    },
+    {
+      "source": "output/2026-10-13-audio-input-backend/v4-aggregate-compile-fix-0.stderr.txt",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/v4-aggregate-compile-fix-0.stderr.txt.raw",
+      "sha256": "67f5b886f7ba4aad07b172fad69b238f9f377796f5cdcd2150db2286c70d3383",
+      "bytes": 713,
+      "kind": "stderr",
+      "actualExitCode": 101,
+      "associatedReceipt": "v4-aggregate-compile-fix-receipt.json.raw"
+    }
+  ],
+  "actualChecks": [
+    {
+      "receipt": "v4-aggregate-final-receipt.json.raw",
+      "checks": [
+        {
+          "command": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "audio",
+            "--",
+            "--nocapture"
+          ],
+          "actualExitCode": 0,
+          "stdout": "v4-aggregate-final-0.stdout.txt.raw",
+          "stderr": "v4-aggregate-final-0.stderr.txt.raw"
+        },
+        {
+          "command": [
+            "cargo",
+            "fmt",
+            "--check",
+            "--manifest-path",
+            "src-tauri/Cargo.toml"
+          ],
+          "actualExitCode": 0,
+          "stdout": "v4-aggregate-final-1.stdout.txt.raw",
+          "stderr": "v4-aggregate-final-1.stderr.txt.raw"
+        }
+      ]
+    },
+    {
+      "receipt": "v2-capture-receipt.json.raw",
+      "checks": [
+        {
+          "command": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "audio",
+            "--",
+            "--nocapture"
+          ],
+          "actualExitCode": 0,
+          "stdout": "v2-capture-0.stdout.txt.raw",
+          "stderr": "v2-capture-0.stderr.txt.raw"
+        },
+        {
+          "command": [
+            "cargo",
+            "fmt",
+            "--check",
+            "--manifest-path",
+            "src-tauri/Cargo.toml"
+          ],
+          "actualExitCode": 0,
+          "stdout": "v2-capture-1.stdout.txt.raw",
+          "stderr": "v2-capture-1.stderr.txt.raw"
+        }
+      ]
+    },
+    {
+      "receipt": "green-receipt.json.raw",
+      "checks": [
+        {
+          "command": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "audio",
+            "--",
+            "--nocapture"
+          ],
+          "actualExitCode": 0,
+          "stdout": "green.stdout.txt.raw",
+          "stderr": "green.stderr.txt.raw"
+        }
+      ]
+    },
+    {
+      "receipt": "regression-receipt.json.raw",
+      "checks": [
+        {
+          "command": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "prompt",
+            "--",
+            "--nocapture"
+          ],
+          "actualExitCode": 0,
+          "stdout": "regression-0.stdout.txt.raw",
+          "stderr": "regression-0.stderr.txt.raw"
+        },
+        {
+          "command": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "draft_attachment",
+            "--",
+            "--nocapture"
+          ],
+          "actualExitCode": 0,
+          "stdout": "regression-1.stdout.txt.raw",
+          "stderr": "regression-1.stderr.txt.raw"
+        },
+        {
+          "command": [
+            "cargo",
+            "fmt",
+            "--check",
+            "--manifest-path",
+            "src-tauri/Cargo.toml"
+          ],
+          "actualExitCode": 0,
+          "stdout": "regression-2.stdout.txt.raw",
+          "stderr": "regression-2.stderr.txt.raw"
+        }
+      ]
+    },
+    {
+      "receipt": "red-receipt.json.raw",
+      "checks": [
+        {
+          "command": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "prompt_audio",
+            "--",
+            "--nocapture"
+          ],
+          "actualExitCode": 101,
+          "stdout": "red.stdout.txt.raw",
+          "stderr": "red.stderr.txt.raw"
+        }
+      ]
+    },
+    {
+      "receipt": "v4-aggregate-receipt.json.raw",
+      "checks": [
+        {
+          "command": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "audio",
+            "--",
+            "--nocapture"
+          ],
+          "actualExitCode": 101,
+          "stdout": "v4-aggregate-0.stdout.txt.raw",
+          "stderr": "v4-aggregate-0.stderr.txt.raw"
+        }
+      ]
+    },
+    {
+      "receipt": "v4-aggregate-compile-fix-receipt.json.raw",
+      "checks": [
+        {
+          "command": [
+            "cargo",
+            "test",
+            "--manifest-path",
+            "src-tauri/Cargo.toml",
+            "--locked",
+            "audio",
+            "--",
+            "--nocapture"
+          ],
+          "actualExitCode": 101,
+          "stdout": "v4-aggregate-compile-fix-0.stdout.txt.raw",
+          "stderr": "v4-aggregate-compile-fix-0.stderr.txt.raw"
+        }
+      ]
+    }
+  ],
+  "scopes": {
+    "red-receipt.json.raw": "v1 production admission red: actual same-owner handshake missing/unsupported was incorrectly admitted (Ok instead of AUDIO_UNKNOWN/UNSUPPORTED),1passed2failed,exit101. This is the original demonstrated missing production gate, not a compiler/test-author failure.",
+    "green-receipt.json.raw": "v1 after production audio gate/parser/capture implementation:14audio tests passed. Evidence applies to exact v1 inputs.",
+    "regression-receipt.json.raw": "v1 regression:42prompt tests passed1real-Agent test ignored;9draft_attachment tests passed;cargo fmt0. Only controlled/local paths were executed.",
+    "v2-capture-receipt.json.raw": "v2 real safe read_audio_input capture and expected-source reread with7independent smallWAV fixtures;15audio tests plusfmt passed. Later formatting changes do not rewrite this run identity.",
+    "v4-aggregate-receipt.json.raw": "Test-author compilation failure E0277: newtest tried LowerHex on currentsha2 output,exit101,no tests executed. Corrected only test hex formatting. Its raw boundary describes intended assertions, not actual results.",
+    "v4-aggregate-compile-fix-receipt.json.raw": "Test-author cleanup failure:15passed1failed at final disconnect after exactaggregate/wire assertions. Cancellation delivery was mistaken for completed cancellation; busyguard correctly rejected. Corrected only test to await real turnEnd cancelled; no productionfix claimed.",
+    "v4-aggregate-final-receipt.json.raw": "v4 final16audio tests andfmt passed;451inputs stable. Actualconnection rejects16MiB+2 completefilebytes beforecontrol although PCM sum is16MiB-86; real controlled ACP JSONRPC peer receives exact16MiB pair as two ordered wholebyteaudio blocks,then confirms cancelled. Peer is synthetic,not an installedAgent.",
+    "source-freeze-v4.json.raw": "Original21-file backend freeze including compactseed/oracle. Fullseven pending at freeze time; publication neither changes that statement nor claims a newwhole-project run."
+  },
+  "boundaries": [
+    "Every copied file is a regular UTF-8 file from the exact synthetic backend sourceRoot; no recursive traversal of embedded path references. Logs were read and matched against receipt SHA before copying. No private database/body,credential,real-account or installed-Agent material is included.",
+    "red/green receipts give log SHA without filename; green.stdout/stderr and red.stdout/stderr are matched by their exact stored SHA and explicitly mapped here. No original receipt was edited to add paths.",
+    "Only8requestedJSON originals and22directstdout/stderr logs copied with.raw suffix. No largeWAV,data tables,fullinput inventories,generators,oldpublicevidence or separately linked predecessorfreezes copied.",
+    "Source references inside originals intentionally remain unchanged. This mapping locates published originals; it does not assert that all transitivehistorical/output references are published.",
+    "No source,main docs,oldreceipt or otherowner artifacts modified; no tests/build/UI/Agent/DB/install performed by publication. Full integration/candidate/installed/realAgent proof belongs to separate receipts."
+  ]
+}

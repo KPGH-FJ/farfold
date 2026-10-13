@@ -5,7 +5,7 @@ import {
 } from "./drafts";
 import type { PromptBlock } from "./session_types";
 import { queuedAttachmentsNeedReview } from "./recovered_attachments";
-import { resourceDraftAttachment } from "./prompt_blocks";
+import { resourceDraftAttachment, audioDraftAttachment } from "./prompt_blocks";
 
 const liveTargets = new WeakMap<
   NonNullable<ComposerDraft["queueEdit"]>,
@@ -24,6 +24,12 @@ export function startQueueEditor(
   const text: string[] = [];
   for (const block of blocks) {
     if (block.type === "text") text.push(block.text);
+    else if (block.type === "audio")
+      attachments.push(
+        audioDraftAttachment(block, {
+          recovered: queuedAttachmentsNeedReview(blocks),
+        }),
+      );
     else if (block.type === "image")
       attachments.push({
         id: crypto.randomUUID(),

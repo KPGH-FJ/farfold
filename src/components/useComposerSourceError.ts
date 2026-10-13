@@ -1,3 +1,9 @@
+import {
+  AudioSourceError,
+  resolvedAudioSourceNotice,
+  type AudioSourceConfirmation,
+  type AudioSourceNotice,
+} from "../runtime/audio_source_error";
 import { useEffect, useRef, useState } from "react";
 import { composerDrafts } from "../runtime/drafts";
 import { DraftSaveError } from "../runtime/draft_storage";
@@ -18,6 +24,7 @@ import { STRINGS } from "../runtime/strings";
 export function useComposerSourceError(draftKey: string, errorContext: string) {
   const [sendError, updateError] = useState<UiNotice | null>(null);
   const source = useRef<DocumentSourceNotice | null>(null);
+  const audioSource = useRef<AudioSourceNotice | null>(null);
   const save = useRef<ReturnType<typeof watchDraftSave> | null>(null);
   const context = useRef({ draftKey, errorContext });
   context.current = { draftKey, errorContext };
@@ -25,6 +32,7 @@ export function useComposerSourceError(draftKey: string, errorContext: string) {
     save.current?.retire();
     save.current = null;
     source.current = null;
+    audioSource.current = null;
     updateError(notice);
   };
   useEffect(() => {
@@ -40,6 +48,10 @@ export function useComposerSourceError(draftKey: string, errorContext: string) {
     setSendFailure(error: unknown) {
       save.current?.retire();
       save.current = null;
+      audioSource.current =
+        error instanceof AudioSourceError
+          ? { draftKey, errorContext, error }
+          : null;
       source.current =
         error instanceof DocumentSourceError
           ? { draftKey, errorContext, error }
@@ -61,6 +73,19 @@ export function useComposerSourceError(draftKey: string, errorContext: string) {
         save.current = notice;
         notice.check();
       }
+    },
+    audioSaved(confirmation: AudioSourceConfirmation) {
+      const current = context.current;
+      if (
+        resolvedAudioSourceNotice(
+          audioSource.current,
+          current.draftKey,
+          current.errorContext,
+          confirmation,
+          composerDrafts.read(current.draftKey),
+        )
+      )
+        setSendError(null);
     },
     documentSaved(confirmation: DocumentSourceConfirmation) {
       const current = context.current;

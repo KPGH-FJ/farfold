@@ -1,0 +1,36 @@
+{
+  "observedAtUtc": "2026-10-13T09:32:09.245235+00:00",
+  "ownedServerPid": 30799,
+  "serverSession": 85450,
+  "serverActualExitCode": 0,
+  "serverCompletionToolChunk": "82149e",
+  "stopEvent": "output/2026-10-13-audio-input-browser/owned-server-stop-event.json",
+  "stopEventSha256": "82896be56866cd9c220a3f5b11f85c510cfe2495b5a3722355e2aae75da8966c",
+  "postStopChecks": [
+    {
+      "command": [
+        "/bin/ps",
+        "-p",
+        "30799",
+        "-o",
+        "pid=,command="
+      ],
+      "actualExitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/sbin/lsof",
+        "-nP",
+        "-iTCP:1536",
+        "-sTCP:LISTEN"
+      ],
+      "actualExitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "ownerGone": true,
+  "noListener1536": true
+}

@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "publishedAtUtc": "2026-10-13T09:37:22.867913+00:00",
+  "scope": "Only current audio-input independent synthetic fixture/protocol/source and controlled validation reviews. Exact original report bytes retained in .raw files; this mapping may be formatted. No private database, credentials, real-account logs, native UI originals, large WAV fixtures, complete parser phase tree or other historical user content copied.",
+  "files": [
+    {
+      "source": "output/2026-10-13-audio-input-independent/independent-audio-report.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/independent-audio-report.json.raw",
+      "bytes": 6382,
+      "sha256": "34a4cfddf9be0f061cfc24145932ed7c285fc833cf71e3894fc3e3a22635df7a",
+      "byteIdentical": true
+    },
+    {
+      "source": "output/2026-10-13-audio-input-independent/backend-v4-peer-evidence-review.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/backend-v4-peer-evidence-review.json.raw",
+      "bytes": 2031,
+      "sha256": "98441c6985995af1c21463c1f7383da05a1f196c615934843df097d7a5ded426",
+      "byteIdentical": true
+    },
+    {
+      "source": "output/2026-10-13-audio-input-independent/frontend-final-independent-review.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/frontend-final-independent-review.json.raw",
+      "bytes": 17918,
+      "sha256": "a1cfd52f1def25ba5c7000510ee3b05837dc9861f85df2ce5dbfec2e03489467",
+      "byteIdentical": true
+    },
+    {
+      "source": "output/2026-10-13-audio-input-independent/frontend-capacity-review-open.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/frontend-capacity-review-open.json.raw",
+      "bytes": 3364,
+      "sha256": "71d80fb2d0c9b5a46402c0b23d73df7adb4d19555d9123bc13246a79e0a22662",
+      "byteIdentical": true
+    },
+    {
+      "source": "output/2026-10-13-audio-input-independent/frontend-codec-budget-review-open.json",
+      "public": "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/frontend-codec-budget-review-open.json.raw",
+      "bytes": 1557,
+      "sha256": "ef51f4506bc18e305535f6071ca5ae5e58066a3b03c7bcae7b37a9a32822904d",
+      "byteIdentical": true
+    }
+  ],
+  "interpretation": [
+    "OPEN reports remain original observations; read final frontend review for current scoped resolution.",
+    "Original parser59/60 actualexit2 remains preserved and described; derivative success does not replace it.",
+    "Frontend targeted265 and two controlled browsers35+35 exercised v1. Currentv2 changes only one test formatting; production and fixtures unchanged, whole seven checks handled independently by root.",
+    "No installed audio UI, real Agent understanding or full P08 acceptance claimed."
+  ],
+  "sourceIntegrityAtPublication": "Each .raw public payload byte-compared to its source and SHA256 checked after writing."
+}

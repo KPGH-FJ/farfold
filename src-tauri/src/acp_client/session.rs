@@ -61,6 +61,39 @@ fn embedded_context_admission(
     Ok(())
 }
 
+fn audio_admission(
+    handshake: Option<&Handshake>,
+    blocks: &[ContentBlock],
+) -> Result<(), &'static str> {
+    if !blocks
+        .iter()
+        .any(|block| matches!(block, ContentBlock::Audio(_)))
+    {
+        return Ok(());
+    }
+    let handshake = handshake.ok_or("FAILED:PROMPT_AUDIO_UNKNOWN")?;
+    if !handshake.typed.agent_capabilities.prompt_capabilities.audio {
+        return Err("FAILED:PROMPT_AUDIO_UNSUPPORTED");
+    }
+    let mut total = 0u64;
+    for block in blocks {
+        if let ContentBlock::Audio(audio) = block {
+            let size = crate::file_delivery::prompt_audio_bytes(&audio.data, &audio.mime_type)
+                .map_err(|error| match error.code {
+                    "limit" => "FAILED:PROMPT_AUDIO_LIMIT",
+                    "durationLimit" => "FAILED:PROMPT_AUDIO_DURATION_LIMIT",
+                    "unsupported" => "FAILED:PROMPT_AUDIO_FORMAT_UNSUPPORTED",
+                    _ => "FAILED:PROMPT_AUDIO_INVALID",
+                })?;
+            total += size;
+            if total > crate::file_delivery::MAX_AUDIO_BYTES {
+                return Err("FAILED:PROMPT_AUDIO_LIMIT");
+            }
+        }
+    }
+    Ok(())
+}
+
 impl AcpManager {
     #[cfg(test)]
     pub(crate) async fn archive_session(
@@ -509,6 +542,7 @@ impl AcpManager {
         let control =
             session_control(&connection, session_id).map_err(|error| format!("FAILED: {error}"))?;
         embedded_context_admission(connection.handshake.get(), &blocks)?;
+        audio_admission(connection.handshake.get(), &blocks)?;
         let (result_tx, result_rx) = oneshot::channel();
         control
             .send(SessionControl::Prompt {

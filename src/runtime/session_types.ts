@@ -1,3 +1,4 @@
+import type { LocalAudio } from "./audio_input";
 /**
  * Normalized thread view-model types (extracted from `sessions.ts` to keep
  * it under the file-size cap; `sessions.ts` re-exports this module).
@@ -10,6 +11,13 @@ import type { LocalDocumentText } from "./document_input_types";
 /** Content blocks accepted by `session_prompt`. */
 export type PromptBlock =
   | { type: "text"; text: string }
+  | {
+      type: "audio";
+      data: string;
+      mimeType: string;
+      uri?: string;
+      localAudio?: LocalAudio | null;
+    }
   | { type: "image"; data: string; mimeType: string; uri?: string }
   | { type: "resource_link"; name: string; uri: string; mimeType?: string }
   | {
@@ -29,6 +37,7 @@ export interface Attachment {
   text?: string;
   /** Only attached by our checked outgoing-message projection. */
   localDocumentText?: LocalDocumentText | null;
+  localAudio?: LocalAudio | null;
 }
 
 export interface PlanEntry {

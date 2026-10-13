@@ -1,0 +1,42 @@
+{
+  "started": "2026-10-13T09:19:29.812247+00:00",
+  "completed": "2026-10-13T09:19:49.127699+00:00",
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "audio",
+        "--",
+        "--nocapture"
+      ],
+      "actualExitCode": 0,
+      "stdout": "v4-aggregate-final-0.stdout.txt",
+      "stdoutSHA": "b14cd72ac460f7e1b52f14acd1efc8ecb5619038834ad73d5b738f16bc4ab532",
+      "stderr": "v4-aggregate-final-0.stderr.txt",
+      "stderrSHA": "aa7dd3ceabdc6f55416006a165b60e5b5106821fbbe53dfb47e04b8bdbfc6a1f"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "actualExitCode": 0,
+      "stdout": "v4-aggregate-final-1.stdout.txt",
+      "stdoutSHA": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "v4-aggregate-final-1.stderr.txt",
+      "stderrSHA": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "allPassed": true,
+  "inputCount": 451,
+  "inputsStable": true,
+  "fixtureFreezeSHA": "2f52ce3df7e825c54f5a79cbe4b35029ca729a6a2ad07ed4032f36a703814ea4",
+  "boundary": "Temporary SQLite and actual same-owner connection with controlled JSONRPC peer only. Prior compilation and cleanup failures preserved, test-only corrections. Production and independent samples unchanged; full seven still root task."
+}

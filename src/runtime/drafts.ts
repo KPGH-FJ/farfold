@@ -1,3 +1,6 @@
+import { localResourcePath } from "./file_delivery";
+import { encodeDraftAudio, decodeDraftAudio } from "./draft_audio_encoding";
+import { parseLocalAudio, type LocalAudio } from "./audio_input";
 import { useSyncExternalStore } from "react";
 import type { ServiceSelection } from "./credentials";
 import type { PromptBlock } from "./session_types";
@@ -25,7 +28,9 @@ export { draftPersistence } from "./draft_storage";
 
 export interface DraftAttachment {
   id: string;
-  kind: "file" | "image";
+  kind: "file" | "image" | "audio";
+  localAudio?: LocalAudio | null;
+  audioClassificationFailed?: boolean;
   name: string;
   uri?: string;
   data?: string;
@@ -424,6 +429,10 @@ function isPromptBlocks(value: unknown): value is PromptBlock[] {
       if (item.type !== "resource" && item.localDocumentText !== undefined)
         return false;
       if (item.type === "text") return typeof item.text === "string";
+      if (item.type === "audio")
+        return (
+          typeof item.data === "string" && typeof item.mimeType === "string"
+        );
       if (item.type === "image")
         return (
           typeof item.data === "string" && typeof item.mimeType === "string"
@@ -489,6 +498,13 @@ function parseChoice(value: unknown): ConversationChoice {
     reviewRequired: selected.reviewRequired === true,
   } as ConversationChoice;
 }
+function retainedAudioSource(value: unknown): LocalAudio | null {
+  try {
+    return parseLocalAudio(value);
+  } catch {
+    return null;
+  }
+}
 function parseComposer(value: unknown): ComposerDraft {
   const raw = record(value);
   if (
@@ -546,7 +562,7 @@ function parseComposer(value: unknown): ComposerDraft {
         typeof a.id !== "string" ||
         typeof a.name !== "string" ||
         typeof a.kind !== "string" ||
-        !["file", "image"].includes(a.kind) ||
+        !["file", "image", "audio"].includes(a.kind) ||
         ["uri", "data", "mimeType"].some(
           (key) => a[key] !== undefined && typeof a[key] !== "string",
         )
@@ -558,11 +574,23 @@ function parseComposer(value: unknown): ComposerDraft {
           : parseApprovedDocumentText(a.documentText);
       if (documentText && (a.kind !== "file" || typeof a.uri !== "string"))
         throw new Error("invalid document attachment");
+      let audioSource =
+        a.kind === "audio" ? retainedAudioSource(a.localAudio) : null;
+      const uri = typeof a.uri === "string" ? a.uri : undefined;
+      if (
+        a.kind === "audio" &&
+        (!uri || localResourcePath(uri) !== audioSource?.file.path)
+      )
+        audioSource = null;
       return {
         id: a.id,
         name: a.name,
-        kind: a.kind as "file" | "image",
-        uri: typeof a.uri === "string" ? a.uri : undefined,
+        kind: a.kind as DraftAttachment["kind"],
+        ...(a.kind === "audio" ? { localAudio: audioSource } : {}),
+        ...(a.audioClassificationFailed === true
+          ? { audioClassificationFailed: true }
+          : {}),
+        uri: a.kind === "audio" && !audioSource ? undefined : uri,
         data: typeof a.data === "string" ? a.data : undefined,
         mimeType: typeof a.mimeType === "string" ? a.mimeType : undefined,
         ...(documentText ? { documentText } : {}),
@@ -592,7 +620,7 @@ function serializeComposer(value: ComposerDraft): ComposerDraft {
 
 export function parseDraftSnapshot(value: unknown) {
   if (value === null || value === undefined) return;
-  const raw = record(value);
+  const raw = record(decodeDraftAudio(value));
   if (
     raw.version !== 1 ||
     Object.keys(raw).some(
@@ -731,28 +759,29 @@ export function parseDraftSnapshot(value: unknown) {
 }
 
 draftPersistence.configure(
-  () => ({
-    version: 1,
-    composers: Object.fromEntries(
-      [...values]
-        .filter(
-          ([key]) =>
-            key === "new" ||
-            key.startsWith("session:") ||
-            key.startsWith("queue-edit:") ||
-            key.startsWith("resend:") ||
-            key.startsWith("saved-new:"),
-        )
-        .map(([key, value]) => [key, serializeComposer(value)]),
-    ),
-    choice,
-    feedback: Object.fromEntries(feedbackValues),
-    queues: Object.fromEntries(queueValues),
-    activity: archiveActivity.snapshot(),
-    ...(templateEditDrafts.read()
-      ? { templateEdits: templateEditDrafts.read() }
-      : {}),
-  }),
+  () =>
+    encodeDraftAudio({
+      version: 1,
+      composers: Object.fromEntries(
+        [...values]
+          .filter(
+            ([key]) =>
+              key === "new" ||
+              key.startsWith("session:") ||
+              key.startsWith("queue-edit:") ||
+              key.startsWith("resend:") ||
+              key.startsWith("saved-new:"),
+          )
+          .map(([key, value]) => [key, serializeComposer(value)]),
+      ),
+      choice,
+      feedback: Object.fromEntries(feedbackValues),
+      queues: Object.fromEntries(queueValues),
+      activity: archiveActivity.snapshot(),
+      ...(templateEditDrafts.read()
+        ? { templateEdits: templateEditDrafts.read() }
+        : {}),
+    }),
   (value) => {
     const parsed = parseDraftSnapshot(value);
     if (!parsed) return;

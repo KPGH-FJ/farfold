@@ -1,3 +1,5 @@
+import type { AudioSourceConfirmation } from "../runtime/audio_source_error";
+import { useAudioComposerAttachments } from "./useAudioComposerAttachments";
 import { useEffect, useRef, useState } from "react";
 import { ComposerAttachments } from "./ComposerAttachments";
 import { WorkspaceDialog } from "./WorkspaceDialog";
@@ -73,14 +75,26 @@ export function DocumentComposerAttachments({
   items,
   onRemove,
   onSaved,
+  audioCapability,
+  onAudioSaved,
 }: {
   draftKey: string;
   context: string;
   enabled: boolean;
+  audioCapability?: boolean;
+  onAudioSaved?: (confirmation: AudioSourceConfirmation) => void;
   items: readonly DraftAttachment[];
   onRemove: (id: string) => void;
   onSaved?: (confirmation: DocumentSourceConfirmation) => void;
 }) {
+  const audio = useAudioComposerAttachments({
+    draftKey,
+    context,
+    enabled,
+    items,
+    capability: audioCapability,
+    onSaved: onAudioSaved,
+  });
   const [selection, setSelection] = useState<Selection | null>(null);
   const [result, setResult] = useState<Review | null>(null);
   const [partialSelected, setPartialSelected] = useState(false);
@@ -329,7 +343,8 @@ export function DocumentComposerAttachments({
         items={items}
         onRemove={onRemove}
         action={(item) =>
-          candidate(item) ? (
+          audio.action(item) ??
+          (candidate(item) ? (
             <>
               {item.documentText && (
                 <small className="document-input-state">
@@ -355,9 +370,10 @@ export function DocumentComposerAttachments({
                 {item.documentText ? S.reread : S.read}
               </button>
             </>
-          ) : null
+          ) : null)
         }
       />
+      {audio.dialog}
       {saved?.draftKey === draftKey &&
         items.some(
           (item) =>

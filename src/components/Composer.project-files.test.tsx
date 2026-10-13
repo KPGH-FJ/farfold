@@ -1,3 +1,8 @@
+// Image/project fixtures isolate audio classification; audio input tests cover the real IPC boundary.
+vi.mock("../runtime/audio_input", async (original) => ({
+  ...(await original<typeof import("../runtime/audio_input")>()),
+  selectedAudioCandidate: vi.fn().mockResolvedValue(null),
+}));
 // These existing hook fixtures have no native browser; the barrier has dedicated lifecycle tests.
 vi.mock("../runtime/browser_surface", async (original) => ({
   ...(await original<typeof import("../runtime/browser_surface")>()),
@@ -532,6 +537,7 @@ it("completes an explicitly picked file read only in its original draft after an
   typeMention();
   await settle();
   pick(options()[0]!);
+  await settle();
   expect(invoke).toHaveBeenCalledWith("project_file_read", {
     cwd: "/selected",
     path: "note.txt",

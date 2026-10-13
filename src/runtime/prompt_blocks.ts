@@ -1,3 +1,5 @@
+import { localResourcePath } from "./file_delivery";
+import { AUDIO_INPUT, parseLocalAudio } from "./audio_input";
 import type { DraftAttachment } from "./drafts";
 import type { Attachment, PromptBlock, ThreadItem } from "./session_types";
 import {
@@ -27,6 +29,16 @@ export function titleFromBlocks(blocks: readonly PromptBlock[]): string {
 }
 export function promptRejectionNotice(result: PromptAdmission): string | null {
   if (result.status !== "rejected") return null;
+  const audioReasons = {
+    audio_unknown: AUDIO_INPUT.capabilityUnknown,
+    audio_unsupported: AUDIO_INPUT.capabilityUnsupported,
+    audio_limit: AUDIO_INPUT.limit,
+    audio_invalid: AUDIO_INPUT.invalid,
+    audio_format_unsupported: AUDIO_INPUT.unsupported,
+    audio_duration_limit: AUDIO_INPUT.durationLimit,
+  };
+  if (result.reason && result.reason in audioReasons)
+    return audioReasons[result.reason as keyof typeof audioReasons];
   if (result.reason === "permission_scope_unverified")
     return C.permissionScopeUnverified;
   return result.reason === "embedded_context_unsupported"
@@ -116,6 +128,8 @@ export function wirePromptBlocks(
     switch (block.type) {
       case "text":
         return { type: "text", text: block.text };
+      case "audio":
+        return { type: "audio", data: block.data, mimeType: block.mimeType };
       case "image":
         return {
           type: "image",
@@ -154,6 +168,8 @@ export function localMessageAttachments(
   for (const block of blocks) {
     const [attachment] = normalizeMessageAttachments([block]);
     if (!attachment) continue;
+    if (block.type === "audio")
+      attachment.localAudio = structuredClone(block.localAudio ?? null);
     if (block.type === "resource") {
       const documentText = resourceDocumentText(block);
       if (documentText)
@@ -162,4 +178,28 @@ export function localMessageAttachments(
     out.push(attachment);
   }
   return out;
+}
+
+export function audioDraftAttachment(
+  block: Extract<PromptBlock, { type: "audio" }>,
+  options: { name?: string; recovered?: boolean } = {},
+): DraftAttachment {
+  let local = null;
+  try {
+    local = parseLocalAudio(block.localAudio);
+    if (!block.uri || localResourcePath(block.uri) !== local?.file.path)
+      local = null;
+  } catch {
+    /* Retain bytes without granting an invalid source. */
+  }
+  return {
+    id: crypto.randomUUID(),
+    kind: "audio",
+    name: options.name ?? local?.file.name ?? AUDIO_INPUT.title,
+    data: block.data,
+    mimeType: block.mimeType,
+    uri: local ? block.uri : undefined,
+    localAudio: local,
+    recovered: options.recovered === true || !local,
+  };
 }

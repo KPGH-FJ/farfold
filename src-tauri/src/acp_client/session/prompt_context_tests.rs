@@ -5,6 +5,8 @@ use std::{path::PathBuf, sync::OnceLock, time::Duration};
 
 const UNKNOWN: &str = "FAILED:PROMPT_EMBEDDED_CONTEXT_UNKNOWN";
 const UNSUPPORTED: &str = "FAILED:PROMPT_EMBEDDED_CONTEXT_UNSUPPORTED";
+#[path = "prompt_audio_tests.rs"]
+mod audio_tests;
 const PEER: &str = r#"
 import json,os,sys
 root=sys.argv[1];prompt=None

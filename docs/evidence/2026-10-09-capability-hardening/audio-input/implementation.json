@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T09:41:28.747489+00:00",
+  "scope": "P08 bounded PCM WAV content input; source and controlled evidence checkpoint",
+  "implemented": [
+    "Explicit whole-file audio approval in shared attachment UI; generic file selection remains file position until confirmation.",
+    "Classic RIFF/WAVE integer PCM only: mono/stereo, 8/16 bits, 8-96 kHz, up to 600 seconds per file; aggregate whole original file bytes at most 16 MiB. Metadata chunks are retained.",
+    "Sending connection must actually declare promptCapabilities.audio === true. Official outgoing content contains only type, data and mimeType. Unknown capability cannot authorize sending.",
+    "Verified source capture and pre-send recheck; cancellation, changed source, failure, recovery, resend and queue edits retain approved audio without implicit file-link fallback.",
+    "Atomic existing unsentWork.v1 snapshot deduplicates exact audio strings only inside that snapshot; unchanged encoded 32 MiB limit, bounded 96 MiB expansion and 256 references. Historical ordinary v1 remains readable.",
+    "Unknown historical audio provenance cannot authorize a file read; explicit file selection and successful same-attachment replacement/save are required to resolve the corresponding source warning."
+  ],
+  "verified": {
+    "backendFinalAudioTests": 16,
+    "frontendTargeted": {
+      "files": 22,
+      "tests": 265,
+      "source": "v1; v2 changes one test file formatting only"
+    },
+    "controlledApp": {
+      "chromium": 35,
+      "webkit": 35,
+      "source": "v1 production identical to v2",
+      "tauriReplies": "controlled fixtures",
+      "pageErrors": 0,
+      "externalRequests": 0
+    },
+    "aggregateActualProtocolPeer": "Two files totaling exactly 16 MiB transmitted in order with identical full bytes and only official fields; 16 MiB + 2 rejected before control/prompt.",
+    "snapshotFull16MiB": {
+      "originalFileBytes": 16777216,
+      "snapshotBytes": 22370478,
+      "completeShaMatches": true
+    },
+    "independentParser": "Original 59/60, exit 2 retained: one independently authored odd-size WAV omitted required padding; separately corrected fixture passed. Three policy probes remain unrated."
+  },
+  "preservedFailures": [
+    "Original backend capability/admission red; later two backend test-authoring failures separately retained.",
+    "Original persistence duplicate-capacity failure, codec interim expansion-budget failure and controlled App source-warning failure retained with subsequent scoped green evidence.",
+    "Initial frontend owned-format failure retained; v2 only formats audio_input_draft.test.ts."
+  ],
+  "references": {
+    "backend": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/backend/publication.json",
+      "sha256": "f246a37beea3c97917eea18ecb4cecdc0e039aaa632d55112beab6f4ba666051"
+    },
+    "independent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/independent/publication.json",
+      "sha256": "5b95da29ea32dd007c9f270c568952eb2b30c47246d0f12a5d35247e8b0072bd"
+    },
+    "frontendFreeze": {
+      "path": "output/2026-10-13-audio-input-browser/source-freeze-v2.json",
+      "sha256": "5507e7e2269cd1795124e89294df7a1247525077e0bfd6f18380b2d398f615d3"
+    },
+    "backendFreeze": {
+      "path": "output/2026-10-13-audio-input-backend/source-freeze-v4.json",
+      "sha256": "a27b6dfe0ccfc9c56fee97170d2ed42b236551975035280e61b287f8cca19ab8"
+    },
+    "frontendSummary": {
+      "path": "output/2026-10-13-audio-input-browser/summary.json",
+      "sha256": "ed78dc4ba25f348363cbfa0ac7bc1b9e19ed0f9adb26ae3071965e5c0619a7ab"
+    },
+    "frontend": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input/frontend/publication.json",
+      "sha256": "e3564bbc744cdb7671f999a6cca2f5e6c3e67230162601fde330d940ace4f383"
+    }
+  },
+  "pending": [
+    "Seven complete engineering checks of frozen integrated v2 sources.",
+    "Candidate build, strict artifact verification and data-preserving formal application replacement.",
+    "Installed audio file-picker/content journey; NEW26 picker observation remains unresolved.",
+    "Real Agent audio understanding and all-agent capability acceptance; NEW24 permission restoration still blocks new real prompts."
+  ],
+  "boundaries": [
+    "No microphone recording, transcription, transcoding, autoplay or new audio service.",
+    "No Agent account, service, permission or model changes; no real Agent prompt executed in this audio slice.",
+    "P08 remains partial; fixture/protocol/UI success does not establish real audio understanding.",
+    "Formal installed application remains PDF/permission source e5995b219d2f3ed543d9a054911240122358d76b at this checkpoint."
+  ]
+}
