@@ -1,0 +1,18 @@
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+import * as prettier from 'prettier';
+const base='docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser';
+const receipt='output/2026-10-13-xlsx-input-browser/canonical-publication.json';
+if(fs.existsSync(receipt))throw Error('refusing to overwrite canonical receipt');
+const sha=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+const rows=[];
+for(const name of ['summary','publication']){
+ const target=`${base}/${name}.json`,raw=`${target}.raw`;
+ const before=JSON.parse(fs.readFileSync(raw,'utf8')),rawSha=sha(raw);
+ const content=await prettier.format(JSON.stringify(before),{...(await prettier.resolveConfig(target)),parser:'json'});
+ fs.writeFileSync(target,content);
+ if(JSON.stringify(before)!==JSON.stringify(JSON.parse(fs.readFileSync(target,'utf8')))||sha(raw)!==rawSha)throw Error('canonical formatting altered raw data');
+ rows.push({target,sha256:sha(target),raw,rawSha256:rawSha,parsedObjectEquivalent:true,rawUnchanged:true});
+}
+fs.writeFileSync(receipt,JSON.stringify({scope:'Only two new public canonical summaries; all raw input scripts and receipts unchanged',rows},null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({canonicalSummaries:2,parsedObjectEquivalent:true,rawUnchanged:true}));

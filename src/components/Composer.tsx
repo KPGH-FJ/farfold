@@ -3,6 +3,7 @@ import { ProjectFileScanNotice } from "./ProjectFileScanNotice";
 import { useComposerFileDrop } from "./useComposerFileDrop";
 import { FILE_DROP_STRINGS } from "../runtime/composer_file_drop";
 import { DocumentComposerAttachments } from "./DocumentComposerAttachments";
+import { useComposerSourceError } from "./useComposerSourceError";
 import { ThreadUsage } from "./ThreadUsage";
 import {
   ComposerTemplateActions,
@@ -199,7 +200,8 @@ export function Composer({
   const shortcutOwner = useRef<string | null>(null);
   const shortcutOpen = active && shortcutScope === storageKey;
   shortcutOwner.current = shortcutOpen ? storageKey : null;
-  const [sendError, setSendError] = useState<UiNotice | null>(null);
+  const { sendError, setSendError, setSendFailure, documentSaved } =
+    useComposerSourceError(storageKey, errorContext);
   const [recoveringPending, setRecoveringPending] = useState(false);
   const [abandonPending, setAbandonPending] =
     useState<PendingConversation | null>(null);
@@ -236,9 +238,6 @@ export function Composer({
       Boolean(composerDrafts.read(queueEditorKey(thread?.key ?? "")).queueEdit),
     );
   }, [storageKey, thread?.key]);
-  useEffect(() => {
-    setSendError(null);
-  }, [errorContext]);
   useEffect(() => {
     if (!active) {
       setPlusOpen(false);
@@ -630,7 +629,7 @@ export function Composer({
         liveKey.current === targetKey &&
         liveErrorContext.current === targetErrorContext
       )
-        setSendError(toUiNotice(error, STRINGS.repair.sendFailed));
+        setSendFailure(error);
     } finally {
       if (liveKey.current === targetKey) busy.current = false;
     }
@@ -1287,6 +1286,7 @@ export function Composer({
             !input.pendingConversation
           }
           items={chips}
+          onSaved={documentSaved}
           onRemove={(id) =>
             setChips((previous) => previous.filter((chip) => chip.id !== id))
           }

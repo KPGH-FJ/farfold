@@ -1,0 +1,142 @@
+{
+  "originalOracleSha256": "ee8a56367666e6ec001c7814011bf564132bf4c3b68068265b223fcb72ea6453",
+  "originalOracleNeverEdited": true,
+  "defaultPolicyCorrection": {
+    "fixture": "01-values-scope",
+    "cell": "C4",
+    "reason": "Original authored column C is hidden; default omission applies to saved C4 cache as well",
+    "originalDefaultCount": 21,
+    "correctedIncludedCount": 20,
+    "correctedHiddenOmissionCount": 5
+  },
+  "fixtureManifest": [
+    {
+      "name": "values",
+      "zip": "output/2026-10-13-xlsx-input-browser/fixtures/values.xlsx",
+      "zipSha256": "834df0bafb40c08b376d5da8c6e25e1712ec98dfcfcf1492a59582fd94d5e80d",
+      "capture": "output/2026-10-13-xlsx-input-browser/fixtures/values.capture.json",
+      "captureSha256": "72eea00d5f12dd30d47acd4a185bdc100eff0d86110b9aade72373c1957f1502",
+      "file": {
+        "root": "/controlled/xlsx",
+        "path": "/controlled/xlsx/values.xlsx",
+        "resolvedPath": "/controlled/xlsx/values.xlsx",
+        "name": "values.xlsx",
+        "size": 4089,
+        "sha256": "834df0bafb40c08b376d5da8c6e25e1712ec98dfcfcf1492a59582fd94d5e80d",
+        "version": "controlled-full-bytes:834df0bafb40c08b376d5da8c6e25e1712ec98dfcfcf1492a59582fd94d5e80d"
+      },
+      "uri": "file:///controlled/xlsx/values.xlsx",
+      "provenance": {
+        "originalSource": "docs/evidence/2026-10-09-capability-hardening/xlsx-input/fixtures/01-values-scope.xlsx",
+        "originalSha256": "834df0bafb40c08b376d5da8c6e25e1712ec98dfcfcf1492a59582fd94d5e80d"
+      }
+    },
+    {
+      "name": "protection",
+      "zip": "output/2026-10-13-xlsx-input-browser/fixtures/protection.xlsx",
+      "zipSha256": "d588dd30f65be1d70f415d7fbe364f2ec3679ca2d97ffd94861cacfcdc3538c0",
+      "capture": "output/2026-10-13-xlsx-input-browser/fixtures/protection.capture.json",
+      "captureSha256": "86a3bd66755540332e2b5b327021e1b0035634d6c5fc0f9b5bd2dd99f2e6e5b1",
+      "file": {
+        "root": "/controlled/xlsx",
+        "path": "/controlled/xlsx/protection.xlsx",
+        "resolvedPath": "/controlled/xlsx/protection.xlsx",
+        "name": "protection.xlsx",
+        "size": 2722,
+        "sha256": "d588dd30f65be1d70f415d7fbe364f2ec3679ca2d97ffd94861cacfcdc3538c0",
+        "version": "controlled-full-bytes:d588dd30f65be1d70f415d7fbe364f2ec3679ca2d97ffd94861cacfcdc3538c0"
+      },
+      "uri": "file:///controlled/xlsx/protection.xlsx",
+      "provenance": {
+        "originalSource": "docs/evidence/2026-10-09-capability-hardening/xlsx-input/fixtures/02-protection-format.xlsx",
+        "originalSha256": "d588dd30f65be1d70f415d7fbe364f2ec3679ca2d97ffd94861cacfcdc3538c0"
+      }
+    },
+    {
+      "name": "unread",
+      "zip": "output/2026-10-13-xlsx-input-browser/fixtures/unread.xlsx",
+      "zipSha256": "91658ecea876200f17650d9d2b390d9fe22c9945510f6787f149ff7eecb51063",
+      "capture": "output/2026-10-13-xlsx-input-browser/fixtures/unread.capture.json",
+      "captureSha256": "cb4ad951cf8bf0f935db6d778e0df9bdf19c1a41ad2b46db97df4f48e8e0a04a",
+      "file": {
+        "root": "/controlled/xlsx",
+        "path": "/controlled/xlsx/unread.xlsx",
+        "resolvedPath": "/controlled/xlsx/unread.xlsx",
+        "name": "unread.xlsx",
+        "size": 4839,
+        "sha256": "91658ecea876200f17650d9d2b390d9fe22c9945510f6787f149ff7eecb51063",
+        "version": "controlled-full-bytes:91658ecea876200f17650d9d2b390d9fe22c9945510f6787f149ff7eecb51063"
+      },
+      "uri": "file:///controlled/xlsx/unread.xlsx",
+      "provenance": {
+        "originalSource": "docs/evidence/2026-10-09-capability-hardening/xlsx-input/fixtures/03-unread-surfaces.xlsx",
+        "originalSha256": "91658ecea876200f17650d9d2b390d9fe22c9945510f6787f149ff7eecb51063"
+      }
+    },
+    {
+      "name": "malformed",
+      "zip": "output/2026-10-13-xlsx-input-browser/fixtures/malformed.xlsx",
+      "zipSha256": "ee34f95a0518f05d71a084c71a385be074d8a616cfb75f61d19f91af210074f3",
+      "capture": "output/2026-10-13-xlsx-input-browser/fixtures/malformed.capture.json",
+      "captureSha256": "71b0a3a99075aa3e498b987da383cf8857c7e50b9f07ee73a49543a9c1950b77",
+      "file": {
+        "root": "/controlled/xlsx",
+        "path": "/controlled/xlsx/malformed.xlsx",
+        "resolvedPath": "/controlled/xlsx/malformed.xlsx",
+        "name": "malformed.xlsx",
+        "size": 2820,
+        "sha256": "ee34f95a0518f05d71a084c71a385be074d8a616cfb75f61d19f91af210074f3",
+        "version": "controlled-full-bytes:ee34f95a0518f05d71a084c71a385be074d8a616cfb75f61d19f91af210074f3"
+      },
+      "uri": "file:///controlled/xlsx/malformed.xlsx",
+      "provenance": {
+        "originalSource": "docs/evidence/2026-10-09-capability-hardening/xlsx-input/fixtures/04-invalid-late-sheet.xlsx",
+        "originalSha256": "ee34f95a0518f05d71a084c71a385be074d8a616cfb75f61d19f91af210074f3"
+      }
+    },
+    {
+      "name": "oversize",
+      "zip": "output/2026-10-13-xlsx-input-browser/fixtures/oversize.xlsx",
+      "zipSha256": "00047c47312fdd97c77a19781b5a4017244c68047b588e0064397a16e5444c6a",
+      "capture": "output/2026-10-13-xlsx-input-browser/fixtures/oversize.capture.json",
+      "captureSha256": "f539781b877d61433d5013ddbd933ae3955a6cb6b73bc06ea2cff2f3427b34f9",
+      "file": {
+        "root": "/controlled/xlsx",
+        "path": "/controlled/xlsx/oversize.xlsx",
+        "resolvedPath": "/controlled/xlsx/oversize.xlsx",
+        "name": "oversize.xlsx",
+        "size": 3114,
+        "sha256": "00047c47312fdd97c77a19781b5a4017244c68047b588e0064397a16e5444c6a",
+        "version": "controlled-full-bytes:00047c47312fdd97c77a19781b5a4017244c68047b588e0064397a16e5444c6a"
+      },
+      "uri": "file:///controlled/xlsx/oversize.xlsx",
+      "provenance": {
+        "originalSource": "docs/evidence/2026-10-09-capability-hardening/xlsx-input/fixtures/05-text-budget.xlsx",
+        "originalSha256": "00047c47312fdd97c77a19781b5a4017244c68047b588e0064397a16e5444c6a"
+      }
+    },
+    {
+      "name": "all-hidden",
+      "zip": "output/2026-10-13-xlsx-input-browser/fixtures/all-hidden.xlsx",
+      "zipSha256": "5f588a1a333b8335b566675d5573c6927de4fecff3a3abbc13911318ea51cbfb",
+      "capture": "output/2026-10-13-xlsx-input-browser/fixtures/all-hidden.capture.json",
+      "captureSha256": "d852831406c66d836ae3dfd669e88c3dd73ab42be6b93745caa46c06701e3302",
+      "file": {
+        "root": "/controlled/xlsx",
+        "path": "/controlled/xlsx/all-hidden.xlsx",
+        "resolvedPath": "/controlled/xlsx/all-hidden.xlsx",
+        "name": "all-hidden.xlsx",
+        "size": 4080,
+        "sha256": "5f588a1a333b8335b566675d5573c6927de4fecff3a3abbc13911318ea51cbfb",
+        "version": "controlled-full-bytes:5f588a1a333b8335b566675d5573c6927de4fecff3a3abbc13911318ea51cbfb"
+      },
+      "uri": "file:///controlled/xlsx/all-hidden.xlsx",
+      "provenance": {
+        "derivation": "Only captured workbook sheet state attributes changed to hidden in a new synthetic ZIP; original ZIP untouched",
+        "originalValueZipSha256": "834df0bafb40c08b376d5da8c6e25e1712ec98dfcfcf1492a59582fd94d5e80d"
+      }
+    }
+  ],
+  "nativeCaptureClaim": false,
+  "realAgentClaim": false
+}

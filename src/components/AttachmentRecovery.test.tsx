@@ -51,6 +51,9 @@ import { WorkspaceDialog } from "./WorkspaceDialog";
 import { composerDrafts, draftPersistence } from "../runtime/drafts";
 import { threads } from "../runtime/sessions";
 import { ATTACHMENT_REVIEW as S } from "../runtime/attachment_review_strings";
+import { DOCUMENT_INPUT_STRINGS as D } from "../runtime/document_input_strings";
+import { DocumentTextDetails } from "./DocumentTextDetails";
+import { renderToStaticMarkup } from "react-dom/server";
 type Element = ReactElement<Record<string, unknown>>;
 let props: ComponentProps<typeof AttachmentRecovery>;
 function nodes(tree: ReactNode): Element[] {
@@ -213,4 +216,57 @@ it("shows unknown-sending attachments as locked instead of allowing a confirmati
   expect(button(S.confirm).props.disabled).toBe(true);
   expect(composerDrafts.read(props.draftKey)).toBe(original);
   expect(h.invoke).not.toHaveBeenCalled();
+});
+
+it("lets recovered full workbook text be inspected with its original range without reading, changing or sending", () => {
+  const text = `${"saved cell ".repeat(3000)}<script>complete-hidden-tail</script>`;
+  composerDrafts.update(props.draftKey, (draft) => ({
+    ...draft,
+    attachments: [
+      {
+        id: "workbook",
+        name: "original.xlsx",
+        uri: "file:///p/original.xlsx",
+        kind: "file",
+        recovered: true,
+        documentText: {
+          text,
+          local: {
+            schema: 1,
+            format: "xlsx",
+            source: {
+              root: "/p",
+              path: "/p/original.xlsx",
+              resolvedPath: "/p/original.xlsx",
+              name: "original.xlsx",
+              size: 100,
+              sha256: "a".repeat(64),
+              version: "original-version",
+            },
+            textSha256: "b".repeat(64),
+            utf8Bytes: text.length,
+            selection: "read-saved-cell-content",
+            scope: { mode: "all-saved-cells", sheetIds: ["visible", "hidden"] },
+            partial: true,
+            partialSelected: true,
+            warnings: [{ code: "images", count: 2 }],
+          },
+        },
+      },
+    ],
+  }));
+  const before = composerDrafts.read(props.draftKey);
+  const details = open().find((node) => node.type === DocumentTextDetails)!;
+  expect(details).toBeDefined();
+  const html = renderToStaticMarkup(details);
+  expect(html).toContain(D.xlsxAll);
+  expect(html).toContain(D.xlsxSheetCount(2));
+  expect(html).toContain("&lt;script&gt;complete-hidden-tail&lt;/script&gt;");
+  expect(html).toContain("2 份保存的相关内容");
+  expect(html).not.toContain("<script>");
+  expect(composerDrafts.read(props.draftKey)).toBe(before);
+  expect(before.attachments[0].recovered).toBe(true);
+  expect(h.invoke).not.toHaveBeenCalled();
+  expect(threads.send).not.toHaveBeenCalled();
+  expect(threads.continueQueue).not.toHaveBeenCalled();
 });

@@ -1,3 +1,10 @@
+import { readXlsxWorker } from "./xlsx_worker_read";
+import {
+  checkedXlsxInputRequest,
+  type XlsxInputRequest,
+  type XlsxInputResult,
+} from "./xlsx_input_types";
+import { checkedXlsxInputResult } from "./xlsx_input_validation";
 import { invoke } from "@tauri-apps/api/core";
 import type { VerifiedFile } from "./file_delivery";
 import {
@@ -83,7 +90,6 @@ export async function readWorkbookCapture(
     if (abort) signal.removeEventListener("abort", abort);
   }
 }
-let running = 0;
 function checkedResult(value: WorkbookPreview): WorkbookPreview {
   if (
     !value ||
@@ -116,86 +122,38 @@ export async function readWorkbookPreview(
 ): Promise<WorkbookPreview> {
   if (signal.aborted) throw new XlsxError("cancelled");
   checkedCapture(capture.file, capture);
-  if (typeof Worker === "undefined") throw new XlsxError("unsupported");
-  if (running) throw new XlsxError("busy");
-  running++;
-  let worker: Worker | undefined,
-    timer: ReturnType<typeof setTimeout> | undefined,
-    abort: (() => void) | undefined;
-  let disposed = false;
-  const dispose = () => {
-    if (disposed) return;
-    disposed = true;
-    clearTimeout(timer);
-    if (abort) signal.removeEventListener("abort", abort);
-    try {
-      worker?.terminate();
-    } finally {
-      running--;
-    }
-  };
-  try {
-    return await new Promise<WorkbookPreview>((resolve, reject) => {
-      let settled = false;
-      const fail = (error: XlsxError) => {
-        if (!settled) {
-          settled = true;
-          dispose();
-          reject(error);
-        }
-      };
-      abort = () => fail(new XlsxError("cancelled"));
-      signal.addEventListener("abort", abort, { once: true });
-      timer = setTimeout(
-        () => fail(new XlsxError("timeout")),
-        XLSX_LIMITS.wait,
-      );
-      worker = new Worker(
-        new URL("../workers/xlsx_preview.worker.ts", import.meta.url),
-        { type: "module" },
-      );
-      worker.addEventListener("error", () => fail(new XlsxError("invalid")));
-      worker.addEventListener("messageerror", () =>
-        fail(new XlsxError("invalid")),
-      );
-      worker.addEventListener("message", (event) => {
-        if (settled) return;
-        if (event.data?.kind === "error") {
-          const code = ["limit", "unsupported"].includes(event.data.code)
-            ? event.data.code
-            : "invalid";
-          fail(new XlsxError(code));
-          return;
-        }
-        try {
-          if (event.data?.kind !== "ready") throw new XlsxError("invalid");
-          const result = checkedResult(event.data.workbook);
-          if (sheetId !== undefined && result.sheet?.id !== sheetId)
-            throw new XlsxError("invalid");
-          if (signal.aborted) {
-            abort?.();
-            return;
-          }
-          settled = true;
-          dispose();
-          resolve(result);
-        } catch {
-          fail(new XlsxError("invalid"));
-        }
-      });
-      if (signal.aborted) {
-        abort();
-        return;
-      }
-      worker.postMessage({
-        parts: capture.parts,
-        entries: capture.entries,
-        sheetId,
-      });
-    });
-  } catch (error) {
-    throw error instanceof XlsxError ? error : new XlsxError("invalid");
-  } finally {
-    dispose();
-  }
+  return readXlsxWorker(
+    capture,
+    { parts: capture.parts, entries: capture.entries, sheetId },
+    "ready",
+    (value) => {
+      const result = checkedResult(value as WorkbookPreview);
+      if (sheetId !== undefined && result.sheet?.id !== sheetId)
+        throw new XlsxError("invalid");
+      return result;
+    },
+    signal,
+  );
+}
+
+export async function readWorkbookInput(
+  capture: WorkbookCapture,
+  request: XlsxInputRequest,
+  signal: AbortSignal,
+): Promise<XlsxInputResult> {
+  if (signal.aborted) throw new XlsxError("cancelled");
+  checkedCapture(capture.file, capture);
+  const selected = checkedXlsxInputRequest(request);
+  return readXlsxWorker(
+    capture,
+    {
+      kind: "input",
+      parts: capture.parts,
+      entries: capture.entries,
+      request: selected,
+    },
+    "inputReady",
+    (value) => checkedXlsxInputResult(value, capture, selected),
+    signal,
+  );
 }

@@ -15,12 +15,19 @@ import {
   forgetRestoredQueueAttachments,
   queuedAttachmentsNeedReview,
 } from "./recovered_attachments";
+import {
+  DocumentInputError,
+  type ApprovedDocumentText,
+} from "./document_input_types";
+import { resourceDocumentText } from "./prompt_blocks";
 
 export interface AttachmentReviewEntry {
   id: string;
   label: string;
   group: string;
   locked?: string;
+  /** Transient complete retained text/scope for explicit recovery inspection. */
+  documentText?: ApprovedDocumentText;
 }
 export interface AttachmentReview {
   draftKey: string;
@@ -67,6 +74,9 @@ export function attachmentReviewEntries(
               label: item.name,
               group: S.draft,
               locked: draftLocked(draft),
+              ...(item.documentText !== undefined
+                ? { documentText: structuredClone(item.documentText) }
+                : {}),
             },
           ]
         : [],
@@ -74,13 +84,19 @@ export function attachmentReviewEntries(
   thread?.queued.forEach((blocks, index) => {
     if (!thread || !queuedAttachmentsNeedReview(blocks)) return;
     blocks.forEach((block, blockIndex) => {
-      if (block.type !== "text")
+      if (block.type !== "text") {
+        const documentText =
+          block.type === "resource" ? resourceDocumentText(block) : undefined;
         entries.push({
           id: queueId(index, blockIndex),
           label: blockLabel(block),
           group: S.queue(index),
           locked: queueLocked(thread, blocks, index),
+          ...(documentText !== undefined
+            ? { documentText: structuredClone(documentText) }
+            : {}),
         });
+      }
     });
   });
   return entries;
@@ -164,8 +180,9 @@ export async function confirmAttachmentReview(
         reparseDocuments: true,
       });
       attachments.push({ ...checked, recovered: false });
-    } catch {
+    } catch (error) {
       if (!isCurrent()) return false;
+      if (error instanceof DocumentInputError) throw error;
       throw new Error(S.unreadable(entry.label));
     }
     if (!isCurrent()) return false;
@@ -189,8 +206,9 @@ export async function confirmAttachmentReview(
       const checked = structuredClone(block);
       try {
         await validateQueuedAttachments([checked], { reparseDocuments: true });
-      } catch {
+      } catch (error) {
         if (!isCurrent()) return false;
+        if (error instanceof DocumentInputError) throw error;
         throw new Error(S.unreadable(entry.label));
       }
       if (!isCurrent()) return false;

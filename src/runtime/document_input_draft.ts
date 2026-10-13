@@ -53,7 +53,7 @@ export function createDocumentInputTarget(
       composerDrafts.update(draftKey, (draft) => ({
         ...draft,
         attachments: draft.attachments.map((item) =>
-          item === selected ? { ...item, loading: false } : item,
+          item === selected ? attachment : item,
         ),
       }));
   }

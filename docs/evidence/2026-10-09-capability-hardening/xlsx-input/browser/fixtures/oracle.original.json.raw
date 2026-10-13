@@ -1,0 +1,187 @@
+{
+  "schema": 1,
+  "authority": "Manually specified original OOXML facts and proposed content-accuracy expectations; never obtained from a Farfold parser or future converter.",
+  "outputSerialization": "UNSET: no future text layout is assumed",
+  "productTests": "NOT_EXECUTED",
+  "agentSupport": "UNKNOWN: no Agent initialize or prompt was performed",
+  "scopePolicy": {
+    "status": "PROPOSED, not a new contract or active plan",
+    "default": "All visible sheets, omitting known hidden row/column/format content and protected formula-bar content; cached visible values remain distinguishable.",
+    "includeHidden": "An independent explicit selection with new read/review; preserve saved raw content, never infer unprovided formula text or fetch external content.",
+    "unknown": "Do not assert visible/complete for unknown conditional or nonconforming display semantics; refuse or require explicit partial review.",
+    "wholeWorkbook": "All selected sheets must validate atomically. Success of the first sheet or the preview window is insufficient."
+  },
+  "sourceIds": {
+    "CELL": "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.cell?view=openxml-3.0.1",
+    "SST": "https://learn.microsoft.com/en-us/office/open-xml/spreadsheet/working-with-the-shared-string-table",
+    "FORMULA": "https://learn.microsoft.com/en-us/office/open-xml/spreadsheet/working-with-formulas",
+    "SHARED_FORMULA": "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.cellformula?view=openxml-3.0.1",
+    "HIDDEN_SHEETS": "https://learn.microsoft.com/en-us/office/open-xml/spreadsheet/how-to-retrieve-a-list-of-the-hidden-worksheets-in-a-spreadsheet",
+    "HIDDEN_ROWS_COLUMNS": "https://learn.microsoft.com/en-us/office/open-xml/spreadsheet/how-to-retrieve-a-list-of-the-hidden-rows-or-columns-in-a-spreadsheet",
+    "PROTECTION": "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.protection?view=openxml-3.0.1",
+    "NUMBER_FORMAT": "https://support.microsoft.com/en-US/Excel/review-guidelines-for-customizing-a-number-format",
+    "DEFINED_NAME": "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.definedname?view=openxml-3.0.1",
+    "MERGE": "https://learn.microsoft.com/en-us/office/open-xml/spreadsheet/how-to-merge-two-adjacent-cells-in-a-spreadsheet"
+  },
+  "fixtures": [
+    {
+      "id": "01-values-scope",
+      "classification": "Positive saved-cell content; two visible sheets plus explicit hidden-scope contrast; cache/formula caveats remain.",
+      "basis": ["CELL", "SST", "FORMULA", "SHARED_FORMULA", "HIDDEN_SHEETS", "HIDDEN_ROWS_COLUMNS", "MERGE"],
+      "date1904": true,
+      "sheetOrder": [
+        {"name": "Data", "id": "rId1", "state": "visible", "part": "xl/worksheets/sheet1.xml"},
+        {"name": "Tail", "id": "rId2", "state": "visible", "part": "xl/worksheets/sheet2.xml"},
+        {"name": "Hidden", "id": "rId3", "state": "hidden", "part": "xl/worksheets/sheet3.xml"},
+        {"name": "VeryHidden", "id": "rId4", "state": "veryHidden", "part": "xl/worksheets/sheet4.xml"}
+      ],
+      "sharedStrings": [
+        {"index": 0, "text": "Shared \u96f6", "runs": ["Shared \u96f6"]},
+        {"index": 1, "text": "Shared rich", "runs": ["Shared ", "rich"]}
+      ],
+      "cells": [
+        {"sheet":"Data","address":"A1","t":"s","vPresent":true,"vText":"0","authorText":"Shared \u96f6","meaning":"SST index 0, never author text 0"},
+        {"sheet":"Data","address":"B1","t":"n","vPresent":true,"vText":"0","meaning":"numeric zero, not empty"},
+        {"sheet":"Data","address":"C1","t":"inlineStr","vPresent":false,"isText":"HIDDEN_COLUMN","excludedDefault":"hidden column C"},
+        {"sheet":"Data","address":"D1","t":"b","vPresent":true,"vText":"0","meaning":"Boolean false, not numeric zero or empty"},
+        {"sheet":"Data","address":"E1","t":"str","vPresent":true,"vText":"","meaning":"explicit empty string, not missing value"},
+        {"sheet":"Data","address":"F1","t":null,"vPresent":false,"meaning":"saved empty cell with no value, not an absent grid cell"},
+        {"sheet":"Data","address":"G1","t":"n","vPresent":true,"vText":"9007199254740993","meaning":"saved decimal lexical bytes exact; no silently rounded 9007199254740992"},
+        {"sheet":"Data","address":"H1","t":"e","vPresent":true,"vText":"#DIV/0!","meaning":"saved error, not an executed error or empty"},
+        {"sheet":"Data","address":"I1","t":"inlineStr","vPresent":false,"isText":"[1]","meaning":"literal authored text; never generated marker"},
+        {"sheet":"Data","address":"J1","t":"inlineStr","vPresent":false,"isText":" prefix & suffix ","isRuns":[" prefix ","& suffix "],"meaning":"spaces and XML-unescaped ampersand retained"},
+        {"sheet":"Data","address":"K1","t":"n","s":"1","vPresent":true,"vText":"0","meaning":"date style numFmtId 14 with date1904=true; preserve raw 0, do not invent locale rendering"},
+        {"sheet":"Data","address":"L1","t":"d","vPresent":true,"vText":"2026-10-13T00:00:00Z","meaning":"saved date lexical text, no timezone conversion inferred"},
+        {"sheet":"Data","address":"A2","t":"inlineStr","vPresent":false,"isText":"HIDDEN_ROW","excludedDefault":"hidden row 2"},
+        {"sheet":"Data","address":"A3","t":"inlineStr","vPresent":false,"isText":"Inline rich","isRuns":["Inline ","rich"]},
+        {"sheet":"Data","address":"A4","t":"n","vPresent":true,"vText":"0","fPresent":true,"fText":"1-1","fAttrs":{},"meaning":"cached numeric zero present, not missing; not recalculated"},
+        {"sheet":"Data","address":"B4","t":"n","vPresent":false,"fPresent":true,"fText":"1+2","fAttrs":{},"meaning":"missing cache, never compute 3 or substitute 0"},
+        {"sheet":"Data","address":"C4","t":"str","vPresent":true,"vText":"","fPresent":true,"fText":"\"\"","fAttrs":{},"meaning":"cached empty string present, distinct from B4 missing cache"},
+        {"sheet":"Data","address":"A5","t":"n","vPresent":true,"vText":"1","fPresent":true,"fText":"B1+1","fAttrs":{"t":"shared","ref":"A5:A6","si":"0"},"meaning":"shared master formula text is actually stored"},
+        {"sheet":"Data","address":"A6","t":"n","vPresent":true,"vText":"2","fPresent":true,"fText":"","fAttrs":{"t":"shared","si":"0"},"meaning":"follower formula text is not stored; report that state, never silently synthesize B2+1"},
+        {"sheet":"Data","address":"A8","t":"inlineStr","vPresent":false,"isText":"MERGE_ANCHOR","meaning":"only saved merge anchor; B8 absent, never copy value into B8"},
+        {"sheet":"Tail","address":"A1","t":"s","vPresent":true,"vText":"1","authorText":"Shared rich","meaning":"shared rich SST across sheets"},
+        {"sheet":"Tail","address":"Y101","t":"inlineStr","vPresent":false,"isText":"END_TAIL","meaning":"outside 100 x 24 preview window"},
+        {"sheet":"Tail","address":"XFD1048576","t":"inlineStr","vPresent":false,"isText":"FAR_CORNER","meaning":"maximum grid address; must remain sparse"},
+        {"sheet":"Hidden","address":"A1","t":"inlineStr","vPresent":false,"isText":"HIDDEN_SHEET","excludedDefault":"hidden sheet"},
+        {"sheet":"VeryHidden","address":"A1","t":"inlineStr","vPresent":false,"isText":"VERY_HIDDEN_SHEET","excludedDefault":"veryHidden sheet"}
+      ],
+      "hiddenRows":{"Data":[2]},
+      "hiddenColumns":{"Data":[[3,3]]},
+      "merges":{"Data":["A8:B8"]},
+      "defaultExpectedSheetIds":["rId1","rId2"],
+      "defaultExpectedRecordCount":21,
+      "allSavedRecordCount":25,
+      "defaultExcludedKeys":["Data!C1","Data!A2","Hidden!A1","VeryHidden!A1"],
+      "mustNeverInvent":["Data!B8 value","B4 computed 3","A6 computed formula text","latest-correct cached values","locale-specific K1 date"],
+      "mustRetain":["Tail!Y101 END_TAIL","Tail!XFD1048576 FAR_CORNER","raw G1 9007199254740993","all distinct empty/zero/false/cache states"]
+    },
+    {
+      "id":"02-protection-format",
+      "classification":"Known protected-formula and format-hidden scope; visible saved cache versus hidden formula-bar content.",
+      "basis":["CELL","FORMULA","PROTECTION","NUMBER_FORMAT"],
+      "date1904":false,
+      "sheetOrder":[
+        {"name":"Protected","id":"rId1","state":"visible","part":"xl/worksheets/sheet1.xml"},
+        {"name":"Unprotected","id":"rId2","state":"visible","part":"xl/worksheets/sheet2.xml"}
+      ],
+      "styles":[
+        {"index":0,"numFmtId":"0","hidden":false},
+        {"index":1,"numFmtId":"0","applyProtection":"1","protection":{"locked":"1","hidden":"1"}},
+        {"index":2,"numFmtId":"164","formatCode":";;;","meaning":"four empty sections separated by three semicolons"}
+      ],
+      "sheetProtection":{"Protected":{"sheet":"1","objects":"1","scenarios":"1"},"Unprotected":null},
+      "cells":[
+        {"sheet":"Protected","address":"A1","t":"n","s":"1","vPresent":true,"vText":"7","fPresent":true,"fText":"3+4","fAttrs":{},"defaultFormulaWithheld":true,"defaultCachedValueRetained":true,"meaning":"grid may display saved cache 7; formula-bar formula hidden"},
+        {"sheet":"Protected","address":"B1","t":"n","s":"2","vPresent":true,"vText":"123.45","excludedDefault":"known all-empty number format; still has saved raw data"},
+        {"sheet":"Protected","address":"C1","t":"inlineStr","s":"2","vPresent":false,"isText":"HIDDEN_BY_FORMAT","excludedDefault":"known all-empty text section; not an author-empty cell"},
+        {"sheet":"Protected","address":"D1","t":"inlineStr","s":"1","vPresent":false,"isText":"VISIBLE_GRID_SECRET","meaning":"hidden formula-bar content flag does not erase text visible in the cell grid"},
+        {"sheet":"Protected","address":"A2","t":"n","s":"1","vPresent":false,"fPresent":true,"fText":"6+1","fAttrs":{},"defaultFormulaWithheld":true,"meaning":"hidden formula and missing cache; no invented 7, no meaningful value supplied"},
+        {"sheet":"Protected","address":"B2","t":"n","vPresent":true,"vText":"0"},
+        {"sheet":"Unprotected","address":"A1","t":"n","s":"1","vPresent":true,"vText":"7","fPresent":true,"fText":"3+4","fAttrs":{},"defaultFormulaWithheld":false,"meaning":"same hidden protection style without active sheetProtection does not hide formula"}
+      ],
+      "defaultExpectedRecordCount":5,
+      "allSavedRecordCount":7,
+      "defaultExcludedKeys":["Protected!B1","Protected!C1"],
+      "mustNeverInvent":["Protected!A2 cache 7","Protected!A1 cache absent","Unprotected!A1 hidden formula","B1/C1 contain no saved data"],
+      "includeHiddenExpected":["Protected!A1 formula 3+4","Protected!A2 formula 6+1 and cache missing","Protected!B1 raw 123.45","Protected!C1 HIDDEN_BY_FORMAT"]
+    },
+    {
+      "id":"03-unread-surfaces",
+      "classification":"Negative completeness; useful local cells plus unsupported content/visibility and covered saved merge data.",
+      "basis":["CELL","FORMULA","NUMBER_FORMAT","DEFINED_NAME","MERGE"],
+      "date1904":false,
+      "sheetOrder":[{"name":"Gap","id":"rId1","state":"visible","part":"xl/worksheets/sheet1.xml"}],
+      "cells":[
+        {"sheet":"Gap","address":"A1","t":"inlineStr","vPresent":false,"isText":"LOCAL_CELL_WORDS"},
+        {"sheet":"Gap","address":"A2","t":"n","s":"1","vPresent":true,"vText":"10","meaning":";;;; has five sections; display semantics UNKNOWN, never classify as known ;;;"},
+        {"sheet":"Gap","address":"A3","t":"n","vPresent":true,"vText":"99","fPresent":true,"fText":"[1]Remote!A1+1","fAttrs":{},"meaning":"saved external-dependent formula and cache only; remote result not fetched/calculated"},
+        {"sheet":"Gap","address":"A6","t":"inlineStr","vPresent":false,"isText":"VISIBLE_MERGE_ANCHOR"},
+        {"sheet":"Gap","address":"B6","t":"inlineStr","vPresent":false,"isText":"COVERED_SAVED_VALUE","meaning":"saved non-anchor content covered by merge; do not silently drop it or duplicate anchor"}
+      ],
+      "allSavedRecordCount":5,
+      "merges":{"Gap":["A6:B6"]},
+      "styles":[{"index":1,"numFmtId":"165","formatCode":";;;;","meaning":"outside documented up-to-four sections; actual Excel handling not tested"}],
+      "definedNames":[
+        {"name":"VisibleName","localSheetId":"0","text":"Gap!$A$1"},
+        {"name":"HiddenName","hidden":"1","text":"Gap!$A$2"}
+      ],
+      "conditionalFormatting":{"part":"xl/worksheets/sheet1.xml","sqref":"A2","type":"expression","dxfId":"0","priority":"1","formula":"TRUE","dxfFormat":";;;","meaning":"presence known, applied visibility/result not evaluated"},
+      "unreadContent":[
+        {"part":"xl/drawings/drawing1.xml","text":"DRAWING_ONLY_WORDS","meaning":"DrawingML shape text is not worksheet cell text"},
+        {"part":"xl/media/fixture.png","meaning":"synthetic one-pixel image; no image semantics or OCR"},
+        {"part":"xl/externalLinks/externalLink1.xml","text":"REMOTE_CACHED_ONLY","meaning":"external-link part cache, not a current remote fetch or ordinary worksheet cell"},
+        {"part":"xl/externalLinks/_rels/externalLink1.xml.rels","target":"https://example.invalid/farfold-fixture.xlsx","mode":"External","meaning":"must not access target"}
+      ],
+      "expectedAdmissionWithoutPartialConsent":"REJECT_OR_REVIEW_REQUIRED; never all-content success",
+      "permittedWithExplicitPartialConsent":"Only validated selected local saved cells, accurate omissions and unknown visibility; no claim all workbook features were read.",
+      "mustNeverClaim":["conditional formatting evaluated",";;;; empty display known","defined names returned/evaluated as complete","drawing or image meaning read","remote content current","merge covered value absent from the file"]
+    },
+    {
+      "id":"04-invalid-late-sheet",
+      "classification":"Negative atomic validation; first valid visible sheet cannot hide malformed second visible sheet.",
+      "basis":["CELL","SST"],
+      "date1904":false,
+      "sheetOrder":[
+        {"name":"First","id":"rId1","state":"visible","part":"xl/worksheets/sheet1.xml"},
+        {"name":"Broken","id":"rId2","state":"visible","part":"xl/worksheets/sheet2.xml"}
+      ],
+      "sharedStrings":[{"index":0,"text":"ONLY_STRING","runs":["ONLY_STRING"]}],
+      "cells":[
+        {"sheet":"First","address":"A1","t":"inlineStr","vPresent":false,"isText":"FIRST_SHEET_OK"},
+        {"sheet":"Broken","address":"A1","t":"s","vPresent":true,"vText":"999","meaning":"out of range: sharedString index 999 but only one item"}
+      ],
+      "allSavedRecordCount":2,
+      "expectedAllSelectedResult":"REJECT_INVALID; preserve prior draft/approved text; do not succeed with First only or send index 999 as content.",
+      "explicitFirstSheetOnlyResult":"May be separately read/reviewed if the product supports explicit selection; not all-workbook acceptance."
+    },
+    {
+      "id":"05-text-budget",
+      "classification":"Negative aggregate UTF8 text budget, with an independently smaller single-sheet scope.",
+      "basis":["CELL"],
+      "date1904":false,
+      "sheetOrder":[
+        {"name":"BudgetA","id":"rId1","state":"visible","part":"xl/worksheets/sheet1.xml"},
+        {"name":"BudgetB","id":"rId2","state":"visible","part":"xl/worksheets/sheet2.xml"}
+      ],
+      "budgetPattern":{
+        "addresses":["A1","A2","A3","A4","A5"],
+        "type":"inlineStr",
+        "prefix":"BUDGET_{sheet}_{address}:",
+        "repeatText":"\u6570",
+        "repeatCount":9000,
+        "suffix":":END_{sheet}_{address}",
+        "perCellCharacters":9033,
+        "perCellUtf8Bytes":27033,
+        "perSheetUtf8Bytes":135165,
+        "allAuthorTextCharacters":90330,
+        "allAuthorTextUtf8Bytes":270330,
+        "proposedFinalTextMaximumUtf8Bytes":262144
+      },
+      "allSavedRecordCount":10,
+      "expectedAllSelectedResult":"REJECT_LIMIT: author text alone exceeds 256 KiB, before addresses/scope/warnings; no prefix success or auto multi-prompt split.",
+      "explicitSingleSheetResult":"Author text alone is below 256 KiB; final serialized size must still be checked. Never infer final accepted result from author bytes only.",
+      "mustNeverClaim":["90330 character count meets UTF8 budget","each sheet below budget means whole workbook below budget","trimmed prefix is complete content"]
+    }
+  ]
+}

@@ -1,0 +1,409 @@
+{
+  "schema": 1,
+  "phase": "installedNativeInitialScopedVerification",
+  "sourceCommit": "b862b79dc1c97e19b688da9c6d031f6ad3856476",
+  "formalApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "checkedAtUtc": "2026-10-12T22:59:55.813057+00:00",
+  "candidateAndInstall": {
+    "candidate": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input-candidate/candidate.json",
+      "sha256": "b78d4fb95b1cf6fc30d6d9777d5dd9d26c7933bddbcca55a19180c9cb81ef4a9"
+    },
+    "candidateIndependent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input-candidate/candidate-independent.json",
+      "sha256": "bc18842f2ce0079393b9ed915c6aab670864b47211d3ef3f2e717e361147b89e"
+    },
+    "installIndependent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input-candidate/install-independent-final.json",
+      "sha256": "85b81dc2c7fd3e573013510730d6b4163bb9b860521380093e0eb782364f8e2f"
+    },
+    "candidateChecksPassed": 9,
+    "installChecksPassed": 10,
+    "installDataManifestEntries": 217400,
+    "installThreeManifestsEqualSha256": "44c6e403b919dde07c98300a34fd2288ca5b85196b02428eb1593ae891bd38a0",
+    "boundary": "These three equal manifests cover installation before the later native interaction, not post-interaction retention."
+  },
+  "nativeObserved": {
+    "fixture": {
+      "path": "output/2026-10-13-docx-input-native-workspace/full-story.docx",
+      "sha256": "ccf582c307326ff35f4b869b0cd530a044e6fa35209431458546dbdaedb84946"
+    },
+    "approvedWholeTextUtf8Bytes": 25744,
+    "confirmSavedWithoutAutoSend": true,
+    "ordinaryTabCancelAndConfirmReached": true,
+    "enterConfirmsAndEscapeCancels": true,
+    "optionTabDidNotReachFooterButtons": true,
+    "coldRestoredKnownText": true,
+    "coldSendRequiredExistingExplicitKeepSelected": true,
+    "coldSourceMechanism": "The keep-selected path reparses and compares the full current source/text. Source and controlled route evidence establish that mechanism; native captures show the explicit keep-selected step and subsequent dispatch, not the internal IPC itself.",
+    "modelAndReasoningRetained": "Codex / 6 Astra / Ultra",
+    "realAgentRequests": 2,
+    "completedRequestsVisibleInNativeUI": 2,
+    "firstRequestObserved": "Visible body tail and four story markers; the prompt asking for the last table cell was ambiguous and the answer correctly selected the final merged table, not the earlier 31x7 table.",
+    "secondRequestObserved": "Requested the complete 1290-character cell at row31/column7 of the 7-column table. Native AX exposes a truncated answer; exact full-text oracle comparison against the original official Agent record is pending.",
+    "officialHistoryExactOracle": "not-yet-verified",
+    "officialHistoryToolCallCount": "not-yet-verified",
+    "changedSourceSendRejectedPreservedInput": true,
+    "sourceChangedReadTextUtf8Bytes": 25752,
+    "cancelledChangedReadPreservedOldApproval": true,
+    "originalFixtureRestoredByteExactly": true,
+    "staleSourceErrorAfterSuccessfulReconfirmation": "confirmed-defect-NEW-20; repair-in-progress",
+    "normalExitViaCuaSaveAndQuit": true,
+    "exactFormalProcessesAfterExit": 0,
+    "postInteractionDataRetention": "not-yet-verified; first capture failed on private consolidated backup sidecars and is preserved; v2 is under synthetic-fixture verification"
+  },
+  "corrections": [
+    "Capture names 11-option-tab-cancel and 12-option-tab-confirm describe the original expectation; actual images show footer buttons were skipped.",
+    "Capture18 was named for an expected fresh full-text modal. Existing explicit keep-selected plus exact full-source reparse is the actual intended cold-review path; no second full-text modal is required.",
+    "Receipt28 used an uppercase process selector. Its CUA normal-quit evidence remains; receipt29 freshly checks the exact lowercase executable and establishes process absence. Original receipts and freezes are unchanged."
+  ],
+  "privateCapturePairsHashVerified": [
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/01-attachment-selected.json",
+        "sha256": "87a8d93ea026ff838f05cb4ec0ea1d97ac788b158d99233adc7efa0366f5e8fd"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/01-attachment-selected.ax.txt",
+        "sha256": "ac2a9060eab6f4138601f65eb075d8fef7b93e619ea0d5246ac1fbfe08fb2695"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/01-attachment-selected.png",
+        "sha256": "d157f264a94765abe7bc240de0366f56ca2f3e0194fee73837613819e0e0f7c5"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/02-review-whole-text.json",
+        "sha256": "5fc367090bcf795099e7893b0176b7ebe5845fb2aba214ce5be1749e35ed2434"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/02-review-whole-text.ax.txt",
+        "sha256": "d96e02c921837dcf384788895a303353fcc7d9562321d93d08ef0d641c1e5e96"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/02-review-whole-text.png",
+        "sha256": "003944bfc0af42e01ca794b5731974fcb42ff14b101b016f8cdee29dd8342cb0"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/03-tab-summary.json",
+        "sha256": "d40992d220ea44b5604af9af614d1262fb6dff34151c9c20b21ade7e2f09a61d"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/03-tab-summary.ax.txt",
+        "sha256": "d96e02c921837dcf384788895a303353fcc7d9562321d93d08ef0d641c1e5e96"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/03-tab-summary.png",
+        "sha256": "b12e3f93eb970b39da26954a753d477f0352d88fd788f62720d1dab4826fc361"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/04-tab-textarea.json",
+        "sha256": "66a4c4abcc40ad861bf193399514b0ed7ca3e9351fc715f8b99612b6aaffee22"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/04-tab-textarea.ax.txt",
+        "sha256": "d96e02c921837dcf384788895a303353fcc7d9562321d93d08ef0d641c1e5e96"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/04-tab-textarea.png",
+        "sha256": "e5b24bd920968c6b6eb3dd9a9972d71db6c69c4d3e4d032563cbcd68be95731d"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/05-tab-after-textarea.json",
+        "sha256": "a7d139954eb00a5aa2795ab281c01ab78aa6041fbe325430a7ac6b2913617e5e"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/05-tab-after-textarea.ax.txt",
+        "sha256": "d96e02c921837dcf384788895a303353fcc7d9562321d93d08ef0d641c1e5e96"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/05-tab-after-textarea.png",
+        "sha256": "da7c223b00d75c136d46ac15ec2252dc4cda0f38359ad1f4f5003549eea3702b"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/06-tab-confirm.json",
+        "sha256": "ddcb8a0bbe241bb2ee197af7307bb5d20e27c19dc9ec9fa4277c97808c7ef75b"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/06-tab-confirm.ax.txt",
+        "sha256": "d96e02c921837dcf384788895a303353fcc7d9562321d93d08ef0d641c1e5e96"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/06-tab-confirm.png",
+        "sha256": "91148d7f93adfa51fb4ca81fd311cbcc91736a0b1140e10238239d2f5f6d55d1"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/07-enter-confirmed-unsent.json",
+        "sha256": "21de77407c59c1a378d5b2f57d5ce11bebfe6eba8ac5a8a8c83484e4c3a89274"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/07-enter-confirmed-unsent.ax.txt",
+        "sha256": "7eb99723a5b718e82bd838d61359f9ea8756ec675603b03f693b6b56f8f501d0"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/07-enter-confirmed-unsent.png",
+        "sha256": "ec5050b663c523e9694d6b86385b506f7d1b07b5059686257a7a1f2805ad85de"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/08-option-tab-old-text.json",
+        "sha256": "0e323db3ef6a57770a54491fba71812f64d78345a126e0fc48e147e0567ee4af"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/08-option-tab-old-text.ax.txt",
+        "sha256": "b1711d6cfda43ebfc84deec8555364b2506be6ca345c9c108f7452184bd12d1f"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/08-option-tab-old-text.png",
+        "sha256": "e6ad900c0dccc851e4f3310d137a18db7daeeeed5181e224e7f91611521f6aaf"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/09-option-tab-scope.json",
+        "sha256": "02081fea0c692b49363fc2365db88116ad8c0d6a4a7cba15c3abb71239792c12"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/09-option-tab-scope.ax.txt",
+        "sha256": "b1711d6cfda43ebfc84deec8555364b2506be6ca345c9c108f7452184bd12d1f"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/09-option-tab-scope.png",
+        "sha256": "bb5372bb91405b7f565bf281d218cfa8e5baedb854cf55b5aec79992c8233504"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/10-option-tab-textarea.json",
+        "sha256": "a582bd33d2f12f00278dbe105986547fc0b42151d1dd98d32f9b7eb88abeaa6a"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/10-option-tab-textarea.ax.txt",
+        "sha256": "b1711d6cfda43ebfc84deec8555364b2506be6ca345c9c108f7452184bd12d1f"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/10-option-tab-textarea.png",
+        "sha256": "982ddba7882c200166da3e8ec29bfd46f8033775b75907b51e89aa87e14efaec"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/11-option-tab-cancel.json",
+        "sha256": "f8890a65d729e98b1d79fd6a0b7953037c982bf608d615e52479812d4d6035c4"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/11-option-tab-cancel.ax.txt",
+        "sha256": "b1711d6cfda43ebfc84deec8555364b2506be6ca345c9c108f7452184bd12d1f"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/11-option-tab-cancel.png",
+        "sha256": "89ff91cd3006c6119d289e54aeec0cfc15e7240c6ff32210df016110878d55c6"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/12-option-tab-confirm.json",
+        "sha256": "a8aa2ec67b08006cbbfae2a663ecbea7aaf220cc6fbfdbcf566e8382e1146153"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/12-option-tab-confirm.ax.txt",
+        "sha256": "80da107a29238bf1a5b560b057b2f3d2fa7f27f1a65499c2b5b282b0aaeb9fcc"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/12-option-tab-confirm.png",
+        "sha256": "27a7eac9c2142bf8d0a29a0d9c9595d8cb46884207b0d46ed59fd619e5712d3f"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/13-reread-escape-preserved.json",
+        "sha256": "7c30ae9626ff094aa12c22d0ca704f92c86b38c51f1a9b3247b5df4424107172"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/13-reread-escape-preserved.ax.txt",
+        "sha256": "0a32c649e5c994c45b0544e920cfed2c627c484628361954a162a8812f55c3ca"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/13-reread-escape-preserved.png",
+        "sha256": "7a3d080c149c5f7f68ac09d00b60f4708d8ca7f6eb5846dd4fc5a6f5c9073285"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/14-existing-model-unchanged.json",
+        "sha256": "6e9a5b379d86a5c690e15e8778f4fed2869d7b9ad4f6a142c37018affb07f315"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/14-existing-model-unchanged.ax.txt",
+        "sha256": "947df988bdde3d9f758c118372890c1960baaa0a47f8455e418b9e0e24071d7f"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/14-existing-model-unchanged.png",
+        "sha256": "d7c3cff0cf9de51f9c821ccfc96637ef702e6cbf78131b2883a081ba45208646"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/15-normal-quit-warning.json",
+        "sha256": "957145ed69c9ad3da331a7465920162904e5f0ff1d286f708ea4531b95c8f287"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/15-normal-quit-warning.ax.txt",
+        "sha256": "ce407fc038509d04de4809ca5108d9c2340d4ec35ff03278d404cf69d6a87468"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/15-normal-quit-warning.png",
+        "sha256": "ff9bb44725e5c4e53817dd0d6d3f7d349c351a6d3cc5fce6083d9139706c29a9"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/17-cold-restored-requires-review.json",
+        "sha256": "e107f0d6d3652ffe1f6f9546b52abcad55264dbd1a5437318a63177782158c24"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/17-cold-restored-requires-review.ax.txt",
+        "sha256": "179406f8d7350a8ee0535495f660f4cc7f42014451e2e21b8af5c38a5a02b3ff"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/17-cold-restored-requires-review.png",
+        "sha256": "56fa53414490763467f67cdf60087db53a8c1fe651d0d8277a1a66447a212e11"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/18-cold-send-requires-fresh-text-review.json",
+        "sha256": "4a0ede9dd44e18454e71279738c6659ab92a6a4e60bdb9277352e6dacce1b3fa"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/18-cold-send-requires-fresh-text-review.ax.txt",
+        "sha256": "cdc35d556d8391987e82b25a231e617656e8214c7916cf13a7116c3163e339be"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/18-cold-send-requires-fresh-text-review.png",
+        "sha256": "1e075ba0caddfca7d651c4226a6ff2d486ee3fe48bc160327fe396c5021198ee"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/19-real-agent-first-completed.json",
+        "sha256": "c227332fb1d5e57d1b93633e99beef049d4d23a5ea4cec6ac61a3f27e9d8b9c5"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/19-real-agent-first-completed.ax.txt",
+        "sha256": "72f4e11eff02b1e15aea8fb7daddc5fbb66e2371f1b9480a96c36dd964cf27b7"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/19-real-agent-first-completed.png",
+        "sha256": "aa08b7ed800bf377d90bacf6148cc313e47dee300c9dfcab74dc1aade8b4fbb6"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/20-real-agent-long-cell-completed.json",
+        "sha256": "77835881bc820468463fe71f18607bdbabb8295397d00b6416e9d2b5ec6f5491"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/20-real-agent-long-cell-completed.ax.txt",
+        "sha256": "d3743366deb9d25b698a6d9acf0bb69719912d3757fe059062dd84ba1c7499d6"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/20-real-agent-long-cell-completed.png",
+        "sha256": "86e7c84215b6964da9b06ab903394830ed94136e7eb04cb520cb5ea98cb2c219"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/22-changed-source-send-rejected-input-preserved.json",
+        "sha256": "08016ed5e70387306c49e94d1d9d5e31488afb993e4d73995a9bc7763f61ed69"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/22-changed-source-send-rejected-input-preserved.ax.txt",
+        "sha256": "89f347ea8a4bfd9e00322f30b0c819660eb87522635ad58d05fa786386c72ef6"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/22-changed-source-send-rejected-input-preserved.png",
+        "sha256": "06da70349b143124705743e0ac52f03c7b1b97a2c16b62ae9437ab72f3c1fc23"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/23-changed-source-reread-new-text.json",
+        "sha256": "ac884101d29a71dc2a75d0731686f81da581de3d282fc547fb80bd68c1902c40"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/23-changed-source-reread-new-text.ax.txt",
+        "sha256": "7899b510323a560571d2ccac0af2afe5ba530a5bf8f27dcb669826bca9048bbb"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/23-changed-source-reread-new-text.png",
+        "sha256": "fe154a69820cd176c6a57d465f1757ca27efe79ed18cd365239b7f39282cb2d4"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/24-changed-reread-cancel-preserves-input.json",
+        "sha256": "5d3657abfaf3eceaf3eaa5516a41c24486b76311ba1b63397879c4002ab30165"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/24-changed-reread-cancel-preserves-input.ax.txt",
+        "sha256": "6e66269e5bf36aa16dfce1c490e5aab2bd203eccbb92db1b8564c00bd856d6c6"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/24-changed-reread-cancel-preserves-input.png",
+        "sha256": "3945e27624516bf680516e85e84e960cb8c803b47f6bbb1e132c405e65d76e60"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/26-restored-current-version-confirmed-unsent.json",
+        "sha256": "6e14da5a706e33b9fb81843a5dfa4fadca939e640f5a085806468b0ec66ab335"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/26-restored-current-version-confirmed-unsent.ax.txt",
+        "sha256": "89f347ea8a4bfd9e00322f30b0c819660eb87522635ad58d05fa786386c72ef6"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/26-restored-current-version-confirmed-unsent.png",
+        "sha256": "781513abb7845ce8a03f1566d29605c1d6ae16334703832d82fcea8755c7f830"
+      }
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-13-docx-input-native/27-final-normal-quit-warning.json",
+        "sha256": "376066d59151d57d352f3e3e0a8141efc5345f31906e1bd645873c856c24c8ad"
+      },
+      "ax": {
+        "path": "output/2026-10-13-docx-input-native/27-final-normal-quit-warning.ax.txt",
+        "sha256": "ce407fc038509d04de4809ca5108d9c2340d4ec35ff03278d404cf69d6a87468"
+      },
+      "screenshot": {
+        "path": "output/2026-10-13-docx-input-native/27-final-normal-quit-warning.png",
+        "sha256": "bf5b6b464c704bbec267b8b004d0653ca50834fd33eecc397b875a8f04cf7654"
+      }
+    }
+  ],
+  "correctedExactProcessReceipt": {
+    "path": "output/2026-10-13-docx-input-native/29-exact-lowercase-formal-process-correction.json",
+    "sha256": "c070e8377479dc3ed3b2fafe4b5944ac47a125c47a1af6e1eed1c867eba182e2"
+  },
+  "firstDataCaptureFailure": {
+    "path": "output/2026-10-13-docx-input-native-data/capture-failure-private.json",
+    "sha256": "e43ccacc53458a5f1d1f03bc5fe793c14a46fc2cebac88f66b7284c2c848171b"
+  },
+  "boundary": "Private native AX/images/SQLite and original Agent records stay local. This scoped evidence does not close P08, other formats/Agents, all122 conditions, 29 eight-standard acceptances, Windows or the market-readiness goal."
+}

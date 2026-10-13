@@ -1,0 +1,2035 @@
+{
+  "schema": 1,
+  "scope": "new synthetic controlled browser proof only",
+  "originalRawNeverEdited": true,
+  "nativeAppClaim": false,
+  "realAgentClaim": false,
+  "files": {
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/index.html.raw": {
+      "sha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1",
+      "original": "output/2026-10-13-xlsx-input-browser/index.html",
+      "originalSha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixture.tsx.raw": {
+      "sha256": "c60c396450b002f73fd15eb3c238f99a54a9ceb838bda721bf346e98652b5f8d",
+      "original": "output/2026-10-13-xlsx-input-browser/fixture.tsx",
+      "originalSha256": "c60c396450b002f73fd15eb3c238f99a54a9ceb838bda721bf346e98652b5f8d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/serve.mjs.raw": {
+      "sha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3",
+      "original": "output/2026-10-13-xlsx-input-browser/serve.mjs",
+      "originalSha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/run.mjs.raw": {
+      "sha256": "7e4e6baad803558ee2c6ef473af827e964401797e55a196d231252b9dc9f6d00",
+      "original": "output/2026-10-13-xlsx-input-browser/run.mjs",
+      "originalSha256": "7e4e6baad803558ee2c6ef473af827e964401797e55a196d231252b9dc9f6d00"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/make_captures.py.raw": {
+      "sha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc",
+      "original": "output/2026-10-13-xlsx-input-browser/make_captures.py",
+      "originalSha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/prepare_format_formula.py.raw": {
+      "sha256": "9e313a48e0479bad061ee3ee8f6558bb7bba7cb037c1e03a8ff054343da7e9a9",
+      "original": "output/2026-10-13-xlsx-input-browser/prepare_format_formula.py",
+      "originalSha256": "9e313a48e0479bad061ee3ee8f6558bb7bba7cb037c1e03a8ff054343da7e9a9"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/publish.py.raw": {
+      "sha256": "4d9057a1e3ea8a897b6324b27d4e90f60bf20222cfaf9453f7119771a5b4f071",
+      "original": "output/2026-10-13-xlsx-input-browser/publish.py",
+      "originalSha256": "4d9057a1e3ea8a897b6324b27d4e90f60bf20222cfaf9453f7119771a5b4f071"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/summary.json.raw": {
+      "sha256": "838a0b8b6684431bb2a7be4e8dec1865d7b5c2691bf830bc0b7ae525245673a1",
+      "original": "output/2026-10-13-xlsx-input-browser/summary.json",
+      "originalSha256": "838a0b8b6684431bb2a7be4e8dec1865d7b5c2691bf830bc0b7ae525245673a1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/execution-receipts.json.raw": {
+      "sha256": "f97b975b2c3e2842e2d3913cb9ace39f3093fe4e50917c97fd6a0ae510814194",
+      "original": "output/2026-10-13-xlsx-input-browser/execution-receipts.json",
+      "originalSha256": "f97b975b2c3e2842e2d3913cb9ace39f3093fe4e50917c97fd6a0ae510814194"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/format-formula-fixture-verification.json.raw": {
+      "sha256": "3a8e14a71955a90f6a4a03849e1b96575516cad5d7ab3337fbfbdbe42461b94e",
+      "original": "output/2026-10-13-xlsx-input-browser/format-formula-fixture-verification.json",
+      "originalSha256": "3a8e14a71955a90f6a4a03849e1b96575516cad5d7ab3337fbfbdbe42461b94e"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/checkpoint-before-parser-P1-repair.json.raw": {
+      "sha256": "3a593eef5d3b58843b64d9578d99b5f1ccb608f28a0d103f82bf3eb258f51da9",
+      "original": "output/2026-10-13-xlsx-input-browser/checkpoint-before-parser-P1-repair.json",
+      "originalSha256": "3a593eef5d3b58843b64d9578d99b5f1ccb608f28a0d103f82bf3eb258f51da9"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/checkpoint-after-dual-green.json.raw": {
+      "sha256": "502f45c94a9af76b2ab2b080cdd373d2f871370462f9fbbdaccb6ab520a20fe1",
+      "original": "output/2026-10-13-xlsx-input-browser/checkpoint-after-dual-green.json",
+      "originalSha256": "502f45c94a9af76b2ab2b080cdd373d2f871370462f9fbbdaccb6ab520a20fe1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry-product-finding.json.raw": {
+      "sha256": "99b025731b3e16c462f0f1a9e4087851768f94c905c36690451db72287c3e707",
+      "original": "output/2026-10-13-xlsx-input-browser/save-retry-product-finding.json",
+      "originalSha256": "99b025731b3e16c462f0f1a9e4087851768f94c905c36690451db72287c3e707"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/inspect_save_retry.mjs.raw": {
+      "sha256": "ab9f5392c50e221729a2d6fb9acee86ebcba815662aa5afc457d74660ef2dc9a",
+      "original": "output/2026-10-13-xlsx-input-browser/inspect_save_retry.mjs",
+      "originalSha256": "ab9f5392c50e221729a2d6fb9acee86ebcba815662aa5afc457d74660ef2dc9a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/format_public.mjs.raw": {
+      "sha256": "1ec6ac823ceede6ba7eb973b949aa2d08868053574ac7e0d114d1ea62bf54b36",
+      "original": "output/2026-10-13-xlsx-input-browser/format_public.mjs",
+      "originalSha256": "1ec6ac823ceede6ba7eb973b949aa2d08868053574ac7e0d114d1ea62bf54b36"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/server-stop-request.json.raw": {
+      "sha256": "d55f0054cef9b95b6224876629aed28b1f0395df7eda4ca3008a0c267c52b94d",
+      "original": "output/2026-10-13-xlsx-input-browser/server-stop-request.json",
+      "originalSha256": "d55f0054cef9b95b6224876629aed28b1f0395df7eda4ca3008a0c267c52b94d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/server-cleanup.json.raw": {
+      "sha256": "d443e27357e3d3294cacfec50dc8a64a7eb300a5ca3523551bae172cb245875e",
+      "original": "output/2026-10-13-xlsx-input-browser/server-cleanup.json",
+      "originalSha256": "d443e27357e3d3294cacfec50dc8a64a7eb300a5ca3523551bae172cb245875e"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/publisher-before-server-exit-receipt.py.raw": {
+      "sha256": "b4e01b284da74ef0ef14e5328477ff298271a0f055691e717427b071812360a8",
+      "original": "output/2026-10-13-xlsx-input-browser/publisher-before-server-exit-receipt.py",
+      "originalSha256": "b4e01b284da74ef0ef14e5328477ff298271a0f055691e717427b071812360a8"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/publication-condition-revision.json.raw": {
+      "sha256": "642c65dace046608b0fddf711e0b9bc6ad8afee40c2304e789cea7533059444e",
+      "original": "output/2026-10-13-xlsx-input-browser/publication-condition-revision.json",
+      "originalSha256": "642c65dace046608b0fddf711e0b9bc6ad8afee40c2304e789cea7533059444e"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run01.json.raw": {
+      "sha256": "03c45f94538a118785e0a5d9540aac1ef2a591afda6eb3b9263f6cf03e7d56f9",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run01.json",
+      "originalSha256": "03c45f94538a118785e0a5d9540aac1ef2a591afda6eb3b9263f6cf03e7d56f9"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02.json.raw": {
+      "sha256": "eb0d4be6509340a6bdfc652b1dd65544360a4288eaebaa05b043ca27c51f16e5",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02.json",
+      "originalSha256": "eb0d4be6509340a6bdfc652b1dd65544360a4288eaebaa05b043ca27c51f16e5"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03.json.raw": {
+      "sha256": "c43b6ec07b2d5db5ce14fbdd02989d27852d6687302ef05960f1ccba3c66ef65",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03.json",
+      "originalSha256": "c43b6ec07b2d5db5ce14fbdd02989d27852d6687302ef05960f1ccba3c66ef65"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04.json.raw": {
+      "sha256": "df28f5fc2ae0ee8f20c4b1311a8a6ee0c583bf612a66cc7e513135bfbf21f817",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04.json",
+      "originalSha256": "df28f5fc2ae0ee8f20c4b1311a8a6ee0c583bf612a66cc7e513135bfbf21f817"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05.json.raw": {
+      "sha256": "4e9d2536950c4e38abfcf2f055c321857fa46db338930b3b36c78fb504c3a03d",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05.json",
+      "originalSha256": "4e9d2536950c4e38abfcf2f055c321857fa46db338930b3b36c78fb504c3a03d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run06.json.raw": {
+      "sha256": "1b7bb2ed41f536a348c8b899c546d9071a58873061d7826fd90cd21c1fde3f80",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run06.json",
+      "originalSha256": "1b7bb2ed41f536a348c8b899c546d9071a58873061d7826fd90cd21c1fde3f80"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07.json.raw": {
+      "sha256": "fde7bc6b075e3554b3385c4771ec34a1cd44d84950491752f09791bdd2b71d5a",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07.json",
+      "originalSha256": "fde7bc6b075e3554b3385c4771ec34a1cd44d84950491752f09791bdd2b71d5a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08.json.raw": {
+      "sha256": "1e5763a96c56274dd3633cb9e8cddbc1e00d03ebad9e81e4ec40d0474dff988a",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08.json",
+      "originalSha256": "1e5763a96c56274dd3633cb9e8cddbc1e00d03ebad9e81e4ec40d0474dff988a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09.json.raw": {
+      "sha256": "d48fe25807b6fb4b6e564e1224cf88c0cc7f47a4da288ed6fcc1815aeb29e3b2",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09.json",
+      "originalSha256": "d48fe25807b6fb4b6e564e1224cf88c0cc7f47a4da288ed6fcc1815aeb29e3b2"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry-inspection-run01.json.raw": {
+      "sha256": "e12f9e5f597bf3997a26e0db592cb42b114f7869a7698191a2cc66cc642e7acc",
+      "original": "output/2026-10-13-xlsx-input-browser/save-retry-inspection-run01.json",
+      "originalSha256": "e12f9e5f597bf3997a26e0db592cb42b114f7869a7698191a2cc66cc642e7acc"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry-inspection-run02.json.raw": {
+      "sha256": "014d6f4936002f8c9d3f04b99fe4c090789430095f97d794fb2946ed6852a9d8",
+      "original": "output/2026-10-13-xlsx-input-browser/save-retry-inspection-run02.json",
+      "originalSha256": "014d6f4936002f8c9d3f04b99fe4c090789430095f97d794fb2946ed6852a9d8"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01.json.raw": {
+      "sha256": "07324dcb8e15f61d2bb4dcc5775cc1042c7b967697ff814ebff4110529c53796",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01.json",
+      "originalSha256": "07324dcb8e15f61d2bb4dcc5775cc1042c7b967697ff814ebff4110529c53796"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02.json.raw": {
+      "sha256": "a39478995429c9e0346b2ed02d6a127e2f85bd5e56d41a7b83e7078bed395ad5",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02.json",
+      "originalSha256": "a39478995429c9e0346b2ed02d6a127e2f85bd5e56d41a7b83e7078bed395ad5"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03.json.raw": {
+      "sha256": "3108f86a644b48cdeb753d94a7cb63e3fda7454c2a86c7083b35b103202f4d81",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03.json",
+      "originalSha256": "3108f86a644b48cdeb753d94a7cb63e3fda7454c2a86c7083b35b103202f4d81"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04.json.raw": {
+      "sha256": "9ceb08495ee8fb0a06bdde10c58404ef399111355b7c52012982968a63dc9ac8",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04.json",
+      "originalSha256": "9ceb08495ee8fb0a06bdde10c58404ef399111355b7c52012982968a63dc9ac8"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run05.json.raw": {
+      "sha256": "90f6965166b26e46eacbdef9624d4e799f8ce9855f3db95cd495cca202d6fa55",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run05.json",
+      "originalSha256": "90f6965166b26e46eacbdef9624d4e799f8ce9855f3db95cd495cca202d6fa55"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06.json.raw": {
+      "sha256": "7bd3f950563ed7311b30b58edb50268bce835d7466ea7000c1c19a5d0f6b6ac0",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06.json",
+      "originalSha256": "7bd3f950563ed7311b30b58edb50268bce835d7466ea7000c1c19a5d0f6b6ac0"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07.json.raw": {
+      "sha256": "d5f043ef678d14da93bca7362a901ca3a6c7b271a2b4846d67d09ffe815d2d5c",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07.json",
+      "originalSha256": "d5f043ef678d14da93bca7362a901ca3a6c7b271a2b4846d67d09ffe815d2d5c"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08.json.raw": {
+      "sha256": "aedf14b311e059a0e5ba8c55f5000c9fb50b52a0923653f67f8ece67f3e87e63",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08.json",
+      "originalSha256": "aedf14b311e059a0e5ba8c55f5000c9fb50b52a0923653f67f8ece67f3e87e63"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run01-default-review.png": {
+      "sha256": "81a6d6b3470921c22d443ea81269ae424dc13230a025e0353a801d93ade1708a",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run01-default-review.png",
+      "originalSha256": "81a6d6b3470921c22d443ea81269ae424dc13230a025e0353a801d93ade1708a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run01-failure.png": {
+      "sha256": "1e3d55137621920173732e084781e96e7c753917c143c2462bae1793e54f18e5",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run01-failure.png",
+      "originalSha256": "1e3d55137621920173732e084781e96e7c753917c143c2462bae1793e54f18e5"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-all-hidden-confirmed.png": {
+      "sha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-all-hidden-confirmed.png",
+      "originalSha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-all-review-dark.png": {
+      "sha256": "d8aec4d16079b8b3d1f8e20592eccf86b6ae7785016063b9005dccd3c2d8a0f7",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-all-review-dark.png",
+      "originalSha256": "d8aec4d16079b8b3d1f8e20592eccf86b6ae7785016063b9005dccd3c2d8a0f7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-all-review-narrow.png": {
+      "sha256": "3e51e84e6d4ccd148569f3f0963a30128571e8ef18f3e6a81b5aa0ba5c5ad5d4",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-all-review-narrow.png",
+      "originalSha256": "3e51e84e6d4ccd148569f3f0963a30128571e8ef18f3e6a81b5aa0ba5c5ad5d4"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-cold-changed.png": {
+      "sha256": "a55cb570e06edb6308483d4bcdab0c10422981791da826d8bfc311788d02a0e9",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-cold-changed.png",
+      "originalSha256": "a55cb570e06edb6308483d4bcdab0c10422981791da826d8bfc311788d02a0e9"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-default-review.png": {
+      "sha256": "d7f150e34aa810f54544a3f257a6f90bcdd680b28bc0ddac6acd6da05e473781",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-default-review.png",
+      "originalSha256": "d7f150e34aa810f54544a3f257a6f90bcdd680b28bc0ddac6acd6da05e473781"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-embedded_context_unknown.png": {
+      "sha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-embedded_context_unknown.png",
+      "originalSha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-embedded_context_unsupported.png": {
+      "sha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-embedded_context_unsupported.png",
+      "originalSha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-failure.png": {
+      "sha256": "d85724d268bc63f6d3c3916186d415459cd1e2830954156f75bde09634f8d888",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-failure.png",
+      "originalSha256": "d85724d268bc63f6d3c3916186d415459cd1e2830954156f75bde09634f8d888"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-reject-malformed.png": {
+      "sha256": "0751432f8a076d136ba7b62cf17ba70b5fa63780ef4f6f64a03cc109207c69ec",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-reject-malformed.png",
+      "originalSha256": "0751432f8a076d136ba7b62cf17ba70b5fa63780ef4f6f64a03cc109207c69ec"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-reject-oversize.png": {
+      "sha256": "dfe59ced8829a99eebd3524eb474f0a051dfcb85b7cee98b05f8d55d7b8f7453",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-reject-oversize.png",
+      "originalSha256": "dfe59ced8829a99eebd3524eb474f0a051dfcb85b7cee98b05f8d55d7b8f7453"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-sent-official-echo.png": {
+      "sha256": "4fd7f094345f7b66536ed48e60cb16819aa6bc2c07b88cc6f51e7f29d6921dc3",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-sent-official-echo.png",
+      "originalSha256": "4fd7f094345f7b66536ed48e60cb16819aa6bc2c07b88cc6f51e7f29d6921dc3"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-source-repair-clear.png": {
+      "sha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-source-repair-clear.png",
+      "originalSha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run02-unread-warnings.png": {
+      "sha256": "27db5ffbebe688e52de85663983cd4902b170036ac2c8a7053b78ae58532bc3f",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run02-unread-warnings.png",
+      "originalSha256": "27db5ffbebe688e52de85663983cd4902b170036ac2c8a7053b78ae58532bc3f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-all-hidden-confirmed.png": {
+      "sha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-all-hidden-confirmed.png",
+      "originalSha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-all-review-dark.png": {
+      "sha256": "a4c9952d993f2bec888c5ac2fab5f117b486d3a0fabdfd4a26f09bba053b690b",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-all-review-dark.png",
+      "originalSha256": "a4c9952d993f2bec888c5ac2fab5f117b486d3a0fabdfd4a26f09bba053b690b"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-all-review-narrow.png": {
+      "sha256": "42f473d612d657e7a7dd3c646e562bae9f9f272ba4218c2d5b59b41b7faceaa7",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-all-review-narrow.png",
+      "originalSha256": "42f473d612d657e7a7dd3c646e562bae9f9f272ba4218c2d5b59b41b7faceaa7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-cold-changed.png": {
+      "sha256": "5a188560377b595dddec1d59441f308d1f6d617cb164ebb8f38a5015cef2dfb7",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-cold-changed.png",
+      "originalSha256": "5a188560377b595dddec1d59441f308d1f6d617cb164ebb8f38a5015cef2dfb7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-cross-draft.png": {
+      "sha256": "eee22977397d7aea5463fe2fc27b0de57902e36766173333bc927198568f90b0",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-cross-draft.png",
+      "originalSha256": "eee22977397d7aea5463fe2fc27b0de57902e36766173333bc927198568f90b0"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-default-review.png": {
+      "sha256": "5915caa1cbbc2841ee5fad0075c999d5348ad072f12f62de172713b9c9cc70c1",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-default-review.png",
+      "originalSha256": "5915caa1cbbc2841ee5fad0075c999d5348ad072f12f62de172713b9c9cc70c1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-embedded_context_unknown.png": {
+      "sha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-embedded_context_unknown.png",
+      "originalSha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-embedded_context_unsupported.png": {
+      "sha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-embedded_context_unsupported.png",
+      "originalSha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-failure.png": {
+      "sha256": "2f8a914178003b81d132c4e29c2600536786a3250d29c1dab66efa315adc4cb7",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-failure.png",
+      "originalSha256": "2f8a914178003b81d132c4e29c2600536786a3250d29c1dab66efa315adc4cb7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-reject-malformed.png": {
+      "sha256": "0751432f8a076d136ba7b62cf17ba70b5fa63780ef4f6f64a03cc109207c69ec",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-reject-malformed.png",
+      "originalSha256": "0751432f8a076d136ba7b62cf17ba70b5fa63780ef4f6f64a03cc109207c69ec"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-reject-oversize.png": {
+      "sha256": "dfe59ced8829a99eebd3524eb474f0a051dfcb85b7cee98b05f8d55d7b8f7453",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-reject-oversize.png",
+      "originalSha256": "dfe59ced8829a99eebd3524eb474f0a051dfcb85b7cee98b05f8d55d7b8f7453"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-sent-official-echo.png": {
+      "sha256": "9417b53b68b55fd857a5738a14436287afac62b8d5cf8d8bd7a420975994c023",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-sent-official-echo.png",
+      "originalSha256": "9417b53b68b55fd857a5738a14436287afac62b8d5cf8d8bd7a420975994c023"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-source-repair-clear.png": {
+      "sha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-source-repair-clear.png",
+      "originalSha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-uncertain.png": {
+      "sha256": "fc5dbc6ca50654df954116afb8bb69808ff328fb2cd0235691470122ca31ab53",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-uncertain.png",
+      "originalSha256": "fc5dbc6ca50654df954116afb8bb69808ff328fb2cd0235691470122ca31ab53"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run03-unread-warnings.png": {
+      "sha256": "189b36f873058fc263b8b36f2ff8ca2b503cc639f536a2ce8aab3b49943fc4fa",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run03-unread-warnings.png",
+      "originalSha256": "189b36f873058fc263b8b36f2ff8ca2b503cc639f536a2ce8aab3b49943fc4fa"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-all-hidden-confirmed.png": {
+      "sha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-all-hidden-confirmed.png",
+      "originalSha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-all-review-dark.png": {
+      "sha256": "d8aec4d16079b8b3d1f8e20592eccf86b6ae7785016063b9005dccd3c2d8a0f7",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-all-review-dark.png",
+      "originalSha256": "d8aec4d16079b8b3d1f8e20592eccf86b6ae7785016063b9005dccd3c2d8a0f7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-all-review-narrow.png": {
+      "sha256": "3e51e84e6d4ccd148569f3f0963a30128571e8ef18f3e6a81b5aa0ba5c5ad5d4",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-all-review-narrow.png",
+      "originalSha256": "3e51e84e6d4ccd148569f3f0963a30128571e8ef18f3e6a81b5aa0ba5c5ad5d4"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-cold-changed.png": {
+      "sha256": "e6fcc2e672a91ddb93d80d23bec6776f1d05cd6b59d4f1ce18dc760a7bda1e81",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-cold-changed.png",
+      "originalSha256": "e6fcc2e672a91ddb93d80d23bec6776f1d05cd6b59d4f1ce18dc760a7bda1e81"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-confirm-busy.png": {
+      "sha256": "99468e64cc466db556fcfec29e5c7da0123b9395ee2393b81c233c2364e36d53",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-confirm-busy.png",
+      "originalSha256": "99468e64cc466db556fcfec29e5c7da0123b9395ee2393b81c233c2364e36d53"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-confirm-pending.png": {
+      "sha256": "dec4fb0a15a06c072f9afca79d657e62a72038cb1446da162e27df30d13cce1f",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-confirm-pending.png",
+      "originalSha256": "dec4fb0a15a06c072f9afca79d657e62a72038cb1446da162e27df30d13cce1f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-cross-draft.png": {
+      "sha256": "01740987f872310e80e9497c948000fcd24e0c15c1c3646b3c60e5dd021bbec0",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-cross-draft.png",
+      "originalSha256": "01740987f872310e80e9497c948000fcd24e0c15c1c3646b3c60e5dd021bbec0"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-default-review.png": {
+      "sha256": "59e2b13d1a4b1258d3f5865dc3ae29a543b376935a88ce1bc515fbd77b85d3f7",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-default-review.png",
+      "originalSha256": "59e2b13d1a4b1258d3f5865dc3ae29a543b376935a88ce1bc515fbd77b85d3f7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-embedded_context_unknown.png": {
+      "sha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-embedded_context_unknown.png",
+      "originalSha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-embedded_context_unsupported.png": {
+      "sha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-embedded_context_unsupported.png",
+      "originalSha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-failure.png": {
+      "sha256": "b428e61c86fafe72643aaa58c3a440dae9825b21b0aeb767e360704761764bf4",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-failure.png",
+      "originalSha256": "b428e61c86fafe72643aaa58c3a440dae9825b21b0aeb767e360704761764bf4"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-readBusy.png": {
+      "sha256": "bee2175bbb772988fff49fae185d0024921e0c4d401fffb410280bdb35ec5540",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-readBusy.png",
+      "originalSha256": "bee2175bbb772988fff49fae185d0024921e0c4d401fffb410280bdb35ec5540"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-readPending.png": {
+      "sha256": "018990e5a0af054583abd100b406605fdc1c05838411279404a8009fa56c2690",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-readPending.png",
+      "originalSha256": "018990e5a0af054583abd100b406605fdc1c05838411279404a8009fa56c2690"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-reject-malformed.png": {
+      "sha256": "0751432f8a076d136ba7b62cf17ba70b5fa63780ef4f6f64a03cc109207c69ec",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-reject-malformed.png",
+      "originalSha256": "0751432f8a076d136ba7b62cf17ba70b5fa63780ef4f6f64a03cc109207c69ec"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-reject-oversize.png": {
+      "sha256": "dfe59ced8829a99eebd3524eb474f0a051dfcb85b7cee98b05f8d55d7b8f7453",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-reject-oversize.png",
+      "originalSha256": "dfe59ced8829a99eebd3524eb474f0a051dfcb85b7cee98b05f8d55d7b8f7453"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-sent-official-echo.png": {
+      "sha256": "7bdec59eaebfebd268e14481ec1b891efbca4d2aa4f66f77d9d5263fb06c275a",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-sent-official-echo.png",
+      "originalSha256": "7bdec59eaebfebd268e14481ec1b891efbca4d2aa4f66f77d9d5263fb06c275a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-source-repair-clear.png": {
+      "sha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-source-repair-clear.png",
+      "originalSha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-uncertain.png": {
+      "sha256": "cbad879d0b1e06731443d3c7c9d61cedacdc5e8b54a9d8c502c228b7af5a2831",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-uncertain.png",
+      "originalSha256": "cbad879d0b1e06731443d3c7c9d61cedacdc5e8b54a9d8c502c228b7af5a2831"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run04-unread-warnings.png": {
+      "sha256": "62128fa5a457a262f3ddd34151d313a77bac79723b043cff2891e0bf42c8b465",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run04-unread-warnings.png",
+      "originalSha256": "62128fa5a457a262f3ddd34151d313a77bac79723b043cff2891e0bf42c8b465"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-all-hidden-confirmed.png": {
+      "sha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-all-hidden-confirmed.png",
+      "originalSha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-all-review-dark.png": {
+      "sha256": "a4c9952d993f2bec888c5ac2fab5f117b486d3a0fabdfd4a26f09bba053b690b",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-all-review-dark.png",
+      "originalSha256": "a4c9952d993f2bec888c5ac2fab5f117b486d3a0fabdfd4a26f09bba053b690b"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-all-review-narrow.png": {
+      "sha256": "845d98ba28accb09deb53c1a3f39b758fc14657e7fefb67196de95bdcca807e2",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-all-review-narrow.png",
+      "originalSha256": "845d98ba28accb09deb53c1a3f39b758fc14657e7fefb67196de95bdcca807e2"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-cold-changed.png": {
+      "sha256": "5a188560377b595dddec1d59441f308d1f6d617cb164ebb8f38a5015cef2dfb7",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-cold-changed.png",
+      "originalSha256": "5a188560377b595dddec1d59441f308d1f6d617cb164ebb8f38a5015cef2dfb7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-confirm-busy.png": {
+      "sha256": "99468e64cc466db556fcfec29e5c7da0123b9395ee2393b81c233c2364e36d53",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-confirm-busy.png",
+      "originalSha256": "99468e64cc466db556fcfec29e5c7da0123b9395ee2393b81c233c2364e36d53"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-confirm-pending.png": {
+      "sha256": "dec4fb0a15a06c072f9afca79d657e62a72038cb1446da162e27df30d13cce1f",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-confirm-pending.png",
+      "originalSha256": "dec4fb0a15a06c072f9afca79d657e62a72038cb1446da162e27df30d13cce1f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-cross-draft.png": {
+      "sha256": "ec5ab240194f7ffac9fae8e0d9ad1155526d1aa1d71e52549029a669637184a2",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-cross-draft.png",
+      "originalSha256": "ec5ab240194f7ffac9fae8e0d9ad1155526d1aa1d71e52549029a669637184a2"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-default-review.png": {
+      "sha256": "232a41c5b44bfe40d9615273570ba7fe35f921a7a4c8487fd896f4eb7f7f8105",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-default-review.png",
+      "originalSha256": "232a41c5b44bfe40d9615273570ba7fe35f921a7a4c8487fd896f4eb7f7f8105"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-embedded_context_unknown.png": {
+      "sha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-embedded_context_unknown.png",
+      "originalSha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-embedded_context_unsupported.png": {
+      "sha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-embedded_context_unsupported.png",
+      "originalSha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-failure.png": {
+      "sha256": "b428e61c86fafe72643aaa58c3a440dae9825b21b0aeb767e360704761764bf4",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-failure.png",
+      "originalSha256": "b428e61c86fafe72643aaa58c3a440dae9825b21b0aeb767e360704761764bf4"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-queue-edited-paused.png": {
+      "sha256": "9ebdefaa219d160cc5a7af197ac0cc320c442a685e02c75ac6055e3a473d3da8",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-queue-edited-paused.png",
+      "originalSha256": "9ebdefaa219d160cc5a7af197ac0cc320c442a685e02c75ac6055e3a473d3da8"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-readBusy.png": {
+      "sha256": "bee2175bbb772988fff49fae185d0024921e0c4d401fffb410280bdb35ec5540",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-readBusy.png",
+      "originalSha256": "bee2175bbb772988fff49fae185d0024921e0c4d401fffb410280bdb35ec5540"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-readPending.png": {
+      "sha256": "d35105ce36438468940afae71fa60a5410abafa23145c7ba0899176ecc5eaae6",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-readPending.png",
+      "originalSha256": "d35105ce36438468940afae71fa60a5410abafa23145c7ba0899176ecc5eaae6"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-reject-malformed.png": {
+      "sha256": "0751432f8a076d136ba7b62cf17ba70b5fa63780ef4f6f64a03cc109207c69ec",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-reject-malformed.png",
+      "originalSha256": "0751432f8a076d136ba7b62cf17ba70b5fa63780ef4f6f64a03cc109207c69ec"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-reject-oversize.png": {
+      "sha256": "dfe59ced8829a99eebd3524eb474f0a051dfcb85b7cee98b05f8d55d7b8f7453",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-reject-oversize.png",
+      "originalSha256": "dfe59ced8829a99eebd3524eb474f0a051dfcb85b7cee98b05f8d55d7b8f7453"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-sent-official-echo.png": {
+      "sha256": "b4584ceeaeeca154f511cec8425ada9e6700212077d3dddaeb27283d7ef9d105",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-sent-official-echo.png",
+      "originalSha256": "b4584ceeaeeca154f511cec8425ada9e6700212077d3dddaeb27283d7ef9d105"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-source-repair-clear.png": {
+      "sha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-source-repair-clear.png",
+      "originalSha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-uncertain.png": {
+      "sha256": "8d8804867ea0b08e48daa789a4334d46a5136f0654b50f748681af0d81e893e3",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-uncertain.png",
+      "originalSha256": "8d8804867ea0b08e48daa789a4334d46a5136f0654b50f748681af0d81e893e3"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run05-unread-warnings.png": {
+      "sha256": "189b36f873058fc263b8b36f2ff8ca2b503cc639f536a2ce8aab3b49943fc4fa",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run05-unread-warnings.png",
+      "originalSha256": "189b36f873058fc263b8b36f2ff8ca2b503cc639f536a2ce8aab3b49943fc4fa"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run06-format-cache-symmetry.png": {
+      "sha256": "e8928ec926e5cb59970718292df330234c784f6ee3ce0750f1d7bf66f498fafe",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run06-format-cache-symmetry.png",
+      "originalSha256": "e8928ec926e5cb59970718292df330234c784f6ee3ce0750f1d7bf66f498fafe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-all-hidden-confirmed.png": {
+      "sha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-all-hidden-confirmed.png",
+      "originalSha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-all-review-dark.png": {
+      "sha256": "cba4a3892413aa032bb363d1304062bc6988f22096c72be5374ff60419359fef",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-all-review-dark.png",
+      "originalSha256": "cba4a3892413aa032bb363d1304062bc6988f22096c72be5374ff60419359fef"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-all-review-narrow.png": {
+      "sha256": "b9c5c429a056fe39532262272138a43be90d84df00be2d882f7034dc81fa8313",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-all-review-narrow.png",
+      "originalSha256": "b9c5c429a056fe39532262272138a43be90d84df00be2d882f7034dc81fa8313"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-cold-changed.png": {
+      "sha256": "5a188560377b595dddec1d59441f308d1f6d617cb164ebb8f38a5015cef2dfb7",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-cold-changed.png",
+      "originalSha256": "5a188560377b595dddec1d59441f308d1f6d617cb164ebb8f38a5015cef2dfb7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-cold-scope-mismatch.png": {
+      "sha256": "7b44850f7474330ce96bfb72d62bb280eed916d1d2fad55cb8f77c51dfd5bf35",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-cold-scope-mismatch.png",
+      "originalSha256": "7b44850f7474330ce96bfb72d62bb280eed916d1d2fad55cb8f77c51dfd5bf35"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-confirm-busy.png": {
+      "sha256": "6ba6a219cea2a8530adc8d15db38097df310656d3853cd41ed6dc0903e8efeb1",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-confirm-busy.png",
+      "originalSha256": "6ba6a219cea2a8530adc8d15db38097df310656d3853cd41ed6dc0903e8efeb1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-confirm-pending.png": {
+      "sha256": "7a2984c16c57d9bd108b1c7562dca4aa4ed7af5055f6b0c23fa2a09d432875e5",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-confirm-pending.png",
+      "originalSha256": "7a2984c16c57d9bd108b1c7562dca4aa4ed7af5055f6b0c23fa2a09d432875e5"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-cross-draft.png": {
+      "sha256": "1f1f589fcafe831185bf759e0a5e77d9273522dbb5438bcfe54a6bf27a4bc53f",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-cross-draft.png",
+      "originalSha256": "1f1f589fcafe831185bf759e0a5e77d9273522dbb5438bcfe54a6bf27a4bc53f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-default-review.png": {
+      "sha256": "8add012aef2cf5bfc003ef709f3492f6e2259cb1c932e6678fa33cc25219e8cf",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-default-review.png",
+      "originalSha256": "8add012aef2cf5bfc003ef709f3492f6e2259cb1c932e6678fa33cc25219e8cf"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-embedded_context_unknown.png": {
+      "sha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-embedded_context_unknown.png",
+      "originalSha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-embedded_context_unsupported.png": {
+      "sha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-embedded_context_unsupported.png",
+      "originalSha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-failure.png": {
+      "sha256": "d30aa5724ff5f677985fc685edd3f9fb30b057133f6e47ddff5144867a53f3e7",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-failure.png",
+      "originalSha256": "d30aa5724ff5f677985fc685edd3f9fb30b057133f6e47ddff5144867a53f3e7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-format-cache-symmetry.png": {
+      "sha256": "e8928ec926e5cb59970718292df330234c784f6ee3ce0750f1d7bf66f498fafe",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-format-cache-symmetry.png",
+      "originalSha256": "e8928ec926e5cb59970718292df330234c784f6ee3ce0750f1d7bf66f498fafe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-keyboard-confirmed.png": {
+      "sha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-keyboard-confirmed.png",
+      "originalSha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-queue-edited-paused.png": {
+      "sha256": "9ebdefaa219d160cc5a7af197ac0cc320c442a685e02c75ac6055e3a473d3da8",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-queue-edited-paused.png",
+      "originalSha256": "9ebdefaa219d160cc5a7af197ac0cc320c442a685e02c75ac6055e3a473d3da8"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-readBusy.png": {
+      "sha256": "64d3ba0019dd939fde5acb559a6211e9c2d1ec79e3e4919bc31267ad6ccf49a3",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-readBusy.png",
+      "originalSha256": "64d3ba0019dd939fde5acb559a6211e9c2d1ec79e3e4919bc31267ad6ccf49a3"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-readPending.png": {
+      "sha256": "bc485a99a312f4cd53ea336fa346555af67d2159f9a751c82c65b18b88f7823b",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-readPending.png",
+      "originalSha256": "bc485a99a312f4cd53ea336fa346555af67d2159f9a751c82c65b18b88f7823b"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-reject-malformed.png": {
+      "sha256": "109e215b41b63e5dae61e9764c10c541ba681b92202cc4bc063bfccffef40859",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-reject-malformed.png",
+      "originalSha256": "109e215b41b63e5dae61e9764c10c541ba681b92202cc4bc063bfccffef40859"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-reject-oversize.png": {
+      "sha256": "1d57b0a4984781bb5462b0a5414d21d73f95251e226e79384d63f90887e8c3cc",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-reject-oversize.png",
+      "originalSha256": "1d57b0a4984781bb5462b0a5414d21d73f95251e226e79384d63f90887e8c3cc"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-sent-official-echo.png": {
+      "sha256": "040aeb8dc6ba24f6965927e09b4f6478dbfe410b52b137c141f7bdc560552005",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-sent-official-echo.png",
+      "originalSha256": "040aeb8dc6ba24f6965927e09b4f6478dbfe410b52b137c141f7bdc560552005"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-source-repair-clear.png": {
+      "sha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-source-repair-clear.png",
+      "originalSha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-uncertain.png": {
+      "sha256": "36033df525b170dcfff3e5e5cd098097d37832dbf00a82b628d3ac7612628eae",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-uncertain.png",
+      "originalSha256": "36033df525b170dcfff3e5e5cd098097d37832dbf00a82b628d3ac7612628eae"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run07-unread-warnings.png": {
+      "sha256": "091b1e302105db1316528922b84074cbde7e1e6b4c4795f9750a8d9da342c301",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run07-unread-warnings.png",
+      "originalSha256": "091b1e302105db1316528922b84074cbde7e1e6b4c4795f9750a8d9da342c301"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-all-hidden-confirmed.png": {
+      "sha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-all-hidden-confirmed.png",
+      "originalSha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-all-review-dark.png": {
+      "sha256": "cba4a3892413aa032bb363d1304062bc6988f22096c72be5374ff60419359fef",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-all-review-dark.png",
+      "originalSha256": "cba4a3892413aa032bb363d1304062bc6988f22096c72be5374ff60419359fef"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-all-review-narrow.png": {
+      "sha256": "b9c5c429a056fe39532262272138a43be90d84df00be2d882f7034dc81fa8313",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-all-review-narrow.png",
+      "originalSha256": "b9c5c429a056fe39532262272138a43be90d84df00be2d882f7034dc81fa8313"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-cold-changed.png": {
+      "sha256": "5a188560377b595dddec1d59441f308d1f6d617cb164ebb8f38a5015cef2dfb7",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-cold-changed.png",
+      "originalSha256": "5a188560377b595dddec1d59441f308d1f6d617cb164ebb8f38a5015cef2dfb7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-cold-scope-mismatch.png": {
+      "sha256": "076fb29f1546c9a556e48134d1e4b08b281417742665d14d49e013cb9ed83b2c",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-cold-scope-mismatch.png",
+      "originalSha256": "076fb29f1546c9a556e48134d1e4b08b281417742665d14d49e013cb9ed83b2c"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-confirm-busy.png": {
+      "sha256": "6ba6a219cea2a8530adc8d15db38097df310656d3853cd41ed6dc0903e8efeb1",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-confirm-busy.png",
+      "originalSha256": "6ba6a219cea2a8530adc8d15db38097df310656d3853cd41ed6dc0903e8efeb1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-confirm-pending.png": {
+      "sha256": "7a2984c16c57d9bd108b1c7562dca4aa4ed7af5055f6b0c23fa2a09d432875e5",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-confirm-pending.png",
+      "originalSha256": "7a2984c16c57d9bd108b1c7562dca4aa4ed7af5055f6b0c23fa2a09d432875e5"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-cross-draft.png": {
+      "sha256": "4e2d500d3b94ab03d6997c19b385a8cc965b3ace7390185978328e42c13d7ef1",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-cross-draft.png",
+      "originalSha256": "4e2d500d3b94ab03d6997c19b385a8cc965b3ace7390185978328e42c13d7ef1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-default-review.png": {
+      "sha256": "8add012aef2cf5bfc003ef709f3492f6e2259cb1c932e6678fa33cc25219e8cf",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-default-review.png",
+      "originalSha256": "8add012aef2cf5bfc003ef709f3492f6e2259cb1c932e6678fa33cc25219e8cf"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-embedded_context_unknown.png": {
+      "sha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-embedded_context_unknown.png",
+      "originalSha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-embedded_context_unsupported.png": {
+      "sha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-embedded_context_unsupported.png",
+      "originalSha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-format-cache-symmetry.png": {
+      "sha256": "e8928ec926e5cb59970718292df330234c784f6ee3ce0750f1d7bf66f498fafe",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-format-cache-symmetry.png",
+      "originalSha256": "e8928ec926e5cb59970718292df330234c784f6ee3ce0750f1d7bf66f498fafe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-keyboard-confirmed.png": {
+      "sha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-keyboard-confirmed.png",
+      "originalSha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-queue-edited-paused.png": {
+      "sha256": "9ebdefaa219d160cc5a7af197ac0cc320c442a685e02c75ac6055e3a473d3da8",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-queue-edited-paused.png",
+      "originalSha256": "9ebdefaa219d160cc5a7af197ac0cc320c442a685e02c75ac6055e3a473d3da8"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-readBusy.png": {
+      "sha256": "93585e84118a337554edd42e992699007602d8526234f1a819989c943f0c72ce",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-readBusy.png",
+      "originalSha256": "93585e84118a337554edd42e992699007602d8526234f1a819989c943f0c72ce"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-readPending.png": {
+      "sha256": "a6dce040b28f008f9d390ba54e733c8b2846143be7634162e483337a02fbe3a2",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-readPending.png",
+      "originalSha256": "a6dce040b28f008f9d390ba54e733c8b2846143be7634162e483337a02fbe3a2"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-reject-malformed.png": {
+      "sha256": "109e215b41b63e5dae61e9764c10c541ba681b92202cc4bc063bfccffef40859",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-reject-malformed.png",
+      "originalSha256": "109e215b41b63e5dae61e9764c10c541ba681b92202cc4bc063bfccffef40859"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-reject-oversize.png": {
+      "sha256": "1d57b0a4984781bb5462b0a5414d21d73f95251e226e79384d63f90887e8c3cc",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-reject-oversize.png",
+      "originalSha256": "1d57b0a4984781bb5462b0a5414d21d73f95251e226e79384d63f90887e8c3cc"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-save-failure.png": {
+      "sha256": "3992e6d217a1c2dcdee01c063630e1bfa6a8811ce42959b631a59b6017d4ee60",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-save-failure.png",
+      "originalSha256": "3992e6d217a1c2dcdee01c063630e1bfa6a8811ce42959b631a59b6017d4ee60"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-sent-official-echo.png": {
+      "sha256": "9591b8e47622ace479ffb2da11c080db27b94cb20fec817c9eb7e96cc2f8bbbe",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-sent-official-echo.png",
+      "originalSha256": "9591b8e47622ace479ffb2da11c080db27b94cb20fec817c9eb7e96cc2f8bbbe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-source-repair-clear.png": {
+      "sha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-source-repair-clear.png",
+      "originalSha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-uncertain.png": {
+      "sha256": "81b6faf8db61ec977dde3d2572c43513cc5c562a01ff6cfb1e38639797eb386c",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-uncertain.png",
+      "originalSha256": "81b6faf8db61ec977dde3d2572c43513cc5c562a01ff6cfb1e38639797eb386c"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run08-unread-warnings.png": {
+      "sha256": "091b1e302105db1316528922b84074cbde7e1e6b4c4795f9750a8d9da342c301",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run08-unread-warnings.png",
+      "originalSha256": "091b1e302105db1316528922b84074cbde7e1e6b4c4795f9750a8d9da342c301"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-all-hidden-confirmed.png": {
+      "sha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-all-hidden-confirmed.png",
+      "originalSha256": "35ad792d7e6895db1990e570ff5d0d6cdbb49be8e59371a98e303ee1b9602a8f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-all-review-dark.png": {
+      "sha256": "cba4a3892413aa032bb363d1304062bc6988f22096c72be5374ff60419359fef",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-all-review-dark.png",
+      "originalSha256": "cba4a3892413aa032bb363d1304062bc6988f22096c72be5374ff60419359fef"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-all-review-narrow.png": {
+      "sha256": "b9c5c429a056fe39532262272138a43be90d84df00be2d882f7034dc81fa8313",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-all-review-narrow.png",
+      "originalSha256": "b9c5c429a056fe39532262272138a43be90d84df00be2d882f7034dc81fa8313"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-cold-changed.png": {
+      "sha256": "5b07d0a520d5d5e95c83cf059045c2ad2ac0fd976b25b33487c96337bbe8a1fe",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-cold-changed.png",
+      "originalSha256": "5b07d0a520d5d5e95c83cf059045c2ad2ac0fd976b25b33487c96337bbe8a1fe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-cold-scope-mismatch.png": {
+      "sha256": "8a01e4157bb2737fcec908e32a36bddb3cec6e6283c9c3635f88c62b0874f953",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-cold-scope-mismatch.png",
+      "originalSha256": "8a01e4157bb2737fcec908e32a36bddb3cec6e6283c9c3635f88c62b0874f953"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-confirm-busy.png": {
+      "sha256": "6ba6a219cea2a8530adc8d15db38097df310656d3853cd41ed6dc0903e8efeb1",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-confirm-busy.png",
+      "originalSha256": "6ba6a219cea2a8530adc8d15db38097df310656d3853cd41ed6dc0903e8efeb1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-confirm-pending.png": {
+      "sha256": "7a2984c16c57d9bd108b1c7562dca4aa4ed7af5055f6b0c23fa2a09d432875e5",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-confirm-pending.png",
+      "originalSha256": "7a2984c16c57d9bd108b1c7562dca4aa4ed7af5055f6b0c23fa2a09d432875e5"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-cross-draft.png": {
+      "sha256": "e5e1d52d7cecf4f264d3d82f27566aaa445d7ae3828532be6f066f39868044ef",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-cross-draft.png",
+      "originalSha256": "e5e1d52d7cecf4f264d3d82f27566aaa445d7ae3828532be6f066f39868044ef"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-default-review.png": {
+      "sha256": "8982b47d1e49f882ba4d1629d4552e1d77dd014275065603cc18d5c7b1c55e87",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-default-review.png",
+      "originalSha256": "8982b47d1e49f882ba4d1629d4552e1d77dd014275065603cc18d5c7b1c55e87"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-embedded_context_unknown.png": {
+      "sha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-embedded_context_unknown.png",
+      "originalSha256": "7ae8745dd68acb50cb0f294f46515845caced9724710d0facfe2e14d93b4899a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-embedded_context_unsupported.png": {
+      "sha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-embedded_context_unsupported.png",
+      "originalSha256": "487901d2e03316215a328d32ea8cdb9e986ed5567195e70e31128c9b8cc2164d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-format-cache-symmetry.png": {
+      "sha256": "e8928ec926e5cb59970718292df330234c784f6ee3ce0750f1d7bf66f498fafe",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-format-cache-symmetry.png",
+      "originalSha256": "e8928ec926e5cb59970718292df330234c784f6ee3ce0750f1d7bf66f498fafe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-keyboard-confirmed.png": {
+      "sha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-keyboard-confirmed.png",
+      "originalSha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-queue-edited-paused.png": {
+      "sha256": "9ebdefaa219d160cc5a7af197ac0cc320c442a685e02c75ac6055e3a473d3da8",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-queue-edited-paused.png",
+      "originalSha256": "9ebdefaa219d160cc5a7af197ac0cc320c442a685e02c75ac6055e3a473d3da8"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-readBusy.png": {
+      "sha256": "d7b71077c1f9c7a1c1573ae3ba6b27c233f1740369cddeeb46468e57cf6019ad",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-readBusy.png",
+      "originalSha256": "d7b71077c1f9c7a1c1573ae3ba6b27c233f1740369cddeeb46468e57cf6019ad"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-readPending.png": {
+      "sha256": "fe72b11a55104984e3ac35fde8734f848f1885892f1ebff3dc035aa2d56a8cb7",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-readPending.png",
+      "originalSha256": "fe72b11a55104984e3ac35fde8734f848f1885892f1ebff3dc035aa2d56a8cb7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-reject-malformed.png": {
+      "sha256": "109e215b41b63e5dae61e9764c10c541ba681b92202cc4bc063bfccffef40859",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-reject-malformed.png",
+      "originalSha256": "109e215b41b63e5dae61e9764c10c541ba681b92202cc4bc063bfccffef40859"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-reject-oversize.png": {
+      "sha256": "1d57b0a4984781bb5462b0a5414d21d73f95251e226e79384d63f90887e8c3cc",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-reject-oversize.png",
+      "originalSha256": "1d57b0a4984781bb5462b0a5414d21d73f95251e226e79384d63f90887e8c3cc"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-save-failure.png": {
+      "sha256": "efb9d3f33fc7f4e6fcac603ed93dcdc9304e72db5154496fa386dbdca442a679",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-save-failure.png",
+      "originalSha256": "efb9d3f33fc7f4e6fcac603ed93dcdc9304e72db5154496fa386dbdca442a679"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-sent-official-echo.png": {
+      "sha256": "7239433fb3b24c99d98d1b02952a845c295bada117fba4a99dc7e1768f6c76ee",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-sent-official-echo.png",
+      "originalSha256": "7239433fb3b24c99d98d1b02952a845c295bada117fba4a99dc7e1768f6c76ee"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-source-repair-clear.png": {
+      "sha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-source-repair-clear.png",
+      "originalSha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-uncertain.png": {
+      "sha256": "ae817233e2b9ba90d37aa1b9afd64999ebdb82591189383c95224457b4ca0421",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-uncertain.png",
+      "originalSha256": "ae817233e2b9ba90d37aa1b9afd64999ebdb82591189383c95224457b4ca0421"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/chromium-run09-unread-warnings.png": {
+      "sha256": "afe11ba182e540cf4b8cc14f1048908d5c2f727255f47db64a2bdbdd6ee8022f",
+      "original": "output/2026-10-13-xlsx-input-browser/chromium-run09-unread-warnings.png",
+      "originalSha256": "afe11ba182e540cf4b8cc14f1048908d5c2f727255f47db64a2bdbdd6ee8022f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry-inspection-run01.png": {
+      "sha256": "36317e71db441684e8ccb025e9d451f25bb900c9b48ff1c033a28b347ba39427",
+      "original": "output/2026-10-13-xlsx-input-browser/save-retry-inspection-run01.png",
+      "originalSha256": "36317e71db441684e8ccb025e9d451f25bb900c9b48ff1c033a28b347ba39427"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry-inspection-run02.png": {
+      "sha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62",
+      "original": "output/2026-10-13-xlsx-input-browser/save-retry-inspection-run02.png",
+      "originalSha256": "2f8bd9a04acc1a3a127383f73b66cfdd80ec314826b3fcb65a6b5565ecf3fa62"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-all-hidden-confirmed.png": {
+      "sha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-all-hidden-confirmed.png",
+      "originalSha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-all-review-dark.png": {
+      "sha256": "cdccc6cbd13c0a9d05b754506e98673d728f05928e4240f4ee45cba5d8324212",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-all-review-dark.png",
+      "originalSha256": "cdccc6cbd13c0a9d05b754506e98673d728f05928e4240f4ee45cba5d8324212"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-all-review-narrow.png": {
+      "sha256": "3fd8e186578cf2b04078c82213633f8863f9c92282e35ba7cf1f07ad6b2684d2",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-all-review-narrow.png",
+      "originalSha256": "3fd8e186578cf2b04078c82213633f8863f9c92282e35ba7cf1f07ad6b2684d2"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-cold-changed.png": {
+      "sha256": "fdb2a4a5f6ef5a6bb1f4f69a49e8718bbed54d4bd266dd7a3bbe07b54973f3f0",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-cold-changed.png",
+      "originalSha256": "fdb2a4a5f6ef5a6bb1f4f69a49e8718bbed54d4bd266dd7a3bbe07b54973f3f0"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-default-review.png": {
+      "sha256": "655bbb0c12e19a50f5e897d455f660fdfdb4b6d65cc9c48f9e216c8eb8a4b86f",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-default-review.png",
+      "originalSha256": "655bbb0c12e19a50f5e897d455f660fdfdb4b6d65cc9c48f9e216c8eb8a4b86f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-embedded_context_unknown.png": {
+      "sha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-embedded_context_unknown.png",
+      "originalSha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-embedded_context_unsupported.png": {
+      "sha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-embedded_context_unsupported.png",
+      "originalSha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-failure.png": {
+      "sha256": "9748d2587024c7043c1a6952fecba3d2724bbe001a4597469fc1065fe38b903b",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-failure.png",
+      "originalSha256": "9748d2587024c7043c1a6952fecba3d2724bbe001a4597469fc1065fe38b903b"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-reject-malformed.png": {
+      "sha256": "a07a13635dbac5efdc3a76331f4f2ec21d5f93e69334bae31ec04128d159241d",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-reject-malformed.png",
+      "originalSha256": "a07a13635dbac5efdc3a76331f4f2ec21d5f93e69334bae31ec04128d159241d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-reject-oversize.png": {
+      "sha256": "d231babbeda76f92a37e655d08f5d6b2ad46d79a9976bff0561a257f80811f59",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-reject-oversize.png",
+      "originalSha256": "d231babbeda76f92a37e655d08f5d6b2ad46d79a9976bff0561a257f80811f59"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-sent-official-echo.png": {
+      "sha256": "16d12a4f8dfc8bd0cfd587252aa874b153f640709e09c972c5cd6c5f3d4c58d4",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-sent-official-echo.png",
+      "originalSha256": "16d12a4f8dfc8bd0cfd587252aa874b153f640709e09c972c5cd6c5f3d4c58d4"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-source-repair-clear.png": {
+      "sha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-source-repair-clear.png",
+      "originalSha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run01-unread-warnings.png": {
+      "sha256": "6a1b8d0710b3d6932fdd1002c104177632775a43d9acc681b68d0443972d2cac",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run01-unread-warnings.png",
+      "originalSha256": "6a1b8d0710b3d6932fdd1002c104177632775a43d9acc681b68d0443972d2cac"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-all-hidden-confirmed.png": {
+      "sha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-all-hidden-confirmed.png",
+      "originalSha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-all-review-dark.png": {
+      "sha256": "bfdec7e9664ba0191cab606c8c167307be46dc47c1146d465cdd709db97acf47",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-all-review-dark.png",
+      "originalSha256": "bfdec7e9664ba0191cab606c8c167307be46dc47c1146d465cdd709db97acf47"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-all-review-narrow.png": {
+      "sha256": "ed33f60ce530df3d3c8808c0a70f1fc3268bce6ce915ed2992125b79c4e8fd6a",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-all-review-narrow.png",
+      "originalSha256": "ed33f60ce530df3d3c8808c0a70f1fc3268bce6ce915ed2992125b79c4e8fd6a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-cold-changed.png": {
+      "sha256": "55611e6485a93891782b5ac7999ebdfe3d8f497affd78468b06d4b1d7a843bf0",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-cold-changed.png",
+      "originalSha256": "55611e6485a93891782b5ac7999ebdfe3d8f497affd78468b06d4b1d7a843bf0"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-cross-draft.png": {
+      "sha256": "0bef79c5e66d4155be2906936c11eceb4d73503638a0cd0ae90e3bd782d2df63",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-cross-draft.png",
+      "originalSha256": "0bef79c5e66d4155be2906936c11eceb4d73503638a0cd0ae90e3bd782d2df63"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-default-review.png": {
+      "sha256": "04f3aaeaa0c69a85efbd35ce82220f70dd2a99d8830c05707d3b36a5d6327f3a",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-default-review.png",
+      "originalSha256": "04f3aaeaa0c69a85efbd35ce82220f70dd2a99d8830c05707d3b36a5d6327f3a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-embedded_context_unknown.png": {
+      "sha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-embedded_context_unknown.png",
+      "originalSha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-embedded_context_unsupported.png": {
+      "sha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-embedded_context_unsupported.png",
+      "originalSha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-failure.png": {
+      "sha256": "3c905c4a536cb5b6460c9b05556fecdd4874608c62c1cdfa0cbb3c8599155c9e",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-failure.png",
+      "originalSha256": "3c905c4a536cb5b6460c9b05556fecdd4874608c62c1cdfa0cbb3c8599155c9e"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-reject-malformed.png": {
+      "sha256": "a07a13635dbac5efdc3a76331f4f2ec21d5f93e69334bae31ec04128d159241d",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-reject-malformed.png",
+      "originalSha256": "a07a13635dbac5efdc3a76331f4f2ec21d5f93e69334bae31ec04128d159241d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-reject-oversize.png": {
+      "sha256": "d231babbeda76f92a37e655d08f5d6b2ad46d79a9976bff0561a257f80811f59",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-reject-oversize.png",
+      "originalSha256": "d231babbeda76f92a37e655d08f5d6b2ad46d79a9976bff0561a257f80811f59"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-sent-official-echo.png": {
+      "sha256": "b82eb4fd0dab3357e26a9efd14c879ea96e96aedc4408494664a6bc34818a290",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-sent-official-echo.png",
+      "originalSha256": "b82eb4fd0dab3357e26a9efd14c879ea96e96aedc4408494664a6bc34818a290"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-source-repair-clear.png": {
+      "sha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-source-repair-clear.png",
+      "originalSha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-uncertain.png": {
+      "sha256": "e3497f1faba1207ac986e5634fd6923cda3d4950fc25d5e9a53f7f3eca3bdf3f",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-uncertain.png",
+      "originalSha256": "e3497f1faba1207ac986e5634fd6923cda3d4950fc25d5e9a53f7f3eca3bdf3f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run02-unread-warnings.png": {
+      "sha256": "86ef7bfd794461eb1b414faa5a362c0c5870b052c7218d1e6642e006744971ee",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run02-unread-warnings.png",
+      "originalSha256": "86ef7bfd794461eb1b414faa5a362c0c5870b052c7218d1e6642e006744971ee"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-all-hidden-confirmed.png": {
+      "sha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-all-hidden-confirmed.png",
+      "originalSha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-all-review-dark.png": {
+      "sha256": "bfdec7e9664ba0191cab606c8c167307be46dc47c1146d465cdd709db97acf47",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-all-review-dark.png",
+      "originalSha256": "bfdec7e9664ba0191cab606c8c167307be46dc47c1146d465cdd709db97acf47"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-all-review-narrow.png": {
+      "sha256": "62220edb259b9714f869dbab3fe3d89bcd67d7d931e7e1523782a094dee9a345",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-all-review-narrow.png",
+      "originalSha256": "62220edb259b9714f869dbab3fe3d89bcd67d7d931e7e1523782a094dee9a345"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-cold-changed.png": {
+      "sha256": "55611e6485a93891782b5ac7999ebdfe3d8f497affd78468b06d4b1d7a843bf0",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-cold-changed.png",
+      "originalSha256": "55611e6485a93891782b5ac7999ebdfe3d8f497affd78468b06d4b1d7a843bf0"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-confirm-busy.png": {
+      "sha256": "ded788b963ffdaa4bdc51ef05d8d1531c7c414512f128e4d9b17dfbea2a73486",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-confirm-busy.png",
+      "originalSha256": "ded788b963ffdaa4bdc51ef05d8d1531c7c414512f128e4d9b17dfbea2a73486"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-confirm-pending.png": {
+      "sha256": "52c4d3a7b000c9cbf982d4e71e687b95a91eb07d08df56ee5309e32d8dfdb9ab",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-confirm-pending.png",
+      "originalSha256": "52c4d3a7b000c9cbf982d4e71e687b95a91eb07d08df56ee5309e32d8dfdb9ab"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-cross-draft.png": {
+      "sha256": "0bef79c5e66d4155be2906936c11eceb4d73503638a0cd0ae90e3bd782d2df63",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-cross-draft.png",
+      "originalSha256": "0bef79c5e66d4155be2906936c11eceb4d73503638a0cd0ae90e3bd782d2df63"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-default-review.png": {
+      "sha256": "381b36e9433c126b79bab2f282ee28645dd148257c0388af0850e13191f45da1",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-default-review.png",
+      "originalSha256": "381b36e9433c126b79bab2f282ee28645dd148257c0388af0850e13191f45da1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-embedded_context_unknown.png": {
+      "sha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-embedded_context_unknown.png",
+      "originalSha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-embedded_context_unsupported.png": {
+      "sha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-embedded_context_unsupported.png",
+      "originalSha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-failure.png": {
+      "sha256": "4c6bfe35a230908f61028c891e75abd96ef1c5d4d2f61d43ca29c55f91f8426f",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-failure.png",
+      "originalSha256": "4c6bfe35a230908f61028c891e75abd96ef1c5d4d2f61d43ca29c55f91f8426f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-readBusy.png": {
+      "sha256": "cae1b50db08fe013cfc582b274e44c52397a67fd5141e2902104a52ea56235ba",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-readBusy.png",
+      "originalSha256": "cae1b50db08fe013cfc582b274e44c52397a67fd5141e2902104a52ea56235ba"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-readPending.png": {
+      "sha256": "c347f08011afc9b2be3261fc720447dfbeb61c5102c0511ba8ce7e5eeef5667a",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-readPending.png",
+      "originalSha256": "c347f08011afc9b2be3261fc720447dfbeb61c5102c0511ba8ce7e5eeef5667a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-reject-malformed.png": {
+      "sha256": "a07a13635dbac5efdc3a76331f4f2ec21d5f93e69334bae31ec04128d159241d",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-reject-malformed.png",
+      "originalSha256": "a07a13635dbac5efdc3a76331f4f2ec21d5f93e69334bae31ec04128d159241d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-reject-oversize.png": {
+      "sha256": "d231babbeda76f92a37e655d08f5d6b2ad46d79a9976bff0561a257f80811f59",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-reject-oversize.png",
+      "originalSha256": "d231babbeda76f92a37e655d08f5d6b2ad46d79a9976bff0561a257f80811f59"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-sent-official-echo.png": {
+      "sha256": "f09ce5f4fcd8182fb128cf5b09ac01f8f3bd1502bf9d9496ea123d14f36737e6",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-sent-official-echo.png",
+      "originalSha256": "f09ce5f4fcd8182fb128cf5b09ac01f8f3bd1502bf9d9496ea123d14f36737e6"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-source-repair-clear.png": {
+      "sha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-source-repair-clear.png",
+      "originalSha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-uncertain.png": {
+      "sha256": "bf5fd64c1d97716646d7a93dcda5f516c23d97079ffb944664ddeb6b933a2884",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-uncertain.png",
+      "originalSha256": "bf5fd64c1d97716646d7a93dcda5f516c23d97079ffb944664ddeb6b933a2884"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run03-unread-warnings.png": {
+      "sha256": "86ef7bfd794461eb1b414faa5a362c0c5870b052c7218d1e6642e006744971ee",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run03-unread-warnings.png",
+      "originalSha256": "86ef7bfd794461eb1b414faa5a362c0c5870b052c7218d1e6642e006744971ee"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-all-hidden-confirmed.png": {
+      "sha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-all-hidden-confirmed.png",
+      "originalSha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-all-review-dark.png": {
+      "sha256": "bfdec7e9664ba0191cab606c8c167307be46dc47c1146d465cdd709db97acf47",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-all-review-dark.png",
+      "originalSha256": "bfdec7e9664ba0191cab606c8c167307be46dc47c1146d465cdd709db97acf47"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-all-review-narrow.png": {
+      "sha256": "ed33f60ce530df3d3c8808c0a70f1fc3268bce6ce915ed2992125b79c4e8fd6a",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-all-review-narrow.png",
+      "originalSha256": "ed33f60ce530df3d3c8808c0a70f1fc3268bce6ce915ed2992125b79c4e8fd6a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-cold-changed.png": {
+      "sha256": "5370dfa16ea5acbf14033dcfd03141e08f659c9707134c8e5f130a27a961ad31",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-cold-changed.png",
+      "originalSha256": "5370dfa16ea5acbf14033dcfd03141e08f659c9707134c8e5f130a27a961ad31"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-confirm-busy.png": {
+      "sha256": "ded788b963ffdaa4bdc51ef05d8d1531c7c414512f128e4d9b17dfbea2a73486",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-confirm-busy.png",
+      "originalSha256": "ded788b963ffdaa4bdc51ef05d8d1531c7c414512f128e4d9b17dfbea2a73486"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-confirm-pending.png": {
+      "sha256": "52c4d3a7b000c9cbf982d4e71e687b95a91eb07d08df56ee5309e32d8dfdb9ab",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-confirm-pending.png",
+      "originalSha256": "52c4d3a7b000c9cbf982d4e71e687b95a91eb07d08df56ee5309e32d8dfdb9ab"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-cross-draft.png": {
+      "sha256": "0bef79c5e66d4155be2906936c11eceb4d73503638a0cd0ae90e3bd782d2df63",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-cross-draft.png",
+      "originalSha256": "0bef79c5e66d4155be2906936c11eceb4d73503638a0cd0ae90e3bd782d2df63"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-default-review.png": {
+      "sha256": "45763649e744f62011bf7c98588db0c41b4f31af57f1c41e8e1ee36d97b221f5",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-default-review.png",
+      "originalSha256": "45763649e744f62011bf7c98588db0c41b4f31af57f1c41e8e1ee36d97b221f5"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-embedded_context_unknown.png": {
+      "sha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-embedded_context_unknown.png",
+      "originalSha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-embedded_context_unsupported.png": {
+      "sha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-embedded_context_unsupported.png",
+      "originalSha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-failure.png": {
+      "sha256": "4c6bfe35a230908f61028c891e75abd96ef1c5d4d2f61d43ca29c55f91f8426f",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-failure.png",
+      "originalSha256": "4c6bfe35a230908f61028c891e75abd96ef1c5d4d2f61d43ca29c55f91f8426f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-queue-edited-paused.png": {
+      "sha256": "62de08146ae26df8f55ca7f7d4f136cd3c4b0ba2728167a027efba53f7ffe01d",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-queue-edited-paused.png",
+      "originalSha256": "62de08146ae26df8f55ca7f7d4f136cd3c4b0ba2728167a027efba53f7ffe01d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-readBusy.png": {
+      "sha256": "3a0d361d22d06ea31a416a8d6f590c21b88c9bd982878555e38769e1e13ee129",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-readBusy.png",
+      "originalSha256": "3a0d361d22d06ea31a416a8d6f590c21b88c9bd982878555e38769e1e13ee129"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-readPending.png": {
+      "sha256": "eb079d75fd0108b34fc84e961be283d427037445cad5425781f80408fc3c527c",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-readPending.png",
+      "originalSha256": "eb079d75fd0108b34fc84e961be283d427037445cad5425781f80408fc3c527c"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-reject-malformed.png": {
+      "sha256": "a07a13635dbac5efdc3a76331f4f2ec21d5f93e69334bae31ec04128d159241d",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-reject-malformed.png",
+      "originalSha256": "a07a13635dbac5efdc3a76331f4f2ec21d5f93e69334bae31ec04128d159241d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-reject-oversize.png": {
+      "sha256": "d231babbeda76f92a37e655d08f5d6b2ad46d79a9976bff0561a257f80811f59",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-reject-oversize.png",
+      "originalSha256": "d231babbeda76f92a37e655d08f5d6b2ad46d79a9976bff0561a257f80811f59"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-sent-official-echo.png": {
+      "sha256": "bf7902e4d249e6ee052c46776c2423188998dc16e4db01501f12302f85be0d66",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-sent-official-echo.png",
+      "originalSha256": "bf7902e4d249e6ee052c46776c2423188998dc16e4db01501f12302f85be0d66"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-source-repair-clear.png": {
+      "sha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-source-repair-clear.png",
+      "originalSha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-uncertain.png": {
+      "sha256": "53424b7d996ccb7065d096d0b5f2610ee974791f91b701004a5e5fbe52b1e692",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-uncertain.png",
+      "originalSha256": "53424b7d996ccb7065d096d0b5f2610ee974791f91b701004a5e5fbe52b1e692"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run04-unread-warnings.png": {
+      "sha256": "86ef7bfd794461eb1b414faa5a362c0c5870b052c7218d1e6642e006744971ee",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run04-unread-warnings.png",
+      "originalSha256": "86ef7bfd794461eb1b414faa5a362c0c5870b052c7218d1e6642e006744971ee"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run05-format-cache-symmetry.png": {
+      "sha256": "4f152c89d428d581eba0d36b4183d7199deed78886c398d90fa8c7dbd96c4200",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run05-format-cache-symmetry.png",
+      "originalSha256": "4f152c89d428d581eba0d36b4183d7199deed78886c398d90fa8c7dbd96c4200"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-all-hidden-confirmed.png": {
+      "sha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-all-hidden-confirmed.png",
+      "originalSha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-all-review-dark.png": {
+      "sha256": "84ed727a7654326307dbf602545a4a4ff87fbc386014cf69385132b869a9efcd",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-all-review-dark.png",
+      "originalSha256": "84ed727a7654326307dbf602545a4a4ff87fbc386014cf69385132b869a9efcd"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-all-review-narrow.png": {
+      "sha256": "8e76e209629a537d8d912d1631c2620b8290dd6bb02eb90af5d3901da0089faf",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-all-review-narrow.png",
+      "originalSha256": "8e76e209629a537d8d912d1631c2620b8290dd6bb02eb90af5d3901da0089faf"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-cold-changed.png": {
+      "sha256": "55611e6485a93891782b5ac7999ebdfe3d8f497affd78468b06d4b1d7a843bf0",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-cold-changed.png",
+      "originalSha256": "55611e6485a93891782b5ac7999ebdfe3d8f497affd78468b06d4b1d7a843bf0"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-cold-scope-mismatch.png": {
+      "sha256": "5020f9c6361d2dac3deae14053d16643017dfe97db75e8edbf54cd3f547d6b8d",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-cold-scope-mismatch.png",
+      "originalSha256": "5020f9c6361d2dac3deae14053d16643017dfe97db75e8edbf54cd3f547d6b8d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-confirm-busy.png": {
+      "sha256": "72016c0846fc448066ea9d6dde50a635060e9805c0635bed2b66e27a387ec539",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-confirm-busy.png",
+      "originalSha256": "72016c0846fc448066ea9d6dde50a635060e9805c0635bed2b66e27a387ec539"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-confirm-pending.png": {
+      "sha256": "ba0916acfbc4a3ff3422a9ed361d79142baa30205bf1fcc67a42fc9b67c106ac",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-confirm-pending.png",
+      "originalSha256": "ba0916acfbc4a3ff3422a9ed361d79142baa30205bf1fcc67a42fc9b67c106ac"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-cross-draft.png": {
+      "sha256": "0bef79c5e66d4155be2906936c11eceb4d73503638a0cd0ae90e3bd782d2df63",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-cross-draft.png",
+      "originalSha256": "0bef79c5e66d4155be2906936c11eceb4d73503638a0cd0ae90e3bd782d2df63"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-default-review.png": {
+      "sha256": "a692776c0da1ee25ae618f46a52cee4a026b0426909a214b487c1b1f6674c5cd",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-default-review.png",
+      "originalSha256": "a692776c0da1ee25ae618f46a52cee4a026b0426909a214b487c1b1f6674c5cd"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-embedded_context_unknown.png": {
+      "sha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-embedded_context_unknown.png",
+      "originalSha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-embedded_context_unsupported.png": {
+      "sha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-embedded_context_unsupported.png",
+      "originalSha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-failure.png": {
+      "sha256": "dbfe92c1c08b8574c450b80acc1c9c52c63b7becf4319438ed27fa52dcf7047b",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-failure.png",
+      "originalSha256": "dbfe92c1c08b8574c450b80acc1c9c52c63b7becf4319438ed27fa52dcf7047b"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-format-cache-symmetry.png": {
+      "sha256": "4f152c89d428d581eba0d36b4183d7199deed78886c398d90fa8c7dbd96c4200",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-format-cache-symmetry.png",
+      "originalSha256": "4f152c89d428d581eba0d36b4183d7199deed78886c398d90fa8c7dbd96c4200"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-keyboard-confirmed.png": {
+      "sha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-keyboard-confirmed.png",
+      "originalSha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-queue-edited-paused.png": {
+      "sha256": "62de08146ae26df8f55ca7f7d4f136cd3c4b0ba2728167a027efba53f7ffe01d",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-queue-edited-paused.png",
+      "originalSha256": "62de08146ae26df8f55ca7f7d4f136cd3c4b0ba2728167a027efba53f7ffe01d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-readBusy.png": {
+      "sha256": "f3b97e8d18d99b316ecc1723f5b9f54936868422bcdcb0f9f6642b4eb1fc9fea",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-readBusy.png",
+      "originalSha256": "f3b97e8d18d99b316ecc1723f5b9f54936868422bcdcb0f9f6642b4eb1fc9fea"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-readPending.png": {
+      "sha256": "dc2e99a58ef4fa4bbe6f096287485fb0c217f6767cf65747896808dcfffb91fc",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-readPending.png",
+      "originalSha256": "dc2e99a58ef4fa4bbe6f096287485fb0c217f6767cf65747896808dcfffb91fc"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-reject-malformed.png": {
+      "sha256": "df2387fffa222c83ae4e7c8a1b918936445b4e7b0d21a9b9e7e6d500e188573a",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-reject-malformed.png",
+      "originalSha256": "df2387fffa222c83ae4e7c8a1b918936445b4e7b0d21a9b9e7e6d500e188573a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-reject-oversize.png": {
+      "sha256": "0c1544569d33b25f05bca865425cc82834bc820b2ce7c3b08616707e6eeed2c6",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-reject-oversize.png",
+      "originalSha256": "0c1544569d33b25f05bca865425cc82834bc820b2ce7c3b08616707e6eeed2c6"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-sent-official-echo.png": {
+      "sha256": "65223ebc478498fd5a8b25062a4b7a2f1742cc5c4b7a7e6ee4549caed3296e64",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-sent-official-echo.png",
+      "originalSha256": "65223ebc478498fd5a8b25062a4b7a2f1742cc5c4b7a7e6ee4549caed3296e64"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-source-repair-clear.png": {
+      "sha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-source-repair-clear.png",
+      "originalSha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-uncertain.png": {
+      "sha256": "ed72758051de0733d6ff86bb7ad628930ee9b1312336fac1aab3023f047108be",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-uncertain.png",
+      "originalSha256": "ed72758051de0733d6ff86bb7ad628930ee9b1312336fac1aab3023f047108be"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run06-unread-warnings.png": {
+      "sha256": "b0df18baa13cc710b5b47dab07449c8ed610b3a6f3f0486a8b9e6dfea6df2c9f",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run06-unread-warnings.png",
+      "originalSha256": "b0df18baa13cc710b5b47dab07449c8ed610b3a6f3f0486a8b9e6dfea6df2c9f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-all-hidden-confirmed.png": {
+      "sha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-all-hidden-confirmed.png",
+      "originalSha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-all-review-dark.png": {
+      "sha256": "8ef3d1b083e5f204ddb98256e710d12b1b8e245711e483eeeb4b202243ce4942",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-all-review-dark.png",
+      "originalSha256": "8ef3d1b083e5f204ddb98256e710d12b1b8e245711e483eeeb4b202243ce4942"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-all-review-narrow.png": {
+      "sha256": "a3c2e4dbc7da4762a0c08a1751373b3185cae28fedb353051e1dfc2a6938fc9e",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-all-review-narrow.png",
+      "originalSha256": "a3c2e4dbc7da4762a0c08a1751373b3185cae28fedb353051e1dfc2a6938fc9e"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-cold-changed.png": {
+      "sha256": "4e56bda1a51262ac81a6f6dff856bfe7f961ce49f4f469597b323c9742eef0a7",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-cold-changed.png",
+      "originalSha256": "4e56bda1a51262ac81a6f6dff856bfe7f961ce49f4f469597b323c9742eef0a7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-cold-scope-mismatch.png": {
+      "sha256": "55611e6485a93891782b5ac7999ebdfe3d8f497affd78468b06d4b1d7a843bf0",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-cold-scope-mismatch.png",
+      "originalSha256": "55611e6485a93891782b5ac7999ebdfe3d8f497affd78468b06d4b1d7a843bf0"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-confirm-busy.png": {
+      "sha256": "72016c0846fc448066ea9d6dde50a635060e9805c0635bed2b66e27a387ec539",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-confirm-busy.png",
+      "originalSha256": "72016c0846fc448066ea9d6dde50a635060e9805c0635bed2b66e27a387ec539"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-confirm-pending.png": {
+      "sha256": "ba0916acfbc4a3ff3422a9ed361d79142baa30205bf1fcc67a42fc9b67c106ac",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-confirm-pending.png",
+      "originalSha256": "ba0916acfbc4a3ff3422a9ed361d79142baa30205bf1fcc67a42fc9b67c106ac"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-cross-draft.png": {
+      "sha256": "0bef79c5e66d4155be2906936c11eceb4d73503638a0cd0ae90e3bd782d2df63",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-cross-draft.png",
+      "originalSha256": "0bef79c5e66d4155be2906936c11eceb4d73503638a0cd0ae90e3bd782d2df63"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-default-review.png": {
+      "sha256": "a692776c0da1ee25ae618f46a52cee4a026b0426909a214b487c1b1f6674c5cd",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-default-review.png",
+      "originalSha256": "a692776c0da1ee25ae618f46a52cee4a026b0426909a214b487c1b1f6674c5cd"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-embedded_context_unknown.png": {
+      "sha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-embedded_context_unknown.png",
+      "originalSha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-embedded_context_unsupported.png": {
+      "sha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-embedded_context_unsupported.png",
+      "originalSha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-format-cache-symmetry.png": {
+      "sha256": "4f152c89d428d581eba0d36b4183d7199deed78886c398d90fa8c7dbd96c4200",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-format-cache-symmetry.png",
+      "originalSha256": "4f152c89d428d581eba0d36b4183d7199deed78886c398d90fa8c7dbd96c4200"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-keyboard-confirmed.png": {
+      "sha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-keyboard-confirmed.png",
+      "originalSha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-queue-edited-paused.png": {
+      "sha256": "62de08146ae26df8f55ca7f7d4f136cd3c4b0ba2728167a027efba53f7ffe01d",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-queue-edited-paused.png",
+      "originalSha256": "62de08146ae26df8f55ca7f7d4f136cd3c4b0ba2728167a027efba53f7ffe01d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-readBusy.png": {
+      "sha256": "72aa0aeb8c080e7426bb3802468958cbc53516635305980cb74036a48187db79",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-readBusy.png",
+      "originalSha256": "72aa0aeb8c080e7426bb3802468958cbc53516635305980cb74036a48187db79"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-readPending.png": {
+      "sha256": "3872638af1dda75b8ccf1771ab0a6a80e61530f95beb168c6126a1db45f75804",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-readPending.png",
+      "originalSha256": "3872638af1dda75b8ccf1771ab0a6a80e61530f95beb168c6126a1db45f75804"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-reject-malformed.png": {
+      "sha256": "df2387fffa222c83ae4e7c8a1b918936445b4e7b0d21a9b9e7e6d500e188573a",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-reject-malformed.png",
+      "originalSha256": "df2387fffa222c83ae4e7c8a1b918936445b4e7b0d21a9b9e7e6d500e188573a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-reject-oversize.png": {
+      "sha256": "0c1544569d33b25f05bca865425cc82834bc820b2ce7c3b08616707e6eeed2c6",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-reject-oversize.png",
+      "originalSha256": "0c1544569d33b25f05bca865425cc82834bc820b2ce7c3b08616707e6eeed2c6"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-save-failure.png": {
+      "sha256": "980410edeee1c4e8ff0683205c992d2dfc585b0a8a8b589d7943e53494587a0c",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-save-failure.png",
+      "originalSha256": "980410edeee1c4e8ff0683205c992d2dfc585b0a8a8b589d7943e53494587a0c"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-sent-official-echo.png": {
+      "sha256": "23a53312ffbcd932290fc9240c289583767ca5f976a9cdbb7fea66cd209d84a0",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-sent-official-echo.png",
+      "originalSha256": "23a53312ffbcd932290fc9240c289583767ca5f976a9cdbb7fea66cd209d84a0"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-source-repair-clear.png": {
+      "sha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-source-repair-clear.png",
+      "originalSha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-uncertain.png": {
+      "sha256": "61138fb04b88871b9991f0617bc2e947546dcc5295fa72b785704902fe89077c",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-uncertain.png",
+      "originalSha256": "61138fb04b88871b9991f0617bc2e947546dcc5295fa72b785704902fe89077c"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run07-unread-warnings.png": {
+      "sha256": "b0df18baa13cc710b5b47dab07449c8ed610b3a6f3f0486a8b9e6dfea6df2c9f",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run07-unread-warnings.png",
+      "originalSha256": "b0df18baa13cc710b5b47dab07449c8ed610b3a6f3f0486a8b9e6dfea6df2c9f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-all-hidden-confirmed.png": {
+      "sha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-all-hidden-confirmed.png",
+      "originalSha256": "d3c46b5355ca6505db91d3eb7d940103a583f2b4e20483ef39c2ccff19c2a0c1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-all-review-dark.png": {
+      "sha256": "84ed727a7654326307dbf602545a4a4ff87fbc386014cf69385132b869a9efcd",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-all-review-dark.png",
+      "originalSha256": "84ed727a7654326307dbf602545a4a4ff87fbc386014cf69385132b869a9efcd"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-all-review-narrow.png": {
+      "sha256": "8e76e209629a537d8d912d1631c2620b8290dd6bb02eb90af5d3901da0089faf",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-all-review-narrow.png",
+      "originalSha256": "8e76e209629a537d8d912d1631c2620b8290dd6bb02eb90af5d3901da0089faf"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-cold-changed.png": {
+      "sha256": "5020f9c6361d2dac3deae14053d16643017dfe97db75e8edbf54cd3f547d6b8d",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-cold-changed.png",
+      "originalSha256": "5020f9c6361d2dac3deae14053d16643017dfe97db75e8edbf54cd3f547d6b8d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-cold-scope-mismatch.png": {
+      "sha256": "5020f9c6361d2dac3deae14053d16643017dfe97db75e8edbf54cd3f547d6b8d",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-cold-scope-mismatch.png",
+      "originalSha256": "5020f9c6361d2dac3deae14053d16643017dfe97db75e8edbf54cd3f547d6b8d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-confirm-busy.png": {
+      "sha256": "72016c0846fc448066ea9d6dde50a635060e9805c0635bed2b66e27a387ec539",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-confirm-busy.png",
+      "originalSha256": "72016c0846fc448066ea9d6dde50a635060e9805c0635bed2b66e27a387ec539"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-confirm-pending.png": {
+      "sha256": "ba0916acfbc4a3ff3422a9ed361d79142baa30205bf1fcc67a42fc9b67c106ac",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-confirm-pending.png",
+      "originalSha256": "ba0916acfbc4a3ff3422a9ed361d79142baa30205bf1fcc67a42fc9b67c106ac"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-cross-draft.png": {
+      "sha256": "0bef79c5e66d4155be2906936c11eceb4d73503638a0cd0ae90e3bd782d2df63",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-cross-draft.png",
+      "originalSha256": "0bef79c5e66d4155be2906936c11eceb4d73503638a0cd0ae90e3bd782d2df63"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-default-review.png": {
+      "sha256": "a476a41d232604756c9af8862cae295af780764e79750afa73422c2cd20eae86",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-default-review.png",
+      "originalSha256": "a476a41d232604756c9af8862cae295af780764e79750afa73422c2cd20eae86"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-embedded_context_unknown.png": {
+      "sha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-embedded_context_unknown.png",
+      "originalSha256": "53784442e7178224b8d06d3127e81fac7fcec3a1d4a2a7f698c7fe3c76c2f249"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-embedded_context_unsupported.png": {
+      "sha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-embedded_context_unsupported.png",
+      "originalSha256": "653fd8ba15ad87183082d43e7512d60d7acc1687437e7bcba784129b4bc40875"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-format-cache-symmetry.png": {
+      "sha256": "4f152c89d428d581eba0d36b4183d7199deed78886c398d90fa8c7dbd96c4200",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-format-cache-symmetry.png",
+      "originalSha256": "4f152c89d428d581eba0d36b4183d7199deed78886c398d90fa8c7dbd96c4200"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-keyboard-confirmed.png": {
+      "sha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-keyboard-confirmed.png",
+      "originalSha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-queue-edited-paused.png": {
+      "sha256": "62de08146ae26df8f55ca7f7d4f136cd3c4b0ba2728167a027efba53f7ffe01d",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-queue-edited-paused.png",
+      "originalSha256": "62de08146ae26df8f55ca7f7d4f136cd3c4b0ba2728167a027efba53f7ffe01d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-readBusy.png": {
+      "sha256": "3041b2691686cf19aab82a96291a36db8ff0ee4e788470c8f0c3ef1e6f73a1eb",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-readBusy.png",
+      "originalSha256": "3041b2691686cf19aab82a96291a36db8ff0ee4e788470c8f0c3ef1e6f73a1eb"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-readPending.png": {
+      "sha256": "b1309211614b2605515e6c05ca6c15e5e9ab38c25f8bd94208c172189bfcc219",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-readPending.png",
+      "originalSha256": "b1309211614b2605515e6c05ca6c15e5e9ab38c25f8bd94208c172189bfcc219"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-reject-malformed.png": {
+      "sha256": "df2387fffa222c83ae4e7c8a1b918936445b4e7b0d21a9b9e7e6d500e188573a",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-reject-malformed.png",
+      "originalSha256": "df2387fffa222c83ae4e7c8a1b918936445b4e7b0d21a9b9e7e6d500e188573a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-reject-oversize.png": {
+      "sha256": "0c1544569d33b25f05bca865425cc82834bc820b2ce7c3b08616707e6eeed2c6",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-reject-oversize.png",
+      "originalSha256": "0c1544569d33b25f05bca865425cc82834bc820b2ce7c3b08616707e6eeed2c6"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-save-failure.png": {
+      "sha256": "980410edeee1c4e8ff0683205c992d2dfc585b0a8a8b589d7943e53494587a0c",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-save-failure.png",
+      "originalSha256": "980410edeee1c4e8ff0683205c992d2dfc585b0a8a8b589d7943e53494587a0c"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-sent-official-echo.png": {
+      "sha256": "7cc58c74c06844012341300bd2afa80f64b8277b21c91e7b71a7eab31bc5b48c",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-sent-official-echo.png",
+      "originalSha256": "7cc58c74c06844012341300bd2afa80f64b8277b21c91e7b71a7eab31bc5b48c"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-source-repair-clear.png": {
+      "sha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-source-repair-clear.png",
+      "originalSha256": "8289dfd6c155e9df8e06802ce4b736e947c495034bf09376275eb8128f827efe"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-uncertain.png": {
+      "sha256": "01480c0eaed101c7345012b1cbe0999e565b3fb48a233cc1af139c433fb3ebfb",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-uncertain.png",
+      "originalSha256": "01480c0eaed101c7345012b1cbe0999e565b3fb48a233cc1af139c433fb3ebfb"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/webkit-run08-unread-warnings.png": {
+      "sha256": "b0df18baa13cc710b5b47dab07449c8ed610b3a6f3f0486a8b9e6dfea6df2c9f",
+      "original": "output/2026-10-13-xlsx-input-browser/webkit-run08-unread-warnings.png",
+      "originalSha256": "b0df18baa13cc710b5b47dab07449c8ed610b3a6f3f0486a8b9e6dfea6df2c9f"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/all-hidden.capture.json.raw": {
+      "sha256": "d852831406c66d836ae3dfd669e88c3dd73ab42be6b93745caa46c06701e3302",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/all-hidden.capture.json",
+      "originalSha256": "d852831406c66d836ae3dfd669e88c3dd73ab42be6b93745caa46c06701e3302"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/all-hidden.xlsx": {
+      "sha256": "5f588a1a333b8335b566675d5573c6927de4fecff3a3abbc13911318ea51cbfb",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/all-hidden.xlsx",
+      "originalSha256": "5f588a1a333b8335b566675d5573c6927de4fecff3a3abbc13911318ea51cbfb"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/format-formula-cache.capture.json.raw": {
+      "sha256": "7487cb45c09f558d216818b4fc7096a8589fd7d1c9201ac2f9c513dd25ad7272",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/format-formula-cache.capture.json",
+      "originalSha256": "7487cb45c09f558d216818b4fc7096a8589fd7d1c9201ac2f9c513dd25ad7272"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/format-formula-cache.manifest.json.raw": {
+      "sha256": "900827766a7e582eac32393909aed99e650d1b11268e3f2035b4da314bc2f30e",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/format-formula-cache.manifest.json",
+      "originalSha256": "900827766a7e582eac32393909aed99e650d1b11268e3f2035b4da314bc2f30e"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/format-formula-cache.oracle.json.raw": {
+      "sha256": "3e74dfd974aa4b57d99e978f148259d7fa9afc846063f00f0a31c096b178bcfa",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/format-formula-cache.oracle.json",
+      "originalSha256": "3e74dfd974aa4b57d99e978f148259d7fa9afc846063f00f0a31c096b178bcfa"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/format-formula-cache.xlsx": {
+      "sha256": "eb86baa14902a53f35fada8f616fb83f620f9203ed516dcf5f76b41b96f3ad7d",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/format-formula-cache.xlsx",
+      "originalSha256": "eb86baa14902a53f35fada8f616fb83f620f9203ed516dcf5f76b41b96f3ad7d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/malformed.capture.json.raw": {
+      "sha256": "71b0a3a99075aa3e498b987da383cf8857c7e50b9f07ee73a49543a9c1950b77",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/malformed.capture.json",
+      "originalSha256": "71b0a3a99075aa3e498b987da383cf8857c7e50b9f07ee73a49543a9c1950b77"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/malformed.xlsx": {
+      "sha256": "ee34f95a0518f05d71a084c71a385be074d8a616cfb75f61d19f91af210074f3",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/malformed.xlsx",
+      "originalSha256": "ee34f95a0518f05d71a084c71a385be074d8a616cfb75f61d19f91af210074f3"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/manifest.json.raw": {
+      "sha256": "3acedd036b102a48c9676049f7222f42f60da9527e728aaa43bca455334f24e0",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/manifest.json",
+      "originalSha256": "3acedd036b102a48c9676049f7222f42f60da9527e728aaa43bca455334f24e0"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/oracle.original.json.raw": {
+      "sha256": "ee8a56367666e6ec001c7814011bf564132bf4c3b68068265b223fcb72ea6453",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/oracle.original.json",
+      "originalSha256": "ee8a56367666e6ec001c7814011bf564132bf4c3b68068265b223fcb72ea6453"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/oversize.capture.json.raw": {
+      "sha256": "f539781b877d61433d5013ddbd933ae3955a6cb6b73bc06ea2cff2f3427b34f9",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/oversize.capture.json",
+      "originalSha256": "f539781b877d61433d5013ddbd933ae3955a6cb6b73bc06ea2cff2f3427b34f9"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/oversize.xlsx": {
+      "sha256": "00047c47312fdd97c77a19781b5a4017244c68047b588e0064397a16e5444c6a",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/oversize.xlsx",
+      "originalSha256": "00047c47312fdd97c77a19781b5a4017244c68047b588e0064397a16e5444c6a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/protection.capture.json.raw": {
+      "sha256": "86a3bd66755540332e2b5b327021e1b0035634d6c5fc0f9b5bd2dd99f2e6e5b1",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/protection.capture.json",
+      "originalSha256": "86a3bd66755540332e2b5b327021e1b0035634d6c5fc0f9b5bd2dd99f2e6e5b1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/protection.xlsx": {
+      "sha256": "d588dd30f65be1d70f415d7fbe364f2ec3679ca2d97ffd94861cacfcdc3538c0",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/protection.xlsx",
+      "originalSha256": "d588dd30f65be1d70f415d7fbe364f2ec3679ca2d97ffd94861cacfcdc3538c0"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/unread.capture.json.raw": {
+      "sha256": "cb4ad951cf8bf0f935db6d778e0df9bdf19c1a41ad2b46db97df4f48e8e0a04a",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/unread.capture.json",
+      "originalSha256": "cb4ad951cf8bf0f935db6d778e0df9bdf19c1a41ad2b46db97df4f48e8e0a04a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/unread.xlsx": {
+      "sha256": "91658ecea876200f17650d9d2b390d9fe22c9945510f6787f149ff7eecb51063",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/unread.xlsx",
+      "originalSha256": "91658ecea876200f17650d9d2b390d9fe22c9945510f6787f149ff7eecb51063"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/values.capture.json.raw": {
+      "sha256": "72eea00d5f12dd30d47acd4a185bdc100eff0d86110b9aade72373c1957f1502",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/values.capture.json",
+      "originalSha256": "72eea00d5f12dd30d47acd4a185bdc100eff0d86110b9aade72373c1957f1502"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/fixtures/values.xlsx": {
+      "sha256": "834df0bafb40c08b376d5da8c6e25e1712ec98dfcfcf1492a59582fd94d5e80d",
+      "original": "output/2026-10-13-xlsx-input-browser/fixtures/values.xlsx",
+      "originalSha256": "834df0bafb40c08b376d5da8c6e25e1712ec98dfcfcf1492a59582fd94d5e80d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v1/diagnosis.json.raw": {
+      "sha256": "99c46602e559b9560852e66d5542e29e8d2c3326234bc5150d02df17de26f14e",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v1/diagnosis.json",
+      "originalSha256": "99c46602e559b9560852e66d5542e29e8d2c3326234bc5150d02df17de26f14e"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v1/fixture.tsx.raw": {
+      "sha256": "8d6986542536994afede9c5a9486888d1c5e543e271e2cd73677192cd6dac904",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v1/fixture.tsx",
+      "originalSha256": "8d6986542536994afede9c5a9486888d1c5e543e271e2cd73677192cd6dac904"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v1/index.html.raw": {
+      "sha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v1/index.html",
+      "originalSha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v1/make_captures.py.raw": {
+      "sha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v1/make_captures.py",
+      "originalSha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v1/run.mjs.raw": {
+      "sha256": "4de770f83d3057c398a3bc91d5b7542c3b5da82450494adf822f975557bb1a2c",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v1/run.mjs",
+      "originalSha256": "4de770f83d3057c398a3bc91d5b7542c3b5da82450494adf822f975557bb1a2c"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v1/serve.mjs.raw": {
+      "sha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v1/serve.mjs",
+      "originalSha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v2/diagnosis.json.raw": {
+      "sha256": "690206b714ae7163773891f1165dc6b3a35864ae5a25bab29dad4bf72f6ba8ee",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v2/diagnosis.json",
+      "originalSha256": "690206b714ae7163773891f1165dc6b3a35864ae5a25bab29dad4bf72f6ba8ee"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v2/fixture.tsx.raw": {
+      "sha256": "8d6986542536994afede9c5a9486888d1c5e543e271e2cd73677192cd6dac904",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v2/fixture.tsx",
+      "originalSha256": "8d6986542536994afede9c5a9486888d1c5e543e271e2cd73677192cd6dac904"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v2/index.html.raw": {
+      "sha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v2/index.html",
+      "originalSha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v2/make_captures.py.raw": {
+      "sha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v2/make_captures.py",
+      "originalSha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v2/run.mjs.raw": {
+      "sha256": "0a9bd4e274235ef05de8400d4fa14d79212c10a418caa46b8fd4aa622de08415",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v2/run.mjs",
+      "originalSha256": "0a9bd4e274235ef05de8400d4fa14d79212c10a418caa46b8fd4aa622de08415"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v2/serve.mjs.raw": {
+      "sha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v2/serve.mjs",
+      "originalSha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v3/diagnosis.json.raw": {
+      "sha256": "a6992c01e0d9d1d78985131a1bd6778d8dd7b33b9df027c38d97490862445031",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v3/diagnosis.json",
+      "originalSha256": "a6992c01e0d9d1d78985131a1bd6778d8dd7b33b9df027c38d97490862445031"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v3/fixture.tsx.raw": {
+      "sha256": "8d6986542536994afede9c5a9486888d1c5e543e271e2cd73677192cd6dac904",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v3/fixture.tsx",
+      "originalSha256": "8d6986542536994afede9c5a9486888d1c5e543e271e2cd73677192cd6dac904"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v3/index.html.raw": {
+      "sha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v3/index.html",
+      "originalSha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v3/make_captures.py.raw": {
+      "sha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v3/make_captures.py",
+      "originalSha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v3/run.mjs.raw": {
+      "sha256": "2eb1326b1dd3a5c4da0855ae7ea50697f2aa102f24545cc55d8ea444609b8908",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v3/run.mjs",
+      "originalSha256": "2eb1326b1dd3a5c4da0855ae7ea50697f2aa102f24545cc55d8ea444609b8908"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v3/serve.mjs.raw": {
+      "sha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v3/serve.mjs",
+      "originalSha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v4/diagnosis.json.raw": {
+      "sha256": "ecea70420091173529f2701ea41691054eb0048552d5f27d9f386458abd5f301",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v4/diagnosis.json",
+      "originalSha256": "ecea70420091173529f2701ea41691054eb0048552d5f27d9f386458abd5f301"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v4/fixture.tsx.raw": {
+      "sha256": "049411229d1b96c02d00941632e7b2d966832c15263569b2d4e92876eeec540c",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v4/fixture.tsx",
+      "originalSha256": "049411229d1b96c02d00941632e7b2d966832c15263569b2d4e92876eeec540c"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v4/index.html.raw": {
+      "sha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v4/index.html",
+      "originalSha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v4/make_captures.py.raw": {
+      "sha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v4/make_captures.py",
+      "originalSha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v4/run.mjs.raw": {
+      "sha256": "85f66e7c3a842a662cad28fe09ba5292dab8bbf012cb41ffe6fa870979dc1f21",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v4/run.mjs",
+      "originalSha256": "85f66e7c3a842a662cad28fe09ba5292dab8bbf012cb41ffe6fa870979dc1f21"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v4/serve.mjs.raw": {
+      "sha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v4/serve.mjs",
+      "originalSha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v5/diagnosis.json.raw": {
+      "sha256": "0b0fdad7d126e2be4d1d2e45796ff2b03b55b7ee2b86e88fe06727e5fcdd4a02",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v5/diagnosis.json",
+      "originalSha256": "0b0fdad7d126e2be4d1d2e45796ff2b03b55b7ee2b86e88fe06727e5fcdd4a02"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v5/fixture.tsx.raw": {
+      "sha256": "bd469657f58d621f7d3cf3b859d32e3f05529fc946e436d5de017be6b05e7def",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v5/fixture.tsx",
+      "originalSha256": "bd469657f58d621f7d3cf3b859d32e3f05529fc946e436d5de017be6b05e7def"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v5/index.html.raw": {
+      "sha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v5/index.html",
+      "originalSha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v5/make_captures.py.raw": {
+      "sha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v5/make_captures.py",
+      "originalSha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v5/run.mjs.raw": {
+      "sha256": "4f1d19bb67707ef5168707f28b65d68e5089bc7ffc5e2796efae61f17df68954",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v5/run.mjs",
+      "originalSha256": "4f1d19bb67707ef5168707f28b65d68e5089bc7ffc5e2796efae61f17df68954"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v5/serve.mjs.raw": {
+      "sha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v5/serve.mjs",
+      "originalSha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v6/diagnosis.json.raw": {
+      "sha256": "0dea031734ba85eeb81f8f44fdba262310f45038b1542418b055c596817f208c",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v6/diagnosis.json",
+      "originalSha256": "0dea031734ba85eeb81f8f44fdba262310f45038b1542418b055c596817f208c"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v6/fixture.tsx.raw": {
+      "sha256": "c60c396450b002f73fd15eb3c238f99a54a9ceb838bda721bf346e98652b5f8d",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v6/fixture.tsx",
+      "originalSha256": "c60c396450b002f73fd15eb3c238f99a54a9ceb838bda721bf346e98652b5f8d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v6/index.html.raw": {
+      "sha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v6/index.html",
+      "originalSha256": "0deb03ddab772d037471a0c8f3d734db7fbea35be25fdd64e21aff8ca392f2a1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v6/make_captures.py.raw": {
+      "sha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v6/make_captures.py",
+      "originalSha256": "455c9e49ce5a6890804a7a82fd8d760b9898e6b1685cc4e44882eae6ce58eddc"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v6/prepare_format_formula.py.raw": {
+      "sha256": "9e313a48e0479bad061ee3ee8f6558bb7bba7cb037c1e03a8ff054343da7e9a9",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v6/prepare_format_formula.py",
+      "originalSha256": "9e313a48e0479bad061ee3ee8f6558bb7bba7cb037c1e03a8ff054343da7e9a9"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v6/run.mjs.raw": {
+      "sha256": "9520f79b68015063b430686bd4644b1260bc7643394b4e0d8612518e56021b91",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v6/run.mjs",
+      "originalSha256": "9520f79b68015063b430686bd4644b1260bc7643394b4e0d8612518e56021b91"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/harness-revision-v6/serve.mjs.raw": {
+      "sha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3",
+      "original": "output/2026-10-13-xlsx-input-browser/harness-revision-v6/serve.mjs",
+      "originalSha256": "edbd71b4d74700be7ecc5d240b38a6beaaec26ce859040b444bff3ef439d9bc3"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/component-green-first.log.raw": {
+      "sha256": "63d93995283d23f7542ddbe5bac04180701552fa2cdf51af734082d737fa6547",
+      "original": "output/2026-10-13-xlsx-input-save-retry/component-green-first.log",
+      "originalSha256": "63d93995283d23f7542ddbe5bac04180701552fa2cdf51af734082d737fa6547"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/component-red.log.raw": {
+      "sha256": "7cddab5c6fea9174f92222b2b0994cb61a9e63d95c837cca5b08c4600fa3f931",
+      "original": "output/2026-10-13-xlsx-input-save-retry/component-red.log",
+      "originalSha256": "7cddab5c6fea9174f92222b2b0994cb61a9e63d95c837cca5b08c4600fa3f931"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/edit-observation-red.log.raw": {
+      "sha256": "53b234a700c396f867795f5134557b5802b289dbcc934881decf5f8fbdaf3bfb",
+      "original": "output/2026-10-13-xlsx-input-save-retry/edit-observation-red.log",
+      "originalSha256": "53b234a700c396f867795f5134557b5802b289dbcc934881decf5f8fbdaf3bfb"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/engineering-source-inventory-current.json.raw": {
+      "sha256": "1c4240b0644f36a152fafaa93c9bb9989fde8b6fe8ec9b758f0ca3708d6d4e0a",
+      "original": "output/2026-10-13-xlsx-input-save-retry/engineering-source-inventory-current.json",
+      "originalSha256": "1c4240b0644f36a152fafaa93c9bb9989fde8b6fe8ec9b758f0ca3708d6d4e0a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/focused-green-receipt.json.raw": {
+      "sha256": "201e18798375fd89352b5d51e25d025bb90227df2da4ac7e89a00f62708596f4",
+      "original": "output/2026-10-13-xlsx-input-save-retry/focused-green-receipt.json",
+      "originalSha256": "201e18798375fd89352b5d51e25d025bb90227df2da4ac7e89a00f62708596f4"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/format-check-v2.log.raw": {
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "original": "output/2026-10-13-xlsx-input-save-retry/format-check-v2.log",
+      "originalSha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/format-check.log.raw": {
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "original": "output/2026-10-13-xlsx-input-save-retry/format-check.log",
+      "originalSha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/inspect_send_edit_save_retry.mjs.raw": {
+      "sha256": "91df2b627884e3da79d014195582867194f6424c346f5d00abbc919c0447a711",
+      "original": "output/2026-10-13-xlsx-input-save-retry/inspect_send_edit_save_retry.mjs",
+      "originalSha256": "91df2b627884e3da79d014195582867194f6424c346f5d00abbc919c0447a711"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/inspect_send_save_retry.mjs.raw": {
+      "sha256": "b87630a38edf90e7abaf4384430ae76c98a2ed4fdeb0fe33937a85b2b985932a",
+      "original": "output/2026-10-13-xlsx-input-save-retry/inspect_send_save_retry.mjs",
+      "originalSha256": "b87630a38edf90e7abaf4384430ae76c98a2ed4fdeb0fe33937a85b2b985932a"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/receipt-format.log.raw": {
+      "sha256": "a6acb24f0866cec6c0c0b67b4de40f979c21427bf801c90c8f2c3af750d6511d",
+      "original": "output/2026-10-13-xlsx-input-save-retry/receipt-format.log",
+      "originalSha256": "a6acb24f0866cec6c0c0b67b4de40f979c21427bf801c90c8f2c3af750d6511d"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/revision-v2-format-final.log.raw": {
+      "sha256": "7478790adb82144d6695214bfcb829e51db2afb570885e4e56abeab9c237eae5",
+      "original": "output/2026-10-13-xlsx-input-save-retry/revision-v2-format-final.log",
+      "originalSha256": "7478790adb82144d6695214bfcb829e51db2afb570885e4e56abeab9c237eae5"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/revision-v2-format.log.raw": {
+      "sha256": "9066047bd24c5af8f686abd2bd70137483c8760094bf95c49c0bb9d0cededf28",
+      "original": "output/2026-10-13-xlsx-input-save-retry/revision-v2-format.log",
+      "originalSha256": "9066047bd24c5af8f686abd2bd70137483c8760094bf95c49c0bb9d0cededf28"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/save-retry-inspection-run01.json.raw": {
+      "sha256": "1d38db253ae68278481d468cc5d7b3177b6f3710951f36875bc2ca8c165e437c",
+      "original": "output/2026-10-13-xlsx-input-save-retry/save-retry-inspection-run01.json",
+      "originalSha256": "1d38db253ae68278481d468cc5d7b3177b6f3710951f36875bc2ca8c165e437c"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/save-retry-inspection-run01.png": {
+      "sha256": "7e096f0d6655676668d89c7892f8cd85adba585301cdb2e052549b3689161130",
+      "original": "output/2026-10-13-xlsx-input-save-retry/save-retry-inspection-run01.png",
+      "originalSha256": "7e096f0d6655676668d89c7892f8cd85adba585301cdb2e052549b3689161130"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/save-retry-inspection-run02.json.raw": {
+      "sha256": "1fbf9dc58d7e2514ca7cc2fd3fead9fbdc075d8e1e9f5f672113ff0ad1e7c1df",
+      "original": "output/2026-10-13-xlsx-input-save-retry/save-retry-inspection-run02.json",
+      "originalSha256": "1fbf9dc58d7e2514ca7cc2fd3fead9fbdc075d8e1e9f5f672113ff0ad1e7c1df"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/save-retry-inspection-run02.png": {
+      "sha256": "12c73c2e4fc14c200be827d33168e51aebee806e6a1b3c5b45a8b45b554f9cd6",
+      "original": "output/2026-10-13-xlsx-input-save-retry/save-retry-inspection-run02.png",
+      "originalSha256": "12c73c2e4fc14c200be827d33168e51aebee806e6a1b3c5b45a8b45b554f9cd6"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/send-edit-save-retry-run01.json.raw": {
+      "sha256": "c095ae5940f23c0eeb6c7bdd36bc693f8b100adfde834f06494d0654ef553ea8",
+      "original": "output/2026-10-13-xlsx-input-save-retry/send-edit-save-retry-run01.json",
+      "originalSha256": "c095ae5940f23c0eeb6c7bdd36bc693f8b100adfde834f06494d0654ef553ea8"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/send-edit-save-retry-run01.png": {
+      "sha256": "dd3437d07e108b07f1f65aea64d499aa01dd1debae38f6c44ee6a6342cf5b2e1",
+      "original": "output/2026-10-13-xlsx-input-save-retry/send-edit-save-retry-run01.png",
+      "originalSha256": "dd3437d07e108b07f1f65aea64d499aa01dd1debae38f6c44ee6a6342cf5b2e1"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/send-edit-save-retry-run02.json.raw": {
+      "sha256": "7462bdcca05794d77bbc71a2a9815c5f082d7c3df3115c427d45b69d2d124458",
+      "original": "output/2026-10-13-xlsx-input-save-retry/send-edit-save-retry-run02.json",
+      "originalSha256": "7462bdcca05794d77bbc71a2a9815c5f082d7c3df3115c427d45b69d2d124458"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/send-edit-save-retry-run02.png": {
+      "sha256": "ac3c353727483a8b7ee1c3efbecd0281f7279ebb79357186af5ee2913abbb173",
+      "original": "output/2026-10-13-xlsx-input-save-retry/send-edit-save-retry-run02.png",
+      "originalSha256": "ac3c353727483a8b7ee1c3efbecd0281f7279ebb79357186af5ee2913abbb173"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/source-freeze-v1.json.raw": {
+      "sha256": "983ed95ea3cf3d6fec4f5ad8762dfc5c823d6d831f260023d74791c9295b8eb8",
+      "original": "output/2026-10-13-xlsx-input-save-retry/source-freeze-v1.json",
+      "originalSha256": "983ed95ea3cf3d6fec4f5ad8762dfc5c823d6d831f260023d74791c9295b8eb8"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/source-freeze-v2.json.raw": {
+      "sha256": "31c499b5a4c24055b5c17e280648220fee75d72f158c4a0354fbab4d47b2ebf8",
+      "original": "output/2026-10-13-xlsx-input-save-retry/source-freeze-v2.json",
+      "originalSha256": "31c499b5a4c24055b5c17e280648220fee75d72f158c4a0354fbab4d47b2ebf8"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/targeted-first.log.raw": {
+      "sha256": "350bdeb1e5532662f95dceb87b0bbe94ea587b6dcea423b2fd83017b3bb8cced",
+      "original": "output/2026-10-13-xlsx-input-save-retry/targeted-first.log",
+      "originalSha256": "350bdeb1e5532662f95dceb87b0bbe94ea587b6dcea423b2fd83017b3bb8cced"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/targeted-run02.log.raw": {
+      "sha256": "6f47eceaea80d802e273c5af8d39e879f45b26f936028e0d5097939174652700",
+      "original": "output/2026-10-13-xlsx-input-save-retry/targeted-run02.log",
+      "originalSha256": "6f47eceaea80d802e273c5af8d39e879f45b26f936028e0d5097939174652700"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/targeted-run03.log.raw": {
+      "sha256": "d2ca4a29c99518406710e006bdda0c959d3bbffb35d2d6e1bd6824716db484bb",
+      "original": "output/2026-10-13-xlsx-input-save-retry/targeted-run03.log",
+      "originalSha256": "d2ca4a29c99518406710e006bdda0c959d3bbffb35d2d6e1bd6824716db484bb"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/targeted-run04.log.raw": {
+      "sha256": "2831b5ec9e3f2a6fd43d4443d65d947f8d8777b24ff0c9588ec2eb88f313f3e9",
+      "original": "output/2026-10-13-xlsx-input-save-retry/targeted-run04.log",
+      "originalSha256": "2831b5ec9e3f2a6fd43d4443d65d947f8d8777b24ff0c9588ec2eb88f313f3e9"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/targeted-run05.log.raw": {
+      "sha256": "f5f5429b02f61a0a9e4aab1ddf85612334a9f93b514ca59fd4815ef014229ab7",
+      "original": "output/2026-10-13-xlsx-input-save-retry/targeted-run05.log",
+      "originalSha256": "f5f5429b02f61a0a9e4aab1ddf85612334a9f93b514ca59fd4815ef014229ab7"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/targeted-run06.log.raw": {
+      "sha256": "e0158acae12bccdcb5ef08dea3f8b092515775b57c1d40995b65cb8fc3117ea6",
+      "original": "output/2026-10-13-xlsx-input-save-retry/targeted-run06.log",
+      "originalSha256": "e0158acae12bccdcb5ef08dea3f8b092515775b57c1d40995b65cb8fc3117ea6"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/test-format-final-02.log.raw": {
+      "sha256": "33bbae0ce739df8553a25094d1cda96893ff5553986375bdf57a4efd43a4a1f2",
+      "original": "output/2026-10-13-xlsx-input-save-retry/test-format-final-02.log",
+      "originalSha256": "33bbae0ce739df8553a25094d1cda96893ff5553986375bdf57a4efd43a4a1f2"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/test-format-final.log.raw": {
+      "sha256": "b7de0aca05fc5885a5832b3c7577ad0ec72f1d017be662ab9db181d3c951fda3",
+      "original": "output/2026-10-13-xlsx-input-save-retry/test-format-final.log",
+      "originalSha256": "b7de0aca05fc5885a5832b3c7577ad0ec72f1d017be662ab9db181d3c951fda3"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/test-format.log.raw": {
+      "sha256": "084cd4cc9bde7debe757f1f1ef423912bdaa9d7a836eab20ac1b76e8f6d8738b",
+      "original": "output/2026-10-13-xlsx-input-save-retry/test-format.log",
+      "originalSha256": "084cd4cc9bde7debe757f1f1ef423912bdaa9d7a836eab20ac1b76e8f6d8738b"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/typecheck-run01.log.raw": {
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "original": "output/2026-10-13-xlsx-input-save-retry/typecheck-run01.log",
+      "originalSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/typecheck-run02.log.raw": {
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "original": "output/2026-10-13-xlsx-input-save-retry/typecheck-run02.log",
+      "originalSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    "docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser/save-retry/typecheck-run03.log.raw": {
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "original": "output/2026-10-13-xlsx-input-save-retry/typecheck-run03.log",
+      "originalSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    }
+  },
+  "allByteIdentical": true
+}

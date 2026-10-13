@@ -1,0 +1,184 @@
+{
+  "schema": 1,
+  "scope": "controlled-complete-production-app-real-worker",
+  "nativeAppClaim": false,
+  "realAgentClaim": false,
+  "userDatabaseRead": false,
+  "nativeOsCaptureClaim": false,
+  "finalBothEnginesPassed": true,
+  "finalRuns": [
+    {
+      "raw": "output/2026-10-13-xlsx-input-browser/chromium-run09.json",
+      "rawSha256": "d48fe25807b6fb4b6e564e1224cf88c0cc7f47a4da288ed6fcc1815aeb29e3b2",
+      "engine": "chromium",
+      "label": "run09",
+      "suite": "full",
+      "passed": true,
+      "passedChecks": 122,
+      "totalChecks": 122,
+      "sourceStable": true,
+      "sourceInputCount": 1004,
+      "testInputCount": 462,
+      "pageErrors": [],
+      "blockedRequests": [],
+      "failure": null,
+      "sessionId": 61182,
+      "completionChunk": "3a96dc",
+      "actualExitCode": 0
+    },
+    {
+      "raw": "output/2026-10-13-xlsx-input-browser/webkit-run08.json",
+      "rawSha256": "aedf14b311e059a0e5ba8c55f5000c9fb50b52a0923653f67f8ece67f3e87e63",
+      "engine": "webkit",
+      "label": "run08",
+      "suite": "full",
+      "passed": true,
+      "passedChecks": 122,
+      "totalChecks": 122,
+      "sourceStable": true,
+      "sourceInputCount": 1004,
+      "testInputCount": 462,
+      "pageErrors": [],
+      "blockedRequests": [],
+      "failure": null,
+      "sessionId": 22118,
+      "completionChunk": "a425db",
+      "actualExitCode": 0
+    }
+  ],
+  "sourceFreeze": {
+    "path": "output/2026-10-13-xlsx-input-save-retry/source-freeze-v2.json",
+    "sha256": "31c499b5a4c24055b5c17e280648220fee75d72f158c4a0354fbab4d47b2ebf8",
+    "sourcesStillMatch": true
+  },
+  "sourceInventory": {
+    "path": "output/2026-10-13-xlsx-input-save-retry/engineering-source-inventory-current.json",
+    "sha256": "1c4240b0644f36a152fafaa93c9bb9989fde8b6fe8ec9b758f0ca3708d6d4e0a",
+    "inputCount": 1642,
+    "actualSevenChecksClaim": false
+  },
+  "historicalBaseFreezes": [
+    {
+      "owner": "A",
+      "path": "output/2026-10-13-document-input-next/implementation-a/source-freeze-v2.json",
+      "sha256": "a22504aa58720bf0d6e8719a35f7663a50f5ffc8dada9f8d04404f3525ff8c20"
+    },
+    {
+      "owner": "B",
+      "path": "output/2026-10-13-xlsx-input-integration/source-freeze-v1.json",
+      "sha256": "ed2ac6105776843b591df6ba58b0b31fa326a2e1fbd633c9048dad1d950ef150"
+    },
+    {
+      "owner": "C",
+      "path": "output/2026-10-13-xlsx-input-ui/source-freeze-v2.json",
+      "sha256": "81e9006ba0d7b1bb52c9ce6482aa4324287af3b999681015c552edaa0d34fdc7"
+    }
+  ],
+  "harnessRevisionsRetained": [
+    "output/2026-10-13-xlsx-input-browser/harness-revision-v1",
+    "output/2026-10-13-xlsx-input-browser/harness-revision-v2",
+    "output/2026-10-13-xlsx-input-browser/harness-revision-v3",
+    "output/2026-10-13-xlsx-input-browser/harness-revision-v4",
+    "output/2026-10-13-xlsx-input-browser/harness-revision-v5",
+    "output/2026-10-13-xlsx-input-browser/harness-revision-v6"
+  ],
+  "allMainRawRuns": 17,
+  "failedMainRawRuns": 11,
+  "failedMainClassification": "11 harness assumptions corrected with retained exact prior scripts, raw failures and diagnoses. Actual product defects are separately retained below.",
+  "oracleCorrection": {
+    "original": "docs/evidence/2026-10-09-capability-hardening/xlsx-input/fixtures/oracle.json",
+    "originalSha256": "ee8a56367666e6ec001c7814011bf564132bf4c3b68068265b223fcb72ea6453",
+    "originalDefaultCount": 21,
+    "actualIndependentPolicyCount": 20,
+    "actualHiddenOmissions": 5,
+    "reason": "Authored C4 is also within hidden column C; original oracle bytes were not rewritten. Explicit all remains25."
+  },
+  "verification": {
+    "fullChecksPerEngine": 122,
+    "productionWorkersPerEngine": 42,
+    "sourceInputsPerRun": 1004,
+    "testInputsPerRun": 462,
+    "covered": [
+      "actual independently authored ZIP parts and production XLSX Worker",
+      "default-visible20 and explicit-all25; complete saved tails; unsafe-integer lexical bytes/zero/false/cache distinctions",
+      "all-hidden scopeEmpty without fallback; range switch fresh capture/reset consent/no automatic Send",
+      "known cold original all-mode+complete sheet IDs actual reparse; unknown historical metadata/null cannot confer authority",
+      "whole-source revision/URI/text digest rejection; malformed later sheet and aggregate UTF8 budget reject whole result without dropping prior input",
+      "exact official outgoing whitelist, untrusted incoming metadata, echo dedupe and exact local resend/queue metadata retention",
+      "controlled capability unknown/false/definite rejection/uncertain admission no fallback or implicit retry",
+      "cancel/cross-draft/remove-readd/late completion ownership; busy/storage guards",
+      "actual view and recovery whole snapshot display without reread or Send approval",
+      "dark/narrow fixed16px radio beside label; actual label, arrows, Space and Enter interactions",
+      "NEW20 exact-owner successful reread clears typed source error only",
+      "NEW21 ;;; missing/empty cached formula default exclusion vs explicit-all retention",
+      "NEW22 actual layout correction and resize settling",
+      "NEW23 three actual save-retry flows, including blocked Send and subsequent ordinary text editing; no prompt and complete retained source/text"
+    ]
+  },
+  "saveRetry": {
+    "finding": "NEW23 actual product P2",
+    "originalRed": "output/2026-10-13-xlsx-input-browser/save-retry-product-finding.json",
+    "originalRedSha256": "99b025731b3e16c462f0f1a9e4087851768f94c905c36690451db72287c3e707",
+    "laterEditRed": "output/2026-10-13-xlsx-input-save-retry/send-edit-save-retry-run01.json",
+    "laterEditRedSha256": "c095ae5940f23c0eeb6c7bdd36bc693f8b100adfde834f06494d0654ef553ea8",
+    "finalGreenReceipt": "output/2026-10-13-xlsx-input-save-retry/focused-green-receipt.json",
+    "finalGreenReceiptSha256": "201e18798375fd89352b5d51e25d025bb90227df2da4ac7e89a00f62708596f4",
+    "actualFocusedFlowsPassed": 3,
+    "promptCount": 0,
+    "localWriteErrorType": "DraftSaveError belongs to the existing flush write-stage catch, including32MiB/snapshot serialization rejection and settings_set failure. Load failures remain untyped.",
+    "durableCondition": "All current unsent revision saved, saving=false and no error; error=null at write start alone is insufficient.",
+    "ownerCondition": "Document exact applied object/generation/choice/context; parent ordinary text continuations only with unchanged non-text identities. Attachment/choice/queue/pending replacements and ABA retire synchronously.",
+    "ordinaryAgentAndTypedSourceErrors": "Retained even when visible text is identical; no string-matching clear.",
+    "targeted": {
+      "files": 10,
+      "tests": 111,
+      "actualExitCode": 0,
+      "completionChunk": "d2c694"
+    },
+    "typecheck": {
+      "actualExitCode": 0,
+      "completionChunk": "74299d"
+    },
+    "ownedFormat": {
+      "actualExitCode": 0,
+      "completionChunk": "68a44b"
+    },
+    "composerChanged": false,
+    "composerLines": 1496
+  },
+  "serverCleanup": {
+    "schema": 1,
+    "scope": "Only owned finite controlled Vite server lifecycle, no formal App or Agent shutdown claim",
+    "pid": 270,
+    "sessionId": 87116,
+    "startChunk": "b471fa",
+    "stopRequest": "output/2026-10-13-xlsx-input-browser/server-stop-request.json",
+    "stopRequestSha256": "d55f0054cef9b95b6224876629aed28b1f0395df7eda4ca3008a0c267c52b94d",
+    "actualExitCode": 143,
+    "completionChunk": "c5340a",
+    "requestedSignal": "SIGTERM",
+    "sameSessionCompletionObserved": true,
+    "ps": {
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "listener": {
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "processAbsent": true,
+    "portClosed": true,
+    "cleanExitZeroClaim": false,
+    "explanation": "Actual existing exec session returned143 after targeted SIGTERM. Preserve this value; handler expected0 is not completion proof. No restart to manufacture a zero exit."
+  },
+  "limitations": [
+    "Native OS file capture, installed App, real Agent/account and native user-data preservation are not established by controlled browser evidence.",
+    "Native IPC and initial data/backend admission are controlled; source captures carry actual self-authored ZIP bytes and VerifiedFile hashes.",
+    "Engineering seven-check acceptance is owned by root and remains separate.",
+    "Old frontend five-timeout root cause remains unknown; sequential scheduling is not diagnosis.",
+    "Owned Vite server existing exec session completed143 after exact targeted SIGTERM; PID and listener disappearance prove shutdown, not zero-exit/normal-close acceptance."
+  ],
+  "rawPolicy": "All original failed and successful raw records, old source freezes and authored oracle are retained byte-identical; only new canonical public summary/publication files may be formatted."
+}

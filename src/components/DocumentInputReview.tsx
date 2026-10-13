@@ -1,6 +1,7 @@
 import { DOCUMENT_INPUT_STRINGS as S } from "../runtime/document_input_strings";
-import { DOCUMENT_WARNINGS } from "../runtime/document_strings";
+import { documentInputPresentation } from "../runtime/document_input_presentation";
 import type { DocumentInputReview as Review } from "../runtime/document_input";
+import type { XlsxInputRequest } from "../runtime/xlsx_input_types";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import "../document-input.css";
 
@@ -14,6 +15,8 @@ export function DocumentInputReview({
   error,
   onConfirm,
   onClose,
+  xlsxRequest,
+  onXlsxRequest,
 }: {
   name: string;
   result: Review | null;
@@ -24,13 +27,41 @@ export function DocumentInputReview({
   error: string | null;
   onConfirm: () => void;
   onClose: () => void;
+  xlsxRequest?: XlsxInputRequest;
+  onXlsxRequest?: (request: XlsxInputRequest) => void;
 }) {
+  const presentation = result && documentInputPresentation(result.local);
   return (
     <WorkspaceDialog title={S.title} onClose={onClose}>
       <div className="workspace-dialog-body document-input-review">
         <strong>{name}</strong>
-        <p>{S.scope}</p>
+        <p>{xlsxRequest ? S.xlsxScope : S.scope}</p>
         <p>{S.draftOnly}</p>
+        {xlsxRequest && onXlsxRequest && (
+          <fieldset disabled={!!busy}>
+            <legend>{S.xlsxRange}</legend>
+            {(["visible-saved-cells", "all-saved-cells"] as const).map(
+              (mode) => (
+                <label key={mode} className="document-input-consent">
+                  <input
+                    type="radio"
+                    name="document-input-range"
+                    checked={xlsxRequest.mode === mode}
+                    onChange={() => onXlsxRequest({ mode })}
+                  />
+                  <span>
+                    {mode === "all-saved-cells" ? S.xlsxAll : S.xlsxVisible}
+                  </span>
+                </label>
+              ),
+            )}
+            <p>
+              {xlsxRequest.mode === "all-saved-cells"
+                ? S.xlsxAllDetails
+                : S.xlsxVisibleDetails}
+            </p>
+          </fieldset>
+        )}
         {busy && (
           <p role="status">{busy === "reading" ? S.loading : S.checking}</p>
         )}
@@ -44,19 +75,18 @@ export function DocumentInputReview({
             />
           </details>
         )}
-        {result && (
+        {result && presentation && (
           <>
-            <p>
-              {S.count(result.local.utf8Bytes, result.local.imageReferences)}
-            </p>
+            <p>{presentation.count}</p>
+            {presentation.sheetCount && <p>{presentation.sheetCount}</p>}
             <p>{S.sourceVersion}</p>
             <details open={result.local.partial}>
               <summary>{S.omissions}</summary>
               {result.local.partial && <p>{S.scopePartial}</p>}
               <ul>
-                {result.local.warnings.map((warning) => (
+                {presentation.warnings.map((warning) => (
                   <li key={warning.code}>
-                    {DOCUMENT_WARNINGS[warning.code]} ({warning.count})
+                    {warning.text} ({warning.countText})
                   </li>
                 ))}
               </ul>

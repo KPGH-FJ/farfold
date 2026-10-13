@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "scope": "Only this finite controlled Vite server evidence publication, not formal App shutdown",
+  "previousPublisher": "output/2026-10-13-xlsx-input-browser/publisher-before-server-exit-receipt.py",
+  "previousSha256": "b4e01b284da74ef0ef14e5328477ff298271a0f055691e717427b071812360a8",
+  "actualPublisher": "output/2026-10-13-xlsx-input-browser/publish.py",
+  "actualPublisherSha256": "4d9057a1e3ea8a897b6324b27d4e90f60bf20222cfaf9453f7119771a5b4f071",
+  "reason": "Root explicitly accepted exact targeted server session143 plus actual PID/listener disappearance as end-of-server evidence, while zero/normal exit is not claimed. Previous preparation requiredzero without observed completion.",
+  "serverReceipt": "output/2026-10-13-xlsx-input-browser/server-cleanup.json",
+  "serverReceiptSha256": "d443e27357e3d3294cacfec50dc8a64a7eb300a5ca3523551bae172cb245875e",
+  "actualExitCode": 143,
+  "zeroExitClaim": false,
+  "browserGreenRequiresUnchanged": true,
+  "allFailedRawRetained": true
+}

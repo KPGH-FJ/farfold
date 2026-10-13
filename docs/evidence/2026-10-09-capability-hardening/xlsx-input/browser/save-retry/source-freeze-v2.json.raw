@@ -1,0 +1,117 @@
+{
+  "schema": 1,
+  "scope": "NEW23 final save notices: actual latest existing revision; exact applied document owner; parent same-input ordinary text continuations only. No Agent/native/DB/Composer/send changes or new persistent records.",
+  "sources": {
+    "src/runtime/draft_storage.ts": {
+      "sha256": "dfcddc5a36611bb2a75b5e967d4e701f52149ea6d2dc940fcb7bdeaafd925354",
+      "lines": 185,
+      "kind": "production",
+      "priorSha256": "a3fce4de9dd17be896e9db72429d5108cb1565b1fb34b927047aa5fa95d9823b"
+    },
+    "src/runtime/draft_save_notice.ts": {
+      "sha256": "56762f7c4410c8fdaa4ac78bd60f4fad914c6e118efcf2e601182d5fbf16e5b4",
+      "lines": 60,
+      "kind": "production",
+      "priorSha256": null
+    },
+    "src/components/DocumentComposerAttachments.tsx": {
+      "sha256": "7c20c150a0a94c5093adeb00ce96694a4439dd33ab1762ccfd904d278d6a31bf",
+      "lines": 330,
+      "kind": "production",
+      "priorSha256": "dc583b8d1a5aef99b934de7defa599d8b4ac8ce414016f79868616dcf993aa18"
+    },
+    "src/components/useComposerSourceError.ts": {
+      "sha256": "83454bef9635d8a06a904dbdab1f59fec2fc690f4b482a25cd26036457c38a3c",
+      "lines": 79,
+      "kind": "production",
+      "priorSha256": "873e8d2a89e23ee89bfa7d9385d0efed463d88ef2dbbe15e2ba97c301b236310"
+    },
+    "src/runtime/draft_storage.receipt.test.ts": {
+      "sha256": "6850b90310b0f658c17ae2ad2e422c8417d1a5e108946f2c705705e9c268ba7d",
+      "lines": 112,
+      "kind": "test",
+      "priorSha256": null
+    },
+    "src/components/DocumentComposerAttachments.save.test.tsx": {
+      "sha256": "bb9ed0ee0c47c5953340d57dcd5d9ede997c3cf1cb753e003875fbbae36460ae",
+      "lines": 394,
+      "kind": "test",
+      "priorSha256": null
+    },
+    "src/components/useComposerSourceError.save.test.tsx": {
+      "sha256": "c4eeac6f523151cb15d24725dd5fb105fc73a5ea39ab8ff01d26137ec60a48cf",
+      "lines": 276,
+      "kind": "test",
+      "priorSha256": null
+    }
+  },
+  "checks": [
+    {
+      "name": "targeted",
+      "log": "output/2026-10-13-xlsx-input-save-retry/targeted-run06.log",
+      "sha256": "e0158acae12bccdcb5ef08dea3f8b092515775b57c1d40995b65cb8fc3117ea6",
+      "exitCode": 0,
+      "files": 10,
+      "tests": 111
+    },
+    {
+      "name": "typecheck",
+      "log": "output/2026-10-13-xlsx-input-save-retry/typecheck-run03.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "exitCode": 0
+    },
+    {
+      "name": "owned-format",
+      "log": "output/2026-10-13-xlsx-input-save-retry/format-check-v2.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20",
+      "exitCode": 0,
+      "completionChunk": "68a44b"
+    }
+  ],
+  "actualRed": [
+    {
+      "log": "output/2026-10-13-xlsx-input-browser/save-retry-inspection-run01.json",
+      "sha256": "e12f9e5f597bf3997a26e0db592cb42b114f7869a7698191a2cc66cc642e7acc",
+      "exitCode": 1,
+      "completionChunk": "fae3c6",
+      "finding": "durable retry succeeds but document-local save error remains"
+    },
+    {
+      "log": "output/2026-10-13-xlsx-input-save-retry/save-retry-inspection-run01.json",
+      "sha256": "1d38db253ae68278481d468cc5d7b3177b6f3710951f36875bc2ca8c165e437c",
+      "exitCode": 1,
+      "completionChunk": "179b16",
+      "finding": "Send blocked by actual failed flush; durable retry succeeds but typed-origin parent save error remains"
+    },
+    {
+      "log": "output/2026-10-13-xlsx-input-save-retry/component-red.log",
+      "sha256": "7cddab5c6fea9174f92222b2b0994cb61a9e63d95c837cca5b08c4600fa3f931",
+      "exitCode": 1,
+      "completionChunk": "00dfe7",
+      "finding": "component regression fails at obsolete local save notice after durable retry"
+    }
+  ],
+  "composerUnchanged": true,
+  "composerSha256": "d87e35e04a49bf192d2c4026912c02bb517a5bb71492409ab9a38a895672d71e",
+  "composerLines": 1490,
+  "browserGreen": "pending; a new run must match these source digests",
+  "oldFreezes": "A-v2/B-v1/C-v2 and original RED/raw traces retained byte-identical",
+  "priorFreeze": {
+    "path": "output/2026-10-13-xlsx-input-save-retry/source-freeze-v1.json",
+    "sha256": "983ed95ea3cf3d6fec4f5ad8762dfc5c823d6d831f260023d74791c9295b8eb8"
+  },
+  "editAfterFailureRed": {
+    "actualBrowser": {
+      "path": "output/2026-10-13-xlsx-input-save-retry/send-edit-save-retry-run01.json",
+      "sha256": "c095ae5940f23c0eeb6c7bdd36bc693f8b100adfde834f06494d0654ef553ea8",
+      "exitCode": 1,
+      "completionChunk": "800606"
+    },
+    "unit": {
+      "path": "output/2026-10-13-xlsx-input-save-retry/edit-observation-red.log",
+      "sha256": "53b234a700c396f867795f5134557b5802b289dbcc934881decf5f8fbdaf3bfb",
+      "exitCode": 1,
+      "completionChunk": "502727"
+    }
+  }
+}

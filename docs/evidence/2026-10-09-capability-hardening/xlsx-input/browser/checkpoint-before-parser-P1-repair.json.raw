@@ -1,0 +1,119 @@
+{
+  "runs": [
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/chromium-run01.json",
+      "sha256": "03c45f94538a118785e0a5d9540aac1ef2a591afda6eb3b9263f6cf03e7d56f9",
+      "engine": "chromium",
+      "checks": 10,
+      "passedChecks": 10,
+      "workers": 2,
+      "sourceStable": true,
+      "failure": "TimeoutError: page.waitForFunction: Timeout 10000ms exceeded.",
+      "productionFailure": false,
+      "coveredWithoutWholeAcceptance": true
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/chromium-run02.json",
+      "sha256": "eb0d4be6509340a6bdfc652b1dd65544360a4288eaebaa05b043ca27c51f16e5",
+      "engine": "chromium",
+      "checks": 73,
+      "passedChecks": 72,
+      "workers": 21,
+      "sourceStable": true,
+      "failure": "Error: Admission uncertain preserves exact local queued resource and never retries",
+      "productionFailure": false,
+      "coveredWithoutWholeAcceptance": true
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/chromium-run03.json",
+      "sha256": "c43b6ec07b2d5db5ce14fbdd02989d27852d6687302ef05960f1ccba3c66ef65",
+      "engine": "chromium",
+      "checks": 84,
+      "passedChecks": 84,
+      "workers": 26,
+      "sourceStable": true,
+      "failure": "TimeoutError: locator.waitFor: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog', { name: '\u52a0\u5165\u6587\u6863\u6587\u5b57', exact: true }).getByRole('alert') to be visible\u001b[22m\n",
+      "productionFailure": false,
+      "coveredWithoutWholeAcceptance": true
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/chromium-run04.json",
+      "sha256": "df28f5fc2ae0ee8f20c4b1311a8a6ee0c583bf612a66cc7e513135bfbf21f817",
+      "engine": "chromium",
+      "checks": 96,
+      "passedChecks": 95,
+      "workers": 34,
+      "sourceStable": true,
+      "failure": "Error: Even shape-valid official historical local metadata cannot acquire authority",
+      "productionFailure": false,
+      "coveredWithoutWholeAcceptance": true
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/chromium-run05.json",
+      "sha256": "4e9d2536950c4e38abfcf2f055c321857fa46db338930b3b36c78fb504c3a03d",
+      "engine": "chromium",
+      "checks": 97,
+      "passedChecks": 97,
+      "workers": 36,
+      "sourceStable": true,
+      "failure": "Error: page.evaluate: Error: official channel not opened\n    at Object.officialHistory (http://127.0.0.1:1529/output/2026-10-13-xlsx-input-browser/fixture.tsx?t=1791848048021:388:23)\n    at eval (eval at evaluate (:311:30), <anonymous>:1:19)\n    at UtilityScript.evaluate (<anonymous>:313:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)",
+      "productionFailure": false,
+      "coveredWithoutWholeAcceptance": true
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/webkit-run01.json",
+      "sha256": "07324dcb8e15f61d2bb4dcc5775cc1042c7b967697ff814ebff4110529c53796",
+      "engine": "webkit",
+      "checks": 73,
+      "passedChecks": 72,
+      "workers": 21,
+      "sourceStable": true,
+      "failure": "Error: Admission uncertain preserves exact local queued resource and never retries",
+      "productionFailure": false,
+      "coveredWithoutWholeAcceptance": true
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/webkit-run02.json",
+      "sha256": "a39478995429c9e0346b2ed02d6a127e2f85bd5e56d41a7b83e7078bed395ad5",
+      "engine": "webkit",
+      "checks": 84,
+      "passedChecks": 84,
+      "workers": 26,
+      "sourceStable": true,
+      "failure": "TimeoutError: locator.waitFor: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('dialog', { name: '\u52a0\u5165\u6587\u6863\u6587\u5b57', exact: true }).getByRole('alert') to be visible\u001b[22m\n",
+      "productionFailure": false,
+      "coveredWithoutWholeAcceptance": true
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/webkit-run03.json",
+      "sha256": "3108f86a644b48cdeb753d94a7cb63e3fda7454c2a86c7083b35b103202f4d81",
+      "engine": "webkit",
+      "checks": 96,
+      "passedChecks": 95,
+      "workers": 34,
+      "sourceStable": true,
+      "failure": "Error: Even shape-valid official historical local metadata cannot acquire authority",
+      "productionFailure": false,
+      "coveredWithoutWholeAcceptance": true
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/webkit-run04.json",
+      "sha256": "9ceb08495ee8fb0a06bdde10c58404ef399111355b7c52012982968a63dc9ac8",
+      "engine": "webkit",
+      "checks": 97,
+      "passedChecks": 97,
+      "workers": 36,
+      "sourceStable": true,
+      "failure": "Error: page.evaluate: Error: official channel not opened",
+      "productionFailure": false,
+      "coveredWithoutWholeAcceptance": true
+    }
+  ],
+  "knownProductFailure": {
+    "owner": "A parser",
+    "boundary": ";;; format + formula missing/empty saved cache",
+    "previousFixturesCovered": false,
+    "status": "await-new-A-freeze; not accepted"
+  },
+  "next": "After A new freeze run independently authored format fixture through complete App+actual Worker in both engines, then full fresh run as justified by production change. Official history/coldscope/savefail unfinished."
+}

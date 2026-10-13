@@ -4,6 +4,7 @@ import type { PromptBlock } from "./session_types";
 import { DRAFT_STRINGS } from "./draft_storage";
 import { verifyDocumentInput } from "./document_input";
 import { DocumentInputError } from "./document_input_types";
+import { documentSourceError } from "./document_source_error";
 import { resourceDocumentText } from "./prompt_blocks";
 import {
   isBitmapMime,
@@ -77,13 +78,17 @@ export async function prepareDraftAttachments(
     }
     if (!attachment.uri) throw new Error(DRAFT_STRINGS.attachmentFailed);
     if (attachment.documentText !== undefined) {
-      if (!embed) throw new DocumentInputError("capabilityUnsupported");
-      if (attachment.recovered && !options.reparseDocuments)
-        throw new DocumentInputError("recoveryRequired");
-      await verifyDocumentInput(attachment.documentText, attachment.uri, {
-        reparse: options.reparseDocuments === true,
-        signal: options.signal,
-      });
+      try {
+        if (!embed) throw new DocumentInputError("capabilityUnsupported");
+        if (attachment.recovered && !options.reparseDocuments)
+          throw new DocumentInputError("recoveryRequired");
+        await verifyDocumentInput(attachment.documentText, attachment.uri, {
+          reparse: options.reparseDocuments === true,
+          signal: options.signal,
+        });
+      } catch (error) {
+        throw documentSourceError(error, attachment);
+      }
       prepared.push({ ...attachment, recovered: false, loading: false });
       continue;
     }

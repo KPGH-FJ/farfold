@@ -71,7 +71,11 @@ export function boolean(raw: string | undefined, fallback = false): boolean {
   if (raw === "0" || raw === "false") return false;
   throw new XlsxError("invalid");
 }
-export function parseXml(bytes: Uint8Array): XmlNode {
+export interface XmlBudget {
+  nodes: number;
+  text: number;
+}
+export function parseXml(bytes: Uint8Array, budget?: XmlBudget): XmlNode {
   if (bytes.length > XLSX_LIMITS.partBytes) throw new XlsxError("limit");
   let source: string;
   try {
@@ -107,6 +111,7 @@ export function parseXml(bytes: Uint8Array): XmlNode {
   parser.on("opentag", (node) => {
     if (
       ++count > XLSX_LIMITS.xmlNodes ||
+      (budget !== undefined && ++budget.nodes > XLSX_LIMITS.xmlNodes) ||
       stack.length >= XLSX_LIMITS.xmlDepth ||
       Object.keys(node.attributes).length > XLSX_LIMITS.attributes
     )
@@ -132,6 +137,10 @@ export function parseXml(bytes: Uint8Array): XmlNode {
   });
   const addText = (value: string) => {
     text += value.length;
+    if (budget) {
+      budget.text += value.length;
+      if (budget.text > XLSX_LIMITS.text) throw new XlsxError("limit");
+    }
     if (text > XLSX_LIMITS.text) throw new XlsxError("limit");
     if (stack.length) stack[stack.length - 1].text += value;
   };

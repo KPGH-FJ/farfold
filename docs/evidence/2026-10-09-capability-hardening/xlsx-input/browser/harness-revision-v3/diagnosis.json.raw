@@ -1,0 +1,9 @@
+{
+  "runs": [
+    "chromium-run03.json",
+    "webkit-run02.json"
+  ],
+  "sourceStable": true,
+  "actualFailure": "Harness wrongly required controlled Agent submitting=true to forbid updates to unsent document text. Product deliberately permits unsent edits while send button is disabled; approval succeeded without sending.",
+  "fix": "Preserve this existing behavior explicitly. Exercise file-read guards using actual capture readBusy/readPending and revision busy/pending error codes; no invented deadline code, no production semantics change."
+}

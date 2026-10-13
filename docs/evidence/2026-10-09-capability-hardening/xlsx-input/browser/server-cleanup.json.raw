@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "scope": "Only owned finite controlled Vite server lifecycle, no formal App or Agent shutdown claim",
+  "pid": 270,
+  "sessionId": 87116,
+  "startChunk": "b471fa",
+  "stopRequest": "output/2026-10-13-xlsx-input-browser/server-stop-request.json",
+  "stopRequestSha256": "d55f0054cef9b95b6224876629aed28b1f0395df7eda4ca3008a0c267c52b94d",
+  "actualExitCode": 143,
+  "completionChunk": "c5340a",
+  "requestedSignal": "SIGTERM",
+  "sameSessionCompletionObserved": true,
+  "ps": {
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "listener": {
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  "processAbsent": true,
+  "portClosed": true,
+  "cleanExitZeroClaim": false,
+  "explanation": "Actual existing exec session returned143 after targeted SIGTERM. Preserve this value; handler expected0 is not completion proof. No restart to manufacture a zero exit."
+}

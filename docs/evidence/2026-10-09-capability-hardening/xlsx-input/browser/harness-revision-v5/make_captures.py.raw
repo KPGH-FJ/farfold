@@ -1,0 +1,59 @@
+"""Only owned synthetic ZIP fixtures; this is not native capture proof."""
+from pathlib import Path
+import hashlib
+import io
+import json
+import re
+import zipfile
+
+ROOT = Path('/Users/tw/Desktop/farfold')
+OUT = ROOT / 'output/2026-10-13-xlsx-input-browser'
+SOURCE = ROOT / 'docs/evidence/2026-10-09-capability-hardening/xlsx-input/fixtures'
+
+
+def write(path, raw):
+    with path.open('xb') as stream: stream.write(raw)
+
+
+def main():
+    target = OUT / 'fixtures'; target.mkdir()
+    entries = []
+    names = {'01-values-scope': 'values', '02-protection-format': 'protection', '03-unread-surfaces': 'unread', '04-invalid-late-sheet': 'malformed', '05-text-budget': 'oversize'}
+    for source_name, name in names.items():
+        raw = (SOURCE / (source_name + '.xlsx')).read_bytes()
+        write(target / (name + '.xlsx'), raw)
+        entries.append((name, raw, {'originalSource': str((SOURCE / (source_name + '.xlsx')).relative_to(ROOT)), 'originalSha256': hashlib.sha256(raw).hexdigest()}))
+    original = (target / 'values.xlsx').read_bytes()
+    destination = io.BytesIO()
+    with zipfile.ZipFile(io.BytesIO(original)) as source, zipfile.ZipFile(destination, 'w') as transformed:
+        for item in source.infolist():
+            data = source.read(item.filename)
+            if item.filename == 'xl/workbook.xml':
+                def hide(match):
+                    tag = re.sub(r'\sstate="[^"]*"', '', match.group(0))
+                    return tag[:-2] + ' state="hidden"/>' if tag.endswith('/>') else tag[:-1] + ' state="hidden">'
+                data = re.sub(r'<sheet\b[^>]*>', hide, data.decode()).encode()
+            transformed.writestr(item, data)
+    raw = destination.getvalue(); write(target / 'all-hidden.xlsx', raw)
+    entries.append(('all-hidden', raw, {'derivation': 'Only captured workbook sheet state attributes changed to hidden in a new synthetic ZIP; original ZIP untouched', 'originalValueZipSha256': hashlib.sha256(original).hexdigest()}))
+    manifest = []
+    for name, raw, provenance in entries:
+        sha = hashlib.sha256(raw).hexdigest(); path = '/controlled/xlsx/' + name + '.xlsx'
+        file = {'root': '/controlled/xlsx', 'path': path, 'resolvedPath': path, 'name': name + '.xlsx', 'size': len(raw), 'sha256': sha, 'version': 'controlled-full-bytes:' + sha}
+        parts = []; names = []; inflated = 0
+        with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+            for part in archive.infolist():
+                data = archive.read(part.filename); names.append(part.filename); inflated += len(data)
+                if part.filename.endswith(('.xml', '.rels')):
+                    import base64
+                    parts.append({'name': part.filename, 'data': base64.b64encode(data).decode()})
+        capture = {'file': file, 'parts': parts, 'entries': names, 'inflatedBytes': inflated}
+        capture_path = target / (name + '.capture.json'); write(capture_path, (json.dumps(capture, indent=2) + '\n').encode())
+        manifest.append({'name': name, 'zip': str((target / (name + '.xlsx')).relative_to(ROOT)), 'zipSha256': sha, 'capture': str(capture_path.relative_to(ROOT)), 'captureSha256': hashlib.sha256(capture_path.read_bytes()).hexdigest(), 'file': file, 'uri': 'file://' + path, 'provenance': provenance})
+    oracle = (SOURCE / 'oracle.json').read_bytes(); write(target / 'oracle.original.json', oracle)
+    policy = {'originalOracleSha256': hashlib.sha256(oracle).hexdigest(), 'originalOracleNeverEdited': True, 'defaultPolicyCorrection': {'fixture': '01-values-scope', 'cell': 'C4', 'reason': 'Original authored column C is hidden; default omission applies to saved C4 cache as well', 'originalDefaultCount': 21, 'correctedIncludedCount': 20, 'correctedHiddenOmissionCount': 5}, 'fixtureManifest': manifest, 'nativeCaptureClaim': False, 'realAgentClaim': False}
+    write(target / 'manifest.json', (json.dumps(policy, indent=2) + '\n').encode())
+    print(json.dumps({'syntheticFixtures': len(manifest), 'originalOracleSHA': policy['originalOracleSha256'], 'nativeCapture': False}))
+
+
+if __name__ == '__main__': main()

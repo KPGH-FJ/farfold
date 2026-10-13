@@ -1,0 +1,9 @@
+{
+  "runs": [
+    "chromium-run04.json",
+    "webkit-run03.json"
+  ],
+  "sourceStable": true,
+  "actualFailure": "Harness mislabeled typed local PromptBlock reconstruction as incoming official history. resourceDraftAttachment intentionally retains known own metadata; untrusted Channel event normalization is the actual official history boundary.",
+  "fix": "Inject forged localDocumentText through real production Channel user_message_chunk, then reconstruct projected user attachments. Confirm metadata is absent/null after official normalization; no source change."
+}

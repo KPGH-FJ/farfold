@@ -1,0 +1,9 @@
+{
+  "runs": [
+    "chromium-run02.json",
+    "webkit-run01.json"
+  ],
+  "sourceStable": true,
+  "actualFailure": "Harness imposed definite-rejected local user count on unknown admission. Unknown keeps submitted local user projection and complete quarantined queued resource; actual UI marks result unknown with no automatic retry.",
+  "fix": "Assert unknown branch separately: full local queued source remains, uncertainPrompt, exactly one IPC, UI explicit result unknown. Preserve stricter no-new-user rule for definite rejected."
+}

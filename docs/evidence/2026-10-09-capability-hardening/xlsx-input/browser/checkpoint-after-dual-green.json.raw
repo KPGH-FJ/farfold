@@ -1,0 +1,72 @@
+{
+  "scope": "controlled complete production App real Worker; not native/real Agent",
+  "freezeReferences": [
+    {
+      "owner": "A",
+      "path": "output/2026-10-13-document-input-next/implementation-a/source-freeze-v2.json",
+      "sha256": "a22504aa58720bf0d6e8719a35f7663a50f5ffc8dada9f8d04404f3525ff8c20"
+    },
+    {
+      "owner": "B",
+      "path": "output/2026-10-13-xlsx-input-integration/source-freeze-v1.json",
+      "sha256": "ed2ac6105776843b591df6ba58b0b31fa326a2e1fbd633c9048dad1d950ef150"
+    },
+    {
+      "owner": "C",
+      "path": "output/2026-10-13-xlsx-input-ui/source-freeze-v2.json",
+      "sha256": "81e9006ba0d7b1bb52c9ce6482aa4324287af3b999681015c552edaa0d34fdc7"
+    }
+  ],
+  "acceptedRuns": [
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/chromium-run06.json",
+      "sha256": "1b7bb2ed41f536a348c8b899c546d9071a58873061d7826fd90cd21c1fde3f80",
+      "engine": "chromium",
+      "suite": "format-only",
+      "checks": 9,
+      "workers": 2,
+      "sourceStable": true,
+      "sourceInputCount": 1003,
+      "testInputCount": 459
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/webkit-run05.json",
+      "sha256": "90f6965166b26e46eacbdef9624d4e799f8ce9855f3db95cd495cca202d6fa55",
+      "engine": "webkit",
+      "suite": "format-only",
+      "checks": 9,
+      "workers": 2,
+      "sourceStable": true,
+      "sourceInputCount": 1003,
+      "testInputCount": 459
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/chromium-run08.json",
+      "sha256": "1e5763a96c56274dd3633cb9e8cddbc1e00d03ebad9e81e4ec40d0474dff988a",
+      "engine": "chromium",
+      "suite": "full",
+      "checks": 122,
+      "workers": 42,
+      "sourceStable": true,
+      "sourceInputCount": 1003,
+      "testInputCount": 459
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-browser/webkit-run07.json",
+      "sha256": "d5f043ef678d14da93bca7362a901ca3a6c7b271a2b4846d67d09ffe815d2d5c",
+      "engine": "webkit",
+      "suite": "full",
+      "checks": 122,
+      "workers": 42,
+      "sourceStable": true,
+      "sourceInputCount": 1003,
+      "testInputCount": 459
+    }
+  ],
+  "productFindings": {
+    "A;;;missing/emptyCache": "repaired/focused9+full122both",
+    "NEW22CSS": "repaired/actualdark-narrow-label-keyboardboth",
+    "saveRetryStaleHint": "actualP2-open; save-retry-product-finding.json"
+  },
+  "next": "Await root C save-retry fix decision; preserve actual RED. No source writes. After necessary focused checks retain all raw inputs and publish canonical summaries beside byte-identical .raw copies, close owned1529 server with actual cleanup receipt."
+}

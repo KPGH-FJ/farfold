@@ -1,0 +1,97 @@
+import React, { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from '/src/App';
+import { DraftStartup } from '/src/components/DraftStartup';
+import { StorageStartup } from '/src/components/StorageRecovery';
+import { threads, freshThreadState } from '/src/runtime/sessions';
+import { composerDrafts, newConversationChoice, draftPersistence, fileFeedbackDrafts } from '/src/runtime/drafts';
+import { readDocumentInput, confirmDocumentInput, verifyDocumentInput } from '/src/runtime/document_input';
+import { userMessageDraftAttachments } from '/src/runtime/message_actions';
+import { resourceDraftAttachment } from '/src/runtime/prompt_blocks';
+import '@xterm/xterm/css/xterm.css';
+import '/src/styles.css'; import '/src/styles-settings.css'; import '/src/styles-content.css';
+import '/src/styles-thread.css'; import '/src/styles-artifact.css'; import '/src/product-shell.css';
+import '/src/conversation-workspace.css'; import '/src/history-import.css'; import '/src/desktop-workbench.css';
+
+const w = window as any, base='/output/2026-10-13-xlsx-input-browser';
+const oracle=await fetch(base+'/fixtures/manifest.json').then(r=>r.json());
+const formatFormula=await fetch(base+'/fixtures/format-formula-cache.manifest.json').then(r=>r.json());
+oracle.fixtureManifest.push(formatFormula);
+const originalOracle=await fetch(base+'/fixtures/oracle.original.json').then(r=>r.json());
+const captures = new Map<string,any>();
+for(const f of oracle.fixtureManifest) captures.set(f.name,await fetch('/'+f.capture).then(r=>r.json()));
+const fixtureFiles=Object.fromEntries(oracle.fixtureManifest.map((f:any)=>[f.name,f]));
+const settings=new Map<string,any>();
+const seed=w.fixtureSeed;
+if(seed?.unsentWork) settings.set('unsentWork.v1',structuredClone(seed.unsentWork));
+const agent={id:'independent-xlsx',name:'Controlled document Agent',source:'custom',command:'/controlled/never-executed',args:[],env:[],version:null,handshake:{agentCapabilities:{promptCapabilities:seed?.capability==='unknown'?{}:{embeddedContext:seed?.capability==='false'?false:true}},authMethods:[],configOptions:[]},createdAt:1,updatedAt:1};
+const row={id:'independent-xlsx:/controlled/xlsx:native-xlsx',agentId:agent.id,cwd:'/controlled/xlsx',nativeSessionId:'native-xlsx',title:'XLSX_CONTROLLED',configOptions:null,pinned:false,archived:false,createdAt:1,updatedAt:1};
+const otherRow={...row,id:agent.id+':/controlled/other:native-other',cwd:'/controlled/other',nativeSessionId:'native-other',title:'XLSX_OTHER'};
+const draftKey='session:'+row.id;
+const channels:any[]=[];
+const channelsByNative=new Map<string,any>();
+const mode={captureHold:false,inspectHold:false,revisionHold:false,sourceChanged:false,sourceReplacement:null as null|string,saveFail:false,promptReason:null as null|string,revisionFailure:null as null|string,captureFailure:null as null|string};
+const pending:{name:string;resolve:(v:any)=>void;reject:(v:any)=>void;value:any}[]=[];
+const clone=(v:any)=>structuredClone(v);
+const held=(name:string,value:any)=>new Promise((resolve,reject)=>pending.push({name,resolve,reject,value}));
+const sourceCapture=(path:string)=>{const original=[...captures.values()].find(v=>v.file.path===path);if(!original)throw {code:'missing'};if(!mode.sourceChanged&&!mode.sourceReplacement)return original;const replacement=clone(captures.get(mode.sourceReplacement??'protection'));replacement.file={...original.file,size:replacement.file.size,sha256:replacement.file.sha256,version:replacement.file.version+':same-selected-path'};return replacement;};
+const captureFor=(file:any)=>{const value=sourceCapture(file.path);if(JSON.stringify(value.file)!==JSON.stringify(file))throw{code:'changed'};return value;};
+function events(channel:any,body:string='KEEP_LOADED_BODY') {
+  channel.onmessage({update:{sessionUpdate:'user_message_chunk',content:{type:'text',text:body}}});
+}
+w.testInvoke=async(cmd:string,args:any)=>{
+  const {channel,...rest}=args??{};w.calls.push({cmd,args:clone(rest)});
+  if(cmd==='settings_get')return args.key==='autoArchiveDays'?0:settings.get(args.key)??null;
+  if(cmd==='settings_set'){if(args.key==='unsentWork.v1'&&mode.saveFail)throw Error('OWN_CONTROLLED_SAVE_FAILURE');settings.set(args.key,clone(args.value));return;}
+  if(cmd==='storage_recovery_status')return {ready:true,issue:null,dataDirectory:'/controlled/data',databaseReplacementAvailable:false,databaseReplacement:null};
+  if(cmd==='app_initial_snapshot')return {agents:[agent],settings:{}};
+  if(cmd==='app_default_working_directory')return row.cwd;
+  if(cmd==='session_index_list')return [clone(row),clone(otherRow)];
+  if(['catalog_list','catalog_scan','credential_list','desktop_notification_take_pending','prompt_templates_list','agent_status'].includes(cmd))return [];
+  if(['app_drafts_ready','host_performance_sample','session_mark_read','session_index_mark_read','session_close','session_dismiss','plugin:event|unlisten'].includes(cmd))return;
+  if(cmd==='host_performance_origin')return null;
+  if(cmd==='plugin:event|listen')return 1;
+  if(cmd==='agent_work_get')return {cwd:args.cwd,enabled:{},locationEnabled:true};
+  if(cmd==='desktop_notifications_get')return {enabled:false,successEnabled:false,sound:false};
+  if(cmd==='worktree_list')return {locations:[],archives:[],recoveries:[],materials:[],operation:null};
+  if(cmd==='browser_share_status')return {taskKey:args.taskKey,label:args.label,agentId:agent.id,phase:'unshared',revision:0,reason:null,pendingRequest:null};
+  if(cmd==='file_delivery_inspect_selected') {const cap=sourceCapture(args.path);return mode.inspectHold?held('inspect',clone(cap.file)):clone(cap.file);}
+  if(cmd==='file_delivery_read_workbook'){if(mode.captureFailure)throw {code:mode.captureFailure};const value=clone(captureFor(args.file));return mode.captureHold?held('capture',value):value;}
+  if(cmd==='file_delivery_check_revision'){if(mode.revisionFailure)throw{code:mode.revisionFailure};const value={kind:'verified',file:clone(sourceCapture(args.file.path).file)};return mode.revisionHold?held('revision',value):value;}
+  if(cmd==='draft_attachment_check')throw Error('XLSX must never be re-read as ordinary UTF8');
+  if(cmd==='session_open'){if(args.nativeSessionId){channels.push(channel);channelsByNative.set(args.nativeSessionId,channel);events(channel,args.nativeSessionId===otherRow.nativeSessionId?'OTHER_BODY':'KEEP_LOADED_BODY');channel.onmessage({kind:'session_history_complete',openToken:args.openToken});}return {nativeSessionId:args.nativeSessionId??'controlled-document-preparation',connectionId:'controlled-document-connection',cwd:args.cwd,configOptions:[],configOptionsModern:true,resumed:Boolean(args.nativeSessionId),warnings:[],permissionState:'ready'};}
+  if(cmd==='session_prompt')return mode.promptReason?{status:mode.promptReason==='uncertain'?'unknown':'rejected',reason:mode.promptReason}:{status:'accepted'};
+  w.unexpected.push(cmd);throw Error('Unexpected independent controlled IPC '+cmd);
+};
+settings.set('agentSetup.v1',{version:1,completed:[agent.id],pending:{},progress:{},selections:{[agent.id]:{service:null,config:{}}}});
+await draftPersistence.load();
+newConversationChoice.cwd=row.cwd;newConversationChoice.agentId=agent.id;
+const state=freshThreadState(row.id,agent.id,row.cwd,row.nativeSessionId);
+state.identity='established';state.title=row.title;state.openError=null;state.workEnabled=true;
+state.items=[{kind:'user',id:'original-user',text:'KEEP_LOADED_BODY',attachments:[],streaming:false,time:1}];
+threads.getSnapshot().threads.set(row.id,state);
+const otherState=freshThreadState(otherRow.id,agent.id,otherRow.cwd,otherRow.nativeSessionId);otherState.identity='established';otherState.title=otherRow.title;otherState.openError=null;otherState.workEnabled=true;otherState.items=[{kind:'user',id:'other-original',text:'OTHER_BODY',attachments:[],streaming:false,time:1}];threads.getSnapshot().threads.set(otherRow.id,otherState);composerDrafts.update('session:'+otherRow.id,()=>({text:'KEEP_OTHER',attachments:[]}));
+function fileAttachment(name:string,id='document-chip') {const f=fixtureFiles[name];return{id,kind:'file' as const,name:f.file.name,uri:f.uri,mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'};}
+if(!seed?.unsentWork) composerDrafts.update(draftKey,()=>({text:'KEEP_COMPOSER',attachments:[fileAttachment('values')]}));
+fileFeedbackDrafts.update(row.id,'/controlled/keep.txt',{text:'KEEP_OPINION',selection:null});
+await draftPersistence.flush();
+w.fixture={
+  oracle,originalOracle,files:fixtureFiles,draftKey,row,otherRow,
+  current:()=>({calls:clone(w.calls),unexpected:clone(w.unexpected),draft:clone(composerDrafts.read(draftKey)),queueDraft:clone(composerDrafts.read('queue-edit:'+row.id)),newDraft:clone(composerDrafts.read('new')),thread:JSON.parse(JSON.stringify(threads.thread(row.id))),status:clone(draftPersistence.snapshot()),saved:clone(settings.get('unsentWork.v1')),otherDraft:clone(composerDrafts.read('session:'+otherRow.id)),pending:pending.map(x=>x.name),channels:channels.length,choice:JSON.parse(JSON.stringify(newConversationChoice))}),
+  mode:(patch:any)=>Object.assign(mode,patch),
+  workState:(patch:any)=>{Object.assign(threads.thread(row.id)!,patch);(threads as any).emit(row.id,true);},
+  release:(name:string,error?:boolean)=>{const i=pending.findIndex(p=>p.name===name);if(i<0)throw Error('no pending '+name);const [p]=pending.splice(i,1);error?p.reject({code:'unreadable'}):p.resolve(clone(p.value));},
+  choose:(name:string)=>composerDrafts.update(draftKey,d=>({...d,attachments:[fileAttachment(name)]})),
+  remove:()=>composerDrafts.update(draftKey,d=>({...d,attachments:[]})),
+  removeReadd:()=>{const d=composerDrafts.read(draftKey);const a=d.attachments[0];composerDrafts.update(draftKey,x=>({...x,attachments:[]}));composerDrafts.update(draftKey,x=>({...x,attachments:[{...a,loading:false}]}));},
+  edit:(text:string)=>composerDrafts.update(draftKey,d=>({...d,text})),
+  useUnknown:(text:string)=>composerDrafts.update(draftKey,d=>({...d,attachments:[{...fileAttachment('values'),documentText:{text,local:null},recovered:true}]})),
+  flush:()=>draftPersistence.flush(),
+  readAPI:(name:string,scope?:string)=>readDocumentInput({uri:fixtureFiles[name].uri,name:fixtureFiles[name].file.name},new AbortController().signal,scope?{xlsx:{mode:scope as any}}:undefined),
+  verifyAPI:(value:any,uri:string,reparse:boolean)=>verifyDocumentInput(value,uri,{reparse}),
+  resendFromLocal:()=>{const thread=threads.thread(row.id)!;const user=thread.items.find((i:any)=>i.kind==='user'&&i.attachments?.some((a:any)=>a.localDocumentText));return user?userMessageDraftAttachments((user as any).attachments??[]):null;},
+  historicalResource:(text:string,forged?:any)=>resourceDraftAttachment({type:'resource',resource:{uri:fixtureFiles.values.uri,mimeType:'text/plain',text},...(forged?{localDocumentText:forged}:{})}),
+  officialHistory:async(text:string,forged:any)=>{if(!channelsByNative.has(row.nativeSessionId)){threads.thread(row.id)!.connectionLost=true;(threads as any).emit(row.id,true);await threads.reconnect(row.id);}const channel=channelsByNative.get(row.nativeSessionId);if(!channel)throw Error('controlled reconnect did not open official channel');channel.onmessage({update:{sessionUpdate:'user_message_chunk',content:{type:'text',text:'UNTRUSTED_OFFICIAL_HISTORY_MARKER'}}});channel.onmessage({update:{sessionUpdate:'user_message_chunk',content:{type:'resource',resource:{uri:fixtureFiles.values.uri,mimeType:'text/plain',text},localDocumentText:clone(forged)}}});channel.onmessage({kind:'turnEnd',stopReason:'end_turn'});const user=threads.thread(row.id)!.items.find((i:any)=>i.kind==='user'&&i.attachments?.some((a:any)=>a.text===text));return user?userMessageDraftAttachments((user as any).attachments):null;},
+  echo:()=>{const sent=w.calls.filter((x:any)=>x.cmd==='session_prompt').at(-1);if(!sent)throw Error('no send');const channel=channelsByNative.get(row.nativeSessionId);const deliver=(event:any)=>channel?channel.onmessage(event):(threads as any).applyChannelEvent(row.id,event);for(const block of sent.args.content)deliver({update:{sessionUpdate:'user_message_chunk',content:clone(block)}});deliver({kind:'turnEnd',stopReason:'end_turn'});},
+};
+createRoot(document.getElementById('root')!).render(<StrictMode><StorageStartup><DraftStartup><App/></DraftStartup></StorageStartup></StrictMode>);

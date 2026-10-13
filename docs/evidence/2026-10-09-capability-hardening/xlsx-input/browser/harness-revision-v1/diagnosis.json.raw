@@ -1,0 +1,6 @@
+{
+  "run": "chromium-run01.json",
+  "sourceStable": true,
+  "actualFailure": "Harness queried non-existent aria-label attribute; production label supplies accessible name. All scope actual Worker result and full25 cell text are visible in retained failure aria snapshot.",
+  "fix": "Wait on actual textarea values rather than fabricated aria-label attribute. No production source edits."
+}

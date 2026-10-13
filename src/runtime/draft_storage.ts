@@ -36,6 +36,15 @@ let writing: Promise<void> | null = null;
 const pendingAttachments = new Set<Promise<unknown>>();
 let revision = 0;
 let savedRevision = 0;
+/** A local write failure, distinguished from Agent and load failures. */
+export class DraftSaveError extends Error {
+  constructor(
+    message: string,
+    readonly revision: number,
+  ) {
+    super(message);
+  }
+}
 let snapshot: () => unknown = () => ({});
 let restore: (value: unknown) => void = () => {};
 let legacyInteractionLock = false;
@@ -61,6 +70,19 @@ export const draftPersistence = {
     restore = hydrate;
   },
   snapshot: () => status,
+  revision: () => revision,
+  /** Only a completed write of all current input proves this revision saved. */
+  isSaved(expectedRevision: number): boolean {
+    return (
+      Number.isSafeInteger(expectedRevision) &&
+      expectedRevision >= 0 &&
+      expectedRevision <= savedRevision &&
+      savedRevision === revision &&
+      status.ready &&
+      !status.saving &&
+      !status.error
+    );
+  },
   lockInteraction(value: boolean) {
     legacyInteractionLock = value;
     publish({ interactionLocked: value || interactionOwners.size > 0 });
@@ -141,7 +163,7 @@ export const draftPersistence = {
             ? message
             : `${message}${STRINGS.storageRecovery.unsaved}`;
         publish({ error: explanation });
-        throw new Error(explanation);
+        throw new DraftSaveError(explanation, revision);
       } finally {
         publish({ saving: false });
       }

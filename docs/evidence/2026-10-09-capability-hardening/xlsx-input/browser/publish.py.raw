@@ -1,0 +1,48 @@
+"""Publish only this task's explicitly selected new synthetic evidence.
+
+No source mutation, DB, App, Agent, build or installation. Existing destination
+files cause a hard stop. Call only after actual final receipts are complete.
+"""
+from pathlib import Path
+import hashlib,json,shutil
+
+SOURCE=Path('output/2026-10-13-xlsx-input-browser')
+DEST=Path('docs/evidence/2026-10-09-capability-hardening/xlsx-input/browser')
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def main():
+ summary=json.loads((SOURCE/'summary.json').read_text())
+ assert summary['scope']=='controlled-complete-production-app-real-worker'
+ assert summary['finalBothEnginesPassed']
+ cleanup=summary['serverCleanup']
+ assert cleanup['actualExitCode']==143 and cleanup['requestedSignal']=='SIGTERM'
+ assert cleanup['pid']==270 and cleanup['sessionId']==87116 and cleanup['sameSessionCompletionObserved']
+ assert cleanup['processAbsent'] and cleanup['portClosed'] and not cleanup['cleanExitZeroClaim']
+ assert not summary['nativeAppClaim'] and not summary['realAgentClaim']
+ names=['index.html','fixture.tsx','serve.mjs','run.mjs','make_captures.py','prepare_format_formula.py','publish.py','summary.json','execution-receipts.json','format-formula-fixture-verification.json','checkpoint-before-parser-P1-repair.json','checkpoint-after-dual-green.json','save-retry-product-finding.json','inspect_save_retry.mjs','format_public.mjs','server-stop-request.json','server-cleanup.json','publisher-before-server-exit-receipt.py','publication-condition-revision.json']
+ selected=[SOURCE/n for n in names]
+ selected+=sorted(SOURCE.glob('*-run*.json'))+sorted(SOURCE.glob('*-run*.png'))
+ selected+=sorted((SOURCE/'fixtures').rglob('*'))
+ selected+=sorted(SOURCE.glob('harness-revision-v*/**/*'))
+ selected+=sorted(SOURCE.glob('focused-result-*.json'))
+ selected=[p for p in selected if p.is_file()]
+ assert selected and len(selected)==len(set(selected))
+ saveSource=Path('output/2026-10-13-xlsx-input-save-retry')
+ saveSelected=sorted(p for p in saveSource.iterdir() if p.is_file())
+ assert saveSelected
+ selected+=saveSelected
+ destinations={p:DEST/((str(p.relative_to(SOURCE)) if p.is_relative_to(SOURCE) else 'save-retry/'+str(p.relative_to(saveSource)))+(''if p.suffix in ['.png','.xlsx']else'.raw')) for p in selected}
+ assert all(not dest.exists()for dest in destinations.values()),'refusing to overwrite any public evidence'
+ before={str(p):sha(p)for p in selected}
+ for source,dest in destinations.items():
+  dest.parent.mkdir(parents=True,exist_ok=True)
+  with source.open('rb') as inp,dest.open('xb')as out:shutil.copyfileobj(inp,out)
+  assert sha(dest)==before[str(source)]
+ assert before=={str(p):sha(p)for p in selected},'private evidence changed while copying'
+ receipt={'schema':1,'scope':'new synthetic controlled browser proof only','originalRawNeverEdited':True,'nativeAppClaim':False,'realAgentClaim':False,'files':{str(dest):{'sha256':sha(dest),'original':str(source),'originalSha256':before[str(source)]}for source,dest in destinations.items()},'allByteIdentical':True}
+ target=SOURCE/'publication.json'
+ with target.open('x')as out:json.dump(receipt,out,indent=2);out.write('\n')
+ with (DEST/'publication.json.raw').open('x')as out:json.dump(receipt,out,indent=2);out.write('\n')
+ with (DEST/'publication.json').open('x')as out:json.dump(receipt,out,indent=2);out.write('\n')
+ with (DEST/'summary.json').open('x')as out:json.dump(summary,out,indent=2);out.write('\n')
+ print(json.dumps({'publishedFiles':len(selected),'allByteIdentical':True,'publicationSha256':sha(target)}))
+if __name__=='__main__':main()

@@ -1,0 +1,15 @@
+{
+  "checks": {
+    "newZipHash": true,
+    "captureHash": true,
+    "captureFullEntries": true,
+    "inflatedBytes": true,
+    "eachCapturedXmlSameActualZIPBytes": true,
+    "unmodifiedPartsMatchOriginal": true,
+    "originalZIPUnchanged": true
+  },
+  "noProductParserOracle": true,
+  "nativeCapture": false,
+  "browserExecuted": false,
+  "newZIPsha256": "eb86baa14902a53f35fada8f616fb83f620f9203ed516dcf5f76b41b96f3ad7d"
+}

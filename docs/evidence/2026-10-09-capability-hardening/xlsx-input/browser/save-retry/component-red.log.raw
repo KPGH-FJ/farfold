@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/DocumentComposerAttachments.save.test.tsx (1 test | 1 failed) 212ms
+   × updates only its failed document-save notice after actual retry writes the same complete approved attachment 212ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/DocumentComposerAttachments.save.test.tsx > updates only its failed document-save notice after actual retry writes the same complete approved attachment
+AssertionError: expected [ '文字已加入，但未发送内容尚未保存。请重试保存后再发送或关闭。' ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "文字已加入，但未发送内容尚未保存。请重试保存后再发送或关闭。",
++ ]
+
+ ❯ src/components/DocumentComposerAttachments.save.test.tsx:125:20
+    123|   h.failApproved = false;
+    124|   await d.draftPersistence.flush();
+    125|   expect(alerts()).toEqual([]);
+       |                    ^
+    126|   expect(render().some((node) => node.props.role === "status" && text(…
+    127|   expect(h.saved).toHaveBeenCalledExactlyOnceWith({ draftKey: "new", a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  07:57:19
+   Duration  312ms (transform 110ms, setup 0ms, import 46ms, tests 212ms, environment 0ms)
+

@@ -9,6 +9,8 @@ import {
 import { ATTACHMENT_REVIEW as S } from "../runtime/attachment_review_strings";
 import type { ThreadState } from "../runtime/session_types";
 import { WorkspaceDialog } from "./WorkspaceDialog";
+import { DocumentTextDetails } from "./DocumentTextDetails";
+import { DOCUMENT_INPUT_STRINGS as D } from "../runtime/document_input_strings";
 import "../attachment-review.css";
 
 export function AttachmentRecovery({
@@ -106,27 +108,35 @@ export function AttachmentRecovery({
               <p>{S.emptyQueue}</p>
               <div className="attachment-review-list">
                 {review.entries.map((entry) => (
-                  <label key={entry.id}>
-                    <input
-                      type="checkbox"
-                      checked={kept.has(entry.id)}
-                      disabled={checking || !!entry.locked}
-                      onChange={(event) => {
-                        setError(null);
-                        setKept((previous) => {
-                          const next = new Set(previous);
-                          if (event.target.checked) next.add(entry.id);
-                          else next.delete(entry.id);
-                          return next;
-                        });
-                      }}
-                    />
-                    <span>
-                      <strong>{entry.label}</strong>
-                      <small>{entry.group}</small>
-                      {entry.locked && <small>{entry.locked}</small>}
-                    </span>
-                  </label>
+                  <div key={entry.id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={kept.has(entry.id)}
+                        disabled={checking || !!entry.locked}
+                        onChange={(event) => {
+                          setError(null);
+                          setKept((previous) => {
+                            const next = new Set(previous);
+                            if (event.target.checked) next.add(entry.id);
+                            else next.delete(entry.id);
+                            return next;
+                          });
+                        }}
+                      />
+                      <span>
+                        <strong>{entry.label}</strong>
+                        <small>{entry.group}</small>
+                        {entry.locked && <small>{entry.locked}</small>}
+                      </span>
+                    </label>
+                    {entry.documentText && (
+                      <details className="attachment-review-document">
+                        <summary>{D.view}</summary>
+                        <DocumentTextDetails document={entry.documentText} />
+                      </details>
+                    )}
+                  </div>
                 ))}
               </div>
               {error && (

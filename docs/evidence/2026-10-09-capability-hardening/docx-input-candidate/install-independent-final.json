@@ -1,0 +1,271 @@
+{
+  "sourceCommit": "b862b79dc1c97e19b688da9c6d031f6ad3856476",
+  "startedAt": "2026-10-12T22:17:49.932175+00:00",
+  "completedAt": "2026-10-12T22:18:01.435093+00:00",
+  "result": "passed",
+  "checks": {
+    "normalExitAndFreshPreparation": {
+      "passed": true,
+      "freshInstallDirectory": "output/2026-10-13-docx-input-install",
+      "priorFormalSourceCommit": "3bcd43dcd86713748d95f9255f2653e656772b3a",
+      "boundary": "Prior observed normal quit plus this preparation fresh absence; no newly fabricated quit."
+    },
+    "candidateReceipts": {
+      "passed": true,
+      "candidateChecks": 9
+    },
+    "exactSourceAndEngineering": {
+      "passed": true,
+      "inputCount": 1605,
+      "engineering": {
+        "receipt": "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/verification.json",
+        "sha256": "b37b1ddc995df2866e50cc2065dbc59a39432ec1c1fad510edb5ea8ab25998bb",
+        "originalPrivateReceipt": {
+          "path": "output/2026-10-13-docx-input-checks/run-02/verification.json",
+          "sha256": "0e533f356e13a9ce783aa6a36ef70bf3a72464c5c77a0881feac998441613ac8"
+        },
+        "inputCount": 1605,
+        "references": {
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/verification.json": "b37b1ddc995df2866e50cc2065dbc59a39432ec1c1fad510edb5ea8ab25998bb",
+          "output/2026-10-13-docx-input-checks/run-02/verification.json": "0e533f356e13a9ce783aa6a36ef70bf3a72464c5c77a0881feac998441613ac8",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/verification-original.json.raw": "0e533f356e13a9ce783aa6a36ef70bf3a72464c5c77a0881feac998441613ac8",
+          "output/2026-10-13-docx-input-checks/verification.json": "736d290aadd299271a2344201b0ed749ac4ef2ab9c6f4dd292a41be8b73157f0",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/run-01/verification-original.json.raw": "736d290aadd299271a2344201b0ed749ac4ef2ab9c6f4dd292a41be8b73157f0",
+          "output/2026-10-13-docx-input-checks/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "output/2026-10-13-docx-input-checks/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "output/2026-10-13-docx-input-checks/frontend.txt": "da07c0dc5a322fbb97a8b8b831a07fdb1b64b450b0d2ad28026faa11e64bb271",
+          "output/2026-10-13-docx-input-checks/cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "output/2026-10-13-docx-input-checks/clippy.txt": "537301cf47a02fc6126212678f437647cdb0caa9c85b39875acb31203d087695",
+          "output/2026-10-13-docx-input-checks/rust.txt": "56378c50c09ad41f5656018b0bf5c2fae72313d652ad233ecc7b941e4788ca3b",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/inputs-before.json": "ab3d4c2b24dd3a608b36590a6930e1e9fa9249ff82fc3be1125774cd3090a54d",
+          "output/2026-10-13-docx-input-checks/run-02/inputs-before.json": "ab3d4c2b24dd3a608b36590a6930e1e9fa9249ff82fc3be1125774cd3090a54d",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/inputs-after.json": "ab3d4c2b24dd3a608b36590a6930e1e9fa9249ff82fc3be1125774cd3090a54d",
+          "output/2026-10-13-docx-input-checks/run-02/inputs-after.json": "ab3d4c2b24dd3a608b36590a6930e1e9fa9249ff82fc3be1125774cd3090a54d",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/protected-before.json": "5e3f812325b0e53cb88e702d45799fc104557017355c0813c11e8930abebdb0a",
+          "output/2026-10-13-docx-input-checks/run-02/protected-before.json": "5e3f812325b0e53cb88e702d45799fc104557017355c0813c11e8930abebdb0a",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/protected-after.json": "5e3f812325b0e53cb88e702d45799fc104557017355c0813c11e8930abebdb0a",
+          "output/2026-10-13-docx-input-checks/run-02/protected-after.json": "5e3f812325b0e53cb88e702d45799fc104557017355c0813c11e8930abebdb0a",
+          "output/2026-10-13-docx-input-checks/inputs-before.json": "09fca6b93e25c39c92687c73e6540282117eec029b02f5cedcc7a310ddcf553f",
+          "output/2026-10-13-docx-input-checks/inputs-after.json": "09fca6b93e25c39c92687c73e6540282117eec029b02f5cedcc7a310ddcf553f",
+          "output/2026-10-13-docx-input-checks/protected-before.json": "5e3f812325b0e53cb88e702d45799fc104557017355c0813c11e8930abebdb0a",
+          "output/2026-10-13-docx-input-checks/protected-after.json": "5e3f812325b0e53cb88e702d45799fc104557017355c0813c11e8930abebdb0a",
+          "output/2026-10-13-docx-input-checks/run-02/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/format.txt": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+          "output/2026-10-13-docx-input-checks/run-02/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/typecheck.txt": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+          "output/2026-10-13-docx-input-checks/run-02/frontend.txt": "6c0904352c59190d7d3c74ea180a3c257296063591367700fa707d6fe655f3a1",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/frontend.txt": "6c0904352c59190d7d3c74ea180a3c257296063591367700fa707d6fe655f3a1",
+          "output/2026-10-13-docx-input-checks/run-02/build.txt": "738ae234488c45a56b400ce1a13c6ad495448b03c907bd4b114c923fb37d695d",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/build.txt": "738ae234488c45a56b400ce1a13c6ad495448b03c907bd4b114c923fb37d695d",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/run-01/cargo-fmt.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/run-01/clippy.txt": "537301cf47a02fc6126212678f437647cdb0caa9c85b39875acb31203d087695",
+          "docs/evidence/2026-10-09-capability-hardening/docx-input-checks/run-01/rust.txt": "56378c50c09ad41f5656018b0bf5c2fae72313d652ad233ecc7b941e4788ca3b"
+        },
+        "boundary": "Four frontend commands executed in run-02; three native actual passes explicitly reused from this slice run-01, with only the pinned frontend shallow test locator changed and all other inputs byte-identical. Run-01 frontend failure/build-not-executed are retained. Candidate, installed UI and actual Agent use remain separate."
+      }
+    },
+    "candidateFormalFiveFiles": {
+      "passed": true,
+      "files": {
+        "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+        "Contents/MacOS/farfold": "dae09bc83210149ba5da73d38ee844af9ea51fe386a856bf957f12de03e8a533",
+        "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+        "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+        "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+      },
+      "modes": {
+        "Contents/Info.plist": 420,
+        "Contents/MacOS/farfold": 493,
+        "Contents/Resources/icon.icns": 420,
+        "Contents/Resources/release-manifest.json": 420,
+        "Contents/_CodeSignature/CodeResources": 420
+      }
+    },
+    "identityArchitectureSignature": {
+      "passed": true,
+      "candidate": {
+        "identifier": "ai.farfold.desktop",
+        "version": "0.1.7",
+        "architecture": "arm64",
+        "strictCodesign": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: valid on disk\n/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app: satisfies its Designated Requirement",
+        "signature": "ad-hoc; not notarized"
+      },
+      "formal": {
+        "identifier": "ai.farfold.desktop",
+        "version": "0.1.7",
+        "architecture": "arm64",
+        "strictCodesign": "/Applications/Farfold.app: valid on disk\n/Applications/Farfold.app: satisfies its Designated Requirement",
+        "signature": "ad-hoc; not notarized"
+      }
+    },
+    "archive": {
+      "passed": true,
+      "sha256": "eb667a5379ca3924961951b44f71f07358df102e1bc62be0d5310991949a7e21",
+      "bytes": 14425414
+    },
+    "installationOperation": {
+      "passed": true,
+      "phase": "installedVerifiedNotLaunched",
+      "rootInstallerReportedLaunched": false
+    },
+    "snapshotCaptures": {
+      "backup": {
+        "receiptSha256": "b916e6e5a1315503f9c84755ec233305e37bc6e4113934e2eac8f388f274a28f",
+        "backupSha256": "060a7a5c3269b7f68856a63063958dc76591ad77b9fb2f1bba63ea6fdcabee80",
+        "capturedFiles": {
+          "farfold.sqlite3": "ec59ea5c0e5ecaa6f081460db31ca5d31263efa2179f21a6b81ad68af43bba47",
+          "farfold.sqlite3-wal": "3120b89eea76bf6ec556d6ca338191f283ae5e3a845c2281318f3af443b16cac",
+          "farfold.sqlite3-shm": "691f513d35cac0944bf57f1902dca1ca80729b0892b0135cf528922e962a3088"
+        },
+        "boundary": "Verified only retained private evidence; no live database was opened by this check."
+      },
+      "passed": true,
+      "actualSuccessfulCaptures": 3,
+      "rawMode": "0600",
+      "entriesEach": 217400
+    },
+    "retainedDataEquality": {
+      "passed": true,
+      "allThreeManifestsEqual": true,
+      "entriesEach": 217400,
+      "sha256": "44c6e403b919dde07c98300a34fd2288ca5b85196b02428eb1593ae891bd38a0"
+    },
+    "finalStableAndProcessAbsent": {
+      "passed": true,
+      "checkedAt": "2026-10-12T22:18:01.435076+00:00",
+      "formalProcessCount": 0,
+      "sourceInputCount": 1605
+    }
+  },
+  "failures": [],
+  "reviewerLaunchedApp": false,
+  "reviewerReadLiveDatabase": false,
+  "boundary": "Single read-only installed gate. Snapshot manifests and retained backup receipts were read, not live user files or SQLite. This gate concerns only the configured DOCX text-input installation over the formal3bcd baseline. Four frontend actual checks and three explicitly traced native actual passes from this slice run-01 establish engineering; its frontend failure/build-not-executed are retained. Gate applies at the recorded time before root intentional native testing; no later process/source recheck is implied. Ad-hoc signature is not notarization or distribution approval.",
+  "refs": [
+    {
+      "path": "output/2026-10-13-docx-input-independent-install/install-final-review.json",
+      "sha256": "ea587fd4be773117d5cc8a080dde35e91c93de34d6b8c188155a83c082b824b9",
+      "bytes": 15344
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/install-data-before-summary.json",
+      "sha256": "f65fc5912d2c11c9f67c28e4719dfa62edbebfa91baafc9801c01f50d7491eef",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/snapshot-before-execution.json",
+      "sha256": "c5ad1ec3056b8715df2a60bd9c6f232e4639267eefb3adad5be8f7eb5d32c716",
+      "bytes": 618
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/install-data-before.jsonl",
+      "sha256": "44c6e403b919dde07c98300a34fd2288ca5b85196b02428eb1593ae891bd38a0",
+      "bytes": 58925641
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/install-data-preinstall-summary.json",
+      "sha256": "f65fc5912d2c11c9f67c28e4719dfa62edbebfa91baafc9801c01f50d7491eef",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/snapshot-preinstall-execution.json",
+      "sha256": "41ec114fdf71e4f6ed2b213a28a232944d1df9e413340e30fbc5cf4416c39ed2",
+      "bytes": 622
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/install-data-preinstall.jsonl",
+      "sha256": "44c6e403b919dde07c98300a34fd2288ca5b85196b02428eb1593ae891bd38a0",
+      "bytes": 58925641
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/install-data-after-summary.json",
+      "sha256": "f65fc5912d2c11c9f67c28e4719dfa62edbebfa91baafc9801c01f50d7491eef",
+      "bytes": 419
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/snapshot-after-execution.json",
+      "sha256": "7b90939d3d39bc7d321ff4a536fa4faa24aeec8afa7f7f673371db5415aef9a6",
+      "bytes": 617
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/install-data-after.jsonl",
+      "sha256": "44c6e403b919dde07c98300a34fd2288ca5b85196b02428eb1593ae891bd38a0",
+      "bytes": 58925641
+    },
+    {
+      "path": "output/2026-10-13-docx-input-independent-install/verify_installed_final.py",
+      "sha256": "7f2d78a2a42b4e46066b3e03c99000e80ce304e573ded85089a281057f781683",
+      "bytes": 12856
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/install_verified_candidate.py",
+      "sha256": "f3d6e77d0bae8fbed7d0a3ea41bf6912dfffd5a5ae9fe1cde13987149489c67a",
+      "bytes": 23330
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/install_data_snapshot.py",
+      "sha256": "b5c475ee179a65d9f9bf38a09300d9af3f08c9a105aba34f011e6ae2669b9d3a",
+      "bytes": 6220
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/capture_snapshot.py",
+      "sha256": "11309bbc64567508154e3cee6969d363106f83b71f841dd30f59df3965d367f0",
+      "bytes": 2839
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/normal-exit-observation.json",
+      "sha256": "e0b14e4f74ba5fab10686c4b27ec35649dc63fae759e5a8a17b820fbf73a015e",
+      "bytes": 1169
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/install-operation.json",
+      "sha256": "9d5aede5a34f819d30cea5926b30c5441a22d4c92417deac737e61f8eb4a67ca",
+      "bytes": 3492
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install-preparation/revision-v2/generated-tools.json",
+      "sha256": "9e807dd20d040f8c2b1c2279b4de099f899a2fc5a9d4659c40d2d819e062057b",
+      "bytes": 6736
+    },
+    {
+      "path": "output/2026-10-13-claude-history-origin-fix-native/normal-exit-observation.json",
+      "sha256": "4ae7c026654fce8cbe42d261d93bac6a62df9623683ff759d00550ffa6aa1055",
+      "bytes": 655
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input-candidate/candidate.json",
+      "sha256": "b78d4fb95b1cf6fc30d6d9777d5dd9d26c7933bddbcca55a19180c9cb81ef4a9",
+      "bytes": 15221
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input-candidate/candidate-independent.json",
+      "sha256": "bc18842f2ce0079393b9ed915c6aab670864b47211d3ef3f2e717e361147b89e",
+      "bytes": 3060
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/docx-input-candidate/candidate-inputs.json",
+      "sha256": "ab3d4c2b24dd3a608b36590a6930e1e9fa9249ff82fc3be1125774cd3090a54d",
+      "bytes": 186298
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/backup_metadata.py",
+      "sha256": "6ef2221d2f4d8b44f38aa05e4d0da45f40acc8272fa492ee5216aea72ece6dd3",
+      "bytes": 7966
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/data_manifest.py",
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "bytes": 4258
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/metadata-backup-receipt.json",
+      "sha256": "b916e6e5a1315503f9c84755ec233305e37bc6e4113934e2eac8f388f274a28f",
+      "bytes": 889
+    },
+    {
+      "path": "output/2026-10-13-docx-input-install/metadata-before.sqlite3",
+      "sha256": "060a7a5c3269b7f68856a63063958dc76591ad77b9fb2f1bba63ea6fdcabee80",
+      "bytes": 405504
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "scope": "only owned finite controlled Vite server, no formal App or Agent",
+  "pid": 270,
+  "exactCommand": "270 node output/2026-10-13-xlsx-input-browser/serve.mjs",
+  "beforePs": "270 node output/2026-10-13-xlsx-input-browser/serve.mjs",
+  "beforePsExitCode": 0,
+  "signal": "SIGTERM",
+  "actualExitCode": "pending same existing exec session87116"
+}

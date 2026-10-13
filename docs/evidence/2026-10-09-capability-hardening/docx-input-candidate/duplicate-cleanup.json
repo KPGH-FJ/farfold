@@ -1,0 +1,18 @@
+{
+  "checkedAtUtc": "2026-10-12T23:24:23.980578+00:00",
+  "sourceCommit": "b862b79dc1c97e19b688da9c6d031f6ad3856476",
+  "removedExactReproduciblePath": "src-tauri/target/release/bundle/macos/Farfold.app",
+  "formalAppRetained": "/Applications/Farfold.app",
+  "formalFilesSha256BeforeAndAfterEqual": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "dae09bc83210149ba5da73d38ee844af9ea51fe386a856bf957f12de03e8a533",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "candidateArchiveRetained": "src-tauri/target/internal-candidate/2026-10-13-docx-input-b862b79d/Farfold-0.1.7-b862b79d.zip",
+  "candidateArchiveSha256": "eb667a5379ca3924961951b44f71f07358df102e1bc62be0d5310991949a7e21",
+  "candidateArchiveBytes": 14425414,
+  "otherProjectOrUserPathsChanged": false,
+  "boundary": "Only the duplicate generated bundle was removed after candidate9/install10/native initial verification; old target backups and sole formal app remain."
+}

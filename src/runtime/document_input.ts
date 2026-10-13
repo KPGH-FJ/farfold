@@ -7,6 +7,10 @@ import { readDocxCapture, readDocxPreview } from "./docx_preview";
 import { DOCX_LIMITS, DocxError } from "./docx_types";
 import { FILE_DELIVERY_STRINGS as D } from "./file_delivery_strings";
 import { docxInputText } from "./docx_input_text";
+import { readWorkbookCapture, readWorkbookInput } from "./xlsx_preview";
+import { XlsxError } from "./xlsx_types";
+import { XlsxInputError, type XlsxInputRequest } from "./xlsx_input_types";
+import { xlsxInputText } from "./xlsx_input_text";
 import {
   DOCUMENT_INPUT_MAX_BYTES,
   DocumentInputError,
@@ -29,7 +33,12 @@ function cancelled(signal?: AbortSignal) {
 }
 function normalized(error: unknown): never {
   if (error instanceof DocumentInputError) throw error;
-  if (error instanceof DocxError) throw new DocumentInputError(error.code);
+  if (
+    error instanceof DocxError ||
+    error instanceof XlsxError ||
+    error instanceof XlsxInputError
+  )
+    throw new DocumentInputError(error.code);
   if (error instanceof Error && error.message === D.checkBusy)
     throw new DocumentInputError("readBusy");
   if (error instanceof Error && error.message === D.checkWaitExpired)
@@ -111,6 +120,7 @@ async function revision(
 export async function readDocumentInput(
   attachment: { uri: string; name: string },
   signal: AbortSignal,
+  options?: { xlsx: XlsxInputRequest },
 ): Promise<DocumentInputReview> {
   cancelled(signal);
   const path = selectedPath(attachment.uri);
@@ -119,6 +129,38 @@ export async function readDocumentInput(
     if (source.path !== path) throw new DocumentInputError("changed");
     if (source.size > DOCX_LIMITS.archive)
       throw new DocumentInputError("limit");
+    if (/\.xlsx$/i.test(path)) {
+      const capture = await readWorkbookCapture(source, signal);
+      const document = await readWorkbookInput(
+        capture,
+        options?.xlsx ?? { mode: "visible-saved-cells" },
+        signal,
+      );
+      cancelled(signal);
+      const converted = xlsxInputText(document);
+      if (!converted.actualTextChars) throw new DocumentInputError("noText");
+      const local = parseLocalDocumentText({
+        schema: 1,
+        format: "xlsx",
+        source,
+        textSha256: await digest(converted.text, signal),
+        utf8Bytes: documentTextBytes(converted.text, DOCUMENT_INPUT_MAX_BYTES)
+          .byteLength,
+        selection: "read-saved-cell-content",
+        partial: document.partial,
+        partialSelected: false,
+        scope: document.scope,
+        warnings: document.warnings,
+      });
+      if (!local) throw new DocumentInputError("invalid");
+      cancelled(signal);
+      return {
+        text: converted.text,
+        local,
+        actualTextChars: converted.actualTextChars,
+      };
+    }
+    if (!/\.docx$/i.test(path)) throw new DocumentInputError("unsupported");
     const capture = await readDocxCapture(source, signal);
     const document = await readDocxPreview(capture, signal);
     cancelled(signal);
@@ -204,6 +246,9 @@ export async function verifyDocumentInput(
       const current = await readDocumentInput(
         { uri, name: local.source.name },
         options.signal ?? new AbortController().signal,
+        local.format === "xlsx"
+          ? { xlsx: { mode: local.scope.mode } }
+          : undefined,
       );
       if (
         !sameFile(current.local.source, local.source) ||
@@ -211,7 +256,15 @@ export async function verifyDocumentInput(
         current.local.textSha256 !== local.textSha256 ||
         current.local.utf8Bytes !== local.utf8Bytes ||
         current.local.partial !== local.partial ||
-        current.local.imageReferences !== local.imageReferences ||
+        current.local.format !== local.format ||
+        current.local.selection !== local.selection ||
+        (current.local.format === "docx" &&
+          local.format === "docx" &&
+          current.local.imageReferences !== local.imageReferences) ||
+        (current.local.format === "xlsx" &&
+          local.format === "xlsx" &&
+          JSON.stringify(current.local.scope) !==
+            JSON.stringify(local.scope)) ||
         JSON.stringify(current.local.warnings) !==
           JSON.stringify(local.warnings)
       )

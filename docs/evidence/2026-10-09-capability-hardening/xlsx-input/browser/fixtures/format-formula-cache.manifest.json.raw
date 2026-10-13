@@ -1,0 +1,22 @@
+{
+  "name": "format-formula-cache",
+  "zip": "output/2026-10-13-xlsx-input-browser/fixtures/format-formula-cache.xlsx",
+  "zipSha256": "eb86baa14902a53f35fada8f616fb83f620f9203ed516dcf5f76b41b96f3ad7d",
+  "capture": "output/2026-10-13-xlsx-input-browser/fixtures/format-formula-cache.capture.json",
+  "captureSha256": "7487cb45c09f558d216818b4fc7096a8589fd7d1c9201ac2f9c513dd25ad7272",
+  "file": {
+    "root": "/controlled/xlsx",
+    "path": "/controlled/xlsx/format-formula-cache.xlsx",
+    "resolvedPath": "/controlled/xlsx/format-formula-cache.xlsx",
+    "name": "format-formula-cache.xlsx",
+    "size": 2786,
+    "sha256": "eb86baa14902a53f35fada8f616fb83f620f9203ed516dcf5f76b41b96f3ad7d",
+    "version": "controlled-full-bytes:eb86baa14902a53f35fada8f616fb83f620f9203ed516dcf5f76b41b96f3ad7d"
+  },
+  "uri": "file:///controlled/xlsx/format-formula-cache.xlsx",
+  "provenance": {
+    "originalSource": "docs/evidence/2026-10-09-capability-hardening/xlsx-input/fixtures/02-protection-format.xlsx",
+    "originalSha256": "d588dd30f65be1d70f415d7fbe364f2ec3679ca2d97ffd94861cacfcdc3538c0",
+    "change": "Appended six independently authored style2 ;;; saved cells on Unprotected!B2:G2"
+  }
+}

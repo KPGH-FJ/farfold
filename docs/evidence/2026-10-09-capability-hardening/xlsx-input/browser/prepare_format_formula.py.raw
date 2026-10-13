@@ -1,0 +1,54 @@
+"""Independently author a new negative ZIP; never execute during an active proof.
+
+Does not import or call Farfold parsers, fixtures generators, App or native IPC.
+One retained public synthetic workbook is the base, with six exact new saved
+cells under its already declared all-empty number format ;;; (style index 2).
+"""
+from pathlib import Path
+from zipfile import ZipFile, ZIP_DEFLATED
+from xml.etree import ElementTree as ET
+import hashlib,json,base64
+
+BASE=Path('output/2026-10-13-xlsx-input-browser')
+SOURCE=Path('docs/evidence/2026-10-09-capability-hardening/xlsx-input/fixtures/02-protection-format.xlsx')
+TARGET=BASE/'fixtures/format-formula-cache.xlsx'
+NS='http://schemas.openxmlformats.org/spreadsheetml/2006/main'
+ET.register_namespace('',NS)
+def q(name):return f'{{{NS}}}{name}'
+def sha(b):return hashlib.sha256(b).hexdigest()
+if TARGET.exists():raise RuntimeError('refuse overwrite independently authored ZIP')
+with ZipFile(SOURCE) as archive:entries={n:archive.read(n) for n in archive.namelist()}
+styles=ET.fromstring(entries['xl/styles.xml'])
+xfs=styles.find(q('cellXfs'))
+assert xfs is not None and xfs[2].get('numFmtId')=='164'
+assert any(x.get('numFmtId')=='164' and x.get('formatCode')==';;;' for x in styles.find(q('numFmts')))
+sheet=ET.fromstring(entries['xl/worksheets/sheet2.xml'])
+data=sheet.find(q('sheetData'));assert data is not None
+row=ET.SubElement(data,q('row'),{'r':'2'})
+specs=[
+ ('B2','n','40+2',None),
+ ('C2','str','""',''),
+ ('D2','n','0','0'),
+ ('E2','n',None,'0'),
+ ('F2','str',None,''),
+ ('G2','inlineStr',None,'FORMAT_HIDDEN_NEW_LITERAL'),
+]
+for address,kind,formula,value in specs:
+ c=ET.SubElement(row,q('c'),{'r':address,'t':kind,'s':'2'})
+ if formula is not None:ET.SubElement(c,q('f')).text=formula
+ if kind=='inlineStr':ET.SubElement(ET.SubElement(c,q('is')),q('t')).text=value
+ elif value is not None:ET.SubElement(c,q('v')).text=value
+entries['xl/worksheets/sheet2.xml']=ET.tostring(sheet,encoding='utf-8',xml_declaration=True)
+with ZipFile(TARGET,'x',compression=ZIP_DEFLATED) as archive:
+ for name,content in entries.items():archive.writestr(name,content)
+raw=TARGET.read_bytes();file={'root':'/controlled/xlsx','path':'/controlled/xlsx/format-formula-cache.xlsx','resolvedPath':'/controlled/xlsx/format-formula-cache.xlsx','name':'format-formula-cache.xlsx','size':len(raw),'sha256':sha(raw),'version':'controlled-full-bytes:'+sha(raw)}
+with ZipFile(TARGET) as archive:
+ contents=[(n,archive.read(n))for n in archive.namelist()]
+capture={'file':file,'inflatedBytes':sum(len(b)for _,b in contents),'entries':[n for n,_ in contents],'parts':[{'name':n,'data':base64.b64encode(b).decode()}for n,b in contents if n.endswith(('.xml','.rels'))]}
+cap_path=BASE/'fixtures/format-formula-cache.capture.json'
+with cap_path.open('x')as out:json.dump(capture,out,indent=2);out.write('\n')
+oracle={'source':str(SOURCE),'sourceSha256':sha(SOURCE.read_bytes()),'newZip':str(TARGET),'newZipSha256':sha(raw),'independentAuthorship':'Only explicit saved cells and declared style164 ;;;. No product parser/converter/generator oracle.', 'baseKnownDefaultCount':5,'baseAllCount':7,'appendedCells':[{'sheet':'Unprotected','address':a,'type':t,'formula':f,'valueElementPresent':v is not None,'savedValue':v,'styleIndex':2,'knownFormat':';;;','defaultExcluded':True}for a,t,f,v in specs], 'expectedDefaultRecordCount':5,'expectedAllRecordCount':13,'expectedHiddenCellOmissionCount':8,'mustNeverInvent':['B2 computed42','B2 saved0','C2 missing-cache state','default-visible B2/C2/D2/E2/F2/G2'], 'unmodifiedParts':{n:sha(b)for n,b in entries.items()if n!='xl/worksheets/sheet2.xml'}}
+with (BASE/'fixtures/format-formula-cache.oracle.json').open('x')as out:json.dump(oracle,out,indent=2);out.write('\n')
+manifest={'name':'format-formula-cache','zip':str(TARGET),'zipSha256':sha(raw),'capture':str(cap_path),'captureSha256':sha(cap_path.read_bytes()),'file':file,'uri':'file:///controlled/xlsx/format-formula-cache.xlsx','provenance':{'originalSource':str(SOURCE),'originalSha256':sha(SOURCE.read_bytes()),'change':'Appended six independently authored style2 ;;; saved cells on Unprotected!B2:G2'}}
+with (BASE/'fixtures/format-formula-cache.manifest.json').open('x')as out:json.dump(manifest,out,indent=2);out.write('\n')
+print(json.dumps({'zip':str(TARGET),'sha256':sha(raw),'defaultExpected':5,'allExpected':13}))

@@ -1,0 +1,94 @@
+{
+  "source": "docs/evidence/2026-10-09-capability-hardening/xlsx-input/fixtures/02-protection-format.xlsx",
+  "sourceSha256": "d588dd30f65be1d70f415d7fbe364f2ec3679ca2d97ffd94861cacfcdc3538c0",
+  "newZip": "output/2026-10-13-xlsx-input-browser/fixtures/format-formula-cache.xlsx",
+  "newZipSha256": "eb86baa14902a53f35fada8f616fb83f620f9203ed516dcf5f76b41b96f3ad7d",
+  "independentAuthorship": "Only explicit saved cells and declared style164 ;;;. No product parser/converter/generator oracle.",
+  "baseKnownDefaultCount": 5,
+  "baseAllCount": 7,
+  "appendedCells": [
+    {
+      "sheet": "Unprotected",
+      "address": "B2",
+      "type": "n",
+      "formula": "40+2",
+      "valueElementPresent": false,
+      "savedValue": null,
+      "styleIndex": 2,
+      "knownFormat": ";;;",
+      "defaultExcluded": true
+    },
+    {
+      "sheet": "Unprotected",
+      "address": "C2",
+      "type": "str",
+      "formula": "\"\"",
+      "valueElementPresent": true,
+      "savedValue": "",
+      "styleIndex": 2,
+      "knownFormat": ";;;",
+      "defaultExcluded": true
+    },
+    {
+      "sheet": "Unprotected",
+      "address": "D2",
+      "type": "n",
+      "formula": "0",
+      "valueElementPresent": true,
+      "savedValue": "0",
+      "styleIndex": 2,
+      "knownFormat": ";;;",
+      "defaultExcluded": true
+    },
+    {
+      "sheet": "Unprotected",
+      "address": "E2",
+      "type": "n",
+      "formula": null,
+      "valueElementPresent": true,
+      "savedValue": "0",
+      "styleIndex": 2,
+      "knownFormat": ";;;",
+      "defaultExcluded": true
+    },
+    {
+      "sheet": "Unprotected",
+      "address": "F2",
+      "type": "str",
+      "formula": null,
+      "valueElementPresent": true,
+      "savedValue": "",
+      "styleIndex": 2,
+      "knownFormat": ";;;",
+      "defaultExcluded": true
+    },
+    {
+      "sheet": "Unprotected",
+      "address": "G2",
+      "type": "inlineStr",
+      "formula": null,
+      "valueElementPresent": true,
+      "savedValue": "FORMAT_HIDDEN_NEW_LITERAL",
+      "styleIndex": 2,
+      "knownFormat": ";;;",
+      "defaultExcluded": true
+    }
+  ],
+  "expectedDefaultRecordCount": 5,
+  "expectedAllRecordCount": 13,
+  "expectedHiddenCellOmissionCount": 8,
+  "mustNeverInvent": [
+    "B2 computed42",
+    "B2 saved0",
+    "C2 missing-cache state",
+    "default-visible B2/C2/D2/E2/F2/G2"
+  ],
+  "unmodifiedParts": {
+    "[Content_Types].xml": "3bbd77624ebcbed5a975d706b4678246431e1654385aed712cf26a024189b408",
+    "_rels/.rels": "4b444ae484e542c8b09e536933f62a2b27a272a950b2b2b7398f1afdc0314b6e",
+    "xl/_rels/workbook.xml.rels": "28c74cee48b52a44f20c660a5fb25be8b3c867a8333b4e3c770da47d99b17ada",
+    "xl/styles.xml": "b4049a6312c68cb7338d04c25e192c3f338514e37f912c17ea3dbdc876b2a774",
+    "xl/workbook.xml": "0b78ea1ac540fd7e2c58a12cb0a9a7dea60a10dd0643477adcf2aca68536e040",
+    "xl/worksheets/sheet1.xml": "9a7c90fe85d85b1b7df45fb6cb1de81973b643fc61bb87f5c354eb9bc8e1a7dc"
+  }
+}

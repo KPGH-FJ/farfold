@@ -1,0 +1,10 @@
+{
+  "runs": [
+    "chromium-run05.json",
+    "webkit-run04.json"
+  ],
+  "sourceStable": true,
+  "actualFailure": "Preseeded established controlled thread has no actual Channel until a connection is opened; fixture official-history injection required it too early. Previously actual echo used production event-projection fallback.",
+  "fix": "Explicitly simulate a controlled disconnected conversation and call real threads.reconnect; then inject forged history through its actual Tauri Channel. No native process or Agent is executed.",
+  "pendingProductFailure": "Independent A parser ;;; formula missing/empty cache P1 is separate and not closed by the 97 positive checks already covered."
+}

@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "kind": "actual-product-P2",
+  "scope": "controlled complete production App StrictMode actual Worker; native saving IPC controlled",
+  "raw": "output/2026-10-13-xlsx-input-browser/save-retry-inspection-run01.json",
+  "rawSha256": "e12f9e5f597bf3997a26e0db592cb42b114f7869a7698191a2cc66cc642e7acc",
+  "screenshot": "output/2026-10-13-xlsx-input-browser/save-retry-inspection-run01.png",
+  "screenshotSha256": "36317e71db441684e8ccb025e9d451f25bb900c9b48ff1c033a28b347ba39427",
+  "actualExitCode": 1,
+  "completionChunk": "fae3c6",
+  "sourceStable": true,
+  "successfulSavingProved": [
+    {
+      "name": "Actually saved complete approved text/source after prior failed persistence",
+      "pass": true
+    },
+    {
+      "name": "Actual retry preserved exact retained draft and never submitted",
+      "pass": true
+    }
+  ],
+  "failure": {
+    "name": "Resolved persistence no longer displays obsolete document-save failure",
+    "pass": false
+  },
+  "sourceOwnership": "root C DocumentComposerAttachments",
+  "notClassifiedAsHarnessError": true,
+  "notClosedByEarlier122BrowserChecks": true,
+  "status": "reported-to-root-await-owned-fix-or-exact-pending-handoff"
+}

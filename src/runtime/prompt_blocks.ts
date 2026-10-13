@@ -41,14 +41,14 @@ export function promptRejectionItem(
     : null;
 }
 
-/** Recognizing an old DOCX text resource only withholds authority. It never
+/** Recognizing an old Office text resource only withholds authority. It never
  * invents a verified file or authorizes reading or sending it. */
 function historicalDocumentUri(uri: string): boolean {
   try {
     const value = new URL(uri);
-    return /\.docx$/i.test(decodeURIComponent(value.pathname));
+    return /\.(docx|xlsx)$/i.test(decodeURIComponent(value.pathname));
   } catch {
-    return /\.docx$/i.test(uri);
+    return /\.(docx|xlsx)$/i.test(uri);
   }
 }
 
@@ -62,8 +62,10 @@ export function resourceDocumentText(
     });
   if (
     historicalDocumentUri(block.resource.uri) ||
-    block.resource.mimeType ===
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    [
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ].includes(block.resource.mimeType)
   )
     return parseApprovedDocumentText({
       text: block.resource.text,

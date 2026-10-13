@@ -7,6 +7,16 @@ import {
   type DocxWarning,
 } from "./docx_types";
 import { documentInputFailure } from "./document_input_strings";
+import {
+  XLSX_INPUT_INFORMATIONAL_CODES,
+  type XlsxInputFailure,
+  type XlsxInputScope,
+  type XlsxInputWarning,
+} from "./xlsx_input_types";
+import {
+  checkedXlsxInputScope,
+  checkedXlsxInputWarnings,
+} from "./xlsx_input_validation";
 
 export const DOCUMENT_INPUT_MAX_BYTES = 256 * 1024;
 /** Retained unknown text remains user input, never dispatch authority. */
@@ -14,6 +24,7 @@ export const DOCUMENT_INPUT_RETAINED_MAX_BYTES = 32 * 1024 * 1024;
 
 export type DocumentInputFailure =
   | DocxFailure
+  | XlsxInputFailure
   | "noText"
   | "textLimit"
   | "sourceUnknown"
@@ -28,18 +39,27 @@ export class DocumentInputError extends Error {
 }
 
 /** Only metadata of explicitly retained unsent text; no document cache. */
-export interface LocalDocumentText {
+interface LocalDocumentTextBase {
   schema: 1;
-  format: "docx";
   source: VerifiedFile;
   textSha256: string;
   utf8Bytes: number;
-  selection: "read-visible-text";
   partial: boolean;
   partialSelected: boolean;
+}
+export interface LocalDocxDocumentText extends LocalDocumentTextBase {
+  format: "docx";
+  selection: "read-visible-text";
   warnings: DocxWarning[];
   imageReferences: number;
 }
+export interface LocalXlsxDocumentText extends LocalDocumentTextBase {
+  format: "xlsx";
+  selection: "read-saved-cell-content";
+  scope: XlsxInputScope;
+  warnings: XlsxInputWarning[];
+}
+export type LocalDocumentText = LocalDocxDocumentText | LocalXlsxDocumentText;
 
 export interface ApprovedDocumentText {
   text: string;
@@ -87,7 +107,7 @@ function absolute(value: unknown): string {
   if (!isAbsoluteFilePath(path)) invalid();
   return path;
 }
-function source(value: unknown): VerifiedFile {
+function source(value: unknown, max = DOCX_LIMITS.archive): VerifiedFile {
   const file = object(value, [
     "root",
     "path",
@@ -102,7 +122,7 @@ function source(value: unknown): VerifiedFile {
     path: absolute(file.path),
     resolvedPath: absolute(file.resolvedPath),
     name: string(file.name, 4096),
-    size: integer(file.size, 1, DOCX_LIMITS.archive),
+    size: integer(file.size, 1, max),
     sha256: sha(file.sha256),
     version: string(file.version, 4096),
   };
@@ -129,6 +149,13 @@ export function parseLocalDocumentText(
   value: unknown,
 ): LocalDocumentText | null {
   if (value === null) return null;
+  if (
+    value &&
+    typeof value === "object" &&
+    "format" in value &&
+    value.format === "xlsx"
+  )
+    return parseLocalXlsxDocumentText(value);
   const item = object(value, [
     "schema",
     "format",
@@ -182,6 +209,54 @@ export function parseLocalDocumentText(
     warnings,
     imageReferences: integer(item.imageReferences, 0, DOCX_LIMITS.images),
   };
+}
+
+function parseLocalXlsxDocumentText(value: unknown): LocalXlsxDocumentText {
+  const item = object(value, [
+    "schema",
+    "format",
+    "source",
+    "textSha256",
+    "utf8Bytes",
+    "selection",
+    "partial",
+    "partialSelected",
+    "scope",
+    "warnings",
+  ]);
+  if (
+    item.schema !== 1 ||
+    item.format !== "xlsx" ||
+    item.selection !== "read-saved-cell-content" ||
+    typeof item.partial !== "boolean" ||
+    typeof item.partialSelected !== "boolean"
+  )
+    invalid();
+  try {
+    const scope = checkedXlsxInputScope(item.scope),
+      warnings = checkedXlsxInputWarnings(item.warnings);
+    if (
+      item.partial !==
+      warnings.some(
+        (warning) => !XLSX_INPUT_INFORMATIONAL_CODES.includes(warning.code),
+      )
+    )
+      invalid();
+    return {
+      schema: 1,
+      format: "xlsx",
+      selection: "read-saved-cell-content",
+      source: source(item.source, 16 * 1024 * 1024),
+      textSha256: sha(item.textSha256),
+      utf8Bytes: integer(item.utf8Bytes, 1, DOCUMENT_INPUT_MAX_BYTES),
+      partial: item.partial,
+      partialSelected: item.partialSelected,
+      scope,
+      warnings,
+    };
+  } catch {
+    invalid();
+  }
 }
 
 export function parseApprovedDocumentText(

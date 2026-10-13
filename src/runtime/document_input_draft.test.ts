@@ -5,7 +5,10 @@ beforeEach(() => {
   vi.resetModules();
   h.invoke.mockReset().mockResolvedValue(null);
 });
-async function fixture(key = "document-target") {
+async function fixture(
+  key = "document-target",
+  loading: "absent" | "false" = "false",
+) {
   const { composerDrafts, newConversationChoice } = await import("./drafts");
   const { draftPersistence } = await import("./draft_storage");
   const { createDocumentInputTarget } = await import("./document_input_draft");
@@ -18,6 +21,7 @@ async function fixture(key = "document-target") {
         kind: "file",
         name: "fixture.docx",
         uri: "file:///docs/fixture.docx",
+        ...(loading === "false" ? { loading: false } : {}),
       },
     ],
   }));
@@ -51,10 +55,26 @@ async function fixture(key = "document-target") {
     newConversationChoice,
     draftPersistence,
     target,
+    chip,
     approved,
     key,
   };
 }
+it.each(["absent", "false"] as const)(
+  "cancel restores original identity with loading=%s before later source repair",
+  async (loading) => {
+    const {
+      composerDrafts: d,
+      target,
+      chip,
+      key,
+    } = await fixture("document-target", loading);
+    expect(d.read(key).attachments[0]).not.toBe(chip);
+    target.retire();
+    expect(d.read(key).attachments[0]).toBe(chip);
+    expect(target.signal.aborted).toBe(true);
+  },
+);
 it("confirms into the exact existing draft once and preserves memory if saving fails", async () => {
   const {
     composerDrafts: d,

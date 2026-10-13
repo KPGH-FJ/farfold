@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "phase": "installedNativeScopedCloseout",
+  "checkedAtUtc": "2026-10-12T23:37:08.956445+00:00",
+  "sourceCommit": "b862b79dc1c97e19b688da9c6d031f6ad3856476",
+  "formalApp": "/Applications/Farfold.app",
+  "version": "0.1.7",
+  "architecture": "arm64",
+  "initialEvidencePreserved": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-input-candidate/installed-native-initial.json",
+    "sha256": "8a1d63cd76f9e8fe75d779dba9eaeffce95e016f16e3081c0919af81629c2567"
+  },
+  "officialOwnRecordProof": {
+    "verification": {
+      "path": "output/2026-10-13-docx-input-native-agent-oracle/oracle-verification-private.json",
+      "sha256": "cec8f2f2318b41ee5ee237ec0c73617ed7ff19e8390dfdf56dc3169e213369e6"
+    },
+    "independent": {
+      "path": "output/2026-10-13-docx-input-native-data-closeout-independent/own-oracle-inspection.json",
+      "sha256": "976889ea360d7b05264159475eeba1f9cd4f9fc2527e4a251ab3433b735e2e85"
+    },
+    "requests": 2,
+    "completedRequests": 2,
+    "wholeApprovedTextUtf8Bytes": 25744,
+    "wholeApprovedTextExactInFirstRequest": true,
+    "wholeApprovedTextSha256": "8ab725c787bc5419766279f098739c6819457fc45f2b9fb4a815b6231b6a3b13",
+    "all31x7DecodedCellsMatchedIndependentOracle": true,
+    "longLastCellAndSecondFinalAnswerCharacters": 1290,
+    "secondFinalAnswerUtf8ByteExactlyMatches": true,
+    "secondFinalAnswerSha256": "506a38bd4d8d0b92e63bc3c6f4589684111c2833b403d38030a7a059300c40af",
+    "bodyTailAndFourStoryMarkersMatched": true,
+    "plainPromptContainsNoOracleAnswer": true,
+    "officialToolCallItems": 0,
+    "blockedSourceChangeMarkerAbsent": true,
+    "firstAmbiguousLastTableAnswerNotUsedForLongCellProof": true,
+    "privateOriginalRecordAndOtherHistoriesNotPublished": true
+  },
+  "postInteractionData": {
+    "captureActualExit": 0,
+    "captureCompletionChunk": "9d88a2",
+    "captureFinal": {
+      "path": "output/2026-10-13-docx-input-native-data-v2/capture-final-verification-private.json",
+      "sha256": "4951f842c19a7d4cba65b15543198544de8f67dd3945fb766d367a3a01853607"
+    },
+    "originalCompareActualExit": 2,
+    "originalCompareCompletionChunk": "6d38bc",
+    "originalCompareReceipt": {
+      "path": "output/2026-10-13-docx-input-native-data-v2/final-verification-private.json",
+      "sha256": "cf5284096c9ed02e5027a78299f7e8aca4778dfec0e45a0ec30ff21795eef6e9"
+    },
+    "independentCloseout": {
+      "path": "output/2026-10-13-docx-input-native-data-closeout-independent/closeout.json",
+      "sha256": "e8a77b86c65dac12d7a47706c012b3cf754ccfda6afdcf6dc8ca35da9af29c07"
+    },
+    "separateRootNarrowAcceptance": {
+      "path": "output/2026-10-13-docx-input-native-data-v2/root-narrow-data-acceptance.json",
+      "sha256": "80054f709eaa4071b4a53f083ba2aa6d623fdbe918694a322aba6502086e0d3c"
+    },
+    "acceptedExactOriginalDifferences": [
+      {
+        "originalDifferenceSha256": "2275dcc6789f9662ee64f434def392fd816f6c395e690b9af810aacf65373cca",
+        "exactOriginalDifference": {
+          "table": "agents",
+          "rowKeySha256": "08f6b585592467d20717e8abd8dd02b9fb430ba65eb4b745c373ce3001ef5dae",
+          "kind": "changedOldRow",
+          "columns": [
+            {
+              "column": "updated_at",
+              "beforeSha256": "9208c643d63c84b83c8a194461701ec3ea6b82666e1599fd9394b739b83738d1",
+              "afterSha256": "6270d36e6d8a0a676e6438429090d92d305f880831d1cb4a769d0f1b0f0eddf2",
+              "status": "unlocated"
+            }
+          ],
+          "beforeSha256": "d22df9720dd75593e06c4c4c4c1b4d7eef2e9a59d183d884c92ef23adb478922",
+          "afterSha256": "c8de8c273dea756ab7c95f535105224503ae768ca8287bc22c0f8e58f792b61b",
+          "status": "unlocated"
+        },
+        "acceptanceReason": "Only Codex updated_at changed, within the observed native journey; exact writer remains unproven. No other Agent column is exempted."
+      },
+      {
+        "originalDifferenceSha256": "1873d0b582a359497114e79ca9ddba8b4bbe895b1a56fc714dd1728d98aecb31",
+        "exactOriginalDifference": {
+          "table": "settings",
+          "rowKeySha256": "0ca5ab37ef0c73593f6d671e42c6089ce519b8c0e4c479fad075b3301b95a188",
+          "kind": "changedOldRow",
+          "columns": [
+            {
+              "column": "value",
+              "beforeSha256": "5009130e2263a6419c441fa84c5fee169dd4d3bbec2ef674028652104a59a8b4",
+              "afterSha256": "76b98f6d761d9afc87b44d697f629f23f029855df9a463908ee5d5012fce2dc8",
+              "status": "unlocated"
+            }
+          ],
+          "beforeSha256": "d134ae3c4c1c38898cb4060286d28687452d00602ac7df8d64df65597bf81b01",
+          "afterSha256": "aba7a3a3fc44997aff87ea0bcfa2cca8db0ebff8db4681883d731f34903cd608",
+          "status": "unlocated"
+        },
+        "acceptanceReason": "Only unsentWork.v1 changed: exact one owned new session/two owned unsent additions plus the three separately checked choice entries. Existing unsent bodies/queues/feedback/activity and other fields remain exact."
+      },
+      {
+        "originalDifferenceSha256": "9c99be83ae75faee53ac31f4a9f68a9f342d40ac183a47d6a7be7fb3bd0b27c9",
+        "exactOriginalDifference": {
+          "category": "choice",
+          "entryKeySha256": "a488f72fec4fe9d578d779e5d9ec52bbe6d351f2582cc144e04ace8a278d2af5",
+          "kind": "changedOldEntry",
+          "beforeSha256": "372662df1b70ffe8d0435e7103fce3b1417a95391d745160fd7ae8379f5d2ebb",
+          "afterSha256": "08f6b585592467d20717e8abd8dd02b9fb430ba65eb4b745c373ce3001ef5dae",
+          "status": "unlocated"
+        },
+        "acceptanceReason": "Exact choice.agentId for the test: Agent and cwd match the owned new session; the complete five-key configuration equals the preexisting confirmed Codex selection. Only this before/after pair is accepted."
+      },
+      {
+        "originalDifferenceSha256": "679a4848374c24ee393705298480959c1cec2805f5f1a878c025d36d18a7c0d9",
+        "exactOriginalDifference": {
+          "category": "choice",
+          "entryKeySha256": "48882ab48bfdf3bef2fe65e3304e91ccfd8f74e357c183367ad6fe903fe0e697",
+          "kind": "changedOldEntry",
+          "beforeSha256": "e2d2ea0b5f8f8b3cd2dc027d651e858b6d6ad0590c619fae8864e207faa6d287",
+          "afterSha256": "47a1408a6ec5c551dcee7e17768c9426f65ae4947563540985fb1cd24cb87055",
+          "status": "unlocated"
+        },
+        "acceptanceReason": "Exact choice.config for the test: Agent and cwd match the owned new session; the complete five-key configuration equals the preexisting confirmed Codex selection. Only this before/after pair is accepted."
+      },
+      {
+        "originalDifferenceSha256": "9e1b84549070b8a1c399d938abdcec210f43a82e3423ed939693555e4827aa6a",
+        "exactOriginalDifference": {
+          "category": "choice",
+          "entryKeySha256": "0bd0d1b1c68938163c7904fd4ef60c183864a0935dbe9d671b6629a7c1a8d5a4",
+          "kind": "changedOldEntry",
+          "beforeSha256": "25069a815b0b73d8abab029c87aaa36eb7947a5d23101a3e7e2652c4dea3d7ad",
+          "afterSha256": "9c8b5a67d46e402bfbd8a9f1f7b593c925a17a01252761fd98458cfb6e465728",
+          "status": "unlocated"
+        },
+        "acceptanceReason": "Exact choice.cwd for the test: Agent and cwd match the owned new session; the complete five-key configuration equals the preexisting confirmed Codex selection. Only this before/after pair is accepted."
+      }
+    ],
+    "acceptedCount": 5,
+    "unacceptedCount": 0,
+    "priorConfirmedWholeCodexConfigurationIndependentProof": {
+      "path": "output/2026-10-13-xlsx-input-independent/prior-choice-config-proof-v2.json",
+      "sha256": "e96ab809b130d86acab7edc30d6000657a51514ebb55153e78b9d4a258dfc395"
+    },
+    "existingDataPreserved": {
+      "sessionsWholeRows": 133,
+      "dismissedWholeRows": 170,
+      "otherAgentWholeRows": 39,
+      "codexOtherColumnsExact": true,
+      "otherSettingsWholeRows": 52,
+      "oldUnsentComposers": 8,
+      "oldFeedbackGroups": 8,
+      "oldQueueGroups": 3,
+      "oldActivityEntries": 131,
+      "worktreeFieldsAndOtherChoiceFieldsExact": true,
+      "schemaExact": true
+    },
+    "exactOwnedAdditions": {
+      "sessions": 1,
+      "composers": 1,
+      "activity": 1
+    },
+    "specificCodexTimestampWriter": "unknown",
+    "privateDataOrOriginalReceiptsMutated": false,
+    "firstCaptureExit1AndSidecarFailurePreserved": true,
+    "boundary": "Five exact differences accepted separately after whole-value review; original exit2 unchanged. Not a claim that every stored value is identical. Only second inspection copies were read through SQLite; first backups and live DB were not opened by these checks."
+  },
+  "formalClosed": true,
+  "correctExactExecutableProcessReceipt": {
+    "path": "output/2026-10-13-docx-input-native/29-exact-lowercase-formal-process-correction.json",
+    "sha256": "c070e8377479dc3ed3b2fafe4b5944ac47a125c47a1af6e1eed1c867eba182e2"
+  },
+  "duplicateGeneratedAppCleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-input-candidate/duplicate-cleanup.json",
+    "sha256": "bd6b4dce6e3c56cd97b3872fb108c111c792ad79e345f5ab6bf0b6953d9a8300"
+  },
+  "NEW20": "Source repair and controlled full-App checks completed; formal repaired-version recheck pending.",
+  "boundary": "Only this own DOCX fixture, this macOS arm64 formal build and two requests with existing Codex / 6 Astra / Ultra. P08 overall, other input formats, all122 conditions, all29 Agent standards and Windows remain open. Subsequent P2/XLSX source is not installed by this record."
+}

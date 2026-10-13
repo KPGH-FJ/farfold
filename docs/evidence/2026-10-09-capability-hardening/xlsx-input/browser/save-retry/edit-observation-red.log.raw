@@ -1,0 +1,35 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/useComposerSourceError.save.test.tsx (12 tests | 1 failed) 279ms
+   × updates an obsolete storage notice after an ordinary text edit of the same unsent input is actually saved 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/useComposerSourceError.save.test.tsx > updates an obsolete storage notice after an ordinary text edit of the same unsent input is actually saved
+AssertionError: expected { message: '未发送内容尚未保存，请重试后再关闭。' } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "message": "未发送内容尚未保存，请重试后再关闭。",
+}
+
+ ❯ src/components/useComposerSourceError.save.test.tsx:223:30
+    221|   await d.draftPersistence.flush();
+    222|   expect(d.composerDrafts.read(key).text).toBe("EDITED_UNSENT_BODY");
+    223|   expect(render().sendError).toBeNull();
+       |                              ^
+    224|   expect(h.invoke.mock.calls.every(([name]) => name !== "session_promp…
+    225| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+   Start at  08:03:45
+   Duration  385ms (transform 132ms, setup 0ms, import 35ms, tests 279ms, environment 0ms)
+

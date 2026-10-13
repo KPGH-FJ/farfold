@@ -1,0 +1,14 @@
+{
+  "runs": [
+    "chromium-run07.json",
+    "webkit-run06.json"
+  ],
+  "sourceStable": true,
+  "actualFailure": "Last harness assertion wrongly required send button disabled on persistence failure. Existing product allows save retry and blocks real submission through doSend initial flush, while displaying saveFailed and preserving exact memory input.",
+  "fix": "Keep all memory/error/no-autosend assertions; actually click Send while storage still rejects, assert no session_prompt/no user admission/exact draft retained. Then use real Retry Save button, inspect saved data. No product semantics changed.",
+  "productFixCovered": {
+    "A-P1": ";;; cache missing/empty/zero default/all symmetry now passes",
+    "C-NEW22": "16px horizontal radio label actual dark/narrow and label-click+keyboard now pass"
+  },
+  "unfinished": "Only final actual save-failure send/retry guard and full accepted receipts."
+}
