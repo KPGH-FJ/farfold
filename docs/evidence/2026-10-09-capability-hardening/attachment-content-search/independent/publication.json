@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T15:08:23.205100+00:00",
+  "originals": [
+    {
+      "source": "output/2026-10-13-attachment-search-independent/provisional-review.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/independent/raw/provisional-review.json.raw",
+      "bytes": 8403,
+      "sha256": "8f0d405173b30a4395f67f6f3073ff503a041f8caf8c239cd864f7aeee22905d"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-independent/error-ownership-open.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/independent/raw/error-ownership-open.json.raw",
+      "bytes": 1311,
+      "sha256": "e2558a98dcd883bc5b7c0134616212da538bb57155e2b60fb36f17387329db61"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-independent/backend-final-review.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/independent/raw/backend-final-review.json.raw",
+      "bytes": 6003,
+      "sha256": "ebd6fbc2208d166095bd11bacbe9442e59c06b4c42a87003b06fd3beaef2337c"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-independent/frontend-original-receipts-review.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/independent/raw/frontend-original-receipts-review.json.raw",
+      "bytes": 6859,
+      "sha256": "c79a00c3961c49e2407cf28844281ad019f163ec06c0132cf8ae3b8312495a7a"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-independent/final-review.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/independent/raw/final-review.json.raw",
+      "bytes": 10882,
+      "sha256": "0ed50c219ec071aa3e08ed88771c359b5137eddce9c0135d634489f3652abdea"
+    }
+  ],
+  "conclusion": "Independent source and controlled-evidence review passed with actual original failures retained. Finalfrontend v3 differs from v1 only by2 literal copy corrections; browser55/targeted68 remain v1. No full7/installed/native-file/Agent acceptance here."
+}

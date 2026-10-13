@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T15:12:14.878607+00:00",
+  "argv": [
+    "python3",
+    "-B",
+    "output/2026-10-13-pdf-at-route-data-independent/localize.py"
+  ],
+  "actualExitCode": 0,
+  "evidenceCarrier": "Reviewer exec_command tool completion chunk c62118, not a reconstructed historical subprocess log.",
+  "scriptSha256": "1859007541353348e31c265825bf3d057d33cec20b78b063facc8a271c7bc964",
+  "summarySha256": "be7299bc3e3adfe7a47c7955161010f8998f0b6876181d27d65c20f138d3d436",
+  "scope": "New independent second-copy localization only. Original root capture remains actual exit2; no capture rerun or difference exemption."
+}

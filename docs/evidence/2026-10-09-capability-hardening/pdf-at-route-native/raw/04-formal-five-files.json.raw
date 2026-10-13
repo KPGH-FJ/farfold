@@ -1,0 +1,15 @@
+{
+  "atUtc": "2026-10-13T14:54:50.645234+00:00",
+  "sourceCommit": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+  "installationReceipt": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/installation.json",
+  "installationReceiptSha256": "e6dee976730601dd8fc7d6a6f5518fc3af7f47bf2009a473468ff169e401a954",
+  "fiveFiles": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "7555aa3ea4655c2d4a1802837195f46b5f9629bc84ef0af3d01b91a6cde4e3dd",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "allMatch": true,
+  "appLaunched": false
+}

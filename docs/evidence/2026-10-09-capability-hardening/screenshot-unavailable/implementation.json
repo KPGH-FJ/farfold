@@ -1,0 +1,161 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T14:31:23.005740+00:00",
+  "baseCommit": "43919180ce7a129e6881dfa86c8e45ab13eae27d",
+  "source": {
+    "path": "src-tauri/src/browser_sharing/protocol.rs",
+    "bytes": 21005,
+    "sha256": "c3916e3de372d7fad516fbcf32c5efb2cb3c70c992de5465528edddcb15d6ddb"
+  },
+  "change": "Unsupported screenshot=true receives a fixed original-id protocol tool error after valid handshake/list gate, before Action::Read/page/permission. Tool/schema copy says use a separate false request for text/positions. No new one-shot approval/control semantics/pixel support.",
+  "tested": {
+    "red": {
+      "actualExitCode": 101,
+      "passed": 1,
+      "failed": 1,
+      "behavior": "Screenshot true entered Action::Read before fix; positive ordinary/control case passed."
+    },
+    "green": {
+      "actualExitCode": 0,
+      "passed": 2
+    },
+    "regression": {
+      "actualExitCode": 0,
+      "passed": 58
+    },
+    "cargoFmtActualExitCode": 0
+  },
+  "rootIndependentSourceReview": {
+    "protocolGate": "Supported handshake and tools/list delivery required before fixed original-id error. Optional false/omitted and existing controls remain on original admission.",
+    "productionDispatch": "transport.rs Action::Reply calls wire.reply only; Action::Read separately owns page admission and permission.",
+    "boundary": "Reviewed source and actual Protocol::receive tests, not an authenticated live Worker/socket callback counter or installed/Agent test."
+  },
+  "pending": [
+    "Combined seven engineering checks",
+    "Source checkpoint and formal application evidence",
+    "P27 actual screenshot/protected-input/closed-content requirements remain incomplete"
+  ],
+  "formalApplicationStill": "36c56a827 audio candidate; this new source not installed",
+  "originals": [
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/format/completed.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/format/completed.json.raw",
+      "bytes": 1095,
+      "sha256": "a59629c409c5fc528882cd9ea244439c283e4428f23b9f516dafa5b58eae03ea"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/format/started.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/format/started.json.raw",
+      "bytes": 500,
+      "sha256": "a1311cb27c3e0ec60bd9b7595fbd4d22b5c7d7906ab1cbb1ef93e4cc9d1297bc"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/format/stderr.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/format/stderr.log.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/format/stdout.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/format/stdout.log.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/green/completed.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/green/completed.json.raw",
+      "bytes": 1139,
+      "sha256": "974ae85f161e098a4204a6bc54c5388643851f5e61e1d52c233e4eb447b7cb9f"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/green/started.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/green/started.json.raw",
+      "bytes": 542,
+      "sha256": "ab5962578e603c98290c906a45eba72fa460265d365fe734771c6271f8248e4c"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/green/stderr.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/green/stderr.log.raw",
+      "bytes": 323,
+      "sha256": "c931c8886d3a44e193f96c09dedf7c56a28905c6d10a6b01cd00d6878595a24f"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/green/stdout.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/green/stdout.log.raw",
+      "bytes": 469,
+      "sha256": "8c229b8c0728f6b6064ea6149207e20df10cdbeb39c14b163f5766e14549ce74"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/receipt.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/receipt.json.raw",
+      "bytes": 3560,
+      "sha256": "260d5186c59405afc7490f5a5ee7b637997f0a2ed350d2828fd83652f5f36e3a"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/red/completed.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/red/completed.json.raw",
+      "bytes": 1135,
+      "sha256": "1c9b29cf590c576ace9a857c3031e5d48298bdce6257bc963ada91695a8ded4d"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/red/started.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/red/started.json.raw",
+      "bytes": 540,
+      "sha256": "b129eecca47b1253c3b8677a75f717e99f76aea36f1267ab2f2b637f279e61fb"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/red/stderr.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/red/stderr.log.raw",
+      "bytes": 590,
+      "sha256": "a81df1360a6bb996c350ab7054c60ad73eb0ac2a3411215062b002537dbba87c"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/red/stdout.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/red/stdout.log.raw",
+      "bytes": 496,
+      "sha256": "6a994103f2706a06625cefd8e073b28cf081b856213b395a8c278753bee32e28"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/regression/completed.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/regression/completed.json.raw",
+      "bytes": 1166,
+      "sha256": "d2820e417722e336bd7fd8e2799c5caaa4ad26ce31806830a54d5b2f13ee716a"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/regression/started.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/regression/started.json.raw",
+      "bytes": 558,
+      "sha256": "f303d41de474622e7476000713936e6cbb3a5b70fd0497287a4d432b6c2d05e4"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/regression/stderr.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/regression/stderr.log.raw",
+      "bytes": 256,
+      "sha256": "16ea5573e10c30f2bc3322451469c89dd221c2e6ab0f03999a4b7c953a6f39b0"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/regression/stdout.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/regression/stdout.log.raw",
+      "bytes": 6725,
+      "sha256": "8844e2b564c433a4e02c0f22bd66abb03074d0475050108c9bcf182099585e1d"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/run_scoped.py",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/run_scoped.py.raw",
+      "bytes": 2460,
+      "sha256": "3c5c48a60c8b64aa6c30a4702e4deed44323e7fc4ace563cf80551c5fc49c3ae"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/scope.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/scope.json.raw",
+      "bytes": 2026,
+      "sha256": "b0ca9ecdbb7ea9c32a9658d7a351615ab94b3ade932166df8fe770e0fcc818b7"
+    },
+    {
+      "source": "output/2026-10-13-p27-unavailable-backend/source-freeze.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/raw/source-freeze.json.raw",
+      "bytes": 4052,
+      "sha256": "14041302d6fa6c246c62ebd54f5d44a6a82c3748152de9651de510506f719e85"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "phase": "green",
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "text_inspection",
+    "--",
+    "--nocapture"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T14:40:41.815131+00:00",
+  "sourcesBefore": {
+    "src-tauri/src/file_delivery.rs": "df315d1729b42b6d842e1d4335d3571090c74f5e9593fa77805c5e8c9c06ac32",
+    "src-tauri/src/file_delivery_commands.rs": "1952a744e427287073abfc4e074a9c3029e1e317e0adb4cc7d2d619843d24f83",
+    "src-tauri/src/lib.rs": "9a724de51a9d34c2378c8d2e93886c80d35cab4e7a6277c36a58e074a195ba17",
+    "src-tauri/src/file_delivery/text_inspection.rs": "e247aa6bb04b56e3ac91f7d12be2b66047b7a94ae255411e4de744c993060b55",
+    "src-tauri/src/file_delivery/text_inspection_tests.rs": "26ef222d44b4a50152b8686ca965cdb16493293f9067455370237247ae711656"
+  },
+  "runnerSha256": "f563efc36627c9d1a70bf1fa41032019fffbc574db4fb304466339c65fc7c2c6",
+  "completedAtUtc": "2026-10-13T14:41:03.318942+00:00",
+  "actualExitCode": 0,
+  "sourcesAfter": {
+    "src-tauri/src/file_delivery.rs": "df315d1729b42b6d842e1d4335d3571090c74f5e9593fa77805c5e8c9c06ac32",
+    "src-tauri/src/file_delivery_commands.rs": "1952a744e427287073abfc4e074a9c3029e1e317e0adb4cc7d2d619843d24f83",
+    "src-tauri/src/lib.rs": "9a724de51a9d34c2378c8d2e93886c80d35cab4e7a6277c36a58e074a195ba17",
+    "src-tauri/src/file_delivery/text_inspection.rs": "e247aa6bb04b56e3ac91f7d12be2b66047b7a94ae255411e4de744c993060b55",
+    "src-tauri/src/file_delivery/text_inspection_tests.rs": "26ef222d44b4a50152b8686ca965cdb16493293f9067455370237247ae711656"
+  },
+  "outputs": [
+    {
+      "path": "output/2026-10-13-p32-text-backend/v2/green/stdout.log",
+      "bytes": 929,
+      "sha256": "09317db7d87344787f8645aa930c4464a08029cec049357c8caa125831c12c07"
+    },
+    {
+      "path": "output/2026-10-13-p32-text-backend/v2/green/stderr.log",
+      "bytes": 323,
+      "sha256": "9a1e07632748aa9494bc48769a2ee1bd2a6ca7a9f7a27285af26f3f1b576c566"
+    }
+  ],
+  "sourceStable": true
+}

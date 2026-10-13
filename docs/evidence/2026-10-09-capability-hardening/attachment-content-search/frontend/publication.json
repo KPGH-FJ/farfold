@@ -1,0 +1,372 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T15:02:32.712360+00:00",
+  "selection": {
+    "path": "output/2026-10-13-attachment-search-frontend/publication-selection.json",
+    "sha256": "bf8f0ec43e2c2cca971daa772efff2a78ca3fa3960bfd11ee502b32c1f56d2f4"
+  },
+  "originals": [
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/chromium-run01.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/chromium-run01.json.raw",
+      "bytes": 285067,
+      "sha256": "a9908ecf5da4cb55f0fa291378396ad9d8c41b2d760e3312d4fa3f18dce2dc97"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/chromium-run02-results-narrow.png",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/screenshots/browser/chromium-run02-results-narrow.png",
+      "bytes": 99265,
+      "sha256": "4d89fdba65bebdfcb30e99336099eb90449972818c109080226516108e0e2e22"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/chromium-run02-source-location.png",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/screenshots/browser/chromium-run02-source-location.png",
+      "bytes": 66443,
+      "sha256": "29ace9fada8f8b44a37074b36ddcd2f0f686556813f42884be3680e3d25bd256"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/chromium-run02.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/chromium-run02.json.raw",
+      "bytes": 288924,
+      "sha256": "39dbbb7e994fc98556b6c41615f4e5ff1e17b527a47c7770b80c85739bc9e5f0"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/fixture.tsx",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/fixture.tsx.raw",
+      "bytes": 7097,
+      "sha256": "c350ae71e33f6a37d433e8a9e22deef4296c2f164a5416ddcf0a3c3d57db2033"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/index.html",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/index.html.raw",
+      "bytes": 760,
+      "sha256": "1bb222cae7375ebef4aa165ff444c3596e57b14db7a2dfb49f422c9edab9530f"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/port-prelaunch.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/port-prelaunch.json.raw",
+      "bytes": 137,
+      "sha256": "5b7ac54a837bcdb510c467934f3009990559142d5430cc1ea5cd291fc3d030b4"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/run.mjs",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/run.mjs.raw",
+      "bytes": 14145,
+      "sha256": "231cc6ca1500fd91af39d1db93e9f81a314cd5220136d77a50b6863439c83bb4"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/serve.mjs",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/serve.mjs.raw",
+      "bytes": 622,
+      "sha256": "c9a1958f379945e027f7be9f6385782b4b616712197927f378b77dc9e078c00f"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/server-owned.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/server-owned.json.raw",
+      "bytes": 314,
+      "sha256": "59bc84fc209e349c17db0a329166e59d62e79cf7172d51673615324152c9e536"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/server-stop-request.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/server-stop-request.json.raw",
+      "bytes": 400,
+      "sha256": "bafa310b35e76f2d47219aa468ae9e528c1f8c69024f8e67cfd92d98fa0e2128"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/server-stopped-v2.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/server-stopped-v2.json.raw",
+      "bytes": 552,
+      "sha256": "885348155bd7f84818723fe2dd1310567c71a46615b3f2e9787471219110ac99"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/server-stopped.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/server-stopped.json.raw",
+      "bytes": 250,
+      "sha256": "49dd7eabce9ec5e58b62808977bdce6e79ca613fd2b4f60ad0ee2191449fce18"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/webkit-run01.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/webkit-run01.json.raw",
+      "bytes": 285061,
+      "sha256": "e6c604a2dfc818d4f8c239c61febb723c8ac818e0ebe863494f9d2e17dae0c41"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/webkit-run02-results-narrow.png",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/screenshots/browser/webkit-run02-results-narrow.png",
+      "bytes": 132379,
+      "sha256": "28c36abf67d833938c46979a00b4ade4ac39d5149e9a5bad0d310d4b41a50792"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/webkit-run02-source-location.png",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/screenshots/browser/webkit-run02-source-location.png",
+      "bytes": 87968,
+      "sha256": "e4262fee38c552f348d13b1558112bd88f448b3e94e941657d4e629037e5f6dc"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/browser/webkit-run02.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/browser/webkit-run02.json.raw",
+      "bytes": 288918,
+      "sha256": "175f2b1199eca170a563096ee96173d79eac6c73f4f2e52c291f243d8bf167ce"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/finalize-evidence.py",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/finalize-evidence.py.raw",
+      "bytes": 8306,
+      "sha256": "2629c70ba5a09242e48b909a2755a589f43782544f0b2bc54e7d6ddf7a3641c3"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/format-final.txt",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/format-final.txt.raw",
+      "bytes": 66,
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/source-freeze-v1.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/source-freeze-v1.json.raw",
+      "bytes": 3339,
+      "sha256": "6449dd35c938909ef32b256c90f124dfebecae06f8ef96c69bc4fa20415188ea"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/source-freeze-v2.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/source-freeze-v2.json.raw",
+      "bytes": 3981,
+      "sha256": "a0b1b610ac1d2fb6de724518eb5b10be7ac2e105962cee50b396ca17a7ef65bc"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/strings-budget-copy-v2.txt",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/strings-budget-copy-v2.txt.raw",
+      "bytes": 209,
+      "sha256": "23c1392a13c371fef12a48e956ce34380e5fd102c36e98835391605b68300c20"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/summary.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/summary.json.raw",
+      "bytes": 10931,
+      "sha256": "51d27fc828d97be02358b20ecaaf86f8b3d249e00a5a7d24ff7319cf32bff2d7"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/targeted-run01.txt",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/targeted-run01.txt.raw",
+      "bytes": 4502,
+      "sha256": "7f4dd7107107d96d793e500ee0dfb25cf0eaaf3a6c7b6508f455a05f8485e57d"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/targeted-run04-red.txt",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/targeted-run04-red.txt.raw",
+      "bytes": 3741,
+      "sha256": "bf891ce5f85bf07f0ea73bfef98c13b26962dd2ec2f8323e67f8d11624b64a6d"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/targeted-run05.txt",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/targeted-run05.txt.raw",
+      "bytes": 1354,
+      "sha256": "990c8c3b266d35ce388db29a6c4df2aa29247af160be887fff42867774f57288"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/targeted-run07-notice-red.txt",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/targeted-run07-notice-red.txt.raw",
+      "bytes": 1093,
+      "sha256": "c9e8bbd3ccfb555f10ea0acec475ff1fa18e1b1ff2b5ea756b3866a5e595a083"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/targeted-run09.txt",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/targeted-run09.txt.raw",
+      "bytes": 212,
+      "sha256": "9f238bb2af897475653be2a49a83d1dde4a6e0de531187d10fa8b668a56ccb8c"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/candidate-fix.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/candidate-fix.raw.jsonl.raw",
+      "bytes": 3047,
+      "sha256": "cdea1d0a16d0f518020aecd74f4360953c42d340d160b0fed51b742cd11617ba"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/chromium-run01.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/chromium-run01.raw.jsonl.raw",
+      "bytes": 2811,
+      "sha256": "ac8b55ed4262d4e2a796b94af8f23ff6b27a2f282c683ad51d54a03ee096b554"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/chromium-run02.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/chromium-run02.raw.jsonl.raw",
+      "bytes": 957,
+      "sha256": "db0c34a29838858adf23c3c67622396b569dccb8ad5febdd54d925efd3f98162"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/format-final.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/format-final.raw.jsonl.raw",
+      "bytes": 1774,
+      "sha256": "18d4c1b5e8ae5a4ba8cf29e4e3701b4130973a65c9b7c1d0515cd69ce61afcd4"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/manifest.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/manifest.json.raw",
+      "bytes": 13297,
+      "sha256": "539ea6f27c66d7321435552d1f885c4c74b5763728201a16a7161e47f65ef8f8"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/server.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/server.raw.jsonl.raw",
+      "bytes": 3168,
+      "sha256": "b1cbcfe7e5844b9cf2b9baba780181c40a52bd355c6daf93d382f9a9e12519f1"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/strings-budget-copy-v2.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/strings-budget-copy-v2.raw.jsonl.raw",
+      "bytes": 896,
+      "sha256": "c7daeecc782b660d60f45ce1ac0e3c661c53f6b00b673467189e1cfff509f1be"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run01.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/targeted-run01.raw.jsonl.raw",
+      "bytes": 26332,
+      "sha256": "c83b120be1fa4e28c5bc40a7c65c809968dd4291dfc937631177c8374bbbfe4a"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run02.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/targeted-run02.raw.jsonl.raw",
+      "bytes": 4158,
+      "sha256": "38048d197b98b8cec964187bb108d8c4dfad0b8940fc0bea8a157347e8d5205d"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run03.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/targeted-run03.raw.jsonl.raw",
+      "bytes": 12597,
+      "sha256": "d9714ae0ad2572212ec81725b1cc0c234d1969827c9b4607b127c52543c327f1"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run04-red.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/targeted-run04-red.raw.jsonl.raw",
+      "bytes": 6361,
+      "sha256": "b9196441cd4db2160ff05e4be125b32095709b1b85503c95c7adf5befe361439"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run05.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/targeted-run05.raw.jsonl.raw",
+      "bytes": 1200,
+      "sha256": "d03da05733d92986e44dace22fb5e54fafcfa71921586e5afe33d2d4e8908fbb"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run06.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/targeted-run06.raw.jsonl.raw",
+      "bytes": 27176,
+      "sha256": "3e55c4a9cc534b68ed1d09d75a95abe15358d8425c5bb5116e105e2f107115e8"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run07-notice-red.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/targeted-run07-notice-red.raw.jsonl.raw",
+      "bytes": 2267,
+      "sha256": "7fb4c2952af930d5afb42145071f41488defe3f5805550d375b08a748cd55a19"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run08.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/targeted-run08.raw.jsonl.raw",
+      "bytes": 1204,
+      "sha256": "ca47bd87d523fcf055cde4281d7818a3b8bf45e406a75477f405787ccf2bdd9a"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run09.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/targeted-run09.raw.jsonl.raw",
+      "bytes": 6814,
+      "sha256": "3c1fb033804491b2e0929ab11cfdc65ff3ae92872b17f4bf3bf8c3d7c2c47668"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-initial.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/typecheck-initial.raw.jsonl.raw",
+      "bytes": 4938,
+      "sha256": "7f7d737b3e86e1cbee3ee796871d5ee47d88fd04f6bf0de669a20d4eff496ecd"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-run02.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/typecheck-run02.raw.jsonl.raw",
+      "bytes": 2563,
+      "sha256": "142141fd95f5a8faae1f7c3c2382ed6c4df3cb9f4da8bf468ce2a4b795996d5f"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-run03.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/typecheck-run03.raw.jsonl.raw",
+      "bytes": 814,
+      "sha256": "f9522e7dad72bf0494642a6ac6bbb0c356de3530d55daf5a4d11e533ae786c09"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-run04.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/typecheck-run04.raw.jsonl.raw",
+      "bytes": 814,
+      "sha256": "ff45f8439965a07e2810be649969957f163d9c9fd6ed9e46e81da1d424ddd850"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/webkit-run01.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/webkit-run01.raw.jsonl.raw",
+      "bytes": 1248,
+      "sha256": "e85e941f6ee5e8b8dc47be6a7564ee1956d93ded42f2e42836b1666f4c16f88b"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/webkit-run02.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/webkit-run02.raw.jsonl.raw",
+      "bytes": 949,
+      "sha256": "5c523a1fa10d68fe802b228b30547979a7cbb1edee7fca3c08fcb69a383193dd"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/typecheck-initial.txt",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/typecheck-initial.txt.raw",
+      "bytes": 865,
+      "sha256": "150fe5d0b308f2207afd1716532fdd739b8fb8aca1a2bf9f4ff2d300e689f042"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/typecheck-run02.txt",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/typecheck-run02.txt.raw",
+      "bytes": 1522,
+      "sha256": "f30065273984b874767ba3f9f7d44a7ef7ccf17358f9a6f5ece92c738860401b"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/typecheck-run04.txt",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/typecheck-run04.txt.raw",
+      "bytes": 78,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/source-freeze-v3.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/source-freeze-v3.json.raw",
+      "bytes": 4476,
+      "sha256": "5a951633c1835060e17299608ada860a2b6aa34f970f1354f947f0c6c0e2c9c9"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/summary-v3.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/summary-v3.json.raw",
+      "bytes": 2314,
+      "sha256": "173e273e00e0c9f5dff734b85ff424affaf4c4387efc1095bfea0d9e53d7191b"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/strings-stale-copy-v3.txt",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/strings-stale-copy-v3.txt.raw",
+      "bytes": 209,
+      "sha256": "2110f8fc5dd89817a0beaa8108e797b54a5320ecc16841afc5bd1d2fbd89fbd0"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/transcript-receipts/strings-stale-copy-v3.raw.jsonl",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/transcript-receipts/strings-stale-copy-v3.raw.jsonl.raw",
+      "bytes": 894,
+      "sha256": "54ddf44806caf9b34820fa6164bb90d314fa6d2aa2d7a716ec883e547142357a"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-frontend/supplement-v3.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/raw/supplement-v3.json.raw",
+      "bytes": 1721,
+      "sha256": "7a05b247e89a270599206ca90a2e8769f0ea5f45831fc6e4f5ff95539ac773cf"
+    }
+  ],
+  "boundary": "Byte-preserving controlled frontend evidence. v1 targeted68 and both browser55; v2 changes only budget wording, with strings2 and scoped formatting. No actual native filesystem or installed attachment search/Agent proof. Original failed tests and mistaken manual server-exit0 retained; actual server SIGTERM exit143 is authoritative.",
+  "rootVisualReview": {
+    "images": [
+      "browser/webkit-run02-results-narrow.png",
+      "browser/chromium-run02-source-location.png"
+    ],
+    "observed": "Current-file provenance labels and bounded scrolling; malicious-looking markup renders as literal text; highlighted matches; genuine folded attachment revealed in original message; own draft remains. Controlled full App views, not formal app screenshots."
+  },
+  "v3Supplement": {
+    "scope": "Second copy-only correction: stale status no longer asserts that unreadable means changed. v2 to v3 only this string; exact source freeze v3 has13 sources+4 historical browser fixtures. Strings2 actual0.",
+    "original": "output/2026-10-13-attachment-search-frontend/supplement-v3.json",
+    "sha256": "7a05b247e89a270599206ca90a2e8769f0ea5f45831fc6e4f5ff95539ac773cf",
+    "browserScope": "Retained v1 harness/tests/screenshots and68+55+55 original inputs; two copy changes were not relabelled as browser reruns. Full current-source engineering checks pending."
+  }
+}

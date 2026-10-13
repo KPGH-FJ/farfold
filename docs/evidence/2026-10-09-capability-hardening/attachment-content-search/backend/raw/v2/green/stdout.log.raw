@@ -1,0 +1,16 @@
+
+running 6 tests
+test file_delivery::text_inspection::tests::text_inspection_growth_after_open_is_rejected_before_hashing ... ok
+test file_delivery::text_inspection::tests::text_inspection_retains_legacy_utf8_nul_and_precise_file_failures ... ok
+test file_delivery::text_inspection::tests::text_inspection_redirected_symlink_rejects_before_body_capture ... ok
+test file_delivery::text_inspection::tests::text_inspection_changed_bytes_and_replaced_identity_are_not_old_receipts ... ok
+test file_delivery::text_inspection::tests::text_inspection_rejects_oversize_before_capture_for_both_entrypoints ... ok
+test file_delivery::text_inspection::tests::text_inspection_exact_limit_keeps_all_bytes_and_full_revision ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1658 filtered out; finished in 0.03s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

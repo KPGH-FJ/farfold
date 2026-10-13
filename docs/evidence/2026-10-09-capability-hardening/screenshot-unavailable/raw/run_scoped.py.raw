@@ -1,0 +1,50 @@
+import datetime
+import hashlib
+import json
+import pathlib
+import subprocess
+import sys
+
+ROOT = pathlib.Path('/Users/tw/Desktop/farfold')
+OUT = pathlib.Path(__file__).resolve().parent
+SOURCE = ROOT / 'src-tauri/src/browser_sharing/protocol.rs'
+COMMANDS = {
+    'red': ['cargo', 'test', '--manifest-path', 'src-tauri/Cargo.toml', '--locked', 'p27_', '--', '--nocapture'],
+    'green': ['cargo', 'test', '--manifest-path', 'src-tauri/Cargo.toml', '--locked', 'p27_', '--', '--nocapture'],
+    'regression': ['cargo', 'test', '--manifest-path', 'src-tauri/Cargo.toml', '--locked', 'browser_sharing', '--', '--nocapture'],
+    'format': ['cargo', 'fmt', '--check', '--manifest-path', 'src-tauri/Cargo.toml'],
+}
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def now():
+    return datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+
+def main():
+    phase = sys.argv[1]
+    argv = COMMANDS[phase]
+    folder = OUT / phase
+    folder.mkdir()
+    scope = json.loads((OUT / 'scope.json').read_text())
+    expected = scope['expectedTestOnlySha256' if phase == 'red' else 'expectedFinalSha256']
+    before = digest(SOURCE)
+    if before != expected:
+        raise RuntimeError('Protocol source differs from reviewed stage')
+    record = {'schema': 1, 'phase': phase, 'argv': argv, 'cwd': str(ROOT), 'startedAtUtc': now(), 'sourceSha256Before': before, 'runnerSha256': digest(pathlib.Path(__file__)), 'scopeSha256': digest(OUT / 'scope.json')}
+    (folder / 'started.json').write_text(json.dumps(record, indent=2) + '\n')
+    print(json.dumps({'started': phase, 'argv': argv}), flush=True)
+    with (folder / 'stdout.log').open('xb') as stdout, (folder / 'stderr.log').open('xb') as stderr:
+        completed = subprocess.run(argv, cwd=ROOT, stdout=stdout, stderr=stderr)
+    record.update({'completedAtUtc': now(), 'actualExitCode': completed.returncode, 'sourceSha256After': digest(SOURCE), 'outputs': [{'path': str(p.relative_to(ROOT)), 'bytes': p.stat().st_size, 'sha256': digest(p)} for p in [folder / 'stdout.log', folder / 'stderr.log']]})
+    record['sourceStable'] = record['sourceSha256Before'] == record['sourceSha256After']
+    (folder / 'completed.json').write_text(json.dumps(record, indent=2) + '\n')
+    print(json.dumps({'completed': phase, 'actualExitCode': completed.returncode, 'sourceStable': record['sourceStable']}), flush=True)
+    return completed.returncode
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -1,0 +1,90 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/attachment_search.test.ts (40 tests | 4 failed) 38ms
+     × pending is never retried automatically but an explicit start can retry against the real pool 4ms
+     × explicit retry cannot turn a still busy backend into successful completion 0ms
+     × pending navigation preserves uncertainty until an explicit retry 1ms
+     × notifies subscribers after a successful navigation returns to idle admission 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/attachment_search.test.ts > explicit current attachment text search > pending is never retried automatically but an explicit start can retry against the real pool
+AssertionError: expected 'idle' to be 'pending' // Object.is equality
+
+Expected: "pending"
+Received: "idle"
+
+ ❯ src/runtime/attachment_search.test.ts:235:39
+    233|     await tick();
+    234|     expect(h.services.inspect).toHaveBeenCalledTimes(1);
+    235|     expect(h.search.snapshot().phase).toBe("pending");
+       |                                       ^
+    236|     await h.search.start("needle", h.candidates, h.current);
+    237|     expect(h.services.inspect).toHaveBeenCalledTimes(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  src/runtime/attachment_search.test.ts > explicit current attachment text search > explicit retry cannot turn a still busy backend into successful completion
+AssertionError: expected 'pending' to be 'busy' // Object.is equality
+
+Expected: "busy"
+Received: "pending"
+
+ ❯ src/runtime/attachment_search.test.ts:245:46
+    243|     await h.search.start("needle", h.candidates, h.current);
+    244|     await h.search.start("needle", h.candidates, h.current);
+    245|     expect(h.search.snapshot().rows[0].code).toBe("busy");
+       |                                              ^
+    246|     expect(h.search.snapshot().hits).toEqual([]);
+    247|     expect(h.services.read).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  src/runtime/attachment_search.test.ts > explicit current attachment text search > pending navigation preserves uncertainty until an explicit retry
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/runtime/attachment_search.test.ts:288:69
+    286|     expect(h.search.snapshot().phase).toBe("pending");
+    287|     h.services.check.mockImplementation(async (file) => ({kind: "verif…
+    288|     expect(await h.search.start("needle", h.candidates, h.current)).to…
+       |                                                                     ^
+    289|   });
+    290|   it("abort during match enumeration yields and suppresses the partial…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  src/runtime/attachment_search.test.ts > explicit current attachment text search > notifies subscribers after a successful navigation returns to idle admission
+AssertionError: expected [] to deeply equal [ true, false ]
+
+- Expected
++ Received
+
+- [
+-   true,
+-   false,
+- ]
++ []
+
+ ❯ src/runtime/attachment_search.test.ts:307:22
+    305|     h.search.subscribe(() => observed.push(h.search.busy()));
+    306|     await h.search.verifyHit(h.search.snapshot().hits[0], h.current);
+    307|     expect(observed).toEqual([true, false]);
+       |                      ^
+    308|   });
+    309|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 36 passed (40)
+   Start at  22:45:18
+   Duration  190ms (transform 68ms, setup 0ms, import 88ms, tests 38ms, environment 0ms)
+

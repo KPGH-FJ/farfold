@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "startedAtUtc": "2026-10-13T14:22:16.028017+00:00",
+  "scope": "Only protocol.rs production refusal+tool/schema copy+two ingress tests. No old approval proposal applied. No page/native/Agent/UI/DB/install actions.",
+  "investigation": "Current Protocol accepts valid screenshot=true and emits Action::Read. Worker Read may reuse text grant or create ordinary text approval, while downstream native path forces pixels=false and strips captured bytes. Refuse unsupported pixels at protocol admission; leave text and side-effecting control paths unchanged.",
+  "hypothesis": "After handshake/list delivery, a valid screenshot=true currently violates expected direct unavailable Reply; a single pre-admission rejection will make it Reply without permission/page dispatch.",
+  "expectedRed": "First p27 test fails at real Action::Reply pattern; text/control positive test should pass. Compile/other failures are not behavioral red.",
+  "baseSourceSha256": "b43f435f45bbe4e32665c1413adf7b3ae65f6ec144294fc960e69670eb95f3c5",
+  "expectedTestOnlySha256": "2c81c22b00fcdd7b3007af6a80ca1616c8f07bcee843e5e9e6ed7fbeff99ef16",
+  "expectedFinalSha256": "c3916e3de372d7fad516fbcf32c5efb2cb3c70c992de5465528edddcb15d6ddb",
+  "patches": [
+    {
+      "path": "output/2026-10-13-next-capability-priority/p27-unavailable-direct-rejection.patch",
+      "bytes": 8053,
+      "sha256": "24ef162e6cfa6169a0d497a815e6ce2599c44fded727829c1293624290c1d41a"
+    },
+    {
+      "path": "output/2026-10-13-next-capability-priority/p27-unavailable-tests-first.patch",
+      "bytes": 4136,
+      "sha256": "04f7fbac128c23395f4dd29225155e3c7040f72e51b297efdaa3cdfc2e4fc784"
+    },
+    {
+      "path": "output/2026-10-13-next-capability-priority/p27-unavailable-fix-after-tests.patch",
+      "bytes": 4108,
+      "sha256": "c14e8d949c05e846b1811d11ab2611de94c085490326cf1add69020aab282ed4"
+    }
+  ],
+  "repositoryChecks": "Root later owns full seven checks. This owner runs scoped red,green,browser sharing regression, cargo fmt only."
+}

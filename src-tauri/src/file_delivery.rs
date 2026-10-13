@@ -31,6 +31,8 @@ pub use audio_input::{AudioCapture, AudioReadFailure, read_audio_input};
 pub(crate) use audio_input::{MAX_AUDIO_BYTES, prompt_audio_bytes};
 mod revision;
 pub use revision::{RevisionCheck, RevisionFailure, RevisionMode, check_revision};
+mod text_inspection;
+pub use text_inspection::{check_text_revision, inspect_text};
 mod stream;
 mod text_blocks;
 pub use text_blocks::{TextBlock, TextBlockFailure, read_text_block};

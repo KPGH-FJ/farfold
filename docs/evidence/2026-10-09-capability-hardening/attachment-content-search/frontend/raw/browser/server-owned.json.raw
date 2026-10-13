@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-13T14:51:26.848399+00:00",
+  "pid": 67697,
+  "sessionId": 1929,
+  "port": 1537,
+  "command": [
+    "node",
+    "output/2026-10-13-attachment-search-frontend/browser/serve.mjs"
+  ],
+  "formalApp": false,
+  "prelaunch": "output/2026-10-13-attachment-search-frontend/browser/port-prelaunch.json"
+}

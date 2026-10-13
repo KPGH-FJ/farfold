@@ -1,0 +1,50 @@
+{
+  "sources": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "sha256": "24e1236aa084619798b312fc1b4855adecef643df811891ea7e7ce66b883dbe4",
+      "bytes": 17609
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "sha256": "ef36673184ed687d795c02e601b6451b07301de44c28792b19e1ede276ff8cb8",
+      "bytes": 18405
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "c5c76f8117f9345793ac47e6ba9b85d5e1a60429e5e7c51541d3db63faac937b",
+      "bytes": 21444
+    },
+    {
+      "path": "src-tauri/src/file_delivery/revision.rs",
+      "sha256": "6e8011cb8888e381a33ff092088efc030a5aa003c9150dedece358e4727b6830",
+      "bytes": 3512
+    },
+    {
+      "path": "src-tauri/src/file_delivery/stream.rs",
+      "sha256": "bbf7ff3573aa4ad1ba42cdb017c4f7deb383b0f6f6451ad79f74c6f565e78db7",
+      "bytes": 2149
+    },
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "sha256": "cf10e7bfbf76873e8b290cd6ea5e3e5ddac383c5f22a8924af3fa862b4a05ee2",
+      "bytes": 2674
+    },
+    {
+      "path": "src/runtime/file_delivery.ts",
+      "sha256": "eaec401ada62b1da686016d811baf267e39726fd8b0292f428042a6011aea468",
+      "bytes": 7202
+    },
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "sha256": "ddb54a872a1aea2515510473fd3853fc20c5f8737890cd2043dae906ce6d5cd8",
+      "bytes": 12097
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/protocol.rs",
+      "sha256": "c3916e3de372d7fad516fbcf32c5efb2cb3c70c992de5465528edddcb15d6ddb",
+      "bytes": 21005
+    }
+  ],
+  "protectedProtocolSha256": "c3916e3de372d7fad516fbcf32c5efb2cb3c70c992de5465528edddcb15d6ddb"
+}

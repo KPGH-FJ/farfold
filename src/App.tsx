@@ -1,3 +1,8 @@
+import {
+  attachmentSearchSourceCurrent,
+  type AttachmentSearchLocation,
+} from "./runtime/attachment_search_source";
+import type { AttachmentSearchRequest } from "./components/AttachmentSearchJump";
 import { currentWorkLocationGuidance } from "./runtime/archived_work_location";
 import { OpeningElicitationList } from "./components/OpeningElicitationList";
 import { openingInquiries } from "./runtime/opening_inquiries";
@@ -135,11 +140,14 @@ export default function App() {
       : { kind: "start" },
   );
   const currentView = useRef(view);
+  const [attachmentSearchRequest, setAttachmentSearchRequest] =
+    useState<AttachmentSearchRequest | null>(null);
   const [loadedSearchRequest, setLoadedSearchRequest] =
     useState<LoadedSearchRequest | null>(null);
   const historyOpen = useRef(0);
   const setView = (next: View) => {
     setLoadedSearchRequest(null);
+    setAttachmentSearchRequest(null);
     openingInquiries.retireAll();
     currentView.current = next;
     updateView(next);
@@ -566,7 +574,33 @@ export default function App() {
       // cold open, recovery, configuration change or model request.
       setThreadKey(hit.threadKey);
       setView({ kind: "thread", key: hit.threadKey });
+      setAttachmentSearchRequest(null);
       setLoadedSearchRequest({ hit, token: {} });
+    },
+  );
+  const openAttachmentSearch = afterBrowserClose(
+    (source: AttachmentSearchLocation, current: () => boolean) => {
+      if (!current()) return;
+      const snapshot = threads.getSnapshot(),
+        row = snapshot.index.find((r) => r.id === source.threadKey),
+        state = snapshot.threads.get(source.threadKey);
+      if (
+        !row ||
+        !state ||
+        row.agentId !== state.agentId ||
+        row.cwd !== state.cwd ||
+        row.nativeSessionId !== state.nativeSessionId ||
+        !attachmentSearchSourceCurrent(source, snapshot.threads)
+      )
+        return;
+      ++historyOpen.current;
+      routeHistory.current = [];
+      setPaletteOpen(false);
+      setNotificationOnlyKey(null);
+      setLoadedSearchRequest(null);
+      setThreadKey(source.threadKey);
+      setView({ kind: "thread", key: source.threadKey });
+      setAttachmentSearchRequest({ source, token: {} });
     },
   );
   const notificationSelection = useRef<(key: string) => void>(() => {});
@@ -917,6 +951,7 @@ export default function App() {
             onFilter={setFilter}
             onOpen={openRow}
             onSelectLoaded={openLoadedSearch}
+            onSelectAttachment={openAttachmentSearch}
             onImport={(opener) => openImport(null, opener)}
             onNew={goNew}
             onReopen={reopenSame}
@@ -938,6 +973,11 @@ export default function App() {
           >
             <ThreadPage
               viewKey={pageKey}
+              attachmentSearchRequest={
+                attachmentSearchRequest?.source.threadKey === pageKey
+                  ? attachmentSearchRequest
+                  : null
+              }
               searchRequest={
                 loadedSearchRequest?.hit.threadKey === pageKey
                   ? loadedSearchRequest

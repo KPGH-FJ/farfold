@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "phase": "red",
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "p27_",
+    "--",
+    "--nocapture"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T14:22:48.053982+00:00",
+  "sourceSha256Before": "2c81c22b00fcdd7b3007af6a80ca1616c8f07bcee843e5e9e6ed7fbeff99ef16",
+  "runnerSha256": "3c5c48a60c8b64aa6c30a4702e4deed44323e7fc4ace563cf80551c5fc49c3ae",
+  "scopeSha256": "b0ca9ecdbb7ea9c32a9658d7a351615ab94b3ade932166df8fe770e0fcc818b7"
+}

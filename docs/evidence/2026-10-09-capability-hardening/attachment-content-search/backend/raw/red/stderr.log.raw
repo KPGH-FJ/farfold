@@ -1,0 +1,15 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 22.72s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+thread 'file_delivery::text_inspection::tests::text_inspection_growth_after_open_is_rejected_before_hashing' (29016569) panicked at src/file_delivery/text_inspection_tests.rs:57:5:
+assertion `left == right` failed
+  left: Err(RevisionFailure { code: "changing" })
+ right: Err(RevisionFailure { code: "tooLarge" })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'file_delivery::text_inspection::tests::text_inspection_rejects_oversize_before_capture_for_both_entrypoints' (29016571) panicked at src/file_delivery/text_inspection_tests.rs:27:5:
+assertion `left == right` failed
+  left: Ok(VerifiedFile { root: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpAr6Xwv", path: "/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpAr6Xwv/selected.txt", resolved_path: "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpAr6Xwv/selected.txt", name: "selected.txt", size: 1048577, sha256: "7cabacb90701f3e9ca8d198e6bfb7e42467b56e4880e30483dbfc83524efc9b6", version: "c4fe701a27ceae6b18e6b45bc49b16ee00912b48b9c64696b96aec6dd10913f1" })
+ right: Err(RevisionFailure { code: "tooLarge" })
+error: test failed, to rerun pass `--lib`

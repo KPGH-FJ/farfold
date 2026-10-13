@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "completedAtUtc": "2026-10-13T14:25:25.733927+00:00",
+  "status": "SCOPED_IMPLEMENTATION_RED_GREEN_REGRESSION_PASSED; ROOT_FULL_SEVEN_AND_COMMIT_PENDING",
+  "source": {
+    "path": "src-tauri/src/browser_sharing/protocol.rs",
+    "bytes": 21005,
+    "sha256": "c3916e3de372d7fad516fbcf32c5efb2cb3c70c992de5465528edddcb15d6ddb"
+  },
+  "sourceLineCount": 480,
+  "sourceHashStages": {
+    "before": "b43f435f45bbe4e32665c1413adf7b3ae65f6ec144294fc960e69670eb95f3c5",
+    "testsOnly": "2c81c22b00fcdd7b3007af6a80ca1616c8f07bcee843e5e9e6ed7fbeff99ef16",
+    "fixed": "c3916e3de372d7fad516fbcf32c5efb2cb3c70c992de5465528edddcb15d6ddb"
+  },
+  "observedCurrentSourceDiffPaths": [
+    "src-tauri/src/browser_sharing/protocol.rs"
+  ],
+  "ownerModifiedSource": [
+    "src-tauri/src/browser_sharing/protocol.rs"
+  ],
+  "changes": "Unsupported screenshot=true receives a fixed original-id protocol tool error after valid handshake/list gate, before Action::Read/page/permission. Tool/schema copy says use a separate false request for text/positions. No new one-shot approval/control semantics/pixel support.",
+  "red": {
+    "receipt": {
+      "path": "output/2026-10-13-p27-unavailable-backend/red/completed.json",
+      "bytes": 1135,
+      "sha256": "1c9b29cf590c576ace9a857c3031e5d48298bdce6257bc963ada91695a8ded4d"
+    },
+    "exitCode": 101,
+    "passed": 1,
+    "failed": 1,
+    "cause": "Actual screenshot inbound path emitted Action::Read; first new test panicked at protocol.rs:278 expected Reply. Compile succeeded; wording assertions occur afterward. Positive text/control case passed."
+  },
+  "green": {
+    "receipt": {
+      "path": "output/2026-10-13-p27-unavailable-backend/green/completed.json",
+      "bytes": 1139,
+      "sha256": "974ae85f161e098a4204a6bc54c5388643851f5e61e1d52c233e4eb447b7cb9f"
+    },
+    "exitCode": 0,
+    "passed": 2,
+    "failed": 0
+  },
+  "browserSharingRegression": {
+    "receipt": {
+      "path": "output/2026-10-13-p27-unavailable-backend/regression/completed.json",
+      "bytes": 1166,
+      "sha256": "d2820e417722e336bd7fd8e2799c5caaa4ad26ce31806830a54d5b2f13ee716a"
+    },
+    "exitCode": 0,
+    "passed": 58,
+    "failed": 0
+  },
+  "cargoFmt": {
+    "receipt": {
+      "path": "output/2026-10-13-p27-unavailable-backend/format/completed.json",
+      "bytes": 1095,
+      "sha256": "a59629c409c5fc528882cd9ea244439c283e4428f23b9f516dafa5b58eae03ea"
+    },
+    "exitCode": 0
+  },
+  "diffCheck": {
+    "argv": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "src-tauri/src/browser_sharing/protocol.rs"
+    ],
+    "exitCode": 0
+  },
+  "allCommandsNaturallyCompleted": true,
+  "rustCompilerReleased": true,
+  "coverage": "Real Protocol::receive handshake/discovery/calls and existing browser_sharing unit/regression machinery. Production Worker Reply arm is source-reviewed to avoid page/permission admission; no full Worker/native/UI/authenticated socket callback count claimed.",
+  "notPerformed": [
+    "full seven checks",
+    "release build",
+    "App/Agent/browser/UI",
+    "database or user content reads",
+    "install",
+    "commit",
+    "old9file approval proposal apply"
+  ],
+  "productBoundary": "P27 real screenshot delivery/protected-input/closed-content conditions remain incomplete; this increment only refuses unavailable operation without misleading approval.",
+  "oldProposalPreserved": {
+    "path": "output/2026-10-13-next-capability-priority/proposed.patch",
+    "bytes": 23900,
+    "sha256": "8d4570df4675e96660934f8c453108320d299663085d417f1bc314eceb1770ec"
+  }
+}

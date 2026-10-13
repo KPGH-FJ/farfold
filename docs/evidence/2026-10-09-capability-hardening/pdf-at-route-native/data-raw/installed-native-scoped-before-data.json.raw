@@ -1,0 +1,180 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T14:59:11.364991+00:00",
+  "formalSource": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+  "scope": "Actual installed macOS PDF input through normal @ project-file route; no new candidate/install in this phase.",
+  "publicRaw": [
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/05-call_51b222d0610d408dba22b9c1bef394ba.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/05-call_51b222d0610d408dba22b9c1bef394ba.jsonl.raw",
+      "bytes": 3288,
+      "sha256": "6a3c8aee0078e1c54f44643bdf2384f30e2d64f7432cf5d5ac00007f2f3a20a8"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/06-call_13d2de9fbb7a4f35900d9c7f9fbc15f9.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/06-call_13d2de9fbb7a4f35900d9c7f9fbc15f9.jsonl.raw",
+      "bytes": 1203,
+      "sha256": "c36388da3aa91ccab2439047211b45323928d548da3e3dd90fa2e87090fb7388"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/07-call_c5e05cd79bbd4f70ba1582e64e9c588f.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/07-call_c5e05cd79bbd4f70ba1582e64e9c588f.jsonl.raw",
+      "bytes": 4687,
+      "sha256": "18b413ecd2d8cbc015a0aa2c3ceecb64110bf7ffcdd87a87f5e32d14d7ad40d7"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/09-call_b875b62639b94e758eb4152adcfdfcb3.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/09-call_b875b62639b94e758eb4152adcfdfcb3.jsonl.raw",
+      "bytes": 3272,
+      "sha256": "3a2396f32ad3d6c0cfc09fd5b0d1c8c5a78557eee7c81f2191409d4f2a3e7a17"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/10-call_43e5d61a303b4b25ac2fbf419b91d1ba.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/10-call_43e5d61a303b4b25ac2fbf419b91d1ba.jsonl.raw",
+      "bytes": 1203,
+      "sha256": "90c082e1b5e0737925c706a82778914ec915dd936c22efa089ec702ab693f1ea"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/11-call_077a7a7f66434bbb853811c76147fed2.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/11-call_077a7a7f66434bbb853811c76147fed2.jsonl.raw",
+      "bytes": 4691,
+      "sha256": "767421fcfcb535274004e91e307733e8f64ca4e8470ab930a432317c9fab72ce"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/12-call_61e03de6aa5b41cbb25708948ec35ff5.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/12-call_61e03de6aa5b41cbb25708948ec35ff5.jsonl.raw",
+      "bytes": 1192,
+      "sha256": "749542fcb787cc69b85624446499ed281c1160812b1f5f62233f83f02a6e154f"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/16-call_4b6242e8b04541ce82488c5032f04db9.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/16-call_4b6242e8b04541ce82488c5032f04db9.jsonl.raw",
+      "bytes": 3287,
+      "sha256": "8ac0e0a56043c205d5602974f093f589c2a73163929d45e7aa4ce18a3d053659"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/17-call_db5baad7b1f34c4ab541578a7d83146e.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/17-call_db5baad7b1f34c4ab541578a7d83146e.jsonl.raw",
+      "bytes": 1212,
+      "sha256": "6a1a352e057393645d648a1d2c1721e81047258754d9089a7f7cf5464576123e"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/18-call_d4660afd8f9d48d697ff87a9f35327da.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/18-call_d4660afd8f9d48d697ff87a9f35327da.jsonl.raw",
+      "bytes": 1208,
+      "sha256": "59efa0efac2025c77cd812326a699cb74e58a94b675ade6272cc6092a65cb21c"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/20-call_2a6e9fc949714c32b34c8a60b29a88d4.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/20-call_2a6e9fc949714c32b34c8a60b29a88d4.jsonl.raw",
+      "bytes": 1208,
+      "sha256": "005ac8c83affb5a63d6ffae107cf3f3be2717e7250790a412125be099b483ca0"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/21-call_cd9bcdb64a7747f78e0a7fb4f0873a4b.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/21-call_cd9bcdb64a7747f78e0a7fb4f0873a4b.jsonl.raw",
+      "bytes": 1186,
+      "sha256": "f867436e842c14fcd4c6d6610fbd10c84e5e2e67b994cf7bbb7bbfd615c0d235"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/22-call_7d49a09431284d90a1475b49a1283af0.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/22-call_7d49a09431284d90a1475b49a1283af0.jsonl.raw",
+      "bytes": 1668,
+      "sha256": "bee9bb390e1bfa95e17285de5410401de867dac6e164e88c5630a62b81403472"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/23-call_f65bd851b393473981c10fe7517cfe68.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/23-call_f65bd851b393473981c10fe7517cfe68.jsonl.raw",
+      "bytes": 815,
+      "sha256": "44b318edfa2dc4815c865c68a35923f3e8407261f3405053228c967d98b7cd68"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/26-call_f148b1194123482885551e3bfce29e80.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/26-call_f148b1194123482885551e3bfce29e80.jsonl.raw",
+      "bytes": 4811,
+      "sha256": "4a2f56649ea4d9714416395ab41a5e39bddc366335662cef461fe0f94f4eb33c"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/28-call_59bca40bb44c417eb93b8f6ffb50f129.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/28-call_59bca40bb44c417eb93b8f6ffb50f129.jsonl.raw",
+      "bytes": 2516,
+      "sha256": "98cb8c781fb55d4e73d5fd14eecf9019b576dbe0b0b6f4ed1d7240aab210ada2"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/30-call_197e7efb8c3244ee812683f3464afe9c.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/30-call_197e7efb8c3244ee812683f3464afe9c.jsonl.raw",
+      "bytes": 1654,
+      "sha256": "56e65c9dd258f96f470a97127dded078bbe76b2a1faf90898f33ef15296ed87c"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/transcript-receipts/31-call_0f3f762f921247e7a35609d749cd655d.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/transcript-receipts/31-call_0f3f762f921247e7a35609d749cd655d.jsonl.raw",
+      "bytes": 835,
+      "sha256": "a031f8c66c1b09684e883d6c67aeb4de0852fb2a3ad6ee4d0154810d06cd6ee3"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/01-prelaunch-and-fixtures.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/01-prelaunch-and-fixtures.json.raw",
+      "bytes": 1134,
+      "sha256": "d342d6963485b164882b5e48c3be31558d8acf3e4844784062b428504432a5f4"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/02-first-normal-quit-process.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/02-first-normal-quit-process.json.raw",
+      "bytes": 357,
+      "sha256": "b75b1c85015a2573512abb6e48458cb759869a2ccb92709f296f58412eb4ed27"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/03-final-normal-quit-process.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/03-final-normal-quit-process.json.raw",
+      "bytes": 357,
+      "sha256": "da6547ed47cba2eb761f461beabe315f3f6e99e278bbdc140f3b3865a524d8d3"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/03-final-normal-quit-exec.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/03-final-normal-quit-exec.jsonl.raw",
+      "bytes": 2504,
+      "sha256": "724ad73051eabafeb27784e0014f1802d53eb7417c1c922d9291191bde0d027c"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native/04-formal-five-files.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/raw/04-formal-five-files.json.raw",
+      "bytes": 916,
+      "sha256": "3d4fe902ec9d2ac36649f26dacff5ac1bff1ba430acaddfefc4dd044eea9b339"
+    }
+  ],
+  "privateCompleteNativeTranscript": {
+    "path": "output/2026-10-13-pdf-at-route-native/transcript-receipts/manifest.json",
+    "sha256": "183472ef193779894019c562df2e5c1d88a4e3673d45f6989a420c1cc3b7e89c",
+    "events": 31,
+    "reasonPrivate": "Full workspace/sidebar AX includes unrelated user conversation titles; selected public modal/action originals contain only this synthetic fixture and generic controls."
+  },
+  "positive": {
+    "sourceBytes": 2554,
+    "sha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f",
+    "displayedTextBytes": 1311,
+    "displayedPages": 3,
+    "observed": "Scope consent initially unchecked and read disabled; explicit scope selection; full preview with partial-content notices; cancel retained file link; second explicit scope and partial-content confirmation saved text.",
+    "limitations": "AX preview body is truncated by the accessibility transport. Displayed total length/pages are directly observed; complete saved body/receipt verification awaits second-copy data analysis. No OCR/visual reading order/all stored PDF strings claim."
+  },
+  "negative": {
+    "sourceBytes": 2998,
+    "sha256": "87fd1dfc347a4b9dae8276b1c2691d8fbd73dff5672f14ad246001b813784e01",
+    "observed": "Encrypted PDF rejected with disabled add-text button; no password requested or entered. Cancel retained link; root explicitly removed only this newly added negative file link afterward."
+  },
+  "cold": {
+    "firstQuitEventUtc": "2026-10-13T14:51:39.856Z",
+    "processZeroBeforeRelaunch": "output/2026-10-13-pdf-at-route-native/02-first-normal-quit-process.json",
+    "observed": "New launch after exact lowercase process zero restored PDF chip, displayed1311 bytes/3pages and saved scope; viewing alone did not clear recovery gate. Explicit keep selected rechecked both PDF and audio and kept send disabled.",
+    "finalQuitEventUtc": "2026-10-13T14:52:36.263Z",
+    "finalProcessZero": "output/2026-10-13-pdf-at-route-native/03-final-normal-quit-process.json"
+  },
+  "preservedAtUI": "Own33-byte marker and original140-byte complete audio remained visible; precise stored values pending data comparison.",
+  "actionBoundary": "No ordinary/slash/pending-send action, account/model/service/permission configuration change. This describes CUA actions, not an official Agent zero-request counter. Existing H17 unknown and NEW24 unknown permissions remain unchanged.",
+  "stillOpen": [
+    "Post-run exact second-copy data analysis",
+    "Independent native evidence review",
+    "System file panel NEW26 remains unresolved",
+    "Real Agent PDF delivery; entire P08 and29x8 acceptance"
+  ]
+}

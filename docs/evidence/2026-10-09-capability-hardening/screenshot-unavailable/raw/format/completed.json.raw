@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "phase": "format",
+  "argv": [
+    "cargo",
+    "fmt",
+    "--check",
+    "--manifest-path",
+    "src-tauri/Cargo.toml"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T14:24:18.412646+00:00",
+  "sourceSha256Before": "c3916e3de372d7fad516fbcf32c5efb2cb3c70c992de5465528edddcb15d6ddb",
+  "runnerSha256": "3c5c48a60c8b64aa6c30a4702e4deed44323e7fc4ace563cf80551c5fc49c3ae",
+  "scopeSha256": "b0ca9ecdbb7ea9c32a9658d7a351615ab94b3ade932166df8fe770e0fcc818b7",
+  "completedAtUtc": "2026-10-13T14:24:19.492949+00:00",
+  "actualExitCode": 0,
+  "sourceSha256After": "c3916e3de372d7fad516fbcf32c5efb2cb3c70c992de5465528edddcb15d6ddb",
+  "outputs": [
+    {
+      "path": "output/2026-10-13-p27-unavailable-backend/format/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-13-p27-unavailable-backend/format/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "sourceStable": true
+}

@@ -1,0 +1,264 @@
+{
+  "completedAtUtc": "2026-10-13T15:01:17.547519+00:00",
+  "scope": "P32 increment: explicitly selected current local complete UTF8 attachment text, loaded user/reply declarations only. It is not historical original bytes, format extraction, all P32 completion, native installation or actual Agent validation.",
+  "sourceFreezeV1": {
+    "path": "output/2026-10-13-attachment-search-frontend/source-freeze-v1.json",
+    "bytes": 3339,
+    "sha256": "6449dd35c938909ef32b256c90f124dfebecae06f8ef96c69bc4fa20415188ea"
+  },
+  "sourceFreezeV2": {
+    "path": "output/2026-10-13-attachment-search-frontend/source-freeze-v2.json",
+    "bytes": 3981,
+    "sha256": "a0b1b610ac1d2fb6de724518eb5b10be7ac2e105962cee50b396ca17a7ef65bc"
+  },
+  "ownedFilesCount": 13,
+  "sourceWillRemainUnchanged": true,
+  "limits": {
+    "files": 20,
+    "fileBytes": 1048576,
+    "searchableBodyBytes": 16777216,
+    "concurrentFrontendAndNativePool": 2,
+    "displayedHits": 200,
+    "queryUTF8Bytes": 256,
+    "important": "Bounded inspection/revision may hash selected bytes again;16MiB is searchable-body total, not a cumulative disk-IO limit. Plain UTF8/NUL validation does not parse document/image/audio formats."
+  },
+  "targetedV1": {
+    "files": 6,
+    "passed": 68,
+    "actualExitCode": 0,
+    "stdout": {
+      "path": "output/2026-10-13-attachment-search-frontend/targeted-run09.txt",
+      "bytes": 212,
+      "sha256": "9f238bb2af897475653be2a49a83d1dde4a6e0de531187d10fa8b668a56ccb8c"
+    },
+    "completion": {
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run09.raw.jsonl",
+      "bytes": 6814,
+      "sha256": "3c1fb033804491b2e0929ab11cfdc65ff3ae92872b17f4bf3bf8c3d7c2c47668"
+    }
+  },
+  "typecheckV1": {
+    "actualExitCode": 0,
+    "stdout": {
+      "path": "output/2026-10-13-attachment-search-frontend/typecheck-run04.txt",
+      "bytes": 78,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    "completion": {
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-run04.raw.jsonl",
+      "bytes": 814,
+      "sha256": "ff45f8439965a07e2810be649969957f163d9c9fd6ed9e46e81da1d424ddd850"
+    }
+  },
+  "v2OnlyDelta": "One budget message corrected to say not used for search because inspection may already have read the bytes. No logic/test/fixture changed; original browser+68 receipts remain v1 scope.",
+  "v2Checks": [
+    {
+      "name": "strings-budget-copy-v2",
+      "actualExitCode": 0,
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/strings-budget-copy-v2.txt",
+        "bytes": 209,
+        "sha256": "23c1392a13c371fef12a48e956ce34380e5fd102c36e98835391605b68300c20"
+      },
+      "completion": {
+        "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/strings-budget-copy-v2.raw.jsonl",
+        "bytes": 896,
+        "sha256": "c7daeecc782b660d60f45ce1ac0e3c661c53f6b00b673467189e1cfff509f1be"
+      }
+    },
+    {
+      "name": "format-final",
+      "actualExitCode": 0,
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/format-final.txt",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "completion": {
+        "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/format-final.raw.jsonl",
+        "bytes": 1774,
+        "sha256": "18d4c1b5e8ae5a4ba8cf29e4e3701b4130973a65c9b7c1d0515cd69ce61afcd4"
+      }
+    }
+  ],
+  "browser": [
+    {
+      "engine": "chromium",
+      "label": "run01",
+      "checks": 47,
+      "actualExitCode": 0,
+      "sourceStable": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "result": {
+        "path": "output/2026-10-13-attachment-search-frontend/browser/chromium-run01.json",
+        "bytes": 285067,
+        "sha256": "a9908ecf5da4cb55f0fa291378396ad9d8c41b2d760e3312d4fa3f18dce2dc97"
+      },
+      "completion": {
+        "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/chromium-run01.raw.jsonl",
+        "bytes": 2811,
+        "sha256": "ac8b55ed4262d4e2a796b94af8f23ff6b27a2f282c683ad51d54a03ee096b554"
+      }
+    },
+    {
+      "engine": "webkit",
+      "label": "run01",
+      "checks": 47,
+      "actualExitCode": 0,
+      "sourceStable": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "result": {
+        "path": "output/2026-10-13-attachment-search-frontend/browser/webkit-run01.json",
+        "bytes": 285061,
+        "sha256": "e6c604a2dfc818d4f8c239c61febb723c8ac818e0ebe863494f9d2e17dae0c41"
+      },
+      "completion": {
+        "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/webkit-run01.raw.jsonl",
+        "bytes": 1248,
+        "sha256": "e85e941f6ee5e8b8dc47be6a7564ee1956d93ded42f2e42836b1666f4c16f88b"
+      }
+    },
+    {
+      "engine": "chromium",
+      "label": "run02",
+      "checks": 55,
+      "actualExitCode": 0,
+      "sourceStable": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "result": {
+        "path": "output/2026-10-13-attachment-search-frontend/browser/chromium-run02.json",
+        "bytes": 288924,
+        "sha256": "39dbbb7e994fc98556b6c41615f4e5ff1e17b527a47c7770b80c85739bc9e5f0"
+      },
+      "completion": {
+        "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/chromium-run02.raw.jsonl",
+        "bytes": 957,
+        "sha256": "db0c34a29838858adf23c3c67622396b569dccb8ad5febdd54d925efd3f98162"
+      }
+    },
+    {
+      "engine": "webkit",
+      "label": "run02",
+      "checks": 55,
+      "actualExitCode": 0,
+      "sourceStable": true,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "result": {
+        "path": "output/2026-10-13-attachment-search-frontend/browser/webkit-run02.json",
+        "bytes": 288918,
+        "sha256": "175f2b1199eca170a563096ee96173d79eac6c73f4f2e52c291f243d8bf167ce"
+      },
+      "completion": {
+        "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/webkit-run02.raw.jsonl",
+        "bytes": 949,
+        "sha256": "5c523a1fa10d68fe802b228b30547979a7cbb1edee7fca3c08fcb69a383193dd"
+      }
+    }
+  ],
+  "meaningfulFailures": [
+    {
+      "name": "targeted-run01",
+      "cause": "Forged candidate clone was accepted; actual fixed readText errors classified as unreadable. Candidate registration and real-error mapping repaired.",
+      "completion": {
+        "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run01.raw.jsonl",
+        "bytes": 26332,
+        "sha256": "c83b120be1fa4e28c5bc40a7c65c809968dd4291dfc937631177c8374bbbfe4a"
+      },
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/targeted-run01.txt",
+        "bytes": 4502,
+        "sha256": "7f4dd7107107d96d793e500ee0dfb25cf0eaaf3a6c7b6508f455a05f8485e57d"
+      }
+    },
+    {
+      "name": "targeted-run04-red",
+      "cause": "Pending unknown latch prevented explicit recovery, retire hid it, and navigation completion did not notify admission. Explicit start/native pool discipline and notifications repaired.",
+      "completion": {
+        "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run04-red.raw.jsonl",
+        "bytes": 6361,
+        "sha256": "b9196441cd4db2160ff05e4be125b32095709b1b85503c95c7adf5befe361439"
+      },
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/targeted-run04-red.txt",
+        "bytes": 3741,
+        "sha256": "bf891ce5f85bf07f0ea73bfef98c13b26962dd2ec2f8323e67f8d11624b64a6d"
+      }
+    },
+    {
+      "name": "targeted-run07-notice-red",
+      "cause": "Merged initial state retained prior attachment error across scope change; explicit empty initial error repaired.",
+      "completion": {
+        "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run07-notice-red.raw.jsonl",
+        "bytes": 2267,
+        "sha256": "7fb4c2952af930d5afb42145071f41488defe3f5805550d375b08a748cd55a19"
+      },
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/targeted-run07-notice-red.txt",
+        "bytes": 1093,
+        "sha256": "c9e8bbd3ccfb555f10ea0acec475ff1fa18e1b1ff2b5ea756b3866a5e595a083"
+      }
+    }
+  ],
+  "otherFailuresPreserved": [
+    {
+      "name": "typecheck-initial",
+      "cause": "Unintended extra CommandPalette prop removed."
+    },
+    {
+      "name": "typecheck-run02",
+      "cause": "Test fixture supplied narrowed harness map instead of real ThreadState map; fixed fixture."
+    },
+    {
+      "name": "targeted-run05",
+      "cause": "New fixture called Sidebar onLibrary without its required all-filter argument.64/65; repaired fixture→run06 65/65, not a production red-to-green."
+    }
+  ],
+  "server": {
+    "pid": 67697,
+    "port": 1537,
+    "actualObservedExecExit": 143,
+    "stopped": {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/server-stopped-v2.json",
+      "bytes": 552,
+      "sha256": "885348155bd7f84818723fe2dd1310567c71a46615b3f2e9787471219110ac99"
+    },
+    "originalCompletion": {
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/server.raw.jsonl",
+      "bytes": 3168,
+      "sha256": "b1cbcfe7e5844b9cf2b9baba780181c40a52bd355c6daf93d382f9a9e12519f1"
+    },
+    "correction": "Earlier manual server-stopped.json assumed exit0 and is retained/superseded. Exact original termination was143; fresh ps empty and listener absent/bind success prove current stop. No other process signaled."
+  },
+  "screenshotsReviewed": [
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/chromium-run02-results-narrow.png",
+      "bytes": 99265,
+      "sha256": "4d89fdba65bebdfcb30e99336099eb90449972818c109080226516108e0e2e22"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/chromium-run02-source-location.png",
+      "bytes": 66443,
+      "sha256": "29ace9fada8f8b44a37074b36ddcd2f0f686556813f42884be3680e3d25bd256"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/webkit-run02-results-narrow.png",
+      "bytes": 132379,
+      "sha256": "28c36abf67d833938c46979a00b4ade4ac39d5149e9a5bad0d310d4b41a50792"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/webkit-run02-source-location.png",
+      "bytes": 87968,
+      "sha256": "e4262fee38c552f348d13b1558112bd88f448b3e94e941657d4e629037e5f6dc"
+    }
+  ],
+  "originalReceiptManifest": {
+    "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/manifest.json",
+    "bytes": 13297,
+    "sha256": "539ea6f27c66d7321435552d1f885c4c74b5763728201a16a7161e47f65ef8f8"
+  },
+  "remaining": "Full engineering seven checks, real native file IO integration, installed UI and broader P32 requirements are separate work; frontend did not run/build/install/send."
+}

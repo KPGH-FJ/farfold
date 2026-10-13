@@ -1,0 +1,34 @@
+{
+  "argv": [
+    "/Library/Developer/CommandLineTools/usr/bin/python3",
+    "-B",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-pdf-at-route-data-preparation/capture_compare.py",
+    "--config",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-pdf-at-route-data/config.json",
+    "--config-sha",
+    "7fbd75fc6fef7e7ad2fdb8f1465e4643418c22a9defd4624de2cf1c752d735ff"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T15:04:18.523824+00:00",
+  "completedAtUtc": "2026-10-13T15:04:18.710903+00:00",
+  "actualExitCode": 2,
+  "runCount": 1,
+  "newStageAfterVerifiedColdUi": true,
+  "freezeSha256Before": "bd8a641ff3ac91553d1f812899d1587b9c707dc13cdd218b19dfd86b98679fa4",
+  "freezeSha256After": "bd8a641ff3ac91553d1f812899d1587b9c707dc13cdd218b19dfd86b98679fa4",
+  "frozenInputsStable": true,
+  "outputs": [
+    {
+      "path": "output/2026-10-13-pdf-at-route-data/stdout.raw",
+      "bytes": 93,
+      "sha256": "a67fa174ace9ef780e83b02655a50abd17a83378018d79d92b110937c605b189"
+    },
+    {
+      "path": "output/2026-10-13-pdf-at-route-data/stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "firstCaptureOverwritten": false,
+  "reviewerAppActions": false
+}

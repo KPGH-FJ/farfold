@@ -1,0 +1,160 @@
+{
+  "schema": 1,
+  "atUtc": "2026-10-13T15:04:32.181610+00:00",
+  "result": "PASS",
+  "manifest": {
+    "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/manifest.json",
+    "sha256": "539ea6f27c66d7321435552d1f885c4c74b5763728201a16a7161e47f65ef8f8"
+  },
+  "method": "Compared only the21 manifest-selected complete event lines against exact source subtask transcript; parsed only these target events, no non-target transcript content inspected or emitted. Also verified referenced existing stdout bytes. No test/command rerun.",
+  "verified": [
+    {
+      "name": "typecheck-initial",
+      "actualExitCode": 1,
+      "sourceLine": 2958,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-initial.raw.jsonl",
+      "sha256": "7f7d737b3e86e1cbee3ee796871d5ee47d88fd04f6bf0de669a20d4eff496ecd"
+    },
+    {
+      "name": "targeted-run01",
+      "actualExitCode": 1,
+      "sourceLine": 2996,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run01.raw.jsonl",
+      "sha256": "c83b120be1fa4e28c5bc40a7c65c809968dd4291dfc937631177c8374bbbfe4a"
+    },
+    {
+      "name": "candidate-fix",
+      "actualExitCode": 0,
+      "sourceLine": 3018,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/candidate-fix.raw.jsonl",
+      "sha256": "cdea1d0a16d0f518020aecd74f4360953c42d340d160b0fed51b742cd11617ba"
+    },
+    {
+      "name": "targeted-run02",
+      "actualExitCode": 0,
+      "sourceLine": 3023,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run02.raw.jsonl",
+      "sha256": "38048d197b98b8cec964187bb108d8c4dfad0b8940fc0bea8a157347e8d5205d"
+    },
+    {
+      "name": "targeted-run03",
+      "actualExitCode": 0,
+      "sourceLine": 3066,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run03.raw.jsonl",
+      "sha256": "d9714ae0ad2572212ec81725b1cc0c234d1969827c9b4607b127c52543c327f1"
+    },
+    {
+      "name": "typecheck-run02",
+      "actualExitCode": 1,
+      "sourceLine": 3073,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-run02.raw.jsonl",
+      "sha256": "142141fd95f5a8faae1f7c3c2382ed6c4df3cb9f4da8bf468ce2a4b795996d5f"
+    },
+    {
+      "name": "targeted-run04-red",
+      "actualExitCode": 1,
+      "sourceLine": 3165,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run04-red.raw.jsonl",
+      "sha256": "b9196441cd4db2160ff05e4be125b32095709b1b85503c95c7adf5befe361439"
+    },
+    {
+      "name": "targeted-run05",
+      "actualExitCode": 1,
+      "sourceLine": 3213,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run05.raw.jsonl",
+      "sha256": "d03da05733d92986e44dace22fb5e54fafcfa71921586e5afe33d2d4e8908fbb"
+    },
+    {
+      "name": "typecheck-run03",
+      "actualExitCode": 0,
+      "sourceLine": 3214,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-run03.raw.jsonl",
+      "sha256": "f9522e7dad72bf0494642a6ac6bbb0c356de3530d55daf5a4d11e533ae786c09"
+    },
+    {
+      "name": "targeted-run06",
+      "actualExitCode": 0,
+      "sourceLine": 3247,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run06.raw.jsonl",
+      "sha256": "3e55c4a9cc534b68ed1d09d75a95abe15358d8425c5bb5116e105e2f107115e8"
+    },
+    {
+      "name": "targeted-run07-notice-red",
+      "actualExitCode": 1,
+      "sourceLine": 3268,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run07-notice-red.raw.jsonl",
+      "sha256": "7fb4c2952af930d5afb42145071f41488defe3f5805550d375b08a748cd55a19"
+    },
+    {
+      "name": "chromium-run01",
+      "actualExitCode": 0,
+      "sourceLine": 3284,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/chromium-run01.raw.jsonl",
+      "sha256": "ac8b55ed4262d4e2a796b94af8f23ff6b27a2f282c683ad51d54a03ee096b554"
+    },
+    {
+      "name": "targeted-run08",
+      "actualExitCode": 0,
+      "sourceLine": 3292,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run08.raw.jsonl",
+      "sha256": "ca47bd87d523fcf055cde4281d7818a3b8bf45e406a75477f405787ccf2bdd9a"
+    },
+    {
+      "name": "webkit-run01",
+      "actualExitCode": 0,
+      "sourceLine": 3301,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/webkit-run01.raw.jsonl",
+      "sha256": "e85e941f6ee5e8b8dc47be6a7564ee1956d93ded42f2e42836b1666f4c16f88b"
+    },
+    {
+      "name": "targeted-run09",
+      "actualExitCode": 0,
+      "sourceLine": 3327,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run09.raw.jsonl",
+      "sha256": "3c1fb033804491b2e0929ab11cfdc65ff3ae92872b17f4bf3bf8c3d7c2c47668"
+    },
+    {
+      "name": "typecheck-run04",
+      "actualExitCode": 0,
+      "sourceLine": 3330,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-run04.raw.jsonl",
+      "sha256": "ff45f8439965a07e2810be649969957f163d9c9fd6ed9e46e81da1d424ddd850"
+    },
+    {
+      "name": "chromium-run02",
+      "actualExitCode": 0,
+      "sourceLine": 3331,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/chromium-run02.raw.jsonl",
+      "sha256": "db0c34a29838858adf23c3c67622396b569dccb8ad5febdd54d925efd3f98162"
+    },
+    {
+      "name": "webkit-run02",
+      "actualExitCode": 0,
+      "sourceLine": 3349,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/webkit-run02.raw.jsonl",
+      "sha256": "5c523a1fa10d68fe802b228b30547979a7cbb1edee7fca3c08fcb69a383193dd"
+    },
+    {
+      "name": "server",
+      "actualExitCode": 143,
+      "sourceLine": 3375,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/server.raw.jsonl",
+      "sha256": "b1cbcfe7e5844b9cf2b9baba780181c40a52bd355c6daf93d382f9a9e12519f1"
+    },
+    {
+      "name": "strings-budget-copy-v2",
+      "actualExitCode": 0,
+      "sourceLine": 3403,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/strings-budget-copy-v2.raw.jsonl",
+      "sha256": "c7daeecc782b660d60f45ce1ac0e3c661c53f6b00b673467189e1cfff509f1be"
+    },
+    {
+      "name": "format-final",
+      "actualExitCode": 0,
+      "sourceLine": 3404,
+      "rawPath": "output/2026-10-13-attachment-search-frontend/transcript-receipts/format-final.raw.jsonl",
+      "sha256": "18d4c1b5e8ae5a4ba8cf29e4e3701b4130973a65c9b7c1d0515cd69ce61afcd4"
+    }
+  ],
+  "scope": "Original completion evidence, including failures and actual owned server stop143. It is not installed/native product validation."
+}

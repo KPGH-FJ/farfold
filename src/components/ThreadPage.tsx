@@ -1,3 +1,7 @@
+import {
+  AttachmentSearchJump,
+  type AttachmentSearchRequest,
+} from "./AttachmentSearchJump";
 import { ConversationExportHost } from "./ConversationExportHost";
 import {
   captureConversationExport,
@@ -73,9 +77,11 @@ export function ThreadPage({
   onBrowserStateChange,
   draftComposerRef,
   searchRequest,
+  attachmentSearchRequest,
 }: {
   onManualOpen?: () => void;
   searchRequest?: LoadedSearchRequest | null;
+  attachmentSearchRequest?: AttachmentSearchRequest | null;
   draftComposerRef?: React.Ref<HTMLDivElement>;
   onBrowserStateChange?: (
     taskKey: string,
@@ -131,6 +137,12 @@ export function ThreadPage({
     searchRequest?.hit.threadKey === viewKey &&
     closedSearch !== searchRequest.token
       ? searchRequest
+      : null;
+  const attachmentSearch =
+    active &&
+    attachmentSearchRequest?.source.threadKey === viewKey &&
+    closedSearch !== attachmentSearchRequest.token
+      ? attachmentSearchRequest
       : null;
   const findTrigger = useRef<HTMLButtonElement>(null);
   const [exported, setExported] = useState<{
@@ -271,6 +283,14 @@ export function ThreadPage({
           }}
         />
       )}
+      {attachmentSearch && (
+        <AttachmentSearchJump
+          host={host}
+          request={attachmentSearch}
+          revision={snapshot.version}
+          onClose={() => setClosedSearch(attachmentSearch.token)}
+        />
+      )}
       {loadedSearch && (
         <LoadedSearchJump
           host={host}
@@ -283,7 +303,7 @@ export function ThreadPage({
   );
   return (
     <TranscriptSearchContext.Provider
-      value={active && (finding || !!loadedSearch)}
+      value={active && (finding || !!loadedSearch || !!attachmentSearch)}
     >
       <main className="main workspace-thread" ref={host}>
         {thread ? (

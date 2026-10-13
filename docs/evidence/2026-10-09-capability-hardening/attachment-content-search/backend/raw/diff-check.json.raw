@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "git",
+    "diff",
+    "--check",
+    "--",
+    "src-tauri/src/file_delivery.rs",
+    "src-tauri/src/file_delivery_commands.rs",
+    "src-tauri/src/lib.rs",
+    "src-tauri/src/file_delivery/text_inspection.rs",
+    "src-tauri/src/file_delivery/text_inspection_tests.rs"
+  ],
+  "startedAtUtc": "2026-10-13T14:43:22.510410+00:00",
+  "completedAtUtc": "2026-10-13T14:43:22.520252+00:00",
+  "actualExitCode": 0,
+  "outputs": [
+    {
+      "path": "output/2026-10-13-p32-text-backend/diff-check.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-13-p32-text-backend/diff-check.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

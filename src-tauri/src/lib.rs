@@ -346,6 +346,8 @@ pub fn run() {
                 file_delivery_commands::file_delivery_inspect,
                 file_delivery_commands::file_delivery_inspect_selected,
                 file_delivery_commands::file_delivery_check_revision,
+                file_delivery_commands::file_delivery_inspect_text,
+                file_delivery_commands::file_delivery_check_text_revision,
                 file_delivery_commands::file_delivery_read_text,
                 file_delivery_commands::file_delivery_read_text_block,
                 file_delivery_commands::file_delivery_read_visual,

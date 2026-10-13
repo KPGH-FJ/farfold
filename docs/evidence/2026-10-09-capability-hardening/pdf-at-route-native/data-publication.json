@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T15:20:19.878989+00:00",
+  "scope": "Exact original hash/count/field-only data and UI review reports plus strict execution stdout/stderr. No database files, private row values, account values or private sidebar AX are published. The prior entry snapshot preserves the input of the independent UI review.",
+  "strictComparison": {
+    "actualExitCode": 2,
+    "differenceCount": 2,
+    "acceptedDifferences": [],
+    "baseline": "Prior audio post-cold snapshot; earlier strict exit 2 and differences remain unaccepted."
+  },
+  "files": [
+    {
+      "source": "output/2026-10-13-pdf-at-route-data-independent/localization-summary.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/data-raw/independent-localization-summary.json.raw",
+      "bytes": 7134,
+      "sha256": "be7299bc3e3adfe7a47c7955161010f8998f0b6876181d27d65c20f138d3d436"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-data-independent/localization-execution.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/data-raw/independent-localization-execution.json.raw",
+      "bytes": 647,
+      "sha256": "3ec1b5eead9d6603da9926c1040eed98e7f726d1c4d676d4f7ebdca84b511a52"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-data-independent/public-summary.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/data-raw/independent-public-summary.json.raw",
+      "bytes": 6104,
+      "sha256": "d06f82fe4993a56fd767f32491d0b4543e4937f6a974d462e08883f409bdbc4a"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-native-independent/ui-review.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/data-raw/ui-review.json.raw",
+      "bytes": 14726,
+      "sha256": "1fce146022d23521963b826db92e747377be5bc63837567a671c33e89299fb87"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-data/execution.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/data-raw/execution.json.raw",
+      "bytes": 1260,
+      "sha256": "b7c1a8089c53fe9217bebdb7a691dd8fc16a2eed18593d67bb309e980fbeb988"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-data/capture-receipt-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/data-raw/capture-receipt-private.json.raw",
+      "bytes": 10304,
+      "sha256": "1494a30fff2d02749e9648e5b42f18c66b67a2bb87f9058672cf30e8ef7ca3c4"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-data/comparison-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/data-raw/comparison-private.json.raw",
+      "bytes": 4974,
+      "sha256": "d9b0387d175c24c6cc21df487a9b7d15db1f56eef71338922fb1a546e5c6292d"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-data/final-verification-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/data-raw/final-verification-private.json.raw",
+      "bytes": 792,
+      "sha256": "f5ff866e0d6a886084f88ece3cb49d190dce5b87993a915aecc981eade64da5f"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-data/stdout.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/data-raw/stdout.raw",
+      "bytes": 93,
+      "sha256": "a67fa174ace9ef780e83b02655a50abd17a83378018d79d92b110937c605b189"
+    },
+    {
+      "source": "output/2026-10-13-pdf-at-route-data/stderr.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/data-raw/stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/installed-native-scoped.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/data-raw/installed-native-scoped-before-data.json.raw",
+      "bytes": 11926,
+      "sha256": "8933a245d2c7d08ce572c3f412b62581e5857289eff8f762edc9619a5ec248bc",
+      "sourcePhase": "Exact copy before this closeout updates the source entry; this historical input is the entry hash reviewed by ui-review.json."
+    }
+  ]
+}

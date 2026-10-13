@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-13T14:56:21.731196+00:00",
+  "pid": 67697,
+  "port": 1537,
+  "psExit": 1,
+  "psStdout": "",
+  "lsofExit": 1,
+  "lsofStdout": "",
+  "bindAvailable": true,
+  "ownedServerNaturalExitObserved": 0,
+  "unrelatedProcessSignaled": false
+}

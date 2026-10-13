@@ -1,0 +1,34 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/App.attachment-search.test.tsx (7 tests | 1 failed) 221ms
+   × clears the old attachment jump when ordinary navigation leaves and returns 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/App.attachment-search.test.tsx > clears the old attachment jump when ordinary navigation leaves and returns
+TypeError: Cannot read properties of undefined (reading 'kind')
+ ❯ src/App.tsx:322:12
+    320|     routeHistory.current = [];
+    321|     setFilter((current) =>
+    322|       next.kind === "agent" || next.kind === "group"
+       |            ^
+    323|         ? {
+    324|             ...normalizeLibraryFilter(current),
+ ❯ src/App.test-harness.ts:72:41
+ ❯ src/App.tsx:321:5
+ ❯ Object.action src/App.tsx:114:41
+ ❯ BrowserSurfaceGuard.advance src/runtime/browser_surface_guard.ts:179:70
+ ❯ BrowserSurfaceGuard.runLatest src/runtime/browser_surface_guard.ts:112:10
+ ❯ Object.onLibrary src/App.tsx:114:25
+ ❯ call src/App.test-harness.ts:258:26
+ ❯ src/App.attachment-search.test.tsx:97:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 64 passed (65)
+   Start at  22:47:43
+   Duration  2.03s (transform 869ms, setup 0ms, import 3.76s, tests 461ms, environment 0ms)
+

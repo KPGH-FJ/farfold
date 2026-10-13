@@ -1,3 +1,6 @@
+import { SelectedAttachmentSearch } from "./SelectedAttachmentSearch";
+import type { SelectAttachmentSearch } from "../runtime/attachment_search_source";
+import { ATTACHMENT_SEARCH_STRINGS as ATTACHMENT_SEARCH } from "../runtime/attachment_search_strings";
 import {
   useEffect,
   useMemo,
@@ -142,6 +145,7 @@ export function ConversationLibrary({
   defaultCwd,
   header,
   onSelectLoaded,
+  onSelectAttachment,
   agentOwners,
 }: {
   active?: boolean;
@@ -157,6 +161,7 @@ export function ConversationLibrary({
   defaultCwd: string | null;
   header?: ReactNode;
   onSelectLoaded?: SelectLoadedSearch;
+  onSelectAttachment?: SelectAttachmentSearch;
 }) {
   const data = useCollections();
   const readState = useConversationReadState();
@@ -212,7 +217,7 @@ export function ConversationLibrary({
   const rowsWithDraft = new Set(draftKeys.split("\n"));
   const [organizing, setOrganizing] = useState(false);
   const [searchScope, setSearchScope] = useState<
-    "metadata" | "body" | "history"
+    "metadata" | "body" | "history" | "attachments"
   >("metadata");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [busy, setBusy] = useState(false);
@@ -554,11 +559,13 @@ export function ConversationLibrary({
           </div>
         </div>
         <p className="library-search-boundary">
-          {searchScope === "history"
-            ? HISTORY.boundary
-            : searchScope === "body"
-              ? SEARCH.boundary
-              : R.searchBoundary}
+          {searchScope === "attachments"
+            ? ATTACHMENT_SEARCH.boundary
+            : searchScope === "history"
+              ? HISTORY.boundary
+              : searchScope === "body"
+                ? SEARCH.boundary
+                : R.searchBoundary}
         </p>
         <div className="library-tools">
           <select
@@ -566,11 +573,13 @@ export function ConversationLibrary({
             value={searchScope}
             onChange={(event) => {
               setSearchScope(
-                event.target.value === "history"
-                  ? "history"
-                  : event.target.value === "body"
-                    ? "body"
-                    : "metadata",
+                event.target.value === "attachments"
+                  ? "attachments"
+                  : event.target.value === "history"
+                    ? "history"
+                    : event.target.value === "body"
+                      ? "body"
+                      : "metadata",
               );
               setOrganizing(false);
               changeSelection(() => new Set());
@@ -579,23 +588,28 @@ export function ConversationLibrary({
             <option value="metadata">{SEARCH.metadata}</option>
             <option value="body">{SEARCH.body}</option>
             <option value="history">{HISTORY.scope}</option>
+            <option value="attachments">{ATTACHMENT_SEARCH.scope}</option>
           </select>
           <label className="library-search">
             <MagnifyingGlassIcon size={16} />
             <input
               aria-label={
-                searchScope === "history"
-                  ? HISTORY.query
-                  : searchScope === "body"
-                    ? SEARCH.query
-                    : LIBRARY.query
+                searchScope === "attachments"
+                  ? ATTACHMENT_SEARCH.query
+                  : searchScope === "history"
+                    ? HISTORY.query
+                    : searchScope === "body"
+                      ? SEARCH.query
+                      : LIBRARY.query
               }
               placeholder={
-                searchScope === "history"
-                  ? HISTORY.query
-                  : searchScope === "body"
-                    ? SEARCH.query
-                    : LIBRARY.query
+                searchScope === "attachments"
+                  ? ATTACHMENT_SEARCH.query
+                  : searchScope === "history"
+                    ? HISTORY.query
+                    : searchScope === "body"
+                      ? SEARCH.query
+                      : LIBRARY.query
               }
               maxLength={searchScope === "body" ? 512 : undefined}
               value={query}
@@ -872,7 +886,20 @@ export function ConversationLibrary({
           role="tabpanel"
           aria-label={LIBRARY_TABS.find(([id]) => id === tab)?.[1]}
         >
-          {searchScope === "history" ? (
+          {searchScope === "attachments" ? (
+            <SelectedAttachmentSearch
+              active={active}
+              rows={rows}
+              query={query}
+              scopeKey={JSON.stringify([
+                tab,
+                dimensions.agent,
+                dimensions.group,
+                dimensions.favorites,
+              ])}
+              onSelect={onSelectAttachment}
+            />
+          ) : searchScope === "history" ? (
             <HistorySearchPanel
               scopeKey={JSON.stringify([
                 tab,

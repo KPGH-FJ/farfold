@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "phase": "red",
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "text_inspection",
+    "--",
+    "--nocapture"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T14:35:08.771692+00:00",
+  "sourcesBefore": {
+    "src-tauri/src/file_delivery.rs": "df315d1729b42b6d842e1d4335d3571090c74f5e9593fa77805c5e8c9c06ac32",
+    "src-tauri/src/file_delivery_commands.rs": "1952a744e427287073abfc4e074a9c3029e1e317e0adb4cc7d2d619843d24f83",
+    "src-tauri/src/lib.rs": "9a724de51a9d34c2378c8d2e93886c80d35cab4e7a6277c36a58e074a195ba17",
+    "src-tauri/src/file_delivery/text_inspection.rs": "1975175d20a83e9d55352d58f846bd20d67a527e4478d5f07a6511a604946342",
+    "src-tauri/src/file_delivery/text_inspection_tests.rs": "7c41b75d9c8ed044aee85b5563d94c3641f4bebe989daa6dfb9d6a51a0970550"
+  },
+  "runnerSha256": "f563efc36627c9d1a70bf1fa41032019fffbc574db4fb304466339c65fc7c2c6"
+}

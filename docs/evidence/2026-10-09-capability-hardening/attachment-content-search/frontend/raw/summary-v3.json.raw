@@ -1,0 +1,45 @@
+{
+  "completedAtUtc": "2026-10-13T15:04:44.159714+00:00",
+  "scope": "Append-only copy clarification; previous published summary/publication/receipts are unchanged.",
+  "finalSource": {
+    "path": "output/2026-10-13-attachment-search-frontend/source-freeze-v3.json",
+    "bytes": 4476,
+    "sha256": "5a951633c1835060e17299608ada860a2b6aa34f970f1354f947f0c6c0e2c9c9"
+  },
+  "deltaFromV2": {
+    "onlyFile": "src/runtime/attachment_search_strings.ts",
+    "old": "附件或搜索范围已变化，请重新选择并查找。",
+    "new": "本次结果已失效，请重新选择并查找。",
+    "why": "A failed revision read may be unreadable/unknown; only the precise alert names changed/unreadable. Generic invalidated-result status no longer asserts a known source change.",
+    "exactOneStringDeltaVerified": true,
+    "noLogicTestsOrFixtureChanges": true
+  },
+  "check": {
+    "command": "corepack pnpm exec vitest run src/runtime/strings.test.ts",
+    "files": 1,
+    "passed": 2,
+    "actualExitCode": 0,
+    "stdout": {
+      "path": "output/2026-10-13-attachment-search-frontend/strings-stale-copy-v3.txt",
+      "bytes": 209,
+      "sha256": "2110f8fc5dd89817a0beaa8108e797b54a5320ecc16841afc5bd1d2fbd89fbd0"
+    },
+    "originalCompletion": {
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/strings-stale-copy-v3.raw.jsonl",
+      "bytes": 894,
+      "sha256": "54ddf44806caf9b34820fa6164bb90d314fa6d2aa2d7a716ec883e547142357a",
+      "sourceThreadId": "01a13410-a021-7660-b316-4a5e2c3de35f",
+      "sourceLine": 3472,
+      "originalTimestampUtc": "2026-10-13T15:03:41.416Z",
+      "actualExitCode": 0,
+      "provenance": "Exact original item_completed JSONL bytes from own transcript. No rerun/reconstruction."
+    }
+  },
+  "earlierScope": "68 targeted tests, typecheck and both full App55 checks remain exact v1 scope. v2/v3 only change two public messages. No full browser, build, install or real Agent request repeated. The frozen v1 browser harness checks its original stale text and is archived with that scope.",
+  "sourceFrozen": true,
+  "ownedServerStopped": {
+    "path": "output/2026-10-13-attachment-search-frontend/browser/server-stopped-v2.json",
+    "bytes": 552,
+    "sha256": "885348155bd7f84818723fe2dd1310567c71a46615b3f2e9787471219110ac99"
+  }
+}

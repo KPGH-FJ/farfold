@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "phase": "regression",
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "browser_sharing",
+    "--",
+    "--nocapture"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T14:24:07.343013+00:00",
+  "sourceSha256Before": "c3916e3de372d7fad516fbcf32c5efb2cb3c70c992de5465528edddcb15d6ddb",
+  "runnerSha256": "3c5c48a60c8b64aa6c30a4702e4deed44323e7fc4ace563cf80551c5fc49c3ae",
+  "scopeSha256": "b0ca9ecdbb7ea9c32a9658d7a351615ab94b3ade932166df8fe770e0fcc818b7"
+}

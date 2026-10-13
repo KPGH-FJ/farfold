@@ -1,0 +1,214 @@
+{
+  "schema": 1,
+  "atUtc": "2026-10-13T15:11:49.390946+00:00",
+  "result": "localizedWithoutAcceptingDifferences",
+  "actualStrictExitCode": 2,
+  "baseline": "Prior audio post-cold snapshot; earlier two install-baseline differences remain unaccepted.",
+  "originalComparisonPreserved": true,
+  "acceptedDifferences": [],
+  "differenceCount": 2,
+  "tables": {
+    "agents": {
+      "rowCount": 40,
+      "wholeRowsUnchanged": 39
+    },
+    "dismissed_sessions": {
+      "rowCount": 171,
+      "wholeRowsUnchanged": 171
+    },
+    "sessions": {
+      "rowCount": 135,
+      "wholeRowsUnchanged": 135
+    },
+    "settings": {
+      "rowCount": 53,
+      "wholeRowsUnchanged": 52
+    }
+  },
+  "differences": [
+    {
+      "table": "agents",
+      "rowKeySha256": "08f6b585592467d20717e8abd8dd02b9fb430ba65eb4b745c373ce3001ef5dae",
+      "changedFields": [
+        "updated_at"
+      ]
+    },
+    {
+      "table": "settings",
+      "rowKeySha256": "0ca5ab37ef0c73593f6d671e42c6089ce519b8c0e4c479fad075b3301b95a188",
+      "changedFields": [
+        "value"
+      ]
+    }
+  ],
+  "schemaAndVersionEqual": true,
+  "draft": {
+    "composerCount": 10,
+    "changedComposers": 1,
+    "otherNineComposersExact": true,
+    "allOtherUnsentWorkFieldsExact": true,
+    "onlyDraftDelta": "One approved PDF documentText attachment appended",
+    "markerBytes": 33,
+    "markerSha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf",
+    "markerUnchanged": true,
+    "sendPendingStayedFalse": true,
+    "entirePriorAudioAttachmentExact": true,
+    "audioCompleteBytes": 140,
+    "audioCompleteSha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b",
+    "audioAllSevenSourceFieldsExact": true,
+    "audioSourceObjectSha256": "755d27a8243827ad7b69996748ad50192adda134dbd2234c25dff87375b162d9",
+    "audioEncodingPresent": false,
+    "finalAttachmentCount": 2,
+    "encryptedNegativeAttachmentAbsent": true
+  },
+  "pdf": {
+    "completeSourceBytes": 2554,
+    "completeSourceSha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f",
+    "sourceAllSevenFieldsVerified": true,
+    "sourceVersionIndependentlyRecomputedFromSyntheticFileStat": true,
+    "sourceObjectSha256": "f14331e87ed5802629dcac4322d3af0aaf48f794c3e252ea3ef0beed255b557f",
+    "sourceUriSha256": "3ebb10ac741ed1bd99376c56a76147021142ff9fbe8af06c7c92282477921cbe",
+    "completeSavedRepresentationBytes": 1311,
+    "completeSavedRepresentationSha256": "11b45fe9a1365b8f7995d30590b47b24b8d8b3cf8f24c5b481bb0dd8dd484a5e",
+    "exactPriorControlledWholeTextAndAllPageItems": true,
+    "pageNumbers": [
+      1,
+      2,
+      3
+    ],
+    "decodedRotations": [
+      0,
+      90,
+      0
+    ],
+    "pageItemCounts": [
+      7,
+      2,
+      1
+    ],
+    "partial": true,
+    "partialSelected": true,
+    "scope": {
+      "mode": "decoded-page-text",
+      "includePossiblyInvisibleText": true,
+      "pageCount": 3,
+      "readPageNumbers": [
+        1,
+        2,
+        3
+      ],
+      "extraction": "pdfjs-text-content-v1"
+    },
+    "warningCodes": [
+      "decodedTextOnly",
+      "visibilityUnverified",
+      "readingOrderUnverified",
+      "textDecodingUnverified"
+    ],
+    "independentAuthoringOracle": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/independent-oracle.json.raw",
+      "bytes": 7595,
+      "sha256": "121e894057c059f10f63af8fa560af3f11c232c6c20f5dc74d564c80a7be22a6"
+    },
+    "authoringTokenChecks": [
+      {
+        "tokenSha256": "3a69ce0bff53da30c21ab7fb65a9f563491910b9eed2e6e3f32e03aeb1e93785",
+        "page": 1,
+        "present": true,
+        "absencePermittedByIndependentOracle": false
+      },
+      {
+        "tokenSha256": "e540133d58fdf093972ae6835524d167f20c03115d7e79e370eb82bc6741eaac",
+        "page": 1,
+        "present": true,
+        "absencePermittedByIndependentOracle": false
+      },
+      {
+        "tokenSha256": "4913e8cb117a46df599735de395572c1ffd19812c399be171d2f368ada347f85",
+        "page": 1,
+        "present": true,
+        "absencePermittedByIndependentOracle": false
+      },
+      {
+        "tokenSha256": "33b70060fe9788cb51a88f6f8d2100fdf514e777e835da0ccef11f126fde52ef",
+        "page": 1,
+        "present": true,
+        "absencePermittedByIndependentOracle": false
+      },
+      {
+        "tokenSha256": "f10d863dbd21d18ce863f7a436928826faaa92cb247c1d56bdb541a6430cfc8d",
+        "page": 1,
+        "present": true,
+        "absencePermittedByIndependentOracle": false
+      },
+      {
+        "tokenSha256": "37beb62fa96366febf0a894a8e4a088d97a7a1ffe76a149d1769c5ff56e5b173",
+        "page": 1,
+        "present": false,
+        "absencePermittedByIndependentOracle": true
+      },
+      {
+        "tokenSha256": "7bbdf94d48980bc5ec85c2ebc6912bedfe43f5557f3eb9a872d373718e705fca",
+        "page": 1,
+        "present": true,
+        "absencePermittedByIndependentOracle": false
+      },
+      {
+        "tokenSha256": "1b38e795cb431264b7ac2fc2340d70bf837b414bbe26adaee4f18afd2e33ce76",
+        "page": 2,
+        "present": true,
+        "absencePermittedByIndependentOracle": false
+      },
+      {
+        "tokenSha256": "53d26fa6dc9cd21e09ec24d01765fe3c105e69d44c780cc9002c97249639c0db",
+        "page": 2,
+        "present": true,
+        "absencePermittedByIndependentOracle": false
+      },
+      {
+        "tokenSha256": "1e335f29bedcc8acbc978ab7f7bae800587a1a0f9f950d08c6476c5cb84375cf",
+        "page": 3,
+        "present": true,
+        "absencePermittedByIndependentOracle": false
+      }
+    ],
+    "controlledWholeTextReference": {
+      "path": "output/2026-10-13-pdf-input-independent/webkit-run04.json",
+      "bytes": 259423,
+      "sha256": "e0fd0c770859298eac88507e8aa79af8a7717d735c4c67175a1962815bd8b3da"
+    },
+    "scopeLimits": [
+      "No complete visible-layout/reading-order/encoding accuracy claim",
+      "No all-stored-strings claim; crop-out omission permitted",
+      "No OCR, real Agent delivery or understanding proof"
+    ]
+  },
+  "unknown": [
+    "Exact writer responsible for the single Agent updated_at change remains unproven"
+  ],
+  "readScope": "Only this phase immutable baseline-second-copy and new consolidated snapshot opened with SQLite; no live/original/first capture DB opened.",
+  "snapshotsStableAfterRead": true,
+  "privateTextOrAccountValuesIncluded": false,
+  "evidence": [
+    {
+      "path": "output/2026-10-13-pdf-at-route-data/execution.json",
+      "bytes": 1260,
+      "sha256": "b7c1a8089c53fe9217bebdb7a691dd8fc16a2eed18593d67bb309e980fbeb988"
+    },
+    {
+      "path": "output/2026-10-13-pdf-at-route-data/capture-receipt-private.json",
+      "bytes": 10304,
+      "sha256": "1494a30fff2d02749e9648e5b42f18c66b67a2bb87f9058672cf30e8ef7ca3c4"
+    },
+    {
+      "path": "output/2026-10-13-pdf-at-route-data/comparison-private.json",
+      "bytes": 4974,
+      "sha256": "d9b0387d175c24c6cc21df487a9b7d15db1f56eef71338922fb1a546e5c6292d"
+    },
+    {
+      "path": "output/2026-10-13-pdf-at-route-data/final-verification-private.json",
+      "bytes": 792,
+      "sha256": "f5ff866e0d6a886084f88ece3cb49d190dce5b87993a915aecc981eade64da5f"
+    }
+  ]
+}

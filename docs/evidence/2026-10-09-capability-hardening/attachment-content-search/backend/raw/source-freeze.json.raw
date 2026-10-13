@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "frozenAtUtc": "2026-10-13T14:43:22.522244+00:00",
+  "scope": "P32 bounded current-file text inspection and content revision only",
+  "sources": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17692,
+      "sha256": "df315d1729b42b6d842e1d4335d3571090c74f5e9593fa77805c5e8c9c06ac32",
+      "lines": 508
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 19312,
+      "sha256": "1952a744e427287073abfc4e074a9c3029e1e317e0adb4cc7d2d619843d24f83",
+      "lines": 543
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21587,
+      "sha256": "9a724de51a9d34c2378c8d2e93886c80d35cab4e7a6277c36a58e074a195ba17",
+      "lines": 468
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "bytes": 1345,
+      "sha256": "e247aa6bb04b56e3ac91f7d12be2b66047b7a94ae255411e4de744c993060b55",
+      "lines": 38
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection_tests.rs",
+      "bytes": 4946,
+      "sha256": "26ef222d44b4a50152b8686ca965cdb16493293f9067455370237247ae711656",
+      "lines": 146
+    }
+  ],
+  "protectedUnchanged": [
+    {
+      "path": "src-tauri/src/file_delivery/revision.rs",
+      "bytes": 3512,
+      "sha256": "6e8011cb8888e381a33ff092088efc030a5aa003c9150dedece358e4727b6830"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/stream.rs",
+      "bytes": 2149,
+      "sha256": "bbf7ff3573aa4ad1ba42cdb017c4f7deb383b0f6f6451ad79f74c6f565e78db7"
+    },
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "bytes": 2674,
+      "sha256": "cf10e7bfbf76873e8b290cd6ea5e3e5ddac383c5f22a8924af3fa862b4a05ee2"
+    },
+    {
+      "path": "src-tauri/src/browser_sharing/protocol.rs",
+      "bytes": 21005,
+      "sha256": "c3916e3de372d7fad516fbcf32c5efb2cb3c70c992de5465528edddcb15d6ddb"
+    }
+  ],
+  "frozenProtocol": {
+    "path": "src-tauri/src/browser_sharing/protocol.rs",
+    "bytes": 21005,
+    "sha256": "c3916e3de372d7fad516fbcf32c5efb2cb3c70c992de5465528edddcb15d6ddb"
+  },
+  "inputRecords": [
+    {
+      "path": "output/2026-10-13-p32-text-backend/before.json",
+      "bytes": 1637,
+      "sha256": "36935e9400d8139e71d9cba8c82ef483f9236ca78d6fba218fd8cf7cba6f9e7b"
+    },
+    {
+      "path": "output/2026-10-13-p32-text-backend/red-sources.json",
+      "bytes": 560,
+      "sha256": "261522d86f73ea7956ba80b52a483d740de25e959799bf63204b824b0c5ad295"
+    },
+    {
+      "path": "output/2026-10-13-p32-text-backend/fixed-sources.json",
+      "bytes": 560,
+      "sha256": "11d1bd9c6192a81c18432b676cdf8517bf8a670a667cfcedf750add129be151d"
+    },
+    {
+      "path": "output/2026-10-13-p32-text-backend/v2/fixed-sources.json",
+      "bytes": 560,
+      "sha256": "8e8a93099218a8db09a7aac3a7b2964c316892bd813e702de9cd120a6f45a241"
+    }
+  ],
+  "boundary": "Owner source frozen; frontend is independently changing. These are targeted checks, not full seven checks, installed product, real Agent, or UI evidence."
+}

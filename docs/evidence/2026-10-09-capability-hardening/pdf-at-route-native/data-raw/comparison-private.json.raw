@@ -1,0 +1,123 @@
+{
+  "phase": "exactComparisonNoDifferencesAccepted",
+  "before": {
+    "schemaSha256": "c5f17339be1ec29106c215dfaf090a033ea610d595df24e9715caad607efa241",
+    "userVersion": 0,
+    "tables": {
+      "agents": {
+        "count": 40,
+        "columnsSha256": "59df5fcf12e078ccde86b81308fac85a8c5f03f456445da2477c08387bc901ac",
+        "wholeRowsSha256": "602945e7710098cb5276a649247ac4426befb9c7959478184020b3e5b42a2c0c"
+      },
+      "dismissed_sessions": {
+        "count": 171,
+        "columnsSha256": "2671ccc28c5464aa41e269e8b6dc02c6de6b785c28b839f41eed5ee8a59d7166",
+        "wholeRowsSha256": "85d6a5d94f52909d1998494eb674735f43780fc64c257e108122992c28390072"
+      },
+      "sessions": {
+        "count": 135,
+        "columnsSha256": "92eacb48b37c7621ea34ae6d2bcfa254196cd50a25b8b71b8082c79822a2415e",
+        "wholeRowsSha256": "528cc12d55c599feb0604691fb96cf1015edffea02366ec87e14659780acfa76"
+      },
+      "settings": {
+        "count": 53,
+        "columnsSha256": "4fbdc207cfceca4e82d8c650ac5082978df78422d262a76d5adb7260f478df87",
+        "wholeRowsSha256": "f1fc82f1b21876802c6473c24f36b836b45ba27b16b26731464afbc5256ddaf0"
+      }
+    }
+  },
+  "after": {
+    "schemaSha256": "c5f17339be1ec29106c215dfaf090a033ea610d595df24e9715caad607efa241",
+    "userVersion": 0,
+    "tables": {
+      "agents": {
+        "count": 40,
+        "columnsSha256": "59df5fcf12e078ccde86b81308fac85a8c5f03f456445da2477c08387bc901ac",
+        "wholeRowsSha256": "00f3c61d4cb6a23320531f6f78e127761a3ce9f814f8fc5b6c67e9e020e6bea9"
+      },
+      "dismissed_sessions": {
+        "count": 171,
+        "columnsSha256": "2671ccc28c5464aa41e269e8b6dc02c6de6b785c28b839f41eed5ee8a59d7166",
+        "wholeRowsSha256": "85d6a5d94f52909d1998494eb674735f43780fc64c257e108122992c28390072"
+      },
+      "sessions": {
+        "count": 135,
+        "columnsSha256": "92eacb48b37c7621ea34ae6d2bcfa254196cd50a25b8b71b8082c79822a2415e",
+        "wholeRowsSha256": "528cc12d55c599feb0604691fb96cf1015edffea02366ec87e14659780acfa76"
+      },
+      "settings": {
+        "count": 53,
+        "columnsSha256": "4fbdc207cfceca4e82d8c650ac5082978df78422d262a76d5adb7260f478df87",
+        "wholeRowsSha256": "69a3b9f95996c3e9219647217ea9a5980cd4fa8a3c94c81a35071c108771c78b"
+      }
+    }
+  },
+  "tables": {
+    "agents": {
+      "beforeCount": 40,
+      "afterCount": 40,
+      "oldWholeRowsUnchanged": 39
+    },
+    "dismissed_sessions": {
+      "beforeCount": 171,
+      "afterCount": 171,
+      "oldWholeRowsUnchanged": 171
+    },
+    "sessions": {
+      "beforeCount": 135,
+      "afterCount": 135,
+      "oldWholeRowsUnchanged": 135
+    },
+    "settings": {
+      "beforeCount": 53,
+      "afterCount": 53,
+      "oldWholeRowsUnchanged": 52
+    }
+  },
+  "differences": [
+    {
+      "table": "agents",
+      "rowKeySha256": "08f6b585592467d20717e8abd8dd02b9fb430ba65eb4b745c373ce3001ef5dae",
+      "beforeSha256": "0c8d384363b355eb86b8a1e35f53361282493d3ad8df930424c439d2e03e5b2c",
+      "afterSha256": "6abc054c780c32cc9bfc92d4a6dc4379ddfd74a51088e93276e36f31cfaf03be",
+      "kind": "changedOldRow",
+      "columns": [
+        {
+          "column": "updated_at",
+          "beforeSha256": "899a0ecc64739ba529ccefcec1a45fe8695b653e5b1cd36cd00a9d4039064be0",
+          "afterSha256": "3a3c004340df4d964c893b4fca04e6e5633abdb01174fed8fcb57ad838e678a7"
+        }
+      ]
+    },
+    {
+      "table": "settings",
+      "rowKeySha256": "0ca5ab37ef0c73593f6d671e42c6089ce519b8c0e4c479fad075b3301b95a188",
+      "beforeSha256": "f5d7a097770edfeddc30d9cc5ab53c18bcdab8d938510944673a5b1adcaeacb8",
+      "afterSha256": "9a801e8c325d84810a4bd568f8adb4addb1e6a93bb29d381c686bcb2261fffe2",
+      "kind": "changedOldRow",
+      "columns": [
+        {
+          "column": "value",
+          "beforeSha256": "82f57a06401447946e35848192ec908c41bed94d2dc192587460b8eb37ed458d",
+          "afterSha256": "280a0d719d5edc800dd2eece3fd12b4bafccb560162cfcfc9c1c0bffdeb58366",
+          "jsonFieldChanges": [
+            {
+              "pathSha256": "1a7a709c2486f9345f06f6b783c42ecba92c5695b2d12f72611583716c992338",
+              "beforeSha256": null,
+              "afterSha256": "d4900088fb57e4582cd92f874c31357e9c8a57f61d6e9fca1ef4fdf349347f24",
+              "kind": "new"
+            }
+          ],
+          "rawChangedButDecodedEqual": false,
+          "category": "draftsFeedbackQueuesActivityChoice"
+        }
+      ]
+    }
+  ],
+  "newPdfDraftCandidates": [],
+  "acceptedDifferences": [],
+  "result": "differencesRequireReview",
+  "boundary": "All raw SQLite fields compared without normalization. JSON leaf hashes are diagnostic only; raw serialization differences remain differences. New PDF drafts are unaccepted candidates. No old session, dismissed row, Agent, timestamp, settings, draft, queue, feedback, worktree or choice exemption. Hashes/counts only; no private text emitted.",
+  "sourceCommit": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+  "checkedAtUtc": "2026-10-13T15:04:18.679813+00:00"
+}

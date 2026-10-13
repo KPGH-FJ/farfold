@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-13T14:56:21.731196+00:00",
+  "pid": 67697,
+  "port": 1537,
+  "psExit": 1,
+  "psStdout": "",
+  "lsofExit": 1,
+  "lsofStdout": "",
+  "bindAvailable": true,
+  "unrelatedProcessSignaled": false,
+  "observedToolExecExitCode": 143,
+  "termination": "SIGTERM after exact owner PID/command/listener verification",
+  "nodeNaturalExitIndependentlyProved": false,
+  "correction": "The earlier manual server-stopped.json had assumed natural exit0 before inspecting the exec result. It is superseded; original retained, not evidence of exit0."
+}

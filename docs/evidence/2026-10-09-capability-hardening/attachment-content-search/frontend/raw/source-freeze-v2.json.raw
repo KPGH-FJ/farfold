@@ -1,0 +1,107 @@
+{
+  "frozenAtUtc": "2026-10-13T14:58:22.345180+00:00",
+  "scope": "P32 explicit selected current local UTF8 text attachment search only; no native App/real Agent",
+  "head": "43919180ce7a129e6881dfa86c8e45ab13eae27d",
+  "ownedFiles": [
+    {
+      "path": "src/App.tsx",
+      "bytes": 46830,
+      "sha256": "c707515f5d2ff7c2ddf7efd2a4e5e8fca161f9dee9ed1bbf515c6a9dedd7f4cd"
+    },
+    {
+      "path": "src/App.attachment-search.test.tsx",
+      "bytes": 3292,
+      "sha256": "507b90ed9cf9fb6877ca78740b33f2b256af2ca7dc571852c5a874ed18513ad1"
+    },
+    {
+      "path": "src/components/ConversationLibrary.tsx",
+      "bytes": 45221,
+      "sha256": "9e62d5b829b559e4b9825b259cd5acd987540a06c64eee40367b963d95b4cef1"
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "bytes": 20143,
+      "sha256": "1fe8fc548f1f45b764219f77ef2e84edbb7b9bdaba78df0440b9c486b1909a8c"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 8976,
+      "sha256": "e6216000b6cd2416a72c5a595a7ecf0a1e175e9a0b95de1954fcce320d60398f"
+    },
+    {
+      "path": "src/components/AttachmentSearchJump.tsx",
+      "bytes": 3868,
+      "sha256": "35d79b6a8ad60b3c6e5bac302160388878f5f1b22b6ed1199a480cab774940e8"
+    },
+    {
+      "path": "src/components/AttachmentSearchJump.test.tsx",
+      "bytes": 3623,
+      "sha256": "f954d7f5d1d99d97fab0e198a26d519e23fc506cdc1e782f56cf4412c885edc7"
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 3919,
+      "sha256": "0fd94a62fbefc7d89af3167c3d2167232bf34640e6f68a41f18e919e4df683e7"
+    },
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 13415,
+      "sha256": "d032aba60a214b8565b9450eb237de27773d31656b55afff447905337b9f09d0"
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 3669,
+      "sha256": "ef6e459b9c36f459e60c049b45f3c133cd077e014d5765c6e20666189f3c58db"
+    },
+    {
+      "path": "src/runtime/attachment_search.test-support.ts",
+      "bytes": 2187,
+      "sha256": "9f532b55b6e398b07768433c6d16346993c1a32988d3c9209f8b875404dd208f"
+    },
+    {
+      "path": "src/runtime/attachment_search.test.ts",
+      "bytes": 14703,
+      "sha256": "b9166a9c0b246850be42d8971010615ddd83a20d9bc9b8da7620994d698fa9f7"
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "bytes": 7154,
+      "sha256": "0326cb1d2abd3613c5585a5cce2925a9051eca6a57b2829cb3f943c9447946bb"
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/fixture.tsx",
+      "bytes": 7097,
+      "sha256": "c350ae71e33f6a37d433e8a9e22deef4296c2f164a5416ddcf0a3c3d57db2033"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/index.html",
+      "bytes": 760,
+      "sha256": "1bb222cae7375ebef4aa165ff444c3596e57b14db7a2dfb49f422c9edab9530f"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/serve.mjs",
+      "bytes": 622,
+      "sha256": "c9a1958f379945e027f7be9f6385782b4b616712197927f378b77dc9e078c00f"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/run.mjs",
+      "bytes": 14145,
+      "sha256": "231cc6ca1500fd91af39d1db93e9f81a314cd5220136d77a50b6863439c83bb4"
+    }
+  ],
+  "maximumOwnedSourceLines": 1336,
+  "sourceWillRemainUnchanged": true,
+  "deltaFromV1": {
+    "changes": [
+      {
+        "path": "src/runtime/attachment_search_strings.ts",
+        "before": "ea0c4e0e217e526865bf49ad67a4db8e1361e87b5b01c879d6ee4ba4c5a4f192",
+        "after": "ef6e459b9c36f459e60c049b45f3c133cd077e014d5765c6e20666189f3c58db"
+      }
+    ],
+    "onlyChange": "Budget row now says bytes were not used for search, rather than falsely saying no body bytes were read. Bounded inspection may already hash the full selected file. No logic/test/fixture changes.",
+    "v1ValidationRetained": "Targeted68 and both browsers55 are v1; v2 is copy-only, separate strings check. No full-engine rerun."
+  }
+}

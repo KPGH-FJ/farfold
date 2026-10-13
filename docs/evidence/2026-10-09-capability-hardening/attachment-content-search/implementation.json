@@ -1,0 +1,177 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T15:08:23.205703+00:00",
+  "baseCommit": "43919180ce7a129e6881dfa86c8e45ab13eae27d",
+  "phase": "INDEPENDENT_SOURCE_AND_CONTROLLED_CHECKS_COMPLETE_BEFORE_SEVEN",
+  "change": "Common conversation-library scope searches explicitly selected current local files declared by loaded user/reply attachments. Pure candidate enumeration; explicit Start authorizes full bounded UTF8-byte inspection/read/revision. Temporary excerpts and genuine source-attachment navigation; no persistent body index or Agent request.",
+  "sources": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17692,
+      "sha256": "df315d1729b42b6d842e1d4335d3571090c74f5e9593fa77805c5e8c9c06ac32",
+      "lines": 508
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 19312,
+      "sha256": "1952a744e427287073abfc4e074a9c3029e1e317e0adb4cc7d2d619843d24f83",
+      "lines": 543
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21587,
+      "sha256": "9a724de51a9d34c2378c8d2e93886c80d35cab4e7a6277c36a58e074a195ba17",
+      "lines": 468
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "bytes": 1345,
+      "sha256": "e247aa6bb04b56e3ac91f7d12be2b66047b7a94ae255411e4de744c993060b55",
+      "lines": 38
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection_tests.rs",
+      "bytes": 4946,
+      "sha256": "26ef222d44b4a50152b8686ca965cdb16493293f9067455370237247ae711656",
+      "lines": 146
+    },
+    {
+      "path": "src/App.tsx",
+      "bytes": 46830,
+      "sha256": "c707515f5d2ff7c2ddf7efd2a4e5e8fca161f9dee9ed1bbf515c6a9dedd7f4cd"
+    },
+    {
+      "path": "src/App.attachment-search.test.tsx",
+      "bytes": 3292,
+      "sha256": "507b90ed9cf9fb6877ca78740b33f2b256af2ca7dc571852c5a874ed18513ad1"
+    },
+    {
+      "path": "src/components/ConversationLibrary.tsx",
+      "bytes": 45221,
+      "sha256": "9e62d5b829b559e4b9825b259cd5acd987540a06c64eee40367b963d95b4cef1"
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "bytes": 20143,
+      "sha256": "1fe8fc548f1f45b764219f77ef2e84edbb7b9bdaba78df0440b9c486b1909a8c"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 8976,
+      "sha256": "e6216000b6cd2416a72c5a595a7ecf0a1e175e9a0b95de1954fcce320d60398f"
+    },
+    {
+      "path": "src/components/AttachmentSearchJump.tsx",
+      "bytes": 3868,
+      "sha256": "35d79b6a8ad60b3c6e5bac302160388878f5f1b22b6ed1199a480cab774940e8"
+    },
+    {
+      "path": "src/components/AttachmentSearchJump.test.tsx",
+      "bytes": 3623,
+      "sha256": "f954d7f5d1d99d97fab0e198a26d519e23fc506cdc1e782f56cf4412c885edc7"
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 3919,
+      "sha256": "0fd94a62fbefc7d89af3167c3d2167232bf34640e6f68a41f18e919e4df683e7"
+    },
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 13415,
+      "sha256": "d032aba60a214b8565b9450eb237de27773d31656b55afff447905337b9f09d0"
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 3660,
+      "sha256": "2ad526d89b4be133bf4c3683576e7ff56ba101dc9087dbc3a40c143e7dae3832"
+    },
+    {
+      "path": "src/runtime/attachment_search.test-support.ts",
+      "bytes": 2187,
+      "sha256": "9f532b55b6e398b07768433c6d16346993c1a32988d3c9209f8b875404dd208f"
+    },
+    {
+      "path": "src/runtime/attachment_search.test.ts",
+      "bytes": 14703,
+      "sha256": "b9166a9c0b246850be42d8971010615ddd83a20d9bc9b8da7620994d698fa9f7"
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "bytes": 7154,
+      "sha256": "0326cb1d2abd3613c5585a5cce2925a9051eca6a57b2829cb3f943c9447946bb"
+    }
+  ],
+  "limits": {
+    "selectedFiles": 20,
+    "fileBytes": 1048576,
+    "searchableBodyBytes": 16777216,
+    "concurrentNativeReadPool": 2,
+    "displayedMatches": 200,
+    "queryUtf8Bytes": 256,
+    "ioBoundary": "16MiB is searchable body total, not cumulative file reads. Inspection/read/revision can read bytes repeatedly; growth has one overflow sentinel byte.",
+    "formatBoundary": "Complete valid UTF8 without NUL; literal source text only, not document/image/audio extraction or format-semantic search. ASCII PDF raw syntax may match; no file-extension-only classification."
+  },
+  "ownership": "Source/thread/index agent,cwd,native identity and query/scope/selection checked across awaits; seven file receipt fields and exact text byte SHA checked. Cancel retires results/admission but does not claim real OS cancellation. Explicit fresh retry is limited by the unchanged native semaphore, with previous pending state disclosed.",
+  "repairsFromReview": [
+    "Forged candidate and fixed backend error classification rejected accurately.",
+    "Native1MiB bound applied before hashing and to growing-file capture.",
+    "Pending state permits explicit fresh start without automatic retry or pool bypass.",
+    "Same-key index identity drift retires selection, equivalent refresh retained.",
+    "Changed/unreadable navigation removes stale excerpts; late navigation does not recover/load a conversation.",
+    "Old result location and error cleared when leaving/switching scope.",
+    "Second-frame genuine DOM source rechecked and folded attachment revealed.",
+    "Budget and stale copy describe actual searchable/invalidated scope."
+  ],
+  "actualChecks": {
+    "backendFinal": {
+      "new": 6,
+      "fileDeliveryPassed": 97,
+      "fileDeliveryIgnored": 1,
+      "sharedReadPool": 5,
+      "exitCodes": 0
+    },
+    "frontendV1": {
+      "targeted": 68,
+      "targetedFiles": 6,
+      "typecheckExit": 0,
+      "chromiumFullApp": 55,
+      "webkitFullApp": 55,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "exits": 0
+    },
+    "frontendV2V3": "Only2 copy lines changed after v1 browser run, each supplemented with strings2 actual0; scoped format0. Full final source check pending.",
+    "p27Separate": "Direct unavailable screenshot rejection has its own2 targeted and58 regression source receipt; actual screenshots remain missing."
+  },
+  "publications": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/publication.json",
+      "sha256": "7b08b9ea56ead7d728598f408af0cb58e835a746750dd7067541d134ec91188f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/publication.json",
+      "sha256": "8cdd9e6d5eccce48b6b7b681d592245ba9dd8f4cba6f52d865f717300d1e0cf1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/independent/publication.json",
+      "sha256": "7f0932050212fc7911ccc2eed4fce3492f3ef4b1a46b68aaa3c9a46b2a7ead9a"
+    }
+  ],
+  "rootReview": {
+    "path": "output/2026-10-13-attachment-search-integration/root-ui-source-review.json",
+    "scope": "Root UI/source review and two controlled screenshot visual checks; v3 adds only neutral stale wording."
+  },
+  "formalApplicationStill": "36c56a827 audio source, independently exercised PDF @ route in a separate native record; new attachment-search source not installed.",
+  "remaining": [
+    "Combined final-source seven engineering checks",
+    "Source commit and fresh candidate/install/native attachment-search evidence",
+    "P32 unloaded attachment discovery, document formats, other official histories, exact historical bytes, real Agent and Windows coverage",
+    "P27 production screenshot/protected-input/closed-content requirements"
+  ],
+  "scopeNotComplete": [
+    "P32",
+    "P27",
+    "122 original items",
+    "29 Agents x8 standards"
+  ]
+}

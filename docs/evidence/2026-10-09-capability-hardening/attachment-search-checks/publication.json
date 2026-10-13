@@ -1,0 +1,439 @@
+{
+  "schema": 1,
+  "publishedAtUtc": "2026-10-13T15:27:28.601797+00:00",
+  "files": [
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/summary.json",
+        "bytes": 6314,
+        "sha256": "61d677491bb52e5ffc5da1d1b972ba38675f77f6d0e7fba040fd58f64b849037"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/summary.json.raw",
+        "bytes": 6314,
+        "sha256": "61d677491bb52e5ffc5da1d1b972ba38675f77f6d0e7fba040fd58f64b849037"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/inputs-before.json",
+        "bytes": 205246,
+        "sha256": "e076ab700e2d9b96bc7e958846ec63f2303f110e956a1921a03ddb69d825b62d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/inputs-before.json.raw",
+        "bytes": 205246,
+        "sha256": "e076ab700e2d9b96bc7e958846ec63f2303f110e956a1921a03ddb69d825b62d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/inputs-after.json",
+        "bytes": 205246,
+        "sha256": "e076ab700e2d9b96bc7e958846ec63f2303f110e956a1921a03ddb69d825b62d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/inputs-after.json.raw",
+        "bytes": 205246,
+        "sha256": "e076ab700e2d9b96bc7e958846ec63f2303f110e956a1921a03ddb69d825b62d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/protected-before.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/protected-before.json.raw",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/protected-after.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/protected-after.json.raw",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/preflight.json",
+        "bytes": 270,
+        "sha256": "b88440354c49df0a470c27aeaf84e8781859d157fb785cce796e720947afdedc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/preflight.json.raw",
+        "bytes": 270,
+        "sha256": "b88440354c49df0a470c27aeaf84e8781859d157fb785cce796e720947afdedc"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/events.jsonl",
+        "bytes": 2218,
+        "sha256": "b75270c6e0ffc28f1ec0ee3f8cb392205b9d1b3b930845f304fc2a9b3f46137f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/events.jsonl.raw",
+        "bytes": 2218,
+        "sha256": "b75270c6e0ffc28f1ec0ee3f8cb392205b9d1b3b930845f304fc2a9b3f46137f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-freeze/freeze.json",
+        "bytes": 289594,
+        "sha256": "3143092192b9f9e0b822867dbac68dce7115a706effa68a5f53040eb03ef0320"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/freeze.json.raw",
+        "bytes": 289594,
+        "sha256": "3143092192b9f9e0b822867dbac68dce7115a706effa68a5f53040eb03ef0320"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/format-check/started.json",
+        "bytes": 288,
+        "sha256": "82b4f4bf289715f1225443345638c717d969fd84faa57399899493a3fa217402"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/format-check/started.json.raw",
+        "bytes": 288,
+        "sha256": "82b4f4bf289715f1225443345638c717d969fd84faa57399899493a3fa217402"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/format-check/completed.json",
+        "bytes": 667,
+        "sha256": "6930fba320e53d6ca270df8e01f0448f43cae7c5a768170c76a7ca5c05b3a620"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/format-check/completed.json.raw",
+        "bytes": 667,
+        "sha256": "6930fba320e53d6ca270df8e01f0448f43cae7c5a768170c76a7ca5c05b3a620"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/format-check/stdout.log",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/format-check/stdout.log.raw",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/format-check/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/typecheck/started.json",
+        "bytes": 280,
+        "sha256": "054f1e636edaf1e0f6f51ea201042835b0c5bfdfbbd01a35e61bed231599724c"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/typecheck/started.json.raw",
+        "bytes": 280,
+        "sha256": "054f1e636edaf1e0f6f51ea201042835b0c5bfdfbbd01a35e61bed231599724c"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/typecheck/completed.json",
+        "bytes": 658,
+        "sha256": "63d7f949946ca5afaa9b67fd6f8b5b55b0dc97cb0048709c70d76d987e0a12bd"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/typecheck/completed.json.raw",
+        "bytes": 658,
+        "sha256": "63d7f949946ca5afaa9b67fd6f8b5b55b0dc97cb0048709c70d76d987e0a12bd"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/typecheck/stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/typecheck/stdout.log.raw",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/typecheck/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/typecheck/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/frontend-test/started.json",
+        "bytes": 271,
+        "sha256": "486311c82867485fd5c1733d64c6a73efc0e5d0d19578c7016603d29f9d805fc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-test/started.json.raw",
+        "bytes": 271,
+        "sha256": "486311c82867485fd5c1733d64c6a73efc0e5d0d19578c7016603d29f9d805fc"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/frontend-test/completed.json",
+        "bytes": 656,
+        "sha256": "07c04b8aab41c108f8daf3c7231619ba77800d17ac46a67820d495f78c1d4cd4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-test/completed.json.raw",
+        "bytes": 656,
+        "sha256": "07c04b8aab41c108f8daf3c7231619ba77800d17ac46a67820d495f78c1d4cd4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/frontend-test/stdout.log",
+        "bytes": 289,
+        "sha256": "25dcd02552d1ca6ed82ae883fa4073e04cafdef5d495745ad95ce3539ceaf8c3"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-test/stdout.log.raw",
+        "bytes": 289,
+        "sha256": "25dcd02552d1ca6ed82ae883fa4073e04cafdef5d495745ad95ce3539ceaf8c3"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/frontend-test/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-test/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/frontend-build/started.json",
+        "bytes": 277,
+        "sha256": "d8f40b8d734a96c9c2b01e960004caa550fdcf41ae7121aa19b6fe2eff178aee"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-build/started.json.raw",
+        "bytes": 277,
+        "sha256": "d8f40b8d734a96c9c2b01e960004caa550fdcf41ae7121aa19b6fe2eff178aee"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/frontend-build/completed.json",
+        "bytes": 655,
+        "sha256": "66965a8c6ca49afc8ab005ecd87a95a4f363368d1537da38fbb6c679ba9a66d5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-build/completed.json.raw",
+        "bytes": 655,
+        "sha256": "66965a8c6ca49afc8ab005ecd87a95a4f363368d1537da38fbb6c679ba9a66d5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/frontend-build/stdout.log",
+        "bytes": 4560,
+        "sha256": "3357ab5f98b6dc4df27f69fc01b974f76ea6110b91b31b1683182d3bc7c2e68f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-build/stdout.log.raw",
+        "bytes": 4560,
+        "sha256": "3357ab5f98b6dc4df27f69fc01b974f76ea6110b91b31b1683182d3bc7c2e68f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/frontend-build/stderr.log",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-build/stderr.log.raw",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/cargo-fmt/started.json",
+        "bytes": 353,
+        "sha256": "9f1b401eb053a7030ecc3fb5b2ddb9ad9aa29b557ace3126071b38b18a1aa62d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-fmt/started.json.raw",
+        "bytes": 353,
+        "sha256": "9f1b401eb053a7030ecc3fb5b2ddb9ad9aa29b557ace3126071b38b18a1aa62d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/cargo-fmt/completed.json",
+        "bytes": 737,
+        "sha256": "fa236fec9c94fa4095807124cedafd179745676cf2828bb33c1aa69c43111f62"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-fmt/completed.json.raw",
+        "bytes": 737,
+        "sha256": "fa236fec9c94fa4095807124cedafd179745676cf2828bb33c1aa69c43111f62"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-fmt/stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-fmt/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/cargo-clippy/started.json",
+        "bytes": 416,
+        "sha256": "a15662e7c13658965d4d901439de8a2bfa7a515eb856343121b32d4a49e910f7"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-clippy/started.json.raw",
+        "bytes": 416,
+        "sha256": "a15662e7c13658965d4d901439de8a2bfa7a515eb856343121b32d4a49e910f7"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/cargo-clippy/completed.json",
+        "bytes": 800,
+        "sha256": "46052dee6444cd6f29e70713f5bcdff981765585a67f0afacef31f485becbad7"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-clippy/completed.json.raw",
+        "bytes": 800,
+        "sha256": "46052dee6444cd6f29e70713f5bcdff981765585a67f0afacef31f485becbad7"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/cargo-clippy/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-clippy/stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/cargo-clippy/stderr.log",
+        "bytes": 138,
+        "sha256": "a094b72fddc6854f115a71df4233a8b0940d74530b16a70d557d931241d6ed16"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-clippy/stderr.log.raw",
+        "bytes": 138,
+        "sha256": "a094b72fddc6854f115a71df4233a8b0940d74530b16a70d557d931241d6ed16"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/cargo-test/started.json",
+        "bytes": 360,
+        "sha256": "cc3a0aeead71f7c43600e5c2f172fe82612a2146b7191ab7a1ef45d4291e19bc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-test/started.json.raw",
+        "bytes": 360,
+        "sha256": "cc3a0aeead71f7c43600e5c2f172fe82612a2146b7191ab7a1ef45d4291e19bc"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/cargo-test/completed.json",
+        "bytes": 740,
+        "sha256": "786eee04e85ee7fe55c340f7b04645bcf25d80270bddf8333d8887aed743de9a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-test/completed.json.raw",
+        "bytes": 740,
+        "sha256": "786eee04e85ee7fe55c340f7b04645bcf25d80270bddf8333d8887aed743de9a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/cargo-test/stdout.log",
+        "bytes": 184604,
+        "sha256": "4aadaf3c3f23dc97aff79aa1ab9a32bd31c107f45d39a59f056138ca19a40801"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-test/stdout.log.raw",
+        "bytes": 184604,
+        "sha256": "4aadaf3c3f23dc97aff79aa1ab9a32bd31c107f45d39a59f056138ca19a40801"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-13-attachment-search-integration/checks-run/cargo-test/stderr.log",
+        "bytes": 671,
+        "sha256": "f19a6283a9bb13ada0dce7cfb6247e0b4c33b63a0c8eb223a2b0e7c25c28f2b4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-test/stderr.log.raw",
+        "bytes": 671,
+        "sha256": "f19a6283a9bb13ada0dce7cfb6247e0b4c33b63a0c8eb223a2b0e7c25c28f2b4"
+      }
+    }
+  ],
+  "boundary": "Engineering checks only; installed App, native document workflow, actual Agent, P08 or whole plan acceptance are separate."
+}

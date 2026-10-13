@@ -1,3 +1,4 @@
+import { ATTACHMENT_SEARCH_STRINGS } from "./attachment_search_strings";
 import { HISTORY_SEARCH_STRINGS } from "./history_search_strings";
 import { EXTENSION_INVENTORY_STRINGS } from "./extension_inventory_strings";
 import { WORKTREE_PREPARATION_STRINGS } from "./worktree_preparation_strings";
@@ -92,6 +93,7 @@ describe("strings", () => {
     {
       STRINGS,
       HISTORY_SEARCH_STRINGS,
+      ATTACHMENT_SEARCH_STRINGS,
       ASYNC_TASKS,
       WORKTREE_STRINGS,
       WORKTREE_PREPARATION_STRINGS,

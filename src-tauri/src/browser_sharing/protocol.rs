@@ -87,6 +87,14 @@ impl Protocol {
                 if !self.listed {
                     return reply(tool_error(id, "网页工具尚未准备完成"));
                 }
+                // Pixels are unavailable. Reject before page admission rather
+                // than asking permission for an operation we cannot deliver.
+                if matches!(request, ToolRequest::Observe { screenshot: true }) {
+                    return reply(tool_error(
+                        id,
+                        "当前版本暂不提供网页截图。若需要网页文字和可操作位置，请单独使用 screenshot=false 重新请求观察。",
+                    ));
+                }
                 Action::Read { id, request }
             }
             _ => reply(error(id, -32601, "Method not found")),
@@ -100,7 +108,7 @@ fn tool_list() -> Value {
     input_target["text"] = json!({"type":"string","maxLength":4096});
     json!({"tools":[
         {"name":"read_page_snapshot","description":"读取此对话当前页面的标题、地址和文字，未允许时等待用户确认。关闭、跳转或停止共享后失效。","inputSchema":empty,"annotations":{"readOnlyHint":true,"destructiveHint":false,"idempotentHint":true,"openWorldHint":true}},
-        {"name":"observe_page","description":"观察当前页面的可见文字和可操作位置。当前版本不提供页面截图，screenshot=true仍返回文字与位置并说明截图不可用。位置30秒内有效，每次操作后重新观察。","inputSchema":{"type":"object","properties":{"screenshot":{"type":"boolean","default":false}},"additionalProperties":false},"annotations":{"readOnlyHint":true,"destructiveHint":false,"idempotentHint":true,"openWorldHint":true}},
+        {"name":"observe_page","description":"观察当前页面的可见文字和可操作位置。当前版本不提供页面截图，screenshot=true直接返回不可用且不读取网页或请求许可。需要文字和位置时，请单独使用screenshot=false重新请求。位置30秒内有效，每次操作后重新观察。","inputSchema":{"type":"object","properties":{"screenshot":{"type":"boolean","default":false,"description":"当前请使用false读取文字和位置；true仅返回截图不可用，不读取网页或请求许可。"}},"additionalProperties":false},"annotations":{"readOnlyHint":true,"destructiveHint":false,"idempotentHint":true,"openWorldHint":true}},
         {"name":"click_page_node","description":"申请点击最近观察得到的位置，等待用户确认。本次许可仅用一次；结果未知时先重新观察，不自动重复。","inputSchema":{"type":"object","properties":target,"required":["observationId","nodeRef"],"additionalProperties":false},"annotations":{"readOnlyHint":false,"destructiveHint":true,"idempotentHint":false,"openWorldHint":true}},
         {"name":"input_page_node","description":"申请把文字填入最近观察得到的普通输入位置，用户确认具体内容后仅执行一次。不提交表单；密码、账号和验证码输入受保护。verification=matched仅表示回复时同一普通字段与本次获准文字一致，mismatched表示不一致，unverified或缺失表示无法安全核实；不返回字段值，observe_page也不读取字段值。dispatched只表示事件已交付，不表示网站操作成功。结果未知时不要自动重试。","inputSchema":{"type":"object","properties":input_target,"required":["observationId","nodeRef","text"],"additionalProperties":false},"annotations":{"readOnlyHint":false,"destructiveHint":true,"idempotentHint":false,"openWorldHint":true}}
     ]})
@@ -258,6 +266,85 @@ mod tests {
         assert!(protocol.mark_list_delivered());
         assert!(!protocol.mark_list_delivered());
         assert!(matches!(protocol.receive(call), Action::Read { .. }));
+    }
+    #[test]
+    fn p27_screenshot_unavailable_is_a_reply_after_handshake_and_list_delivery() {
+        let mut protocol = ready();
+        let Action::Reply { value, list } = protocol.receive(request("tools/list", json!({})))
+        else {
+            panic!("tool list should be delivered before calls");
+        };
+        assert!(list);
+        assert!(protocol.mark_list_delivered());
+        for id in [json!(42), json!("screenshot-repeat")] {
+            let Action::Reply { value, list } = protocol.receive(json!({
+                "jsonrpc":"2.0", "id":id, "method":"tools/call",
+                "params":{"name":"observe_page","arguments":{"screenshot":true},
+                    "_meta":{"progressToken":"CANARY_NOT_ECHOED"}}
+            })) else {
+                // Only Action::Read enters Worker page/permission admission.
+                panic!("unavailable screenshots must never request page admission");
+            };
+            assert!(!list);
+            assert_eq!(
+                value,
+                json!({
+                    "jsonrpc":"2.0", "id":id,
+                    "result":{"isError":true,"content":[{"type":"text",
+                        "text":"当前版本暂不提供网页截图。若需要网页文字和可操作位置，请单独使用 screenshot=false 重新请求观察。"}]}
+                })
+            );
+        }
+        let observe = &value["result"]["tools"][1];
+        assert_eq!(observe["name"], "observe_page");
+        assert!(
+            observe["description"]
+                .as_str()
+                .unwrap()
+                .contains("screenshot=false")
+        );
+        assert!(
+            observe["inputSchema"]["properties"]["screenshot"]["description"]
+                .as_str()
+                .unwrap()
+                .contains("不读取网页或请求许可")
+        );
+        assert_eq!(observe["annotations"]["readOnlyHint"], true);
+    }
+    #[test]
+    fn p27_unavailable_screenshot_preserves_text_observation_and_control_admission() {
+        let mut protocol = ready();
+        assert!(matches!(
+            protocol.receive(request("tools/list", json!({}))),
+            Action::Reply { list: true, .. }
+        ));
+        assert!(protocol.mark_list_delivered());
+        for (params, control) in [
+            (json!({"name":"read_page_snapshot"}), false),
+            (json!({"name":"observe_page"}), false),
+            (
+                json!({"name":"observe_page","arguments":{"screenshot":false}}),
+                false,
+            ),
+            (
+                json!({"name":"click_page_node","arguments":{"observationId":"o","nodeRef":"n"}}),
+                true,
+            ),
+            (
+                json!({"name":"input_page_node","arguments":{"observationId":"o","nodeRef":"n","text":"public"}}),
+                true,
+            ),
+        ] {
+            let Action::Read { id, request } = protocol.receive(request("tools/call", params))
+            else {
+                panic!("existing text/control requests must retain admission");
+            };
+            assert_eq!(id, 7);
+            assert_eq!(request.control(), control);
+            if let ToolRequest::Observe { screenshot } = request {
+                assert!(!screenshot);
+            }
+        }
     }
     #[test]
     fn standard_optional_arguments_and_progress_metadata_are_accepted_without_echo() {

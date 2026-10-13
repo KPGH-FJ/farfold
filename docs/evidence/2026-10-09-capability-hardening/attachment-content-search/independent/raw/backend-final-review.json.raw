@@ -1,0 +1,141 @@
+{
+  "schema": 1,
+  "atUtc": "2026-10-13T14:48:23.669649+00:00",
+  "result": "PASS-readonly-backend-scope",
+  "method": "Read source and existing exact original completion/stdout/stderr; hash-checked final five-source freeze, protected inputs, original receipts and publication. No cargo, tests, main, UI, DB, Agent or server execution by this reviewer.",
+  "sourceFreeze": {
+    "path": "output/2026-10-13-p32-text-backend/source-freeze.json",
+    "bytes": 2978,
+    "sha256": "11b25d6c4b765ae8c1e5d0cda9f590c512b3c28c3eddc0d311d6b0ef2be5929a"
+  },
+  "receipt": {
+    "path": "output/2026-10-13-p32-text-backend/receipt.json",
+    "sha256": "a4493c9e8fa57049cc99222f7c707afb730d7254bffde2287956d40eec662334"
+  },
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/publication.json",
+    "sha256": "7b08b9ea56ead7d728598f408af0cb58e835a746750dd7067541d134ec91188f",
+    "exactCopies": 35
+  },
+  "verifiedCurrentSources": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17692,
+      "sha256": "df315d1729b42b6d842e1d4335d3571090c74f5e9593fa77805c5e8c9c06ac32",
+      "lines": 508
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 19312,
+      "sha256": "1952a744e427287073abfc4e074a9c3029e1e317e0adb4cc7d2d619843d24f83",
+      "lines": 543
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21587,
+      "sha256": "9a724de51a9d34c2378c8d2e93886c80d35cab4e7a6277c36a58e074a195ba17",
+      "lines": 468
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "bytes": 1345,
+      "sha256": "e247aa6bb04b56e3ac91f7d12be2b66047b7a94ae255411e4de744c993060b55",
+      "lines": 38
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection_tests.rs",
+      "bytes": 4946,
+      "sha256": "26ef222d44b4a50152b8686ca965cdb16493293f9067455370237247ae711656",
+      "lines": 146
+    }
+  ],
+  "phases": [
+    {
+      "phase": "red",
+      "actualExitCode": 101,
+      "originalCompletion": {
+        "path": "output/2026-10-13-p32-text-backend/red/completed.json",
+        "bytes": 2049,
+        "sha256": "4c02c110805c1d38ca8f6faf1f683f8f93dfcb2017cd5f8abb517bd4fa7ca7f5"
+      },
+      "testResultLines": [
+        "test result: FAILED. 4 passed; 2 failed; 0 ignored; 0 measured; 1658 filtered out; finished in 0.04s"
+      ],
+      "sourceStable": true
+    },
+    {
+      "phase": "green",
+      "actualExitCode": 0,
+      "originalCompletion": {
+        "path": "output/2026-10-13-p32-text-backend/green/completed.json",
+        "bytes": 2051,
+        "sha256": "2bb148eee0084ee86e4132e2a565fe74b5a9c4b8ef020c58e50aa7392c0d2aaa"
+      },
+      "testResultLines": [
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1658 filtered out; finished in 0.04s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ],
+      "sourceStable": true
+    },
+    {
+      "phase": "v2/green",
+      "actualExitCode": 0,
+      "originalCompletion": {
+        "path": "output/2026-10-13-p32-text-backend/v2/green/completed.json",
+        "bytes": 2057,
+        "sha256": "15a4e37a7a7f54fb33f9b5ba1c8f9418d2160447b0476ca59c9834d560a37092"
+      },
+      "testResultLines": [
+        "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 1658 filtered out; finished in 0.03s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ],
+      "sourceStable": true
+    },
+    {
+      "phase": "v2/regression",
+      "actualExitCode": 0,
+      "originalCompletion": {
+        "path": "output/2026-10-13-p32-text-backend/v2/regression/completed.json",
+        "bytes": 2073,
+        "sha256": "ecd81bebf9bdcddcd4caefb0684f667e61a9825fecb9caf07ec58f11887a48d8"
+      },
+      "testResultLines": [
+        "test result: ok. 97 passed; 0 failed; 1 ignored; 0 measured; 1566 filtered out; finished in 1.19s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ],
+      "sourceStable": true
+    },
+    {
+      "phase": "v2/readpool",
+      "actualExitCode": 0,
+      "originalCompletion": {
+        "path": "output/2026-10-13-p32-text-backend/v2/readpool/completed.json",
+        "bytes": 2066,
+        "sha256": "abf919c17384104fe914a3daea1be684f2ab7ae7ef0af8abfc74f773f79217a7"
+      },
+      "testResultLines": [
+        "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1659 filtered out; finished in 0.03s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ],
+      "sourceStable": true
+    },
+    {
+      "phase": "v2/format",
+      "actualExitCode": 0,
+      "originalCompletion": {
+        "path": "output/2026-10-13-p32-text-backend/v2/format/completed.json",
+        "bytes": 2002,
+        "sha256": "d40d89e1862c7d5f25bcb55e453dfb1cc14d568c93105a0c63df61b8de03e496"
+      },
+      "testResultLines": [],
+      "sourceStable": true
+    }
+  ],
+  "staticFindings": {
+    "boundedRead": "MAX_TEXT_BYTES checked before content capture; growth reads only through MAX_TEXT_BYTES+1 sentinel before hash; no production injected test closure.",
+    "revision": "Safe root/descriptor/canonical path handling, exact body hash and final identity/path checks. Fresh receipt may differ; frontend must compare all seven expected fields.",
+    "guardAndPool": "Both new commands require trusted main webview and use existing same file_read_check as read_text. Static Semaphore(2), actual blocking closure keeps permits after timeout/drop.",
+    "compatibility": "General inspect, read_text, revision and shared pool source unchanged by this backend slice. UTF8/NUL frontend handling remains separate."
+  },
+  "remaining": "Frontend pending recovery/index-binding/stale-hit/copy issues remain under owner repair; full seven checks, installed P32, actual Agent and Windows not established by this record."
+}

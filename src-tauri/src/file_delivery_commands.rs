@@ -63,6 +63,28 @@ pub async fn file_delivery_check_revision(
 }
 
 #[tauri::command]
+pub async fn file_delivery_inspect_text(
+    webview: Webview,
+    path: String,
+) -> Result<VerifiedFile, file_delivery::RevisionFailure> {
+    require_main(&webview).map_err(|_| file_delivery::RevisionFailure { code: "unreadable" })?;
+    crate::file_read_check::run(move || Ok(file_delivery::inspect_text(Path::new(&path))))
+        .await
+        .map_err(|message| file_delivery::RevisionFailure::check(&message))?
+}
+
+#[tauri::command]
+pub async fn file_delivery_check_text_revision(
+    webview: Webview,
+    file: VerifiedFile,
+) -> Result<file_delivery::RevisionCheck, file_delivery::RevisionFailure> {
+    require_main(&webview).map_err(|_| file_delivery::RevisionFailure { code: "unreadable" })?;
+    crate::file_read_check::run(move || Ok(file_delivery::check_text_revision(&file)))
+        .await
+        .map_err(|message| file_delivery::RevisionFailure::check(&message))?
+}
+
+#[tauri::command]
 pub async fn file_delivery_read_text(
     webview: Webview,
     file: VerifiedFile,

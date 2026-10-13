@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/attachment_search.test.ts (47 tests | 1 failed | 46 skipped) 7ms
+     × retiring a failed navigation does not carry its source error into a new scope 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/attachment_search.test.ts > explicit current attachment text search > retiring a failed navigation does not carry its source error into a new scope
+AssertionError: expected 'unreadable' to be undefined
+
+- Expected:
+undefined
+
++ Received:
+"unreadable"
+
+ ❯ src/runtime/attachment_search.test.ts:375:39
+    373|     expect(h.search.snapshot().error).toBe("unreadable");
+    374|     h.search.retire();
+    375|     expect(h.search.snapshot().error).toBeUndefined();
+       |                                       ^
+    376|   });
+    377|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 46 skipped (47)
+   Start at  22:51:07
+   Duration  167ms (transform 78ms, setup 0ms, import 99ms, tests 7ms, environment 0ms)
+

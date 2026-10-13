@@ -1,0 +1,403 @@
+{
+  "reviewedAtUtc": "2026-10-13T15:12:12.786360+00:00",
+  "reviewer": "frontend_review independent read-only evidence review",
+  "result": "passed within the explicit UI and artifact-provenance scope",
+  "sourceUntouched": "P32v3 and all production/docs untouched; only this output report created.",
+  "readBoundary": {
+    "nativeUIActionsExecuted": 0,
+    "AgentRequestsExecutedByReviewer": 0,
+    "databasesOpened": 0,
+    "scope": "Only declared raw events, exact bounded transcript offsets, process/fixture/formal-app receipts, two controlled fixture copies and five formal-app file hashes. No live/original/second database inspection."
+  },
+  "inputs": [
+    {
+      "path": "output/2026-10-13-pdf-at-route-native/transcript-receipts/manifest.json",
+      "bytes": 17686,
+      "sha256": "183472ef193779894019c562df2e5c1d88a4e3673d45f6989a420c1cc3b7e89c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-at-route-native/installed-native-scoped.json",
+      "bytes": 11926,
+      "sha256": "8933a245d2c7d08ce572c3f412b62581e5857289eff8f762edc9619a5ec248bc"
+    },
+    {
+      "path": "output/2026-10-13-pdf-at-route-native/01-prelaunch-and-fixtures.json",
+      "bytes": 1134,
+      "sha256": "d342d6963485b164882b5e48c3be31558d8acf3e4844784062b428504432a5f4"
+    },
+    {
+      "path": "output/2026-10-13-pdf-at-route-native/02-first-normal-quit-process.json",
+      "bytes": 357,
+      "sha256": "b75b1c85015a2573512abb6e48458cb759869a2ccb92709f296f58412eb4ed27"
+    },
+    {
+      "path": "output/2026-10-13-pdf-at-route-native/03-final-normal-quit-process.json",
+      "bytes": 357,
+      "sha256": "da6547ed47cba2eb761f461beabe315f3f6e99e278bbdc140f3b3865a524d8d3"
+    },
+    {
+      "path": "output/2026-10-13-pdf-at-route-native/03-final-normal-quit-exec.jsonl.raw",
+      "bytes": 2504,
+      "sha256": "724ad73051eabafeb27784e0014f1802d53eb7417c1c922d9291191bde0d027c"
+    },
+    {
+      "path": "output/2026-10-13-pdf-at-route-native/04-formal-five-files.json",
+      "bytes": 916,
+      "sha256": "3d4fe902ec9d2ac36649f26dacff5ac1bff1ba430acaddfefc4dd044eea9b339"
+    }
+  ],
+  "provenance": {
+    "all31OriginalCompletedEventsByteExact": true,
+    "all31StatusCompletedAndNoToolError": true,
+    "noOmittedCUACompletedEventInDeclaredInterval": true,
+    "all31ContentTextOnly": true,
+    "public23FilesByteExact": true,
+    "publicScope": "18 selected modal/action events plus5 fixture/process/install receipts. Unrelated sidebar AX remains private.",
+    "originalEvents": [
+      {
+        "event": 1,
+        "sourceByteOffset": 14782359,
+        "bytes": 1277,
+        "sha256": "15448e4214f3910dc8ac09ccbac9e34884b439c399df869264bc7e1432348556",
+        "sourceByteExact": true
+      },
+      {
+        "event": 2,
+        "sourceByteOffset": 14786920,
+        "bytes": 5196,
+        "sha256": "060737cec85dfc8744bc4ee502f11cf95e16b07b6fbb3c61427370e5060f8b1c",
+        "sourceByteExact": true
+      },
+      {
+        "event": 3,
+        "sourceByteOffset": 14811214,
+        "bytes": 1744,
+        "sha256": "041456f554a73d0a74b2f1fe88f155fcd3199f3841d4618219f1cb2077cc8ad5",
+        "sourceByteExact": true
+      },
+      {
+        "event": 4,
+        "sourceByteOffset": 14816644,
+        "bytes": 1536,
+        "sha256": "f9d16af16bc1b9e01de725a22d77630c9044e8364d8fd61b76050630d42037bb",
+        "sourceByteExact": true
+      },
+      {
+        "event": 5,
+        "sourceByteOffset": 14821704,
+        "bytes": 3288,
+        "sha256": "6a3c8aee0078e1c54f44643bdf2384f30e2d64f7432cf5d5ac00007f2f3a20a8",
+        "sourceByteExact": true
+      },
+      {
+        "event": 6,
+        "sourceByteOffset": 14832793,
+        "bytes": 1203,
+        "sha256": "c36388da3aa91ccab2439047211b45323928d548da3e3dd90fa2e87090fb7388",
+        "sourceByteExact": true
+      },
+      {
+        "event": 7,
+        "sourceByteOffset": 14837203,
+        "bytes": 4687,
+        "sha256": "18b413ecd2d8cbc015a0aa2c3ceecb64110bf7ffcdd87a87f5e32d14d7ad40d7",
+        "sourceByteExact": true
+      },
+      {
+        "event": 8,
+        "sourceByteOffset": 14855240,
+        "bytes": 5357,
+        "sha256": "a9c377a0696c781c003209eee71b0e0e69a7182acd64a0355ba0bade143d3ae6",
+        "sourceByteExact": true
+      },
+      {
+        "event": 9,
+        "sourceByteOffset": 14870682,
+        "bytes": 3272,
+        "sha256": "3a2396f32ad3d6c0cfc09fd5b0d1c8c5a78557eee7c81f2191409d4f2a3e7a17",
+        "sourceByteExact": true
+      },
+      {
+        "event": 10,
+        "sourceByteOffset": 14879221,
+        "bytes": 1203,
+        "sha256": "90c082e1b5e0737925c706a82778914ec915dd936c22efa089ec702ab693f1ea",
+        "sourceByteExact": true
+      },
+      {
+        "event": 11,
+        "sourceByteOffset": 14883633,
+        "bytes": 4691,
+        "sha256": "767421fcfcb535274004e91e307733e8f64ca4e8470ab930a432317c9fab72ce",
+        "sourceByteExact": true
+      },
+      {
+        "event": 12,
+        "sourceByteOffset": 14894998,
+        "bytes": 1192,
+        "sha256": "749542fcb787cc69b85624446499ed281c1160812b1f5f62233f83f02a6e154f",
+        "sourceByteExact": true
+      },
+      {
+        "event": 13,
+        "sourceByteOffset": 14899385,
+        "bytes": 5493,
+        "sha256": "173cc8413ef60a6c1d699926b01cf05c1e914c028ed9c0365ddb38a5278b8ac3",
+        "sourceByteExact": true
+      },
+      {
+        "event": 14,
+        "sourceByteOffset": 14917143,
+        "bytes": 1748,
+        "sha256": "dd88cb29895a2b21e1c9b7642ebd94798ff04feeaedc2e5642c4dc067a97f558",
+        "sourceByteExact": true
+      },
+      {
+        "event": 15,
+        "sourceByteOffset": 14922580,
+        "bytes": 1535,
+        "sha256": "e36987120e5672f752cf774181e6df6a56be062d085bc1b9109b8d4b94175863",
+        "sourceByteExact": true
+      },
+      {
+        "event": 16,
+        "sourceByteOffset": 14927642,
+        "bytes": 3287,
+        "sha256": "8ac0e0a56043c205d5602974f093f589c2a73163929d45e7aa4ce18a3d053659",
+        "sourceByteExact": true
+      },
+      {
+        "event": 17,
+        "sourceByteOffset": 14936215,
+        "bytes": 1212,
+        "sha256": "6a1a352e057393645d648a1d2c1721e81047258754d9089a7f7cf5464576123e",
+        "sourceByteExact": true
+      },
+      {
+        "event": 18,
+        "sourceByteOffset": 14940637,
+        "bytes": 1208,
+        "sha256": "59efa0efac2025c77cd812326a699cb74e58a94b675ade6272cc6092a65cb21c",
+        "sourceByteExact": true
+      },
+      {
+        "event": 19,
+        "sourceByteOffset": 14945040,
+        "bytes": 5568,
+        "sha256": "5d1b26a5526491f526a30732a6467a91470741c5ad905fb4bc2cdd6732439fe0",
+        "sourceByteExact": true
+      },
+      {
+        "event": 20,
+        "sourceByteOffset": 14962094,
+        "bytes": 1208,
+        "sha256": "005ac8c83affb5a63d6ffae107cf3f3be2717e7250790a412125be099b483ca0",
+        "sourceByteExact": true
+      },
+      {
+        "event": 21,
+        "sourceByteOffset": 14966538,
+        "bytes": 1186,
+        "sha256": "f867436e842c14fcd4c6d6610fbd10c84e5e2e67b994cf7bbb7bbfd615c0d235",
+        "sourceByteExact": true
+      },
+      {
+        "event": 22,
+        "sourceByteOffset": 14978095,
+        "bytes": 1668,
+        "sha256": "bee9bb390e1bfa95e17285de5410401de867dac6e164e88c5630a62b81403472",
+        "sourceByteExact": true
+      },
+      {
+        "event": 23,
+        "sourceByteOffset": 14982480,
+        "bytes": 815,
+        "sha256": "44b318edfa2dc4815c865c68a35923f3e8407261f3405053228c967d98b7cd68",
+        "sourceByteExact": true
+      },
+      {
+        "event": 24,
+        "sourceByteOffset": 14994788,
+        "bytes": 5114,
+        "sha256": "a4086f8aacb005dd8e7a778cc05d34550943047ecc7bbb6f3b2ccc8dc81587c9",
+        "sourceByteExact": true
+      },
+      {
+        "event": 25,
+        "sourceByteOffset": 15009479,
+        "bytes": 3499,
+        "sha256": "46154b2b6d1ad3b800dd3059ebe8fdc964cbee74d19e334f1d32e993c3b1ddb4",
+        "sourceByteExact": true
+      },
+      {
+        "event": 26,
+        "sourceByteOffset": 15018435,
+        "bytes": 4811,
+        "sha256": "4a2f56649ea4d9714416395ab41a5e39bddc366335662cef461fe0f94f4eb33c",
+        "sourceByteExact": true
+      },
+      {
+        "event": 27,
+        "sourceByteOffset": 15032497,
+        "bytes": 5493,
+        "sha256": "7b7833550437faa78c0f5a5efa5be4a992dbc39526c1a0fe5fe3291c7f9c5c1f",
+        "sourceByteExact": true
+      },
+      {
+        "event": 28,
+        "sourceByteOffset": 15045463,
+        "bytes": 2516,
+        "sha256": "98cb8c781fb55d4e73d5fd14eecf9019b576dbe0b0b6f4ed1d7240aab210ada2",
+        "sourceByteExact": true
+      },
+      {
+        "event": 29,
+        "sourceByteOffset": 15052499,
+        "bytes": 5293,
+        "sha256": "c1d3396ff495d61b3517ec51907fb7d27e534f74f41b22c94d31b5cc07697f19",
+        "sourceByteExact": true
+      },
+      {
+        "event": 30,
+        "sourceByteOffset": 15067436,
+        "bytes": 1654,
+        "sha256": "56e65c9dd258f96f470a97127dded078bbe76b2a1faf90898f33ef15296ed87c",
+        "sourceByteExact": true
+      },
+      {
+        "event": 31,
+        "sourceByteOffset": 15071813,
+        "bytes": 835,
+        "sha256": "a031f8c66c1b09684e883d6c67aeb4de0852fb2a3ad6ee4d0154810d06cd6ee3",
+        "sourceByteExact": true
+      }
+    ]
+  },
+  "fixtures": [
+    {
+      "source": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/01-pages-hidden-crop-ocr.pdf",
+      "target": "/Users/tw/Desktop/farfold/output/2026-10-13-xlsx-input-native-workspace/FarfoldPdfScope2554.pdf",
+      "bytes": 2554,
+      "sha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f",
+      "sourceTargetByteExact": true
+    },
+    {
+      "source": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/04-encrypted.pdf",
+      "target": "/Users/tw/Desktop/farfold/output/2026-10-13-xlsx-input-native-workspace/FarfoldPdfEncrypted2998.pdf",
+      "bytes": 2998,
+      "sha256": "87fd1dfc347a4b9dae8276b1c2691d8fbd73dff5672f14ad246001b813784e01",
+      "sourceTargetByteExact": true
+    }
+  ],
+  "formalApplication": {
+    "sourceCommit": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+    "installationReceiptHashVerified": true,
+    "recordedFiveHashesMatchCurrentInstalledFiveFiles": true,
+    "fiveFileReceipt": {
+      "path": "output/2026-10-13-pdf-at-route-native/04-formal-five-files.json",
+      "bytes": 916,
+      "sha256": "3d4fe902ec9d2ac36649f26dacff5ac1bff1ba430acaddfefc4dd044eea9b339"
+    },
+    "notANewInstall": true
+  },
+  "processChronology": {
+    "firstNormalQuit": "2026-10-13T14:51:39.856Z",
+    "firstPsZero": "2026-10-13T14:51:52.923597+00:00",
+    "firstPsOriginalCommand": {
+      "sourceByteOffset": 14988250,
+      "bytes": 2504,
+      "sha256": "047eb3adaf62416a6703d362f3a6f8998b976c8be46d203690f181c0b0ba762d",
+      "timestamp": "2026-10-13T14:51:52.948Z",
+      "actualExitCode": 0,
+      "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "newGetApp": "2026-10-13T14:51:58.623Z",
+    "finalNormalQuit": "2026-10-13T14:52:36.263Z",
+    "finalPsZero": "2026-10-13T14:52:45.401649+00:00",
+    "finalPsOriginalCommand": {
+      "path": "output/2026-10-13-pdf-at-route-native/03-final-normal-quit-exec.jsonl.raw",
+      "bytes": 2504,
+      "sha256": "724ad73051eabafeb27784e0014f1802d53eb7417c1c922d9291191bde0d027c",
+      "sourceByteOffset": 15076277,
+      "sourceByteExact": true,
+      "actualExitCode": 0,
+      "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold"
+    },
+    "trueColdUIRestorationEstablished": true,
+    "noRetroactiveOrWrongCaseProcessInference": true
+  },
+  "claims": [
+    {
+      "events": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "conclusion": "Normal @ project-file selection reached document review. Scope initially unchecked/read disabled; explicit scope selection preceded displayed1311-byte/3-page extraction with partial-content notice and separate unchecked partial confirmation."
+    },
+    {
+      "events": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "conclusion": "Cancel returned to the original PDF chip with Add text available and no added-text badge. A second scope selection and partial-content confirmation produced added-text badge and saved-success notice; send remained disabled."
+    },
+    {
+      "events": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "conclusion": "Encrypted fixture was explicitly selected and scope confirmed, then rejected with add-text disabled. Cancel preserved its unapproved chip; the only following removal targeted that newly added encrypted fixture, returning attachment count from3to2."
+    },
+    {
+      "events": [
+        2,
+        21,
+        24,
+        25,
+        27,
+        29
+      ],
+      "conclusion": "The same synthetic33-byte marker appeared before and after restoration. This is UI text evidence, not a stored database value/hash claim."
+    },
+    {
+      "events": [
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "conclusion": "Normal save-and-exit action was followed by real exact-lowercase process-zero before getApp. New visible UI restored both approved PDF and audio plus recovery gate; viewing the confirmed1311-byte/3-page PDF and canceling the view left the recovery gate intact."
+    },
+    {
+      "events": [
+        28,
+        29,
+        30,
+        31
+      ],
+      "conclusion": "Explicit keep-selected recheck had both audio140-byte PCM and PDF checked, followed by retained-choice notice and two approved chips. Send stayed disabled for unavailable audio input. Final normal exit was click97 on the observed Save and Exit control, followed by correct exact process-zero."
+    }
+  ],
+  "limits": [
+    "1311 text bytes and3pages are directly displayed metrics; AX body truncates during page2 and cannot prove the full saved body or full-body SHA. Exact stored text/source receipts belong to independent data analysis.",
+    "All31raw event results contain text blocks, not archived screenshot pixels; no pixel/visual layout claim.",
+    "Observed CUA actions include no ordinary/slash/pending-send, account/model/service/permission configuration operation. This is not an official Agent0-request counter.",
+    "Quit warning preserves unknown work as unknown; successful normal exit/process0 does not establish that existing unknown work completed or stopped.",
+    "Normal @ route success does not resolve native system picker NEW26, prove real Agent PDF delivery, OCR/visual reading order/all stored PDF strings, or complete all P08/29x8 requirements."
+  ],
+  "findings": []
+}

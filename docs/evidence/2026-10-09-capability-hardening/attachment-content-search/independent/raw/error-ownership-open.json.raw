@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "observedAtUtc": "2026-10-13T14:52:12.100129+00:00",
+  "state": "OPEN-owner-notified-not-final-frozen",
+  "method": "Static only; no production execution or duplicate tests.",
+  "id": "P32-review-error-ownership",
+  "priority": "P2",
+  "sourceRefs": [
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 13415,
+      "sha256": "d032aba60a214b8565b9450eb237de27773d31656b55afff447905337b9f09d0"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 8976,
+      "sha256": "e6216000b6cd2416a72c5a595a7ecf0a1e175e9a0b95de1954fcce320d60398f"
+    }
+  ],
+  "trigger": "After a navigation check failure sets state.error, retire/query/selection changes emit a partial state merge. initial() does not explicitly clear optional error, so the old error survives. Panel renders it even when state.phase is idle or the old hit is not visible.",
+  "suggestion": "Explicitly clear old error on retirement/reset; keep unknown native pending state separate. Confirm the new scope displays no error owned by an old attachment.",
+  "sharedWith": "frontend owner; root informed in progress commentary",
+  "boundary": "Adjacent error-presentation ownership issue found during review of the earlier stale-hit repair, not a new filesystem authorization leak."
+}

@@ -1,0 +1,41 @@
+{
+  "atUtc": "2026-10-13T15:04:44.160035+00:00",
+  "appendTo": {
+    "path": "output/2026-10-13-attachment-search-frontend/publication-selection.json",
+    "bytes": 11564,
+    "sha256": "bf8f0ec43e2c2cca971daa772efff2a78ca3fa3960bfd11ee502b32c1f56d2f4"
+  },
+  "reason": "Root-authorized second copy-only correction; retain all previous publications byte-for-byte.",
+  "files": [
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/source-freeze-v3.json",
+      "bytes": 4476,
+      "sha256": "5a951633c1835060e17299608ada860a2b6aa34f970f1354f947f0c6c0e2c9c9"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/summary-v3.json",
+      "bytes": 2314,
+      "sha256": "173e273e00e0c9f5dff734b85ff424affaf4c4387efc1095bfea0d9e53d7191b"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/strings-stale-copy-v3.txt",
+      "bytes": 209,
+      "sha256": "2110f8fc5dd89817a0beaa8108e797b54a5320ecc16841afc5bd1d2fbd89fbd0"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/strings-stale-copy-v3.raw.jsonl",
+      "bytes": 894,
+      "sha256": "54ddf44806caf9b34820fa6164bb90d314fa6d2aa2d7a716ec883e547142357a"
+    }
+  ],
+  "receipt": {
+    "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/strings-stale-copy-v3.raw.jsonl",
+    "bytes": 894,
+    "sha256": "54ddf44806caf9b34820fa6164bb90d314fa6d2aa2d7a716ec883e547142357a",
+    "sourceThreadId": "01a13410-a021-7660-b316-4a5e2c3de35f",
+    "sourceLine": 3472,
+    "originalTimestampUtc": "2026-10-13T15:03:41.416Z",
+    "actualExitCode": 0,
+    "provenance": "Exact original item_completed JSONL bytes from own transcript. No rerun/reconstruction."
+  }
+}

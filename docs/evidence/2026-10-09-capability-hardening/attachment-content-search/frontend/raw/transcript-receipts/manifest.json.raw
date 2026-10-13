@@ -1,0 +1,322 @@
+{
+  "extractedAtUtc": "2026-10-13T15:01:17.543743+00:00",
+  "sourceThreadId": "01a13410-a021-7660-b316-4a5e2c3de35f",
+  "provenance": "Exact complete original item_completed JSONL bytes from this subagent own transcript. Preparatory commands, failures and SIGTERM143 are preserved; not reconstructed or rerun.",
+  "receipts": [
+    {
+      "name": "typecheck-initial",
+      "sourceLine": 2958,
+      "originalTimestampUtc": "2026-10-13T14:28:22.940Z",
+      "actualExitCode": 1,
+      "status": "failed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/typecheck-initial.txt",
+        "bytes": 865,
+        "sha256": "150fe5d0b308f2207afd1716532fdd739b8fb8aca1a2bf9f4ff2d300e689f042"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-initial.raw.jsonl",
+      "bytes": 4938,
+      "sha256": "7f7d737b3e86e1cbee3ee796871d5ee47d88fd04f6bf0de669a20d4eff496ecd"
+    },
+    {
+      "name": "targeted-run01",
+      "sourceLine": 2996,
+      "originalTimestampUtc": "2026-10-13T14:31:32.695Z",
+      "actualExitCode": 1,
+      "status": "failed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/targeted-run01.txt",
+        "bytes": 4502,
+        "sha256": "7f4dd7107107d96d793e500ee0dfb25cf0eaaf3a6c7b6508f455a05f8485e57d"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run01.raw.jsonl",
+      "bytes": 26332,
+      "sha256": "c83b120be1fa4e28c5bc40a7c65c809968dd4291dfc937631177c8374bbbfe4a"
+    },
+    {
+      "name": "candidate-fix",
+      "sourceLine": 3018,
+      "originalTimestampUtc": "2026-10-13T14:32:17.620Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/candidate-fix.txt",
+        "bytes": 220,
+        "sha256": "0f14f9d344d3b2f1ce997efef2b7ec0bd624398fdfce1eb6258183154feda8f3"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/candidate-fix.raw.jsonl",
+      "bytes": 3047,
+      "sha256": "cdea1d0a16d0f518020aecd74f4360953c42d340d160b0fed51b742cd11617ba"
+    },
+    {
+      "name": "targeted-run02",
+      "sourceLine": 3023,
+      "originalTimestampUtc": "2026-10-13T14:32:38.961Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/targeted-run02.txt",
+        "bytes": 209,
+        "sha256": "78f537d22fa1211af0ed5d68ac2444054ae1165efa142c13a5566eb05a240239"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run02.raw.jsonl",
+      "bytes": 4158,
+      "sha256": "38048d197b98b8cec964187bb108d8c4dfad0b8940fc0bea8a157347e8d5205d"
+    },
+    {
+      "name": "targeted-run03",
+      "sourceLine": 3066,
+      "originalTimestampUtc": "2026-10-13T14:36:50.672Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/targeted-run03.txt",
+        "bytes": 212,
+        "sha256": "0024e14e63e967c0047b355eff377bf76daf6f395d18e94fcc72685ca56e4230"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run03.raw.jsonl",
+      "bytes": 12597,
+      "sha256": "d9714ae0ad2572212ec81725b1cc0c234d1969827c9b4607b127c52543c327f1"
+    },
+    {
+      "name": "typecheck-run02",
+      "sourceLine": 3073,
+      "originalTimestampUtc": "2026-10-13T14:37:11.781Z",
+      "actualExitCode": 1,
+      "status": "failed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/typecheck-run02.txt",
+        "bytes": 1522,
+        "sha256": "f30065273984b874767ba3f9f7d44a7ef7ccf17358f9a6f5ece92c738860401b"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-run02.raw.jsonl",
+      "bytes": 2563,
+      "sha256": "142141fd95f5a8faae1f7c3c2382ed6c4df3cb9f4da8bf468ce2a4b795996d5f"
+    },
+    {
+      "name": "targeted-run04-red",
+      "sourceLine": 3165,
+      "originalTimestampUtc": "2026-10-13T14:45:18.670Z",
+      "actualExitCode": 1,
+      "status": "failed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/targeted-run04-red.txt",
+        "bytes": 3741,
+        "sha256": "bf891ce5f85bf07f0ea73bfef98c13b26962dd2ec2f8323e67f8d11624b64a6d"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run04-red.raw.jsonl",
+      "bytes": 6361,
+      "sha256": "b9196441cd4db2160ff05e4be125b32095709b1b85503c95c7adf5befe361439"
+    },
+    {
+      "name": "targeted-run05",
+      "sourceLine": 3213,
+      "originalTimestampUtc": "2026-10-13T14:47:45.676Z",
+      "actualExitCode": 1,
+      "status": "failed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/targeted-run05.txt",
+        "bytes": 1354,
+        "sha256": "990c8c3b266d35ce388db29a6c4df2aa29247af160be887fff42867774f57288"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run05.raw.jsonl",
+      "bytes": 1200,
+      "sha256": "d03da05733d92986e44dace22fb5e54fafcfa71921586e5afe33d2d4e8908fbb"
+    },
+    {
+      "name": "typecheck-run03",
+      "sourceLine": 3214,
+      "originalTimestampUtc": "2026-10-13T14:47:52.112Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/typecheck-run03.txt",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-run03.raw.jsonl",
+      "bytes": 814,
+      "sha256": "f9522e7dad72bf0494642a6ac6bbb0c356de3530d55daf5a4d11e533ae786c09"
+    },
+    {
+      "name": "targeted-run06",
+      "sourceLine": 3247,
+      "originalTimestampUtc": "2026-10-13T14:50:09.439Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/targeted-run06.txt",
+        "bytes": 212,
+        "sha256": "41027028eea9fccc30b7b2df223a5fa5578ae6e6856afab9e9e99671942dae34"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run06.raw.jsonl",
+      "bytes": 27176,
+      "sha256": "3e55c4a9cc534b68ed1d09d75a95abe15358d8425c5bb5116e105e2f107115e8"
+    },
+    {
+      "name": "targeted-run07-notice-red",
+      "sourceLine": 3268,
+      "originalTimestampUtc": "2026-10-13T14:51:08.166Z",
+      "actualExitCode": 1,
+      "status": "failed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/targeted-run07-notice-red.txt",
+        "bytes": 1093,
+        "sha256": "c9e8bbd3ccfb555f10ea0acec475ff1fa18e1b1ff2b5ea756b3866a5e595a083"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run07-notice-red.raw.jsonl",
+      "bytes": 2267,
+      "sha256": "7fb4c2952af930d5afb42145071f41488defe3f5805550d375b08a748cd55a19"
+    },
+    {
+      "name": "chromium-run01",
+      "sourceLine": 3284,
+      "originalTimestampUtc": "2026-10-13T14:51:42.961Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/browser/chromium-run01.stdout.txt",
+        "bytes": 112,
+        "sha256": "cf5a593c5eafc4127f8af5eea69e4b91184e5741fb2937113a8195c56d70ddce"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/chromium-run01.raw.jsonl",
+      "bytes": 2811,
+      "sha256": "ac8b55ed4262d4e2a796b94af8f23ff6b27a2f282c683ad51d54a03ee096b554"
+    },
+    {
+      "name": "targeted-run08",
+      "sourceLine": 3292,
+      "originalTimestampUtc": "2026-10-13T14:51:52.075Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/targeted-run08.txt",
+        "bytes": 212,
+        "sha256": "445a2db85b0394da576b4b691a875f6007b35c5eec80ca3737ccf95b31122271"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run08.raw.jsonl",
+      "bytes": 1204,
+      "sha256": "ca47bd87d523fcf055cde4281d7818a3b8bf45e406a75477f405787ccf2bdd9a"
+    },
+    {
+      "name": "webkit-run01",
+      "sourceLine": 3301,
+      "originalTimestampUtc": "2026-10-13T14:52:12.696Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/browser/webkit-run01.stdout.txt",
+        "bytes": 110,
+        "sha256": "4cbb6cdc1eebcf09a4423249d7e9539af55e667528cd5b3c5cb7683aeb43f4e3"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/webkit-run01.raw.jsonl",
+      "bytes": 1248,
+      "sha256": "e85e941f6ee5e8b8dc47be6a7564ee1956d93ded42f2e42836b1666f4c16f88b"
+    },
+    {
+      "name": "targeted-run09",
+      "sourceLine": 3327,
+      "originalTimestampUtc": "2026-10-13T14:53:56.776Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/targeted-run09.txt",
+        "bytes": 212,
+        "sha256": "9f238bb2af897475653be2a49a83d1dde4a6e0de531187d10fa8b668a56ccb8c"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/targeted-run09.raw.jsonl",
+      "bytes": 6814,
+      "sha256": "3c1fb033804491b2e0929ab11cfdc65ff3ae92872b17f4bf3bf8c3d7c2c47668"
+    },
+    {
+      "name": "typecheck-run04",
+      "sourceLine": 3330,
+      "originalTimestampUtc": "2026-10-13T14:54:07.089Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/typecheck-run04.txt",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/typecheck-run04.raw.jsonl",
+      "bytes": 814,
+      "sha256": "ff45f8439965a07e2810be649969957f163d9c9fd6ed9e46e81da1d424ddd850"
+    },
+    {
+      "name": "chromium-run02",
+      "sourceLine": 3331,
+      "originalTimestampUtc": "2026-10-13T14:54:14.270Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/browser/chromium-run02.stdout.txt",
+        "bytes": 112,
+        "sha256": "eea7a3b6623e23079435222a371878f4d2fd6977da36b0f28e1707eebcea55d7"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/chromium-run02.raw.jsonl",
+      "bytes": 957,
+      "sha256": "db0c34a29838858adf23c3c67622396b569dccb8ad5febdd54d925efd3f98162"
+    },
+    {
+      "name": "webkit-run02",
+      "sourceLine": 3349,
+      "originalTimestampUtc": "2026-10-13T14:55:08.220Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/browser/webkit-run02.stdout.txt",
+        "bytes": 110,
+        "sha256": "7f62984342ce094cc35b00fa157c726798801d147bae29ae2a9c05862eba3b4e"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/webkit-run02.raw.jsonl",
+      "bytes": 949,
+      "sha256": "5c523a1fa10d68fe802b228b30547979a7cbb1edee7fca3c08fcb69a383193dd"
+    },
+    {
+      "name": "server",
+      "sourceLine": 3375,
+      "originalTimestampUtc": "2026-10-13T14:56:21.670Z",
+      "actualExitCode": 143,
+      "status": "failed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/browser/server.log",
+        "bytes": 233,
+        "sha256": "7c6a8ef2ae94371d1e18e113416d05614267a64a3c34b2115ea1133e30639c14"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/server.raw.jsonl",
+      "bytes": 3168,
+      "sha256": "b1cbcfe7e5844b9cf2b9baba780181c40a52bd355c6daf93d382f9a9e12519f1"
+    },
+    {
+      "name": "strings-budget-copy-v2",
+      "sourceLine": 3403,
+      "originalTimestampUtc": "2026-10-13T14:58:21.770Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/strings-budget-copy-v2.txt",
+        "bytes": 209,
+        "sha256": "23c1392a13c371fef12a48e956ce34380e5fd102c36e98835391605b68300c20"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/strings-budget-copy-v2.raw.jsonl",
+      "bytes": 896,
+      "sha256": "c7daeecc782b660d60f45ce1ac0e3c661c53f6b00b673467189e1cfff509f1be"
+    },
+    {
+      "name": "format-final",
+      "sourceLine": 3404,
+      "originalTimestampUtc": "2026-10-13T14:58:22.310Z",
+      "actualExitCode": 0,
+      "status": "completed",
+      "stdout": {
+        "path": "output/2026-10-13-attachment-search-frontend/format-final.txt",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "path": "output/2026-10-13-attachment-search-frontend/transcript-receipts/format-final.raw.jsonl",
+      "bytes": 1774,
+      "sha256": "18d4c1b5e8ae5a4ba8cf29e4e3701b4130973a65c9b7c1d0515cd69ce61afcd4"
+    }
+  ]
+}

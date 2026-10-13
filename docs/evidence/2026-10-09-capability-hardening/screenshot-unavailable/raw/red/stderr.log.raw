@@ -1,0 +1,8 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.83s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+thread 'browser_sharing::protocol::tests::p27_screenshot_unavailable_is_a_reply_after_handshake_and_list_delivery' (29003754) panicked at src/browser_sharing/protocol.rs:278:17:
+unavailable screenshots must never request page admission
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `--lib`

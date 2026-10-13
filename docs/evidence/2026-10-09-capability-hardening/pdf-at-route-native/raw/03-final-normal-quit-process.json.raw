@@ -1,0 +1,11 @@
+{
+  "atUtc": "2026-10-13T14:52:45.401649+00:00",
+  "actualExitCode": 0,
+  "command": [
+    "/bin/ps",
+    "-axo",
+    "pid=,comm="
+  ],
+  "exactFormalProcessMatches": [],
+  "uiPreceded": "Root CUA super+q exposed Save and Exit index97; following click(97) returned normally. Raw CUA transcript extraction pending; this summary is not the raw UI receipt."
+}

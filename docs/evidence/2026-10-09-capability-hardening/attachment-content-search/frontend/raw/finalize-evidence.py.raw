@@ -1,0 +1,47 @@
+from pathlib import Path
+import json,re,hashlib,datetime
+base=Path('output/2026-10-13-attachment-search-frontend')
+transcript=Path('/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl')
+rawdir=base/'transcript-receipts';rawdir.mkdir(exist_ok=True)
+ref=lambda p:{'path':str(p),'bytes':Path(p).stat().st_size,'sha256':hashlib.sha256(Path(p).read_bytes()).hexdigest()}
+receipts=[]
+pattern=re.compile(r'(?:^|;\s*)(?:corepack pnpm (?:exec (?:vitest|tsc)|typecheck)|corepack pnpm exec prettier --check|node output/2026-10-13-attachment-search-frontend/browser/(?:run|serve)\.mjs).*?>\s*(output/2026-10-13-attachment-search-frontend/[^\s;]+)\s+2>&1',re.M)
+for number,line in enumerate(transcript.read_bytes().splitlines(keepends=True),1):
+ v=json.loads(line)
+ if v.get('type')!='event_msg' or v.get('payload',{}).get('type')!='item_completed':continue
+ item=v['payload'].get('item',{})
+ if item.get('type')!='CommandExecution':continue
+ command=item.get('command',[]);text='\n'.join(command) if isinstance(command,list) else command
+ matches=pattern.findall(text)
+ if not matches:continue
+ # One original completion may include preparation, followed by one actual check.
+ assert len(matches)==1,(number,matches)
+ stdout=Path(matches[0]);name=stdout.name.replace('.stdout.txt','').replace('.txt','').replace('.log','')
+ path=rawdir/(name+'.raw.jsonl')
+ if path.exists():assert path.read_bytes()==line
+ else:path.write_bytes(line)
+ receipts.append({'name':name,'sourceLine':number,'originalTimestampUtc':v.get('timestamp'),'actualExitCode':item.get('exit_code'),'status':item.get('status'),'stdout':ref(stdout),**ref(path)})
+manifest={'extractedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'sourceThreadId':'01a13410-a021-7660-b316-4a5e2c3de35f','provenance':'Exact complete original item_completed JSONL bytes from this subagent own transcript. Preparatory commands, failures and SIGTERM143 are preserved; not reconstructed or rerun.','receipts':receipts}
+(rawdir/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+by={r['name']:r for r in receipts}
+for name in ['targeted-run09','typecheck-run04','strings-budget-copy-v2','format-final','chromium-run02','webkit-run02']:assert by[name]['actualExitCode']==0,(name,by.get(name))
+assert by['server']['actualExitCode']==143
+v1=json.loads((base/'source-freeze-v1.json').read_text());v2=json.loads((base/'source-freeze-v2.json').read_text())
+for r in v2['ownedFiles']+v2['fixtures']:assert ref(r['path'])==r
+runs=[]
+for label in ['run01','run02']:
+ for engine in ['chromium','webkit']:
+  p=base/'browser'/f'{engine}-{label}.json';v=json.loads(p.read_text());assert v['passed'] and v['stable'];assert by[f'{engine}-{label}']['actualExitCode']==0
+  for r in v1['ownedFiles']:
+   if label=='run02':assert v['before'][r['path']]==r['sha256']
+  runs.append({'engine':engine,'label':label,'checks':len(v['checks']),'actualExitCode':0,'sourceStable':v['stable'],'pageErrors':len(v['errors']),'externalRequests':len(v['externalRequests']),'result':ref(p),'completion':ref(by[f'{engine}-{label}']['path'])})
+summary={'completedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'scope':'P32 increment: explicitly selected current local complete UTF8 attachment text, loaded user/reply declarations only. It is not historical original bytes, format extraction, all P32 completion, native installation or actual Agent validation.','sourceFreezeV1':ref(base/'source-freeze-v1.json'),'sourceFreezeV2':ref(base/'source-freeze-v2.json'),'ownedFilesCount':13,'sourceWillRemainUnchanged':True,'limits':{'files':20,'fileBytes':1048576,'searchableBodyBytes':16777216,'concurrentFrontendAndNativePool':2,'displayedHits':200,'queryUTF8Bytes':256,'important':'Bounded inspection/revision may hash selected bytes again;16MiB is searchable-body total, not a cumulative disk-IO limit. Plain UTF8/NUL validation does not parse document/image/audio formats.'},'targetedV1':{'files':6,'passed':68,'actualExitCode':0,'stdout':ref(base/'targeted-run09.txt'),'completion':ref(by['targeted-run09']['path'])},'typecheckV1':{'actualExitCode':0,'stdout':ref(base/'typecheck-run04.txt'),'completion':ref(by['typecheck-run04']['path'])},'v2OnlyDelta':'One budget message corrected to say not used for search because inspection may already have read the bytes. No logic/test/fixture changed; original browser+68 receipts remain v1 scope.','v2Checks':[{'name':n,'actualExitCode':by[n]['actualExitCode'],'stdout':by[n]['stdout'],'completion':ref(by[n]['path'])} for n in ['strings-budget-copy-v2','format-final']],'browser':runs,'meaningfulFailures':[{'name':'targeted-run01','cause':'Forged candidate clone was accepted; actual fixed readText errors classified as unreadable. Candidate registration and real-error mapping repaired.','completion':ref(by['targeted-run01']['path']),'stdout':ref(base/'targeted-run01.txt')},{'name':'targeted-run04-red','cause':'Pending unknown latch prevented explicit recovery, retire hid it, and navigation completion did not notify admission. Explicit start/native pool discipline and notifications repaired.','completion':ref(by['targeted-run04-red']['path']),'stdout':ref(base/'targeted-run04-red.txt')},{'name':'targeted-run07-notice-red','cause':'Merged initial state retained prior attachment error across scope change; explicit empty initial error repaired.','completion':ref(by['targeted-run07-notice-red']['path']),'stdout':ref(base/'targeted-run07-notice-red.txt')}],'otherFailuresPreserved':[{'name':'typecheck-initial','cause':'Unintended extra CommandPalette prop removed.'},{'name':'typecheck-run02','cause':'Test fixture supplied narrowed harness map instead of real ThreadState map; fixed fixture.'},{'name':'targeted-run05','cause':'New fixture called Sidebar onLibrary without its required all-filter argument.64/65; repaired fixture→run06 65/65, not a production red-to-green.'}],'server':{'pid':67697,'port':1537,'actualObservedExecExit':143,'stopped':ref(base/'browser/server-stopped-v2.json'),'originalCompletion':ref(by['server']['path']),'correction':'Earlier manual server-stopped.json assumed exit0 and is retained/superseded. Exact original termination was143; fresh ps empty and listener absent/bind success prove current stop. No other process signaled.'},'screenshotsReviewed':[ref(base/'browser'/f'{engine}-run02-{name}.png') for engine in ['chromium','webkit'] for name in ['results-narrow','source-location']],'originalReceiptManifest':ref(rawdir/'manifest.json'),'remaining':'Full engineering seven checks, real native file IO integration, installed UI and broader P32 requirements are separate work; frontend did not run/build/install/send.'}
+(base/'summary.json').write_text(json.dumps(summary,ensure_ascii=False,indent=2)+'\n')
+selected=[base/'summary.json',base/'source-freeze-v1.json',base/'source-freeze-v2.json',base/'finalize-evidence.py',rawdir/'manifest.json']
+selected += [base/n for n in ['targeted-run09.txt','typecheck-run04.txt','strings-budget-copy-v2.txt','format-final.txt','targeted-run01.txt','targeted-run04-red.txt','targeted-run07-notice-red.txt','targeted-run05.txt','typecheck-initial.txt','typecheck-run02.txt']]
+selected += [base/'browser'/n for n in ['fixture.tsx','index.html','serve.mjs','run.mjs','port-prelaunch.json','server-owned.json','server-stop-request.json','server-stopped.json','server-stopped-v2.json','chromium-run01.json','webkit-run01.json','chromium-run02.json','webkit-run02.json']]
+selected += [Path(r['path']) for r in receipts]
+selected += [Path(r['path']) for r in summary['screenshotsReviewed']]
+plan={'atUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'scope':'Byte-preserving publication suggestion; root owns docs publication. No source mutation. Complete original commands may include preparation, all are controlled local fixture material. No full transcript or user data.','files':[ref(p) for p in sorted(set(selected))]}
+(base/'publication-selection.json').write_text(json.dumps(plan,ensure_ascii=False,indent=2)+'\n')
+print(json.dumps({'summary':ref(base/'summary.json'),'manifest':ref(rawdir/'manifest.json'),'publication':ref(base/'publication-selection.json'),'receipts':len(receipts),'selectedFiles':len(plan['files'])},ensure_ascii=False))

@@ -1,0 +1,7 @@
+[
+  "src-tauri/src/file_delivery.rs",
+  "src-tauri/src/file_delivery_commands.rs",
+  "src-tauri/src/lib.rs",
+  "src-tauri/src/file_delivery/text_inspection.rs",
+  "src-tauri/src/file_delivery/text_inspection_tests.rs"
+]

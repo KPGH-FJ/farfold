@@ -1,0 +1,4 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 20.25s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)

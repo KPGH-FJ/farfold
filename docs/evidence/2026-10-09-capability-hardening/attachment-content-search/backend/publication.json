@@ -1,0 +1,278 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T14:45:48.407341+00:00",
+  "phase": "BOUNDED_TEXT_INSPECTION_TARGETED_SOURCE",
+  "sources": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17692,
+      "sha256": "df315d1729b42b6d842e1d4335d3571090c74f5e9593fa77805c5e8c9c06ac32",
+      "lines": 508
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 19312,
+      "sha256": "1952a744e427287073abfc4e074a9c3029e1e317e0adb4cc7d2d619843d24f83",
+      "lines": 543
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21587,
+      "sha256": "9a724de51a9d34c2378c8d2e93886c80d35cab4e7a6277c36a58e074a195ba17",
+      "lines": 468
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "bytes": 1345,
+      "sha256": "e247aa6bb04b56e3ac91f7d12be2b66047b7a94ae255411e4de744c993060b55",
+      "lines": 38
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection_tests.rs",
+      "bytes": 4946,
+      "sha256": "26ef222d44b4a50152b8686ca965cdb16493293f9067455370237247ae711656",
+      "lines": 146
+    }
+  ],
+  "originals": [
+    {
+      "source": "output/2026-10-13-p32-text-backend/receipt.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/receipt.json.raw",
+      "bytes": 9971,
+      "sha256": "a4493c9e8fa57049cc99222f7c707afb730d7254bffde2287956d40eec662334"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/source-freeze.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/source-freeze.json.raw",
+      "bytes": 2978,
+      "sha256": "11b25d6c4b765ae8c1e5d0cda9f590c512b3c28c3eddc0d311d6b0ef2be5929a"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/before.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/before.json.raw",
+      "bytes": 1637,
+      "sha256": "36935e9400d8139e71d9cba8c82ef483f9236ca78d6fba218fd8cf7cba6f9e7b"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/diff-check.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/diff-check.json.raw",
+      "bytes": 822,
+      "sha256": "75d498121e572b64db512a664b7d5d8e14355a84d464b932d84dbda4386a6610"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/owned-sources.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/owned-sources.json.raw",
+      "bytes": 220,
+      "sha256": "691211ae992f278cead58eadab9cfa0e62912949c3a5d0afe10860c20a2bdda6"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/red-sources.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/red-sources.json.raw",
+      "bytes": 560,
+      "sha256": "261522d86f73ea7956ba80b52a483d740de25e959799bf63204b824b0c5ad295"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/fixed-sources.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/fixed-sources.json.raw",
+      "bytes": 560,
+      "sha256": "11d1bd9c6192a81c18432b676cdf8517bf8a670a667cfcedf750add129be151d"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/run_scoped.py",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/run_scoped.py.raw",
+      "bytes": 2511,
+      "sha256": "f563efc36627c9d1a70bf1fa41032019fffbc574db4fb304466339c65fc7c2c6"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/run_v2.py",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/run_v2.py.raw",
+      "bytes": 384,
+      "sha256": "e449f365ff460a48e26192c5f56f5d5085b47178f632715ba21deea308b64b64"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/owned-sources.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/owned-sources.json.raw",
+      "bytes": 220,
+      "sha256": "691211ae992f278cead58eadab9cfa0e62912949c3a5d0afe10860c20a2bdda6"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/fixed-sources.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/fixed-sources.json.raw",
+      "bytes": 560,
+      "sha256": "8e8a93099218a8db09a7aac3a7b2964c316892bd813e702de9cd120a6f45a241"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/red/started.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/red/started.json.raw",
+      "bytes": 966,
+      "sha256": "1013e071c6beaf27715caca78d5021f123fe9930a5b88ea6e255e6ff3db88f35"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/red/completed.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/red/completed.json.raw",
+      "bytes": 2049,
+      "sha256": "4c02c110805c1d38ca8f6faf1f683f8f93dfcb2017cd5f8abb517bd4fa7ca7f5"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/red/stdout.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/red/stdout.log.raw",
+      "bytes": 1066,
+      "sha256": "cf3fc5b404855492d8cb052f91d8c268e88a4986eaba575ac2f4db4dd7bcc115"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/red/stderr.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/red/stderr.log.raw",
+      "bytes": 1417,
+      "sha256": "305599966de91261438f164ee03c9968cb6ce2fee30ea2f306dc4b81ec6be94e"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/green/started.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/green/started.json.raw",
+      "bytes": 968,
+      "sha256": "842eff201810c1019e498d5a14aafb100f51567df1d46a730c109f8ad3e4920f"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/green/completed.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/green/completed.json.raw",
+      "bytes": 2051,
+      "sha256": "2bb148eee0084ee86e4132e2a565fe74b5a9c4b8ef020c58e50aa7392c0d2aaa"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/green/stdout.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/green/stdout.log.raw",
+      "bytes": 929,
+      "sha256": "c42e180cd0f83b72bfec15a9110ba0a28c73d94fdd3bf0bb45c8b0c37785970c"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/green/stderr.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/green/stderr.log.raw",
+      "bytes": 322,
+      "sha256": "54c5756dab9edd107a07ec8dae57103cab90a171f05cedbd64f0fb3bcb002f34"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/green/started.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/green/started.json.raw",
+      "bytes": 968,
+      "sha256": "ce6309c4f6c45cd4b5c0dc2a2b6a077ee65775cdcae78d14d1a6ea0babdd99fc"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/green/completed.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/green/completed.json.raw",
+      "bytes": 2057,
+      "sha256": "15a4e37a7a7f54fb33f9b5ba1c8f9418d2160447b0476ca59c9834d560a37092"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/green/stdout.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/green/stdout.log.raw",
+      "bytes": 929,
+      "sha256": "09317db7d87344787f8645aa930c4464a08029cec049357c8caa125831c12c07"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/green/stderr.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/green/stderr.log.raw",
+      "bytes": 323,
+      "sha256": "9a1e07632748aa9494bc48769a2ee1bd2a6ca7a9f7a27285af26f3f1b576c566"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/regression/started.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/regression/started.json.raw",
+      "bytes": 971,
+      "sha256": "1c701784877687f6d50aac98e530e8c2416549a567392fa1225d50c433bf46b8"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/regression/completed.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/regression/completed.json.raw",
+      "bytes": 2073,
+      "sha256": "ecd81bebf9bdcddcd4caefb0684f667e61a9825fecb9caf07ec58f11887a48d8"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/regression/stdout.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/regression/stdout.log.raw",
+      "bytes": 285396,
+      "sha256": "bcfaa135cb56ff37b95d6fbb8785764f0314080f58d4f424723b8b1a50382d50"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/regression/stderr.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/regression/stderr.log.raw",
+      "bytes": 447,
+      "sha256": "ffd95caa3274bd999d08188d87d4807f76efecb1f5af159e0ad2c8f282a7a4a0"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/readpool/started.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/readpool/started.json.raw",
+      "bytes": 971,
+      "sha256": "addb427b0295125511aa16ca487b65e63dfa435af061dd73f7e4d5c4246a3f19"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/readpool/completed.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/readpool/completed.json.raw",
+      "bytes": 2066,
+      "sha256": "abf919c17384104fe914a3daea1be684f2ab7ae7ef0af8abfc74f773f79217a7"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/readpool/stdout.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/readpool/stdout.log.raw",
+      "bytes": 711,
+      "sha256": "ea3f5b6f85e64f109b02bbe9815f3804f533a3099c4da05c110a665f4de9407b"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/readpool/stderr.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/readpool/stderr.log.raw",
+      "bytes": 450,
+      "sha256": "2d6a9dafc9abcd9405d0fea479726937c4ae05ddb996fccf89f121378ba687f0"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/format/started.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/format/started.json.raw",
+      "bytes": 915,
+      "sha256": "6eb64adfbc79623245d926850092a6327d456d423d0c8795f1f6f9041c77fe6a"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/format/completed.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/format/completed.json.raw",
+      "bytes": 2002,
+      "sha256": "d40d89e1862c7d5f25bcb55e453dfb1cc14d568c93105a0c63df61b8de03e496"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/format/stdout.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/format/stdout.log.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "output/2026-10-13-p32-text-backend/v2/format/stderr.log",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/raw/v2/format/stderr.log.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "New text inspect and full revision commands enforce 1MiB before capture and bound read growth; unchanged main webview guard and actual shared two-slot pool. Existing generic inspection/readText remain unchanged.",
+  "actualResults": {
+    "red": {
+      "exitCode": 101,
+      "passed": 4,
+      "failed": 2
+    },
+    "firstGreen": {
+      "exitCode": 0,
+      "passed": 6
+    },
+    "finalTargeted": {
+      "exitCode": 0,
+      "passed": 6
+    },
+    "fileDelivery": {
+      "exitCode": 0,
+      "passed": 97,
+      "ignored": 1
+    },
+    "readPool": {
+      "exitCode": 0,
+      "passed": 5
+    },
+    "format": {
+      "exitCode": 0
+    }
+  },
+  "boundary": "Source and controlled native checks only. Frontend integration and independent review ongoing; no full seven checks, real UI IPC, installation or Agent acceptance in this record."
+}

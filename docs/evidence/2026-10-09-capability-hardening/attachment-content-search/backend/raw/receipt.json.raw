@@ -1,0 +1,280 @@
+{
+  "schema": 1,
+  "completedAtUtc": "2026-10-13T14:43:22.522761+00:00",
+  "status": "targeted-verified-source-frozen",
+  "sourceFreeze": {
+    "path": "output/2026-10-13-p32-text-backend/source-freeze.json",
+    "bytes": 2978,
+    "sha256": "11b25d6c4b765ae8c1e5d0cda9f590c512b3c28c3eddc0d311d6b0ef2be5929a"
+  },
+  "implementation": {
+    "ipc": [
+      "file_delivery_inspect_text({path}) -> VerifiedFile",
+      "file_delivery_check_text_revision({file}) -> {kind:verified,file:VerifiedFile}"
+    ],
+    "errors": "Existing typed RevisionFailure {code}; shared read-pool busy/pending/unavailable remain accurate",
+    "limitBytes": 1048576,
+    "limits": "Both operations reject oversized metadata before content capture; growth is bounded by existing take(limit + 1) overflow sentinel and rejected before hashing. This is not a zero-OS-I/O claim or an OS cancellation API.",
+    "reuse": "Existing descriptor-based safe open, canonical containment, expected location, final identity/path/size recheck, exact complete-byte SHA and version; main webview guard and shared read pool",
+    "compatibility": "Existing ordinary inspection, revision and readText unchanged; strict UTF-8 remains readText responsibility; BOM/CRLF retained, valid NUL retained by old readText and excluded by P32 frontend."
+  },
+  "redMeaning": {
+    "actual": "New bounded operations initially used inherited MAX_VERIFIED_FILE_BYTES=256MiB: existing oversize accepted; after-open growth classified changing. Tests compiled and observed these two failures, not author/compilation failure.",
+    "counts": {
+      "passed": 4,
+      "failed": 2
+    },
+    "minimalFix": "Use MAX_TEXT_BYTES for both initial open and content capture.",
+    "v2": "Removed injectable production capture closure after first green; deterministic growth/counter behavior is now wholly in tests around the actual bounded open and existing production capture. Original red and first green receipts remain unchanged."
+  },
+  "verification": [
+    {
+      "phase": "red",
+      "receipt": {
+        "path": "output/2026-10-13-p32-text-backend/red/completed.json",
+        "bytes": 2049,
+        "sha256": "4c02c110805c1d38ca8f6faf1f683f8f93dfcb2017cd5f8abb517bd4fa7ca7f5"
+      },
+      "actualExitCode": 101,
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "text_inspection",
+        "--",
+        "--nocapture"
+      ],
+      "outputs": [
+        {
+          "path": "output/2026-10-13-p32-text-backend/red/stdout.log",
+          "bytes": 1066,
+          "sha256": "cf3fc5b404855492d8cb052f91d8c268e88a4986eaba575ac2f4db4dd7bcc115"
+        },
+        {
+          "path": "output/2026-10-13-p32-text-backend/red/stderr.log",
+          "bytes": 1417,
+          "sha256": "305599966de91261438f164ee03c9968cb6ce2fee30ea2f306dc4b81ec6be94e"
+        }
+      ]
+    },
+    {
+      "phase": "green",
+      "receipt": {
+        "path": "output/2026-10-13-p32-text-backend/green/completed.json",
+        "bytes": 2051,
+        "sha256": "2bb148eee0084ee86e4132e2a565fe74b5a9c4b8ef020c58e50aa7392c0d2aaa"
+      },
+      "actualExitCode": 0,
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "text_inspection",
+        "--",
+        "--nocapture"
+      ],
+      "outputs": [
+        {
+          "path": "output/2026-10-13-p32-text-backend/green/stdout.log",
+          "bytes": 929,
+          "sha256": "c42e180cd0f83b72bfec15a9110ba0a28c73d94fdd3bf0bb45c8b0c37785970c"
+        },
+        {
+          "path": "output/2026-10-13-p32-text-backend/green/stderr.log",
+          "bytes": 322,
+          "sha256": "54c5756dab9edd107a07ec8dae57103cab90a171f05cedbd64f0fb3bcb002f34"
+        }
+      ]
+    },
+    {
+      "phase": "v2/green",
+      "receipt": {
+        "path": "output/2026-10-13-p32-text-backend/v2/green/completed.json",
+        "bytes": 2057,
+        "sha256": "15a4e37a7a7f54fb33f9b5ba1c8f9418d2160447b0476ca59c9834d560a37092"
+      },
+      "actualExitCode": 0,
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "text_inspection",
+        "--",
+        "--nocapture"
+      ],
+      "outputs": [
+        {
+          "path": "output/2026-10-13-p32-text-backend/v2/green/stdout.log",
+          "bytes": 929,
+          "sha256": "09317db7d87344787f8645aa930c4464a08029cec049357c8caa125831c12c07"
+        },
+        {
+          "path": "output/2026-10-13-p32-text-backend/v2/green/stderr.log",
+          "bytes": 323,
+          "sha256": "9a1e07632748aa9494bc48769a2ee1bd2a6ca7a9f7a27285af26f3f1b576c566"
+        }
+      ]
+    },
+    {
+      "phase": "v2/regression",
+      "receipt": {
+        "path": "output/2026-10-13-p32-text-backend/v2/regression/completed.json",
+        "bytes": 2073,
+        "sha256": "ecd81bebf9bdcddcd4caefb0684f667e61a9825fecb9caf07ec58f11887a48d8"
+      },
+      "actualExitCode": 0,
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "file_delivery",
+        "--",
+        "--nocapture"
+      ],
+      "outputs": [
+        {
+          "path": "output/2026-10-13-p32-text-backend/v2/regression/stdout.log",
+          "bytes": 285396,
+          "sha256": "bcfaa135cb56ff37b95d6fbb8785764f0314080f58d4f424723b8b1a50382d50"
+        },
+        {
+          "path": "output/2026-10-13-p32-text-backend/v2/regression/stderr.log",
+          "bytes": 447,
+          "sha256": "ffd95caa3274bd999d08188d87d4807f76efecb1f5af159e0ad2c8f282a7a4a0"
+        }
+      ]
+    },
+    {
+      "phase": "v2/readpool",
+      "receipt": {
+        "path": "output/2026-10-13-p32-text-backend/v2/readpool/completed.json",
+        "bytes": 2066,
+        "sha256": "abf919c17384104fe914a3daea1be684f2ab7ae7ef0af8abfc74f773f79217a7"
+      },
+      "actualExitCode": 0,
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "file_read_check",
+        "--",
+        "--nocapture"
+      ],
+      "outputs": [
+        {
+          "path": "output/2026-10-13-p32-text-backend/v2/readpool/stdout.log",
+          "bytes": 711,
+          "sha256": "ea3f5b6f85e64f109b02bbe9815f3804f533a3099c4da05c110a665f4de9407b"
+        },
+        {
+          "path": "output/2026-10-13-p32-text-backend/v2/readpool/stderr.log",
+          "bytes": 450,
+          "sha256": "2d6a9dafc9abcd9405d0fea479726937c4ae05ddb996fccf89f121378ba687f0"
+        }
+      ]
+    },
+    {
+      "phase": "v2/format",
+      "receipt": {
+        "path": "output/2026-10-13-p32-text-backend/v2/format/completed.json",
+        "bytes": 2002,
+        "sha256": "d40d89e1862c7d5f25bcb55e453dfb1cc14d568c93105a0c63df61b8de03e496"
+      },
+      "actualExitCode": 0,
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "outputs": [
+        {
+          "path": "output/2026-10-13-p32-text-backend/v2/format/stdout.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "output/2026-10-13-p32-text-backend/v2/format/stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "finalCounts": {
+    "textInspection": {
+      "passed": 6,
+      "failed": 0
+    },
+    "fileDelivery": {
+      "passed": 97,
+      "failed": 0,
+      "ignored": 1
+    },
+    "readPool": {
+      "passed": 5,
+      "failed": 0
+    }
+  },
+  "testScope": [
+    "Oversized file does not reach body capture; both new public operations reject it; old generic inspection accepts it as an unchanged control.",
+    "File grows after checked open; real capture returns tooLarge before hash.",
+    "Exactly 1MiB with BOM, CRLF and multibyte UTF-8 retains all bytes and complete receipt on read and revision.",
+    "Changed bytes and same-byte replaced inode are not accepted with the previous receipt.",
+    "Symlink redirection rejects before body capture; missing and non-file remain typed.",
+    "Legacy invalid UTF-8 rejects; valid NUL remains exact; P32 frontend independently rejects NUL.",
+    "Existing pool tests show timeout or dropped receiver keeps the real worker slot until completion, and production checks share the same capacity."
+  ],
+  "diffCheck": {
+    "path": "output/2026-10-13-p32-text-backend/diff-check.json",
+    "bytes": 822,
+    "sha256": "75d498121e572b64db512a664b7d5d8e14355a84d464b932d84dbda4386a6610"
+  },
+  "preservedP27": {
+    "source": {
+      "path": "src-tauri/src/browser_sharing/protocol.rs",
+      "bytes": 21005,
+      "sha256": "c3916e3de372d7fad516fbcf32c5efb2cb3c70c992de5465528edddcb15d6ddb"
+    },
+    "priorReceipt": {
+      "path": "output/2026-10-13-p27-unavailable-backend/receipt.json",
+      "bytes": 3560,
+      "sha256": "260d5186c59405afc7490f5a5ee7b637997f0a2ed350d2828fd83652f5f36e3a"
+    },
+    "priorFreeze": {
+      "path": "output/2026-10-13-p27-unavailable-backend/source-freeze.json",
+      "bytes": 4052,
+      "sha256": "14041302d6fa6c246c62ebd54f5d44a6a82c3748152de9651de510506f719e85"
+    }
+  },
+  "runners": [
+    {
+      "path": "output/2026-10-13-p32-text-backend/run_scoped.py",
+      "bytes": 2511,
+      "sha256": "f563efc36627c9d1a70bf1fa41032019fffbc574db4fb304466339c65fc7c2c6"
+    },
+    {
+      "path": "output/2026-10-13-p32-text-backend/run_v2.py",
+      "bytes": 384,
+      "sha256": "e449f365ff460a48e26192c5f56f5d5085b47178f632715ba21deea308b64b64"
+    }
+  ],
+  "notRun": [
+    "Full repository seven checks",
+    "Tauri webview IPC runtime invocation for the new commands",
+    "Installed App or browser UI",
+    "Real Agent, private database or account access",
+    "Release packaging, installation or commit"
+  ]
+}

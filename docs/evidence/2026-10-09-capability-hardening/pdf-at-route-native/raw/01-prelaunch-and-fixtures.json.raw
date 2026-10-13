@@ -1,0 +1,26 @@
+{
+  "atUtc": "2026-10-13T14:48:30.340296+00:00",
+  "processCommand": [
+    "/bin/ps",
+    "-axo",
+    "pid=,comm="
+  ],
+  "actualExitCode": 0,
+  "exactFormalProcessMatches": [],
+  "executable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+  "fixtures": [
+    {
+      "source": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/01-pages-hidden-crop-ocr.pdf",
+      "target": "/Users/tw/Desktop/farfold/output/2026-10-13-xlsx-input-native-workspace/FarfoldPdfScope2554.pdf",
+      "bytes": 2554,
+      "sha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f"
+    },
+    {
+      "source": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/04-encrypted.pdf",
+      "target": "/Users/tw/Desktop/farfold/output/2026-10-13-xlsx-input-native-workspace/FarfoldPdfEncrypted2998.pdf",
+      "bytes": 2998,
+      "sha256": "87fd1dfc347a4b9dae8276b1c2691d8fbd73dff5672f14ad246001b813784e01"
+    }
+  ],
+  "scope": "New finite PDF @ route native phase; own saved marker/audio retained. No new Agent prompt or permission/config change."
+}

@@ -1,0 +1,7 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.51s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+thread 'tokio-rt-worker' (29024043) panicked at src/file_delivery_commands.rs:534:47:
+controlled worker failure
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+     Running unittests src/main.rs (src-tauri/target/debug/deps/farfold-86517b3632a82a76)
