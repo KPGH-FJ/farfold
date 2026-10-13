@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "startedAtUtc": "2026-10-13T16:22:10.516752+00:00",
+  "completedAtUtc": "2026-10-13T16:22:10.561861+00:00",
+  "actualAnalysisExitCode": 0,
+  "analysisAttemptCount": 2,
+  "originalCaptureStrictExitCode": 2,
+  "originalCaptureRerun": false,
+  "originalCaptureDifferenceCount": 1,
+  "acceptedDifferences": [],
+  "previousBaselineStrictExitCode": 2,
+  "previousBaselineDifferencesAccepted": false,
+  "firstAttempt": {
+    "actualAnalysisExitCode": 1,
+    "failureStage": "Dedicated output directory mode precondition before receipt/DB reads",
+    "databaseReadBeforeFailure": false,
+    "originalExecution": {
+      "path": "output/2026-10-14-file-dialog-data-independent/execution.json",
+      "bytes": 1273,
+      "sha256": "1fc89313f0eb4a72cb1907c5fbe62df087b0c88ade32273bdc3eef235c2ad68a"
+    },
+    "originalStdout": {
+      "path": "output/2026-10-14-file-dialog-data-independent/stdout.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "originalStderr": {
+      "path": "output/2026-10-14-file-dialog-data-independent/stderr.raw",
+      "bytes": 385,
+      "sha256": "c3a5eb64d35a6fbff664bb50134fb99ee798b163819bc9f814b0a24b028b4f7f"
+    },
+    "correction": "Dedicated directory lstat confirmed current owner and no symlink, permission tightened0755→0700 without recursion; creator/writer unknown.",
+    "correctionEvidence": {
+      "path": "output/2026-10-14-file-dialog-data-independent/directory-mode-correction.json",
+      "bytes": 1092,
+      "sha256": "ab32d6cc62a23097b14d147fe9c5203c0f5d2f5c7a20dc3c9dee36deba77880b"
+    }
+  },
+  "successfulAttempt": {
+    "originalExecution": {
+      "path": "output/2026-10-14-file-dialog-data-independent/run-02/execution.json",
+      "bytes": 2154,
+      "sha256": "0286cecdde89c6277ea5d4609de05fc20152150980667ad99f3bfbd00d652937"
+    },
+    "sourceBefore": {
+      "path": "output/2026-10-14-file-dialog-data-independent/localize.py",
+      "bytes": 15208,
+      "sha256": "6b96f0a643df95655f99fb325c4407d4515d47d9d658a2c9110461401707d6c7"
+    },
+    "sourceAfter": {
+      "path": "output/2026-10-14-file-dialog-data-independent/localize.py",
+      "bytes": 15208,
+      "sha256": "6b96f0a643df95655f99fb325c4407d4515d47d9d658a2c9110461401707d6c7"
+    },
+    "stdout": {
+      "path": "output/2026-10-14-file-dialog-data-independent/run-02/stdout.raw",
+      "bytes": 353,
+      "sha256": "487c6c6e8e85c5ed35a9346aab196446fb7f14186cfcff985754b0ab53ade778"
+    },
+    "stderr": {
+      "path": "output/2026-10-14-file-dialog-data-independent/run-02/stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "summary": {
+    "path": "output/2026-10-14-file-dialog-data-independent/public-summary.json",
+    "bytes": 6935,
+    "sha256": "85ff264aab39228c74ac6ae3aeb3aff725ed0f0f6f8c455a4e1d18602e03976f"
+  },
+  "originalCaptureExecution": {
+    "path": "output/2026-10-14-file-dialog-data/execution.json",
+    "bytes": 980,
+    "sha256": "803c0790ed7ea0a39f4721241f20f2c6b68fca61cf633df475f9b33ddca89bd6"
+  },
+  "priorStageEvidence": [
+    {
+      "path": "output/2026-10-13-attachment-search-native-data/capture-receipt-private.json",
+      "sha256": "923dd886fcf2252c557b8c4a2e81e5aba3d0dc20c65d0d000c893d1a6d0c9f7a"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-native-data/final-verification-private.json",
+      "sha256": "ec9c09570e71265eaab786d612143cd993a97142f3860686f596e963ab994e92"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-native-data/execution.json",
+      "sha256": "d5f9562f65fca17c0dde70391b5a8459a4ab1f970b13205b61afcfb0fdffc755"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-native-data/comparison-private.json",
+      "sha256": "6190565fbe121beb87c8228b9cce556c03ae43992e63c26e20975c74241bdbc2"
+    }
+  ],
+  "readScope": "Only capture-produced baseline-second-copy and new consolidated snapshot opened immutable/query-only; no live/original-installation/first-capture database opened or read.",
+  "secondSnapshotByteHashesStable": true,
+  "boundary": "Successful independent localization is distinct from original strict capture exit2. No timestamps, row identities, user body, credentials or database files published. Past App/process observations are scoped to the capture stage; this record makes no new live-state claim."
+}

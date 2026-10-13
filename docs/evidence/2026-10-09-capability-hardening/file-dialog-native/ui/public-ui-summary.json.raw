@@ -1,0 +1,161 @@
+{
+  "schema": 1,
+  "checkedAtUtc": "2026-10-13T16:11:35.746789+00:00",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "phase": "NEW-26 separate installed file-panel observation",
+  "result": "scoped native selection and cancel observations verified; data review pending",
+  "eventIntegrity": {
+    "manifest": {
+      "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/manifest.json",
+      "bytes": 16670,
+      "sha256": "d4a3e377389ac349f7592ac38f112851a44a0f7410659ffc5754ea2b1ed34942"
+    },
+    "completedLifecycleEvents": 24,
+    "toolStatusCompleted": 23,
+    "toolStatusFailed": 1,
+    "byteOffsetsAndHashesExact": true,
+    "allCuaCompletedEventsInBoundedIntervalIncluded": true,
+    "previousP32EventsExcluded": true
+  },
+  "observations": [
+    {
+      "scope": "Initial failed UI action retained",
+      "actual": "Raise then click(66) failed with invalid element ID; following diff reported no change. A new full AX snapshot exposed the current add-file button 71 before the next action.",
+      "events": [
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "scope": "WAV file position selected through system panel",
+      "actual": "Coordinate click [722,373] selected valid-metadata-odd-before-and-after.wav; Open changed from disabled to enabled. Clicking Open returned a third attachment explicitly labelled file position, audio content not added. Only that newly added file chip was removed.",
+      "events": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "fixture": {
+        "path": "src-tauri/test-fixtures/audio-input/valid-metadata-odd-before-and-after.wav",
+        "bytes": 140,
+        "sha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b"
+      },
+      "identityBoundary": "This is a different filename/URI from the existing FarfoldAudioMetadata140.wav full-audio attachment, though both contain exactly the same 140 bytes."
+    },
+    {
+      "scope": "PDF system panel selection and explicit preview",
+      "actual": "A separately named 2554-byte exact fixture copy avoids conflating selection with the already-attached source. Coordinate click [641,214] selected the new PDF and enabled Open; opening returned its file chip. Initial scope checkbox was unchecked and Read disabled; checking the scope enabled Read. Preview displayed 1,311 representation bytes, 3 pages and partial-reading limitations.",
+      "events": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "fixture": {
+        "path": "output/2026-10-13-xlsx-input-native-workspace/FarfoldPickerPdf2554.pdf",
+        "bytes": 2554,
+        "sha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f"
+      },
+      "previewBoundary": "AX display is truncated; visible 1311-byte/3-page labels do not independently prove every body byte. The second partial-content acceptance checkbox stayed unchecked and the save-content button disabled."
+    },
+    {
+      "scope": "Preview cancellation preserves file-position transaction",
+      "actual": "Cancelling preview returned the still-unapproved new PDF file chip with Add text. Only this new PDF chip was then removed; no new PDF representation was approved or saved in this phase.",
+      "events": [
+        18,
+        19
+      ]
+    },
+    {
+      "scope": "Independent system-panel cancellation",
+      "actual": "Third panel: coordinate click [631,214] selected that PDF and enabled Open, then Cancel returned to the original two visible audio/PDF attachments, the owned marker and Ultra with Send disabled.",
+      "events": [
+        20,
+        21,
+        22
+      ],
+      "retentionBoundary": "Visible UI continuity only here; exact persisted marker/body/source equality is left to the separate data review."
+    },
+    {
+      "scope": "Normal save and quit",
+      "actual": "Cmd+Q showed the generic work/unknown-work confirmation and button 196 Save and quit. Clicking 196 completed with isError=false and one empty text block. A later actual command matched the exact lowercase formal executable and found zero processes; formal five-file metadata matched the previous 9c record.",
+      "events": [
+        23,
+        24
+      ],
+      "process": {
+        "path": "output/2026-10-13-file-dialog-investigation/native-run/01-final-process.json",
+        "bytes": 320,
+        "sha256": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c"
+      },
+      "actualExecution": {
+        "path": "output/2026-10-13-file-dialog-investigation/native-run/03-final-process-exec.jsonl.raw",
+        "bytes": 3385,
+        "sha256": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205"
+      },
+      "formalFiles": {
+        "path": "output/2026-10-13-file-dialog-investigation/native-run/02-formal-files.json",
+        "bytes": 608,
+        "sha256": "872d3edc9c887b80454209c91ae722b92e3bd66ad8dbf2eb26b258cab64ed7a2"
+      },
+      "unknownWork": "Not reclassified as completed or stopped."
+    }
+  ],
+  "marker": {
+    "expectedBytesFromExistingFixture": 33,
+    "expectedSha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf",
+    "visibleTextRestored": true,
+    "exactPersistedValueVerifiedHere": false
+  },
+  "screenshotArchive": {
+    "images": [
+      {
+        "event": 6,
+        "mimeType": "image/jpeg",
+        "encodedCharacters": 56124,
+        "encodedUtf8Sha256": "50f248932b632e067bf801aed2850a536b3a97badecb16e0be76a9f5365d5c45",
+        "hasEllipsis": true,
+        "strictBase64Valid": false,
+        "completeArchivedPixels": false
+      },
+      {
+        "event": 12,
+        "mimeType": "image/jpeg",
+        "encodedCharacters": 56533,
+        "encodedUtf8Sha256": "2ed88e943665bd843f3f3cc1aaeea63d12008ccc0a0993b9f47593e31b37548e",
+        "hasEllipsis": true,
+        "strictBase64Valid": false,
+        "completeArchivedPixels": false
+      },
+      {
+        "event": 20,
+        "mimeType": "image/jpeg",
+        "encodedCharacters": 56512,
+        "encodedUtf8Sha256": "708fdbcc24fbafcdf0497cbb993b4db9d3baf3d8c8c93f5103d6fa5e4590ed03",
+        "hasEllipsis": true,
+        "strictBase64Valid": false,
+        "completeArchivedPixels": false
+      }
+    ],
+    "boundary": "All three nested JPEG data strings contain an ellipsis and fail strict base64 validation. They are preserved only as original private tool text, not complete pixel archives. No images reconstructed or re-captured."
+  },
+  "notEstablished": [
+    "A unique cause for earlier disabled-Open failures.",
+    "A production code fix: no source change occurred in this phase.",
+    "Official zero-request counter; no prompt, slash, approval or account/model/service change was observed in these actions.",
+    "New audio-content ingestion or acceptance; WAV was added as a file position only.",
+    "New PDF content approval/save, complete AX body bytes, OCR or visual rendering equivalence.",
+    "All formats, directories, machines or Windows; this is a bounded macOS observation.",
+    "Post-run exact persisted data equality; separate captured-copy review pending."
+  ],
+  "fixtureCopyReceipt": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/pdf-fixture-copy.json",
+    "bytes": 500,
+    "sha256": "c4f33da92b811031e71819cf2413234b043d83aba19d2b646109944423ad943f"
+  },
+  "reviewerActions": "Read bounded transcript bytes, extracted raw lines and named synthetic fixtures only; wrote output evidence. No app/UI/Agent/process/database commands, no source/docs edits."
+}

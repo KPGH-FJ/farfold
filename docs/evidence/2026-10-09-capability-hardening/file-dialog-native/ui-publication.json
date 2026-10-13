@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "publishedAtUtc": "2026-10-13T16:17:35.197791+00:00",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "scope": "NEW-26 separate installed macOS file-dialog UI observations; ten minimal safe originals published byte-for-byte. No data-retention closeout yet.",
+  "selection": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-independent/public-ui-publication-selection.json",
+    "bytes": 5508,
+    "sha256": "4add56a3e4b645b966589cdc6892dec4cb03c70a898cbd9ea02a66cc8162669f"
+  },
+  "recordCount": 10,
+  "allPublishedBytesEqualSources": true,
+  "records": [
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/02-call_unWR8uqdbASy7PuH1OONbGuu.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/02-call_unWR8uqdbASy7PuH1OONbGuu.jsonl.raw",
+      "bytes": 966,
+      "sha256": "e8d60433319aa240d245a5081fd4c654c26b0779908489a26351e3c4cca09ad7",
+      "event": 2,
+      "timestamp": "2026-10-13T16:01:53.498Z"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/07-call_e6fd9674095a40c29b5507cceb602e0b.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/07-call_e6fd9674095a40c29b5507cceb602e0b.jsonl.raw",
+      "bytes": 1899,
+      "sha256": "e1ff0bdadbe6140a2613a47ebc907422acfec62bbad0222cd657ee977f3a5af9",
+      "event": 7,
+      "timestamp": "2026-10-13T16:02:31.516Z"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/13-call_aH06ca0JQF7cJSkPH7Exh3IM.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/13-call_aH06ca0JQF7cJSkPH7Exh3IM.jsonl.raw",
+      "bytes": 1865,
+      "sha256": "b250288dd5cb94a39cc2bd34734fdae2fd2517e35f3f0147785f5a902d95d74f",
+      "event": 13,
+      "timestamp": "2026-10-13T16:04:20.240Z"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/21-call_tYyiDR066eR4jt7GZYb2eMN7.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/21-call_tYyiDR066eR4jt7GZYb2eMN7.jsonl.raw",
+      "bytes": 1866,
+      "sha256": "d41dc9880e4d611da7d04e1596e4191e4dcb9174c9cc26d64b7d24fdb31519d9",
+      "event": 21,
+      "timestamp": "2026-10-13T16:05:09.708Z"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/23-call_uuooA1Gh1QJrWmJl4RZLWkJd.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/23-call_uuooA1Gh1QJrWmJl4RZLWkJd.jsonl.raw",
+      "bytes": 1724,
+      "sha256": "b6bb997adbea13389eab605b1b38a50b782ae9a105c04de58b063ed4bfe51d14",
+      "event": 23,
+      "timestamp": "2026-10-13T16:05:21.814Z"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/24-call_ZEZOnBmsADcKmAIHpmZgGYZ9.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/24-call_ZEZOnBmsADcKmAIHpmZgGYZ9.jsonl.raw",
+      "bytes": 808,
+      "sha256": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+      "event": 24,
+      "timestamp": "2026-10-13T16:05:25.650Z"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/01-final-process.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/01-final-process.json.raw",
+      "bytes": 320,
+      "sha256": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/03-final-process-exec.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/03-final-process-exec.jsonl.raw",
+      "bytes": 3385,
+      "sha256": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/02-formal-files.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/02-formal-files.json.raw",
+      "bytes": 608,
+      "sha256": "872d3edc9c887b80454209c91ae722b92e3bd66ad8dbf2eb26b258cab64ed7a2"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-independent/public-ui-summary.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/public-ui-summary.json.raw",
+      "bytes": 7560,
+      "sha256": "c2501a45f694e2bb92dccfab6f12791501ffb8b4c59dc8f3b52deef2efe30426"
+    }
+  ],
+  "evidenceBoundary": [
+    "The six CUA raw events directly show the retained invalid-element failure, three successful coordinate selections enabling Open, normal quit context and final empty successful quit completion.",
+    "The safe summary records independent review of all 24 bounded CUA lifecycle events, including PDF explicit scope, 1311-byte/3-page partial preview, cancellation and restoration. Those detailed transaction raw events remain private or optional and are not claimed to be in this minimal publication.",
+    "WAV selection added a file-position chip only. PDF preview was cancelled before the second partial-reading agreement or saving new PDF text. This phase did not send a prompt or approve Agent permissions; this is action evidence, not an official zero-request counter.",
+    "No previous failure was removed or attributed to a unique cause. No product source fix is claimed. No XLSX path was tested in this phase.",
+    "The actual later command checked the exact lowercase formal executable and found zero processes; the formal-file receipt contains five files. Unknown work was not classified complete or stopped.",
+    "Full app AX snapshots may contain user history and remain private. Three nested screenshot payloads are truncated, fail strict base64 validation and are not complete archived images. Full transcript, user history, image payloads and databases are not published.",
+    "Exact persisted draft, attachment and source retention awaits the separate post-run data review. No main installed-native-scoped entry or four status documents changed in this publication."
+  ],
+  "optionalTransactionRecordsPublished": 0,
+  "dataReview": "pending",
+  "applicationOrAgentActionsByPublisher": false
+}

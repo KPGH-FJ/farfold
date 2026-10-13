@@ -1,0 +1,1 @@
+{"result": "independentlyLocalizedNoDifferencesAccepted", "strictExitCode": 2, "differenceCount": 1, "changedFields": [{"table": "agents", "fields": ["updated_at"]}], "all53SettingsRawExact": true, "allTenDraftsExact": true, "completeMarkerAudioPdfExact": true, "publicSummarySha256": "85ff264aab39228c74ac6ae3aeb3aff725ed0f0f6f8c455a4e1d18602e03976f"}

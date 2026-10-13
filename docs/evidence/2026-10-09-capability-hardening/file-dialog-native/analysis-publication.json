@@ -1,0 +1,24 @@
+{
+  "publishedAtUtc": "2026-10-13T16:32:11.571122+00:00",
+  "records": [
+    {
+      "source": "output/2026-10-14-file-dialog-data-independent/public-execution.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/independent-execution.json.raw",
+      "bytes": 4416,
+      "sha256": "3607de6a8da2ffed72cd84b89316443819adcf6f758bbdc28adacfd948dcf874"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data-independent/run-02/stdout.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/independent-stdout.raw",
+      "bytes": 353,
+      "sha256": "487c6c6e8e85c5ed35a9346aab196446fb7f14186cfcff985754b0ab53ade778"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data-independent/run-02/stderr.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/independent-stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "scope": "Approved original safe analysis mapping and successful run-02 stdout/stderr. First failure and same-source directory-mode correction remain linked; capture was not repeated."
+}

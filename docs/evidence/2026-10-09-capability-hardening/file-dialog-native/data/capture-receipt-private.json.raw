@@ -1,0 +1,312 @@
+{
+  "phase": "capturedExactBytesNotAccepted",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "checkedAtUtc": "2026-10-13T16:19:35.345223+00:00",
+  "baselineOriginal": {
+    "signature": [
+      16777234,
+      74916269,
+      33152,
+      512000,
+      1791906951237534778,
+      1791906951237534778,
+      501
+    ],
+    "sha256": "805099d1c897f7b00387ce17caef7d1dd161eb85865472cfd8196875129f970b",
+    "bytes": 512000
+  },
+  "baselineOriginalRaw": {
+    "farfold.sqlite3": {
+      "signature": [
+        16777234,
+        74916262,
+        33152,
+        512000,
+        1791906951186640973,
+        1791906951186640973,
+        501
+      ],
+      "sha256": "f7ddc093c95edd33c01bb65146cff52f5570e3b8ebb6fabc6ad95a4cf1eb4da5",
+      "bytes": 512000
+    },
+    "farfold.sqlite3-wal": {
+      "signature": [
+        16777234,
+        74916263,
+        33152,
+        4169472,
+        1791906951188885580,
+        1791906951188885580,
+        501
+      ],
+      "sha256": "9ca3e31b0c25a5c694ced40f37d08152f7240633e263fa80ccf3f805438fcd05",
+      "bytes": 4169472
+    },
+    "farfold.sqlite3-shm": {
+      "signature": [
+        16777234,
+        74916264,
+        33152,
+        32768,
+        1791906951190155462,
+        1791906951190155462,
+        501
+      ],
+      "sha256": "a18f0fabc771320866c958fb1690a22ac982311d43f828647afee62dbd4859df",
+      "bytes": 32768
+    }
+  },
+  "baselineStageEvidence": {
+    "/Users/tw/Desktop/farfold/output/2026-10-13-attachment-search-native-data/capture-receipt-private.json": "923dd886fcf2252c557b8c4a2e81e5aba3d0dc20c65d0d000c893d1a6d0c9f7a",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-attachment-search-native-data/final-verification-private.json": "ec9c09570e71265eaab786d612143cd993a97142f3860686f596e963ab994e92",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-attachment-search-native-data/execution.json": "d5f9562f65fca17c0dde70391b5a8459a4ab1f970b13205b61afcfb0fdffc755",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-attachment-search-native-data/comparison-private.json": "6190565fbe121beb87c8228b9cce556c03ae43992e63c26e20975c74241bdbc2"
+  },
+  "baselineStrictExitCode": 2,
+  "baselineDifferencesAccepted": false,
+  "baselineSecondCopy": {
+    "signature": [
+      16777234,
+      74919557,
+      33152,
+      512000,
+      1791908375244767871,
+      1791908375244767871,
+      501
+    ],
+    "sha256": "805099d1c897f7b00387ce17caef7d1dd161eb85865472cfd8196875129f970b",
+    "bytes": 512000
+  },
+  "sourceBefore": {
+    "farfold.sqlite3": {
+      "signature": [
+        16777234,
+        65087098,
+        33188,
+        512000,
+        1791903118952241776,
+        1791903118952241776,
+        501
+      ],
+      "sha256": "f7ddc093c95edd33c01bb65146cff52f5570e3b8ebb6fabc6ad95a4cf1eb4da5",
+      "bytes": 512000
+    },
+    "farfold.sqlite3-wal": {
+      "signature": [
+        16777234,
+        65087100,
+        33188,
+        4169472,
+        1791907497599080383,
+        1791907497599080383,
+        501
+      ],
+      "sha256": "6e4974af2c3e869b67234a7b5a2495407d447cd1ba57264dc9f4b92f88cb059e",
+      "bytes": 4169472
+    },
+    "farfold.sqlite3-shm": {
+      "signature": [
+        16777234,
+        65087101,
+        33188,
+        32768,
+        1791907309062520096,
+        1791907525721705519,
+        501
+      ],
+      "sha256": "bb104a2cbc5e5adcff76748ed2f11654fd46fe86c88220e69437cfe59a57ffb9",
+      "bytes": 32768
+    }
+  },
+  "sourceAfter": {
+    "farfold.sqlite3": {
+      "signature": [
+        16777234,
+        65087098,
+        33188,
+        512000,
+        1791903118952241776,
+        1791903118952241776,
+        501
+      ],
+      "sha256": "f7ddc093c95edd33c01bb65146cff52f5570e3b8ebb6fabc6ad95a4cf1eb4da5",
+      "bytes": 512000
+    },
+    "farfold.sqlite3-wal": {
+      "signature": [
+        16777234,
+        65087100,
+        33188,
+        4169472,
+        1791907497599080383,
+        1791907497599080383,
+        501
+      ],
+      "sha256": "6e4974af2c3e869b67234a7b5a2495407d447cd1ba57264dc9f4b92f88cb059e",
+      "bytes": 4169472
+    },
+    "farfold.sqlite3-shm": {
+      "signature": [
+        16777234,
+        65087101,
+        33188,
+        32768,
+        1791907309062520096,
+        1791907525721705519,
+        501
+      ],
+      "sha256": "bb104a2cbc5e5adcff76748ed2f11654fd46fe86c88220e69437cfe59a57ffb9",
+      "bytes": 32768
+    }
+  },
+  "firstRawCaptureBefore": {
+    "farfold.sqlite3": {
+      "signature": [
+        16777234,
+        74919559,
+        33152,
+        512000,
+        1791908375252332330,
+        1791908375252332330,
+        501
+      ],
+      "sha256": "f7ddc093c95edd33c01bb65146cff52f5570e3b8ebb6fabc6ad95a4cf1eb4da5",
+      "bytes": 512000
+    },
+    "farfold.sqlite3-wal": {
+      "signature": [
+        16777234,
+        74919560,
+        33152,
+        4169472,
+        1791908375254279309,
+        1791908375254279309,
+        501
+      ],
+      "sha256": "6e4974af2c3e869b67234a7b5a2495407d447cd1ba57264dc9f4b92f88cb059e",
+      "bytes": 4169472
+    },
+    "farfold.sqlite3-shm": {
+      "signature": [
+        16777234,
+        74919561,
+        33152,
+        32768,
+        1791908375255945832,
+        1791908375255945832,
+        501
+      ],
+      "sha256": "bb104a2cbc5e5adcff76748ed2f11654fd46fe86c88220e69437cfe59a57ffb9",
+      "bytes": 32768
+    }
+  },
+  "firstRawCaptureAfter": {
+    "farfold.sqlite3": {
+      "signature": [
+        16777234,
+        74919559,
+        33152,
+        512000,
+        1791908375252332330,
+        1791908375252332330,
+        501
+      ],
+      "sha256": "f7ddc093c95edd33c01bb65146cff52f5570e3b8ebb6fabc6ad95a4cf1eb4da5",
+      "bytes": 512000
+    },
+    "farfold.sqlite3-wal": {
+      "signature": [
+        16777234,
+        74919560,
+        33152,
+        4169472,
+        1791908375254279309,
+        1791908375254279309,
+        501
+      ],
+      "sha256": "6e4974af2c3e869b67234a7b5a2495407d447cd1ba57264dc9f4b92f88cb059e",
+      "bytes": 4169472
+    },
+    "farfold.sqlite3-shm": {
+      "signature": [
+        16777234,
+        74919561,
+        33152,
+        32768,
+        1791908375255945832,
+        1791908375255945832,
+        501
+      ],
+      "sha256": "bb104a2cbc5e5adcff76748ed2f11654fd46fe86c88220e69437cfe59a57ffb9",
+      "bytes": 32768
+    }
+  },
+  "consolidated": {
+    "signature": [
+      16777234,
+      74919566,
+      33152,
+      512000,
+      1791908375296962051,
+      1791908375296962051,
+      501
+    ],
+    "sha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+    "bytes": 512000
+  },
+  "backupNormalization": {
+    "lockingBeforeBackupOrFirstWalAccess": "exclusive",
+    "modeBefore": "wal",
+    "checkpointBeforeDelete": [
+      0,
+      0,
+      0
+    ],
+    "modeAfter": "delete",
+    "checkpointAfterDelete": [
+      0,
+      -1,
+      -1
+    ],
+    "integrity": "ok",
+    "connectionsClosedVerified": true,
+    "sidecarsAbsentAfterClose": true,
+    "deletedOrMovedSidecars": false,
+    "SQLiteOpenScope": "secondWorkingAndNewConsolidatedOnly"
+  },
+  "configSha256": "43356564b8c568dd0a30456c6d0207378df31635b6bc5abe00c9211cbe5f207e",
+  "evidencePins": {
+    "/Users/tw/Desktop/farfold/output/2026-10-13-attachment-search-install/install-operation.json": "18bd2d59bd3271f155a9e652927cf326c2ab1195ede9dee711453b8c1719dd7f",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-file-dialog-investigation/native-run/03-final-process-exec.jsonl.raw": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-attachment-search-install/metadata-backup-receipt.json": "8e7c035fc0821c3cf7b907311f56da60b2c99944c00b928fafd03540fd281450",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-attachment-search-native-data/capture-receipt-private.json": "923dd886fcf2252c557b8c4a2e81e5aba3d0dc20c65d0d000c893d1a6d0c9f7a",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-attachment-search-native-data/final-verification-private.json": "ec9c09570e71265eaab786d612143cd993a97142f3860686f596e963ab994e92",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-attachment-search-native-data/execution.json": "d5f9562f65fca17c0dde70391b5a8459a4ab1f970b13205b61afcfb0fdffc755",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-attachment-search-native-data/comparison-private.json": "6190565fbe121beb87c8228b9cce556c03ae43992e63c26e20975c74241bdbc2",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/23-call_uuooA1Gh1QJrWmJl4RZLWkJd.jsonl.raw": "b6bb997adbea13389eab605b1b38a50b782ae9a105c04de58b063ed4bfe51d14",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/24-call_ZEZOnBmsADcKmAIHpmZgGYZ9.jsonl.raw": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/manifest.json": "d4a3e377389ac349f7592ac38f112851a44a0f7410659ffc5754ea2b1ed34942",
+    "/Users/tw/Desktop/farfold/output/2026-10-13-file-dialog-investigation/native-run/01-final-process.json": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c",
+    "/Users/tw/Desktop/farfold/output/2026-10-14-file-dialog-data-preparation/capture_compare.py": "6cf348beb59d11a4d95218f86c51168604fe186fa3a13f526359088d6fc70c2c",
+    "/Users/tw/Desktop/farfold/output/2026-10-14-file-dialog-data-preparation/io_support.py": "2060664a23e535f938a3a37012937f99e3a071092c376ef208a4e629fcbd31d9",
+    "/Users/tw/Desktop/farfold/output/2026-10-14-file-dialog-data-preparation/data_compare.py": "831a696eb1cea51874c6d428a1ef349e275cb48c95dc24bfbaf3598196db4e10"
+  },
+  "sourceFirstAndBaselineStable": true,
+  "processObservations": [
+    {
+      "checkedAtUtc": "2026-10-13T16:19:35.238897+00:00",
+      "formalProcessCount": 0,
+      "exactExecutableSha256": "8abd4e1adf11e1d90f7d3797a7dc47064e1cd8fcc575b4be2d7be6c0e56448ec"
+    },
+    {
+      "checkedAtUtc": "2026-10-13T16:19:35.284017+00:00",
+      "formalProcessCount": 0,
+      "exactExecutableSha256": "8abd4e1adf11e1d90f7d3797a7dc47064e1cd8fcc575b4be2d7be6c0e56448ec"
+    },
+    {
+      "checkedAtUtc": "2026-10-13T16:19:35.345143+00:00",
+      "formalProcessCount": 0,
+      "exactExecutableSha256": "8abd4e1adf11e1d90f7d3797a7dc47064e1cd8fcc575b4be2d7be6c0e56448ec"
+    }
+  ]
+}

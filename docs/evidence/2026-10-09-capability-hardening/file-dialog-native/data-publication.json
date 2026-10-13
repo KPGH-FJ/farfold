@@ -1,0 +1,53 @@
+{
+  "publishedAtUtc": "2026-10-13T16:23:48.788455+00:00",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "records": [
+    {
+      "source": "output/2026-10-14-file-dialog-data/capture-receipt-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/capture-receipt-private.json.raw",
+      "bytes": 10334,
+      "sha256": "7de7a6ad67f60922869b6dd4aea6a128b9030a2ca6d4c65c167cd1bf2bccde99"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data/comparison-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/comparison-private.json.raw",
+      "bytes": 3936,
+      "sha256": "a087bc3a57afe2e3fa41039e702e453e7b5ccdb40d9766f5b7b24a50a42592cc"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data/final-verification-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/final-verification-private.json.raw",
+      "bytes": 792,
+      "sha256": "dba4b6ac8b53b44f5e8f4447071c67ac5b039cc6534ed893478ec27fa259efd8"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data/execution.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/execution.json.raw",
+      "bytes": 980,
+      "sha256": "803c0790ed7ea0a39f4721241f20f2c6b68fca61cf633df475f9b33ddca89bd6"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data/stdout.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/stdout.raw",
+      "bytes": 93,
+      "sha256": "69f6e60483803dc5a06e45ed88cee6140936c57be9139f63fa673badd4c01ec3"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data/stderr.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data-independent/public-summary.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/independent-summary.json.raw",
+      "bytes": 6935,
+      "sha256": "85ff264aab39228c74ac6ae3aeb3aff725ed0f0f6f8c455a4e1d18602e03976f"
+    }
+  ],
+  "scope": "Actual single strict-capture execution/stdout/stderr, hash/count/field-only capture/comparison/final records and independent field summary. No SQLite files, original row values, account identity or user body.",
+  "strictCaptureActualExit": 2,
+  "differenceCount": 1,
+  "acceptedDifferences": [],
+  "independentExecutionProof": "Separate analysis execution publication follows; analysis success does not turn capture exit2 into zero."
+}

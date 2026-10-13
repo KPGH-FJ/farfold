@@ -1,0 +1,350 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T16:34:32.855996+00:00",
+  "result": "PASS_NO_CLOSEOUT_BLOCKER_WITH_RETAINED_STRICT_DIFFERENCE",
+  "scope": "Final read-only review of this NEW-26 publication and four documentation files. Prior saved UI/data reviews reused; no new DB, App, process, Agent, network, source-check or capture activity.",
+  "installedSourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "documentationBaselineCommit": "fb2ba8e9c8205a7478265fdd60b28da442fdb480",
+  "findings": [],
+  "publicationChecks": {
+    "entry": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/installed-native-scoped.json",
+      "bytes": 6167,
+      "sha256": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96"
+    },
+    "publications": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui-publication.json",
+        "bytes": 6420,
+        "sha256": "9a10eebed8c298839e0707e1dc6ce60c0c938533b6a84d566d222491c23f6e50"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui-reading-supplement.json",
+        "bytes": 2132,
+        "sha256": "9d2bfa16ea456d03232e3209f331781bc677ac3b750399ff6600357db653e6aa"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data-publication.json",
+        "bytes": 2743,
+        "sha256": "699604e48179c50a127e0239723d7df849655aaef75a382fc72b4f3553dadd5d"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/analysis-publication.json",
+        "bytes": 1222,
+        "sha256": "3d9bc2458a0012f8fe119421c8135b4ef871baa4973cc2d847e05aa9fc324ed4"
+      }
+    ],
+    "rawOriginalsByteExact": 24,
+    "uiRawOriginals": 14,
+    "captureAndSummaryRawOriginals": 7,
+    "analysisRawOriginals": 3,
+    "directoryFiles": 29,
+    "directoryMembershipExact": true,
+    "entryPinnedReferencesChecked": 9,
+    "allReferencesByteAndHashMatched": true,
+    "entryReferences": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/install-independent-final.json",
+        "bytes": 102974,
+        "sha256": "e672ab352926712369cb2295325276b227c77fee84f7d7ec9e2f9a2d5bb84481"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui-publication.json",
+        "bytes": 6420,
+        "sha256": "9a10eebed8c298839e0707e1dc6ce60c0c938533b6a84d566d222491c23f6e50"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui-reading-supplement.json",
+        "bytes": 2132,
+        "sha256": "9d2bfa16ea456d03232e3209f331781bc677ac3b750399ff6600357db653e6aa"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/public-ui-summary.json.raw",
+        "bytes": 7560,
+        "sha256": "c2501a45f694e2bb92dccfab6f12791501ffb8b4c59dc8f3b52deef2efe30426"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data-publication.json",
+        "bytes": 2743,
+        "sha256": "699604e48179c50a127e0239723d7df849655aaef75a382fc72b4f3553dadd5d"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/analysis-publication.json",
+        "bytes": 1222,
+        "sha256": "3d9bc2458a0012f8fe119421c8135b4ef871baa4973cc2d847e05aa9fc324ed4"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/execution.json.raw",
+        "bytes": 980,
+        "sha256": "803c0790ed7ea0a39f4721241f20f2c6b68fca61cf633df475f9b33ddca89bd6"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/independent-summary.json.raw",
+        "bytes": 6935,
+        "sha256": "85ff264aab39228c74ac6ae3aeb3aff725ed0f0f6f8c455a4e1d18602e03976f"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/independent-execution.json.raw",
+        "bytes": 4416,
+        "sha256": "3607de6a8da2ffed72cd84b89316443819adcf6f758bbdc28adacfd948dcf874"
+      }
+    ]
+  },
+  "documents": {
+    "files": [
+      {
+        "path": "docs/status.md",
+        "bytes": 88912,
+        "sha256": "696b9593e07b769b5f8d6232805954e4ce180754572b6069cf5732bc290d115f"
+      },
+      {
+        "path": "docs/architecture.md",
+        "bytes": 130321,
+        "sha256": "58267c5169c91be66ae369395b7fd58ed21ec67f64ca2ddb85c87f397b7f4499"
+      },
+      {
+        "path": "plans/agent-access.md",
+        "bytes": 154051,
+        "sha256": "910d29a25f84be5e3ccbd158304d5d16c9d1291dddfa7660fa06a2cd3e4bad57"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+        "bytes": 87013,
+        "sha256": "f474b096ebf6977ed68af7a0a8087e63f68937e8a9b6cd1d494a0e9e3821038a"
+      }
+    ],
+    "ownerFinalReport": {
+      "path": "output/2026-10-14-file-dialog-doc-closeout/report.json",
+      "bytes": 11094,
+      "sha256": "aa25a55d0e534e30b4be01527ee249a118b88e0e517f8e015f5e89d5753b0332"
+    },
+    "touchedLinksExist": 16,
+    "uniqueTouchedTargets": 4,
+    "original122FullRowsUnchangedAgainstDocumentationBaseline": true,
+    "original122TitlesAndConditionsUnchangedAgainst43919180": true,
+    "all28NewConditionsUnchangedAgainstBothBaselines": true,
+    "onlyProgressRowChanged": "NEW-26",
+    "protectedUnchanged": [
+      {
+        "path": "PRODUCT.md",
+        "bytes": 35083,
+        "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+      },
+      {
+        "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+        "bytes": 11543,
+        "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+      },
+      {
+        "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+        "bytes": 2341,
+        "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+      }
+    ]
+  },
+  "claimsReview": {
+    "new26Scope": "The installed 9c macOS normal panel accepted coordinate selection of the bounded WAV/PDF fixtures, returned only file-position chips, allowed explicit PDF scope reading/preview, and preserved the original draft after cancellation and removal of only temporary chips.",
+    "pdfBoundary": "1311 bytes/3 pages are the displayed partial-preview metrics. The new PDF second acceptance remained unchecked; no new PDF text was saved. Truncated AX and screenshot payloads are not complete content or pixel archives.",
+    "retentionProof": "Existing 33-byte marker, complete 140-byte audio and 1311-byte saved PDF representation, both complete seven-field sources, all 10 drafts and entire unsentWork raw string are reported exact by the separately reviewed saved second-copy analysis; UI appearance alone is not used as byte evidence.",
+    "strictCapture": {
+      "runs": 1,
+      "actualExitCode": 2,
+      "differenceCount": 1,
+      "field": "agents.updated_at",
+      "writer": "unknown",
+      "acceptedDifferences": [],
+      "baselineConsolidatedSha256": "805099d1c897f7b00387ce17caef7d1dd161eb85865472cfd8196875129f970b",
+      "wholeRowsExact": {
+        "sessions": 135,
+        "dismissedSessions": 171,
+        "settings": 53,
+        "otherAgents": 39
+      }
+    },
+    "analysisBoundary": "First analysis exited 1 at the dedicated output-directory mode assertion before DB reads. After owner/non-symlink checks only that directory was tightened 0755 to 0700; the same analysis source exited 0 with separately retained run-02 receipts. No recapture and no strict-result rewrite.",
+    "oldFailuresRetained": true,
+    "previousCauseStillUnlocated": true,
+    "productionFixNotClaimed": true,
+    "xlsxOtherFormatsOrPlatformsNotClaimedTested": true,
+    "officialZeroRequestCounterNotClaimed": true,
+    "otherBoundariesOpen": [
+      "NEW-24",
+      "P08 real-Agent receipt and whole scope",
+      "P27 production screenshot",
+      "P32 native positive attachment search and whole scope",
+      "remaining original plan conditions"
+    ]
+  },
+  "privacyReview": {
+    "publicRecords": "Reviewed saved metadata, counts, hashes, synthetic-fixture dialog snippets, generic exit controls and safe execution mappings only. No database bytes, private row values, credentials, account identity, user message body or private full AX/sidebar were added.",
+    "reportSafeForByteExactRawPublication": true,
+    "fullPrivateUiAndDataRemainUnpublished": true
+  },
+  "reviewSourceRecords": [
+    {
+      "path": "output/2026-10-14-file-dialog-closeout-independent/ui-publication-review.json",
+      "bytes": 7969,
+      "sha256": "c0a84548ebba88a423bcfce8133b547c087e11009e823c45b4d24e213210e640"
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-closeout-independent/data-evidence-review.json",
+      "bytes": 4939,
+      "sha256": "3af82fe9ceaf19ab55a14a9717b9c24e88a39fd63f73820c5dea919ecb185467"
+    }
+  ],
+  "executionBoundary": {
+    "databaseReads": 0,
+    "newCaptureRuns": 0,
+    "appOrAgentActions": 0,
+    "processChecks": 0,
+    "sourceTests": 0,
+    "sourceOrDocumentationWrites": 0,
+    "writes": "This new output report only"
+  },
+  "rawPublicationRecords": [
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/02-call_unWR8uqdbASy7PuH1OONbGuu.jsonl.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/02-call_unWR8uqdbASy7PuH1OONbGuu.jsonl.raw",
+      "bytes": 966,
+      "sha256": "e8d60433319aa240d245a5081fd4c654c26b0779908489a26351e3c4cca09ad7"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/07-call_e6fd9674095a40c29b5507cceb602e0b.jsonl.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/07-call_e6fd9674095a40c29b5507cceb602e0b.jsonl.raw",
+      "bytes": 1899,
+      "sha256": "e1ff0bdadbe6140a2613a47ebc907422acfec62bbad0222cd657ee977f3a5af9"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/13-call_aH06ca0JQF7cJSkPH7Exh3IM.jsonl.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/13-call_aH06ca0JQF7cJSkPH7Exh3IM.jsonl.raw",
+      "bytes": 1865,
+      "sha256": "b250288dd5cb94a39cc2bd34734fdae2fd2517e35f3f0147785f5a902d95d74f"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/21-call_tYyiDR066eR4jt7GZYb2eMN7.jsonl.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/21-call_tYyiDR066eR4jt7GZYb2eMN7.jsonl.raw",
+      "bytes": 1866,
+      "sha256": "d41dc9880e4d611da7d04e1596e4191e4dcb9174c9cc26d64b7d24fdb31519d9"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/23-call_uuooA1Gh1QJrWmJl4RZLWkJd.jsonl.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/23-call_uuooA1Gh1QJrWmJl4RZLWkJd.jsonl.raw",
+      "bytes": 1724,
+      "sha256": "b6bb997adbea13389eab605b1b38a50b782ae9a105c04de58b063ed4bfe51d14"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/24-call_ZEZOnBmsADcKmAIHpmZgGYZ9.jsonl.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/24-call_ZEZOnBmsADcKmAIHpmZgGYZ9.jsonl.raw",
+      "bytes": 808,
+      "sha256": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/01-final-process.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/01-final-process.json.raw",
+      "bytes": 320,
+      "sha256": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/03-final-process-exec.jsonl.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/03-final-process-exec.jsonl.raw",
+      "bytes": 3385,
+      "sha256": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/02-formal-files.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/02-formal-files.json.raw",
+      "bytes": 608,
+      "sha256": "872d3edc9c887b80454209c91ae722b92e3bd66ad8dbf2eb26b258cab64ed7a2"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-independent/public-ui-summary.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/public-ui-summary.json.raw",
+      "bytes": 7560,
+      "sha256": "c2501a45f694e2bb92dccfab6f12791501ffb8b4c59dc8f3b52deef2efe30426"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/15-call_Eokxy5is31xmRMsHSm1Hzgwd.jsonl.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/15-call_Eokxy5is31xmRMsHSm1Hzgwd.jsonl.raw",
+      "bytes": 3369,
+      "sha256": "a041d449c3b1fb3bb07b191acd5fc0ff6707fff5639d9de4abc56ce8f0d21a0c"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/16-call_ledg21OJRBbCJwtXHlb9LCyX.jsonl.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/16-call_ledg21OJRBbCJwtXHlb9LCyX.jsonl.raw",
+      "bytes": 1346,
+      "sha256": "5338b4573940caf36763153cbc6c10ae2f2306dae4503e2a27a69719f23543fb"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/17-call_57FfmiIag8ka7ZaUfQ6V3Poo.jsonl.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/17-call_57FfmiIag8ka7ZaUfQ6V3Poo.jsonl.raw",
+      "bytes": 4788,
+      "sha256": "da436603ed73adf7caa9271aad7e53ec339150ccce317487a6c6f4359844eaff"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/pdf-fixture-copy.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/pdf-fixture-copy.json.raw",
+      "bytes": 500,
+      "sha256": "c4f33da92b811031e71819cf2413234b043d83aba19d2b646109944423ad943f"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data/capture-receipt-private.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/capture-receipt-private.json.raw",
+      "bytes": 10334,
+      "sha256": "7de7a6ad67f60922869b6dd4aea6a128b9030a2ca6d4c65c167cd1bf2bccde99"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data/comparison-private.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/comparison-private.json.raw",
+      "bytes": 3936,
+      "sha256": "a087bc3a57afe2e3fa41039e702e453e7b5ccdb40d9766f5b7b24a50a42592cc"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data/final-verification-private.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/final-verification-private.json.raw",
+      "bytes": 792,
+      "sha256": "dba4b6ac8b53b44f5e8f4447071c67ac5b039cc6534ed893478ec27fa259efd8"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data/execution.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/execution.json.raw",
+      "bytes": 980,
+      "sha256": "803c0790ed7ea0a39f4721241f20f2c6b68fca61cf633df475f9b33ddca89bd6"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data/stdout.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/stdout.raw",
+      "bytes": 93,
+      "sha256": "69f6e60483803dc5a06e45ed88cee6140936c57be9139f63fa673badd4c01ec3"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data/stderr.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data-independent/public-summary.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/independent-summary.json.raw",
+      "bytes": 6935,
+      "sha256": "85ff264aab39228c74ac6ae3aeb3aff725ed0f0f6f8c455a4e1d18602e03976f"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data-independent/public-execution.json",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/independent-execution.json.raw",
+      "bytes": 4416,
+      "sha256": "3607de6a8da2ffed72cd84b89316443819adcf6f758bbdc28adacfd948dcf874"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data-independent/run-02/stdout.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/independent-stdout.raw",
+      "bytes": 353,
+      "sha256": "487c6c6e8e85c5ed35a9346aab196446fb7f14186cfcff985754b0ab53ade778"
+    },
+    {
+      "source": "output/2026-10-14-file-dialog-data-independent/run-02/stderr.raw",
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/independent-stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

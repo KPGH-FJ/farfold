@@ -1,0 +1,185 @@
+{
+  "schema": 1,
+  "checkedAtUtc": "2026-10-13T16:22:10.558842+00:00",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "result": "independentlyLocalizedNoDifferencesAccepted",
+  "actualStrictExitCode": 2,
+  "acceptedDifferences": [],
+  "differenceCount": 1,
+  "tables": {
+    "agents": {
+      "rowCount": 40,
+      "wholeRowsUnchanged": 39,
+      "rowMembershipExact": true,
+      "columnsExact": true,
+      "beforeWholeRowsSha256": "012b201c09025cacb326067b4f3e35882c64bf3ce42523d00d3d7929a12f9f60",
+      "afterWholeRowsSha256": "5145b4763d70b1a285d349298b096d9cb303b665176ba2b1722106ebfd7321a3"
+    },
+    "dismissed_sessions": {
+      "rowCount": 171,
+      "wholeRowsUnchanged": 171,
+      "rowMembershipExact": true,
+      "columnsExact": true,
+      "beforeWholeRowsSha256": "85d6a5d94f52909d1998494eb674735f43780fc64c257e108122992c28390072",
+      "afterWholeRowsSha256": "85d6a5d94f52909d1998494eb674735f43780fc64c257e108122992c28390072"
+    },
+    "sessions": {
+      "rowCount": 135,
+      "wholeRowsUnchanged": 135,
+      "rowMembershipExact": true,
+      "columnsExact": true,
+      "beforeWholeRowsSha256": "c5e9d492a4af6df5a2e07e1d1e40bbff79d23b0e16708ba14440d66545fe6852",
+      "afterWholeRowsSha256": "c5e9d492a4af6df5a2e07e1d1e40bbff79d23b0e16708ba14440d66545fe6852"
+    },
+    "settings": {
+      "rowCount": 53,
+      "wholeRowsUnchanged": 53,
+      "rowMembershipExact": true,
+      "columnsExact": true,
+      "beforeWholeRowsSha256": "69a3b9f95996c3e9219647217ea9a5980cd4fa8a3c94c81a35071c108771c78b",
+      "afterWholeRowsSha256": "69a3b9f95996c3e9219647217ea9a5980cd4fa8a3c94c81a35071c108771c78b"
+    }
+  },
+  "differences": [
+    {
+      "table": "agents",
+      "rowKeySha256": "08f6b585592467d20717e8abd8dd02b9fb430ba65eb4b745c373ce3001ef5dae",
+      "columns": [
+        {
+          "column": "updated_at",
+          "beforeSha256": "ff15e1eb4c63d31a616298b3e31eca7945c02e9b192492861cc17cae8a254a21",
+          "afterSha256": "902f69585f98b65b194ee1be364c18ea35e9daa460ba0ff6a663a80f527da535"
+        }
+      ]
+    }
+  ],
+  "schemaAndVersionExact": true,
+  "entireUnsentWorkRawExact": true,
+  "unsentWorkRawUtf8Bytes": 73533,
+  "unsentWorkRawSha256": "40bbd89bb0a53e77bf2bd9eae05927f4e7df7e65deea39036b887c92ea87abc7",
+  "unsentTopFields": {
+    "version": {
+      "exact": true,
+      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "type": "int"
+    },
+    "composers": {
+      "exact": true,
+      "sha256": "230dcdedb82413d1a5f07d36faec6894e8617a52e361649ecfe2fc1ae76e5d6a",
+      "type": "dict"
+    },
+    "choice": {
+      "exact": true,
+      "sha256": "83dfd1288bb041e41f87d79a57323f04f1543c287540902d5c5b1510924f470c",
+      "type": "dict"
+    },
+    "feedback": {
+      "exact": true,
+      "sha256": "92c0e7ac2cd949e361546aeeb367da3aa91435ea5af547f0a27bfdd77e08276e",
+      "type": "dict"
+    },
+    "queues": {
+      "exact": true,
+      "sha256": "6cc186f3f1356f30c45610d6a647537e5a6359b32b73d479df47f29968bd5fff",
+      "type": "dict"
+    },
+    "activity": {
+      "exact": true,
+      "sha256": "34c2db3b587678edeec2b00e03d6b1f7e2f612604501ac9a11b846d6ba30cb7a",
+      "type": "dict"
+    }
+  },
+  "worktreeLocations": {
+    "present": true,
+    "rawExact": true,
+    "wholeRowSha256": "98beefee9b34126e0ddd50512b530ed515abfabbc83ff339a44a2d66abcd96af"
+  },
+  "draft": {
+    "composerCount": 10,
+    "allTenComposersExact": true,
+    "otherNineComposersExact": true,
+    "ownedEntireComposerExact": true,
+    "ownedComposerSha256": "d29577d4a8cd2afcd6e5932560796f796368d13b1f5f093296e3e0e235b405d2",
+    "markerBytes": 33,
+    "markerSha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf",
+    "sendPendingStayedFalse": true,
+    "completeAttachmentArrayExact": true,
+    "attachmentArraySha256": "7b9b17ab47a60cfc9ee4618687224e148e98024c15abef1c33cd8270592d2783",
+    "audioCompleteBytes": 140,
+    "audioCompleteSha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b",
+    "audioEntireAttachmentExact": true,
+    "audioAllSevenSourceFieldsExact": true,
+    "audioSourceFieldNames": [
+      "name",
+      "path",
+      "resolvedPath",
+      "root",
+      "sha256",
+      "size",
+      "version"
+    ],
+    "audioSourceObjectSha256": "755d27a8243827ad7b69996748ad50192adda134dbd2234c25dff87375b162d9",
+    "pdfEntireAttachmentExact": true,
+    "pdfCompleteSavedRepresentationBytes": 1311,
+    "pdfCompleteSavedRepresentationSha256": "11b45fe9a1365b8f7995d30590b47b24b8d8b3cf8f24c5b481bb0dd8dd484a5e",
+    "pdfAllSevenSourceFieldsExact": true,
+    "pdfSourceObjectSha256": "f14331e87ed5802629dcac4322d3af0aaf48f794c3e252ea3ef0beed255b557f",
+    "pdfSourceBytes": 2554,
+    "pdfSourceSha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f",
+    "pdfPageNumbers": [
+      1,
+      2,
+      3
+    ],
+    "pdfPartialStayedTrue": true,
+    "pdfPartialSelectedStayedTrue": true,
+    "audioAndPdfSourceObjectsEqualPriorIndependentReport": true
+  },
+  "changedSessionMatchesOwnedDraft": false,
+  "writerAttribution": "Unknown for any observed change; retained values do not establish writer or completion.",
+  "readScope": "Only capture-produced baseline-second-copy and new consolidated snapshot opened immutable/query-only; no live/original-installation/first-capture database opened or read.",
+  "secondSnapshotByteHashesStable": true,
+  "privateIdentityOrBodyIncluded": false,
+  "sourceSnapshots": [
+    {
+      "role": "capturedBaselineSecondCopy",
+      "sha256": "805099d1c897f7b00387ce17caef7d1dd161eb85865472cfd8196875129f970b"
+    },
+    {
+      "role": "capturedAfterConsolidated",
+      "sha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "output/2026-10-14-file-dialog-data/execution.json",
+      "bytes": 980,
+      "sha256": "803c0790ed7ea0a39f4721241f20f2c6b68fca61cf633df475f9b33ddca89bd6"
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-data/capture-receipt-private.json",
+      "bytes": 10334,
+      "sha256": "7de7a6ad67f60922869b6dd4aea6a128b9030a2ca6d4c65c167cd1bf2bccde99"
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-data/comparison-private.json",
+      "bytes": 3936,
+      "sha256": "a087bc3a57afe2e3fa41039e702e453e7b5ccdb40d9766f5b7b24a50a42592cc"
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-data/final-verification-private.json",
+      "bytes": 792,
+      "sha256": "dba4b6ac8b53b44f5e8f4447071c67ac5b039cc6534ed893478ec27fa259efd8"
+    },
+    {
+      "path": "output/2026-10-14-file-dialog-data-preparation/freeze.json",
+      "bytes": 6040,
+      "sha256": "9133e7881bda60fa945ec1460e03a6f646fd1e46f0e6fa5cb6b42be45adcddc5"
+    },
+    {
+      "path": "output/2026-10-13-pdf-at-route-data-independent/localization-summary.json",
+      "bytes": 7134,
+      "sha256": "be7299bc3e3adfe7a47c7955161010f8998f0b6876181d27d65c20f138d3d436"
+    }
+  ]
+}

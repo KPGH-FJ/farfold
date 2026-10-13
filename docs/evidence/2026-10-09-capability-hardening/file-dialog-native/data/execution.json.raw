@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "output/2026-10-14-file-dialog-data-preparation/capture_compare.py",
+    "--config",
+    "/Users/tw/Desktop/farfold/output/2026-10-14-file-dialog-data/config.json",
+    "--config-sha",
+    "43356564b8c568dd0a30456c6d0207378df31635b6bc5abe00c9211cbe5f207e"
+  ],
+  "startedAtUtc": "2026-10-13T16:19:35.179691+00:00",
+  "completedAtUtc": "2026-10-13T16:19:35.382560+00:00",
+  "actualExitCode": 2,
+  "interrupted": false,
+  "noAppActionSinceFinalQuit": true,
+  "independentReview": {
+    "path": "output/2026-10-14-file-dialog-data-independent/adapter-review.json",
+    "sha256": "5e32b1c9f2e5331b6b440d5da04c4966d825daf9725a39599ebca4ed9c56b285"
+  },
+  "outputs": {
+    "stdout.raw": {
+      "bytes": 93,
+      "sha256": "69f6e60483803dc5a06e45ed88cee6140936c57be9139f63fa673badd4c01ec3"
+    },
+    "stderr.raw": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

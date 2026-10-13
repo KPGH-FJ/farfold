@@ -1,0 +1,150 @@
+{
+  "schema": 2,
+  "reviewedAtUtc": "2026-10-13T16:39:58.249704+00:00",
+  "result": "PASS_NO_CLOSEOUT_BLOCKER_WITH_RETAINED_STRICT_DIFFERENCE",
+  "scope": "Delta-only final review after correcting one obsolete P08 progress statement. Read and compare documentation delta; hash-only stability check of the already-reviewed 29 publication files. No reread of database or private UI content; no App, Agent, process, capture or source-test actions.",
+  "installedSourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "documentationBaselineCommit": "fb2ba8e9c8205a7478265fdd60b28da442fdb480",
+  "supersedes": {
+    "report": {
+      "path": "output/2026-10-14-file-dialog-closeout-independent/final-review.json",
+      "bytes": 17420,
+      "sha256": "9e941e501568b7840683e6a60877c15df11c983a42579cb6d6b0ed5c31afcdc9"
+    },
+    "reason": "The first final review missed the obsolete P08 current-progress phrase saying the system panel remained blocked. Root identified it. That historical review is preserved privately; this v2 replaces its final publication conclusion and its assertion that all original progress rows were unchanged.",
+    "previousReportPreserved": true,
+    "previousReportNotPublished": true
+  },
+  "findings": [],
+  "delta": {
+    "ownerReport": {
+      "path": "output/2026-10-14-file-dialog-doc-closeout/report.json",
+      "bytes": 12528,
+      "sha256": "826e593f6ecc9149f4137d6077c021e65acc285519d2fbb1bf9f17b9b6013030"
+    },
+    "correction": {
+      "path": "output/2026-10-14-file-dialog-doc-closeout/p08-correction.json",
+      "bytes": 2263,
+      "sha256": "c3da2b1ae77bfe66be2a3cd5891862df5a5d170b0a5f0219b87e380f90bfbf8e"
+    },
+    "exactDiff": {
+      "path": "output/2026-10-14-file-dialog-doc-closeout/p08-only.diff",
+      "bytes": 10117,
+      "sha256": "7b40071a7d72a8c8086560781cf90992498b89f3ad6120555a28521a0a82eaea"
+    },
+    "priorPlanReconstructedExactly": true,
+    "priorPlanSha256": "910d29a25f84be5e3ccbd158304d5d16c9d1291dddfa7660fa06a2cd3e4bad57",
+    "onlySemanticDeltaFromV1": "P08 current progress; the table alignment also changed. Its ID/title/completion condition are unchanged.",
+    "P08CurrentProgress": "DOCX/XLSX正式分项、PDF/WAV有限读取与冷恢复及系统面板选择已验；真实Agent与权限/数据余项未完",
+    "otherThreeDocumentsByteIdenticalToV1": true
+  },
+  "documentationChecks": {
+    "files": [
+      {
+        "path": "docs/status.md",
+        "bytes": 88912,
+        "sha256": "696b9593e07b769b5f8d6232805954e4ce180754572b6069cf5732bc290d115f"
+      },
+      {
+        "path": "docs/architecture.md",
+        "bytes": 130321,
+        "sha256": "58267c5169c91be66ae369395b7fd58ed21ec67f64ca2ddb85c87f397b7f4499"
+      },
+      {
+        "path": "plans/agent-access.md",
+        "bytes": 153531,
+        "sha256": "4f53a4809c5ac07e6ef042de614aee8ad8601fc535d05aa95e84e1ca01f74003"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+        "bytes": 87013,
+        "sha256": "f474b096ebf6977ed68af7a0a8087e63f68937e8a9b6cd1d494a0e9e3821038a"
+      }
+    ],
+    "originalIds": 122,
+    "originalTitlesAndCompletionConditionsUnchanged": true,
+    "other121OriginalProgressValuesUnchanged": true,
+    "changedProgressRowsComparedWithFb2": [
+      "P08",
+      "NEW-26"
+    ],
+    "all28NewConditionsUnchanged": true,
+    "all28NewRowsUnchangedSinceV1": true,
+    "remainingHistoricalPanelFailures": "Retained earlier failures stay time-scoped in the unchanged document paragraphs and point to the later bounded native observation. No unique historical cause or production fix is claimed.",
+    "all16TouchedLinksExist": true,
+    "uniqueTouchedTargets": 4,
+    "protectedFilesUnchanged": [
+      {
+        "path": "PRODUCT.md",
+        "bytes": 35083,
+        "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+      },
+      {
+        "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+        "bytes": 11543,
+        "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+      },
+      {
+        "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+        "bytes": 2341,
+        "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+      }
+    ]
+  },
+  "stableEvidence": {
+    "fileCount": 29,
+    "totalBytes": 77527,
+    "hashOnlyChecksAllMatchV1": true,
+    "membershipUnchanged": true,
+    "rawOriginalsPreviouslyCheckedByteExact": 24,
+    "entryPinnedReferencesPreviouslyChecked": 9,
+    "entry": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/installed-native-scoped.json",
+      "bytes": 6167,
+      "sha256": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96"
+    },
+    "manifestSha256": "ef5cd255fad802837ab95fe7890c282b061a4351b60815ca794b1835b8b5aeaf",
+    "manifestHashEncoding": "SHA256 of sorted {path,bytes,sha256} JSON array using UTF-8, separators comma/colon, ensure_ascii=False and one final newline",
+    "contentAndPrivacyReview": "The prior UI/data and final content reviews remain applicable because every publication byte is unchanged. Only safe counts, hashes, synthetic-fixture and generic-control snippets, scoped conclusions and safe execution mappings are public; no DB, private row values, account identity, credentials, user body or full private AX/sidebar was added."
+  },
+  "retainedResultBoundary": {
+    "strictCaptureRuns": 1,
+    "strictCaptureActualExitCode": 2,
+    "differenceCount": 1,
+    "field": "agents.updated_at",
+    "writer": "unknown",
+    "acceptedDifferences": [],
+    "independentAnalysisFirstExitCode": 1,
+    "independentAnalysisSameSourceRun02ExitCode": 0,
+    "analysisRetryIsNotRecapture": true,
+    "wholeRowsExact": {
+      "sessions": 135,
+      "dismissedSessions": 171,
+      "settings": 53,
+      "otherAgents": 39
+    },
+    "all10DraftsAndRawUnsentExact": true,
+    "markerBytes": 33,
+    "completeAudioBytes": 140,
+    "completeSavedPdfRepresentationBytes": 1311,
+    "bothSevenSourceFieldsExact": true,
+    "newPdfPreviewSecondAcceptanceUncheckedAndNotSaved": true,
+    "realAgentReceiptAndP08WholeRemainIncomplete": true,
+    "noSourceFixOrXlsxRetestClaim": true,
+    "officialRequestTotalNotMeasured": true
+  },
+  "publicationSafety": {
+    "safeForByteExactRawPublication": true,
+    "contains": "Paths, hashes, counts, plan status, evidence boundaries and review conclusions only.",
+    "privateDatabasesUserBodiesAccountsCredentialsIncluded": false
+  },
+  "reviewActions": {
+    "sourceTests": 0,
+    "databaseReads": 0,
+    "appOrAgentActions": 0,
+    "processChecks": 0,
+    "captureRuns": 0,
+    "productionOrDocumentationWrites": 0,
+    "writes": "This new v2 output report only"
+  }
+}

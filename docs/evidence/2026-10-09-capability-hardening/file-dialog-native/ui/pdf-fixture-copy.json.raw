@@ -1,0 +1,8 @@
+{
+  "atUtc": "2026-10-13T16:03:57.608270+00:00",
+  "source": "output/2026-10-13-xlsx-input-native-workspace/FarfoldPdfScope2554.pdf",
+  "newFixture": "output/2026-10-13-xlsx-input-native-workspace/FarfoldPickerPdf2554.pdf",
+  "bytes": 2554,
+  "sha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f",
+  "reason": "New explicitly owned synthetic copy separates normal panel import from already-attached source deduplication. Original fixture and original attachments unchanged."
+}

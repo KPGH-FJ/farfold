@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T16:32:11.571830+00:00",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "scope": "NEW-26 installed macOS normal file selection, cancellation and PDF reading. No production source changes in this phase.",
+  "result": "SCOPED_NATIVE_VERIFIED_WITH_RETAINED_TIMESTAMP_DIFFERENCE",
+  "installation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/install-independent-final.json",
+    "bytes": 102974,
+    "sha256": "e672ab352926712369cb2295325276b227c77fee84f7d7ec9e2f9a2d5bb84481"
+  },
+  "ui": {
+    "publication": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui-publication.json",
+      "bytes": 6420,
+      "sha256": "9a10eebed8c298839e0707e1dc6ce60c0c938533b6a84d566d222491c23f6e50"
+    },
+    "readingSupplement": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui-reading-supplement.json",
+      "bytes": 2132,
+      "sha256": "9d2bfa16ea456d03232e3209f331781bc677ac3b750399ff6600357db653e6aa"
+    },
+    "summary": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/public-ui-summary.json.raw",
+      "bytes": 7560,
+      "sha256": "c2501a45f694e2bb92dccfab6f12791501ffb8b4c59dc8f3b52deef2efe30426"
+    },
+    "lifecycleEvents": 24,
+    "successfulToolEvents": 23,
+    "failedToolEvents": 1,
+    "observed": [
+      "Actual coordinate selection enabled Open for the 140-byte WAV; its file-position chip returned to the original draft. Only the new chip was removed; original full audio remained.",
+      "Actual coordinate selection enabled Open for a separately named, byte-identical 2554-byte synthetic PDF copy. Its file position returned to the draft. Explicit scope selection produced a partial preview labelled 1311 bytes and 3 pages.",
+      "The second partial-content acceptance checkbox stayed unchecked. New PDF text was neither approved nor saved. Preview cancellation retained its file position; only that new position was then removed.",
+      "A third panel selection followed by Cancel added no attachment. The original marker, two attachments and Ultra remained visible with Send disabled. Normal save/quit was followed by an actual exact lowercase executable check finding zero processes."
+    ],
+    "limits": [
+      "One invalid-element action failure is retained; three actual coordinate selections succeeded.",
+      "Screenshot payloads and displayed AX body are truncated, not complete pixel or new PDF body-byte evidence.",
+      "No prompt/slash send, Agent permission approval, account/service/model change was performed. Official request total was not measured."
+    ]
+  },
+  "data": {
+    "publication": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data-publication.json",
+      "bytes": 2743,
+      "sha256": "699604e48179c50a127e0239723d7df849655aaef75a382fc72b4f3553dadd5d"
+    },
+    "analysisPublication": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/analysis-publication.json",
+      "bytes": 1222,
+      "sha256": "3d9bc2458a0012f8fe119421c8135b4ef871baa4973cc2d847e05aa9fc324ed4"
+    },
+    "strictExecution": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/execution.json.raw",
+      "bytes": 980,
+      "sha256": "803c0790ed7ea0a39f4721241f20f2c6b68fca61cf633df475f9b33ddca89bd6"
+    },
+    "independentSummary": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/independent-summary.json.raw",
+      "bytes": 6935,
+      "sha256": "85ff264aab39228c74ac6ae3aeb3aff725ed0f0f6f8c455a4e1d18602e03976f"
+    },
+    "independentExecution": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/data/independent-execution.json.raw",
+      "bytes": 4416,
+      "sha256": "3607de6a8da2ffed72cd84b89316443819adcf6f758bbdc28adacfd948dcf874"
+    },
+    "baselineConsolidatedSha256": "805099d1c897f7b00387ce17caef7d1dd161eb85865472cfd8196875129f970b",
+    "captureRuns": 1,
+    "strictCaptureActualExitCode": 2,
+    "differenceCount": 1,
+    "difference": "One Agent updated_at only; writer unknown. No difference accepted or normalized.",
+    "acceptedDifferences": [],
+    "wholeRowsExact": {
+      "sessions": 135,
+      "dismissedSessions": 171,
+      "settings": 53,
+      "otherAgents": 39
+    },
+    "allTenDraftsAndEntireUnsentWorkRawExact": true,
+    "markerBytes": 33,
+    "completeAudioBytes": 140,
+    "completeSavedPdfRepresentationBytes": 1311,
+    "audioAndPdfSevenSourceFieldsExact": true,
+    "temporaryAttachmentChipsAbsentAtEnd": true,
+    "analysisFirstAttemptExitCode": 1,
+    "analysisSuccessfulAttemptExitCode": 0,
+    "analysisCorrection": "The first analysis stopped at the dedicated-directory mode assertion before DB reads. After owner/non-symlink verification, only that directory changed0755 to0700. The same source succeeded with separate run-02 receipts. Capture was not repeated.",
+    "SQLiteScope": "Capture handles live/original/first-copy database files as bytes only; SQLite and independent localization open second copies or the new consolidated file only."
+  },
+  "boundaries": [
+    "Earlier disabled-Open and noWindowsAvailable failures remain. Current success does not identify their unique cause or constitute a source fix.",
+    "Only these macOS WAV/PDF fixtures and directories were exercised. Earlier XLSX controls and other platforms were not retested; they are not added as new prerequisites for this scoped result.",
+    "Earlier evidence covers original full audio/PDF saving and cold recovery. This phase adds normal-panel return, PDF reading/cancellation and final persisted-data retention.",
+    "NEW-24, P08 real-Agent receipt, P27 production screenshot, P32 native positive search and remaining plan conditions stay open."
+  ],
+  "timeBoundary": {
+    "normalQuitEventAtUtc": "2026-10-13T16:05:25.650Z",
+    "captureCompletedAtUtc": "2026-10-13T16:19:35.382560+00:00",
+    "independentAnalysisCompletedAtUtc": "2026-10-13T16:22:10.561861+00:00",
+    "earlierP32StageNotOverwritten": true
+  }
+}

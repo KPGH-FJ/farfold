@@ -1,0 +1,32 @@
+{
+  "publishedAtUtc": "2026-10-13T16:21:01.596289+00:00",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "purpose": "Supplement the earlier minimal UI publication with synthetic-only original PDF scope/read/preview events and the exact fixture-copy receipt. Earlier 10-file publication remains its original time-scoped record.",
+  "records": [
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/15-call_Eokxy5is31xmRMsHSm1Hzgwd.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/15-call_Eokxy5is31xmRMsHSm1Hzgwd.jsonl.raw",
+      "bytes": 3369,
+      "sha256": "a041d449c3b1fb3bb07b191acd5fc0ff6707fff5639d9de4abc56ce8f0d21a0c"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/16-call_ledg21OJRBbCJwtXHlb9LCyX.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/16-call_ledg21OJRBbCJwtXHlb9LCyX.jsonl.raw",
+      "bytes": 1346,
+      "sha256": "5338b4573940caf36763153cbc6c10ae2f2306dae4503e2a27a69719f23543fb"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/17-call_57FfmiIag8ka7ZaUfQ6V3Poo.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/17-call_57FfmiIag8ka7ZaUfQ6V3Poo.jsonl.raw",
+      "bytes": 4788,
+      "sha256": "da436603ed73adf7caa9271aad7e53ec339150ccce317487a6c6f4359844eaff"
+    },
+    {
+      "source": "output/2026-10-13-file-dialog-investigation/native-run/pdf-fixture-copy.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/ui/pdf-fixture-copy.json.raw",
+      "bytes": 500,
+      "sha256": "c4f33da92b811031e71819cf2413234b043d83aba19d2b646109944423ad943f"
+    }
+  ],
+  "scope": "Explicit scope unchecked then checked, actual partial preview labels1311bytes/3pages, second acceptance remained unchecked. Truncated AX content is not complete body-byte proof. No sidebar/history/image payload included. Remaining optional records not published."
+}
