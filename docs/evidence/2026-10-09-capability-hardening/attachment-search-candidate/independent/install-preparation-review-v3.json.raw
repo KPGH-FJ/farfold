@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T15:37:35.976268+00:00",
+  "result": "PASS_STATIC_INSTALLATION_PREPARATION_PENDING_FRESH_DATA_PINS",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "tools": [
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/install/observe_normal_exit.py",
+      "bytes": 3445,
+      "sha256": "893b5ac8404624e55385eaa378d965eca95430ff55723c3bceac574a365a9504"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/install/capture_snapshot.py",
+      "bytes": 2847,
+      "sha256": "a0e34a0dd2bbf4671eb9144fd3cadde1ab4f3f0d0c3bec49273b4d20dbbf1806"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/install/install_data_snapshot.py",
+      "bytes": 6228,
+      "sha256": "739ba3dc1b61d697ed7038a771bb196f9a6c1f1104011d61a1a97efd86b96bfd"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/install/data_manifest.py",
+      "bytes": 4258,
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/install/backup_metadata.py",
+      "bytes": 10583,
+      "sha256": "949bda3311cb0a69143897093707828506b2d8e9b343ecab2c40668d47d0b9ef"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/install/install_verified_candidate.py",
+      "bytes": 33981,
+      "sha256": "468e6d57240856a89e446fc54882742d3a69d59c3ad325333d2a20c437215566"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/independent/verify_installed_final.py",
+      "bytes": 14180,
+      "sha256": "d59f7ce05d8b121ff1a34cc9425851ef7057a101c89f84364033431beda2eafd"
+    }
+  ],
+  "exactDiffsVerified": 7,
+  "freeze": {
+    "path": "output/2026-10-13-attachment-search-install-preparation/freeze-review-v3.json",
+    "bytes": 7024,
+    "sha256": "c2a3a97045767265c243881c97215c93d88390d3e33efdc8b2e82aac08ab7817"
+  },
+  "preservationReview": {
+    "path": "output/2026-10-13-attachment-search-independent/install-preservation-review-v3.json",
+    "bytes": 4567,
+    "sha256": "3f33133fa9ebbe8772e2f246664db41c547c3c6c76df107d218c645f66bbc31c"
+  },
+  "candidateReview": {
+    "path": "output/2026-10-13-attachment-search-independent/candidate-preparation-review-v3.json",
+    "bytes": 4741,
+    "sha256": "6dd71752882e9fec95539bf167a9a4ed5736bd88ad164b7551f015df6c9add91"
+  },
+  "findings": [],
+  "changesAgainstPreviousActualTools": {
+    "fourReadPreservationTools": "source/output path substitutions; observation additionally accurate PDF30/31/03 provenance wording. No original-data read/copy algorithm relaxation.",
+    "manifest": "byte-identical pure validator",
+    "installer": "new source/output/provenance pins, exact1756 closure equal candidate, and additional exact main/WAL/SHM hash+size comparison from fresh backup against latest closed PDF metadata; existing install main unchanged",
+    "independent": "new source/output/provenance pins/count and reference expansion for original quit/process plus latest closed data metadata; ten checks and complete3capture equality remain"
+  },
+  "installerGuards": [
+    "First require_configured(backup=True) rejects UNSET source/normal/before/backup before any installation mutation, and validates exclusive nine-tool seal and exact dependency pins.",
+    "Exact commit argument and approved absolute installer location; exclusive install-operation receipt preserves failures. Full source closure matches actual candidate input SHA and commit blobs.",
+    "Actual candidate build exit0 plus independent9/9, bound candidate/input receipt SHA, exact5 candidate/formal baseline files+modes, exact candidate paths, archive CRC/member/mode/SHA/byte identity, arm64/plist/ad-hoc strict signature.",
+    "Fresh normal observation validates prior actual PDF quit/process metadata + explicit root continuity; no obsolete e599 schema. New closed-data provenance preserves strict exit2, not accepted differences.",
+    "Fresh backup receipt binds normal SHA, source identity, owner0600/0700, consolidated backup digest and original exact SQLite capture membership/hash; new gate compares every captured main/WAL/SHM SHA+actualsize to latestClosedDataStage.sourceFiles before proceeding.",
+    "Before/preinstall actual successful executions, complete three-root manifests with same count/hash/schema, owner0600, fresh before-summary pin; no data-difference exemptions.",
+    "Two exact lowercase process-zero checks during preflight; candidate/formal files+modes and watched engineering evidence rechecked immediately before sole ditto(candidate,formal) mutation; no launch/kill/data edit in installer.",
+    "Post-copy exact5 files+modes/identity/signature and process0; failure retained with copyStarted/phase/error, no retry or automatic rollback. Successful operation explicitly dataRetentionComparisonPending until independent final."
+  ],
+  "independentTenChecks": [
+    "normalExitAndFreshPreparation",
+    "candidateReceipts",
+    "exactSourceAndEngineering",
+    "candidateFormalFiveFiles",
+    "identityArchitectureSignature",
+    "archive",
+    "installationOperation",
+    "snapshotCaptures",
+    "retainedDataEquality",
+    "finalStableAndProcessAbsent"
+  ],
+  "independentGateNotes": "Original actual build+independent9+engineering are revalidated. Three captures require actual exit0/no stderr/valid complete manifests with identical count+SHA; backup revalidated. Final source/files/referenced-artifact hashes and fresh lowercase process0 are checked. No app launch or live DB reads; private backup only hashed. The gate concerns installation at its recorded time, not later native workflow or real Agent acceptance.",
+  "sealReview": {
+    "path": "output/2026-10-13-attachment-search-install-preparation/seal-tools.py",
+    "sha256": "daab7d8a27815e36e9e91d2b34b210a4c38cc20546cbfc47af30680d5a307c0f",
+    "delta": "Only exact preparation directory change against previous actual seal script.",
+    "behavior": "Imports definition-only copied reviewed tools; all file hashes equal final preparation and every SHA/source/count pin configured; source/engineering/normal/dependency receipts verified before exclusive generated-tools.json. This script itself was only read."
+  },
+  "pendingExecutionPins": [
+    "NORMAL_EXIT_SHA",
+    "BEFORE_SUMMARY_SHA",
+    "BACKUP_RECEIPT_SHA"
+  ],
+  "nextBoundary": "Root may continue approved fresh preservation sequence. Before replacement, render only the three fresh data pins, preserve v3, verify exact delta/tool hashes and final nine-tool seal, and obtain successful candidate-independent9/9 plus preinstall full equality. Actual build/captures/install/final10 success is not claimed by this static review.",
+  "operationsPerformed": "Read source, exact diffs and existing metadata; hash seven prepared scripts and compare frozen pins; AST compare installer and candidate SCOPES/TOP equality. No generated module/functions/main, build, tests, process inspection, SQLite/database reads, user-data reads, App/UI/Agent operations or installation. Source/docs unchanged."
+}

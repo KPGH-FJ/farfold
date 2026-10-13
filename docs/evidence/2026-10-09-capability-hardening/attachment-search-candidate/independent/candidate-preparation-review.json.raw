@@ -1,0 +1,195 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T15:31:52.657325+00:00",
+  "phase": "STATIC_CANDIDATE_PREPARATION_REVIEW_V1",
+  "result": "BLOCKED_TWO_RENDERING_DEFECTS",
+  "reviewer": "frontend_review",
+  "scope": "Read-only source/metadata/hash inspection of review-v1 candidate pair against prior actual audio candidate tools. No generated module imported or function invoked; no main, build, test, database, ps, UI, Agent, install, commit or launch executed. Only this report written.",
+  "findings": [
+    {
+      "id": "C1",
+      "severity": "blocking",
+      "file": "output/2026-10-13-attachment-search-install-preparation/review-v1/candidate/verify-candidate.py",
+      "lines": [
+        50,
+        66,
+        67,
+        188,
+        398,
+        567
+      ],
+      "issue": "Engineering receipt, freeze and publication paths contain duplicate output/output.",
+      "evidence": {
+        "wrongSummaryExists": false,
+        "wrongFreezeExists": false,
+        "actualPreflightFreezePath": "/Users/tw/Desktop/farfold/output/2026-10-13-attachment-search-integration/checks-freeze/freeze.json"
+      },
+      "effect": "UNSET currently rejects earlier; once source and engineering pins are filled, real proof cannot be found or pass exact-path/prefix gates. This fails closed and does not install anything.",
+      "requiredFix": "Render single output/ prefix consistently for constants, configured guards, preflight guard and engineering publication scope. Preserve v1."
+    },
+    {
+      "id": "C2",
+      "severity": "blocking",
+      "file": "output/2026-10-13-attachment-search-install-preparation/review-v1/candidate/verify-candidate.py",
+      "lines": [
+        463,
+        476
+      ],
+      "issue": "PRIOR_ACTUAL_PROCESS and PRIOR_ACTUAL_PROCESS_SHA are referenced but never defined.",
+      "evidence": "Full module AST has no binding of either global; prior_exit_evidence constructs expected with both names before validation.",
+      "effect": "After configured pins pass, prepare baseline calls prior_exit_evidence and raises NameError before candidate build. Independent verification would likewise fail baseline.",
+      "requiredFix": "Pin the actual final PDF process CommandExecution raw path and SHA in candidate verifier as well as installer. Preserve v1."
+    }
+  ],
+  "checks": {
+    "exactDiff": {
+      "passed": true,
+      "pairs": 2,
+      "prepareByteIdenticalToPrior": true,
+      "bothProvidedUnifiedDiffsByteExact": true,
+      "declaredOldAndNewHashesMatch": true,
+      "newVerifierBytes": 47831,
+      "newVerifierSha256": "6b530a1398b3d03620fb620b33fa9aec5952a3827a654679a290d8b42c666506",
+      "scope": "Unchanged builder and nine-check main; verifier changes limited to output/pins, source closure, and new actual PDF exit/data-provenance schema. Renderer defects above are part of this diff."
+    },
+    "sourceClosure": {
+      "passed": true,
+      "scopes": 16,
+      "explicitTopPaths": 78,
+      "enumeratedDistinctInputs": 1756,
+      "equalsInventoryPaths": true,
+      "equalsFreezeInputs": true,
+      "currentHashMatches": 1756,
+      "currentHashMismatches": [],
+      "inventorySha256": "71f90937fc08b0e984243d2a0b255ddf9416f490d4d22197d7ad58a006f2d6b1",
+      "freezeSha256": "3143092192b9f9e0b822867dbac68dce7115a706effa68a5f53040eb03ef0320",
+      "futureGate": "source() requires HEAD equals future pinned commit, exact disk/tree membership, regular non-symlink files and every Git blob equals current bytes, then engineering freeze equals the same 1756 SHA map. No commit proof claimed now."
+    },
+    "formalBaseline": {
+      "passed": true,
+      "sourceCommit": "36c56a827f9bf2146e913bf0d2a2d072f51d89b8",
+      "candidateReceiptSha256": "4d9ef1fc8aca8d97d1193a98810bbdb933eea0a24e46788b870d47a1dff7f637",
+      "installedReceiptSha256": "77fbaaf786a7d4da5595c63abaf0c6f2ede556a45bbc6afbc256f42c0ccf919a",
+      "actualFileCount": 5,
+      "actualFileHashAndModeMapEqualsBaseline": true,
+      "executable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+      "boundary": "Direct read/stat/hash only; no code-signature execution or current process observation performed by this review."
+    },
+    "unsetPins": {
+      "passedStatic": true,
+      "pins": {
+        "SOURCE_COMMIT": "UNSET",
+        "ENGINEERING_SHA": "UNSET",
+        "PRIVATE_ENGINEERING_SHA": "UNSET"
+      },
+      "gate": "Both mains call arguments/configured before receipt creation, build, git/source inspection or baseline access. SOURCE_COMMIT must be lowercase 40hex and engineering hashes 64hex. Import has definitions/constants only; preparation import loads its adjacent verifier without calling main. No executable gate test was run."
+    },
+    "actualSevenSchema": {
+      "passedStaticExceptWrongPaths": true,
+      "checkedAgainst": "Actual frozen runner source, frontend-build start/completed receipts, real preflight and publisher source. Final seven summary and future published proof remain unpinned; no all-seven completion claim.",
+      "guards": [
+        "Pinned original/public verification hashes and exact semantic copy plus raw original",
+        "Pinned freeze and inventory, exact seven argv/group/cwd identities, exact input map and owner/tool pins",
+        "schema=1 phase=ACTUAL_COMMAND_RESULTS, allPassed/sourceStable/sourceMembershipStable/protectedUnchanged true, exactly seven launched/completed stages",
+        "No interruption, runner errors, not-started, failed or launch-failed stages",
+        "Each stage COMPLETED, actual completion/process launched, exit0, positive pid, started/completed receipt consistency and stdout/stderr SHA",
+        "Private/public raw stage and before/after/protected manifest byte equality",
+        "Counts derived from actual stdout/stderr, all Rust result lines ok; stable watched evidence at final verifier check"
+      ],
+      "futurePublication": "Publisher currently uses the real single-output directory; wrong verifier prefix must be corrected."
+    },
+    "nativeAndDataSchema": {
+      "passedStaticDesignOnly": true,
+      "boundary": "Actual PDF events30/31 and lowercase executable process03 + original CommandExecution, not obsolete pdf-permission46/47 schema; missing process pin is C2. Metadata-only prior capture/final/execution pins preserve strict exit2 and differenceCount2; they do not accept old differences or replace fresh installation captures. No DB read."
+    },
+    "sideEffects": {
+      "passedStatic": true,
+      "prepare": "Only after configured/closed-source/engineering/baseline gates: internal Tauri build, exclusive candidate receipt/log/input maps and ZIP, then identity/arm64/ad-hoc signature/archive checks. Formal app is hashed, never replaced or launched.",
+      "verify": "Read-only checking subprocesses git/lipo/codesign plus exclusive verification receipt, no install/start/quit.",
+      "claims": "Both reports explicitly installed=false and realAgentInvoked=false; independent report launched=false. This review does not authorize execution."
+    }
+  },
+  "references": [
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v1/preparation.json",
+      "bytes": 19205,
+      "sha256": "c525a074d59fa7785b11fef57adc6d484cab7332098412ec47e18c41fd178aeb"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v1/candidate/prepare-candidate.py",
+      "bytes": 4493,
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v1/candidate/verify-candidate.py",
+      "bytes": 47831,
+      "sha256": "6b530a1398b3d03620fb620b33fa9aec5952a3827a654679a290d8b42c666506"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v1/diffs/candidate-prepare-candidate.py.diff",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v1/diffs/candidate-verify-candidate.py.diff",
+      "bytes": 32134,
+      "sha256": "9e3ed3817729dc8d2b99c88a3ce95727f712bb2b9cdcfe81f3a15d959af5c566"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/prepare-candidate.py",
+      "bytes": 4493,
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/verify-candidate.py",
+      "bytes": 35000,
+      "sha256": "88cf2b2956b855a7d6824c163baa3f560d4a64ea5811107c6ae74113c3d11da8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/candidate.json",
+      "bytes": 44133,
+      "sha256": "4d9ef1fc8aca8d97d1193a98810bbdb933eea0a24e46788b870d47a1dff7f637"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/install-independent-final.json",
+      "bytes": 88884,
+      "sha256": "77fbaaf786a7d4da5595c63abaf0c6f2ede556a45bbc6afbc256f42c0ccf919a"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-integration/inventory-plan.json",
+      "bytes": 558927,
+      "sha256": "71f90937fc08b0e984243d2a0b255ddf9416f490d4d22197d7ad58a006f2d6b1"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-integration/checks-freeze/freeze.json",
+      "bytes": 289594,
+      "sha256": "3143092192b9f9e0b822867dbac68dce7115a706effa68a5f53040eb03ef0320"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-integration/checks-run/preflight.json",
+      "bytes": 270,
+      "sha256": "b88440354c49df0a470c27aeaf84e8781859d157fb785cce796e720947afdedc"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-integration/checks-run/frontend-build/started.json",
+      "bytes": 277,
+      "sha256": "d8f40b8d734a96c9c2b01e960004caa550fdcf41ae7121aa19b6fe2eff178aee"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-integration/checks-run/frontend-build/completed.json",
+      "bytes": 655,
+      "sha256": "66965a8c6ca49afc8ab005ecd87a95a4f363368d1537da38fbb6c679ba9a66d5"
+    },
+    {
+      "path": "output/2026-10-13-xlsx-input-checks-preparation/runner-v4/run_checks.py",
+      "bytes": 15448,
+      "sha256": "0cf4b3fd62d3d94f1781119f65d87f68a9fd26a6afb5e95ca7e56bda3f140a0c"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-integration/publish_checks.py",
+      "bytes": 2668,
+      "sha256": "aa09d5978ee2387c1a3e04f0201bd1050bcfc47d981592029a35d6f41d3535bc"
+    }
+  ],
+  "next": "Backend acknowledged both defects and is preparing review-v2. Re-review its exact delta and future final pins before any candidate main; installation seven-tool guards require separate review. P32 production source and documents remain frozen."
+}

@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T15:24:59.511152+00:00",
+  "result": "PASS_INVENTORY_ONLY_ENGINEERING_PENDING_ROOT_COMPLETION",
+  "adapterCorrection": {
+    "currentSha256": "b1aa751cc1f40ff74c04cb3a8d493c8505be0c7ec3b48d538af4b1fdae5134ac",
+    "inverseTwoLineCorrectionReconstructsPriorSha256": "1c61b759ce67942630389e3f1bbe8ad9f84499e755311637d1ef7315a294bed1",
+    "change": "Original rows retain 4 cells; NEW rows require actual 3 cells. Malformed inverse shapes rejected.",
+    "isolatedRowsOnlyExecuted": true,
+    "adapterMainExecuted": false,
+    "preparationExit1Preserved": {
+      "previousPreparationActualExit": 1,
+      "failedBeforeInventoryWriteAndEngineering": "NEW rows are three columns, originals four; adapter formerly assumed four for all",
+      "correction": "Only row-shape validation now uses actual three vs four; 122 and 28 baseline exact plus two malformed controls pass",
+      "adapterSha256": "b1aa751cc1f40ff74c04cb3a8d493c8505be0c7ec3b48d538af4b1fdae5134ac",
+      "noEngineeringRerun": true
+    }
+  },
+  "inventory": {
+    "path": "output/2026-10-13-attachment-search-integration/inventory-plan.json",
+    "sha256": "71f90937fc08b0e984243d2a0b255ddf9416f490d4d22197d7ad58a006f2d6b1",
+    "inputCount": 1756,
+    "historicalBaseInputs": 1736,
+    "physicalAndGitCurrentSources": 1550,
+    "newPathsBeyondBase": [
+      "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/publication.json",
+      "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/publication.json",
+      "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/implementation.json",
+      "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/independent/publication.json",
+      "docs/evidence/2026-10-09-capability-hardening/screenshot-unavailable/implementation.json",
+      "output/2026-10-13-attachment-search-frontend/browser/fixture.tsx",
+      "output/2026-10-13-attachment-search-frontend/browser/index.html",
+      "output/2026-10-13-attachment-search-frontend/browser/run.mjs",
+      "output/2026-10-13-attachment-search-frontend/browser/serve.mjs",
+      "src-tauri/src/file_delivery/text_inspection.rs",
+      "src-tauri/src/file_delivery/text_inspection_tests.rs",
+      "src/App.attachment-search.test.tsx",
+      "src/components/AttachmentSearchJump.test.tsx",
+      "src/components/AttachmentSearchJump.tsx",
+      "src/components/SelectedAttachmentSearch.tsx",
+      "src/runtime/attachment_search.test-support.ts",
+      "src/runtime/attachment_search.test.ts",
+      "src/runtime/attachment_search.ts",
+      "src/runtime/attachment_search_source.ts",
+      "src/runtime/attachment_search_strings.ts"
+    ],
+    "allInputHashesMatchCurrent": true,
+    "allOwnerAndReceiptPinsMatchCurrent": true,
+    "ownerMembershipCounts": {
+      "output/2026-10-13-attachment-search-frontend/source-freeze-v3.json": 17,
+      "output/2026-10-13-p27-unavailable-backend/source-freeze.json": 1,
+      "output/2026-10-13-p32-text-backend/source-freeze.json": 5
+    },
+    "protectedFilesMatch": 3,
+    "fourDocsMatchFrozenPins": true,
+    "conditionsBaseline": "43919180ce7a129e6881dfa86c8e45ab13eae27d",
+    "original122TitlesAndCompletionConditionsExact": true,
+    "new28CompletionConditionsExact": true
+  },
+  "freeze": {
+    "path": "output/2026-10-13-attachment-search-integration/checks-freeze/freeze.json",
+    "sha256": "3143092192b9f9e0b822867dbac68dce7115a706effa68a5f53040eb03ef0320",
+    "inputHashesEqualPlan": true,
+    "sourceMembershipEqualPlanAndPhysical": true,
+    "sevenCommandArgvExact": true,
+    "helperAndRunnerPinsMatch": true
+  },
+  "boundary": "Read-only source/inventory/hash review plus pure-RAM row parser controls. No adapter main, engineering test, build, App, Agent, UI or database execution. Engineering actual stages/counts await parent completion event."
+}

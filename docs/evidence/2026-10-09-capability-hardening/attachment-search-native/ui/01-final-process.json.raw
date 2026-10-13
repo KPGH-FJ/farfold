@@ -1,0 +1,11 @@
+{
+  "atUtc": "2026-10-13T15:45:37.671944+00:00",
+  "command": [
+    "/bin/ps",
+    "-axo",
+    "pid=,comm="
+  ],
+  "actualExitCode": 0,
+  "exactFormalProcessMatches": [],
+  "uiPreceded": "Native actual Cmd+Q exit confirmation then click97 completed; unknown work left unknown."
+}

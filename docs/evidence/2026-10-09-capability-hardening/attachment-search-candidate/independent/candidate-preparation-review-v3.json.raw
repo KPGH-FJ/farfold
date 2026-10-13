@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T15:33:49.935364+00:00",
+  "result": "PASS_STATIC_CANDIDATE_PREPARATION_ONLY",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "candidateTools": [
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/candidate/prepare-candidate.py",
+      "bytes": 4493,
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/candidate/verify-candidate.py",
+      "bytes": 48142,
+      "sha256": "ef20bbbae69a3a495d2cc27ae752337c9c3d4de899aeb088d73dae0f8876edca"
+    }
+  ],
+  "priorBlockedReview": {
+    "path": "output/2026-10-13-attachment-search-independent/candidate-preparation-review.json",
+    "bytes": 10840,
+    "sha256": "9b7d26a278f93759bca99bd26e13c1d5d45d56b3bafc92c127cf2152f7fc2a00"
+  },
+  "fixes": {
+    "C1": "Every duplicate output/output prefix removed consistently; actual single-output summary/freeze/publication paths retained.",
+    "C2": "PRIOR_ACTUAL_PROCESS and SHA now explicitly pin PDF03 original CommandExecution raw; actual raw SHA matches."
+  },
+  "exactDelta": {
+    "providedV1ToV3DiffByteExact": true,
+    "prepareRemainsByteIdenticalToPriorActual": true,
+    "changesOnly": "C1/C2 corrections plus actual new source commit and both completed-seven SHA pins. No build/install/control logic loosened."
+  },
+  "checked": {
+    "freezeSha256": "c2a3a97045767265c243881c97215c93d88390d3e33efdc8b2e82aac08ab7817",
+    "freezeEntriesRehashed": 8,
+    "allMatched": true,
+    "sourceHEADMatchesPin": true,
+    "frozenInputsCheckedAgainstDiskShaAndCommitGitBlobs": 1756,
+    "sourceOrCommitMismatches": [],
+    "engineeringPinsAndActualProcessRawHashesMatched": 3,
+    "privateSummarySemanticsEqualPublication": true,
+    "sevenActualSummaryStagesCompletedExit0": true,
+    "threeInstallationDataPinsStillUnset": true
+  },
+  "retainedGuards": "configured pins before main side effects; exact 1756 source/commit/freeze/input membership; full raw engineering checks; formal36c exact5 file/mode baseline; PDF30/31 normal quit+03 lowercase process; prior data strict2 preserved; candidate exclusive outputs, arm64/plist/embedded manifest/signature/ZIP, formal bytes stable; no install or launch route added.",
+  "dependencyEvidence": {
+    "backendEngineeringGate": {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/engineering-gate-review.json",
+      "bytes": 39238,
+      "sha256": "85b67041ab8ccad619713daca1b013c5cbdb2df45029ea8530837527662967e4"
+    },
+    "backendMetadataGate": {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/metadata-gate-review.json",
+      "bytes": 1997,
+      "sha256": "df978ec69523ec536268d5ca122898ca089df3cf2be96b05641d4936fc9e4a1c"
+    },
+    "scope": "Read reported 234-reference engineering gate and actual9/8RAM metadata results against exact verifier hash. Did not repeat their 234-reference scan or execute their tests."
+  },
+  "references": [
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/freeze-review-v3.json",
+      "bytes": 7024,
+      "sha256": "c2a3a97045767265c243881c97215c93d88390d3e33efdc8b2e82aac08ab7817"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/diffs/v1-to-v3-candidate-verify-candidate.py.diff",
+      "bytes": 6489,
+      "sha256": "f0c238e29f5c81bf43dd11ca78b6849589a0f6978634d8bbb1f91c42f53a1b5d"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-install-preparation/pins-source.json",
+      "bytes": 551,
+      "sha256": "cd4b7b98b4cff942de9a23827211a4bb5a9ead756e0343ae15451dd546a1a7d7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/verification.json",
+      "bytes": 7168,
+      "sha256": "5cf3ca7ab074641fa7b14faaf863184b9f55a3553e392049e57bc8f4cf5a3f1a"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-integration/checks-run/summary.json",
+      "bytes": 6314,
+      "sha256": "61d677491bb52e5ffc5da1d1b972ba38675f77f6d0e7fba040fd58f64b849037"
+    },
+    {
+      "path": "output/2026-10-13-pdf-at-route-native/03-final-normal-quit-exec.jsonl.raw",
+      "bytes": 2504,
+      "sha256": "724ad73051eabafeb27784e0014f1802d53eb7417c1c922d9291191bde0d027c"
+    }
+  ],
+  "boundary": "Only source/metadata reads, hashing and read-only git HEAD/tree inspection; no generated module/functions/main, build, test, DB, ps, UI, Agent, install or launch. This clears static candidate preparation blockers, not successful candidate build or installation. Root owns next authorized execution. Separate installation7 review remains."
+}

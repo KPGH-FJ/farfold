@@ -1,0 +1,272 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T16:08:10.748986+00:00",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "phase": "INSTALLED_NATIVE_SCOPED_CLOSEOUT_WITH_UNACCEPTED_DATA_DIFFERENCES",
+  "scope": "P27 不可用截图请求直接拒绝与 P32 所选文本附件搜索源码已进入正式 9c 包；本轮界面仅有限观察，不代表 P27/P32 整项完成。",
+  "engineering": {
+    "proof": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/verification.json",
+      "bytes": 7168,
+      "sha256": "5cf3ca7ab074641fa7b14faaf863184b9f55a3553e392049e57bc8f4cf5a3f1a"
+    },
+    "actualCommandsPassed": 7,
+    "inputCount": 1756,
+    "counts": {
+      "frontendSummaryLines": [
+        "Test Files  491 passed (491)",
+        "Tests  5821 passed (5821)"
+      ],
+      "rustSummaryLines": [
+        "test result: ok. 1658 passed; 0 failed; 6 ignored; 0 measured; 0 filtered out; finished in 113.70s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    }
+  },
+  "candidate": {
+    "proof": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/candidate-independent.json",
+      "bytes": 3060,
+      "sha256": "d3cd0f574c3fae7ab3f07ff89a451f317dd31556e08e3e871c9c32d32a6fa133"
+    },
+    "actualChecksPassed": 9
+  },
+  "installation": {
+    "proof": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/install-independent-final.json",
+      "bytes": 102974,
+      "sha256": "e672ab352926712369cb2295325276b227c77fee84f7d7ec9e2f9a2d5bb84481"
+    },
+    "actualChecksPassed": 10,
+    "beforePreinstallAfterEqualAtInstallation": {
+      "passed": true,
+      "allThreeManifestsEqual": true,
+      "entriesEach": 217400,
+      "sha256": "f07c39cbd8bca17c11d9fdf368014d11f44eb21f9b9432b68492c7e8e328a73f"
+    },
+    "boundary": "安装时三个完整清单相等，不代表之后运行应用的全部字段保持。"
+  },
+  "nativeUi": {
+    "proof": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/public-ui-summary.json.raw",
+      "bytes": 6331,
+      "sha256": "889ad2148ff3500b1731de7474c7474100d7650094aa6b9e0d60a6c8b3510f53"
+    },
+    "observed": [
+      "正式9c版本展示共用“所选附件内容”搜索范围、当前本地文件/历史内容边界及20文件、每文件1MiB、可检索正文合计16MiB说明。",
+      "首次范围选择click84未激活搜索范围；原无效结果保留。原生菜单End+Return随后完成选择。",
+      "空态为134个对话尚未加载、0候选。用户明确打开已有专用XLSX历史后，尚未加载数变为133，仍为0候选；没有开始附件检索。",
+      "257个ASCII字节关键词显示256个UTF8字节上限的明确原因。因没有已选文件，开始按钮原本禁用；未以此声称隔离验证已选文件时的长度门禁。",
+      "结束前恢复“对话资料”搜索范围；原33字节专用marker、2个音频/PDF附件、Ultra仍可见，发送禁用，附件恢复确认仍保留。此为UI观察，持久化完整性等待独立数据证据。",
+      "正常退出确认明确说明未知工作不会视为完成/停止或自动重发；点击“保存并退出”原操作完成。之后真实小写farfold精确进程检查exit0/0匹配，记录的正式应用5文件SHA与本次候选一致。"
+    ],
+    "notVerified": [
+      "正式应用的有效文字附件候选选择、明确开始及实际文件读取",
+      "文件匹配片段、来源跳转及变更/取消路径",
+      "未加载历史的附件实体兼容性或全产品附件覆盖",
+      "真实Agent能力、官方零请求计数或P32全部完成"
+    ],
+    "actions": {
+      "observedPromptOrSlashSendActions": 0,
+      "observedPermissionChoiceActions": 0,
+      "observedModelReasoningServiceAccountChanges": 0,
+      "observedDraftEdits": 0,
+      "officialRequestCount": "not measured",
+      "boundary": "仅核原始UI操作清单；打开已有历史不等于发送新prompt。该历史显示过权限重确认提示，未做权限选择。"
+    },
+    "completeScreenshotPixelsArchived": false,
+    "screenshotBoundary": "图像事件载荷截断，不是完整像素证据；未公开该载荷。",
+    "historicalPendingLabel": "旧 public-ui-summary 先于数据审核写入，pending 文本原样保留；本条 dataReview 补充后续实际结果。"
+  },
+  "dataReview": {
+    "originalCaptureActualExitCode": 2,
+    "independentAnalysisActualExitCode": 0,
+    "originalCaptureExecution": {
+      "path": "output/2026-10-13-attachment-search-native-data/execution.json",
+      "bytes": 1019,
+      "sha256": "d5f9562f65fca17c0dde70391b5a8459a4ab1f970b13205b61afcfb0fdffc755"
+    },
+    "capture": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/capture-receipt.json.raw",
+      "bytes": 9123,
+      "sha256": "923dd886fcf2252c557b8c4a2e81e5aba3d0dc20c65d0d000c893d1a6d0c9f7a"
+    },
+    "strictComparison": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/comparison.json.raw",
+      "bytes": 4543,
+      "sha256": "6190565fbe121beb87c8228b9cce556c03ae43992e63c26e20975c74241bdbc2"
+    },
+    "finalVerification": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/final-verification.json.raw",
+      "bytes": 792,
+      "sha256": "ec9c09570e71265eaab786d612143cd993a97142f3860686f596e963ab994e92"
+    },
+    "independent": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-summary.json.raw",
+      "bytes": 7400,
+      "sha256": "58a007e3e632037bf45edafd435b95a78be61cb9a3dcea70fcaad42a5900c34a"
+    },
+    "analysisExecution": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-execution.json.raw",
+      "bytes": 1617,
+      "sha256": "83af95728b04586e3c48c0c13303aa4b681c447a38fdcd0f463e4a93aa0db69d"
+    },
+    "acceptedDifferences": [],
+    "differences": [
+      {
+        "table": "agents",
+        "rowKeySha256": "08f6b585592467d20717e8abd8dd02b9fb430ba65eb4b745c373ce3001ef5dae",
+        "columns": [
+          {
+            "column": "updated_at",
+            "beforeSha256": "3a3c004340df4d964c893b4fca04e6e5633abdb01174fed8fcb57ad838e678a7",
+            "afterSha256": "ff15e1eb4c63d31a616298b3e31eca7945c02e9b192492861cc17cae8a254a21"
+          }
+        ]
+      },
+      {
+        "table": "sessions",
+        "rowKeySha256": "89025546186a087aa4bb120f629f6c6f80b2420a0a66d3dcf5740033dc02a704",
+        "columns": [
+          {
+            "column": "updated_at",
+            "beforeSha256": "c45199bccf95dd8e3aa8f04b8394971fa35af6507e4d62bfc2ee93e1950262e2",
+            "afterSha256": "f71a1d03785b74599358b59a6828c8f0a8de4e715cf6c7691006677d9d23d607"
+          }
+        ]
+      }
+    ],
+    "tables": {
+      "agents": {
+        "rowCount": 40,
+        "wholeRowsUnchanged": 39,
+        "rowMembershipExact": true,
+        "columnsExact": true,
+        "beforeWholeRowsSha256": "00f3c61d4cb6a23320531f6f78e127761a3ce9f814f8fc5b6c67e9e020e6bea9",
+        "afterWholeRowsSha256": "012b201c09025cacb326067b4f3e35882c64bf3ce42523d00d3d7929a12f9f60"
+      },
+      "dismissed_sessions": {
+        "rowCount": 171,
+        "wholeRowsUnchanged": 171,
+        "rowMembershipExact": true,
+        "columnsExact": true,
+        "beforeWholeRowsSha256": "85d6a5d94f52909d1998494eb674735f43780fc64c257e108122992c28390072",
+        "afterWholeRowsSha256": "85d6a5d94f52909d1998494eb674735f43780fc64c257e108122992c28390072"
+      },
+      "sessions": {
+        "rowCount": 135,
+        "wholeRowsUnchanged": 134,
+        "rowMembershipExact": true,
+        "columnsExact": true,
+        "beforeWholeRowsSha256": "528cc12d55c599feb0604691fb96cf1015edffea02366ec87e14659780acfa76",
+        "afterWholeRowsSha256": "c5e9d492a4af6df5a2e07e1d1e40bbff79d23b0e16708ba14440d66545fe6852"
+      },
+      "settings": {
+        "rowCount": 53,
+        "wholeRowsUnchanged": 53,
+        "rowMembershipExact": true,
+        "columnsExact": true,
+        "beforeWholeRowsSha256": "69a3b9f95996c3e9219647217ea9a5980cd4fa8a3c94c81a35071c108771c78b",
+        "afterWholeRowsSha256": "69a3b9f95996c3e9219647217ea9a5980cd4fa8a3c94c81a35071c108771c78b"
+      }
+    },
+    "writerAttribution": "一条 Agent 和一条会话仅 updated_at 变化；两者具体写入者未知，未豁免。变化会话并非自有 marker 草稿对应会话，不能简化为只改自有会话。",
+    "entireUnsentWorkRawExact": true,
+    "all53SettingsRawExact": true,
+    "draft": {
+      "composerCount": 10,
+      "allTenComposersExact": true,
+      "otherNineComposersExact": true,
+      "ownedEntireComposerExact": true,
+      "ownedComposerSha256": "d29577d4a8cd2afcd6e5932560796f796368d13b1f5f093296e3e0e235b405d2",
+      "markerBytes": 33,
+      "markerSha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf",
+      "sendPendingStayedFalse": true,
+      "completeAttachmentArrayExact": true,
+      "attachmentArraySha256": "7b9b17ab47a60cfc9ee4618687224e148e98024c15abef1c33cd8270592d2783",
+      "audioCompleteBytes": 140,
+      "audioCompleteSha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b",
+      "audioEntireAttachmentExact": true,
+      "audioAllSevenSourceFieldsExact": true,
+      "audioSourceFieldNames": [
+        "name",
+        "path",
+        "resolvedPath",
+        "root",
+        "sha256",
+        "size",
+        "version"
+      ],
+      "audioSourceObjectSha256": "755d27a8243827ad7b69996748ad50192adda134dbd2234c25dff87375b162d9",
+      "pdfEntireAttachmentExact": true,
+      "pdfCompleteSavedRepresentationBytes": 1311,
+      "pdfCompleteSavedRepresentationSha256": "11b45fe9a1365b8f7995d30590b47b24b8d8b3cf8f24c5b481bb0dd8dd484a5e",
+      "pdfAllSevenSourceFieldsExact": true,
+      "pdfSourceObjectSha256": "f14331e87ed5802629dcac4322d3af0aaf48f794c3e252ea3ef0beed255b557f",
+      "pdfSourceBytes": 2554,
+      "pdfSourceSha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f",
+      "pdfPageNumbers": [1, 2, 3],
+      "pdfPartialStayedTrue": true,
+      "pdfPartialSelectedStayedTrue": true,
+      "audioAndPdfSourceObjectsEqualPriorIndependentReport": true
+    },
+    "queuesAndAllUnsentTopFields": {
+      "version": {
+        "exact": true,
+        "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+        "type": "int"
+      },
+      "composers": {
+        "exact": true,
+        "sha256": "230dcdedb82413d1a5f07d36faec6894e8617a52e361649ecfe2fc1ae76e5d6a",
+        "type": "dict"
+      },
+      "choice": {
+        "exact": true,
+        "sha256": "83dfd1288bb041e41f87d79a57323f04f1543c287540902d5c5b1510924f470c",
+        "type": "dict"
+      },
+      "feedback": {
+        "exact": true,
+        "sha256": "92c0e7ac2cd949e361546aeeb367da3aa91435ea5af547f0a27bfdd77e08276e",
+        "type": "dict"
+      },
+      "queues": {
+        "exact": true,
+        "sha256": "6cc186f3f1356f30c45610d6a647537e5a6359b32b73d479df47f29968bd5fff",
+        "type": "dict"
+      },
+      "activity": {
+        "exact": true,
+        "sha256": "34c2db3b587678edeec2b00e03d6b1f7e2f612604501ac9a11b846d6ba30cb7a",
+        "type": "dict"
+      }
+    },
+    "worktreeLocations": {
+      "present": true,
+      "rawExact": true,
+      "wholeRowSha256": "98beefee9b34126e0ddd50512b530ed515abfabbc83ff339a44a2d66abcd96af"
+    },
+    "boundary": "原始捕获严格 exit 2 和两处差异保留；分析 exit 0 仅证明定位与保持核对成功。本次独立定位仅以 SQLite 打开捕获生成的第二副本，未读活库、原安装基线或首份捕获；此前捕获阶段按其原始回执读取和复制原始字节。"
+  },
+  "timeBoundary": {
+    "recordedQuitEventAtUtc": "2026-10-13T15:45:00.770Z",
+    "recordedPostQuitProcessAtUtc": "2026-10-13T15:45:37.671944+00:00",
+    "captureCompletedAtUtc": "2026-10-13T15:55:51.389288+00:00",
+    "independentAnalysisCompletedAtUtc": "2026-10-13T16:01:07.982533+00:00",
+    "laterUiStagesExcluded": true,
+    "statement": "仅对应原17条界面事件及该次数据捕获。后来新的 NEW-26 面板诊断独立记录；本条不声称应用当前关闭、当前进程为空或当前数据不变。"
+  },
+  "openBoundaries": [
+    "P32 正式有效文本候选选择、明确开始、匹配片段及来源/变更/取消路径尚未实测；本轮为0候选。",
+    "P27 像素仍关闭；当前仅准确拒绝不可交付截图，不证明采集、遮蔽或 Agent 接收。",
+    "无新 prompt/slash 发送、权限选择或模型/服务/账号更改；官方请求总数未测量。",
+    "本轮不关闭 NEW-26、NEW-24 或真实 Agent 接收要求；新 NEW-26 成功操作另行记录。"
+  ],
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/publication.json",
+    "bytes": 5337,
+    "sha256": "1638c2e033fcd7c5b197338a0cc4ebd5baf934f34e6405ddd0502aa76c848104"
+  }
+}

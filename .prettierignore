@@ -294,3 +294,12 @@ docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/candidate-in
 docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/installation.json
 docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/install-independent-final.json
 docs/evidence/2026-10-09-capability-hardening/audio-input-candidate/duplicate-cleanup.json
+
+# Preserve exact hashed attachment-search candidate and installation receipts.
+docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/candidate-inputs.json
+docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/candidate-inputs-after.json
+docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/candidate.json
+docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/candidate-independent.json
+docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/installation.json
+docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/install-independent-final.json
+docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/duplicate-cleanup.json

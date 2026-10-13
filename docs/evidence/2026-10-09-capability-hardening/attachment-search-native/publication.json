@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "publishedAtUtc": "2026-10-13T16:08:10.748724+00:00",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "uiSelection": {
+    "path": "output/2026-10-13-attachment-search-native-independent/public-ui-publication-selection.json",
+    "bytes": 3800,
+    "sha256": "1d203045839089739bb43e6a9d6282d01efeae79c5ae174a0cb2b2161d9192ba"
+  },
+  "dataSelection": {
+    "path": "output/2026-10-13-attachment-search-native-data-independent/publication-selection.json",
+    "bytes": 2004,
+    "sha256": "5bf2490f0d47e1225f0623222859d063bc76f116ae5bf88880de96873ee76aaa"
+  },
+  "files": [
+    {
+      "source": "output/2026-10-13-attachment-search-native/transcript-receipts/16-call_bd700ae170b64574af461d5885adb0a2.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/16-quit-context.jsonl.raw",
+      "bytes": 1675,
+      "sha256": "9f1dde552bab302a9d49f047f5bd585aa15734908e851341fa251a79e1e6842d"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-native/transcript-receipts/17-call_2c39785b78044d8abaed5960989a7f3f.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/17-normal-quit.jsonl.raw",
+      "bytes": 834,
+      "sha256": "7773153c21e35954d068f8dd96aeee272dcc542e5f4f77412b4a2eefb785cb10"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-native/01-final-process.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/01-final-process.json.raw",
+      "bytes": 280,
+      "sha256": "5f429a435a5948029abfc5f6802cd874d1ad810fbb47aecbd764352414a05bc1"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-native/03-final-process-exec.jsonl.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/03-final-process-exec.jsonl.raw",
+      "bytes": 3227,
+      "sha256": "53981d0b2a9a233c934048313920288e50ee1a620633107388e6feb600cb2d95"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-native/02-formal-files.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/02-formal-files.json.raw",
+      "bytes": 608,
+      "sha256": "872d3edc9c887b80454209c91ae722b92e3bd66ad8dbf2eb26b258cab64ed7a2"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-native-independent/public-ui-summary.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/public-ui-summary.json.raw",
+      "bytes": 6331,
+      "sha256": "889ad2148ff3500b1731de7474c7474100d7650094aa6b9e0d60a6c8b3510f53"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-native-data-independent/public-summary.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-summary.json.raw",
+      "bytes": 7400,
+      "sha256": "58a007e3e632037bf45edafd435b95a78be61cb9a3dcea70fcaad42a5900c34a"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-native-data-independent/public-execution.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-execution.json.raw",
+      "bytes": 1617,
+      "sha256": "83af95728b04586e3c48c0c13303aa4b681c447a38fdcd0f463e4a93aa0db69d"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-native-data-independent/stdout.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-stdout.log.raw",
+      "bytes": 402,
+      "sha256": "4247d5ee899226fe2de875711df402ac9cf637025085f325070ff6e06934133e"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-native-data-independent/stderr.raw",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-stderr.log.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-native-data/capture-receipt-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/capture-receipt.json.raw",
+      "bytes": 9123,
+      "sha256": "923dd886fcf2252c557b8c4a2e81e5aba3d0dc20c65d0d000c893d1a6d0c9f7a"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-native-data/comparison-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/comparison.json.raw",
+      "bytes": 4543,
+      "sha256": "6190565fbe121beb87c8228b9cce556c03ae43992e63c26e20975c74241bdbc2"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-native-data/final-verification-private.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/final-verification.json.raw",
+      "bytes": 792,
+      "sha256": "ec9c09570e71265eaab786d612143cd993a97142f3860686f596e963ab994e92"
+    }
+  ],
+  "boundary": "Six approved UI and seven safe metadata/data originals, byte-exact. No database files, row identities, user body, sidebar history, raw changed timestamps or incomplete screenshot payload. Historical UI pending-data wording remains unchanged; the new entry adds the completed independent result."
+}

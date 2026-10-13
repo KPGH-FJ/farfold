@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "sourcePushed": true,
+  "engineeringAllPassed": true,
+  "files": [
+    {
+      "source": "output/2026-10-13-attachment-search-independent/engineering-review.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/independent/engineering-review.json.raw",
+      "bytes": 11265,
+      "sha256": "ff42f4e8da27314170b98760d99ff16c5d76f34b17147d3b2beece39cf849f51"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-independent/root-public-review.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/independent/root-public-review.json.raw",
+      "bytes": 14968,
+      "sha256": "46a5b0fa57ddfbc44a50665cdb559ceff58defd05f84e58b5eb45f3131246f60"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-independent/inventory-review.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/independent/inventory-review.json.raw",
+      "bytes": 3911,
+      "sha256": "b6df4203991dd4cc3b9d0d0279720b1cf2ee5404a8ff0ad2d52d2c6cf0fd4af8"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-integration/inventory-preparation-correction.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/independent/inventory-preparation-correction.json.raw",
+      "bytes": 424,
+      "sha256": "028bf8408569f4ce0c009d0c3ad9cebe4bc66542940efbb5c7f832a158447034"
+    }
+  ],
+  "boundary": "Independent review of source, unchanged inventory, actual seven and published originals. Candidate/installation/native P32 and whole P27/P32 remain separate."
+}

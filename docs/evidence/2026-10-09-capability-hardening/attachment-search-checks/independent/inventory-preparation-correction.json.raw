@@ -1,0 +1,7 @@
+{
+  "previousPreparationActualExit": 1,
+  "failedBeforeInventoryWriteAndEngineering": "NEW rows are three columns, originals four; adapter formerly assumed four for all",
+  "correction": "Only row-shape validation now uses actual three vs four; 122 and 28 baseline exact plus two malformed controls pass",
+  "adapterSha256": "b1aa751cc1f40ff74c04cb3a8d493c8505be0c7ec3b48d538af4b1fdae5134ac",
+  "noEngineeringRerun": true
+}

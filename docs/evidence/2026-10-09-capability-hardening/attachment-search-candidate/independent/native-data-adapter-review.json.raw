@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T15:55:18.610429+00:00",
+  "result": "PASS_READY_FOR_ROOT_SINGLE_CAPTURE_IF_NO_FURTHER_APP_ACTION",
+  "freeze": {
+    "path": "output/2026-10-13-attachment-search-native-data-preparation/freeze.json",
+    "bytes": 3610,
+    "sha256": "2000ada456d1bf654ddd3320b18eee6c8b1965c8708a451d53ee0f17ac118057"
+  },
+  "config": {
+    "path": "output/2026-10-13-attachment-search-native-data/config.json",
+    "bytes": 1289,
+    "sha256": "fe7d6c347498540e7ffdb9e25dca17d9023ed02c3dd19f06d6470285a233b4b1"
+  },
+  "algorithm": {
+    "ioAndCompareExactOriginAfterPathOnlyReplacement": true,
+    "captureMainExactOriginBytes": true,
+    "captureMainSha256": "be190ec561ea4a867c10c3aaa0cf4e5cc6656d60a49edc988b39602f75631e79",
+    "changedFunctionsOnly": [
+      "receipt_path",
+      "validate_literals",
+      "verified_quit",
+      "validate_receipts",
+      "load_config"
+    ],
+    "changesRestrictedToExactCurrentEvidencePathsSchemaPinsAndFreshQuitGate": true,
+    "strictDifferencesExempted": false,
+    "comparisonNotExecuted": true
+  },
+  "metadataGate": {
+    "independentLoadConfigPassed": true,
+    "allowlistedMetadataAndToolFiles": 11,
+    "readPaths": [
+      "output/2026-10-13-attachment-search-install/install-operation.json",
+      "output/2026-10-13-attachment-search-install/metadata-backup-receipt.json",
+      "output/2026-10-13-attachment-search-native/01-final-process.json",
+      "output/2026-10-13-attachment-search-native/03-final-process-exec.jsonl.raw",
+      "output/2026-10-13-attachment-search-native/transcript-receipts/16-call_bd700ae170b64574af461d5885adb0a2.jsonl.raw",
+      "output/2026-10-13-attachment-search-native/transcript-receipts/17-call_2c39785b78044d8abaed5960989a7f3f.jsonl.raw",
+      "output/2026-10-13-attachment-search-native/transcript-receipts/manifest.json",
+      "output/2026-10-13-attachment-search-native-data/config.json",
+      "output/2026-10-13-attachment-search-native-data-preparation/capture_compare.py",
+      "output/2026-10-13-attachment-search-native-data-preparation/data_compare.py",
+      "output/2026-10-13-attachment-search-native-data-preparation/io_support.py"
+    ],
+    "sqliteConnections": 0,
+    "processCalls": 0,
+    "databaseByteReads": 0,
+    "captureMainInvoked": false,
+    "backendOriginalGateSelfcheck": {
+      "path": "output/2026-10-13-attachment-search-native-data-preparation/gate-selfcheck-result.json",
+      "bytes": 1941,
+      "sha256": "6ce193e70d036f4b9e7e6c90954e924fe249171cab8c4005f5334f20ac134787"
+    },
+    "backendChecksPassed": 18,
+    "backend17RamNegativesNotRepeated": true
+  },
+  "baseline": {
+    "path": "output/2026-10-13-attachment-search-install/metadata-before.sqlite3",
+    "sha256FromPinnedBackupReceipt": "90430bf5a59edb3f7f43dcc2e810e99a180008b3ba8bf35e2643c3a258dc0933",
+    "databaseHashNotRereadByReviewer": true,
+    "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+    "sourceInputsVerified": 1756,
+    "installReceipt": {
+      "path": "output/2026-10-13-attachment-search-install/install-operation.json",
+      "bytes": 3492,
+      "sha256": "18bd2d59bd3271f155a9e652927cf326c2ab1195ede9dee711453b8c1719dd7f"
+    },
+    "backupReceipt": {
+      "path": "output/2026-10-13-attachment-search-install/metadata-backup-receipt.json",
+      "bytes": 1358,
+      "sha256": "8e7c035fc0821c3cf7b907311f56da60b2c99944c00b928fafd03540fd281450"
+    },
+    "baselineIsThisInstallationBackupNotOldAudioInstallOrPdfIncrementalBase": true,
+    "strictFutureBaselineByteCheckStillRequired": true
+  },
+  "freshQuit": {
+    "contextEvent": {
+      "path": "output/2026-10-13-attachment-search-native/transcript-receipts/16-call_bd700ae170b64574af461d5885adb0a2.jsonl.raw",
+      "bytes": 1675,
+      "sha256": "9f1dde552bab302a9d49f047f5bd585aa15734908e851341fa251a79e1e6842d"
+    },
+    "quitEvent": {
+      "path": "output/2026-10-13-attachment-search-native/transcript-receipts/17-call_2c39785b78044d8abaed5960989a7f3f.jsonl.raw",
+      "bytes": 834,
+      "sha256": "7773153c21e35954d068f8dd96aeee272dcc542e5f4f77412b4a2eefb785cb10"
+    },
+    "quitActualCompletedAt": "2026-10-13T15:45:00.770Z",
+    "successfulClick97OnObservedSaveAndExit": true,
+    "rawResultEmptyNotInventedReturnedTrue": true,
+    "processReceipt": {
+      "path": "output/2026-10-13-attachment-search-native/01-final-process.json",
+      "bytes": 280,
+      "sha256": "5f429a435a5948029abfc5f6802cd874d1ad810fbb47aecbd764352414a05bc1"
+    },
+    "originalProcessExecution": {
+      "path": "output/2026-10-13-attachment-search-native/03-final-process-exec.jsonl.raw",
+      "bytes": 3227,
+      "sha256": "53981d0b2a9a233c934048313920288e50ee1a620633107388e6feb600cb2d95"
+    },
+    "processObservedAtUtc": "2026-10-13T15:45:37.671944+00:00",
+    "actualOriginalCommandExitCode": 0,
+    "actualLowercaseExactPsZero": true,
+    "actualCommandAssertsPsReturnAndEmptyStderrAndNoMatches": true,
+    "installationContextQuitPsExecutionChronologyPassed": true,
+    "configNoAppActionAfterFinalCorrectPs": true,
+    "remainingRuntimeCondition": "Root must maintain the no-further-App-action condition; future capture itself performs its live zero-process and exact-byte gates."
+  },
+  "boundary": "Read-only metadata/source review only. No DB file opened or hashed, no SQLite/process/capture/App/UI/Agent action. Future execution determines strict exit0/2/1; no difference accepted in advance."
+}

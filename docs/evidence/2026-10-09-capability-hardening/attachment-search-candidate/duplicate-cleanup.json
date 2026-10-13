@@ -1,0 +1,13 @@
+{
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "completedAtUtc": "2026-10-13T15:42:10.013782+00:00",
+  "removedPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "exactCandidateAndFormalFiveFilesAndModesMatched": true,
+  "formalApplicationPreserved": true,
+  "archivePreserved": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-13-attachment-search-9c278d82/Farfold-0.1.7-9c278d82.zip",
+  "independentInstallation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/install-independent-final.json",
+    "sha256": "e672ab352926712369cb2295325276b227c77fee84f7d7ec9e2f9a2d5bb84481"
+  },
+  "boundary": "Only the exact verified generated app duplicate was removed; no source, formal app, archive, backup or user data was removed."
+}

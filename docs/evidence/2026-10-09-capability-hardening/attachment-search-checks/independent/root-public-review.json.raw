@@ -1,0 +1,253 @@
+{
+  "reviewedAtUtc": "2026-10-13T15:21:29.698396+00:00",
+  "scope": "Read-only recursive repository reference, publication byte identity and claim-scope audit from four P32 public entrypoints. No source/docs mutation, test rerun, UI, App, Agent or database operation.",
+  "result": "PASS with explicit historical-input differences retained; no broken current or immutable evidence references",
+  "entrypoints": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/implementation.json",
+      "bytes": 7663,
+      "sha256": "0fbcecc7b873a4f996ca262a65df2744cdec7c0b944d91461d388dda0fc501da"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/backend/publication.json",
+      "bytes": 13206,
+      "sha256": "7b08b9ea56ead7d728598f408af0cb58e835a746750dd7067541d134ec91188f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/frontend/publication.json",
+      "bytes": 22443,
+      "sha256": "8cdd9e6d5eccce48b6b7b681d592245ba9dd8f4cba6f52d865f717300d1e0cf1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-content-search/independent/publication.json",
+      "bytes": 2121,
+      "sha256": "7f0932050212fc7911ccc2eed4fce3492f3ef4b1a46b68aaa3c9a46b2a7ead9a"
+    }
+  ],
+  "counts": {
+    "entrypoints": 4,
+    "parsedJsonOrJsonlDocuments": 151,
+    "distinctPathHashBytesReferences": 1640,
+    "distinctHashBearingReferences": 1364,
+    "hashBearingReferencesMatchingCurrentFileBytes": 1347,
+    "historicalHashReferencesNotCurrentSource": 17,
+    "distinctReferencedFilesRead": 1326,
+    "missingPaths": 0,
+    "publishedOriginalPairsByteExact": 98,
+    "publicationCounts": {
+      "backend": 35,
+      "frontend": 58,
+      "independent": 5
+    },
+    "rootCurrentSourcePinsMatched": 18,
+    "archivedProvisionalCopiesMatched": 9,
+    "relativeVisualReferencesResolved": 2,
+    "unexpectedHashOrByteMismatches": 0,
+    "rawPairFailures": 0
+  },
+  "method": "Followed structured repository path/source/published/original/copy references and repository-path-keyed SHA maps, including raw JSON envelopes. Hash/bytes and source-to-published byte equality checked without executing embedded commands. Free-form shell/code/example paths, URLs and external private transcripts were not treated as repository artifact dependencies. Counted unique (path, expected SHA, expected bytes) tuples; the same digest with/without size is distinct.",
+  "historicalDifferences": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "sha256": "24e1236aa084619798b312fc1b4855adecef643df811891ea7e7ce66b883dbe4",
+      "origin": "output/2026-10-13-p32-text-backend/before.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "sha256": "ef36673184ed687d795c02e601b6451b07301de44c28792b19e1ede276ff8cb8",
+      "origin": "output/2026-10-13-p32-text-backend/before.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "sha256": "c5c76f8117f9345793ac47e6ba9b85d5e1a60429e5e7c51541d3db63faac937b",
+      "origin": "output/2026-10-13-p32-text-backend/before.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "sha256": "ddb54a872a1aea2515510473fd3853fc20c5f8737890cd2043dae906ce6d5cd8",
+      "origin": "output/2026-10-13-p32-text-backend/before.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "sha256": "1975175d20a83e9d55352d58f846bd20d67a527e4478d5f07a6511a604946342",
+      "origin": "output/2026-10-13-p32-text-backend/red-sources.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "sha256": "1975175d20a83e9d55352d58f846bd20d67a527e4478d5f07a6511a604946342",
+      "origin": "output/2026-10-13-p32-text-backend/red/started.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "sha256": "1975175d20a83e9d55352d58f846bd20d67a527e4478d5f07a6511a604946342",
+      "origin": "output/2026-10-13-p32-text-backend/red/completed.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection_tests.rs",
+      "sha256": "7c41b75d9c8ed044aee85b5563d94c3641f4bebe989daa6dfb9d6a51a0970550",
+      "origin": "output/2026-10-13-p32-text-backend/red-sources.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection_tests.rs",
+      "sha256": "7c41b75d9c8ed044aee85b5563d94c3641f4bebe989daa6dfb9d6a51a0970550",
+      "origin": "output/2026-10-13-p32-text-backend/fixed-sources.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection_tests.rs",
+      "sha256": "7c41b75d9c8ed044aee85b5563d94c3641f4bebe989daa6dfb9d6a51a0970550",
+      "origin": "output/2026-10-13-p32-text-backend/red/started.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection_tests.rs",
+      "sha256": "7c41b75d9c8ed044aee85b5563d94c3641f4bebe989daa6dfb9d6a51a0970550",
+      "origin": "output/2026-10-13-p32-text-backend/red/completed.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection_tests.rs",
+      "sha256": "7c41b75d9c8ed044aee85b5563d94c3641f4bebe989daa6dfb9d6a51a0970550",
+      "origin": "output/2026-10-13-p32-text-backend/green/started.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection_tests.rs",
+      "sha256": "7c41b75d9c8ed044aee85b5563d94c3641f4bebe989daa6dfb9d6a51a0970550",
+      "origin": "output/2026-10-13-p32-text-backend/green/completed.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "sha256": "ac059d494393b6cbc85eb3210c064544fc11fe15b5f9059922eb497759a5e215",
+      "origin": "output/2026-10-13-p32-text-backend/fixed-sources.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "sha256": "ac059d494393b6cbc85eb3210c064544fc11fe15b5f9059922eb497759a5e215",
+      "origin": "output/2026-10-13-p32-text-backend/green/started.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "sha256": "ac059d494393b6cbc85eb3210c064544fc11fe15b5f9059922eb497759a5e215",
+      "origin": "output/2026-10-13-p32-text-backend/green/completed.json",
+      "reason": "Preserved backend before/red/first-green source pin; final backend v2 has separate current pins."
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/fixture.tsx",
+      "sha256": "96b6cd0c753d49b7574f970b07a8caf889e848aac5e3035a77dc634c19269c9c",
+      "origin": "output/2026-10-13-attachment-search-frontend/browser/chromium-run01.json",
+      "reason": "Earlier47-check source/fixture scope retained before final55-check run."
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/fixture.tsx",
+      "sha256": "96b6cd0c753d49b7574f970b07a8caf889e848aac5e3035a77dc634c19269c9c",
+      "origin": "output/2026-10-13-attachment-search-frontend/browser/webkit-run01.json",
+      "reason": "Earlier47-check source/fixture scope retained before final55-check run."
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/run.mjs",
+      "sha256": "104bdb8695a3db40f902dfb9c6348e1962471fdc3cceec0fcfb5bbcde4c6a385",
+      "origin": "output/2026-10-13-attachment-search-frontend/browser/chromium-run01.json",
+      "reason": "Earlier47-check source/fixture scope retained before final55-check run."
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-frontend/browser/run.mjs",
+      "sha256": "104bdb8695a3db40f902dfb9c6348e1962471fdc3cceec0fcfb5bbcde4c6a385",
+      "origin": "output/2026-10-13-attachment-search-frontend/browser/webkit-run01.json",
+      "reason": "Earlier47-check source/fixture scope retained before final55-check run."
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "sha256": "ea0c4e0e217e526865bf49ad67a4db8e1361e87b5b01c879d6ee4ba4c5a4f192",
+      "origin": "output/2026-10-13-attachment-search-frontend/browser/chromium-run01.json",
+      "reason": "Earlier47-check source/fixture scope retained before final55-check run."
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "sha256": "ea0c4e0e217e526865bf49ad67a4db8e1361e87b5b01c879d6ee4ba4c5a4f192",
+      "origin": "output/2026-10-13-attachment-search-frontend/browser/chromium-run02.json",
+      "reason": "55-check browser v1 source; only later two copy lines differ."
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "sha256": "ea0c4e0e217e526865bf49ad67a4db8e1361e87b5b01c879d6ee4ba4c5a4f192",
+      "origin": "output/2026-10-13-attachment-search-frontend/browser/webkit-run01.json",
+      "reason": "Earlier47-check source/fixture scope retained before final55-check run."
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "sha256": "ea0c4e0e217e526865bf49ad67a4db8e1361e87b5b01c879d6ee4ba4c5a4f192",
+      "origin": "output/2026-10-13-attachment-search-frontend/browser/webkit-run02.json",
+      "reason": "55-check browser v1 source; only later two copy lines differ."
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "114aecb77a987d7533a7c9884c08f395b2be67ca5d435926f73c36d53c23aa2a",
+      "origin": "output/2026-10-13-attachment-search-frontend/browser/chromium-run01.json",
+      "reason": "Earlier47-check source/fixture scope retained before final55-check run."
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "sha256": "114aecb77a987d7533a7c9884c08f395b2be67ca5d435926f73c36d53c23aa2a",
+      "origin": "output/2026-10-13-attachment-search-frontend/browser/webkit-run01.json",
+      "reason": "Earlier47-check source/fixture scope retained before final55-check run."
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "sha256": "ea0c4e0e217e526865bf49ad67a4db8e1361e87b5b01c879d6ee4ba4c5a4f192",
+      "origin": "output/2026-10-13-attachment-search-frontend/source-freeze-v1.json",
+      "reason": "Explicit later v2/v3 copy-only difference, reconstructed against old SHA below."
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "sha256": "ef6e459b9c36f459e60c049b45f3c133cd077e014d5765c6e20666189f3c58db",
+      "origin": "output/2026-10-13-attachment-search-frontend/source-freeze-v2.json",
+      "reason": "Explicit later v2/v3 copy-only difference, reconstructed against old SHA below."
+    },
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "sha256": "cb953100d75681fec60a8447d6f9b2f3b1a78d4bf3dd2075f6e4ae4c360ddf51",
+      "origin": "output/2026-10-13-attachment-search-independent/provisional-review.json",
+      "reason": "Explicit provisional review; archived source copy independently matches its old hash."
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "sha256": "5cf6d5f147413537b88f8356d1ec88cb5a673683c2d427c2d35f9569f28bfd98",
+      "origin": "output/2026-10-13-attachment-search-independent/provisional-review.json",
+      "reason": "Explicit provisional review; archived source copy independently matches its old hash."
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "sha256": "0aba13c3615291b5e8536c111f6fa7910fd235b41ded86a8695578fc78ca1040",
+      "origin": "output/2026-10-13-attachment-search-independent/provisional-review.json",
+      "reason": "Explicit provisional review; archived source copy independently matches its old hash."
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "sha256": "63e038b4b535157c39452a285352f910e0af4249fb00daaf59720cc2490c785d",
+      "origin": "output/2026-10-13-attachment-search-independent/provisional-review.json",
+      "reason": "Explicit provisional review; archived source copy independently matches its old hash."
+    }
+  ],
+  "scopeConclusions": {
+    "frontendV1": "Final six-file targeted68, typecheck0 and both browser55 have original exit0 receipts. Each browser before/after set is identical and its13 owned pins match source-freeze-v1; no page errors/external requests. Earlier47-run records retain their earlier fixture/source scope.",
+    "frontendV2V3": "Reverse replacement reconstructs exact v2 and v1 hashes/bytes from current v3 for the two literal copy corrections. Other12 owned source files match all three freezes. Only strings2 checks and v2 scoped format are asserted after the browser run; no browser rerun is claimed.",
+    "backend": "Final5-source pins match current bytes; red/first-green input hashes remain historical, while their published command/results are byte-preserved.",
+    "installedBoundary": "Implementation explicitly remains before full seven/source commit/fresh candidate/install/native P32 evidence. Existing formal audio36c/PDF native observations are separate and not promoted into installed P32. P32/P27/122/29x8 remain incomplete.",
+    "serverBoundary": "Mistaken manual exit0 is explicitly superseded; exact original exec143 is authoritative and stop evidence uses later ps/listener/bind observations."
+  },
+  "unexplainedFailures": [],
+  "stableEntrypointsDuringAudit": true,
+  "next": "Wait for root instruction to review backend candidate/install preparation tools; no commit/check pins inferred."
+}

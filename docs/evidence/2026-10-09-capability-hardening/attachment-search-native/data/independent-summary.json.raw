@@ -1,0 +1,196 @@
+{
+  "schema": 1,
+  "checkedAtUtc": "2026-10-13T16:01:07.979238+00:00",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "result": "independentlyLocalizedNoDifferencesAccepted",
+  "actualStrictExitCode": 2,
+  "acceptedDifferences": [],
+  "differenceCount": 2,
+  "tables": {
+    "agents": {
+      "rowCount": 40,
+      "wholeRowsUnchanged": 39,
+      "rowMembershipExact": true,
+      "columnsExact": true,
+      "beforeWholeRowsSha256": "00f3c61d4cb6a23320531f6f78e127761a3ce9f814f8fc5b6c67e9e020e6bea9",
+      "afterWholeRowsSha256": "012b201c09025cacb326067b4f3e35882c64bf3ce42523d00d3d7929a12f9f60"
+    },
+    "dismissed_sessions": {
+      "rowCount": 171,
+      "wholeRowsUnchanged": 171,
+      "rowMembershipExact": true,
+      "columnsExact": true,
+      "beforeWholeRowsSha256": "85d6a5d94f52909d1998494eb674735f43780fc64c257e108122992c28390072",
+      "afterWholeRowsSha256": "85d6a5d94f52909d1998494eb674735f43780fc64c257e108122992c28390072"
+    },
+    "sessions": {
+      "rowCount": 135,
+      "wholeRowsUnchanged": 134,
+      "rowMembershipExact": true,
+      "columnsExact": true,
+      "beforeWholeRowsSha256": "528cc12d55c599feb0604691fb96cf1015edffea02366ec87e14659780acfa76",
+      "afterWholeRowsSha256": "c5e9d492a4af6df5a2e07e1d1e40bbff79d23b0e16708ba14440d66545fe6852"
+    },
+    "settings": {
+      "rowCount": 53,
+      "wholeRowsUnchanged": 53,
+      "rowMembershipExact": true,
+      "columnsExact": true,
+      "beforeWholeRowsSha256": "69a3b9f95996c3e9219647217ea9a5980cd4fa8a3c94c81a35071c108771c78b",
+      "afterWholeRowsSha256": "69a3b9f95996c3e9219647217ea9a5980cd4fa8a3c94c81a35071c108771c78b"
+    }
+  },
+  "differences": [
+    {
+      "table": "agents",
+      "rowKeySha256": "08f6b585592467d20717e8abd8dd02b9fb430ba65eb4b745c373ce3001ef5dae",
+      "columns": [
+        {
+          "column": "updated_at",
+          "beforeSha256": "3a3c004340df4d964c893b4fca04e6e5633abdb01174fed8fcb57ad838e678a7",
+          "afterSha256": "ff15e1eb4c63d31a616298b3e31eca7945c02e9b192492861cc17cae8a254a21"
+        }
+      ]
+    },
+    {
+      "table": "sessions",
+      "rowKeySha256": "89025546186a087aa4bb120f629f6c6f80b2420a0a66d3dcf5740033dc02a704",
+      "columns": [
+        {
+          "column": "updated_at",
+          "beforeSha256": "c45199bccf95dd8e3aa8f04b8394971fa35af6507e4d62bfc2ee93e1950262e2",
+          "afterSha256": "f71a1d03785b74599358b59a6828c8f0a8de4e715cf6c7691006677d9d23d607"
+        }
+      ]
+    }
+  ],
+  "schemaAndVersionExact": true,
+  "entireUnsentWorkRawExact": true,
+  "unsentWorkRawUtf8Bytes": 73533,
+  "unsentWorkRawSha256": "40bbd89bb0a53e77bf2bd9eae05927f4e7df7e65deea39036b887c92ea87abc7",
+  "unsentTopFields": {
+    "version": {
+      "exact": true,
+      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+      "type": "int"
+    },
+    "composers": {
+      "exact": true,
+      "sha256": "230dcdedb82413d1a5f07d36faec6894e8617a52e361649ecfe2fc1ae76e5d6a",
+      "type": "dict"
+    },
+    "choice": {
+      "exact": true,
+      "sha256": "83dfd1288bb041e41f87d79a57323f04f1543c287540902d5c5b1510924f470c",
+      "type": "dict"
+    },
+    "feedback": {
+      "exact": true,
+      "sha256": "92c0e7ac2cd949e361546aeeb367da3aa91435ea5af547f0a27bfdd77e08276e",
+      "type": "dict"
+    },
+    "queues": {
+      "exact": true,
+      "sha256": "6cc186f3f1356f30c45610d6a647537e5a6359b32b73d479df47f29968bd5fff",
+      "type": "dict"
+    },
+    "activity": {
+      "exact": true,
+      "sha256": "34c2db3b587678edeec2b00e03d6b1f7e2f612604501ac9a11b846d6ba30cb7a",
+      "type": "dict"
+    }
+  },
+  "worktreeLocations": {
+    "present": true,
+    "rawExact": true,
+    "wholeRowSha256": "98beefee9b34126e0ddd50512b530ed515abfabbc83ff339a44a2d66abcd96af"
+  },
+  "draft": {
+    "composerCount": 10,
+    "allTenComposersExact": true,
+    "otherNineComposersExact": true,
+    "ownedEntireComposerExact": true,
+    "ownedComposerSha256": "d29577d4a8cd2afcd6e5932560796f796368d13b1f5f093296e3e0e235b405d2",
+    "markerBytes": 33,
+    "markerSha256": "238811e8a6f4a1489661232a3853d35f7086f9921074f157cccc8638977a94cf",
+    "sendPendingStayedFalse": true,
+    "completeAttachmentArrayExact": true,
+    "attachmentArraySha256": "7b9b17ab47a60cfc9ee4618687224e148e98024c15abef1c33cd8270592d2783",
+    "audioCompleteBytes": 140,
+    "audioCompleteSha256": "f15572ccc49185cbc3cafe854b17382d67ee34337d1b8bc3654f24c1b6b8160b",
+    "audioEntireAttachmentExact": true,
+    "audioAllSevenSourceFieldsExact": true,
+    "audioSourceFieldNames": [
+      "name",
+      "path",
+      "resolvedPath",
+      "root",
+      "sha256",
+      "size",
+      "version"
+    ],
+    "audioSourceObjectSha256": "755d27a8243827ad7b69996748ad50192adda134dbd2234c25dff87375b162d9",
+    "pdfEntireAttachmentExact": true,
+    "pdfCompleteSavedRepresentationBytes": 1311,
+    "pdfCompleteSavedRepresentationSha256": "11b45fe9a1365b8f7995d30590b47b24b8d8b3cf8f24c5b481bb0dd8dd484a5e",
+    "pdfAllSevenSourceFieldsExact": true,
+    "pdfSourceObjectSha256": "f14331e87ed5802629dcac4322d3af0aaf48f794c3e252ea3ef0beed255b557f",
+    "pdfSourceBytes": 2554,
+    "pdfSourceSha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f",
+    "pdfPageNumbers": [
+      1,
+      2,
+      3
+    ],
+    "pdfPartialStayedTrue": true,
+    "pdfPartialSelectedStayedTrue": true,
+    "audioAndPdfSourceObjectsEqualPriorIndependentReport": true
+  },
+  "changedSessionMatchesOwnedDraft": false,
+  "writerAttribution": "Unknown for each updated_at change; retained values do not establish writer or completion.",
+  "readScope": "Only capture-produced baseline-second-copy and new consolidated snapshot opened immutable/query-only; no live/original-installation/first-capture database opened or read.",
+  "secondSnapshotByteHashesStable": true,
+  "privateIdentityOrBodyIncluded": false,
+  "sourceSnapshots": [
+    {
+      "role": "capturedBaselineSecondCopy",
+      "sha256": "90430bf5a59edb3f7f43dcc2e810e99a180008b3ba8bf35e2643c3a258dc0933"
+    },
+    {
+      "role": "capturedAfterConsolidated",
+      "sha256": "805099d1c897f7b00387ce17caef7d1dd161eb85865472cfd8196875129f970b"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "output/2026-10-13-attachment-search-native-data/execution.json",
+      "bytes": 1019,
+      "sha256": "d5f9562f65fca17c0dde70391b5a8459a4ab1f970b13205b61afcfb0fdffc755"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-native-data/capture-receipt-private.json",
+      "bytes": 9123,
+      "sha256": "923dd886fcf2252c557b8c4a2e81e5aba3d0dc20c65d0d000c893d1a6d0c9f7a"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-native-data/comparison-private.json",
+      "bytes": 4543,
+      "sha256": "6190565fbe121beb87c8228b9cce556c03ae43992e63c26e20975c74241bdbc2"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-native-data/final-verification-private.json",
+      "bytes": 792,
+      "sha256": "ec9c09570e71265eaab786d612143cd993a97142f3860686f596e963ab994e92"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-native-data-preparation/freeze.json",
+      "bytes": 3610,
+      "sha256": "2000ada456d1bf654ddd3320b18eee6c8b1965c8708a451d53ee0f17ac118057"
+    },
+    {
+      "path": "output/2026-10-13-pdf-at-route-data-independent/localization-summary.json",
+      "bytes": 7134,
+      "sha256": "be7299bc3e3adfe7a47c7955161010f8998f0b6876181d27d65c20f138d3d436"
+    }
+  ]
+}

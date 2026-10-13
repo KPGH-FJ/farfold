@@ -1,0 +1,609 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T16:13:11.285284+00:00",
+  "result": "PASS_NO_BLOCKER_FOR_SCOPED_9C_CLOSEOUT",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "scope": "Read-only review of current four closeout documents, exact ignore additions, candidate/install receipts, independent engineering publication and old17-event native/data publication. No current App/process/data state claim.",
+  "findings": [],
+  "checks": {
+    "planContract": {
+      "originalCount": 122,
+      "newCount": 28,
+      "originalTitlesAndCompletionUnchanged": true,
+      "allNewCompletionUnchanged": true,
+      "comparedAgainst": [
+        "9c278d82",
+        "43919180"
+      ],
+      "newStatusTextNotMistakenForTitle": true
+    },
+    "protectedFiles": {
+      "unchanged": true,
+      "files": [
+        {
+          "path": "PRODUCT.md",
+          "bytes": 35083,
+          "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+        },
+        {
+          "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+          "bytes": 11543,
+          "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+        },
+        {
+          "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+          "bytes": 2341,
+          "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+        }
+      ]
+    },
+    "ignoreDelta": {
+      "onlySevenExactCandidateAndInstallReceiptPaths": true,
+      "noBroadNewExclusion": true
+    },
+    "engineering": {
+      "publicOriginalsByteExact": 36,
+      "allSevenActuallyPassed": true,
+      "inputCount": 1756,
+      "frontendFiles": 491,
+      "frontendTests": 5821,
+      "rustPassed": 1658,
+      "rustIgnored": 6,
+      "originalFourDocsMatch9cCommitPins": true,
+      "currentCloseoutDocsAreNotClaimedAsOriginalTestedInput": true,
+      "independentPublishedReviewsByteExact": 4,
+      "noTestsRerun": true
+    },
+    "candidateInstallation": {
+      "preparationReviewOriginalsByteExact": 5,
+      "buildLogMatchesCandidatePin": true,
+      "candidateChecks": 9,
+      "installChecks": 10,
+      "allPassedAndNoFailuresInOriginalReceipts": true,
+      "sourceCommitConsistent": true,
+      "candidateAndChecksBeforeAfterInputManifestsByteExact": true,
+      "fiveFileReceiptChainEqual": true,
+      "installThreeFullManifestsEqual": true,
+      "entriesEach": 217400,
+      "manifestSha256": "f07c39cbd8bca17c11d9fdf368014d11f44eb21f9b9432b68492c7e8e328a73f",
+      "noNewBundleOrLiveInstalledFileCheck": true
+    },
+    "nativePublication": {
+      "originals": 13,
+      "ui": 6,
+      "data": 7,
+      "allByteExact": true,
+      "directoryMembershipExact": true,
+      "entryPinnedReferencesChecked": 11,
+      "formalUiScope": "Only original17 CUA events;0candidate;134to133unloaded;257ASCII limit explanation without selected-file length-isolation claim;positive read/match/jump/cancel untested.",
+      "actualQuitChain": "Original16 confirmation/17 completed empty-result save quit; original03 actual lowercase ps0 after quit. No fabricated returned=true.",
+      "actions": "No observed prompt/permission/config edit; official request count remains not measured.",
+      "incompleteScreenshotPayloadNotPublished": true
+    },
+    "dataScope": {
+      "originalStrictExitCode": 2,
+      "independentLocalizationExitCode": 0,
+      "acceptedDifferences": [],
+      "differenceCount": 2,
+      "differences": [
+        {
+          "table": "agents",
+          "field": "updated_at",
+          "writer": "unknown"
+        },
+        {
+          "table": "sessions",
+          "field": "updated_at",
+          "writer": "unknown"
+        }
+      ],
+      "changedSessionMatchesOwnedDraft": false,
+      "settingsRawExact": 53,
+      "allComposersExact": 10,
+      "entireUnsentRawExact": true,
+      "audioWholeBytes": 140,
+      "pdfCompleteSavedRepresentationBytes": 1311,
+      "bothSevenSourceFieldsExact": true,
+      "sourceSummary": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-summary.json.raw",
+        "bytes": 7400,
+        "sha256": "58a007e3e632037bf45edafd435b95a78be61cb9a3dcea70fcaad42a5900c34a"
+      },
+      "noDbReadInThisCloseoutReview": true,
+      "independentReadScopeSeparatelyWordedFromRawCapture": true
+    },
+    "privacy": {
+      "reviewedPublicNativePayloads": "Only metadata/hash/count/field names and generic quit controls; no private row identities, user message body, account or credential values, database bytes or full sidebar/history tree.",
+      "nativePublicFileSetExactlyMatchesManifest": true,
+      "otherNewPublicRecords": "Source/test/preparation metadata and original logs; no newly published user histories or databases.",
+      "historyDeclarationReviewRemainsPrivate": true
+    },
+    "claims": {
+      "p27WholeIncomplete": true,
+      "p32WholeIncomplete": true,
+      "new24AndNew26RemainOpenInThisOldScope": true,
+      "v1Controlled68And55EachNotClaimedAsV3BrowserRerun": true,
+      "whole122And29AgentsNotClaimedComplete": true,
+      "strict2NotOverwrittenByAnalysis0": true,
+      "laterNew26UiExcluded": true
+    }
+  },
+  "reviewNotes": [
+    "A preliminary local plan-audit expression incorrectly included NEW status text and omitted ARCH identifiers; it stopped before publishing a report. The corrected audit uses actual3-column NEW and4-column original schemas and passed122+28 comparisons. This is a reviewer probe correction, not a source/test result.",
+    "The SQLite scope wording was clarified in the final entry; original raw records were unchanged.",
+    "Only saved evidence and current text were reviewed. Root is conducting a later NEW26 phase, so these old process/data receipts do not establish current state."
+  ],
+  "publicScopePins": [
+    {
+      "path": ".prettierignore",
+      "bytes": 20470,
+      "sha256": "f663f01884d9c2a8d4241444401cc0023c8874109f389cee48df322222d4e046"
+    },
+    {
+      "path": "docs/status.md",
+      "bytes": 87279,
+      "sha256": "f56ece6c75ef37a9c02ebe9a42e96bf8a0c5e70e65492e3f4a9dfe9e546d0ea9"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 128688,
+      "sha256": "69648599dc4d02ed286d503b20c4cc340c557a3e187eff91a2dd9b154b5a15aa"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 152408,
+      "sha256": "f7ac7663c6ccd861e15fc36e31bce00a984e33594e1e5a14787e81c416775b01"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 85397,
+      "sha256": "a93a892c24c6130c56efc5e02c0c1f9fb29c4f11b951c2307078b104ddb69e19"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/candidate-independent.json",
+      "bytes": 3060,
+      "sha256": "d3cd0f574c3fae7ab3f07ff89a451f317dd31556e08e3e871c9c32d32a6fa133"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/candidate-inputs-after.json",
+      "bytes": 205246,
+      "sha256": "e076ab700e2d9b96bc7e958846ec63f2303f110e956a1921a03ddb69d825b62d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/candidate-inputs.json",
+      "bytes": 205246,
+      "sha256": "e076ab700e2d9b96bc7e958846ec63f2303f110e956a1921a03ddb69d825b62d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/candidate.json",
+      "bytes": 50056,
+      "sha256": "07644f012b7246b5f92136dc727071365e5f31308fa84b97ec89cf7da1f55f7e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/checks/candidate-build.txt",
+      "bytes": 6235,
+      "sha256": "179c6b004bbd6757bbda753e17cc1c2cc591ce5e157bd5468816dfc0160e8882"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/duplicate-cleanup.json",
+      "bytes": 846,
+      "sha256": "c0054a233ed87b1a2afe2345de0e46b0a43d6eb66f1086d56604b47faa8abde0"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/independent/candidate-preparation-review-v3.json.raw",
+      "bytes": 4741,
+      "sha256": "6dd71752882e9fec95539bf167a9a4ed5736bd88ad164b7551f015df6c9add91"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/independent/candidate-preparation-review.json.raw",
+      "bytes": 10840,
+      "sha256": "9b7d26a278f93759bca99bd26e13c1d5d45d56b3bafc92c127cf2152f7fc2a00"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/independent/install-preparation-review-v3.json.raw",
+      "bytes": 7246,
+      "sha256": "4faa16aa6f47fe9aba9f67c27850a03f06d1952c7256b241efb9721f09af7721"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/independent/install-preservation-review-v3.json.raw",
+      "bytes": 4567,
+      "sha256": "3f33133fa9ebbe8772e2f246664db41c547c3c6c76df107d218c645f66bbc31c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/independent/native-data-adapter-review.json.raw",
+      "bytes": 5425,
+      "sha256": "8ddf6b6ac77dfdef46b34bc183cc61719fdf1392987ac10b2c1e6a81b3f6db50"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/install-independent-final.json",
+      "bytes": 102974,
+      "sha256": "e672ab352926712369cb2295325276b227c77fee84f7d7ec9e2f9a2d5bb84481"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/installation.json",
+      "bytes": 3492,
+      "sha256": "18bd2d59bd3271f155a9e652927cf326c2ab1195ede9dee711453b8c1719dd7f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/preparation-review.json",
+      "bytes": 3096,
+      "sha256": "495b758e1c0458cca52e5ce2594b500eb59e367eae85b7d9959c9b62cc682c30"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/prepare-candidate.py",
+      "bytes": 4493,
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/verify-candidate.py",
+      "bytes": 48142,
+      "sha256": "ef20bbbae69a3a495d2cc27ae752337c9c3d4de899aeb088d73dae0f8876edca"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-clippy/completed.json.raw",
+      "bytes": 800,
+      "sha256": "46052dee6444cd6f29e70713f5bcdff981765585a67f0afacef31f485becbad7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-clippy/started.json.raw",
+      "bytes": 416,
+      "sha256": "a15662e7c13658965d4d901439de8a2bfa7a515eb856343121b32d4a49e910f7"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-clippy/stderr.log.raw",
+      "bytes": 138,
+      "sha256": "a094b72fddc6854f115a71df4233a8b0940d74530b16a70d557d931241d6ed16"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-clippy/stdout.log.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-fmt/completed.json.raw",
+      "bytes": 737,
+      "sha256": "fa236fec9c94fa4095807124cedafd179745676cf2828bb33c1aa69c43111f62"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-fmt/started.json.raw",
+      "bytes": 353,
+      "sha256": "9f1b401eb053a7030ecc3fb5b2ddb9ad9aa29b557ace3126071b38b18a1aa62d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-fmt/stderr.log.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-fmt/stdout.log.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-test/completed.json.raw",
+      "bytes": 740,
+      "sha256": "786eee04e85ee7fe55c340f7b04645bcf25d80270bddf8333d8887aed743de9a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-test/started.json.raw",
+      "bytes": 360,
+      "sha256": "cc3a0aeead71f7c43600e5c2f172fe82612a2146b7191ab7a1ef45d4291e19bc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-test/stderr.log.raw",
+      "bytes": 671,
+      "sha256": "f19a6283a9bb13ada0dce7cfb6247e0b4c33b63a0c8eb223a2b0e7c25c28f2b4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/cargo-test/stdout.log.raw",
+      "bytes": 184604,
+      "sha256": "4aadaf3c3f23dc97aff79aa1ab9a32bd31c107f45d39a59f056138ca19a40801"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/events.jsonl.raw",
+      "bytes": 2218,
+      "sha256": "b75270c6e0ffc28f1ec0ee3f8cb392205b9d1b3b930845f304fc2a9b3f46137f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/format-check/completed.json.raw",
+      "bytes": 667,
+      "sha256": "6930fba320e53d6ca270df8e01f0448f43cae7c5a768170c76a7ca5c05b3a620"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/format-check/started.json.raw",
+      "bytes": 288,
+      "sha256": "82b4f4bf289715f1225443345638c717d969fd84faa57399899493a3fa217402"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/format-check/stderr.log.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/format-check/stdout.log.raw",
+      "bytes": 144,
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/freeze.json.raw",
+      "bytes": 289594,
+      "sha256": "3143092192b9f9e0b822867dbac68dce7115a706effa68a5f53040eb03ef0320"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-build/completed.json.raw",
+      "bytes": 655,
+      "sha256": "66965a8c6ca49afc8ab005ecd87a95a4f363368d1537da38fbb6c679ba9a66d5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-build/started.json.raw",
+      "bytes": 277,
+      "sha256": "d8f40b8d734a96c9c2b01e960004caa550fdcf41ae7121aa19b6fe2eff178aee"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-build/stderr.log.raw",
+      "bytes": 360,
+      "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-build/stdout.log.raw",
+      "bytes": 4560,
+      "sha256": "3357ab5f98b6dc4df27f69fc01b974f76ea6110b91b31b1683182d3bc7c2e68f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-test/completed.json.raw",
+      "bytes": 656,
+      "sha256": "07c04b8aab41c108f8daf3c7231619ba77800d17ac46a67820d495f78c1d4cd4"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-test/started.json.raw",
+      "bytes": 271,
+      "sha256": "486311c82867485fd5c1733d64c6a73efc0e5d0d19578c7016603d29f9d805fc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-test/stderr.log.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/frontend-test/stdout.log.raw",
+      "bytes": 289,
+      "sha256": "25dcd02552d1ca6ed82ae883fa4073e04cafdef5d495745ad95ce3539ceaf8c3"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/independent/engineering-review.json.raw",
+      "bytes": 11265,
+      "sha256": "ff42f4e8da27314170b98760d99ff16c5d76f34b17147d3b2beece39cf849f51"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/independent/inventory-preparation-correction.json.raw",
+      "bytes": 424,
+      "sha256": "028bf8408569f4ce0c009d0c3ad9cebe4bc66542940efbb5c7f832a158447034"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/independent/inventory-review.json.raw",
+      "bytes": 3911,
+      "sha256": "b6df4203991dd4cc3b9d0d0279720b1cf2ee5404a8ff0ad2d52d2c6cf0fd4af8"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/independent/root-public-review.json.raw",
+      "bytes": 14968,
+      "sha256": "46a5b0fa57ddfbc44a50665cdb559ceff58defd05f84e58b5eb45f3131246f60"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/independent.json",
+      "bytes": 1717,
+      "sha256": "402a3c3d389e37c5408edc10e0e73391f959c0b00f94d3b6204b12dc786b7d53"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/inputs-after.json.raw",
+      "bytes": 205246,
+      "sha256": "e076ab700e2d9b96bc7e958846ec63f2303f110e956a1921a03ddb69d825b62d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/inputs-before.json.raw",
+      "bytes": 205246,
+      "sha256": "e076ab700e2d9b96bc7e958846ec63f2303f110e956a1921a03ddb69d825b62d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/preflight.json.raw",
+      "bytes": 270,
+      "sha256": "b88440354c49df0a470c27aeaf84e8781859d157fb785cce796e720947afdedc"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/protected-after.json.raw",
+      "bytes": 357,
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/protected-before.json.raw",
+      "bytes": 357,
+      "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/publication.json",
+      "bytes": 18344,
+      "sha256": "a47df9c7305174575115fa5953a16676d5db5189ef845a7857e2bcbd3dfceeb5"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/summary.json.raw",
+      "bytes": 6314,
+      "sha256": "61d677491bb52e5ffc5da1d1b972ba38675f77f6d0e7fba040fd58f64b849037"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/typecheck/completed.json.raw",
+      "bytes": 658,
+      "sha256": "63d7f949946ca5afaa9b67fd6f8b5b55b0dc97cb0048709c70d76d987e0a12bd"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/typecheck/started.json.raw",
+      "bytes": 280,
+      "sha256": "054f1e636edaf1e0f6f51ea201042835b0c5bfdfbbd01a35e61bed231599724c"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/typecheck/stderr.log.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/typecheck/stdout.log.raw",
+      "bytes": 78,
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/verification.json",
+      "bytes": 7168,
+      "sha256": "5cf3ca7ab074641fa7b14faaf863184b9f55a3553e392049e57bc8f4cf5a3f1a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/capture-receipt.json.raw",
+      "bytes": 9123,
+      "sha256": "923dd886fcf2252c557b8c4a2e81e5aba3d0dc20c65d0d000c893d1a6d0c9f7a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/comparison.json.raw",
+      "bytes": 4543,
+      "sha256": "6190565fbe121beb87c8228b9cce556c03ae43992e63c26e20975c74241bdbc2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/final-verification.json.raw",
+      "bytes": 792,
+      "sha256": "ec9c09570e71265eaab786d612143cd993a97142f3860686f596e963ab994e92"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-execution.json.raw",
+      "bytes": 1617,
+      "sha256": "83af95728b04586e3c48c0c13303aa4b681c447a38fdcd0f463e4a93aa0db69d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-stderr.log.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-stdout.log.raw",
+      "bytes": 402,
+      "sha256": "4247d5ee899226fe2de875711df402ac9cf637025085f325070ff6e06934133e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-summary.json.raw",
+      "bytes": 7400,
+      "sha256": "58a007e3e632037bf45edafd435b95a78be61cb9a3dcea70fcaad42a5900c34a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/installed-native-scoped.json",
+      "bytes": 13265,
+      "sha256": "7fee2a42f9d4784d2f4b56e5ac8ed6be03da8377dab298396b6d3cd0820612da"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/publication.json",
+      "bytes": 5337,
+      "sha256": "1638c2e033fcd7c5b197338a0cc4ebd5baf934f34e6405ddd0502aa76c848104"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/01-final-process.json.raw",
+      "bytes": 280,
+      "sha256": "5f429a435a5948029abfc5f6802cd874d1ad810fbb47aecbd764352414a05bc1"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/02-formal-files.json.raw",
+      "bytes": 608,
+      "sha256": "872d3edc9c887b80454209c91ae722b92e3bd66ad8dbf2eb26b258cab64ed7a2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/03-final-process-exec.jsonl.raw",
+      "bytes": 3227,
+      "sha256": "53981d0b2a9a233c934048313920288e50ee1a620633107388e6feb600cb2d95"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/16-quit-context.jsonl.raw",
+      "bytes": 1675,
+      "sha256": "9f1dde552bab302a9d49f047f5bd585aa15734908e851341fa251a79e1e6842d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/17-normal-quit.jsonl.raw",
+      "bytes": 834,
+      "sha256": "7773153c21e35954d068f8dd96aeee272dcc542e5f4f77412b4a2eefb785cb10"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/public-ui-summary.json.raw",
+      "bytes": 6331,
+      "sha256": "889ad2148ff3500b1731de7474c7474100d7650094aa6b9e0d60a6c8b3510f53"
+    }
+  ],
+  "keyEntry": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/installed-native-scoped.json",
+    "bytes": 13265,
+    "sha256": "7fee2a42f9d4784d2f4b56e5ac8ed6be03da8377dab298396b6d3cd0820612da"
+  },
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/publication.json",
+    "bytes": 5337,
+    "sha256": "1638c2e033fcd7c5b197338a0cc4ebd5baf934f34e6405ddd0502aa76c848104"
+  },
+  "entryReferences": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-checks/verification.json",
+      "bytes": 7168,
+      "sha256": "5cf3ca7ab074641fa7b14faaf863184b9f55a3553e392049e57bc8f4cf5a3f1a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/candidate-independent.json",
+      "bytes": 3060,
+      "sha256": "d3cd0f574c3fae7ab3f07ff89a451f317dd31556e08e3e871c9c32d32a6fa133"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/install-independent-final.json",
+      "bytes": 102974,
+      "sha256": "e672ab352926712369cb2295325276b227c77fee84f7d7ec9e2f9a2d5bb84481"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/ui/public-ui-summary.json.raw",
+      "bytes": 6331,
+      "sha256": "889ad2148ff3500b1731de7474c7474100d7650094aa6b9e0d60a6c8b3510f53"
+    },
+    {
+      "path": "output/2026-10-13-attachment-search-native-data/execution.json",
+      "bytes": 1019,
+      "sha256": "d5f9562f65fca17c0dde70391b5a8459a4ab1f970b13205b61afcfb0fdffc755"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/capture-receipt.json.raw",
+      "bytes": 9123,
+      "sha256": "923dd886fcf2252c557b8c4a2e81e5aba3d0dc20c65d0d000c893d1a6d0c9f7a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/comparison.json.raw",
+      "bytes": 4543,
+      "sha256": "6190565fbe121beb87c8228b9cce556c03ae43992e63c26e20975c74241bdbc2"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/final-verification.json.raw",
+      "bytes": 792,
+      "sha256": "ec9c09570e71265eaab786d612143cd993a97142f3860686f596e963ab994e92"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-summary.json.raw",
+      "bytes": 7400,
+      "sha256": "58a007e3e632037bf45edafd435b95a78be61cb9a3dcea70fcaad42a5900c34a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/data/independent-execution.json.raw",
+      "bytes": 1617,
+      "sha256": "83af95728b04586e3c48c0c13303aa4b681c447a38fdcd0f463e4a93aa0db69d"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-native/publication.json",
+      "bytes": 5337,
+      "sha256": "1638c2e033fcd7c5b197338a0cc4ebd5baf934f34e6405ddd0502aa76c848104"
+    }
+  ],
+  "executionBoundary": {
+    "testCommands": 0,
+    "appOrUiActions": 0,
+    "processQueries": 0,
+    "databaseOpensOrReads": 0,
+    "captures": 0,
+    "productionOrDocumentEdits": 0,
+    "onlyNewOutputReportWritten": true
+  }
+}

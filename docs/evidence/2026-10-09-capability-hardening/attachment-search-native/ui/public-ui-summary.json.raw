@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "preparedAtUtc": "2026-10-13T15:55:53.500208+00:00",
+  "phase": "NATIVE_UI_SCOPED_REVIEW_DATA_REVIEW_PENDING",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "result": "SCOPED_UI_OBSERVED_POSITIVE_NATIVE_ATTACHMENT_SEARCH_NOT_VERIFIED",
+  "installedProof": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/install-independent-final.json",
+    "bytes": 102974,
+    "sha256": "e672ab352926712369cb2295325276b227c77fee84f7d7ec9e2f9a2d5bb84481"
+  },
+  "observed": [
+    "正式9c版本展示共用“所选附件内容”搜索范围、当前本地文件/历史内容边界及20文件、每文件1MiB、可检索正文合计16MiB说明。",
+    "首次范围选择click84未激活搜索范围；原无效结果保留。原生菜单End+Return随后完成选择。",
+    "空态为134个对话尚未加载、0候选。用户明确打开已有专用XLSX历史后，尚未加载数变为133，仍为0候选；没有开始附件检索。",
+    "257个ASCII字节关键词显示256个UTF8字节上限的明确原因。因没有已选文件，开始按钮原本禁用；未以此声称隔离验证已选文件时的长度门禁。",
+    "结束前恢复“对话资料”搜索范围；原33字节专用marker、2个音频/PDF附件、Ultra仍可见，发送禁用，附件恢复确认仍保留。此为UI观察，持久化完整性等待独立数据证据。",
+    "正常退出确认明确说明未知工作不会视为完成/停止或自动重发；点击“保存并退出”原操作完成。之后真实小写farfold精确进程检查exit0/0匹配，记录的正式应用5文件SHA与本次候选一致。"
+  ],
+  "notVerified": [
+    "正式应用的有效文字附件候选选择、明确开始及实际文件读取",
+    "文件匹配片段、来源跳转及变更/取消路径",
+    "未加载历史的附件实体兼容性或全产品附件覆盖",
+    "真实Agent能力、官方零请求计数或P32全部完成"
+  ],
+  "actions": {
+    "observedPromptOrSlashSendActions": 0,
+    "observedPermissionChoiceActions": 0,
+    "observedModelReasoningServiceAccountChanges": 0,
+    "observedDraftEdits": 0,
+    "officialRequestCount": "not measured",
+    "boundary": "仅核原始UI操作清单；打开已有历史不等于发送新prompt。该历史显示过权限重确认提示，未做权限选择。"
+  },
+  "privateEvidence": {
+    "completedCuaEventCount": 17,
+    "boundedIntervalComplete": true,
+    "sourceByteExact": true,
+    "manifest": {
+      "path": "output/2026-10-13-attachment-search-native/transcript-receipts/manifest.json",
+      "bytes": 11051,
+      "sha256": "3c5a028b4fbe459379ae5f060cac6c79a8e852957659a9f494ca7e3f41947347"
+    },
+    "fullIndependentReview": {
+      "path": "output/2026-10-13-attachment-search-native-independent/ui-review.json",
+      "bytes": 13442,
+      "sha256": "782875e72dd2d56c3bab4add231f05a4ee8dd4b798dfa880e20987021fc7b0f8"
+    },
+    "noEffectScopeClick": {
+      "path": "output/2026-10-13-attachment-search-native/transcript-receipts/05-call_6ca6ec29b7b246d5acd4a799969e49be.jsonl.raw",
+      "bytes": 1100,
+      "sha256": "4f87125c98ae2c4e975200e86e4cd3c177ad7773aa03f282d725b8af8de21fe8"
+    },
+    "queryLimit": {
+      "path": "output/2026-10-13-attachment-search-native/transcript-receipts/08-call_5c07d193094d47d482dfec217cf2d9a9.jsonl.raw",
+      "bytes": 2015,
+      "sha256": "d16b3a7072f3c26aee343e5755e656c732d4e66264b7783467ae8a6178b2b534"
+    },
+    "afterExplicitHistoryLoad": {
+      "path": "output/2026-10-13-attachment-search-native/transcript-receipts/13-call_b293f07d6109443680b13f381b253e76.jsonl.raw",
+      "bytes": 5177,
+      "sha256": "0216346139c4542d0ee3c6aa920ee7df3ecb9075083ea684c8b0eacc820619d2"
+    },
+    "preservedDraftVisible": {
+      "path": "output/2026-10-13-attachment-search-native/transcript-receipts/15-call_b5a5d2f1dbfe421cac2acc352149ae41.jsonl.raw",
+      "bytes": 3477,
+      "sha256": "351f82047e7fec09af51024bc8995192d6f35ad5eecac8d41ae706b7e7d58522"
+    },
+    "scope": "仅引用路径/hash/字节；不复制这些含侧栏或历史的原件。"
+  },
+  "screenshots": {
+    "publicRawEventsExcluded": [
+      10,
+      12
+    ],
+    "completePixelsArchived": false,
+    "reason": "外层text中有序列化image/jpeg字段，但图像载荷含省略号，严格base64无效；不能重建完整截图。原事件仅在私有目录保留。",
+    "newScreenshotsTakenByReviewer": false
+  },
+  "normalExit": {
+    "context": {
+      "path": "output/2026-10-13-attachment-search-native/transcript-receipts/16-call_bd700ae170b64574af461d5885adb0a2.jsonl.raw",
+      "bytes": 1675,
+      "sha256": "9f1dde552bab302a9d49f047f5bd585aa15734908e851341fa251a79e1e6842d",
+      "timestamp": "2026-10-13T15:44:57.747Z",
+      "callId": "call_bd700ae170b64574af461d5885adb0a2"
+    },
+    "quit": {
+      "path": "output/2026-10-13-attachment-search-native/transcript-receipts/17-call_2c39785b78044d8abaed5960989a7f3f.jsonl.raw",
+      "bytes": 834,
+      "sha256": "7773153c21e35954d068f8dd96aeee272dcc542e5f4f77412b4a2eefb785cb10",
+      "timestamp": "2026-10-13T15:45:00.770Z",
+      "callId": "call_2c39785b78044d8abaed5960989a7f3f"
+    },
+    "processReceipt": {
+      "path": "output/2026-10-13-attachment-search-native/01-final-process.json",
+      "bytes": 280,
+      "sha256": "5f429a435a5948029abfc5f6802cd874d1ad810fbb47aecbd764352414a05bc1"
+    },
+    "processExecution": {
+      "path": "output/2026-10-13-attachment-search-native/03-final-process-exec.jsonl.raw",
+      "bytes": 3227,
+      "sha256": "53981d0b2a9a233c934048313920288e50ee1a620633107388e6feb600cb2d95"
+    },
+    "observedAtUtc": "2026-10-13T15:45:37.671944+00:00",
+    "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "actualExitCode": 0,
+    "exactFormalProcessMatches": [],
+    "unknownWorkClassifiedCompletedOrStopped": false,
+    "formalFilesReceipt": {
+      "path": "output/2026-10-13-attachment-search-native/02-formal-files.json",
+      "bytes": 608,
+      "sha256": "872d3edc9c887b80454209c91ae722b92e3bd66ad8dbf2eb26b258cab64ed7a2"
+    }
+  },
+  "publicationBoundary": "仅准备最小UI公开材料；待独立数据结果后由root决定发布并更新文档。未改源码/docs、未重开App、未执行Agent、ps或数据库操作。"
+}

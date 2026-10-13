@@ -1,0 +1,16 @@
+{
+  "result": "differencesRequireReview",
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "checkedAtUtc": "2026-10-13T15:55:51.366279+00:00",
+  "captureSha256": "923dd886fcf2252c557b8c4a2e81e5aba3d0dc20c65d0d000c893d1a6d0c9f7a",
+  "comparisonSha256": "6190565fbe121beb87c8228b9cce556c03ae43992e63c26e20975c74241bdbc2",
+  "differenceCount": 2,
+  "newPdfDraftCandidateCount": 0,
+  "sourceFirstAndBaselineStableAtFinalCheck": true,
+  "finalProcess": {
+    "checkedAtUtc": "2026-10-13T15:55:51.385603+00:00",
+    "formalProcessCount": 0,
+    "exactExecutableSha256": "8abd4e1adf11e1d90f7d3797a7dc47064e1cd8fcc575b4be2d7be6c0e56448ec"
+  },
+  "boundary": "Private capture/field comparison only. No difference accepted or normalized, no private body emitted, no App/Agent action."
+}

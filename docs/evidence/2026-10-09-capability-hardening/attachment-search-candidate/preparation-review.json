@@ -1,0 +1,48 @@
+{
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "createdAtUtc": "2026-10-13T15:57:44.764417+00:00",
+  "scope": "Original read-only preparation and installation reviews; actual execution results are separately recorded in candidate-independent, installation and install-independent-final.",
+  "retainedFailures": [
+    "Initial inventory preparation rejected NEW rows with three columns; corrected inventory preparation did not rerun a started seven-check job.",
+    "Candidate preparation v1 duplicated output path and lacked prior process evidence constants; independently found before candidate execution and corrected in v3.",
+    "Initial render invocation passed relative rather than absolute pin path and failed before preview/data; absolute invocation succeeded."
+  ],
+  "laterConfiguration": "v4 filled only the fresh normal-exit SHA; v5 filled only the fresh before-summary and backup-receipt SHA in the two intended tools; root verified exact constant-only changes before materialization.",
+  "files": [
+    {
+      "source": "output/2026-10-13-attachment-search-independent/candidate-preparation-review.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/independent/candidate-preparation-review.json.raw",
+      "bytes": 10840,
+      "sha256": "9b7d26a278f93759bca99bd26e13c1d5d45d56b3bafc92c127cf2152f7fc2a00"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-independent/candidate-preparation-review-v3.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/independent/candidate-preparation-review-v3.json.raw",
+      "bytes": 4741,
+      "sha256": "6dd71752882e9fec95539bf167a9a4ed5736bd88ad164b7551f015df6c9add91"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-independent/install-preservation-review-v3.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/independent/install-preservation-review-v3.json.raw",
+      "bytes": 4567,
+      "sha256": "3f33133fa9ebbe8772e2f246664db41c547c3c6c76df107d218c645f66bbc31c"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-independent/install-preparation-review-v3.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/independent/install-preparation-review-v3.json.raw",
+      "bytes": 7246,
+      "sha256": "4faa16aa6f47fe9aba9f67c27850a03f06d1952c7256b241efb9721f09af7721"
+    },
+    {
+      "source": "output/2026-10-13-attachment-search-independent/native-data-adapter-review.json",
+      "published": "docs/evidence/2026-10-09-capability-hardening/attachment-search-candidate/independent/native-data-adapter-review.json.raw",
+      "bytes": 5425,
+      "sha256": "8ddf6b6ac77dfdef46b34bc183cc61719fdf1392987ac10b2c1e6a81b3f6db50"
+    }
+  ],
+  "boundaries": [
+    "Preparation gate tests are not App/data/Agent tests.",
+    "Candidate9/9 and installation10/10 do not prove native UI or Agent capability.",
+    "Original reports and actual failures remain unchanged."
+  ]
+}

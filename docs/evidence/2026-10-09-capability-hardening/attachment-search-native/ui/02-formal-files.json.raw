@@ -1,0 +1,10 @@
+{
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "files": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+    "Contents/MacOS/farfold": "67f42a236f6938596b250a118c6020d677c4669d79a7a10ccc0f29cfa04c80c4",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+  }
+}

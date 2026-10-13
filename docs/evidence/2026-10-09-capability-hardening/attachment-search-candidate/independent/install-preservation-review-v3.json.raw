@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T15:35:22.900886+00:00",
+  "result": "PASS_STATIC_PRESERVATION_PREPARATION_ONLY",
+  "tools": [
+    {
+      "name": "observe_normal_exit.py",
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/install/observe_normal_exit.py",
+      "sha256": "893b5ac8404624e55385eaa378d965eca95430ff55723c3bceac574a365a9504",
+      "bytes": 3445,
+      "diffByteExact": true,
+      "oldSha256": "19fd66455a46838c71baa5277671d559c4f803f582ac29ea092bdcfc49eea757"
+    },
+    {
+      "name": "capture_snapshot.py",
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/install/capture_snapshot.py",
+      "sha256": "a0e34a0dd2bbf4671eb9144fd3cadde1ab4f3f0d0c3bec49273b4d20dbbf1806",
+      "bytes": 2847,
+      "diffByteExact": true,
+      "oldSha256": "9b1c4003c08e0f94abf2bcef84080390d0f50fb10bc1939802b42b347ecf0ab5"
+    },
+    {
+      "name": "install_data_snapshot.py",
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/install/install_data_snapshot.py",
+      "sha256": "739ba3dc1b61d697ed7038a771bb196f9a6c1f1104011d61a1a97efd86b96bfd",
+      "bytes": 6228,
+      "diffByteExact": true,
+      "oldSha256": "0aefe6bcbce7c72f42dd0a987ebaa24c58914f2013d14c1a8edeb75c8f3fd0f8"
+    },
+    {
+      "name": "data_manifest.py",
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/install/data_manifest.py",
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "bytes": 4258,
+      "diffByteExact": true,
+      "oldSha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+    },
+    {
+      "name": "backup_metadata.py",
+      "path": "output/2026-10-13-attachment-search-install-preparation/review-v3/install/backup_metadata.py",
+      "sha256": "949bda3311cb0a69143897093707828506b2d8e9b343ecab2c40668d47d0b9ef",
+      "bytes": 10583,
+      "diffByteExact": true,
+      "oldSha256": "e5a074c4d2b530cd9a353b20567b2ad89a4d9dda3154e75192671c063303480e"
+    }
+  ],
+  "sourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "reviewedDependency": "review-v3 install_verified_candidate.require_configured(false), verify_normal_exit, process_count, read/hash helpers and candidate-v3 exact PDF quit/data metadata guards",
+  "allowedStageOrder": "Root-confirmed no App restart -> observe once -> pin only fresh normal-exit SHA into installer helper -> fresh before manifest -> private metadata capture/backup. No dependence on not-yet-existing before-summary/backup SHA until final installer gate backup=True.",
+  "guards": [
+    "Exact owner-held 0700 output directory; all observation and capture/backup destinations exclusive, 0600 raw files, retain any failure without retry overwrite.",
+    "Observe requires explicit root continuity flag plus actual pinned PDF30/31+03 normal-exit provenance, fresh /bin/ps exact lowercase executable absence and no active matches. No quit/kill/launch.",
+    "Snapshot requires source pin, normal-exit SHA, validated real observation and actual process absence before and after; fd-relative O_NOFOLLOW traversal of the three unchanged exact roots, only hashes/modes/symlink targets, no SQLite open.",
+    "Wrapper retains raw execution, refuses authoritative summary on nonzero/stderr/manifest/hash discrepancy and verifies complete three-root manifest plus current process/normal-exit guard.",
+    "Backup verifies main/WAL/SHM full membership+SHA+size against before; copies originals twice into exclusive private targets with before/open/read/after stat signatures; opens SQLite only second working and new consolidated target; closes connections, verifies integrity/delete journal/no target sidecars; source and first-copy bytes rechecked.",
+    "No source/database contents are printed by this review; no generated functions or process/data commands run."
+  ],
+  "scopeAndPending": {
+    "fiveExactDiffsMatch": true,
+    "readPreservationAlgorithmsUnchangedFromPriorActual": true,
+    "normalExitShaStillUnsetInReviewedV3": true,
+    "captureBackupNotExecutableUntilFreshNormalShaPinned": true,
+    "finalInstallerRequiresFullSeparateReviewAndAllThreePins": true,
+    "noAppReplacementOrStartInTheseThreeMains": true
+  },
+  "notes": [
+    "Two old docstrings still say SOURCE_COMMIT UNSET although current constant is filled; documentation-only, runtime source guard uses the actual value.",
+    "Formal-app process absence is a point-in-time guard and root continuity is explicit evidence, not inferred solely from ps."
+  ]
+}
