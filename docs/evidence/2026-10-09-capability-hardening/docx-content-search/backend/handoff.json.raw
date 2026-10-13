@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "phase": "BACKEND_TARGETED_VERIFIED_FROZEN_PENDING_INTEGRATION",
+  "api": {
+    "command": "file_delivery_read_docx_search",
+    "request": "{file: VerifiedFile}",
+    "response": "DocxCapture {file,parts:[{name,data:base64}],entries,inflatedBytes}",
+    "errors": [
+      "changed",
+      "limit",
+      "unreadable",
+      "invalid",
+      "encrypted",
+      "unsupported",
+      "readPending",
+      "readBusy"
+    ]
+  },
+  "bounds": {
+    "sourceBytes": 1048576,
+    "beforeBody": "Expected root/requested/resolved path, current object stamp/name/size and saved version are checked before body bytes. Oversize metadata rejects before capture.",
+    "duringBody": "take(max+1) rejects growth before hashing; full safe-path/stamp recheck then final seven-field receipt/hash equality.",
+    "archivePartBytes": 16777216,
+    "archiveInflatedTotalBytes": 67108864,
+    "archiveEntries": 2048,
+    "crc": "All entries, including ignored binary, read to EOF with CRC verification by existing unchanged unpack.",
+    "realOsSlots": 2,
+    "cancel": "Reply timeout or dropped await does not release the real blocking closure permit.",
+    "frontEndBudgetContract": "20 selected files; actual extracted author UTF-8 body sum16MiB. Source ZIP byte count is separate, no generated-label matching."
+  },
+  "red": {
+    "actualExitCode": 101,
+    "passed": 1,
+    "failed": 1,
+    "cause": "New proposed search API initially delegated legacy16MiB read_docx; valid1MiB+1 synthetic ZIP was accepted. Existing legacy preview behavior itself remains intentionally supported, not retrospectively called a defect.",
+    "receipt": {
+      "path": "output/2026-10-14-docx-search-backend/red/receipt.json",
+      "bytes": 1351,
+      "sha256": "db959311ca6b28bd6902c8330c1da5fef3492a9e9f0e145245adb9e1c373aece"
+    }
+  },
+  "green": {
+    "docxCaptureAndLegacyRegression": 18,
+    "newSearchCaptureSubset": 7,
+    "newProductionCommandHelperSharedAdmission": 1,
+    "sharedPoolTimeoutDroppedWaitAndCapacityRegression": 5,
+    "totalPassed": 24,
+    "formatActualExitCode": 0,
+    "scopedGitDiffCheckActualExitCode": 0,
+    "note": "green label contains the command-helper1 test; capture-green contains the matching original2 tests plus5new counterexamples and11existing DOCX tests. No count is inferred from compile-only success."
+  },
+  "notVerified": [
+    "Real native Webview caller invocation; caller guard/IPC registration independently source reviewed",
+    "Shared frontend author-text projection and original-context ownership integration",
+    "P32 installed positive flow or real Agent actions",
+    "Whole-project seven engineering checks"
+  ],
+  "sourceFreeze": {
+    "path": "output/2026-10-14-docx-search-backend/source-freeze.json",
+    "bytes": 3266,
+    "sha256": "4f1553dd50d55becedcce9bbeaaeed399ebffa8ad9e7c11e1c531359558406d8"
+  },
+  "boundaries": [
+    "Only synthetic tempfiles and checked-in public synthetic DOCX fixtures",
+    "No new dependency, env switch, production test hook, privateDB, App or Agent use",
+    "Old read_docx16MiB, common ZIP unpack, shared OS pool and text inspection remain behaviorally unchanged",
+    "All receipts and raw failed results preserved; no source edits after freeze"
+  ]
+}

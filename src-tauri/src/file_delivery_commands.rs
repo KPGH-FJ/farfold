@@ -149,6 +149,30 @@ pub async fn file_delivery_read_docx(
 }
 
 #[tauri::command]
+pub async fn file_delivery_read_docx_search(
+    webview: Webview,
+    file: VerifiedFile,
+) -> Result<file_delivery::DocxCapture, file_delivery::DocxReadFailure> {
+    require_main(&webview).map_err(|_| file_delivery::DocxReadFailure { code: "unreadable" })?;
+    checked_docx_search(file).await
+}
+
+async fn checked_docx_search(
+    file: VerifiedFile,
+) -> Result<file_delivery::DocxCapture, file_delivery::DocxReadFailure> {
+    // Same real OS budget as other file reads. A dropped/timed-out reply does
+    // not release its slot while capture and archive validation are still running.
+    crate::file_read_check::run(move || Ok(file_delivery::read_docx_search(&file)))
+        .await
+        .map_err(|message| file_delivery::DocxReadFailure::check(&message))?
+        .map_err(Into::into)
+}
+
+#[cfg(test)]
+#[path = "file_delivery/document_search_command_tests.rs"]
+mod docx_search_tests;
+
+#[tauri::command]
 pub async fn file_delivery_read_pdf_input(
     webview: Webview,
     file: VerifiedFile,

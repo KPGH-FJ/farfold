@@ -1,0 +1,22 @@
+{
+  "actualStageCompletion": true,
+  "argv": [
+    "corepack",
+    "pnpm",
+    "typecheck"
+  ],
+  "completedAt": "2026-10-13T17:35:29.449839+00:00",
+  "cwd": "/Users/tw/Desktop/farfold",
+  "displayCommand": "corepack pnpm typecheck",
+  "elapsedSeconds": 8.348215541000002,
+  "group": "frontend",
+  "monotonicStart": 30.133308,
+  "name": "typecheck",
+  "pid": 28627,
+  "processLaunched": true,
+  "rawExitCode": 0,
+  "startedAt": "2026-10-13T17:35:21.102019+00:00",
+  "state": "COMPLETED",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdoutSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+}

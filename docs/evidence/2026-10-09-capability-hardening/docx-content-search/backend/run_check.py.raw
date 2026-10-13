@@ -1,0 +1,20 @@
+"""Record one bounded synthetic Rust check and exact scoped inputs, no retries."""
+from pathlib import Path
+import datetime,hashlib,json,os,subprocess,sys
+ROOT=Path('/Users/tw/Desktop/farfold');OUT=ROOT/'output/2026-10-14-docx-search-backend'
+def digest(p):
+ b=p.read_bytes();return {'path':str(p.relative_to(ROOT)),'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()}
+def inventory():
+ roots=[ROOT/'src-tauri/src',ROOT/'src-tauri/test-fixtures',ROOT/'docs/evidence/2026-10-09-capability-hardening/docx-fixtures']
+ files={p for base in roots for p in base.rglob('*') if p.is_file()}
+ files|={ROOT/'src-tauri'/n for n in ('Cargo.toml','Cargo.lock','build.rs','tauri.conf.json')}
+ return [digest(p) for p in sorted(files)]
+label=sys.argv[1];assert label.replace('-','').isalnum();cmd=sys.argv[2:];assert cmd and cmd[0] in ('cargo','rustfmt')
+run=OUT/label;run.mkdir(mode=0o700);before=inventory();start=datetime.datetime.now(datetime.timezone.utc).isoformat()
+(run/'inputs-before.json').write_text(json.dumps(before,indent=2)+'\n')
+with (run/'stdout.raw').open('xb') as stdout,(run/'stderr.raw').open('xb') as stderr:p=subprocess.run(cmd,cwd=ROOT,stdout=stdout,stderr=stderr)
+after=inventory();(run/'inputs-after.json').write_text(json.dumps(after,indent=2)+'\n')
+v={'label':label,'command':cmd,'startedAtUtc':start,'completedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'actualExitCode':p.returncode,'interrupted':False,'inputCount':len(before),'sourceStable':before==after,'inputScope':'All Rust source/Cargo manifests/build config and src-tauri/test-fixtures plus DOCX fixture tree; no frontend test or real Agent acceptance claimed.','inputsBefore':digest(run/'inputs-before.json'),'inputsAfter':digest(run/'inputs-after.json'),'stdout':digest(run/'stdout.raw'),'stderr':digest(run/'stderr.raw')}
+(run/'receipt.json').write_text(json.dumps(v,indent=2)+'\n')
+print(json.dumps(v))
+sys.exit(p.returncode)

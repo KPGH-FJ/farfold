@@ -1,0 +1,14 @@
+--- v1/src/components/SelectedAttachmentSearch.tsx
++++ v2/src/components/SelectedAttachmentSearch.tsx
+@@ -218,6 +218,11 @@
+         {visible && state.matches > state.hits.length && (
+           <p>{S.omittedHits(state.matches - state.hits.length)}</p>
+         )}
++        {visible &&
++          (state.phase === "complete" || state.phase === "reading") &&
++          state.rows.some(
++            (row) => row.state === "searched" && row.document?.partial,
++          ) && <p>{S.docxPartial}</p>}
+       </div>
+       {(error || state.error) && (
+         <p role="alert">{error ?? S.errors[state.error!]}</p>

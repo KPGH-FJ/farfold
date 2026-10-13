@@ -1,0 +1,335 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:45:33.305745+00:00",
+  "verdict": "ALL_SEVEN_V2_ENGINEERING_CHECKS_VERIFIED_PASSED",
+  "scope": "Independent read-only verification of saved original receipts, logs, source membership and hashes. No test, build, App, Agent or database operation was executed by this review.",
+  "summary": {
+    "path": "output/2026-10-14-docx-search-integration/checks-run-v2/summary.json",
+    "bytes": 6323,
+    "sha256": "68b117bad0cc9b56ebc8c77ac0e41ffbaf29703e490f885229cfd32f6088e27f"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-docx-search-integration/checks-freeze-v2/freeze.json",
+    "bytes": 292525,
+    "sha256": "4b8ddfb51fb85b65c7378e6f84ebded40f59aed6b00f3505877567aea8f4086f"
+  },
+  "inventory": {
+    "path": "output/2026-10-14-docx-search-integration/inventory-plan-v2.json",
+    "bytes": 566400,
+    "sha256": "87de403af8ff7fd3c301daa8271f6cabdb75c5d8d70fc0568b3d8d1dd95f0f51"
+  },
+  "stages": [
+    {
+      "name": "format-check",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "format:check"
+      ],
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/format-check/started.json",
+        "bytes": 285,
+        "sha256": "e368874eba97015c23743f48ad21dc1ef94eebdb2c4bf85af9c9f5374a69e7ae"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/format-check/completed.json",
+        "bytes": 664,
+        "sha256": "c600c09ca51ef071442c418a4b5a53a65a2276be0b1ee2fd5fb93377f48de951"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/format-check/stdout.log",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "typecheck",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "typecheck"
+      ],
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/typecheck/started.json",
+        "bytes": 277,
+        "sha256": "12379428acec9068a5fe18c8c8bfef361022d2ca966cfe368d76f3a84adc14cb"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/typecheck/completed.json",
+        "bytes": 661,
+        "sha256": "287e621609de01bb4b09d36896cd7967be86b7ccad9140ee899a37d5737674a6"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/typecheck/stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/typecheck/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "frontend-test",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "test"
+      ],
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/frontend-test/started.json",
+        "bytes": 274,
+        "sha256": "c81a65e120d7f1458095a3acbef1be2bf6abf5104c794b37b20cbf373dc1e4a2"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/frontend-test/completed.json",
+        "bytes": 658,
+        "sha256": "d6b58a4e8352a8225301fe52231ce504f0953662ae1451f9c9d5d3f6c5df61cb"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/frontend-test/stdout.log",
+        "bytes": 289,
+        "sha256": "a12c08d2ee405a0331622bfe52b6457f792af44bf2aced73492179024bc937b2"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/frontend-test/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "frontend-build",
+      "argv": [
+        "corepack",
+        "pnpm",
+        "build"
+      ],
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/frontend-build/started.json",
+        "bytes": 277,
+        "sha256": "b517ad342cf137a0d7e291e2e76fc92f7b372a04a6d1cca883a71df90102354c"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/frontend-build/completed.json",
+        "bytes": 661,
+        "sha256": "9b36ae51117fdf5337d32447726c98f25d817642be75031569c4406885dacbdb"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/frontend-build/stdout.log",
+        "bytes": 4560,
+        "sha256": "7372411018dd34473918c6dff5e63bcd11b786d314270e12d8b76c027761bdbc"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/frontend-build/stderr.log",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      }
+    },
+    {
+      "name": "cargo-fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/cargo-fmt/started.json",
+        "bytes": 354,
+        "sha256": "48a157aae7b876583a19889e4fda3541bfa8404fb04c17673436645d66089206"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/cargo-fmt/completed.json",
+        "bytes": 738,
+        "sha256": "29db6727edd7a26095d2a7e955c7e3e8d2fea408a78fa64342511d1d16eaf509"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "cargo-clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/cargo-clippy/started.json",
+        "bytes": 416,
+        "sha256": "a3fab56a649571355fd5f1dbec49d6ee46b64362522503ac7b43c46346ca1623"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/cargo-clippy/completed.json",
+        "bytes": 801,
+        "sha256": "b921cf89e112a8cb15fe3dc07d9ee3d195da1e26060b28909dfbfd4c233429b6"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/cargo-clippy/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/cargo-clippy/stderr.log",
+        "bytes": 72,
+        "sha256": "d9533554809e0846c6113df1671caf5d74f2a7b9763b0232786a0b652704164a"
+      }
+    },
+    {
+      "name": "cargo-test",
+      "argv": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/cargo-test/started.json",
+        "bytes": 359,
+        "sha256": "71a87fbd3a3aa70f1b5aeb1853d61c60e778611e4d6805ffcc9a4cff59fbdd29"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/cargo-test/completed.json",
+        "bytes": 739,
+        "sha256": "78cfa2a1ff2d4590d91a4c8b0abf72877aa4c4e9eec1b2b95e2c86168c3ad7dd"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/cargo-test/stdout.log",
+        "bytes": 185515,
+        "sha256": "be2d653a5209f30f235163a609ce272c1b4149cc4e589a8accfc551769720ccd"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/cargo-test/stderr.log",
+        "bytes": 605,
+        "sha256": "05785a46a45c745fbcea9dee39939eda16161b013c468dc924cfc96faa1f45f1"
+      }
+    }
+  ],
+  "countsFromRawLogs": {
+    "frontend": {
+      "filesPassed": 494,
+      "testsPassed": 5885
+    },
+    "rustLibrary": {
+      "passed": 1666,
+      "failed": 0,
+      "ignored": 6,
+      "filteredOut": 0
+    },
+    "rustAdditionalBinariesOrDocs": {
+      "zeroTestSuccessfulSummaries": 2
+    }
+  },
+  "actualWrapperCompletion": {
+    "sessionReportedByRoot": 26855,
+    "chunk": "6df438",
+    "actualExitCode": 0,
+    "exactOriginalRecord": {
+      "path": "output/2026-10-14-docx-search-independent/engineering-v2-root-completion.jsonl.raw",
+      "bytes": 1220,
+      "sha256": "fd917773747869bd1d87f1cd005a4db3d18c5ba5b94e84333418c51059a6d3fd"
+    },
+    "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+    "byteOffset": 26925346,
+    "bytes": 1220,
+    "timestamp": "2026-10-13T17:38:51.122Z",
+    "ordinal": 9383,
+    "source": "Exact original tool output; not reconstructed from summary status."
+  },
+  "stableInputs": {
+    "count": 1799,
+    "beforeAfterFreezePlanAllEqual": true,
+    "beforeAfterByteEqual": true,
+    "allCurrentHashesMatch": true,
+    "sourceMembershipCount": 1561,
+    "physicalMembershipMatches": true,
+    "protectedCount": 3,
+    "protectedUnchanged": true,
+    "frozenRunnerAndInventoryToolsMatch": true,
+    "manifests": [
+      {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/inputs-before.json",
+        "bytes": 210821,
+        "sha256": "6b62cd4201ec1e12c2f95f4327962bcb08277498108a44530ba3fc074824f7f3"
+      },
+      {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/inputs-after.json",
+        "bytes": 210821,
+        "sha256": "6b62cd4201ec1e12c2f95f4327962bcb08277498108a44530ba3fc074824f7f3"
+      },
+      {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/protected-before.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/protected-after.json",
+        "bytes": 357,
+        "sha256": "aeafd0b07ec4dd56b1323379bca87b0facbc7bfab1ce384b06a87ede07bbd814"
+      },
+      {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/events.jsonl",
+        "bytes": 2223,
+        "sha256": "4c0c3552443e7a83a95dd0cee3e7869be4a4ddf2bd7bee123c16763beae2811c"
+      },
+      {
+        "path": "output/2026-10-14-docx-search-integration/checks-run-v2/preflight.json",
+        "bytes": 267,
+        "sha256": "9c8096d9a9cb2719fbfc3a4af126e37564947793419f11ed980f079375c355f2"
+      }
+    ]
+  },
+  "originalV1Failure": {
+    "retained": true,
+    "failedStages": [
+      "cargo-test"
+    ],
+    "passedStages": 6,
+    "cargoActualExitCode": 101,
+    "wrapperActualExitCode": 1,
+    "rustPassed": 1665,
+    "rustFailed": 1,
+    "rustIgnored": 6,
+    "rawLogsAndCompletedStillExact": true,
+    "independentReview": {
+      "path": "output/2026-10-14-docx-search-independent/failed-engineering-review.json",
+      "bytes": 9369,
+      "sha256": "5a30f45af47b60768018e6d85a0f1df55a203df5cd900d39486daa96ad442834"
+    }
+  },
+  "repairReview": {
+    "path": "output/2026-10-14-docx-search-independent/cancel-test-repair-review.json",
+    "bytes": 3439,
+    "sha256": "14b9dc3e7c9b20170a210aebcd30dd889dbbe8f66e88369e28d6d061a4f9b424"
+  },
+  "nonFailureObservation": "Frontend build stderr retains the Vite advisory about chunks over 500 kB after minification. Actual build exit is 0; the warning is not hidden.",
+  "boundary": "Engineering success only. It does not establish new candidate/installation/native DOCX-search/real-Agent acceptance or completion of P32/P08/the full plan. Original failed run is not overwritten.",
+  "safeToPublish": true
+}

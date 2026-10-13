@@ -1,0 +1,62 @@
+{
+  "schema": 1,
+  "at": "2026-10-13T17:31:13.745106+00:00",
+  "ownedBefore": [
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+      "bytes": 11398,
+      "sha256": "c17a16b5c42ee9953ab79e55da98458e7df9077ed8e99257e980f5d885898e11"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_context_tests.rs",
+      "bytes": 11278,
+      "sha256": "35af39dcc9c75004e779943ed985e956f44f16225361e159abc0910e7fe52dae"
+    }
+  ],
+  "protectedBefore": [
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "bytes": 74414,
+      "sha256": "250c3fb6ad7b1d7aefb8907a8633660f01d86e1b9bd618f68167a16a311903df"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "bytes": 42074,
+      "sha256": "c4c4ed2ca728a18ffb4fbf3df3a7ee33ce910d89357f2b867862fc503affea19"
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle.rs",
+      "bytes": 22318,
+      "sha256": "9aa051951e25877d824a62c743479f4e138041014b63408b2572cbff09632110"
+    },
+    {
+      "path": "src-tauri/src/acp_client/connection_control.rs",
+      "bytes": 2794,
+      "sha256": "842d7484d7435257344232486a076e9f90d5b321ccdb107e70c4b8f54d7ab2e1"
+    }
+  ],
+  "docxFreeze": {
+    "path": "output/2026-10-14-docx-search-backend/source-freeze.json",
+    "bytes": 3266,
+    "sha256": "4f1553dd50d55becedcce9bbeaaeed399ebffa8ad9e7c11e1c531359558406d8"
+  },
+  "originalFullFailure": [
+    {
+      "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-test/stdout.log",
+      "bytes": 185957,
+      "sha256": "f4ab057cc886eef9efdfd4463c264f938ff617043a3c09126f5b9af0d447ed72"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-test/stderr.log",
+      "bytes": 598,
+      "sha256": "43e9dad548ae4fc48add235dbdcacca536281e35bf09cb489db4fe155238b3c3"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-test/completed.json",
+      "bytes": 746,
+      "sha256": "3ec2e63d7091e475e90e810c5368b6e7724b635c3b8a52e6f8a2b18c75e15651"
+    }
+  ],
+  "diagnosis": "Original failure is prompt_audio_tests.rs:244 disconnect after session_cancel dispatch, not second prompt. Cancel notification acknowledgement does not release the work lease. Pump turn_rx drops prompt_lease before emitting turnEnd; wait for actual turnEnd/cancelled before disconnect. Production behavior is correct; two tests share the invalid completion assumption. Original actual cargo exit101 remains the red evidence; no new peer mechanism or delay.",
+  "scope": "Only two test functions changed; no production/peer/DOCX changes; targeted module and fmt only."
+}

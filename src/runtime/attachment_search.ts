@@ -3,8 +3,21 @@ import { invoke } from "@tauri-apps/api/core";
 import { fileDelivery, type VerifiedFile } from "./file_delivery";
 import { sameFileRevision } from "./file_revision_monitor";
 import { FILE_DELIVERY_STRINGS as D } from "./file_delivery_strings";
+import { readDocxPreview } from "./docx_preview";
+import {
+  DOCX_LIMITS,
+  DocxError,
+  type DocxCapture,
+  type DocxPreview,
+} from "./docx_types";
+import {
+  docxSearchText,
+  type DocxSearchLocation,
+  type DocxSearchScope,
+} from "./docx_search_text";
 import {
   knownAttachmentSearchCandidate,
+  attachmentSearchIsDocx,
   type AttachmentSearchCandidate,
 } from "./attachment_search_source";
 
@@ -24,6 +37,9 @@ export type AttachmentSearchCode =
   | "budget"
   | "pending"
   | "busy"
+  | "documentLimit"
+  | "encrypted"
+  | "timeout"
   | "invalid";
 export type AttachmentSearchRow = {
   source: AttachmentSearchCandidate;
@@ -31,6 +47,7 @@ export type AttachmentSearchRow = {
   code?: AttachmentSearchCode;
   matches: number;
   file?: VerifiedFile;
+  document?: DocxSearchScope;
 };
 export type AttachmentSearchHit = Readonly<{
   source: AttachmentSearchCandidate;
@@ -38,6 +55,7 @@ export type AttachmentSearchHit = Readonly<{
   before: string;
   match: string;
   after: string;
+  location?: DocxSearchLocation;
 }>;
 export type AttachmentSearchState = {
   phase:
@@ -59,11 +77,15 @@ export interface AttachmentSearchPort {
   inspect(path: string): Promise<unknown>;
   read(file: VerifiedFile): Promise<unknown>;
   check(file: VerifiedFile): Promise<unknown>;
+  readDocx?(file: VerifiedFile): Promise<unknown>;
+  parseDocx?(capture: DocxCapture, signal: AbortSignal): Promise<DocxPreview>;
 }
 const port: AttachmentSearchPort = {
   inspect: (path) => invoke("file_delivery_inspect_text", { path }),
   read: (file) => fileDelivery.readText(file),
   check: (file) => invoke("file_delivery_check_text_revision", { file }),
+  readDocx: (file) => invoke("file_delivery_read_docx_search", { file }),
+  parseDocx: readDocxPreview,
 };
 const initial = (): AttachmentSearchState => ({
   phase: "idle",
@@ -125,10 +147,16 @@ function failure(e: unknown): AttachmentSearchCode {
       "budget",
       "pending",
       "busy",
+      "documentLimit",
+      "encrypted",
+      "timeout",
       "invalid",
     ].includes(String(code))
   )
     return code as AttachmentSearchCode;
+  if (code === "limit") return "documentLimit";
+  if (code === "readPending") return "pending";
+  if (code === "readBusy") return "busy";
   if (["missing", "redirected", "changing", "notFile"].includes(String(code)))
     return "changed";
   const message = e instanceof Error ? e.message : e;
@@ -191,6 +219,7 @@ export class AttachmentSearch {
     current: () => boolean;
     cancelled: boolean;
     retired: boolean;
+    abort: AbortController;
   } | null = null;
   private pending = false;
   private locating = false;
@@ -218,11 +247,15 @@ export class AttachmentSearch {
   cancel() {
     if (this.flight) {
       this.flight.cancelled = true;
+      this.flight.abort.abort();
       this.emit({ phase: "cancelling", hits: [], matches: 0 });
     }
   }
   retire() {
-    if (this.flight) this.flight.retired = true;
+    if (this.flight) {
+      this.flight.retired = true;
+      this.flight.abort.abort();
+    }
     this.emit({
       ...initial(),
       phase: this.flight ? "cancelling" : this.pending ? "pending" : "idle",
@@ -244,7 +277,12 @@ export class AttachmentSearch {
       this.emit({ ...initial(), error: "invalid" });
       return false;
     }
-    const run = { current, cancelled: false, retired: false };
+    const run = {
+      current,
+      cancelled: false,
+      retired: false,
+      abort: new AbortController(),
+    };
     // Only this explicit start can retry an unknown read. The native pool's
     // real worker still owns its permit; no UI action releases that work.
     const previousPending = this.pending;
@@ -273,7 +311,7 @@ export class AttachmentSearch {
     const error = (index: number, e: unknown) => {
       const code = failure(e);
       if (code === "pending") this.pending = true;
-      if (!run.retired) this.row(index, { state: "error", code });
+      if (valid()) this.row(index, { state: "error", code });
     };
     try {
       await pool(async (i) => {
@@ -290,70 +328,173 @@ export class AttachmentSearch {
           error(i, e);
         }
       });
-      let budget = 0;
-      const admitted = new Set<number>();
-      for (let i = 0; i < sources.length; i++) {
-        const f = checked.get(i);
-        if (!f) continue;
-        if (budget + f.size > ATTACHMENT_SEARCH_LIMITS.totalBytes) {
-          if (valid()) this.row(i, { state: "skipped", code: "budget" });
-          continue;
-        }
-        budget += f.size;
-        admitted.add(i);
-      }
-      const matches = new Map<number, AttachmentSearchHit[]>();
-      const counts = new Map<number, number>();
-      await pool(async (i) => {
-        const f = checked.get(i);
-        if (!f || !admitted.has(i) || !valid()) return;
+      type Content = {
+        segments: readonly { text: string; location?: DocxSearchLocation }[];
+        bytes: number;
+        document?: DocxSearchScope;
+      };
+      // The preview worker is shared with document viewing. Serialize this
+      // batch only; an unrelated preview can still honestly report busy.
+      let parseTail: Promise<unknown> = Promise.resolve();
+      const load = async (
+        i: number,
+        f: VerifiedFile,
+      ): Promise<Content | null> => {
         this.row(i, { state: "reading", file: f });
         try {
-          const text = await textPayload(await this.services.read(f), f);
-          if (!valid()) return;
-          const revision = record(await this.services.check(f));
-          if (!valid()) return;
-          if (revision.kind !== "verified") fail("changed");
-          if (!sameFileRevision(f, file(revision.file, f.path)))
-            fail("changed");
-          const regex = new RegExp(
-            query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
-            "giu",
-          );
-          let count = 0;
-          const hits: AttachmentSearchHit[] = [];
-          for (const match of text.matchAll(regex)) {
-            count++;
-            if (count % 4096 === 0) {
-              await new Promise<void>((resolve) => setTimeout(resolve, 0));
-              if (!valid()) return;
-            }
-            if (hits.length < ATTACHMENT_SEARCH_LIMITS.hits)
-              hits.push(
-                Object.freeze({
-                  source: sources[i],
-                  file: f,
-                  before: text.slice(
-                    Math.max(0, match.index - 56),
-                    match.index,
-                  ),
-                  match: match[0],
-                  after: text.slice(
-                    match.index + match[0].length,
-                    match.index + match[0].length + 88,
-                  ),
-                }),
+          let content: Content;
+          if (attachmentSearchIsDocx(sources[i])) {
+            if (!this.services.readDocx || !this.services.parseDocx)
+              fail("unsupported");
+            const capture = record(await this.services.readDocx(f));
+            if (!valid() || this.pending) return null;
+            if (!sameFileRevision(f, file(capture.file, f.path)))
+              fail("changed");
+            if (
+              !Number.isSafeInteger(capture.inflatedBytes) ||
+              Number(capture.inflatedBytes) < 1 ||
+              Number(capture.inflatedBytes) > DOCX_LIMITS.bytes ||
+              !Array.isArray(capture.parts) ||
+              !Array.isArray(capture.entries) ||
+              capture.parts.length > DOCX_LIMITS.entries ||
+              capture.entries.length > DOCX_LIMITS.entries
+            )
+              fail("documentLimit");
+            const parsed = parseTail.then(async () => {
+              if (!valid() || this.pending) throw new DocxError("cancelled");
+              return this.services.parseDocx!(
+                capture as unknown as DocxCapture,
+                run.abort.signal,
               );
+            });
+            parseTail = parsed.catch(() => undefined);
+            const preview = await parsed;
+            if (!valid() || this.pending) return null;
+            if (!sameFileRevision(f, file(preview.file, f.path)))
+              fail("changed");
+            content = docxSearchText(preview);
+          } else {
+            const text = await textPayload(await this.services.read(f), f);
+            content = { segments: [{ text }], bytes: f.size };
           }
-          if (!valid()) return;
-          matches.set(i, hits);
-          counts.set(i, count);
-          this.row(i, { state: "searched", matches: count });
-          this.emit({ bytes: this.state.bytes + f.size });
+          if (!valid() || this.pending) return null;
+          const revision = record(await this.services.check(f));
+          if (!valid() || this.pending) return null;
+          if (
+            revision.kind !== "verified" ||
+            !sameFileRevision(f, file(revision.file, f.path))
+          )
+            fail("changed");
+          return content;
         } catch (e) {
           error(i, e);
+          return null;
         }
-      });
+      };
+      const matches = new Map<number, AttachmentSearchHit[]>();
+      const counts = new Map<number, number>();
+      let next = 0,
+        budget = 0,
+        reserved = 0;
+      const tasks = new Map<
+        number,
+        { result: Promise<Content | null>; reservation: number }
+      >();
+      const fill = () => {
+        while (
+          next < sources.length &&
+          tasks.size < 2 &&
+          valid() &&
+          !this.pending
+        ) {
+          const i = next++,
+            f = checked.get(i);
+          if (!f) continue;
+          // Plain UTF-8 bytes are known before reading. DOCX compressed size
+          // cannot stand in for its extracted author text, so admit after parse.
+          const reservation = attachmentSearchIsDocx(sources[i]) ? 0 : f.size;
+          if (
+            budget + reserved + reservation >
+            ATTACHMENT_SEARCH_LIMITS.totalBytes
+          ) {
+            if (budget + reservation <= ATTACHMENT_SEARCH_LIMITS.totalBytes) {
+              // A prefetched read can still fail. Wait for its actual outcome
+              // instead of treating its temporary reservation as spent bytes.
+              next--;
+              break;
+            }
+            this.row(i, { state: "skipped", code: "budget" });
+            continue;
+          }
+          reserved += reservation;
+          tasks.set(i, { result: load(i, f), reservation });
+        }
+      };
+      fill();
+      while (tasks.size) {
+        const [i, task] = tasks.entries().next().value!;
+        const content = await task.result;
+        tasks.delete(i);
+        reserved -= task.reservation;
+        if (content && valid() && !this.pending) {
+          if (budget + content.bytes > ATTACHMENT_SEARCH_LIMITS.totalBytes) {
+            this.row(i, {
+              state: "skipped",
+              code: "budget",
+              document: content.document,
+            });
+          } else {
+            budget += content.bytes;
+            const f = checked.get(i)!;
+            const regex = new RegExp(
+              query.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+              "giu",
+            );
+            let count = 0;
+            const hits: AttachmentSearchHit[] = [];
+            for (const segment of content.segments) {
+              for (const match of segment.text.matchAll(regex)) {
+                count++;
+                if (count % 4096 === 0) {
+                  await new Promise<void>((resolve) => setTimeout(resolve, 0));
+                  if (!valid() || this.pending) break;
+                }
+                if (hits.length < ATTACHMENT_SEARCH_LIMITS.hits)
+                  hits.push(
+                    Object.freeze({
+                      source: sources[i],
+                      file: f,
+                      before: segment.text.slice(
+                        Math.max(0, match.index - 56),
+                        match.index,
+                      ),
+                      match: match[0],
+                      after: segment.text.slice(
+                        match.index + match[0].length,
+                        match.index + match[0].length + 88,
+                      ),
+                      ...(segment.location
+                        ? { location: segment.location }
+                        : {}),
+                    }),
+                  );
+              }
+              if (!valid() || this.pending) break;
+            }
+            if (valid() && !this.pending) {
+              matches.set(i, hits);
+              counts.set(i, count);
+              this.row(i, {
+                state: "searched",
+                matches: count,
+                document: content.document,
+              });
+              this.emit({ bytes: budget });
+            }
+          }
+        }
+        fill();
+      }
       if (run.retired) return false;
       const phase = this.pending
         ? "pending"

@@ -1,0 +1,40 @@
+{
+  "label": "pool-regression",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "file_read_check::tests",
+    "--",
+    "--nocapture"
+  ],
+  "startedAtUtc": "2026-10-13T16:49:08.239249+00:00",
+  "completedAtUtc": "2026-10-13T16:49:08.554063+00:00",
+  "actualExitCode": 0,
+  "interrupted": false,
+  "inputCount": 504,
+  "sourceStable": true,
+  "inputScope": "All Rust source/Cargo manifests/build config and src-tauri/test-fixtures plus DOCX fixture tree; no frontend test or real Agent acceptance claimed.",
+  "inputsBefore": {
+    "path": "output/2026-10-14-docx-search-backend/pool-regression/inputs-before.json",
+    "bytes": 86922,
+    "sha256": "dbc0ea71b33476b3e2caca02bb24ea9bab3a04e49dcc177ecafd4e372d6599aa"
+  },
+  "inputsAfter": {
+    "path": "output/2026-10-14-docx-search-backend/pool-regression/inputs-after.json",
+    "bytes": 86922,
+    "sha256": "dbc0ea71b33476b3e2caca02bb24ea9bab3a04e49dcc177ecafd4e372d6599aa"
+  },
+  "stdout": {
+    "path": "output/2026-10-14-docx-search-backend/pool-regression/stdout.raw",
+    "bytes": 711,
+    "sha256": "eefd2a294e15136f23bf1a9582849307d918cb83100e8f4d5fc7b909620066cf"
+  },
+  "stderr": {
+    "path": "output/2026-10-14-docx-search-backend/pool-regression/stderr.raw",
+    "bytes": 450,
+    "sha256": "e54c0745174aea4215bfd0b57cbbedfdaac52733bd775f7f4bc400eed252541f"
+  }
+}

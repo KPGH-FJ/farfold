@@ -1,0 +1,25 @@
+{
+  "stage": "cargo-fmt",
+  "command": [
+    "cargo",
+    "fmt",
+    "--check",
+    "--manifest-path",
+    "src-tauri/Cargo.toml"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAt": "2026-10-13T17:32:33.004846+00:00",
+  "completedAt": "2026-10-13T17:32:34.713252+00:00",
+  "elapsedSeconds": 1.7084913329999978,
+  "actualExitCode": 0,
+  "stdout": {
+    "path": "output/2026-10-14-audio-cancel-test-race/cargo-fmt/stdout.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "output/2026-10-14-audio-cancel-test-race/cargo-fmt/stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

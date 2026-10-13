@@ -203,7 +203,22 @@ async fn prompt_audio_actual_supported_wire_preserves_original_bytes_and_busy_gu
         r#"{"promptCapabilities":{"audio":true}}"#,
     )
     .unwrap();
-    let id = f.open().await;
+    let (events, mut notifications) = mpsc::unbounded_channel();
+    let id = f
+        .manager
+        .open_session(
+            &f.row,
+            &f.cwd,
+            None,
+            vec![],
+            Arc::new(move |event| {
+                let _ = events.send(event);
+            }),
+            &f.store,
+        )
+        .await
+        .unwrap()
+        .session_id;
     f.store.set_agent_handshake(&f.row, &json!({"protocolVersion":1,"agentCapabilities":{"promptCapabilities":{"audio":false}}})).unwrap();
     let (bytes, blocks) = audio();
     f.manager
@@ -241,6 +256,18 @@ async fn prompt_audio_actual_supported_wire_preserves_original_bytes_and_busy_gu
         .session_cancel(&f.row.id, &f.cwd, &id)
         .await
         .unwrap();
+    // Cancel acknowledgement only confirms delivery; wait for the peer's result.
+    tokio::time::timeout(Duration::from_secs(5), async {
+        loop {
+            let event = notifications.recv().await.unwrap();
+            if event["kind"] == "turnEnd" {
+                assert_eq!(event["stopReason"], "cancelled");
+                break;
+            }
+        }
+    })
+    .await
+    .unwrap();
     f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();
 }
 

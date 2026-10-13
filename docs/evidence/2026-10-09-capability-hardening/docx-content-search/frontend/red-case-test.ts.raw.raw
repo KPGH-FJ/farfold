@@ -1,0 +1,81 @@
+import { describe, expect, it, vi } from "vitest";
+import { setup } from "./attachment_search.test-support";
+import { AttachmentSearch } from "./attachment_search";
+import { attachmentSearchCandidates } from "./attachment_search_source";
+import type { DocxCapture, DocxPreview } from "./docx_types";
+import type { VerifiedFile } from "./file_delivery";
+
+function docxSetup() {
+  const h = setup(["compressed source"]);
+  const item = h.s.items[0];
+  if (item.kind !== "user") throw Error();
+  item.attachments[0] = {
+    name: "chosen.docx",
+    uri: "file:///fixture/chosen.docx",
+  };
+  const original = h.files.values().next().value!;
+  const file = {
+    ...original,
+    path: "/fixture/chosen.docx",
+    resolvedPath: "/fixture/chosen.docx",
+    name: "chosen.docx",
+  };
+  h.files.set(file.path, file);
+  const capture: DocxCapture = {
+    file,
+    parts: [{ name: "word/document.xml", data: "eA==" }],
+    entries: ["word/document.xml"],
+    inflatedBytes: 1,
+  };
+  const preview: DocxPreview = {
+    file,
+    blocks: [
+      {
+        kind: "paragraph",
+        id: "p1",
+        style: {},
+        source: { part: "word/document.xml", elementPath: [0, 0] },
+        runs: [{ kind: "text", text: "author needle tail", style: {} }],
+      },
+    ],
+    stories: [],
+    images: [],
+    warnings: [],
+    partial: false,
+  };
+  const services = {
+    ...h.services,
+    read: vi.fn(async (_file: VerifiedFile): Promise<unknown> => {
+      throw "此文件无法作为文字预览，请另存或使用其他应用打开";
+    }),
+    readDocx: vi.fn(async (_file: VerifiedFile) => capture),
+    parseDocx: vi.fn(
+      async (_capture: DocxCapture, _signal: AbortSignal) => preview,
+    ),
+  };
+  return {
+    ...h,
+    file,
+    capture,
+    preview,
+    services,
+    candidates: attachmentSearchCandidates([h.s.key], h.states).candidates,
+    search: new AttachmentSearch(services),
+  };
+}
+
+describe("explicit current DOCX attachment search", () => {
+  it("searches selected DOCX author text through the bounded document route", async () => {
+    const h = docxSetup();
+    await h.search.start("needle", h.candidates, () => true);
+    expect(h.search.snapshot().matches).toBe(1);
+    expect(h.services.readDocx).toHaveBeenCalledOnce();
+    expect(h.services.read).not.toHaveBeenCalled();
+    expect(h.search.snapshot().hits[0]).toMatchObject({
+      source: h.candidates[0],
+      before: "author ",
+      match: "needle",
+      after: " tail",
+    });
+  });
+});

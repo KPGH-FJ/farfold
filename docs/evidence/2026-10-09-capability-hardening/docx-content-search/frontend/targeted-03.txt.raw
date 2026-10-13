@@ -1,0 +1,43 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/docx_search_text.test.ts (14 tests | 1 failed) 26ms
+     × matches independently authored body, styled runs, nested table and four story regions 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/docx_search_text.test.ts > DOCX author text for explicit temporary search > matches independently authored body, styled runs, nested table and four story regions
+AssertionError: expected [ Array(8) ] to deeply equal [ Array(8) ]
+
+- Expected
++ Received
+
+  [
+    "body",
+    "body",
+    "body",
+    "body",
+-   "header",
+-   "footer",
+    "footnote",
+    "endnote",
++   "header",
++   "footer",
+  ]
+
+ ❯ src/runtime/docx_search_text.test.ts:20:48
+     18|     expect(result.bytes).toBe(result.segments.reduce((n, s) => n + Buf…
+     19|     const hits = result.segments.filter((s) => s.text.includes("needle…
+     20|     expect(hits.map((s) => s.location.region)).toEqual(["body", "body"…
+       |                                                ^
+     21|     expect(hits[2].location.cells).toEqual([{table: 1, row: 1, column:…
+     22|     expect(hits[3].location.cells).toEqual([{table: 1, row: 1, column:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 15 passed (16)
+   Start at  00:56:34
+   Duration  480ms (transform 364ms, setup 0ms, import 486ms, tests 45ms, environment 0ms)
+

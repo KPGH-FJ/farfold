@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:01:40.696624+00:00",
+  "result": "PASS_INDEPENDENT_BUDGET_ORACLE_AND_CAPTURE_BYTES",
+  "method": "Read-only standard-library ZIP CRC/parts/base64 equality and independent XML author-text extraction. No production parser or controller execution.",
+  "files": [
+    {
+      "path": "output/2026-10-14-docx-search-browser/generate-budget.py",
+      "bytes": 2484,
+      "sha256": "b7a60fdda1fec979a20aa43dc5fa43e5782b938ff627ff9314cf0600666894f3"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/budget-a.docx",
+      "bytes": 9578,
+      "sha256": "ed75447bbfb5b7a074ace4abced1b48066d830b00d1d59f35acc284f9ffd06f0"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/budget-b.docx",
+      "bytes": 9578,
+      "sha256": "ed75447bbfb5b7a074ace4abced1b48066d830b00d1d59f35acc284f9ffd06f0"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/budget-oracle.json",
+      "bytes": 384,
+      "sha256": "c3c41c0273a562c956f2e0bfad6269ec84b161c532572c009b4c1d1e046b519c"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/budget-captures.json",
+      "bytes": 24003071,
+      "sha256": "ca12d586b2a1dd101dd6cbebe2376b1aa4c887294ec574abab9cb0260f8e5b26"
+    }
+  ],
+  "checks": {
+    "archivesByteIdentical": true,
+    "sourceBytesEach": 9578,
+    "partsEach": 3,
+    "wholeSourceSha256": "ed75447bbfb5b7a074ace4abced1b48066d830b00d1d59f35acc284f9ffd06f0",
+    "eachSourceWithin1MiB": true,
+    "eachXmlPartWithin16MiB": true,
+    "inflateEachWithin64MiB": true,
+    "authorCodePointsEach": 3000007,
+    "authorUtf8BytesEach": 9000007,
+    "literalNeedleCountEach": 1,
+    "bothAuthorBodiesExceed16MiB": true,
+    "totalAuthorUtf8BytesIfBoth": 18000014,
+    "capturesExactlyMatchZipParts": true,
+    "inputsStable": true
+  },
+  "coverageBoundary": "This checks the prepared oracle only. A future actual Worker/controller run must separately establish correct post-parse budget admission and display. It is complementary to the deferred failed-reservation counterexample, not proof of that fix."
+}

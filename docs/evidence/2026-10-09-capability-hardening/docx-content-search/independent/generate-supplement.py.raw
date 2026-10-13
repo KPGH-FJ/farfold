@@ -1,0 +1,62 @@
+from pathlib import Path
+from io import BytesIO
+import base64
+import hashlib
+import json
+import struct
+import zipfile
+import zlib
+
+BASE = Path(__file__).parent
+W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
+R = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
+REL = 'http://schemas.openxmlformats.org/package/2006/relationships'
+CT = 'http://schemas.openxmlformats.org/package/2006/content-types'
+A = 'http://schemas.openxmlformats.org/drawingml/2006/main'
+WP = 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing'
+PIC = 'http://schemas.openxmlformats.org/drawingml/2006/picture'
+
+def chunk(kind, data):
+    return struct.pack('>I', len(data)) + kind + data + struct.pack('>I', zlib.crc32(kind + data))
+
+# Independently written one-pixel opaque RGBA PNG, ordinary filtered scanline.
+png = b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', 1, 1, 8, 6, 0, 0, 0)) + chunk(b'IDAT', zlib.compress(b'\0\x31\x72\xa8\xff')) + chunk(b'IEND', b'')
+assert zlib.decompress(png[41:-16]) == b'\0\x31\x72\xa8\xff'
+
+def p(text):
+    return '<w:p><w:r><w:t>' + text + '</w:t></w:r></w:p>'
+
+body = '''<w:p><w:r><w:t>IMAGELEFT</w:t><w:drawing><wp:inline><wp:extent cx="12700" cy="12700"/><wp:docPr id="1" name="one" descr="ALT_ONLY needle"/><a:graphic><a:graphicData uri="''' + PIC + '''"><pic:pic><pic:blipFill><a:blip r:embed="image"/></pic:blipFill></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing><w:t>IMAGERIGHT</w:t></w:r></w:p>
+<w:p><w:r><w:t>NOTICELEFT</w:t><w:commentReference w:id="0"/><w:t>NOTICERIGHT</w:t></w:r></w:p>
+<w:tbl><w:tblGrid><w:gridCol w:w="1800"/><w:gridCol w:w="1800"/></w:tblGrid><w:tr><w:tc><w:tcPr/>''' + p('CELLLEFT') + '''</w:tc><w:tc><w:tcPr/>''' + p('CELLRIGHT') + '''</w:tc></w:tr></w:tbl>
+''' + p('汉😀é') + '''<w:p><w:r><w:t>TABLEFT</w:t><w:tab/><w:t>TABRIGHT</w:t></w:r></w:p>
+<w:p><w:r><w:t>BREAKLEFT</w:t><w:br/><w:t>BREAKRIGHT</w:t></w:r></w:p>'''
+parts = {
+    '[Content_Types].xml': f'<Types xmlns="{CT}"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>'.encode(),
+    '_rels/.rels': f'<Relationships xmlns="{REL}"><Relationship Id="doc" Type="{R}/officeDocument" Target="word/document.xml"/></Relationships>'.encode(),
+    'word/document.xml': f'<w:document xmlns:w="{W}" xmlns:r="{R}" xmlns:a="{A}" xmlns:wp="{WP}" xmlns:pic="{PIC}"><w:body>{body}</w:body></w:document>'.encode(),
+    'word/_rels/document.xml.rels': f'<Relationships xmlns="{REL}"><Relationship Id="image" Type="{R}/image" Target="media/pixel.png"/></Relationships>'.encode(),
+    'word/media/pixel.png': png,
+}
+stream = BytesIO()
+with zipfile.ZipFile(stream, 'w') as archive:
+    for name, data in parts.items():
+        info = zipfile.ZipInfo(name, date_time=(2026, 10, 14, 0, 0, 0))
+        info.compress_type = zipfile.ZIP_DEFLATED
+        archive.writestr(info, data)
+raw = stream.getvalue()
+with zipfile.ZipFile(BytesIO(raw)) as archive:
+    assert archive.testzip() is None
+    assert all(archive.read(name) == data for name, data in parts.items())
+name = 'image-and-cell-barriers.docx'
+file = {'root': '/controlled', 'path': '/controlled/' + name, 'resolvedPath': '/controlled/' + name, 'name': name, 'size': len(raw), 'sha256': hashlib.sha256(raw).hexdigest(), 'version': 'controlled-independent-' + name}
+capture = {'file': file, 'parts': [{'name': name, 'data': base64.b64encode(data).decode()} for name, data in parts.items()], 'entries': list(parts), 'inflatedBytes': sum(map(len, parts.values()))}
+# Handwritten author-text oracle. This is not obtained from either production
+# parseDocx or the new search extractor. No generated labels or image alt.
+segments = ['IMAGELEFT', 'IMAGERIGHT', 'NOTICELEFT', 'NOTICERIGHT', 'CELLLEFT', 'CELLRIGHT', '汉😀é', 'TABLEFT\tTABRIGHT', 'BREAKLEFT\nBREAKRIGHT']
+oracle = {'scope': 'Independent small OOXML supplement: one real PNG/author alt, comment omission, adjacent table cells, real tab/break and non-ASCII UTF-8. Production parser/extractor has not run.', 'file': file, 'expectedSegments': segments, 'expectedSearchableUtf8Bytes': sum(len(s.encode()) for s in segments), 'expectedPartial': True, 'positiveCounts': {s: 1 for s in ['IMAGELEFT', 'IMAGERIGHT', 'NOTICELEFT', 'NOTICERIGHT', 'CELLLEFT', 'CELLRIGHT', '汉😀é']}, 'zeroCountTerms': ['ALT_ONLY', 'needle', 'IMAGELEFTIMAGERIGHT', 'NOTICELEFTNOTICERIGHT', 'CELLLEFTCELLRIGHT', 'TABLEFTTABRIGHT', 'BREAKLEFTBREAKRIGHT', 'paragraph', 'continuousLayout', '文档文字', '表格', '图片未加入'], 'unicodeLiteralUtf8Bytes': 10, 'pngBytes': len(png), 'pngSha256': hashlib.sha256(png).hexdigest(), 'nativeIoProved': False}
+assert len('汉😀é'.encode()) == oracle['unicodeLiteralUtf8Bytes']
+for filename, data in [(name, raw), ('supplement-capture.json', (json.dumps(capture, ensure_ascii=False, indent=2) + '\n').encode()), ('supplement-oracle.json', (json.dumps(oracle, ensure_ascii=False, indent=2) + '\n').encode())]:
+    with (BASE / filename).open('xb') as output:
+        output.write(data)
+print(json.dumps({'file': file, 'expectedUtf8Bytes': oracle['expectedSearchableUtf8Bytes'], 'oracleSha256': hashlib.sha256((BASE / 'supplement-oracle.json').read_bytes()).hexdigest()}))

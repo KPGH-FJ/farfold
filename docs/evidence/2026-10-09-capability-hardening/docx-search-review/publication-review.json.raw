@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:18:55.571971+00:00",
+  "conclusion": "Publication has no identified blocker. All 121 original/published pairs are byte-exact; directory contains exactly those files plus its two entries.",
+  "entry": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json",
+    "bytes": 6121,
+    "sha256": "8a366c69b20d36c340e6bdded5f76f500f2d0e31f0babb083f0cb19aecb68226"
+  },
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-content-search/publication.json",
+    "bytes": 60399,
+    "sha256": "51a084dd4463828ea3b53a07a245acd4b3f0c6900e3da002d9eaae851dd98dfc"
+  },
+  "publisher": {
+    "path": "output/2026-10-14-docx-search-integration/publish_implementation.py",
+    "bytes": 6706,
+    "sha256": "8b116d98c277757028bd4c7cce1bd6c150c2349da52c3ca20e61f9d097fd3902"
+  },
+  "checks": {
+    "byteExactPairs": 121,
+    "exactDirectoryFiles": 123,
+    "currentSourcePins": 19,
+    "groups": {
+      "backend": 28,
+      "frontend": 45,
+      "browser": 32,
+      "independent": 16
+    },
+    "frontendV2DiffAndBothCompletionManifestsPresent": true,
+    "backendFiveStageBeforeAfterManifestsPresent": true,
+    "independentOpenFindingOracleAndGeneratorPresent": true,
+    "rootFourOriginalExecutionRecordsAndManifestPresent": true
+  },
+  "scope": "Entry correctly limits proof to bounded source/capture, targeted tests and controlled full App with real Worker. v1 109, v2 delta6 and both run3 60/11 retain distinct scopes. Actual exits are independently verified in frontend-browser-supplement.json. No new candidate/install or real Agent claim. Formal source remains 9c278d82.",
+  "retainedFailures": "Initial unsupported DOCX, bounded-capture and temporary reservation failures retained; original run1 visibility defect, wrong test assumptions and run2 WebKit same-origin-blob harness rejection are distinguished.",
+  "privacy": "Selected originals are this task synthetic fixtures/source/test records and scoped original tool completions. No DB, real private AX/sidebar/message body, account or credential source is included. Large reproducible budget-captures.json intentionally remains local.",
+  "remaining": "Four-doc alignment and next engineering inventory freeze are separate, not yet reviewed here."
+}

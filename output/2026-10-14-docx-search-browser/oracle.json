@@ -1,0 +1,45 @@
+{
+  "scope": "Independently authored synthetic OOXML. Browser uses controlled capture IPC, production Worker and complete App; this is not a native I/O receipt.",
+  "authorNeedleCount": 8,
+  "authorVisibleContexts": [
+    "BODY",
+    "HEADING",
+    "TABLE",
+    "NESTED",
+    "HEADER",
+    "FOOTER",
+    "FOOTNOTE",
+    "ENDNOTE"
+  ],
+  "negativeTerms": [
+    "HIDDEN_ONLY",
+    "LEFTRIGHT",
+    "NOTELEFTNOTERIGHT",
+    "PARALEFTPARARIGHT",
+    "continuousLayout",
+    "headingLevel"
+  ],
+  "secondTermCount": 7,
+  "files": [
+    {
+      "root": "/controlled",
+      "path": "/controlled/author.docx",
+      "resolvedPath": "/controlled/author.docx",
+      "name": "author.docx",
+      "size": 2393,
+      "sha256": "edbdf6fa40ee82b15ec3a579ea28c09ea16d5a8d98ace9b42380abb7e97f7d0d",
+      "version": "controlled-author.docx"
+    },
+    {
+      "root": "/controlled",
+      "path": "/controlled/second.docx",
+      "resolvedPath": "/controlled/second.docx",
+      "name": "second.docx",
+      "size": 2407,
+      "sha256": "bdcd861e2e97d71b7f0f374165cc732cdda9ebbfa0cce711c018bd74ad93eb5c",
+      "version": "controlled-second.docx"
+    }
+  ],
+  "secondNeedleCount": 1,
+  "secondBodySplitRunsUnchanged": true
+}

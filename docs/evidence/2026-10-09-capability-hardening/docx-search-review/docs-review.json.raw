@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:20:51.418222+00:00",
+  "conclusion": "Four-doc delta has no blocker for inventory freeze. Only P32 progress changes; original completion conditions remain intact.",
+  "docCloseout": {
+    "path": "output/2026-10-14-docx-search-doc-closeout/report.json",
+    "bytes": 5718,
+    "sha256": "f7b292ec2ee0d0d46d9832acf306fbc3401d4866681526e6ad720a9e070ef6f9"
+  },
+  "files": [
+    {
+      "path": "docs/status.md",
+      "bytes": 89891,
+      "sha256": "733ffee4d877bec18a9ed189299c32d709bd8d9f88838e1a3760fa6a2da846e4"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 131530,
+      "sha256": "20989354150b015f4862654af7fac9449e23c0f14584138a058d6d502af67626"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 154599,
+      "sha256": "18603e4ba369a1561e0626fb2f5dfdb88dd7548608697e99af1b2e28e09f2a6e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 87951,
+      "sha256": "7a63b3db8876c6900ded57e982b5e6804bc9300b8ebe64688696716536671c23"
+    }
+  ],
+  "checks": {
+    "beforeFourFilesExactlyA64Commit": true,
+    "currentFourHashesMatchFrozenReport": true,
+    "originalIdsTitlesCompletionConditionsUnchanged": 122,
+    "newIdsCompletionConditionsUnchanged": 28,
+    "onlyNormalizedTableRowChanged": "P32",
+    "productHashUnchanged": true,
+    "newLinksResolvedToReviewedImplementation": 4,
+    "v2ThirteenSourcePinsUnchanged": true,
+    "formatOriginalWhitelistedCompletedBytesExact": true,
+    "formatActualExitCode": 0
+  },
+  "scope": "DOCX source, v1 targeted109, v2 delta6, backend24 and real-Worker controlled Chromium/WebKit60checks11scenarios each are explicitly separated from formal9c and unperformed new installation. NEW24, earlier strict2 data comparisons and P32 whole-item conditions remain unchanged.",
+  "reviewBookkeeping": "Initial review selector omitted H-prefixed original IDs and stopped at count100 before writing output. Corrected selector includes H01-H22; all122 actual IDs/titles/conditions now independently compared. No document/source/test change resulted.",
+  "privacy": "Only source/document paths, counts, hashes and scope conclusions; no private user body or database values.",
+  "remaining": "Next engineering inventory and seven checks remain separate."
+}

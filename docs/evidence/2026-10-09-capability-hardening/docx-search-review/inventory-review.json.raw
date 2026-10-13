@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:22:02.567338+00:00",
+  "conclusion": "1797-input freeze is complete and consistent with current source membership and owner evidence. No inventory blocker found. Engineering results are not inferred from this review.",
+  "inventory": {
+    "path": "output/2026-10-14-docx-search-integration/inventory-plan.json",
+    "bytes": 565711,
+    "sha256": "47de5c4440811fcb34edcf659f671f6e5c6b6698773f1d090f9c75960b3bb4d8"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-docx-search-integration/checks-freeze/freeze.json",
+    "bytes": 292109,
+    "sha256": "84b6f84e047713684032dd9607cb48d2d89a875c1920bc34deb8c08ebe90f68c"
+  },
+  "adapter": {
+    "path": "output/2026-10-14-docx-search-integration/prepare_inventory.py",
+    "bytes": 5300,
+    "sha256": "32e95fc7fe3e8ea2bea26e8f814ae34fc75991d06cc701ba44ab568c2b949f8e"
+  },
+  "reviewedFiles": {
+    "path": "output/2026-10-14-docx-search-integration/reviewed-files.json",
+    "bytes": 6980,
+    "sha256": "604c8a66acfa5874c2fd7dc4e4996daa4299114244967b8e1d27328629836c73"
+  },
+  "checks": {
+    "inputHashesCurrent": 1797,
+    "physicalSourcePaths": 1561,
+    "base1756AllRetained": true,
+    "newInputPaths": 41,
+    "newPhysicalSourcePaths": 11,
+    "ownerReviewedFiles": 38,
+    "allSourceDeltaOwnerCovered": true,
+    "protectedHashesCurrent": 3,
+    "receiptPinsCurrent": 9,
+    "priorRunnerAndInventoryHelperUnchanged": true,
+    "fourDocsMatchIndependentReview": true,
+    "changesSincePreparation": [],
+    "requiredCommandsConfigured": 7
+  },
+  "sourceScanBoundary": "All physical files under src and src-tauri, excluding only src-tauri/target and src-tauri/gen; no symlinks accepted. New fixtures are included. No build/test/App/Agent/database command executed by review.",
+  "conditionReview": {
+    "path": "output/2026-10-14-docx-search-independent/docs-review.json",
+    "bytes": 2327,
+    "sha256": "ae996f823860ca46a3da38f538df60d54fdcbcde33f036f7d53de4f66439f042"
+  },
+  "sevenStatus": "Root execution is ongoing; no stage results polled or tests rerun."
+}

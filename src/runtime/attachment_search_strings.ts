@@ -1,11 +1,39 @@
+import type { DocxSearchLocation } from "./docx_search_text";
+import { DOCUMENT_WARNINGS } from "./document_strings";
+
+const regions = {
+  body: "正文",
+  header: "页眉",
+  footer: "页脚",
+  footnote: "脚注",
+  endnote: "尾注",
+} as const;
+
 export const ATTACHMENT_SEARCH_STRINGS = {
   scope: "所选附件内容",
   title: "查找当前附件文件",
   query: "搜索所选附件内容…",
   boundary:
-    "只查找你明确选择的当前本地文字文件，不代表附件当时的历史内容。不会加载历史、连接 Agent 或读取网页。",
+    "只查找你明确选择的当前本地文字或 DOCX 文件，不代表附件当时的历史内容。不会加载历史、连接 Agent 或读取网页。",
   limits:
-    "每次最多 20 个文件；每个完整 UTF-8 文字文件最多 1 MiB，可检索正文合计最多 16 MiB。按纯文字读取，不提取图片、音频或文档中的内容。",
+    "每次最多 20 个文件；每个源文件最多 1 MiB，实际可检索文字合计最多 16 MiB。支持 UTF-8 纯文字及 DOCX 作者文字；不提取图片、音频、PDF 或电子表格中的内容。",
+  docxCandidate: "按 DOCX 读取作者文字（文件类型声明或 .docx 位置）",
+  textCandidate: "按 UTF-8 纯文字读取",
+  docxScope:
+    "DOCX 已提取作者文字；段落、单元格和文档区域分别查找，不代表 Word 视觉页码。",
+  docxPartial:
+    "仅查找已提取的作者文字，存在省略内容；没有匹配不代表完整文档没有匹配。",
+  docxImages: (n: number) => `${n} 处图片及其替代文字不参与查找。`,
+  docxRegions: regions,
+  docxWarnings: {
+    ...DOCUMENT_WARNINGS,
+    hiddenContent: "隐藏文字未参与查找。",
+    missingFieldResult: "部分字段没有保存结果，未参与查找。",
+  },
+  docxParagraph: (n: number) => `段落 ${n}`,
+  docxCell: (table: number, row: number, column: number) =>
+    `表格 ${table} · 第 ${row} 行、第 ${column} 列`,
+  docxNote: (id: string) => `原标记 ${id}`,
   choose: "选择要读取的当前文件",
   start: "开始查找附件",
   retry: "重新检查所选附件",
@@ -40,7 +68,7 @@ export const ATTACHMENT_SEARCH_STRINGS = {
     matches: number,
     displayed: number,
   ) =>
-    `已检索 ${searched}/${total} 个完整文件 · ${matches} 处匹配 · 显示 ${displayed} 处`,
+    `已检索 ${searched}/${total} 个文件的所列文字范围 · ${matches} 处匹配 · 显示 ${displayed} 处`,
   omittedHits: (n: number) => `${n} 处匹配未展示，请缩小范围或补充关键词。`,
   details: "文件范围与读取结果",
   navigate: "前往来源附件",
@@ -53,7 +81,7 @@ export const ATTACHMENT_SEARCH_STRINGS = {
     queued: "尚未读取",
     checking: "正在核实文件",
     reading: "正在读取文件",
-    searched: "完整文字已检索",
+    searched: "所列文字范围已检索",
     error: "未能检索",
     skipped: "未检索",
   },
@@ -61,10 +89,24 @@ export const ATTACHMENT_SEARCH_STRINGS = {
     changed: "内容、位置或来源已变化，请重新选择。",
     unreadable: "无法读取此文件。",
     tooLarge: "完整文件超过 1 MiB。",
-    unsupported: "不是本次支持的 UTF-8 纯文字文件。",
+    unsupported: "不是本次支持的 UTF-8 纯文字或 DOCX 内容。",
     budget: "超过本次 16 MiB 可检索正文限额，未用于检索。",
     pending: "读取尚未返回，后台状态未确认。",
-    busy: "已有文件读取尚未结束，本次未开始。",
+    busy: "已有文件读取或文档处理尚未结束，本文件未完成检索。",
+    documentLimit: "文档超过解析大小或复杂度限制，未用于检索。",
+    encrypted: "此文档已加密，未用于检索。",
+    timeout: "文档处理等待超时，本次未完成；可明确重新查找。",
     invalid: "返回内容无法确认，未用于检索。",
   },
 } as const;
+
+export function docxSearchLocationLabel(location: DocxSearchLocation): string {
+  const s = ATTACHMENT_SEARCH_STRINGS;
+  return [
+    `${s.docxRegions[location.region]}${location.regionIndex ? ` ${location.regionIndex}` : ""}${location.noteId !== undefined ? `（${s.docxNote(location.noteId)}）` : ""}`,
+    ...location.cells.map((cell) =>
+      s.docxCell(cell.table, cell.row, cell.column),
+    ),
+    s.docxParagraph(location.paragraph),
+  ].join(" · ");
+}

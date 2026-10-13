@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:38:56.080280+00:00",
+  "verdict": "NO_BLOCKER_IN_V2_INPUT_ENVELOPE",
+  "scope": "Read-only inventory, source hashes and membership; no engineering command execution or polling.",
+  "inventory": {
+    "path": "output/2026-10-14-docx-search-integration/inventory-plan-v2.json",
+    "bytes": 566400,
+    "sha256": "87de403af8ff7fd3c301daa8271f6cabdb75c5d8d70fc0568b3d8d1dd95f0f51"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-docx-search-integration/checks-freeze-v2/freeze.json",
+    "bytes": 292525,
+    "sha256": "4b8ddfb51fb85b65c7378e6f84ebded40f59aed6b00f3505877567aea8f4086f"
+  },
+  "ownerMapping": {
+    "path": "output/2026-10-14-docx-search-integration/reviewed-files-v2.json",
+    "bytes": 7362,
+    "sha256": "f6c02a0b3cf3533bd5d5cbe4fbaf2f9299030cd11fd48fd9e85cedf6e6a48823"
+  },
+  "oldInputCount": 1797,
+  "newInputCount": 1799,
+  "retainedAllOldMembers": true,
+  "addedInputs": [
+    "output/2026-10-14-audio-cancel-test-race/source-freeze.json",
+    "output/2026-10-14-docx-search-integration/reviewed-files-v2.json"
+  ],
+  "changedExistingHashes": [
+    "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+    "src-tauri/src/acp_client/session/prompt_context_tests.rs"
+  ],
+  "currentSourceCount": 1561,
+  "currentPhysicalMembershipMatches": true,
+  "allCurrentInputHashesMatch": true,
+  "ownerFilesVerified": 40,
+  "ownerReceiptsVerified": 10,
+  "runnerAndSevenCommandsUnchanged": true,
+  "protected3Unchanged": true,
+  "fourDocsSameAsPreviouslyReviewedFrozenBytes": true,
+  "conditionScope": "No plan or PRODUCT bytes changed from the already-reviewed original 122 titles/conditions and 28 NEW conditions envelope.",
+  "newEngineeringResult": "PENDING_ROOT_COMPLETION_EVENT; not inferred from this input review",
+  "oldEngineeringResult": "FAILED: 6 stages exit 0, cargo-test exit 101, wrapper exit 1; retained separately.",
+  "safeToPublish": true
+}

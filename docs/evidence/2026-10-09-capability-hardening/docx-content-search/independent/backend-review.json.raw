@@ -1,0 +1,252 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T16:53:22.788162+00:00",
+  "result": "PASS_NO_BACKEND_BLOCKER_WITH_SCOPED_EVIDENCE",
+  "scope": "Independent static review of frozen bounded DOCX search capture and saved targeted execution receipts. No test rerun, App/Agent/process/database action.",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-docx-search-backend/source-freeze.json",
+    "bytes": 3266,
+    "sha256": "4f1553dd50d55becedcce9bbeaaeed399ebffa8ad9e7c11e1c531359558406d8"
+  },
+  "handoff": {
+    "path": "output/2026-10-14-docx-search-backend/handoff.json",
+    "bytes": 3239,
+    "sha256": "679c3e389562b017070d4702634602abdab4084f04f62fca1902772cb0c58062"
+  },
+  "sourcePins": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17710,
+      "sha256": "b9414968f6e2716df17810cde912c65f93560daf3523f93efe1403b4eaf650fa"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document.rs",
+      "bytes": 3497,
+      "sha256": "c3ed531837f35f37877b7e11b5e40ed5bf15441e3e35657b24a07d0cb12cbfac"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 20225,
+      "sha256": "b2291c7044db5ff07315252c528e801cefa3b85097da6f6d41920e36bc819dd8"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21659,
+      "sha256": "b264a0ca18e4b50a6de005e25eb8029322b12419e105b5d364f81130efb596c1"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_tests.rs",
+      "bytes": 7335,
+      "sha256": "a847ddd179319016f5e725a36f5b50c38b75c920dad58a6c87670524d72a4708"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_command_tests.rs",
+      "bytes": 2008,
+      "sha256": "86f07caf27591d7f88741ad0f3a4d7d500b5fbad4164238c61f5a06b9f1a046d"
+    }
+  ],
+  "sharedPinsByteIdenticalToBaseCommit": [
+    {
+      "path": "src-tauri/src/file_delivery/ooxml_archive.rs",
+      "bytes": 9656,
+      "sha256": "cccda6285276fd368199f3ad2b37dc07abecdb968b10f2359fa1f5fced13b0e8"
+    },
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "bytes": 2674,
+      "sha256": "cf10e7bfbf76873e8b290cd6ea5e3e5ddac383c5f22a8924af3fa862b4a05ee2"
+    },
+    {
+      "path": "src-tauri/src/file_read_check_tests.rs",
+      "bytes": 5667,
+      "sha256": "91ede3d5566f8c7d73844a16e96af3268572d2e1e214ad28483d587eff9d9a4c"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "bytes": 1345,
+      "sha256": "e247aa6bb04b56e3ac91f7d12be2b66047b7a94ae255411e4de744c993060b55"
+    }
+  ],
+  "baseCommit": "a64f5dca6cc764dd711ac2cdac532a196f37830c",
+  "findings": [],
+  "codeReview": [
+    {
+      "path": "src-tauri/src/file_delivery/document.rs",
+      "start": 39,
+      "conclusion": "read_docx_search has its own MAX_TEXT_BYTES (1 MiB) capture. open_source_detailed validates absolute/canonical root and requested/resolved location plus metadata cap before body capture; name/size/saved version are checked before body. capture_opened bounds growth at max+1, rechecks safe handle/path/stamp and returns a newly computed full SHA. Complete VerifiedFile equality is required before unpack."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/ooxml_archive.rs",
+      "start": 235,
+      "conclusion": "Existing pre-index central/local directory, count, duplicate/name/overlap/encryption/ZIP64 checks are reused unchanged. Every member, including omitted binary, is read through bounded EOF/CRC before inclusion. Per-part16MiB, total64MiB and2048 entries remain finite inflation bounds; this is not a1MiB inflated-text promise."
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "start": 151,
+      "conclusion": "Main caller guard precedes checked_docx_search, which uses the actual shared file_read_check::run rather than a new pool. Its nested domain result maps changed/limit/invalid/etc and outer pending/busy separately. lib registers the same handler. Actual Webview invocation is not covered by helper tests."
+    },
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "start": 51,
+      "conclusion": "Unchanged real semaphore permit lives inside the blocking closure and is not released by dropped or timed-out response; it remains shared with other file checks. The new command-helper test saturates this production admission and verifies busy followed by actual capture and limit after release."
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document.rs",
+      "start": 11,
+      "conclusion": "Legacy read_docx still calls old read_archive16MiB with equivalent selection closure. New search limit does not silently lower normal preview limit. Extension or ZIP capture alone does not authenticate OPC/author text, which stays the frontend parser responsibility."
+    }
+  ],
+  "counterexampleEvidence": {
+    "red": "The temporary delegate of the newly proposed search API accepted a valid ZIP of1MiB+1: actual exit101,1pass/1fail. Legacy16MiB behavior is intentional, not retrospectively called a legacy bug.",
+    "newCaptureTests": 7,
+    "newCaptureCoverage": [
+      "Exactly1MiB success and1MiB+1 refusal while legacy remains usable",
+      "Oversize at open and post-open growth; source path shows size failure before hashing",
+      "Each of seven saved source fields changes independently",
+      "Same-byte inode replacement after open",
+      "Symlink redirected after saved receipt",
+      "Ignored binary CRC corruption",
+      "Compressed member expanding to MAX_PART+1",
+      "Suffix does not authenticate ZIP or DOCX semantics"
+    ],
+    "legacyDocxRegressionTests": 11,
+    "productionSharedAdmissionHelperTests": 1,
+    "sharedTimeoutDropAndCapacityTests": 5,
+    "totalPassed": 24,
+    "formatActualExitCode": 0,
+    "receipts": [
+      {
+        "label": "red",
+        "receipt": {
+          "path": "output/2026-10-14-docx-search-backend/red/receipt.json",
+          "bytes": 1351,
+          "sha256": "db959311ca6b28bd6902c8330c1da5fef3492a9e9f0e145245adb9e1c373aece"
+        },
+        "actualExitCode": 101,
+        "passed": 1,
+        "failed": 1,
+        "inputCount": 503,
+        "beforeAfterManifestByteExact": true,
+        "rawStdout": {
+          "path": "output/2026-10-14-docx-search-backend/red/stdout.raw",
+          "bytes": 482,
+          "sha256": "ff1caf1060902ff2f8f51e9c353015adaeee752dfd08db132a460ad82adc3850"
+        },
+        "rawStderr": {
+          "path": "output/2026-10-14-docx-search-backend/red/stderr.raw",
+          "bytes": 999,
+          "sha256": "f05eed7965db9a444095a7b08ef34b583c419ad5fe50eb8f661478e2a100ae36"
+        }
+      },
+      {
+        "label": "green",
+        "receipt": {
+          "path": "output/2026-10-14-docx-search-backend/green/receipt.json",
+          "bytes": 1333,
+          "sha256": "f58996393900a64b3444a3b7b3c5219c4562b94b8e051c2fb73f2f51cd3bcf36"
+        },
+        "actualExitCode": 0,
+        "passed": 1,
+        "failed": 0,
+        "inputCount": 504,
+        "beforeAfterManifestByteExact": true,
+        "rawStdout": {
+          "path": "output/2026-10-14-docx-search-backend/green/stdout.raw",
+          "bytes": 336,
+          "sha256": "4cdff7b14a6b1aff657d4694df3bb9523f6fa377aee54e750634b01e995c506b"
+        },
+        "rawStderr": {
+          "path": "output/2026-10-14-docx-search-backend/green/stderr.raw",
+          "bytes": 323,
+          "sha256": "e381ebcc55c6e238f6faaf8dfc0f07590243dd6870ec35a9a9d21368a40dcf8c"
+        }
+      },
+      {
+        "label": "capture-green",
+        "receipt": {
+          "path": "output/2026-10-14-docx-search-backend/capture-green/receipt.json",
+          "bytes": 1386,
+          "sha256": "3fa4e963aa438a000f66562bc32069ba85433db322b1922fe805c396b861865a"
+        },
+        "actualExitCode": 0,
+        "passed": 18,
+        "failed": 0,
+        "inputCount": 504,
+        "beforeAfterManifestByteExact": true,
+        "rawStdout": {
+          "path": "output/2026-10-14-docx-search-backend/capture-green/stdout.raw",
+          "bytes": 8535,
+          "sha256": "f5af45a6a856c84d19e5e9eecda6e28019f24679a495803a25fc907c2dd6a39e"
+        },
+        "rawStderr": {
+          "path": "output/2026-10-14-docx-search-backend/capture-green/stderr.raw",
+          "bytes": 256,
+          "sha256": "706688ab7bdee0f381159fbbe64a4b7a0d48019e281a17964b45abc610e87b3a"
+        }
+      },
+      {
+        "label": "pool-regression",
+        "receipt": {
+          "path": "output/2026-10-14-docx-search-backend/pool-regression/receipt.json",
+          "bytes": 1394,
+          "sha256": "f740c62132a020dad31346a04238ffff54187e7933a1ab419feb9dfc4fe2d32a"
+        },
+        "actualExitCode": 0,
+        "passed": 5,
+        "failed": 0,
+        "inputCount": 504,
+        "beforeAfterManifestByteExact": true,
+        "rawStdout": {
+          "path": "output/2026-10-14-docx-search-backend/pool-regression/stdout.raw",
+          "bytes": 711,
+          "sha256": "eefd2a294e15136f23bf1a9582849307d918cb83100e8f4d5fc7b909620066cf"
+        },
+        "rawStderr": {
+          "path": "output/2026-10-14-docx-search-backend/pool-regression/stderr.raw",
+          "bytes": 450,
+          "sha256": "e54c0745174aea4215bfd0b57cbbedfdaac52733bd775f7f4bc400eed252541f"
+        }
+      },
+      {
+        "label": "format",
+        "receipt": {
+          "path": "output/2026-10-14-docx-search-backend/format/receipt.json",
+          "bytes": 1284,
+          "sha256": "87ce57c8318af8fef7f044342aa3c47a0bf1a3ffc0221bf93ae19bc3fd6e67aa"
+        },
+        "actualExitCode": 0,
+        "passed": null,
+        "failed": null,
+        "inputCount": 504,
+        "beforeAfterManifestByteExact": true,
+        "rawStdout": {
+          "path": "output/2026-10-14-docx-search-backend/format/stdout.raw",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "rawStderr": {
+          "path": "output/2026-10-14-docx-search-backend/format/stderr.raw",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ]
+  },
+  "limitations": [
+    "No native Webview call or installed App journey",
+    "No real Agent or data retention proof",
+    "No complete frontend controller/UTF8 aggregation/jump acceptance yet",
+    "Full seven engineering checks have not run for this source",
+    "Aggregate64MiB/duplicate/overlap/ZIP64 enforcement reviewed from unchanged shared code; not all malformed combinations newly tested in this7-test subset"
+  ],
+  "privacy": "Only source metadata, synthetic test labels/counts, hashes and scoped conclusions. No user body/account/credentials or DB content.",
+  "safeForRawPublication": true,
+  "actions": {
+    "sourceWrites": 0,
+    "testRuns": 0,
+    "appOrAgentActions": 0,
+    "databaseReads": 0,
+    "processChecks": 0,
+    "writes": "This independent output report only"
+  }
+}

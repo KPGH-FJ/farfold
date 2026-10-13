@@ -1,0 +1,22 @@
+
+running 12 tests
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_does_not_change_non_audio_admission ... ok
+test acp_client::session::prompt_context_tests::prompt_context_gate_requires_typed_true_only_for_resource_variant ... ok
+test acp_client::session::prompt_context_tests::prompt_context_missing_actual_handshake_rejects_before_control_send ... ok
+test acp_client::session::prompt_context_tests::prompt_context_baseline_text_and_link_need_no_embedded_handshake ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_missing_actual_handshake_rejects_without_sending ... ok
+test acp_client::session::prompt_context_tests::prompt_context_supported_does_not_bypass_existing_preview_protection ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_actual_supported_wire_preserves_original_bytes_and_busy_guard ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_total_and_invalid_payload_reject_before_control_without_fallback ... ok
+test acp_client::session::prompt_context_tests::prompt_context_supported_actual_wire_preserves_content_and_pump_busy_guard ... ok
+test acp_client::session::prompt_context_tests::prompt_context_false_or_omitted_actual_session_rejects_despite_supported_preparation_and_cache ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_false_missing_and_malformed_reject_despite_preparation_and_cache ... ok
+test acp_client::session::prompt_context_tests::audio_tests::prompt_audio_exact_whole_file_limit_sends_and_two_extra_bytes_never_reach_control ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 1660 filtered out; finished in 2.64s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

@@ -1,0 +1,168 @@
+{
+  "phase": "CHECKPOINT_AFTER_SEVEN",
+  "decision": "Preserve the original pre-seven publication. At this later checkpoint the exact synthetic auxiliary inputs are committed, including the already-existing 24MB budget capture previously retained locally, so candidate verification can require every frozen input to match the commit without exceptions. No new working copy or user data is added.",
+  "auxiliaryInputCount": 30,
+  "inputCount": 1799,
+  "auxiliaryInputs": [
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/source-freeze.json",
+      "bytes": 8230,
+      "sha256": "2ba51a6c5df5e496a045a3fde13fbfa6c005fff1e10dda824cc6a1ed00a819af"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-backend/source-freeze.json",
+      "bytes": 3266,
+      "sha256": "4f1553dd50d55becedcce9bbeaaeed399ebffa8ad9e7c11e1c531359558406d8"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/author.docx",
+      "bytes": 2393,
+      "sha256": "edbdf6fa40ee82b15ec3a579ea28c09ea16d5a8d98ace9b42380abb7e97f7d0d"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/budget-a.docx",
+      "bytes": 9578,
+      "sha256": "ed75447bbfb5b7a074ace4abced1b48066d830b00d1d59f35acc284f9ffd06f0"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/budget-b.docx",
+      "bytes": 9578,
+      "sha256": "ed75447bbfb5b7a074ace4abced1b48066d830b00d1d59f35acc284f9ffd06f0"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/budget-captures.json",
+      "bytes": 24003071,
+      "sha256": "ca12d586b2a1dd101dd6cbebe2376b1aa4c887294ec574abab9cb0260f8e5b26"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/budget-oracle.json",
+      "bytes": 384,
+      "sha256": "c3c41c0273a562c956f2e0bfad6269ec84b161c532572c009b4c1d1e046b519c"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/captures.json",
+      "bytes": 12011,
+      "sha256": "65e823dc4e4e90e3ad44564414544c1e15b227c01a31f04234d06feed4c5441b"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/fixture.tsx",
+      "bytes": 7921,
+      "sha256": "79b47fdb6a4a38599ae1fb451844029dd67a2101795f4fdaedfe8005b456b951"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/generate-budget.py",
+      "bytes": 2484,
+      "sha256": "b7a60fdda1fec979a20aa43dc5fa43e5782b938ff627ff9314cf0600666894f3"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/generate-fixtures.py",
+      "bytes": 4880,
+      "sha256": "e1bc68f3c13e65d01d26d0bbfafc024ae455782014a860a50940664a4f45cc6f"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/index.html",
+      "bytes": 1128,
+      "sha256": "c6209ad727145e1e3e78a050c507bed765c8d2ffc248113032c93d3823be3061"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/oracle.json",
+      "bytes": 1212,
+      "sha256": "ccc1a3af0a5a2c5fc8680cb5a5eca9bf012bdec38639b68a0884c417a8010a23"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/run-v1.mjs",
+      "bytes": 12476,
+      "sha256": "d6381d0a7e467dd7a35120bf1a36d808c62416bbe9d84d7d90b33e13ef69ea68"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/run-v2.mjs",
+      "bytes": 12618,
+      "sha256": "f3bbf68392c8d402f5f05b4c479d0789ef4af9367ed94bb8b510fd1cc2bac6bc"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/run.mjs",
+      "bytes": 12774,
+      "sha256": "d9fac45a3481323e7a1e1bad208fb38cb25fe3878fe913e72a0ef64542d055c5"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/second.docx",
+      "bytes": 2407,
+      "sha256": "bdcd861e2e97d71b7f0f374165cc732cdda9ebbfa0cce711c018bd74ad93eb5c"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/serve.mjs",
+      "bytes": 601,
+      "sha256": "1a20bc08354e2801a1e130044e57f9eeccda8c607b8d02a11bef661077a3b3c6"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-doc-closeout/report.json",
+      "bytes": 5718,
+      "sha256": "f7b292ec2ee0d0d46d9832acf306fbc3401d4866681526e6ad720a9e070ef6f9"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-frontend/source-freeze-v2.json",
+      "bytes": 3684,
+      "sha256": "52d40d76af161652ee95834939ffb9c0d913480bbfafd38d6b6ee6110d8ef4c1"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/backend-review.json",
+      "bytes": 10861,
+      "sha256": "924179f459a9b73e2096285fdbfb36271198dbaec2b347bc93e124b08504d952"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/frontend-browser-supplement.json",
+      "bytes": 4865,
+      "sha256": "06a21a5a060f1132612bda713e59330b4484387d46160c025cc9563f5d6d168d"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/frontend-source-review.json",
+      "bytes": 11604,
+      "sha256": "386d970e4884fa10b041f70b40551a0ed3fdc57d9ffbc1a32da2b82c7728c54e"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/image-and-cell-barriers.docx",
+      "bytes": 1598,
+      "sha256": "d7118a9764c80bf1af2bb9c1775e7787c1fe76722c80517b5780326e2bd76975"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/publication-review.json",
+      "bytes": 2324,
+      "sha256": "77c24bc81eee6d6da1d983379331f8603fa77567fb7ca50138e23e1328ca6639"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/supplement-capture.json",
+      "bytes": 3939,
+      "sha256": "d4292307c6862bfd408e9a05e7d0371602aefc1019cf6b2437de6e4b74da36ad"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/supplement-oracle.json",
+      "bytes": 1458,
+      "sha256": "466e88b279a6462a34ae5fdf5967617640f377ae2ce55d73d20fef0f75176673"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-integration/publish_implementation.py",
+      "bytes": 6706,
+      "sha256": "8b116d98c277757028bd4c7cce1bd6c150c2349da52c3ca20e61f9d097fd3902"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-integration/reviewed-files-v2.json",
+      "bytes": 7362,
+      "sha256": "f6c02a0b3cf3533bd5d5cbe4fbaf2f9299030cd11fd48fd9e85cedf6e6a48823"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-integration/reviewed-files.json",
+      "bytes": 6980,
+      "sha256": "604c8a66acfa5874c2fd7dc4e4996daa4299114244967b8e1d27328629836c73"
+    }
+  ],
+  "priorPublication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/docx-content-search/publication.json",
+    "bytes": 60399,
+    "sha256": "51a084dd4463828ea3b53a07a245acd4b3f0c6900e3da002d9eaae851dd98dfc"
+  },
+  "engineering": {
+    "path": "output/2026-10-14-docx-search-integration/checks-run-v2/summary.json",
+    "bytes": 6323,
+    "sha256": "68b117bad0cc9b56ebc8c77ac0e41ffbaf29703e490f885229cfd32f6088e27f"
+  }
+}

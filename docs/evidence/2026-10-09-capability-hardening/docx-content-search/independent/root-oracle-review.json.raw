@@ -1,0 +1,74 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T16:47:07.432791+00:00",
+  "result": "ROOT_SYNTHETIC_ORACLE_COUNTS_CONSISTENT",
+  "method": "Independent Python standard zipfile/CRC/base64 equality/XML walk of the small authored fixture only; no production parser or new extractor execution. Direct visible-run interpretation with hidden/reference barriers; generated labels are absent. Not a generic DOCX implementation.",
+  "rootPins": [
+    {
+      "path": "output/2026-10-14-docx-search-browser/generate-fixtures.py",
+      "bytes": 4880,
+      "sha256": "e1bc68f3c13e65d01d26d0bbfafc024ae455782014a860a50940664a4f45cc6f"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/captures.json",
+      "bytes": 12011,
+      "sha256": "65e823dc4e4e90e3ad44564414544c1e15b227c01a31f04234d06feed4c5441b"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/oracle.json",
+      "bytes": 1212,
+      "sha256": "ccc1a3af0a5a2c5fc8680cb5a5eca9bf012bdec38639b68a0884c417a8010a23"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/author.docx",
+      "bytes": 2393,
+      "sha256": "edbdf6fa40ee82b15ec3a579ea28c09ea16d5a8d98ace9b42380abb7e97f7d0d"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/second.docx",
+      "bytes": 2407,
+      "sha256": "bdcd861e2e97d71b7f0f374165cc732cdda9ebbfa0cce711c018bd74ad93eb5c"
+    }
+  ],
+  "checks": [
+    {
+      "file": "author.docx",
+      "bytes": 2393,
+      "sha256": "edbdf6fa40ee82b15ec3a579ea28c09ea16d5a8d98ace9b42380abb7e97f7d0d",
+      "visibleSegments": 14,
+      "counts": {
+        "needle": 8,
+        "secondterm": 0,
+        "HIDDEN_ONLY": 0,
+        "LEFTRIGHT": 0,
+        "NOTELEFTNOTERIGHT": 0,
+        "PARALEFTPARARIGHT": 0,
+        "continuousLayout": 0,
+        "headingLevel": 0
+      },
+      "nativeIoProved": false
+    },
+    {
+      "file": "second.docx",
+      "bytes": 2407,
+      "sha256": "bdcd861e2e97d71b7f0f374165cc732cdda9ebbfa0cce711c018bd74ad93eb5c",
+      "visibleSegments": 14,
+      "counts": {
+        "needle": 1,
+        "secondterm": 7,
+        "HIDDEN_ONLY": 0,
+        "LEFTRIGHT": 0,
+        "NOTELEFTNOTERIGHT": 0,
+        "PARALEFTPARARIGHT": 0,
+        "continuousLayout": 0,
+        "headingLevel": 0
+      },
+      "nativeIoProved": false
+    }
+  ],
+  "gaps": [
+    "No image alt/real image omission case",
+    "Only one outer and one nested table cell; adjacent-cell barrier needs supplement"
+  ],
+  "newSourceExecution": false
+}

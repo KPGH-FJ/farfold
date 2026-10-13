@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:17:22.421854+00:00",
+  "addsTo": {
+    "path": "output/2026-10-14-docx-search-independent/frontend-source-review.json",
+    "bytes": 11604,
+    "sha256": "386d970e4884fa10b041f70b40551a0ed3fdc57d9ffbc1a32da2b82c7728c54e"
+  },
+  "conclusion": "The v2 completion supplement and both final controlled real-Worker browser runs are verified. No remaining source or controlled-browser blocker found; seven checks and installed-product/Agent proof remain separate.",
+  "v2": {
+    "freeze": {
+      "path": "output/2026-10-14-docx-search-frontend/source-freeze-v2.json",
+      "bytes": 3684,
+      "sha256": "52d40d76af161652ee95834939ffb9c0d913480bbfafd38d6b6ee6110d8ef4c1"
+    },
+    "summary": {
+      "path": "output/2026-10-14-docx-search-frontend/summary-v2.json",
+      "bytes": 7782,
+      "sha256": "4652eb48f732bb6d0dd89b1366fb71be666e7ef2705fb8b9ebec53df81f8aa40"
+    },
+    "originalCompletionManifest": {
+      "path": "output/2026-10-14-docx-search-frontend/transcript-receipts-v2/manifest.json",
+      "bytes": 3078,
+      "sha256": "6ccd4cc73098956b39583f0301bbeb9f6873ea0ed08dad8f7d616ec4db2c2b53"
+    },
+    "exactFiveWhitelistedSourceRangesVerified": true,
+    "actualExits": {
+      "ui-notice-red-v2.txt": 1,
+      "ui-notice-v2.txt": 0,
+      "typecheck-v2.txt": 0,
+      "format-v2.txt": 0,
+      "format-check-v2.txt": 0
+    },
+    "passedDeltaTests": 6,
+    "rawLogHashesMatchSummary": true
+  },
+  "browser": [
+    {
+      "engine": "chromium",
+      "report": {
+        "path": "output/2026-10-14-docx-search-browser/chromium-run3.json",
+        "bytes": 316925,
+        "sha256": "fa995e64642d6d6a875ef432a6cc5e9f38512ee32e8bdd091fd086665331a8de"
+      },
+      "checks": 60,
+      "scenarios": 11,
+      "actualExitCode": 0,
+      "sourceBeforeAfterExact": true,
+      "v2AllThirteenSourcePinsMatch": true,
+      "localBlobRequestCount": 0,
+      "externalRequests": 0,
+      "pageErrors": 0
+    },
+    {
+      "engine": "webkit",
+      "report": {
+        "path": "output/2026-10-14-docx-search-browser/webkit-run3.json",
+        "bytes": 318401,
+        "sha256": "0582c7467ff147fadef8ef4ceaf4fc0811edabfe77b38153e57607a7c587b615"
+      },
+      "checks": 60,
+      "scenarios": 11,
+      "actualExitCode": 0,
+      "sourceBeforeAfterExact": true,
+      "v2AllThirteenSourcePinsMatch": true,
+      "localBlobRequestCount": 10,
+      "externalRequests": 0,
+      "pageErrors": 0
+    }
+  ],
+  "rootOriginalCompletions": {
+    "path": "output/2026-10-14-docx-search-independent/browser-completion-receipts/manifest.json",
+    "bytes": 2262,
+    "sha256": "d5a2533ffc27842d79d6ad9256c0f7c34e066410c944904eb6e5010c7d44d851"
+  },
+  "actualExitScope": "The seven exits were independently read from exact original root custom_tool_call_output records, not inferred from report.passed or rebuilt logs.",
+  "preservedFailures": {
+    "run1": "Both engines actual 1: 8 correct author matches and partial=true, but omitted-content notice was inside closed details. The runner also used the wrong wording. Production display fixed in v2, original run retained.",
+    "run2": "Chromium actual 0; WebKit actual 1 when root harness classified its own blob:http://127.0.0.1:1538/ image as external and aborted it. run-v2.mjs retains that route. Only same-origin blobs were allowed in run3; all other external URLs stay blocked. Not a product source fix."
+  },
+  "coveredFacts": [
+    "Eight independently authored DOCX matches, two-file parsing, source attachment navigation and exact omission notice visibly outside closed details. Chromium result screenshot also independently viewed.",
+    "Independent image/alt/notice/cell/tab/break barriers and 103 UTF-8 byte extraction; Unicode author content searched with real Worker.",
+    "Two compressed 9578-byte DOCX files each expand to 9000007 author UTF-8 bytes. Second is omitted from search budget; first plus 102-byte plain file produce 9000109 bytes and three matches.",
+    "Version/source/index drift, capture cancellation and changed-before-navigation discard or invalidate results; no invented Word page or stored source body."
+  ],
+  "serverStop": {
+    "chunk": "2dac6d",
+    "actualExitCode": 143,
+    "meaning": "Intentional SIGTERM of root-owned controlled fixture server; not a natural exit 0. No native App action performed by this review."
+  },
+  "publicationBoundary": "Only synthetic controlled App/Worker evidence, paths, hashes and original execution records. No live/native DB, private user body, credentials, or real Agent action.",
+  "publisherReview": "Initial publisher was read-only reviewed for source and scope. Missing v2 diff, supplemental generator/open finding/oracle freeze and backend input manifests were reported to root for inclusion before execution; final publication membership must be checked after root changes."
+}

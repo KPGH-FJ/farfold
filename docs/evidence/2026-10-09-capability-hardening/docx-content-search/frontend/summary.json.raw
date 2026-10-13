@@ -1,0 +1,275 @@
+{
+  "createdAtUtc": "2026-10-13T17:04:51.409427+00:00",
+  "scope": "Frontend source and bounded unit checks for P32 explicitly selected current local DOCX author-text search. Complete App browser validation belongs to root and is separate; no full seven checks, build, install, native App or Agent operation performed here.",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-docx-search-frontend/source-freeze-v1.json",
+    "bytes": 2724,
+    "sha256": "1322d5fa4b7a1a900158c30bfa9fa6d5be166ad9d8b469c8e0de2b11de8fa629"
+  },
+  "ownedFiles": 12,
+  "fixtureCopies": {
+    "path": "output/2026-10-14-docx-search-frontend/fixture-copies.json",
+    "bytes": 1430,
+    "sha256": "e4ebc2ac39a1e0b03aa589ef955b8d02fbb13c28287ac2fa66fbeb3915243964"
+  },
+  "sourcePolicy": {
+    "admission": "Explicit Start on loaded message attachment declarations only. Shared MIME essence or actual local .docx path selects DOCX; display name alone does not. MIME captured in owner and rechecked along with the existing message/thread/index ownership.",
+    "source": "Bounded native source <=1MiB, exact seven fields on capture, parsed result and post-read revision. Explicit attachment navigation rechecks revision; snippets are never message offsets.",
+    "text": "Validated author text only: adjacent style runs join, genuine tabs/breaks retained; images/alt, omitted notices and note markers are hard barriers. Paragraphs, cells and stories stay separate. Labels, JSON keys and warning copy are not searched.",
+    "limits": "20files, two native-prefetch operations, one batch DOCX parser at a time, 16MiB actual searchable UTF8 aggregate and 200 displayed hits. Existing document parse/inflation budgets remain. Total disk IO is not claimed <=16MiB; bounded checks may reread sources.",
+    "cancellation": "Worker AbortSignal and late-owner guards; already-started native captures still awaited. Pending is preserved as unknown, explicit retry only. No inferred OS stop.",
+    "publication": "Only snippets and source/range metadata survive temporary results. Full extracted author content is not persisted."
+  },
+  "validation": [
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/targeted-red-01.txt",
+        "bytes": 1155,
+        "sha256": "ba01d4226e9605b75b1485e315cef03a6d3492e7dad70e460b7dd53d29bf0565"
+      },
+      "originalCompletion": {
+        "name": "targeted-red-01.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts/targeted-red-01.txt.completed.jsonl.raw",
+        "bytes": 999,
+        "sha256": "c81523c77bd6f6122ab22036389d048d8caad482b111b2c0fd1a888f5ffa6931",
+        "sourceLine": 4670,
+        "sourceStartByte": 17885704,
+        "sourceEndByte": 17886703,
+        "timestamp": "2026-10-13T16:46:49.249Z",
+        "callId": "exec-cdfdf7df-3b51-4e5d-b54d-8da40aede6b1",
+        "actualExitCode": 1,
+        "status": "failed"
+      },
+      "passed": 0,
+      "total": 1,
+      "interpretation": "Production gap: selected DOCX fell into ordinary UTF8 read; expected author match missing. Original failure retained."
+    },
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/targeted-02.txt",
+        "bytes": 211,
+        "sha256": "87cc8c0acd3263fe8181d5cda5f14c8acfa34f49a606a0750a1c7181e054ecb1"
+      },
+      "originalCompletion": {
+        "name": "targeted-02.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts/targeted-02.txt.completed.jsonl.raw",
+        "bytes": 968,
+        "sha256": "1cbdd13e76b98b97160c48e7537a2887b5a3defb9de9d1b33b9eaf70850aeeaf",
+        "sourceLine": 4767,
+        "sourceStartByte": 18549893,
+        "sourceEndByte": 18550861,
+        "timestamp": "2026-10-13T16:54:36.628Z",
+        "callId": "exec-6eefd04e-eb68-4e18-bc20-cbfc85ecca6e",
+        "actualExitCode": 0,
+        "status": "completed"
+      },
+      "passed": 48,
+      "total": 48,
+      "interpretation": "First DOCX route plus existing search tests."
+    },
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/targeted-03.txt",
+        "bytes": 1482,
+        "sha256": "8e6027c953c2ff5e3bfbd9f2436c29b2fb6221128d177bcb5c3cb452682dc385"
+      },
+      "originalCompletion": {
+        "name": "targeted-03.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts/targeted-03.txt.completed.jsonl.raw",
+        "bytes": 10803,
+        "sha256": "ecca49eff139bc1a21c79385a995be643a51ff56b97d4402cd67ed2cd86f2b85",
+        "sourceLine": 4803,
+        "sourceStartByte": 18672683,
+        "sourceEndByte": 18683486,
+        "timestamp": "2026-10-13T16:56:35.069Z",
+        "callId": "exec-eb656659-8b92-4dc3-bce2-5896919ff5ad",
+        "actualExitCode": 1,
+        "status": "failed"
+      },
+      "passed": 15,
+      "total": 16,
+      "interpretation": "Test expectation error only: assumed story order header/footer before notes. Existing parser follows actual queued story order; oracle did not specify ordering. Corrected test, no production change."
+    },
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/targeted-04.txt",
+        "bytes": 2071,
+        "sha256": "a4e37c3217ead4616863e825acdd6fd65a40182d00887275e0ac85074867fcf0"
+      },
+      "originalCompletion": {
+        "name": "targeted-04.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts/targeted-04.txt.completed.jsonl.raw",
+        "bytes": 25325,
+        "sha256": "0367134ed8d9d2fdb27ce940e339eeddfcf5843a3ae29de29218281cf40a0406",
+        "sourceLine": 4819,
+        "sourceStartByte": 18737479,
+        "sourceEndByte": 18762804,
+        "timestamp": "2026-10-13T16:58:33.942Z",
+        "callId": "exec-4eb4fdac-e13a-482b-9b37-a23fd5f4b900",
+        "actualExitCode": 1,
+        "status": "failed"
+      },
+      "passed": 57,
+      "total": 59,
+      "interpretation": "Two test assumptions corrected: differing path is invalid receipt rather than changed code; at most-two prefetch can legitimately read later plain text before prior DOCX actual budget is known. Result remained omitted, no production fix claimed."
+    },
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/targeted-05-reservation-red.txt",
+        "bytes": 1335,
+        "sha256": "fe8fc28dfcc69607d92172b11f9faf84f60789bae90dbb7873f8201ba40d461d"
+      },
+      "originalCompletion": {
+        "name": "targeted-05-reservation-red.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts/targeted-05-reservation-red.txt.completed.jsonl.raw",
+        "bytes": 3645,
+        "sha256": "c65078c5dc09a67876b0378f2bdd466a6d85aca54a8af13e913b4d6f40b05fbe",
+        "sourceLine": 4840,
+        "sourceStartByte": 18799525,
+        "sourceEndByte": 18803170,
+        "timestamp": "2026-10-13T16:59:21.479Z",
+        "callId": "exec-381a0db3-c8c7-4d35-9cfc-9b3ef3897eaa",
+        "actualExitCode": 1,
+        "status": "failed"
+      },
+      "passed": 45,
+      "total": 46,
+      "interpretation": "Real newly reproduced bug: failed earlier reserved text caused later small file to be skipped despite available actual budget. Fixed reserved-only overflow to wait without advancing next, then admit using actual consumed budget."
+    },
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/targeted-06.txt",
+        "bytes": 214,
+        "sha256": "fb1b45b82e434a17b36406fc7121345cc0fdf879e1ae12c663aee46d02ddd6c5"
+      },
+      "originalCompletion": {
+        "name": "targeted-06.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts/targeted-06.txt.completed.jsonl.raw",
+        "bytes": 1098,
+        "sha256": "c18734990d21b5466350e1abb0f55bd2d593e0470484991492e990e94379096e",
+        "sourceLine": 4851,
+        "sourceStartByte": 18820521,
+        "sourceEndByte": 18821619,
+        "timestamp": "2026-10-13T16:59:41.093Z",
+        "callId": "exec-226759cf-1ea0-4e12-990c-b4fdbf5410b8",
+        "actualExitCode": 0,
+        "status": "completed"
+      },
+      "passed": 109,
+      "total": 109,
+      "interpretation": "4 files: DOCX controller46, author projection14, existing text search47, strings2."
+    },
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/typecheck-01.txt",
+        "bytes": 1341,
+        "sha256": "5691a99a7ddbec9bc5209f3db123163651acf114482af391bee2e0cbe1b4fcc7"
+      },
+      "originalCompletion": {
+        "name": "typecheck-01.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts/typecheck-01.txt.completed.jsonl.raw",
+        "bytes": 793,
+        "sha256": "55c76f69657a4885db5a9a7eb68bc1a97cf436a67f5b02c66aab40e28ca28882",
+        "sourceLine": 4854,
+        "sourceStartByte": 18823595,
+        "sourceEndByte": 18824388,
+        "timestamp": "2026-10-13T16:59:49.369Z",
+        "callId": "exec-e7019783-47fe-4185-b65a-8d31c7e167d8",
+        "actualExitCode": 1,
+        "status": "failed"
+      },
+      "interpretation": "Test fixture missing required image dimensions, not production type failure. Original exit1 preserved; added real 1pt dimensions."
+    },
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/typecheck-02.txt",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "originalCompletion": {
+        "name": "typecheck-02.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts/typecheck-02.txt.completed.jsonl.raw",
+        "bytes": 795,
+        "sha256": "9ef472f0e61993ec66ab6d5456a85bae92669406fad522d4c23c917ff31e1f03",
+        "sourceLine": 4876,
+        "sourceStartByte": 18868084,
+        "sourceEndByte": 18868879,
+        "timestamp": "2026-10-13T17:01:10.506Z",
+        "callId": "exec-5c8c38d5-0fe6-4d53-8e79-1d9e64186111",
+        "actualExitCode": 0,
+        "status": "completed"
+      },
+      "interpretation": "Actual completed exit0, not inferred from empty stdout."
+    },
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/format-final.txt",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "originalCompletion": {
+        "name": "format-final.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts/format-final.txt.completed.jsonl.raw",
+        "bytes": 1440,
+        "sha256": "5920fab56552de846d62544e3009dc66b64677990dea6d4bb791e8234341489c",
+        "sourceLine": 4888,
+        "sourceStartByte": 18886189,
+        "sourceEndByte": 18887629,
+        "timestamp": "2026-10-13T17:01:57.659Z",
+        "callId": "exec-da156eca-78b3-4f76-a5b1-16681667af32",
+        "actualExitCode": 0,
+        "status": "completed"
+      },
+      "interpretation": "Scoped source/tests and copied JSON fixtures; actual completed exit0."
+    }
+  ],
+  "finalTargeted": {
+    "receipt": {
+      "path": "output/2026-10-14-docx-search-frontend/targeted-final.completed.json",
+      "bytes": 5141,
+      "sha256": "e88994ad048f61db27f9b9df320610a08f41f4c740963ecafa3f4a64c3a7ed13"
+    },
+    "stdout": {
+      "path": "output/2026-10-14-docx-search-frontend/targeted-final.stdout.txt",
+      "bytes": 214,
+      "sha256": "0670a90486409cb628da894c21c052eb91c1dadb131c8481aff9f3746d162a17"
+    },
+    "stderr": {
+      "path": "output/2026-10-14-docx-search-frontend/targeted-final.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "originalCompletion": {
+      "name": "final-targeted.py",
+      "path": "output/2026-10-14-docx-search-frontend/transcript-receipts/final-targeted.py.completed.jsonl.raw",
+      "bytes": 5558,
+      "sha256": "3f431f2151a81df88eabe15b18041f0bd738e6cb5958cbfbab8207a4b0fb801b",
+      "sourceLine": 4889,
+      "sourceStartByte": 18887629,
+      "sourceEndByte": 18893187,
+      "timestamp": "2026-10-13T17:01:58.473Z",
+      "callId": "exec-6afed8b5-45e0-468e-8ea0-8d77cd7add95",
+      "actualExitCode": 0,
+      "status": "completed"
+    },
+    "actualExitCode": 0,
+    "passed": 109,
+    "total": 109,
+    "sourceStable": true
+  },
+  "originalCompletionManifest": {
+    "path": "output/2026-10-14-docx-search-frontend/transcript-receipts/manifest.json",
+    "bytes": 5683,
+    "sha256": "781439db5b0390618195acf86528674f8bfe42d83d254cc7aa7a2fe4ef5fb26c"
+  },
+  "reservationRedSource": {
+    "path": "output/2026-10-14-docx-search-frontend/reservation-red-source.ts.raw",
+    "bytes": 18159,
+    "sha256": "1a5532c59871694d25b0bc2c5336dbce8edf22a724ae99b72a635fea1826ed7a"
+  },
+  "remaining": [
+    "Root full App Chromium/WebKit actual Worker scenarios, including independent compressed-budget fixtures.",
+    "Independent final source review and root whole-engineering gate.",
+    "No claim of installed product, real Agent use, or whole P32 completion."
+  ]
+}

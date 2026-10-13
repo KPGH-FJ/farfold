@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "displayCommand": "cargo test --manifest-path src-tauri/Cargo.toml --locked",
+  "group": "native",
+  "monotonicStart": 96.092741125,
+  "name": "cargo-test",
+  "startedAt": "2026-10-13T17:36:27.058471+00:00"
+}

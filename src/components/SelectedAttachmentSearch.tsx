@@ -11,11 +11,15 @@ import {
 } from "../runtime/attachment_search";
 import {
   attachmentSearchCandidates,
+  attachmentSearchIsDocx,
   attachmentSearchSourceCurrent,
   type AttachmentSearchCandidate,
   type SelectAttachmentSearch,
 } from "../runtime/attachment_search_source";
-import { ATTACHMENT_SEARCH_STRINGS as S } from "../runtime/attachment_search_strings";
+import {
+  ATTACHMENT_SEARCH_STRINGS as S,
+  docxSearchLocationLabel,
+} from "../runtime/attachment_search_strings";
 import "./HistorySearchPanel.css";
 
 export function SelectedAttachmentSearch({
@@ -157,6 +161,13 @@ export function SelectedAttachmentSearch({
                       ? `${S.currentFile} · ${candidate.path}`
                       : S.notLocal}
                   </small>
+                  {candidate.path && (
+                    <small>
+                      {attachmentSearchIsDocx(candidate)
+                        ? S.docxCandidate
+                        : S.textCandidate}
+                    </small>
+                  )}
                 </span>
               </label>
             );
@@ -207,6 +218,11 @@ export function SelectedAttachmentSearch({
         {visible && state.matches > state.hits.length && (
           <p>{S.omittedHits(state.matches - state.hits.length)}</p>
         )}
+        {visible &&
+          (state.phase === "complete" || state.phase === "reading") &&
+          state.rows.some(
+            (row) => row.state === "searched" && row.document?.partial,
+          ) && <p>{S.docxPartial}</p>}
       </div>
       {(error || state.error) && (
         <p role="alert">{error ?? S.errors[state.error!]}</p>
@@ -219,6 +235,22 @@ export function SelectedAttachmentSearch({
               <li key={row.source.id}>
                 {row.source.name} · {S.rowStates[row.state]}
                 {row.code && <small>{S.errors[row.code]}</small>}
+                {row.document && (
+                  <>
+                    <small>{S.docxScope}</small>
+                    {row.document.partial && <small>{S.docxPartial}</small>}
+                    {!!row.document.imageReferences && (
+                      <small>
+                        {S.docxImages(row.document.imageReferences)}
+                      </small>
+                    )}
+                    {row.document.warnings.map((warning) => (
+                      <small key={warning.code}>
+                        {S.docxWarnings[warning.code]}
+                      </small>
+                    ))}
+                  </>
+                )}
               </li>
             ))}
           </ul>
@@ -235,6 +267,9 @@ export function SelectedAttachmentSearch({
                 <strong>
                   {hit.source.name} · {title(hit.source.threadKey)}
                 </strong>
+                {hit.location && (
+                  <small>{docxSearchLocationLabel(hit.location)}</small>
+                )}
                 <span className="history-search-excerpt">
                   {hit.before}
                   <mark>{hit.match}</mark>

@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "frozenAtUtc": "2026-10-13T16:49:11.821738+00:00",
+  "scope": "Supplement fixture and independently handwritten expected author segments frozen before invoking the new production search extractor. Root fixture metadata/CRC/XML oracle review is included. No native IO or new parser/extractor execution.",
+  "files": [
+    {
+      "path": "output/2026-10-14-docx-search-independent/generate-supplement.py",
+      "bytes": 5491,
+      "sha256": "3e651f8a4955cbc48f96372b15756fa0864ad919bf2aa0aed48719fd469c6da8"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/image-and-cell-barriers.docx",
+      "bytes": 1598,
+      "sha256": "d7118a9764c80bf1af2bb9c1775e7787c1fe76722c80517b5780326e2bd76975"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/supplement-capture.json",
+      "bytes": 3939,
+      "sha256": "d4292307c6862bfd408e9a05e7d0371602aefc1019cf6b2437de6e4b74da36ad"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/supplement-oracle.json",
+      "bytes": 1458,
+      "sha256": "466e88b279a6462a34ae5fdf5967617640f377ae2ce55d73d20fef0f75176673"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/root-oracle-review.json",
+      "bytes": 2473,
+      "sha256": "aa57a8a29f3b7006489cdb6285387c551f6e7f35597f0b2fedffe6b3608b48c1"
+    }
+  ]
+}

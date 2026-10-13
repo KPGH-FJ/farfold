@@ -1,0 +1,37 @@
+{
+  "label": "format",
+  "command": [
+    "cargo",
+    "fmt",
+    "--check",
+    "--manifest-path",
+    "src-tauri/Cargo.toml"
+  ],
+  "startedAtUtc": "2026-10-13T16:49:55.149720+00:00",
+  "completedAtUtc": "2026-10-13T16:49:56.165545+00:00",
+  "actualExitCode": 0,
+  "interrupted": false,
+  "inputCount": 504,
+  "sourceStable": true,
+  "inputScope": "All Rust source/Cargo manifests/build config and src-tauri/test-fixtures plus DOCX fixture tree; no frontend test or real Agent acceptance claimed.",
+  "inputsBefore": {
+    "path": "output/2026-10-14-docx-search-backend/format/inputs-before.json",
+    "bytes": 86922,
+    "sha256": "dbc0ea71b33476b3e2caca02bb24ea9bab3a04e49dcc177ecafd4e372d6599aa"
+  },
+  "inputsAfter": {
+    "path": "output/2026-10-14-docx-search-backend/format/inputs-after.json",
+    "bytes": 86922,
+    "sha256": "dbc0ea71b33476b3e2caca02bb24ea9bab3a04e49dcc177ecafd4e372d6599aa"
+  },
+  "stdout": {
+    "path": "output/2026-10-14-docx-search-backend/format/stdout.raw",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stderr": {
+    "path": "output/2026-10-14-docx-search-backend/format/stderr.raw",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

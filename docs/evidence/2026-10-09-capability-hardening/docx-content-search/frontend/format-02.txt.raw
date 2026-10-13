@@ -1,0 +1,7 @@
+src/runtime/attachment_search.ts 71ms (unchanged)
+src/runtime/attachment_search_source.ts 9ms (unchanged)
+src/runtime/attachment_search_strings.ts 7ms
+src/runtime/docx_search_text.ts 8ms (unchanged)
+src/runtime/attachment_search.docx.test.ts 24ms
+src/runtime/docx_search_text.test.ts 6ms
+src/components/SelectedAttachmentSearch.tsx 15ms

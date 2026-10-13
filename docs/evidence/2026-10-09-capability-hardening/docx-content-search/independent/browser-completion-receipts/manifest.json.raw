@@ -1,0 +1,65 @@
+{
+  "scope": "Four exact original root tool-output JSONL records selected only by seven expressly provided chunks; no reconstructed exit, rerun, or unrelated transcript content. The server-stop record also contains the adjacent same-operation SIGTERM receipt.",
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "records": [
+    {
+      "record": {
+        "path": "output/2026-10-14-docx-search-independent/browser-completion-receipts/run1.jsonl.raw",
+        "bytes": 1401,
+        "sha256": "985448d6439d5d66428274736ffe7e6e997d50cf26d7aea812e6617501a5af1b"
+      },
+      "sourceLine": 8541,
+      "sourceStartByte": 24583128,
+      "sourceEndByte": 24584529,
+      "timestamp": "2026-10-13T17:07:33.231Z",
+      "actualExits": {
+        "9cc8ef": 1,
+        "6a8e1c": 1
+      }
+    },
+    {
+      "record": {
+        "path": "output/2026-10-14-docx-search-independent/browser-completion-receipts/run2.jsonl.raw",
+        "bytes": 1404,
+        "sha256": "fd505d8c1c62e13536dc47758f76a61faf4c19daa28e532efa23ca75f0529171"
+      },
+      "sourceLine": 8739,
+      "sourceStartByte": 25478126,
+      "sourceEndByte": 25479530,
+      "timestamp": "2026-10-13T17:12:46.986Z",
+      "actualExits": {
+        "47a732": 0,
+        "8554ff": 1
+      }
+    },
+    {
+      "record": {
+        "path": "output/2026-10-14-docx-search-independent/browser-completion-receipts/run3.jsonl.raw",
+        "bytes": 1233,
+        "sha256": "b698504cefd2d05e510542219baba1331e01fab6df6b697994d9431825076507"
+      },
+      "sourceLine": 8786,
+      "sourceStartByte": 25576094,
+      "sourceEndByte": 25577327,
+      "timestamp": "2026-10-13T17:13:57.226Z",
+      "actualExits": {
+        "fd55a1": 0,
+        "b23aa8": 0
+      }
+    },
+    {
+      "record": {
+        "path": "output/2026-10-14-docx-search-independent/browser-completion-receipts/server-stop.jsonl.raw",
+        "bytes": 992,
+        "sha256": "bb64b2b4b4a28211202edb15489ecce636bd6d9108370c9e5e9e206a55f20e33"
+      },
+      "sourceLine": 8817,
+      "sourceStartByte": 25898749,
+      "sourceEndByte": 25899741,
+      "timestamp": "2026-10-13T17:14:43.343Z",
+      "actualExits": {
+        "2dac6d": 143
+      }
+    }
+  ]
+}

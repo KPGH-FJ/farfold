@@ -1,0 +1,58 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/attachment_search.docx.test.ts (45 tests | 2 failed) 61ms
+     × rejects changed capture source path before parsing 3ms
+     × accepts exact16MiB extracted bytes and skips only the one-byte excess 20ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/attachment_search.docx.test.ts > explicit current DOCX attachment search > rejects changed capture source path before parsing
+AssertionError: expected 'invalid' to be 'changed' // Object.is equality
+
+Expected: "changed"
+Received: "invalid"
+
+ ❯ src/runtime/attachment_search.docx.test.ts:71:46
+     69|     const h=docxSetup();h.services.readDocx.mockResolvedValue({...h.ca…
+     70|     await h.search.start("needle",h.candidates,h.current);
+     71|     expect(h.search.snapshot().rows[0].code).toBe("changed");expect(h.…
+       |                                              ^
+     72|   });
+     73|   it.each(["root","path","resolvedPath","name","size","sha256","versio…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/attachment_search.docx.test.ts > explicit current DOCX attachment search > accepts exact16MiB extracted bytes and skips only the one-byte excess
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "name": "file2.txt",
+        "path": "/fixture/file2.txt",
+        "resolvedPath": "/fixture/file2.txt",
+        "root": "/fixture",
+        "sha256": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+        "size": 1,
+        "version": "version2",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ src/runtime/attachment_search.docx.test.ts:113:228
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 57 passed (59)
+   Start at  00:58:33
+   Duration  253ms (transform 174ms, setup 0ms, import 227ms, tests 82ms, environment 0ms)
+

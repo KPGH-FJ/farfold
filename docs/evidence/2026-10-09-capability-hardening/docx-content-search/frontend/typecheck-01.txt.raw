@@ -1,0 +1,12 @@
+
+> farfold@0.1.7 typecheck /Users/tw/Desktop/farfold
+> tsc -b --pretty false
+
+src/runtime/docx_search_text.test.ts(75,35): error TS2352: Conversion of type '{ blocks: { kind: "paragraph"; id: string; source: { part: string; elementPath: number[]; }; style: {}; runs: { kind: "image"; imageId: string; alt: string; }[]; }[]; stories: never[]; images: never[]; warnings: never[]; partial: false; }' to type 'DocxDocument' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Types of property 'blocks' are incompatible.
+    Type '{ kind: "paragraph"; id: string; source: { part: string; elementPath: number[]; }; style: {}; runs: { kind: "image"; imageId: string; alt: string; }[]; }' is not comparable to type 'DocxBlock'.
+      Types of property 'runs' are incompatible.
+        Type '{ kind: "image"; imageId: string; alt: string; }[]' is not comparable to type 'DocxRun[]'.
+          Type '{ kind: "image"; imageId: string; alt: string; }' is not comparable to type 'DocxRun'.
+            Type '{ kind: "image"; imageId: string; alt: string; }' is missing the following properties from type '{ kind: "image"; imageId: string; widthPt: number; heightPt: number; alt: string; }': widthPt, heightPt
+ ELIFECYCLE  Command failed with exit code 1.

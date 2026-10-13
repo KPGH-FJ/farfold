@@ -1,0 +1,9 @@
+{
+  "scope": "Independent literal 3,000,000 CJK characters plus one ASCII query; each valid three-part DOCX archive is below 1MiB but expanded author text is over 8MiB.",
+  "sourceBytesEach": 9578,
+  "authorUtf8BytesEach": 9000007,
+  "query": "needle",
+  "matchesEach": 1,
+  "twoExceed16MiB": true,
+  "sourceHash": "ed75447bbfb5b7a074ace4abced1b48066d830b00d1d59f35acc284f9ffd06f0"
+}

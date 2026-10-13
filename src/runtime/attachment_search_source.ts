@@ -1,4 +1,5 @@
 import { localResourcePath } from "./file_delivery";
+import { documentMediaFormat } from "./document_media_type";
 import type { Attachment, ThreadItem, ThreadState } from "./session_types";
 
 type Message = Extract<ThreadItem, { kind: "user" | "agent" }>;
@@ -9,6 +10,7 @@ export interface AttachmentSearchCandidate {
   readonly attachmentIndex: number;
   readonly role: "user" | "agent";
   readonly name: string;
+  readonly mimeType?: string;
   readonly path: string | null;
 }
 interface Owner {
@@ -17,6 +19,7 @@ interface Owner {
   attachment: Attachment;
   uri: string | undefined;
   name: string;
+  mimeType: string | undefined;
   cwd: string;
   agentId: string;
   nativeSessionId: string;
@@ -55,6 +58,7 @@ export function attachmentSearchCandidates(
           attachmentIndex,
           role: item.kind,
           name: attachment.name,
+          mimeType: attachment.mimeType,
           path: attachment.uri ? localResourcePath(attachment.uri) : null,
         });
         owners.set(candidate, {
@@ -63,6 +67,7 @@ export function attachmentSearchCandidates(
           attachment,
           uri: attachment.uri,
           name: attachment.name,
+          mimeType: attachment.mimeType,
           cwd: thread.cwd,
           agentId: thread.agentId,
           nativeSessionId: thread.nativeSessionId,
@@ -109,7 +114,16 @@ export function attachmentSearchSourceCurrent(
     thread.items.includes(owner.item) &&
     owner.item.attachments?.[candidate.attachmentIndex] === owner.attachment &&
     owner.attachment.uri === owner.uri &&
-    owner.attachment.name === owner.name
+    owner.attachment.name === owner.name &&
+    owner.attachment.mimeType === owner.mimeType
+  );
+}
+
+/** Type declarations select a parser, never authorize or validate its contents. */
+export function attachmentSearchIsDocx(source: AttachmentSearchCandidate) {
+  return (
+    documentMediaFormat(source.mimeType) === "docx" ||
+    /\.docx$/i.test(source.path ?? "")
   );
 }
 /** A location request contains no file text and never pretends it is message text. */

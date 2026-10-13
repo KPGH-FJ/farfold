@@ -1,0 +1,225 @@
+{
+  "schema": 1,
+  "frozenAtUtc": "2026-10-13T17:33:15.487356+00:00",
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+      "bytes": 12150,
+      "sha256": "3ea3e60bfcc71911d4a02f5aa9ce0f253a7dd85c36133bd396fce728e002c234"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_context_tests.rs",
+      "bytes": 12030,
+      "sha256": "054b0c8d2ac89247052406b51bbe082b81a1588abb67a89fcbcf9f54987f3175"
+    }
+  ],
+  "protectedUnchanged": [
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "bytes": 74414,
+      "sha256": "250c3fb6ad7b1d7aefb8907a8633660f01d86e1b9bd618f68167a16a311903df"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "bytes": 42074,
+      "sha256": "c4c4ed2ca728a18ffb4fbf3df3a7ee33ce910d89357f2b867862fc503affea19"
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle.rs",
+      "bytes": 22318,
+      "sha256": "9aa051951e25877d824a62c743479f4e138041014b63408b2572cbff09632110"
+    },
+    {
+      "path": "src-tauri/src/acp_client/connection_control.rs",
+      "bytes": 2794,
+      "sha256": "842d7484d7435257344232486a076e9f90d5b321ccdb107e70c4b8f54d7ab2e1"
+    }
+  ],
+  "docxSourceAndSharedUnchanged": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17710,
+      "sha256": "b9414968f6e2716df17810cde912c65f93560daf3523f93efe1403b4eaf650fa"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document.rs",
+      "bytes": 3497,
+      "sha256": "c3ed531837f35f37877b7e11b5e40ed5bf15441e3e35657b24a07d0cb12cbfac"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 20225,
+      "sha256": "b2291c7044db5ff07315252c528e801cefa3b85097da6f6d41920e36bc819dd8"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21659,
+      "sha256": "b264a0ca18e4b50a6de005e25eb8029322b12419e105b5d364f81130efb596c1"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_tests.rs",
+      "bytes": 7335,
+      "sha256": "a847ddd179319016f5e725a36f5b50c38b75c920dad58a6c87670524d72a4708"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_command_tests.rs",
+      "bytes": 2008,
+      "sha256": "86f07caf27591d7f88741ad0f3a4d7d500b5fbad4164238c61f5a06b9f1a046d"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/ooxml_archive.rs",
+      "bytes": 9656,
+      "sha256": "cccda6285276fd368199f3ad2b37dc07abecdb968b10f2359fa1f5fced13b0e8"
+    },
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "bytes": 2674,
+      "sha256": "cf10e7bfbf76873e8b290cd6ea5e3e5ddac383c5f22a8924af3fa862b4a05ee2"
+    },
+    {
+      "path": "src-tauri/src/file_read_check_tests.rs",
+      "bytes": 5667,
+      "sha256": "91ede3d5566f8c7d73844a16e96af3268572d2e1e214ad28483d587eff9d9a4c"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "bytes": 1345,
+      "sha256": "e247aa6bb04b56e3ac91f7d12be2b66047b7a94ae255411e4de744c993060b55"
+    }
+  ],
+  "originalFullFailure": [
+    {
+      "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-test/stdout.log",
+      "bytes": 185957,
+      "sha256": "f4ab057cc886eef9efdfd4463c264f938ff617043a3c09126f5b9af0d447ed72"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-test/stderr.log",
+      "bytes": 598,
+      "sha256": "43e9dad548ae4fc48add235dbdcacca536281e35bf09cb489db4fe155238b3c3"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-test/completed.json",
+      "bytes": 746,
+      "sha256": "3ec2e63d7091e475e90e810c5368b6e7724b635c3b8a52e6f8a2b18c75e15651"
+    }
+  ],
+  "targetedResults": {
+    "cargo": {
+      "actualExitCode": 0,
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "filteredOut": 1660
+    },
+    "cargoFmt": {
+      "actualExitCode": 0
+    },
+    "wrapperActualExitCode": 0,
+    "session": 8509
+  },
+  "evidence": [
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/baseline-and-diagnosis.json",
+      "bytes": 2629,
+      "sha256": "4b3474b95474cc390dafbdd8ce630ed633af8561bb5bd179480f8d467c5ddf16"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/cargo-fmt/completed.json",
+      "bytes": 727,
+      "sha256": "ac110958415909a60279dffbfbb50abc5f6f1cb373ee393bc0ad0424b332fd59"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/cargo-fmt/started.json",
+      "bytes": 3051,
+      "sha256": "02dbe940b28d3bb651fe30276f02bd778657e8395df9e48a23017b68ad25a4a6"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/cargo-fmt/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/cargo-fmt/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/inputs-after.json",
+      "bytes": 2848,
+      "sha256": "7919a2a64157bb41f7ee66ff9e90280a77493a9b6141d37985e49f762aa0e05e"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/inputs-before.json",
+      "bytes": 2848,
+      "sha256": "7919a2a64157bb41f7ee66ff9e90280a77493a9b6141d37985e49f762aa0e05e"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/minimal-test-fix.diff",
+      "bytes": 3508,
+      "sha256": "d6495faff0fbbaba01f3b8928b810ffb89c29ce867bf1cbbc947e00162a35ad4"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/original-full-completed.json.raw",
+      "bytes": 746,
+      "sha256": "3ec2e63d7091e475e90e810c5368b6e7724b635c3b8a52e6f8a2b18c75e15651"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/original-full-stderr.log.raw",
+      "bytes": 598,
+      "sha256": "43e9dad548ae4fc48add235dbdcacca536281e35bf09cb489db4fe155238b3c3"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/original-full-stdout.log.raw",
+      "bytes": 185957,
+      "sha256": "f4ab057cc886eef9efdfd4463c264f938ff617043a3c09126f5b9af0d447ed72"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/prompt-context-module/completed.json",
+      "bytes": 848,
+      "sha256": "127656585664703801f27afecc52f3a955ce33b1c5aab63b57ffeb90bc6fe0a8"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/prompt-context-module/started.json",
+      "bytes": 3131,
+      "sha256": "6deebb25792f825b6894646bd272623c1a214a7d9ef592c2d3ccef0260a44138"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/prompt-context-module/stderr.log",
+      "bytes": 323,
+      "sha256": "54093fe6b0f567f558e2bc744613fca81541a81ae264c96a7774c2561de3d6bd"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/prompt-context-module/stdout.log",
+      "bytes": 1831,
+      "sha256": "cf35c6f468c04f361a78008bf2871089c9a90078ca32cf9c9c816bcadced6712"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/prompt_audio_tests.rs.before.raw",
+      "bytes": 11398,
+      "sha256": "c17a16b5c42ee9953ab79e55da98458e7df9077ed8e99257e980f5d885898e11"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/prompt_context_tests.rs.before.raw",
+      "bytes": 11278,
+      "sha256": "35af39dcc9c75004e779943ed985e956f44f16225361e159abc0910e7fe52dae"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/root-cause.json",
+      "bytes": 1925,
+      "sha256": "b1e7a798a5f513113aac5342f0e7b3f698595bf985018aab6dcb9ba7ec5b12ba"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/run_targeted.py",
+      "bytes": 2729,
+      "sha256": "1f95fdb7d63b97b25b576f80cd13a8cf229294934006a1ae86cc806186f8850b"
+    },
+    {
+      "path": "output/2026-10-14-audio-cancel-test-race/targeted-receipt.json",
+      "bytes": 1893,
+      "sha256": "f7e3e984d7670a10888ff9014adfffc91146218d35ac9ec7c2b5d59e0b821bd0"
+    }
+  ],
+  "boundary": "Test-only cleanup correction. Original full cargo exit101 is preserved. New full seven-check run is still pending, owned by root. No production/peer/DOCX modification, no new sleep or retry mechanism, no real Agent/App/install.",
+  "rustCompileReleased": true
+}

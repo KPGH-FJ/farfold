@@ -1,0 +1,12 @@
+
+running 2 tests
+test file_delivery::document::search_tests::search_exact_one_mib_preserves_all_parts_and_full_source_receipt ... ok
+test file_delivery::document::search_tests::search_rejects_one_mib_plus_one_while_legacy_docx_stays_usable ... FAILED
+
+failures:
+
+failures:
+    file_delivery::document::search_tests::search_rejects_one_mib_plus_one_while_legacy_docx_stays_usable
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 1664 filtered out; finished in 0.04s
+

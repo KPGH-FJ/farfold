@@ -1,0 +1,94 @@
+{
+  "scope": "v2: only visible omitted-content notice in existing attachment search component plus four real-React server-render component tests. v1 logic and fixtures byte-identical. Final browser geometry and full App validation remain root-owned.",
+  "createdAtUtc": "2026-10-13T17:11:48.187156+00:00",
+  "sourceBase": "a64f5dca6cc764dd711ac2cdac532a196f37830c",
+  "ownedFiles": [
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 18453,
+      "sha256": "55d1dbb3930ed4ddb0fd2ddeeeea68679f820bee56dc6e0f8a7a15ae1f97c80b"
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 4449,
+      "sha256": "7459198ceafbf515f4deac03e64994066ca61a8f8a8183387b82eaf3bb28ed6f"
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 5589,
+      "sha256": "bfc9eadbe520510f0de3ef1764cc4b0734088146ebcab8c7a132162f8593a161"
+    },
+    {
+      "path": "src/runtime/docx_search_text.ts",
+      "bytes": 4225,
+      "sha256": "0a96dc7d9f6f335b3bf975263c72f4b24beaaf113aecde6f6b35266613c0aa01"
+    },
+    {
+      "path": "src/runtime/attachment_search.docx.test.ts",
+      "bytes": 13910,
+      "sha256": "b433ee1d609e155f3466b3fe53e0a54fe5ecdfe9b2fe7ad65adece98d981cf33"
+    },
+    {
+      "path": "src/runtime/docx_search_text.test.ts",
+      "bytes": 5188,
+      "sha256": "33ed7448ad007b7f0856362e3d6afb3e2584a84fae3e1e0b743a2b649edb2deb"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 10301,
+      "sha256": "28de404c2a06cb4cc2023198de65c0f07a5d4ee1dd646d82d92630b5c4c81586"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/author-oracle.json",
+      "bytes": 1212,
+      "sha256": "ccc1a3af0a5a2c5fc8680cb5a5eca9bf012bdec38639b68a0884c417a8010a23"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/author.docx",
+      "bytes": 2393,
+      "sha256": "edbdf6fa40ee82b15ec3a579ea28c09ea16d5a8d98ace9b42380abb7e97f7d0d"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/image-and-cell-barriers.docx",
+      "bytes": 1598,
+      "sha256": "d7118a9764c80bf1af2bb9c1775e7787c1fe76722c80517b5780326e2bd76975"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/second.docx",
+      "bytes": 2407,
+      "sha256": "bdcd861e2e97d71b7f0f374165cc732cdda9ebbfa0cce711c018bd74ad93eb5c"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/supplement-oracle.json",
+      "bytes": 1458,
+      "sha256": "466e88b279a6462a34ae5fdf5967617640f377ae2ce55d73d20fef0f75176673"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.test.tsx",
+      "bytes": 3723,
+      "sha256": "4d91aa68e0a31f947d1ddc81f40a13d85151979471dc175dcebbbdfc1865eb63"
+    }
+  ],
+  "targetedReceipt": {
+    "path": "output/2026-10-14-docx-search-frontend/targeted-final.completed.json",
+    "bytes": 5141,
+    "sha256": "e88994ad048f61db27f9b9df320610a08f41f4c740963ecafa3f4a64c3a7ed13"
+  },
+  "previousFreeze": {
+    "path": "output/2026-10-14-docx-search-frontend/source-freeze-v1.json",
+    "bytes": 2724,
+    "sha256": "1322d5fa4b7a1a900158c30bfa9fa6d5be166ad9d8b469c8e0de2b11de8fa629"
+  },
+  "targetedReceiptScope": "The inherited v1 targetedReceipt covers prior109 tests. v2 UI-specific6 tests plus typecheck and scopedformat actual0 are separately referenced in summary-v2.",
+  "productionChanges": [
+    "src/components/SelectedAttachmentSearch.tsx"
+  ],
+  "addedTests": [
+    "src/components/SelectedAttachmentSearch.test.tsx"
+  ],
+  "exactProductionDiff": {
+    "path": "output/2026-10-14-docx-search-frontend/v1-to-v2-production.diff",
+    "bytes": 611,
+    "sha256": "99a0f21617f61582c2c939342ceba78fb5655d39359da38271b9a1ca248f6437"
+  }
+}

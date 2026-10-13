@@ -1,0 +1,52 @@
+{
+  "scope": "Independent small OOXML supplement: one real PNG/author alt, comment omission, adjacent table cells, real tab/break and non-ASCII UTF-8. Production parser/extractor has not run.",
+  "file": {
+    "root": "/controlled",
+    "path": "/controlled/image-and-cell-barriers.docx",
+    "resolvedPath": "/controlled/image-and-cell-barriers.docx",
+    "name": "image-and-cell-barriers.docx",
+    "size": 1598,
+    "sha256": "d7118a9764c80bf1af2bb9c1775e7787c1fe76722c80517b5780326e2bd76975",
+    "version": "controlled-independent-image-and-cell-barriers.docx"
+  },
+  "expectedSegments": [
+    "IMAGELEFT",
+    "IMAGERIGHT",
+    "NOTICELEFT",
+    "NOTICERIGHT",
+    "CELLLEFT",
+    "CELLRIGHT",
+    "汉😀é",
+    "TABLEFT\tTABRIGHT",
+    "BREAKLEFT\nBREAKRIGHT"
+  ],
+  "expectedSearchableUtf8Bytes": 103,
+  "expectedPartial": true,
+  "positiveCounts": {
+    "IMAGELEFT": 1,
+    "IMAGERIGHT": 1,
+    "NOTICELEFT": 1,
+    "NOTICERIGHT": 1,
+    "CELLLEFT": 1,
+    "CELLRIGHT": 1,
+    "汉😀é": 1
+  },
+  "zeroCountTerms": [
+    "ALT_ONLY",
+    "needle",
+    "IMAGELEFTIMAGERIGHT",
+    "NOTICELEFTNOTICERIGHT",
+    "CELLLEFTCELLRIGHT",
+    "TABLEFTTABRIGHT",
+    "BREAKLEFTBREAKRIGHT",
+    "paragraph",
+    "continuousLayout",
+    "文档文字",
+    "表格",
+    "图片未加入"
+  ],
+  "unicodeLiteralUtf8Bytes": 10,
+  "pngBytes": 70,
+  "pngSha256": "52d4039e787b7ccbb097e5ea6b1058b8b9b1b4dcd9e0d6d46366af30da8c6afd",
+  "nativeIoProved": false
+}

@@ -1,0 +1,3 @@
+src/runtime/docx_search_text.test.ts 36ms
+src/runtime/attachment_search_strings.ts 9ms (unchanged)
+src/components/SelectedAttachmentSearch.tsx 24ms (unchanged)

@@ -1,0 +1,133 @@
+{
+  "createdAtUtc": "2026-10-13T17:18:45.658871+00:00",
+  "base": {
+    "head": "a64f5dca6cc764dd711ac2cdac532a196f37830c",
+    "files": [
+      {
+        "path": "docs/status.md",
+        "bytes": 88912,
+        "sha256": "696b9593e07b769b5f8d6232805954e4ce180754572b6069cf5732bc290d115f",
+        "beforeCopy": "output/2026-10-14-docx-search-doc-closeout/before-1.md.raw"
+      },
+      {
+        "path": "docs/architecture.md",
+        "bytes": 130321,
+        "sha256": "58267c5169c91be66ae369395b7fd58ed21ec67f64ca2ddb85c87f397b7f4499",
+        "beforeCopy": "output/2026-10-14-docx-search-doc-closeout/before-2.md.raw"
+      },
+      {
+        "path": "plans/agent-access.md",
+        "bytes": 153531,
+        "sha256": "4f53a4809c5ac07e6ef042de614aee8ad8601fc535d05aa95e84e1ca01f74003",
+        "beforeCopy": "output/2026-10-14-docx-search-doc-closeout/before-3.md.raw"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+        "bytes": 87013,
+        "sha256": "f474b096ebf6977ed68af7a0a8087e63f68937e8a9b6cd1d494a0e9e3821038a",
+        "beforeCopy": "output/2026-10-14-docx-search-doc-closeout/before-4.md.raw"
+      }
+    ],
+    "productSha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+  },
+  "scope": "Only four existing docs: short DOCX search source/controlled evidence paragraphs and P32 progress. Current formal9c remains; no installed DOCX or real Agent claim. Original history unchanged.",
+  "files": [
+    {
+      "path": "docs/status.md",
+      "bytes": 89891,
+      "sha256": "733ffee4d877bec18a9ed189299c32d709bd8d9f88838e1a3760fa6a2da846e4"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 131530,
+      "sha256": "20989354150b015f4862654af7fac9449e23c0f14584138a058d6d502af67626"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 154599,
+      "sha256": "18603e4ba369a1561e0626fb2f5dfdb88dd7548608697e99af1b2e28e09f2a6e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 87951,
+      "sha256": "7a63b3db8876c6900ded57e982b5e6804bc9300b8ebe64688696716536671c23"
+    }
+  ],
+  "diff": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-docx-search-doc-closeout/four-docs.diff",
+    "bytes": 20257,
+    "sha256": "731d3a177888afa8e5427fd4e91b2db8fd573562af02bae609684a76a6a20a40"
+  },
+  "sourceFreezeUnchanged": true,
+  "conditions": {
+    "original122IdsTitlesAndCompletionConditionsUnchanged": true,
+    "new28IdsTitlesAndCompletionConditionsUnchanged": true,
+    "productUnchanged": true,
+    "onlyProgressRowChanged": "P32",
+    "delta": {
+      "id": "P32",
+      "before": [
+        "P32",
+        "跨对话全文及附件内容搜索",
+        "文本附件源码/受控已验并安装 9c；正式仅空态等有限观察，正例未测；整项未完",
+        "经官方搜索或明确授权范围的临时读取提供跨对话正文及附件内容查找、来源和跳转；检索覆盖及缺失明确，结果与原文一致；无官方路径保持缺口，不建持久正文/事件账本绕过契约。"
+      ],
+      "after": [
+        "P32",
+        "跨对话全文及附件内容搜索",
+        "文本搜索已安装 9c，正式正例未测；DOCX 源码/双引擎各 60 项已验，尚未安装；整项未完",
+        "经官方搜索或明确授权范围的临时读取提供跨对话正文及附件内容查找、来源和跳转；检索覆盖及缺失明确，结果与原文一致；无官方路径保持缺口，不建持久正文/事件账本绕过契约。"
+      ]
+    }
+  },
+  "links": [
+    {
+      "from": "docs/status.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json",
+      "exists": true,
+      "pin": {
+        "path": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json",
+        "bytes": 6121,
+        "sha256": "8a366c69b20d36c340e6bdded5f76f500f2d0e31f0babb083f0cb19aecb68226"
+      }
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json",
+      "exists": true,
+      "pin": {
+        "path": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json",
+        "bytes": 6121,
+        "sha256": "8a366c69b20d36c340e6bdded5f76f500f2d0e31f0babb083f0cb19aecb68226"
+      }
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json",
+      "exists": true,
+      "pin": {
+        "path": "/Users/tw/Desktop/farfold/docs/evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json",
+        "bytes": 6121,
+        "sha256": "8a366c69b20d36c340e6bdded5f76f500f2d0e31f0babb083f0cb19aecb68226"
+      }
+    }
+  ],
+  "pendingLinks": 0,
+  "formatLog": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-docx-search-doc-closeout/format-final.txt",
+    "bytes": 171,
+    "sha256": "cc16b2bb0221b36e8fd97d980988fc817df2e556a22f7d35c0c65625dbd6862b"
+  },
+  "formatActualExitCode": 0,
+  "formatOriginalToolCompletion": {
+    "path": "output/2026-10-14-docx-search-doc-closeout/format-final.completed.jsonl.raw",
+    "bytes": 2600,
+    "sha256": "f36f49fb3a5c3e8d3713d5e82538c78d8a99f5ae1fbdc9ed0a79f76270cd4e2c",
+    "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl",
+    "sourceLine": 5113,
+    "sourceStartByte": 19631941,
+    "sourceEndByte": 19634541,
+    "timestamp": "2026-10-13T17:18:01.184Z",
+    "actualExitCode": 0
+  }
+}

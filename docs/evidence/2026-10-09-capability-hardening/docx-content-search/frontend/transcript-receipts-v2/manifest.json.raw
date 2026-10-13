@@ -1,0 +1,73 @@
+{
+  "scope": "Original CommandExecution item_completed raw JSONL bytes from this frontend subagent only. No rerun or reconstructed exit. Logs containing failures remain unchanged.",
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl",
+  "sourceThreadId": "01a13410-a021-7660-b316-4a5e2c3de35f",
+  "createdAtUtc": "2026-10-13T17:13:17.718297+00:00",
+  "receipts": [
+    {
+      "name": "ui-notice-red-v2.txt",
+      "path": "output/2026-10-14-docx-search-frontend/transcript-receipts-v2/ui-notice-red-v2.txt.completed.jsonl.raw",
+      "bytes": 8201,
+      "sha256": "073579386d3d8f1cee034b3ca7f6be958a3dee682f5c737216657ef8820e10aa",
+      "sourceLine": 4997,
+      "sourceStartByte": 19365242,
+      "sourceEndByte": 19373443,
+      "timestamp": "2026-10-13T17:10:20.620Z",
+      "callId": "exec-dd41c16d-7b26-4109-ae7e-b0696754f460",
+      "actualExitCode": 1,
+      "status": "failed"
+    },
+    {
+      "name": "ui-notice-v2.txt",
+      "path": "output/2026-10-14-docx-search-frontend/transcript-receipts-v2/ui-notice-v2.txt.completed.jsonl.raw",
+      "bytes": 962,
+      "sha256": "fe618ccbf7fdac1ea90cc08537792ee7119ecbfe099550b88ca4dddc11d7c474",
+      "sourceLine": 5010,
+      "sourceStartByte": 19393214,
+      "sourceEndByte": 19394176,
+      "timestamp": "2026-10-13T17:10:52.860Z",
+      "callId": "exec-54aa6fe8-dc20-4be2-b829-544fba31b63b",
+      "actualExitCode": 0,
+      "status": "completed"
+    },
+    {
+      "name": "typecheck-v2.txt",
+      "path": "output/2026-10-14-docx-search-frontend/transcript-receipts-v2/typecheck-v2.txt.completed.jsonl.raw",
+      "bytes": 796,
+      "sha256": "5f8e583f46036b55c7678b1073114c525f6fbc246acbc22c2c5bd3ed11c4a818",
+      "sourceLine": 5013,
+      "sourceStartByte": 19398735,
+      "sourceEndByte": 19399531,
+      "timestamp": "2026-10-13T17:11:01.503Z",
+      "callId": "exec-37349644-cf88-41f7-b05e-26e0c09a2013",
+      "actualExitCode": 0,
+      "status": "completed"
+    },
+    {
+      "name": "format-v2.txt",
+      "path": "output/2026-10-14-docx-search-frontend/transcript-receipts-v2/format-v2.txt.completed.jsonl.raw",
+      "bytes": 1000,
+      "sha256": "63ce15d117709478f037a2eddf851502deccf467b694c9b70d2cec99946f208e",
+      "sourceLine": 5009,
+      "sourceStartByte": 19392214,
+      "sourceEndByte": 19393214,
+      "timestamp": "2026-10-13T17:10:52.102Z",
+      "callId": "exec-fffae422-0c30-4e25-b2ed-bd512b85abdb",
+      "actualExitCode": 0,
+      "status": "completed"
+    },
+    {
+      "name": "format-check-v2.txt",
+      "path": "output/2026-10-14-docx-search-frontend/transcript-receipts-v2/format-check-v2.txt.completed.jsonl.raw",
+      "bytes": 1012,
+      "sha256": "2df6c29dbf35c57788c271fc3807a17a8c93a33acf3f5de063d817cc4d6b18b1",
+      "sourceLine": 5025,
+      "sourceStartByte": 19426506,
+      "sourceEndByte": 19427518,
+      "timestamp": "2026-10-13T17:11:48.153Z",
+      "callId": "exec-9d000245-4d12-4e10-9f2f-dcc36a95b3c1",
+      "actualExitCode": 0,
+      "status": "completed"
+    }
+  ]
+}

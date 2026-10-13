@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "observedAtUtc": "2026-10-13T16:59:58.389805+00:00",
+  "status": "OPEN_STATIC_COUNTEREXAMPLE_OWNER_ACCEPTED_CONTROLLED_RED_PENDING",
+  "id": "temporary-reservation-false-budget-skip",
+  "severity": "P2",
+  "source": {
+    "path": "src/runtime/attachment_search.ts",
+    "bytes": 18453,
+    "sha256": "55d1dbb3930ed4ddb0fd2ddeeeea68679f820bee56dc6e0f8a7a15ae1f97c80b",
+    "line": 417
+  },
+  "trigger": "Earlier successful DOCX files use15MiB real UTF8. An earlier1MiB TXT prefetch is reserved but will fail. fill permanently marks a later0.5MiB TXT as budget-skipped before consuming the earlier failure. Releasing that reservation later cannot revisit the skipped source even though15.5MiB would be legal.",
+  "expected": "Preserve source order and await unresolved earlier reservations before final budget refusal. Count actual accepted searchable UTF8, not a transient reservation that may fail.",
+  "ownerPlannedControlledCase": "12MiB DOCX +3MiB DOCX +deferred failing1MiB TXT +later0.5MiB TXT. Keep original failure, then minimally wait without advancing next when only reserved capacity prevents prefetch.",
+  "boundary": "Not an over-limit admission or installed-product defect claim. This is a new unshipped controller regression observed statically; no test run by independent reviewer yet.",
+  "sourceUnmodifiedByReviewer": true
+}

@@ -1,0 +1,56 @@
+import datetime
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+import time
+
+ROOT = Path(__file__).resolve().parents[2]
+OUT = Path(__file__).resolve().parent
+
+
+def now():
+    return datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+
+def pin(path):
+    data = (ROOT / path).read_bytes()
+    return {"path": path, "bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
+
+
+def write(path, value):
+    with path.open("x") as stream:
+        stream.write(json.dumps(value, indent=2) + "\n")
+
+
+baseline = json.loads((OUT / "baseline-and-diagnosis.json").read_text())
+docx = json.loads((ROOT / baseline["docxFreeze"]["path"]).read_text())
+protected = baseline["protectedBefore"] + docx["sourceFiles"] + docx["unchangedSharedMechanisms"]
+assert [pin(item["path"]) for item in protected] == protected
+paths = sorted({item["path"] for item in baseline["ownedBefore"] + protected})
+before = [pin(path) for path in paths]
+write(OUT / "inputs-before.json", {"files": before})
+checks = []
+for name, argv in [
+    ("prompt-context-module", ["cargo", "test", "--manifest-path", "src-tauri/Cargo.toml", "--locked", "acp_client::session::prompt_context_tests", "--", "--nocapture"]),
+    ("cargo-fmt", ["cargo", "fmt", "--check", "--manifest-path", "src-tauri/Cargo.toml"]),
+]:
+    folder = OUT / name
+    folder.mkdir()
+    started = now()
+    timer = time.monotonic()
+    write(folder / "started.json", {"command": argv, "cwd": str(ROOT), "startedAt": started, "inputFiles": before})
+    print(json.dumps({"stage": name, "startedAt": started}), flush=True)
+    with (folder / "stdout.log").open("xb") as stdout, (folder / "stderr.log").open("xb") as stderr:
+        result = subprocess.run(argv, cwd=ROOT, stdout=stdout, stderr=stderr, check=False)
+    receipt = {"stage": name, "command": argv, "cwd": str(ROOT), "startedAt": started, "completedAt": now(), "elapsedSeconds": time.monotonic() - timer, "actualExitCode": result.returncode, "stdout": pin(str((folder / "stdout.log").relative_to(ROOT))), "stderr": pin(str((folder / "stderr.log").relative_to(ROOT)))}
+    write(folder / "completed.json", receipt)
+    checks.append(receipt)
+    print(json.dumps({"stage": name, "actualExitCode": result.returncode}), flush=True)
+    if result.returncode:
+        break
+after = [pin(path) for path in paths]
+write(OUT / "inputs-after.json", {"files": after})
+summary = {"checks": checks, "sourceStable": before == after, "productionAndDocxUnchanged": [pin(item["path"]) for item in protected] == protected, "allPassed": len(checks) == 2 and all(item["actualExitCode"] == 0 for item in checks) and before == after}
+write(OUT / "targeted-receipt.json", summary)
+raise SystemExit(0 if summary["allPassed"] else 1)

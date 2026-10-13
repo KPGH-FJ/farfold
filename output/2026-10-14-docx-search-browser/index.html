@@ -1,0 +1,6 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Controlled DOCX search full production App</title></head><body><div id="root"></div><script>
+window.workerEvents=[];const OriginalWorker=window.Worker;window.Worker=class extends OriginalWorker{constructor(...args){super(...args);const info={url:String(args[0]),messages:[],errors:[]};window.workerEvents.push(info);this.addEventListener('message',event=>info.messages.push(event.data?.kind));this.addEventListener('error',event=>info.errors.push(event.message));}};
+let nextCallback=1;const callbacks=new Map();window.calls=[];window.unexpected=[];
+window.__TAURI_INTERNALS__={invoke:(cmd,args)=>window.testInvoke(cmd,args),transformCallback:(fn)=>{const id=nextCallback++;callbacks.set(id,fn);return id;},unregisterCallback:id=>callbacks.delete(id),convertFileSrc:path=>path,metadata:{currentWindow:{label:'main'},currentWebview:{label:'main'}}};
+window.__TAURI_EVENT_PLUGIN_INTERNALS__={unregisterListener:()=>{}};window.testInvoke=async(cmd,args)=>{window.calls.push({cmd,args});return null;};
+</script><script type="module" src="./fixture.tsx"></script></body></html>

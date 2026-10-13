@@ -1,0 +1,60 @@
+{
+  "checks": [
+    {
+      "stage": "prompt-context-module",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "acp_client::session::prompt_context_tests",
+        "--",
+        "--nocapture"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-10-13T17:32:13.660468+00:00",
+      "completedAt": "2026-10-13T17:32:33.003970+00:00",
+      "elapsedSeconds": 19.344293791000002,
+      "actualExitCode": 0,
+      "stdout": {
+        "path": "output/2026-10-14-audio-cancel-test-race/prompt-context-module/stdout.log",
+        "bytes": 1831,
+        "sha256": "cf35c6f468c04f361a78008bf2871089c9a90078ca32cf9c9c816bcadced6712"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-audio-cancel-test-race/prompt-context-module/stderr.log",
+        "bytes": 323,
+        "sha256": "54093fe6b0f567f558e2bc744613fca81541a81ae264c96a7774c2561de3d6bd"
+      }
+    },
+    {
+      "stage": "cargo-fmt",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "cwd": "/Users/tw/Desktop/farfold",
+      "startedAt": "2026-10-13T17:32:33.004846+00:00",
+      "completedAt": "2026-10-13T17:32:34.713252+00:00",
+      "elapsedSeconds": 1.7084913329999978,
+      "actualExitCode": 0,
+      "stdout": {
+        "path": "output/2026-10-14-audio-cancel-test-race/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-audio-cancel-test-race/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "sourceStable": true,
+  "productionAndDocxUnchanged": true,
+  "allPassed": true
+}

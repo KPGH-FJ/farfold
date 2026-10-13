@@ -1,0 +1,35 @@
+{
+  "scope": "byte-exact copies of independently authored controlled fixtures and original oracles",
+  "files": [
+    {
+      "source": "output/2026-10-14-docx-search-browser/author.docx",
+      "path": "src/runtime/fixtures/docx-search/author.docx",
+      "bytes": 2393,
+      "sha256": "edbdf6fa40ee82b15ec3a579ea28c09ea16d5a8d98ace9b42380abb7e97f7d0d"
+    },
+    {
+      "source": "output/2026-10-14-docx-search-browser/second.docx",
+      "path": "src/runtime/fixtures/docx-search/second.docx",
+      "bytes": 2407,
+      "sha256": "bdcd861e2e97d71b7f0f374165cc732cdda9ebbfa0cce711c018bd74ad93eb5c"
+    },
+    {
+      "source": "output/2026-10-14-docx-search-browser/oracle.json",
+      "path": "src/runtime/fixtures/docx-search/author-oracle.json",
+      "bytes": 1212,
+      "sha256": "ccc1a3af0a5a2c5fc8680cb5a5eca9bf012bdec38639b68a0884c417a8010a23"
+    },
+    {
+      "source": "output/2026-10-14-docx-search-independent/image-and-cell-barriers.docx",
+      "path": "src/runtime/fixtures/docx-search/image-and-cell-barriers.docx",
+      "bytes": 1598,
+      "sha256": "d7118a9764c80bf1af2bb9c1775e7787c1fe76722c80517b5780326e2bd76975"
+    },
+    {
+      "source": "output/2026-10-14-docx-search-independent/supplement-oracle.json",
+      "path": "src/runtime/fixtures/docx-search/supplement-oracle.json",
+      "bytes": 1458,
+      "sha256": "466e88b279a6462a34ae5fdf5967617640f377ae2ce55d73d20fef0f75176673"
+    }
+  ]
+}

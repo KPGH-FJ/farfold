@@ -1,0 +1,3 @@
+import {createServer} from 'vite';
+const base='output/2026-10-14-docx-search-browser';
+const server=await createServer({configFile:'vite.config.ts',cacheDir:base+'/.vite',optimizeDeps:{entries:[base+'/index.html']},server:{host:'127.0.0.1',port:1538,strictPort:true,watch:{ignored:['**/src-tauri/**','**/.git/**']}}});await server.listen();console.log(JSON.stringify({pid:process.pid,port:1538,scope:'Owned complete production App controlled DOCX search IPC, no real Agent or formal App'}));for(const signal of ['SIGINT','SIGTERM'])process.on(signal,async()=>{await server.close();process.exit(0);});

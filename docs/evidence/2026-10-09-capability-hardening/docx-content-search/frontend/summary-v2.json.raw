@@ -1,0 +1,172 @@
+{
+  "scope": "v2 minimal visible scope notice only; source/tests frozen for root browser run2. Adds to, never supersedes, v1 receipts and original failures.",
+  "createdAtUtc": "2026-10-13T17:13:53.157218+00:00",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-docx-search-frontend/source-freeze-v2.json",
+    "bytes": 3684,
+    "sha256": "52d40d76af161652ee95834939ffb9c0d913480bbfafd38d6b6ee6110d8ef4c1"
+  },
+  "previousSummary": {
+    "path": "output/2026-10-14-docx-search-frontend/summary.json",
+    "bytes": 12913,
+    "sha256": "0a755c578f3dfe61419694c956076fc18db706833dbeaecdb8f5a39638fb46a4"
+  },
+  "diff": {
+    "path": "output/2026-10-14-docx-search-frontend/v1-to-v2-production.diff",
+    "bytes": 611,
+    "sha256": "99a0f21617f61582c2c939342ceba78fb5655d39359da38271b9a1ca248f6437"
+  },
+  "ownedFiles": 13,
+  "changedProductionFiles": [
+    "src/components/SelectedAttachmentSearch.tsx"
+  ],
+  "newTests": [
+    "src/components/SelectedAttachmentSearch.test.tsx"
+  ],
+  "otherV1OwnedFilesByteIdentical": 11,
+  "rootBrowserRun1Evidence": [
+    {
+      "path": "output/2026-10-14-docx-search-browser/chromium-run1.json",
+      "bytes": 286900,
+      "sha256": "600c8a040a539a41dda2ee94484e5abb749cef4974e20e4831cb4ec79613b25b"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/webkit-run1.json",
+      "bytes": 286757,
+      "sha256": "35ffc90d64b0941afeba47994c0494e031a58255d84daca5654556f8fc68886a"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/chromium-run1-failure.png",
+      "bytes": 139835,
+      "sha256": "7637613a9e1624b8831ff04d13dd86a8d070852bef92921936f13dc85eee0e96"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/webkit-run1-failure.png",
+      "bytes": 168948,
+      "sha256": "b45cef503f75108f3759912badb3eb10615819231bb0c6d81b2b6528661383d8"
+    }
+  ],
+  "finding": {
+    "production": "Both root run1 diagnostics contain8correct author matches and partial=true, but omitted-content explanation only inside closed details. A visible status notice is necessary before treating matches as complete document coverage.",
+    "runner": "Root original expectation searched for 部分 while actual copy says 存在省略内容. This expectation mismatch is separate and not claimed as a product bug. Root owns runner correction.",
+    "change": "Reuse exact S.docxPartial beside counts for valid reading/complete view with a searched partial row. Preserve per-file details. Stale, retired, inactive and no-omission cases do not show current-scope notice."
+  },
+  "checks": [
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/ui-notice-red-v2.txt",
+        "bytes": 2484,
+        "sha256": "161ace83d475098a2ae6e706d33fb9371ac47708620c98a65c635f50cd084877"
+      },
+      "originalCompletion": {
+        "name": "ui-notice-red-v2.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts-v2/ui-notice-red-v2.txt.completed.jsonl.raw",
+        "bytes": 8201,
+        "sha256": "073579386d3d8f1cee034b3ca7f6be958a3dee682f5c737216657ef8820e10aa",
+        "sourceLine": 4997,
+        "sourceStartByte": 19365242,
+        "sourceEndByte": 19373443,
+        "timestamp": "2026-10-13T17:10:20.620Z",
+        "callId": "exec-dd41c16d-7b26-4109-ae7e-b0696754f460",
+        "actualExitCode": 1,
+        "status": "failed"
+      }
+    },
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/ui-notice-v2.txt",
+        "bytes": 209,
+        "sha256": "4b1689fdb0ac2b6c8e2f28e17b65176f50b9418b36ffdf03b0bfb3761c6dc500"
+      },
+      "originalCompletion": {
+        "name": "ui-notice-v2.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts-v2/ui-notice-v2.txt.completed.jsonl.raw",
+        "bytes": 962,
+        "sha256": "fe618ccbf7fdac1ea90cc08537792ee7119ecbfe099550b88ca4dddc11d7c474",
+        "sourceLine": 5010,
+        "sourceStartByte": 19393214,
+        "sourceEndByte": 19394176,
+        "timestamp": "2026-10-13T17:10:52.860Z",
+        "callId": "exec-54aa6fe8-dc20-4be2-b829-544fba31b63b",
+        "actualExitCode": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/typecheck-v2.txt",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "originalCompletion": {
+        "name": "typecheck-v2.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts-v2/typecheck-v2.txt.completed.jsonl.raw",
+        "bytes": 796,
+        "sha256": "5f8e583f46036b55c7678b1073114c525f6fbc246acbc22c2c5bd3ed11c4a818",
+        "sourceLine": 5013,
+        "sourceStartByte": 19398735,
+        "sourceEndByte": 19399531,
+        "timestamp": "2026-10-13T17:11:01.503Z",
+        "callId": "exec-37349644-cf88-41f7-b05e-26e0c09a2013",
+        "actualExitCode": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/format-v2.txt",
+        "bytes": 115,
+        "sha256": "f176d04d73634bedef4479c01d098a6af3c78c22b0a8733854a103fbf9854a08"
+      },
+      "originalCompletion": {
+        "name": "format-v2.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts-v2/format-v2.txt.completed.jsonl.raw",
+        "bytes": 1000,
+        "sha256": "63ce15d117709478f037a2eddf851502deccf467b694c9b70d2cec99946f208e",
+        "sourceLine": 5009,
+        "sourceStartByte": 19392214,
+        "sourceEndByte": 19393214,
+        "timestamp": "2026-10-13T17:10:52.102Z",
+        "callId": "exec-fffae422-0c30-4e25-b2ed-bd512b85abdb",
+        "actualExitCode": 0,
+        "status": "completed"
+      }
+    },
+    {
+      "log": {
+        "path": "output/2026-10-14-docx-search-frontend/format-check-v2.txt",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "originalCompletion": {
+        "name": "format-check-v2.txt",
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts-v2/format-check-v2.txt.completed.jsonl.raw",
+        "bytes": 1012,
+        "sha256": "2df6c29dbf35c57788c271fc3807a17a8c93a33acf3f5de063d817cc4d6b18b1",
+        "sourceLine": 5025,
+        "sourceStartByte": 19426506,
+        "sourceEndByte": 19427518,
+        "timestamp": "2026-10-13T17:11:48.153Z",
+        "callId": "exec-9d000245-4d12-4e10-9f2f-dcc36a95b3c1",
+        "actualExitCode": 0,
+        "status": "completed"
+      }
+    }
+  ],
+  "testInterpretation": {
+    "uiNoticeRed": "2/4 passed: one real missing visible status notice; the other was my test wiring error using a different controller service to simulate stale. Preserved original failure, corrected to actual verifyHit changed path retaining partial row state.",
+    "uiNoticeGreen": "6/6:4real-React server-render component tests plus2central strings. Tests verify status DOM is outside still-closed details, no invented omissions, inactive/retired hiding and actual verifyHit changed stale hiding. This is structural component proof, not computed browser pixel visibility.",
+    "typecheck": "Actual completion exit0; not inferred from empty log.",
+    "format": "Scopedwrite andcheck both actual0.",
+    "v1": "Previous109 unchanged-controller/projector/string tests retain original source scope; not rerun or relabeled as v2fullsuite."
+  },
+  "originalCompletionManifest": {
+    "path": "output/2026-10-14-docx-search-frontend/transcript-receipts-v2/manifest.json",
+    "bytes": 3078,
+    "sha256": "6ccd4cc73098956b39583f0301bbeb9f6873ea0ed08dad8f7d616ec4db2c2b53"
+  },
+  "remaining": [
+    "Root actual complete App Chromium/WebKit run2 currently executing.",
+    "No whole-seven checks, installed App or Agent claim."
+  ]
+}

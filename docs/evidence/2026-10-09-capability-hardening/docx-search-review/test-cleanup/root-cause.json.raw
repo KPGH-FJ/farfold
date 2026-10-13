@@ -1,0 +1,45 @@
+{
+  "classification": "test cleanup race; product busy protection behaved correctly",
+  "originalFailure": {
+    "path": "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+    "line": 244,
+    "operation": "manager.disconnect(...).await.unwrap()",
+    "actualCargoExit": 101,
+    "summary": "1665 passed; 1 failed; 6 ignored",
+    "secondPromptBusyAssertion": "already passed before the failing disconnect"
+  },
+  "cause": [
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "lines": [
+        655,
+        667
+      ],
+      "fact": "Cancel notification is dispatched and its send result returned; prompt lease is retained."
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "lines": [
+        889,
+        903
+      ],
+      "fact": "PromptResponse processing clears in-flight state and drops prompt work lease before invoking actual turnEnd event callback."
+    },
+    {
+      "path": "src-tauri/src/acp_client/connection_control.rs",
+      "lines": [
+        30,
+        34
+      ],
+      "fact": "Nonzero work refuses normal disconnect, as required."
+    }
+  ],
+  "fix": "Two tests subscribe to actual open_session events, then after cancel wait with the existing 5-second event timeout until turnEnd and assert stopReason cancelled before disconnect. Existing original wire bytes and second-prompt busy checks unchanged. No new sleep/peer mechanism/forced idle.",
+  "counterexample": "Same audio module aggregate test already follows this real-event sequence; it passed in the original full run.",
+  "boundary": "No product failure is claimed. Original full-run actual failure remains; no newly manufactured red. Targeted success cannot substitute a subsequent full seven-check run.",
+  "diff": {
+    "path": "output/2026-10-14-audio-cancel-test-race/minimal-test-fix.diff",
+    "bytes": 3508,
+    "sha256": "d6495faff0fbbaba01f3b8928b810ffb89c29ce867bf1cbbc947e00162a35ad4"
+  }
+}

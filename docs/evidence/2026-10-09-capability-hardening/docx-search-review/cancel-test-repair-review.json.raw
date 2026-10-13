@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:38:55.992465+00:00",
+  "verdict": "NO_BLOCKER_FOR_TEST_ONLY_REPAIR",
+  "scope": "Read-only source and saved evidence verification; no tests, App, Agent, build, process observation or database access.",
+  "freeze": {
+    "path": "output/2026-10-14-audio-cancel-test-race/source-freeze.json",
+    "bytes": 8230,
+    "sha256": "2ba51a6c5df5e496a045a3fde13fbfa6c005fff1e10dda824cc6a1ed00a819af"
+  },
+  "targetedReceipt": {
+    "path": "output/2026-10-14-audio-cancel-test-race/targeted-receipt.json",
+    "bytes": 1893,
+    "sha256": "f7e3e984d7670a10888ff9014adfffc91146218d35ac9ec7c2b5d59e0b821bd0"
+  },
+  "verifiedFrozenReferences": 39,
+  "sourceChanges": [
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+      "bytes": 12150,
+      "sha256": "3ea3e60bfcc71911d4a02f5aa9ce0f253a7dd85c36133bd396fce728e002c234"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_context_tests.rs",
+      "bytes": 12030,
+      "sha256": "054b0c8d2ac89247052406b51bbe082b81a1588abb67a89fcbcf9f54987f3175"
+    }
+  ],
+  "exactDeltaVerification": "Removing only the event subscription replacement and the real turnEnd/cancelled wait reconstructs both preserved pre-fix files byte for byte. This also proves all other test assertions and the controlled peer are unchanged.",
+  "causalReview": [
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "lines": [
+        655,
+        667
+      ],
+      "conclusion": "Cancel returns the notification dispatch result; it does not drop the prompt lease."
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "lines": [
+        889,
+        903
+      ],
+      "conclusion": "Actual PromptResponse handling clears prompt_in_flight and drops the lease before invoking the turnEnd callback. Awaiting that callback establishes the necessary disconnect ordering."
+    },
+    {
+      "path": "src-tauri/src/acp_client/connection_control.rs",
+      "lines": [
+        30,
+        34
+      ],
+      "conclusion": "Ordinary disconnect correctly rejects a nonzero active-work count."
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_context_tests.rs",
+      "lines": [
+        10,
+        27
+      ],
+      "conclusion": "Unchanged controlled peer returns cancelled as the pending prompt result after session/cancel."
+    }
+  ],
+  "targetedVerification": {
+    "passed": 12,
+    "failed": 0,
+    "ignored": 0,
+    "filteredOut": 1660,
+    "cargoActualExitCode": 0,
+    "cargoFmtActualExitCode": 0,
+    "beforeAfterCurrentFiles": 16,
+    "stable": true,
+    "receiptCarrier": "Saved subprocess started/completed receipts and raw logs independently matched. Backend separately reported wrapper session 8509 actual exit 0; this review does not manufacture a tool completion raw record."
+  },
+  "originalFailureRetained": {
+    "actualCargoExitCode": 101,
+    "passed": 1665,
+    "failed": 1,
+    "ignored": 6,
+    "failingOperation": "The original audio test disconnect at old line 244, after cancellation dispatch; the earlier second-prompt busy assertion passed.",
+    "originalAndCopiesByteEqual": true
+  },
+  "unchangedProductionAndDocxFiles": 14,
+  "limitations": [
+    "Controlled peer and tests only; no real Agent or installed-product acceptance.",
+    "Targeted success does not replace the new full seven-check run. The old full run remains failed."
+  ],
+  "safeToPublish": true
+}

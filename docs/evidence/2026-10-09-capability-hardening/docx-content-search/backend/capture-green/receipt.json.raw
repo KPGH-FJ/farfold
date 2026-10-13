@@ -1,0 +1,40 @@
+{
+  "label": "capture-green",
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "file_delivery::document",
+    "--",
+    "--nocapture"
+  ],
+  "startedAtUtc": "2026-10-13T16:48:52.525056+00:00",
+  "completedAtUtc": "2026-10-13T16:48:53.381280+00:00",
+  "actualExitCode": 0,
+  "interrupted": false,
+  "inputCount": 504,
+  "sourceStable": true,
+  "inputScope": "All Rust source/Cargo manifests/build config and src-tauri/test-fixtures plus DOCX fixture tree; no frontend test or real Agent acceptance claimed.",
+  "inputsBefore": {
+    "path": "output/2026-10-14-docx-search-backend/capture-green/inputs-before.json",
+    "bytes": 86922,
+    "sha256": "dbc0ea71b33476b3e2caca02bb24ea9bab3a04e49dcc177ecafd4e372d6599aa"
+  },
+  "inputsAfter": {
+    "path": "output/2026-10-14-docx-search-backend/capture-green/inputs-after.json",
+    "bytes": 86922,
+    "sha256": "dbc0ea71b33476b3e2caca02bb24ea9bab3a04e49dcc177ecafd4e372d6599aa"
+  },
+  "stdout": {
+    "path": "output/2026-10-14-docx-search-backend/capture-green/stdout.raw",
+    "bytes": 8535,
+    "sha256": "f5af45a6a856c84d19e5e9eecda6e28019f24679a495803a25fc907c2dd6a39e"
+  },
+  "stderr": {
+    "path": "output/2026-10-14-docx-search-backend/capture-green/stderr.raw",
+    "bytes": 256,
+    "sha256": "706688ab7bdee0f381159fbbe64a4b7a0d48019e281a17964b45abc610e87b3a"
+  }
+}

@@ -21,7 +21,7 @@ mod visual;
 pub use visual::{VisualPreview, read_visual};
 mod document;
 mod ooxml_archive;
-pub use document::{DocxCapture, DocxReadFailure, read_docx};
+pub use document::{DocxCapture, DocxReadFailure, read_docx, read_docx_search};
 mod workbook;
 pub use workbook::{WorkbookCapture, WorkbookReadFailure, read_workbook};
 mod pdf_input;

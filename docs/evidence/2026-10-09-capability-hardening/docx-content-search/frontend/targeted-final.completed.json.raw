@@ -1,0 +1,151 @@
+{
+  "command": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/attachment_search.docx.test.ts",
+    "src/runtime/docx_search_text.test.ts",
+    "src/runtime/attachment_search.test.ts",
+    "src/runtime/strings.test.ts"
+  ],
+  "startedAtUtc": "2026-10-13T17:01:57.694890+00:00",
+  "completedAtUtc": "2026-10-13T17:01:58.463380+00:00",
+  "actualExitCode": 0,
+  "sourceStable": true,
+  "stdout": {
+    "path": "output/2026-10-14-docx-search-frontend/targeted-final.stdout.txt",
+    "bytes": 214,
+    "sha256": "0670a90486409cb628da894c21c052eb91c1dadb131c8481aff9f3746d162a17"
+  },
+  "stderr": {
+    "path": "output/2026-10-14-docx-search-frontend/targeted-final.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "sourceBefore": [
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 18453,
+      "sha256": "55d1dbb3930ed4ddb0fd2ddeeeea68679f820bee56dc6e0f8a7a15ae1f97c80b"
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 4449,
+      "sha256": "7459198ceafbf515f4deac03e64994066ca61a8f8a8183387b82eaf3bb28ed6f"
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 5589,
+      "sha256": "bfc9eadbe520510f0de3ef1764cc4b0734088146ebcab8c7a132162f8593a161"
+    },
+    {
+      "path": "src/runtime/docx_search_text.ts",
+      "bytes": 4225,
+      "sha256": "0a96dc7d9f6f335b3bf975263c72f4b24beaaf113aecde6f6b35266613c0aa01"
+    },
+    {
+      "path": "src/runtime/attachment_search.docx.test.ts",
+      "bytes": 13910,
+      "sha256": "b433ee1d609e155f3466b3fe53e0a54fe5ecdfe9b2fe7ad65adece98d981cf33"
+    },
+    {
+      "path": "src/runtime/docx_search_text.test.ts",
+      "bytes": 5188,
+      "sha256": "33ed7448ad007b7f0856362e3d6afb3e2584a84fae3e1e0b743a2b649edb2deb"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 10072,
+      "sha256": "0da972cd6ac36b944573e69fb522e4bdb887fa4b38f3eb633a80cf86616716ff"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/author-oracle.json",
+      "bytes": 1212,
+      "sha256": "ccc1a3af0a5a2c5fc8680cb5a5eca9bf012bdec38639b68a0884c417a8010a23"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/author.docx",
+      "bytes": 2393,
+      "sha256": "edbdf6fa40ee82b15ec3a579ea28c09ea16d5a8d98ace9b42380abb7e97f7d0d"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/image-and-cell-barriers.docx",
+      "bytes": 1598,
+      "sha256": "d7118a9764c80bf1af2bb9c1775e7787c1fe76722c80517b5780326e2bd76975"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/second.docx",
+      "bytes": 2407,
+      "sha256": "bdcd861e2e97d71b7f0f374165cc732cdda9ebbfa0cce711c018bd74ad93eb5c"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/supplement-oracle.json",
+      "bytes": 1458,
+      "sha256": "466e88b279a6462a34ae5fdf5967617640f377ae2ce55d73d20fef0f75176673"
+    }
+  ],
+  "sourceAfter": [
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 18453,
+      "sha256": "55d1dbb3930ed4ddb0fd2ddeeeea68679f820bee56dc6e0f8a7a15ae1f97c80b"
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 4449,
+      "sha256": "7459198ceafbf515f4deac03e64994066ca61a8f8a8183387b82eaf3bb28ed6f"
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 5589,
+      "sha256": "bfc9eadbe520510f0de3ef1764cc4b0734088146ebcab8c7a132162f8593a161"
+    },
+    {
+      "path": "src/runtime/docx_search_text.ts",
+      "bytes": 4225,
+      "sha256": "0a96dc7d9f6f335b3bf975263c72f4b24beaaf113aecde6f6b35266613c0aa01"
+    },
+    {
+      "path": "src/runtime/attachment_search.docx.test.ts",
+      "bytes": 13910,
+      "sha256": "b433ee1d609e155f3466b3fe53e0a54fe5ecdfe9b2fe7ad65adece98d981cf33"
+    },
+    {
+      "path": "src/runtime/docx_search_text.test.ts",
+      "bytes": 5188,
+      "sha256": "33ed7448ad007b7f0856362e3d6afb3e2584a84fae3e1e0b743a2b649edb2deb"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 10072,
+      "sha256": "0da972cd6ac36b944573e69fb522e4bdb887fa4b38f3eb633a80cf86616716ff"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/author-oracle.json",
+      "bytes": 1212,
+      "sha256": "ccc1a3af0a5a2c5fc8680cb5a5eca9bf012bdec38639b68a0884c417a8010a23"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/author.docx",
+      "bytes": 2393,
+      "sha256": "edbdf6fa40ee82b15ec3a579ea28c09ea16d5a8d98ace9b42380abb7e97f7d0d"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/image-and-cell-barriers.docx",
+      "bytes": 1598,
+      "sha256": "d7118a9764c80bf1af2bb9c1775e7787c1fe76722c80517b5780326e2bd76975"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/second.docx",
+      "bytes": 2407,
+      "sha256": "bdcd861e2e97d71b7f0f374165cc732cdda9ebbfa0cce711c018bd74ad93eb5c"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/supplement-oracle.json",
+      "bytes": 1458,
+      "sha256": "466e88b279a6462a34ae5fdf5967617640f377ae2ce55d73d20fef0f75176673"
+    }
+  ]
+}

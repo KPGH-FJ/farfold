@@ -1,0 +1,38 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/attachment_search.docx.test.ts (46 tests | 1 failed) 82ms
+     × reconsiders later text after an earlier reserved read fails 23ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/attachment_search.docx.test.ts > explicit current DOCX attachment search > reconsiders later text after an earlier reserved read fails
+AssertionError: expected [ 'searched', 'searched', …(2) ] to deeply equal [ 'searched', 'searched', …(2) ]
+
+- Expected
++ Received
+
+  [
+    "searched",
+    "searched",
+    "error",
+-   "searched",
++   "skipped",
+  ]
+
+ ❯ src/runtime/attachment_search.docx.test.ts:128:54
+    126|     const run = h.search.start("needle", h.candidates, h.current);
+    127|     await tick(); wait.reject({code:"unreadable"}); await run;
+    128|     expect(h.search.snapshot().rows.map(r=>r.state)).toEqual(["searche…
+       |                                                      ^
+    129|     expect(h.search.snapshot()).toMatchObject({bytes: 15*1024*1024+512…
+    130|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 45 passed (46)
+   Start at  00:59:21
+   Duration  247ms (transform 87ms, setup 0ms, import 110ms, tests 82ms, environment 0ms)
+

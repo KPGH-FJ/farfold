@@ -1,0 +1,47 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/components/SelectedAttachmentSearch.test.tsx (4 tests | 2 failed) 12ms
+     × shows the partial scope beside counts even while per-file details are closed 8ms
+     × does not keep a current-scope notice after result ownership becomes stale 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/SelectedAttachmentSearch.test.tsx > selected attachment omitted-content notice > shows the partial scope beside counts even while per-file details are closed
+AssertionError: expected '<p>本次附件查找已结束</p><p>已检索 1/1 个文件的所列文字范围…' to contain '仅查找已提取的作者文字，存在省略内容；没有匹配不代表完整文档没有匹配。'
+
+Expected: "仅查找已提取的作者文字，存在省略内容；没有匹配不代表完整文档没有匹配。"
+Received: "<p>本次附件查找已结束</p><p>已检索 1/1 个文件的所列文字范围 · 0 处匹配 · 显示 0 处</p>"
+
+ ❯ src/components/SelectedAttachmentSearch.test.tsx:36:26
+     34|   it("shows the partial scope beside counts even while per-file detail…
+     35|     const {search}=await searched(true);const html=render(search);
+     36|     expect(status(html)).toContain(S.docxPartial);
+       |                          ^
+     37|     expect(html).toMatch(/<details class="history-search-coverage">/);
+     38|     expect(html).not.toMatch(/<details[^>]*\bopen\b/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/SelectedAttachmentSearch.test.tsx > selected attachment omitted-content notice > does not keep a current-scope notice after result ownership becomes stale
+AssertionError: expected 'complete' to be 'stale' // Object.is equality
+
+Expected: "stale"
+Received: "complete"
+
+ ❯ src/components/SelectedAttachmentSearch.test.tsx:54:39
+     52|     let current=true;const c=setup(["needle"]);c.services.inspect.mock…
+     53|     await h.search.start("needle",c.candidates,()=>current);
+     54|     expect(h.search.snapshot().phase).toBe("stale");expect(status(rend…
+       |                                       ^
+     55|   });
+     56| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  01:10:20
+   Duration  216ms (transform 102ms, setup 0ms, import 142ms, tests 12ms, environment 0ms)
+

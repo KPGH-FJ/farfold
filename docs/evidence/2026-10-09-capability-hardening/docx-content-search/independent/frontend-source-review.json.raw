@@ -1,0 +1,244 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:14:00.719514+00:00",
+  "scope": "Read-only frozen frontend source, synthetic fixtures, saved logs and exact whitelisted execution records. No tests, server, App, Agent or database run by this review.",
+  "conclusion": "No source blocker found in v2. Root full-App real-Worker browser run2 remains separate and pending at this review.",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-docx-search-frontend/source-freeze-v2.json",
+    "bytes": 3684,
+    "sha256": "52d40d76af161652ee95834939ffb9c0d913480bbfafd38d6b6ee6110d8ef4c1"
+  },
+  "sourcePins": [
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 18453,
+      "sha256": "55d1dbb3930ed4ddb0fd2ddeeeea68679f820bee56dc6e0f8a7a15ae1f97c80b"
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 4449,
+      "sha256": "7459198ceafbf515f4deac03e64994066ca61a8f8a8183387b82eaf3bb28ed6f"
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 5589,
+      "sha256": "bfc9eadbe520510f0de3ef1764cc4b0734088146ebcab8c7a132162f8593a161"
+    },
+    {
+      "path": "src/runtime/docx_search_text.ts",
+      "bytes": 4225,
+      "sha256": "0a96dc7d9f6f335b3bf975263c72f4b24beaaf113aecde6f6b35266613c0aa01"
+    },
+    {
+      "path": "src/runtime/attachment_search.docx.test.ts",
+      "bytes": 13910,
+      "sha256": "b433ee1d609e155f3466b3fe53e0a54fe5ecdfe9b2fe7ad65adece98d981cf33"
+    },
+    {
+      "path": "src/runtime/docx_search_text.test.ts",
+      "bytes": 5188,
+      "sha256": "33ed7448ad007b7f0856362e3d6afb3e2584a84fae3e1e0b743a2b649edb2deb"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 10301,
+      "sha256": "28de404c2a06cb4cc2023198de65c0f07a5d4ee1dd646d82d92630b5c4c81586"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/author-oracle.json",
+      "bytes": 1212,
+      "sha256": "ccc1a3af0a5a2c5fc8680cb5a5eca9bf012bdec38639b68a0884c417a8010a23"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/author.docx",
+      "bytes": 2393,
+      "sha256": "edbdf6fa40ee82b15ec3a579ea28c09ea16d5a8d98ace9b42380abb7e97f7d0d"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/image-and-cell-barriers.docx",
+      "bytes": 1598,
+      "sha256": "d7118a9764c80bf1af2bb9c1775e7787c1fe76722c80517b5780326e2bd76975"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/second.docx",
+      "bytes": 2407,
+      "sha256": "bdcd861e2e97d71b7f0f374165cc732cdda9ebbfa0cce711c018bd74ad93eb5c"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/supplement-oracle.json",
+      "bytes": 1458,
+      "sha256": "466e88b279a6462a34ae5fdf5967617640f377ae2ce55d73d20fef0f75176673"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.test.tsx",
+      "bytes": 3723,
+      "sha256": "4d91aa68e0a31f947d1ddc81f40a13d85151979471dc175dcebbbdfc1865eb63"
+    }
+  ],
+  "v1Freeze": {
+    "path": "output/2026-10-14-docx-search-frontend/source-freeze-v1.json",
+    "bytes": 2724,
+    "sha256": "1322d5fa4b7a1a900158c30bfa9fa6d5be166ad9d8b469c8e0de2b11de8fa629"
+  },
+  "v2Delta": {
+    "changed": [
+      "src/components/SelectedAttachmentSearch.tsx"
+    ],
+    "added": [
+      "src/components/SelectedAttachmentSearch.test.tsx"
+    ],
+    "otherElevenFilesByteIdentical": true,
+    "exactFiveLineReverseReconstructionMatchesV1": true,
+    "diff": {
+      "path": "output/2026-10-14-docx-search-frontend/v1-to-v2-production.diff",
+      "bytes": 611,
+      "sha256": "99a0f21617f61582c2c939342ceba78fb5655d39359da38271b9a1ca248f6437"
+    },
+    "interpretation": "Only an always-visible omission notice was added beside results; complete/reading and searched-partial guards prevent presenting it as current after stale/retired/inactive results. Per-file closed details remain."
+  },
+  "review": [
+    {
+      "area": "Explicit authorization and source ownership",
+      "files": [
+        "src/runtime/attachment_search_source.ts:103",
+        "src/components/SelectedAttachmentSearch.tsx:90"
+      ],
+      "result": "Explicit Start over at most 20 known WeakMap candidates; captured URI/name/MIME, message attachment object, thread and current index agent/cwd/native-session fields stay checked. MIME selects a parser only, never authenticates a DOCX."
+    },
+    {
+      "area": "Bounded capture and source identity",
+      "files": [
+        "src/runtime/attachment_search.ts:339",
+        "src/runtime/attachment_search.ts:351",
+        "src/runtime/attachment_search.ts:373",
+        "src/runtime/attachment_search.ts:382"
+      ],
+      "result": "The new bounded DOCX IPC is used with all seven VerifiedFile fields; capture, parsed preview and final revision must agree. Missing/invalid parse fails explicitly without plain-text fallback. Backend safe capture and shared OS pool are covered separately by backend-review.json."
+    },
+    {
+      "area": "Real text and budget",
+      "files": [
+        "src/runtime/docx_search_text.ts:39",
+        "src/runtime/attachment_search.ts:415",
+        "src/runtime/attachment_search.ts:441"
+      ],
+      "result": "Only validated author run text, actual tab and line break enter search. Images, notices and note references break segments; paragraph, cell and story boundaries never join. Generated labels and alt text are excluded. TextEncoder counts extracted UTF-8 bytes; whole-file admission is at most 16 MiB, with no prefix search. Unknown temporary reservations wait instead of consuming later candidates."
+    },
+    {
+      "area": "Concurrency, cancellation and errors",
+      "files": [
+        "src/runtime/attachment_search.ts:158",
+        "src/runtime/attachment_search.ts:338",
+        "src/runtime/attachment_search.ts:363",
+        "src/runtime/attachment_search.ts:399"
+      ],
+      "result": "At most two captured/read tasks; per-batch parseTail serializes the single Worker. External Worker busy is reported, not retried. Every asynchronous boundary discards cancelled/stale results; cancellation does not claim an OS read stopped or release its Rust permit. readPending/readBusy/limit/encrypted/timeout remain distinct."
+    },
+    {
+      "area": "Jump and persistence",
+      "files": [
+        "src/runtime/attachment_search.ts:526",
+        "src/components/AttachmentSearchJump.tsx",
+        "src/App.tsx"
+      ],
+      "result": "Result navigation rechecks the exact file and current source, then jumps to an already loaded declared attachment with existing DOM-owner checks. No Word visual page or conversation text offset is invented. Search contents/results remain temporary; no new persistence or Agent request path."
+    }
+  ],
+  "evidence": {
+    "targetedV1": {
+      "receipt": {
+        "path": "output/2026-10-14-docx-search-frontend/targeted-final.completed.json",
+        "bytes": 5141,
+        "sha256": "e88994ad048f61db27f9b9df320610a08f41f4c740963ecafa3f4a64c3a7ed13"
+      },
+      "files": 4,
+      "passed": 109,
+      "actualExitCode": 0,
+      "beforeAfterExactlyV1Freeze": true,
+      "originalExecutionRecords": {
+        "path": "output/2026-10-14-docx-search-frontend/transcript-receipts/manifest.json",
+        "bytes": 5683,
+        "sha256": "781439db5b0390618195acf86528674f8bfe42d83d254cc7aa7a2fe4ef5fb26c"
+      },
+      "tenRawRecordsMatchedExactSourceByteRanges": true,
+      "originalExits": {
+        "targeted-red-01.txt": 1,
+        "targeted-02.txt": 0,
+        "targeted-03.txt": 1,
+        "targeted-04.txt": 1,
+        "targeted-05-reservation-red.txt": 1,
+        "targeted-06.txt": 0,
+        "typecheck-01.txt": 1,
+        "typecheck-02.txt": 0,
+        "format-final.txt": 0,
+        "final-targeted.py": 0
+      },
+      "verificationMethod": "Only ten manifest-whitelisted byte ranges were read from the named agent transcript; raw bytes/hash/CommandExecution ID/time/status/exit were compared. No surrounding history read."
+    },
+    "v2ScopedLogs": [
+      {
+        "path": "output/2026-10-14-docx-search-frontend/ui-notice-red-v2.txt",
+        "bytes": 2484,
+        "sha256": "161ace83d475098a2ae6e706d33fb9371ac47708620c98a65c635f50cd084877"
+      },
+      {
+        "path": "output/2026-10-14-docx-search-frontend/ui-notice-v2.txt",
+        "bytes": 209,
+        "sha256": "4b1689fdb0ac2b6c8e2f28e17b65176f50b9418b36ffdf03b0bfb3761c6dc500"
+      },
+      {
+        "path": "output/2026-10-14-docx-search-frontend/typecheck-v2.txt",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      {
+        "path": "output/2026-10-14-docx-search-frontend/format-check-v2.txt",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      }
+    ],
+    "v2ScopedPassed": 6,
+    "v2CompletionCarrier": "Frontend agent reports actual exits 0; supplemental exact completion extraction not yet available when this report was written. Logs alone are not used as process exit proof.",
+    "preservedFailures": [
+      "targeted-red-01: missing DOCX support; original actual exit 1.",
+      "targeted-05-reservation-red: 45/46 actual exit 1; transient plain-text reservation caused a later eligible file to be permanently skipped. Fixed in v1; original OPEN record and red source unchanged.",
+      "targeted-03 story order and targeted-04 error category/prefetch assumptions were test expectation mistakes, not production fixes. typecheck-01 was a fixture image-dimension omission.",
+      "Browser run1: both engines observed partial=true and eight correct matches but omitted-content notice was hidden in closed details. The runner also used an incorrect substring. Source issue fixed in v2; original run1 retained.",
+      "ui-notice-red-v2: one real missing-status-notice failure plus one test wired to the wrong controller/service. Distinct from final four component tests passing.",
+      "Reviewer first report assembly assumed targeted-06 contained 46 tests; assertion stopped before writing. Actual saved log is 109/109. No production source or test rerun resulted."
+    ]
+  },
+  "relatedReports": [
+    {
+      "path": "output/2026-10-14-docx-search-independent/backend-review.json",
+      "bytes": 10861,
+      "sha256": "924179f459a9b73e2096285fdbfb36271198dbaec2b347bc93e124b08504d952"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/root-oracle-review.json",
+      "bytes": 2473,
+      "sha256": "aa57a8a29f3b7006489cdb6285387c551f6e7f35597f0b2fedffe6b3608b48c1"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/root-budget-oracle-review.json",
+      "bytes": 2096,
+      "sha256": "edd414f20c4f4bffe5320c52ed90a7728b1d64074de6c1fb0f3f04194b5cd111"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/budget-reservation-finding-open.json",
+      "bytes": 1361,
+      "sha256": "9b18e2f33579bcdfbd53b34deb838155a6b8d771750a317d8c7f138b95627ba8"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/oracle-freeze.json",
+      "bytes": 1344,
+      "sha256": "7ed6a4e555fa69bb0a20096bbe7f9b03619cd689eafa874c3bfa9d9346767d90"
+    }
+  ],
+  "limits": [
+    "No new full engineering checks, candidate, installation, native DOCX search positive or real Agent validation is claimed.",
+    "Controller units mock the preview port; actual Worker full-App validation belongs to root browser records.",
+    "This review does not close P32 as a whole."
+  ],
+  "publicationSafety": "Only source paths, hashes, synthetic fixture facts, counts and conclusions; no user database values, private message body or credentials."
+}

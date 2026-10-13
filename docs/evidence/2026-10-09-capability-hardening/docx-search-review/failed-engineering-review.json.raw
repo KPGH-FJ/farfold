@@ -1,0 +1,225 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T17:33:04.039789+00:00",
+  "conclusion": "First complete engineering run failed: six stages exit0, cargo-test exit101, runner actualexit1. Original failure preserved; no test rerun by reviewer.",
+  "summary": {
+    "path": "output/2026-10-14-docx-search-integration/checks-run/summary.json",
+    "bytes": 6350,
+    "sha256": "d55f7ce179f4abbb9c75e249a24f9d8d8c19ad19d0b4f59a095ab3bee12bd881"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-docx-search-integration/checks-freeze/freeze.json",
+    "bytes": 292109,
+    "sha256": "84b6f84e047713684032dd9607cb48d2d89a875c1920bc34deb8c08ebe90f68c"
+  },
+  "stages": [
+    {
+      "name": "format-check",
+      "rawExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/format-check/started.json",
+        "bytes": 286,
+        "sha256": "48d5fb41dfb1e938ee840826f38dd64e59095d052adc702bc241d4fa3e10376d"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/format-check/completed.json",
+        "bytes": 664,
+        "sha256": "20575c7240defe21e8cb558ebac47af3da73ca4c2ed0c98b3e34909c3e1907db"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/format-check/stdout.log",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "typecheck",
+      "rawExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/typecheck/started.json",
+        "bytes": 280,
+        "sha256": "c397e955c2fec3c7bc191cc2e134e4685d1f8f2f481d87f85862ff5778399dd2"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/typecheck/completed.json",
+        "bytes": 663,
+        "sha256": "fa68e9034e56427fed412bae2f112dc33155e287bc09a54b3bdb5f6bb4f45c66"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/typecheck/stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/typecheck/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "frontend-test",
+      "rawExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/frontend-test/started.json",
+        "bytes": 274,
+        "sha256": "1a5bf9db7078b3b09d538720a89203f1d35a3a5943562ae6e75317579ff30231"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/frontend-test/completed.json",
+        "bytes": 658,
+        "sha256": "85c81f92f67bc3104ea8712213ebdeed48809eb2b61f232e1c98e8f18702dcc1"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/frontend-test/stdout.log",
+        "bytes": 289,
+        "sha256": "087e25d7b931cce2b610f475c78972862e441ee256e385e14238c11c3e8b2130"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/frontend-test/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "frontend-build",
+      "rawExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/frontend-build/started.json",
+        "bytes": 277,
+        "sha256": "bb76f4b0c3f2b2b2ef35f4b1ac8bae60bfc91a704c4ba67df516dbdafc2fd6e9"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/frontend-build/completed.json",
+        "bytes": 660,
+        "sha256": "5078f9886ee9f3710482a212652f87e6820d894db0254d21612d8434fe215b1f"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/frontend-build/stdout.log",
+        "bytes": 4560,
+        "sha256": "173c613eeb03a96dbda902bea96147b9cb572107bca5ca95bbf29643a6eb9b1a"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/frontend-build/stderr.log",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      }
+    },
+    {
+      "name": "cargo-fmt",
+      "rawExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-fmt/started.json",
+        "bytes": 354,
+        "sha256": "2ac7204f7ecf3798b3df2d98756e2523ef12550bf0ed2d41ebebcd8e4dbe19d2"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-fmt/completed.json",
+        "bytes": 738,
+        "sha256": "da7ab9d0df7e0fbf98d5d221b719d388b2addc48011f6b7246af9a39423becb1"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "cargo-clippy",
+      "rawExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-clippy/started.json",
+        "bytes": 416,
+        "sha256": "f06620076c03ea2ccbb404a7328eb563ef84ff65a1f69aad698e052b296db086"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-clippy/completed.json",
+        "bytes": 799,
+        "sha256": "c6f340296d0f299ba6c2959ca7e2363a1528c82bd23ab01890afeba7ec3ea092"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-clippy/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-clippy/stderr.log",
+        "bytes": 138,
+        "sha256": "921669401ea208763c2134f7f54f29e7717390b2b17efe080d10f162c04e4b3c"
+      }
+    },
+    {
+      "name": "cargo-test",
+      "rawExitCode": 101,
+      "started": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-test/started.json",
+        "bytes": 360,
+        "sha256": "102d63de0dac0e79d579cb355d24c398402ff62197782a195416799013ce7038"
+      },
+      "completed": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-test/completed.json",
+        "bytes": 746,
+        "sha256": "3ec2e63d7091e475e90e810c5368b6e7724b635c3b8a52e6f8a2b18c75e15651"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-test/stdout.log",
+        "bytes": 185957,
+        "sha256": "f4ab057cc886eef9efdfd4463c264f938ff617043a3c09126f5b9af0d447ed72"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-docx-search-integration/checks-run/cargo-test/stderr.log",
+        "bytes": 598,
+        "sha256": "43e9dad548ae4fc48add235dbdcacca536281e35bf09cb489db4fe155238b3c3"
+      }
+    }
+  ],
+  "actualRunnerCompletion": {
+    "record": {
+      "path": "output/2026-10-14-docx-search-independent/failed-engineering-root-completion.jsonl.raw",
+      "bytes": 1275,
+      "sha256": "1ee13fd39fcab8b2750995f4de182d5a984ba227526c821bbb999cc9b013d6c0"
+    },
+    "sourceStartByte": 26414226,
+    "sourceEndByte": 26415501,
+    "sourceLine": 9107,
+    "timestamp": "2026-10-13T17:25:42.017Z",
+    "chunk": "34877f",
+    "actualExitCode": 1,
+    "carrier": "Exact original root custom_tool_call_output JSONL bytes; only this authorized record extracted."
+  },
+  "counts": {
+    "frontendSummaryLines": [
+      "Test Files  494 passed (494)",
+      "Tests  5885 passed (5885)"
+    ],
+    "rust": {
+      "passed": 1665,
+      "failed": 1,
+      "ignored": 6
+    }
+  },
+  "frozenSourceAndProtected": {
+    "inputs": 1797,
+    "beforeAfterExactlyFrozen": true,
+    "membershipStableAsRecorded": true,
+    "protectedBeforeAfterExactlyFrozen": 3,
+    "runUninterrupted": true
+  },
+  "failureLocation": {
+    "test": "prompt_audio_actual_supported_wire_preserves_original_bytes_and_busy_guard",
+    "source": "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+    "line": 244,
+    "verifiedFrozenLine": "f.manager.disconnect(&f.row.id, &f.cwd).await.unwrap();",
+    "meaning": "Immediate disconnect after session_cancel returned was rejected as busy. The earlier second-prompt busy assertion was already passed. Cancel dispatch is not proof that official cancelled prompt result has been consumed. Product versus test repair is recorded separately after its evidence."
+  },
+  "boundary": "This report verifies the original run only. Later two-test repair cannot change its failure or relabel its source. No current-source equality claimed after repair began."
+}

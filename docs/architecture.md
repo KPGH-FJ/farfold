@@ -6,6 +6,10 @@ NEW-26 的[系统文件面板本机分项](evidence/2026-10-09-capability-harden
 
 本轮严格数据比较实际退出 2，独立第二副本核对仅定位到一条 Agent 的 `updated_at` 变化，具体写入者未知，原差异未豁免。135 条会话、171 条屏蔽、53 项设置、整个未发内容原始字符串及全部 10 份草稿精确保持；33 字节标记、完整 140 字节音频、PDF 完整保存表示 1311 字节及两附件全部 7 项来源字段相同，临时文件附件无残留。两份工作副本在独立读取前后的摘要稳定；本机正常选择、取消保稿和 PDF 读取条件已有本轮分项证据，不将原严格比较改为通过。
 
+P32 的[所选本地 DOCX 附件临时文字搜索](evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json)复用共用搜索面板、有界来源检查及现有文档 Worker：`file_delivery_read_docx_search` 只在明确开始后读取完整来源，`docx_search_text.ts` 只提取作者文字，保留段落、单元格与文档区域位置；图片、隐藏或省略内容两侧不拼接为命中。同批文档串行解析，最多两项读取；每源文件 ≤1 MiB、最多 20 个文件，实际 UTF-8 检索文字合计 ≤16 MiB。结果仍跳转到真实来源附件，来源变化、取消或迟到返回撤回结果，不建立持久正文索引。
+
+前端 v1 定向 109 项、v2 的可见省略提示及字符串 6 项通过，后端定向 24 项通过。完整 App 的 Chromium/WebKit 最终各 60 项检查、11 个场景通过，使用真实文档 Worker 与受控文件返回，源文件稳定且无页面错误或外部网络请求。原 DOCX 未命中、预取预算、提示折叠及测试脚本错误均保留并区分；本片工程检查另行记录，尚未更新正式应用，当前正式版本仍为 `9c278d82`，不提升 NEW-24 或 P32 整项结论。
+
 P27 的[截图不可用请求保护](evidence/2026-10-09-capability-hardening/screenshot-unavailable/implementation.json)已完成源码定向 2 项及相关回归 58 项：`screenshot=true` 按原请求身份拒绝，普通文字路径保持；生产截图能力仍缺少。P32 的[所选本地文本附件临时搜索](evidence/2026-10-09-capability-hardening/attachment-content-search/implementation.json)已完成本片源码与受控验证，明确选择后才读取，不连接 Agent 或建立持久正文索引。前端 v1 定向 6 文件 / 68 项、Chromium 与 WebKit 各 55 项通过；当前 v3 仅累计两处文案修正，v2、v3 各补字符串检查 2/2，未重跑完整浏览器。后端有界读取、来源核验及共用读取池已有定向验证。本片已提交并安装 `9c278d82`；P27 生产截图及 P32 整项仍未完成。
 
 当前正式应用为 `9c278d82` / 0.1.7 arm64，源码已推送 main。[本片七项工程检查](evidence/2026-10-09-capability-hardening/attachment-search-checks/verification.json)在 1,756 个稳定输入上全部实际退出 0：前端 491 文件 / 5,821 项，Rust 1,658 项 / 6 忽略；[候选独立检查](evidence/2026-10-09-capability-hardening/attachment-search-candidate/candidate-independent.json)9/9、[安装独立检查](evidence/2026-10-09-capability-hardening/attachment-search-candidate/install-independent-final.json)10/10。安装前、替换前及安装后三份 217,400 条完整清单相同（SHA-256 `f07c39cbd8bca17c11d9fdf368014d11f44eb21f9b9432b68492c7e8e328a73f`）；唯一正式应用已替换，重复打包应用已精确移除，候选 ZIP 保留。

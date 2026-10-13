@@ -1,0 +1,84 @@
+{
+  "files": [
+    {
+      "path": "src-tauri/src/acp_client/connection_control.rs",
+      "bytes": 2794,
+      "sha256": "842d7484d7435257344232486a076e9f90d5b321ccdb107e70c4b8f54d7ab2e1"
+    },
+    {
+      "path": "src-tauri/src/acp_client/lifecycle.rs",
+      "bytes": 22318,
+      "sha256": "9aa051951e25877d824a62c743479f4e138041014b63408b2572cbff09632110"
+    },
+    {
+      "path": "src-tauri/src/acp_client/pump.rs",
+      "bytes": 74414,
+      "sha256": "250c3fb6ad7b1d7aefb8907a8633660f01d86e1b9bd618f68167a16a311903df"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session.rs",
+      "bytes": 42074,
+      "sha256": "c4c4ed2ca728a18ffb4fbf3df3a7ee33ce910d89357f2b867862fc503affea19"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+      "bytes": 12150,
+      "sha256": "3ea3e60bfcc71911d4a02f5aa9ce0f253a7dd85c36133bd396fce728e002c234"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_context_tests.rs",
+      "bytes": 12030,
+      "sha256": "054b0c8d2ac89247052406b51bbe082b81a1588abb67a89fcbcf9f54987f3175"
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17710,
+      "sha256": "b9414968f6e2716df17810cde912c65f93560daf3523f93efe1403b4eaf650fa"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document.rs",
+      "bytes": 3497,
+      "sha256": "c3ed531837f35f37877b7e11b5e40ed5bf15441e3e35657b24a07d0cb12cbfac"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_command_tests.rs",
+      "bytes": 2008,
+      "sha256": "86f07caf27591d7f88741ad0f3a4d7d500b5fbad4164238c61f5a06b9f1a046d"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_tests.rs",
+      "bytes": 7335,
+      "sha256": "a847ddd179319016f5e725a36f5b50c38b75c920dad58a6c87670524d72a4708"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/ooxml_archive.rs",
+      "bytes": 9656,
+      "sha256": "cccda6285276fd368199f3ad2b37dc07abecdb968b10f2359fa1f5fced13b0e8"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "bytes": 1345,
+      "sha256": "e247aa6bb04b56e3ac91f7d12be2b66047b7a94ae255411e4de744c993060b55"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 20225,
+      "sha256": "b2291c7044db5ff07315252c528e801cefa3b85097da6f6d41920e36bc819dd8"
+    },
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "bytes": 2674,
+      "sha256": "cf10e7bfbf76873e8b290cd6ea5e3e5ddac383c5f22a8924af3fa862b4a05ee2"
+    },
+    {
+      "path": "src-tauri/src/file_read_check_tests.rs",
+      "bytes": 5667,
+      "sha256": "91ede3d5566f8c7d73844a16e96af3268572d2e1e214ad28483d587eff9d9a4c"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21659,
+      "sha256": "b264a0ca18e4b50a6de005e25eb8029322b12419e105b5d364f81130efb596c1"
+    }
+  ]
+}

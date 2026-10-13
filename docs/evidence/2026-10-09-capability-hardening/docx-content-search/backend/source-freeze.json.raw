@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "frozenAtUtc": "2026-10-13T16:51:04.923059+00:00",
+  "baseHead": "a64f5dca6cc764dd711ac2cdac532a196f37830c",
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17710,
+      "sha256": "b9414968f6e2716df17810cde912c65f93560daf3523f93efe1403b4eaf650fa"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document.rs",
+      "bytes": 3497,
+      "sha256": "c3ed531837f35f37877b7e11b5e40ed5bf15441e3e35657b24a07d0cb12cbfac"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 20225,
+      "sha256": "b2291c7044db5ff07315252c528e801cefa3b85097da6f6d41920e36bc819dd8"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21659,
+      "sha256": "b264a0ca18e4b50a6de005e25eb8029322b12419e105b5d364f81130efb596c1"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_tests.rs",
+      "bytes": 7335,
+      "sha256": "a847ddd179319016f5e725a36f5b50c38b75c920dad58a6c87670524d72a4708"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_command_tests.rs",
+      "bytes": 2008,
+      "sha256": "86f07caf27591d7f88741ad0f3a4d7d500b5fbad4164238c61f5a06b9f1a046d"
+    }
+  ],
+  "unchangedSharedMechanisms": [
+    {
+      "path": "src-tauri/src/file_delivery/ooxml_archive.rs",
+      "bytes": 9656,
+      "sha256": "cccda6285276fd368199f3ad2b37dc07abecdb968b10f2359fa1f5fced13b0e8"
+    },
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "bytes": 2674,
+      "sha256": "cf10e7bfbf76873e8b290cd6ea5e3e5ddac383c5f22a8924af3fa862b4a05ee2"
+    },
+    {
+      "path": "src-tauri/src/file_read_check_tests.rs",
+      "bytes": 5667,
+      "sha256": "91ede3d5566f8c7d73844a16e96af3268572d2e1e214ad28483d587eff9d9a4c"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/text_inspection.rs",
+      "bytes": 1345,
+      "sha256": "e247aa6bb04b56e3ac91f7d12be2b66047b7a94ae255411e4de744c993060b55"
+    }
+  ],
+  "checkReceipts": [
+    {
+      "path": "output/2026-10-14-docx-search-backend/red/receipt.json",
+      "bytes": 1351,
+      "sha256": "db959311ca6b28bd6902c8330c1da5fef3492a9e9f0e145245adb9e1c373aece"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-backend/green/receipt.json",
+      "bytes": 1333,
+      "sha256": "f58996393900a64b3444a3b7b3c5219c4562b94b8e051c2fb73f2f51cd3bcf36"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-backend/capture-green/receipt.json",
+      "bytes": 1386,
+      "sha256": "3fa4e963aa438a000f66562bc32069ba85433db322b1922fe805c396b861865a"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-backend/pool-regression/receipt.json",
+      "bytes": 1394,
+      "sha256": "f740c62132a020dad31346a04238ffff54187e7933a1ab419feb9dfc4fe2d32a"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-backend/format/receipt.json",
+      "bytes": 1284,
+      "sha256": "87ce57c8318af8fef7f044342aa3c47a0bf1a3ffc0221bf93ae19bc3fd6e67aa"
+    }
+  ],
+  "scope": "Backend-only controlled capture/command helper and pool tests; not full seven checks, native UI, Agent or frontend acceptance.",
+  "maxFileLines": 567,
+  "finalScopedInputCount": 504,
+  "finalScopedInputListSha256": "dbc0ea71b33476b3e2caca02bb24ea9bab3a04e49dcc177ecafd4e372d6599aa",
+  "rustCompileReleased": true
+}

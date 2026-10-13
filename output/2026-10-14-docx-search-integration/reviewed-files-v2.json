@@ -1,0 +1,204 @@
+{
+  "files": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17710,
+      "sha256": "b9414968f6e2716df17810cde912c65f93560daf3523f93efe1403b4eaf650fa"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document.rs",
+      "bytes": 3497,
+      "sha256": "c3ed531837f35f37877b7e11b5e40ed5bf15441e3e35657b24a07d0cb12cbfac"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 20225,
+      "sha256": "b2291c7044db5ff07315252c528e801cefa3b85097da6f6d41920e36bc819dd8"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21659,
+      "sha256": "b264a0ca18e4b50a6de005e25eb8029322b12419e105b5d364f81130efb596c1"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_tests.rs",
+      "bytes": 7335,
+      "sha256": "a847ddd179319016f5e725a36f5b50c38b75c920dad58a6c87670524d72a4708"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_command_tests.rs",
+      "bytes": 2008,
+      "sha256": "86f07caf27591d7f88741ad0f3a4d7d500b5fbad4164238c61f5a06b9f1a046d"
+    },
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 18453,
+      "sha256": "55d1dbb3930ed4ddb0fd2ddeeeea68679f820bee56dc6e0f8a7a15ae1f97c80b"
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 4449,
+      "sha256": "7459198ceafbf515f4deac03e64994066ca61a8f8a8183387b82eaf3bb28ed6f"
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 5589,
+      "sha256": "bfc9eadbe520510f0de3ef1764cc4b0734088146ebcab8c7a132162f8593a161"
+    },
+    {
+      "path": "src/runtime/docx_search_text.ts",
+      "bytes": 4225,
+      "sha256": "0a96dc7d9f6f335b3bf975263c72f4b24beaaf113aecde6f6b35266613c0aa01"
+    },
+    {
+      "path": "src/runtime/attachment_search.docx.test.ts",
+      "bytes": 13910,
+      "sha256": "b433ee1d609e155f3466b3fe53e0a54fe5ecdfe9b2fe7ad65adece98d981cf33"
+    },
+    {
+      "path": "src/runtime/docx_search_text.test.ts",
+      "bytes": 5188,
+      "sha256": "33ed7448ad007b7f0856362e3d6afb3e2584a84fae3e1e0b743a2b649edb2deb"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 10301,
+      "sha256": "28de404c2a06cb4cc2023198de65c0f07a5d4ee1dd646d82d92630b5c4c81586"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/author-oracle.json",
+      "bytes": 1212,
+      "sha256": "ccc1a3af0a5a2c5fc8680cb5a5eca9bf012bdec38639b68a0884c417a8010a23"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/author.docx",
+      "bytes": 2393,
+      "sha256": "edbdf6fa40ee82b15ec3a579ea28c09ea16d5a8d98ace9b42380abb7e97f7d0d"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/image-and-cell-barriers.docx",
+      "bytes": 1598,
+      "sha256": "d7118a9764c80bf1af2bb9c1775e7787c1fe76722c80517b5780326e2bd76975"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/second.docx",
+      "bytes": 2407,
+      "sha256": "bdcd861e2e97d71b7f0f374165cc732cdda9ebbfa0cce711c018bd74ad93eb5c"
+    },
+    {
+      "path": "src/runtime/fixtures/docx-search/supplement-oracle.json",
+      "bytes": 1458,
+      "sha256": "466e88b279a6462a34ae5fdf5967617640f377ae2ce55d73d20fef0f75176673"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.test.tsx",
+      "bytes": 3723,
+      "sha256": "4d91aa68e0a31f947d1ddc81f40a13d85151979471dc175dcebbbdfc1865eb63"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/fixture.tsx",
+      "bytes": 7921,
+      "sha256": "79b47fdb6a4a38599ae1fb451844029dd67a2101795f4fdaedfe8005b456b951"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/index.html",
+      "bytes": 1128,
+      "sha256": "c6209ad727145e1e3e78a050c507bed765c8d2ffc248113032c93d3823be3061"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/serve.mjs",
+      "bytes": 601,
+      "sha256": "1a20bc08354e2801a1e130044e57f9eeccda8c607b8d02a11bef661077a3b3c6"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/run.mjs",
+      "bytes": 12774,
+      "sha256": "d9fac45a3481323e7a1e1bad208fb38cb25fe3878fe913e72a0ef64542d055c5"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/run-v1.mjs",
+      "bytes": 12476,
+      "sha256": "d6381d0a7e467dd7a35120bf1a36d808c62416bbe9d84d7d90b33e13ef69ea68"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/run-v2.mjs",
+      "bytes": 12618,
+      "sha256": "f3bbf68392c8d402f5f05b4c479d0789ef4af9367ed94bb8b510fd1cc2bac6bc"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/captures.json",
+      "bytes": 12011,
+      "sha256": "65e823dc4e4e90e3ad44564414544c1e15b227c01a31f04234d06feed4c5441b"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/oracle.json",
+      "bytes": 1212,
+      "sha256": "ccc1a3af0a5a2c5fc8680cb5a5eca9bf012bdec38639b68a0884c417a8010a23"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/author.docx",
+      "bytes": 2393,
+      "sha256": "edbdf6fa40ee82b15ec3a579ea28c09ea16d5a8d98ace9b42380abb7e97f7d0d"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/second.docx",
+      "bytes": 2407,
+      "sha256": "bdcd861e2e97d71b7f0f374165cc732cdda9ebbfa0cce711c018bd74ad93eb5c"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/generate-fixtures.py",
+      "bytes": 4880,
+      "sha256": "e1bc68f3c13e65d01d26d0bbfafc024ae455782014a860a50940664a4f45cc6f"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/generate-budget.py",
+      "bytes": 2484,
+      "sha256": "b7a60fdda1fec979a20aa43dc5fa43e5782b938ff627ff9314cf0600666894f3"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/budget-a.docx",
+      "bytes": 9578,
+      "sha256": "ed75447bbfb5b7a074ace4abced1b48066d830b00d1d59f35acc284f9ffd06f0"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/budget-b.docx",
+      "bytes": 9578,
+      "sha256": "ed75447bbfb5b7a074ace4abced1b48066d830b00d1d59f35acc284f9ffd06f0"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/budget-captures.json",
+      "bytes": 24003071,
+      "sha256": "ca12d586b2a1dd101dd6cbebe2376b1aa4c887294ec574abab9cb0260f8e5b26"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-browser/budget-oracle.json",
+      "bytes": 384,
+      "sha256": "c3c41c0273a562c956f2e0bfad6269ec84b161c532572c009b4c1d1e046b519c"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/supplement-capture.json",
+      "bytes": 3939,
+      "sha256": "d4292307c6862bfd408e9a05e7d0371602aefc1019cf6b2437de6e4b74da36ad"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/supplement-oracle.json",
+      "bytes": 1458,
+      "sha256": "466e88b279a6462a34ae5fdf5967617640f377ae2ce55d73d20fef0f75176673"
+    },
+    {
+      "path": "output/2026-10-14-docx-search-independent/image-and-cell-barriers.docx",
+      "bytes": 1598,
+      "sha256": "d7118a9764c80bf1af2bb9c1775e7787c1fe76722c80517b5780326e2bd76975"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_audio_tests.rs",
+      "bytes": 12150,
+      "sha256": "3ea3e60bfcc71911d4a02f5aa9ce0f253a7dd85c36133bd396fce728e002c234"
+    },
+    {
+      "path": "src-tauri/src/acp_client/session/prompt_context_tests.rs",
+      "bytes": 12030,
+      "sha256": "054b0c8d2ac89247052406b51bbe082b81a1588abb67a89fcbcf9f54987f3175"
+    }
+  ]
+}
