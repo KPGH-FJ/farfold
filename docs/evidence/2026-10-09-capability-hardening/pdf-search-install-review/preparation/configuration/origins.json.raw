@@ -1,0 +1,55 @@
+{
+  "scripts": {
+    "candidate": {
+      "prepare-candidate.py": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/prepare-candidate.py",
+        "bytes": 4493,
+        "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+      },
+      "verify-candidate.py": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/verify-candidate.py",
+        "bytes": 62564,
+        "sha256": "ab21fa35a8976b4703d09b04fe2ad53ee053733c60a9e139e1787f08191cd38c"
+      }
+    },
+    "install": {
+      "data_manifest.py": {
+        "path": "output/2026-10-14-xlsx-search-install/data_manifest.py",
+        "bytes": 4258,
+        "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+      },
+      "observe_normal_exit.py": {
+        "path": "output/2026-10-14-xlsx-search-install/observe_normal_exit.py",
+        "bytes": 3476,
+        "sha256": "61b24bacd25903b44e9cad5f5201a5ad18ded14a1a8b24561fbfa1b5dad4e8a2"
+      },
+      "install_data_snapshot.py": {
+        "path": "output/2026-10-14-xlsx-search-install/install_data_snapshot.py",
+        "bytes": 6222,
+        "sha256": "5b10eb37cc9ea52968bf3c32c12d3f7d2dbf4a23f5b335dbbee7923c1134c64b"
+      },
+      "capture_snapshot.py": {
+        "path": "output/2026-10-14-xlsx-search-install/capture_snapshot.py",
+        "bytes": 2841,
+        "sha256": "5f609a0f0c0eeade19bb42c4927d334982047a220690c3d56389c95fdce077e7"
+      },
+      "backup_metadata.py": {
+        "path": "output/2026-10-14-xlsx-search-install/backup_metadata.py",
+        "bytes": 10577,
+        "sha256": "d4e4b08bf9babde19dfa54bd5835092e9824628d01ea77e054b0246f73c3da97"
+      },
+      "install_verified_candidate.py": {
+        "path": "output/2026-10-14-xlsx-search-install/install_verified_candidate.py",
+        "bytes": 33883,
+        "sha256": "6d7eb986848a06d8867402413ee9d83bbce929bba0b007c5e5a66937ac4b34c8"
+      }
+    },
+    "independent": {
+      "verify_installed_final.py": {
+        "path": "output/2026-10-14-xlsx-search-independent-install/verify_installed_final.py",
+        "bytes": 14610,
+        "sha256": "90f20d31c5d828bef2452abdb7488b000f92a9bda4f5dc8a106645c97a86fe4a"
+      }
+    }
+  }
+}

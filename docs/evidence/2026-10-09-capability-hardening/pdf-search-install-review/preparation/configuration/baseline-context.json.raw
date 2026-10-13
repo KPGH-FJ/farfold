@@ -1,0 +1,67 @@
+{
+  "installedSourceCommit": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+  "installedSourceNeverLaunched": "Root continuity report; new fresh observation still required before snapshot or replacement.",
+  "lastRunningSourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "latestClosedDatabase": {
+    "path": "output/2026-10-14-file-dialog-data/metadata-after-consolidated.sqlite3",
+    "sha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+    "bytes": 512000,
+    "readInThisPreparation": false
+  },
+  "savedThreeManifests": {
+    "sha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+    "entriesEach": 217400,
+    "notFreshProofForPdfInstallation": true
+  },
+  "previousCleanup": {
+    "sourceCommit": "c89b8f824357fa95e4e72ffdd2979feb8bfb47ea",
+    "originalCleanupActualExitCode": 1,
+    "recoveryActualExitCode": 0,
+    "publisherV2ActualExitCode": 0,
+    "deletionOccurredInOriginalFailedRun": true,
+    "finalizerPerformedDeletion": false,
+    "references": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/duplicate-cleanup.json",
+        "bytes": 2484,
+        "sha256": "1175180597c4bbea1d82bb8010d90ed99da97c2d0d5e090a8bfa21ab874dedd9"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-install-review/verification.json",
+        "bytes": 16486,
+        "sha256": "de423595d52d3cfc224efabb0ac7bb1056dfcee2764f2028a7466398c268dcfc"
+      },
+      {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-install/cleanup-failed.jsonl.raw",
+        "bytes": 1655,
+        "sha256": "6de7a2fb3a7eeb94f1b3c3a31bcd97050a488b9924468c9168c6ac493bf06e8c"
+      },
+      {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-install/manifest.json",
+        "bytes": 3185,
+        "sha256": "44f2f7e68318ea63d8ad89608ddfbc7b53ebf892e4e9d34084b64cd25492a0fd"
+      },
+      {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-post-cleanup/manifest.json",
+        "bytes": 1345,
+        "sha256": "4b06fb0ec9e26acf7403bc8684afeaa3286c156a873d21c435f65b6faa493fb7"
+      },
+      {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-post-cleanup/finalizer.jsonl.raw",
+        "bytes": 974,
+        "sha256": "d7fa5f008f1758e8f677918b356ee78c5f1da79842cf84b639f6eac9a736c102"
+      },
+      {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-post-cleanup/publisher-v2.jsonl.raw",
+        "bytes": 940,
+        "sha256": "59f01b1e5c3cdb2d68daecbb8238b3d72a4846f6bd5649b0da9147c6b1d6db0e"
+      }
+    ]
+  },
+  "pureZipReuse": {
+    "path": "output/2026-10-14-xlsx-search-install-preparation/post-cleanup-finalize.py",
+    "bytes": 7996,
+    "sha256": "58bd796b1ad30c96fdf1dcfc9bf008c924d7d9b40ff31f233d5cd2f89936c2da"
+  },
+  "boundary": "Only saved source/tool/JSON and synthetic execution metadata read. No App, process query, database bytes, filesystem data manifest capture, candidate/build or engineering command executed. Historical exits are not this PDF slice results."
+}

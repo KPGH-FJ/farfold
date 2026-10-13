@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "status": "PASS_FOUR_DOCS_INSTALL_CLOSEOUT",
+  "createdAtUtc": "2026-10-13T19:58:40.654251+00:00",
+  "installedSourceCommit": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+  "base": {
+    "path": "output/2026-10-14-pdf-search-install-docs/before.json",
+    "bytes": 2805,
+    "sha256": "69046c67c8bb70d76e160d09209266ffb209a28be8b2c78d51dda22c6364ce55"
+  },
+  "finalFiles": [
+    {
+      "path": "docs/status.md",
+      "bytes": 95197,
+      "sha256": "6b58ea904c799f8d45cf92be74960dc21d0107b038686fadb01614fd165a0d4e"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 137259,
+      "sha256": "4d8576b17423f893b3d6feaca595c37d250f5a7178171203e608b9526721e785"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 160182,
+      "sha256": "d045821e13520c78957d053c050aae9b159d44578b08d73f8e08d87bf4806e7e"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 92683,
+      "sha256": "56d0ce79feac805c87ef91ee215d92f5b89a75af3eadad11de19876b0b044634"
+    },
+    {
+      "path": ".prettierignore",
+      "bytes": 22592,
+      "sha256": "d37ffcaf99c78f989b83e9018944e2c46008f59ef9a156674b63b002abc8ef6a"
+    }
+  ],
+  "diff": {
+    "path": "output/2026-10-14-pdf-search-install-docs/five-files.diff",
+    "bytes": 29928,
+    "sha256": "87c5d9515e0f828474dbd43abaf0cac19de37be98a0936139bedc2e3944304bb"
+  },
+  "changes": "PDF engineering/install actual results added; prior c89 install moved to historical tense; only P32 progress changed; seven immutable JSON paths appended to ignore.",
+  "validation": {
+    "scopedPrettierActualExitCode": 0,
+    "formatter": {
+      "path": "output/2026-10-14-pdf-search-install-docs/format.completed.json",
+      "bytes": 752,
+      "sha256": "34d738d1283c1128223303a1c32951ac6341076941dedf98b3a15f25b4b975c1"
+    },
+    "originalIdsTitlesConditionsUnchanged": 122,
+    "newIdsAndWholeRowsUnchanged": 28,
+    "normalizedProgressRowsChanged": [
+      "P32"
+    ],
+    "other121OriginalRowsUnchanged": true,
+    "protectedFilesUnchanged": 3,
+    "newLinkOccurrencesValid": 16,
+    "uniqueNewTargets": 4,
+    "sevenImmutableJsonPinsPreserved": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate-inputs.json",
+        "bytes": 247474,
+        "sha256": "3366b87b251e428bf6243391a46e053cf27075009f173dcaca62fd4129329011"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate-inputs-after.json",
+        "bytes": 247474,
+        "sha256": "3366b87b251e428bf6243391a46e053cf27075009f173dcaca62fd4129329011"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate.json",
+        "bytes": 68870,
+        "sha256": "5009f29ce62ab5336ba4b71ac824248e3f5ef7a8b63a86550774de2d72fb7158"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate-independent.json",
+        "bytes": 3060,
+        "sha256": "0134c72571fb6928a5bfaa11f59ed1b9feccd683e422b6890436542e02db70ad"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/installation.json",
+        "bytes": 3492,
+        "sha256": "12dde219d19216081d8194c62120ea679cf40e2233ef04b36fb6d97d724b8c31"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/install-independent-final.json",
+        "bytes": 98849,
+        "sha256": "d7bf945c81c0e37a61273054457b2b40148e9da9af5ff1f46e54e2809388decf"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/duplicate-cleanup.json",
+        "bytes": 1674,
+        "sha256": "b61a6b8343ba8048175a7ba892653707ab37901c55801ee56434b87461980b03"
+      }
+    ],
+    "nativePositiveNotClaimed": true,
+    "wholeP32AndNEW24RemainOpen": true,
+    "priorStrictDifferencesNotWaived": true
+  },
+  "installationReview": {
+    "path": "output/2026-10-14-pdf-search-independent/final-installation-review.json",
+    "bytes": 5047,
+    "sha256": "47bd310a71b1c93e201fd347121118a5f75eac1ea4eba43067278d382ef8c330"
+  },
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-review/verification.json",
+    "bytes": 15903,
+    "sha256": "24f3b3a14774244940de0c89aef5e58f0cdddb996c5ced77d8198200f97fbe7b"
+  },
+  "stageSuggestion": {
+    "path": "output/2026-10-14-pdf-search-install-docs/suggested-stage-files.json",
+    "bytes": 10753,
+    "sha256": "6b4c9e35fa3b2322d0bb0b786441d62215a994196615c21ea73a829a8522d9ed"
+  },
+  "scope": "Only four docs and precise.prettierignore edits. No source/test/App/Agent/DB actions. Current P18 source may change after the recorded installation freeze; it is excluded from this checkpoint.",
+  "safeToPublish": true,
+  "blockers": []
+}

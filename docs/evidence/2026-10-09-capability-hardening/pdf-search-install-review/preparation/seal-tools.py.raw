@@ -1,0 +1,83 @@
+"""Seal the nine copied, pinned tools after actual closed-app data receipts exist.
+
+Only this preparation directory's exclusive generated-tools.json is written.
+No build, app copy, launch/quit or live user data/SQLite access. Not run in preparation.
+"""
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import re
+import sys
+
+sys.dont_write_bytecode = True
+ROOT = Path('/Users/tw/Desktop/farfold')
+OUT = ROOT / 'output/2026-10-14-pdf-search-install-preparation'
+
+
+def sha(path):
+    assert all(not p.is_symlink() for p in (path, *path.parents))
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def load(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def main():
+    assert Path(__file__).absolute() == OUT / 'seal-tools.py'
+    preparation = OUT / 'preparation.json'
+    plan = json.loads(preparation.read_text())
+    tools = []
+    modules = {}
+    for item in plan['tools']:
+        path = ROOT / item['finalPath']
+        assert sha(path) == item['preparedSha256'], 'Final runtime tool differs from reviewed rendering'
+        module = load('seal_' + path.stem.replace('-', '_'), path)
+        modules[path.name] = module
+        pins = {key: value for key, value in vars(module).items()
+                if key in ('SOURCE_COMMIT', 'EXPECTED_INPUT_COUNT') or key.endswith('_SHA')}
+        assert 'UNSET' not in pins.values(), 'Unknown runtime pins remain'
+        for key, value in pins.items():
+            if key.endswith('_SHA'):
+                assert isinstance(value, str) and re.fullmatch('[0-9a-f]{64}', value)
+        tools.append({'path': item['finalPath'], 'sha256': sha(path), 'pins': pins})
+    verifier = modules['verify-candidate.py']
+    installer = modules['install_verified_candidate.py']
+    verifier.configured()
+    installer.require_configured()
+    installer.verify_normal_exit()
+    assert all(item['pins'].get('SOURCE_COMMIT', verifier.SOURCE_COMMIT) == verifier.SOURCE_COMMIT for item in tools)
+    assert all(item['pins'].get('EXPECTED_INPUT_COUNT', verifier.EXPECTED_INPUT_COUNT) == verifier.EXPECTED_INPUT_COUNT for item in tools)
+    assert installer.SOURCE_COMMIT == verifier.SOURCE_COMMIT
+    verifier.engineering(verifier.ENGINEERING_PATH, verifier.source(verifier.SOURCE_COMMIT))
+    fields = [('beforeSummary', 'install-data-before-summary.json', 'BEFORE_SUMMARY_SHA'),
+              ('backupReceipt', 'metadata-backup-receipt.json', 'BACKUP_RECEIPT_SHA'),
+              ('normalExit', 'normal-exit-observation.json', 'NORMAL_EXIT_SHA')]
+    dependencies = {}
+    for field, filename, pin in fields:
+        path = installer.OUT / filename
+        digest = sha(path)
+        assert digest == getattr(installer, pin)
+        assert all(item['pins'].get(pin, digest) == digest for item in tools)
+        dependencies[field] = {'path': str(path.relative_to(ROOT)), 'sha256': digest}
+    result = {'phase': 'fullyConfiguredForVerifiedInstallBeforeAppMutation',
+              'sourceCommit': verifier.SOURCE_COMMIT, 'notYetKnownPins': [],
+              'preparation': {'path': str(preparation.relative_to(ROOT)), 'sha256': sha(preparation)},
+              'tools': tools, **dependencies}
+    path = OUT / 'generated-tools.json'
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    with os.fdopen(fd, 'w') as handle:
+        json.dump(result, handle, ensure_ascii=False, indent=2)
+        handle.write('\n')
+        handle.flush()
+        os.fsync(handle.fileno())
+    print(json.dumps({'path': str(path.relative_to(ROOT)), 'sha256': sha(path), 'tools': len(tools)}))
+
+
+if __name__ == '__main__':
+    main()

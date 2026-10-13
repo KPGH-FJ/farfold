@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "status": "PASS_RECORDED_INSTALLATION_AND_PUBLICATION",
+  "createdAtUtc": "2026-10-13T19:56:14.466873+00:00",
+  "sourceCommit": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+  "actualCompletions": {
+    "path": "output/2026-10-14-pdf-search-independent/transcript-install/manifest.json",
+    "bytes": 3039,
+    "sha256": "7dc87acac12d31a9da880836aa3a775ae1edfe32cc734479fe3296d6ff2859ba"
+  },
+  "candidate": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate-independent.json",
+    "bytes": 3060,
+    "sha256": "0134c72571fb6928a5bfaa11f59ed1b9feccd683e422b6890436542e02db70ad"
+  },
+  "installed": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/install-independent-final.json",
+    "bytes": 98849,
+    "sha256": "d7bf945c81c0e37a61273054457b2b40148e9da9af5ff1f46e54e2809388decf"
+  },
+  "operation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/installation.json",
+    "bytes": 3492,
+    "sha256": "12dde219d19216081d8194c62120ea679cf40e2233ef04b36fb6d97d724b8c31"
+  },
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/duplicate-cleanup.json",
+    "bytes": 1674,
+    "sha256": "b61a6b8343ba8048175a7ba892653707ab37901c55801ee56434b87461980b03"
+  },
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-review/verification.json",
+    "bytes": 15903,
+    "sha256": "24f3b3a14774244940de0c89aef5e58f0cdddb996c5ced77d8198200f97fbe7b"
+  },
+  "verified": {
+    "candidateChecks": 9,
+    "installedChecks": 10,
+    "actualCompletionExits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "threeFreshSnapshotSummariesAndActualExecutionBindingsEqual": true,
+    "manifestEntriesEach": 217400,
+    "manifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+    "savedFullManifestReferencesMatchFinalGate": true,
+    "backupReceiptAndSealedShaMatch": true,
+    "publishedInstallationExactOperation": true,
+    "fiveFileAndModeRecordsConsistent": true,
+    "duplicateAbsent": true,
+    "publicCopies": 28,
+    "publicDirectoryFiles": 29,
+    "allCopiesByteExact": true,
+    "publicWhitelistNoDbOrFullUserManifest": true
+  },
+  "snapshotRecords": [
+    {
+      "phase": "before",
+      "summary": {
+        "path": "output/2026-10-14-pdf-search-install/install-data-before-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "execution": {
+        "path": "output/2026-10-14-pdf-search-install/snapshot-before-execution.json",
+        "bytes": 618,
+        "sha256": "659d634ad86d64c4c454ea0e532cea9dac5607adb5684e7edacc99e65248b12a"
+      },
+      "fullManifestReference": {
+        "path": "output/2026-10-14-pdf-search-install/install-data-before.jsonl",
+        "sha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+        "bytes": 58925641
+      }
+    },
+    {
+      "phase": "preinstall",
+      "summary": {
+        "path": "output/2026-10-14-pdf-search-install/install-data-preinstall-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "execution": {
+        "path": "output/2026-10-14-pdf-search-install/snapshot-preinstall-execution.json",
+        "bytes": 622,
+        "sha256": "0b43d9502714b3af8ae937a46b28d9706d1f48043451bbe1b98dea98c5ed8013"
+      },
+      "fullManifestReference": {
+        "path": "output/2026-10-14-pdf-search-install/install-data-preinstall.jsonl",
+        "sha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+        "bytes": 58925641
+      }
+    },
+    {
+      "phase": "after",
+      "summary": {
+        "path": "output/2026-10-14-pdf-search-install/install-data-after-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "execution": {
+        "path": "output/2026-10-14-pdf-search-install/snapshot-after-execution.json",
+        "bytes": 617,
+        "sha256": "59144c9b99e998b7346db148bdf098e748e776d682b59db12c17962d9e6e5705"
+      },
+      "fullManifestReference": {
+        "path": "output/2026-10-14-pdf-search-install/install-data-after.jsonl",
+        "sha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+        "bytes": 58925641
+      }
+    }
+  ],
+  "boundary": "Saved actual reports, exact root completion events and public original-byte copies independently checked. No rerun of candidate/installed gates, no full private manifest rescan, DB bytes, SQLite, App or process query. Source freeze applies to recorded installation; concurrent P18 edits are permitted and were not compared against the old2029 inputs. Formal0.1.7arm64 installed but not launched; no native search positive or real-Agent/whole-P32 acceptance. Prior strict data differences remain unaccepted.",
+  "safeToPublish": true,
+  "blockers": []
+}

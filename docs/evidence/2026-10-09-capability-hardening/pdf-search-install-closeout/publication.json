@@ -1,0 +1,139 @@
+{
+  "sourceCommit": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+  "copies": [
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/final-installation-review.json",
+        "bytes": 5047,
+        "sha256": "47bd310a71b1c93e201fd347121118a5f75eac1ea4eba43067278d382ef8c330"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-closeout/final-installation-review.json.raw",
+        "bytes": 5047,
+        "sha256": "47bd310a71b1c93e201fd347121118a5f75eac1ea4eba43067278d382ef8c330"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/stage-selection-review.json",
+        "bytes": 3921,
+        "sha256": "3342a025402750beac3cc775a3e056b9e0e9b54bdbc3fd0036ab8d5f7ce30f81"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-closeout/stage-selection-review.json.raw",
+        "bytes": 3921,
+        "sha256": "3342a025402750beac3cc775a3e056b9e0e9b54bdbc3fd0036ab8d5f7ce30f81"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/installation-preparation-review.json",
+        "bytes": 7612,
+        "sha256": "c76bd91fe7bc63af1edca8b65e1cfd9e41176e8cc227f553c2b8372772785ad9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-closeout/installation-preparation-review.json.raw",
+        "bytes": 7612,
+        "sha256": "c76bd91fe7bc63af1edca8b65e1cfd9e41176e8cc227f553c2b8372772785ad9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-install-docs/report.json",
+        "bytes": 4861,
+        "sha256": "7fed51f0b8c12a03185f51dc382cbf44e9c13c2b31d66b376914da1d320efe83"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-closeout/docs-report.json.raw",
+        "bytes": 4861,
+        "sha256": "7fed51f0b8c12a03185f51dc382cbf44e9c13c2b31d66b376914da1d320efe83"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/manifest.json",
+        "bytes": 3039,
+        "sha256": "7dc87acac12d31a9da880836aa3a775ae1edfe32cc734479fe3296d6ff2859ba"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-closeout/transcript-install/manifest.json.raw",
+        "bytes": 3039,
+        "sha256": "7dc87acac12d31a9da880836aa3a775ae1edfe32cc734479fe3296d6ff2859ba"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/preinstall.jsonl.raw",
+        "bytes": 1080,
+        "sha256": "032b07731367e522db2d68cbbfaaaf8facc01364f7c7cbb03ddedc237d2b9c0d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-closeout/transcript-install/preinstall.jsonl.raw",
+        "bytes": 1080,
+        "sha256": "032b07731367e522db2d68cbbfaaaf8facc01364f7c7cbb03ddedc237d2b9c0d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/install.jsonl.raw",
+        "bytes": 815,
+        "sha256": "5bd7044dd8dcc2ef8355fc4c183d2b5e3c81a2827888bd4162af2ce23b72f2bf"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-closeout/transcript-install/install.jsonl.raw",
+        "bytes": 815,
+        "sha256": "5bd7044dd8dcc2ef8355fc4c183d2b5e3c81a2827888bd4162af2ce23b72f2bf"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/after.jsonl.raw",
+        "bytes": 1079,
+        "sha256": "cf33444f99cbe40369073e23634cf08f0a05634d06a9a54b9605e702f80606f4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-closeout/transcript-install/after.jsonl.raw",
+        "bytes": 1079,
+        "sha256": "cf33444f99cbe40369073e23634cf08f0a05634d06a9a54b9605e702f80606f4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/independent-final.jsonl.raw",
+        "bytes": 1226,
+        "sha256": "e81a543d4500bdc8f7b9848e2ceb9c24217aab70894ee6bc722d1b75f23661b9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-closeout/transcript-install/independent-final.jsonl.raw",
+        "bytes": 1226,
+        "sha256": "e81a543d4500bdc8f7b9848e2ceb9c24217aab70894ee6bc722d1b75f23661b9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/cleanup.jsonl.raw",
+        "bytes": 985,
+        "sha256": "944a0e7db1281e82ba461bf9dec676640207899f646036bd1bddba97ab43a7af"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-closeout/transcript-install/cleanup.jsonl.raw",
+        "bytes": 985,
+        "sha256": "944a0e7db1281e82ba461bf9dec676640207899f646036bd1bddba97ab43a7af"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/publication.jsonl.raw",
+        "bytes": 931,
+        "sha256": "62a7ccc36df8ab6b47295c763a0f3a4ce513086b21c02ce5aff210d445c84359"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-closeout/transcript-install/publication.jsonl.raw",
+        "bytes": 931,
+        "sha256": "62a7ccc36df8ab6b47295c763a0f3a4ce513086b21c02ce5aff210d445c84359"
+      }
+    }
+  ],
+  "boundary": "Safe metadata and exact root completion events only; no database bytes, raw user-data manifests or private UI content.",
+  "preparationCorrection": "First root selection helper failed before any copy, actual exit1 35f3e6, because a Path was subscripted. Empty destination preserved and Path join corrected; no production or evidence source changed."
+}

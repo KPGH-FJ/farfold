@@ -1,0 +1,90 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "records": [
+    {
+      "name": "preinstall",
+      "chunkId": "c597d8",
+      "actualExitCode": 0,
+      "sourceLine": 13074,
+      "sourceByteOffset": 35814304,
+      "sourceByteLength": 1080,
+      "timestamp": "2026-10-13T19:52:46.692Z",
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/preinstall.jsonl.raw",
+        "bytes": 1080,
+        "sha256": "032b07731367e522db2d68cbbfaaaf8facc01364f7c7cbb03ddedc237d2b9c0d"
+      }
+    },
+    {
+      "name": "install",
+      "chunkId": "fa53d2",
+      "actualExitCode": 0,
+      "sourceLine": 13087,
+      "sourceByteOffset": 35825764,
+      "sourceByteLength": 815,
+      "timestamp": "2026-10-13T19:53:01.517Z",
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/install.jsonl.raw",
+        "bytes": 815,
+        "sha256": "5bd7044dd8dcc2ef8355fc4c183d2b5e3c81a2827888bd4162af2ce23b72f2bf"
+      }
+    },
+    {
+      "name": "after",
+      "chunkId": "6b28ac",
+      "actualExitCode": 0,
+      "sourceLine": 13105,
+      "sourceByteOffset": 35846362,
+      "sourceByteLength": 1079,
+      "timestamp": "2026-10-13T19:53:37.986Z",
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/after.jsonl.raw",
+        "bytes": 1079,
+        "sha256": "cf33444f99cbe40369073e23634cf08f0a05634d06a9a54b9605e702f80606f4"
+      }
+    },
+    {
+      "name": "independent-final",
+      "chunkId": "5fec8f",
+      "actualExitCode": 0,
+      "sourceLine": 13116,
+      "sourceByteOffset": 35856418,
+      "sourceByteLength": 1226,
+      "timestamp": "2026-10-13T19:53:55.133Z",
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/independent-final.jsonl.raw",
+        "bytes": 1226,
+        "sha256": "e81a543d4500bdc8f7b9848e2ceb9c24217aab70894ee6bc722d1b75f23661b9"
+      }
+    },
+    {
+      "name": "cleanup",
+      "chunkId": "ee819a",
+      "actualExitCode": 0,
+      "sourceLine": 13127,
+      "sourceByteOffset": 35866574,
+      "sourceByteLength": 985,
+      "timestamp": "2026-10-13T19:54:09.323Z",
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/cleanup.jsonl.raw",
+        "bytes": 985,
+        "sha256": "944a0e7db1281e82ba461bf9dec676640207899f646036bd1bddba97ab43a7af"
+      }
+    },
+    {
+      "name": "publication",
+      "chunkId": "a72884",
+      "actualExitCode": 0,
+      "sourceLine": 13140,
+      "sourceByteOffset": 35878314,
+      "sourceByteLength": 931,
+      "timestamp": "2026-10-13T19:54:22.387Z",
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-install/publication.jsonl.raw",
+        "bytes": 931,
+        "sha256": "62a7ccc36df8ab6b47295c763a0f3a4ce513086b21c02ce5aff210d445c84359"
+      }
+    }
+  ],
+  "boundary": "Only six exact requested completion events; no other history exported."
+}

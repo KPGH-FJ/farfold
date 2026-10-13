@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "status": "PASS_CAPTURE_READY_INSTALL_AND_CLEANUP_GATED",
+  "createdAtUtc": "2026-10-13T19:51:19.828701+00:00",
+  "sourceCommit": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+  "reviewedPreparation": {
+    "build": {
+      "path": "output/2026-10-14-pdf-search-install-preparation/review-build/preparation.json",
+      "bytes": 4232,
+      "sha256": "642c969ba95fdf45fe359566c8bd02fc83f16a6f61164929173a333b0966679f"
+    },
+    "observe": {
+      "path": "output/2026-10-14-pdf-search-install-preparation/review-observe/preparation.json",
+      "bytes": 11593,
+      "sha256": "c78c793b7400570e2426004163f6e215cc9a78e6db179e823681e38c1b7e9892"
+    },
+    "capture": {
+      "path": "output/2026-10-14-pdf-search-install-preparation/review-capture/preparation.json",
+      "bytes": 11657,
+      "sha256": "4981d58fc31256416d15fd6303a066859275dae1a65da89270d09ec01c4ac386"
+    }
+  },
+  "normalObservation": {
+    "path": "output/2026-10-14-pdf-search-install/normal-exit-observation.json",
+    "bytes": 11214,
+    "sha256": "5d51863d6bccd2069455f2fd37485c9776d18dbf44ca37199d30f1c45d78d641"
+  },
+  "toolPins": [
+    {
+      "path": "output/2026-10-14-pdf-search-install-preparation/review-capture/candidate/prepare-candidate.py",
+      "bytes": 4493,
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install-preparation/review-capture/candidate/verify-candidate.py",
+      "bytes": 80324,
+      "sha256": "beda0af5ed1189dbaffe4ac34a56e1e002b411d4e33a08e8a293e637e4d5c5d6"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install-preparation/review-capture/install/data_manifest.py",
+      "bytes": 4258,
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install-preparation/review-capture/install/observe_normal_exit.py",
+      "bytes": 3474,
+      "sha256": "7c69fbc903260b0926a7d60e71b71f641f8d415fa95331e4878e69bd8c95cd2c"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install-preparation/review-capture/install/install_data_snapshot.py",
+      "bytes": 6221,
+      "sha256": "f61df361af742532e85344a949e0af1e99c0632798731e16ee190a7c28e1ff97"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install-preparation/review-capture/install/capture_snapshot.py",
+      "bytes": 2840,
+      "sha256": "29893e04a24e5c4b933c48172e05df549c845d3ec010b57642551be64c91607b"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install-preparation/review-capture/install/backup_metadata.py",
+      "bytes": 10576,
+      "sha256": "7a03e387973de8dcc3f791b16e7eae7035298038450e605de5a55bf8eb8efa8e"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install-preparation/review-capture/install/install_verified_candidate.py",
+      "bytes": 51487,
+      "sha256": "36748087c836c8277c63409c91eef40dad5a9323e94e113eb4171bc1d190320b"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install-preparation/review-capture/independent/verify_installed_final.py",
+      "bytes": 14542,
+      "sha256": "3c15344e4c50255521c1eaeed2d8acd463ccdfbb227e4bacc33194276e78d12d"
+    }
+  ],
+  "checks": {
+    "captureDelta": "Only NORMAL_EXIT_SHA=None replaced by the actual 5d51863d pin in installer and final verifier; other seven files including both candidate scripts byte-identical to observe.",
+    "inputs": "Both candidate and installer SCOPES plus exact 321 TOP complement equal all2029 frozen input paths; inherited source() still requires disk/commit membership and every Git blob equality. No source scope exception.",
+    "history": "Formal baseline c89 installedVerifiedNotLaunched; actual normal quit remains 9c NEW26 events23/24 plus actual lowercase executable process03. Last strict capture exit2/difference1 remains unaccepted. No new c89 quit fabricated. Four historical/source validation functions are byte-identical to the prior audited verifier.",
+    "previousInstallReferences": {
+      "count": 24,
+      "metadataAndToolHashesMatch": true,
+      "candidateChecks": 9,
+      "installedChecks": 10,
+      "savedManifestEntries": 217400,
+      "savedManifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+      "savedBackupSha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+      "scope": "Saved metadata only; no manifest traversal or database byte read in this review."
+    },
+    "normal": "Saved fresh exact lowercase process record has exit0/matchingPids[], newQuitPerformed=false and rootConfirmedNoAppRestartSincePriorQuit=true; observed SHA matches rendered pin. Root reports actual observer completion923369; this review did not run observer or extract that execution event.",
+    "dataHelpers": "All24 function source segments across manifest/snapshot/capture/backup helpers equal their prior audited versions. Only source/output literals change. SQLite remains exclusively second working/new backup; first capture/live bytes never SQLite-opened.",
+    "installationGate": "before and backup hashes are null. Installer begins require_configured(backup=True), rejecting before opening operation receipt or copying. Need actual fresh before, backup, preinstall equality, two actual pins, copied final9 and seal.",
+    "cleanup": "Requires exact source candidate9/install10, sealed9, actual three saved complete manifests equal, duplicate/formal exact5 hashes+modes and ZIP. Only fixed src-tauri/target/release/bundle/macos/Farfold.app is passed to rmtree. FORMAL and archive rechecked after removal.",
+    "zip": "inspect_zip and zip_matches_formal source exactly equal previously independently reviewed XLSX recovery pure functions. Explicit FORMAL sizes and modes; CRC, exact unique5 paths, full archive hash/size and each payload hash/size verified before/after deletion. No deleted APP dependency.",
+    "publication": "Fixed whitelist of configured tools and safe metadata only; no SQLite bytes or full user-data manifests. Candidate installed=true is separate from appLaunched/nativePositive/realAgent=false."
+  },
+  "cleanupTools": {
+    "preparation": {
+      "path": "output/2026-10-14-pdf-search-install-preparation/cleanup-publication-preparation.json",
+      "bytes": 3032,
+      "sha256": "c4f9b4c05732c2ff394489bb53b9fd7f05546f0601871b37726d0ea534cae01d"
+    },
+    "cleanup": {
+      "path": "output/2026-10-14-pdf-search-install-preparation/publish_and_cleanup.py",
+      "bytes": 10395,
+      "sha256": "835deda099a7fd0c1648aa610017b027ed3618cb444488b8877e51ca4f425197"
+    },
+    "publisher": {
+      "path": "output/2026-10-14-pdf-search-install-preparation/publish_installation.py",
+      "bytes": 5851,
+      "sha256": "7fd49aeef2288b9dd148889f39708a9ca3b633260454a064ad9ea87a616f9978"
+    },
+    "seal": {
+      "path": "output/2026-10-14-pdf-search-install-preparation/seal-tools.py",
+      "bytes": 3754,
+      "sha256": "c35f9f09095fa26c05b1c736393fe98eb2df369eee9f7356e8601b1e1fd756a4"
+    }
+  },
+  "allowedNext": "Root may run copied capture/backup/preinstall under its continuous no-App-action context. Installation and cleanup remain contingent on their actual data and independent-check gates.",
+  "limitations": [
+    "Static AST/source and saved metadata/hash review only. No generated function/import/main executed.",
+    "No build, tests, App, ps, live data, SQLite or database bytes read by this review.",
+    "New three-manifest equality, backup, installation and final10 remain future results at this reviewed preparation stage."
+  ],
+  "safeToPublish": true,
+  "blockers": []
+}

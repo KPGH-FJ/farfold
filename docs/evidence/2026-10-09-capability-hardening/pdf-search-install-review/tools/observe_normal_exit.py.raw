@@ -1,0 +1,51 @@
+"""Fresh process absence after root confirms continuity from actual 9c NEW26 save/quit23/24.
+
+No launch, quit, SQLite, user-data read or inferred completion of unknown work.
+"""
+import datetime
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+sys.dont_write_bytecode = True
+ROOT = Path('/Users/tw/Desktop/farfold')
+OUT = ROOT / 'output/2026-10-14-pdf-search-install'
+SOURCE_COMMIT = '2a720169e6e07fe33cecc3ec2c8b6e0909769fba'
+VERIFIER = ROOT / 'docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/verify-candidate.py'
+EXECUTABLE = '/Applications/Farfold.app/Contents/MacOS/farfold'
+
+
+def main():
+    assert isinstance(SOURCE_COMMIT, str) and len(SOURCE_COMMIT) == 40 and all(c in '0123456789abcdef' for c in SOURCE_COMMIT), 'Preparation only: SOURCE_COMMIT is UNSET'
+    assert sys.argv[1:] == ['--root-confirmed-no-app-restart-since-prior-quit'], 'Requires actual root confirmation; process absence alone is not a normal exit'
+    assert Path(__file__).parent.resolve() == OUT and all(not p.is_symlink() for p in (OUT, *OUT.parents)), 'Wrong exact output directory'
+    assert OUT.stat().st_uid == os.getuid() and (OUT.stat().st_mode & 0o777) == 0o700, 'Output must be owner-held 0700'
+    path = OUT / 'normal-exit-observation.json'
+    assert not path.exists() and not path.is_symlink(), 'Observation exists; preserve it, do not retry'
+    spec = importlib.util.spec_from_file_location('audio_candidate_normal_exit', VERIFIER)
+    verifier = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(verifier)
+    assert verifier.SOURCE_COMMIT == SOURCE_COMMIT, 'Tool source pins differ'
+    prior = verifier.prior_exit_evidence()
+    argv = ['/bin/ps', '-axo', 'pid=,comm=']
+    actual = subprocess.run(argv, capture_output=True, text=True)
+    assert actual.returncode == 0 and actual.stderr == '', 'Actual process inspection failed'
+    matching = [int(fields[0]) for line in actual.stdout.splitlines() if len(fields := line.split(None, 1)) == 2 and fields[1] == EXECUTABLE]
+    assert matching == [], 'Formal App is active; preserve work, do not force quit'
+    receipt = {'sourceCommit': SOURCE_COMMIT, 'observedAtUtc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'userAuthorizedContinuousDevelopment': True, 'normalQuitObserved': True, 'forcedQuit': False, 'formalProcessCountAfter': 0, 'newQuitPerformed': False, 'unconfirmedWorkMarkedComplete': False, 'rootConfirmedNoAppRestartSincePriorQuit': True, **prior, 'processCheck': {'argv': argv, 'exitCode': actual.returncode, 'exactExecutable': EXECUTABLE, 'matchingPids': matching}, 'boundary': 'Actual 9c NEW26 save/quit23/24 and exact-process03 with original execution plus root-confirmed no restart and fresh exact process absence. Saved c89 installation was not launched; prior strict data differences remain recorded; no new quit, launch, data mutation or unknown work completion.'}
+    verifier.validate_normal_observation(receipt)
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    with os.fdopen(fd, 'w') as handle:
+        json.dump(receipt, handle, ensure_ascii=False, indent=2)
+        handle.write('\n')
+        handle.flush()
+        os.fsync(handle.fileno())
+    print(json.dumps({'path': str(path.relative_to(ROOT)), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'processCount': 0, 'newQuitPerformed': False}))
+
+
+if __name__ == '__main__':
+    main()

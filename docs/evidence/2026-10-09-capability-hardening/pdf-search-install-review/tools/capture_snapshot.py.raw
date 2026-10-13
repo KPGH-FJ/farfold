@@ -1,0 +1,62 @@
+"""Capture wrapper; no authoritative summary on subprocess failure or drift."""
+import importlib.util
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+sys.dont_write_bytecode = True
+SOURCE_COMMIT = '2a720169e6e07fe33cecc3ec2c8b6e0909769fba'
+ROOT = Path('/Users/tw/Desktop/farfold')
+OUT = ROOT / 'output/2026-10-14-pdf-search-install'
+
+
+def require(ok, message):
+    if not ok:
+        raise RuntimeError(message)
+
+
+def load(name, filename):
+    spec = importlib.util.spec_from_file_location(name, OUT / filename)
+    helpers = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(helpers)
+    return helpers
+
+
+def exclusive_write(path, value):
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    with os.fdopen(descriptor, 'w') as stream:
+        json.dump(value, stream, ensure_ascii=False, indent=2)
+        stream.write('\n')
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
+def main():
+    require(type(SOURCE_COMMIT) is str and len(SOURCE_COMMIT) == 40 and all(c in '0123456789abcdef' for c in SOURCE_COMMIT), 'Preparation only: SOURCE_COMMIT is UNSET')
+    require(Path(__file__).parent.resolve() == OUT, 'Wrong exact installation directory')
+    require(len(sys.argv) == 2 and sys.argv[1] in ('before', 'preinstall', 'after'), 'Expected exact capture phase')
+    phase = sys.argv[1]
+    snapshot = load('docx_snapshot_helpers', 'install_data_snapshot.py')
+    require(snapshot.SOURCE_COMMIT == SOURCE_COMMIT, 'Tool source pins disagree')
+    helpers = snapshot.require_ready()
+    validator = load('docx_manifest_helpers', 'data_manifest.py')
+    destinations = [OUT / f'snapshot-{phase}-execution.json', OUT / f'install-data-{phase}.jsonl', OUT / f'install-data-{phase}-summary.json']
+    require(not any(path.exists() or path.is_symlink() for path in destinations), 'Capture destination exists; preserve it and do not retry')
+    argv = [sys.executable, str(OUT / 'install_data_snapshot.py'), phase, '--normal-window-close-observed']
+    result = subprocess.run(argv, capture_output=True, text=True)
+    execution = {'argv': argv, 'exitCode': result.returncode, 'stdout': result.stdout, 'stderr': result.stderr}
+    exclusive_write(destinations[0], execution)
+    require(result.returncode == 0 and result.stderr == '', 'Snapshot failed; retain raw/execution and do not create an authoritative summary')
+    summary = json.loads(result.stdout)
+    require(set(summary) == {'counts', 'sha256'} and validator.manifest(destinations[1]) == summary, 'Actual complete snapshot differs from summary')
+    require(helpers.process_count() == 0, 'Formal app started during capture')
+    helpers.verify_normal_exit()
+    exclusive_write(destinations[2], summary)
+    print(json.dumps(summary), flush=True)
+
+
+
+if __name__ == '__main__':
+    main()

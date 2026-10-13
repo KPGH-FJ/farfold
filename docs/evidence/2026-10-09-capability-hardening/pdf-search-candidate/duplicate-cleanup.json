@@ -1,0 +1,27 @@
+{
+  "sourceCommit": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+  "completedAtUtc": "2026-10-13T19:54:09.317359+00:00",
+  "removedPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "exactCandidateAndFormalFiveFilesAndModesMatched": true,
+  "formalApplicationPreserved": true,
+  "archivePreserved": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-14-pdf-search-2a720169/Farfold-0.1.7-2a720169.zip",
+  "independentInstallation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/install-independent-final.json",
+    "bytes": 98849,
+    "sha256": "d7bf945c81c0e37a61273054457b2b40148e9da9af5ff1f46e54e2809388decf"
+  },
+  "threeManifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+  "manifestEntriesEach": 217400,
+  "publishedInstallation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/installation.json",
+    "bytes": 3492,
+    "sha256": "12dde219d19216081d8194c62120ea679cf40e2233ef04b36fb6d97d724b8c31"
+  },
+  "cleanupTool": {
+    "path": "output/2026-10-14-pdf-search-install-preparation/publish_and_cleanup.py",
+    "bytes": 10395,
+    "sha256": "835deda099a7fd0c1648aa610017b027ed3618cb444488b8877e51ca4f425197"
+  },
+  "archiveValidation": "CRC, exact five payload paths, full bytes/hash, sizes and modes checked against FORMAL both before and after duplicate removal",
+  "boundary": "Only the exact verified generated App duplicate was removed after actual 10-check and three-manifest gates. Formal App, ZIP archive, sources, backups and user data were preserved. No App launch or native search validation."
+}

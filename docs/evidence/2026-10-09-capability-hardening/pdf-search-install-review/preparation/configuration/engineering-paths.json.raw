@@ -1,0 +1,6 @@
+{
+  "INVENTORY_PATH": "output/2026-10-14-pdf-search-integration/inventory-plan.json",
+  "ENGINEERING_PLAN_REL": "output/2026-10-14-pdf-search-integration/checks-freeze/freeze.json",
+  "PRIVATE_ENGINEERING_REL": "output/2026-10-14-pdf-search-integration/checks-run/summary.json",
+  "ENGINEERING_PATH": "docs/evidence/2026-10-09-capability-hardening/pdf-search-checks/verification.json"
+}

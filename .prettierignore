@@ -321,3 +321,12 @@ docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate.js
 docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/duplicate-cleanup.json
 docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/install-independent-final.json
 docs/evidence/2026-10-09-capability-hardening/xlsx-search-candidate/installation.json
+
+# Preserve original PDF search candidate and installation receipts.
+docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate-inputs.json
+docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate-inputs-after.json
+docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate.json
+docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate-independent.json
+docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/installation.json
+docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/install-independent-final.json
+docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/duplicate-cleanup.json

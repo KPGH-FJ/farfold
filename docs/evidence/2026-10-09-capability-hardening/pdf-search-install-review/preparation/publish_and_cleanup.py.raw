@@ -1,0 +1,186 @@
+"""After actual installation gates, publish its exact receipt and remove one generated App.
+
+Preparation only until root explicitly runs main. Never launch/quit, query a process,
+open SQLite, read live data roots, or remove the formal App/archive/backup.
+"""
+import datetime
+import hashlib
+import importlib.util
+import json
+import io
+import re
+import stat
+import zipfile
+from pathlib import Path
+import shutil
+import sys
+
+sys.dont_write_bytecode = True
+ROOT = Path('/Users/tw/Desktop/farfold')
+PREP = ROOT / 'output/2026-10-14-pdf-search-install-preparation'
+PUBLIC = ROOT / 'docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate'
+PRIVATE = ROOT / 'output/2026-10-14-pdf-search-install'
+DUPLICATE = ROOT / 'src-tauri/target/release/bundle/macos/Farfold.app'
+FORMAL = Path('/Applications/Farfold.app')
+
+
+def digest(path):
+    assert all(not p.is_symlink() for p in (path, *path.parents))
+    value = hashlib.sha256()
+    with path.open('rb') as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b''):
+            value.update(chunk)
+    return value.hexdigest()
+
+
+def read(path):
+    digest(path)
+    return json.loads(path.read_bytes())
+
+
+def ref(path):
+    return {'path': str(path.relative_to(ROOT)), 'bytes': path.stat().st_size, 'sha256': digest(path)}
+
+
+def load(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    value = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(value)
+    return value
+
+
+def arguments():
+    assert len(sys.argv) == 2 and re.fullmatch('[0-9a-f]{40}', sys.argv[1]), 'An explicit exact source commit is required'
+    return sys.argv[1]
+
+
+def inspect_zip(raw, files, modes, sizes, expected_sha, expected_bytes):
+    """Pure byte verification; callers supply sizes from the verified formal bundle."""
+    assert len(raw) == expected_bytes and hashlib.sha256(raw).hexdigest() == expected_sha
+    assert len(files) == 5 and set(files) == set(modes) == set(sizes)
+    with zipfile.ZipFile(io.BytesIO(raw)) as zipped:
+        assert zipped.testzip() is None, 'Archive CRC failure'
+        entries = zipped.infolist()
+        assert len(entries) == len({entry.filename for entry in entries}) == 5
+        assert {entry.filename for entry in entries} == {'Farfold.app/' + name for name in files}
+        for entry in entries:
+            name = entry.filename[len('Farfold.app/'):]
+            mode = entry.external_attr >> 16
+            assert stat.S_ISREG(mode) and stat.S_IMODE(mode) == modes[name], 'ZIP mode differs'
+            assert entry.file_size == sizes[name], 'ZIP/formal size differs'
+            data = zipped.read(entry)
+            assert len(data) == sizes[name] and hashlib.sha256(data).hexdigest() == files[name], 'ZIP payload differs'
+    return {'archiveSha256': expected_sha, 'archiveBytes': expected_bytes}
+
+
+def zip_matches_formal(path, files, modes, formal, expected_sha, expected_bytes):
+    assert formal == Path('/Applications/Farfold.app')
+    assert all(not p.is_symlink() for p in (path, *path.parents, formal, *formal.parents))
+    assert path.is_file()
+    sizes = {}
+    for name in files:
+        assert not Path(name).is_absolute() and '..' not in Path(name).parts
+        item = formal / name
+        assert all(not p.is_symlink() for p in (item, *item.parents))
+        value = item.stat()
+        assert stat.S_ISREG(value.st_mode) and stat.S_IMODE(value.st_mode) == modes[name]
+        sizes[name] = value.st_size
+    return inspect_zip(path.read_bytes(), files, modes, sizes, expected_sha, expected_bytes)
+
+
+def installed_gate(commit):
+    """Only saved installation metadata/manifests; no generated tool main."""
+    final_path = PUBLIC / 'install-independent-final.json'
+    final, candidate, independent = [read(PUBLIC / name) for name in (
+        'install-independent-final.json', 'candidate.json', 'candidate-independent.json')]
+    assert final['sourceCommit'] == candidate['sourceCommit'] == independent['sourceCommit'] == commit
+    for report, count in ((final, 10), (independent, 9)):
+        assert report['result'] == 'passed' and report['failures'] == []
+        assert len(report['checks']) == count and all(check['passed'] is True for check in report['checks'].values())
+    assert candidate['phase'] == 'internalCandidatePreparedNotInstalled' and candidate['buildExitCode'] == 0
+    operation_path = PRIVATE / 'install-operation.json'
+    operation = read(operation_path)
+    assert operation['candidateCommit'] == commit and operation['installed'] is True
+    assert operation['phase'] == 'installedVerifiedNotLaunched' and operation['copyStarted'] is True
+    assert operation['launched'] is False and operation['realAgentInvoked'] is False
+    assert operation['onlyFormalAppReplaced'] is True and operation['installedExactFiveFiles'] is True
+    assert operation['installedFiles'] == candidate['candidateFiles']
+    assert operation['receiptHashes'] == {key: digest(PUBLIC / name) for key, name in (
+        ('candidate', 'candidate.json'), ('independent', 'candidate-independent.json'), ('inputs', 'candidate-inputs.json'))}
+    assert ref(operation_path) in final['refs']
+    assert independent['inputReceipts']['candidateJsonSha256'] == digest(PUBLIC / 'candidate.json')
+    assert independent['inputReceipts']['candidateInputsJsonSha256'] == digest(PUBLIC / 'candidate-inputs.json')
+    sealed = read(PREP / 'generated-tools.json')
+    assert sealed['sourceCommit'] == commit and sealed['notYetKnownPins'] == []
+    assert sealed['phase'] == 'fullyConfiguredForVerifiedInstallBeforeAppMutation' and len(sealed['tools']) == 9
+    for item in sealed['tools']:
+        assert digest(ROOT / item['path']) == item['sha256']
+    validator = load('pdf_cleanup_manifest', PRIVATE / 'data_manifest.py')
+    summaries = []
+    for phase in ('before', 'preinstall', 'after'):
+        summary_path = PRIVATE / f'install-data-{phase}-summary.json'
+        execution_path = PRIVATE / f'snapshot-{phase}-execution.json'
+        manifest_path = PRIVATE / f'install-data-{phase}.jsonl'
+        summary, execution = read(summary_path), read(execution_path)
+        assert type(execution['exitCode']) is int and execution['exitCode'] == 0 and execution['stderr'] == ''
+        assert json.loads(execution['stdout']) == summary and set(summary) == {'counts', 'sha256'}
+        assert validator.manifest(manifest_path) == summary
+        assert all(ref(path) in final['refs'] for path in (summary_path, execution_path, manifest_path))
+        summaries.append(summary)
+    assert summaries[0] == summaries[1] == summaries[2]
+    count = sum(sum(value.values()) for value in summaries[0]['counts'].values())
+    assert count > 0
+    assert final['checks']['retainedDataEquality'] == {
+        'passed': True, 'allThreeManifestsEqual': True, 'entriesEach': count, 'sha256': summaries[0]['sha256']}
+    assert operation['beforeSnapshot']['counts'] == summaries[0]['counts']
+    assert operation['beforeSnapshot']['sha256'] == summaries[0]['sha256']
+    assert operation['beforeSnapshot']['summarySha256'] == digest(PRIVATE / 'install-data-preinstall-summary.json')
+    return final, candidate, summaries[0], count
+
+
+def main():
+    assert Path(__file__).absolute() == PREP / 'publish_and_cleanup.py'
+    commit = arguments()
+    target, cleanup = PUBLIC / 'installation.json', PUBLIC / 'duplicate-cleanup.json'
+    assert not any(path.exists() or path.is_symlink() for path in (target, cleanup))
+    final, candidate, summary, count = installed_gate(commit)
+    checks = load('pdf_cleanup_candidate', PUBLIC / 'verify-candidate.py')
+    assert checks.SOURCE_COMMIT == commit and checks.APP == DUPLICATE and checks.FORMAL == FORMAL
+    assert candidate['candidateApp'] == str(DUPLICATE) and DUPLICATE != FORMAL
+    assert all(not p.is_symlink() for p in (DUPLICATE, *DUPLICATE.parents))
+    expected = candidate['candidateFiles'], candidate['candidateModes']
+    assert len(expected[0]) == len(expected[1]) == 5
+    assert final['checks']['candidateFormalFiveFiles']['files'] == expected[0]
+    assert final['checks']['candidateFormalFiveFiles']['modes'] == expected[1]
+    assert checks.bundle(DUPLICATE) == checks.bundle(FORMAL) == expected
+    archive = checks.archive_path(commit)
+    assert str(archive) == candidate['archive'] and digest(archive) == candidate['archiveSha256']
+    assert archive.stat().st_size == candidate['archiveBytes']
+    zip_matches_formal(archive, *expected, FORMAL, candidate['archiveSha256'], candidate['archiveBytes'])
+    operation = PRIVATE / 'install-operation.json'
+    raw = operation.read_bytes()
+    with target.open('xb') as handle:
+        handle.write(raw)
+    assert digest(target) == digest(operation) == hashlib.sha256(raw).hexdigest()
+    # Exact literal target only; no parent, glob, cleanup prefix or alternate path.
+    shutil.rmtree(DUPLICATE)
+    assert not DUPLICATE.exists() and not DUPLICATE.is_symlink()
+    assert checks.bundle(FORMAL) == expected and digest(archive) == candidate['archiveSha256']
+    zip_matches_formal(archive, *expected, FORMAL, candidate['archiveSha256'], candidate['archiveBytes'])
+    receipt = {'sourceCommit': commit, 'completedAtUtc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+               'removedPath': str(DUPLICATE), 'exactCandidateAndFormalFiveFilesAndModesMatched': True,
+               'formalApplicationPreserved': True, 'archivePreserved': str(archive),
+               'independentInstallation': ref(PUBLIC / 'install-independent-final.json'),
+               'threeManifestSha256': summary['sha256'], 'manifestEntriesEach': count,
+               'publishedInstallation': ref(target),
+               'cleanupTool': ref(Path(__file__)),
+               'archiveValidation': 'CRC, exact five payload paths, full bytes/hash, sizes and modes checked against FORMAL both before and after duplicate removal',
+               'boundary': 'Only the exact verified generated App duplicate was removed after actual 10-check and three-manifest gates. Formal App, ZIP archive, sources, backups and user data were preserved. No App launch or native search validation.'}
+    with cleanup.open('x') as handle:
+        json.dump(receipt, handle, indent=2)
+        handle.write('\n')
+    print(json.dumps({'publishedInstallationSha256': digest(target), 'duplicateRemoved': str(DUPLICATE), 'cleanupSha256': digest(cleanup)}))
+
+
+if __name__ == '__main__':
+    main()

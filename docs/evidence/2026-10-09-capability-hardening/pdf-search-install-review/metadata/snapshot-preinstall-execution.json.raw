@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "/Library/Developer/CommandLineTools/usr/bin/python3",
+    "/Users/tw/Desktop/farfold/output/2026-10-14-pdf-search-install/install_data_snapshot.py",
+    "preinstall",
+    "--normal-window-close-observed"
+  ],
+  "exitCode": 0,
+  "stdout": "{\"counts\": {\"appData\": {\"directory\": 21360, \"file\": 195450, \"special\": 0, \"symlink\": 328}, \"cache\": {\"directory\": 8, \"file\": 2, \"special\": 0, \"symlink\": 0}, \"webkit\": {\"directory\": 152, \"file\": 100, \"special\": 0, \"symlink\": 0}}, \"sha256\": \"eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849\"}\n",
+  "stderr": ""
+}

@@ -1,0 +1,111 @@
+{
+  "phase": "fullyConfiguredForVerifiedInstallBeforeAppMutation",
+  "sourceCommit": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+  "notYetKnownPins": [],
+  "preparation": {
+    "path": "output/2026-10-14-pdf-search-install-preparation/preparation.json",
+    "sha256": "c6b6bd0ad058252b547fdbe3ed7940fbeed44bf98f0ffcfd094197c1c58e466a"
+  },
+  "tools": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/prepare-candidate.py",
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1",
+      "pins": {}
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/verify-candidate.py",
+      "sha256": "beda0af5ed1189dbaffe4ac34a56e1e002b411d4e33a08e8a293e637e4d5c5d6",
+      "pins": {
+        "BASELINE_SHA": "fbdb9a57bad0166620c03b0db429c50231c4fb9670557a61217e85da42c9ba54",
+        "SOURCE_COMMIT": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+        "ENGINEERING_SHA": "bb7cf7cb1135945597f01f04a9bd8bd595416e23a6401c7ab78b5ab47636cc01",
+        "PRIVATE_ENGINEERING_SHA": "a8de159746ed44354bb4087c2869f73a931950f07d58483f1bf842e32860b355",
+        "BASELINE_INSTALL_SHA": "57a740f3fda71de9d47f6254fdcef6d57c9bbfe55065f976fde3c16c25dd53d8",
+        "EXPECTED_INPUT_COUNT": 2029,
+        "BASELINE_NATIVE_SHA": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+        "PRIOR_QUIT_SHA": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+        "PRIOR_PROCESS_SHA": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c",
+        "ENGINEERING_PLAN_SHA": "8f5c74b502827688f3a04fd9e49a6d9b6ac8e888bad70a6a98fc3b2c9c930f97",
+        "QUIT_CONTEXT_SHA": "b6bb997adbea13389eab605b1b38a50b782ae9a105c04de58b063ed4bfe51d14",
+        "QUIT_MANIFEST_SHA": "d4a3e377389ac349f7592ac38f112851a44a0f7410659ffc5754ea2b1ed34942",
+        "PRIOR_ACTUAL_PROCESS_SHA": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205",
+        "LATEST_DATA_CONSOLIDATED_SHA": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+        "INVENTORY_SHA": "9385051c955ef4d546ce00550fb5f433c4ee8011f80769ff6ac07e3f1e785d56",
+        "PREVIOUS_MANIFEST_SHA": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849"
+      }
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install/data_manifest.py",
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "pins": {}
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install/observe_normal_exit.py",
+      "sha256": "7c69fbc903260b0926a7d60e71b71f641f8d415fa95331e4878e69bd8c95cd2c",
+      "pins": {
+        "SOURCE_COMMIT": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba"
+      }
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install/install_data_snapshot.py",
+      "sha256": "f61df361af742532e85344a949e0af1e99c0632798731e16ee190a7c28e1ff97",
+      "pins": {
+        "SOURCE_COMMIT": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba"
+      }
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install/capture_snapshot.py",
+      "sha256": "29893e04a24e5c4b933c48172e05df549c845d3ec010b57642551be64c91607b",
+      "pins": {
+        "SOURCE_COMMIT": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba"
+      }
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install/backup_metadata.py",
+      "sha256": "7a03e387973de8dcc3f791b16e7eae7035298038450e605de5a55bf8eb8efa8e",
+      "pins": {
+        "SOURCE_COMMIT": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba"
+      }
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-install/install_verified_candidate.py",
+      "sha256": "c70b28f062019359336e0d41a4aa9dd21db68457c66603552ac79f607702f272",
+      "pins": {
+        "SOURCE_COMMIT": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+        "NORMAL_EXIT_SHA": "5d51863d6bccd2069455f2fd37485c9776d18dbf44ca37199d30f1c45d78d641",
+        "BACKUP_RECEIPT_SHA": "ce31d94f737d1f1992060906cb31d448ab353926679b9df64bf43d2ff15c1254",
+        "BEFORE_SUMMARY_SHA": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+        "PRIOR_QUIT_SHA": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+        "EXPECTED_INPUT_COUNT": 2029,
+        "BASELINE_NATIVE_SHA": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+        "PRIOR_PROCESS_SHA": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c",
+        "PRIOR_ACTUAL_PROCESS_SHA": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205"
+      }
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-independent-install/verify_installed_final.py",
+      "sha256": "ab74036073e267665607417772eff60606730e3101d1992b04a8af7569fcdbf5",
+      "pins": {
+        "SOURCE_COMMIT": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+        "BEFORE_SUMMARY_SHA": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+        "NORMAL_EXIT_SHA": "5d51863d6bccd2069455f2fd37485c9776d18dbf44ca37199d30f1c45d78d641",
+        "PRIOR_QUIT_SHA": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+        "EXPECTED_INPUT_COUNT": 2029,
+        "BASELINE_NATIVE_SHA": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+        "PRIOR_PROCESS_SHA": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c"
+      }
+    }
+  ],
+  "beforeSummary": {
+    "path": "output/2026-10-14-pdf-search-install/install-data-before-summary.json",
+    "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+  },
+  "backupReceipt": {
+    "path": "output/2026-10-14-pdf-search-install/metadata-backup-receipt.json",
+    "sha256": "ce31d94f737d1f1992060906cb31d448ab353926679b9df64bf43d2ff15c1254"
+  },
+  "normalExit": {
+    "path": "output/2026-10-14-pdf-search-install/normal-exit-observation.json",
+    "sha256": "5d51863d6bccd2069455f2fd37485c9776d18dbf44ca37199d30f1c45d78d641"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "status": "PASS_EXACT_V2_SELECTION_AND_COMMIT_TREE",
+  "createdAtUtc": "2026-10-13T19:48:29.632662+00:00",
+  "base": "b4cce76e6d8ab38988e78fc11580818bd167391c",
+  "commit": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+  "originalPlan": {
+    "path": "output/2026-10-14-pdf-search-integration/source-stage-plan.json",
+    "bytes": 54827,
+    "sha256": "bf7b7f88534d275beedffa228ae8c441655b95ada1615421c0815b71d7de4cf6"
+  },
+  "originalSelection": {
+    "files": 245,
+    "bytes": 7297497,
+    "groups": {
+      "source": 17,
+      "docs": 4,
+      "newFrozenAuxiliary": 19,
+      "postFreezeSelector": 1,
+      "implementationPublic": 161,
+      "engineeringPublic": 38,
+      "reviewOriginal": 5
+    },
+    "exactUnionAndHashesMatch": true,
+    "originalPreserved": true
+  },
+  "selectedPlan": {
+    "path": "output/2026-10-14-pdf-search-integration/source-stage-plan-v2.json",
+    "bytes": 55449,
+    "sha256": "477e5872ad950f0657b769d72a187cb1d02e5d3004c9d0a862b9a017ad878c41"
+  },
+  "selectedNul": {
+    "path": "output/2026-10-14-pdf-search-integration/source-stage-paths-v2.nul",
+    "bytes": 22172,
+    "sha256": "b829a0dc1b22cdd03124e1814f1cd3ac37046d49802157323221655c7b798b02"
+  },
+  "selectedFiles": 247,
+  "selectedBytes": 7299253,
+  "delta": {
+    "added": [
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-review/engineering-manifest.json.raw",
+        "bytes": 535,
+        "sha256": "0681bd445621c346dbc6127565844251ec3c815a0d24f3f7452a24141d544a72"
+      },
+      {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-review/engineering-seven-check-completed.jsonl.raw.raw",
+        "bytes": 1221,
+        "sha256": "260c64f417e29b92ec3327a612e139395831e05883b577a31294806837aa52e6"
+      }
+    ],
+    "removed": [],
+    "changedOriginalReferences": [],
+    "byteExactOriginalCopies": true,
+    "purpose": "Actual root b3f3c1 completion and its original offset/hash manifest; no source or engineering input changes."
+  },
+  "closure": {
+    "all2029InputsInBaseOrSelected": true,
+    "implementationRawCopies": 159,
+    "engineeringRawCopies": 36,
+    "publicDirectoriesExactMembership": true,
+    "rootActualCompletionPublic": true,
+    "necessaryEvidenceOmissions": [],
+    "localProvenanceBoundary": "Original inventory and documentation before/diff/format locators remain local. Complete checked input hashes are published in the freeze; docs baseline is reconstructable from recorded Git base and public seven-check receipts cover final formatting. No additional historical appendix is required."
+  },
+  "protection": {
+    "protectedFiles": 3,
+    "allCurrentHashesUnchanged": true,
+    "allExcludedFromCommitDelta": true,
+    "unrelatedDirtyExcluded": [
+      "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md"
+    ],
+    "commitDeltaExact247": true,
+    "everyCommitBlobHashAndBytesMatch": true,
+    "noPrivateDataOrUnrelatedOutputAdded": true
+  },
+  "verificationEvidence": {
+    "exact247CommitAndCurrentHashCheckActualExit0Chunk": "b014e6",
+    "actualExtraFilename": "engineering-seven-check-completed.jsonl.raw.raw",
+    "coordinationCorrections": "Read-only attempts initially encountered root staging/committing after the old empty-index/base-HEAD assumptions. A later filename assertion assumed one .raw suffix; the actual v2 selection has two. Exact immutable commit blob verification passed, and the final two original copies match. No product tests were rerun."
+  },
+  "scope": "Source/docs/synthetic evidence checkpoint only; PDF candidate, installation, native positive and real Agent remain separate. Original failures preserved. Prior publication privacy whitelist retained with two safe completion records. No App, Agent, DB, engineering commands or full-2029 rehash executed.",
+  "safeToPublish": true,
+  "blockers": []
+}

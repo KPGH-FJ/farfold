@@ -1,0 +1,91 @@
+"""Publish exact selected tools and safe metadata after actual installation/cleanup.
+
+No live data, SQLite, process, App action or raw user-data manifest publication.
+"""
+import datetime
+import importlib.util
+import json
+from pathlib import Path
+import sys
+
+sys.dont_write_bytecode = True
+ROOT = Path('/Users/tw/Desktop/farfold')
+BASE = ROOT / 'docs/evidence/2026-10-09-capability-hardening'
+OUT = BASE / 'pdf-search-install-review'
+PREP = ROOT / 'output/2026-10-14-pdf-search-install-preparation'
+INSTALL = ROOT / 'output/2026-10-14-pdf-search-install'
+
+
+def main():
+    assert Path(__file__).absolute() == PREP / 'publish_installation.py'
+    assert not OUT.exists() and not OUT.is_symlink()
+    spec = importlib.util.spec_from_file_location('pdf_publication_cleanup', PREP / 'publish_and_cleanup.py')
+    gate = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gate)
+    commit = gate.arguments()
+    final, candidate, summary, count = gate.installed_gate(commit)
+    assert final['sourceCommit'] == commit
+    public = BASE / 'pdf-search-candidate'
+    clean = gate.read(public / 'duplicate-cleanup.json')
+    assert clean['sourceCommit'] == commit and clean['removedPath'] == str(gate.DUPLICATE)
+    assert not gate.DUPLICATE.exists() and not gate.DUPLICATE.is_symlink()
+    assert clean['formalApplicationPreserved'] is True and clean['exactCandidateAndFormalFiveFilesAndModesMatched'] is True
+    assert clean['independentInstallation'] == gate.ref(public / 'install-independent-final.json')
+    assert clean['threeManifestSha256'] == summary['sha256'] and clean['manifestEntriesEach'] == count
+    assert clean['publishedInstallation'] == gate.ref(public / 'installation.json')
+    assert clean['cleanupTool'] == gate.ref(PREP / 'publish_and_cleanup.py')
+    assert gate.digest(public / 'installation.json') == gate.digest(INSTALL / 'install-operation.json')
+    checks = gate.load('pdf_publication_candidate', public / 'verify-candidate.py')
+    expected = candidate['candidateFiles'], candidate['candidateModes']
+    assert checks.bundle(gate.FORMAL) == expected
+    archive = checks.archive_path(commit)
+    assert clean['archivePreserved'] == str(archive) == candidate['archive']
+    assert gate.digest(archive) == candidate['archiveSha256'] and archive.stat().st_size == candidate['archiveBytes']
+    gate.zip_matches_formal(archive, *expected, gate.FORMAL, candidate['archiveSha256'], candidate['archiveBytes'])
+    assert checks.bundle(gate.FORMAL) == expected and not gate.DUPLICATE.exists() and not gate.DUPLICATE.is_symlink()
+    preparation = gate.read(PREP / 'preparation.json')
+    selected = [(PREP / name, 'preparation/' + name + '.raw') for name in (
+        'preparation.json', 'generated-tools.json', 'publish_and_cleanup.py', 'publish_installation.py', 'seal-tools.py')]
+    for name, sha in preparation['configurationInputs'].items():
+        path = ROOT / name
+        assert path.parent == PREP and path.suffix in ('.py', '.json', '.inc') and gate.digest(path) == sha
+        selected.append((path, 'preparation/configuration/' + path.name + '.raw'))
+    for item in preparation['tools']:
+        path = ROOT / item['finalPath']
+        assert path.suffix == '.py' and gate.digest(path) == item['preparedSha256']
+        selected.append((path, 'tools/' + path.name + '.raw'))
+    for name in ('normal-exit-observation.json', 'metadata-backup-receipt.json'):
+        selected.append((INSTALL / name, 'metadata/' + name + '.raw'))
+    for phase in ('before', 'preinstall', 'after'):
+        selected.extend((INSTALL / name, 'metadata/' + name + '.raw') for name in (
+            f'snapshot-{phase}-execution.json', f'install-data-{phase}-summary.json'))
+    assert len({relative for _, relative in selected}) == len(selected)
+    originals = {str(source): gate.ref(source) for source, _ in selected}
+    OUT.mkdir()
+    copies = []
+    for source, relative in selected:
+        target = OUT / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with target.open('xb') as handle:
+            handle.write(source.read_bytes())
+        original, published = gate.ref(source), gate.ref(target)
+        assert original == originals[str(source)]
+        assert original['bytes'] == published['bytes'] and original['sha256'] == published['sha256']
+        copies.append({'original': original, 'published': published})
+    result = {'sourceCommit': commit, 'publishedAtUtc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'candidateChecksPassed': len(gate.read(public / 'candidate-independent.json')['checks']),
+              'installedChecksPassed': len(final['checks']), 'applicationVersion': '0.1.7', 'architecture': 'arm64',
+              'dataManifestEntries': count, 'beforePreinstallAfterSha256': summary['sha256'],
+              'formalAppUpdated': True, 'appLaunchedForThisSlice': False, 'realAgentInvokedForThisSlice': False,
+              'nativePositiveSearchVerified': False, 'copies': copies,
+              'candidate': gate.ref(public / 'candidate.json'), 'installed': gate.ref(public / 'install-independent-final.json'),
+              'operation': gate.ref(public / 'installation.json'), 'cleanup': gate.ref(public / 'duplicate-cleanup.json'),
+              'boundary': 'Installed bundle and recorded data retention only. No native PDF search positive result, real-Agent, permission recovery, or whole-P32 acceptance. Original failed checks/preparation records remain preserved; earlier strict data differences are not waived. Raw user-data manifests and database bytes stay private.'}
+    with (OUT / 'verification.json').open('x') as handle:
+        json.dump(result, handle, indent=2)
+        handle.write('\n')
+    print(json.dumps({'published': len(copies), 'entry': gate.ref(OUT / 'verification.json')}))
+
+
+if __name__ == '__main__':
+    main()

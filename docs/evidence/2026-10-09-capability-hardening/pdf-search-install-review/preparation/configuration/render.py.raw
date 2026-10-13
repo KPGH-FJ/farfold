@@ -1,0 +1,214 @@
+"""Prepare the nine actually executed XLSX tools for PDF; never execute them.
+
+Usage: python3 -B render.py pins.json engineering-paths.json new-review candidate|all
+Engineering paths must be explicit. Unknown result pins remain null and keep
+the existing runtime gates closed. All final input members must be committed.
+"""
+import ast
+import difflib
+import hashlib
+import json
+from pathlib import Path
+import re
+import sys
+
+ROOT = Path('/Users/tw/Desktop/farfold')
+OUT = ROOT / 'output/2026-10-14-pdf-search-install-preparation'
+INTEGRATION = 'output/2026-10-14-pdf-search-integration'
+PIN_KEYS = {'SOURCE_COMMIT', 'ENGINEERING_SHA', 'PRIVATE_ENGINEERING_SHA',
+            'EXPECTED_INPUT_COUNT', 'INVENTORY_SHA', 'FREEZE_SHA',
+            'NORMAL_EXIT_SHA', 'BEFORE_SUMMARY_SHA', 'BACKUP_RECEIPT_SHA'}
+PATH_KEYS = {'INVENTORY_PATH', 'ENGINEERING_PLAN_REL',
+             'PRIVATE_ENGINEERING_REL', 'ENGINEERING_PATH'}
+
+
+def sha(path):
+    assert all(not p.is_symlink() for p in (path, *path.parents))
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def once(text, old, new):
+    assert text.count(old) == 1, 'Nonunique patch anchor: ' + old[:100]
+    return text.replace(old, new, 1)
+
+
+def assignments(text, values):
+    edits = []
+    for node in ast.parse(text).body:
+        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+            key = node.targets[0].id
+            if key in values:
+                edits.append((ast.get_source_segment(text, node), key + ' = ' + values[key]))
+    for old, new in edits:
+        text = once(text, old, new)
+    return text
+
+
+def function(text, name):
+    node, = [n for n in ast.parse(text).body if isinstance(n, ast.FunctionDef) and n.name == name]
+    return ast.get_source_segment(text, node)
+
+
+def scope(text):
+    nodes = [n for n in ast.parse(text).body if
+             (isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id in ('ROOT', 'BASE', 'SCOPES', 'TOP') for t in n.targets))
+             or (isinstance(n, ast.AugAssign) and isinstance(n.target, ast.Name) and n.target.id in ('SCOPES', 'TOP'))]
+    env = {'Path': Path}
+    exec(compile(ast.Module(body=nodes, type_ignores=[]), '<literal-scope>', 'exec'), env)
+    paths = set(env['TOP'])
+    for directory in env['SCOPES']:
+        base = ROOT / directory
+        assert base.is_dir() and not base.is_symlink()
+        for path in base.rglob('*'):
+            if path.name == '.DS_Store' or '__pycache__' in path.parts:
+                continue
+            assert not path.is_symlink()
+            if path.is_file():
+                paths.add(str(path.relative_to(ROOT)))
+    return paths
+
+
+def set_scope(text, paths):
+    # Keep recursive source/fixture scopes; TOP is exactly the new inventory's
+    # complement, including every frozen output fixture. No commit exemption.
+    nodes = [n for n in ast.parse(text).body if
+             (isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'TOP' for t in n.targets))
+             or (isinstance(n, ast.AugAssign) and isinstance(n.target, ast.Name) and n.target.id == 'TOP')]
+    for node in reversed(nodes):
+        text = once(text, ast.get_source_segment(text, node), '')
+    scopes = [n for n in ast.parse(text).body if
+              (isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'SCOPES' for t in n.targets))
+              or (isinstance(n, ast.AugAssign) and isinstance(n.target, ast.Name) and n.target.id == 'SCOPES')]
+    env = {}
+    exec(compile(ast.Module(body=scopes, type_ignores=[]), '<literal-directories>', 'exec'), env)
+    top = sorted(p for p in paths if not any(p.startswith(s) for s in env['SCOPES'])) if paths is not None else []
+    text = assignments(text, {'INPUT_SCOPE_READY': repr(paths is not None)})
+    text = once(text, "if __name__ == '__main__':", 'TOP = ' + repr(top) + "\n\nif __name__ == '__main__':")
+    if paths is not None:
+        assert scope(text) == set(paths), 'Candidate/install inventory membership differs'
+    return text
+
+
+def transform(text, name, pins, known, phase, paths):
+    original = text
+    previous = None
+    if name == 'verify-candidate.py':
+        # Shield saved installation provenance from all current-phase rewrites.
+        previous = function(text, 'previous_installation_evidence')
+        text = once(text, previous, 'def previous_installation_evidence():\n    pass')
+    for old, new in (
+        ('output/2026-10-14-xlsx-search-install-preparation', 'output/2026-10-14-pdf-search-install-preparation'),
+        ('output/2026-10-14-xlsx-search-independent-install', 'output/2026-10-14-pdf-search-independent-install'),
+        ('output/2026-10-14-xlsx-search-install', 'output/2026-10-14-pdf-search-install'),
+        ('hardening/xlsx-search-candidate', 'hardening/pdf-search-candidate'),
+        ('docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks', str(Path(phase['ENGINEERING_PATH']).parent)),
+        ('output/2026-10-14-xlsx-search-integration/checks-run/summary.json', phase['PRIVATE_ENGINEERING_REL']),
+        ('output/2026-10-14-xlsx-search-integration/checks-freeze/freeze.json', phase['ENGINEERING_PLAN_REL']),
+        ('output/2026-10-14-xlsx-search-integration/inventory-plan-final.json', phase['INVENTORY_PATH']),
+        ('output/2026-10-14-xlsx-search-integration', INTEGRATION),
+        ('internal-candidate/2026-10-14-xlsx-search-', 'internal-candidate/2026-10-14-pdf-search-'),
+    ):
+        text = text.replace(old, new)
+    values = {key: repr(value) for key, value in {**known, **pins}.items()}
+    values.update({'BASELINE': "BASE / 'xlsx-search-candidate/candidate.json'",
+                   'BASELINE_INSTALL': "BASE / 'xlsx-search-candidate/install-independent-final.json'",
+                   'ENGINEERING_PLAN_SHA': repr(pins['FREEZE_SHA'])})
+    for key in ('QUIT_CONTEXT', 'QUIT_MANIFEST', 'PRIOR_QUIT', 'PRIOR_PROCESS', 'PRIOR_ACTUAL_PROCESS'):
+        values[key] = 'ROOT / ' + repr(known[key])
+    for key, path in phase.items():
+        values[key] = ('ROOT / ' if key in ('INVENTORY_PATH', 'ENGINEERING_PATH') else '') + repr(path)
+    text = assignments(text, values)
+    if previous is not None:
+        previous = once(previous, '== 1799,', '== PREVIOUS_INPUT_COUNT,')
+        previous = previous.replace('output/2026-10-14-docx-search-install/', 'output/2026-10-14-xlsx-search-install/')
+        previous = previous.replace('52d', 'c89')
+        text = once(text, function(text, 'previous_installation_evidence'), previous)
+        text = once(text, "if __name__ == '__main__':", 'PREVIOUS_INPUT_COUNT = ' + repr(known['PREVIOUS_INPUT_COUNT']) + "\n\nif __name__ == '__main__':")
+        text = text.replace('source52d baseline (never launched)', 'sourcec89 baseline (never launched)')
+        for retained in ('latest_data_evidence', 'prior_exit_evidence', 'completed_quit_text', 'quit_timestamp', 'raw_publication_evidence'):
+            assert function(text, retained) == function(original, retained), 'Historical gate changed: ' + retained
+    if name in ('verify-candidate.py', 'install_verified_candidate.py'):
+        text = set_scope(text, paths)
+    if name == 'observe_normal_exit.py':
+        text = text.replace('Saved 52d installation was not launched;', 'Saved c89 installation was not launched;')
+    if name == 'verify_installed_final.py':
+        text = text.replace('this configured XLSX selected-attachment search installation over the actual unlaunched 52d formal baseline;',
+                            'this configured PDF selected-attachment search installation over the actual unlaunched c89 formal baseline;')
+    assert 'output/output/' not in text and len(text.splitlines()) <= 1500
+    compile(text, name, 'exec')
+    return text
+
+
+def configuration(filename):
+    path = OUT / filename
+    assert path.parent == OUT and not path.is_symlink()
+    return path, json.loads(path.read_text())
+
+
+def main():
+    assert Path(__file__).absolute() == OUT / 'render.py'
+    assert len(sys.argv) == 5 and sys.argv[4] in ('candidate', 'all')
+    assert re.fullmatch('[a-z0-9][a-z0-9-]*', sys.argv[3])
+    pin_path, pins = configuration(sys.argv[1])
+    phase_path, phase = configuration(sys.argv[2])
+    assert set(pins) == PIN_KEYS and set(phase) == PATH_KEYS
+    for key, value in pins.items():
+        assert value is None or (type(value) is int and value > 0 if key == 'EXPECTED_INPUT_COUNT' else isinstance(value, str) and re.fullmatch('[0-9a-f]{' + ('40' if key == 'SOURCE_COMMIT' else '64') + '}', value)), key
+    for key, value in phase.items():
+        assert isinstance(value, str) and value and not Path(value).is_absolute() and '..' not in Path(value).parts, 'Explicit engineering path required: ' + key
+        assert value.endswith('.json') and value.startswith('docs/evidence/2026-10-09-capability-hardening/' if key == 'ENGINEERING_PATH' else INTEGRATION + '/'), key
+    assert Path(phase['PRIVATE_ENGINEERING_REL']).name == 'summary.json'
+    assert Path(phase['ENGINEERING_PLAN_REL']).name == 'freeze.json'
+    assert Path(phase['ENGINEERING_PATH']).name == 'verification.json'
+    origins = json.loads((OUT / 'origins.json').read_text())
+    known = json.loads((OUT / 'known-baseline.json').read_text())
+    paths = None
+    if pins['INVENTORY_SHA'] is not None:
+        inventory_path = ROOT / phase['INVENTORY_PATH']
+        assert sha(inventory_path) == pins['INVENTORY_SHA']
+        inventory = json.loads(inventory_path.read_bytes())
+        assert inventory['inputCount'] == pins['EXPECTED_INPUT_COUNT'] == len(inventory['paths'])
+        assert inventory['paths'] == sorted(set(inventory['paths']))
+        paths = inventory['paths']
+    destination = OUT / sys.argv[3]
+    assert not destination.exists()
+    rendered = []
+    for category, records in origins['scripts'].items():
+        if sys.argv[4] == 'candidate' and category != 'candidate':
+            continue
+        for name, record in records.items():
+            path = ROOT / record['path']
+            assert sha(path) == record['sha256'] and path.stat().st_size == record['bytes']
+            source = path.read_text()
+            rendered.append((category, name, source, transform(source, name, pins, known, phase, paths), record))
+    destination.mkdir(mode=0o700)
+    (destination / 'diffs').mkdir()
+    files = []
+    finals = {'candidate': 'docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate',
+              'install': 'output/2026-10-14-pdf-search-install',
+              'independent': 'output/2026-10-14-pdf-search-independent-install'}
+    for category, name, source, result, record in rendered:
+        target = destination / category / name
+        target.parent.mkdir(exist_ok=True)
+        with target.open('x') as handle:
+            handle.write(result)
+        diff = destination / 'diffs' / (category + '-' + name + '.diff')
+        with diff.open('x') as handle:
+            handle.writelines(difflib.unified_diff(source.splitlines(True), result.splitlines(True), fromfile=record['path'], tofile=str(target.relative_to(ROOT))))
+        files.append({'path': str(target.relative_to(ROOT)), 'bytes': target.stat().st_size, 'sha256': sha(target),
+                      'origin': record, 'diff': str(diff.relative_to(ROOT)), 'diffSha256': sha(diff),
+                      'finalPath': finals[category] + '/' + name})
+    receipt = {'phase': 'PREPARATION_ONLY_NO_GENERATED_MAIN_EXECUTED', 'pins': pins, 'engineeringPaths': phase,
+               'inputScopeReady': paths is not None, 'files': files,
+               'tools': [{'preparedPath': f['path'], 'preparedSha256': f['sha256'], 'finalPath': f['finalPath']} for f in files],
+               'configurationInputs': {str(p.relative_to(ROOT)): sha(p) for p in (
+                   Path(__file__), pin_path, phase_path, OUT / 'origins.json', OUT / 'known-baseline.json', OUT / 'baseline-context.json')}}
+    with (destination / 'preparation.json').open('x') as handle:
+        json.dump(receipt, handle, ensure_ascii=False, indent=2)
+        handle.write('\n')
+    print(json.dumps({'path': str(destination.relative_to(ROOT)), 'files': len(files), 'scopeReady': paths is not None,
+                      'preparationSha256': sha(destination / 'preparation.json')}))
+
+
+if __name__ == '__main__':
+    main()
