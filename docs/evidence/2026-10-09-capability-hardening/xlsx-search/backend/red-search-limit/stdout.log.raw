@@ -1,0 +1,12 @@
+
+running 2 tests
+test file_delivery::workbook::search_tests::search_exact_one_mib_preserves_xml_parts_and_complete_receipt ... ok
+test file_delivery::workbook::search_tests::search_rejects_one_mib_plus_one_while_legacy_workbook_stays_usable ... FAILED
+
+failures:
+
+failures:
+    file_delivery::workbook::search_tests::search_rejects_one_mib_plus_one_while_legacy_workbook_stays_usable
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 1672 filtered out; finished in 0.03s
+

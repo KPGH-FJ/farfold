@@ -1,0 +1,78 @@
+{
+  "createdAtUtc": "2026-10-13T18:16:59.655969+00:00",
+  "baseCommit": "a07392822ec6a0beaa7e2508ac9fc8ee7795d83d",
+  "ownedFiles": [
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 20940,
+      "sha256": "4a4a1078d43a6e2830117ce76e1914872e6fc85c4c6922501cc8e7fb00de0077"
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 4834,
+      "sha256": "879dbac3552e5b398feada2837f823e44f9d545ddbaa22fa292ede9717120453"
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 7365,
+      "sha256": "013a9ce524c0e9b20a0462f0852ed0d16e7f23097d6f16bb44c5b5980dba5065"
+    },
+    {
+      "path": "src/runtime/attachment_search.xlsx.test.ts",
+      "bytes": 15751,
+      "sha256": "af67347b3bab7ecf99effec24876a0f9266652a165dd4db66b23ab36597278a9"
+    },
+    {
+      "path": "src/runtime/attachment_search.xlsx.test-support.ts",
+      "bytes": 3021,
+      "sha256": "3d946bd9ec82c754eba1dc62d5e86960a0f94bb32e0bf8a8384cdfb1c734e37a"
+    },
+    {
+      "path": "src/runtime/xlsx_search_text.ts",
+      "bytes": 3713,
+      "sha256": "d3a25060ce3ead1a9d2d8024a7517bda069d36d727f8d3f528847cd15eeb6f5e"
+    },
+    {
+      "path": "src/runtime/xlsx_search_text.test.ts",
+      "bytes": 11652,
+      "sha256": "8abdd2b5afaa61de69b5fe688791a0081e39c179fb6a0aead4f374016d3d6f06"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 11626,
+      "sha256": "c7263157d22d3d32d35d3d29baac7a96f9b54e3796abebaeaf6a60fcbc384d2a"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.test.tsx",
+      "bytes": 5758,
+      "sha256": "50f380e17d7d7efecc11f0facca8769eb80b06204af02dbea647d5628e9e131e"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/captures.json",
+      "bytes": 23548,
+      "sha256": "cb3be77e2777c7b5a1d30f362bc1be7cba07241030ae6d05a227a94414c8c7bd"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/decoding-fields.xlsx",
+      "bytes": 2986,
+      "sha256": "37ec3551b11f08feaeafe03f5b4639b4ad939b857cb57667f2f35691b5fa34e9"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/hidden-only.xlsx",
+      "bytes": 2249,
+      "sha256": "8e8c782e1b905e2f3106663fd9771ae1e47b165caf5a651fac0f534930153116"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/oracle.json",
+      "bytes": 11563,
+      "sha256": "bb267ceec0c54dc3807268923b416fa69021d8eccb9bb7402591b1c833467536"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/scope-barriers.xlsx",
+      "bytes": 3696,
+      "sha256": "26579c383c8b9d955c18a595b5025d5a4a7e8c3abdfb1093ebc18bac9d95b7c5"
+    }
+  ],
+  "scope": "XLSX selected current attachment saved values/cache and included stored formulas; bounded IPC plus existing real Workbook Worker, shared DOCX/UTF8 UI/controller. No docs/backend/app changes by this owner.",
+  "remaining": "Root controlled browser and independent review; full engineering/build/install not run by frontend."
+}

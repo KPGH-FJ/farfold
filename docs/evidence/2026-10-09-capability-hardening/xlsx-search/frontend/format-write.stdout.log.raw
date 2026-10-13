@@ -1,0 +1,9 @@
+src/runtime/attachment_search.ts 75ms
+src/runtime/attachment_search_source.ts 9ms
+src/runtime/attachment_search_strings.ts 8ms
+src/runtime/attachment_search.xlsx.test.ts 32ms
+src/runtime/attachment_search.xlsx.test-support.ts 4ms
+src/runtime/xlsx_search_text.ts 6ms
+src/runtime/xlsx_search_text.test.ts 15ms
+src/components/SelectedAttachmentSearch.tsx 14ms
+src/components/SelectedAttachmentSearch.test.tsx 9ms

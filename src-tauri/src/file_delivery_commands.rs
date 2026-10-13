@@ -137,6 +137,31 @@ pub async fn file_delivery_read_workbook(
 }
 
 #[tauri::command]
+pub async fn file_delivery_read_workbook_search(
+    webview: Webview,
+    file: VerifiedFile,
+) -> Result<file_delivery::WorkbookCapture, file_delivery::WorkbookReadFailure> {
+    require_main(&webview)
+        .map_err(|_| file_delivery::WorkbookReadFailure { code: "unreadable" })?;
+    checked_workbook_search(file).await
+}
+
+async fn checked_workbook_search(
+    file: VerifiedFile,
+) -> Result<file_delivery::WorkbookCapture, file_delivery::WorkbookReadFailure> {
+    // Capture and archive validation retain one shared OS slot until they finish,
+    // even when the caller stops waiting or the bounded reply expires.
+    crate::file_read_check::run(move || Ok(file_delivery::read_workbook_search(&file)))
+        .await
+        .map_err(|message| file_delivery::WorkbookReadFailure::check(&message))?
+        .map_err(Into::into)
+}
+
+#[cfg(test)]
+#[path = "file_delivery/workbook_search_command_tests.rs"]
+mod workbook_search_tests;
+
+#[tauri::command]
 pub async fn file_delivery_read_docx(
     webview: Webview,
     file: VerifiedFile,

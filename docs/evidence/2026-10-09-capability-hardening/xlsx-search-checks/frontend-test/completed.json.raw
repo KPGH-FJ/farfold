@@ -1,0 +1,22 @@
+{
+  "actualStageCompletion": true,
+  "argv": [
+    "corepack",
+    "pnpm",
+    "test"
+  ],
+  "completedAt": "2026-10-13T18:31:39.318305+00:00",
+  "cwd": "/Users/tw/Desktop/farfold",
+  "displayCommand": "corepack pnpm test",
+  "elapsedSeconds": 47.079297417,
+  "group": "frontend",
+  "monotonicStart": 39.299249416,
+  "name": "frontend-test",
+  "pid": 57018,
+  "processLaunched": true,
+  "rawExitCode": 0,
+  "startedAt": "2026-10-13T18:30:52.533966+00:00",
+  "state": "COMPLETED",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdoutSha256": "3727dd72e1a574d3001d7326cac8f329665d4c4e36e0e3fceed78c49f814a3f0"
+}

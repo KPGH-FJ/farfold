@@ -4,6 +4,14 @@ import { fileDelivery, type VerifiedFile } from "./file_delivery";
 import { sameFileRevision } from "./file_revision_monitor";
 import { FILE_DELIVERY_STRINGS as D } from "./file_delivery_strings";
 import { readDocxPreview } from "./docx_preview";
+import { readWorkbookInput } from "./xlsx_preview";
+import { XLSX_LIMITS, XlsxError, type WorkbookCapture } from "./xlsx_types";
+import type { XlsxInputResult } from "./xlsx_input_types";
+import {
+  xlsxSearchText,
+  type XlsxSearchLocation,
+  type XlsxSearchScope,
+} from "./xlsx_search_text";
 import {
   DOCX_LIMITS,
   DocxError,
@@ -18,6 +26,7 @@ import {
 import {
   knownAttachmentSearchCandidate,
   attachmentSearchIsDocx,
+  attachmentSearchIsXlsx,
   type AttachmentSearchCandidate,
 } from "./attachment_search_source";
 
@@ -40,6 +49,7 @@ export type AttachmentSearchCode =
   | "documentLimit"
   | "encrypted"
   | "timeout"
+  | "scopeEmpty"
   | "invalid";
 export type AttachmentSearchRow = {
   source: AttachmentSearchCandidate;
@@ -48,6 +58,7 @@ export type AttachmentSearchRow = {
   matches: number;
   file?: VerifiedFile;
   document?: DocxSearchScope;
+  workbook?: XlsxSearchScope;
 };
 export type AttachmentSearchHit = Readonly<{
   source: AttachmentSearchCandidate;
@@ -55,7 +66,7 @@ export type AttachmentSearchHit = Readonly<{
   before: string;
   match: string;
   after: string;
-  location?: DocxSearchLocation;
+  location?: DocxSearchLocation | XlsxSearchLocation;
 }>;
 export type AttachmentSearchState = {
   phase:
@@ -79,6 +90,11 @@ export interface AttachmentSearchPort {
   check(file: VerifiedFile): Promise<unknown>;
   readDocx?(file: VerifiedFile): Promise<unknown>;
   parseDocx?(capture: DocxCapture, signal: AbortSignal): Promise<DocxPreview>;
+  readWorkbook?(file: VerifiedFile): Promise<unknown>;
+  parseWorkbook?(
+    capture: WorkbookCapture,
+    signal: AbortSignal,
+  ): Promise<XlsxInputResult>;
 }
 const port: AttachmentSearchPort = {
   inspect: (path) => invoke("file_delivery_inspect_text", { path }),
@@ -86,6 +102,10 @@ const port: AttachmentSearchPort = {
   check: (file) => invoke("file_delivery_check_text_revision", { file }),
   readDocx: (file) => invoke("file_delivery_read_docx_search", { file }),
   parseDocx: readDocxPreview,
+  readWorkbook: (file) =>
+    invoke("file_delivery_read_workbook_search", { file }),
+  parseWorkbook: (capture, signal) =>
+    readWorkbookInput(capture, { mode: "visible-saved-cells" }, signal),
 };
 const initial = (): AttachmentSearchState => ({
   phase: "idle",
@@ -150,6 +170,7 @@ function failure(e: unknown): AttachmentSearchCode {
       "documentLimit",
       "encrypted",
       "timeout",
+      "scopeEmpty",
       "invalid",
     ].includes(String(code))
   )
@@ -329,9 +350,13 @@ export class AttachmentSearch {
         }
       });
       type Content = {
-        segments: readonly { text: string; location?: DocxSearchLocation }[];
+        segments: readonly {
+          text: string;
+          location?: DocxSearchLocation | XlsxSearchLocation;
+        }[];
         bytes: number;
         document?: DocxSearchScope;
+        workbook?: XlsxSearchScope;
       };
       // The preview worker is shared with document viewing. Serialize this
       // batch only; an unrelated preview can still honestly report busy.
@@ -373,6 +398,36 @@ export class AttachmentSearch {
             if (!sameFileRevision(f, file(preview.file, f.path)))
               fail("changed");
             content = docxSearchText(preview);
+          } else if (attachmentSearchIsXlsx(sources[i])) {
+            if (!this.services.readWorkbook || !this.services.parseWorkbook)
+              fail("unsupported");
+            const capture = record(await this.services.readWorkbook(f));
+            if (!valid() || this.pending) return null;
+            if (!sameFileRevision(f, file(capture.file, f.path)))
+              fail("changed");
+            if (
+              !Number.isSafeInteger(capture.inflatedBytes) ||
+              Number(capture.inflatedBytes) < 1 ||
+              Number(capture.inflatedBytes) > XLSX_LIMITS.bytes ||
+              !Array.isArray(capture.parts) ||
+              !Array.isArray(capture.entries) ||
+              capture.parts.length > XLSX_LIMITS.parts ||
+              capture.entries.length > XLSX_LIMITS.parts
+            )
+              fail("documentLimit");
+            const parsed = parseTail.then(async () => {
+              if (!valid() || this.pending) throw new XlsxError("cancelled");
+              return this.services.parseWorkbook!(
+                capture as unknown as WorkbookCapture,
+                run.abort.signal,
+              );
+            });
+            parseTail = parsed.catch(() => undefined);
+            const workbook = await parsed;
+            if (!valid() || this.pending) return null;
+            if (!sameFileRevision(f, file(capture.file, f.path)))
+              fail("changed");
+            content = xlsxSearchText(workbook);
           } else {
             const text = await textPayload(await this.services.read(f), f);
             content = { segments: [{ text }], bytes: f.size };
@@ -412,7 +467,11 @@ export class AttachmentSearch {
           if (!f) continue;
           // Plain UTF-8 bytes are known before reading. DOCX compressed size
           // cannot stand in for its extracted author text, so admit after parse.
-          const reservation = attachmentSearchIsDocx(sources[i]) ? 0 : f.size;
+          const reservation =
+            attachmentSearchIsDocx(sources[i]) ||
+            attachmentSearchIsXlsx(sources[i])
+              ? 0
+              : f.size;
           if (
             budget + reserved + reservation >
             ATTACHMENT_SEARCH_LIMITS.totalBytes
@@ -442,6 +501,7 @@ export class AttachmentSearch {
               state: "skipped",
               code: "budget",
               document: content.document,
+              workbook: content.workbook,
             });
           } else {
             budget += content.bytes;
@@ -488,6 +548,7 @@ export class AttachmentSearch {
                 state: "searched",
                 matches: count,
                 document: content.document,
+                workbook: content.workbook,
               });
               this.emit({ bytes: budget });
             }

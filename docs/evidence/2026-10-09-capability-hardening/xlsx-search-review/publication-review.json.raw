@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "result": "passed",
+  "verification": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/verification.json",
+    "bytes": 7387,
+    "sha256": "4820fcbe11bd27141e36206697ae1a00aa67c0a51c406ae72cbc0da10764f39c"
+  },
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/publication.json",
+    "bytes": 63848,
+    "sha256": "f8e5dbecbb36c6b349e65d163a45c97d2d351d30e4eb18ca542443631670cd06"
+  },
+  "publisher": {
+    "path": "output/2026-10-14-xlsx-search-integration/publish_implementation.py",
+    "bytes": 5837,
+    "sha256": "cc916305f1bd05123d7197880cd47beef3734d3d91f89e23f784908efe0ad057"
+  },
+  "correction": {
+    "path": "output/2026-10-14-xlsx-search-integration/publisher-correction.json",
+    "bytes": 471,
+    "sha256": "9b8d448d3499dbbfc5f45138642f997fd5873e985eb136c3a7f675909a25a1c0"
+  },
+  "copiedFiles": 130,
+  "copiedBytes": 1802209,
+  "groups": {
+    "backend": 41,
+    "frontend": 50,
+    "browser": 22,
+    "independent": 17
+  },
+  "publicDirectoryFiles": 132,
+  "exactCopyAndMembership": true,
+  "currentSourcePinsVerified": 23,
+  "privacyReview": "Explicit130source paths are this increment synthetic XLSX/DOCX/controlled-App evidence, selected scoped command outputs, generators and source snapshots. No user DB/history/AX/account values or credential payload published. Paths and synthetic fixture labels are retained as provenance. Large synthetic budget-captures is intentionally not duplicated publicly; current source closure can include its original bytes.",
+  "scopeReview": [
+    "40backend scoped tests and190frontend scoped tests with preserved actual failed precursors.",
+    "Chromium/WebKit162checks17scenarios each with real productionApp/Workers and controlledTauri; no nativeIO/installed-positive/Agent proof.",
+    "Formal52d21a3 historical installed state kept distinct from new source; full7/checkpoint/candidate/install remain pending in this stage record.",
+    "Original P32/NEW24/29x8/Windows acceptance not elevated."
+  ],
+  "publisherFailureBoundary": "Initial sourceFiles schema assumption failed before OUT creation. Exact sole correction reads actual files key; source/hash checks unchanged. Original script and correction receipt preserved.",
+  "reviewInputs": {
+    "backend": {
+      "path": "output/2026-10-14-xlsx-search-independent/backend-review.json",
+      "bytes": 11225,
+      "sha256": "c35b541682fe7b039903a12b8894f401f44a99164f41d143e9aba54a31017b3a"
+    },
+    "frontend": {
+      "path": "output/2026-10-14-xlsx-search-independent/frontend-review.json",
+      "bytes": 11469,
+      "sha256": "aa39c7bcb0423e68cd2ba44e770bf7c1891fa7d12666ba6fb85387e62d8aeff4"
+    },
+    "frontendRaw": {
+      "path": "output/2026-10-14-xlsx-search-independent/frontend-receipt-review.json",
+      "bytes": 4456,
+      "sha256": "57c487b7d487c3a2c2b0e6e15f465d48ccaaac9f9182ab7aedd56e82aaad0082"
+    },
+    "browser": {
+      "path": "output/2026-10-14-xlsx-search-independent/browser-review.json",
+      "bytes": 13197,
+      "sha256": "29e3a2e8a5795c5ab7a2d4e4e3feafb2f6ba414efe6245ff40846499bc2c2102"
+    }
+  },
+  "safeForPublicRaw": true
+}

@@ -1,5 +1,5 @@
 //! Passive spreadsheet capture; only XML parts are returned to its parser.
-use super::{VerifiedFile, ooxml_archive};
+use super::{VerifiedFile, ooxml_archive, search_source};
 pub use ooxml_archive::{
     ArchiveCapture as WorkbookCapture, ArchiveError as WorkbookError,
     ArchiveReadFailure as WorkbookReadFailure,
@@ -7,6 +7,18 @@ pub use ooxml_archive::{
 
 pub fn read_workbook(file: &VerifiedFile) -> Result<WorkbookCapture, WorkbookError> {
     ooxml_archive::read_archive(file, |name, _| Ok(xml_part(name)))
+}
+
+pub fn read_workbook_search(file: &VerifiedFile) -> Result<WorkbookCapture, WorkbookError> {
+    let bytes = search_source::read(file).map_err(WorkbookError::File)?;
+    let (parts, entries, inflated_bytes) =
+        ooxml_archive::unpack(&bytes, |name, _| Ok(xml_part(name)))?;
+    Ok(WorkbookCapture {
+        file: file.clone(),
+        parts,
+        entries,
+        inflated_bytes,
+    })
 }
 fn xml_part(name: &str) -> bool {
     name.ends_with(".xml") || name.ends_with(".rels")
@@ -26,3 +38,7 @@ fn unpack(bytes: &[u8]) -> Result<ooxml_archive::Unpacked, WorkbookError> {
 #[cfg(test)]
 #[path = "workbook_tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "workbook_search_tests.rs"]
+mod search_tests;

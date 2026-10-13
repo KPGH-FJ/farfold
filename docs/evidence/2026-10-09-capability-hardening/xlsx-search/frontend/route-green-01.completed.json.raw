@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/attachment_search.xlsx.test.ts"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T18:08:19.911578+00:00",
+  "completedAtUtc": "2026-10-13T18:08:20.477911+00:00",
+  "actualExitCode": 0,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/route-green-01.stdout.log",
+    "bytes": 208,
+    "sha256": "8d74b6eb376475089e62159294bde3b35028093cd1d6e5553f51401f83a2a72c"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/route-green-01.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

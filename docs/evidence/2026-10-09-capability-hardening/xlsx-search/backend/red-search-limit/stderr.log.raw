@@ -1,0 +1,18 @@
+   Compiling farfold v0.1.7 (/Users/tw/Desktop/farfold/src-tauri)
+warning: function `read_workbook_search` is never used
+  --> src/file_delivery/workbook.rs:12:8
+   |
+12 | pub fn read_workbook_search(file: &VerifiedFile) -> Result<WorkbookCapture, WorkbookError> {
+   |        ^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `farfold` (lib) generated 1 warning
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 15.32s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/farfold_lib-03fcdbef3e0f8bc9)
+
+thread 'file_delivery::workbook::search_tests::search_rejects_one_mib_plus_one_while_legacy_workbook_stays_usable' (29391442) panicked at src/file_delivery/workbook_search_tests.rs:49:5:
+assertion failed: matches!(read_workbook_search(&file),
+    Err(WorkbookError::File(DeliveryError::TooLarge)))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `--lib`

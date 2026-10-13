@@ -1,5 +1,5 @@
 //! Passive document capture; OPC semantics and image decoding belong to the parser.
-use super::{DeliveryError, OpenedFile, VerifiedFile, ooxml_archive};
+use super::{VerifiedFile, ooxml_archive, search_source};
 pub use ooxml_archive::{
     ArchiveCapture as DocxCapture, ArchiveError as DocumentError,
     ArchiveReadFailure as DocxReadFailure,
@@ -38,7 +38,7 @@ fn include_document_parts() -> impl FnMut(&str, &[u8]) -> Result<bool, DocumentE
 /// keeps its larger archive limit; neither UI preflight nor a supplied size can
 /// authorize a larger read here. Inflation/CRC checks retain the common limits.
 pub fn read_docx_search(file: &VerifiedFile) -> Result<DocxCapture, DocumentError> {
-    let bytes = capture_search_source(file, open_search_source(file)?)?;
+    let bytes = search_source::read(file).map_err(DocumentError::File)?;
     let (parts, entries, inflated_bytes) = ooxml_archive::unpack(&bytes, include_document_parts())?;
     Ok(DocxCapture {
         file: file.clone(),
@@ -46,42 +46,6 @@ pub fn read_docx_search(file: &VerifiedFile) -> Result<DocxCapture, DocumentErro
         entries,
         inflated_bytes,
     })
-}
-
-fn open_search_source(file: &VerifiedFile) -> Result<OpenedFile, DocumentError> {
-    let opened = super::open_source_detailed(
-        std::path::Path::new(&file.root),
-        std::path::Path::new(&file.path),
-        super::MAX_TEXT_BYTES,
-        Some(file),
-    )
-    .map_err(|error| {
-        DocumentError::File(match error.delivery {
-            DeliveryError::OutsideRoot => DeliveryError::Changed,
-            error => error,
-        })
-    })?;
-    // Check the saved location and object stamp before reading its body. The
-    // supplied hash is only a stamp input here; capture checks actual bytes next.
-    if opened.before.size != file.size
-        || opened.resolved.file_name().and_then(|name| name.to_str()) != Some(file.name.as_str())
-        || super::version(&opened, &file.sha256).map_err(DocumentError::File)? != file.version
-    {
-        return Err(DocumentError::File(DeliveryError::Changed));
-    }
-    Ok(opened)
-}
-
-fn capture_search_source(
-    expected: &VerifiedFile,
-    opened: OpenedFile,
-) -> Result<Vec<u8>, DocumentError> {
-    let (current, bytes) =
-        super::capture_opened(opened, super::MAX_TEXT_BYTES).map_err(DocumentError::File)?;
-    if current != *expected {
-        return Err(DocumentError::File(DeliveryError::Changed));
-    }
-    Ok(bytes)
 }
 
 #[cfg(test)]

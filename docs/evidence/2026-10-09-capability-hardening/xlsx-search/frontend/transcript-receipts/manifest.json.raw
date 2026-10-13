@@ -1,0 +1,126 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl",
+  "boundary": "Exact selected CommandExecution item_completed JSONL lines for this frontend scoped runner only. No full transcript copy; all raw test failures retained.",
+  "records": [
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/01-completed.jsonl.raw",
+      "bytes": 11849,
+      "sha256": "a1bf61a4a4e3e2ad22f8f80ec3914f606d988c5f855a8099b7cf41a941f8ee9e",
+      "sourceStartByte": 21505094,
+      "sourceEndByte": 21516943,
+      "sourceLine": 5483,
+      "timestamp": "2026-10-13T18:06:38.633Z",
+      "callId": "exec-07e83c15-cd6e-41a5-8d2e-d186a2989faa",
+      "actualExitCode": 1,
+      "processId": "76639"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/02-completed.jsonl.raw",
+      "bytes": 1616,
+      "sha256": "1674715ddb103fc32becdc975e285c98cc3a8623f0f74bd4bc7bf884995621fb",
+      "sourceStartByte": 21566070,
+      "sourceEndByte": 21567686,
+      "sourceLine": 5500,
+      "timestamp": "2026-10-13T18:08:20.480Z",
+      "callId": "exec-c6c9ab20-b092-4aec-b9fc-c249416ebd72",
+      "actualExitCode": 0,
+      "processId": "90856"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/03-completed.jsonl.raw",
+      "bytes": 3128,
+      "sha256": "240492f0223fd4da23622110d10e9271d8f6c3a5ff33818139b33c16667ae715",
+      "sourceStartByte": 21708511,
+      "sourceEndByte": 21711639,
+      "sourceLine": 5544,
+      "timestamp": "2026-10-13T18:12:32.685Z",
+      "callId": "exec-c3094c55-0068-4b68-aee4-bd3d1b6433af",
+      "actualExitCode": 1,
+      "processId": "71515"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/04-completed.jsonl.raw",
+      "bytes": 12462,
+      "sha256": "ae70ca271df0d5902c2677eb81793348237ca81a053729d5f31a11a7581787ca",
+      "sourceStartByte": 21777540,
+      "sourceEndByte": 21790002,
+      "sourceLine": 5568,
+      "timestamp": "2026-10-13T18:14:17.530Z",
+      "callId": "exec-3ee97f39-a349-4c90-b259-7ec4fd14a08b",
+      "actualExitCode": 0,
+      "processId": "45560"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/05-completed.jsonl.raw",
+      "bytes": 4316,
+      "sha256": "6d0fe8f875150e4e9c7e3cf37892b477151e8458c5281a48cd10f91445cfc307",
+      "sourceStartByte": 21812789,
+      "sourceEndByte": 21817105,
+      "sourceLine": 5585,
+      "timestamp": "2026-10-13T18:15:04.295Z",
+      "callId": "exec-afb10f94-d3f2-429d-96ca-0a914c96981d",
+      "actualExitCode": 0,
+      "processId": "83494"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/06-completed.jsonl.raw",
+      "bytes": 2086,
+      "sha256": "9bcc7eb1216932deefb7c9d2a90472bdb233a458e7ef1421f6769e623b29acb7",
+      "sourceStartByte": 21824563,
+      "sourceEndByte": 21826649,
+      "sourceLine": 5592,
+      "timestamp": "2026-10-13T18:15:19.695Z",
+      "callId": "exec-5fa78cfc-3421-4de4-9044-76874dcf68f3",
+      "actualExitCode": 0,
+      "processId": "19205"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/07-completed.jsonl.raw",
+      "bytes": 1372,
+      "sha256": "5324a9e94e70c45c9222d3fcea8e79dc113358285151409dda4b1b4ace41b8bc",
+      "sourceStartByte": 21826649,
+      "sourceEndByte": 21828021,
+      "sourceLine": 5593,
+      "timestamp": "2026-10-13T18:15:27.294Z",
+      "callId": "exec-f4539c37-a1f8-4967-b20a-87966a43109f",
+      "actualExitCode": 0,
+      "processId": "51599"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/08-completed.jsonl.raw",
+      "bytes": 2414,
+      "sha256": "e7b0d188d76b150204d338b00bacfcb98c9b46356ad840c9c30c10af3e72bae2",
+      "sourceStartByte": 21839291,
+      "sourceEndByte": 21841705,
+      "sourceLine": 5600,
+      "timestamp": "2026-10-13T18:15:46.259Z",
+      "callId": "exec-1da44030-4cee-4dde-a707-3a9bdf4749b3",
+      "actualExitCode": 1,
+      "processId": "31588"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/09-completed.jsonl.raw",
+      "bytes": 9372,
+      "sha256": "e6094cd22303f25c2ca42297625921b46a5ade74bf9507cc2ed9bcae79e4af2f",
+      "sourceStartByte": 21854526,
+      "sourceEndByte": 21863898,
+      "sourceLine": 5607,
+      "timestamp": "2026-10-13T18:16:17.278Z",
+      "callId": "exec-73095f85-3ba6-4bad-a180-657c12c5b496",
+      "actualExitCode": 0,
+      "processId": "97777"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/10-completed.jsonl.raw",
+      "bytes": 8331,
+      "sha256": "4cbee800eb2166a029996bb4e632d52af8d3be21bd33b3533d57418dcda696c8",
+      "sourceStartByte": 21885741,
+      "sourceEndByte": 21894072,
+      "sourceLine": 5614,
+      "timestamp": "2026-10-13T18:17:01.002Z",
+      "callId": "exec-2755efc0-6dfe-479d-8522-61de9701240b",
+      "actualExitCode": 0,
+      "processId": "91444"
+    }
+  ]
+}

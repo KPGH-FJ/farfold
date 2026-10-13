@@ -1,0 +1,375 @@
+{
+  "schema": 1,
+  "completedAtUtc": "2026-10-13T18:18:59.587528+00:00",
+  "scope": "P32 current explicitly selected XLSX saved cells and stored included formulas, common attachment search alongside existing DOCX and UTF8. Source implementation and targeted verification only.",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-xlsx-search-frontend/source-freeze-v1.json",
+    "bytes": 2977,
+    "sha256": "106bd070a18364d1bf9fe0f13563dbefd29c672f1bb61f979c98123f2f51849d"
+  },
+  "sourceStableAfterFrozenTests": true,
+  "ownedFiles": [
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 20940,
+      "sha256": "4a4a1078d43a6e2830117ce76e1914872e6fc85c4c6922501cc8e7fb00de0077"
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 4834,
+      "sha256": "879dbac3552e5b398feada2837f823e44f9d545ddbaa22fa292ede9717120453"
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 7365,
+      "sha256": "013a9ce524c0e9b20a0462f0852ed0d16e7f23097d6f16bb44c5b5980dba5065"
+    },
+    {
+      "path": "src/runtime/attachment_search.xlsx.test.ts",
+      "bytes": 15751,
+      "sha256": "af67347b3bab7ecf99effec24876a0f9266652a165dd4db66b23ab36597278a9"
+    },
+    {
+      "path": "src/runtime/attachment_search.xlsx.test-support.ts",
+      "bytes": 3021,
+      "sha256": "3d946bd9ec82c754eba1dc62d5e86960a0f94bb32e0bf8a8384cdfb1c734e37a"
+    },
+    {
+      "path": "src/runtime/xlsx_search_text.ts",
+      "bytes": 3713,
+      "sha256": "d3a25060ce3ead1a9d2d8024a7517bda069d36d727f8d3f528847cd15eeb6f5e"
+    },
+    {
+      "path": "src/runtime/xlsx_search_text.test.ts",
+      "bytes": 11652,
+      "sha256": "8abdd2b5afaa61de69b5fe688791a0081e39c179fb6a0aead4f374016d3d6f06"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 11626,
+      "sha256": "c7263157d22d3d32d35d3d29baac7a96f9b54e3796abebaeaf6a60fcbc384d2a"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.test.tsx",
+      "bytes": 5758,
+      "sha256": "50f380e17d7d7efecc11f0facca8769eb80b06204af02dbea647d5628e9e131e"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/captures.json",
+      "bytes": 23548,
+      "sha256": "cb3be77e2777c7b5a1d30f362bc1be7cba07241030ae6d05a227a94414c8c7bd"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/decoding-fields.xlsx",
+      "bytes": 2986,
+      "sha256": "37ec3551b11f08feaeafe03f5b4639b4ad939b857cb57667f2f35691b5fa34e9"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/hidden-only.xlsx",
+      "bytes": 2249,
+      "sha256": "8e8c782e1b905e2f3106663fd9771ae1e47b165caf5a651fac0f534930153116"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/oracle.json",
+      "bytes": 11563,
+      "sha256": "bb267ceec0c54dc3807268923b416fa69021d8eccb9bb7402591b1c833467536"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/scope-barriers.xlsx",
+      "bytes": 3696,
+      "sha256": "26579c383c8b9d955c18a595b5025d5a4a7e8c3abdfb1093ebc18bac9d95b7c5"
+    }
+  ],
+  "interface": {
+    "captureCommand": "file_delivery_read_workbook_search",
+    "captureInput": "{file: VerifiedFile}",
+    "captureOutput": "WorkbookCapture",
+    "worker": "readWorkbookInput(capture,{mode:visible-saved-cells},signal) with checkedXlsxInputResult",
+    "projection": "xlsxSearchText checked model -> cell/field-separated segments; string text decoded once, other raw lexemes; no formula calculation/shared expansion/format display/labels/attributes",
+    "location": "kind:xlsx, sheetId(actual relationship id), sheetName, reference, row, column, field:value|savedCache|formula",
+    "state": "row.workbook={mode,partial,warnings}; existing row.document and DocxSearchLocation unchanged"
+  },
+  "limits": {
+    "sourceBytes": 1048576,
+    "files": 20,
+    "actualUtf8SearchBytes": 16777216,
+    "displayedHits": 200,
+    "queryUtf8Bytes": 256,
+    "prefetchedReads": 2,
+    "batchStructuredParsers": "One shared parseTail for DOCX/XLSX; external preview contention remains busy; native blocking reads retain actual backend slots through timeout/cancellation."
+  },
+  "verification": {
+    "targeted": {
+      "files": 7,
+      "passed": 190,
+      "actualExitCode": 0,
+      "scope": [
+        "XLSX bounded route, source7 fields and postparse capture/revision checks",
+        "MIME extensionless/case/parameters, ownership drift, late capture/parse and explicit pending retry",
+        "missing/empty/zero, Unicode/precise lexemes, formula/cache/cell barriers, hidden protected expressions and valid cache",
+        "mixed DOCX/XLSX/text actual UTF8 budgets including exact16MiB and failed-reservation regression",
+        "same-batch parser serialization, cancellation and source navigation",
+        "real parser plus independent 3 ZIP/capture/oracle samples:26 segments265bytes,6 segments69bytes,scopeEmpty",
+        "existing DOCX/UTF8 controller and author projection regression",
+        "React server render notices outside closed details, no stale/current mislabel and centralized strings"
+      ]
+    },
+    "typecheckActualExitCode": 0,
+    "formatActualExitCode": 0,
+    "installedApp": false,
+    "realAgent": false,
+    "browser": "Root-owned controlled browser run is separate and not included in this summary. SSR component tests do not prove pixel layout."
+  },
+  "preservedFailures": [
+    {
+      "run": "red-01",
+      "actualExitCode": 1,
+      "passed": 0,
+      "total": 1,
+      "cause": "Existing frontend route treated the selected XLSX as plain text; no cell author-content search. Controlled route red, not installed/native evidence."
+    },
+    {
+      "run": "targeted-02",
+      "actualExitCode": 1,
+      "passedTests": 178,
+      "failedSuites": 1,
+      "cause": "New structured warning formatter was put in the primitive-argument string registry; string-suite collection passed number/string and threw. Moved object formatter outside the registry without changing authored content."
+    },
+    {
+      "run": "format-check-01",
+      "actualExitCode": 1,
+      "cause": "Independent oracle JSON copy needed repository formatting. Only whitespace changed; parsed JSON equality is independently recorded. Not a production correctness failure."
+    }
+  ],
+  "fixtureCopies": {
+    "path": "output/2026-10-14-xlsx-search-frontend/fixture-copies.json",
+    "bytes": 1263,
+    "sha256": "3d3a5e1952a2ee513c8aa6f82101b1db67c3e0818a1d061362623b0ce0c7e189"
+  },
+  "fixtureOracleFormatting": {
+    "path": "output/2026-10-14-xlsx-search-frontend/fixture-oracle-format.json",
+    "bytes": 571,
+    "sha256": "2cc7057dab798c3375bfc427e504690b26ccd96e95acd62f4b56ca9ea3f1f3bb"
+  },
+  "runs": [
+    {
+      "name": "red-01",
+      "actualExitCode": 1,
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-frontend/red-01.completed.json",
+        "bytes": 737,
+        "sha256": "2239d4d914920b243ed99219b1b9fad7d4dd2f5d13fa663ecaa29e7cb3c8763f"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/red-01.stdout.log",
+        "bytes": 363,
+        "sha256": "221ba962946504860fb1b6c5e9eca460f81567d7f5335f785c6558152ed5c1dc"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/red-01.stderr.log",
+        "bytes": 799,
+        "sha256": "ded0c8c2b21a4b916980bdf673cb22cbabd8281a5f3348ccc29018ae7321e268"
+      }
+    },
+    {
+      "name": "route-green-01",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-frontend/route-green-01.completed.json",
+        "bytes": 751,
+        "sha256": "1243765adc1155cbd6918ce8b1460c6ab1eebd75fccbada49f7d8bc738d3d934"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/route-green-01.stdout.log",
+        "bytes": 208,
+        "sha256": "8d74b6eb376475089e62159294bde3b35028093cd1d6e5553f51401f83a2a72c"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/route-green-01.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "targeted-02",
+      "actualExitCode": 1,
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-02.completed.json",
+        "bytes": 1021,
+        "sha256": "99e844c50d9dbe22361a2c01e637e34fb0bccdd7c90449d5cc53b0129c37a16e"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/targeted-02.stdout.log",
+        "bytes": 267,
+        "sha256": "42847a040d048663ce9d562b7a4d8564cb16454181fef3bd78bf4138362dca32"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/targeted-02.stderr.log",
+        "bytes": 980,
+        "sha256": "dfa59255908ece0616c0b189c009231121e5c8f5ad7c36bdb77f0a57122fbfd2"
+      }
+    },
+    {
+      "name": "targeted-03",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-03.completed.json",
+        "bytes": 1019,
+        "sha256": "c8aa11d7d775775d5576257ab2f2742bb1082d887459e083a772ff83a14c021c"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/targeted-03.stdout.log",
+        "bytes": 214,
+        "sha256": "d9823d6dd0e09b5125392aecf8c25d28df6dc537d70e7025b0f101a0b4632840"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/targeted-03.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "format-write",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-frontend/format-write.completed.json",
+        "bytes": 1136,
+        "sha256": "50fab2b9bd285cbb43972913fae2205cdd29dc8588c7d30991dcf7b95aec5894"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/format-write.stdout.log",
+        "bytes": 410,
+        "sha256": "e8c94341ddf444ca71a4b8f84a685303c10c0b47406d694819913d581e176a62"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/format-write.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "typecheck-01",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-frontend/typecheck-01.completed.json",
+        "bytes": 676,
+        "sha256": "8702ee81e0e28513d894e0ef63edf962854ae9cc7697992831d46e84a02c14a4"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/typecheck-01.stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/typecheck-01.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "targeted-final",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-final.completed.json",
+        "bytes": 1025,
+        "sha256": "7626996631cf0e0e57297ae793681d87a25820b6011eb20d0d6dc70334b0cfdd"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/targeted-final.stdout.log",
+        "bytes": 214,
+        "sha256": "dffc4d625d8d43c00bea04fa713918ca867b70eb55e8bd6f453c0e3b207b1c4d"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/targeted-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "format-check-01",
+      "actualExitCode": 1,
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-frontend/format-check-01.completed.json",
+        "bytes": 1249,
+        "sha256": "8d861815405cb9c149561e8d7f06635e49308e0f515c8eb951b9ddba5fc4be90"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/format-check-01.stdout.log",
+        "bytes": 23,
+        "sha256": "ebe82dad128d5e5d8936334ceac09492f3c60bd9e0b4a16cc7fd7075513b33de"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/format-check-01.stderr.log",
+        "bytes": 136,
+        "sha256": "2fae21f4c4daa2265ee8724318b5f32a1f39e421375561162a4611b562da7f33"
+      }
+    },
+    {
+      "name": "fixture-format-write",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-frontend/fixture-format-write.completed.json",
+        "bytes": 770,
+        "sha256": "449c32efd21adcecdac7189fc14c7bcfc0476b502967b8a56b2e2bae13ee4ddc"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/fixture-format-write.stdout.log",
+        "bytes": 50,
+        "sha256": "5bbf42461778c5f0459bd0bb1f79621b4fa7549554962228d77aa00c67b4ed6a"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/fixture-format-write.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "format-final",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-frontend/format-final.completed.json",
+        "bytes": 1241,
+        "sha256": "e9b442f644d40f19e44334f2ca4e89c4184c6bc3d842da8014eeac3651c99a7a"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/format-final.stdout.log",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/format-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "targeted-frozen",
+      "actualExitCode": 0,
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-frozen.completed.json",
+        "bytes": 1027,
+        "sha256": "6fecbdc37e0b0f3740f1ee43b4dec499efcb83a6bb31075b4b2e693439a8cf34"
+      },
+      "stdout": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/targeted-frozen.stdout.log",
+        "bytes": 214,
+        "sha256": "976d5fd1519de3a15d27c77e1f412cd24516795edcefbc9716050696b5a817c5"
+      },
+      "stderr": {
+        "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/targeted-frozen.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "originalToolCompletions": {
+    "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/manifest.json",
+    "bytes": 5058,
+    "sha256": "de40d2774d8ac72e11ad2c102b292e09566e23cd037f56f6d6ffcad8b084b993"
+  },
+  "notPerformed": [
+    "No full seven engineering checks",
+    "No build/install/App/UI/real Agent/database operation",
+    "No docs/plan/PRODUCT/backend edits or commit by frontend"
+  ]
+}

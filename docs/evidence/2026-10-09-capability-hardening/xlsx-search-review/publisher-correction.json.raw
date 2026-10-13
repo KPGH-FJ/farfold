@@ -1,0 +1,10 @@
+{
+  "actualFailure": {
+    "chunk": "fe40bf",
+    "exitCode": 1,
+    "error": "KeyError: sourceFiles"
+  },
+  "cause": "Publication helper assumed the preceding slice backend schema. Current frozen backend uses files. Failed before public-directory creation; no implementation or source changed.",
+  "originalSha256": "1e0cbc0ba238a3c2b7cd707ab9d014693ba981e9e2b723bca61d67b67ece4438",
+  "correction": "Read the actual files field; all exact source hash checks remain."
+}

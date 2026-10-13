@@ -1,0 +1,27 @@
+{
+  "actualStageCompletion": true,
+  "argv": [
+    "cargo",
+    "clippy",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "completedAt": "2026-10-13T18:31:57.342414+00:00",
+  "cwd": "/Users/tw/Desktop/farfold",
+  "displayCommand": "cargo clippy --manifest-path src-tauri/Cargo.toml --locked -- -D warnings",
+  "elapsedSeconds": 7.225332874999992,
+  "group": "native",
+  "monotonicStart": 97.178094458,
+  "name": "cargo-clippy",
+  "pid": 57637,
+  "processLaunched": true,
+  "rawExitCode": 0,
+  "startedAt": "2026-10-13T18:31:50.117422+00:00",
+  "state": "COMPLETED",
+  "stderrSha256": "45212cf0d9b72e9c476f768bd0e76311ccd43f2d8433306570713057c77e97a1",
+  "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

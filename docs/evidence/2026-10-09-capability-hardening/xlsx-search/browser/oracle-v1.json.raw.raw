@@ -1,0 +1,136 @@
+{
+  "scope": "Authored strings and locations, no production parser or formula evaluation; native I/O and installed App untested.",
+  "generatorSha256": "5f7b506ee022cbc0f20a1fc48ae91528ce4bc6a2cf57562b810bebe8cd8d0eb3",
+  "segments": [
+    {
+      "sheetId": "17",
+      "reference": "A1",
+      "field": "value",
+      "text": "needle 汉😀é"
+    },
+    {
+      "sheetId": "17",
+      "reference": "B1",
+      "field": "value",
+      "text": "12345678901234567890.000100"
+    },
+    {
+      "sheetId": "17",
+      "reference": "C1",
+      "field": "value",
+      "text": "0"
+    },
+    {
+      "sheetId": "17",
+      "reference": "D1",
+      "field": "value",
+      "text": "#DIV/0!"
+    },
+    {
+      "sheetId": "17",
+      "reference": "E1",
+      "field": "value",
+      "text": "2026-10-14T00:00:00Z"
+    },
+    {
+      "sheetId": "17",
+      "reference": "F1",
+      "field": "formula",
+      "text": "\"needle formula-only\""
+    },
+    {
+      "sheetId": "17",
+      "reference": "F1",
+      "field": "savedCache",
+      "text": "needle cached-result"
+    },
+    {
+      "sheetId": "17",
+      "reference": "G1",
+      "field": "value",
+      "text": "LEFT"
+    },
+    {
+      "sheetId": "17",
+      "reference": "H1",
+      "field": "value",
+      "text": "RIGHT"
+    },
+    {
+      "sheetId": "17",
+      "reference": "I1",
+      "field": "formula",
+      "text": "NO_CACHE_FORMULA"
+    },
+    {
+      "sheetId": "17",
+      "reference": "J1",
+      "field": "formula",
+      "text": "EMPTY_CACHE_FORMULA"
+    },
+    {
+      "sheetId": "17",
+      "reference": "K1",
+      "field": "formula",
+      "text": "0"
+    },
+    {
+      "sheetId": "17",
+      "reference": "K1",
+      "field": "savedCache",
+      "text": "0"
+    },
+    {
+      "sheetId": "17",
+      "reference": "L1",
+      "field": "savedCache",
+      "text": "8"
+    },
+    {
+      "sheetId": "17",
+      "reference": "A5",
+      "field": "value",
+      "text": "needle <img src=\"https://example.invalid/XLSX\">"
+    },
+    {
+      "sheetId": "3",
+      "reference": "A1",
+      "field": "value",
+      "text": "second sheet needle"
+    }
+  ],
+  "authorBytes": 226,
+  "authorNeedleCount": 5,
+  "secondNeedleCount": 1,
+  "secondTermCount": 4,
+  "negativeTerms": [
+    "HIDDEN_ROW_NEVER",
+    "HIDDEN_COLUMN_NEVER",
+    "HIDDEN_SHEET_NEVER",
+    "SHEET_LABEL_NEVER",
+    "LEFTRIGHT",
+    "formula-only\"needle cached-result",
+    "date1904",
+    "savedFormulaCaches"
+  ],
+  "files": [
+    {
+      "root": "/controlled",
+      "path": "/controlled/author.xlsx",
+      "resolvedPath": "/controlled/author.xlsx",
+      "name": "author.xlsx",
+      "size": 3580,
+      "sha256": "e5f5b87c72c41d7e610622b8d48b00876be6d793e4d699651065b1bfe07d901b",
+      "version": "controlled-author.xlsx"
+    },
+    {
+      "root": "/controlled",
+      "path": "/controlled/second.xlsx",
+      "resolvedPath": "/controlled/second.xlsx",
+      "name": "second.xlsx",
+      "size": 3585,
+      "sha256": "0d3ca8bc3f93cb706ce41d54f7be88f179bba3b7322556494fdee614cf978485",
+      "version": "controlled-second.xlsx"
+    }
+  ]
+}

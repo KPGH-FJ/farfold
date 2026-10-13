@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "result": "passed",
+  "ownerReport": {
+    "path": "output/2026-10-14-xlsx-search-docs/report.json",
+    "bytes": 5923,
+    "sha256": "36f5578524eb4137c09ab4db776fc13bdaef5d73c9162bfa721e54e459a2d07b"
+  },
+  "reviewedDiff": {
+    "path": "output/2026-10-14-xlsx-search-docs/four-docs.diff",
+    "bytes": 20155,
+    "sha256": "facaccd71a55739a5e20c0954ae22c7ffbd9defc31bb9747e70c9ebcc1f47c61"
+  },
+  "files": [
+    {
+      "path": "docs/status.md",
+      "bytes": 92195,
+      "sha256": "d71b34726326365e829272f6b26fd400a3196856da7e8b6188a9a1c1a4e84e60"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 134138,
+      "sha256": "30f6fb2fbc743158cde4972abc925991723c8fa067db5eda94ab59af7d066262"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 156975,
+      "sha256": "46a404be3e15d987701eeb8cbf8091ca7e283f1023dc780cdf28486f3bc121ca"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 90050,
+      "sha256": "55442a44bbf02df7b1e3fc4e68d10d45ed0f80cd6e81d20556347696aa7eb940"
+    }
+  ],
+  "baselineCommit": "a07392822ec6a0beaa7e2508ac9fc8ee7795d83d",
+  "conditions": {
+    "originalIds": 122,
+    "originalTitlesAndCompletionConditionsUnchanged": true,
+    "newIds": 28,
+    "allNewRowsUnchanged": true,
+    "onlyOriginalProgressChanged": [
+      "P32"
+    ]
+  },
+  "protected": [
+    {
+      "path": "PRODUCT.md",
+      "bytes": 35083,
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "bytes": 11543,
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "bytes": 2341,
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+    }
+  ],
+  "links": [
+    {
+      "from": "docs/status.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/verification.json",
+        "bytes": 7387,
+        "sha256": "4820fcbe11bd27141e36206697ae1a00aa67c0a51c406ae72cbc0da10764f39c"
+      }
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/verification.json",
+        "bytes": 7387,
+        "sha256": "4820fcbe11bd27141e36206697ae1a00aa67c0a51c406ae72cbc0da10764f39c"
+      }
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/verification.json",
+        "bytes": 7387,
+        "sha256": "4820fcbe11bd27141e36206697ae1a00aa67c0a51c406ae72cbc0da10764f39c"
+      }
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/verification.json",
+        "bytes": 7387,
+        "sha256": "4820fcbe11bd27141e36206697ae1a00aa67c0a51c406ae72cbc0da10764f39c"
+      }
+    }
+  ],
+  "sourceFreezeUnchanged": {
+    "path": "output/2026-10-14-xlsx-search-frontend/source-freeze-v1.json",
+    "bytes": 2977,
+    "sha256": "106bd070a18364d1bf9fe0f13563dbefd29c672f1bb61f979c98123f2f51849d"
+  },
+  "formatOriginalCompleted": {
+    "path": "output/2026-10-14-xlsx-search-docs/format-original.completed.jsonl.raw",
+    "bytes": 4351,
+    "sha256": "1accb09749ca9857c28099660d55c73ce41d12a950421ba9e6418f7fe0e81dfd"
+  },
+  "scopeReview": "Only current XLSX controlled-source paragraphs and P32progress added.40backend/190frontend/dual162checks17scenarios accurately attributed. Formal52d21a3 remains prior installed-not-launched; new XLSX full7/install/nativepositive pending. No retroactive waiver of prior strict data exit2, no NEW24/P32 whole closure or contract change.",
+  "safeForPublicRaw": true
+}

@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "sourceFreeze": {
+    "path": "output/2026-10-14-xlsx-search-backend/source-freeze.json",
+    "bytes": 11423,
+    "sha256": "7d1cb900612bfdd732ed8b56d61563f03257cf8dc78453c8f76d7c6401c2ef17"
+  },
+  "interface": {
+    "command": "file_delivery_read_workbook_search",
+    "payload": "{file: VerifiedFile}",
+    "result": "WorkbookCapture {file, parts, entries, inflatedBytes}",
+    "failure": "existing WorkbookReadFailure {code}; readBusy/readPending/changed/limit/invalid/encrypted/unsupported/unreadable"
+  },
+  "budget": "1MiB complete original source per selection, using shared MAX_TEXT_BYTES; frontend owns20files/16MiB actual saved-cell search-text aggregate and parser semantics. Per-part16MiB/total64MiB archive expansion and2048entries unchanged.",
+  "verified": "New7search+1actualcommand tests plus existing8workbook/18docx/1docxcommand/5readpool=40pass; cargo fmt0. All6successful stage input lists stable. No warnings in successful commands.",
+  "unverified": "Full7/frontend integration/dual browsers/new candidate/install/native acceptance remain root-owned. Main Webview guard unchanged and statically connected, not exercised by command-helper test.",
+  "next": "Independent review of exact extraction/error mapping/newcommand and source-freeze; root integration seven checks. No further source edits without coordination."
+}

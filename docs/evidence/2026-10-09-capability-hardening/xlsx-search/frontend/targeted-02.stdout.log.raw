@@ -1,0 +1,10 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/strings.test.ts (0 test)
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  178 passed (178)
+   Start at  02:12:32
+   Duration  565ms (transform 1.12s, setup 0ms, import 1.22s, tests 356ms, environment 0ms)
+

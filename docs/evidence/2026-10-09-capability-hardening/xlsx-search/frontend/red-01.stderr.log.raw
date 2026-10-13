@@ -1,0 +1,22 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/attachment_search.xlsx.test.ts > selected current XLSX attachment search > reads XLSX through the bounded capture and searches cell author content
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/attachment_search.xlsx.test.ts:8:41
+      6|     const h = xlsxSetup();
+      7|     await h.search.start("needle", h.candidates, h.current);
+      8|     expect(h.search.snapshot().matches).toBe(1);
+       |                                         ^
+      9|     expect(h.services.readWorkbook).toHaveBeenCalledOnce();
+     10|     expect(h.services.read).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

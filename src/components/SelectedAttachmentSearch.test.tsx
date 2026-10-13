@@ -8,6 +8,7 @@ import {
 } from "../runtime/attachment_search_source";
 import { ATTACHMENT_SEARCH_STRINGS as S } from "../runtime/attachment_search_strings";
 import type { DocxCapture } from "../runtime/docx_types";
+import { xlsxSetup } from "../runtime/attachment_search.xlsx.test-support";
 vi.mock("../runtime/sessions", () => ({
   threads: { getSnapshot: () => ({ index: [], threads: new Map() }) },
   useThreadsSnapshot: () => ({ index: [], threads: new Map() }),
@@ -90,5 +91,43 @@ describe("selected attachment omitted-content notice", () => {
     expect(h.search.snapshot().phase).toBe("stale");
     expect(h.search.snapshot().rows[0].document?.partial).toBe(true);
     expect(status(render(h.search))).not.toContain(S.docxPartial);
+  });
+});
+
+describe("selected XLSX saved-content notices", () => {
+  it("always shows saved/cache freshness beside counts even without formulas or partial warnings", async () => {
+    const h = xlsxSetup();
+    await h.search.start("needle", h.candidates, h.current);
+    const html = render(h.search);
+    expect(status(html)).toContain(S.xlsxCache);
+    expect(status(html)).not.toContain(S.xlsxPartial);
+    expect(status(html)).not.toContain(S.docxPartial);
+    expect(html).not.toMatch(/<details[^>]*\bopen\b/);
+    expect(html).toContain("Author sheet · A1 · 第 1 行、第 1 列 · 保存值");
+  });
+  it("makes XLSX omissions visible without expanding per-file details", async () => {
+    const h = xlsxSetup();
+    h.workbook.partial = true;
+    h.workbook.warnings = [{ code: "hiddenCellsOmitted", count: 2 }];
+    await h.search.start("needle", h.candidates, h.current);
+    expect(status(render(h.search))).toContain(S.xlsxPartial);
+    expect(status(render(h.search))).toContain(S.xlsxCache);
+  });
+  it("does not label stale or inactive workbook results as the current scope", async () => {
+    const h = xlsxSetup();
+    await h.search.start("needle", h.candidates, h.current);
+    expect(status(render(h.search, false))).not.toContain(S.xlsxCache);
+    h.services.check.mockRejectedValue({ code: "changed" });
+    await h.search.verifyHit(h.search.snapshot().hits[0], h.current);
+    expect(status(render(h.search))).not.toContain(S.xlsxCache);
+    h.search.retire();
+    expect(render(h.search)).not.toContain(S.xlsxCache);
+  });
+  it("shows the all-hidden scope rejection outside folded details without inventing cache success", async () => {
+    const h = xlsxSetup();
+    h.services.parseWorkbook.mockRejectedValue({ code: "scopeEmpty" });
+    await h.search.start("needle", h.candidates, h.current);
+    expect(status(render(h.search))).toContain(S.errors.scopeEmpty);
+    expect(status(render(h.search))).not.toContain(S.xlsxCache);
   });
 });

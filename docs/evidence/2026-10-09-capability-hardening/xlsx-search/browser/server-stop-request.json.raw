@@ -1,0 +1,7 @@
+{
+  "pid": 55952,
+  "command": "node output/2026-10-14-xlsx-search-browser/serve.mjs",
+  "signal": "SIGTERM",
+  "requestedAt": "2026-10-13T18:23:49.683762+00:00",
+  "reason": "both engines completed; root-owned controlled server only"
+}

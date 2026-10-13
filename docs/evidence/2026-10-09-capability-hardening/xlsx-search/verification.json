@@ -1,0 +1,176 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T18:25:19.726007+00:00",
+  "phase": "SOURCE_AND_CONTROLLED_BROWSER_VERIFIED_BEFORE_FULL_CHECKS",
+  "change": "Search explicitly selected local XLSX attachments through bounded native capture and the existing checked Workbook Worker. Search visible saved values, formula caches and included stored expressions as separate fields, alongside DOCX and UTF8 in the common temporary attachment-search interface.",
+  "sources": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17751,
+      "sha256": "2da2e56dcf80513aa02bbe9c8d960c8d1ee25c31175e78eab2c6a4fcc5bd407a"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document.rs",
+      "bytes": 2186,
+      "sha256": "cba79932194a05851ef8021184f6e5534f1d35af1cdcbc5108f6e6332bf2e056"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_tests.rs",
+      "bytes": 7333,
+      "sha256": "cff8740030c3d22ef23e1baaffd94b0a8b0fae7eaf820df4b761c8c8c05d1f83"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook.rs",
+      "bytes": 1317,
+      "sha256": "3e2b65d0ea2b616b5669173cde6532fffc6c47f4342d821c6f1c52ad9ec6b4ad"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/search_source.rs",
+      "bytes": 1384,
+      "sha256": "0f102ed3753a585b017189ba8fa7b3c4bc47d9158f4cf089f7d704beec0b66af"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook_search_tests.rs",
+      "bytes": 7862,
+      "sha256": "b0db42a1ed2022d96ec689b8fdce6aa2072e8175c9a0772de4b5f3dbacaaa07a"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook_search_command_tests.rs",
+      "bytes": 1741,
+      "sha256": "c0d67f43ea5883e1d8cda64c332a642c45b3528da4d7d003f69874e49059664e"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 21183,
+      "sha256": "52dcb86e6d19459ddda8f3fb815ade69df0ae9ac150e1092bfef1a810b14379e"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21735,
+      "sha256": "40b70dfc28fa0e5545750fccd36fe7acf6025662bd1560317981c8d3ea11159c"
+    },
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 20940,
+      "sha256": "4a4a1078d43a6e2830117ce76e1914872e6fc85c4c6922501cc8e7fb00de0077"
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 4834,
+      "sha256": "879dbac3552e5b398feada2837f823e44f9d545ddbaa22fa292ede9717120453"
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 7365,
+      "sha256": "013a9ce524c0e9b20a0462f0852ed0d16e7f23097d6f16bb44c5b5980dba5065"
+    },
+    {
+      "path": "src/runtime/attachment_search.xlsx.test.ts",
+      "bytes": 15751,
+      "sha256": "af67347b3bab7ecf99effec24876a0f9266652a165dd4db66b23ab36597278a9"
+    },
+    {
+      "path": "src/runtime/attachment_search.xlsx.test-support.ts",
+      "bytes": 3021,
+      "sha256": "3d946bd9ec82c754eba1dc62d5e86960a0f94bb32e0bf8a8384cdfb1c734e37a"
+    },
+    {
+      "path": "src/runtime/xlsx_search_text.ts",
+      "bytes": 3713,
+      "sha256": "d3a25060ce3ead1a9d2d8024a7517bda069d36d727f8d3f528847cd15eeb6f5e"
+    },
+    {
+      "path": "src/runtime/xlsx_search_text.test.ts",
+      "bytes": 11652,
+      "sha256": "8abdd2b5afaa61de69b5fe688791a0081e39c179fb6a0aead4f374016d3d6f06"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 11626,
+      "sha256": "c7263157d22d3d32d35d3d29baac7a96f9b54e3796abebaeaf6a60fcbc384d2a"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.test.tsx",
+      "bytes": 5758,
+      "sha256": "50f380e17d7d7efecc11f0facca8769eb80b06204af02dbea647d5628e9e131e"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/captures.json",
+      "bytes": 23548,
+      "sha256": "cb3be77e2777c7b5a1d30f362bc1be7cba07241030ae6d05a227a94414c8c7bd"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/decoding-fields.xlsx",
+      "bytes": 2986,
+      "sha256": "37ec3551b11f08feaeafe03f5b4639b4ad939b857cb57667f2f35691b5fa34e9"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/hidden-only.xlsx",
+      "bytes": 2249,
+      "sha256": "8e8c782e1b905e2f3106663fd9771ae1e47b165caf5a651fac0f534930153116"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/oracle.json",
+      "bytes": 11563,
+      "sha256": "bb267ceec0c54dc3807268923b416fa69021d8eccb9bb7402591b1c833467536"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/scope-barriers.xlsx",
+      "bytes": 3696,
+      "sha256": "26579c383c8b9d955c18a595b5025d5a4a7e8c3abdfb1093ebc18bac9d95b7c5"
+    }
+  ],
+  "limits": {
+    "files": 20,
+    "sourceBytes": 1048576,
+    "actualUtf8TextBytes": 16777216,
+    "hits": 200,
+    "queryUtf8Bytes": 256,
+    "nativeReadSlots": 2,
+    "batchStructuredParsers": 1
+  },
+  "boundaries": [
+    "Strings are decoded once; number/boolean/error/date lexemes retain precision. No generated formatting, formula evaluation, shared-formula expansion or added equals signs.",
+    "Cells, fields and sheets stay separate. Hidden/unknown/covered content is excluded; missing, empty and zero caches stay distinct. Empty visible scope does not expand to hidden sheets.",
+    "Cache and partial-scope notices remain visible outside collapsed details. Seven source fields, MIME, owner and current selection are checked across awaits and before source navigation.",
+    "Cancelled reads retain native capacity until real work ends; late results are discarded. Existing DOCX and workbook previews keep their original limits."
+  ],
+  "actualChecks": {
+    "backendTargetedPassed": 40,
+    "frontendTargetedPassed": 190,
+    "frontendTestFiles": 7,
+    "browsers": [
+      {
+        "engine": "chromium",
+        "label": "run1",
+        "checks": 162,
+        "scenarios": 17,
+        "sourceStable": true
+      },
+      {
+        "engine": "webkit",
+        "label": "run1",
+        "checks": 162,
+        "scenarios": 17,
+        "sourceStable": true
+      }
+    ],
+    "pixels": "Root inspected all four saved result/source screenshots. Both browser runs are controlled Tauri IPC with actual production App and Workers."
+  },
+  "retainedFailures": [
+    "Backend initial oversized search-source acceptance and frontend missing XLSX route exposed by red tests.",
+    "Frontend string-registry collection failure and oracle-only formatting failure retained with fixes and subsequent actual completions.",
+    "Root pre-browser oracle initially used numeric sheetId; corrected to the existing relationship identity before either run. Original oracle/generator and correction receipt retained. No failed browser run."
+  ],
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/publication.json",
+    "bytes": 63848,
+    "sha256": "f8e5dbecbb36c6b349e65d163a45c97d2d351d30e4eb18ca542443631670cd06"
+  },
+  "formalApplication": "52d21a3 /0.1.7 installed and independently verified in preceding DOCX slice, never launched after that replacement. New XLSX search is not installed by this record.",
+  "remaining": [
+    "Full seven checks, checkpoint and candidate/install validation for this increment.",
+    "P32 installed selected-file match and source-navigation positive evidence, additional formats and unloaded attachment discovery remain open.",
+    "NEW24 permission recovery, original P32 acceptance, 29 Agents x8 and Windows remain separate and uncompleted."
+  ]
+}

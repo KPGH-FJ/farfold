@@ -1,0 +1,361 @@
+{
+  "schema": 1,
+  "result": "noBlockingFinding",
+  "harness": [
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/run.mjs",
+      "bytes": 20311,
+      "sha256": "6ec5275058812583ed7080c605b8f98664b7f3a75067f230edec23a7a0bada3b"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/fixture.tsx",
+      "bytes": 10280,
+      "sha256": "df778c577c8b2ad7624bc543d3de7be4dabcf5055015f5bdf3286e1af3da8609"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/index.html",
+      "bytes": 1618,
+      "sha256": "27fca9573d058eb6ef5feba6be352c2c28391b37279d842cdedffa5cec1c0162"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/serve.mjs",
+      "bytes": 722,
+      "sha256": "f0d797f42d4489b342f4d6e636b7d61ea7faad32dd4ee3631ffbc3140f127c47"
+    }
+  ],
+  "sourceFreeze": {
+    "path": "output/2026-10-14-xlsx-search-frontend/source-freeze-v1.json",
+    "bytes": 2977,
+    "sha256": "106bd070a18364d1bf9fe0f13563dbefd29c672f1bb61f979c98123f2f51849d"
+  },
+  "originalCompletions": {
+    "path": "output/2026-10-14-xlsx-search-independent/transcript-browser/manifest.json",
+    "bytes": 1265,
+    "sha256": "9f30dae472f6ecfec76c92d872f7f8530ff6bf2e007e3a16c352a4eaa474e5f9"
+  },
+  "results": [
+    {
+      "report": {
+        "path": "output/2026-10-14-xlsx-search-browser/chromium-run1.json",
+        "bytes": 424872,
+        "sha256": "d1c9d4f931a5f3af66cd20123f17c0d476b6744aae507b747ca84901eb56eed3"
+      },
+      "engine": "chromium",
+      "actualExitCode": 0,
+      "checksPassed": 162,
+      "scenarios": 17,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "localBlobRequests": 0,
+      "stableInputCount": 1106,
+      "screenshots": [
+        {
+          "path": "output/2026-10-14-xlsx-search-browser/chromium-run1-xlsx-results.png",
+          "bytes": 127485,
+          "sha256": "9532c3fbcae0b6eb732192a559524644b360f7bbb0b5fbbf5bbd37fafc1bbda2"
+        },
+        {
+          "path": "output/2026-10-14-xlsx-search-browser/chromium-run1-source-location.png",
+          "bytes": 74473,
+          "sha256": "f3654d443694b9048706b12770aced1e0bc3b1fead3ee1e2c9e0cb0a51b7253d"
+        }
+      ],
+      "scenarioSummary": [
+        {
+          "name": "real-xlsx-worker-authored-values-and-formulas",
+          "phaseAfterScenario": "idle",
+          "workerCount": 1,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "precise-values-unicode-and-formula-cache-separation",
+          "phaseAfterScenario": "complete",
+          "workerCount": 8,
+          "matchesAfterScenario": 19,
+          "utf8BytesAfterScenario": 226
+        },
+        {
+          "name": "hidden-and-generated-labels-excluded",
+          "phaseAfterScenario": "complete",
+          "workerCount": 8,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 226
+        },
+        {
+          "name": "two-workbooks-serialize-production-workers",
+          "phaseAfterScenario": "complete",
+          "workerCount": 2,
+          "matchesAfterScenario": 6,
+          "utf8BytesAfterScenario": 468
+        },
+        {
+          "name": "text-docx-xlsx-share-search",
+          "phaseAfterScenario": "complete",
+          "workerCount": 2,
+          "matchesAfterScenario": 15,
+          "utf8BytesAfterScenario": 525
+        },
+        {
+          "name": "actual-utf8-budget-with-budget-b.xlsx",
+          "phaseAfterScenario": "complete",
+          "workerCount": 2,
+          "matchesAfterScenario": 3,
+          "utf8BytesAfterScenario": 9000109
+        },
+        {
+          "name": "actual-utf8-budget-with-budget-a.docx",
+          "phaseAfterScenario": "complete",
+          "workerCount": 2,
+          "matchesAfterScenario": 3,
+          "utf8BytesAfterScenario": 9000109
+        },
+        {
+          "name": "independent-decoding-fields.xlsx",
+          "phaseAfterScenario": "complete",
+          "workerCount": 22,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 265
+        },
+        {
+          "name": "independent-scope-barriers.xlsx",
+          "phaseAfterScenario": "complete",
+          "workerCount": 19,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 69
+        },
+        {
+          "name": "independent-hidden-only.xlsx",
+          "phaseAfterScenario": "complete",
+          "workerCount": 1,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "capture-source-version-mismatch",
+          "phaseAfterScenario": "complete",
+          "workerCount": 0,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "late-xlsx-sourceChange",
+          "phaseAfterScenario": "idle",
+          "workerCount": 0,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "late-xlsx-mimeChange",
+          "phaseAfterScenario": "idle",
+          "workerCount": 0,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "late-xlsx-indexChange",
+          "phaseAfterScenario": "idle",
+          "workerCount": 0,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "equal-index-refresh-retains-authorization",
+          "phaseAfterScenario": "complete",
+          "workerCount": 1,
+          "matchesAfterScenario": 5,
+          "utf8BytesAfterScenario": 226
+        },
+        {
+          "name": "cancel-capture",
+          "phaseAfterScenario": "cancelled",
+          "workerCount": 0,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "changed-before-navigation",
+          "phaseAfterScenario": "stale",
+          "workerCount": 1,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 226
+        }
+      ]
+    },
+    {
+      "report": {
+        "path": "output/2026-10-14-xlsx-search-browser/webkit-run1.json",
+        "bytes": 424866,
+        "sha256": "729cab23d1d0fdae9ebef36be7a36ab00f739964ee1e2460e9eccecaad76ff81"
+      },
+      "engine": "webkit",
+      "actualExitCode": 0,
+      "checksPassed": 162,
+      "scenarios": 17,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "localBlobRequests": 0,
+      "stableInputCount": 1106,
+      "screenshots": [
+        {
+          "path": "output/2026-10-14-xlsx-search-browser/webkit-run1-xlsx-results.png",
+          "bytes": 150299,
+          "sha256": "93ce563d2858eda751ba0e7bc6b3d4730c06f6abf8ef4e38f5c4d99b7db60aa9"
+        },
+        {
+          "path": "output/2026-10-14-xlsx-search-browser/webkit-run1-source-location.png",
+          "bytes": 97088,
+          "sha256": "fae7f1e4664d275bd1df662b818fc388f6ae20000e1b30fdaf594226cccfbcec"
+        }
+      ],
+      "scenarioSummary": [
+        {
+          "name": "real-xlsx-worker-authored-values-and-formulas",
+          "phaseAfterScenario": "idle",
+          "workerCount": 1,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "precise-values-unicode-and-formula-cache-separation",
+          "phaseAfterScenario": "complete",
+          "workerCount": 8,
+          "matchesAfterScenario": 19,
+          "utf8BytesAfterScenario": 226
+        },
+        {
+          "name": "hidden-and-generated-labels-excluded",
+          "phaseAfterScenario": "complete",
+          "workerCount": 8,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 226
+        },
+        {
+          "name": "two-workbooks-serialize-production-workers",
+          "phaseAfterScenario": "complete",
+          "workerCount": 2,
+          "matchesAfterScenario": 6,
+          "utf8BytesAfterScenario": 468
+        },
+        {
+          "name": "text-docx-xlsx-share-search",
+          "phaseAfterScenario": "complete",
+          "workerCount": 2,
+          "matchesAfterScenario": 15,
+          "utf8BytesAfterScenario": 525
+        },
+        {
+          "name": "actual-utf8-budget-with-budget-b.xlsx",
+          "phaseAfterScenario": "complete",
+          "workerCount": 2,
+          "matchesAfterScenario": 3,
+          "utf8BytesAfterScenario": 9000109
+        },
+        {
+          "name": "actual-utf8-budget-with-budget-a.docx",
+          "phaseAfterScenario": "complete",
+          "workerCount": 2,
+          "matchesAfterScenario": 3,
+          "utf8BytesAfterScenario": 9000109
+        },
+        {
+          "name": "independent-decoding-fields.xlsx",
+          "phaseAfterScenario": "complete",
+          "workerCount": 22,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 265
+        },
+        {
+          "name": "independent-scope-barriers.xlsx",
+          "phaseAfterScenario": "complete",
+          "workerCount": 19,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 69
+        },
+        {
+          "name": "independent-hidden-only.xlsx",
+          "phaseAfterScenario": "complete",
+          "workerCount": 1,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "capture-source-version-mismatch",
+          "phaseAfterScenario": "complete",
+          "workerCount": 0,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "late-xlsx-sourceChange",
+          "phaseAfterScenario": "idle",
+          "workerCount": 0,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "late-xlsx-mimeChange",
+          "phaseAfterScenario": "idle",
+          "workerCount": 0,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "late-xlsx-indexChange",
+          "phaseAfterScenario": "idle",
+          "workerCount": 0,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "equal-index-refresh-retains-authorization",
+          "phaseAfterScenario": "complete",
+          "workerCount": 1,
+          "matchesAfterScenario": 5,
+          "utf8BytesAfterScenario": 226
+        },
+        {
+          "name": "cancel-capture",
+          "phaseAfterScenario": "cancelled",
+          "workerCount": 0,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 0
+        },
+        {
+          "name": "changed-before-navigation",
+          "phaseAfterScenario": "stale",
+          "workerCount": 1,
+          "matchesAfterScenario": 0,
+          "utf8BytesAfterScenario": 226
+        }
+      ]
+    }
+  ],
+  "reviewedCoverage": [
+    "fixture.tsx mounts production App, startup components and styles. Worker instrumentation subclasses original Worker and only records events; production Worker modules execute.",
+    "Tauri is explicitly controlled. Archive parts and full file receipts come from independent synthetic ZIP captures; matching/search/model results are not injected.",
+    "Independent oracle queries exercise exact Unicode/ST_Xstring, numeric lexemes, protected cache/formula separation, hidden/unknown/covered exclusions and scopeEmpty through actual Worker.",
+    "Primary16segments/226UTF8 and5matches; two workbooks6matches; DOCX/XLSX/plain mixed15matches. Nine-million-byte parsed XLSX with second XLSX or DOCX enforces aggregate UTF8 budget and retains plain text.",
+    "Selecting/typing performs no file read; selected version mismatch blocks Worker; source/MIME/index drift rejects late capture; equal index refresh retains authorization; cancel waits for held capture then publishes nothing.",
+    "Actual source jump checks revision and highlights declared attachment; mismatch before navigation clears hits. Cache/partial notices visible outside details; injected synthetic markup stays text.",
+    "All1106 browser inputs identical before/after/between engines and current;14frontend frozen owned files included. FourPNG files hash verified; parent visual review is separate."
+  ],
+  "limits": [
+    "Browser capture/revision returns are simulated; this is not native IO/Webview origin/OS pool, installed App or real Agent acceptance.",
+    "Cancellation coverage here is held controlled capture/late result withdrawal; actual OS cancellation is not claimed.",
+    "Synthetic draft/feedback equality and blocked unexpected IPC do not prove user data retention or official request counters.",
+    "This review did not launch App/browser/test or read DB.",
+    "All checks passed on run1. Numeric sheetId oracle correction happened before browser execution and is not a browser/product failure."
+  ],
+  "oracleCorrection": {
+    "path": "output/2026-10-14-xlsx-search-browser/oracle-correction.json",
+    "bytes": 409,
+    "sha256": "e1e4f9f9556b74ddb3d9d1369b6058fcd194ad6c964ab83350a694bcd1283d89"
+  },
+  "independentOracleReview": {
+    "path": "output/2026-10-14-xlsx-search-independent/fixture-static-review.json",
+    "bytes": 3477,
+    "sha256": "a39b71265d19fa2d2df8fb9eece0e3d62821b1cce3a1f7eea585a23dd7aa808a"
+  },
+  "safeForPublicRaw": true
+}

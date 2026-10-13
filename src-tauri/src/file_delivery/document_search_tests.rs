@@ -1,3 +1,7 @@
+use super::super::{
+    DeliveryError,
+    search_source::{capture as capture_search_source, open as open_search_source},
+};
 use super::*;
 use base64::{Engine, engine::general_purpose::STANDARD};
 use std::io::{Cursor, Write};
@@ -90,17 +94,14 @@ fn search_oversize_open_and_post_open_growth_never_hash_the_large_body() {
     // Once opened, take(max+1) limits growth and rejects before content hashing.
     assert!(matches!(
         capture_search_source(&file, opened),
-        Err(DocumentError::File(DeliveryError::TooLarge))
+        Err(DeliveryError::TooLarge)
     ));
     let mut entered_body = false;
     let result = open_search_source(&file).and_then(|opened| {
         entered_body = true;
         capture_search_source(&file, opened)
     });
-    assert!(matches!(
-        result,
-        Err(DocumentError::File(DeliveryError::TooLarge))
-    ));
+    assert!(matches!(result, Err(DeliveryError::TooLarge)));
     assert!(
         !entered_body,
         "oversize metadata must reject before body capture"
@@ -137,11 +138,11 @@ fn search_all_seven_source_fields_and_same_byte_replacement_are_checked() {
     std::fs::rename(&other, &path).unwrap();
     assert!(matches!(
         capture_search_source(&file, opened),
-        Err(DocumentError::File(DeliveryError::Changed))
+        Err(DeliveryError::Changed)
     ));
     assert!(matches!(
         open_search_source(&file),
-        Err(DocumentError::File(DeliveryError::Changed))
+        Err(DeliveryError::Changed)
     ));
     assert_eq!(std::fs::read(&path).unwrap(), bytes);
 }
@@ -161,7 +162,7 @@ fn search_redirected_symlink_is_rejected_before_body_capture() {
     std::os::unix::fs::symlink(&other, &alias).unwrap();
     assert!(matches!(
         open_search_source(&expected),
-        Err(DocumentError::File(DeliveryError::Changed))
+        Err(DeliveryError::Changed)
     ));
 }
 

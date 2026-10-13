@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "typecheck"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "displayCommand": "corepack pnpm typecheck",
+  "group": "frontend",
+  "monotonicStart": 30.548765,
+  "name": "typecheck",
+  "startedAt": "2026-10-13T18:30:43.783650+00:00"
+}

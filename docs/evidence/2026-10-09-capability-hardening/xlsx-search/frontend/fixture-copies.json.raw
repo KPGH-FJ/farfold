@@ -1,0 +1,32 @@
+[
+  {
+    "original": "output/2026-10-14-xlsx-search-independent/decoding-fields.xlsx",
+    "copy": "src/runtime/fixtures/xlsx-search/decoding-fields.xlsx",
+    "bytes": 2986,
+    "sha256": "37ec3551b11f08feaeafe03f5b4639b4ad939b857cb57667f2f35691b5fa34e9"
+  },
+  {
+    "original": "output/2026-10-14-xlsx-search-independent/scope-barriers.xlsx",
+    "copy": "src/runtime/fixtures/xlsx-search/scope-barriers.xlsx",
+    "bytes": 3696,
+    "sha256": "26579c383c8b9d955c18a595b5025d5a4a7e8c3abdfb1093ebc18bac9d95b7c5"
+  },
+  {
+    "original": "output/2026-10-14-xlsx-search-independent/hidden-only.xlsx",
+    "copy": "src/runtime/fixtures/xlsx-search/hidden-only.xlsx",
+    "bytes": 2249,
+    "sha256": "8e8c782e1b905e2f3106663fd9771ae1e47b165caf5a651fac0f534930153116"
+  },
+  {
+    "original": "output/2026-10-14-xlsx-search-independent/captures.json",
+    "copy": "src/runtime/fixtures/xlsx-search/captures.json",
+    "bytes": 23548,
+    "sha256": "cb3be77e2777c7b5a1d30f362bc1be7cba07241030ae6d05a227a94414c8c7bd"
+  },
+  {
+    "original": "output/2026-10-14-xlsx-search-independent/oracle.json",
+    "copy": "src/runtime/fixtures/xlsx-search/oracle.json",
+    "bytes": 11603,
+    "sha256": "bb3d67612a2f68080aa429ccf3929cf97f7bb273bf60f89e2be186267ae53a1f"
+  }
+]

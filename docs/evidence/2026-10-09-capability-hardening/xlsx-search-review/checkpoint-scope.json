@@ -1,0 +1,157 @@
+{
+  "phase": "CHECKPOINT_AFTER_SEVEN",
+  "scope": "Exact XLSX search increment, four current docs, scoped evidence and all new synthetic engineering inputs. Original generated budget capture is committed to satisfy candidate commit-source equality. Existing unrelated dirty evidence is preserved.",
+  "inputCount": 1842,
+  "auxiliaryInputs": [
+    {
+      "path": "output/2026-10-14-xlsx-search-backend/run_check.py",
+      "bytes": 2003,
+      "sha256": "e9aeebca48aa79becf525b31ae9bd665ba93223ec23d5b780af33ad20025e55a"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-backend/source-freeze.json",
+      "bytes": 11423,
+      "sha256": "7d1cb900612bfdd732ed8b56d61563f03257cf8dc78453c8f76d7c6401c2ef17"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/author.xlsx",
+      "bytes": 3580,
+      "sha256": "e5f5b87c72c41d7e610622b8d48b00876be6d793e4d699651065b1bfe07d901b"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/budget-a.xlsx",
+      "bytes": 10965,
+      "sha256": "31aa23b236993b0f5b2721311ced83c77b4f2e1b2aa21b257ce6c1f710ddc6ea"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/budget-b.xlsx",
+      "bytes": 10965,
+      "sha256": "31aa23b236993b0f5b2721311ced83c77b4f2e1b2aa21b257ce6c1f710ddc6ea"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/budget-captures.json",
+      "bytes": 24009727,
+      "sha256": "6ed3ecd44593d5cb1726fa93116f46c36ad1dcf280f414f61b9fee6ff9a32419"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/budget-oracle.json",
+      "bytes": 167,
+      "sha256": "aa35b7a8fa477e3299ab88f2a4f4b0809609eb02a126a810f8e0826aa149472b"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/captures.json",
+      "bytes": 17763,
+      "sha256": "1ac8a47cdae6d07dce744c772709c0162c66119b229fa0def1dcb3f1bd3f69f3"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/fixture.tsx",
+      "bytes": 10280,
+      "sha256": "df778c577c8b2ad7624bc543d3de7be4dabcf5055015f5bdf3286e1af3da8609"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/generate-fixtures.py",
+      "bytes": 6007,
+      "sha256": "46dd5183efafc923b49926d7d12e353c7e43ca97934a75062eb49e3a9cd202d6"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/index.html",
+      "bytes": 1618,
+      "sha256": "27fca9573d058eb6ef5feba6be352c2c28391b37279d842cdedffa5cec1c0162"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/oracle.json",
+      "bytes": 3291,
+      "sha256": "990dd6ee0bb208f1cdd2dedddc2c92e39ff973d9b9d0e02766deca068d9f9be6"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/run.mjs",
+      "bytes": 20311,
+      "sha256": "6ec5275058812583ed7080c605b8f98664b7f3a75067f230edec23a7a0bada3b"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/second.xlsx",
+      "bytes": 3585,
+      "sha256": "0d3ca8bc3f93cb706ce41d54f7be88f179bba3b7322556494fdee614cf978485"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-browser/serve.mjs",
+      "bytes": 722,
+      "sha256": "f0d797f42d4489b342f4d6e636b7d61ea7faad32dd4ee3631ffbc3140f127c47"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/run.py",
+      "bytes": 863,
+      "sha256": "1b69245ca2d169ae1dd8c503a5ba00a25207d90d67741947e2a895765cfa2228"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-frontend/source-freeze-v1.json",
+      "bytes": 2977,
+      "sha256": "106bd070a18364d1bf9fe0f13563dbefd29c672f1bb61f979c98123f2f51849d"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-independent/captures.json",
+      "bytes": 23548,
+      "sha256": "cb3be77e2777c7b5a1d30f362bc1be7cba07241030ae6d05a227a94414c8c7bd"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-independent/decoding-fields.xlsx",
+      "bytes": 2986,
+      "sha256": "37ec3551b11f08feaeafe03f5b4639b4ad939b857cb57667f2f35691b5fa34e9"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-independent/fixture-freeze.json",
+      "bytes": 993,
+      "sha256": "a7274f4a68c68112ff7da2c2e8e705c2ad500dacbbf292c6c78a078be71e48f4"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-independent/generate-supplement.py",
+      "bytes": 12854,
+      "sha256": "0b04c927b193ddf13818c91f75aa83b8102091f5e0619c0ff593eb6acfcbb9fc"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-independent/hidden-only.xlsx",
+      "bytes": 2249,
+      "sha256": "8e8c782e1b905e2f3106663fd9771ae1e47b165caf5a651fac0f534930153116"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-independent/oracle.json",
+      "bytes": 11603,
+      "sha256": "bb3d67612a2f68080aa429ccf3929cf97f7bb273bf60f89e2be186267ae53a1f"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-independent/scope-barriers.xlsx",
+      "bytes": 3696,
+      "sha256": "26579c383c8b9d955c18a595b5025d5a4a7e8c3abdfb1093ebc18bac9d95b7c5"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-independent/verify-fixtures.py",
+      "bytes": 6577,
+      "sha256": "e7cb81cf17db521d3f4b2c32cc31b10384a7ce0e48a7b6932b0732b9197a0efa"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/prepare_checkpoint.py",
+      "bytes": 3943,
+      "sha256": "9e0e2b8c87c4e00dada2db1741619a11e443b9788c59c3e38c2e1d207310b121"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/prepare_inventory.py",
+      "bytes": 9335,
+      "sha256": "32137d0dd417c72e0b169dc13b31495ab467e53281c41be4ba6d6eb32964eaf9"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/publish_checks.py",
+      "bytes": 2650,
+      "sha256": "1ec6d41a9b61aac42178b11fcd8f169c1032cf373275dfc06a9143e3b5614913"
+    },
+    {
+      "path": "output/2026-10-14-xlsx-search-integration/publish_implementation.py",
+      "bytes": 5837,
+      "sha256": "cc916305f1bd05123d7197880cd47beef3734d3d91f89e23f784908efe0ad057"
+    }
+  ],
+  "engineering": {
+    "path": "output/2026-10-14-xlsx-search-integration/checks-run/summary.json",
+    "bytes": 6315,
+    "sha256": "f928920ad2a962c445ee4f4d6f657adc6ab5d4a08390536af4c63f0d9569eb36"
+  }
+}

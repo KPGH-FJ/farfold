@@ -1,0 +1,322 @@
+{
+  "schema": 1,
+  "result": "noBlockingFinding",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-xlsx-search-backend/source-freeze.json",
+    "bytes": 11423,
+    "sha256": "7d1cb900612bfdd732ed8b56d61563f03257cf8dc78453c8f76d7c6401c2ef17"
+  },
+  "sourceFiles": [
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17751,
+      "sha256": "2da2e56dcf80513aa02bbe9c8d960c8d1ee25c31175e78eab2c6a4fcc5bd407a"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document.rs",
+      "bytes": 2186,
+      "sha256": "cba79932194a05851ef8021184f6e5534f1d35af1cdcbc5108f6e6332bf2e056"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_tests.rs",
+      "bytes": 7333,
+      "sha256": "cff8740030c3d22ef23e1baaffd94b0a8b0fae7eaf820df4b761c8c8c05d1f83"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook.rs",
+      "bytes": 1317,
+      "sha256": "3e2b65d0ea2b616b5669173cde6532fffc6c47f4342d821c6f1c52ad9ec6b4ad"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/search_source.rs",
+      "bytes": 1384,
+      "sha256": "0f102ed3753a585b017189ba8fa7b3c4bc47d9158f4cf089f7d704beec0b66af"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook_search_tests.rs",
+      "bytes": 7862,
+      "sha256": "b0db42a1ed2022d96ec689b8fdce6aa2072e8175c9a0772de4b5f3dbacaaa07a"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook_search_command_tests.rs",
+      "bytes": 1741,
+      "sha256": "c0d67f43ea5883e1d8cda64c332a642c45b3528da4d7d003f69874e49059664e"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 21183,
+      "sha256": "52dcb86e6d19459ddda8f3fb815ade69df0ae9ac150e1092bfef1a810b14379e"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21735,
+      "sha256": "40b70dfc28fa0e5545750fccd36fe7acf6025662bd1560317981c8d3ea11159c"
+    }
+  ],
+  "unchangedSharedCount": 8,
+  "unchangedSharedMatchesBaseHead": "a07392822ec6a0beaa7e2508ac9fc8ee7795d83d",
+  "actualStages": [
+    {
+      "name": "red-search-limit",
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-backend/red-search-limit/completed.json",
+        "bytes": 3634,
+        "sha256": "0fcd44d97d3cf50d993263ba308b23d7a27ff5d2ea750fad8256157b8099b417"
+      },
+      "actualExitCode": 101,
+      "sourceStable": true,
+      "counts": [
+        {
+          "result": "FAILED",
+          "passed": 1,
+          "failed": 1,
+          "ignored": 0
+        }
+      ],
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-backend/red-search-limit/stdout.log",
+        "bytes": 487,
+        "sha256": "e3d1bc6567dd374b0df5eadc541f375f0bc28779f0c608ab986533393a3af832"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-backend/red-search-limit/stderr.log",
+        "bytes": 1009,
+        "sha256": "97c67e6c995f5d38491e3afbc4ad795302287521554cb4bcf768b130f3462e46"
+      }
+    },
+    {
+      "name": "green-workbook",
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-backend/green-workbook/completed.json",
+        "bytes": 3778,
+        "sha256": "d5e752c015556325a79946709979fbe7aa680ae506e4848f795bffe5e5c49201"
+      },
+      "actualExitCode": 0,
+      "sourceStable": true,
+      "counts": [
+        {
+          "result": "ok",
+          "passed": 15,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "result": "ok",
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-backend/green-workbook/stdout.log",
+        "bytes": 6297,
+        "sha256": "f6e826091e961ab1276e026ab9cf97c525e129666d5d08119cf13794b0bc25ce"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-backend/green-workbook/stderr.log",
+        "bytes": 323,
+        "sha256": "f7c1fe35f95c5b8710893a3a29e0b39ae2f3dd86d5ca9968d9e1345a731ce084"
+      }
+    },
+    {
+      "name": "regression-docx",
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx/completed.json",
+        "bytes": 3779,
+        "sha256": "81c499aa603230306c66b0d4b17b0e5052422c0d61d45b8f8792b36c4f277930"
+      },
+      "actualExitCode": 0,
+      "sourceStable": true,
+      "counts": [
+        {
+          "result": "ok",
+          "passed": 18,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "result": "ok",
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx/stdout.log",
+        "bytes": 8535,
+        "sha256": "eadf2cfa4a212e3041f3ae8e0eb3449f83af94cc11927fb52bffbbde358ad433"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx/stderr.log",
+        "bytes": 256,
+        "sha256": "706688ab7bdee0f381159fbbe64a4b7a0d48019e281a17964b45abc610e87b3a"
+      }
+    },
+    {
+      "name": "command-pool",
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-backend/command-pool/completed.json",
+        "bytes": 3813,
+        "sha256": "5aadf8374cad11be20286f52b38f878282d1e17b2477ff404fae24dbf8c1eb86"
+      },
+      "actualExitCode": 0,
+      "sourceStable": true,
+      "counts": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "result": "ok",
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-backend/command-pool/stdout.log",
+        "bytes": 344,
+        "sha256": "5afc700297946044ea4a9318a82061a4d76b515def103a1a55c321d9d1c2d421"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-backend/command-pool/stderr.log",
+        "bytes": 256,
+        "sha256": "487d1e10b2a7e7df63c0118d62d8e3c24753104b288e927c814222fad45d39fe"
+      }
+    },
+    {
+      "name": "regression-docx-command",
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx-command/completed.json",
+        "bytes": 3823,
+        "sha256": "5863bd1359bb6cf4d3c7fa98b8d658cea1ce410282620fd4d487ac9f12e94003"
+      },
+      "actualExitCode": 0,
+      "sourceStable": true,
+      "counts": [
+        {
+          "result": "ok",
+          "passed": 1,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "result": "ok",
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx-command/stdout.log",
+        "bytes": 336,
+        "sha256": "c604adc45489cd783fb7bf87fc79a35286bd51cfce1fbd4fa98b1bfaaafb00d2"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx-command/stderr.log",
+        "bytes": 256,
+        "sha256": "884e4afc88c81c6e9ac2d5f18a3c56645581db6952d27f6325a59495d86ac093"
+      }
+    },
+    {
+      "name": "regression-read-pool",
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-read-pool/completed.json",
+        "bytes": 3787,
+        "sha256": "f697b2f8ce962b54b727e581686205a2d0da66b9914edd05a43ec1ae168dd2e4"
+      },
+      "actualExitCode": 0,
+      "sourceStable": true,
+      "counts": [
+        {
+          "result": "ok",
+          "passed": 5,
+          "failed": 0,
+          "ignored": 0
+        },
+        {
+          "result": "ok",
+          "passed": 0,
+          "failed": 0,
+          "ignored": 0
+        }
+      ],
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-read-pool/stdout.log",
+        "bytes": 711,
+        "sha256": "2ac0e778786f3898570a630260fe2f8dd02cc9695f1966793f24da40ef55e6d6"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-read-pool/stderr.log",
+        "bytes": 450,
+        "sha256": "25b2259703ea97f27819753ed58bc1de779d7b0d43ad5047ae89831ee3815da9"
+      }
+    },
+    {
+      "name": "cargo-fmt",
+      "completion": {
+        "path": "output/2026-10-14-xlsx-search-backend/cargo-fmt/completed.json",
+        "bytes": 3697,
+        "sha256": "5edabf47b6e55378549440f497a38e71daa01989ef808611f291e98b1cf893aa"
+      },
+      "actualExitCode": 0,
+      "sourceStable": true,
+      "counts": [],
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-backend/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-backend/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "successfulTargetedTests": 40,
+  "findings": [],
+  "reviewedMechanisms": [
+    {
+      "file": "src-tauri/src/file_delivery/search_source.rs",
+      "lines": "5-40",
+      "conclusion": "DOCX capture logic moved into a private shared helper; expected location/object stamp checked before body, complete 1MiB cap, final full VerifiedFile equality."
+    },
+    {
+      "file": "src-tauri/src/file_delivery.rs",
+      "lines": "183-235,238-330",
+      "conclusion": "Metadata cap precedes body; take(max+1) rejects growth before SHA. Handle/path/root identity rechecks and complete receipt compare remain intact."
+    },
+    {
+      "file": "src-tauri/src/file_delivery/workbook.rs",
+      "lines": "8-25",
+      "conclusion": "Old16MiB preview unchanged. New search reads bounded whole source then existing unpack; only XML/rels returned, all archive entries still validated."
+    },
+    {
+      "file": "src-tauri/src/file_delivery_commands.rs",
+      "lines": "139-162",
+      "conclusion": "Main-view gate precedes actual checked helper; shared run wraps capture and unpack, preserving OS slot lifetime and readBusy/readPending classification."
+    },
+    {
+      "file": "src-tauri/src/file_read_check.rs",
+      "lines": "39-81",
+      "conclusion": "Two actual blocking operations max; timeout/drop does not release closure-owned permit or claim OS cancellation. Shared mechanism bytes unchanged."
+    },
+    {
+      "file": "src-tauri/src/file_delivery/ooxml_archive.rs",
+      "lines": "9-49,111-292",
+      "conclusion": "Archive/part/total/entry limits, CRC of ignored members, duplicate/overlap and ZIP64 checks unchanged; TooLarge maps limit, Changed maps changed, outer busy/pending remain distinct."
+    }
+  ],
+  "redBoundary": "Original new-entry delegate compiled; exact1MiB passed and +1MiB rejection failed actual101. Legacy16MiB preview was correct and not labelled a prior product defect.",
+  "verificationBoundary": [
+    "Read saved actual command receipts and stdout/stderr; did not rerun cargo or tests.",
+    "Pool test exercises the actual checked helper, not a real Webview invocation.",
+    "Backend valid-ZIP fixtures intentionally do not prove OPC semantics; frontend real Worker owns that validation.",
+    "No new candidate/install/App/Agent/data retention acceptance.",
+    "Frontend core and frozen-version review remain pending owner freeze."
+  ],
+  "safeForPublicRaw": true
+}

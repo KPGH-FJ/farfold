@@ -1,0 +1,263 @@
+{
+  "schema": 1,
+  "result": "noBlockingFinding",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-xlsx-search-frontend/source-freeze-v1.json",
+    "bytes": 2977,
+    "sha256": "106bd070a18364d1bf9fe0f13563dbefd29c672f1bb61f979c98123f2f51849d"
+  },
+  "ownedFiles": [
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 20940,
+      "sha256": "4a4a1078d43a6e2830117ce76e1914872e6fc85c4c6922501cc8e7fb00de0077"
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 4834,
+      "sha256": "879dbac3552e5b398feada2837f823e44f9d545ddbaa22fa292ede9717120453"
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 7365,
+      "sha256": "013a9ce524c0e9b20a0462f0852ed0d16e7f23097d6f16bb44c5b5980dba5065"
+    },
+    {
+      "path": "src/runtime/attachment_search.xlsx.test.ts",
+      "bytes": 15751,
+      "sha256": "af67347b3bab7ecf99effec24876a0f9266652a165dd4db66b23ab36597278a9"
+    },
+    {
+      "path": "src/runtime/attachment_search.xlsx.test-support.ts",
+      "bytes": 3021,
+      "sha256": "3d946bd9ec82c754eba1dc62d5e86960a0f94bb32e0bf8a8384cdfb1c734e37a"
+    },
+    {
+      "path": "src/runtime/xlsx_search_text.ts",
+      "bytes": 3713,
+      "sha256": "d3a25060ce3ead1a9d2d8024a7517bda069d36d727f8d3f528847cd15eeb6f5e"
+    },
+    {
+      "path": "src/runtime/xlsx_search_text.test.ts",
+      "bytes": 11652,
+      "sha256": "8abdd2b5afaa61de69b5fe688791a0081e39c179fb6a0aead4f374016d3d6f06"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 11626,
+      "sha256": "c7263157d22d3d32d35d3d29baac7a96f9b54e3796abebaeaf6a60fcbc384d2a"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.test.tsx",
+      "bytes": 5758,
+      "sha256": "50f380e17d7d7efecc11f0facca8769eb80b06204af02dbea647d5628e9e131e"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/captures.json",
+      "bytes": 23548,
+      "sha256": "cb3be77e2777c7b5a1d30f362bc1be7cba07241030ae6d05a227a94414c8c7bd"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/decoding-fields.xlsx",
+      "bytes": 2986,
+      "sha256": "37ec3551b11f08feaeafe03f5b4639b4ad939b857cb57667f2f35691b5fa34e9"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/hidden-only.xlsx",
+      "bytes": 2249,
+      "sha256": "8e8c782e1b905e2f3106663fd9771ae1e47b165caf5a651fac0f534930153116"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/oracle.json",
+      "bytes": 11563,
+      "sha256": "bb267ceec0c54dc3807268923b416fa69021d8eccb9bb7402591b1c833467536"
+    },
+    {
+      "path": "src/runtime/fixtures/xlsx-search/scope-barriers.xlsx",
+      "bytes": 3696,
+      "sha256": "26579c383c8b9d955c18a595b5025d5a4a7e8c3abdfb1093ebc18bac9d95b7c5"
+    }
+  ],
+  "reviewScope": "Frozen helper/controller/source ownership/UI and saved targeted receipts; no new test or production execution.",
+  "findings": [],
+  "reviewedMechanisms": [
+    {
+      "file": "src/runtime/xlsx_search_text.ts",
+      "lines": "27-117",
+      "conclusion": "Visible-saved-only scope and matching catalog required. Included visible noncovered cells emit decoded strings or original raw lexemes; formula text emitted only when included and stored. Empty strings/absent cache create no synthetic text. Each field/cell remains independent; no labels, attrs, formatted display, equals prefix, evaluation or shared-formula expansion."
+    },
+    {
+      "file": "src/runtime/xlsx_search_text.ts",
+      "lines": "56-97",
+      "conclusion": "Rejects NUL/unpaired surrogate, counts actual UTF8 from saved segments, freezes copied location/warnings. Relationship id resolves stable sheet name, not numeric sheetId or index."
+    },
+    {
+      "file": "src/runtime/attachment_search.ts",
+      "lines": "401-444",
+      "conclusion": "New bounded capture verifies exact7fields, enforces archive envelope limits, uses existing real readWorkbookInput in visible mode, shares DOCX parseTail, checks owner/cancel after each await and rechecks full source after parsing."
+    },
+    {
+      "file": "src/runtime/attachment_search.ts",
+      "lines": "450-563",
+      "conclusion": "At most2capture tasks; compressed source never substitutes for extracted text budget. Ordered actualUTF8 aggregate<=16MiB; temporary text reservation waits rather than falsely spending failed reads. 200displayed hits preserves total count."
+    },
+    {
+      "file": "src/runtime/attachment_search.ts",
+      "lines": "245-286,586-625",
+      "conclusion": "Cancellation/retire withdraw results and abort Worker wait; native operations retain own OS permits. Explicit retry only; navigation rechecks source, failures clear stale hits, no auto history/Agent action."
+    },
+    {
+      "file": "src/runtime/attachment_search_source.ts",
+      "lines": "65-144",
+      "conclusion": "Source freshness includes attachment identity/URI/name/MIME, loaded thread and index ownership. XLSX declared MIME or path chooses parser; conflicting DOCX route unchanged, no fallback broadening."
+    },
+    {
+      "file": "src/components/SelectedAttachmentSearch.tsx",
+      "lines": "96-126,230-247,273-307",
+      "conclusion": "Existing explicit selection/start ownership retained. Saved-cache freshness, partial-scope warning and scopeEmpty are visible outside folded details; location rendered as actual sheet/cell/field, body React escaped."
+    }
+  ],
+  "evidence": {
+    "targetedFiles": 7,
+    "targetedTests": 190,
+    "receipts": [
+      {
+        "name": "red-01",
+        "completion": {
+          "path": "output/2026-10-14-xlsx-search-frontend/red-01.completed.json",
+          "bytes": 737,
+          "sha256": "2239d4d914920b243ed99219b1b9fad7d4dd2f5d13fa663ecaa29e7cb3c8763f"
+        },
+        "actualExitCode": 1,
+        "stdout": {
+          "path": "output/2026-10-14-xlsx-search-frontend/red-01.stdout.log",
+          "bytes": 363,
+          "sha256": "221ba962946504860fb1b6c5e9eca460f81567d7f5335f785c6558152ed5c1dc"
+        },
+        "stderr": {
+          "path": "output/2026-10-14-xlsx-search-frontend/red-01.stderr.log",
+          "bytes": 799,
+          "sha256": "ded0c8c2b21a4b916980bdf673cb22cbabd8281a5f3348ccc29018ae7321e268"
+        }
+      },
+      {
+        "name": "targeted-02",
+        "completion": {
+          "path": "output/2026-10-14-xlsx-search-frontend/targeted-02.completed.json",
+          "bytes": 1021,
+          "sha256": "99e844c50d9dbe22361a2c01e637e34fb0bccdd7c90449d5cc53b0129c37a16e"
+        },
+        "actualExitCode": 1,
+        "stdout": {
+          "path": "output/2026-10-14-xlsx-search-frontend/targeted-02.stdout.log",
+          "bytes": 267,
+          "sha256": "42847a040d048663ce9d562b7a4d8564cb16454181fef3bd78bf4138362dca32"
+        },
+        "stderr": {
+          "path": "output/2026-10-14-xlsx-search-frontend/targeted-02.stderr.log",
+          "bytes": 980,
+          "sha256": "dfa59255908ece0616c0b189c009231121e5c8f5ad7c36bdb77f0a57122fbfd2"
+        }
+      },
+      {
+        "name": "format-check-01",
+        "completion": {
+          "path": "output/2026-10-14-xlsx-search-frontend/format-check-01.completed.json",
+          "bytes": 1249,
+          "sha256": "8d861815405cb9c149561e8d7f06635e49308e0f515c8eb951b9ddba5fc4be90"
+        },
+        "actualExitCode": 1,
+        "stdout": {
+          "path": "output/2026-10-14-xlsx-search-frontend/format-check-01.stdout.log",
+          "bytes": 23,
+          "sha256": "ebe82dad128d5e5d8936334ceac09492f3c60bd9e0b4a16cc7fd7075513b33de"
+        },
+        "stderr": {
+          "path": "output/2026-10-14-xlsx-search-frontend/format-check-01.stderr.log",
+          "bytes": 136,
+          "sha256": "2fae21f4c4daa2265ee8724318b5f32a1f39e421375561162a4611b562da7f33"
+        }
+      },
+      {
+        "name": "targeted-frozen",
+        "completion": {
+          "path": "output/2026-10-14-xlsx-search-frontend/targeted-frozen.completed.json",
+          "bytes": 1027,
+          "sha256": "6fecbdc37e0b0f3740f1ee43b4dec499efcb83a6bb31075b4b2e693439a8cf34"
+        },
+        "actualExitCode": 0,
+        "stdout": {
+          "path": "output/2026-10-14-xlsx-search-frontend/targeted-frozen.stdout.log",
+          "bytes": 214,
+          "sha256": "976d5fd1519de3a15d27c77e1f412cd24516795edcefbc9716050696b5a817c5"
+        },
+        "stderr": {
+          "path": "output/2026-10-14-xlsx-search-frontend/targeted-frozen.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "typecheck-01",
+        "completion": {
+          "path": "output/2026-10-14-xlsx-search-frontend/typecheck-01.completed.json",
+          "bytes": 676,
+          "sha256": "8702ee81e0e28513d894e0ef63edf962854ae9cc7697992831d46e84a02c14a4"
+        },
+        "actualExitCode": 0,
+        "stdout": {
+          "path": "output/2026-10-14-xlsx-search-frontend/typecheck-01.stdout.log",
+          "bytes": 78,
+          "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+        },
+        "stderr": {
+          "path": "output/2026-10-14-xlsx-search-frontend/typecheck-01.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "name": "format-final",
+        "completion": {
+          "path": "output/2026-10-14-xlsx-search-frontend/format-final.completed.json",
+          "bytes": 1241,
+          "sha256": "e9b442f644d40f19e44334f2ca4e89c4184c6bc3d842da8014eeac3651c99a7a"
+        },
+        "actualExitCode": 0,
+        "stdout": {
+          "path": "output/2026-10-14-xlsx-search-frontend/format-final.stdout.log",
+          "bytes": 66,
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        "stderr": {
+          "path": "output/2026-10-14-xlsx-search-frontend/format-final.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      }
+    ],
+    "syntheticFixtureCopies": "3 XLSX and captures exact original bytes; source oracle JSON differs only formatting and parses exactly equal.",
+    "fixtureOracleOriginal": {
+      "path": "output/2026-10-14-xlsx-search-independent/oracle.json",
+      "bytes": 11603,
+      "sha256": "bb3d67612a2f68080aa429ccf3929cf97f7bb273bf60f89e2be186267ae53a1f"
+    },
+    "fixtureOracleFormatted": {
+      "path": "src/runtime/fixtures/xlsx-search/oracle.json",
+      "bytes": 11563,
+      "sha256": "bb267ceec0c54dc3807268923b416fa69021d8eccb9bb7402591b1c833467536"
+    }
+  },
+  "preservedFailures": [
+    "red-01: initial missing XLSX route,1failed actual1.",
+    "targeted-02:178tests passed but strings collection suite failed on new object-taking formatter registration; entire command actual1, not178 pass as a successful stage.",
+    "format-check-01: oracle style failure actual1, later only source-copy JSON formatted; original independent oracle preserved."
+  ],
+  "boundaries": [
+    "Unit/helper tests include real pure workbook parser, while controller services are controlled doubles.",
+    "Root real Worker/fullApp browser verification remains a separate evidence stage.",
+    "No new full seven-check result, formal installation/native positive, Agent acceptance or data retention claim.",
+    "No App,Agent,DB or source/test execution performed by this review."
+  ],
+  "safeForPublicRaw": true
+}

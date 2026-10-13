@@ -1,0 +1,30 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/attachment_search.xlsx.test.ts",
+    "src/runtime/xlsx_search_text.test.ts",
+    "src/runtime/attachment_search.docx.test.ts",
+    "src/runtime/attachment_search.test.ts",
+    "src/runtime/docx_search_text.test.ts",
+    "src/components/SelectedAttachmentSearch.test.tsx",
+    "src/runtime/strings.test.ts"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T18:17:00.111484+00:00",
+  "completedAtUtc": "2026-10-13T18:17:01.000298+00:00",
+  "actualExitCode": 0,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/targeted-frozen.stdout.log",
+    "bytes": 214,
+    "sha256": "976d5fd1519de3a15d27c77e1f412cd24516795edcefbc9716050696b5a817c5"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/targeted-frozen.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

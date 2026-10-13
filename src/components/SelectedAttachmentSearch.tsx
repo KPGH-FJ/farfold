@@ -12,13 +12,15 @@ import {
 import {
   attachmentSearchCandidates,
   attachmentSearchIsDocx,
+  attachmentSearchIsXlsx,
   attachmentSearchSourceCurrent,
   type AttachmentSearchCandidate,
   type SelectAttachmentSearch,
 } from "../runtime/attachment_search_source";
 import {
   ATTACHMENT_SEARCH_STRINGS as S,
-  docxSearchLocationLabel,
+  attachmentSearchLocationLabel,
+  xlsxSearchWarningLabel,
 } from "../runtime/attachment_search_strings";
 import "./HistorySearchPanel.css";
 
@@ -165,7 +167,9 @@ export function SelectedAttachmentSearch({
                     <small>
                       {attachmentSearchIsDocx(candidate)
                         ? S.docxCandidate
-                        : S.textCandidate}
+                        : attachmentSearchIsXlsx(candidate)
+                          ? S.xlsxCandidate
+                          : S.textCandidate}
                     </small>
                   )}
                 </span>
@@ -223,6 +227,21 @@ export function SelectedAttachmentSearch({
           state.rows.some(
             (row) => row.state === "searched" && row.document?.partial,
           ) && <p>{S.docxPartial}</p>}
+        {visible &&
+          (state.phase === "complete" || state.phase === "reading") &&
+          state.rows.some(
+            (row) => row.state === "searched" && row.workbook,
+          ) && <p>{S.xlsxCache}</p>}
+        {visible &&
+          (state.phase === "complete" || state.phase === "reading") &&
+          state.rows.some(
+            (row) => row.state === "searched" && row.workbook?.partial,
+          ) && <p>{S.xlsxPartial}</p>}
+        {visible &&
+          (state.phase === "complete" || state.phase === "reading") &&
+          state.rows.some((row) => row.code === "scopeEmpty") && (
+            <p>{S.errors.scopeEmpty}</p>
+          )}
       </div>
       {(error || state.error) && (
         <p role="alert">{error ?? S.errors[state.error!]}</p>
@@ -251,6 +270,18 @@ export function SelectedAttachmentSearch({
                     ))}
                   </>
                 )}
+                {row.workbook && (
+                  <>
+                    <small>{S.xlsxScope}</small>
+                    <small>{S.xlsxCache}</small>
+                    {row.workbook.partial && <small>{S.xlsxPartial}</small>}
+                    {row.workbook.warnings.map((warning) => (
+                      <small key={warning.code}>
+                        {xlsxSearchWarningLabel(warning)}
+                      </small>
+                    ))}
+                  </>
+                )}
               </li>
             ))}
           </ul>
@@ -268,7 +299,7 @@ export function SelectedAttachmentSearch({
                   {hit.source.name} · {title(hit.source.threadKey)}
                 </strong>
                 {hit.location && (
-                  <small>{docxSearchLocationLabel(hit.location)}</small>
+                  <small>{attachmentSearchLocationLabel(hit.location)}</small>
                 )}
                 <span className="history-search-excerpt">
                   {hit.before}

@@ -1,0 +1,14 @@
+{
+  "original": {
+    "path": "output/2026-10-14-xlsx-search-independent/oracle.json",
+    "bytes": 11603,
+    "sha256": "bb3d67612a2f68080aa429ccf3929cf97f7bb273bf60f89e2be186267ae53a1f"
+  },
+  "formattedSource": {
+    "path": "src/runtime/fixtures/xlsx-search/oracle.json",
+    "bytes": 11563,
+    "sha256": "bb267ceec0c54dc3807268923b416fa69021d8eccb9bb7402591b1c833467536"
+  },
+  "parsedJsonExactlyEqual": true,
+  "boundary": "Only oracle JSON whitespace formatted for repository style. Original independent oracle and first byte-copy receipt preserved unchanged."
+}

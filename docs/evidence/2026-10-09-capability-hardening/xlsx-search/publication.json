@@ -1,0 +1,1566 @@
+{
+  "schema": 1,
+  "files": [
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/baseline.json",
+        "bytes": 2917,
+        "sha256": "2a3c1876985009c3a61e3a859754c67113aed90464e618f27f3aeb82a1cde579"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/baseline.json.raw",
+        "bytes": 2917,
+        "sha256": "2a3c1876985009c3a61e3a859754c67113aed90464e618f27f3aeb82a1cde579"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/cargo-fmt/completed.json",
+        "bytes": 3697,
+        "sha256": "5edabf47b6e55378549440f497a38e71daa01989ef808611f291e98b1cf893aa"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/cargo-fmt/completed.json.raw",
+        "bytes": 3697,
+        "sha256": "5edabf47b6e55378549440f497a38e71daa01989ef808611f291e98b1cf893aa"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/cargo-fmt/started.json",
+        "bytes": 3168,
+        "sha256": "1b71f5b0cdeb7a79ca83bb53c5f4bf2613fdec6417f8f87cda63df75b3513a49"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/cargo-fmt/started.json.raw",
+        "bytes": 3168,
+        "sha256": "1b71f5b0cdeb7a79ca83bb53c5f4bf2613fdec6417f8f87cda63df75b3513a49"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/cargo-fmt/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/cargo-fmt/stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/command-pool/completed.json",
+        "bytes": 3813,
+        "sha256": "5aadf8374cad11be20286f52b38f878282d1e17b2477ff404fae24dbf8c1eb86"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/command-pool/completed.json.raw",
+        "bytes": 3813,
+        "sha256": "5aadf8374cad11be20286f52b38f878282d1e17b2477ff404fae24dbf8c1eb86"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/command-pool/started.json",
+        "bytes": 3263,
+        "sha256": "a64afebf74dba0bfda99ef0e2aa1643321e6f62d4f7ee7af2451a26f07f8a359"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/command-pool/started.json.raw",
+        "bytes": 3263,
+        "sha256": "a64afebf74dba0bfda99ef0e2aa1643321e6f62d4f7ee7af2451a26f07f8a359"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/command-pool/stderr.log",
+        "bytes": 256,
+        "sha256": "487d1e10b2a7e7df63c0118d62d8e3c24753104b288e927c814222fad45d39fe"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/command-pool/stderr.log.raw",
+        "bytes": 256,
+        "sha256": "487d1e10b2a7e7df63c0118d62d8e3c24753104b288e927c814222fad45d39fe"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/command-pool/stdout.log",
+        "bytes": 344,
+        "sha256": "5afc700297946044ea4a9318a82061a4d76b515def103a1a55c321d9d1c2d421"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/command-pool/stdout.log.raw",
+        "bytes": 344,
+        "sha256": "5afc700297946044ea4a9318a82061a4d76b515def103a1a55c321d9d1c2d421"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/final-source.diff",
+        "bytes": 21246,
+        "sha256": "1d14534aa478a908e473c95be753f7dfd0934c03599e5b3a31525bd70eef18f0"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/final-source.diff.raw",
+        "bytes": 21246,
+        "sha256": "1d14534aa478a908e473c95be753f7dfd0934c03599e5b3a31525bd70eef18f0"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/green-workbook/completed.json",
+        "bytes": 3778,
+        "sha256": "d5e752c015556325a79946709979fbe7aa680ae506e4848f795bffe5e5c49201"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/green-workbook/completed.json.raw",
+        "bytes": 3778,
+        "sha256": "d5e752c015556325a79946709979fbe7aa680ae506e4848f795bffe5e5c49201"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/green-workbook/started.json",
+        "bytes": 3230,
+        "sha256": "c8b2518d1806a77f069a06eb8bcbb93245eabdc25c9de5398b0ffad7001c3c9f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/green-workbook/started.json.raw",
+        "bytes": 3230,
+        "sha256": "c8b2518d1806a77f069a06eb8bcbb93245eabdc25c9de5398b0ffad7001c3c9f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/green-workbook/stderr.log",
+        "bytes": 323,
+        "sha256": "f7c1fe35f95c5b8710893a3a29e0b39ae2f3dd86d5ca9968d9e1345a731ce084"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/green-workbook/stderr.log.raw",
+        "bytes": 323,
+        "sha256": "f7c1fe35f95c5b8710893a3a29e0b39ae2f3dd86d5ca9968d9e1345a731ce084"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/green-workbook/stdout.log",
+        "bytes": 6297,
+        "sha256": "f6e826091e961ab1276e026ab9cf97c525e129666d5d08119cf13794b0bc25ce"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/green-workbook/stdout.log.raw",
+        "bytes": 6297,
+        "sha256": "f6e826091e961ab1276e026ab9cf97c525e129666d5d08119cf13794b0bc25ce"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/handoff.json",
+        "bytes": 1362,
+        "sha256": "543f4a2fd16ff5f4fc17e2c49bd1081bf94c01c89885579ad158eac97b3e0396"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/handoff.json.raw",
+        "bytes": 1362,
+        "sha256": "543f4a2fd16ff5f4fc17e2c49bd1081bf94c01c89885579ad158eac97b3e0396"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/red-search-limit/completed.json",
+        "bytes": 3634,
+        "sha256": "0fcd44d97d3cf50d993263ba308b23d7a27ff5d2ea750fad8256157b8099b417"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/red-search-limit/completed.json.raw",
+        "bytes": 3634,
+        "sha256": "0fcd44d97d3cf50d993263ba308b23d7a27ff5d2ea750fad8256157b8099b417"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/red-search-limit/started.json",
+        "bytes": 3080,
+        "sha256": "5355a1bb83bc62b6646b26acfa1fd4cfd5329f6c7161a0f406d9a1be41b8d31f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/red-search-limit/started.json.raw",
+        "bytes": 3080,
+        "sha256": "5355a1bb83bc62b6646b26acfa1fd4cfd5329f6c7161a0f406d9a1be41b8d31f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/red-search-limit/stderr.log",
+        "bytes": 1009,
+        "sha256": "97c67e6c995f5d38491e3afbc4ad795302287521554cb4bcf768b130f3462e46"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/red-search-limit/stderr.log.raw",
+        "bytes": 1009,
+        "sha256": "97c67e6c995f5d38491e3afbc4ad795302287521554cb4bcf768b130f3462e46"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/red-search-limit/stdout.log",
+        "bytes": 487,
+        "sha256": "e3d1bc6567dd374b0df5eadc541f375f0bc28779f0c608ab986533393a3af832"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/red-search-limit/stdout.log.raw",
+        "bytes": 487,
+        "sha256": "e3d1bc6567dd374b0df5eadc541f375f0bc28779f0c608ab986533393a3af832"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/red-search-limit/workbook.rs.raw",
+        "bytes": 1024,
+        "sha256": "6522eb30b736c2ce34484ff1262f3bbf7ba8379922d9c88094cde049a11816e0"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/red-search-limit/workbook.rs.raw.raw",
+        "bytes": 1024,
+        "sha256": "6522eb30b736c2ce34484ff1262f3bbf7ba8379922d9c88094cde049a11816e0"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/red-search-limit/workbook_search_tests.rs.raw",
+        "bytes": 2774,
+        "sha256": "900927ddcd33ca2d55105aa34ffbc3cdd38e609dc15ce77a7f33c87fa29ff87d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/red-search-limit/workbook_search_tests.rs.raw.raw",
+        "bytes": 2774,
+        "sha256": "900927ddcd33ca2d55105aa34ffbc3cdd38e609dc15ce77a7f33c87fa29ff87d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx/completed.json",
+        "bytes": 3779,
+        "sha256": "81c499aa603230306c66b0d4b17b0e5052422c0d61d45b8f8792b36c4f277930"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/regression-docx/completed.json.raw",
+        "bytes": 3779,
+        "sha256": "81c499aa603230306c66b0d4b17b0e5052422c0d61d45b8f8792b36c4f277930"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx/started.json",
+        "bytes": 3230,
+        "sha256": "6af84e6f926540dc861f539f63d87fb19f9a88e4da94b3fa7f6e8998dfdf8748"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/regression-docx/started.json.raw",
+        "bytes": 3230,
+        "sha256": "6af84e6f926540dc861f539f63d87fb19f9a88e4da94b3fa7f6e8998dfdf8748"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx/stderr.log",
+        "bytes": 256,
+        "sha256": "706688ab7bdee0f381159fbbe64a4b7a0d48019e281a17964b45abc610e87b3a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/regression-docx/stderr.log.raw",
+        "bytes": 256,
+        "sha256": "706688ab7bdee0f381159fbbe64a4b7a0d48019e281a17964b45abc610e87b3a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx/stdout.log",
+        "bytes": 8535,
+        "sha256": "eadf2cfa4a212e3041f3ae8e0eb3449f83af94cc11927fb52bffbbde358ad433"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/regression-docx/stdout.log.raw",
+        "bytes": 8535,
+        "sha256": "eadf2cfa4a212e3041f3ae8e0eb3449f83af94cc11927fb52bffbbde358ad433"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx-command/completed.json",
+        "bytes": 3823,
+        "sha256": "5863bd1359bb6cf4d3c7fa98b8d658cea1ce410282620fd4d487ac9f12e94003"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/regression-docx-command/completed.json.raw",
+        "bytes": 3823,
+        "sha256": "5863bd1359bb6cf4d3c7fa98b8d658cea1ce410282620fd4d487ac9f12e94003"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx-command/started.json",
+        "bytes": 3259,
+        "sha256": "38b46bb818cd2d12e038945088259e12539c17fae8faaab04f19557ec4386e56"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/regression-docx-command/started.json.raw",
+        "bytes": 3259,
+        "sha256": "38b46bb818cd2d12e038945088259e12539c17fae8faaab04f19557ec4386e56"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx-command/stderr.log",
+        "bytes": 256,
+        "sha256": "884e4afc88c81c6e9ac2d5f18a3c56645581db6952d27f6325a59495d86ac093"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/regression-docx-command/stderr.log.raw",
+        "bytes": 256,
+        "sha256": "884e4afc88c81c6e9ac2d5f18a3c56645581db6952d27f6325a59495d86ac093"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-docx-command/stdout.log",
+        "bytes": 336,
+        "sha256": "c604adc45489cd783fb7bf87fc79a35286bd51cfce1fbd4fa98b1bfaaafb00d2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/regression-docx-command/stdout.log.raw",
+        "bytes": 336,
+        "sha256": "c604adc45489cd783fb7bf87fc79a35286bd51cfce1fbd4fa98b1bfaaafb00d2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-read-pool/completed.json",
+        "bytes": 3787,
+        "sha256": "f697b2f8ce962b54b727e581686205a2d0da66b9914edd05a43ec1ae168dd2e4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/regression-read-pool/completed.json.raw",
+        "bytes": 3787,
+        "sha256": "f697b2f8ce962b54b727e581686205a2d0da66b9914edd05a43ec1ae168dd2e4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-read-pool/started.json",
+        "bytes": 3229,
+        "sha256": "5e41672a3e0fc67da972e0b27f47d0899d2a953751fa6fc4dec9857125759350"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/regression-read-pool/started.json.raw",
+        "bytes": 3229,
+        "sha256": "5e41672a3e0fc67da972e0b27f47d0899d2a953751fa6fc4dec9857125759350"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-read-pool/stderr.log",
+        "bytes": 450,
+        "sha256": "25b2259703ea97f27819753ed58bc1de779d7b0d43ad5047ae89831ee3815da9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/regression-read-pool/stderr.log.raw",
+        "bytes": 450,
+        "sha256": "25b2259703ea97f27819753ed58bc1de779d7b0d43ad5047ae89831ee3815da9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/regression-read-pool/stdout.log",
+        "bytes": 711,
+        "sha256": "2ac0e778786f3898570a630260fe2f8dd02cc9695f1966793f24da40ef55e6d6"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/regression-read-pool/stdout.log.raw",
+        "bytes": 711,
+        "sha256": "2ac0e778786f3898570a630260fe2f8dd02cc9695f1966793f24da40ef55e6d6"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/run_check.py",
+        "bytes": 2003,
+        "sha256": "e9aeebca48aa79becf525b31ae9bd665ba93223ec23d5b780af33ad20025e55a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/run_check.py.raw",
+        "bytes": 2003,
+        "sha256": "e9aeebca48aa79becf525b31ae9bd665ba93223ec23d5b780af33ad20025e55a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/source-freeze.json",
+        "bytes": 11423,
+        "sha256": "7d1cb900612bfdd732ed8b56d61563f03257cf8dc78453c8f76d7c6401c2ef17"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/source-freeze.json.raw",
+        "bytes": 11423,
+        "sha256": "7d1cb900612bfdd732ed8b56d61563f03257cf8dc78453c8f76d7c6401c2ef17"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/src-tauri__src__file_delivery.rs.before.raw",
+        "bytes": 17710,
+        "sha256": "b9414968f6e2716df17810cde912c65f93560daf3523f93efe1403b4eaf650fa"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/src-tauri__src__file_delivery.rs.before.raw.raw",
+        "bytes": 17710,
+        "sha256": "b9414968f6e2716df17810cde912c65f93560daf3523f93efe1403b4eaf650fa"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/src-tauri__src__file_delivery__document.rs.before.raw",
+        "bytes": 3497,
+        "sha256": "c3ed531837f35f37877b7e11b5e40ed5bf15441e3e35657b24a07d0cb12cbfac"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/src-tauri__src__file_delivery__document.rs.before.raw.raw",
+        "bytes": 3497,
+        "sha256": "c3ed531837f35f37877b7e11b5e40ed5bf15441e3e35657b24a07d0cb12cbfac"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/src-tauri__src__file_delivery__document_search_tests.rs.before.raw",
+        "bytes": 7335,
+        "sha256": "a847ddd179319016f5e725a36f5b50c38b75c920dad58a6c87670524d72a4708"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/src-tauri__src__file_delivery__document_search_tests.rs.before.raw.raw",
+        "bytes": 7335,
+        "sha256": "a847ddd179319016f5e725a36f5b50c38b75c920dad58a6c87670524d72a4708"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/src-tauri__src__file_delivery__workbook.rs.before.raw",
+        "bytes": 835,
+        "sha256": "794bf33ca5f98f2c03be0c1dfbcc5e67f677a1a06509f02fbbf59c54d8384579"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/src-tauri__src__file_delivery__workbook.rs.before.raw.raw",
+        "bytes": 835,
+        "sha256": "794bf33ca5f98f2c03be0c1dfbcc5e67f677a1a06509f02fbbf59c54d8384579"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/src-tauri__src__file_delivery_commands.rs.before.raw",
+        "bytes": 20225,
+        "sha256": "b2291c7044db5ff07315252c528e801cefa3b85097da6f6d41920e36bc819dd8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/src-tauri__src__file_delivery_commands.rs.before.raw.raw",
+        "bytes": 20225,
+        "sha256": "b2291c7044db5ff07315252c528e801cefa3b85097da6f6d41920e36bc819dd8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-backend/src-tauri__src__lib.rs.before.raw",
+        "bytes": 21659,
+        "sha256": "b264a0ca18e4b50a6de005e25eb8029322b12419e105b5d364f81130efb596c1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/backend/src-tauri__src__lib.rs.before.raw.raw",
+        "bytes": 21659,
+        "sha256": "b264a0ca18e4b50a6de005e25eb8029322b12419e105b5d364f81130efb596c1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/finalize.py",
+        "bytes": 5962,
+        "sha256": "2a0aa212515b121642778721429b18dda0092683c7a29363a191d44743eb7c43"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/finalize.py.raw",
+        "bytes": 5962,
+        "sha256": "2a0aa212515b121642778721429b18dda0092683c7a29363a191d44743eb7c43"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/fixture-copies.json",
+        "bytes": 1263,
+        "sha256": "3d3a5e1952a2ee513c8aa6f82101b1db67c3e0818a1d061362623b0ce0c7e189"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/fixture-copies.json.raw",
+        "bytes": 1263,
+        "sha256": "3d3a5e1952a2ee513c8aa6f82101b1db67c3e0818a1d061362623b0ce0c7e189"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/fixture-format-write.completed.json",
+        "bytes": 770,
+        "sha256": "449c32efd21adcecdac7189fc14c7bcfc0476b502967b8a56b2e2bae13ee4ddc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/fixture-format-write.completed.json.raw",
+        "bytes": 770,
+        "sha256": "449c32efd21adcecdac7189fc14c7bcfc0476b502967b8a56b2e2bae13ee4ddc"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/fixture-format-write.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/fixture-format-write.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/fixture-format-write.stdout.log",
+        "bytes": 50,
+        "sha256": "5bbf42461778c5f0459bd0bb1f79621b4fa7549554962228d77aa00c67b4ed6a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/fixture-format-write.stdout.log.raw",
+        "bytes": 50,
+        "sha256": "5bbf42461778c5f0459bd0bb1f79621b4fa7549554962228d77aa00c67b4ed6a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/fixture-oracle-format.json",
+        "bytes": 571,
+        "sha256": "2cc7057dab798c3375bfc427e504690b26ccd96e95acd62f4b56ca9ea3f1f3bb"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/fixture-oracle-format.json.raw",
+        "bytes": 571,
+        "sha256": "2cc7057dab798c3375bfc427e504690b26ccd96e95acd62f4b56ca9ea3f1f3bb"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/format-check-01.completed.json",
+        "bytes": 1249,
+        "sha256": "8d861815405cb9c149561e8d7f06635e49308e0f515c8eb951b9ddba5fc4be90"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/format-check-01.completed.json.raw",
+        "bytes": 1249,
+        "sha256": "8d861815405cb9c149561e8d7f06635e49308e0f515c8eb951b9ddba5fc4be90"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/format-check-01.stderr.log",
+        "bytes": 136,
+        "sha256": "2fae21f4c4daa2265ee8724318b5f32a1f39e421375561162a4611b562da7f33"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/format-check-01.stderr.log.raw",
+        "bytes": 136,
+        "sha256": "2fae21f4c4daa2265ee8724318b5f32a1f39e421375561162a4611b562da7f33"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/format-check-01.stdout.log",
+        "bytes": 23,
+        "sha256": "ebe82dad128d5e5d8936334ceac09492f3c60bd9e0b4a16cc7fd7075513b33de"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/format-check-01.stdout.log.raw",
+        "bytes": 23,
+        "sha256": "ebe82dad128d5e5d8936334ceac09492f3c60bd9e0b4a16cc7fd7075513b33de"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/format-final.completed.json",
+        "bytes": 1241,
+        "sha256": "e9b442f644d40f19e44334f2ca4e89c4184c6bc3d842da8014eeac3651c99a7a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/format-final.completed.json.raw",
+        "bytes": 1241,
+        "sha256": "e9b442f644d40f19e44334f2ca4e89c4184c6bc3d842da8014eeac3651c99a7a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/format-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/format-final.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/format-final.stdout.log",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/format-final.stdout.log.raw",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/format-write.completed.json",
+        "bytes": 1136,
+        "sha256": "50fab2b9bd285cbb43972913fae2205cdd29dc8588c7d30991dcf7b95aec5894"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/format-write.completed.json.raw",
+        "bytes": 1136,
+        "sha256": "50fab2b9bd285cbb43972913fae2205cdd29dc8588c7d30991dcf7b95aec5894"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/format-write.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/format-write.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/format-write.stdout.log",
+        "bytes": 410,
+        "sha256": "e8c94341ddf444ca71a4b8f84a685303c10c0b47406d694819913d581e176a62"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/format-write.stdout.log.raw",
+        "bytes": 410,
+        "sha256": "e8c94341ddf444ca71a4b8f84a685303c10c0b47406d694819913d581e176a62"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/red-01.completed.json",
+        "bytes": 737,
+        "sha256": "2239d4d914920b243ed99219b1b9fad7d4dd2f5d13fa663ecaa29e7cb3c8763f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/red-01.completed.json.raw",
+        "bytes": 737,
+        "sha256": "2239d4d914920b243ed99219b1b9fad7d4dd2f5d13fa663ecaa29e7cb3c8763f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/red-01.stderr.log",
+        "bytes": 799,
+        "sha256": "ded0c8c2b21a4b916980bdf673cb22cbabd8281a5f3348ccc29018ae7321e268"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/red-01.stderr.log.raw",
+        "bytes": 799,
+        "sha256": "ded0c8c2b21a4b916980bdf673cb22cbabd8281a5f3348ccc29018ae7321e268"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/red-01.stdout.log",
+        "bytes": 363,
+        "sha256": "221ba962946504860fb1b6c5e9eca460f81567d7f5335f785c6558152ed5c1dc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/red-01.stdout.log.raw",
+        "bytes": 363,
+        "sha256": "221ba962946504860fb1b6c5e9eca460f81567d7f5335f785c6558152ed5c1dc"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/route-green-01.completed.json",
+        "bytes": 751,
+        "sha256": "1243765adc1155cbd6918ce8b1460c6ab1eebd75fccbada49f7d8bc738d3d934"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/route-green-01.completed.json.raw",
+        "bytes": 751,
+        "sha256": "1243765adc1155cbd6918ce8b1460c6ab1eebd75fccbada49f7d8bc738d3d934"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/route-green-01.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/route-green-01.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/route-green-01.stdout.log",
+        "bytes": 208,
+        "sha256": "8d74b6eb376475089e62159294bde3b35028093cd1d6e5553f51401f83a2a72c"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/route-green-01.stdout.log.raw",
+        "bytes": 208,
+        "sha256": "8d74b6eb376475089e62159294bde3b35028093cd1d6e5553f51401f83a2a72c"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/run.py",
+        "bytes": 863,
+        "sha256": "1b69245ca2d169ae1dd8c503a5ba00a25207d90d67741947e2a895765cfa2228"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/run.py.raw",
+        "bytes": 863,
+        "sha256": "1b69245ca2d169ae1dd8c503a5ba00a25207d90d67741947e2a895765cfa2228"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/source-freeze-v1.json",
+        "bytes": 2977,
+        "sha256": "106bd070a18364d1bf9fe0f13563dbefd29c672f1bb61f979c98123f2f51849d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/source-freeze-v1.json.raw",
+        "bytes": 2977,
+        "sha256": "106bd070a18364d1bf9fe0f13563dbefd29c672f1bb61f979c98123f2f51849d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/summary.json",
+        "bytes": 15670,
+        "sha256": "acdecd52588dd92c3dc2b9693fe357b1746c48e3ad542dddb3b7f7bf4234f3bd"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/summary.json.raw",
+        "bytes": 15670,
+        "sha256": "acdecd52588dd92c3dc2b9693fe357b1746c48e3ad542dddb3b7f7bf4234f3bd"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-02.completed.json",
+        "bytes": 1021,
+        "sha256": "99e844c50d9dbe22361a2c01e637e34fb0bccdd7c90449d5cc53b0129c37a16e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/targeted-02.completed.json.raw",
+        "bytes": 1021,
+        "sha256": "99e844c50d9dbe22361a2c01e637e34fb0bccdd7c90449d5cc53b0129c37a16e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-02.stderr.log",
+        "bytes": 980,
+        "sha256": "dfa59255908ece0616c0b189c009231121e5c8f5ad7c36bdb77f0a57122fbfd2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/targeted-02.stderr.log.raw",
+        "bytes": 980,
+        "sha256": "dfa59255908ece0616c0b189c009231121e5c8f5ad7c36bdb77f0a57122fbfd2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-02.stdout.log",
+        "bytes": 267,
+        "sha256": "42847a040d048663ce9d562b7a4d8564cb16454181fef3bd78bf4138362dca32"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/targeted-02.stdout.log.raw",
+        "bytes": 267,
+        "sha256": "42847a040d048663ce9d562b7a4d8564cb16454181fef3bd78bf4138362dca32"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-03.completed.json",
+        "bytes": 1019,
+        "sha256": "c8aa11d7d775775d5576257ab2f2742bb1082d887459e083a772ff83a14c021c"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/targeted-03.completed.json.raw",
+        "bytes": 1019,
+        "sha256": "c8aa11d7d775775d5576257ab2f2742bb1082d887459e083a772ff83a14c021c"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-03.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/targeted-03.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-03.stdout.log",
+        "bytes": 214,
+        "sha256": "d9823d6dd0e09b5125392aecf8c25d28df6dc537d70e7025b0f101a0b4632840"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/targeted-03.stdout.log.raw",
+        "bytes": 214,
+        "sha256": "d9823d6dd0e09b5125392aecf8c25d28df6dc537d70e7025b0f101a0b4632840"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-final.completed.json",
+        "bytes": 1025,
+        "sha256": "7626996631cf0e0e57297ae793681d87a25820b6011eb20d0d6dc70334b0cfdd"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/targeted-final.completed.json.raw",
+        "bytes": 1025,
+        "sha256": "7626996631cf0e0e57297ae793681d87a25820b6011eb20d0d6dc70334b0cfdd"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/targeted-final.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-final.stdout.log",
+        "bytes": 214,
+        "sha256": "dffc4d625d8d43c00bea04fa713918ca867b70eb55e8bd6f453c0e3b207b1c4d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/targeted-final.stdout.log.raw",
+        "bytes": 214,
+        "sha256": "dffc4d625d8d43c00bea04fa713918ca867b70eb55e8bd6f453c0e3b207b1c4d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-frozen.completed.json",
+        "bytes": 1027,
+        "sha256": "6fecbdc37e0b0f3740f1ee43b4dec499efcb83a6bb31075b4b2e693439a8cf34"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/targeted-frozen.completed.json.raw",
+        "bytes": 1027,
+        "sha256": "6fecbdc37e0b0f3740f1ee43b4dec499efcb83a6bb31075b4b2e693439a8cf34"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-frozen.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/targeted-frozen.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/targeted-frozen.stdout.log",
+        "bytes": 214,
+        "sha256": "976d5fd1519de3a15d27c77e1f412cd24516795edcefbc9716050696b5a817c5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/targeted-frozen.stdout.log.raw",
+        "bytes": 214,
+        "sha256": "976d5fd1519de3a15d27c77e1f412cd24516795edcefbc9716050696b5a817c5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/01-completed.jsonl.raw",
+        "bytes": 11849,
+        "sha256": "a1bf61a4a4e3e2ad22f8f80ec3914f606d988c5f855a8099b7cf41a941f8ee9e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/transcript-receipts/01-completed.jsonl.raw.raw",
+        "bytes": 11849,
+        "sha256": "a1bf61a4a4e3e2ad22f8f80ec3914f606d988c5f855a8099b7cf41a941f8ee9e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/02-completed.jsonl.raw",
+        "bytes": 1616,
+        "sha256": "1674715ddb103fc32becdc975e285c98cc3a8623f0f74bd4bc7bf884995621fb"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/transcript-receipts/02-completed.jsonl.raw.raw",
+        "bytes": 1616,
+        "sha256": "1674715ddb103fc32becdc975e285c98cc3a8623f0f74bd4bc7bf884995621fb"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/03-completed.jsonl.raw",
+        "bytes": 3128,
+        "sha256": "240492f0223fd4da23622110d10e9271d8f6c3a5ff33818139b33c16667ae715"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/transcript-receipts/03-completed.jsonl.raw.raw",
+        "bytes": 3128,
+        "sha256": "240492f0223fd4da23622110d10e9271d8f6c3a5ff33818139b33c16667ae715"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/04-completed.jsonl.raw",
+        "bytes": 12462,
+        "sha256": "ae70ca271df0d5902c2677eb81793348237ca81a053729d5f31a11a7581787ca"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/transcript-receipts/04-completed.jsonl.raw.raw",
+        "bytes": 12462,
+        "sha256": "ae70ca271df0d5902c2677eb81793348237ca81a053729d5f31a11a7581787ca"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/05-completed.jsonl.raw",
+        "bytes": 4316,
+        "sha256": "6d0fe8f875150e4e9c7e3cf37892b477151e8458c5281a48cd10f91445cfc307"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/transcript-receipts/05-completed.jsonl.raw.raw",
+        "bytes": 4316,
+        "sha256": "6d0fe8f875150e4e9c7e3cf37892b477151e8458c5281a48cd10f91445cfc307"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/06-completed.jsonl.raw",
+        "bytes": 2086,
+        "sha256": "9bcc7eb1216932deefb7c9d2a90472bdb233a458e7ef1421f6769e623b29acb7"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/transcript-receipts/06-completed.jsonl.raw.raw",
+        "bytes": 2086,
+        "sha256": "9bcc7eb1216932deefb7c9d2a90472bdb233a458e7ef1421f6769e623b29acb7"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/07-completed.jsonl.raw",
+        "bytes": 1372,
+        "sha256": "5324a9e94e70c45c9222d3fcea8e79dc113358285151409dda4b1b4ace41b8bc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/transcript-receipts/07-completed.jsonl.raw.raw",
+        "bytes": 1372,
+        "sha256": "5324a9e94e70c45c9222d3fcea8e79dc113358285151409dda4b1b4ace41b8bc"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/08-completed.jsonl.raw",
+        "bytes": 2414,
+        "sha256": "e7b0d188d76b150204d338b00bacfcb98c9b46356ad840c9c30c10af3e72bae2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/transcript-receipts/08-completed.jsonl.raw.raw",
+        "bytes": 2414,
+        "sha256": "e7b0d188d76b150204d338b00bacfcb98c9b46356ad840c9c30c10af3e72bae2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/09-completed.jsonl.raw",
+        "bytes": 9372,
+        "sha256": "e6094cd22303f25c2ca42297625921b46a5ade74bf9507cc2ed9bcae79e4af2f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/transcript-receipts/09-completed.jsonl.raw.raw",
+        "bytes": 9372,
+        "sha256": "e6094cd22303f25c2ca42297625921b46a5ade74bf9507cc2ed9bcae79e4af2f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/10-completed.jsonl.raw",
+        "bytes": 8331,
+        "sha256": "4cbee800eb2166a029996bb4e632d52af8d3be21bd33b3533d57418dcda696c8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/transcript-receipts/10-completed.jsonl.raw.raw",
+        "bytes": 8331,
+        "sha256": "4cbee800eb2166a029996bb4e632d52af8d3be21bd33b3533d57418dcda696c8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/manifest.json",
+        "bytes": 5058,
+        "sha256": "de40d2774d8ac72e11ad2c102b292e09566e23cd037f56f6d6ffcad8b084b993"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/transcript-receipts/manifest.json.raw",
+        "bytes": 5058,
+        "sha256": "de40d2774d8ac72e11ad2c102b292e09566e23cd037f56f6d6ffcad8b084b993"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/typecheck-01.completed.json",
+        "bytes": 676,
+        "sha256": "8702ee81e0e28513d894e0ef63edf962854ae9cc7697992831d46e84a02c14a4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/typecheck-01.completed.json.raw",
+        "bytes": 676,
+        "sha256": "8702ee81e0e28513d894e0ef63edf962854ae9cc7697992831d46e84a02c14a4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/typecheck-01.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/typecheck-01.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-frontend/typecheck-01.stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/frontend/typecheck-01.stdout.log.raw",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/author.xlsx",
+        "bytes": 3580,
+        "sha256": "e5f5b87c72c41d7e610622b8d48b00876be6d793e4d699651065b1bfe07d901b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/author.xlsx",
+        "bytes": 3580,
+        "sha256": "e5f5b87c72c41d7e610622b8d48b00876be6d793e4d699651065b1bfe07d901b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/budget-a.xlsx",
+        "bytes": 10965,
+        "sha256": "31aa23b236993b0f5b2721311ced83c77b4f2e1b2aa21b257ce6c1f710ddc6ea"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/budget-a.xlsx",
+        "bytes": 10965,
+        "sha256": "31aa23b236993b0f5b2721311ced83c77b4f2e1b2aa21b257ce6c1f710ddc6ea"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/budget-b.xlsx",
+        "bytes": 10965,
+        "sha256": "31aa23b236993b0f5b2721311ced83c77b4f2e1b2aa21b257ce6c1f710ddc6ea"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/budget-b.xlsx",
+        "bytes": 10965,
+        "sha256": "31aa23b236993b0f5b2721311ced83c77b4f2e1b2aa21b257ce6c1f710ddc6ea"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/budget-oracle.json",
+        "bytes": 167,
+        "sha256": "aa35b7a8fa477e3299ab88f2a4f4b0809609eb02a126a810f8e0826aa149472b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/budget-oracle.json.raw",
+        "bytes": 167,
+        "sha256": "aa35b7a8fa477e3299ab88f2a4f4b0809609eb02a126a810f8e0826aa149472b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/captures.json",
+        "bytes": 17763,
+        "sha256": "1ac8a47cdae6d07dce744c772709c0162c66119b229fa0def1dcb3f1bd3f69f3"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/captures.json.raw",
+        "bytes": 17763,
+        "sha256": "1ac8a47cdae6d07dce744c772709c0162c66119b229fa0def1dcb3f1bd3f69f3"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/chromium-run1-source-location.png",
+        "bytes": 74473,
+        "sha256": "f3654d443694b9048706b12770aced1e0bc3b1fead3ee1e2c9e0cb0a51b7253d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/chromium-run1-source-location.png",
+        "bytes": 74473,
+        "sha256": "f3654d443694b9048706b12770aced1e0bc3b1fead3ee1e2c9e0cb0a51b7253d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/chromium-run1-xlsx-results.png",
+        "bytes": 127485,
+        "sha256": "9532c3fbcae0b6eb732192a559524644b360f7bbb0b5fbbf5bbd37fafc1bbda2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/chromium-run1-xlsx-results.png",
+        "bytes": 127485,
+        "sha256": "9532c3fbcae0b6eb732192a559524644b360f7bbb0b5fbbf5bbd37fafc1bbda2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/chromium-run1.json",
+        "bytes": 424872,
+        "sha256": "d1c9d4f931a5f3af66cd20123f17c0d476b6744aae507b747ca84901eb56eed3"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/chromium-run1.json.raw",
+        "bytes": 424872,
+        "sha256": "d1c9d4f931a5f3af66cd20123f17c0d476b6744aae507b747ca84901eb56eed3"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/fixture.tsx",
+        "bytes": 10280,
+        "sha256": "df778c577c8b2ad7624bc543d3de7be4dabcf5055015f5bdf3286e1af3da8609"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/fixture.tsx.raw",
+        "bytes": 10280,
+        "sha256": "df778c577c8b2ad7624bc543d3de7be4dabcf5055015f5bdf3286e1af3da8609"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/generate-fixtures-v1.py.raw",
+        "bytes": 5788,
+        "sha256": "e17ba020d30aa718a54beb663e51087310fed6d797c837ad302c38080766150d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/generate-fixtures-v1.py.raw.raw",
+        "bytes": 5788,
+        "sha256": "e17ba020d30aa718a54beb663e51087310fed6d797c837ad302c38080766150d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/generate-fixtures.py",
+        "bytes": 6007,
+        "sha256": "46dd5183efafc923b49926d7d12e353c7e43ca97934a75062eb49e3a9cd202d6"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/generate-fixtures.py.raw",
+        "bytes": 6007,
+        "sha256": "46dd5183efafc923b49926d7d12e353c7e43ca97934a75062eb49e3a9cd202d6"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/index.html",
+        "bytes": 1618,
+        "sha256": "27fca9573d058eb6ef5feba6be352c2c28391b37279d842cdedffa5cec1c0162"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/index.html.raw",
+        "bytes": 1618,
+        "sha256": "27fca9573d058eb6ef5feba6be352c2c28391b37279d842cdedffa5cec1c0162"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/oracle-correction.json",
+        "bytes": 409,
+        "sha256": "e1e4f9f9556b74ddb3d9d1369b6058fcd194ad6c964ab83350a694bcd1283d89"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/oracle-correction.json.raw",
+        "bytes": 409,
+        "sha256": "e1e4f9f9556b74ddb3d9d1369b6058fcd194ad6c964ab83350a694bcd1283d89"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/oracle-v1.json.raw",
+        "bytes": 3082,
+        "sha256": "027a18a48d19ff53fb6daa4a477f351f167517285224c302c0f46d15ef4f6ff3"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/oracle-v1.json.raw.raw",
+        "bytes": 3082,
+        "sha256": "027a18a48d19ff53fb6daa4a477f351f167517285224c302c0f46d15ef4f6ff3"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/oracle.json",
+        "bytes": 3291,
+        "sha256": "990dd6ee0bb208f1cdd2dedddc2c92e39ff973d9b9d0e02766deca068d9f9be6"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/oracle.json.raw",
+        "bytes": 3291,
+        "sha256": "990dd6ee0bb208f1cdd2dedddc2c92e39ff973d9b9d0e02766deca068d9f9be6"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/run.mjs",
+        "bytes": 20311,
+        "sha256": "6ec5275058812583ed7080c605b8f98664b7f3a75067f230edec23a7a0bada3b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/run.mjs.raw",
+        "bytes": 20311,
+        "sha256": "6ec5275058812583ed7080c605b8f98664b7f3a75067f230edec23a7a0bada3b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/second.xlsx",
+        "bytes": 3585,
+        "sha256": "0d3ca8bc3f93cb706ce41d54f7be88f179bba3b7322556494fdee614cf978485"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/second.xlsx",
+        "bytes": 3585,
+        "sha256": "0d3ca8bc3f93cb706ce41d54f7be88f179bba3b7322556494fdee614cf978485"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/serve.mjs",
+        "bytes": 722,
+        "sha256": "f0d797f42d4489b342f4d6e636b7d61ea7faad32dd4ee3631ffbc3140f127c47"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/serve.mjs.raw",
+        "bytes": 722,
+        "sha256": "f0d797f42d4489b342f4d6e636b7d61ea7faad32dd4ee3631ffbc3140f127c47"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/server-stop-request.json",
+        "bytes": 237,
+        "sha256": "be4fca490a35f20736b2b4adad2fc1702e94e46add742668faaf2c0cb64c7d98"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/server-stop-request.json.raw",
+        "bytes": 237,
+        "sha256": "be4fca490a35f20736b2b4adad2fc1702e94e46add742668faaf2c0cb64c7d98"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/webkit-run1-source-location.png",
+        "bytes": 97088,
+        "sha256": "fae7f1e4664d275bd1df662b818fc388f6ae20000e1b30fdaf594226cccfbcec"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/webkit-run1-source-location.png",
+        "bytes": 97088,
+        "sha256": "fae7f1e4664d275bd1df662b818fc388f6ae20000e1b30fdaf594226cccfbcec"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/webkit-run1-xlsx-results.png",
+        "bytes": 150299,
+        "sha256": "93ce563d2858eda751ba0e7bc6b3d4730c06f6abf8ef4e38f5c4d99b7db60aa9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/webkit-run1-xlsx-results.png",
+        "bytes": 150299,
+        "sha256": "93ce563d2858eda751ba0e7bc6b3d4730c06f6abf8ef4e38f5c4d99b7db60aa9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-browser/webkit-run1.json",
+        "bytes": 424866,
+        "sha256": "729cab23d1d0fdae9ebef36be7a36ab00f739964ee1e2460e9eccecaad76ff81"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/browser/webkit-run1.json.raw",
+        "bytes": 424866,
+        "sha256": "729cab23d1d0fdae9ebef36be7a36ab00f739964ee1e2460e9eccecaad76ff81"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/backend-review.json",
+        "bytes": 11225,
+        "sha256": "c35b541682fe7b039903a12b8894f401f44a99164f41d143e9aba54a31017b3a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/backend-review.json.raw",
+        "bytes": 11225,
+        "sha256": "c35b541682fe7b039903a12b8894f401f44a99164f41d143e9aba54a31017b3a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/browser-review.json",
+        "bytes": 13197,
+        "sha256": "29e3a2e8a5795c5ab7a2d4e4e3feafb2f6ba414efe6245ff40846499bc2c2102"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/browser-review.json.raw",
+        "bytes": 13197,
+        "sha256": "29e3a2e8a5795c5ab7a2d4e4e3feafb2f6ba414efe6245ff40846499bc2c2102"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/captures.json",
+        "bytes": 23548,
+        "sha256": "cb3be77e2777c7b5a1d30f362bc1be7cba07241030ae6d05a227a94414c8c7bd"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/captures.json.raw",
+        "bytes": 23548,
+        "sha256": "cb3be77e2777c7b5a1d30f362bc1be7cba07241030ae6d05a227a94414c8c7bd"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/decoding-fields.xlsx",
+        "bytes": 2986,
+        "sha256": "37ec3551b11f08feaeafe03f5b4639b4ad939b857cb57667f2f35691b5fa34e9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/decoding-fields.xlsx",
+        "bytes": 2986,
+        "sha256": "37ec3551b11f08feaeafe03f5b4639b4ad939b857cb57667f2f35691b5fa34e9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/fixture-freeze.json",
+        "bytes": 993,
+        "sha256": "a7274f4a68c68112ff7da2c2e8e705c2ad500dacbbf292c6c78a078be71e48f4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/fixture-freeze.json.raw",
+        "bytes": 993,
+        "sha256": "a7274f4a68c68112ff7da2c2e8e705c2ad500dacbbf292c6c78a078be71e48f4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/fixture-static-review.json",
+        "bytes": 3477,
+        "sha256": "a39b71265d19fa2d2df8fb9eece0e3d62821b1cce3a1f7eea585a23dd7aa808a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/fixture-static-review.json.raw",
+        "bytes": 3477,
+        "sha256": "a39b71265d19fa2d2df8fb9eece0e3d62821b1cce3a1f7eea585a23dd7aa808a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/frontend-receipt-review.json",
+        "bytes": 4456,
+        "sha256": "57c487b7d487c3a2c2b0e6e15f465d48ccaaac9f9182ab7aedd56e82aaad0082"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/frontend-receipt-review.json.raw",
+        "bytes": 4456,
+        "sha256": "57c487b7d487c3a2c2b0e6e15f465d48ccaaac9f9182ab7aedd56e82aaad0082"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/frontend-review.json",
+        "bytes": 11469,
+        "sha256": "aa39c7bcb0423e68cd2ba44e770bf7c1891fa7d12666ba6fb85387e62d8aeff4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/frontend-review.json.raw",
+        "bytes": 11469,
+        "sha256": "aa39c7bcb0423e68cd2ba44e770bf7c1891fa7d12666ba6fb85387e62d8aeff4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/generate-supplement.py",
+        "bytes": 12854,
+        "sha256": "0b04c927b193ddf13818c91f75aa83b8102091f5e0619c0ff593eb6acfcbb9fc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/generate-supplement.py.raw",
+        "bytes": 12854,
+        "sha256": "0b04c927b193ddf13818c91f75aa83b8102091f5e0619c0ff593eb6acfcbb9fc"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/hidden-only.xlsx",
+        "bytes": 2249,
+        "sha256": "8e8c782e1b905e2f3106663fd9771ae1e47b165caf5a651fac0f534930153116"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/hidden-only.xlsx",
+        "bytes": 2249,
+        "sha256": "8e8c782e1b905e2f3106663fd9771ae1e47b165caf5a651fac0f534930153116"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/oracle.json",
+        "bytes": 11603,
+        "sha256": "bb3d67612a2f68080aa429ccf3929cf97f7bb273bf60f89e2be186267ae53a1f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/oracle.json.raw",
+        "bytes": 11603,
+        "sha256": "bb3d67612a2f68080aa429ccf3929cf97f7bb273bf60f89e2be186267ae53a1f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/scope-barriers.xlsx",
+        "bytes": 3696,
+        "sha256": "26579c383c8b9d955c18a595b5025d5a4a7e8c3abdfb1093ebc18bac9d95b7c5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/scope-barriers.xlsx",
+        "bytes": 3696,
+        "sha256": "26579c383c8b9d955c18a595b5025d5a4a7e8c3abdfb1093ebc18bac9d95b7c5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-browser/chromium-completion.jsonl.raw",
+        "bytes": 2043,
+        "sha256": "46756ce85d61759ddebbab93014f9edcf7491e50b4117d27858a0c24d4361a5a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/transcript-browser/chromium-completion.jsonl.raw.raw",
+        "bytes": 2043,
+        "sha256": "46756ce85d61759ddebbab93014f9edcf7491e50b4117d27858a0c24d4361a5a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-browser/manifest.json",
+        "bytes": 1265,
+        "sha256": "9f30dae472f6ecfec76c92d872f7f8530ff6bf2e007e3a16c352a4eaa474e5f9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/transcript-browser/manifest.json.raw",
+        "bytes": 1265,
+        "sha256": "9f30dae472f6ecfec76c92d872f7f8530ff6bf2e007e3a16c352a4eaa474e5f9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/transcript-browser/webkit-completion.jsonl.raw",
+        "bytes": 1099,
+        "sha256": "69591d365df1880ff3abd21359b83189346b559b3c517d8d705b6577c5b3936e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/transcript-browser/webkit-completion.jsonl.raw.raw",
+        "bytes": 1099,
+        "sha256": "69591d365df1880ff3abd21359b83189346b559b3c517d8d705b6577c5b3936e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/verify-browser-records.py",
+        "bytes": 5595,
+        "sha256": "3bfb4ac0a16fde943ee8d0825fd9c6c8e1bc7d457e650acb98dc7cc32caecab0"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/verify-browser-records.py.raw",
+        "bytes": 5595,
+        "sha256": "3bfb4ac0a16fde943ee8d0825fd9c6c8e1bc7d457e650acb98dc7cc32caecab0"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-xlsx-search-independent/verify-fixtures.py",
+        "bytes": 6577,
+        "sha256": "e7cb81cf17db521d3f4b2c32cc31b10384a7ce0e48a7b6932b0732b9197a0efa"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search/independent/verify-fixtures.py.raw",
+        "bytes": 6577,
+        "sha256": "e7cb81cf17db521d3f4b2c32cc31b10384a7ce0e48a7b6932b0732b9197a0efa"
+      }
+    }
+  ],
+  "boundary": "Authored synthetic fixtures, source snapshots and controlled verification records only. Large generated budget-captures.json is reproducible and retained in its original path; strict candidate source closure includes original test inputs. No user DB, histories, credentials, installed-app or real-Agent content."
+}

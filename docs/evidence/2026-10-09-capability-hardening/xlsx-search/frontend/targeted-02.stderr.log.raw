@@ -1,0 +1,22 @@
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/strings.test.ts [ src/runtime/strings.test.ts ]
+TypeError: Cannot read properties of undefined (reading 'toLocaleString')
+ ❯ xlsxInputWarningCount src/runtime/document_input_presentation.ts:15:31
+     13|
+     14| export function xlsxInputWarningCount(warning: XlsxInputWarning): stri…
+     15|   const count = warning.count.toLocaleString();
+       |                               ^
+     16|   switch (XLSX_INPUT_WARNING_UNITS[warning.code]) {
+     17|     case "cells":
+ ❯ xlsxWarning src/runtime/attachment_search_strings.ts:31:91
+ ❯ collectStrings src/runtime/strings.test.ts:78:24
+ ❯ src/runtime/strings.test.ts:85:25
+ ❯ collectStrings src/runtime/strings.test.ts:84:61
+ ❯ src/runtime/strings.test.ts:85:25
+ ❯ collectStrings src/runtime/strings.test.ts:84:61
+ ❯ src/runtime/strings.test.ts:92:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

@@ -1,0 +1,53 @@
+"""Read-only review of saved browser evidence; no browser/test rerun."""
+import hashlib,json
+from pathlib import Path
+R=Path('/Users/tw/Desktop/farfold');B=R/'output/2026-10-14-xlsx-search-browser';O=Path(__file__).parent
+T=Path('/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl')
+def sha(b):return hashlib.sha256(b).hexdigest()
+def pin(p):
+ b=p.read_bytes();return {'path':str(p.relative_to(R)),'bytes':len(b),'sha256':sha(b)}
+def save(p,x):
+ with p.open('x') as f:json.dump(x,f,ensure_ascii=False,indent=2);f.write('\n')
+D=O/'transcript-browser';D.mkdir(exist_ok=True);original=[]
+with T.open('rb') as f:
+ for engine,start,end,line,chunk in [('webkit',29307488,29308587,10364,'c8fd81'),('chromium',29314530,29316573,10370,'5ad369')]:
+  f.seek(start);b=f.read(end-start);j=json.loads(b);items=[]
+  assert j['payload']['type']=='custom_tool_call_output'
+  for block in j['payload']['output']:
+   try:v=json.loads(block.get('text',''))
+   except ValueError:continue
+   v=v.get('value',v)
+   if v.get('chunk_id')==chunk:items.append(v)
+  assert len(items)==1 and items[0]['exit_code']==0
+  result=json.loads(items[0]['output']);assert result['engine']==engine and result['passed'] and result['checks']==162 and result['stable']
+  path=D/(engine+'-completion.jsonl.raw')
+  with path.open('xb') as w:w.write(b)
+  original.append({'engine':engine,'raw':pin(path),'sourceStartByte':start,'sourceEndByte':end,'sourceLine':line,'chunkId':chunk,'actualExitCode':0,'timestamp':j['timestamp']})
+save(D/'manifest.json',{'sourceTranscript':str(T),'records':original,'boundary':'Only two exact authorized original tool outputs copied. Sibling completed metadata in the same original event retained, never reconstructed.'})
+reports=[];baseline=None
+for engine in ['chromium','webkit']:
+ p=B/(engine+'-run1.json');d=json.loads(p.read_text());assert d['passed'] and d['stable'] and not d.get('failure')
+ assert len(d['checks'])==162 and all(x['pass'] for x in d['checks']) and len(d['scenarios'])==17
+ assert d['errors']==d['externalRequests']==[] and d['before']==d['after']
+ if baseline is None:baseline=d['before']
+ else:assert d['before']==baseline
+ for path,digest in d['before'].items():assert sha((R/path).read_bytes())==digest
+ shots=[]
+ for s in d['screenshots']:
+  q=R/s['file'];assert pin(q)['sha256']==s['sha256'];assert q.read_bytes()[:8]==b'\x89PNG\r\n\x1a\n';shots.append(pin(q))
+ scenarios=[{'name':s['name'],'phaseAfterScenario':s['phase'],'workerCount':len(s['workers']),'matchesAfterScenario':s['matches'],'utf8BytesAfterScenario':s['bytes']} for s in d['scenarios']]
+ assert all(not w['errors'] for s in d['scenarios'] for w in s['workers'])
+ reports.append({'report':pin(p),'engine':engine,'actualExitCode':0,'checksPassed':162,'scenarios':17,'pageErrors':0,'externalRequests':0,'localBlobRequests':len(d['localBlobRequests']),'stableInputCount':len(d['before']),'screenshots':shots,'scenarioSummary':scenarios})
+f=json.loads((R/'output/2026-10-14-xlsx-search-frontend/source-freeze-v1.json').read_text())
+assert all(baseline[x['path']]==x['sha256'] for x in f['ownedFiles'])
+report={'schema':1,'result':'noBlockingFinding','harness':[pin(B/n) for n in ['run.mjs','fixture.tsx','index.html','serve.mjs']],'sourceFreeze':pin(R/'output/2026-10-14-xlsx-search-frontend/source-freeze-v1.json'),'originalCompletions':pin(D/'manifest.json'),'results':reports,'reviewedCoverage':[
+'fixture.tsx mounts production App, startup components and styles. Worker instrumentation subclasses original Worker and only records events; production Worker modules execute.',
+'Tauri is explicitly controlled. Archive parts and full file receipts come from independent synthetic ZIP captures; matching/search/model results are not injected.',
+'Independent oracle queries exercise exact Unicode/ST_Xstring, numeric lexemes, protected cache/formula separation, hidden/unknown/covered exclusions and scopeEmpty through actual Worker.',
+'Primary16segments/226UTF8 and5matches; two workbooks6matches; DOCX/XLSX/plain mixed15matches. Nine-million-byte parsed XLSX with second XLSX or DOCX enforces aggregate UTF8 budget and retains plain text.',
+'Selecting/typing performs no file read; selected version mismatch blocks Worker; source/MIME/index drift rejects late capture; equal index refresh retains authorization; cancel waits for held capture then publishes nothing.',
+'Actual source jump checks revision and highlights declared attachment; mismatch before navigation clears hits. Cache/partial notices visible outside details; injected synthetic markup stays text.',
+'All1106 browser inputs identical before/after/between engines and current;14frontend frozen owned files included. FourPNG files hash verified; parent visual review is separate.'],
+'limits':['Browser capture/revision returns are simulated; this is not native IO/Webview origin/OS pool, installed App or real Agent acceptance.','Cancellation coverage here is held controlled capture/late result withdrawal; actual OS cancellation is not claimed.','Synthetic draft/feedback equality and blocked unexpected IPC do not prove user data retention or official request counters.','This review did not launch App/browser/test or read DB.','All checks passed on run1. Numeric sheetId oracle correction happened before browser execution and is not a browser/product failure.'],
+'oracleCorrection':pin(B/'oracle-correction.json'),'independentOracleReview':pin(O/'fixture-static-review.json'),'safeForPublicRaw':True}
+save(O/'browser-review.json',report);print(json.dumps(pin(O/'browser-review.json')))

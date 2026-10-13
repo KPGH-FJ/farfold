@@ -1,0 +1,451 @@
+{
+  "schema": 1,
+  "scope": "Synthetic selected visible saved values/caches and actual stored included formula text only. Handwritten expected text, no production parser or search helper used. Formula/cache order is not an oracle requirement.",
+  "cases": [
+    {
+      "file": "decoding-fields.xlsx",
+      "segments": [
+        {
+          "sheetId": "relDecode",
+          "reference": "A1",
+          "field": "value",
+          "text": "_x0041_"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "B1",
+          "field": "value",
+          "text": "_x0042_"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "C1",
+          "field": "value",
+          "text": "DECODE A & <词> 😀 é"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "D1",
+          "field": "value",
+          "text": "C & raw"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "E1",
+          "field": "value",
+          "text": "9007199254740993"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "F1",
+          "field": "value",
+          "text": "+0001.2300E+02"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "G1",
+          "field": "value",
+          "text": "0"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "H1",
+          "field": "value",
+          "text": "#N/A"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "I1",
+          "field": "value",
+          "text": "2026-10-14T00:00:00Z"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "J1",
+          "field": "value",
+          "text": "0"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "K1",
+          "field": "value",
+          "text": "needleDecoded"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "A2",
+          "field": "formula",
+          "text": "FORMULALEFT"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "A2",
+          "field": "savedCache",
+          "text": "CACHERIGHT"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "B2",
+          "field": "formula",
+          "text": "SHARE_ANCHOR(B3)"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "B2",
+          "field": "savedCache",
+          "text": "11"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "C2",
+          "field": "formula",
+          "text": "\"_x0044_\""
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "C2",
+          "field": "savedCache",
+          "text": "D"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "D2",
+          "field": "formula",
+          "text": "ZERO_FORMULA"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "D2",
+          "field": "savedCache",
+          "text": "0"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "E2",
+          "field": "formula",
+          "text": "MISSING_FORMULA"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "F2",
+          "field": "formula",
+          "text": "EMPTY_NUM_FORMULA"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "G2",
+          "field": "formula",
+          "text": "EMPTY_STR_FORMULA"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "B3",
+          "field": "savedCache",
+          "text": "12"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "A4",
+          "field": "value",
+          "text": "CELLLEFT"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "B4",
+          "field": "value",
+          "text": "CELLRIGHT"
+        },
+        {
+          "sheetId": "relDecode",
+          "reference": "A5",
+          "field": "value",
+          "text": "汉😀é\tline\nnext"
+        }
+      ],
+      "searchableUtf8Bytes": 265,
+      "queries": [
+        {
+          "query": "_x0041_",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "_x0042_",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "DECODE A & <词> 😀 é",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "C & raw",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "9007199254740993",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "+0001.2300E+02",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "needleDecoded",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "SHARE_ANCHOR",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "\"_x0044_\"",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "汉😀é",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "FORMULALEFTCACHERIGHT",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "CELLLEFTCELLRIGHT",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "B2:B3",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "SST_UNUSED_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "SHEET_LABEL_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "NAME_LABEL_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "NAME_BODY_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "FALSE",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "=FORMULALEFT",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "1899",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "1900",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "_x005F_",
+          "expectedOccurrences": 0
+        }
+      ],
+      "emptyFields": [
+        {
+          "reference": "G2",
+          "field": "savedCache",
+          "storedEmpty": true
+        },
+        {
+          "reference": "H2",
+          "field": "value",
+          "storedEmpty": true
+        },
+        {
+          "reference": "J2",
+          "field": "value",
+          "storedEmpty": true
+        }
+      ],
+      "missingCaches": ["E2", "F2"],
+      "noStoredValue": ["I2"],
+      "sharedFollower": "B3: no stored formula text; only cache 12",
+      "expectedPartial": true
+    },
+    {
+      "file": "scope-barriers.xlsx",
+      "segments": [
+        {
+          "sheetId": "relScope",
+          "reference": "A1",
+          "field": "savedCache",
+          "text": "31"
+        },
+        {
+          "sheetId": "relScope",
+          "reference": "D1",
+          "field": "value",
+          "text": "PUBLIC_SCOPE"
+        },
+        {
+          "sheetId": "relScope",
+          "reference": "E1",
+          "field": "value",
+          "text": "MERGE_ANCHOR"
+        },
+        {
+          "sheetId": "relScope",
+          "reference": "H1",
+          "field": "value",
+          "text": "PUBLIC_PROTECTED_VALUE"
+        },
+        {
+          "sheetId": "relOpen",
+          "reference": "A1",
+          "field": "formula",
+          "text": "UNPROTECTED_FORMULA"
+        },
+        {
+          "sheetId": "relOpen",
+          "reference": "A1",
+          "field": "savedCache",
+          "text": "32"
+        }
+      ],
+      "searchableUtf8Bytes": 69,
+      "queries": [
+        {
+          "query": "PUBLIC_SCOPE",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "MERGE_ANCHOR",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "PUBLIC_PROTECTED_VALUE",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "UNPROTECTED_FORMULA",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "31",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "32",
+          "expectedOccurrences": 1
+        },
+        {
+          "query": "PROTECTED_FORMULA_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "HIDDEN_FORMAT_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "UNKNOWN_FORMAT_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "MERGE_COVER_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "CONDITIONAL_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "CONDITIONAL_RULE_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "HIDDEN_MISSING_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "HIDDEN_ROW_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "HIDDEN_COLUMN_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "HIDDEN_SHEET_BODY_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "VERY_HIDDEN_BODY_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "SCOPE_SHEET_LABEL_NEVER",
+          "expectedOccurrences": 0
+        },
+        {
+          "query": "E1:F1",
+          "expectedOccurrences": 0
+        }
+      ],
+      "expectedPartial": true,
+      "requiredWarnings": [
+        "hiddenCellsOmitted",
+        "hiddenFormulasOmitted",
+        "unknownVisibility",
+        "coveredMergeData",
+        "savedFormulaCaches",
+        "recalculationRequested"
+      ]
+    },
+    {
+      "file": "hidden-only.xlsx",
+      "expectedError": "scopeEmpty",
+      "segments": [],
+      "searchableUtf8Bytes": 0
+    }
+  ],
+  "files": [
+    {
+      "root": "/controlled",
+      "path": "/controlled/decoding-fields.xlsx",
+      "resolvedPath": "/controlled/decoding-fields.xlsx",
+      "name": "decoding-fields.xlsx",
+      "size": 2986,
+      "sha256": "37ec3551b11f08feaeafe03f5b4639b4ad939b857cb57667f2f35691b5fa34e9",
+      "version": "independent-xlsx-v1-decoding-fields.xlsx"
+    },
+    {
+      "root": "/controlled",
+      "path": "/controlled/scope-barriers.xlsx",
+      "resolvedPath": "/controlled/scope-barriers.xlsx",
+      "name": "scope-barriers.xlsx",
+      "size": 3696,
+      "sha256": "26579c383c8b9d955c18a595b5025d5a4a7e8c3abdfb1093ebc18bac9d95b7c5",
+      "version": "independent-xlsx-v1-scope-barriers.xlsx"
+    },
+    {
+      "root": "/controlled",
+      "path": "/controlled/hidden-only.xlsx",
+      "resolvedPath": "/controlled/hidden-only.xlsx",
+      "name": "hidden-only.xlsx",
+      "size": 2249,
+      "sha256": "8e8c782e1b905e2f3106663fd9771ae1e47b165caf5a651fac0f534930153116",
+      "version": "independent-xlsx-v1-hidden-only.xlsx"
+    }
+  ],
+  "semantics": [
+    "r:id is the existing stable sheet identity; numeric sheetId is not exposed as sheet.id.",
+    "ST_Xstring decoding is one pass per original string or rich-text run; formula text is not ST_Xstring-decoded.",
+    "Empty saved string is distinguishable from absent numeric cache, but supplies no nonempty searchable segment.",
+    "No equals prefix, shared-formula expansion, recomputation, labels, formula attributes, or display generation.",
+    "Each field and cell is a separate search segment.",
+    "All counts and UTF-8 sizes computed from the handwritten segments only."
+  ]
+}

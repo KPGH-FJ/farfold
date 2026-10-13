@@ -1,0 +1,31 @@
+{
+  "phase": "oracle frozen before reading new xlsx search helper",
+  "files": {
+    "captures.json": {
+      "bytes": 23548,
+      "sha256": "cb3be77e2777c7b5a1d30f362bc1be7cba07241030ae6d05a227a94414c8c7bd"
+    },
+    "decoding-fields.xlsx": {
+      "bytes": 2986,
+      "sha256": "37ec3551b11f08feaeafe03f5b4639b4ad939b857cb57667f2f35691b5fa34e9"
+    },
+    "generate-supplement.py": {
+      "bytes": 12854,
+      "sha256": "0b04c927b193ddf13818c91f75aa83b8102091f5e0619c0ff593eb6acfcbb9fc"
+    },
+    "hidden-only.xlsx": {
+      "bytes": 2249,
+      "sha256": "8e8c782e1b905e2f3106663fd9771ae1e47b165caf5a651fac0f534930153116"
+    },
+    "oracle.json": {
+      "bytes": 11603,
+      "sha256": "bb3d67612a2f68080aa429ccf3929cf97f7bb273bf60f89e2be186267ae53a1f"
+    },
+    "scope-barriers.xlsx": {
+      "bytes": 3696,
+      "sha256": "26579c383c8b9d955c18a595b5025d5a4a7e8c3abdfb1093ebc18bac9d95b7c5"
+    }
+  },
+  "zipCrcAndXmlParse": "passed stdlib only",
+  "productionExecution": false
+}

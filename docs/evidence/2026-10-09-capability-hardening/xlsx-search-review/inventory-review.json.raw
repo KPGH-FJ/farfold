@@ -1,0 +1,59 @@
+{
+  "schema": 1,
+  "result": "readyForRootFreeze",
+  "inventory": {
+    "path": "output/2026-10-14-xlsx-search-integration/inventory-plan-final.json",
+    "bytes": 581824,
+    "sha256": "32d00ac07782aa18692465eb059252b60f7de67c65a9f73913bca5dd0fe8926a"
+  },
+  "adapter": {
+    "path": "output/2026-10-14-xlsx-search-integration/prepare_inventory.py",
+    "bytes": 9335,
+    "sha256": "32137d0dd417c72e0b169dc13b31495ab467e53281c41be4ba6d6eb32964eaf9"
+  },
+  "checkpointHelper": {
+    "path": "output/2026-10-14-xlsx-search-integration/prepare_checkpoint.py",
+    "bytes": 3943,
+    "sha256": "9e0e2b8c87c4e00dada2db1741619a11e443b9788c59c3e38c2e1d207310b121"
+  },
+  "selection": {
+    "path": "output/2026-10-14-xlsx-search-integration/inventory-final-selection.json",
+    "bytes": 1770,
+    "sha256": "b4ec1a4ab7e2d929f7b882498357d7a369df5e38ace7fb3b403ed80a4c44ddd6"
+  },
+  "inputCount": 1842,
+  "baseInputsRetained": 1799,
+  "addedInputs": 43,
+  "removedInputs": 0,
+  "physicalSourceFiles": 1573,
+  "ownerFiles": 23,
+  "browserInputFiles": 1106,
+  "exactExpectedUnionAndAllCurrentHashes": true,
+  "protected": {
+    "PRODUCT.md": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7",
+    "docs/evidence/2026-10-08-reliability-ui-review/README.md": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45",
+    "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+  },
+  "runner": {
+    "path": "output/2026-10-13-xlsx-input-checks-preparation/runner-v4/run_checks.py",
+    "sha256": "0cf4b3fd62d3d94f1781119f65d87f68a9fd26a6afb5e95ca7e56bda3f140a0c"
+  },
+  "helper": {
+    "path": "output/2026-10-13-xlsx-input-checks-preparation/inventory.py",
+    "sha256": "7784a38803fb1c10da014755cde9901f9deba982ffb01ab1076dfd2060e3e076"
+  },
+  "docsReview": {
+    "path": "output/2026-10-14-xlsx-search-independent/docs-review.json",
+    "bytes": 3909,
+    "sha256": "74fe022cea2ce79ea922410d28fe6b4eff3d2ec0800713984896fe29027d63fb"
+  },
+  "reviewedBoundaries": [
+    "Allsrc/src-tauri physical files included except generatedtarget/gen; newfiles and fixtures not silently omitted.",
+    "Both preparation adapters explicitly included; final1842 differs from preserved owner1841 solely by prepare_inventory.py membership.",
+    "Untracked synthetic source inputs including budget-captures are retained for later commit-source equality.",
+    "Checkpoint helper checks actual all7/source/protected receipts before selecting23owned+4docs+allnewoutputinputs+publicevidence; it does not stage or commit.",
+    "Originalexclusive FileExistsError preserved; no earlier plan overwritten and no test result inferred.",
+    "This is preparation review only; final freeze and actual fullseven remain root-owned."
+  ],
+  "safeForPublicRaw": true
+}

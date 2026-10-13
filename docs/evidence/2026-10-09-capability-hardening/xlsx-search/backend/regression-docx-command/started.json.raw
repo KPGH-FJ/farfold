@@ -1,0 +1,101 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "src-tauri/Cargo.toml",
+    "--locked",
+    "docx_search_uses_the_production_shared_two_slot_gate",
+    "--",
+    "--nocapture"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T18:10:27.560468+00:00",
+  "files": [
+    {
+      "path": "src-tauri/Cargo.lock",
+      "bytes": 144545,
+      "sha256": "ffcad4afc42bab386642035337b21f533608620307fda28044d0baf6ee588e08"
+    },
+    {
+      "path": "src-tauri/Cargo.toml",
+      "bytes": 2320,
+      "sha256": "5a5656bb244f9ace362fe78d613f86a59040de92a7d0d9452682959964708e2b"
+    },
+    {
+      "path": "src-tauri/src/file_access.rs",
+      "bytes": 905,
+      "sha256": "9ceea312f6062dc59dd574392dd5744883ed3f0fff0259968b0f3ef63190f9a4"
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17751,
+      "sha256": "2da2e56dcf80513aa02bbe9c8d960c8d1ee25c31175e78eab2c6a4fcc5bd407a"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document.rs",
+      "bytes": 2186,
+      "sha256": "cba79932194a05851ef8021184f6e5534f1d35af1cdcbc5108f6e6332bf2e056"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_search_tests.rs",
+      "bytes": 7333,
+      "sha256": "cff8740030c3d22ef23e1baaffd94b0a8b0fae7eaf820df4b761c8c8c05d1f83"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/document_tests.rs",
+      "bytes": 10613,
+      "sha256": "7828515625859534bf00dc4d8487dd5929a098be284af353e1397fca206c489d"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/ooxml_archive.rs",
+      "bytes": 9656,
+      "sha256": "cccda6285276fd368199f3ad2b37dc07abecdb968b10f2359fa1f5fced13b0e8"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/search_source.rs",
+      "bytes": 1384,
+      "sha256": "0f102ed3753a585b017189ba8fa7b3c4bc47d9158f4cf089f7d704beec0b66af"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook.rs",
+      "bytes": 1317,
+      "sha256": "3e2b65d0ea2b616b5669173cde6532fffc6c47f4342d821c6f1c52ad9ec6b4ad"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook_search_command_tests.rs",
+      "bytes": 1741,
+      "sha256": "c0d67f43ea5883e1d8cda64c332a642c45b3528da4d7d003f69874e49059664e"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook_search_tests.rs",
+      "bytes": 7862,
+      "sha256": "b0db42a1ed2022d96ec689b8fdce6aa2072e8175c9a0772de4b5f3dbacaaa07a"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/workbook_tests.rs",
+      "bytes": 6296,
+      "sha256": "1159cc7d4bf7afd755a74a0741272c4673228006efef2f073d745dd1d0695608"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 21183,
+      "sha256": "52dcb86e6d19459ddda8f3fb815ade69df0ae9ac150e1092bfef1a810b14379e"
+    },
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "bytes": 2674,
+      "sha256": "cf10e7bfbf76873e8b290cd6ea5e3e5ddac383c5f22a8924af3fa862b4a05ee2"
+    },
+    {
+      "path": "src-tauri/src/file_read_check_tests.rs",
+      "bytes": 5667,
+      "sha256": "91ede3d5566f8c7d73844a16e96af3268572d2e1e214ad28483d587eff9d9a4c"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21735,
+      "sha256": "40b70dfc28fa0e5545750fccd36fe7acf6025662bd1560317981c8d3ea11159c"
+    }
+  ]
+}

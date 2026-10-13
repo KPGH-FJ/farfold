@@ -1,0 +1,8 @@
+{
+  "scope": "Harness oracle correction before browser run; fixture ZIP/capture/production files unchanged.",
+  "reason": "Initial manually authored oracle used numeric OOXML sheetId; existing xlsx_workbook_context.ts exposes relationship r:id as stable sheet.id.",
+  "old": "oracle-v1.json.raw",
+  "current": "oracle.json",
+  "bytesAndMatchesUnchanged": true,
+  "browserRunOccurredBeforeCorrection": false
+}

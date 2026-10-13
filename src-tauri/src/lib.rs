@@ -352,6 +352,7 @@ pub fn run() {
                 file_delivery_commands::file_delivery_read_text_block,
                 file_delivery_commands::file_delivery_read_visual,
                 file_delivery_commands::file_delivery_read_workbook,
+                file_delivery_commands::file_delivery_read_workbook_search,
                 file_delivery_commands::file_delivery_read_docx,
                 file_delivery_commands::file_delivery_read_docx_search,
                 file_delivery_commands::file_delivery_read_pdf_input,

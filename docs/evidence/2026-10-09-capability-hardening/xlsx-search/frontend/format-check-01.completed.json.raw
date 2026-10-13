@@ -1,0 +1,34 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "prettier",
+    "--check",
+    "src/runtime/attachment_search.ts",
+    "src/runtime/attachment_search_source.ts",
+    "src/runtime/attachment_search_strings.ts",
+    "src/runtime/attachment_search.xlsx.test.ts",
+    "src/runtime/attachment_search.xlsx.test-support.ts",
+    "src/runtime/xlsx_search_text.ts",
+    "src/runtime/xlsx_search_text.test.ts",
+    "src/components/SelectedAttachmentSearch.tsx",
+    "src/components/SelectedAttachmentSearch.test.tsx",
+    "src/runtime/fixtures/xlsx-search/captures.json",
+    "src/runtime/fixtures/xlsx-search/oracle.json"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T18:15:45.861718+00:00",
+  "completedAtUtc": "2026-10-13T18:15:46.256507+00:00",
+  "actualExitCode": 1,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/format-check-01.stdout.log",
+    "bytes": 23,
+    "sha256": "ebe82dad128d5e5d8936334ceac09492f3c60bd9e0b4a16cc7fd7075513b33de"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/format-check-01.stderr.log",
+    "bytes": 136,
+    "sha256": "2fae21f4c4daa2265ee8724318b5f32a1f39e421375561162a4611b562da7f33"
+  }
+}

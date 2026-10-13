@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "prettier",
+    "--write",
+    "src/runtime/fixtures/xlsx-search/oracle.json"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T18:16:17.064831+00:00",
+  "completedAtUtc": "2026-10-13T18:16:17.275537+00:00",
+  "actualExitCode": 0,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/fixture-format-write.stdout.log",
+    "bytes": 50,
+    "sha256": "5bbf42461778c5f0459bd0bb1f79621b4fa7549554962228d77aa00c67b4ed6a"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-xlsx-search-frontend/fixture-format-write.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

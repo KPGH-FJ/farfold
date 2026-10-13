@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "result": "passed",
+  "summary": {
+    "path": "output/2026-10-14-xlsx-search-frontend/summary.json",
+    "bytes": 15670,
+    "sha256": "acdecd52588dd92c3dc2b9693fe357b1746c48e3ad542dddb3b7f7bf4234f3bd"
+  },
+  "manifest": {
+    "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/manifest.json",
+    "bytes": 5058,
+    "sha256": "de40d2774d8ac72e11ad2c102b292e09566e23cd037f56f6d6ffcad8b084b993"
+  },
+  "sourceReview": {
+    "path": "output/2026-10-14-xlsx-search-independent/frontend-review.json",
+    "bytes": 11469,
+    "sha256": "aa39c7bcb0423e68cd2ba44e770bf7c1891fa7d12666ba6fb85387e62d8aeff4"
+  },
+  "exactOriginalEventRecords": [
+    {
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/01-completed.jsonl.raw",
+        "bytes": 11849,
+        "sha256": "a1bf61a4a4e3e2ad22f8f80ec3914f606d988c5f855a8099b7cf41a941f8ee9e"
+      },
+      "sourceStartByte": 21505094,
+      "sourceEndByte": 21516943,
+      "actualExitCode": 1
+    },
+    {
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/02-completed.jsonl.raw",
+        "bytes": 1616,
+        "sha256": "1674715ddb103fc32becdc975e285c98cc3a8623f0f74bd4bc7bf884995621fb"
+      },
+      "sourceStartByte": 21566070,
+      "sourceEndByte": 21567686,
+      "actualExitCode": 0
+    },
+    {
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/03-completed.jsonl.raw",
+        "bytes": 3128,
+        "sha256": "240492f0223fd4da23622110d10e9271d8f6c3a5ff33818139b33c16667ae715"
+      },
+      "sourceStartByte": 21708511,
+      "sourceEndByte": 21711639,
+      "actualExitCode": 1
+    },
+    {
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/04-completed.jsonl.raw",
+        "bytes": 12462,
+        "sha256": "ae70ca271df0d5902c2677eb81793348237ca81a053729d5f31a11a7581787ca"
+      },
+      "sourceStartByte": 21777540,
+      "sourceEndByte": 21790002,
+      "actualExitCode": 0
+    },
+    {
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/05-completed.jsonl.raw",
+        "bytes": 4316,
+        "sha256": "6d0fe8f875150e4e9c7e3cf37892b477151e8458c5281a48cd10f91445cfc307"
+      },
+      "sourceStartByte": 21812789,
+      "sourceEndByte": 21817105,
+      "actualExitCode": 0
+    },
+    {
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/06-completed.jsonl.raw",
+        "bytes": 2086,
+        "sha256": "9bcc7eb1216932deefb7c9d2a90472bdb233a458e7ef1421f6769e623b29acb7"
+      },
+      "sourceStartByte": 21824563,
+      "sourceEndByte": 21826649,
+      "actualExitCode": 0
+    },
+    {
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/07-completed.jsonl.raw",
+        "bytes": 1372,
+        "sha256": "5324a9e94e70c45c9222d3fcea8e79dc113358285151409dda4b1b4ace41b8bc"
+      },
+      "sourceStartByte": 21826649,
+      "sourceEndByte": 21828021,
+      "actualExitCode": 0
+    },
+    {
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/08-completed.jsonl.raw",
+        "bytes": 2414,
+        "sha256": "e7b0d188d76b150204d338b00bacfcb98c9b46356ad840c9c30c10af3e72bae2"
+      },
+      "sourceStartByte": 21839291,
+      "sourceEndByte": 21841705,
+      "actualExitCode": 1
+    },
+    {
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/09-completed.jsonl.raw",
+        "bytes": 9372,
+        "sha256": "e6094cd22303f25c2ca42297625921b46a5ade74bf9507cc2ed9bcae79e4af2f"
+      },
+      "sourceStartByte": 21854526,
+      "sourceEndByte": 21863898,
+      "actualExitCode": 0
+    },
+    {
+      "raw": {
+        "path": "output/2026-10-14-xlsx-search-frontend/transcript-receipts/10-completed.jsonl.raw",
+        "bytes": 8331,
+        "sha256": "4cbee800eb2166a029996bb4e632d52af8d3be21bd33b3533d57418dcda696c8"
+      },
+      "sourceStartByte": 21885741,
+      "sourceEndByte": 21894072,
+      "actualExitCode": 0
+    }
+  ],
+  "summaryReferencesVerified": 51,
+  "boundary": "Only the10explicit byte ranges from owner-provided transcript were read; no other history. Original actual exitCodes match selected item_completed records. Final190/7files,type/format0 are separate from root browser scope. Original route,string-suite and style failures retained. No tests rerun.",
+  "safeForPublicRaw": true
+}

@@ -126,6 +126,15 @@ export function attachmentSearchIsDocx(source: AttachmentSearchCandidate) {
     /\.docx$/i.test(source.path ?? "")
   );
 }
+export function attachmentSearchIsXlsx(source: AttachmentSearchCandidate) {
+  // Preserve the existing DOCX route when declarations conflict. The actual
+  // captured package must still validate; there is no parser/link fallback.
+  return (
+    !attachmentSearchIsDocx(source) &&
+    (documentMediaFormat(source.mimeType) === "xlsx" ||
+      /\.xlsx$/i.test(source.path ?? ""))
+  );
+}
 /** A location request contains no file text and never pretends it is message text. */
 export type AttachmentSearchLocation = AttachmentSearchCandidate;
 export type SelectAttachmentSearch = (

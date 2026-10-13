@@ -1,4 +1,8 @@
 import type { DocxSearchLocation } from "./docx_search_text";
+import type { XlsxSearchLocation } from "./xlsx_search_text";
+import type { XlsxInputWarning } from "./xlsx_input_types";
+import { XLSX_INPUT_WARNING_TEXT } from "./document_input_strings";
+import { xlsxInputWarningCount } from "./document_input_presentation";
 import { DOCUMENT_WARNINGS } from "./document_strings";
 
 const regions = {
@@ -14,10 +18,23 @@ export const ATTACHMENT_SEARCH_STRINGS = {
   title: "查找当前附件文件",
   query: "搜索所选附件内容…",
   boundary:
-    "只查找你明确选择的当前本地文字或 DOCX 文件，不代表附件当时的历史内容。不会加载历史、连接 Agent 或读取网页。",
+    "只查找你明确选择的当前本地文字、DOCX 或 XLSX 文件，不代表附件当时的历史内容。不会加载历史、连接 Agent 或读取网页。",
   limits:
-    "每次最多 20 个文件；每个源文件最多 1 MiB，实际可检索文字合计最多 16 MiB。支持 UTF-8 纯文字及 DOCX 作者文字；不提取图片、音频、PDF 或电子表格中的内容。",
+    "每次最多 20 个文件；每个源文件最多 1 MiB，实际可检索文字合计最多 16 MiB。支持 UTF-8 纯文字、DOCX 作者文字及 XLSX 所列范围的保存内容；不提取图片、音频或 PDF 中的内容。",
   docxCandidate: "按 DOCX 读取作者文字（文件类型声明或 .docx 位置）",
+  xlsxCandidate: "按 XLSX 读取可见工作表中符合范围的保存内容",
+  xlsxScope:
+    "XLSX 仅查找可见工作表中符合范围的单元格值、保存缓存和公式文字；隐藏、可见性未知及合并覆盖的内容不参与查找，不代表 Excel 的完整显示效果。",
+  xlsxCache:
+    "单元格和公式结果来自文件保存的内容，可能不是最新；不重新计算公式，不展开共享公式，也不更新外部数据。",
+  xlsxPartial:
+    "XLSX 存在省略内容或未确认的范围；没有匹配不代表完整工作簿没有匹配。",
+  xlsxFields: {
+    value: "保存值",
+    savedCache: "保存的公式结果",
+    formula: "保存的公式文字",
+  },
+  xlsxCell: (row: number, column: number) => `第 ${row} 行、第 ${column} 列`,
   textCandidate: "按 UTF-8 纯文字读取",
   docxScope:
     "DOCX 已提取作者文字；段落、单元格和文档区域分别查找，不代表 Word 视觉页码。",
@@ -89,7 +106,7 @@ export const ATTACHMENT_SEARCH_STRINGS = {
     changed: "内容、位置或来源已变化，请重新选择。",
     unreadable: "无法读取此文件。",
     tooLarge: "完整文件超过 1 MiB。",
-    unsupported: "不是本次支持的 UTF-8 纯文字或 DOCX 内容。",
+    unsupported: "不是本次支持的 UTF-8 纯文字、DOCX 或 XLSX 内容。",
     budget: "超过本次 16 MiB 可检索正文限额，未用于检索。",
     pending: "读取尚未返回，后台状态未确认。",
     busy: "已有文件读取或文档处理尚未结束，本文件未完成检索。",
@@ -97,6 +114,8 @@ export const ATTACHMENT_SEARCH_STRINGS = {
     encrypted: "此文档已加密，未用于检索。",
     timeout: "文档处理等待超时，本次未完成；可明确重新查找。",
     invalid: "返回内容无法确认，未用于检索。",
+    scopeEmpty:
+      "此工作簿没有可见工作表，本次没有可读取的范围；未改为读取隐藏内容。",
   },
 } as const;
 
@@ -109,4 +128,21 @@ export function docxSearchLocationLabel(location: DocxSearchLocation): string {
     ),
     s.docxParagraph(location.paragraph),
   ].join(" · ");
+}
+
+export function attachmentSearchLocationLabel(
+  location: DocxSearchLocation | XlsxSearchLocation,
+): string {
+  if (!("kind" in location)) return docxSearchLocationLabel(location);
+  const s = ATTACHMENT_SEARCH_STRINGS;
+  return [
+    location.sheetName,
+    location.reference,
+    s.xlsxCell(location.row, location.column),
+    s.xlsxFields[location.field],
+  ].join(" · ");
+}
+
+export function xlsxSearchWarningLabel(warning: XlsxInputWarning): string {
+  return `${XLSX_INPUT_WARNING_TEXT[warning.code]}（${xlsxInputWarningCount(warning)}）`;
 }

@@ -1,0 +1,270 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T18:36:32.870513+00:00",
+  "result": "sevenActualChecksVerifiedNoBlockingIssue",
+  "method": "Read-only review of actual stage receipts, stdout/stderr, frozen/current hashes, exact authorized root completion and published byte copies. No tests or helper main executed.",
+  "rootCompletion": {
+    "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+    "sourceLine": 10753,
+    "sourceByteOffset": 30628267,
+    "sourceByteLength": 1213,
+    "originalTimestamp": "2026-10-13T18:34:22.758Z",
+    "chunkId": "a8194f",
+    "actualExitCode": 0,
+    "raw": {
+      "path": "output/2026-10-14-xlsx-search-independent/transcript-engineering/root-seven-completion.jsonl.raw",
+      "bytes": 1213,
+      "sha256": "feb8d0d3132daa275596b85895b984ea49c4f6898b16655a73a2ed22e4945520"
+    },
+    "scope": "Exact root final tool-output record only; not reconstructed from summary."
+  },
+  "summary": {
+    "path": "output/2026-10-14-xlsx-search-integration/checks-run/summary.json",
+    "bytes": 6315,
+    "sha256": "f928920ad2a962c445ee4f4d6f657adc6ab5d4a08390536af4c63f0d9569eb36"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-xlsx-search-integration/checks-freeze/freeze.json",
+    "bytes": 297778,
+    "sha256": "a0ffe1ca43984921663a5b97d021a8363c02d53fd42a45ca4d001e7151d2b205"
+  },
+  "inventory": {
+    "path": "output/2026-10-14-xlsx-search-integration/inventory-plan-final.json",
+    "bytes": 581824,
+    "sha256": "32d00ac07782aa18692465eb059252b60f7de67c65a9f73913bca5dd0fe8926a"
+  },
+  "runner": {
+    "path": "output/2026-10-13-xlsx-input-checks-preparation/runner-v4/run_checks.py",
+    "sha256": "0cf4b3fd62d3d94f1781119f65d87f68a9fd26a6afb5e95ca7e56bda3f140a0c"
+  },
+  "preflight": {
+    "path": "output/2026-10-14-xlsx-search-integration/checks-run/preflight.json",
+    "bytes": 264,
+    "sha256": "144a6004fb347903132365c2b609d41ece88577303cab5f94ca66717fb892b2a"
+  },
+  "stages": [
+    {
+      "name": "format-check",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/format-check/started.json",
+        "bytes": 288,
+        "sha256": "65e4cf394b71f4afe0f3849ab7cb828dbc3399dfe073b303eb0acb26c7f25add"
+      },
+      "completed": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/format-check/completed.json",
+        "bytes": 667,
+        "sha256": "d76f3ae6899ab2ed08b236f9edeba30d2e9d0de2e4e5dc31d433bef97c3cddbb"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/format-check/stdout.log",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "typecheck",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/typecheck/started.json",
+        "bytes": 277,
+        "sha256": "d60a80580e52a38cac59bb5682c31653e9f5ea476510375dd715f0831b8d6237"
+      },
+      "completed": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/typecheck/completed.json",
+        "bytes": 655,
+        "sha256": "10dbe0ab1d56ccf0afb8ad6550ca4e3a6d9ce2bacb1066d245f221db8c6a0a05"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/typecheck/stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/typecheck/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "frontend-test",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-test/started.json",
+        "bytes": 274,
+        "sha256": "37b5703f57f138932e26a8188fdeb45babed87b8ab99fab72e8518274378ebec"
+      },
+      "completed": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-test/completed.json",
+        "bytes": 653,
+        "sha256": "8b286c2df84ab180d1e7c3a840134c0f2946337cb5b4bc4e7d82996e06e08abd"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-test/stdout.log",
+        "bytes": 289,
+        "sha256": "3727dd72e1a574d3001d7326cac8f329665d4c4e36e0e3fceed78c49f814a3f0"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-test/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "frontend-build",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-build/started.json",
+        "bytes": 277,
+        "sha256": "cf1c9aa9c946772321201d2503ea266830d978ed1688f1b020d295c1ea145ab4"
+      },
+      "completed": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-build/completed.json",
+        "bytes": 655,
+        "sha256": "4a8a8de77037acc5400cc44477f8285c46662039f5d4d6928ee249684513a49f"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-build/stdout.log",
+        "bytes": 4560,
+        "sha256": "63d4c4d0140919b17cdb8c3e268347b3a75890d5dab03b1ce57a88420d22de92"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/frontend-build/stderr.log",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      }
+    },
+    {
+      "name": "cargo-fmt",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-fmt/started.json",
+        "bytes": 354,
+        "sha256": "946ef01b1c17d26514b01e09b94d0be1ad9a9e10b824edc6ae30173ae90ed0c6"
+      },
+      "completed": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-fmt/completed.json",
+        "bytes": 739,
+        "sha256": "84f52dac4f58dc31b46bb9454c46e25a07f5c4a7f91fa27aa8e7aff075ada0e5"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "cargo-clippy",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-clippy/started.json",
+        "bytes": 416,
+        "sha256": "1b18cd9a587f75adff4639193a7cf41d18d7a2fc7f9142164ecede043aecb744"
+      },
+      "completed": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-clippy/completed.json",
+        "bytes": 800,
+        "sha256": "9823980f13299501d9d3f8f17c23173f7fa265aa6852dda84d0b764c67feefb6"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-clippy/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-clippy/stderr.log",
+        "bytes": 138,
+        "sha256": "45212cf0d9b72e9c476f768bd0e76311ccd43f2d8433306570713057c77e97a1"
+      }
+    },
+    {
+      "name": "cargo-test",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-test/started.json",
+        "bytes": 360,
+        "sha256": "b4cd123157bf93d049dab7c4b1866427cf379ff274d09282857fc673f4ecb406"
+      },
+      "completed": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-test/completed.json",
+        "bytes": 745,
+        "sha256": "03cce34c942a7fb00c929496846de1f6691be94eeb999166d95dad861af477e0"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-test/stdout.log",
+        "bytes": 186462,
+        "sha256": "1d8fc169b0b7990d749e3fec4b7f66bcb82be143364aa2264202fdd02215dcfd"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-xlsx-search-integration/checks-run/cargo-test/stderr.log",
+        "bytes": 671,
+        "sha256": "21cb92102057fb2066aa3b335af27420cbd9d3bae25143d9218e1d9543d004ae"
+      }
+    }
+  ],
+  "counts": {
+    "frontendFilesPassed": 496,
+    "frontendTestsPassed": 5962,
+    "rustPassed": 1674,
+    "rustFailed": 0,
+    "rustIgnored": 6,
+    "additionalRustZeroTestSummaries": 2
+  },
+  "sourceVerification": {
+    "inputCount": 1842,
+    "beforeAfterFreezePlanCurrentEqual": true,
+    "physicalSourceMembershipCount": 1573,
+    "currentMembershipEqualsPlan": true,
+    "protectedCount": 3,
+    "protectedBeforeAfterFreezePlanCurrentEqual": true,
+    "requiredCommandsExecuted": 7,
+    "actualStageCompletionCount": 7,
+    "allActualExitZero": true,
+    "eventsStartedCompletedPairs": 7
+  },
+  "publicationVerification": {
+    "publication": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/publication.json",
+      "bytes": 17912,
+      "sha256": "e3403b8e13f0baf6bf884c567e56e2fa74708e21907e1146db708c174e558260"
+    },
+    "verification": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/xlsx-search-checks/verification.json",
+      "bytes": 7157,
+      "sha256": "0694dd37dbb1d54e52529a9ed447f9ce8670fe7f2f381bb85d11c2e7dc993390"
+    },
+    "exactCopies": 36,
+    "exactDirectoryMembers": 38,
+    "allCopiesByteExact": true,
+    "formattedVerificationOriginalFieldsSemanticallyEqual": true,
+    "noSymlinks": true
+  },
+  "checkpointPreparation": {
+    "helperReview": {
+      "path": "output/2026-10-14-xlsx-search-independent/checkpoint-helper-review.json",
+      "bytes": 2338,
+      "sha256": "cacaa50eb049bd57acb9d3115d216432b4cf3fa56412c96f51714e96056bbef5"
+    },
+    "currentScopedNewAuxiliaryInputCount": 29,
+    "allAuxiliaryInputsCurrentPhaseFrozen": true,
+    "protectedNotSelected": true,
+    "actualStagePlanNotYetCreatedOrReviewed": true
+  },
+  "boundary": [
+    "This proves the actual full engineering check run for the frozen XLSX search source and inputs. Candidate, formal installation, native XLSX search positive, actual Agent and complete P32 acceptance are separate and not established.",
+    "Original targeted failures, fixture/harness corrections, existing strict data differences and previous phase failure records remain unchanged.",
+    "The final index/path plan still requires exact-stage review after root prepares it; this report does not perform staging."
+  ],
+  "testsExecutedByReviewer": 0,
+  "appAgentDatabaseOperationsByReviewer": 0
+}

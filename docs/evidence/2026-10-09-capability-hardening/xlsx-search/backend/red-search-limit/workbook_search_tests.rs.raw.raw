@@ -1,0 +1,76 @@
+use super::*;
+use base64::{Engine, engine::general_purpose::STANDARD};
+use std::io::{Cursor, Write};
+use zip::{CompressionMethod, ZipWriter, write::SimpleFileOptions};
+
+fn package(payload: &[u8], method: CompressionMethod) -> Vec<u8> {
+    let mut writer = ZipWriter::new(Cursor::new(Vec::new()));
+    for (name, bytes) in [
+        ("[Content_Types].xml", b"<Types/>".as_slice()),
+        ("_rels/.rels", b"<Relationships/>".as_slice()),
+        ("xl/workbook.xml", b"<workbook/>".as_slice()),
+        (
+            "xl/worksheets/sheet1.xml",
+            b"<worksheet><c><v>author</v></c></worksheet>".as_slice(),
+        ),
+        ("xl/ignored.bin", payload),
+    ] {
+        writer
+            .start_file(
+                name,
+                SimpleFileOptions::default().compression_method(method),
+            )
+            .unwrap();
+        writer.write_all(bytes).unwrap();
+    }
+    writer.finish().unwrap().into_inner()
+}
+
+fn sized_package(size: usize) -> Vec<u8> {
+    let overhead = package(&[], CompressionMethod::Stored).len();
+    let bytes = package(&vec![b'x'; size - overhead], CompressionMethod::Stored);
+    assert_eq!(bytes.len(), size);
+    bytes
+}
+
+fn fixture(bytes: &[u8]) -> (tempfile::TempDir, std::path::PathBuf, VerifiedFile) {
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("selected.xlsx");
+    std::fs::write(&path, bytes).unwrap();
+    let file = super::super::inspect(dir.path(), &path).unwrap();
+    (dir, path, file)
+}
+
+#[test]
+fn search_rejects_one_mib_plus_one_while_legacy_workbook_stays_usable() {
+    let bytes = sized_package(super::super::MAX_TEXT_BYTES as usize + 1);
+    let (_dir, path, file) = fixture(&bytes);
+    assert!(read_workbook(&file).is_ok(), "legacy16MiB preview unchanged");
+    assert!(matches!(
+        read_workbook_search(&file),
+        Err(WorkbookError::File(DeliveryError::TooLarge))
+    ));
+    assert_eq!(std::fs::read(path).unwrap(), bytes);
+}
+
+#[test]
+fn search_exact_one_mib_preserves_xml_parts_and_complete_receipt() {
+    let bytes = sized_package(super::super::MAX_TEXT_BYTES as usize);
+    let (dir, path, file) = fixture(&bytes);
+    let captured = read_workbook_search(&file).unwrap();
+    assert_eq!(captured.file, file);
+    assert_eq!(captured.file.sha256, super::super::content_hash(&bytes));
+    assert_eq!(captured.entries.len(), 5);
+    assert_eq!(captured.parts.len(), 4);
+    let sheet = captured
+        .parts
+        .iter()
+        .find(|part| part.name == "xl/worksheets/sheet1.xml")
+        .unwrap();
+    assert_eq!(
+        STANDARD.decode(&sheet.data).unwrap(),
+        b"<worksheet><c><v>author</v></c></worksheet>"
+    );
+    assert_eq!(std::fs::read(path).unwrap(), bytes);
+    assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), 1);
+}

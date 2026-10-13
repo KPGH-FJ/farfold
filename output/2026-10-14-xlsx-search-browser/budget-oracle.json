@@ -1,0 +1,9 @@
+{
+  "authorUtf8BytesPerFile": 9000007,
+  "compressedBytes": [
+    10965,
+    10965
+  ],
+  "retainedFirstFileNeedleCount": 1,
+  "otherLargeFileSkippedAsBudget": true
+}

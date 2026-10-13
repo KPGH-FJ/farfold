@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "result": "passed",
+  "scope": "Independent static synthetic XML/capture/oracle review. No production search/parser/Worker/native/App execution.",
+  "root": {
+    "checkedArchives": [
+      {
+        "path": "output/2026-10-14-xlsx-search-browser/author.xlsx",
+        "bytes": 3580,
+        "sha256": "e5f5b87c72c41d7e610622b8d48b00876be6d793e4d699651065b1bfe07d901b"
+      },
+      {
+        "path": "output/2026-10-14-xlsx-search-browser/second.xlsx",
+        "bytes": 3585,
+        "sha256": "0d3ca8bc3f93cb706ce41d54f7be88f179bba3b7322556494fdee614cf978485"
+      },
+      {
+        "path": "output/2026-10-14-xlsx-search-browser/budget-a.xlsx",
+        "bytes": 10965,
+        "sha256": "31aa23b236993b0f5b2721311ced83c77b4f2e1b2aa21b257ce6c1f710ddc6ea"
+      },
+      {
+        "path": "output/2026-10-14-xlsx-search-browser/budget-b.xlsx",
+        "bytes": 10965,
+        "sha256": "31aa23b236993b0f5b2721311ced83c77b4f2e1b2aa21b257ce6c1f710ddc6ea"
+      }
+    ],
+    "oracle": {
+      "path": "output/2026-10-14-xlsx-search-browser/oracle.json",
+      "bytes": 3291,
+      "sha256": "990dd6ee0bb208f1cdd2dedddc2c92e39ff973d9b9d0e02766deca068d9f9be6"
+    },
+    "generator": {
+      "path": "output/2026-10-14-xlsx-search-browser/generate-fixtures.py",
+      "bytes": 6007,
+      "sha256": "46dd5183efafc923b49926d7d12e353c7e43ca97934a75062eb49e3a9cd202d6"
+    },
+    "authorSegments": 16,
+    "authorUtf8Bytes": 226,
+    "authorNeedleMatches": 5,
+    "secondNeedleMatches": 1,
+    "secondSecondtermMatches": 4,
+    "budgetUtf8PerWorkbook": 9000007,
+    "sheetIdentityCorrection": "Current rId1/rId2 oracle is correct. Original numeric sheetId assumption was an oracle error, not a product defect; original root records retained."
+  },
+  "independent": {
+    "freeze": {
+      "path": "output/2026-10-14-xlsx-search-independent/fixture-freeze.json",
+      "bytes": 993,
+      "sha256": "a7274f4a68c68112ff7da2c2e8e705c2ad500dacbbf292c6c78a078be71e48f4"
+    },
+    "archives": [
+      {
+        "path": "output/2026-10-14-xlsx-search-independent/decoding-fields.xlsx",
+        "bytes": 2986,
+        "sha256": "37ec3551b11f08feaeafe03f5b4639b4ad939b857cb57667f2f35691b5fa34e9"
+      },
+      {
+        "path": "output/2026-10-14-xlsx-search-independent/scope-barriers.xlsx",
+        "bytes": 3696,
+        "sha256": "26579c383c8b9d955c18a595b5025d5a4a7e8c3abdfb1093ebc18bac9d95b7c5"
+      },
+      {
+        "path": "output/2026-10-14-xlsx-search-independent/hidden-only.xlsx",
+        "bytes": 2249,
+        "sha256": "8e8c782e1b905e2f3106663fd9771ae1e47b165caf5a651fac0f534930153116"
+      }
+    ],
+    "cases": [
+      {
+        "file": "decoding-fields.xlsx",
+        "segments": 26,
+        "utf8Bytes": 265,
+        "expectedError": null
+      },
+      {
+        "file": "scope-barriers.xlsx",
+        "segments": 6,
+        "utf8Bytes": 69,
+        "expectedError": null
+      },
+      {
+        "file": "hidden-only.xlsx",
+        "segments": 0,
+        "utf8Bytes": 0,
+        "expectedError": "scopeEmpty"
+      }
+    ]
+  },
+  "boundaries": [
+    "Expected strings were authored independently and not computed by the implementation under test.",
+    "ZIP CRC, full byte hashes, every captured part, entry membership, inflated counts and XML well-formedness checked.",
+    "No formula evaluation/shared expansion/display generation; no real Agent claims.",
+    "Real Worker search and actual IPC remain root/owner verification scopes."
+  ]
+}
