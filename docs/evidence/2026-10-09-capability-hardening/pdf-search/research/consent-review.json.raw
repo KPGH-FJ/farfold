@@ -1,0 +1,61 @@
+{
+  "createdAtUtc": "2026-10-13T18:39:46.634198+00:00",
+  "kind": "只读设计纠正；原handoff/source-review保留，本记录仅取代其双确认与关键词重置建议。",
+  "conclusion": "两个默认未选确认并非PRODUCT/P32契约要求；此前把P08加入Agent输入的partialSelected确认外推给临时本地搜索属于设计推断，撤回。",
+  "basis": [
+    {
+      "path": "plans/agent-access.md",
+      "lines": [
+        297,
+        297
+      ],
+      "fact": "P32要求官方搜索或明确授权范围的临时读取，覆盖/缺失明确、原文一致、来源跳转；未规定两阶段或额外checkbox。"
+    },
+    {
+      "path": "PRODUCT.md",
+      "lines": [
+        89,
+        91
+      ],
+      "fact": "未获取正文不能宣称全文；官方历史列表/正文/可继续能力分开，没有本地部分搜索额外审批条款。"
+    },
+    {
+      "path": "src/runtime/document_input_strings.ts",
+      "lines": [
+        40,
+        42
+      ],
+      "fact": "P08按钮是加入这些文字/只加入已读取文字，partialConsent明说我已查看缺失说明，只加入本次已读取的文字。"
+    },
+    {
+      "path": "src/runtime/document_input.ts",
+      "lines": [
+        268,
+        296
+      ],
+      "fact": "confirmDocumentInput将partialSelected写入ApprovedDocumentText并核文字哈希/源版本，服务于已批准输入，不是搜索读取许可机制。"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "lines": [
+        70,
+        114
+      ],
+      "fact": "现关键词变化退休旧结果但保留selected；Start捕获当前query、selection及owner，未有自动读取。"
+    }
+  ],
+  "recommendedMinimalUX": [
+    "沿用现候选文件checkbox，PDF行在选择前即可见“全部页可提取文字，可能包含不可见文字，仅为部分内容”；它同时表达文件与固定范围选择，不另加确认。",
+    "只要选中PDF，在Start附近常显四项范围边界：非可见完整文本，阅读顺序/解码不保证，无OCR/图片图表完整内容/批注表单。用户点现Start才inspect/hash/read/parse；勾选本身不读。",
+    "结果常显partial、实际处理页数/无文字页及覆盖缺失；明确当前文件非历史附件字节。无需先看结果再批准搜索，且不产生草稿输入/Agent发送授权。"
+  ],
+  "alternative": "若行内范围难以清楚表达，可在同一面板加一个本次固定范围选择后仍用Start；这属于可选UX，最多一处范围选择，不能与文件选择再叠加部分内容审批。推荐本片直接行标签+常显说明。",
+  "changesAndAuthorization": [
+    "同一有效文件来源与固定范围，仅修改关键词：旧结果/运行/迟到回调失效，保留文件选择，重新点Start即可；无需重新勾选。",
+    "取消/离开/回来不自动读取；若原candidate仍有效，显式Start可重做，不需要新增批准。新挂载仍沿现默认无选择。",
+    "MIME/URI/Agent/cwd/nativeSession/index归属/消息附件对象变化：旧候选无效、旧结果撤回，按现规则重新选择；新选择先展示其真实范围。不得仅以相同文件名复用。",
+    "读取中版本变化整份撤回；不自动重读。用户后续明确Start读取当前文件，重新inspect并对本轮7字段/hash全程核验，不将旧结果描述成当前。"
+  ],
+  "unchangedGuards": "1MiB bounded捕获、完整7字段、per-item/page匹配、实际UTF8预算、真实Worker串行、错误整份拒绝/无降级、取消及late保护不变。Start及候选授权边界仍需有意义反例，删除不必要的缺partial-checkbox=零IO测试。",
+  "activity": "只读已列契约/源码并写本记录；不改源码/docs，不测试、不启动App/Agent。"
+}

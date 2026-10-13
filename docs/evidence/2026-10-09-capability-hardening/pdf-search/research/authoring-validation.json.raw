@@ -1,0 +1,155 @@
+{
+  "createdAtUtc": "2026-10-13T18:44:48.029603+00:00",
+  "legacyProvenance": {
+    "path": "output/2026-10-14-pdf-search-research/legacy-provenance.json",
+    "bytes": 10612,
+    "sha256": "ee06ef0fe5acc30988cf6299f6ddd9f3d9e3344117a0df1399ea28c5ef040f79"
+  },
+  "newContainerChecks": [
+    {
+      "file": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/07-page-item-barriers.pdf",
+        "bytes": 1022,
+        "sha256": "13443f33956ca18fda7de18e90980c3f35d74080c660c9adef160892835ad5ba"
+      },
+      "pages": 2,
+      "xrefAndPageStreamsChecked": true,
+      "declaredDamagedPage": null,
+      "textExtractionUsed": false
+    },
+    {
+      "file": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/08-unicode-preservation.pdf",
+        "bytes": 1455,
+        "sha256": "2af57c234829205f99957bf8a6881d1c12fed36efe12e6007f705772899f2995"
+      },
+      "pages": 1,
+      "xrefAndPageStreamsChecked": true,
+      "declaredDamagedPage": null,
+      "textExtractionUsed": false
+    },
+    {
+      "file": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/09-terminal-page-damaged.pdf",
+        "bytes": 1180,
+        "sha256": "3939e6b9b64e6ae040946fc4ad8c0ff7c22dd7d992a8049c4537d6d44197642d"
+      },
+      "pages": 3,
+      "xrefAndPageStreamsChecked": true,
+      "declaredDamagedPage": 3,
+      "textExtractionUsed": false
+    }
+  ],
+  "renders": [
+    {
+      "argv": [
+        "/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override/pdftoppm",
+        "-r",
+        "72",
+        "-png",
+        "/Users/tw/Desktop/farfold/output/2026-10-14-pdf-search-research/fixtures/07-page-item-barriers.pdf",
+        "/Users/tw/Desktop/farfold/output/2026-10-14-pdf-search-research/renders/07-page-item-barriers"
+      ],
+      "startedAtUtc": "2026-10-13T18:44:46.088932+00:00",
+      "completedAtUtc": "2026-10-13T18:44:47.693024+00:00",
+      "actualExitCode": 0,
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-research/renders/07-page-item-barriers.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-research/renders/07-page-item-barriers.stderr.log",
+        "bytes": 66,
+        "sha256": "48d1742e4eb8d891c783fb9298eeb3b7b38196001af8c8f9457e38ebf0e40b99"
+      },
+      "pages": [
+        {
+          "path": "output/2026-10-14-pdf-search-research/renders/07-page-item-barriers-1.png",
+          "bytes": 5427,
+          "sha256": "4df9357a3434e8040dc08aaa3753edc693443f155492ef662d76b7e820c5b3b2"
+        },
+        {
+          "path": "output/2026-10-14-pdf-search-research/renders/07-page-item-barriers-2.png",
+          "bytes": 5474,
+          "sha256": "c8056782baff4f62c9322c9cf0bc18954d8f2dcb92e6e1b4114697561eb6d693"
+        }
+      ],
+      "scope": "Independent Poppler visual check only; tolerant rendering of malformed PDF is not application read success."
+    },
+    {
+      "argv": [
+        "/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override/pdftoppm",
+        "-r",
+        "72",
+        "-png",
+        "/Users/tw/Desktop/farfold/output/2026-10-14-pdf-search-research/fixtures/08-unicode-preservation.pdf",
+        "/Users/tw/Desktop/farfold/output/2026-10-14-pdf-search-research/renders/08-unicode-preservation"
+      ],
+      "startedAtUtc": "2026-10-13T18:44:47.693636+00:00",
+      "completedAtUtc": "2026-10-13T18:44:47.728026+00:00",
+      "actualExitCode": 0,
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-research/renders/08-unicode-preservation.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-research/renders/08-unicode-preservation.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "pages": [
+        {
+          "path": "output/2026-10-14-pdf-search-research/renders/08-unicode-preservation-1.png",
+          "bytes": 2328,
+          "sha256": "1ee572faff931e7301296dca1bef47a4d633f91ec287012fd2fc764781194f6a"
+        }
+      ],
+      "scope": "Independent Poppler visual check only; tolerant rendering of malformed PDF is not application read success."
+    },
+    {
+      "argv": [
+        "/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override/pdftoppm",
+        "-r",
+        "72",
+        "-png",
+        "/Users/tw/Desktop/farfold/output/2026-10-14-pdf-search-research/fixtures/09-terminal-page-damaged.pdf",
+        "/Users/tw/Desktop/farfold/output/2026-10-14-pdf-search-research/renders/09-terminal-page-damaged"
+      ],
+      "startedAtUtc": "2026-10-13T18:44:47.728421+00:00",
+      "completedAtUtc": "2026-10-13T18:44:48.029153+00:00",
+      "actualExitCode": 0,
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-research/renders/09-terminal-page-damaged.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-research/renders/09-terminal-page-damaged.stderr.log",
+        "bytes": 129,
+        "sha256": "108c5ad365d25b8fc11b9fe6d5e3243d50bce0cc9955466586db9acc3d03f8b6"
+      },
+      "pages": [
+        {
+          "path": "output/2026-10-14-pdf-search-research/renders/09-terminal-page-damaged-1.png",
+          "bytes": 5814,
+          "sha256": "318356c9418e8f3725b0c51ff868997676d1bcc87c693e530881e05d0e528dbf"
+        },
+        {
+          "path": "output/2026-10-14-pdf-search-research/renders/09-terminal-page-damaged-2.png",
+          "bytes": 6528,
+          "sha256": "07b26ad7d944bd84304f4cea20bd3d69ea717cb1dc51f2ad3db194fbe9343ce3"
+        },
+        {
+          "path": "output/2026-10-14-pdf-search-research/renders/09-terminal-page-damaged-3.png",
+          "bytes": 2205,
+          "sha256": "fd020c4787f544b718cb0e72789317ff16a2278348510992bb7a4cf278be28ab"
+        }
+      ],
+      "scope": "Independent Poppler visual check only; tolerant rendering of malformed PDF is not application read success."
+    }
+  ],
+  "actualApplicationParserExecuted": false,
+  "nativeAppOrAgentExecuted": false
+}

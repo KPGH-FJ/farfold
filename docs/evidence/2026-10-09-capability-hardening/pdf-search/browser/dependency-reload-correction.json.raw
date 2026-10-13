@@ -1,0 +1,13 @@
+{
+  "originalRun": "chromium-run1.json",
+  "actualExitCode": 1,
+  "completionChunk": "2569d4",
+  "sourceStable": true,
+  "serverOutputChunk": "fe8f8f",
+  "serverOutput": "dependencies optimized: pdfjs-dist/legacy/build/pdf.mjs, pdfjs-dist/legacy/build/pdf.worker.mjs; optimized dependencies changed. reloading",
+  "change": "Explicit PDF module dependency preload in controlled Vite server, production source unchanged.",
+  "serverPid": 84600,
+  "serverCommand": "node output/2026-10-14-pdf-search-browser/serve.mjs",
+  "beforeServerSha256": "688f8247e5b30811feb4190ec979edff079ed52dc24596a0440efc6f2379f9c8",
+  "afterServerSha256": "0a2e2486e1c783e058be5e3c54912c36d0326d75315d86a6b6165900f200bae3"
+}

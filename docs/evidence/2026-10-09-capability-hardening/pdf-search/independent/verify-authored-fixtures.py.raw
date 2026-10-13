@@ -1,0 +1,66 @@
+from pathlib import Path
+import base64, hashlib, json, re, zlib, datetime
+ROOT=Path('/Users/tw/Desktop/farfold'); O=ROOT/'output/2026-10-14-pdf-search-research'; B=ROOT/'output/2026-10-14-pdf-search-browser'; OUT=ROOT/'output/2026-10-14-pdf-search-independent'
+def ref(p):
+ b=p.read_bytes(); return {'path':str(p.relative_to(ROOT)), 'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()}
+def checked(p,r):
+ actual=ref(p); assert actual['bytes']==r['bytes'] and actual['sha256']==r['sha256'],str(p); return actual
+freeze=json.loads((O/'fixture-freeze.json').read_bytes())
+for r in freeze['files']: checked(ROOT/r['path'],r)
+oracle=json.loads((O/'fixtures/authoring-oracle.json').read_bytes()); examined=[]
+for entry in oracle['fixtures']:
+ p=O/entry['file']['path']; data=p.read_bytes(); checked(p,entry['file'])
+ objects=list(re.finditer(rb'(?m)^(\d+) 0 obj\n(.*?)\nendobj\n',data,re.S))
+ assert len(objects)>0
+ xref=int(re.search(rb'startxref\n(\d+)\n%%EOF\n$',data).group(1)); assert data[xref:xref+5]==b'xref\n'
+ rows=data[xref:].splitlines(); assert rows[1]==f'0 {len(objects)+1}'.encode()
+ for i,obj in enumerate(objects,1):
+  assert int(obj.group(1))==i and int(rows[2+i].split()[0])==obj.start()
+ page_objects=[m for m in objects if re.search(rb'/Type /Page\b',m.group(2))]
+ assert len(page_objects)==entry['pageCount']
+ streams=[]
+ for obj in objects:
+  m=re.search(rb'\nstream\n',obj.group(2))
+  if m:
+   n=int(re.search(rb'/Length (\d+)',obj.group(2)[:m.start()]).group(1)); body=obj.group(2)[m.end():m.end()+n]
+   assert obj.group(2)[m.end()+n:]==b'\nendstream'; streams.append(body)
+ for raw in entry['raw']:
+  rp=O/raw['path']; checked(rp,raw); assert rp.read_bytes() in streams
+ if p.name.startswith('07-'):
+  page_tokens=[[s.decode('ascii') for s in re.findall(rb'\(([^()]*)\) Tj',body)] for body in streams]
+  assert page_tokens==entry['authorTextByPage']
+  assert sum(len(t.encode()) for page in page_tokens for t in page)==entry['authorUtf8Bytes']==46
+  for q in entry['queries']: assert sum(t.count(q['q']) for page in page_tokens for t in page)==q['matches']
+ if p.name.startswith('08-'):
+  cm=next(s for s in streams if b'beginbfchar' in s); part=cm.split(b'beginbfchar',1)[1].split(b'endbfchar',1)[0]
+  mapping={int(a,16):bytes.fromhex(b.decode()).decode('utf-16-be') for a,b in re.findall(rb'<([0-9A-F]+)> <([0-9A-F]+)>',part)}
+  encoded=bytes.fromhex(re.search(rb'<([0-9A-F]+)> Tj',streams[0]).group(1).decode())
+  value=''.join(mapping[x] for x in encoded)
+  assert value=='ée\u0301fiﬁ中🚀'==entry['mappedSequence'] and len(value.encode())==entry['authorUtf8Bytes']==17
+  for q in entry['queries']: assert value.count(q['q'])==q['matches']
+ if p.name.startswith('09-'):
+  assert [s.decode() for s in re.findall(rb'\(([^()]*)\) Tj',streams[0]+streams[1])]==['FIRST_PAGE_MUST_NOT_LEAK','SECOND_PAGE_MUST_NOT_LEAK']
+  assert b'/Filter /FlateDecode' in objects[7].group(2)
+  try: zlib.decompress(streams[-1])
+  except zlib.error: pass
+  else: raise AssertionError('Invalid Flate stream unexpectedly valid')
+ examined.append({'file':ref(p),'pageCount':len(page_objects),'xrefOffsetsAndLengthsExact':True,'allRawStreamsExact':True,'authorFactsMatched':True})
+model=json.loads((O/'fixtures/hand-authored-textitems.json').read_bytes())
+segments=[{'text':i['text'],'pageNumber':p['number'],'itemIndex':n,'decodedRotation':p['decodedRotation']} for p in model['result']['pages'] for n,i in enumerate(p['items']) if i['text']]
+assert segments==model['expectedNonemptySegments'] and len(segments)==10 and sum(len(i['text'].encode()) for i in segments)==model['expectedUtf8Bytes']==63
+assert all(not any(q in i['text'] for i in segments) for q in model['negativeQueries'])
+provenance=json.loads((B/'input-provenance.json').read_bytes()); captures=json.loads((B/'captures.json').read_bytes()); assert len(provenance)==len(captures)==9
+capture_checks=[]
+for r,c in zip(provenance,captures):
+ p=ROOT/r['path']; checked(p,r); raw=base64.b64decode(c['data'],validate=True); f=c['file']
+ assert raw==p.read_bytes() and f['size']==len(raw) and f['sha256']==hashlib.sha256(raw).hexdigest() and f['name']==p.name
+ assert set(f)=={'root','path','resolvedPath','name','size','sha256','version'}
+ assert f['root']=='/controlled' and f['path']==f['resolvedPath']=='/controlled/'+p.name
+ capture_checks.append({'source':r,'fullCaptureBytesEqual':True,'sevenFieldShape':True})
+validation=json.loads((O/'authoring-validation.json').read_bytes())
+for render in validation['renders']:
+ for r in [render['stdout'],render['stderr'],*render['pages']]: checked(ROOT/r['path'],r)
+report={'schema':1,'createdAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'PASS_AUTHORING_AND_CAPTURE_ONLY','sourceFreeze':ref(O/'fixture-freeze.json'),'oracle':ref(O/'fixtures/authoring-oracle.json'),'reviewProgram':ref(Path(__file__)),'frozenReferencesVerified':len(freeze['files']),'newPdf':examined,'handModel':{'reference':ref(O/'fixtures/hand-authored-textitems.json'),'nonemptySegments':10,'utf8Bytes':63,'originalOrdinalGapRetained':True},'browserCapture':capture_checks,'independence':'Generator imports stdlib only and declares author strings/mappings before byte writing; this review inspected PDF object/xref/stream bytes and CMap directly, without application/parser/text-extraction execution. Existing owner pypdf container and Poppler receipts were read/hash checked, not rerun.','limits':['PDF text-show operators do not define exact production TextItem count or ordinal. Hand model ordinals are helper-only.','Malformed terminal FlateDecode proves authored corruption, not that current application rejects it; actual Worker test remains pending.','Visible render is not Unicode/OCR or visibility semantics proof.','No browser, production parser, App, Agent, SQLite, database or native capture executed.'],'safeToPublish':True,'blockers':[]}
+p=OUT/'fixture-review.json'
+with p.open('x') as h: json.dump(report,h,ensure_ascii=False,indent=2);h.write('\n')
+print(json.dumps(ref(p)))

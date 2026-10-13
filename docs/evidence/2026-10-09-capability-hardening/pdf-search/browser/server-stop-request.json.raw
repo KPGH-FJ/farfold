@@ -1,0 +1,6 @@
+{
+  "pid": 84925,
+  "command": "node output/2026-10-14-pdf-search-browser/serve.mjs",
+  "signal": "SIGTERM",
+  "scope": "Exact self-owned controlled Vite server after both engines completed."
+}

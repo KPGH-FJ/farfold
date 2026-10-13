@@ -1,0 +1,46 @@
+} catch (error) {
+  result.failure = String(error);
+  if (page) {
+    result.diagnostic = {
+      scenario,
+      body: await page
+        .locator("body")
+        .innerText()
+        .catch(() => ""),
+      aria: await page
+        .locator("body")
+        .ariaSnapshot()
+        .catch(() => ""),
+      state: await state().catch(() => null),
+    };
+    await shot("failure").catch(() => {});
+  }
+} finally {
+  await browser.close();
+  result.after = refs();
+  result.stable =
+    JSON.stringify(result.before) === JSON.stringify(result.after);
+  result.passed =
+    !result.failure &&
+    result.stable &&
+    !result.errors.length &&
+    !result.externalRequests.length;
+  fs.writeFileSync(
+    base + "/" + engine + "-" + label + ".json",
+    JSON.stringify(result, null, 2) + "\n",
+    { flag: "wx" },
+  );
+  console.log(
+    JSON.stringify({
+      engine,
+      label,
+      passed: result.passed,
+      checks: result.checks.length,
+      failure: result.failure,
+      errors: result.errors,
+      externalRequests: result.externalRequests,
+      stable: result.stable,
+    }),
+  );
+  process.exitCode = result.passed ? 0 : 1;
+}

@@ -1,0 +1,68 @@
+from pathlib import Path
+import json,hashlib,datetime,re
+R=Path('/Users/tw/Desktop/farfold');O=R/'output/2026-10-14-pdf-search-independent';F=R/'output/2026-10-14-pdf-search-frontend';B=R/'output/2026-10-14-pdf-search-browser'
+def ref(p):
+ b=p.read_bytes();return {'path':str(p.relative_to(R)),'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()}
+def verify(r):
+ p=Path(r['path']);p=p if p.is_absolute() else R/p; a=ref(p); assert a['bytes']==r['bytes'] and a['sha256']==r['sha256'],str(p);return p
+def save(p,v):
+ with p.open('x') as f:json.dump(v,f,ensure_ascii=False,indent=2);f.write('\n')
+ return ref(p)
+freeze=json.loads((F/'source-freeze-v1.json').read_bytes());assert ref(F/'source-freeze-v1.json')['sha256']=='e58426127890a0c650f2ca7f8e8080131efe6ce1a0f3fe18be7920672a24ac77'
+for r in [*freeze['files'],*freeze['checks'],freeze['fixtureProvenance']]:verify(r)
+summary=json.loads((F/'summary.json').read_bytes());manifest=json.loads((F/'transcript-receipts/manifest.json').read_bytes());events=[]
+with Path(manifest['sourceTranscript']).open('rb') as source:
+ for r in manifest['records']:
+  p=verify(r);source.seek(r['sourceByteOffset']);raw=source.read(r['sourceByteLength']);assert raw==p.read_bytes()
+  v=json.loads(raw);item=v['payload']['item'];assert v['payload']['type']=='item_completed' and item['type']=='CommandExecution' and item['exit_code']==r['actualExitCode'] and item['id']==r['itemId']
+  c=json.loads(verify(r['completionReceipt']).read_bytes());assert c['actualExitCode']==item['exit_code'];verify(c['stdout']);verify(c['stderr'])
+  output=json.loads(item['aggregated_output'].splitlines()[0]);assert output['actualExitCode']==c['actualExitCode'] and output['stdout']==c['stdout'] and output['stderr']==c['stderr']
+  events.append({'name':r['name'],'actualExitCode':c['actualExitCode'],'sourceByteOffset':r['sourceByteOffset'],'raw':ref(p),'receipt':r['completionReceipt']})
+assert len(events)==8
+prov=json.loads((F/'fixture-provenance.json').read_bytes());assert json.loads(verify(prov['authoringSource']).read_bytes())==json.loads(verify(prov['unitFixture']).read_bytes())
+stdout=(F/'targeted-final.stdout.log').read_text();assert '9 passed (9)' in stdout and '262 passed (262)' in stdout
+frontend={'schema':1,'status':'PASS_FROZEN_FRONTEND_EVIDENCE','createdAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'sourceFreeze':ref(F/'source-freeze-v1.json'),'ownedFilesVerified':11,'summary':ref(F/'summary.json'),'originalCompletionManifest':ref(F/'transcript-receipts/manifest.json'),'originalEventsByteExact':events,'final':{'testFiles':9,'testsPassed':262,'targetedExit':0,'typecheckExit':0,'scopedFormatExit':0},'failureClassification':['red-01 actual1/0pass1fail is unsupported new PDF controller route before implementation.','targeted-02 actual1/61pass2fail is invalid it.each argument shape in new tests; current object cases fix construction, not application behavior.','Owner extraction helper initially mis-assumed failed CommandExecution status; correction and raw failure retained, no tests rerun.'],'sameStartTime':'Two separate run.py processes were launched concurrently; actual receipt start strings are equal and retained, no finer order inferred. Each original command completion independently confirms exit0.','fixture':'Original author model and source fixture have identical JSON values; Prettier whitespace is sole stated difference and hashes verified.','boundaries':['Code logic review handled separately by backend/root; this review binds frozen files, oracle, logs and actual commands.','Controller ports are controlled; real Worker evidence is separate browser report, native IPC/App/Agent/install not established.'],'safeToPublish':True,'blockers':[]}
+print(json.dumps(save(O/'frontend-evidence-review.json',frontend)))
+# Only exact root chunks authorized for this phase; preserve raw event lines.
+source=Path('/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl')
+requested={'2569d4':('chromium-run1',1),'b60c76':('chromium-run2',1),'e159fe':('chromium-run3',0),'49b863':('webkit-run1',0),'b89828':('server-stop',143),'fe8f8f':('dependency-reload-observation',None)}
+def chunks(v):
+ if isinstance(v,dict):
+  if v.get('chunk_id') in requested:yield v
+  for x in v.values():yield from chunks(x)
+ elif isinstance(v,list):
+  for x in v:yield from chunks(x)
+ elif isinstance(v,str):
+  try:j=json.loads(v)
+  except (ValueError,TypeError):return
+  yield from chunks(j)
+found={}; offset=0
+with source.open('rb') as f:
+ for lineno,raw in enumerate(f,1):
+  if any(k.encode() in raw for k in requested):
+   event=json.loads(raw)
+   if event['type']=='response_item' and event['payload']['type']=='custom_tool_call_output':
+    for c in chunks(event['payload'].get('output')):
+     k=c['chunk_id'];assert k not in found;kphase,code=requested[k];assert c.get('exit_code')==code,(k,c)
+     found[k]=(event,raw,lineno,offset,c)
+  offset+=len(raw)
+assert set(found)==set(requested),set(requested)-set(found)
+T=O/'transcript-browser';T.mkdir();entries=[]
+for k,(phase,code) in requested.items():
+ event,raw,line,offset,c=found[k];p=T/(phase+'.jsonl.raw');p.write_bytes(raw)
+ entries.append({'phase':phase,'chunkId':k,'actualExitCode':code,'timestamp':event['timestamp'],'sourceLine':line,'sourceByteOffset':offset,'sourceByteLength':len(raw),'raw':ref(p)})
+tref=save(T/'manifest.json',{'sourceTranscript':str(source),'scope':'Only six authorized exact browser/owned-server tool outputs; no other conversation content exported. Reload observation is not process completion.','entries':entries})
+results=[];finalmaps=[]
+for name,pin in [('chromium-run3','0fa2cb401cbc70d7119d6fc512af8ebb1ac693ec34ca3c465f131a99a14ec49e'),('webkit-run1','ad32489d5da5a69cd18dbd9508f7883e8eb585845dde51285ce56036e082fd87')]:
+ p=B/(name+'.json');assert ref(p)['sha256']==pin;v=json.loads(p.read_bytes());assert v['passed'] is True and v['stable'] is True and v['errors']==v['externalRequests']==[] and v['before']==v['after']
+ assert len(v['checks'])==76 and all(c['pass'] is True for c in v['checks']) and len(v['scenarios'])==11 and len(v['before'])==1096
+ for path,digest in v['after'].items():assert ref(R/path)['sha256']==digest,path
+ for f in freeze['files']:assert v['before'][f['path']]==f['sha256']
+ for shot in v['screenshots']:assert ref(R/shot['file'])['sha256']==shot['sha256']
+ finalmaps.append(v['after']);results.append({'result':ref(p),'engine':v['engine'],'checks':76,'scenarios':11,'stableInputs':1096,'pageErrors':0,'externalRequests':0,'screenshotsHashVerified':2})
+assert finalmaps[0]==finalmaps[1]
+for n in ['chromium-run1','chromium-run2']:
+ v=json.loads((B/(n+'.json')).read_bytes());assert v['passed'] is False and v['stable'] is True
+ for f in freeze['files']:assert v['before'][f['path']]==v['after'][f['path']]==f['sha256']
+report={'schema':1,'status':'PASS_CONTROLLED_BROWSER_SCOPE','createdAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'frontendFreeze':ref(F/'source-freeze-v1.json'),'frontendEvidenceReview':ref(O/'frontend-evidence-review.json'),'actualToolCompletions':tref,'results':results,'sharedFinalInputMapsEqualAndCurrent':True,'reviewedScope':['Actual production App and PDF/XLSX/DOCX Workers; Tauri captures/checks and messages are controlled authored fixtures. OriginalWorker subclass only observes events.','Authored07 barriers and08 Unicode queries pass without generated labels or cross-item/page joins; no exact production ordinal derived from Tj count.','All-pages/possibly-invisible partial disclosure, no-text/no-OCR error and 4 typed whole-file failure paths; no earlier-page prefix hits.','Mixed PDF1+XLSX5+DOCX8+TXT2=16 matches; capture concurrency bound is controlled IPC scope only.','Source/MIME/index late results discarded before parsing; capture cancellation leaves no parse/hits; source changed before jump clears matches.','Navigation identifies existing declared source attachment, not fabricated PDF text offset in history.','No unexpected IPC/settings-write/Agent commands; protected synthetic drafts unchanged.'],'retainedFailures':[{'result':ref(B/'chromium-run1.json'),'actualExitCode':1,'classification':'Harness dependency optimization reloaded page; exact server observation contains PDF modules optimized/reloading. No source fix.'},{'result':ref(B/'chromium-run2.json'),'actualExitCode':1,'classification':'Harness selected success-only partial wording for no-text result; actual pdfNoText/no-OCR display confirmed. Only assertion corrected.'}],'corrections':[ref(B/'dependency-reload-correction.json'),ref(B/'no-text-assertion-correction.json'),ref(B/'pre-run-corrections.json')],'serverStop':{'actualExitCode':143,'meaning':'Root intentionally stopped its precisely identified server; not natural success0.'},'limits':['01/02 fixtures loaded but not queried: no new hidden/crop/rotation/unknown-mapping acceptance claimed.','No real native IO/MainWebview/installed App/Agent/database tested here.','Screenshots hashes checked; visual review was root scope, not independently repeated.','Seven engineering checks and installation are separate and still pending for this slice.'],'safeToPublish':True,'blockers':[]}
+print(json.dumps(save(O/'browser-review.json',report)))

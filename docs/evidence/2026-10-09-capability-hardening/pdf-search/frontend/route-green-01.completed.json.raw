@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "vitest",
+    "run",
+    "src/runtime/attachment_search.pdf.test.ts"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T19:11:07.935467+00:00",
+  "completedAtUtc": "2026-10-13T19:11:08.497424+00:00",
+  "actualExitCode": 0,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-pdf-search-frontend/route-green-01.stdout.log",
+    "bytes": 208,
+    "sha256": "1870f3b0bce7822b1b035a0fc93eae8811844bd42313ff52a33bb516b34c75d2"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-pdf-search-frontend/route-green-01.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

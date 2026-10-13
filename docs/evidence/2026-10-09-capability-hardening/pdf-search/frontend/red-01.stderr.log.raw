@@ -1,0 +1,22 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/attachment_search.pdf.test.ts > searches PDF decoded page text through the bounded capture, never raw file text
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ src/runtime/attachment_search.pdf.test.ts:7:39
+      5|   const h = pdfSetup();
+      6|   await h.search.start("needle", h.candidates, h.current);
+      7|   expect(h.search.snapshot().matches).toBe(1);
+       |                                       ^
+      8|   expect(h.services.readPdf).toHaveBeenCalledOnce();
+      9|   expect(h.services.read).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

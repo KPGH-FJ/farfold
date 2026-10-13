@@ -1,0 +1,27 @@
+import { createServer } from "vite";
+const base = "output/2026-10-14-pdf-search-browser";
+const server = await createServer({
+  configFile: "vite.config.ts",
+  cacheDir: base + "/.vite",
+  optimizeDeps: { entries: [base + "/index.html"], include: ["pdfjs-dist/legacy/build/pdf.mjs", "pdfjs-dist/legacy/build/pdf.worker.mjs"] },
+  server: {
+    host: "127.0.0.1",
+    port: 1539,
+    strictPort: true,
+    watch: { ignored: ["**/src-tauri/**", "**/.git/**"] },
+  },
+});
+await server.listen();
+console.log(
+  JSON.stringify({
+    pid: process.pid,
+    port: 1539,
+    scope:
+      "Owned complete production App controlled PDF search IPC, no real Agent or formal App",
+  }),
+);
+for (const signal of ["SIGINT", "SIGTERM"])
+  process.on(signal, async () => {
+    await server.close();
+    process.exit(0);
+  });

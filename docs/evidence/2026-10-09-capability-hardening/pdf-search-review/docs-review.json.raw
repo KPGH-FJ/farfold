@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "status": "PASS_FOUR_DOCS_NO_BLOCKER",
+  "createdAtUtc": "2026-10-13T19:29:23.730404+00:00",
+  "ownerReport": {
+    "path": "output/2026-10-14-pdf-search-docs/report.json",
+    "bytes": 6087,
+    "sha256": "ee1e0d81deb9617edc71562bca83228e7e62a7a1813005a33821ad96bf42efa5"
+  },
+  "baselineCommit": "b4cce76e6d8ab38988e78fc11580818bd167391c",
+  "files": [
+    {
+      "path": "docs/status.md",
+      "bytes": 94376,
+      "sha256": "05d76ce782a2c90500454f1e83a757852f04645a3c05b7ce6286d824f13407ed"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 136438,
+      "sha256": "ca103bfb42efd3f1b6474cd5748e5560733ecdcffe2c270909f8667e1935cfcb"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 159327,
+      "sha256": "b93689dcf6eb3a48e8c276f47e76574880149fa64934d79f439b465e79f95681"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 92026,
+      "sha256": "a8cbd1bf5a9e8c4153680bc66315ff3746fde85aefd8457d77027c63d4d06099"
+    }
+  ],
+  "conditions": {
+    "original122IdsTitlesCompletionConditionsUnchanged": true,
+    "new28EntireRowsUnchanged": true,
+    "onlyProgressChanged": [
+      "P32"
+    ],
+    "protectedFour": [
+      {
+        "path": "PRODUCT.md",
+        "bytes": 35083,
+        "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+      },
+      {
+        "path": "docs/agent-first-release.md",
+        "bytes": 16987,
+        "sha256": "58f9d802793dcb3e369053fb2d94e1dab24c241ebcd055872e820f0e9f185ee7"
+      },
+      {
+        "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+        "bytes": 11543,
+        "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+      },
+      {
+        "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+        "bytes": 2341,
+        "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+      }
+    ]
+  },
+  "delta": "Exactly two PDF paragraphs in each document, superseded next-PDF clause replaced once, and P32 progress; table-width whitespace normalized. All other prose matches baseline.",
+  "publicLinksVerified": 4,
+  "formatOriginalEventsByteExact": 2,
+  "scope": "18backend/262frontend/dual76+11 controlled verification only. Full7/new installation pending, formalc89 installed-not-launched, native positive/NEW24/wholeP32 open. No source review/tests repeated.",
+  "publicationReview": {
+    "path": "output/2026-10-14-pdf-search-independent/publication-review.json",
+    "bytes": 2078,
+    "sha256": "49b3cab8febbc80c6e9d6e06f065fffa67662b79546b7de6a194351c78d6090f"
+  },
+  "safeToPublish": true,
+  "blockers": []
+}

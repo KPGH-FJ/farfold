@@ -1,0 +1,61 @@
+{
+  "createdAtUtc": "2026-10-13T18:45:55.789204+00:00",
+  "legacy": "6 PDFs/3 locations byte-exact; original generator/oracle identical to published copies; every original raw-content ref verified. Exact PDF.js TextItem indices were never authoring facts.",
+  "legacyRef": {
+    "path": "output/2026-10-14-pdf-search-research/legacy-provenance.json",
+    "bytes": 10612,
+    "sha256": "ee06ef0fe5acc30988cf6299f6ddd9f3d9e3344117a0df1399ea28c5ef040f79"
+  },
+  "newPdfs": [
+    {
+      "path": "fixtures/07-page-item-barriers.pdf",
+      "bytes": 1022,
+      "sha256": "13443f33956ca18fda7de18e90980c3f35d74080c660c9adef160892835ad5ba"
+    },
+    {
+      "path": "fixtures/08-unicode-preservation.pdf",
+      "bytes": 1455,
+      "sha256": "2af57c234829205f99957bf8a6881d1c12fed36efe12e6007f705772899f2995"
+    },
+    {
+      "path": "fixtures/09-terminal-page-damaged.pdf",
+      "bytes": 1180,
+      "sha256": "3939e6b9b64e6ae040946fc4ad8c0ff7c22dd7d992a8049c4537d6d44197642d"
+    }
+  ],
+  "newOracle": {
+    "path": "output/2026-10-14-pdf-search-research/fixtures/authoring-oracle.json",
+    "bytes": 6418,
+    "sha256": "c9e4f29fde46c8fbe374abffe4ada858cb54c21bb64bbcdaeca568e2201bde99"
+  },
+  "handAuthoredModel": {
+    "path": "output/2026-10-14-pdf-search-research/fixtures/hand-authored-textitems.json",
+    "bytes": 3757,
+    "sha256": "f1966c5904e245f1f66559a2db0f31c960117bb688ba02cf4698fd575a08bc24"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-pdf-search-research/fixture-freeze.json",
+    "bytes": 3725,
+    "sha256": "a738ce8e8ad4cf8bb60772f1cc176f93fc8f1a986bd7074f91e09ab08ee21a50"
+  },
+  "validation": {
+    "path": "output/2026-10-14-pdf-search-research/authoring-validation.json",
+    "bytes": 6348,
+    "sha256": "e0329ee99414d0c2b585a62ac35452d1fb6afa40b9af70ee466f3109b661614f"
+  },
+  "actualCompletedCommands": {
+    "path": "output/2026-10-14-pdf-search-research/fixture-transcript-receipts/manifest.json",
+    "bytes": 1766,
+    "sha256": "480a5064822defc53910e789bf7c2d65e2cdc77793c38be058419ba2f7926023"
+  },
+  "visualReview": "Viewed all6 rendered pages: 07 separated lines on2pages; 08 six intentionally identical Type3 glyph shapes (not a visual Unicode oracle); 09 first2 good pages/blank malformed3rd. No incidental clipping or overlap in intended positive visual layout. Poppler returned0 for malformed fixture but this is NOT whole-read success.",
+  "predefinedExpectedBoundaries": [
+    "No cross-item/page concatenation",
+    "No Unicode normalization/guessing; ToUnicode map predeclared",
+    "No generated scope/wrapper/JSON field matches",
+    "Image-only reuse03 explicitly no OCR/no searchable authored text",
+    "Encrypted04 rejected; old middle-failure05/new terminal-failure09 reject whole file/no earlier success prefix",
+    "No exact production item count/location assumption from raw Tj operators"
+  ],
+  "scope": "Only this future output directory written. No src/docs changes; no current app/parser/Agent/DB/full tests. pypdf only checked container/page streams, never extracted text to define expected results. Independent authoring review still required."
+}

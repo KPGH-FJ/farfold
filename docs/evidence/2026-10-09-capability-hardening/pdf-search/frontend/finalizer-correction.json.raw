@@ -1,0 +1,24 @@
+{
+  "scope": "Evidence extraction only; no source changes or test re-execution.",
+  "failure": "Initial finalizer expected item.status completed even for real failing tests; actual item_completed lifecycle represents nonzero commands as status failed. Assert stopped before writing any raw test event.",
+  "correction": "Preserved finalize-v1.py; permit completed for exit0 and failed for nonzero. Same 8 actual completed lifecycle events were then saved byte-exact.",
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl",
+  "records": [
+    {
+      "path": "output/2026-10-14-pdf-search-frontend/finalize-failure.jsonl.raw",
+      "bytes": 933,
+      "sha256": "66dd3e9a9e1351131cf1f7a15d9229598d27e1c35d1c1e43c48978ece6ead57e",
+      "sourceByteOffset": 24735735,
+      "actualExitCode": 1,
+      "timestamp": "2026-10-13T19:23:35.450Z"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-frontend/finalize-success.jsonl.raw",
+      "bytes": 1133,
+      "sha256": "ff230a5ad1516f6582ed4dd5a0440379bc135d025ec4133dd0261e318362bc41",
+      "sourceByteOffset": 24755955,
+      "actualExitCode": 0,
+      "timestamp": "2026-10-13T19:24:13.917Z"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-13T19:17:33.312909+00:00",
+  "status": "STATIC_NO_BLOCKER_AFTER_ASSERTION_STRENGTHENING",
+  "priorReview": {
+    "path": "output/2026-10-14-pdf-search-independent/browser-preparation-review.json",
+    "bytes": 3610,
+    "sha256": "cdc2d647855cf4811b5a3cc892ad93bca817e8e5c94326efa252336c2252a873"
+  },
+  "priorRunPin": {
+    "path": "output/2026-10-14-pdf-search-browser/run.mjs",
+    "bytes": 13987,
+    "sha256": "330f3f2c90362d4ea33bf3aea06314767eae14576b08005f902c9d394fc6d83d"
+  },
+  "currentRun": {
+    "path": "output/2026-10-14-pdf-search-browser/run.mjs",
+    "bytes": 13987,
+    "sha256": "330f3f2c90362d4ea33bf3aea06314767eae14576b08005f902c9d394fc6d83d"
+  },
+  "deltaReviewed": [
+    "Existing four-failure scenario now requires 05 and09 invalid/pdfIncomplete,06 documentLimit,04 encrypted.",
+    "Whole read failure retains zero hits and zero consumed bytes,4 PDF captures and zero raw-text fallback.",
+    "Codes use actual controller mapping; no oracle byte modification or extra scenario claimed."
+  ],
+  "scope": "No browser or production code executed. Previous preparation report remains exact; future actual run must report this or later script hash.",
+  "safeToPublish": true
+}

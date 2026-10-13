@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "purpose": "Original authoring inputs and expectations independent of current application PDF parser. No application parser executed.",
+  "fixtures": [
+    {
+      "file": {
+        "path": "fixtures/07-page-item-barriers.pdf",
+        "bytes": 1022,
+        "sha256": "13443f33956ca18fda7de18e90980c3f35d74080c660c9adef160892835ad5ba"
+      },
+      "raw": [
+        {
+          "path": "raw-content/07-page-item-barriers-page1.bin",
+          "bytes": 145,
+          "sha256": "bb391d3bd4e793740ffad834cb8cee05f670d8d4bac6ef611464e831e0136102"
+        },
+        {
+          "path": "raw-content/07-page-item-barriers-page2.bin",
+          "bytes": 101,
+          "sha256": "ca4b9438de5a92bbe224bdf6cc85e7b8b739d7c993987eaa1a8a6c55a9be8065"
+        }
+      ],
+      "pageCount": 2,
+      "authorTextByPage": [
+        [
+          "ITEMLEFT",
+          "ITEMRIGHT",
+          "PAGELEFT"
+        ],
+        [
+          "PAGERIGHT",
+          "EXACT_NEEDLE"
+        ]
+      ],
+      "authorUtf8Bytes": 46,
+      "queries": [
+        {
+          "q": "ITEMLEFT",
+          "matches": 1
+        },
+        {
+          "q": "ITEMRIGHT",
+          "matches": 1
+        },
+        {
+          "q": "PAGELEFT",
+          "matches": 1
+        },
+        {
+          "q": "PAGERIGHT",
+          "matches": 1
+        },
+        {
+          "q": "EXACT_NEEDLE",
+          "matches": 1
+        },
+        {
+          "q": "ITEMLEFTITEMRIGHT",
+          "matches": 0
+        },
+        {
+          "q": "PAGELEFTPAGERIGHT",
+          "matches": 0
+        },
+        {
+          "q": "readPageNumbers",
+          "matches": 0
+        },
+        {
+          "q": "decodedRotation",
+          "matches": 0
+        },
+        {
+          "q": "pdfjs-text-content-v1",
+          "matches": 0
+        },
+        {
+          "q": "PDF 提取文字",
+          "matches": 0
+        }
+      ],
+      "scope": "One independently placed Tj per token; no generated wrappers in authored text. Do not assert exact TextItem count/index from Tj count. Exact per-item helper barriers are separately hand-authored below."
+    },
+    {
+      "file": {
+        "path": "fixtures/08-unicode-preservation.pdf",
+        "bytes": 1455,
+        "sha256": "2af57c234829205f99957bf8a6881d1c12fed36efe12e6007f705772899f2995"
+      },
+      "raw": [
+        {
+          "path": "raw-content/08-unicode-preservation-page1.bin",
+          "bytes": 52,
+          "sha256": "fee9bbe7cc2839e6a15de0271b2e276bab5d2f480b97cd2a7d2c9d5cda085c5a"
+        },
+        {
+          "path": "raw-content/08-unicode-preservation-to-unicode.bin",
+          "bytes": 403,
+          "sha256": "cd7b3b0a5b2d182376bb7ab7edb04d2aac7969c0db54d3907179605ba34fd7da"
+        },
+        {
+          "path": "raw-content/08-unicode-preservation-glyph.bin",
+          "bytes": 81,
+          "sha256": "6e0881162708973ed16d687d3da7cdb7c4abb48b70d89d5b07cb9314da4cc896"
+        }
+      ],
+      "pageCount": 1,
+      "sourceHex": "414243444546",
+      "toUnicode": {
+        "41": "00E9",
+        "42": "00650301",
+        "43": "00660069",
+        "44": "FB01",
+        "45": "4E2D",
+        "46": "D83DDE80"
+      },
+      "mappedSequence": "ééfiﬁ中🚀",
+      "authorUtf8Bytes": 17,
+      "queries": [
+        {
+          "q": "é",
+          "matches": 1
+        },
+        {
+          "q": "é",
+          "matches": 1
+        },
+        {
+          "q": "fi",
+          "matches": 1
+        },
+        {
+          "q": "ﬁ",
+          "matches": 1
+        },
+        {
+          "q": "中",
+          "matches": 1
+        },
+        {
+          "q": "🚀",
+          "matches": 1
+        },
+        {
+          "q": "ee",
+          "matches": 0
+        },
+        {
+          "q": "readPageNumbers",
+          "matches": 0
+        },
+        {
+          "q": "保存的公式文字",
+          "matches": 0
+        }
+      ],
+      "scope": "Exact author mapping, not normalized. The six drawn Type3 glyphs intentionally look alike; visual appearance is not a Unicode oracle. No claim that one Tj necessarily yields one TextItem."
+    },
+    {
+      "file": {
+        "path": "fixtures/09-terminal-page-damaged.pdf",
+        "bytes": 1180,
+        "sha256": "3939e6b9b64e6ae040946fc4ad8c0ff7c22dd7d992a8049c4537d6d44197642d"
+      },
+      "raw": [
+        {
+          "path": "raw-content/09-terminal-page-damaged-page1.bin",
+          "bytes": 64,
+          "sha256": "11cb144d73b905789cdc9b45eb6e4325c5170e0eb5bf6008c3012ef7ed3bf387"
+        },
+        {
+          "path": "raw-content/09-terminal-page-damaged-page2.bin",
+          "bytes": 65,
+          "sha256": "1c529ddedc7badd123aa272c32bd94cc0818dd555f9543364df99d28ce90f5f5"
+        },
+        {
+          "path": "raw-content/09-terminal-page-damaged-page3-invalid.bin",
+          "bytes": 32,
+          "sha256": "7307c87e2dfc6925982e1e3afae2671c5a088b168a52def0786d5eb48ae3ea9a"
+        }
+      ],
+      "pageCount": 3,
+      "damagedPage": 3,
+      "authorTextByPage": [
+        [
+          "FIRST_PAGE_MUST_NOT_LEAK"
+        ],
+        [
+          "SECOND_PAGE_MUST_NOT_LEAK"
+        ],
+        []
+      ],
+      "expectedRead": "Whole read rejects invalid/incomplete; no result rows/hits from earlier good pages may be published as success.",
+      "scope": "Deliberately invalid FlateDecode on the final page; valid xref/page tree. A tolerant renderer may show earlier pages; that cannot redefine application success."
+    }
+  ],
+  "projectionModel": {
+    "path": "fixtures/hand-authored-textitems.json",
+    "bytes": 3757,
+    "sha256": "f1966c5904e245f1f66559a2db0f31c960117bb688ba02cf4698fd575a08bc24"
+  },
+  "reuseExisting": {
+    "imageOnly": "src/runtime/fixtures/pdf-input/03-image-only.pdf",
+    "encrypted": "src/runtime/fixtures/pdf-input/04-encrypted.pdf",
+    "middlePageFailure": "src/runtime/fixtures/pdf-input/05-late-page-damaged.pdf",
+    "textLimit": "src/runtime/fixtures/pdf-input/06-whole-utf8-over-limit.pdf"
+  },
+  "uiPlan": "Existing file checkbox with explicit all-page/possibly-invisible/partial scope + Start; no extra partial approval. Selection/query/cancel alone cause zero reads; only explicit Start reads. Query change keeps valid selected file, retires old results.",
+  "notProven": [
+    "Actual PDF.js TextItem counts and ordinal mapping",
+    "Current PDF search implementation",
+    "Native App/Agent behavior",
+    "Visual equivalence or OCR"
+  ]
+}

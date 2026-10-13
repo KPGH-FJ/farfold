@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "status": "PASS_PUBLICATION_NO_BLOCKER",
+  "createdAtUtc": "2026-10-13T19:29:23.694795+00:00",
+  "verification": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/verification.json",
+    "bytes": 6708,
+    "sha256": "0e0950412c12a0150229fc1508b3344dc84c192ca0c1bad617af7ee29b3fc9c7"
+  },
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/publication.json",
+    "bytes": 78757,
+    "sha256": "41f95ce1c938f1808ff47ccccb72a0796542653e42f302c72794106a6346e936"
+  },
+  "publisher": {
+    "path": "output/2026-10-14-pdf-search-integration/publish_implementation.py",
+    "bytes": 6037,
+    "sha256": "69a17528a3ac5967c785043f885be394111e271e861efc181657ca10ac2626f5"
+  },
+  "exactCopies": 159,
+  "metadataFiles": 2,
+  "directoryMembers": 161,
+  "copiedBytes": 4757102,
+  "groups": {
+    "backend": 35,
+    "frontend": 42,
+    "independent": 17,
+    "research": 38,
+    "browser": 27
+  },
+  "checks": [
+    "All159 originals and published copies match bytes/hash; exact161-member directory, no extra or symlink.",
+    "Copy source families limited to this phase backend/frontend/independent/research/browser directories; raw source, synthetic PDF/streams/captures/rendered pixels, scoped test/browser receipts only. No user DB/AX/history/credential payloads included.",
+    "Publisher recursively selected these owned evidence directories at this historical publication point; this review validates its actual finite list, not future rglob contents.",
+    "17source refs and18/262/dual76+11 counts match reviewed evidence.",
+    "Historical two-checkbox proposal remains immutable but later consent-review explicitly retracts it; current verification correctly states file selection+Start without extra checkbox.",
+    "Backend red101,frontend route red,test-shape failures,browser reload/assertion failures are retained separately. Full7/PDF installation/native positive/wholeP32 remain pending; prior formalc89 not-launched is not PDF installed proof."
+  ],
+  "safeToPublish": true,
+  "blockers": []
+}

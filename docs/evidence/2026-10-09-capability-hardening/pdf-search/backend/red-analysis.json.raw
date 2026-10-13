@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "originalFailure": {
+    "receipt": "output/2026-10-14-pdf-search-backend/red-search-limit/completed.json",
+    "actualExitCode": 101,
+    "sourceStable": true,
+    "reason": "Test-first new search entry delegated to the existing 32 MiB input path; the 1 MiB + 1 selected whole file returned Ok, violating the search-specific 1 MiB cap. This is the incomplete new entry, not a defect in the intentional legacy 32 MiB input contract."
+  },
+  "fix": "Only the new entry reads through existing search_source::read (1 MiB before/during capture and complete expected version); a private capture_pdf helper shares the unchanged PDF-header/base64 response logic.",
+  "testDiagnosticChange": "The red unwrap_err printed the complete synthetic base64 payload. Its original log remains exact. The failure helper now uses an equivalent Err/Ok match with fixed panic text to avoid dumping capture contents on future failures. Assertions and fixture bytes remain unchanged.",
+  "boundary": "Capture only; header does not prove PDF validity, encryption support, decoded text, successful search, MainWebview execution or installed-product behavior."
+}

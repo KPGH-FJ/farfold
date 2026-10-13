@@ -1,0 +1,179 @@
+{
+  "provenance": "Manually specified search-helper input; not extracted from any PDF and not evidence of production parser segmentation. itemIndex is zero-based original ordinal including empty items. Empty strings create no searchable text; may be retained or omitted by projector without reindexing.",
+  "result": {
+    "scope": {
+      "mode": "decoded-page-text",
+      "includePossiblyInvisibleText": true,
+      "pageCount": 2,
+      "readPageNumbers": [
+        1,
+        2
+      ],
+      "extraction": "pdfjs-text-content-v1"
+    },
+    "pages": [
+      {
+        "number": 1,
+        "decodedRotation": 0,
+        "items": [
+          {
+            "text": "ITEMLEFT",
+            "dir": "ltr",
+            "hasEOL": false
+          },
+          {
+            "text": "ITEMRIGHT",
+            "dir": "ltr",
+            "hasEOL": false
+          },
+          {
+            "text": "",
+            "dir": "ltr",
+            "hasEOL": false
+          },
+          {
+            "text": "é",
+            "dir": "ltr",
+            "hasEOL": false
+          },
+          {
+            "text": "é",
+            "dir": "ltr",
+            "hasEOL": false
+          },
+          {
+            "text": "fi",
+            "dir": "ltr",
+            "hasEOL": false
+          },
+          {
+            "text": "ﬁ",
+            "dir": "ltr",
+            "hasEOL": false
+          },
+          {
+            "text": "中🚀",
+            "dir": "ltr",
+            "hasEOL": false
+          },
+          {
+            "text": "PAGELEFT",
+            "dir": "ltr",
+            "hasEOL": false
+          }
+        ]
+      },
+      {
+        "number": 2,
+        "decodedRotation": 90,
+        "items": [
+          {
+            "text": "PAGERIGHT",
+            "dir": "ltr",
+            "hasEOL": false
+          },
+          {
+            "text": "EXACT_NEEDLE",
+            "dir": "ltr",
+            "hasEOL": false
+          }
+        ]
+      }
+    ],
+    "partial": true,
+    "warnings": [
+      {
+        "code": "decodedTextOnly",
+        "count": 1,
+        "unit": "scope"
+      },
+      {
+        "code": "visibilityUnverified",
+        "count": 1,
+        "unit": "scope"
+      },
+      {
+        "code": "readingOrderUnverified",
+        "count": 1,
+        "unit": "scope"
+      },
+      {
+        "code": "textDecodingUnverified",
+        "count": 1,
+        "unit": "scope"
+      }
+    ]
+  },
+  "expectedNonemptySegments": [
+    {
+      "text": "ITEMLEFT",
+      "pageNumber": 1,
+      "itemIndex": 0,
+      "decodedRotation": 0
+    },
+    {
+      "text": "ITEMRIGHT",
+      "pageNumber": 1,
+      "itemIndex": 1,
+      "decodedRotation": 0
+    },
+    {
+      "text": "é",
+      "pageNumber": 1,
+      "itemIndex": 3,
+      "decodedRotation": 0
+    },
+    {
+      "text": "é",
+      "pageNumber": 1,
+      "itemIndex": 4,
+      "decodedRotation": 0
+    },
+    {
+      "text": "fi",
+      "pageNumber": 1,
+      "itemIndex": 5,
+      "decodedRotation": 0
+    },
+    {
+      "text": "ﬁ",
+      "pageNumber": 1,
+      "itemIndex": 6,
+      "decodedRotation": 0
+    },
+    {
+      "text": "中🚀",
+      "pageNumber": 1,
+      "itemIndex": 7,
+      "decodedRotation": 0
+    },
+    {
+      "text": "PAGELEFT",
+      "pageNumber": 1,
+      "itemIndex": 8,
+      "decodedRotation": 0
+    },
+    {
+      "text": "PAGERIGHT",
+      "pageNumber": 2,
+      "itemIndex": 0,
+      "decodedRotation": 90
+    },
+    {
+      "text": "EXACT_NEEDLE",
+      "pageNumber": 2,
+      "itemIndex": 1,
+      "decodedRotation": 90
+    }
+  ],
+  "expectedUtf8Bytes": 63,
+  "negativeQueries": [
+    "ITEMLEFTITEMRIGHT",
+    "PAGELEFTPAGERIGHT",
+    "fifi",
+    "pdfjs-text-content-v1",
+    "readPageNumbers",
+    "visibilityUnverified",
+    "PDF 提取文字"
+  ]
+}

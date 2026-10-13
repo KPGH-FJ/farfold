@@ -1,0 +1,11 @@
+src/runtime/attachment_search.ts 81ms
+src/runtime/attachment_search_source.ts 8ms (unchanged)
+src/runtime/attachment_search_strings.ts 10ms
+src/runtime/pdf_search_text.ts 5ms
+src/components/SelectedAttachmentSearch.tsx 22ms
+src/runtime/attachment_search.pdf.test-support.ts 5ms
+src/runtime/attachment_search.pdf.test.ts 23ms
+src/runtime/pdf_search_text.test.ts 11ms
+src/components/SelectedAttachmentSearch.test.tsx 8ms
+src/runtime/attachment_search.xlsx.test.ts 15ms
+src/runtime/fixtures/pdf-search/hand-authored-textitems.json 8ms

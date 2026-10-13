@@ -1,0 +1,75 @@
+"""Small owned authoring fixtures; imports no application/parser code.
+Expected text is declared here before bytes are written, never extracted to define an oracle.
+PDF text-show operators are NOT claimed to equal parser TextItems.
+"""
+from pathlib import Path
+import hashlib,json,zlib
+OUT=Path(__file__).resolve().parent
+F=OUT/'fixtures'; R=OUT/'raw-content'
+F.mkdir(exist_ok=True);R.mkdir(exist_ok=True)
+def sha(b):return hashlib.sha256(b).hexdigest()
+def write(p,b):
+ with p.open('xb') as h:h.write(b)
+ return {'path':str(p.relative_to(OUT)),'bytes':len(b),'sha256':sha(b)}
+def jwrite(p,v):return write(p,(json.dumps(v,ensure_ascii=False,indent=2)+'\n').encode())
+def stream(b,extra=''):
+ if isinstance(b,str):b=b.encode('ascii')
+ return f'<< /Length {len(b)} {extra} >>\nstream\n'.encode()+b+b'\nendstream'
+def pdf(objs):
+ b=bytearray(b'%PDF-1.7\n%\xe2\xe3\xcf\xd3\n'); offsets=[]
+ for i,v in enumerate(objs,1):
+  if isinstance(v,str):v=v.encode('ascii')
+  offsets.append(len(b));b.extend(f'{i} 0 obj\n'.encode()+v+b'\nendobj\n')
+ x=len(b);b.extend(f'xref\n0 {len(objs)+1}\n0000000000 65535 f \n'.encode())
+ for o in offsets:b.extend(f'{o:010d} 00000 n \n'.encode())
+ b.extend(f'trailer\n<< /Size {len(objs)+1} /Root 1 0 R >>\nstartxref\n{x}\n%%EOF\n'.encode())
+ return bytes(b)
+def text(s,y):
+ assert all(c not in s for c in '()\\')
+ return f'BT /F1 16 Tf 1 0 0 1 40 {y} Tm ({s}) Tj ET\n'
+def plain_pages(contents,filters=None):
+ n=len(contents);font=3+2*n
+ objs=['<< /Type /Catalog /Pages 2 0 R >>',f'<< /Type /Pages /Kids [{" ".join(f"{3+2*i} 0 R" for i in range(n))}] /Count {n} >>']
+ for i,c in enumerate(contents):
+  objs += [f'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 700] /Resources << /Font << /F1 {font} 0 R >> >> /Contents {4+2*i} 0 R >>',stream(c,(filters or {}).get(i,''))]
+ return pdf(objs+['<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>'])
+records=[]
+def record(name,data,author,raw):
+ ref=write(F/name,data)
+ rawrefs=[write(R/(name[:-4]+'-'+k+'.bin'),v.encode('ascii') if isinstance(v,str) else v) for k,v in raw.items()]
+ records.append({'file':ref,'raw':rawrefs,**author})
+# Distinct baselines are an authoring barrier; actual parser item ordinals remain unasserted.
+p1=text('ITEMLEFT',640)+text('ITEMRIGHT',540)+text('PAGELEFT',440)
+p2=text('PAGERIGHT',640)+text('EXACT_NEEDLE',540)
+record('07-page-item-barriers.pdf',plain_pages([p1,p2]),{
+ 'pageCount':2,'authorTextByPage':[['ITEMLEFT','ITEMRIGHT','PAGELEFT'],['PAGERIGHT','EXACT_NEEDLE']],
+ 'authorUtf8Bytes':len('ITEMLEFTITEMRIGHTPAGELEFTPAGERIGHTEXACT_NEEDLE'.encode()),
+ 'queries':[{'q':q,'matches':1} for q in ['ITEMLEFT','ITEMRIGHT','PAGELEFT','PAGERIGHT','EXACT_NEEDLE']]+[{'q':q,'matches':0} for q in ['ITEMLEFTITEMRIGHT','PAGELEFTPAGERIGHT','readPageNumbers','decodedRotation','pdfjs-text-content-v1','PDF 提取文字']],
+ 'scope':'One independently placed Tj per token; no generated wrappers in authored text. Do not assert exact TextItem count/index from Tj count. Exact per-item helper barriers are separately hand-authored below.'
+},{'page1':p1,'page2':p2})
+# Deterministic ToUnicode mapping, including composed/decomposed forms and multi-codepoint expansion.
+sequence='ée\u0301fiﬁ中🚀'
+mappings=[('41','00E9'),('42','00650301'),('43','00660069'),('44','FB01'),('45','4E2D'),('46','D83DDE80')]
+cmap='/CIDInit /ProcSet findresource begin\n12 dict begin begincmap\n/CIDSystemInfo << /Registry (Owned) /Ordering (Unicode) /Supplement 0 >> def\n/CMapName /SearchUnicode def /CMapType 2 def\n1 begincodespacerange <00> <FF> endcodespacerange\n6 beginbfchar '+ ' '.join(f'<{a}> <{b}>' for a,b in mappings)+' endbfchar\nendcmap CMapName currentdict /CMap defineresource pop end end\n'
+glyph='600 0 0 0 600 700 d1 50 50 450 600 re S 275 50 m 275 650 l S 50 350 m 500 350 l S'
+page='BT /F1 24 Tf 1 0 0 1 40 620 Tm <414243444546> Tj ET\n'
+font='/Type /Font /Subtype /Type3 /FontBBox [0 0 600 700] /FontMatrix [.001 0 0 .001 0 0] /CharProcs << /g 6 0 R >> /Encoding << /Type /Encoding /Differences [65 /g /g /g /g /g /g] >> /FirstChar 65 /LastChar 70 /Widths [600 600 600 600 600 600] /Resources << >> /ToUnicode 7 0 R'
+record('08-unicode-preservation.pdf',pdf(['<< /Type /Catalog /Pages 2 0 R >>','<< /Type /Pages /Kids [3 0 R] /Count 1 >>','<< /Type /Page /Parent 2 0 R /MediaBox [0 0 600 700] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>',stream(page),f'<< {font} >>',stream(glyph),stream(cmap)]),{
+ 'pageCount':1,'sourceHex':'414243444546','toUnicode':dict(mappings),'mappedSequence':sequence,'authorUtf8Bytes':len(sequence.encode()),
+ 'queries':[{'q':q,'matches':1} for q in ['é','e\u0301','fi','ﬁ','中','🚀']]+[{'q':q,'matches':0} for q in ['ee','readPageNumbers','保存的公式文字']],
+ 'scope':'Exact author mapping, not normalized. The six drawn Type3 glyphs intentionally look alike; visual appearance is not a Unicode oracle. No claim that one Tj necessarily yields one TextItem.'
+},{'page1':page,'to-unicode':cmap,'glyph':glyph})
+good1=text('FIRST_PAGE_MUST_NOT_LEAK',640);good2=text('SECOND_PAGE_MUST_NOT_LEAK',640);bad=b'owned-terminal-page-invalid-zlib'
+record('09-terminal-page-damaged.pdf',plain_pages([good1,good2,bad],{2:'/Filter /FlateDecode'}),{
+ 'pageCount':3,'damagedPage':3,'authorTextByPage':[['FIRST_PAGE_MUST_NOT_LEAK'],['SECOND_PAGE_MUST_NOT_LEAK'],[]],
+ 'expectedRead':'Whole read rejects invalid/incomplete; no result rows/hits from earlier good pages may be published as success.',
+ 'scope':'Deliberately invalid FlateDecode on the final page; valid xref/page tree. A tolerant renderer may show earlier pages; that cannot redefine application success.'
+},{'page1':good1,'page2':good2,'page3-invalid':bad})
+# This fixture is a hand-written data contract for the future pure projector, NOT a parser output oracle.
+item_texts=[['ITEMLEFT','ITEMRIGHT','','é','e\u0301','fi','ﬁ','中🚀','PAGELEFT'],['PAGERIGHT','EXACT_NEEDLE']]
+result={'scope':{'mode':'decoded-page-text','includePossiblyInvisibleText':True,'pageCount':2,'readPageNumbers':[1,2],'extraction':'pdfjs-text-content-v1'},'pages':[{'number':n+1,'decodedRotation':0 if n==0 else 90,'items':[{'text':s,'dir':'ltr','hasEOL':False} for s in row]} for n,row in enumerate(item_texts)],'partial':True,'warnings':[{'code':c,'count':1,'unit':'scope'} for c in ['decodedTextOnly','visibilityUnverified','readingOrderUnverified','textDecodingUnverified']]}
+expected=[{'text':s,'pageNumber':p+1,'itemIndex':i,'decodedRotation':0 if p==0 else 90} for p,row in enumerate(item_texts) for i,s in enumerate(row) if s]
+model=jwrite(F/'hand-authored-textitems.json',{'provenance':'Manually specified search-helper input; not extracted from any PDF and not evidence of production parser segmentation. itemIndex is zero-based original ordinal including empty items. Empty strings create no searchable text; may be retained or omitted by projector without reindexing.','result':result,'expectedNonemptySegments':expected,'expectedUtf8Bytes':sum(len(s.encode()) for row in item_texts for s in row),'negativeQueries':['ITEMLEFTITEMRIGHT','PAGELEFTPAGERIGHT','fifi','pdfjs-text-content-v1','readPageNumbers','visibilityUnverified','PDF 提取文字']})
+oracle={'schema':1,'purpose':'Original authoring inputs and expectations independent of current application PDF parser. No application parser executed.','fixtures':records,'projectionModel':model,'reuseExisting':{'imageOnly':'src/runtime/fixtures/pdf-input/03-image-only.pdf','encrypted':'src/runtime/fixtures/pdf-input/04-encrypted.pdf','middlePageFailure':'src/runtime/fixtures/pdf-input/05-late-page-damaged.pdf','textLimit':'src/runtime/fixtures/pdf-input/06-whole-utf8-over-limit.pdf'},'uiPlan':'Existing file checkbox with explicit all-page/possibly-invisible/partial scope + Start; no extra partial approval. Selection/query/cancel alone cause zero reads; only explicit Start reads. Query change keeps valid selected file, retires old results.','notProven':['Actual PDF.js TextItem counts and ordinal mapping','Current PDF search implementation','Native App/Agent behavior','Visual equivalence or OCR']}
+ref=jwrite(F/'authoring-oracle.json',oracle)
+print(json.dumps({'createdPdfCount':len(records),'pdfBytes':sum(x['file']['bytes'] for x in records),'oracle':ref}))

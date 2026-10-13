@@ -1,0 +1,38 @@
+{
+  "records": [
+    {
+      "kind": "marker",
+      "path": "output/2026-10-14-pdf-search-research/fixture-transcript-receipts/marker.completed.jsonl.raw",
+      "bytes": 1313,
+      "sha256": "a26352e7474c870f8e1e23c4b93962792c062de34ccdc340d978274ab4fed597",
+      "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl",
+      "sourceStartByte": 23512359,
+      "sourceEndByte": 23513672,
+      "timestamp": "2026-10-13T18:42:50.772Z",
+      "actualExitCode": 0
+    },
+    {
+      "kind": "generation",
+      "path": "output/2026-10-14-pdf-search-research/fixture-transcript-receipts/generation.completed.jsonl.raw",
+      "bytes": 17972,
+      "sha256": "243b66aabc1b415307100e68ca483942f5478529dfaebb0eb18461f89cfb5d01",
+      "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl",
+      "sourceStartByte": 23524377,
+      "sourceEndByte": 23542349,
+      "timestamp": "2026-10-13T18:43:54.682Z",
+      "actualExitCode": 0
+    },
+    {
+      "kind": "authoring-validation",
+      "path": "output/2026-10-14-pdf-search-research/fixture-transcript-receipts/authoring-validation.completed.jsonl.raw",
+      "bytes": 10505,
+      "sha256": "92bf8df7722553c550e2cb8778e7307d682a49fa91c0b3e10fe90a562d541e34",
+      "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl",
+      "sourceStartByte": 23558500,
+      "sourceEndByte": 23569005,
+      "timestamp": "2026-10-13T18:44:48.049Z",
+      "actualExitCode": 0
+    }
+  ],
+  "scope": "Exact completed authoring/validation commands only; no application parser or whole engineering suite."
+}

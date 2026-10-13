@@ -1,0 +1,91 @@
+{
+  "createdAtUtc": "2026-10-13T18:45:55.786786+00:00",
+  "files": [
+    {
+      "path": "output/2026-10-14-pdf-search-research/generate_search_fixtures.py",
+      "bytes": 8218,
+      "sha256": "52e36ae201a9f6f261dd134db88227f120dd233a520e85c5d6a7e63b7b0d808c"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/verify_authoring.py",
+      "bytes": 4511,
+      "sha256": "f0c5b07e1aab8778851271f7f5007e0d74c61b112db759dd793240fde11a83aa"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/legacy-provenance.json",
+      "bytes": 10612,
+      "sha256": "ee06ef0fe5acc30988cf6299f6ddd9f3d9e3344117a0df1399ea28c5ef040f79"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/authoring-validation.json",
+      "bytes": 6348,
+      "sha256": "e0329ee99414d0c2b585a62ac35452d1fb6afa40b9af70ee466f3109b661614f"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/fixtures/07-page-item-barriers.pdf",
+      "bytes": 1022,
+      "sha256": "13443f33956ca18fda7de18e90980c3f35d74080c660c9adef160892835ad5ba"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/fixtures/08-unicode-preservation.pdf",
+      "bytes": 1455,
+      "sha256": "2af57c234829205f99957bf8a6881d1c12fed36efe12e6007f705772899f2995"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/fixtures/09-terminal-page-damaged.pdf",
+      "bytes": 1180,
+      "sha256": "3939e6b9b64e6ae040946fc4ad8c0ff7c22dd7d992a8049c4537d6d44197642d"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/fixtures/authoring-oracle.json",
+      "bytes": 6418,
+      "sha256": "c9e4f29fde46c8fbe374abffe4ada858cb54c21bb64bbcdaeca568e2201bde99"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/fixtures/hand-authored-textitems.json",
+      "bytes": 3757,
+      "sha256": "f1966c5904e245f1f66559a2db0f31c960117bb688ba02cf4698fd575a08bc24"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/raw-content/07-page-item-barriers-page1.bin",
+      "bytes": 145,
+      "sha256": "bb391d3bd4e793740ffad834cb8cee05f670d8d4bac6ef611464e831e0136102"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/raw-content/07-page-item-barriers-page2.bin",
+      "bytes": 101,
+      "sha256": "ca4b9438de5a92bbe224bdf6cc85e7b8b739d7c993987eaa1a8a6c55a9be8065"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/raw-content/08-unicode-preservation-glyph.bin",
+      "bytes": 81,
+      "sha256": "6e0881162708973ed16d687d3da7cdb7c4abb48b70d89d5b07cb9314da4cc896"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/raw-content/08-unicode-preservation-page1.bin",
+      "bytes": 52,
+      "sha256": "fee9bbe7cc2839e6a15de0271b2e276bab5d2f480b97cd2a7d2c9d5cda085c5a"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/raw-content/08-unicode-preservation-to-unicode.bin",
+      "bytes": 403,
+      "sha256": "cd7b3b0a5b2d182376bb7ab7edb04d2aac7969c0db54d3907179605ba34fd7da"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/raw-content/09-terminal-page-damaged-page1.bin",
+      "bytes": 64,
+      "sha256": "11cb144d73b905789cdc9b45eb6e4325c5170e0eb5bf6008c3012ef7ed3bf387"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/raw-content/09-terminal-page-damaged-page2.bin",
+      "bytes": 65,
+      "sha256": "1c529ddedc7badd123aa272c32bd94cc0818dd555f9543364df99d28ce90f5f5"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/raw-content/09-terminal-page-damaged-page3-invalid.bin",
+      "bytes": 32,
+      "sha256": "7307c87e2dfc6925982e1e3afae2671c5a088b168a52def0786d5eb48ae3ea9a"
+    }
+  ],
+  "scope": "Authoring-only future inputs, not current frozen application inputs."
+}

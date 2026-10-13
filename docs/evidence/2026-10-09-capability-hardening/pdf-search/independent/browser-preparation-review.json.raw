@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-13T19:16:39.744016+00:00",
+  "status": "STATIC_REVIEW_NO_BLOCKER_NOT_EXECUTED",
+  "inputs": [
+    {
+      "path": "output/2026-10-14-pdf-search-browser/run.mjs",
+      "bytes": 13987,
+      "sha256": "330f3f2c90362d4ea33bf3aea06314767eae14576b08005f902c9d394fc6d83d"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/fixture.tsx",
+      "bytes": 9554,
+      "sha256": "eb0923702afbecbd534397cdddeed47aedfa087915b5897447a7414adf8c6c23"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/index.html",
+      "bytes": 1617,
+      "sha256": "d80905d6752f8a4660fbba2c66149c510097192da8c3a8d52396d4dc22bf2ce8"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/serve.mjs",
+      "bytes": 720,
+      "sha256": "688f8247e5b30811feb4190ec979edff079ed52dc24596a0440efc6f2379f9c8"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/captures.json",
+      "bytes": 601775,
+      "sha256": "05dd6aadc47f1d12417d66ddb92d83604d39fb2df9332ec6897b9404a89bf590"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/input-provenance.json",
+      "bytes": 1682,
+      "sha256": "04e3b2ec2e2404d94abce0802e47a0ec9aecae5e5937814959b5ac835bd00c49"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/pre-run-corrections.json",
+      "bytes": 292,
+      "sha256": "f1b7e5efb450fb89a79ac64474d266b8396b5e5f93cf96a2231c7eb66afd5b60"
+    }
+  ],
+  "fixtureReview": {
+    "path": "output/2026-10-14-pdf-search-independent/fixture-review.json",
+    "bytes": 5739,
+    "sha256": "db479365622ffb8b6a22704cb5f730e8b3f770c44203e7fc866e5aa39b21ecaf"
+  },
+  "findings": [
+    "Production App/DraftStartup/StorageStartup and controller imported directly. Window.Worker subclasses original Worker and only records events; production parsing is not replaced.",
+    "Tauri file inspection/capture/revision results and synthetic messages/drafts are controlled inputs. All 9 PDF data payloads already independently matched full authored files. No native IO or backend Webview proof.",
+    "11 planned scenarios cover explicit Start, full-page/possibly-invisible disclosure, PDF page/ordinal location without fixed ordinal, query barriers, Unicode, image-only explicit pdfNoText, four whole-read failures, mixed formats, 3 late owner changes, cancellation and navigation recheck.",
+    "Mixed expected 16 matches independently accounts PDF1 + XLSX5 + DOCX8 + TXT2.",
+    "Per-run before/after hashes cover src, dependency/config and imported capture maps; page errors/external requests reject, same-origin blob explicitly permitted.",
+    "Settings calls and protected draft strings are compared; unexpected IPC rejects. Forbidden Agent commands are checked.",
+    "Failure writes exclusive result and retains failure diagnostics; success is not declared until actual browser run."
+  ],
+  "suggestions": [
+    "Within existing four-failure scenario, assert 05/09 invalid and 06 textLimit rather than any error. Sent to root; not changed here."
+  ],
+  "limits": [
+    "Old 01/02 captured fixtures are not queried in current harness; do not claim new hidden/crop/rotation or unknown-mapping search acceptance from this planned run.",
+    "maxActive concerns controlled IPC promises, not actual Rust/OS semaphore lifetime.",
+    "No automatic exact PDF.js TextItem ordinal expectation; hand model indices are separate.",
+    "The image-only success-empty assumption was corrected before browser execution and retained in scenarios.mjs.raw/pre-run-corrections."
+  ],
+  "safeToPublish": true,
+  "executedTests": 0,
+  "blockers": []
+}

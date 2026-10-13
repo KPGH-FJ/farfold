@@ -135,6 +135,16 @@ export function attachmentSearchIsXlsx(source: AttachmentSearchCandidate) {
       /\.xlsx$/i.test(source.path ?? ""))
   );
 }
+export function attachmentSearchIsPdf(source: AttachmentSearchCandidate) {
+  // Keep existing DOCX/XLSX declaration precedence. A selected parser must
+  // validate the captured bytes; failures never fall back to raw text.
+  return (
+    !attachmentSearchIsDocx(source) &&
+    !attachmentSearchIsXlsx(source) &&
+    (documentMediaFormat(source.mimeType) === "pdf" ||
+      /\.pdf$/i.test(source.path ?? ""))
+  );
+}
 /** A location request contains no file text and never pretends it is message text. */
 export type AttachmentSearchLocation = AttachmentSearchCandidate;
 export type SelectAttachmentSearch = (

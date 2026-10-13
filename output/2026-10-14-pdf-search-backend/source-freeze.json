@@ -1,0 +1,359 @@
+{
+  "schema": 1,
+  "frozenAtUtc": "2026-10-13T19:14:14.519716+00:00",
+  "scope": "P32 PDF search native whole-file capture <=1 MiB; all7 selected identity fields/hash; existing shared2 OS read slots; legacy32MiB PDF input behavior retained.",
+  "files": [
+    {
+      "path": "src-tauri/src/file_delivery/pdf_input.rs",
+      "bytes": 2558,
+      "sha256": "d709b7d6232e53538d1ccbe1c77ce913a5830fb3add02e01321d37cbc290b26d"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/pdf_search_tests.rs",
+      "bytes": 6510,
+      "sha256": "902f7a76114029964cb649256120eb6985be5379d3ec0beb88b94b5e3454ee2c"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/pdf_search_command_tests.rs",
+      "bytes": 2330,
+      "sha256": "c9721d1b1ceab129f27fbfa72ff8cf6943869c29252ab29ee7c4b81481a1d470"
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17768,
+      "sha256": "0c8a30c827ca6b384dfffee6a0f4dc5d53202d05a2039bf9be7b223fa1756da7"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 22112,
+      "sha256": "822240098bf9fe33a392051cfbf9e58f63df21d14308c274258935a7bf06dc6b"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21806,
+      "sha256": "8a540b54f086599e66a9a513679262663bc1115f31568929209d6d23c654b475"
+    }
+  ],
+  "unchangedShared": [
+    {
+      "path": "src-tauri/src/file_delivery/search_source.rs",
+      "bytes": 1384,
+      "sha256": "0f102ed3753a585b017189ba8fa7b3c4bc47d9158f4cf089f7d704beec0b66af"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/pdf_input_tests.rs",
+      "bytes": 5626,
+      "sha256": "277d8eecb1432faa14a4eb1c11d88b897201167ebe817b40c5697fac5cc5bdc7"
+    },
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "bytes": 2674,
+      "sha256": "cf10e7bfbf76873e8b290cd6ea5e3e5ddac383c5f22a8924af3fa862b4a05ee2"
+    },
+    {
+      "path": "src-tauri/src/file_read_check_tests.rs",
+      "bytes": 5667,
+      "sha256": "91ede3d5566f8c7d73844a16e96af3268572d2e1e214ad28483d587eff9d9a4c"
+    },
+    {
+      "path": "src-tauri/src/file_access.rs",
+      "bytes": 905,
+      "sha256": "9ceea312f6062dc59dd574392dd5744883ed3f0fff0259968b0f3ef63190f9a4"
+    },
+    {
+      "path": "src-tauri/Cargo.toml",
+      "bytes": 2320,
+      "sha256": "5a5656bb244f9ace362fe78d613f86a59040de92a7d0d9452682959964708e2b"
+    },
+    {
+      "path": "src-tauri/Cargo.lock",
+      "bytes": 144545,
+      "sha256": "ffcad4afc42bab386642035337b21f533608620307fda28044d0baf6ee588e08"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/01-pages-hidden-crop-ocr.pdf",
+      "bytes": 2554,
+      "sha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/02-encoding-ligature-unmapped.pdf",
+      "bytes": 1763,
+      "sha256": "d7eddd1a926105af9dc1ae3556d8f528217819be080707218fe110969e794e16"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/03-image-only.pdf",
+      "bytes": 700,
+      "sha256": "69cace2daec2442c8704e4bb683011a4ca67144bccca9cf7a218ace6ab764413"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/04-encrypted.pdf",
+      "bytes": 2998,
+      "sha256": "87fd1dfc347a4b9dae8276b1c2691d8fbd73dff5672f14ad246001b813784e01"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/05-late-page-damaged.pdf",
+      "bytes": 1186,
+      "sha256": "06d1431bfaba18c80aa5abc81c3fd6a12da4c453eaca319d49cbe4d6e470828a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/06-whole-utf8-over-limit.pdf",
+      "bytes": 435787,
+      "sha256": "90eff15f92b7e56f0c45d29c1f7cbe23d94c8b6719552cdb21bc7904b3325723"
+    }
+  ],
+  "commands": [
+    {
+      "stage": "red-search-limit",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "file_delivery::pdf_input::search_tests::search_rejects_one_mib_plus_one_while_original_pdf_input_stays_usable",
+        "--",
+        "--exact"
+      ],
+      "actualExitCode": 101,
+      "passed": 0,
+      "started": {
+        "path": "output/2026-10-14-pdf-search-backend/red-search-limit/started.json",
+        "bytes": 3930,
+        "sha256": "8efd663b44c939cba03c369f7b36511091cd3bdc9a5f1d8c15abb3cde853fe95"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-backend/red-search-limit/completed.json",
+        "bytes": 4491,
+        "sha256": "3a189e487babf2a0fa57b71211c353d3d57eee763b31a1354aac3847e9b0b082"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-backend/red-search-limit/stdout.log",
+        "bytes": 1399428,
+        "sha256": "4603dd859c8b9d8e7c7c84cd1cb59829ab5a642c19752ec5bb2c19af4ddb6cf1"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-backend/red-search-limit/stderr.log",
+        "bytes": 275,
+        "sha256": "17b7c6a0a3f1156df70b690282ed3a20190e7d01f8bc00c2d10948b5eca4e645"
+      },
+      "sourceStable": true
+    },
+    {
+      "stage": "green-pdf-capture",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "file_delivery::pdf_input::"
+      ],
+      "actualExitCode": 0,
+      "passed": 12,
+      "started": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-capture/started.json",
+        "bytes": 3822,
+        "sha256": "2285ede3498fb631a030ce5a0ea8d31bf89820948518c8a8176a25dc37c57ffd"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-capture/completed.json",
+        "bytes": 4374,
+        "sha256": "738ec411495f048b14050e91951e1a0d478a4c50e963f19a0a48a0ceead5d879"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-capture/stdout.log",
+        "bytes": 1639,
+        "sha256": "bd85b4b1e923307395adaf01e6a7d7b91a539241e45f06bc74a5f0a7cb7490c3"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-capture/stderr.log",
+        "bytes": 323,
+        "sha256": "8b29422b96d9d5fe5e64eb41bfdf0b0c9a7a6e87ae67aaf77d70bb3e163163a1"
+      },
+      "sourceStable": true
+    },
+    {
+      "stage": "green-pdf-command",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "file_delivery_commands::pdf_search_tests::"
+      ],
+      "actualExitCode": 0,
+      "passed": 1,
+      "started": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-command/started.json",
+        "bytes": 3838,
+        "sha256": "cd49ff62b20b49758ae954a1451f2f63905e8fa2eebe466c50381cb9bad9bed7"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-command/completed.json",
+        "bytes": 4388,
+        "sha256": "3ea774b8910bea303c544141df7cb4a950868ac97cb4511996503fa9235dfe46"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-command/stdout.log",
+        "bytes": 353,
+        "sha256": "f1bbd929b5da047cfeefd280ff3c9c2a46a2c4c0601ecfbd6e1e60fa591735ac"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-command/stderr.log",
+        "bytes": 256,
+        "sha256": "706688ab7bdee0f381159fbbe64a4b7a0d48019e281a17964b45abc610e87b3a"
+      },
+      "sourceStable": true
+    },
+    {
+      "stage": "regression-read-pool",
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "file_read_check::tests::"
+      ],
+      "actualExitCode": 0,
+      "passed": 5,
+      "started": {
+        "path": "output/2026-10-14-pdf-search-backend/regression-read-pool/started.json",
+        "bytes": 3820,
+        "sha256": "13609740778cc0ed95a0a1814f2c00835eccf4d539bb52f71d43cad88f231e41"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-backend/regression-read-pool/completed.json",
+        "bytes": 4384,
+        "sha256": "f74d8d60515e431c8d1a0c12f72f02cce27d37d7b21a7fd11009792b05d9118d"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-backend/regression-read-pool/stdout.log",
+        "bytes": 711,
+        "sha256": "dcbf6854a4096d9722df9e3819ff539817073e7fdb15faf65fccc73505ed58cb"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-backend/regression-read-pool/stderr.log",
+        "bytes": 256,
+        "sha256": "ca76514d82d06feac18d6bd20977d376bd715789dee20cc01e4df58091ed27cb"
+      },
+      "sourceStable": true
+    },
+    {
+      "stage": "format-check",
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "actualExitCode": 0,
+      "passed": null,
+      "started": {
+        "path": "output/2026-10-14-pdf-search-backend/format-check/started.json",
+        "bytes": 3786,
+        "sha256": "650d036aca49b005b90f6390ef0289a35b80adfd5d37ed16ea5884c490f3da34"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-backend/format-check/completed.json",
+        "bytes": 4322,
+        "sha256": "d67b282614a7493d86412d0a178f81cefb60b1f5fde1c7aa7d293ae334f10d1b"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-backend/format-check/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-backend/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "sourceStable": true
+    }
+  ],
+  "targetedPassed": 18,
+  "baseline": {
+    "path": "output/2026-10-14-pdf-search-backend/baseline.json",
+    "bytes": 3681,
+    "sha256": "c237ddd81c1a84af9f2a7ccb5441e6f8e988de22ea5794648a31129122d654a4"
+  },
+  "sourceDiff": {
+    "path": "output/2026-10-14-pdf-search-backend/source.diff",
+    "bytes": 12775,
+    "sha256": "4496a5ac3ecb832b84f6a013cd4231e8dfab76e1fd5204243f9893364d5a3aca"
+  },
+  "redAnalysis": {
+    "path": "output/2026-10-14-pdf-search-backend/red-analysis.json",
+    "bytes": 1156,
+    "sha256": "7cd59aeaae0038deaba9241b835728d918e9215b5d337dd55130529320a3950e"
+  },
+  "runner": {
+    "path": "output/2026-10-14-pdf-search-backend/run_check.py",
+    "bytes": 2003,
+    "sha256": "e9aeebca48aa79becf525b31ae9bd665ba93223ec23d5b780af33ad20025e55a"
+  },
+  "redSources": [
+    {
+      "path": "output/2026-10-14-pdf-search-backend/red-source/src-tauri/src/file_delivery/pdf_input.rs",
+      "bytes": 2195,
+      "sha256": "38f140eefc64d82030ed04b800b362162ce6732521fd6d1584eae3c52a49ad35"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-backend/red-source/src-tauri/src/file_delivery/pdf_search_tests.rs",
+      "bytes": 6155,
+      "sha256": "d6bd86b59fd0c396a130bc0b8324be2d2482a4d5d310e2688724f10f69e5981e"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-backend/red-source/src-tauri/src/file_delivery/pdf_search_command_tests.rs",
+      "bytes": 2147,
+      "sha256": "eaadbd391866d8150110a3d1ecd6671a9c5c5deb1a45af2a41b9353fdf70672f"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-backend/red-source/src-tauri/src/file_delivery.rs",
+      "bytes": 17768,
+      "sha256": "0c8a30c827ca6b384dfffee6a0f4dc5d53202d05a2039bf9be7b223fa1756da7"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-backend/red-source/src-tauri/src/file_delivery_commands.rs",
+      "bytes": 22112,
+      "sha256": "822240098bf9fe33a392051cfbf9e58f63df21d14308c274258935a7bf06dc6b"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-backend/red-source/src-tauri/src/lib.rs",
+      "bytes": 21806,
+      "sha256": "8a540b54f086599e66a9a513679262663bc1115f31568929209d6d23c654b475"
+    }
+  ],
+  "originalSources": [
+    {
+      "path": "output/2026-10-14-pdf-search-backend/before/src-tauri/src/file_delivery/pdf_input.rs",
+      "bytes": 2015,
+      "sha256": "908c09fe54aeb5cfce8159423d5b1652af273d4818112cd08562d793ffbac5ba"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-backend/before/src-tauri/src/file_delivery.rs",
+      "bytes": 17751,
+      "sha256": "2da2e56dcf80513aa02bbe9c8d960c8d1ee25c31175e78eab2c6a4fcc5bd407a"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-backend/before/src-tauri/src/file_delivery_commands.rs",
+      "bytes": 21183,
+      "sha256": "52dcb86e6d19459ddda8f3fb815ade69df0ae9ac150e1092bfef1a810b14379e"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-backend/before/src-tauri/src/lib.rs",
+      "bytes": 21735,
+      "sha256": "40b70dfc28fa0e5545750fccd36fe7acf6025662bd1560317981c8d3ea11159c"
+    }
+  ],
+  "boundaries": [
+    "No full seven-check run; root owns integration checks.",
+    "New command production helper and existing shared pool tested locally; actual Tauri MainWebview invocation not executed.",
+    "Captures full bytes only. Encrypted/damaged/over-text samples still reach the separate parser, whose search behavior is not established by these native tests.",
+    "No installed App, Agent request, user database, service/account/config change, dependency or environment addition.",
+    "The original red log includes only synthetic temporary-file bytes and is retained exactly; its verbosity was reduced for future assertions without weakening rejection expectations."
+  ]
+}

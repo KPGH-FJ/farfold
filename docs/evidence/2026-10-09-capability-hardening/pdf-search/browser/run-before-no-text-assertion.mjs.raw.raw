@@ -1,0 +1,282 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } =
+  await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base = "output/2026-10-14-pdf-search-browser";
+const independent = "output/2026-10-14-pdf-search-research";
+const engine = process.argv[2],
+  label = process.argv[3];
+if (!["chromium", "webkit"].includes(engine) || !/^run\d+$/.test(label))
+  throw Error("identity required");
+const hash = (p) =>
+  createHash("sha256").update(fs.readFileSync(p)).digest("hex");
+const scan = (p) =>
+  fs
+    .readdirSync(p, { withFileTypes: true })
+    .flatMap((e) =>
+      e.isDirectory() ? scan(p + "/" + e.name) : [p + "/" + e.name],
+    );
+const refs = () => Object.fromEntries([
+  ...scan("src"),
+  ...["fixture.tsx", "index.html", "serve.mjs", "run.mjs", "captures.json", "input-provenance.json"].map(n => base+"/"+n),
+  "output/2026-10-14-xlsx-search-browser/captures.json",
+  "output/2026-10-14-docx-search-browser/captures.json",
+  independent+"/fixtures/authoring-oracle.json",
+  "package.json", "pnpm-lock.yaml", "vite.config.ts"
+].sort().map(p => [p,hash(p)]));
+const result = {
+  schema: 1,
+  engine,
+  label,
+  scope:
+    "Full production App and actual production PDF, XLSX and DOCX Workers; controlled Tauri capture/check returns from independently authored synthetic PDF and OOXML. No native IO, installed App, real Agent, user data or external network.",
+  before: refs(),
+  checks: [],
+  errors: [],
+  externalRequests: [],
+  localBlobRequests: [],
+  screenshots: [],
+  scenarios: [],
+};
+const browser = await (engine === "webkit" ? webkit : chromium).launch({
+  headless: true,
+  executablePath:
+    engine === "webkit"
+      ? path.resolve(
+          "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+        )
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+});
+let page,
+  scenario = "start",
+  baseline;
+const check = (name, pass, detail) => {
+  result.checks.push({
+    scenario,
+    name,
+    pass: !!pass,
+    ...(detail === undefined ? {} : { detail }),
+  });
+  if (!pass) throw Error(name);
+};
+const count = (s, cmd) => s.calls.filter((c) => c.cmd === cmd).length;
+const state = () => page.evaluate(() => window.fixture.current());
+const panel = () =>
+  page.getByRole("region", { name: "查找当前附件文件", exact: true });
+const button = (n) => panel().getByRole("button", { name: n, exact: true });
+const query = () =>
+  page.getByRole("textbox", { name: "搜索所选附件内容…", exact: true });
+const scope = () =>
+  page.getByRole("combobox", { name: "搜索范围", exact: true });
+const box = (n) =>
+  panel().getByRole("checkbox", {
+    name: new RegExp("^" + n.replaceAll(".", "\\.") + "\\s"),
+  });
+const mode = (m) => page.evaluate((m) => window.fixture.mode(m), m);
+async function load(name, seed = {}) {
+  scenario = name;
+  if (page) await page.close();
+  page = await browser.newPage({ viewport: { width: 1100, height: 820 } });
+  page.setDefaultTimeout(10000);
+  page.on("pageerror", (e) =>
+    result.errors.push({ scenario, error: String(e) }),
+  );
+  await page.route("**/*", (r) => {
+    const url = r.request().url();
+    if (url.startsWith("http://127.0.0.1:1539/")) return r.continue();
+    if (url.startsWith("blob:http://127.0.0.1:1539/")) {
+      result.localBlobRequests.push({ scenario, url });
+      return r.continue();
+    }
+    result.externalRequests.push(url);
+    return r.abort();
+  });
+  await page.addInitScript((seed) => (window.fixtureSeed = seed), seed);
+  await page.goto("http://127.0.0.1:1539/" + base + "/index.html");
+  await page
+    .locator(".product-navigation")
+    .getByRole("button", { name: /所有对话/ })
+    .click();
+  await scope().selectOption("attachments");
+  await panel().waitFor();
+  baseline = await state();
+}
+async function choose(names, q = "needle") {
+  for (const name of names) await box(name).check();
+  await query().fill(q);
+}
+async function start() {
+  await button("开始查找附件").click();
+  await page.waitForFunction(
+    () =>
+      window.fixture.current().search.phase === "complete" &&
+      !window.fixture.current().busy,
+  );
+}
+async function shot(name) {
+  const file = base + "/" + engine + "-" + label + "-" + name + ".png";
+  await page.screenshot({ path: file });
+  result.screenshots.push({ file, sha256: hash(file) });
+}
+async function post() {
+  const s = await state();
+  check(
+    "No Agent or settings-write side effects",
+    !s.calls.some((c) =>
+      /^(session_prompt|session_open|session_load|session_set_config|history_search_)/.test(
+        c.cmd,
+      ),
+    ) &&
+      s.unexpected.length === 0 &&
+      count(s, "settings_set") === count(baseline, "settings_set"),
+    { unexpected: s.unexpected },
+  );
+  check("Existing drafts and feedback retained exactly", s.protectedUnchanged);
+  result.scenarios.push({
+    name: scenario,
+    phase: s.search.phase,
+    rows: s.search.rows,
+    hits: s.search.hits,
+    matches: s.search.matches,
+    bytes: s.search.bytes,
+    workers: s.workers,
+    maxActive: s.maxActive,
+    calls: s.calls.filter((c) => /^file_delivery_/.test(c.cmd)),
+  });
+}
+const authored = JSON.parse(fs.readFileSync(independent + "/fixtures/authoring-oracle.json", "utf8"));
+const primary = "07-page-item-barriers.pdf";
+const partialNotice = "PDF 仅查找各页提取到的文字片段，始终只是部分内容；没有匹配不代表完整文件没有匹配。";
+try {
+  await load("real-pdf-worker-scope-source-and-navigation");
+  await choose([primary], "EXACT_NEEDLE");
+  let s = await state();
+  check("Selection and query alone perform no file read or parsing",
+    count(s,"file_delivery_inspect_text") === 0 && count(s,"file_delivery_read_pdf_search") === 0 && s.workers.length === 0);
+  check("Fixed all-page and possible-invisible scope is visible before Start", (await panel().innerText()).includes("全部页面") && (await panel().innerText()).includes("看不见"));
+  await start(); s = await state();
+  check("Authored page-two token found by real PDF Worker", s.search.matches === 1 && s.search.hits[0].match === "EXACT_NEEDLE" && s.search.hits[0].location.kind === "pdf" && s.search.hits[0].location.pageNumber === 2 && Number.isInteger(s.search.hits[0].location.itemIndex), s.search.hits);
+  check("All two pages and partial scope retained", s.search.rows[0].pdf.partial === true && JSON.stringify(s.search.rows[0].pdf.scope.readPageNumbers) === "[1,2]" && s.search.rows[0].pdf.scope.includePossiblyInvisibleText === true);
+  check("Real PDF input Worker completed without plain-text fallback", s.workers.length === 1 && s.workers[0].messages.includes("inputReady") && count(s,"file_delivery_read_pdf_search") === 1 && count(s,"file_delivery_read_text") === 0);
+  check("Partial limitation always visible", await panel().getByText(partialNotice,{exact:true}).first().isVisible());
+  await page.evaluate(() => window.fixture.refresh());
+  check("Equal index refresh preserves results", (await state()).search.matches === 1);
+  await page.setViewportSize({width:780,height:760});
+  check("Narrow results stay within viewport", await panel().evaluate(e => e.getBoundingClientRect().right <= innerWidth + 1 && e.scrollWidth <= e.clientWidth + 1));
+  await panel().getByRole("heading",{name:"当前文件的匹配片段",exact:true}).scrollIntoViewIfNeeded();
+  await shot("pdf-results");
+  await panel().getByRole("button",{name:"前往来源附件",exact:true}).click();
+  await page.getByText("已定位到来源附件；文件匹配片段仍以本次查找为准。",{exact:true}).waitFor();
+  check("Navigation rechecks and locates actual message attachment", await page.locator('[data-loaded-message="A-message"].search-match [data-loaded-attachment="0"]').isVisible());
+  await shot("source-location"); await post();
+
+  await load("authored-barriers-and-generated-metadata");
+  await choose([primary], "EXACT_NEEDLE");
+  for (const entry of authored.fixtures[0].queries) {
+    const previousReads=count(await state(),"file_delivery_read_pdf_search");
+    await query().fill(entry.q);
+    check("Query keeps file selection and requires explicit Start: "+entry.q, await box(primary).isChecked() && count(await state(),"file_delivery_read_pdf_search") === previousReads);
+    await start(); s=await state();
+    check("Independently authored query "+entry.q, s.search.matches === entry.matches && s.search.rows[0].state === "searched", {matches:s.search.matches});
+  }
+  await post();
+
+  await load("unicode-decoding-without-normalization");
+  await choose(["08-unicode-preservation.pdf"],"é");
+  for (const entry of authored.fixtures[1].queries) {
+    await query().fill(entry.q); await start(); s=await state();
+    check("Author ToUnicode sequence: "+entry.q, s.search.matches === entry.matches && s.search.rows[0].state === "searched", {matches:s.search.matches,bytes:s.search.bytes});
+  }
+  await post();
+
+  await load("image-only-explicit-no-text");
+  await choose(["03-image-only.pdf"]); await start(); s=await state();
+  check("Image-only PDF yields no invented OCR match", s.search.matches === 0 && s.search.rows[0].state === "error" && s.search.rows[0].code === "pdfNoText", s.search.rows);
+  check("No-text or partial scope is visible", await panel().getByText(partialNotice,{exact:true}).first().isVisible());
+  await post();
+
+  await load("encrypted-damaged-and-text-limit-reject-whole-file");
+  await choose(["04-encrypted.pdf","05-late-page-damaged.pdf","06-whole-utf8-over-limit.pdf","09-terminal-page-damaged.pdf"],"FIRST_PAGE_MUST_NOT_LEAK");
+  await start(); s=await state();
+  check("All four failing whole reads produce no prefix hits", s.search.rows.length === 4 && s.search.rows.every(r=>r.state === "error") && s.search.hits.length === 0 && s.search.bytes === 0, s.search.rows);
+  check("Encrypted file retains concrete reason", s.search.rows.find(r=>r.source.name === "04-encrypted.pdf").code === "encrypted");
+  check("Damaged streams retain invalid or incomplete reason", ["05-late-page-damaged.pdf", "09-terminal-page-damaged.pdf"].every(name => ["invalid", "pdfIncomplete"].includes(s.search.rows.find(r=>r.source.name === name).code)));
+  check("Complete representation limit retains limit reason", s.search.rows.find(r=>r.source.name === "06-whole-utf8-over-limit.pdf").code === "documentLimit");
+  check("Malformed PDFs did not fall back to raw bytes", count(s,"file_delivery_read_text") === 0 && count(s,"file_delivery_read_pdf_search") === 4);
+  await post();
+
+  await load("four-format-shared-parsing");
+  await choose([primary,"author.xlsx","author.docx","a.txt"],"needle"); await start(); s=await state();
+  check("PDF DOCX XLSX and UTF8 share selected-file results", s.search.rows.length === 4 && s.search.rows.every(r=>r.state === "searched") && s.search.matches === 16, {rows:s.search.rows,matches:s.search.matches});
+  check("Three real workers complete with bounded reads", s.workers.length === 3 && s.workers.every(w=>w.messages.includes("ready")||w.messages.includes("inputReady")) && s.maxActive <= 2);
+  await post();
+
+  for (const mutation of ["sourceChange","mimeChange","indexChange"]) {
+    await load("late-pdf-"+mutation); await choose([primary],"EXACT_NEEDLE");
+    await mode({hold:true,stage:"capture"}); await button("开始查找附件").click();
+    await page.waitForFunction(()=>window.fixture.current().held===1);
+    await page.evaluate(m=>window.fixture[m](),mutation); await page.evaluate(()=>window.fixture.release());
+    await page.waitForFunction(()=>!window.fixture.current().busy); s=await state();
+    check("Changed owner discards late PDF before parsing", s.search.hits.length===0 && s.workers.length===0 && count(s,"file_delivery_check_text_revision")===0);
+    await post();
+  }
+  await load("cancel-pdf-capture"); await choose([primary],"EXACT_NEEDLE");
+  await mode({hold:true,stage:"capture"}); await button("开始查找附件").click();
+  await page.waitForFunction(()=>window.fixture.current().held===1);
+  await button("取消本次附件查找").click(); await page.evaluate(()=>window.fixture.release());
+  await page.waitForFunction(()=>!window.fixture.current().busy); s=await state();
+  check("Cancellation leaves no parse or late result", s.search.hits.length===0 && s.workers.length===0 && count(s,"file_delivery_read_pdf_search")===1);
+  await post();
+
+  await load("changed-pdf-before-navigation"); await choose([primary],"EXACT_NEEDLE"); await start();
+  await mode({changed:true}); await panel().getByRole("button",{name:"前往来源附件",exact:true}).click();
+  await panel().getByRole("alert").waitFor(); s=await state();
+  check("Changed source blocks navigation and removes matches", s.search.hits.length===0 && s.search.error === "changed");
+  await post();
+} catch (error) {
+  result.failure = String(error);
+  if (page) {
+    result.diagnostic = {
+      scenario,
+      body: await page
+        .locator("body")
+        .innerText()
+        .catch(() => ""),
+      aria: await page
+        .locator("body")
+        .ariaSnapshot()
+        .catch(() => ""),
+      state: await state().catch(() => null),
+    };
+    await shot("failure").catch(() => {});
+  }
+} finally {
+  await browser.close();
+  result.after = refs();
+  result.stable =
+    JSON.stringify(result.before) === JSON.stringify(result.after);
+  result.passed =
+    !result.failure &&
+    result.stable &&
+    !result.errors.length &&
+    !result.externalRequests.length;
+  fs.writeFileSync(
+    base + "/" + engine + "-" + label + ".json",
+    JSON.stringify(result, null, 2) + "\n",
+    { flag: "wx" },
+  );
+  console.log(
+    JSON.stringify({
+      engine,
+      label,
+      passed: result.passed,
+      checks: result.checks.length,
+      failure: result.failure,
+      errors: result.errors,
+      externalRequests: result.externalRequests,
+      stable: result.stable,
+    }),
+  );
+  process.exitCode = result.passed ? 0 : 1;
+}

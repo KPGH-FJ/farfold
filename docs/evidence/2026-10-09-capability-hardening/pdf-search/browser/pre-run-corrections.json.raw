@@ -1,0 +1,4 @@
+{
+  "correction": "Image-only search rejects explicitly with pdfNoText. Previous unexecuted runner assumed successful empty scope; author oracle only requires no OCR, no invented matches, clear no-text status. Original assumption retained in scenarios.mjs.raw.",
+  "executedBrowserRuns": 0
+}

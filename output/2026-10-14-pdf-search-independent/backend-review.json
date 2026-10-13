@@ -1,0 +1,18 @@
+{
+  "reviewedAtUtc": "2026-10-13T19:15:19.629301+00:00",
+  "ownerFreeze": {
+    "path": "output/2026-10-14-pdf-search-backend/source-freeze.json",
+    "sha256": "a46903830d8aeea3be39c467101c52768fa6f15db54bbac6ff337a2614cc56ef"
+  },
+  "verifiedReferences": 53,
+  "reviewedProductionFiles": 4,
+  "reviewedNewTestFiles": 2,
+  "blockingFindings": [],
+  "findings": [
+    "New main-WebView IPC reuses production read pool and typed PDF errors.",
+    "Search read alone uses 1 MiB shared capture helper; existing input stays 32 MiB and shares only header/base64 packing.",
+    "Tests cover exact cap, cap+1, seven identity fields, replacement, redirect/growth, full source hash, concrete failures and actual production pool saturation.",
+    "Existing parser and dependencies unchanged. Actual red exit101 retained; repaired targeted18 and fmt0 receipts/source hashes verified."
+  ],
+  "boundary": "Independent source and saved targeted-receipt review only; no new test, browser, native App, Agent, data scan or live database action. Full integration remains pending."
+}

@@ -1,0 +1,90 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "scope": "Only six authorized exact browser/owned-server tool outputs; no other conversation content exported. Reload observation is not process completion.",
+  "entries": [
+    {
+      "phase": "chromium-run1",
+      "chunkId": "2569d4",
+      "actualExitCode": 1,
+      "timestamp": "2026-10-13T19:21:38.375Z",
+      "sourceLine": 12092,
+      "sourceByteOffset": 33295058,
+      "sourceByteLength": 6854,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/chromium-run1.jsonl.raw",
+        "bytes": 6854,
+        "sha256": "00950331435b0962c569f2970bc3ac596fb4a0cf6cac040e47593cca635496d8"
+      }
+    },
+    {
+      "phase": "chromium-run2",
+      "chunkId": "b60c76",
+      "actualExitCode": 1,
+      "timestamp": "2026-10-13T19:22:43.936Z",
+      "sourceLine": 12128,
+      "sourceByteOffset": 33349087,
+      "sourceByteLength": 898,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/chromium-run2.jsonl.raw",
+        "bytes": 898,
+        "sha256": "6f4348f9ec5fbbcb10a502017a379754e222ae7ca15deb27bf55ebf11dd51218"
+      }
+    },
+    {
+      "phase": "chromium-run3",
+      "chunkId": "e159fe",
+      "actualExitCode": 0,
+      "timestamp": "2026-10-13T19:23:30.720Z",
+      "sourceLine": 12154,
+      "sourceByteOffset": 33397800,
+      "sourceByteLength": 830,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/chromium-run3.jsonl.raw",
+        "bytes": 830,
+        "sha256": "1453de4c82611e0cd952dfcfa569deea7c93c05a6ac02b724d7002c840871fa4"
+      }
+    },
+    {
+      "phase": "webkit-run1",
+      "chunkId": "49b863",
+      "actualExitCode": 0,
+      "timestamp": "2026-10-13T19:24:17.331Z",
+      "sourceLine": 12190,
+      "sourceByteOffset": 33728547,
+      "sourceByteLength": 836,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/webkit-run1.jsonl.raw",
+        "bytes": 836,
+        "sha256": "5a76215468c0f5c6031343d67ddd802639a2eb9e63e9e4c17f9e5b903b7378de"
+      }
+    },
+    {
+      "phase": "server-stop",
+      "chunkId": "b89828",
+      "actualExitCode": 143,
+      "timestamp": "2026-10-13T19:24:34.862Z",
+      "sourceLine": 12203,
+      "sourceByteOffset": 34106962,
+      "sourceByteLength": 2213,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/server-stop.jsonl.raw",
+        "bytes": 2213,
+        "sha256": "f49a532bbb8450fea998fa3fda2aa8f2c54494c10d30ada81c52a5bb4bd09836"
+      }
+    },
+    {
+      "phase": "dependency-reload-observation",
+      "chunkId": "fe8f8f",
+      "actualExitCode": null,
+      "timestamp": "2026-10-13T19:21:53.070Z",
+      "sourceLine": 12099,
+      "sourceByteOffset": 33309679,
+      "sourceByteLength": 2197,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/dependency-reload-observation.jsonl.raw",
+        "bytes": 2197,
+        "sha256": "25d9f54dd56f2bf32a1a4649b6db469aacbe7fc6d7afbb0d3a7d66e6a1d216f9"
+      }
+    }
+  ]
+}

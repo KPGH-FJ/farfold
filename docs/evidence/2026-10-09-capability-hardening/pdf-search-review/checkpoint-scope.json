@@ -1,0 +1,107 @@
+{
+  "phase": "CHECKPOINT_AFTER_SEVEN",
+  "scope": "Exact PDF search increment, four current docs, scoped evidence and all new synthetic engineering inputs. All new test inputs are committed to satisfy candidate commit-source equality. Existing unrelated dirty evidence is preserved.",
+  "inputCount": 2029,
+  "auxiliaryInputs": [
+    {
+      "path": "output/2026-10-14-pdf-search-backend/run_check.py",
+      "bytes": 2003,
+      "sha256": "e9aeebca48aa79becf525b31ae9bd665ba93223ec23d5b780af33ad20025e55a"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-backend/source-freeze.json",
+      "bytes": 13574,
+      "sha256": "a46903830d8aeea3be39c467101c52768fa6f15db54bbac6ff337a2614cc56ef"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/captures.json",
+      "bytes": 601775,
+      "sha256": "05dd6aadc47f1d12417d66ddb92d83604d39fb2df9332ec6897b9404a89bf590"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/fixture.tsx",
+      "bytes": 9554,
+      "sha256": "eb0923702afbecbd534397cdddeed47aedfa087915b5897447a7414adf8c6c23"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/index.html",
+      "bytes": 1617,
+      "sha256": "d80905d6752f8a4660fbba2c66149c510097192da8c3a8d52396d4dc22bf2ce8"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/input-provenance.json",
+      "bytes": 1682,
+      "sha256": "04e3b2ec2e2404d94abce0802e47a0ec9aecae5e5937814959b5ac835bd00c49"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/run.mjs",
+      "bytes": 14123,
+      "sha256": "1f10b89429dc5ad1993c41080b94f747c775a66a6193d24e116cf786ffcceb58"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/serve.mjs",
+      "bytes": 808,
+      "sha256": "0a2e2486e1c783e058be5e3c54912c36d0326d75315d86a6b6165900f200bae3"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-docs/report.json",
+      "bytes": 6087,
+      "sha256": "ee1e0d81deb9617edc71562bca83228e7e62a7a1813005a33821ad96bf42efa5"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-frontend/run.py",
+      "bytes": 863,
+      "sha256": "1b69245ca2d169ae1dd8c503a5ba00a25207d90d67741947e2a895765cfa2228"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-frontend/source-freeze-v1.json",
+      "bytes": 4229,
+      "sha256": "e58426127890a0c650f2ca7f8e8080131efe6ce1a0f3fe18be7920672a24ac77"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-independent/backend-review.json",
+      "bytes": 1066,
+      "sha256": "b24c7dc986df72d35fb02b99eaff580c05b8caa1eb357ab765e447dc4e8b28a2"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-independent/browser-review.json",
+      "bytes": 4661,
+      "sha256": "f3a86fd05974312ad6f72d319c2d1f09e7a91902388ab4e5603755d211ac1f95"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-independent/frontend-evidence-review.json",
+      "bytes": 6487,
+      "sha256": "388d3f1d6347851ce4c7a1ad74fd7f5800e936afd2786ff428aca63974b59a97"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-independent/frontend-review.json",
+      "bytes": 16185,
+      "sha256": "22cf14ca1d4971e7329d52ff7e11e6af4063fbecc7f1b2b926ec65f8adef1afe"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-integration/prepare_inventory.py",
+      "bytes": 9230,
+      "sha256": "b6182d25248b47a0f16a4532bb9cbb3c0da04dfe009ef63284953ebb624a2810"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-integration/publish_checks.py",
+      "bytes": 2647,
+      "sha256": "25585de17bd364b656ebc8fb969bf8a227c029ae1c17d2f263727129f81e7b1d"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-integration/publish_implementation.py",
+      "bytes": 6037,
+      "sha256": "69a17528a3ac5967c785043f885be394111e271e861efc181657ca10ac2626f5"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-research/fixtures/authoring-oracle.json",
+      "bytes": 6418,
+      "sha256": "c9e4f29fde46c8fbe374abffe4ada858cb54c21bb64bbcdaeca568e2201bde99"
+    }
+  ],
+  "engineering": {
+    "path": "output/2026-10-14-pdf-search-integration/checks-run/summary.json",
+    "bytes": 6332,
+    "sha256": "a8de159746ed44354bb4087c2869f73a931950f07d58483f1bf842e32860b355"
+  }
+}

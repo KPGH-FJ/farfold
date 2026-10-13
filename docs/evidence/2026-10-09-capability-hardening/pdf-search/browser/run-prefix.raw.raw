@@ -1,0 +1,147 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { webkit, chromium } =
+  await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const base = "output/2026-10-14-pdf-search-browser";
+const independent = "output/2026-10-14-pdf-search-research";
+const engine = process.argv[2],
+  label = process.argv[3];
+if (!["chromium", "webkit"].includes(engine) || !/^run\d+$/.test(label))
+  throw Error("identity required");
+const hash = (p) =>
+  createHash("sha256").update(fs.readFileSync(p)).digest("hex");
+const scan = (p) =>
+  fs
+    .readdirSync(p, { withFileTypes: true })
+    .flatMap((e) =>
+      e.isDirectory() ? scan(p + "/" + e.name) : [p + "/" + e.name],
+    );
+const refs = () => Object.fromEntries([
+  ...scan("src"),
+  ...["fixture.tsx", "index.html", "serve.mjs", "run.mjs", "captures.json", "input-provenance.json"].map(n => base+"/"+n),
+  "output/2026-10-14-xlsx-search-browser/captures.json",
+  "output/2026-10-14-docx-search-browser/captures.json",
+  independent+"/fixtures/authoring-oracle.json",
+  "package.json", "pnpm-lock.yaml", "vite.config.ts"
+].sort().map(p => [p,hash(p)]));
+const result = {
+  schema: 1,
+  engine,
+  label,
+  scope:
+    "Full production App and actual production PDF, XLSX and DOCX Workers; controlled Tauri capture/check returns from independently authored synthetic PDF and OOXML. No native IO, installed App, real Agent, user data or external network.",
+  before: refs(),
+  checks: [],
+  errors: [],
+  externalRequests: [],
+  localBlobRequests: [],
+  screenshots: [],
+  scenarios: [],
+};
+const browser = await (engine === "webkit" ? webkit : chromium).launch({
+  headless: true,
+  executablePath:
+    engine === "webkit"
+      ? path.resolve(
+          "output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+        )
+      : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+});
+let page,
+  scenario = "start",
+  baseline;
+const check = (name, pass, detail) => {
+  result.checks.push({
+    scenario,
+    name,
+    pass: !!pass,
+    ...(detail === undefined ? {} : { detail }),
+  });
+  if (!pass) throw Error(name);
+};
+const count = (s, cmd) => s.calls.filter((c) => c.cmd === cmd).length;
+const state = () => page.evaluate(() => window.fixture.current());
+const panel = () =>
+  page.getByRole("region", { name: "查找当前附件文件", exact: true });
+const button = (n) => panel().getByRole("button", { name: n, exact: true });
+const query = () =>
+  page.getByRole("textbox", { name: "搜索所选附件内容…", exact: true });
+const scope = () =>
+  page.getByRole("combobox", { name: "搜索范围", exact: true });
+const box = (n) =>
+  panel().getByRole("checkbox", {
+    name: new RegExp("^" + n.replaceAll(".", "\\.") + "\\s"),
+  });
+const mode = (m) => page.evaluate((m) => window.fixture.mode(m), m);
+async function load(name, seed = {}) {
+  scenario = name;
+  if (page) await page.close();
+  page = await browser.newPage({ viewport: { width: 1100, height: 820 } });
+  page.setDefaultTimeout(10000);
+  page.on("pageerror", (e) =>
+    result.errors.push({ scenario, error: String(e) }),
+  );
+  await page.route("**/*", (r) => {
+    const url = r.request().url();
+    if (url.startsWith("http://127.0.0.1:1539/")) return r.continue();
+    if (url.startsWith("blob:http://127.0.0.1:1539/")) {
+      result.localBlobRequests.push({ scenario, url });
+      return r.continue();
+    }
+    result.externalRequests.push(url);
+    return r.abort();
+  });
+  await page.addInitScript((seed) => (window.fixtureSeed = seed), seed);
+  await page.goto("http://127.0.0.1:1539/" + base + "/index.html");
+  await page
+    .locator(".product-navigation")
+    .getByRole("button", { name: /所有对话/ })
+    .click();
+  await scope().selectOption("attachments");
+  await panel().waitFor();
+  baseline = await state();
+}
+async function choose(names, q = "needle") {
+  for (const name of names) await box(name).check();
+  await query().fill(q);
+}
+async function start() {
+  await button("开始查找附件").click();
+  await page.waitForFunction(
+    () =>
+      window.fixture.current().search.phase === "complete" &&
+      !window.fixture.current().busy,
+  );
+}
+async function shot(name) {
+  const file = base + "/" + engine + "-" + label + "-" + name + ".png";
+  await page.screenshot({ path: file });
+  result.screenshots.push({ file, sha256: hash(file) });
+}
+async function post() {
+  const s = await state();
+  check(
+    "No Agent or settings-write side effects",
+    !s.calls.some((c) =>
+      /^(session_prompt|session_open|session_load|session_set_config|history_search_)/.test(
+        c.cmd,
+      ),
+    ) &&
+      s.unexpected.length === 0 &&
+      count(s, "settings_set") === count(baseline, "settings_set"),
+    { unexpected: s.unexpected },
+  );
+  check("Existing drafts and feedback retained exactly", s.protectedUnchanged);
+  result.scenarios.push({
+    name: scenario,
+    phase: s.search.phase,
+    rows: s.search.rows,
+    hits: s.search.hits,
+    matches: s.search.matches,
+    bytes: s.search.bytes,
+    workers: s.workers,
+    maxActive: s.maxActive,
+    calls: s.calls.filter((c) => /^file_delivery_/.test(c.cmd)),
+  });
+}

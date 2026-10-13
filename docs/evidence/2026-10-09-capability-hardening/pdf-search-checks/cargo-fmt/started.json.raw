@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "cargo",
+    "fmt",
+    "--check",
+    "--manifest-path",
+    "src-tauri/Cargo.toml"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "displayCommand": "cargo fmt --check --manifest-path src-tauri/Cargo.toml",
+  "group": "native",
+  "monotonicStart": 96.283566833,
+  "name": "cargo-fmt",
+  "startedAt": "2026-10-13T19:31:23.296156+00:00"
+}

@@ -1,0 +1,153 @@
+{
+  "createdAtUtc": "2026-10-13T19:27:10.500807+00:00",
+  "before": {
+    "path": "output/2026-10-14-pdf-search-docs/before.json",
+    "bytes": 2001,
+    "sha256": "d2a4da8f14658b58a91ccf8b4b46ad1d78b501683c3a25da0d877b4d0215df1a"
+  },
+  "files": [
+    {
+      "path": "docs/status.md",
+      "bytes": 94376,
+      "sha256": "05d76ce782a2c90500454f1e83a757852f04645a3c05b7ce6286d824f13407ed"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 136438,
+      "sha256": "ca103bfb42efd3f1b6474cd5748e5560733ecdcffe2c270909f8667e1935cfcb"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 159327,
+      "sha256": "b93689dcf6eb3a48e8c276f47e76574880149fa64934d79f439b465e79f95681"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 92026,
+      "sha256": "a8cbd1bf5a9e8c4153680bc66315ff3746fde85aefd8457d77027c63d4d06099"
+    }
+  ],
+  "diff": {
+    "path": "output/2026-10-14-pdf-search-docs/four-docs.diff",
+    "bytes": 29492,
+    "sha256": "e335a797eb802c9a32efd17d0a03c3327ad3503360e1898618439ca0a60fdb3c"
+  },
+  "scope": "Only four docs: two short PDF paragraphs, P32 progress, and superseded next-PDF clause updated to point to those paragraphs. Earlier history unchanged; no git/source/App/Agent operations.",
+  "conditions": {
+    "original122IdsTitlesConditionsUnchanged": true,
+    "new28RowsEntirelyUnchanged": true,
+    "onlyProgressChanged": [
+      "P32"
+    ],
+    "P32": {
+      "before": "文本/DOCX/XLSX 搜索已安装 c89b8f82；XLSX 七项及双引擎各 162 项已验；正式正例、PDF 及整项未完",
+      "after": "文本/DOCX/XLSX 搜索已安装 c89b8f82；PDF 源码及双引擎各 76 项已验，工程/安装待验；正式正例及整项未完"
+    },
+    "allEarlierProseExceptExactSupersededNextStepUnchanged": true,
+    "first29EightStandardsAndPRODUCTUnchanged": true
+  },
+  "protected": [
+    {
+      "path": "PRODUCT.md",
+      "bytes": 35083,
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "docs/agent-first-release.md",
+      "bytes": 16987,
+      "sha256": "58f9d802793dcb3e369053fb2d94e1dab24c241ebcd055872e820f0e9f185ee7"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "bytes": 11543,
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "bytes": 2341,
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+    }
+  ],
+  "frontendSourceFreezeUnchanged": {
+    "path": "output/2026-10-14-pdf-search-frontend/source-freeze-v1.json",
+    "bytes": 4229,
+    "sha256": "e58426127890a0c650f2ca7f8e8080131efe6ce1a0f3fe18be7920672a24ac77"
+  },
+  "publicLinks": [
+    {
+      "from": "docs/status.md",
+      "targetPath": "docs/evidence/2026-10-09-capability-hardening/pdf-search/verification.json",
+      "exists": true,
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/verification.json",
+        "bytes": 6708,
+        "sha256": "0e0950412c12a0150229fc1508b3344dc84c192ca0c1bad617af7ee29b3fc9c7"
+      }
+    },
+    {
+      "from": "docs/architecture.md",
+      "targetPath": "docs/evidence/2026-10-09-capability-hardening/pdf-search/verification.json",
+      "exists": true,
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/verification.json",
+        "bytes": 6708,
+        "sha256": "0e0950412c12a0150229fc1508b3344dc84c192ca0c1bad617af7ee29b3fc9c7"
+      }
+    },
+    {
+      "from": "plans/agent-access.md",
+      "targetPath": "docs/evidence/2026-10-09-capability-hardening/pdf-search/verification.json",
+      "exists": true,
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/verification.json",
+        "bytes": 6708,
+        "sha256": "0e0950412c12a0150229fc1508b3344dc84c192ca0c1bad617af7ee29b3fc9c7"
+      }
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "targetPath": "docs/evidence/2026-10-09-capability-hardening/pdf-search/verification.json",
+      "exists": true,
+      "target": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/verification.json",
+        "bytes": 6708,
+        "sha256": "0e0950412c12a0150229fc1508b3344dc84c192ca0c1bad617af7ee29b3fc9c7"
+      }
+    }
+  ],
+  "formatReceipts": [
+    {
+      "path": "output/2026-10-14-pdf-search-docs/format.completed.json",
+      "bytes": 823,
+      "sha256": "6454ea0437577d199fd6b8b17a3b9e4d60c9c52934a65517787c18f8db2987d2"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-docs/format-check.completed.json",
+      "bytes": 834,
+      "sha256": "62532148810502b59b297071c2c5cf62e290ad9a8e79c9eeadbbe5450167ed8a"
+    }
+  ],
+  "actualOriginalCompletions": [
+    {
+      "path": "output/2026-10-14-pdf-search-docs/format.completed.jsonl.raw",
+      "bytes": 1849,
+      "sha256": "2b7f1205ab8c891034fdd0b0bb93a5711620cf11586b324d795531e8f02ccaeb",
+      "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl",
+      "sourceByteOffset": 24998745,
+      "sourceByteLength": 1849,
+      "timestamp": "2026-10-13T19:26:29.088Z",
+      "actualExitCode": 0
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-docs/format-check.completed.jsonl.raw",
+      "bytes": 1590,
+      "sha256": "da4e5569bc4ba36224de63fe977c2dad1a6d74dd62a9dd9c6eff725bde794aa5",
+      "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl",
+      "sourceByteOffset": 25004436,
+      "sourceByteLength": 1590,
+      "timestamp": "2026-10-13T19:26:37.801Z",
+      "actualExitCode": 0
+    }
+  ],
+  "boundary": "PDF backend18/frontend262 and two browsers76checks11scenarios each are source/controlled evidence; full-seven/install still pending. Formalc89 installed-not-launched; NEW24/P32 whole open."
+}

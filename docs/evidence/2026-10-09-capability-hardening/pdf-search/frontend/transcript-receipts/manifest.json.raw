@@ -1,0 +1,183 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl",
+  "exactRawEvents": true,
+  "scope": "Only 8 actual CommandExecution completed events for this frontend phase; byte offsets and raw event bytes retained. No full transcript export.",
+  "records": [
+    {
+      "name": "red-01",
+      "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/red-01.jsonl.raw",
+      "bytes": 10873,
+      "sha256": "c78eb59182113715ca8f2041cba45e0269dbd170a281278f434bdc80412cbff1",
+      "sourceByteOffset": 23802695,
+      "sourceByteLength": 10873,
+      "timestamp": "2026-10-13T19:09:02.146Z",
+      "itemId": "exec-2222efe7-711f-4436-8d9a-3e3f17b3a06a",
+      "processId": "34830",
+      "actualExitCode": 1,
+      "command": [
+        "/bin/zsh",
+        "-lc",
+        "mkdir -p output/2026-10-14-pdf-search-frontend\ncp output/2026-10-14-xlsx-search-frontend/run.py output/2026-10-14-pdf-search-frontend/run.py\ncat > src/runtime/attachment_search.pdf.test-support.ts <<'EOF'\nimport { createHash } from \"node:crypto\";\nimport { vi } from \"vitest\";\nimport { setup } from \"./attachment_search.test-support\";\nimport { AttachmentSearch } from \"./attachment_search\";\nimport {\n  attachmentSearchCandidates,\n  attachmentSearchSourceCurrent,\n} from \"./attachment_search_source\";\nimport type { VerifiedFile } from \"./file_delivery\";\nimport {\n  PDF_INPUT_SCOPE_WARNING_CODES,\n  type PdfInputCapture,\n  type PdfInputResult,\n} from \"./pdf_input_types\";\n\nexport function searchPdf(pages = [[\"author needle tail\"]]): PdfInputResult {\n  return {\n    scope: {\n      mode: \"decoded-page-text\",\n      includePossiblyInvisibleText: true,\n      pageCount: pages.length,\n      readPageNumbers: pages.map((_, i) => i + 1),\n      extraction: \"pdfjs-text-content-v1\",\n    },\n    pages: pages.map((texts, i) => ({\n      number: i + 1,\n      decodedRotation: i % 2 ? 90 : 0,\n      items: texts.map((text) => ({ text, dir: \"ltr\", hasEOL: false })),\n    })),\n    partial: true,\n    warnings: [\n      ...PDF_INPUT_SCOPE_WARNING_CODES.map((code) => ({\n        code, count: 1 as const, unit: \"scope\" as const,\n      })),\n      ...(pages.filter((p) => !p.some((t) => /\\S/u.test(t))).length\n        ? [{ code: \"pagesWithoutText\" as const, count: pages.filter((p) => !p.some((t) => /\\S/u.test(t))).length, unit: \"pages\" as const }]\n        : []),\n    ],\n  };\n}\nexport function pdfSetup(texts = [\"author needle tail\"], plain: string[] = []) {\n  // Controller fixtures use real hashed whole capture bytes, but a controlled\n  // parser result. They do not claim these bytes are a structurally valid PDF.\n  const h = setup([...texts.map(() => \"%PDF-controlled-capture\"), ...plain]);\n  const captures = new Map<string, PdfInputCapture>(),\n    results = new Map<string, PdfInputResult>();\n  texts.forEach((text, i) => {\n    const item = h.s.items[i];\n    if (item.kind !== \"user\" && item.kind !== \"agent\") throw Error();\n    const path = `/fixture/chosen${i}.pdf`;\n    item.attachments![0] = { name: `chosen${i}.pdf`, uri: `file://${path}` };\n    const raw = Buffer.from(`%PDF-controlled-capture-${i}`);\n    const file = {\n      ...h.files.get(`/fixture/file${i}.txt`)!, path, resolvedPath: path,\n      name: `chosen${i}.pdf`, size: raw.length,\n      sha256: createHash(\"sha256\").update(raw).digest(\"hex\"),\n    };\n    h.files.set(path, file);\n    captures.set(path, { file, data: raw.toString(\"base64\") });\n    results.set(path, searchPdf([[text]]));\n  });\n  const services = {\n    ...h.services,\n    readPdf: vi.fn(async (file: VerifiedFile) => captures.get(file.path)!),\n    parsePdf: vi.fn(async (capture: PdfInputCapture, _signal: AbortSignal) => results.get(capture.file.path)!),\n  };\n  let candidates = attachmentSearchCandidates([h.s.key], h.states).candidates;\n  const refresh = () => (candidates = attachmentSearchCandidates([h.s.key], h.states).candidates);\n  const current = () => candidates.every((c) => attachmentSearchSourceCurrent(c, h.states));\n  const capture = captures.values().next().value!;\n  return { ...h, services, captures, results, capture, file: capture.file,\n    pdf: results.get(capture.file.path)!, candidates, refresh, current,\n    search: new AttachmentSearch(services) };\n}\nEOF\ncat > src/runtime/attachment_search.pdf.test.ts <<'EOF'\nimport { expect, it } from \"vitest\";\nimport { pdfSetup } from \"./attachment_search.pdf.test-support\";\n\nit(\"searches PDF decoded page text through the bounded capture, never raw file text\", async () => {\n  const h = pdfSetup();\n  await h.search.start(\"needle\", h.candidates, h.current);\n  expect(h.search.snapshot().matches).toBe(1);\n  expect(h.services.readPdf).toHaveBeenCalledOnce();\n  expect(h.services.read).not.toHaveBeenCalled();\n  expect(h.search.snapshot().hits[0]).toMatchObject({\n    location: { kind: \"pdf\", pageNumber: 1, itemIndex: 0, decodedRotation: 0 },\n  });\n});\nEOF\npython3 output/2026-10-14-pdf-search-frontend/run.py red-01 corepack pnpm exec vitest run src/runtime/attachment_search.pdf.test.ts"
+      ],
+      "completionReceipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/red-01.completed.json",
+        "bytes": 734,
+        "sha256": "6b4e0c26a6aba76ecaa3f5b70373c316956585854d83a6f2140fe32c9312387d"
+      }
+    },
+    {
+      "name": "route-green-01",
+      "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/route-green-01.jsonl.raw",
+      "bytes": 1610,
+      "sha256": "7abf4be22c80dbf7d5363248b3057e894eafad7607166923967ed7ce43f727aa",
+      "sourceByteOffset": 23884944,
+      "sourceByteLength": 1610,
+      "timestamp": "2026-10-13T19:11:08.500Z",
+      "itemId": "exec-f00b81c2-319d-43dd-8f47-0d72aa17089e",
+      "processId": "13875",
+      "actualExitCode": 0,
+      "command": [
+        "/bin/zsh",
+        "-lc",
+        "python3 output/2026-10-14-pdf-search-frontend/run.py route-green-01 corepack pnpm exec vitest run src/runtime/attachment_search.pdf.test.ts"
+      ],
+      "completionReceipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/route-green-01.completed.json",
+        "bytes": 748,
+        "sha256": "6bf1a31d03dae3d16d47d5f107e7c3f6ea6233df2adc9b313e0c9a46e37cbc41"
+      }
+    },
+    {
+      "name": "targeted-02",
+      "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/targeted-02.jsonl.raw",
+      "bytes": 3872,
+      "sha256": "477e4b1d9b13e3ae4d4f9cc7d100c985e4724716b741914d04e692a1fd98e920",
+      "sourceByteOffset": 24001793,
+      "sourceByteLength": 3872,
+      "timestamp": "2026-10-13T19:14:53.704Z",
+      "itemId": "exec-d91d9821-de08-4d36-84b2-6ac1c1a273a9",
+      "processId": "77012",
+      "actualExitCode": 1,
+      "command": [
+        "/bin/zsh",
+        "-lc",
+        "python3 output/2026-10-14-pdf-search-frontend/run.py targeted-02 corepack pnpm exec vitest run src/runtime/attachment_search.pdf.test.ts src/runtime/pdf_search_text.test.ts"
+      ],
+      "completionReceipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-02.completed.json",
+        "bytes": 788,
+        "sha256": "a02355c4b0b7014461ed22adc56a67c93e9065b7e9ed4cc2662d94b8ef93785b"
+      }
+    },
+    {
+      "name": "targeted-03",
+      "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/targeted-03.jsonl.raw",
+      "bytes": 12927,
+      "sha256": "819a439aa988fdc69a9b732a0ef76bfdb77efd24e88022125bb7b4576d0954cf",
+      "sourceByteOffset": 24062840,
+      "sourceByteLength": 12927,
+      "timestamp": "2026-10-13T19:17:23.669Z",
+      "itemId": "exec-e34cbec3-d09f-4a20-bfec-af0dfed40f27",
+      "processId": "54404",
+      "actualExitCode": 0,
+      "command": [
+        "/bin/zsh",
+        "-lc",
+        "mkdir -p src/runtime/fixtures/pdf-search\ncp output/2026-10-14-pdf-search-research/fixtures/hand-authored-textitems.json src/runtime/fixtures/pdf-search/hand-authored-textitems.json\ncat >> src/runtime/pdf_search_text.test.ts <<'EOF'\n\nimport handAuthored from \"./fixtures/pdf-search/hand-authored-textitems.json\";\nimport type { PdfInputResult } from \"./pdf_input_types\";\nit(\"matches the independently reviewed hand-authored TextItem model without deriving expected data from parser output\", () => {\n  const output = pdfSearchText(handAuthored.result as PdfInputResult);\n  expect(output.segments.map(({ text, location }) => ({ text, pageNumber: location.pageNumber, itemIndex: location.itemIndex, decodedRotation: location.decodedRotation }))).toEqual(handAuthored.expectedNonemptySegments);\n  expect(output.bytes).toBe(handAuthored.expectedUtf8Bytes);\n  expect(output.bytes).toBe(63);\n  for (const query of handAuthored.negativeQueries)\n    expect(output.segments.some((s) => s.text.includes(query))).toBe(false);\n});\nEOF\ncat >> src/runtime/attachment_search.pdf.test.ts <<'EOF'\n\nimport { attachmentSearchCandidates, attachmentSearchSourceCurrent } from \"./attachment_search_source\";\nit.each([0, 1])(\"shares the actual 16MiB XLSX/plain/PDF budget (over by %i)\", async (over) => {\n  const p = pdfSetup([\"中🚀 needle\"]), pdfBytes = Buffer.byteLength(\"中🚀 needle\"), plain = \"plain needle\";\n  const h = xlsxSetup([\"a\".repeat(L.totalBytes / 2), \"b\".repeat(L.totalBytes / 2 - pdfBytes - Buffer.byteLength(plain) + over)], [plain]);\n  h.s.items.push({ ...p.s.items[0], id: \"pdf-last\" });\n  h.files.set(p.file.path, p.file);\n  const candidates = attachmentSearchCandidates([h.s.key], h.states).candidates;\n  const current = () => candidates.every((c) => attachmentSearchSourceCurrent(c, h.states));\n  const search = new AttachmentSearch({ ...h.services, readPdf: p.services.readPdf, parsePdf: p.services.parsePdf });\n  await search.start(\"needle\", candidates, current);\n  expect(search.snapshot().rows.at(-1)?.state).toBe(over ? \"skipped\" : \"searched\");\n  expect(search.snapshot().rows.at(-1)?.code).toBe(over ? \"budget\" : undefined);\n  expect(search.snapshot().bytes).toBe(over ? L.totalBytes - pdfBytes + 1 : L.totalBytes);\n});\nit(\"preserves DOCX/XLSX routing precedence for conflicting PDF declarations\", async () => {\n  for (const mimeType of [\"application/vnd.openxmlformats-officedocument.wordprocessingml.document\", \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\"]) {\n    const h = pdfSetup(), item = h.s.items[0]; if (item.kind !== \"user\") throw Error();\n    item.attachments[0].mimeType = mimeType;\n    await h.search.start(\"needle\", h.refresh(), h.current);\n    expect(h.services.readPdf).not.toHaveBeenCalled(); expect(h.services.read).not.toHaveBeenCalled();\n    expect(h.search.snapshot().rows[0].code).toBe(\"unsupported\");\n  }\n});\nit(\"retired result ownership cannot publish a late PDF parse\", async () => {\n  const h = pdfSetup(), gate = deferred<PdfInputResult>(); h.services.parsePdf.mockImplementationOnce(() => gate.promise);\n  const run = h.search.start(\"needle\", h.candidates, h.current);\n  await vi.waitFor(() => expect(h.services.parsePdf).toHaveBeenCalledOnce());\n  h.search.retire(); gate.resolve(h.pdf); await run;\n  expect(h.search.snapshot().hits).toEqual([]);\n});\nEOF\ncat >> src/components/SelectedAttachmentSearch.test.tsx <<'EOF'\n\nimport { pdfSetup, searchPdf } from \"../runtime/attachment_search.pdf.test-support\";\ndescribe(\"selected PDF extracted-text notices\", () => {\n  it(\"shows partial and page count outside collapsed details, with exact original item location\", async () => {\n    const h = pdfSetup(); h.results.set(h.file.path, searchPdf([[\"\", \"needle\"], [\"page two\"]]));\n    await h.search.start(\"needle\", h.candidates, h.current);\n    const html = render(h.search);\n    expect(status(html)).toContain(S.pdfPartial); expect(status(html)).toContain(S.pdfPages(2));\n    expect(html).toContain(\"第 1 页 · 提取片段 2\");\n    expect(html).not.toMatch(/<details[^>]*\\bopen\\b/);\n    expect(html.slice(html.indexOf(\"<details\"))).toContain(S.pdfWarnings.visibilityUnverified);\n    // No extra partial approval checkbox exists in the search result flow.\n    expect(html).not.toContain('type=\"checkbox\"');\n  });\n  it(\"keeps no-text/no-OCR result visible instead of claiming a whole PDF absence\", async () => {\n    const h = pdfSetup(); h.results.set(h.file.path, searchPdf([[]]));\n    await h.search.start(\"needle\", h.candidates, h.current);\n    expect(status(render(h.search))).toContain(S.errors.pdfNoText);\n    expect(status(render(h.search))).not.toContain(S.pdfPages(1));\n  });\n  it(\"does not label inactive, retired or stale PDF results as current scope\", async () => {\n    const h = pdfSetup(); await h.search.start(\"needle\", h.candidates, h.current);\n    expect(status(render(h.search, false))).not.toContain(S.pdfPartial);\n    h.services.check.mockRejectedValue({ code: \"changed\" });\n    await h.search.verifyHit(h.search.snapshot().hits[0], h.current);\n    expect(status(render(h.search))).not.toContain(S.pdfPartial);\n    h.search.retire(); expect(render(h.search)).not.toContain(S.pdfPages(1));\n  });\n  it(\"does not add PDF warnings to a plain-text-only result\", async () => {\n    const h = setup([\"needle\"]); await h.search.start(\"needle\", h.candidates, h.current);\n    expect(status(render(h.search))).not.toContain(S.pdfPartial);\n  });\n});\nEOF\npython3 output/2026-10-14-pdf-search-frontend/run.py targeted-03 corepack pnpm exec vitest run src/runtime/attachment_search.pdf.test.ts src/runtime/pdf_search_text.test.ts src/components/SelectedAttachmentSearch.test.tsx"
+      ],
+      "completionReceipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-03.completed.json",
+        "bytes": 841,
+        "sha256": "6e8126a906abeb8382617e5f7459315c20811664fceedb72234114272a6d3bfc"
+      }
+    },
+    {
+      "name": "format-01",
+      "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/format-01.jsonl.raw",
+      "bytes": 2779,
+      "sha256": "10d6a5f46fceb037f9d183f03168ab228c27e85f03e8337ee11dca0283f6688c",
+      "sourceByteOffset": 24523444,
+      "sourceByteLength": 2779,
+      "timestamp": "2026-10-13T19:20:04.266Z",
+      "itemId": "exec-1afe7d90-1f74-4ef9-885e-346e8d1b2cc2",
+      "processId": "75852",
+      "actualExitCode": 0,
+      "command": [
+        "/bin/zsh",
+        "-lc",
+        "python3 output/2026-10-14-pdf-search-frontend/run.py format-01 corepack pnpm exec prettier --write src/runtime/attachment_search.ts src/runtime/attachment_search_source.ts src/runtime/attachment_search_strings.ts src/runtime/pdf_search_text.ts src/components/SelectedAttachmentSearch.tsx src/runtime/attachment_search.pdf.test-support.ts src/runtime/attachment_search.pdf.test.ts src/runtime/pdf_search_text.test.ts src/components/SelectedAttachmentSearch.test.tsx src/runtime/attachment_search.xlsx.test.ts src/runtime/fixtures/pdf-search/hand-authored-textitems.json"
+      ],
+      "completionReceipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/format-01.completed.json",
+        "bytes": 1242,
+        "sha256": "22ec955bead5a34acb65b89165e7c4cde3a2919391179b24267573460cfa8026"
+      }
+    },
+    {
+      "name": "targeted-final",
+      "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/targeted-final.jsonl.raw",
+      "bytes": 2237,
+      "sha256": "f66ce85d7e27febcf410b84f08f8e20f928fc061b423b23a508c3578d06a51b8",
+      "sourceByteOffset": 24532579,
+      "sourceByteLength": 2237,
+      "timestamp": "2026-10-13T19:20:13.477Z",
+      "itemId": "exec-afcd32b6-31fa-491b-9bbe-31819e092e08",
+      "processId": "88568",
+      "actualExitCode": 0,
+      "command": [
+        "/bin/zsh",
+        "-lc",
+        "python3 output/2026-10-14-pdf-search-frontend/run.py targeted-final corepack pnpm exec vitest run src/runtime/attachment_search.test.ts src/runtime/attachment_search.docx.test.ts src/runtime/attachment_search.xlsx.test.ts src/runtime/attachment_search.pdf.test.ts src/runtime/docx_search_text.test.ts src/runtime/xlsx_search_text.test.ts src/runtime/pdf_search_text.test.ts src/components/SelectedAttachmentSearch.test.tsx src/runtime/strings.test.ts"
+      ],
+      "completionReceipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-final.completed.json",
+        "bytes": 1115,
+        "sha256": "9aa37440578bffc9e601847e6bb7847ac3437ae5061445c3bbc33b0a91459473"
+      }
+    },
+    {
+      "name": "typecheck-01",
+      "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/typecheck-01.jsonl.raw",
+      "bytes": 1368,
+      "sha256": "c367ab9105f55026a2ded36222b2e9ce94c74e274a6d59dd297f90e9635ab5d8",
+      "sourceByteOffset": 24583853,
+      "sourceByteLength": 1368,
+      "timestamp": "2026-10-13T19:20:21.057Z",
+      "itemId": "exec-e9605580-3095-4cfa-ba1c-0a90adb55cc8",
+      "processId": "11838",
+      "actualExitCode": 0,
+      "command": [
+        "/bin/zsh",
+        "-lc",
+        "python3 output/2026-10-14-pdf-search-frontend/run.py typecheck-01 corepack pnpm typecheck"
+      ],
+      "completionReceipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/typecheck-01.completed.json",
+        "bytes": 674,
+        "sha256": "8a26a64d97f17fec28ff70da1145f85caf152f85f38ba3a09c651ece65169629"
+      }
+    },
+    {
+      "name": "format-final",
+      "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/format-final.jsonl.raw",
+      "bytes": 2318,
+      "sha256": "99ff70ce714dcff8d2a9cb38a428a5fc06f2d6b24b30bad1cf8404bfdedfb406",
+      "sourceByteOffset": 24595517,
+      "sourceByteLength": 2318,
+      "timestamp": "2026-10-13T19:20:38.996Z",
+      "itemId": "exec-a8f36690-40b3-41b6-af4b-98e3216ed0fa",
+      "processId": "22588",
+      "actualExitCode": 0,
+      "command": [
+        "/bin/zsh",
+        "-lc",
+        "python3 output/2026-10-14-pdf-search-frontend/run.py format-final corepack pnpm exec prettier --check src/runtime/attachment_search.ts src/runtime/attachment_search_source.ts src/runtime/attachment_search_strings.ts src/runtime/pdf_search_text.ts src/components/SelectedAttachmentSearch.tsx src/runtime/attachment_search.pdf.test-support.ts src/runtime/attachment_search.pdf.test.ts src/runtime/pdf_search_text.test.ts src/components/SelectedAttachmentSearch.test.tsx src/runtime/attachment_search.xlsx.test.ts src/runtime/fixtures/pdf-search/hand-authored-textitems.json"
+      ],
+      "completionReceipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/format-final.completed.json",
+        "bytes": 1247,
+        "sha256": "985ef8584828409a1c8d7ea3a5b0ac1eb4c7aa90a6cad3027ca88629cdc15861"
+      }
+    }
+  ]
+}

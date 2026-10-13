@@ -1,0 +1,375 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T19:23:10.360855+00:00",
+  "status": "PASS_NO_BLOCKING_FINDING",
+  "method": "Independent read-only source and final diff review; verify exact frozen files and saved owner command receipts/log hashes. No tests, browser, App, Agent, database, network or source mutation executed by this reviewer.",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-pdf-search-frontend/source-freeze-v1.json",
+    "bytes": 4229,
+    "sha256": "e58426127890a0c650f2ca7f8e8080131efe6ce1a0f3fe18be7920672a24ac77"
+  },
+  "files": [
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 23320,
+      "sha256": "e848db4362a29f066e6a89f38e6990aa7edab7caab42f086045a485065cdf3e5"
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 5249,
+      "sha256": "21430397af601a3dbc25599b62803f70e921d06f3e24eb5e9ecb28eb48d93d65"
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 9450,
+      "sha256": "66f0f8e4797fc05d7467bb8363a4daaec5d175d25bf7a014d807fc8df5142b43"
+    },
+    {
+      "path": "src/runtime/pdf_search_text.ts",
+      "bytes": 1923,
+      "sha256": "a5a2c126cad9300bc4c6b64e5f6c4b40e126f9bccb0ed3b1d821421b7f05d9ac"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 13250,
+      "sha256": "3e1eaa1fdefc3a284e065bd67e583df49b83afe3381d0ad357dfd7cdb566b549"
+    },
+    {
+      "path": "src/runtime/attachment_search.pdf.test-support.ts",
+      "bytes": 3363,
+      "sha256": "6ed28fbab1ed8a8a3cf92c6ea5baa23b758b1e3a0df3d3b59f0e2e7711ef05f7"
+    },
+    {
+      "path": "src/runtime/attachment_search.pdf.test.ts",
+      "bytes": 17069,
+      "sha256": "450334777413ce094b6862a05096ee47862b1994d6223ca016e18f424623610e"
+    },
+    {
+      "path": "src/runtime/pdf_search_text.test.ts",
+      "bytes": 4715,
+      "sha256": "fff1ed002d783a07259a6528070eb46d49e2045d46ca82a78713366a57dbd4ed"
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.test.tsx",
+      "bytes": 7830,
+      "sha256": "23bfa0434f5330c1f95367aba2a623ed07b6352cde76b26d79f1418c840fbab9"
+    },
+    {
+      "path": "src/runtime/attachment_search.xlsx.test.ts",
+      "bytes": 15801,
+      "sha256": "e497fb50d8a4139e96b2cdc284476ddcc62e95ea4a687c0c770c5d85758f77ca"
+    },
+    {
+      "path": "src/runtime/fixtures/pdf-search/hand-authored-textitems.json",
+      "bytes": 3733,
+      "sha256": "7f273b87384b253eba817f4312223e3a8162d5ec11e306cd03d93950db31de9b"
+    }
+  ],
+  "sharedRead": [
+    {
+      "path": "src/runtime/pdf_input_capture.ts",
+      "bytes": 4696,
+      "sha256": "d5ebc79111c50ce89005b64d84465a193258849f95366ad0085b320cd6066f7b"
+    },
+    {
+      "path": "src/runtime/pdf_input_validation.ts",
+      "bytes": 5892,
+      "sha256": "929805d3bbb6a0c4a39b96448212dd1ab07466e98e67fa62e92eb11b0388a76c"
+    },
+    {
+      "path": "src/runtime/pdf_input_read.ts",
+      "bytes": 3962,
+      "sha256": "eb85a66fc3bd855f6912c4a5d9aab6819199a8a506f2695bb2aa1a7845a552a9"
+    },
+    {
+      "path": "src/runtime/pdf_input_types.ts",
+      "bytes": 2133,
+      "sha256": "feb76b5d16ebc66e9acadcc62de3fd747ca05d2d2ae4259a3af5d43f0ecf9e8d"
+    },
+    {
+      "path": "src/runtime/document_media_type.ts",
+      "bytes": 876,
+      "sha256": "05069c31c0b0fe74cc097438c14dd755fbab90e65f98942f52c4be58abcfb651"
+    },
+    {
+      "path": "src/runtime/file_delivery.ts",
+      "bytes": 7202,
+      "sha256": "eaec401ada62b1da686016d811baf267e39726fd8b0292f428042a6011aea468"
+    },
+    {
+      "path": "src/runtime/file_revision_monitor.ts",
+      "bytes": 5192,
+      "sha256": "f917385e2f39e26b2f5f52500d9b24a5255f037f965fdc0e314937c8b67cf451"
+    },
+    {
+      "path": "src/components/AttachmentSearchJump.tsx",
+      "bytes": 3868,
+      "sha256": "35d79b6a8ad60b3c6e5bac302160388878f5f1b22b6ed1199a480cab774940e8"
+    }
+  ],
+  "checks": [
+    {
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-final.completed.json",
+        "bytes": 1115,
+        "sha256": "9aa37440578bffc9e601847e6bb7847ac3437ae5061445c3bbc33b0a91459473"
+      },
+      "actualExitCode": 0,
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "vitest",
+        "run",
+        "src/runtime/attachment_search.test.ts",
+        "src/runtime/attachment_search.docx.test.ts",
+        "src/runtime/attachment_search.xlsx.test.ts",
+        "src/runtime/attachment_search.pdf.test.ts",
+        "src/runtime/docx_search_text.test.ts",
+        "src/runtime/xlsx_search_text.test.ts",
+        "src/runtime/pdf_search_text.test.ts",
+        "src/components/SelectedAttachmentSearch.test.tsx",
+        "src/runtime/strings.test.ts"
+      ],
+      "logs": [
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/targeted-final.stdout.log",
+          "bytes": 214,
+          "sha256": "132fce376fff0b048c3771ee91ab40d35ce89d5ab43e86fdedc19cf47d03fa71"
+        },
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/targeted-final.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/typecheck-01.completed.json",
+        "bytes": 674,
+        "sha256": "8a26a64d97f17fec28ff70da1145f85caf152f85f38ba3a09c651ece65169629"
+      },
+      "actualExitCode": 0,
+      "argv": [
+        "corepack",
+        "pnpm",
+        "typecheck"
+      ],
+      "logs": [
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/typecheck-01.stdout.log",
+          "bytes": 78,
+          "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+        },
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/typecheck-01.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/format-final.completed.json",
+        "bytes": 1247,
+        "sha256": "985ef8584828409a1c8d7ea3a5b0ac1eb4c7aa90a6cad3027ca88629cdc15861"
+      },
+      "actualExitCode": 0,
+      "argv": [
+        "corepack",
+        "pnpm",
+        "exec",
+        "prettier",
+        "--check",
+        "src/runtime/attachment_search.ts",
+        "src/runtime/attachment_search_source.ts",
+        "src/runtime/attachment_search_strings.ts",
+        "src/runtime/pdf_search_text.ts",
+        "src/components/SelectedAttachmentSearch.tsx",
+        "src/runtime/attachment_search.pdf.test-support.ts",
+        "src/runtime/attachment_search.pdf.test.ts",
+        "src/runtime/pdf_search_text.test.ts",
+        "src/components/SelectedAttachmentSearch.test.tsx",
+        "src/runtime/attachment_search.xlsx.test.ts",
+        "src/runtime/fixtures/pdf-search/hand-authored-textitems.json"
+      ],
+      "logs": [
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/format-final.stdout.log",
+          "bytes": 66,
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/format-final.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "originalStages": [
+    {
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/red-01.completed.json",
+        "bytes": 734,
+        "sha256": "6b4e0c26a6aba76ecaa3f5b70373c316956585854d83a6f2140fe32c9312387d"
+      },
+      "actualExitCode": 1,
+      "logs": [
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/red-01.stdout.log",
+          "bytes": 369,
+          "sha256": "f709859cb5cb6b6cc4694cc97b6088bd5249f63a1d9d4434f11d6384f385978e"
+        },
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/red-01.stderr.log",
+          "bytes": 745,
+          "sha256": "548807eb2c91cb1890c4f823676898eabad1758186449e2a1f5da48ba6dca62f"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/route-green-01.completed.json",
+        "bytes": 748,
+        "sha256": "6bf1a31d03dae3d16d47d5f107e7c3f6ea6233df2adc9b313e0c9a46e37cbc41"
+      },
+      "actualExitCode": 0,
+      "logs": [
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/route-green-01.stdout.log",
+          "bytes": 208,
+          "sha256": "1870f3b0bce7822b1b035a0fc93eae8811844bd42313ff52a33bb516b34c75d2"
+        },
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/route-green-01.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-02.completed.json",
+        "bytes": 788,
+        "sha256": "a02355c4b0b7014461ed22adc56a67c93e9065b7e9ed4cc2662d94b8ef93785b"
+      },
+      "actualExitCode": 1,
+      "logs": [
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/targeted-02.stdout.log",
+          "bytes": 462,
+          "sha256": "70f3ab29cc104e7e6570e00814370bd3cb1328664b1d3f028b192a830dba0496"
+        },
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/targeted-02.stderr.log",
+          "bytes": 1864,
+          "sha256": "52594aedfabf99bf6d91157153dd169bd0e88c0cb4870b6dcf5c6bae05c30533"
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-03.completed.json",
+        "bytes": 841,
+        "sha256": "6e8126a906abeb8382617e5f7459315c20811664fceedb72234114272a6d3bfc"
+      },
+      "actualExitCode": 0,
+      "logs": [
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/targeted-03.stdout.log",
+          "bytes": 212,
+          "sha256": "eadaec88f0b7f9043a23a8d32a84dfb482ae3a538b7290797710ec75e6fd8b75"
+        },
+        {
+          "path": "output/2026-10-14-pdf-search-frontend/targeted-03.stderr.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "findings": [],
+  "reviewedContracts": [
+    {
+      "area": "Selected local source and declaration routing",
+      "evidence": [
+        "src/runtime/attachment_search_source.ts:29",
+        "src/runtime/attachment_search_source.ts:81",
+        "src/runtime/attachment_search_source.ts:138",
+        "src/runtime/file_delivery.ts:66"
+      ],
+      "conclusion": "Candidates come only from loaded user/agent message attachments; owner checks retain exact item/attachment identity, URI, MIME, current index, Agent, cwd and nativeSession. Only local file URI without remote host/query/hash is admitted. MIME/path selects the parser; display name is not authority. Conflicting declarations retain earlier DOCX/XLSX precedence with no raw-text fallback."
+    },
+    {
+      "area": "Bounded whole capture, version and immutable handoff",
+      "evidence": [
+        "src/runtime/attachment_search.ts:121",
+        "src/runtime/attachment_search.ts:468",
+        "src/runtime/pdf_input_capture.ts:55",
+        "src/runtime/file_revision_monitor.ts:17"
+      ],
+      "conclusion": "Production port uses file_delivery_read_pdf_search. Selected inspect result is <=1 MiB; PDF capture copies/freezes source/data synchronously before awaiting the digest. Strict base64 round-trip, exact full length, all seven fields and actual whole SHA precede parser dispatch. The source is rechecked after parsing and before any jump."
+    },
+    {
+      "area": "Read concurrency and parser lifetime",
+      "evidence": [
+        "src/runtime/attachment_search.ts:358",
+        "src/runtime/attachment_search.ts:400",
+        "src/runtime/attachment_search.ts:482",
+        "src/runtime/pdf_input_read.ts:21"
+      ],
+      "conclusion": "At most two per-batch read tasks; PDF/DOCX/XLSX parser calls share one parseTail. Read cancellation does not claim OS cancellation. Queued parsing checks current owner/cancel/pending before entry; actual PDF worker uses the shared worker admission and release path. Tests of native slot semantics remain separate backend evidence."
+    },
+    {
+      "area": "Search text, scope and exact UTF-8 budgets",
+      "evidence": [
+        "src/runtime/pdf_search_text.ts:24",
+        "src/runtime/pdf_input_validation.ts:148",
+        "src/runtime/attachment_search.ts:529",
+        "src/runtime/attachment_search.ts:559"
+      ],
+      "conclusion": "Strict complete-result validation before indexing. Only actual item.text enters segments; each item/page remains separate with original item ordinal/page/rotation. No generated labels/JSON keys/warnings/OCR text is indexed. No Unicode normalization or whitespace synthesis. Real UTF-8 item bytes enter the mixed 16 MiB aggregate budget; source limits20 files/1 MiB and existing PDF whole-result256KiB/1000-page/parser limits remain."
+    },
+    {
+      "area": "Whole-file failure and no-text semantics",
+      "evidence": [
+        "src/runtime/pdf_search_text.ts:48",
+        "src/runtime/attachment_search.ts:209",
+        "src/runtime/attachment_search.ts:495",
+        "src/runtime/attachment_search_strings.ts:140"
+      ],
+      "conclusion": "Encrypted/timeout/late-page/limit/invalid results reject that entire file without earlier-page success or raw-text fallback. Whitespace/empty extracted scope reports pdfNoText rather than whole-file absence. PDF scope stays partial and warnings remain visible."
+    },
+    {
+      "area": "Explicit Start, owner invalidation, query and navigation",
+      "evidence": [
+        "src/components/SelectedAttachmentSearch.tsx:72",
+        "src/components/SelectedAttachmentSearch.tsx:88",
+        "src/components/SelectedAttachmentSearch.tsx:185",
+        "src/runtime/attachment_search.ts:304",
+        "src/runtime/attachment_search.ts:661",
+        "src/components/AttachmentSearchJump.tsx:45"
+      ],
+      "conclusion": "Selection itself does not read. Inline candidate scope explains all-page extractable/possibly invisible/partial text; selection+Start is authorization without extra PDF approval checkbox. Query changes retire results while preserving valid selection. Cancel/retire/owner mutation discards late outputs; pending can retry only via explicit new Start. Navigation revalidates source and locates the original attachment, not a fabricated visual PDF page position."
+    }
+  ],
+  "testInterpretation": {
+    "ownerActualFinal": "9 files /262 tests passed; typecheck0; scoped Prettier check0. Original final logs hashed; this reviewer did not rerun them.",
+    "originalProductionRed": "red-01 actual1, missing PDF search route; route-green-01 actual0.",
+    "testAuthorFailure": "targeted-02 actual1 (61/63); its stderr shows it.each expanded page arrays into malformed arguments. The corrected object-row fixture preserves valid empty/whitespace-page expected pdfNoText. targeted-03 actual0 (80) and targeted-final actual0 remain separate.",
+    "fixture": "Hand-authored decoded-item oracle JSON equals the prior authoring object; only formatting changed. It is a model-level oracle, not proof of PDF bytes decoded by a real Worker.",
+    "inputPinLimit": "The simple owner command runner records raw outputs but not a source-before/source-after table. Final freeze pins were checked now; later root engineering freeze/run must establish complete source stability."
+  },
+  "remainingValidation": [
+    "Root real Chromium/WebKit whole-app fixture+actual Worker validation is separate and was not reviewed/executed here.",
+    "Root full seven engineering checks, candidate/install and any native product observation remain separate.",
+    "No all-document/P32-complete claim: selected current-source temporary search only; no history/network/semantic retrieval/OCR/PDF rendering fidelity guarantee."
+  ],
+  "fixtureProvenance": {
+    "path": "output/2026-10-14-pdf-search-frontend/fixture-provenance.json",
+    "bytes": 805,
+    "sha256": "0d1032ce2050cef7c128ca7d85eec24bcf5bc3037f2ede747b2649deccbaccdf"
+  }
+}

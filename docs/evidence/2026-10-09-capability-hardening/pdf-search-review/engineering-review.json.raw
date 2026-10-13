@@ -1,0 +1,243 @@
+{
+  "schema": 1,
+  "status": "PASS_ACTUAL_SEVEN_ENGINEERING_CHECKS",
+  "createdAtUtc": "2026-10-13T19:35:52.690836+00:00",
+  "summary": {
+    "path": "output/2026-10-14-pdf-search-integration/checks-run/summary.json",
+    "bytes": 6332,
+    "sha256": "a8de159746ed44354bb4087c2869f73a931950f07d58483f1bf842e32860b355"
+  },
+  "freeze": {
+    "path": "output/2026-10-14-pdf-search-integration/checks-freeze/freeze.json",
+    "bytes": 330357,
+    "sha256": "8f5c74b502827688f3a04fd9e49a6d9b6ac8e888bad70a6a98fc3b2c9c930f97"
+  },
+  "inventory": {
+    "path": "output/2026-10-14-pdf-search-integration/inventory-plan.json",
+    "bytes": 675858,
+    "sha256": "9385051c955ef4d546ce00550fb5f433c4ee8011f80769ff6ac07e3f1e785d56"
+  },
+  "rootActualCompletion": {
+    "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+    "sourceLine": 12445,
+    "sourceByteOffset": 34423010,
+    "sourceByteLength": 1221,
+    "timestamp": "2026-10-13T19:34:09.566Z",
+    "chunkId": "b3f3c1",
+    "actualExitCode": 0,
+    "raw": {
+      "path": "output/2026-10-14-pdf-search-independent/transcript-engineering/seven-check-completed.jsonl.raw",
+      "bytes": 1221,
+      "sha256": "260c64f417e29b92ec3327a612e139395831e05883b577a31294806837aa52e6"
+    }
+  },
+  "stages": [
+    {
+      "name": "format-check",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/format-check/started.json",
+        "bytes": 288,
+        "sha256": "3c2bb5a79a65a9796b108e7aa3b00e93b1ef4488d466addc10aa0d7297f95416"
+      },
+      "completed": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/format-check/completed.json",
+        "bytes": 665,
+        "sha256": "fee8c6aa6131236dfa4ab68d3ecddd11224add0576261b2c8da543b91e9c73e5"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/format-check/stdout.log",
+        "bytes": 144,
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "typecheck",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/typecheck/started.json",
+        "bytes": 280,
+        "sha256": "0c1dac482a45ee02cbeb191507631fb991569fe0e413bafb6aaa7f47254929ab"
+      },
+      "completed": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/typecheck/completed.json",
+        "bytes": 664,
+        "sha256": "67294516a5132009c1ae4fdda713c048a02af343f4d9d370fcb430adae6596be"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/typecheck/stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/typecheck/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "frontend-test",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/frontend-test/started.json",
+        "bytes": 274,
+        "sha256": "6ada3c0d05e2e1d12bce94792f1c2630fc1b397a2449f02877b6d8f1a9d4fcae"
+      },
+      "completed": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/frontend-test/completed.json",
+        "bytes": 658,
+        "sha256": "2e4cd0e442bfb083a2c8c0b1322ecaeedba7c93526c1a5f9f6a25f2d8b2e8cad"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/frontend-test/stdout.log",
+        "bytes": 289,
+        "sha256": "efef695ef181048940d9597b47687a7ba3b2564f358763cd5c26d7bfd9b5be5d"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/frontend-test/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "frontend-build",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/frontend-build/started.json",
+        "bytes": 277,
+        "sha256": "1d3a23b638a017c381fd9244b60b9775e61d7c5f968d1b47856a9ae76359918d"
+      },
+      "completed": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/frontend-build/completed.json",
+        "bytes": 660,
+        "sha256": "e18eb32fcf812e6ed7ffea2efc7e11775f1fc3afc547bb3fc57266a8105a385b"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/frontend-build/stdout.log",
+        "bytes": 4560,
+        "sha256": "bcf45a573c8056ae40bdb8aed68db410c825ac735249629ed4781d367abc0513"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/frontend-build/stderr.log",
+        "bytes": 360,
+        "sha256": "351b524197fb492920789369e7f1a271420c757633fbb553b280a181ac4c31a4"
+      }
+    },
+    {
+      "name": "cargo-fmt",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/cargo-fmt/started.json",
+        "bytes": 354,
+        "sha256": "144c476c3918b05e6d4e0d752dfecc2affad166a77dcbb23362de0109a3db0b0"
+      },
+      "completed": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/cargo-fmt/completed.json",
+        "bytes": 739,
+        "sha256": "fbbf5a93a3936b4b9fc25d09858e6ef8d0ac8500692bc13e607df1e032fe26c3"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/cargo-fmt/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/cargo-fmt/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "cargo-clippy",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/cargo-clippy/started.json",
+        "bytes": 416,
+        "sha256": "6b9c1864dec9ca06eab5c4e9d0dbf8157b2040e29b0386415ed9cd29cef160bf"
+      },
+      "completed": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/cargo-clippy/completed.json",
+        "bytes": 800,
+        "sha256": "7d4f59eef56b302cd892b869b4cf821bb1c86cad521f4ee01b1465b6724fe92b"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/cargo-clippy/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/cargo-clippy/stderr.log",
+        "bytes": 138,
+        "sha256": "5b45baeebc343b35f3e46adb19dee5c37aebf69f8ab05a84bc061fc7ca3b4a26"
+      }
+    },
+    {
+      "name": "cargo-test",
+      "actualExitCode": 0,
+      "started": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/cargo-test/started.json",
+        "bytes": 360,
+        "sha256": "97877f90a8653df1a27a4baae6b60982b3486628309ad96491dd58f0d4ac3552"
+      },
+      "completed": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/cargo-test/completed.json",
+        "bytes": 745,
+        "sha256": "093f02225a26347dcdb5c19fc7dcddc83cdae575596612165a2e84eeac0ed447"
+      },
+      "stdout": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/cargo-test/stdout.log",
+        "bytes": 187331,
+        "sha256": "d920aa9a1468b5ddc61df799aeed06f220926f38cb6b1638232f9bc566b1ee55"
+      },
+      "stderr": {
+        "path": "output/2026-10-14-pdf-search-integration/checks-run/cargo-test/stderr.log",
+        "bytes": 671,
+        "sha256": "15434cb18ef0effd93f0fe0fb75c9ad4161691c3f81d1c3aeb3c7adf2c82ff0d"
+      }
+    }
+  ],
+  "counts": {
+    "frontendFiles": 498,
+    "frontendPassed": 6034,
+    "rustPassed": 1681,
+    "rustIgnored": 6,
+    "rustAdditionalZeroTestSummaries": 2
+  },
+  "inputs": {
+    "count": 2029,
+    "sourcePaths": 1580,
+    "beforeAfterFreezeCurrentHashEquality": true,
+    "physicalMembershipMatches": true,
+    "protectedCount": 3,
+    "allProtectedUnchanged": true,
+    "runnerAndOwnerPinsCurrent": true
+  },
+  "public": {
+    "verification": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-checks/verification.json",
+      "bytes": 7172,
+      "sha256": "bb7cf7cb1135945597f01f04a9bd8bd595416e23a6401c7ab78b5ab47636cc01"
+    },
+    "publication": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-checks/publication.json",
+      "bytes": 17840,
+      "sha256": "b88be5a4b5f18f015401c55b75c5f35fea6fea67c7f92618b83da80b16db9776"
+    },
+    "exactOriginalCopies": 36,
+    "directoryMembers": 38,
+    "summaryFieldsMatchOriginal": true
+  },
+  "limits": [
+    "Engineering checks only; installed PDF App, native attachment search positive and actual Agent remain separate.",
+    "Original targeted/browser failures retained in prior phase publication, not overwritten by these engineering successes.",
+    "Post-freeze prepare_checkpoint.py is independently statically reviewed but not one of2029 checked inputs.",
+    "No tests, App, Agent, SQLite or live data executed/read by this review."
+  ],
+  "safeToPublish": true,
+  "blockers": []
+}

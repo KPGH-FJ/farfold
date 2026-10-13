@@ -1,0 +1,158 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-13T19:15:35.277581+00:00",
+  "status": "PASS_AUTHORING_AND_CAPTURE_ONLY",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-pdf-search-research/fixture-freeze.json",
+    "bytes": 3725,
+    "sha256": "a738ce8e8ad4cf8bb60772f1cc176f93fc8f1a986bd7074f91e09ab08ee21a50"
+  },
+  "oracle": {
+    "path": "output/2026-10-14-pdf-search-research/fixtures/authoring-oracle.json",
+    "bytes": 6418,
+    "sha256": "c9e4f29fde46c8fbe374abffe4ada858cb54c21bb64bbcdaeca568e2201bde99"
+  },
+  "reviewProgram": {
+    "path": "output/2026-10-14-pdf-search-independent/verify-authored-fixtures.py",
+    "bytes": 5998,
+    "sha256": "00e660a5cebf4201973c88bab6e9f35ad33dc0365789482fd78cf9e332525228"
+  },
+  "frozenReferencesVerified": 17,
+  "newPdf": [
+    {
+      "file": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/07-page-item-barriers.pdf",
+        "bytes": 1022,
+        "sha256": "13443f33956ca18fda7de18e90980c3f35d74080c660c9adef160892835ad5ba"
+      },
+      "pageCount": 2,
+      "xrefOffsetsAndLengthsExact": true,
+      "allRawStreamsExact": true,
+      "authorFactsMatched": true
+    },
+    {
+      "file": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/08-unicode-preservation.pdf",
+        "bytes": 1455,
+        "sha256": "2af57c234829205f99957bf8a6881d1c12fed36efe12e6007f705772899f2995"
+      },
+      "pageCount": 1,
+      "xrefOffsetsAndLengthsExact": true,
+      "allRawStreamsExact": true,
+      "authorFactsMatched": true
+    },
+    {
+      "file": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/09-terminal-page-damaged.pdf",
+        "bytes": 1180,
+        "sha256": "3939e6b9b64e6ae040946fc4ad8c0ff7c22dd7d992a8049c4537d6d44197642d"
+      },
+      "pageCount": 3,
+      "xrefOffsetsAndLengthsExact": true,
+      "allRawStreamsExact": true,
+      "authorFactsMatched": true
+    }
+  ],
+  "handModel": {
+    "reference": {
+      "path": "output/2026-10-14-pdf-search-research/fixtures/hand-authored-textitems.json",
+      "bytes": 3757,
+      "sha256": "f1966c5904e245f1f66559a2db0f31c960117bb688ba02cf4698fd575a08bc24"
+    },
+    "nonemptySegments": 10,
+    "utf8Bytes": 63,
+    "originalOrdinalGapRetained": true
+  },
+  "browserCapture": [
+    {
+      "source": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/07-page-item-barriers.pdf",
+        "bytes": 1022,
+        "sha256": "13443f33956ca18fda7de18e90980c3f35d74080c660c9adef160892835ad5ba"
+      },
+      "fullCaptureBytesEqual": true,
+      "sevenFieldShape": true
+    },
+    {
+      "source": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/08-unicode-preservation.pdf",
+        "bytes": 1455,
+        "sha256": "2af57c234829205f99957bf8a6881d1c12fed36efe12e6007f705772899f2995"
+      },
+      "fullCaptureBytesEqual": true,
+      "sevenFieldShape": true
+    },
+    {
+      "source": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/09-terminal-page-damaged.pdf",
+        "bytes": 1180,
+        "sha256": "3939e6b9b64e6ae040946fc4ad8c0ff7c22dd7d992a8049c4537d6d44197642d"
+      },
+      "fullCaptureBytesEqual": true,
+      "sevenFieldShape": true
+    },
+    {
+      "source": {
+        "path": "src/runtime/fixtures/pdf-input/01-pages-hidden-crop-ocr.pdf",
+        "bytes": 2554,
+        "sha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f"
+      },
+      "fullCaptureBytesEqual": true,
+      "sevenFieldShape": true
+    },
+    {
+      "source": {
+        "path": "src/runtime/fixtures/pdf-input/02-encoding-ligature-unmapped.pdf",
+        "bytes": 1763,
+        "sha256": "d7eddd1a926105af9dc1ae3556d8f528217819be080707218fe110969e794e16"
+      },
+      "fullCaptureBytesEqual": true,
+      "sevenFieldShape": true
+    },
+    {
+      "source": {
+        "path": "src/runtime/fixtures/pdf-input/03-image-only.pdf",
+        "bytes": 700,
+        "sha256": "69cace2daec2442c8704e4bb683011a4ca67144bccca9cf7a218ace6ab764413"
+      },
+      "fullCaptureBytesEqual": true,
+      "sevenFieldShape": true
+    },
+    {
+      "source": {
+        "path": "src/runtime/fixtures/pdf-input/04-encrypted.pdf",
+        "bytes": 2998,
+        "sha256": "87fd1dfc347a4b9dae8276b1c2691d8fbd73dff5672f14ad246001b813784e01"
+      },
+      "fullCaptureBytesEqual": true,
+      "sevenFieldShape": true
+    },
+    {
+      "source": {
+        "path": "src/runtime/fixtures/pdf-input/05-late-page-damaged.pdf",
+        "bytes": 1186,
+        "sha256": "06d1431bfaba18c80aa5abc81c3fd6a12da4c453eaca319d49cbe4d6e470828a"
+      },
+      "fullCaptureBytesEqual": true,
+      "sevenFieldShape": true
+    },
+    {
+      "source": {
+        "path": "src/runtime/fixtures/pdf-input/06-whole-utf8-over-limit.pdf",
+        "bytes": 435787,
+        "sha256": "90eff15f92b7e56f0c45d29c1f7cbe23d94c8b6719552cdb21bc7904b3325723"
+      },
+      "fullCaptureBytesEqual": true,
+      "sevenFieldShape": true
+    }
+  ],
+  "independence": "Generator imports stdlib only and declares author strings/mappings before byte writing; this review inspected PDF object/xref/stream bytes and CMap directly, without application/parser/text-extraction execution. Existing owner pypdf container and Poppler receipts were read/hash checked, not rerun.",
+  "limits": [
+    "PDF text-show operators do not define exact production TextItem count or ordinal. Hand model ordinals are helper-only.",
+    "Malformed terminal FlateDecode proves authored corruption, not that current application rejects it; actual Worker test remains pending.",
+    "Visible render is not Unicode/OCR or visibility semantics proof.",
+    "No browser, production parser, App, Agent, SQLite, database or native capture executed."
+  ],
+  "safeToPublish": true,
+  "blockers": []
+}

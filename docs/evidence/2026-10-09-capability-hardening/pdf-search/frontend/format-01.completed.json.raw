@@ -1,0 +1,34 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "prettier",
+    "--write",
+    "src/runtime/attachment_search.ts",
+    "src/runtime/attachment_search_source.ts",
+    "src/runtime/attachment_search_strings.ts",
+    "src/runtime/pdf_search_text.ts",
+    "src/components/SelectedAttachmentSearch.tsx",
+    "src/runtime/attachment_search.pdf.test-support.ts",
+    "src/runtime/attachment_search.pdf.test.ts",
+    "src/runtime/pdf_search_text.test.ts",
+    "src/components/SelectedAttachmentSearch.test.tsx",
+    "src/runtime/attachment_search.xlsx.test.ts",
+    "src/runtime/fixtures/pdf-search/hand-authored-textitems.json"
+  ],
+  "cwd": "/Users/tw/Desktop/farfold",
+  "startedAtUtc": "2026-10-13T19:20:03.820771+00:00",
+  "completedAtUtc": "2026-10-13T19:20:04.263212+00:00",
+  "actualExitCode": 0,
+  "stdout": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-pdf-search-frontend/format-01.stdout.log",
+    "bytes": 532,
+    "sha256": "8143588d785f42e2f0cbe3bdd8df6dd075bd52dffdec1c024343e57293249a20"
+  },
+  "stderr": {
+    "path": "/Users/tw/Desktop/farfold/output/2026-10-14-pdf-search-frontend/format-01.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

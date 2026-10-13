@@ -173,7 +173,9 @@ it("matches formula and saved cache separately, never across cells or labels", a
     h.search
       .snapshot()
       .hits.map((x) =>
-        x.location && "kind" in x.location ? x.location.field : null,
+        x.location && "kind" in x.location && x.location.kind === "xlsx"
+          ? x.location.field
+          : null,
       ),
   ).toEqual(["savedCache", "formula"]);
   for (const query of [

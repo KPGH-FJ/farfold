@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "atUtc": "2026-10-13T19:10:45.007460+00:00",
+  "ownedBefore": [
+    {
+      "path": "src-tauri/src/file_delivery/pdf_input.rs",
+      "bytes": 2015,
+      "sha256": "908c09fe54aeb5cfce8159423d5b1652af273d4818112cd08562d793ffbac5ba"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/pdf_search_tests.rs",
+      "exists": false
+    },
+    {
+      "path": "src-tauri/src/file_delivery/pdf_search_command_tests.rs",
+      "exists": false
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17751,
+      "sha256": "2da2e56dcf80513aa02bbe9c8d960c8d1ee25c31175e78eab2c6a4fcc5bd407a"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 21183,
+      "sha256": "52dcb86e6d19459ddda8f3fb815ade69df0ae9ac150e1092bfef1a810b14379e"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21735,
+      "sha256": "40b70dfc28fa0e5545750fccd36fe7acf6025662bd1560317981c8d3ea11159c"
+    }
+  ],
+  "unchangedShared": [
+    {
+      "path": "src-tauri/src/file_delivery/search_source.rs",
+      "bytes": 1384,
+      "sha256": "0f102ed3753a585b017189ba8fa7b3c4bc47d9158f4cf089f7d704beec0b66af"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/pdf_input_tests.rs",
+      "bytes": 5626,
+      "sha256": "277d8eecb1432faa14a4eb1c11d88b897201167ebe817b40c5697fac5cc5bdc7"
+    },
+    {
+      "path": "src-tauri/src/file_read_check.rs",
+      "bytes": 2674,
+      "sha256": "cf10e7bfbf76873e8b290cd6ea5e3e5ddac383c5f22a8924af3fa862b4a05ee2"
+    },
+    {
+      "path": "src-tauri/src/file_read_check_tests.rs",
+      "bytes": 5667,
+      "sha256": "91ede3d5566f8c7d73844a16e96af3268572d2e1e214ad28483d587eff9d9a4c"
+    },
+    {
+      "path": "src-tauri/src/file_access.rs",
+      "bytes": 905,
+      "sha256": "9ceea312f6062dc59dd574392dd5744883ed3f0fff0259968b0f3ef63190f9a4"
+    },
+    {
+      "path": "src-tauri/Cargo.toml",
+      "bytes": 2320,
+      "sha256": "5a5656bb244f9ace362fe78d613f86a59040de92a7d0d9452682959964708e2b"
+    },
+    {
+      "path": "src-tauri/Cargo.lock",
+      "bytes": 144545,
+      "sha256": "ffcad4afc42bab386642035337b21f533608620307fda28044d0baf6ee588e08"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/01-pages-hidden-crop-ocr.pdf",
+      "bytes": 2554,
+      "sha256": "4c849280b7e381d77c160124e8f743206a64b107294e7aa1580045bb0c74c76f"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/02-encoding-ligature-unmapped.pdf",
+      "bytes": 1763,
+      "sha256": "d7eddd1a926105af9dc1ae3556d8f528217819be080707218fe110969e794e16"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/03-image-only.pdf",
+      "bytes": 700,
+      "sha256": "69cace2daec2442c8704e4bb683011a4ca67144bccca9cf7a218ace6ab764413"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/04-encrypted.pdf",
+      "bytes": 2998,
+      "sha256": "87fd1dfc347a4b9dae8276b1c2691d8fbd73dff5672f14ad246001b813784e01"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/05-late-page-damaged.pdf",
+      "bytes": 1186,
+      "sha256": "06d1431bfaba18c80aa5abc81c3fd6a12da4c453eaca319d49cbe4d6e470828a"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures/06-whole-utf8-over-limit.pdf",
+      "bytes": 435787,
+      "sha256": "90eff15f92b7e56f0c45d29c1f7cbe23d94c8b6719552cdb21bc7904b3325723"
+    }
+  ],
+  "scope": "PDF local search capture only; old32MiB input and shared1MiB source/readpool behavior unchanged; capture success does not prove PDF extraction/search."
+}

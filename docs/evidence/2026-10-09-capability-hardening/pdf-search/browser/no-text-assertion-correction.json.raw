@@ -1,0 +1,10 @@
+{
+  "run": "chromium-run2.json",
+  "actualExitCode": 1,
+  "completionChunk": "b60c76",
+  "checksBeforeFailure": 47,
+  "sourceStable": true,
+  "diagnosis": "No-text error was correctly displayed outside collapsed details with no-OCR limitation. Runner label allowed no-text or partial but only selected successful partial text; corrected to assert exact no-text status. No production change.",
+  "beforeRunScriptSha256": "330f3f2c90362d4ea33bf3aea06314767eae14576b08005f902c9d394fc6d83d",
+  "afterRunScriptSha256": "1f10b89429dc5ad1993c41080b94f747c775a66a6193d24e116cf786ffcceb58"
+}

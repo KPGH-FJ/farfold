@@ -1,0 +1,14 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "sourceLine": 12445,
+  "sourceByteOffset": 34423010,
+  "sourceByteLength": 1221,
+  "timestamp": "2026-10-13T19:34:09.566Z",
+  "chunkId": "b3f3c1",
+  "actualExitCode": 0,
+  "raw": {
+    "path": "output/2026-10-14-pdf-search-independent/transcript-engineering/seven-check-completed.jsonl.raw",
+    "bytes": 1221,
+    "sha256": "260c64f417e29b92ec3327a612e139395831e05883b577a31294806837aa52e6"
+  }
+}

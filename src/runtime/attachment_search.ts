@@ -5,6 +5,18 @@ import { sameFileRevision } from "./file_revision_monitor";
 import { FILE_DELIVERY_STRINGS as D } from "./file_delivery_strings";
 import { readDocxPreview } from "./docx_preview";
 import { readWorkbookInput } from "./xlsx_preview";
+import { readPdfInput } from "./pdf_input_read";
+import { decodePdfInputCapture } from "./pdf_input_capture";
+import {
+  PdfInputError,
+  type PdfInputCapture,
+  type PdfInputResult,
+} from "./pdf_input_types";
+import {
+  pdfSearchText,
+  type PdfSearchLocation,
+  type PdfSearchScope,
+} from "./pdf_search_text";
 import { XLSX_LIMITS, XlsxError, type WorkbookCapture } from "./xlsx_types";
 import type { XlsxInputResult } from "./xlsx_input_types";
 import {
@@ -27,6 +39,7 @@ import {
   knownAttachmentSearchCandidate,
   attachmentSearchIsDocx,
   attachmentSearchIsXlsx,
+  attachmentSearchIsPdf,
   type AttachmentSearchCandidate,
 } from "./attachment_search_source";
 
@@ -50,6 +63,8 @@ export type AttachmentSearchCode =
   | "encrypted"
   | "timeout"
   | "scopeEmpty"
+  | "pdfNoText"
+  | "pdfIncomplete"
   | "invalid";
 export type AttachmentSearchRow = {
   source: AttachmentSearchCandidate;
@@ -59,6 +74,7 @@ export type AttachmentSearchRow = {
   file?: VerifiedFile;
   document?: DocxSearchScope;
   workbook?: XlsxSearchScope;
+  pdf?: PdfSearchScope;
 };
 export type AttachmentSearchHit = Readonly<{
   source: AttachmentSearchCandidate;
@@ -66,7 +82,7 @@ export type AttachmentSearchHit = Readonly<{
   before: string;
   match: string;
   after: string;
-  location?: DocxSearchLocation | XlsxSearchLocation;
+  location?: DocxSearchLocation | XlsxSearchLocation | PdfSearchLocation;
 }>;
 export type AttachmentSearchState = {
   phase:
@@ -95,6 +111,11 @@ export interface AttachmentSearchPort {
     capture: WorkbookCapture,
     signal: AbortSignal,
   ): Promise<XlsxInputResult>;
+  readPdf?(file: VerifiedFile): Promise<unknown>;
+  parsePdf?(
+    capture: PdfInputCapture,
+    signal: AbortSignal,
+  ): Promise<PdfInputResult>;
 }
 const port: AttachmentSearchPort = {
   inspect: (path) => invoke("file_delivery_inspect_text", { path }),
@@ -106,6 +127,16 @@ const port: AttachmentSearchPort = {
     invoke("file_delivery_read_workbook_search", { file }),
   parseWorkbook: (capture, signal) =>
     readWorkbookInput(capture, { mode: "visible-saved-cells" }, signal),
+  readPdf: (file) => invoke("file_delivery_read_pdf_search", { file }),
+  parsePdf: (capture, signal) =>
+    readPdfInput(
+      capture,
+      {
+        mode: "decoded-page-text",
+        includePossiblyInvisibleText: true,
+      },
+      signal,
+    ),
 };
 const initial = (): AttachmentSearchState => ({
   phase: "idle",
@@ -171,11 +202,15 @@ function failure(e: unknown): AttachmentSearchCode {
       "encrypted",
       "timeout",
       "scopeEmpty",
+      "pdfNoText",
+      "pdfIncomplete",
       "invalid",
     ].includes(String(code))
   )
     return code as AttachmentSearchCode;
-  if (code === "limit") return "documentLimit";
+  if (code === "limit" || code === "textLimit") return "documentLimit";
+  if (code === "incomplete") return "pdfIncomplete";
+  if (code === "scopeRequired") return "invalid";
   if (code === "readPending") return "pending";
   if (code === "readBusy") return "busy";
   if (["missing", "redirected", "changing", "notFile"].includes(String(code)))
@@ -352,11 +387,13 @@ export class AttachmentSearch {
       type Content = {
         segments: readonly {
           text: string;
-          location?: DocxSearchLocation | XlsxSearchLocation;
+          location?:
+            DocxSearchLocation | XlsxSearchLocation | PdfSearchLocation;
         }[];
         bytes: number;
         document?: DocxSearchScope;
         workbook?: XlsxSearchScope;
+        pdf?: PdfSearchScope;
       };
       // The preview worker is shared with document viewing. Serialize this
       // batch only; an unrelated preview can still honestly report busy.
@@ -428,6 +465,29 @@ export class AttachmentSearch {
             if (!sameFileRevision(f, file(capture.file, f.path)))
               fail("changed");
             content = xlsxSearchText(workbook);
+          } else if (attachmentSearchIsPdf(sources[i])) {
+            if (!this.services.readPdf || !this.services.parsePdf)
+              fail("unsupported");
+            const value = record(await this.services.readPdf(f));
+            if (!valid() || this.pending) return null;
+            if (Object.keys(value).length !== 2) fail("invalid");
+            // Snapshot before the asynchronous digest. A returned object cannot
+            // swap bytes or source metadata between validation and parsing.
+            const capture = Object.freeze({
+              file: file(value.file, f.path),
+              data: value.data as string,
+            });
+            await decodePdfInputCapture(f, capture, run.abort.signal);
+            if (!valid() || this.pending) return null;
+            const parsed = parseTail.then(async () => {
+              if (!valid() || this.pending)
+                throw new PdfInputError("cancelled");
+              return this.services.parsePdf!(capture, run.abort.signal);
+            });
+            parseTail = parsed.catch(() => undefined);
+            const pdf = await parsed;
+            if (!valid() || this.pending) return null;
+            content = pdfSearchText(pdf);
           } else {
             const text = await textPayload(await this.services.read(f), f);
             content = { segments: [{ text }], bytes: f.size };
@@ -469,7 +529,8 @@ export class AttachmentSearch {
           // cannot stand in for its extracted author text, so admit after parse.
           const reservation =
             attachmentSearchIsDocx(sources[i]) ||
-            attachmentSearchIsXlsx(sources[i])
+            attachmentSearchIsXlsx(sources[i]) ||
+            attachmentSearchIsPdf(sources[i])
               ? 0
               : f.size;
           if (
@@ -502,6 +563,7 @@ export class AttachmentSearch {
               code: "budget",
               document: content.document,
               workbook: content.workbook,
+              pdf: content.pdf,
             });
           } else {
             budget += content.bytes;
@@ -549,6 +611,7 @@ export class AttachmentSearch {
                 matches: count,
                 document: content.document,
                 workbook: content.workbook,
+                pdf: content.pdf,
               });
               this.emit({ bytes: budget });
             }

@@ -26,7 +26,7 @@ pub use document::{DocxCapture, DocxReadFailure, read_docx, read_docx_search};
 mod workbook;
 pub use workbook::{WorkbookCapture, WorkbookReadFailure, read_workbook, read_workbook_search};
 mod pdf_input;
-pub use pdf_input::{PdfInputCapture, PdfInputReadFailure, read_pdf_input};
+pub use pdf_input::{PdfInputCapture, PdfInputReadFailure, read_pdf_input, read_pdf_search};
 mod audio_input;
 pub use audio_input::{AudioCapture, AudioReadFailure, read_audio_input};
 pub(crate) use audio_input::{MAX_AUDIO_BYTES, prompt_audio_bytes};

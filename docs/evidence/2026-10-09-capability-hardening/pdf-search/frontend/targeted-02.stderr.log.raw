@@ -1,0 +1,48 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/pdf_search_text.test.ts > reports an empty extracted scope without calling the whole file empty
+AssertionError: expected Error: invalid { code: 'invalid' } to deeply equal { code: 'pdfNoText' }
+
+- Expected
++ Received
+
+- {
+-   "code": "pdfNoText",
++ PdfInputError {
++   "message": "invalid",
++   "code": "invalid",
+  }
+
+ ❯ src/runtime/pdf_search_text.test.ts:24:80
+     22| it.each([[[]], [["", " \t\n"]]])("reports an empty extracted scope wit…
+     23|   expect(() => pdfSearchText(searchPdf(pages as string[][]))).toThrow(…
+     24|   try { pdfSearchText(searchPdf(pages as string[][])); } catch (e) { e…
+       |                                                                                ^
+     25| });
+     26| it("keeps empty-page warnings and independent immutable location/scope…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/runtime/pdf_search_text.test.ts > reports an empty extracted scope without calling the whole file empty
+AssertionError: expected TypeError: texts.map is not a function to deeply equal { code: 'pdfNoText' }
+
+- Expected
++ Received
+
+- {
+-   "code": "pdfNoText",
++ TypeError {
++   "message": "texts.map is not a function",
+  }
+
+ ❯ src/runtime/pdf_search_text.test.ts:24:80
+     22| it.each([[[]], [["", " \t\n"]]])("reports an empty extracted scope wit…
+     23|   expect(() => pdfSearchText(searchPdf(pages as string[][]))).toThrow(…
+     24|   try { pdfSearchText(searchPdf(pages as string[][])); } catch (e) { e…
+       |                                                                                ^
+     25| });
+     26| it("keeps empty-page warnings and independent immutable location/scope…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

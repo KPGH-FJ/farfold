@@ -1,0 +1,45 @@
+from pathlib import Path
+import json,hashlib,subprocess,datetime,zlib
+from pypdf import PdfReader
+ROOT=Path('/Users/tw/Desktop/farfold'); O=ROOT/'output/2026-10-14-pdf-search-research'; OLD=ROOT/'output/2026-10-13-pdf-input-preparation'; PUBLIC=ROOT/'docs/evidence/2026-10-09-capability-hardening/pdf-input/fixtures'; SRC=ROOT/'src/runtime/fixtures/pdf-input'
+def ref(p):
+ b=p.read_bytes();return {'path':str(p.relative_to(ROOT)),'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()}
+def write(p,v):
+ with p.open('x') as h:json.dump(v,h,ensure_ascii=False,indent=2);h.write('\n')
+old=json.loads((OLD/'independent-oracle.json').read_text()); rows=[]
+assert (OLD/'generate_fixtures.py').read_bytes()==(PUBLIC/'generate_fixtures.py').read_bytes()
+assert (OLD/'independent-oracle.json').read_bytes()==(PUBLIC/'independent-oracle.json.raw').read_bytes()==(SRC/'independent-oracle.json').read_bytes()
+for name,v in old['fixtures'].items():
+ originals=[OLD/'fixtures'/name,PUBLIC/name,SRC/name]
+ allrefs=[ref(p) for p in originals]
+ assert all(r['sha256']==v['sha256'] and r['bytes']==v['bytes'] for r in allrefs)
+ raw=[]
+ for r in v.get('rawContentRefs',[]):
+  p=OLD/r['path']; a=ref(p);assert a['sha256']==r['sha256'] and a['bytes']==r['bytes'];raw.append(a)
+ rows.append({'name':name,'copies':allrefs,'authorRawContent':raw,'pageCount':v['pageCount'],'authorScope':v.get('rawContentOracle',v.get('expectedInputResult',v.get('claimLimits'))),'exactParserItemExpectationsAvailable':False})
+legacy={'generatorCopies':[ref(OLD/'generate_fixtures.py'),ref(PUBLIC/'generate_fixtures.py')],'oracleCopies':[ref(OLD/'independent-oracle.json'),ref(PUBLIC/'independent-oracle.json.raw'),ref(SRC/'independent-oracle.json')],'originalGenerationReceipt':ref(OLD/'generator-receipt.json'),'sixCopiesAndAllRawHashChecks':True,'fixtures':rows,'limits':'Authoring facts only. No exact TextItem ordinals are defined by the original generator; PDF text operations and parser items are not equivalent. Old generator was not rerun.'}
+write(O/'legacy-provenance.json',legacy)
+new=json.loads((O/'fixtures/authoring-oracle.json').read_text()); checks=[]
+for v in new['fixtures']:
+ p=O/v['file']['path'];assert ref(p)['sha256']==v['file']['sha256'];reader=PdfReader(str(p),strict=True);assert len(reader.pages)==v['pageCount'];assert not reader.is_encrypted
+ # Validate authored raw page streams with an independent container reader, never text extraction.
+ for n,page in enumerate(reader.pages,1):
+  if v.get('damagedPage')==n:
+   original=next(O/r['path'] for r in v['raw'] if 'invalid.bin' in r['path'])
+   try:zlib.decompress(original.read_bytes())
+   except zlib.error:pass
+   else:raise AssertionError('Negative stream unexpectedly valid zlib')
+  else:
+   rawref=next(O/r['path'] for r in v['raw'] if r['path'].endswith(f'page{n}.bin'))
+   assert page.get_contents().get_data()==rawref.read_bytes()
+ checks.append({'file':ref(p),'pages':len(reader.pages),'xrefAndPageStreamsChecked':True,'declaredDamagedPage':v.get('damagedPage'),'textExtractionUsed':False})
+render=O/'renders';render.mkdir(exist_ok=True)
+exe='/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override/pdftoppm'
+renderReceipts=[]
+for v in new['fixtures']:
+ p=O/v['file']['path'];argv=[exe,'-r','72','-png',str(p),str(render/p.stem)]
+ start=datetime.datetime.now(datetime.timezone.utc).isoformat();r=subprocess.run(argv,capture_output=True)
+ stdout=render/(p.stem+'.stdout.log');stderr=render/(p.stem+'.stderr.log');stdout.write_bytes(r.stdout);stderr.write_bytes(r.stderr)
+ renderReceipts.append({'argv':argv,'startedAtUtc':start,'completedAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'actualExitCode':r.returncode,'stdout':ref(stdout),'stderr':ref(stderr),'pages':[ref(x) for x in sorted(render.glob(p.stem+'-*.png'))],'scope':'Independent Poppler visual check only; tolerant rendering of malformed PDF is not application read success.'})
+write(O/'authoring-validation.json',{'createdAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'legacyProvenance':ref(O/'legacy-provenance.json'),'newContainerChecks':checks,'renders':renderReceipts,'actualApplicationParserExecuted':False,'nativeAppOrAgentExecuted':False})
+print(json.dumps({'legacyFixtures':len(rows),'allLegacyCopiesAndRawHashesEqual':True,'newFixtures':len(checks),'renderExits':[r['actualExitCode'] for r in renderReceipts],'pngCount':sum(len(r['pages']) for r in renderReceipts),'validation':ref(O/'authoring-validation.json')},ensure_ascii=False))

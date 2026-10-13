@@ -1,0 +1,22 @@
+{
+  "actualStageCompletion": true,
+  "argv": [
+    "corepack",
+    "pnpm",
+    "format:check"
+  ],
+  "completedAt": "2026-10-13T19:30:18.485284+00:00",
+  "cwd": "/Users/tw/Desktop/farfold",
+  "displayCommand": "corepack pnpm format:check",
+  "elapsedSeconds": 31.2528075,
+  "group": "frontend",
+  "monotonicStart": 0.216029833,
+  "name": "format-check",
+  "pid": 85701,
+  "processLaunched": true,
+  "rawExitCode": 0,
+  "startedAt": "2026-10-13T19:29:47.234373+00:00",
+  "state": "COMPLETED",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stdoutSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+}

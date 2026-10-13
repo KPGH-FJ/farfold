@@ -1,0 +1,107 @@
+import hashlib
+import json
+import pathlib
+import re
+
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+BASE = pathlib.Path(__file__).resolve().parent
+TRANSCRIPT = pathlib.Path('/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T15-01-07-01a13410-a021-7660-b316-4a5e2c3de35f.jsonl')
+NAMES = ['red-01', 'route-green-01', 'targeted-02', 'targeted-03', 'format-01', 'targeted-final', 'typecheck-01', 'format-final']
+
+
+def ref(path):
+    path = pathlib.Path(path)
+    data = path.read_bytes()
+    return {'path': str(path.relative_to(ROOT)), 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()}
+
+
+def write(path, value):
+    assert not path.exists(), str(path)
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+
+
+out = BASE / 'transcript-receipts'
+out.mkdir(exist_ok=True)
+events = {}
+# Read only this frontend slice, never copy the entire transcript.
+with TRANSCRIPT.open('rb') as f:
+    f.seek(23700000)
+    f.readline()
+    while True:
+        offset = f.tell()
+        raw = f.readline()
+        if not raw:
+            break
+        if b'2026-10-14-pdf-search-frontend/run.py' not in raw:
+            continue
+        value = json.loads(raw)
+        payload = value.get('payload', {})
+        item = payload.get('item', {})
+        if value.get('type') != 'event_msg' or payload.get('type') != 'item_completed' or item.get('type') != 'CommandExecution':
+            continue
+        command = item['command'][-1]
+        match = re.search(r'(?:^|\n)python3 output/2026-10-14-pdf-search-frontend/run\.py ([\w-]+) corepack ', command)
+        if not match or match[1] not in NAMES:
+            continue
+        name = match[1]
+        assert name not in events, name
+        completed = json.loads((BASE / (name + '.completed.json')).read_bytes())
+        assert item['status'] == 'completed'
+        assert item['exit_code'] == completed['actualExitCode']
+        for stream in ['stdout', 'stderr']:
+            evidence = completed[stream]
+            data = pathlib.Path(evidence['path']).read_bytes()
+            assert len(data) == evidence['bytes']
+            assert hashlib.sha256(data).hexdigest() == evidence['sha256']
+            assert data.decode() in item['aggregated_output']
+        path = out / (name + '.jsonl.raw')
+        assert not path.exists()
+        path.write_bytes(raw)
+        events[name] = {
+            'name': name, **ref(path), 'sourceByteOffset': offset,
+            'sourceByteLength': len(raw), 'timestamp': value['timestamp'],
+            'itemId': item['id'], 'processId': item['process_id'],
+            'actualExitCode': item['exit_code'],
+            'command': item['command'], 'completionReceipt': ref(BASE / (name + '.completed.json')),
+        }
+assert set(events) == set(NAMES)
+write(out / 'manifest.json', {
+    'sourceTranscript': str(TRANSCRIPT), 'exactRawEvents': True,
+    'scope': 'Only 8 actual CommandExecution completed events for this frontend phase; byte offsets and raw event bytes retained. No full transcript export.',
+    'records': [events[name] for name in NAMES],
+})
+freeze = json.loads((BASE / 'source-freeze-v1.json').read_bytes())
+for item in freeze['files']:
+    assert ref(ROOT / item['path'])['sha256'] == item['sha256']
+summary = {
+    'scope': 'P32 temporary search of explicitly selected current local PDF attachments, decoded text from all pages. Controlled frontend tests only; parent browser, whole engineering, installation and real Agent evidence are separate.',
+    'sourceFreeze': ref(BASE / 'source-freeze-v1.json'), 'sourceStableAtSummary': True,
+    'fixtureProvenance': ref(BASE / 'fixture-provenance.json'),
+    'commandRunner': ref(BASE / 'run.py'), 'originalCompletions': ref(out / 'manifest.json'),
+    'runs': [
+        {'name': 'red-01', 'actualExitCode': 1, 'passed': 0, 'failed': 1, 'meaning': 'Genuine controlled controller red: prior source lacks PDF capture/parse route and reports no PDF match.'},
+        {'name': 'route-green-01', 'actualExitCode': 0, 'passed': 1, 'failed': 0, 'meaning': 'Added production PDF route satisfies the same red test.'},
+        {'name': 'targeted-02', 'actualExitCode': 1, 'passed': 61, 'failed': 2, 'meaning': 'New test it.each array spreading supplied malformed fixture shapes; test-only correction, not a production defect or parser-oracle change.'},
+        {'name': 'targeted-03', 'actualExitCode': 0, 'files': 3, 'passed': 80, 'failed': 0},
+        {'name': 'format-01', 'actualExitCode': 0, 'meaning': 'Scoped formatting only, including identical parsed-JSON author fixture.'},
+        {'name': 'targeted-final', 'actualExitCode': 0, 'files': 9, 'passed': 262, 'failed': 0},
+        {'name': 'typecheck-01', 'actualExitCode': 0},
+        {'name': 'format-final', 'actualExitCode': 0, 'files': 11},
+    ],
+    'timestampBoundary': 'targeted-final and typecheck-01 were launched as two independent run.py/exec processes in one Promise.allSettled call. Both raw receipts record the same startedAtUtc value. It is retained, and no finer start order is inferred. Each has its own original completed event and actual exit 0.',
+    'implemented': [
+        'Existing file checkbox plus visible all-pages/possibly-invisible/partial scope and Start; no extra agreement checkboxes.',
+        'Bounded PDF capture command; immutable complete capture and seven fields validated with canonical base64/header/full-file SHA before real PDF Worker, then full revision recheck.',
+        'DOCX/XLSX/PDF batch parsers share serial parseTail; existing two native prefetch tasks, cancellation/late/owner/MIME and precise actual UTF-8 budget behavior remain.',
+        'Search each actual TextItem separately; preserve original item indices including empty gaps, page number and decoded rotation; generated labels, wrappers, page and item boundaries never concatenate.',
+        'Always-visible PDF partial result and page count; explicit no-text/no-OCR error, full-file parse failure never yields earlier-page partial success.',
+    ],
+    'validationBoundary': [
+        'Controller uses controlled ports and hashed synthetic capture bytes; it does not prove PDF parsing or real filesystem IPC. Parent controlled full App uses existing production Worker and independently authored actual PDFs.',
+        'Manual TextItem fixture is not a PDF-parser ordinal oracle. Source Prettier changed only JSON whitespace and was checked equal to independent author source.',
+        'No source/doc/Rust changes outside owned frontend files; no frontend-owned browser service, real Agent request, installation or App operation.',
+    ],
+    'pending': 'Root production App controlled Chromium/WebKit scenarios and later whole engineering/install review; not P32 whole completion.',
+}
+write(BASE / 'summary.json', summary)
+print(json.dumps({'summary': ref(BASE / 'summary.json'), 'manifest': ref(out / 'manifest.json'), 'events': len(events)}, ensure_ascii=False))

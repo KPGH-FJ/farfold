@@ -1,0 +1,66 @@
+use super::*;
+use base64::{Engine, engine::general_purpose::STANDARD};
+use std::{sync::mpsc, time::Duration};
+
+#[tokio::test]
+async fn pdf_search_uses_the_production_shared_two_slot_gate_and_typed_failures() {
+    let _serial = crate::file_read_check::tests::PRODUCTION_CHECKS
+        .lock()
+        .await;
+    let mut requests = Vec::new();
+    let mut releases = Vec::new();
+    for _ in 0..2 {
+        let (started, ready) = tokio::sync::oneshot::channel();
+        let (release, blocked) = mpsc::channel();
+        releases.push(release);
+        requests.push(tokio::spawn(crate::file_read_check::run(move || {
+            started.send(()).unwrap();
+            blocked.recv_timeout(Duration::from_secs(5)).unwrap();
+            Ok(())
+        })));
+        tokio::time::timeout(Duration::from_secs(1), ready)
+            .await
+            .unwrap()
+            .unwrap();
+    }
+    let dir = tempfile::tempdir().unwrap();
+    let path = dir.path().join("selected.pdf");
+    let bytes = b"%PDF-1.7\nwhole bytes\0\xff";
+    std::fs::write(&path, bytes).unwrap();
+    let file = file_delivery::inspect_text(&path).unwrap();
+    let blocked = checked_pdf_search(file.clone()).await;
+    for release in releases {
+        release.send(()).unwrap();
+    }
+    for request in requests {
+        request.await.unwrap().unwrap();
+    }
+    assert_eq!(blocked.unwrap_err().code, "readBusy");
+    let capture = checked_pdf_search(file.clone()).await.unwrap();
+    assert_eq!(capture.file, file);
+    assert_eq!(STANDARD.decode(capture.data).unwrap(), bytes);
+    let mut changed = file.clone();
+    changed.sha256 = "0".repeat(64);
+    assert_eq!(
+        checked_pdf_search(changed).await.unwrap_err().code,
+        "changed"
+    );
+    std::fs::OpenOptions::new()
+        .write(true)
+        .open(&path)
+        .unwrap()
+        .set_len(file_delivery::MAX_TEXT_BYTES + 1)
+        .unwrap();
+    assert_eq!(checked_pdf_search(file).await.unwrap_err().code, "limit");
+    std::fs::write(&path, b"not PDF").unwrap();
+    let file = file_delivery::inspect_text(&path).unwrap();
+    assert_eq!(
+        checked_pdf_search(file.clone()).await.unwrap_err().code,
+        "invalid"
+    );
+    std::fs::remove_file(path).unwrap();
+    assert_eq!(
+        checked_pdf_search(file).await.unwrap_err().code,
+        "unreadable"
+    );
+}

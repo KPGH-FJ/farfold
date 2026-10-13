@@ -1,0 +1,243 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-13T18:35:52.541782+00:00",
+  "kind": "read-only implementation handoff; no new implementation or verification",
+  "head": "a07392822ec6a0beaa7e2508ac9fc8ee7795d83d",
+  "preferredNextIncrement": "P32：已明确选择的当前本地 PDF 附件，全部页提取文字的临时搜索；复用现有生产 PDF Worker，不扩任意页范围。",
+  "keyCorrection": "现有“读取范围”不是任意页区间选择。request 仅 decoded-page-text + includePossiblyInvisibleText:true；core 遍历全部页，validator 强制页号 1..pageCount。结果始终 partial:true。",
+  "currentFacts": [
+    "搜索候选仅来自已加载 user/agent message.attachments 的显式声明，MIME/URI/对象及 thread/index 归属都参与撤权。现无 PDF 路由；非 DOCX/XLSX 按原 UTF-8 原文字路线读取，不表示已解析 PDF。",
+    "P08 PDF 的范围选择先于 inspect/read；其第二次 partialSelected 是解析后的“加入草稿”确认。搜索不能沿用该同意、历史 localDocument 或从文本路径推导读取权，也不应调用 confirmDocumentInput 保存草稿。",
+    "可复用 readPdfInput(capture, checked request, AbortSignal) 及 checkedPdfInputResult：严格全字节摘要、完整页序、两级真实 Worker、诊断/销毁屏障、加密/XFA/迟发错误拒绝均已有入口。",
+    "现 parser 有 1000 页、100000 items、15s 和 256KiB文字表示限制（原 text+结构+范围包装的完整表示也受限）；本片保持，不因搜索总16MiB而放宽。",
+    "当前 PDF native capture 为32MiB通用输入；需新搜索专用1MiB入口，不能直接以先inspect小文件再调用32MiB read替代读取中限额。"
+  ],
+  "consentProposal": {
+    "flow": "在同一 SelectedAttachmentSearch 选择 PDF 后显示固定全部页范围与四项限制；本次范围确认和“只在提取到的部分文字内查找”确认分别默认未选，二者齐备后用户点 Start 才允许任何 inspect/hash/capture/Worker。PDF partial恒真，故可在读取前明确同意这个已知限制；读取后常显实际页数/空文字页/四项风险，不将事前同意伪装成已看过结果。",
+    "implementation": "新增搜索专用的短期 PDF request/consent 参数，controller 在所有 IO 前再次校验；UI 必须同时保护按钮和 start 路径。两项选择只授权本批本次当前文件读取/查找，不写 draft/localDocument/settings、不交 Agent。",
+    "ownership": "绑定实际已选 candidate 集合与当前 owner/query/scope；取消、改选、换范围/页面、MIME/URI/索引/对象来源变化、重入及旧回调均撤回。新 Start 要新有效确认；不得从历史确认自动预勾。混批缺 PDF 确认时拒绝 Start，并允许用户明确取消选择该 PDF 后搜索其余文件。",
+    "copy": "界面明确“全部页面中可提取的文字，可能含不可见文字”；不说全部保存文字/可见文字/完整全文/OCR。现 PdfInputScopeChoice 和 PDF_INPUT_SCOPE_TEXT 含“加入文字”语义，只复用警告代码和交互模式，搜索使用准确本地查找文案。",
+    "alternativeIfPostReadApprovalRequired": "若要求沿 P08 的解析后第二确认时点，则需独立 review-ready 阶段，结果私有且不发布任何命中，用户确认后重新核版本再匹配；这是额外交互/状态，不应偷偷复用 partialSelected 或默认通过。当前推荐明示两项事前搜索同意，以保持单一 Start 流程。"
+  },
+  "minimalImplementation": {
+    "backend": "file_delivery_read_pdf_search({file:VerifiedFile})->PdfInputCapture；调用 search_source::read 的1MiB open前/读中限额及全7字段核验，再%PDF-头校验/base64。main-webview guard +原共享2个OS读取槽；旧read_pdf_input32MiB不变。错误沿PdfInputReadFailure。",
+    "projection": "新增 pdf_search_text.ts，仅投影 checkedPdfInputResult.pages[].items[].text。每个原 item 独立 segment（包括位置计数中的空item），不跨 item/page 拼词，不搜 JSON键、页号、方向、旋转、hasEOL、范围或警告。真实提取片段间可能割断单词，需明确当前匹配范围；不得猜阅读顺序/视觉连续性。",
+    "location": "{kind:\"pdf\",pageNumber,itemIndex,decodedRotation} 来源于实际结果；片段位置保留原始索引。显示实际页号/片段，复用 verifyHit->AttachmentSearchJump 到真实消息附件，不声称 PDF 预览已滚到该页或字符高亮，不制造 message offset。",
+    "controller": "新增 readPdf/parsePdf 端口；严格 whole capture hash +7字段、已选 consent 与返回 scope、每次await owner、parse后revision及jump前revision。PDF 纳入现 batch parseTail，保留2 native预取；全局input仅1 PDF树/总2 PDF树，外部预览冲突显示busy。typed textLimit/incomplete/scopeRequired/readPending/readBusy 分类不能掉通用unreadable。",
+    "budgets": "同一20files/每完整源1MiB/实际搜索UTF8合计16MiB/200displayhits/256querybytes。PDF只计各item.text实际UTF8；不计生成包装，仍受原parser较小的256KiB表示上限。超过限额整文件不采纳，不截断；多阶段可重复读取，不声称累计IO≤16MiB。",
+    "emptyAndFailure": "image-only/全部空白提取单列“未提取到可搜索文字，未识别图片”；不把整个PDF无内容当已搜索零命中。加密、损坏、晚页错误、警告诊断或超限必须整份拒绝，不泄漏好页前缀结果；无降级UTF8/文件链接。",
+    "files": [
+      "src/runtime/pdf_search_text.ts + tests",
+      "src/runtime/attachment_search.ts + PDF targeted tests",
+      "src/runtime/attachment_search_source.ts",
+      "src/runtime/attachment_search_strings.ts",
+      "src/components/SelectedAttachmentSearch.tsx + test",
+      "src-tauri/src/file_delivery/pdf_input.rs + dedicated search tests",
+      "src-tauri/src/file_delivery.rs exports",
+      "src-tauri/src/file_delivery_commands.rs + command/pool tests",
+      "src-tauri/src/lib.rs registration"
+    ],
+    "avoidChanges": [
+      "PDF parser/core/validation existing all-page semantics",
+      "P08 draft approval and send paths",
+      "history candidate authority",
+      "persistent settings/DB/search index",
+      "Agent specific UI/protocol/credentials"
+    ]
+  },
+  "validationPlan": [
+    "先保真实红：现 PDF declared route不能获得页面片段；新增门禁反例分别 scope/partial缺失、旧owner/late旧checkbox：inspect/read/parse均0。不把测试脚本假设错误当生产红。",
+    "纯投影：每item/page隔断、原页号/rotation/itemIndex、Unicode/ligature保真、生成包装字段不命中；actual text UTF8计数，混 DOCX/XLSX/TXT 边界、200省略、256query。",
+    "生命周期：全部7字段逐一变化，MIME/URI/index thread归属、cancel/late capture/worker、retry pending、相同批串行、外部busy、来源jump重新变化撤旧结果。真实OS读未返回仍保slot。",
+    "复用现有 pdf-input fixtures：01三页/不可见/裁切/旋转（raw保存字符串不等于提取全部）；02编码fi/ﬁ/中/🚀且不猜无映射字；03image-only；04encrypted；05late-page-damaged无前缀；06全局UTF8超限。读独立oracle，不用被测结果生成expected。",
+    "完整 App Chromium/WebKit +真实两级PDF Worker/受控Tauricapture：默认不读、两确认+Start、结果/警告常显、键盘/窄宽、取消/来源跳转、两PDF及DOCX/XLSX混批串行、全部负例与零外部网络/pageerror；这不证明native读取或Agent接收。",
+    "整合后由root执行冻结全7与实际built worker静态烟测；正式正例是否可达单独记录，禁止为了制造候选发送真实请求或伪造消息。"
+  ],
+  "priorityAssessment": {
+    "decision": "未确认比PDF更优先且本轮可在不启动真实Agent前提下闭合的源码阻断；PDF为已有共享能力上连续、可独立验证的下一增量。",
+    "moreFundamentalGap": "当前附件搜索不枚举未发草稿；已加载历史若无结构化attachments就没有候选。即使增加PDF，仍不会为这些历史自动产生附件。这是P32覆盖/正式正例可达性缺口，不能由parser数量解决。",
+    "whyNotBypass": "loaded正文搜索已有received attachment.text路径；官方临时历史search协议明确排除附件，并会启动官方程序。不可扫描任意文字链接、从历史path猜授权、自动加载所有历史、写附件账本或把Composer预览当P32正例。",
+    "possibleSeparateSmallUX": "候选为空时更直接说明仅已加载显式附件及当前缺失；可考虑导航到既有对话范围/已有读取入口，但显式open可能启动官方程序，不能记作本次no-Agent实现或凭提示关闭覆盖缺口。新增直接选本地文件/草稿搜索需单独定义非消息来源与跳转，勿为了原生正例悄悄混入当前candidate契约。",
+    "wholeP32": "原完成条件不降：跨对话正文+附件、覆盖/缺失、真实来源跳转、无官方方式保缺口、无持久正文账本。此片只补当前所选PDF部分文字。",
+    "otherBoundaries": "签名/公证/公开分发继续按用户后置；Windows具体实现与实机条件另项，不阻断本macOS源码增量也不算通过。"
+  },
+  "evidence": {
+    "contract": {
+      "path": "plans/agent-access.md",
+      "lines": [
+        297,
+        297
+      ],
+      "sha256": "46a404be3e15d987701eeb8cbf8091ca7e283f1023dc780cdf28486f3bc121ca"
+    },
+    "product": {
+      "path": "PRODUCT.md",
+      "lines": [
+        81,
+        96
+      ],
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    "candidateAuthority": {
+      "path": "src/runtime/attachment_search_source.ts",
+      "lines": [
+        28,
+        137
+      ],
+      "sha256": "879dbac3552e5b398feada2837f823e44f9d545ddbaa22fa292ede9717120453"
+    },
+    "searchLifecycle": {
+      "path": "src/runtime/attachment_search.ts",
+      "lines": [
+        235,
+        580
+      ],
+      "sha256": "4a4a1078d43a6e2830117ce76e1914872e6fc85c4c6922501cc8e7fb00de0077"
+    },
+    "searchUI": {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "lines": [
+        58,
+        244
+      ],
+      "sha256": "c7263157d22d3d32d35d3d29baac7a96f9b54e3796abebaeaf6a60fcbc384d2a"
+    },
+    "pdfScope": {
+      "path": "src/runtime/pdf_input_types.ts",
+      "lines": [
+        3,
+        75
+      ],
+      "sha256": "feb76b5d16ebc66e9acadcc62de3fd747ca05d2d2ae4259a3af5d43f0ecf9e8d"
+    },
+    "pdfScopeValidation": {
+      "path": "src/runtime/pdf_input_validation.ts",
+      "lines": [
+        62,
+        100
+      ],
+      "sha256": "929805d3bbb6a0c4a39b96448212dd1ab07466e98e67fa62e92eb11b0388a76c"
+    },
+    "pdfRead": {
+      "path": "src/runtime/pdf_input_read.ts",
+      "lines": [
+        18,
+        126
+      ],
+      "sha256": "eb85a66fc3bd855f6912c4a5d9aab6819199a8a506f2695bb2aa1a7845a552a9"
+    },
+    "pdfExtraction": {
+      "path": "src/runtime/pdf_input_core.ts",
+      "lines": [
+        149,
+        266
+      ],
+      "sha256": "effa15a43ef92415bb83b580635a1b0c0c087db0f9065d97a7655c857a7b6f19"
+    },
+    "pdfWrapper": {
+      "path": "src/runtime/pdf_input_text.ts",
+      "lines": [
+        15,
+        36
+      ],
+      "sha256": "3dee41de9f77eb00c5f3ec2a4435f76e004eaca181ad3c692bb9285dd913d8a7"
+    },
+    "pdfCapture": {
+      "path": "src/runtime/pdf_input_capture.ts",
+      "lines": [
+        52,
+        153
+      ],
+      "sha256": "d5ebc79111c50ce89005b64d84465a193258849f95366ad0085b320cd6066f7b"
+    },
+    "composerConsent": {
+      "path": "src/components/DocumentInputReview.tsx",
+      "lines": [
+        58,
+        163
+      ],
+      "sha256": "301fea2bc8766a4ecd8c97e2a07a55f130bd03df59bef3c7dbbceec43e4eac88"
+    },
+    "composerNoReadBeforeChoice": {
+      "path": "src/components/DocumentComposerAttachments.tsx",
+      "lines": [
+        190,
+        241
+      ],
+      "sha256": "2130449eda4091f4f59e3b7295aaa0787198220733e3cb5ac2d26b48efc3d12a"
+    },
+    "pdfNativeCapture": {
+      "path": "src-tauri/src/file_delivery/pdf_input.rs",
+      "lines": [
+        51,
+        61
+      ],
+      "sha256": "908c09fe54aeb5cfce8159423d5b1652af273d4818112cd08562d793ffbac5ba"
+    },
+    "boundedSearchSource": {
+      "path": "src-tauri/src/file_delivery/search_source.rs",
+      "lines": [
+        5,
+        39
+      ],
+      "sha256": "0f102ed3753a585b017189ba8fa7b3c4bc47d9158f4cf089f7d704beec0b66af"
+    },
+    "pdfOSReadPool": {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "lines": [
+        200,
+        212
+      ],
+      "sha256": "52dcb86e6d19459ddda8f3fb815ade69df0ae9ac150e1092bfef1a810b14379e"
+    },
+    "pdfWorkerPool": {
+      "path": "src/runtime/pdf_worker_slots.ts",
+      "lines": [
+        1,
+        17
+      ],
+      "sha256": "af5abf17ffbb1036c9e3e6e7ed3db27993cdd111ecc544355159fa0eb644783e"
+    },
+    "sourceJump": {
+      "path": "src/components/AttachmentSearchJump.tsx",
+      "lines": [
+        30,
+        112
+      ],
+      "sha256": "35d79b6a8ad60b3c6e5bac302160388878f5f1b22b6ed1199a480cab774940e8"
+    },
+    "loadedBody": {
+      "path": "src/runtime/loaded_search.ts",
+      "lines": [
+        163,
+        202
+      ],
+      "sha256": "919c8ddd05573b98c581774c88656993f8ebe7befa439d7a7799f957745c8061"
+    },
+    "historyBoundary": {
+      "path": "src/runtime/history_search_types.ts",
+      "lines": [
+        114,
+        128
+      ],
+      "sha256": "ebc43a989b38f56ac3010cc4a1e674ba60c36970ba0a128a4e21e7af2b00c0e3"
+    },
+    "historyStartup": {
+      "path": "src/runtime/history_search_strings.ts",
+      "lines": [
+        7,
+        15
+      ],
+      "sha256": "71417bd3f8569594b0db05e0c9dd70cd094a60ab36ec8988ecec3b869e604d11"
+    },
+    "fixtureOracle": {
+      "path": "src/runtime/fixtures/pdf-input/independent-oracle.json",
+      "lines": [
+        1,
+        201
+      ],
+      "sha256": "121e894057c059f10f63af8fa560af3f11c232c6c20f5dc74d564c80a7be22a6"
+    }
+  },
+  "activity": "仅读取当前契约/源码/既有合成oracle并写本交接；未改源或docs，未运行测试、服务、App、Agent、DB或ps。"
+}

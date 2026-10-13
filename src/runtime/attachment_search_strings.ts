@@ -1,5 +1,7 @@
 import type { DocxSearchLocation } from "./docx_search_text";
 import type { XlsxSearchLocation } from "./xlsx_search_text";
+import type { PdfSearchLocation } from "./pdf_search_text";
+import type { PdfInputWarning } from "./pdf_input_types";
 import type { XlsxInputWarning } from "./xlsx_input_types";
 import { XLSX_INPUT_WARNING_TEXT } from "./document_input_strings";
 import { xlsxInputWarningCount } from "./document_input_presentation";
@@ -18,9 +20,30 @@ export const ATTACHMENT_SEARCH_STRINGS = {
   title: "查找当前附件文件",
   query: "搜索所选附件内容…",
   boundary:
-    "只查找你明确选择的当前本地文字、DOCX 或 XLSX 文件，不代表附件当时的历史内容。不会加载历史、连接 Agent 或读取网页。",
+    "只查找你明确选择的当前本地文字、DOCX、XLSX 或 PDF 文件，不代表附件当时的历史内容。不会加载历史、连接 Agent 或读取网页。",
   limits:
-    "每次最多 20 个文件；每个源文件最多 1 MiB，实际可检索文字合计最多 16 MiB。支持 UTF-8 纯文字、DOCX 作者文字及 XLSX 所列范围的保存内容；不提取图片、音频或 PDF 中的内容。",
+    "每次最多 20 个文件；每个源文件最多 1 MiB，实际可检索文字合计最多 16 MiB。支持 UTF-8 纯文字、DOCX 作者文字、XLSX 所列保存内容及 PDF 可提取的页面文字；不识别图片或音频内容。",
+  pdfCandidate:
+    "按 PDF 读取全部页面可提取文字（可能含不可见文字，仅为部分内容）",
+  pdfScope:
+    "全部页面中可提取的文字，可能包含页面上看不见的文字；不识别图片文字，不保证视觉可见性、阅读顺序或文字还原准确性。",
+  pdfPartial:
+    "PDF 仅查找各页提取到的文字片段，始终只是部分内容；没有匹配不代表完整文件没有匹配。",
+  pdfBarriers: "文字片段分别查找，不跨片段拼接；被分开的词可能无法匹配。",
+  pdfLimits:
+    "每份 PDF 最多处理 1,000 页，完整文字表示最多 256 KiB；超限时整份不参与查找。",
+  pdfPages: (n: number) => `本次处理 ${n} 页的可提取文字。`,
+  pdfLocation: (page: number, item: number) =>
+    `第 ${page} 页 · 提取片段 ${item}`,
+  pdfWarnings: {
+    decodedTextOnly: "图片、图表的完整内容，以及批注和表单内容未读取。",
+    visibilityUnverified:
+      "可能包含不可见文字，也可能缺少页外或裁切范围外的文字。",
+    readingOrderUnverified: "文字片段顺序和显示效果不保证与原文一致。",
+    textDecodingUnverified:
+      "保留实际文字还原结果，不猜测或替换文字，也不自动识别图片文字。",
+    pagesWithoutText: "有页面未提取到文字，没有自动识别图片文字。",
+  },
   docxCandidate: "按 DOCX 读取作者文字（文件类型声明或 .docx 位置）",
   xlsxCandidate: "按 XLSX 读取可见工作表中符合范围的保存内容",
   xlsxScope:
@@ -106,7 +129,7 @@ export const ATTACHMENT_SEARCH_STRINGS = {
     changed: "内容、位置或来源已变化，请重新选择。",
     unreadable: "无法读取此文件。",
     tooLarge: "完整文件超过 1 MiB。",
-    unsupported: "不是本次支持的 UTF-8 纯文字、DOCX 或 XLSX 内容。",
+    unsupported: "不是本次支持的 UTF-8 纯文字、DOCX、XLSX 或 PDF 内容。",
     budget: "超过本次 16 MiB 可检索正文限额，未用于检索。",
     pending: "读取尚未返回，后台状态未确认。",
     busy: "已有文件读取或文档处理尚未结束，本文件未完成检索。",
@@ -114,6 +137,9 @@ export const ATTACHMENT_SEARCH_STRINGS = {
     encrypted: "此文档已加密，未用于检索。",
     timeout: "文档处理等待超时，本次未完成；可明确重新查找。",
     invalid: "返回内容无法确认，未用于检索。",
+    pdfNoText:
+      "此 PDF 未提取到可搜索文字；没有识别图片文字，不能据此判断文件没有内容。",
+    pdfIncomplete: "未能可靠读取整份 PDF 的文字，未用于检索。",
     scopeEmpty:
       "此工作簿没有可见工作表，本次没有可读取的范围；未改为读取隐藏内容。",
   },
@@ -131,10 +157,12 @@ export function docxSearchLocationLabel(location: DocxSearchLocation): string {
 }
 
 export function attachmentSearchLocationLabel(
-  location: DocxSearchLocation | XlsxSearchLocation,
+  location: DocxSearchLocation | XlsxSearchLocation | PdfSearchLocation,
 ): string {
   if (!("kind" in location)) return docxSearchLocationLabel(location);
   const s = ATTACHMENT_SEARCH_STRINGS;
+  if (location.kind === "pdf")
+    return s.pdfLocation(location.pageNumber, location.itemIndex + 1);
   return [
     location.sheetName,
     location.reference,
@@ -145,4 +173,8 @@ export function attachmentSearchLocationLabel(
 
 export function xlsxSearchWarningLabel(warning: XlsxInputWarning): string {
   return `${XLSX_INPUT_WARNING_TEXT[warning.code]}（${xlsxInputWarningCount(warning)}）`;
+}
+export function pdfSearchWarningLabel(warning: PdfInputWarning): string {
+  const text = ATTACHMENT_SEARCH_STRINGS.pdfWarnings[warning.code];
+  return warning.unit === "pages" ? `${text}（${warning.count} 页）` : text;
 }

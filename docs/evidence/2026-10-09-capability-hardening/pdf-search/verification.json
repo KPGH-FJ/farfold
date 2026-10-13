@@ -1,0 +1,162 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-13T19:26:53.470995+00:00",
+  "phase": "SOURCE_AND_CONTROLLED_BROWSER_VERIFIED_BEFORE_FULL_CHECKS",
+  "change": "Search explicitly selected local PDFs through bounded native capture and existing checked PDF Workers, in the common temporary attachment search. Fixed scope is all pages of decoded text, possibly invisible and always partial. Each item is matched separately; page and item locations remain attached to the source.",
+  "sources": [
+    {
+      "path": "src-tauri/src/file_delivery/pdf_input.rs",
+      "bytes": 2558,
+      "sha256": "d709b7d6232e53538d1ccbe1c77ce913a5830fb3add02e01321d37cbc290b26d"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/pdf_search_tests.rs",
+      "bytes": 6510,
+      "sha256": "902f7a76114029964cb649256120eb6985be5379d3ec0beb88b94b5e3454ee2c"
+    },
+    {
+      "path": "src-tauri/src/file_delivery/pdf_search_command_tests.rs",
+      "bytes": 2330,
+      "sha256": "c9721d1b1ceab129f27fbfa72ff8cf6943869c29252ab29ee7c4b81481a1d470"
+    },
+    {
+      "path": "src-tauri/src/file_delivery.rs",
+      "bytes": 17768,
+      "sha256": "0c8a30c827ca6b384dfffee6a0f4dc5d53202d05a2039bf9be7b223fa1756da7"
+    },
+    {
+      "path": "src-tauri/src/file_delivery_commands.rs",
+      "bytes": 22112,
+      "sha256": "822240098bf9fe33a392051cfbf9e58f63df21d14308c274258935a7bf06dc6b"
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 21806,
+      "sha256": "8a540b54f086599e66a9a513679262663bc1115f31568929209d6d23c654b475"
+    },
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 23320,
+      "sha256": "e848db4362a29f066e6a89f38e6990aa7edab7caab42f086045a485065cdf3e5",
+      "lines": 691
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 5249,
+      "sha256": "21430397af601a3dbc25599b62803f70e921d06f3e24eb5e9ecb28eb48d93d65",
+      "lines": 159
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 9450,
+      "sha256": "66f0f8e4797fc05d7467bb8363a4daaec5d175d25bf7a014d807fc8df5142b43",
+      "lines": 180
+    },
+    {
+      "path": "src/runtime/pdf_search_text.ts",
+      "bytes": 1923,
+      "sha256": "a5a2c126cad9300bc4c6b64e5f6c4b40e126f9bccb0ed3b1d821421b7f05d9ac",
+      "lines": 63
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 13250,
+      "sha256": "3e1eaa1fdefc3a284e065bd67e583df49b83afe3381d0ad357dfd7cdb566b549",
+      "lines": 386
+    },
+    {
+      "path": "src/runtime/attachment_search.pdf.test-support.ts",
+      "bytes": 3363,
+      "sha256": "6ed28fbab1ed8a8a3cf92c6ea5baa23b758b1e3a0df3d3b59f0e2e7711ef05f7",
+      "lines": 99
+    },
+    {
+      "path": "src/runtime/attachment_search.pdf.test.ts",
+      "bytes": 17069,
+      "sha256": "450334777413ce094b6862a05096ee47862b1994d6223ca016e18f424623610e",
+      "lines": 470
+    },
+    {
+      "path": "src/runtime/pdf_search_text.test.ts",
+      "bytes": 4715,
+      "sha256": "fff1ed002d783a07259a6528070eb46d49e2045d46ca82a78713366a57dbd4ed",
+      "lines": 138
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.test.tsx",
+      "bytes": 7830,
+      "sha256": "23bfa0434f5330c1f95367aba2a623ed07b6352cde76b26d79f1418c840fbab9",
+      "lines": 177
+    },
+    {
+      "path": "src/runtime/attachment_search.xlsx.test.ts",
+      "bytes": 15801,
+      "sha256": "e497fb50d8a4139e96b2cdc284476ddcc62e95ea4a687c0c770c5d85758f77ca",
+      "lines": 446
+    },
+    {
+      "path": "src/runtime/fixtures/pdf-search/hand-authored-textitems.json",
+      "bytes": 3733,
+      "sha256": "7f273b87384b253eba817f4312223e3a8162d5ec11e306cd03d93950db31de9b",
+      "lines": 176
+    }
+  ],
+  "limits": {
+    "files": 20,
+    "sourceBytes": 1048576,
+    "actualSearchUtf8Bytes": 16777216,
+    "hits": 200,
+    "queryUtf8Bytes": 256,
+    "nativeReadSlots": 2,
+    "batchStructuredParsers": 1,
+    "pdfPages": 1000,
+    "pdfItems": 100000,
+    "pdfCompleteRepresentationBytes": 262144,
+    "pdfTimeoutMs": 15000
+  },
+  "boundaries": [
+    "Existing file selection plus explicit Start, with scope before reading and persistent partial result warning; no extra consent checkbox or automatic Agent input.",
+    "No concatenation across items/pages, normalization or generated wrapper matches. No OCR; image-only files report no extracted text. Encrypted, damaged and over-limit whole reads publish no prefix results.",
+    "Seven source fields, full bytes/hash, MIME, owner and selection are checked across asynchronous work and before source navigation. Captures are immutable before hashing.",
+    "Source navigation locates the actual message attachment, not an asserted PDF page viewer position. Original PDF input remains at its previous 32 MiB limit."
+  ],
+  "actualChecks": {
+    "backendTargetedPassed": 18,
+    "frontendTargetedPassed": 262,
+    "frontendTestFiles": 9,
+    "browsers": [
+      {
+        "engine": "chromium",
+        "label": "run3",
+        "checks": 76,
+        "scenarios": 11,
+        "sourceStable": true
+      },
+      {
+        "engine": "webkit",
+        "label": "run1",
+        "checks": 76,
+        "scenarios": 11,
+        "sourceStable": true
+      }
+    ],
+    "pixels": "Root inspected all four final screenshots. Production App and real PDF/DOCX/XLSX Workers; controlled Tauri file returns, no native IO or real Agent."
+  },
+  "retainedFailures": [
+    "Backend deliberately exposed new search entry accepting 1 MiB+1 via old input path, actual exit101; new bounded path passed.",
+    "Frontend missing PDF route red and later two test parameter-shape errors preserved separately; final targeted262/type/format passed.",
+    "Chromium run1 interrupted by Vite first PDF dependency optimization reload; explicit preload added to test server.",
+    "Chromium run2 had 47 successful assertions then a test selector checked successful-partial text for the explicit no-text error; only the runner assertion corrected, product unchanged."
+  ],
+  "publication": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/publication.json",
+    "bytes": 78757,
+    "sha256": "41f95ce1c938f1808ff47ccccb72a0796542653e42f302c72794106a6346e936"
+  },
+  "formalApplication": "c89b8f82 /0.1.7 installed in prior XLSX slice, never launched after that replacement. PDF search is not installed by this record.",
+  "remaining": [
+    "Seven integration checks, checkpoint and candidate/install verification for this increment.",
+    "Native selected-attachment positive search and source navigation, unloaded attachment discovery and complete P32 remain unverified.",
+    "NEW24 permission recovery, 29 Agents x8 and Windows remain separate and incomplete."
+  ]
+}

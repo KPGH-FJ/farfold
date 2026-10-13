@@ -1,0 +1,1914 @@
+{
+  "schema": 1,
+  "files": [
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/baseline.json",
+        "bytes": 3681,
+        "sha256": "c237ddd81c1a84af9f2a7ccb5441e6f8e988de22ea5794648a31129122d654a4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/baseline.json.raw",
+        "bytes": 3681,
+        "sha256": "c237ddd81c1a84af9f2a7ccb5441e6f8e988de22ea5794648a31129122d654a4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/before/src-tauri/src/file_delivery/pdf_input.rs",
+        "bytes": 2015,
+        "sha256": "908c09fe54aeb5cfce8159423d5b1652af273d4818112cd08562d793ffbac5ba"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/before/src-tauri/src/file_delivery/pdf_input.rs.raw",
+        "bytes": 2015,
+        "sha256": "908c09fe54aeb5cfce8159423d5b1652af273d4818112cd08562d793ffbac5ba"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/before/src-tauri/src/file_delivery.rs",
+        "bytes": 17751,
+        "sha256": "2da2e56dcf80513aa02bbe9c8d960c8d1ee25c31175e78eab2c6a4fcc5bd407a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/before/src-tauri/src/file_delivery.rs.raw",
+        "bytes": 17751,
+        "sha256": "2da2e56dcf80513aa02bbe9c8d960c8d1ee25c31175e78eab2c6a4fcc5bd407a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/before/src-tauri/src/file_delivery_commands.rs",
+        "bytes": 21183,
+        "sha256": "52dcb86e6d19459ddda8f3fb815ade69df0ae9ac150e1092bfef1a810b14379e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/before/src-tauri/src/file_delivery_commands.rs.raw",
+        "bytes": 21183,
+        "sha256": "52dcb86e6d19459ddda8f3fb815ade69df0ae9ac150e1092bfef1a810b14379e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/before/src-tauri/src/lib.rs",
+        "bytes": 21735,
+        "sha256": "40b70dfc28fa0e5545750fccd36fe7acf6025662bd1560317981c8d3ea11159c"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/before/src-tauri/src/lib.rs.raw",
+        "bytes": 21735,
+        "sha256": "40b70dfc28fa0e5545750fccd36fe7acf6025662bd1560317981c8d3ea11159c"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/format-check/completed.json",
+        "bytes": 4322,
+        "sha256": "d67b282614a7493d86412d0a178f81cefb60b1f5fde1c7aa7d293ae334f10d1b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/format-check/completed.json.raw",
+        "bytes": 4322,
+        "sha256": "d67b282614a7493d86412d0a178f81cefb60b1f5fde1c7aa7d293ae334f10d1b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/format-check/started.json",
+        "bytes": 3786,
+        "sha256": "650d036aca49b005b90f6390ef0289a35b80adfd5d37ed16ea5884c490f3da34"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/format-check/started.json.raw",
+        "bytes": 3786,
+        "sha256": "650d036aca49b005b90f6390ef0289a35b80adfd5d37ed16ea5884c490f3da34"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/format-check/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/format-check/stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/format-check/stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/format-check/stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-capture/completed.json",
+        "bytes": 4374,
+        "sha256": "738ec411495f048b14050e91951e1a0d478a4c50e963f19a0a48a0ceead5d879"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/green-pdf-capture/completed.json.raw",
+        "bytes": 4374,
+        "sha256": "738ec411495f048b14050e91951e1a0d478a4c50e963f19a0a48a0ceead5d879"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-capture/started.json",
+        "bytes": 3822,
+        "sha256": "2285ede3498fb631a030ce5a0ea8d31bf89820948518c8a8176a25dc37c57ffd"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/green-pdf-capture/started.json.raw",
+        "bytes": 3822,
+        "sha256": "2285ede3498fb631a030ce5a0ea8d31bf89820948518c8a8176a25dc37c57ffd"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-capture/stderr.log",
+        "bytes": 323,
+        "sha256": "8b29422b96d9d5fe5e64eb41bfdf0b0c9a7a6e87ae67aaf77d70bb3e163163a1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/green-pdf-capture/stderr.log.raw",
+        "bytes": 323,
+        "sha256": "8b29422b96d9d5fe5e64eb41bfdf0b0c9a7a6e87ae67aaf77d70bb3e163163a1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-capture/stdout.log",
+        "bytes": 1639,
+        "sha256": "bd85b4b1e923307395adaf01e6a7d7b91a539241e45f06bc74a5f0a7cb7490c3"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/green-pdf-capture/stdout.log.raw",
+        "bytes": 1639,
+        "sha256": "bd85b4b1e923307395adaf01e6a7d7b91a539241e45f06bc74a5f0a7cb7490c3"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-command/completed.json",
+        "bytes": 4388,
+        "sha256": "3ea774b8910bea303c544141df7cb4a950868ac97cb4511996503fa9235dfe46"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/green-pdf-command/completed.json.raw",
+        "bytes": 4388,
+        "sha256": "3ea774b8910bea303c544141df7cb4a950868ac97cb4511996503fa9235dfe46"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-command/started.json",
+        "bytes": 3838,
+        "sha256": "cd49ff62b20b49758ae954a1451f2f63905e8fa2eebe466c50381cb9bad9bed7"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/green-pdf-command/started.json.raw",
+        "bytes": 3838,
+        "sha256": "cd49ff62b20b49758ae954a1451f2f63905e8fa2eebe466c50381cb9bad9bed7"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-command/stderr.log",
+        "bytes": 256,
+        "sha256": "706688ab7bdee0f381159fbbe64a4b7a0d48019e281a17964b45abc610e87b3a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/green-pdf-command/stderr.log.raw",
+        "bytes": 256,
+        "sha256": "706688ab7bdee0f381159fbbe64a4b7a0d48019e281a17964b45abc610e87b3a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/green-pdf-command/stdout.log",
+        "bytes": 353,
+        "sha256": "f1bbd929b5da047cfeefd280ff3c9c2a46a2c4c0601ecfbd6e1e60fa591735ac"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/green-pdf-command/stdout.log.raw",
+        "bytes": 353,
+        "sha256": "f1bbd929b5da047cfeefd280ff3c9c2a46a2c4c0601ecfbd6e1e60fa591735ac"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/red-analysis.json",
+        "bytes": 1156,
+        "sha256": "7cd59aeaae0038deaba9241b835728d918e9215b5d337dd55130529320a3950e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/red-analysis.json.raw",
+        "bytes": 1156,
+        "sha256": "7cd59aeaae0038deaba9241b835728d918e9215b5d337dd55130529320a3950e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/red-search-limit/completed.json",
+        "bytes": 4491,
+        "sha256": "3a189e487babf2a0fa57b71211c353d3d57eee763b31a1354aac3847e9b0b082"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/red-search-limit/completed.json.raw",
+        "bytes": 4491,
+        "sha256": "3a189e487babf2a0fa57b71211c353d3d57eee763b31a1354aac3847e9b0b082"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/red-search-limit/started.json",
+        "bytes": 3930,
+        "sha256": "8efd663b44c939cba03c369f7b36511091cd3bdc9a5f1d8c15abb3cde853fe95"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/red-search-limit/started.json.raw",
+        "bytes": 3930,
+        "sha256": "8efd663b44c939cba03c369f7b36511091cd3bdc9a5f1d8c15abb3cde853fe95"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/red-search-limit/stderr.log",
+        "bytes": 275,
+        "sha256": "17b7c6a0a3f1156df70b690282ed3a20190e7d01f8bc00c2d10948b5eca4e645"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/red-search-limit/stderr.log.raw",
+        "bytes": 275,
+        "sha256": "17b7c6a0a3f1156df70b690282ed3a20190e7d01f8bc00c2d10948b5eca4e645"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/red-search-limit/stdout.log",
+        "bytes": 1399428,
+        "sha256": "4603dd859c8b9d8e7c7c84cd1cb59829ab5a642c19752ec5bb2c19af4ddb6cf1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/red-search-limit/stdout.log.raw",
+        "bytes": 1399428,
+        "sha256": "4603dd859c8b9d8e7c7c84cd1cb59829ab5a642c19752ec5bb2c19af4ddb6cf1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/red-source/src-tauri/src/file_delivery/pdf_input.rs",
+        "bytes": 2195,
+        "sha256": "38f140eefc64d82030ed04b800b362162ce6732521fd6d1584eae3c52a49ad35"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/red-source/src-tauri/src/file_delivery/pdf_input.rs.raw",
+        "bytes": 2195,
+        "sha256": "38f140eefc64d82030ed04b800b362162ce6732521fd6d1584eae3c52a49ad35"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/red-source/src-tauri/src/file_delivery/pdf_search_command_tests.rs",
+        "bytes": 2147,
+        "sha256": "eaadbd391866d8150110a3d1ecd6671a9c5c5deb1a45af2a41b9353fdf70672f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/red-source/src-tauri/src/file_delivery/pdf_search_command_tests.rs.raw",
+        "bytes": 2147,
+        "sha256": "eaadbd391866d8150110a3d1ecd6671a9c5c5deb1a45af2a41b9353fdf70672f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/red-source/src-tauri/src/file_delivery/pdf_search_tests.rs",
+        "bytes": 6155,
+        "sha256": "d6bd86b59fd0c396a130bc0b8324be2d2482a4d5d310e2688724f10f69e5981e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/red-source/src-tauri/src/file_delivery/pdf_search_tests.rs.raw",
+        "bytes": 6155,
+        "sha256": "d6bd86b59fd0c396a130bc0b8324be2d2482a4d5d310e2688724f10f69e5981e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/red-source/src-tauri/src/file_delivery.rs",
+        "bytes": 17768,
+        "sha256": "0c8a30c827ca6b384dfffee6a0f4dc5d53202d05a2039bf9be7b223fa1756da7"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/red-source/src-tauri/src/file_delivery.rs.raw",
+        "bytes": 17768,
+        "sha256": "0c8a30c827ca6b384dfffee6a0f4dc5d53202d05a2039bf9be7b223fa1756da7"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/red-source/src-tauri/src/file_delivery_commands.rs",
+        "bytes": 22112,
+        "sha256": "822240098bf9fe33a392051cfbf9e58f63df21d14308c274258935a7bf06dc6b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/red-source/src-tauri/src/file_delivery_commands.rs.raw",
+        "bytes": 22112,
+        "sha256": "822240098bf9fe33a392051cfbf9e58f63df21d14308c274258935a7bf06dc6b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/red-source/src-tauri/src/lib.rs",
+        "bytes": 21806,
+        "sha256": "8a540b54f086599e66a9a513679262663bc1115f31568929209d6d23c654b475"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/red-source/src-tauri/src/lib.rs.raw",
+        "bytes": 21806,
+        "sha256": "8a540b54f086599e66a9a513679262663bc1115f31568929209d6d23c654b475"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/regression-read-pool/completed.json",
+        "bytes": 4384,
+        "sha256": "f74d8d60515e431c8d1a0c12f72f02cce27d37d7b21a7fd11009792b05d9118d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/regression-read-pool/completed.json.raw",
+        "bytes": 4384,
+        "sha256": "f74d8d60515e431c8d1a0c12f72f02cce27d37d7b21a7fd11009792b05d9118d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/regression-read-pool/started.json",
+        "bytes": 3820,
+        "sha256": "13609740778cc0ed95a0a1814f2c00835eccf4d539bb52f71d43cad88f231e41"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/regression-read-pool/started.json.raw",
+        "bytes": 3820,
+        "sha256": "13609740778cc0ed95a0a1814f2c00835eccf4d539bb52f71d43cad88f231e41"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/regression-read-pool/stderr.log",
+        "bytes": 256,
+        "sha256": "ca76514d82d06feac18d6bd20977d376bd715789dee20cc01e4df58091ed27cb"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/regression-read-pool/stderr.log.raw",
+        "bytes": 256,
+        "sha256": "ca76514d82d06feac18d6bd20977d376bd715789dee20cc01e4df58091ed27cb"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/regression-read-pool/stdout.log",
+        "bytes": 711,
+        "sha256": "dcbf6854a4096d9722df9e3819ff539817073e7fdb15faf65fccc73505ed58cb"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/regression-read-pool/stdout.log.raw",
+        "bytes": 711,
+        "sha256": "dcbf6854a4096d9722df9e3819ff539817073e7fdb15faf65fccc73505ed58cb"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/run_check.py",
+        "bytes": 2003,
+        "sha256": "e9aeebca48aa79becf525b31ae9bd665ba93223ec23d5b780af33ad20025e55a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/run_check.py.raw",
+        "bytes": 2003,
+        "sha256": "e9aeebca48aa79becf525b31ae9bd665ba93223ec23d5b780af33ad20025e55a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/source-freeze.json",
+        "bytes": 13574,
+        "sha256": "a46903830d8aeea3be39c467101c52768fa6f15db54bbac6ff337a2614cc56ef"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/source-freeze.json.raw",
+        "bytes": 13574,
+        "sha256": "a46903830d8aeea3be39c467101c52768fa6f15db54bbac6ff337a2614cc56ef"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-backend/source.diff",
+        "bytes": 12775,
+        "sha256": "4496a5ac3ecb832b84f6a013cd4231e8dfab76e1fd5204243f9893364d5a3aca"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/backend/source.diff.raw",
+        "bytes": 12775,
+        "sha256": "4496a5ac3ecb832b84f6a013cd4231e8dfab76e1fd5204243f9893364d5a3aca"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/finalize-failure.jsonl.raw",
+        "bytes": 933,
+        "sha256": "66dd3e9a9e1351131cf1f7a15d9229598d27e1c35d1c1e43c48978ece6ead57e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/finalize-failure.jsonl.raw.raw",
+        "bytes": 933,
+        "sha256": "66dd3e9a9e1351131cf1f7a15d9229598d27e1c35d1c1e43c48978ece6ead57e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/finalize-success.jsonl.raw",
+        "bytes": 1133,
+        "sha256": "ff230a5ad1516f6582ed4dd5a0440379bc135d025ec4133dd0261e318362bc41"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/finalize-success.jsonl.raw.raw",
+        "bytes": 1133,
+        "sha256": "ff230a5ad1516f6582ed4dd5a0440379bc135d025ec4133dd0261e318362bc41"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/finalize-v1.py",
+        "bytes": 6908,
+        "sha256": "1ca196625489a21696dae4781f1d805a38f7ea0c1892e26e42672d7780987caa"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/finalize-v1.py.raw",
+        "bytes": 6908,
+        "sha256": "1ca196625489a21696dae4781f1d805a38f7ea0c1892e26e42672d7780987caa"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/finalize.py",
+        "bytes": 7103,
+        "sha256": "caeaa19bbad9fe91b15d66af786dcc9aba2aa7120b1dc6ea2e480f19e1bdf58b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/finalize.py.raw",
+        "bytes": 7103,
+        "sha256": "caeaa19bbad9fe91b15d66af786dcc9aba2aa7120b1dc6ea2e480f19e1bdf58b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/finalizer-correction.json",
+        "bytes": 1239,
+        "sha256": "a5f98b096f80022ad5b3703376812810b8874f5501b10a2cddf23ee6a1cc24c2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/finalizer-correction.json.raw",
+        "bytes": 1239,
+        "sha256": "a5f98b096f80022ad5b3703376812810b8874f5501b10a2cddf23ee6a1cc24c2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/fixture-provenance.json",
+        "bytes": 805,
+        "sha256": "0d1032ce2050cef7c128ca7d85eec24bcf5bc3037f2ede747b2649deccbaccdf"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/fixture-provenance.json.raw",
+        "bytes": 805,
+        "sha256": "0d1032ce2050cef7c128ca7d85eec24bcf5bc3037f2ede747b2649deccbaccdf"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/format-01.completed.json",
+        "bytes": 1242,
+        "sha256": "22ec955bead5a34acb65b89165e7c4cde3a2919391179b24267573460cfa8026"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/format-01.completed.json.raw",
+        "bytes": 1242,
+        "sha256": "22ec955bead5a34acb65b89165e7c4cde3a2919391179b24267573460cfa8026"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/format-01.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/format-01.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/format-01.stdout.log",
+        "bytes": 532,
+        "sha256": "8143588d785f42e2f0cbe3bdd8df6dd075bd52dffdec1c024343e57293249a20"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/format-01.stdout.log.raw",
+        "bytes": 532,
+        "sha256": "8143588d785f42e2f0cbe3bdd8df6dd075bd52dffdec1c024343e57293249a20"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/format-final.completed.json",
+        "bytes": 1247,
+        "sha256": "985ef8584828409a1c8d7ea3a5b0ac1eb4c7aa90a6cad3027ca88629cdc15861"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/format-final.completed.json.raw",
+        "bytes": 1247,
+        "sha256": "985ef8584828409a1c8d7ea3a5b0ac1eb4c7aa90a6cad3027ca88629cdc15861"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/format-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/format-final.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/format-final.stdout.log",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/format-final.stdout.log.raw",
+        "bytes": 66,
+        "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/red-01.completed.json",
+        "bytes": 734,
+        "sha256": "6b4e0c26a6aba76ecaa3f5b70373c316956585854d83a6f2140fe32c9312387d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/red-01.completed.json.raw",
+        "bytes": 734,
+        "sha256": "6b4e0c26a6aba76ecaa3f5b70373c316956585854d83a6f2140fe32c9312387d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/red-01.stderr.log",
+        "bytes": 745,
+        "sha256": "548807eb2c91cb1890c4f823676898eabad1758186449e2a1f5da48ba6dca62f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/red-01.stderr.log.raw",
+        "bytes": 745,
+        "sha256": "548807eb2c91cb1890c4f823676898eabad1758186449e2a1f5da48ba6dca62f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/red-01.stdout.log",
+        "bytes": 369,
+        "sha256": "f709859cb5cb6b6cc4694cc97b6088bd5249f63a1d9d4434f11d6384f385978e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/red-01.stdout.log.raw",
+        "bytes": 369,
+        "sha256": "f709859cb5cb6b6cc4694cc97b6088bd5249f63a1d9d4434f11d6384f385978e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/route-green-01.completed.json",
+        "bytes": 748,
+        "sha256": "6bf1a31d03dae3d16d47d5f107e7c3f6ea6233df2adc9b313e0c9a46e37cbc41"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/route-green-01.completed.json.raw",
+        "bytes": 748,
+        "sha256": "6bf1a31d03dae3d16d47d5f107e7c3f6ea6233df2adc9b313e0c9a46e37cbc41"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/route-green-01.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/route-green-01.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/route-green-01.stdout.log",
+        "bytes": 208,
+        "sha256": "1870f3b0bce7822b1b035a0fc93eae8811844bd42313ff52a33bb516b34c75d2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/route-green-01.stdout.log.raw",
+        "bytes": 208,
+        "sha256": "1870f3b0bce7822b1b035a0fc93eae8811844bd42313ff52a33bb516b34c75d2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/run.py",
+        "bytes": 863,
+        "sha256": "1b69245ca2d169ae1dd8c503a5ba00a25207d90d67741947e2a895765cfa2228"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/run.py.raw",
+        "bytes": 863,
+        "sha256": "1b69245ca2d169ae1dd8c503a5ba00a25207d90d67741947e2a895765cfa2228"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/source-freeze-v1.json",
+        "bytes": 4229,
+        "sha256": "e58426127890a0c650f2ca7f8e8080131efe6ce1a0f3fe18be7920672a24ac77"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/source-freeze-v1.json.raw",
+        "bytes": 4229,
+        "sha256": "e58426127890a0c650f2ca7f8e8080131efe6ce1a0f3fe18be7920672a24ac77"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/summary.json",
+        "bytes": 4244,
+        "sha256": "947ac8ce49b2d39dac03d9b991d1897be184b5c92e601eaae0e54bffa193c2f8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/summary.json.raw",
+        "bytes": 4244,
+        "sha256": "947ac8ce49b2d39dac03d9b991d1897be184b5c92e601eaae0e54bffa193c2f8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-02.completed.json",
+        "bytes": 788,
+        "sha256": "a02355c4b0b7014461ed22adc56a67c93e9065b7e9ed4cc2662d94b8ef93785b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/targeted-02.completed.json.raw",
+        "bytes": 788,
+        "sha256": "a02355c4b0b7014461ed22adc56a67c93e9065b7e9ed4cc2662d94b8ef93785b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-02.stderr.log",
+        "bytes": 1864,
+        "sha256": "52594aedfabf99bf6d91157153dd169bd0e88c0cb4870b6dcf5c6bae05c30533"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/targeted-02.stderr.log.raw",
+        "bytes": 1864,
+        "sha256": "52594aedfabf99bf6d91157153dd169bd0e88c0cb4870b6dcf5c6bae05c30533"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-02.stdout.log",
+        "bytes": 462,
+        "sha256": "70f3ab29cc104e7e6570e00814370bd3cb1328664b1d3f028b192a830dba0496"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/targeted-02.stdout.log.raw",
+        "bytes": 462,
+        "sha256": "70f3ab29cc104e7e6570e00814370bd3cb1328664b1d3f028b192a830dba0496"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-03.completed.json",
+        "bytes": 841,
+        "sha256": "6e8126a906abeb8382617e5f7459315c20811664fceedb72234114272a6d3bfc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/targeted-03.completed.json.raw",
+        "bytes": 841,
+        "sha256": "6e8126a906abeb8382617e5f7459315c20811664fceedb72234114272a6d3bfc"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-03.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/targeted-03.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-03.stdout.log",
+        "bytes": 212,
+        "sha256": "eadaec88f0b7f9043a23a8d32a84dfb482ae3a538b7290797710ec75e6fd8b75"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/targeted-03.stdout.log.raw",
+        "bytes": 212,
+        "sha256": "eadaec88f0b7f9043a23a8d32a84dfb482ae3a538b7290797710ec75e6fd8b75"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-final.completed.json",
+        "bytes": 1115,
+        "sha256": "9aa37440578bffc9e601847e6bb7847ac3437ae5061445c3bbc33b0a91459473"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/targeted-final.completed.json.raw",
+        "bytes": 1115,
+        "sha256": "9aa37440578bffc9e601847e6bb7847ac3437ae5061445c3bbc33b0a91459473"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-final.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/targeted-final.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-final.stdout.log",
+        "bytes": 214,
+        "sha256": "132fce376fff0b048c3771ee91ab40d35ce89d5ab43e86fdedc19cf47d03fa71"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/targeted-final.stdout.log.raw",
+        "bytes": 214,
+        "sha256": "132fce376fff0b048c3771ee91ab40d35ce89d5ab43e86fdedc19cf47d03fa71"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/format-01.jsonl.raw",
+        "bytes": 2779,
+        "sha256": "10d6a5f46fceb037f9d183f03168ab228c27e85f03e8337ee11dca0283f6688c"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/transcript-receipts/format-01.jsonl.raw.raw",
+        "bytes": 2779,
+        "sha256": "10d6a5f46fceb037f9d183f03168ab228c27e85f03e8337ee11dca0283f6688c"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/format-final.jsonl.raw",
+        "bytes": 2318,
+        "sha256": "99ff70ce714dcff8d2a9cb38a428a5fc06f2d6b24b30bad1cf8404bfdedfb406"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/transcript-receipts/format-final.jsonl.raw.raw",
+        "bytes": 2318,
+        "sha256": "99ff70ce714dcff8d2a9cb38a428a5fc06f2d6b24b30bad1cf8404bfdedfb406"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/manifest.json",
+        "bytes": 18670,
+        "sha256": "d33fcb0f54b40440597c684a2021a933a758b347b15dc13d9f2a1d3adac0d3f5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/transcript-receipts/manifest.json.raw",
+        "bytes": 18670,
+        "sha256": "d33fcb0f54b40440597c684a2021a933a758b347b15dc13d9f2a1d3adac0d3f5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/red-01.jsonl.raw",
+        "bytes": 10873,
+        "sha256": "c78eb59182113715ca8f2041cba45e0269dbd170a281278f434bdc80412cbff1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/transcript-receipts/red-01.jsonl.raw.raw",
+        "bytes": 10873,
+        "sha256": "c78eb59182113715ca8f2041cba45e0269dbd170a281278f434bdc80412cbff1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/route-green-01.jsonl.raw",
+        "bytes": 1610,
+        "sha256": "7abf4be22c80dbf7d5363248b3057e894eafad7607166923967ed7ce43f727aa"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/transcript-receipts/route-green-01.jsonl.raw.raw",
+        "bytes": 1610,
+        "sha256": "7abf4be22c80dbf7d5363248b3057e894eafad7607166923967ed7ce43f727aa"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/targeted-02.jsonl.raw",
+        "bytes": 3872,
+        "sha256": "477e4b1d9b13e3ae4d4f9cc7d100c985e4724716b741914d04e692a1fd98e920"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/transcript-receipts/targeted-02.jsonl.raw.raw",
+        "bytes": 3872,
+        "sha256": "477e4b1d9b13e3ae4d4f9cc7d100c985e4724716b741914d04e692a1fd98e920"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/targeted-03.jsonl.raw",
+        "bytes": 12927,
+        "sha256": "819a439aa988fdc69a9b732a0ef76bfdb77efd24e88022125bb7b4576d0954cf"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/transcript-receipts/targeted-03.jsonl.raw.raw",
+        "bytes": 12927,
+        "sha256": "819a439aa988fdc69a9b732a0ef76bfdb77efd24e88022125bb7b4576d0954cf"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/targeted-final.jsonl.raw",
+        "bytes": 2237,
+        "sha256": "f66ce85d7e27febcf410b84f08f8e20f928fc061b423b23a508c3578d06a51b8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/transcript-receipts/targeted-final.jsonl.raw.raw",
+        "bytes": 2237,
+        "sha256": "f66ce85d7e27febcf410b84f08f8e20f928fc061b423b23a508c3578d06a51b8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/typecheck-01.jsonl.raw",
+        "bytes": 1368,
+        "sha256": "c367ab9105f55026a2ded36222b2e9ce94c74e274a6d59dd297f90e9635ab5d8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/transcript-receipts/typecheck-01.jsonl.raw.raw",
+        "bytes": 1368,
+        "sha256": "c367ab9105f55026a2ded36222b2e9ce94c74e274a6d59dd297f90e9635ab5d8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/typecheck-01.completed.json",
+        "bytes": 674,
+        "sha256": "8a26a64d97f17fec28ff70da1145f85caf152f85f38ba3a09c651ece65169629"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/typecheck-01.completed.json.raw",
+        "bytes": 674,
+        "sha256": "8a26a64d97f17fec28ff70da1145f85caf152f85f38ba3a09c651ece65169629"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/typecheck-01.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/typecheck-01.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-frontend/typecheck-01.stdout.log",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/frontend/typecheck-01.stdout.log.raw",
+        "bytes": 78,
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/backend-review.json",
+        "bytes": 1066,
+        "sha256": "b24c7dc986df72d35fb02b99eaff580c05b8caa1eb357ab765e447dc4e8b28a2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/backend-review.json.raw",
+        "bytes": 1066,
+        "sha256": "b24c7dc986df72d35fb02b99eaff580c05b8caa1eb357ab765e447dc4e8b28a2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/browser-preparation-review-supplement.json",
+        "bytes": 1243,
+        "sha256": "3a2353f098da044cb812fd271644408396f234c41e3497b126b26467cd34f714"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/browser-preparation-review-supplement.json.raw",
+        "bytes": 1243,
+        "sha256": "3a2353f098da044cb812fd271644408396f234c41e3497b126b26467cd34f714"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/browser-preparation-review.json",
+        "bytes": 3610,
+        "sha256": "cdc2d647855cf4811b5a3cc892ad93bca817e8e5c94326efa252336c2252a873"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/browser-preparation-review.json.raw",
+        "bytes": 3610,
+        "sha256": "cdc2d647855cf4811b5a3cc892ad93bca817e8e5c94326efa252336c2252a873"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/browser-review.json",
+        "bytes": 4661,
+        "sha256": "f3a86fd05974312ad6f72d319c2d1f09e7a91902388ab4e5603755d211ac1f95"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/browser-review.json.raw",
+        "bytes": 4661,
+        "sha256": "f3a86fd05974312ad6f72d319c2d1f09e7a91902388ab4e5603755d211ac1f95"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/fixture-review.json",
+        "bytes": 5739,
+        "sha256": "db479365622ffb8b6a22704cb5f730e8b3f770c44203e7fc866e5aa39b21ecaf"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/fixture-review.json.raw",
+        "bytes": 5739,
+        "sha256": "db479365622ffb8b6a22704cb5f730e8b3f770c44203e7fc866e5aa39b21ecaf"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/frontend-evidence-review.json",
+        "bytes": 6487,
+        "sha256": "388d3f1d6347851ce4c7a1ad74fd7f5800e936afd2786ff428aca63974b59a97"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/frontend-evidence-review.json.raw",
+        "bytes": 6487,
+        "sha256": "388d3f1d6347851ce4c7a1ad74fd7f5800e936afd2786ff428aca63974b59a97"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/frontend-review.json",
+        "bytes": 16185,
+        "sha256": "22cf14ca1d4971e7329d52ff7e11e6af4063fbecc7f1b2b926ec65f8adef1afe"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/frontend-review.json.raw",
+        "bytes": 16185,
+        "sha256": "22cf14ca1d4971e7329d52ff7e11e6af4063fbecc7f1b2b926ec65f8adef1afe"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/inventory-adapter-review.json",
+        "bytes": 1861,
+        "sha256": "afd5feacd5b5f1c85766c49c43a2a417fa0eb2cc5197cec891c2924cf285e8ad"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/inventory-adapter-review.json.raw",
+        "bytes": 1861,
+        "sha256": "afd5feacd5b5f1c85766c49c43a2a417fa0eb2cc5197cec891c2924cf285e8ad"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/review-final-receipts.py",
+        "bytes": 9255,
+        "sha256": "79fe04544d4b2b51a1e0ad1e29e4de3d48ac63f14d7877821c3168474e868b9a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/review-final-receipts.py.raw",
+        "bytes": 9255,
+        "sha256": "79fe04544d4b2b51a1e0ad1e29e4de3d48ac63f14d7877821c3168474e868b9a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/chromium-run1.jsonl.raw",
+        "bytes": 6854,
+        "sha256": "00950331435b0962c569f2970bc3ac596fb4a0cf6cac040e47593cca635496d8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/transcript-browser/chromium-run1.jsonl.raw.raw",
+        "bytes": 6854,
+        "sha256": "00950331435b0962c569f2970bc3ac596fb4a0cf6cac040e47593cca635496d8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/chromium-run2.jsonl.raw",
+        "bytes": 898,
+        "sha256": "6f4348f9ec5fbbcb10a502017a379754e222ae7ca15deb27bf55ebf11dd51218"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/transcript-browser/chromium-run2.jsonl.raw.raw",
+        "bytes": 898,
+        "sha256": "6f4348f9ec5fbbcb10a502017a379754e222ae7ca15deb27bf55ebf11dd51218"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/chromium-run3.jsonl.raw",
+        "bytes": 830,
+        "sha256": "1453de4c82611e0cd952dfcfa569deea7c93c05a6ac02b724d7002c840871fa4"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/transcript-browser/chromium-run3.jsonl.raw.raw",
+        "bytes": 830,
+        "sha256": "1453de4c82611e0cd952dfcfa569deea7c93c05a6ac02b724d7002c840871fa4"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/dependency-reload-observation.jsonl.raw",
+        "bytes": 2197,
+        "sha256": "25d9f54dd56f2bf32a1a4649b6db469aacbe7fc6d7afbb0d3a7d66e6a1d216f9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/transcript-browser/dependency-reload-observation.jsonl.raw.raw",
+        "bytes": 2197,
+        "sha256": "25d9f54dd56f2bf32a1a4649b6db469aacbe7fc6d7afbb0d3a7d66e6a1d216f9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/manifest.json",
+        "bytes": 3189,
+        "sha256": "48c9ade462bed86c20210296474a99985e584f84f44916dc09e53df54aaa6f25"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/transcript-browser/manifest.json.raw",
+        "bytes": 3189,
+        "sha256": "48c9ade462bed86c20210296474a99985e584f84f44916dc09e53df54aaa6f25"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/server-stop.jsonl.raw",
+        "bytes": 2213,
+        "sha256": "f49a532bbb8450fea998fa3fda2aa8f2c54494c10d30ada81c52a5bb4bd09836"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/transcript-browser/server-stop.jsonl.raw.raw",
+        "bytes": 2213,
+        "sha256": "f49a532bbb8450fea998fa3fda2aa8f2c54494c10d30ada81c52a5bb4bd09836"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/transcript-browser/webkit-run1.jsonl.raw",
+        "bytes": 836,
+        "sha256": "5a76215468c0f5c6031343d67ddd802639a2eb9e63e9e4c17f9e5b903b7378de"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/transcript-browser/webkit-run1.jsonl.raw.raw",
+        "bytes": 836,
+        "sha256": "5a76215468c0f5c6031343d67ddd802639a2eb9e63e9e4c17f9e5b903b7378de"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-independent/verify-authored-fixtures.py",
+        "bytes": 5998,
+        "sha256": "00e660a5cebf4201973c88bab6e9f35ad33dc0365789482fd78cf9e332525228"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/independent/verify-authored-fixtures.py.raw",
+        "bytes": 5998,
+        "sha256": "00e660a5cebf4201973c88bab6e9f35ad33dc0365789482fd78cf9e332525228"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/authoring-validation.json",
+        "bytes": 6348,
+        "sha256": "e0329ee99414d0c2b585a62ac35452d1fb6afa40b9af70ee466f3109b661614f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/authoring-validation.json.raw",
+        "bytes": 6348,
+        "sha256": "e0329ee99414d0c2b585a62ac35452d1fb6afa40b9af70ee466f3109b661614f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/consent-review.json",
+        "bytes": 3831,
+        "sha256": "c72379bed8a1d2cb3f346afd77abc0f5bdd3886bbadbdcb886c75c2fe619c432"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/consent-review.json.raw",
+        "bytes": 3831,
+        "sha256": "c72379bed8a1d2cb3f346afd77abc0f5bdd3886bbadbdcb886c75c2fe619c432"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/fixture-freeze.json",
+        "bytes": 3725,
+        "sha256": "a738ce8e8ad4cf8bb60772f1cc176f93fc8f1a986bd7074f91e09ab08ee21a50"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/fixture-freeze.json.raw",
+        "bytes": 3725,
+        "sha256": "a738ce8e8ad4cf8bb60772f1cc176f93fc8f1a986bd7074f91e09ab08ee21a50"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/fixture-summary.json",
+        "bytes": 3115,
+        "sha256": "e05bf23fca2f9f0a5d25cabc0714169445c1f31a618ab45094cf44f2a3e316d1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/fixture-summary.json.raw",
+        "bytes": 3115,
+        "sha256": "e05bf23fca2f9f0a5d25cabc0714169445c1f31a618ab45094cf44f2a3e316d1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/fixture-transcript-receipts/authoring-validation.completed.jsonl.raw",
+        "bytes": 10505,
+        "sha256": "92bf8df7722553c550e2cb8778e7307d682a49fa91c0b3e10fe90a562d541e34"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/fixture-transcript-receipts/authoring-validation.completed.jsonl.raw.raw",
+        "bytes": 10505,
+        "sha256": "92bf8df7722553c550e2cb8778e7307d682a49fa91c0b3e10fe90a562d541e34"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/fixture-transcript-receipts/generation.completed.jsonl.raw",
+        "bytes": 17972,
+        "sha256": "243b66aabc1b415307100e68ca483942f5478529dfaebb0eb18461f89cfb5d01"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/fixture-transcript-receipts/generation.completed.jsonl.raw.raw",
+        "bytes": 17972,
+        "sha256": "243b66aabc1b415307100e68ca483942f5478529dfaebb0eb18461f89cfb5d01"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/fixture-transcript-receipts/manifest.json",
+        "bytes": 1766,
+        "sha256": "480a5064822defc53910e789bf7c2d65e2cdc77793c38be058419ba2f7926023"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/fixture-transcript-receipts/manifest.json.raw",
+        "bytes": 1766,
+        "sha256": "480a5064822defc53910e789bf7c2d65e2cdc77793c38be058419ba2f7926023"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/fixture-transcript-receipts/marker.completed.jsonl.raw",
+        "bytes": 1313,
+        "sha256": "a26352e7474c870f8e1e23c4b93962792c062de34ccdc340d978274ab4fed597"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/fixture-transcript-receipts/marker.completed.jsonl.raw.raw",
+        "bytes": 1313,
+        "sha256": "a26352e7474c870f8e1e23c4b93962792c062de34ccdc340d978274ab4fed597"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/07-page-item-barriers.pdf",
+        "bytes": 1022,
+        "sha256": "13443f33956ca18fda7de18e90980c3f35d74080c660c9adef160892835ad5ba"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/fixtures/07-page-item-barriers.pdf",
+        "bytes": 1022,
+        "sha256": "13443f33956ca18fda7de18e90980c3f35d74080c660c9adef160892835ad5ba"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/08-unicode-preservation.pdf",
+        "bytes": 1455,
+        "sha256": "2af57c234829205f99957bf8a6881d1c12fed36efe12e6007f705772899f2995"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/fixtures/08-unicode-preservation.pdf",
+        "bytes": 1455,
+        "sha256": "2af57c234829205f99957bf8a6881d1c12fed36efe12e6007f705772899f2995"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/09-terminal-page-damaged.pdf",
+        "bytes": 1180,
+        "sha256": "3939e6b9b64e6ae040946fc4ad8c0ff7c22dd7d992a8049c4537d6d44197642d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/fixtures/09-terminal-page-damaged.pdf",
+        "bytes": 1180,
+        "sha256": "3939e6b9b64e6ae040946fc4ad8c0ff7c22dd7d992a8049c4537d6d44197642d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/authoring-oracle.json",
+        "bytes": 6418,
+        "sha256": "c9e4f29fde46c8fbe374abffe4ada858cb54c21bb64bbcdaeca568e2201bde99"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/fixtures/authoring-oracle.json.raw",
+        "bytes": 6418,
+        "sha256": "c9e4f29fde46c8fbe374abffe4ada858cb54c21bb64bbcdaeca568e2201bde99"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/fixtures/hand-authored-textitems.json",
+        "bytes": 3757,
+        "sha256": "f1966c5904e245f1f66559a2db0f31c960117bb688ba02cf4698fd575a08bc24"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/fixtures/hand-authored-textitems.json.raw",
+        "bytes": 3757,
+        "sha256": "f1966c5904e245f1f66559a2db0f31c960117bb688ba02cf4698fd575a08bc24"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/generate_search_fixtures.py",
+        "bytes": 8218,
+        "sha256": "52e36ae201a9f6f261dd134db88227f120dd233a520e85c5d6a7e63b7b0d808c"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/generate_search_fixtures.py.raw",
+        "bytes": 8218,
+        "sha256": "52e36ae201a9f6f261dd134db88227f120dd233a520e85c5d6a7e63b7b0d808c"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/handoff.json",
+        "bytes": 4744,
+        "sha256": "e409d688a8599d079750db09a80247fd0d618d5937d1731651d348ededd25045"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/handoff.json.raw",
+        "bytes": 4744,
+        "sha256": "e409d688a8599d079750db09a80247fd0d618d5937d1731651d348ededd25045"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/legacy-provenance.json",
+        "bytes": 10612,
+        "sha256": "ee06ef0fe5acc30988cf6299f6ddd9f3d9e3344117a0df1399ea28c5ef040f79"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/legacy-provenance.json.raw",
+        "bytes": 10612,
+        "sha256": "ee06ef0fe5acc30988cf6299f6ddd9f3d9e3344117a0df1399ea28c5ef040f79"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/raw-content/07-page-item-barriers-page1.bin",
+        "bytes": 145,
+        "sha256": "bb391d3bd4e793740ffad834cb8cee05f670d8d4bac6ef611464e831e0136102"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/raw-content/07-page-item-barriers-page1.bin.raw",
+        "bytes": 145,
+        "sha256": "bb391d3bd4e793740ffad834cb8cee05f670d8d4bac6ef611464e831e0136102"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/raw-content/07-page-item-barriers-page2.bin",
+        "bytes": 101,
+        "sha256": "ca4b9438de5a92bbe224bdf6cc85e7b8b739d7c993987eaa1a8a6c55a9be8065"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/raw-content/07-page-item-barriers-page2.bin.raw",
+        "bytes": 101,
+        "sha256": "ca4b9438de5a92bbe224bdf6cc85e7b8b739d7c993987eaa1a8a6c55a9be8065"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/raw-content/08-unicode-preservation-glyph.bin",
+        "bytes": 81,
+        "sha256": "6e0881162708973ed16d687d3da7cdb7c4abb48b70d89d5b07cb9314da4cc896"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/raw-content/08-unicode-preservation-glyph.bin.raw",
+        "bytes": 81,
+        "sha256": "6e0881162708973ed16d687d3da7cdb7c4abb48b70d89d5b07cb9314da4cc896"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/raw-content/08-unicode-preservation-page1.bin",
+        "bytes": 52,
+        "sha256": "fee9bbe7cc2839e6a15de0271b2e276bab5d2f480b97cd2a7d2c9d5cda085c5a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/raw-content/08-unicode-preservation-page1.bin.raw",
+        "bytes": 52,
+        "sha256": "fee9bbe7cc2839e6a15de0271b2e276bab5d2f480b97cd2a7d2c9d5cda085c5a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/raw-content/08-unicode-preservation-to-unicode.bin",
+        "bytes": 403,
+        "sha256": "cd7b3b0a5b2d182376bb7ab7edb04d2aac7969c0db54d3907179605ba34fd7da"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/raw-content/08-unicode-preservation-to-unicode.bin.raw",
+        "bytes": 403,
+        "sha256": "cd7b3b0a5b2d182376bb7ab7edb04d2aac7969c0db54d3907179605ba34fd7da"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/raw-content/09-terminal-page-damaged-page1.bin",
+        "bytes": 64,
+        "sha256": "11cb144d73b905789cdc9b45eb6e4325c5170e0eb5bf6008c3012ef7ed3bf387"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/raw-content/09-terminal-page-damaged-page1.bin.raw",
+        "bytes": 64,
+        "sha256": "11cb144d73b905789cdc9b45eb6e4325c5170e0eb5bf6008c3012ef7ed3bf387"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/raw-content/09-terminal-page-damaged-page2.bin",
+        "bytes": 65,
+        "sha256": "1c529ddedc7badd123aa272c32bd94cc0818dd555f9543364df99d28ce90f5f5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/raw-content/09-terminal-page-damaged-page2.bin.raw",
+        "bytes": 65,
+        "sha256": "1c529ddedc7badd123aa272c32bd94cc0818dd555f9543364df99d28ce90f5f5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/raw-content/09-terminal-page-damaged-page3-invalid.bin",
+        "bytes": 32,
+        "sha256": "7307c87e2dfc6925982e1e3afae2671c5a088b168a52def0786d5eb48ae3ea9a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/raw-content/09-terminal-page-damaged-page3-invalid.bin.raw",
+        "bytes": 32,
+        "sha256": "7307c87e2dfc6925982e1e3afae2671c5a088b168a52def0786d5eb48ae3ea9a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/renders/07-page-item-barriers-1.png",
+        "bytes": 5427,
+        "sha256": "4df9357a3434e8040dc08aaa3753edc693443f155492ef662d76b7e820c5b3b2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/renders/07-page-item-barriers-1.png",
+        "bytes": 5427,
+        "sha256": "4df9357a3434e8040dc08aaa3753edc693443f155492ef662d76b7e820c5b3b2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/renders/07-page-item-barriers-2.png",
+        "bytes": 5474,
+        "sha256": "c8056782baff4f62c9322c9cf0bc18954d8f2dcb92e6e1b4114697561eb6d693"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/renders/07-page-item-barriers-2.png",
+        "bytes": 5474,
+        "sha256": "c8056782baff4f62c9322c9cf0bc18954d8f2dcb92e6e1b4114697561eb6d693"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/renders/07-page-item-barriers.stderr.log",
+        "bytes": 66,
+        "sha256": "48d1742e4eb8d891c783fb9298eeb3b7b38196001af8c8f9457e38ebf0e40b99"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/renders/07-page-item-barriers.stderr.log.raw",
+        "bytes": 66,
+        "sha256": "48d1742e4eb8d891c783fb9298eeb3b7b38196001af8c8f9457e38ebf0e40b99"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/renders/07-page-item-barriers.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/renders/07-page-item-barriers.stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/renders/08-unicode-preservation-1.png",
+        "bytes": 2328,
+        "sha256": "1ee572faff931e7301296dca1bef47a4d633f91ec287012fd2fc764781194f6a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/renders/08-unicode-preservation-1.png",
+        "bytes": 2328,
+        "sha256": "1ee572faff931e7301296dca1bef47a4d633f91ec287012fd2fc764781194f6a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/renders/08-unicode-preservation.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/renders/08-unicode-preservation.stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/renders/08-unicode-preservation.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/renders/08-unicode-preservation.stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/renders/09-terminal-page-damaged-1.png",
+        "bytes": 5814,
+        "sha256": "318356c9418e8f3725b0c51ff868997676d1bcc87c693e530881e05d0e528dbf"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/renders/09-terminal-page-damaged-1.png",
+        "bytes": 5814,
+        "sha256": "318356c9418e8f3725b0c51ff868997676d1bcc87c693e530881e05d0e528dbf"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/renders/09-terminal-page-damaged-2.png",
+        "bytes": 6528,
+        "sha256": "07b26ad7d944bd84304f4cea20bd3d69ea717cb1dc51f2ad3db194fbe9343ce3"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/renders/09-terminal-page-damaged-2.png",
+        "bytes": 6528,
+        "sha256": "07b26ad7d944bd84304f4cea20bd3d69ea717cb1dc51f2ad3db194fbe9343ce3"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/renders/09-terminal-page-damaged-3.png",
+        "bytes": 2205,
+        "sha256": "fd020c4787f544b718cb0e72789317ff16a2278348510992bb7a4cf278be28ab"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/renders/09-terminal-page-damaged-3.png",
+        "bytes": 2205,
+        "sha256": "fd020c4787f544b718cb0e72789317ff16a2278348510992bb7a4cf278be28ab"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/renders/09-terminal-page-damaged.stderr.log",
+        "bytes": 129,
+        "sha256": "108c5ad365d25b8fc11b9fe6d5e3243d50bce0cc9955466586db9acc3d03f8b6"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/renders/09-terminal-page-damaged.stderr.log.raw",
+        "bytes": 129,
+        "sha256": "108c5ad365d25b8fc11b9fe6d5e3243d50bce0cc9955466586db9acc3d03f8b6"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/renders/09-terminal-page-damaged.stdout.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/renders/09-terminal-page-damaged.stdout.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/source-review.json",
+        "bytes": 14258,
+        "sha256": "2877283390abe80e99b30fc70609a3f6389dcfe7d0607841446c3e6e68851fe5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/source-review.json.raw",
+        "bytes": 14258,
+        "sha256": "2877283390abe80e99b30fc70609a3f6389dcfe7d0607841446c3e6e68851fe5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-research/verify_authoring.py",
+        "bytes": 4511,
+        "sha256": "f0c5b07e1aab8778851271f7f5007e0d74c61b112db759dd793240fde11a83aa"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/research/verify_authoring.py.raw",
+        "bytes": 4511,
+        "sha256": "f0c5b07e1aab8778851271f7f5007e0d74c61b112db759dd793240fde11a83aa"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/captures.json",
+        "bytes": 601775,
+        "sha256": "05dd6aadc47f1d12417d66ddb92d83604d39fb2df9332ec6897b9404a89bf590"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/captures.json.raw",
+        "bytes": 601775,
+        "sha256": "05dd6aadc47f1d12417d66ddb92d83604d39fb2df9332ec6897b9404a89bf590"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/chromium-run1-failure.png",
+        "bytes": 4418,
+        "sha256": "838dc62b6b08a78a2151358c04d47a2aeb16f70177dd087448e1d1a1dee947b1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/chromium-run1-failure.png",
+        "bytes": 4418,
+        "sha256": "838dc62b6b08a78a2151358c04d47a2aeb16f70177dd087448e1d1a1dee947b1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/chromium-run1.json",
+        "bytes": 250844,
+        "sha256": "f326099ed31a589c033b298229c7f9c562f427b4781d0bc5e9f1050661eaf633"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/chromium-run1.json.raw",
+        "bytes": 250844,
+        "sha256": "f326099ed31a589c033b298229c7f9c562f427b4781d0bc5e9f1050661eaf633"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/chromium-run2-failure.png",
+        "bytes": 171480,
+        "sha256": "b949172f09745cdbbbea9583798b85f97854b9828ed745a214c3353ed4952ef1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/chromium-run2-failure.png",
+        "bytes": 171480,
+        "sha256": "b949172f09745cdbbbea9583798b85f97854b9828ed745a214c3353ed4952ef1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/chromium-run2-pdf-results.png",
+        "bytes": 136037,
+        "sha256": "06adaeef387ed94a51f6c156659f119539496e28d3b52ffea47daf943cf5f1b9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/chromium-run2-pdf-results.png",
+        "bytes": 136037,
+        "sha256": "06adaeef387ed94a51f6c156659f119539496e28d3b52ffea47daf943cf5f1b9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/chromium-run2-source-location.png",
+        "bytes": 86462,
+        "sha256": "3eb5fa0a4cddb4de724c96d6be6ee30840c4c729a4069d472e0b1b1a40fd9ac9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/chromium-run2-source-location.png",
+        "bytes": 86462,
+        "sha256": "3eb5fa0a4cddb4de724c96d6be6ee30840c4c729a4069d472e0b1b1a40fd9ac9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/chromium-run2.json",
+        "bytes": 325523,
+        "sha256": "7194ac2fd49c0a4e47b1bbef8cfd639c9fbd84e8c89fd4bb043a9fb2a8ca0d38"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/chromium-run2.json.raw",
+        "bytes": 325523,
+        "sha256": "7194ac2fd49c0a4e47b1bbef8cfd639c9fbd84e8c89fd4bb043a9fb2a8ca0d38"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/chromium-run3-pdf-results.png",
+        "bytes": 136037,
+        "sha256": "06adaeef387ed94a51f6c156659f119539496e28d3b52ffea47daf943cf5f1b9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/chromium-run3-pdf-results.png",
+        "bytes": 136037,
+        "sha256": "06adaeef387ed94a51f6c156659f119539496e28d3b52ffea47daf943cf5f1b9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/chromium-run3-source-location.png",
+        "bytes": 86462,
+        "sha256": "3eb5fa0a4cddb4de724c96d6be6ee30840c4c729a4069d472e0b1b1a40fd9ac9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/chromium-run3-source-location.png",
+        "bytes": 86462,
+        "sha256": "3eb5fa0a4cddb4de724c96d6be6ee30840c4c729a4069d472e0b1b1a40fd9ac9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/chromium-run3.json",
+        "bytes": 355719,
+        "sha256": "0fa2cb401cbc70d7119d6fc512af8ebb1ac693ec34ca3c465f131a99a14ec49e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/chromium-run3.json.raw",
+        "bytes": 355719,
+        "sha256": "0fa2cb401cbc70d7119d6fc512af8ebb1ac693ec34ca3c465f131a99a14ec49e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/dependency-reload-correction.json",
+        "bytes": 702,
+        "sha256": "1adf7703ab0faf3502cf8b09cd85e3424c649af480c1529174469615982854e3"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/dependency-reload-correction.json.raw",
+        "bytes": 702,
+        "sha256": "1adf7703ab0faf3502cf8b09cd85e3424c649af480c1529174469615982854e3"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/fixture.tsx",
+        "bytes": 9554,
+        "sha256": "eb0923702afbecbd534397cdddeed47aedfa087915b5897447a7414adf8c6c23"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/fixture.tsx.raw",
+        "bytes": 9554,
+        "sha256": "eb0923702afbecbd534397cdddeed47aedfa087915b5897447a7414adf8c6c23"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/index.html",
+        "bytes": 1617,
+        "sha256": "d80905d6752f8a4660fbba2c66149c510097192da8c3a8d52396d4dc22bf2ce8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/index.html.raw",
+        "bytes": 1617,
+        "sha256": "d80905d6752f8a4660fbba2c66149c510097192da8c3a8d52396d4dc22bf2ce8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/input-provenance.json",
+        "bytes": 1682,
+        "sha256": "04e3b2ec2e2404d94abce0802e47a0ec9aecae5e5937814959b5ac835bd00c49"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/input-provenance.json.raw",
+        "bytes": 1682,
+        "sha256": "04e3b2ec2e2404d94abce0802e47a0ec9aecae5e5937814959b5ac835bd00c49"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/no-text-assertion-correction.json",
+        "bytes": 583,
+        "sha256": "52c4aeac9396d8b96cc10db960da5f999c0e7fd1da59e79b6f2d11dd68c2a7fe"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/no-text-assertion-correction.json.raw",
+        "bytes": 583,
+        "sha256": "52c4aeac9396d8b96cc10db960da5f999c0e7fd1da59e79b6f2d11dd68c2a7fe"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/pre-run-corrections.json",
+        "bytes": 292,
+        "sha256": "f1b7e5efb450fb89a79ac64474d266b8396b5e5f93cf96a2231c7eb66afd5b60"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/pre-run-corrections.json.raw",
+        "bytes": 292,
+        "sha256": "f1b7e5efb450fb89a79ac64474d266b8396b5e5f93cf96a2231c7eb66afd5b60"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/run-before-no-text-assertion.mjs.raw",
+        "bytes": 13987,
+        "sha256": "330f3f2c90362d4ea33bf3aea06314767eae14576b08005f902c9d394fc6d83d"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/run-before-no-text-assertion.mjs.raw.raw",
+        "bytes": 13987,
+        "sha256": "330f3f2c90362d4ea33bf3aea06314767eae14576b08005f902c9d394fc6d83d"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/run-prefix.raw",
+        "bytes": 5238,
+        "sha256": "dc7d669c3b9027a00a55e2b9ce168730ea230f709c8875aa5c81fb69b641cb46"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/run-prefix.raw.raw",
+        "bytes": 5238,
+        "sha256": "dc7d669c3b9027a00a55e2b9ce168730ea230f709c8875aa5c81fb69b641cb46"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/run-tail.raw",
+        "bytes": 1140,
+        "sha256": "e7d8969e0a30252560dccb3dcf56dbc4f226e805866a76c0abe5de128865f8cc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/run-tail.raw.raw",
+        "bytes": 1140,
+        "sha256": "e7d8969e0a30252560dccb3dcf56dbc4f226e805866a76c0abe5de128865f8cc"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/run.mjs",
+        "bytes": 14123,
+        "sha256": "1f10b89429dc5ad1993c41080b94f747c775a66a6193d24e116cf786ffcceb58"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/run.mjs.raw",
+        "bytes": 14123,
+        "sha256": "1f10b89429dc5ad1993c41080b94f747c775a66a6193d24e116cf786ffcceb58"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/scenarios.mjs.raw",
+        "bytes": 7238,
+        "sha256": "33e6b3f0fb84ccf8cfd47c5bb11f066e776687a70851eccf681e7494d87cd71f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/scenarios.mjs.raw.raw",
+        "bytes": 7238,
+        "sha256": "33e6b3f0fb84ccf8cfd47c5bb11f066e776687a70851eccf681e7494d87cd71f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/serve-before-pdf-preload.mjs.raw",
+        "bytes": 720,
+        "sha256": "688f8247e5b30811feb4190ec979edff079ed52dc24596a0440efc6f2379f9c8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/serve-before-pdf-preload.mjs.raw.raw",
+        "bytes": 720,
+        "sha256": "688f8247e5b30811feb4190ec979edff079ed52dc24596a0440efc6f2379f9c8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/serve.mjs",
+        "bytes": 808,
+        "sha256": "0a2e2486e1c783e058be5e3c54912c36d0326d75315d86a6b6165900f200bae3"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/serve.mjs.raw",
+        "bytes": 808,
+        "sha256": "0a2e2486e1c783e058be5e3c54912c36d0326d75315d86a6b6165900f200bae3"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/server-stop-request.json",
+        "bytes": 194,
+        "sha256": "266db13b2a7141017ce6a561917f1688aaf6efebc7b8a642d4caa060a2454033"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/server-stop-request.json.raw",
+        "bytes": 194,
+        "sha256": "266db13b2a7141017ce6a561917f1688aaf6efebc7b8a642d4caa060a2454033"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/webkit-run1-pdf-results.png",
+        "bytes": 163555,
+        "sha256": "36ca2538054d083b5e06e39102c8984d749d32bffa3a5f4f1e3253ddf7bfb9b9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/webkit-run1-pdf-results.png",
+        "bytes": 163555,
+        "sha256": "36ca2538054d083b5e06e39102c8984d749d32bffa3a5f4f1e3253ddf7bfb9b9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/webkit-run1-source-location.png",
+        "bytes": 109711,
+        "sha256": "111e06ea7be90a846d97379d50d6f3bf88a48dd8b566379037dcfdc8ecee7249"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/webkit-run1-source-location.png",
+        "bytes": 109711,
+        "sha256": "111e06ea7be90a846d97379d50d6f3bf88a48dd8b566379037dcfdc8ecee7249"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-pdf-search-browser/webkit-run1.json",
+        "bytes": 355713,
+        "sha256": "ad32489d5da5a69cd18dbd9508f7883e8eb585845dde51285ce56036e082fd87"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search/browser/webkit-run1.json.raw",
+        "bytes": 355713,
+        "sha256": "ad32489d5da5a69cd18dbd9508f7883e8eb585845dde51285ce56036e082fd87"
+      }
+    }
+  ],
+  "boundary": "Only independently authored synthetic fixtures, source snapshots and controlled verification records. No user database, histories, credentials, installed-app content or real-Agent output."
+}

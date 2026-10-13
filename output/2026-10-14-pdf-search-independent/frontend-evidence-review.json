@@ -1,0 +1,163 @@
+{
+  "schema": 1,
+  "status": "PASS_FROZEN_FRONTEND_EVIDENCE",
+  "createdAtUtc": "2026-10-13T19:26:34.660916+00:00",
+  "sourceFreeze": {
+    "path": "output/2026-10-14-pdf-search-frontend/source-freeze-v1.json",
+    "bytes": 4229,
+    "sha256": "e58426127890a0c650f2ca7f8e8080131efe6ce1a0f3fe18be7920672a24ac77"
+  },
+  "ownedFilesVerified": 11,
+  "summary": {
+    "path": "output/2026-10-14-pdf-search-frontend/summary.json",
+    "bytes": 4244,
+    "sha256": "947ac8ce49b2d39dac03d9b991d1897be184b5c92e601eaae0e54bffa193c2f8"
+  },
+  "originalCompletionManifest": {
+    "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/manifest.json",
+    "bytes": 18670,
+    "sha256": "d33fcb0f54b40440597c684a2021a933a758b347b15dc13d9f2a1d3adac0d3f5"
+  },
+  "originalEventsByteExact": [
+    {
+      "name": "red-01",
+      "actualExitCode": 1,
+      "sourceByteOffset": 23802695,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/red-01.jsonl.raw",
+        "bytes": 10873,
+        "sha256": "c78eb59182113715ca8f2041cba45e0269dbd170a281278f434bdc80412cbff1"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/red-01.completed.json",
+        "bytes": 734,
+        "sha256": "6b4e0c26a6aba76ecaa3f5b70373c316956585854d83a6f2140fe32c9312387d"
+      }
+    },
+    {
+      "name": "route-green-01",
+      "actualExitCode": 0,
+      "sourceByteOffset": 23884944,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/route-green-01.jsonl.raw",
+        "bytes": 1610,
+        "sha256": "7abf4be22c80dbf7d5363248b3057e894eafad7607166923967ed7ce43f727aa"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/route-green-01.completed.json",
+        "bytes": 748,
+        "sha256": "6bf1a31d03dae3d16d47d5f107e7c3f6ea6233df2adc9b313e0c9a46e37cbc41"
+      }
+    },
+    {
+      "name": "targeted-02",
+      "actualExitCode": 1,
+      "sourceByteOffset": 24001793,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/targeted-02.jsonl.raw",
+        "bytes": 3872,
+        "sha256": "477e4b1d9b13e3ae4d4f9cc7d100c985e4724716b741914d04e692a1fd98e920"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-02.completed.json",
+        "bytes": 788,
+        "sha256": "a02355c4b0b7014461ed22adc56a67c93e9065b7e9ed4cc2662d94b8ef93785b"
+      }
+    },
+    {
+      "name": "targeted-03",
+      "actualExitCode": 0,
+      "sourceByteOffset": 24062840,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/targeted-03.jsonl.raw",
+        "bytes": 12927,
+        "sha256": "819a439aa988fdc69a9b732a0ef76bfdb77efd24e88022125bb7b4576d0954cf"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-03.completed.json",
+        "bytes": 841,
+        "sha256": "6e8126a906abeb8382617e5f7459315c20811664fceedb72234114272a6d3bfc"
+      }
+    },
+    {
+      "name": "format-01",
+      "actualExitCode": 0,
+      "sourceByteOffset": 24523444,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/format-01.jsonl.raw",
+        "bytes": 2779,
+        "sha256": "10d6a5f46fceb037f9d183f03168ab228c27e85f03e8337ee11dca0283f6688c"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/format-01.completed.json",
+        "bytes": 1242,
+        "sha256": "22ec955bead5a34acb65b89165e7c4cde3a2919391179b24267573460cfa8026"
+      }
+    },
+    {
+      "name": "targeted-final",
+      "actualExitCode": 0,
+      "sourceByteOffset": 24532579,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/targeted-final.jsonl.raw",
+        "bytes": 2237,
+        "sha256": "f66ce85d7e27febcf410b84f08f8e20f928fc061b423b23a508c3578d06a51b8"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/targeted-final.completed.json",
+        "bytes": 1115,
+        "sha256": "9aa37440578bffc9e601847e6bb7847ac3437ae5061445c3bbc33b0a91459473"
+      }
+    },
+    {
+      "name": "typecheck-01",
+      "actualExitCode": 0,
+      "sourceByteOffset": 24583853,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/typecheck-01.jsonl.raw",
+        "bytes": 1368,
+        "sha256": "c367ab9105f55026a2ded36222b2e9ce94c74e274a6d59dd297f90e9635ab5d8"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/typecheck-01.completed.json",
+        "bytes": 674,
+        "sha256": "8a26a64d97f17fec28ff70da1145f85caf152f85f38ba3a09c651ece65169629"
+      }
+    },
+    {
+      "name": "format-final",
+      "actualExitCode": 0,
+      "sourceByteOffset": 24595517,
+      "raw": {
+        "path": "output/2026-10-14-pdf-search-frontend/transcript-receipts/format-final.jsonl.raw",
+        "bytes": 2318,
+        "sha256": "99ff70ce714dcff8d2a9cb38a428a5fc06f2d6b24b30bad1cf8404bfdedfb406"
+      },
+      "receipt": {
+        "path": "output/2026-10-14-pdf-search-frontend/format-final.completed.json",
+        "bytes": 1247,
+        "sha256": "985ef8584828409a1c8d7ea3a5b0ac1eb4c7aa90a6cad3027ca88629cdc15861"
+      }
+    }
+  ],
+  "final": {
+    "testFiles": 9,
+    "testsPassed": 262,
+    "targetedExit": 0,
+    "typecheckExit": 0,
+    "scopedFormatExit": 0
+  },
+  "failureClassification": [
+    "red-01 actual1/0pass1fail is unsupported new PDF controller route before implementation.",
+    "targeted-02 actual1/61pass2fail is invalid it.each argument shape in new tests; current object cases fix construction, not application behavior.",
+    "Owner extraction helper initially mis-assumed failed CommandExecution status; correction and raw failure retained, no tests rerun."
+  ],
+  "sameStartTime": "Two separate run.py processes were launched concurrently; actual receipt start strings are equal and retained, no finer order inferred. Each original command completion independently confirms exit0.",
+  "fixture": "Original author model and source fixture have identical JSON values; Prettier whitespace is sole stated difference and hashes verified.",
+  "boundaries": [
+    "Code logic review handled separately by backend/root; this review binds frozen files, oracle, logs and actual commands.",
+    "Controller ports are controlled; real Worker evidence is separate browser report, native IPC/App/Agent/install not established."
+  ],
+  "safeToPublish": true,
+  "blockers": []
+}

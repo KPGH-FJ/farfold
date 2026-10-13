@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "status": "PASS_CONTROLLED_BROWSER_SCOPE",
+  "createdAtUtc": "2026-10-13T19:26:34.822017+00:00",
+  "frontendFreeze": {
+    "path": "output/2026-10-14-pdf-search-frontend/source-freeze-v1.json",
+    "bytes": 4229,
+    "sha256": "e58426127890a0c650f2ca7f8e8080131efe6ce1a0f3fe18be7920672a24ac77"
+  },
+  "frontendEvidenceReview": {
+    "path": "output/2026-10-14-pdf-search-independent/frontend-evidence-review.json",
+    "bytes": 6487,
+    "sha256": "388d3f1d6347851ce4c7a1ad74fd7f5800e936afd2786ff428aca63974b59a97"
+  },
+  "actualToolCompletions": {
+    "path": "output/2026-10-14-pdf-search-independent/transcript-browser/manifest.json",
+    "bytes": 3189,
+    "sha256": "48c9ade462bed86c20210296474a99985e584f84f44916dc09e53df54aaa6f25"
+  },
+  "results": [
+    {
+      "result": {
+        "path": "output/2026-10-14-pdf-search-browser/chromium-run3.json",
+        "bytes": 355719,
+        "sha256": "0fa2cb401cbc70d7119d6fc512af8ebb1ac693ec34ca3c465f131a99a14ec49e"
+      },
+      "engine": "chromium",
+      "checks": 76,
+      "scenarios": 11,
+      "stableInputs": 1096,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "screenshotsHashVerified": 2
+    },
+    {
+      "result": {
+        "path": "output/2026-10-14-pdf-search-browser/webkit-run1.json",
+        "bytes": 355713,
+        "sha256": "ad32489d5da5a69cd18dbd9508f7883e8eb585845dde51285ce56036e082fd87"
+      },
+      "engine": "webkit",
+      "checks": 76,
+      "scenarios": 11,
+      "stableInputs": 1096,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "screenshotsHashVerified": 2
+    }
+  ],
+  "sharedFinalInputMapsEqualAndCurrent": true,
+  "reviewedScope": [
+    "Actual production App and PDF/XLSX/DOCX Workers; Tauri captures/checks and messages are controlled authored fixtures. OriginalWorker subclass only observes events.",
+    "Authored07 barriers and08 Unicode queries pass without generated labels or cross-item/page joins; no exact production ordinal derived from Tj count.",
+    "All-pages/possibly-invisible partial disclosure, no-text/no-OCR error and 4 typed whole-file failure paths; no earlier-page prefix hits.",
+    "Mixed PDF1+XLSX5+DOCX8+TXT2=16 matches; capture concurrency bound is controlled IPC scope only.",
+    "Source/MIME/index late results discarded before parsing; capture cancellation leaves no parse/hits; source changed before jump clears matches.",
+    "Navigation identifies existing declared source attachment, not fabricated PDF text offset in history.",
+    "No unexpected IPC/settings-write/Agent commands; protected synthetic drafts unchanged."
+  ],
+  "retainedFailures": [
+    {
+      "result": {
+        "path": "output/2026-10-14-pdf-search-browser/chromium-run1.json",
+        "bytes": 250844,
+        "sha256": "f326099ed31a589c033b298229c7f9c562f427b4781d0bc5e9f1050661eaf633"
+      },
+      "actualExitCode": 1,
+      "classification": "Harness dependency optimization reloaded page; exact server observation contains PDF modules optimized/reloading. No source fix."
+    },
+    {
+      "result": {
+        "path": "output/2026-10-14-pdf-search-browser/chromium-run2.json",
+        "bytes": 325523,
+        "sha256": "7194ac2fd49c0a4e47b1bbef8cfd639c9fbd84e8c89fd4bb043a9fb2a8ca0d38"
+      },
+      "actualExitCode": 1,
+      "classification": "Harness selected success-only partial wording for no-text result; actual pdfNoText/no-OCR display confirmed. Only assertion corrected."
+    }
+  ],
+  "corrections": [
+    {
+      "path": "output/2026-10-14-pdf-search-browser/dependency-reload-correction.json",
+      "bytes": 702,
+      "sha256": "1adf7703ab0faf3502cf8b09cd85e3424c649af480c1529174469615982854e3"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/no-text-assertion-correction.json",
+      "bytes": 583,
+      "sha256": "52c4aeac9396d8b96cc10db960da5f999c0e7fd1da59e79b6f2d11dd68c2a7fe"
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-browser/pre-run-corrections.json",
+      "bytes": 292,
+      "sha256": "f1b7e5efb450fb89a79ac64474d266b8396b5e5f93cf96a2231c7eb66afd5b60"
+    }
+  ],
+  "serverStop": {
+    "actualExitCode": 143,
+    "meaning": "Root intentionally stopped its precisely identified server; not natural success0."
+  },
+  "limits": [
+    "01/02 fixtures loaded but not queried: no new hidden/crop/rotation/unknown-mapping acceptance claimed.",
+    "No real native IO/MainWebview/installed App/Agent/database tested here.",
+    "Screenshots hashes checked; visual review was root scope, not independently repeated.",
+    "Seven engineering checks and installation are separate and still pending for this slice."
+  ],
+  "safeToPublish": true,
+  "blockers": []
+}

@@ -213,6 +213,31 @@ pub async fn file_delivery_read_pdf_input(
 }
 
 #[tauri::command]
+pub async fn file_delivery_read_pdf_search(
+    webview: Webview,
+    file: VerifiedFile,
+) -> Result<file_delivery::PdfInputCapture, file_delivery::PdfInputReadFailure> {
+    require_main(&webview)
+        .map_err(|_| file_delivery::PdfInputReadFailure { code: "unreadable" })?;
+    checked_pdf_search(file).await
+}
+
+async fn checked_pdf_search(
+    file: VerifiedFile,
+) -> Result<file_delivery::PdfInputCapture, file_delivery::PdfInputReadFailure> {
+    // The shared slot follows the real OS read, even when this reply is dropped
+    // or expires. PDF decoding happens separately in the existing parser.
+    crate::file_read_check::run(move || Ok(file_delivery::read_pdf_search(&file)))
+        .await
+        .map_err(|message| file_delivery::PdfInputReadFailure::check(&message))?
+        .map_err(Into::into)
+}
+
+#[cfg(test)]
+#[path = "file_delivery/pdf_search_command_tests.rs"]
+mod pdf_search_tests;
+
+#[tauri::command]
 pub async fn file_delivery_export_text(
     webview: Webview,
     text: String,

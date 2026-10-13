@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-13T19:16:39.754715+00:00",
+  "status": "STATIC_REVIEW_NO_BLOCKER_NOT_EXECUTED",
+  "adapter": {
+    "path": "output/2026-10-14-pdf-search-integration/prepare_inventory.py",
+    "bytes": 9230,
+    "sha256": "b6182d25248b47a0f16a4532bb9cbb3c0da04dfe009ef63284953ebb624a2810"
+  },
+  "priorAdapter": {
+    "path": "output/2026-10-14-xlsx-search-integration/prepare_inventory.py",
+    "bytes": 9335,
+    "sha256": "32137d0dd417c72e0b169dc13b31495ab467e53281c41be4ba6d6eb32964eaf9"
+  },
+  "baseInventory": {
+    "path": "output/2026-10-14-xlsx-search-integration/inventory-plan-final.json",
+    "bytes": 581824,
+    "sha256": "32d00ac07782aa18692465eb059252b60f7de67c65a9f73913bca5dd0fe8926a"
+  },
+  "baseCount": 1842,
+  "baselineCommit": "b4cce76e6d8ab38988e78fc11580818bd167391c",
+  "checkedDelta": [
+    "New phase, output and baseline/1842 inventory pins only; runner/helper unchanged.",
+    "Self path explicitly in AUXILIARY union, preventing adapter exclusion.",
+    "Exactly two nonempty owner lists required with unique union length equal sum; individual files bytes/hash still verified and changed/new source must be owned.",
+    "All current physical src/src-tauri except existing target/gen exclusions matched against inventory helper; prior paths union retained.",
+    "Chromium/WebKit actual passing stable before/after maps required and equal each other/current; owner/extra/pin inputs protected by exact hash.",
+    "Original122 titles/conditions and28NEW conditions checked against new baseline, protected3 preserved; exclusive output, no tests or freeze invoked."
+  ],
+  "futureGate": "Actual owner/browser/publication pins and extra stage tools must be supplied after freeze; this review creates no inventory or acceptance counts.",
+  "safeToPublish": true,
+  "executedAdapter": false,
+  "blockers": []
+}

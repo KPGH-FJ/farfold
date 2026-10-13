@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "observedAtUtc": "2026-10-13T19:21:00.418971+00:00",
+  "status": "frozen",
+  "scope": "P32 selected PDF local temporary search frontend; no docs/Rust/full App/Agent/build/install in frontend verification",
+  "files": [
+    {
+      "path": "src/runtime/attachment_search.ts",
+      "bytes": 23320,
+      "sha256": "e848db4362a29f066e6a89f38e6990aa7edab7caab42f086045a485065cdf3e5",
+      "lines": 691
+    },
+    {
+      "path": "src/runtime/attachment_search_source.ts",
+      "bytes": 5249,
+      "sha256": "21430397af601a3dbc25599b62803f70e921d06f3e24eb5e9ecb28eb48d93d65",
+      "lines": 159
+    },
+    {
+      "path": "src/runtime/attachment_search_strings.ts",
+      "bytes": 9450,
+      "sha256": "66f0f8e4797fc05d7467bb8363a4daaec5d175d25bf7a014d807fc8df5142b43",
+      "lines": 180
+    },
+    {
+      "path": "src/runtime/pdf_search_text.ts",
+      "bytes": 1923,
+      "sha256": "a5a2c126cad9300bc4c6b64e5f6c4b40e126f9bccb0ed3b1d821421b7f05d9ac",
+      "lines": 63
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.tsx",
+      "bytes": 13250,
+      "sha256": "3e1eaa1fdefc3a284e065bd67e583df49b83afe3381d0ad357dfd7cdb566b549",
+      "lines": 386
+    },
+    {
+      "path": "src/runtime/attachment_search.pdf.test-support.ts",
+      "bytes": 3363,
+      "sha256": "6ed28fbab1ed8a8a3cf92c6ea5baa23b758b1e3a0df3d3b59f0e2e7711ef05f7",
+      "lines": 99
+    },
+    {
+      "path": "src/runtime/attachment_search.pdf.test.ts",
+      "bytes": 17069,
+      "sha256": "450334777413ce094b6862a05096ee47862b1994d6223ca016e18f424623610e",
+      "lines": 470
+    },
+    {
+      "path": "src/runtime/pdf_search_text.test.ts",
+      "bytes": 4715,
+      "sha256": "fff1ed002d783a07259a6528070eb46d49e2045d46ca82a78713366a57dbd4ed",
+      "lines": 138
+    },
+    {
+      "path": "src/components/SelectedAttachmentSearch.test.tsx",
+      "bytes": 7830,
+      "sha256": "23bfa0434f5330c1f95367aba2a623ed07b6352cde76b26d79f1418c840fbab9",
+      "lines": 177
+    },
+    {
+      "path": "src/runtime/attachment_search.xlsx.test.ts",
+      "bytes": 15801,
+      "sha256": "e497fb50d8a4139e96b2cdc284476ddcc62e95ea4a687c0c770c5d85758f77ca",
+      "lines": 446
+    },
+    {
+      "path": "src/runtime/fixtures/pdf-search/hand-authored-textitems.json",
+      "bytes": 3733,
+      "sha256": "7f273b87384b253eba817f4312223e3a8162d5ec11e306cd03d93950db31de9b",
+      "lines": 176
+    }
+  ],
+  "productionFiles": [
+    "src/runtime/attachment_search.ts",
+    "src/runtime/attachment_search_source.ts",
+    "src/runtime/attachment_search_strings.ts",
+    "src/runtime/pdf_search_text.ts",
+    "src/components/SelectedAttachmentSearch.tsx"
+  ],
+  "testAndFixtureFiles": [
+    "src/runtime/attachment_search.pdf.test-support.ts",
+    "src/runtime/attachment_search.pdf.test.ts",
+    "src/runtime/pdf_search_text.test.ts",
+    "src/components/SelectedAttachmentSearch.test.tsx",
+    "src/runtime/attachment_search.xlsx.test.ts",
+    "src/runtime/fixtures/pdf-search/hand-authored-textitems.json"
+  ],
+  "limits": {
+    "maxSourceBytes": 1048576,
+    "selectedFiles": 20,
+    "aggregateSearchUtf8Bytes": 16777216,
+    "displayHits": 200,
+    "queryUtf8Bytes": 256
+  },
+  "checks": [
+    {
+      "path": "output/2026-10-14-pdf-search-frontend/targeted-final.completed.json",
+      "bytes": 1115,
+      "sha256": "9aa37440578bffc9e601847e6bb7847ac3437ae5061445c3bbc33b0a91459473",
+      "lines": 32
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-frontend/typecheck-01.completed.json",
+      "bytes": 674,
+      "sha256": "8a26a64d97f17fec28ff70da1145f85caf152f85f38ba3a09c651ece65169629",
+      "lines": 21
+    },
+    {
+      "path": "output/2026-10-14-pdf-search-frontend/format-final.completed.json",
+      "bytes": 1247,
+      "sha256": "985ef8584828409a1c8d7ea3a5b0ac1eb4c7aa90a6cad3027ca88629cdc15861",
+      "lines": 34
+    }
+  ],
+  "fixtureProvenance": {
+    "path": "output/2026-10-14-pdf-search-frontend/fixture-provenance.json",
+    "bytes": 805,
+    "sha256": "0d1032ce2050cef7c128ca7d85eec24bcf5bc3037f2ede747b2649deccbaccdf",
+    "lines": 22
+  },
+  "testScope": "262 tests across 9 files. Controller ports are controlled; real PDF Worker and full App browser evidence is separate and pending."
+}

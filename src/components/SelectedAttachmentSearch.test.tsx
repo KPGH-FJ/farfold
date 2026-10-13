@@ -131,3 +131,47 @@ describe("selected XLSX saved-content notices", () => {
     expect(status(render(h.search))).not.toContain(S.xlsxCache);
   });
 });
+
+import {
+  pdfSetup,
+  searchPdf,
+} from "../runtime/attachment_search.pdf.test-support";
+describe("selected PDF extracted-text notices", () => {
+  it("shows partial and page count outside collapsed details, with exact original item location", async () => {
+    const h = pdfSetup();
+    h.results.set(h.file.path, searchPdf([["", "needle"], ["page two"]]));
+    await h.search.start("needle", h.candidates, h.current);
+    const html = render(h.search);
+    expect(status(html)).toContain(S.pdfPartial);
+    expect(status(html)).toContain(S.pdfPages(2));
+    expect(html).toContain("第 1 页 · 提取片段 2");
+    expect(html).not.toMatch(/<details[^>]*\bopen\b/);
+    expect(html.slice(html.indexOf("<details"))).toContain(
+      S.pdfWarnings.visibilityUnverified,
+    );
+    // No extra partial approval checkbox exists in the search result flow.
+    expect(html).not.toContain('type="checkbox"');
+  });
+  it("keeps no-text/no-OCR result visible instead of claiming a whole PDF absence", async () => {
+    const h = pdfSetup();
+    h.results.set(h.file.path, searchPdf([[]]));
+    await h.search.start("needle", h.candidates, h.current);
+    expect(status(render(h.search))).toContain(S.errors.pdfNoText);
+    expect(status(render(h.search))).not.toContain(S.pdfPages(1));
+  });
+  it("does not label inactive, retired or stale PDF results as current scope", async () => {
+    const h = pdfSetup();
+    await h.search.start("needle", h.candidates, h.current);
+    expect(status(render(h.search, false))).not.toContain(S.pdfPartial);
+    h.services.check.mockRejectedValue({ code: "changed" });
+    await h.search.verifyHit(h.search.snapshot().hits[0], h.current);
+    expect(status(render(h.search))).not.toContain(S.pdfPartial);
+    h.search.retire();
+    expect(render(h.search)).not.toContain(S.pdfPages(1));
+  });
+  it("does not add PDF warnings to a plain-text-only result", async () => {
+    const h = setup(["needle"]);
+    await h.search.start("needle", h.candidates, h.current);
+    expect(status(render(h.search))).not.toContain(S.pdfPartial);
+  });
+});

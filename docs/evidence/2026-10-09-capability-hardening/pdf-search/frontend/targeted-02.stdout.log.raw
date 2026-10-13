@@ -1,0 +1,12 @@
+
+ RUN  v4.1.11 /Users/tw/Desktop/farfold
+
+ ❯ src/runtime/pdf_search_text.test.ts (13 tests | 2 failed) 10ms
+   × reports an empty extracted scope without calling the whole file empty 3ms
+   × reports an empty extracted scope without calling the whole file empty 1ms
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 61 passed (63)
+   Start at  03:14:53
+   Duration  429ms (transform 260ms, setup 0ms, import 349ms, tests 194ms, environment 0ms)
+

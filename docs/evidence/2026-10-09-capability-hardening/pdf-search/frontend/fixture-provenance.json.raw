@@ -1,0 +1,22 @@
+{
+  "authoringSource": {
+    "path": "output/2026-10-14-pdf-search-research/fixtures/hand-authored-textitems.json",
+    "bytes": 3757,
+    "sha256": "f1966c5904e245f1f66559a2db0f31c960117bb688ba02cf4698fd575a08bc24",
+    "lines": 179
+  },
+  "unitFixture": {
+    "path": "src/runtime/fixtures/pdf-search/hand-authored-textitems.json",
+    "bytes": 3733,
+    "sha256": "7f273b87384b253eba817f4312223e3a8162d5ec11e306cd03d93950db31de9b",
+    "lines": 176
+  },
+  "parsedJsonExactlyEqual": true,
+  "change": "Only repository Prettier formatting; no parser output used to set oracle.",
+  "independentReview": {
+    "path": "output/2026-10-14-pdf-search-independent/fixture-review.json",
+    "bytes": 5739,
+    "sha256": "db479365622ffb8b6a22704cb5f730e8b3f770c44203e7fc866e5aa39b21ecaf",
+    "lines": 158
+  }
+}

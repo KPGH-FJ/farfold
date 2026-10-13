@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "createdAtUtc": "2026-10-13T18:36:50.467286+00:00",
+  "scope": "只读设计；当前源/文档未改，无测试/App/Agent/DB操作。",
+  "head": "a07392822ec6a0beaa7e2508ac9fc8ee7795d83d",
+  "decision": "下一片优先 P32 所选当前 PDF 的全部页提取文字临时搜索；未确认更紧迫且不用真实 Agent 即可闭环的 P32 源码缺口。",
+  "importantCorrection": "当前 PDF request 不支持任意页区间：仅 decoded-page-text + includePossiblyInvisibleText:true；core遍历全部页，validator强制1..pageCount，partial恒true。不要把现“读取范围”写成页范围选择器。",
+  "minimum": [
+    "同一附件搜索UI选择PDF后，显示全部页、不可见文字及四项限制；本次范围和部分文字查找同意分别默认未选，两者+明确Start才允许任何inspect/hash/read/Worker。因为partial恒真，可事前明确同意已知限制；不是声称用户看过尚未返回的结果。不能继承Composer/历史同意。取消/改选/换query、scope、owner/旧回调清本次确认。",
+    "新 file_delivery_read_pdf_search({file})->PdfInputCapture，复用 search_source::read 的1MiB开前/读中上限及全7字段摘要；同main guard/2个真实OS槽，旧PDF输入32MiB保持。inspect_text/check_text_revision复用。",
+    "前端 readPdf/parsePdf 接真实 readPdfInput；新增 pdf_search_text.ts 只搜checked result的每个items[].text，各item/page分段；不搜pdfInputText包装/JSON键/页标题/警告，不拼跨片段假词。保留Unicode原表示，明确片段间单词可能不匹配。",
+    "location={kind:pdf,pageNumber,itemIndex,decodedRotation}保留原索引；复用来源7字段复核和真实消息附件跳转，不伪造message offset或声称PDF已滚至该页。",
+    "复用DOCX/XLSX batch parseTail、2读取预取和全部owner/cancel/late/retry保护；已识别PDF失败不降级raw UTF8。保持20files/1MiB源/16MiB实际检索UTF8/200hits/256query；原PDF1000页/100000items/15s/256KiB完整文字表示限制不放宽。",
+    "范围与partial常显；image-only单列未提取文字/无OCR，不说整个PDF无匹配。加密/损坏/晚页诊断/超限拒绝整份，无好页前缀命中；textLimit/incomplete/scopeRequired/readPending/readBusy明确分类。"
+  ],
+  "ownership": {
+    "frontend": [
+      "attachment_search.ts/source.ts/strings.ts",
+      "SelectedAttachmentSearch.tsx",
+      "新pdf_search_text.ts及定向/组件测试"
+    ],
+    "backend": [
+      "file_delivery/pdf_input.rs + 搜索测试",
+      "file_delivery.rs导出",
+      "file_delivery_commands.rs + pool测试",
+      "lib.rs注册"
+    ],
+    "keepFrozenSemantics": "不改PDF parser任意页范围/P08草稿发送/现候选授权/持久存储；文件≤1500行。搜索文案复用现警告含义，避免照搬“加入文字”。"
+  },
+  "acceptance": [
+    "先保当前PDF路由不能命中页面文字的真红；两项确认缺一/旧owner/旧checkbox时全部IO为0。",
+    "原页/item隔断与来源、Unicode、包装负例；全7字段/MIME/index/归属逐项变化；混DOCX/XLSX/TXT实际UTF8预算、worker串行、外部busy、cancel/late/pending显式重试。",
+    "既有src/runtime/fixtures/pdf-input/01..06：三页/不可见/裁切/旋转、编码、image-only、加密、晚页损坏、全局文字超限；以独立authoring oracle定预期，不把raw保存字符串都当解析必返。",
+    "root完整App Chromium/WebKit真实两级PDFWorker+受控capture验证两确认/常显说明/键盘窄窗/来源跳转/负例；之后冻结全7与built static smoke另证。受控不升级正式正例或Agent接收。"
+  ],
+  "remainingP32": "候选只来自已加载message.attachments；草稿/文本链接/未加载历史不是读取授权。官方临时历史search本身排除附件且会启动官方程序。PDF不会补出缺失声明；不造历史、不扫任意路径、不为正例发送请求。已有loaded正文搜索包含received attachment.text。直接本地选文件或草稿搜索若另做，需单独明确非消息来源及跳转，不偷偷混入当前候选契约。",
+  "outOfScope": "P32原全部完成条件/NEW24/29×8保持；签名公证公开分发继续后置，Windows具体实现和实机条件另项。",
+  "coordination": "backend_review与status_evidence_review只读设计意见一致；无实现或新测试结论。",
+  "detail": {
+    "path": "output/2026-10-14-pdf-search-research/source-review.json",
+    "bytes": 14258,
+    "sha256": "2877283390abe80e99b30fc70609a3f6389dcfe7d0607841446c3e6e68851fe5",
+    "contents": "22项当前源码/契约引用与哈希、细化时点/边界/验证；引用供定位，不是新测试回执。"
+  }
+}

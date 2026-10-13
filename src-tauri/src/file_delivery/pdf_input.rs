@@ -52,6 +52,17 @@ pub fn read_pdf_input(file: &VerifiedFile) -> Result<PdfInputCapture, PdfInputEr
     // Rechecks every identity field and the complete file digest. PDF's 32 MiB
     // cap does not widen the separate DOCX/XLSX archive-reader caps.
     let bytes = capture_expected(file, MAX_FILE_BYTES).map_err(PdfInputError::File)?;
+    capture_pdf(file, bytes)
+}
+
+pub fn read_pdf_search(file: &VerifiedFile) -> Result<PdfInputCapture, PdfInputError> {
+    // Search has a separate 1 MiB source budget, enforced before reading and
+    // during capture, with the complete selected version checked again.
+    let bytes = super::search_source::read(file).map_err(PdfInputError::File)?;
+    capture_pdf(file, bytes)
+}
+
+fn capture_pdf(file: &VerifiedFile, bytes: Vec<u8>) -> Result<PdfInputCapture, PdfInputError> {
     if !bytes.starts_with(b"%PDF-") {
         return Err(PdfInputError::Invalid);
     }
@@ -64,3 +75,7 @@ pub fn read_pdf_input(file: &VerifiedFile) -> Result<PdfInputCapture, PdfInputEr
 #[cfg(test)]
 #[path = "pdf_input_tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "pdf_search_tests.rs"]
+mod search_tests;

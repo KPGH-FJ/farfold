@@ -13,6 +13,7 @@ import {
   attachmentSearchCandidates,
   attachmentSearchIsDocx,
   attachmentSearchIsXlsx,
+  attachmentSearchIsPdf,
   attachmentSearchSourceCurrent,
   type AttachmentSearchCandidate,
   type SelectAttachmentSearch,
@@ -21,6 +22,7 @@ import {
   ATTACHMENT_SEARCH_STRINGS as S,
   attachmentSearchLocationLabel,
   xlsxSearchWarningLabel,
+  pdfSearchWarningLabel,
 } from "../runtime/attachment_search_strings";
 import "./HistorySearchPanel.css";
 
@@ -169,7 +171,9 @@ export function SelectedAttachmentSearch({
                         ? S.docxCandidate
                         : attachmentSearchIsXlsx(candidate)
                           ? S.xlsxCandidate
-                          : S.textCandidate}
+                          : attachmentSearchIsPdf(candidate)
+                            ? S.pdfCandidate
+                            : S.textCandidate}
                     </small>
                   )}
                 </span>
@@ -178,6 +182,14 @@ export function SelectedAttachmentSearch({
           })}
         </div>
       </fieldset>
+      {active && validSources && selected.some(attachmentSearchIsPdf) && (
+        <div className="history-search-boundary">
+          <p>{S.pdfScope}</p>
+          <p>
+            {S.pdfWarnings.decodedTextOnly} {S.pdfBarriers} {S.pdfLimits}
+          </p>
+        </div>
+      )}
       <div className="history-search-actions">
         <button
           type="button"
@@ -239,8 +251,27 @@ export function SelectedAttachmentSearch({
           ) && <p>{S.xlsxPartial}</p>}
         {visible &&
           (state.phase === "complete" || state.phase === "reading") &&
+          state.rows.some((row) => row.state === "searched" && row.pdf) && (
+            <>
+              <p>{S.pdfPartial}</p>
+              {state.rows
+                .filter((row) => row.state === "searched" && row.pdf)
+                .map((row) => (
+                  <p key={row.source.id}>
+                    {row.source.name} · {S.pdfPages(row.pdf!.scope.pageCount)}
+                  </p>
+                ))}
+            </>
+          )}
+        {visible &&
+          (state.phase === "complete" || state.phase === "reading") &&
           state.rows.some((row) => row.code === "scopeEmpty") && (
             <p>{S.errors.scopeEmpty}</p>
+          )}
+        {visible &&
+          (state.phase === "complete" || state.phase === "reading") &&
+          state.rows.some((row) => row.code === "pdfNoText") && (
+            <p>{S.errors.pdfNoText}</p>
           )}
       </div>
       {(error || state.error) && (
@@ -278,6 +309,17 @@ export function SelectedAttachmentSearch({
                     {row.workbook.warnings.map((warning) => (
                       <small key={warning.code}>
                         {xlsxSearchWarningLabel(warning)}
+                      </small>
+                    ))}
+                  </>
+                )}
+                {row.pdf && (
+                  <>
+                    <small>{S.pdfPartial}</small>
+                    <small>{S.pdfPages(row.pdf.scope.pageCount)}</small>
+                    {row.pdf.warnings.map((warning) => (
+                      <small key={warning.code}>
+                        {pdfSearchWarningLabel(warning)}
                       </small>
                     ))}
                   </>
