@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T20:53:21.096273+00:00",
+  "result": "pass-static-candidate-v2-ready",
+  "preparation": {
+    "path": "output/2026-10-14-diff-summary-install-preparation/review-build-v2/preparation.json",
+    "bytes": 4302,
+    "sha256": "eb7cf87d312a40dff74d907059a3acd40efdbfe9cbb0f075aebd83609bba4743"
+  },
+  "candidateTools": [
+    {
+      "path": "output/2026-10-14-diff-summary-install-preparation/review-build-v2/candidate/prepare-candidate.py",
+      "bytes": 4493,
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install-preparation/review-build-v2/candidate/verify-candidate.py",
+      "bytes": 85335,
+      "sha256": "8250f029b98402a6daccc56bb2b9e8e4a416bff25b074f6d95c99629000ad3aa"
+    }
+  ],
+  "delta": {
+    "prepareByteIdentical": true,
+    "onlyAddedFunction": "retained_prior_run_evidence",
+    "onlyChangedExistingFunction": "engineering",
+    "allOtherFunctionAstsAndModuleConstantsUnchanged": true,
+    "priorSevenSuccessGateNotRelaxed": true
+  },
+  "closedSource": {
+    "commit": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+    "inputCount": 2059,
+    "selectedCommittedScopeEqualsInventoryEqualsFreeze": true,
+    "all2059CurrentBytesMatchCommitBlobAndFrozenSha256": true,
+    "sourceGateAstUnchanged": true
+  },
+  "engineeringBindings": {
+    "publicRun2Sha256": "31de4b2f7bbfcd7c7e1a3658e0eb2b3eccf26befa581b45896784e3bfd5dce77",
+    "privateRun2Sha256": "8788605205218b9dbe599b8dd567d19fb60be087ba6d2ea4d512eeada64abb7e",
+    "freezeSha256": "1f443afdb73e4abfe1489a84dd132e2fb8ad289262e873af7bc0a814d2ee289e",
+    "inventorySha256": "33da2d3702eb3848a15ee36b9e0e8a6b159abdb28677262f505beeb8a96c4283",
+    "publicPreservesOriginalRun2Semantics": true,
+    "run2ActualSevenAllZero": true,
+    "retainedRun1SummarySha256": "6cbe21f9b525111da9a6607c1fe905a9f1ac1eba4394d369f449ae46e05b367d",
+    "retainedRun1ActualStageExits": [
+      0,
+      0,
+      1,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "reviewFindings": [
+    "The additional publication field is explicitly whitelisted and validated, not ignored. The helper pins the original failed summary and checks its actual stages, four unstarted stages, stable before/after inventories and protected baseline.",
+    "Run2 still requires all seven actual zero exits and exact source/plan/public/private raw records. The retained failed run cannot satisfy current success.",
+    "Candidate preparation remains build-only with exclusive destinations; new normal/before/backup pins remain null and this static result does not authorize later replacement.",
+    "Previous baseline/last-running quit/data bridge functions and all other verifier functions are AST-identical to review-build; no fresh quit is fabricated by this delta."
+  ],
+  "rendererAttemptHistory": {
+    "exactOriginalEvents": {
+      "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-v2-render/manifest.json",
+      "bytes": 1129,
+      "sha256": "058d6b2d82768f11bb407dd84a73c244f5a6992cfdbc26ee2e549eed1f7dccd1"
+    },
+    "failedChunk": "7127b3",
+    "failedExitCode": 1,
+    "reason": "Path arguments were supplied where renderer expects filename/name. argv[3] name assertion occurs before configuration reads and destination writes.",
+    "correctedChunk": "0d99f1",
+    "correctedExitCode": 0,
+    "candidateAttemptClaim": "These two events are renderer invocations only; no candidate execution is inferred."
+  },
+  "notExecuted": [
+    "generated imports or functions",
+    "candidate main/build",
+    "App/process/DB tools",
+    "source or document edits"
+  ],
+  "safeToPublish": true
+}

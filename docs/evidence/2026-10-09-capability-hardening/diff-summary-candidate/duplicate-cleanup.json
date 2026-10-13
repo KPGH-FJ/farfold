@@ -1,0 +1,27 @@
+{
+  "sourceCommit": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+  "completedAtUtc": "2026-10-13T20:57:15.060195+00:00",
+  "removedPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "exactCandidateAndFormalFiveFilesAndModesMatched": true,
+  "formalApplicationPreserved": true,
+  "archivePreserved": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-14-diff-summary-fcd7b266/Farfold-0.1.7-fcd7b266.zip",
+  "independentInstallation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/install-independent-final.json",
+    "bytes": 114708,
+    "sha256": "034446261d20db459a9999ea787d3edcb4341f4d4ed69d29c28e96503ad67900"
+  },
+  "threeManifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+  "manifestEntriesEach": 217400,
+  "publishedInstallation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/installation.json",
+    "bytes": 3492,
+    "sha256": "06f7fbf36952d295557d3026616743e0959dca59ec35c0560d642e32c96fc811"
+  },
+  "cleanupTool": {
+    "path": "output/2026-10-14-diff-summary-install-preparation/publish_and_cleanup.py",
+    "bytes": 10419,
+    "sha256": "6bb40304c30f4d5b5821c23a2267ef3cdb1f5f84915f6d5d34ff53fca8832593"
+  },
+  "archiveValidation": "CRC, exact five payload paths, full bytes/hash, sizes and modes checked against FORMAL both before and after duplicate removal",
+  "boundary": "Only the exact verified generated App duplicate was removed after actual 10-check and three-manifest gates. Formal App, ZIP archive, sources, backups and user data were preserved. No App launch or native tool-difference workflow validation."
+}

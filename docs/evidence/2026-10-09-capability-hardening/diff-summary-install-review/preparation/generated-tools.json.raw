@@ -1,0 +1,111 @@
+{
+  "phase": "fullyConfiguredForVerifiedInstallBeforeAppMutation",
+  "sourceCommit": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+  "notYetKnownPins": [],
+  "preparation": {
+    "path": "output/2026-10-14-diff-summary-install-preparation/preparation.json",
+    "sha256": "2053ac4b91af777627d861e3e70bf704eb88c289c1c6aaeef06378e59aa02072"
+  },
+  "tools": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/prepare-candidate.py",
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1",
+      "pins": {}
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/verify-candidate.py",
+      "sha256": "8250f029b98402a6daccc56bb2b9e8e4a416bff25b074f6d95c99629000ad3aa",
+      "pins": {
+        "BASELINE_SHA": "5009f29ce62ab5336ba4b71ac824248e3f5ef7a8b63a86550774de2d72fb7158",
+        "SOURCE_COMMIT": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+        "ENGINEERING_SHA": "31de4b2f7bbfcd7c7e1a3658e0eb2b3eccf26befa581b45896784e3bfd5dce77",
+        "PRIVATE_ENGINEERING_SHA": "8788605205218b9dbe599b8dd567d19fb60be087ba6d2ea4d512eeada64abb7e",
+        "BASELINE_INSTALL_SHA": "d7bf945c81c0e37a61273054457b2b40148e9da9af5ff1f46e54e2809388decf",
+        "EXPECTED_INPUT_COUNT": 2059,
+        "BASELINE_NATIVE_SHA": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+        "PRIOR_QUIT_SHA": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+        "PRIOR_PROCESS_SHA": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c",
+        "ENGINEERING_PLAN_SHA": "1f443afdb73e4abfe1489a84dd132e2fb8ad289262e873af7bc0a814d2ee289e",
+        "QUIT_CONTEXT_SHA": "b6bb997adbea13389eab605b1b38a50b782ae9a105c04de58b063ed4bfe51d14",
+        "QUIT_MANIFEST_SHA": "d4a3e377389ac349f7592ac38f112851a44a0f7410659ffc5754ea2b1ed34942",
+        "PRIOR_ACTUAL_PROCESS_SHA": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205",
+        "LATEST_DATA_CONSOLIDATED_SHA": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+        "INVENTORY_SHA": "33da2d3702eb3848a15ee36b9e0e8a6b159abdb28677262f505beeb8a96c4283",
+        "PREVIOUS_MANIFEST_SHA": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849"
+      }
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install/data_manifest.py",
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "pins": {}
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install/observe_normal_exit.py",
+      "sha256": "10b137c9e2af03cc88445009be7b041a07a5d9351b785a6216f2a805e62c9203",
+      "pins": {
+        "SOURCE_COMMIT": "fcd7b2669341b05f40c712b6c9fbbca26feb9031"
+      }
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install/install_data_snapshot.py",
+      "sha256": "d19076d9e12eed3df412810c434fd25246270eb65b60c1ba59355b2c9ca32c33",
+      "pins": {
+        "SOURCE_COMMIT": "fcd7b2669341b05f40c712b6c9fbbca26feb9031"
+      }
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install/capture_snapshot.py",
+      "sha256": "4d6e0b74e8231d6a5fd701711fdc83db00107a0d3a5627efee6863fd51b61167",
+      "pins": {
+        "SOURCE_COMMIT": "fcd7b2669341b05f40c712b6c9fbbca26feb9031"
+      }
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install/backup_metadata.py",
+      "sha256": "cc286780302f9f2663f5db819806caa55291ecd429ab06d0d38dbf495b1fc5e0",
+      "pins": {
+        "SOURCE_COMMIT": "fcd7b2669341b05f40c712b6c9fbbca26feb9031"
+      }
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install/install_verified_candidate.py",
+      "sha256": "5ec3b2110254efe767855055eefb7002eb1a1faa0bcfbd415d0a43f6d51e558a",
+      "pins": {
+        "SOURCE_COMMIT": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+        "NORMAL_EXIT_SHA": "c7763270157abf51ec818869cd940480d9b57c91adf39d7c68b56fcd3a7224b8",
+        "BACKUP_RECEIPT_SHA": "668eb02c4bb457c1b3a93243be4e62a2df844d314e3c868e2d5e1ce09cca0afc",
+        "BEFORE_SUMMARY_SHA": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+        "PRIOR_QUIT_SHA": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+        "EXPECTED_INPUT_COUNT": 2059,
+        "BASELINE_NATIVE_SHA": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+        "PRIOR_PROCESS_SHA": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c",
+        "PRIOR_ACTUAL_PROCESS_SHA": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205"
+      }
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-independent-install/verify_installed_final.py",
+      "sha256": "0cf1a681a16017a49e4ac4ddcd539e5d553de8e0440e84be176dd2b0368fa47e",
+      "pins": {
+        "SOURCE_COMMIT": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+        "BEFORE_SUMMARY_SHA": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+        "NORMAL_EXIT_SHA": "c7763270157abf51ec818869cd940480d9b57c91adf39d7c68b56fcd3a7224b8",
+        "PRIOR_QUIT_SHA": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+        "EXPECTED_INPUT_COUNT": 2059,
+        "BASELINE_NATIVE_SHA": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+        "PRIOR_PROCESS_SHA": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c"
+      }
+    }
+  ],
+  "beforeSummary": {
+    "path": "output/2026-10-14-diff-summary-install/install-data-before-summary.json",
+    "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+  },
+  "backupReceipt": {
+    "path": "output/2026-10-14-diff-summary-install/metadata-backup-receipt.json",
+    "sha256": "668eb02c4bb457c1b3a93243be4e62a2df844d314e3c868e2d5e1ce09cca0afc"
+  },
+  "normalExit": {
+    "path": "output/2026-10-14-diff-summary-install/normal-exit-observation.json",
+    "sha256": "c7763270157abf51ec818869cd940480d9b57c91adf39d7c68b56fcd3a7224b8"
+  }
+}

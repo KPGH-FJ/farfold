@@ -1,0 +1,262 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T21:02:33.342804+00:00",
+  "result": "pass-five-file-minimal-installation-closeout",
+  "baselineHead": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+  "changedFiles": [
+    {
+      "path": "docs/status.md",
+      "before": {
+        "path": "docs/status.md",
+        "bytes": 96405,
+        "sha256": "e7eb2ce8f0f43acdb54c54651ee7ba4a7a701bea83c12a5375b916aca903d588"
+      },
+      "after": {
+        "path": "docs/status.md",
+        "bytes": 97498,
+        "sha256": "17ec7169caf620a49240d6a3e4396669ee0ea08489495c86e843ace558c989b6"
+      }
+    },
+    {
+      "path": "docs/architecture.md",
+      "before": {
+        "path": "docs/architecture.md",
+        "bytes": 138467,
+        "sha256": "4271b60a6008d651545e2991680d607b0ea7a0e380d9dd7f98f0374f91066976"
+      },
+      "after": {
+        "path": "docs/architecture.md",
+        "bytes": 139560,
+        "sha256": "155cc9c966c1f0cf82582476d6d801d8bfd3fdb81d40840cd1749e86df68254b"
+      }
+    },
+    {
+      "path": "plans/agent-access.md",
+      "before": {
+        "path": "plans/agent-access.md",
+        "bytes": 161619,
+        "sha256": "1584dff33140a8ffa07e8fdc1a7fb0ff51235850f0bee190dc7bf30703ea4d4e"
+      },
+      "after": {
+        "path": "plans/agent-access.md",
+        "bytes": 163027,
+        "sha256": "5974d4bda16b1c7f4bcc97ec6df4a82e6b4d715c04baad0ac4d23013e9e6875b"
+      }
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "before": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+        "bytes": 93850,
+        "sha256": "a8b211c32243ecdd39a8a01eea7e2ed16ccac5a0aa0810070881aa9f9404f26e"
+      },
+      "after": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+        "bytes": 94779,
+        "sha256": "d35563e5285e6c3f9c5efcc03367005e641363f7641cb46dd5b57dc702a4b782"
+      }
+    },
+    {
+      "path": ".prettierignore",
+      "before": {
+        "path": ".prettierignore",
+        "bytes": 22592,
+        "sha256": "d37ffcaf99c78f989b83e9018944e2c46008f59ef9a156674b63b002abc8ef6a"
+      },
+      "after": {
+        "path": ".prettierignore",
+        "bytes": 23314,
+        "sha256": "b4072c8b3dd3b2376bbe02ea2b1b7d37f3ba8dce81294cb57c0a3a38a4aed8bf"
+      }
+    }
+  ],
+  "diff": {
+    "path": "output/2026-10-14-diff-summary-install-docs/five-files.diff",
+    "bytes": 25104,
+    "sha256": "21df9f36ddf08f59a2e2d5008d2a69d47595e5ba7798dea2e72d9bf7f8c7a430"
+  },
+  "format": {
+    "receipt": {
+      "path": "output/2026-10-14-diff-summary-install-docs/format-completed.json",
+      "bytes": 753,
+      "sha256": "0269451da02adb5c8ce27e4f14ea056042cce986c4894e38d61ce7f8bfc5cd1e"
+    },
+    "actualExitCode": 0,
+    "actualToolChunk": "fd85f3",
+    "scope": "Four named Markdown documents only. .prettierignore is a plain exact-path list and was not passed to Prettier."
+  },
+  "planValidation": {
+    "originalIds": 122,
+    "originalTitlesAndCompletionConditionsUnchanged": true,
+    "onlyProgressChanged": "P18",
+    "other121OriginalRowsSemanticallyUnchanged": true,
+    "all28NewRowsUnchanged": true,
+    "allOtherMarkdownTableCellsIncluding29AgentEightStandardMatrixUnchanged": true,
+    "formatOnlySeparatorDashWidthExcludedFromSemanticComparison": true
+  },
+  "protectedUnchanged": [
+    {
+      "path": "PRODUCT.md",
+      "bytes": 35083,
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "bytes": 11543,
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "bytes": 2341,
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+    },
+    {
+      "path": "docs/agent-first-release.md",
+      "bytes": 16987,
+      "sha256": "58f9d802793dcb3e369053fb2d94e1dab24c241ebcd055872e820f0e9f185ee7"
+    }
+  ],
+  "exactFormattingExclusionsAdded": [
+    "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/candidate-inputs.json",
+    "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/candidate-inputs-after.json",
+    "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/candidate.json",
+    "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/candidate-independent.json",
+    "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/installation.json",
+    "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/install-independent-final.json",
+    "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/duplicate-cleanup.json"
+  ],
+  "newP18Links": [
+    {
+      "from": "docs/status.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary/verification.json",
+      "sha256": "7ef8aa6dada78f489b8d8f389ce3d93f84e82c75b1d85716991f2f46542b2388"
+    },
+    {
+      "from": "docs/status.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-checks/verification.json",
+      "sha256": "31de4b2f7bbfcd7c7e1a3658e0eb2b3eccf26befa581b45896784e3bfd5dce77"
+    },
+    {
+      "from": "docs/status.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/publication.json",
+      "sha256": "475c0254b2de0583dc59f3e5ea5be71def6358591a4da325cafc6086d95e75e9"
+    },
+    {
+      "from": "docs/status.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/verification.json",
+      "sha256": "15cf7c3de2f647bce6e72a22688a1f49fecf3bca28a199783d1356256e4f9d54"
+    },
+    {
+      "from": "docs/status.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/install-independent-final.json",
+      "sha256": "034446261d20db459a9999ea787d3edcb4341f4d4ed69d29c28e96503ad67900"
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary/verification.json",
+      "sha256": "7ef8aa6dada78f489b8d8f389ce3d93f84e82c75b1d85716991f2f46542b2388"
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-checks/verification.json",
+      "sha256": "31de4b2f7bbfcd7c7e1a3658e0eb2b3eccf26befa581b45896784e3bfd5dce77"
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/publication.json",
+      "sha256": "475c0254b2de0583dc59f3e5ea5be71def6358591a4da325cafc6086d95e75e9"
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/verification.json",
+      "sha256": "15cf7c3de2f647bce6e72a22688a1f49fecf3bca28a199783d1356256e4f9d54"
+    },
+    {
+      "from": "docs/architecture.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/install-independent-final.json",
+      "sha256": "034446261d20db459a9999ea787d3edcb4341f4d4ed69d29c28e96503ad67900"
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary/verification.json",
+      "sha256": "7ef8aa6dada78f489b8d8f389ce3d93f84e82c75b1d85716991f2f46542b2388"
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-checks/verification.json",
+      "sha256": "31de4b2f7bbfcd7c7e1a3658e0eb2b3eccf26befa581b45896784e3bfd5dce77"
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/publication.json",
+      "sha256": "475c0254b2de0583dc59f3e5ea5be71def6358591a4da325cafc6086d95e75e9"
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/verification.json",
+      "sha256": "15cf7c3de2f647bce6e72a22688a1f49fecf3bca28a199783d1356256e4f9d54"
+    },
+    {
+      "from": "plans/agent-access.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/install-independent-final.json",
+      "sha256": "034446261d20db459a9999ea787d3edcb4341f4d4ed69d29c28e96503ad67900"
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary/verification.json",
+      "sha256": "7ef8aa6dada78f489b8d8f389ce3d93f84e82c75b1d85716991f2f46542b2388"
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-checks/verification.json",
+      "sha256": "31de4b2f7bbfcd7c7e1a3658e0eb2b3eccf26befa581b45896784e3bfd5dce77"
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-correction/publication.json",
+      "sha256": "475c0254b2de0583dc59f3e5ea5be71def6358591a4da325cafc6086d95e75e9"
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/verification.json",
+      "sha256": "15cf7c3de2f647bce6e72a22688a1f49fecf3bca28a199783d1356256e4f9d54"
+    },
+    {
+      "from": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "target": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/install-independent-final.json",
+      "sha256": "034446261d20db459a9999ea787d3edcb4341f4d4ed69d29c28e96503ad67900"
+    }
+  ],
+  "installedScope": {
+    "sourceCommit": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+    "candidate": 9,
+    "installed": 10,
+    "manifestEntriesEach": 217400,
+    "threeSavedManifestHashesEqual": true,
+    "formalAppNotLaunched": true,
+    "nativeP18Untested": true,
+    "realAgentNotInvoked": true,
+    "wholeP18Incomplete": true,
+    "new24StillOpen": true
+  },
+  "evidence": {
+    "publicInstallation": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/verification.json",
+      "bytes": 16058,
+      "sha256": "15cf7c3de2f647bce6e72a22688a1f49fecf3bca28a199783d1356256e4f9d54"
+    },
+    "independentSavedInstallationReview": {
+      "path": "output/2026-10-14-diff-summary-independent/final-installation-review.json",
+      "bytes": 4710,
+      "sha256": "8498ff9e88d9b9c0098f5ed8edae7f07e1f2a6976ad433321b73dc75e455e65a"
+    }
+  },
+  "reviewScriptCorrection": {
+    "actualToolChunk": "32346c",
+    "actualExitCode": 1,
+    "cause": "First semantic-table checker compared the Prettier-resized separator dash row as if it were a data row. The only mismatch was P18 table separator width.",
+    "resolution": "Exclude syntax-only separator rows; compare all actual table cells and 150 plan rows. No document edit or formatter rerun was needed."
+  },
+  "boundary": "Only five named documentation/formatting files were edited. No production source, PRODUCT, protected README, staging, full-format, test, App, Agent or DB action. P30 may proceed independently; no current whole-source equality to the installed checkpoint is asserted.",
+  "safeToPublish": true
+}

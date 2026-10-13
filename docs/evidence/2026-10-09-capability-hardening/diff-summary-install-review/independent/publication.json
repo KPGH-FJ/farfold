@@ -1,0 +1,341 @@
+{
+  "schema": 1,
+  "publishedAtUtc": "2026-10-13T21:07:41.759876+00:00",
+  "sourceCommit": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+  "scope": "Exact original candidate/install completion events, safe saved-record independent reviews and five-document closeout. Synthetic/source/build metadata, paths, counts and hashes only; no DB, raw user-data manifest, account, credentials, or private message body.",
+  "copies": [
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/candidate-v2-static-review.json",
+        "bytes": 3702,
+        "sha256": "5355fcab7e64f9e36d8ecaaa998af69a0c08b7080821380160eb07da255353d5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/candidate-v2-static-review.json.raw",
+        "bytes": 3702,
+        "sha256": "5355fcab7e64f9e36d8ecaaa998af69a0c08b7080821380160eb07da255353d5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/candidate-actual-review.json",
+        "bytes": 4905,
+        "sha256": "eebb0f059f19109157e1787ce540fcf759b59778f6c6c0d93bc92a8e9f64e273"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/candidate-actual-review.json.raw",
+        "bytes": 4905,
+        "sha256": "eebb0f059f19109157e1787ce540fcf759b59778f6c6c0d93bc92a8e9f64e273"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/final-installation-review.json",
+        "bytes": 4710,
+        "sha256": "8498ff9e88d9b9c0098f5ed8edae7f07e1f2a6976ad433321b73dc75e455e65a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/final-installation-review.json.raw",
+        "bytes": 4710,
+        "sha256": "8498ff9e88d9b9c0098f5ed8edae7f07e1f2a6976ad433321b73dc75e455e65a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-v2-render/0d99f1.jsonl.raw",
+        "bytes": 909,
+        "sha256": "408ae1ce713b29ecc3a9de86b3c27583b7b43840fd432c8e79b700ef624423f8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-candidate-v2-render/0d99f1.jsonl.raw",
+        "bytes": 909,
+        "sha256": "408ae1ce713b29ecc3a9de86b3c27583b7b43840fd432c8e79b700ef624423f8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-v2-render/7127b3.jsonl.raw",
+        "bytes": 1049,
+        "sha256": "92a2f43a930deed8c0cb0ac9dbec7ab6f1f92a7a6f1b8f4e339d77c3ebf9f7f0"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-candidate-v2-render/7127b3.jsonl.raw",
+        "bytes": 1049,
+        "sha256": "92a2f43a930deed8c0cb0ac9dbec7ab6f1f92a7a6f1b8f4e339d77c3ebf9f7f0"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-v2-render/manifest.json",
+        "bytes": 1129,
+        "sha256": "058d6b2d82768f11bb407dd84a73c244f5a6992cfdbc26ee2e549eed1f7dccd1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-candidate-v2-render/manifest.json.raw",
+        "bytes": 1129,
+        "sha256": "058d6b2d82768f11bb407dd84a73c244f5a6992cfdbc26ee2e549eed1f7dccd1"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-actual/build-completed.jsonl.raw",
+        "bytes": 1840,
+        "sha256": "f110d74d012ad2d7214ef802e64dda4e9e6d686ceb6e4620a99ac68dcd95b619"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-candidate-actual/build-completed.jsonl.raw",
+        "bytes": 1840,
+        "sha256": "f110d74d012ad2d7214ef802e64dda4e9e6d686ceb6e4620a99ac68dcd95b619"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-actual/manifest.json",
+        "bytes": 1811,
+        "sha256": "df1a6dc21d00072b825114964cea824a0f729ea5fb348e9fc53793557b05a3d7"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-candidate-actual/manifest.json.raw",
+        "bytes": 1811,
+        "sha256": "df1a6dc21d00072b825114964cea824a0f729ea5fb348e9fc53793557b05a3d7"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-actual/observation-completed.jsonl.raw",
+        "bytes": 913,
+        "sha256": "a368c935091fa78a7af20a7b2bbfc8544964bdb70a477171721e3b18f5931405"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-candidate-actual/observation-completed.jsonl.raw",
+        "bytes": 913,
+        "sha256": "a368c935091fa78a7af20a7b2bbfc8544964bdb70a477171721e3b18f5931405"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-actual/verify-completed.jsonl.raw",
+        "bytes": 1035,
+        "sha256": "380898f682bfeb48a367e168f09bfbd721f41c7844b3df8907f03e02b5dac6a9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-candidate-actual/verify-completed.jsonl.raw",
+        "bytes": 1035,
+        "sha256": "380898f682bfeb48a367e168f09bfbd721f41c7844b3df8907f03e02b5dac6a9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/after-completed.jsonl.raw",
+        "bytes": 1088,
+        "sha256": "28f773e7cd0302eaac275eee7ad6f34036d767df0f89bb42a6a1f68255473a6f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-install-actual/after-completed.jsonl.raw",
+        "bytes": 1088,
+        "sha256": "28f773e7cd0302eaac275eee7ad6f34036d767df0f89bb42a6a1f68255473a6f"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/backup-completed.jsonl.raw",
+        "bytes": 740,
+        "sha256": "785d4a37c6e18325f07ce243f38ee55dd5bdeb9658c77738b25af2dc6c4e9222"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-install-actual/backup-completed.jsonl.raw",
+        "bytes": 740,
+        "sha256": "785d4a37c6e18325f07ce243f38ee55dd5bdeb9658c77738b25af2dc6c4e9222"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/cleanup-completed.jsonl.raw",
+        "bytes": 990,
+        "sha256": "95257898d8e873a2b97fe63bd34b6e457ae8fae3649e74dbfb97559b83c13191"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-install-actual/cleanup-completed.jsonl.raw",
+        "bytes": 990,
+        "sha256": "95257898d8e873a2b97fe63bd34b6e457ae8fae3649e74dbfb97559b83c13191"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/independent-ten-completed.jsonl.raw",
+        "bytes": 1435,
+        "sha256": "430310ffbabb01b0a0dc914f6efd47f270313b052a23110e3df9006c8caaa485"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-install-actual/independent-ten-completed.jsonl.raw",
+        "bytes": 1435,
+        "sha256": "430310ffbabb01b0a0dc914f6efd47f270313b052a23110e3df9006c8caaa485"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/install-completed.jsonl.raw",
+        "bytes": 822,
+        "sha256": "b3d72ffce904ceb920fe9b6ed69710dac40dd843cb740d99988e4cf5318d9535"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-install-actual/install-completed.jsonl.raw",
+        "bytes": 822,
+        "sha256": "b3d72ffce904ceb920fe9b6ed69710dac40dd843cb740d99988e4cf5318d9535"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/manifest.json",
+        "bytes": 3699,
+        "sha256": "c6bf8f3ba0856a3de0dd045ce65bd5aef5c14a0cad5e628dbeb53bae25a1a7c7"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-install-actual/manifest.json.raw",
+        "bytes": 3699,
+        "sha256": "c6bf8f3ba0856a3de0dd045ce65bd5aef5c14a0cad5e628dbeb53bae25a1a7c7"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/preinstall-completed.jsonl.raw",
+        "bytes": 14159,
+        "sha256": "9a6d277507c889e14e539d6a03aabc46aee7c6cff5f96dc943dbce2420c826c8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-install-actual/preinstall-completed.jsonl.raw",
+        "bytes": 14159,
+        "sha256": "9a6d277507c889e14e539d6a03aabc46aee7c6cff5f96dc943dbce2420c826c8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/publication-completed.jsonl.raw",
+        "bytes": 1145,
+        "sha256": "e1bf9e864d078fd796e26425e62bb5ebd46eb70d9718cebda3300092d2a97e61"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/transcript-install-actual/publication-completed.jsonl.raw",
+        "bytes": 1145,
+        "sha256": "e1bf9e864d078fd796e26425e62bb5ebd46eb70d9718cebda3300092d2a97e61"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-docs/report.json",
+        "bytes": 11369,
+        "sha256": "485062aa8d8587fc66fc55bac1dd3c09bb3e352e8db679f4820202f3418e6987"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/docs/report.json.raw",
+        "bytes": 11369,
+        "sha256": "485062aa8d8587fc66fc55bac1dd3c09bb3e352e8db679f4820202f3418e6987"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-docs/report-v2.json",
+        "bytes": 4979,
+        "sha256": "273b516f3ae696e2ec43cae8107f3ca48ffcc98ca540b63a86f122837005bbf9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/docs/report-v2.json.raw",
+        "bytes": 4979,
+        "sha256": "273b516f3ae696e2ec43cae8107f3ca48ffcc98ca540b63a86f122837005bbf9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-docs/format-completed.json",
+        "bytes": 753,
+        "sha256": "0269451da02adb5c8ce27e4f14ea056042cce986c4894e38d61ce7f8bfc5cd1e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/docs/format-completed.json.raw",
+        "bytes": 753,
+        "sha256": "0269451da02adb5c8ce27e4f14ea056042cce986c4894e38d61ce7f8bfc5cd1e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-docs/format-stdout.log",
+        "bytes": 172,
+        "sha256": "0533ac7c3b37d316309cd96b5aeff03e9a3d71fb68a79721dfcdf7f36ef4fbd5"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/docs/format-stdout.log.raw",
+        "bytes": 172,
+        "sha256": "0533ac7c3b37d316309cd96b5aeff03e9a3d71fb68a79721dfcdf7f36ef4fbd5"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-docs/format-stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/docs/format-stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-docs/format-v2-completed.json",
+        "bytes": 645,
+        "sha256": "d55545346d530c52aacb44b155ca7000b7d55d4d4f0f050de5cde4aa00d27304"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/docs/format-v2-completed.json.raw",
+        "bytes": 645,
+        "sha256": "d55545346d530c52aacb44b155ca7000b7d55d4d4f0f050de5cde4aa00d27304"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-docs/format-v2-stdout.log",
+        "bytes": 28,
+        "sha256": "331804b9e9aaa421dd6fb8c09bf3ee8469f7142e1cc620c0aabab932f7080e3a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/docs/format-v2-stdout.log.raw",
+        "bytes": 28,
+        "sha256": "331804b9e9aaa421dd6fb8c09bf3ee8469f7142e1cc620c0aabab932f7080e3a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-docs/format-v2-stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/docs/format-v2-stderr.log.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-docs/five-files-v2.diff",
+        "bytes": 24781,
+        "sha256": "63af21cce5004023dd0b62330dc3484fcbb0151cc1352e0006e5a99ca2392f5f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/independent/docs/five-files-v2.diff.raw",
+        "bytes": 24781,
+        "sha256": "63af21cce5004023dd0b62330dc3484fcbb0151cc1352e0006e5a99ca2392f5f"
+      }
+    }
+  ],
+  "originalReportRetained": "docs/report.json.raw is the first closeout variant; docs/report-v2.json.raw supplies final file hashes after shortening P18 progress.",
+  "actualFailureRetained": "Renderer 7127b3 exit1 and corrected 0d99f1 exit0 remain separate exact events; no candidate failure is inferred. Historical review-checker mistakes are disclosed in reports.",
+  "installedNotLaunched": true,
+  "nativeP18WorkflowTested": false,
+  "realAgentInvoked": false,
+  "wholeP18Complete": false,
+  "new24Resolved": false,
+  "sourceBoundary": "Current P30 work is independent; the installed checkpoint is fcd7, not a current-source claim.",
+  "rawPolicy": "All 27 copied records preserve source bytes. Only this new publication manifest may be formatted."
+}

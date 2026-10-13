@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-13T20:59:45.335176+00:00",
+  "result": "pass-saved-installation-closeout-evidence",
+  "sourceCommit": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+  "publicVerification": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/verification.json",
+    "bytes": 16058,
+    "sha256": "15cf7c3de2f647bce6e72a22688a1f49fecf3bca28a199783d1356256e4f9d54"
+  },
+  "exactPublicCopies": 28,
+  "initialPublicDirectoryFiles": 29,
+  "all28OriginalAndPublicBytesHashMatched": true,
+  "candidate": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/candidate.json",
+    "bytes": 77341,
+    "sha256": "0d97f25bdea66bb111287343a5fb63d2575da93842bb3a276cd459b32422bdc9"
+  },
+  "installed": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/install-independent-final.json",
+    "bytes": 114708,
+    "sha256": "034446261d20db459a9999ea787d3edcb4341f4d4ed69d29c28e96503ad67900"
+  },
+  "operation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/installation.json",
+    "bytes": 3492,
+    "sha256": "06f7fbf36952d295557d3026616743e0959dca59ec35c0560d642e32c96fc811"
+  },
+  "cleanup": "Actual cleanup0 recorded removal of only the generated duplicate; exact candidate/formal five files+mode and ZIP validation preceded and followed removal. Formal App and ZIP retained according to saved cleanup report. No fresh App/ZIP gate was rerun here.",
+  "rootActualCompletions": {
+    "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/manifest.json",
+    "bytes": 3699,
+    "sha256": "c6bf8f3ba0856a3de0dd045ce65bd5aef5c14a0cad5e628dbeb53bae25a1a7c7"
+  },
+  "savedChecks": {
+    "candidate": 9,
+    "installed": 10,
+    "failed": 0,
+    "formalProcessAtFinalRecordedGate": 0
+  },
+  "savedDataManifests": [
+    {
+      "phase": "before",
+      "summary": {
+        "path": "output/2026-10-14-diff-summary-install/install-data-before-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "execution": {
+        "path": "output/2026-10-14-diff-summary-install/snapshot-before-execution.json",
+        "bytes": 620,
+        "sha256": "74dce120278ecbd4cebffd1347797afd103822b6ba041a096f1e10fac8c53fa9"
+      },
+      "entryCount": 217400,
+      "manifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849"
+    },
+    {
+      "phase": "preinstall",
+      "summary": {
+        "path": "output/2026-10-14-diff-summary-install/install-data-preinstall-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "execution": {
+        "path": "output/2026-10-14-diff-summary-install/snapshot-preinstall-execution.json",
+        "bytes": 624,
+        "sha256": "ac7dc8415cefb430e79b055e3808a71e49049bd8dfd6aa2a73e3647f76ec4075"
+      },
+      "entryCount": 217400,
+      "manifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849"
+    },
+    {
+      "phase": "after",
+      "summary": {
+        "path": "output/2026-10-14-diff-summary-install/install-data-after-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "execution": {
+        "path": "output/2026-10-14-diff-summary-install/snapshot-after-execution.json",
+        "bytes": 619,
+        "sha256": "be36af355ed67fffa3e8f2bd1171ebd1e1dd7ca7011d49a9a1d7d28790c31493"
+      },
+      "entryCount": 217400,
+      "manifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849"
+    }
+  ],
+  "recordedThreeCompleteManifestsEqual": true,
+  "manifestComparisonScope": "Read the three saved count/hash summaries, their actual successful execution records and the final ten-check equality receipt. Raw 217400-entry user-data manifests and DB files were not read or copied by this review.",
+  "installedNotLaunched": true,
+  "nativeDifferenceWorkflowTested": false,
+  "realAgentInvoked": false,
+  "earlierStrictDifferences": "NEW-24 and earlier strict data differences remain unresolved; installation retention equality does not accept those differences.",
+  "historicalReceiptBoundary": "installation.json retains dataRetentionComparisonPending=true at installer completion. Later after-capture and independent ten-check receipt establish this installation comparison; the earlier receipt is not rewritten.",
+  "sourceBoundary": "P30 may now change source. This is a saved installation receipt review, not a claim that current source still equals fcd7.",
+  "safeToPublish": true
+}

@@ -330,3 +330,12 @@ docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate-ind
 docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/installation.json
 docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/install-independent-final.json
 docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/duplicate-cleanup.json
+
+# Preserve original P18 diff-summary candidate and installation receipts.
+docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/candidate-inputs.json
+docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/candidate-inputs-after.json
+docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/candidate.json
+docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/candidate-independent.json
+docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/installation.json
+docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/install-independent-final.json
+docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/duplicate-cleanup.json

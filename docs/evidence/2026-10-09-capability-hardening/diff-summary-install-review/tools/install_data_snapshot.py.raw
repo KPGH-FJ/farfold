@@ -1,0 +1,131 @@
+"""Capture all three data roots only after exact commit/normal-exit gates.
+
+This script is a preparation template. SOURCE_COMMIT remains UNSET.
+Import performs no filesystem or subprocess operations.
+"""
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import stat
+import sys
+
+sys.dont_write_bytecode = True
+SOURCE_COMMIT = 'fcd7b2669341b05f40c712b6c9fbbca26feb9031'
+ROOT = Path('/Users/tw/Desktop/farfold')
+OUT = ROOT / 'output/2026-10-14-diff-summary-install'
+ROOTS = {
+    'appData': '/Users/tw/Library/Application Support/ai.farfold.desktop',
+    'webkit': '/Users/tw/Library/WebKit/ai.farfold.desktop',
+    'cache': '/Users/tw/Library/Caches/ai.farfold.desktop',
+}
+DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+
+
+def require(ok, message):
+    if not ok:
+        raise RuntimeError(message)
+
+
+def signature(value):
+    return (value.st_dev, value.st_ino, value.st_mode, value.st_size,
+            value.st_mtime_ns, value.st_ctime_ns, value.st_uid)
+
+
+def open_directory(path):
+    require(Path(path).is_absolute() and '..' not in Path(path).parts, 'Directory path differs')
+    descriptor = os.open('/', DIR_FLAGS)
+    try:
+        for part in Path(path).parts[1:]:
+            child = os.open(part, DIR_FLAGS, dir_fd=descriptor)
+            os.close(descriptor)
+            descriptor = child
+        return descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def require_ready():
+    require(type(SOURCE_COMMIT) is str and len(SOURCE_COMMIT) == 40 and all(c in '0123456789abcdef' for c in SOURCE_COMMIT), 'Preparation only: SOURCE_COMMIT is UNSET')
+    require(Path(__file__).parent.resolve() == OUT, 'Copy reviewed tools to the exact new installation directory before execution')
+    spec = importlib.util.spec_from_file_location('docx_install_helpers', OUT / 'install_verified_candidate.py')
+    helpers = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(helpers)
+    helpers.require_configured()
+    require(helpers.SOURCE_COMMIT == SOURCE_COMMIT, 'Tool source pins disagree')
+    helpers.verify_normal_exit()
+    require(helpers.process_count() == 0, 'Formal app is running; normal exit is required')
+    return helpers
+
+
+def emit(writer, digest, counts, root, relative, value, kind, extra=None):
+    record = {'root': root, 'path': relative, 'kind': kind,
+              'type': stat.S_IFMT(value.st_mode), 'mode': stat.S_IMODE(value.st_mode)}
+    record.update(extra or {})
+    line = (json.dumps(record, ensure_ascii=True, sort_keys=True) + '\n').encode()
+    writer.write(line)
+    digest.update(line)
+    counts[root][kind] += 1
+
+
+def inspect(writer, digest, counts, parent, name, root, relative):
+    before = os.stat(name, dir_fd=parent, follow_symlinks=False)
+    if stat.S_ISLNK(before.st_mode):
+        target = os.readlink(name, dir_fd=parent)
+        require(signature(before) == signature(os.stat(name, dir_fd=parent, follow_symlinks=False)), 'Symlink changed while reading')
+        emit(writer, digest, counts, root, relative, before, 'symlink', {'target': target})
+    elif stat.S_ISDIR(before.st_mode):
+        descriptor = os.open(name, DIR_FLAGS, dir_fd=parent)
+        try:
+            require(signature(before) == signature(os.fstat(descriptor)), 'Directory changed while opening')
+            emit(writer, digest, counts, root, relative, before, 'directory')
+            for child in sorted(os.listdir(descriptor)):
+                child_path = child if relative == '.' else relative + '/' + child
+                inspect(writer, digest, counts, descriptor, child, root, child_path)
+            require(signature(before) == signature(os.fstat(descriptor)) == signature(os.stat(name, dir_fd=parent, follow_symlinks=False)), 'Directory changed while reading')
+        finally:
+            os.close(descriptor)
+    elif stat.S_ISREG(before.st_mode):
+        descriptor = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=parent)
+        with os.fdopen(descriptor, 'rb') as stream:
+            require(signature(before) == signature(os.fstat(stream.fileno())), 'File changed while opening')
+            content = hashlib.sha256()
+            for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+                content.update(chunk)
+            require(signature(before) == signature(os.fstat(stream.fileno())) == signature(os.stat(name, dir_fd=parent, follow_symlinks=False)), 'File changed while reading')
+        emit(writer, digest, counts, root, relative, before, 'file', {'size': before.st_size, 'sha256': content.hexdigest()})
+    else:
+        require(signature(before) == signature(os.stat(name, dir_fd=parent, follow_symlinks=False)), 'Special entry changed while reading')
+        emit(writer, digest, counts, root, relative, before, 'special')
+
+
+def main():
+    helpers = require_ready()
+    require(len(sys.argv) == 3 and sys.argv[1] in ('before', 'preinstall', 'after') and sys.argv[2] == '--normal-window-close-observed', 'Expected exact capture phase and normal-exit flag')
+    output = open_directory(OUT)
+    try:
+        require(os.fstat(output).st_uid == os.getuid() and stat.S_IMODE(os.fstat(output).st_mode) == 0o700, 'Capture directory must be owner-held 0700')
+        descriptor = os.open('install-data-' + sys.argv[1] + '.jsonl', os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=output)
+        digest = hashlib.sha256()
+        counts = {root: dict.fromkeys(('directory', 'file', 'symlink', 'special'), 0) for root in ROOTS}
+        with os.fdopen(descriptor, 'wb') as writer:
+            for root, path in ROOTS.items():
+                parent = open_directory(Path(path).parent)
+                try:
+                    inspect(writer, digest, counts, parent, Path(path).name, root, '.')
+                finally:
+                    os.close(parent)
+            writer.flush()
+            os.fsync(writer.fileno())
+        require(helpers.process_count() == 0, 'Formal app started during snapshot; preserve partial evidence')
+        helpers.verify_normal_exit()
+        print(json.dumps({'counts': counts, 'sha256': digest.hexdigest()}, sort_keys=True))
+    finally:
+        os.close(output)
+
+
+
+if __name__ == '__main__':
+    main()

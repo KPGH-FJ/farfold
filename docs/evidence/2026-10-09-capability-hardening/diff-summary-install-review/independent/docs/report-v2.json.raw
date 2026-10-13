@@ -1,0 +1,120 @@
+{
+  "schema": 2,
+  "reviewedAtUtc": "2026-10-13T21:07:20.612413+00:00",
+  "result": "pass-five-file-installation-closeout-v2",
+  "supersedesCurrentFilePinsOnly": {
+    "path": "output/2026-10-14-diff-summary-install-docs/report.json",
+    "bytes": 11369,
+    "sha256": "485062aa8d8587fc66fc55bac1dd3c09bb3e352e8db679f4820202f3418e6987"
+  },
+  "previousReportAndFormatRetained": true,
+  "requestedCorrection": "Shorten only P18 progress; keep details in preceding installation paragraphs.",
+  "originalBaselineProgress": "共用差异比较源码与受控已验；正式分项及整项未完",
+  "previousV1Progress": "共用差异比较源码、受控及工程已验；已安装 fcd7b266；正式交互及整项未完",
+  "finalProgress": "共用差异已安装；正式交互及整项待验",
+  "finalFiles": [
+    {
+      "path": "docs/status.md",
+      "bytes": 97498,
+      "sha256": "17ec7169caf620a49240d6a3e4396669ee0ea08489495c86e843ace558c989b6"
+    },
+    {
+      "path": "docs/architecture.md",
+      "bytes": 139560,
+      "sha256": "155cc9c966c1f0cf82582476d6d801d8bfd3fdb81d40840cd1749e86df68254b"
+    },
+    {
+      "path": "plans/agent-access.md",
+      "bytes": 162594,
+      "sha256": "659d311f863462d654ff925adfd03612111bc21ea46a050e174a01c24b149c67"
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/README.md",
+      "bytes": 94779,
+      "sha256": "d35563e5285e6c3f9c5efcc03367005e641363f7641cb46dd5b57dc702a4b782"
+    },
+    {
+      "path": ".prettierignore",
+      "bytes": 23314,
+      "sha256": "b4072c8b3dd3b2376bbe02ea2b1b7d37f3ba8dce81294cb57c0a3a38a4aed8bf"
+    }
+  ],
+  "originalIds": 122,
+  "original122TitlesAndCompletionConditionsUnchanged": true,
+  "other121OriginalRowsAllCellsUnchanged": true,
+  "new28RowsAllCellsUnchanged": true,
+  "allOtherTableCellsIncluding29AgentEightStandardMatrixUnchanged": true,
+  "formattingBoundary": "Prettier recalculates G-table padding from shorter progress. Root accepted canonical narrower width; padding-only changes are not other row content changes.",
+  "otherFourFilesByteIdenticalToV1": true,
+  "protectedUnchanged": [
+    {
+      "path": "PRODUCT.md",
+      "bytes": 35083,
+      "sha256": "c571fe2afcd6f06efff3da1aea5f5c879bcb69cbeab10cec3569f0d33718cfe7"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/README.md",
+      "bytes": 11543,
+      "sha256": "2a2a3127cc0e97e62ff64eaf067033c37af6878dc7d32fcfa67dd19dbafc2d45"
+    },
+    {
+      "path": "docs/evidence/2026-10-08-reliability-ui-review/annotated/README.md",
+      "bytes": 2341,
+      "sha256": "f2d6cedc87d969d63d17507c85c6f5abd7424a7a3edb9cfcd940520553429cd7"
+    },
+    {
+      "path": "docs/agent-first-release.md",
+      "bytes": 16987,
+      "sha256": "58f9d802793dcb3e369053fb2d94e1dab24c241ebcd055872e820f0e9f185ee7"
+    }
+  ],
+  "format": {
+    "receipt": {
+      "path": "output/2026-10-14-diff-summary-install-docs/format-v2-completed.json",
+      "bytes": 645,
+      "sha256": "d55545346d530c52aacb44b155ca7000b7d55d4d4f0f050de5cde4aa00d27304"
+    },
+    "actualToolChunk": "adc45d",
+    "actualExitCode": 0,
+    "scope": [
+      "plans/agent-access.md"
+    ]
+  },
+  "diff": {
+    "path": "output/2026-10-14-diff-summary-install-docs/five-files-v2.diff",
+    "bytes": 24781,
+    "sha256": "63af21cce5004023dd0b62330dc3484fcbb0151cc1352e0006e5a99ca2392f5f"
+  },
+  "installedScope": {
+    "sourceCommit": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+    "candidate": 9,
+    "installed": 10,
+    "manifestEntriesEach": 217400,
+    "threeSavedManifestHashesEqual": true,
+    "formalAppNotLaunched": true,
+    "nativeP18Untested": true,
+    "realAgentNotInvoked": true,
+    "wholeP18Incomplete": true,
+    "new24StillOpen": true
+  },
+  "evidence": {
+    "publicInstallation": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/verification.json",
+      "bytes": 16058,
+      "sha256": "15cf7c3de2f647bce6e72a22688a1f49fecf3bca28a199783d1356256e4f9d54"
+    },
+    "independentSavedInstallationReview": {
+      "path": "output/2026-10-14-diff-summary-independent/final-installation-review.json",
+      "bytes": 4710,
+      "sha256": "8498ff9e88d9b9c0098f5ed8edae7f07e1f2a6976ad433321b73dc75e455e65a"
+    }
+  },
+  "reviewCheckerCorrection": {
+    "actualToolChunk": "52b398",
+    "actualExitCode": 1,
+    "cause": "Initial v2 ID-count regex omitted the ARCH- prefix and counted 72 instead of 122; all-cell equality check had already passed. The assertion stopped before report or diff writes.",
+    "resolution": "Use actual ARCH-/P/H original ID shapes, count 122 original and 28 NEW rows; no document change or formatter rerun."
+  },
+  "boundary": "Only five named documentation/formatting files were edited. No production source, PRODUCT, protected README, staging, full-format, test, App, Agent or DB action. P30 may proceed independently; no current whole-source equality to the installed checkpoint is asserted.",
+  "safeToPublish": true
+}

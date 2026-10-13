@@ -1,0 +1,104 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "records": [
+    {
+      "name": "backup",
+      "chunkId": "1635b2",
+      "actualExitCode": 0,
+      "sourceLine": 14835,
+      "sourceByteOffset": 41103013,
+      "sourceByteLength": 740,
+      "timestamp": "2026-10-13T20:54:42.920Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/backup-completed.jsonl.raw",
+        "bytes": 740,
+        "sha256": "785d4a37c6e18325f07ce243f38ee55dd5bdeb9658c77738b25af2dc6c4e9222"
+      }
+    },
+    {
+      "name": "preinstall",
+      "chunkId": "de4670",
+      "actualExitCode": 0,
+      "sourceLine": 14880,
+      "sourceByteOffset": 41162738,
+      "sourceByteLength": 14159,
+      "timestamp": "2026-10-13T20:55:43.794Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/preinstall-completed.jsonl.raw",
+        "bytes": 14159,
+        "sha256": "9a6d277507c889e14e539d6a03aabc46aee7c6cff5f96dc943dbce2420c826c8"
+      }
+    },
+    {
+      "name": "install",
+      "chunkId": "5240a6",
+      "actualExitCode": 0,
+      "sourceLine": 14901,
+      "sourceByteOffset": 41194368,
+      "sourceByteLength": 822,
+      "timestamp": "2026-10-13T20:56:03.567Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/install-completed.jsonl.raw",
+        "bytes": 822,
+        "sha256": "b3d72ffce904ceb920fe9b6ed69710dac40dd843cb740d99988e4cf5318d9535"
+      }
+    },
+    {
+      "name": "after",
+      "chunkId": "5db549",
+      "actualExitCode": 0,
+      "sourceLine": 14935,
+      "sourceByteOffset": 41299140,
+      "sourceByteLength": 1088,
+      "timestamp": "2026-10-13T20:56:39.954Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/after-completed.jsonl.raw",
+        "bytes": 1088,
+        "sha256": "28f773e7cd0302eaac275eee7ad6f34036d767df0f89bb42a6a1f68255473a6f"
+      }
+    },
+    {
+      "name": "independent-ten",
+      "chunkId": "5ee5e5",
+      "actualExitCode": 0,
+      "sourceLine": 14958,
+      "sourceByteOffset": 41322609,
+      "sourceByteLength": 1435,
+      "timestamp": "2026-10-13T20:57:02.377Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/independent-ten-completed.jsonl.raw",
+        "bytes": 1435,
+        "sha256": "430310ffbabb01b0a0dc914f6efd47f270313b052a23110e3df9006c8caaa485"
+      }
+    },
+    {
+      "name": "cleanup",
+      "chunkId": "d4e4fe",
+      "actualExitCode": 0,
+      "sourceLine": 14976,
+      "sourceByteOffset": 41340433,
+      "sourceByteLength": 990,
+      "timestamp": "2026-10-13T20:57:20.645Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/cleanup-completed.jsonl.raw",
+        "bytes": 990,
+        "sha256": "95257898d8e873a2b97fe63bd34b6e457ae8fae3649e74dbfb97559b83c13191"
+      }
+    },
+    {
+      "name": "publication",
+      "chunkId": "c248af",
+      "actualExitCode": 0,
+      "sourceLine": 14988,
+      "sourceByteOffset": 41354361,
+      "sourceByteLength": 1145,
+      "timestamp": "2026-10-13T20:57:37.574Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-install-actual/publication-completed.jsonl.raw",
+        "bytes": 1145,
+        "sha256": "e1bf9e864d078fd796e26425e62bb5ebd46eb70d9718cebda3300092d2a97e61"
+      }
+    }
+  ],
+  "scope": "Exact seven requested root completion events only. Output contains phase/summary/hash metadata; no raw user-data manifest or database payload."
+}

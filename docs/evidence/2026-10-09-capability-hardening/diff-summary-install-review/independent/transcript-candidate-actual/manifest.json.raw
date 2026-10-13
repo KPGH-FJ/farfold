@@ -1,0 +1,48 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "records": [
+    {
+      "name": "build-completed",
+      "chunkId": "7b133e",
+      "actualExitCode": 0,
+      "sourceLine": 14750,
+      "sourceByteOffset": 40940112,
+      "sourceByteLength": 1840,
+      "timestamp": "2026-10-13T20:53:18.056Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-actual/build-completed.jsonl.raw",
+        "bytes": 1840,
+        "sha256": "f110d74d012ad2d7214ef802e64dda4e9e6d686ceb6e4620a99ac68dcd95b619"
+      }
+    },
+    {
+      "name": "verify-completed",
+      "chunkId": "8f6e6a",
+      "actualExitCode": 0,
+      "sourceLine": 14764,
+      "sourceByteOffset": 40957722,
+      "sourceByteLength": 1035,
+      "timestamp": "2026-10-13T20:53:35.959Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-actual/verify-completed.jsonl.raw",
+        "bytes": 1035,
+        "sha256": "380898f682bfeb48a367e168f09bfbd721f41c7844b3df8907f03e02b5dac6a9"
+      }
+    },
+    {
+      "name": "observation-completed",
+      "chunkId": "8b7244",
+      "actualExitCode": 0,
+      "sourceLine": 14771,
+      "sourceByteOffset": 40963850,
+      "sourceByteLength": 913,
+      "timestamp": "2026-10-13T20:53:39.431Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-actual/observation-completed.jsonl.raw",
+        "bytes": 913,
+        "sha256": "a368c935091fa78a7af20a7b2bbfc8544964bdb70a477171721e3b18f5931405"
+      }
+    }
+  ],
+  "scope": "Three requested root completion events only; build, independent candidate verification and fresh process observation. No installation or capture success inferred."
+}

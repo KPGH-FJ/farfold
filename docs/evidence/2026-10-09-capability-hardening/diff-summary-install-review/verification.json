@@ -1,0 +1,373 @@
+{
+  "sourceCommit": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+  "publishedAtUtc": "2026-10-13T20:57:34.146298+00:00",
+  "candidateChecksPassed": 9,
+  "installedChecksPassed": 10,
+  "applicationVersion": "0.1.7",
+  "architecture": "arm64",
+  "dataManifestEntries": 217400,
+  "beforePreinstallAfterSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+  "formalAppUpdated": true,
+  "appLaunchedForThisSlice": false,
+  "realAgentInvokedForThisSlice": false,
+  "nativeToolDifferenceWorkflowVerified": false,
+  "copies": [
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-preparation/preparation.json",
+        "bytes": 11840,
+        "sha256": "2053ac4b91af777627d861e3e70bf704eb88c289c1c6aaeef06378e59aa02072"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/preparation/preparation.json.raw",
+        "bytes": 11840,
+        "sha256": "2053ac4b91af777627d861e3e70bf704eb88c289c1c6aaeef06378e59aa02072"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-preparation/generated-tools.json",
+        "bytes": 5920,
+        "sha256": "6d91cdb295bb40deffb61852f11cf1b9408bd4a194fe06beb90cb5106a799a03"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/preparation/generated-tools.json.raw",
+        "bytes": 5920,
+        "sha256": "6d91cdb295bb40deffb61852f11cf1b9408bd4a194fe06beb90cb5106a799a03"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-preparation/publish_and_cleanup.py",
+        "bytes": 10419,
+        "sha256": "6bb40304c30f4d5b5821c23a2267ef3cdb1f5f84915f6d5d34ff53fca8832593"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/preparation/publish_and_cleanup.py.raw",
+        "bytes": 10419,
+        "sha256": "6bb40304c30f4d5b5821c23a2267ef3cdb1f5f84915f6d5d34ff53fca8832593"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-preparation/publish_installation.py",
+        "bytes": 5883,
+        "sha256": "8b01165de096fdbb367d3ffdaf1ad7980312c463fdf983ebfa67ff65d745b21b"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/preparation/publish_installation.py.raw",
+        "bytes": 5883,
+        "sha256": "8b01165de096fdbb367d3ffdaf1ad7980312c463fdf983ebfa67ff65d745b21b"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-preparation/seal-tools.py",
+        "bytes": 3756,
+        "sha256": "0982d948598165bc86747c56ec637093e4d37eb93415ab897ca0971b66c6a898"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/preparation/seal-tools.py.raw",
+        "bytes": 3756,
+        "sha256": "0982d948598165bc86747c56ec637093e4d37eb93415ab897ca0971b66c6a898"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-preparation/render.py",
+        "bytes": 16049,
+        "sha256": "d017c86629da3a0e5c2b9f6c670e632c31c8b70b356c2cd40c266abc3c93b0d2"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/preparation/configuration/render.py.raw",
+        "bytes": 16049,
+        "sha256": "d017c86629da3a0e5c2b9f6c670e632c31c8b70b356c2cd40c266abc3c93b0d2"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-preparation/pins-final.json",
+        "bytes": 728,
+        "sha256": "eeaec95a0861d6feefcbf91a89c9675318b91fdfd7e1fdbb79acd640b1f69b86"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/preparation/configuration/pins-final.json.raw",
+        "bytes": 728,
+        "sha256": "eeaec95a0861d6feefcbf91a89c9675318b91fdfd7e1fdbb79acd640b1f69b86"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-preparation/engineering-paths-run2.json",
+        "bytes": 404,
+        "sha256": "8d8cb5fd5339bbac7734c5cab35b8145cec6bb4d29c978738fd84066bbd21cfd"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/preparation/configuration/engineering-paths-run2.json.raw",
+        "bytes": 404,
+        "sha256": "8d8cb5fd5339bbac7734c5cab35b8145cec6bb4d29c978738fd84066bbd21cfd"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-preparation/origins.json",
+        "bytes": 2231,
+        "sha256": "3acfe3bed5b3c996c70e8eda86f709a510b3ea3f614c3cb0dada5b7dc0294832"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/preparation/configuration/origins.json.raw",
+        "bytes": 2231,
+        "sha256": "3acfe3bed5b3c996c70e8eda86f709a510b3ea3f614c3cb0dada5b7dc0294832"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-preparation/known-baseline.json",
+        "bytes": 6816,
+        "sha256": "ed4cd76d299af0155b4b12977c1e34b2139eadd37fd747c45d8b4dfc3df71d02"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/preparation/configuration/known-baseline.json.raw",
+        "bytes": 6816,
+        "sha256": "ed4cd76d299af0155b4b12977c1e34b2139eadd37fd747c45d8b4dfc3df71d02"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install-preparation/baseline-context.json",
+        "bytes": 1756,
+        "sha256": "f6d7d8b0a2c1bd46cbccd71a495a1c448ed8cc975f73e96d28e9010a5cd14d8f"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/preparation/configuration/baseline-context.json.raw",
+        "bytes": 1756,
+        "sha256": "f6d7d8b0a2c1bd46cbccd71a495a1c448ed8cc975f73e96d28e9010a5cd14d8f"
+      }
+    },
+    {
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/prepare-candidate.py",
+        "bytes": 4493,
+        "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/tools/prepare-candidate.py.raw",
+        "bytes": 4493,
+        "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+      }
+    },
+    {
+      "original": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/verify-candidate.py",
+        "bytes": 85335,
+        "sha256": "8250f029b98402a6daccc56bb2b9e8e4a416bff25b074f6d95c99629000ad3aa"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/tools/verify-candidate.py.raw",
+        "bytes": 85335,
+        "sha256": "8250f029b98402a6daccc56bb2b9e8e4a416bff25b074f6d95c99629000ad3aa"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/data_manifest.py",
+        "bytes": 4258,
+        "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/tools/data_manifest.py.raw",
+        "bytes": 4258,
+        "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/observe_normal_exit.py",
+        "bytes": 3480,
+        "sha256": "10b137c9e2af03cc88445009be7b041a07a5d9351b785a6216f2a805e62c9203"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/tools/observe_normal_exit.py.raw",
+        "bytes": 3480,
+        "sha256": "10b137c9e2af03cc88445009be7b041a07a5d9351b785a6216f2a805e62c9203"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/install_data_snapshot.py",
+        "bytes": 6223,
+        "sha256": "d19076d9e12eed3df412810c434fd25246270eb65b60c1ba59355b2c9ca32c33"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/tools/install_data_snapshot.py.raw",
+        "bytes": 6223,
+        "sha256": "d19076d9e12eed3df412810c434fd25246270eb65b60c1ba59355b2c9ca32c33"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/capture_snapshot.py",
+        "bytes": 2842,
+        "sha256": "4d6e0b74e8231d6a5fd701711fdc83db00107a0d3a5627efee6863fd51b61167"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/tools/capture_snapshot.py.raw",
+        "bytes": 2842,
+        "sha256": "4d6e0b74e8231d6a5fd701711fdc83db00107a0d3a5627efee6863fd51b61167"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/backup_metadata.py",
+        "bytes": 10578,
+        "sha256": "cc286780302f9f2663f5db819806caa55291ecd429ab06d0d38dbf495b1fc5e0"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/tools/backup_metadata.py.raw",
+        "bytes": 10578,
+        "sha256": "cc286780302f9f2663f5db819806caa55291ecd429ab06d0d38dbf495b1fc5e0"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/install_verified_candidate.py",
+        "bytes": 53200,
+        "sha256": "5ec3b2110254efe767855055eefb7002eb1a1faa0bcfbd415d0a43f6d51e558a"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/tools/install_verified_candidate.py.raw",
+        "bytes": 53200,
+        "sha256": "5ec3b2110254efe767855055eefb7002eb1a1faa0bcfbd415d0a43f6d51e558a"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-independent-install/verify_installed_final.py",
+        "bytes": 14605,
+        "sha256": "0cf1a681a16017a49e4ac4ddcd539e5d553de8e0440e84be176dd2b0368fa47e"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/tools/verify_installed_final.py.raw",
+        "bytes": 14605,
+        "sha256": "0cf1a681a16017a49e4ac4ddcd539e5d553de8e0440e84be176dd2b0368fa47e"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/normal-exit-observation.json",
+        "bytes": 11196,
+        "sha256": "c7763270157abf51ec818869cd940480d9b57c91adf39d7c68b56fcd3a7224b8"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/metadata/normal-exit-observation.json.raw",
+        "bytes": 11196,
+        "sha256": "c7763270157abf51ec818869cd940480d9b57c91adf39d7c68b56fcd3a7224b8"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/metadata-backup-receipt.json",
+        "bytes": 1358,
+        "sha256": "668eb02c4bb457c1b3a93243be4e62a2df844d314e3c868e2d5e1ce09cca0afc"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/metadata/metadata-backup-receipt.json.raw",
+        "bytes": 1358,
+        "sha256": "668eb02c4bb457c1b3a93243be4e62a2df844d314e3c868e2d5e1ce09cca0afc"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/snapshot-before-execution.json",
+        "bytes": 620,
+        "sha256": "74dce120278ecbd4cebffd1347797afd103822b6ba041a096f1e10fac8c53fa9"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/metadata/snapshot-before-execution.json.raw",
+        "bytes": 620,
+        "sha256": "74dce120278ecbd4cebffd1347797afd103822b6ba041a096f1e10fac8c53fa9"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/install-data-before-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/metadata/install-data-before-summary.json.raw",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/snapshot-preinstall-execution.json",
+        "bytes": 624,
+        "sha256": "ac7dc8415cefb430e79b055e3808a71e49049bd8dfd6aa2a73e3647f76ec4075"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/metadata/snapshot-preinstall-execution.json.raw",
+        "bytes": 624,
+        "sha256": "ac7dc8415cefb430e79b055e3808a71e49049bd8dfd6aa2a73e3647f76ec4075"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/install-data-preinstall-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/metadata/install-data-preinstall-summary.json.raw",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/snapshot-after-execution.json",
+        "bytes": 619,
+        "sha256": "be36af355ed67fffa3e8f2bd1171ebd1e1dd7ca7011d49a9a1d7d28790c31493"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/metadata/snapshot-after-execution.json.raw",
+        "bytes": 619,
+        "sha256": "be36af355ed67fffa3e8f2bd1171ebd1e1dd7ca7011d49a9a1d7d28790c31493"
+      }
+    },
+    {
+      "original": {
+        "path": "output/2026-10-14-diff-summary-install/install-data-after-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "published": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/metadata/install-data-after-summary.json.raw",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      }
+    }
+  ],
+  "candidate": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/candidate.json",
+    "bytes": 77341,
+    "sha256": "0d97f25bdea66bb111287343a5fb63d2575da93842bb3a276cd459b32422bdc9"
+  },
+  "installed": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/install-independent-final.json",
+    "bytes": 114708,
+    "sha256": "034446261d20db459a9999ea787d3edcb4341f4d4ed69d29c28e96503ad67900"
+  },
+  "operation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/installation.json",
+    "bytes": 3492,
+    "sha256": "06f7fbf36952d295557d3026616743e0959dca59ec35c0560d642e32c96fc811"
+  },
+  "cleanup": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/duplicate-cleanup.json",
+    "bytes": 1701,
+    "sha256": "bf9b9d4318a8d2dc09cab6d66dc753942153ab220b887a285dc5224ee1cad167"
+  },
+  "boundary": "Installed bundle and recorded data retention only. No native tool-difference workflow, real-Agent file-write result, permission recovery, or whole-P18 acceptance. Original failed checks/preparation records remain preserved; earlier strict data differences are not waived. Raw user-data manifests and database bytes stay private."
+}

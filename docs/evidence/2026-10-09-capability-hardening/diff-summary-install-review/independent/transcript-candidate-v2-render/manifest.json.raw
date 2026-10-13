@@ -1,0 +1,32 @@
+{
+  "sourceTranscript": "/Users/tw/.codex/sessions/2026/10/13/rollout-2026-10-13T14-58-21-01a1340e-1a89-7153-8ca5-4a7f610b79b3.jsonl",
+  "records": [
+    {
+      "chunkId": "7127b3",
+      "actualExitCode": 1,
+      "sourceLine": 14673,
+      "sourceByteOffset": 40656923,
+      "sourceByteLength": 1049,
+      "timestamp": "2026-10-13T20:51:08.855Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-v2-render/7127b3.jsonl.raw",
+        "bytes": 1049,
+        "sha256": "92a2f43a930deed8c0cb0ac9dbec7ab6f1f92a7a6f1b8f4e339d77c3ebf9f7f0"
+      }
+    },
+    {
+      "chunkId": "0d99f1",
+      "actualExitCode": 0,
+      "sourceLine": 14685,
+      "sourceByteOffset": 40686964,
+      "sourceByteLength": 909,
+      "timestamp": "2026-10-13T20:51:18.432Z",
+      "raw": {
+        "path": "output/2026-10-14-diff-summary-independent/transcript-candidate-v2-render/0d99f1.jsonl.raw",
+        "bytes": 909,
+        "sha256": "408ae1ce713b29ecc3a9de86b3c27583b7b43840fd432c8e79b700ef624423f8"
+      }
+    }
+  ],
+  "scope": "Exact two renderer completions only, not candidate execution."
+}

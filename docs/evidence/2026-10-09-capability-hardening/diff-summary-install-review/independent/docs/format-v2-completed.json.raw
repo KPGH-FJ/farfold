@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "corepack",
+    "pnpm",
+    "exec",
+    "prettier",
+    "--write",
+    "plans/agent-access.md"
+  ],
+  "startedAtUtc": "2026-10-13T21:06:01.446678+00:00",
+  "completedAtUtc": "2026-10-13T21:06:01.787706+00:00",
+  "actualExitCode": 0,
+  "stdout": {
+    "path": "output/2026-10-14-diff-summary-install-docs/format-v2-stdout.log",
+    "bytes": 28,
+    "sha256": "331804b9e9aaa421dd6fb8c09bf3ee8469f7142e1cc620c0aabab932f7080e3a"
+  },
+  "stderr": {
+    "path": "output/2026-10-14-diff-summary-install-docs/format-v2-stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

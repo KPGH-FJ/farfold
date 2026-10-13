@@ -1,0 +1,237 @@
+{
+  "sourceCommit": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+  "observedAtUtc": "2026-10-13T20:53:39.398046+00:00",
+  "userAuthorizedContinuousDevelopment": true,
+  "normalQuitObserved": true,
+  "forcedQuit": false,
+  "formalProcessCountAfter": 0,
+  "newQuitPerformed": false,
+  "unconfirmedWorkMarkedComplete": false,
+  "rootConfirmedNoAppRestartSincePriorQuit": true,
+  "originalNormalExit": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/24-call_ZEZOnBmsADcKmAIHpmZgGYZ9.jsonl.raw",
+    "sha256": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad"
+  },
+  "originalQuitContext": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/23-call_uuooA1Gh1QJrWmJl4RZLWkJd.jsonl.raw",
+    "sha256": "b6bb997adbea13389eab605b1b38a50b782ae9a105c04de58b063ed4bfe51d14"
+  },
+  "originalQuitManifest": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/transcript-receipts/manifest.json",
+    "sha256": "d4a3e377389ac349f7592ac38f112851a44a0f7410659ffc5754ea2b1ed34942"
+  },
+  "originalExactExecutableProcessReceipt": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/01-final-process.json",
+    "sha256": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c"
+  },
+  "originalProcessExecution": {
+    "path": "output/2026-10-13-file-dialog-investigation/native-run/03-final-process-exec.jsonl.raw",
+    "sha256": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205"
+  },
+  "formalBaselineNative": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/file-dialog-native/installed-native-scoped.json",
+    "sha256": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96"
+  },
+  "latestClosedDataStage": {
+    "references": {
+      "execution.json": {
+        "path": "output/2026-10-14-file-dialog-data/execution.json",
+        "bytes": 980,
+        "sha256": "803c0790ed7ea0a39f4721241f20f2c6b68fca61cf633df475f9b33ddca89bd6"
+      },
+      "capture-receipt-private.json": {
+        "path": "output/2026-10-14-file-dialog-data/capture-receipt-private.json",
+        "bytes": 10334,
+        "sha256": "7de7a6ad67f60922869b6dd4aea6a128b9030a2ca6d4c65c167cd1bf2bccde99"
+      },
+      "comparison-private.json": {
+        "path": "output/2026-10-14-file-dialog-data/comparison-private.json",
+        "bytes": 3936,
+        "sha256": "a087bc3a57afe2e3fa41039e702e453e7b5ccdb40d9766f5b7b24a50a42592cc"
+      },
+      "final-verification-private.json": {
+        "path": "output/2026-10-14-file-dialog-data/final-verification-private.json",
+        "bytes": 792,
+        "sha256": "dba4b6ac8b53b44f5e8f4447071c67ac5b039cc6534ed893478ec27fa259efd8"
+      },
+      "config.json": {
+        "path": "output/2026-10-14-file-dialog-data/config.json",
+        "bytes": 1321,
+        "sha256": "43356564b8c568dd0a30456c6d0207378df31635b6bc5abe00c9211cbe5f207e"
+      },
+      "stdout.raw": {
+        "path": "output/2026-10-14-file-dialog-data/stdout.raw",
+        "bytes": 93,
+        "sha256": "69f6e60483803dc5a06e45ed88cee6140936c57be9139f63fa673badd4c01ec3"
+      },
+      "stderr.raw": {
+        "path": "output/2026-10-14-file-dialog-data/stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "adapter-review.json": {
+        "path": "output/2026-10-14-file-dialog-data-independent/adapter-review.json",
+        "bytes": 5912,
+        "sha256": "5e32b1c9f2e5331b6b440d5da04c4966d825daf9725a39599ebca4ed9c56b285"
+      }
+    },
+    "sourceFiles": {
+      "farfold.sqlite3": {
+        "sha256": "f7ddc093c95edd33c01bb65146cff52f5570e3b8ebb6fabc6ad95a4cf1eb4da5",
+        "bytes": 512000
+      },
+      "farfold.sqlite3-wal": {
+        "sha256": "6e4974af2c3e869b67234a7b5a2495407d447cd1ba57264dc9f4b92f88cb059e",
+        "bytes": 4169472
+      },
+      "farfold.sqlite3-shm": {
+        "sha256": "bb104a2cbc5e5adcff76748ed2f11654fd46fe86c88220e69437cfe59a57ffb9",
+        "bytes": 32768
+      }
+    },
+    "strictExitCode": 2,
+    "differencesAccepted": false,
+    "boundary": "Latest closed NEW26 provenance only. Preserve capture exit2/difference1 and earlier unaccepted strict2. New installation still requires fresh full manifests and raw backup."
+  },
+  "previousUnlaunchedInstallation": {
+    "installedSourceCommit": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+    "lastRunningSourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+    "installedButNotLaunchedAtRecordedGate": true,
+    "references": {
+      "candidate": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate.json",
+        "bytes": 68870,
+        "sha256": "5009f29ce62ab5336ba4b71ac824248e3f5ef7a8b63a86550774de2d72fb7158"
+      },
+      "candidateIndependent": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate-independent.json",
+        "bytes": 3060,
+        "sha256": "0134c72571fb6928a5bfaa11f59ed1b9feccd683e422b6890436542e02db70ad"
+      },
+      "inputs": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate-inputs.json",
+        "bytes": 247474,
+        "sha256": "3366b87b251e428bf6243391a46e053cf27075009f173dcaca62fd4129329011"
+      },
+      "installed": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/install-independent-final.json",
+        "bytes": 98849,
+        "sha256": "d7bf945c81c0e37a61273054457b2b40148e9da9af5ff1f46e54e2809388decf"
+      },
+      "operation": {
+        "path": "output/2026-10-14-pdf-search-install/install-operation.json",
+        "bytes": 3492,
+        "sha256": "12dde219d19216081d8194c62120ea679cf40e2233ef04b36fb6d97d724b8c31"
+      },
+      "backup": {
+        "path": "output/2026-10-14-pdf-search-install/metadata-backup-receipt.json",
+        "bytes": 1358,
+        "sha256": "ce31d94f737d1f1992060906cb31d448ab353926679b9df64bf43d2ff15c1254"
+      },
+      "normal": {
+        "path": "output/2026-10-14-pdf-search-install/normal-exit-observation.json",
+        "bytes": 11214,
+        "sha256": "5d51863d6bccd2069455f2fd37485c9776d18dbf44ca37199d30f1c45d78d641"
+      },
+      "tools": {
+        "path": "output/2026-10-14-pdf-search-install-preparation/generated-tools.json",
+        "bytes": 5894,
+        "sha256": "7da5c59f548c1d429db44b9cc03c82769a2687d4c8a5e75d087ea4425a017f39"
+      },
+      "privateInstalled": {
+        "path": "output/2026-10-14-pdf-search-independent-install/install-final-review.json",
+        "bytes": 98639,
+        "sha256": "41fbdce7a5bfcc99dccc0b017310a2657f8f1cb381744c55b19dfd2d47bd5ed1"
+      },
+      "beforeSummary": {
+        "path": "output/2026-10-14-pdf-search-install/install-data-before-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "beforeExecution": {
+        "path": "output/2026-10-14-pdf-search-install/snapshot-before-execution.json",
+        "bytes": 618,
+        "sha256": "659d634ad86d64c4c454ea0e532cea9dac5607adb5684e7edacc99e65248b12a"
+      },
+      "preinstallSummary": {
+        "path": "output/2026-10-14-pdf-search-install/install-data-preinstall-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "preinstallExecution": {
+        "path": "output/2026-10-14-pdf-search-install/snapshot-preinstall-execution.json",
+        "bytes": 622,
+        "sha256": "0b43d9502714b3af8ae937a46b28d9706d1f48043451bbe1b98dea98c5ed8013"
+      },
+      "afterSummary": {
+        "path": "output/2026-10-14-pdf-search-install/install-data-after-summary.json",
+        "bytes": 419,
+        "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+      },
+      "afterExecution": {
+        "path": "output/2026-10-14-pdf-search-install/snapshot-after-execution.json",
+        "bytes": 617,
+        "sha256": "59144c9b99e998b7346db148bdf098e748e776d682b59db12c17962d9e6e5705"
+      },
+      "tool:prepare-candidate.py": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/prepare-candidate.py",
+        "bytes": 4493,
+        "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+      },
+      "tool:verify-candidate.py": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/verify-candidate.py",
+        "bytes": 80324,
+        "sha256": "beda0af5ed1189dbaffe4ac34a56e1e002b411d4e33a08e8a293e637e4d5c5d6"
+      },
+      "tool:data_manifest.py": {
+        "path": "output/2026-10-14-pdf-search-install/data_manifest.py",
+        "bytes": 4258,
+        "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+      },
+      "tool:observe_normal_exit.py": {
+        "path": "output/2026-10-14-pdf-search-install/observe_normal_exit.py",
+        "bytes": 3474,
+        "sha256": "7c69fbc903260b0926a7d60e71b71f641f8d415fa95331e4878e69bd8c95cd2c"
+      },
+      "tool:install_data_snapshot.py": {
+        "path": "output/2026-10-14-pdf-search-install/install_data_snapshot.py",
+        "bytes": 6221,
+        "sha256": "f61df361af742532e85344a949e0af1e99c0632798731e16ee190a7c28e1ff97"
+      },
+      "tool:capture_snapshot.py": {
+        "path": "output/2026-10-14-pdf-search-install/capture_snapshot.py",
+        "bytes": 2840,
+        "sha256": "29893e04a24e5c4b933c48172e05df549c845d3ec010b57642551be64c91607b"
+      },
+      "tool:backup_metadata.py": {
+        "path": "output/2026-10-14-pdf-search-install/backup_metadata.py",
+        "bytes": 10576,
+        "sha256": "7a03e387973de8dcc3f791b16e7eae7035298038450e605de5a55bf8eb8efa8e"
+      },
+      "tool:install_verified_candidate.py": {
+        "path": "output/2026-10-14-pdf-search-install/install_verified_candidate.py",
+        "bytes": 51611,
+        "sha256": "c70b28f062019359336e0d41a4aa9dd21db68457c66603552ac79f607702f272"
+      },
+      "tool:verify_installed_final.py": {
+        "path": "output/2026-10-14-pdf-search-independent-install/verify_installed_final.py",
+        "bytes": 14604,
+        "sha256": "ab74036073e267665607417772eff60606730e3101d1992b04a8af7569fcdbf5"
+      }
+    },
+    "savedThreeManifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+    "savedBackupSha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+    "boundary": "Saved 2a720 installation over last-running 9c, not a fabricated 2a720 quit. Root must confirm no later restart and obtain fresh exact process absence, captures, backup, and three-manifest equality."
+  },
+  "processCheck": {
+    "argv": [
+      "/bin/ps",
+      "-axo",
+      "pid=,comm="
+    ],
+    "exitCode": 0,
+    "exactExecutable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+    "matchingPids": []
+  },
+  "boundary": "Actual 9c NEW26 save/quit23/24 and exact-process03 with original execution plus root-confirmed no restart and fresh exact process absence. Saved 2a720 installation was not launched; prior strict data differences remain recorded; no new quit, launch, data mutation or unknown work completion."
+}

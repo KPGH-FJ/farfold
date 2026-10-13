@@ -1,0 +1,195 @@
+{
+  "phase": "PREPARATION_ONLY_NO_GENERATED_MAIN_EXECUTED",
+  "pins": {
+    "SOURCE_COMMIT": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+    "ENGINEERING_SHA": "31de4b2f7bbfcd7c7e1a3658e0eb2b3eccf26befa581b45896784e3bfd5dce77",
+    "PRIVATE_ENGINEERING_SHA": "8788605205218b9dbe599b8dd567d19fb60be087ba6d2ea4d512eeada64abb7e",
+    "EXPECTED_INPUT_COUNT": 2059,
+    "INVENTORY_SHA": "33da2d3702eb3848a15ee36b9e0e8a6b159abdb28677262f505beeb8a96c4283",
+    "FREEZE_SHA": "1f443afdb73e4abfe1489a84dd132e2fb8ad289262e873af7bc0a814d2ee289e",
+    "NORMAL_EXIT_SHA": "c7763270157abf51ec818869cd940480d9b57c91adf39d7c68b56fcd3a7224b8",
+    "BEFORE_SUMMARY_SHA": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+    "BACKUP_RECEIPT_SHA": "668eb02c4bb457c1b3a93243be4e62a2df844d314e3c868e2d5e1ce09cca0afc"
+  },
+  "engineeringPaths": {
+    "INVENTORY_PATH": "output/2026-10-14-diff-summary-integration/inventory-plan-02.json",
+    "ENGINEERING_PLAN_REL": "output/2026-10-14-diff-summary-integration/checks-freeze-02/freeze.json",
+    "PRIVATE_ENGINEERING_REL": "output/2026-10-14-diff-summary-integration/checks-run-02/summary.json",
+    "ENGINEERING_PATH": "docs/evidence/2026-10-09-capability-hardening/diff-summary-checks/verification.json"
+  },
+  "inputScopeReady": true,
+  "files": [
+    {
+      "path": "output/2026-10-14-diff-summary-install-preparation/review-final/candidate/prepare-candidate.py",
+      "bytes": 4493,
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1",
+      "origin": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/prepare-candidate.py",
+        "bytes": 4493,
+        "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+      },
+      "diff": "output/2026-10-14-diff-summary-install-preparation/review-final/diffs/candidate-prepare-candidate.py.diff",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "finalPath": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/prepare-candidate.py"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install-preparation/review-final/candidate/verify-candidate.py",
+      "bytes": 85335,
+      "sha256": "8250f029b98402a6daccc56bb2b9e8e4a416bff25b074f6d95c99629000ad3aa",
+      "origin": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/verify-candidate.py",
+        "bytes": 80324,
+        "sha256": "beda0af5ed1189dbaffe4ac34a56e1e002b411d4e33a08e8a293e637e4d5c5d6"
+      },
+      "diff": "output/2026-10-14-diff-summary-install-preparation/review-final/diffs/candidate-verify-candidate.py.diff",
+      "diffSha256": "f934618e0646c8ea485793fe1d728730293e3ad58a061ac2c815123f9234b142",
+      "finalPath": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/verify-candidate.py"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install-preparation/review-final/install/data_manifest.py",
+      "bytes": 4258,
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "origin": {
+        "path": "output/2026-10-14-pdf-search-install/data_manifest.py",
+        "bytes": 4258,
+        "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+      },
+      "diff": "output/2026-10-14-diff-summary-install-preparation/review-final/diffs/install-data_manifest.py.diff",
+      "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "finalPath": "output/2026-10-14-diff-summary-install/data_manifest.py"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install-preparation/review-final/install/observe_normal_exit.py",
+      "bytes": 3480,
+      "sha256": "10b137c9e2af03cc88445009be7b041a07a5d9351b785a6216f2a805e62c9203",
+      "origin": {
+        "path": "output/2026-10-14-pdf-search-install/observe_normal_exit.py",
+        "bytes": 3474,
+        "sha256": "7c69fbc903260b0926a7d60e71b71f641f8d415fa95331e4878e69bd8c95cd2c"
+      },
+      "diff": "output/2026-10-14-diff-summary-install-preparation/review-final/diffs/install-observe_normal_exit.py.diff",
+      "diffSha256": "d58979dc30f0ea567b9c7fa161d2653e0dc8ac8e251f769ac89086c2088e9746",
+      "finalPath": "output/2026-10-14-diff-summary-install/observe_normal_exit.py"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install-preparation/review-final/install/install_data_snapshot.py",
+      "bytes": 6223,
+      "sha256": "d19076d9e12eed3df412810c434fd25246270eb65b60c1ba59355b2c9ca32c33",
+      "origin": {
+        "path": "output/2026-10-14-pdf-search-install/install_data_snapshot.py",
+        "bytes": 6221,
+        "sha256": "f61df361af742532e85344a949e0af1e99c0632798731e16ee190a7c28e1ff97"
+      },
+      "diff": "output/2026-10-14-diff-summary-install-preparation/review-final/diffs/install-install_data_snapshot.py.diff",
+      "diffSha256": "ed9a37f0e23cf01fd10554ac10ab32049da9547075b396b47c9b83c24dcc1caa",
+      "finalPath": "output/2026-10-14-diff-summary-install/install_data_snapshot.py"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install-preparation/review-final/install/capture_snapshot.py",
+      "bytes": 2842,
+      "sha256": "4d6e0b74e8231d6a5fd701711fdc83db00107a0d3a5627efee6863fd51b61167",
+      "origin": {
+        "path": "output/2026-10-14-pdf-search-install/capture_snapshot.py",
+        "bytes": 2840,
+        "sha256": "29893e04a24e5c4b933c48172e05df549c845d3ec010b57642551be64c91607b"
+      },
+      "diff": "output/2026-10-14-diff-summary-install-preparation/review-final/diffs/install-capture_snapshot.py.diff",
+      "diffSha256": "29adfc8a26be58341fa27a4d02999c2f3c2319c3f8c4f916959ca84ca5223091",
+      "finalPath": "output/2026-10-14-diff-summary-install/capture_snapshot.py"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install-preparation/review-final/install/backup_metadata.py",
+      "bytes": 10578,
+      "sha256": "cc286780302f9f2663f5db819806caa55291ecd429ab06d0d38dbf495b1fc5e0",
+      "origin": {
+        "path": "output/2026-10-14-pdf-search-install/backup_metadata.py",
+        "bytes": 10576,
+        "sha256": "7a03e387973de8dcc3f791b16e7eae7035298038450e605de5a55bf8eb8efa8e"
+      },
+      "diff": "output/2026-10-14-diff-summary-install-preparation/review-final/diffs/install-backup_metadata.py.diff",
+      "diffSha256": "45672bd6c720b0e35ec99d88529a838302f666d7cfc0341bf2e4166682fe0607",
+      "finalPath": "output/2026-10-14-diff-summary-install/backup_metadata.py"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install-preparation/review-final/install/install_verified_candidate.py",
+      "bytes": 53200,
+      "sha256": "5ec3b2110254efe767855055eefb7002eb1a1faa0bcfbd415d0a43f6d51e558a",
+      "origin": {
+        "path": "output/2026-10-14-pdf-search-install/install_verified_candidate.py",
+        "bytes": 51611,
+        "sha256": "c70b28f062019359336e0d41a4aa9dd21db68457c66603552ac79f607702f272"
+      },
+      "diff": "output/2026-10-14-diff-summary-install-preparation/review-final/diffs/install-install_verified_candidate.py.diff",
+      "diffSha256": "fffa1b501a0bcee60c36747a18e83ee2c325c15aad6f9d095ddbe7ece5a2e071",
+      "finalPath": "output/2026-10-14-diff-summary-install/install_verified_candidate.py"
+    },
+    {
+      "path": "output/2026-10-14-diff-summary-install-preparation/review-final/independent/verify_installed_final.py",
+      "bytes": 14605,
+      "sha256": "0cf1a681a16017a49e4ac4ddcd539e5d553de8e0440e84be176dd2b0368fa47e",
+      "origin": {
+        "path": "output/2026-10-14-pdf-search-independent-install/verify_installed_final.py",
+        "bytes": 14604,
+        "sha256": "ab74036073e267665607417772eff60606730e3101d1992b04a8af7569fcdbf5"
+      },
+      "diff": "output/2026-10-14-diff-summary-install-preparation/review-final/diffs/independent-verify_installed_final.py.diff",
+      "diffSha256": "e5c09080193e58054e6d3e5943531804557649fdd34780ae2cc1b30670684825",
+      "finalPath": "output/2026-10-14-diff-summary-independent-install/verify_installed_final.py"
+    }
+  ],
+  "tools": [
+    {
+      "preparedPath": "output/2026-10-14-diff-summary-install-preparation/review-final/candidate/prepare-candidate.py",
+      "preparedSha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1",
+      "finalPath": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/prepare-candidate.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-diff-summary-install-preparation/review-final/candidate/verify-candidate.py",
+      "preparedSha256": "8250f029b98402a6daccc56bb2b9e8e4a416bff25b074f6d95c99629000ad3aa",
+      "finalPath": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/verify-candidate.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-diff-summary-install-preparation/review-final/install/data_manifest.py",
+      "preparedSha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "finalPath": "output/2026-10-14-diff-summary-install/data_manifest.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-diff-summary-install-preparation/review-final/install/observe_normal_exit.py",
+      "preparedSha256": "10b137c9e2af03cc88445009be7b041a07a5d9351b785a6216f2a805e62c9203",
+      "finalPath": "output/2026-10-14-diff-summary-install/observe_normal_exit.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-diff-summary-install-preparation/review-final/install/install_data_snapshot.py",
+      "preparedSha256": "d19076d9e12eed3df412810c434fd25246270eb65b60c1ba59355b2c9ca32c33",
+      "finalPath": "output/2026-10-14-diff-summary-install/install_data_snapshot.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-diff-summary-install-preparation/review-final/install/capture_snapshot.py",
+      "preparedSha256": "4d6e0b74e8231d6a5fd701711fdc83db00107a0d3a5627efee6863fd51b61167",
+      "finalPath": "output/2026-10-14-diff-summary-install/capture_snapshot.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-diff-summary-install-preparation/review-final/install/backup_metadata.py",
+      "preparedSha256": "cc286780302f9f2663f5db819806caa55291ecd429ab06d0d38dbf495b1fc5e0",
+      "finalPath": "output/2026-10-14-diff-summary-install/backup_metadata.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-diff-summary-install-preparation/review-final/install/install_verified_candidate.py",
+      "preparedSha256": "5ec3b2110254efe767855055eefb7002eb1a1faa0bcfbd415d0a43f6d51e558a",
+      "finalPath": "output/2026-10-14-diff-summary-install/install_verified_candidate.py"
+    },
+    {
+      "preparedPath": "output/2026-10-14-diff-summary-install-preparation/review-final/independent/verify_installed_final.py",
+      "preparedSha256": "0cf1a681a16017a49e4ac4ddcd539e5d553de8e0440e84be176dd2b0368fa47e",
+      "finalPath": "output/2026-10-14-diff-summary-independent-install/verify_installed_final.py"
+    }
+  ],
+  "configurationInputs": {
+    "output/2026-10-14-diff-summary-install-preparation/render.py": "d017c86629da3a0e5c2b9f6c670e632c31c8b70b356c2cd40c266abc3c93b0d2",
+    "output/2026-10-14-diff-summary-install-preparation/pins-final.json": "eeaec95a0861d6feefcbf91a89c9675318b91fdfd7e1fdbb79acd640b1f69b86",
+    "output/2026-10-14-diff-summary-install-preparation/engineering-paths-run2.json": "8d8cb5fd5339bbac7734c5cab35b8145cec6bb4d29c978738fd84066bbd21cfd",
+    "output/2026-10-14-diff-summary-install-preparation/origins.json": "3acfe3bed5b3c996c70e8eda86f709a510b3ea3f614c3cb0dada5b7dc0294832",
+    "output/2026-10-14-diff-summary-install-preparation/known-baseline.json": "ed4cd76d299af0155b4b12977c1e34b2139eadd37fd747c45d8b4dfc3df71d02",
+    "output/2026-10-14-diff-summary-install-preparation/baseline-context.json": "f6d7d8b0a2c1bd46cbccd71a495a1c448ed8cc975f73e96d28e9010a5cd14d8f"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "installedSourceCommit": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+  "installedSourceNeverLaunched": "Saved installation operation says launched=false; root reports no later launch. This preparation performs no fresh process/App inspection.",
+  "lastRunningSourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "latestClosedDatabase": {
+    "path": "output/2026-10-14-file-dialog-data/metadata-after-consolidated.sqlite3",
+    "sha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+    "bytes": 512000,
+    "readInThisPreparation": false
+  },
+  "savedThreeManifests": {
+    "sha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+    "entriesEach": 217400,
+    "notFreshProofForP18Installation": true
+  },
+  "priorStage": {
+    "sourceCommit": "2a720169e6e07fe33cecc3ec2c8b6e0909769fba",
+    "candidate9PassedFromSavedReceipt": true,
+    "installed10PassedFromSavedReceipt": true,
+    "cleanup": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-candidate/duplicate-cleanup.json",
+      "bytes": 1674,
+      "sha256": "b61a6b8343ba8048175a7ba892653707ab37901c55801ee56434b87461980b03"
+    },
+    "publication": {
+      "path": "docs/evidence/2026-10-09-capability-hardening/pdf-search-install-review/verification.json",
+      "bytes": 15903,
+      "sha256": "24f3b3a14774244940de0c89aef5e58f0cdddb996c5ced77d8198200f97fbe7b"
+    }
+  },
+  "olderXlsxFailure": "Prior XLSX cleanup exit1 followed by separate recovery0 and publication0 is retained by earlier evidence. It is not this P18 or the previous PDF cleanup outcome.",
+  "boundary": "Only saved tools/JSON/hash/count metadata read. No DB bytes or raw data manifests read, no App/ps/build/generated function executed."
+}
