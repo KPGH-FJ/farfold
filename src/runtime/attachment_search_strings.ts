@@ -3,6 +3,9 @@ import type { XlsxSearchLocation } from "./xlsx_search_text";
 import type { PdfSearchLocation } from "./pdf_search_text";
 import type { PdfInputWarning } from "./pdf_input_types";
 import type { XlsxInputWarning } from "./xlsx_input_types";
+import type { PptxSearchLocation } from "./attachment_search_pptx";
+import type { PptxWarning } from "./pptx_types";
+import { PPTX_WARNINGS } from "./pptx_strings";
 import { XLSX_INPUT_WARNING_TEXT } from "./document_input_strings";
 import { xlsxInputWarningCount } from "./document_input_presentation";
 import { DOCUMENT_WARNINGS } from "./document_strings";
@@ -20,9 +23,28 @@ export const ATTACHMENT_SEARCH_STRINGS = {
   title: "查找当前附件文件",
   query: "搜索所选附件内容…",
   boundary:
-    "只查找你明确选择的当前本地文字、DOCX、XLSX 或 PDF 文件，不代表附件当时的历史内容。不会加载历史、连接 Agent 或读取网页。",
+    "只查找你明确选择的当前本地文字、DOCX、XLSX、PDF 或 PPTX 文件，不代表附件当时的历史内容。不会加载历史、连接 Agent 或读取网页。",
   limits:
-    "每次最多 20 个文件；每个源文件最多 1 MiB，实际可检索文字合计最多 16 MiB。支持 UTF-8 纯文字、DOCX 作者文字、XLSX 所列保存内容及 PDF 可提取的页面文字；不识别图片或音频内容。",
+    "每次最多 20 个文件；每个源文件最多 1 MiB，实际可检索文字合计最多 16 MiB。支持 UTF-8 纯文字、DOCX 作者文字、XLSX 所列保存内容、PDF 可提取的页面文字及 PPTX 已解析的预览文字；不识别图片或音频内容。",
+  pptxCandidate: "按 PPTX 查找已解析的预览文字（仅为部分内容）",
+  pptxDetails: "PPTX 查找范围说明",
+  pptxScope:
+    "只查找可解析幻灯片的预览文字；未解析和隐藏内容、备注、图片文字及图表完整内容不参与。不能保证原应用的可见文字或阅读顺序。",
+  pptxFormatting:
+    "可能包含依源格式生成的项目符号和间隔，并非作者逐字全文或源字符位置。",
+  pptxBarriers: "按幻灯片、对象、段落及换行分别查找，不跨这些边界拼接文字。",
+  pptxPartial:
+    "PPTX 始终仅查找已解析的预览文字；没有匹配不代表完整演示文稿没有匹配。",
+  pptxSlides: (n: number) => `本次解析 ${n} 页预览的文字，不代表源文件页码。`,
+  pptxImages: (n: number) => `${n} 处图片未作文字识别。`,
+  pptxLocation: (
+    page: number,
+    total: number,
+    shape: number,
+    paragraph: number,
+    segment: number,
+  ) =>
+    `预览 ${page}/${total} · 对象 ${shape} · 段落 ${paragraph} · 片段 ${segment}`,
   pdfCandidate:
     "按 PDF 读取全部页面可提取文字（可能含不可见文字，仅为部分内容）",
   pdfScope:
@@ -129,7 +151,7 @@ export const ATTACHMENT_SEARCH_STRINGS = {
     changed: "内容、位置或来源已变化，请重新选择。",
     unreadable: "无法读取此文件。",
     tooLarge: "完整文件超过 1 MiB。",
-    unsupported: "不是本次支持的 UTF-8 纯文字、DOCX、XLSX 或 PDF 内容。",
+    unsupported: "不是本次支持的 UTF-8 纯文字、DOCX、XLSX、PDF 或 PPTX 内容。",
     budget: "超过本次 16 MiB 可检索正文限额，未用于检索。",
     pending: "读取尚未返回，后台状态未确认。",
     busy: "已有文件读取或文档处理尚未结束，本文件未完成检索。",
@@ -157,10 +179,22 @@ export function docxSearchLocationLabel(location: DocxSearchLocation): string {
 }
 
 export function attachmentSearchLocationLabel(
-  location: DocxSearchLocation | XlsxSearchLocation | PdfSearchLocation,
+  location:
+    | DocxSearchLocation
+    | XlsxSearchLocation
+    | PdfSearchLocation
+    | PptxSearchLocation,
 ): string {
   if (!("kind" in location)) return docxSearchLocationLabel(location);
   const s = ATTACHMENT_SEARCH_STRINGS;
+  if (location.kind === "pptx")
+    return s.pptxLocation(
+      location.previewSlide,
+      location.previewTotal,
+      location.shape,
+      location.paragraph,
+      location.segment,
+    );
   if (location.kind === "pdf")
     return s.pdfLocation(location.pageNumber, location.itemIndex + 1);
   return [
@@ -169,6 +203,10 @@ export function attachmentSearchLocationLabel(
     s.xlsxCell(location.row, location.column),
     s.xlsxFields[location.field],
   ].join(" · ");
+}
+
+export function pptxSearchWarningLabel(warning: PptxWarning): string {
+  return `${PPTX_WARNINGS[warning.code]}（${warning.count}）`;
 }
 
 export function xlsxSearchWarningLabel(warning: XlsxInputWarning): string {

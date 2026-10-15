@@ -6,6 +6,14 @@ import { FILE_DELIVERY_STRINGS as D } from "./file_delivery_strings";
 import { readDocxPreview } from "./docx_preview";
 import { readWorkbookInput } from "./xlsx_preview";
 import { readPdfInput } from "./pdf_input_read";
+import { readPptxPreview } from "./pptx_preview";
+import { PptxError, type PptxCapture, type PptxPreview } from "./pptx_types";
+import {
+  pptxSearchText,
+  snapshotPptxSearchCapture,
+  type PptxSearchLocation,
+  type PptxSearchScope,
+} from "./attachment_search_pptx";
 import { decodePdfInputCapture } from "./pdf_input_capture";
 import {
   PdfInputError,
@@ -40,6 +48,7 @@ import {
   attachmentSearchIsDocx,
   attachmentSearchIsXlsx,
   attachmentSearchIsPdf,
+  attachmentSearchIsPptx,
   type AttachmentSearchCandidate,
 } from "./attachment_search_source";
 
@@ -75,6 +84,7 @@ export type AttachmentSearchRow = {
   document?: DocxSearchScope;
   workbook?: XlsxSearchScope;
   pdf?: PdfSearchScope;
+  presentation?: PptxSearchScope;
 };
 export type AttachmentSearchHit = Readonly<{
   source: AttachmentSearchCandidate;
@@ -82,7 +92,11 @@ export type AttachmentSearchHit = Readonly<{
   before: string;
   match: string;
   after: string;
-  location?: DocxSearchLocation | XlsxSearchLocation | PdfSearchLocation;
+  location?:
+    | DocxSearchLocation
+    | XlsxSearchLocation
+    | PdfSearchLocation
+    | PptxSearchLocation;
 }>;
 export type AttachmentSearchState = {
   phase:
@@ -116,6 +130,8 @@ export interface AttachmentSearchPort {
     capture: PdfInputCapture,
     signal: AbortSignal,
   ): Promise<PdfInputResult>;
+  readPptx?(file: VerifiedFile): Promise<unknown>;
+  parsePptx?(capture: PptxCapture, signal: AbortSignal): Promise<PptxPreview>;
 }
 const port: AttachmentSearchPort = {
   inspect: (path) => invoke("file_delivery_inspect_text", { path }),
@@ -137,6 +153,9 @@ const port: AttachmentSearchPort = {
       },
       signal,
     ),
+  // Await the real read receipt. Cancelling the parser does not settle an OS read.
+  readPptx: (file) => invoke("file_delivery_read_pptx_search", { file }),
+  parsePptx: readPptxPreview,
 };
 const initial = (): AttachmentSearchState => ({
   phase: "idle",
@@ -388,12 +407,16 @@ export class AttachmentSearch {
         segments: readonly {
           text: string;
           location?:
-            DocxSearchLocation | XlsxSearchLocation | PdfSearchLocation;
+            | DocxSearchLocation
+            | XlsxSearchLocation
+            | PdfSearchLocation
+            | PptxSearchLocation;
         }[];
         bytes: number;
         document?: DocxSearchScope;
         workbook?: XlsxSearchScope;
         pdf?: PdfSearchScope;
+        presentation?: PptxSearchScope;
       };
       // The preview worker is shared with document viewing. Serialize this
       // batch only; an unrelated preview can still honestly report busy.
@@ -488,6 +511,31 @@ export class AttachmentSearch {
             const pdf = await parsed;
             if (!valid() || this.pending) return null;
             content = pdfSearchText(pdf);
+          } else if (attachmentSearchIsPptx(sources[i])) {
+            if (!this.services.readPptx || !this.services.parsePptx)
+              fail("unsupported");
+            const value = record(await this.services.readPptx(f));
+            if (!valid() || this.pending) return null;
+            const capturedFile = file(value.file, f.path);
+            if (!sameFileRevision(f, capturedFile)) fail("changed");
+            const capture = snapshotPptxSearchCapture({
+              ...value,
+              file: capturedFile,
+            } as unknown as PptxCapture);
+            const capturedParts = new Set(
+              capture.parts.map((part) => part.name),
+            );
+            const parsed = parseTail.then(async () => {
+              if (!valid() || this.pending) throw new PptxError("cancelled");
+              return this.services.parsePptx!(capture, run.abort.signal);
+            });
+            parseTail = parsed.catch(() => undefined);
+            const preview = await parsed;
+            if (!valid() || this.pending) return null;
+            if (!sameFileRevision(f, file(preview.file, f.path)))
+              fail("changed");
+            const { file: _file, ...document } = preview;
+            content = pptxSearchText(document, capturedParts);
           } else {
             const text = await textPayload(await this.services.read(f), f);
             content = { segments: [{ text }], bytes: f.size };
@@ -530,7 +578,8 @@ export class AttachmentSearch {
           const reservation =
             attachmentSearchIsDocx(sources[i]) ||
             attachmentSearchIsXlsx(sources[i]) ||
-            attachmentSearchIsPdf(sources[i])
+            attachmentSearchIsPdf(sources[i]) ||
+            attachmentSearchIsPptx(sources[i])
               ? 0
               : f.size;
           if (
@@ -564,6 +613,7 @@ export class AttachmentSearch {
               document: content.document,
               workbook: content.workbook,
               pdf: content.pdf,
+              presentation: content.presentation,
             });
           } else {
             budget += content.bytes;
@@ -612,6 +662,7 @@ export class AttachmentSearch {
                 document: content.document,
                 workbook: content.workbook,
                 pdf: content.pdf,
+                presentation: content.presentation,
               });
               this.emit({ bytes: budget });
             }

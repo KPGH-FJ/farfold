@@ -188,6 +188,30 @@ pub async fn file_delivery_read_pptx(
 }
 
 #[tauri::command]
+pub async fn file_delivery_read_pptx_search(
+    webview: Webview,
+    file: VerifiedFile,
+) -> Result<file_delivery::PptxCapture, file_delivery::PptxReadFailure> {
+    require_main(&webview).map_err(|_| file_delivery::PptxReadFailure { code: "unreadable" })?;
+    checked_pptx_search(file).await
+}
+
+async fn checked_pptx_search(
+    file: VerifiedFile,
+) -> Result<file_delivery::PptxCapture, file_delivery::PptxReadFailure> {
+    // Keep the slot until the actual bounded source/archive read has returned,
+    // including when the caller retires its results or the reply times out.
+    crate::file_read_check::run(move || Ok(file_delivery::read_pptx_search(&file)))
+        .await
+        .map_err(|message| file_delivery::PptxReadFailure::check(&message))?
+        .map_err(Into::into)
+}
+
+#[cfg(test)]
+#[path = "file_delivery/presentation_search_command_tests.rs"]
+mod pptx_search_tests;
+
+#[tauri::command]
 pub async fn file_delivery_read_docx_search(
     webview: Webview,
     file: VerifiedFile,

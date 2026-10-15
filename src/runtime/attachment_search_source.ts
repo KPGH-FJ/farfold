@@ -145,6 +145,25 @@ export function attachmentSearchIsPdf(source: AttachmentSearchCandidate) {
       /\.pdf$/i.test(source.path ?? ""))
   );
 }
+export function attachmentSearchIsPptx(source: AttachmentSearchCandidate) {
+  // Keep the established document routing precedence. This declaration never
+  // grants scope, identifies bytes or enables PPTX as Agent input.
+  const essence =
+    typeof source.mimeType === "string"
+      ? source.mimeType
+          .split(";", 1)[0]
+          .replace(/^[ \t]+|[ \t]+$/g, "")
+          .toLowerCase()
+      : undefined;
+  return (
+    !attachmentSearchIsDocx(source) &&
+    !attachmentSearchIsXlsx(source) &&
+    !attachmentSearchIsPdf(source) &&
+    (essence ===
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation" ||
+      /\.pptx$/i.test(source.path ?? ""))
+  );
+}
 /** A location request contains no file text and never pretends it is message text. */
 export type AttachmentSearchLocation = AttachmentSearchCandidate;
 export type SelectAttachmentSearch = (

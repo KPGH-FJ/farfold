@@ -14,6 +14,7 @@ import {
   attachmentSearchIsDocx,
   attachmentSearchIsXlsx,
   attachmentSearchIsPdf,
+  attachmentSearchIsPptx,
   attachmentSearchSourceCurrent,
   type AttachmentSearchCandidate,
   type SelectAttachmentSearch,
@@ -23,6 +24,7 @@ import {
   attachmentSearchLocationLabel,
   xlsxSearchWarningLabel,
   pdfSearchWarningLabel,
+  pptxSearchWarningLabel,
 } from "../runtime/attachment_search_strings";
 import "./HistorySearchPanel.css";
 
@@ -173,7 +175,9 @@ export function SelectedAttachmentSearch({
                           ? S.xlsxCandidate
                           : attachmentSearchIsPdf(candidate)
                             ? S.pdfCandidate
-                            : S.textCandidate}
+                            : attachmentSearchIsPptx(candidate)
+                              ? S.pptxCandidate
+                              : S.textCandidate}
                     </small>
                   )}
                 </span>
@@ -182,6 +186,16 @@ export function SelectedAttachmentSearch({
           })}
         </div>
       </fieldset>
+      {active && validSources && selected.some(attachmentSearchIsPptx) && (
+        <>
+          <p>{S.pptxScope}</p>
+          <details className="history-search-coverage">
+            <summary>{S.pptxDetails}</summary>
+            <p>{S.pptxFormatting}</p>
+            <p>{S.pptxBarriers}</p>
+          </details>
+        </>
+      )}
       {active && validSources && selected.some(attachmentSearchIsPdf) && (
         <div className="history-search-boundary">
           <p>{S.pdfScope}</p>
@@ -265,6 +279,23 @@ export function SelectedAttachmentSearch({
           )}
         {visible &&
           (state.phase === "complete" || state.phase === "reading") &&
+          state.rows.some(
+            (row) => row.state === "searched" && row.presentation,
+          ) && (
+            <>
+              <p>{S.pptxPartial}</p>
+              {state.rows
+                .filter((row) => row.state === "searched" && row.presentation)
+                .map((row) => (
+                  <p key={row.source.id}>
+                    {row.source.name} ·{" "}
+                    {S.pptxSlides(row.presentation!.slideCount)}
+                  </p>
+                ))}
+            </>
+          )}
+        {visible &&
+          (state.phase === "complete" || state.phase === "reading") &&
           state.rows.some((row) => row.code === "scopeEmpty") && (
             <p>{S.errors.scopeEmpty}</p>
           )}
@@ -320,6 +351,27 @@ export function SelectedAttachmentSearch({
                     {row.pdf.warnings.map((warning) => (
                       <small key={warning.code}>
                         {pdfSearchWarningLabel(warning)}
+                      </small>
+                    ))}
+                  </>
+                )}
+                {row.presentation && (
+                  <>
+                    <small>{S.pptxScope}</small>
+                    <small>{S.pptxPartial}</small>
+                    <small>{S.pptxFormatting}</small>
+                    <small>{S.pptxBarriers}</small>
+                    <small>{S.pptxSlides(row.presentation.slideCount)}</small>
+                    {!!row.presentation.imageReferences && (
+                      <small>
+                        {S.pptxImages(row.presentation.imageReferences)}
+                      </small>
+                    )}
+                    {row.presentation.warnings.map((warning, index) => (
+                      <small
+                        key={`${warning.code}:${warning.slideId ?? ""}:${index}`}
+                      >
+                        {pptxSearchWarningLabel(warning)}
                       </small>
                     ))}
                   </>
