@@ -7,6 +7,10 @@ import type { CommandEntry } from "./commands";
 import type { ReportedDetailsOwner } from "./reported_details";
 import { hasAsyncTasks, type AsyncTasksState } from "./async_tasks";
 import type { LocalDocumentText } from "./document_input_types";
+import {
+  hasActiveCompaction,
+  type CompactionActivityState,
+} from "./compaction_activity";
 
 /** Content blocks accepted by `session_prompt`. */
 export type PromptBlock =
@@ -232,6 +236,7 @@ export interface ThreadState extends ReportedDetailsOwner {
   running: boolean;
   /** Live IDs reported by the connection, separate from prompt/replayed status. */
   activeToolCallIds: string[];
+  compactionActivity?: CompactionActivityState;
   asyncTasks?: AsyncTasksState;
   queued: PromptBlock[][];
   pendingPermissions: PendingPermission[];
@@ -315,6 +320,10 @@ export function hasActiveTools(
     (!state.connectionLost && state.activeToolCallIds.length > 0) ||
     hasAsyncTasks(state)
   );
+}
+
+export function hasActiveWork(state: ThreadState): boolean {
+  return hasActiveTools(state) || hasActiveCompaction(state);
 }
 
 /** Rendering only: never rewrite the Agent's reported tool status. */

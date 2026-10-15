@@ -46,7 +46,7 @@ import { useArchiveBlockReasons } from "../runtime/archive_blockers";
 import {
   threads,
   basename,
-  hasActiveTools,
+  hasActiveWork,
   useThread,
   useThreadsSnapshot,
   type Attachment,
@@ -212,7 +212,7 @@ export function ThreadPage({
                 ·{" "}
                 {threads.needsAttention(thread)
                   ? LIBRARY.attention
-                  : thread.running || hasActiveTools(thread)
+                  : thread.running || hasActiveWork(thread)
                     ? LIBRARY.running
                     : LIBRARY.notRunning}
               </>

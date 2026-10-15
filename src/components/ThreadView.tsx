@@ -65,6 +65,11 @@ import { reportedArtifactCounts } from "../runtime/reported_artifacts";
 import { useContentOwner } from "./useContentOwner";
 import { settledRoundResults, type RoundResult } from "../runtime/round_result";
 import { maintenanceLabel } from "../runtime/compaction_strings";
+import { COMPACTION } from "../runtime/compaction_strings";
+import {
+  hasActiveCompaction,
+  compactionUncertain,
+} from "../runtime/compaction_activity";
 import { CompactionCard } from "./CompactionCard";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
 import { UserMessageContent } from "./UserMessageContent";
@@ -798,6 +803,13 @@ export function ThreadView({
                     {createError && <span role="alert">{createError}</span>}
                   </>
                 )}
+              </div>
+            )}
+            {!thread.running && hasActiveCompaction(thread) && (
+              <div className="banner" role="status">
+                {compactionUncertain(thread)
+                  ? COMPACTION.unknown
+                  : COMPACTION.inProgress}
               </div>
             )}
             {!thread.running && hasActiveTools(thread) && (

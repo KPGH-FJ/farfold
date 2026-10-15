@@ -3,6 +3,7 @@ import { useEffect, useSyncExternalStore } from "react";
 import { completion } from "./completion";
 import { SuccessNotifications } from "./success_notification";
 import type { ThreadState } from "./session_types";
+import { hasActiveCompaction } from "./compaction_activity";
 
 export const NOTIFICATION_STRINGS = {
   hint: "在你离开 Farfold 时，提醒新的批准请求、提问和工作异常。提醒不包含对话内容。",
@@ -177,6 +178,7 @@ function activity(s: ThreadState): boolean {
     s.stopUnconfirmed ||
     s.uncertainPrompt ||
     s.activeToolCallIds.length ||
+    hasActiveCompaction(s) ||
     s.pendingPermissions.length ||
     s.pendingElicitations.length ||
     s.browserReadRequestId,

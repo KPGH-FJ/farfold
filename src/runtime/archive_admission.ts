@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 import { archiveActivity } from "./archive_activity";
 import { draftPersistence, hasUnsentWork } from "./drafts";
 import type { IndexRow } from "./sessions";
-import { hasActiveTools, type ThreadState } from "./session_types";
+import { hasActiveWork, type ThreadState } from "./session_types";
 import { STRINGS } from "./strings";
 
 export function archiveBlockReason(
@@ -18,7 +18,7 @@ export function archiveBlockReason(
   if (state?.configuring) return "configuring" as const;
   if (state?.reconnecting) return "reconnecting" as const;
   if (state && needsAttention(state)) return "attention" as const;
-  if (state && (state.running || hasActiveTools(state)))
+  if (state && (state.running || hasActiveWork(state)))
     return "running" as const;
   if (state?.queued.length) return "queued" as const;
   if (hasUnsentWork(key)) return "unsent" as const;

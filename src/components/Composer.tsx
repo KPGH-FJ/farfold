@@ -60,6 +60,7 @@ import { useWorkPolicy } from "../runtime/work_policy";
 import { STRINGS } from "../runtime/strings";
 import { hasPendingRequests } from "../runtime/session_types";
 import { canReleaseEmptyQueuePause } from "../runtime/queue";
+import { hasActiveCompaction } from "../runtime/compaction_activity";
 import { LIBRARY } from "../runtime/library_strings";
 import { abandonPendingConversation } from "../runtime/pending_conversation";
 
@@ -278,6 +279,7 @@ export function Composer({
     !queueEditing &&
     Boolean(
       running ||
+      (thread && hasActiveCompaction(thread)) ||
       (thread && hasPendingRequests(thread)) ||
       (thread?.queuePaused && !canReleaseEmptyQueuePause(thread)) ||
       queued.length,
@@ -1134,6 +1136,7 @@ export function Composer({
                 thread.submitting ||
                 thread.stopping ||
                 thread.stopUnconfirmed ||
+                hasActiveCompaction(thread) ||
                 hasPendingRequests(thread) ||
                 !!thread.uncertainPrompt ||
                 thread.connectionOutcomeUnknown ||

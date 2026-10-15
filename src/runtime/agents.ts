@@ -11,7 +11,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AgentExtensionOwners } from "./agent_extension_owner";
 import { uiError } from "./ui_error";
 import { threads } from "./sessions";
-import { hasPendingRequests } from "./session_types";
+import { hasActiveWork, hasPendingRequests } from "./session_types";
 import { STRINGS } from "./strings";
 import { setupStorage } from "./setup_storage";
 import type { InstallationInput } from "./installation_input";
@@ -878,6 +878,7 @@ export function useAgents(): AgentsState {
                 t.submitting ||
                 t.stopping ||
                 t.stopUnconfirmed ||
+                hasActiveWork(t) ||
                 hasPendingRequests(t) ||
                 t.uncertainPrompt),
           )

@@ -5,6 +5,7 @@ import {
   type ThreadState,
 } from "./session_types";
 import type { TaskState } from "./async_tasks";
+import { hasActiveCompaction } from "./compaction_activity";
 
 type Ending = Extract<ThreadItem, { kind: "settled" }>;
 interface Candidate {
@@ -65,7 +66,10 @@ export class SuccessNotifications {
       e.kind === "serviceUnavailable" ||
       (e.kind === "toolActivity" &&
         e.reason === "process_ended" &&
-        s.activeToolCallIds.length)
+        s.activeToolCallIds.length) ||
+      (e.kind === "compactionActivity" &&
+        e.reason === "process_ended" &&
+        hasActiveCompaction(s))
     ) {
       this.candidates.delete(s);
       return;
@@ -145,6 +149,7 @@ export class SuccessNotifications {
       s.uncertainPrompt ||
       s.connectionOutcomeUnknown ||
       s.activeToolCallIds.length ||
+      hasActiveCompaction(s) ||
       hasPendingRequests(s) ||
       (s.permissionConfigId && s.permissionState !== "ready")
     )

@@ -6,6 +6,7 @@ import {
 } from "./session_types";
 import { queuedAttachmentsNeedReview } from "./recovered_attachments";
 import { forgetConfigurationPause } from "./configuration_pause";
+import { hasActiveCompaction } from "./compaction_activity";
 export type QueuePause =
   | "work_disabled"
   | "unavailable"
@@ -49,6 +50,7 @@ function canAdmit(s: ThreadState): boolean {
     !s.stopping &&
     !s.uncertainPrompt &&
     !s.connectionOutcomeUnknown &&
+    !hasActiveCompaction(s) &&
     !hasPendingRequests(s) &&
     (!s.permissionConfigId || s.permissionState === "ready") &&
     !s.stopUnconfirmed &&

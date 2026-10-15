@@ -308,6 +308,7 @@ pub(crate) async fn open_session_on_connection(
         .insert(
             session_id.clone(),
             SessionEntry {
+                connection_id: ops.connection_id.clone(),
                 preview_token,
                 browser_unavailable,
                 control: control_tx,

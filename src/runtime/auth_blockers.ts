@@ -1,5 +1,5 @@
 import {
-  hasActiveTools,
+  hasActiveWork,
   hasPendingRequests,
   type ThreadState,
 } from "./session_types";
@@ -27,7 +27,7 @@ function workReason(thread: ThreadState): string | null {
   if (thread.reconnecting) return S.workConnecting;
   if (thread.configuring) return S.workChanging;
   if (thread.running) return S.workRunning;
-  if (hasActiveTools(thread)) return S.workTools;
+  if (hasActiveWork(thread)) return S.workTools;
   return null;
 }
 

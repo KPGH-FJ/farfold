@@ -1,5 +1,5 @@
 import {
-  hasActiveTools,
+  hasActiveWork,
   hasPendingRequests,
   type ConfigOptionView,
   type ThreadState,
@@ -50,7 +50,7 @@ export function configChangeBusy(thread: ThreadState): boolean {
     thread.unrecoverable ||
     thread.historyUnavailable ||
     authActive(authenticationActivity(thread.agentId).getSnapshot()) ||
-    hasActiveTools(thread) ||
+    hasActiveWork(thread) ||
     hasPendingRequests(thread),
   );
 }

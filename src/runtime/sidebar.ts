@@ -9,6 +9,8 @@ import { SIDEBAR_STRINGS } from "./sidebar_strings";
 import type { AgentOnlyRow, IndexRow, ThreadState } from "./sessions";
 import { hasActiveTools, hasPendingRequests } from "./session_types";
 import { hasUnsentWork } from "./drafts";
+import { hasActiveCompaction } from "./compaction_activity";
+import { threadNeedsAttention } from "./thread_attention";
 
 export interface SidebarRow {
   key: string;
@@ -41,24 +43,6 @@ export function shortPath(path: string, max = 48): string {
   if (p.length <= max) return p;
   const keep = Math.floor((max - 1) / 2);
   return `${p.slice(0, keep)}…${p.slice(p.length - keep)}`;
-}
-
-/** Mirrors `threads.needsAttention` — pure predicate over thread state. */
-function needsAttention(s: ThreadState): boolean {
-  return (
-    Boolean(s.openError) ||
-    s.unrecoverable ||
-    s.stopUnconfirmed ||
-    s.modelDrift ||
-    Boolean(
-      s.permissionConfigId &&
-      ["required", "unknown"].includes(s.permissionState),
-    ) ||
-    Boolean(s.uncertainPrompt) ||
-    s.queuePaused === "no_result" ||
-    hasPendingRequests(s) ||
-    s.connectionOutcomeUnknown
-  );
 }
 
 /** Keep the official activity untouched; its last reply ending only changes
@@ -111,9 +95,11 @@ export function groupSidebarRows(
     const liveState = live.get(row.id);
     const unconfirmedTail = liveState ? toolTailUnconfirmed(liveState) : false;
     const status: SidebarRow["status"] = liveState
-      ? needsAttention(liveState) || unconfirmedTail
+      ? threadNeedsAttention(liveState) || unconfirmedTail
         ? "need"
-        : liveState.running || hasActiveTools(liveState)
+        : liveState.running ||
+            hasActiveTools(liveState) ||
+            hasActiveCompaction(liveState)
           ? "run"
           : "idle"
       : "idle";

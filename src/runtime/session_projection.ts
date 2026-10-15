@@ -4,6 +4,10 @@ import { hasAsyncTasks, isKnownAsyncTaskUpdate } from "./async_tasks";
 import { readElicitation } from "./elicitation";
 import { INQUIRY } from "./elicitation_strings";
 import {
+  hasActiveCompaction,
+  unconfirmedCompactionOutcome,
+} from "./compaction_activity";
+import {
   applyCompaction,
   loseCompactionObservation,
   maintenanceResult,
@@ -737,7 +741,7 @@ export function applyTurnEnd(
   s.running = false;
   s.stopping = false;
   s.stopUnconfirmed = false;
-  s.connectionOutcomeUnknown = false;
+  s.connectionOutcomeUnknown = unconfirmedCompactionOutcome(s);
   clearPendingRequests(s);
   sealStreams(s);
   const { status, error } = completion(event);
@@ -799,6 +803,7 @@ export function applyConnectionLost(s: ThreadState, reason?: unknown): void {
     s.stopping ||
     s.stopUnconfirmed ||
     s.activeToolCallIds.length > 0 ||
+    hasActiveCompaction(s) ||
     hasAsyncTasks(s) ||
     s.uncertainPrompt ||
     s.pendingPermissions.length ||

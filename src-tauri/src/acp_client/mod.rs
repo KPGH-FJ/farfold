@@ -19,6 +19,7 @@ pub(crate) mod auth_compat;
 pub mod auth_connection;
 pub(crate) mod auth_route;
 pub(crate) mod browser_capability;
+mod compaction_activity;
 mod dependency_environment;
 pub(crate) mod directory_presentation;
 mod elicitation;
@@ -124,6 +125,9 @@ mod transient_mcp_route_tests;
 
 #[cfg(test)]
 mod compaction_wire_tests;
+
+#[cfg(test)]
+mod compaction_activity_wire_tests;
 
 #[cfg(all(test, target_os = "macos"))]
 mod installed_initialize_probe;

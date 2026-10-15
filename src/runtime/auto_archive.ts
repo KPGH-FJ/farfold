@@ -2,7 +2,7 @@ import { useSyncExternalStore } from "react";
 import { archiveActivity } from "./archive_activity";
 import { composerDrafts, draftPersistence, hasUnsentWork } from "./drafts";
 import {
-  hasActiveTools,
+  hasActiveWork,
   hasPendingRequests,
   type IndexRow,
   type ThreadState,
@@ -62,7 +62,7 @@ export function archiveEligible(
         live.connectionOutcomeUnknown ||
         live.connectionLost ||
         live.queued.length ||
-        hasActiveTools(live) ||
+        hasActiveWork(live) ||
         hasPendingRequests(live) ||
         threads.needsAttention(live)
       ))

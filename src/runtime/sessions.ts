@@ -23,6 +23,9 @@ import { configChangeBusy } from "./protected_config";
 import { retainReportedDetails } from "./reported_details";
 import { receiveAsyncTasks, type AsyncTask } from "./async_tasks";
 import { stopAsyncTask } from "./async_task_actions";
+import { receiveWorkActivity } from "./session_work_activity";
+import { hasActiveCompaction } from "./compaction_activity";
+import { threadNeedsAttention } from "./thread_attention";
 /**
  * Session command client and normalized conversation state.
  * Agent updates enter the shared `applyUpdate` projection.
@@ -281,6 +284,7 @@ class ThreadsStore {
       s.connectionOutcomeUnknown ||
       s.uncertainPrompt ||
       hasActiveTools(s) ||
+      hasActiveCompaction(s) ||
       hasPendingRequests(s) ||
       (s.permissionConfigId && s.permissionState !== "ready")
     )
@@ -323,20 +327,7 @@ class ThreadsStore {
   }
 
   needsAttention(s: ThreadState): boolean {
-    return (
-      Boolean(s.openError) ||
-      s.unrecoverable ||
-      s.stopUnconfirmed ||
-      s.modelDrift ||
-      Boolean(
-        s.permissionConfigId &&
-        ["required", "unknown"].includes(s.permissionState),
-      ) ||
-      Boolean(s.uncertainPrompt) ||
-      s.queuePaused === "no_result" ||
-      hasPendingRequests(s) ||
-      s.connectionOutcomeUnknown
-    );
+    return threadNeedsAttention(s);
   }
 
   setAutoArchiveDays(days: number): Promise<void> {
@@ -401,13 +392,7 @@ class ThreadsStore {
     } else if (e.kind === "asyncTasks") {
       if (!receiveAsyncTasks(s, e)) return;
       this.finishArchiveActivity(s);
-    } else if (e.kind === "toolActivity" && Array.isArray(e.toolCallIds)) {
-      // Process exit ends local activity, but is not a successful tool result.
-      if (e.reason === "process_ended" && s.activeToolCallIds.length > 0)
-        s.connectionOutcomeUnknown = true;
-      s.activeToolCallIds = e.toolCallIds.filter(
-        (id): id is string => typeof id === "string",
-      );
+    } else if (receiveWorkActivity(s, e)) {
       this.finishArchiveActivity(s);
     } else if (e.kind === "permissionState") {
       // Only the explicit setter's matching reply may enable sending. A late
@@ -1091,6 +1076,7 @@ class ThreadsStore {
       s.uncertainPrompt ||
       s.connectionOutcomeUnknown ||
       s.queued.some(queuedAttachmentsNeedReview) ||
+      hasActiveCompaction(s) ||
       composerDrafts.read(`queue-edit:${key}`).queueEdit ||
       s.configuring ||
       (s.permissionConfigId && s.permissionState !== "ready") ||

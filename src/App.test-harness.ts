@@ -181,6 +181,7 @@ vi.mock("./runtime/sessions", () => ({
   paneCards: () => [],
   basename: (path: string) => path.split("/").at(-1) ?? path,
   hasActiveTools: () => false,
+  hasActiveWork: () => false,
   useThread: (key: string) => h.threads.get(key),
   useThreadsSnapshot: () => ({ index: h.index }),
 }));

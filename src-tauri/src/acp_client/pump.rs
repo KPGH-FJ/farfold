@@ -51,8 +51,10 @@ use config_change::{complete_choice_change, save_confirmed_change};
 #[path = "pump/open.rs"]
 mod open;
 pub(crate) use open::open_session_on_connection;
+mod list;
 #[path = "pump/restore_config.rs"]
 pub(crate) mod restore_config;
+pub(crate) use list::list_sessions_on_connection;
 
 /// Frontend event sink: wraps `tauri::ipc::Channel`; tests pass a collector.
 pub(crate) type SessionSink = Arc<dyn Fn(Value) + Send + Sync>;
@@ -138,6 +140,7 @@ pub(crate) type SessionMap = Arc<Mutex<HashMap<String, SessionEntry>>>;
 
 /// Everything needed to reach a live session from the command layer.
 pub(crate) struct SessionEntry {
+    connection_id: String,
     pub(crate) preview_token: Option<String>,
     pub(crate) browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
     pub control: mpsc::UnboundedSender<SessionControl>,
@@ -499,6 +502,7 @@ struct DispatchContext<'a> {
     elicitation_ids: &'a mut Vec<String>,
     expirations: &'a mpsc::UnboundedSender<String>,
     tools: &'a mut super::tool_activity::ToolActivity,
+    compactions: &'a mut super::compaction_activity::CompactionActivity,
     async_tasks: &'a mut super::async_tasks::Tasks,
     prompt_cancelling: bool,
 }
@@ -529,10 +533,14 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
         Dispatch::Notification(message) => {
             if message.method() == "session/update" {
                 let activity = ctx.tools.observe(message.params());
+                let compaction_activity = ctx.compactions.observe(message.params());
                 let task_activity = ctx.async_tasks.observe(message.params());
                 // Raw passthrough: the params object is the update envelope,
                 // unknown fields and `_meta` survive untouched.
                 (ctx.events)(message.params().clone());
+                if let Some(activity) = compaction_activity {
+                    (ctx.events)(activity);
+                }
                 if let Some(activity) = task_activity {
                     (ctx.events)(activity);
                 }
@@ -700,6 +708,11 @@ async fn session_pump(
     let mut prompt_cancelling = false;
     let mut prompt_lease = None;
     let mut tools = super::tool_activity::ToolActivity::new(ops.life.clone());
+    let mut compactions = super::compaction_activity::CompactionActivity::new(
+        ops.life.clone(),
+        ops.connection_id.clone(),
+        session_id.clone(),
+    );
     let mut async_tasks = super::async_tasks::Tasks::new(
         ops.async_tasks_supported.load(Ordering::SeqCst),
         ops.connection_id.clone(),
@@ -725,6 +738,7 @@ async fn session_pump(
             elicitation_ids: &mut elicitation_ids,
             expirations: &expiry_tx,
             tools: &mut tools,
+            compactions: &mut compactions,
             async_tasks: &mut async_tasks,
             prompt_cancelling,
         };
@@ -816,6 +830,7 @@ async fn session_pump(
             // prefix has reached the sink. Do not use a timing delay here.
             () = std::future::ready(()), if opening.as_ref().is_some_and(|opening| opening.reply.is_some()) && mutation.is_none() => {
                 events(ctx.tools.event());
+                events(ctx.compactions.event());
                 events(ctx.async_tasks.event());
                 let source = config_store.validate_service().await;
                 restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models, &mut model_guard,
@@ -881,6 +896,7 @@ async fn session_pump(
                 // The received load prefix was handled as history. This
                 // locally admitted setter owns any following reported work.
                 ctx.tools.begin_live();
+                ctx.compactions.begin_live();
                 let future = request.send(&cx, &session_id, &initial.operation);
                 mutation = Some(Mutation::new(MutationKind::Restore { plan:Box::new(plan), request },
                     MutationReply::Open(initial.reply.take().unwrap()), initial.operation.clone(), lease,
@@ -1096,7 +1112,7 @@ async fn session_pump(
                     match command {
                 SessionControl::Shutdown => break,
                 SessionControl::Archive { row, canonical_cwd, reservations, admission, result, .. } => {
-                    let busy = prompt_in_flight || mutation.is_some() || (ctx.tools.busy() || ctx.async_tasks.busy())
+                    let busy = prompt_in_flight || mutation.is_some() || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy())
                         || !permission_guard.admissible() || !model_guard.admissible()
                         || pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id && entry.lease.belongs_to(&ops.life))).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id && entry.lease.belongs_to(&ops.life))).unwrap_or(true);
@@ -1115,7 +1131,7 @@ async fn session_pump(
                     let _ = result.send(outcome);
                 }
                 SessionControl::Detach { result, .. } => {
-                    let busy = prompt_in_flight || mutation.is_some() || (ctx.tools.busy() || ctx.async_tasks.busy())
+                    let busy = prompt_in_flight || mutation.is_some() || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy())
                         || pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
                     if busy {
@@ -1126,6 +1142,10 @@ async fn session_pump(
                     break;
                 }
                 SessionControl::Prompt { blocks, result, deadline } => {
+                    if ctx.compactions.busy() {
+                        let _ = result.send(Err("上下文整理尚未结束，请等待明确结果".into()));
+                        continue;
+                    }
                     if !permission_guard.admissible() {
                         events(permission_guard.event());
                         let _ = result.send(Err("请重新确认权限后再发送".into()));
@@ -1176,6 +1196,10 @@ async fn session_pump(
                     // routing updates. Admit only the selection just saved.
                     restore_config::drain(&mut inbox, &mut ctx, &mut configuration, &mut models,
                         &mut model_guard, &mut permission_guard, &mut opening, &mut mutation);
+                    if ctx.compactions.busy() {
+                        let _ = result.send(Err("上下文整理尚未结束，请等待明确结果".into()));
+                        continue;
+                    }
                     if !permission_guard.admissible() {
                         events(permission_guard.event());
                         let _ = result.send(Err("请重新确认权限后再发送".into()));
@@ -1212,6 +1236,7 @@ async fn session_pump(
                         .map_err(describe_acp_error);
                     if sent.is_ok() {
                         ctx.tools.begin_live();
+                        ctx.compactions.begin_live();
                         events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                         prompt_lease = Some(lease);
                         prompt_in_flight = true;
@@ -1231,7 +1256,7 @@ async fn session_pump(
                     let permission = permission_guard.is_permission(&config_id);
                     let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
-                    if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy()) || awaiting || !model_guard.may_set(&config_id) {
+                    if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) || awaiting || !model_guard.may_set(&config_id) {
                         let _ = result.send(Err("当前无法修改此设置，请等待已发出的请求结束".into()));
                         continue;
                     }
@@ -1269,7 +1294,7 @@ async fn session_pump(
                         }
                         let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                             || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
-                        if !model_guard.admissible() || !permission_guard.admissible() || (ctx.tools.busy() || ctx.async_tasks.busy()) || awaiting {
+                        if !model_guard.admissible() || !permission_guard.admissible() || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) || awaiting {
                             let _ = result.send(Err("当前设置或待处理事项已变化，请重新检查此对话".into()));
                             continue;
                         }
@@ -1294,7 +1319,7 @@ async fn session_pump(
                 SessionControl::ConfirmConfig { displayed, result, .. } => {
                     let awaiting = pending.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true)
                         || ops.elicitations.lock().map(|entries| entries.values().any(|entry| entry.session_id == session_id)).unwrap_or(true);
-                    let outcome = if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy()) || awaiting || !model_guard.confirmable(&displayed) {
+                    let outcome = if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) || awaiting || !model_guard.confirmable(&displayed) {
                         Err("当前设置已变化或无法确认，请重新检查".to_string())
                     } else if let Err(error) = save_confirmed_change(&session_id, &mut model_guard,
                         &mut config_store, &mut pending_config_store).await {
@@ -1350,7 +1375,7 @@ async fn session_pump(
                             "session/delete", serde_json::json!({"sessionId":session_id})),
                         _ => unreachable!(),
                     };
-                    if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy()) {
+                    if mutation.is_some() || prompt_in_flight || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy()) {
                         let _ = result.send(Err("上次请求尚未结束，请先停止或等待".into()));
                         continue;
                     }
@@ -1390,11 +1415,15 @@ async fn session_pump(
 /// the registrations (pumps exit as their channels close).
 pub(crate) fn notify_connection_lost(sessions: &SessionMap, reason: super::lifecycle::CloseReason) {
     if let Ok(mut map) = sessions.lock() {
-        for (_, entry) in map.drain() {
+        for (session_id, entry) in map.drain() {
             // The process owner calls this only after the exact child and its
             // process group ended. This does not rewrite any tool outcome.
             (entry.events)(
                 serde_json::json!({"kind":"toolActivity", "toolCallIds":[], "reason":"process_ended"}),
+            );
+            (entry.events)(
+                serde_json::json!({"kind":"compactionActivity", "connectionId":entry.connection_id,
+                "sessionId":session_id, "compactionIds":[], "uncertain":false, "reason":"process_ended"}),
             );
             (entry.events)(serde_json::json!({"kind": "connectionLost", "closeReason": reason}));
         }
@@ -1423,54 +1452,5 @@ pub(crate) fn clear_connection_interactions(
             .collect::<Vec<_>>();
         drop(map);
         cancel_elicitations(forms, &mut ids);
-    }
-}
-
-/// `session/list` over the live connection: raw response, cursor pagination
-/// unrolled into a single array. Call only when the agent advertises the
-/// capability.
-pub(crate) async fn list_sessions_on_connection(
-    cx: &ConnectionTo<Agent>,
-    cwd: Option<&Path>,
-    initial_cursor: Option<&str>,
-    all_pages: bool,
-) -> Result<Value, String> {
-    let mut sessions: Vec<Value> = Vec::new();
-    let mut cursor = initial_cursor.map(str::to_string);
-    let mut seen = std::collections::HashSet::new();
-    loop {
-        let mut params = serde_json::json!({});
-        if let Some(cwd) = cwd {
-            params["cwd"] = serde_json::json!(cwd);
-        }
-        if let Some(cursor) = &cursor {
-            if !seen.insert(cursor.clone()) {
-                return Err("Agent 返回了重复的翻页结果，请重新查找".into());
-            }
-            params["cursor"] = Value::String(cursor.clone());
-        }
-        let request = UntypedMessage::new("session/list", &params).map_err(describe_acp_error)?;
-        let response = cx
-            .send_request_to(Agent, request)
-            .block_task()
-            .await
-            .map_err(describe_acp_error)?;
-        let list = response
-            .get("sessions")
-            .and_then(Value::as_array)
-            .ok_or("Agent 未返回有效的对话列表，请重试")?;
-        if !all_pages {
-            return Ok(response);
-        }
-        sessions.extend(list.iter().cloned());
-        match response.get("nextCursor").and_then(Value::as_str) {
-            Some(next) if !next.is_empty() => {
-                if sessions.len() >= 10_000 || seen.len() >= 100 {
-                    return Err("对话较多，请使用带入已有对话逐页查看".into());
-                }
-                cursor = Some(next.to_string());
-            }
-            _ => return Ok(Value::Array(sessions)),
-        }
     }
 }

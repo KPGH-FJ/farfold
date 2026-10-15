@@ -1,5 +1,5 @@
 import {
-  hasActiveTools,
+  hasActiveWork,
   hasPendingRequests,
   type ThreadState,
 } from "./session_types";
@@ -46,7 +46,7 @@ export function updateConversationBlocker(thread: ThreadState): string | null {
   if (thread.reconnecting) return UPDATE_IMPACT.connecting;
   if (thread.configuring) return UPDATE_IMPACT.changing;
   if (thread.running) return UPDATE_IMPACT.running;
-  if (hasActiveTools(thread)) return UPDATE_IMPACT.tools;
+  if (hasActiveWork(thread)) return UPDATE_IMPACT.tools;
   return null;
 }
 

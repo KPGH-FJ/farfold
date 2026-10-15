@@ -3,7 +3,7 @@ import { pendingPreparationRead } from "../runtime/agent_preparation";
 import { ShieldCheckIcon } from "@phosphor-icons/react";
 import {
   configValueLabel,
-  hasActiveTools,
+  hasActiveWork,
   threads,
   type ConfigChoice,
   type ThreadState,
@@ -67,7 +67,7 @@ export function PermissionControl({
     inactive ||
     thread.configuring ||
     thread.running ||
-    hasActiveTools(thread) ||
+    hasActiveWork(thread) ||
     thread.submitting ||
     thread.stopping ||
     thread.stopUnconfirmed ||
