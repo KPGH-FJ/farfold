@@ -1,0 +1,155 @@
+{
+  "schema": 1,
+  "kind": "derived-safe-summary",
+  "scope": "P16 regular transitional PPTX passive slide preview subset",
+  "implemented": [
+    "Bounded shared ZIP capture and main-window command; cancelled presentation never releases unfinished native reads.",
+    "Explicit presentation order, slide/layout/master/theme inheritance and direct overrides; literal text, rect/ellipse and internal PNG/JPEG.",
+    "Real disposable Worker, closed display vocabulary, byte/EXIF checks and actual bitmap decode; no document HTML, foreignObject, CSS, script or resource URLs.",
+    "One slide at a time, fitted canvas, page selection and transient reading location; replacement prepared before old content is retired.",
+    "Exact seven-field source identity, page/resource leases, A/B/A late-event rejection, visible bitmap failure and unknown-read guards.",
+    "Ordinary unchanged default writer templates supported as explicit partial previews; recognized nonpaint metadata ignored narrowly, checked literal bullet characters preserved, auxiliary script fonts/auto-fit/known shadow and spacing limitations disclosed."
+  ],
+  "limits": {
+    "archiveBytes": 16777216,
+    "partBytes": 16777216,
+    "inflatedBytes": 67108864,
+    "entries": 2048,
+    "slides": 1000,
+    "shapes": 10000,
+    "runs": 100000,
+    "textCodeUnits": 4194304,
+    "imageBytes": 8388608,
+    "images": 256,
+    "imagePixelsTotalAndPerDisplayedSlide": 33554432,
+    "workerWaitMs": 10000
+  },
+  "targeted": {
+    "rust": {
+      "passed": 132,
+      "ignored": 1,
+      "newPresentationTests": 12
+    },
+    "parser": {
+      "passed": 62,
+      "failed": 0
+    },
+    "frontend": {
+      "files": 9,
+      "passed": 151,
+      "failed": 0
+    },
+    "coverageNote": "Groups are separate scoped runs; no summed all-product acceptance claim.",
+    "compatibilityAndPreview": {
+      "files": 4,
+      "passed": 136,
+      "newCompatibilityTests": 28,
+      "existingParserCases": 62,
+      "failed": 0
+    }
+  },
+  "independentReview": {
+    "findingsCorrected": [
+      "Placeholder layout-to-master role and text-style mapping",
+      "Explicit master colour-map reset",
+      "Required slide/layout/master/theme MIME roles",
+      "Unimplemented visible text-overflow policy",
+      "Retired image/page handlers after A/B/A"
+    ],
+    "proof": "Owner fixes and targeted regressions, with subsequent complete-App authored checks; the earlier three-issue review is a pre-fix record, not a final approval receipt."
+  },
+  "evidence": [
+    {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-backend/verification.json",
+      "sha256": "68942f561e147fef806bf3789c99a5d8e3f38abf0e91d56eadc921dce0aff9c8"
+    },
+    {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-parser/source-freeze-r2.json",
+      "sha256": "8365802b8455ec7410e0ddd10420b6dcfaf0eed3643cd34bd7aaa6c5cfa21f9a"
+    },
+    {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-frontend/source-freeze.json",
+      "sha256": "5a933effab4f39fd8535ed7e8897f31f0114ac7600f86b270f24afa4245b3eff"
+    },
+    {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-backend/pure-parser-review-private.json",
+      "sha256": "9f8de4fe0ec4c7cb9256541ea99fa7c34392f6af47c48380b0ca0443b627c8bd"
+    },
+    {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-authoring-compat/parser-fix-freeze-final.json",
+      "sha256": "3f8f661606416434113a47b5b8295a6272d1d20eb809fc5dacdbc59c9b66c35e"
+    },
+    {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-authoring-compat/source-run1/verification.json",
+      "sha256": "ea56ec5b9500e36bee9fd850ac45dd8d319973b24c20df61aee293b8a64aa33d"
+    }
+  ],
+  "notSupportedInThisSlice": [
+    "Legacy PPT or macro PPTM",
+    "Groups, charts, embedded objects/media/animation, rotation/flips, crop/tile, custom geometry, unsupported effects/gradients and unresolved required inheritance or transforms; a strictly recognized outer shadow is omitted only with partial warning.",
+    "Exact platform font/glyph/layout equivalence with PowerPoint"
+  ],
+  "notAdded": [
+    "Persistence or body index",
+    "P32 search",
+    "Agent input",
+    "New feedback anchors",
+    "New dependencies or environment flags"
+  ],
+  "retainedTargetedFailures": {
+    "frontend": [
+      "Old unsupported-format assertion still named PPTX; updated to legacy PPT/PPTM while retaining positive PPTX cases.",
+      "Mocked React test advanced a timer before committing blocked state; test sequencing corrected."
+    ],
+    "parser": [
+      {
+        "tests": 32,
+        "failed": 1,
+        "cause": "unknown namespace replaced mandatory a:t; actual invalid refusal versus blanket test expected unsupported; test made precise"
+      },
+      {
+        "tests": 62,
+        "failed": 2,
+        "typecheckExit": 1,
+        "cause": "new overflow negative tuples inserted in role mapping parameter table; moved to explicit rejection table without production relaxation"
+      }
+    ],
+    "compatibility": [
+      {
+        "log": "parser-boundary-red.log",
+        "actualExitCode": 1,
+        "testsPassed": 20,
+        "testsFailed": 8,
+        "meaning": "Confirmed six missing shadow strictness refusals and old satMod range/fractional acceptance before final fix."
+      },
+      {
+        "log": "parser-targeted-final2.log",
+        "actualExitCode": 1,
+        "testsPassed": 134,
+        "testsFailed": 2,
+        "meaning": "Two test mutations edited only unselected theme effectStyle index1; active rectangle references index2. Replaced mutation on every matching shadow/colour so active known shadow is exercised. No additional production change was needed."
+      },
+      {
+        "log": "parser-targeted-final3.log",
+        "actualExitCode": 0,
+        "testsPassed": 136,
+        "testsFailed": 0
+      }
+    ]
+  },
+  "sourceCommit": "c7466f69f1dc5ea3bf35d7e42148e70ff3ab6a03",
+  "compatibilitySamples": [
+    {
+      "name": "default-title-content.pptx",
+      "state": "partial",
+      "preserved": "Actual presentation and shape order, placeholder geometry, source text, literal bullet glyphs and source positions",
+      "notExact": "Script font fallback, hanging-indent/paragraph spacing and platform font layout; implicit text-container paint defaults marked partial"
+    },
+    {
+      "name": "default-blank-basic.pptx",
+      "state": "partial",
+      "preserved": "Exact authored boxes, literal text, direct rectangle fill, real PNG bytes and basic outline colour transforms",
+      "notExact": "Shape auto-resize and recognized theme outer shadow not painted; script/platform typography; no full PowerPoint fidelity claim"
+    }
+  ]
+}

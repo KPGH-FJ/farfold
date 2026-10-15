@@ -2,11 +2,15 @@
 
 ## 当前源码与证据边界（2026-10-15）
 
-共用前端与 Tauri/Rust 沿官方 ACP/SDK/CLI 连接外部 Agent，既有架构边界保持。唯一正式应用已更新为 `5b8c9d0ff`；[本机分项](evidence/2026-10-09-capability-hardening/remembered-pages-install/verification.json)核到逐页公开网址确认、顺序、冷启动只列清单及点击才打开、忘记/清空保留活页。安装三份数据清单一致；运行后旧设置、对话与当前 9 份草稿保持，严格 2 处差异保留。所选旧对话重连失败，本片未建立读取许可，旧许可撤回仍缺本机证明。上轮运行后的延迟严格比较退出 2，包含后续用户活动；原测试草稿的主动处理已获用户确认，原差异不改为全等。
+共用前端与 Tauri/Rust 沿官方 ACP/SDK/CLI 连接外部 Agent，既有架构边界保持。唯一正式应用已更新为 `c7466f69f`；此前P30的[本机分项](evidence/2026-10-09-capability-hardening/remembered-pages-install/verification.json)核到逐页公开网址确认、顺序、冷启动只列清单及点击才打开、忘记/清空保留活页。安装三份数据清单一致；运行后旧设置、对话与当前 9 份草稿保持，严格 2 处差异保留。所选旧对话重连失败，本片未建立读取许可，旧许可撤回仍缺本机证明。上轮运行后的延迟严格比较退出 2，包含后续用户活动；原测试草稿的主动处理已获用户确认，原差异不改为全等。
 
 新入口为 `BrowserRememberedPages.tsx`、`browser_remembered.ts`，经既有 `BrowserTabs`/`BrowserWorkspaceScope` 打开新页面；后端 `browser_workspace/remembered_pages.rs` 核对当前实际页面，`meta_store/remembered_pages.rs` 仅保存网址清单及必要归属/CAS 字段。既有索引和创建时间必须一致；记住顺序稳定、空清单推进修订、删除对话与记录原子清理。重启读取只加载元数据，不创建页面或恢复旧许可；忘记记录不关闭活页。
 
-本片[实现与检查](evidence/2026-10-09-capability-hardening/remembered-pages/verification.json)区分相关测试、受控完整界面、完整工程及上述有界正式冷恢复。首次交付仍全部 29 家及八项标准；PPTX 生产实现与相关验证正在进行，生产截图及 NEW-24 完整权限回执仍缺。最新执行衔接见[当前状态](status.md#当前续接2026-10-15)。
+P16 的[普通 PPTX 视觉预览](evidence/2026-10-09-capability-hardening/pptx-preview/verification.json)原实现 `e0605006c` 已提交；后续默认模板兼容修复 `c7466f69f` 已提交并安装。`file_delivery/presentation.rs` 复用有界 ZIP 读取与真实读取槽；`pptx_package/theme/layout/text/shapes/parse` 明确关系、继承和直接覆盖，Worker 内外的闭合模型检查及二进制/实际解码保护被动显示。`PptxFilePreview`/`PptxSlideView` 仅绘制基础 SVG、普通文字及本地 Blob 图片；共用 `office_preview_prepare` 在新内容准备完成后才替换旧页，保留七字段来源、临时阅读位置、切页归属和未知读取保护。不生成文档 HTML、不加载外部资源，不新增正文存储、搜索、Agent 输入或意见锚点。
+
+本片兼容修复定向136项、独立源码65项、新编译产物两引擎各65项及完整App各29项通过；[本次七项工程](evidence/2026-10-09-capability-hardening/pptx-preview/engineering.json)全部实际成功，18,927输入稳定、前端6,306项、Rust1,716项/6忽略。候选独审9/9、安装独审10/10，三份217,407条清单一致；正常保存退出后进程0，严格比较原退出2及两处差异保留，9份旧草稿整对象相同。原模板、oracle与启动失败均保留，旧启动和第二次重开最终调用者仍未知。实际文件预览受空栏无独立选择入口限制，下一批复用共用文件核实和打开机制补入口，并加入P21整页版本意见；新工作尚未安装，不冒称完整P16。
+
+P30 的[实现与检查](evidence/2026-10-09-capability-hardening/remembered-pages/verification.json)区分相关测试、受控完整界面、工程及上述有界正式冷恢复。首次交付仍全部 29 家及八项标准；P27 生产截图的系统安全证据及 NEW-24 完整权限回执仍缺。最新执行衔接见[当前状态](status.md#当前续接2026-10-15)。
 
 ## 阶段实现与验证摘要（2026-10-14，对齐前记录）
 

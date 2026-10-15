@@ -1,0 +1,153 @@
+{
+  "schema": 1,
+  "kind": "derived-safe-summary",
+  "scope": "Complete production App, real PPTX Worker/parser/decode/render; controlled metadata and file-capture replies, no installed App or actual OS file read.",
+  "fullApp": [
+    {
+      "engine": "chromium",
+      "checksPassed": 29,
+      "checksFailed": 0,
+      "sourceStable": true,
+      "scenarioSnapshots": 2,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "evidence": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-browser/chromium-run7.json",
+        "sha256": "8302c4ce52eead54538fe735509edd11d54fd38a2e13280badbe51489fa88538"
+      }
+    },
+    {
+      "engine": "webkit",
+      "checksPassed": 29,
+      "checksFailed": 0,
+      "sourceStable": true,
+      "scenarioSnapshots": 2,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "evidence": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-browser/webkit-run7.json",
+        "sha256": "2b0a20ee5214129853d9afa25fd6b61e3ee7c3bd929f75f59556bb46d4418556"
+      }
+    }
+  ],
+  "covered": [
+    "Independent authored slide order, inherited and direct geometry/colour, font-size unit conversion, PNG position and four-quadrant pixels",
+    "Page selection and keyboard navigation, hide/show reading position, old-content retention until replacement succeeds",
+    "Narrow viewport fitting, unsupported visible crop refusal, cancellation retaining unfinished capture, readPending without automatic retry",
+    "Protected composer and existing feedback plus all-scenario controlled IPC cumulatively checked; no Agent send/configuration action."
+  ],
+  "retainedFailures": [
+    "Earlier full-App runs and scripted selector/startup failures remain in original private records; current fullApp counts only final run7. Prior run6 is retained separately as previousFullApp.",
+    "WebKit internal bitmap decoding used an owned same-origin Blob; the original test route wrongly blocked it. A two-arm production-client probe reproduced failure under the old route and success when only owned same-origin Blob was allowed; production code and external-network blocking were unchanged.",
+    "Compiled-CSP probe first stopped at an obsolete oracle .json path before server/browser creation; runner path corrected to the byte-exact .json.raw fixture.",
+    "The original same two genuine-writer samples were rejected by source and both old compiled engines, six actual refusals; original receipt retained in verification.json. Current successes apply only to the repaired source/new worker."
+  ],
+  "routeIsolationEvidence": {
+    "privateProjectRelativePath": "output/2026-10-15-pptx-frontend/webkit-route-probe-01.json",
+    "sha256": "e7ddbcc5a9637a087fec073b31722c63cb62779b2b492b94a9e022e80e5f1019"
+  },
+  "boundaries": [
+    "No PowerPoint authoring-engine comparison",
+    "Installed identity and data retention verified separately; actual selected-file native preview has not been reached.",
+    "CSP probe uses actual compiled assets and header on a private loopback static server; it is not a native Tauri acceptance run."
+  ],
+  "previousFullApp": [
+    {
+      "engine": "chromium",
+      "checksPassed": 29,
+      "checksFailed": 0,
+      "sourceStable": true,
+      "scenarioSnapshots": 9,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "evidence": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-browser/chromium-run6.json",
+        "sha256": "86db31b907ad37da1b18e59177122d128074ecb134f6496b1013853b3329e14e"
+      }
+    },
+    {
+      "engine": "webkit",
+      "checksPassed": 29,
+      "checksFailed": 0,
+      "sourceStable": true,
+      "scenarioSnapshots": 9,
+      "pageErrors": 0,
+      "externalRequests": 0,
+      "evidence": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-browser/webkit-run6.json",
+        "sha256": "0302335fb9bffbb65f6484c18e78ab7e0b71467ce81e70658bf49f886a8529d0"
+      }
+    }
+  ],
+  "previousCompiledProductionCsp": {
+    "engines": [
+      {
+        "engine": "chromium",
+        "checksPassed": 7,
+        "checksFailed": 0,
+        "actualHeaderExact": true,
+        "visibleBlobImage": true,
+        "cspViolations": 0,
+        "externalRequests": 0
+      },
+      {
+        "engine": "webkit",
+        "checksPassed": 7,
+        "checksFailed": 0,
+        "actualHeaderExact": true,
+        "visibleBlobImage": true,
+        "cspViolations": 0,
+        "externalRequests": 0
+      }
+    ],
+    "workerAsset": "dist/assets/pptx_preview.worker-DtONDTny.js",
+    "workerSha256": "4f1d22c79deaa811a6ebaeee765ad2cbbe18967e79fec0801ab621ab2029a7f2",
+    "compiledJsAssetsPinned": 13,
+    "actualCspSha256": "27edc0d9cea3c33664fb811c44b4c9dca6964aad1a5ccec95b5744c821c7c441",
+    "inputsStable": true,
+    "selfOwnedServerClosed": true,
+    "browserCloseAwaited": true,
+    "evidence": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-artifact-csp/verification.json",
+      "sha256": "23ca7c5fb898a3d6f5f832d358827d3ea6b03dc7db004b5434425b85b45720e8"
+    }
+  },
+  "compiledProductionCsp": {
+    "workerAsset": "dist/assets/pptx_preview.worker-JU2f-JwA.js",
+    "workerSha256": "059fb6205ecd5b869e31ff8540c4dbf0d2ab2b98b8ba7b9d6d8bbb581f0b822f",
+    "engines": [
+      {
+        "engine": "chromium",
+        "checksPassed": 65,
+        "checksFailed": 0,
+        "actualHeaderExact": true,
+        "pageErrors": 0,
+        "externalRequests": 0,
+        "cspViolations": 0,
+        "browserCloseAwaited": true
+      },
+      {
+        "engine": "webkit",
+        "checksPassed": 65,
+        "checksFailed": 0,
+        "actualHeaderExact": true,
+        "pageErrors": 0,
+        "externalRequests": 0,
+        "cspViolations": 0,
+        "browserCloseAwaited": true
+      }
+    ],
+    "samples": "Two genuine unchanged python-pptx1.0.2 default-template outputs; both explicitly partial, API/XML oracle-v2",
+    "actualBitmapDecodeAndBlobPixels": true,
+    "inputsStable": true,
+    "selfOwnedServerClosed": true,
+    "evidence": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-authoring-compat/compiled-run1/verification.json",
+      "sha256": "36a3733d9b38655cccd5256ea35994a571d5505ab51f845d06d6f9e899440740"
+    },
+    "postCandidateBuild57PinsStable": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-compat-engineering/browser-closure.json",
+      "sha256": "6707761c35439805d11c30e6b4b98090fc738cad7c4e19113e5973203345fb61"
+    }
+  }
+}

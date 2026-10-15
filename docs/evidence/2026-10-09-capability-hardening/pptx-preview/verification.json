@@ -1,0 +1,250 @@
+{
+  "schema": 1,
+  "kind": "derived-safe-checkpoint",
+  "date": "2026-10-15",
+  "scope": "P16 passive regular PPTX preview subset",
+  "state": "source and controlled compatibility verified; installed c746 with native file-entry gap, P16 remains open",
+  "records": {
+    "implementation": "implementation.json",
+    "browserAndCompiledCsp": "browser.json",
+    "engineering": "engineering.json"
+  },
+  "summary": {
+    "rustRelatedPassed": 132,
+    "rustRelatedIgnored": 1,
+    "frontendTargetedPassed": 151,
+    "fullAppChromiumChecksPassed": 29,
+    "fullAppWebkitChecksPassed": 29,
+    "fullFrontendTestsPassed": 6306,
+    "fullRustTestsPassed": 1716,
+    "fullRustIgnored": 6,
+    "parserAndPreviewTargetedPassed": 136,
+    "newCompatibilityTests": 28,
+    "independentSourceOracleChecks": 65,
+    "compiledWriterChecksPassedPerEngine": 65,
+    "historicalE060AuthoredCompiledCspChecksPassedPerEngine": 7,
+    "historicalInitialParserPassed": 62
+  },
+  "formalAppAtCheckpoint": {
+    "source": "c7466f69f1dc5ea3bf35d7e42148e70ff3ab6a03",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "scope": "P16 compatible PPTX preview source installed; selected-file preview not yet verified in native UI"
+  },
+  "remaining": [
+    "P16 remaining format/content scope and native selected-file verification",
+    "P27 production screenshot with sufficient OS privacy/security evidence",
+    "NEW-24 complete permission receipt and paused affected real sends",
+    "Prior strict data differences; no waiver or restoration",
+    "All29 first-release Agents and eight standards, remaining plan entries and Windows"
+  ],
+  "privacy": "Only safe derived counts, scope and SHA-256 pointers are published. No live data, user IDs, histories, settings values, credentials, full-window AX, screenshots or large input maps are copied.",
+  "sourceCommit": "c7466f69f1dc5ea3bf35d7e42148e70ff3ab6a03",
+  "initialInstallationAttempt": {
+    "actualExitCode": 1,
+    "stage": "initial exact formal-process absence check",
+    "reason": "formal App was running",
+    "installationJournalCreated": false,
+    "formalAppWrites": 0,
+    "formalAppSourceStill": "5b8c9d0ffbed2706a70a1ddc541a52e9c7bebb52",
+    "launchOrigin": "Original process launch requester unknown; separate later tool/OS investigation does not retroactively establish this cause.",
+    "failurePreserved": true,
+    "evidence": "Root original tool result; refusal occurred before any installation receipt or journal was created.",
+    "next": "Historical refusal retained. User later approved normal save/quit; new closed-reset before/pre/after baseline matched and revised c746 installed."
+  },
+  "knownCompatibilityFailure": {
+    "writer": "python-pptx 1.0.2 default templates, unchanged master/layout",
+    "samples": ["default-title-content.pptx", "default-blank-basic.pptx"],
+    "sourceParserRejections": 2,
+    "compiledWorkerRejectionsPerEngine": 2,
+    "expectedModelSuccesses": 0,
+    "actualProbeExit": 1,
+    "privateReceipt": {
+      "path": "output/2026-10-15-pptx-authoring-compat/verification.json",
+      "sha256": "4248569b43e58eb35ebef9144c4a7f88ced5438e469304ea0b31660086721338"
+    },
+    "interpretation": "Historical six refusals retained. The same two unmodified writer outputs now pass independent source and actual compiled tests, both explicitly partial; broader authoring compatibility unknown."
+  },
+  "historicalE060Candidate": {
+    "candidateBuild": {
+      "scope": "Build and 9 independent packaging checks completed; not installed. Installation withheld after standard-writer compatibility counterexamples.",
+      "source": "e0605006c2a1e800c4ecc8763c9d3c3b4f27cd99",
+      "receipt": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-install-preparation/candidate-output/candidate.json",
+        "sha256": "6effa177c25af2920a06335cfac58d0e37e3a6ac736635a485efce3a7266e345"
+      }
+    },
+    "candidateIndependentReview": {
+      "checksPassed": 9,
+      "checksTotal": 9,
+      "receipt": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-candidate-independent/review.json",
+        "sha256": "f57e434c76d115b621381e699aa7ad09bbe1f17b4e2410633f2eda7eb60f9940"
+      }
+    },
+    "temporaryBundleRetired": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-e060-retirement/retirement-result.json",
+      "sha256": "125ecda2f6d01288f33e8c9d5ca371d34bf5867d630bb947ca42c1ebb4616ca9"
+    },
+    "notInstalled": true
+  },
+  "candidateBuild": {
+    "source": "c7466f69f1dc5ea3bf35d7e42148e70ff3ab6a03",
+    "scope": "Actual build completed, independent9/9, then installed. Earlier e060 candidate not installed.",
+    "receipt": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-compat-install-preparation/candidate-output/candidate.json",
+      "sha256": "74baffb82b4109f03ac3afa8f07e4c4fbeb8091d756a03cd44baab4295c3baea"
+    }
+  },
+  "candidateIndependentReview": {
+    "checksPassed": 9,
+    "checksTotal": 9,
+    "receipt": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-compat-candidate-independent/review.json",
+      "sha256": "66fa9bda9b5a5d96495ff2bdfc227ca6750eaf7654aa92354f7972e6b4e54915"
+    }
+  },
+  "installation": {
+    "source": "c7466f69f1dc5ea3bf35d7e42148e70ff3ab6a03",
+    "actualExitCode": 0,
+    "independentChecksPassed": 10,
+    "independentChecksTotal": 10,
+    "manifestCountEach": 217407,
+    "threeCompleteManifestsIdentical": true,
+    "manifestSha256": "ce6501024c76f995f019cfdf307690ea9b635ddf5480102bc636cc776754cc74",
+    "receipt": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-install-closed-reset/install-result.json",
+      "sha256": "6a60c63759b90211782fc416c011a2f5c8176c703baa02f0c9eb16dc87130f6f"
+    },
+    "independent": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-install-closed-reset/installed-independent-review-private.json",
+      "sha256": "255e88f831d16b79bc6640086d82fcae2e7c79e93a284c470464fde586b3b6ea"
+    },
+    "afterRetention": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-install-closed-reset/retention-after-receipt.json",
+      "sha256": "546f0a5542360cfd49f0d4c7dd7e18c14f01a39d47d53d067e67762bef9540f4"
+    },
+    "exactTemporaryDuplicateCleanup": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-compat-cleanup/cleanup-result.json",
+      "sha256": "350dfa8d438b43dcfe3e1b910a2d286169ac58937ea219235f08634a96d0f578"
+    },
+    "formalAndZipRetained": true
+  },
+  "compatibilityFix": {
+    "scope": "Exact known creation metadata, auxiliary font slots, checked text-container defaults, literal bullets, strict auto-fit/shadow partial handling and bounded colour transforms. Unknown visible constructs remain rejected.",
+    "freeze": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-authoring-compat/parser-fix-freeze-final.json",
+      "sha256": "3f8f661606416434113a47b5b8295a6272d1d20eb809fc5dacdbc59c9b66c35e"
+    },
+    "targetedTestsPassed": 136,
+    "independentSource": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-authoring-compat/source-run1/verification.json",
+      "sha256": "ea56ec5b9500e36bee9fd850ac45dd8d319973b24c20df61aee293b8a64aa33d"
+    },
+    "independentCompiled": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-authoring-compat/compiled-run1/verification.json",
+      "sha256": "36a3733d9b38655cccd5256ea35994a571d5505ab51f845d06d6f9e899440740"
+    },
+    "samples": [
+      {
+        "name": "default-title-content.pptx",
+        "state": "partial",
+        "preserved": "Actual presentation and shape order, placeholder geometry, source text, literal bullet glyphs and source positions",
+        "notExact": "Script font fallback, hanging-indent/paragraph spacing and platform font layout; implicit text-container paint defaults marked partial"
+      },
+      {
+        "name": "default-blank-basic.pptx",
+        "state": "partial",
+        "preserved": "Exact authored boxes, literal text, direct rectangle fill, real PNG bytes and basic outline colour transforms",
+        "notExact": "Shape auto-resize and recognized theme outer shadow not painted; script/platform typography; no full PowerPoint fidelity claim"
+      }
+    ],
+    "fullPowerPointFidelityEstablished": false
+  },
+  "nativeScoped": {
+    "state": "selected-file preview not reached; actual file-entry gap recorded",
+    "observed": [
+      "Existing DOCX input history loaded with protected draft and attachment visible; content pane had zero reported files and no independent picker.",
+      "An older dedicated Codex file record failed to reconnect. OpenCode authored-result record remained loading at its last observation.",
+      "Normal save-and-exit confirmed, interface connection reset, exact formal process0 verified; no post-quit UI getter."
+    ],
+    "notPerformed": [
+      "New Agent prompt",
+      "Permission approval",
+      "Attachment edit",
+      "PPTX selected-file preview or slide interaction"
+    ],
+    "officialRpcCountClaimed": false,
+    "captureActualExitCode": 2,
+    "strictDifferences": 2,
+    "oldDraftObjectsExact": 9,
+    "baselineDraftObjects": 9,
+    "dataReceipt": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-compat-native-data/capture-receipt-private.json",
+      "sha256": "7a5396f73a7addb4a298b0160251bf3dd5f7c224fe3c96989aa2762fa786a695"
+    },
+    "comparison": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-compat-native-data/comparison-private.json",
+      "sha256": "afcc8cd62e6d3e224d5b5217bdd5dc26daf295d1311fe27d7ddd40cc5f7d7cd1"
+    },
+    "acceptedDifferences": [],
+    "next": "Common local-file picker plus P21 whole-current-slide version feedback, one coherent batch; native file/slide validation remains required.",
+    "independentReview": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-compat-native-data/independent-review-private/review.json",
+      "sha256": "382562c12079bda0c624c086b706d6c95f8ca8db0d90b564d79270b4c521807f"
+    },
+    "independentSafeSummary": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-compat-native-data/independent-safe-summary.json",
+      "sha256": "ac1c076a2beb183be2f0f4b0ddac381c7366b10310f8662735e6a179fe888042"
+    },
+    "nativeSteps": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-compat-native-data/independent-review-private/native-summary.json",
+      "sha256": "c405c7a03d41f8132d06dbb93c3bb2cbb26aef29e133693b291c5f7333441c36"
+    },
+    "strictDifferenceDetails": [
+      {
+        "table": "agents",
+        "oldRows": 1,
+        "changedFields": ["updated_at"],
+        "writer": "UNKNOWN"
+      },
+      {
+        "table": "sessions",
+        "oldRows": 1,
+        "changedFields": ["updated_at"],
+        "writer": "UNKNOWN"
+      }
+    ],
+    "retained": {
+      "sessions": 137,
+      "sessionsWholeRowsEqual": 136,
+      "dismissals": 173,
+      "dismissalsAllRowsEqual": true,
+      "agents": 40,
+      "agentsWholeRowsEqual": 39,
+      "settings": 54,
+      "settingsAllRowsEqual": true,
+      "draftWholeObjects": 9,
+      "draftAllFieldsAndAttachmentFieldsEqual": true,
+      "newOrMissingDraftObjects": 0
+    }
+  },
+  "automaticReopenInvestigation": {
+    "documentedToolBehavior": "Interface state readers can launch a stopped macOS app. Reads after quit are avoided; tools reset after explicit save-and-exit.",
+    "secondReopenUltimateRequester": "UNKNOWN",
+    "productRestartFixClaimed": false,
+    "osToolReview": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-reopen-diagnostic/tool-os-review.json",
+      "sha256": "6b365fed6b38bfdb6aff88514f1c3990135d72add56f75d392004cc76a6838a8"
+    },
+    "errata": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-reopen-diagnostic/tool-os-review-errata.json",
+      "sha256": "2e8e213ef8e2720a4636b7af7e2b939f8c88a15f78b5e0190aa45d03b7315ed8"
+    },
+    "boundedClosedEndpoints": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-reopen-diagnostic/closed-reset-observation.json",
+      "sha256": "f1ee3f9392301053805334d1de231b17bf4904589b75b68744c5305ec795e3ce"
+    },
+    "continuousAbsenceOrRootCauseClaimed": false
+  }
+}

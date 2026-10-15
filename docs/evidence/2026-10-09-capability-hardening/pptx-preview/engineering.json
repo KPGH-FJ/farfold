@@ -1,0 +1,335 @@
+{
+  "schema": 1,
+  "kind": "derived-safe-summary",
+  "retainedFailures": [
+    {
+      "run": "run1",
+      "result": "format check exit1; later checks not started",
+      "cause": "Independent author-oracle JSON formatting",
+      "evidence": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/run1/verification.json",
+        "sha256": "fbcfed7b6781a792b69132e53da59bcca3870aea0f64b68f630f92132331d2b0"
+      }
+    },
+    {
+      "run": "run2",
+      "result": "format/typecheck exit0, frontend tests exit1; later checks not started",
+      "cause": "Formatting preserved JSON values but changed the byte-pinned oracle; original author bytes restored at .json.raw and byte guard retained.",
+      "evidence": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/run2/verification.json",
+        "sha256": "2eb4e3dcea2dc8765520eeb62749fc37e6368f68c9057e039aeddda1a64f8f09"
+      }
+    },
+    {
+      "run": "run3",
+      "result": "First six checks exit0; Rust exit101 with 1712 pass, 4 startup failures, 6 ignored.",
+      "cause": "Unknown. The subsequent successes do not establish or fix the earlier startup cause.",
+      "evidence": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/run3/verification.json",
+        "sha256": "590956dd3ad0a6edd40f9f9440ff479774fd4fa82226e57d0710c67ea20c9a24"
+      }
+    }
+  ],
+  "oracle": {
+    "originalBytesSha256": "e01347ab74fc27dc04bd1b963864f4820654735d5c00d05aa09f584a6514a3a9",
+    "intermediateFormattedSha256": "60d5493a41beae53d2d0bf520875be9fe70ff124863694de1df9bec95d0d0d3b",
+    "jsonValuesWereEqual": true,
+    "finalFixture": "src/runtime/fixtures/pptx/author-oracle.json.raw",
+    "originalByteGuardRetained": true
+  },
+  "fourFailedTestsSerialDiagnostic": {
+    "passed": 4,
+    "failed": 0,
+    "newCauseEstablished": false,
+    "evidence": {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-startup-diagnostic/four-tests-serial.json",
+      "sha256": "e9ce6b3895121c829ea771e3e0107a3c99e7a7e24cdb09a67c53ce0061b15769"
+    }
+  },
+  "notEstablished": [
+    "Native selected-file preview",
+    "Full P16, all29 Agents/eight standards, Windows or P27 screenshot completion"
+  ],
+  "result": "all-seven-required-checks-actually-passed-in-one-sequential-run",
+  "inputCount": 18927,
+  "inputMapsEqual": true,
+  "engineeringHeadMetadata": "e0605006c2a1e800c4ecc8763c9d3c3b4f27cd99",
+  "sourceCommit": "c7466f69f1dc5ea3bf35d7e42148e70ff3ab6a03",
+  "frontend": {
+    "filesPassed": 511,
+    "testsPassed": 6306
+  },
+  "rust": {
+    "passed": 1716,
+    "failed": 0,
+    "ignored": 6
+  },
+  "checks": [
+    {
+      "command": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "origin": "this actual compatibility run; no reuse",
+      "inputsStable": true,
+      "log": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-compat-engineering/run1/01.log",
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+      }
+    },
+    {
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "origin": "this actual compatibility run; no reuse",
+      "inputsStable": true,
+      "log": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-compat-engineering/run1/02.log",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+      }
+    },
+    {
+      "command": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "origin": "this actual compatibility run; no reuse",
+      "inputsStable": true,
+      "log": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-compat-engineering/run1/03.log",
+        "sha256": "ba4af5c7f058228dceb34c8a28f968429d27eed7e6542f04b91d4839343fc888"
+      }
+    },
+    {
+      "command": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "origin": "this actual compatibility run; no reuse",
+      "inputsStable": true,
+      "log": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-compat-engineering/run1/04.log",
+        "sha256": "9884ba2b50023778dea6036faf03c04ca6ceb9cb3d1c4f025f36e593dc95278b"
+      }
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "origin": "this actual compatibility run; no reuse",
+      "inputsStable": true,
+      "log": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-compat-engineering/run1/05.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "origin": "this actual compatibility run; no reuse",
+      "inputsStable": true,
+      "log": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-compat-engineering/run1/06.log",
+        "sha256": "50d7c5226c6686d9fd7d2627bd23839dc13ee8383fe9823565b691ccfacf358d"
+      }
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "origin": "this actual compatibility run; no reuse",
+      "inputsStable": true,
+      "log": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-compat-engineering/run1/07.log",
+        "sha256": "17516a0f3b20c1ebe4a4050fb8a81c8c2fcb505e6b864edfe26b3a260d4f1a05"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "privateProjectRelativePath": "output/2026-10-15-pptx-compat-engineering/run1/verification.json",
+      "sha256": "b2e8f9d15275c55d3862920ac59b81ff1025d0fcb91f72f2425d3b9890c3e610"
+    }
+  ],
+  "previousSourceCheckpoint": {
+    "schema": 1,
+    "kind": "derived-safe-summary",
+    "result": "seven-required-checks-have-actual-success-on-identical-recorded-inputs",
+    "inputCount": 18924,
+    "inputMapsEqual": true,
+    "engineeringHeadMetadata": "773302a2b4f1e9491c425812e9b10e81ad20acb2",
+    "frontend": {
+      "filesPassed": 510,
+      "testsPassed": 6278
+    },
+    "rust": {
+      "passed": 1716,
+      "failed": 0,
+      "ignored": 6
+    },
+    "checks": [
+      {
+        "command": ["corepack", "pnpm", "format:check"],
+        "exitCode": 0,
+        "origin": "reused exact successful run3 check",
+        "log": {
+          "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/run3/01.log",
+          "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+        }
+      },
+      {
+        "command": ["corepack", "pnpm", "typecheck"],
+        "exitCode": 0,
+        "origin": "reused exact successful run3 check",
+        "log": {
+          "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/run3/02.log",
+          "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+        }
+      },
+      {
+        "command": ["corepack", "pnpm", "test"],
+        "exitCode": 0,
+        "origin": "reused exact successful run3 check",
+        "log": {
+          "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/run3/03.log",
+          "sha256": "9350fcb80a5d9ebdc52bf3f6dc3bacd240241c7b5d66ce797dc79e38d95a080e"
+        }
+      },
+      {
+        "command": ["corepack", "pnpm", "build"],
+        "exitCode": 0,
+        "origin": "reused exact successful run3 check",
+        "log": {
+          "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/run3/04.log",
+          "sha256": "e9224f6b8433c99834cb4ae7a247b86df7969a47e6d9cc712bb22b3b926cc329"
+        }
+      },
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "origin": "reused exact successful run3 check",
+        "log": {
+          "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/run3/05.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "origin": "reused exact successful run3 check",
+        "log": {
+          "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/run3/06.log",
+          "sha256": "d45006197a58d3591511e8220a2f4a8bd039e9a092cd6a66dbadf79d6dc77af2"
+        }
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 0,
+        "origin": "one later canonical full Rust run with external observer",
+        "log": {
+          "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/rust-observed-run1/07.log",
+          "sha256": "e95b23c89da3ab8701faae83c9036c82ecf04ab512c0a7b0d025d97839481e09"
+        }
+      }
+    ],
+    "evidence": [
+      {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/final-verification.json",
+        "sha256": "0049f20a887bbaf71a5d390f0cb802eb8b0e090dba3b93fc32bf17534fd2d246"
+      },
+      {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/final-evidence-chain.json",
+        "sha256": "87593a72ada902e4f8a7850df67d98817d7910f7e44299b60c8a8933a10bf6ae"
+      },
+      {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/rust-observed-run1/verification.json",
+        "sha256": "cc6a39a06c226a4bf820cb90bc9429b1f4fa001b92935f7fb999486793eb4bd8"
+      }
+    ],
+    "retainedFailures": [
+      {
+        "run": "run1",
+        "result": "format check exit1; later checks not started",
+        "cause": "Independent author-oracle JSON formatting",
+        "evidence": {
+          "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/run1/verification.json",
+          "sha256": "fbcfed7b6781a792b69132e53da59bcca3870aea0f64b68f630f92132331d2b0"
+        }
+      },
+      {
+        "run": "run2",
+        "result": "format/typecheck exit0, frontend tests exit1; later checks not started",
+        "cause": "Formatting preserved JSON values but changed the byte-pinned oracle; original author bytes restored at .json.raw and byte guard retained.",
+        "evidence": {
+          "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/run2/verification.json",
+          "sha256": "2eb4e3dcea2dc8765520eeb62749fc37e6368f68c9057e039aeddda1a64f8f09"
+        }
+      },
+      {
+        "run": "run3",
+        "result": "First six checks exit0; Rust exit101 with 1712 pass, 4 startup failures, 6 ignored.",
+        "cause": "Unknown. The subsequent successes do not establish or fix the earlier startup cause.",
+        "evidence": {
+          "privateProjectRelativePath": "output/2026-10-15-pptx-engineering/run3/verification.json",
+          "sha256": "590956dd3ad0a6edd40f9f9440ff479774fd4fa82226e57d0710c67ea20c9a24"
+        }
+      }
+    ],
+    "oracle": {
+      "originalBytesSha256": "e01347ab74fc27dc04bd1b963864f4820654735d5c00d05aa09f584a6514a3a9",
+      "intermediateFormattedSha256": "60d5493a41beae53d2d0bf520875be9fe70ff124863694de1df9bec95d0d0d3b",
+      "jsonValuesWereEqual": true,
+      "finalFixture": "src/runtime/fixtures/pptx/author-oracle.json.raw",
+      "originalByteGuardRetained": true
+    },
+    "fourFailedTestsSerialDiagnostic": {
+      "passed": 4,
+      "failed": 0,
+      "newCauseEstablished": false,
+      "evidence": {
+        "privateProjectRelativePath": "output/2026-10-15-pptx-startup-diagnostic/four-tests-serial.json",
+        "sha256": "e9ce6b3895121c829ea771e3e0107a3c99e7a7e24cdb09a67c53ce0061b15769"
+      }
+    },
+    "interpretation": "Six actual run3 successes are reused verbatim with identical 18924 inputs. A later single canonical full Rust command exited0 under unchanged source, default parallelism, production five-second and fixture budgets. No retry result is rewritten as the earlier run passing or a production timeout repair.",
+    "notEstablished": [
+      "Installed-app acceptance",
+      "Native file preview",
+      "Full P16, all29 Agents/eight standards, Windows or P27 screenshot completion"
+    ]
+  },
+  "interpretation": "New compatible source was frozen for this one complete sequential seven-check run. Prior original failures and identical-input reuse belong to the earlier e060 checkpoint; later passes do not locate or repair the unknown startup cause."
+}
