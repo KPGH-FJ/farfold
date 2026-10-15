@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "result": "网页清单本轮范围已独立核对；严格数据比较仍保留2处差异",
+  "nativeVerified": [
+    "取消后清单保持0项",
+    "两个公开网址分别确认保存并保留顺序；普通关页不删除清单",
+    "正常退出及进程归零后冷启动，界面为空白标签与2项清单；点击后实际网页可见",
+    "忘记单项、清空清单均保留已打开网页；测试网页已关闭，最终正常退出"
+  ],
+  "dataVerified": {
+    "sessions": {
+      "before": 137,
+      "after": 137,
+      "allOldWholeRowsExact": true
+    },
+    "dismissedRows": {
+      "before": 173,
+      "after": 173,
+      "allOldWholeRowsExact": true
+    },
+    "agents": {
+      "before": 40,
+      "after": 40,
+      "onlyOneUpdatedAtChanged": true
+    },
+    "settings": {
+      "all53OldWholeRowsExact": true,
+      "oneNewEmptyRememberedPageList": true
+    },
+    "drafts": {
+      "before": 9,
+      "after": 9,
+      "allWholeObjectsExact": true
+    },
+    "strictExitCode": 2,
+    "strictDifferenceCount": 2,
+    "acceptedDifferences": []
+  },
+  "recordCorrection": "参数进程调用引用误指；独审按原执行记录补链，原件保持。",
+  "unverified": [
+    "本次未建立网页读取许可，旧许可撤回仍缺原生证明",
+    "真实Agent及全部接入标准",
+    "完整P30完成"
+  ],
+  "evidenceFileSha256": {
+    "captureReceipt": "d76cce8b620a96506f8bcf685c9d1ef7397a9b8ca0a5d9cd479e44e96ea54dc8",
+    "strictComparison": "71402774483752c73051221360b95277a326ee31a9169f3a8ced9251a4d64c92",
+    "rootSecondCopyReview": "03c44fedd60c9542459be2861d98848802c3c028a30caf263a8ce5379adae925",
+    "independentPrivateReview": "a7ee8411524cea3270d43432599a65bdfa6fa53585716e6c326e04ef4082285e"
+  }
+}

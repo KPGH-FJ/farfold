@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "updatedAt": "2026-10-15",
+  "sourceCommit": "5b8c9d0ffbed2706a70a1ddc541a52e9c7bebb52",
+  "scope": "P30 explicitly remembered public webpage positions, macOS arm64 only; not complete P30/29-Agent/Windows acceptance",
+  "installed": {
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "candidateActualExitCode": 0,
+    "candidateIndependentPassed": 9,
+    "candidateIndependentTotal": 9,
+    "candidateReceiptSha256": "969960d175a10b0cfcae0e2ee4b2a450c75709a04856fc45bcce97dbad31f24e",
+    "candidateIndependentSha256": "0434ab169830c813e14baafd39b300d7af6a95a946b5e9a1dea0fe0a66141edf",
+    "installActualExitCode": 0,
+    "installActualFinalChunk": "37c5b7",
+    "installReceiptSha256": "a04daa57dd44f4917e5513fc4a47c5387642e47c11fcf32c5cbbcc9f39bed6df",
+    "installedIndependentPassed": 10,
+    "installedIndependentTotal": 10,
+    "threeFreshFullManifestsEqual": true,
+    "manifestEntryCount": 217400,
+    "manifestSha256": "aa15603baa5846f11217dd2c6c40905d496cd6ffd73953ae313128d8f2cb9ad9",
+    "backupSha256": "a8535e3476f2b6632c1b286f0828e93c570150d2871432acc1b9d9b866cb69c8",
+    "exactDuplicateAppRemoved": true,
+    "formalAppAndZipRetained": true,
+    "cleanupActualFinalChunk": "df252d",
+    "cleanupReceiptSha256": "874c15ddaee36fd5b5e402a2e56e6fe2e3148729c88af8b2e342e47b228b98dd",
+    "archiveSha256": "2f91bf00fcb179953c73fb85756691d5e726ca11fcaa2ad7a6d69fc8e9b61a9e"
+  },
+  "native": {
+    "observationDate": "2026-10-15",
+    "publicUrls": ["https://example.org/", "https://example.com/"],
+    "verified": [
+      "cancel did not save",
+      "fresh independent full URL and unchecked checkbox for each page",
+      "two URLs persisted in remember order",
+      "ordinary close retained metadata list",
+      "normal save-and-exit then exact process zero; cold startup shows blank tab and two dormant entries",
+      "explicit click opens actual public webpage",
+      "forget and clear retain already open webpage",
+      "test locations cleared and webpage closed; final normal save-and-exit and exact process zero"
+    ],
+    "preservedNonSuccess": [
+      "one stale-state CUA action was rejected; fresh observation then successful action",
+      "selected old conversation reconnect failed; no new prompt or permission approval",
+      "processCallId in original capture parameters mistakenly referenced binder; independent review supplied original process execution and receipt without changing original capture"
+    ],
+    "unverified": [
+      "native prior granted read permission revocation: no grant established in this disconnected conversation",
+      "new native owner isolation",
+      "real Agent use or zero IPC",
+      "full P30, 29-Agent eight standards, Windows"
+    ]
+  },
+  "postNativeData": {
+    "actualExitCode": 2,
+    "actualFinalChunk": "04a336",
+    "strictDifferenceCount": 2,
+    "acceptedDifferences": [],
+    "all137SessionRowsExact": true,
+    "all173DismissedRowsExact": true,
+    "all53OldSettingsRowsExact": true,
+    "all9CurrentDraftWholeObjectsExact": true,
+    "agentRowsRetained": 40,
+    "differences": [
+      "one Agent updated_at only; exact writer unproven",
+      "one new authorized remembered-pages setting for existing owner, version1/revision4/items empty after explicit test clear"
+    ],
+    "captureReceiptSha256": "d76cce8b620a96506f8bcf685c9d1ef7397a9b8ca0a5d9cd479e44e96ea54dc8",
+    "strictComparisonSha256": "71402774483752c73051221360b95277a326ee31a9169f3a8ced9251a4d64c92",
+    "oldUserHandledDraftNotRestored": true,
+    "priorNineDifferencesStillNotWaived": true
+  },
+  "rawEvidence": {
+    "installation-independent.json.raw": {
+      "source": "output/2026-10-15-browser-pages-install/installed-independent-review-private.json",
+      "sha256": "d920e1db9623a38ce822960e982ab8e6dc020a6b33004964e3f4f2226f2eb49b"
+    },
+    "native-independent-summary.json.raw": {
+      "source": "output/2026-10-15-browser-pages-native-data/independent-safe-summary.json",
+      "sha256": "0ca1890bf8a2ca52aa9d35a2a803d0127bbc84caf93ab4d89c2887366870a5c4"
+    },
+    "data-second-copy-summary.json.raw": {
+      "source": "output/2026-10-15-browser-pages-native-data/root-second-copy-review-private.json",
+      "sha256": "03c44fedd60c9542459be2861d98848802c3c028a30caf263a8ce5379adae925"
+    }
+  },
+  "privacy": "Public records include deidentified counts, own public URLs, build file identity/modes and evidence hashes. DBs, backups, full AX/screenshots, history and private raw tool excerpts stay local private."
+}

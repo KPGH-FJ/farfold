@@ -1,0 +1,149 @@
+{
+  "schema": 1,
+  "phase": "installed-10-independent-checks",
+  "checkedAtUtc": "2026-10-15T08:33:19.477576+00:00",
+  "sourceVerifiedBeforeP16Release": "5b8c9d0ffbed2706a70a1ddc541a52e9c7bebb52",
+  "passed": 10,
+  "total": 10,
+  "failures": [],
+  "checks": [
+    {
+      "name": "source-and-1640-production-inputs",
+      "passed": true,
+      "details": {
+        "source": "5b8c9d0ffbed2706a70a1ddc541a52e9c7bebb52",
+        "productionFiles": 1640,
+        "independentLiveAndGitObjectHashMismatches": 0,
+        "actualCommandChunk": "1fb9be",
+        "note": "source verification completed before root released P16 writes; no post-release source stability claim"
+      }
+    },
+    {
+      "name": "receipt-and-evidence-seals",
+      "passed": true,
+      "details": {
+        "verified": 46,
+        "mismatches": []
+      }
+    },
+    {
+      "name": "formal-candidate-exact-five-files-and-modes",
+      "passed": true,
+      "details": {
+        "fileCount": 5,
+        "files": {
+          "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+          "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8",
+          "Contents/MacOS/farfold": "12c30d853f22e3e3cb8dd9b82aa8022590d743f05025092512b4ba8d368727f6",
+          "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+          "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f"
+        },
+        "modes": {
+          "Contents/Info.plist": 420,
+          "Contents/_CodeSignature/CodeResources": 420,
+          "Contents/MacOS/farfold": 493,
+          "Contents/Resources/icon.icns": 420,
+          "Contents/Resources/release-manifest.json": 420
+        },
+        "symlinks": []
+      }
+    },
+    {
+      "name": "bundle-identity",
+      "passed": true,
+      "details": {
+        "CFBundleIdentifier": "ai.farfold.desktop",
+        "CFBundleShortVersionString": "0.1.7",
+        "CFBundleDevelopmentRegion": "zh_CN",
+        "CFBundleLocalizations": [
+          "zh-Hans"
+        ],
+        "CFBundleExecutable": "farfold"
+      }
+    },
+    {
+      "name": "arm64-mach-o",
+      "passed": true,
+      "details": {
+        "magic": "0xfeedfacf",
+        "cpu": "0x100000c",
+        "subtype": 0,
+        "lipo": "arm64"
+      }
+    },
+    {
+      "name": "strict-codesign",
+      "passed": true,
+      "details": {
+        "verifyExit": 0,
+        "detailsExit": 0,
+        "detailsSha256": "c7eb148f0cd6eb42d6ce732fec5016a663ad18b3ca71ca2566fec3b952f8a9da",
+        "scope": "adhoc internal signature; no distribution/notarization claim"
+      }
+    },
+    {
+      "name": "archive-exact-five-crc-mode",
+      "passed": true,
+      "details": {
+        "sha256": "2f91bf00fcb179953c73fb85756691d5e726ca11fcaa2ad7a6d69fc8e9b61a9e",
+        "bytes": 15225063,
+        "members": 5,
+        "mismatches": [],
+        "unzipExit": 0
+      }
+    },
+    {
+      "name": "closed-without-launch-observed",
+      "passed": true,
+      "details": {
+        "recordedZeroProcessObservations": 17,
+        "currentExactExecutableProcesses": [],
+        "noLaunchPerformedByReviewer": true,
+        "normalQuitEvidence": null
+      }
+    },
+    {
+      "name": "metadata-backup-and-first-capture-retained",
+      "passed": true,
+      "details": {
+        "backupSha256": "a8535e3476f2b6632c1b286f0828e93c570150d2871432acc1b9d9b866cb69c8",
+        "firstCaptureFiles": 3,
+        "byteMismatches": [],
+        "threeReceiptRawMetadataEqual": true,
+        "reviewerOpenedSql": false,
+        "scope": "byte retention verified; existing standalone integrity/normalization evidence retained, not rerun"
+      }
+    },
+    {
+      "name": "fresh-three-full-manifests-byte-identical",
+      "passed": true,
+      "details": {
+        "manifests": [
+          [
+            "before",
+            "aa15603baa5846f11217dd2c6c40905d496cd6ffd73953ae313128d8f2cb9ad9",
+            217400
+          ],
+          [
+            "preinstall",
+            "aa15603baa5846f11217dd2c6c40905d496cd6ffd73953ae313128d8f2cb9ad9",
+            217400
+          ],
+          [
+            "after",
+            "aa15603baa5846f11217dd2c6c40905d496cd6ffd73953ae313128d8f2cb9ad9",
+            217400
+          ]
+        ],
+        "countsMatchReceipts": true,
+        "strictByteEqual": true,
+        "noInterpretiveAcceptanceOfPriorNineDifferences": true
+      }
+    }
+  ],
+  "boundaries": [
+    "read-only independent standard-library/OS-tool algorithms; no installer/candidate helper import",
+    "no App/Agent launch, no SQL connection, no source/Git writes/build",
+    "native remembered-page cold restore remains untested; this report proves installation and data retention only"
+  ]
+}

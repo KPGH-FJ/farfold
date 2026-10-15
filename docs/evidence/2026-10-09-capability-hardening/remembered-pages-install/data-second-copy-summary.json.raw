@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "review": "root separate second-copy SQL review; no live/first SQL",
+  "tableCounts": {
+    "agents": {
+      "before": 40,
+      "after": 40
+    },
+    "dismissed_sessions": {
+      "before": 173,
+      "after": 173
+    },
+    "sessions": {
+      "before": 137,
+      "after": 137
+    },
+    "settings": {
+      "before": 53,
+      "after": 54
+    }
+  },
+  "allOldSettingsWholeStringsExact": 53,
+  "allSessionRowsExact": 137,
+  "agentChangeColumns": [
+    [
+      "updated_at"
+    ]
+  ],
+  "newRememberedSetting": {
+    "ownerMatchesExistingSession": true,
+    "version": 1,
+    "revision": 4,
+    "items": []
+  },
+  "strictComparisonExitCode": 2,
+  "strictDifferenceCount": 2,
+  "acceptedDifferences": [],
+  "baselineAndCapturedSha256": [
+    "a8535e3476f2b6632c1b286f0828e93c570150d2871432acc1b9d9b866cb69c8",
+    "bb937ce58c88a6e34493907cde54e3871796a7e086f090e5566c31fe552747fc"
+  ],
+  "filesStableAndNoSidecars": true,
+  "realAgentOrPermissionProof": false
+}
