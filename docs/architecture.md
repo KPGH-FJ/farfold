@@ -2,9 +2,11 @@
 
 ## 当前源码与证据边界（2026-10-15）
 
-共用前端与 Tauri/Rust 沿官方 ACP/SDK/CLI 连接外部 Agent，既有架构边界保持。`aabbbb063` 已实现运行期页面归属、显式选择、读取撤回和未知关闭保护；正式本机已观察到部分切页/保留/快照/退出行为，运行后严格数据比较仍未执行。安装时清单相同、受控结果、本机观察和真实 Agent 效果分别成立，不相互替代。
+共用前端与 Tauri/Rust 沿官方 ACP/SDK/CLI 连接外部 Agent，既有架构边界保持。已安装的 `aabbbb063` 具备运行期页面归属、显式选择、读取撤回和未知关闭保护；本片逐页公开网址记住清单已补源码与受控验证，尚未安装。上轮运行后的延迟严格比较退出 2，包含后续用户活动；原测试草稿的主动处理已获用户确认，原差异不改为全等。
 
-逐页公开网址“记住”方案已由用户批准，尚无持久清单实现；PPTX 仅样本和接口准备，生产网页截图尚缺。首次交付仍29家及八项标准，未增加2–3家试用版范围。最新状态与执行衔接见[当前状态](status.md#当前续接2026-10-15)，[本次核对](evidence/2026-10-15-record-alignment/verification.json)有对应原件定位。
+新入口为 `BrowserRememberedPages.tsx`、`browser_remembered.ts`，经既有 `BrowserTabs`/`BrowserWorkspaceScope` 打开新页面；后端 `browser_workspace/remembered_pages.rs` 核对当前实际页面，`meta_store/remembered_pages.rs` 仅保存网址清单及必要归属/CAS 字段。既有索引和创建时间必须一致；记住顺序稳定、空清单推进修订、删除对话与记录原子清理。重启读取只加载元数据，不创建页面或恢复旧许可；忘记记录不关闭活页。
+
+本片[实现与检查](evidence/2026-10-09-capability-hardening/remembered-pages/verification.json)区分相关测试、受控完整界面、完整工程与尚未开展的正式冷恢复。首次交付仍全部 29 家及八项标准；PPTX 仅样本准备、生产截图及 NEW-24 完整权限回执仍缺。最新执行衔接见[当前状态](status.md#当前续接2026-10-15)。
 
 ## 阶段实现与验证摘要（2026-10-14，对齐前记录）
 

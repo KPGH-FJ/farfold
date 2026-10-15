@@ -4,12 +4,19 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
   useSyncExternalStore,
 } from "react";
 import { PlusIcon, XIcon } from "@phosphor-icons/react";
 import type { BrowserWorkspaceClient } from "../runtime/browser_workspace";
 import { BrowserTabs } from "../runtime/browser_tabs";
 import { BROWSER_WORKSPACE_STRINGS as S } from "../runtime/browser_workspace_strings";
+import type {
+  RememberedBrowserOpen,
+  RememberedBrowserOwner,
+  RememberedBrowserPagesClient,
+} from "../runtime/browser_remembered";
+import { BrowserRememberedPages } from "./BrowserRememberedPages";
 import {
   BrowserWorkspacePage,
   type BrowserWorkspaceProps as PageProps,
@@ -17,11 +24,18 @@ import {
 
 export interface BrowserWorkspaceProps extends Omit<
   PageProps,
-  "client" | "initialPage" | "onCloseReady" | "presentationSuspended"
+  | "client"
+  | "initialPage"
+  | "onCloseReady"
+  | "presentationSuspended"
+  | "rememberedRequest"
+  | "onRememberedRequestConsumed"
 > {
   client: BrowserWorkspaceClient;
   /** Includes pending native opens, so leaving a task never drops an owner. */
   onOwnersChange?: (ownsPages: boolean) => void;
+  rememberedOwner?: RememberedBrowserOwner | null;
+  rememberedClient?: RememberedBrowserPagesClient;
 }
 
 /** Runtime-only tabs. Page controls and native scopes remain one common implementation. */
@@ -31,6 +45,8 @@ export function BrowserWorkspace({
   onOwnersChange,
   onStateChange,
   onVisibilityChange,
+  rememberedOwner = null,
+  rememberedClient,
   ...props
 }: BrowserWorkspaceProps) {
   const tabs = useMemo(
@@ -43,6 +59,24 @@ export function BrowserWorkspace({
     tabs.getSnapshot,
   );
   const prefix = useId();
+  const [rememberedRequest, setRememberedRequest] = useState<{
+    tabId: string;
+    input: RememberedBrowserOpen;
+  } | null>(null);
+  const current = useRef({
+    taskKey,
+    active: props.active,
+    visible: props.visible,
+    rememberedOwner,
+  });
+  current.current = {
+    taskKey,
+    active: props.active,
+    visible: props.visible,
+    rememberedOwner,
+  };
+  const openingRemembered = useRef(false);
+  const lifetime = useRef(0);
   const callbacks = useRef({
     onOwnersChange,
     onStateChange,
@@ -51,6 +85,7 @@ export function BrowserWorkspace({
   callbacks.current = { onOwnersChange, onStateChange, onVisibilityChange };
   tabs.setActive(props.active && (props.visible ?? true));
   useEffect(() => {
+    ++lifetime.current;
     let live = true;
     let stop: (() => void) | undefined;
     void tabs.start().then((unlisten) => {
@@ -58,6 +93,7 @@ export function BrowserWorkspace({
       else unlisten();
     });
     return () => {
+      ++lifetime.current;
       live = false;
       stop?.();
       tabs.retire();
@@ -163,6 +199,52 @@ export function BrowserWorkspace({
               <PlusIcon size={16} aria-hidden="true" />
             </button>
           </div>
+          {rememberedClient && (
+            <BrowserRememberedPages
+              owner={rememberedOwner}
+              client={rememberedClient}
+              page={page}
+              active={
+                props.active &&
+                (props.visible ?? true) &&
+                !state.changing &&
+                !state.failed
+              }
+              onOpen={async (input) => {
+                if (openingRemembered.current) return false;
+                const expected = current.current;
+                if (
+                  expected.taskKey !== input.owner.sessionId ||
+                  !expected.active ||
+                  expected.visible === false ||
+                  expected.rememberedOwner?.sessionId !==
+                    input.owner.sessionId ||
+                  expected.rememberedOwner.createdAt !== input.owner.createdAt
+                )
+                  return false;
+                openingRemembered.current = true;
+                const epoch = lifetime.current;
+                try {
+                  const tabId = await tabs.add();
+                  const now = current.current;
+                  if (
+                    epoch !== lifetime.current ||
+                    !tabId ||
+                    now.taskKey !== expected.taskKey ||
+                    !now.active ||
+                    now.visible === false ||
+                    now.rememberedOwner?.sessionId !== input.owner.sessionId ||
+                    now.rememberedOwner.createdAt !== input.owner.createdAt
+                  )
+                    return false;
+                  setRememberedRequest({ tabId, input });
+                  return true;
+                } finally {
+                  openingRemembered.current = false;
+                }
+              }}
+            />
+          )}
           {!state.failed &&
             !state.changing &&
             page &&
@@ -211,6 +293,20 @@ export function BrowserWorkspace({
               active={props.active && state.selected === tab.id}
               presentationSuspended={suspended}
               htmlRequest={state.selected === tab.id ? props.htmlRequest : null}
+              rememberedRequest={
+                rememberedRequest?.tabId === tab.id &&
+                rememberedRequest.input.owner.sessionId === taskKey &&
+                rememberedOwner?.sessionId === taskKey &&
+                rememberedRequest.input.owner.createdAt ===
+                  rememberedOwner.createdAt
+                  ? rememberedRequest.input
+                  : null
+              }
+              onRememberedRequestConsumed={() => {
+                setRememberedRequest((value) =>
+                  value?.tabId === tab.id ? null : value,
+                );
+              }}
               toolbar={state.selected === tab.id ? props.toolbar : null}
               onStateChange={(next) => tabs.observe(tab.id, next)}
               onCloseReady={(close) => tabs.registerCloser(tab.id, close)}

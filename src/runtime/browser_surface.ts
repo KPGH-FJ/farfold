@@ -9,9 +9,12 @@ import {
   createBrowserWorkspaceClient,
   type BrowserWorkspaceState,
 } from "./browser_workspace";
+import { createRememberedBrowserPagesClient } from "./browser_remembered";
 
 /** One in-memory coordinator for the trusted main application's native surface. */
 export const browserSurfaceGuard = new BrowserSurfaceGuard();
+export const rememberedBrowserPagesClient =
+  createRememberedBrowserPagesClient(invoke);
 export const browserWorkspaceClient = createBrowserWorkspaceClient(
   invoke,
   (callback) =>

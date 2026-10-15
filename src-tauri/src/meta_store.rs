@@ -14,6 +14,7 @@ use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 mod archive;
 pub(crate) mod prompt_templates;
+pub(crate) mod remembered_pages;
 pub(crate) mod schema;
 mod startup_restore;
 mod storage_recovery;
@@ -566,10 +567,18 @@ impl MetaStore {
     }
 
     pub fn remove_session(&self, session_id: &str) -> Result<bool, String> {
-        let connection = self.lock()?;
-        let deleted = connection
+        let mut connection = self.lock()?;
+        let transaction = connection.transaction().map_err(sqlite_receipt)?;
+        let deleted = transaction
             .execute("DELETE FROM sessions WHERE id = ?1", params![session_id])
-            .map_err(|error| format!("cannot remove session {session_id}: {error}"))?;
+            .map_err(sqlite_receipt)?;
+        transaction
+            .execute(
+                "DELETE FROM settings WHERE key=?1",
+                [remembered_pages::key(session_id)],
+            )
+            .map_err(sqlite_receipt)?;
+        transaction.commit().map_err(sqlite_receipt)?;
         Ok(deleted > 0)
     }
 

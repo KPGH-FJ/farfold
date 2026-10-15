@@ -1,4 +1,5 @@
 import { ATTACHMENT_SEARCH_STRINGS } from "./attachment_search_strings";
+import { REMEMBERED_BROWSER_STRINGS } from "./browser_remembered_strings";
 import { HISTORY_SEARCH_STRINGS } from "./history_search_strings";
 import { EXTENSION_INVENTORY_STRINGS } from "./extension_inventory_strings";
 import { WORKTREE_PREPARATION_STRINGS } from "./worktree_preparation_strings";
@@ -92,6 +93,7 @@ describe("strings", () => {
   const leaves = collectStrings(
     {
       STRINGS,
+      REMEMBERED_BROWSER_STRINGS,
       HISTORY_SEARCH_STRINGS,
       ATTACHMENT_SEARCH_STRINGS,
       ASYNC_TASKS,

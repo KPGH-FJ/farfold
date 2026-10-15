@@ -419,3 +419,77 @@
 .browser-tabs-error button {
   margin-left: 8px;
 }
+
+.browser-remembered-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+.browser-remembered-actions > button {
+  padding: 4px 7px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+.browser-remembered-actions > button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.browser-remembered-unavailable {
+  flex: none;
+  padding: 6px 10px;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.browser-remembered-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.browser-remembered-url {
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--row-hover);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  user-select: text;
+  unicode-bidi: plaintext;
+}
+.browser-remembered-confirmation {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.browser-remembered-confirmation input {
+  flex: none;
+  margin-top: 5px;
+}
+.browser-remembered-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.browser-remembered-list {
+  margin: 0;
+  padding-left: 24px;
+  max-height: min(50vh, 440px);
+  overflow: auto;
+}
+.browser-remembered-list > li {
+  padding: 4px 0 10px;
+}
+.browser-remembered-list .browser-remembered-footer {
+  margin-top: 6px;
+}

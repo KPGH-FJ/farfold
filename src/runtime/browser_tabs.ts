@@ -205,10 +205,16 @@ export class BrowserTabs {
     return this.change(id);
   }
   async add() {
-    if (this.snapshot.changing || this.retired) return;
+    if (this.snapshot.changing || this.retired || !this.active) return null;
     const tab = this.blank();
     this.publish({ tabs: [...this.snapshot.tabs, tab] });
     await this.change(tab.id);
+    return !this.retired &&
+      this.active &&
+      !this.snapshot.failed &&
+      this.snapshot.selected === tab.id
+      ? tab.id
+      : null;
   }
   isSelected(id: string) {
     return this.server.selection.label === (this.tab(id)?.page?.label ?? null);
@@ -332,6 +338,9 @@ export class BrowserTabs {
         : undefined,
       openDevelopment: base.openDevelopment
         ? (input) => open(() => base.openDevelopment!(input))
+        : undefined,
+      openRemembered: base.openRemembered
+        ? (input) => open(() => base.openRemembered!(input))
         : undefined,
       setVisible: async (input) => {
         if (!input.visible) return base.setVisible(input);

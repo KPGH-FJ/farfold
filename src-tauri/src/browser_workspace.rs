@@ -24,6 +24,9 @@ mod page_read;
 mod page_store;
 #[path = "browser_workspace/policy.rs"]
 mod policy;
+pub(crate) use policy::validate_public_url;
+#[path = "browser_workspace/remembered_pages.rs"]
+pub(crate) mod remembered_pages;
 #[path = "browser_workspace/tab_commands.rs"]
 pub(crate) mod tab_commands;
 #[cfg(test)]
@@ -215,12 +218,22 @@ pub async fn browser_workspace_open(
     let url = policy::validate_public_url(&url)?;
     policy::validate_task_key(&task_key)?;
     let _operation = state.1.lock().await;
-    let (id, _, _) = state.reserve(&task_key, url.clone())?;
-    let shared = state.inner().clone();
-    let creation = native::create(&app, shared.clone(), id, bounds, url.to_string()).await;
+    open_public_owned(&app, &state, &task_key, url, bounds).await
+}
+
+async fn open_public_owned(
+    app: &AppHandle,
+    state: &BrowserWorkspace,
+    task_key: &str,
+    url: Url,
+    bounds: Bounds,
+) -> Result<BrowserInfo, String> {
+    let (id, _, _) = state.reserve(task_key, url.clone())?;
+    let shared = state.clone();
+    let creation = native::create(app, shared.clone(), id, bounds, url.to_string()).await;
     if creation.is_err() {
         if let Some(info) = shared.event(id, 1, 2, "") {
-            publish(&app, info);
+            publish(app, info);
         }
         // Reservation already owns a possibly-created native surface. Return
         // its failed state and exact identity so the caller can close/retry it;
@@ -229,7 +242,7 @@ pub async fn browser_workspace_open(
     }
     shared.creation_confirmed(id)?;
     let info = shared.info(id)?;
-    publish(&app, info.clone());
+    publish(app, info.clone());
     Ok(info)
 }
 

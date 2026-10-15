@@ -1,0 +1,242 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-15T07:56:42.895804+00:00",
+  "scope": "P30 explicitly remembered nonsecret public URL list, existing established indexed conversations only. Not complete P30, 29-Agent or Windows acceptance.",
+  "baseCommit": "8ebfc2332cf65c46a2160eee7c60da11c8068574",
+  "implementation": {
+    "sourceFiles": {
+      "src-tauri/src/browser_workspace.rs": "4c1fdf3576abd921c474428de2396386ef31ec72f9aa60e1114de78565cb7c2c",
+      "src-tauri/src/browser_workspace/remembered_pages.rs": "8a3c442759949fa2332bba5c8b473033ba49773de0e7b60f483ebb066abd17fe",
+      "src-tauri/src/browser_workspace/remembered_pages_tests.rs": "3f5217f200dc766f223de3d6e812cf6ef3bcdcf8b517349397b5936b6dd8b06d",
+      "src-tauri/src/meta_store.rs": "fa2d99bcb13ac4d6bd45c23e5ce130dd93b45e6f73b7fac3402c987976244325",
+      "src-tauri/src/meta_store/remembered_pages.rs": "b3d092b417bd66ce52bb2106484cce7e3a30559c963e6a8f499d2b009fe4dc9d",
+      "src-tauri/src/meta_store/remembered_pages_tests.rs": "f3426a4d1bd70712af7e62304064889901fdbe2aad905eadae085191c5bd712f",
+      "src-tauri/src/acp_client/session_commands.rs": "e6cbc506ffe2c336a1e98144633380e6780b97021045780d4c0b8d4f2cd913ec",
+      "src-tauri/src/lib.rs": "f3cb56a9c72e5c8877f92cc75522409068dbb023f9300d209eb6e58ff3c7df12",
+      "src/browser-workspace.css": "347c432127327831dba76541b10cf54500a615ae0feb2a34324184bb46d7132b",
+      "src/components/ArtifactPane.tsx": "0c88159353da397ef43a8551a566dcd33d5890ac58cec3000c4626788cdb7fe0",
+      "src/components/BrowserRememberedPages.tsx": "1df2e504602a5ebf0f26efa9697165c3394fe50809aa15f74e3b7e954eaba5a3",
+      "src/components/BrowserRememberedPages.test.tsx": "8cdd276e32e54d1c983802f1a6dc4fb56002f8c07bcb1dfa2136e2f3170facc0",
+      "src/components/BrowserWorkspace.tsx": "fcd50656002c054bb650ca10ca019dfcbc26cfc11fc12bd57e675edb00bd8656",
+      "src/components/BrowserWorkspacePage.tsx": "e576dd125b240a66d94825c8bb292fe45901ddc3f080e875e4bd7835b435c17a",
+      "src/components/ThreadPage.tsx": "5550a004e80c92c4e5ce969a55234d3d306f6ba2c345e4f3f81bd26f912bd067",
+      "src/components/ThreadView.tsx": "5aa6fb40163183ee467f035ad6e370fafb13a0db7a1443877b5a2a64cfd8401e",
+      "src/runtime/browser_surface.ts": "546a5742622da71c0eb06e361105341e052e67d79e65e68f892f3d8c5677e359",
+      "src/runtime/browser_tabs.test.ts": "1cc0f8b069bb7551337b3b2bb387c1df6579e43a8cfdda4ed9a412e4c21caeac",
+      "src/runtime/browser_tabs.ts": "9fbd0958c2003497c9608b21372d07216ec41659ebc37f60badbc6410d95f01a",
+      "src/runtime/browser_workspace.ts": "638b0e3711e398ee9bfac478f2fd1154c3e83ac43bd2065e52a1c1c27f8869f6",
+      "src/runtime/browser_remembered.ts": "6946eee71584efeaac683b8fff7ea0447fcaa65107bfc96b392023f606afa175",
+      "src/runtime/browser_remembered.test.ts": "3372a5d97f7355b31f9ed2e932fc99f854b3fe51342511f05593c54518194834",
+      "src/runtime/browser_remembered_strings.ts": "71cba630d3cef6dbc9bf84c9ac05f5a2b251eff6053e9b7616fa06a5dfdba5c5",
+      "src/runtime/strings.test.ts": "f6ad3e6dadcc4e97195034b4a0aac1f3cc9d8c53783e255134b88fb6a49380a1",
+      "src-tauri/src/agent_discovery.rs": "a4c46af558870aafe6b2066c8e982e508ddd997047f1f3197fab0b5938252a8e",
+      "src-tauri/src/program_launch_tests.rs": "8e43424a71d7f8f3a9d02b3810a8f0a5a9b7b1b9838107655935bebfbab6f64f"
+    },
+    "featureFiles": 24,
+    "testDiagnosticFiles": 2,
+    "stored": "browserPages.v1:<existing conversation index id>; version,createdAt,CAS revision,ordered{id,url} only",
+    "confirmation": "Actual selected ready public non-preview page, exact label/navigation revision/full URL and independent explicit checkbox. Local pages and secrets rejected by existing admission; detector is not a universal secret classifier.",
+    "restart": "Metadata-only dormant list; explicit click creates a fresh owned page. No old grant/title/body/form/JS/login/session state retained.",
+    "lifecycle": "Normal close preserves descriptor; forget/clear changes descriptor list only. Delete conversation+descriptor atomic. Empty-clear advances CAS. Unknown write does not retry; explicit recheck required. Unknown close retains exact page identity.",
+    "limits": {
+      "itemsPerConversation": 100,
+      "savedRecordUtf8Bytes": 1048576,
+      "urlLimit": "existing public-page admission"
+    }
+  },
+  "verification": {
+    "backendRelated": {
+      "passed": 155,
+      "newTests": 12,
+      "fmt": 0,
+      "clippy": 0
+    },
+    "frontendRelated": {
+      "targetedFiles": 9,
+      "targetedTests": 156,
+      "associatedFiles": 21,
+      "associatedTests": 178,
+      "overlap": "Counts overlap; do not add.",
+      "typecheck": 0,
+      "scopedFormat": 0
+    },
+    "independentReviews": "No actionable defect found in reviewed frontend/Rust scope; static review is not native validation.",
+    "fullAppControlled": {
+      "chromium": 24,
+      "webkit": 24,
+      "sourceStable": true,
+      "errors": 0,
+      "externalRequests": 0,
+      "boundary": "Production App/StrictMode with controlled metadata ACKs, authored iframe pages and localStorage reload. Not real SQL/native view/installed cold restart/Agent proof."
+    },
+    "engineering": {
+      "result": "passed_with_exact_unchanged_frontend_reuse",
+      "frontendFiles": 505,
+      "frontendTests": 6151,
+      "rustPassed": 1704,
+      "rustIgnored": 6,
+      "sourceInputs": 18863,
+      "allInputsStable": true,
+      "reused": "run1 frontend/Prettier four checks; only two Rust test-diagnostic files changed",
+      "fresh": "run2 Rust fmt/clippy/full tests actual0",
+      "localOriginalRun1Sha256": "c0860407165a013692bb4d9241198629c9943d04db6ae2726a6632364e667957",
+      "localOriginalRun2Sha256": "e58b7394174614534796813d9a3cefea1bbb081b7913dbe5adacc58550d3fbc8",
+      "fullGlobalInputMaps": "Retained in local original engineering receipts; public record contains 26 changed-source fingerprints and exact raw check logs."
+    }
+  },
+  "retainedFailures": {
+    "backend": "Initial two borrow compiler errors, then one test assertion depended on JSON map key order; corrected and original logs retained locally.",
+    "frontend": "Initial invoke Record type error; corrected spread and original log retained locally.",
+    "engineeringRun1": {
+      "rustPassed": 1703,
+      "failed": 1,
+      "ignored": 6,
+      "failure": "program_launch_tests::cancelled_selection_does_not_start_program_version_check; Node probe deadline_loop bytes0/eof=false",
+      "cause": "UNLOCATED. One unchanged isolated test passed; test-only diagnostic additions and subsequent full pass do not prove a root-cause repair.",
+      "production": "Original 5s budget, cancellation predicate, real shell and assertions preserved."
+    }
+  },
+  "installedApp": {
+    "source": "aabbbb063555c929f7f63a23d5d58a6b359e865e",
+    "featureInstalled": false,
+    "newNativeTests": "Not started"
+  },
+  "nativeDataCloseout": "See raw/data-closeout-summary.json.raw; delayed strict comparison exit2/9diff retained. User confirmed intentional handling of the old test draft; no restoration or inference of a product loss defect.",
+  "remaining": [
+    "Candidate/install and actual public-page confirmation/cold restart/dormant list/fresh unshared open verification",
+    "P30 full conditions, Agent page journeys, public-site breadth and Windows",
+    "P16 PPTX production preview; P27 production screenshots; NEW24 complete permissions owner interface and other original plan requirements"
+  ],
+  "rawReceipts": [
+    {
+      "path": "raw/backend-source-freeze.json.raw",
+      "sha256": "e1a211405b545e84d3a2f7cd8d7db5596b877c5f960f41d01a4a35bd0b8b5339",
+      "bytes": 3858
+    },
+    {
+      "path": "raw/frontend-source-freeze.json.raw",
+      "sha256": "eeaf83b71029c0e350a601569ebbe4eafef8083aeec41cb7806acf466859af21",
+      "bytes": 6037
+    },
+    {
+      "path": "raw/diagnostic-source-freeze.json.raw",
+      "sha256": "35ee0d2824c51718fab9a21559f7382d7ab3a5a28d5678309568012b62004206",
+      "bytes": 2480
+    },
+    {
+      "path": "raw/rust-independent.json.raw",
+      "sha256": "7ebd4ae3145c1f829152f2377784d4aa0875fd15aabc2f753555d614dcba0e75",
+      "bytes": 10194
+    },
+    {
+      "path": "raw/frontend-independent.json.raw",
+      "sha256": "13ab82b6708591dedb3284d12ec601689315510e15e8d0cb0d075187ea979f28",
+      "bytes": 4585
+    },
+    {
+      "path": "raw/chromium-run1.json.raw",
+      "sha256": "20b2f25f313eb626d81cfd8d05a2c9174ad74a8ec41640835df52f4de01d5a30",
+      "bytes": 357955
+    },
+    {
+      "path": "raw/webkit-run1.json.raw",
+      "sha256": "3bb0c1e66da0c9cb0d3ab551105ec7530853a7da51d0a1a4bfe47d39ce7c54a2",
+      "bytes": 357951
+    },
+    {
+      "path": "raw/data-closeout-summary.json.raw",
+      "sha256": "6082ed6e6af296fc03db7b7e7657f2c7c8695241064a90049c8a18f5b8d49266",
+      "bytes": 3105
+    },
+    {
+      "path": "raw/controlled-fixture.tsx.raw",
+      "sha256": "45463dea3dc678ee1774c6c4908203bb4382e09e3f75911f0cf4e58b6a832435",
+      "bytes": 7492
+    },
+    {
+      "path": "raw/controlled-run.mjs.raw",
+      "sha256": "86fac4e5c6556081d0a12131b65762d21802691d2de541c88cc9131bd1680085",
+      "bytes": 11163
+    },
+    {
+      "path": "raw/controlled-index.html.raw",
+      "sha256": "505d54a9082329f66fba7a5ea87eb49fa1ff07d97ee7ce5e8eac438883ea9b5a",
+      "bytes": 1890
+    },
+    {
+      "path": "raw/controlled-serve.mjs.raw",
+      "sha256": "d8aeb5601eb8e9592175cc6ce6e2268c931e3eaeb87763d30ee543e1deae069d",
+      "bytes": 682
+    },
+    {
+      "path": "raw/controlled-transport.ts.raw",
+      "sha256": "55f71153703d56dce60cab881a9cafdde9db7467c27b213e6721e0328d569eea",
+      "bytes": 10865
+    },
+    {
+      "path": "raw/controlled-a.html.raw",
+      "sha256": "c8b5bdfefde1f27f703663252270afc598325872fe08ce454d8a24c28e810aaa",
+      "bytes": 747
+    },
+    {
+      "path": "raw/controlled-b.html.raw",
+      "sha256": "de28854dd0a43aa892391686091211dbd25dc33eb4c4ef6081b3840f3ba9ccfb",
+      "bytes": 747
+    },
+    {
+      "path": "raw/controlled-c.html.raw",
+      "sha256": "b1489dda9f8d58df4db74507339d59bccd7199fefb00e786e9c466781b405199",
+      "bytes": 747
+    },
+    {
+      "path": "raw/engineering-run1-01.log.raw",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "bytes": 144
+    },
+    {
+      "path": "raw/engineering-run1-02.log.raw",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "bytes": 78
+    },
+    {
+      "path": "raw/engineering-run1-03.log.raw",
+      "sha256": "f161639de1b739959c6a5c81d5d83a763387fbba5e19670a7c831b59340f464d",
+      "bytes": 289
+    },
+    {
+      "path": "raw/engineering-run1-04.log.raw",
+      "sha256": "44ebaa3dfd5da4881143ac634fb2d7c4b91f3c5dff8134e9004cad6448e276cf",
+      "bytes": 4920
+    },
+    {
+      "path": "raw/engineering-run1-05.log.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/engineering-run1-06.log.raw",
+      "sha256": "7ea9ff7442106040f95bc079f85de985b086e1fed897d88dec87dd8425c35ee1",
+      "bytes": 72
+    },
+    {
+      "path": "raw/engineering-run1-07.log.raw",
+      "sha256": "3bf7ff864440caffadce135bf5aab025876dbcc4080af0dc9154715cf5446c16",
+      "bytes": 191105
+    },
+    {
+      "path": "raw/engineering-run2-05.log.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "raw/engineering-run2-06.log.raw",
+      "sha256": "1c258457a63f9c079e4e31537289774d466f3d4866cae3dd01cb9019591372b6",
+      "bytes": 138
+    },
+    {
+      "path": "raw/engineering-run2-07.log.raw",
+      "sha256": "897f560c7628b21b90fa070eb9e3ed4e02e525b076c1e86f1409a0a9f489a51a",
+      "bytes": 190703
+    }
+  ]
+}

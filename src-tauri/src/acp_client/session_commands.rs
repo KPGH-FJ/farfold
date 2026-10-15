@@ -677,7 +677,7 @@ pub async fn session_delete(
     let store = app.state::<MetaStore>();
     store
         .run(move |store| {
-            let _ = store.remove_session(&row_id);
+            store.remove_session(&row_id)?;
             store.dismiss_session(&row_id)
         })
         .await?;

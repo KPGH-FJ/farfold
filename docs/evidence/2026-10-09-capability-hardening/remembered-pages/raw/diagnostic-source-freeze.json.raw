@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "atUtc": "2026-10-15T07:51:02.583052+00:00",
+  "status": "TEST_DIAGNOSTICS_ONLY_NOT_A_FIX",
+  "files": [
+    {
+      "path": "src-tauri/src/agent_discovery.rs",
+      "bytes": 15868,
+      "lines": 466,
+      "sha256": "a4c46af558870aafe6b2066c8e982e508ddd997047f1f3197fab0b5938252a8e"
+    },
+    {
+      "path": "src-tauri/src/program_launch_tests.rs",
+      "bytes": 8058,
+      "lines": 240,
+      "sha256": "8e43424a71d7f8f3a9d02b3810a8f0a5a9b7b1b9838107655935bebfbab6f64f"
+    }
+  ],
+  "diff": {
+    "path": "output/2026-10-15-program-selection-diagnostic/diagnostics.diff",
+    "sha256": "141b3e4bfcebed6fb1694c8781dcedf312a4ff74acc8379bd62c62e1b2e1a8e6"
+  },
+  "investigation": {
+    "path": "output/2026-10-15-program-selection-diagnostic/investigation.json",
+    "sha256": "798c387363e4a6d6d879379ef76e1c62dff5521c53bec92a29afc6310f2738fb"
+  },
+  "productionBehaviorUnchanged": [
+    "agent_discovery adds a cfg(test)-only timeout diagnostic helper and cfg(test)-only Instant/last-exit cells; no added production statements, no budget/cancellation/read/cleanup/launch modification.",
+    "Existing child.try_wait remains called at exactly its original site/count. A cfg(test)-only successful-exit/no-EOF match arm records the already obtained status; diagnostic does not call try_wait or reap.",
+    "Program launch fixture retains actual shell script bytes, marker-based cancellation predicate and every original cancellation/marker assertion. Cell count/elapsed collection and post-result marker/error log are test-only observations.",
+    "No environment changes; no URLs, credential values, user paths or command contents logged. PID, elapsed and existing cached exit status are bounded fixture diagnostics only."
+  ],
+  "originalFailure": "Unknown cause retained; isolated original test passed once, not a repair.",
+  "verification": {
+    "formatInitial": {
+      "actualExit": 1,
+      "chunk": "81208c",
+      "reason": "Only assert formatting; retained"
+    },
+    "formatFinal": {
+      "actualExit": 0,
+      "chunk": "a9e2f7",
+      "receipt": "output/2026-10-15-program-selection-diagnostic/fmt-check-02/completed.json"
+    },
+    "originalIsolatedRunBeforeEdits": {
+      "actualExit": 0,
+      "chunk": "64f4bc",
+      "tests": 1
+    },
+    "noFurtherTestsOrFullSuite": true,
+    "compileOfNewCfgTestDiagnostics": "NOT_RUN; root will run required Rust checks on new diagnostic inputs"
+  },
+  "unrelatedFourProbeSourcesUnchanged": true
+}

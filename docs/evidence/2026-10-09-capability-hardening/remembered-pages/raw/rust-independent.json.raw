@@ -1,0 +1,185 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-15T07:38:42.682045+00:00",
+  "scope": "Independent static Rust review of remembered-page IPC/metadata implementation and direct ownership/close/caller dependencies. No source edits, cargo, tests, App/liveDB/Agent operation.",
+  "sourceFreeze": {
+    "path": "output/2026-10-15-browser-pages-backend/final-checks/source-before.json",
+    "sha256": "cbb6fcf4d5eabfe0a13dae218fa869befb0597261206403eb9756b9d8fc8f5f6",
+    "allEightMatch": true,
+    "files": [
+      {
+        "path": "src-tauri/src/browser_workspace.rs",
+        "bytes": 13924,
+        "sha256": "4c1fdf3576abd921c474428de2396386ef31ec72f9aa60e1114de78565cb7c2c",
+        "matchesFreeze": true
+      },
+      {
+        "path": "src-tauri/src/browser_workspace/remembered_pages.rs",
+        "bytes": 4960,
+        "sha256": "8a3c442759949fa2332bba5c8b473033ba49773de0e7b60f483ebb066abd17fe",
+        "matchesFreeze": true
+      },
+      {
+        "path": "src-tauri/src/browser_workspace/remembered_pages_tests.rs",
+        "bytes": 8798,
+        "sha256": "3f5217f200dc766f223de3d6e812cf6ef3bcdcf8b517349397b5936b6dd8b06d",
+        "matchesFreeze": true
+      },
+      {
+        "path": "src-tauri/src/meta_store.rs",
+        "bytes": 53142,
+        "sha256": "fa2d99bcb13ac4d6bd45c23e5ce130dd93b45e6f73b7fac3402c987976244325",
+        "matchesFreeze": true
+      },
+      {
+        "path": "src-tauri/src/meta_store/remembered_pages.rs",
+        "bytes": 7960,
+        "sha256": "b3d092b417bd66ce52bb2106484cce7e3a30559c963e6a8f499d2b009fe4dc9d",
+        "matchesFreeze": true
+      },
+      {
+        "path": "src-tauri/src/meta_store/remembered_pages_tests.rs",
+        "bytes": 11072,
+        "sha256": "f3426a4d1bd70712af7e62304064889901fdbe2aad905eadae085191c5bd712f",
+        "matchesFreeze": true
+      },
+      {
+        "path": "src-tauri/src/acp_client/session_commands.rs",
+        "bytes": 23995,
+        "sha256": "e6cbc506ffe2c336a1e98144633380e6780b97021045780d4c0b8d4f2cd913ec",
+        "matchesFreeze": true
+      },
+      {
+        "path": "src-tauri/src/lib.rs",
+        "bytes": 22254,
+        "sha256": "f3cb56a9c72e5c8877f92cc75522409068dbb023f9300d209eb6e58ff3c7df12",
+        "matchesFreeze": true
+      }
+    ]
+  },
+  "readOnlyDependencies": [
+    {
+      "path": "src-tauri/src/browser_workspace/policy.rs",
+      "bytes": 11712,
+      "sha256": "b6f5e572d1329fccdfeac8228eaf7bfeb86033ec77ea4171ae45af7af70ff088"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/page_store.rs",
+      "bytes": 18493,
+      "sha256": "890d50bcd60bcdb65cc1e4c012ad9e915b8a7f2aaa07a780771aa09b766bc24c"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/tab_commands.rs",
+      "bytes": 13395,
+      "sha256": "3badf904f93d482dd3be8b9734c16ae76ae33a8c1e4b452c80a5c735037a2dc2"
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/native.rs",
+      "bytes": 27396,
+      "sha256": "7a4d31535f68d6f31771fb288d5ed78c07e4c172f7ebdea281638b5c7d4071f7"
+    },
+    {
+      "path": "src/runtime/browser_remembered.ts",
+      "bytes": 7497,
+      "sha256": "6946eee71584efeaac683b8fff7ea0447fcaa65107bfc96b392023f606afa175"
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tsx",
+      "bytes": 11152,
+      "sha256": "fcd50656002c054bb650ca10ca019dfcbc26cfc11fc12bd57e675edb00bd8656"
+    }
+  ],
+  "issues": [],
+  "result": "NO_CONFIRMED_ACTIONABLE_DEFECT_FOUND_IN_REVIEWED_SOURCE",
+  "reasoning": [
+    {
+      "area": "Real owner and saved shape",
+      "evidence": [
+        "meta_store/remembered_pages.rs validate_owner checks sessions.id+created_at under the metadata mutex/transaction; unsafe/new draft caller receives no synthetic owner.",
+        "SavedPages has deny_unknown_fields and only version/createdAt/revision/items; item fields only id/url. No grants/native labels/snapshot/title stored.",
+        "Frontend ownerForRememberedPages consumes a real matching established index row; backend does not rely on a draft owner claim."
+      ],
+      "limits": "Static review of this source slice; no installed/native verification."
+    },
+    {
+      "area": "CAS and atomically persisted deletion",
+      "evidence": [
+        "remember_page/forget_page use SQLite immediate transactions for read-owner/read-list/check-revision/write/commit. Distinct connections cannot both commit the same baseline revision.",
+        "Even clearing an already-empty list persists incremented revision, preventing stale CAS0 resurrection. Duplicate remember leaves same list without writes.",
+        "remove_session now deletes session+exact browserPages key in the same transaction; a descriptor cleanup error rolls back session deletion. session_delete propagates removal failure."
+      ],
+      "limits": "The pre-existing remove_session then dismiss_session facade still uses two separate transactions; this review does not promote it to an atomic entire remote-delete/tombstone transaction."
+    },
+    {
+      "area": "Page confirmation and caller boundary",
+      "evidence": [
+        "All four IPC commands call require_main from actual Webview context.",
+        "Remember holds browser operation serialization and Browser Store mutex through the short metadata commit; selected label, page revision, task/session key, complete current URL, ready/error-free state and public-vs-local/preview classification all checked.",
+        "Selected-page predicate excludes shutdown, close, withdrawing, incomplete creation and selection switching.",
+        "A-B-A invalidates old page revision; URL/path/query/fragment must match complete current canonical URL.",
+        "Public URL admission rejects known login/auth/secret markers and local targets; exact URL normalization enforced before persistence."
+      ],
+      "limits": "Known-marker URL admission cannot prove arbitrary opaque path/query has no secret. Explicit per-page user non-secret confirmation remains necessary; source/tests do not establish its installed UX."
+    },
+    {
+      "area": "Late reopen cleanup and owner retention",
+      "evidence": [
+        "Reopen uses current list CAS/item lookup, performs fresh public view reserve/create and re-verifies actual owner afterward.",
+        "Deletion/clear during native creation triggers close_owned of the exact new task/label. A confirmed close returns the owner error; unknown close returns actual retained BrowserInfo rather than abandoning identity.",
+        "close_owned marks closing, revokes lease, awaits sharing stop then exact native close ACK; failure preserves error owner and retry identity.",
+        "reserve creates a fresh page/read lease; descriptor does not select/ready/authorize the new page or restore an old read grant."
+      ],
+      "limits": "Forget descriptor intentionally does not close/revoke an already requested/live page. Native missing-ACK behavior examined in source and controlled tests, not exercised by this reviewer."
+    },
+    {
+      "area": "Clear, readonly, corrupt data and resource limits",
+      "evidence": [
+        "Existing clear_all deletes records and seals query_only while holding the same metadata mutex; pending remembered writers cannot rewrite deleted old owner.",
+        "Corrupt/future/extra-field/owner-mismatched/oversize/duplicate/unsafe-url saved payloads return errors before write/forget and retain original value.",
+        "100 items, 1MiB saved payload and JavaScript-safe revisions bound parsed data and cross-language integers."
+      ],
+      "limits": "No disk full/power-loss or externally corrupted live database execution by this reviewer."
+    },
+    {
+      "area": "Lock order and awaits",
+      "evidence": [
+        "remember: async Browser operation mutex -> blocking closure -> Browser Store mutex -> MetaStore mutex/SQLite; MetaStore.run itself does not pre-acquire metadata lock.",
+        "New metadata methods only call pure URL policy; no MetaStore->Browser Store inverse path found in this slice.",
+        "No std::MutexGuard is held across an await. Reopen metadata lookup/check and native create/close await sequentially under only the async operation lock.",
+        "Run-event shutdown does not await the async operation lock, avoiding main-loop deadlock on native ACK."
+      ],
+      "limits": "No concurrency stress or runtime stall measurements were executed."
+    }
+  ],
+  "counterexampleAttempts": [
+    {
+      "trace": "Save claimed URL for nonexistent/stale createdAt owner",
+      "disposition": "Rejected by validate_owner within transaction; stale saved createdAt also invalid."
+    },
+    {
+      "trace": "Confirm A then A-B-A or navigate before remember admission",
+      "disposition": "Rejected by selected page and revision/fullURL checks; existing begin_select increments old page revision."
+    },
+    {
+      "trace": "Forget empty list then late expectedRevision0 remember",
+      "disposition": "Persistent revision advances; stale expected rejected."
+    },
+    {
+      "trace": "Clear data or delete/recreate same id during create",
+      "disposition": "Post-create owner verification rejects missing/different-createdAt owner; exact new view close attempt retains unknown owner. A new explicit confirmation for a new valid owner is not a stale old request."
+    },
+    {
+      "trace": "Native creation timeout then owner deleted and close unconfirmed",
+      "disposition": "Reserved page error identity remains, close_failed retains identity; finish_reopen returns that identity. No falsely acknowledged cleanup found."
+    },
+    {
+      "trace": "Overwrite a corrupt record by remember or forget",
+      "disposition": "read validates shape before both writes; error returns preserve old row."
+    },
+    {
+      "trace": "Metadata mutex inverted with Browser Store mutex",
+      "disposition": "No inverse path in the added code and direct metadata dependencies; pure URL validation does not lock Browser Store."
+    }
+  ],
+  "verificationBoundary": "No confirmed issue is not proof of overall correctness. Owner is running the sole relevant cargo/fmt/clippy checks; reviewer did not duplicate those commands. Native install/UI, cancellation schedules and all-Agent claims remain separate."
+}

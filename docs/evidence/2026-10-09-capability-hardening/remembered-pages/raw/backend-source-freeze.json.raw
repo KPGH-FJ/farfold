@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-15T07:35:28.756958+00:00",
+  "scope": "Backend remembered public locations, existing stable indexed owner only. Source and controlled Rust tests; no App, native WebView, real Agent, cold-restart or full engineering verification.",
+  "files": [
+    {
+      "path": "src-tauri/src/browser_workspace.rs",
+      "bytes": 13924,
+      "sha256": "4c1fdf3576abd921c474428de2396386ef31ec72f9aa60e1114de78565cb7c2c",
+      "lines": 456
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/remembered_pages.rs",
+      "bytes": 4960,
+      "sha256": "8a3c442759949fa2332bba5c8b473033ba49773de0e7b60f483ebb066abd17fe",
+      "lines": 150
+    },
+    {
+      "path": "src-tauri/src/browser_workspace/remembered_pages_tests.rs",
+      "bytes": 8798,
+      "sha256": "3f5217f200dc766f223de3d6e812cf6ef3bcdcf8b517349397b5936b6dd8b06d",
+      "lines": 251
+    },
+    {
+      "path": "src-tauri/src/meta_store.rs",
+      "bytes": 53142,
+      "sha256": "fa2d99bcb13ac4d6bd45c23e5ce130dd93b45e6f73b7fac3402c987976244325",
+      "lines": 1324
+    },
+    {
+      "path": "src-tauri/src/meta_store/remembered_pages.rs",
+      "bytes": 7960,
+      "sha256": "b3d092b417bd66ce52bb2106484cce7e3a30559c963e6a8f499d2b009fe4dc9d",
+      "lines": 239
+    },
+    {
+      "path": "src-tauri/src/meta_store/remembered_pages_tests.rs",
+      "bytes": 11072,
+      "sha256": "f3426a4d1bd70712af7e62304064889901fdbe2aad905eadae085191c5bd712f",
+      "lines": 319
+    },
+    {
+      "path": "src-tauri/src/acp_client/session_commands.rs",
+      "bytes": 23995,
+      "sha256": "e6cbc506ffe2c336a1e98144633380e6780b97021045780d4c0b8d4f2cd913ec",
+      "lines": 709
+    },
+    {
+      "path": "src-tauri/src/lib.rs",
+      "bytes": 22254,
+      "sha256": "f3cb56a9c72e5c8877f92cc75522409068dbb023f9300d209eb6e58ff3c7df12",
+      "lines": 477
+    }
+  ],
+  "sourceStableDuringFinalChecks": true,
+  "checks": {
+    "stages": [
+      {
+        "name": "browser-workspace",
+        "argv": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "browser_workspace::"
+        ],
+        "startedAtUtc": "2026-10-15T07:34:11.541389+00:00",
+        "completedAtUtc": "2026-10-15T07:34:31.602622+00:00",
+        "exitCode": 0,
+        "sourceStable": true
+      },
+      {
+        "name": "meta-store",
+        "argv": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "meta_store::"
+        ],
+        "startedAtUtc": "2026-10-15T07:34:31.608384+00:00",
+        "completedAtUtc": "2026-10-15T07:34:35.350955+00:00",
+        "exitCode": 0,
+        "sourceStable": true
+      },
+      {
+        "name": "cargo-fmt-check",
+        "argv": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "startedAtUtc": "2026-10-15T07:34:35.351491+00:00",
+        "completedAtUtc": "2026-10-15T07:34:36.583268+00:00",
+        "exitCode": 0,
+        "sourceStable": true
+      },
+      {
+        "name": "cargo-clippy",
+        "argv": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "startedAtUtc": "2026-10-15T07:34:36.583774+00:00",
+        "completedAtUtc": "2026-10-15T07:34:46.576191+00:00",
+        "exitCode": 0,
+        "sourceStable": true
+      }
+    ],
+    "sourceStable": true,
+    "allPassed": true
+  },
+  "counts": {
+    "browserWorkspacePassed": 107,
+    "metaStorePassed": 48,
+    "newTestsIncluded": 12,
+    "independentGroupsTotalPassed": 155
+  },
+  "actualFinalToolCompletion": {
+    "session": 30724,
+    "exitCode": 0,
+    "chunk": "287a69"
+  }
+}

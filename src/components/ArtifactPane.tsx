@@ -10,7 +10,11 @@ import {
 import type { VerifiedFile } from "../runtime/file_delivery";
 import type { PreviewReadingPositionRef } from "../runtime/preview_reading_position";
 import { BrowserWorkspace } from "./BrowserWorkspace";
-import { browserWorkspaceClient } from "../runtime/browser_surface";
+import {
+  browserWorkspaceClient,
+  rememberedBrowserPagesClient,
+} from "../runtime/browser_surface";
+import type { RememberedBrowserOwner } from "../runtime/browser_remembered";
 import { BROWSER_WORKSPACE_STRINGS as B } from "../runtime/browser_workspace_strings";
 /**
  * 产物抽屉：右侧可拖宽面板，列出会话产物 ——
@@ -98,7 +102,9 @@ export function ArtifactPane({
   browserToolbar,
   fileRequest,
   returnFocusRef,
+  rememberedBrowserOwner = null,
 }: {
+  rememberedBrowserOwner?: RememberedBrowserOwner | null;
   thread: ThreadState;
   active?: boolean;
   open?: boolean;
@@ -535,6 +541,8 @@ export function ArtifactPane({
           projectDirectory={thread.cwd}
           active={active}
           client={browserWorkspaceClient}
+          rememberedClient={rememberedBrowserPagesClient}
+          rememberedOwner={rememberedBrowserOwner}
           visible={active && open && contentMode === "browser"}
           onVisibilityChange={setNativeVisible}
           onStateChange={onBrowserStateChange}

@@ -38,6 +38,7 @@ import {
 } from "@phosphor-icons/react";
 import { BROWSER_WORKSPACE_STRINGS as S } from "../runtime/browser_workspace_strings";
 import { DangerConfirm } from "./DangerConfirm";
+import type { RememberedBrowserOpen } from "../runtime/browser_remembered";
 import "../browser-workspace.css";
 
 export interface BrowserWorkspaceProps {
@@ -65,6 +66,8 @@ export interface BrowserWorkspaceProps {
   presentationSuspended?: boolean;
   initialPage?: BrowserWorkspaceState | null;
   onCloseReady?: (close: (() => Promise<void>) | null) => void;
+  rememberedRequest?: RememberedBrowserOpen | null;
+  onRememberedRequestConsumed?: () => void;
 }
 
 type Operation =
@@ -130,6 +133,8 @@ export function BrowserWorkspacePage({
   presentationSuspended = false,
   initialPage = null,
   onCloseReady,
+  rememberedRequest,
+  onRememberedRequestConsumed,
 }: BrowserWorkspaceProps) {
   const addressId = useId();
   const hintId = useId();
@@ -149,6 +154,7 @@ export function BrowserWorkspacePage({
   const choiceOwner = useRef<object | null>(null);
   const clearChoice = useRef<BrowserWorkspaceScope | null>(null);
   const consumedHtml = useRef<BrowserWorkspaceProps["htmlRequest"]>(null);
+  const consumedRemembered = useRef<RememberedBrowserOpen | null>(null);
   const registrations = useRef(
     new Map<BrowserWorkspaceScope, BrowserSurfaceRegistration>(),
   );
@@ -375,7 +381,8 @@ export function BrowserWorkspacePage({
       | { url: string }
       | { file: VerifiedFile }
       | { entry: string }
-      | { development: string },
+      | { development: string }
+      | { remembered: RememberedBrowserOpen },
   ) {
     const owner = scope.current;
     if (
@@ -408,6 +415,7 @@ export function BrowserWorkspacePage({
     }
     const hasPage = owner.current && owner.current.phase !== "closed";
     const replacePage =
+      "remembered" in target ||
       !!html ||
       "entry" in target ||
       "development" in target ||
@@ -442,6 +450,8 @@ export function BrowserWorkspacePage({
           projectDirectory!,
         );
       else if (html) await nextOwner.openHtml(html, bounds, projectDirectory!);
+      else if ("remembered" in target)
+        await nextOwner.openRemembered(target.remembered, bounds);
       else if ("url" in target) {
         if (hasPage && !replacePage && !owner.isRetired)
           await nextOwner.navigate(target.url);
@@ -458,7 +468,9 @@ export function BrowserWorkspacePage({
             ? target.url
             : "development" in target
               ? target.development
-              : "",
+              : "remembered" in target
+                ? (nextOwner.current?.url ?? "")
+                : "",
         );
         setSourceMode("development" in target ? "development" : "public");
         publish(nextOwner);
@@ -618,6 +630,32 @@ export function BrowserWorkspacePage({
     onHtmlRequestConsumed?.();
     void openTarget({ file: htmlRequest.file });
   }, [htmlRequest, active, visible, taskKey, listening, operation]);
+
+  useEffect(() => {
+    if (!rememberedRequest || consumedRemembered.current === rememberedRequest)
+      return;
+    if (!active || !visible || rememberedRequest.owner.sessionId !== taskKey) {
+      consumedRemembered.current = rememberedRequest;
+      onRememberedRequestConsumed?.();
+      return;
+    }
+    // The list dialog holds the native surface barrier until it is dismissed.
+    if (!listening || busy.current || !guard.canOpen || presentationSuspended)
+      return;
+    consumedRemembered.current = rememberedRequest;
+    onRememberedRequestConsumed?.();
+    void openTarget({ remembered: rememberedRequest });
+  }, [
+    rememberedRequest,
+    active,
+    visible,
+    taskKey,
+    listening,
+    operation,
+    guard,
+    guardRevision,
+    presentationSuspended,
+  ]);
 
   async function openInBrowser() {
     const owner = scope.current;

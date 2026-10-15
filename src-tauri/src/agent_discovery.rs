@@ -179,6 +179,20 @@ fn version_probe_diagnostic(
     );
 }
 
+#[cfg(test)]
+fn version_probe_timeout_state(
+    child: &Child,
+    started: Instant,
+    last_exit_status: Option<std::process::ExitStatus>,
+) {
+    // Observe only existing state; do not poll/reap the child an extra time.
+    eprintln!(
+        "[farfold-version-probe-state] pid={} elapsed_ms={} last_exit_status={last_exit_status:?}",
+        child.id(),
+        started.elapsed().as_millis(),
+    );
+}
+
 /// Shared bounded probe for discovery and install preparation. Cancellation
 /// is checked even when no output arrives or a descendant retains the pipe.
 pub(crate) fn version_output(
@@ -219,6 +233,10 @@ pub(crate) fn version_output(
     };
     let mut stdout =
         crate::process_platform::PipeReader::new(stdout).map_err(|_| "无法读取程序检查结果")?;
+    #[cfg(test)]
+    let probe_started = Instant::now();
+    #[cfg(test)]
+    let mut last_exit_status = None;
     let deadline = Instant::now() + timeout;
     let mut buffer = Vec::new();
     let mut eof = false;
@@ -227,14 +245,20 @@ pub(crate) fn version_output(
         check()?;
         if Instant::now() >= deadline {
             #[cfg(test)]
-            version_probe_diagnostic("deadline_loop", None, None, buffer.len(), eof);
+            {
+                version_probe_diagnostic("deadline_loop", None, None, buffer.len(), eof);
+                version_probe_timeout_state(&child.child, probe_started, last_exit_status);
+            }
             return Ok(None);
         }
         while !eof {
             check()?;
             if Instant::now() >= deadline {
                 #[cfg(test)]
-                version_probe_diagnostic("deadline_read", None, None, buffer.len(), eof);
+                {
+                    version_probe_diagnostic("deadline_read", None, None, buffer.len(), eof);
+                    version_probe_timeout_state(&child.child, probe_started, last_exit_status);
+                }
                 return Ok(None);
             }
             match stdout.read(&mut chunk) {
@@ -282,6 +306,8 @@ pub(crate) fn version_output(
                 );
                 return Ok(None);
             }
+            #[cfg(test)]
+            Ok(Some(status)) => last_exit_status = Some(status),
             _ => {}
         }
         std::thread::sleep(

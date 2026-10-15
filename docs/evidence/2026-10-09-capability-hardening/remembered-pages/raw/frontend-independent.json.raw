@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "atUtc": "2026-10-15T07:39:58.009928+00:00",
+  "scope": "Independent read-only frontend/source review plus inspection of existing controlled-browser fixture, assertions and final run reports. No edits to source, new tests, App/Agent/native actions or database reads.",
+  "sourceFreeze": {
+    "path": "output/2026-10-15-browser-pages-frontend/source-freeze.json",
+    "sha256": "eeaf83b71029c0e350a601569ebbe4eafef8083aeec41cb7806acf466859af21",
+    "filesMatched": 16
+  },
+  "result": "NO_ACTIONABLE_DEFECT_FOUND_IN_REVIEWED_SCOPE",
+  "reviewed": [
+    {
+      "area": "Existing indexed owner",
+      "evidence": "ownerForRememberedPages requires established identity, exact row.id=thread.key and same agent/cwd/native; canonical open key and first admission/touch source use same triple. Alias/error placeholders and missing rows remain disabled rather than remapped."
+    },
+    {
+      "area": "Confirmation",
+      "evidence": "Complete URL is text in WorkspaceDialog, separate checkbox defaults false. Exact label/revision/URL/task and activity are rechecked; changed owner keys body anew. Current-ref checks reject stale handlers."
+    },
+    {
+      "area": "StrictMode/late metadata",
+      "evidence": "Model epoch and retire gate discard old responses; second start clears old load busy without replaying mutation. Unknown mutation blocks writes/opening until explicit metadata refresh."
+    },
+    {
+      "area": "Modal and native surface",
+      "evidence": "WorkspaceDialog uses existing useBrowserSurfaceBarrier which waits exact hide ACK. Remembered request waits listening, operation, guard.canOpen, presentationSuspended and guardRevision before one-time consumption."
+    },
+    {
+      "area": "Reopen ownership",
+      "evidence": "Parent validates owner/visibility/lifetime after tabs.add. A single request enters BrowserWorkspacePage.openTarget -> Scope.openRemembered -> BrowserTabs.pageClient open wrapper. Real late identity returns through Scope, with guard registrations and close acknowledgements unchanged."
+    },
+    {
+      "area": "Forget and ordinary close",
+      "evidence": "Forget only calls metadata client. Existing tabs.close and native page close do not invoke metadata forget; clear is separately confirmed."
+    }
+  ],
+  "coverageNotes": [
+    "Review is static, not a proof of all interleavings. Existing targeted tests and parent full-App runs are separately attributed.",
+    "Unknown-save browser fixture throws before mutation, so it proves no automatic retry but not a real committed-save/lost-reply transport failure.",
+    "Controlled reload uses authored localStorage list and iframe state; it is not installed process restart, actual SQLite, real public network or native WebView retention.",
+    "Controlled fake metadata handler is deliberately not a full Rust policy/storage implementation (no real SQL deletion atomicity, capacity/corrupt record enforcement or protected-URL admission proof). These remain distinct backend unit/integration coverage.",
+    "The two full-App runs exercise plain synthetic URLs. Complete query/fragment retention/confirmation has source and component-test evidence, not a separate native visual journey.",
+    "No independent screenshot/pixel claim is added by this read-only review; root reported visual inspection separately."
+  ],
+  "existingBrowserRuns": [
+    {
+      "path": "output/2026-10-15-remembered-browser/chromium-run1.json",
+      "sha256": "20b2f25f313eb626d81cfd8d05a2c9174ad74a8ec41640835df52f4de01d5a30",
+      "status": "passed",
+      "checks": 24,
+      "failed": 0,
+      "sourceStable": true,
+      "scope": "Full production App, StrictMode, controlled Tauri metadata/page ACKs and authored iframe pages. No native view, installed App, real SQLite, real Agent, or user data. Rust authority and storage are covered separately."
+    },
+    {
+      "path": "output/2026-10-15-remembered-browser/webkit-run1.json",
+      "sha256": "3bb0c1e66da0c9cb0d3ab551105ec7530853a7da51d0a1a4bfe47d39ce7c54a2",
+      "status": "passed",
+      "checks": 24,
+      "failed": 0,
+      "sourceStable": true,
+      "scope": "Full production App, StrictMode, controlled Tauri metadata/page ACKs and authored iframe pages. No native view, installed App, real SQLite, real Agent, or user data. Rust authority and storage are covered separately."
+    }
+  ],
+  "remaining": "Full seven integration checks, installed fresh startup/native saved list reopening and subsequent scoped data protection verification remain separate; real Agent and Windows acceptance not asserted."
+}

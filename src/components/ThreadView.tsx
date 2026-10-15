@@ -14,6 +14,7 @@ import { BrowserShareControls } from "./BrowserShareControls";
 import { useBrowserSharing } from "../runtime/browser_sharing";
 import { browserSharingClient } from "../runtime/browser_sharing_service";
 import type { BrowserWorkspaceState } from "../runtime/browser_workspace";
+import type { RememberedBrowserOwner } from "../runtime/browser_remembered";
 import { browserSurfaceGuard } from "../runtime/browser_surface";
 /**
  * 会话正文：消息流 + 步骤流 + 审批卡 + 结束行 + 连接横幅 + 消息栏。
@@ -260,7 +261,9 @@ export function ThreadView({
   onBrowserStateChange,
   onBrowserOwnersChange,
   draftComposerRef,
+  rememberedBrowserOwner,
 }: {
+  rememberedBrowserOwner?: RememberedBrowserOwner | null;
   draftComposerRef?: React.Ref<HTMLDivElement>;
   onBrowserOwnersChange?: (taskKey: string, ownsPages: boolean) => void;
   onBrowserStateChange?: (
@@ -1379,6 +1382,7 @@ export function ThreadView({
       <TranscriptSearchContext.Provider value={false}>
         <ArtifactPane
           thread={thread}
+          rememberedBrowserOwner={rememberedBrowserOwner}
           active={active}
           open={thread.artifactPaneOpen}
           contentMode={contentMode}

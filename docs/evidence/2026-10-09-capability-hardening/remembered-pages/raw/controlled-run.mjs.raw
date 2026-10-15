@@ -1,0 +1,133 @@
+import fs from "node:fs";
+import path from "node:path";
+import { createHash } from "node:crypto";
+const { chromium, webkit } = await import("/Users/tw/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs");
+const [engine, label] = process.argv.slice(2);
+if (!["chromium", "webkit"].includes(engine) || !/^run\d+$/.test(label)) throw Error("Exact engine/run required");
+const base = "output/2026-10-15-remembered-browser";
+const destination = `${base}/${engine}-${label}.json`;
+if (fs.existsSync(destination)) throw Error("Retain previous run");
+const hash = file => createHash("sha256").update(fs.readFileSync(file)).digest("hex");
+const scan = dir => fs.readdirSync(dir, { withFileTypes: true }).flatMap(item => item.isDirectory() ? scan(dir + "/" + item.name) : [dir + "/" + item.name]);
+const inputs = () => [...scan("src"), ...["fixture.tsx", "index.html", "serve.mjs", "run.mjs"].map(n=>`${base}/${n}`), ...["transport.ts", "pages/a.html", "pages/b.html", "pages/c.html"].map(n=>`output/2026-10-14-browser-tabs-browser/${n}`), "package.json", "pnpm-lock.yaml", "vite.config.ts"];
+const inventory = () => Object.fromEntries(inputs().sort().map(file=>[file,hash(file)]));
+const result = {engine,label,scope:"Full production App, StrictMode, controlled Tauri metadata/page ACKs and authored iframe pages. No native view, installed App, real SQLite, real Agent, or user data. Rust authority and storage are covered separately.",before:inventory(),checks:[],errors:[],externalRequests:[],screenshots:[]};
+const browser = await (engine === "webkit" ? webkit : chromium).launch({headless:true, executablePath:engine === "webkit" ? path.resolve("output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh") : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"});
+const page = await browser.newPage({viewport:{width:1280,height:860}});
+page.setDefaultTimeout(12000);
+page.on("pageerror",e=>result.errors.push(String(e)));
+await page.route("**/*",route=>{
+  if (route.request().url().startsWith("http://127.0.0.1:1544/")) return route.continue();
+  result.externalRequests.push(route.request().url());return route.abort();
+});
+let scenario="startup";
+const check=(name,pass,detail)=>{
+  result.checks.push({scenario,name,pass:Boolean(pass),...(detail===undefined?{}:{detail})});
+  if(!pass)throw Error(name);
+};
+const state=()=>page.evaluate(()=>window.fixture.current());
+const saved=()=>page.evaluate(()=>window.fixture.remembered());
+const pane=()=>page.locator(".artifact-pane:visible");
+const tabs=()=>pane().getByRole("tablist",{name:"网页标签",exact:true});
+const live=s=>s.pages.filter(p=>!p.closed);
+const shown=s=>live(s).filter(p=>p.visible);
+const dialog=()=>page.getByRole("dialog");
+const calls=(s,cmd)=>s.calls.filter(c=>c.cmd===cmd);
+async function waitState(predicate,data){
+  await page.waitForFunction(({source,data})=>new Function("s","d","return ("+source+")(s,d)")(window.fixture.current(),data),{source:predicate.toString(),data});
+}
+async function task(letter){
+  await page.getByText("P30_TASK_"+letter,{exact:true}).first().click();
+  await page.locator(".thread-title h1:visible").filter({hasText:"P30_TASK_"+letter}).waitFor();
+  await pane().getByRole("button",{name:"网页",exact:true}).click();
+  await tabs().waitFor();
+}
+async function open(letter,fresh=true){
+  const before=(await state()).pages.map(p=>p.label);
+  if(fresh)await pane().getByRole("button",{name:"新建网页",exact:true}).click();
+  const panel=()=>pane().getByRole("tabpanel");
+  await panel().getByRole("textbox",{name:"公开网页地址",exact:true}).fill("https://example.org/"+letter.toLowerCase());
+  await panel().getByRole("button",{name:"打开",exact:true}).click();
+  await waitState((s,old)=>s.pages.some(p=>!old.includes(p.label)&&p.visible),before);
+  return shown(await state())[0];
+}
+async function confirm(yes=true){
+  await pane().getByRole("button",{name:"记住此网页",exact:true}).click();
+  await dialog().waitFor();
+  check("A fresh secret confirmation is required",!(await dialog().getByRole("checkbox").isChecked()) && await dialog().getByRole("button",{name:"记住此网页",exact:true}).isDisabled());
+  if(!yes){await dialog().getByRole("button",{name:"取消",exact:true}).click();return;}
+  await dialog().getByRole("checkbox").check();
+  await dialog().getByRole("button",{name:"记住此网页",exact:true}).click();
+}
+async function remember(){await confirm();await dialog().waitFor({state:"hidden"});await pane().getByRole("button",{name:"已记住",exact:true}).waitFor();}
+async function list(){await pane().getByRole("button",{name:/^已记住的网页/}).click();await dialog().waitFor();}
+async function closeDialog(){await dialog().getByRole("button",{name:"关闭",exact:true}).click();await dialog().waitFor({state:"hidden"});}
+async function reopen(letter){
+  const before=(await state()).pages.map(p=>p.label);
+  await list();await dialog().getByRole("button",{name:`打开新标签：https://example.org/${letter.toLowerCase()}`,exact:true}).click();
+  await dialog().waitFor({state:"hidden"});
+  await waitState((s,old)=>s.pages.some(p=>!old.includes(p.label)&&p.visible),before);
+  return shown(await state())[0];
+}
+try{
+  await page.goto(`http://127.0.0.1:1544/${base}/index.html`);
+  await task("A");
+  await pane().getByRole("button",{name:"已记住的网页 (0)",exact:true}).waitFor();
+  check("Entering saved conversation creates no page",live(await state()).length===0);
+  await list();check("Empty metadata list has clear guidance",await dialog().getByText("尚未记住网页。",{exact:true}).isVisible());await closeDialog();
+  const first=await open("A",false);
+  scenario="explicit-confirmation";
+  await confirm(false);check("Cancel has no save IPC",calls(await state(),"browser_pages_remember").length===0);
+  await remember();
+  let db=await saved();check("Only URL and item identity are stored in append order",db["tabs-A"].items.length===1&&JSON.stringify(Object.keys(db["tabs-A"].items[0]).sort())==='["id","url"]'&&db["tabs-A"].items[0].url==="https://example.org/a",db);
+  await pane().getByRole("button",{name:"读取权限",exact:true}).click();
+  await pane().getByRole("button",{name:"允许读取",exact:true}).click();
+  await waitState(s=>s.pages.some(p=>p.shared));
+  await pane().getByRole("button",{name:"关闭网页：https://example.org/a",exact:true}).click();
+  await waitState(s=>s.pages.every(p=>p.closed));
+  check("Ordinary page close preserves remembered location",(await saved())["tabs-A"].items.length===1);
+  scenario="dormant-reload";
+  await page.reload();await task("A");await pane().getByRole("button",{name:"已记住的网页 (1)",exact:true}).waitFor();
+  let current=await state();check("Reload lists metadata without creating or fetching pages",live(current).length===0&&calls(current,"browser_pages_reopen").length===0&&calls(current,"browser_workspace_open").length===0);
+  const restored=await reopen("A");
+  check("Explicit reopen creates unshared initial page",restored.url===first.url&&!restored.shared&&restored.gate===0&&restored.state.counter==="0",restored);
+  scenario="order-and-conversation-isolation";
+  await open("B");await remember();db=await saved();check("Append order retained",JSON.stringify(db["tabs-A"].items.map(p=>p.url))==='["https://example.org/a","https://example.org/b"]');
+  await task("B");await open("C",false);await remember();
+  await task("A");await pane().getByRole("button",{name:"已记住的网页 (2)",exact:true}).waitFor();
+  check("Conversation lists remain independent",(await saved())["tabs-B"].items[0].url==="https://example.org/c");
+  const reopened=await reopen("A");
+  scenario="forget-and-clear";
+  const liveBefore=live(await state()).map(p=>p.label);
+  await list();await dialog().getByRole("button",{name:"忘记：https://example.org/a",exact:true}).click();
+  await dialog().getByRole("button",{name:"忘记：https://example.org/a",exact:true}).waitFor({state:"hidden"});
+  check("Forget preserves the exact live page",live(await state()).some(p=>p.label===reopened.label));
+  await dialog().getByRole("button",{name:"清除此对话网页清单",exact:true}).click();
+  await dialog().getByRole("button",{name:"清除此对话网页清单",exact:true}).click();
+  await dialog().getByText("尚未记住网页。",{exact:true}).waitFor();
+  db=await saved();check("Clear affects only this conversation and preserves all live pages",db["tabs-A"].items.length===0&&db["tabs-B"].items.length===1&&JSON.stringify(live(await state()).map(p=>p.label))===JSON.stringify(liveBefore));
+  await closeDialog();
+  scenario="unknown-save-no-retry";
+  await open("C");await page.evaluate(()=>window.fixture.failRemember());
+  const saveBefore=calls(await state(),"browser_pages_remember").length;
+  await confirm();await dialog().getByRole("alert").filter({hasText:"操作结果尚未确认"}).waitFor();
+  await page.setViewportSize({width:780,height:840});
+  check("Unknown save is not automatically retried",calls(await state(),"browser_pages_remember").length===saveBefore+1);
+  await dialog().getByRole("button",{name:"重新检查清单",exact:true}).click();
+  await dialog().getByRole("alert").waitFor({state:"hidden"});
+  check("Explicit recheck does not repeat write",calls(await state(),"browser_pages_remember").length===saveBefore+1);
+  await dialog().getByRole("button",{name:"取消",exact:true}).click();
+  await confirm(false);
+  scenario="narrow-layout";
+  await list();
+  check("Dialog fits narrow viewport",await dialog().evaluate(el=>{const r=el.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.top>=0&&r.bottom<=innerHeight+1}));
+  const screenshot=`${base}/${engine}-${label}-narrow.png`;await page.screenshot({path:screenshot});result.screenshots.push({file:screenshot,sha256:hash(screenshot)});
+  await closeDialog();
+  current=await state();check("Protected user input and feedback unchanged",current.protectedUnchanged);
+  check("At most one simulated native page visible",current.maximumVisible<=1);
+  check("No real Agent calls or unexpected IPC",current.unexpected.length===0&&!current.calls.some(c=>/^(session_prompt|session_open|session_load|session_set_config)/.test(c.cmd)),current.unexpected);
+  check("No page errors or external requests",result.errors.length===0&&result.externalRequests.length===0);
+  result.final=current;result.remembered=await saved();result.status="passed";
+}catch(error){result.status="failed";result.failure={scenario,error:String(error)};result.final=await state().catch(()=>null);const screenshot=`${base}/${engine}-${label}-failure.png`;await page.screenshot({path:screenshot}).catch(()=>{});}
+finally{result.after=inventory();result.sourceStable=JSON.stringify(result.before)===JSON.stringify(result.after);fs.writeFileSync(destination,JSON.stringify(result,null,2)+"\n");await browser.close();console.log(JSON.stringify({engine,label,status:result.status,checks:result.checks.length,failed:result.checks.filter(c=>!c.pass).length,sourceStable:result.sourceStable,failure:result.failure}));}
+if(result.status!=="passed"||!result.sourceStable)process.exitCode=1;

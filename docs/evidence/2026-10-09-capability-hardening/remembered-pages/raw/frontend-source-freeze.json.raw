@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "version": "frontend-v1",
+  "sourceCommitBeforeChanges": "aabbbb063555c929f7f63a23d5d58a6b359e865e",
+  "scope": "P30 remembered nonsecret public URL list; frontend only; runtime fresh reopening through existing page owner/scope. No App run or new Agent requests.",
+  "checks": [
+    {
+      "name": "targeted-9-files",
+      "status": "passed",
+      "tests": 156,
+      "actualExit": 0,
+      "chunk": "968d58",
+      "startChunk": "49d1da",
+      "session": 90793
+    },
+    {
+      "name": "related-ArtifactPane-ThreadView-21-files",
+      "status": "passed",
+      "tests": 178,
+      "actualExit": 0,
+      "chunk": "023b9c",
+      "startChunk": "f220d3",
+      "session": 87452,
+      "overlap": "ArtifactPane.browser appears in targeted group too; counts not additive unique coverage."
+    },
+    {
+      "name": "typecheck",
+      "status": "passed",
+      "actualExit": 0,
+      "chunk": "91c8a2",
+      "startChunk": "ae080a",
+      "session": 53791
+    },
+    {
+      "name": "scoped-prettier",
+      "status": "passed",
+      "actualExit": 0,
+      "chunk": "eca2d4"
+    }
+  ],
+  "retainedPriorFailures": [
+    {
+      "name": "initial-typecheck",
+      "actualExit": 1,
+      "chunk": "c10441",
+      "reason": "RememberedBrowserOpen intersection was not Record<string,unknown> at invoke; fixed by explicit spread; no runtime semantics changed."
+    }
+  ],
+  "ownerEvidence": [
+    "src/runtime/sessions.ts:712-734 builds key from canonical returned cwd/native and marks resumed established",
+    "src/runtime/sessions.ts:964-978 first admission only changes identity and touch uses the same agent/cwd/native",
+    "src-tauri/src/acp_client/session_commands.rs:38-39,118-132 canonicalizes cwd and returns canonical identity",
+    "src-tauri/src/acp_client/session_index.rs:18-20,34-40 writes row.id from same composite triple",
+    "ownerForRememberedPages additionally requires real row exact id and agent/cwd/native match; draft and unmatched historical placeholders have no owner"
+  ],
+  "boundaries": [
+    "Initial list read only requests metadata; no page opens until explicit clicked action.",
+    "Exact ready page and full URL displayed with separate nonsecret checkbox; navigation, selection, hide and owner change withdraw confirmation.",
+    "Unknown writes are not repeated; explicit successful list recheck required before further actions.",
+    "Remembered opener gets new tab and Scope identity; dialog native barrier releases before page open; owner/visibility/lifetime checked after async selection.",
+    "Normal tab close has no metadata deletion; forgetting does not close the page.",
+    "Array preserves append order; no hand reorder in this slice.",
+    "Backend independently validates source, owner, current selected page/revision/URL and all destination policy.",
+    "No claim to identify every secret in URLs; user confirmation remains required.",
+    "Parent full App controlled dual-engine/native/cold-start evidence pending."
+  ],
+  "files": [
+    {
+      "path": "src/browser-workspace.css",
+      "bytes": 9251,
+      "lines": 495,
+      "sha256": "347c432127327831dba76541b10cf54500a615ae0feb2a34324184bb46d7132b"
+    },
+    {
+      "path": "src/components/ArtifactPane.tsx",
+      "bytes": 21544,
+      "lines": 649,
+      "sha256": "0c88159353da397ef43a8551a566dcd33d5890ac58cec3000c4626788cdb7fe0"
+    },
+    {
+      "path": "src/components/BrowserRememberedPages.tsx",
+      "bytes": 10598,
+      "lines": 315,
+      "sha256": "1df2e504602a5ebf0f26efa9697165c3394fe50809aa15f74e3b7e954eaba5a3"
+    },
+    {
+      "path": "src/components/BrowserRememberedPages.test.tsx",
+      "bytes": 8305,
+      "lines": 263,
+      "sha256": "8cdd276e32e54d1c983802f1a6dc4fb56002f8c07bcb1dfa2136e2f3170facc0"
+    },
+    {
+      "path": "src/components/BrowserWorkspace.tsx",
+      "bytes": 11152,
+      "lines": 323,
+      "sha256": "fcd50656002c054bb650ca10ca019dfcbc26cfc11fc12bd57e675edb00bd8656"
+    },
+    {
+      "path": "src/components/BrowserWorkspacePage.tsx",
+      "bytes": 44375,
+      "lines": 1361,
+      "sha256": "e576dd125b240a66d94825c8bb292fe45901ddc3f080e875e4bd7835b435c17a"
+    },
+    {
+      "path": "src/components/ThreadPage.tsx",
+      "bytes": 20530,
+      "lines": 609,
+      "sha256": "5550a004e80c92c4e5ce969a55234d3d306f6ba2c345e4f3f81bd26f912bd067"
+    },
+    {
+      "path": "src/components/ThreadView.tsx",
+      "bytes": 52301,
+      "lines": 1407,
+      "sha256": "5aa6fb40163183ee467f035ad6e370fafb13a0db7a1443877b5a2a64cfd8401e"
+    },
+    {
+      "path": "src/runtime/browser_surface.ts",
+      "bytes": 1701,
+      "lines": 49,
+      "sha256": "546a5742622da71c0eb06e361105341e052e67d79e65e68f892f3d8c5677e359"
+    },
+    {
+      "path": "src/runtime/browser_tabs.test.ts",
+      "bytes": 22357,
+      "lines": 648,
+      "sha256": "1cc0f8b069bb7551337b3b2bb387c1df6579e43a8cfdda4ed9a412e4c21caeac"
+    },
+    {
+      "path": "src/runtime/browser_tabs.ts",
+      "bytes": 13515,
+      "lines": 401,
+      "sha256": "9fbd0958c2003497c9608b21372d07216ec41659ebc37f60badbc6410d95f01a"
+    },
+    {
+      "path": "src/runtime/browser_workspace.ts",
+      "bytes": 15308,
+      "lines": 489,
+      "sha256": "638b0e3711e398ee9bfac478f2fd1154c3e83ac43bd2065e52a1c1c27f8869f6"
+    },
+    {
+      "path": "src/runtime/browser_remembered.ts",
+      "bytes": 7497,
+      "lines": 261,
+      "sha256": "6946eee71584efeaac683b8fff7ea0447fcaa65107bfc96b392023f606afa175"
+    },
+    {
+      "path": "src/runtime/browser_remembered.test.ts",
+      "bytes": 8572,
+      "lines": 266,
+      "sha256": "3372a5d97f7355b31f9ed2e932fc99f854b3fe51342511f05593c54518194834"
+    },
+    {
+      "path": "src/runtime/browser_remembered_strings.ts",
+      "bytes": 1353,
+      "lines": 27,
+      "sha256": "71cba630d3cef6dbc9bf84c9ac05f5a2b251eff6053e9b7616fa06a5dfdba5c5"
+    },
+    {
+      "path": "src/runtime/strings.test.ts",
+      "bytes": 7263,
+      "lines": 179,
+      "sha256": "f6ad3e6dadcc4e97195034b4a0aac1f3cc9d8c53783e255134b88fb6a49380a1"
+    }
+  ]
+}

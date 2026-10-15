@@ -208,21 +208,33 @@ fn cancelled_selection_does_not_start_program_version_check() {
         cancelled
     );
     assert!(!node_checked.exists());
-    assert_eq!(
-        validate(
-            &fixture.root,
-            &fixture.launcher,
-            &fixture.launch,
-            &fixture.release,
-            || if node_checked.exists() {
+    let checks = std::cell::Cell::new(0usize);
+    let last_check = std::cell::Cell::new(std::time::Duration::ZERO);
+    let started = std::time::Instant::now();
+    let result = validate(
+        &fixture.root,
+        &fixture.launcher,
+        &fixture.launch,
+        &fixture.release,
+        || {
+            checks.set(checks.get() + 1);
+            last_check.set(started.elapsed());
+            if node_checked.exists() {
                 Err(cancelled.into())
             } else {
                 Ok(())
-            },
-        )
-        .unwrap_err(),
-        cancelled
+            }
+        },
     );
+    eprintln!(
+        "[farfold-selection-cancel-fixture] checks={} last_check_ms={} elapsed_ms={} node_marker={} program_marker={} result={result:?}",
+        checks.get(),
+        last_check.get().as_millis(),
+        started.elapsed().as_millis(),
+        node_checked.exists(),
+        program_checked.exists(),
+    );
+    assert_eq!(result.unwrap_err(), cancelled);
     assert!(node_checked.exists());
     assert!(!program_checked.exists());
 }

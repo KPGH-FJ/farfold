@@ -570,3 +570,79 @@ it("keeps selected-close locked through its successor ACK, then respects the nex
   expect(f.tabs.getSnapshot().selected).toBe(a.tab);
   expect(f.state.selection.label).toBe(a.result.label);
 });
+
+it("reopens remembered metadata through a fresh scope and preserves the previous tab", async () => {
+  const f = fixture();
+  f.client.openRemembered = vi.fn(async () =>
+    f.page("https://www.rust-lang.org/learn"),
+  );
+  await f.tabs.start();
+  const previous = await f.open();
+  const id = await f.tabs.add();
+  expect(id).toBeTruthy();
+  const scope = new BrowserWorkspaceScope(f.tabs.pageClient(id!), "task");
+  const request = {
+    owner: { sessionId: "task", createdAt: 1 },
+    expectedRevision: 4,
+    itemId: "saved",
+  };
+  const page = await scope.openRemembered(request, bounds);
+  expect(page.label).not.toBe(previous.result.label);
+  expect(f.client.openRemembered).toHaveBeenCalledExactlyOnceWith({
+    ...request,
+    bounds,
+  });
+  expect(f.client.navigate).not.toHaveBeenCalled();
+  expect(f.client.close).not.toHaveBeenCalled();
+  expect(f.tabs.getSnapshot().tabs.filter((tab) => tab.page)).toHaveLength(2);
+  await scope.close();
+  expect(f.client.close).toHaveBeenCalledExactlyOnceWith({
+    taskKey: "task",
+    label: page.label,
+  });
+});
+
+it("retirement keeps the exact late remembered owner available for close retry", async () => {
+  const f = fixture();
+  const pending = deferred<BrowserWorkspaceState>();
+  f.client.openRemembered = vi.fn(() => pending.promise);
+  await f.tabs.start();
+  const id = f.tabs.getSnapshot().selected;
+  const scope = new BrowserWorkspaceScope(f.tabs.pageClient(id), "task");
+  const opening = scope.openRemembered(
+    {
+      owner: { sessionId: "task", createdAt: 1 },
+      expectedRevision: 4,
+      itemId: "saved",
+    },
+    bounds,
+  );
+  await Promise.resolve();
+  await Promise.resolve();
+  const closing = scope.close();
+  f.tabs.retire();
+  pending.resolve(f.page("https://www.rust-lang.org/learn"));
+  await expect(opening).rejects.toThrow();
+  await closing;
+  expect(f.client.close).toHaveBeenCalledExactlyOnceWith({
+    taskKey: "task",
+    label: "page-1",
+  });
+});
+
+it("never reopens a remembered record for a different task scope", async () => {
+  const f = fixture();
+  f.client.openRemembered = vi.fn();
+  const scope = new BrowserWorkspaceScope(f.client, "task");
+  await expect(
+    scope.openRemembered(
+      {
+        owner: { sessionId: "other", createdAt: 1 },
+        expectedRevision: 0,
+        itemId: "saved",
+      },
+      bounds,
+    ),
+  ).rejects.toThrow();
+  expect(f.client.openRemembered).not.toHaveBeenCalled();
+});

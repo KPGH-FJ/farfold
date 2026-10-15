@@ -1,4 +1,5 @@
 import type { VerifiedFile } from "./file_delivery";
+import type { RememberedBrowserOpen } from "./browser_remembered";
 
 /** CSS pixels relative to the main window's client area; never multiply by DPR. */
 export interface BrowserWorkspaceBounds {
@@ -58,6 +59,9 @@ export interface BrowserWorkspacePageClient {
     url: string;
     bounds: BrowserWorkspaceBounds;
   }): Promise<BrowserWorkspaceState>;
+  openRemembered?(
+    input: RememberedBrowserOpen & { bounds: BrowserWorkspaceBounds },
+  ): Promise<BrowserWorkspaceState>;
   navigate(
     input: BrowserWorkspaceIdentity & { url: string },
   ): Promise<BrowserWorkspaceState>;
@@ -123,6 +127,7 @@ export function createBrowserWorkspaceClient(
     openDirectory: (input) => invoke("browser_workspace_open_directory", input),
     openDevelopment: (input) =>
       invoke("browser_workspace_open_development", input),
+    openRemembered: (input) => invoke("browser_pages_reopen", { ...input }),
     navigate: (input) => invoke("browser_workspace_navigate", { ...input }),
     resize: (input) => invoke("browser_workspace_resize", { ...input }),
     setVisible: (input) =>
@@ -218,6 +223,14 @@ export class BrowserWorkspaceScope {
     return this.openWith(() =>
       this.client.open({ taskKey: this.taskKey, url, bounds }),
     );
+  }
+
+  openRemembered(input: RememberedBrowserOpen, bounds: BrowserWorkspaceBounds) {
+    return this.openWith(() => {
+      if (!this.client.openRemembered || input.owner.sessionId !== this.taskKey)
+        throw new BrowserWorkspaceRetiredError();
+      return this.client.openRemembered({ ...input, bounds });
+    });
   }
 
   openHtml(

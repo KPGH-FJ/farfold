@@ -15,6 +15,7 @@ import { ConversationFind } from "./ConversationFind";
 import { LoadedSearchJump, type LoadedSearchRequest } from "./LoadedSearchJump";
 import { useEffect, useRef, useState } from "react";
 import type { BrowserWorkspaceState } from "../runtime/browser_workspace";
+import { ownerForRememberedPages } from "../runtime/browser_remembered";
 import { browserSurfaceGuard } from "../runtime/browser_surface";
 import {
   canMarkConversationRead,
@@ -317,6 +318,7 @@ export function ThreadPage({
             onContentModeChange={setContentMode}
             key={thread.key}
             thread={thread}
+            rememberedBrowserOwner={ownerForRememberedPages(thread, row)}
             active={
               active && !menu && !rename && !moving && !deleting && !exported
             }

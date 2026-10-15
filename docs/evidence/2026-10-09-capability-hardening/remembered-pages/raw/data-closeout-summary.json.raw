@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "recordedAtUtc": "2026-10-15T07:43:34.466644+00:00",
+  "scope": "Delayed saved-metadata comparison after the runtime browser-tab checks; user clarification recorded on2026-10-15.",
+  "strictResult": {
+    "actualExitCode": 2,
+    "result": "differencesRequireReview",
+    "differenceCount": 9,
+    "acceptedDifferences": [],
+    "originalRecordsUnchanged": true
+  },
+  "recordRetention": {
+    "sessions": {
+      "originalCount": 135,
+      "allOriginalRecordsPresent": true,
+      "wholeOriginalRowsExact": 134,
+      "originalRowsOnlyUpdatedTimestampChanged": 1,
+      "newRows": 2,
+      "capturedTotal": 137
+    },
+    "dismissedSessions": {
+      "originalCount": 171,
+      "allOriginalRowsExact": true,
+      "newRows": 2,
+      "capturedTotal": 173
+    },
+    "agents": {
+      "originalCount": 40,
+      "allOriginalRecordsPresent": true,
+      "wholeOriginalRowsExact": 38,
+      "originalRowsOnlyUpdatedTimestampChanged": 2,
+      "newRows": 0,
+      "capturedTotal": 40
+    },
+    "settings": {
+      "originalCount": 53,
+      "allOriginalRecordsPresent": true,
+      "wholeOriginalRowsExact": 51,
+      "changedValueRows": 2,
+      "newRows": 0,
+      "capturedTotal": 53
+    },
+    "drafts": {
+      "originalComposerCount": 10,
+      "wholeOriginalComposersExact": 9,
+      "knownValidationComposerAbsentFromCapturedMetadata": 1,
+      "capturedComposerCount": 9,
+      "exactKnownContentRelocationFoundInCapturedMetadata": false
+    }
+  },
+  "userClarification": {
+    "date": "2026-10-15",
+    "userConfirmedIntentionalHandlingOfAffectedDraft": true,
+    "specificSendDeleteMoveActionEstablished": false,
+    "treatAsUnexplainedProductDraftLossDefect": false,
+    "restoredOrOverwritten": false
+  },
+  "interpretation": [
+    "The strict comparison remains exit2 with9 differences; the clarification does not turn it into equal or erase a difference.",
+    "Later metadata timestamps and new records extend beyond the original native UI verification window. These differences are not attributed to the P30 original exit or to a specific writer.",
+    "The affected validation draft is absent from this captured metadata; other nine original draft objects match exactly. This is not a claim about every storage location or recoverability.",
+    "The table counts describe this captured snapshot only; the next installation requires a fresh baseline."
+  ],
+  "privateOriginalFileSha256": {
+    "privateCaptureReceipt": "328f23152f23982b80ccb0e69e3b318cf59d7c5ef416ccd1476ada06e77f74ab",
+    "privateStrictComparison": "98dcb66a1de998cdf560ddb80555b482a7f5e205f83c3f3e98a31552531dcdfe",
+    "privateFinalVerification": "035e78fa883ea5aceb26f28dbb914622deb57793673496fb40535de5cf9b7d7a",
+    "privateIndependentReview": "cd9ae82b1b68673386eb3a003f6776af5d8d12570801d1f190b7dd026a7fb171",
+    "userClarificationRecord": "dfab60efce3c8abd0940a710ab8782b913e3c929989d05f8fc2c8ec88dba1f2a"
+  },
+  "privacy": "No actual identifiers, filesystem locations, titles, draft bodies, credentials, service/model configuration values, raw database data or screenshots are included."
+}
