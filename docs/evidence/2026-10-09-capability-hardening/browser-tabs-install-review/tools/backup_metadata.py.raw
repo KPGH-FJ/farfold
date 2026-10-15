@@ -1,0 +1,174 @@
+"""Preserve exact SQLite bytes; open SQLite only on second private copies.
+
+Preparation only: SOURCE_COMMIT remains UNSET. Import performs no I/O.
+No original or first captured SQLite copy is opened with sqlite3.
+"""
+from contextlib import closing
+import datetime
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import sqlite3
+import stat
+import sys
+
+sys.dont_write_bytecode = True
+SOURCE_COMMIT = 'aabbbb063555c929f7f63a23d5d58a6b359e865e'
+ROOT = Path('/Users/tw/Desktop/farfold')
+OUT = ROOT / 'output/2026-10-14-browser-tabs-install'
+SOURCE = Path('/Users/tw/Library/Application Support/ai.farfold.desktop')
+NAMES = ('farfold.sqlite3', 'farfold.sqlite3-wal', 'farfold.sqlite3-shm')
+
+
+def require(ok, message):
+    if not ok:
+        raise RuntimeError(message)
+
+
+def load(name, filename):
+    spec = importlib.util.spec_from_file_location(name, OUT / filename)
+    helpers = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(helpers)
+    return helpers
+
+
+def read_source(directory, name, signatures):
+    before = os.stat(name, dir_fd=directory, follow_symlinks=False)
+    require(stat.S_ISREG(before.st_mode) and before.st_uid == os.getuid(), 'SQLite source must be an owner-held regular file')
+    descriptor = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory)
+    digest = hashlib.sha256()
+    with os.fdopen(descriptor, 'rb') as stream:
+        require(signatures.signature(before) == signatures.signature(os.fstat(stream.fileno())), 'SQLite changed while opening')
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(chunk)
+        require(signatures.signature(before) == signatures.signature(os.fstat(stream.fileno())) == signatures.signature(os.stat(name, dir_fd=directory, follow_symlinks=False)), 'SQLite changed while reading')
+    return signatures.signature(before), digest.hexdigest(), before.st_size
+
+
+def inventory(directory, signatures):
+    present = set(os.listdir(directory)) & set(NAMES)
+    require(NAMES[0] in present, 'SQLite main file is absent')
+    return {name: read_source(directory, name, signatures) for name in NAMES if name in present}
+
+
+def write_bytes(directory, name, raw):
+    descriptor = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=directory)
+    with os.fdopen(descriptor, 'wb') as stream:
+        stream.write(raw)
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
+def copy_source(directory, name, destination, expected, signatures):
+    before = os.stat(name, dir_fd=directory, follow_symlinks=False)
+    require(signatures.signature(before) == expected[0] and stat.S_ISREG(before.st_mode), 'SQLite changed before copy')
+    source = os.open(name, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK, dir_fd=directory)
+    with os.fdopen(source, 'rb') as stream:
+        require(signatures.signature(os.fstat(stream.fileno())) == expected[0], 'SQLite changed while opening copy')
+        target = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=destination)
+        digest = hashlib.sha256()
+        size = 0
+        with os.fdopen(target, 'wb') as writer:
+            for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+                writer.write(chunk)
+                digest.update(chunk)
+                size += len(chunk)
+            writer.flush()
+            os.fsync(writer.fileno())
+        require((digest.hexdigest(), size) == expected[1:] and signatures.signature(os.fstat(stream.fileno())) == expected[0] == signatures.signature(os.stat(name, dir_fd=directory, follow_symlinks=False)), 'SQLite changed during copy')
+
+
+def private_standalone_backup(working_path, consolidated_path):
+    require(working_path == OUT / 'metadata-working' / NAMES[0] and consolidated_path == OUT / 'metadata-before.sqlite3', 'exact-private-backup-paths')
+    # SQLite connects exclusively to the second working copy and new target.
+    with closing(sqlite3.connect(working_path)) as work_db:
+        with closing(sqlite3.connect(consolidated_path)) as merged_db:
+            # This new private target has no other reader or writer. Set this
+            # before backup imports WAL header pages: SQLite WAL section 8 then
+            # keeps its target wal-index in memory, never creating target SHM.
+            locking_before = merged_db.execute('PRAGMA locking_mode=EXCLUSIVE').fetchone()[0]
+            require(locking_before == 'exclusive', 'private-backup-not-exclusive-before-wal')
+            work_db.backup(merged_db)
+            require(not merged_db.in_transaction, 'private-backup-transaction-open')
+            mode_before = merged_db.execute('PRAGMA journal_mode').fetchone()[0]
+            checkpoint_before = merged_db.execute('PRAGMA wal_checkpoint(TRUNCATE)').fetchone()
+            require(len(checkpoint_before) == 3 and checkpoint_before[0] == 0 and checkpoint_before[1] == checkpoint_before[2], 'private-backup-checkpoint-incomplete')
+            require(merged_db.execute('PRAGMA journal_mode=DELETE').fetchone() == ('delete',), 'private-backup-delete-mode-failed')
+            checkpoint_after = merged_db.execute('PRAGMA wal_checkpoint(TRUNCATE)').fetchone()
+            require(checkpoint_after == (0, -1, -1), 'private-backup-still-has-wal')
+            mode_after = merged_db.execute('PRAGMA journal_mode').fetchone()[0]
+            require(mode_after == 'delete', 'private-backup-mode-not-delete')
+            require(merged_db.execute('PRAGMA integrity_check').fetchall() == [('ok',)], 'after-private-integrity')
+    for closed_db in (work_db, merged_db):
+        try:
+            closed_db.execute('SELECT 1')
+        except sqlite3.ProgrammingError:
+            pass
+        else:
+            raise RuntimeError('private-backup-connection-still-open')
+    require(not any(Path(str(consolidated_path) + suffix).exists() or Path(str(consolidated_path) + suffix).is_symlink() for suffix in ('-wal', '-shm')), 'private-backup-sidecars-after-close')
+    return {'lockingBeforeBackupOrFirstWalAccess': locking_before, 'modeBefore': mode_before, 'checkpointBeforeDelete': list(checkpoint_before), 'modeAfter': mode_after, 'checkpointAfterDelete': list(checkpoint_after), 'integrity': 'ok', 'connectionsClosedVerified': True, 'sidecarsAbsentAfterClose': True, 'deletedOrMovedSidecars': False, 'SQLiteOpenScope': 'secondWorkingAndNewConsolidatedOnly'}
+
+
+def main():
+    require(type(SOURCE_COMMIT) is str and len(SOURCE_COMMIT) == 40 and all(c in '0123456789abcdef' for c in SOURCE_COMMIT), 'Preparation only: SOURCE_COMMIT is UNSET')
+    require(Path(__file__).parent.resolve() == OUT, 'Wrong exact installation directory')
+    snapshot = load('docx_backup_snapshot_helpers', 'install_data_snapshot.py')
+    require(snapshot.SOURCE_COMMIT == SOURCE_COMMIT, 'Tool source pins disagree')
+    helpers = snapshot.require_ready()
+    validator = load('docx_backup_manifest_helpers', 'data_manifest.py')
+    before_path = OUT / 'install-data-before.jsonl'
+    before_summary, before_entries = validator.validated_manifest(before_path)
+    require(helpers.read_json(OUT / 'install-data-before-summary.json') == before_summary, 'Before data capture differs')
+    destinations = [OUT / 'metadata-source', OUT / 'metadata-working', OUT / 'metadata-before.sqlite3', OUT / 'metadata-backup-receipt.json']
+    require(not any(path.exists() or path.is_symlink() for path in destinations), 'Backup destination exists; preserve it and do not retry')
+    directory = snapshot.open_directory(SOURCE)
+    try:
+        initial = inventory(directory, snapshot)
+        expected = {name: before_entries.get(('appData', name)) for name in NAMES}
+        require(set(initial) == {name for name, entry in expected.items() if entry is not None}, 'SQLite presence changed since before capture')
+        require(all(expected[name]['kind'] == 'file' and expected[name]['sha256'] == value[1] and expected[name]['size'] == value[2] for name, value in initial.items()), 'SQLite bytes changed since before capture')
+        output = snapshot.open_directory(OUT)
+        try:
+            require(os.fstat(output).st_uid == os.getuid() and stat.S_IMODE(os.fstat(output).st_mode) == 0o700, 'Backup directory must be owner-held 0700')
+            for destination in destinations[:2]:
+                os.mkdir(destination.name, mode=0o700, dir_fd=output)
+                target = os.open(destination.name, snapshot.DIR_FLAGS, dir_fd=output)
+                try:
+                    for name, value in initial.items():
+                        copy_source(directory, name, target, value, snapshot)
+                finally:
+                    os.close(target)
+            descriptor = os.open(destinations[2].name, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600, dir_fd=output)
+            os.close(descriptor)
+        finally:
+            os.close(output)
+        require(inventory(directory, snapshot) == initial, 'SQLite originals or sidecar presence changed during capture')
+        backup_normalization = private_standalone_backup(destinations[1] / NAMES[0], destinations[2])
+        require(inventory(directory, snapshot) == initial, 'SQLite originals or sidecar presence changed during private backup')
+        require(all(helpers.sha(destinations[0] / name) == value[1] for name, value in initial.items()), 'First captured original bytes changed')
+        require(helpers.process_count() == 0, 'Formal app started during backup')
+        helpers.verify_normal_exit()
+        receipt = {'sourceCommit': SOURCE_COMMIT, 'normalExitSha256': helpers.NORMAL_EXIT_SHA,
+                   'checkedAtUtc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                   'method': 'Capture original main/WAL/SHM; SQLite backup exclusively from second private working copy',
+                   'sourceAndCaptureUnchanged': True, 'integrity': 'ok', 'privateMode': '0600',
+                   'backupNormalization': backup_normalization,
+                   'sourceBeforeManifestSha256': before_summary['sha256'],
+                   'capturedFiles': {name: value[1] for name, value in initial.items()},
+                   'backupSha256': helpers.sha(destinations[2])}
+        output = snapshot.open_directory(OUT)
+        try:
+            write_bytes(output, destinations[3].name, (json.dumps(receipt, indent=2) + '\n').encode())
+        finally:
+            os.close(output)
+    finally:
+        os.close(directory)
+    print('private closed-app metadata backup verified; original bytes preserved')
+
+
+
+if __name__ == '__main__':
+    main()

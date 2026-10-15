@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "mode": "retainedPriorRuns",
+  "retainedPriorRuns": [
+    {
+      "privateSummary": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run/summary.json",
+        "bytes": 6358,
+        "sha256": "cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685"
+      },
+      "metadata": {
+        "summary": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-01/summary.json.raw",
+          "bytes": 6358,
+          "sha256": "cf5ae2a88fd7d1834316a8876f02ba9d004fe2336be36540a033d92d79d39685"
+        },
+        "actualRootExitCode": 1,
+        "actualRootChunk": "a9baaa",
+        "reason": "Original P30 formal run 01 failed its three-second readiness guard with empty collected PTY output. The assertion did not distinguish elapsed timeout from a closed ready channel. Cause remains unresolved; the following mutex poison is secondary to the panic."
+      }
+    },
+    {
+      "privateSummary": {
+        "path": "output/2026-10-14-browser-tabs-integration/checks-run-02/summary.json",
+        "bytes": 6351,
+        "sha256": "9b830d61a4a44a7130dd7821f18af0e3128b55f34b0d38b945b09755d9236ee5"
+      },
+      "metadata": {
+        "summary": {
+          "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/run-02/summary.json.raw",
+          "bytes": 6351,
+          "sha256": "9b830d61a4a44a7130dd7821f18af0e3128b55f34b0d38b945b09755d9236ee5"
+        },
+        "actualRootExitCode": 1,
+        "actualRootChunk": "174aac",
+        "reason": "Original P30 formal run 02 failed the same readiness guard after original sources were restored. Empty collected PTY output and the subsequent poison remain original failures; passing isolated or instrumented diagnoses do not establish a repair or their cause."
+      }
+    }
+  ]
+}

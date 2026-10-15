@@ -339,3 +339,12 @@ docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/candidate-i
 docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/installation.json
 docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/install-independent-final.json
 docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/duplicate-cleanup.json
+
+# Preserve original P30 browser-tabs candidate and installation receipts.
+docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/candidate-independent.json
+docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/candidate-inputs-after.json
+docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/candidate-inputs.json
+docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/candidate.json
+docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/duplicate-cleanup.json
+docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/install-independent-final.json
+docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/installation.json

@@ -1,0 +1,623 @@
+{
+  "schema": 1,
+  "reviewedAtUtc": "2026-10-15T06:55:52.147760+00:00",
+  "sourceCommit": "aabbbb063555c929f7f63a23d5d58a6b359e865e",
+  "scope": "Reconcile current documentation with existing commits, selected source, original engineering/install receipts and original native tool outputs. No new tests, App run, Agent action, live database access or data comparison.",
+  "sourceThreadId": "01a1340e-1a89-7153-8ca5-4a7f610b79b3",
+  "originalLinePinsVerified": 56,
+  "confirmed": [
+    {
+      "claim": "P30 final seven checks actually passed",
+      "inputCount": 2538,
+      "frontendFiles": 503,
+      "frontendTests": 6116,
+      "rustPassed": 1692,
+      "rustIgnored": 6,
+      "earlierFormalFailedRunsRetained": 2,
+      "originalFinalToolOutputLine": 18465,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-integration/checks-run-03/summary.json",
+          "sha256": "a1e8f815723a6a43f2187e6c15f99ba9cf82d1b706be7aef5e47154efae4b2f3"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/verification.json",
+          "sha256": "762144f549cb6e1caa3b575d59b0e12d67f67dd232d4161e094da1ac6c0006e5"
+        }
+      ],
+      "rawCounts": "frontend-test/stdout.log lines9-10; cargo-test/stdout.log line1702",
+      "notClaimed": "All Agent, native product acceptance or PTY original root cause fixed."
+    },
+    {
+      "claim": "P30 engineering publication exact copies",
+      "copiedFiles": 108,
+      "hashedPathChecks": 216,
+      "mismatches": 0,
+      "ref": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/publication.json",
+        "sha256": "4a93f3a92ec325c06b7130efdceade14ffef16e6c340878012eb2c473d5086c2"
+      }
+    },
+    {
+      "claim": "P30 candidate9 and installation10 passed",
+      "candidateChecks": 9,
+      "installationChecks": 10,
+      "originalFinalToolOutputLines": [18732, 18829],
+      "refs": [
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/candidate-independent.json",
+          "sha256": "f3490549afda24b92a9279c422dbd0511948d36b0b1eea461dec46f79f6a9145"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/install-independent-final.json",
+          "sha256": "27662e86979ab239c2dd952e10c29d4fc424267ccfacecb44420b0d897e9c2ca"
+        }
+      ]
+    },
+    {
+      "claim": "Installation publication and final tool seal match present bytes",
+      "installationPublishedCopies": 29,
+      "installationHashedPathChecks": 62,
+      "toolSealHashedReferences": 13,
+      "preparationHashedReferences": 22,
+      "mismatches": 0,
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-install-preparation/generated-tools.json",
+          "sha256": "45c7a9b775794744812560b61aa97c0754ac02532e5f15920c1838c99fd4542a"
+        },
+        {
+          "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-install-review/verification.json",
+          "sha256": "8ba1017ab7a85b661e33c51b543ab1a9e75f1f4b0dc2f4fa9d945085b8b2f4ad"
+        }
+      ]
+    },
+    {
+      "claim": "Three saved installation data manifests byte-equal",
+      "entriesEach": 217400,
+      "bytesEach": 58925641,
+      "sha256Each": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+      "names": ["before", "preinstall", "after"],
+      "method": "Stream hash and count existing jsonl bytes only; no live storage or row values inspected.",
+      "notClaimed": "After-native-run data retention, contents correctness or earlier differences waived."
+    },
+    {
+      "claim": "Installed formal bundle matches pinned candidate",
+      "filesCompared": 5,
+      "mismatches": 0,
+      "method": "SHA256 of exact candidateInfo bundleFiles entries; includes executable, plist, icon, release-manifest, CodeResources.",
+      "notClaimed": "Source commit inferred from generic release-manifest; commit association comes from candidate exactSourceAndEngineering chain."
+    },
+    {
+      "claim": "Native P30 observations have actual CUA evidence",
+      "actualCuaOutputLines": {
+        "firstTaskReturned": 19378,
+        "secondTaskReturned": 19383,
+        "firstTaskReturnedAgain": 19388,
+        "manualSnapshot": 19536,
+        "quit": 19598
+      },
+      "scopedObserved": "Authored loopback B notes/counters retained independently both ways; manual text snapshot P30_PAGE_B/count1; App quit observed. Normal-exit process receipt confirms exact formal process absence.",
+      "refs": [
+        {
+          "path": "output/2026-10-14-browser-tabs-native/normal-exit-process.json",
+          "sha256": "9e0483ed18d98880db3cff0c7a72ff54712096ee3bdb36b3f93ca4fca98f53f5"
+        }
+      ],
+      "notClaimed": "Real Agent sharing, all native cases, exact pixel scroll or restart recovery."
+    },
+    {
+      "claim": "Search/diff public publication bytes match originals",
+      "hashedPathChecks": {
+        "attachmentSearch": 74,
+        "docxSearch": 90,
+        "xlsxSearch": 332,
+        "pdfSearch": 412,
+        "diffSummary": 352
+      },
+      "mismatches": 0,
+      "boundary": "Counts are file hash checks, not behavior assertions. DOCX/XLSX/PDF installation receipts explicitly nativePositiveSearchVerified=false; diff installation nativeToolDifferenceWorkflowVerified=false."
+    },
+    {
+      "claim": "PPTX preview and remembered public-URL recovery remain unimplemented",
+      "sourceEvidence": [
+        "src/runtime/office_preview_prepare.ts only DOCX/XLSX union and handlers",
+        "src/components/OpenedFileView.tsx workbook/document extension dispatch only",
+        "src/runtime/browser_workspace.ts owns live surface, not persistence",
+        "src-tauri/src/browser_workspace/page_store.rs stores current pages in memory"
+      ],
+      "authorization": "User explicitly approved remembered nonsecret public URLs, owner/order, dormant restart list, explicit fresh opening/no old grants. Approval is not implementation."
+    }
+  ],
+  "nativeObservations": [
+    {
+      "name": "three_tabs_switch_memory",
+      "status": "observed",
+      "facts": {
+        "A": {
+          "note": "http://127.0.0.1:1541/A_RETAINED",
+          "counter": 2,
+          "scrollNormalized": 0.4502447
+        },
+        "B": {
+          "note": "B_RETAINED",
+          "counter": 1,
+          "scrollNormalized": 0.2553018
+        },
+        "C": {
+          "note": "C_RETAINED",
+          "counter": 3,
+          "scrollNormalized": 0
+        }
+      },
+      "evidence": [
+        {
+          "callId": "call_b5b1fabb0e5d4ad58a254a418a25ebed",
+          "call": {
+            "line": 19203,
+            "timestampUtc": "2026-10-13T23:44:00.685Z",
+            "rawLineSha256": "5ca59efe8c1c740a892d2fcbdcd5466e9668126e457fcf9d61df598742e6574e"
+          },
+          "output": {
+            "line": 19206,
+            "timestampUtc": "2026-10-13T23:44:01.642Z",
+            "rawLineSha256": "d8b488d3afec7bec9740bcea0c568940cf79c6451c32c7cbb039ce4dbfc7f3ff"
+          }
+        },
+        {
+          "callId": "call_b52ee061163c4599bc25114b36b84977",
+          "call": {
+            "line": 19215,
+            "timestampUtc": "2026-10-13T23:44:19.643Z",
+            "rawLineSha256": "e4a1ef7b84afd8df4eb33eaeba91875985e4ccaef41bd6a529aa91e304c61727"
+          },
+          "output": {
+            "line": 19218,
+            "timestampUtc": "2026-10-13T23:44:20.113Z",
+            "rawLineSha256": "cff50edd135b41fe418f2140d0fdd9519a970466c7886dc79afb74e77c431ca2"
+          }
+        },
+        {
+          "callId": "call_3713bcbf21ec47b7a52b4dae8ac03f67",
+          "call": {
+            "line": 19220,
+            "timestampUtc": "2026-10-13T23:44:23.212Z",
+            "rawLineSha256": "70b4dfeb179f5965ebd832e7052f2de494a6a1f90d653f2dc5647fa66b17bda9"
+          },
+          "output": {
+            "line": 19223,
+            "timestampUtc": "2026-10-13T23:44:23.697Z",
+            "rawLineSha256": "4e0e1f53c676582c6daa5b9bf36bfd7fa64f43486ded0ca119bb9e402236012a"
+          }
+        }
+      ]
+    },
+    {
+      "name": "collapse_and_files_panel_roundtrip",
+      "status": "observed",
+      "facts": {
+        "A_noteAndCounterAndScrollRetained": true
+      },
+      "evidence": [
+        {
+          "callId": "call_b0c8f490925a4ee290b690e3f6e2ce83",
+          "call": {
+            "line": 19230,
+            "timestampUtc": "2026-10-13T23:44:33.832Z",
+            "rawLineSha256": "81271ef99f28447ab1237da13af440b2ab799c9339664b007fb74fc769db818c"
+          },
+          "output": {
+            "line": 19233,
+            "timestampUtc": "2026-10-13T23:44:34.321Z",
+            "rawLineSha256": "4c6a7abff9028a3b3aab5e09c7949d15ecb1dfb7eccfc9ae7f866a5ba5a7e7ba"
+          }
+        },
+        {
+          "callId": "call_fd156d2590a04c489d3fb154a56e69cf",
+          "call": {
+            "line": 19240,
+            "timestampUtc": "2026-10-13T23:44:44.441Z",
+            "rawLineSha256": "551c6f29872b39b20093f433e58a3ee12141c67a698ce15d45a4beffbdc66538"
+          },
+          "output": {
+            "line": 19243,
+            "timestampUtc": "2026-10-13T23:44:44.933Z",
+            "rawLineSha256": "d822cc6b3d64c3fb4b11718b108355b77979d5e4b49513e0c4b81d19d92ec305"
+          }
+        }
+      ]
+    },
+    {
+      "name": "single_B_close_and_reopen",
+      "status": "observed",
+      "facts": {
+        "onlyBRemovalDiff": "Removed IDs391-393,417; tab count2",
+        "C_preserved": {
+          "note": "C_RETAINED",
+          "counter": 3
+        },
+        "B_reopened": {
+          "note": "B_INITIAL",
+          "counter": 0,
+          "scrollNormalized": 0
+        },
+        "A_boundary": "A was current when B closed; diff showed no A reset. C has explicit subsequent full page state; no new full A capture after close."
+      },
+      "evidence": [
+        {
+          "callId": "call_85154c979e304ded8e95dfac7b7dcc42",
+          "call": {
+            "line": 19247,
+            "timestampUtc": "2026-10-13T23:44:48.417Z",
+            "rawLineSha256": "8f6102e9c3f64291ad209b42d8a207856a70d329ab3e10d599c28cf5fa97ff9a"
+          },
+          "output": {
+            "line": 19250,
+            "timestampUtc": "2026-10-13T23:44:48.897Z",
+            "rawLineSha256": "2fe75294ecb28f31405310ce0e411273e3a5e626017e6a12b0616ecf233cb8de"
+          }
+        },
+        {
+          "callId": "call_4de253c2c3d945a5adb456205ade052e",
+          "call": {
+            "line": 19252,
+            "timestampUtc": "2026-10-13T23:44:54.941Z",
+            "rawLineSha256": "db59fce539f023fdee08e01835c642875a102146242548c2c8273cbdb9db59eb"
+          },
+          "output": {
+            "line": 19255,
+            "timestampUtc": "2026-10-13T23:44:55.425Z",
+            "rawLineSha256": "849036e38147a12396d653947324ce41000b9126a0dce4e0809c718976d59eaa"
+          }
+        },
+        {
+          "callId": "call_c15ed7c9412b401386be3e3ce94dca20",
+          "call": {
+            "line": 19295,
+            "timestampUtc": "2026-10-13T23:45:33.560Z",
+            "rawLineSha256": "58ed0dfd26f79b6c25dbae11ffeafd1102c11b2447d035a8b254ddde72e5d23c"
+          },
+          "output": {
+            "line": 19298,
+            "timestampUtc": "2026-10-13T23:45:34.180Z",
+            "rawLineSha256": "f5a2f0b44ddd492aa2daebacc9f773e192d0899dc7e623fd8e358ce9f22c62ba"
+          }
+        }
+      ]
+    },
+    {
+      "name": "two_conversations_same_origin_B_bidirectional",
+      "status": "observed",
+      "facts": {
+        "firstConversation": {
+          "note": "B_REOPENED_FIRST_TASK",
+          "counter": 1,
+          "scrollAfterReturn": 0.2553018
+        },
+        "secondConversation": {
+          "note": "SECOND_TASK_B",
+          "counter": 2,
+          "scrollAfterReturn": 0.6117455
+        },
+        "order": "first set -> second opened initial -> second set -> first return -> second return -> first return",
+        "boundary": "Loaded historical conversation displayed permission reconfirmation; no confirmation was performed."
+      },
+      "evidence": [
+        {
+          "callId": "call_1d046b3b4dc1445ab65d830bff0c6799",
+          "call": {
+            "line": 19307,
+            "timestampUtc": "2026-10-13T23:45:43.335Z",
+            "rawLineSha256": "151fce97e51e7d707940be5a5dda65402731a95fb2c0c4ec4e69bd878dc6374a"
+          },
+          "output": {
+            "line": 19310,
+            "timestampUtc": "2026-10-13T23:45:44.756Z",
+            "rawLineSha256": "df1bd831eb8268fdd73d586d5dce69f06df3922268f978df3d0a129935de64ef"
+          }
+        },
+        {
+          "callId": "call_c0d55610f7f749829a3e38399084b4be",
+          "call": {
+            "line": 19358,
+            "timestampUtc": "2026-10-13T23:46:31.253Z",
+            "rawLineSha256": "f25bbea94bef16d078f8150b6b5f74428785633522bee3586a849f0d70678bd0"
+          },
+          "output": {
+            "line": 19361,
+            "timestampUtc": "2026-10-13T23:46:31.874Z",
+            "rawLineSha256": "35ea202dfedf71f2192f7366574785fb6ecf01849d60e97543e79757bd0fb659"
+          }
+        },
+        {
+          "callId": "call_d97cd4055c854aa1a7a7c25423945e43",
+          "call": {
+            "line": 19363,
+            "timestampUtc": "2026-10-13T23:46:34.999Z",
+            "rawLineSha256": "63b63f2f9cce847bb10a7244d59ea451ab13581d819412cb3adad9bf942b1587"
+          },
+          "output": {
+            "line": 19366,
+            "timestampUtc": "2026-10-13T23:46:36.433Z",
+            "rawLineSha256": "df9154a9f84cae3a5cf130c34777c1e4f9357053b9234dff57882c4254098f81"
+          }
+        },
+        {
+          "callId": "call_c75bd9447ce047f0806fbab79ebe6bbe",
+          "call": {
+            "line": 19375,
+            "timestampUtc": "2026-10-13T23:46:57.188Z",
+            "rawLineSha256": "b77b15a9a539b00bf948858c9f58b1ab06e462b3e42a01991baef02243d981d4"
+          },
+          "output": {
+            "line": 19378,
+            "timestampUtc": "2026-10-13T23:46:57.679Z",
+            "rawLineSha256": "133d8ebb881dc01d13026d9739d1b644328c94fc711a6048247d209f68d2d2f9"
+          }
+        },
+        {
+          "callId": "call_b18c123ff41046bfbbb5222f44f8c3a8",
+          "call": {
+            "line": 19380,
+            "timestampUtc": "2026-10-13T23:47:03.049Z",
+            "rawLineSha256": "c1dbe2ceaf34790f6d2a7def9cb7bc1ee9616eac9ff208cc24c5a0f6d3a7a124"
+          },
+          "output": {
+            "line": 19383,
+            "timestampUtc": "2026-10-13T23:47:03.518Z",
+            "rawLineSha256": "90f5d924368a6c6f2f9cc5f2d509018f444557a08804e962ec72d569c2156714"
+          }
+        },
+        {
+          "callId": "call_a0d934c5f85b4aefbf6880f6f91668cf",
+          "call": {
+            "line": 19385,
+            "timestampUtc": "2026-10-13T23:47:08.040Z",
+            "rawLineSha256": "15e8b1535c9b174e7be5c1c9fe287364007f254f1a1c71b9bffd93fae448f0f0"
+          },
+          "output": {
+            "line": 19388,
+            "timestampUtc": "2026-10-13T23:47:08.538Z",
+            "rawLineSha256": "cb1380e2957d1ad71c2fdb5a10bf33a3728de00a652606a4e75fb88995b7f10d"
+          }
+        }
+      ]
+    },
+    {
+      "name": "manual_snapshot_first_attempt_and_lock",
+      "status": "failed_or_unobserved",
+      "facts": {
+        "firstRequest": "CUA timed out; snapshot success not established",
+        "nextObservation": "Mac locked; automatic unlock failed"
+      },
+      "evidence": [
+        {
+          "callId": "call_d0e10c0d4124487d91546b5f35184a29",
+          "call": {
+            "line": 19399,
+            "timestampUtc": "2026-10-13T23:47:19.271Z",
+            "rawLineSha256": "b35474e2f7925bf92317bfea58abf6b14ca3b172ff507cebe47fa6586caa8b5a"
+          },
+          "output": {
+            "line": 19402,
+            "timestampUtc": "2026-10-13T23:51:23.816Z",
+            "rawLineSha256": "ca834461e1b1b53bf52b117e7ea0609fbaa4bc396d4120f1bfc955edd45a845f"
+          }
+        },
+        {
+          "callId": "call_9494bd43bf8f46539d8e7382f66c68c8",
+          "call": {
+            "line": 19413,
+            "timestampUtc": "2026-10-13T23:52:10.092Z",
+            "rawLineSha256": "51e128df8ae9885a8948c784a4fd6ff6a5698d80e02b5777fd3562f5cce8690e"
+          },
+          "output": {
+            "line": 19416,
+            "timestampUtc": "2026-10-13T23:52:10.223Z",
+            "rawLineSha256": "7eb9931808a1f9c4ee15c94a805900df73dc97e4ef7e57e0d99b4fa777d903bd"
+          }
+        }
+      ]
+    },
+    {
+      "name": "manual_snapshot_after_unlock",
+      "status": "observed_success",
+      "facts": {
+        "explicitControlClick": 113,
+        "readTimeLocal": "07:54:19",
+        "title": "P30_PAGE_B",
+        "counterInSnapshot": 1,
+        "noteFieldNotInExtractedText": true,
+        "notice": "Does not automatically update or send",
+        "permission": "Full relevant AX before click showed 尚未允许读取; manual snapshot does not establish Agent read grant."
+      },
+      "evidence": [
+        {
+          "callId": "call_cde1201018084813a36ba8dcce57959e",
+          "call": {
+            "line": 19509,
+            "timestampUtc": "2026-10-13T23:53:54.092Z",
+            "rawLineSha256": "8eede614fe5c7b509ac80bdcd3971b5ec697e4c8d797bb3c3b75c0e7972add3f"
+          },
+          "output": {
+            "line": 19512,
+            "timestampUtc": "2026-10-13T23:53:54.226Z",
+            "rawLineSha256": "5d3acb7db99e598c2a21952e7424418360d182d791cba52e65d65982123241fd"
+          }
+        },
+        {
+          "callId": "call_e64df522db924bd9a65056049eeee792",
+          "call": {
+            "line": 19533,
+            "timestampUtc": "2026-10-13T23:54:19.146Z",
+            "rawLineSha256": "1751e8f2660b2248c11444a77ee2a7049b1ba7e7ef97ce5284e2e0cff276b544"
+          },
+          "output": {
+            "line": 19536,
+            "timestampUtc": "2026-10-13T23:54:19.741Z",
+            "rawLineSha256": "87c41594b36e56aca0832a99c96be55992e7fba6a6a713bc413db08bfe9e48cf"
+          }
+        }
+      ]
+    },
+    {
+      "name": "normal_save_and_exit",
+      "status": "observed",
+      "facts": {
+        "firstQuitPromptThenStay": true,
+        "activityInProgress": 0,
+        "waiting": 1,
+        "waitingReason": "Loaded history permission reconfirmation gate; left unconfirmed",
+        "returnedToOriginalDraft": true,
+        "clickedSaveAndExit": 162,
+        "toolResult": "App quit",
+        "processCheck": "Exact lowercase /Applications/Farfold.app/Contents/MacOS/farfold matches empty",
+        "dataRetention": "not established by this receipt"
+      },
+      "evidence": [
+        {
+          "callId": "call_282001fedcae4958aa3e721dcd5c737a",
+          "call": {
+            "line": 19540,
+            "timestampUtc": "2026-10-13T23:54:25.285Z",
+            "rawLineSha256": "d710752819459d1911456f11f52371455b791e42ed2befa5b64d29d624f52f8e"
+          },
+          "output": {
+            "line": 19543,
+            "timestampUtc": "2026-10-13T23:54:25.850Z",
+            "rawLineSha256": "809fca0627d719f35e13fb5d4732111a038310977201ad2ca51f13de7d5060e0"
+          }
+        },
+        {
+          "callId": "call_4cd428e9cfea42938415e8a713bd7401",
+          "call": {
+            "line": 19576,
+            "timestampUtc": "2026-10-13T23:54:57.775Z",
+            "rawLineSha256": "31f91ac5939595708c69211ecf30dcca7638b5297317753ff3831dd98af1e2cb"
+          },
+          "output": {
+            "line": 19579,
+            "timestampUtc": "2026-10-13T23:54:58.263Z",
+            "rawLineSha256": "a69ac5c4ef7fa8647823696ffc669ddcfa1724ebc18f7777a1b967d9de921b7c"
+          }
+        },
+        {
+          "callId": "call_1ee4c27402aa40ffba58c7bdc0f206f7",
+          "call": {
+            "line": 19585,
+            "timestampUtc": "2026-10-13T23:55:08.236Z",
+            "rawLineSha256": "2eeab49303a05d8baeebd6bdf3b9d748b8ff9c603938273037ce09ffa0e47e7b"
+          },
+          "output": {
+            "line": 19588,
+            "timestampUtc": "2026-10-13T23:55:08.729Z",
+            "rawLineSha256": "67ff585877353110320e0457914f17d37ffbfc51d48993b575e7c24371b0a2e7"
+          }
+        },
+        {
+          "callId": "call_fdab8104a80b41569dab76ede4d59aed",
+          "call": {
+            "line": 19590,
+            "timestampUtc": "2026-10-13T23:55:15.099Z",
+            "rawLineSha256": "3a65a41b47df8e23aff549547581f3b4d3e53336d36d4f0c25a9e290fd7dffca"
+          },
+          "output": {
+            "line": 19593,
+            "timestampUtc": "2026-10-13T23:55:15.630Z",
+            "rawLineSha256": "c74686cbf8b55663243dfeccf9ab86bd8f81d815f5966f19508e850cf00dba6d"
+          }
+        },
+        {
+          "callId": "call_e3e07df41cca4e9698de4ae7a7548c19",
+          "call": {
+            "line": 19595,
+            "timestampUtc": "2026-10-13T23:55:19.873Z",
+            "rawLineSha256": "29214b959f86285021788d399822d8ed85340659653a96a664ac959792bfe5c5"
+          },
+          "output": {
+            "line": 19598,
+            "timestampUtc": "2026-10-13T23:55:25.000Z",
+            "rawLineSha256": "1685823c37ef3e84c4fed116f12261b740efde74a972c0e6f05a231e2e2a4d4f"
+          }
+        },
+        {
+          "callId": "call_ee20c0f3c9b749448c2a871c71fc4a69",
+          "call": {
+            "line": 19600,
+            "timestampUtc": "2026-10-13T23:55:35.084Z",
+            "rawLineSha256": "553a79bee9de50789c534abb0a6ff7c366303c2880c5c16558a47f90629f68af"
+          },
+          "output": {
+            "line": 19603,
+            "timestampUtc": "2026-10-13T23:55:35.203Z",
+            "rawLineSha256": "10550f5639e63edf6ec8da5180dc330f6e59f3d38d9cec15bb326308b9b0dac2"
+          }
+        }
+      ]
+    }
+  ],
+  "nativePrecisionCorrections": [
+    "The earlier first snapshot attempt timed out; do not count it as success. Only the later explicit click at 23:54:19Z has snapshot result evidence.",
+    "A note was actually http://127.0.0.1:1541/A_RETAINED after ambiguous CUA focus/setValue operations, not exactly A_RETAINED. Treat the actual observed value as the retention oracle.",
+    "A/B/C were authored synthetic loopback pages on three different origins (ports 1541/1542/1543). Same-origin isolation was additionally exercised by B at port1542 in two conversations.",
+    "Accessibility scroll values are normalized and changed with viewport layout. They support nonzero/retained position observations, not exact pixel scroll invariance.",
+    "No new prompt or permission confirmation action is present in the audited native calls; startup/history loading may still send Agent IPC."
+  ],
+  "notVerified": [
+    "post-native strict saved-data comparison",
+    "new normal exit cold-recovery verification",
+    "restart remembered-page implementation",
+    "production webpage screenshot",
+    "real public-web workflows",
+    "actual Agent webpage shared-read journey",
+    "read-grant retention/revocation in installed UI",
+    "29 Agent eight-standard acceptance",
+    "Windows runtime"
+  ],
+  "decisions": [
+    {
+      "key": "remember-page",
+      "sourceThreadId": "01a1340e-1a89-7153-8ca5-4a7f610b79b3",
+      "timestampUtc": "2026-10-13T23:53:42.979Z",
+      "line": 19496,
+      "rawLineSha256": "694878487d43d60535f522a81ba160b416c39928101ce2818c20c5da2db2b484",
+      "meaning": "Only explicit per-page non-secret public URL, conversation and order; restart lists dormant items; click opens; no old reading permission."
+    },
+    {
+      "key": "delivery-and-batching",
+      "sourceThreadId": "01a1340e-1a89-7153-8ca5-4a7f610b79b3",
+      "timestampUtc": "2026-10-15T06:45:20.277Z",
+      "line": 19972,
+      "rawLineSha256": "70b5fa039c414288d36198acb8c13d03b9427e820482a56fe187d0fb75ed99ad",
+      "meaning": "First user delivery remains29; user endorses impacted checks during development plus batched full engineering, install and actual verification; other tips are suggestions."
+    }
+  ],
+  "findings": [
+    "Current P30 status lagged actual scoped native observation and normal exit. Post-native strict data comparison remains pending.",
+    "Approved remember-page scope had not reached PRODUCT; approval is not implementation.",
+    "First delivery remains29 and eight standards;2-3first-release suggestion was rejected. Only batched engineering/install/native verification explicitly endorsed.",
+    "Old currentExecution nodes mixed prior preparation/failure stages with completed install. Historical failures are preserved; current pointers are corrected.",
+    "Dated historical next-step language can revive obsolete work; current continuation is explicit and history is marked."
+  ],
+  "boundary": "No key success fabrication found in the checked records. This audit does not validate all historical claims, all122 conditions, real Agent acceptance, Windows or whole-product readiness.",
+  "reviewInputReports": [
+    {
+      "kind": "plan-review",
+      "sha256": "80d1e7b623413f4529e0b4bea5d3f08e30ac1a2a28f12ae4535381fde6c16dca"
+    },
+    {
+      "kind": "evidence-review",
+      "sha256": "2b2dc491a1ad8f10ccc70e113baa529fefffb0266b402c527cd87ae18755130a"
+    },
+    {
+      "kind": "native-review",
+      "sha256": "b5b326f8bf1d9d8563bc7222e32e1b0f1429aca4f41ff891f58bc3586bb24ae2"
+    }
+  ],
+  "originalLinePinBreakdown": {
+    "native": 54,
+    "authorizations": 2,
+    "embeddedPublicPins": 50,
+    "totalReviewed": 56
+  }
+}

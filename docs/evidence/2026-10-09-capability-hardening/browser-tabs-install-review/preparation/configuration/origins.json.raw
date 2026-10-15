@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "phase": "SAVED_EXECUTED_P18_ORIGINS_NOT_P30_RENDERED",
+  "seal": {
+    "path": "output/2026-10-14-diff-summary-install-preparation/generated-tools.json",
+    "bytes": 5920,
+    "sha256": "6d91cdb295bb40deffb61852f11cf1b9408bd4a194fe06beb90cb5106a799a03"
+  },
+  "scripts": {
+    "candidate": {
+      "prepare-candidate.py": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/prepare-candidate.py",
+        "bytes": 4493,
+        "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1"
+      },
+      "verify-candidate.py": {
+        "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-candidate/verify-candidate.py",
+        "bytes": 85335,
+        "sha256": "8250f029b98402a6daccc56bb2b9e8e4a416bff25b074f6d95c99629000ad3aa"
+      }
+    },
+    "install": {
+      "data_manifest.py": {
+        "path": "output/2026-10-14-diff-summary-install/data_manifest.py",
+        "bytes": 4258,
+        "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662"
+      },
+      "observe_normal_exit.py": {
+        "path": "output/2026-10-14-diff-summary-install/observe_normal_exit.py",
+        "bytes": 3480,
+        "sha256": "10b137c9e2af03cc88445009be7b041a07a5d9351b785a6216f2a805e62c9203"
+      },
+      "install_data_snapshot.py": {
+        "path": "output/2026-10-14-diff-summary-install/install_data_snapshot.py",
+        "bytes": 6223,
+        "sha256": "d19076d9e12eed3df412810c434fd25246270eb65b60c1ba59355b2c9ca32c33"
+      },
+      "capture_snapshot.py": {
+        "path": "output/2026-10-14-diff-summary-install/capture_snapshot.py",
+        "bytes": 2842,
+        "sha256": "4d6e0b74e8231d6a5fd701711fdc83db00107a0d3a5627efee6863fd51b61167"
+      },
+      "backup_metadata.py": {
+        "path": "output/2026-10-14-diff-summary-install/backup_metadata.py",
+        "bytes": 10578,
+        "sha256": "cc286780302f9f2663f5db819806caa55291ecd429ab06d0d38dbf495b1fc5e0"
+      },
+      "install_verified_candidate.py": {
+        "path": "output/2026-10-14-diff-summary-install/install_verified_candidate.py",
+        "bytes": 53200,
+        "sha256": "5ec3b2110254efe767855055eefb7002eb1a1faa0bcfbd415d0a43f6d51e558a"
+      }
+    },
+    "independent": {
+      "verify_installed_final.py": {
+        "path": "output/2026-10-14-diff-summary-independent-install/verify_installed_final.py",
+        "bytes": 14605,
+        "sha256": "0cf1a681a16017a49e4ac4ddcd539e5d553de8e0440e84be176dd2b0368fa47e"
+      }
+    }
+  },
+  "reusablePreparation": {
+    "render.py": {
+      "path": "output/2026-10-14-diff-summary-install-preparation/render.py",
+      "bytes": 16049,
+      "sha256": "d017c86629da3a0e5c2b9f6c670e632c31c8b70b356c2cd40c266abc3c93b0d2"
+    },
+    "seal-tools.py": {
+      "path": "output/2026-10-14-diff-summary-install-preparation/seal-tools.py",
+      "bytes": 3756,
+      "sha256": "0982d948598165bc86747c56ec637093e4d37eb93415ab897ca0971b66c6a898"
+    },
+    "publish_and_cleanup.py": {
+      "path": "output/2026-10-14-diff-summary-install-preparation/publish_and_cleanup.py",
+      "bytes": 10419,
+      "sha256": "6bb40304c30f4d5b5821c23a2267ef3cdb1f5f84915f6d5d34ff53fca8832593"
+    },
+    "publish_installation.py": {
+      "path": "output/2026-10-14-diff-summary-install-preparation/publish_installation.py",
+      "bytes": 5883,
+      "sha256": "8b01165de096fdbb367d3ffdaf1ad7980312c463fdf983ebfa67ff65d745b21b"
+    }
+  },
+  "historicalFunctionsToKeepByteExact": {
+    "latest_data_evidence": {
+      "bytes": 4853,
+      "sha256": "11ff6d4d2e315b8a8f076d9e9bd44f7d228ca99cfb4316cba7c87edec73202c5"
+    },
+    "prior_exit_evidence": {
+      "bytes": 4976,
+      "sha256": "c507d8809ec5ee385e94e421670a7de97bd8357d6b6480b3208710fa3ff2258b"
+    },
+    "completed_quit_text": {
+      "bytes": 766,
+      "sha256": "543d104650849e5e6d3fc5c9a6952084813cf300e37bd09441dd8bad251f04cc"
+    },
+    "quit_timestamp": {
+      "bytes": 218,
+      "sha256": "f1a6becaa9896bf75225f2f52efaf5546ee4ce4e463e99519f9692a8aa2f9b73"
+    },
+    "raw_publication_evidence": {
+      "bytes": 1386,
+      "sha256": "ac599de3d7e8d02f199a662af24f26024d60ea27ae8a11cc8e609234b34595bf"
+    }
+  }
+}

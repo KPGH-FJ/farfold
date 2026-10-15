@@ -1,0 +1,27 @@
+{
+  "sourceCommit": "aabbbb063555c929f7f63a23d5d58a6b359e865e",
+  "completedAtUtc": "2026-10-13T23:33:36.886836+00:00",
+  "removedPath": "/Users/tw/Desktop/farfold/src-tauri/target/release/bundle/macos/Farfold.app",
+  "exactCandidateAndFormalFiveFilesAndModesMatched": true,
+  "formalApplicationPreserved": true,
+  "archivePreserved": "/Users/tw/Desktop/farfold/src-tauri/target/internal-candidate/2026-10-14-browser-tabs-aabbbb06/Farfold-0.1.7-aabbbb06.zip",
+  "independentInstallation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/install-independent-final.json",
+    "bytes": 156912,
+    "sha256": "27662e86979ab239c2dd952e10c29d4fc424267ccfacecb44420b0d897e9c2ca"
+  },
+  "threeManifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+  "manifestEntriesEach": 217400,
+  "publishedInstallation": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/installation.json",
+    "bytes": 3492,
+    "sha256": "1e6fcc4f77fd2ad5ff6039a6f00f60fa6fd922f384efac84e76e7115a2d1d545"
+  },
+  "cleanupTool": {
+    "path": "output/2026-10-14-browser-tabs-install-preparation/publish_and_cleanup.py",
+    "bytes": 10414,
+    "sha256": "bdf0022297a807449c9b172711d43dfb9e0d62456eb13b353364485f9b7cad0f"
+  },
+  "archiveValidation": "CRC, exact five payload paths, full bytes/hash, sizes and modes checked against FORMAL both before and after duplicate removal",
+  "boundary": "Only the exact verified generated App duplicate was removed after actual 10-check and three-manifest gates. Formal App, ZIP archive, sources, backups and user data were preserved. No App launch or native multi-tab lifecycle validation."
+}

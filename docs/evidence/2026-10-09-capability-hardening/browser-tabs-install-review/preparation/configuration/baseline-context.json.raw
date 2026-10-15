@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "phase": "SAVED_METADATA_ONLY_NOT_CURRENT_OBSERVATION",
+  "repositoryHeadReportedByRoot": "a45112856a44c4a16f83ebdd079ab6d5c4876907",
+  "installedSourceCommit": "fcd7b2669341b05f40c712b6c9fbbca26feb9031",
+  "lastRunningSourceCommit": "9c278d82c758176370efea8a7a17a8d2ab0bf697",
+  "sourceCommitForP30": null,
+  "lastRecordedCandidateInputCount": 2059,
+  "recordedCandidateFiles": {
+    "Contents/Info.plist": "3522970cc3aeeac804bc2c348bfd685efdf20758b804d2068f6caf36e0baa15b",
+    "Contents/MacOS/farfold": "ca7b3c692fcf18788bfe01fbf33b0feca76207f08e5a53c44179ce3edb68da1c",
+    "Contents/Resources/icon.icns": "e177892d6deffd1a696358d272f2bd00b34acb2667b1c0479c6e7922ff5e4341",
+    "Contents/Resources/release-manifest.json": "9af2cd07d60d877ebf28ef6a8e1365970e731652bc65ee77a042803ad2f6f56f",
+    "Contents/_CodeSignature/CodeResources": "a0428955c945fa4e4f6ebcc0238fbc271fac27b8c4fe750914a0b6c635fd59a8"
+  },
+  "recordedCandidateModes": {
+    "Contents/Info.plist": 420,
+    "Contents/MacOS/farfold": 493,
+    "Contents/Resources/icon.icns": 420,
+    "Contents/Resources/release-manifest.json": 420,
+    "Contents/_CodeSignature/CodeResources": 420
+  },
+  "recordedThreeManifest": {
+    "counts": {
+      "appData": {
+        "directory": 21360,
+        "file": 195450,
+        "special": 0,
+        "symlink": 328
+      },
+      "cache": {
+        "directory": 8,
+        "file": 2,
+        "special": 0,
+        "symlink": 0
+      },
+      "webkit": {
+        "directory": 152,
+        "file": 100,
+        "special": 0,
+        "symlink": 0
+      }
+    },
+    "sha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849"
+  },
+  "recordedConsolidatedSha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+  "installedNotLaunchedAtSavedGate": true,
+  "rootReportsNoLaterLaunch": true,
+  "freshProcessCheckPerformedHere": false,
+  "freshFormalBundleReadPerformedHere": false,
+  "freshDataCapturePerformedHere": false,
+  "databaseBytesReadHere": false,
+  "backupReuseAdopted": false,
+  "nextBackup": "New metadata-source + metadata-working + consolidated backup after fresh before capture. Old backup is provenance only.",
+  "publicCloseout": {
+    "path": "docs/evidence/2026-10-09-capability-hardening/diff-summary-install-review/verification.json",
+    "bytes": 16058,
+    "sha256": "15cf7c3de2f647bce6e72a22688a1f49fecf3bca28a199783d1356256e4f9d54"
+  },
+  "boundary": "Read saved JSON metadata and script bytes only. No current process/formal inspection, DB bytes, raw user-data manifest, module import or tool execution. Saved hashes do not prove current live equality."
+}

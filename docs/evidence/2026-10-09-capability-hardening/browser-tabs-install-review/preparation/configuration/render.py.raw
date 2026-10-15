@@ -1,0 +1,364 @@
+"""Prepare the nine actually executed P18 tools for P30; never execute them.
+
+Usage: python3 -B render.py pins.json engineering-paths.json new-review candidate|all
+Engineering paths must be explicit. Unknown result pins remain null and keep
+the existing runtime gates closed. All final input members must be committed.
+"""
+import ast
+import difflib
+import hashlib
+import json
+from pathlib import Path
+import re
+import sys
+
+ROOT = Path('/Users/tw/Desktop/farfold')
+OUT = ROOT / 'output/2026-10-14-browser-tabs-install-preparation'
+INTEGRATION = 'output/2026-10-14-browser-tabs-integration'
+PIN_KEYS = {'SOURCE_COMMIT', 'ENGINEERING_SHA', 'PRIVATE_ENGINEERING_SHA',
+            'EXPECTED_INPUT_COUNT', 'INVENTORY_SHA', 'FREEZE_SHA',
+            'NORMAL_EXIT_SHA', 'BEFORE_SUMMARY_SHA', 'BACKUP_RECEIPT_SHA'}
+PATH_KEYS = {'INVENTORY_PATH', 'ENGINEERING_PLAN_REL',
+             'PRIVATE_ENGINEERING_REL', 'ENGINEERING_PATH'}
+
+
+def sha(path):
+    assert all(not p.is_symlink() for p in (path, *path.parents))
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def once(text, old, new):
+    assert text.count(old) == 1, 'Nonunique patch anchor: ' + old[:100]
+    return text.replace(old, new, 1)
+
+
+def assignments(text, values):
+    edits = []
+    for node in ast.parse(text).body:
+        if isinstance(node, ast.Assign) and len(node.targets) == 1 and isinstance(node.targets[0], ast.Name):
+            key = node.targets[0].id
+            if key in values:
+                edits.append((ast.get_source_segment(text, node), key + ' = ' + values[key]))
+    for old, new in edits:
+        text = once(text, old, new)
+    return text
+
+
+def function(text, name):
+    node, = [n for n in ast.parse(text).body if isinstance(n, ast.FunctionDef) and n.name == name]
+    return ast.get_source_segment(text, node)
+
+
+def scope(text):
+    nodes = [n for n in ast.parse(text).body if
+             (isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id in ('ROOT', 'BASE', 'SCOPES', 'TOP') for t in n.targets))
+             or (isinstance(n, ast.AugAssign) and isinstance(n.target, ast.Name) and n.target.id in ('SCOPES', 'TOP'))]
+    env = {'Path': Path}
+    exec(compile(ast.Module(body=nodes, type_ignores=[]), '<literal-scope>', 'exec'), env)
+    paths = set(env['TOP'])
+    for directory in env['SCOPES']:
+        base = ROOT / directory
+        assert base.is_dir() and not base.is_symlink()
+        for path in base.rglob('*'):
+            if path.name == '.DS_Store' or '__pycache__' in path.parts:
+                continue
+            assert not path.is_symlink()
+            if path.is_file():
+                paths.add(str(path.relative_to(ROOT)))
+    return paths
+
+
+def set_scope(text, paths):
+    # Keep recursive source/fixture scopes; TOP is exactly the new inventory's
+    # complement, including every frozen output fixture. No commit exemption.
+    nodes = [n for n in ast.parse(text).body if
+             (isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'TOP' for t in n.targets))
+             or (isinstance(n, ast.AugAssign) and isinstance(n.target, ast.Name) and n.target.id == 'TOP')]
+    for node in reversed(nodes):
+        text = once(text, ast.get_source_segment(text, node), '')
+    scopes = [n for n in ast.parse(text).body if
+              (isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == 'SCOPES' for t in n.targets))
+              or (isinstance(n, ast.AugAssign) and isinstance(n.target, ast.Name) and n.target.id == 'SCOPES')]
+    env = {}
+    exec(compile(ast.Module(body=scopes, type_ignores=[]), '<literal-directories>', 'exec'), env)
+    top = sorted(p for p in paths if not any(p.startswith(s) for s in env['SCOPES'])) if paths is not None else []
+    text = assignments(text, {'INPUT_SCOPE_READY': repr(paths is not None)})
+    text = once(text, "if __name__ == '__main__':", 'TOP = ' + repr(top) + "\n\nif __name__ == '__main__':")
+    if paths is not None:
+        assert scope(text) == set(paths), 'Candidate/install inventory membership differs'
+    return text
+
+
+def validate_current_proof(proof, phase):
+    if proof.get('mode') == 'retainedPriorRuns':
+        assert set(proof) == {'schema', 'mode', 'retainedPriorRuns'} and proof['schema'] == 1
+        entries = proof['retainedPriorRuns']
+        assert isinstance(entries, list) and len(entries) >= 2
+        for entry in entries:
+            validate_current_proof({'schema': 1, 'mode': 'retainedPriorRun', 'retainedPriorRun': entry}, phase)
+        for refs in ([e['privateSummary']['path'] for e in entries],
+                     [e['metadata']['summary']['path'] for e in entries]):
+            assert len(refs) == len(set(refs)), 'Duplicate retained failed-run path'
+        return
+    assert set(proof) == {'schema', 'mode', 'retainedPriorRun'} and proof['schema'] == 1
+    assert proof['mode'] in ('none', 'retainedPriorRun'), 'Explicit current-proof mode is required'
+    if proof['mode'] == 'none':
+        assert proof['retainedPriorRun'] is None
+        return
+    retained = proof['retainedPriorRun']
+    assert isinstance(retained, dict) and set(retained) == {'privateSummary', 'metadata'}
+    metadata = retained['metadata']
+    assert set(metadata) == {'summary', 'actualRootExitCode', 'actualRootChunk', 'reason'}
+    assert type(metadata['actualRootExitCode']) is int and metadata['actualRootExitCode'] != 0
+    assert isinstance(metadata['actualRootChunk'], str) and metadata['actualRootChunk']
+    assert isinstance(metadata['reason'], str) and metadata['reason']
+    for item, base in ((retained['privateSummary'], INTEGRATION),
+                       (metadata['summary'], str(Path(phase['ENGINEERING_PATH']).parent))):
+        assert set(item) == {'path', 'bytes', 'sha256'}
+        path = Path(item['path'])
+        assert not path.is_absolute() and '..' not in path.parts and path.is_relative_to(base)
+        assert type(item['bytes']) is int and item['bytes'] > 0
+        assert isinstance(item['sha256'], str) and re.fullmatch('[0-9a-f]{64}', item['sha256'])
+    assert retained['privateSummary']['path'] != phase['PRIVATE_ENGINEERING_REL']
+    assert retained['privateSummary']['path'].endswith('/summary.json')
+    assert metadata['summary']['path'].endswith('/summary.json.raw')
+    assert all(retained['privateSummary'][key] == metadata['summary'][key] for key in ('bytes', 'sha256'))
+
+
+def current_proof(text, proof):
+    if proof['mode'] == 'retainedPriorRuns':
+        return current_proof_list(text, proof)
+    old = function(text, 'retained_prior_run_evidence')
+    if proof['mode'] == 'none':
+        text = once(text, old, '')
+        text = once(text, "set(original) | {'originalPrivateVerification', 'originalPublishedVerification', 'counts', 'publication', 'retainedPriorRun'}",
+                    "set(original) | {'originalPrivateVerification', 'originalPublishedVerification', 'counts', 'publication', 'retainedPriorRun', 'runHistoryBoundary', 'currentScope'}")
+        boundary = 'This is the first completed P30 full engineering run. Earlier targeted/browser failures remain in browser-tabs implementation evidence. P18 failed engineering run remains in its original evidence.'
+        current_scope = 'P30 engineering checks only; native browser pages, real Agent sharing, restart recovery and whole-plan acceptance remain separate. The reused runner raw boundary text is preserved unchanged.'
+        validation = ("    need('retainedPriorRun' in report and report['retainedPriorRun'] is None\n"
+                      "         and report.get('runHistoryBoundary') == " + repr(boundary) + "\n"
+                      "         and report.get('currentScope') == " + repr(current_scope) + ",\n"
+                      "         'First P30 run must retain explicit null and exact run-history/current-scope boundaries')\n"
+                      "    references = {}")
+        return once(text, '    references = retained_prior_run_evidence(path, report)', validation)
+    helper = '''def retained_prior_run_evidence(path, report):
+    """Pinned actual failed P30 run; never counted as the successful current seven."""
+    configured = __RETAINED_CONFIG__
+    need(report.get('currentScope') == 'P30 engineering checks only; native browser pages, real Agent sharing, restart recovery and whole-plan acceptance remain separate. The reused runner raw boundary text is preserved unchanged.'
+         and report.get('runHistoryBoundary') == 'This successful P30 run is separate from the retained first full run with six successful stages and cargo-test exit101. Targeted/browser failures and subsequent PTY diagnosis remain separate evidence. P18 historical failures are not relabeled as P30.',
+         'Retained P30 run must preserve exact current-scope and run-history boundaries')
+    retained = configured['metadata']
+    private_ref, public_ref = configured['privateSummary'], retained['summary']
+    need(report['retainedPriorRun'] == retained, 'Retained failed-run metadata differs')
+    private, public = [relative(item['path']) for item in (private_ref, public_ref)]
+    need(public.is_relative_to(path.parent) and private != PRIVATE_ENGINEERING,
+         'Retained failed run escaped this publication or equals current run')
+    for actual, expected in ((private, private_ref), (public, public_ref)):
+        need(actual.stat().st_size == expected['bytes'] and sha(actual) == expected['sha256'],
+             'Retained failed-run summary bytes differ')
+    need(private_ref['bytes'] == public_ref['bytes'] and private_ref['sha256'] == public_ref['sha256'],
+         'Retained summary original/copy differs')
+    prior = read(private)
+    names = ['format-check', 'typecheck', 'frontend-test', 'frontend-build', 'cargo-fmt', 'cargo-clippy', 'cargo-test']
+    need(prior['schema'] == 1 and prior['phase'] == 'ACTUAL_COMMAND_RESULTS'
+         and prior['allPassed'] is False and type(prior['inputCount']) is int and prior['inputCount'] > 0
+         and prior['interruptedSignal'] is None and prior['launchFailed'] == prior['runnerErrors'] == []
+         and all(prior[k] is True for k in ('sourceStable', 'sourceMembershipStable', 'protectedUnchanged')),
+         'Retained failure/stability is outside this supported recorded-completion schema')
+    need([row['name'] for row in prior['checks']] == names, 'Retained failed-run stages differ')
+    completed, failed, unstarted = [], [], []
+    for index, row in enumerate(prior['checks']):
+        need(row['argv'] == COMMANDS[row['name']]
+             and row['group'] == ('frontend' if index < 4 else 'native'), 'Retained failed-run command differs')
+        if row['state'] == 'COMPLETED':
+            need(row['actualStageCompletion'] is True and row['processLaunched'] is True
+                 and type(row['rawExitCode']) is int and row['cwd'] == str(ROOT),
+                 'Retained actual completion differs')
+            completed.append(row['name'])
+            if row['rawExitCode'] != 0:
+                failed.append(row['name'])
+        else:
+            need(row['state'] == 'NOT_STARTED' and row['actualStageCompletion'] is False
+                 and row['processLaunched'] is False and row['rawExitCode'] is None,
+                 'Retained unstarted work was misreported')
+            unstarted.append(row['name'])
+    need(failed and prior['failed'] == failed and prior['notStarted'] == unstarted
+         and prior['completedCount'] == prior['requiredCommandsExecuted'] == len(completed),
+         'Retained failed-run counts differ')
+    refs = {str(p.relative_to(ROOT)): sha(p) for p in (private, public)}
+    for prefix, count in (('inputs', prior['inputCount']), ('protected', 3)):
+        before, after = [private.parent / (prefix + '-' + side + '.json') for side in ('before', 'after')]
+        need(read(before) == read(after) and len(read(before)) == count,
+             'Retained failed-run source/protected manifests differ')
+        if prefix == 'protected':
+            need(read(before) == read(ENGINEERING_PLAN)['protected'], 'Retained protected baseline differs')
+        for item in (before, after):
+            refs[str(item.relative_to(ROOT))] = sha(item)
+    return refs'''
+    helper = once(helper, '__RETAINED_CONFIG__', repr(proof['retainedPriorRun']))
+    text = once(text, "set(original) | {'originalPrivateVerification', 'originalPublishedVerification', 'counts', 'publication', 'retainedPriorRun'}",
+                "set(original) | {'originalPrivateVerification', 'originalPublishedVerification', 'counts', 'publication', 'retainedPriorRun', 'runHistoryBoundary', 'currentScope'}")
+    return once(text, old, helper)
+
+
+def current_proof_list(text, proof):
+    # Reuse every per-run gate from the existing single-failure branch. Only
+    # the outer metadata container and history statement change for a list.
+    entries = proof['retainedPriorRuns']
+    single = current_proof(text, {'mode': 'retainedPriorRun', 'retainedPriorRun': entries[0]})
+    old = function(single, 'retained_prior_run_evidence')
+    item = once(old, 'def retained_prior_run_evidence(path, report):',
+                'def retained_prior_run_item_evidence(path, metadata, configured):')
+    item = once(item, '    configured = ' + repr(entries[0]) + '\n', '')
+    guards = [n for n in ast.parse(item).body[0].body
+              if isinstance(n, ast.Expr) and isinstance(n.value, ast.Call)
+              and any(isinstance(x, ast.Constant) and x.value == 'currentScope' for x in ast.walk(n))]
+    guard, = guards
+    item = once(item, '    ' + ast.get_source_segment(item, guard) + '\n', '')
+    item = once(item, "report['retainedPriorRun'] == retained", 'metadata == retained')
+    wrapper = '''def retained_prior_run_evidence(path, report):
+    """All explicitly pinned original failures remain separate from current success."""
+    configured = __RETAINED_LIST__
+    need(report.get('currentScope') == 'P30 engineering checks only; native browser pages, real Agent sharing, restart recovery and whole-plan acceptance remain separate. The reused runner raw boundary text is preserved unchanged.'
+         and report.get('runHistoryBoundary') == 'The successful current P30 run is separate from every retained failed formal run listed in retainedPriorRuns. Each original result remains unchanged; isolated or instrumented diagnoses are not repairs or substitutes for formal engineering. P18 historical failures are not relabeled as P30.',
+         'Retained P30 runs must preserve exact current-scope and run-history boundaries')
+    need(report.get('retainedPriorRuns') == [entry['metadata'] for entry in configured],
+         'Retained failed-run list or order differs')
+    references = {}
+    for entry, metadata in zip(configured, report['retainedPriorRuns']):
+        refs = retained_prior_run_item_evidence(path, metadata, entry)
+        need(not set(references).intersection(refs), 'Retained failed runs reuse a source path')
+        references.update(refs)
+    return references'''
+    wrapper = once(wrapper, '__RETAINED_LIST__', repr(entries))
+    single = once(single, old, item + '\n\n\n' + wrapper)
+    return once(single,
+                "set(original) | {'originalPrivateVerification', 'originalPublishedVerification', 'counts', 'publication', 'retainedPriorRun', 'runHistoryBoundary', 'currentScope'}",
+                "set(original) | {'originalPrivateVerification', 'originalPublishedVerification', 'counts', 'publication', 'retainedPriorRuns', 'runHistoryBoundary', 'currentScope'}")
+
+
+def transform(text, name, pins, known, phase, paths, proof):
+    original = text
+    previous = None
+    if name == 'verify-candidate.py':
+        # Only this previous-install bridge changes historical baseline phase.
+        previous = function(text, 'previous_installation_evidence')
+        text = once(text, previous, 'def previous_installation_evidence():\n    pass')
+    for old, new in (
+        ('output/2026-10-14-diff-summary-install-preparation', 'output/2026-10-14-browser-tabs-install-preparation'),
+        ('output/2026-10-14-diff-summary-independent-install', 'output/2026-10-14-browser-tabs-independent-install'),
+        ('output/2026-10-14-diff-summary-install', 'output/2026-10-14-browser-tabs-install'),
+        ('hardening/diff-summary-candidate', 'hardening/browser-tabs-candidate'),
+        ('docs/evidence/2026-10-09-capability-hardening/diff-summary-checks', str(Path(phase['ENGINEERING_PATH']).parent)),
+        ('output/2026-10-14-diff-summary-integration/checks-run-02/summary.json', phase['PRIVATE_ENGINEERING_REL']),
+        ('output/2026-10-14-diff-summary-integration/checks-freeze-02/freeze.json', phase['ENGINEERING_PLAN_REL']),
+        ('output/2026-10-14-diff-summary-integration/inventory-plan-02.json', phase['INVENTORY_PATH']),
+        ('output/2026-10-14-diff-summary-integration', INTEGRATION),
+        ('internal-candidate/2026-10-14-diff-summary-', 'internal-candidate/2026-10-14-browser-tabs-'),
+    ):
+        text = text.replace(old, new)
+    values = {key: repr(value) for key, value in {**known, **pins}.items()}
+    values.update({'BASELINE': "BASE / 'diff-summary-candidate/candidate.json'",
+                   'BASELINE_INSTALL': "BASE / 'diff-summary-candidate/install-independent-final.json'",
+                   'ENGINEERING_PLAN_SHA': repr(pins['FREEZE_SHA'])})
+    for key in ('QUIT_CONTEXT', 'QUIT_MANIFEST', 'PRIOR_QUIT', 'PRIOR_PROCESS', 'PRIOR_ACTUAL_PROCESS'):
+        values[key] = 'ROOT / ' + repr(known[key])
+    for key, path in phase.items():
+        values[key] = ('ROOT / ' if key in ('INVENTORY_PATH', 'ENGINEERING_PATH') else '') + repr(path)
+    text = assignments(text, values)
+    if previous is not None:
+        previous = previous.replace('output/2026-10-14-pdf-search-install/', 'output/2026-10-14-diff-summary-install/')
+        previous = previous.replace('2a720', 'fcd7')
+        text = once(text, function(text, 'previous_installation_evidence'), previous)
+        text = once(text, 'source2a720 baseline (never launched)', 'sourcefcd7 baseline (never launched)')
+        for retained in ('latest_data_evidence', 'prior_exit_evidence', 'completed_quit_text', 'quit_timestamp', 'raw_publication_evidence'):
+            assert function(text, retained) == function(original, retained), 'Historical gate changed: ' + retained
+        text = current_proof(text, proof)
+    if name in ('verify-candidate.py', 'install_verified_candidate.py'):
+        text = set_scope(text, paths)
+    if name == 'observe_normal_exit.py':
+        text = once(text, 'Saved 2a720 installation was not launched;', 'Saved fcd7 installation was not launched;')
+    if name == 'verify_installed_final.py':
+        text = once(text, 'this configured P18 tool-difference installation over the actual unlaunched 2a720 formal baseline;',
+                    'this configured P30 runtime browser-tabs installation over the actual unlaunched fcd7 formal baseline;')
+    assert 'output/output/' not in text and len(text.splitlines()) <= 1500
+    compile(text, name, 'exec')
+    return text
+
+
+def configuration(filename):
+    path = OUT / filename
+    assert path.parent == OUT and not path.is_symlink()
+    return path, json.loads(path.read_text())
+
+
+def main():
+    assert Path(__file__).absolute() == OUT / 'render.py'
+    assert len(sys.argv) == 5 and sys.argv[4] in ('candidate', 'all')
+    assert re.fullmatch('[a-z0-9][a-z0-9-]*', sys.argv[3])
+    pin_path, pins = configuration(sys.argv[1])
+    phase_path, phase = configuration(sys.argv[2])
+    proof_path, proof = configuration('current-proof.json')
+    assert set(pins) == PIN_KEYS and set(phase) == PATH_KEYS
+    for key, value in pins.items():
+        assert value is None or (type(value) is int and value > 0 if key == 'EXPECTED_INPUT_COUNT' else isinstance(value, str) and re.fullmatch('[0-9a-f]{' + ('40' if key == 'SOURCE_COMMIT' else '64') + '}', value)), key
+    for key, value in phase.items():
+        assert isinstance(value, str) and value and not Path(value).is_absolute() and '..' not in Path(value).parts, 'Explicit engineering path required: ' + key
+        assert value.endswith('.json') and value.startswith('docs/evidence/2026-10-09-capability-hardening/' if key == 'ENGINEERING_PATH' else INTEGRATION + '/'), key
+    assert Path(phase['PRIVATE_ENGINEERING_REL']).name == 'summary.json'
+    assert Path(phase['ENGINEERING_PLAN_REL']).name == 'freeze.json'
+    assert Path(phase['ENGINEERING_PATH']).name == 'verification.json'
+    validate_current_proof(proof, phase)
+    assert all(pins[k] is not None for k in PIN_KEYS - {'NORMAL_EXIT_SHA', 'BEFORE_SUMMARY_SHA', 'BACKUP_RECEIPT_SHA'}), 'Final source/engineering pins are required before rendering'
+    origins = json.loads((OUT / 'origins.json').read_text())
+    known = json.loads((OUT / 'known-baseline.json').read_text())
+    paths = None
+    if pins['INVENTORY_SHA'] is not None:
+        inventory_path = ROOT / phase['INVENTORY_PATH']
+        assert sha(inventory_path) == pins['INVENTORY_SHA']
+        inventory = json.loads(inventory_path.read_bytes())
+        assert inventory['inputCount'] == pins['EXPECTED_INPUT_COUNT'] == len(inventory['paths'])
+        assert inventory['paths'] == sorted(set(inventory['paths']))
+        paths = inventory['paths']
+    destination = OUT / sys.argv[3]
+    assert not destination.exists()
+    rendered = []
+    for category, records in origins['scripts'].items():
+        if sys.argv[4] == 'candidate' and category != 'candidate':
+            continue
+        for name, record in records.items():
+            path = ROOT / record['path']
+            assert sha(path) == record['sha256'] and path.stat().st_size == record['bytes']
+            source = path.read_text()
+            rendered.append((category, name, source, transform(source, name, pins, known, phase, paths, proof), record))
+    destination.mkdir(mode=0o700)
+    (destination / 'diffs').mkdir()
+    files = []
+    finals = {'candidate': 'docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate',
+              'install': 'output/2026-10-14-browser-tabs-install',
+              'independent': 'output/2026-10-14-browser-tabs-independent-install'}
+    for category, name, source, result, record in rendered:
+        target = destination / category / name
+        target.parent.mkdir(exist_ok=True)
+        with target.open('x') as handle:
+            handle.write(result)
+        diff = destination / 'diffs' / (category + '-' + name + '.diff')
+        with diff.open('x') as handle:
+            handle.writelines(difflib.unified_diff(source.splitlines(True), result.splitlines(True), fromfile=record['path'], tofile=str(target.relative_to(ROOT))))
+        files.append({'path': str(target.relative_to(ROOT)), 'bytes': target.stat().st_size, 'sha256': sha(target),
+                      'origin': record, 'diff': str(diff.relative_to(ROOT)), 'diffSha256': sha(diff),
+                      'finalPath': finals[category] + '/' + name})
+    receipt = {'phase': 'PREPARATION_ONLY_NO_GENERATED_MAIN_EXECUTED', 'pins': pins, 'engineeringPaths': phase, 'currentProof': proof,
+               'inputScopeReady': paths is not None, 'files': files,
+               'tools': [{'preparedPath': f['path'], 'preparedSha256': f['sha256'], 'finalPath': f['finalPath']} for f in files],
+               'configurationInputs': {str(p.relative_to(ROOT)): sha(p) for p in (
+                   Path(__file__), pin_path, phase_path, proof_path, OUT / 'origins.json', OUT / 'known-baseline.json', OUT / 'baseline-context.json')}}
+    with (destination / 'preparation.json').open('x') as handle:
+        json.dump(receipt, handle, ensure_ascii=False, indent=2)
+        handle.write('\n')
+    print(json.dumps({'path': str(destination.relative_to(ROOT)), 'files': len(files), 'scopeReady': paths is not None,
+                      'preparationSha256': sha(destination / 'preparation.json')}))
+
+
+if __name__ == '__main__':
+    main()

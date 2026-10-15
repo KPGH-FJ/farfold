@@ -1,0 +1,6 @@
+{
+  "INVENTORY_PATH": "output/2026-10-14-browser-tabs-integration/inventory-plan-03.json",
+  "ENGINEERING_PLAN_REL": "output/2026-10-14-browser-tabs-integration/checks-freeze-03/freeze.json",
+  "PRIVATE_ENGINEERING_REL": "output/2026-10-14-browser-tabs-integration/checks-run-03/summary.json",
+  "ENGINEERING_PATH": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-checks/verification.json"
+}

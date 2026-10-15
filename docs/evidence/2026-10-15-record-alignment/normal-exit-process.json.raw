@@ -1,0 +1,25 @@
+{
+  "observedAtUtc": "2026-10-13T23:55:35.176070+00:00",
+  "command": [
+    "ps",
+    "-axo",
+    "pid=,comm="
+  ],
+  "executable": "/Applications/Farfold.app/Contents/MacOS/farfold",
+  "exactProcessMatches": [],
+  "formalProcessAbsent": true,
+  "sourceCommit": "aabbbb063555c929f7f63a23d5d58a6b359e865e",
+  "normalExitUi": "Root CUA clicked162 Save and Exit after current UI showed in-progress0, only loaded history permission-reconfirmation gate; getAXState returned App quit. No prompt or permission confirmation performed.",
+  "exitActions": [
+    "first super+q dialog",
+    "stay and inspect activity",
+    "continue original draft",
+    "second super+q",
+    "save and exit"
+  ],
+  "notClaimed": [
+    "pending history permission became confirmed",
+    "all data unchanged",
+    "zero Agent IPC"
+  ]
+}

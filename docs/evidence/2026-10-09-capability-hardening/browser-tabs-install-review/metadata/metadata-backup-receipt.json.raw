@@ -1,0 +1,36 @@
+{
+  "sourceCommit": "aabbbb063555c929f7f63a23d5d58a6b359e865e",
+  "normalExitSha256": "22698751536bd547efe39810a19fa004ca94298b3bac0f7ed508a26612a11cb7",
+  "checkedAtUtc": "2026-10-13T23:30:23.424035+00:00",
+  "method": "Capture original main/WAL/SHM; SQLite backup exclusively from second private working copy",
+  "sourceAndCaptureUnchanged": true,
+  "integrity": "ok",
+  "privateMode": "0600",
+  "backupNormalization": {
+    "lockingBeforeBackupOrFirstWalAccess": "exclusive",
+    "modeBefore": "wal",
+    "checkpointBeforeDelete": [
+      0,
+      0,
+      0
+    ],
+    "modeAfter": "delete",
+    "checkpointAfterDelete": [
+      0,
+      -1,
+      -1
+    ],
+    "integrity": "ok",
+    "connectionsClosedVerified": true,
+    "sidecarsAbsentAfterClose": true,
+    "deletedOrMovedSidecars": false,
+    "SQLiteOpenScope": "secondWorkingAndNewConsolidatedOnly"
+  },
+  "sourceBeforeManifestSha256": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849",
+  "capturedFiles": {
+    "farfold.sqlite3": "f7ddc093c95edd33c01bb65146cff52f5570e3b8ebb6fabc6ad95a4cf1eb4da5",
+    "farfold.sqlite3-wal": "6e4974af2c3e869b67234a7b5a2495407d447cd1ba57264dc9f4b92f88cb059e",
+    "farfold.sqlite3-shm": "bb104a2cbc5e5adcff76748ed2f11654fd46fe86c88220e69437cfe59a57ffb9"
+  },
+  "backupSha256": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24"
+}

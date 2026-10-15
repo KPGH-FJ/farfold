@@ -1,0 +1,111 @@
+{
+  "phase": "fullyConfiguredForVerifiedInstallBeforeAppMutation",
+  "sourceCommit": "aabbbb063555c929f7f63a23d5d58a6b359e865e",
+  "notYetKnownPins": [],
+  "preparation": {
+    "path": "output/2026-10-14-browser-tabs-install-preparation/preparation.json",
+    "sha256": "22e91b76eeeef90c12dd911e1b69ce6a5351ef3af75024cea6048b4f5b3ed5f6"
+  },
+  "tools": [
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/prepare-candidate.py",
+      "sha256": "1679ff4b5e91b9605c3322e4ab5ba84e10f1a636fe488dbf9e9aaf141e2d02f1",
+      "pins": {}
+    },
+    {
+      "path": "docs/evidence/2026-10-09-capability-hardening/browser-tabs-candidate/verify-candidate.py",
+      "sha256": "cf1390e2bca0113de73999a38575cb2f0b167c1a8b2f03695d2fa221313e1efb",
+      "pins": {
+        "BASELINE_SHA": "0d97f25bdea66bb111287343a5fb63d2575da93842bb3a276cd459b32422bdc9",
+        "SOURCE_COMMIT": "aabbbb063555c929f7f63a23d5d58a6b359e865e",
+        "ENGINEERING_SHA": "762144f549cb6e1caa3b575d59b0e12d67f67dd232d4161e094da1ac6c0006e5",
+        "PRIVATE_ENGINEERING_SHA": "a1e8f815723a6a43f2187e6c15f99ba9cf82d1b706be7aef5e47154efae4b2f3",
+        "BASELINE_INSTALL_SHA": "034446261d20db459a9999ea787d3edcb4341f4d4ed69d29c28e96503ad67900",
+        "EXPECTED_INPUT_COUNT": 2538,
+        "BASELINE_NATIVE_SHA": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+        "PRIOR_QUIT_SHA": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+        "PRIOR_PROCESS_SHA": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c",
+        "ENGINEERING_PLAN_SHA": "85b63764754d11ea39f81bfeb50cd29766d42c04121523f0618cff1425365c53",
+        "QUIT_CONTEXT_SHA": "b6bb997adbea13389eab605b1b38a50b782ae9a105c04de58b063ed4bfe51d14",
+        "QUIT_MANIFEST_SHA": "d4a3e377389ac349f7592ac38f112851a44a0f7410659ffc5754ea2b1ed34942",
+        "PRIOR_ACTUAL_PROCESS_SHA": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205",
+        "LATEST_DATA_CONSOLIDATED_SHA": "a70054804a5399ff5a1e38157d6008987c9c0e6218545545f3b3089f42b4cc24",
+        "INVENTORY_SHA": "a3c5edb78b4a9ff1a192ad365a76e3d317e556d2dc28ff452ac5c304a33e364e",
+        "PREVIOUS_MANIFEST_SHA": "eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849"
+      }
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-install/data_manifest.py",
+      "sha256": "1178b92a5528e05c35edcadc84e511fbdb2ff0113fde06c168f25951bf71b662",
+      "pins": {}
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-install/observe_normal_exit.py",
+      "sha256": "90c75744882b26bf8de1c625876f91ca9dcebbe480547ef62a80701fc207c4a8",
+      "pins": {
+        "SOURCE_COMMIT": "aabbbb063555c929f7f63a23d5d58a6b359e865e"
+      }
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-install/install_data_snapshot.py",
+      "sha256": "cc12f49d05b666cc75b8cf804fa689bdd9b5b010c969d0105738ca7b1c1fc6b6",
+      "pins": {
+        "SOURCE_COMMIT": "aabbbb063555c929f7f63a23d5d58a6b359e865e"
+      }
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-install/capture_snapshot.py",
+      "sha256": "7ddc3594101400baa9caa9a9deaef5d546cee5404b2398f06cb78f26e358061c",
+      "pins": {
+        "SOURCE_COMMIT": "aabbbb063555c929f7f63a23d5d58a6b359e865e"
+      }
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-install/backup_metadata.py",
+      "sha256": "f0360390f0c1932bb0eac4e7a78c02acca4208d69818b95f9b9490573ee97b6d",
+      "pins": {
+        "SOURCE_COMMIT": "aabbbb063555c929f7f63a23d5d58a6b359e865e"
+      }
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-install/install_verified_candidate.py",
+      "sha256": "1fb6f69d3dbdcc2e525c9440e88e0d455be011b3b850d49b9f46c81c944e1f28",
+      "pins": {
+        "SOURCE_COMMIT": "aabbbb063555c929f7f63a23d5d58a6b359e865e",
+        "NORMAL_EXIT_SHA": "22698751536bd547efe39810a19fa004ca94298b3bac0f7ed508a26612a11cb7",
+        "BACKUP_RECEIPT_SHA": "50e2af609c8d20b2f7f84c21886523756361a2ea71da815748fe2307bfadcc9d",
+        "BEFORE_SUMMARY_SHA": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+        "PRIOR_QUIT_SHA": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+        "EXPECTED_INPUT_COUNT": 2538,
+        "BASELINE_NATIVE_SHA": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+        "PRIOR_PROCESS_SHA": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c",
+        "PRIOR_ACTUAL_PROCESS_SHA": "5408a88ad6cc62a7207c5a6ec55e067d3c9079df411cfd67236470b0e6f62205"
+      }
+    },
+    {
+      "path": "output/2026-10-14-browser-tabs-independent-install/verify_installed_final.py",
+      "sha256": "ea6394c85a1284d9c05c24a56419ec638bcdaa269470cf337ead0d6513850256",
+      "pins": {
+        "SOURCE_COMMIT": "aabbbb063555c929f7f63a23d5d58a6b359e865e",
+        "BEFORE_SUMMARY_SHA": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af",
+        "NORMAL_EXIT_SHA": "22698751536bd547efe39810a19fa004ca94298b3bac0f7ed508a26612a11cb7",
+        "PRIOR_QUIT_SHA": "580df48ae00223df3b0f5200e07160d957a15c913ec86ddb46684f531feee6ad",
+        "EXPECTED_INPUT_COUNT": 2538,
+        "BASELINE_NATIVE_SHA": "663cf0983a81cd8c80fd3497d996810a1e4cb1aa0e473e2ad48c540072572a96",
+        "PRIOR_PROCESS_SHA": "4cb4a39f6f27ec99e022e7aae0145b5e4952bbad473d3e5909dd28573792398c"
+      }
+    }
+  ],
+  "beforeSummary": {
+    "path": "output/2026-10-14-browser-tabs-install/install-data-before-summary.json",
+    "sha256": "e42f5ce73eb58a4ebf1ab1f83d727d92ebf66949d9afb09c754aaf3c9d0498af"
+  },
+  "backupReceipt": {
+    "path": "output/2026-10-14-browser-tabs-install/metadata-backup-receipt.json",
+    "sha256": "50e2af609c8d20b2f7f84c21886523756361a2ea71da815748fe2307bfadcc9d"
+  },
+  "normalExit": {
+    "path": "output/2026-10-14-browser-tabs-install/normal-exit-observation.json",
+    "sha256": "22698751536bd547efe39810a19fa004ca94298b3bac0f7ed508a26612a11cb7"
+  }
+}
