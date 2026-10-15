@@ -32,6 +32,7 @@ import {
   fileFeedbackKey,
   fileFeedbackDrafts,
   useFileFeedback,
+  type FileFeedbackDestination,
 } from "../runtime/drafts";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { fileFeedbackText } from "../runtime/feedback_strings";
@@ -324,7 +325,9 @@ export function FileArtifactView({
   onOpenHtml,
   onOpenFile,
   active = true,
+  feedbackDestination,
 }: {
+  feedbackDestination?: FileFeedbackDestination;
   card: FileArtifact;
   threadKey: string;
   headerActions?: ReactNode;
@@ -700,6 +703,7 @@ export function FileArtifactView({
                 threadKey,
                 key,
                 fileFeedbackText(current),
+                feedbackDestination,
               )
             )
               return;
@@ -776,6 +780,7 @@ export function FileArtifactView({
         </form>
       )}
       <FileFeedbackDrafts
+        feedbackDestination={feedbackDestination}
         threadKey={threadKey}
         path={card.path}
         excludeContentId={contentId}

@@ -76,6 +76,7 @@ import {
 } from "../runtime/agent_preparation";
 import { PREPARATION_ACTION_STRINGS as C } from "../runtime/preparation_action_strings";
 import { ArtifactPane, type OpenedFileRequest } from "./ArtifactPane";
+import { useFileFeedbackDestination } from "./useFileFeedbackDestination";
 import { Composer } from "./Composer";
 import { WorkspacePopover } from "./WorkspacePopover";
 import { ModelPicker } from "./ModelPicker";
@@ -261,10 +262,12 @@ export function ThreadView({
   onBrowserStateChange,
   onBrowserOwnersChange,
   draftComposerRef,
+  preparedComposerIsCurrent,
   rememberedBrowserOwner,
 }: {
   rememberedBrowserOwner?: RememberedBrowserOwner | null;
   draftComposerRef?: React.Ref<HTMLDivElement>;
+  preparedComposerIsCurrent?: (() => boolean) | null;
   onBrowserOwnersChange?: (taskKey: string, ownsPages: boolean) => void;
   onBrowserStateChange?: (
     taskKey: string,
@@ -340,6 +343,12 @@ export function ThreadView({
   const artifactReturnFocus =
     artifactReturnFocusRef ?? localArtifactReturnFocus;
   const ownsContent = useContentOwner(thread, active);
+  const feedbackDestination = useFileFeedbackDestination(
+    thread,
+    active,
+    draftComposerRef ? "new" : `session:${thread.key}`,
+    preparedComposerIsCurrent,
+  );
   const openArtifacts = (roundId: string, opener: HTMLElement) => {
     if (!ownsContent()) return;
     browserSurfaceGuard.runLatest(() => {
@@ -1159,7 +1168,11 @@ export function ThreadView({
               {T.latest}
             </button>
           )}
-          <FileFeedbackDrafts key={thread.key} threadKey={thread.key} />
+          <FileFeedbackDrafts
+            key={thread.key}
+            threadKey={thread.key}
+            feedbackDestination={feedbackDestination}
+          />
           {recoveryNotice && (
             <ArchivedWorkLocationNotice
               cwd={thread.cwd}
@@ -1382,6 +1395,7 @@ export function ThreadView({
       <TranscriptSearchContext.Provider value={false}>
         <ArtifactPane
           thread={thread}
+          feedbackDestination={feedbackDestination}
           rememberedBrowserOwner={rememberedBrowserOwner}
           active={active}
           open={thread.artifactPaneOpen}

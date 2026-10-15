@@ -287,6 +287,13 @@ export interface FileFeedback {
   scope?: "file" | "fragment";
   anchor?: FileFeedbackAnchor;
 }
+
+/** An explicit currently visible input; never persisted with an opinion. */
+export interface FileFeedbackDestination {
+  readonly threadKey: string;
+  readonly draftKey: string;
+  readonly isCurrent: () => boolean;
+}
 export interface SavedFileFeedback extends FileFeedback {
   path: string;
 }
@@ -334,9 +341,21 @@ export const fileFeedbackDrafts = {
     changed(threadKey);
   },
   /** Move one exact draft into the composer in one persistence snapshot. */
-  take(threadKey: string, key: string, text: string): boolean {
+  take(
+    threadKey: string,
+    key: string,
+    text: string,
+    destination?: FileFeedbackDestination,
+  ): boolean {
     if (!this.entries(threadKey)[key] || !text.trim()) return false;
-    const draftKey = `session:${threadKey}`;
+    const draftKey = destination?.draftKey ?? `session:${threadKey}`;
+    if (
+      destination &&
+      (destination.threadKey !== threadKey ||
+        (draftKey !== "new" && draftKey !== `session:${threadKey}`) ||
+        !destination.isCurrent())
+    )
+      return false;
     const draft = composerDrafts.read(draftKey);
     values.set(draftKey, {
       ...draft,

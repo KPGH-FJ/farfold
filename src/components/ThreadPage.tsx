@@ -78,6 +78,7 @@ export function ThreadPage({
   onBrowserStateChange,
   onBrowserOwnersChange,
   draftComposerRef,
+  preparedComposerIsCurrent,
   searchRequest,
   attachmentSearchRequest,
 }: {
@@ -85,6 +86,7 @@ export function ThreadPage({
   searchRequest?: LoadedSearchRequest | null;
   attachmentSearchRequest?: AttachmentSearchRequest | null;
   draftComposerRef?: React.Ref<HTMLDivElement>;
+  preparedComposerIsCurrent?: (() => boolean) | null;
   onBrowserOwnersChange?: (taskKey: string, ownsPages: boolean) => void;
   onBrowserStateChange?: (
     taskKey: string,
@@ -337,6 +339,7 @@ export function ThreadPage({
             onBrowserStateChange={onBrowserStateChange}
             onBrowserOwnersChange={onBrowserOwnersChange}
             draftComposerRef={draftComposerRef}
+            preparedComposerIsCurrent={preparedComposerIsCurrent}
           />
         ) : (
           <>

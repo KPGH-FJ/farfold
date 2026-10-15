@@ -65,6 +65,7 @@ import {
   fileFeedbackDrafts,
   fileFeedbackKey,
   useFileFeedback,
+  type FileFeedbackDestination,
 } from "../runtime/drafts";
 import { fileFeedbackText } from "../runtime/feedback_strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
@@ -78,6 +79,7 @@ import {
 } from "../runtime/visual_feedback";
 
 export interface OpenedFileViewProps {
+  feedbackDestination?: FileFeedbackDestination;
   /** The original conversation owns unsent feedback, including after refresh. */
   threadKey: string;
   /** Exact local file selected by the user; never an inferred artifact body. */
@@ -237,6 +239,7 @@ export function OpenedFileView({
   onOpenHtml,
   headerActions,
   onBack,
+  feedbackDestination,
 }: OpenedFileViewProps) {
   const identity = JSON.stringify([
     threadKey,
@@ -1274,7 +1277,12 @@ export function OpenedFileView({
             const draft = fileFeedbackDrafts.entries(threadKey)[key];
             if (
               draft?.text.trim() &&
-              fileFeedbackDrafts.take(threadKey, key, fileFeedbackText(draft))
+              fileFeedbackDrafts.take(
+                threadKey,
+                key,
+                fileFeedbackText(draft),
+                feedbackDestination,
+              )
             ) {
               setFeedbackAdded(true);
               setFeedbackOpen(false);
@@ -1286,6 +1294,7 @@ export function OpenedFileView({
       {
         <FileFeedbackDrafts
           threadKey={threadKey}
+          feedbackDestination={feedbackDestination}
           path={file ? feedbackPath : undefined}
           excludeContentId={supportsFeedback ? contentId : undefined}
         />

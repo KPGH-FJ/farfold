@@ -7,6 +7,7 @@ import { audioCapability } from "../runtime/audio_input";
 import { PreservedDrafts } from "./PreservedDrafts";
 import { NewConversationLocationBar } from "./NewConversationLocationBar";
 import { useDraftPreparation } from "./useDraftPreparation";
+import { usePreparedComposerOwner } from "./usePreparedComposerOwner";
 import { useDraftWorkLocation } from "./useDraftWorkLocation";
 import {
   DraftArchiveBlockedError,
@@ -120,11 +121,13 @@ export function EmptyState({
   header,
   active = true,
   onPreparedKey,
+  onPreparedComposerOwner,
   composerTarget,
   onRestoreDraft,
 }: {
   onRestoreDraft?: (key: string) => Promise<void>;
   onPreparedKey?: (key: string | null) => void;
+  onPreparedComposerOwner?: (current: (() => boolean) | null) => void;
   composerTarget?: HTMLElement | null;
   header?: ReactNode;
   active?: boolean;
@@ -297,9 +300,7 @@ export function EmptyState({
       sourceContext,
     });
 
-  // Agent+项目确定 → 预开草稿会话，拿到 configOptions（模型选项）。
-  // 草稿不写索引；切换/离开时丢弃并记墓碑（B1：不再产生幽灵会话）。
-  // 选择变化防抖 250ms（划选项不起进程）；打开失败的组合不自动重试。
+  // Explicit selection prepares a draft; failed combinations are not retried automatically.
   const failedPairRef = useRef<string | null>(null);
   const pendingInquiryAbort = useRef<AbortController | null>(null);
   useEffect(() => {
@@ -316,6 +317,7 @@ export function EmptyState({
     };
   }, []);
   const pair = `${agentId}|${cwd}|${requestCwd}|${JSON.stringify(service)}`;
+  const preparedComposerOwner = usePreparedComposerOwner(pair, active);
   const handedOffKeys = useRef(new Set<string>());
   // One-shot intent from a folderless send: armed before the folder choice,
   // bound to the pair the pick creates, then sent once when ready.
@@ -598,6 +600,7 @@ export function EmptyState({
           )
             throw new Error(STRINGS.repair.configFailed);
           if (rejectOpened()) return;
+          preparedComposerOwner.open(state.key);
           setDraftKey(state.key);
         })
         .catch((error) => {
@@ -954,10 +957,12 @@ export function EmptyState({
       presentedDraft.current === draftKey)
       ? draftKey
       : null;
+  const composerOwner = preparedComposerOwner.current(workspaceKey);
   useEffect(() => {
     presentedDraft.current = workspaceKey;
     onPreparedKey?.(workspaceKey);
-  }, [onPreparedKey, workspaceKey]);
+    onPreparedComposerOwner?.(composerOwner);
+  }, [onPreparedKey, onPreparedComposerOwner, workspaceKey, composerOwner]);
   useEffect(() => () => onPreparedKey?.(null), [onPreparedKey]);
 
   const sendingPaused = Boolean(

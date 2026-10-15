@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { fileFeedbackDrafts, useFileFeedbackEntries } from "../runtime/drafts";
+import {
+  fileFeedbackDrafts,
+  useFileFeedbackEntries,
+  type FileFeedbackDestination,
+} from "../runtime/drafts";
 import {
   FEEDBACK_STRINGS as S,
   fileFeedbackText,
@@ -10,7 +14,9 @@ export function FileFeedbackDrafts({
   threadKey,
   path,
   excludeContentId,
+  feedbackDestination,
 }: {
+  feedbackDestination?: FileFeedbackDestination;
   threadKey: string;
   path?: string;
   excludeContentId?: string;
@@ -46,6 +52,7 @@ export function FileFeedbackDrafts({
                     threadKey,
                     key,
                     fileFeedbackText(current),
+                    feedbackDestination,
                   )
                 )
                   setMessage(S.added);

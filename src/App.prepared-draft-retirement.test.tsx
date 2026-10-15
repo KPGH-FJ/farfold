@@ -11,6 +11,17 @@ import {
 beforeEach(resetHarness);
 afterEach(cleanupHarness);
 
+it("passes the actual prepared editor owner without replacing the original new input", () => {
+  const originalDraft = structuredClone(h.draft);
+  const owner = () => true;
+  call("EmptyState", "onPreparedKey", "prepared-A");
+  call("EmptyState", "onPreparedComposerOwner", owner);
+  expect(component("ThreadPage").preparedComposerIsCurrent).toBe(owner);
+  expect(h.draft).toEqual(originalDraft);
+  call("EmptyState", "onPreparedComposerOwner", null);
+  expect(component("ThreadPage").preparedComposerIsCurrent).toBeNull();
+});
+
 it.each(["start", "library"])(
   "releases a retired prepared workspace on %s without changing navigation or draft choice",
   (route) => {

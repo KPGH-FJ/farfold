@@ -157,6 +157,12 @@ export default function App() {
     null,
   );
   const [preparedDraftKey, setPreparedDraftKey] = useState<string | null>(null);
+  const [preparedComposerOwner, setPreparedComposerOwner] = useState<
+    (() => boolean) | null
+  >(null);
+  const observePreparedComposerOwner = useRef((owner: (() => boolean) | null) =>
+    setPreparedComposerOwner(() => owner),
+  ).current;
   const currentPreparedDraftKey = useRef(preparedDraftKey);
   currentPreparedDraftKey.current = preparedDraftKey;
   const [draftComposerTarget, setDraftComposerTarget] =
@@ -913,6 +919,7 @@ export default function App() {
               initialSelection={preparedSelection}
               active={view.kind === "start" && !paletteOpen && !importOpen}
               onPreparedKey={setPreparedDraftKey}
+              onPreparedComposerOwner={observePreparedComposerOwner}
               composerTarget={draftComposerTarget}
               header={
                 <header className="workspace-topbar start-context">
@@ -965,6 +972,9 @@ export default function App() {
             hidden={pageKey !== visiblePageKey}
           >
             <ThreadPage
+              preparedComposerIsCurrent={
+                pageKey === preparedDraftKey ? preparedComposerOwner : null
+              }
               viewKey={pageKey}
               attachmentSearchRequest={
                 attachmentSearchRequest?.source.threadKey === pageKey

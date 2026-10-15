@@ -9,6 +9,7 @@ import {
   type ReportedArtifactOrigin,
 } from "../runtime/reported_artifacts";
 import type { VerifiedFile } from "../runtime/file_delivery";
+import type { FileFeedbackDestination } from "../runtime/drafts";
 import type { PreviewReadingPositionRef } from "../runtime/preview_reading_position";
 import { BrowserWorkspace } from "./BrowserWorkspace";
 import {
@@ -104,7 +105,9 @@ export function ArtifactPane({
   fileRequest,
   returnFocusRef,
   rememberedBrowserOwner = null,
+  feedbackDestination,
 }: {
+  feedbackDestination?: FileFeedbackDestination;
   rememberedBrowserOwner?: RememberedBrowserOwner | null;
   thread: ThreadState;
   active?: boolean;
@@ -158,6 +161,10 @@ export function ArtifactPane({
   const pickerToken = pickerOwner.current.token;
   const ownsPicker = () =>
     ownsContent() && pickerOwner.current.token === pickerToken;
+  const contentFeedbackDestination = feedbackDestination && {
+    ...feedbackDestination,
+    isCurrent: () => ownsPicker() && feedbackDestination.isCurrent(),
+  };
   const retirePicker = () => {
     pickerOwner.current = { identity: pickerOwner.current.identity, token: {} };
   };
@@ -248,7 +255,10 @@ export function ArtifactPane({
     setHtmlRequest({ taskKey: thread.key, file });
     chooseContent("browser");
   };
-  const closeContent = () => threads.closeArtifactPane(thread.key);
+  const closeContent = () => {
+    retirePicker();
+    threads.closeArtifactPane(thread.key);
+  };
   const drag = useRef<{ startX: number; startWidth: number } | null>(null);
   const paneRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -589,6 +599,7 @@ export function ArtifactPane({
       {currentFile && (
         <div className="artifact-opened-file-body" hidden={showingBrowser}>
           <OpenedFileView
+            feedbackDestination={contentFeedbackDestination}
             key={`${currentFile.taskKey}:${currentFile.selection}`}
             path={currentFile.path}
             threadKey={thread.key}
@@ -608,6 +619,7 @@ export function ArtifactPane({
         !currentFile &&
         (file ? (
           <FileArtifactView
+            feedbackDestination={contentFeedbackDestination}
             key={`${thread.key}:${roundId ?? "all"}:${file.path}`}
             card={file}
             threadKey={thread.key}

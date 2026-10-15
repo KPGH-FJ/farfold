@@ -1,3 +1,4 @@
+import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
 import { FileFeedbackEditor } from "./FileFeedbackEditor";
 import {
   Children,
@@ -543,4 +544,35 @@ it("retains a prior-version PPTX opinion on refresh and adds it once without sen
   expect(composerDrafts.read(`session:${props.threadKey}`).text).toContain(
     pptxFile.sha256,
   );
+});
+
+it("the common disk-file form and historical list use the visible new draft, and stale destination cannot consume an opinion", async () => {
+  await ready();
+  composerDrafts.clear("new");
+  let current = true;
+  const feedbackDestination = {
+    threadKey: props.threadKey,
+    draftKey: "new",
+    isCurrent: () => current,
+  };
+  props = { ...props, feedbackDestination };
+  click(S.feedback);
+  edit("EXACT VISIBLE DISK OPINION");
+  const tree = render().nodes;
+  const form = tree.find((node) => node.type === "form")!;
+  const historical = tree.find((node) => node.type === FileFeedbackDrafts)!;
+  expect(historical.props.feedbackDestination).toBe(feedbackDestination);
+  current = false;
+  (form.props.onSubmit as (event: unknown) => void)({ preventDefault() {} });
+  expect(saved().text).toBe("EXACT VISIBLE DISK OPINION");
+  expect(composerDrafts.read("new").text).toBe("");
+  current = true;
+  (form.props.onSubmit as (event: unknown) => void)({ preventDefault() {} });
+  expect(composerDrafts.read("new").text).toContain(
+    "EXACT VISIBLE DISK OPINION",
+  );
+  expect(composerDrafts.read(`session:${props.threadKey}`).text).not.toContain(
+    "EXACT VISIBLE DISK OPINION",
+  );
+  expect(saved().text).toBe("");
 });

@@ -49,7 +49,11 @@ vi.mock("react", async (original) => ({
 }));
 import { FileArtifactView, FileDifference } from "./FileArtifactView";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
-import { composerDrafts, fileFeedbackDrafts } from "../runtime/drafts";
+import {
+  composerDrafts,
+  fileFeedbackDrafts,
+  type FileFeedbackDestination,
+} from "../runtime/drafts";
 import { FEEDBACK_STRINGS } from "../runtime/feedback_strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
 import { artifactFiles, type FileArtifact } from "../runtime/artifact_view";
@@ -79,12 +83,23 @@ function elements(tree: ReactNode) {
   visit(tree);
   return result;
 }
+let destination: FileFeedbackDestination | undefined;
 function render(value: FileArtifact) {
   h.cursor = 0;
-  FileArtifactView({ card: value, threadKey: key });
+  FileArtifactView({
+    card: value,
+    threadKey: key,
+    feedbackDestination: destination,
+  });
   for (const effect of h.effects.splice(0)) effect();
   h.cursor = 0;
-  return elements(FileArtifactView({ card: value, threadKey: key }));
+  return elements(
+    FileArtifactView({
+      card: value,
+      threadKey: key,
+      feedbackDestination: destination,
+    }),
+  );
 }
 function write(
   value: FileArtifact,
@@ -108,6 +123,7 @@ function submit(value: FileArtifact) {
   (form.props.onSubmit as (event: unknown) => void)({ preventDefault() {} });
 }
 beforeEach(() => {
+  destination = undefined;
   h.slots.length = 0;
   h.effects.length = 0;
   h.cursor = 0;
@@ -464,3 +480,53 @@ it.each(["before", "after"] as const)(
     );
   },
 );
+
+it("artifact and historical file opinions join only the explicitly visible input and rejected routes retain opinions", () => {
+  composerDrafts.clear("new");
+  let current = true;
+  destination = { threadKey: key, draftKey: "new", isCurrent: () => current };
+  const value = card("visible-route");
+  write(value, "EXACT ROUTED OPINION");
+  const nested = render(value).find(
+    (node) => node.type === FileFeedbackDrafts,
+  )!;
+  expect(nested.props.feedbackDestination).toBe(destination);
+  current = false;
+  submit(value);
+  expect(Object.values(fileFeedbackDrafts.entries(key))).toHaveLength(1);
+  expect(composerDrafts.read("new").text).toBe("");
+  current = true;
+  submit(value);
+  expect(composerDrafts.read("new").text).toContain("EXACT ROUTED OPINION");
+  expect(composerDrafts.read(`session:${key}`).text).toBe("");
+  expect(fileFeedbackDrafts.entries(key)).toEqual({});
+});
+it("the shared retained-opinion button uses its explicit destination and rejection never consumes the original", () => {
+  composerDrafts.clear("new");
+  fileFeedbackDrafts.update(key, "/old.md", {
+    text: "RETAINED ROUTE",
+    selection: null,
+  });
+  let current = false;
+  const feedbackDestination = {
+    threadKey: key,
+    draftKey: "new",
+    isCurrent: () => current,
+  };
+  h.cursor = 0;
+  const tree = elements(
+    FileFeedbackDrafts({ threadKey: key, feedbackDestination }),
+  );
+  const button = tree.find(
+    (node) =>
+      node.type === "button" && node.props.children === FEEDBACK_STRINGS.add,
+  )!;
+  (button.props.onClick as () => void)();
+  expect(Object.values(fileFeedbackDrafts.entries(key))).toHaveLength(1);
+  expect(composerDrafts.read("new").text).toBe("");
+  current = true;
+  (button.props.onClick as () => void)();
+  expect(composerDrafts.read("new").text).toContain("RETAINED ROUTE");
+  expect(composerDrafts.read(`session:${key}`).text).toBe("");
+  expect(fileFeedbackDrafts.entries(key)).toEqual({});
+});
