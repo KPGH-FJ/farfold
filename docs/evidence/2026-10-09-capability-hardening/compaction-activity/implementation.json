@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-16",
+  "sourceBase": "100606537d6d9b2eab365d4820945d695142c196",
+  "featureCommit": "40c4bb37298e97aee4655ef86252c845a7e9d24c",
+  "scope": "ARCH-36/C/K 的当前连接整理活动保护；不提供手动压缩控制。",
+  "problem": "已显示的上下文整理未进入发送、配置、维护及连接活动保护；普通请求结束后，整理仍进行中或结果未知时可能继续派发或回收。",
+  "behavior": [
+    "接入层以当前实际连接和对话识别整理活动；原始事件先交付，再给出不含正文的内存活动信息。只有明确且结构有效的终态结束对应工作。",
+    "历史回放及已终结标识重放不变成当前工作；未知状态、畸形终态、孤立片段及身份超限保持未知，不由其他实体的完成回包解锁。",
+    "当前整理尚未结束时保护发送、显式继续、配置、归档、账号及更新操作；实际派发前在异步保存后再次检查。独立对话的普通工作不因此串扰。",
+    "断线和实际进程结束不冒称整理成功，普通请求的迟到完成不能清除独立未知；已暂停队列保持，不自动重发。",
+    "恢复设置产生的实际活动信息即使早于打开结果送达，仍按准确连接/对话接收；界面的历史交付标记不能再次推翻接入层已判定的工作。共用侧栏、状态和提醒同步承接。"
+  ],
+  "limits": [
+    "仅内存持有最多 512 个整理标识，每项最多 4096 UTF-8 字节；无法精确归属的溢出保持未知，直到真实进程结束。",
+    "不保存 Agent 正文或事件账本，不新增依赖、环境开关或第二套循环。",
+    "当前锁定的 ACP SDK/协议未提供本批可用的手动压缩控制请求；其他官方接口仍需核实，fork 仅研究，NEW-24 完整权限未恢复。"
+  ],
+  "privateEvidence": [
+    {
+      "path": "output/2026-10-16-compaction-activity/source-freeze.json",
+      "sha256": "8158e3fbd08511d3d1c635307906b46a0bb2a067a7149e2a1b8f8e2da76e826e"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-review/review.json",
+      "sha256": "36c0f2eca409244810d3f31cb73a90ce8b222f3584b01c806a3c0800105da0da"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-backend/verification.json",
+      "sha256": "da7b384cdf487df191c8177ec4f1e6fffd5b7ed61672599f326861af062e36fa"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-frontend/targeted-final.log",
+      "sha256": "c3b69563a159eb25706a2913254aeba35c1f7c901b0b872650f4cb54bcfef231"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity/source-freeze-r2.json",
+      "sha256": "c1c0889e6afd993a8d27a0b0cd0336bb34bfe109269e260b0d7b22112c2921c9"
+    }
+  ],
+  "sourceFiles": {
+    "total": 29,
+    "functionalSet": 28,
+    "additionalTestOnly": 1,
+    "frontend": 22,
+    "backend": 7
+  },
+  "sourceCommit": "40c4bb37298e97aee4655ef86252c845a7e9d24c"
+}

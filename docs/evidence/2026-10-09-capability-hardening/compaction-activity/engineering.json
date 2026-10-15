@@ -1,0 +1,229 @@
+{
+  "date": "2026-10-16",
+  "targeted": {
+    "frontend": {
+      "files": 65,
+      "passed": 832,
+      "actualExitCode": 0,
+      "actualSession": 98000,
+      "actualFinalChunk": "496f2a"
+    },
+    "backendCompaction": {
+      "passed": 17,
+      "actualExitCode": 0,
+      "actualSession": 80547,
+      "actualFinalChunk": "58d015"
+    },
+    "backendRelatedFinal": {
+      "groups": 8,
+      "eachGroupExitCode": 0,
+      "passedPerGroup": [5, 2, 1, 1, 5, 5, 95, 6],
+      "outerActualExitCode": 1,
+      "explanation": "随后格式检查拒绝模块顺序，原失败保留；最终格式已单独实际通过。"
+    }
+  },
+  "independentSourceReview": "原28份功能相关文件已独审无阻断；第29份仅补既有导航测试模拟导出。完整run2在相同29文件摘要上七项实际成功，原失败保留。",
+  "fullSeven": {
+    "run": 2,
+    "state": "passed",
+    "actualSession": 79451,
+    "actualFinalChunk": "a48fd5",
+    "actualExitCode": 0,
+    "inputCount": 18958,
+    "inputsStable": true,
+    "frontend": {
+      "files": 520,
+      "passed": 6450
+    },
+    "rust": {
+      "passed": 1731,
+      "ignored": 6
+    },
+    "checksExecuted": 7,
+    "checksReused": 0,
+    "receipt": {
+      "path": "output/2026-10-16-compaction-activity-engineering/run2/verification.json",
+      "sha256": "50388cfed7118249ef678fbceee1db23e0d8833e927668ae030d50c1c581b428"
+    },
+    "steps": [
+      {
+        "command": ["corepack", "pnpm", "format:check"],
+        "exitCode": 0,
+        "log": "output/2026-10-16-compaction-activity-engineering/run2/01.log",
+        "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "inputsStable": true
+      },
+      {
+        "command": ["corepack", "pnpm", "typecheck"],
+        "exitCode": 0,
+        "log": "output/2026-10-16-compaction-activity-engineering/run2/02.log",
+        "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "inputsStable": true
+      },
+      {
+        "command": ["corepack", "pnpm", "test"],
+        "exitCode": 0,
+        "log": "output/2026-10-16-compaction-activity-engineering/run2/03.log",
+        "logSha256": "5d61f6d238cb543bb8a5fd6b89304b747474f363b8e742bca3c5e4f689ea1b6d",
+        "inputsStable": true
+      },
+      {
+        "command": ["corepack", "pnpm", "build"],
+        "exitCode": 0,
+        "log": "output/2026-10-16-compaction-activity-engineering/run2/04.log",
+        "logSha256": "90809a7444d8404f93117efb3f254f12c8982fdb8615d8ff9ee95686a4dd11d9",
+        "inputsStable": true
+      },
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "log": "output/2026-10-16-compaction-activity-engineering/run2/05.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "inputsStable": true
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "log": "output/2026-10-16-compaction-activity-engineering/run2/06.log",
+        "logSha256": "be4743849d8d62a67809dfa087722778a4468c4c7d75d627ac19a6c4f7812846",
+        "inputsStable": true
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 0,
+        "log": "output/2026-10-16-compaction-activity-engineering/run2/07.log",
+        "logSha256": "54561df84a74d325c6725d507d69b2224715e6be6832901aafa7c38cb8301b3b",
+        "inputsStable": true
+      }
+    ]
+  },
+  "retainedFailures": [
+    "原后端 5 项中 4 项产品真红；首轮前端包含一处选择器夹具错误，纠正记录与原输出保留。",
+    "畸形终态独立反例 2 项失败，校验修复后最终17项通过。",
+    "初始前端将已核归属的活动信息因缓冲为历史而忽略，测试假设已校正；旧红绿记录不冒称覆盖真实恢复窗口。",
+    "后端中间夹具失败及最终相关检查外壳格式失败保留，不改写为全程成功。"
+  ],
+  "privateEvidence": [
+    {
+      "path": "output/2026-10-16-compaction-activity-backend/verification.json",
+      "sha256": "da7b384cdf487df191c8177ec4f1e6fffd5b7ed61672599f326861af062e36fa"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-frontend/targeted-final.log",
+      "sha256": "c3b69563a159eb25706a2913254aeba35c1f7c901b0b872650f4cb54bcfef231"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-review/review.json",
+      "sha256": "36c0f2eca409244810d3f31cb73a90ce8b222f3584b01c806a3c0800105da0da"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-frontend/first-red-fixture-correction.json",
+      "sha256": "400bf617308163feadd0403a123c137571524890e05bbb9769a02ab1a96bae0a"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-engineering/run1/verification.json",
+      "sha256": "0fb4ad0d587e16240df322befba688b040a90e75957954ed3b165b85a176e0a0"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-engineering/run2/verification.json",
+      "sha256": "50388cfed7118249ef678fbceee1db23e0d8833e927668ae030d50c1c581b428"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity/source-freeze-r2.json",
+      "sha256": "c1c0889e6afd993a8d27a0b0cd0336bb34bfe109269e260b0d7b22112c2921c9"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-engineering/independent-review.json",
+      "sha256": "74188fe822a2c2d8205fbe7eb00858ec62e6d23e33c4e40943c5c706c04ba4b5"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-browser/verification.json",
+      "sha256": "3516534e1dce566cb32eb6575c77575b572c37e869055ae5efca40b22fe47911"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-browser/browser-current-input-reuse-review.json",
+      "sha256": "990e7283f1c57073810b691a9192477de148a6eedaed8e1daf4d4acd4ba3618b"
+    }
+  ],
+  "boundary": "定向检查、完整工程、受控完整界面、正式安装与真实 Agent 分开记录；本文件不提供尚未发生的结果。",
+  "additionalTestOnlyFile": {
+    "path": "src/App.test-harness.ts",
+    "scope": "Navigation harness exports the new common activity predicate with its existing no-active-work fixture state; original 57 navigation assertions remain. No product source changed.",
+    "focusedActualExit": 0,
+    "focusedActualSession": 87018,
+    "log": "output/2026-10-16-compaction-activity-frontend/navigation-mock-green.log",
+    "logSha256": "d465e0706529d0098b97129b473dd655a69ce31ee65b6d6a74f9ef31d4cd84b3",
+    "sha256": "5551fd36a5d977d5c245ba09b4a06c9ba28f0eb9bd58d1d933e788f29d15b57f",
+    "newFreeze": {
+      "path": "output/2026-10-16-compaction-activity/source-freeze-r2.json",
+      "sha256": "c1c0889e6afd993a8d27a0b0cd0336bb34bfe109269e260b0d7b22112c2921c9"
+    }
+  },
+  "retainedFullSevenRun1": {
+    "run": 1,
+    "state": "failed",
+    "actualSession": 76286,
+    "inputCount": 18958,
+    "inputsStable": true,
+    "steps": [
+      {
+        "name": "format",
+        "exitCode": 0
+      },
+      {
+        "name": "typecheck",
+        "exitCode": 0
+      },
+      {
+        "name": "frontend",
+        "exitCode": 1,
+        "passed": 6449,
+        "failed": 1
+      }
+    ],
+    "remainingFourChecks": "notStarted",
+    "failure": "App.navigation.test.tsx 的既有 sessions 模拟缺少 hasActiveWork 导出。",
+    "receipt": {
+      "path": "output/2026-10-16-compaction-activity-engineering/run1/verification.json",
+      "sha256": "0fb4ad0d587e16240df322befba688b040a90e75957954ed3b165b85a176e0a0"
+    }
+  },
+  "sourceCommit": "40c4bb37298e97aee4655ef86252c845a7e9d24c",
+  "independentEngineeringReview": {
+    "path": "output/2026-10-16-compaction-activity-engineering/independent-review.json",
+    "sha256": "74188fe822a2c2d8205fbe7eb00858ec62e6d23e33c4e40943c5c706c04ba4b5"
+  },
+  "sourceCheckpoint": "工程run2记录的HEAD100606与当时29文件工作区保持原件；已逐字节核对同一选集提交为40c4bb3并推送，未改写原工程回执HEAD。",
+  "browserReuse": {
+    "eachEngine": 29,
+    "originalFreezeFiles": 28,
+    "onlyChangedCurrentInput": "src/App.test-harness.ts",
+    "entireOldMapEqualsCurrent": false,
+    "rerunOnCurrent29Freeze": false,
+    "receipt": {
+      "path": "output/2026-10-16-compaction-activity-browser/browser-current-input-reuse-review.json",
+      "sha256": "990e7283f1c57073810b691a9192477de148a6eedaed8e1daf4d4acd4ba3618b"
+    }
+  }
+}

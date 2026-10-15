@@ -1,0 +1,346 @@
+{
+  "date": "2026-10-16",
+  "scope": "本次具体整理活动保护缺陷，记为 NEW-29；不关闭 ARCH-36/C/K 整项。",
+  "source": {
+    "files": 29,
+    "frontendFiles": 22,
+    "backendFiles": 7,
+    "functionalSetCount": 28,
+    "additionalTestOnlyFile": {
+      "path": "src/App.test-harness.ts",
+      "scope": "Navigation harness exports the new common activity predicate with its existing no-active-work fixture state; original 57 navigation assertions remain. No product source changed.",
+      "sha256": "5551fd36a5d977d5c245ba09b4a06c9ba28f0eb9bd58d1d933e788f29d15b57f"
+    },
+    "frozen": true,
+    "freeze": {
+      "path": "output/2026-10-16-compaction-activity/source-freeze-r2.json",
+      "sha256": "c1c0889e6afd993a8d27a0b0cd0336bb34bfe109269e260b0d7b22112c2921c9"
+    },
+    "commit": "40c4bb37298e97aee4655ef86252c845a7e9d24c",
+    "committed29BytesMatchFreeze": true,
+    "pushedOriginMainOwnerReported": true,
+    "localOriginMainRefMatches": true
+  },
+  "targetedAndIndependentReview": "已有冻结源码、前端65文件/832项、后端最终17项及相关定向检查；独立源码复核无阻断。",
+  "controlledBrowser": {
+    "state": "passedOriginalControlledCoverageExplicitlyReused",
+    "run": 1,
+    "originalFreezeFiles": 28,
+    "engines": [
+      {
+        "engine": "chromium",
+        "passed": 29,
+        "actualExitCode": 0,
+        "actualSession": 71099,
+        "actualFinalChunk": "f442de",
+        "pageErrors": 0,
+        "externalRequests": 0,
+        "unexpectedIpc": 0
+      },
+      {
+        "engine": "webkit",
+        "passed": 29,
+        "actualExitCode": 0,
+        "actualSession": 27081,
+        "actualFinalChunk": "7b9395",
+        "pageErrors": 0,
+        "externalRequests": 0,
+        "unexpectedIpc": 0
+      }
+    ],
+    "originalInputs": {
+      "count": 1639,
+      "beforeAfterStableEachRun": true
+    },
+    "currentInputReview": {
+      "unchanged": 1638,
+      "changedOnly": "src/App.test-harness.ts",
+      "testOnlyOneLine": true,
+      "allOriginal28FrozenFilesCurrentAndCommitted": true,
+      "productionAndHarnessPathsUnchanged": true,
+      "entireOldMapEqualsCurrent": false,
+      "rerunOnCurrent29Freeze": false,
+      "receipt": {
+        "path": "output/2026-10-16-compaction-activity-browser/browser-current-input-reuse-review.json",
+        "sha256": "990e7283f1c57073810b691a9192477de148a6eedaed8e1daf4d4acd4ba3618b"
+      }
+    },
+    "receipt": {
+      "path": "output/2026-10-16-compaction-activity-browser/verification.json",
+      "sha256": "3516534e1dce566cb32eb6575c77575b572c37e869055ae5efca40b22fe47911"
+    },
+    "coverage": [
+      "Reply ended but live compaction still protects visible status/model/reasoning/permission.",
+      "Follow-up enters paused queue without dispatch; UI and production continuation guard refuse.",
+      "Completed transcript card does not settle live metadata; terminal current metadata does not auto-flush old queue.",
+      "Valid backend owner metadata buffered before open remains active even with live=false.",
+      "Raw historical cards, stale connection and wrong-session events cannot manufacture/release another live owner.",
+      "Unknown metadata remains protected; processEnded plus later turnEnd or old empty live/buffered snapshots cannot clear independent unknown.",
+      "Connection loss preserves unknown; second conversation remains independent and explicitly performs exactly one mocked positive prompt."
+    ],
+    "cleanup": {
+      "browsersClosed": 2,
+      "serverActualExitCode": 0,
+      "listener1556Absent": true
+    },
+    "boundary": "受控完整App与真实事件处理路径，合成对话/IPC；未启动正式应用或真实Agent。按未变生产覆盖复用，不称当前29文件冻结上的新浏览器运行或新编译产物验证。"
+  },
+  "fullSeven": {
+    "run": 2,
+    "state": "passed",
+    "actualSession": 79451,
+    "actualFinalChunk": "a48fd5",
+    "actualExitCode": 0,
+    "inputCount": 18958,
+    "inputsStable": true,
+    "frontend": {
+      "files": 520,
+      "passed": 6450
+    },
+    "rust": {
+      "passed": 1731,
+      "ignored": 6
+    },
+    "checksExecuted": 7,
+    "checksReused": 0,
+    "receipt": {
+      "path": "output/2026-10-16-compaction-activity-engineering/run2/verification.json",
+      "sha256": "50388cfed7118249ef678fbceee1db23e0d8833e927668ae030d50c1c581b428"
+    },
+    "details": "engineering.json"
+  },
+  "candidate": {
+    "state": "passedInternalCandidate",
+    "actualSession": 54550,
+    "actualFinalChunk": "bd633b",
+    "actualExitCode": 0,
+    "receipt": {
+      "path": "output/2026-10-16-compaction-activity-install-preparation/candidate-output/candidate.json",
+      "sha256": "07fd068c987f5ce347488cb20d6ca514f27c915534942f780e3763c0fab272eb"
+    },
+    "independentChecks": {
+      "passed": 9,
+      "total": 9,
+      "receipt": {
+        "path": "output/2026-10-16-compaction-activity-candidate-independent/review.json",
+        "sha256": "dd798fd7ff4bc5c7a7ea5279649fde92e40dff556766406fad7308ef781b4cf7"
+      }
+    },
+    "publicSigningOrNotarization": false
+  },
+  "installation": {
+    "state": "installedVerifiedNotLaunched",
+    "actualSession": 36723,
+    "actualFinalChunk": "725918",
+    "actualExitCode": 0,
+    "receipt": {
+      "path": "output/2026-10-16-compaction-activity-install/install-result.json",
+      "sha256": "1041ba8ad51cfddeb8864576ddc02590a869fbf68a2bce1529ccb2988c3af7ee"
+    },
+    "independentChecks": {
+      "passed": 10,
+      "total": 10,
+      "actualSession": 34276,
+      "actualFinalChunk": "069c7d",
+      "actualExitCode": 0,
+      "receipt": {
+        "path": "output/2026-10-16-compaction-activity-install/installed-independent-review-private.json",
+        "sha256": "4b9ab23389493ef02ad2c7c4f406b41d64f71cc13158a2d630a51c718b27c9d5"
+      }
+    },
+    "cleanup": {
+      "state": "exactDuplicateCandidateAppRemovedArchiveRetained",
+      "actualFinalChunk": "6288d1",
+      "actualExitCode": 0,
+      "receipt": {
+        "path": "output/2026-10-16-compaction-activity-install/candidate-cleanup.json",
+        "sha256": "c2a6cf874fa8e149489aa673d93ae58b156ac5d5bc40d327c08c5b76f45e6b9e"
+      },
+      "removedFiles": 5,
+      "removedChildDirectories": 4,
+      "removedAppRoot": true,
+      "formalAndArchiveRetained": true
+    }
+  },
+  "formalApplication": {
+    "source": "40c4bb37298e97aee4655ef86252c845a7e9d24c",
+    "thisFeatureInstalled": true,
+    "version": "0.1.7",
+    "bundleIdentifier": "ai.farfold.desktop",
+    "architecture": "arm64",
+    "binarySha256": "542b00016c9e0cf6b07525f4793e2ce2178691d04445812597974e343529b000",
+    "state": "notLaunchedForThisBatch",
+    "closedAtRecordedObservations": true,
+    "continuousProcessAbsenceClaimed": false,
+    "noAfterQuitGetterUsedOwnerReported": true
+  },
+  "nativeCompactionBusy": {
+    "state": "notTested"
+  },
+  "realAgentCompaction": {
+    "state": "notTested"
+  },
+  "planConservation": {
+    "baselineItems": 150,
+    "originalItems": 122,
+    "baselineNewProblems": 28,
+    "additionalProblem": "NEW-29",
+    "total": 151,
+    "baselineTitlesAndCompletionConditionsUnchanged": true,
+    "baselineProjectionSha256": "7b81400461d02ea7f0d2210902b5e46aee933e6d7aa9a9516fceb7d9d89205aa"
+  },
+  "stillOpen": [
+    "ARCH-36 手动控制及整项",
+    "NEW-24 完整权限恢复与受影响真实发送",
+    "fork 尚未开发",
+    "P27 生产截图",
+    "29家八项标准",
+    "Windows",
+    "旧严格数据差异及自动重开最终请求者"
+  ],
+  "privateEvidence": [
+    {
+      "path": "output/2026-10-16-compaction-activity/source-freeze.json",
+      "sha256": "8158e3fbd08511d3d1c635307906b46a0bb2a067a7149e2a1b8f8e2da76e826e"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-review/review.json",
+      "sha256": "36c0f2eca409244810d3f31cb73a90ce8b222f3584b01c806a3c0800105da0da"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-backend/verification.json",
+      "sha256": "da7b384cdf487df191c8177ec4f1e6fffd5b7ed61672599f326861af062e36fa"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-frontend/targeted-final.log",
+      "sha256": "c3b69563a159eb25706a2913254aeba35c1f7c901b0b872650f4cb54bcfef231"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-engineering/run1/verification.json",
+      "sha256": "0fb4ad0d587e16240df322befba688b040a90e75957954ed3b165b85a176e0a0"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-engineering/run2/verification.json",
+      "sha256": "50388cfed7118249ef678fbceee1db23e0d8833e927668ae030d50c1c581b428"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity/source-freeze-r2.json",
+      "sha256": "c1c0889e6afd993a8d27a0b0cd0336bb34bfe109269e260b0d7b22112c2921c9"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-engineering/independent-review.json",
+      "sha256": "74188fe822a2c2d8205fbe7eb00858ec62e6d23e33c4e40943c5c706c04ba4b5"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-browser/verification.json",
+      "sha256": "3516534e1dce566cb32eb6575c77575b572c37e869055ae5efca40b22fe47911"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-browser/browser-current-input-reuse-review.json",
+      "sha256": "990e7283f1c57073810b691a9192477de148a6eedaed8e1daf4d4acd4ba3618b"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-browser/chromium-run1.json",
+      "sha256": "71ce71b5aef8892fe73bef3834f01b0bcaf0da2da3f7a15360faf4c36105fd33"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-browser/webkit-run1.json",
+      "sha256": "d4860acbbc779a61f58c879519afabb19cba14ea31b9db0b52e4867f8791f930"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-install-preparation/candidate-output/candidate.json",
+      "sha256": "07fd068c987f5ce347488cb20d6ca514f27c915534942f780e3763c0fab272eb"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-candidate-independent/review.json",
+      "sha256": "dd798fd7ff4bc5c7a7ea5279649fde92e40dff556766406fad7308ef781b4cf7"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-install/install-result.json",
+      "sha256": "1041ba8ad51cfddeb8864576ddc02590a869fbf68a2bce1529ccb2988c3af7ee"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-install/retention-before-receipt.json",
+      "sha256": "7bc1a7052590e3b735443f54f08464f3d5176cd50d2292a2e29ad2aec73f8c9a"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-install/retention-preinstall-receipt.json",
+      "sha256": "699c968a6dadc9ad7bbe1e0f7800db7dade432a18d2507e050dfc3e7c3cd8293"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-install/retention-after-receipt.json",
+      "sha256": "027fb42f3b9eed03315deff57e867de30c17f4a68118e2b931b27cca612a876f"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-install/installed-independent-review-private.json",
+      "sha256": "4b9ab23389493ef02ad2c7c4f406b41d64f71cc13158a2d630a51c718b27c9d5"
+    },
+    {
+      "path": "output/2026-10-16-compaction-activity-install/candidate-cleanup.json",
+      "sha256": "c2a6cf874fa8e149489aa673d93ae58b156ac5d5bc40d327c08c5b76f45e6b9e"
+    }
+  ],
+  "boundary": "正式应用已更新为40c4且本批尚未启动。源码、定向、受控界面、七项工程及安装分别有证；本批实机界面、冷恢复及真实Agent整理忙态未测。此前P21的已验分项、严格差异及未知自动重开请求者继续按原据保留，不由本次安装清单全等覆盖。",
+  "retainedFullSevenRun1": {
+    "run": 1,
+    "state": "failed",
+    "actualSession": 76286,
+    "inputCount": 18958,
+    "inputsStable": true,
+    "steps": [
+      {
+        "name": "format",
+        "exitCode": 0
+      },
+      {
+        "name": "typecheck",
+        "exitCode": 0
+      },
+      {
+        "name": "frontend",
+        "exitCode": 1,
+        "passed": 6449,
+        "failed": 1
+      }
+    ],
+    "remainingFourChecks": "notStarted",
+    "failure": "App.navigation.test.tsx 的既有 sessions 模拟缺少 hasActiveWork 导出。",
+    "receipt": {
+      "path": "output/2026-10-16-compaction-activity-engineering/run1/verification.json",
+      "sha256": "0fb4ad0d587e16240df322befba688b040a90e75957954ed3b165b85a176e0a0"
+    }
+  },
+  "sourceCommit": "40c4bb37298e97aee4655ef86252c845a7e9d24c",
+  "independentEngineeringReview": {
+    "path": "output/2026-10-16-compaction-activity-engineering/independent-review.json",
+    "sha256": "74188fe822a2c2d8205fbe7eb00858ec62e6d23e33c4e40943c5c706c04ba4b5"
+  },
+  "installationDataPreparation": {
+    "state": "freshThreeManifestsStrictlyByteEqual",
+    "manifestEntriesEach": 217407,
+    "manifestSha256": "438f4913ed29f44f4b748ff1f893b97330de8f80d2c2c208552ce9ed6411d810",
+    "beforeReceipt": {
+      "path": "output/2026-10-16-compaction-activity-install/retention-before-receipt.json",
+      "sha256": "7bc1a7052590e3b735443f54f08464f3d5176cd50d2292a2e29ad2aec73f8c9a"
+    },
+    "preinstallReceipt": {
+      "path": "output/2026-10-16-compaction-activity-install/retention-preinstall-receipt.json",
+      "sha256": "699c968a6dadc9ad7bbe1e0f7800db7dade432a18d2507e050dfc3e7c3cd8293"
+    },
+    "after": {
+      "actualSession": 18496,
+      "actualFinalChunk": "7fe6ff",
+      "actualExitCode": 0,
+      "receipt": {
+        "path": "output/2026-10-16-compaction-activity-install/retention-after-receipt.json",
+        "sha256": "027fb42f3b9eed03315deff57e867de30c17f4a68118e2b931b27cca612a876f"
+      }
+    },
+    "metadataBackupAndFirstCaptureRetained": true,
+    "priorStrictDifferencesNotWaived": true,
+    "scope": "仅本批未启动应用的安装前、替换前及安装后清单；不证明运行后数据不变或未知重开原因已解决。"
+  },
+  "nativeUiAndColdRestore": {
+    "state": "notTestedForThisBatch"
+  }
+}
