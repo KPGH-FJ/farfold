@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-15",
+  "sourceCommit": "1bc27d7cc2b6a226888d01e23a5f1505d1445b1f",
+  "scope": "P21 当前预览整页幻灯片意见、共用打开文件入口与意见加入当前可见输入框；分项实现，不关闭整项。",
+  "behavior": [
+    "打开文件…复用单文件系统面板、七字段来源核实和既有内容栏；取消保留旧内容，真实面板或核实尚未结束时不并发再开，切换归属及迟到结果不能替换新选择。核实成功后交给既有格式准备与预览，不能据此保证随后解析必然成功。",
+    "PPTX 先选择当前可见整页，再确认保存意见；保留路径、内容版本、完整 SHA 与文件内 part。预览序号只表示本次预览顺序，不冒称源文件页码；加入输入框明确携带文件内定位依据。",
+    "实际预览/页对象、选择 token、图片资源 lease 与七字段来源共同约束候选；翻页 A→B→A、隐藏、刷新、来源变化和交互阻断撤回旧确认，图片失败同一次事件内先撤回资格。翻页不把已保存意见改到另一页，旧版本意见保留。",
+    "共用 FileFeedbackEditor 承担已有意见编辑；共用 FileFeedbackDestination 明确路由到用户当前可见草稿或准确对话输入。准备新对话时沿既有 DraftLocationOwner 校验，原子加入并消费一次；拒绝时保留原意见与输入，不借隐藏对话代收。",
+    "spAutoFit 非空叶文字增加真实拒绝反例；档案成功测试改为等待真实 SHA 和注册完成，生产档案逻辑、预算与原断言保持。"
+  ],
+  "storage": "沿既有文件意见与未发内容保存必要锚点和用户意见；不持久化幻灯片正文或页面派生标题，不自动发送，不新增依赖、环境开关、第二套 Agent 循环或持久归属映射。",
+  "privateEvidence": [
+    {
+      "path": "output/2026-10-15-pptx-feedback-preparation/source-freeze-r2.json",
+      "sha256": "0eee2c12c531230af20309a976e7da7e545d898d089264f25b8aa9a6d9752051"
+    },
+    {
+      "path": "output/2026-10-15-file-preview-picker/source-freeze-r2.json",
+      "sha256": "7c29224d7a30b086d5cf4149079caef62b267d24ebf697920e695eb2f40f45d4"
+    },
+    {
+      "path": "output/2026-10-15-feedback-visible-composer-routing/source-freeze.json",
+      "sha256": "4a9099b2c958428311d1447cefebb84de9fb0210263a1280c8a90fba6630ecc7"
+    },
+    {
+      "path": "output/2026-10-15-feedback-visible-composer-routing/independent-source-review-private.json",
+      "sha256": "a2fc82deb33e573947a7c424ce2a2c8124b989b73dae5646548c832a5f97e55f"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-cross-review/review-r2.json",
+      "sha256": "eccba73616c056a10659d7e1d0773d662aed82b78cceee64c8a37dfcf5149ec5"
+    },
+    {
+      "path": "output/2026-10-15-archive-registration-wait/source-freeze.json",
+      "sha256": "c9415ef9150bcbd31702e743c8a404dce3d4a685582c28ca0acb07badc751669"
+    }
+  ],
+  "boundary": "本片不提供页内任意区域、整份 PPTX 内容输入或搜索，不声明全部 Office 保真、P16/P21 完成或真实 Agent 接通。"
+}

@@ -1,0 +1,212 @@
+{
+  "date": "2026-10-15",
+  "sourceCommit": "1bc27d7cc2b6a226888d01e23a5f1505d1445b1f",
+  "status": "本片源码、工程、正式安装、有界本机分项及封存副本独审已完成；严格运行后比较仍有两处差异，整项保持开放。",
+  "priorInstalledCommit": "c7466f69f1dc5ea3bf35d7e42148e70ff3ab6a03",
+  "installed": {
+    "path": "/Applications/Farfold.app",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "1bc27d7cc2b6a226888d01e23a5f1505d1445b1f",
+    "candidateBuildActualExitCode": 0,
+    "candidateIndependent": {
+      "passed": 9,
+      "total": 9
+    },
+    "installationActualExitCode": 0,
+    "installedIndependent": {
+      "passed": 10,
+      "total": 10
+    },
+    "productionInputCount": 1685,
+    "binarySha256": "b67a0b4eaa7889b52ddc9331c27d5f7ea26914028b18ca7d69dd8aec07819d95",
+    "archiveSha256": "bb90e64a61e3b84b91afc89d412677ef1291340abbf223f6b3e8800fbe3691fd",
+    "checks": "真实来源与生产输入、候选/正式五文件及权限、标识、arm64、严格签名、ZIP、关闭基线、备份与三份完整清单分别核实。只移除准确五个临时候选文件，正式应用和 ZIP 保留。"
+  },
+  "installationData": {
+    "freshBeforePreinstallAfter": {
+      "entriesEach": 217407,
+      "manifestSha256": "bba91b0513a757aaa96aa958e78b6bdb5f1a4298a745049044cf30dce3121849",
+      "wholeManifestBytesEqual": true
+    },
+    "sealedMetadataOldToFreshBytesEqual": true,
+    "oldToFreshThreeRootManifest": {
+      "result": "differencesRequireReview",
+      "changedEntries": 5,
+      "otherEntriesEqual": 217402,
+      "changedContent": "registry-cache 与四个 WebKit 统计文件的 SHA；不是仅时间字段差异。",
+      "attribution": "unknown",
+      "acceptedDifferences": []
+    },
+    "preservedFirstInstallFailure": {
+      "actualExitCode": 1,
+      "session": 30448,
+      "chunk": "05d909",
+      "stage": "写入前拒绝",
+      "causeObserved": "metadata SHM 时间签名变化；三个 metadata 文件的内容字节保持。",
+      "journalOrInstallResultCreated": false,
+      "formalStayedAtPriorCommit": true
+    },
+    "boundary": "新的严格关闭基线通过不回写旧失败或豁免旧→新五处内容变化；安装三份相同不扩大为运行后数据不变。"
+  },
+  "nativeScoped": {
+    "executionEvidence": "root 实际正式窗口及退出工具回执；本公开记录不复制全窗口、历史正文或数据库。",
+    "conversation": "独立受控对话，不属于九份旧草稿；旧历史恢复失败不算 Agent 接通。",
+    "observed": [
+      "系统文件面板取消后，明确选择自有两页样本；正式内容栏实际显示图形、PNG 与页序。",
+      "第二个预览页两步选择并保存意见 A，明确加入该可见输入；交付携完整 SHA 和文件内 slide1.xml。翻页未重定向旧目标。",
+      "第一个预览页保留未加入的意见 B。正常保存退出，停用界面工具并核到精确正式进程为零；有意冷启动回到同一对话，A 完整输入、B 文字及 slide2.xml/预览 1/2/SHA 均恢复。",
+      "随后明确选择未经改写的真实 writer 默认标题/正文样本；正式内容栏部分预览就绪，标题和正文列表可见，A/B 保持。此观察不提升为全部 PowerPoint 保真。"
+    ],
+    "lastQuit": "再次仅点击保存并退出，停用界面工具后实际核到正式进程零；不是连续无进程保证。",
+    "noNewPromptOrApproval": true,
+    "noAccountOrModelChange": true,
+    "zeroIpcClaimed": false,
+    "independentActualEventJoinCount": 37,
+    "defaultTemplatePreview": "observedPartial；界面显示 29 项格式无法完整还原，不声明全部 PowerPoint 保真。",
+    "coldStartIntent": "本轮冷启动为已核实的 root 有意操作；自动重开历史事件最终请求者仍未知。"
+  },
+  "postRunData": {
+    "actualExitCode": 2,
+    "result": "differencesRequireReview",
+    "differenceCount": 2,
+    "independentlyRebuiltExactly": true,
+    "acceptedDifferences": [],
+    "differences": [
+      "40 条 Agent 中 39 条整行相等；另一条仅 updated_at 变化，具体写者未知。",
+      "54 项设置中 53 项整行相等；unsentWork.v1 仅同一受控归属的 activity、一份新增输入 A 和一份新增保留意见 B 变化。"
+    ],
+    "oldSessionsWholeRowsExact": 137,
+    "oldDismissedWholeRowsExact": 173,
+    "oldWholeComposerObjectsExact": 9,
+    "allOldAttachmentFieldsExact": true,
+    "oldFeedbackQueuesAndChoiceIncludingConfigExact": true,
+    "controlledEdits": {
+      "sameControlledOwner": true,
+      "excludedFromOldNineDrafts": true,
+      "aFullInputExactlyOnce": true,
+      "aPart": "ppt/slides/slide1.xml",
+      "aPreviewSlide": 2,
+      "bAbsentFromInput": true,
+      "bRetainedTextExact": true,
+      "bPart": "ppt/slides/slide2.xml",
+      "bPreviewSlide": 1,
+      "previewSlideCount": 2,
+      "originalOwnFileSha256": "2926fecb62ab09afb99369d8fddcecb4bb6a0dd46f80e774920ebb619c945acc",
+      "retainedOpinionActualFields": 6,
+      "pptxAnchorActualFields": 4,
+      "addedAttachments": 0
+    },
+    "independentFieldReview": "两份既有封存第二副本只读核对，并与 37 次有界实际界面调用逐项关联；输入及签名稳定，无新 App/数据库捕获。独审不提供截图像素或完整保真证明。",
+    "boundary": "原始严格比较仍退出 2，不归一化、豁免或改为全等；本轮受控编辑已定位，Agent 更新时间的具体写者仍未知。"
+  },
+  "reopenInvestigation": {
+    "observed": "11:54:26 UTC 的正式 GUI 经 LaunchServices/CoreServicesUIAgent 启动；覆盖的六份实际记录窗口未见 CUA getter 或显式启动。",
+    "ultimateRequester": "unknown",
+    "earlierThirdReopenRequester": "unknown",
+    "productCauseOrFixClaimed": false,
+    "boundary": "系统中间方与透明启动能力不是最终调用者证明；窄窗口未见调用不证明全部进程或时段无调用。"
+  },
+  "stillOpen": [
+    "P16 整项和全部格式保真/拒绝条件",
+    "P21 整项及所有预览格式意见",
+    "P30 整项及旧许可本机撤回",
+    "全部 29 家八项标准",
+    "NEW-24 完整权限恢复与受影响真实发送",
+    "P27 生产网页截图安全证据",
+    "Windows",
+    "旧严格数据差异及自动重开最终请求者"
+  ],
+  "planConservation": {
+    "originalItems": 122,
+    "newItems": 28,
+    "titlesAndCompletionConditionsUnchanged": true,
+    "projectionSha256": "7b81400461d02ea7f0d2210902b5e46aee933e6d7aa9a9516fceb7d9d89205aa"
+  },
+  "privateEvidence": [
+    {
+      "path": "output/2026-10-15-pptx-feedback-route-install-preparation/candidate-output/candidate.json",
+      "sha256": "9a65d924a9930cb59fb9f9158c642a5775e88c0ff80b2425564dc89fdbf4119c"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-route-candidate-independent/review.json",
+      "sha256": "ad5ade0604fd99dd5766cde617e88d96e0b33a579c416081997e4dc387ddeb6b"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-install-fresh-baseline/retention-before-receipt.json",
+      "sha256": "5acf38c20c06624d723d4aadc3d47ec57939e6c47d417088e22996db42b29e51"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-install-fresh-baseline/retention-preinstall-receipt.json",
+      "sha256": "69277019ee1188716edd4689a00ac01df4a44403d393f90835b1151afb9a65d5"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-install-fresh-baseline/install-result.json",
+      "sha256": "eb5c154a6e949d08db9d2e57670b70cba02a3170bf970ffe5d17d8cae9fd53a5"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-install-fresh-baseline/retention-after-receipt.json",
+      "sha256": "5b1722021352f2dfb4778558b4109d42a1232d32a25319af5b7a1ecbb3b2b54d"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-install-fresh-baseline/installed-independent-review-private.json",
+      "sha256": "2e42c80cc98508f2407ac945540aa393123fe40ae26040ea3b5f60b087528517"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-install-fresh-baseline/cleanup-result.json",
+      "sha256": "982a9b04c35cd965f1c39d901f0e27066c82ca701f353039684fb5f971cf6ab3"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-install-fresh-baseline/data-continuity-scope-private.json",
+      "sha256": "a88af66b6cbbf6da123c336f1232dd910f57e859792d866c104aff72be83208e"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-install-fresh-baseline/old-new-baseline-manifest-diff-private.json",
+      "sha256": "54550deee7326e1e891c3cd8fced0d410504b149d79717b3935e0af442f677f3"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-native-data-preparation/cold-quit-process.json",
+      "sha256": "4b9e4aad001835dff9bb4732adbc725080e8ef205a40e33ef738b68e2ccf2ea2"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-native-data-preparation/normal-quit-process.json",
+      "sha256": "1abf5c3757412b9b0110fcc5f765bb5806a73accbae3814f3d3d28fb5fc2b1b9"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-native-data/capture-receipt-private.json",
+      "sha256": "de00212e2ed1acae1e226c7f2fc96cbe892483d8f106a517715e78dec11ac708"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-native-data/comparison-private.json",
+      "sha256": "e50310605fbd10f863f7ae2d3271db75ff3a3be795d68edf165ea7577d804aef"
+    },
+    {
+      "path": "output/2026-10-15-reopen-115426-investigation/investigation.json",
+      "sha256": "0724129a07c02d0d5ca54a425863c6299da40a3113a25fb0c29b8e0296136c3f"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-install-after-reopen/install-attempt1-failure.json",
+      "sha256": "97719c48da23abd8c6c096e3b3be9a1a7f5c47240b00ed0781149b05738418b2"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-install-after-reopen-preparation/install-final-metadata-drift-private.json",
+      "sha256": "635d50f18f6c11a992f7b9691bb7e4dc99336d24745d3f4ca0b1050ec50e6038"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-native-data/independent-review-safe-summary.json",
+      "sha256": "c4d4357e897e800baa5832552174cafee633d96a6f64a9b6de0012d4c87178fe"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-native-data/independent-review-private/final-review.json",
+      "sha256": "e4ee8d8faa60bb8dd42337eeef55bc4bb8120bd9c2315a12bdb856b18a824b85"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-native-data/independent-review-private/control-event-data-join-final.json",
+      "sha256": "c545ce5af6d62b788cef7dd65e287b7ce4468efa64f207e17373605f7bc298d8"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-native-data/independent-review-private/native-event-review.json",
+      "sha256": "295ffff1bdd5354d3b89ea690a3e57af197c0aca47f084aa99e6411353b3b749"
+    }
+  ]
+}

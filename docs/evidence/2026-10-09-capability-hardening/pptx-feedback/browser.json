@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-15",
+  "sourceCommit": "1bc27d7cc2b6a226888d01e23a5f1505d1445b1f",
+  "scope": "完整 App 与真实 PPTX Worker，受控文件/命令和合成未发内容；浏览器不是正式应用或真实 Agent。",
+  "finalRun": 7,
+  "engines": {
+    "Chromium": {
+      "passed": 74,
+      "actualExitCode": 0,
+      "actualChunk": "e8d072"
+    },
+    "WebKit": {
+      "passed": 74,
+      "actualExitCode": 0,
+      "actualChunk": "217a46"
+    }
+  },
+  "coverage": {
+    "previousP16Checks": 29,
+    "pptxFeedbackAndPickerChecks": 35,
+    "preparedNewConversationRoutingChecks": 10,
+    "pageErrors": 0,
+    "externalRequests": 0,
+    "unexpectedIpc": 0
+  },
+  "sourceComposition": "旧 27 文件 + 路由 17 文件 − 3 个覆盖文件 = 41 个界面/运行库及测试文件；档案测试等待修正另记。",
+  "proved": [
+    "真实 Worker 的原作者样本、修订与拒绝路径保持。",
+    "两步选择、明确 part/SHA、翻页不重定向、旧版本保留及受控冷重载。",
+    "选择取消和迟到保护；准备新对话的意见只进入可见输入，旧隐藏输入及其他保存字段逐值保持、只消费一次。"
+  ],
+  "retainedFailures": [
+    {
+      "run": 5,
+      "completedChecks": 0,
+      "reason": "开发服务输入提前结束，连接拒绝；保留失败，不算产品修复。"
+    },
+    {
+      "run": 6,
+      "completedChecks": 18,
+      "reason": "自动修订监视先于手动刷新进入读取，等待不可用按钮超时；只改验证调度，不改产品或删除断言。"
+    }
+  ],
+  "cleanup": "开发服务实际正常关闭 0（87c424），监听已消失。",
+  "privateEvidence": [
+    {
+      "path": "output/2026-10-15-pptx-feedback-browser/prepared-routing-verification.json",
+      "sha256": "d9575bf488cd588215314a7fc936d0df08d3319a815c1fedddd86d7195c2be35"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-browser/chromium-run7.json",
+      "sha256": "d9f9ed5fa93a03f36bea72bb54fbad7f8eaf438e3d90bc4d27b2e6053a55da36"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-browser/webkit-run7.json",
+      "sha256": "851439501f72d8dfac5d255b3c634626da9661f95561282c24953d4af4de763c"
+    }
+  ],
+  "boundary": "受控保存重载不冒称正式冷恢复；模拟打开一次只准备对话，未发送提示。正式本机分项另见 verification.json。"
+}

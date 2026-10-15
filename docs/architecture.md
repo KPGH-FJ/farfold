@@ -2,13 +2,15 @@
 
 ## 当前源码与证据边界（2026-10-15）
 
-共用前端与 Tauri/Rust 沿官方 ACP/SDK/CLI 连接外部 Agent，既有架构边界保持。唯一正式应用已更新为 `c7466f69f`；此前P30的[本机分项](evidence/2026-10-09-capability-hardening/remembered-pages-install/verification.json)核到逐页公开网址确认、顺序、冷启动只列清单及点击才打开、忘记/清空保留活页。安装三份数据清单一致；运行后旧设置、对话与当前 9 份草稿保持，严格 2 处差异保留。所选旧对话重连失败，本片未建立读取许可，旧许可撤回仍缺本机证明。上轮运行后的延迟严格比较退出 2，包含后续用户活动；原测试草稿的主动处理已获用户确认，原差异不改为全等。
+共用前端与 Tauri/Rust 沿官方 ACP/SDK/CLI 连接外部 Agent，既有架构边界保持。唯一正式应用已更新为 `1bc27d7cc`；本批[P21整页意见与共用文件入口](evidence/2026-10-09-capability-hardening/pptx-feedback/verification.json)区分源码、受控界面、完整工程、安装与本机分项。新安装基线三份清单一致；运行后严格两处差异和旧→新基线五处内容摘要变化分别保留，独审核到旧对话/隐藏记录、九份旧草稿及附件、队列和配置保持；设置变化为受控输入、意见及对应活动变化，Agent 更新时间写者未知，严格差异不豁免。此前P30的[本机分项](evidence/2026-10-09-capability-hardening/remembered-pages-install/verification.json)仅证明所覆盖路径；旧对话重连失败、旧许可本机撤回与真实 Agent 证明仍缺，上轮延迟严格差异及用户主动处理测试草稿的澄清保持。
 
 新入口为 `BrowserRememberedPages.tsx`、`browser_remembered.ts`，经既有 `BrowserTabs`/`BrowserWorkspaceScope` 打开新页面；后端 `browser_workspace/remembered_pages.rs` 核对当前实际页面，`meta_store/remembered_pages.rs` 仅保存网址清单及必要归属/CAS 字段。既有索引和创建时间必须一致；记住顺序稳定、空清单推进修订、删除对话与记录原子清理。重启读取只加载元数据，不创建页面或恢复旧许可；忘记记录不关闭活页。
 
-P16 的[普通 PPTX 视觉预览](evidence/2026-10-09-capability-hardening/pptx-preview/verification.json)原实现 `e0605006c` 已提交；后续默认模板兼容修复 `c7466f69f` 已提交并安装。`file_delivery/presentation.rs` 复用有界 ZIP 读取与真实读取槽；`pptx_package/theme/layout/text/shapes/parse` 明确关系、继承和直接覆盖，Worker 内外的闭合模型检查及二进制/实际解码保护被动显示。`PptxFilePreview`/`PptxSlideView` 仅绘制基础 SVG、普通文字及本地 Blob 图片；共用 `office_preview_prepare` 在新内容准备完成后才替换旧页，保留七字段来源、临时阅读位置、切页归属和未知读取保护。不生成文档 HTML、不加载外部资源，不新增正文存储、搜索、Agent 输入或意见锚点。
+历史 P16 预览切片：P16 的[普通 PPTX 视觉预览](evidence/2026-10-09-capability-hardening/pptx-preview/verification.json)原实现 `e0605006c` 已提交；后续默认模板兼容修复 `c7466f69f` 已提交并安装。`file_delivery/presentation.rs` 复用有界 ZIP 读取与真实读取槽；`pptx_package/theme/layout/text/shapes/parse` 明确关系、继承和直接覆盖，Worker 内外的闭合模型检查及二进制/实际解码保护被动显示。`PptxFilePreview`/`PptxSlideView` 仅绘制基础 SVG、普通文字及本地 Blob 图片；共用 `office_preview_prepare` 在新内容准备完成后才替换旧页，保留七字段来源、临时阅读位置、切页归属和未知读取保护。不生成文档 HTML、不加载外部资源，该切片本身不新增正文存储、搜索、Agent 输入或意见锚点；后续意见扩展见下文。
 
-本片兼容修复定向136项、独立源码65项、新编译产物两引擎各65项及完整App各29项通过；[本次七项工程](evidence/2026-10-09-capability-hardening/pptx-preview/engineering.json)全部实际成功，18,927输入稳定、前端6,306项、Rust1,716项/6忽略。候选独审9/9、安装独审10/10，三份217,407条清单一致；正常保存退出后进程0，严格比较原退出2及两处差异保留，9份旧草稿整对象相同。原模板、oracle与启动失败均保留，旧启动和第二次重开最终调用者仍未知。实际文件预览受空栏无独立选择入口限制，下一批复用共用文件核实和打开机制补入口，并加入P21整页版本意见；新工作尚未安装，不冒称完整P16。
+当前增量沿 `FilePreviewPicker` → 既有七字段核实 → `OpenedFileView` 打开文件；取消保留内容，真实请求结束前阻止并发选择，归属变化永久撤回旧返回。`PptxSlideView` 提供当前整页的两步确认，`OfficeFeedbackSource` 的实际对象、选择 token、资源 lease 与父级来源共同约束保存；翻页、隐藏、刷新、图片错误和交互阻断同步撤回旧候选。意见对象保留文件版本/SHA，PPTX 锚点四字段为 kind、文件内 part、预览序号与预览总页数；预览序号不当作文件页码；界面摘要与交付定位依据分别表达。共用 `FileFeedbackEditor` 保持单套意见 UI。
+
+意见加入输入经共用 `FileFeedbackDestination` 指定实际可见目标，并沿 `DraftLocationOwner` 核实准备新对话的原归属；加入与消费原子完成，失败保留双方内容，临时忙碌阻断不改变身份。复用既有未发内容持久化，保留历史版本意见，不保存幻灯片正文、不自动发送。最终[七项工程](evidence/2026-10-09-capability-hardening/pptx-feedback/engineering.json)全部实际通过，18,946 输入稳定；完整 App 两引擎各 74 项受控检查通过。本机已核两页预览、定位意见及有意冷启动恢复，默认模板明确部分预览；这些分项不关闭 P16/P21，旧失败及自动重开未知归因保持。
 
 P30 的[实现与检查](evidence/2026-10-09-capability-hardening/remembered-pages/verification.json)区分相关测试、受控完整界面、工程及上述有界正式冷恢复。首次交付仍全部 29 家及八项标准；P27 生产截图的系统安全证据及 NEW-24 完整权限回执仍缺。最新执行衔接见[当前状态](status.md#当前续接2026-10-15)。
 

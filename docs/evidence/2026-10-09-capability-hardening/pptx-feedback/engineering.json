@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-15",
+  "sourceCommit": "1bc27d7cc2b6a226888d01e23a5f1505d1445b1f",
+  "scope": "本批最终完整七项工程 run3，全部实际执行，无检查复用；不是安装或真实 Agent 证明。",
+  "inputCount": 18946,
+  "inputsStable": true,
+  "result": "passed",
+  "frontend": {
+    "files": 519,
+    "passed": 6426
+  },
+  "rust": {
+    "passed": 1716,
+    "ignored": 6
+  },
+  "steps": [
+    {
+      "command": ["corepack", "pnpm", "format:check"],
+      "exitCode": 0,
+      "log": "output/2026-10-15-pptx-feedback-engineering/run3/01.log",
+      "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+      "inputsStable": true
+    },
+    {
+      "command": ["corepack", "pnpm", "typecheck"],
+      "exitCode": 0,
+      "log": "output/2026-10-15-pptx-feedback-engineering/run3/02.log",
+      "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+      "inputsStable": true
+    },
+    {
+      "command": ["corepack", "pnpm", "test"],
+      "exitCode": 0,
+      "log": "output/2026-10-15-pptx-feedback-engineering/run3/03.log",
+      "logSha256": "c7b32286839df6dae48406ec848e180621296ec7412ea2c245641a29c8b0d6fb",
+      "inputsStable": true
+    },
+    {
+      "command": ["corepack", "pnpm", "build"],
+      "exitCode": 0,
+      "log": "output/2026-10-15-pptx-feedback-engineering/run3/04.log",
+      "logSha256": "fe8433e13916edf07180e5719f00eed1f5467d4b537b462bc8a62134d01f9c49",
+      "inputsStable": true
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--check",
+        "--manifest-path",
+        "src-tauri/Cargo.toml"
+      ],
+      "exitCode": 0,
+      "log": "output/2026-10-15-pptx-feedback-engineering/run3/05.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "inputsStable": true
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0,
+      "log": "output/2026-10-15-pptx-feedback-engineering/run3/06.log",
+      "logSha256": "a7642a0867425c6137f6fda230ee0c5445d5148745ccd7b4f5b0b4f2b4540d91",
+      "inputsStable": true
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--manifest-path",
+        "src-tauri/Cargo.toml",
+        "--locked"
+      ],
+      "exitCode": 0,
+      "log": "output/2026-10-15-pptx-feedback-engineering/run3/07.log",
+      "logSha256": "84c98d389db1df89d282be59c76cb0925f7918e5c911b8706e8c30dc61591505",
+      "inputsStable": true
+    }
+  ],
+  "executionBaseline": "run3 记录的 HEAD 为 1903fcb3；当时工作区包含完整路由修复，按输入映射封存；随后相同选集提交为 1bc27d7。不能把旧 run2 的通过扩大到新路由。",
+  "retainedFailures": [
+    "本批 run1：格式/类型成功，前端 6392 通过、1 失败；构建/Rust 尚未启动。旧档案测试两次计时刷新不保证真实 digest 已完成；受控延迟红/绿证明等待假设不足，不能断言原历史失败根因已确证。仅修成功测试的完成条件，保留真实摘要、一次注册、关闭与保留活动断言。",
+    "旧 run2 七项成功只覆盖 1903 及当时 18941 输入。1903 候选在安装前发现意见误入隐藏输入，被退役；不是最终路由验收。",
+    "更早 PPTX 工程四项子进程启动超时及原始日志保持；后续通过不证明原因已修，生产超时与默认并行未改。"
+  ],
+  "privateEvidence": [
+    {
+      "path": "output/2026-10-15-pptx-feedback-engineering/run3/verification.json",
+      "sha256": "275abe8cd7bcc2ca081c003bccdd0312b2f7f7aafe09a65dc6aba0d744e8d43e"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-engineering/source-selection-route.json",
+      "sha256": "20c05eb69ef27ef8f020da112dde0da6ec8915292648c17194575b89644692d1"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-engineering/run1/verification.json",
+      "sha256": "4ef59f4b34f5264e909cfc51850f8341dbc6e07f27085dc216ad838c59e21962"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-engineering/run2/verification.json",
+      "sha256": "b12ea36b32c7dd8da889762bafed4cc241bb7d17b245ae585293f02680f3446a"
+    },
+    {
+      "path": "output/2026-10-15-pptx-feedback-unused-candidate-retirement/receipt.json",
+      "sha256": "ebe5db8eed79492f8a970c419508f63eb5b411b1b562cbe6b6dafff89151a944"
+    }
+  ]
+}
