@@ -507,12 +507,12 @@ describe("PPTX refuses unsupported visible operations and malformed packages", (
         ),
     ],
     [
-      "bullet",
+      "automatic bullet numbering",
       SLIDE,
       (s: string) =>
         s.replace(
           '<a:pPr algn="l"/>',
-          '<a:pPr algn="l"><a:buChar char="●"/></a:pPr>',
+          '<a:pPr algn="l"><a:buAutoNum type="arabicPeriod"/></a:pPr>',
         ),
     ],
     [

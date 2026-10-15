@@ -5,7 +5,7 @@ import {
   type PptxSource,
 } from "./pptx_types";
 import { A, P, R, attr, child, number, type PptxXml } from "./pptx_xml";
-import { box, emu, flag, shapeId } from "./pptx_layout";
+import { box, emu, flag, placeholder, shapeId } from "./pptx_layout";
 import { matrixStyle, readColor } from "./pptx_theme";
 import { text, type PptxTextContext } from "./pptx_text";
 import type { PptxPackage } from "./pptx_package";
@@ -123,21 +123,66 @@ function effects(
   props: PptxXml[],
   c: PptxShapeContext,
 ): void {
+  const unknownAttrs = (node: PptxXml, names: string[]) =>
+    Object.keys(node.attrs).some(
+      (key) =>
+        !names.includes(key) &&
+        !key.startsWith("http://www.w3.org/2000/xmlns/#"),
+    );
+  const partialShadow = (node: PptxXml) => {
+    if (
+      node.uri !== A ||
+      node.name !== "outerShdw" ||
+      unknownAttrs(node, ["blurRad", "dist", "dir", "rotWithShape"]) ||
+      node.text.trim() ||
+      node.children.length !== 1
+    )
+      throw new PptxError("unsupported");
+    emu(attr(node, "blurRad") ?? "0", 0, G.extent);
+    emu(attr(node, "dist") ?? "0", 0, G.extent);
+    number(attr(node, "dir") ?? "0", 0, 21_600_000);
+    flag(attr(node, "rotWithShape"), true);
+    const color = node.children[0];
+    for (const effect of color.children) {
+      if (
+        effect.uri !== A ||
+        effect.name !== "alpha" ||
+        effect.children.length ||
+        effect.text.trim() ||
+        unknownAttrs(effect, ["val"])
+      )
+        throw new PptxError("unsupported");
+      const value = attr(effect, "val");
+      if (!value || !/^\d+$/.test(value)) throw new PptxError("invalid");
+      number(value, 0, 100_000);
+    }
+    readColor(
+      { ...node, children: [{ ...color, children: [] }] },
+      c.theme,
+      c.mapping,
+    );
+    // The regular Office theme shadow is recognized, but this canvas has no
+    // shadow paint vocabulary. Never report the omission as full fidelity.
+    c.warn("unsupportedFormatting");
+  };
+  const checkList = (list: PptxXml) => {
+    if (
+      list.uri !== A ||
+      list.name !== "effectLst" ||
+      list.text.trim() ||
+      unknownAttrs(list, [])
+    )
+      throw new PptxError("unsupported");
+    for (const effect of list.children) partialShadow(effect);
+  };
   const own = last(props, ["effectLst", "effectDag"]);
   if (own) {
-    if (own.name !== "effectLst" || own.children.length)
-      throw new PptxError("unsupported");
+    checkList(own);
     return;
   }
   const ref = reference(chain, "effectRef");
   const style = matrixStyle(ref, "effectStyleLst", c.theme);
-  if (
-    style &&
-    style.children.some(
-      (n) => n.uri !== A || n.name !== "effectLst" || n.children.length,
-    )
-  )
-    throw new PptxError("unsupported");
+  if (style) for (const list of style.children) checkList(list);
 }
 function geometry(
   chain: PptxXml[],
@@ -230,11 +275,20 @@ export function shape(
       paint = fill(chain, props, c),
       line = stroke(chain, props, c),
       tx = text(chain, c.master, c);
-    // No undocumented fill/line defaults: ordinary geometry needs explicit
-    // paint, an inherited paint, or an actual theme style reference.
+    // A plain text container can lack paint declarations in ordinary Office
+    // files. Preserve its text without inventing a filled rectangle, while
+    // explicitly marking the unresolved default paint as partial.
     if (geom === null && (paint || line)) throw new PptxError("unsupported");
-    if (geom !== null && (paint === undefined || line === undefined))
-      throw new PptxError("unsupported");
+    if (paint === undefined || line === undefined) {
+      const txBox = child(child(own, "nvSpPr", P), "cNvSpPr", P);
+      if (
+        !tx ||
+        (!placeholder(own) && !flag(txBox && attr(txBox, "txBox"), false)) ||
+        chain.some((node) => child(node, "style", P))
+      )
+        throw new PptxError("unsupported");
+      c.warn("unsupportedFormatting");
+    }
     return {
       kind: "shape",
       id: identifier,

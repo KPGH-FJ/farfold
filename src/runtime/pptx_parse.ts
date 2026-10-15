@@ -29,6 +29,40 @@ import {
 import { PptxImages } from "./pptx_images";
 import { shape, type PptxShapeContext } from "./pptx_shapes";
 
+/** MS-PPTX 2.2.9: this exact extension is a creation-tracking uint32,
+ * not paint or behaviour. All other extension payloads still reject. */
+function creationMetadata(node: PptxXml): boolean {
+  const keys = (n: PptxXml) =>
+    Object.keys(n.attrs).filter(
+      (key) => !key.startsWith("http://www.w3.org/2000/xmlns/#"),
+    );
+  if (
+    node.uri !== P ||
+    node.name !== "extLst" ||
+    keys(node).length ||
+    node.text.trim() ||
+    node.children.length !== 1
+  )
+    return false;
+  const extension = node.children[0],
+    value = extension.children[0];
+  return Boolean(
+    extension.uri === P &&
+    extension.name === "ext" &&
+    keys(extension).length === 1 &&
+    attr(extension, "uri") === "{BB962C8B-B14F-4D97-AF65-F5344CB8AC3E}" &&
+    !extension.text.trim() &&
+    extension.children.length === 1 &&
+    value?.uri === "http://schemas.microsoft.com/office/powerpoint/2010/main" &&
+    value.name === "creationId" &&
+    keys(value).length === 1 &&
+    /^\d+$/.test(attr(value, "val") ?? "") &&
+    Number(attr(value, "val")) <= 4_294_967_295 &&
+    !value.children.length &&
+    !value.text.trim(),
+  );
+}
+
 export function parsePptx(input: PptxWorkerInput): PptxDocument {
   const pkg = new PptxPackage(input),
     presentation = pkg.xml(pkg.presentation),
@@ -128,7 +162,9 @@ export function parsePptx(input: PptxWorkerInput): PptxDocument {
         const common = child(l.node, "cSld", P);
         if (
           common?.children.some(
-            (n) => n.uri !== P || !["bg", "spTree"].includes(n.name),
+            (n) =>
+              !(n.uri === P && ["bg", "spTree"].includes(n.name)) &&
+              !creationMetadata(n),
           )
         )
           throw new PptxError("unsupported");

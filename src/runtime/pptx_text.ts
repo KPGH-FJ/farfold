@@ -7,7 +7,12 @@ import {
 } from "./pptx_types";
 import { A, P, attr, child, children, number, type PptxXml } from "./pptx_xml";
 import { emu, flag, placeholder, masterPlaceholderType } from "./pptx_layout";
-import { fontFamily, readColor, type PptxTheme } from "./pptx_theme";
+import {
+  checkedFont,
+  fontFamily,
+  readColor,
+  type PptxTheme,
+} from "./pptx_theme";
 
 export interface PptxTextContext {
   theme: PptxTheme;
@@ -53,6 +58,17 @@ function style(
   if (latin) into.fontFamily = fontFamily(a(latin, "typeface") ?? "", c.theme);
   for (const key of ["ea", "cs"]) {
     const family = a(child(n, key), "typeface");
+    // Office themes commonly leave these auxiliary collections empty and
+    // resolve script fonts per language. This renderer has one Latin family;
+    // keep its checked family and state that script typography is partial.
+    if (
+      family &&
+      /^\+(?:mj|mn)-(?:ea|cs)$/.test(family) &&
+      !c.theme.fonts.has(family)
+    ) {
+      c.warn("unsupportedFormatting");
+      continue;
+    }
     if (
       family &&
       into.fontFamily &&
@@ -77,15 +93,56 @@ function style(
 }
 function paragraphProperties(n: PptxXml | undefined, c: PptxTextContext): void {
   if (!n) return;
+  if (
+    n.children.filter(
+      (element) =>
+        element.uri === A &&
+        ["buNone", "buChar", "buAutoNum", "buBlip"].includes(element.name),
+    ).length > 1
+  )
+    throw new PptxError("invalid");
   for (const element of n.children) {
     if (element.uri !== A) throw new PptxError("unsupported");
-    if (["defRPr", "buNone"].includes(element.name)) continue;
+    if (element.name === "defRPr") continue;
+    const names = Object.keys(element.attrs).filter(
+      (key) => !key.startsWith("http://www.w3.org/2000/xmlns/#"),
+    );
+    if (["buNone", "buFontTx"].includes(element.name)) {
+      if (element.children.length || names.length || element.text.trim())
+        throw new PptxError("unsupported");
+      continue;
+    }
+    if (element.name === "buFont") {
+      if (
+        element.children.length ||
+        element.text.trim() ||
+        names.some(
+          (key) =>
+            !["typeface", "panose", "pitchFamily", "charset"].includes(key),
+        )
+      )
+        throw new PptxError("unsupported");
+      checkedFont(a(element, "typeface") ?? "");
+      continue;
+    }
+    if (element.name === "buChar") {
+      const mark = a(element, "char") ?? "";
+      if (Array.from(mark).length !== 1 || /[\p{C}\s]/u.test(mark))
+        throw new PptxError("unsupported");
+      if (
+        element.children.length ||
+        element.text.trim() ||
+        names.some((key) => key !== "char")
+      )
+        throw new PptxError("unsupported");
+      continue;
+    }
     if (["lnSpc", "spcBef", "spcAft", "tabLst"].includes(element.name)) {
       c.warn("unsupportedFormatting");
       continue;
     }
-    // Bullets/numbering need visible marks and indent layout, not text-only
-    // approximation. Their absence must never be reported as complete.
+    // Automatic/image bullets remain unsupported; character bullets below
+    // retain their actual visible glyph and mark approximate layout partial.
     throw new PptxError("unsupported");
   }
   for (const key of ["marL", "marR", "indent", "defTabSz"])
@@ -133,6 +190,18 @@ export function text(
     for (const n of p.children) {
       if (n.uri !== A) throw new PptxError("unsupported");
       if (n.name === "noAutofit") continue;
+      if (
+        n.name === "spAutoFit" &&
+        !n.children.length &&
+        !Object.keys(n.attrs).some(
+          (key) => !key.startsWith("http://www.w3.org/2000/xmlns/#"),
+        )
+      ) {
+        // The stored box is retained; automatic shape resizing is not
+        // reproduced by the passive canvas and must stay visibly partial.
+        context.warn("unsupportedFormatting");
+        continue;
+      }
       if (
         n.name === "normAutofit" &&
         (a(n, "fontScale") ?? "100000") === "100000" &&
@@ -203,9 +272,17 @@ export function text(
     if (direct) properties.push(direct);
     const resolved = { ...base };
     let alignment: "left" | "center" | "right" = "left";
+    let bullet: string | null = null,
+      bulletFont: string | undefined;
     for (const p of properties) {
       paragraphProperties(p, context);
       style(child(p, "defRPr"), resolved, context);
+      if (child(p, "buNone")) bullet = null;
+      const mark = child(p, "buChar");
+      if (mark) bullet = attr(mark, "char")!;
+      const font = child(p, "buFont");
+      if (font) bulletFont = checkedFont(attr(font, "typeface") ?? "");
+      if (child(p, "buFontTx")) bulletFont = undefined;
       const algn = attr(p, "algn");
       if (algn !== undefined) {
         if (!["l", "ctr", "r"].includes(algn))
@@ -246,6 +323,16 @@ export function text(
         bold: value.bold,
         italic: value.italic,
         underline: value.underline,
+      });
+    }
+    const first = runs.find((run) => run.kind === "text" && run.text.length);
+    if (bullet && first?.kind === "text") {
+      context.run(bullet + " ");
+      context.warn("unsupportedFormatting");
+      runs.unshift({
+        ...first,
+        text: bullet + " ",
+        fontFamily: bulletFont ?? first.fontFamily,
       });
     }
     if (!runs.length) context.warn("unsupportedFormatting");

@@ -8,6 +8,8 @@ export interface PptxTheme {
 }
 export function readTheme(node: PptxXml): PptxTheme {
   root(node, "theme", A);
+  // a:objectDefaults describes formatting imprinted when a NEW object is
+  // inserted (ISO 29500 objectDefaults). It is not a current-shape override.
   const elements = child(node, "themeElements"),
     scheme = child(elements, "clrScheme"),
     fonts = child(elements, "fontScheme");
@@ -98,6 +100,15 @@ export function readColor(
   );
   if (candidates.length !== 1) throw new PptxError("unsupported");
   const n = candidates[0];
+  if (
+    n.text.trim() ||
+    Object.keys(n.attrs).some(
+      (key) =>
+        !(n.name === "sysClr" ? ["val", "lastClr"] : ["val"]).includes(key) &&
+        !key.startsWith("http://www.w3.org/2000/xmlns/#"),
+    )
+  )
+    throw new PptxError("unsupported");
   let raw: string | undefined;
   if (n.name === "srgbClr") raw = attr(n, "val");
   else if (n.name === "sysClr") raw = attr(n, "lastClr");
@@ -109,11 +120,31 @@ export function readColor(
     raw = value?.replace(/^#/, "");
   } else throw new PptxError("unsupported");
   if (!raw || !/^[\da-f]{6}$/i.test(raw)) throw new PptxError("unsupported");
-  const rgb = [0, 2, 4].map((at) => parseInt(raw!.slice(at, at + 2), 16));
+  let rgb = [0, 2, 4].map((at) => parseInt(raw!.slice(at, at + 2), 16));
   for (const effect of n.children) {
-    if (effect.uri !== A) throw new PptxError("unsupported");
-    const v = number(attr(effect, "val"), 0, 100_000) / 100_000;
+    if (
+      effect.uri !== A ||
+      effect.children.length ||
+      effect.text.trim() ||
+      Object.keys(effect.attrs).some(
+        (key) =>
+          key !== "val" && !key.startsWith("http://www.w3.org/2000/xmlns/#"),
+      )
+    )
+      throw new PptxError("unsupported");
+    const value = attr(effect, "val");
+    if (!value || !/^[+-]?\d+$/.test(value)) throw new PptxError("invalid");
+    // DrawingML satMod uses CT_Percentage / signed Int32 (unlike fixed
+    // shade/alpha). Keep the schema range; saturation itself is bounded HSL.
+    const v =
+      number(
+        value,
+        effect.name === "satMod" ? -2_147_483_648 : 0,
+        effect.name === "satMod" ? 2_147_483_647 : 100_000,
+      ) / 100_000;
     if (effect.name === "alpha" && v === 1) continue;
+    else if (effect.name === "shade") rgb = rgb.map((channel) => channel * v);
+    else if (effect.name === "satMod") rgb = saturation(rgb, v);
     else throw new PptxError("unsupported");
   }
   return (
@@ -123,6 +154,31 @@ export function readColor(
       .join("")
       .toUpperCase()
   );
+}
+
+/** DrawingML saturation modulation keeps HSL hue/lightness, changing only S. */
+function saturation(rgb: number[], factor: number): number[] {
+  const [r, g, b] = rgb.map((channel) => channel / 255),
+    high = Math.max(r, g, b),
+    low = Math.min(r, g, b),
+    delta = high - low,
+    light = (high + low) / 2;
+  if (!delta) return rgb;
+  const hue =
+    (high === r
+      ? (g - b) / delta + (g < b ? 6 : 0)
+      : high === g
+        ? (b - r) / delta + 2
+        : (r - g) / delta + 4) * 60;
+  const sat = Math.max(
+      0,
+      Math.min(1, (delta / (1 - Math.abs(2 * light - 1))) * factor),
+    ),
+    amplitude = sat * Math.min(light, 1 - light);
+  return [0, 8, 4].map((n) => {
+    const k = (n + hue / 30) % 12;
+    return (light - amplitude * Math.max(-1, Math.min(k - 3, 9 - k, 1))) * 255;
+  });
 }
 
 export function matrixStyle(
