@@ -10,6 +10,7 @@ import { LOADED_SEARCH_STRINGS } from "./loaded_search_strings";
 import { REPORTED_ARTIFACT_STRINGS } from "./reported_artifact_strings";
 import { REDESIGN } from "./redesign_strings";
 import { DOCUMENT_STRINGS, DOCUMENT_WARNINGS } from "./document_strings";
+import { PPTX_STRINGS, PPTX_WARNINGS } from "./pptx_strings";
 import { INQUIRY } from "./elicitation_strings";
 import { AGENT_REDESIGN } from "./agent_redesign_strings";
 import { SETTINGS_REDESIGN } from "./settings_redesign_strings";
@@ -102,6 +103,8 @@ describe("strings", () => {
       EXTENSION_INVENTORY_STRINGS,
       REPORTED_ARTIFACT_STRINGS,
       DOCUMENT_STRINGS,
+      PPTX_STRINGS,
+      PPTX_WARNINGS,
       VISUAL_AREA_STRINGS,
       LOADED_SEARCH_STRINGS,
       DOCUMENT_WARNINGS,

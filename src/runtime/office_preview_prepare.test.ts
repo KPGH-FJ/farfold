@@ -4,6 +4,8 @@ const h = vi.hoisted(() => ({
   dp: vi.fn(),
   wc: vi.fn(),
   wp: vi.fn(),
+  pc: vi.fn(),
+  pp: vi.fn(),
 }));
 vi.mock("./docx_preview", () => ({
   readDocxCapture: h.dc,
@@ -12,6 +14,10 @@ vi.mock("./docx_preview", () => ({
 vi.mock("./xlsx_preview", () => ({
   readWorkbookCapture: h.wc,
   readWorkbookPreview: h.wp,
+}));
+vi.mock("./pptx_preview", () => ({
+  readPptxCapture: h.pc,
+  readPptxPreview: h.pp,
 }));
 import { prepareOfficePreview } from "./office_preview_prepare";
 const file = {
@@ -145,4 +151,52 @@ it("fully prepares the retained worksheet from the new capture before replacemen
     capture,
     value,
   });
+});
+it("prepares the complete new presentation before replacing the old slides", async () => {
+  const presentation = { ...file, name: "a.pptx" };
+  let resolve!: (value: unknown) => void;
+  h.pc.mockResolvedValue({ file: presentation });
+  h.pp.mockImplementation(
+    () =>
+      new Promise((yes) => {
+        resolve = yes;
+      }),
+  );
+  let applied = false;
+  const pending = prepareOfficePreview(
+    presentation,
+    { current: null },
+    new AbortController().signal,
+    () => true,
+  ).then((value) => {
+    applied = true;
+    return value;
+  });
+  await Promise.resolve();
+  expect(applied).toBe(false);
+  const value = { file: presentation, slides: [] };
+  resolve(value);
+  expect(await pending).toEqual({ kind: "pptx", file: presentation, value });
+});
+it("hiding preserves an unfinished PPTX read and rejects late publication", async () => {
+  const presentation = { ...file, name: "a.pptx" };
+  let resolve!: (value: unknown) => void;
+  h.pc.mockImplementation(
+    () =>
+      new Promise((yes) => {
+        resolve = yes;
+      }),
+  );
+  const parser = new AbortController();
+  const pending = prepareOfficePreview(
+    presentation,
+    { current: null },
+    parser.signal,
+    () => !parser.signal.aborted,
+  );
+  parser.abort();
+  expect(h.pc.mock.calls[0][1].aborted).toBe(false);
+  resolve({ file: presentation });
+  await expect(pending).rejects.toEqual({ code: "cancelled" });
+  expect(h.pp).not.toHaveBeenCalled();
 });

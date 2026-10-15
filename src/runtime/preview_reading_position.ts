@@ -10,6 +10,7 @@ import type { WorkbookPreview } from "./xlsx_types";
 import { sheetExtent } from "./workbook_view";
 import { DOCUMENT_WINDOW, paragraphParts } from "./document_view";
 import { MAX_PDF_PAGES } from "./visual_preview";
+import type { PptxPreview } from "./pptx_types";
 
 interface FilePosition {
   root: string;
@@ -19,6 +20,7 @@ export type PreviewReadingPosition = FilePosition &
   (
     | { kind: "pdf"; page: number }
     | { kind: "text"; blockIndex: number }
+    | { kind: "presentation"; slide: { part: string; index: number } }
     | {
         kind: "workbook";
         sheet: { id: string; name: string; hiddenSelected?: boolean };
@@ -189,6 +191,25 @@ export function restoredTextBlock(
     ? p.blockIndex
     : 0;
 }
+/** Prefer the actual slide part after a reorder, otherwise clamp the old page.
+ * This transient reading location never grants access to another file. */
+export function restoredPptxSlide(
+  preview: PptxPreview,
+  ref?: PreviewReadingPositionRef,
+): number {
+  const position = ref?.current;
+  if (
+    position?.kind !== "presentation" ||
+    !sameReadingFile(position, preview.file)
+  )
+    return 0;
+  const index = preview.slides.findIndex(
+    (slide) => slide.part === position.slide.part,
+  );
+  return index >= 0
+    ? index
+    : clamp(position.slide.index, 0, Math.max(0, preview.slides.length - 1));
+}
 export function savedWorkbookPosition(
   file: VerifiedFile,
   ref?: PreviewReadingPositionRef,
@@ -269,6 +290,10 @@ export function saveReadingPosition(
       >
     | Omit<
         Extract<PreviewReadingPosition, { kind: "document" }>,
+        keyof FilePosition
+      >
+    | Omit<
+        Extract<PreviewReadingPosition, { kind: "presentation" }>,
         keyof FilePosition
       >,
 ): void {

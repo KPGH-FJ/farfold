@@ -3,6 +3,8 @@ import type { DocxPreview } from "./docx_types";
 import type { WorkbookCapture, WorkbookPreview } from "./xlsx_types";
 import { readDocxCapture, readDocxPreview } from "./docx_preview";
 import { readWorkbookCapture, readWorkbookPreview } from "./xlsx_preview";
+import { readPptxCapture, readPptxPreview } from "./pptx_preview";
+import type { PptxPreview } from "./pptx_types";
 import {
   restoredWorkbookSheet,
   type PreviewReadingPositionRef,
@@ -20,7 +22,12 @@ export type PreparedWorkbookPreview = {
   value: WorkbookPreview;
 };
 export type PreparedOfficePreview =
-  PreparedDocxPreview | PreparedWorkbookPreview;
+  PreparedDocxPreview | PreparedWorkbookPreview | PreparedPptxPreview;
+export type PreparedPptxPreview = {
+  kind: "pptx";
+  file: VerifiedFile;
+  value: PptxPreview;
+};
 
 /** Prepare a replacement snapshot before retiring the visible document. */
 export async function prepareOfficePreview(
@@ -36,6 +43,13 @@ export async function prepareOfficePreview(
   // Hiding cancels presentation/parsing, not the real OS operation. Keep awaiting
   // its bounded reply so readPending cannot be silently discarded and retried.
   const captureSignal = new AbortController().signal;
+  if (/\.pptx$/i.test(file.name)) {
+    const capture = await readPptxCapture(file, captureSignal);
+    check();
+    const value = await readPptxPreview(capture, parserSignal);
+    check();
+    return { kind: "pptx", file, value };
+  }
   if (/\.docx$/i.test(file.name)) {
     const capture = await readDocxCapture(file, captureSignal);
     check();

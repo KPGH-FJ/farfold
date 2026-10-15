@@ -1,0 +1,47 @@
+{
+  "status": "Independent hand-designed expected content and geometry, written before package generation; not extracted from a current or future production parser. Rendering has not been performed.",
+  "units": { "emuPerInch": 914400, "referencePixelsPerInch": 96, "fontSizeUnit": "hundredths of a point" },
+  "canvas": { "widthEmu": 9144000, "heightEmu": 5143500, "referenceCssPx": [960, 540], "background": "FFFFFF", "pages": 2 },
+  "displayOrder": [
+    { "page": 1, "slideId": "512", "relationshipId": "rSlideSecond", "part": "ppt/slides/slide2.xml" },
+    { "page": 2, "slideId": "256", "relationshipId": "rSlideFirst", "part": "ppt/slides/slide1.xml" }
+  ],
+  "common": {
+    "masterFooter": { "source": "ppt/slideMasters/slideMaster1.xml shape id9", "geometry": "rect", "boxEmu": [0,4457700,9144000,228600], "referenceCssPx": [0,468,960,24], "fill": "E5A329", "resolution": "master shape scheme accent2 -> theme1.xml clrScheme accent2", "zLayer": "master before slide objects", "shownOnBothSlides": true },
+    "placeholderMatch": { "type": "title", "idx": 7, "layoutShapeId": 4, "masterShapeId": 2, "slideShapeId": 2, "rule": "Match placeholder identity, not cNvPr id or array ordinal." },
+    "masterTitleBoxEmu": [228600,228600,4572000,685800],
+    "layoutTitleBoxEmu": [914400,457200,7315200,914400],
+    "theme": { "accent1": "1F7A5C", "accent2": "E5A329" },
+    "font": "Arial requested; platform fallback/glyph rasterization must be reported separately, not used to change authored coordinates or text."
+  },
+  "page1": {
+    "title": { "text": "LAYOUT THEME 01", "shapeId": 2, "boxEmu": [914400,457200,7315200,914400], "referenceCssPx": [96,48,768,96], "fontPt": 32, "color": "1F7A5C", "source": "No slide xfrm; layout idx7 position overrides different master position. Run schemeClr accent1 resolves through master theme; slide has no direct RGB for title." },
+    "objectsInSlideOrder": [
+      { "shapeId": 11, "geometry": "rect", "boxEmu": [914400,1828800,1828800,914400], "referenceCssPx": [96,192,192,96], "fill": "1F7A5C", "source": "schemeClr accent1 -> theme" },
+      { "shapeId": 14, "geometry": "ellipse", "boxEmu": [3657600,1828800,1371600,914400], "referenceCssPx": [384,192,144,96], "fill": "3264C8", "source": "direct srgbClr" },
+      { "shapeId": 21, "kind": "picture", "relationshipId": "rImage", "part": "ppt/media/quadrants.png", "boxEmu": [6400800,1828800,1828800,1828800], "referenceCssPx": [672,192,192,192], "rotation": 0, "crop": "none", "fit": "stretch full 16x16 image into equal-aspect square" },
+      { "shapeId": 31, "kind": "text", "text": "BODY A - 甲", "boxEmu": [914400,3200400,5029200,685800], "referenceCssPx": [96,336,528,72], "fontPt": 24, "color": "17212B" }
+    ]
+  },
+  "page2": {
+    "title": { "text": "DIRECT OVERRIDE 02", "shapeId": 2, "boxEmu": [457200,228600,8229600,914400], "referenceCssPx": [48,24,864,96], "fontPt": 32, "color": "C62828", "source": "Explicit slide xfrm overrides layout/master; direct run srgbClr overrides theme-based first-page appearance." },
+    "objectsInSlideOrder": [
+      { "shapeId": 12, "geometry": "rect", "boxEmu": [914400,1828800,2743200,914400], "referenceCssPx": [96,192,288,96], "fill": "CC3377" },
+      { "shapeId": 32, "kind": "text", "text": "SECOND DISPLAY PAGE", "boxEmu": [914400,3200400,6400800,685800], "referenceCssPx": [96,336,672,72], "fontPt": 24, "color": "17212B" }
+    ],
+    "imageCount": 0
+  },
+  "image": {
+    "width": 16, "height": 16, "bitDepth": 8, "colorType": 2, "alpha": false,
+    "pixels": { "x0to7y0to7": [255,0,0], "x8to15y0to7": [0,255,0], "x0to7y8to15": [0,0,255], "x8to15y8to15": [255,255,0] },
+    "visualRule": "Four coloured quadrants; raster scaling may interpolate along boundaries. Decode-source pixel bytes are exact; do not demand identical platform antialiasing."
+  },
+  "negativeAssertionsWithinSamePositiveSample": [
+    "Do not use ZIP, filename, numeric slide ID or presentation relationships order as display order.",
+    "Do not substitute the master title position for the layout title position on page1.",
+    "Do not apply layout title geometry or accent1 colour over page2 explicit settings.",
+    "Do not render empty master/layout placeholders as extra page text or duplicate slide title objects.",
+    "Do not render relationship IDs, part names, shape names or generated labels as slide text.",
+    "Only page1 has one PNG; no external URL, active content, macro, embedded object, note, transition or animation is in this package."
+  ]
+}

@@ -174,6 +174,20 @@ pub async fn file_delivery_read_docx(
 }
 
 #[tauri::command]
+pub async fn file_delivery_read_pptx(
+    webview: Webview,
+    file: VerifiedFile,
+) -> Result<file_delivery::PptxCapture, file_delivery::PptxReadFailure> {
+    require_main(&webview).map_err(|_| file_delivery::PptxReadFailure { code: "unreadable" })?;
+    // The shared slot follows the actual OS read, even if this reply is dropped
+    // or times out. Captured parts never grant access to a remote browser view.
+    crate::file_read_check::run(move || Ok(file_delivery::read_pptx(&file)))
+        .await
+        .map_err(|message| file_delivery::PptxReadFailure::check(&message))?
+        .map_err(Into::into)
+}
+
+#[tauri::command]
 pub async fn file_delivery_read_docx_search(
     webview: Webview,
     file: VerifiedFile,

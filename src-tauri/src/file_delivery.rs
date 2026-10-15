@@ -23,6 +23,8 @@ mod document;
 mod ooxml_archive;
 mod search_source;
 pub use document::{DocxCapture, DocxReadFailure, read_docx, read_docx_search};
+mod presentation;
+pub use presentation::{PptxCapture, PptxReadFailure, read_pptx};
 mod workbook;
 pub use workbook::{WorkbookCapture, WorkbookReadFailure, read_workbook, read_workbook_search};
 mod pdf_input;

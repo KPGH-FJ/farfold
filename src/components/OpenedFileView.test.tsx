@@ -89,6 +89,11 @@ vi.mock("./DocxFilePreview", () => ({
     <div data-document-version={file.version} data-document-active={active} />
   ),
 }));
+vi.mock("./PptxFilePreview", () => ({
+  PptxFilePreview: ({ file }: { file: { version: string } }) => (
+    <div data-pptx-version={file.version} />
+  ),
+}));
 vi.mock("react", async (original) => {
   const effect = (callback: () => void | (() => void), deps: unknown[]) => {
     const index = h.cursor++;
@@ -132,6 +137,8 @@ import { TEXT_BLOCK_STRINGS as T } from "../runtime/text_block_strings";
 import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
 import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
+import { PPTX_STRINGS as P } from "../runtime/pptx_strings";
+import { PptxError } from "../runtime/pptx_types";
 import { composerDrafts, fileFeedbackDrafts } from "../runtime/drafts";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
 
@@ -359,6 +366,138 @@ it("retains the old document and stops automatic checking when Office staging re
   await vi.advanceTimersByTimeAsync(60000);
   expect(h.checkRevision).toHaveBeenCalledOnce();
 });
+it("waits for PPTX readiness and stages a verified revision without adding feedback controls", async () => {
+  vi.useFakeTimers();
+  const file = { ...receipt, name: "result.pptx" };
+  h.inspectLink.mockResolvedValue(file);
+  await ready();
+  await vi.advanceTimersByTimeAsync(10000);
+  expect(h.checkRevision).not.toHaveBeenCalled();
+  expect(button(S.feedback)).toBeUndefined();
+  const child = render().nodes.find(
+    (node) => typeof node.props.onStatus === "function",
+  )!;
+  (child.props.onStatus as (s: unknown) => void)({
+    file,
+    state: "ready",
+    readInFlight: false,
+  });
+  render();
+  const next = { ...file, version: "pptx-new" },
+    pending = deferred<unknown>();
+  h.checkRevision.mockResolvedValueOnce({ kind: "verified", file: next });
+  h.prepareOffice.mockReturnValueOnce(pending.promise);
+  await vi.advanceTimersByTimeAsync(0);
+  expect(render().html).toContain('data-pptx-version="v1"');
+  pending.resolve({ kind: "pptx", file: next, value: { file: next } });
+  await vi.advanceTimersByTimeAsync(0);
+  expect(render().html).toContain('data-pptx-version="pptx-new"');
+  expect(h.prepareOffice).toHaveBeenCalledOnce();
+});
+it("keeps PPTX content during manual refresh and preserves it after parsing failure", async () => {
+  const file = { ...receipt, name: "result.pptx" };
+  h.inspectLink.mockResolvedValue(file);
+  await ready();
+  const next = { ...file, version: "bad-pptx" },
+    pending = deferred<unknown>();
+  h.inspectLink.mockResolvedValueOnce(next);
+  h.prepareOffice.mockReturnValueOnce(pending.promise);
+  click(S.refresh);
+  await drain();
+  expect(render().html).toContain('data-pptx-version="v1"');
+  pending.reject(Error("invalid"));
+  await drain();
+  expect(render().html).toContain('data-pptx-version="v1"');
+  expect(render().html).not.toContain('data-pptx-version="bad-pptx"');
+  expect(render().html).toContain(P.failed);
+});
+it("retains a hidden parent PPTX refresh and halts unknown reads until explicit retry", async () => {
+  vi.useFakeTimers();
+  const file = { ...receipt, name: "result.pptx" };
+  h.inspectLink.mockResolvedValue(file);
+  await ready();
+  const report = () => {
+    const child = render().nodes.find(
+      (node) => typeof node.props.onStatus === "function",
+    )!;
+    (child.props.onStatus as (s: unknown) => void)({
+      file,
+      state: "ready",
+      readInFlight: false,
+    });
+    render();
+  };
+  report();
+  const pending = deferred<unknown>();
+  h.prepareOffice.mockReturnValueOnce(pending.promise);
+  click(S.refresh);
+  render(); // Commit the event's pending/blocked state before advancing timers.
+  await vi.advanceTimersByTimeAsync(0);
+  expect(h.inspectLink).toHaveBeenCalledTimes(2);
+  render({ ...props, active: false });
+  render({ ...props, active: true });
+  report();
+  expect(button(S.refresh)?.props.disabled).toBe(true);
+  click(S.refresh);
+  await vi.advanceTimersByTimeAsync(60000);
+  expect(h.inspectLink).toHaveBeenCalledTimes(2);
+  expect(h.checkRevision).not.toHaveBeenCalled();
+  pending.reject(new PptxError("readPending"));
+  await vi.advanceTimersByTimeAsync(0);
+  expect(render().html).toContain(P.readPending);
+  expect(button(S.refresh)?.props.disabled).toBe(false);
+  render({ ...props, active: false });
+  render({ ...props, active: true });
+  report();
+  await vi.advanceTimersByTimeAsync(60000);
+  expect(h.checkRevision).not.toHaveBeenCalled();
+  expect(h.prepareOffice).toHaveBeenCalledOnce();
+  h.prepareOffice.mockResolvedValueOnce({
+    kind: "pptx",
+    file,
+    value: { file },
+  });
+  click(S.refresh);
+  await vi.advanceTimersByTimeAsync(0);
+  expect(h.prepareOffice).toHaveBeenCalledTimes(2);
+});
+it("does not start a new PPTX inspect while the cancelled preview still owns an OS read", async () => {
+  const file = { ...receipt, name: "result.pptx" };
+  h.inspectLink.mockResolvedValue(file);
+  await ready();
+  const child = render().nodes.find(
+    (node) => typeof node.props.onStatus === "function",
+  )!;
+  (child.props.onStatus as (s: unknown) => void)({
+    file,
+    state: "paused",
+    readInFlight: true,
+  });
+  render();
+  expect(button(S.refresh)?.props.disabled).toBe(true);
+  click(S.refresh);
+  await drain();
+  expect(h.inspectLink).toHaveBeenCalledOnce();
+});
+it("also retains the initial inspection of a hidden manual PPTX refresh", async () => {
+  const file = { ...receipt, name: "result.pptx" };
+  h.inspectLink.mockResolvedValue(file);
+  await ready();
+  const pending = deferred<typeof file>();
+  h.inspectLink.mockReturnValueOnce(pending.promise);
+  click(S.refresh);
+  await drain();
+  render({ ...props, active: false });
+  render({ ...props, active: true });
+  expect(button(S.refresh)?.props.disabled).toBe(true);
+  click(S.refresh);
+  await drain();
+  expect(h.inspectLink).toHaveBeenCalledTimes(2);
+  pending.reject(Error(D.checkWaitExpired));
+  await drain();
+  expect(render().html).toContain(P.readPending);
+  expect(h.prepareOffice).not.toHaveBeenCalled();
+});
 
 it("opens the exact clicked path through the common inspector and renders verified Markdown", async () => {
   await ready();
@@ -474,7 +613,7 @@ it("opens only the inspected DOCX version and refreshes it without handing the f
   );
 });
 
-it.each(["legacy.doc", "macros.docm", "slides.pptx"])(
+it.each(["legacy.doc", "macros.docm", "slides.ppt", "macros.pptm"])(
   "does not interpret %s as DOCX",
   async (name) => {
     h.inspectLink.mockResolvedValueOnce({ ...receipt, name });
