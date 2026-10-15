@@ -1,0 +1,382 @@
+{
+  "date": "2026-10-16",
+  "targeted": {
+    "runtime": {
+      "files": 8,
+      "passed": 312,
+      "actualSession": 75707,
+      "actualFinalChunk": "be14e4",
+      "actualExitCode": 0,
+      "typecheckExit": 0,
+      "scopedSixFormatExit": 0,
+      "ownedSixStable": true,
+      "receipt": {
+        "path": "output/2026-10-16-next-independent-slice/targeted-verification.json",
+        "sha256": "899b72fed40e413b75a992d5a5cc923762ef0347bac65f4e4b9e0abb4ac231ce"
+      }
+    },
+    "ui": {
+      "files": 2,
+      "passed": 17,
+      "actualFinalChunkOwnerReported": "79723c",
+      "actualExitCode": 0,
+      "receipt": {
+        "path": "output/2026-10-16-pptx-search-frontend/ui-targeted-1.json",
+        "sha256": "3f140ca110d05d5c3e3beea1b88c4391f5ef2e1fa407c0fe01d868db5cf20bc0"
+      }
+    },
+    "backend": {
+      "passed": 6,
+      "actualSessionOwnerReported": 16973,
+      "actualFinalChunkOwnerReported": "a2e38d",
+      "actualExitCode": 0,
+      "receipt": {
+        "path": "output/2026-10-16-pptx-search-backend/targeted-1.json",
+        "sha256": "08003d33be4ed534bca7d519f4a129c1f1fc639af9eb32177378094f153013a6"
+      }
+    },
+    "coverageOverlaps": true
+  },
+  "retainedFailures": [
+    {
+      "kind": "previouslyUnsupportedFormatGap",
+      "actualExitCode": 1,
+      "actualFinalChunk": "86cbc1",
+      "failed": 1,
+      "receipt": {
+        "path": "output/2026-10-16-next-independent-slice/pptx-route-red.json",
+        "sha256": "e1d37d9359e151e2d70c571404ad76d135dc9ca70cee7cb8c21cfdafbb6ec264"
+      },
+      "meaning": "PPTX selected the old UTF8 route. Previous search disclosure did not promise PPTX; this proves the missing extension, not a regression of promised PPTX support."
+    },
+    {
+      "kind": "workInProgressProjectionDefense",
+      "actualExitCode": 1,
+      "actualFinalChunk": "c0b35c",
+      "failed": 1,
+      "skipped": 63,
+      "receipt": {
+        "path": "output/2026-10-16-next-independent-slice/split-unicode-red.json",
+        "sha256": "200453a1e6ac0b1c77e4f16b37fc8f597db55394005569ef81e22077fa5eba20"
+      },
+      "meaning": "Separate malformed UTF16 runs could manufacture a scalar after concatenation. The new projection was tightened per run; no claim that the existing actual PPTX parser emitted such text."
+    },
+    {
+      "kind": "unsuccessfulListeningServerAttempt",
+      "actualExitCode": 0,
+      "cause": "unknown",
+      "meaning": "Initial shell-default Node server command returned0 silently without ready/lifecycle. It is retained as an unsuccessful listening-server attempt with unknown cause; the unchanged script was actually run once with the existing bundled Node24. No browser scenario failed or was retried.",
+      "receipt": {
+        "path": "output/2026-10-16-pptx-search-browser/invocation-history.json",
+        "sha256": "95a2ad2f230b561219721ae9ac20d2b0ff43f72e166a126ceb177bf7a8f30f1f"
+      }
+    }
+  ],
+  "independentReview": {
+    "eightFileRootSubset": {
+      "path": "output/2026-10-16-pptx-search-review/root-subset-review.json",
+      "sha256": "b286e450c20fef2ea476cffbc5fcd47f4b3c84e785833a4d6e4b926780df5cf8"
+    },
+    "fullFourteenRuntimeSupplement": {
+      "path": "output/2026-10-16-pptx-search-review/complete-source-review.json",
+      "sha256": "d8e128de8f498ed5d545d8079ae2e1bc4c118cc99ec756eed46d3670e03946f9"
+    },
+    "priorInventoryCorrection": "The earlier subset review mistakenly reported missing log bytes; the complete review independently read and hash-verified both existing logs, corrected that inventory statement and retained the original report."
+  },
+  "fullSeven": {
+    "run": 1,
+    "state": "passed",
+    "actualSession": 16719,
+    "actualFinalChunk": "9d8db0",
+    "actualExitCode": 0,
+    "inputCount": 18968,
+    "inputsStable": true,
+    "frontend": {
+      "files": 522,
+      "passed": 6519
+    },
+    "rust": {
+      "passed": 1737,
+      "ignored": 6
+    },
+    "checksExecuted": 7,
+    "checksReused": 0,
+    "receipt": {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/verification.json",
+      "sha256": "6ecba0468f091409a44ccc7581ed5d668b03c4dbec7fdefa4411c0da3dff8c05"
+    },
+    "steps": [
+      {
+        "command": ["corepack", "pnpm", "format:check"],
+        "exitCode": 0,
+        "startedAtUnix": 1792106923.797062,
+        "finishedAtUnix": 1792106958.748632,
+        "log": "output/2026-10-16-pptx-search-engineering/run1/01.log",
+        "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "inputsStable": true
+      },
+      {
+        "command": ["corepack", "pnpm", "typecheck"],
+        "exitCode": 0,
+        "startedAtUnix": 1792106958.769804,
+        "finishedAtUnix": 1792106970.986638,
+        "log": "output/2026-10-16-pptx-search-engineering/run1/02.log",
+        "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "inputsStable": true
+      },
+      {
+        "command": ["corepack", "pnpm", "test"],
+        "exitCode": 0,
+        "startedAtUnix": 1792106971.00855,
+        "finishedAtUnix": 1792107029.5908659,
+        "log": "output/2026-10-16-pptx-search-engineering/run1/03.log",
+        "logSha256": "a259eeaaa887093707afd807c4dcb7b2ef2045a1b2d67896d30f5b42a946ba4c",
+        "inputsStable": true
+      },
+      {
+        "command": ["corepack", "pnpm", "build"],
+        "exitCode": 0,
+        "startedAtUnix": 1792107029.729244,
+        "finishedAtUnix": 1792107046.540801,
+        "log": "output/2026-10-16-pptx-search-engineering/run1/04.log",
+        "logSha256": "5bf97219b0406dfbfb3773cf41916efe2d20770850f8141e524ee796f25d8274",
+        "inputsStable": true
+      },
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "startedAtUnix": 1792107046.578193,
+        "finishedAtUnix": 1792107051.976989,
+        "log": "output/2026-10-16-pptx-search-engineering/run1/05.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "inputsStable": true
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "startedAtUnix": 1792107052.011689,
+        "finishedAtUnix": 1792107063.9218738,
+        "log": "output/2026-10-16-pptx-search-engineering/run1/06.log",
+        "logSha256": "79b6867ecacdb64d5e754930d0d33e4386acdd5e878092e8863bb689e4d3d237",
+        "inputsStable": true
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 0,
+        "startedAtUnix": 1792107063.945285,
+        "finishedAtUnix": 1792107186.612582,
+        "log": "output/2026-10-16-pptx-search-engineering/run1/07.log",
+        "logSha256": "b96eeeadf720d2fce671e1c03c5603e89b37cdededd9bfe8cf0332a4164e1444",
+        "inputsStable": true
+      }
+    ]
+  },
+  "controlledBrowser": {
+    "state": "passedControlledCompleteAppActualWorker",
+    "run": 1,
+    "sourceFreezeFiles": 14,
+    "engines": {
+      "chromium": {
+        "actualExitCode": 0,
+        "actualSession": 79976,
+        "actualFinalChunk": "b5965b",
+        "passed": 38,
+        "total": 38,
+        "inputCount": 1656,
+        "beforeAfterExact": true,
+        "pageErrors": 0,
+        "externalRequests": 0,
+        "unexpectedIpc": 0,
+        "AgentExecutionIpc": 0,
+        "pptxUtf8FallbackIpc": 0,
+        "actualWorkers": 15,
+        "allWorkersClosed": true,
+        "browserClosed": true
+      },
+      "webkit": {
+        "actualExitCode": 0,
+        "actualSession": 8645,
+        "actualFinalChunk": "2f5b3d",
+        "passed": 38,
+        "total": 38,
+        "inputCount": 1656,
+        "beforeAfterExact": true,
+        "pageErrors": 0,
+        "externalRequests": 0,
+        "unexpectedIpc": 0,
+        "AgentExecutionIpc": 0,
+        "pptxUtf8FallbackIpc": 0,
+        "actualWorkers": 15,
+        "allWorkersClosed": true,
+        "browserClosed": true
+      }
+    },
+    "crossEngineInputMapsExact": true,
+    "receipt": {
+      "path": "output/2026-10-16-pptx-search-browser/verification.json",
+      "sha256": "2ca7f3a4d572a90c073b273141d9fd16aa74f931c728005bec90372807b30a0b"
+    },
+    "cleanup": {
+      "serverActualExitCode": 0,
+      "serverActualSession": 20885,
+      "serverFinalChunk": "a11ec1",
+      "port1558AbsentObserved": true,
+      "receipt": {
+        "path": "output/2026-10-16-pptx-search-browser/server-lifecycle.json",
+        "sha256": "33553a216a4072bf8c6ae3e264f4599b7bf495392db419c4ef248f00ba8c0dbc"
+      }
+    },
+    "boundary": "Controlled current synthetic owners and production Worker, not formal App or actual Agent proof."
+  },
+  "privateEvidence": [
+    {
+      "path": "output/2026-10-16-pptx-search/source-freeze.json",
+      "sha256": "0ffd271ecb4f5e442827526241a0e374a7cac897569a584723e5072d93393730"
+    },
+    {
+      "path": "output/2026-10-16-next-independent-slice/targeted-verification.json",
+      "sha256": "899b72fed40e413b75a992d5a5cc923762ef0347bac65f4e4b9e0abb4ac231ce"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-backend/targeted-1.json",
+      "sha256": "08003d33be4ed534bca7d519f4a129c1f1fc639af9eb32177378094f153013a6"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-frontend/ui-targeted-1.json",
+      "sha256": "3f140ca110d05d5c3e3beea1b88c4391f5ef2e1fa407c0fe01d868db5cf20bc0"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-review/root-subset-review.json",
+      "sha256": "b286e450c20fef2ea476cffbc5fcd47f4b3c84e785833a4d6e4b926780df5cf8"
+    },
+    {
+      "path": "output/2026-10-16-next-independent-slice/pptx-route-red.json",
+      "sha256": "e1d37d9359e151e2d70c571404ad76d135dc9ca70cee7cb8c21cfdafbb6ec264"
+    },
+    {
+      "path": "output/2026-10-16-next-independent-slice/split-unicode-red.json",
+      "sha256": "200453a1e6ac0b1c77e4f16b37fc8f597db55394005569ef81e22077fa5eba20"
+    },
+    {
+      "path": "output/2026-10-16-next-capability-research/recommendation.json",
+      "sha256": "10aba1bf0ceb36e66a58299849c3ed08ce0b10140c66a6af507ca6967863afea"
+    },
+    {
+      "path": "output/2026-10-16-fork-design/design.json",
+      "sha256": "c50e3d1fd4dac598dbb8824db1ca12605993bc6d79b69d6b8d867595d8b0ade0"
+    },
+    {
+      "path": "output/2026-10-16-next-independent-slice/pptx-route-red.log",
+      "sha256": "e1184a32f91243ef20365db3738ef766838ea86f77832fe4978d3479c6675e79"
+    },
+    {
+      "path": "output/2026-10-16-next-independent-slice/split-unicode-red.log",
+      "sha256": "bd2fd1f979e3b38af77ad14b968152086ba92fc9a62ca3eda01eefab3afffd2e"
+    },
+    {
+      "path": "output/2026-10-16-next-independent-slice/targeted-related-r2.log",
+      "sha256": "f72ace80cb139e2d207c3598358e826246f09dafa31c957fa651d05360b2d4bc"
+    },
+    {
+      "path": "output/2026-10-16-next-independent-slice/typecheck-r2.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "output/2026-10-16-next-independent-slice/scoped-format-check-r2.log",
+      "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-backend/targeted-1.log",
+      "sha256": "78cd7d943a509885c9018a5456dc8285dcfc8596e9586b6295f43cc1d7de3945"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-frontend/ui-targeted-1.log",
+      "sha256": "2327177740984e85f612a37eb46de83f56e6b5ce325830f81dc0822e7934ff74"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-browser/verification.json",
+      "sha256": "2ca7f3a4d572a90c073b273141d9fd16aa74f931c728005bec90372807b30a0b"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-browser/chromium-run1.json",
+      "sha256": "3ef3d65127435008cf815200ccb0c8ced7d1666329f30dcac99cfac616d481f3"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-browser/webkit-run1.json",
+      "sha256": "eb283f9b37af40e9150870e66c75157568e9dd0ffa6449df1d5639e05885aea4"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-browser/server-lifecycle.json",
+      "sha256": "33553a216a4072bf8c6ae3e264f4599b7bf495392db419c4ef248f00ba8c0dbc"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-browser/invocation-history.json",
+      "sha256": "95a2ad2f230b561219721ae9ac20d2b0ff43f72e166a126ceb177bf7a8f30f1f"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/verification.json",
+      "sha256": "6ecba0468f091409a44ccc7581ed5d668b03c4dbec7fdefa4411c0da3dff8c05"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-review/complete-source-review.json",
+      "sha256": "d8e128de8f498ed5d545d8079ae2e1bc4c118cc99ec756eed46d3670e03946f9"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/01.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/02.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/03.log",
+      "sha256": "a259eeaaa887093707afd807c4dcb7b2ef2045a1b2d67896d30f5b42a946ba4c"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/04.log",
+      "sha256": "5bf97219b0406dfbfb3773cf41916efe2d20770850f8141e524ee796f25d8274"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/05.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/06.log",
+      "sha256": "79b6867ecacdb64d5e754930d0d33e4386acdd5e878092e8863bb689e4d3d237"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/07.log",
+      "sha256": "b96eeeadf720d2fce671e1c03c5603e89b37cdededd9bfe8cf0332a4164e1444"
+    }
+  ],
+  "featureCommit": "cd0097111e4f95300c719ccb0846a2aa6b2d055b",
+  "sourceCheckpoint": {
+    "executionHead": "012f58d8bdffbf222d9b0579eaea81489cdae51e",
+    "committedCurrent14BytesMatchFreeze": true,
+    "pushedOriginMainOwnerReported": true,
+    "localOriginMainRefMatches": true,
+    "note": "Raw engineering HEAD stays012f58d8; the same14 source files were committed ascd009711. The original receipt is not rewritten."
+  }
+}

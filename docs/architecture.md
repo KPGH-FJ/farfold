@@ -2,9 +2,11 @@
 
 ## 当前源码与证据边界（2026-10-16）
 
-共用前端与 Tauri/Rust 沿官方 ACP/SDK/CLI 连接外部 Agent，既有架构边界保持。唯一正式应用已更新为 `40c4bb372`，本批尚未启动；此前[P21整页意见与共用文件入口](evidence/2026-10-09-capability-hardening/pptx-feedback/verification.json)区分源码、受控界面、完整工程、安装与本机分项。新安装基线三份清单一致；运行后严格两处差异和旧→新基线五处内容摘要变化分别保留，独审核到旧对话/隐藏记录、九份旧草稿及附件、队列和配置保持；设置变化为受控输入、意见及对应活动变化，Agent 更新时间写者未知，严格差异不豁免。此前P30的[本机分项](evidence/2026-10-09-capability-hardening/remembered-pages-install/verification.json)仅证明所覆盖路径；旧对话重连失败、旧许可本机撤回与真实 Agent 证明仍缺，上轮延迟严格差异及用户主动处理测试草稿的澄清保持。
+共用前端与 Tauri/Rust 沿官方 ACP/SDK/CLI 连接外部 Agent，既有架构边界保持。唯一正式应用已更新为 `cd0097111`，本批尚未启动；此前[P21整页意见与共用文件入口](evidence/2026-10-09-capability-hardening/pptx-feedback/verification.json)区分源码、受控界面、完整工程、安装与本机分项。该P21阶段安装基线三份清单一致；运行后严格两处差异和旧→新基线五处内容摘要变化分别保留，独审核到旧对话/隐藏记录、九份旧草稿及附件、队列和配置保持；设置变化为受控输入、意见及对应活动变化，Agent 更新时间写者未知，严格差异不豁免。此前P30的[本机分项](evidence/2026-10-09-capability-hardening/remembered-pages-install/verification.json)仅证明所覆盖路径；旧对话重连失败、旧许可本机撤回与真实 Agent 证明仍缺，上轮延迟严格差异及用户主动处理测试草稿的澄清保持。
 
-本批新增 `compaction_activity` 内存活动保护：接入层区分历史、当前活动及终态，原始事件先于含准确连接/对话归属的活动信息交付；界面只消费该活动事实作准入，不扫描历史卡片。进行中或未知整理继续持有工作资格，保护异步派发、配置、归档、账号和更新；断线、实际进程结束及迟到普通回包不冒称独立整理完成。恢复期间提前送达的活动信息按准确归属接收。[本批记录](evidence/2026-10-09-capability-hardening/compaction-activity/verification.json)分开记29文件源码、第二轮完整工程、原28文件双引擎各29项的明确复用及候选9/9与安装10/10。三份217,407条安装清单严格相同，候选副本已精确清理；正式40c4未启动，核心忙态、实机界面/冷恢复与真实Agent未测。不包含手动压缩、fork或完整权限恢复。
+本批P32扩展沿 `SelectedAttachmentSearch` → `AttachmentSearch` → `file_delivery_read_pptx_search`：完整1MiB源经现有 `search_source`、ZIP/CRC及实际读取槽，使用既有 `readPptxPreview` Worker和闭合模型。`attachment_search_pptx` 仅生成临时预览文字片段及part/shape/预览序号/段落/换行身份，不增加正文存储、Agent输入或新循环。格式生成项目符号/间隔明确披露；四类片段边界不拼接，PPTX结果始终partial。七字段及实际thread/item/attachment归属、文件变化、取消/迟到和真实未结束读取保护保持，命中只定位原消息附件节点。[本片证据](evidence/2026-10-09-capability-hardening/pptx-search/verification.json)区分14文件源码cd0097111、七项实际工程、双引擎各38项受控和候选9/安装10项独审；三份217,407条安装清单严格一致，候选副本已精确清理。正式cd009本批未启动，正式搜索、冷恢复及真实Agent仍未测。
+
+此前整理活动保护批次新增 `compaction_activity` 内存活动保护：接入层区分历史、当前活动及终态，原始事件先于含准确连接/对话归属的活动信息交付；界面只消费该活动事实作准入，不扫描历史卡片。进行中或未知整理继续持有工作资格，保护异步派发、配置、归档、账号和更新；断线、实际进程结束及迟到普通回包不冒称独立整理完成。恢复期间提前送达的活动信息按准确归属接收。[该批记录](evidence/2026-10-09-capability-hardening/compaction-activity/verification.json)分开记29文件源码、第二轮完整工程、原28文件双引擎各29项的明确复用及候选9/9与安装10/10。三份217,407条安装清单严格相同，候选副本已精确清理；该阶段正式40c4安装后未启动，核心忙态、实机界面/冷恢复与真实Agent未测。不包含手动压缩、fork或完整权限恢复。
 
 新入口为 `BrowserRememberedPages.tsx`、`browser_remembered.ts`，经既有 `BrowserTabs`/`BrowserWorkspaceScope` 打开新页面；后端 `browser_workspace/remembered_pages.rs` 核对当前实际页面，`meta_store/remembered_pages.rs` 仅保存网址清单及必要归属/CAS 字段。既有索引和创建时间必须一致；记住顺序稳定、空清单推进修订、删除对话与记录原子清理。重启读取只加载元数据，不创建页面或恢复旧许可；忘记记录不关闭活页。
 

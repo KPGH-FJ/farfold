@@ -1,0 +1,124 @@
+{
+  "date": "2026-10-16",
+  "scope": "P32 current selected local PPTX parsed-preview-text search; no NEW-30 and no whole P32/P16/P21 completion",
+  "sourceBase": "012f58d8bdffbf222d9b0579eaea81489cdae51e",
+  "featureCommit": "cd0097111e4f95300c719ccb0846a2aa6b2d055b",
+  "sourceFiles": {
+    "total": 14,
+    "frontend": 8,
+    "backend": 6
+  },
+  "sourceFreeze": {
+    "path": "output/2026-10-16-pptx-search/source-freeze.json",
+    "sha256": "0ffd271ecb4f5e442827526241a0e374a7cac897569a584723e5072d93393730"
+  },
+  "behavior": [
+    "Only an explicit user selection and start reads current local attachments already declared by loaded messages; it does not load history, connect an Agent or send a prompt.",
+    "PPTX MIME essence or the actual local .pptx path selects a parser only; misleading display names do not authorize it, existing DOCX/XLSX/PDF precedence remains, parser failure never falls back to text.",
+    "The main-view command captures a complete source with the existing search_source read, full seven-field revision checks, archive inflation/CRC/member validation and actual shared OS slot. Reply cancellation or timeout does not release an unfinished read.",
+    "The controller awaits the actual read receipt, snapshots and freezes capture file/parts/entries, and uses the existing real PPTX Worker. The source file is removed before the closed model recheck, while unknown model fields remain rejected.",
+    "Only parsed preview strings enter temporary segments. Source-format generated character bullets and spacing may be included; the result is not author-verbatim whole text, source character positions or complete visible text.",
+    "Slide, shape, paragraph and break are separate boundaries. Styled runs may join within one valid segment; invalid Unicode is rejected per run before joining. Labels, package keys, metadata, notes, images/OCR and omitted/hidden content are not searched.",
+    "Every PPTX scope remains partial, with parsed preview slide count, image omissions and parser warnings. No match is not proof that the full presentation lacks the query.",
+    "Source identity is checked before parse, after parse, after a fresh content revision check and before navigation. Actual thread/message/attachment owners and source mutation, scope/query changes, cancellation, hide and late results retain the shared invalidation rules."
+  ],
+  "sourceFields": [
+    "root",
+    "path",
+    "resolvedPath",
+    "name",
+    "size",
+    "sha256",
+    "version"
+  ],
+  "limits": {
+    "batchFiles": 20,
+    "wholeSourceBytesPerFile": 1048576,
+    "batchExtractedUtf8Bytes": 16777216,
+    "displayedHits": 200,
+    "queryUtf8Bytes": 256,
+    "parserBudgets": "Existing PPTX16MiB archive/64MiB inflated/4MiB text-character/shape/run/image limits remain; search source stays1MiB."
+  },
+  "location": {
+    "kind": "pptx",
+    "fields": [
+      "slidePart",
+      "previewSlide",
+      "previewTotal",
+      "shape",
+      "paragraph",
+      "segment",
+      "source.part",
+      "source.shapeId",
+      "source.layer"
+    ],
+    "ordinals": "Preview slide/shape/paragraph/segment are1-based. Preview order is not source-file page numbering.",
+    "navigation": "The existing jump locates the exact originating message attachment node after a fresh file check. It does not automatically open a slide or reinterpret a match as conversation body text."
+  },
+  "storage": "Ephemeral search projection only; no new persisted body/event ledger, dependencies, environment switches, Agent-specific UI or Agent input capability.",
+  "privateEvidence": [
+    {
+      "path": "output/2026-10-16-pptx-search/source-freeze.json",
+      "sha256": "0ffd271ecb4f5e442827526241a0e374a7cac897569a584723e5072d93393730"
+    },
+    {
+      "path": "output/2026-10-16-next-independent-slice/targeted-verification.json",
+      "sha256": "899b72fed40e413b75a992d5a5cc923762ef0347bac65f4e4b9e0abb4ac231ce"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-backend/targeted-1.json",
+      "sha256": "08003d33be4ed534bca7d519f4a129c1f1fc639af9eb32177378094f153013a6"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-frontend/ui-targeted-1.json",
+      "sha256": "3f140ca110d05d5c3e3beea1b88c4391f5ef2e1fa407c0fe01d868db5cf20bc0"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-review/root-subset-review.json",
+      "sha256": "b286e450c20fef2ea476cffbc5fcd47f4b3c84e785833a4d6e4b926780df5cf8"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/verification.json",
+      "sha256": "6ecba0468f091409a44ccc7581ed5d668b03c4dbec7fdefa4411c0da3dff8c05"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-review/complete-source-review.json",
+      "sha256": "d8e128de8f498ed5d545d8079ae2e1bc4c118cc99ec756eed46d3670e03946f9"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/01.log",
+      "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/02.log",
+      "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/03.log",
+      "sha256": "a259eeaaa887093707afd807c4dcb7b2ef2045a1b2d67896d30f5b42a946ba4c"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/04.log",
+      "sha256": "5bf97219b0406dfbfb3773cf41916efe2d20770850f8141e524ee796f25d8274"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/05.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/06.log",
+      "sha256": "79b6867ecacdb64d5e754930d0d33e4386acdd5e878092e8863bb689e4d3d237"
+    },
+    {
+      "path": "output/2026-10-16-pptx-search-engineering/run1/07.log",
+      "sha256": "b96eeeadf720d2fce671e1c03c5603e89b37cdededd9bfe8cf0332a4164e1444"
+    }
+  ],
+  "sourceCheckpoint": {
+    "executionHead": "012f58d8bdffbf222d9b0579eaea81489cdae51e",
+    "committedCurrent14BytesMatchFreeze": true,
+    "pushedOriginMainOwnerReported": true,
+    "localOriginMainRefMatches": true,
+    "note": "Raw engineering HEAD stays012f58d8; the same14 source files were committed ascd009711. The original receipt is not rewritten."
+  }
+}
