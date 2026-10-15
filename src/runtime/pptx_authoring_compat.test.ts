@@ -324,6 +324,14 @@ it("rejects unknown automatic shape-resize settings", () => {
   );
 });
 
+it("refuses nonempty automatic shape-resize text rather than accepting a malformed leaf as partial", () => {
+  refuse(
+    replacePptxPart(blankInput(), "ppt/slides/slide1.xml", (xml) =>
+      xml.replace("<a:spAutoFit/>", "<a:spAutoFit>paint</a:spAutoFit>"),
+    ),
+  );
+});
+
 it("retains the shadow bounds limit instead of turning an excessive effect into partial success", () => {
   refuse(
     replacePptxPart(blankInput(), "ppt/theme/theme1.xml", (xml) =>

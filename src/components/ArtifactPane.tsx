@@ -1,4 +1,5 @@
 import { OpenedFileView } from "./OpenedFileView";
+import { FilePreviewPicker } from "./FilePreviewPicker";
 import { ReportedFilesList } from "./ReportedFilesList";
 import { useContentOwner } from "./useContentOwner";
 import {
@@ -140,6 +141,26 @@ export function ArtifactPane({
     active && open && !showingBrowser,
     roundId,
   );
+  // A selected file also owns navigation within the same conversation/scope.
+  // Retire synchronously on explicit actions and on incoming request changes;
+  // returning to the same file must not revive an earlier dialog or receipt.
+  const pickerIdentity = JSON.stringify([
+    fileRequest?.taskKey,
+    fileRequest?.cwd,
+    fileRequest?.path,
+    fileRequest?.selection,
+    openedFile,
+    thread.artifactPaneTarget?.selected ?? thread.artifactPaneSelection,
+  ]);
+  const pickerOwner = useRef({ identity: pickerIdentity, token: {} });
+  if (pickerOwner.current.identity !== pickerIdentity)
+    pickerOwner.current = { identity: pickerIdentity, token: {} };
+  const pickerToken = pickerOwner.current.token;
+  const ownsPicker = () =>
+    ownsContent() && pickerOwner.current.token === pickerToken;
+  const retirePicker = () => {
+    pickerOwner.current = { identity: pickerOwner.current.identity, token: {} };
+  };
   useEffect(() => {
     if (roundId !== null) {
       setOpenedFile(null);
@@ -148,6 +169,7 @@ export function ArtifactPane({
     }
   }, [thread.key, thread.cwd, roundId]);
   const chooseContent = (mode: "files" | "browser") => {
+    if (mode !== contentMode) retirePicker();
     setLocalMode(mode);
     onContentModeChange?.(mode);
   };
@@ -165,6 +187,7 @@ export function ArtifactPane({
   }, [fileRequest, thread.key]);
   const openFile = (path: string) => {
     if (!ownsContent()) return;
+    retirePicker();
     setOpenedFile({
       taskKey: thread.key,
       cwd: thread.cwd,
@@ -377,9 +400,10 @@ export function ArtifactPane({
       <select
         aria-label={W.fileChoice}
         value={value}
-        onChange={(event) =>
-          threads.selectArtifact(thread.key, event.target.value, roundId)
-        }
+        onChange={(event) => {
+          retirePicker();
+          threads.selectArtifact(thread.key, event.target.value, roundId);
+        }}
       >
         {files.map((card) => (
           <option key={card.path} value={`file:${card.path}`}>
@@ -535,6 +559,16 @@ export function ArtifactPane({
         </button>
         {contentMode === "browser" && headerActions}
       </div>
+      <div hidden={showingBrowser}>
+        <FilePreviewPicker
+          workingDirectory={thread.cwd}
+          active={active && open && !showingBrowser}
+          isCurrent={ownsPicker}
+          onOpenFile={(file) => {
+            if (ownsPicker()) openFile(file.resolvedPath);
+          }}
+        />
+      </div>
       <div className="artifact-browser-body" hidden={!showingBrowser}>
         <BrowserWorkspace
           taskKey={thread.key}
@@ -563,7 +597,10 @@ export function ArtifactPane({
             active={active && open && !showingBrowser}
             onOpenHtml={openHtml}
             headerActions={headerActions}
-            onBack={() => setOpenedFile(null)}
+            onBack={() => {
+              retirePicker();
+              setOpenedFile(null);
+            }}
           />
         </div>
       )}

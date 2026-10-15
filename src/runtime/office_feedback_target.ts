@@ -1,8 +1,10 @@
 import {
   validDocxBlock,
   validXlsxRange,
+  validPptxSlide,
   type DocxBlockAnchor,
   type XlsxRangeAnchor,
+  type PptxSlideAnchor,
 } from "./file_feedback_anchor";
 import {
   workbookFeedbackTarget,
@@ -16,28 +18,37 @@ import {
   retireDocumentFeedbackSource,
   type DocumentFeedbackSource,
 } from "./docx_feedback_target";
+import {
+  pptxFeedbackTarget,
+  pptxFeedbackSourceIsValid,
+  retirePptxFeedbackSource,
+  type PptxFeedbackSource,
+} from "./pptx_feedback_target";
 
 // Extend this union only when another format has actual source coordinates.
 export type OfficeFeedbackSource =
-  WorkbookFeedbackSource | DocumentFeedbackSource;
+  WorkbookFeedbackSource | DocumentFeedbackSource | PptxFeedbackSource;
 export interface OfficeTargetAvailability {
   source: OfficeFeedbackSource;
   available: boolean;
 }
 export type OfficeTargetConfirmation =
   | { source: WorkbookFeedbackSource; anchor: XlsxRangeAnchor }
-  | { source: DocumentFeedbackSource; anchor: DocxBlockAnchor };
+  | { source: DocumentFeedbackSource; anchor: DocxBlockAnchor }
+  | { source: PptxFeedbackSource; anchor: PptxSlideAnchor };
 
 export function officeFeedbackSourceIsValid(
   source: OfficeFeedbackSource,
 ): boolean {
   if (source?.kind === "xlsx") return workbookFeedbackSourceIsValid(source);
   if (source?.kind === "docx") return documentFeedbackSourceIsValid(source);
+  if (source?.kind === "pptx") return pptxFeedbackSourceIsValid(source);
   return false;
 }
 export function retireOfficeFeedbackSource(source: OfficeFeedbackSource): void {
   if (source?.kind === "xlsx") retireWorkbookFeedbackSource(source);
   else if (source?.kind === "docx") retireDocumentFeedbackSource(source);
+  else if (source?.kind === "pptx") retirePptxFeedbackSource(source);
 }
 
 /** Coordinate/retirement check only. Current view and file ownership are separate. */
@@ -46,6 +57,16 @@ export function officeFeedbackTargetMatches(
 ): boolean {
   if (!value) return false;
   const anchor = value.anchor;
+  if (value.source?.kind === "pptx") {
+    if (!validPptxSlide(anchor)) return false;
+    const actual = pptxFeedbackTarget(value.source);
+    return (
+      !!actual &&
+      (Object.keys(actual) as (keyof PptxSlideAnchor)[]).every(
+        (key) => actual[key] === anchor[key],
+      )
+    );
+  }
   if (value.source?.kind === "docx") {
     if (!validDocxBlock(anchor)) return false;
     const actual = documentFeedbackTarget(value.source);

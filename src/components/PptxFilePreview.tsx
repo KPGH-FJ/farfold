@@ -15,6 +15,10 @@ import {
 import type { PreparedPptxPreview } from "../runtime/office_preview_prepare";
 import type { PreviewReadingPositionRef } from "../runtime/preview_reading_position";
 import { PptxSlideView } from "./PptxSlideView";
+import type {
+  OfficeTargetAvailability,
+  OfficeTargetConfirmation,
+} from "../runtime/office_feedback_target";
 import "./PptxFilePreview.css";
 
 /** Presentation cancellation retires the Worker, never its unfinished OS read. */
@@ -25,6 +29,8 @@ export function PptxFilePreview({
   prepared,
   onStatus,
   interactionBlocked = false,
+  onOfficeTargetAvailability,
+  onOfficeTargetConfirm,
 }: {
   file: VerifiedFile;
   active: boolean;
@@ -32,6 +38,8 @@ export function PptxFilePreview({
   prepared?: PreparedPptxPreview;
   onStatus?: (status: PreviewContentStatus) => void;
   interactionBlocked?: boolean;
+  onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
+  onOfficeTargetConfirm?: (value: OfficeTargetConfirmation) => void;
 }) {
   const props = useRef({ file, active, interactionBlocked });
   props.current = { file, active, interactionBlocked };
@@ -212,6 +220,8 @@ export function PptxFilePreview({
           preview={ready}
           readingPosition={readingPosition}
           interactionBlocked={interactionBlocked}
+          onOfficeTargetAvailability={onOfficeTargetAvailability}
+          onOfficeTargetConfirm={onOfficeTargetConfirm}
           isCurrent={() =>
             sourceCurrent() &&
             shown.current.state === "ready" &&

@@ -53,6 +53,15 @@
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+.pptx-feedback-controls {
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+}
+.pptx-feedback-controls .pptx-scope {
+  flex-basis: 100%;
+  margin: 0;
+}
 .pptx-viewport {
   width: 100%;
   min-width: 0;

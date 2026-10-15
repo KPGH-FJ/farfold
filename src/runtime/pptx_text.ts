@@ -192,6 +192,7 @@ export function text(
       if (n.name === "noAutofit") continue;
       if (
         n.name === "spAutoFit" &&
+        !n.text.trim() &&
         !n.children.length &&
         !Object.keys(n.attrs).some(
           (key) => !key.startsWith("http://www.w3.org/2000/xmlns/#"),

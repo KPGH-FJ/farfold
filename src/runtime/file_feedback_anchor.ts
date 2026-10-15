@@ -1,5 +1,6 @@
 import { MAX_PDF_PAGES } from "./visual_preview";
 import { isDocxSourcePosition } from "./docx_source_position";
+import { PPTX_GEOMETRY_LIMITS } from "./pptx_types";
 import {
   validVisualAreaRect,
   type VisualAreaRect,
@@ -39,6 +40,14 @@ export type DocxBlockAnchor = {
   blockKind: "paragraph" | "table";
 };
 
+/** Whole original slide; the ordinal counts only then-displayed preview slides. */
+export type PptxSlideAnchor = {
+  kind: "pptx-slide";
+  part: string;
+  previewSlide: number;
+  previewSlideCount: number;
+};
+
 /** Historical displayed coordinates; never original PDF/JPEG internal axes. */
 export type ImageAreaAnchor = VisualAreaRect & {
   kind: "image-area";
@@ -56,6 +65,7 @@ export type FileFeedbackAnchor =
   | TextRangeAnchor
   | XlsxRangeAnchor
   | DocxBlockAnchor
+  | PptxSlideAnchor
   | ImageAreaAnchor
   | PdfAreaAnchor;
 
@@ -63,6 +73,25 @@ function exactKeys(value: object, keys: readonly string[]): boolean {
   const actual = Object.keys(value);
   return (
     actual.length === keys.length && actual.every((key) => keys.includes(key))
+  );
+}
+
+export function validPptxSlide(value: unknown): value is PptxSlideAnchor {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const a = value as PptxSlideAnchor;
+  return (
+    exactKeys(a, ["kind", "part", "previewSlide", "previewSlideCount"]) &&
+    a.kind === "pptx-slide" &&
+    typeof a.part === "string" &&
+    a.part.length > 0 &&
+    a.part.length <= 1024 &&
+    !/[\\:%\x00-\x1f\x7f]/.test(a.part) &&
+    !a.part.split("/").some((part) => !part || part === "." || part === "..") &&
+    Number.isSafeInteger(a.previewSlide) &&
+    Number.isSafeInteger(a.previewSlideCount) &&
+    a.previewSlide >= 1 &&
+    a.previewSlide <= a.previewSlideCount &&
+    a.previewSlideCount <= PPTX_GEOMETRY_LIMITS.slides
   );
 }
 
@@ -204,6 +233,7 @@ export function parseFeedbackAnchor(
   )
     throw new Error("invalid feedback anchor");
   if (validTextRange(value)) return { ...value };
+  if (validPptxSlide(value)) return { ...value };
   if (validXlsxRange(value)) return { ...value };
   if (validDocxBlock(value))
     return { ...value, elementPath: [...value.elementPath] };

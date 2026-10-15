@@ -35,8 +35,6 @@ import {
   visualAreaFeedbackTargetMatches,
   type VisualAreaFeedbackSource,
 } from "../runtime/visual_feedback_target";
-import { WORKBOOK_STRINGS as B } from "../runtime/workbook_strings";
-import { DOCUMENT_STRINGS as DOC } from "../runtime/document_strings";
 import { pptxFailure } from "../runtime/pptx_strings";
 import {
   readTextBlock,
@@ -68,15 +66,12 @@ import {
   fileFeedbackKey,
   useFileFeedback,
 } from "../runtime/drafts";
-import {
-  fileFeedbackText,
-  FEEDBACK_STRINGS,
-} from "../runtime/feedback_strings";
+import { fileFeedbackText } from "../runtime/feedback_strings";
 import { WORKSPACE_STRINGS as W } from "../runtime/workspace_strings";
+import { FileFeedbackEditor } from "./FileFeedbackEditor";
 import { FileFeedbackDrafts } from "./FileFeedbackDrafts";
 import { FILE_OPEN_STRINGS as S } from "../runtime/file_open_strings";
 import { FILE_DELIVERY_STRINGS as D } from "../runtime/file_delivery_strings";
-import { VISUAL_FEEDBACK_STRINGS as F } from "../runtime/visual_feedback_strings";
 import {
   validVisualFeedbackLocation,
   type VisualPreviewReadiness,
@@ -720,10 +715,7 @@ export function OpenedFileView({
   const supportsFeedback =
     shown.text !== undefined ||
     Boolean(shown.block) ||
-    Boolean(
-      file &&
-      (visualFileKind(file.name) || isWorkbook(file) || isDocument(file)),
-    );
+    Boolean(file && (visualFileKind(file.name) || isOfficePreview(file)));
   const officeReady = () =>
     latestOfficeStatus.current?.file === latestView.current.file &&
     latestOfficeStatus.current?.state === "ready" &&
@@ -739,13 +731,12 @@ export function OpenedFileView({
     currentFeedback.current === feedbackOwner &&
     !operation.current &&
     !latestView.current.pending &&
-    (!file || (!isWorkbook(file) && !isDocument(file)) || officeReady()) &&
+    (!file || !isOfficePreview(file) || officeReady()) &&
     !(shown.block && latestBlockStatus.current?.readInFlight) &&
     shown.phase === "ready" &&
     (shown.text !== undefined ||
       Boolean(shown.block) ||
-      (Boolean(file && (isWorkbook(file) || isDocument(file))) &&
-        officeReady()) ||
+      (Boolean(file && isOfficePreview(file)) && officeReady()) ||
       (latestReadiness.current?.source === shown.visual &&
         Boolean(latestReadiness.current?.location)) ||
       (supportsFeedback && hasRetainedFeedback())) &&
@@ -788,7 +779,8 @@ export function OpenedFileView({
       Boolean(
         latest.file &&
         ((source.kind === "xlsx" && isWorkbook(latest.file)) ||
-          (source.kind === "docx" && isDocument(latest.file))) &&
+          (source.kind === "docx" && isDocument(latest.file)) ||
+          (source.kind === "pptx" && isPresentation(latest.file))) &&
         sameFile(latest.file, source.file),
       ) &&
       officeFeedbackSourceIsValid(source)
@@ -852,7 +844,7 @@ export function OpenedFileView({
       return (
         latest.file === file &&
         Boolean(file && sameFile(file, targetFile)) &&
-        ((Boolean(file && (isWorkbook(file) || isDocument(file))) &&
+        ((Boolean(file && isOfficePreview(file)) &&
           latest.office === shown.office) ||
           (Boolean(shown.visual) &&
             latest.visual === shown.visual &&
@@ -1143,6 +1135,8 @@ export function OpenedFileView({
           readingPosition={readingPosition}
           prepared={shown.office?.kind === "pptx" ? shown.office : undefined}
           onStatus={reportOfficeStatus}
+          onOfficeTargetAvailability={targets.reportOffice}
+          onOfficeTargetConfirm={targets.confirmOffice}
         />
       )}
       {shown.text !== undefined && (
@@ -1212,10 +1206,69 @@ export function OpenedFileView({
         </div>
       )}
       {supportsFeedback && feedbackOpen && (
-        <form
-          className="artifact-feedback"
-          onSubmit={(event) => {
-            event.preventDefault();
+        <FileFeedbackEditor
+          feedback={feedback}
+          disabled={disabled}
+          canEdit={canEditFeedback}
+          inputRef={feedbackInput}
+          isPdf={Boolean(file && visualFileKind(file.name) === "pdf")}
+          pdfPage={visualLocation?.kind === "pdf" ? visualLocation : undefined}
+          hasBlock={Boolean(shown.block)}
+          onWholeFile={() => {
+            if (!canEditFeedback()) return;
+            const saved = fileFeedbackDrafts.read(
+              threadKey,
+              feedbackPath,
+              contentId,
+            );
+            const {
+              anchor: _anchor,
+              lineInput: _lineInput,
+              ...retained
+            } = saved;
+            fileFeedbackDrafts.update(threadKey, feedbackPath, {
+              ...retained,
+              contentId,
+              scope: "file",
+              selection: null,
+            });
+          }}
+          onPdfPage={() => {
+            if (
+              !canEditFeedback() ||
+              latestReadiness.current !== visualReadiness ||
+              visualLocation?.kind !== "pdf"
+            )
+              return;
+            const saved = fileFeedbackDrafts.read(
+              threadKey,
+              feedbackPath,
+              contentId,
+            );
+            fileFeedbackDrafts.update(threadKey, feedbackPath, {
+              ...saved,
+              contentId,
+              scope: "file",
+              selection: null,
+              anchor: {
+                kind: "pdf-page",
+                page: visualLocation.page,
+                pageCount: visualLocation.pageCount,
+              },
+            });
+          }}
+          onTextChange={(text) => {
+            if (!canEditFeedback()) return;
+            fileFeedbackDrafts.update(threadKey, feedbackPath, {
+              ...fileFeedbackDrafts.read(threadKey, feedbackPath, contentId),
+              text,
+              selection: null,
+              contentId,
+              scope: "file",
+            });
+            setFeedbackAdded(false);
+          }}
+          onSubmit={() => {
             if (!canEditFeedback()) return;
             const key = fileFeedbackKey(feedbackPath, contentId);
             const draft = fileFeedbackDrafts.entries(threadKey)[key];
@@ -1227,208 +1280,7 @@ export function OpenedFileView({
               setFeedbackOpen(false);
             }
           }}
-        >
-          {file && visualFileKind(file.name) && (
-            <div>
-              <p role="status">
-                {feedback.anchor?.kind === "image-area" ||
-                feedback.anchor?.kind === "pdf-area"
-                  ? FEEDBACK_STRINGS.visualArea(feedback.anchor)
-                  : feedback.anchor?.kind === "pdf-page"
-                    ? F.pageTarget(
-                        feedback.anchor.page,
-                        feedback.anchor.pageCount,
-                      )
-                    : F.fileTarget}
-              </p>
-              {(visualFileKind(file.name) === "pdf" ||
-                feedback.anchor?.kind === "image-area") && (
-                <div className="ac-actions" style={{ flexWrap: "wrap" }}>
-                  <button
-                    type="button"
-                    className="btn btn-text"
-                    disabled={!canEditFeedback()}
-                    aria-pressed={!feedback.anchor}
-                    onClick={() => {
-                      if (!canEditFeedback()) return;
-                      const saved = fileFeedbackDrafts.read(
-                        threadKey,
-                        feedbackPath,
-                        contentId,
-                      );
-                      const { anchor: _anchor, ...value } = saved;
-                      fileFeedbackDrafts.update(threadKey, feedbackPath, {
-                        ...value,
-                        selection: null,
-                        contentId,
-                        scope: "file",
-                      });
-                    }}
-                  >
-                    {F.wholeFile}
-                  </button>
-                  {visualLocation?.kind === "pdf" && (
-                    <button
-                      type="button"
-                      className="btn btn-text"
-                      disabled={!canEditFeedback()}
-                      aria-pressed={
-                        feedback.anchor?.kind === "pdf-page" &&
-                        feedback.anchor.page === visualLocation.page &&
-                        feedback.anchor.pageCount === visualLocation.pageCount
-                      }
-                      onClick={() => {
-                        if (
-                          !canEditFeedback() ||
-                          latestReadiness.current !== visualReadiness
-                        )
-                          return;
-                        const saved = fileFeedbackDrafts.read(
-                          threadKey,
-                          feedbackPath,
-                          contentId,
-                        );
-                        fileFeedbackDrafts.update(threadKey, feedbackPath, {
-                          ...saved,
-                          selection: null,
-                          contentId,
-                          scope: "file",
-                          anchor: {
-                            kind: "pdf-page",
-                            page: visualLocation.page,
-                            pageCount: visualLocation.pageCount,
-                          },
-                        });
-                      }}
-                    >
-                      {F.currentPage(visualLocation.page)}
-                    </button>
-                  )}
-                </div>
-              )}
-              {feedback.anchor && <p>{F.retained}</p>}
-            </div>
-          )}
-          {(shown.text !== undefined || shown.block) && (
-            <div>
-              <p role="status">
-                {feedback.anchor?.kind === "text-range"
-                  ? S.textTarget(
-                      feedback.anchor.startLine,
-                      feedback.anchor.endLine,
-                    )
-                  : F.fileTarget}
-              </p>
-              {feedback.anchor?.kind === "text-range" && (
-                <>
-                  <p>{S.textTargetRetained}</p>
-                  <button
-                    type="button"
-                    className="btn btn-text"
-                    disabled={disabled || !canEditFeedback()}
-                    onClick={() => {
-                      if (!canEditFeedback()) return;
-                      const saved = fileFeedbackDrafts.read(
-                        threadKey,
-                        feedbackPath,
-                        contentId,
-                      );
-                      const {
-                        anchor: _anchor,
-                        lineInput: _lineInput,
-                        ...value
-                      } = saved;
-                      fileFeedbackDrafts.update(threadKey, feedbackPath, {
-                        ...value,
-                        contentId,
-                        scope: "file",
-                        selection: null,
-                      });
-                    }}
-                  >
-                    {F.wholeFile}
-                  </button>
-                </>
-              )}
-              {shown.block && !feedback.anchor && <p>{T.feedback}</p>}
-            </div>
-          )}
-          {file && (isWorkbook(file) || isDocument(file)) && (
-            <div>
-              <p role="status">
-                {feedback.anchor?.kind === "xlsx-range"
-                  ? B.feedbackTarget(feedback.anchor)
-                  : feedback.anchor?.kind === "docx-block"
-                    ? DOC.feedbackTarget(feedback.anchor)
-                    : F.fileTarget}
-              </p>
-              {(feedback.anchor?.kind === "xlsx-range" ||
-                feedback.anchor?.kind === "docx-block") && (
-                <>
-                  <p>
-                    {feedback.anchor.kind === "xlsx-range"
-                      ? B.feedbackRetained
-                      : DOC.feedbackRetained}
-                  </p>
-                  <button
-                    type="button"
-                    className="btn btn-text"
-                    disabled={disabled || !canEditFeedback()}
-                    onClick={() => {
-                      if (!canEditFeedback()) return;
-                      const saved = fileFeedbackDrafts.read(
-                        threadKey,
-                        feedbackPath,
-                        contentId,
-                      );
-                      const {
-                        anchor: _anchor,
-                        lineInput: _lineInput,
-                        ...retained
-                      } = saved;
-                      fileFeedbackDrafts.update(threadKey, feedbackPath, {
-                        ...retained,
-                        contentId,
-                        scope: "file",
-                        selection: null,
-                      });
-                    }}
-                  >
-                    {F.wholeFile}
-                  </button>
-                </>
-              )}
-            </div>
-          )}
-          <textarea
-            ref={feedbackInput}
-            aria-label={W.feedbackLabel}
-            placeholder={W.feedbackPlaceholder}
-            rows={2}
-            disabled={disabled || !canEditFeedback()}
-            value={feedback.text}
-            onChange={(event) => {
-              if (!canEditFeedback()) return;
-              fileFeedbackDrafts.update(threadKey, feedbackPath, {
-                ...fileFeedbackDrafts.read(threadKey, feedbackPath, contentId),
-                text: event.target.value,
-                selection: null,
-                contentId,
-                scope: "file",
-              });
-              setFeedbackAdded(false);
-            }}
-          />
-          <div>
-            <span>{S.feedbackHint}</span>
-            <button
-              type="submit"
-              disabled={disabled || !canEditFeedback() || !feedback.text.trim()}
-            >
-              {W.feedbackAdd}
-            </button>
-          </div>
-        </form>
+        />
       )}
       {feedbackAdded && <p role="status">{W.feedbackAdded}</p>}
       {

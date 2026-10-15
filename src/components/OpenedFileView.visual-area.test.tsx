@@ -1,3 +1,4 @@
+import { FileFeedbackEditor } from "./FileFeedbackEditor";
 import {
   Children,
   isValidElement,
@@ -121,7 +122,18 @@ function elements(tree: ReactNode): Element[] {
   const result: Element[] = [];
   Children.forEach(tree, (node) => {
     if (isValidElement<Record<string, unknown>>(node))
-      result.push(node, ...elements(node.props.children as ReactNode));
+      result.push(
+        node,
+        ...elements(
+          node.type === FileFeedbackEditor
+            ? FileFeedbackEditor(
+                node.props as unknown as Parameters<
+                  typeof FileFeedbackEditor
+                >[0],
+              )
+            : (node.props.children as ReactNode),
+        ),
+      );
   });
   return result;
 }

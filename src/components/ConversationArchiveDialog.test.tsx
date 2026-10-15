@@ -1,5 +1,8 @@
 import { beforeEach, afterEach, expect, it, vi } from "vitest";
 import { Children, isValidElement, type ReactNode } from "react";
+import { createHash } from "node:crypto";
+import { archiveCanonical } from "../runtime/conversation_archive_input";
+import type { ArchivePrepareInput } from "../runtime/conversation_archive_types";
 const h = vi.hoisted(() => ({
   states: [] as unknown[],
   refs: [] as { current: unknown }[],
@@ -146,21 +149,58 @@ it("unmount while input hashing is pending retires the exact view even if reopen
 });
 it("after synchronous intent registration close only hides and retains the saving activity", async () => {
   h.pick.mockResolvedValue("/owned/out.zip");
-  click(S.save);
-  await flush();
-  expect(h.begin).toHaveBeenCalledOnce();
-  expect(registered).toHaveBeenCalledOnce();
-  expect(
-    (h.states[0] as { getSnapshot: () => unknown[] }).getSnapshot(),
-  ).toEqual([]);
-  expect(h.begin.mock.calls[0][0]).toMatchObject({
-    destination: "/owned/out.zip",
-    selected: [],
+  const nativeDigest = crypto.subtle.digest.bind(crypto.subtle);
+  let release!: () => void, hashed!: () => void;
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
   });
-  expect(nodes().some((n) => n.props.children === S.closeScope)).toBe(true);
-  click(S.continue);
-  expect(close).toHaveBeenCalledOnce();
-  expect(h.begin).toHaveBeenCalledOnce();
+  const computed = new Promise<void>((resolve) => {
+    hashed = resolve;
+  });
+  const digest = vi
+    .spyOn(crypto.subtle, "digest")
+    .mockImplementation(async (algorithm, data) => {
+      const result = await nativeDigest(algorithm, data);
+      hashed();
+      await held;
+      return result;
+    });
+  click(S.save);
+  await computed;
+  try {
+    await flush();
+    // Two timer turns are not a completion signal for the real digest result.
+    expect(h.begin).not.toHaveBeenCalled();
+    expect(registered).not.toHaveBeenCalled();
+    release();
+    await vi.waitFor(() => {
+      expect(h.begin).toHaveBeenCalledOnce();
+      expect(registered).toHaveBeenCalledOnce();
+    });
+    expect(h.begin).toHaveBeenCalledOnce();
+    expect(registered).toHaveBeenCalledOnce();
+    expect(
+      (h.states[0] as { getSnapshot: () => unknown[] }).getSnapshot(),
+    ).toEqual([]);
+    expect(h.begin.mock.calls[0][0]).toMatchObject({
+      destination: "/owned/out.zip",
+      selected: [],
+    });
+    const input = h.begin.mock.calls[0][0] as ArchivePrepareInput;
+    const bytes = new TextEncoder().encode(archiveCanonical(input));
+    expect(digest).toHaveBeenCalledOnce();
+    expect(digest.mock.calls[0]).toEqual(["SHA-256", bytes]);
+    expect(input.inputSha256).toBe(
+      createHash("sha256").update(bytes).digest("hex"),
+    );
+    expect(nodes().some((n) => n.props.children === S.closeScope)).toBe(true);
+    click(S.continue);
+    expect(close).toHaveBeenCalledOnce();
+    expect(h.begin).toHaveBeenCalledOnce();
+  } finally {
+    release();
+    await flush();
+  }
 });
 it("cancelled chooser keeps original capture without fabricating a saved result", async () => {
   h.pick.mockResolvedValue(null);

@@ -2,6 +2,16 @@ import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import type { PptxPreview, PptxShape } from "../runtime/pptx_types";
 import { PPTX_STRINGS as S, PPTX_WARNINGS } from "../runtime/pptx_strings";
 import {
+  createPptxFeedbackSource,
+  pptxFeedbackTarget,
+  retirePptxFeedbackSource,
+  type PptxFeedbackSource,
+} from "../runtime/pptx_feedback_target";
+import type {
+  OfficeTargetAvailability,
+  OfficeTargetConfirmation,
+} from "../runtime/office_feedback_target";
+import {
   restoredPptxSlide,
   saveReadingPosition,
   type PreviewReadingPositionRef,
@@ -121,12 +131,16 @@ export function PptxSlideView({
   interactionBlocked,
   isCurrent,
   onImageFailure,
+  onOfficeTargetAvailability,
+  onOfficeTargetConfirm,
 }: {
   preview: PptxPreview;
   readingPosition?: PreviewReadingPositionRef;
   interactionBlocked: boolean;
   isCurrent: () => boolean;
   onImageFailure: () => void;
+  onOfficeTargetAvailability?: (value: OfficeTargetAvailability) => void;
+  onOfficeTargetConfirm?: (value: OfficeTargetConfirmation) => void;
 }) {
   const [selection, setSelection] = useState<{
     preview: PptxPreview;
@@ -150,6 +164,8 @@ export function PptxSlideView({
     interactionBlocked,
     isCurrent,
     onImageFailure,
+    onOfficeTargetAvailability,
+    onOfficeTargetConfirm,
   });
   latest.current = {
     preview,
@@ -158,6 +174,8 @@ export function PptxSlideView({
     interactionBlocked,
     isCurrent,
     onImageFailure,
+    onOfficeTargetAvailability,
+    onOfficeTargetConfirm,
   };
   const viewport = useRef<HTMLDivElement>(null);
   const [availableWidth, setAvailableWidth] = useState(0);
@@ -167,11 +185,72 @@ export function PptxSlideView({
     token: object;
   } | null>(null);
   const lease = useRef<object | null>(null);
+  const mounted = useRef(false);
+  const liveFeedback = useRef<{
+    source: PptxFeedbackSource;
+    selection: object;
+    resource: object;
+  } | null>(null);
+  const [feedback, setFeedback] = useState<PptxFeedbackSource | null>(null);
+  const feedbackButton = useRef<HTMLButtonElement>(null);
+  const integrated = Boolean(onOfficeTargetConfirm);
+  const feedbackEpoch = useRef({
+    blocked: interactionBlocked,
+    integrated,
+    token: {},
+  });
+  if (
+    feedbackEpoch.current.blocked !== interactionBlocked ||
+    feedbackEpoch.current.integrated !== integrated
+  ) {
+    // Current interaction changes revoke the claim before queued layout cleanup.
+    // Cleanup still reports withdrawal of this exact source to the parent.
+    if (liveFeedback.current)
+      retirePptxFeedbackSource(liveFeedback.current.source);
+    feedbackEpoch.current = {
+      blocked: interactionBlocked,
+      integrated,
+      token: {},
+    };
+  }
+  const feedbackToken = feedbackEpoch.current.token;
+  const retireFeedback = () => {
+    const old = liveFeedback.current;
+    liveFeedback.current = null;
+    if (old) {
+      retirePptxFeedbackSource(old.source);
+      latest.current.onOfficeTargetAvailability?.({
+        source: old.source,
+        available: false,
+      });
+    }
+  };
   const current = () =>
+    mounted.current &&
     latest.current.preview === preview &&
     latest.current.index === index &&
     latest.current.selectionToken === selectionToken &&
     latest.current.isCurrent();
+  useLayoutEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+      lease.current = null;
+      retireFeedback();
+    };
+  }, []);
+  const feedbackCurrent = () =>
+    feedbackEpoch.current.token === feedbackToken &&
+    current() &&
+    !latest.current.interactionBlocked &&
+    Boolean(latest.current.onOfficeTargetConfirm) &&
+    resources?.slide === slide &&
+    lease.current !== null &&
+    lease.current === resources?.token;
+  useLayoutEffect(() => {
+    if (interactionBlocked || !integrated) retireFeedback();
+    return () => retireFeedback();
+  }, [preview, slide, selectionToken, interactionBlocked, integrated]);
   useLayoutEffect(() => {
     const element = viewport.current;
     if (!element) return;
@@ -226,6 +305,8 @@ export function PptxSlideView({
       next >= preview.slides.length
     )
       return;
+    retireFeedback();
+    if (!current() || latest.current.interactionBlocked) return;
     latest.current.index = next;
     const token = {};
     latest.current.selectionToken = token;
@@ -293,6 +374,87 @@ export function PptxSlideView({
           {S.next}
         </button>
       </div>
+      {integrated && (
+        <div className="ac-actions pptx-feedback-controls">
+          <button
+            type="button"
+            className="btn btn-ghost"
+            ref={feedbackButton}
+            disabled={!feedbackCurrent()}
+            aria-pressed={Boolean(
+              feedback && liveFeedback.current?.source === feedback,
+            )}
+            onClick={() => {
+              if (!feedbackCurrent()) return;
+              retireFeedback();
+              if (!feedbackCurrent()) return;
+              const source = createPptxFeedbackSource({
+                preview,
+                slide,
+                expectedFile: preview.file,
+              });
+              if (!source || !resources) return;
+              liveFeedback.current = {
+                source,
+                selection: selectionToken,
+                resource: resources.token,
+              };
+              setFeedback(source);
+              latest.current.onOfficeTargetAvailability?.({
+                source,
+                available: true,
+              });
+            }}
+          >
+            {S.selectFeedback}
+          </button>
+          {feedback && liveFeedback.current?.source === feedback && (
+            <>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={!feedbackCurrent()}
+                onClick={() => {
+                  if (
+                    !feedbackCurrent() ||
+                    liveFeedback.current?.source !== feedback ||
+                    liveFeedback.current.selection !== selectionToken ||
+                    liveFeedback.current.resource !== resources?.token
+                  )
+                    return;
+                  const anchor = pptxFeedbackTarget(feedback);
+                  if (anchor)
+                    latest.current.onOfficeTargetConfirm?.({
+                      source: feedback,
+                      anchor,
+                    });
+                }}
+              >
+                {S.confirmFeedback}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={!feedbackCurrent()}
+                onClick={() => {
+                  if (
+                    !feedbackCurrent() ||
+                    liveFeedback.current?.source !== feedback
+                  )
+                    return;
+                  retireFeedback();
+                  setFeedback(null);
+                  if (feedbackCurrent() && feedbackButton.current?.isConnected)
+                    feedbackButton.current.focus({ preventScroll: true });
+                }}
+              >
+                {S.cancelFeedback}
+              </button>
+              <span className="pptx-scope">{S.feedbackScope}</span>
+            </>
+          )}
+        </div>
+      )}
       <div className="pptx-viewport" ref={viewport}>
         <div
           className="pptx-frame"
@@ -326,8 +488,13 @@ export function PptxSlideView({
                     current() &&
                     lease.current === resources?.token &&
                     resources?.slide === slide
-                  )
-                    latest.current.onImageFailure();
+                  ) {
+                    // Revoke before the parent's queued failed-state render.
+                    // An error followed by confirm in this same tick is stale.
+                    lease.current = null;
+                    retireFeedback();
+                    if (current()) latest.current.onImageFailure();
+                  }
                 }}
               />
             ))}

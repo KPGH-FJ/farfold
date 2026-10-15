@@ -1,3 +1,4 @@
+import { FileFeedbackEditor } from "./FileFeedbackEditor";
 import {
   Children,
   isValidElement,
@@ -34,6 +35,7 @@ vi.mock("../runtime/office_preview_prepare", () => ({
 vi.mock("./DocxFilePreview", () => ({
   DocxFilePreview: () => <div />,
 }));
+vi.mock("./PptxFilePreview", () => ({ PptxFilePreview: () => <div /> }));
 vi.mock("./FileCopyJobsStatus", () => ({ FileCopyJobsStatus: () => null }));
 vi.mock("./SourceTextSelection", () => ({
   SourceTextSelection: ({ source }: { source: { text: string } }) => (
@@ -81,6 +83,12 @@ vi.mock("react", async (original) => {
 
 import { OpenedFileView, type OpenedFileViewProps } from "./OpenedFileView";
 import { DocxFilePreview } from "./DocxFilePreview";
+import { PptxFilePreview } from "./PptxFilePreview";
+import { pptxDisplayFixture } from "../runtime/pptx_display_fixture";
+import {
+  createPptxFeedbackSource,
+  pptxFeedbackTarget,
+} from "../runtime/pptx_feedback_target";
 import type { VerifiedFile } from "../runtime/file_delivery";
 import type { DocxParagraph, DocxPreview } from "../runtime/docx_types";
 import type { PreviewContentStatus } from "../runtime/preview_capture";
@@ -123,7 +131,18 @@ function elements(tree: ReactNode): Element[] {
   const found: Element[] = [];
   Children.forEach(tree, (child) => {
     if (isValidElement<Record<string, unknown>>(child))
-      found.push(child, ...elements(child.props.children as ReactNode));
+      found.push(
+        child,
+        ...elements(
+          child.type === FileFeedbackEditor
+            ? FileFeedbackEditor(
+                child.props as unknown as Parameters<
+                  typeof FileFeedbackEditor
+                >[0],
+              )
+            : (child.props.children as ReactNode),
+        ),
+      );
   });
   return found;
 }
@@ -403,3 +422,125 @@ it.each([false, true])(
     }
   },
 );
+
+// The same parent Office guards must apply when the preview format is PPTX.
+const pptxFile = {
+  ...file,
+  path: "/work/slides.pptx",
+  resolvedPath: "/work/slides.pptx",
+  name: "slides.pptx",
+};
+const pptxChild = () =>
+  render().nodes.find((n) => n.type === PptxFilePreview)!
+    .props as unknown as DocumentProps;
+const pptxTarget = (f = pptxFile) => {
+  const preview = { ...pptxDisplayFixture(), file: f };
+  const source = createPptxFeedbackSource({
+    preview,
+    slide: preview.slides[1],
+    expectedFile: f,
+  })!;
+  return { source, anchor: pptxFeedbackTarget(source)! };
+};
+async function readyPptx() {
+  h.inspect.mockResolvedValue(pptxFile);
+  render({ ...props, path: "slides.pptx" });
+  await vi.waitFor(() =>
+    expect(render().nodes.some((n) => n.type === PptxFilePreview)).toBe(true),
+  );
+  expect(button(S.feedback)?.props.disabled).toBe(true);
+  const p = pptxChild();
+  p.onStatus({ file: p.file, state: "ready", readInFlight: false });
+  render();
+  expect(button(S.feedback)?.props.disabled).toBe(false);
+  return pptxChild();
+}
+it("uses the shared editor for an explicitly confirmed PPTX slide and permanently revokes nonready targets", async () => {
+  const p = await readyPptx(),
+    target = pptxTarget();
+  p.onOfficeTargetConfirm(target);
+  expect(saved(pptxFile).anchor).toBeUndefined();
+  p.onOfficeTargetAvailability({ source: target.source, available: true });
+  p.onOfficeTargetConfirm(target);
+  edit("  keep slide opinion\n");
+  expect(saved(pptxFile)).toMatchObject({
+    text: "  keep slide opinion\n",
+    anchor: target.anchor,
+  });
+  const oldEditor = render().nodes.find((n) => n.type === "textarea")!;
+  p.onStatus({ file: p.file, state: "failed" });
+  (oldEditor.props.onChange as (e: unknown) => void)({
+    target: { value: "late" },
+  });
+  expect(pptxFeedbackTarget(target.source)).toBeNull();
+  p.onStatus({ file: p.file, state: "ready" });
+  p.onOfficeTargetAvailability({ source: target.source, available: true });
+  p.onOfficeTargetConfirm(target);
+  expect(saved(pptxFile).text).toBe("  keep slide opinion\n");
+});
+it.each(["hide", "conversation", "selection"])(
+  "rejects a retained PPTX confirmation after %s without changing prior opinion",
+  async (change) => {
+    const p = await readyPptx(),
+      target = pptxTarget();
+    p.onOfficeTargetAvailability({ source: target.source, available: true });
+    if (change === "hide") render({ ...props, active: false });
+    if (change === "conversation")
+      render({ ...props, threadKey: "other-docx-feedback" });
+    if (change === "selection") render({ ...props, selectionKey: "another" });
+    p.onOfficeTargetConfirm(target);
+    expect(saved(pptxFile, "docx-feedback-parent").anchor).toBeUndefined();
+    expect(saved(pptxFile, "other-docx-feedback").anchor).toBeUndefined();
+  },
+);
+it("retains a prior-version PPTX opinion on refresh and adds it once without sending", async () => {
+  const p = await readyPptx(),
+    target = pptxTarget();
+  p.onOfficeTargetAvailability({ source: target.source, available: true });
+  p.onOfficeTargetConfirm(target);
+  edit("  original slide text\n");
+  const next = { ...pptxFile, version: "two", sha256: "b".repeat(64) };
+  h.inspect.mockResolvedValue(next);
+  h.prepare.mockResolvedValue({
+    kind: "pptx",
+    file: next,
+    value: { ...pptxDisplayFixture(), file: next },
+  });
+  click(S.refresh);
+  await vi.waitFor(() => expect(pptxChild().file).toEqual(next));
+  expect(saved(pptxFile)).toMatchObject({
+    text: "  original slide text\n",
+    anchor: target.anchor,
+  });
+  expect(saved(next).anchor).toBeUndefined();
+  p.onOfficeTargetConfirm(target);
+  expect(saved(next).anchor).toBeUndefined();
+  expect(render().html).toContain("其他内容版本的意见");
+  const key = Object.keys(fileFeedbackDrafts.entries(props.threadKey)).find(
+    (key) =>
+      fileFeedbackDrafts.entries(props.threadKey)[key].contentId ===
+      id(pptxFile),
+  )!;
+  const { fileFeedbackText } = await import("../runtime/feedback_strings");
+  const before = composerDrafts.read(`session:${props.threadKey}`);
+  expect(
+    fileFeedbackDrafts.take(
+      props.threadKey,
+      key,
+      fileFeedbackText({ ...saved(pptxFile), path: pptxFile.resolvedPath }),
+    ),
+  ).toBe(true);
+  expect(fileFeedbackDrafts.take(props.threadKey, key, "duplicate")).toBe(
+    false,
+  );
+  expect(composerDrafts.read(`session:${props.threadKey}`)).toEqual({
+    ...before,
+    text: expect.stringContaining("  original slide text\n"),
+  });
+  expect(composerDrafts.read(`session:${props.threadKey}`).text).toContain(
+    `文件内定位依据 ${JSON.stringify(target.anchor.part)}`,
+  );
+  expect(composerDrafts.read(`session:${props.threadKey}`).text).toContain(
+    pptxFile.sha256,
+  );
+});

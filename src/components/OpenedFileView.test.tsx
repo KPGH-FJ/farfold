@@ -1,3 +1,4 @@
+import { FileFeedbackEditor } from "./FileFeedbackEditor";
 import {
   Children,
   isValidElement,
@@ -157,7 +158,18 @@ function elements(tree: ReactNode): Element[] {
   const found: Element[] = [];
   Children.forEach(tree, (child) => {
     if (isValidElement<Record<string, unknown>>(child))
-      found.push(child, ...elements(child.props.children as ReactNode));
+      found.push(
+        child,
+        ...elements(
+          child.type === FileFeedbackEditor
+            ? FileFeedbackEditor(
+                child.props as unknown as Parameters<
+                  typeof FileFeedbackEditor
+                >[0],
+              )
+            : (child.props.children as ReactNode),
+        ),
+      );
   });
   return found;
 }
@@ -366,14 +378,14 @@ it("retains the old document and stops automatic checking when Office staging re
   await vi.advanceTimersByTimeAsync(60000);
   expect(h.checkRevision).toHaveBeenCalledOnce();
 });
-it("waits for PPTX readiness and stages a verified revision without adding feedback controls", async () => {
+it("gates PPTX feedback on readiness and stages a verified revision", async () => {
   vi.useFakeTimers();
   const file = { ...receipt, name: "result.pptx" };
   h.inspectLink.mockResolvedValue(file);
   await ready();
   await vi.advanceTimersByTimeAsync(10000);
   expect(h.checkRevision).not.toHaveBeenCalled();
-  expect(button(S.feedback)).toBeUndefined();
+  expect(button(S.feedback)?.props.disabled).toBe(true);
   const child = render().nodes.find(
     (node) => typeof node.props.onStatus === "function",
   )!;
@@ -383,6 +395,7 @@ it("waits for PPTX readiness and stages a verified revision without adding feedb
     readInFlight: false,
   });
   render();
+  expect(button(S.feedback)?.props.disabled).toBe(false);
   const next = { ...file, version: "pptx-new" },
     pending = deferred<unknown>();
   h.checkRevision.mockResolvedValueOnce({ kind: "verified", file: next });

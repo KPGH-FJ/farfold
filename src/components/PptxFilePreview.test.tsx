@@ -14,6 +14,8 @@ import {
 } from "../runtime/pptx_display_fixture";
 import { PptxError } from "../runtime/pptx_types";
 import { PPTX_STRINGS as S } from "../runtime/pptx_strings";
+import { pptxFeedbackTarget } from "../runtime/pptx_feedback_target";
+import type { PptxFeedbackSource } from "../runtime/pptx_feedback_target";
 const h = vi.hoisted(() => ({
   owner: "",
   cursor: 0,
@@ -81,7 +83,7 @@ let props: Parameters<typeof PptxFilePreview>[0];
 const status = vi.fn(),
   createUrl = vi.fn(),
   revokeUrl = vi.fn();
-function render() {
+function render(flushEffects = true) {
   const visited = new Set<string>(),
     all: Element[] = [];
   const resolve = (node: ReactNode, path: string): ReactNode => {
@@ -112,7 +114,7 @@ function render() {
       slots.forEach((slot) => slot.cleanup?.());
       h.slots.delete(owner);
     }
-  for (const effect of h.effects.splice(0)) effect();
+  if (flushEffects) for (const effect of h.effects.splice(0)) effect();
   return { all, html: renderToStaticMarkup(tree) };
 }
 const drain = async () => {
@@ -339,4 +341,148 @@ it("never revives retired image or page handlers after page A/B/A", async () => 
   expect(render().html).toContain(S.page(1, 2));
   expect(render().html).not.toContain(S.imageFailed);
   expect(status.mock.calls.at(-1)?.[0]).toMatchObject({ state: "ready" });
+});
+
+const feedbackReady = async (image = false) => {
+  const availability = vi.fn(),
+    confirm = vi.fn();
+  props.onOfficeTargetAvailability = availability;
+  props.onOfficeTargetConfirm = confirm;
+  h.parse.mockImplementation(async () => ({
+    ...pptxDisplayFixture(image),
+    file: props.file,
+  }));
+  render();
+  await drain();
+  render();
+  render();
+  return { availability, confirm };
+};
+const feedbackControl = (label: string) =>
+  render().all.find((n) => n.type === "button" && n.props.children === label)!;
+const chosenSource = (availability: ReturnType<typeof vi.fn>) =>
+  availability.mock.calls.filter(([v]) => v.available).at(-1)![0]
+    .source as PptxFeedbackSource;
+it("registers a whole current slide only on choose and confirms only on a second action", async () => {
+  const { availability, confirm } = await feedbackReady();
+  expect(availability).not.toHaveBeenCalled();
+  expect(confirm).not.toHaveBeenCalled();
+  click(S.selectFeedback);
+  const source = chosenSource(availability);
+  expect(pptxFeedbackTarget(source)).toEqual({
+    kind: "pptx-slide",
+    part: "ppt/slides/slide1.xml",
+    previewSlide: 1,
+    previewSlideCount: 2,
+  });
+  expect(confirm).not.toHaveBeenCalled();
+  click(S.confirmFeedback);
+  expect(confirm).toHaveBeenCalledOnce();
+  click(S.cancelFeedback);
+  expect(pptxFeedbackTarget(source)).toBeNull();
+  expect(confirm).toHaveBeenCalledOnce();
+});
+it("permanently revokes retained choose/confirm/cancel handlers across slide A/B/A", async () => {
+  const { availability, confirm } = await feedbackReady(true);
+  const oldChoose = feedbackControl(S.selectFeedback);
+  click(S.selectFeedback);
+  const source = chosenSource(availability),
+    oldConfirm = feedbackControl(S.confirmFeedback),
+    oldCancel = feedbackControl(S.cancelFeedback),
+    oldImage = render().all.find((n) => n.type === "img")!;
+  click(S.next);
+  click(S.previous);
+  render();
+  expect(pptxFeedbackTarget(source)).toBeNull();
+  click(S.selectFeedback);
+  const fresh = chosenSource(availability);
+  for (const node of [oldChoose, oldConfirm, oldCancel])
+    (node.props.onClick as () => void)();
+  (oldImage.props.onError as () => void)();
+  expect(chosenSource(availability)).toBe(fresh);
+  expect(pptxFeedbackTarget(fresh)).not.toBeNull();
+  expect(confirm).not.toHaveBeenCalled();
+  click(S.confirmFeedback);
+  expect(confirm).toHaveBeenCalledOnce();
+});
+it("synchronously retires a current image-failed source before a same-tick retained confirm", async () => {
+  const { availability, confirm } = await feedbackReady(true);
+  click(S.selectFeedback);
+  const source = chosenSource(availability),
+    button = feedbackControl(S.confirmFeedback),
+    image = render().all.find((n) => n.type === "img")!;
+  (image.props.onError as () => void)();
+  (button.props.onClick as () => void)();
+  expect(pptxFeedbackTarget(source)).toBeNull();
+  expect(confirm).not.toHaveBeenCalled();
+  expect(status.mock.calls.at(-1)?.[0]).toMatchObject({ state: "failed" });
+});
+it.each(["block", "hide", "version"])(
+  "does not revive a feedback handler after %s returns to the same page",
+  async (kind) => {
+    const { availability, confirm } = await feedbackReady();
+    const oldChoose = feedbackControl(S.selectFeedback);
+    click(S.selectFeedback);
+    const source = chosenSource(availability),
+      oldConfirm = feedbackControl(S.confirmFeedback);
+    if (kind === "block") {
+      props.interactionBlocked = true;
+      render();
+      props.interactionBlocked = false;
+    }
+    if (kind === "hide") {
+      props.active = false;
+      render();
+      props.active = true;
+    }
+    if (kind === "version")
+      props.file = { ...props.file, version: "two", sha256: "b".repeat(64) };
+    render();
+    await drain();
+    render();
+    render();
+    (oldChoose.props.onClick as () => void)();
+    (oldConfirm.props.onClick as () => void)();
+    expect(pptxFeedbackTarget(source)).toBeNull();
+    expect(confirm).not.toHaveBeenCalled();
+    click(S.selectFeedback);
+    click(S.confirmFeedback);
+    expect(confirm).toHaveBeenCalledOnce();
+  },
+);
+it("StrictMode replay retires a selected source and stale controls while retaining one capture", async () => {
+  const { availability, confirm } = await feedbackReady();
+  const choose = feedbackControl(S.selectFeedback);
+  click(S.selectFeedback);
+  const source = chosenSource(availability),
+    oldConfirm = feedbackControl(S.confirmFeedback);
+  for (const slots of h.slots.values())
+    for (const slot of slots)
+      if (slot.setup) {
+        slot.cleanup?.();
+        slot.cleanup = slot.setup() || undefined;
+      }
+  await drain();
+  render();
+  render();
+  (choose.props.onClick as () => void)();
+  (oldConfirm.props.onClick as () => void)();
+  expect(pptxFeedbackTarget(source)).toBeNull();
+  expect(confirm).not.toHaveBeenCalled();
+  expect(h.capture).toHaveBeenCalledOnce();
+  click(S.selectFeedback);
+  click(S.confirmFeedback);
+  expect(confirm).toHaveBeenCalledOnce();
+});
+it("retires a blocked feedback claim during render before layout cleanup runs", async () => {
+  const { availability, confirm } = await feedbackReady();
+  click(S.selectFeedback);
+  const source = chosenSource(availability),
+    button = feedbackControl(S.confirmFeedback);
+  props.interactionBlocked = true;
+  render(false);
+  expect(pptxFeedbackTarget(source)).toBeNull();
+  (button.props.onClick as () => void)();
+  expect(confirm).not.toHaveBeenCalled();
+  for (const effect of h.effects.splice(0)) effect();
 });
