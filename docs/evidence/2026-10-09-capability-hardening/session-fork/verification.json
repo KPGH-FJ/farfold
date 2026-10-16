@@ -1,0 +1,523 @@
+{
+  "schema": 1,
+  "state": "sourceEngineeringControlledBrowserAndInstallationVerifiedNotLaunched",
+  "scope": "ARCH-33当前完整上下文官方复制首片；各层实证分别记录，不代表整项完成",
+  "source": {
+    "baseHead": "1aaef1654a3ed8d5950373b7e7a7e1c8e0c2b17a",
+    "commit": "09ad7ce47fc941c799e4ca7638e3740b6bd70f59",
+    "push": {
+      "branch": "main",
+      "session": 94813,
+      "finalChunk": "2014e4",
+      "actualExitCode": 0
+    },
+    "freeze": {
+      "path": "output/2026-10-16-session-fork/source-freeze-r3.json",
+      "sha256": "68b39c79c732a86425208d7730b02401f5eaef0aa4a230e4be1b752e0bde70fd"
+    },
+    "fileCount": 50,
+    "maxLines": 1471,
+    "frontendFiles": 17,
+    "backendAndConfigFiles": 33,
+    "independentReview": {
+      "path": "output/2026-10-16-session-fork-review/complete-source-review.json",
+      "sha256": "06f6be94ad641ff3ac72822bcba10740f7ad46061f175519b2aca09d8c3523d3"
+    }
+  },
+  "implementation": [
+    "当前实际连接声明能力且稳定对话、来源、设置与空闲状态可核时，显示共用入口；明确确认后官方fork一次",
+    "同一新ID立即保留并尝试只插入既有索引；源端load后等待明确close回执，再交独立工作进程load与完整有序回放",
+    "父对话输入、待发、历史与来源保持；源端包装事件不混入独立回放；共享项目文件位置，不生成文件副本或自行拼接历史",
+    "pending/unknown及未确认源处理持续受保护，已知ID保留；关闭窗口不撤销已发请求，不自动再fork、打开或发送",
+    "确认释放的ready/rejected结果可显式准备新确认，使用新owner退休旧处理；新对话不沿用父权限确认，实际发送仍由子状态及现有权限规则决定"
+  ],
+  "focused": {
+    "ui": {
+      "receipt": {
+        "path": "output/2026-10-16-session-fork-ui/verification-r4.json",
+        "sha256": "a3ee9a937a7c6c0879a9623113aed1e4b936e873f242007ff0a3e1808c8b733c"
+      },
+      "files": 6,
+      "tests": 49,
+      "actualExitCode": 0,
+      "scope": "含既有相关测试，不是49个唯一新增测试"
+    },
+    "runtime": {
+      "receipt": {
+        "path": "output/2026-10-16-session-fork-runtime/targeted-run9.json",
+        "sha256": "2153bc10f8b48319e79927224a8c99270381da2bf1b8a228c97ff303fc2d0c4c"
+      },
+      "files": 4,
+      "tests": 66,
+      "actualExitCode": 0
+    },
+    "typecheck": {
+      "receipt": {
+        "path": "output/2026-10-16-session-fork-runtime/typecheck-run7.json",
+        "sha256": "ad2afcee90d2c5b7c86df8c8249b85c659afd5ccc9b4ad3d22609a9ff52cc150"
+      },
+      "actualExitCode": 0
+    },
+    "backend": {
+      "receipt": {
+        "path": "output/2026-10-16-session-fork-backend/final-checks-r6.json",
+        "sha256": "091912c899813f21aadcf18841a724082e39b9ca63b313b56caca99a82361d38"
+      },
+      "execution": {
+        "session": 27693,
+        "finalChunk": "8faaae",
+        "actualExitCode": 0
+      },
+      "allNineCommandsActualExitZero": true,
+      "sourceUnchanged": true,
+      "groups": [
+        {
+          "actualExitCode": 0,
+          "results": [
+            "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1767 filtered out; finished in 0.01s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ]
+        },
+        {
+          "actualExitCode": 0,
+          "results": [
+            "test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 1745 filtered out; finished in 16.52s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ]
+        },
+        {
+          "actualExitCode": 0,
+          "results": [
+            "test result: ok. 114 passed; 0 failed; 0 ignored; 0 measured; 1656 filtered out; finished in 35.51s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ]
+        },
+        {
+          "actualExitCode": 0,
+          "results": [
+            "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1768 filtered out; finished in 6.94s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ]
+        },
+        {
+          "actualExitCode": 0,
+          "results": [
+            "test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 1744 filtered out; finished in 5.67s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ]
+        },
+        {
+          "actualExitCode": 0,
+          "results": [
+            "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 1766 filtered out; finished in 0.00s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ]
+        },
+        {
+          "actualExitCode": 0,
+          "results": [
+            "test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 1758 filtered out; finished in 0.02s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ]
+        },
+        {
+          "actualExitCode": 0,
+          "results": [
+            "test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 1761 filtered out; finished in 0.63s",
+            "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+          ]
+        },
+        {
+          "actualExitCode": 0,
+          "results": []
+        }
+      ],
+      "scope": "owned3/fork25/lifecycle114/permission2/MCP26/browser4/preparation12/compaction9及clippy；组可重叠，不相加冒称唯一195样本，不是完整七项工程",
+      "finalVerification": {
+        "path": "output/2026-10-16-session-fork-backend/verification.json",
+        "sha256": "e38bbd150738914196f73309572bcd785fcb1c7cb581e16b1c911facb8418af8"
+      }
+    }
+  },
+  "controlledBrowser": {
+    "receipt": {
+      "path": "output/2026-10-16-session-fork-browser/verification.json",
+      "sha256": "78b119be83bedc739a15e9aa7204293c3ca6d3d54f590ac58b22da2b7dbf3c58"
+    },
+    "inputs": 1665,
+    "eachBeforeAfterAndCrossEngineEqual": true,
+    "chromium": {
+      "receipt": {
+        "path": "output/2026-10-16-session-fork-browser/chromium-run3.json",
+        "sha256": "fab5072dd47c5e5c39acc0c5b7524b5eb0d9b004870084e43e44c29a63c94d90"
+      },
+      "checks": 39,
+      "actualExitCode": 0,
+      "status": "passed",
+      "ordinaryTab": "document focus及modal归属通过"
+    },
+    "webkit": {
+      "receipt": {
+        "path": "output/2026-10-16-session-fork-browser/webkit-run2.json",
+        "sha256": "30a1d7ed39c9c7d9f2a06d2cc9b6a1c3cb5af45a51f1c3db538864f2add683ad"
+      },
+      "checks": 42,
+      "actualExitCode": 0,
+      "status": "passed-with-known-keyboard-limitation",
+      "selectedKeyboard": [
+        "Alt+Tab: Close→Cancel→Confirm",
+        "Alt+Shift+Tab: Confirm→Cancel",
+        "Shift+Tab: Close→native dialog container",
+        "Escape closes review without a fork"
+      ],
+      "ordinaryTab": "未通过；交出文档焦点而native modal仍在，未观察到背景控件获得焦点"
+    },
+    "keyboardStrategy": {
+      "path": "output/2026-10-16-session-fork-browser/keyboard-validation-strategy.json",
+      "sha256": "92ce40d2573d1c8f89f6ee4c51ccf13f06607ca1f217fd302b52b5aeeec4578d"
+    },
+    "closure": "每引擎7页面及浏览器已关闭，sole server正常stdin close/actual0，port1560无listener",
+    "noActualAgentOrUserData": true
+  },
+  "counterexamplesB1ThroughB9": [
+    {
+      "id": "FORK-B1",
+      "issue": "五秒等待超时被误当实际进程结束，可能过早解除保护",
+      "proof": "实际旧版真红101；r6相关检查通过",
+      "red": {
+        "path": "output/2026-10-16-session-fork-backend/slow-owner-red.json",
+        "sha256": "d42af40489ecec09e71cc7ac1fa1c24620c48a0aa8cfc5af250359aade19e9c0"
+      }
+    },
+    {
+      "id": "FORK-B2",
+      "issue": "实际结束与迟到新ID交错时，持有权竞争可触发无效expect",
+      "proof": "静态反例及实际结束/迟到ID正例；无专门race真红",
+      "review": {
+        "path": "output/2026-10-16-session-fork-review/backend-first-draft.json",
+        "sha256": "6e9b92dfc74557c2c531fc71072e719027117d5039d7e3fda71501bccae44920"
+      }
+    },
+    {
+      "id": "FORK-B3",
+      "issue": "新ID尚未返回时，真实请求范围的提问被前端丢弃",
+      "proof": "跨层静态反例、前端真红1及后端三阶段提问正例",
+      "red": {
+        "path": "output/2026-10-16-session-fork-runtime/prechild-inquiry-red.json",
+        "sha256": "38830620d8923021da6769bfc08f4079746ddad8088d670747a50b89a2132aa7"
+      }
+    },
+    {
+      "id": "FORK-B4",
+      "issue": "已屏蔽旧ID及跨目录同Agent冲突可能被误当新副本",
+      "proof": "静态反例与后续正反例；无专门旧版真红",
+      "review": {
+        "path": "output/2026-10-16-session-fork-review/backend-first-draft.json",
+        "sha256": "6e9b92dfc74557c2c531fc71072e719027117d5039d7e3fda71501bccae44920"
+      },
+      "crossDirectoryReview": {
+        "path": "output/2026-10-16-session-fork-review/backend-integration-review-r1.json",
+        "sha256": "4f7d8b035a87c032a18e43146f06b477b286b12aa90d440484e155da3a07e3e2"
+      }
+    },
+    {
+      "id": "FORK-B5",
+      "issue": "终态先到后，旧RPC或活动未知回执使结果回退未知并再锁父对话",
+      "proof": "前端实际真红1；最终完整App两引擎覆盖",
+      "red": {
+        "path": "output/2026-10-16-session-fork-runtime/settled-failure-red.json",
+        "sha256": "e8668eaae6b8c5bbde4c7ebbfba870a64ce844a3aa3e7c9a4a8b2a460139573c"
+      }
+    },
+    {
+      "id": "FORK-B6",
+      "issue": "源端关闭的迟到ACK未交还原操作，已知副本停留未知",
+      "proof": "实际真红101；r6迟到15.5秒ACK正例",
+      "red": {
+        "path": "output/2026-10-16-session-fork-backend/late-close-red.json",
+        "sha256": "805fca7b3be525d80d15ba93a5e6f1ff3d6ebffc13385640ed943ed88f217b20"
+      }
+    },
+    {
+      "id": "FORK-B7",
+      "issue": "其他目录同一已知ID正在打开时，副本仍可能取得该ID",
+      "proof": "实际真红101，两个失败；r6双向冲突及其他Agent反例",
+      "red": {
+        "path": "output/2026-10-16-session-fork-backend/cross-opening-red.json",
+        "sha256": "daf6b5e1bd6c8323d43d109498d50da1cacb1410f604fa2ca1bad7f986ec7b1f"
+      }
+    },
+    {
+      "id": "FORK-B8",
+      "issue": "停止意图被误当实际结束，可能丢掉仍在途的官方回执",
+      "proof": "旧停止语义抽取helper实际101：1通过/2失败；关闭后续迟到ID另有真红；r6通过",
+      "red": {
+        "path": "output/2026-10-16-session-fork-backend/stop-intent-red.json",
+        "sha256": "badc88829fd01b3a887bb99ef5dfa064f1ac1eb76e367a37ceffe29232293954"
+      },
+      "closingFollowupRed": {
+        "path": "output/2026-10-16-session-fork-backend/closing-followup-red.json",
+        "sha256": "ef47af02211c839042145c221b15c3c8cd881f687c0d2b83b73ed2e1ec1118ef"
+      }
+    },
+    {
+      "id": "FORK-B9",
+      "issue": "弱观察者不能持有未完操作至实际结束，最后交付/处理者退出时可能过早释放保留权",
+      "proof": "实际真红101：3失败；r6观察者3项通过",
+      "red": {
+        "path": "output/2026-10-16-session-fork-backend/owner-observer-red.json",
+        "sha256": "91f4f370362a0a00e174b66e77d25f6e178539a71e1c4afaa20ffd9388f56c27"
+      },
+      "review": {
+        "path": "output/2026-10-16-session-fork-review/complete-source-r2-b9-blocking-review.json",
+        "sha256": "df2e15ccdbb401bc71438a4bf10e51cbee11eb10f131a4fb7d41068d5dbc9f8e"
+      },
+      "limit": "仅direct OpenReservation、最终owner_ended及whole busy保留；不泛称账号或更新保护全部失效"
+    }
+  ],
+  "retainedFailures": {
+    "queue": {
+      "issue": "continueQueue在复制期间将原暂停stopped清成null，未发请求仍改变用户暂停意图",
+      "runtimeRed": {
+        "path": "output/2026-10-16-session-fork-runtime/continue-queue-red.json",
+        "sha256": "205daf8ec52c79495fb21d91c24a8d2dd661c8d0a86a15418662d4b75f919539"
+      },
+      "browserRed": {
+        "path": "output/2026-10-16-session-fork-browser/chromium-run1.json",
+        "sha256": "05208784367c2f1680d368daabdad1893f6f36f22b85811c945159a19e336fd7"
+      },
+      "counterexample": {
+        "path": "output/2026-10-16-session-fork-browser/run1-counterexample.json",
+        "sha256": "0db06f2c88cdf5d56cbefa3a990d8c6059a652d9ada2f70290d846af0311890a"
+      },
+      "final": "最终39/42指定检查精确保留原队列暂停；旧版复制结束后的误发未执行或观察，不声称已经发生"
+    },
+    "earlyRuntimeLifecycleRed": {
+      "path": "output/2026-10-16-session-fork-runtime/late-lifecycle-red.json",
+      "sha256": "d2168a504152461cea00b1f0eebfb782589960de4d0986a2d0d82b389ebce3c6"
+    },
+    "uiHarnessFailure": {
+      "path": "output/2026-10-16-session-fork-ui/related-run1.json",
+      "sha256": "a9ea7a1b369f409ae6e0b5b6dd46a8064de0ef464248600831a73bd9030975d2"
+    },
+    "runtimeHarnessFailure": {
+      "path": "output/2026-10-16-session-fork-runtime/targeted-run1.json",
+      "sha256": "2a4a91f736332c9f496e9d2ad955dd9464dc0d6c65069e870485ccf100a75249"
+    },
+    "earlierBackendFailedChecks": [
+      {
+        "path": "output/2026-10-16-session-fork-backend/final-checks.json",
+        "sha256": "e21866feda668acb1dc65d22618a2b7589617ecff593a05665b02d59b016cc6a"
+      },
+      {
+        "path": "output/2026-10-16-session-fork-backend/final-checks-r2.json",
+        "sha256": "ef22ae9cd5693ba983a5264e88a18360dd86b4d89da3404ca61303eed2c097ee"
+      },
+      {
+        "path": "output/2026-10-16-session-fork-backend/final-checks-r3.json",
+        "sha256": "12925fa1ddbaf037175d9f1f6192f523672b0df95acdec3e0981e6685667582e"
+      },
+      {
+        "path": "output/2026-10-16-session-fork-backend/final-checks-r5.json",
+        "sha256": "9e2709d200ca1ec98fa05bade9c7673e58ca9f6c313ac1779db1803fd369b294"
+      }
+    ],
+    "mcpParallelTimeout": {
+      "receipt": {
+        "path": "output/2026-10-16-session-fork-backend/final-checks-r5.json",
+        "sha256": "9e2709d200ca1ec98fa05bade9c7673e58ca9f6c313ac1779db1803fd369b294"
+      },
+      "log": {
+        "path": "output/2026-10-16-session-fork-backend/final-r5-5.log",
+        "sha256": "03e2c95a02091a2af9d7802988e45bdc46778372f51317cc003cb57305ca5319"
+      },
+      "result": "transient_mcp组25通过/1失败，controlled peer生命周期等待Elapsed；原并行原因未知",
+      "laterExact": {
+        "path": "output/2026-10-16-session-fork-backend/mcp-exact-r5.json",
+        "sha256": "d9dcb91e060aba485dd80c4bc8c0e23fe1e390d4f2f8a41cca397df80247ba3e"
+      },
+      "laterGroup": {
+        "path": "output/2026-10-16-session-fork-backend/final-checks-r6.json",
+        "sha256": "091912c899813f21aadcf18841a724082e39b9ca63b313b56caca99a82361d38"
+      },
+      "limit": "同源隔离1/1与r6同组26项通过不改写原失败；未修改该旧测试断言或超时，不记为生产故障已修复"
+    },
+    "ordinaryWebKitTab": {
+      "red": {
+        "path": "output/2026-10-16-session-fork-browser/webkit-run1.json",
+        "sha256": "c04c45b41a429f86e2756821ec6c9ffddff3b9bcb276357ae50ff8de76ce5b5b"
+      },
+      "diagnostic": {
+        "path": "output/2026-10-16-session-fork-browser/webkit-focus-diagnostic.json",
+        "sha256": "5f86ec7221145209053463b1c2bd30f0c50a5e710b9ccd1417a090028247e118"
+      },
+      "result": "普通Tab未通过，Alt+Tab等不同键序成功不改绿；未证明OS设置唯一因果"
+    }
+  },
+  "futureProofs": {
+    "nativeUi": null,
+    "nativeColdRestore": null,
+    "realAgentFork": null
+  },
+  "remaining": [
+    "P11指定历史节点",
+    "官方rollback与checkpoint恢复",
+    "共享项目文件位置及文件副作用的真实核查；本片不生成独立文件副本或回滚文件",
+    "NEW-24当前完整有效权限及受影响真实新请求",
+    "真实Agent完整上下文及账号模型路径实证",
+    "正式应用UI与冷恢复",
+    "29家八标准、Windows与整个ARCH-33"
+  ],
+  "plan": {
+    "baseline": {
+      "path": "output/2026-10-16-session-fork/plan-conditions-baseline.json",
+      "sha256": "1d8abc1d62923b0372ee7f88784d0ca11206122384b80ff7f3ecfb23ae516fd0"
+    },
+    "items": 151,
+    "originalItems": 122,
+    "newItems": 29,
+    "appendNewItem": false,
+    "titleAndCompletionConditionsChanged": false,
+    "progressOnly": "ARCH-33仅更新进度列与最新续接；P11原状态保持，151项原题与完成条件不变"
+  },
+  "publicationBoundary": "公开记录只保存安全摘要及原始证据定位；私有数据库、完整清单、历史正文、凭据不复制入公开目录。受控结果不作正式窗口、真实Agent或整项完成证明。",
+  "recordedAt": "2026-10-16",
+  "engineering": {
+    "receipt": {
+      "path": "output/2026-10-16-session-fork-engineering/run1/verification.json",
+      "sha256": "a2ddda110bdd45aa40806ec06faff4280d5808c7413992e31c758be134eb2c62"
+    },
+    "execution": {
+      "session": 69030,
+      "finalChunk": "8ceadc",
+      "actualExitCode": 0
+    },
+    "allSevenFresh": true,
+    "inputCount": 18991,
+    "beforeAfterEqual": true,
+    "frontend": {
+      "files": 525,
+      "passed": 6588
+    },
+    "rust": {
+      "passed": 1764,
+      "ignored": 6
+    }
+  },
+  "candidate": {
+    "receipt": {
+      "path": "output/2026-10-16-session-fork-install-preparation/candidate-output/candidate.json",
+      "sha256": "0dc6a2629d5accf0babdcf61d4b7e6fd69e80c1a02f49e309ee97fb5e7f4f465"
+    },
+    "execution": {
+      "session": 73571,
+      "finalChunk": "0fda49",
+      "actualExitCode": 0
+    },
+    "productionInputCount": 1717,
+    "independent9": {
+      "receipt": {
+        "path": "output/2026-10-16-session-fork-install-preparation/independent/review.json",
+        "sha256": "1e8e5d6d9a73f29c7b3d0304fbe56f5bf588a6026f9d9ae9133fc69b990f7a6a"
+      },
+      "actualExitCode": 0,
+      "finalChunk": "fb9f98",
+      "passed": 9
+    },
+    "archive": {
+      "path": "src-tauri/target/internal-candidate/2026-10-16-session-fork-09ad7ce4/Farfold-0.1.7-09ad7ce4.zip",
+      "sha256": "870964ed12439cc07b58ee1b135bc73bf419f4e9cb99a9da0b2fc56e4f5a4ab2"
+    }
+  },
+  "installation": {
+    "receipt": {
+      "path": "output/2026-10-16-session-fork-install/install-result.json",
+      "sha256": "2ecd61c91e584cd1abaf7c4d32bd15e60e252089d82541ca80ff09fa82ebc87b"
+    },
+    "execution": {
+      "session": 40596,
+      "finalChunk": "177d40",
+      "actualExitCode": 0
+    },
+    "phase": "installedVerifiedNotLaunched",
+    "formalSource": "09ad7ce47fc941c799e4ca7638e3740b6bd70f59",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "formalBinarySha256": "7044dbed46cf04b834819ca8111b942becd19c7d77dfc5be3284752cbd0ae720",
+    "launchedThisBatch": false,
+    "normalQuitEvidence": null,
+    "closedObservedOnly": true,
+    "freshRetention": {
+      "before": {
+        "receipt": {
+          "path": "output/2026-10-16-session-fork-install/retention-before-receipt.json",
+          "sha256": "12f1a4699c829da3ddf574e2ac9c6a3f6f2c18657cd7a5c1a924caa2177580e7"
+        },
+        "session": 66631,
+        "finalChunk": "e49cfb",
+        "actualExitCode": 0
+      },
+      "preinstall": {
+        "receipt": {
+          "path": "output/2026-10-16-session-fork-install/retention-preinstall-receipt.json",
+          "sha256": "eccd47acd7d31d579618af68d6a52aefe4f0c43efe7af06e185a1504caf33b14"
+        },
+        "session": 71799,
+        "finalChunk": "8720e8",
+        "actualExitCode": 0
+      },
+      "after": {
+        "receipt": {
+          "path": "output/2026-10-16-session-fork-install/retention-after-receipt.json",
+          "sha256": "ab52727d1f87c062d37c9c7e10dc84a0fefa8cf1f909b612c8b19e57b6de9f92"
+        },
+        "session": 35788,
+        "finalChunk": "c39aaf",
+        "actualExitCode": 0
+      },
+      "entryCountEach": 217407,
+      "manifestSha256Each": "438f4913ed29f44f4b748ff1f893b97330de8f80d2c2c208552ce9ed6411d810",
+      "allThreeStrictlyEqual": true,
+      "backupRetained": true,
+      "scope": "安装前、替换前与安装后的新清单；不覆盖此前运行后严格差异或证明本批正常退出"
+    },
+    "independent10": {
+      "receipt": {
+        "path": "output/2026-10-16-session-fork-install/installed-independent-review-private.json",
+        "sha256": "23dd086f67f1e5ef50e68bb9fe8857bfa1ad3d3aab6bf922a053611e8a8a49b8"
+      },
+      "execution": {
+        "session": 26039,
+        "finalChunk": "3a4f40",
+        "actualExitCode": 0
+      },
+      "passed": 10,
+      "total": 10,
+      "failures": []
+    },
+    "duplicateCandidateCleanup": {
+      "receipt": {
+        "path": "output/2026-10-16-session-fork-install/candidate-cleanup.json",
+        "sha256": "29cf47a7a94d02efa35451b3c9694c9ae4ff8e82a919d8f02a1182ea40ef9972"
+      },
+      "actualExitCode": 0,
+      "finalChunk": "6add48",
+      "formalAndArchiveHashesUnchanged": true,
+      "processZeroObserved": true,
+      "userDataTouched": false
+    },
+    "closureBoundary": "仅记录观察时关闭；不承诺连续无启动，本批未发生正常退出验证，旧严格差异与未知自动重开请求者保持原据"
+  },
+  "storage": {
+    "receipt": {
+      "path": "output/2026-10-16-session-fork-storage/cleanup.json",
+      "sha256": "a80167d4069a8fd9fc8cd3082a9a29fe6e4d4c46abde59e8a7792f5c8c00ca6d"
+    },
+    "path": "src-tauri/target/debug/incremental",
+    "logicalBytesRemoved": 7600402613,
+    "freeBytesBefore": 3770179584,
+    "freeBytesAfter": 7853092864,
+    "pathAbsentAfter": true,
+    "scope": "完整工程结束且无Rust写入后精确清理可再生成缓存；逻辑目录大小不等同物理释放量"
+  }
+}
