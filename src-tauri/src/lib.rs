@@ -239,6 +239,7 @@ pub fn run() {
                 acp_client::manager::agent_status,
                 acp_client::manager::connection_retention::agent_connection_hold,
                 acp_client::session_commands::session_open,
+                acp_client::session_fork::session_fork_current,
                 acp_client::session_commands::session_prompt,
                 acp_client::session_commands::session_cancel,
                 acp_client::session_commands::session_stop_task,

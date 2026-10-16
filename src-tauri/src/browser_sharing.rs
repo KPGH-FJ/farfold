@@ -331,6 +331,22 @@ impl Drop for ToolSession {
 }
 
 impl SessionMcpOwner for ToolSession {
+    fn fork_admissible(&self) -> bool {
+        let Ok(_operation) = self.operation.try_lock() else {
+            return false;
+        };
+        let Ok(state) = self.state.lock() else {
+            return false;
+        };
+        let Ok(page) = self.page.lock() else {
+            return false;
+        };
+        matches!(state.phase, READY | CLOSED)
+            && !state.prompt_active
+            && state.pending_request.is_none()
+            && state.retiring.is_none()
+            && page.is_none()
+    }
     fn bind_session(&self, native_session_id: &str) -> Result<(), String> {
         let mut state = self.state.lock().unwrap_or_else(|e| e.into_inner());
         if native_session_id.is_empty() || state.ended {

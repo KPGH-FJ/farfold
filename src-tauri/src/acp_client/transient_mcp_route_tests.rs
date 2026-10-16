@@ -76,6 +76,9 @@ struct OwnerWitness {
     prompt_states: Mutex<Vec<bool>>,
 }
 impl SessionMcpOwner for OwnerWitness {
+    fn fork_admissible(&self) -> bool {
+        true
+    }
     fn bind_session(&self, id: &str) -> Result<(), String> {
         self.bound.lock().unwrap().push(id.into());
         Ok(())

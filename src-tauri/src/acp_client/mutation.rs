@@ -68,6 +68,7 @@ pub(crate) struct Mutation {
     deadline: tokio::time::Instant,
     _lease: OperationLease,
     started: bool,
+    actual_reply: bool,
 }
 impl Mutation {
     pub(crate) fn awaiting_reply(&self) -> bool {
@@ -119,13 +120,24 @@ impl Mutation {
             operation,
             _lease: lease,
             started: false,
+            actual_reply: false,
             deadline,
             request: Box::pin(request),
         }
     }
+    /// The fork handoff owns delivery beyond the public IPC wait. Ordinary
+    /// close/configuration callers retain their existing bounded delivery.
+    pub(crate) fn until_actual_reply(mut self) -> Self {
+        self.actual_reply = true;
+        self
+    }
     /// None means only delivery ended. Keep polling the same wire request; its
     /// reservation remains held until the actual response or connection shutdown.
     async fn poll(&mut self) -> Option<Result<Value, String>> {
+        if self.actual_reply {
+            self.started = true;
+            return Some(self.request.as_mut().await);
+        }
         let Some(reply) = &mut self.reply else {
             return Some(self.request.as_mut().await);
         };

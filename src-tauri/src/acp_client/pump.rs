@@ -26,8 +26,8 @@ use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 
 use agent_client_protocol::schema::v1::{
-    CancelNotification, ContentBlock, PromptRequest, SessionConfigOptionValue,
-    SessionConfigValueId, SessionModeState, SetSessionModeRequest,
+    CancelNotification, PromptRequest, SessionConfigOptionValue, SessionConfigValueId,
+    SessionModeState, SetSessionModeRequest,
 };
 use agent_client_protocol::{
     Agent, ConnectionTo, Dispatch, DynamicHandlerGuard, HandleDispatchFrom, Handled,
@@ -142,6 +142,8 @@ pub(crate) type SessionMap = Arc<Mutex<HashMap<String, SessionEntry>>>;
 pub(crate) struct SessionEntry {
     connection_id: String,
     pub(crate) preview_token: Option<String>,
+    /// Parameters accepted by this client's successful new/load, not Agent permissions.
+    pub(crate) workspace: Option<Vec<std::path::PathBuf>>,
     pub(crate) browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
     pub control: mpsc::UnboundedSender<SessionControl>,
     pub events: SessionSink,
@@ -158,102 +160,9 @@ impl SessionEntry {
     }
 }
 
-/// Commands delivered to the session pump task.
-pub(crate) enum SessionControl {
-    Prompt {
-        blocks: Vec<ContentBlock>,
-        deadline: tokio::time::Instant,
-        result: oneshot::Sender<Result<(), String>>,
-    },
-    Cancel {
-        deadline: tokio::time::Instant,
-        result: oneshot::Sender<Result<(), String>>,
-    },
-    StopTask {
-        connection_id: String,
-        task_id: String,
-        deadline: tokio::time::Instant,
-        result: oneshot::Sender<Result<Value, String>>,
-    },
-    SetConfig {
-        config_id: String,
-        value: Value,
-        deadline: tokio::time::Instant,
-        result: oneshot::Sender<Result<Value, String>>,
-    },
-    ConfirmConfig {
-        displayed: Value,
-        deadline: tokio::time::Instant,
-        result: oneshot::Sender<Result<Value, String>>,
-    },
-    /// `session/set_mode` — agents that expose `modes` outside
-    /// `configOptions` (the synthetic `mode` option in the UI calls this).
-    SetMode {
-        mode_id: String,
-        deadline: tokio::time::Instant,
-        result: oneshot::Sender<Result<(), String>>,
-    },
-    Close {
-        /// Automatic read cleanup must preserve newly arrived interactions.
-        require_idle_interactions: bool,
-        deadline: tokio::time::Instant,
-        result: oneshot::Sender<Result<(), String>>,
-    },
-    /// `session/delete` — removes the session agent-side, then ends the pump.
-    Delete {
-        deadline: tokio::time::Instant,
-        result: oneshot::Sender<Result<(), String>>,
-    },
-    /// Detach a live local route only after this pump confirms it is idle.
-    Detach {
-        deadline: tokio::time::Instant,
-        result: oneshot::Sender<Result<(), String>>,
-    },
-    /// Metadata mutation serialized with this session's prompt/config admission.
-    Archive {
-        row: Box<crate::meta_store::SessionRow>,
-        canonical_cwd: String,
-        reservations: Vec<super::lifecycle::OpenReservation>,
-        admission: crate::managed_update::ActivityPermit,
-        deadline: tokio::time::Instant,
-        result: oneshot::Sender<Result<crate::meta_store::SessionRow, String>>,
-    },
-    /// Local teardown without a protocol call (connection already dead).
-    Shutdown,
-}
-
-impl SessionControl {
-    fn abandoned(&self) -> bool {
-        let (deadline, closed) = match self {
-            Self::Prompt {
-                deadline, result, ..
-            }
-            | Self::Cancel { deadline, result }
-            | Self::SetMode {
-                deadline, result, ..
-            }
-            | Self::Close {
-                deadline, result, ..
-            }
-            | Self::Detach { deadline, result }
-            | Self::Delete { deadline, result } => (*deadline, result.is_closed()),
-            Self::StopTask {
-                deadline, result, ..
-            }
-            | Self::SetConfig {
-                deadline, result, ..
-            }
-            | Self::ConfirmConfig {
-                deadline, result, ..
-            } => (*deadline, result.is_closed()),
-            Self::Archive {
-                deadline, result, ..
-            } => (*deadline, result.is_closed()),
-            Self::Shutdown => return false,
-        };
-        closed || tokio::time::Instant::now() >= deadline
-    }
-}
+mod control;
+pub(crate) use control::SessionControl;
+mod fork;
 
 /// Result of opening a session inside the connection task.
 pub(crate) struct OpenedSession {
@@ -699,12 +608,16 @@ async fn session_pump(
 ) {
     let mut opening = Some(opening);
     let mut detached = None;
+    let mut fork_state: Option<Arc<super::session_fork::SourceFork>> = None;
     let mut stopping = ops.life.stop_receiver();
     let mut mutation: Option<Mutation> = None;
     let mut pending_config_store = None;
     let (turn_tx, mut turn_rx) = mpsc::unbounded_channel::<Result<Value, String>>();
     let mut permission_ids: Vec<String> = Vec::new();
     let mut prompt_in_flight = false;
+    // A transport/error receipt cannot establish which context was committed.
+    // This guard only gates the new fork action; it does not infer a stop.
+    let mut fork_execution_known = true;
     let mut prompt_cancelling = false;
     let mut prompt_lease = None;
     let mut tools = super::tool_activity::ToolActivity::new(ops.life.clone());
@@ -750,6 +663,9 @@ async fn session_pump(
         }
         if ((prompt_in_flight && matches!(buffered_control, Some(SessionControl::Cancel { .. })))
             || (opening.is_none()
+                && !fork_state
+                    .as_ref()
+                    .is_some_and(|fork| fork.busy.load(Ordering::SeqCst))
                 && matches!(buffered_control, Some(SessionControl::StopTask { .. }))))
             && let Some(command) = buffered_control.take()
         {
@@ -905,6 +821,7 @@ async fn session_pump(
             outcome = turn_rx.recv() => {
                 if let Some(outcome) = outcome {
                     ops.life.touch();
+                    fork_execution_known = outcome.as_ref().is_ok_and(|reply|matches!(reply.get("stopReason").and_then(Value::as_str),Some("end_turn"|"max_tokens"|"max_turn_requests"|"refusal"|"cancelled")));
                     if prompt_in_flight {
                         prompt_in_flight = false;
                         prompt_cancelling = false;
@@ -1099,18 +1016,39 @@ async fn session_pump(
                     ops.life.touch();
                     if opening.is_some() {
                         let error="对话正在恢复，请稍后重试".to_string();
-                        match command {
-                            SessionControl::Prompt { result,.. } | SessionControl::Cancel { result,.. }
-                            | SessionControl::SetMode { result,.. } | SessionControl::Close { result,.. }
-                            | SessionControl::Delete { result,.. } | SessionControl::Detach { result,.. } => { let _=result.send(Err(error)); }
-                            SessionControl::StopTask { result,.. } | SessionControl::SetConfig { result,.. } | SessionControl::ConfirmConfig { result,.. } => { let _=result.send(Err(error)); }
-                            SessionControl::Archive { result,.. } => { let _=result.send(Err(error)); }
-                            SessionControl::Shutdown => break,
-                        }
+                        if matches!(command,SessionControl::Shutdown) { break; }
+                        command.reject(error);
+                        continue;
+                    }
+                    if fork_state.as_ref().is_some_and(|fork|fork.busy.load(Ordering::SeqCst)) && !matches!(command,SessionControl::Shutdown) {
+                        command.reject("复制结果尚未确认，请等待此操作结束".into());
                         continue;
                     }
                     match command {
                 SessionControl::Shutdown => break,
+                SessionControl::Fork { request,result,.. } => {
+                    let blocked = if request.parent!=session_id || request.connection.connection_id!=ops.connection_id || !fork_execution_known {Some("unavailable")}
+                        else if mcp_requests.as_ref().is_some_and(|mcp|!mcp.fork_admissible()) {Some("browser_shared")}
+                        else if !permission_guard.admissible() {Some("permission")}
+                        else if !model_guard.admissible() {Some("configuration")}
+                        else if !fork::idle(&ctx,prompt_in_flight,mutation.is_some(),&model_guard,&permission_guard) {Some("busy")} else {None};
+                    if let Some(reason)=blocked {
+                        let _=result.send(Err(super::session_fork::AdmissionFailure::rejected(reason)));continue;
+                    }
+                    let saved=model_guard.record();
+                    let snapshot=match super::session_fork::preflight(&request,saved.clone(),&config_store).await {
+                        Ok(value)=>value,Err(_)=>{let _=result.send(Err(super::session_fork::AdmissionFailure::rejected("configuration")));continue;}
+                    };
+                    restore_config::drain(&mut inbox,&mut ctx,&mut configuration,&mut models,&mut model_guard,&mut permission_guard,&mut opening,&mut mutation);
+                    if !fork_execution_known || !fork::idle(&ctx,prompt_in_flight,mutation.is_some(),&model_guard,&permission_guard) || model_guard.record()!=saved
+                        || mcp_requests.as_ref().is_some_and(|mcp|!mcp.fork_admissible()) {
+                        let reason=if mcp_requests.as_ref().is_some_and(|mcp|!mcp.fork_admissible()) {"browser_shared"} else {"configuration"};
+                        let _=result.send(Err(super::session_fork::AdmissionFailure::rejected(reason)));continue;
+                    }
+                    let started=super::session_fork::start(*request,snapshot,cx.clone(),ops.clone(),sessions.clone(),pending.clone(),config_store.clone(),events.clone()).map_err(|_|super::session_fork::AdmissionFailure::rejected("unavailable"));
+                    if let Ok(state)=&started { fork_state=Some(state.clone()); }
+                    let _=result.send(started);
+                }
                 SessionControl::Archive { row, canonical_cwd, reservations, admission, result, .. } => {
                     let busy = prompt_in_flight || mutation.is_some() || (ctx.tools.busy() || ctx.async_tasks.busy() || ctx.compactions.busy())
                         || !permission_guard.admissible() || !model_guard.admissible()
@@ -1349,7 +1287,12 @@ async fn session_pump(
                     events(serde_json::json!({"kind":"configCheck", "check":model_guard.check()}));
                     let _ = result.send(outcome);
                 }
-                command @ (SessionControl::SetMode { .. } | SessionControl::Close { .. } | SessionControl::Delete { .. }) => {
+                command @ (SessionControl::SetMode { .. } | SessionControl::Close { .. } | SessionControl::ForkClose { .. } | SessionControl::Delete { .. }) => {
+                    let actual_reply = matches!(&command,SessionControl::ForkClose { .. });
+                    let command = match command {
+                        SessionControl::ForkClose {result} => SessionControl::Close {result,require_idle_interactions:true,deadline:tokio::time::Instant::now()},
+                        other=>other,
+                    };
                     let (kind, result, deadline, method, params) = match command {
                         SessionControl::SetMode { result, .. } if configuration.modern_options().is_some() => {
                             let _ = result.send(Err("请通过当前设置选项重新选择并确认".into())); continue;
@@ -1385,12 +1328,13 @@ async fn session_pump(
                     };
                     let operation = Operation::new();
                     let (request_operation, request_cx) = (operation.clone(), cx.clone());
-                    mutation = Some(Mutation::new(kind, MutationReply::Unit(result), operation, lease,
+                    let pending = Mutation::new(kind, MutationReply::Unit(result), operation, lease,
                         deadline, async move {
                             let request = UntypedMessage::new(method, &params).map_err(describe_acp_error)?;
                             request_operation.request(&request_cx, request_cx.send_request_to(Agent, request))
                                 .await.map_err(describe_acp_error)
-                        }));
+                        });
+                    mutation = Some(if actual_reply {pending.until_actual_reply()} else {pending});
                 }
                     }
                 }

@@ -310,6 +310,7 @@ pub(crate) async fn open_session_on_connection(
             SessionEntry {
                 connection_id: ops.connection_id.clone(),
                 preview_token,
+                workspace: Some(Vec::new()),
                 browser_unavailable,
                 control: control_tx,
                 events: events.clone(),

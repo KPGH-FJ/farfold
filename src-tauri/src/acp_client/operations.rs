@@ -22,6 +22,8 @@ mod auth_result_tests;
 mod list_result_tests;
 mod open_result;
 pub(crate) use open_result::OpenDelivery;
+mod owned_reply;
+pub(crate) use owned_reply::until_owner_ended;
 
 #[derive(Clone)]
 pub(crate) struct Operation {
@@ -363,6 +365,7 @@ pub(crate) async fn run(
             .await;
         }
         ManagerCommand::OpenSession {
+            fork_owned,
             native_session_id,
             preview_token,
             recorded_config,
@@ -375,29 +378,43 @@ pub(crate) async fn run(
         } => {
             let mut ops = ops;
             ops.opening = _lease.opening();
+            let life = ops.life.clone();
+            let future = pump::open_session_on_connection(
+                &cx,
+                &cwd,
+                native_session_id,
+                preview_token,
+                recorded_config,
+                *config_store,
+                config_options,
+                events,
+                &sessions,
+                &pending,
+                ops,
+                operation.clone(),
+                mcp,
+                browser_unavailable,
+            );
+            if fork_owned {
+                open_result::execute_owned_open(
+                    result,
+                    life,
+                    operation,
+                    _lease,
+                    sessions.clone(),
+                    future,
+                )
+                .await;
+                return;
+            }
             open_result::execute_open(
                 result,
-                ops.life.clone(),
+                life,
                 operation.clone(),
                 deadline,
                 _lease,
                 sessions.clone(),
-                pump::open_session_on_connection(
-                    &cx,
-                    &cwd,
-                    native_session_id,
-                    preview_token,
-                    recorded_config,
-                    *config_store,
-                    config_options,
-                    events,
-                    &sessions,
-                    &pending,
-                    ops,
-                    operation,
-                    mcp,
-                    browser_unavailable,
-                ),
+                future,
             )
             .await;
         }

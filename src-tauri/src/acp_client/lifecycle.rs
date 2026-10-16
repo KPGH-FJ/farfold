@@ -4,7 +4,7 @@ use std::{
     path::{Path, PathBuf},
     sync::{
         Arc, Mutex, Weak,
-        atomic::{AtomicU8, AtomicU64, Ordering},
+        atomic::{AtomicBool, AtomicU8, AtomicU64, Ordering},
     },
     time::{Duration, Instant},
 };
@@ -45,6 +45,7 @@ impl Clone for OpenReservation {
 struct ReservedOpen {
     owner: OpenReservations,
     key: OpenKey,
+    exclusive_native: AtomicBool,
 }
 impl OpenReservations {
     pub fn reserve(
@@ -76,18 +77,51 @@ impl OpenReservations {
         cwd: &Path,
         session_id: Option<&str>,
     ) -> Result<(OpenReservation, bool), String> {
+        self.claim_with_scope(agent_id, cwd, session_id, false)
+    }
+    /// A newly returned fork ID must exclude known pending opens across
+    /// projects, and keep that same exclusion throughout its handoff.
+    pub(crate) fn claim_fork(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: &str,
+    ) -> Result<(OpenReservation, bool), String> {
+        self.claim_with_scope(agent_id, cwd, Some(session_id), true)
+    }
+    fn claim_with_scope(
+        &self,
+        agent_id: &str,
+        cwd: &Path,
+        session_id: Option<&str>,
+        exclusive_native: bool,
+    ) -> Result<(OpenReservation, bool), String> {
         let key = (
             agent_id.to_owned(),
             cwd.to_path_buf(),
             session_id.map(str::to_owned),
         );
+        // Keep upgraded owners until after the map guard drops. The last Arc's
+        // destructor itself removes its key under this same mutex.
+        let mut live = Vec::new();
         let mut entries = self.0.lock().map_err(|_| "无法读取对话打开状态")?;
-        if let Some(entry) = entries.get(&key).and_then(Weak::upgrade) {
-            return Ok((OpenReservation(entry), false));
+        live.extend(entries.values().filter_map(Weak::upgrade));
+        if let Some(entry) = live.iter().find(|entry| {
+            entry.key == key
+                || (session_id.is_some()
+                    && entry.key.0 == agent_id
+                    && entry.key.2.as_deref() == session_id
+                    && (exclusive_native || entry.exclusive_native.load(Ordering::SeqCst)))
+        }) {
+            if exclusive_native {
+                entry.exclusive_native.store(true, Ordering::SeqCst);
+            }
+            return Ok((OpenReservation(entry.clone()), false));
         }
         let entry = Arc::new(ReservedOpen {
             owner: self.clone(),
             key: key.clone(),
+            exclusive_native: AtomicBool::new(exclusive_native),
         });
         entries.insert(key, Arc::downgrade(&entry));
         Ok((OpenReservation(entry), true))

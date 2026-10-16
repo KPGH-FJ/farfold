@@ -14,6 +14,8 @@ export function threadNeedsAttention(thread: ThreadState): boolean {
     thread.queuePaused === "no_result" ||
     hasPendingRequests(thread) ||
     thread.connectionOutcomeUnknown ||
+    thread.forkOperation?.status === "unknown" ||
+    thread.forkOperation?.status === "created_unavailable" ||
     compactionUncertain(thread),
   );
 }

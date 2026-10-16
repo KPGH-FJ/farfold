@@ -56,6 +56,7 @@ async fn aliases_share_account_admission_and_busy_api_work_blocks_changes() {
     let captured = events.clone();
     let (result, receive) = tokio::sync::oneshot::channel();
     api.send(ManagerCommand::OpenSession {
+        fork_owned: false,
         native_session_id: None,
         preview_token: None,
         recorded_config: None,

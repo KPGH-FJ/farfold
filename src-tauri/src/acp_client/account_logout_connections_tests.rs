@@ -150,6 +150,7 @@ async fn review_regression_logout_reaps_idle_account_copies_and_preserves_api_an
         .clone();
     let (result, receive) = tokio::sync::oneshot::channel();
     api.send(ManagerCommand::OpenSession {
+        fork_owned: false,
         native_session_id: None,
         preview_token: None,
         recorded_config: None,

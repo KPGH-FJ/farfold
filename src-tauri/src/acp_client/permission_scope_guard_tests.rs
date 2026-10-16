@@ -34,6 +34,9 @@ for line in sys.stdin:
 #[derive(Default)]
 struct Owner(Mutex<Vec<bool>>);
 impl SessionMcpOwner for Owner {
+    fn fork_admissible(&self) -> bool {
+        true
+    }
     fn bind_session(&self, _: &str) -> Result<(), String> {
         Ok(())
     }

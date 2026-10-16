@@ -65,6 +65,9 @@ mod account_scope_tests;
 #[path = "connection_isolation_tests.rs"]
 mod connection_isolation_tests;
 
+#[path = "session_fork_wire_tests.rs"]
+mod session_fork_wire_tests;
+
 #[path = "directory_maintenance_tests.rs"]
 mod directory_maintenance_tests;
 
@@ -761,6 +764,7 @@ async fn two_service_connections_route_stop_and_interactions_to_their_own_sessio
         let (tx, rx) = tokio::sync::oneshot::channel();
         connection
             .send(ManagerCommand::OpenSession {
+                fork_owned: false,
                 native_session_id: None,
                 preview_token: None,
                 recorded_config: None,
@@ -911,6 +915,7 @@ async fn abandoned_restore_blocks_other_service_until_actual_load_finishes() {
         connection
             .send_reserved(
                 ManagerCommand::OpenSession {
+                    fork_owned: false,
                     native_session_id: Some(id.into()),
                     preview_token: None,
                     recorded_config: None,

@@ -33,6 +33,9 @@ import { useContentOwner } from "./useContentOwner";
 import { ThreadView } from "./ThreadView";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { WorkspaceActionMenu } from "./WorkspaceActionMenu";
+import { SessionForkDialog } from "./SessionForkDialog";
+import { sessionForkControl } from "../runtime/session_fork_ui";
+import { SESSION_FORK_STRINGS as FORK } from "../runtime/session_fork_strings";
 import { MoveConversationsDialog } from "./MoveConversationsDialog";
 import { DeleteConversationsDialog } from "./DeleteConversationsDialog";
 import type { useAgents } from "../runtime/agents";
@@ -165,6 +168,23 @@ export function ThreadPage({
   const [name, setName] = useState(title);
   const [moving, setMoving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const forkControl = sessionForkControl(thread, onOpened);
+  const [forkReview, setForkReview] = useState<{
+    owner: object;
+    thread: ThreadState;
+    connectionId: string | undefined;
+    isCurrent: () => boolean;
+    retired: boolean;
+  } | null>(null);
+  if (
+    forkReview &&
+    (!active ||
+      forkReview.owner !== forkControl?.owner ||
+      forkReview.thread !== thread ||
+      forkReview.connectionId !== thread?.connectionId)
+  )
+    forkReview.retired = true;
+  const forkVisible = Boolean(forkReview && !forkReview.retired);
   const collectionsData = useCollections();
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -175,6 +195,8 @@ export function ThreadPage({
     setRename(false);
     setMoving(false);
     setDeleting(false);
+    if (forkReview) forkReview.retired = true;
+    setForkReview(null);
     setExported(null);
     setError(null);
   };
@@ -322,7 +344,13 @@ export function ThreadPage({
             thread={thread}
             rememberedBrowserOwner={ownerForRememberedPages(thread, row)}
             active={
-              active && !menu && !rename && !moving && !deleting && !exported
+              active &&
+              !menu &&
+              !rename &&
+              !moving &&
+              !deleting &&
+              !exported &&
+              !forkVisible
             }
             agents={agents.cards}
             onGoSettings={onGoSettings}
@@ -491,6 +519,58 @@ export function ThreadPage({
                   {LIBRARY.reopenSame}
                 </button>
               )}
+              {forkControl && (
+                <>
+                  <button
+                    type="button"
+                    className="btn btn-ghost"
+                    disabled={
+                      saving ||
+                      (forkControl.phase === "idle" &&
+                        Boolean(forkControl.blockedReason))
+                    }
+                    aria-describedby={
+                      forkControl.phase === "idle" && forkControl.blockedReason
+                        ? "thread-fork-reason"
+                        : undefined
+                    }
+                    onClick={() => {
+                      if (
+                        !active ||
+                        !thread ||
+                        !ownsContent() ||
+                        !forkControl.isCurrent() ||
+                        (forkControl.phase === "idle" &&
+                          forkControl.blockedReason)
+                      )
+                        return;
+                      setMenu(false);
+                      setForkReview({
+                        owner: forkControl.owner,
+                        thread,
+                        connectionId: thread.connectionId,
+                        isCurrent: ownsContent,
+                        retired: false,
+                      });
+                    }}
+                  >
+                    {forkControl.phase === "idle"
+                      ? FORK.title
+                      : forkControl.phase === "pending"
+                        ? FORK.progress
+                        : FORK.result}
+                  </button>
+                  {forkControl.phase === "idle" &&
+                    forkControl.blockedReason && (
+                      <p
+                        className="archive-block-reason"
+                        id="thread-fork-reason"
+                      >
+                        {forkControl.blockedReason}
+                      </p>
+                    )}
+                </>
+              )}
               <button
                 type="button"
                 className="btn btn-ghost"
@@ -534,6 +614,58 @@ export function ThreadPage({
             }
             returnFocusRef={menuAnchor}
             onClose={() => setExported(null)}
+          />
+        )}
+        {active && forkVisible && forkReview && forkControl && (
+          <SessionForkDialog
+            control={
+              forkControl.prepareNew
+                ? {
+                    ...forkControl,
+                    prepareNew: () => {
+                      if (
+                        forkReview.retired ||
+                        !forkReview.isCurrent() ||
+                        forkReview.thread !== thread ||
+                        forkReview.connectionId !== thread.connectionId ||
+                        forkReview.owner !== forkControl.owner ||
+                        !forkControl.isCurrent()
+                      )
+                        return;
+                      forkReview.retired = true;
+                      setForkReview(null);
+                      forkControl.prepareNew?.();
+                      const next = sessionForkControl(thread, onOpened);
+                      if (
+                        !forkReview.isCurrent() ||
+                        forkReview.connectionId !== thread.connectionId ||
+                        !next ||
+                        next.phase !== "idle" ||
+                        next.owner === forkReview.owner ||
+                        !next.isCurrent()
+                      )
+                        return;
+                      setForkReview({
+                        owner: next.owner,
+                        thread,
+                        connectionId: thread.connectionId,
+                        isCurrent: forkReview.isCurrent,
+                        retired: false,
+                      });
+                    },
+                  }
+                : forkControl
+            }
+            active={active}
+            isCurrent={() =>
+              !forkReview.retired &&
+              forkReview.isCurrent() &&
+              forkReview.thread === thread &&
+              forkReview.connectionId === thread.connectionId &&
+              forkReview.owner === forkControl.owner
+            }
+            onClose={closeDialog}
+            returnFocusRef={menuAnchor}
           />
         )}
         {active && moving && row && (

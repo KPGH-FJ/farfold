@@ -122,3 +122,37 @@ fn ending_one_prompt_keeps_other_owner_and_explicit_page_grant() {
             .is_ok()
     );
 }
+
+#[test]
+fn fork_admission_allows_unshared_offer_and_requires_confirmed_cleanup() {
+    let (owner, _) = owner();
+    assert!(
+        owner.fork_admissible(),
+        "connected tool alone grants no page access"
+    );
+    let (grant, _) = sharing_scope_fixture(TASK, LABEL);
+    *owner.page.lock().unwrap() = Some(grant.clone());
+    assert!(!owner.fork_admissible());
+    *owner.page.lock().unwrap() = None;
+    owner.state.lock().unwrap().retiring = Some(grant);
+    assert!(!owner.fork_admissible());
+    owner.state.lock().unwrap().retiring.take();
+    for phase in [CONNECTING, STOPPING, STOP_FAILED] {
+        owner.state.lock().unwrap().phase = phase;
+        assert!(!owner.fork_admissible());
+    }
+    for phase in [READY, CLOSED] {
+        owner.state.lock().unwrap().phase = phase;
+        assert!(owner.fork_admissible());
+    }
+    owner.state.lock().unwrap().phase = READY;
+    let operation = owner.operation.try_lock().unwrap();
+    assert!(!owner.fork_admissible());
+    drop(operation);
+    owner.set_prompt_active(true);
+    let waiting = owner.request_permission(page()).unwrap();
+    assert!(!owner.fork_admissible());
+    owner.set_prompt_active(false);
+    assert!(matches!(waiting.poll(), Some(Err(_))));
+    assert!(owner.fork_admissible());
+}

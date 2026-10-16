@@ -25,6 +25,9 @@ import { receiveAsyncTasks, type AsyncTask } from "./async_tasks";
 import { stopAsyncTask } from "./async_task_actions";
 import { receiveWorkActivity } from "./session_work_activity";
 import { hasActiveCompaction } from "./compaction_activity";
+import { hasActiveFork, receiveForkActivity } from "./session_fork_activity";
+import { openedThreadState } from "./session_open_state";
+import { SessionForks } from "./session_fork";
 import { threadNeedsAttention } from "./thread_attention";
 /**
  * Session command client and normalized conversation state.
@@ -207,6 +210,24 @@ class ThreadsStore {
   /** channel kept alive per thread key. */
   private channels = new Map<string, Channel<unknown>>();
   private permissionRevisions = new Map<string, number>();
+  private forks = new SessionForks({
+    thread: (key) => this.thread(key),
+    rows: () => this.indexRows,
+    install: (state, channel) => {
+      this.threads.set(state.key, state);
+      this.channels.set(state.key, channel);
+    },
+    ownsChannel: (key, channel) => this.channels.get(key) === channel,
+    apply: (key, event, live) => this.applyChannelEvent(key, event, live),
+    emit: (key) => this.emit(key),
+    refreshIndex: () => this.refreshIndex(),
+  });
+  forkCurrent(key: string): Promise<ThreadState | undefined> {
+    return this.forks.start(key);
+  }
+  prepareNewFork(key: string, operationId: string): boolean {
+    return this.forks.prepareNew(key, operationId);
+  }
   /** dedupe concurrent opens (same agent+cwd+native target). */
   private openings = new Map<string, Promise<ThreadState>>();
   /** Unprompted ("draft") conversations per agent+cwd — re-picking the
@@ -392,6 +413,8 @@ class ThreadsStore {
     } else if (e.kind === "asyncTasks") {
       if (!receiveAsyncTasks(s, e)) return;
       this.finishArchiveActivity(s);
+    } else if (e.kind === "forkActivity") {
+      if (!receiveForkActivity(s, e)) return;
     } else if (receiveWorkActivity(s, e)) {
       this.finishArchiveActivity(s);
     } else if (e.kind === "permissionState") {
@@ -463,6 +486,8 @@ class ThreadsStore {
           : STRINGS.repair.requestFailed;
       pauseQueue(s, "unavailable");
     } else if (e.kind === "connectionLost") {
+      if (hasActiveFork(s) && s.forkOperation)
+        s.forkOperation.status = "unknown";
       replacePermissionEffect(s, undefined);
       this.stopConfirmation.clear(key);
       applyConnectionLost(s, e.closeReason);
@@ -553,6 +578,8 @@ class ThreadsStore {
     if (input.nativeSessionId) {
       const key = `${input.agentId}:${input.cwd}:${input.nativeSessionId}`;
       const existing = this.threads.get(key);
+      if (existing && hasActiveFork(existing))
+        return Promise.reject(new Error(STRINGS.repair.reconnectFailed));
       if (
         existing &&
         !recheck &&
@@ -698,66 +725,22 @@ class ThreadsStore {
       // the session key must be built from it — the index row the first
       // prompt will create uses the same canonical path.
       const key = `${input.agentId}:${result.cwd}:${result.nativeSessionId}`;
-      const canonicalCwd = result.cwd;
       const rows = await invoke<IndexRow[]>("session_index_list").catch(
         () => null,
       );
       if (rows) this.indexRows = retainIndexRows(this.indexRows, rows);
       recheck?.validateResult(result);
       const existing = this.threads.get(key);
-      const state = freshThreadState(
-        key,
-        input.agentId,
-        canonicalCwd,
-        result.nativeSessionId,
-      );
-      state.service = result.service ?? undefined;
-      state.serviceContext = result.serviceContext ?? undefined;
-      state.connectionId = result.connectionId;
-      state.draftGroup = draftGroup(input);
-      state.resumed = result.resumed;
-      state.identity = result.resumed ? "established" : "draft";
-      if (existing) {
-        state.queued = existing.queued;
-        state.queuePaused = existing.queuePaused ?? "unavailable";
-        state.uncertainPrompt = existing.uncertainPrompt;
-        state.stopUnconfirmed = existing.stopUnconfirmed;
-        state.connectionOutcomeUnknown = existing.connectionOutcomeUnknown;
-        state.workEnabled = existing.workEnabled;
-      } else this.restoreQueue(state);
       // The saved Farfold name is authoritative before replay is delivered.
       // Older rows do not distinguish generated names from explicit renames.
       const savedTitle = this.indexRows.find((row) => row.id === key)?.title;
-      state.title = savedTitle?.trim() ? savedTitle : (existing?.title ?? null);
-      state.configOptions = normalizeConfigOptions(result.configOptions);
-      state.permissionConfigId = result.permissionConfigId;
-      replacePermissionEffect(state, result.permissionEffect);
-      state.permissionState = result.permissionConfigId
-        ? result.resumed
-          ? "required"
-          : (result.permissionState ?? "unknown")
-        : "ready";
-      if (state.permissionConfigId && state.permissionState !== "ready")
-        pauseQueue(state, state.uncertainPrompt ? "uncertain" : "stopped");
-      // Prefer the Agent's actual modern declaration, not synthesized model options.
-      const modeOption = synthesizeModeOption(
-        result.modes,
-        result.configOptionsModern ?? Array.isArray(result.configOptions),
+      const state = openedThreadState(
+        input,
+        result,
+        savedTitle,
+        existing,
+        (s) => this.restoreQueue(s),
       );
-      if (
-        modeOption &&
-        !state.configOptions.some(
-          (o) => o.id === "mode" || o.category === "mode",
-        )
-      ) {
-        state.modesSeparate = true;
-        state.configOptions = [...state.configOptions, modeOption];
-        if (typeof modeOption.currentValue === "string")
-          state.currentModeId = modeOption.currentValue;
-      }
-      if (result.configCheck) applyConfigCheck(state, result.configCheck);
-      if (result.warnings?.length && result.configCheck?.status !== "ready")
-        state.configError = STRINGS.repair.recheckConfigFailed;
       observeAuthentication(
         input.agentId,
         input.cwd,
@@ -1077,6 +1060,7 @@ class ThreadsStore {
       s.connectionOutcomeUnknown ||
       s.queued.some(queuedAttachmentsNeedReview) ||
       hasActiveCompaction(s) ||
+      hasActiveFork(s) ||
       composerDrafts.read(`queue-edit:${key}`).queueEdit ||
       s.configuring ||
       (s.permissionConfigId && s.permissionState !== "ready") ||
@@ -1344,8 +1328,9 @@ class ThreadsStore {
   }
 
   async close(key: string): Promise<void> {
-    this.stopConfirmation.clear(key);
     const s = this.threads.get(key);
+    if (s && hasActiveFork(s)) throw new Error(STRINGS.repair.archiveBusy);
+    this.stopConfirmation.clear(key);
     this.channels.delete(key);
     this.threads.delete(key);
     if (s) this.drafts.delete(s.draftGroup ?? "");

@@ -113,3 +113,52 @@ fn work_authentication_and_unknown_work_still_block_recycling() {
     assert!(life.close_for(true, None, CloseReason::Shutdown).unwrap());
     assert_eq!(life.close_reason(), Some(CloseReason::Shutdown));
 }
+
+#[test]
+fn fork_holder_excludes_known_native_across_projects_without_guessing_unknown_ids() {
+    let reservations = OpenReservations::default();
+    let unknown = reservations
+        .reserve_open("agent", Path::new("/other"), None)
+        .unwrap();
+    let (fork, exclusive) = reservations
+        .claim_fork("agent", Path::new("/current"), "child")
+        .unwrap();
+    assert!(
+        exclusive,
+        "an unknown new ID cannot be guessed to be this child"
+    );
+    assert!(
+        reservations
+            .reserve("agent", Path::new("/other"), "child")
+            .is_err()
+    );
+    assert!(
+        reservations
+            .reserve("another-agent", Path::new("/other"), "child")
+            .is_ok()
+    );
+    let transferred = fork.clone();
+    drop(fork);
+    assert!(
+        reservations
+            .reserve("agent", Path::new("/other"), "child")
+            .is_err()
+    );
+    drop(transferred);
+    assert!(
+        reservations
+            .reserve("agent", Path::new("/other"), "child")
+            .is_ok()
+    );
+    drop(unknown);
+    // Existing ordinary opens keep their project-scoped behavior.
+    let first = reservations
+        .reserve("agent", Path::new("/one"), "ordinary")
+        .unwrap();
+    assert!(
+        reservations
+            .reserve("agent", Path::new("/two"), "ordinary")
+            .is_ok()
+    );
+    drop(first);
+}

@@ -65,6 +65,7 @@ fn send_open(
         .reserve(&f.row.id, &f.cwd, native)
         .unwrap();
     let command = ManagerCommand::OpenSession {
+        fork_owned: false,
         native_session_id: Some(native.into()),
         preview_token: Some("delivery-fixture".into()),
         recorded_config: None,

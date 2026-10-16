@@ -49,6 +49,7 @@ pub mod session;
 pub mod session_commands;
 mod session_config;
 pub mod session_discovery;
+pub mod session_fork;
 pub(crate) mod session_index;
 pub mod skill_management;
 pub(crate) mod startup_diagnostics;

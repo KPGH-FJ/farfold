@@ -75,11 +75,16 @@ pub(crate) async fn open_import_preview(
         )
         .await?;
     let connection = manager.session_connection(&row.id, cwd, &opened.session_id);
+    let session_operations = connection
+        .as_ref()
+        .map(|c| super::session_fork::capabilities(c, &opened.session_id))
+        .unwrap_or_default();
     let failed = delivery_failed.load(Ordering::SeqCst) || connection.is_err();
     let source = connection.ok().and_then(|connection| connection.service);
     let preview = ImportPreview {
         preview_token: token.clone(),
         session: super::session::SessionOpenResult {
+            session_operations,
             connection_id: opened.connection_id,
             service: source.as_ref().map(|source| source.identity.clone()),
             service_context: source.map(|source| source.revision),

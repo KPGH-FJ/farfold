@@ -13,6 +13,7 @@ use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 mod archive;
+mod fork;
 pub(crate) mod prompt_templates;
 pub(crate) mod remembered_pages;
 pub(crate) mod schema;

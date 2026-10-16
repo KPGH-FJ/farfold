@@ -70,6 +70,27 @@ pub(super) async fn execute_open(
     drop(execute(reply, life, operation, deadline, true, settled).await);
 }
 
+/// A fork coordinator already owns delivery independently of its IPC caller.
+/// Keep this exact load and its inquiries until its real result or connection end.
+pub(super) async fn execute_owned_open(
+    reply: oneshot::Sender<Result<OpenDelivery, String>>,
+    life: Arc<ConnectionLife>,
+    operation: Operation,
+    lease: OperationLease,
+    sessions: SessionMap,
+    future: impl std::future::Future<Output = Result<OpenedSession, String>>,
+) {
+    let outcome = super::until_owner_ended(&life, future)
+        .await
+        .unwrap_or_else(|| Err("新对话读取结果尚未确认".into()));
+    let _ = reply.send(Ok(OpenDelivery {
+        outcome: Some(outcome),
+        lease: Some(lease),
+        sessions,
+        operation,
+    }));
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

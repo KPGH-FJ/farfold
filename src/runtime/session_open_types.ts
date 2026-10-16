@@ -5,6 +5,7 @@ import type { ThreadState } from "./session_types";
 export interface OpenResult {
   nativeSessionId: string;
   connectionId?: string;
+  sessionOperations?: import("./session_fork_types").SessionOperations;
   /** Canonicalized cwd — session keys must be built from this. */
   cwd: string;
   configOptions: unknown;

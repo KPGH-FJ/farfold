@@ -79,6 +79,7 @@ pub enum ManagerCommand {
         result: oneshot::Sender<Result<(), String>>,
     },
     OpenSession {
+        fork_owned: bool,
         native_session_id: Option<String>,
         preview_token: Option<String>,
         recorded_config: Option<serde_json::Value>,
@@ -149,11 +150,12 @@ pub(crate) fn runtime() -> &'static tokio::runtime::Runtime {
 }
 
 /// Owns preparation connections and one independent process per conversation.
+#[derive(Clone)]
 pub struct AcpManager {
-    pub(crate) shutting_down: AtomicBool,
+    pub(crate) shutting_down: Arc<AtomicBool>,
     pub(crate) opening_sessions: super::lifecycle::OpenReservations,
     connections: Arc<Mutex<HashMap<ConnectionKey, ManagedConnection>>>,
-    account_admission: AccountAdmission,
+    account_admission: Arc<AccountAdmission>,
     log_dir: PathBuf,
     /// App data dir — home of `pids.json` for process supervision.
     data_dir: PathBuf,
@@ -183,10 +185,10 @@ impl Drop for StartingConnection {
 impl AcpManager {
     pub fn new(log_dir: PathBuf, data_dir: PathBuf) -> Self {
         let manager = Self {
-            shutting_down: AtomicBool::new(false),
+            shutting_down: Arc::new(AtomicBool::new(false)),
             opening_sessions: super::lifecycle::OpenReservations::default(),
             connections: Arc::new(Mutex::new(HashMap::new())),
-            account_admission: AccountAdmission::default(),
+            account_admission: Arc::new(AccountAdmission::default()),
             log_dir,
             data_dir,
             pending_permissions: PendingPermissions::default(),

@@ -1,4 +1,5 @@
 import type { LocalAudio } from "./audio_input";
+import { hasActiveFork } from "./session_fork_activity";
 /**
  * Normalized thread view-model types (extracted from `sessions.ts` to keep
  * it under the file-size cap; `sessions.ts` re-exports this module).
@@ -229,6 +230,8 @@ export interface ThreadState extends ReportedDetailsOwner {
   serviceContext?: string;
   /** Live process only, not saved in the conversation index. */
   connectionId?: string;
+  sessionOperations?: import("./session_fork_types").SessionOperations;
+  forkOperation?: import("./session_fork_types").ForkOperation;
   sourceError?: boolean;
   draftGroup?: string;
   title: string | null;
@@ -323,7 +326,9 @@ export function hasActiveTools(
 }
 
 export function hasActiveWork(state: ThreadState): boolean {
-  return hasActiveTools(state) || hasActiveCompaction(state);
+  return (
+    hasActiveTools(state) || hasActiveCompaction(state) || hasActiveFork(state)
+  );
 }
 
 /** Rendering only: never rewrite the Agent's reported tool status. */

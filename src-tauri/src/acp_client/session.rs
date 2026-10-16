@@ -340,6 +340,7 @@ impl AcpManager {
             None,
             mcp,
             browser_unavailable,
+            None,
         )
         .await
     }
@@ -367,6 +368,33 @@ impl AcpManager {
             preview_token,
             None,
             Some(super::transient_mcp::McpUnavailable::NotEnabledForConversation),
+            None,
+        )
+        .await
+    }
+
+    /// Transfer the already held fork identity; do not release/reacquire it.
+    pub(crate) async fn open_session_reserved(
+        &self,
+        agent: &AgentRow,
+        cwd: &Path,
+        native_session_id: String,
+        events: SessionSink,
+        store: &MetaStore,
+        reservation: super::lifecycle::OpenReservation,
+    ) -> Result<OpenedSession, String> {
+        self.open_session_owned_with_mcp(
+            agent,
+            cwd,
+            Some(native_session_id),
+            vec![],
+            events,
+            store,
+            None,
+            None,
+            None,
+            Some(super::transient_mcp::McpUnavailable::NotEnabledForConversation),
+            Some(reservation),
         )
         .await
     }
@@ -384,13 +412,17 @@ impl AcpManager {
         preview_token: Option<String>,
         mcp: Option<super::transient_mcp::TransientMcpOpen>,
         browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
+        reserved: Option<super::lifecycle::OpenReservation>,
     ) -> Result<OpenedSession, String> {
         use super::service_connection::{ServiceRecord, recorded_service, selection_for_open};
-        let opening = Some(self.opening_sessions.reserve_open(
-            &agent.id,
-            cwd,
-            native_session_id.as_deref(),
-        )?);
+        let fork_owned = reserved.is_some();
+        let opening = Some(match reserved {
+            Some(reservation) => reservation,
+            None => {
+                self.opening_sessions
+                    .reserve_open(&agent.id, cwd, native_session_id.as_deref())?
+            }
+        });
         if let Some(id) = &native_session_id
             && let Some(owner) = self.session_owner(&agent.id, cwd, id)?
         {
@@ -480,6 +512,7 @@ impl AcpManager {
         let (result_tx, result_rx) = oneshot::channel();
         command_tx.send_reserved(
             ManagerCommand::OpenSession {
+                fork_owned,
                 native_session_id,
                 preview_token,
                 recorded_config,
@@ -501,6 +534,12 @@ impl AcpManager {
             },
             opening,
         )?;
+        if fork_owned {
+            return result_rx
+                .await
+                .map_err(|_| "新对话读取结果尚未确认".to_string())??
+                .accept();
+        }
         super::wait::reply(
             result_rx,
             std::time::Duration::from_secs(120),
@@ -1113,6 +1152,7 @@ impl InteractionReply {
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SessionOpenResult {
+    pub session_operations: super::session_fork::SessionOperations,
     pub connection_id: String,
     pub native_session_id: String,
     /// Canonicalized cwd the session was opened under — the frontend must

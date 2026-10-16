@@ -72,6 +72,9 @@ pub(crate) trait SessionMcpOwner: Send + Sync {
     /// Accept decisions only for a locally admitted live prompt. Ending a
     /// prompt cancels pending decisions, not page grants or running tools.
     fn set_prompt_active(&self, active: bool);
+    /// Read-only admission. An offered tool is not a page grant. Unknown
+    /// cleanup/output state must reject copying without revoking anything.
+    fn fork_admissible(&self) -> bool;
     fn revoke(&self);
 }
 
@@ -163,6 +166,11 @@ pub(crate) struct SessionMcpLease {
 pub(crate) struct SessionMcpRequests(Weak<OwnerState>);
 
 impl SessionMcpRequests {
+    pub(crate) fn fork_admissible(&self) -> bool {
+        self.0
+            .upgrade()
+            .is_some_and(|state| state.owner.fork_admissible())
+    }
     pub(crate) fn set_prompt_active(&self, active: bool) {
         if let Some(state) = self.0.upgrade()
             && !state.revoked.load(Ordering::Acquire)
@@ -202,6 +210,8 @@ pub(crate) fn session_params(
     mcp: Option<&TransientMcpOpen>,
 ) -> serde_json::Value {
     let servers = mcp.map(TransientMcpOpen::servers).unwrap_or_default();
+    // Omission is the protocol's explicit empty-root default. Do not send an
+    // optional field to peers that did not advertise it.
     let mut params = serde_json::json!({"cwd": cwd, "mcpServers": servers});
     if let Some(session_id) = native_session_id {
         params["sessionId"] = serde_json::Value::String(session_id.into());
@@ -225,6 +235,9 @@ mod tests {
         prompt_states: Mutex<Vec<bool>>,
     }
     impl SessionMcpOwner for Witness {
+        fn fork_admissible(&self) -> bool {
+            true
+        }
         fn bind_session(&self, id: &str) -> Result<(), String> {
             if self.fail_bind.load(Ordering::Acquire) {
                 return Err(FAKE_SECRET.to_string());
