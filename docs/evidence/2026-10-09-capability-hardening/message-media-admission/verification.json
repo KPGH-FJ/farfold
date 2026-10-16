@@ -1,0 +1,223 @@
+{
+  "schema": 1,
+  "phase": "sourcePushedEngineeringBrowserPassedInstalledAfterReviewedAtomicRecoveryNotLaunched",
+  "sourceCommit": "c73b42b4de158c7392fa11300340442f7bf2246e",
+  "originalPlanItem": "P13",
+  "scope": "Single embedded media preview byte admission; no new formats and not wholeP13 or perAgent acceptance",
+  "behavior": {
+    "singleDecodedBytesMaximum": 16777216,
+    "encodedLengthGateBeforePayloadScan": true,
+    "deterministicBoundedAlphabetScan": true,
+    "strictBase64LengthPaddingUnusedBits": true,
+    "sameSupportedMimeList": true,
+    "userExpansionRequired": true,
+    "searchRevealDoesNotAdmitMedia": true,
+    "originalPayloadSourcesAndOrderPreserved": true,
+    "remoteAutomaticFetch": false,
+    "autoplay": false,
+    "automaticRetry": false,
+    "existingRendererErrorRetryCleanupUnchanged": true
+  },
+  "checks": {
+    "originalRed": {
+      "tests": 16,
+      "failed": 11,
+      "passed": 5,
+      "actualExit": 1,
+      "session": 57641,
+      "finalChunk": "9a8ba7"
+    },
+    "sameTestsGreen": {
+      "tests": 16,
+      "passed": 16,
+      "actualExit": 0,
+      "session": 12851,
+      "finalChunk": "ba61f2"
+    },
+    "finalAffected": {
+      "files": 8,
+      "tests": 75,
+      "typecheckActual0": true,
+      "ownedFormatActual0": true,
+      "actualExit": 0,
+      "session": 63551,
+      "finalChunk": "cc2e2d"
+    },
+    "independentCodeReview": {
+      "blockingFindings": 0,
+      "independentBase64Cases": 381493,
+      "mismatches": 0,
+      "firstDriverPathErrorRetained": true
+    },
+    "componentBrowser": {
+      "chromiumPassed": 31,
+      "webkitPassed": 31,
+      "stableInputs": 620,
+      "actualExit": 0,
+      "session": 57946,
+      "finalChunk": "c4143c",
+      "realPNGDecode": true,
+      "realSilentWAVExplicitPlayback": true,
+      "rejectedPayloadEverMediaDOM": 0,
+      "externalRequests": 0,
+      "browserAndSoleServerClosed": true,
+      "portAfterCloseOpen": false
+    },
+    "engineering": {
+      "commands": 7,
+      "allActuallyExecuted": true,
+      "allActualExit0": true,
+      "inputCount": 18995,
+      "inputsStable": true,
+      "frontendFiles": 527,
+      "frontendPassed": 6618,
+      "rustPassed": 1764,
+      "rustIgnored": 6,
+      "session": 60940,
+      "finalChunk": "f4940c"
+    }
+  },
+  "formal": {
+    "phase": "installedRecoveredVerifiedNotLaunched",
+    "sourceCommit": "c73b42b4de158c7392fa11300340442f7bf2246e",
+    "binarySha256": "060e3f73498f33331ae73e80924859f2e7541acd64440f7b92d98e9c7891a939",
+    "id": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "strictCodesignActuallyPassed": true,
+    "formalLipoActuallyPassed": true,
+    "candidateIndependent": "9/9",
+    "installedIndependent": "10/10",
+    "newSliceFormalUI": false,
+    "realAgent": false,
+    "onlyFormalAppRemains": true,
+    "duplicateCandidateAppRemoved": true,
+    "archiveSha256": "d62b8bf5adfa0c5fc2036d4aa91b898a1beaa242f14ce0bb02b4a73d31719447"
+  },
+  "refs": [
+    {
+      "path": "output/2026-10-17-message-media-admission/source-freeze.json",
+      "sha256": "a5a349154ada5df604ea2a6e5c176156b0794c4b89fb938f2007c6799f95bcb1"
+    },
+    {
+      "path": "output/2026-10-17-message-media-admission/verification.json",
+      "sha256": "bbeed16188509d932e03b539ec56e751ea4fb1e4127ac7afd56cb1fd485319cc"
+    },
+    {
+      "path": "output/2026-10-17-message-media-admission/independent-review.json",
+      "sha256": "b3beb344f329ef90cd12e776a1ac8c0ff01e5bc97038895fbed4a130120f89f4"
+    },
+    {
+      "path": "output/2026-10-17-message-media-admission/browser-independent/independent-summary.json",
+      "sha256": "8b0d42983a7d13989bbe2a9c72214b2be4b3d5482035c48c78a9b540f299c26f"
+    },
+    {
+      "path": "output/2026-10-17-message-media-admission/browser-independent/run1-verification.json",
+      "sha256": "f1c66f9d3aeac60330fa2a8c336ca8579628e2e353f0390b5ed76cc5f7b823fc"
+    },
+    {
+      "path": "output/2026-10-17-message-media-admission/engineering/run1/verification.json",
+      "sha256": "9e4aa28447737e6bfa9bca71ae0ea2c26adf61ef2ab557a84426ea96640d3f68"
+    }
+  ],
+  "remaining": [
+    "Image pixels, audio duration, aggregate resources, decoder concurrency and upstream retained/transport memory not bounded by this preview-byte change",
+    "Corrupt declared formats inside the admitted byte budget still use actual browser decoder error feedback",
+    "Native formal media, actual Agent response/receipt, cold recovery and fullP13 remain unverified",
+    "Original151 conditions, all29/eight, Windows, NEW24 effective permission readback and affected real-request pause unchanged; historical failures and strict data differences retained"
+  ],
+  "originalInstallFailure": {
+    "actualSession": 91658,
+    "actualExitCode": 1,
+    "finalChunk": "d4cbf4",
+    "allFiveWritesCompleteBeforeFailure": true,
+    "kernelCause": "The formal lipo process was killed with CODESIGNING Invalid Page after retained-inode executable overwrite; kernel cached signature mtime differs from newfile mtime",
+    "oldRetainedInode": 75865996,
+    "newToolSha256": "d9bbcdf6b26e5b03a0ad3481cfb835214d1349ac176adea2383bef5734d41b22",
+    "originalJournalUnchanged": true,
+    "originalInstallResultRemainsAbsent": true,
+    "automaticRetry": false,
+    "appleOfficial": "https://developer.apple.com/documentation/security/updating-mac-software",
+    "kernelSummary": {
+      "path": "output/2026-10-17-message-media-admission/install-failure-independent/kernel-summary.json",
+      "sha256": "492f605b7e4cdf11227244df6986e6e5c20f4f9910ae9943e543665add80cda4"
+    },
+    "recoveryActualResult": {
+      "path": "output/2026-10-17-message-media-admission/install/install-result-recovered.json",
+      "sha256": "9ea75d11da1a274cc2801378b84a2db1b17fb68b239db54609d9fcc772246e96",
+      "session": 53372,
+      "actualExitCode": 0,
+      "finalChunk": "4be831",
+      "toolSha256": "d9bbcdf6b26e5b03a0ad3481cfb835214d1349ac176adea2383bef5734d41b22",
+      "independentStaticReview": {
+        "path": "output/2026-10-17-message-media-admission/install-failure-independent/atomic-recovery-independent-static-review.json",
+        "sha256": "3dab8cd671545787191aa6bc13c9906b11daa50f2671f201885a24a351034c30"
+      },
+      "newInode": 77386622,
+      "oldInode": 75865996,
+      "newFileAtomicReplaceOnly": true,
+      "binaryBytesUnchanged": true,
+      "originalFailureNeverRewritten": true
+    },
+    "afterFullManifest": {
+      "path": "output/2026-10-17-message-media-admission/install/retention-after-receipt.json",
+      "sha256": "6c78c17107c1b9a7860f4f942631c4e969d411c0bcdcfa98ef05e9d545b143db",
+      "session": 34731,
+      "actualExitCode": 0,
+      "finalChunk": "f5bb25",
+      "allThreeFreshManifestsStrictlyEqual": true,
+      "entriesEach": 217407,
+      "manifestSha256": "eaa22f79adf795c0f6025735af1347689bd1662de250cfaf65a236202dac9f8d",
+      "scope": "Fresh install before/preinstall/after, not native-run before/after and not waiver of original strict differences"
+    },
+    "independent10": {
+      "path": "output/2026-10-17-message-media-admission/install/installed-independent-review-recovered-private.json",
+      "sha256": "101de0c8fdaf176c0973e66fbdee874f457e1b576286895b30f085bd221d492c",
+      "session": 74743,
+      "actualExitCode": 0,
+      "finalChunk": "84d22d",
+      "passed": 10,
+      "total": 10,
+      "verifierScope": "Independent snapshot/captured-original data checks, actual formal lipo and codesign, allsource/archive/recovery gates; no full live user data scan"
+    },
+    "recoveryToolPath": "output/2026-10-17-message-media-admission/install-failure-independent/atomic-recovery.py"
+  },
+  "installation": {
+    "candidate": {
+      "path": "output/2026-10-17-message-media-admission/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "b43f78b4ccd63ff00bdf9b6b0b0b47f303c0622937e90b12baf380e4351da8d9"
+    },
+    "candidate9": {
+      "path": "output/2026-10-17-message-media-admission/candidate-preparation/independent/review.json",
+      "sha256": "1ab99a687754a1004458d300627281c3004d2a9d36018ff86b30c211b4f6f43e"
+    },
+    "before": {
+      "path": "output/2026-10-17-message-media-admission/install/retention-before-receipt.json",
+      "sha256": "8e19187028abd912f90b25ba7412c1a31c0b602422a44f58ca959babd024437e"
+    },
+    "preinstall": {
+      "path": "output/2026-10-17-message-media-admission/install/retention-preinstall-receipt.json",
+      "sha256": "9c8dec1a329991f2a960b709e1a1b5efe0fd01f943940f936716bf853ac0c897"
+    },
+    "after": {
+      "path": "output/2026-10-17-message-media-admission/install/retention-after-receipt.json",
+      "sha256": "6c78c17107c1b9a7860f4f942631c4e969d411c0bcdcfa98ef05e9d545b143db"
+    },
+    "newSealedMetadataSha256": "ac061be0f0d38dd0adbe6f85272c1d59e009eb5a85ae9d3af19edf2ebec2e912",
+    "recovered": {
+      "path": "output/2026-10-17-message-media-admission/install/install-result-recovered.json",
+      "sha256": "9ea75d11da1a274cc2801378b84a2db1b17fb68b239db54609d9fcc772246e96"
+    },
+    "independent10": {
+      "path": "output/2026-10-17-message-media-admission/install/installed-independent-review-recovered-private.json",
+      "sha256": "101de0c8fdaf176c0973e66fbdee874f457e1b576286895b30f085bd221d492c"
+    },
+    "duplicateCleanup": {
+      "path": "output/2026-10-17-message-media-admission/install/candidate-cleanup.json",
+      "sha256": "cfbefd8d9f17a76ab3d966266f91ce6fcf314343af33e2281819a0c6bf767737",
+      "actualExitCode": 0,
+      "finalChunk": "12847c"
+    },
+    "futureInstallerRule": "Do not reuse the old in-place Mach-O write method. This exact inode repair succeeded; future install batches must use complete new files and atomic replacement with the same source/data/identity gates."
+  }
+}

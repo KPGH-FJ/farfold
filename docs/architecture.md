@@ -1,10 +1,14 @@
 # 当前源码架构
 
-## 当前源码与证据边界（2026-10-16）
+## 当前源码与证据边界（2026-10-17）
 
-本批[官方当前完整上下文复制](evidence/2026-10-09-capability-hardening/session-fork/verification.json)复用共用 `ThreadState`、`Channel`、`HistoryReplayBuffer` 与 `openedThreadState`。`ThreadPage`/`SessionForkDialog` 仅按实际连接能力呈现确认与结果；`session_fork` 保留同一操作的未知、迟到和终态事实，`prepareNew` 只在确认释放的终态建立新确认owner。Rust `session_fork/coordinator`、`pump/fork` 和 `operations/owned_reply` 负责一次官方fork、同ID保留、源端load及明确close、独立load和实际结束前的保护；`meta_store/fork` 只向既有索引插入新子记录，不复制会话正文或建立事件账本。项目文件位置共享，原输入和队列保持，新对话不继承旧权限确认；关闭窗口不伪造回滚。源码50文件及完整工程、候选9项和受控39/42项各分层记证；WebKit普通Tab限制不改绿，正式09ad本批未启动，指定节点/回退/检查点及真实Agent仍缺实证或开发。
+当前[P13媒体预览准入](evidence/2026-10-09-capability-hardening/message-media-admission/verification.json)源码 `c73b42b4d` 已提交推送。`message_attachments` 保留原协议负载并提供预览准入结果；单项16 MiB解码字节，先按长度拒绝超限，再有界检查编码，不先解码或生成来源。`MessageContent` 只在用户明确展开时消费该结果，分别显示超限和格式错误；搜索展开不启动媒体，既有 `MessageAttachmentMedia` 播放、失败重试和释放逻辑未改。75项相关检查、独立编码差分、组件双引擎各31项及七项实际工程分层通过；唯一正式应用已更新为本片源码，候选9项及恢复后安装10项独审通过，三份本批新安装清单严格一致，重复候选应用已移除，新版本本批未启动。像素、时长、聚合资源和传输内存不因本片变为有界。首次安装五文件写入后校验退出1，内核签名缓存未因原位覆盖而刷新；经独审后仅对同一程序作新文件原子替换，实际架构和严格签名通过，原失败与独立恢复链保留。后续安装不得复用旧原位写入Mach-O的方法；每次仍须完整源码、候选、退出与数据门禁。
 
-共用前端与 Tauri/Rust 沿官方 ACP/SDK/CLI 连接外部 Agent，既有架构边界保持。唯一正式应用已更新为 `09ad7ce47`，本批尚未启动；此前[P21整页意见与共用文件入口](evidence/2026-10-09-capability-hardening/pptx-feedback/verification.json)区分源码、受控界面、完整工程、安装与本机分项。该P21阶段安装基线三份清单一致；运行后严格两处差异和旧→新基线五处内容摘要变化分别保留，独审核到旧对话/隐藏记录、九份旧草稿及附件、队列和配置保持；设置变化为受控输入、意见及对应活动变化，Agent 更新时间写者未知，严格差异不豁免。此前P30的[本机分项](evidence/2026-10-09-capability-hardening/remembered-pages-install/verification.json)仅证明所覆盖路径；旧对话重连失败、旧许可本机撤回与真实 Agent 证明仍缺，上轮延迟严格差异及用户主动处理测试草稿的澄清保持。
+[本轮09ad正式分项](evidence/2026-10-09-capability-hardening/native-closeout-20261017/verification.json)已启动并正常保存退出。旧测试历史可读，但真实附件搜索、差异及整理忙态的正例条件未建立；复制入口因设置未核对保存而禁用。默认OpenCode未返回初始化回应，超时终止及连接清理已确认，底层原因未知。NEW-24完整权限读回仍缺；执行暂停不等于源码全面禁发，无新提示不代表无加载或配置通信。运行后严格数据退出2及未知写入者保留，草稿、设置、附件与队列的具体保持范围见记录。
+
+此前[官方当前完整上下文复制](evidence/2026-10-09-capability-hardening/session-fork/verification.json)复用共用 `ThreadState`、`Channel`、`HistoryReplayBuffer` 与 `openedThreadState`。`ThreadPage`/`SessionForkDialog` 仅按实际连接能力呈现确认与结果；`session_fork` 保留同一操作的未知、迟到和终态事实，`prepareNew` 只在确认释放的终态建立新确认owner。Rust `session_fork/coordinator`、`pump/fork` 和 `operations/owned_reply` 负责一次官方fork、同ID保留、源端load及明确close、独立load和实际结束前的保护；`meta_store/fork` 只向既有索引插入新子记录，不复制会话正文或建立事件账本。项目文件位置共享，原输入和队列保持，新对话不继承旧权限确认；关闭窗口不伪造回滚。源码50文件及完整工程、候选9项和受控39/42项各分层记证；WebKit普通Tab限制不改绿，正式09ad在该安装批当时未启动，本轮分项见上文，指定节点/回退/检查点及真实Agent仍缺实证或开发。
+
+共用前端与 Tauri/Rust 沿官方 ACP/SDK/CLI 连接外部 Agent，既有架构边界保持。唯一正式应用当前为 `c73b42b4d`，该安装后本批未启动；上一次09ad正式分项结果见上文；此前[P21整页意见与共用文件入口](evidence/2026-10-09-capability-hardening/pptx-feedback/verification.json)区分源码、受控界面、完整工程、安装与本机分项。该P21阶段安装基线三份清单一致；运行后严格两处差异和旧→新基线五处内容摘要变化分别保留，独审核到旧对话/隐藏记录、九份旧草稿及附件、队列和配置保持；设置变化为受控输入、意见及对应活动变化，Agent 更新时间写者未知，严格差异不豁免。此前P30的[本机分项](evidence/2026-10-09-capability-hardening/remembered-pages-install/verification.json)仅证明所覆盖路径；旧对话重连失败、旧许可本机撤回与真实 Agent 证明仍缺，上轮延迟严格差异及用户主动处理测试草稿的澄清保持。
 
 此前P32扩展沿 `SelectedAttachmentSearch` → `AttachmentSearch` → `file_delivery_read_pptx_search`：完整1MiB源经现有 `search_source`、ZIP/CRC及实际读取槽，使用既有 `readPptxPreview` Worker和闭合模型。`attachment_search_pptx` 仅生成临时预览文字片段及part/shape/预览序号/段落/换行身份，不增加正文存储、Agent输入或新循环。格式生成项目符号/间隔明确披露；四类片段边界不拼接，PPTX结果始终partial。七字段及实际thread/item/attachment归属、文件变化、取消/迟到和真实未结束读取保护保持，命中只定位原消息附件节点。[本片证据](evidence/2026-10-09-capability-hardening/pptx-search/verification.json)区分14文件源码cd0097111、七项实际工程、双引擎各38项受控和候选9/安装10项独审；三份217,407条安装清单严格一致，候选副本已精确清理。该P32阶段的cd009安装后未启动，正式搜索、冷恢复及真实Agent仍未测。
 
@@ -18,7 +22,7 @@
 
 意见加入输入经共用 `FileFeedbackDestination` 指定实际可见目标，并沿 `DraftLocationOwner` 核实准备新对话的原归属；加入与消费原子完成，失败保留双方内容，临时忙碌阻断不改变身份。复用既有未发内容持久化，保留历史版本意见，不保存幻灯片正文、不自动发送。最终[七项工程](evidence/2026-10-09-capability-hardening/pptx-feedback/engineering.json)全部实际通过，18,946 输入稳定；完整 App 两引擎各 74 项受控检查通过。本机已核两页预览、定位意见及有意冷启动恢复，默认模板明确部分预览；这些分项不关闭 P16/P21，旧失败及自动重开未知归因保持。
 
-P30 的[实现与检查](evidence/2026-10-09-capability-hardening/remembered-pages/verification.json)区分相关测试、受控完整界面、工程及上述有界正式冷恢复。首次交付仍全部 29 家及八项标准；P27 生产截图的系统安全证据及 NEW-24 完整权限回执仍缺。最新执行衔接见[当前状态](status.md#当前续接2026-10-15)。
+P30 的[实现与检查](evidence/2026-10-09-capability-hardening/remembered-pages/verification.json)区分相关测试、受控完整界面、工程及上述有界正式冷恢复。首次交付仍全部 29 家及八项标准；P27 生产截图的系统安全证据及 NEW-24 完整权限回执仍缺。最新执行衔接见[当前状态](status.md#当前续接2026-10-17)。
 
 ## 阶段实现与验证摘要（2026-10-14，对齐前记录）
 

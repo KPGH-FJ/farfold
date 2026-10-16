@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "recordedAt": "2026-10-17",
+  "state": "scopedInstalledNativeObservationsAndStrictDifferencesRetained",
+  "sourceReceipt": {
+    "path": "output/2026-10-17-native-closeout-permissions/native-public-final.json",
+    "sha256": "7e695c4258737ab738338cff3c95f18a14bb929668ba8942de16f693f194fd34"
+  },
+  "scope": "Safe public-facing summary of scoped installed09ad observations; original user history/database/full AX text remain private in output",
+  "sourceCommit": "09ad7ce47fc941c799e4ca7638e3740b6bd70f59",
+  "actualOperations": {
+    "launch": "2026-10-16T16:52:53.741Z",
+    "saveAndExit": "2026-10-16T16:59:55.110Z",
+    "freshBeforeSession": 19902,
+    "freshBeforeActualExit": 0,
+    "afterCaptureSession": 40107,
+    "afterCaptureActualExit": 2,
+    "noNewPromptViaUI": true,
+    "noPermissionReconfirmation": true,
+    "noRetry": true,
+    "zeroAgentIPCClaim": false
+  },
+  "nativeResults": {
+    "OpenCodeStartup": "Failed: no initialize response observed; timeout after60031ms then TERM and child/group/connection cleanup confirmed. Underlying no-response cause unknown. No retry.",
+    "existingCodexHistories": "Two existing synthetic document histories successfully loaded. Both still require permissions/settings re-confirmation before work; no such action performed.",
+    "P32": "No eligible loaded-message attachment candidate in this scoped run; no formal search positive. Replayed text links and existing draft attachment not treated as candidates.",
+    "P18": "No suitable structured diff established in bounded selected histories; untested, no global absence claim.",
+    "currentContextFork": "Entry exists but disabled awaiting checked/saved settings; no confirmation dialog or dispatch.",
+    "compactionBusy": "No actual current official compaction activity; untested, no request manufactured."
+  },
+  "data": {
+    "strictResult": "differencesRequireReview",
+    "strictActualExit": 2,
+    "metadataDifferences": 3,
+    "retainedRootDifferences": 7,
+    "beforeAndAfterEntryCounts": 217407,
+    "oldComposerWholeObjectsExact": "10/10",
+    "independentClassification": {
+      "path": "output/2026-10-17-native-closeout-permissions/data-closeout-safe-summary.json",
+      "sha256": "ef689c506cf0833634db6dd229f6826f3be7ea90dbadd58335102c536a43ec69",
+      "result": "strictExit2Preserved",
+      "settingsAllOriginalValues": "54/54",
+      "dismissedAllOriginalRows": "173/173",
+      "sessionRows": "137 retained;135whole exact;2updated_at only",
+      "agentRows": "40retained;39whole exact;1handshake and updated_at",
+      "oldComposersWholeObjectsExact": "10/10",
+      "storedAttachment": "1 fullattachment and7sourcefields exact",
+      "feedbackStoredEntries": 9,
+      "queuesStoredEntries": 3,
+      "activityWholeExact": true,
+      "specificWriters": "unknown",
+      "rootDifferences": "metadata WAL+SHM2;registryCache1;WebKit resourceStatistics4;all changed existingentries;strict not equal"
+    },
+    "acceptedDifferences": [],
+    "fieldScope": "The 54 unchanged settings are Farfold metadata values, not proof of the Agent complete effective permission scope."
+  },
+  "permissions": {
+    "NEW24": "Open; currently exposed ACP surface lacks usable same-owner complete effective permissions readback; mode ACK is not proof. No speculative patch. Affected new real prompts remain paused.",
+    "officialPackage": "Installed ACP1.13.1 files same as10/15; observed current formalApp Codex child uses global binary, adjacent manifest0.155.1, not an executed version response or exact conversation/connection attribution.",
+    "sameExecutableChild": "Observed Farfold executable under Codex subtree is not proof of a reopened desktop; role unknown. Previous automatic-reopen requester remains unknown."
+  },
+  "privateRefs": [
+    {
+      "path": "output/2026-10-17-native-closeout-permissions/native-ui-private.json",
+      "sha256": "c636ade3a10ea4c3583d0b6a5cd2ac029c6ced3a8d0345043ec579c0aeb9fe24"
+    },
+    {
+      "path": "output/2026-10-17-native-closeout-permissions/data-before/retention-before-receipt.json",
+      "sha256": "67ef6a01c80c180d26fd42f81c28a4c960feee3d642d53841f097f7188bab76f"
+    },
+    {
+      "path": "output/2026-10-17-native-closeout-permissions/data-after/capture-receipt-private.json",
+      "sha256": "5a8d8f6be71af09c4d59106c974b11ad617cdce988bbc54a06397fbd25104f02"
+    },
+    {
+      "path": "output/2026-10-17-native-closeout-permissions/data-after/comparison-private.json",
+      "sha256": "927c57aeaa16153c03e3a7df1cfabc04dac14d9ce59c6f358178445f9816f4f6"
+    },
+    {
+      "path": "output/2026-10-17-native-closeout-permissions/data-preparation/actual-quit-tool-results.json",
+      "sha256": "84aaa22f5b005e79fc7e670bd4f8bd8d4ae1efb248498d9e0a56800de50864a3"
+    },
+    {
+      "path": "output/2026-10-17-native-closeout-permissions/permission-investigation/investigation.json",
+      "sha256": "97b0525c24902128ed49a3ebc0ba63ee0fc7362d16c212eb15c60b88e8974ac8"
+    },
+    {
+      "path": "output/2026-10-17-native-closeout-permissions/permission-investigation/live-owner-followup.json",
+      "sha256": "f08a02f748cc4be77551e209252921859695deda96a5ad6cfe5329c238e126c6"
+    },
+    {
+      "path": "output/2026-10-17-native-closeout-permissions/permission-investigation/initialize-timeout-conclusion.json",
+      "sha256": "6ad304b32efccc31a876feb5f5c043f68057d3e6b1364a7e27fe8c3b5532422f"
+    },
+    {
+      "path": "output/2026-10-17-native-closeout-permissions/data-closeout-safe-summary.json",
+      "sha256": "ef689c506cf0833634db6dd229f6826f3be7ea90dbadd58335102c536a43ec69"
+    }
+  ],
+  "boundary": "Does not close P13/P18/P32/ARCH33/NEW24/all29/eight/Windows; old strict differences and original failures retained.",
+  "pauseBoundary": "NEW-24 continues to pause execution of affected new real prompts. This record does not assert blanket source-level sending disablement or a new Agent-specific prohibition; independent development continues."
+}
