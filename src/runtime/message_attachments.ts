@@ -9,6 +9,10 @@ function record(value: unknown): Record<string, unknown> | null {
 function nonempty(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value : undefined;
 }
+/** Preserve payload bytes without scanning them before preview admission. */
+function payload(value: unknown): string | undefined {
+  return typeof value === "string" && value.length ? value : undefined;
+}
 
 /** Accept only declared message content types with their required payload.
  * Unknown envelopes remain raw and never qualify as readable conversation. */
@@ -18,7 +22,7 @@ export function normalizeMessageAttachment(
   const c = record(content);
   if (!c) return null;
   if (c.type === "image" || c.type === "audio") {
-    const data = nonempty(c.data);
+    const data = payload(c.data);
     const mimeType = nonempty(c.mimeType);
     if (!data || !mimeType) return null;
     return {
@@ -45,7 +49,7 @@ export function normalizeMessageAttachment(
     if (
       !resource ||
       !uri ||
-      (typeof resource.text !== "string" && !nonempty(resource.blob))
+      (typeof resource.text !== "string" && !payload(resource.blob))
     )
       return null;
     return {
@@ -54,7 +58,7 @@ export function normalizeMessageAttachment(
       uri,
       mimeType: nonempty(resource.mimeType),
       text: typeof resource.text === "string" ? resource.text : undefined,
-      data: nonempty(resource.blob),
+      data: payload(resource.blob),
     };
   }
   return null;
@@ -94,20 +98,66 @@ export function hasReadableMessages(items: readonly ThreadItem[]): boolean {
   );
 }
 
-/** Media is embedded only for recognized inert media formats. Remote resource
- * links remain explicit links; they are never fetched by rendering a message. */
-export function attachmentMedia(
+export const MAX_MESSAGE_MEDIA_BYTES = 16 * 1024 * 1024;
+const MAX_ENCODED_MEDIA_LENGTH = 4 * Math.ceil(MAX_MESSAGE_MEDIA_BYTES / 3);
+type MessageMedia = { kind: "image" | "audio"; src: string };
+export type MessageMediaAdmission =
+  | { status: "available"; media: MessageMedia }
+  | { status: "unavailable" }
+  | { status: "rejected"; reason: "tooLarge" | "invalid" };
+
+function base64Value(code: number): number {
+  if (code >= 65 && code <= 90) return code - 65;
+  if (code >= 97 && code <= 122) return code - 71;
+  if (code >= 48 && code <= 57) return code + 4;
+  return code === 43 ? 62 : code === 47 ? 63 : -1;
+}
+
+/** Preview-only byte admission. Original payload/transport memory, decoded
+ * image pixels, duration and aggregate media resources are not bounded here.
+ * Remote links are never fetched. No payload trim, decode or URL precedes the
+ * constant-time length gate; the admitted alphabet scan has no regex backtracking. */
+export function attachmentMediaAdmission(
   attachment: Attachment,
-): { kind: "image" | "audio"; src: string } | null {
-  if (!attachment.data || !/^[A-Za-z0-9+/]+={0,2}$/.test(attachment.data))
-    return null;
+): MessageMediaAdmission {
+  const data = attachment.data;
+  if (typeof data !== "string") return { status: "unavailable" };
+  const overEncodedLimit = data.length > MAX_ENCODED_MEDIA_LENGTH;
   const mime = attachment.mimeType?.toLowerCase();
-  if (mime && /^image\/(?:png|jpeg|gif|webp|avif|bmp)$/.test(mime))
-    return { kind: "image", src: `data:${mime};base64,${attachment.data}` };
-  if (
-    mime &&
-    /^audio\/(?:mpeg|mp3|mp4|ogg|wav|wave|x-wav|webm|flac|aac)$/.test(mime)
-  )
-    return { kind: "audio", src: `data:${mime};base64,${attachment.data}` };
-  return null;
+  const kind =
+    mime && /^image\/(?:png|jpeg|gif|webp|avif|bmp)$/.test(mime)
+      ? "image"
+      : mime &&
+          /^audio\/(?:mpeg|mp3|mp4|ogg|wav|wave|x-wav|webm|flac|aac)$/.test(
+            mime,
+          )
+        ? "audio"
+        : null;
+  if (!kind) return { status: "unavailable" };
+  if (overEncodedLimit) return { status: "rejected", reason: "tooLarge" };
+  if (!data.length || data.length % 4 !== 0)
+    return { status: "rejected", reason: "invalid" };
+  const padding = data.endsWith("==") ? 2 : data.endsWith("=") ? 1 : 0;
+  const decodedBytes = (data.length / 4) * 3 - padding;
+  if (decodedBytes > MAX_MESSAGE_MEDIA_BYTES)
+    return { status: "rejected", reason: "tooLarge" };
+  const bodyLength = data.length - padding;
+  let tail = -1;
+  for (let index = 0; index < bodyLength; index++) {
+    tail = base64Value(data.charCodeAt(index));
+    if (tail < 0) return { status: "rejected", reason: "invalid" };
+  }
+  // Padding belongs only to the final quartet. Its unused bits must be zero.
+  if ((padding === 2 && tail % 16 !== 0) || (padding === 1 && tail % 4 !== 0))
+    return { status: "rejected", reason: "invalid" };
+  return {
+    status: "available",
+    media: { kind, src: `data:${mime};base64,${data}` },
+  };
+}
+
+/** Compatibility for consumers that only need an admitted preview source. */
+export function attachmentMedia(attachment: Attachment): MessageMedia | null {
+  const result = attachmentMediaAdmission(attachment);
+  return result.status === "available" ? result.media : null;
 }

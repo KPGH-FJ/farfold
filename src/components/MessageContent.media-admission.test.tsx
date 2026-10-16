@@ -1,0 +1,102 @@
+import { beforeEach, expect, it, vi } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
+import { MessageAttachments } from "./MessageContent";
+import { PNG_IMAGE_TEST_DATA } from "../runtime/image_fixtures.test-support";
+
+const h = vi.hoisted(() => ({ userOpen: true }));
+vi.mock("./transcript-search", () => ({
+  useSearchExpansion: () => ({
+    open: true,
+    userOpen: h.userOpen,
+    materialized: true,
+    ref: () => {},
+    onToggle: () => {},
+    choose: () => {},
+  }),
+}));
+beforeEach(() => {
+  h.userOpen = true;
+});
+
+it("shows an explicit malformed-media explanation without creating a media element", () => {
+  const attachment = {
+    kind: "image" as const,
+    name: "Original name",
+    uri: "file:///owned/image.png",
+    data: "Zg",
+    mimeType: "image/png",
+  };
+  const before = JSON.stringify(attachment);
+  const html = renderToStaticMarkup(
+    <MessageAttachments attachments={[attachment]} />,
+  );
+  expect(html.includes("<img")).toBe(false);
+  expect(html.includes("<audio")).toBe(false);
+  expect(html).toContain("媒体数据格式无法读取");
+  expect(html).toContain("Original name");
+  expect(html).toContain("file:///owned/image.png");
+  expect(html).not.toContain("重新载入");
+  expect(JSON.stringify(attachment)).toBe(before);
+});
+
+it("shows the 16 MiB boundary and preserves later text attachments in order", () => {
+  const data = "A".repeat(4 * Math.ceil((16 * 1024 * 1024) / 3) + 4);
+  const attachment = {
+    kind: "audio" as const,
+    name: "Original audio",
+    data,
+    mimeType: "audio/wav",
+  };
+  const html = renderToStaticMarkup(
+    <MessageAttachments
+      attachments={[
+        attachment,
+        { name: "After media", text: "Retained next body" },
+      ]}
+    />,
+  );
+  expect(html.includes("<audio")).toBe(false);
+  expect(html.includes("data:audio")).toBe(false);
+  expect(html).toContain("16 MiB");
+  expect(html.indexOf("Original audio")).toBeLessThan(
+    html.indexOf("After media"),
+  );
+  expect(html).toContain("Retained next body");
+  expect(attachment.data === data).toBe(true);
+});
+
+it("does not admit or reject media merely because search revealed its text", () => {
+  h.userOpen = false;
+  const html = renderToStaticMarkup(
+    <MessageAttachments
+      attachments={[
+        { name: "Search-only image", data: "Zg", mimeType: "image/png" },
+      ]}
+    />,
+  );
+  expect(html).not.toContain("<img");
+  expect(html).not.toContain("媒体数据格式无法读取");
+  expect(html).toContain("Search-only image");
+});
+
+it("keeps admitted embedded media user-initiated and remote resources as explicit links", () => {
+  const html = renderToStaticMarkup(
+    <MessageAttachments
+      attachments={[
+        { name: "Exact PNG", data: PNG_IMAGE_TEST_DATA, mimeType: "image/png" },
+        { name: "Audio", data: "YXVkaW8=", mimeType: "audio/wav" },
+        {
+          name: "Remote",
+          uri: "https://example.com/remote.png",
+          mimeType: "image/png",
+        },
+      ]}
+    />,
+  );
+  expect(html).toContain(`src="data:image/png;base64,${PNG_IMAGE_TEST_DATA}"`);
+  expect(html).toContain("<audio");
+  expect(html).toContain('preload="none"');
+  expect(html).not.toMatch(/autoplay/i);
+  expect(html).not.toContain('src="https://');
+  expect(html).toContain('href="https://example.com/remote.png"');
+});

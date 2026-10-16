@@ -12,7 +12,7 @@ import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { inlineFilePath, messageLink } from "../runtime/message-link";
 import type { Attachment } from "../runtime/session_types";
-import { attachmentMedia } from "../runtime/message_attachments";
+import { attachmentMediaAdmission } from "../runtime/message_attachments";
 import { MESSAGE_ATTACHMENTS as A } from "../runtime/message_attachment_strings";
 import { THREAD_VIEW_STRINGS } from "../runtime/thread_view_strings";
 import "../message-attachments.css";
@@ -138,7 +138,11 @@ export function MessageAttachments({
 function MessageAttachment({ attachment }: { attachment: Attachment }) {
   const expansion = useSearchExpansion();
   // Search may reveal loaded text, but only the user's own expansion admits media.
-  const media = expansion.userOpen ? attachmentMedia(attachment) : null;
+  const admission = expansion.userOpen
+    ? attachmentMediaAdmission(attachment)
+    : null;
+  const media = admission?.status === "available" ? admission.media : null;
+  const mediaRejected = admission?.status === "rejected";
   const mediaWaiting =
     !expansion.userOpen &&
     !!attachment.data &&
@@ -201,7 +205,12 @@ function MessageAttachment({ attachment }: { attachment: Attachment }) {
             {R.findShowMedia}
           </button>
         )}
-        {!mediaWaiting && !media && attachment.data && (
+        {admission?.status === "rejected" && (
+          <p role="status">
+            {admission.reason === "tooLarge" ? A.mediaTooLarge : A.mediaInvalid}
+          </p>
+        )}
+        {!mediaWaiting && !media && !mediaRejected && attachment.data && (
           <p>{A.previewUnavailable}</p>
         )}
       </figure>
