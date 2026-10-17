@@ -1,6 +1,7 @@
 import type { Attachment, ThreadItem } from "./session_types";
 import { MESSAGE_ATTACHMENTS } from "./message_attachment_strings";
 import { messagePngAdmission } from "./message_png_admission";
+import { messageRasterAdmission } from "./message_raster_admission";
 
 function record(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -105,7 +106,10 @@ type MessageMedia = { kind: "image" | "audio"; src: string };
 export type MessageMediaAdmission =
   | { status: "available"; media: MessageMedia }
   | { status: "unavailable" }
-  | { status: "rejected"; reason: "tooLarge" | "invalid" | "tooManyPixels" };
+  | {
+      status: "rejected";
+      reason: "tooLarge" | "invalid" | "tooManyPixels" | "tooComplex";
+    };
 
 function base64Value(code: number): number {
   if (code >= 65 && code <= 90) return code - 65;
@@ -114,9 +118,9 @@ function base64Value(code: number): number {
   return code === 43 ? 62 : code === 47 ? 63 : -1;
 }
 
-/** Preview-only byte admission. Original payload/transport memory, decoded
- * decoded pixels, duration and actual media resources are not bounded here.
- * PNG additionally checks only its declared IHDR canvas before creating a URL.
+/** Preview-only byte and declared raster metadata admission. Original payload,
+ * transport, actual decoder memory, audio duration, AVIF and PNG animation
+ * resources are not bounded here. No URL is created before the checks.
  * Remote links are never fetched. No payload trim, decode or URL precedes the
  * constant-time length gate; the admitted alphabet scan has no regex backtracking. */
 export function attachmentMediaAdmission(
@@ -156,6 +160,11 @@ export function attachmentMediaAdmission(
     const png = messagePngAdmission(data, mime === "image/png");
     if (png === "invalid" || png === "tooManyPixels")
       return { status: "rejected", reason: png };
+    if (png === "notPng") {
+      const raster = messageRasterAdmission(data, mime!);
+      if (raster !== "withinBudget" && raster !== "notCovered")
+        return { status: "rejected", reason: raster };
+    }
   }
   return {
     status: "available",

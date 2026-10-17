@@ -33,15 +33,17 @@ export function MessageAttachmentMedia({
       // React may detach and reattach the same element without writing props
       // again (including StrictMode ref replay). Restore only this exact already
       // admitted source if our own detach cleared it; never use an external URI.
-      if (next?.tagName === "AUDIO" && next.getAttribute("src") !== media.src)
+      if (next && next.getAttribute("src") !== media.src)
         next.setAttribute("src", media.src);
-      if (previous && previous !== next && previous.tagName === "AUDIO") {
-        // A detached player must not keep playing. This releases this element;
-        // it is not a claim that all browser decoding has synchronously stopped.
-        const audio = previous as HTMLAudioElement;
-        audio.pause();
-        audio.removeAttribute("src");
-        audio.load();
+      if (previous && previous !== next) {
+        // Retire only this element's source. Audio additionally stops playback;
+        // neither operation proves synchronous release of all codec resources.
+        if (previous.tagName === "AUDIO") {
+          const audio = previous as HTMLAudioElement;
+          audio.pause();
+          audio.removeAttribute("src");
+          audio.load();
+        } else previous.removeAttribute("src");
       }
     },
     [media.src],

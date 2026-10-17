@@ -216,3 +216,32 @@ it("reattaches the same audio element with only its admitted src after a ref rep
   expect(node.pause).toHaveBeenCalledOnce();
   expect(element(tree, "audio").props.autoPlay).toBeUndefined();
 });
+
+it("clears only its retired image source when a preview detaches", () => {
+  const tree = render(image);
+  const node = attach(tree, "img");
+  const ref = element(tree, "img").props.ref;
+  ref(null);
+  expect(node.getAttribute("src")).toBeNull();
+  expect(node.removeAttribute).toHaveBeenCalledExactlyOnceWith("src");
+  expect(node.pause).not.toHaveBeenCalled();
+  expect(node.load).not.toHaveBeenCalled();
+  // Repeating cleanup does not reload or touch the retired element twice.
+  ref(null);
+  expect(node.removeAttribute).toHaveBeenCalledOnce();
+  expect(node.setAttribute).not.toHaveBeenCalled();
+});
+
+it("restores the exact admitted image source on the same node after ref replay", () => {
+  const tree = render(image);
+  const node = attach(tree, "img");
+  const ref = element(tree, "img").props.ref;
+  expect(node.setAttribute).not.toHaveBeenCalled();
+  ref(null);
+  expect(node.getAttribute("src")).toBeNull();
+  ref(node);
+  expect(node.getAttribute("src")).toBe(image.src);
+  expect(node.setAttribute).toHaveBeenCalledExactlyOnceWith("src", image.src);
+  expect(node.pause).not.toHaveBeenCalled();
+  expect(node.load).not.toHaveBeenCalled();
+});

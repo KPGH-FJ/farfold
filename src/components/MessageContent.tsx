@@ -224,7 +224,9 @@ function MessageAttachment({
               ? A.mediaTooLarge
               : admission.reason === "tooManyPixels"
                 ? A.mediaTooManyPixels
-                : A.mediaInvalid}
+                : admission.reason === "tooComplex"
+                  ? A.mediaTooComplex
+                  : A.mediaInvalid}
           </p>
         )}
         {pending && <p role="status">{A.mediaPreparing}</p>}

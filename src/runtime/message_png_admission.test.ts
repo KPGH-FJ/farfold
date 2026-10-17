@@ -1,6 +1,7 @@
 import { expect, it, vi } from "vitest";
 import { attachmentMediaAdmission } from "./message_attachments";
 import { PNG_IMAGE_TEST_DATA } from "./image_fixtures.test-support";
+import { MESSAGE_RASTER_TEST_DATA } from "./message_raster_fixtures.test-support";
 
 // Only IHDR is changed; never send a large-canvas fixture to an image decoder.
 function pngHeader(width = 2, height = 1, change?: (bytes: Buffer) => void) {
@@ -136,11 +137,20 @@ it("keeps the exact small PNG and other supported non-PNG sources unchanged", ()
     status: "available",
     media: { kind: "image", src: source },
   });
-  for (const mime of ["jpeg", "gif", "webp", "avif", "bmp"])
-    expect(attachmentMediaAdmission(image("YWJj", `image/${mime}`))).toEqual({
+  for (const [mime, data] of [
+    ["jpeg", MESSAGE_RASTER_TEST_DATA.JPEG],
+    ["gif", MESSAGE_RASTER_TEST_DATA.GIF],
+    ["webp", MESSAGE_RASTER_TEST_DATA.WEBP],
+  ])
+    expect(attachmentMediaAdmission(image(data, `image/${mime}`))).toEqual({
       status: "available",
-      media: { kind: "image", src: `data:image/${mime};base64,YWJj` },
+      media: { kind: "image", src: `data:image/${mime};base64,${data}` },
     });
+  // AVIF metadata admission remains outside this slice; its browser decoding
+  // outcome is not inferred from Base64 admission.
+  expect(attachmentMediaAdmission(image("YWJj", "image/avif")).status).toBe(
+    "available",
+  );
   expect(attachmentMediaAdmission(image("YWJj", "image/svg+xml"))).toEqual({
     status: "unavailable",
   });
