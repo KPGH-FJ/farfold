@@ -1,0 +1,168 @@
+{
+  "schema": 1,
+  "date": "2026-10-17",
+  "phase": "sourceControlledChecksEngineeringAndAtomicInstallationCompleteNativeNotRun",
+  "source": {
+    "commit": "bb76e79958b44058f147bc41cd8b7f1dab32fca3",
+    "pushedToMain": true,
+    "changedSourceAndTestFiles": 12,
+    "jointFrozenFiles": 14,
+    "unchangedCommonSourceFilesWithinFreeze": 2,
+    "separatelyProtectedExistingReadmes": 2,
+    "sourceReview": "Root integration of two independent scoped reviews; not a third independent review."
+  },
+  "implementation": {
+    "mediaPreviewAdmission": {
+      "scope": "MessageContent message-attachment preview instances only",
+      "maxInstances": 4,
+      "maxAdmittedFileBytes": 33554432,
+      "perItemLimitRetained": 16777216,
+      "releaseOnHiddenListCollapseAndUnmount": true,
+      "explicitRetryOnlyNoAutoStart": true,
+      "focus": "Return only the currently focused retry button to the same attachment summary; never steal focus moved elsewhere.",
+      "excluded": "UserMessageContent historical images,Office,pixels,duration,actual codec and transport memory."
+    },
+    "parentPipeDiagnostics": {
+      "fields": "Parent API successful bytes,nonempty-read EOF,total IO errors and first fixed error category/operation; no payload/path/error text.",
+      "completion": "parent_wrappers_dropped",
+      "publication": "One update to bounded latest-summary slot; not disk exactly-once.",
+      "notProofOf": "Child consumption,valid protocol,OS/process/group termination or old failure root cause."
+    }
+  },
+  "engineering": {
+    "run": 2,
+    "actualSession": 49664,
+    "actualFinalChunk": "4b767d",
+    "actualExitCode": 0,
+    "allSevenFresh": true,
+    "stableInputs": 19005,
+    "frontendFiles": 528,
+    "frontendPassed": 6627,
+    "rustPassed": 1770,
+    "rustIgnored": 6,
+    "run1Retained": "6626 frontend passed,one old SSR assertion failed,last four commands not started."
+  },
+  "controlledBrowsers": {
+    "engines": ["Chromium", "WebKit"],
+    "checksPerEngine": {
+      "quota": 32,
+      "realEnterFocus": 6,
+      "priorP13Regression": 31,
+      "total": 69
+    },
+    "eachRunStableInputs": 622,
+    "ownedBrowsersAndServersClosed": true,
+    "ordinaryWebKitTabLimitationRetained": true,
+    "scope": "Production-component fixtures,not installed WebView or real Agent acceptance."
+  },
+  "installation": {
+    "sourceCommit": "bb76e79958b44058f147bc41cd8b7f1dab32fca3",
+    "version": "0.1.7",
+    "identifier": "ai.farfold.desktop",
+    "architecture": "arm64",
+    "binarySha256": "4cb673eb839ba382bc965a7ce9a0c52da830760eddc021163710bfe130843f14",
+    "candidateProductionInputs": 1725,
+    "candidateIndependentPassed": 9,
+    "installedIndependentPassed": 10,
+    "installActualSession": 46009,
+    "installActualExitCode": 0,
+    "installFinalChunk": "df3214",
+    "atomicReplacements": 5,
+    "method": "Each target: complete same-directory exclusive temporary bytes/mode/fsync,os.replace,new inode verified. Five files are not one transaction.",
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "automaticRetry": false,
+    "restorePerformed": false,
+    "freshManifests": {
+      "phases": ["before", "preinstall", "after"],
+      "entriesEach": 217407,
+      "sha256": "eaa22f79adf795c0f6025735af1347689bd1662de250cfaf65a236202dac9f8d",
+      "strictlyEqual": true
+    },
+    "exactCandidateAppRemoved": true,
+    "formalAndZipRetained": true,
+    "formalLaunchedThisBatch": false,
+    "normalQuitEvidence": null,
+    "continuousClosedIntervalNotClaimed": true
+  },
+  "permissionFollowup": {
+    "new24": "open",
+    "completeSameOwnerPermissionReadback": "No verified usable installed-owner route established; new source investigation is not runtime capability.",
+    "officialPackageNotUpgraded": true,
+    "noGuessedInterfaceOrPermissionConfirmation": true,
+    "affectedNewRealSendsRemainPaused": true,
+    "pauseIsExecutionBoundaryNotBlanketSourceDisablement": true
+  },
+  "retained": {
+    "failures": "Original SSR,real focus and driver failures; pipe red cases and test-only compile failure; previous c73 failed in-place installation and separate recovery.",
+    "historicalStrictDataResult": "exit2,three database and seven retained-root differences; not waived.",
+    "unknowns": [
+      "OpenCode initialize nonresponse cause",
+      "automatic-reopen final requester",
+      "data difference writer"
+    ],
+    "notAccepted": [
+      "native media/current pipe behavior",
+      "real Agent",
+      "cold recovery",
+      "whole P13 or NEW24",
+      "all151/all29/eight standards",
+      "Windows/public distribution"
+    ]
+  },
+  "maintenance": {
+    "specificOldGeneratedObjectsRemoved": 1965,
+    "logicalBytes": 3221508056,
+    "scope": "Exact verified old-object inventory only; not whole target or all-user-data equality."
+  },
+  "scopeConservation": {
+    "firstReleaseAgents": 29,
+    "standardsPerAgent": 8,
+    "originalPlanRows": 151,
+    "newPlanRowsAdded": 0,
+    "oldStrictDifferencesWaived": false
+  },
+  "privateEvidence": {
+    "sourceFreeze": {
+      "path": "output/2026-10-17-trusted-execution-followup/source-freeze-r2.json",
+      "sha256": "0cb0212322b9912c9605aeebd387d3464dc49f1429e1bc275e7dd801a6254513"
+    },
+    "combinedSourceReview": {
+      "path": "output/2026-10-17-trusted-execution-followup/source-review.json",
+      "sha256": "1f0d8c1d2ecba5e2ac0492e83a163949a903b7b3b05b6460ebd95190f617a5e9"
+    },
+    "engineeringRun1": {
+      "path": "output/2026-10-17-trusted-execution-followup/engineering/run1/verification.json",
+      "sha256": "5e9db35794d5df9565e9a4c73f5711d36d8303e41c74f6b6582648cef3885bac"
+    },
+    "engineeringRun2": {
+      "path": "output/2026-10-17-trusted-execution-followup/engineering/run2/verification.json",
+      "sha256": "9e2f88dea31e8c738c6cb1519ec2b69d8dd9bd4e2fb5fc200b4f039333bc3a75"
+    },
+    "browserFinal": {
+      "path": "output/2026-10-17-trusted-execution-followup/media-budget/browser-independent/final-summary-r2.json",
+      "sha256": "041362c5fa3b5668384fc69a045e92743643b87e564eeabef2d72dd0a00ca224"
+    },
+    "permissionFollowup": {
+      "path": "output/2026-10-17-trusted-execution-followup/permission/investigation-followup.json",
+      "sha256": "11a6ecf393aca3376182440de72277a8e57d08a718d0272fd2d28973df0e65b5"
+    },
+    "candidateIndependentNine": {
+      "path": "output/2026-10-17-trusted-execution-followup/candidate-preparation/independent/review.json",
+      "sha256": "f518425c6e78971da45ef06b8c6211cbe16f8c923db0baf21422d552ca249145"
+    },
+    "atomicInstallation": {
+      "path": "output/2026-10-17-trusted-execution-followup/install/install-result.json",
+      "sha256": "86dd63952da71709250c1fdadb9bc8a97e27920dd65395191271f49d8a8d5007"
+    },
+    "installedIndependentTen": {
+      "path": "output/2026-10-17-trusted-execution-followup/install/installed-independent-review-private.json",
+      "sha256": "16390b7cba9a9f26382d53f4f9c3497370114050ac8a02764de9468f603f8140"
+    },
+    "exactCandidateCleanup": {
+      "path": "output/2026-10-17-trusted-execution-followup/install/candidate-cleanup.json",
+      "sha256": "57a9a1e3c7c21630d45ab5a227e0beb2c7bddca09a101387b61242f45d1a1af6"
+    }
+  },
+  "privacy": "Safe summary and receipt pins only; no user history,AX,credentials,environment values,database records or private manifest contents."
+}
