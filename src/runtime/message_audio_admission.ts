@@ -66,8 +66,9 @@ function linearFormat(
 /** Classic little-endian RIFF/WAVE declarations only. Caller must first enforce
  * canonical Base64 and the existing per-file byte limit. Cross-audio-MIME
  * signatures receive the same check. No URL, full binary buffer or audio
- * decoder is created. RIFX/RF64/Wave64, compressed WAVE, wavl, playlists and
- * other containers remain explicitly notCovered, not newly unsupported.
+ * decoder is created. RIFX/RF64/Wave64, compressed WAVE, wavl, playlist timing
+ * and other containers remain uncovered. A playlist cannot hide a known
+ * direct linear data extent; its stored frames retain the independent budget.
  * Duration is linear stored data frames, not elapsed playback, loop duration,
  * resampled allocation, compressed expansion or transport-memory proof.
  * Microsoft/IBM RIFF WAVE specification: fmt precedes a single data or wavl.
@@ -88,7 +89,7 @@ export function messageAudioAdmission(
     let dataSeen = false;
     let extendedLayout = false;
     let linear: LinearFormat | null = null;
-    let dataBytes = 0;
+    let dataBytes: number | null = null;
     while (at < reader.length) {
       if (++records > MAX_MESSAGE_AUDIO_RECORDS) return "audioTooComplex";
       reader.require(at, 8);
@@ -117,12 +118,12 @@ export function messageAudioAdmission(
       at = end + (length % 2);
     }
     requireAudio(fmtSeen && dataSeen);
-    if (extendedLayout || !linear) return "notCovered";
+    if (!linear || dataBytes === null) return "notCovered";
     requireAudio(dataBytes % linear.align === 0);
     const frames = dataBytes / linear.align;
-    return frames > linear.sampleRate * MAX_MESSAGE_AUDIO_SECONDS
-      ? "audioTooLong"
-      : "withinBudget";
+    if (frames > linear.sampleRate * MAX_MESSAGE_AUDIO_SECONDS)
+      return "audioTooLong";
+    return extendedLayout ? "notCovered" : "withinBudget";
   } catch (error) {
     if (error instanceof MessageRasterError) return "invalid";
     throw error;

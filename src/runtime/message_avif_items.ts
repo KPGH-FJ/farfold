@@ -237,6 +237,20 @@ export function avifItems(context: AvifContext, meta: AvifBox): void {
     }
     cursor.done();
   }
+  // Definite local ranges apply to coded/auxiliary items as well as grids.
+  // Unknown addressing keeps its prior coverage; no item payload is decoded.
+  for (const value of items.values()) {
+    if (value.uncertainLocation || !value.extents) continue;
+    let limit = reader.length;
+    if (value.method === 1) {
+      rasterRequire(idat);
+      limit = idat.end - idat.data;
+    }
+    for (const extent of value.extents)
+      rasterRequire(
+        extent.offset <= limit && extent.length <= limit - extent.offset,
+      );
+  }
   // All item lookups and graph work are linear in charged records. Reusing one
   // ispe does not make thousands of image items cost one image's pixels.
   const incoming = new Map<number, number>(),
