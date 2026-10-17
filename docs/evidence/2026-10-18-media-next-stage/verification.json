@@ -1,0 +1,242 @@
+{
+  "schema": 1,
+  "kind": "SelectedHiddenToolMediaRetirementAndAttachmentSearchRecoveryStage",
+  "recordedAtUtc": "2026-10-17T18:28:31.769859+00:00",
+  "onlyActivePlan": "plans/agent-access.md",
+  "originalScope": "151 original requirements and29 Agents x8 standards unchanged",
+  "sourceCommit": "a8534c6ef6825339a3749a0e599f7313c19e8a79",
+  "result": "SelectedSourceControlledAndStaticInstallationPassed;fullP13P32AndRealAgentUnverified",
+  "implementation": {
+    "media": "Inherited visibility intersects tool-group and retained tool-detail disclosures; hidden media retires source and exact lease and clears previous media intent; ancestor/search reveal cannot auto-load. Text/source/order/search tree remain.",
+    "search": "Explicit recovery removes only current-owner-invalid choices, preserves valid choices, retires old results, never reads/starts automatically. Inactive/inflight guarded. Keyboard focus moves to stablefieldset only while recovery button still owns focus.",
+    "noScopeExpansion": "No format/decoder/dependency/env/Agent-specific UI/new persistent content or event ledger."
+  },
+  "engineering": {
+    "receipt": {
+      "path": "output/2026-10-18-media-next-stage/engineering/run1/verification.json",
+      "sha256": "723e5102e6f6c285e2f86c6e5aa70eb2fe0ff5e817b0556c49804d51aa07d196"
+    },
+    "completion": {
+      "path": "output/2026-10-18-media-next-stage/engineering/execution-completion.json",
+      "sha256": "f8d8446d4adfdccba1771e54c32873d652b17d27f132730735bfdf8bfc3f129e"
+    },
+    "checks": 7,
+    "stableInputs": 19125,
+    "frontendFiles": 577,
+    "frontendPassed": 7576,
+    "rustPassed": 1787,
+    "rustIgnored": 6
+  },
+  "sourceEvidence": [
+    {
+      "path": "output/2026-10-18-media-next-stage/source-freeze.json",
+      "sha256": "c245425cec07745bc6b3ee5eb8ed3526e8b865695b834f67c435aa107d080d10"
+    },
+    {
+      "path": "output/2026-10-18-media-next-stage/source-review.json",
+      "sha256": "e8d2fdc2602b0d9bb5b985f7d2d0670e3344a3f402e4351ef774764070c5ee0a"
+    },
+    {
+      "path": "output/2026-10-18-media-next-stage/source-independent-review.json",
+      "sha256": "3ddde1692f7a2b9ee447352602f8593fb606757dffde7a306c056218af7db11f"
+    },
+    {
+      "path": "output/2026-10-18-media-next-stage/source-checkpoint.json",
+      "sha256": "485fa2da4c9b86383f6bad7357cdc96ce88dbe2c40d2435859faea297df9ac82"
+    },
+    {
+      "path": "output/2026-10-18-media-next-stage/conditions/current.json",
+      "sha256": "3e6f77ccfbd506b80f2281a3c20bc6b32238442756cd4cfed630ec9bd7ce3390"
+    }
+  ],
+  "controlledMedia": {
+    "originalRed": {
+      "path": "output/2026-10-18-media-next-stage/media-visibility/original-chromium-r1-verification.json",
+      "sha256": "b0f99cc7283f86744a575e7591ed2ffb556b124bdb2d0187ae7114680b10e506"
+    },
+    "originalRedCompletion": {
+      "path": "output/2026-10-18-media-next-stage/media-visibility/original-execution-completion.json",
+      "sha256": "964fca1e3e74558dcaaf949f9287bc7a082996f3ffb9bb14b5c5990c047e2d01"
+    },
+    "originalResults": "11passed/14semanticfail; relevant original media sources equal abc85; unrelated P32 dirty sources do not imply a clean whole original App.",
+    "affectedExisting": {
+      "path": "output/2026-10-18-media-next-stage/media-visibility/affected-existing-r1.json",
+      "sha256": "4dbea206823b6b3bea019e9797e01edb11849248fa40d624a611c7961b6d510f"
+    },
+    "ssr": {
+      "path": "output/2026-10-18-media-next-stage/media-visibility/ssr/verification.json",
+      "sha256": "e157e35462787703e72208d2ee2c2a81ad322ea42c92ae67fa0d1f742b86888a"
+    },
+    "summary": {
+      "path": "output/2026-10-18-media-next-stage/media-visibility/green/summary.json",
+      "sha256": "04ed6d79a8c38627c2d602aa323f4abba302512574bcd3748526a670d23e3362"
+    },
+    "eachPassed": 37,
+    "eachStableInputs": 750,
+    "commonPins": 749,
+    "scope": "Real production React components/DOM+StrictMode. Exact72B PNG2x1 and124B WAV. No audio play requested; no naturalcodec/peakmemory/App/Agent/background-thread policy proof. WK14same-origin internalblob requests preserved; no script objectURL."
+  },
+  "controlledSearch": {
+    "refinedOriginalRed": {
+      "path": "output/2026-10-18-media-next-stage/search-investigation/recovery/refined-red.json",
+      "sha256": "86bd2319b95fa4b1661b0a031c8d1691b66de01e0f92d4f85789ffad3247de6a"
+    },
+    "targetedFinal": {
+      "path": "output/2026-10-18-media-next-stage/search-investigation/recovery/verification-r2.json",
+      "sha256": "3a61a3915e4b240ca5b0b9748ba4e84c2b989a5d2c00be92442104485762b0a6"
+    },
+    "webkit": {
+      "path": "output/2026-10-18-media-next-stage/search-investigation/browser/webkit-search-r2-verification.json",
+      "sha256": "bd262eda5c2bb67a1fedd1c0b9a51024f12f63e4783cf2defd86e2bb54c2494e"
+    },
+    "completion": {
+      "path": "output/2026-10-18-media-next-stage/search-investigation/browser/webkit-search-r2-execution-completion.json",
+      "sha256": "767b9de13b0b5a7babb7a2201a238dbac0a8986e849209b4a9e90ae305883703"
+    },
+    "originalFocusFailure": {
+      "path": "output/2026-10-18-media-next-stage/search-investigation/browser/webkit-search-r1-verification.json",
+      "sha256": "3ce097e09a4b09d9c7dd45c5d0427f8a5ab9b9409f099d6dca600659734a1d84"
+    },
+    "passed": 19,
+    "stableInputs": 650,
+    "scope": "Real React/WebKit controlled DOM; A/B logical read port, not real files or formal App. Original18pass/1BODYfocusfail retained; same19 nowpass/FIELDSET. ActualHEAD abc85+then-uncommittedsource content later independently byte-joined to a853; not retrospectively changed sourceHead. Earlier direct-auto-unlock diagnostic and testfixture streaming type failure retained, not production regressions."
+  },
+  "actualBrowserIndependentReview": {
+    "path": "output/2026-10-18-media-next-stage/browser-results-independent-review.json",
+    "sha256": "ea0dfb0fb5833365e8c9c532c6db790f22a9cb36e72de7c66dc1a53ddd418bb0"
+  },
+  "formalEligibilityObservation": {
+    "ui": {
+      "path": "output/2026-10-18-media-next-stage/native-search/ui-observations.json",
+      "sha256": "6d246e1c4ed5d8f21a9823d0e45d9c70f92979f1ac035756f2e1131324e33ef4"
+    },
+    "metadataComparison": {
+      "path": "output/2026-10-18-media-next-stage/native-search/metadata-comparison.json",
+      "sha256": "15c8a03cb1ba82de941c35ce7468a0f27c6c7023cd4bd000cd9171d00c6ab894"
+    },
+    "comparisonCompletion": {
+      "path": "output/2026-10-18-media-next-stage/native-search/metadata-comparison-execution-completion.json",
+      "sha256": "0c9b0968d77778822b535de39fc3820a29f459b3d4c5df7b72766039bae1c361"
+    },
+    "formalSourceAtUIObservation": "9f22e4117b938e79516265bdb4bc19d8ea0f2428",
+    "selectedLoadedHistories": 1,
+    "eligibleAttachmentsInObservedLoadedSet": 0,
+    "positiveSearchPerformed": false,
+    "limits": "Only selected existing DOCX history. No new prompt action, permission confirmation, fake history or arbitrary scan; not all136histories checked. Actual metadata comparison exit2/two updated_at differences/rawWAL+SHM changes preserved; writer unknown. 10drafts/entireunsentWork/54settings exact. No all-user-data equality claim."
+  },
+  "candidate": {
+    "receipt": {
+      "path": "output/2026-10-18-media-next-stage/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "e94e1002c4b5b4ae79814fb1b6c26116bec6df3e861baf751a0de9a5c0f3da8b"
+    },
+    "completion": {
+      "path": "output/2026-10-18-media-next-stage/candidate-preparation/candidate-build-completion.json",
+      "sha256": "e9cb9a93b4bb0cc8068cff2472154ef333c660bb6bbe832a05cd574637382e4a"
+    },
+    "productionInputs": 1816,
+    "independent9": {
+      "path": "output/2026-10-18-media-next-stage/candidate-preparation/independent/review.json",
+      "sha256": "01057384d5b60fb3711024df2e847ff664f88da212f55e359e628646104db281"
+    },
+    "independent9Completion": {
+      "path": "output/2026-10-18-media-next-stage/candidate-preparation/independent/nine-execution-completion.json",
+      "sha256": "f6ff5bdf81cff26fcb4b0794e9d7bcd91a8d167de80084d2457591384ee11369"
+    },
+    "archive": {
+      "path": "src-tauri/target/internal-candidate/2026-10-18-media-next-stage-a8534c6e/Farfold-0.1.7-a8534c6e.zip",
+      "sha256": "864ec0c47873b808f3692d9a879b9172f384efab3ff9be896ab88576f72d88a1"
+    },
+    "historicalBuildInstalledFalseRetained": true
+  },
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "sourceCommit": "a8534c6ef6825339a3749a0e599f7313c19e8a79",
+    "binarySha256": "2f7182e275f249fbe3879f0775b60ef995abca136fae12cdd27811aeed5de8e0",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "install": {
+      "path": "output/2026-10-18-media-next-stage/install/install-result.json",
+      "sha256": "e790ef1a68859bdb281eb9928372bb1dce58ce371648c9e9bcebc32d9160318c"
+    },
+    "completion": {
+      "path": "output/2026-10-18-media-next-stage/install/install-execution-completion.json",
+      "sha256": "8c52b864086bb77d07230f5a75faf79802d7cc29e1ac1a505563b1ee5c1a4c8a"
+    },
+    "independent10": {
+      "path": "output/2026-10-18-media-next-stage/install/installed-independent-review-private.json",
+      "sha256": "8bdcfb5fab54484138cf31a805ab592dfd061384570409795522803d12b6f0f4"
+    },
+    "independent10Completion": {
+      "path": "output/2026-10-18-media-next-stage/install/installed-ten-execution-completion.json",
+      "sha256": "ac4075c144392a6409b5ee5cd68557889691a2a04e3501a759ecf4a5f52799e2"
+    },
+    "passedIndependentChecks": 10,
+    "newAppLaunched": false,
+    "scope": "Strict ad-hoc signature/static checks;5 per-file new-inode replacements, not whole-bundle atomicity. No backupApp/forcedquit/restore/retry."
+  },
+  "dataRetention": {
+    "manifests": [
+      {
+        "path": "output/2026-10-18-media-next-stage/install/install-data-before.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      },
+      {
+        "path": "output/2026-10-18-media-next-stage/install/install-data-preinstall.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      },
+      {
+        "path": "output/2026-10-18-media-next-stage/install/install-data-after.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      }
+    ],
+    "receipts": [
+      {
+        "path": "output/2026-10-18-media-next-stage/install/retention-before-receipt.json",
+        "sha256": "379ef2a109b65fcaba6d39e6ac61402758954bf968f0526850daf6087b565b2e"
+      },
+      {
+        "path": "output/2026-10-18-media-next-stage/install/retention-preinstall-receipt.json",
+        "sha256": "2321a54686d6117357886abcb8b9184d8997e0953d8791950e98afdf0e3b9b8b"
+      },
+      {
+        "path": "output/2026-10-18-media-next-stage/install/retention-after-receipt.json",
+        "sha256": "53c64fd4e54c699dfd2bbd807a93b78eaa653bf80b677a5bde77d351fa0dcbb1"
+      }
+    ],
+    "eachEntries": 217407,
+    "strictThreeEqual": true,
+    "freshManifestSha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd",
+    "freshMetadataBackupSha256": "59e1b463b32354697f779572bb6050749ded7222889efb32384cfcdc26b07c1a",
+    "scope": "Three fresh captured manifests at closedObserved points/normalQuitEvidence=null, not previous2194 reused or continuous absence/live equality. Only separate second-working/newconsolidated connected toSQLite; source/firstraw untouched. Consolidated backup is metadata only. Native UI normal-save-and-quit is separate observed evidence. Old strict differences remain."
+  },
+  "cleanup": {
+    "receipt": {
+      "path": "output/2026-10-18-media-next-stage/install/candidate-cleanup.json",
+      "sha256": "af627ba164902cb0fb44497107a9691556fc8b158407438abff536125437cbeb"
+    },
+    "completion": {
+      "path": "output/2026-10-18-media-next-stage/install/cleanup-execution-completion.json",
+      "sha256": "1cc2e0539e5d2376777913917fb9b1bfbebbda16f048be737b8702818b86777f"
+    },
+    "exactFiles": 5,
+    "exactEmptyDirectories": 5,
+    "formalAndArchiveRetained": true
+  },
+  "previousStageOriginal": {
+    "path": "docs/evidence/2026-10-18-media-resource-stage/verification.json",
+    "sha256": "456981a77def676c1924f54d2ee9951038f61a97a5c1ac72546c1f58354dbc00"
+  },
+  "remaining": [
+    "NEW24 same-owner complete permission readback/effect timing unresolved; affected newreal sends remainpaused. Initial32 selected inputs unchanged at precheck; this batch subsequently changed two selected source files for P13/P32 (src/components/thread-items.tsx and src/components/SelectedAttachmentSearch.tsx). All11 permission inputs remain unchanged.",
+    "Formal message/media/search positives and fullP13/P32/P35/29x8/Windows remainopen. Only one current existing history checked for eligible attachments.",
+    "Uncovered formats/layouts/resources, actualcodec/transportmemory, animation/fullplayback and old shortAAC/FLAC failures remain; Ogg validlongcontrol missing.",
+    "P18originalsamples/NEW29realbusy/P40currentadoption missing; prior strictdata differences/unknownwriters/OpenCodeinitialize/reopen caller unresolved."
+  ],
+  "publicationPreparationFailure": {
+    "path": "output/2026-10-18-media-next-stage/publication-preparation-error.json",
+    "sha256": "54910d88ec752562e8738789f9773dd1162dd01531ee8122ab4091312437c1e8"
+  },
+  "publicationCompletionLocator": "output/2026-10-18-media-next-stage/completion-verification.json",
+  "publicationCompletionClaimedAtRecordCreation": false
+}
