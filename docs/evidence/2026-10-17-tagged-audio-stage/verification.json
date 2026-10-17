@@ -1,0 +1,303 @@
+{
+  "schema": 1,
+  "kind": "TaggedAudioDeclarationAndSelectedBrowserStaticInstallStage",
+  "recordedAtUtc": "2026-10-17T15:36:00.561980+00:00",
+  "onlyActivePlan": "plans/agent-access.md",
+  "originalScope": "151 requirements;29 Agents x8 standards unchanged",
+  "result": "selectedSourceControlledAndStaticInstallationPassed; fullP13AndRealAgentUnverified",
+  "sourceCommit": "8b487630a6bb4c55249a097cb88154d26f0df5df",
+  "implementation": {
+    "scope": "Leading ID3v2.2/2.3/2.4 revision0 stored extents before MPEG LayerIII or ADTS; same600second and65536combined-record declaration policy; original Base64/src retained.",
+    "confirmedOriginalFailure": "Complete601.23s tagged MP3 bypassed shared gate: actual original3fail/4pass; same7cases nowpass. Tagged ADTS covered by shared fix and affected checks, not represented as another original pre-fix failure.",
+    "completeControls": "4 tagged MPEG and3 tagged ADTS complete independent PCM decodes equal bare controls; no new encoder.",
+    "unchanged": "No new MIME/dependency/env/Agentbranch/decoder; unknown metadata/codec body layouts remain uncovered."
+  },
+  "engineering": {
+    "kind": "ConsumedActualEngineeringCompletion",
+    "sessionId": 66322,
+    "actualExitCode": 0,
+    "actualFinalChunk": "a719bf",
+    "receipt": {
+      "path": "output/2026-10-17-tagged-audio-stage/engineering/run1/verification.json",
+      "sha256": "358e7e86c88e4bd3e5a0844ad0672ae34cf10273836a280680789a40d3b5b5fc"
+    },
+    "inputCount": 19107,
+    "allSevenPassed": true,
+    "beforeAfterExact": true,
+    "frontendFiles": 567,
+    "frontendPassed": 7437,
+    "rustPassed": 1787,
+    "rustIgnored": 6,
+    "scope": "Seven fresh sequential checks; no App/Agent proof"
+  },
+  "controlledBrowser": {
+    "summary": {
+      "path": "output/2026-10-17-tagged-audio-stage/browser-independent/independent-summary.json",
+      "sha256": "9cd2ef10469a5e657ecf51897b341762cddc17a135e55457d24d049df4020394"
+    },
+    "completion": {
+      "path": "output/2026-10-17-tagged-audio-stage/browser-independent/execution-completion.json",
+      "sha256": "1746d49853324016480823148a8e378f5288fc4395ad2859bf90a48174e39153"
+    },
+    "eachChecksPassed": 35,
+    "engineCount": 2,
+    "eachInputCount": 748,
+    "eachBeforeAfterExact": true,
+    "playback": [
+      {
+        "engine": "chromium",
+        "actualExitCode": 0,
+        "receipt": {
+          "path": "output/2026-10-17-tagged-audio-stage/browser-independent/chromium-selected-run1-verification.json",
+          "sha256": "2b6ad7490454cb96582b7c5a2bed210b95fcd0f0958d929ba17653911ea76464"
+        },
+        "observed": [
+          {
+            "name": "mpeg-short3",
+            "currentTime": 0.019472,
+            "duration": 3.108219,
+            "declaredSeconds": 3.1346938775510202,
+            "trustedUiPlayRequests": 1,
+            "playResolved": true
+          },
+          {
+            "name": "adts-short65",
+            "currentTime": 0.019691,
+            "duration": 65.583697,
+            "declaredSeconds": 65.536,
+            "trustedUiPlayRequests": 1,
+            "playResolved": true
+          }
+        ]
+      },
+      {
+        "engine": "webkit",
+        "actualExitCode": 0,
+        "receipt": {
+          "path": "output/2026-10-17-tagged-audio-stage/browser-independent/webkit-selected-run1-verification.json",
+          "sha256": "aca3ae0005636f2214c254c01ef1475aaaf8893b9cd571569130caa0e3d841ae"
+        },
+        "observed": [
+          {
+            "name": "mpeg-short3",
+            "currentTime": 0.01704354165121913,
+            "duration": 3.1085714285714285,
+            "declaredSeconds": 3.1346938775510202,
+            "trustedUiPlayRequests": 1,
+            "playResolved": true
+          },
+          {
+            "name": "adts-short65",
+            "currentTime": 0.07783437496982515,
+            "duration": 65.536,
+            "declaredSeconds": 65.536,
+            "trustedUiPlayRequests": 1,
+            "playResolved": true
+          }
+        ]
+      }
+    ],
+    "scope": "Only complete v2.3 short MPEG andADTS65 sources allowed; explicit trusted play and progress. Four long cross-MIME cases refused before src; unknown tags only preflight; original URI/text retained; error/retry synthetic lifecycle only.",
+    "limits": "v2.2/v2.4footer onlyCoreAudio/unit,not browser. Duration differences/full playback/decoder memory/cause unknown. Old33B AAC/55BFLAC failures unaltered; no nativeWKWebView proof.",
+    "allOwnedResourcesAndPortClosed": true
+  },
+  "candidate": {
+    "receipt": {
+      "path": "output/2026-10-17-tagged-audio-stage/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "cb4ae48ea5245b9ae7b960adca3319d45fc35e83702d23b42d49bd601c3dc75a"
+    },
+    "actualBuildCompletion": {
+      "path": "output/2026-10-17-tagged-audio-stage/candidate-preparation/build-execution-completion.json",
+      "sha256": "ca03f9d372f56723faffed2525118bcf756d0e62fd5cb2f8ead138dfc0731ced"
+    },
+    "productionInputs": 1801,
+    "independent9": {
+      "path": "output/2026-10-17-tagged-audio-stage/candidate-preparation/independent/review.json",
+      "sha256": "e6ef5c0c4c6d21a333177da9242367c49358e05cfdfb46ef108d03de27616973"
+    },
+    "independent9Completion": {
+      "path": "output/2026-10-17-tagged-audio-stage/candidate-preparation/independent/nine-execution-completion.json",
+      "sha256": "178cc1443fc4945cb2c3cc646299eacc3b21f075e92641536bf750badd121147"
+    },
+    "archive": {
+      "path": "src-tauri/target/internal-candidate/2026-10-17-tagged-audio-stage-8b487630/Farfold-0.1.7-8b487630.zip",
+      "sha256": "6df7c723c2c92476f3a6eb0e5e15fb7cb68ac40819a6c3a702168c06725fbdad"
+    },
+    "historicalBuildInstalledFalseRetained": true
+  },
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "8b487630a6bb4c55249a097cb88154d26f0df5df",
+    "binarySha256": "c6cb4a755019927289535c6fda6db69db34a91c1b0066c7ac46357cc846dcd80",
+    "install": {
+      "path": "output/2026-10-17-tagged-audio-stage/install/install-result.json",
+      "sha256": "a4d101718190e1faa077d6dd5f4ab569bdde81d6343b8c62ba0a682784713bf8"
+    },
+    "installCompletion": {
+      "path": "output/2026-10-17-tagged-audio-stage/install/install-execution-completion.json",
+      "sha256": "2bb1661c0a713aa4892d39fd32b32cdaba249b4b49ea65bfe05500df83e329ff"
+    },
+    "journal": {
+      "path": "output/2026-10-17-tagged-audio-stage/install/install-journal.jsonl",
+      "sha256": "2e1eca0cf079273bf3c329bbecc8f849b43cea89d2a03796ec11141cd6750743"
+    },
+    "independent10": {
+      "path": "output/2026-10-17-tagged-audio-stage/install/installed-independent-review-private.json",
+      "sha256": "ece3c783181d4b9ca6fd6b70892a47f3e75584cc99ad0a874ee536544071d127"
+    },
+    "independent10Completion": {
+      "path": "output/2026-10-17-tagged-audio-stage/install/installed-ten-execution-completion.json",
+      "sha256": "e0c8cd3660c88efa395815dc4e4bd25f4db608e39f950b73343ca8480443ac0c"
+    },
+    "passedIndependentChecks": 10,
+    "strictAdHocSignatureVerified": true,
+    "appLaunchedByThisStage": false,
+    "replacement": "Five per-file new-inode atomic replacements; not a whole-bundle atomic transaction. No backupApp/forcedquit/restore/retry."
+  },
+  "dataRetention": {
+    "manifests": [
+      {
+        "path": "output/2026-10-17-tagged-audio-stage/install/install-data-before.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      },
+      {
+        "path": "output/2026-10-17-tagged-audio-stage/install/install-data-preinstall.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      },
+      {
+        "path": "output/2026-10-17-tagged-audio-stage/install/install-data-after.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      }
+    ],
+    "receipts": [
+      {
+        "path": "output/2026-10-17-tagged-audio-stage/install/retention-before-receipt.json",
+        "sha256": "f06f93e7ffa78aa8f46fcffc8b19dffc482667f2594b0805aff93f940b78849d"
+      },
+      {
+        "path": "output/2026-10-17-tagged-audio-stage/install/retention-preinstall-receipt.json",
+        "sha256": "5ab7cf7c42d6b33740c171b27d8195e7c79a62d2fc700c7494706c8e62ce3150"
+      },
+      {
+        "path": "output/2026-10-17-tagged-audio-stage/install/retention-after-receipt.json",
+        "sha256": "742ed4626385c2799e2a9fc5f05a8ddfaeb3893182838666a9d2dc2ad9617afd"
+      }
+    ],
+    "actualCompletions": [
+      {
+        "path": "output/2026-10-17-tagged-audio-stage/install/before-execution-completion.json",
+        "sha256": "b4b64c6b0625ae0b54b589d5ac53674a4ce5c167a414337c0e7c8c6a5ba0ce09"
+      },
+      {
+        "path": "output/2026-10-17-tagged-audio-stage/install/preinstall-execution-completion.json",
+        "sha256": "670006f663dbf8a8e1bebd795574d4273eff5da97a6fcccfbe59399a593c2b59"
+      },
+      {
+        "path": "output/2026-10-17-tagged-audio-stage/install/after-execution-completion.json",
+        "sha256": "d88ce341c0129223c4cda1d6c80a5136eec918324e7e2510f93f898d56a16940"
+      }
+    ],
+    "eachEntries": 217407,
+    "strictThreeEqual": true,
+    "scope": "Fresh closed-observed individual process points,not continuous closed interval; normalQuitEvidence=null. Independent backup only Farfoldmetadata,not all217407entries. Source/firstcopy never SQLite-connected; old strict differences andunknown writers not waived."
+  },
+  "cleanup": {
+    "receipt": {
+      "path": "output/2026-10-17-tagged-audio-stage/install/candidate-cleanup.json",
+      "sha256": "a9fa85358e80171b06f91906cbbdc76e644323e1d9a0f82eb29dc58dae772c80"
+    },
+    "actualCompletion": {
+      "path": "output/2026-10-17-tagged-audio-stage/install/cleanup-execution-completion.json",
+      "sha256": "d6f6293683de5d47019fd9af39f178648197e4d607e2ef31cf2b355052f7f4ad"
+    },
+    "onlyExactCandidateFiles": 5,
+    "onlyEmptyDirectories": 5,
+    "formalAndArchiveRetained": true
+  },
+  "receipts": [
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/source-freeze.json",
+      "sha256": "c460a22bd3f3d1c269e73338b01d99a1f854952cfb93e924efaf64173372c9da"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/source-review.json",
+      "sha256": "6a3f224d216727984eb89d41038f7081f6061e13927190be6dedc8b961682f45"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/source-id3-independent-review.json",
+      "sha256": "94652a185da315a5a80e208eb19f9608deee77a59783963e99d8da44a0d72bcc"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/source-checkpoint.json",
+      "sha256": "0b28cbcab86a6c62e551ee27b49de5530b33aec1cf4850ffe7a4384e0d5aba44"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/root-affected-checks.json",
+      "sha256": "5af253f0dc8ef484721dcf2f416de86730756c06f7dfa06d2dc68355237796ef"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/id3/verification.json",
+      "sha256": "37050a1bee3bceb1e54156f5a4893ff666e9b18125c379c68f6246142123dc10"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/id3/common-red.json",
+      "sha256": "b1100711f65035d8644b4853b6f8e82b68af3fefc2c61624bdfa1ffa8187b72e"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/id3/common-green-1.json",
+      "sha256": "04823aab1817bff8e23b0b635cb5e3147627b4612601b8598c813a2d6d7240a2"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/conditions/selected-condition-delta.json",
+      "sha256": "b16e3182c74c18a7f645547ee24fc2e07e9662b8bafe862d72967bcac48dd890"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/conditions/format-and-third-batch-investigation.json",
+      "sha256": "d45a110f893f7b4203bbf982752416ed97d4cec7a3a337ad0105e383b219c6cc"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/conditions/mp4-readiness.json",
+      "sha256": "04102492ee22c3ef53e0e2a00c1bb749f235ccac522f8b23de830eb699b32a84"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/attachment-search/investigation.json",
+      "sha256": "10eb7ce536e342be7e9c9901b3a1f87e89142fe6847ad96720af83260a9d6a01"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/preparation-independent-review.json",
+      "sha256": "4336240c8d13794dd45c24ebbe046b445402658dd046f60949814f29ef5c0600"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/prebuild-binding-independent-review.json",
+      "sha256": "6d8fa36968718011b1b708f20650bb6b780c21197b1b5b5915c9914b4b3df904"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/preinstall-binding-independent-review.json",
+      "sha256": "407c2bcedd208e2ee878deabd6e375ab8430d421804849ce49a0e994e0959be3"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/browser-preexecution-review.json",
+      "sha256": "a5d58ce8c865fe53f742721f9d2216b50d145f46a687bbd7fc0946c81ac1a032"
+    },
+    {
+      "path": "output/2026-10-17-tagged-audio-stage/browser-independent/actual-results-independent-review.json",
+      "sha256": "18a07c7e3809c77472b9dcb83014a1e74506260bdccbd1e81d0a283d0e04ee67"
+    }
+  ],
+  "previousStageOriginal": {
+    "path": "docs/evidence/2026-10-17-media-search-next-stage/verification.json",
+    "sha256": "0efc724eeab8663cef79225e210e713e89f968be533267dd39946d4a21fe9555"
+  },
+  "remaining": [
+    "NEW24 relevant official/permission pins unchanged; one of32selected source differences is attributed to previous delivered search change,not an unknown writer. Affected newreal sends remainpaused.",
+    "Formal message/media/search positives,fullP13/P32/P35,29x8 andWindows remainopen.",
+    "Unknown ID3 versions/revisions/flags/v2.2compression/body/interleaved or trailingtags,freebitrate/otherlayers/unvisitedtails/codec payload/actualdecode andtransport memory remainuncovered.",
+    "Ogg/MP4 selected investigations lack independently complete longcontrols; no speculative implementations or repeated encoders.",
+    "P32 selected investigation no confirmed new defect; P18originalsamples/NEW29realbusy/P40currentadoption missing. Oldstrict differences/unknownwriters/OpenCodeinitialize and reopen caller unresolved."
+  ],
+  "publicationCompletionLocator": "output/2026-10-17-tagged-audio-stage/completion-verification.json",
+  "publicationCompletionClaimedAtRecordCreation": false
+}
