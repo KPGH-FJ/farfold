@@ -1,0 +1,397 @@
+{
+  "schema": 1,
+  "kind": "StageVerificationNotFullProductAcceptance",
+  "date": "2026-10-17",
+  "sourceCommit": "70f5eec106fed0f70cc514f3b6e61362010ed093",
+  "previousInstalledSourceCommit": "920d216cd3d36e54d9ac3b4badbeb666424f274c",
+  "result": "selectedAvifAndWaveIncrementDeliveredOtherRequirementsRemainOpen",
+  "onlyActivePlan": "plans/agent-access.md",
+  "taskRequirementsReference": "docs/agent-access-requirements.md",
+  "scope": {
+    "firstReleaseAgents": 29,
+    "standardsPerAgent": 8,
+    "originalRequirements": 151,
+    "originalIdsTitlesAndCompletionConditionsUnchanged": true,
+    "noSecondActivePlan": true,
+    "newAgentLoopOrUpstreamPatch": false,
+    "newDependencyEnvironmentSwitchOrCredentials": false
+  },
+  "delivered": {
+    "avif": {
+      "module": "src/runtime/message_avif_admission.ts",
+      "scope": "Bounded recognized BMFF boxes,item associations,derived grid/auxiliary declarations,visual display and supported sequence sample declarations before preview admission. Unknown versions/layouts or unavailable declarations remain explicitly notCovered under existing compatibility.",
+      "declarationLimits": {
+        "maxEdge": 8192,
+        "maxCanvasPixels": 16777216,
+        "maxFrames": 128,
+        "maxDeclaredPixelWork": 67108864,
+        "maxRecords": 65536,
+        "maxNestedDepth": 16
+      },
+      "knownVisualUnknownStsdBypassReproducedAndFixed": true,
+      "notAv1BitstreamMaxOrIntermediateFrameOrDecoderMemoryProof": true
+    },
+    "classicWave": {
+      "module": "src/runtime/message_audio_admission.ts",
+      "scope": "Classic RIFF/WAVE chunks and padding; recognized PCM,float32/64,and standard extensible GUID declarations validate rate/alignment and integral stored-data frames. Other codecs,GUIDs,containers and unsupported playlist/wavl layouts remain notCovered under existing compatibility.",
+      "maxStoredLinearDataSeconds": 600,
+      "maxChunkRecords": 65536,
+      "durationLimitIsPreviewPolicyNotFormatOrElapsedPlaybackGuarantee": true
+    },
+    "shared": {
+      "originalPayloadUriAndOrderPreserved": true,
+      "sameUiFeedbackAndExplicitPreviewLifecycle": true,
+      "singleItemByteAndAggregateBudgetsRetained": true,
+      "rejectionBeforeMediaSourceCreationCovered": true,
+      "noRemoteFetchOrAgentSpecificPanelAdded": true
+    }
+  },
+  "sourceEvidence": {
+    "freeze": {
+      "path": "output/2026-10-17-media-resource-stage/source-freeze.json",
+      "sha256": "ae600833afba51a125eb182965835dc12cbc4c28d0ec08ad0885028dc58663f7"
+    },
+    "independentReview": {
+      "path": "output/2026-10-17-media-resource-stage/source-review.json",
+      "sha256": "7ee65f25d53af2955299462e5dc63da436841efadd4fc250311785d10925fb95"
+    },
+    "avifAuthor": {
+      "path": "output/2026-10-17-message-avif-admission/verification.json",
+      "sha256": "4e2a44b295bd02a7f7643d9df0e4b38cb680279268877eb25ba594b324acd6e3"
+    },
+    "audioAuthor": {
+      "path": "output/2026-10-17-message-audio-admission/verification.json",
+      "sha256": "636533e37c518a5b7667b851d32ed4007db69e8ff87917d470aec87296528da8"
+    },
+    "sourceReviewedFiles": 41,
+    "ownedChangedFiles": 24,
+    "freezeScope": "Source review and installation input snapshot before final documentation publication. Current status and sole plan may be updated after completed installed10 and duplicate cleanup; production inputs remain the installed source."
+  },
+  "engineering": {
+    "receipt": {
+      "path": "output/2026-10-17-media-resource-stage/engineering/run1/verification.json",
+      "sha256": "edcace6adaee354905071e180f6513b728ddad6e0739fac5ce197f89411713fe"
+    },
+    "executionCompletion": {
+      "path": "output/2026-10-17-media-resource-stage/engineering/execution-completion.json",
+      "sha256": "de80dc6607e809a1208b305feb8cecb49b44bb730eb34005c02c2b74e717da18"
+    },
+    "actualSession": 68196,
+    "actualExitCode": 0,
+    "finalChunk": "a50242",
+    "freshSequentialChecks": 7,
+    "stableInputs": 19071,
+    "frontendFiles": 547,
+    "frontendPassed": 7036,
+    "rustPassed": 1787,
+    "rustIgnored": 6
+  },
+  "controlledBrowser": {
+    "summary": {
+      "path": "output/2026-10-17-media-resource-stage/browser-independent/independent-summary.json",
+      "sha256": "490cd0b1ef1d1adc22ea671bf22199d80011d002fe638592a747c030e1edeeb3"
+    },
+    "executionCompletion": {
+      "path": "output/2026-10-17-media-resource-stage/browser-independent/execution-completion-r2.json",
+      "sha256": "672bb4fcf0a8e576627d25abc443af35538ab9ca090327700f8cdc35649f0cbb"
+    },
+    "coverage": {
+      "productionComponents": "MessageContent, MessageAttachmentMedia and shared media budget under React StrictMode",
+      "chromium": {
+        "browserVersion": "155.0.8059.82",
+        "fullSelectedRun": {
+          "actualExitCode": 1,
+          "passed": 51,
+          "failed": 1,
+          "inputCount": 689,
+          "receipt": {
+            "path": "output/2026-10-17-media-resource-stage/browser-independent/chromium-run2-verification.json",
+            "sha256": "941eeb9e2fdadaf3f4648918ecb2157d8525b07e2e421649bc7dbd539788191c"
+          }
+        },
+        "onlyFailedCheck": "Immediate four-preview count before waiting for the fourth preview (the single audio among three images) to mount; original initial numeric count not captured.",
+        "leaseOnlyFollowup": {
+          "actualExitCode": 0,
+          "passed": 12,
+          "failed": 0,
+          "inputCount": 691,
+          "receipt": {
+            "path": "output/2026-10-17-media-resource-stage/browser-independent/chromium-lease-only-verification.json",
+            "sha256": "e1a4612b7b3d3b647f5b792569b30a8bc5cf8c6feef9addb8df6f7941f0ac4b7"
+          },
+          "stableCountSequence": [4, 4, 3, 4],
+          "safeOwnerNameCountObservationsRecorded": true
+        },
+        "avifActuallyDecoded": [
+          {
+            "sample": "avif-static",
+            "width": 1,
+            "height": 1
+          },
+          {
+            "sample": "avif-alpha_grid",
+            "width": 80,
+            "height": 80
+          },
+          {
+            "sample": "avif-grid",
+            "width": 1024,
+            "height": 770
+          },
+          {
+            "sample": "avif-sequence",
+            "width": 150,
+            "height": 150
+          }
+        ],
+        "wavCurrentTimePositiveWaitActuallyCompleted": true,
+        "explicitTrustedPlayAndActualMpegErrorCode4": true
+      },
+      "webkit": {
+        "browserVersion": "26.5",
+        "priorSelectedRun": {
+          "actualExitCode": 1,
+          "passed": 30,
+          "failedAssertions": 0,
+          "laterHarnessWaitTimedOut": true,
+          "receipt": {
+            "path": "output/2026-10-17-media-resource-stage/browser-independent/run1-verification.json",
+            "sha256": "f07230b7474d92f1ea420149bea8312e6880fcc66425600a61570711b82a4115"
+          },
+          "fourAvifDecodesRetainedOnUnchangedSourceAndAvifBytes": true
+        },
+        "avifActuallyDecodedFromPriorRun": [
+          {
+            "sample": "avif-static",
+            "width": 1,
+            "height": 1
+          },
+          {
+            "sample": "avif-alpha_grid",
+            "width": 80,
+            "height": 80
+          },
+          {
+            "sample": "avif-grid",
+            "width": 1024,
+            "height": 770
+          },
+          {
+            "sample": "avif-sequence",
+            "width": 150,
+            "height": 150
+          }
+        ],
+        "uncoveredFollowup": {
+          "actualExitCode": 0,
+          "passed": 25,
+          "failed": 0,
+          "inputCount": 690,
+          "receipt": {
+            "path": "output/2026-10-17-media-resource-stage/browser-independent/webkit-uncovered-run2-verification.json",
+            "sha256": "dc6474cd645afc366f2f7137843b5f3f73a0a3712a80fd33fc8a704f9e6852c9"
+          },
+          "noAvifRerunClaimed": true,
+          "wavObservedAfterTrustedUiClick": {
+            "currentTime": 0.006321083288639784,
+            "paused": false,
+            "preload": "none",
+            "muted": true
+          },
+          "actualMpegErrorCode4AndExplicitRetry": true
+        }
+      },
+      "selectedSharedBoundaries": [
+        "Eight dangerous metadata controls rejected before any IMG/audio source or objectURL, with original fields preserved",
+        "Search-only reveal does not admit media in selected full path",
+        "Four preview leases shared by three PNG and one audio; fifth refuses without automatic retry",
+        "Explicit Enter retries only after a lease release; exact source retirement on collapse/replacement/unmount",
+        "Real WAV muted UI play advances currentTime; preload none and no autoplay on expansion/retry/replacement",
+        "Real tiny invalid MPEG decoder error after explicit UI gesture and real retry",
+        "Synthetic late image/audio error events test retired-owner isolation separately from real MPEG codec error"
+      ],
+      "allSourceAndHarnessInputsStableWithinEachActualRun": true,
+      "all41FrozenSourcePinsStillEqual": true,
+      "noUnexpectedIpcExternalRequestCspViolationOrPageException": true,
+      "allOwnedBrowsersExitedZeroAndPageContextBrowserServerClosedPortClosed": true
+    },
+    "preservedFailures": [
+      {
+        "kind": "OriginalChromiumLaunchTimeout",
+        "actualExitCode": 1,
+        "checks": 0,
+        "cause": "unknown",
+        "receipt": {
+          "path": "output/2026-10-17-media-resource-stage/browser-independent/run1-verification.json",
+          "sha256": "f07230b7474d92f1ea420149bea8312e6880fcc66425600a61570711b82a4115"
+        }
+      },
+      {
+        "kind": "OriginalWebkitBadPngMustErrorAssumption",
+        "actualExitCode": 1,
+        "explanation": "Actual standalone WebKit decoded the tiny bad PNG 2x1 with load/no error; output harness replaced only that negative control with diagnostic-tested 23-byte MPEG. No production PNG change.",
+        "diagnostic": {
+          "path": "output/2026-10-17-media-resource-stage/browser-independent/diagnostic-webkit-codec/verification.json",
+          "sha256": "6b643f8d341d321367f637ed8b11b1986ad84e21afb8d577661c0034b2759181"
+        }
+      },
+      {
+        "kind": "ChromiumImmediateCountWithoutMediaMountWait",
+        "actualExitCode": 1,
+        "passed": 51,
+        "failed": 1,
+        "review": {
+          "path": "output/2026-10-17-media-resource-stage/browser-independent/chromium-run2-timing-review.json",
+          "sha256": "88ba7bd54550fdbe024353adbd3abf01650fc263b514183f308c839c80de40ba"
+        },
+        "followupDoesNotRewriteOriginal": true
+      },
+      {
+        "kind": "EarlierFixturePreparationSelectorErrors",
+        "actualExitCode": 1,
+        "productBrowserNotStartedByThosePreparationErrors": true
+      }
+    ],
+    "limits": [
+      "Controlled local production component paths only; no formal Farfold App, real Agent or SQL operations",
+      "Four AVIF decoded poster outcomes do not establish full sequence playback or every AVIF layout/codec",
+      "Classic recognized WAVE declared-duration policy and tiny actual WAV progress do not establish all-audio bounds or full playback",
+      "No peak codec/transport memory, GPU resource-release, full-P13, Windows or29-Agent acceptance",
+      "No claim that original Chromium launch timeout or historical unknown writers/reopen/OpenCode causes were fixed"
+    ],
+    "notOneAllGreenRun": true
+  },
+  "candidate": {
+    "receipt": {
+      "path": "output/2026-10-17-media-resource-stage/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "0203b29b95d0962106bf85b14ac74b99228b60857429e6d146315b1b558fc05c"
+    },
+    "actualSession": 56632,
+    "actualExitCode": 0,
+    "finalChunk": "252313",
+    "actualBuildAttempts": 1,
+    "productionInputs": 1769,
+    "independent9": {
+      "path": "output/2026-10-17-media-resource-stage/candidate-preparation/independent/review.json",
+      "sha256": "50b75873c7f0476d84aa39eb6db91cda876be1dd63dcc0795d0084e4498ed493"
+    },
+    "independent9ActualExitCode": 0,
+    "independent9Chunk": "37693c",
+    "archive": "src-tauri/target/internal-candidate/2026-10-17-media-resource-stage-70f5eec1/Farfold-0.1.7-70f5eec1.zip",
+    "archiveSha256": "33f4e0eec2f5cc5131a216638ecb09ff119833252be0d10045e8ffba40b1ece6"
+  },
+  "installation": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binarySha256": "75c76f690fb0c8ecb2c3ebd6579b10e7fa1099fff07e6a22ac749bcba3eb7150",
+    "result": {
+      "path": "output/2026-10-17-media-resource-stage/install/install-result.json",
+      "sha256": "d9fe7f15ff797844d83da14a766d05d7ddac880d0fb3bad80a3d96f927ec8db7"
+    },
+    "actualSession": 49843,
+    "actualExitCode": 0,
+    "finalChunk": "ad57af",
+    "independent10": {
+      "path": "output/2026-10-17-media-resource-stage/install/installed-independent-review-private.json",
+      "sha256": "791defb8d9a6f2da1cb3fde295e9af15d5f7739520f1775329d88a521b282621"
+    },
+    "independent10Execution": {
+      "path": "output/2026-10-17-media-resource-stage/install/installed-ten-execution-completion.json",
+      "sha256": "497f4a8235a8968545d5608db2ad0e02d42dd9af49964eb8ba5b377d079f2d38"
+    },
+    "independent10ActualSession": 20780,
+    "independent10ActualExitCode": 0,
+    "independent10FinalChunk": "b837c8",
+    "exactFiveNewInodeFilesAndStrictSignatureVerified": true,
+    "fivePerFileAtomicReplacementsNotWholeBundleTransaction": true,
+    "duplicateCandidateCleanup": {
+      "path": "output/2026-10-17-media-resource-stage/install/candidate-cleanup.json",
+      "sha256": "168301e05110a9571b9aff83a83de66f6e7d53523e0479b12e184b2d796baab6"
+    },
+    "cleanupActualExitCode": 0,
+    "cleanupChunk": "501929",
+    "formalAppLaunchedByThisStage": false,
+    "noPublicSigningNotarizationOrDistributionClaimed": true
+  },
+  "dataRetention": {
+    "freshCompleteManifestCount": 3,
+    "entriesPerManifest": 217407,
+    "allThreeStrictlyEqual": true,
+    "manifestSha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4",
+    "manifests": [
+      {
+        "path": "output/2026-10-17-media-resource-stage/install/install-data-before.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      },
+      {
+        "path": "output/2026-10-17-media-resource-stage/install/install-data-preinstall.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      },
+      {
+        "path": "output/2026-10-17-media-resource-stage/install/install-data-after.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      }
+    ],
+    "before": {
+      "actualSession": 64453,
+      "actualExitCode": 0,
+      "finalChunk": "a5d29e",
+      "receipt": {
+        "path": "output/2026-10-17-media-resource-stage/install/retention-before-receipt.json",
+        "sha256": "2965a3baf760866a1bf72ecb9c7fa706593024a6e585a007843c40429b29e1a1"
+      }
+    },
+    "preinstall": {
+      "actualSession": 93116,
+      "actualExitCode": 0,
+      "finalChunk": "9f4b7a",
+      "receipt": {
+        "path": "output/2026-10-17-media-resource-stage/install/retention-preinstall-receipt.json",
+        "sha256": "111049eaeee97a7b7c3822e709c9b45dfd2f8e1f4b2a4e703dd83b60ed055499"
+      }
+    },
+    "after": {
+      "actualSession": 97764,
+      "actualExitCode": 0,
+      "finalChunk": "a0d346",
+      "receipt": {
+        "path": "output/2026-10-17-media-resource-stage/install/retention-after-receipt.json",
+        "sha256": "5b1ee58ca43a79553248eb4cd1e5a5b5f0f49eaa28a4ced693649d5376d53d4e"
+      }
+    },
+    "standaloneBackupCheckedOnSecondCopyOnly": true,
+    "sealedBackupSha256": "ac061be0f0d38dd0adbe6f85272c1d59e009eb5a85ae9d3af19edf2ebec2e912",
+    "noSidecarExemptionOrHistoryDeletion": true,
+    "earlierStrictDifferencesOrUnknownWritersNotWaived": true,
+    "sqliteConnectionToSourceOpened": false,
+    "normalQuitEvidence": null,
+    "onlyRecordedProcessZeroPointsNotContinuousClosedInterval": true
+  },
+  "otherSelectedWork": {
+    "unchangedSourceAndSelectedEvidenceDelta": {
+      "path": "output/2026-10-17-media-resource-stage/third-batch/audit-delta.json",
+      "sha256": "e2c7fa1951e1d28c67e0f5cd924342c2f51ace80026a7903b7177f64a51f89f7"
+    },
+    "NEW24": "Official surface and selected inputs unchanged; no new repeated investigation or affected real send. Complete effective file/network permission readback from same official connection remains unknown; affected new real sends stay paused.",
+    "P18": "Prior exact two-file candidate was absent; this delta did not reobserve files or recreate/retarget a sample.",
+    "P32": "No eligible completed-message item.attachments established in selected unchanged evidence; no global absence claim.",
+    "NEW29": "No actual current compaction busy state exercised.",
+    "P40": "Temporary discovery is not actual adoption by current conversation."
+  },
+  "retainedFailures": {
+    "sourceIndependentCounterexample": {
+      "path": "output/2026-10-17-media-resource-stage/source-review-preliminary/diagnostic-results.json",
+      "sha256": "30130d55592af29582f9b6d7eb5d76e1da071844e0f8c8ef9def315de82a8204"
+    },
+    "avifVisualTkhdCountBypass": "Original independent diagnostic1ea032 failed; author red151fcf then fixed, independent count control4d5bb2 passed on its recorded source. Final frozen source334 affected tests and full seven passed.",
+    "authorFixtureAndPreparationFailures": "Original truncated libavif GRID and copied WAVE fixture failures, and author/type/preparation failures remain in pinned author records; corrected fixture bytes do not rewrite earlier runs.",
+    "browserFailures": "Original launch timeout, tolerant-PNG assumption and immediate-mount count failure retained above; scoped diagnostics/followups do not make original runs pass.",
+    "candidateReviewPreparationKeyError": "Preparation-only actualSession field lookup failed38e0d8 before helper; actual independent9 helper ran once and passed. No failed candidate9 or duplicate build claim."
+  },
+  "remaining": "NEW24,formal message media,uncovered AVIF layouts/codecs and audio resources,actual codec/transport allocation,full animation/loop/playback,long-running behavior,full P13,remaining29x8 and Windows real-system proof stay open. Historical data differences,unknown writers,OpenCode initialize and reopen request cause remain unresolved. Distribution and product exclusions unchanged.",
+  "priorEvidenceAndFailuresUnmodified": true,
+  "completionReceipt": "output/2026-10-17-media-resource-stage/completion-verification.json",
+  "productOrRealAgentAcceptanceClaimed": false
+}
