@@ -7,6 +7,7 @@ import { messageAvifAdmission } from "./message_avif_admission";
 import { messageFlacAdmission } from "./message_flac_admission";
 import { messageAdtsAdmission } from "./message_adts_admission";
 import { messageMpegAudioAdmission } from "./message_mpeg_audio_admission";
+import { messageMp4AudioAdmission } from "./message_mp4_audio_admission";
 
 function record(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -133,7 +134,8 @@ function base64Value(code: number): number {
  * transport and actual decoder memory are not bounded here. Recognized linear
  * WAVE, native FLAC, ADTS and indexed LayerIII MPEG frames receive their
  * recognized duration policies, including selected leading ID3 stored extents
- * on the ADTS/MPEG paths. The original tagged source is never rewritten;
+ * on the ADTS/MPEG paths. Selected classic MP4 audio-track declarations also
+ * receive a media-clock policy. The original source is never rewritten;
  * other audio and unknown duration declarations remain uncovered.
  * PNG/APNG receives only structural/declaration admission,
  * including animation frame work; actual playback remains unverified.
@@ -229,6 +231,15 @@ export function attachmentMediaAdmission(
             mpeg !== "notMpegAudio"
           )
             return { status: "rejected", reason: mpeg };
+          if (mpeg === "notMpegAudio") {
+            const mp4 = messageMp4AudioAdmission(data);
+            if (
+              mp4 !== "withinBudget" &&
+              mp4 !== "notCovered" &&
+              mp4 !== "notMp4Audio"
+            )
+              return { status: "rejected", reason: mp4 };
+          }
         }
       }
     }

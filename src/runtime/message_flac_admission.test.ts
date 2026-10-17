@@ -185,12 +185,16 @@ it("rejects an escaped metadata body and a missing final-metadata marker", () =>
   expect(admit(encoded(missing))).toBe("invalid");
 });
 
-it.each(["", "fLa", "RIFF\0\0\0\0WAVE", "OggS", "ID3", "ftyp"])(
+it.each(["", "fLa", "RIFF\0\0\0\0WAVE", "OggS", "ftyp"])(
   "does not claim another container%j",
   (signature) => {
     expect(admit(encoded(Buffer.from(signature)))).toBe("notFlac");
   },
 );
+
+it("rejects a recognized but truncated ID3 prefix before identifying FLAC", () => {
+  expect(admit(encoded(Buffer.from("ID3")))).toBe("invalid");
+});
 
 it.each([65_535, 65_536])(
   "charges%s extra bounded metadata headers",

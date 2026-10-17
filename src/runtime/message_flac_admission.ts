@@ -2,6 +2,7 @@ import {
   MAX_MESSAGE_AUDIO_RECORDS,
   MAX_MESSAGE_AUDIO_SECONDS,
 } from "./message_audio_admission";
+import { messageAudioPrefix } from "./message_audio_prefix";
 import {
   MessageRasterError,
   MessageRasterReader,
@@ -19,7 +20,8 @@ function requireFlac(value: unknown): asserts value {
   if (!value) throw new MessageRasterError("invalid");
 }
 
-/** Native fLaC metadata declarations only; canonical Base64 and byte admission
+/** fLaC metadata declarations after selected leading ID3 stored extents only;
+ * canonical Base64 and byte admission
  * must precede this call. RFC9639 §§6,8.1,8.2: STREAMINFO is first and unique;
  * interchannel samples / rate is a declared duration, independent of channels.
  * Zero total samples are unknown; zero rate may describe legal non-audio data.
@@ -27,13 +29,20 @@ function requireFlac(value: unknown): asserts value {
  * independently known budgets still apply. Payloads (including PICTURE/URIs),
  * frame overrides/CRCs, actual playback and decoder memory are not inspected.
  * https://www.rfc-editor.org/rfc/rfc9639.html
+ * Leading ID3 is optional decoder compatibility, not a FLAC conformance rule:
+ * https://www.xiph.org/flac/documentation_format_overview.html
+ * No tag bytes are removed or decoded; prefix and metadata share the record cap.
  */
 export function messageFlacAdmission(data: string): MessageFlacAdmission {
   const reader = new MessageRasterReader(data);
-  if (!reader.matches(0, "fLaC")) return "notFlac";
+  const prefix = messageAudioPrefix(reader);
+  if (prefix.status !== "none" && prefix.status !== "supported")
+    return prefix.status;
+  if (!reader.matches(prefix.offset, "fLaC")) return "notFlac";
   try {
-    let at = 4;
-    let records = 0;
+    let at = prefix.offset + 4;
+    let records = prefix.records;
+    let metadataRecords = 0;
     let rate = 0;
     let samples = 0;
     let uncovered = false;
@@ -46,7 +55,9 @@ export function messageFlacAdmission(data: string): MessageFlacAdmission {
       const length = reader.u8(at + 1) * 65_536 + reader.u16be(at + 2);
       const start = at + 4;
       reader.require(start, length);
-      requireFlac(type !== 127 && (records === 1 ? type === 0 : type !== 0));
+      requireFlac(
+        type !== 127 && (metadataRecords++ === 0 ? type === 0 : type !== 0),
+      );
       if (type === 0) {
         requireFlac(length === 34);
         const minBlock = reader.u16be(start);

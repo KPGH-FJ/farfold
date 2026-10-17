@@ -83,13 +83,15 @@ AVIF入口 [message_avif_admission.ts](../src/runtime/message_avif_admission.ts)
 
 音频入口 [message_audio_admission.ts](../src/runtime/message_audio_admission.ts) 仅对已识别经典RIFF/WAVE做容器边界、填充和有界分片遍历；明确的线性PCM、IEEE浮点及标准扩展格式才按data字节、帧对齐和采样率核算，并采用600秒的消息预览策略。未知压缩编码、其他容器、wavl和播放列表保持原播放路径，不套用PCM时长公式。该策略不等于格式限制、实际播放/循环时长或解码与重采样内存保证。
 
-经典WAVE未识别时，共用入口另调 [message_flac_admission.ts](../src/runtime/message_flac_admission.ts) 核原生`fLaC`标记、首个且唯一的STREAMINFO及有界元数据。已知总采样数与采样率沿600秒声明策略；总量为零的未知值、零采样率的非音频数据和保留元数据保持未覆盖，独立已知的超限仍拒绝。跨原允许音频MIME核实际标记，不新增格式入口；不扫描音频帧、嵌入图片或URI，不核实际解码内存或帧内参数变化。
+经典WAVE未识别时，共用入口另调 [message_flac_admission.ts](../src/runtime/message_flac_admission.ts) 核`fLaC`标记、首个且唯一的STREAMINFO及有界元数据；也核选定前置ID3存储边界，标签与FLAC元数据共享记录预算，原始来源字节保持。前置ID3只是选定解码器的兼容布局，不是FLAC规范要求。已知总采样数与采样率沿600秒声明策略；总量为零的未知值、零采样率的非音频数据和保留元数据保持未覆盖，独立已知的超限仍拒绝。跨原允许音频MIME核实际标记，不新增格式入口；不扫描音频帧、嵌入图片或URI，不核实际解码内存或帧内参数变化。
 
 其他音频另由 [message_adts_admission.ts](../src/runtime/message_adts_admission.ts) 识别ADTS并有界遍历帧边界；对已知AAC-LC采样率和块数用整数时间基计入同一600秒声明策略。CRC保护或未知配置保留未覆盖，仍保留独立已知的超限判断；ADIF、其他AAC容器及帧负载语义不在此路径的证明范围。它不增加MIME支持或解码器能力，也不等于实际播放时长或内存保证。
 
 [message_mpeg_audio_admission.ts](../src/runtime/message_mpeg_audio_admission.ts) 对MPEG LayerIII已索引码率帧沿版本、采样率、填充和帧边界累加声明采样数，以整数时间基核同一600秒策略。Xing/VBRI时长不代替实际遍历的帧声明；CRC保护帧保留部分覆盖，已知超限仍拒绝。自由码率、其他层和未知尾部不搜索猜测下一同步点，保留未覆盖；不解码音频、不核位储存器或完整负载，不保证实际播放时长和解码内存。实际签名检查跨原允许音频MIME，未增加格式入口。
 
-两者共用 [message_audio_prefix.ts](../src/runtime/message_audio_prefix.ts) 核连续前置ID3v2.2/2.3/2.4修订0标签的已知头标志、存储字节范围及v2.4可选尾标记，随后只在声明边界识别音频；标签和音频帧共享65536条记录预算。未知版本、修订和标志保持未覆盖，不搜索标签内部或尾部同步点；标签内容、嵌入图片、URL、去同步及压缩语义不解码。播放保留原始完整来源，不裁掉标签、不改字节；这仍是选定声明准入，不是标签内容正确、完整播放或解码内存证明。
+FLAC、ADTS与MPEG共用 [message_audio_prefix.ts](../src/runtime/message_audio_prefix.ts) 核连续前置ID3v2.2/2.3/2.4修订0标签的已知头标志、存储字节范围及v2.4可选尾标记，随后只在声明边界识别音频；标签与对应音频帧或FLAC元数据共享65536条记录预算。未知版本、修订和标志保持未覆盖，不搜索标签内部或尾部同步点；标签内容、嵌入图片、URL、去同步及压缩语义不解码。播放保留原始完整来源，不裁掉标签、不改字节；这仍是选定声明准入，不是标签内容正确、完整播放或解码内存证明。
+
+[message_mp4_audio_admission.ts](../src/runtime/message_mp4_audio_admission.ts) 另核首个`ftyp`的选定经典ISO/M4A容器，只遍历固定层级、有界盒范围及声明表，不读取`mdat`样本负载。对已识别`soun`音轨，以该轨刻度分别核`mdhd`时长与`stts`的样本计数乘间隔，沿600秒策略，64位值用BigInt比较；不取影片或视频时钟，也不把并行音轨、声道倍乘成时长。盒、品牌和时间表条目共享65536记录预算。未知版本/标志/品牌、零或未知时间、时钟不一致、编辑映射及分片保持部分覆盖，独立已知超限仍拒绝；不验证完整编解码内容，不推断去除AAC前导/尾部采样后的准确播放或实际内存。原允许MIME和播放字节保持，未知容器不通过搜索内部同步点猜测格式。
 
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化按各自租约退役。[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 移除旧图片来源并处理重复挂载；音频暂停、清来源及重新加载沿其生命周期处理。可明确重试，不自动重复占用。
 
