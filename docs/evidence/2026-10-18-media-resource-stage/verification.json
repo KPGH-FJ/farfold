@@ -1,0 +1,383 @@
+{
+  "schema": 1,
+  "kind": "SelectedSharedMediaFailureRetirementAndExplicitRetryStage",
+  "recordedAtUtc": "2026-10-17T17:36:39.893403+00:00",
+  "onlyActivePlan": "plans/agent-access.md",
+  "originalScope": "151 requirements;29 Agents x8 standards unchanged",
+  "result": "selectedSourceControlledAndStaticInstallationPassed; fullP13AndRealAgentUnverified",
+  "sourceCommit": "9f22e4117b938e79516265bdb4bc19d8ea0f2428",
+  "implementation": {
+    "scope": "Clear only the current failed media source before releasing its exact admitted file-byte/instance lease. Parent distinguishes failure from quota, explicit retry reacquires; another owner releasing cannot auto-load. Original payload, source fields and order retained.",
+    "elementOriginalRed": {
+      "path": "output/2026-10-18-media-resource-stage/lifecycle/original-red.json",
+      "sha256": "b620660445b0e35784b4ba9d6b97a98f8de104571db475bce3650c74ceb7a42e"
+    },
+    "parentFeedbackOriginalRed": {
+      "path": "output/2026-10-18-media-resource-stage/lifecycle/original-feedback-red.json",
+      "sha256": "2dd35267d4a3f022ed2566b6efc3b12e33200b22111aa53b18fc88125ba3ff21"
+    },
+    "hookOriginalApiRed": {
+      "path": "output/2026-10-18-media-resource-stage/image-investigation/hook-original-red/verification.json",
+      "sha256": "ac01428f9c747378ed2b873fb36438ace585ca391d24c609dae69ac1ed018963"
+    },
+    "hookRedClassification": "9failed/1passed because old fail() API absent; not nine independently reproduced resource defects.",
+    "originalChromeRed": {
+      "path": "output/2026-10-18-media-resource-stage/lifecycle-browser/execution-completion.json",
+      "sha256": "f9f83a635e418d0dca52bc4b1787d4b28b432880287ac68775f5ee3878404652"
+    },
+    "redScope": "Element semantic2failed; parent SSR2failed/1passed; deterministic hook API9failed/1passed; original real Chrome10passed/2failed. Synthetic errors are not codec failures.",
+    "affectedGreen": {
+      "path": "output/2026-10-18-media-resource-stage/lifecycle/affected-run1.json",
+      "sha256": "d1d3d6599ed3e87ee1948321bf6e71e7b8695fd61377e4c934a5211e8948428c"
+    },
+    "affectedScope": "9files/63tests; deterministic hook simulation, parent SSR and element peers remain separate from real browser.",
+    "unchanged": "No new MIME, container/codec parser, decoder, dependency, environment switch, Agent UI branch, user configuration or persistent event ledger."
+  },
+  "investigations": {
+    "mp4": {
+      "path": "output/2026-10-18-media-resource-stage/mp4-investigation/investigation.json",
+      "sha256": "576bb122b7301f739e7f2ffeede1ad38c8fd572d36182bd9869a7cb4efb48a46"
+    },
+    "mp4Probe": {
+      "path": "output/2026-10-18-media-resource-stage/mp4-investigation/edit-list-probe.json",
+      "sha256": "362d5cc6874c3c6b419682d43c2a2e4f88bf025b0eb68d30c51bb32eb506dfb5"
+    },
+    "mp4Result": "Metadata-only repeated-edit candidate declares603s presentation, but one complete CoreAudio decode remains100310frames/32000Hz=3.1346875s. Outer1/leaf0 retained; no confirmed new >600s control or production MP4 repair.",
+    "image": {
+      "path": "output/2026-10-18-media-resource-stage/image-investigation/investigation.json",
+      "sha256": "610ce2ad5e0756e6badb6127cc61e9981a9f0d18a2394c0f848b03e53a6604bf"
+    },
+    "imageResult": "Bounded selected container/source investigation found no confirmed new valid image counterexample; no speculative parser change."
+  },
+  "engineering": {
+    "kind": "ConsumedActualEngineeringCompletion",
+    "sessionId": 63149,
+    "actualExitCode": 0,
+    "actualFinalChunk": "8d306a",
+    "receipt": {
+      "path": "output/2026-10-18-media-resource-stage/engineering/run1/verification.json",
+      "sha256": "b9bc427bddb1153c587400fa78f497829913dc5ab190ebadce341fc18403854d"
+    },
+    "inputCount": 19121,
+    "beforeAfterExact": true,
+    "allSevenPassed": true,
+    "frontendFiles": 575,
+    "frontendPassed": 7556,
+    "rustPassed": 1787,
+    "rustIgnored": 6,
+    "completion": {
+      "path": "output/2026-10-18-media-resource-stage/engineering/execution-completion.json",
+      "sha256": "30ac11398cc02bb1d8775653fecae73f57293811136edca324a7fe145d21d329"
+    },
+    "scope": "Seven actual sequential checks;19121stable inputs/575frontend files/7556tests/Rust1787+6ignored; no App/Agent proof"
+  },
+  "controlledBrowser": {
+    "summary": {
+      "path": "output/2026-10-18-media-resource-stage/browser-independent/summary.json",
+      "sha256": "a4929a1799fd5a5487c4dbb290d347e15b188c1f0c9d1682ce844f4abd1d2d14"
+    },
+    "actualResultsIndependentReview": {
+      "path": "output/2026-10-18-media-resource-stage/browser-independent/actual-results-independent-review.json",
+      "sha256": "06e540ed471ff96b10624d3b7b3015128bc5482374285779c376853c1d724b56"
+    },
+    "engines": {
+      "chromium": {
+        "actualSessionId": 34775,
+        "actualExitCode": 0,
+        "actualFinalChunk": "4fdf6e",
+        "receipt": {
+          "path": "output/2026-10-18-media-resource-stage/browser-independent/chromium-lifecycle-r1-verification.json",
+          "sha256": "94c70d23e9e53266be32e73bbb387fb4e3289bc746b3d10228ae34b119abae20"
+        },
+        "completion": {
+          "path": "output/2026-10-18-media-resource-stage/browser-independent/chromium-lifecycle-r1-execution-completion.json",
+          "sha256": "0cb516814365090e15dd2899c66c0f03eec32eb3e0d1a1145a3038ce71c2fced"
+        },
+        "results": {
+          "passed": 47,
+          "failed": 0
+        },
+        "inputCount": 736,
+        "sourceUnchanged": true,
+        "playback": [
+          {
+            "currentTime": 0.085077,
+            "duration": 3.232,
+            "muted": true,
+            "errorCode": null,
+            "maxObservedEventTime": 0.085176,
+            "trustedRequests": 1,
+            "resolved": true,
+            "declaredSeconds": 3.232,
+            "priorDecodedSeconds": 3.1346875,
+            "completePlaybackClaimed": false
+          }
+        ],
+        "sameOriginInternalBlobRequestCount": 0,
+        "externalRequests": 0,
+        "ipcCalls": 0,
+        "cspViolations": 0,
+        "errors": [],
+        "ownedBrowserProcesses": [
+          {
+            "pid": 25908,
+            "parentPid": 25906,
+            "executable": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+            "exitedObserved": true,
+            "exitCode": 0,
+            "signal": null
+          }
+        ],
+        "closure": {
+          "pageClosed": true,
+          "contextClosed": true,
+          "browserClosed": true,
+          "serverClosed": true,
+          "port": 1593,
+          "portOpenAfterClose": false
+        }
+      },
+      "webkit": {
+        "actualSessionId": 88545,
+        "actualExitCode": 0,
+        "actualFinalChunk": "ca2387",
+        "receipt": {
+          "path": "output/2026-10-18-media-resource-stage/browser-independent/webkit-lifecycle-r1-verification.json",
+          "sha256": "ad61f430b7907fe5efeb8e2cb478cb69f6c21acb1393a24c6c49d1f97958e460"
+        },
+        "completion": {
+          "path": "output/2026-10-18-media-resource-stage/browser-independent/webkit-lifecycle-r1-execution-completion.json",
+          "sha256": "fc47caec4959b495f07e8f2101bec149fe6ffe239e4599ba9a60e66201e9fee8"
+        },
+        "results": {
+          "passed": 47,
+          "failed": 0
+        },
+        "inputCount": 736,
+        "sourceUnchanged": true,
+        "playback": [
+          {
+            "currentTime": 0.007358666742220521,
+            "duration": 3.1346875,
+            "muted": true,
+            "errorCode": null,
+            "maxObservedEventTime": 0,
+            "trustedRequests": 1,
+            "resolved": true,
+            "declaredSeconds": 3.232,
+            "priorDecodedSeconds": 3.1346875,
+            "completePlaybackClaimed": false
+          }
+        ],
+        "sameOriginInternalBlobRequestCount": 16,
+        "externalRequests": 0,
+        "ipcCalls": 0,
+        "cspViolations": 0,
+        "errors": [],
+        "ownedBrowserProcesses": [
+          {
+            "pid": 26264,
+            "parentPid": 26263,
+            "executable": "/Users/tw/Desktop/farfold/output/2026-10-10-text-feedback-webkit/browsers/webkit-2336/pw_run.sh",
+            "exitedObserved": true,
+            "exitCode": 0,
+            "signal": null
+          }
+        ],
+        "closure": {
+          "pageClosed": true,
+          "contextClosed": true,
+          "browserClosed": true,
+          "serverClosed": true,
+          "port": 1593,
+          "portOpenAfterClose": false
+        }
+      }
+    },
+    "eachChecksPassed": 47,
+    "eachInputCount": 736,
+    "eachBeforeAfterExact": true,
+    "scope": "Exact72B PNG displays2x1. Exact16054B short M4A one trusted muted play resolved/progress per engine. Five-owner quotas, current synthetic error retirement, explicit lease reacquisition, old errors/source changes/text/focus/search/group/collapse/unmount/StrictMode covered.",
+    "limits": "Synthetic errors only lifecycle; no natural codec-failure, immediate decoder-memory release, full/exact playback, formal message, App, real Agent or Windows proof. Chrome duration3.232 vs WebKit3.1346875, declaration3.232/prior completePCM3.1346875; cause unknown. WebKit16 same-origin internal blob requests retained; script objectURL0. Old33B AAC/55B FLAC failures not rerun or resolved.",
+    "allOwnedResourcesAndPortClosed": true
+  },
+  "candidate": {
+    "receipt": {
+      "path": "output/2026-10-18-media-resource-stage/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "3e679ebba002173ee3740a929d191bde45e499eeed6c669032228054321d0172"
+    },
+    "actualBuildCompletion": {
+      "path": "output/2026-10-18-media-resource-stage/candidate-preparation/candidate-build-completion.json",
+      "sha256": "833b4f65e6e339a38b70f69f71f3ece7a686d3c3be5ffa04c04523528f3547f3"
+    },
+    "productionInputs": 1813,
+    "independent9": {
+      "path": "output/2026-10-18-media-resource-stage/candidate-preparation/independent/review.json",
+      "sha256": "226e5e797cc054c437620fc7597ad23a93dab5c956e8b026f8449c5165f45510"
+    },
+    "independent9Completion": {
+      "path": "output/2026-10-18-media-resource-stage/candidate-preparation/independent/nine-execution-completion.json",
+      "sha256": "f9e11b2243cd3f75b9a598bd2d0b0cef38e208a1c929e46d48061f3bc3cdf7e3"
+    },
+    "archive": {
+      "path": "src-tauri/target/internal-candidate/2026-10-18-media-resource-stage-9f22e411/Farfold-0.1.7-9f22e411.zip",
+      "sha256": "7cbd3b896df73f08a4a8922d79dc8c4e8e515b14face2c559f08017ae0edefd5"
+    },
+    "historicalBuildInstalledFalseRetained": true
+  },
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "9f22e4117b938e79516265bdb4bc19d8ea0f2428",
+    "binarySha256": "9c53b3d0edaf192fdab76f901f78b7a8eef839f51a0af8b422435a2467aa7ef5",
+    "install": {
+      "path": "output/2026-10-18-media-resource-stage/install/install-result.json",
+      "sha256": "f92ec869bf05c96847d365eccf68a51adc0f1881cfdf8757f6242dff0a1f5453"
+    },
+    "installCompletion": {
+      "path": "output/2026-10-18-media-resource-stage/install/install-execution-completion.json",
+      "sha256": "f46dae6cbebc5807e61f60803bfdaebf4ae8b4fc07851de1743f4fdc819cc3dc"
+    },
+    "journal": {
+      "path": "output/2026-10-18-media-resource-stage/install/install-journal.jsonl",
+      "sha256": "48219b884e9e9ec73c066c28482ea8913c916f63047d2d8bf9e166a74f90a690"
+    },
+    "independent10": {
+      "path": "output/2026-10-18-media-resource-stage/install/installed-independent-review-private.json",
+      "sha256": "acb385bcfebdb35c3c317c242d6691f480bae7200c316308416e7a5b39afc1dd"
+    },
+    "independent10Completion": {
+      "path": "output/2026-10-18-media-resource-stage/install/installed-ten-execution-completion.json",
+      "sha256": "e84111b1d7d5f7cd57c54d0fa63432da326c3575a6b1d25cfd17d4c0369f7755"
+    },
+    "passedIndependentChecks": 10,
+    "strictAdHocSignatureVerified": true,
+    "appLaunchedByThisStage": false,
+    "replacement": "Five per-file new-inode atomic replacements; not whole-bundle atomic transaction. No backupApp/forcedquit/restore/retry."
+  },
+  "dataRetention": {
+    "manifests": [
+      {
+        "path": "output/2026-10-18-media-resource-stage/install/install-data-before.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      },
+      {
+        "path": "output/2026-10-18-media-resource-stage/install/install-data-preinstall.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      },
+      {
+        "path": "output/2026-10-18-media-resource-stage/install/install-data-after.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      }
+    ],
+    "receipts": [
+      {
+        "path": "output/2026-10-18-media-resource-stage/install/retention-before-receipt.json",
+        "sha256": "4d1948b9032af4a8bee2b95c2646100108337e848eaa74fd4f718933979bcd26"
+      },
+      {
+        "path": "output/2026-10-18-media-resource-stage/install/retention-preinstall-receipt.json",
+        "sha256": "4d668bf1780e8ca4adc4c30cf2f7eb6bb565cef927fb6972b0767194e524271b"
+      },
+      {
+        "path": "output/2026-10-18-media-resource-stage/install/retention-after-receipt.json",
+        "sha256": "71d4343d6b01ee82bd7e0553f42ca727144d62013d1e6ac0dc475729fb442fc7"
+      }
+    ],
+    "actualCompletions": [
+      {
+        "path": "output/2026-10-18-media-resource-stage/install/before-execution-completion.json",
+        "sha256": "f97aa536f2a4adb27174e18aaa2009a5ac6afa62327cc6a1ae50023b480bc299"
+      },
+      {
+        "path": "output/2026-10-18-media-resource-stage/install/preinstall-execution-completion.json",
+        "sha256": "55a245897f35e3da092d303bfb4407bdf46bdf4edb98fb40765fffbf7245569c"
+      },
+      {
+        "path": "output/2026-10-18-media-resource-stage/install/after-execution-completion.json",
+        "sha256": "514787ce7047f804964cbede6fcf539444d24922c2981550e983bbe0a7426184"
+      }
+    ],
+    "eachEntries": 217407,
+    "strictThreeEqual": true,
+    "scope": "Three fresh captured manifests at individual closed-observed points, normalQuitEvidence=null. No normal-quit event or continuous absence claim. Independent consolidated backup covers Farfold metadata only, not every217407entry. Source and first raw capture never SQLite-connected; only separate second working/new consolidated backup connected. Old strict differences/unknown writers not waived."
+  },
+  "cleanup": {
+    "receipt": {
+      "path": "output/2026-10-18-media-resource-stage/install/candidate-cleanup.json",
+      "sha256": "5f4051f09e30a1773e35cd1bcf088d4a68ee39862a0f99cdfce50aa5d8f6664b"
+    },
+    "actualCompletion": {
+      "path": "output/2026-10-18-media-resource-stage/install/cleanup-execution-completion.json",
+      "sha256": "2b92cf3b40912d1b4ec1fc248203ddf0a9dcfb8a59a208a84b021b37f3191d18"
+    },
+    "onlyExactCandidateFiles": 5,
+    "onlyEmptyDirectories": 5,
+    "formalAndArchiveRetained": true
+  },
+  "receipts": [
+    {
+      "path": "output/2026-10-18-media-resource-stage/source-freeze.json",
+      "sha256": "e43b207ff1c5a2f2a176d54ef07cad40f36942938f2cc9443e37d5bfec6f1cf2"
+    },
+    {
+      "path": "output/2026-10-18-media-resource-stage/source-review.json",
+      "sha256": "16159bf1628014fd2c4525f31cb3f79454aa33a2616eab637f513b3639a69a70"
+    },
+    {
+      "path": "output/2026-10-18-media-resource-stage/source-independent-review.json",
+      "sha256": "5214fe7878c92646c1825a14516c48202196ea23a755272fdd26b5f0f6b725fd"
+    },
+    {
+      "path": "output/2026-10-18-media-resource-stage/source-checkpoint.json",
+      "sha256": "211c2d809e0b1cda65017a9d4a1b6c00a4673d62be04d6c2056c661c75f711a2"
+    },
+    {
+      "path": "output/2026-10-18-media-resource-stage/conditions/current.json",
+      "sha256": "c7ce3eaadde182478e57f9135e4235f19afdc6241faa2341c80fd981f47b95f9"
+    },
+    {
+      "path": "output/2026-10-18-media-resource-stage/lifecycle/design.json",
+      "sha256": "f3924137957c50fec08ef2b05b14f0fc986befa79ec2f0c73ac34da3306fd2b0"
+    },
+    {
+      "path": "output/2026-10-18-media-resource-stage/lifecycle/implementation-preparation-errors.json",
+      "sha256": "c56ad5e634c3fac47a803985e68332ace9824abe2464a38b646222159439d608"
+    },
+    {
+      "path": "output/2026-10-18-media-resource-stage/image-investigation/hook-test-handoff.json",
+      "sha256": "9c90794111c679485b9e28242a2647d3b247bc7042cb83474863f6670a204537"
+    },
+    {
+      "path": "output/2026-10-18-media-resource-stage/candidate-preparation/preparation-index.json",
+      "sha256": "23f1020fc7125610ff02332195a7d5dce3ffd794d954477fadbc63be5b824d5e"
+    },
+    {
+      "path": "output/2026-10-18-media-resource-stage/candidate-preparation/preparation-independent-review.json",
+      "sha256": "d8d51c2ec0363a5255f2284c237260d6bc27489aac0de8737670f24c3d2a77e2"
+    },
+    {
+      "path": "output/2026-10-18-media-resource-stage/candidate-preparation/prebuild-binding-independent-review.json",
+      "sha256": "1ae49c738167be3c153a839d58af019ae05564a9c7d9bc700edbe1fe5ac0f5a0"
+    },
+    {
+      "path": "output/2026-10-18-media-resource-stage/candidate-preparation/preinstall-binding-independent-review.json",
+      "sha256": "ef41f4a358c729c4ab6283429f208441767b0f7968e4596beb8045a4437e4b43"
+    }
+  ],
+  "previousStageOriginal": {
+    "path": "docs/evidence/2026-10-17-media-container-stage/verification.json",
+    "sha256": "16317e6c5be0e9f9af169f749070ce21a39235bccf3779bb20daa312f05e7d83"
+  },
+  "remaining": [
+    "NEW24 full same-owner permission scope/readback unresolved;32/32 selected inputs unchanged. Affected newreal sends remainpaused.",
+    "Formal message/media/search positives, fullP13/P32/P35,29x8 and Windows remainopen.",
+    "Unknown ID3/free bitrate/MP4 edit-fragment/track clocks, other uncovered image/audio layouts, payload/resource behavior and actual codec/transport memory/full playback remain unverified.",
+    "Ogg valid long control missing. This MP4 edit-list and image investigation did not establish new parser repairs.",
+    "P18originalsamples/NEW29realbusy/P40currentadoption missing. Old3database/7data-directory and later5data-directory strict differences/unknown writers/OpenCodeinitialize/reopen caller remain unresolved."
+  ],
+  "publicationCompletionLocator": "output/2026-10-18-media-resource-stage/completion-verification.json",
+  "publicationCompletionClaimedAtRecordCreation": false
+}
