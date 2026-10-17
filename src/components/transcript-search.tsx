@@ -11,6 +11,7 @@ import {
   registerSearchExpansion,
   keepSearchAncestors,
 } from "../runtime/transcript_search";
+import { MessageMediaVisibility } from "./message-media-visibility";
 
 export const TranscriptSearchContext = createContext(false);
 export function useTranscriptSearchActive() {
@@ -67,7 +68,9 @@ export function SearchDisclosure({
       open={fold.open}
       onToggle={fold.onToggle}
     >
-      {children}
+      <MessageMediaVisibility visible={fold.open}>
+        {children}
+      </MessageMediaVisibility>
     </details>
   );
 }

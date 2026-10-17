@@ -29,6 +29,7 @@ import { STRINGS } from "../runtime/strings";
 import { THREAD_VIEW_STRINGS as T } from "../runtime/thread_view_strings";
 import { ReportedDetails } from "./ReportedDetails";
 import { SearchDisclosure, useSearchExpansion } from "./transcript-search";
+import { MessageMediaVisibility } from "./message-media-visibility";
 import type {
   PermissionOption,
   PlanEntry,
@@ -494,7 +495,13 @@ export function ToolStep({
       </div>
       {expansion.materialized && (
         <div hidden={!expansion.open}>
-          <ToolDetail call={call} activity={activity} onOpenFile={onOpenFile} />
+          <MessageMediaVisibility visible={expansion.open}>
+            <ToolDetail
+              call={call}
+              activity={activity}
+              onOpenFile={onOpenFile}
+            />
+          </MessageMediaVisibility>
         </div>
       )}
     </div>

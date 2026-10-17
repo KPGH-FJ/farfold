@@ -18,6 +18,7 @@ import { MESSAGE_ATTACHMENTS as A } from "../runtime/message_attachment_strings"
 import { THREAD_VIEW_STRINGS } from "../runtime/thread_view_strings";
 import "../message-attachments.css";
 import { MessageAttachmentMedia } from "./MessageAttachmentMedia";
+import { useMessageMediaVisibility } from "./message-media-visibility";
 import { useSearchExpansion } from "./transcript-search";
 import {
   checkedMessageContentOrder,
@@ -154,15 +155,16 @@ function MessageAttachment({
   mediaVisible: boolean;
 }) {
   const expansion = useSearchExpansion();
+  const visible = useMessageMediaVisibility() && mediaVisible;
   useLayoutEffect(() => {
-    // The materialized list keeps hidden children mounted. Retire a hidden
-    // child's old media intent so a later search-only reveal cannot reload it.
-    if (!mediaVisible && expansion.userOpen) expansion.choose(false);
-  }, [mediaVisible, expansion.userOpen, expansion.choose]);
+    // Retained attachment/tool text can outlive a visible ancestor. Retire the
+    // old media intent so reopening or a search-only reveal cannot reload it.
+    if (!visible && expansion.userOpen) expansion.choose(false);
+  }, [visible, expansion.userOpen, expansion.choose]);
   // Search may reveal loaded text, but only the user's own expansion admits media.
   const failureStatusId = useId();
   const { admission, media, failed, budgetRejected, pending, fail, retry } =
-    useMessageMediaPreview(attachment, expansion.userOpen && mediaVisible);
+    useMessageMediaPreview(attachment, expansion.userOpen && visible);
   const mediaRejected = admission?.status === "rejected";
   const mediaWaiting =
     !expansion.userOpen &&

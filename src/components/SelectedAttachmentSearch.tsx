@@ -50,6 +50,7 @@ export function SelectedAttachmentSearch({
   const [locating, setLocating] = useState(false);
   const mounted = useRef(false),
     revision = useRef<object>({});
+  const selectionFieldset = useRef<HTMLFieldSetElement>(null);
   const live = useRef({ active, rows, query, scopeKey, selected });
   live.current = { active, rows, query, scopeKey, selected };
   const state = useSyncExternalStore(
@@ -85,6 +86,31 @@ export function SelectedAttachmentSearch({
     invalidate();
     setSelected((old) =>
       checked ? [...old, candidate] : old.filter((s) => s.id !== candidate.id),
+    );
+  };
+  const clearInvalidSelection = (event?: {
+    currentTarget: HTMLButtonElement;
+  }) => {
+    if (!live.current.active || controller.active()) return;
+    const fieldset = selectionFieldset.current;
+    if (
+      fieldset &&
+      event &&
+      fieldset.ownerDocument.activeElement === event.currentTarget
+    )
+      fieldset.focus();
+    invalidate();
+    const current = threads.getSnapshot(),
+      currentKeys = live.current.rows.map((row) => row.key);
+    setSelected((old) =>
+      old.filter((source) =>
+        attachmentSearchSourceCurrent(
+          source,
+          current.threads,
+          currentKeys,
+          current.index,
+        ),
+      ),
     );
   };
   const captureOwner = () => {
@@ -129,7 +155,11 @@ export function SelectedAttachmentSearch({
           candidates.omitted,
         )}
       </p>
-      <fieldset disabled={!active || controller.active()}>
+      <fieldset
+        ref={selectionFieldset}
+        tabIndex={-1}
+        disabled={!active || controller.active()}
+      >
         <legend>
           {S.choose} · {S.selected(selected.length)}
         </legend>
@@ -205,6 +235,16 @@ export function SelectedAttachmentSearch({
         </div>
       )}
       <div className="history-search-actions">
+        {!validSources && selected.length > 0 && (
+          <button
+            type="button"
+            className="btn btn-ghost"
+            disabled={!active || controller.active()}
+            onClick={clearInvalidSelection}
+          >
+            {S.clearInvalidSelection}
+          </button>
+        )}
         <button
           type="button"
           className="btn btn-primary"

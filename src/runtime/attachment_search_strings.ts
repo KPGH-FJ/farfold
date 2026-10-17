@@ -99,6 +99,7 @@ export const ATTACHMENT_SEARCH_STRINGS = {
   choose: "选择要读取的当前文件",
   start: "开始查找附件",
   retry: "重新检查所选附件",
+  clearInvalidSelection: "清除失效选择",
   cancel: "取消本次附件查找",
   emptyCandidates: "当前范围没有已加载的消息附件。",
   notLocal: "没有可供本次读取的本地文件位置",

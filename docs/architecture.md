@@ -95,6 +95,8 @@ FLAC、ADTS与MPEG共用 [message_audio_prefix.ts](../src/runtime/message_audio_
 
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化只退役各自租约。当前媒体加载失败时，[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 先失效当前节点并移除来源，音频先暂停、清来源及重新加载，再通知共用持有者释放配额；迟到错误与失败节点的重复挂载不恢复来源。错误反馈、原文和来源信息由附件保留，显式重试重新申请配额后才创建媒体；配额不足单独提示，其他附件释放不会自动重试。
 
+[message-media-visibility.tsx](../src/components/message-media-visibility.tsx) 将工具组和工具详情的可见性逐层相交，内层展开不能覆盖已收起的祖先。查找保留的隐藏文字节点继续存在，但其中的媒体来源和配额退役，并撤回该附件此前的媒体展开意图；重新展开工具组或查找揭示不会自动加载，仍需用户明确展开媒体。不据此推断后台对话或解码器内存的生命周期。
+
 以上是字节、已覆盖声明结构和DOM生命周期约束，不是实际解码器分配、传输内存、动画循环或播放时长保证。APNG/AVIF完整动画、未覆盖AVIF/音频资源边界、长期使用、正式消息媒体和完整P13仍开放；受控浏览器文件显示不证明动画帧推进或真实 Agent效果。
 
 ## 历史、查找、导出与复制
@@ -113,6 +115,8 @@ Agent历史仍归 Agent所有。列表、正文读取与继续对话分别处理
 已加载正文及所选附件结果共用 [search_snippet.ts](../src/runtime/search_snippet.ts) 截取匹配前后摘要；保留56/88个UTF-16单位的窗口上限，仅在外缘切开有效代理对时向内缩一个单位，避免制造原文没有的替代字符。匹配内容、来源版本及定位范围不变，不归一化原文，也不保证整个组合字素都留在窗口内。
 
 附件查找每次最多20文件、单源文件1 MiB、可检索文字合计16 MiB。各格式的页、段落、单元格或片段边界保留；PPTX/PDF未匹配不等于完整文件无匹配。它读取当前选中文件，不自动打开历史、连接 Agent或读取网页。
+
+筛选范围变化或附件移除后，失效选择继续阻止读取和结果跳转。[SelectedAttachmentSearch.tsx](../src/components/SelectedAttachmentSearch.tsx) 提供明确的“清除失效选择”出口：只移除当前来源校验不通过的选择，保留仍有效的文件，并撤回旧结果；清除不读取文件，也不自动开始新查找。未结束的读取继续限制操作。
 
 Markdown导出仅覆盖当前已加载的可读消息；资料包按实际选取文件打包，不补全 Agent完整历史。导出不是数据恢复备份。
 
