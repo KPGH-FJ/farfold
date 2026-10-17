@@ -1,0 +1,324 @@
+{
+  "schema": 1,
+  "kind": "StageVerificationNotFullProductAcceptance",
+  "date": "2026-10-17",
+  "sourceCommit": "c39b86cc84dd304b36cba78ae7aef7b778001a14",
+  "previousInstalledSourceCommit": "70f5eec106fed0f70cc514f3b6e61362010ed093",
+  "result": "SelectedFlacDurationAndAvifSpatialLayerDeclarationIncrementDeliveredWithActualWebkitPlaybackFailureOpen",
+  "authority": {
+    "onlyActivePlan": "plans/agent-access.md",
+    "requirementsReference": "docs/agent-access-requirements.md",
+    "all29AgentsEightStandardsAnd151OriginalRequirementsUnchanged": true,
+    "thisReceiptHasNoSchedulingAuthority": true
+  },
+  "delivered": [
+    "Native fLaC STREAMINFO sample rate and36-bit interchannel sample count use the existing600-second preview declaration policy; metadata extents and record bounds checked without full decode or objectURL.",
+    "Known AVIF a1lx charges selected-ispe pixel work for1..4 spatial layers and existing dimg uses under the existing67,108,864 pixel-work limit. Spatial layers are not animation samples or the128-frame limit.",
+    "Common dispatch retains existing MIME allowlist, original payload/URI/text order,16MiB per-file byte gate and shared4-preview/32MiB budget. No new Agent-specific UI, production dependency or encoder."
+  ],
+  "declarationLimits": [
+    "Unknown/zero FLAC totals or sample-rate declarations and reserved metadata are not covered rather than zero-duration success; frame overrides, CRC and complete-file validity are not certified by admission.",
+    "Known a1lx count is conservative; a1op/lsel do not establish fewer dependencies. Reserved future bits remain not-covered. Definite extent validation is limited to known local lengths.",
+    "Official complete600B progressive AVIF is a real33x11 decoder control. Over-budget AVIF controls change container declarations only, not a valid huge AV1 bitstream or measured decoder exploit.",
+    "No peak codec/transport memory, synchronous GPU deallocation, every spatial-layer display, full animation/loop or complete playback guarantee."
+  ],
+  "sourceEvidence": {
+    "freeze": {
+      "path": "output/2026-10-17-media-next-stage/source-freeze.json",
+      "sha256": "39a967e4ffe42c3d936d7ed35420996aa743894e19b5462f7588ff9e28020eb7"
+    },
+    "aggregateIndependentReview": {
+      "path": "output/2026-10-17-media-next-stage/source-review.json",
+      "sha256": "56dc721313d2894735937d01f7ae6f5aa3f86daf69f404ac8f692154d3f8a62a"
+    },
+    "crossAuthorAvifAndSharedReview": {
+      "path": "output/2026-10-17-media-next-stage/source-review-avif-shared/source-review.json",
+      "sha256": "c966a2941b755d00cbaca12c72a5297a86dc208127ed29922f209e44fb824f34"
+    },
+    "crossAuthorFlacReview": {
+      "path": "output/2026-10-17-media-next-stage/source-review-flac/source-review.json",
+      "sha256": "c74ec44b17ace64d19614e688d2e5c56b4c27ce0cc9b8f46d6d79eab1744cfd0"
+    },
+    "flacAuthor": {
+      "path": "output/2026-10-17-audio-next-admission-investigation/verification.json",
+      "sha256": "cf24c0d7cdf450a0a5b34eb778479b69a2750ab9e01049d01ec397ff049efd99"
+    },
+    "flacFullPcmAndMd5Control": {
+      "path": "output/2026-10-17-audio-next-admission-investigation/rfc-control-evidence.json",
+      "sha256": "e9760d20e415ac30744de34503c907343bde43a148b8d63f8b49dd3889c4af8d"
+    },
+    "avifAuthor": {
+      "path": "output/2026-10-17-avif-next-admission-investigation/verification.json",
+      "sha256": "54b105f176aaee7025da33a29a8192dacfad07a87fb3ad51cd126cbe06bae6a9"
+    },
+    "sourceReviewedFiles": 49,
+    "ownedChangedFiles": 11,
+    "blockingFindings": 0,
+    "finalAffected": {
+      "path": "output/2026-10-17-media-next-stage/final-affected/verification.json",
+      "sha256": "a5c641dc2591e52b04fd90a7c6559f4b8ff055e8422d686610053a5465024592"
+    },
+    "affectedTests": 451,
+    "affectedFiles": 20,
+    "affectedActualExitCode": 0,
+    "affectedNaturalFinalChunk": "1dafd4",
+    "freezeScope": "Historical pre-publication source/install snapshot; only status and sole short plan legitimately update after installed10 and cleanup. Other47 frozen files and1777 production inputs remain exact."
+  },
+  "engineering": {
+    "receipt": {
+      "path": "output/2026-10-17-media-next-stage/engineering/run1/verification.json",
+      "sha256": "55ce91a0f0604acd308d72b52a929d6da9d4516a0c51ec41874010558b3d129d"
+    },
+    "executionCompletion": {
+      "path": "output/2026-10-17-media-next-stage/engineering/execution-completion.json",
+      "sha256": "9ae94c2cb64270dc97da491b5de22040e0dec67866b16d389e8bbc9447ecc9c7"
+    },
+    "actualSession": 83816,
+    "actualExitCode": 0,
+    "naturalFinalChunk": "5a742d",
+    "freshSequentialChecks": 7,
+    "stableInputs": 19080,
+    "frontendFiles": 551,
+    "frontendPassed": 7153,
+    "rustPassed": 1787,
+    "rustIgnored": 6
+  },
+  "controlledBrowser": {
+    "summary": {
+      "path": "output/2026-10-17-media-next-stage/browser-independent/independent-summary.json",
+      "sha256": "22ed71037491f63a2e43f0fd2cba627bd251dd3c592a71ad074acddb938da8db"
+    },
+    "executionCompletion": {
+      "path": "output/2026-10-17-media-next-stage/browser-independent/execution-completion.json",
+      "sha256": "258854dc7acbbcc2568499cc94a46e5929f9c3be520786e2467201b21a380f5c"
+    },
+    "scope": "Controlled local production React StrictMode MessageContent and common media lifecycle paths; no formal App, real message or real Agent.",
+    "chromium": {
+      "version": "155.0.8059.82",
+      "actualSession": 22167,
+      "actualExitCode": 0,
+      "naturalFinalChunk": "66765e",
+      "passed": 29,
+      "failed": 0,
+      "shortFlacCurrentTime": 0.015259,
+      "shortFlacPlayResolved": true
+    },
+    "webkit": {
+      "version": "26.5",
+      "actualSession": 9289,
+      "actualExitCode": 1,
+      "naturalFinalChunk": "449550",
+      "passed": 28,
+      "failed": 1,
+      "failedCheck": "55B0.1-second FLAC playback after actual trusted UI click",
+      "currentTime": 0,
+      "duration": null,
+      "errorCode": 4,
+      "playResolved": false,
+      "cause": "unknown",
+      "originalFailureRetained": true
+    },
+    "commonConfirmed": [
+      "Official progressive AVIF decoded33x11 in both engines; not every layer displayed.",
+      "Complete601-second FLAC under FLAC/MPEG MIME and synthetic over-budget AVIF declarations under AVIF/JPEG MIME refused before media source/codec exposure.",
+      "Search-only reveal admits no selected media to decoder; fixture preflight itself performs admission checks.",
+      "Selected pool3PNG+1FLAC, fifth refusal, release without automatic retry, trusted Enter reacquisition and exact source retirement verified.",
+      "Each run697 inputs stable including49 source pins; own browser processes exited0 and page/context/browser/server/port1587 closed."
+    ],
+    "standaloneDiagnostic": {
+      "summary": {
+        "path": "output/2026-10-17-media-next-stage/browser-independent/diagnostic-summary.json",
+        "sha256": "cdf13dfd3591b062a013953f61110ff1526cedfdbd3faeb581ae770d36b46c2a"
+      },
+      "receipt": {
+        "path": "output/2026-10-17-media-next-stage/browser-independent/diagnostic-webkit-flac-sources/verification.json",
+        "sha256": "488a75f7e88e2b8590716ccbbddb47fea79ca5c8855592c4ae8c7bb6ca8b907d"
+      },
+      "actualSession": null,
+      "actualExitCode": 0,
+      "naturalFinalChunk": "660b64",
+      "observation": "Same55B FLAC fails raw WebKit over data and local HTTP without Farfold components; same trusted muted handler plays WAV with currentTime0.016664/duration2/playResolvedtrue.",
+      "limits": "Not explained by data URI alone; exact file/decoder/program condition cause unknown. canPlayType maybe, CoreAudio decode and Chrome playback are not WebKit success. No all-FLAC-unsupported or formal WKWebView claim.",
+      "allOwnedResourcesClosed": true,
+      "originalSelectedRunsNotRepeated": true
+    },
+    "allChecksPassed": false,
+    "noPlaybackFixClaimed": true
+  },
+  "candidate": {
+    "receipt": {
+      "path": "output/2026-10-17-media-next-stage/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "dd2871593692f9a07dbdab425b02a30047e01266bf9077d247b44a19e9619371"
+    },
+    "executionCompletion": {
+      "path": "output/2026-10-17-media-next-stage/candidate-preparation/build-execution-completion.json",
+      "sha256": "a576f1314abca9efb0b26d794d0a32888ee4e5cbea2d5bc49dd9fc5ef3b293fc"
+    },
+    "actualSession": 84431,
+    "actualExitCode": 0,
+    "naturalFinalChunk": "c22173",
+    "actualBuildAttempts": 1,
+    "productionInputs": 1777,
+    "independent9": {
+      "path": "output/2026-10-17-media-next-stage/candidate-preparation/independent/review.json",
+      "sha256": "f297bfc582205900d72480bedf3b49ea8d4f07e7f4d7854456e363d2c04b1134"
+    },
+    "independent9Execution": {
+      "path": "output/2026-10-17-media-next-stage/candidate-preparation/independent/nine-execution-completion.json",
+      "sha256": "4879e712f5ccdc6db875321eb68dfc8a5ea31d11b80309c200038a309fbec61d"
+    },
+    "independent9ActualExitCode": 0,
+    "independent9Chunk": "1786e6",
+    "checksPassed": 9,
+    "checksTotal": 9,
+    "archive": "src-tauri/target/internal-candidate/2026-10-17-media-next-stage-c39b86cc/Farfold-0.1.7-c39b86cc.zip",
+    "archiveSha256": "6997338cade09e580072d74ef9d2c594c4662e9c9a3c36c2601bf9996aa9de22"
+  },
+  "installation": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binarySha256": "55ec40eecbfdadbaf16c678028cc0f3f221f1929c88cad5ddcb2cf5a2e670fb1",
+    "result": {
+      "path": "output/2026-10-17-media-next-stage/install/install-result.json",
+      "sha256": "30d6e8579d3fd4e57341a3f80be3574d590c418ca3a1d79add92faf527d4f530"
+    },
+    "executionCompletion": {
+      "path": "output/2026-10-17-media-next-stage/install/install-execution-completion.json",
+      "sha256": "46219d18019a7e760e967e121dd8e05080c0050d560c59381d6ea71eb1f7de7d"
+    },
+    "actualSession": 82507,
+    "actualExitCode": 0,
+    "naturalFinalChunk": "7e5005",
+    "independent10": {
+      "path": "output/2026-10-17-media-next-stage/install/installed-independent-review-private.json",
+      "sha256": "97fd79b9dc095e5259ebe91899c9944ecb390c1719d57c6dca77ee30120bd45a"
+    },
+    "independent10Execution": {
+      "path": "output/2026-10-17-media-next-stage/install/installed-ten-execution-completion.json",
+      "sha256": "0442823347ad623921144de02a5ae558390ef495416e1ef9834a7027963f5eb5"
+    },
+    "independent10ActualSession": 50292,
+    "independent10ActualExitCode": 0,
+    "independent10NaturalFinalChunk": "3d9caf",
+    "checksPassed": 10,
+    "checksTotal": 10,
+    "exactFiveNewInodeFilesAndStrictAdhocSignatureVerified": true,
+    "fivePerFileAtomicReplacementsNotWholeBundleTransaction": true,
+    "duplicateCandidateCleanup": {
+      "path": "output/2026-10-17-media-next-stage/install/candidate-cleanup.json",
+      "sha256": "ca164c301b20df4aadc26215c20a95429d2b560ec7b9dc4da23ef31a81ccf2f8"
+    },
+    "cleanupExecution": {
+      "path": "output/2026-10-17-media-next-stage/install/cleanup-execution-completion.json",
+      "sha256": "d65b1fa29a5cd9020095774224b629f3ae5bfa88fde4f2f75864d224314bf22f"
+    },
+    "cleanupActualExitCode": 0,
+    "cleanupChunk": "514204",
+    "cleanupScope": "Exact5files and5empty directories of duplicate candidate only; formal App and ZIP retained.",
+    "formalAppLaunchedByThisStage": false,
+    "publicSigningNotarizationOrDistributionClaimed": false,
+    "executedTenLegacyScopeLabel": "Executed10 retains old media-resource-stage behavior label; actual c39 binding verifies static installation, not playback/real-Agent acceptance."
+  },
+  "dataRetention": {
+    "freshCompleteManifestCount": 3,
+    "entriesPerManifest": 217407,
+    "allThreeStrictlyEqual": true,
+    "manifestSha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4",
+    "manifests": [
+      {
+        "path": "output/2026-10-17-media-next-stage/install/install-data-before.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      },
+      {
+        "path": "output/2026-10-17-media-next-stage/install/install-data-preinstall.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      },
+      {
+        "path": "output/2026-10-17-media-next-stage/install/install-data-after.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      }
+    ],
+    "captures": [
+      {
+        "phase": "before",
+        "actualSession": 79176,
+        "actualExitCode": 0,
+        "naturalFinalChunk": "09e131",
+        "receipt": {
+          "path": "output/2026-10-17-media-next-stage/install/retention-before-receipt.json",
+          "sha256": "9dc84d94fa3a562a624ef8d48fde1f3fb9b71f9a4b75211c1d5637b8dc73b5bb"
+        }
+      },
+      {
+        "phase": "preinstall",
+        "actualSession": 49705,
+        "actualExitCode": 0,
+        "naturalFinalChunk": "a8868d",
+        "receipt": {
+          "path": "output/2026-10-17-media-next-stage/install/retention-preinstall-receipt.json",
+          "sha256": "d3050eeee6ba1640fe9db03a2f078d12d8fac096655b4f87945b906a0062a1f7"
+        }
+      },
+      {
+        "phase": "after",
+        "actualSession": 7687,
+        "actualExitCode": 0,
+        "naturalFinalChunk": "ec5a3f",
+        "receipt": {
+          "path": "output/2026-10-17-media-next-stage/install/retention-after-receipt.json",
+          "sha256": "ab9c5673bd930a97448c5d654e23a4a8567e1a054ba4d3bc9c057674f56f4b24"
+        }
+      }
+    ],
+    "standaloneBackupCheckedOnSecondCopyOnly": true,
+    "sealedBackupSha256": "ac061be0f0d38dd0adbe6f85272c1d59e009eb5a85ae9d3af19edf2ebec2e912",
+    "sourceAndFirstCaptureSqliteOpened": false,
+    "noSidecarExemptionOrHistoryDeletion": true,
+    "earlierStrictDifferencesOrUnknownWritersNotWaived": true,
+    "normalQuitEvidence": null,
+    "onlyRecordedProcessZeroPointsNotContinuousClosedInterval": true
+  },
+  "otherSelectedWork": {
+    "selectedInputDelta": {
+      "path": "output/2026-10-17-media-next-stage/conditions/incremental-condition-review.json",
+      "sha256": "86c5a84bf587743675442d69b241ba065b04c163fc59b8d086769700088cb768"
+    },
+    "NEW24": "Selected official/package/source/research inputs unchanged locally; no latest-remote freshness claim. Complete same-connection permission readback unknown; affected new real sends stay paused.",
+    "P18": "Exact two-file absence is a prior observation, not reobserved or recreated/retargeted this stage.",
+    "P32": "No eligible completed-message item.attachments established in selected unchanged evidence; no global absence claim.",
+    "NEW29": "Actual current compaction busy state not exercised.",
+    "P40": "Temporary discovery does not prove current conversation adoption."
+  },
+  "retainedFailures": {
+    "rootOriginalRed": {
+      "path": "output/2026-10-17-media-next-stage/root-shared-red/verification.json",
+      "sha256": "d6ed84a3896882265912e997b9ff35bfcffd274edc90156cd5afe34dbf1f2023"
+    },
+    "rootRedActualExitCode": 1,
+    "rootRedFailed": 13,
+    "rootRedPassed": 14,
+    "rootLaterGreen": {
+      "path": "output/2026-10-17-media-next-stage/root-shared-green-r1/verification.json",
+      "sha256": "ca06dba4ba6ce4776a5b544a0271182890099129657fd40d3e2baef79a82f6c0"
+    },
+    "authorPreparationFailures": "Original invalid Apple42B output, encoder/test preparation failures and AVIF test.each errors remain in pinned author records. Corrected controls/tests do not rewrite earlier runs.",
+    "browserActualFailure": "Actual WebKit28pass/1fail and raw data+HTTP failures retained; no automatic retry or all-green reclassification.",
+    "helperPreparationAudit": {
+      "path": "output/2026-10-17-media-next-stage/preparation/root-template-review.json",
+      "sha256": "ff5712509a99ef3762e584bf2e5769b1e7c2ec8d16c3b56487c0a890e5a114bd"
+    },
+    "installedTenStdoutLabelCorrection": {
+      "path": "output/2026-10-17-media-next-stage/preparation/installed-ten.output-label-correction.json",
+      "sha256": "695759aea20f58c2a3a61a766bb40fac93d2c12a8b364e369674986f9e9163ce"
+    },
+    "correctionScope": "Prior readonly stdout mislabeled candidate dd287 receipt as actual install; stored bindings were already correct30d6. No installed10 reexecution or report rewrite.",
+    "publicReceiptPreparationFailure": "d64bfb actual1 before any write: incorrect output helper path cleanup.py. Corrected to existing cleanup-candidate-atomic.py; no helper or installation reexecuted."
+  },
+  "remaining": "NEW24;formal message media;unknown AVIF/audio layouts and FLAC frame overrides;observed WebKit short-FLAC playback condition;actual codec/transport allocation;full animation/loop/playback;long-running behavior;full P13;remaining29x8 and Windows real-system proof remain open. Old data differences/unknown writers/OpenCode initialize/reopen causes unresolved. Product exclusions and distribution deferral unchanged.",
+  "priorEvidenceAndFailuresUnmodified": true,
+  "completionReceiptLocator": "output/2026-10-17-media-next-stage/completion-verification.json",
+  "completionLocatorIsNotYetAClaimOfPublicationCompletion": true,
+  "productOrRealAgentAcceptanceClaimed": false
+}
