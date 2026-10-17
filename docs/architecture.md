@@ -85,9 +85,11 @@ AVIF入口 [message_avif_admission.ts](../src/runtime/message_avif_admission.ts)
 
 经典WAVE未识别时，共用入口另调 [message_flac_admission.ts](../src/runtime/message_flac_admission.ts) 核原生`fLaC`标记、首个且唯一的STREAMINFO及有界元数据。已知总采样数与采样率沿600秒声明策略；总量为零的未知值、零采样率的非音频数据和保留元数据保持未覆盖，独立已知的超限仍拒绝。跨原允许音频MIME核实际标记，不新增格式入口；不扫描音频帧、嵌入图片或URI，不核实际解码内存或帧内参数变化。
 
-其他音频另由 [message_adts_admission.ts](../src/runtime/message_adts_admission.ts) 识别裸ADTS并有界遍历帧边界；对已知AAC-LC采样率和块数用整数时间基计入同一600秒声明策略。CRC保护或未知配置保留未覆盖，仍保留独立已知的超限判断；ID3前缀、ADIF、其他AAC容器及帧负载语义不在此路径的证明范围。它不增加MIME支持或解码器能力，也不等于实际播放时长或内存保证。
+其他音频另由 [message_adts_admission.ts](../src/runtime/message_adts_admission.ts) 识别ADTS并有界遍历帧边界；对已知AAC-LC采样率和块数用整数时间基计入同一600秒声明策略。CRC保护或未知配置保留未覆盖，仍保留独立已知的超限判断；ADIF、其他AAC容器及帧负载语义不在此路径的证明范围。它不增加MIME支持或解码器能力，也不等于实际播放时长或内存保证。
 
-[message_mpeg_audio_admission.ts](../src/runtime/message_mpeg_audio_admission.ts) 对裸MPEG LayerIII已索引码率帧沿版本、采样率、填充和帧边界累加声明采样数，以整数时间基核同一600秒策略。Xing/VBRI时长不代替实际遍历的帧声明；CRC保护帧保留部分覆盖，已知超限仍拒绝。ID3前缀、自由码率、其他层和未知尾部不搜索猜测下一同步点，保留未覆盖；不解码音频、不核位储存器或完整负载，不保证实际播放时长和解码内存。实际签名检查跨原允许音频MIME，未增加格式入口。
+[message_mpeg_audio_admission.ts](../src/runtime/message_mpeg_audio_admission.ts) 对MPEG LayerIII已索引码率帧沿版本、采样率、填充和帧边界累加声明采样数，以整数时间基核同一600秒策略。Xing/VBRI时长不代替实际遍历的帧声明；CRC保护帧保留部分覆盖，已知超限仍拒绝。自由码率、其他层和未知尾部不搜索猜测下一同步点，保留未覆盖；不解码音频、不核位储存器或完整负载，不保证实际播放时长和解码内存。实际签名检查跨原允许音频MIME，未增加格式入口。
+
+两者共用 [message_audio_prefix.ts](../src/runtime/message_audio_prefix.ts) 核连续前置ID3v2.2/2.3/2.4修订0标签的已知头标志、存储字节范围及v2.4可选尾标记，随后只在声明边界识别音频；标签和音频帧共享65536条记录预算。未知版本、修订和标志保持未覆盖，不搜索标签内部或尾部同步点；标签内容、嵌入图片、URL、去同步及压缩语义不解码。播放保留原始完整来源，不裁掉标签、不改字节；这仍是选定声明准入，不是标签内容正确、完整播放或解码内存证明。
 
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化按各自租约退役。[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 移除旧图片来源并处理重复挂载；音频暂停、清来源及重新加载沿其生命周期处理。可明确重试，不自动重复占用。
 

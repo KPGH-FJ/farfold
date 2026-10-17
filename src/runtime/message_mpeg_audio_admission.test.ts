@@ -3,6 +3,11 @@ import { expect, it, vi } from "vitest";
 import { messageMpegAudioAdmission as admit } from "./message_mpeg_audio_admission";
 import { MessageRasterReader } from "./message_raster_reader";
 import {
+  id3PrefixTestBytes as tag,
+  id3PrefixTestFile as tagged,
+  MESSAGE_AUDIO_PREFIX_TEST_DATA as T,
+} from "./message_audio_prefix_fixtures.test-support";
+import {
   MESSAGE_MPEG_AUDIO_TEST_DATA as F,
   MESSAGE_MPEG_AUDIO_TEST_PROVENANCE as P,
   mpegAudioTestFile as file,
@@ -95,17 +100,47 @@ it("does not trust Xing duration to replace the actual complete frame walk", () 
     "audioTooLong",
   );
 });
+it.each(["RIFF", "fLaC", "OggS", "ADIF", "\xff\xf9", "\xff\xfd", "\xff\xff"])(
+  "does not search past non-LayerIII prefix%j",
+  (prefix) => {
+    expect(admit(file(Buffer.from(prefix, "binary"), frame()))).toBe(
+      "notMpegAudio",
+    );
+  },
+);
+it("rejects the old unframed ID3 marker rather than scanning its body for sync", () => {
+  expect(admit(file(Buffer.from("ID3"), frame()))).toBe("invalid");
+});
 it.each([
-  "ID3",
-  "RIFF",
-  "fLaC",
-  "OggS",
-  "ADIF",
-  "\xff\xf9",
-  "\xff\xfd",
-  "\xff\xff",
-])("does not search past non-LayerIII prefix%j", (prefix) => {
-  expect(admit(file(Buffer.from(prefix, "binary"), frame()))).toBe(
+  "MPEG_SHORT_3",
+  "MPEG_V22_SHORT_3",
+  "MPEG_V24_FOOTER_SHORT_3",
+] as const)(
+  "admits known leading tag boundary for complete%s without trimming original data",
+  (key) => {
+    expect(admit(T[key])).toBe("withinBudget");
+  },
+);
+it("applies known time after a complete valid tagged601s MP3", () => {
+  expect(admit(T.MPEG_LONG_601)).toBe("audioTooLong");
+});
+it("keeps exact600-second frame time unchanged by leading metadata", () => {
+  const f = frame({ rateIndex: 1 });
+  expect(admit(tagged(repeat(f, 25000)))).toBe("withinBudget");
+  expect(admit(tagged(repeat(f, 25001)))).toBe("audioTooLong");
+});
+it("shares the total record cap between tag declarations and MPEG frames", () => {
+  const part = tag({ body: Buffer.alloc(0) });
+  expect(admit(file(Buffer.concat(Array(65535).fill(part)), frame()))).toBe(
+    "withinBudget",
+  );
+  expect(admit(file(Buffer.concat(Array(65536).fill(part)), frame()))).toBe(
+    "audioTooComplex",
+  );
+});
+it("keeps unknown tags uncovered and never scans supported-tag opaque tails", () => {
+  expect(admit(tagged(F.LONG_601, { version: 5 }))).toBe("notCovered");
+  expect(admit(file(tag(), Buffer.from("opaque"), frame()))).toBe(
     "notMpegAudio",
   );
 });

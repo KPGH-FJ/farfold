@@ -2,6 +2,7 @@ import {
   MAX_MESSAGE_AUDIO_RECORDS,
   MAX_MESSAGE_AUDIO_SECONDS,
 } from "./message_audio_admission";
+import { messageAudioPrefix } from "./message_audio_prefix";
 import {
   MessageRasterError,
   MessageRasterReader,
@@ -32,13 +33,14 @@ function layer3Sync(reader: MessageRasterReader, at: number): boolean {
   );
 }
 
-/** Bare indexed-bitrate LayerIII frame declarations only. Canonical Base64
+/** Indexed-bitrate LayerIII frame declarations after supported leading ID3
+ * stored extents only. Canonical Base64
  * and byte admission must precede this call. Official FFmpeg8.1 header code
  * defines indexed rates/bitrates, length/padding and1152/576 samples:
  * https://ffmpeg.org/doxygen/8.1/mpegaudiodecheader_8c_source.html
  * https://ffmpeg.org/doxygen/8.1/mpegaudiotabs_8h_source.html
  *
- * ID3/container prefixes are not searched for sync. Free format has no known
+ * Unknown ID3/container prefixes are not searched for sync. Free format has no known
  * next extent here; opaque tails/layer changes stay notCovered. CRC-protected
  * frames stay partial while their independent known duration is still checked.
  * No CRC, side-info/bit-reservoir or encoded audio is decoded/validated. Xing,
@@ -49,10 +51,13 @@ export function messageMpegAudioAdmission(
   data: string,
 ): MessageMpegAudioAdmission {
   const reader = new MessageRasterReader(data);
-  if (!layer3Sync(reader, 0)) return "notMpegAudio";
+  const prefix = messageAudioPrefix(reader);
+  if (prefix.status !== "none" && prefix.status !== "supported")
+    return prefix.status;
+  if (!layer3Sync(reader, prefix.offset)) return "notMpegAudio";
   try {
-    let at = 0;
-    let records = 0;
+    let at = prefix.offset;
+    let records = prefix.records;
     let ticks = 0;
     let uncovered = false;
     while (at < reader.length) {

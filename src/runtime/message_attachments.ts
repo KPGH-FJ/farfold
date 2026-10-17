@@ -131,8 +131,9 @@ function base64Value(code: number): number {
 
 /** Preview-only byte and declared image/audio metadata admission. Original payload,
  * transport and actual decoder memory are not bounded here. Recognized linear
- * WAVE, native FLAC, bare ADTS and indexed LayerIII MPEG frames receive their
- * recognized duration policies;
+ * WAVE, native FLAC, ADTS and indexed LayerIII MPEG frames receive their
+ * recognized duration policies, including selected leading ID3 stored extents
+ * on the ADTS/MPEG paths. The original tagged source is never rewritten;
  * other audio and unknown duration declarations remain uncovered.
  * PNG/APNG receives only structural/declaration admission,
  * including animation frame work; actual playback remains unverified.

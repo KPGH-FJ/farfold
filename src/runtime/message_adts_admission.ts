@@ -2,6 +2,7 @@ import {
   MAX_MESSAGE_AUDIO_RECORDS,
   MAX_MESSAGE_AUDIO_SECONDS,
 } from "./message_audio_admission";
+import { messageAudioPrefix } from "./message_audio_prefix";
 import {
   MessageRasterError,
   MessageRasterReader,
@@ -31,7 +32,8 @@ function hasSync(reader: MessageRasterReader, at: number): boolean {
   );
 }
 
-/** Bare ADTS AAC-LC header declarations only. Canonical Base64 and byte
+/** ADTS AAC-LC declarations after supported leading ID3 stored extents only.
+ * Canonical Base64 and byte
  * admission must precede this call. FFmpeg8.1's official adts_header parser
  * supplies frame_length, standard rate and1024*(raw_blocks+1) samples:
  * https://ffmpeg.org/doxygen/8.1/adts__header_8c_source.html
@@ -40,15 +42,18 @@ function hasSync(reader: MessageRasterReader, at: number): boolean {
  * LC/rate segments still receive the duration budget. Encoded payloads and
  * CRC values are not read, so withinBudget is no codec-conformance guarantee.
  * SBR/PS, gapless trimming, actual playback, loops and decoder allocation are
- * outside this declared sample sum. ID3/ADIF/container prefixes are not
- * searched for a later sync. Interleaved/trailing tags leave the rest unknown.
+ * outside this declared sample sum. Unknown ID3/ADIF/container prefixes are
+ * not searched for a later sync. Interleaved/trailing tags remain unknown.
  */
 export function messageAdtsAdmission(data: string): MessageAdtsAdmission {
   const reader = new MessageRasterReader(data);
-  if (!hasSync(reader, 0)) return "notAdts";
+  const prefix = messageAudioPrefix(reader);
+  if (prefix.status !== "none" && prefix.status !== "supported")
+    return prefix.status;
+  if (!hasSync(reader, prefix.offset)) return "notAdts";
   try {
-    let at = 0;
-    let records = 0;
+    let at = prefix.offset;
+    let records = prefix.records;
     let ticks = 0;
     let uncovered = false;
     while (at < reader.length) {

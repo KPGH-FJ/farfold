@@ -3,6 +3,11 @@ import { expect, it, vi } from "vitest";
 import { messageAdtsAdmission as admit } from "./message_adts_admission";
 import { MessageRasterReader } from "./message_raster_reader";
 import {
+  id3PrefixTestBytes as tag,
+  id3PrefixTestFile as tagged,
+  MESSAGE_AUDIO_PREFIX_TEST_DATA as T,
+} from "./message_audio_prefix_fixtures.test-support";
+import {
   MESSAGE_ADTS_TEST_DATA as F,
   MESSAGE_ADTS_TEST_PROVENANCE as P,
   adtsTestFile as file,
@@ -110,12 +115,32 @@ it.each([1, 2, 4])(
   },
 );
 
-it.each(["ID3", "ADIF", "OggS", "fLaC", "RIFF", "\xff\xfb", "\x56\xe0"])(
+it.each(["ADIF", "OggS", "fLaC", "RIFF", "\xff\xfb", "\x56\xe0"])(
   "does not search past other transport/prefix%j for sync",
   (prefix) => {
     expect(admit(file(Buffer.from(prefix, "binary"), frame()))).toBe("notAdts");
   },
 );
+it("rejects the old unframed ID3 marker without searching later audio bytes", () => {
+  expect(admit(file(Buffer.from("ID3"), frame()))).toBe("invalid");
+});
+it("applies ADTS duration after a complete supported leading tag", () => {
+  expect(admit(T.ADTS_TINY)).toBe("withinBudget");
+  expect(admit(T.ADTS_SHORT_65)).toBe("withinBudget");
+  expect(admit(T.ADTS_LONG_601)).toBe("audioTooLong");
+});
+it("lets tagged LayerIII continue to its actual parser instead of claiming ADTS", () => {
+  expect(admit(T.MPEG_LONG_601)).toBe("notAdts");
+});
+it("shares record budget with leading metadata even for unknown-profile frames", () => {
+  const unknown = frame({ profile: 0 });
+  expect(admit(tagged(repeat(unknown, 65535)))).toBe("notCovered");
+  expect(admit(tagged(repeat(unknown, 65536)))).toBe("audioTooComplex");
+});
+it("retains unknown tags and does not scan supported-prefix opaque tails", () => {
+  expect(admit(tagged(F.LONG_601, { version: 5 }))).toBe("notCovered");
+  expect(admit(file(tag(), Buffer.from("opaque"), frame()))).toBe("notAdts");
+});
 
 it("leaves empty or one-byte input unidentified", () => {
   expect(admit("")).toBe("notAdts");
