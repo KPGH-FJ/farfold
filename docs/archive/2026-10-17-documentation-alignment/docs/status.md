@@ -1,0 +1,293 @@
+# Farfold 当前状态
+
+更新：2026-10-17。当前阶段为**能力建设与逐项补强**，目标是可面向市场用户、具备一线多 Agent 桌面工作台水准。执行顺序与全部原始条目见[唯一活动计划](../plans/agent-access.md)，产品要求以 [PRODUCT.md](../PRODUCT.md) 为准。
+
+## 当前续接（2026-10-17）
+
+最新：[消息图片尺寸与动画预览保护](evidence/2026-10-09-capability-hardening/message-raster-admission/verification.json)源码 `b754a1584` 已提交推送并更新唯一正式应用。JPEG、GIF、WebP、BMP 在生成预览来源前核验支持范围内的声明画布；GIF/WebP 同时限制帧数、整画布乘帧数及遍历块数。收起、换内容或卸载时清除当前图片自己的来源，重新挂载只恢复相同已准入内容。拒绝时保留原消息、来源和顺序，搜索不启动媒体，既有4实例/32 MiB配额不变。
+
+24文件冻结含18变更/6共享；271项相关检查、七项工程及源码独审已收口。完整工程19,030输入稳定，前端536文件/6,837项、Rust1,787项/6忽略；受控双引擎主组各88项、旧P13回归各31项通过。候选9/9、安装10/10及三份本批新217,407条清单严格相同，重复候选已精确清理，正式应用和ZIP保留。原6个格式/动画真红、2个图片来源退役真红、作者夹具错误、首轮浏览器自有Blob误分类和准备JSON错误分别保留。安装10原件中的上批技能边界措辞残留已记录，不据此声称技能或媒体行为通过。
+
+本阶段完成有界声明检查、受控组件和静态安装验证。本批没有启动新正式版本，正式消息媒体与真实Agent仍未验证；动画样本仅证明文件解码显示，未测帧推进、循环、时长或完整播放。APNG、AVIF、音频时长、实际解码与传输内存、长期资源及P13整项保持开放。NEW-24受影响的新真实发送继续暂停；旧5处目录差异、3处数据库/7处目录差异及未知写入者不豁免，151原条件和29家八项标准不变。
+
+此前：[额外技能目录临时发现](evidence/2026-10-09-capability-hardening/extra-skill-discovery/verification.json)源码 `a8e84d7ea` 已推送安装。显式选择目录、手动查询后临时发现，整份结果含默认项且只读，不安装、不写持久配置或代表当前对话采用。第二轮七项工程通过（19,017输入稳定、前端6,709项、Rust1,787项/6忽略）；原冻结双引擎各75项按两行lint差异明确复用。候选9/9、安装10/10及三份本批新217,407条安装清单严格相同，候选已精确清理。正式窗口核到默认无目标技能、选择不自动查、明确查询后出现且只读、清空再查消失，并保存退出。运行后严格退出2：metadata各表/字段与10份旧草稿整对象相同，5处数据目录差异保留，写入者未知；不宣称整体数据无变化。一次官方无提示验证不证明启动无副作用；P40整项、151原条件、29家八项标准、NEW-24受影响新发送暂停及旧未知原因保持。
+
+此前：[退出等待与PNG预览保护](evidence/2026-10-09-capability-hardening/exit-and-preview-guards/verification.json)源码 `6a5fb61c2` 已推送安装：普通退出等待可见、可撤回，同次撤回只提交一次，确认后只释放自身锁；PNG仅补33字节IHDR/CRC声明画布准入，其他允许图片声明下的PNG签名同闸。七项工程实际通过（19,009输入稳定、前端6,693项、Rust1,770项/6忽略），独立双引擎各54项；候选9/9、安装10/10及三份本批新217,407条清单严格相同，候选已清理。本批未启动新版本，不计正式慢保存退出、媒体、真实Agent或冷恢复通过；产品真红、测试辅助错误和浏览器准备失败分别保留。NEW-24受影响新真实发送继续暂停，旧初始化/重开/写者未知、严格数据差异、151项及29家八项标准保持。
+
+此前：[可信执行诊断与媒体配额](evidence/2026-10-09-capability-hardening/trusted-execution-followup/verification.json)源码 `bb76e7995` 已推送安装，补消息附件4实例/32 MiB准入、重试焦点保留与无正文父端IO汇总。配额仅覆盖 `MessageContent` 消息附件；IO不证明子进程已读、协议有效、OS结束或磁盘恰好一条。七项工程第二轮实际通过（19,005输入稳定、前端6,627项、Rust1,770项/6忽略），独立双引擎各69项；候选9/9、安装10/10及三份本批新217,407条清单严格一致，重复候选App已清理。五文件分别新inode替换，非整体事务；新版本本批未启动，不计正式媒体、冷恢复或真实Agent通过。原SSR/焦点/driver及c73安装失败保留；NEW-24、P13整项、历史严格3处数据库/7处目录差异与未知归因、29家及Windows仍开放。
+
+此前：[P13嵌入媒体预览准入](evidence/2026-10-09-capability-hardening/message-media-admission/verification.json)源码 `c73b42b4d` 已提交推送。单项解码字节限制16 MiB，先按长度拒绝超限，再检查编码；只有用户明确展开才生成媒体来源，拒绝时保留原消息、来源与顺序。原回归11失败/5通过保留，同组16项修复后全过；最终75项相关检查、独立381,493例编码差分及组件Chromium/WebKit各31项通过。七项工程全部实际通过，18,995输入稳定，前端527文件/6,618项、Rust1,764项/6忽略。唯一正式应用已更新，候选独审9/9、恢复后安装独审10/10及三份本批新217,407条安装清单严格一致；重复候选应用已移除。首次安装在五文件写入后校验退出1，签名缓存原位覆盖问题已按新文件原子替换处理，原失败保留。安装后本片未启动正式应用，不证明正式播放、真实Agent或P13整项通过，像素、时长、聚合资源及传输内存仍缺限制或实证。
+
+[此前09ad正式窗口分项](evidence/2026-10-09-capability-hardening/native-closeout-20261017/verification.json)已实际启动并保存退出。两段既有测试历史可读，但消息附件候选为空；P32搜索正例、P18结构化差异和当前整理忙态仍未验。复制入口因当前设置尚未核对保存而禁用，没有派发复制或新提示。默认OpenCode启动未观察到握手回应，约60秒后子进程、进程组和连接已清理，底层无响应原因未知；没有重试。运行后严格比较实际退出2：3处数据库及7处数据目录差异，写入者未知；独立核到54项设置、173条隐藏记录、10份旧草稿及附件、待发和意见保持。NEW-24仍缺同一官方连接的完整权限读回；受影响的新真实发送继续暂停，这是执行边界，不宣称后台已有全面禁发保护，也不宣称加载历史零通信。
+
+此前：[官方复制当前完整上下文](evidence/2026-10-09-capability-hardening/session-fork/verification.json)源码 `09ad7ce47` 已推送并安装，该安装批当时未启动正式应用；本轮启动结果见上文。50文件及独审已收口，七项工程全部重新实际通过：18,991输入稳定，前端525文件/6,588项，Rust1,764项/6忽略；候选独审9/9通过。完整App Chromium39项通过，WebKit42项指定功能及键序通过，普通Tab限制另列，不写相同键序全过。安装前、替换前与安装后三份新的217,407条清单严格相同；安装独审10/10通过，重复候选应用已精确清理，正式应用与ZIP保持。复制保留原对话、输入与待发，项目文件位置仍共享，新对话不沿用原权限确认，不自动发送。原队列暂停及B1–B9开发调查、旧检查失败和MCP并行超时均保留；B2/B4无专门真红，超时原因仍未知。P11指定历史节点、回退/检查点、完整权限、正式界面/冷恢复、真实Agent及ARCH-33整项仍开放，151项原条件和29家八项标准保持；旧严格数据差异和未知自动重开请求者不豁免。
+
+此前：[所选当前PPTX附件的预览文字搜索](evidence/2026-10-09-capability-hardening/pptx-search/verification.json)已提交推送并安装 `cd0097111`。14文件源码及独审、七项工程均通过，18,968输入稳定，前端6,519项、Rust1,737项/6忽略；完整App双引擎各38项受控通过，1,656输入稳定。候选独审9/9、安装独审10/10，三份217,407条安装清单严格全等，重复候选应用已精确清理。范围是明确所选当前文件的已解析预览文字，可能含格式生成符号，四类片段边界不拼接，始终为部分内容。该P32阶段安装后未启动正式应用，正式搜索、冷恢复及真实Agent未测。原格式缺口、WIP Unicode反例及服务启动异常保留；151项原题/条件不变，不追加NEW-30，不关闭P32/P16/P21或全部29家八项标准。此前整理活动保护核心忙态仍未实机；P21既有正式分项、严格退出2/两处差异、五处基线摘要变化及未知自动重开最终请求者保留原据。
+
+- 首次向用户交付仍覆盖全部 29 家及八项标准；122 个原始条目和 NEW-01–28 的完成条件保持，另追加 NEW-29。按用户认可的批次方式做工程、安装和实际验证。
+- [此前P21实现](evidence/2026-10-09-capability-hardening/pptx-feedback/implementation.json)复用共用文件核实、内容预览和意见编辑；两步确认当前整页，保留版本、完整摘要及准确文件内位置。加入意见只进入当前可见输入，旧版本保留、翻页不重定向；保存不自动发送。
+- [此前P21工程](evidence/2026-10-09-capability-hardening/pptx-feedback/engineering.json)保留首轮档案测试等待失败和旧候选退役；档案仅修测试完成等待，历史失败根因未确证。`c7466f69f` 的[P16兼容证据](evidence/2026-10-09-capability-hardening/pptx-preview/verification.json)保持历史范围，原模板/oracle/子进程启动失败不回写，启动原因仍未知。
+- P30 已补[逐页记住公开网页](evidence/2026-10-09-capability-hardening/remembered-pages/verification.json)源码：只保存明确确认的非秘密公开网址、既有对话和记住顺序。重启只列清单，点击才新开，旧读取许可不恢复；普通关页保留记录，忘记/清空不关闭现有页面。未保存的草稿不可记住。
+- P30 该片后端相关 155 项通过；前端定向 156 项与关联 178 项通过（覆盖相交）。完整 App 的 Chromium/WebKit 各 24 项受控检查通过；静态独审未发现需修问题。该片工程前端 505 文件 / 6,151 项、Rust 1,704 项通过及 6 项忽略：前端四项按精确未变输入复用，Rust 三项重新实际通过，18,863 个记录输入稳定。该片当时安装 `5b8c9d0ff` / 0.1.7 arm64，见[安装与本机分项](evidence/2026-10-09-capability-hardening/remembered-pages-install/verification.json)：候选独审 9/9、安装独审 10/10，三份新的 217,400 条清单一致；逐页确认、保存顺序、正常退出后仅列清单及点击才打开、忘记/清空保留活页已在正式窗口核到。旧对话重连失败，未建立读取许可，旧许可撤回及真实 Agent 仍缺本机证明。
+- 首轮完整工程的 Rust 1,703 通过 / 1 失败 / 6 忽略保留：已有取消程序选择测试的 Node 探针超时，唯一隔离运行随后通过；只增加测试诊断，原 5 秒预算、取消谓词、真实子进程和断言未改。原超时根因仍未定位，最终通过不记为生产故障已修复。
+- 上轮 P30 运行后的延迟数据比较已实际执行，严格退出 2 / 9 处差异保留，见[安全摘要](evidence/2026-10-09-capability-hardening/remembered-pages/raw/data-closeout-summary.json.raw)。旧 135 条会话、171 条隐藏记录及 40 条 Agent 均在；旧 10 份草稿中 9 份完整相同，原 PDF/音频测试草稿在捕获的 metadata 中缺失。快照包含 10 月 15 日后续活动，用户已确认主动处理过该草稿；不推断具体发送或删除动作，不恢复旧数据，不归因为上轮退出丢稿，也不将严格比较改为全等。
+- P30该片正常退出后立即严格比较退出 2：一条 Agent 仅更新时间变化，新增本轮空网页清单；137 条对话、173 条屏蔽、旧 53 项设置及当前 9 份草稿逐值保持。进程调用参数引用误指已由独审补真实执行链，原件不改，不将严格比较改绿。
+- NEW-24 当前完整权限仍未知，受影响的新真实发送继续暂停；独立源码调查仍未取得官方同一连接的完整权限回执。P27 生产网页截图的系统安全证据仍不足；DOCX/XLSX/PDF/PPTX 搜索与工具差异的正式正例仍待验。
+- 此前P21批次正常退出、安装及运行后独审已收口，严格差异与未知写入者保持；后续继续按活动计划补未覆盖能力与实证。P16/P21/P30 整项、全部 29 家八项标准、NEW-24、P27 与 Windows 保持开放，不恢复旧验收门槛。
+
+[2026-10-15 记录对齐](evidence/2026-10-15-record-alignment/verification.json)保留此前原件定位与当时边界；该只读审查阶段不代表本片开发或新测试。数据库、全窗口和历史正文仍保持私有。
+
+## 已有阶段明细与证据边界
+
+下文按各提交保留实现和验证记录；“当前”“下一步”“未安装”等词应按相应阶段解读，以本页上方的最新续接为准，原始失败和中间回执不改写。
+
+P30 的[运行期间多标签](evidence/2026-10-09-capability-hardening/browser-tabs/verification.json)已完成本片源码与受控验证：同一对话可保留多个页面实例，明确切页先撤回旧页共享与未交付读取，再等待隐藏确认；普通收起或离开对话只隐藏同页。已保留页面按稳定顺序呈现，切回对话不重新创建或关闭另一对话页面；取消、失败、迟到回执和明确关闭分别保持原归属。
+
+后端 178 项定向通过；前端先完成 241 项定向，最后布局恢复增量的 74 项相关回归、类型及格式检查通过（两组覆盖相交）。最终完整 App 的 Chromium/WebKit 各 141 项检查、13 个场景通过，1,109 个输入前后稳定，使用受控命令和合成网页，页面错误与外部请求均为 0。旧 138 项通过漏检反向保留，后续真实反例、诊断和修复证据均保留。本片未新建持久浏览清单；重启恢复、正式网页、真实 Agent 与 Windows 分项待验，P30 和 NEW-24 不关闭。本片受控证据与下述正式工程、安装及本机验证分别记录。
+
+本片前两轮完整工程均在同一个服务配置终端测试的 3 秒就绪等待处失败，PTY 记录为空，原日志未区分超时或通道关闭。三轮临时诊断通过但未复现，原失败原因仍未知。后续仅修正测试稳健性：夹具启动预算改为 10 秒，保留完整就绪信号、所有权、取消及精确回收断言，明确等待失败类别，并在断言前释放输出锁以免二次中毒；没有修改终端生产逻辑。第三轮正式工程通过不回写前两次失败，也不把诊断通过写成生产故障已修复。
+
+本片[第三轮完整工程](evidence/2026-10-09-capability-hardening/browser-tabs-checks/verification.json)七项实际通过：2,538 个输入稳定，前端 503 文件 / 6,116 项，Rust 1,692 项通过、6 项忽略。源码 `aabbbb063` 已推送 main；[候选独立检查](evidence/2026-10-09-capability-hardening/browser-tabs-candidate/candidate-independent.json)9/9、[安装独立检查](evidence/2026-10-09-capability-hardening/browser-tabs-candidate/install-independent-final.json)10/10。
+
+[安装回执](evidence/2026-10-09-capability-hardening/browser-tabs-install-review/verification.json)确认唯一正式应用已更新为 `aabbbb063` / 0.1.7 arm64，安装前、替换前及安装后三份 217,400 条完整清单逐字节相同（`eb77d425…`），原字节备份保留；重复 App 产物已精确移除，正式应用和 ZIP 归档保留。该安装回执只描述启动前阶段；随后本机分项已实际观察到合成页面切换、收起/文件区往返、B 关闭重开、两对话同源 B 双向状态保留及手动文字快照，并经“保存并退出”核到精确正式进程为 0。首次快照超时不计成功，解锁后的第二次才有结果；滚动只按无障碍工具的归一化值记证，不宣称像素不变。运行后的严格数据比较仍未执行，不能把安装时三份清单相同扩大为运行后数据不变。重启恢复、真实 Agent、Windows、P30 整项与 NEW-24 仍未完成，旧严格数据差异未豁免。
+
+P18 的[共用工具差异比较](evidence/2026-10-09-capability-hardening/diff-summary/verification.json)已完成本片源码与受控验证：消息与内容栏共用有界逐行比较，仅已精确对齐的正文显示增删统计；缺少修改前文本与已知空文本分开，超出比较预算时保留两侧原文并中性提示。空白、Unicode、LF/CRLF 与末尾换行保持，换行变化标注两侧各自的片段行号。失败、未完成、未知结果及输入意图不提升为已写入；点击明确文件位置才核验当前内容。
+
+前端定向 10 文件 / 117 项、独立纯比较 13 项通过；完整 App 的 Chromium/WebKit 各 147 项检查、17 个场景通过，使用合成工具报告与受控文件返回，1,098 个输入前后稳定。原产品反例、旧断言及测试脚本失败和五轮浏览器脚本失败均保留；迟到保护的浏览器证据限定为文件检查期间切换对话。
+
+本片[第二轮完整工程](evidence/2026-10-09-capability-hardening/diff-summary-checks/verification.json)七项实际通过：2,059 个输入稳定，前端 500 文件 / 6,080 项，Rust 1,681 项通过、6 项忽略。首轮仅格式、类型通过，前端 6,079 通过 / 1 项旧断言失败，后四项未启动；[修正记录](evidence/2026-10-09-capability-hardening/diff-summary-correction/publication.json)保留原失败，修改仅限一个 SSR 测试断言，原 15 文件不变，原浏览器运行未执行新断言。
+
+源码 `fcd7b266` 的候选构建和独立 9 项检查已通过；正式更新结果为 `fcd7b266` / 0.1.7 arm64 已安装且尚未启动。安装前与替换前两份完整清单均为 217,400 条且逐字节相同（`eb77d425…`），原字节备份已完成；安装后的第三份完整清单与前两份逐字节相同；最终独立 10 项检查实际通过；重复 App 产物已移除，唯一正式应用及 ZIP 归档保留。公开依据见[安装回执](evidence/2026-10-09-capability-hardening/diff-summary-install-review/verification.json)及[最终独立核验](evidence/2026-10-09-capability-hardening/diff-summary-candidate/install-independent-final.json)。本片正式界面分项尚未测试，未启动真实 Agent；工具报告不作为磁盘写入证明，P18 整项和 NEW-24 仍未完成。
+
+NEW-26 的[系统文件面板本机分项](evidence/2026-10-09-capability-hardening/file-dialog-native/installed-native-scoped.json)在已安装的 `9c278d82` 上复验：实际鼠标选择 140 字节 WAV、2554 字节 PDF 均使“打开”可用，并把文件位置加入草稿。PDF 明确范围后显示 1,311 字节、3 页部分文字；第二项同意未勾选，未保存新 PDF 正文。预览取消、仅移除本次临时附件及再次面板取消后，原两附件、33 字节标记、Ultra 与发送禁用可见保持；已正常退出并核到正式进程为 0。旧失败和本轮控件编号失效保留；旧原因仍未定位，未改源码，不将本次复验写作代码修复或 XLSX 已测。没有发送或批准 Agent 权限动作，不据此宣称官方请求计数为零。
+
+本轮严格数据比较实际退出 2，独立第二副本核对仅定位到一条 Agent 的 `updated_at` 变化，具体写入者未知，原差异未豁免。135 条会话、171 条屏蔽、53 项设置、整个未发内容原始字符串及全部 10 份草稿精确保持；33 字节标记、完整 140 字节音频、PDF 完整保存表示 1311 字节及两附件全部 7 项来源字段相同，临时文件附件无残留。两份工作副本在独立读取前后的摘要稳定；本机正常选择、取消保稿和 PDF 读取条件已有本轮分项证据，不将原严格比较改为通过。
+
+P32 的[所选本地 PDF 附件临时文字搜索](evidence/2026-10-09-capability-hardening/pdf-search/verification.json)已完成本片源码与受控验证：勾选文件、查看明确的全部页范围后，按“开始”才读取；结果可能含不可见文字，始终按部分内容说明。每个实际文字片段及页面分别匹配，不跨片段拼接，不搜索包装或说明；不做 OCR，整份解析失败时不保留先前页面的命中。每个完整源文件 ≤1 MiB，与文字、DOCX、XLSX 共用最多 20 个文件、实际检索文字合计 ≤16 MiB 的预算及批次解析顺序；来源七字段、完整文件摘要、取消和迟到返回保护保持。
+
+后端定向 18 项、前端 9 文件 / 262 项通过；完整 App 的 Chromium/WebKit 各 76 项检查、11 个场景通过，使用生产 PDF Worker 与受控文件返回，1,096 个输入稳定，页面错误和外部网络请求均为 0。原缺少 PDF 路由的失败、测试夹具参数错误、开发服务首次依赖重载及无文字样本定位脚本失败分别保留。[本片七项工程检查](evidence/2026-10-09-capability-hardening/pdf-search-checks/verification.json)在 2,029 个稳定输入上全部实际退出 0：前端 498 文件 / 6,034 项，Rust 1,681 项 / 6 忽略。
+
+源码 `2a720169` 已推送 main，唯一正式应用已更新为该版本 / 0.1.7 arm64；[候选检查](evidence/2026-10-09-capability-hardening/pdf-search-candidate/candidate-independent.json)9/9、[安装独立检查](evidence/2026-10-09-capability-hardening/pdf-search-candidate/install-independent-final.json)10/10。[安装记录](evidence/2026-10-09-capability-hardening/pdf-search-install-review/verification.json)中，安装前、替换前及安装后三份 217,400 条完整清单相同，数据库备份保持；重复打包应用已精确移除，正式应用和候选 ZIP 保留。本片安装与清理均实际退出 0，安装后尚未启动。正式附件搜索命中、来源跳转和真实 Agent 仍未验证，NEW-24 与 P32 整项保持开放；此前严格数据比较差异未豁免。
+
+P32 的[所选本地 XLSX 附件临时内容搜索](evidence/2026-10-09-capability-hardening/xlsx-search/verification.json)已完成本片源码与受控验证：明确开始后只查找可见工作表范围内的保存值、公式缓存及实际保存且允许读取的公式文字；各单元格及字段分别匹配，不计算、不补写或展开公式，不搜索显示格式、标签或属性。隐藏、可见性未知及合并覆盖内容不参与，无可见工作表明确拒绝；缓存可能过期及省略范围说明常显。每个完整源文件 ≤1 MiB，与 DOCX、UTF-8 文字共用最多 20 个文件、实际检索文字合计 ≤16 MiB 的预算；来源变化、取消和迟到返回仍撤回结果。
+
+后端定向 40 项、前端定向 190 项通过；完整 App 的 Chromium/WebKit 各 162 项检查、17 个场景通过，使用生产文档 Worker 与受控文件返回，源码稳定、页面错误和外部网络请求均为 0。原未命中及字符串检查、夹具排版失败保留并区分。[本片七项工程检查](evidence/2026-10-09-capability-hardening/xlsx-search-checks/verification.json)在 1,842 个稳定输入上全部实际退出 0：前端 496 文件 / 5,962 项，Rust 1,674 项 / 6 忽略。
+
+此前 XLSX 搜索源码 `c89b8f82` 已推送 main，并曾安装为 0.1.7 arm64；[候选检查](evidence/2026-10-09-capability-hardening/xlsx-search-candidate/candidate-independent.json)9/9、[安装独立检查](evidence/2026-10-09-capability-hardening/xlsx-search-candidate/install-independent-final.json)10/10。[安装记录](evidence/2026-10-09-capability-hardening/xlsx-search-install-review/verification.json)中，安装前、替换前及安装后三份 217,400 条完整清单相同，数据库备份保持。重复打包应用已移除，正式应用和候选 ZIP 保留。清理脚本在删除后引用已删目录，原退出 1 保留；独立恢复工具未再删除，经正式文件及 ZIP 核对后补齐回执。安装后尚未启动，附件搜索命中与来源跳转仍未在正式窗口验证；NEW-24 与 P32 整项保持开放；本片 PDF 搜索的工程与安装结果见上文。
+
+P32 的[所选本地 DOCX 附件临时文字搜索](evidence/2026-10-09-capability-hardening/docx-content-search/implementation.json)已完成本片源码与受控验证：明确开始后只查找作者文字，段落、单元格及文档区域分别匹配，省略内容提示常显；来源变化、取消或迟到返回撤回结果。每源文件 ≤1 MiB、最多 20 个文件，实际 UTF-8 检索文字合计 ≤16 MiB，不建立持久正文索引。
+
+前端 v1 定向 109 项、v2 的可见省略提示及字符串 6 项通过，后端定向 24 项通过。完整 App 的 Chromium/WebKit 最终各 60 项检查、11 个场景通过，使用真实文档 Worker 与受控文件返回，源文件稳定且无页面错误或外部网络请求。原 DOCX 未命中、预取预算、提示折叠及测试脚本错误均保留并区分。[本片七项工程检查](evidence/2026-10-09-capability-hardening/docx-search-checks/verification.json)第二轮在 1,799 个稳定输入上全部实际退出 0：前端 494 文件 / 5,885 项，Rust 1,666 项 / 6 忽略。首轮 Rust 音频取消后清理测试失败保留；仅两份测试改为等待真实取消完成事件，未修改生产取消语义。
+
+此前 DOCX 搜索源码 `52d21a3` 已推送 main，并曾安装为 0.1.7 arm64；[候选独立检查](evidence/2026-10-09-capability-hardening/docx-search-candidate/candidate-independent.json)9/9、[安装独立检查](evidence/2026-10-09-capability-hardening/docx-search-candidate/install-independent-final.json)10/10。[安装](evidence/2026-10-09-capability-hardening/docx-search-candidate/installation.json)前、替换前和安装后三份 217,400 条完整清单相同（SHA-256 `eb77d4255cab06d3096378b2123365a9555c97e23aef3cf5b264185c504b6849`），数据库备份保持；重复打包应用已精确移除，正式应用和候选 ZIP 保留。安装后尚未启动；附件读取、匹配及来源跳转正例仍未在正式应用验证。安装与受控通过不提升 NEW-24 或 P32 整项结论。
+
+P27 的[截图不可用请求保护](evidence/2026-10-09-capability-hardening/screenshot-unavailable/implementation.json)已完成源码定向 2 项及相关回归 58 项：`screenshot=true` 按原请求身份拒绝，普通文字路径保持；生产截图能力仍缺少。P32 的[所选本地文本附件临时搜索](evidence/2026-10-09-capability-hardening/attachment-content-search/implementation.json)已完成本片源码与受控验证，明确选择后才读取，不连接 Agent 或建立持久正文索引。前端 v1 定向 6 文件 / 68 项、Chromium 与 WebKit 各 55 项通过；当前 v3 仅累计两处文案修正，v2、v3 各补字符串检查 2/2，未重跑完整浏览器。后端有界读取、来源核验及共用读取池已有定向验证。本片已提交并安装 `9c278d82`；P27 生产截图及 P32 整项仍未完成。
+
+此前 P27/P32 正式版本为 `9c278d82` / 0.1.7 arm64，源码已推送 main。[本片七项工程检查](evidence/2026-10-09-capability-hardening/attachment-search-checks/verification.json)在 1,756 个稳定输入上全部实际退出 0：前端 491 文件 / 5,821 项，Rust 1,658 项 / 6 忽略；[候选独立检查](evidence/2026-10-09-capability-hardening/attachment-search-candidate/candidate-independent.json)9/9、[安装独立检查](evidence/2026-10-09-capability-hardening/attachment-search-candidate/install-independent-final.json)10/10。安装前、替换前及安装后三份 217,400 条完整清单相同（SHA-256 `f07c39cbd8bca17c11d9fdf368014d11f44eb21f9b9432b68492c7e8e328a73f`）；唯一正式应用已替换，重复打包应用已精确移除，候选 ZIP 保留。
+
+[本片正式界面有限观察](evidence/2026-10-09-capability-hardening/attachment-search-native/installed-native-scoped.json)核到共用搜索范围与空态：首次 134 个对话未加载，明确打开一条既有专用 XLSX 历史后为 133 个，仍无附件候选。257 个 ASCII 字节关键词显示 256 个 UTF-8 字节上限提示；没有已选文件时开始按钮本已禁用，不作为已选文件长度门禁的独立实证。菜单点击未生效的原事件保留，End/Return 随后完成选择；收尾恢复资料范围，原 33 字节标记、两附件及 Ultra 可见保持。未操作发送或批准权限，不据此宣称官方请求计数为零。已正常保存退出，随后精确正式进程为 0；未知工作不改记完成或停止。实际附件读取、匹配和来源跳转正例尚未正式验证，P27 生产截图与 P32 全部原条件仍开放。
+
+本片正式运行后的严格数据比较实际退出 2，独立逐字段核对仅定位到一条 Agent 和一条会话的 `updated_at` 变化，具体写入者均未知，原差异未豁免。53 项设置全部原值、整个未发内容原始字符串及全部 10 份草稿精确相同；33 字节标记、完整 140 字节音频、PDF 完整保存表示 1311 字节及两附件全部 7 项来源字段保持。两份捕获后工作副本在独立读取前后的摘要与文件状态稳定；这证明上述保留范围，不把原比较改写为通过，也不证明未知工作已完成。
+
+[正式 PDF 的 `@` 入口分项](evidence/2026-10-09-capability-hardening/pdf-at-route-native/installed-native-scoped.json)在此前 `36c56a82` 上完成：2554 字节合成 PDF 明确选择读取范围后取消，原文件位置保留；再次明确范围并同意部分读取后保存。2998 字节加密样本被拒绝，取消后只移除本轮负例附件。正常退出和精确进程为 0 后另行启动，确认 PDF 与音频恢复；查看不解除恢复检查，明确保留所选附件后重新核对成功，发送仍禁用，未向真实 Agent 发消息。最终再次正常退出。
+
+[独立界面与数据核对](evidence/2026-10-09-capability-hardening/pdf-at-route-native/data-publication.json)分别保留原始证据。以前一轮音频冷恢复后的快照为基线，本轮严格比较实际退出 2：一条 Agent 仅更新时间变化，具体写入者未知；本轮既有草稿仅新增上述 PDF。原 135 条会话、171 条屏蔽、39 条其他 Agent、52 项其他设置、其他 9 份草稿和未发内容其余字段保持；33 字节标记及完整 140 字节音频与 7 项来源字段准确保持，`sendPending` 仍为 `false`。第二副本核到 PDF 完整保存表示 1311 字节、3 页及全部 7 项来源字段；完整文字及页项与既有独立受控结果一致，仍是明确同意的部分读取，不证明可见版式、OCR 或全部文件字符串。原 exit 2、两处差异和此前差异均未豁免。当时 NEW-26 系统文件面板仍开放，后续本机有限复验见首段；NEW-24、真实 Agent 接收及 P08 整项仍开放。
+
+P08 的完整 PCM WAV 音频输入已完成本片源码与受控验证：明确确认并复核来源，每条消息完整文件合计 ≤16 MiB、每段 ≤10 分钟；失败不自动改发文件位置。[前端](evidence/2026-10-09-capability-hardening/audio-input/frontend/publication.json)定向 265 项、完整 App 的 Chromium/WebKit 各 35 项通过；[后端](evidence/2026-10-09-capability-hardening/audio-input/backend/publication.json)16 项通过，实际受控连接核到完整文件合计恰好 16 MiB 可发送、超出 2 字节在提交消息前拒绝。[独立复核](evidence/2026-10-09-capability-hardening/audio-input/independent/publication.json)无新增阻断；NEW-27/28 已修复并通过受控复验，原失败保留。前端受测为 v1，当前 v2 仅一份测试排版变化；本片工程、安装及有限正式分项见下文，真实 Agent 接收和 P08 整项仍未完成。
+
+此前音频正式版本为 `36c56a82` / 0.1.7 arm64，源码已推送 main。[音频七项工程检查](evidence/2026-10-09-capability-hardening/audio-input-checks/verification.json)在 1,736 个稳定输入上全部通过：前端 488 文件 / 5,763 项，Rust 1,650 项 / 6 忽略；[候选](evidence/2026-10-09-capability-hardening/audio-input-candidate/candidate-independent.json)9/9、[安装独立检查](evidence/2026-10-09-capability-hardening/audio-input-candidate/install-independent-final.json)10/10。安装前、替换前及安装后三份 217,400 条完整清单字节一致，重复打包应用已精确移除，唯一正式应用与候选 ZIP 保留。
+
+[正式音频分项](evidence/2026-10-09-capability-hardening/audio-input-candidate/installed-native-scoped.json)通过 `@` 项目文件入口完成 140 字节合成 PCM WAV 的完整预览、取消保留文件位置、明确确认并保存，以及有正确进程退出证据的冷恢复与重新核对。当前连接未声明音频输入，附件保持完整音频且发送禁用；未向真实 Agent 发送。当时系统文件面板的 WAV“打开”不可用，NEW-26 尚未关闭；`@` 入口成功不证明系统面板已修复，后续本机有限复验见首段。早期两份进程检查误用了可执行文件名大小写，原失败保留，后补的正确检查不追认此前冷恢复；用户解锁后已另做真实冷恢复。两次运行后的严格数据比较均实际退出 2，原结果和两处差异保留：一条 Agent 的更新时间，以及本轮原有草稿新增完整音频与 `sendPending` 缺省变为 `false`，具体历史写入者未证。独立第二副本核到原 135 条会话、171 条屏蔽、39 条其他 Agent、52 项其他设置及其他 9 份草稿不变；两次捕获之间，53 项设置逐原值相同，整个草稿原始字符串、33 字节标记、140 字节音频全文件哈希及 7 项来源字段跨真实冷恢复完全一致，仅同一 Agent 更新时间再变。这两轮捕获与独立核对仅通过 SQLite 打开第二工作副本及新合并副本，不把局部保持写成全部数据不变。NEW-27 的 16 MiB 发送/待发容量及 NEW-28 的错误归属全路径仍只有受控证据，有限正式分项不替代这些完成条件。
+
+此前 PDF/权限版本为 `e5995b219` / 0.1.7 arm64，源码已推送 main。[PDF 与权限保护整合检查](evidence/2026-10-09-capability-hardening/pdf-permission-checks/verification.json)在 1,703 个稳定输入上七项全部实际通过：前端 481 文件 / 5,643 项，Rust 1,634 项 / 6 忽略。保存配置期间漂移及首发拒绝后重试绕过确认的两轮原始失败均保留，5 项竞态对照与 37 项发送回归通过。[正式安装](evidence/2026-10-09-capability-hardening/pdf-permission-candidate/installation.json)独立候选 9/9、安装 10/10；安装前、替换前、安装后三份 217,400 条完整清单字节一致。重复打包应用已精确移除，唯一正式应用与候选 ZIP 保留；这只证明安装时的数据保持，正式界面运行后的核对另记。
+
+完整 App 的权限/PDF 组合受控检查在 Chromium、WebKit 各 32 项通过；实际打包的两级 PDF 工作线程在纯静态服务各 3 个样本通过，服务字节与产物哈希一致。正式界面已核到权限“下次消息的选择”、当前完整权限未知说明和取消后原选择保留；文件面板选中 PDF 后“打开”不可用，XLSX 对照相同，当时未定位原因，也未把 PDF 路径交到解析器。当时的正式读取与附件冷恢复缺证现由上述 36c `@` 有限分项补充；当时系统文件面板未获成功验证，后续本机有限复验见首段；未定位旧原因或改动源码，真实 Agent 接收仍未验证。新的真实请求继续暂停，NEW-24 完整权限恢复、P08 全项和其余计划条件保持未完成。
+
+[本片正式分项](evidence/2026-10-09-capability-hardening/pdf-permission-candidate/installed-native-scoped.json)当时已正常保存退出，精确正式进程为 0；该轮冷恢复仅证明 33 字节未发标记完整，不能记作 PDF 附件恢复；后续 36c `@` 附件恢复另见本节新分项。H17 既有结束后未知结果保持，未确认、重核或改记成功/停止。退出后的严格数据比较实际退出 2：原 135 条会话、171 条屏蔽、39 条其他 Agent、52 项其他设置及全部 9 份旧草稿保持；新增草稿仅本轮准确标记和空附件，另一处仅 Agent 更新时间变化，具体写入者未知。独立第二副本核验通过，原比较与两处差异保持，不宣称全部字段相同。NEW-26 当时记录本机文件面板入口阻塞，尚无成功实际鼠标点击对照；后续本机有限复验见首段，仍不把辅助操作失败直接归为产品解析缺陷。
+
+此前正式应用 `92aa4a27` 的[XLSX与DOCX来源修复正式分项](evidence/2026-10-09-capability-hardening/xlsx-input-candidate/installed-native-scoped.json)完成候选9/9、安装10/10，安装前后三份217,400条清单逐字节相同，唯一正式应用已正常保存退出。沿用已有Codex来源及6 Astra / Ultra完成两次XLSX真实请求，独立官方记录核对20/25/1/1条全部单元格的字段、值、类型、公式、缓存及顺序精确一致，四份完整附加正文匹配，记录中0次工具调用；两份普通提示各仅移除一个末尾换行，原拟发送文字和官方记录均保留。冷恢复保留三份全文和全部范围选择，查看不授予发送许可；明确核对附件、重新确认权限后也不自动重发。NEW-20在正式DOCX及XLSX均核到文件变化拦截、查看/取消保留错误、当前完整文字实际确认并保存后清除旧错误；DOCX源文件及25,744字节全文准确还原，无第三请求。NEW-21的缺失/空/有缓存对照和NEW-22的标签、普通Tab/方向键/Space/Return/Escape、深色/窄窗均已有本机正式分项；NEW-23三种失败→重试的源码与受控结果保持，正式故障注入及重试仍未测试。
+
+此前 92aa 正式验证后的唯一数据捕获实际退出0；原完整比较退出2且不改写，三处差异单列未豁免：Codex更新时间、受控DOCX位置的一条新屏蔽记录，以及自有DOCX草稿sendPending缺省→false。独立第二副本逐字段核对保留全部134条旧会话、170条旧屏蔽、39条其他Agent、52项其他设置、全部8组意见与3组待发、8份其他旧草稿和自有DOCX普通全文；仅新增准确自有XLSX会话及活动，四项准确自有活动/选择位置/来源版本变化事先逐哈希声明。本轮只读复核两份已捕获副本及合成验证：新屏蔽身份与前后已索引会话均不重合；相同握手可更新时间，sendPending缺省在后续变更保存时可归一为false，true不会降级。三处历史具体写入者仍未知；屏蔽记录也不证明官方历史为空或关闭成功，不能写“全部数据逐值不变”或“原比较通过”。原数据、首份捕获及完整schema保持，私有正文、数据库和账号信息不公开。
+
+新增NEW-24：官方接入恢复未重建旧具体文件/网络权限，旧DOCX完整官方字节前缀保持，仅追加764字节设置事件，其中permission_profile由managed restricted变为disabled；官方源码的disabled确为不限制文件且启用网络。具体有效配置来源未定位，选择权限的回包只确认下一次普通请求，不能证明立即更改当前工作。XLSX第二次实际请求仍workspace-write/network=false，但reviewer由auto_review变为user，期间设置经历disabled→managed；因此不能写“所有权限未变”。已补共用权限作用时点说明及受控命令保护：回包只确认“下次消息的选择”，当前完整权限保持未知；对已核会绕过普通下发的review/compact/工作型goal在发送前拒绝，保留暂停队列、附件及来源，配置完成不自动重发。完整App的Chromium和WebKit各32项通过，原夹具、开发服务重载及按钮名称定位失败保留；尚非正式应用或真实命令验证。另已修复保存期间收到模型/权限更新仍误发送及首发拒绝后继续待发绕过确认的竞态：成功保存后先固定原配置，再处理通知和核查；5项受控反例/对照及37项发送回归通过，1项真实Agent测试仍忽略。原两轮真红保留，不把受控协议成功写为实机或完整权限恢复。本片完整权限恢复尚缺同一官方连接的可用读写接口；不伪造接口、修改官方程序或另起Agent循环。新的真实请求暂不继续；完整P08、122项原条件、29家八项标准和Windows仍开放。
+
+PDF 的[源码及受控分项](evidence/2026-10-09-capability-hardening/pdf-input/implementation.json)已通过完整字节捕获6项、解析相关11文件85项；完整App真实解析工作线程在原源码各71项，新MIME及URI增量各74项实际退出0，分属两次稳定源码范围。新增NEW-25保留格式声明变体、无后缀重读、旧回调误勾和不同URI沿用范围的原失败：当前源码已补保护，原独立MIME四项窄复验及同路径编码对照通过。明确范围前不读取，全文始终部分读取；损坏、加密、超限或无正文不生成已批准前缀。当时仅覆盖受控文件接口与Agent接纳；后续36c的正常`@`入口已补正式读取、真实冷恢复及有限数据核对，严格比较仍为exit 2，真实Agent接收未验；本片七项工程、实际打包工作线程和正式安装分别留证，检查结果以本片新回执为准；原92aa检查不复用作新片达标。
+
+[此前 92aa 七项工程检查](evidence/2026-10-09-capability-hardening/xlsx-input-checks/verification.json)在1,642个稳定输入上全部实际通过：前端463文件/5,421项，Rust1,617项/6忽略；受控Chromium与WebKit完整App各122项、42个真实Worker。原首轮5项超时与当时未开始打包的失败保留，原因未定位；顺序执行通过不证明根因。上述工程及正式分项只对应92aa范围，后续 PDF 整合与 e599 安装结果见本节首段，不据此关闭全计划。
+
+此前DOCX正式版本 `b862b79d` 的[旧分项收口](evidence/2026-10-09-capability-hardening/docx-input-candidate/installed-native-final.json)继续保留当时25,744字节输入、31×7表格及1290字符末格、正文和附注的两次无工具请求证据；旧133条会话与当时数据比较不作为本轮134条新基线。旧首问歧义、备份侧文件失败、比较退出2及具体更新时间写入者未知仍保持。
+
+此前来源与选择器阶段的正式应用为 `3bcd43dc` / 0.1.7 arm64，[本片正式复验](evidence/2026-10-09-capability-hardening/claude-history-origin-fix-candidate/installed-native-followup.json)已完成：候选9/9、安装10/10，三份新的217,400条数据清单一致。共用界面仅选同一条已登记Claude历史，三次官方读取按已知标记→不存在标记→已知标记返回部分覆盖的1页/2段文字，匹配1→0→1；两次纯文字预览与从第二次正向结果打开的原对话用户文字一致。占位和选中Claude名称在正式截图可见，鼠标菜单及Space/Up/Down/Return保持正确选择。NEW-18/19仅此本机、本片官方human文字路径复验；原空白原因未唯一定位，其他主题与历史未测。原对话只见用户历史，回复、当前分支和上下文续接未证；没有经界面发送prompt或批准权限/配置，P32整体及29家八项标准仍未完成。
+
+3bcd本轮已正常保存退出，退出回执与随后正式进程不存在分别留证，不据退出警告推断全部外部工作完成或停止。133条完整会话、170条屏蔽、53项设置原值、整个未发8/8/3及活动、工作树清单、schema保持，0新增；唯一Claude更新时间变化经root窄逐值接受，其他列保持，具体写入者未证。重复打包应用已精确移除，唯一正式应用和候选ZIP保持；私有数据只保留本地证据、摘要和哈希。
+
+此前P32第二条官方读取路径已安装 `63f646e7`，[候选9项、安装10项](evidence/2026-10-09-capability-hardening/claude-history-candidate/install-independent-final.json)及三份217,400条数据清单一致。正式共用界面只选一条已登记Claude历史，真实SDK每次返回部分覆盖的1页/1段文字：不存在词0匹配，但已确认存在的用户文字及短前缀也均0匹配，正向验证失败；命中文字预览和从结果打开原对话未执行，不能算P32完成。
+
+[来源过滤与选择器修正](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json)已完成源码和受控验证：官方human用户来源被误排除的用例先真红，修复后Node19项、Rust目标类12项及独立23项通过；共用选择器空白候选双浏览器各23项通过，本片正式复验见首段，浏览器结果不代替原生证据。只搜索官方返回的已保存用户/回复文字，不另行搜索附件文件、工具结果或思考；保存文字可能包含处理后的上下文，不能承诺逐字键盘原文。全部结果仍为部分覆盖，当前分支、上下文续接、其他Agent与附件内容搜索等原条件未证；NEW-18/19本机本片路径已复验，其他主题、历史和Agent未测，不计P32整体完成。
+
+63f原轮已正常保存退出。[数据逐字段接受](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json)保留133条完整会话、170条屏蔽、53项设置原值及整个未发/工作树记录；唯一Claude记录的providers字段由缺失变为空对象及更新时间变化获明确接受，其余字段准确保持。不能写成全部Agent行完全相同，具体写入者未证；私有数据只保留摘要和哈希。
+
+[第四处说明的复查](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/run-02/verification.json)在1,578稳定输入上四项前端全部实际通过：442文件/5,203项；三项后端在未变的后端、配置、夹具与协议输入上明确复用[三处修正的原七项工程](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/checks/verification.json)，Rust1,610项/6忽略，本轮未再执行后端三项。原三处修正的七项全部实际通过仍保历史范围；工程通过不算正式界面验证。旧源码/受控99项双浏览器、真实Rust回执及独立8项继续保持历史范围。原Clippy、未定位Node取消测试、PID标记失败及模板错误保留；后续通过不算已定位Node原因，原JSON及规范视图的格式桥也不覆盖原记录。
+
+P16独立Office连接探针实际核到974项服务并正常结束，未加载文档；[自身CLI隔离探针](evidence/2026-10-09-capability-hardening/claude-history-origin-fix/implementation.json)的父进程SIGTRAP，系统报告code identity错误100001，隔离尚未验证，继续核查官方路径。P16原完成条件保持。
+
+P08 DOCX显式文字输入已完成本片源码：从完整已读取结构生成正文、完整表格及附注文字，保留附注标记的来源；部分读取须单独同意，图片仅说明省略及原有文字说明，不冒称图片内容已读取。审阅、确认和发送按原文件版本、完整内容哈希及文字哈希核验；取消、换目标与迟到结果不替换原输入。共用草稿、待发队列、编辑重发及从消息新建保留已确认文字和已知来源，官方历史缺少来源时保留文字并要求重新读取确认；冷恢复重新读取及审阅后才可发送。实际发送连接同时提供能力声明与发送柄，能力未知或不支持时拒绝，保留原忙碌、权限、模型及期限检查；正式消息只列官方字段，本地来源、版本与同意信息不交给Agent。
+
+[本片工程检查](evidence/2026-10-09-capability-hardening/docx-input-checks/verification.json)对应1,605个稳定输入：run-02四项前端实际退出0（451文件/5,265项）；三项后端在run-01实际退出0（Rust1,617项/6忽略），因唯一变化是旧浅树测试的附件组件定位、其余1,604输入及后端/配置/夹具/协议均未变，run-02明确复用。run-01前端实际退出1及当时打包未执行保持原记录，不改写为首轮全过。
+
+独立静态复核检查27个文件、10处边界，未确认阻断问题；[完整App及真实Worker受控验证](evidence/2026-10-09-capability-hardening/docx-input/independent/summary.json)在WebKit与Chromium各81项实际退出0，生产输入稳定，无页面错误或外部请求。原会话夹具、发送按钮定位及普通WebKit Tab失败保留，受控Option+Tab/Chromium Tab与正式窗口当前普通Tab的结果各按实际环境记证，不推断未读取的系统偏好。b862正式DOCX初轮另见本节当前段落，冷恢复采用原有明确“保留所选附件”后完整重读核对；不要求另开第二个完整文字弹窗。当时的工程和受控成功只对应b862范围；后续92aa正式分项及正在开发的PDF增量见当前段落。P08整项、其他输入格式、全部122项原条件、29家八项标准及Windows仍未关闭。
+
+P16已有新的只读expected-host身份候选研究，但方案未选择、未执行，隔离及文档预览仍未验证；原P16及全部剩余完成条件保持。
+
+所选附件归档已提交安装 `a5a24810` / 0.1.7 arm64，并完成[正式窗口到真实ZIP的分项验证](evidence/2026-10-09-capability-hardening/attachment-archive-candidate/installed-archive-native.json)：默认Markdown、明确勾选两项附件、已加载修改前后文字、保存选择器取消后保留选择、替代来源标识、所选源文件失效时不发布ZIP及恢复后的准确保存。两包分别核到2/1和1/3项打包/省略，44字节附件内容与磁盘逐字节相同；本例未证明全部终端或工具正文类型。候选9/9通过，安装9组核心核验及产物稳定性通过；末尾包装断言在后续有意启动应用后失败，原失败保留，不写成10/10。三份217,400条安装数据快照相同；实测正常退出后133条完整会话、170条屏蔽及53项设置原值保持，整个未发内容与工作树清单相同，仅Codex更新时间变化。界面可见132条与数据库133行分别记录。重复打包应用已精确删除，唯一正式应用和候选ZIP保持。
+
+[本片源码与受控证据](evidence/2026-10-09-capability-hardening/attachment-archive/implementation.json)、[原七项工程检查](evidence/2026-10-09-capability-hardening/attachment-archive-checks/final-verification.json)继续保持各自范围：1,542输入，前端5,071项、Rust1,578项/6忽略；原格式失败保留，六项同源码检查未机械重复。写入中原生取消、未知清理、其他Agent与Windows及P35/P14/H06其余条件仍未完成。P32所选未加载历史临时文字搜索的刷新缺陷已修复，500a0570正式版同一历史的命中预览在自然等待148,478毫秒后仍保留；无匹配查询及单独打开正确原对话已复验。此前66a的结果消失失败保留，本轮正常退出后数据独立核对完成，仅Codex更新时间变化经逐值接受，详见下段。[桌面权限补查](evidence/2026-10-09-capability-hardening/desktop-permission-followup.json)中一次直接桌面PDF已显示实际两页中的第一页，旧失败当前在此路径未复现；OpenCode初始化原因、系统授权结果与NEW-01仍未关闭。签名、公开分发及市场目标继续未完成。
+
+P32首片[所选历史临时检索](evidence/2026-10-09-capability-hardening/history-search/implementation.json)通过源码集成：同Agent最多20条已有索引，先检查读取方式、再明确开始；后端经官方只读分页接口读取用户消息和回复文字，核实真实进程结束及来源后公开匹配；范围、缺失、截断、失败和未知分开呈现，纯文字查看和打开原对话分开。无持久正文库、无模型消息、不代替Agent循环；首条已核接口在接入层，其他Agent及附件/工具/思考不在首片范围。[工程证据](evidence/2026-10-09-capability-hardening/history-search-checks/run-02/verification.json)对应1,566稳定输入、前端439文件/5,151项，Rust1,597项/6忽略：两前端文件小修后重查四项，三项原生检查在相同源码/配置/夹具/wire上复用；原格式失败及准确例外保留。[完整受控App](evidence/2026-10-09-capability-hardening/history-search/frontend/browser-validation.json)两引擎各37项；返回已结束搜索时误提示核对/取消的原红已修复并复测。此片已提交安装 `66a2bbfc`，候选9/9、安装独立10/10，三份217,400条数据清单相同；首次准备漏存摘要在替换前被拒，原失败保留。[正式初轮](evidence/2026-10-09-capability-hardening/history-search-candidate/installed-initial.json)确实返回一段正确历史用户文字，但一分钟后台刷新后匹配及范围消失，列为NEW-17。完整App用真实IPC对象克隆已复现：等值索引对象被误当来源变化；源码修复已完成，93项定向测试、真实IPC克隆的双浏览器各63项及独立审查通过；1,568稳定输入对应前端440文件/5,168项，四项前端检查重跑，三项相同原生输入检查复用。[修复已提交安装500a0570](evidence/2026-10-09-capability-hardening/history-search-refresh-candidate/installed-refresh-native.json)，候选9/9、安装10/10。正式同一受控历史首查1段正确用户文字，纯文字预览自然等待148,478毫秒后仍保留，返回列表后范围说明为1页/3段文字/1段匹配；不存在标记查询为0匹配，再查原标记为1匹配，单独打开正确原对话。既有未发送文件意见1项和Ultra保持，权限仍明确要求继续发送前确认；没有批准或发送。66a初轮正常退出后133会话、170屏蔽、40Agent全部字段、53设置和整个未发/工作树记录全表全列相等，0新增。500a本轮正常退出后，133条会话、170条屏蔽完整记录、53项设置原值、整个未发8/8/3、全部活动、工作树清单及schema相同，0新增；仅Codex更新时间变化经逐值接受，时间与本轮旅程相容但具体写入者未证，其余39条Agent及Codex其他列相同。原准备记录将P19_ALPHA_V2误称工具独有文字，实际用户请求和回复均含该词；原稿保留，该负例未执行。本次不存在标记的0匹配只证明已读取用户/回复文字中没有命中，不作为工具正文排除实证。NEW-17这一具体缺陷关闭；其他Agent、附件、原生取消/未知清理和Windows等余项保持，不宣称P32整体或市场目标完成。
+
+HTTP MCP默认停用添加已提交安装 `8cfb2ccb` / 0.1.7 arm64，见[正式分项验证](evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/installed-mcp-http-add.json)和[独立收口](evidence/2026-10-09-capability-hardening/mcp-http-add-candidate/native-independent.json)。完整地址原样审阅、撤回后重新审阅、一次明确添加并保持停用、单独只读核对及同名拒绝已实测；官方接口已恢复两种目录范围原完整配置语义，专用本地端点在观测期间接收0次连接，不扩大为全局无网络或工具可用证明。[七项整合](evidence/2026-10-09-capability-hardening/mcp-http-add-checks/run-02/verification.json)通过：1,509输入稳定，前端425文件/4,963项、Rust1,557项/6忽略；双浏览器各34项，候选9/9、安装10/10，三份217,400条安装数据快照相同。有限实测正常退出后的131条完整会话、168条屏蔽、整个未发8/8/3及工作树清单保持；52项设置原值相同，另1项仅Codex准备页签由账号页变为程序页，其余字段与选择保持；Codex更新时间变化已逐值核对。首次安装核验脚本字段映射错误已修，原失败保留。已有启动环境测试偶发超时仍未定位，仅增强诊断，后续全量通过不作为已修复证明。该片实测后曾重新打开且有待回应项；随后归档片的正常退出及当前安装见首段，旧快照不代表后续状态。附件归档的后续源码进展见本节首段；连接、认证、诊断、其他Agent、P41及全量市场目标继续未完成。
+
+P41精确移除已提交安装 `8fa557c0` / 0.1.7 arm64，完成[正式分项验证](evidence/2026-10-09-capability-hardening/mcp-remove-candidate/installed-mcp-remove.json)与[独立收口](evidence/2026-10-09-capability-hardening/mcp-remove-candidate/native-independent.json)。正式窗口已核审阅撤回后旧确认失效、重新审阅、一次移除、单独只读核对和新清单缺失；覆盖一个明确停用、用户配置范围且父容器另有条目的本地MCP。测试配置经官方接口核到两种目录范围的原完整语义，收尾无需再写；专用执行标记未出现。七项工程全过（1,497输入稳定，前端420文件/4,854项、Rust1,546项/6忽略），双浏览器各31项，候选9/9、安装10/10，三份217,400条安装快照相同。正常退出后，131条会话完整记录、168条屏蔽、53项设置、整个未发8/8/3与工作树清单保持；仅Codex更新时间发生已逐值复核的变化。退出仍提示未完成或未知工作，经保存并退出正常结束；没有经界面发送消息，不据此推断无官方会话准备或全部外部工作已停。安装包装脚本的摘要缺失及失败未阻止后续命令已单列，安装器自身检查与原始数据核对均通过。接续HTTP添加、连接、诊断、凭据和其他来源/Agent；P41、原122项、16项新增问题及29家八项标准仍按原条件推进，市场目标未完成。
+
+此前P41默认停用的本地MCP添加已提交安装 `51c5159f` / 0.1.7 arm64，完成[正式分项验证](evidence/2026-10-09-capability-hardening/mcp-add-candidate/installed-mcp-add.json)及[独立收口](evidence/2026-10-09-capability-hardening/mcp-add-candidate/native-independent.json)。正式窗口已核精确程序和有序参数（含空值、空格及引号）、审阅撤回后重新审阅、一次明确添加并保持停用、单独只读核对与同名拒绝；随后经官方接口恢复两种目录范围的全部配置层语义。专用执行标记未出现，不据此扩大为其他MCP连接或工具可用证明。七项工程通过（1,480输入稳定，前端413文件/4,774项、Rust1,531项/6忽略），受控双浏览器各23项；候选9/9、安装10/10，三份217,400条安装数据快照相同。实测正常退出后，131条会话完整记录、168条屏蔽、53项设置原值、整个未发8/8/3与工作树清单保持，0新增保留会话；仅Codex更新时间发生已逐值复核的变化。退出仍提示未完成或未知工作，保存并退出正常结束；没有经界面发送消息，不宣称全部外部工作停止或没有官方建会话调用。接续精确移除，再补连接、诊断、凭据、其他来源/Agent；P41及原122项、29家八项标准继续按原条件完成，当前不宣称市场目标达标。
+
+此前P41现有MCP启用偏好首片已提交安装 `26a55a7b` / 0.1.7 arm64，完成[正式分项验证](evidence/2026-10-09-capability-hardening/mcp-management-candidate/installed-mcp-management.json)与[独立收口](evidence/2026-10-09-capability-hardening/mcp-management-candidate/native-independent.json)。专用禁用条目的审阅撤回、启用、只读核对、停用和官方配置层语义恢复已实测；只写同一最高可写用户层中准确条目的enabled字段，配置与报告不一致、跨来源和策略禁用仍拒绝。配置保存、报告及当前对话实际使用分别呈现。七项工程通过（1,461输入稳定，前端407文件/4,711项、Rust1,514项/6忽略），候选9/9、安装10/10，三份217,400条快照相同；双浏览器各23项为受控证据。正常退出后131条完整会话、168条屏蔽、53项设置原值、未发8/8/3整个对象及工作树清单保持，只有Codex更新时间变化。退出仍显示未完成或未知工作提示，经保存并退出正常结束；没有经界面发送消息，不据此声称所有外部工作已停止或没有官方建会话调用。NEW-16共用提示已在自然超过5分钟的MCP读取许可上复验：准确提示失效或变化，显式重查不自动查询，另行查询恢复；没有重做技能过期实测或插桩确认内部拒绝分支。原字段断言失败及修复、数据比较辅助工具仅放行三个准确公开引用的修正均保留。新增、移除、连接、诊断、凭据管理、其他来源/Agent与P41全项仍未完成；下一片推进默认禁用的本地MCP添加。
+
+P40技能启停首片已提交安装 `4d3bd81e` / 0.1.7 arm64，并完成[正式分项验证](evidence/2026-10-09-capability-hardening/skill-management-candidate/installed-skill-management.json)及[独立收口](evidence/2026-10-09-capability-hardening/skill-management-candidate/native-independent.json)。专用项目技能的审阅撤回、停用、独立核对、重新启用和官方配置语义恢复均有实测。七项工程通过（1,439输入稳定，前端4,670项、Rust1,502项/6忽略），候选9/9、安装10/10，三份217,400条快照相同。正常退出后131条完整会话、168条屏蔽、53项设置原值、未发8/8/3整个对象及工作树清单相同，只有Codex更新时间变化；没有经界面发送消息，启动准备空会话不能据此说没有任何官方建会话调用。NEW-16：后续清单刷新被拒时，失效许可误统称“Agent或程序选择变化”；手动重查后恢复，原失败保留。`f381e63b`已修正共用提示，[40项关联测试与独立审查](evidence/2026-10-09-capability-hardening/selection-expiry-followup/independent-review.json)通过，正式共用MCP路径复验见首段，原技能过期场景未重测。当前对话采用、技能发现/安装、其他来源/Agent和P40整项仍未完成。
+
+此前提醒批次实装为 `6c37a012` / 0.1.7 arm64，见[完成提醒正式分项验证](evidence/2026-10-09-capability-hardening/notification-media-candidate/installed-notification-media.json)。同一新建受控对话三次请求沿用 Codex / 6 Astra / Ultra 及已有服务，均明确正常完成。开启完成提醒且隐藏窗口时，macOS 接受提交；实际显示、声音与点击尚未验证。三项偏好已恢复原来关闭状态，后台补测明确因 `disabled` 跳过且未提交系统；另一次因 `foreground` 跳过的反例保留，不并称关闭开关证明。
+
+本片候选9/9、安装10/10；三份217,400条安装前后数据快照相同。正常退出后，1,415输入及正式五文件保持，130条旧对话完整行、168条已屏蔽记录、整个未发内容8/8/3和工作树清单不变；仅新增本轮1条对话及相应未读/活动记录、Codex更新时间、完成提醒由缺省关闭保存为显式关闭，其余50项设置原值相同。隐藏窗口的工具交互限制及恢复过程单列，不据此声称产品故障。
+
+此前 `39955ec6` 的限定技能名修复已在正式共用入口复验：一次官方查询返回24项，7个扩展技能的合法限定名全部显示，0项“名称未显示”；受控技能的名称、说明、项目来源及启用报告保持，界面仍明确不证明当前对话已加载或执行。见[正式名称复验](evidence/2026-10-09-capability-hardening/skills-qualified-names-candidate/installed-qualified-names.json)。
+
+此前 `aadbe0f2` 的[技能分项实测](evidence/2026-10-09-capability-hardening/skills-inventory-candidate/installed-skills-inventory.json)保留：正常/损坏目录各24项，后者明确1项未读取；目录取消、过期提示、类型/Agent隔离及MCP清单5项已有当时实机证据。限定名缺陷由两端拒绝官方合法的 `namespace:skill` 引起；本轮只放行受限技能名格式，MCP规则保持。该最小修复不把P39、技能执行、管理、全部工具或其他Agent标为完成。
+
+[七项工程检查](evidence/2026-10-09-capability-hardening/skills-qualified-names-checks/run-02/verification.json)全部通过：1,407输入稳定，前端391文件/4,555项、Rust1,457项/6忽略；真实Rust输出经TS解析及纯文本组件验证。候选9/9、安装10/10独立通过，三份217,400条数据快照相同；复测后正常退出，正式五文件和1,407输入保持。原130条完整会话、168条已屏蔽记录、整个未发送内容8/8/3、工作树清单及全部53项设置相同；40条Agent记录仅Codex更新时间变化，其他9列和存储模型/推理/来源选择均保持。无模型发送或新增会话，零发送依据受控操作及只读命令路径，不由数据库单独推出。历史失败材料保留。
+
+P48成功完成提醒、P47过时提醒撤回及P13媒体失败反馈已并入并安装 `6c37a012`。完成提醒有独立且默认关闭的偏好；仅真实发送后已正常结束、无失败或未确认步骤的工作可发出。批准和提问处理、对话关闭或归属变化后，撤回尚未跨过系统派发边界的精确请求；已经开始派发或结果未知不伪称已阻止显示。前端143项关联测试及双引擎各19项受控检查通过，实际系统显示、声音和点击尚未核验。
+
+P13已补坏图片/音频反馈、同一来源的显式重试及收起播放器清理；独立复核无新增阻断，实际浏览器组件各21项通过。另发现正式内容策略缺少媒体来源声明，会拦截有效内嵌音频（NEW-14）；最小允许已有准入的本地内嵌音频后，精确媒体策略在双引擎各6项通过，外部媒体仍被阻止。此证据不等于正式WebView或真实Agent验收。[通知独立复核](evidence/2026-10-09-capability-hardening/success-notification/independent-review.json)已通过最终边界检查；[本轮全仓七项](evidence/2026-10-09-capability-hardening/notification-media-checks/run-01/verification.json)全部通过：1,415输入稳定，前端396文件/4,621项，Rust1,477项/6忽略。Windows派发边界仅有静态复核，未作Windows编译或实机声明。正式提醒分项结果见本节首段；P13媒体及P47撤回仍待正式实证，P13/P47/P48整项、P39/P40/P41、29家标准和市场能力目标均未完成。
+
+此前 `08cff0ac` 的[官方MCP配置分项实测](evidence/2026-10-09-capability-hardening/extension-inventory-candidate/installed-extension-inventory.json)继续按当时范围保留；其误入管理设置所增加的1条准备进度已纳入本轮基线，本轮未新增此项变化。
+
+此前[3632acb0文件选择与冷恢复实测](evidence/2026-10-09-capability-hardening/project-file-scan-candidate/installed-project-files.json)已核H11扫描/选择及NEW-12归档→恢复→重启→重新核查；正式扫描取消仍未测。H17的EPERM/退出24仍不作端口冲突、服务启动或恢复成功证明。下方阶段记录保留当时结果，不覆盖本节最新状态。
+
+P39首片已补共用“技能与工具”入口，按官方能力显示可查询范围；当时该首片只支持已核官方Codex入口对用户明确选择目录的MCP配置只读查询。配置清单不等于当前对话实际可用工具；该MCP报告不能提供技能、工具详情及官方未报告的配置来源层，不读取私有配置补猜、不添加或修改配置，P39/P40/P41均未完成。见[后端实现与独立复核](evidence/2026-10-09-capability-hardening/extension-inventory/backend/independent-review.json)及[共用界面受控证据](evidence/2026-10-09-capability-hardening/extension-inventory/frontend/implementation.json)。
+
+P39动态工具清单仍有一项已核边界：[官方路径与清理反例](evidence/2026-10-09-capability-hardening/mcp-tool-lifecycle-review.json)表明，查询会新建MCP连接，而部分命令会创建独立进程组，现有父进程退出检查不能证明其全部退出。该限制只针对当前动态发现路径，不据此停下其他能力；P41接续官方配置接口的启停管理，连接与工具可用性另验。
+
+查询使用当前程序选择的短期票据，选择变化后旧票和迟到结果不能冒充新结果。取消或超时后，实际进程与输出尚未结束仍保留清理中状态并阻止新查询；旧结果标为过期。请求记录过期后，只有用户明确结束等待且取得准确回执才释放本次跟踪，结果仍未知，不宣称原命令已取消；[独立反例](evidence/2026-10-09-capability-hardening/extension-inventory/independent/expired-tracking-independent.json)由1项失败、5项通过复验为6项通过。
+
+P39[第二轮七项工程检查](evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-02/verification.json)全部通过：1,396输入稳定，前端387文件/4,537项、Rust1,433项通过/6项忽略。[首轮失败](evidence/2026-10-09-capability-hardening/extension-inventory-checks/run-01/verification.json)保留：前端28项失败、其余6项检查通过；3份旧React模拟未提供useMemo，[各补一行后28项定向通过](evidence/2026-10-09-capability-hardening/extension-inventory/frontend/hook-harness-followup/receipt.json)，原断言与生产源码不变。受控完整App的WebKit与Chromium各27项通过，目录选择和命令回执由测试控制。该首片随后已提交安装08cff0ac，正式分项结果见本节首段。查询取消、超时、过期跟踪和官方命令失败仍未在正式窗口覆盖，不能用受控结果替代；技能清单实装与名称缺陷接续见本节首段，限定名已按本节新记录复验，P39/P40/P41、29家、Windows与全量市场目标仍未完成。
+
+| 层级         | 已有证据                                                                                                                  | 不能据此推出                                     |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| 产品源码     | 所选附件ZIP与可选工具详情已实装分项；P32所选未加载用户/回复文字首片及刷新修复已实装分项                                   | 完整P35/P14/H06、P32及所有已列能力已补齐         |
+| 工程检查     | P32刷新修复1,568稳定输入，前端5,168项；四项前端检查重跑，Rust1,597项/6忽略等三项同输入证据复用，原失败保留                | 正式界面、全部Agent与系统环境均通过              |
+| 正式安装     | 此前500a0570 / 0.1.7 arm64，历史文字首片功能复验及正常退出已完成；退出后完整数据比较已通过，仅Codex更新时间变化获逐值接受 | 全P32、P35或29家完整接入通过                     |
+| 历史真实使用 | 部分 Agent、模型和路径有成功、失败与未测记录，逐条保留当时配置与版本                                                      | 跨版本累计成功等于当前 29 家全部通过             |
+| 本轮能力审查 | 122 个唯一编号，基于源码、历史证据与同行官方资料/定向源码                                                                 | 122 个缺陷、122 个已获批准的新功能或市场达标证明 |
+
+安装细节见[正式落地](evidence/2026-10-09-prototype07-landing/README.md)和[最终布局安装](evidence/2026-10-09-prototype07-landing/prepared-draft-layout/README.md)。本轮源码与受控检查见[能力补强证据](evidence/2026-10-09-capability-hardening/README.md)。接续已调用已安装的官方 Claude 0.81.2 对接受控 HTTP 服务，确认实际路径、模型与测试认证头，并核本次进程组退出，见[路由实证](evidence/2026-10-09-capability-hardening/claude-service-delivery/installed-route.json)；不是实际模型回答、付费服务或新安装版 UI 证明。第三片[安装与数据保留](evidence/2026-10-09-capability-hardening/candidate/installed-data-retention.json)及[实际用量/冷恢复](evidence/2026-10-09-capability-hardening/candidate/installed-usage-progress.json)已有回执：Codex 1.13.1、gpt-6-astra / ultra 单次回复及累计用量显示，重启后正文恢复、未重报用量明确未知；继续发送仍需权限确认，本轮没有确认该权限或再次发送。第四片[安装与数据保留](evidence/2026-10-09-capability-hardening/fourth-candidate/installed-data-retention.json)核验完成，独立候选检查9/9通过，启动后110段对话可见；新能力仍逐项验证。OpenCode 1.18.31 在前三次 GUI 初始化超时后，本片重启恢复新草稿时再次自动准备并超时，没有手动点重试或发送。独立环境和真实传输探针均成功；第三次观测确认请求已写入、子进程卡在文件打开，macOS 同期出现桌面文件夹授权等待，结果仍未知且无可见弹窗。见[诊断回执](evidence/2026-10-09-capability-hardening/opencode-initialize-diagnosis.json)，不算恢复成功，不要求扩大到完全磁盘访问。
+
+第六片源码已补强当前已加载内容检索与 Markdown 导出，七项工程检查通过（前端2,887项、Rust1,134项/5项忽略），安装版分项结果见下段。[检索定向证据](evidence/2026-10-09-capability-hardening/transcript-search/receipt.json)覆盖折叠文字、附件文字与定位恢复，29文件203项及受控Chrome31项通过；[导出定向证据](evidence/2026-10-09-capability-hardening/conversation-export-review.json)覆盖正文保真、工具状态、附件来源、范围说明与取消/失败保护，最终关联72项通过。全局历史正文索引、附件打包归档及其他未覆盖项仍保留。第五片实机检查后已正常退出；原7项未发内容逐值保留。
+
+第六片[正式实机结果](evidence/2026-10-09-capability-hardening/sixth-candidate/installed-search-export.json)已补：正文与折叠详情计数/定位/临时展开回收、真实Markdown文件及再次保存取消反馈通过；关闭导出返回正确焦点。查找说明挤占工具栏、关闭查找焦点和导出隐私说明精度已在第七片安装复验。实机后已正常退出，原3条输入、1组意见、3组待发逐值不变；没有重新批准对话权限或发送新请求。第七片目录读取、PDF/图片版本意见与XLSX预览已整合及分项独立复核；XLSX真实Chromium38项通过。[最终工程整合](evidence/2026-10-09-capability-hardening/seventh-checks-final/final-verification.json)七项通过：前端267文件/2,983项，Rust1,153项/5项忽略，962输入匹配。首轮管道关闭失败的实际干扰进程未捕获；受控fork反例证实测试需要隔离，原即时断言保留，独立发现的输出等待也已修复复验。第七片已提交 `0de05b0a` 并安装，[正式界面实测](evidence/2026-10-09-capability-hardening/seventh-candidate/installed-preview-feedback.json)覆盖XLSX缓存值/公式详情/合并与隐藏行/隐藏工作表/分段读取、损坏与换版重读、PDF页级及旧版本意见、PNG和查找修正；一条新建Codex对话沿用既有6Astra/Ultra完成受限链接回显，没有工具调用或权限变更。正常退出后原3条输入、1组意见、3组待发逐值保留。第八片已实现受限DOCX预览及ARCH-43官方请求级与URL询问。三项全仓回归已修正并独立复核；最终源码输入1,058项保持一致，前端279文件/3,121项、Rust1,178项/5项忽略及类型、打包、Rust格式与clippy通过。生成回执格式修正后单独复验全仓格式，见[第八片整合记录](evidence/2026-10-09-capability-hardening/eighth-checks-final/final-verification.json)；已提交 `af66f006` 并安装，[第一次DOCX实机](evidence/2026-10-09-capability-hardening/eighth-candidate/installed-docx-first.json)确认中文/列表/合并表格、页眉页脚、长内容分段、损坏/隐藏提示与换版重读；当时PNG/JPEG内嵌图片被正式图片策略拒绝；随后修复及实机复验见下段。原7项未发内容保留且已正常退出。完整Office及剩余条目不据此关闭。
+
+图片最小修复的[工程收口](evidence/2026-10-09-capability-hardening/docx-image-fix-checks-final/final-verification.json)已完成：生产策略仅新增本地Blob图片来源，独立WebKit由失败转成功，外部图片仍拦截。协议测试的受控配置锁反例证实派发前等待不应当作响应超时；修正测试边界后Rust1,179项通过，生产协议未改。原失败具体调度未捕获，额外测试lint检查的两项既有问题单列保留；修复已提交 `6c36cae0` 并安装，[正式图片复验](evidence/2026-10-09-capability-hardening/docx-image-fix-candidate/installed-docx-images.json)确认普通PNG/JPEG、EXIF6方向、同版本重读及收起重开均成功，合并单元格详情可打开和返回。本次沿用已有受控对话，没有新请求或权限变更；正常退出后原7项未发内容保持。P16完整Office仍未完成，接续P20自动检查与刷新。
+
+P20 自动刷新已完成源码及独立复核：保护单文件版本，刷新失败保留旧快照并明确提示，编辑意见时延后替换，保留PDF页、工作表窗口和DOCX区域位置。隐藏与迟到结果竞态已有有效反例及修复；[七项检查](evidence/2026-10-09-capability-hardening/file-refresh-checks/final-verification.json)通过，1,073个输入稳定，前端3,183项、Rust1,195项/5项忽略。已提交并安装 `fa235998`；[父层受控浏览器](evidence/2026-10-09-capability-hardening/file-preview-refresh/parent-browser-independent.json)28项通过，实际组件/Office解析器与模拟Tauri接口边界明确。[正式应用复验](evidence/2026-10-09-capability-hardening/file-refresh-candidate/installed-file-refresh.json)确认DOCX段落、XLSX行范围、PDF页码跨版本保持或夹到有效范围；损坏/移走文件保留旧快照并明确提示；编辑中的PDF意见保留旧页和实际版本摘要。三份217,400条数据一致；无新Agent请求或权限变更，正常退出后原7项未发内容逐值不变。P20已有上述macOS证据，其他格式、真实Agent改写与Windows仍分项保留。P17接续已完成流式核验、分块查看、可取消完整另存、未知结果与退出保护，以及超限文件的位置退路；[最终工程整合](evidence/2026-10-09-capability-hardening/large-file-checks-final/final-verification.json)七项通过（前端3,251项、Rust1,230项/6项忽略，1,104输入一致）。新增忽略项为已另行执行的256MiB性能实验；现有真实Agent/Keychain忽略项不计通过。[独立复核](evidence/2026-10-09-capability-hardening/large-file-segments/independent-review.json)最终实际浏览器33项通过；原pending及取消/隐藏后重复读取反例已修复。P17已提交安装 `f71a3434`，[正式初轮实测](evidence/2026-10-09-capability-hardening/large-file-candidate/installed-large-file-initial.json)核到16/256 MiB首末分段及完整副本SHA一致、全局保存入口和无效编码尾部拒绝。257 MiB被拦截但提示误为检查位置，已定位inspect真实字符串与前端结构化错误分类不符；最小源码修复及独立浏览器40项已通过，[工程复核](evidence/2026-10-09-capability-hardening/inspection-limit-checks-final/final-verification.json)前端3,258项通过，未改Rust按相同输入复用既有证据。修复已提交安装 `e8d76d4c`；[正式修复复验](evidence/2026-10-09-capability-hardening/inspection-limit-candidate/installed-inspection-limit.json)确认257 MiB限额提示、无效UTF-8独立提示及16 MiB首段正常。候选独立核验9/9、安装10/10，三份217,400条快照一致；没有新Agent请求或权限变更，正常退出后原7项未发内容逐值保持。原失败保留。一次取消尝试的实际结果为已完成，不计取消成功。沿用既有配置仅新建一条无工具链接回显对话，原7项未发内容保持；不把本机实测当Windows、所有磁盘环境或真实Agent返工完成。
+
+P21 已补普通文字、Markdown原文及大文件当前片段的准确选段意见：按实际读取版本记录UTF-8字节与行范围，支持拖选和按行选择；明确操作才更新目标，原意见跨刷新与换版保留，加入原对话输入框后不自动发送。冷恢复位置始终按历史位置表达，不把保存的坐标当成当前文件证明。[整合检查](evidence/2026-10-09-capability-hardening/text-feedback-checks-final/final-verification.json)前端302文件/3,345项及类型、打包、格式通过，1,116输入稳定；未变Rust与共享夹具复用前次证据。[独立实际浏览器](evidence/2026-10-09-capability-hardening/text-feedback/independent/receipt.json)61项通过；发现继承样式阻止拖选，最小CSS修复经原样反例复验，首次驱动按键/鼠标问题单列而不冒称产品失败。该片提交安装 `cd66aae7`，候选独立9/9、三份217,400条快照一致；已实机核验拖选、片段和旧版意见；随后Enter/滚动修复已安装e98并实机复验，原失败时的7项未发内容逐值保持；[初轮结果](evidence/2026-10-09-capability-hardening/text-feedback-candidate/installed-text-feedback-initial.json)保留按行输入Enter失选失败，不计全项通过；PDF区域、Office位置、图片区域及P22仍开放。
+
+P21 XLSX 单元格/完整合并范围意见已提交并安装 `4952c692`；[正式窗口分项实测](evidence/2026-10-09-capability-hardening/workbook-feedback-candidate/installed-workbook-feedback.json)确认零值/空白/缺公式缓存、实际键盘确认、查看不串目标、跨窗口仍保留 X99:AA102、真实非顺序工作表标识、换版与重启保留旧意见，以及无当前编辑目标时自动读取新内容。候选独立9/9、安装10/10，三份217,400条数据一致；一条新建受限链接回显对话沿用 Codex 6 Astra / Ultra，意见各加入一次且未发送，冷恢复权限未确认。正常退出后原4条输入、2组意见、3组待发逐值保留；新增仅本轮受控输入和意见。此为4952阶段记录；随后DOCX安装与初轮实机见下文。任意表格矩形、PDF/图片区域与P22仍未完成。
+
+P21 DOCX 已补原文件段落/整张表格位置意见：正文、页眉页脚和受支持的附加区域均保留实际 XML 部件及元素路径；只确认当前可见内容，重复文字不串位置，长段落与分窗表格明确对应原完整段落/表格。切区、取消选择、隐藏和换版会收回旧选择，已写意见保留原版本，加入输入框不自动发送。[工程整合](evidence/2026-10-09-capability-hardening/docx-feedback-checks/final-verification.json)前端315文件/3,651项、类型/打包/全仓格式通过，1,145输入稳定；未变Rust与共享夹具按明确输入复用。[独立双浏览器](evidence/2026-10-09-capability-hardening/docx-feedback/independent/receipt.json)各89项DOCX及15项XLSX自动刷新回归通过；另各11项精确隐藏文字补验通过，不重复计能力。两处整页溢出红测经局部滚动修复通过，原始失败保留。上述为源码与受控浏览器证明；随后8c2f安装和初轮实机见下段。完整Office兼容、其他位置/区域与P22继续未完成。
+
+DOCX 已提交安装 `8c2f5e29`，候选独立9/9、安装10/10，三份217,400条快照一致。[正式实机初轮](evidence/2026-10-09-capability-hardening/docx-feedback-candidate/installed-docx-feedback-initial.json)确认同文段落/页眉位置、键盘确认、取消保留意见、换版归属、自动刷新、长段/整表目标及冷恢复；一次受限链接回显，三条意见各加入一次且未发送。发现NEW-03：收起后点同文件重开，长段内分页与表格窗口回到开头；意见不丢，当时接续修复；其后2e976168复验见下文。原5条输入、3组意见、3组待发的内容及其他字段保持；严格逐值检查发现1条输入的可选sendPending从缺省规范为false，原失败与具体差异保留，不冒称完全逐值相同。新增仅本轮受控对话，最终正常退出；[独立收口复核](evidence/2026-10-09-capability-hardening/docx-feedback-candidate/native-closeout-independent.json)核实正式包及数据副本，未把界面观察冒称独立实机复验。该阶段XLSX任意矩形仍在开发，后续安装结果见下文。
+
+XLSX 任意矩形与 NEW-03 阅读位置修复在完成源码检查后，已提交安装2e976168并完成下述分项实机复验。矩形保留用户声明的准确坐标，不因合并单元格或显示窗口扩大、截短，包含隐藏行列需再次确认；未完成输入也保护当前内容。独立写出器原样本暴露的默认内容类型漏读已修，原文件未改，宏文件保护保留。[最终工程](evidence/2026-10-09-capability-hardening/workbook-range-checks-final/final-verification.json)前端323文件/3,811项及类型、打包、全仓格式通过，1,171输入稳定；Rust及共享夹具按未变输入复用。[DOCX修复](evidence/2026-10-09-capability-hardening/docx-reading-position-repair/implementation.json)双浏览器常规与窄窗共208断言通过，表格完整界面双浏览器各74项、独立解析各404项分开留证。早先拒绝、驱动错误预期与修复均保留。检测变化后若因编辑延后，会提示明确重读；没有编辑保护的自动刷新另测。其他区域、完整Office兼容和P22仍未完成。
+
+## 全量盘点与完成口径
+
+[能力审查报告](evidence/2026-10-09-host-capability-audit/index.html)保留 ARCH-01–ARCH-50、P01–P50、H01–H22 共 **122 项**。原分类为源码具备 51、部分具备 37、缺少 13、待实证 8、范围待定 10、明确后置/契约排除 3。
+
+“112”与“122”的差值恰为 10 项范围待定，但这不能证明用户原意是排除这 10 项；112 中也包含 3 项后置/排除内容。全部原始编号保留在活动计划，合并工作包只合并实现，不抹去任何条目。已实现条目继续补所缺验证；范围决定和后置不计成功。
+
+[29 项 × 八项标准跟踪](evidence/2026-10-09-host-capability-audit/agent-standard-coverage.json)有 232 格，当前标注为尚未重新逐家验证本版，不是 232 个失败，也不覆盖旧成功证据。每家八项要求均保留；没有完整证据不能宣布该家达标。
+
+## 未关闭的重点与全量去向
+
+下表便于定位风险，**不是缩减后的任务清单**；全部 122 项及具体完成条件在活动计划逐项列出。
+
+| 领域                   | 当前未关闭内容                                                                                                                                          | 去向                                                                |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| 停止与恢复             | 已修本地准备/迟到交互竞态与运行中队首取消延后，受控 FIFO/并发/未知测试通过；真实负载未量测，历史部分 Agent 的外部命令残留仍未统一归因                   | 执行停止恢复包；分 Farfold、协议/接入层、Agent、服务/认证及环境定位 |
+| 账号、服务、模型、历史 | 29 家官方资料基线已留证，10 家取消面仍未知；布尔协商和设置确认已补。SDK/CLI 补充、账号作用范围、新 API、恢复保持及真实生效仍需逐家闭合                  | 接入、配置与历史包；官方限制仍标未完成                              |
+| Agent 能力承接         | 运行中引导、完整上下文分支、压缩状态、用量、子任务、非表单询问、skills/MCP 的完整呈现和管理不足                                                         | 官方能力与扩展包；不重造 Agent 循环或历史                           |
+| 日常资料与成果         | 文件拖入已有源码及71项关联检查，仍待实机；多种附件真实读取、PDF/Office/图片内嵌查看、成果清单、版本意见、完整导出和实际返工仍需补强或实证               | 输入与文件成果包                                                    |
+| 浏览器                 | 生产截图禁用；自有工具的已核接入形式有限；受控动作、撤回、导航与后续观测需完整闭环                                                                      | 浏览器包；登录及敏感动作保持范围边界                                |
+| 搜索与交互             | 已加载正文及所选Codex未加载用户/回复文字已有分项实测；其他官方历史路径、附件实体检索、原生取消/未知清理、通知真实送达和其余键盘/读屏/长内容验证继续补齐 | 搜索与交互通知包                                                    |
+| 数据与长期运行         | 已补非法草稿/启动配置/历史配置拒绝读取与原值保留、SQLite 容量耗尽旧快照保护；完整损坏恢复、物理磁盘满、长期运行和资源上限仍缺完整证据                   | 数据维护与性能包；破坏性验证不使用日常用户数据                      |
+| 并行工作目录           | 创建、接入、归档、删除与独立恢复已有正式分项证据；NEW-07–12具体问题已按各自记录复验，同目录冲突及共享资源余项仍需补齐                                   | 继续原条目剩余条件；不承诺文件系统沙箱或自动合并                    |
+| Windows                | 已有共用源码及历史交叉检查；真实系统运行、MSVC 包、凭据/终端/通知/浏览器与路径行为未完整验收。UNC/重解析目录限制及通知冷启动仍保留                      | Windows 包；不把交叉编译当真实运行                                  |
+| 分发及明确排除         | 签名、公证、公开分发、更新渠道待用户认可能力达标；编辑器、LifeModel 真实采集等仍按契约排除                                                              | 独立后置，不计作已完成能力                                          |
+
+历史故障与局部成功原始入口：[macOS 第一批](evidence/2026-10-06-macos-batch1/README.md)、[代表实测](evidence/2026-10-06-real-use/README.md)、[源级补强及 Windows 检查](evidence/2026-10-06-product-development/README.md)。未在新证据中关闭的旧故障继续保留，但不把旧版本失败直接判为当前复现。
+
+此前增量已提交安装 `2e976168` / 0.1.7：[正式窗口分项验证](evidence/2026-10-09-capability-hardening/workbook-range-candidate/installed-workbook-range.json)通过XLSX准确矩形、隐藏行列确认、部分合并、无效输入保护、手动重读与自动刷新、跨版本意见及冷恢复；NEW-03同文件重开阅读位置通过。候选独立9/9、安装10/10及三份217,400条快照一致；旧未发送内容保持，1条可选sendPending缺省规范为false单列，最终正常退出。第二工作表实际可见，旧记录误称隐藏的范围已纠正，原始证据未改。前述8c2f和待安装说明为对应阶段记录，不覆盖本段。随后区域安装结果见下段。
+
+PDF/图片区域意见已提交安装 `a47a6652` / 0.1.7 arm64，候选独立9/9、安装10/10及三份217,400条数据一致。[正式窗口分项验证](evidence/2026-10-09-capability-hardening/visual-area-candidate/installed-visual-area.json)覆盖旋转PDF页的键盘区域、图片反向拖选/边界裁切、四位小数、明确确认、目标切换保留文字、无效输入、翻页/收起、换版旧意见及冷恢复。一次受限无工具链接回显沿用 Codex 6 Astra / Ultra 和既有服务权限；图片意见只加入原输入一次，保留前缀且未发送。正常退出后原7条输入中6条逐值相同、1条仅sendPending缺省规范为false；5组意见和3组待发逐值相同。新增仅本轮受控输入和PDF意见。NEW-04源码与受控恢复预览已通过，真实故障恢复入口仍未验，不破坏用户数据制造入口。该区域阶段完成后继续P19清单和P22真实返工；最新结果见下文，全量计划未完成。
+
+P22 已在正式 `a47a6652` 上完成一条有界真实 Codex 返工：[正式窗口与磁盘证据](evidence/2026-10-09-capability-hardening/real-rework/installed-rework.json)核到沿用 6 Astra / Ultra、既有服务与权限，两次请求分别生成文件和按意见修改。实际工具先核旧 SHA，再只将目标行 draft 改为 ready；明确重读显示新内容，另一条未发意见仍属于旧版本，实际完整另存 93 字节与新文件逐字节相同。保存选择器取消未产生文件；受控移走后重读明确失败，恢复原文件后可重新打开。正常退出后旧8条输入中7条逐值相同、1条仅sendPending缺省规范为false；旧6组意见和3组待发逐值不变。[独立核对](evidence/2026-10-09-capability-hardening/real-rework/independent-review.json)另核官方两次请求、文件字节、私有数据副本及正式包链。此为macOS/Codex/小Markdown正常返工及选择器取消证明；运行中Agent/复制取消、失败返工、结果未知、其他格式和环境仍未完成。
+
+P19 成果清单已提交安装 `394bb91a` / 0.1.7 arm64。[正式窗口与文件核对](evidence/2026-10-09-capability-hardening/reported-files-candidate/installed-reported-files.json)确认同一真实 Codex 请求的两次补丁报告去重为两个文件，来源次数2/1、单步与本轮切换、实际读取、移动失败/恢复、完整另存22字节、换版旧意见及重启恢复。沿用 6 Astra / Ultra、既有服务和权限；官方外层工具记录为两次 Code Mode `exec` 包裹内部 `tools.apply_patch`，没有 shell 写文件，不声称满足提示的字面“无exec”。正常退出后旧8条输入、7组意见、3组待发逐值保持，新增仅受控意见，冷恢复没有再次发送或确认权限。[工程检查](evidence/2026-10-09-capability-hardening/reported-files-checks/final-verification.json)1,215输入稳定，前端338文件/4,057项及类型、打包、格式通过；未变Rust1,230项/6忽略按精确输入复用。候选独立9/9、安装10/10，三份217,400条数据一致。此为macOS/Codex分项证明，其他Agent、失败/取消/未知与全量能力仍未完成。[独立收口](evidence/2026-10-09-capability-hardening/reported-files-candidate/native-closeout-independent.json)核对69处引用、正式包和三份私有数据副本；官方记录保留原快照前缀，恢复仅追加一条设置事件，没有新增请求或工具。接续网页请求生命周期和跨对话已加载正文检索。
+
+## 历史阶段的边界与后续安排
+
+- 首批仍为 [29 项](agent-first-release.md)，八项接入标准不减。只沿官方 ACP、SDK、CLI 承接能力，不修改 Agent/适配器，不私有 HOME；配置变更经官方接口，不直接改写其配置文件，不自建正文或事件账本。
+- 2026-10-09 用户授权持续开发与必要验证，明确期间不使用 Farfold。已有明确选择的服务/模型可做有界真实测试；正式替换前核无活动工作、正常退出与数据保留。缺账号、密钥、换号或系统许可等具体条件逐项交接，独立工作继续。
+- 新交互由开发方自查自纠；不再发起一次大规模 UI 改版。签名与更新渠道按用户要求后置，已撤销的整组六条旅程门槛不恢复。
+- 首批已推进停止竞态、数据保护、布尔协商和配置确认；接续官方来源映射、历史回放可见性、数据恢复与真实负载剩余条件。29 家公开资料见[官方能力基线](evidence/2026-10-09-capability-hardening/official-capabilities.json)，其中旧源码缺口与本轮修正按增量证据对照，不把资料核查算作真实通过。
+- 第五片整库恢复、PDF/图片预览与用户模板已完成源码整合及独立复核；[七项检查](evidence/2026-10-09-capability-hardening/fifth-checks-final/final-verification.json)通过，前端2,820项、Rust1,134项/5项忽略。首轮失败及修复证据保留；第五片已安装并启动，[数据留存](evidence/2026-10-09-capability-hardening/fifth-candidate/installed-data-retention.json)及[独立核验](evidence/2026-10-09-capability-hardening/fifth-candidate/install-independent.json)通过。[模板实机](evidence/2026-10-09-capability-hardening/fifth-candidate/installed-templates.json)覆盖创建/编辑/保存、关闭与重启恢复、保留草稿与附件且不自动发送；[预览实机](evidence/2026-10-09-capability-hardening/fifth-candidate/installed-visual-preview.json)覆盖临时受控副本两页PDF、Type3中文单字、PNG及损坏/密码反馈。桌面路径读取等候系统许可，未解决；该次尚无Office预览，后续XLSX/DOCX进展见前文；整库恢复未破坏日常数据进行验收。第六片已补强P12已加载内容检索和P35导出保真，分项实机结果见上文。运行中引导的[官方接口核查](evidence/2026-10-09-capability-hardening/official-steering-surfaces.json)发现旧接口能力声明不足以保证只作用于当前工作，ARCH-37继续未完成。
+
+- P21 的文字、XLSX单元格/合并范围/任意矩形、DOCX段落/整表、PDF/图片区域意见已分项安装验证，NEW-03具体阅读位置缺陷已复验关闭；P19成果清单已安装并分项实机通过，P22有界真实返工已验、失败和运行中取消等余项继续。NEW-04恢复预览修复已安装，实际故障入口仍待验证；这些分项不代表完整P21完成。
+
+## 历史与维护记录
+
+过去累计状态原文已逐字保存在[能力建设前状态快照](archive/2026-10-09-before-capability-hardening/docs/status.md)，原计划见[冻结计划](archive/2026-10-09-before-capability-hardening/plans/agent-access.md)。它们的“当前版本”“下一步”“未安装”“33 家”和旧实测授权均为当时记录，不能覆盖本页、当前契约或新用户指令。
+
+本轮归档摘要、条目完整性与保护检查见[一致性整理回执](maintenance/2026-10-09-plan-consistency.json)；Markdown 分布与旧计划式证据去向见[清点回执](maintenance/2026-10-09-markdown-inventory.json)。资料整理不代表功能缺口已修复。
+
+P21实机后两项修复已完成工程检查：按行输入Enter的WebKit焦点交接修复通过[独立键盘复核](evidence/2026-10-09-capability-hardening/text-feedback/webkit-enter/independent-review.json)；NEW-02大文件预览改为局部滚动，完整App双浏览器156项通过，见[原反例和修复](evidence/2026-10-09-capability-hardening/text-feedback/native-scroll-review/receipt.json)。[最终整合](evidence/2026-10-09-capability-hardening/text-selection-keyboard-checks-final/final-verification.json)七项具备成功证据，前端3,349项，1,116输入稳定；最终仅CSS变化，打包/全仓格式重跑，未变输入的检查明确复用。已提交安装 `e98e2a46`，[正式复验](evidence/2026-10-09-capability-hardening/text-selection-keyboard-candidate/installed-keyboard-scroll.json)确认两种行号输入Enter、明确二次确认与长文件局部滚动；4条输入、2组意见、3组待发逐值不变，已正常退出。没有新Agent请求、权限变更或全产品达标结论。
+
+本轮真实停止已在 `394bb91a` 完成一次有界 Codex 实测，沿用 6 Astra / Ultra 与既有权限。[正式停止记录](evidence/2026-10-09-capability-hardening/real-stop/installed-stop.json)及[独立核查](evidence/2026-10-09-capability-hardening/real-stop/independent-preliminary.json)确认回复收到中断，但此前启动的单个命令仍运行至45秒并正常写出完成标记；Farfold先显示步骤未确认，随后接收同一命令迟到完成，未启动第二条命令。这不满足“所有外部工作已取消”，ARCH-28/29及29家停止覆盖保持未完成，也尚不能归因为接入层缺陷。正常退出后旧8条输入、8组意见、3组待发逐值不变；整对象严格相等失败仅因新增本次活动记录，原失败保留。此后已接续网页请求取消/超时保护和已加载跨对话搜索的整合与安装验证，结果见后续阶段。
+
+此前网页请求生命周期与跨对话已加载正文搜索源码及独立验证阶段，正式应用为 `394bb91a`；后续安装结果见下文。[网页请求记录](evidence/2026-10-09-capability-hardening/browser-request-lifecycle/implementation.json)补齐每次请求独立取消、排队/执行期限及迟到回调一次回收；撤销单次请求不会误撤页面许可，实际网页脚本结束前仍保留忙碌状态。独立macOS受控回调58项、真实WKWebView脚本14项通过；Windows路径已改，但交叉检查在依赖编译器缺失处停止，不能声称Windows已验证。[搜索独立实测](evidence/2026-10-09-capability-hardening/loaded-history-search/independent/implementation.json)两浏览器各48项通过，修复长Markdown阻塞、Worker实体解码与多路更新饥饿；仅查已加载消息/回复/已收到的附件文字，支持准确跳转、失效提示和取消，无持久正文索引，不自动加载历史。P32未加载历史/附件实体、P27生产截图及其他原条件继续未完成。[整合检查](evidence/2026-10-09-capability-hardening/browser-search-checks/final-verification.json)对应1,234输入：前端345文件/4,098项，Rust1,242项/6忽略，类型和打包通过；完整格式结果以回执为准。一次Rust回归出现3项失败，隔离与后续正常全量复验通过，原失败保留，具体触发原因尚未定位，不能归因为已证实的并发干扰。
+
+网页请求与已加载正文搜索已提交安装 `ece08cd5` / 0.1.7 arm64，候选独立9/9、安装10/10及三份217,400条数据快照一致。[正式分项验证](evidence/2026-10-09-capability-hardening/browser-search-candidate/installed-browser-search.json)确认空载范围提示、两段已加载历史搜索、键盘/点击跳转高亮、无匹配，以及受控本机网页打开、手动文字快照、页面变化重读、收起重开与关闭。正常退出后原8条输入、8组意见、3组待发及整体未发送对象逐值相同，124条会话身份不变；两段官方历史各只追加一次设置事件，无新请求或工具。NEW-05：正文搜索框无障碍名称沿用资料搜索文案，源码已修，尚未随新版安装复验。上述手动网页检查不等于真实Agent网页取消验证；单次请求取消、超时和迟到回调仅有此前受控原生证据。P32未加载历史/附件实体及全部原条件继续未完成。该安装阶段后接续安全工作树与官方后台任务停止；当时的ece08安装版尚未承接官方AIR任务能力。后续源码进展见下段，仍不能据源码推断此前45秒命令已可成功终止。
+
+[本片独立收口](evidence/2026-10-09-capability-hardening/browser-search-candidate/native-closeout-independent.json)复核87处引用、正式包及两份私有数据副本，未把凭据/用户原数据库纳入读取，也未把证据核查冒称第二次实机操作。网页/搜索分项收口后，继续工作树和后台任务停止；完整计划仍未完成。
+
+工作位置创建/已有位置接入、准确起点、新稿归属与未知材料保护，以及官方后台任务独立停止已完成本片源码和独立复核。[七项整合检查](evidence/2026-10-09-capability-hardening/worktree-task-checks/run-02/verification.json)对应1,277个稳定输入，前端354文件/4,180项、Rust1,293项/6忽略通过。首轮Rust源码守卫把安全的try_state误认成必需state，已精确修正并补无数据库退出及不可绕过活动工作的测试；生产路径未因该误报改动，原失败保留。后台任务需实际能力协商、当前连接和任务事件；停止回执不等于任务终态。NEW-05无障碍文案随本片修正。该源码阶段随后已提交安装8780df9e，实机分项结果见下段。工作树归档/恢复/删除及全部剩余条件继续保留。
+
+`8780df9e` / 0.1.7 arm64 已安装并完成[工作树与后台任务分项实机验证](evidence/2026-10-09-capability-hardening/worktree-task-candidate/installed-worktree-tasks.json)。新建分支、已有分支、接入和移除清单均核到实际 Git 结果；原索引、未提交、未跟踪和忽略文件保持，明确使用位置才切换草稿，冷启动后重新核查通过。一次真实 Codex 6 Astra / Ultra 请求中，明确点击后台任务的停止按钮，同一任务报告 stopped，进程在自然期限前退出，超过60秒仍无自然完成文件；此前停止回复未终止命令的失败仍有效，不推广到29家。恢复原空白TR新稿并正常退出后，原8条输入、8组意见、3组待发及124条旧会话完整记录相同，只新增本轮受控会话与活动记录。列表正文搜索的NEW-05已实机修复，全局搜索入口的范围名称仍需新版复验；已知任务事件仍显示“未识别的更新”，作为NEW-06继续修正。当前接续H15归档/恢复及维护保护；永久删除、其他边界与完整计划均未完成。 [独立收口](evidence/2026-10-09-capability-hardening/worktree-task-candidate/native-closeout-independent.json)核对77处引用、正式包及两份私有数据副本；这是证据复核，没有冒称第二次实机操作。
+
+工作树保留归档与原路径恢复已完成本片源码，七项工程检查通过：1,296输入稳定，前端360文件/4,225项，Rust1,321项/6忽略。归档保留完整目录，不改历史对话位置；材料或归属变化、未发内容、活动及未知进程阻挡操作。目录移动、取消、独立重查、写入隔离及实际连接退出均有定向证据；独立复核发现的孤立草稿借用全局位置、写入恢复失败误报成功等反例已修复，原红例保留。完整界面双引擎各27项及维护提示增量各8项通过；11份实际Rust输出经生产TS解析与负向校验共16项通过。全局搜索范围名称与合法后台任务事件标题已修正。该源码阶段随后已提交安装418880a2，分项实机结果见最新记录；安全删除与独立恢复副本继续开发，H15及全部原条件不据此结项。 [工程回执](evidence/2026-10-09-capability-hardening/worktree-recycle-checks/run-01/verification.json)，[后端独立复核](evidence/2026-10-09-capability-hardening/worktree-recycle/independent/backend-independent.json)，[源码闭合](evidence/2026-10-09-capability-hardening/worktree-recycle-checks/source-closure.json)。
+
+`418880a2` / 0.1.7 arm64 已安装并完成[归档恢复与提示分项实机验证](evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/installed-archive-restore.json)：未发内容阻挡归档；归档与原路径恢复保持暂存区、未暂存、未跟踪、忽略文件、符号链接、执行权限及空目录；归档释放受控空闲连接，原对话位置和历史不变。冷启动必须重新核查，原位置被占时拒绝覆盖；恢复后同一 Codex 6 Astra / Ultra 对话继续成功。NEW-05 全局正文搜索范围名称已确认；NEW-06 真实60秒任务的启动与自然完成均使用准确标题并保留原始事件。12秒前样本没有任务事件，不计覆盖。四次受控请求中前两次无工具，后两次仅执行等待命令及查询其结果；模型、服务和权限未扩大，冷恢复明确重选原权限模式。恢复原空白TR新稿并正常退出后，125条旧对话完整记录与原8条输入、8组意见、3组待发逐值相同；只新增一条受控对话及其活动。该实机阶段发现的归档位置通用报错、重复阻挡提示、恢复目标冲突和恢复结果文案问题列为NEW-07/08；当时尚未包含安全删除与独立恢复副本，后续源码进展见下段。
+
+[本片独立收口](evidence/2026-10-09-capability-hardening/worktree-recycle-candidate/native-closeout-independent.json)核对88处公共引用、24处私有引用、41组图文、正式包、三份只读数据副本和官方请求记录；七组检查通过，现存提示缺陷继续保留。独立复核没有再次操作正式窗口。
+
+H15 安全删除与恢复到新文件夹已完成本片源码及受控验证。仅明确归属的已归档工作树可先准备提交恢复副本，核验支持的私有引用、reflog旧新提交及独立恢复内容后，第二次明确确认才执行删除；不删除分支，不改旧对话位置，不自动使用恢复目录或发送。无法从提交准确复现的脏、未跟踪、忽略内容会阻挡删除；取消、失联、路径变化和未知结果保留材料与核查入口。NEW-07 已区分归档与恢复副本：仅有副本不证明原位置被删除，提示保留原失败原因和重连操作；NEW-08 的重复阻挡、恢复冲突及结果文案已修。
+
+本片[第二轮七项检查](evidence/2026-10-09-capability-hardening/worktree-remove-checks/run-02/verification.json)全部通过，1,328个输入前后稳定，前端370文件/4,385项、Rust1,342项/6忽略。首轮7项失败来自两个旧测试未展开抽出的真实子组件；只修测试读取方式，原断言和生产源码保持，原失败保留。[独立完整界面](evidence/2026-10-09-capability-hardening/worktree-remove/independent/browser/receipt.json)双引擎各27项主流程及21项提示增量通过；[后端独立复核](evidence/2026-10-09-capability-hardening/worktree-remove/independent/backend-review-final.json)保留实际路径替换、恢复副本覆盖等红例与修复。以上为本片源码、临时Git夹具和受控界面证据；随后已安装 `ecc78ce3` 并发现实机缺陷，结果见最新段落。H15及全量计划不据源码检查结项。
+
+`ecc78ce3` / 0.1.7 arm64 已安装并完成[删除与独立恢复首轮实机记录](evidence/2026-10-09-capability-hardening/worktree-remove-candidate/installed-removal-initial.json)。正式窗口通过未发内容阻挡、准备副本后取消、源仓库离线时独立恢复、原位置占用保护、恢复原路径后继续同一对话，以及第二次明确确认删除。另一受控干净工作树实际删除后，源仓库、分支、索引和恢复副本保持。首次删除因开发方检查命令刷新了Git索引缓存而被严格保护拒绝，原失败与材料保留，不计作删除成功。三次有界无工具请求沿用 Codex 6 Astra / Ultra 和既有权限；新恢复目录仅明确使用后进入新对话。正常退出后，旧126条完整会话、8条输入、8组意见、3组待发和旧活动逐值相同，仅新增两个受控会话及其活动；清单中的旧位置仅一项可用状态随冷加载降为未知，具体差异单列。
+
+该轮仍有失败：冷启动后“重新核查删除”只更新操作回执，未同步恢复副本清单，导致界面显示已核验而实际恢复被拒绝（NEW-10）。单独点击“核验恢复副本”后，恢复新目录及7项材料核对通过，但该路径不替代原失败修复。准备阶段过早显示第二次确认/结果未知列为NEW-09；新草稿使用记住的已归档目录仍通用报错（NEW-07延续），冷删除未知说明重复（NEW-08延续）。当前优先修复这四处并补工程、完整界面及正式复测，再继续H17与其余原条件；H15、29家八项标准、Windows及全量市场目标均未完成。正式应用已恢复空白TR草稿并正常退出。
+
+[首轮实装独立收口](evidence/2026-10-09-capability-hardening/worktree-remove-candidate/installed-native-closeout.json)已核对106个唯一证据文件与精确数据差异；冷恢复失败、另行核验后的恢复成功分别保留。后端修复已通过暖/冷恢复、版本变化、篡改与迟到发布共6项定向测试及[独立复核](evidence/2026-10-09-capability-hardening/worktree-remove/cold-recovery-fix/independent-publication-review.json)；前端确认归属、清单等待和草稿准备竞态已修复，正式应用仍为ecc78ce3，待安装复验。
+
+NEW-07–10 修复已完成源码与独立检查。[第二轮七项工程检查](evidence/2026-10-09-capability-hardening/worktree-native-followup-checks/run-02/verification.json)全部通过：1,336输入稳定，前端374文件/4,424项，Rust1,348项/6忽略；[完整界面](evidence/2026-10-09-capability-hardening/worktree-native-followup/independent/implementation.json)WebKit与Chromium各35项通过。首轮浏览器发现的清单读取与定时刷新冲突已修；首轮Rust旧测试沿用过期副本版本，已增加明确拒绝断言并按当前清单继续恢复，原失败保留。接下来提交、安装并复测删除→冷启动→重新核查→独立恢复及归档新草稿提示；尚不关闭四项实装问题或H15。

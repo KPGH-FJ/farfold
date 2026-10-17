@@ -11,6 +11,7 @@
     "tauri": "tauri",
     "tauri:build:internal": "tauri build",
     "typecheck": "tsc -b --pretty false",
+    "docs:check": "node scripts/check-project-docs.mjs",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "test": "vitest run"

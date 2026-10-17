@@ -1,0 +1,201 @@
+{
+  "schema": 1,
+  "phase": "documentationAndTestStructureAligned",
+  "updatedAtUtc": "2026-10-17T08:53:59.306826+00:00",
+  "baseHead": "e3be55b4ba5cf385cb39bdf523feb75c5a26edf6",
+  "productContract": "PRODUCT.md",
+  "currentFacts": "docs/status.md",
+  "onlyActivePlan": "plans/agent-access.md",
+  "formalApplication": {
+    "path": "/Applications/Farfold.app",
+    "sourceCommit": "b754a158479fdc944ea1ee0fbdf425d71093b273",
+    "binarySha256": "10d703e412918993b55cc40c96427ec610370af225629b8535a7c157f6ec0f89",
+    "replacedThisBatch": false,
+    "fiveFilesAndModesUnchanged": true,
+    "appLaunchedThisBatch": false
+  },
+  "scope": {
+    "runtimeProductCodeChanged": false,
+    "testOnlySourceReorganization": true,
+    "newDependencyOrEnvironmentSwitch": false,
+    "packageChangeOnlyDocsCheckScript": true,
+    "originalConditions": 151,
+    "workPackageSharedConditions": 16,
+    "progressChangedOnly": ["P40"],
+    "nextBatchesInExistingPlan": 3,
+    "productOrRealAgentAcceptanceClaimed": false
+  },
+  "resolvedFindings": [
+    "Conflicting current installed version removed from architecture; status owns the current identity.",
+    "README and INTERNAL-USE use current authorization and concrete missing conditions, including NEW-24 affected-send pause.",
+    "Completion notification documented as implemented/default-off with system display,sound,click still unverified.",
+    "P40 progress includes the extra-directory discovery sub-scope without claiming current-conversation applicability.",
+    "Original IDs,titles,completion conditions verified separately from editable progress.",
+    "Cumulative narrative archived; current status,architecture and sole plan have distinct roles.",
+    "Old total handoff redirects to current facts and sole plan; original private bytes retained.",
+    "Oversized test split into three suites and common support without dropping assertions."
+  ],
+  "archive": {
+    "index": "docs/archive/2026-10-17-documentation-alignment/INDEX.md",
+    "snapshots": [
+      {
+        "source": "AGENTS.md",
+        "snapshot": "docs/archive/2026-10-17-documentation-alignment/AGENTS.md",
+        "sha256": "82cc2c77c068a555be59ca4597c7220eca6689007f50a522093b17ab8754ac83",
+        "bytes": 11696
+      },
+      {
+        "source": "README.md",
+        "snapshot": "docs/archive/2026-10-17-documentation-alignment/README.md",
+        "sha256": "e53f2abfa9430039525b5f17bb61c855d6eb998f928c757fcdfbdf8ce17a8383",
+        "bytes": 5046
+      },
+      {
+        "source": "INTERNAL-USE.md",
+        "snapshot": "docs/archive/2026-10-17-documentation-alignment/INTERNAL-USE.md",
+        "sha256": "938cb31396527a4cb762d3143262e4ba5274bf4dec63301126170687e5f1f913",
+        "bytes": 11495
+      },
+      {
+        "source": "docs/README.md",
+        "snapshot": "docs/archive/2026-10-17-documentation-alignment/docs/README.md",
+        "sha256": "8f94d858aaf88b2d24346689e05bfbdc04f01a8ea73ed28b9c2c77a7c9360760",
+        "bytes": 3167
+      },
+      {
+        "source": "docs/status.md",
+        "snapshot": "docs/archive/2026-10-17-documentation-alignment/docs/status.md",
+        "sha256": "814896ea5a6fb3bf4354aeb3f4cfe7f9cb966b1f6ccff569b887a78f2f82f0c3",
+        "bytes": 113812
+      },
+      {
+        "source": "docs/architecture.md",
+        "snapshot": "docs/archive/2026-10-17-documentation-alignment/docs/architecture.md",
+        "sha256": "e9c30f06b13958d85be5f93e2885655464ed9d8f6e7d655a8baf14f02c7f14ea",
+        "bytes": 157363
+      },
+      {
+        "source": "docs/archive/README.md",
+        "snapshot": "docs/archive/2026-10-17-documentation-alignment/docs/archive/README.md",
+        "sha256": "b9912c8022d922d41aecc8b4e0e40b04d6c9d95d1aa897052257cd402d043df7",
+        "bytes": 1585
+      },
+      {
+        "source": "plans/agent-access.md",
+        "snapshot": "docs/archive/2026-10-17-documentation-alignment/agent-access-before-alignment.md",
+        "sha256": "3c34984c08ddcbff5df562fe0578f930a43a2f8df10ffcd8f1d38613f6c8dbbd",
+        "bytes": 180298
+      }
+    ],
+    "allEightByteExactAgainstBaseGit": true,
+    "rawPrivateHandoff": {
+      "path": "output/2026-10-17-documentation-alignment/prior-docx-root-handoff.json",
+      "sha256": "673e433c8957610e8654ecbba3d699fd5d377d1c78ed1e890a897f8f7e9abe9e",
+      "originalBytesPreserved": true
+    },
+    "immutableOriginalConditions": {
+      "path": "docs/archive/2026-10-17-documentation-alignment/plan-conditions.json",
+      "sha256": "a5c231d101131af806b95ba174be1a7f6a360ae650912623b963a40159472b7e"
+    }
+  },
+  "checks": {
+    "splitTests": {
+      "files": 3,
+      "passed": 50,
+      "actualSession": 85613,
+      "actualExitCode": 0,
+      "finalChunk": "66d91d"
+    },
+    "typecheck": {
+      "actualSession": 41339,
+      "actualExitCode": 0,
+      "finalChunk": "cf709c"
+    },
+    "independentTestAst": {
+      "testCallsEquivalent": 40,
+      "sharedStatementsEquivalent": 20,
+      "actualExitCode": 0,
+      "finalChunk": "9477d9"
+    },
+    "documentationCheck": {
+      "command": "corepack pnpm docs:check",
+      "originalConditions": 151,
+      "currentRows": 151,
+      "activePlans": 1,
+      "entrypoints": 12,
+      "localLinks": 185,
+      "localHeadingAnchors": 5,
+      "actualExitCode": 0,
+      "finalChunk": "c30d69"
+    },
+    "progressAndFailureGuardBehavior": {
+      "editableProgressAccepted": true,
+      "changedConditionMissingAndDuplicateIdsRejected": true,
+      "missingPathAndAnchorRejected": true,
+      "actualExitCode": 0,
+      "finalChunk": "8720ea"
+    },
+    "headingCollisionFix": {
+      "actualExitCode": 0,
+      "finalChunk": "06ae15"
+    },
+    "repositoryFormat": {
+      "command": "corepack pnpm format:check",
+      "actualSession": 52376,
+      "actualExitCode": 0,
+      "finalChunk": "5c5237",
+      "scopeNote": "The full repository check preceded this final maintenance receipt; its final formatting outcome belongs to the completion receipt."
+    },
+    "sourceScopeAndProtectedFiles": {
+      "actualExitCode": 0,
+      "finalChunk": "c497a6",
+      "runtimeUnchanged": true,
+      "priorP13Frozen24Unchanged": true,
+      "noCodeFileOver1500Lines": true,
+      "PRODUCTAndTwoExistingDirtyReadmesUnchanged": true
+    }
+  },
+  "independentReviews": {
+    "rootAndSolePlan": {
+      "path": "output/2026-10-17-documentation-alignment/root-plan-independent-review.json",
+      "sha256": "33878dac3a40a803874eb5bbb404f6d8706b36ab171b73650353ec73afe503dc",
+      "result": "noRemainingBlockingFinding"
+    },
+    "threeCurrentDocuments": {
+      "path": "output/2026-10-17-documentation-alignment/readme-internal-architecture-independent-review.json",
+      "sha256": "22a591a7a34200c53a7133b45d1fbc522597709da8ace9c82a5b4347d3b4d794",
+      "result": "noBlockingFinding"
+    }
+  },
+  "preparationCorrectionsRetained": [
+    {
+      "kind": "Archive index initially collided with original README snapshot; index moved to INDEX.md and original restored exactly from base Git before validation.",
+      "resolved": true
+    },
+    {
+      "kind": "First in-progress integration docs check found an incorrect source path; corrected before final successful docs check.",
+      "actualExitCode": 1,
+      "chunk": "0f0194",
+      "resolved": true
+    },
+    {
+      "kind": "Review corrected P47/P48 summary mapping and heading duplicate-suffix allocation.",
+      "resolved": true
+    },
+    {
+      "kind": "An author AST-check script syntax error and plan patch JSON preparation failure occurred before validation or source mutation; neither counted as product/test failures.",
+      "resolved": true
+    }
+  ],
+  "retainedOpen": [
+    "NEW-24 same-connection full permissions unknown; affected new real sends paused.",
+    "Historical data differences and unknown initialization/reopen/writer causes unwaived.",
+    "P13 full media,formal message media,actual animation playback and resource limits remain open.",
+    "All29/eight standards and Windows real-system acceptance still incomplete."
+  ],
+  "notRerun": {
+    "rustTestsClippyBuild": "No Rust, runtime product logic, dependencies or existing build command changed; affected tests/typecheck and documentation checks cover this batch.",
+    "installedOrRealAgentTesting": "No app or Agent launch,SQL access or installation performed."
+  },
+  "checkpointBoundary": "This record does not contain its own commit ID. Actual commit,push and read-after results are kept in the completion receipt; no future result is predeclared."
+}
