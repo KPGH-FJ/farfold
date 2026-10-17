@@ -2,7 +2,11 @@
 
 ## 当前源码与证据边界（2026-10-17）
 
-当前[额外技能目录临时发现](evidence/2026-10-09-capability-hardening/extra-skill-discovery/verification.json)源码 `a8e84d7ea` 已推送安装。共用 `AgentExtensionInventory` 显式选择一个额外目录；后端 `extension_inventory` 接受最多4个有序原始路径并精确回显，将规范化目录身份固定后，经同一短进程 `skills/extraRoots/set` 严格 `{}` 确认，再 `skills/list`，各阶段和结束重核身份，仍不是文件系统原子扫描。报告同时含默认技能，非空额外目录的整份结果均为 `discoveryOnly`，不生成管理目标，后端管理入口独立拒绝；不自动追加子目录、不安装、不写持久配置或发送提示，当前对话采用未验。26文件冻结含22变更/4共享；完整工程、原冻结受控浏览器的明确复用、安装与正式分项分别留证。正式目录查询及保存退出已有本批分项，metadata/10旧草稿保持，但严格5处目录差异和未知写者未豁免；P40整项及旧重开、初始化原因均未闭合。
+当前[消息图片尺寸与动画预览保护](evidence/2026-10-09-capability-hardening/message-raster-admission/verification.json)源码 `b754a1584` 已提交推送并安装。消息附件沿用16 MiB解码字节与编码合规准入、4实例/32 MiB配额；`message_raster_reader` 随机读取已合规Base64的必要字节，不创建完整解码缓冲。`message_raster_admission` 按实际签名派发 JPEG/GIF/WebP/BMP，即使被标成其他允许图片类型也经过同一检查。各解析器核验支持范围内的声明画布，边长≤8192、画布≤16,777,216像素；GIF/WebP 逐帧核矩形、偏移及实际声明尺寸，最多128帧、整画布像素乘帧数≤67,108,864，并把子块、嵌套块计入65,536条遍历预算。已有PNG的33字节IHDR检查不变，APNG、AVIF和音频资源不在新增检查范围。
+
+`MessageAttachmentMedia` 对退役图片元素清除其自身来源，同一元素重新挂载只恢复原已准入来源；音频既有暂停、清除来源和重新加载保持。该动作不证明浏览器同步释放全部解码资源。原协议内容、来源顺序、显式展开/重试和搜索不加载保持；输入图片独立的8 MiB/静态规则未改。24文件冻结含18变更/6共享，工程、独审、受控双引擎、候选9项、安装10项及三份新清单分层留证；五文件分别完整临时写入、fsync后替换为新inode，非整体事务，候选副本已精确清理。本批未启动新正式版本，不计正式消息媒体、真实Agent或完整播放证明；完整P13、实际codec内存、NEW-24及历史严格差异均未闭合。安装10原件继承的上批技能边界措辞不扩为本批行为证明。
+
+此前[额外技能目录临时发现](evidence/2026-10-09-capability-hardening/extra-skill-discovery/verification.json)源码 `a8e84d7ea` 已推送安装。共用 `AgentExtensionInventory` 显式选择一个额外目录；后端 `extension_inventory` 接受最多4个有序原始路径并精确回显，将规范化目录身份固定后，经同一短进程 `skills/extraRoots/set` 严格 `{}` 确认，再 `skills/list`，各阶段和结束重核身份，仍不是文件系统原子扫描。报告同时含默认技能，非空额外目录的整份结果均为 `discoveryOnly`，不生成管理目标，后端管理入口独立拒绝；不自动追加子目录、不安装、不写持久配置或发送提示，当前对话采用未验。26文件冻结含22变更/4共享；完整工程、原冻结受控浏览器的明确复用、安装与正式分项分别留证。正式目录查询及保存退出已有本批分项，metadata/10旧草稿保持，但严格5处目录差异和未知写者未豁免；P40整项及旧重开、初始化原因均未闭合。
 
 此前[退出等待与PNG预览保护](evidence/2026-10-09-capability-hardening/exit-and-preview-guards/verification.json)源码 `6a5fb61c2` 已推送安装。`DraftStartup` 复用共用等待对话框，同次撤回只提交一次，迟到回包按当前请求处理；退出锁改用既有 `draft_storage.acquireInteractionLock`，撤回确认、延后及卸载只释放自身，更新和工作位置维护锁保持。撤回不取消保存、不恢复队列，重启规则保持。`attachmentMediaAdmission` 在16 MiB/编码检查后经 `message_png_admission` 最多33字节IHDR/CRC核声明边长8192和画布16,777,216像素；其他允许图片声明下的PNG签名同闸，拒绝先于来源及解码器创建。18文件冻结含12变更/6共享，工程、受控组件、安装分层留证；本批未启动新版本，完整PNG/动画/实际解码与传输内存、正式退出/媒体和旧未知原因均未闭合。
 

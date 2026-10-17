@@ -1,0 +1,337 @@
+{
+  "schema": 1,
+  "phase": "implemented_committed_installed_static_verified_native_unverified",
+  "sourceCommit": "b754a158479fdc944ea1ee0fbdf425d71093b273",
+  "scope": "Message-only JPEG/GIF/WebP/BMP supported declaration admission, GIF/WebP frame budgets and explicit image source retirement. This slice does not establish full P13, native message-media or real-Agent acceptance.",
+  "implementation": {
+    "frozenFiles": 24,
+    "changedFiles": 18,
+    "unchangedSharedFiles": 6,
+    "formats": ["image/jpeg", "image/gif", "image/webp", "image/bmp"],
+    "actualSignatureDispatchWithinAllowedImages": true,
+    "maximumDeclaredEdge": 8192,
+    "maximumDeclaredCanvasPixels": 16777216,
+    "gifWebpMaximumFrames": 128,
+    "gifWebpMaximumFullCanvasPixelsTimesFrames": 67108864,
+    "maximumParsedRecordsIncludingSubblocksAndNestedChunks": 65536,
+    "budgetedAnimationSupported": true,
+    "infiniteLoopAndZeroDelayRejectedAsSuch": false,
+    "originalPayloadSourcesAndOrderPreserved": true,
+    "onlyExplicitExpandAndRetryLoadMedia": true,
+    "searchDoesNotGrantMediaLoad": true,
+    "retiredImageSourceClearedOnOwnElement": true,
+    "sameAdmittedSourceRestoredOnRefReplay": true,
+    "synchronousCodecResourceReleaseGuaranteed": false,
+    "existingMessageByteLimit": 16777216,
+    "existingSharedActiveMediaLimit": 4,
+    "existingInputImage8MiBAndStaticPolicyChanged": false,
+    "existingPng33ByteHeaderGateChanged": false,
+    "existingSharedActiveAdmittedFileByteLimit": 33554432
+  },
+  "supportedDeclarationBoundaries": {
+    "jpeg": "Supported SOF types with known positive dimensions; no DNL deferred height, hierarchical DHP/EXP or JPEG-LS support claimed; not complete entropy/file validation.",
+    "bmp": "Supported DIB 12,16,40,52,56,64,108,124 layouts and byte extents; embedded JPEG/PNG compression and other layouts not admitted; not full pixel/RLE/Huffman validation.",
+    "gif": "Logical screen, all image/plain-text rectangles and bounded blocks; graphics charged at the full logical canvas. Unknown rendering extensions not admitted.",
+    "webp": "Exact RIFF/chunk extents, VP8X canvas, VP8/VP8L coded dimensions and each ANMF rectangle/nested image; ambiguous mixed or duplicate reconstruction not admitted."
+  },
+  "targetedChecks": {
+    "result": "passed",
+    "affectedFiles": 13,
+    "passed": 271,
+    "actualExitCode": 0,
+    "rootActualSession": 74377,
+    "rootActualFinalChunk": "05ec67",
+    "typecheck": {
+      "result": "passed",
+      "actualExitCode": 0,
+      "rootActualSession": 9630,
+      "rootActualFinalChunk": "2935ed"
+    },
+    "scopedFormat": {
+      "result": "passed",
+      "files": 18,
+      "actualExitCode": 0,
+      "rootActualFinalChunk": "f0b459"
+    },
+    "theseAreNotFullEngineeringOrNativeResults": true
+  },
+  "engineering": {
+    "result": "passed",
+    "allSevenActuallyCompleted": true,
+    "rootActualSession": 87529,
+    "actualExitCode": 0,
+    "actualFinalChunk": "be8484",
+    "stableInputs": 19030,
+    "beforeAfterExact": true,
+    "frontendFiles": 536,
+    "frontendTestsPassed": 6837,
+    "rustTestsPassed": 1787,
+    "rustIgnored": 6,
+    "receiptSha256": "23415d35b6c2be8604946e2c8ab879b6a13f801c26465da9c68f6e339b46a580"
+  },
+  "independentSourceReviews": {
+    "result": "noBlockingFinding",
+    "whole24ReviewSha256": "511e24de791db67cea7f9c46c6a14b7ba551eb51437d12c29e23d5c715e3de54",
+    "aggregateSha256": "e85c57ff4eba0ba37bb6eef0a34798907892caeadeed0f471e8c43b83415e34f",
+    "aggregationIsNotAnAdditionalIndependentReview": true
+  },
+  "controlledBrowser": {
+    "result": "passedWithinScope",
+    "engines": ["chromium", "webkit"],
+    "mainChecksPerEngine": 88,
+    "legacyP13ChecksPerEngine": 31,
+    "mainStableInputs": 635,
+    "legacyStableInputs": 630,
+    "beforeAfterExact": true,
+    "actualExecutions": [
+      {
+        "label": "main-run2",
+        "session": 5871,
+        "exitCode": 0,
+        "finalChunk": "ed378d"
+      },
+      {
+        "label": "old-p13-regression-run1",
+        "session": 52783,
+        "exitCode": 0,
+        "finalChunk": "44aef2"
+      }
+    ],
+    "receiptSha256": "8bcd90c73a92785f8daa487733e4433eca1a3a4807c36596400d1b6e5d8e659e",
+    "executionCompletionSha256": "f12ab0542a4c9d8b16816342c90b03d6e9211e20b275f545d6ab2d592b566757",
+    "smallImageFilesActuallyDecodedAndDisplayed": 10,
+    "animationFileDecodeDisplayOnly": true,
+    "animationFrameAdvanceLoopDurationOrCompletePlaybackMeasured": false,
+    "controlledSilentWavPlaybackChecked": true,
+    "browsersAndServersClosed": true,
+    "pageErrors": 0,
+    "unknownExternalRequests": 0,
+    "notNativeApp": true
+  },
+  "preservedFailures": {
+    "sourceSemanticRed": {
+      "jpegBmpCases": 2,
+      "gifWebpCases": 4,
+      "total": 6,
+      "actualExitCode": 1,
+      "missingModuleFailureUsedAsRed": false
+    },
+    "imageRetirementSemanticRed": {
+      "failedNew": 2,
+      "passedOld": 8,
+      "actualExitCode": 1,
+      "laterTargetedPassed": 10
+    },
+    "jpegBmpAuthorFixtureError": {
+      "actualExitCode": 1,
+      "passed": 67,
+      "failed": 1,
+      "classification": "Test helper used four bytes for a two-pixel 32bpp row requiring eight. Fixture only corrected; production extent guard preserved."
+    },
+    "gifWebpAuthorAssertionShapeError": {
+      "actualExitCode": 1,
+      "passed": 26,
+      "failed": 6,
+      "classification": "Positive test expected available.kind instead of actual available.media.kind. Assertion shape only corrected; production unchanged."
+    },
+    "allOriginalLogsRetained": true,
+    "browserFirstRun": {
+      "session": 28219,
+      "actualExitCode": 1,
+      "actualFinalChunk": "025f63",
+      "chromium": {
+        "passed": 88,
+        "failed": 0
+      },
+      "webkit": {
+        "passed": 87,
+        "failed": 1
+      },
+      "classification": "Harness classified 15 exact same-origin owned Blob image requests as external; test classification alone corrected before an actual full rerun, no production change for this failure.",
+      "originalReceiptSha256": "4299df74ee509525cd5e60932a99aab2f7787d3b982f2da823cbf4152333660f"
+    },
+    "browserPreparationJsonError": {
+      "retained": true,
+      "receiptSha256": "2780e0075586bc76605096ebb4c48219994c8e2170f126d6a3c01b3069c43095",
+      "notProductFailure": true
+    }
+  },
+  "installation": {
+    "result": "installed_static_verified",
+    "formalSource": "b754a158479fdc944ea1ee0fbdf425d71093b273",
+    "appIdentifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "internalAdhocStrictSignatureVerified": true,
+    "publicSigningOrNotarizationClaimed": false,
+    "candidateProductionInputs": 1744,
+    "candidateReviewPassed": 9,
+    "candidateReviewTotal": 9,
+    "candidateReviewActualExitCode": 0,
+    "candidateReviewActualSession": null,
+    "candidateReviewActualFinalChunk": "6ad77c",
+    "replacementActualSession": 45453,
+    "replacementActualExitCode": 0,
+    "replacementActualFinalChunk": "a13c2f",
+    "fiveMembersEachWrittenToExclusiveSameDirectoryTempThenNewInode": true,
+    "atomicFiveFileTransactionClaimed": false,
+    "freshBeforeManifestEntries": 217407,
+    "freshPreinstallManifestEntries": 217407,
+    "freshAfterManifestEntries": 217407,
+    "allThreeInstallManifestsExact": true,
+    "manifestSha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4",
+    "freshBeforeActual": {
+      "session": 45981,
+      "exitCode": 0,
+      "finalChunk": "af08b4"
+    },
+    "freshPreinstallActual": {
+      "session": 87658,
+      "exitCode": 0,
+      "finalChunk": "f103b9"
+    },
+    "freshAfterActual": {
+      "session": 33218,
+      "exitCode": 0,
+      "finalChunk": "0b83b6"
+    },
+    "sealedMetadataBackupSha256": "ac061be0f0d38dd0adbe6f85272c1d59e009eb5a85ae9d3af19edf2ebec2e912",
+    "oldRawMetadataFirstCaptureRetained": true,
+    "installedIndependent10Passed": 10,
+    "installedIndependent10Total": 10,
+    "installedIndependent10Actual": {
+      "session": 65829,
+      "exitCode": 0,
+      "finalChunk": "cc45f8"
+    },
+    "candidateCleanup": {
+      "result": "exactDuplicateCandidateRemoved",
+      "actualSession": null,
+      "actualExitCode": 0,
+      "actualFinalChunk": "af1cea",
+      "actualReceiptFile": "install/candidate-cleanup.json",
+      "removedExactFiles": 5,
+      "onlyExpectedEmptyDirectoriesAlsoRemoved": true,
+      "formalFiveFilesAndModesAndArchivePreserved": true
+    },
+    "retentionScope": "Current closed-observed installation interval only; not historical/no-side-effects/continuous-zero proof.",
+    "historicalStrictDifferencesWaived": false
+  },
+  "nativeMessageMedia": {
+    "result": "unverified",
+    "newFormalAppExplicitlyLaunchedByThisBatch": false,
+    "continuousProcessAbsenceClaim": false,
+    "formalMessageMediaTestedThisBatch": false,
+    "actualReturnedSupportedMediaProven": false,
+    "realAgentResult": "unverified",
+    "filePreviewOrControlledFakeAgentSubstitutionUsed": false,
+    "newRealSendsAffectedByNEW24": "paused"
+  },
+  "retainedOpenBoundaries": [
+    "Full P13, APNG animation, AVIF, audio duration and other unimplemented format resource limits.",
+    "Actual codec/heap/GPU memory, lifetime CPU, repeated playback and transport memory are not bounded by header declarations or encoded byte pools.",
+    "Native media requires actual message media and its applicable official conditions; no file-preview or controlled fake-Agent substitution.",
+    "Original151planconditions and all29agents/eightstandards remain; no NEW-30.",
+    "Historical five reported data-directory differences and prior three reported database/seven reported data-directory differences remain unwaived; writers, OpenCode initialization and reopen caller remain unknown.",
+    "Documentation commit/push and the final read-after helper require their own later actual receipts; no completion is predeclared here."
+  ],
+  "evidencePins": {
+    "sourceFreeze": {
+      "path": "output/2026-10-17-message-raster-admission/source-freeze.json",
+      "sha256": "e0f6fc129050d65e194b15989d7e167ecda502a7ab7e34a70a525b2400719399"
+    },
+    "jpegBmpAuthor": {
+      "path": "output/2026-10-17-message-raster-admission/jpeg-bmp/verification.json",
+      "sha256": "0524a6505cd568cc31709854c381a79c577839518c884ce8b45b397c672b5321"
+    },
+    "gifWebpAuthor": {
+      "path": "output/2026-10-17-message-raster-admission/gif-webp/verification.json",
+      "sha256": "bc275d113fc645b8f9953b816601463dd2a5613c6850b94c4429c3d03060fb34"
+    },
+    "preparationToolsIndependent": {
+      "path": "output/2026-10-17-message-raster-admission/preparation-tools-independent-review.json",
+      "sha256": "fe6b23a66cef25b791f4eca9490b5de25f2fd81e464799eddd0888ed46f31772"
+    },
+    "engineering": {
+      "path": "output/2026-10-17-message-raster-admission/engineering/run1/verification.json",
+      "sha256": "23415d35b6c2be8604946e2c8ab879b6a13f801c26465da9c68f6e339b46a580"
+    },
+    "sourceReview": {
+      "path": "output/2026-10-17-message-raster-admission/source-review.json",
+      "sha256": "e85c57ff4eba0ba37bb6eef0a34798907892caeadeed0f471e8c43b83415e34f"
+    },
+    "controlledBrowser": {
+      "path": "output/2026-10-17-message-raster-admission/browser-independent/verification.json",
+      "sha256": "8bcd90c73a92785f8daa487733e4433eca1a3a4807c36596400d1b6e5d8e659e"
+    },
+    "candidateReview": {
+      "path": "output/2026-10-17-message-raster-admission/candidate-preparation/independent/review.json",
+      "sha256": "b977d37602a231c90319ab2ff31963458a341fff85b9b6d599f5a31413ac5624"
+    },
+    "installedIndependentReview": {
+      "path": "output/2026-10-17-message-raster-admission/install/installed-independent-review-private.json",
+      "sha256": "eaf2efd56195444c42e321930fd83aec7d2eee2141563324e1136992ae7feed7"
+    },
+    "candidateCleanup": {
+      "path": "output/2026-10-17-message-raster-admission/install/candidate-cleanup.json",
+      "sha256": "1a1f87856cc4758c96b55f5ecb9d0681b55e6147a6adb8ecb541329ae3b0f18b"
+    },
+    "wholeFreezeReview": {
+      "path": "output/2026-10-17-message-raster-admission/independent-source-review.json",
+      "sha256": "511e24de791db67cea7f9c46c6a14b7ba551eb51437d12c29e23d5c715e3de54"
+    },
+    "browserActualCompletion": {
+      "path": "output/2026-10-17-message-raster-admission/browser-independent/execution-completion.json",
+      "sha256": "f12ab0542a4c9d8b16816342c90b03d6e9211e20b275f545d6ab2d592b566757"
+    },
+    "candidateBuild": {
+      "path": "output/2026-10-17-message-raster-admission/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "f8fa28f8de19f8a0e2bad9581c4ccee5e014993e106b31bbb8c3e454c4f164d1"
+    },
+    "atomicInstallation": {
+      "path": "output/2026-10-17-message-raster-admission/install/install-result.json",
+      "sha256": "bc75e168ebc64de9f1bcd1a7ff96815b63f4ea27f0184574d6d5b1b0a7fd2744"
+    },
+    "freshBefore": {
+      "path": "output/2026-10-17-message-raster-admission/install/retention-before-receipt.json",
+      "sha256": "05fe38adcf1c4adffef78e41c5dff69fae573350193c5c6df394374e64693326"
+    },
+    "freshPreinstall": {
+      "path": "output/2026-10-17-message-raster-admission/install/retention-preinstall-receipt.json",
+      "sha256": "e471d563309ca17a0ed4c762cc2b26c83a243dae8ed750fefcd8de5baba5c645"
+    },
+    "freshAfter": {
+      "path": "output/2026-10-17-message-raster-admission/install/retention-after-receipt.json",
+      "sha256": "bb7da5e714e6367b39b2029e0405c5a1e485376448b4f129bc9d36e23a2dec05"
+    }
+  },
+  "sourceCheckpoint": {
+    "commitActualExitCode": 0,
+    "commitActualFinalChunk": "dd75e4",
+    "pushActualSession": 71540,
+    "pushActualExitCode": 0,
+    "pushActualFinalChunk": "64c8cf",
+    "completionHistorySuppliedByRoot": true
+  },
+  "candidateBuild": {
+    "result": "internalCandidatePreparedNotInstalled",
+    "sourceCommit": "b754a158479fdc944ea1ee0fbdf425d71093b273",
+    "actualSession": 7971,
+    "actualExitCode": 0,
+    "actualFinalChunk": "1677d0",
+    "receiptSha256": "f8fa28f8de19f8a0e2bad9581c4ccee5e014993e106b31bbb8c3e454c4f164d1",
+    "productionInputs": 1744,
+    "archiveSha256": "f915628753ad332be5a61a411bddc108c35c38bfd321b70f749e6f8c5f0c7faa",
+    "binarySha256": "10d703e412918993b55cc40c96427ec610370af225629b8535a7c157f6ec0f89",
+    "candidateIndependent9Result": "passed",
+    "installed": false,
+    "formalAppReplaced": false
+  },
+  "inheritedReceiptWording": {
+    "path": "output/2026-10-17-message-raster-admission/install/installed-independent-review-private.json",
+    "field": "boundaries[2]",
+    "nonBlockingInheritedExtraSkillDirectoryWording": true,
+    "originalReceiptUnchanged": true,
+    "currentMeaning": "The actual ten checks establish current source,files,identity,signature,archive,process point and retained data only; no skill or native media behavior is proved."
+  }
+}
