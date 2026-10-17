@@ -1,12 +1,17 @@
 import { MAX_IMAGE_EDGE, MAX_IMAGE_PIXELS } from "./image_bytes";
+import { messageApngAdmission } from "./message_apng_admission";
+import {
+  MessageRasterError,
+  MessageRasterReader,
+} from "./message_raster_reader";
 
 type PngCanvasAdmission =
-  "notPng" | "withinBudget" | "invalid" | "tooManyPixels";
+  "notPng" | "withinBudget" | "invalid" | "tooManyPixels" | "tooComplex";
 
 /** Called only after canonical Base64 and the message byte limit are checked.
- * Inspect at most 33 decoded bytes, never a decoder, URL or complete buffer.
- * A CRC-checked IHDR's declared canvas is not proof of valid image data, actual
- * decoded resources, animation bounds, or even the presence of IDAT/IEND. */
+ * Extract a fixed 33-byte IHDR, then traverse the container through a bounded
+ * Base64 reader; never a decoder, URL or complete binary buffer. Canvas and
+ * animation declarations do not prove image data or actual codec resources. */
 export function messagePngAdmission(
   data: string,
   declaredPng: boolean,
@@ -57,9 +62,17 @@ export function messagePngAdmission(
   )
     return "invalid";
   // Check edges before multiplication: the remaining product is exact and small.
-  return width > MAX_IMAGE_EDGE ||
+  if (
+    width > MAX_IMAGE_EDGE ||
     height > MAX_IMAGE_EDGE ||
     width * height > MAX_IMAGE_PIXELS
-    ? "tooManyPixels"
-    : "withinBudget";
+  )
+    return "tooManyPixels";
+  try {
+    messageApngAdmission(new MessageRasterReader(data), width, height);
+    return "withinBudget";
+  } catch (error) {
+    if (error instanceof MessageRasterError) return error.reason;
+    throw error;
+  }
 }

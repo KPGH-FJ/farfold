@@ -17,7 +17,7 @@ const source = (data: string, mimeType = "image/png") => ({
 
 afterEach(() => vi.restoreAllMocks());
 
-it.each(["image/png", "audio/wav"])(
+it.each(["image/png", "image/apng", "audio/wav"])(
   "refuses oversized %s before scanning its payload or constructing a URL",
   (mimeType) => {
     const data = "A".repeat(encodedLimit + 4);

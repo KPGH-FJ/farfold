@@ -4,7 +4,9 @@
 
 ## 当前工作与接续
 
-上一轮文档一致性整改、累计原件归档、交接指向统一及超长测试拆分已于 `d1ab0edeed4bf56ceeccb6300c641e58a4746d5e` 完成，结果见[整理记录](maintenance/2026-10-17-documentation-alignment.json)。本批按用户新授权，将执行计划收为短入口，把151条任务及共同条件完整移至单一要求参考，并调整导航、按ID读取和文档维护检查；本批结果单独记于[入口拆分记录](maintenance/2026-10-17-plan-entrypoint-split.json)。只改变存放位置与读取策略，不开发产品能力、不启动Agent、不替换正式应用；正式功能源码仍为 `b754a158479fdc944ea1ee0fbdf425d71093b273`。
+文档一致性整改与短入口拆分已分别于 `d1ab0edeed4bf56ceeccb6300c641e58a4746d5e`、`4fe46300fd0f60d74093e2ed2fd97ad7dbf065db` 完成，结果见[整理记录](maintenance/2026-10-17-documentation-alignment.json)和[入口拆分记录](maintenance/2026-10-17-plan-entrypoint-split.json)。这两批仅整理文档、测试结构与读取工具，正式功能源码仍为 `b754a158479fdc944ea1ee0fbdf425d71093b273`。
+
+用户现要求持续开发，到较大阶段后集中审阅。当前已开始短计划所列工作核查；小提交、分项检查和进度简报不自动结束开发。阶段目标与出口只见短计划，本页随实际证据更新，不将进行中的调查或开发写作已完成。
 
 后续开发顺序、依赖与出口只由[短执行计划](../plans/agent-access.md)安排；按任务ID补读[要求参考](agent-access-requirements.md)中的对应条目、所属工作包及共用完成依据。参考没有调度权，不从旧交接或历史“下一步”另起队列；存放位置调整不降低29家八项标准或151条原始要求。
 

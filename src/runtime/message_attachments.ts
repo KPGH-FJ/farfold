@@ -119,8 +119,10 @@ function base64Value(code: number): number {
 }
 
 /** Preview-only byte and declared raster metadata admission. Original payload,
- * transport, actual decoder memory, audio duration, AVIF and PNG animation
- * resources are not bounded here. No URL is created before the checks.
+ * transport, actual decoder memory, audio duration and AVIF resources are not
+ * bounded here. PNG/APNG receives only structural/declaration admission,
+ * including animation frame work; actual playback remains unverified.
+ * No URL is created before the checks.
  * Remote links are never fetched. No payload trim, decode or URL precedes the
  * constant-time length gate; the admitted alphabet scan has no regex backtracking. */
 export function attachmentMediaAdmission(
@@ -131,7 +133,7 @@ export function attachmentMediaAdmission(
   const overEncodedLimit = data.length > MAX_ENCODED_MEDIA_LENGTH;
   const mime = attachment.mimeType?.toLowerCase();
   const kind =
-    mime && /^image\/(?:png|jpeg|gif|webp|avif|bmp)$/.test(mime)
+    mime && /^image\/(?:png|apng|jpeg|gif|webp|avif|bmp)$/.test(mime)
       ? "image"
       : mime &&
           /^audio\/(?:mpeg|mp3|mp4|ogg|wav|wave|x-wav|webm|flac|aac)$/.test(
@@ -157,8 +159,11 @@ export function attachmentMediaAdmission(
   if ((padding === 2 && tail % 16 !== 0) || (padding === 1 && tail % 4 !== 0))
     return { status: "rejected", reason: "invalid" };
   if (kind === "image") {
-    const png = messagePngAdmission(data, mime === "image/png");
-    if (png === "invalid" || png === "tooManyPixels")
+    const png = messagePngAdmission(
+      data,
+      mime === "image/png" || mime === "image/apng",
+    );
+    if (png !== "withinBudget" && png !== "notPng")
       return { status: "rejected", reason: png };
     if (png === "notPng") {
       const raster = messageRasterAdmission(data, mime!);

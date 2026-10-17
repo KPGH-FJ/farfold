@@ -211,12 +211,13 @@ it("does not extract any header until byte and canonical Base64 gates pass", () 
   }
 });
 
-it("does not pretend a budgeted IHDR proves later image data or animation validity", () => {
+it("rejects a header without a container while leaving compressed image validity to the browser", () => {
   const header = Buffer.from(PNG_IMAGE_TEST_DATA, "base64").subarray(0, 33);
-  // This only admits a declared canvas. Missing IDAT/IEND still fails decoding.
+  // The old fixed-header admission accepted this intentionally incomplete
+  // fixture. Container traversal now requires IDAT/IEND, without decoding it.
   expect(
     attachmentMediaAdmission(image(header.toString("base64"))).status,
-  ).toBe("available");
+  ).toBe("rejected");
   expect(
     attachmentMediaAdmission(image(PNG_IMAGE_TEST_DATA, "IMAGE/PNG")).status,
   ).toBe("available");

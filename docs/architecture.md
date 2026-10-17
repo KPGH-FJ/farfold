@@ -73,11 +73,11 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 收到的媒体由 [message_attachments.ts](../src/runtime/message_attachments.ts) 保留原payload与顺序，仅对允许MIME、规范Base64及单项最多16 MiB做预览准入。显式展开才生成媒体DOM；搜索、折叠、普通消息呈现不自动加载媒体。远程地址不因预览而抓取，未知格式与原协议内容仍保留。
 
-PNG检查签名和固定IHDR声明；JPEG、GIF、WebP、BMP由 [message_raster_admission.ts](../src/runtime/message_raster_admission.ts) 分派格式解析。支持范围内画布每边最多8192像素、总量最多16,777,216像素。GIF/WebP另限128帧、完整画布像素乘帧数最多67,108,864、遍历记录最多65,536，并检查帧矩形与结构；跨允许MIME标注的已识别格式也受相应准入约束。
+PNG检查签名、IHDR和有界容器布局；[message_apng_admission.ts](../src/runtime/message_apng_admission.ts) 核APNG控制块、帧序号、矩形与声明数量。JPEG、GIF、WebP、BMP由 [message_raster_admission.ts](../src/runtime/message_raster_admission.ts) 分派。支持范围内画布每边最多8192像素、总量最多16,777,216像素。GIF/WebP/APNG另限128动画帧、完整画布像素乘帧数最多67,108,864、遍历记录最多65,536；APNG独立默认图额外计入像素总量。PNG/APNG固定控制数据核CRC，压缩像素与其他负载不做全量CRC或解压；标准`image/apng`复用同一PNG准入。跨允许MIME标注的已识别格式也受相应约束。
 
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化按各自租约退役。[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 移除旧图片来源并处理重复挂载；音频暂停、清来源及重新加载沿其生命周期处理。可明确重试，不自动重复占用。
 
-以上是字节、声明结构和DOM生命周期约束，不是实际解码器分配、传输内存、动画循环或播放时长保证。APNG动画、AVIF及音频资源治理、长期使用、正式消息媒体和完整P13仍开放；受控浏览器文件显示不证明动画帧推进或真实 Agent效果。
+以上是字节、声明结构和DOM生命周期约束，不是实际解码器分配、传输内存、动画循环或播放时长保证。APNG完整播放、AVIF及音频资源治理、长期使用、正式消息媒体和完整P13仍开放；受控浏览器文件显示不证明动画帧推进或真实 Agent效果。
 
 ## 历史、查找、导出与复制
 
