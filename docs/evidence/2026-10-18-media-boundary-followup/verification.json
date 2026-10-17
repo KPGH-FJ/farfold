@@ -1,0 +1,231 @@
+{
+  "kind": "SelectedP13KnownExtentStoredAudioAndControlledPlaybackStage",
+  "recordedAtUtc": "2026-10-17T23:54:14.580818+00:00",
+  "sourceCommit": "3b4fd7b680ae4d3797a7a069825df4b9f61fd97d",
+  "scope": "Selected common P13 fixes, full engineering, controlled browsers and static formal installation. Not complete P13,29x8 or release acceptance.",
+  "formal": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "3b4fd7b680ae4d3797a7a069825df4b9f61fd97d",
+    "binarySha256": "5cc11310753aaf04c54e3fbd4ac4eca63c30a7b4efafb74d743e165072fe1b7f",
+    "installedUiOrRealMessagePlaybackTested": false
+  },
+  "implemented": [
+    "Definite local AVIF iloc ranges checked against file or idat for all parsed item types; external/unknown addressing remains uncovered.",
+    "WAVE playlists cannot hide independently known direct linear data alignment or600second stored-frame budget; unknown mapping/wavl/compression remains uncovered."
+  ],
+  "engineering": {
+    "commandsPassed": 7,
+    "inputCount": 19128,
+    "inputsStable": true,
+    "frontendFiles": 579,
+    "frontendPassed": 7618,
+    "rustPassed": 1787,
+    "rustIgnored": 6
+  },
+  "selectedChecks": {
+    "avifRootRed": {
+      "total": 19,
+      "passed": 10,
+      "semanticFailed": 9
+    },
+    "avifAffectedPassed": 164,
+    "audioOriginalSemanticFailed": 2,
+    "audioSameCasesGreen": 4,
+    "audioAffectedPassed": 508,
+    "completeIndependentPcmDecodeSeconds": 601,
+    "controlledBrowserClock": "Complete32044byte2secondPCM; Chrome10/10 and WebKit-r2 same10/10, each156stable. Explicit muted play advances clock; ancestor collapse pauses/removes/reloads;350ms observation stays source-free/paused; reopen does not auto-load.",
+    "webkitR1": "Actual exit1 despite10semantic pass:16sameoriginUUID blobs blocked by harness; resource types unobserved. Original kept. R2 only request classification/logging/output path changed;16actualimage blobs internal,0external."
+  },
+  "installation": {
+    "candidateIndependentPassed": 9,
+    "installedIndependentPassed": 10,
+    "fiveNewInodeAtomicFileReplacements": true,
+    "wholeBundleAtomicityClaimed": false,
+    "duplicateCandidateRemoved": true,
+    "archivePreserved": {
+      "path": "src-tauri/target/internal-candidate/2026-10-18-media-boundary-followup-3b4fd7b6/Farfold-0.1.7-3b4fd7b6.zip",
+      "sha256": "a6d1d951ee3adddd83deb6aef6d745bf8bcbf80cb1edbe34fe79975a4360b8b6"
+    }
+  },
+  "dataRetention": {
+    "manifests": [
+      {
+        "path": "output/2026-10-18-media-boundary-followup/install/install-data-before.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      },
+      {
+        "path": "output/2026-10-18-media-boundary-followup/install/install-data-preinstall.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      },
+      {
+        "path": "output/2026-10-18-media-boundary-followup/install/install-data-after.jsonl",
+        "sha256": "2650d29c31eb3eb8133f2ad6a5e098517df2bb2ad9a53b4ad5b9a55502d379dd"
+      }
+    ],
+    "eachEntries": 217407,
+    "strictThreeEqual": true,
+    "scope": "Fresh captured three-root manifests and metadata/raw-first seals only. No continuous absence, normalquit event, live/all-user-data equality or whole-userdata backup claim; earlier differences are not waived."
+  },
+  "agentTests": {
+    "run": false,
+    "reason": "NEW24 affected newreal sends paused; no Agent/model/service changed or new credentials used."
+  },
+  "remaining": [
+    "Initial32selected inputs match previous delivered baseline;11permission inputs unchanged. This batch subsequently changes relevant P13 source; NEW24 complete permission readback/effect timing unresolved and affected newreal sends paused.",
+    "Official AVIF control is complete but not decoded here; altered and synthetic extent cases only prove declarations. Unknown layouts, actual AV1/codec memory, animation and full media coverage remain open.",
+    "601secondCoreAudio decode is complete controlled PCM, not browser playlist execution. ShortbrowserPCM is muted clock evidence, not audible sound, full natural playback, decoder memory, installed App or realAgent.",
+    "Old shortAAC/FLAC failures, previous strict metadata differences/unknown writers and automatic-reopen causes retained.",
+    "P18 originalsample/NEW29 realbusy/P40 currentadoption/Ogg validlong still missing. Formal attachment search positives/Windows/all29x8/fullplan remain open."
+  ],
+  "evidence": [
+    {
+      "path": "output/2026-10-18-media-boundary-followup/conditions.json",
+      "sha256": "f7d2c767516f4b564eb80b7002b44333772e4fa9ee5d5932c6c6dd6a97684d79"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/source-freeze.json",
+      "sha256": "69370cbae6e710978741b78bc81d4c89edc72e2b47820e53fbbcb87c2fd9a877"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/source-review.json",
+      "sha256": "ed68543ba119f3ac862797cb3f320ef2fa6bdab09b3f1d6677812e56e94120ad"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/source-independent-review.json",
+      "sha256": "e7420b0b7b411e8c2410bad838a433f76132db8fca13a27b6137a51217a55ee4"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/source-checkpoint.json",
+      "sha256": "3847cf6cbcd34ec681385b9785be0295aa8fda88f1b403e4029de0b811389d57"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/engineering/run1/verification.json",
+      "sha256": "6eb757908e2df5e1bf68114a204bdfa4f12710387c9bd2c43fdb707485c144f9"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/engineering/execution-completion.json",
+      "sha256": "73858eb6053b9964f0c7a57af2607df1c702f007c69c2d684fafb79d40a3085c"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/avif-investigation/verification.json",
+      "sha256": "4245fa4967bd771286a7f705e529b31bd6c7051a5579d1dc62d11f08b1d5bf69"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/avif-investigation/root-before-fix.json",
+      "sha256": "75a42ab6a21ad338e262422f3a78f2bd114a09c0ee011cc85d69b24a200a34e4"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/avif-investigation/root-after-fix.json",
+      "sha256": "f32f39fc7c8a5c2c518964a1bf5fbd7a4e54226711e2ad32d70dce98e1aa2884"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/audio-investigation/verification.json",
+      "sha256": "f19c5d9f55d85992f1ca95087a084a5bf17985ed9464e9d6d345c83a363fb817"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/audio-investigation/complete-control-probe.json",
+      "sha256": "2cf92e0230d67345a80cd137e3c6ddaef818561128cb6e28383f02dca13c2943"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/audio-investigation/baseline-red.json",
+      "sha256": "af7a2f7c6279482dceccdcb3abfa06ffaf731ffae217d0a98d3b012f4fc40566"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/playback/chromium-verification.json",
+      "sha256": "569f8c4d366aaf42833f1f9ec1ef8c7ebc52ccca2bd946a55f29ea004db831e2"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/playback/webkit-verification.json",
+      "sha256": "c711018fdee26195e099ac040a28c1eb944956f36edba173d0c3be0fe38f6d16"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/playback/webkit-r2-verification.json",
+      "sha256": "406a6857ef570a70250cac249365a18c99047e566f1c6424843c78beca28af28"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/playback/execution-completion.json",
+      "sha256": "43a5d1676eaadaac5edd2ec3f569869b66cc011cf57e4e2a0155bae7135e7ae0"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/playback/harness-request-classification.json",
+      "sha256": "74ec5b62f1f76e49c19a1c67f7a84ce29ea321dc98b36d02beb97892917eecea"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/playback/results-independent-review.json",
+      "sha256": "beb8febd11b2ebcfee29ca948443ff23d5bd2e6d8d6ece0e64e2f1f2adb6607a"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "16ec424b77dfd9c10de6dcef719cb9bfd8a4b1402ba0c39b51d3916921e62c0b"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/candidate-preparation/candidate-build-completion.json",
+      "sha256": "b305091abe30faa80a5d08b75440e633314c3ef2c5e6adea2aedea704f4e923d"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/candidate-preparation/independent/review.json",
+      "sha256": "b434bc28e7429990b9e8aac28f63ad3ca499f64742a897998b89fb337ee48011"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/candidate-preparation/independent/nine-execution-completion.json",
+      "sha256": "db3d300a20b1934940e1065d25da179bf9f3a1a151dddc6a21526daefa36a755"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/candidate-preparation/root-review-preflight-path-correction.json",
+      "sha256": "f3765360f97a742de15ea6fd75b4bbfc8ac637625ec604b39c49a2b4e0b4229d"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/candidate-preparation/cleanup-binding.json",
+      "sha256": "6daa4a03f43c21751b4fde9a4ff6d732ca1d28a693dfbfc77b912951ab8335ce"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/candidate-preparation/cleanup-binding-r2.json",
+      "sha256": "b9f7521052f8b072d315b9df3a812a1a8607f5cc3dba9281f8681e93e8e6bfe2"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/install/install-result.json",
+      "sha256": "52bc16a478e29cce38ac4c37757d88f11b062c51d506c736e0d8a566684eb6da"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/install/install-execution-completion.json",
+      "sha256": "2b687ba8f33225956d53d965b0875a53868ba283baed0755b66e5dded24d70bc"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/install/installed-independent-review-private.json",
+      "sha256": "fd0f6403d91d1655f996e66c292401808e509d666fb197827792f0f1e8519c69"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/install/installed-ten-execution-completion.json",
+      "sha256": "6bf57e6e4e7d7c865069a82a84549d356e2992e7ecd27f7b4094d4d0ebb43d01"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/install/candidate-cleanup.json",
+      "sha256": "fe4b197a2a6c8f739f89950e6812353fe2aa2993e288307ec6635cb01d512776"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/install/candidate-cleanup-execution-completion.json",
+      "sha256": "0a3793087acabdec0a1cf7ec7945afa5db4d4af81ed6b8a6a9452e38634f1d9e"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/install/retention-before-receipt.json",
+      "sha256": "44c6582a15c924a4304be05849a4e98936b601da31d1a0f1d841a8f0ae9261e1"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/install/retention-preinstall-receipt.json",
+      "sha256": "a064d0ee84722d0c9aa838e987ac1b4b206c4d05d40b0de5f4d8aa58648be0f2"
+    },
+    {
+      "path": "output/2026-10-18-media-boundary-followup/install/retention-after-receipt.json",
+      "sha256": "badc62f9a298019027c48a5fbd611baf8d1c80cf09794056c24c44f8e64f08f7"
+    }
+  ],
+  "predecessor": {
+    "path": "docs/evidence/2026-10-18-media-next-stage/verification.json",
+    "sha256": "9887914bd18d63148586869da99f07e0c791b83b126f3ea7619cb8ac3dec636e"
+  },
+  "onlyActivePlan": "plans/agent-access.md",
+  "original151And29x8Unchanged": true
+}
