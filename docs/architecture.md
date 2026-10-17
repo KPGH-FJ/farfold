@@ -93,7 +93,7 @@ FLAC、ADTS与MPEG共用 [message_audio_prefix.ts](../src/runtime/message_audio_
 
 [message_mp4_audio_admission.ts](../src/runtime/message_mp4_audio_admission.ts) 另核首个`ftyp`的选定经典ISO/M4A容器，只遍历固定层级、有界盒范围及声明表，不读取`mdat`样本负载。对已识别`soun`音轨，以该轨刻度分别核`mdhd`时长与`stts`的样本计数乘间隔，沿600秒策略，64位值用BigInt比较；不取影片或视频时钟，也不把并行音轨、声道倍乘成时长。盒、品牌和时间表条目共享65536记录预算。未知版本/标志/品牌、零或未知时间、时钟不一致、编辑映射及分片保持部分覆盖，独立已知超限仍拒绝；不验证完整编解码内容，不推断去除AAC前导/尾部采样后的准确播放或实际内存。原允许MIME和播放字节保持，未知容器不通过搜索内部同步点猜测格式。
 
-[use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化按各自租约退役。[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 移除旧图片来源并处理重复挂载；音频暂停、清来源及重新加载沿其生命周期处理。可明确重试，不自动重复占用。
+[use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化只退役各自租约。当前媒体加载失败时，[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 先失效当前节点并移除来源，音频先暂停、清来源及重新加载，再通知共用持有者释放配额；迟到错误与失败节点的重复挂载不恢复来源。错误反馈、原文和来源信息由附件保留，显式重试重新申请配额后才创建媒体；配额不足单独提示，其他附件释放不会自动重试。
 
 以上是字节、已覆盖声明结构和DOM生命周期约束，不是实际解码器分配、传输内存、动画循环或播放时长保证。APNG/AVIF完整动画、未覆盖AVIF/音频资源边界、长期使用、正式消息媒体和完整P13仍开放；受控浏览器文件显示不证明动画帧推进或真实 Agent效果。
 

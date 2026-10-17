@@ -1,24 +1,22 @@
-import { useCallback, useId, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useLayoutEffect, useRef } from "react";
 import type { attachmentMedia } from "../runtime/message_attachments";
 import { MESSAGE_ATTACHMENTS as S } from "../runtime/message_attachment_strings";
 
 type Media = NonNullable<ReturnType<typeof attachmentMedia>>;
 
-/** The parent admits only attachmentMedia's embedded inert data, on the user's
- * explicit expansion. Its src key retires this state when the resource changes. */
+/** The owner grants this mounted preview a lease. It owns failure feedback and
+ * explicit retries, so a failed element must retire before returning its lease. */
 export function MessageAttachmentMedia({
   media,
   name,
+  onFailure,
 }: {
   media: Media;
   name: string;
+  onFailure(): void;
 }) {
-  const [failed, setFailed] = useState(false);
-  const [attempt, setAttempt] = useState(0);
-  const statusId = useId();
-  const wrapper = useRef<HTMLDivElement | null>(null);
   const node = useRef<HTMLImageElement | HTMLAudioElement | null>(null);
-  const owner = useRef({ live: false, attempt: 0, failed: false });
+  const owner = useRef({ live: false, failed: false });
   useLayoutEffect(() => {
     const current = owner.current;
     current.live = true;
@@ -26,94 +24,64 @@ export function MessageAttachmentMedia({
       current.live = false;
     };
   }, []);
+  const retire = (element: HTMLImageElement | HTMLAudioElement) => {
+    if (element.getAttribute("src") === null) return;
+    if (element.tagName === "AUDIO") {
+      const audio = element as HTMLAudioElement;
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
+    } else element.removeAttribute("src");
+  };
   const mediaRef = useCallback(
     (next: HTMLImageElement | HTMLAudioElement | null) => {
       const previous = node.current;
-      node.current = next;
-      // React may detach and reattach the same element without writing props
-      // again (including StrictMode ref replay). Restore only this exact already
-      // admitted source if our own detach cleared it; never use an external URI.
-      if (next && next.getAttribute("src") !== media.src)
+      node.current = owner.current.failed ? null : next;
+      // A ref replay may restore a live admitted source, never a failed one.
+      if (
+        next &&
+        !owner.current.failed &&
+        next.getAttribute("src") !== media.src
+      )
         next.setAttribute("src", media.src);
-      if (previous && previous !== next) {
-        // Retire only this element's source. Audio additionally stops playback;
-        // neither operation proves synchronous release of all codec resources.
-        if (previous.tagName === "AUDIO") {
-          const audio = previous as HTMLAudioElement;
-          audio.pause();
-          audio.removeAttribute("src");
-          audio.load();
-        } else previous.removeAttribute("src");
-      }
+      if (previous && previous !== next) retire(previous);
     },
     [media.src],
   );
-  const current = (element: HTMLElement) =>
-    owner.current.live &&
-    owner.current.attempt === attempt &&
-    node.current === element &&
-    element.isConnected;
-  const onError = (event: { currentTarget: HTMLElement }) => {
-    if (!current(event.currentTarget)) return;
-    owner.current.failed = true;
-    setFailed(true);
+  const onError = (event: {
+    currentTarget: HTMLImageElement | HTMLAudioElement;
+  }) => {
+    const current = owner.current;
+    const element = event.currentTarget;
+    if (
+      !current.live ||
+      current.failed ||
+      node.current !== element ||
+      !element.isConnected
+    )
+      return;
+    // pause/load can synchronously dispatch more events. Invalidate this owner
+    // first, clear only its source, then let the parent release its exact lease.
+    current.failed = true;
+    node.current = null;
+    retire(element);
+    onFailure();
   };
   return (
-    <div className="message-attachment-media" ref={wrapper} tabIndex={-1}>
+    <div className="message-attachment-media">
       {media.kind === "image" ? (
-        <img
-          key={attempt}
-          ref={mediaRef}
-          src={media.src}
-          alt={name}
-          onError={onError}
-          aria-describedby={failed ? statusId : undefined}
-        />
+        <img ref={mediaRef} src={media.src} alt={name} onError={onError} />
       ) : (
         <audio
-          key={attempt}
           ref={mediaRef}
           controls
           preload="none"
           src={media.src}
           aria-label={name}
           onError={onError}
-          aria-describedby={failed ? statusId : undefined}
         >
           {S.audioUnavailable}
         </audio>
-      )}
-      {failed && (
-        <div className="message-attachment-media-failure">
-          <p id={statusId} role="status">
-            {media.kind === "image" ? S.imageFailed : S.audioFailed}
-          </p>
-          <button
-            type="button"
-            onClick={(event) => {
-              const state = owner.current;
-              if (
-                !state.live ||
-                !state.failed ||
-                !event.currentTarget.isConnected
-              )
-                return;
-              state.failed = false;
-              state.attempt++;
-              // Preserve keyboard focus before removing the retry button. Do not
-              // pull focus back if the user has already moved elsewhere.
-              if (
-                document.activeElement === event.currentTarget &&
-                wrapper.current?.isConnected
-              )
-                wrapper.current.focus();
-              setFailed(false);
-              setAttempt(state.attempt);
-            }}
-          >
-            {S.retryMedia}
-          </button>
-        </div>
       )}
     </div>
   );

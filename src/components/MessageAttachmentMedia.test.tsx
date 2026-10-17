@@ -12,6 +12,7 @@ const h = vi.hoisted(() => ({
   cursor: 0,
   slots: [] as any[],
   effects: [] as (() => void)[],
+  failure: vi.fn(),
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -43,7 +44,6 @@ vi.mock("react", async (original) => ({
 }));
 import { MessageAttachmentMedia } from "./MessageAttachmentMedia";
 import { attachmentMedia } from "../runtime/message_attachments";
-import { MESSAGE_ATTACHMENTS as S } from "../runtime/message_attachment_strings";
 
 type Element = ReactElement<Record<string, any>>;
 type Media = NonNullable<ReturnType<typeof attachmentMedia>>;
@@ -58,7 +58,13 @@ function nodes(tree: ReactNode): Element[] {
 }
 function render(media: Media = image) {
   h.cursor = 0;
-  const tree = nodes(MessageAttachmentMedia({ media, name: "original name" }));
+  const tree = nodes(
+    MessageAttachmentMedia({
+      media,
+      name: "original name",
+      onFailure: h.failure,
+    }),
+  );
   for (const effect of h.effects.splice(0)) effect();
   return tree;
 }
@@ -88,82 +94,26 @@ beforeEach(() => {
   h.cursor = 0;
   h.slots = [];
   h.effects = [];
+  h.failure.mockReset();
 });
 afterEach(() => {
   for (const slot of h.slots) slot.cleanup?.();
   vi.unstubAllGlobals();
 });
 
-it.each([
-  [image, "img", S.imageFailed],
-  [audio, "audio", S.audioFailed],
-] as const)(
-  "reports the actual %s element error without discarding its source",
-  (media, kind, message) => {
-    let tree = render(media);
-    const before = structuredClone(media);
-    expect(tree.some((n) => n.props.role === "status")).toBe(false);
-    expect(tree.some((n) => n.type === "button")).toBe(false);
-    const node = attach(tree, kind);
-    fail(tree, kind, node);
-    tree = render(media);
-    expect(tree.find((n) => n.props.role === "status")?.props.children).toBe(
-      message,
-    );
-    expect(element(tree, kind).props.src).toBe(media.src);
-    expect(element(tree, kind).props["aria-describedby"]).toBe("media-error");
-    expect(element(tree, "button").props.children).toBe(S.retryMedia);
-    expect(media).toEqual(before);
-  },
-);
-
-it("reloads only the admitted bytes once per explicit retry and rejects the previous node", () => {
-  let tree = render();
-  const old = attach(tree, "img");
-  fail(tree, "img", old);
-  tree = render();
-  const retry = element(tree, "button").props.onClick;
-  const button = { isConnected: true };
-  vi.stubGlobal("document", { activeElement: button });
-  const wrapper = { isConnected: true, focus: vi.fn() };
-  element(tree, "div").props.ref.current = wrapper;
-  retry({ currentTarget: button });
-  retry({ currentTarget: button });
-  tree = render();
-  expect(element(tree, "img").key).toBe(".$1");
-  expect(element(tree, "img").props.src).toBe(image.src);
-  expect(tree.some((n) => n.props.role === "status")).toBe(false);
-  expect(wrapper.focus).toHaveBeenCalledOnce();
-  const next = attach(tree, "img");
-  fail(tree, "img", old);
-  expect(render().some((n) => n.props.role === "status")).toBe(false);
-  fail(tree, "img", next);
-  expect(render().some((n) => n.props.role === "status")).toBe(true);
-});
-
-it("does not steal focus when the user moved away from retry", () => {
-  let tree = render();
-  fail(tree, "img", attach(tree, "img"));
-  tree = render();
-  vi.stubGlobal("document", { activeElement: {} });
-  const wrapper = { isConnected: true, focus: vi.fn() };
-  element(tree, "div").props.ref.current = wrapper;
-  element(tree, "button").props.onClick({
-    currentTarget: { isConnected: true },
-  });
-  expect(wrapper.focus).not.toHaveBeenCalled();
-});
-
+// Error presentation and explicit retry now belong to the shared lease owner.
+// MessageContent.media-failure and use_message_media_budget cover that behavior;
+// MessageAttachmentMedia.failure covers ordered retirement before its callback.
 it("ignores detached errors and retired handlers after unmount", () => {
   const tree = render();
   const node = attach(tree, "img");
   node.isConnected = false;
   fail(tree, "img", node);
-  expect(render().some((n) => n.props.role === "status")).toBe(false);
+  expect(h.failure).not.toHaveBeenCalled();
   for (const slot of h.slots) slot.cleanup?.();
   node.isConnected = true;
   fail(tree, "img", node);
-  expect(render().some((n) => n.props.role === "status")).toBe(false);
+  expect(h.failure).not.toHaveBeenCalled();
 });
 
 it("keeps audio user-initiated and releases only its own detached element", () => {

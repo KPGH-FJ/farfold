@@ -19,6 +19,7 @@ export function useMessageMediaPreview(
     admission: typeof admission;
     attempt: number;
     lease: MessageMediaLease | null;
+    failed: boolean;
   } | null>(null);
 
   useLayoutEffect(() => {
@@ -30,7 +31,7 @@ export function useMessageMediaPreview(
     const data = attachment.data!;
     const padding = data.endsWith("==") ? 2 : data.endsWith("=") ? 1 : 0;
     const lease = messageMediaBudget.acquire((data.length / 4) * 3 - padding);
-    setResult({ admission, attempt, lease });
+    setResult({ admission, attempt, lease, failed: false });
     // Each acquisition has its own idempotent release. A late/StrictMode
     // cleanup cannot free another owner or a later acquisition.
     return () => lease?.release();
@@ -41,8 +42,18 @@ export function useMessageMediaPreview(
   return {
     admission,
     media: available && current && result.lease ? admission.media : null,
-    budgetRejected: available && current && !result.lease,
+    failed: available && current && result.failed,
+    budgetRejected: available && current && !result.failed && !result.lease,
     pending: available && !current,
+    fail: () => {
+      if (!current || !result?.lease || result.failed) return;
+      result.lease.release();
+      setResult((previous) =>
+        previous === result
+          ? { ...previous, lease: null, failed: true }
+          : previous,
+      );
+    },
     // No automatic retry on another preview's release. Only a current visible
     // retry button advances this instance's attempt.
     retry: () => setAttempt((value) => value + 1),

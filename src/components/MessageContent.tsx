@@ -160,7 +160,8 @@ function MessageAttachment({
     if (!mediaVisible && expansion.userOpen) expansion.choose(false);
   }, [mediaVisible, expansion.userOpen, expansion.choose]);
   // Search may reveal loaded text, but only the user's own expansion admits media.
-  const { admission, media, budgetRejected, pending, retry } =
+  const failureStatusId = useId();
+  const { admission, media, failed, budgetRejected, pending, fail, retry } =
     useMessageMediaPreview(attachment, expansion.userOpen && mediaVisible);
   const mediaRejected = admission?.status === "rejected";
   const mediaWaiting =
@@ -170,6 +171,7 @@ function MessageAttachment({
   return (
     <details
       className="message-attachment"
+      aria-describedby={failed || budgetRejected ? failureStatusId : undefined}
       ref={expansion.ref}
       open={expansion.open}
       onToggle={expansion.onToggle}
@@ -208,6 +210,7 @@ function MessageAttachment({
             key={media.src}
             media={media}
             name={attachment.name}
+            onFailure={fail}
           />
         )}
         {attachment.uri && (
@@ -241,9 +244,16 @@ function MessageAttachment({
           </p>
         )}
         {pending && <p role="status">{A.mediaPreparing}</p>}
-        {budgetRejected && (
+        {(failed || budgetRejected) && (
           <div className="message-attachment-media-failure">
-            <p role="status">{A.mediaBudgetReached}</p>
+            <p id={failureStatusId} role="status">
+              {budgetRejected
+                ? A.mediaBudgetReached
+                : admission?.status === "available" &&
+                    admission.media.kind === "audio"
+                  ? A.audioFailed
+                  : A.imageFailed}
+            </p>
             <button
               type="button"
               onClick={(event) => {
