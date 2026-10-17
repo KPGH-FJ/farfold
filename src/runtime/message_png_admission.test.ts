@@ -1,4 +1,5 @@
 import { expect, it, vi } from "vitest";
+import { MESSAGE_AVIF_TEST_DATA } from "./message_avif_fixtures.test-support";
 import { attachmentMediaAdmission } from "./message_attachments";
 import { PNG_IMAGE_TEST_DATA } from "./image_fixtures.test-support";
 import { MESSAGE_RASTER_TEST_DATA } from "./message_raster_fixtures.test-support";
@@ -146,11 +147,16 @@ it("keeps the exact small PNG and other supported non-PNG sources unchanged", ()
       status: "available",
       media: { kind: "image", src: `data:image/${mime};base64,${data}` },
     });
-  // AVIF metadata admission remains outside this slice; its browser decoding
-  // outcome is not inferred from Base64 admission.
-  expect(attachmentMediaAdmission(image("YWJj", "image/avif")).status).toBe(
-    "available",
-  );
+  // A complete official tiny AVIF is the positive control; malformed bytes do
+  // not become supported image data merely by using an allowed MIME.
+  expect(
+    attachmentMediaAdmission(image(MESSAGE_AVIF_TEST_DATA.STATIC, "image/avif"))
+      .status,
+  ).toBe("available");
+  expect(attachmentMediaAdmission(image("YWJj", "image/avif"))).toEqual({
+    status: "rejected",
+    reason: "invalid",
+  });
   expect(attachmentMediaAdmission(image("YWJj", "image/svg+xml"))).toEqual({
     status: "unavailable",
   });

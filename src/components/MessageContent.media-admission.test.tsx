@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { MessageAttachments } from "./MessageContent";
 import { PNG_IMAGE_TEST_DATA } from "../runtime/image_fixtures.test-support";
 import { MESSAGE_RASTER_TEST_DATA as F } from "../runtime/message_raster_fixtures.test-support";
+import { AUDIO_FIXTURE_DATA } from "../runtime/audio_input.test-support";
 
 const h = vi.hoisted(() => ({ userOpen: true }));
 vi.mock("./transcript-search", () => ({
@@ -85,7 +86,7 @@ it("does not acquire media before mounting and preserves explicit remote links",
     <MessageAttachments
       attachments={[
         { name: "Exact PNG", data: PNG_IMAGE_TEST_DATA, mimeType: "image/png" },
-        { name: "Audio", data: "YXVkaW8=", mimeType: "audio/wav" },
+        { name: "Audio", data: AUDIO_FIXTURE_DATA, mimeType: "audio/wav" },
         {
           name: "Remote",
           uri: "https://example.com/remote.png",

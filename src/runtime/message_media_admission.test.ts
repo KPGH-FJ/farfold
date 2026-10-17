@@ -4,6 +4,10 @@ import {
   attachmentMediaAdmission,
   normalizeMessageAttachment,
 } from "./message_attachments";
+import {
+  AUDIO_FIXTURE_DATA,
+  largeAudioCapture,
+} from "./audio_input.test-support";
 
 const limit = 16 * 1024 * 1024;
 const encodedLimit = 4 * Math.ceil(limit / 3);
@@ -55,14 +59,17 @@ it.each(["AAA=", "AAAA"])(
   },
 );
 
-it("admits the exact byte limit and canonical one/two/three-byte groups", () => {
-  const data = "AAAA".repeat(Math.floor(limit / 3)) + "AA==";
+it("admits a complete independent WAV at the exact byte limit", () => {
+  const data = largeAudioCapture().data;
   const media = attachmentMedia(source(data, "audio/wav"));
   expect(media?.kind).toBe("audio");
   expect(media?.src.length).toBe(data.length + "data:audio/wav;base64,".length);
+});
+
+it("keeps canonical Base64 groups available to an uncovered codec without claiming decode success", () => {
   for (const value of ["Zg==", "Zm8=", "Zm9v"])
-    expect(attachmentMedia(source(value, "audio/wav"))?.src).toBe(
-      `data:audio/wav;base64,${value}`,
+    expect(attachmentMedia(source(value, "audio/mpeg"))?.src).toBe(
+      `data:audio/mpeg;base64,${value}`,
     );
 });
 
@@ -146,7 +153,7 @@ it("retains declared kinds, sources and bytes in original projection order after
     },
     {
       type: "audio",
-      data: "YXVkaW8=",
+      data: AUDIO_FIXTURE_DATA,
       mimeType: "audio/wav",
       uri: "file:///owned/second.wav",
     },

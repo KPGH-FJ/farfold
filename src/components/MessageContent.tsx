@@ -226,7 +226,11 @@ function MessageAttachment({
                 ? A.mediaTooManyPixels
                 : admission.reason === "tooComplex"
                   ? A.mediaTooComplex
-                  : A.mediaInvalid}
+                  : admission.reason === "audioTooLong"
+                    ? A.audioTooLong
+                    : admission.reason === "audioTooComplex"
+                      ? A.audioTooComplex
+                      : A.mediaInvalid}
           </p>
         )}
         {pending && <p role="status">{A.mediaPreparing}</p>}

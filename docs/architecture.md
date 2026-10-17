@@ -2,7 +2,7 @@
 
 更新：2026-10-17。本页说明当前源码的职责与约束；产品要求以 [PRODUCT.md](../PRODUCT.md) 为准，实际通过、失败、未测和接续安排分别见[当前状态](status.md)与[唯一活动计划](../plans/agent-access.md)。
 
-唯一正式应用为 /Applications/Farfold.app，标识 ai.farfold.desktop，内部版本0.1.7、macOS arm64；最近安装的功能源码为 b754a158479fdc944ea1ee0fbdf425d71093b273。后续文档或测试整理提交不等于重新安装。该图片保护批次没有启动新版验证正式消息媒体，受控样本与安装静态核验不构成真实 Agent 或P13整项验收。
+唯一正式应用为 /Applications/Farfold.app，标识 ai.farfold.desktop，内部版本0.1.7、macOS arm64；实际安装的功能源码、程序摘要与验证范围集中见[当前状态](status.md)。后续文档或测试整理提交不等于重新安装，受控样本与安装静态核验不构成真实 Agent 或P13整项验收。
 
 本次整理前的完整架构记录已逐字保存在[原文快照](archive/2026-10-17-documentation-alignment/docs/architecture.md)，包括各批安装、成功、失败与未知记录，其他原件见[归档索引](archive/2026-10-17-documentation-alignment/INDEX.md)。快照内的相对链接按其原位置 docs/architecture.md 解析；整理前仓库提交为 e3be55b4ba5cf385cb39bdf523feb75c5a26edf6。快照中的“当前”“下一步”和最初只读网页片段属于当时记录，不是本页的现行接口目录。
 
@@ -71,13 +71,17 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 ## 消息图片与音频预览
 
-收到的媒体由 [message_attachments.ts](../src/runtime/message_attachments.ts) 保留原payload与顺序，仅对允许MIME、规范Base64及单项最多16 MiB做预览准入。显式展开才生成媒体DOM；搜索、折叠、普通消息呈现不自动加载媒体。远程地址不因预览而抓取，未知格式与原协议内容仍保留。
+收到的媒体由 [message_attachments.ts](../src/runtime/message_attachments.ts) 保留原payload与顺序，先核允许MIME、规范Base64及单项最多16 MiB，再核下述已覆盖的声明结构。显式展开才生成媒体DOM；搜索、折叠、普通消息呈现不自动加载媒体。远程地址不因预览而抓取，未知格式与原协议内容仍保留。
 
 PNG检查签名、IHDR和有界容器布局；[message_apng_admission.ts](../src/runtime/message_apng_admission.ts) 核APNG控制块、帧序号、矩形与声明数量。JPEG、GIF、WebP、BMP由 [message_raster_admission.ts](../src/runtime/message_raster_admission.ts) 分派。支持范围内画布每边最多8192像素、总量最多16,777,216像素。GIF/WebP/APNG另限128动画帧、完整画布像素乘帧数最多67,108,864、遍历记录最多65,536；APNG独立默认图额外计入像素总量。PNG/APNG固定控制数据核CRC，压缩像素与其他负载不做全量CRC或解压；标准`image/apng`复用同一PNG准入。跨允许MIME标注的已识别格式也受相应约束。
 
+AVIF入口 [message_avif_admission.ts](../src/runtime/message_avif_admission.ts) 使用有界容器、项目关联及序列检查，核已识别的画布、派生图片、辅助图片和样本声明，并沿共用画布、帧数、像素工作量与记录预算计额。容器尺寸不等于AV1位流的最大或中间帧尺寸；未知版本、编码布局及缺少可计额声明的兼容内容保持原支持，明确留为未覆盖，不能据此宣称全部AVIF受同样资源约束。
+
+音频入口 [message_audio_admission.ts](../src/runtime/message_audio_admission.ts) 仅对已识别经典RIFF/WAVE做容器边界、填充和有界分片遍历；明确的线性PCM、IEEE浮点及标准扩展格式才按data字节、帧对齐和采样率核算，并采用600秒的消息预览策略。未知压缩编码、其他容器、wavl和播放列表保持原播放路径，不套用PCM时长公式。该策略不等于格式限制、实际播放/循环时长或解码与重采样内存保证。
+
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化按各自租约退役。[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 移除旧图片来源并处理重复挂载；音频暂停、清来源及重新加载沿其生命周期处理。可明确重试，不自动重复占用。
 
-以上是字节、声明结构和DOM生命周期约束，不是实际解码器分配、传输内存、动画循环或播放时长保证。APNG完整播放、AVIF及音频资源治理、长期使用、正式消息媒体和完整P13仍开放；受控浏览器文件显示不证明动画帧推进或真实 Agent效果。
+以上是字节、已覆盖声明结构和DOM生命周期约束，不是实际解码器分配、传输内存、动画循环或播放时长保证。APNG/AVIF完整动画、未覆盖AVIF/音频资源边界、长期使用、正式消息媒体和完整P13仍开放；受控浏览器文件显示不证明动画帧推进或真实 Agent效果。
 
 ## 历史、查找、导出与复制
 

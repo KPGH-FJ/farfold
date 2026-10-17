@@ -1,6 +1,7 @@
 import { expect, it, vi } from "vitest";
 import { attachmentMediaAdmission } from "./message_attachments";
 import { MESSAGE_RASTER_TEST_DATA as F } from "./message_raster_fixtures.test-support";
+import { AUDIO_FIXTURE_DATA } from "./audio_input.test-support";
 
 const source = (data: string, mimeType: string) => ({
   kind: "image" as const,
@@ -90,9 +91,14 @@ it("retains prior byte/encoding precedence and does not route audio into raster 
         status: "rejected",
         reason: "invalid",
       });
-    expect(attachmentMediaAdmission(source("YWJj", "audio/wav"))).toEqual({
+    expect(
+      attachmentMediaAdmission(source(AUDIO_FIXTURE_DATA, "audio/wav")),
+    ).toEqual({
       status: "available",
-      media: { kind: "audio", src: "data:audio/wav;base64,YWJj" },
+      media: {
+        kind: "audio",
+        src: `data:audio/wav;base64,${AUDIO_FIXTURE_DATA}`,
+      },
     });
     expect(decode).not.toHaveBeenCalled();
   } finally {

@@ -2,6 +2,8 @@ import type { Attachment, ThreadItem } from "./session_types";
 import { MESSAGE_ATTACHMENTS } from "./message_attachment_strings";
 import { messagePngAdmission } from "./message_png_admission";
 import { messageRasterAdmission } from "./message_raster_admission";
+import { messageAudioAdmission } from "./message_audio_admission";
+import { messageAvifAdmission } from "./message_avif_admission";
 
 function record(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -108,7 +110,13 @@ export type MessageMediaAdmission =
   | { status: "unavailable" }
   | {
       status: "rejected";
-      reason: "tooLarge" | "invalid" | "tooManyPixels" | "tooComplex";
+      reason:
+        | "tooLarge"
+        | "invalid"
+        | "tooManyPixels"
+        | "tooComplex"
+        | "audioTooLong"
+        | "audioTooComplex";
     };
 
 function base64Value(code: number): number {
@@ -118,9 +126,10 @@ function base64Value(code: number): number {
   return code === 43 ? 62 : code === 47 ? 63 : -1;
 }
 
-/** Preview-only byte and declared raster metadata admission. Original payload,
- * transport, actual decoder memory, audio duration and AVIF resources are not
- * bounded here. PNG/APNG receives only structural/declaration admission,
+/** Preview-only byte and declared image/audio metadata admission. Original payload,
+ * transport and actual decoder memory are not bounded here. Recognized linear
+ * WAVE receives a stored-data duration policy; other audio stays uncovered.
+ * PNG/APNG receives only structural/declaration admission,
  * including animation frame work; actual playback remains unverified.
  * No URL is created before the checks.
  * Remote links are never fetched. No payload trim, decode or URL precedes the
@@ -166,10 +175,28 @@ export function attachmentMediaAdmission(
     if (png !== "withinBudget" && png !== "notPng")
       return { status: "rejected", reason: png };
     if (png === "notPng") {
-      const raster = messageRasterAdmission(data, mime!);
-      if (raster !== "withinBudget" && raster !== "notCovered")
-        return { status: "rejected", reason: raster };
+      // Identify AVIF before a declared JPEG/GIF/etc. mismatch can short-circuit
+      // its known declarations. Keep actual raster signatures under image/avif
+      // on their existing path, and preserve uncovered AVIF variants.
+      const avif = messageAvifAdmission(data, false);
+      if (
+        avif !== "withinBudget" &&
+        avif !== "notCovered" &&
+        avif !== "notAvif"
+      )
+        return { status: "rejected", reason: avif };
+      if (avif === "notAvif") {
+        const raster = messageRasterAdmission(data, mime!);
+        if (raster !== "withinBudget" && raster !== "notCovered")
+          return { status: "rejected", reason: raster };
+        if (raster === "notCovered" && mime === "image/avif")
+          return { status: "rejected", reason: "invalid" };
+      }
     }
+  } else {
+    const audio = messageAudioAdmission(data, mime!);
+    if (audio !== "withinBudget" && audio !== "notCovered")
+      return { status: "rejected", reason: audio };
   }
   return {
     status: "available",

@@ -12,7 +12,7 @@ import {
 
 /** Called after canonical Base64, byte admission and the existing PNG check.
  * Actual signatures are checked across all allowed image MIME declarations.
- * AVIF and PNG animation are outside this structural preflight. The browser
+ * PNG/APNG and AVIF preflights belong to the caller. The browser
  * remains responsible for decoding; these declarations do not bound its heap. */
 export function messageRasterAdmission(
   data: string,
