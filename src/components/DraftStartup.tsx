@@ -41,6 +41,8 @@ export function DraftStartup({ children }: { children: ReactNode }) {
   const currentExit = useRef<number | null>(null);
   const restartingExit = useRef<number | null>(null);
   const saveAttempt = useRef(0);
+  const cancelRequest = useRef<{ token: number; attempt: number } | null>(null);
+  const exitInteraction = useRef<(() => void) | null>(null);
   const [startupError, setStartupError] = useState(false);
   const [retry, setRetry] = useState(0);
   const [exitReadError, setExitReadError] = useState<string | null>(null);
@@ -49,9 +51,20 @@ export function DraftStartup({ children }: { children: ReactNode }) {
   const [readsSettled, setReadsSettled] = useState(false);
   const [backendCopyReview, setBackendCopyReview] = useState(false);
   const [backendWorktreeReview, setBackendWorktreeReview] = useState(false);
+  const [cancellingExit, setCancellingExit] = useState<number | null>(null);
+  const releaseExitInteraction = () => {
+    const release = exitInteraction.current;
+    exitInteraction.current = null;
+    release?.();
+  };
   const cancelExit = async (token: number) => {
-    if (currentExit.current !== token) return;
+    if (currentExit.current !== token || cancelRequest.current?.token === token)
+      return;
     const attempt = ++saveAttempt.current;
+    const request = { token, attempt };
+    cancelRequest.current = request;
+    setCancellingExit(token);
+    setCancelError(false);
     try {
       await invoke("app_exit_cancel", { token });
       if (currentExit.current !== token || saveAttempt.current !== attempt)
@@ -61,11 +74,16 @@ export function DraftStartup({ children }: { children: ReactNode }) {
       setExitToken(null);
       setExitError(false);
       setCancelError(false);
-      draftPersistence.lockInteraction(false);
+      releaseExitInteraction();
       // A cancelled quit never resumes queues or retries requests.
     } catch {
       if (currentExit.current === token && saveAttempt.current === attempt)
         setCancelError(true);
+    } finally {
+      if (cancelRequest.current === request) {
+        cancelRequest.current = null;
+        setCancellingExit(null);
+      }
     }
   };
   const saveAndExit = async (
@@ -73,6 +91,8 @@ export function DraftStartup({ children }: { children: ReactNode }) {
     confirmActivity = false,
     restarting = false,
   ) => {
+    // A repeated quit event cannot supersede this owner's pending withdrawal.
+    if (cancelRequest.current?.token === token) return;
     if (restarting) restartingExit.current = token;
     else if (currentExit.current !== token) restartingExit.current = null;
     currentExit.current = token;
@@ -83,8 +103,9 @@ export function DraftStartup({ children }: { children: ReactNode }) {
     setCancelError(false);
     setBackendCopyReview(false);
     setBackendWorktreeReview(false);
+    setCancellingExit(null);
     threads.pauseQueuesForExit();
-    draftPersistence.lockInteraction(true);
+    exitInteraction.current ??= draftPersistence.acquireInteractionLock();
     if (
       hasUnsettledFileCopies() ||
       (!confirmActivity &&
@@ -97,6 +118,8 @@ export function DraftStartup({ children }: { children: ReactNode }) {
     setExitReview(null);
     try {
       await Promise.all([draftPersistence.flush(), setupStorage.flush()]);
+      if (currentExit.current !== token || saveAttempt.current !== attempt)
+        return;
       // Include replies received while other metadata was being saved. A failed
       // read without any unread edits is unrelated to this exit's save barrier.
       await conversationReadState.flushPending().catch((reason) => {
@@ -133,7 +156,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
         setExitReview(token);
         return;
       }
-      draftPersistence.lockInteraction(false);
+      releaseExitInteraction();
       setExitError(true);
     }
   };
@@ -178,6 +201,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
           setExitToken(null);
           setExitError(false);
           setExitReview(null);
+          releaseExitInteraction();
         },
       );
       if (!active) {
@@ -193,6 +217,10 @@ export function DraftStartup({ children }: { children: ReactNode }) {
     return () => {
       active = false;
       unlisteners.forEach((off) => off());
+      currentExit.current = null;
+      saveAttempt.current++;
+      cancelRequest.current = null;
+      releaseExitInteraction();
     };
   }, [retry]);
   if (status.ready && setup.ready && connected)
@@ -202,6 +230,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
         {exitReview !== null && (
           <WorkspaceDialog
             title={E.title}
+            busy={cancellingExit === exitReview}
             onClose={() => void cancelExit(exitReview)}
           >
             <div className="workspace-dialog-body">
@@ -219,12 +248,16 @@ export function DraftStartup({ children }: { children: ReactNode }) {
               ) : null}
               <FileCopyJobsStatus />
               <ConversationArchiveJobsStatus />
+              {cancellingExit === exitReview && (
+                <p role="status">{E.cancelling}</p>
+              )}
               {cancelError && <p role="alert">{E.cancelFailed}</p>}
             </div>
             <footer>
               <button
                 type="button"
                 className="btn"
+                disabled={cancellingExit === exitReview}
                 onClick={() => void cancelExit(exitReview)}
               >
                 {E.stay}
@@ -232,7 +265,11 @@ export function DraftStartup({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 className="btn btn-primary"
-                disabled={copying || backendWorktreeReview}
+                disabled={
+                  copying ||
+                  backendWorktreeReview ||
+                  cancellingExit === exitReview
+                }
                 onClick={() => void saveAndExit(exitReview, true)}
               >
                 {E.exit}
@@ -240,20 +277,51 @@ export function DraftStartup({ children }: { children: ReactNode }) {
             </footer>
           </WorkspaceDialog>
         )}
+        {exitToken !== null &&
+          restartingExit.current !== exitToken &&
+          exitReview === null &&
+          !exitError && (
+            <WorkspaceDialog
+              title={E.title}
+              busy={cancellingExit === exitToken}
+              onClose={() => void cancelExit(exitToken)}
+            >
+              <div className="workspace-dialog-body">
+                <p role="status">
+                  {cancellingExit === exitToken ? E.cancelling : E.waiting}
+                </p>
+                <p>{E.waitingNote}</p>
+                {cancelError && <p role="alert">{E.cancelFailed}</p>}
+              </div>
+              <footer>
+                <button
+                  type="button"
+                  className="btn"
+                  disabled={cancellingExit === exitToken}
+                  onClick={() => void cancelExit(exitToken)}
+                >
+                  {E.stay}
+                </button>
+              </footer>
+            </WorkspaceDialog>
+          )}
         {exitError && (
           <div className="draft-exit-error" role="alert">
             <span>
-              {cancelError
-                ? E.cancelFailed
-                : (exitReadError ??
-                  setup.error ??
-                  status.error ??
-                  DRAFT_STRINGS.saveFailed)}
+              {cancellingExit === exitToken
+                ? E.cancelling
+                : cancelError
+                  ? E.cancelFailed
+                  : (exitReadError ??
+                    setup.error ??
+                    status.error ??
+                    DRAFT_STRINGS.saveFailed)}
             </span>
             {restartingExit.current !== exitToken && (
               <button
                 type="button"
                 className="btn"
+                disabled={cancellingExit === exitToken}
                 onClick={() => {
                   if (exitToken !== null) void cancelExit(exitToken);
                 }}
@@ -264,6 +332,7 @@ export function DraftStartup({ children }: { children: ReactNode }) {
             <button
               type="button"
               className="btn"
+              disabled={cancellingExit === exitToken}
               onClick={() => {
                 if (exitToken !== null) void saveAndExit(exitToken);
               }}

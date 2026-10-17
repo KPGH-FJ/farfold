@@ -1,5 +1,6 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
+import { PNG_IMAGE_TEST_DATA } from "../runtime/image_fixtures.test-support";
 import {
   Children,
   isValidElement,
@@ -115,7 +116,7 @@ it("renders declared tool media and resources safely without reading files or lo
     title: "Media result",
     status: "completed",
     content: [
-      { type: "image", data: "aW1hZ2U=", mimeType: "image/png" },
+      { type: "image", data: PNG_IMAGE_TEST_DATA, mimeType: "image/png" },
       { type: "audio", data: "YXVkaW8=", mimeType: "audio/wav" },
       {
         type: "resource",

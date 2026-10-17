@@ -103,3 +103,61 @@ it("does not acquire media before mounting and preserves explicit remote links",
   expect(html).not.toContain('src="https://');
   expect(html).toContain('href="https://example.com/remote.png"');
 });
+
+// Real small-PNG bytes with only IHDR changed and CRC recomputed; never decode
+// this large declared canvas. SSR proves refusal markup, not mounted resources.
+const largePng =
+  "iVBORw0KGgoAAAANSUhEUgAAIAEAAAABCAIAAAAW69wJAAAAD0lEQVR4nGP4z8DA0PAfAAgAAn+cRUBOAAAAAElFTkSuQmCC";
+
+it.each(["image/png", "image/jpeg"])(
+  "preserves source and order when a PNG canvas is refused under %s",
+  (mimeType) => {
+    const attachment = {
+      name: "Original canvas",
+      uri: "file:///owned/canvas.png",
+      mimeType,
+      data: largePng,
+    };
+    const before = JSON.stringify(attachment);
+    const html = renderToStaticMarkup(
+      <MessageAttachments
+        attachments={[
+          attachment,
+          { name: "After canvas", text: "Following body" },
+        ]}
+      />,
+    );
+    expect(html).toContain("图片尺寸过大");
+    expect(html).toContain("file:///owned/canvas.png");
+    expect(html).not.toContain("<img");
+    expect(html).not.toContain("<audio");
+    expect(html).not.toContain("data:image");
+    expect(html).not.toContain("正在准备媒体");
+    expect(html).not.toContain("重新载入");
+    expect(html.indexOf("Original canvas")).toBeLessThan(
+      html.indexOf("After canvas"),
+    );
+    expect(html).toContain("Following body");
+    expect(JSON.stringify(attachment)).toBe(before);
+  },
+);
+
+it("does not inspect the PNG header for a search-only expansion", () => {
+  h.userOpen = false;
+  const atob = vi.spyOn(globalThis, "atob");
+  try {
+    const html = renderToStaticMarkup(
+      <MessageAttachments
+        attachments={[
+          { name: "Search canvas", mimeType: "image/png", data: largePng },
+        ]}
+      />,
+    );
+    expect(atob).not.toHaveBeenCalled();
+    expect(html).not.toContain("图片尺寸过大");
+    expect(html).not.toContain("<img");
+    expect(html).toContain("Search canvas");
+  } finally {
+    atob.mockRestore();
+  }
+});

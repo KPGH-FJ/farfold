@@ -220,7 +220,11 @@ function MessageAttachment({
         )}
         {admission?.status === "rejected" && (
           <p role="status">
-            {admission.reason === "tooLarge" ? A.mediaTooLarge : A.mediaInvalid}
+            {admission.reason === "tooLarge"
+              ? A.mediaTooLarge
+              : admission.reason === "tooManyPixels"
+                ? A.mediaTooManyPixels
+                : A.mediaInvalid}
           </p>
         )}
         {pending && <p role="status">{A.mediaPreparing}</p>}

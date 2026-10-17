@@ -61,8 +61,8 @@ it("admits the exact byte limit and canonical one/two/three-byte groups", () => 
   expect(media?.kind).toBe("audio");
   expect(media?.src.length).toBe(data.length + "data:audio/wav;base64,".length);
   for (const value of ["Zg==", "Zm8=", "Zm9v"])
-    expect(attachmentMedia(source(value))?.src).toBe(
-      `data:image/png;base64,${value}`,
+    expect(attachmentMedia(source(value, "audio/wav"))?.src).toBe(
+      `data:audio/wav;base64,${value}`,
     );
 });
 

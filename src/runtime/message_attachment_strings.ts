@@ -8,6 +8,7 @@ export const MESSAGE_ATTACHMENTS = {
   previewUnavailable: "此附件暂不支持预览",
   mediaTooLarge: "此媒体超过 16 MiB，本次未加载；消息原文和来源仍已保留。",
   mediaInvalid: "媒体数据格式无法读取，消息原文和来源仍已保留。",
+  mediaTooManyPixels: "图片尺寸过大，本次未加载；消息原文和来源仍已保留。",
   mediaBudgetReached:
     "当前打开的媒体较多，请先收起其他图片或音频，再重新载入。消息原文和来源仍已保留。",
   mediaPreparing: "正在准备媒体…",

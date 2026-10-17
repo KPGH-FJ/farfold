@@ -1,5 +1,6 @@
 import type { Attachment, ThreadItem } from "./session_types";
 import { MESSAGE_ATTACHMENTS } from "./message_attachment_strings";
+import { messagePngAdmission } from "./message_png_admission";
 
 function record(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -104,7 +105,7 @@ type MessageMedia = { kind: "image" | "audio"; src: string };
 export type MessageMediaAdmission =
   | { status: "available"; media: MessageMedia }
   | { status: "unavailable" }
-  | { status: "rejected"; reason: "tooLarge" | "invalid" };
+  | { status: "rejected"; reason: "tooLarge" | "invalid" | "tooManyPixels" };
 
 function base64Value(code: number): number {
   if (code >= 65 && code <= 90) return code - 65;
@@ -114,7 +115,8 @@ function base64Value(code: number): number {
 }
 
 /** Preview-only byte admission. Original payload/transport memory, decoded
- * image pixels, duration and aggregate media resources are not bounded here.
+ * decoded pixels, duration and actual media resources are not bounded here.
+ * PNG additionally checks only its declared IHDR canvas before creating a URL.
  * Remote links are never fetched. No payload trim, decode or URL precedes the
  * constant-time length gate; the admitted alphabet scan has no regex backtracking. */
 export function attachmentMediaAdmission(
@@ -150,6 +152,11 @@ export function attachmentMediaAdmission(
   // Padding belongs only to the final quartet. Its unused bits must be zero.
   if ((padding === 2 && tail % 16 !== 0) || (padding === 1 && tail % 4 !== 0))
     return { status: "rejected", reason: "invalid" };
+  if (kind === "image") {
+    const png = messagePngAdmission(data, mime === "image/png");
+    if (png === "invalid" || png === "tooManyPixels")
+      return { status: "rejected", reason: png };
+  }
   return {
     status: "available",
     media: { kind, src: `data:${mime};base64,${data}` },

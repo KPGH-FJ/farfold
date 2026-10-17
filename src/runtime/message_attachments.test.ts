@@ -7,6 +7,7 @@ import {
 } from "./message_attachments";
 import { localMessageAttachments } from "./prompt_blocks";
 import { documentBlock } from "./docx_draft.test-support";
+import { PNG_IMAGE_TEST_DATA } from "./image_fixtures.test-support";
 
 describe("declared message attachments", () => {
   it("matches an official DOCX echo without losing the outgoing source choice or trusting incoming metadata", () => {
@@ -115,10 +116,13 @@ describe("declared message attachments", () => {
     expect(
       attachmentMedia({
         name: "image",
-        data: "aW1hZ2U=",
+        data: PNG_IMAGE_TEST_DATA,
         mimeType: "image/png",
       }),
-    ).toEqual({ kind: "image", src: "data:image/png;base64,aW1hZ2U=" });
+    ).toEqual({
+      kind: "image",
+      src: `data:image/png;base64,${PNG_IMAGE_TEST_DATA}`,
+    });
     expect(
       attachmentMedia({
         name: "remote",

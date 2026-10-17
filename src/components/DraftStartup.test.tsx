@@ -10,12 +10,14 @@ const h = vi.hoisted(() => ({
   setupFlush: vi.fn(),
   readFlush: vi.fn(),
   lock: vi.fn(),
+  acquireLock: vi.fn(),
   active: false,
   copying: false,
   unknownCopy: false,
   stateCursor: 0,
   refCursor: 0,
   refs: [] as { current: unknown }[],
+  cleanup: () => {},
 }));
 vi.mock("react", async (original) => ({
   ...(await original<typeof import("react")>()),
@@ -43,6 +45,7 @@ vi.mock("../runtime/drafts", () => ({
     load: async () => undefined,
     flush: h.flush,
     lockInteraction: h.lock,
+    acquireInteractionLock: h.acquireLock,
   },
 }));
 vi.mock("../runtime/draft_storage", () => ({
@@ -110,6 +113,12 @@ function click(text: string) {
   callback!();
 }
 
+function nodes(node: ReactNode): ReactNode[] {
+  if (Array.isArray(node)) return node.flatMap(nodes);
+  if (!isValidElement<{ children?: ReactNode }>(node)) return [node];
+  return [node, ...nodes(node.props.children)];
+}
+
 function deferred() {
   let resolve!: () => void;
   let reject!: (error: Error) => void;
@@ -129,11 +138,15 @@ beforeEach(async () => {
   h.setupFlush.mockReset().mockResolvedValue(undefined);
   h.readFlush.mockReset().mockResolvedValue(undefined);
   h.lock.mockReset();
+  h.acquireLock.mockReset().mockImplementation(() => {
+    h.lock(true);
+    return () => h.lock(false);
+  });
   h.active = false;
   h.copying = false;
   h.unknownCopy = false;
   render();
-  h.effects[0]();
+  h.cleanup = h.effects[0]() as () => void;
   await vi.waitFor(() =>
     expect(h.listeners.has("app:exit-deferred")).toBe(true),
   );
@@ -339,6 +352,359 @@ it("keeps an unconfirmed cancel visible and permits an explicit retry", async ()
   click(EXIT_IMPACT.stay);
   await vi.waitFor(() => expect(h.lock).toHaveBeenCalledWith(false));
   expect(h.flush).not.toHaveBeenCalled();
+});
+
+it("single-flights repeated stay actions so a duplicate rejection cannot hide successful cancellation", async () => {
+  h.active = true;
+  const firstReply = deferred();
+  let backendHasOwner = true;
+  h.invoke.mockImplementation((name) => {
+    if (name !== "app_exit_cancel") return;
+    // The real backend consumes its unacknowledged token once. Its successful
+    // reply can reach the renderer after a second click has already happened.
+    if (!backendHasOwner) return Promise.reject("关闭请求已失效");
+    backendHasOwner = false;
+    return firstReply.promise;
+  });
+  h.listeners.get("app:save-before-exit")!({ payload: 64 });
+  click(EXIT_IMPACT.stay);
+  click(EXIT_IMPACT.stay);
+  firstReply.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(
+    h.invoke.mock.calls.filter(([name]) => name === "app_exit_cancel"),
+  ).toHaveLength(1);
+  expect(h.lock).toHaveBeenCalledWith(false);
+  expect(h.states[2]).toBe(null);
+  expect(h.states[7]).toBe(false);
+});
+
+it("shows cancellable ordinary exit waiting while a save is pending and ignores its late success", async () => {
+  const saving = deferred();
+  h.flush.mockReturnValueOnce(saving.promise);
+  h.listeners.get("app:save-before-exit")!({ payload: 65 });
+  expect(nodes(render())).toContain("正在保存更改并准备退出…");
+  click(EXIT_IMPACT.stay);
+  await vi.waitFor(() => expect(h.lock).toHaveBeenCalledWith(false));
+  expect(h.flush).toHaveBeenCalledTimes(1);
+  saving.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(h.invoke).not.toHaveBeenCalledWith("app_exit_after_save", {
+    token: 65,
+  });
+  expect(h.states[2]).toBe(null);
+});
+
+it("keeps cancellation pending single-flight despite a repeated quit event and a completed save", async () => {
+  const saving = deferred();
+  const cancel = deferred();
+  h.flush.mockReturnValueOnce(saving.promise);
+  h.invoke.mockImplementation((name) =>
+    name === "app_exit_cancel" ? cancel.promise : undefined,
+  );
+  h.listeners.get("app:save-before-exit")!({ payload: 66 });
+  click(EXIT_IMPACT.stay);
+  h.listeners.get("app:save-before-exit")!({ payload: 66 });
+  click(EXIT_IMPACT.stay);
+  saving.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(nodes(render())).toContain("正在确认取消退出…");
+  const stay = nodes(render()).find(
+    (node) =>
+      isValidElement<{ children?: ReactNode }>(node) &&
+      node.type === "button" &&
+      node.props.children === EXIT_IMPACT.stay,
+  );
+  expect(
+    isValidElement<{ disabled?: boolean }>(stay) && stay.props.disabled,
+  ).toBe(true);
+  expect(h.flush).toHaveBeenCalledTimes(1);
+  expect(h.readFlush).not.toHaveBeenCalled();
+  expect(
+    h.invoke.mock.calls.filter(([name]) => name === "app_exit_cancel"),
+  ).toHaveLength(1);
+  expect(h.lock).not.toHaveBeenCalledWith(false);
+  expect(h.invoke).not.toHaveBeenCalledWith("app_exit_after_save", {
+    token: 66,
+  });
+  cancel.resolve();
+  await vi.waitFor(() => expect(h.lock).toHaveBeenCalledWith(false));
+});
+
+it("keeps a failed pending-save withdrawal visible and retries cancellation only on another action", async () => {
+  const saving = deferred();
+  h.flush.mockReturnValueOnce(saving.promise);
+  h.invoke.mockImplementation((name) =>
+    name === "app_exit_cancel" ? Promise.reject("temporary") : undefined,
+  );
+  h.listeners.get("app:save-before-exit")!({ payload: 67 });
+  click(EXIT_IMPACT.stay);
+  await vi.waitFor(() =>
+    expect(nodes(render())).toContain(EXIT_IMPACT.cancelFailed),
+  );
+  expect(h.lock).not.toHaveBeenCalledWith(false);
+  saving.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(h.invoke).not.toHaveBeenCalledWith("app_exit_after_save", {
+    token: 67,
+  });
+  expect(h.flush).toHaveBeenCalledTimes(1);
+  expect(
+    h.invoke.mock.calls.filter(([name]) => name === "app_exit_cancel"),
+  ).toHaveLength(1);
+  h.invoke.mockResolvedValue(undefined);
+  click(EXIT_IMPACT.stay);
+  await vi.waitFor(() => expect(h.lock).toHaveBeenCalledWith(false));
+  expect(
+    h.invoke.mock.calls.filter(([name]) => name === "app_exit_cancel"),
+  ).toHaveLength(2);
+  expect(h.flush).toHaveBeenCalledTimes(1);
+});
+
+it("does not let an old cancellation reply release or erase a newer pending cancellation", async () => {
+  const firstSave = deferred();
+  const secondSave = deferred();
+  const firstCancel = deferred();
+  const secondCancel = deferred();
+  h.flush
+    .mockReturnValueOnce(firstSave.promise)
+    .mockReturnValueOnce(secondSave.promise);
+  h.invoke.mockImplementation((name, args: { token: number }) => {
+    if (name === "app_exit_cancel")
+      return args.token === 80 ? firstCancel.promise : secondCancel.promise;
+  });
+  h.listeners.get("app:save-before-exit")!({ payload: 80 });
+  click(EXIT_IMPACT.stay);
+  h.listeners.get("app:save-before-exit")!({ payload: 81 });
+  click(EXIT_IMPACT.stay);
+  firstCancel.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(h.lock).not.toHaveBeenCalledWith(false);
+  expect(h.states[2]).toBe(81);
+  expect(nodes(render())).toContain("正在确认取消退出…");
+  click(EXIT_IMPACT.stay);
+  expect(
+    h.invoke.mock.calls.filter(
+      ([name, args]) => name === "app_exit_cancel" && args.token === 81,
+    ),
+  ).toHaveLength(1);
+  firstSave.resolve();
+  secondSave.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(
+    h.invoke.mock.calls.some(([name]) => name === "app_exit_after_save"),
+  ).toBe(false);
+  secondCancel.resolve();
+  await vi.waitFor(() => expect(h.lock).toHaveBeenCalledWith(false));
+});
+
+it("does not display a rejected old cancellation or old save over a newer exit", async () => {
+  const firstSave = deferred();
+  const secondSave = deferred();
+  const firstCancel = deferred();
+  h.flush
+    .mockReturnValueOnce(firstSave.promise)
+    .mockReturnValueOnce(secondSave.promise);
+  h.invoke.mockImplementation((name) =>
+    name === "app_exit_cancel" ? firstCancel.promise : undefined,
+  );
+  h.listeners.get("app:save-before-exit")!({ payload: 82 });
+  click(EXIT_IMPACT.stay);
+  h.listeners.get("app:save-before-exit")!({ payload: 83 });
+  firstCancel.reject(new Error("old withdrawal failed"));
+  firstSave.reject(new Error("old save failed"));
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(h.states[2]).toBe(83);
+  expect(h.states[1]).toBe(false);
+  expect(h.states[7]).toBe(false);
+  expect(h.lock).not.toHaveBeenCalledWith(false);
+  secondSave.resolve();
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", { token: 83 }),
+  );
+});
+
+it("can withdraw while unread metadata saves without treating its late error as a new exit failure", async () => {
+  const read = deferred();
+  h.readFlush.mockReturnValueOnce(read.promise);
+  h.listeners.get("app:save-before-exit")!({ payload: 84 });
+  await vi.waitFor(() => expect(h.readFlush).toHaveBeenCalledTimes(1));
+  expect(nodes(render())).toContain("正在保存更改并准备退出…");
+  click(EXIT_IMPACT.stay);
+  await vi.waitFor(() => expect(h.lock).toHaveBeenCalledWith(false));
+  read.reject(new Error("late metadata failure"));
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(h.states[1]).toBe(false);
+  expect(h.states[2]).toBe(null);
+  expect(h.invoke).not.toHaveBeenCalledWith("app_exit_after_save", {
+    token: 84,
+  });
+});
+
+it("keeps cancellation unconfirmed if the final exit command may already have acknowledged", async () => {
+  const ack = deferred();
+  h.invoke.mockImplementation((name) => {
+    if (name === "app_exit_after_save") return ack.promise;
+    if (name === "app_exit_cancel") return Promise.reject("关闭请求已失效");
+  });
+  h.listeners.get("app:save-before-exit")!({ payload: 85 });
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", { token: 85 }),
+  );
+  click(EXIT_IMPACT.stay);
+  await vi.waitFor(() =>
+    expect(nodes(render())).toContain(EXIT_IMPACT.cancelFailed),
+  );
+  ack.resolve();
+  await Promise.resolve();
+  expect(h.lock).not.toHaveBeenCalledWith(false);
+  expect(h.states[2]).toBe(85);
+  expect(
+    h.invoke.mock.calls.filter(([name]) => name === "app_exit_after_save"),
+  ).toHaveLength(1);
+  expect(h.flush).toHaveBeenCalledTimes(1);
+});
+
+it("does not add a stay action to an installed restart while its save is pending", async () => {
+  const saving = deferred();
+  h.flush.mockReturnValueOnce(saving.promise);
+  h.listeners.get("app:save-before-restart")!({ payload: 86 });
+  expect(nodes(render())).not.toContain(EXIT_IMPACT.stay);
+  expect(nodes(render())).not.toContain("正在保存更改并准备退出…");
+  expect(h.invoke.mock.calls.some(([name]) => name === "app_exit_cancel")).toBe(
+    false,
+  );
+  saving.resolve();
+  await vi.waitFor(() =>
+    expect(h.invoke).toHaveBeenCalledWith("app_exit_after_save", { token: 86 }),
+  );
+});
+
+it("releases the current exit lock when the backend defers exit without resuming or acknowledging", async () => {
+  const saving = deferred();
+  h.flush.mockReturnValueOnce(saving.promise);
+  h.listeners.get("app:save-before-exit")!({ payload: 87 });
+  expect(h.lock).toHaveBeenCalledWith(true);
+  h.listeners.get("app:exit-deferred")!({ payload: 87 });
+  expect(h.states[2]).toBe(null);
+  expect(h.lock).toHaveBeenCalledWith(false);
+  saving.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(h.invoke).not.toHaveBeenCalledWith("app_exit_after_save", {
+    token: 87,
+  });
+  expect(h.readFlush).not.toHaveBeenCalled();
+});
+
+it("reuses one exit lease across repeated saves and owner replacement without releasing it early", async () => {
+  const first = deferred(),
+    second = deferred(),
+    third = deferred();
+  h.flush
+    .mockReturnValueOnce(first.promise)
+    .mockReturnValueOnce(second.promise)
+    .mockReturnValueOnce(third.promise);
+  h.listeners.get("app:save-before-exit")!({ payload: 88 });
+  h.listeners.get("app:save-before-exit")!({ payload: 88 });
+  h.listeners.get("app:save-before-exit")!({ payload: 89 });
+  expect(h.acquireLock).toHaveBeenCalledTimes(1);
+  h.listeners.get("app:exit-deferred")!({ payload: 88 });
+  expect(h.lock).not.toHaveBeenCalledWith(false);
+  first.reject(new Error("old save"));
+  second.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(h.lock).not.toHaveBeenCalledWith(false);
+  expect(h.states[2]).toBe(89);
+  h.listeners.get("app:exit-deferred")!({ payload: 89 });
+  expect(h.lock.mock.calls.filter(([value]) => value === false)).toHaveLength(
+    1,
+  );
+  third.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(
+    h.invoke.mock.calls.some(([name]) => name === "app_exit_after_save"),
+  ).toBe(false);
+});
+
+it.each(["cancel", "deferred", "unmount"] as const)(
+  "%s releases the actual exit lease while preserving legacy update and worktree locks",
+  async (ending) => {
+    const { draftPersistence: p } = await vi.importActual<
+      typeof import("../runtime/draft_storage")
+    >("../runtime/draft_storage");
+    p.lockInteraction(true);
+    const releaseWorktree = p.acquireInteractionLock();
+    h.acquireLock.mockImplementation(() => p.acquireInteractionLock());
+    const saving = deferred();
+    h.flush.mockReturnValueOnce(saving.promise);
+    try {
+      h.listeners.get("app:save-before-exit")!({ payload: 90 });
+      expect(h.acquireLock).toHaveBeenCalledTimes(1);
+      if (ending === "cancel") {
+        click(EXIT_IMPACT.stay);
+        await vi.waitFor(() => expect(h.states[2]).toBe(null));
+      } else if (ending === "deferred") {
+        h.listeners.get("app:exit-deferred")!({ payload: 90 });
+      } else {
+        h.cleanup();
+      }
+      expect(p.snapshot().interactionLocked).toBe(true);
+      releaseWorktree();
+      expect(p.snapshot().interactionLocked).toBe(true);
+      p.lockInteraction(false);
+      expect(p.snapshot().interactionLocked).toBe(false);
+      saving.resolve();
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(h.invoke).not.toHaveBeenCalledWith("app_exit_after_save", {
+        token: 90,
+      });
+      expect(h.readFlush).not.toHaveBeenCalled();
+    } finally {
+      h.cleanup();
+      releaseWorktree();
+      p.lockInteraction(false);
+      saving.resolve();
+    }
+  },
+);
+
+it("unmount invalidates a pending cancellation and its late rejection without touching other locks", async () => {
+  const saving = deferred(),
+    cancel = deferred();
+  h.flush.mockReturnValueOnce(saving.promise);
+  h.invoke.mockImplementation((name) =>
+    name === "app_exit_cancel" ? cancel.promise : undefined,
+  );
+  h.listeners.get("app:save-before-exit")!({ payload: 91 });
+  click(EXIT_IMPACT.stay);
+  h.cleanup();
+  const states = [...h.states];
+  expect(h.lock.mock.calls.filter(([value]) => value === false)).toHaveLength(
+    1,
+  );
+  cancel.reject(new Error("late cancel"));
+  saving.reject(new Error("late save"));
+  await Promise.resolve();
+  await Promise.resolve();
+  expect(h.states).toEqual(states);
+  expect(h.invoke).not.toHaveBeenCalledWith("app_exit_after_save", {
+    token: 91,
+  });
+  expect(h.lock.mock.calls.filter(([value]) => value === false)).toHaveLength(
+    1,
+  );
 });
 
 it("ignores an old exit save failure while a newer restart is saving", async () => {
