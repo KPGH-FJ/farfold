@@ -12,6 +12,7 @@
     "tauri:build:internal": "tauri build",
     "typecheck": "tsc -b --pretty false",
     "docs:check": "node scripts/check-project-docs.mjs",
+    "docs:task": "node scripts/read-agent-task.mjs",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
     "test": "vitest run"

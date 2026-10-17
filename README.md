@@ -22,7 +22,8 @@ Farfold 是独立的多 Agent 桌面工作台，用同一套对话、任务状�
 - [当前状态](docs/status.md)：当前实现、验证层级、失败和未解决问题。
 - [源码架构](docs/architecture.md)：模块职责、数据归属与生命周期。
 - [内部使用说明](INTERNAL-USE.md)：操作入口、范围限制与数据位置。
-- [唯一活动计划](plans/agent-access.md)：开发顺序与保留的原始完成条件。
+- [唯一活动计划](plans/agent-access.md)：短执行入口，只安排顺序、依赖和本批出口。
+- [任务要求参考](docs/agent-access-requirements.md)：按任务ID查阅151条原始要求、所属包及共同完成条件，不另行调度。
 - [目录说明](docs/README.md)：当前文档、设计原型、证据与历史的分工。
 
 ## 开发
@@ -53,6 +54,8 @@ cargo test --manifest-path src-tauri/Cargo.toml --locked
 ```
 
 开发中先执行受影响检查；依赖闭合的一批功能稳定后统一完成完整工程检查、独立复核、正式安装与本批实际验证。相关输入变化、失败或疑点仍须必要复核，不把分项通过当整项完成。
+
+首次了解产品范围后，续接默认读当前状态与短计划，再用 `corepack pnpm docs:task P13` 等按ID读取相关要求；NEW条目须显式指定相关包，例如 `corepack pnpm docs:task NEW-24 --package B,C,K`。工具补读已声明包依赖及普遍条件，错误ID或NEW缺少包会失败，不回退全表。参考拆分仅改变存放位置和读取策略，29家八项标准、151条完成条件及受影响契约与安全验证不变。`corepack pnpm docs:check` 检查这些文档边界和导航，不替代产品验收。
 
 前端build不产生安装验收。内部macOS应用使用：
 

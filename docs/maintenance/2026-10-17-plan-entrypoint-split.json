@@ -1,0 +1,137 @@
+{
+  "kind": "DocumentationMaintenanceReceiptNotExecutionPlan",
+  "date": "2026-10-17",
+  "sourceBase": "d1ab0edeed4bf56ceeccb6300c641e58a4746d5e",
+  "onlyActivePlan": "plans/agent-access.md",
+  "taskRequirementsReference": "docs/agent-access-requirements.md",
+  "referenceSchedulingAuthority": false,
+  "scope": {
+    "firstReleaseAgents": 29,
+    "standardsPerAgent": 8,
+    "originalTaskRequirements": 151,
+    "workPackageSharedConditions": 16,
+    "productRuntimeCodeChanged": false,
+    "appReplacedOrLaunched": false,
+    "productAcceptanceClaimed": false
+  },
+  "verification": "completedForDocumentationAndTaskReaderOnly",
+  "entrypoint": {
+    "beforeBytes": 91124,
+    "afterBytes": 4136,
+    "afterLines": 39,
+    "sha256": "892302f9f93ad7d50139a832c42656d8ff3d68d845e61cf8474197aa68fb7b01",
+    "maximumBytes": 5120,
+    "maximumLines": 60
+  },
+  "requirementsPreserved": {
+    "referenceSha256": "67475b158154ebf02ecd5b4f1b6c6f625bece45f6481f6c1fa2f9ebb8950795d",
+    "all151RowsIncludingCurrentProgressByteExact": true,
+    "idsTitlesAndCompletionConditionsUnchanged": true,
+    "sharedWorkPackagesUnchanged": 16,
+    "originalStageRowsUnchanged": 6,
+    "officialScopeConstraintsUnchanged": true,
+    "productSection3Unchanged": true,
+    "firstReleaseAgentIdsUnchanged": 29,
+    "otherProductTextChangesOnlyThreeStorageAndReadingDescriptions": true,
+    "progressRemainsEditableWithEvidence": true
+  },
+  "reading": {
+    "command": "corepack pnpm docs:task P13",
+    "newTaskExample": "corepack pnpm docs:task NEW-24 --package B,C,K",
+    "selectedTasksOnly": true,
+    "declaredPackageDependenciesAndUniversalConditionsIncluded": true,
+    "officialScopeConstraintsIncluded": true,
+    "newTaskPackageNotGuessed": true,
+    "missingNewPackageAndUnknownIdFailWithoutFullTableFallback": true,
+    "noMeasuredTokenOrModelImprovementClaim": true
+  },
+  "checks": {
+    "migrationAndReader": {
+      "path": "output/2026-10-17-plan-entrypoint-split/migration-and-reader-verification.json",
+      "sha256": "bf2cf5985831a51de7153fd890836bcf94fd32331eb751a272fdcaca7135cc44",
+      "actualExitCode": 0,
+      "chunk": "6fd86d"
+    },
+    "documentation": {
+      "command": "corepack pnpm docs:check",
+      "actualExitCode": 0,
+      "chunk": "6f2b15",
+      "originalConditions": 151,
+      "activePlans": 1,
+      "entrypoints": 13,
+      "localLinks": 196,
+      "localHeadingAnchors": 4
+    },
+    "syntaxAndWhitespace": {
+      "actualExitCode": 0,
+      "chunk": "a0e648"
+    },
+    "repositoryFormat": {
+      "command": "corepack pnpm format:check",
+      "actualSession": 47751,
+      "actualExitCode": 0,
+      "finalChunk": "0fda56",
+      "scopeNote": "Full repository checked before this final JSON receipt; the final receipt is checked separately after formatting."
+    },
+    "publishedTaskCommands": {
+      "P13": {
+        "actualExitCode": 0,
+        "chunk": "08e49b"
+      },
+      "NEW24WithPackages": {
+        "actualExitCode": 0,
+        "chunk": "114d51"
+      },
+      "NEW24WithoutPackagesExpectedRejection": {
+        "actualExitCode": 1,
+        "chunk": "95f6c4"
+      }
+    }
+  },
+  "independentReview": {
+    "path": "output/2026-10-17-plan-entrypoint-split/independent-review.json",
+    "sha256": "588d133de01dce455b7123faec69827de6f8c738d5734d764dfb40763dc961d7",
+    "actualExitCode": 0,
+    "chunk": "577646",
+    "result": "noRemainingBlockingFinding",
+    "readerCases": 9
+  },
+  "scopeAndProtection": {
+    "path": "output/2026-10-17-plan-entrypoint-split/scope-and-protection.json",
+    "sha256": "270078045ebcdeeecf7ff637c06f4f53e6305d0b046ec5ef5b36a522a231feac",
+    "runtimeSourceUnchanged": true,
+    "existingTwoDirtyEvidenceReadmesUnchanged": true,
+    "formalFiveFilesAndModesUnchanged": true
+  },
+  "preservedEvidence": {
+    "beforeSplitPlan": {
+      "path": "output/2026-10-17-plan-entrypoint-split/agent-access-before-split.md",
+      "sha256": "eb20d663cb8cf43ccb262b4a4a52c70703d91a7ed865fe14e06e671176da618d"
+    },
+    "preFixReaderCounterexamples": {
+      "path": "output/2026-10-17-plan-entrypoint-split/reader-pre-fix-reproduction.json",
+      "sha256": "d11d1e031bdbef8a37891d620f56449ae0225dcbdf579d4694fb9c68bc65d9fe",
+      "resolvedByExplicitNewPackagesAndDeclaredDependencyClosure": true
+    },
+    "integrationPreparationFailures": [
+      {
+        "chunk": "71cdd9",
+        "actualExitCode": 1,
+        "reason": "Old status anchor encountered before navigation author froze; replaced with current entrypoint."
+      },
+      {
+        "chunk": "497749",
+        "actualExitCode": 1,
+        "reason": "Navigation author checked before this maintenance receipt existed; final link check passed after creation."
+      }
+    ]
+  },
+  "formalApplication": {
+    "path": "/Applications/Farfold.app",
+    "sourceCommit": "b754a158479fdc944ea1ee0fbdf425d71093b273",
+    "binarySha256": "10d703e412918993b55cc40c96427ec610370af225629b8535a7c157f6ec0f89",
+    "replacedOrLaunchedThisBatch": false,
+    "productOrRealAgentAcceptanceClaimed": false
+  },
+  "completionReceipt": "output/2026-10-17-plan-entrypoint-split/completion-verification.json"
+}

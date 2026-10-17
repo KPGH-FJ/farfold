@@ -3,6 +3,11 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import {
+  parseTaskReference,
+  referenceRole,
+  taskReferencePath,
+} from "./agent-task-reference.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const baselinePath =
@@ -20,6 +25,7 @@ const entrypoints = [
   "docs/archive/README.md",
   "docs/archive/2026-10-17-documentation-alignment/INDEX.md",
   "plans/agent-access.md",
+  taskReferencePath,
   ".design/README.md",
   ".design/2026-09-26-agent-access-redesign/workbench/README.md",
 ];
@@ -116,6 +122,28 @@ export function verifyLinks(text, file) {
   return { links, anchors };
 }
 
+export function verifyExecutionEntrypoint(planText) {
+  const activePlanBytes = Buffer.byteLength(planText);
+  const activePlanLines = planText.trimEnd().split(/\r?\n/).length;
+  assert.ok(
+    activePlanBytes <= 5120,
+    "keep the execution entrypoint within 5 KiB",
+  );
+  assert.ok(
+    activePlanLines <= 60,
+    "keep the execution entrypoint within 60 lines",
+  );
+  assert.ok(
+    !/^\|\s*(?:ARCH-\d+|NEW-\d+|P\d+|H\d+)\s*\|/m.test(planText),
+    "task detail tables belong in the requirements reference",
+  );
+  assert.ok(
+    planText.includes(taskReferencePath),
+    "requirements reference link missing",
+  );
+  return { activePlanBytes, activePlanLines };
+}
+
 export function checkProjectDocs() {
   const raw = readFileSync(resolve(root, baselinePath));
   assert.equal(createHash("sha256").update(raw).digest("hex"), baselineSha256);
@@ -123,10 +151,16 @@ export function checkProjectDocs() {
     name.endsWith(".md"),
   );
   assert.deepEqual(plans, ["agent-access.md"], "keep one active Markdown plan");
-  const plan = verifyPlan(
+  const entrypoint = verifyExecutionEntrypoint(
     readFileSync(resolve(root, "plans/agent-access.md"), "utf8"),
-    JSON.parse(raw),
   );
+  const referenceText = readFileSync(resolve(root, taskReferencePath), "utf8");
+  assert.ok(
+    referenceText.includes(referenceRole),
+    "reference has no scheduling authority",
+  );
+  const plan = verifyPlan(referenceText, JSON.parse(raw));
+  const reference = parseTaskReference(referenceText);
   let localLinks = 0;
   let localAnchors = 0;
   for (const file of entrypoints) {
@@ -137,6 +171,10 @@ export function checkProjectDocs() {
   return {
     ...plan,
     activePlans: plans.length,
+    ...entrypoint,
+    taskReference: taskReferencePath,
+    workPackages: reference.packages.size,
+    referenceSchedulingAuthority: false,
     entrypoints: entrypoints.length,
     localLinks,
     localAnchors,
