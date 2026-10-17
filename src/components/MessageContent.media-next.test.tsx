@@ -1,0 +1,86 @@
+import { beforeEach, expect, it, vi } from "vitest";
+import { renderToStaticMarkup } from "react-dom/server";
+import { MessageAttachments } from "./MessageContent";
+import { MESSAGE_FLAC_TEST_DATA } from "../runtime/message_flac_fixtures.test-support";
+
+const h = vi.hoisted(() => ({ userOpen: true }));
+vi.mock("./transcript-search", () => ({
+  useSearchExpansion: () => ({
+    open: true,
+    userOpen: h.userOpen,
+    materialized: true,
+    ref: () => {},
+    onToggle: () => {},
+    choose: () => {},
+  }),
+}));
+beforeEach(() => {
+  h.userOpen = true;
+});
+
+it.each(["audio/flac", "audio/mpeg"])(
+  "shows the duration refusal for actual long FLAC under %s without a source",
+  (mimeType) => {
+    const attachment = {
+      name: "Original long FLAC",
+      uri: "file:///owned/original.flac",
+      mimeType,
+      data: MESSAGE_FLAC_TEST_DATA.LONG_601,
+    };
+    const before = JSON.stringify(attachment);
+    const html = renderToStaticMarkup(
+      <MessageAttachments
+        attachments={[
+          attachment,
+          { name: "Following text", text: "Keep this body after the audio" },
+        ]}
+      />,
+    );
+    expect(html).toContain("音频时长超过 10 分钟");
+    expect(html).toContain("file:///owned/original.flac");
+    expect(html).toContain("Keep this body after the audio");
+    expect(html.indexOf("Original long FLAC")).toBeLessThan(
+      html.indexOf("Following text"),
+    );
+    expect(html).not.toContain("data:audio");
+    expect(html).not.toContain("<audio");
+    expect(html).not.toContain("重新载入");
+    expect(JSON.stringify(attachment)).toBe(before);
+  },
+);
+
+it("does not preflight long FLAC during a search-only reveal", () => {
+  h.userOpen = false;
+  const html = renderToStaticMarkup(
+    <MessageAttachments
+      attachments={[
+        {
+          name: "Search-only FLAC",
+          mimeType: "audio/flac",
+          data: MESSAGE_FLAC_TEST_DATA.LONG_601,
+        },
+      ]}
+    />,
+  );
+  expect(html).toContain("Search-only FLAC");
+  expect(html).not.toContain("音频时长超过");
+  expect(html).not.toContain("data:audio");
+  expect(html).not.toContain("<audio");
+});
+
+it("keeps an admitted short FLAC pending until mount; SSR proves no playback", () => {
+  const html = renderToStaticMarkup(
+    <MessageAttachments
+      attachments={[
+        {
+          name: "Short complete FLAC",
+          mimeType: "audio/flac",
+          data: MESSAGE_FLAC_TEST_DATA.TINY,
+        },
+      ]}
+    />,
+  );
+  expect(html).toContain("正在准备媒体");
+  expect(html).not.toContain("媒体数据格式无法读取");
+  expect(html).not.toContain("<audio");
+});

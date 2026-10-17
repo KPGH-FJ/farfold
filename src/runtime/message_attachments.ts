@@ -4,6 +4,7 @@ import { messagePngAdmission } from "./message_png_admission";
 import { messageRasterAdmission } from "./message_raster_admission";
 import { messageAudioAdmission } from "./message_audio_admission";
 import { messageAvifAdmission } from "./message_avif_admission";
+import { messageFlacAdmission } from "./message_flac_admission";
 
 function record(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -128,7 +129,8 @@ function base64Value(code: number): number {
 
 /** Preview-only byte and declared image/audio metadata admission. Original payload,
  * transport and actual decoder memory are not bounded here. Recognized linear
- * WAVE receives a stored-data duration policy; other audio stays uncovered.
+ * WAVE and native FLAC receive their recognized declared-duration policies;
+ * other audio and unknown duration declarations remain uncovered.
  * PNG/APNG receives only structural/declaration admission,
  * including animation frame work; actual playback remains unverified.
  * No URL is created before the checks.
@@ -197,6 +199,17 @@ export function attachmentMediaAdmission(
     const audio = messageAudioAdmission(data, mime!);
     if (audio !== "withinBudget" && audio !== "notCovered")
       return { status: "rejected", reason: audio };
+    if (audio === "notCovered") {
+      // Inspect actual signatures across the already allowed audio MIME types.
+      // A different declared MIME must not bypass a known FLAC duration limit.
+      const flac = messageFlacAdmission(data);
+      if (
+        flac !== "withinBudget" &&
+        flac !== "notCovered" &&
+        flac !== "notFlac"
+      )
+        return { status: "rejected", reason: flac };
+    }
   }
   return {
     status: "available",

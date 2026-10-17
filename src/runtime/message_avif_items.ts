@@ -5,6 +5,7 @@ import {
   type AvifDimensions,
 } from "./message_avif_reader";
 import { rasterRecord, rasterRequire } from "./message_raster_reader";
+import { avifLayers, type AvifLayers } from "./message_avif_layers";
 
 interface Item {
   kind?: string;
@@ -16,6 +17,7 @@ interface Item {
   auxiliary?: boolean;
   unknownDimensions?: boolean;
   grid?: { rows: number; columns: number };
+  layers?: AvifLayers;
   dimg: number[];
 }
 
@@ -30,6 +32,7 @@ export function avifItems(context: AvifContext, meta: AvifBox): void {
   }
   const items = new Map<number, Item>();
   const properties: (AvifDimensions | undefined)[] = [undefined];
+  const layerProperties = new Map<number, AvifLayers>();
   const associations: AvifBox[] = [];
   const unknownDimensions = new Set<number>();
   let idat: AvifBox | undefined;
@@ -149,6 +152,9 @@ export function avifItems(context: AvifContext, meta: AvifBox): void {
           size = context.dimensions(cursor.uint(4), cursor.uint(4));
           cursor.done();
         } else unknownDimensions.add(properties.length);
+      } else if (property.kind === "a1lx") {
+        const layers = avifLayers(context, property);
+        if (layers) layerProperties.set(properties.length, layers);
       } else if (
         ![
           "av1C",
@@ -160,7 +166,6 @@ export function avifItems(context: AvifContext, meta: AvifBox): void {
           "auxC",
           "a1op",
           "lsel",
-          "a1lx",
           "clli",
           "mdcv",
           "cclv",
@@ -217,6 +222,11 @@ export function avifItems(context: AvifContext, meta: AvifBox): void {
         rasterRequire(key < properties.length && (key || !encoded));
         if (!key) continue;
         value.associations.push(key);
+        const layers = layerProperties.get(key);
+        if (layers) {
+          rasterRequire(!value.layers);
+          value.layers = layers;
+        }
         if (unknownDimensions.has(key)) value.unknownDimensions = true;
         const size = properties[key];
         if (size) {
@@ -301,7 +311,25 @@ export function avifItems(context: AvifContext, meta: AvifBox): void {
     )
       context.uncovered = true; // New derived image types keep their old support.
     const copies = uses.get(id) ?? 1;
-    if (value.size) context.charge(value.size, copies);
+    if (
+      value.layers &&
+      !value.uncertainLocation &&
+      value.extents?.length &&
+      value.extents.every((extent) => extent.length > 0)
+    ) {
+      // Only definite local/file or idat lengths can locate the final layer.
+      // External references, item-offset construction and unspecified lengths
+      // retain their old unknown coverage rather than pretending exact bytes.
+      const length = value.extents.reduce(
+        (sum, extent) => sum + extent.length,
+        0,
+      );
+      rasterRequire(
+        Number.isSafeInteger(length) && value.layers.precedingBytes < length,
+      );
+    }
+    if (value.size)
+      context.charge(value.size, copies * (value.layers?.count ?? 1));
     for (const target of value.dimg) {
       const number = (uses.get(target) ?? 0) + copies;
       rasterRecord(number);
