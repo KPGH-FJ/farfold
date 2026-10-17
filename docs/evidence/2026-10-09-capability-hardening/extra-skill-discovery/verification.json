@@ -1,0 +1,190 @@
+{
+  "schema": 1,
+  "phase": "implemented_installed_native_scoped_strict_differences_retained",
+  "sourceCommit": "a8e84d7ead16870cdf0ddcba6da6439db1cff2d9",
+  "scope": "P40 explicit extra skill directory temporary read-only discovery; not skill installation, persistent scope, current dialogue application or whole P40 acceptance.",
+  "implementation": {
+    "changedFiles": 22,
+    "unchangedSharedFiles": 4,
+    "rootSelectionUI": 1,
+    "backendOrderedRootLimit": 4,
+    "eachRootUtf8Bytes": 4096,
+    "totalRootUtf8Bytes": 16384,
+    "requestedRootEchoExact": true,
+    "canonicalDirectoryPinRecheckedEachStageAndEnd": true,
+    "filesystemAtomicScanGuaranteed": false,
+    "setterAck": "exact empty JSON object before list",
+    "reportIncludesDefaultSkills": true,
+    "allNonemptyRootReportItems": "unavailable/discoveryOnly",
+    "privateManagementTargetsCreated": false,
+    "backendManagementAlsoRejects": true,
+    "noImplicitSkillSubdirectory": true
+  },
+  "engineering": {
+    "result": "passed",
+    "round": 2,
+    "allSevenActuallyExecuted": true,
+    "stableInputs": 19017,
+    "frontendFiles": 531,
+    "frontendTestsPassed": 6709,
+    "rustTestsPassed": 1787,
+    "rustIgnored": 6,
+    "priorRun1Step6ClippyExit": 101,
+    "priorFailureRetained": true,
+    "finalDelta": "explanation comment and local lint allowance only; all bodies/fields and other25 files unchanged"
+  },
+  "controlledBrowser": {
+    "testedFreezeSha256": "579e37eee91ad06506d13ea20e408d78c98bb9b38cb629010cab3e5bbc8ef572",
+    "checksPerEngine": 75,
+    "casesPerEngine": 14,
+    "stableInputsPerEngine": 1181,
+    "engines": ["chromium", "webkit"],
+    "finalLintDeltaReused": true,
+    "rerunAfterLintDelta": false,
+    "notNativeApp": true
+  },
+  "officialNoPromptProbe": {
+    "result": "passed",
+    "controlledContrast": ["baselineAbsent", "extraPresent", "clearedAbsent"],
+    "actualExitCode": 0,
+    "noPromptOrConfigWriteRpcSent": true,
+    "startupFilesystemSideEffectsExcluded": false,
+    "currentDialogueApplicability": "unverified",
+    "all29Acceptance": false
+  },
+  "installation": {
+    "formalSource": "a8e84d7ead16870cdf0ddcba6da6439db1cff2d9",
+    "candidateProductionInputs": 1733,
+    "candidateReviewPassed": 9,
+    "candidateReviewTotal": 9,
+    "replacementActualExitCode": 0,
+    "beforePreinstallFreshManifestEntries": 217407,
+    "beforePreinstallManifestSha256": "eaa22f79adf795c0f6025735af1347689bd1662de250cfaf65a236202dac9f8d",
+    "afterManifest": {
+      "freshEntries": 217407,
+      "sha256": "eaa22f79adf795c0f6025735af1347689bd1662de250cfaf65a236202dac9f8d",
+      "allThreeInstallManifestsExact": true
+    },
+    "installedIndependent10": {
+      "passed": 10,
+      "total": 10
+    },
+    "candidateCleanup": {
+      "exactFiveLeavesAndEmptyDirectoriesRemoved": true,
+      "formalFiveFilesAndZipPreserved": true
+    }
+  },
+  "nativeScoped": {
+    "formalAppLaunchedThisBatch": true,
+    "referenceKind": "rootRecordedCuaObservations",
+    "toolCallIdsProvided": false,
+    "actualObservedSequence": [
+      "defaultQueryMarkerAbsent",
+      "selectedExtraRootStaleAndNoAutomaticQuery",
+      "explicitExtraQueryMarkerPresentWithDefaultSkills",
+      "wholeReportReadOnlyAndNoEnableDisableActions",
+      "clearRootAndExplicitQueryMarkerAbsent"
+    ],
+    "saveAndExitObservedAndClickPromiseResolved": true,
+    "cuaResetAndNoFurtherAppGetter": true,
+    "exactFormalProcessCountAfter": 0,
+    "processActualExitCode": 0,
+    "notToolSignedNativeReceipts": true,
+    "notVerified": [
+      "current-dialogue skill application",
+      "real prompt",
+      "permission completeness",
+      "fullP40/all29"
+    ],
+    "defaultDialogueAutomaticInitializationAttempted": true,
+    "exitUnknownWorkNoticeObserved": true,
+    "noModelPromptOrSkillConfigurationWriteRequested": true,
+    "partialObservationExcerptsNotCompleteAX": true
+  },
+  "postNativeStrictDataComparison": {
+    "actualExitCode": 2,
+    "result": "differencesRequireReview",
+    "freshBeforeNativeUiRun": true,
+    "metadataSchemaAllTablesAllFields": "equal",
+    "oldComposers": 10,
+    "oldComposerWholeObjectsExact": 10,
+    "coversOldDraftFields": "whole objects include text,attachments,queue,feedback,choice and configuration",
+    "retainedRootDifferenceCount": 5,
+    "retainedRootDifferenceCategories": {
+      "appMetadataSharedMemoryBytes": 1,
+      "webDataContentDigestOrSize": 4
+    },
+    "writer": "unknown",
+    "acceptedDifferences": [],
+    "overallUserDataUnchangedClaimed": false,
+    "priorStrict3Database7RootDifferencesStillRetained": true
+  },
+  "boundaries": [
+    "This slice supports temporary explicit-directory discovery on the actual selected reviewed official surface; installation, persistent scope and current-dialogue application are outside this slice.",
+    "No real prompt or permission confirmation; NEW-24 affected real new sends remain paused.",
+    "Point-in-time directory identity checks are not filesystem-atomic scan isolation.",
+    "Native observations are root-authored Cua step records, not tool-signed call IDs or whole-window public evidence.",
+    "Default dialogue automatic initialization and an unknown-work exit notice occurred. No new model prompt or skill configuration write was requested; this does not establish no Agent startup, zero communication, all work completed/stopped or absence of startup filesystem changes.",
+    "Strict post-native exit2 and five root differences remain; equal metadata rows and old drafts do not prove overall user data unchanged or identify a writer.",
+    "Original strict differences, unknown writers, OpenCode initialization and reopen caller remain unchanged.",
+    "Original151conditions,all29agents/eightstandards and Windows remain open; no NEW-30."
+  ],
+  "evidencePins": {
+    "sourceReview": {
+      "path": "output/2026-10-17-extra-skill-discovery/source-review.json",
+      "sha256": "c5fa40b264b75eba0e7ea011cd7420b69dd7910c63886f696eaa78c5b5b4d957"
+    },
+    "engineeringRun2": {
+      "path": "output/2026-10-17-extra-skill-discovery/engineering/run2/verification.json",
+      "sha256": "b70c8072673ee51150a7722c91ef514e24cb1803fa07cca6d894e9e356c8b710"
+    },
+    "engineeringRun1Failure": {
+      "path": "output/2026-10-17-extra-skill-discovery/engineering/run1/verification.json",
+      "sha256": "3430690d950adbe089e2fba87404c901786b1e358720b225e3a2163eb2038d1f"
+    },
+    "lintOnlyDeltaReview": {
+      "path": "output/2026-10-17-extra-skill-discovery/backend-independent-lint-delta-review.json",
+      "sha256": "a6609b138f52f1276692ec82bca4a667585b0e052a67f11e0cfe0a0b1fc62548"
+    },
+    "controlledBrowser": {
+      "path": "output/2026-10-17-extra-skill-discovery/browser-independent/verification.json",
+      "sha256": "a459f094b1fe3bb6e7647ac3f064728a85686842d43d37dedc4be3065537cfa0"
+    },
+    "officialNoPromptProbe": {
+      "path": "output/2026-10-17-extra-skill-discovery/probe/actual-completion.json",
+      "sha256": "b792f14f6dd59e233deaecf9b80bd25dc088b38ed2fbfc7fb6acf4a0ba3194c1"
+    },
+    "candidateReview": {
+      "path": "output/2026-10-17-extra-skill-discovery/candidate-preparation/independent/review.json",
+      "sha256": "4048edaf435da46e2b0255f4b86bd7e47694aca13a16b55e423c59ec6bd3b97a"
+    },
+    "installedIndependentReview": {
+      "path": "output/2026-10-17-extra-skill-discovery/install/installed-independent-review-private.json",
+      "sha256": "aa91e1186cc420df4e73dd71ac80033017f9c89e7171024778f5efcfa3ec7688"
+    },
+    "candidateCleanup": {
+      "path": "output/2026-10-17-extra-skill-discovery/install/candidate-cleanup.json",
+      "sha256": "42bac215cda389cc372f3ef214459d93f91fbcf5ccf008374c4876a79353aa7b"
+    },
+    "nativeUi": {
+      "path": "output/2026-10-17-extra-skill-discovery/native-ui-private.json",
+      "sha256": "d8b4d2aa8f128ab461c29a064d455d94245ed293dd95c96b89514d443c13360f"
+    },
+    "nativeFreshBefore": {
+      "path": "output/2026-10-17-extra-skill-discovery/data-before/retention-before-receipt.json",
+      "sha256": "93e967cadc1b3968ebad357bac23414db3028d62aaadf75fa462d9b167150876"
+    },
+    "nativeCaptureReceipt": {
+      "path": "output/2026-10-17-extra-skill-discovery/data-after/capture-receipt-private.json",
+      "sha256": "16d61b98c5c562522e69f122e0e91a99c7d8b87f3be9e5bcbbad4e95f92b4194"
+    },
+    "nativeComparison": {
+      "path": "output/2026-10-17-extra-skill-discovery/data-after/comparison-private.json",
+      "sha256": "80b4c9bd354f34c562a6941b58ca605b338403a224c4dd57ac54a30bd62642a7"
+    },
+    "retainedRootDifferenceClassification": {
+      "path": "output/2026-10-17-extra-skill-discovery/data-after/difference-paths-private.json",
+      "sha256": "13040e66726a0ebdb4ac2ed9ca77aeca1e07eb7b4017d731374a7c918163f8cd"
+    }
+  }
+}
