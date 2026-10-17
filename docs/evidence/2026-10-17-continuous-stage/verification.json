@@ -1,0 +1,223 @@
+{
+  "schema": 1,
+  "kind": "StageVerificationNotFullProductAcceptance",
+  "date": "2026-10-17",
+  "sourceCommit": "920d216cd3d36e54d9ac3b4badbeb666424f274c",
+  "result": "selectedIncrementDeliveredOtherRequirementsRemainOpen",
+  "onlyActivePlan": "plans/agent-access.md",
+  "taskRequirementsReference": "docs/agent-access-requirements.md",
+  "scope": {
+    "firstReleaseAgents": 29,
+    "standardsPerAgent": 8,
+    "originalRequirements": 151,
+    "originalIdsTitlesAndCompletionConditionsUnchanged": true,
+    "noSecondActivePlan": true,
+    "newAgentLoopOrUpstreamPatch": false,
+    "newDependencyEnvironmentSwitchOrCredentials": false
+  },
+  "delivered": {
+    "messagePngAndApng": {
+      "mimeTypes": ["image/png", "image/apng"],
+      "declarationLimits": {
+        "maxEdge": 8192,
+        "maxCanvasPixels": 16777216,
+        "maxAnimationFrames": 128,
+        "maxFullCanvasFramePixels": 67108864,
+        "maxChunkRecords": 65536,
+        "separateDefaultImageCountsTowardPixelBudget": true
+      },
+      "checks": "Signature,IHDR,control CRC,chunk layout,sequence,frame rectangle and actual declared frame counts precede preview source creation. Compressed pixels and other opaque payloads are not fully CRC-scanned or decoded by preflight.",
+      "normalStaticPngAndBudgetedApngPreserved": true,
+      "originalPayloadAndOrderPreserved": true,
+      "sharedUiAndLifecycleRetained": true,
+      "actualDecoderMemoryAndPlaybackNotBounded": true
+    }
+  },
+  "sourceEvidence": {
+    "freeze": {
+      "path": "output/2026-10-17-continuous-stage/source-freeze.json",
+      "sha256": "50de930c51dcb299a10c42a33b793b286f36f600e93dbdf87bdb2041a9cf491f"
+    },
+    "independentReview": {
+      "path": "output/2026-10-17-continuous-stage/source-review.json",
+      "sha256": "34c2155008536bd2599a6b4ad61d673da19968e10a714b774c5b5fb17fa24d3c"
+    },
+    "mediaAuthorVerification": {
+      "path": "output/2026-10-17-message-apng-admission/verification.json",
+      "sha256": "72a53f67d430bf97078f40f7879178648a029be99442e1e8c91fbe2ab982bba5"
+    },
+    "sourceReviewedFiles": 20,
+    "ownedChangedFiles": 12
+  },
+  "engineering": {
+    "receipt": {
+      "path": "output/2026-10-17-continuous-stage/engineering/run1/verification.json",
+      "sha256": "a9feaac8ae8fbee5be6fb1313a4ae200df627e5e9f2aebc408882fa5e6222a14"
+    },
+    "actualSession": 15074,
+    "actualExitCode": 0,
+    "finalChunk": "f8d01b",
+    "freshSequentialChecks": 7,
+    "stableInputs": 19055,
+    "frontendFiles": 540,
+    "frontendPassed": 6891,
+    "rustPassed": 1787,
+    "rustIgnored": 6
+  },
+  "controlledBrowser": {
+    "receipt": {
+      "path": "output/2026-10-17-continuous-stage/browser-independent/run1-verification.json",
+      "sha256": "1d25592ad1522c057fa5c1c8f16a923e011f1746b478966847085f1706c25838"
+    },
+    "executionCompletion": {
+      "path": "output/2026-10-17-continuous-stage/browser-independent/execution-completion.json",
+      "sha256": "81f382dc21bfb4dc03ba78f0daad80e738cf4550bab7ac413a93bb4ef6342c77"
+    },
+    "actualSession": 61003,
+    "actualExitCode": 0,
+    "finalChunk": "8408b1",
+    "chromiumPassed": 44,
+    "webkitPassed": 44,
+    "tinyImageDecodeSamplesPerEngine": 3,
+    "rejectionSamplesPerEngine": 13,
+    "rejectedBeforeImageSourceOrObjectUrl": true,
+    "stableInputs": 669,
+    "pageContextBrowserAndServerClosed": true,
+    "port1585Closed": true,
+    "notNativeAppRealAgentOrCompletePlaybackProof": true
+  },
+  "candidate": {
+    "receipt": {
+      "path": "output/2026-10-17-continuous-stage/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "d1bf26d8f2ccc47c2b62c72cad22bf112d5c2d6ab547135bf6cd3e94b8e0d1b0"
+    },
+    "actualSession": 35552,
+    "actualExitCode": 0,
+    "finalChunk": "625a17",
+    "actualBuildAttempts": 1,
+    "productionInputs": 1754,
+    "independent9": {
+      "path": "output/2026-10-17-continuous-stage/candidate-preparation/independent/review.json",
+      "sha256": "3e7a8e79d1654ad01b12803f06535c717909e4591857450aa896185d0d0b8a4e"
+    },
+    "independent9ActualExitCode": 0,
+    "independent9Chunk": "b88c8b",
+    "archive": "src-tauri/target/internal-candidate/2026-10-17-continuous-stage-920d216c/Farfold-0.1.7-920d216c.zip",
+    "archiveSha256": "4f852129fbc8a38b86b065e9d381bd2e8b4809e1114128e98fbd2ec04b994f62"
+  },
+  "installation": {
+    "path": "/Applications/Farfold.app",
+    "bundleId": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binarySha256": "3f9ca807bae902e9c7df41cecf29e2213c2ce11f0a930fa13b33ca7e41562829",
+    "previousSourceCommit": "b754a158479fdc944ea1ee0fbdf425d71093b273",
+    "result": {
+      "path": "output/2026-10-17-continuous-stage/install/install-result.json",
+      "sha256": "bc57fe24be9e0a830d4e3023dded29987da34f7ae5e0f6067770030054f97556"
+    },
+    "actualSession": 30737,
+    "actualExitCode": 0,
+    "finalChunk": "ff284b",
+    "independent10": {
+      "path": "output/2026-10-17-continuous-stage/install/installed-independent-review-private.json",
+      "sha256": "56947288e14e9a1d0e2758c83f8c3d9b9f2d959aad156fd1abb9beaebb493343"
+    },
+    "independent10ActualSession": 96165,
+    "independent10ActualExitCode": 0,
+    "independent10FinalChunk": "632563",
+    "exactFiveNewInodeFilesAndStrictSignatureVerified": true,
+    "duplicateCandidateCleanup": {
+      "path": "output/2026-10-17-continuous-stage/install/candidate-cleanup.json",
+      "sha256": "895533cebc7ed791905a6b5727eb28c4f7cc4ab776eea8765b29dc57b2417597"
+    },
+    "cleanupActualExitCode": 0,
+    "cleanupChunk": "1c7749",
+    "formalAppLaunchedThisStage": false
+  },
+  "dataRetention": {
+    "freshCompleteManifestCount": 3,
+    "entriesPerManifest": 217407,
+    "allThreeStrictlyEqual": true,
+    "manifestSha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4",
+    "manifests": [
+      {
+        "path": "output/2026-10-17-continuous-stage/install/install-data-before.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      },
+      {
+        "path": "output/2026-10-17-continuous-stage/install/install-data-preinstall.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      },
+      {
+        "path": "output/2026-10-17-continuous-stage/install/install-data-after.jsonl",
+        "sha256": "2194a7ac96bbec5c7b77e65b469b541c2a217395c77c2d424f184fe9f2d97ff4"
+      }
+    ],
+    "before": {
+      "actualSession": 6795,
+      "actualExitCode": 0,
+      "finalChunk": "1074d2"
+    },
+    "preinstall": {
+      "actualSession": 79833,
+      "actualExitCode": 0,
+      "finalChunk": "104651"
+    },
+    "after": {
+      "actualSession": 48327,
+      "actualExitCode": 0,
+      "finalChunk": "e96e0e"
+    },
+    "standaloneBackupCheckedOnSecondCopyOnly": true,
+    "noSidecarExemptionOrHistoryDeletion": true,
+    "earlierStrictDifferencesOrUnknownWritersNotWaived": true,
+    "sqliteConnectionToSourceOpened": false
+  },
+  "otherSelectedWork": {
+    "NEW24": {
+      "delta": {
+        "path": "output/2026-10-17-continuous-stage/new24-official-surface-delta.json",
+        "sha256": "0f24dc7ca4a75c48d44d35ea6f3ca468d2985ddd717a0b735437045d3a4b1ad1"
+      },
+      "independent": {
+        "path": "output/2026-10-17-continuous-stage/new24-independent-prep.json",
+        "sha256": "7a13e5cf3734304b275a9bc090df6cae61b2ea2a072c51407c4dd0c5029e984f"
+      },
+      "result": "No new verified production bypass established; no usable complete effective filesystem/network permission readback verified from the same official connection. Mode acknowledgement is insufficient; affected new real sends remain paused.",
+      "currentMainSourceNotInstalledReleaseOrLiveProof": true
+    },
+    "thirdBatchAudit": {
+      "path": "output/2026-10-17-continuous-stage/third-batch-audit.json",
+      "sha256": "4ccec4b269046787cccced955d4dda5e5868530e05834ea2920224afedb5e5b6"
+    },
+    "P18": {
+      "preconditions": {
+        "path": "output/2026-10-17-continuous-stage/p18-current-file-preconditions.json",
+        "sha256": "cf74af9b5038dad2df97696d3f0fded62753938ec4bfde60d79543435d301cda"
+      },
+      "result": "Two exact files of the known historical candidate are absent. No sample recreated,cwd retargeted,new prompt or current formal positive manufactured."
+    },
+    "P32": "No qualified completed-message attachment candidate established in the selected evidence; no global absence claim.",
+    "NEW29": "No actual current compaction busy state exercised.",
+    "P40": "Independent directory discovery does not prove adoption by the current conversation."
+  },
+  "remaining": "NEW24,formal message media,APNG frame advancement/loop/duration/decoder allocation,AVIF/audio resource governance,fullP13,remaining29x8,long-running behavior and Windows real-system proof stay open. Scope decisions and deferred distribution are unchanged.",
+  "retainedPreparationFailures": [
+    {
+      "path": "output/2026-10-17-continuous-stage/candidate-preparation/parameter-pin-preparation-rejection.json",
+      "actualExitCode": 1,
+      "chunk": "f09682",
+      "scope": "Wrong supplied parameter digest rejected before any build or candidate output."
+    },
+    {
+      "path": "output/2026-10-17-continuous-stage/candidate-preparation/cleanup-binding-preparation-rejection.json",
+      "actualExitCode": 1,
+      "chunk": "036279",
+      "scope": "Preparation-only AST selector error; cleanup helper unchanged and not executed before correction."
+    }
+  ],
+  "priorEvidenceAndMediaAuthorFailuresUnmodified": true,
+  "completionReceipt": "output/2026-10-17-continuous-stage/completion-verification.json",
+  "productOrRealAgentAcceptanceClaimed": false
+}
