@@ -27,6 +27,9 @@ export function AgentExtensionInventoryResult({
   };
 }) {
   const snapshot = result.snapshot;
+  const extraRoots = result.request.extraSkillRoots ?? [];
+  const discoveryOnly = extraRoots.length > 0;
+  const allowedManagement = discoveryOnly ? undefined : management;
   const observed = new Date(snapshot.observedAtMs);
   return (
     <div className="agent-extension-result">
@@ -36,6 +39,15 @@ export function AgentExtensionInventoryResult({
         </p>
       )}
       <p className="agent-extension-directory">{result.cwd}</p>
+      {discoveryOnly && (
+        <div className="agent-extension-directory">
+          <strong>{S.extraSkillDirectory}</strong>
+          {extraRoots.map((root, index) => (
+            <span key={index}>{root}</span>
+          ))}
+          <p>{S.extraSkillReadOnly}</p>
+        </div>
+      )}
       <p>
         {S.observed}：
         <time>
@@ -51,7 +63,7 @@ export function AgentExtensionInventoryResult({
           {snapshot.errorCount}
         </p>
       )}
-      {snapshot.source === "officialCli" && management && (
+      {snapshot.source === "officialCli" && allowedManagement && (
         <p>{C.applicability}</p>
       )}
       {snapshot.items.length === 0 ? (
@@ -69,23 +81,23 @@ export function AgentExtensionInventoryResult({
                   <span>
                     {S.auth}：{S.authentication[item.reportedAuth]}
                   </span>
-                  {management &&
+                  {allowedManagement &&
                   item.enablement?.availability === "available" ? (
                     [true, false].map((enabled) => (
                       <button
                         key={String(enabled)}
                         type="button"
                         className="btn btn-ghost"
-                        disabled={stale || !management.enabled}
+                        disabled={stale || !allowedManagement.enabled}
                         onClick={() => {
-                          if (!stale && management.enabled)
-                            management.inspect(item, enabled);
+                          if (!stale && allowedManagement.enabled)
+                            allowedManagement.inspect(item, enabled);
                         }}
                       >
                         {enabled ? C.reviewEnable : C.reviewDisable}
                       </button>
                     ))
-                  ) : management ? (
+                  ) : allowedManagement ? (
                     <span>
                       {item.enablement?.availability === "unavailable"
                         ? C.reasons[item.enablement.reason]
@@ -93,6 +105,7 @@ export function AgentExtensionInventoryResult({
                     </span>
                   ) : null}
                   {removal &&
+                    !discoveryOnly &&
                     snapshot.complete &&
                     item.reportedEnabled === false &&
                     item.enablement?.availability === "available" &&
@@ -132,20 +145,20 @@ export function AgentExtensionInventoryResult({
                   {item.descriptionRedacted && (
                     <span>{S.descriptionRedacted}</span>
                   )}
-                  {management &&
+                  {allowedManagement &&
                   item.enablement.availability === "reviewable" ? (
                     <button
                       type="button"
                       className="btn btn-ghost"
-                      disabled={stale || !management.enabled}
+                      disabled={stale || !allowedManagement.enabled}
                       onClick={() => {
-                        if (!stale && management.enabled)
-                          management.inspect(item);
+                        if (!stale && allowedManagement.enabled)
+                          allowedManagement.inspect(item);
                       }}
                     >
                       {item.reportedEnabled ? M.reviewDisable : M.reviewEnable}
                     </button>
-                  ) : management &&
+                  ) : allowedManagement &&
                     item.enablement.availability === "unavailable" ? (
                     <span>{M.reasons[item.enablement.reason]}</span>
                   ) : null}

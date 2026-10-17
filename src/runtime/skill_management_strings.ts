@@ -57,6 +57,7 @@ export const SKILL_MANAGEMENT_STRINGS = {
   trackingReleased:
     "已结束这次等待，修改结果仍未知。请重新查询当前清单后决定下一步。",
   reasons: {
+    discoveryOnly: "本次只读发现，不提供技能启停。",
     incompleteInventory: "清单读取不完整，暂不能审阅修改。",
     unsupportedOrigin: "此来源的技能暂不提供修改。",
     pluginManaged: "此技能由扩展提供，暂不在此修改。",

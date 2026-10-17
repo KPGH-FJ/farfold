@@ -69,6 +69,15 @@ pub(in crate::acp_client) fn capabilities(row: &AgentRow) -> Result<ExtensionCap
             source: reason.is_none().then_some("officialAppServer"),
             reason,
         },
+        skills_extra_roots_inventory: Some(InventoryCapability {
+            availability: if reason.is_none() {
+                "available"
+            } else {
+                "unavailable"
+            },
+            source: reason.is_none().then_some("officialAppServer"),
+            reason,
+        }),
         skill_enablement: InventoryCapability {
             availability: if reason.is_none() {
                 "available"

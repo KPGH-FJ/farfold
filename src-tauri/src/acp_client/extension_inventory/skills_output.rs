@@ -145,6 +145,13 @@ impl Wire {
         self,
         cwd: &str,
     ) -> Result<(SkillsInventory, Vec<super::targets::SkillTarget>)> {
+        self.project_for_scope(cwd, false)
+    }
+    pub(super) fn project_for_scope(
+        self,
+        cwd: &str,
+        discovery_only: bool,
+    ) -> Result<(SkillsInventory, Vec<super::targets::SkillTarget>)> {
         if self.data.len() != 1 {
             return Err(Code::InvalidOutput.into());
         }
@@ -182,7 +189,9 @@ impl Wire {
             let (description, description_truncated, description_redacted) =
                 description(brief, &skill.path);
             let name = safe_skill_name(&skill.name);
-            let reason = if !complete {
+            let reason = if discovery_only {
+                Some("discoveryOnly")
+            } else if !complete {
                 Some("incompleteInventory")
             } else if skill.plugin_id.as_ref().is_some_and(|v| !v.is_empty()) {
                 Some("pluginManaged")

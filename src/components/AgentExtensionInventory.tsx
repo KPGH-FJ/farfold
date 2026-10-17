@@ -30,6 +30,7 @@ import { AgentExtensionInventoryResult } from "./AgentExtensionInventoryResult";
 import { SkillChangeReview } from "./SkillChangeReview";
 import { MCP_MANAGEMENT_STRINGS as M } from "../runtime/mcp_management_strings";
 import { skillManagement } from "../runtime/skill_management_controller";
+import { sameInventoryExtraRoots } from "../runtime/extension_inventory_scope";
 
 /** Inline in the existing AgentDetails dialog; no separate modal or Agent UI. */
 export function AgentExtensionInventory({
@@ -45,6 +46,12 @@ export function AgentExtensionInventory({
 }) {
   const [kind, setKind] = useState<InventoryKind>("mcp");
   const [cwd, setCwd] = useState("");
+  const [extraSkillRoot, setExtraSkillRoot] = useState("");
+  const extraSkillRoots = useMemo(
+    () => Object.freeze(extraSkillRoot ? [extraSkillRoot] : []),
+    [extraSkillRoot],
+  );
+  const heading = useRef<HTMLHeadingElement>(null);
   const [choosing, setChoosing] = useState(false);
   const [folderError, setFolderError] = useState(false);
   const [revision, setRevision] = useState(0);
@@ -69,7 +76,16 @@ export function AgentExtensionInventory({
         active && !blocked && selection !== null && liveOwner.current === value,
     };
     return value;
-  }, [agentId, selection, active, blocked, cwd, revision, kind]);
+  }, [
+    agentId,
+    selection,
+    active,
+    blocked,
+    cwd,
+    revision,
+    kind,
+    extraSkillRoot,
+  ]);
   liveOwner.current = owner;
   useEffect(() => {
     liveOwner.current = owner;
@@ -127,16 +143,27 @@ export function AgentExtensionInventory({
     kind === "mcp" ? cap?.value?.mcpInventory : cap?.value?.skillsInventory;
   const available =
     !blocked && selectedCapability?.availability === "available";
-  const selectDirectory = async () => {
-    if (!owner.current() || choosing || view.unresolved) return;
+  const extraRootsAvailable =
+    kind === "skills" &&
+    cap?.value?.skillsExtraRootsInventory?.availability === "available";
+  const requestedRoots = kind === "skills" ? extraSkillRoots : [];
+  const selectDirectory = async (extra = false) => {
+    if (
+      !owner.current() ||
+      choosing ||
+      view.unresolved ||
+      (extra && !extraRootsAvailable)
+    )
+      return;
     setChoosing(true);
     setFolderError(false);
     try {
       const result = await open({ directory: true, multiple: false });
       if (!owner.current()) return;
-      if (typeof result === "string" && validInventoryDirectory(result))
-        setCwd(result);
-      else if (result !== null) setFolderError(true);
+      if (typeof result === "string" && validInventoryDirectory(result)) {
+        if (extra) setExtraSkillRoot(result);
+        else setCwd(result);
+      } else if (result !== null) setFolderError(true);
     } catch {
       if (owner.current()) setFolderError(true);
     } finally {
@@ -163,13 +190,20 @@ export function AgentExtensionInventory({
   const additionAvailable =
     kind === "mcp" && cap?.value?.mcpAddition?.availability === "available";
   const stale =
-    result?.stale || !active || !selection || result?.cwd !== cwd || !available;
+    result?.stale ||
+    !active ||
+    !selection ||
+    result?.cwd !== cwd ||
+    !available ||
+    !sameInventoryExtraRoots(result?.request.extraSkillRoots, requestedRoots);
   const reason = !selection
     ? "entryUnverified"
     : (cap?.error ?? selectedCapability?.reason);
   return (
     <section className="agent-extension-inventory" aria-label={S.heading}>
-      <h4>{S.heading}</h4>
+      <h4 ref={heading} tabIndex={-1}>
+        {S.heading}
+      </h4>
       <p>{S.unavailableLists}</p>
       <label className="agent-extension-kind">
         <span>{S.kind}</span>
@@ -224,11 +258,24 @@ export function AgentExtensionInventory({
                 unresolved ||
                 !cwd ||
                 !ticket ||
-                ticketRejected
+                ticketRejected ||
+                (requestedRoots.length > 0 && !extraRootsAvailable)
               }
               onClick={() => {
-                if (owner.current() && available && ticket && !ticketRejected)
-                  extensionInventory.begin(owner, cwd, ticket, kind);
+                if (
+                  owner.current() &&
+                  available &&
+                  ticket &&
+                  !ticketRejected &&
+                  (!requestedRoots.length || extraRootsAvailable)
+                )
+                  extensionInventory.begin(
+                    owner,
+                    cwd,
+                    ticket,
+                    kind,
+                    requestedRoots,
+                  );
               }}
             >
               {kind === "mcp"
@@ -242,6 +289,51 @@ export function AgentExtensionInventory({
           </>
         )}
       </div>
+      {kind === "skills" && (extraRootsAvailable || extraSkillRoot) && (
+        <div
+          className="agent-extension-progress"
+          role="group"
+          aria-label={S.extraSkillDirectory}
+        >
+          <strong>{S.extraSkillDirectory}</strong>
+          <p>{S.extraSkillScope}</p>
+          {extraSkillRoot && (
+            <p className="agent-extension-directory">{extraSkillRoot}</p>
+          )}
+          <div className="agent-extension-actions">
+            <button
+              type="button"
+              className="btn btn-ghost"
+              disabled={
+                !active ||
+                blocked ||
+                choosing ||
+                unresolved ||
+                !extraRootsAvailable
+              }
+              onClick={() => void selectDirectory(true)}
+            >
+              {S.chooseExtraSkillDirectory}
+            </button>
+            {extraSkillRoot && (
+              <button
+                type="button"
+                className="btn btn-ghost"
+                disabled={!active || blocked || choosing || unresolved}
+                onClick={(event) => {
+                  if (!owner.current() || choosing || unresolved) return;
+                  if (document.activeElement === event.currentTarget)
+                    heading.current?.focus();
+                  setExtraSkillRoot("");
+                }}
+              >
+                {S.removeExtraSkillDirectory}
+              </button>
+            )}
+          </div>
+          {extraSkillRoot && <p>{S.extraSkillReadOnly}</p>}
+        </div>
+      )}
       {cwd && (
         <p className="agent-extension-directory">
           <strong>{S.directory}</strong>
@@ -262,6 +354,15 @@ export function AgentExtensionInventory({
                 : S.reading}
           </p>
           <p className="agent-extension-directory">{request.cwd}</p>
+          {(request.extraSkillRoots?.length ?? 0) > 0 && (
+            <div className="agent-extension-directory">
+              <strong>{S.extraSkillDirectory}</strong>
+              {request.extraSkillRoots!.map((root, index) => (
+                <span key={index}>{root}</span>
+              ))}
+              <p>{S.extraSkillReadOnly}</p>
+            </div>
+          )}
           {view.error && view.error !== "cancelled" && (
             <p>{S.errors[view.error]}</p>
           )}
@@ -396,12 +497,14 @@ export function AgentExtensionInventory({
                 : managementAvailable
                   ? M.limits
                   : S.limits
-            : managementAvailable
-              ? S.skillManagementLimits
-              : S.skillLimits}
+            : requestedRoots.length > 0
+              ? S.extraSkillReadOnly
+              : managementAvailable
+                ? S.skillManagementLimits
+                : S.skillLimits}
         </p>
         {removalAvailable && <p>{REMOVE.limits}</p>}
-        <p>{S.sideEffects}</p>
+        <p>{requestedRoots.length > 0 ? S.extraSkillEffects : S.sideEffects}</p>
       </details>
     </section>
   );

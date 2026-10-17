@@ -37,6 +37,15 @@ export const EXTENSION_INVENTORY_STRINGS = {
   capabilityRetry: "重新检查读取方式",
   chooseDirectory: "选择工作文件夹",
   directory: "本次查询的工作文件夹",
+  extraSkillDirectory: "额外技能目录（仅本次查询）",
+  chooseExtraSkillDirectory: "选择额外技能目录",
+  removeExtraSkillDirectory: "移除额外目录",
+  extraSkillScope:
+    "同时查询所选工作文件夹的已有技能和此额外目录；不会只列出额外目录的技能。",
+  extraSkillReadOnly:
+    "本次仅作只读发现；未安装技能，也未应用到当前对话。此报告不提供技能启停。",
+  extraSkillEffects:
+    "官方程序会沿用已有配置、登录状态和环境。本次只临时设置查询目录并读取技能，不保存配置、不安装技能、不发送对话消息，也不附加已保存的服务密钥。",
   query: "检查 MCP 配置",
   queryAgain: "重新查询配置",
   reading: "正在查询所选文件夹的清单…",
@@ -83,7 +92,7 @@ export const EXTENSION_INVENTORY_STRINGS = {
     environmentUnavailable:
       "程序环境暂未准备好。请返回程序设置检查后，再明确重试。",
     selectionChanged: "读取方式已失效或发生变化，请重新检查读取方式。",
-    cwdUnavailable: "此工作文件夹无法用于查询，请重新选择。",
+    cwdUnavailable: "本次查询的文件夹不可用或已变化，请重新选择。",
     busy: "本次查询暂时无法开始，请稍后重试。",
     spawnFailed: "未能启动本次查询，请检查程序设置后重试。",
     queryFailed: "本次查询失败，未得到完整清单。",

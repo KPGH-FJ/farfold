@@ -63,6 +63,8 @@ pub struct ExtensionCapabilities {
     pub selection_id: Option<String>,
     pub mcp_inventory: InventoryCapability,
     pub skills_inventory: InventoryCapability,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub skills_extra_roots_inventory: Option<InventoryCapability>,
     pub skill_enablement: InventoryCapability,
     pub mcp_enablement: InventoryCapability,
     pub mcp_addition: InventoryCapability,
@@ -88,6 +90,7 @@ pub struct InventoryOperation {
     pub agent_id: String,
     pub cwd: String,
     pub kind: Kind,
+    pub extra_skill_roots: Vec<String>,
     pub state: State,
     pub settled: bool,
     #[serde(skip_serializing_if = "Option::is_none")]

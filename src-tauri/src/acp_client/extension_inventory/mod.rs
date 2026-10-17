@@ -1,5 +1,6 @@
 //! Explicit one-shot official CLI inventory; no ACP session or configuration write.
 pub(in crate::acp_client) mod execution;
+mod extra_skill_roots;
 pub(in crate::acp_client) mod launch;
 pub(in crate::acp_client) mod mcp_targets;
 pub(in crate::acp_client) mod output;
@@ -162,12 +163,14 @@ fn query(
         }
         Kind::Skills => {
             let (snapshot, entries) = process::run_skills_private(command, request)?;
-            *request.targets.lock().unwrap_or_else(|p| p.into_inner()) =
-                Some(Arc::new(targets::TargetSet {
-                    row: row.clone(),
-                    directory: directory.clone(),
-                    entries,
-                }));
+            if request.extra_skill_roots.is_empty() {
+                *request.targets.lock().unwrap_or_else(|p| p.into_inner()) =
+                    Some(Arc::new(targets::TargetSet {
+                        row: row.clone(),
+                        directory: directory.clone(),
+                        entries,
+                    }));
+            }
             InventorySnapshot::Skills(snapshot)
         }
     };
@@ -228,6 +231,8 @@ async fn execute_selected(
     }
 }
 #[tauri::command]
+// Keep the flat IPC fields compatible; app/webview are framework-injected.
+#[allow(clippy::too_many_arguments)]
 pub async fn agent_extension_inventory_read(
     app: AppHandle,
     webview: Webview,
@@ -236,11 +241,18 @@ pub async fn agent_extension_inventory_read(
     request_id: String,
     selection_id: String,
     kind: Kind,
+    extra_skill_roots: Option<Vec<String>>,
 ) -> Result<InventoryOperation> {
     let store = context(&app, &webview, "agent_extension_inventory_read")?;
     let activity = crate::managed_update::activity().map_err(|_| Code::Busy)?;
-    let (request, fresh) =
-        requests::shared().begin(&agent_id, &cwd, &request_id, &selection_id, kind)?;
+    let (request, fresh) = requests::shared().begin_with_roots(
+        &agent_id,
+        &cwd,
+        &request_id,
+        &selection_id,
+        kind,
+        extra_skill_roots.unwrap_or_default(),
+    )?;
     if fresh {
         match launch::selections().get(&agent_id, &selection_id, Instant::now()) {
             Ok(selected) => {
@@ -324,3 +336,9 @@ pub(in crate::acp_client) fn skills_scope(
 
 #[cfg(test)]
 mod skills_lifecycle_tests;
+
+#[cfg(test)]
+mod extra_skill_roots_tests;
+
+#[cfg(test)]
+mod extra_skill_roots_rpc_tests;

@@ -17,6 +17,7 @@ import {
 } from "./extension_inventory_types";
 // Generic UI types; official Codex routing stays within acp_client.
 export type SkillEnablementReason =
+  | "discoveryOnly"
   | "incompleteInventory"
   | "unsupportedOrigin"
   | "pluginManaged"

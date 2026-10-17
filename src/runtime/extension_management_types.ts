@@ -111,6 +111,7 @@ export function requestForTarget(
     result.owner !== owner ||
     result.request.agentId !== owner.agentId ||
     result.stale ||
+    (result.request.extraSkillRoots?.length ?? 0) > 0 ||
     !result.snapshot.complete
   )
     return null;

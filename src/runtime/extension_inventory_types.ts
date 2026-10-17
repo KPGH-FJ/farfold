@@ -1,5 +1,10 @@
 import { parseMcpEnablement, type McpEnablement } from "./mcp_management_types";
 import type { SkillEnablement } from "./skill_management_types";
+import {
+  freezeInventoryExtraRoots,
+  sameInventoryExtraRoots,
+} from "./extension_inventory_scope";
+export { validInventoryDirectory } from "./extension_inventory_scope";
 export const EXTENSION_CODES = [
   "notReviewed",
   "entryUnverified",
@@ -31,6 +36,7 @@ export interface ExtensionCapabilities {
   selectionId: string | null;
   mcpInventory: InventoryCapability;
   skillsInventory: InventoryCapability;
+  skillsExtraRootsInventory?: InventoryCapability;
   skillEnablement: InventoryCapability;
   mcpRemoval?: InventoryCapability; // Missing legacy report grants no removal.
   mcpHttpAddition?: InventoryCapability; // Only explicit availability grants HTTP addition.
@@ -85,6 +91,7 @@ export interface InventoryRequest {
   agentId: string;
   requestId: string;
   cwd: string;
+  extraSkillRoots?: readonly string[];
 }
 export interface InventoryOperation extends InventoryRequest {
   state:
@@ -135,13 +142,6 @@ export function extensionFailure(value: unknown): ExtensionCode | null {
     ? (code as ExtensionCode)
     : null;
 }
-export function validInventoryDirectory(value: string): boolean {
-  return (
-    /^(\/|[A-Za-z]:[\\/]|\\\\)/.test(value) &&
-    new TextEncoder().encode(value).length <= 4096 &&
-    !/[\u0000-\u001f\u007f-\u009f]/.test(value)
-  );
-}
 export function validInventoryId(value: unknown): value is string {
   return (
     typeof value === "string" &&
@@ -162,7 +162,13 @@ export function parseExtensionCapabilities(
       "skillEnablement",
       "toolInventory",
     ],
-    ["mcpEnablement", "mcpAddition", "mcpRemoval", "mcpHttpAddition"],
+    [
+      "mcpEnablement",
+      "mcpAddition",
+      "mcpRemoval",
+      "mcpHttpAddition",
+      "skillsExtraRootsInventory",
+    ],
   );
   const capability = (
     raw: unknown,
@@ -198,8 +204,15 @@ export function parseExtensionCapabilities(
   const mcpInventory = capability(v.mcpInventory, "officialCli");
   const skillsInventory = capability(v.skillsInventory, "officialAppServer");
   const skillEnablement = capability(v.skillEnablement, "officialAppServer");
+  const skillsExtraRootsInventory = Object.hasOwn(
+    v,
+    "skillsExtraRootsInventory",
+  )
+    ? capability(v.skillsExtraRootsInventory, "officialAppServer")
+    : undefined;
   if (
-    skillEnablement.availability === "available" &&
+    (skillEnablement.availability === "available" ||
+      skillsExtraRootsInventory?.availability === "available") &&
     skillsInventory.availability !== "available"
   )
     return invalid();
@@ -266,6 +279,7 @@ export function parseExtensionCapabilities(
     mcpInventory,
     skillsInventory,
     skillEnablement,
+    ...(skillsExtraRootsInventory ? { skillsExtraRootsInventory } : {}),
     ...(mcpEnablement ? { mcpEnablement } : {}),
     ...(mcpAddition ? { mcpAddition } : {}),
     ...(mcpHttpAddition ? { mcpHttpAddition } : {}),
@@ -288,7 +302,10 @@ function skillsLabel(value: unknown): string | null {
     return invalid();
   return value;
 }
-function skillsSnapshot(value: unknown): SkillsInventory {
+function skillsSnapshot(
+  value: unknown,
+  discoveryOnly = false,
+): SkillsInventory {
   const v = object(value, [
     "observedAtMs",
     "scope",
@@ -355,15 +372,22 @@ function skillsSnapshot(value: unknown): SkillsInventory {
               "pluginManaged",
               "unsafeLabel",
               "ambiguousTarget",
+              "discoveryOnly",
             ]),
           };
     if (
-      availability === "reviewable" &&
-      (e.reason !== null ||
-        !v.complete ||
-        i.name === null ||
-        i.pluginReported !== false ||
-        !["user", "repo"].includes(String(i.origin)))
+      (discoveryOnly &&
+        (availability !== "unavailable" ||
+          enablement.reason !== "discoveryOnly")) ||
+      (!discoveryOnly &&
+        availability === "unavailable" &&
+        enablement.reason === "discoveryOnly") ||
+      (availability === "reviewable" &&
+        (e.reason !== null ||
+          !v.complete ||
+          i.name === null ||
+          i.pluginReported !== false ||
+          !["user", "repo"].includes(String(i.origin))))
     )
       return invalid();
     return {
@@ -486,9 +510,13 @@ export function parseInventoryOperation(
   const v = object(
     value,
     ["requestId", "agentId", "cwd", "kind", "state", "settled"],
-    ["code", "snapshot"],
+    ["code", "snapshot", "extraSkillRoots"],
   );
+  const roots = freezeInventoryExtraRoots(expected.extraSkillRoots);
   if (
+    roots === null ||
+    !sameInventoryExtraRoots(v.extraSkillRoots, roots) ||
+    (expected.kind !== "skills" && roots.length > 0) ||
     v.requestId !== expected.requestId ||
     v.agentId !== expected.agentId ||
     v.cwd !== expected.cwd ||
@@ -525,7 +553,7 @@ export function parseInventoryOperation(
       ? {
           snapshot:
             expected.kind === "skills"
-              ? skillsSnapshot(v.snapshot)
+              ? skillsSnapshot(v.snapshot, roots.length > 0)
               : snapshot(v.snapshot),
         }
       : {}),

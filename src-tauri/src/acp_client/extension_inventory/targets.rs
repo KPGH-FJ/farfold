@@ -24,6 +24,9 @@ pub(in crate::acp_client) struct Source {
 }
 impl Source {
     pub fn current(&self, store: &MetaStore, require_inventory: bool) -> Result<()> {
+        if !self.request.extra_skill_roots.is_empty() {
+            return Err(Code::TargetUnavailable.into());
+        }
         let current = store
             .get_agent(&self.set.row.id)
             .map_err(|_| Code::Unavailable)?;
@@ -42,7 +45,8 @@ impl Source {
         Ok(())
     }
     pub fn available(&self) -> bool {
-        self.request.operation.interested()
+        self.request.extra_skill_roots.is_empty()
+            && self.request.operation.interested()
             && self
                 .request
                 .targets
@@ -57,7 +61,8 @@ impl Source {
 }
 pub(in crate::acp_client) fn get(agent: &str, id: &str, item: usize) -> Result<Source> {
     let request = requests::shared().get(agent, id)?;
-    if !request.operation.interested()
+    if !request.extra_skill_roots.is_empty()
+        || !request.operation.interested()
         || !request
             .snapshot()
             .is_some_and(|v| v.settled && v.state == State::Ready && v.kind == Kind::Skills)

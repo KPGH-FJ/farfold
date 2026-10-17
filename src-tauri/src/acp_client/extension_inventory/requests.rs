@@ -15,6 +15,7 @@ pub(in crate::acp_client) struct Request {
     pub agent: String,
     pub cwd: Option<String>,
     pub kind: Option<Kind>,
+    pub extra_skill_roots: Vec<String>,
     selection_id: Option<String>,
     pub operation: Operation,
     pub deadline: Instant,
@@ -127,6 +128,7 @@ impl Requests {
         });
         entries
     }
+    #[cfg(test)]
     pub fn begin(
         &self,
         agent: &str,
@@ -135,7 +137,19 @@ impl Requests {
         selection_id: &str,
         kind: Kind,
     ) -> Result<(Arc<Request>, bool)> {
+        self.begin_with_roots(agent, cwd, id, selection_id, kind, vec![])
+    }
+    pub fn begin_with_roots(
+        &self,
+        agent: &str,
+        cwd: &str,
+        id: &str,
+        selection_id: &str,
+        kind: Kind,
+        extra_skill_roots: Vec<String>,
+    ) -> Result<(Arc<Request>, bool)> {
         validate(agent, id)?;
+        super::extra_skill_roots::validate(&extra_skill_roots, kind)?;
         if !valid_id(selection_id) {
             return Err(Code::SelectionChanged.into());
         }
@@ -153,6 +167,7 @@ impl Requests {
             if request.cwd.as_deref() != Some(cwd)
                 || request.selection_id.as_deref() != Some(selection_id)
                 || request.kind != Some(kind)
+                || request.extra_skill_roots != extra_skill_roots
             {
                 return Err(Code::RequestConflict.into());
             }
@@ -168,6 +183,7 @@ impl Requests {
             agent: agent.into(),
             cwd: Some(cwd.into()),
             kind: Some(kind),
+            extra_skill_roots: extra_skill_roots.clone(),
             selection_id: Some(selection_id.into()),
             operation: Operation::new(),
             deadline: Instant::now() + Duration::from_secs(10),
@@ -179,6 +195,7 @@ impl Requests {
                 agent_id: agent.into(),
                 cwd: cwd.into(),
                 kind,
+                extra_skill_roots,
                 state: State::Running,
                 settled: false,
                 code: None,
@@ -213,6 +230,7 @@ impl Requests {
                 agent: agent.into(),
                 cwd: None,
                 kind: None,
+                extra_skill_roots: vec![],
                 selection_id: None,
                 operation: Operation::new(),
                 deadline: Instant::now(),

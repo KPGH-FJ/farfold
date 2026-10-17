@@ -154,15 +154,25 @@ impl Control for Request {
         self.progress(State::PendingCleanup, Some(Code::PendingCleanup));
     }
 }
-impl FixedExchange for super::skills_rpc::Exchange {
+struct ScopedSkillsExchange {
+    rpc: super::skills_rpc::Exchange,
+    roots: super::extra_skill_roots::PinnedRoots,
+}
+impl FixedExchange for ScopedSkillsExchange {
     fn write(&mut self, writer: &mut std::process::ChildStdin) -> Result<()> {
-        self.write(writer)
+        if !self.roots.current() {
+            return Err(Code::CwdUnavailable.into());
+        }
+        self.rpc.write(writer)
     }
     fn received(&mut self, bytes: &mut Vec<u8>) -> Result<()> {
-        self.received(bytes)
+        if !self.roots.current() {
+            return Err(Code::CwdUnavailable.into());
+        }
+        self.rpc.received(bytes)
     }
     fn done(&self) -> bool {
-        self.done()
+        self.rpc.done()
     }
 }
 pub(super) fn run(command: Command, request: &Request) -> Result<Vec<u8>> {
@@ -176,12 +186,19 @@ pub(super) fn run_skills_private(
     command: Command,
     request: &Request,
 ) -> Result<(SkillsInventory, Vec<super::targets::SkillTarget>)> {
-    let mut rpc =
-        super::skills_rpc::Exchange::new(request.cwd.as_deref().ok_or(Code::InvalidRequest)?)?;
-    let mut out = run_owned(command, request, Some(&mut rpc), STDOUT_LIMIT)?;
-    let targets = rpc.take_targets();
-    let result = rpc.finish(&out);
+    let roots = super::extra_skill_roots::PinnedRoots::open(&request.extra_skill_roots)?;
+    let rpc = super::skills_rpc::Exchange::with_roots(
+        request.cwd.as_deref().ok_or(Code::InvalidRequest)?,
+        &roots.paths(),
+    )?;
+    let mut exchange = ScopedSkillsExchange { rpc, roots };
+    let mut out = run_owned(command, request, Some(&mut exchange), STDOUT_LIMIT)?;
+    let targets = exchange.rpc.take_targets();
+    let result = exchange.rpc.finish(&out);
     out.fill(0);
+    if !exchange.roots.current() {
+        return Err(Code::CwdUnavailable.into());
+    }
     result.map(|v| (v, targets))
 }
 pub(in crate::acp_client) fn run_owned(

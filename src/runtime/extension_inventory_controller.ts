@@ -1,4 +1,5 @@
 import { inventoryPort, type InventoryPort } from "./extension_inventory";
+import { freezeInventoryExtraRoots } from "./extension_inventory_scope";
 import {
   extensionFailure,
   parseInventoryCancellation,
@@ -165,9 +166,13 @@ export class ExtensionInventoryController {
     cwd: string,
     selectionId: string,
     kind: InventoryKind = "mcp",
+    extraSkillRoots?: readonly string[],
   ): boolean {
     const previous = this.entries.get(owner.agentId);
+    const roots = freezeInventoryExtraRoots(extraSkillRoots);
     if (
+      roots === null ||
+      (kind !== "skills" && roots.length > 0) ||
       !owner.current() ||
       !validInventoryId(selectionId) ||
       !validInventoryDirectory(cwd) ||
@@ -186,6 +191,7 @@ export class ExtensionInventoryController {
       cwd,
       requestId: this.uuid(),
       kind,
+      ...(roots.length ? { extraSkillRoots: roots } : {}),
     });
     const results = Object.fromEntries(
       Object.entries(previous?.view.results ?? {}).map(([key, value]) => [
