@@ -14,6 +14,7 @@ import {
   loadedMarkdownFields,
 } from "./loaded_search";
 import { loadedSearchDOMRange } from "./loaded_search_dom";
+import { MESSAGE_AVIF_TEST_DATA } from "./message_avif_fixtures.test-support";
 
 type TextNode = {
   nodeType: 3;
@@ -128,6 +129,100 @@ function dom(html: string) {
   return root as unknown as HTMLElement;
 }
 afterEach(() => vi.unstubAllGlobals());
+async function orderedFixture(content: readonly unknown[], query: string) {
+  const state = freshThreadState("ordered", "controlled", "/work", "native");
+  for (const block of content)
+    applyUpdate(state, {
+      sessionUpdate: "agent_message_chunk",
+      messageId: "ordered-message",
+      content: block,
+    });
+  const item = state.items[0];
+  if (item.kind !== "agent") throw new Error("Missing Agent message");
+  const result = await searchLoadedConversations(
+    [state.key],
+    new Map([[state.key, state]]),
+    query,
+    {
+      yieldControl: async () => {},
+      parseMarkdown: async (text) => loadedMarkdownFields(text),
+    },
+  );
+  const html = renderToStaticMarkup(
+    <TranscriptSearchContext.Provider value={true}>
+      <div data-loaded-message={item.id}>
+        <MessageContent
+          source={item}
+          text={item.text}
+          attachments={item.attachments}
+          contentOrder={item.contentOrder}
+        />
+      </div>
+    </TranscriptSearchContext.Provider>,
+  );
+  return { html, hits: result.hits };
+}
+const orderedImage = {
+  type: "image",
+  mimeType: "image/avif",
+  data: MESSAGE_AVIF_TEST_DATA.STATIC,
+};
+it.each([
+  [[orderedImage, { type: "text", text: "after needle" }], "needle"],
+  [
+    [
+      { type: "text", text: "left needle" },
+      orderedImage,
+      { type: "text", text: "right needle" },
+    ],
+    "needle",
+  ],
+  [
+    [
+      { type: "text", text: "**left" },
+      orderedImage,
+      { type: "text", text: "right**" },
+    ],
+    "**left",
+  ],
+])(
+  "maps observed text-run fields onto actual ordered MessageContent DOM: %j",
+  async (content, query) => {
+    const { html, hits } = await orderedFixture(content, query);
+    expect(hits.length).toBeGreaterThan(0);
+    const root = dom(html);
+    expect(root.querySelectorAll("[data-loaded-body]")).toHaveLength(1);
+    for (const hit of hits)
+      expect(loadedSearchDOMRange(root, hit)?.range.toString()).toBe(hit.match);
+    expect(html).not.toContain("<img");
+  },
+);
+it("keeps global received-attachment indices over several ordered runs", async () => {
+  const note = (index: number) => ({
+    type: "resource",
+    resource: {
+      uri: `file:///never-read/${index}.txt`,
+      text: index === 3 ? "fourth needle attachment" : "other",
+    },
+  });
+  const { html, hits } = await orderedFixture(
+    [
+      { type: "text", text: "head" },
+      note(0),
+      { type: "text", text: "middle" },
+      note(1),
+      note(2),
+      { type: "text", text: "tail" },
+      note(3),
+    ],
+    "needle",
+  );
+  expect(hits).toHaveLength(1);
+  expect(hits[0].attachmentIndex).toBe(3);
+  expect(loadedSearchDOMRange(dom(html), hits[0])?.range.toString()).toBe(
+    "needle",
+  );
+});
 async function fixture(
   text: string,
   query: string,

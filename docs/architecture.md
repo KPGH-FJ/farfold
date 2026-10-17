@@ -73,6 +73,8 @@ Agent的原始事件包括未知字段进入总线；工具、异步任务、压
 
 收到的媒体由 [message_attachments.ts](../src/runtime/message_attachments.ts) 保留原payload与顺序，先核允许MIME、规范Base64及单项最多16 MiB，再核下述已覆盖的声明结构。显式展开才生成媒体DOM；搜索、折叠、普通消息呈现不自动加载媒体。远程地址不因预览而抓取，未知格式与原协议内容仍保留。
 
+Agent消息的正文与媒体顺序由 [message_content_order.ts](../src/runtime/message_content_order.ts) 保留为已有正文的字符范围和附件索引范围，仅用于内存呈现，不复制负载、不持久化事件。相邻文字片段合并为一个Markdown段；主对话和已读取历史预览使用同一呈现，搜索按连续文字段解析，导出在对应位置列附件来源。完整覆盖校验失败或旧消息没有顺序信息时保留原布局，不猜测丢失的顺序。稳定的段键及全消息附件索引用于保留展开状态、媒体来源与搜索定位。
+
 PNG检查签名、IHDR和有界容器布局；[message_apng_admission.ts](../src/runtime/message_apng_admission.ts) 核APNG控制块、帧序号、矩形与声明数量。JPEG、GIF、WebP、BMP由 [message_raster_admission.ts](../src/runtime/message_raster_admission.ts) 分派。支持范围内画布每边最多8192像素、总量最多16,777,216像素。GIF/WebP/APNG另限128动画帧、完整画布像素乘帧数最多67,108,864、遍历记录最多65,536；APNG独立默认图额外计入像素总量。PNG/APNG固定控制数据核CRC，压缩像素与其他负载不做全量CRC或解压；标准`image/apng`复用同一PNG准入。跨允许MIME标注的已识别格式也受相应约束。
 
 AVIF入口 [message_avif_admission.ts](../src/runtime/message_avif_admission.ts) 使用有界容器、项目关联及序列检查，核已识别的画布、派生图片、辅助图片和样本声明，并沿共用画布、帧数、像素工作量与记录预算计额。容器尺寸不等于AV1位流的最大或中间帧尺寸；未知版本、编码布局及缺少可计额声明的兼容内容保持原支持，明确留为未覆盖，不能据此宣称全部AVIF受同样资源约束。
@@ -82,6 +84,8 @@ AVIF入口 [message_avif_admission.ts](../src/runtime/message_avif_admission.ts)
 音频入口 [message_audio_admission.ts](../src/runtime/message_audio_admission.ts) 仅对已识别经典RIFF/WAVE做容器边界、填充和有界分片遍历；明确的线性PCM、IEEE浮点及标准扩展格式才按data字节、帧对齐和采样率核算，并采用600秒的消息预览策略。未知压缩编码、其他容器、wavl和播放列表保持原播放路径，不套用PCM时长公式。该策略不等于格式限制、实际播放/循环时长或解码与重采样内存保证。
 
 经典WAVE未识别时，共用入口另调 [message_flac_admission.ts](../src/runtime/message_flac_admission.ts) 核原生`fLaC`标记、首个且唯一的STREAMINFO及有界元数据。已知总采样数与采样率沿600秒声明策略；总量为零的未知值、零采样率的非音频数据和保留元数据保持未覆盖，独立已知的超限仍拒绝。跨原允许音频MIME核实际标记，不新增格式入口；不扫描音频帧、嵌入图片或URI，不核实际解码内存或帧内参数变化。
+
+其他音频另由 [message_adts_admission.ts](../src/runtime/message_adts_admission.ts) 识别裸ADTS并有界遍历帧边界；对已知AAC-LC采样率和块数用整数时间基计入同一600秒声明策略。CRC保护或未知配置保留未覆盖，仍保留独立已知的超限判断；ID3前缀、ADIF、其他AAC容器及帧负载语义不在此路径的证明范围。它不增加MIME支持或解码器能力，也不等于实际播放时长或内存保证。
 
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化按各自租约退役。[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 移除旧图片来源并处理重复挂载；音频暂停、清来源及重新加载沿其生命周期处理。可明确重试，不自动重复占用。
 

@@ -101,6 +101,8 @@ export type ThreadItem = (
       messageId?: string;
       text: string;
       attachments?: Attachment[];
+      /** In-memory order observed while projecting this Agent message. */
+      contentOrder?: readonly import("./message_content_order").MessageContentOrderPart[];
       streaming: boolean;
       time: number;
     }

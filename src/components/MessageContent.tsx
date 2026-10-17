@@ -19,6 +19,10 @@ import { THREAD_VIEW_STRINGS } from "../runtime/thread_view_strings";
 import "../message-attachments.css";
 import { MessageAttachmentMedia } from "./MessageAttachmentMedia";
 import { useSearchExpansion } from "./transcript-search";
+import {
+  checkedMessageContentOrder,
+  type MessageContentOrderPart,
+} from "../runtime/message_content_order";
 
 export type OpenMessageFile = (path: string, opener: HTMLElement) => void;
 const FileOpenContext = createContext<OpenMessageFile | null>(null);
@@ -78,9 +82,12 @@ function InlineFileCode({
 export function MessageAttachments({
   attachments,
   onOpenFile,
+  indexOffset = 0,
 }: {
   attachments: readonly Attachment[];
   onOpenFile?: OpenMessageFile;
+  /** Preserve the original message attachment index across ordered runs. */
+  indexOffset?: number;
 }) {
   const expansion = useSearchExpansion();
   const listId = useId();
@@ -117,7 +124,7 @@ export function MessageAttachments({
           (attachment, index) => (
             <div
               key={index}
-              data-loaded-attachment={index}
+              data-loaded-attachment={indexOffset + index}
               hidden={index >= 3 && !expansion.open}
             >
               <MessageAttachment
@@ -364,13 +371,20 @@ export const MessageContent = memo(function MessageContent({
   source,
   text,
   attachments = [],
+  contentOrder,
   onOpenFile,
 }: {
   source: object;
   text: string;
   attachments?: readonly Attachment[];
+  contentOrder?: readonly MessageContentOrderPart[];
   onOpenFile?: OpenMessageFile;
 }) {
+  const order = checkedMessageContentOrder(
+    text.length,
+    attachments.length,
+    contentOrder,
+  );
   return (
     <FileOpenContext.Provider value={onOpenFile ?? null}>
       <div
@@ -378,8 +392,26 @@ export const MessageContent = memo(function MessageContent({
         data-find-block
         data-loaded-body
       >
-        {messageTree(source, text)}
-        <MessageAttachments attachments={attachments} />
+        {order ? (
+          order.map((part) =>
+            part.kind === "text" ? (
+              <div key={`text:${part.start}`} data-find-block>
+                {messageTree(part, text.slice(part.start, part.end))}
+              </div>
+            ) : (
+              <MessageAttachments
+                key={`attachments:${part.start}`}
+                attachments={attachments.slice(part.start, part.end)}
+                indexOffset={part.start}
+              />
+            ),
+          )
+        ) : (
+          <>
+            {messageTree(source, text)}
+            <MessageAttachments attachments={attachments} />
+          </>
+        )}
       </div>
     </FileOpenContext.Provider>
   );

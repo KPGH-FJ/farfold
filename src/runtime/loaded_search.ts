@@ -2,6 +2,10 @@ import { createLoadedSearchParser } from "./loaded_search_worker";
 export { loadedMarkdownFields } from "./loaded_search_markdown";
 import type { Attachment, ThreadItem, ThreadState } from "./session_types";
 import { textImageParts } from "./text_image_links";
+import {
+  checkedMessageContentOrder,
+  type MessageContentOrderPart,
+} from "./message_content_order";
 
 type Message = Extract<ThreadItem, { kind: "user" | "agent" }>;
 export type LoadedSearchHit = Readonly<{
@@ -37,6 +41,7 @@ type Owner = {
   nativeSessionId: string;
   original: string;
   historical: boolean;
+  bodyOrder: readonly MessageContentOrderPart[] | null;
   attachment?: Attachment;
   fieldIndex: number;
   field: string;
@@ -53,6 +58,29 @@ export const LOADED_SEARCH_LIMITS = {
 } as const;
 function unavailable(state: ThreadState) {
   return !!state.historyUnavailable || state.reconnecting;
+}
+function bodyOrder(item: Message) {
+  return item.kind === "agent"
+    ? checkedMessageContentOrder(
+        item.text.length,
+        item.attachments?.length ?? 0,
+        item.contentOrder,
+      )
+    : null;
+}
+function sameBodyOrder(
+  a: readonly MessageContentOrderPart[] | null,
+  b: readonly MessageContentOrderPart[] | null,
+) {
+  return a === null || b === null
+    ? a === b
+    : a.length === b.length &&
+        a.every(
+          (part, index) =>
+            part.kind === b[index].kind &&
+            part.start === b[index].start &&
+            part.end === b[index].end,
+        );
 }
 export function loadedSearchHitIsCurrent(
   hit: LoadedSearchHit,
@@ -82,7 +110,8 @@ export function loadedSearchHitIsCurrent(
   }
   return (
     owner.item.text === owner.original &&
-    (owner.item.time === 0) === owner.historical
+    (owner.item.time === 0) === owner.historical &&
+    sameBodyOrder(bodyOrder(owner.item), owner.bodyOrder)
   );
 }
 /** For a revalidated hit only; DOM still verifies this full field and offsets. */
@@ -163,6 +192,9 @@ export async function searchLoadedConversations(
       for (const item of [...thread.items]) {
         if (item.kind !== "user" && item.kind !== "agent") continue;
         const historical = item.time === 0;
+        // Snapshot only local presentation ranges, never media payloads. Value
+        // copies also detect an in-place boundary change while parsing awaits.
+        const order = bodyOrder(item)?.map((part) => ({ ...part })) ?? null;
         const inputs = [
           {
             original: item.text,
@@ -191,15 +223,30 @@ export async function searchLoadedConversations(
             continue;
           }
           characters += input.original.length;
-          const fields =
-            input.attachment || (item.kind === "user" && !historical)
-              ? [input.original]
-              : item.kind === "agent"
-                ? await (options.parseMarkdown?.(input.original) ??
-                    parser!.parse(input.original))
-                : textImageParts(input.original).flatMap((part) =>
-                    part.kind === "text" ? [part.text] : [],
-                  );
+          let fields: string[];
+          if (input.attachment || (item.kind === "user" && !historical))
+            fields = [input.original];
+          else if (item.kind === "agent") {
+            if (order === null)
+              fields = await (options.parseMarkdown?.(input.original) ??
+                parser!.parse(input.original));
+            else {
+              fields = [];
+              for (const part of order) {
+                if (part.kind !== "text") continue;
+                await checkpoint(true);
+                const text = input.original.slice(part.start, part.end);
+                const parsed = await (options.parseMarkdown?.(text) ??
+                  parser!.parse(text));
+                // Each complete run uses the same Markdown pipeline as its
+                // rendered counterpart. Never join text across a media gap.
+                for (const field of parsed) fields.push(field);
+              }
+            }
+          } else
+            fields = textImageParts(input.original).flatMap((part) =>
+              part.kind === "text" ? [part.text] : [],
+            );
           await checkpoint();
           result.fields += fields.length;
           for (const [fieldIndex, field] of fields.entries()) {
@@ -226,6 +273,7 @@ export async function searchLoadedConversations(
                   ...identity,
                   original: input.original,
                   historical,
+                  bodyOrder: input.attachment ? null : order,
                   attachment: input.attachment,
                   fieldIndex,
                   field,

@@ -28,6 +28,7 @@ import {
   sameOfficialAttachment,
 } from "./message_attachments";
 import { streamTailItem } from "./session_streams";
+import { appendMessageContentPart } from "./message_content_order";
 import { retainReportedDetails } from "./reported_details";
 import type {
   ConfigChoice,
@@ -185,7 +186,14 @@ function appendStreamText(
       kind === "thought" ? null : normalizeMessageAttachment(content);
     if (attachment && kind !== "thought") {
       if (sameMessage && (tail.kind === "user" || tail.kind === "agent")) {
+        const start = tail.attachments?.length ?? 0;
         tail.attachments = [...(tail.attachments ?? []), attachment];
+        if (tail.kind === "agent")
+          tail.contentOrder = appendMessageContentPart(tail.contentOrder, {
+            kind: "attachments",
+            start,
+            end: start + 1,
+          });
         tail.streaming = true;
         return;
       }
@@ -214,6 +222,13 @@ function appendStreamText(
         ...(messageId === undefined ? {} : { messageId }),
         text: "",
         attachments: [attachment],
+        ...(kind === "agent"
+          ? {
+              contentOrder: [
+                { kind: "attachments" as const, start: 0, end: 1 },
+              ],
+            }
+          : {}),
         streaming: true,
         time: Date.now(),
       });
@@ -223,6 +238,12 @@ function appendStreamText(
     return;
   }
   if (sameMessage) {
+    if (tail.kind === "agent")
+      tail.contentOrder = appendMessageContentPart(tail.contentOrder, {
+        kind: "text",
+        start: tail.text.length,
+        end: tail.text.length + text.length,
+      });
     tail.text += text;
     tail.streaming = true;
     return;
@@ -245,6 +266,13 @@ function appendStreamText(
     id: nextItemId(),
     ...(messageId === undefined ? {} : { messageId }),
     text,
+    ...(kind === "agent"
+      ? {
+          contentOrder: text
+            ? [{ kind: "text" as const, start: 0, end: text.length }]
+            : [],
+        }
+      : {}),
     streaming: true,
     time: Date.now(),
     ...(kind === "user" ? { attachments: [] } : {}),

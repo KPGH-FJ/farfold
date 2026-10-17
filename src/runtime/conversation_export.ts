@@ -2,6 +2,7 @@ import type { Attachment, ThreadItem, ToolCallView } from "./session_types";
 import { STRINGS } from "./strings";
 import { THREAD_VIEW_STRINGS as T } from "./thread_view_strings";
 import { EXPORT_STRINGS as E } from "./export_strings";
+import { checkedMessageContentOrder } from "./message_content_order";
 
 export interface TranscriptExportOptions {
   sourceLocations?: "reported" | "omit";
@@ -191,10 +192,31 @@ export function transcriptMarkdown(
           "",
         );
         if (item.streaming) out.push(`> ${E.snapshot}`, "");
-        if (item.text.trim()) out.push(item.text, "");
-        for (const value of attachments)
-          out.push(`- ${attachment(value, options)}`);
-        if (attachments.length) out.push("");
+        const order =
+          item.kind === "agent"
+            ? checkedMessageContentOrder(
+                item.text.length,
+                attachments.length,
+                item.contentOrder,
+              )
+            : null;
+        if (order) {
+          for (const part of order) {
+            if (part.kind === "text") {
+              const text = item.text.slice(part.start, part.end);
+              if (text.trim()) out.push(text, "");
+            } else {
+              for (const value of attachments.slice(part.start, part.end))
+                out.push(`- ${attachment(value, options)}`);
+              out.push("");
+            }
+          }
+        } else {
+          if (item.text.trim()) out.push(item.text, "");
+          for (const value of attachments)
+            out.push(`- ${attachment(value, options)}`);
+          if (attachments.length) out.push("");
+        }
         break;
       }
       case "tool":

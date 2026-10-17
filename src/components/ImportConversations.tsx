@@ -938,6 +938,11 @@ export function ImportConversations({
                                   source={item}
                                   text={item.text}
                                   attachments={item.attachments}
+                                  contentOrder={
+                                    item.kind === "agent"
+                                      ? item.contentOrder
+                                      : undefined
+                                  }
                                 />
                               </div>
                             ) : null,

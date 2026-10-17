@@ -975,6 +975,7 @@ export function ThreadView({
                           source={first}
                           text={first.text}
                           attachments={first.attachments}
+                          contentOrder={first.contentOrder}
                           onOpenFile={openFile}
                         />
                         {thread.running && first.streaming && (
