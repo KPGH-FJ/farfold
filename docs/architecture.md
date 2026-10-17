@@ -87,6 +87,8 @@ AVIF入口 [message_avif_admission.ts](../src/runtime/message_avif_admission.ts)
 
 其他音频另由 [message_adts_admission.ts](../src/runtime/message_adts_admission.ts) 识别裸ADTS并有界遍历帧边界；对已知AAC-LC采样率和块数用整数时间基计入同一600秒声明策略。CRC保护或未知配置保留未覆盖，仍保留独立已知的超限判断；ID3前缀、ADIF、其他AAC容器及帧负载语义不在此路径的证明范围。它不增加MIME支持或解码器能力，也不等于实际播放时长或内存保证。
 
+[message_mpeg_audio_admission.ts](../src/runtime/message_mpeg_audio_admission.ts) 对裸MPEG LayerIII已索引码率帧沿版本、采样率、填充和帧边界累加声明采样数，以整数时间基核同一600秒策略。Xing/VBRI时长不代替实际遍历的帧声明；CRC保护帧保留部分覆盖，已知超限仍拒绝。ID3前缀、自由码率、其他层和未知尾部不搜索猜测下一同步点，保留未覆盖；不解码音频、不核位储存器或完整负载，不保证实际播放时长和解码内存。实际签名检查跨原允许音频MIME，未增加格式入口。
+
 [use_message_media_budget.ts](../src/runtime/use_message_media_budget.ts) 共用4个实例、32 MiB配额，按Base64所代表的文件字节计额；失败、折叠、卸载和来源变化按各自租约退役。[MessageAttachmentMedia.tsx](../src/components/MessageAttachmentMedia.tsx) 移除旧图片来源并处理重复挂载；音频暂停、清来源及重新加载沿其生命周期处理。可明确重试，不自动重复占用。
 
 以上是字节、已覆盖声明结构和DOM生命周期约束，不是实际解码器分配、传输内存、动画循环或播放时长保证。APNG/AVIF完整动画、未覆盖AVIF/音频资源边界、长期使用、正式消息媒体和完整P13仍开放；受控浏览器文件显示不证明动画帧推进或真实 Agent效果。
@@ -103,6 +105,8 @@ Agent历史仍归 Agent所有。列表、正文读取与继续对话分别处理
 | 所选附件内容 | 明确选取的当前本地文字、DOCX、XLSX、PDF、PPTX的可解析文字  | 附件历史版本、OCR、音频、网页及全格式正文      |
 
 已加载查找在worker内按字段和总量限额执行，迟到结果需校验当前范围。官方历史读取使用临时任务与归属控制，只接受已核入口；已注册方式只证明其返回的保存记录，不推断当前分支或可继续效果。取消/超时不冒充实际停止，SDK内部读取与分配也不被外部输出限额完全约束。入口见 [history_search_controller.ts](../src/runtime/history_search_controller.ts) 与 [history_search](../src-tauri/src/acp_client/history_search)。
+
+已加载正文及所选附件结果共用 [search_snippet.ts](../src/runtime/search_snippet.ts) 截取匹配前后摘要；保留56/88个UTF-16单位的窗口上限，仅在外缘切开有效代理对时向内缩一个单位，避免制造原文没有的替代字符。匹配内容、来源版本及定位范围不变，不归一化原文，也不保证整个组合字素都留在窗口内。
 
 附件查找每次最多20文件、单源文件1 MiB、可检索文字合计16 MiB。各格式的页、段落、单元格或片段边界保留；PPTX/PDF未匹配不等于完整文件无匹配。它读取当前选中文件，不自动打开历史、连接 Agent或读取网页。
 

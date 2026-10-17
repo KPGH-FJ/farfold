@@ -1,6 +1,7 @@
 import { isAbsoluteFilePath } from "./file_paths";
 import { invoke } from "@tauri-apps/api/core";
 import { fileDelivery, type VerifiedFile } from "./file_delivery";
+import { searchSnippetContext } from "./search_snippet";
 import { sameFileRevision } from "./file_revision_monitor";
 import { FILE_DELIVERY_STRINGS as D } from "./file_delivery_strings";
 import { readDocxPreview } from "./docx_preview";
@@ -636,15 +637,12 @@ export class AttachmentSearch {
                     Object.freeze({
                       source: sources[i],
                       file: f,
-                      before: segment.text.slice(
-                        Math.max(0, match.index - 56),
+                      ...searchSnippetContext(
+                        segment.text,
                         match.index,
+                        match.index + match[0].length,
                       ),
                       match: match[0],
-                      after: segment.text.slice(
-                        match.index + match[0].length,
-                        match.index + match[0].length + 88,
-                      ),
                       ...(segment.location
                         ? { location: segment.location }
                         : {}),

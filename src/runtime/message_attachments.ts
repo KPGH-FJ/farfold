@@ -6,6 +6,7 @@ import { messageAudioAdmission } from "./message_audio_admission";
 import { messageAvifAdmission } from "./message_avif_admission";
 import { messageFlacAdmission } from "./message_flac_admission";
 import { messageAdtsAdmission } from "./message_adts_admission";
+import { messageMpegAudioAdmission } from "./message_mpeg_audio_admission";
 
 function record(value: unknown): Record<string, unknown> | null {
   return value && typeof value === "object" && !Array.isArray(value)
@@ -130,7 +131,8 @@ function base64Value(code: number): number {
 
 /** Preview-only byte and declared image/audio metadata admission. Original payload,
  * transport and actual decoder memory are not bounded here. Recognized linear
- * WAVE, native FLAC and bare ADTS receive their recognized duration policies;
+ * WAVE, native FLAC, bare ADTS and indexed LayerIII MPEG frames receive their
+ * recognized duration policies;
  * other audio and unknown duration declarations remain uncovered.
  * PNG/APNG receives only structural/declaration admission,
  * including animation frame work; actual playback remains unverified.
@@ -218,6 +220,15 @@ export function attachmentMediaAdmission(
           adts !== "notAdts"
         )
           return { status: "rejected", reason: adts };
+        if (adts === "notAdts") {
+          const mpeg = messageMpegAudioAdmission(data);
+          if (
+            mpeg !== "withinBudget" &&
+            mpeg !== "notCovered" &&
+            mpeg !== "notMpegAudio"
+          )
+            return { status: "rejected", reason: mpeg };
+        }
       }
     }
   }

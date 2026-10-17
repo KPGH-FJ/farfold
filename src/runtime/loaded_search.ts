@@ -2,6 +2,7 @@ import { createLoadedSearchParser } from "./loaded_search_worker";
 export { loadedMarkdownFields } from "./loaded_search_markdown";
 import type { Attachment, ThreadItem, ThreadState } from "./session_types";
 import { textImageParts } from "./text_image_links";
+import { searchSnippetContext } from "./search_snippet";
 import {
   checkedMessageContentOrder,
   type MessageContentOrderPart,
@@ -263,9 +264,8 @@ export async function searchLoadedConversations(
                   role: item.kind,
                   attachmentIndex: input.attachmentIndex,
                   query: needle,
-                  before: field.slice(Math.max(0, start - 56), start),
+                  ...searchSnippetContext(field, start, end),
                   match: match[0],
-                  after: field.slice(end, end + 88),
                 });
                 owners.set(hit, {
                   thread,
