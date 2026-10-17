@@ -5,6 +5,7 @@ import {
   useContext,
   useState,
   useId,
+  useLayoutEffect,
   type ReactNode,
 } from "react";
 import { CaretDown, Check, Copy, Paperclip } from "@phosphor-icons/react";
@@ -12,7 +13,7 @@ import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { inlineFilePath, messageLink } from "../runtime/message-link";
 import type { Attachment } from "../runtime/session_types";
-import { attachmentMediaAdmission } from "../runtime/message_attachments";
+import { useMessageMediaPreview } from "../runtime/use_message_media_budget";
 import { MESSAGE_ATTACHMENTS as A } from "../runtime/message_attachment_strings";
 import { THREAD_VIEW_STRINGS } from "../runtime/thread_view_strings";
 import "../message-attachments.css";
@@ -119,7 +120,10 @@ export function MessageAttachments({
               data-loaded-attachment={index}
               hidden={index >= 3 && !expansion.open}
             >
-              <MessageAttachment attachment={attachment} />
+              <MessageAttachment
+                attachment={attachment}
+                mediaVisible={index < 3 || expansion.open}
+              />
             </div>
           ),
         )}
@@ -135,13 +139,22 @@ export function MessageAttachments({
   );
 }
 
-function MessageAttachment({ attachment }: { attachment: Attachment }) {
+function MessageAttachment({
+  attachment,
+  mediaVisible,
+}: {
+  attachment: Attachment;
+  mediaVisible: boolean;
+}) {
   const expansion = useSearchExpansion();
+  useLayoutEffect(() => {
+    // The materialized list keeps hidden children mounted. Retire a hidden
+    // child's old media intent so a later search-only reveal cannot reload it.
+    if (!mediaVisible && expansion.userOpen) expansion.choose(false);
+  }, [mediaVisible, expansion.userOpen, expansion.choose]);
   // Search may reveal loaded text, but only the user's own expansion admits media.
-  const admission = expansion.userOpen
-    ? attachmentMediaAdmission(attachment)
-    : null;
-  const media = admission?.status === "available" ? admission.media : null;
+  const { admission, media, budgetRejected, pending, retry } =
+    useMessageMediaPreview(attachment, expansion.userOpen && mediaVisible);
   const mediaRejected = admission?.status === "rejected";
   const mediaWaiting =
     !expansion.userOpen &&
@@ -210,9 +223,33 @@ function MessageAttachment({ attachment }: { attachment: Attachment }) {
             {admission.reason === "tooLarge" ? A.mediaTooLarge : A.mediaInvalid}
           </p>
         )}
-        {!mediaWaiting && !media && !mediaRejected && attachment.data && (
-          <p>{A.previewUnavailable}</p>
+        {pending && <p role="status">{A.mediaPreparing}</p>}
+        {budgetRejected && (
+          <div className="message-attachment-media-failure">
+            <p role="status">{A.mediaBudgetReached}</p>
+            <button
+              type="button"
+              onClick={(event) => {
+                if (!event.currentTarget.isConnected) return;
+                // A successful reservation removes this button. Keep keyboard
+                // focus on the stable attachment summary, without stealing
+                // focus if the user has already moved elsewhere.
+                if (document.activeElement === event.currentTarget)
+                  event.currentTarget
+                    .closest("details")
+                    ?.querySelector("summary")
+                    ?.focus();
+                retry();
+              }}
+            >
+              {A.retryMedia}
+            </button>
+          </div>
         )}
+        {!mediaWaiting &&
+          admission?.status !== "available" &&
+          !mediaRejected &&
+          attachment.data && <p>{A.previewUnavailable}</p>}
       </figure>
     </details>
   );

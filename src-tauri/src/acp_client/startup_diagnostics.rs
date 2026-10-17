@@ -131,6 +131,8 @@ struct Snapshot {
     candidate_cleanup: Cleanup,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     spawn_failure: Option<SpawnFailure>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    transport_io: Option<super::process::io::Snapshot>,
 }
 impl Default for Snapshot {
     fn default() -> Self {
@@ -152,6 +154,7 @@ impl Default for Snapshot {
             connection_removed: false,
             candidate_cleanup: Cleanup::NotApplicable,
             spawn_failure: None,
+            transport_io: None,
         }
     }
 }
@@ -311,6 +314,12 @@ impl Diagnostics {
     pub(crate) fn cleanup(&self, status: Cleanup) {
         self.update(|s| s.snapshot.candidate_cleanup = status);
     }
+    /// One final parent-pipe observation; never rewrites the lifecycle outcome.
+    pub(crate) fn transport_io(&self, snapshot: super::process::io::Snapshot) {
+        self.update(|state| {
+            state.snapshot.transport_io.get_or_insert(snapshot);
+        });
+    }
     /// Called after the existing manager close/removal check. An unsuccessful
     /// wait or poisoned observer cannot authorize deletion of executable files.
     pub(crate) fn candidate_files_releasable(&self) -> bool {
@@ -417,7 +426,8 @@ pub(crate) fn safe_record(value: &serde_json::Value) -> Option<serde_json::Value
     }
     let ts = value.get("ts")?.as_u64()?;
     let snapshot: Snapshot = serde_json::from_value(value.clone()).ok()?;
-    if snapshot.exit_signal.is_some_and(|s| s == 0 || s > 127)
+    if snapshot.transport_io.as_ref().is_some_and(|io| !io.valid())
+        || snapshot.exit_signal.is_some_and(|s| s == 0 || s > 127)
         || (!snapshot.child_reaped
             && (snapshot.exit_code.is_some() || snapshot.exit_signal.is_some()))
         || (snapshot.exit_code.is_some() && snapshot.exit_signal.is_some())

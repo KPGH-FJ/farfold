@@ -144,8 +144,10 @@ it("renders declared tool media and resources safely without reading files or lo
   const html = renderToStaticMarkup(
     <ToolStep call={item.call} onOpenFile={onOpenFile} />,
   );
-  expect(html).toContain('src="data:image/png;base64,aW1hZ2U="');
-  expect(html).toContain('<audio controls="" preload="none"');
+  // Static markup has not mounted or reserved the shared preview budget.
+  expect(html).not.toContain("<img");
+  expect(html).not.toContain("<audio");
+  expect(html.match(/正在准备媒体…/g)).toHaveLength(2);
   expect(html).toContain("&lt;script&gt;escaped&lt;/script&gt;");
   expect(html).toContain("此附件暂不支持预览");
   expect(html).toContain('href="https://example.com/image.png"');

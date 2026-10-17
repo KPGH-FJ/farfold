@@ -79,7 +79,7 @@ it("does not admit or reject media merely because search revealed its text", () 
   expect(html).toContain("Search-only image");
 });
 
-it("keeps admitted embedded media user-initiated and remote resources as explicit links", () => {
+it("does not acquire media before mounting and preserves explicit remote links", () => {
   const html = renderToStaticMarkup(
     <MessageAttachments
       attachments={[
@@ -93,9 +93,12 @@ it("keeps admitted embedded media user-initiated and remote resources as explici
       ]}
     />,
   );
-  expect(html).toContain(`src="data:image/png;base64,${PNG_IMAGE_TEST_DATA}"`);
-  expect(html).toContain("<audio");
-  expect(html).toContain('preload="none"');
+  expect(html).not.toContain("<img");
+  expect(html).not.toContain("<audio");
+  expect(html).not.toContain("data:image/png");
+  expect(html).toContain("Exact PNG");
+  expect(html).toContain("Audio");
+  expect(html.match(/正在准备媒体…/g)).toHaveLength(2);
   expect(html).not.toMatch(/autoplay/i);
   expect(html).not.toContain('src="https://');
   expect(html).toContain('href="https://example.com/remote.png"');

@@ -16,6 +16,9 @@ use std::{
 };
 use tokio::sync::watch;
 
+#[path = "process_io.rs"]
+pub(super) mod io;
+
 #[cfg(test)]
 #[path = "process_mcp_tests.rs"]
 mod mcp_tests;
@@ -275,8 +278,10 @@ impl ConnectTo<Client> for ProcessTransport {
         self,
         client: impl ConnectTo<Agent>,
     ) -> Result<(), agent_client_protocol::Error> {
-        let (stdin, stdout, mut stderr, mut child, group) =
+        let (stdin, stdout, stderr, mut child, group) =
             spawn_process_in(&self.agent, Path::new(&self.cwd), &self.control)?;
+        let (stdin, stdout, mut stderr) =
+            io::observe(stdin, stdout, stderr, self.diagnostics.clone());
         let pid = child.id();
         let drain_stop = Arc::new(AtomicBool::new(false));
         let mut guard = KillOnDrop {
@@ -453,3 +458,7 @@ mod cwd_tests;
 #[cfg(test)]
 #[path = "process_startup_tests.rs"]
 mod startup_tests;
+
+#[cfg(all(test, unix))]
+#[path = "process_io_tests.rs"]
+mod io_tests;
