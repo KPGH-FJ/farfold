@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "date": "2026-10-17",
+  "phase": "sourceControlledChecksEngineeringAndAtomicInstallationCompleteNativeNotRun",
+  "source": {
+    "commit": "6a5fb61c2a7e91204719e181dabad5742da5b8ea",
+    "pushedToMain": true,
+    "changedSourceAndTestFiles": 12,
+    "jointFrozenFiles": 18,
+    "unchangedSharedFilesWithinFreeze": 6,
+    "separatelyProtectedReadmes": 2,
+    "review": "Root aggregation of scoped cross-author and complete independent reviews; not an additional independent review."
+  },
+  "implementation": {
+    "ordinaryExit": "Visible save waiting and explicit withdrawal; one in-flight cancellation per exit request, current-owner replies only.",
+    "interactionLocks": "Acknowledged cancellation,deferred and unmount release only this exit lease; legacy update and worktree locks remain. Withdrawal never cancels/retries in-flight writes,resumes queues or resends. Existing restart rules retained.",
+    "messagePng": "After existing16MiB/canonical Base64 gates,inspect at most33 decoded bytes/44 Base64 characters: PNG signature,first IHDR13,CRC,legal fields,edge8192 and declared canvas16777216 pixels. PNG signature under another allowed image MIME uses same gate.",
+    "pngLimits": "Header declaration only; not complete PNG,IDAT/IEND,animation,other format decoding,actual decoded resources or transport memory. Input image policy and shared4-instance/32MiB admitted-file quota unchanged."
+  },
+  "engineering": {
+    "actualSession": 57510,
+    "finalChunk": "98d0da",
+    "actualExit": 0,
+    "allSevenFresh": true,
+    "stableInputs": 19009,
+    "frontendFiles": 529,
+    "frontendPassed": 6693,
+    "rustPassed": 1770,
+    "rustIgnored": 6
+  },
+  "controlledBrowsers": {
+    "engines": ["Chromium", "WebKit"],
+    "exitChecksEach": 28,
+    "pngChecksEach": 26,
+    "totalChecksEach": 54,
+    "exitInputsStable": 624,
+    "pngInputsStable": 623,
+    "ownedBrowsersAndServersClosed": true,
+    "scope": "Production React components with controlled finite IPC/flush inputs; not installed WebView or real Agent.",
+    "independentHeaderOracleCases": 6075,
+    "oracleScope": "Python struct/zlib through production admission pipeline; no image decoder."
+  },
+  "installation": {
+    "sourceCommit": "6a5fb61c2a7e91204719e181dabad5742da5b8ea",
+    "version": "0.1.7",
+    "identifier": "ai.farfold.desktop",
+    "architecture": "arm64",
+    "binarySha256": "a7e40660d43308698bbc80e0b3ee87e7b7b055a61ccd3b8becc55a650069d460",
+    "candidateProductionInputs": 1727,
+    "candidateIndependentPassed": 9,
+    "installedIndependentPassed": 10,
+    "atomicReplacements": 5,
+    "method": "Each file complete same-directory exclusive temporary write,mode,fsync and replace to new inode; not one five-file transaction.",
+    "existingInodesWritten": false,
+    "appBackupCreated": false,
+    "automaticRetry": false,
+    "restorePerformed": false,
+    "freshManifests": {
+      "phases": ["before", "preinstall", "after"],
+      "entriesEach": 217407,
+      "sha256": "eaa22f79adf795c0f6025735af1347689bd1662de250cfaf65a236202dac9f8d",
+      "strictlyEqual": true
+    },
+    "exactCandidateAppRemoved": true,
+    "formalAndZipRetained": true,
+    "formalLaunchedThisBatch": false,
+    "normalQuitEvidence": null,
+    "continuousClosedIntervalNotClaimed": true
+  },
+  "retained": {
+    "productRedCases": "Duplicate cancellation,missing ordinary save-wait withdrawal,deferred exit lock; PNG oversized/invalid header declarations.",
+    "testOnlyFailures": "Initial exit traversal helper recursion corrected before two-product-case red; old fake-PNG SSR fixture corrected without dropping assertions.",
+    "browserHarnessFailures": "Import path failed before browser creation; later unstyled backdrop coordinates timed out after20 passed per engine. Both originals retained; neither classified as production defect.",
+    "historicalStrictData": "exit2,three database and seven data-root differences; unknown writers not waived.",
+    "unknowns": [
+      "OpenCode initialize nonresponse",
+      "automatic-reopen final requester",
+      "historical data difference writers"
+    ],
+    "new24": "Open; affected new real sends remain paused as execution boundary,not blanket source disablement.",
+    "notAccepted": [
+      "native slow-save exit/media/current pipe behavior",
+      "real Agent or cold recovery",
+      "whole P13 or all151/all29/eight standards",
+      "Windows/public distribution"
+    ]
+  },
+  "scopeConservation": {
+    "originalPlanRows": 151,
+    "firstReleaseAgents": 29,
+    "standardsPerAgent": 8,
+    "newPlanRowsAdded": 0
+  },
+  "privateEvidence": {
+    "sourceFreeze": {
+      "path": "output/2026-10-17-exit-and-preview-guards/source-freeze.json",
+      "sha256": "d3637f508c9b8c7833fd0fc338734a8dd9458fea47b5aab59ac2a15f97703048"
+    },
+    "rootReviewAggregation": {
+      "path": "output/2026-10-17-exit-and-preview-guards/source-review.json",
+      "sha256": "051cb124b9e65cf5bed0b866ecbf2bff23c2707a65592356c63c9eb8edaa7cf5"
+    },
+    "engineering": {
+      "path": "output/2026-10-17-exit-and-preview-guards/engineering/run1/verification.json",
+      "sha256": "1da2570bac833b7ef011494fe44b61acbb7b8cd0b736374dcfb173e975825c05"
+    },
+    "controlledBrowsers": {
+      "path": "output/2026-10-17-exit-and-preview-guards/browser-independent/independent-summary.json",
+      "sha256": "0c960a9e4755ee6120b86ffce4e79b3084e4334454a18d9f15114ee2e98fe329"
+    },
+    "declaredHeaderOracle": {
+      "path": "output/2026-10-17-exit-and-preview-guards/png-independent/verification.json",
+      "sha256": "cc6b8fd65ed0bcd33f8980beb8e5d91f3b240b50bef9e6a1b3df0b6bcfa8d240"
+    },
+    "candidateIndependentNine": {
+      "path": "output/2026-10-17-exit-and-preview-guards/candidate-preparation/independent/review.json",
+      "sha256": "a57f5ca6e59404eaf9a8d26c996c012a42e311cb642cb7c942da8805f23402c5"
+    },
+    "atomicInstallation": {
+      "path": "output/2026-10-17-exit-and-preview-guards/install/install-result.json",
+      "sha256": "71c3321b44550a4184a89c741e93f1cc2fd8312cadcb9fd5e3adce710cb37133"
+    },
+    "installedIndependentTen": {
+      "path": "output/2026-10-17-exit-and-preview-guards/install/installed-independent-review-private.json",
+      "sha256": "ca63ae3be97a271f2b831849c54f8d19b9330ccb5ce4fac2db929a4404d3b902"
+    },
+    "freshRetention": [
+      {
+        "path": "output/2026-10-17-exit-and-preview-guards/install/retention-before-receipt.json",
+        "sha256": "65dcab526184fed5612aca281661e99fe88382e070be8568779126373f6a117e"
+      },
+      {
+        "path": "output/2026-10-17-exit-and-preview-guards/install/retention-preinstall-receipt.json",
+        "sha256": "e6603757e989176764d0f22ac1aacda536753836d0286986ee1df9d25848ef04"
+      },
+      {
+        "path": "output/2026-10-17-exit-and-preview-guards/install/retention-after-receipt.json",
+        "sha256": "6826dec2f0f13098bd75c3cd0cb432db891e1b15d3ae76b90b80fd1f3f2488af"
+      }
+    ],
+    "exactCandidateCleanup": {
+      "path": "output/2026-10-17-exit-and-preview-guards/install/candidate-cleanup.json",
+      "sha256": "378c160173639b70fd3a4386b460b54cec8c47734d9200f21dc737071354409e"
+    }
+  },
+  "privacy": "Safe summary and pins only; no AX,user history,credentials,environment values,database records or private manifest contents."
+}
