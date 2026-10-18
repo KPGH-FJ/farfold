@@ -37,6 +37,7 @@ mod mutation;
 mod operations;
 mod permission_effect;
 mod permission_guard;
+pub mod plugin_management;
 pub mod preparation;
 pub mod preparation_actions;
 mod process;

@@ -1,0 +1,274 @@
+{
+  "kind": "SelectedHistoryRecoveryAndConditionAvailableFormalReadinessCheckpoint",
+  "atUtc": "2026-10-18T06:23:50.624767+00:00",
+  "authority": {
+    "onlyActivePlan": "plans/agent-access.md",
+    "firstReleaseAgents": 29,
+    "standardsEach": 8,
+    "originalRequirements": 151,
+    "unchanged": true
+  },
+  "sourceCommit": "b78a7309b50249edb14527dca68094be6ff18061",
+  "result": "SelectedRecoveryImplementedInstalledAndNativeVerified;P40DevelopmentContinues",
+  "implemented": {
+    "historySearch": "Loaded availability changes invalidate a selected unread row. Show explicit recovery, retain valid selections and query, refuse invalid preparation and prevent stale asynchronous handlers from rewriting successor feedback; keyboard recovery focuses selection group. No automatic history reads or search."
+  },
+  "tests": {
+    "actualSemanticRed": {
+      "initial": {
+        "passed": 21,
+        "failed": 1,
+        "exit": 1
+      },
+      "lateHandler": {
+        "passed": 26,
+        "failed": 1,
+        "exit": 1
+      }
+    },
+    "focused": {
+      "panelPassed": 27,
+      "relatedFiles": 9,
+      "relatedPassed": 124
+    },
+    "freshSeven": {
+      "checks": 7,
+      "exit": 0,
+      "frontendFiles": 585,
+      "frontendPassed": 7808,
+      "rustPassed": 1787,
+      "rustIgnored": 6,
+      "inputsStable": 19149
+    },
+    "independentSourceReview": "No blockers in selected HSP source; not final P40 review."
+  },
+  "controlledMedia": {
+    "sample": "Unmodified complete2s monoPCM,32044 bytes",
+    "chrome": {
+      "cases": 1,
+      "assertions": 15,
+      "passed": 15
+    },
+    "webkit": {
+      "cases": 1,
+      "assertions": 15,
+      "passed": 15
+    },
+    "observed": [
+      "Actual shared message/media component reaches ended at2s",
+      "Same node/source explicit replay clock advances",
+      "Collapse pauses, removes source and reloads; >350ms clock remains0"
+    ],
+    "notProved": [
+      "Audibility/accurate decode",
+      "Real Agent returned media",
+      "Decoder/transport memory",
+      "Whole P13"
+    ]
+  },
+  "installed": {
+    "path": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "sourceCommit": "b78a7309b50249edb14527dca68094be6ff18061",
+    "binarySha256": "3165183878c443624de3bdfe543d45c16db4638c0987b74ad2f7c7d6c1902e16",
+    "candidateChecks": 9,
+    "installedIndependentChecks": 10,
+    "strictAdHocSignature": true,
+    "duplicateCandidateRemoved": true,
+    "replacement": "Five individually atomic fresh-inode file replacements; not a whole-bundle atomicity claim",
+    "installData": {
+      "eachEntries": 217407,
+      "threeManifestsStrictlyEqual": true
+    }
+  },
+  "native": {
+    "rootAuthoredObservationsNotSignedToolReceipts": true,
+    "previousInstalled48b": [
+      "Existing DOCX loaded text query gives2hits; unsent draft retained",
+      "Explicit selected official history query4textmatches; original image visible after restore",
+      "Chosen existing OpenCode SVG reconnect failed; no retry, new prompt or changed selection"
+    ],
+    "installedB78": [
+      "Actual stale history selection recovers with keyboard; only invalid row cleared, valid DOCX and fixed query retained, group receives focus",
+      "After explicit valid preparation, search becomes available; search not started",
+      "P18 historical tool steps restored: reported locations and after fragment shown; before absent, missing-before feedback shown. Explicit current file check reports unreadable. Not a full before/after or disk-write proof",
+      "29 management cards visible; not29 authentication/model tests",
+      "Existing fast-agent setup inspected; no connect/save/test, no wrapper used to bypass NEW-24",
+      "Pi explicit existing-program check returns DeepSeekV4Pro/off, differing from saved Nemotron3Ultra/free+medium. Mismatch shown; returned selection not adopted/saved/tested"
+    ],
+    "normalQuit": "Both native runs use normal Save and Exit, followed by closed-process checks; no force kill",
+    "newPrompt": false
+  },
+  "afterUse": {
+    "previous48b": {
+      "strictExit": 2,
+      "manifestModified": 7,
+      "added": 0,
+      "removed": 0,
+      "changedDbRows": 3,
+      "onlyChangedDbColumn": "updated_at",
+      "drafts": 10,
+      "wholeUnsentWorkExact": true,
+      "settingsWholeRowsExact": 54
+    },
+    "installedB78": {
+      "strictExit": 2,
+      "manifestModified": 7,
+      "added": 0,
+      "removed": 0,
+      "changedDbRows": 5,
+      "changedDbColumns": {
+        "agents.updated_at": 2,
+        "sessions.updated_at": 2,
+        "settings.value": 1
+      },
+      "settingsWholeRowsExact": 53,
+      "settingsTotal": 54,
+      "settingsDelta": "One new fast-agent preparation progress entry; all existing progress/completed/pending/confirmed selections exact",
+      "savedPiBaselineExact": true,
+      "drafts": 10,
+      "wholeDraftObjectsAndUnsentWorkExact": true
+    },
+    "writerAttribution": "unknown",
+    "strictDifferencesRetained": true,
+    "allUserDataUnchangedClaim": false
+  },
+  "safeProtocolWindow": {
+    "previous48b": {
+      "files": 4,
+      "records": 127,
+      "outPrompt": 0,
+      "outNew": 0,
+      "outConfig": 4,
+      "outLoad": 2
+    },
+    "installedB78": {
+      "files": 5,
+      "records": 137,
+      "outPrompt": 0,
+      "outNew": 1,
+      "outConfig": 4,
+      "outLoad": 2,
+      "outCancel": 0,
+      "outPermission": 0,
+      "inPermission": 0,
+      "coverageOrBoundaryIssues": 0
+    },
+    "scope": "Bounded validated content-free diagnostics only. New/config/load communications occurred; no no-SDK-side-effect claim. Typed initialization timeout not attributed to a particular Agent."
+  },
+  "storage": {
+    "scope": "Only reviewed stale Farfold Rust Mach-O object files, exact flat manifest. Libraries, app, user data, backups, evidence and retained object generations preserved.",
+    "removedEntries": 15668,
+    "retainedReviewedEntries": 1566,
+    "freeBeforeBytes": 2775351296,
+    "freeAfterBytes": 22630858752,
+    "observedFreeIncreaseBytes": 19855507456,
+    "logicalSelectedBytesNotEqualPhysicalRelease": true,
+    "actualExit": 0,
+    "compilerPointChecksZero": 34,
+    "notContinuousMutualExclusionProof": true
+  },
+  "ongoing": "P40 official finite CLI plugin package management is a newly identified implementation gap now in development. Current working tree includes its uncommitted work; installed HSP identity is separate. No second active plan.",
+  "remaining": [
+    "NEW-24 affected new real prompts paused; unchanged official permission inputs not re-run",
+    "P18 complete before/after/current-file sample not available",
+    "P32 actual attachment search positives and whole P13 remain incomplete",
+    "NEW-29 real compaction busy state lacks condition",
+    "Pi saved/current configuration mismatch needs explicit user-selected resolution before model test; fast-agent delegation not independently established",
+    "P40 new source/final review/full engineering/installation/formal verification still pending at this checkpoint; actual package modification/current-conversation adoption not proved",
+    "Other29x8, long-use, Windows actual system and original151 conditions remain open; no blanket claim all independent code is done"
+  ],
+  "executionIncidents": [
+    "Candidate parameter SHA guard refused wrong supplied digest before build; corrected literal, one actual build",
+    "Installer wrong helper map key refused before import/journal/write; corrected literal, one actual install",
+    "Installed review first bound builder rather than independent verifier; read-only AttributeError preserved, corrected helper mapping then actual10 passed"
+  ],
+  "privateEvidence": [
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/search-investigation/completion.json",
+      "sha256": "067da63c7aedbfd0bcac7e04dd678559a1f7eadcc1db6502bb84ebba07d83192"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/independent-source-review/history-search-panel-review.json",
+      "sha256": "4c450daa2b73bee58200fd03aaa80629d8448c6de00b2ae8f2e43e8afc319b82"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/source-review.json",
+      "sha256": "011dd25cdfa77d428f5fa4c335641f0f291c50724a2da9208b2a5fe72a635311"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/engineering/run1/verification.json",
+      "sha256": "9cbf1144c96704a7fb81344c886333178995667e44c1b93c134286de238379c4"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/media-playback/execution-completion.json",
+      "sha256": "07444614d4c3678854331964d96e4d139bae0dca5e2b8dd5458386d1197a7df5"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/formal-ui/observations.json",
+      "sha256": "8007dd5df202759ff074fce8fca03e7ea9f6cfb336b2f40e60ee2e9f0a9b2301"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/formal-after-analysis/safe-summary.json",
+      "sha256": "6cd3b80c0e12728170744dbf8ef50ada2712cb227820ded6adcc4d70d2635580"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/formal-protocol-diagnostics/summary.json",
+      "sha256": "9f309fd0a3659567eec881734dbe73f79ed753c4c418778d2f664916d6c7bcf8"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "07c7d611ae3f59f349b6c7d2dbe3cbbd1deaf939d3d963c76803f357e79836a4"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/candidate-preparation/independent/review.json",
+      "sha256": "47af0707b42731120020c3880bee4193c00f4f7eede833a6f3a71cfe99cb039f"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/install/install-result.json",
+      "sha256": "4e42e7ae61aef8296e2ef67c0be3c32900582b586005ab3b5ca05d5359e5aee7"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/install/installed-independent-review-private.json",
+      "sha256": "3854e4f76c472509f75a3596f9b38b176541cb3d4d0a02e1a009abd4e46beb76"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/install/candidate-cleanup.json",
+      "sha256": "6c7c453568d317892d27877b9cf13dcbac36c7f5f0bbcf5666a3ebc279bd92fd"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/delivery-actual-executions.json",
+      "sha256": "f6587906f681cbf1c0d2273792d8b84f259872c315177b0e167f260838275670"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/installed-formal-ui/observations.json",
+      "sha256": "ca115610ec14b889a18414567820130d143c612342da105118ac2dff41c1bb81"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/installed-after-analysis/safe-summary.json",
+      "sha256": "2f6fb801fbdae92dcfc36a76767326dc5c37bdafaedbeaa00c55c5ea067bdc74"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/installed-formal-protocol-diagnostics/summary.json",
+      "sha256": "ad95972fc75ee6e0c21b20e3e8b924ad460ee3d827c1e89d94ed20f8d23c5dd3"
+    },
+    {
+      "path": "output/2026-10-18-storage-cleanup/inventory.json",
+      "sha256": "dd0cf41d894e0f49e84d6f52eb1618c2ec1f4267669446832db8680dba6c39c5"
+    },
+    {
+      "path": "output/2026-10-18-storage-cleanup/receipt.json",
+      "sha256": "5a79fdd17a65d4c1c94bbd2b372a4dd3c49fd3135611961efe1a8fdb44869d4a"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/stage3-conditions/conditions.json",
+      "sha256": "b01dd5a99bba4b8bb894af833a192ce90d9258aa56b2f9f21522a6e62b724935"
+    },
+    {
+      "path": "output/2026-10-18-formal-readiness-stage/stage3-conditions/classification-addendum.json",
+      "sha256": "fa4d64521d666e10142706a71efb2ac740c544c4baebcd2733e9ed738d9abeec"
+    }
+  ]
+}

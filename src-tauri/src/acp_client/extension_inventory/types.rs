@@ -70,7 +70,16 @@ pub struct ExtensionCapabilities {
     pub mcp_addition: InventoryCapability,
     pub mcp_http_addition: InventoryCapability,
     pub mcp_removal: InventoryCapability,
+    pub plugin_management: PluginCapability,
     pub tool_inventory: &'static str,
+}
+
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PluginCapability {
+    #[serde(flatten)]
+    pub query: InventoryCapability,
+    pub support: &'static str,
 }
 
 #[derive(Clone, Copy, Debug, Serialize, PartialEq, Eq)]

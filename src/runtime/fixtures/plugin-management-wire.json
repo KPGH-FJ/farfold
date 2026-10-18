@@ -1,0 +1,336 @@
+{
+  "inventory": {
+    "agentId": "codex",
+    "requestId": "dcd13222-86aa-50e1-6ff4-2c51fc593e91",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpZMBJhA",
+    "action": "inventory",
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "code": null,
+    "writeDispatched": false,
+    "writeAck": "none",
+    "outcome": null,
+    "catalog": {
+      "observedAtMs": 1792304124744,
+      "scope": "officialSharedPluginConfiguration",
+      "source": "officialCli",
+      "complete": false,
+      "sessionApplicability": "unverified",
+      "items": [
+        {
+          "id": 0,
+          "name": "sample",
+          "marketplaceName": "local-market",
+          "version": "1.0.0",
+          "reportedInstalled": false,
+          "reportedEnabled": false,
+          "source": "local",
+          "installPolicy": "available",
+          "authPolicy": "onUse",
+          "install": {
+            "availability": "available",
+            "reason": null
+          },
+          "remove": {
+            "availability": "unavailable",
+            "reason": "notInstalled"
+          }
+        }
+      ]
+    },
+    "review": null,
+    "observation": null,
+    "target": null
+  },
+  "inspect": {
+    "agentId": "codex",
+    "requestId": "a0eefd07-8999-66b3-8335-9cfc140265e3",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpZMBJhA",
+    "action": "inspect",
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "code": null,
+    "writeDispatched": false,
+    "writeAck": "none",
+    "outcome": null,
+    "catalog": null,
+    "review": {
+      "reviewId": "b7f10ab5-f8fb-1df5-9948-ba308ff5993c",
+      "agentId": "codex",
+      "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpZMBJhA",
+      "target": {
+        "id": 0,
+        "name": "sample",
+        "marketplaceName": "local-market",
+        "version": "1.0.0",
+        "reportedInstalled": false,
+        "reportedEnabled": false,
+        "source": "local",
+        "installPolicy": "available",
+        "authPolicy": "onUse",
+        "install": {
+          "availability": "available",
+          "reason": null
+        },
+        "remove": {
+          "availability": "unavailable",
+          "reason": "notInstalled"
+        }
+      },
+      "install": true,
+      "observedAtMs": 1792304124781,
+      "validForMs": 300000,
+      "scope": "officialSharedPluginConfiguration",
+      "sessionApplicability": "unverified"
+    },
+    "observation": null,
+    "target": {
+      "id": 0,
+      "name": "sample",
+      "marketplaceName": "local-market",
+      "version": "1.0.0",
+      "reportedInstalled": false,
+      "reportedEnabled": false,
+      "source": "local",
+      "installPolicy": "available",
+      "authPolicy": "onUse",
+      "install": {
+        "availability": "available",
+        "reason": null
+      },
+      "remove": {
+        "availability": "unavailable",
+        "reason": "notInstalled"
+      }
+    }
+  },
+  "install": {
+    "agentId": "codex",
+    "requestId": "5ea473f0-d5b5-894b-c006-ada1a8ebe1b4",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpZMBJhA",
+    "action": "install",
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "code": null,
+    "writeDispatched": true,
+    "writeAck": "ok",
+    "outcome": "verified",
+    "catalog": null,
+    "review": null,
+    "observation": {
+      "observedAtMs": 1792304124890,
+      "reportedInstalled": true,
+      "reportedEnabled": true,
+      "sessionApplicability": "unverified"
+    },
+    "target": {
+      "id": 0,
+      "name": "sample",
+      "marketplaceName": "local-market",
+      "version": "1.0.0",
+      "reportedInstalled": false,
+      "reportedEnabled": false,
+      "source": "local",
+      "installPolicy": "available",
+      "authPolicy": "onUse",
+      "install": {
+        "availability": "available",
+        "reason": null
+      },
+      "remove": {
+        "availability": "unavailable",
+        "reason": "notInstalled"
+      }
+    }
+  },
+  "installedInventory": {
+    "agentId": "codex",
+    "requestId": "b1261d9a-d339-15ec-d57c-4c3480bd06b6",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpZMBJhA",
+    "action": "inventory",
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "code": null,
+    "writeDispatched": false,
+    "writeAck": "none",
+    "outcome": null,
+    "catalog": {
+      "observedAtMs": 1792304124928,
+      "scope": "officialSharedPluginConfiguration",
+      "source": "officialCli",
+      "complete": false,
+      "sessionApplicability": "unverified",
+      "items": [
+        {
+          "id": 0,
+          "name": "sample",
+          "marketplaceName": "local-market",
+          "version": "1.0.0",
+          "reportedInstalled": true,
+          "reportedEnabled": true,
+          "source": "local",
+          "installPolicy": "available",
+          "authPolicy": "onUse",
+          "install": {
+            "availability": "unavailable",
+            "reason": "alreadyInstalled"
+          },
+          "remove": {
+            "availability": "available",
+            "reason": null
+          }
+        }
+      ]
+    },
+    "review": null,
+    "observation": null,
+    "target": null
+  },
+  "removeInspect": {
+    "agentId": "codex",
+    "requestId": "c718b1b5-8e19-b9f2-f4c5-df4a8c905521",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpZMBJhA",
+    "action": "inspect",
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "code": null,
+    "writeDispatched": false,
+    "writeAck": "none",
+    "outcome": null,
+    "catalog": null,
+    "review": {
+      "reviewId": "4f956fc1-dd1a-7991-9823-a8a3d4639d8c",
+      "agentId": "codex",
+      "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpZMBJhA",
+      "target": {
+        "id": 0,
+        "name": "sample",
+        "marketplaceName": "local-market",
+        "version": "1.0.0",
+        "reportedInstalled": true,
+        "reportedEnabled": true,
+        "source": "local",
+        "installPolicy": "available",
+        "authPolicy": "onUse",
+        "install": {
+          "availability": "unavailable",
+          "reason": "alreadyInstalled"
+        },
+        "remove": {
+          "availability": "available",
+          "reason": null
+        }
+      },
+      "install": false,
+      "observedAtMs": 1792304124967,
+      "validForMs": 300000,
+      "scope": "officialSharedPluginConfiguration",
+      "sessionApplicability": "unverified"
+    },
+    "observation": null,
+    "target": {
+      "id": 0,
+      "name": "sample",
+      "marketplaceName": "local-market",
+      "version": "1.0.0",
+      "reportedInstalled": true,
+      "reportedEnabled": true,
+      "source": "local",
+      "installPolicy": "available",
+      "authPolicy": "onUse",
+      "install": {
+        "availability": "unavailable",
+        "reason": "alreadyInstalled"
+      },
+      "remove": {
+        "availability": "available",
+        "reason": null
+      }
+    }
+  },
+  "remove": {
+    "agentId": "codex",
+    "requestId": "79cb5eb0-5a31-73a8-cdcb-6c85fa44d652",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpZMBJhA",
+    "action": "remove",
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "code": null,
+    "writeDispatched": true,
+    "writeAck": "ok",
+    "outcome": "verified",
+    "catalog": null,
+    "review": null,
+    "observation": {
+      "observedAtMs": 1792304125093,
+      "reportedInstalled": false,
+      "reportedEnabled": false,
+      "sessionApplicability": "unverified"
+    },
+    "target": {
+      "id": 0,
+      "name": "sample",
+      "marketplaceName": "local-market",
+      "version": "1.0.0",
+      "reportedInstalled": true,
+      "reportedEnabled": true,
+      "source": "local",
+      "installPolicy": "available",
+      "authPolicy": "onUse",
+      "install": {
+        "availability": "unavailable",
+        "reason": "alreadyInstalled"
+      },
+      "remove": {
+        "availability": "available",
+        "reason": null
+      }
+    }
+  },
+  "recheck": {
+    "agentId": "codex",
+    "requestId": "2abede92-bf28-2525-e91d-cb969816b6e6",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpZMBJhA",
+    "action": "recheck",
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "code": null,
+    "writeDispatched": false,
+    "writeAck": "none",
+    "outcome": "observed",
+    "catalog": null,
+    "review": null,
+    "observation": {
+      "observedAtMs": 1792304125132,
+      "reportedInstalled": false,
+      "reportedEnabled": false,
+      "sessionApplicability": "unverified"
+    },
+    "target": {
+      "id": 0,
+      "name": "sample",
+      "marketplaceName": "local-market",
+      "version": "1.0.0",
+      "reportedInstalled": true,
+      "reportedEnabled": true,
+      "source": "local",
+      "installPolicy": "available",
+      "authPolicy": "onUse",
+      "install": {
+        "availability": "unavailable",
+        "reason": "alreadyInstalled"
+      },
+      "remove": {
+        "availability": "available",
+        "reason": null
+      }
+    }
+  }
+}

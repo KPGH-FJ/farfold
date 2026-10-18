@@ -123,6 +123,20 @@ pub(in crate::acp_client) fn capabilities(row: &AgentRow) -> Result<ExtensionCap
             source: reason.is_none().then_some("officialAppServer"),
             reason,
         },
+        plugin_management: PluginCapability {
+            query: InventoryCapability {
+                availability: if reason.is_none() {
+                    "available"
+                } else {
+                    "unavailable"
+                },
+                source: reason.is_none().then_some("officialCli"),
+                reason,
+            },
+            // This admits an explicit bounded query, not a claim that an arbitrary
+            // selected edition implements plugin commands or that a package is adopted.
+            support: "unverified",
+        },
         tool_inventory: "unavailable",
     })
 }

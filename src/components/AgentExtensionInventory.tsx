@@ -31,6 +31,9 @@ import { SkillChangeReview } from "./SkillChangeReview";
 import { MCP_MANAGEMENT_STRINGS as M } from "../runtime/mcp_management_strings";
 import { skillManagement } from "../runtime/skill_management_controller";
 import { sameInventoryExtraRoots } from "../runtime/extension_inventory_scope";
+import { AgentExtensionPlugins } from "./AgentExtensionPlugins";
+import { pluginManagement } from "../runtime/plugin_management_controller";
+import { PLUGIN_MANAGEMENT_STRINGS as PLUGINS } from "../runtime/plugin_management_strings";
 
 /** Inline in the existing AgentDetails dialog; no separate modal or Agent UI. */
 export function AgentExtensionInventory({
@@ -44,7 +47,7 @@ export function AgentExtensionInventory({
   active: boolean;
   blocked?: boolean;
 }) {
-  const [kind, setKind] = useState<InventoryKind>("mcp");
+  const [kind, setKind] = useState<InventoryKind | "plugins">("mcp");
   const [cwd, setCwd] = useState("");
   const [extraSkillRoot, setExtraSkillRoot] = useState("");
   const extraSkillRoots = useMemo(
@@ -93,6 +96,7 @@ export function AgentExtensionInventory({
       if (liveOwner.current === owner) liveOwner.current = null;
       extensionInventory.retire(owner);
       skillManagement.retire(owner);
+      pluginManagement.retire(owner);
     };
   }, [owner]);
   useEffect(() => {
@@ -138,9 +142,18 @@ export function AgentExtensionInventory({
     () => skillManagement.get(agentId),
     () => skillManagement.get(agentId),
   );
+  const pluginView = useSyncExternalStore(
+    pluginManagement.subscribe,
+    () => pluginManagement.get(agentId),
+    () => pluginManagement.get(agentId),
+  );
   const cap = capability?.key === capabilityKey ? capability : null;
   const selectedCapability =
-    kind === "mcp" ? cap?.value?.mcpInventory : cap?.value?.skillsInventory;
+    kind === "plugins"
+      ? cap?.value?.pluginManagement
+      : kind === "mcp"
+        ? cap?.value?.mcpInventory
+        : cap?.value?.skillsInventory;
   const available =
     !blocked && selectedCapability?.availability === "available";
   const extraRootsAvailable =
@@ -152,6 +165,8 @@ export function AgentExtensionInventory({
       !owner.current() ||
       choosing ||
       view.unresolved ||
+      pluginView.unresolved ||
+      managementView.unresolved ||
       (extra && !extraRootsAvailable)
     )
       return;
@@ -171,11 +186,13 @@ export function AgentExtensionInventory({
     }
   };
   const unresolved = view.unresolved;
+  const anyUnresolved =
+    unresolved || pluginView.unresolved || managementView.unresolved;
   const ticket = cap?.value?.selectionId ?? null;
   const ticketRejected =
     view.error === "selectionChanged" && view.selectionId === ticket;
   const request = view.request;
-  const result = view.results[kind];
+  const result = kind === "plugins" ? undefined : view.results[kind];
   const managementAvailable =
     kind === "mcp"
       ? cap?.value?.mcpEnablement?.availability === "available"
@@ -213,14 +230,23 @@ export function AgentExtensionInventory({
           disabled={!active || blocked}
           onChange={(event) => {
             if (active && !blocked && liveOwner.current === owner)
-              setKind(event.target.value as InventoryKind);
+              setKind(event.target.value as InventoryKind | "plugins");
           }}
         >
           <option value="mcp">{S.mcp}</option>
           <option value="skills">{S.skills}</option>
+          {cap?.value?.pluginManagement?.availability === "available" && (
+            <option value="plugins">{PLUGINS.heading}</option>
+          )}
         </select>
       </label>
-      <h5>{kind === "mcp" ? S.mcp : S.skills}</h5>
+      <h5>
+        {kind === "plugins"
+          ? PLUGINS.heading
+          : kind === "mcp"
+            ? S.mcp
+            : S.skills}
+      </h5>
       {(cap?.waiting || (active && !blocked && selection && !cap)) && (
         <p role="status">{S.capabilityChecking}</p>
       )}
@@ -239,12 +265,12 @@ export function AgentExtensionInventory({
         >
           {S.capabilityRetry}
         </button>
-        {available && (
+        {available && kind !== "plugins" && (
           <>
             <button
               type="button"
               className="btn btn-ghost"
-              disabled={!active || choosing || unresolved}
+              disabled={!active || choosing || anyUnresolved}
               onClick={() => void selectDirectory()}
             >
               {S.chooseDirectory}
@@ -255,7 +281,7 @@ export function AgentExtensionInventory({
               disabled={
                 !active ||
                 choosing ||
-                unresolved ||
+                anyUnresolved ||
                 !cwd ||
                 !ticket ||
                 ticketRejected ||
@@ -264,6 +290,7 @@ export function AgentExtensionInventory({
               onClick={() => {
                 if (
                   owner.current() &&
+                  !anyUnresolved &&
                   available &&
                   ticket &&
                   !ticketRejected &&
@@ -334,178 +361,209 @@ export function AgentExtensionInventory({
           {extraSkillRoot && <p>{S.extraSkillReadOnly}</p>}
         </div>
       )}
-      {cwd && (
+      {cwd && kind !== "plugins" && (
         <p className="agent-extension-directory">
           <strong>{S.directory}</strong>
           <span>{cwd}</span>
         </p>
       )}
       {folderError && <p role="alert">{S.chooseFailed}</p>}
-      {unresolved && request && (
-        <div className="agent-extension-progress" role="status">
-          <p>
-            {S.queryKind}：{request.kind === "mcp" ? S.mcp : S.skills}
-          </p>
-          <p>
-            {view.cancellationRequested
-              ? S.cancelling
-              : view.error || view.operation?.state === "pendingCleanup"
-                ? S.pending
-                : S.reading}
-          </p>
-          <p className="agent-extension-directory">{request.cwd}</p>
-          {(request.extraSkillRoots?.length ?? 0) > 0 && (
-            <div className="agent-extension-directory">
-              <strong>{S.extraSkillDirectory}</strong>
-              {request.extraSkillRoots!.map((root, index) => (
-                <span key={index}>{root}</span>
-              ))}
-              <p>{S.extraSkillReadOnly}</p>
-            </div>
-          )}
-          {view.error && view.error !== "cancelled" && (
-            <p>{S.errors[view.error]}</p>
-          )}
-          <div className="agent-extension-actions">
-            <button
-              type="button"
-              className="btn btn-ghost"
-              disabled={!active || view.checking}
-              onClick={() => {
-                if (active && liveOwner.current === owner)
-                  extensionInventory.check(agentId, request.requestId);
-              }}
-            >
-              {view.checking ? S.checking : S.status}
-            </button>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              disabled={!active}
-              onClick={() => {
-                if (active && liveOwner.current === owner)
-                  extensionInventory.cancel(agentId, request.requestId);
-              }}
-            >
-              {S.cancel}
-            </button>
-          </div>
-        </div>
-      )}
-      {!unresolved && view.trackingReleased ? (
-        <p role="status">
-          {request?.kind === "skills" ? S.skills : S.mcp}：
-          <span>{S.trackingReleased}</span>
-        </p>
-      ) : !unresolved && view.error ? (
-        <p role="status">
-          {request?.kind === "skills" ? S.skills : S.mcp}：
-          <span>{S.errors[view.error]}</span>
-        </p>
-      ) : null}
-      {result && (
-        <AgentExtensionInventoryResult
-          result={result}
-          stale={!!stale}
-          removal={
-            removalAvailable
-              ? {
-                  enabled: active && !blocked && !managementView.unresolved,
-                  inspect: (item) => {
-                    const current = () =>
-                      owner.current() &&
-                      liveCapability.current === capabilityKey &&
-                      removalAvailable &&
-                      extensionInventory.isCurrentResult(owner, result);
-                    if (current())
-                      skillManagement.inspect({
-                        kind: "mcpRemoval",
-                        owner,
-                        result,
-                        item,
-                        current,
-                        changed: () => extensionInventory.markStale(result),
-                      });
-                  },
-                }
-              : undefined
+      {kind === "plugins" && (
+        <AgentExtensionPlugins
+          owner={owner}
+          cwd={cwd}
+          selectionId={ticket}
+          choosing={choosing}
+          enabled={
+            active &&
+            !blocked &&
+            available &&
+            !view.unresolved &&
+            !managementView.unresolved
           }
-          management={
-            managementAvailable
-              ? {
-                  enabled: active && !blocked && !managementView.unresolved,
-                  inspect: (item, requestedEnabled) => {
-                    const current = () =>
-                      owner.current() &&
-                      liveCapability.current === capabilityKey &&
-                      managementAvailable &&
-                      extensionInventory.isCurrentResult(owner, result);
-                    if (current())
-                      skillManagement.inspect({
-                        owner,
-                        result,
-                        item,
-                        requestedEnabled,
-                        current,
-                        changed: () => extensionInventory.markStale(result),
-                      });
-                  },
-                }
-              : undefined
-          }
+          chooseDirectory={() => void selectDirectory()}
         />
       )}
-      {(additionAvailable || httpAdditionAvailable) &&
-        result &&
-        result.request.kind === "mcp" && (
-          <McpAddForm
-            key={result.request.requestId}
+      {kind !== "plugins" && (
+        <>
+          {unresolved && request && (
+            <div className="agent-extension-progress" role="status">
+              <p>
+                {S.queryKind}：{request.kind === "mcp" ? S.mcp : S.skills}
+              </p>
+              <p>
+                {view.cancellationRequested
+                  ? S.cancelling
+                  : view.error || view.operation?.state === "pendingCleanup"
+                    ? S.pending
+                    : S.reading}
+              </p>
+              <p className="agent-extension-directory">{request.cwd}</p>
+              {(request.extraSkillRoots?.length ?? 0) > 0 && (
+                <div className="agent-extension-directory">
+                  <strong>{S.extraSkillDirectory}</strong>
+                  {request.extraSkillRoots!.map((root, index) => (
+                    <span key={index}>{root}</span>
+                  ))}
+                  <p>{S.extraSkillReadOnly}</p>
+                </div>
+              )}
+              {view.error && view.error !== "cancelled" && (
+                <p>{S.errors[view.error]}</p>
+              )}
+              <div className="agent-extension-actions">
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  disabled={!active || view.checking}
+                  onClick={() => {
+                    if (active && liveOwner.current === owner)
+                      extensionInventory.check(agentId, request.requestId);
+                  }}
+                >
+                  {view.checking ? S.checking : S.status}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  disabled={!active}
+                  onClick={() => {
+                    if (active && liveOwner.current === owner)
+                      extensionInventory.cancel(agentId, request.requestId);
+                  }}
+                >
+                  {S.cancel}
+                </button>
+              </div>
+            </div>
+          )}
+          {!unresolved && view.trackingReleased ? (
+            <p role="status">
+              {request?.kind === "skills" ? S.skills : S.mcp}：
+              <span>{S.trackingReleased}</span>
+            </p>
+          ) : !unresolved && view.error ? (
+            <p role="status">
+              {request?.kind === "skills" ? S.skills : S.mcp}：
+              <span>{S.errors[view.error]}</span>
+            </p>
+          ) : null}
+          {result && (
+            <AgentExtensionInventoryResult
+              result={result}
+              stale={!!stale}
+              removal={
+                removalAvailable
+                  ? {
+                      enabled:
+                        active &&
+                        !blocked &&
+                        !managementView.unresolved &&
+                        !pluginView.unresolved,
+                      inspect: (item) => {
+                        const current = () =>
+                          owner.current() &&
+                          liveCapability.current === capabilityKey &&
+                          removalAvailable &&
+                          extensionInventory.isCurrentResult(owner, result);
+                        if (current())
+                          skillManagement.inspect({
+                            kind: "mcpRemoval",
+                            owner,
+                            result,
+                            item,
+                            current,
+                            changed: () => extensionInventory.markStale(result),
+                          });
+                      },
+                    }
+                  : undefined
+              }
+              management={
+                managementAvailable
+                  ? {
+                      enabled:
+                        active &&
+                        !blocked &&
+                        !managementView.unresolved &&
+                        !pluginView.unresolved,
+                      inspect: (item, requestedEnabled) => {
+                        const current = () =>
+                          owner.current() &&
+                          liveCapability.current === capabilityKey &&
+                          managementAvailable &&
+                          extensionInventory.isCurrentResult(owner, result);
+                        if (current())
+                          skillManagement.inspect({
+                            owner,
+                            result,
+                            item,
+                            requestedEnabled,
+                            current,
+                            changed: () => extensionInventory.markStale(result),
+                          });
+                      },
+                    }
+                  : undefined
+              }
+            />
+          )}
+          {(additionAvailable || httpAdditionAvailable) &&
+            result &&
+            result.request.kind === "mcp" && (
+              <McpAddForm
+                key={result.request.requestId}
+                owner={owner}
+                result={result}
+                httpAvailable={httpAdditionAvailable}
+                stdioAvailable={additionAvailable}
+                enabled={
+                  active &&
+                  !blocked &&
+                  !stale &&
+                  !view.unresolved &&
+                  !pluginView.unresolved &&
+                  !managementView.unresolved
+                }
+                current={() =>
+                  owner.current() &&
+                  liveCapability.current === capabilityKey &&
+                  (additionAvailable || httpAdditionAvailable) &&
+                  extensionInventory.isCurrentResult(owner, result)
+                }
+                changed={() => extensionInventory.markStale(result)}
+              />
+            )}
+          <SkillChangeReview
+            agentId={agentId}
             owner={owner}
-            result={result}
-            httpAvailable={httpAdditionAvailable}
-            stdioAvailable={additionAvailable}
-            enabled={
-              active &&
-              !blocked &&
-              !stale &&
-              !view.unresolved &&
-              !managementView.unresolved
-            }
-            current={() =>
-              owner.current() &&
-              liveCapability.current === capabilityKey &&
-              (additionAvailable || httpAdditionAvailable) &&
-              extensionInventory.isCurrentResult(owner, result)
-            }
-            changed={() => extensionInventory.markStale(result)}
+            active={active && !blocked}
           />
-        )}
-      <SkillChangeReview
-        agentId={agentId}
-        owner={owner}
-        active={active && !blocked}
-      />
-      <details>
-        <summary>{S.details}</summary>
-        <p>{kind === "mcp" ? S.scope : S.skillScope}</p>
-        <p>
-          {kind === "mcp"
-            ? httpAdditionAvailable
-              ? HTTP.limits
-              : additionAvailable
-                ? ADD.limits
-                : managementAvailable
-                  ? M.limits
-                  : S.limits
-            : requestedRoots.length > 0
-              ? S.extraSkillReadOnly
-              : managementAvailable
-                ? S.skillManagementLimits
-                : S.skillLimits}
-        </p>
-        {removalAvailable && <p>{REMOVE.limits}</p>}
-        <p>{requestedRoots.length > 0 ? S.extraSkillEffects : S.sideEffects}</p>
-      </details>
+          <details>
+            <summary>{S.details}</summary>
+            <p>{kind === "mcp" ? S.scope : S.skillScope}</p>
+            <p>
+              {kind === "mcp"
+                ? httpAdditionAvailable
+                  ? HTTP.limits
+                  : additionAvailable
+                    ? ADD.limits
+                    : managementAvailable
+                      ? M.limits
+                      : S.limits
+                : requestedRoots.length > 0
+                  ? S.extraSkillReadOnly
+                  : managementAvailable
+                    ? S.skillManagementLimits
+                    : S.skillLimits}
+            </p>
+            {removalAvailable && <p>{REMOVE.limits}</p>}
+            <p>
+              {requestedRoots.length > 0 ? S.extraSkillEffects : S.sideEffects}
+            </p>
+          </details>
+        </>
+      )}
     </section>
   );
 }

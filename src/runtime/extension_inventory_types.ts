@@ -32,12 +32,16 @@ export interface InventoryCapability {
   source: "officialCli" | "officialAppServer" | null;
   reason: ExtensionCode | null;
 }
+export interface PluginManagementCapability extends InventoryCapability {
+  support: "unverified";
+}
 export interface ExtensionCapabilities {
   selectionId: string | null;
   mcpInventory: InventoryCapability;
   skillsInventory: InventoryCapability;
   skillsExtraRootsInventory?: InventoryCapability;
   skillEnablement: InventoryCapability;
+  pluginManagement?: PluginManagementCapability;
   mcpRemoval?: InventoryCapability; // Missing legacy report grants no removal.
   mcpHttpAddition?: InventoryCapability; // Only explicit availability grants HTTP addition.
   mcpAddition?: InventoryCapability; // Legacy absence never grants addition authority.
@@ -168,6 +172,7 @@ export function parseExtensionCapabilities(
       "mcpRemoval",
       "mcpHttpAddition",
       "skillsExtraRootsInventory",
+      "pluginManagement",
     ],
   );
   const capability = (
@@ -204,6 +209,22 @@ export function parseExtensionCapabilities(
   const mcpInventory = capability(v.mcpInventory, "officialCli");
   const skillsInventory = capability(v.skillsInventory, "officialAppServer");
   const skillEnablement = capability(v.skillEnablement, "officialAppServer");
+  const pluginManagement = Object.hasOwn(v, "pluginManagement")
+    ? (() => {
+        const raw = object(v.pluginManagement, [
+          "availability",
+          "source",
+          "reason",
+          "support",
+        ]);
+        if (raw.support !== "unverified") return invalid();
+        const { support: _, ...fields } = raw;
+        return {
+          ...capability(fields, "officialCli", true),
+          support: "unverified" as const,
+        };
+      })()
+    : undefined;
   const skillsExtraRootsInventory = Object.hasOwn(
     v,
     "skillsExtraRootsInventory",
@@ -268,7 +289,8 @@ export function parseExtensionCapabilities(
     return invalid();
   const available =
     mcpInventory.availability === "available" ||
-    skillsInventory.availability === "available";
+    skillsInventory.availability === "available" ||
+    pluginManagement?.availability === "available";
   if (
     v.toolInventory !== "unavailable" ||
     (available ? !validInventoryId(v.selectionId) : v.selectionId !== null)
@@ -279,6 +301,7 @@ export function parseExtensionCapabilities(
     mcpInventory,
     skillsInventory,
     skillEnablement,
+    ...(pluginManagement ? { pluginManagement } : {}),
     ...(skillsExtraRootsInventory ? { skillsExtraRootsInventory } : {}),
     ...(mcpEnablement ? { mcpEnablement } : {}),
     ...(mcpAddition ? { mcpAddition } : {}),

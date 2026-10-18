@@ -85,11 +85,17 @@ impl LaunchIdentity {
 struct Claim {
     agent_id: String,
     entries: Vec<LaunchIdentity>,
+    plugin_configuration: bool,
 }
 impl Claim {
     fn includes(&self, agent_id: &str, entry: Option<&LaunchIdentity>) -> bool {
-        self.agent_id == agent_id || entry.is_some_and(|entry| self.entries.contains(entry))
+        self.agent_id == agent_id
+            || (self.plugin_configuration && plugin_family(agent_id))
+            || entry.is_some_and(|entry| self.entries.contains(entry))
     }
+}
+fn plugin_family(agent_id: &str) -> bool {
+    matches!(agent_id, "codex" | "registry:codex-acp")
 }
 
 #[derive(Default)]
@@ -119,6 +125,8 @@ impl AccountAdmission {
         claims.retain(|claim| claim.strong_count() != 0);
         if claims.iter().filter_map(Weak::upgrade).any(|other| {
             other.agent_id == claim.agent_id
+                || (other.plugin_configuration && plugin_family(&claim.agent_id))
+                || (claim.plugin_configuration && plugin_family(&other.agent_id))
                 || claim
                     .entries
                     .iter()
@@ -196,6 +204,7 @@ impl AccountScope {
             _claim: Arc::new(Claim {
                 agent_id: String::new(),
                 entries: Vec::new(),
+                plugin_configuration: false,
             }),
         }
     }
@@ -248,6 +257,28 @@ impl AcpManager {
         agent_id: &str,
         entries: impl IntoIterator<Item = LaunchIdentity>,
     ) -> Result<AccountScope, String> {
+        self.reserve_configuration_scope_for(agent_id, entries, false)
+    }
+
+    /// Official plugin commands mutate shared configuration/cache, including
+    /// across separately installed reviewed entrypoints and service selections.
+    /// This claim also blocks a later connection in the reviewed family.
+    pub(crate) fn reserve_plugin_configuration(
+        &self,
+        row: &AgentRow,
+    ) -> Result<AccountScope, String> {
+        if !plugin_family(&row.id) {
+            return Err("此程序尚未提供可核查的插件管理".into());
+        }
+        self.reserve_configuration_scope_for(&row.id, LaunchIdentity::of(row), true)
+    }
+
+    fn reserve_configuration_scope_for(
+        &self,
+        agent_id: &str,
+        entries: impl IntoIterator<Item = LaunchIdentity>,
+        plugin_configuration: bool,
+    ) -> Result<AccountScope, String> {
         let connections = self.lock()?;
         let mut entries: Vec<_> = entries.into_iter().collect();
         for (key, connection) in connections.iter() {
@@ -258,6 +289,7 @@ impl AcpManager {
         let claim = self.account_admission.reserve(Claim {
             agent_id: agent_id.into(),
             entries,
+            plugin_configuration,
         })?;
         let mut operations = Vec::new();
         let mut protected = Vec::new();
@@ -281,6 +313,55 @@ impl AcpManager {
             connections: protected,
             _claim: claim,
         })
+    }
+}
+
+#[cfg(test)]
+mod plugin_configuration_tests {
+    use super::*;
+    #[test]
+    fn plugin_configuration_claim_blocks_future_known_installations_and_shared_changes() {
+        let admission = AccountAdmission::default();
+        let claim = admission
+            .reserve(Claim {
+                agent_id: "codex".into(),
+                entries: vec![],
+                plugin_configuration: true,
+            })
+            .unwrap();
+        assert!(admission.check("registry:codex-acp", None).is_err());
+        assert!(
+            admission
+                .reserve(Claim {
+                    agent_id: "registry:codex-acp".into(),
+                    entries: vec![],
+                    plugin_configuration: false
+                })
+                .is_err()
+        );
+        assert!(admission.check("independent-agent", None).is_ok());
+        drop(claim);
+        assert!(admission.check("registry:codex-acp", None).is_ok());
+    }
+    #[test]
+    fn an_existing_other_installation_configuration_claim_blocks_plugin_management() {
+        let admission = AccountAdmission::default();
+        let _held = admission
+            .reserve(Claim {
+                agent_id: "registry:codex-acp".into(),
+                entries: vec![],
+                plugin_configuration: false,
+            })
+            .unwrap();
+        assert!(
+            admission
+                .reserve(Claim {
+                    agent_id: "codex".into(),
+                    entries: vec![],
+                    plugin_configuration: true
+                })
+                .is_err()
+        );
     }
 }
 

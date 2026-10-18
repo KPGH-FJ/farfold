@@ -142,6 +142,7 @@ pub(in crate::acp_client) trait Control {
     fn interested(&self) -> bool;
     fn deadline(&self) -> Instant;
     fn pending_cleanup(&self);
+    fn spawned(&self) {}
 }
 impl Control for Request {
     fn interested(&self) -> bool {
@@ -214,6 +215,7 @@ pub(in crate::acp_client) fn run_owned(
         return Err(Code::TimedOut.into());
     }
     let (mut owner, mut streams) = spawn(command, rpc.is_some())?;
+    request.spawned();
     let (mut out, mut discarded) = (Vec::new(), Vec::new());
     let (mut out_count, mut err_count) = (0, 0);
     let (mut out_done, mut err_done) = (false, false);

@@ -342,3 +342,6 @@ mod extra_skill_roots_tests;
 
 #[cfg(test)]
 mod extra_skill_roots_rpc_tests;
+
+#[cfg(test)]
+mod p40_tests;
