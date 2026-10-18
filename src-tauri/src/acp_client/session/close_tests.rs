@@ -179,7 +179,7 @@ impl InteractionFixture {
             id: "close-pending-fixture".into(),
             name: "Fixture".into(),
             source: "custom".into(),
-            command: "/usr/bin/python3".into(),
+            command: crate::platform_tests::python(),
             args: vec![
                 "-u".into(),
                 script.to_string_lossy().into_owned(),

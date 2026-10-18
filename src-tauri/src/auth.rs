@@ -921,7 +921,12 @@ mod tests {
     use super::*;
 
     #[tokio::test]
+    #[cfg_attr(windows, ignore = "Executed by the active owned Windows parent")]
     async fn login_child_keeps_program_reserved_until_exit() {
+        #[cfg(windows)]
+        crate::platform_tests::windows_conpty::entered(
+            crate::platform_tests::windows_conpty::Case::Reservation,
+        );
         let agent = "login-reservation-fixture";
         let reservation = crate::install_job::configuration_guard(agent).await;
         let sink = terminal_output(
@@ -931,6 +936,7 @@ mod tests {
             None,
         );
         let manager = std::sync::Arc::new(PtyManager::new());
+        #[cfg(unix)]
         let id = manager
             .spawn(
                 "/bin/sh",
@@ -941,6 +947,21 @@ mod tests {
                 sink,
             )
             .unwrap();
+        #[cfg(windows)]
+        let directory = tempfile::tempdir().unwrap();
+        #[cfg(windows)]
+        let id = manager
+            .spawn(
+                &crate::platform_tests::python(),
+                &["-u".into(), "-c".into(), "input()".into()],
+                &[],
+                directory.path(),
+                portable_pty::PtySize::default(),
+                sink,
+            )
+            .unwrap();
+        #[cfg(windows)]
+        crate::platform_tests::windows_conpty::environment();
         assert!(
             tokio::time::timeout(
                 std::time::Duration::from_millis(30),
@@ -949,7 +970,10 @@ mod tests {
             .await
             .is_err()
         );
+        #[cfg(unix)]
         manager.write(&id, b"finish\n").unwrap();
+        #[cfg(windows)]
+        manager.write(&id, b"finish\r").unwrap();
         let waiting = manager.clone();
         tauri::async_runtime::spawn_blocking(move || waiting.await_exit(&id))
             .await
@@ -961,6 +985,14 @@ mod tests {
         )
         .await
         .expect("the exited child releases its configuration reservation");
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn windows_login_child_keeps_program_reserved_until_exit_isolated() {
+        crate::platform_tests::windows_conpty::run(
+            crate::platform_tests::windows_conpty::Case::Reservation,
+        );
     }
 
     fn row(id: &str, handshake: serde_json::Value) -> AgentRow {

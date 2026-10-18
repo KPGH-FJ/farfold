@@ -57,7 +57,7 @@ async fn configuration_change_permissions_gate_cold_load_failed_timeout_late_and
         id: "codex".into(),
         name: "Fixture".into(),
         source: "registry".into(),
-        command: "/usr/bin/python3".into(),
+        command: crate::platform_tests::python(),
         args: vec!["-u".into(), cwd.join("peer.py").to_string_lossy().into()],
         env: vec![],
         version: None,

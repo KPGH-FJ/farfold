@@ -64,7 +64,7 @@ fn fixture(dir: &std::path::Path) -> (MetaStore, Arc<AcpManager>, AgentRow) {
         id: "codex".into(),
         name: "Fixture".into(),
         source: "registry".into(),
-        command: "/usr/bin/python3".into(),
+        command: crate::platform_tests::python(),
         args: vec!["-u".into(), dir.join("peer.py").to_string_lossy().into()],
         env: vec![],
         version: None,

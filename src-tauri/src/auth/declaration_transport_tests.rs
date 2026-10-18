@@ -24,7 +24,7 @@ for line in sys.stdin:
    {'id':'default','name':'Default'},
    {'id':'terminal','name':'Terminal','type':'terminal','args':['acp','--auth-setup'],'env':{'PRIVATE':'fixture-sensitive-canary'}},
    {'id':'unresolved','name':'Unresolved','env':{'PRIVATE':'fixture-sensitive-canary'},'_meta':{'terminal-auth':{'command':'/fixture-sensitive-canary/unresolved','args':['fixture-sensitive-canary']}}},
-   {'id':'legacy-env','name':'Declared terminal','_meta':{'terminal-auth':{'command':'/usr/bin/python3','args':[sys.argv[0],'login'],'env':{'PRIVATE':'fixture-sensitive-canary','PUBLIC_MODE':'terminal'}}}}
+   {'id':'legacy-env','name':'Declared terminal','_meta':{'terminal-auth':{'command':sys.argv[2],'args':[sys.argv[0],'login'],'env':{'PRIVATE':'fixture-sensitive-canary','PUBLIC_MODE':'terminal'}}}}
   ]})
  elif method=='authenticate': reply(m,{})
  else: reply(m,{})
@@ -54,15 +54,17 @@ impl Fixture {
         let peer = base.join("peer.py");
         std::fs::write(&peer, PEER).unwrap();
         let calls = base.join("calls");
+        let selected_python = crate::platform_tests::python();
         let row = AgentRow {
             id: "public-declaration-fixture".into(),
             name: "Fixture".into(),
             source: "custom".into(),
-            command: "/usr/bin/python3".into(),
+            command: selected_python.clone(),
             args: vec![
                 "-u".into(),
                 peer.display().to_string(),
                 calls.display().to_string(),
+                selected_python,
             ],
             env: vec![],
             version: None,

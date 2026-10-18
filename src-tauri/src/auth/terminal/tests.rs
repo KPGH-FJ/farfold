@@ -87,7 +87,12 @@ async fn cancelled_declared_or_manual_login_does_not_read_environment_or_spawn()
 }
 
 #[tokio::test(flavor = "multi_thread")]
+#[cfg_attr(windows, ignore = "Executed by the active owned Windows parent")]
 async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
+    #[cfg(windows)]
+    crate::platform_tests::windows_conpty::entered(
+        crate::platform_tests::windows_conpty::Case::Cancellation,
+    );
     let agent = "cancel-live-auth-terminal";
     let owned = owner(agent).await;
     let directory = tempfile::tempdir().unwrap();
@@ -107,6 +112,8 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
         || Ok(vec![]),
     )
     .unwrap();
+    #[cfg(windows)]
+    crate::platform_tests::windows_conpty::environment();
     tokio::time::timeout(Duration::from_secs(3), async {
         while !marker.exists() || std::fs::read_to_string(&marker).unwrap().is_empty() {
             tokio::task::yield_now().await;
@@ -136,6 +143,14 @@ async fn cancellation_after_spawn_keeps_the_original_exit_owner() {
     )
     .await
     .unwrap();
+}
+
+#[cfg(windows)]
+#[test]
+fn windows_cancellation_after_spawn_keeps_the_original_exit_owner_isolated() {
+    crate::platform_tests::windows_conpty::run(
+        crate::platform_tests::windows_conpty::Case::Cancellation,
+    );
 }
 
 #[tokio::test]

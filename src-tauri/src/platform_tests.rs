@@ -95,3 +95,6 @@ pub(crate) fn terminate(pid: i32) -> i32 {
         0
     }
 }
+
+#[cfg(windows)]
+pub(crate) mod windows_conpty;

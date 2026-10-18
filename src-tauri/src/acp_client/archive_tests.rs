@@ -60,7 +60,7 @@ async fn archive_rejects_running_target_but_allows_idle_sibling() {
         id: "archive-fixture".into(),
         name: "Fixture".into(),
         source: "custom".into(),
-        command: "/usr/bin/python3".into(),
+        command: crate::platform_tests::python(),
         args: vec!["-u".into(), cwd.join("peer.py").to_string_lossy().into()],
         env: vec![],
         version: None,
