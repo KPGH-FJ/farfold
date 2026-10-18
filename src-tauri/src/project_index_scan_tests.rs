@@ -203,7 +203,7 @@ fn permission_denied_subtree_is_partial_but_root_failure_is_error() {
         }
     }
     let _restore = Restore(denied.clone());
-    std::fs::set_permissions(&denied, std::fs::Permissions::from_mode(0)).unwrap();
+    std::fs::set_permissions(&denied, std::fs::Permissions::from_mode(0o0)).unwrap();
     // Actual permissions are required for this fixture. Elevated test runners
     // cannot use chmod(000) as evidence of an unreadable directory.
     assert!(

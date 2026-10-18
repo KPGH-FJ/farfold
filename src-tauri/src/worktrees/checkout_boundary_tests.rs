@@ -126,6 +126,7 @@ fn private_object_read_cannot_lazy_fetch_a_missing_target_from_new_source_promis
     );
 }
 #[test]
+#[cfg(unix)]
 fn add_after_preflight_cannot_lazy_fetch_from_mutated_source_configuration() {
     let r = Repo::new();
     let s = inspect::snapshot(&r.root).unwrap();

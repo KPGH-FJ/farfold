@@ -246,12 +246,13 @@ pub(super) fn selected_environment(
     Ok(env)
 }
 pub(super) fn admission(row: &AgentRow) -> Result<Route> {
+    // The management transport's platform support is not history-read admission.
+    if !cfg!(target_os = "macos") {
+        return Err(Code::PlatformUnsupported.into());
+    }
     if row.id != "registry:claude-acp" {
         inventory::launch::admission(row)?;
         return Ok(Route::AppServer);
-    }
-    if !cfg!(target_os = "macos") {
-        return Err(Code::PlatformUnsupported.into());
     }
     let value = resolve(row)?;
     environment(row)?;

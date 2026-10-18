@@ -174,7 +174,7 @@ impl<'a> Exchange<'a> {
     }
 }
 impl inventory::process::FixedExchange for Exchange<'_> {
-    fn write(&mut self, writer: &mut std::process::ChildStdin) -> inventory::Result<()> {
+    fn write(&mut self, writer: &mut dyn Write) -> inventory::Result<()> {
         if self.sent == self.pending.len() {
             return Ok(());
         }

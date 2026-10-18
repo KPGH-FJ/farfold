@@ -64,7 +64,7 @@ impl Exchange {
         this.pending.push(b'\n');
         Ok(this)
     }
-    pub(super) fn write(&mut self, writer: &mut impl Write) -> Result<()> {
+    pub(super) fn write(&mut self, writer: &mut (impl Write + ?Sized)) -> Result<()> {
         if self.sent == self.pending.len() {
             return Ok(());
         }

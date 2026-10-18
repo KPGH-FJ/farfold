@@ -1,7 +1,12 @@
 //! Fixed-name, no-content observations anchored to held directory descriptors.
+#[cfg(target_os = "macos")]
 use super::{
-    preparation_git::{self, GitObservation},
-    preparation_types::{FIXED_NAMES, PreparationFact, PreparationNodeKind},
+    preparation_git,
+    preparation_types::{FIXED_NAMES, PreparationNodeKind},
+};
+use super::{
+    preparation_git::GitObservation,
+    preparation_types::PreparationFact,
     storage::SavedLocation,
     types::{Result, error},
 };

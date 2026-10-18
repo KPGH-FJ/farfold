@@ -21,6 +21,7 @@ fn names(directory: &Path) -> Vec<String> {
     values
 }
 
+#[cfg(unix)]
 fn settled(jobs: &FileCopyJobs, id: &str) -> CopyStatus {
     let deadline = Instant::now() + Duration::from_secs(5);
     loop {

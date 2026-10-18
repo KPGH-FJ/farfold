@@ -4,6 +4,13 @@ use serde::Serialize;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(
+    windows,
+    expect(
+        dead_code,
+        reason = "Shared wire schema retained; Windows preparation producer is not implemented"
+    )
+)]
 pub enum PreparationRole {
     Manifest,
     Lock,
@@ -11,6 +18,13 @@ pub enum PreparationRole {
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
+#[cfg_attr(
+    windows,
+    expect(
+        dead_code,
+        reason = "Shared wire schema retained; Windows preparation producer is not implemented"
+    )
+)]
 pub enum PreparationNodeKind {
     Missing,
     File,
@@ -58,6 +72,7 @@ pub struct PreparationValidation {
     pub valid: bool,
 }
 
+#[cfg(target_os = "macos")]
 pub(super) const FIXED_NAMES: [(&str, PreparationRole); 22] = [
     ("package.json", PreparationRole::Manifest),
     ("pyproject.toml", PreparationRole::Manifest),

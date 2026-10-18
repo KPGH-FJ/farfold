@@ -6,7 +6,7 @@ fn ready(state: &BrowserWorkspace, task: &str) -> (u64, BrowserInfo) {
         .reserve(task, Url::parse("https://www.rust-lang.org/").unwrap())
         .unwrap();
     state.event(id, 1, 1, "https://www.rust-lang.org/").unwrap();
-    super::tab_tests::select_initial(&state, task, &info.label);
+    super::tab_tests::select_initial(state, task, &info.label);
     (id, info)
 }
 fn result() -> &'static str {

@@ -1,4 +1,6 @@
 use super::Endpoint;
+use crate::windows_pipe::logon_sid;
+pub(crate) use crate::windows_pipe::{set_nowait, write_handle};
 use std::{
     cell::{Cell, RefCell},
     fs::File,
@@ -6,7 +8,7 @@ use std::{
     mem::size_of,
     os::windows::{
         ffi::OsStrExt,
-        io::{AsRawHandle, FromRawHandle, OwnedHandle},
+        io::{AsRawHandle, FromRawHandle},
     },
     path::{Path, PathBuf},
     ptr,
@@ -16,7 +18,7 @@ use windows_sys::Win32::{
     Foundation::*,
     Security::{Authorization::*, *},
     Storage::FileSystem::*,
-    System::{Pipes::*, Threading::*},
+    System::Pipes::*,
 };
 pub(crate) struct Guard;
 pub(crate) type Handle = HANDLE;
@@ -104,32 +106,6 @@ impl Write for Stream {
         Ok(())
     }
 }
-pub(crate) fn set_nowait(handle: HANDLE) -> io::Result<()> {
-    if unsafe { GetFileType(handle) } != FILE_TYPE_PIPE {
-        return Err(io::Error::from(io::ErrorKind::InvalidInput));
-    }
-    let mode = PIPE_READMODE_BYTE | PIPE_NOWAIT;
-    if unsafe { SetNamedPipeHandleState(handle, &mode, ptr::null(), ptr::null()) } == 0 {
-        return Err(io::Error::last_os_error());
-    }
-    let mut actual = 0;
-    if unsafe {
-        GetNamedPipeHandleStateW(
-            handle,
-            &mut actual,
-            ptr::null_mut(),
-            ptr::null_mut(),
-            ptr::null_mut(),
-            ptr::null_mut(),
-            0,
-        )
-    } == 0
-        || actual & PIPE_NOWAIT == 0
-    {
-        return Err(io::Error::from(io::ErrorKind::Unsupported));
-    }
-    Ok(())
-}
 pub(crate) fn read_handle(handle: HANDLE, bytes: &mut [u8]) -> io::Result<usize> {
     let mut n = 0;
     let ok = unsafe {
@@ -148,30 +124,6 @@ pub(crate) fn read_handle(handle: HANDLE, bytes: &mut [u8]) -> io::Result<usize>
     match error.raw_os_error().map(|e| e as u32) {
         Some(ERROR_BROKEN_PIPE) => Ok(0),
         Some(ERROR_NO_DATA | ERROR_PIPE_LISTENING) => Err(block()),
-        _ => Err(error),
-    }
-}
-pub(crate) fn write_handle(handle: HANDLE, bytes: &[u8]) -> io::Result<usize> {
-    let mut n = 0;
-    if unsafe {
-        WriteFile(
-            handle,
-            bytes.as_ptr(),
-            bytes.len().min(u32::MAX as usize) as u32,
-            &mut n,
-            ptr::null_mut(),
-        )
-    } != 0
-    {
-        return if n == 0 && !bytes.is_empty() {
-            Err(block())
-        } else {
-            Ok(n as usize)
-        };
-    }
-    let error = io::Error::last_os_error();
-    match error.raw_os_error().map(|e| e as u32) {
-        Some(ERROR_NO_DATA | ERROR_PIPE_BUSY) => Err(block()),
         _ => Err(error),
     }
 }
@@ -211,60 +163,6 @@ pub(crate) fn wait_ready(handle: Handle, interests: i16, deadline: Instant) -> i
         }
         wait_fd(handle, interests, 5);
     }
-}
-// Use this logon session's SID, not Everyone/anonymous/default named-pipe ACL.
-fn logon_sid() -> io::Result<String> {
-    let mut token = ptr::null_mut();
-    if unsafe { OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &mut token) } == 0 {
-        return Err(io::Error::last_os_error());
-    }
-    let token = unsafe { OwnedHandle::from_raw_handle(token) };
-    let mut length = 0;
-    unsafe {
-        GetTokenInformation(
-            token.as_raw_handle(),
-            TokenLogonSid,
-            ptr::null_mut(),
-            0,
-            &mut length,
-        );
-    }
-    if length == 0 || length > 65536 {
-        return Err(io::Error::from(io::ErrorKind::PermissionDenied));
-    }
-    let mut buffer = vec![0usize; (length as usize).div_ceil(size_of::<usize>())];
-    if unsafe {
-        GetTokenInformation(
-            token.as_raw_handle(),
-            TokenLogonSid,
-            buffer.as_mut_ptr().cast(),
-            length,
-            &mut length,
-        )
-    } == 0
-    {
-        return Err(io::Error::last_os_error());
-    }
-    let groups = unsafe { &*buffer.as_ptr().cast::<TOKEN_GROUPS>() };
-    if groups.GroupCount != 1 {
-        return Err(io::Error::from(io::ErrorKind::PermissionDenied));
-    }
-    let mut text = ptr::null_mut();
-    if unsafe { ConvertSidToStringSidW(groups.Groups[0].Sid, &mut text) } == 0 {
-        return Err(io::Error::last_os_error());
-    }
-    let result = unsafe {
-        let mut n = 0;
-        while n < 256 && *text.add(n) != 0 {
-            n += 1;
-        }
-        String::from_utf16(std::slice::from_raw_parts(text, n))
-            .map_err(|_| io::Error::from(io::ErrorKind::InvalidData))
-    };
-    unsafe {
-        LocalFree(text.cast());
-    }
-    result
 }
 pub(crate) struct Listener {
     path: PathBuf,
@@ -392,6 +290,7 @@ pub(crate) fn connect(path: &Path) -> io::Result<Stream> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::os::windows::io::OwnedHandle;
     #[test]
     fn one_authenticated_channel_can_carry_bidirectional_stop_without_a_second_instance() {
         let endpoint = create().unwrap();

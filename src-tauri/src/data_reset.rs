@@ -264,6 +264,7 @@ mod tests {
     }
 
     #[test]
+    #[cfg(unix)]
     fn clear_owned_deletes_an_owned_symlink_without_touching_its_target() {
         let directory = tempfile::tempdir().unwrap();
         let data = directory.path().join("data");

@@ -1,4 +1,5 @@
 import { validMcpHttpUrl } from "./mcp_http_url";
+import { isLocalProgramPath } from "./file_paths";
 import { SKILL_CHANGE_CODES } from "./skill_management_types";
 import type {
   SkillChangeConfirmInput,
@@ -188,13 +189,9 @@ export function mcpAddInputError(value: unknown): McpAddCode | null {
       : "invalidUrl";
   if (
     typeof v.executablePath !== "string" ||
-    !v.executablePath.startsWith("/") ||
     bytes(v.executablePath) > 4096 ||
     hidden(v.executablePath) ||
-    v.executablePath
-      .slice(1)
-      .split("/")
-      .some((p) => !p || p === "." || p === "..")
+    !isLocalProgramPath(v.executablePath)
   )
     return "invalidExecutablePath";
   if (

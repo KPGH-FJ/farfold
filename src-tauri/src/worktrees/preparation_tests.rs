@@ -69,7 +69,7 @@ fn preparation_reports_only_fixed_metadata_never_reads_fifo_or_symlink_content()
         "not JSON: SECRET_MUST_NOT_BE_READ",
     )
     .unwrap();
-    fs::set_permissions(root.join("package.json"), fs::Permissions::from_mode(0)).unwrap();
+    fs::set_permissions(root.join("package.json"), fs::Permissions::from_mode(0o0)).unwrap();
     fs::create_dir(root.join("node_modules")).unwrap();
     fs::write(root.join(".env"), "PRIVATE_CANARY").unwrap();
     symlink("/controlled/nonexistent/SECRET", root.join(".venv")).unwrap();

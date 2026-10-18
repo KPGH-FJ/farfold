@@ -73,7 +73,7 @@ async fn witness(source: &str, closed_input: bool) -> (tempfile::TempDir, Value,
             move |cx: ConnectionTo<Agent>| async move {
                 wait_marker(&marker).await;
                 request_diagnostics.phase(Phase::Initialize);
-                let message = UntypedMessage::new("initialize", &json!({"protocolVersion":1}))?;
+                let message = UntypedMessage::new("initialize", json!({"protocolVersion":1}))?;
                 let _: Value = cx.send_request(message).block_task().await?;
                 Ok(())
             },

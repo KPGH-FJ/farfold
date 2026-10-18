@@ -75,7 +75,7 @@ async fn registered_opencode_initialize_through_real_transport() {
                 // The installed af487016 capability set, before current work.
                 let request = UntypedMessage::new(
                     "initialize",
-                    &json!({
+                    json!({
                         "protocolVersion":1,
                         "clientInfo":{"name":"farfold","version":"0.1.7"},
                         "clientCapabilities":{

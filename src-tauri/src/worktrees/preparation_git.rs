@@ -1,10 +1,12 @@
 //! Fixed local Git metadata reads only. No status, index refresh or object checkout.
+#[cfg(target_os = "macos")]
 use super::{
     git, inspect,
-    preparation_types::PreparationGit,
     storage::SavedLocation,
-    types::{Result, Tree, error, oid},
+    types::{Result, error, oid},
 };
+use super::{preparation_types::PreparationGit, types::Tree};
+#[cfg(target_os = "macos")]
 use std::{path::Path, sync::atomic::AtomicBool, time::Duration};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -12,11 +14,13 @@ pub(super) struct GitObservation {
     pub summary: PreparationGit,
     pub trees: Vec<Tree>,
 }
+#[cfg(target_os = "macos")]
 fn read(root: &Path, args: &[&str]) -> Result<git::Output> {
     let mut all = vec!["--no-optional-locks"];
     all.extend_from_slice(args);
     git::execute(root, &all, &AtomicBool::new(false), Duration::from_secs(10))
 }
+#[cfg(target_os = "macos")]
 fn text(root: &Path, args: &[&str]) -> Result<String> {
     let result = read(root, args)?;
     if !result.success {
@@ -26,6 +30,7 @@ fn text(root: &Path, args: &[&str]) -> Result<String> {
         .map(|s| s.strip_suffix('\n').unwrap_or(&s).to_owned())
         .map_err(|_| error("unsupportedGit"))
 }
+#[cfg(target_os = "macos")]
 fn directory(root: &Path, args: &[&str]) -> Result<String> {
     let value = text(root, args)?;
     let value = Path::new(&value);
@@ -35,6 +40,7 @@ fn directory(root: &Path, args: &[&str]) -> Result<String> {
         root.join(value)
     })
 }
+#[cfg(target_os = "macos")]
 fn parse_trees(bytes: &[u8]) -> Result<Vec<Tree>> {
     let mut trees = Vec::new();
     let mut current: Option<Tree> = None;
@@ -76,6 +82,7 @@ fn parse_trees(bytes: &[u8]) -> Result<Vec<Tree>> {
     }
     Ok(trees)
 }
+#[cfg(target_os = "macos")]
 pub(super) fn observe(saved: &SavedLocation) -> Result<GitObservation> {
     saved.identity.check()?;
     let l = &saved.location;

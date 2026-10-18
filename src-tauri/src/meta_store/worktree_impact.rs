@@ -239,6 +239,7 @@ mod tests {
         let root = d.path().join("owned");
         std::fs::create_dir_all(root.join("sub")).unwrap();
         let root = root.canonicalize().unwrap();
+        #[cfg(unix)]
         let alias = d.path().join("alias");
         #[cfg(unix)]
         std::os::unix::fs::symlink(&root, &alias).unwrap();

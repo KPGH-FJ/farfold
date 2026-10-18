@@ -245,77 +245,83 @@ fn claude_helper_decode_units_are_part_of_rust_verification() {
         String::from_utf8_lossy(&output.stdout)
     );
 }
-#[tokio::test(flavor = "multi_thread")]
-async fn claude_import_hang_observer_drop_keeps_real_scope_and_shared_slot_until_cancel_cleanup() {
+#[test]
+fn claude_import_hang_observer_drop_keeps_real_scope_and_shared_slot_until_cancel_cleanup() {
     let _serial = inventory::execution::fixture_lock();
-    let f = Fixture::new("normal");
-    std::fs::write(f.sdk.join("sdk.mjs"),"import fs from 'node:fs';fs.writeFileSync('owned-pid',String(process.pid));process.on('SIGTERM',()=>{});await new Promise(()=>{setInterval(()=>{},1000)});").unwrap();
-    // Re-capture this controlled selected installation after fixture content creation.
-    let mut saved = f.saved.clone();
-    saved.route = launch::Route::Sdk(launch::resolve(&saved.agent).unwrap());
-    let store = MetaStore::open(&f.root.join("meta.db")).unwrap();
-    store.insert_agent(&saved.agent).unwrap();
-    let manager = AcpManager::new(f.root.join("logs"), f.root.clone());
-    let scope = manager
-        .reserve_preparation_action(&saved.agent, &saved.agent.command, &saved.agent.args)
+    let runtime = tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
         .unwrap();
-    let gate = crate::managed_update::UpdateAdmission::default();
-    let activity = gate.activity().unwrap();
-    let mut q = tests::request();
-    q.agent_id = saved.agent.id.clone();
-    let registry = requests::Requests::default();
-    let (job, _) = registry.begin(q.clone(), || Ok(saved.clone())).unwrap();
-    let command = f.command();
-    let task = tokio::spawn(execute_with(
-        store,
-        job.clone(),
-        activity,
-        scope,
-        move |_, job| run_selected(job, 0, command).and_then(|r| r.publish(job, 0)),
-    ));
-    let marker = f.root.join("owned-pid");
-    tokio::time::timeout(Duration::from_secs(5), async {
-        while !marker.exists() {
-            tokio::time::sleep(Duration::from_millis(10)).await;
-        }
-    })
-    .await
-    .unwrap();
-    let pid = std::fs::read_to_string(&marker)
-        .unwrap()
-        .parse::<i32>()
+    runtime.block_on(async {
+        let f = Fixture::new("normal");
+        std::fs::write(f.sdk.join("sdk.mjs"),"import fs from 'node:fs';fs.writeFileSync('owned-pid',String(process.pid));process.on('SIGTERM',()=>{});await new Promise(()=>{setInterval(()=>{},1000)});").unwrap();
+        // Re-capture this controlled selected installation after fixture content creation.
+        let mut saved = f.saved.clone();
+        saved.route = launch::Route::Sdk(launch::resolve(&saved.agent).unwrap());
+        let store = MetaStore::open(&f.root.join("meta.db")).unwrap();
+        store.insert_agent(&saved.agent).unwrap();
+        let manager = AcpManager::new(f.root.join("logs"), f.root.clone());
+        let scope = manager
+            .reserve_preparation_action(&saved.agent, &saved.agent.command, &saved.agent.args)
+            .unwrap();
+        let gate = crate::managed_update::UpdateAdmission::default();
+        let activity = gate.activity().unwrap();
+        let mut q = tests::request();
+        q.agent_id = saved.agent.id.clone();
+        let registry = requests::Requests::default();
+        let (job, _) = registry.begin(q.clone(), || Ok(saved.clone())).unwrap();
+        let command = f.command();
+        let task = tokio::spawn(execute_with(
+            store,
+            job.clone(),
+            activity,
+            scope,
+            move |_, job| run_selected(job, 0, command).and_then(|r| r.publish(job, 0)),
+        ));
+        let marker = f.root.join("owned-pid");
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while !marker.exists() {
+                tokio::time::sleep(Duration::from_millis(10)).await;
+            }
+        })
+        .await
         .unwrap();
-    let second = inventory::execution::acquire().unwrap();
-    assert!(inventory::execution::acquire().is_err());
-    task.abort();
-    let _ = task.await;
-    assert!(gate.update().is_err());
-    assert!(
-        manager
-            .reserve_preparation_action(&saved.agent, &saved.agent.command, &saved.agent.args)
-            .is_err()
-    );
-    assert!(!job.snapshot().settled);
-    registry.reply(&q.agent_id, &q.request_id, true).unwrap();
-    assert!(!job.snapshot().settled);
-    assert!(inventory::execution::acquire().is_err());
-    tokio::time::timeout(Duration::from_secs(7), async {
-        while !job.snapshot().settled {
-            tokio::time::sleep(Duration::from_millis(10)).await;
-        }
-    })
-    .await
-    .unwrap();
-    assert_eq!(job.snapshot().state, State::Cancelled);
-    assert_ne!(crate::platform_tests::process_check(pid), 0);
-    assert!(gate.update().is_ok());
-    assert!(
-        manager
-            .reserve_preparation_action(&saved.agent, &saved.agent.command, &saved.agent.args)
-            .is_ok()
-    );
-    drop(second);
-    assert!(inventory::execution::acquire().is_ok());
+        let pid = std::fs::read_to_string(&marker)
+            .unwrap()
+            .parse::<i32>()
+            .unwrap();
+        let second = inventory::execution::acquire().unwrap();
+        assert!(inventory::execution::acquire().is_err());
+        task.abort();
+        let _ = task.await;
+        assert!(gate.update().is_err());
+        assert!(
+            manager
+                .reserve_preparation_action(&saved.agent, &saved.agent.command, &saved.agent.args)
+                .is_err()
+        );
+        assert!(!job.snapshot().settled);
+        registry.reply(&q.agent_id, &q.request_id, true).unwrap();
+        assert!(!job.snapshot().settled);
+        assert!(inventory::execution::acquire().is_err());
+        tokio::time::timeout(Duration::from_secs(7), async {
+            while !job.snapshot().settled {
+                tokio::time::sleep(Duration::from_millis(10)).await;
+            }
+        })
+        .await
+        .unwrap();
+        assert_eq!(job.snapshot().state, State::Cancelled);
+        assert_ne!(crate::platform_tests::process_check(pid), 0);
+        assert!(gate.update().is_ok());
+        assert!(
+            manager
+                .reserve_preparation_action(&saved.agent, &saved.agent.command, &saved.agent.args)
+                .is_ok()
+        );
+        drop(second);
+        assert!(inventory::execution::acquire().is_ok());
+    });
 }
 #[test]
 fn claude_pipe_holding_descendant_is_reaped_before_result_is_published() {

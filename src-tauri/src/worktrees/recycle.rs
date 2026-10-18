@@ -166,12 +166,14 @@ pub(super) fn reserve_parent(record: &mut SavedArchive) -> Result<()> {
         return Ok(());
     }
     absent(&record.retained_parent)?;
-    let mut builder = fs::DirBuilder::new();
+    let builder = fs::DirBuilder::new();
     #[cfg(unix)]
-    {
+    let builder = {
+        let mut builder = builder;
         use std::os::unix::fs::DirBuilderExt;
         builder.mode(0o700);
-    }
+        builder
+    };
     builder
         .create(&record.retained_parent)
         .map_err(|_| error("targetExists"))?;

@@ -2,6 +2,9 @@
 use super::types::*;
 use crate::acp_client::extension_inventory::mcp_targets::CatalogueSource;
 use serde::{Deserialize, Serialize};
+#[cfg(all(test, windows))]
+#[path = "mcp_add_path_tests.rs"]
+mod path_tests;
 #[derive(Clone, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct StdioInput {
@@ -158,13 +161,21 @@ impl StdioInput {
     pub fn validate(&self) -> Result<()> {
         validate_name(&self.name)?;
         let path = &self.executable_path;
-        if path.len() > 4096
-            || !path.starts_with('/')
-            || path.chars().any(invisible)
+        #[cfg(not(windows))]
+        let invalid_path = !path.starts_with('/')
             || path[1..]
                 .split('/')
-                .any(|s| s.is_empty() || s == "." || s == "..")
-        {
+                .any(|s| s.is_empty() || s == "." || s == "..");
+        #[cfg(windows)]
+        let invalid_path = {
+            let local = path.strip_prefix(r"\\?\").unwrap_or(path);
+            crate::file_access::absolute(std::path::Path::new(path)).is_err()
+                || local.get(3..).is_none_or(|tail| {
+                    tail.split(['/', '\\'])
+                        .any(|s| s.is_empty() || s == "." || s == "..")
+                })
+        };
+        if path.len() > 4096 || path.chars().any(invisible) || invalid_path {
             return Err(Code::InvalidExecutablePath.into());
         }
         if self.args.len() > 64

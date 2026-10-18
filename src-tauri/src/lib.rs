@@ -59,6 +59,8 @@ mod update_metadata;
 mod update_platform;
 mod uv_runtime;
 #[cfg(windows)]
+mod windows_pipe;
+#[cfg(windows)]
 mod windows_process;
 mod work_policy;
 mod worktree_commands;

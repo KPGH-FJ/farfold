@@ -124,6 +124,8 @@ impl NotificationInput {
                 version: 1,
                 native_result_coverage: if cfg!(target_os = "macos") {
                     "macos_submission_and_callbacks"
+                } else if cfg!(windows) {
+                    "windows_submission_and_callbacks"
                 } else {
                     "not_available"
                 },

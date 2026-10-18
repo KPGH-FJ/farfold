@@ -12,9 +12,12 @@ use std::{
     sync::{Mutex, OnceLock},
     time::{Duration, Instant},
 };
+#[cfg(test)]
+#[path = "launch_tests.rs"]
+mod tests;
 
 pub(in crate::acp_client) fn admission(row: &AgentRow) -> Result<()> {
-    if !cfg!(target_os = "macos") {
+    if !cfg!(any(target_os = "macos", windows)) {
         return Err(Code::PlatformUnsupported.into());
     }
     if !matches!(row.id.as_str(), "codex" | "registry:codex-acp") {

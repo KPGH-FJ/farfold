@@ -461,7 +461,7 @@ impl<'a> Exchange<'a> {
         }
         Ok(())
     }
-    pub(super) fn write_to(&mut self, writer: &mut impl Write) -> Result<()> {
+    pub(super) fn write_to(&mut self, writer: &mut (impl Write + ?Sized)) -> Result<()> {
         if self.sent == self.pending.len() {
             return Ok(());
         }
@@ -493,7 +493,7 @@ impl<'a> Exchange<'a> {
     }
 }
 impl FixedExchange for Exchange<'_> {
-    fn write(&mut self, writer: &mut std::process::ChildStdin) -> Result<()> {
+    fn write(&mut self, writer: &mut dyn Write) -> Result<()> {
         self.write_to(writer)
     }
     fn received(&mut self, bytes: &mut Vec<u8>) -> Result<()> {

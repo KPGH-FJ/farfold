@@ -6,6 +6,7 @@ async fn directory_maintenance_retires_exact_idle_alias_descendant_and_reaps_bef
     let root = f.cwd.join("owned-directory");
     let child = root.join("sub");
     std::fs::create_dir_all(&child).unwrap();
+    #[cfg(unix)]
     let alias = f.cwd.join("alias");
     #[cfg(unix)]
     std::os::unix::fs::symlink(&root, &alias).unwrap();

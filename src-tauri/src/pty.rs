@@ -726,10 +726,8 @@ mod tests {
         let reaped = session.exit.0.lock().unwrap().is_some();
         // Always clean up the deliberately uncooperative fixture, even before
         // the regression is fixed. No Agent process is involved.
-        if !reaped {
-            if let Some(pid) = session.pid {
-                crate::supervisor::signal_owned_group(pid, crate::supervisor::KILL);
-            }
+        if !reaped && let Some(pid) = session.pid {
+            crate::supervisor::signal_owned_group(pid, crate::supervisor::KILL);
         }
         result.unwrap();
         assert!(reaped, "close must not report success before child reaping");

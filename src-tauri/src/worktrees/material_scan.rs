@@ -4,32 +4,34 @@ use super::{
     recycle_types::MaterialSummary,
     types::{Result, error},
 };
+#[cfg(unix)]
 use sha2::{Digest, Sha256};
 #[cfg(unix)]
 use std::os::{
     fd::{AsRawFd, FromRawFd},
     unix::fs::MetadataExt,
 };
-use std::{
-    ffi::CString,
-    fs::File,
-    io::Read,
-    path::Path,
-    sync::atomic::{AtomicBool, Ordering},
-};
+#[cfg(unix)]
+use std::{ffi::CString, fs::File, io::Read, sync::atomic::Ordering};
+use std::{path::Path, sync::atomic::AtomicBool};
 
+#[cfg(unix)]
 const MAX_ENTRIES: u64 = 100_000;
+#[cfg(unix)]
 const MAX_BYTES: u64 = 1024 * 1024 * 1024;
+#[cfg(unix)]
 const MAX_FILE: u64 = 256 * 1024 * 1024;
 pub(super) fn hex(bytes: impl AsRef<[u8]>) -> String {
     bytes.as_ref().iter().map(|b| format!("{b:02x}")).collect()
 }
+#[cfg(unix)]
 struct Scan {
     hash: Sha256,
     entries: u64,
     bytes: u64,
     content_only: bool,
 }
+#[cfg(unix)]
 impl Scan {
     fn field(&mut self, raw: &[u8]) {
         self.hash.update((raw.len() as u64).to_le_bytes());

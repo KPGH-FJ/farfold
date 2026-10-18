@@ -49,12 +49,14 @@ pub(super) fn reserve(i: &RemoveIntent) -> Result<inspect::Stamp> {
     if Path::new(&i.recovery_path).parent() != Some(Path::new(&i.saved.parent)) {
         return Err(error("unsafePath"));
     }
-    let mut b = fs::DirBuilder::new();
+    let b = fs::DirBuilder::new();
     #[cfg(unix)]
-    {
+    let b = {
+        let mut b = b;
         use std::os::unix::fs::DirBuilderExt;
         b.mode(0o700);
-    }
+        b
+    };
     b.create(&i.recovery_path)
         .map_err(|_| error("targetExists"))?;
     let stamp = inspect::stamp(Path::new(&i.recovery_path))?;

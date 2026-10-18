@@ -79,6 +79,7 @@ pub(super) fn execute(
 // admission. Normal completion disables this guard only after group quiescence.
 struct OwnedProcess {
     child: std::process::Child,
+    #[cfg(unix)]
     group: i32,
     finished: bool,
 }
@@ -153,12 +154,14 @@ fn execute_bounded(
     }
     let child = cmd.spawn().map_err(|_| error("gitUnavailable"))?;
     let mut child = OwnedProcess {
+        #[cfg(unix)]
         group: child.id() as i32,
         child,
         finished: false,
     };
     let started = Instant::now();
     let mut stopped = None;
+    #[cfg(unix)]
     let group = child.id() as i32;
     loop {
         let waited = match child.try_wait() {

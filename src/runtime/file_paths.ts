@@ -10,6 +10,32 @@ export function isAbsoluteFilePath(path: string): boolean {
   );
 }
 
+/** Input spelling only; existence, redirection and identity require backend checks. */
+export function isLocalProgramPath(path: string): boolean {
+  if (!isAbsoluteFilePath(path)) return false;
+  if (path.startsWith("/"))
+    return !path
+      .slice(1)
+      .split("/")
+      .some((p) => !p || p === "." || p === "..");
+  const drive = /^(?:[a-z]:[\\/]|\\\\\?\\[a-z]:\\)/i.exec(path);
+  if (!drive) return false;
+  const tail = path.slice(drive[0].length);
+  if (path.startsWith("\\\\?\\") && tail.includes("/")) return false;
+  return tail.split(/[\\/]/).every((part) => {
+    const stem = part.split(".")[0].toUpperCase();
+    return (
+      !!part &&
+      part !== "." &&
+      part !== ".." &&
+      part.length <= 255 &&
+      !/[.: ]$/.test(part) &&
+      !/[:/\\?*"<>|]/.test(part) &&
+      !/^(?:CON|PRN|AUX|NUL|CONIN\$|CONOUT\$|(?:COM|LPT)[1-9¹²³])$/.test(stem)
+    );
+  });
+}
+
 export function fileBasename(path: string): string {
   const windows = /^[a-z]:[\\/]/i.test(path) || path.startsWith("\\\\");
   const separator = windows ? /[\\/]/ : /\//;

@@ -1,4 +1,6 @@
 //! Single actual process owner, sensitive bytes only in bounded private memory.
+#[path = "input.rs"]
+mod input;
 use super::{
     output::{STDERR_LIMIT, STDOUT_LIMIT},
     requests::Request,
@@ -10,14 +12,17 @@ use crate::{
 };
 use std::{
     io::{self, Read},
-    process::{Child, Command, ExitStatus, Stdio},
+    process::{Child, Command, ExitStatus},
     time::{Duration, Instant},
 };
+#[cfg(test)]
+#[path = "process_tests.rs"]
+mod tests;
 
 struct Streams {
     out: PipeReader<io::PipeReader>,
     err: PipeReader<io::PipeReader>,
-    input: Option<std::process::ChildStdin>,
+    input: Option<input::Input>,
 }
 struct ChildOwner {
     child: Child,
@@ -51,15 +56,10 @@ fn spawn(mut command: Command, interactive: bool) -> Result<(ChildOwner, Streams
         err: PipeReader::new(err).map_err(|_| Code::SpawnFailed)?,
         input: None,
     };
-    command
-        .stdin(if interactive {
-            Stdio::piped()
-        } else {
-            Stdio::null()
-        })
-        .stdout(child_out)
-        .stderr(child_err);
+    // Windows wraps the executable and rebuilds Command; configure stdio after it.
     let group = process_platform::prepare_command(&mut command).map_err(|_| Code::SpawnFailed)?;
+    streams.input = input::Input::configure(&mut command, interactive)?;
+    command.stdout(child_out).stderr(child_err);
     let mut child = command.spawn().map_err(|_| Code::SpawnFailed)?;
     drop(command); // Close all parent-side copies of child output handles.
     let pid = child.id();
@@ -77,26 +77,8 @@ fn spawn(mut command: Command, interactive: bool) -> Result<(ChildOwner, Streams
         _group: group,
         settled: false,
     };
-    if interactive {
-        let input = owner.child.stdin.take().ok_or(Code::SpawnFailed)?;
-        nonblocking_input(&input)?;
-        streams.input = Some(input);
-    }
+    input::Input::after_spawn(&mut owner.child, interactive, &mut streams.input)?;
     Ok((owner, streams))
-}
-#[cfg(unix)]
-fn nonblocking_input(input: &std::process::ChildStdin) -> Result<()> {
-    use std::os::fd::AsRawFd;
-    let fd = input.as_raw_fd();
-    let flags = unsafe { libc::fcntl(fd, libc::F_GETFL) };
-    if flags < 0 || unsafe { libc::fcntl(fd, libc::F_SETFL, flags | libc::O_NONBLOCK) } < 0 {
-        return Err(Code::SpawnFailed.into());
-    }
-    Ok(())
-}
-#[cfg(not(unix))]
-fn nonblocking_input(_: &std::process::ChildStdin) -> Result<()> {
-    Err(Code::PlatformUnsupported.into())
 }
 fn drain(
     reader: &mut impl Read,
@@ -134,7 +116,7 @@ fn drain(
 }
 // A transport seam for the two fixed exchanges only; it exposes no RPC method API.
 pub(in crate::acp_client) trait FixedExchange {
-    fn write(&mut self, writer: &mut std::process::ChildStdin) -> Result<()>;
+    fn write(&mut self, writer: &mut dyn io::Write) -> Result<()>;
     fn received(&mut self, bytes: &mut Vec<u8>) -> Result<()>;
     fn done(&self) -> bool;
 }
@@ -160,7 +142,7 @@ struct ScopedSkillsExchange {
     roots: super::extra_skill_roots::PinnedRoots,
 }
 impl FixedExchange for ScopedSkillsExchange {
-    fn write(&mut self, writer: &mut std::process::ChildStdin) -> Result<()> {
+    fn write(&mut self, writer: &mut dyn io::Write) -> Result<()> {
         if !self.roots.current() {
             return Err(Code::CwdUnavailable.into());
         }

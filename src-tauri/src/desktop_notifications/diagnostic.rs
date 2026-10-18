@@ -34,7 +34,9 @@ pub(crate) enum Reason {
     SystemReadFailed,
     NativeUnavailable,
     NativeStartFailed,
+    #[cfg(target_os = "macos")]
     MainThreadUnavailable,
+    #[cfg(any(target_os = "macos", test))]
     PayloadUnavailable,
     AddPending,
     AddAccepted,
@@ -54,9 +56,13 @@ pub(crate) enum AddResult {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub(crate) enum ErrorDomain {
+    #[cfg(any(target_os = "macos", test))]
     UserNotifications,
+    #[cfg(any(target_os = "macos", test))]
     Cocoa,
+    #[cfg(any(target_os = "macos", test))]
     Posix,
+    #[cfg(any(target_os = "macos", test))]
     OsStatus,
     Other,
 }
@@ -65,8 +71,11 @@ pub(crate) enum ErrorDomain {
 #[serde(rename_all = "snake_case")]
 pub(crate) enum Presentation {
     NotObserved,
+    #[cfg(any(target_os = "macos", test))]
     SuppressedForeground,
+    #[cfg(any(target_os = "macos", test))]
     SuppressedUnconfirmed,
+    #[cfg(any(target_os = "macos", test))]
     BannerList,
 }
 
@@ -153,6 +162,7 @@ impl DiagnosticSnapshot {
             }
         }
     }
+    #[cfg(any(target_os = "macos", test))]
     #[allow(clippy::too_many_arguments)] // Exact fixed-field Objective-C callback ABI.
     pub(super) fn native_event(
         &mut self,
@@ -259,6 +269,38 @@ impl DiagnosticStore {
         {
             change(&mut record.snapshot);
         }
+    }
+    // The native caller keeps the existing ticket/permission gates around this
+    // exact Show invocation. This observer grants no submission authority.
+    #[cfg(any(windows, test))]
+    pub(super) fn show_notice<T, E>(
+        &self,
+        attempt: &Attempt,
+        notice: &str,
+        show: impl FnOnce() -> Result<T, E>,
+    ) -> Result<T, E> {
+        self.attach_notice(attempt, notice);
+        self.update(attempt, |d| d.add(AddResult::NotStarted));
+        let result = show();
+        if result.is_err() {
+            self.notice_failed(notice);
+        } else {
+            self.observe_notice(notice, |d| {
+                // A Failed callback may run before Show returns successfully.
+                if d.add_result != AddResult::Rejected {
+                    d.add(AddResult::Accepted);
+                }
+            });
+        }
+        result
+    }
+    #[cfg(any(windows, test))]
+    pub(super) fn notice_failed(&self, notice: &str) {
+        self.observe_notice(notice, |d| {
+            d.add(AddResult::Rejected);
+            // No raw HRESULT or error description enters this shared snapshot.
+            d.error_domain = Some(ErrorDomain::Other);
+        });
     }
     pub(super) fn for_attempt(&self, renderer: &str, sequence: u64) -> Option<DiagnosticSnapshot> {
         let last = self.0.lock().ok()?;
@@ -424,5 +466,130 @@ mod tests {
                 );
             }
         }
+    }
+
+    #[test]
+    fn show_receipt_records_only_api_acceptance_and_correlated_activation() {
+        let store = DiagnosticStore::default();
+        let attempt = store.begin(RENDERER, 3);
+        let mut calls = 0;
+        let result: Result<(), ()> = store.show_notice(&attempt, "owned-show", || {
+            calls += 1;
+            assert_eq!(
+                store.for_attempt(RENDERER, 3).unwrap().reason,
+                Reason::AddPending
+            );
+            Ok(())
+        });
+        assert!(result.is_ok());
+        assert_eq!(calls, 1);
+        store.observe_notice("other-show", |d| d.clicked = true);
+        let accepted = store.for_attempt(RENDERER, 3).unwrap();
+        assert_eq!(accepted.add_result, AddResult::Accepted);
+        assert_eq!(accepted.presentation, Presentation::NotObserved);
+        assert!(accepted.native_initialized.is_none());
+        assert!(!accepted.clicked);
+        store.observe_notice("owned-show", |d| d.clicked = true);
+        assert!(store.for_attempt(RENDERER, 3).unwrap().clicked);
+    }
+
+    #[test]
+    fn failed_callback_before_or_after_show_receipt_cannot_be_erased_by_success() {
+        for synchronous_failure in [false, true] {
+            let store = DiagnosticStore::default();
+            let attempt = store.begin(RENDERER, 4);
+            let result: Result<(), ()> = store.show_notice(&attempt, "owned-failure", || {
+                if synchronous_failure {
+                    store.notice_failed("owned-failure");
+                }
+                Ok(())
+            });
+            assert!(result.is_ok());
+            if !synchronous_failure {
+                store.notice_failed("owned-failure");
+            }
+            let rejected = store.for_attempt(RENDERER, 4).unwrap();
+            assert_eq!(rejected.add_result, AddResult::Rejected);
+            assert_eq!(rejected.reason, Reason::AddRejected);
+            assert_eq!(rejected.error_domain, Some(ErrorDomain::Other));
+            assert!(rejected.error_code.is_none());
+            assert_eq!(rejected.presentation, Presentation::NotObserved);
+        }
+    }
+
+    #[test]
+    fn show_call_error_is_a_rejection_but_a_pre_show_error_is_not() {
+        let store = DiagnosticStore::default();
+        let attempt = store.begin(RENDERER, 5);
+        let failed: Result<(), ()> = store.show_notice(&attempt, "owned-error", || Err(()));
+        assert!(failed.is_err());
+        store.update(&attempt, |d| d.bridge_start_failed());
+        assert_eq!(
+            store.for_attempt(RENDERER, 5).unwrap().add_result,
+            AddResult::Rejected
+        );
+        let local = store.begin(RENDERER, 6);
+        store.update(&local, |d| d.bridge_start_failed());
+        let snapshot = store.for_attempt(RENDERER, 6).unwrap();
+        assert_eq!(snapshot.add_result, AddResult::NotStarted);
+        assert_eq!(snapshot.reason, Reason::NativeStartFailed);
+        assert!(snapshot.error_domain.is_none());
+    }
+
+    #[test]
+    fn unknown_deadline_observation_can_resolve_without_erasing_actual_receipt() {
+        let store = DiagnosticStore::default();
+        let attempt = store.begin(RENDERER, 7);
+        store.update(&attempt, |d| d.unconfirmed());
+        assert_eq!(
+            store.for_attempt(RENDERER, 7).unwrap().add_result,
+            AddResult::Unconfirmed
+        );
+        let result: Result<(), ()> = store.show_notice(&attempt, "owned-late", || Ok(()));
+        assert!(result.is_ok());
+        store.update(&attempt, |d| d.unconfirmed());
+        assert_eq!(
+            store.for_attempt(RENDERER, 7).unwrap().add_result,
+            AddResult::Accepted
+        );
+    }
+
+    #[test]
+    fn replacement_during_show_ignores_all_old_observations() {
+        let store = DiagnosticStore::default();
+        let old = store.begin(RENDERER, 8);
+        let result: Result<(), ()> = store.show_notice(&old, "owned-old-show", || {
+            store.begin(RENDERER, 9);
+            Ok(())
+        });
+        assert!(result.is_ok());
+        store.notice_failed("owned-old-show");
+        store.observe_notice("owned-old-show", |d| d.clicked = true);
+        let new = store.for_attempt(RENDERER, 9).unwrap();
+        assert_eq!(new.reason, Reason::Checking);
+        assert_eq!(new.add_result, AddResult::NotStarted);
+        assert!(!new.clicked);
+    }
+
+    #[test]
+    fn withdrawn_ticket_never_invokes_show_observer_or_system_call() {
+        let tickets = super::super::tickets::Tickets::default();
+        let store = DiagnosticStore::default();
+        let attempt = store.begin(RENDERER, 10);
+        let ticket = tickets.claim(RENDERER, 10).unwrap();
+        tickets.withdraw(RENDERER, 10);
+        let mut called = false;
+        let result = ticket.dispatch(|| {
+            store.show_notice(&attempt, "never-submitted", || {
+                called = true;
+                Ok::<(), ()>(())
+            })
+        });
+        assert!(result.is_none());
+        assert!(!called);
+        assert_eq!(
+            store.for_attempt(RENDERER, 10).unwrap().add_result,
+            AddResult::NotStarted
+        );
     }
 }

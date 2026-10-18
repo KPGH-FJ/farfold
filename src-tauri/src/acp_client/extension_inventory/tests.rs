@@ -337,82 +337,94 @@ mod macos {
         assert!(!launch::same_selection(&f.row, &next));
     }
 
-    #[tokio::test]
-    async fn changed_row_while_waiting_for_configuration_is_not_a_new_query_selection() {
+    #[test]
+    fn changed_row_while_waiting_for_configuration_is_not_a_new_query_selection() {
         let _serial = execution::fixture_lock();
-        let f = fixture();
-        let store = MetaStore::open(&f._root.path().join("fixture.sqlite")).unwrap();
-        store.insert_agent(&f.row).unwrap();
-        let expected = store.get_agent(&f.row.id).unwrap().unwrap();
-        let guard = crate::install_job::configuration_guard(&f.row.id).await;
-        let registry = requests::Requests::default();
-        let (request, _) = registry
-            .begin(&f.row.id, "/tmp", ID, ID, Kind::Mcp)
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
             .unwrap();
-        let gate = crate::managed_update::UpdateAdmission::default();
-        let selected = request.clone();
-        let selected_store = store.clone();
-        let task = tokio::spawn(execute_selected(
-            selected_store,
-            selected,
-            gate.activity().unwrap(),
-            expected,
-            None,
-        ));
-        tokio::task::yield_now().await;
-        store
-            .set_agent_env(
-                &f.row.id,
-                &[("CODEX_HOME".into(), "/changed-environment".into())],
-            )
-            .unwrap();
-        drop(guard);
-        task.await.unwrap();
-        let result = request.snapshot().unwrap();
-        assert!(result.settled);
-        assert_eq!(result.state, State::Failed);
-        assert_eq!(result.code, Some(Code::SelectionChanged));
-        // The synthetic command exits 7 if actually dispatched. This path must
-        // fail at the saved-row comparison before admission/env/process setup.
-        assert!(gate.update().is_ok());
+        runtime.block_on(async {
+            let f = fixture();
+            let store = MetaStore::open(&f._root.path().join("fixture.sqlite")).unwrap();
+            store.insert_agent(&f.row).unwrap();
+            let expected = store.get_agent(&f.row.id).unwrap().unwrap();
+            let guard = crate::install_job::configuration_guard(&f.row.id).await;
+            let registry = requests::Requests::default();
+            let (request, _) = registry
+                .begin(&f.row.id, "/tmp", ID, ID, Kind::Mcp)
+                .unwrap();
+            let gate = crate::managed_update::UpdateAdmission::default();
+            let selected = request.clone();
+            let selected_store = store.clone();
+            let task = tokio::spawn(execute_selected(
+                selected_store,
+                selected,
+                gate.activity().unwrap(),
+                expected,
+                None,
+            ));
+            tokio::task::yield_now().await;
+            store
+                .set_agent_env(
+                    &f.row.id,
+                    &[("CODEX_HOME".into(), "/changed-environment".into())],
+                )
+                .unwrap();
+            drop(guard);
+            task.await.unwrap();
+            let result = request.snapshot().unwrap();
+            assert!(result.settled);
+            assert_eq!(result.state, State::Failed);
+            assert_eq!(result.code, Some(Code::SelectionChanged));
+            // The synthetic command exits 7 if actually dispatched. This path must
+            // fail at the saved-row comparison before admission/env/process setup.
+            assert!(gate.update().is_ok());
+        });
     }
-    #[tokio::test]
-    async fn selection_changed_before_first_metadata_read_is_not_admitted_as_replacement() {
+    #[test]
+    fn selection_changed_before_first_metadata_read_is_not_admitted_as_replacement() {
         let _serial = execution::fixture_lock();
-        let f = fixture();
-        let store = MetaStore::open(&f._root.path().join("selection.sqlite")).unwrap();
-        store.insert_agent(&f.row).unwrap();
-        let selected = store.get_agent(&f.row.id).unwrap().unwrap();
-        assert!(launch::admission(&selected).is_ok());
-        let receipts = launch::Selections::default();
-        let selection_id = receipts.issue(selected, Instant::now()).unwrap();
-        let registry = requests::Requests::default();
-        let (request, _) = registry
-            .begin(&f.row.id, "/tmp", ID, &selection_id, Kind::Mcp)
+        let runtime = tokio::runtime::Builder::new_current_thread()
+            .enable_all()
+            .build()
             .unwrap();
-        store
-            .set_agent_env(
-                &f.row.id,
-                &[("TOKEN".into(), crate::auth::KEYCHAIN_MARKER.into())],
+        runtime.block_on(async {
+            let f = fixture();
+            let store = MetaStore::open(&f._root.path().join("selection.sqlite")).unwrap();
+            store.insert_agent(&f.row).unwrap();
+            let selected = store.get_agent(&f.row.id).unwrap().unwrap();
+            assert!(launch::admission(&selected).is_ok());
+            let receipts = launch::Selections::default();
+            let selection_id = receipts.issue(selected, Instant::now()).unwrap();
+            let registry = requests::Requests::default();
+            let (request, _) = registry
+                .begin(&f.row.id, "/tmp", ID, &selection_id, Kind::Mcp)
+                .unwrap();
+            store
+                .set_agent_env(
+                    &f.row.id,
+                    &[("TOKEN".into(), crate::auth::KEYCHAIN_MARKER.into())],
+                )
+                .unwrap();
+            let gate = crate::managed_update::UpdateAdmission::default();
+            let exact = receipts
+                .get(&f.row.id, &selection_id, Instant::now())
+                .unwrap();
+            execute_selected(
+                store,
+                request.clone(),
+                gate.activity().unwrap(),
+                exact,
+                None,
             )
-            .unwrap();
-        let gate = crate::managed_update::UpdateAdmission::default();
-        let exact = receipts
-            .get(&f.row.id, &selection_id, Instant::now())
-            .unwrap();
-        execute_selected(
-            store,
-            request.clone(),
-            gate.activity().unwrap(),
-            exact,
-            None,
-        )
-        .await;
-        let result = request.snapshot().unwrap();
-        assert!(result.settled);
-        assert_eq!(result.state, State::Failed);
-        assert_eq!(result.code, Some(Code::SelectionChanged));
-        assert!(gate.update().is_ok());
+            .await;
+            let result = request.snapshot().unwrap();
+            assert!(result.settled);
+            assert_eq!(result.state, State::Failed);
+            assert_eq!(result.code, Some(Code::SelectionChanged));
+            assert!(gate.update().is_ok());
+        });
     }
 
     #[test]

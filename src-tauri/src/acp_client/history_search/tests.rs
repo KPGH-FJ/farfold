@@ -242,74 +242,80 @@ fn original_index_and_agent_selection_are_rechecked() {
     assert_eq!(saved.current(&store).unwrap_err().code, Code::IndexChanged);
 }
 
-#[tokio::test(flavor = "multi_thread")]
-async fn real_cancel_keeps_worker_scope_and_budget_until_owned_process_exit() {
+#[test]
+fn real_cancel_keeps_worker_scope_and_budget_until_owned_process_exit() {
     let _serial = inventory::execution::fixture_lock();
-    let temp = tempfile::tempdir().unwrap();
-    let path = temp.path().canonicalize().unwrap();
-    let store = MetaStore::open(&path.join("meta.db")).unwrap();
-    let source = source(path.to_str().unwrap());
-    store.insert_agent(&source.agent).unwrap();
-    let manager = AcpManager::new(path.join("logs"), path.clone());
-    let scope = manager
-        .reserve_preparation_action(&source.agent, &source.agent.command, &source.agent.args)
+    let runtime = tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
         .unwrap();
-    let gate = crate::managed_update::UpdateAdmission::default();
-    let activity = gate.activity().unwrap();
-    let registry = requests::Requests::default();
-    let q = request();
-    let (job, _) = registry.begin(q.clone(), || Ok(source.clone())).unwrap();
-    let marker = path.join("owned-pid");
-    let owned_marker = marker.clone();
-    let task = tokio::spawn(execute_with(
-        store,
-        job.clone(),
-        activity,
-        scope,
-        move |_, job| {
-            let mut cmd = Command::new(crate::platform_tests::python());
-            cmd.args(["-u","-c","import os,sys,signal,time;signal.signal(signal.SIGTERM,signal.SIG_IGN);sys.stdin.readline();open(sys.argv[1],'w').write(str(os.getpid()));time.sleep(30)"]).arg(owned_marker);
-            run_selected(job, 0, cmd).and_then(|read| read.publish(job, 0))
-        },
-    ));
-    tokio::time::timeout(Duration::from_secs(5), async {
-        while !marker.exists() {
-            tokio::time::sleep(Duration::from_millis(10)).await;
-        }
-    })
-    .await
-    .unwrap();
-    let pid = std::fs::read_to_string(&marker)
-        .unwrap()
-        .parse::<i32>()
-        .unwrap();
-    let second = inventory::execution::acquire().unwrap();
-    assert!(inventory::execution::acquire().is_err());
-    registry.reply(&q.agent_id, &q.request_id, true).unwrap();
-    assert!(!job.snapshot().settled);
-    assert!(!registry.release(&q.agent_id, &q.request_id).unwrap());
-    assert!(gate.update().is_err());
-    assert!(
-        manager
+    runtime.block_on(async {
+        let temp = tempfile::tempdir().unwrap();
+        let path = temp.path().canonicalize().unwrap();
+        let store = MetaStore::open(&path.join("meta.db")).unwrap();
+        let source = source(path.to_str().unwrap());
+        store.insert_agent(&source.agent).unwrap();
+        let manager = AcpManager::new(path.join("logs"), path.clone());
+        let scope = manager
             .reserve_preparation_action(&source.agent, &source.agent.command, &source.agent.args)
-            .is_err()
-    );
-    assert_eq!(crate::platform_tests::process_check(pid), 0);
-    tokio::time::timeout(Duration::from_secs(6), task)
+            .unwrap();
+        let gate = crate::managed_update::UpdateAdmission::default();
+        let activity = gate.activity().unwrap();
+        let registry = requests::Requests::default();
+        let q = request();
+        let (job, _) = registry.begin(q.clone(), || Ok(source.clone())).unwrap();
+        let marker = path.join("owned-pid");
+        let owned_marker = marker.clone();
+        let task = tokio::spawn(execute_with(
+            store,
+            job.clone(),
+            activity,
+            scope,
+            move |_, job| {
+                let mut cmd = Command::new(crate::platform_tests::python());
+                cmd.args(["-u","-c","import os,sys,signal,time;signal.signal(signal.SIGTERM,signal.SIG_IGN);sys.stdin.readline();open(sys.argv[1],'w').write(str(os.getpid()));time.sleep(30)"]).arg(owned_marker);
+                run_selected(job, 0, cmd).and_then(|read| read.publish(job, 0))
+            },
+        ));
+        tokio::time::timeout(Duration::from_secs(5), async {
+            while !marker.exists() {
+                tokio::time::sleep(Duration::from_millis(10)).await;
+            }
+        })
         .await
-        .unwrap()
         .unwrap();
-    assert_ne!(crate::platform_tests::process_check(pid), 0);
-    assert!(job.snapshot().settled);
-    assert_eq!(job.snapshot().state, State::Cancelled);
-    assert!(gate.update().is_ok());
-    assert!(
-        manager
-            .reserve_preparation_action(&source.agent, &source.agent.command, &source.agent.args)
-            .is_ok()
-    );
-    assert!(inventory::execution::acquire().is_ok());
-    drop(second);
+        let pid = std::fs::read_to_string(&marker)
+            .unwrap()
+            .parse::<i32>()
+            .unwrap();
+        let second = inventory::execution::acquire().unwrap();
+        assert!(inventory::execution::acquire().is_err());
+        registry.reply(&q.agent_id, &q.request_id, true).unwrap();
+        assert!(!job.snapshot().settled);
+        assert!(!registry.release(&q.agent_id, &q.request_id).unwrap());
+        assert!(gate.update().is_err());
+        assert!(
+            manager
+                .reserve_preparation_action(&source.agent, &source.agent.command, &source.agent.args)
+                .is_err()
+        );
+        assert_eq!(crate::platform_tests::process_check(pid), 0);
+        tokio::time::timeout(Duration::from_secs(6), task)
+            .await
+            .unwrap()
+            .unwrap();
+        assert_ne!(crate::platform_tests::process_check(pid), 0);
+        assert!(job.snapshot().settled);
+        assert_eq!(job.snapshot().state, State::Cancelled);
+        assert!(gate.update().is_ok());
+        assert!(
+            manager
+                .reserve_preparation_action(&source.agent, &source.agent.command, &source.agent.args)
+                .is_ok()
+        );
+        assert!(inventory::execution::acquire().is_ok());
+        drop(second);
+    });
 }
 
 async fn unloaded_guard(alias: bool) {
