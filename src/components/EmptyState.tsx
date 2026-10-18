@@ -1,17 +1,13 @@
 import { audioCapability } from "../runtime/audio_input";
-/**
- * 空态/开始页（F-start-empty）：项目选择 + Agent 选择 + 模型选择 +
- * 消息栏。Agent 选定后预开草稿会话以拿到模型选项；发送即把草稿变成
- * 真会话并切到会话页。
- */
+/** 开始页：仅本次明确选择或首发准备草稿，恢复的选择不会自动打开。 */
 import { PreservedDrafts } from "./PreservedDrafts";
 import { NewConversationLocationBar } from "./NewConversationLocationBar";
 import { useDraftPreparation } from "./useDraftPreparation";
 import { usePreparedComposerOwner } from "./usePreparedComposerOwner";
 import { useDraftWorkLocation } from "./useDraftWorkLocation";
+import { useDraftSendIntent, type DraftSendIntent } from "./useDraftSendIntent";
 import {
   DraftArchiveBlockedError,
-  folderSendSignature,
   useDraftArchiveGuard,
 } from "./useDraftArchiveGuard";
 import { REDESIGN as R } from "../runtime/redesign_strings";
@@ -304,11 +300,26 @@ export function EmptyState({
   const failedPairRef = useRef<string | null>(null);
   const pendingInquiryAbort = useRef<AbortController | null>(null);
   useEffect(() => {
-    if (!active) pendingInquiryAbort.current?.abort();
+    if (!active) {
+      pendingInquiryAbort.current?.abort();
+      setOpening(false);
+    }
     return () => pendingInquiryAbort.current?.abort();
   }, [active]);
   const activeRef = useRef(active);
   activeRef.current = active;
+  const preparationIntent = useRef<{ pair: string } | null>(null);
+  if (!active) preparationIntent.current = null;
+  const requestPreparation = () => {
+    if (!activeRef.current) return;
+    if (opening && preparationIntent.current?.pair === pair) return;
+    preparationIntent.current = { pair };
+    if (!draft || draft.connectionLost || draft.openError || draftError) {
+      failedPairRef.current = null;
+      setDraftError(null);
+      setDraftRevision((value) => value + 1);
+    }
+  };
   const mounted = useRef(true);
   useEffect(() => {
     mounted.current = true;
@@ -319,13 +330,7 @@ export function EmptyState({
   const pair = `${agentId}|${cwd}|${requestCwd}|${JSON.stringify(service)}`;
   const preparedComposerOwner = usePreparedComposerOwner(pair, active);
   const handedOffKeys = useRef(new Set<string>());
-  // One-shot intent from a folderless send: armed before the folder choice,
-  // bound to the pair the pick creates, then sent once when ready.
-  const sendAfterFolder = useRef<{
-    from: string;
-    to: string | null;
-    content: string;
-  } | null>(null);
+  const sendAfterFolder = useRef<DraftSendIntent | null>(null);
   const archiveGuard = useDraftArchiveGuard(
     requestCwd,
     active,
@@ -371,6 +376,7 @@ export function EmptyState({
         failedPairRef.current = null;
         newConversationChoice.cwd = path;
         setFolder(path);
+        requestPreparation();
       },
     });
   const beginPreparation = useDraftPreparation({
@@ -426,9 +432,9 @@ export function EmptyState({
       id: initialAgentId,
       revision: initialAgentRevision,
     };
+    if (activeRef.current) preparationIntent.current = { pair };
     selectionEpoch.current++;
-    // Do not let the previous prepared conversation copy its options over a
-    // newly confirmed selection while the replacement is opening.
+    // Keep the new selection independent of the preceding draft's options.
     setDraftKey(null);
     setFolder(newConversationChoice.cwd);
     if (initialSelection) {
@@ -455,12 +461,12 @@ export function EmptyState({
     initialSelection,
     initialCandidatePresentable,
   ]);
-  // Hidden prepared drafts persist; return opens only if no draft/request exists.
   useEffect(() => {
-    if (active && !draftKey && !opening) setDraftRevision((value) => value + 1);
-  }, [active]);
-
-  useEffect(() => {
+    const intent = preparationIntent.current;
+    if (!intent) {
+      setOpening(false);
+      return;
+    }
     if (unsent.pendingConversation) {
       setOpening(false);
       return;
@@ -496,11 +502,16 @@ export function EmptyState({
     let openedKey: string | null = null;
     const rejectOpened = () => {
       const unavailable = archiveGuard.isBlocked();
-      if (!cancelled && !unavailable) return false;
+      const current = activeRef.current && preparationIntent.current === intent;
+      if (!cancelled && !unavailable && current) return false;
       // Keep an open shared by a newer live effect for the same pair.
       if (
         openedKey &&
-        (!mounted.current || currentPair.current !== pair || unavailable)
+        (!mounted.current ||
+          currentPair.current !== pair ||
+          unavailable ||
+          !activeRef.current ||
+          !preparationIntent.current)
       ) {
         if (!handedOffKeys.current.has(openedKey))
           void threads.discardDraft(openedKey);
@@ -509,10 +520,13 @@ export function EmptyState({
       return true;
     };
     const requestedConfig = { ...newConversationChoice.config };
+    intent.pair = pair;
     setDraftKey(null);
     setOpening(true);
     const timer = setTimeout(() => {
       if (
+        !activeRef.current ||
+        preparationIntent.current !== intent ||
         !isCurrentCandidate(agentId) ||
         !isAutomaticConnectionAllowed(agentId) ||
         readRequired()
@@ -527,6 +541,8 @@ export function EmptyState({
         archiveGuard.requireAvailable();
         if (
           cancelled ||
+          !activeRef.current ||
+          preparationIntent.current !== intent ||
           selectionReviewRef.current ||
           currentPair.current !== pair
         )
@@ -537,6 +553,7 @@ export function EmptyState({
             !cancelled &&
             mounted.current &&
             activeRef.current &&
+            preparationIntent.current === intent &&
             currentPair.current === pair &&
             !archiveGuard.isBlocked(),
           agentId,
@@ -604,13 +621,21 @@ export function EmptyState({
           setDraftKey(state.key);
         })
         .catch((error) => {
-          if (!cancelled && !(error instanceof DraftArchiveBlockedError)) {
+          if (
+            !cancelled &&
+            mounted.current &&
+            activeRef.current &&
+            currentPair.current === pair &&
+            preparationIntent.current === intent &&
+            !(error instanceof DraftArchiveBlockedError)
+          ) {
             failedPairRef.current = pair;
             setDraftError(toUiNotice(error, STRINGS.repair.requestFailed));
           }
         })
         .finally(() => {
-          if (!cancelled) setOpening(false);
+          if (!cancelled && preparationIntent.current === intent)
+            setOpening(false);
         });
     }, 250);
     return () => {
@@ -700,6 +725,7 @@ export function EmptyState({
         setDraftError(null);
         failedPairRef.current = null;
         setFolder(picked);
+        requestPreparation();
         return true;
       }
       return false;
@@ -716,6 +742,21 @@ export function EmptyState({
     }
   };
 
+  const requireSendSelection = () => {
+    if (!mounted.current || !activeRef.current || currentPair.current !== pair)
+      throw new Error(STRINGS.repair.sendFailed);
+    archiveGuard.requireAvailable();
+    if (selectionReviewRef.current) throw new Error(R.selectionReview);
+    if (readRequired()) throw new Error(C.readRequired);
+    if (
+      !agentId ||
+      !isAutomaticConnectionAllowed(agentId) ||
+      !isCurrentCandidate(agentId) ||
+      needsAuthentication ||
+      !setupStorage.completed(agentId)
+    )
+      throw new Error(STRINGS.repair.sendFailed);
+  };
   const send = async (blocks: PromptBlock[], submittedDraft: ComposerDraft) => {
     locationOwner.current.retire();
     const authenticationBlocked = (key = draftKey) => {
@@ -733,11 +774,7 @@ export function EmptyState({
           ))
       );
     };
-    if (!mounted.current || !activeRef.current || currentPair.current !== pair)
-      throw new Error(STRINGS.repair.sendFailed);
-    archiveGuard.requireAvailable();
-    if (selectionReviewRef.current) throw new Error(R.selectionReview);
-    if (readRequired()) throw new Error(C.readRequired);
+    requireSendSelection();
     if (service) await requireCurrentService();
     archiveGuard.requireAvailable();
     if (
@@ -760,7 +797,8 @@ export function EmptyState({
     if (submittedDraft.pendingConversation)
       throw new Error(STRINGS.repair.sendFailed);
     const sentPair = pair;
-    let key = draftKey;
+    const sentIntent = preparationIntent.current;
+    const key = draftKey;
     const current = key ? threads.thread(key) : null;
     const sameSource = service
       ? current?.service?.id === service.id &&
@@ -773,21 +811,8 @@ export function EmptyState({
       current.agentId !== agentId ||
       current.cwd !== requestCwd ||
       !sameSource
-    ) {
-      // The store dedupes a concurrent open for the same pair.
-      const state = await threads.open({
-        inquiryCurrent: () =>
-          mounted.current &&
-          activeRef.current &&
-          currentPair.current === sentPair &&
-          !archiveGuard.isBlocked(),
-        agentId,
-        cwd: requestCwd,
-        service,
-        serviceRevision: service?.revision,
-      });
-      key = state.key;
-    }
+    )
+      throw new Error(STRINGS.repair.sendFailed);
     // This waits for admission only; the actual agent work continues in the store.
     handedOffKeys.current.add(key);
     let pending: PendingAttempt | undefined;
@@ -848,6 +873,8 @@ export function EmptyState({
       }
       throw error;
     }
+    if (preparationIntent.current === sentIntent)
+      preparationIntent.current = null;
     if (mounted.current && currentPair.current === sentPair) {
       setDraftKey(null);
       setDraftRevision((value) => value + 1);
@@ -879,60 +906,22 @@ export function EmptyState({
     !draft.sourceError &&
     !draft.openError &&
     !draft.configuring;
-  // Editing the draft abandons a pending folderless send.
-  const draftSignature = folderSendSignature(unsent);
-  useEffect(() => {
-    const armed = sendAfterFolder.current;
-    if (!armed) return;
-    if (armed.to === null) {
-      // The picked folder reshapes the pair and binds the token; any other
-      // change while still folderless drops the pending send.
-      if (pair === armed.from) return;
-      if (cwd !== null) armed.to = pair;
-      else sendAfterFolder.current = null;
-      return;
-    }
-    if (armed.to !== pair) sendAfterFolder.current = null;
-  }, [pair, cwd]);
-  useEffect(() => {
-    const armed = sendAfterFolder.current;
-    if (armed && armed.content !== draftSignature)
-      sendAfterFolder.current = null;
-  }, [draftSignature]);
-  useEffect(() => {
-    if (draftError) sendAfterFolder.current = null;
-  }, [draftError]);
-  useEffect(() => {
-    setFolderCancelled(false);
-  }, [pair, draftSignature]);
-  useEffect(() => {
-    const armed = sendAfterFolder.current;
-    if (!armed?.to || armed.to !== pair || !ready) return;
-    sendAfterFolder.current = null;
-    setSendRequest((value) => value + 1);
-  }, [ready, pair]);
-  const sendOrPickFolder = async (
-    blocks: PromptBlock[],
-    submittedDraft: ComposerDraft,
-  ): Promise<boolean> => {
-    locationOwner.current.retire();
-    // A direct send consumes any armed one-shot so it cannot fire twice.
-    sendAfterFolder.current = null;
-    if (selectionReviewRef.current) throw new Error(R.selectionReview);
-    if (requestCwd) {
-      await send(blocks, submittedDraft);
-      return true;
-    }
-    const armed = { from: pair, to: null, content: draftSignature };
-    sendAfterFolder.current = armed;
-    const picked = await pickProject();
-    if (!picked && sendAfterFolder.current === armed && armed.to === null) {
-      sendAfterFolder.current = null;
-      setFolderCancelled(true);
-    }
-    // Nothing was sent yet: the composer must keep the draft either way.
-    return false;
-  };
+  const sendOrPickFolder = useDraftSendIntent({
+    pending: sendAfterFolder,
+    pair,
+    cwd: requestCwd,
+    active,
+    ready,
+    error: draftError !== null,
+    draft: unsent,
+    requireCurrent: requireSendSelection,
+    retireLocation: () => locationOwner.current.retire(),
+    prepare: requestPreparation,
+    send,
+    pickProject,
+    requestSend: () => setSendRequest((value) => value + 1),
+    folderCancelled: setFolderCancelled,
+  });
   // Move only the editor's DOM host; preserve its pending work and `new` draft.
   const [editorRoot] = useState(() =>
     typeof document === "undefined" ? null : document.createElement("div"),
@@ -996,10 +985,16 @@ export function EmptyState({
   const needsPreparation =
     !preparationComplete || !currentAgent || !candidateSelected;
   const pickAgent = (id: string) => {
-    if (!isCurrentCandidate(id) || !currentReadiness.current(id)) return;
+    if (
+      !activeRef.current ||
+      !isCurrentCandidate(id) ||
+      !currentReadiness.current(id)
+    )
+      return;
     locationOwner.current.retire();
     setChoiceDialog(null);
     allowAutomaticConnection(id);
+    requestPreparation();
     if (id === agentId) {
       if (!connectionAllowed || draft?.connectionLost || draftError) {
         failedPairRef.current = null;
@@ -1046,6 +1041,7 @@ export function EmptyState({
     const epoch = selectionEpoch.current;
     const ownsApplication = () =>
       mounted.current &&
+      activeRef.current &&
       isCurrentCandidate(agentId) &&
       !readRequired() &&
       currentPair.current === pair &&
@@ -1060,9 +1056,9 @@ export function EmptyState({
         choice.service.revision === service.revision);
     if (sameService) {
       if (readRequired()) throw new Error(C.readRequired);
-      // An explicit source choice releases the missing-history guard. Do not
-      // apply unknown historical options; the next preparation reads real ones.
+      // Explicit source choice releases review; unknown old options stay unapplied.
       if (selectionReviewRef.current) {
+        requestPreparation();
         setDraftKey(null);
         newConversationChoice.config = {};
         setDraftError(null);
@@ -1153,6 +1149,7 @@ export function EmptyState({
     setDraftKey(null);
     newConversationChoice.config = {};
     setService(choice.service);
+    requestPreparation();
     setDraftError(null);
     failedPairRef.current = null;
     setChoiceDialog(null);
@@ -1190,7 +1187,10 @@ export function EmptyState({
         className="new-choice-trigger workspace-model-control"
         aria-label={W.modelChoice}
         aria-haspopup="dialog"
-        onClick={() => setChoiceDialog("model")}
+        onClick={() => {
+          requestPreparation();
+          setChoiceDialog("model");
+        }}
         disabled={
           !active ||
           !agentId ||
@@ -1239,6 +1239,8 @@ export function EmptyState({
       {onRestoreDraft && (
         <PreservedDrafts
           onRestore={async (key) => {
+            preparationIntent.current = null;
+            pendingInquiryAbort.current?.abort();
             locationOwner.current.retire();
             selectionEpoch.current++;
             await onRestoreDraft(key);
@@ -1318,6 +1320,7 @@ export function EmptyState({
         sendRequest={sendRequest}
         onRequireFolder={() => void pickProject()}
         onRecoverPending={async (target) => {
+          preparationIntent.current = null;
           locationOwner.current.retire();
           const key = await recoverPendingConversation(target);
           handedOffKeys.current.add(key);
@@ -1328,7 +1331,7 @@ export function EmptyState({
           }
         }}
         disabled={
-          !(ready || (agentSendable && !cwd)) ||
+          !(ready || (agentSendable && !draft)) ||
           draftError !== null ||
           needsPreparation ||
           selectionNeedsReview
@@ -1386,6 +1389,7 @@ export function EmptyState({
           className="btn btn-ghost"
           onClick={() => {
             if (agentId) allowAutomaticConnection(agentId);
+            preparationIntent.current = { pair };
             failedPairRef.current = null;
             setDraftError(null);
             setDraftRevision((value) => value + 1);

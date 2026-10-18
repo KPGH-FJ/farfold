@@ -113,6 +113,13 @@ function render(): Element[] {
 function composer(): Element {
   return render().find((node) => node.type === Composer)!;
 }
+function requestPreparation() {
+  const trigger = nodes(composer().props.controls as ReactNode).find(
+    (node) => node.props["aria-label"] === "模型与来源",
+  )!;
+  (trigger.props.onClick as () => void)();
+  composer();
+}
 const credential: Credential = {
   id: "api",
   label: "Service",
@@ -156,10 +163,10 @@ afterEach(() => {
   composerDrafts.clear("new");
 });
 it.each(["", "old"])(
-  "blocks eager preparation and direct send of a cold saved API choice with revision %j",
+  "blocks requested preparation and direct send of a cold saved API choice with revision %j",
   async (revision) => {
     newConversationChoice.service!.revision = revision;
-    composer();
+    requestPreparation();
     await vi.advanceTimersByTimeAsync(300);
     expect(h.open).not.toHaveBeenCalled();
     const view = composer();
@@ -196,7 +203,7 @@ it.each(["model-removed", "deleting", "incomplete", "missing", "unreadable"])(
     );
     if (kind === "unreadable")
       h.credentials.mockRejectedValue(new Error("read failed"));
-    composer();
+    requestPreparation();
     await vi.advanceTimersByTimeAsync(300);
     expect(h.open).not.toHaveBeenCalled();
     expect(composer().props.disabled).toBe(true);

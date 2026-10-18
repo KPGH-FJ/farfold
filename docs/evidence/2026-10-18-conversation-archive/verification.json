@@ -1,0 +1,394 @@
+{
+  "kind": "InstalledSingleCurrentToolFileArchiveEvidenceNotFullP35Acceptance",
+  "updatedAtUtc": "2026-10-18T15:56:27.601487+00:00",
+  "schedulingAuthority": "plans/agent-access.md only",
+  "formalSource": "a8a088817bc008481e3cfcc663b1783a0e5d78ef",
+  "formalBinarySha256": "5b7e7756408d3457e1185240bcce00f7b92b9a9bf5e02a5747d581f82ed9a557",
+  "nativeDiagnostic": {
+    "panels": 1,
+    "cancel": 1,
+    "save": 0,
+    "buttonsAlreadyEnabledBeforeTyping": true,
+    "priorDisabledCause": "unknown, not proven fixed",
+    "initialNameAppendMistakeRetained": true
+  },
+  "separateArchiveWrite": {
+    "panels": 1,
+    "save": 1,
+    "toolDetailsIncluded": false,
+    "candidateCount": 8,
+    "selectedCurrentToolFiles": 1,
+    "omittedCandidates": 7,
+    "selectedInputBytes": 48,
+    "sourceType": "Current owned public tool file, explicitly not original sent version",
+    "completedUiObserved": true,
+    "zipBytes": 6008,
+    "zipSha256": "746f12f3137cc3d65d9f51eb88dd53d624f94a8c428162ec5bec83d7e8b614cb",
+    "entries": 3,
+    "allCrcValid": true,
+    "selectedPayloadBytesExact": true,
+    "selectedPayloadSha256": "26b5d9b3a26b920c37497ecc3797dc9e0b24beb0d91148a8063ab697949a861c",
+    "sourceUnchangedAfterReadback": true,
+    "readbackPreparationFailure": "Unsupported Path.stat keyword failed before any ZIP read; corrected bounded single read succeeded, no writer retry"
+  },
+  "rootUiActions": {
+    "prompts": 0,
+    "newConversationClicks": 0,
+    "configChanges": 0,
+    "permissionApprovals": 0,
+    "appDataFixtureAdditions": 0,
+    "repoOutputZipAdditions": 1,
+    "normalSaveExit": true,
+    "unknownWorkWarningRetained": true
+  },
+  "safeProtocol": {
+    "files": 2,
+    "validatedRecords": 1049,
+    "coverageIssues": 0,
+    "boundaryUncertainRecords": 0,
+    "outPrompt": 0,
+    "outLoad": 1,
+    "outNew": 1,
+    "outConfig": 0,
+    "inPermission": 0,
+    "initializeTimeoutClassCount": 0,
+    "agentAttributionOrNewCauseProven": false,
+    "historicalScopeAndDisplayLabelMigrationDefectRetained": true,
+    "actualBaseAndUtcWindowValidated": true
+  },
+  "dataComparison": {
+    "kind": "IndependentCombinedNativeDialogAndArchiveSealedDataComparison",
+    "atUtc": "2026-10-18T15:50:58.368887+00:00",
+    "captureSourceCommit": "a8a088817bc008481e3cfcc663b1783a0e5d78ef",
+    "captureBinarySha256": "5b7e7756408d3457e1185240bcce00f7b92b9a9bf5e02a5747d581f82ed9a557",
+    "captureBinaryIdentityEvidenceOrigin": "Root separate actual byte-point b3ac4f/0, not process path hash or this analysis",
+    "priorInstalledBinarySha256": "5b7e7756408d3457e1185240bcce00f7b92b9a9bf5e02a5747d581f82ed9a557",
+    "processFieldOrigin": {
+      "recordedProcessField": "exactExecutableSha256",
+      "recordedValue": "8abd4e1adf11e1d90f7d3797a7dc47064e1cd8fcc575b4be2d7be6c0e56448ec",
+      "derivedFrom": "SHA256 of UTF-8 EXECUTABLE pathname string, not executable file bytes",
+      "sourcePath": "output/2026-10-14-browser-tabs-native-data-preparation/revision-2026-10-15/io_support.py",
+      "sourceSha256": "3a1488a0c9ba0a9cf5bc34952d2b7df0861792b65eb168ce04f9bebc02acfb1a",
+      "definitionLine": 15,
+      "processFunctionLines": [102, 107],
+      "observation": "/bin/ps pid/comm exact pathname comparison at recorded points",
+      "notHashOfPsOrPgrep": true,
+      "priorInstalledAppFileSha256": "5b7e7756408d3457e1185240bcce00f7b92b9a9bf5e02a5747d581f82ed9a557",
+      "currentAppFileBytesReadOrHashedByThisAnalysis": false,
+      "currentAppBinaryByteMatchEstablishedByThisFieldOrThisAnalysis": false,
+      "differentValuesDoNotProveAppChanged": true,
+      "separateRootActualBinaryBytePoint": {
+        "chunk": "b3ac4f",
+        "naturalExit": 0,
+        "sha256": "5b7e7756408d3457e1185240bcce00f7b92b9a9bf5e02a5747d581f82ed9a557",
+        "matchesPriorInstalledBinary": true,
+        "evidence": "13e529fc6fcb9791b5f06f978e4959002e57f830b032cb2ad5f5a4e436c18469",
+        "notPerformedByThisAnalysis": true
+      }
+    },
+    "scope": {
+      "baseline": "Reused cold876e full manifest and sealed0618, joined toff6207 raw-signature/closed point; not another full pre-UI snapshot.",
+      "after": "Root unique97424 capture after combined diagnostic Cancel plus independent actual ZIPSave and normal SaveExit; before selects the original algorithm.",
+      "sql": "Exactly two sealed normalized copies mode=ro&immutable=1/query_only; no live/source/first/raw SQLiteOpen, SDK/message/history/config file access.",
+      "noContinuousIntervalClaim": true
+    },
+    "RootCaptureExecution": {
+      "kind": "ActualSingleAfterUseCaptureCompletion",
+      "sessionId": 97424,
+      "chunks": ["475134", "88f37a", "9ec3ed"],
+      "naturalExitCode": 0,
+      "helperSha256": "5a786b117385f3d0c2aa606dbbd66babc94f02a984f9a4cb9087a66eedf45d1e",
+      "receiptSha256": "e5bd36ce5509bc6e716cf0923badee0d52ac228f1e3bb97434e7612e9ec3f166",
+      "manifestSha256": "8b1fc1e43fbf24a5bc13fe8d1b457e774cf786da495fa3983faf6e90d43b510d",
+      "normalizedSha256": "cc8b7e9784ebbd3015813b6147e51c71324399d05caec1972bf6b32b4a8d2b91",
+      "normalQuit": "CUA existing app SaveAndExit button12 then App quit -10005; no force",
+      "role": "After combined diagnostic Cancel and separate actual ZIP write; before is algorithm mode name, not chronology",
+      "rootAppDataFixtureAdditions": 0,
+      "rootOutputZipAdditions": 1
+    },
+    "combinedWindow": {
+      "nativePanels": 2,
+      "diagnosticCancelPanels": 1,
+      "separateZipSaveSubmissions": 1,
+      "RootNewPrompts": 0,
+      "RootConfigChanges": 0,
+      "RootApprovals": 0,
+      "RootNewConversationClicks": 0,
+      "RootNewAppDataFixtures": 0,
+      "repoOwnedZipOutsideThreeCapturedRoots": true,
+      "actualExtensionDoesNotRewriteOriginalZeroWriterPreparationIntent": true,
+      "ZipContentAndUiSuccessNotIndependentlyReauditedByThisDataComparison": true
+    },
+    "safeProtocolContext": {
+      "summarySha256": "e5e93aef0104acc715bf011d72ffd9cd10286e6188de686aaad543b65daa96e6",
+      "RootActualChunk": "f320be",
+      "RootNaturalExit": 0,
+      "files": 2,
+      "records": 1049,
+      "prompt": 0,
+      "load": 1,
+      "new": 1,
+      "config": 0,
+      "incomingPermission": 0,
+      "newIsMethodCountNotRootNewConversationClickOrPerAgentAttribution": true,
+      "causeUnknown": true,
+      "notRescannedByThisAnalysis": true,
+      "executedLegacyLabelsPreservedAndClarifiedByRoot": "Executed extractor retained two historical formal-cold-check display/scope labels, though actual BASE resolves to this protocol directory and UTC bounds are this combined window. Original executed tool/result remain unchanged; no re-scan. This addendum identifies actual summary location and scope."
+    },
+    "joins": {
+      "completeManifestsReceiptsRawSignaturesFirstCopyNormalizedBeforeSql": true,
+      "reusedColdBaselineNotFreshFullPreUi": true,
+      "baselineFf6207AndSeparateDiagnosticArchiveExtensionPinsExact": true,
+      "helperOnlyOutMigrationExactAndSourceA8a": true,
+      "sharedThreePinsExact": true,
+      "firstCopyAndNormalizedSignaturesBytesExact": true
+    },
+    "completeManifestComparison": {
+      "beforeCount": 232530,
+      "afterCount": 232530,
+      "added": 0,
+      "removed": 0,
+      "modified": 7,
+      "wholeEntryExact": 232523,
+      "modifiedBySafeCategory": {
+        "webkit": 4,
+        "metadataRawFile": 2,
+        "otherAppData": 1
+      },
+      "beforeSha256": "876ec1f84fc1a77da366fe9d2b1627f0c7a102dda231144b0437f417fc155fbc",
+      "afterSha256": "8b1fc1e43fbf24a5bc13fe8d1b457e774cf786da495fa3983faf6e90d43b510d",
+      "wholeManifestExact": false,
+      "knownRootOwnNewAddition": false,
+      "knownRootAdditionCount": 0,
+      "allAddedEntriesWriterUnknown": 0,
+      "modifiedEntriesWriter": "unknown"
+    },
+    "knownRootFixture": {
+      "newRootAppDataFixtures": 0,
+      "priorOwnFixturesAlreadyInBaseline": true,
+      "repoOwnedZipOutsideCaptureRoots": true,
+      "noNewCapturedEntryAttributed": true
+    },
+    "rawMetadataComparison": {
+      "farfold.sqlite3": {
+        "bytesAndSha256Exact": true,
+        "wholeRecordedSignatureExact": true
+      },
+      "farfold.sqlite3-wal": {
+        "bytesAndSha256Exact": false,
+        "wholeRecordedSignatureExact": false
+      },
+      "farfold.sqlite3-shm": {
+        "bytesAndSha256Exact": false,
+        "wholeRecordedSignatureExact": false
+      }
+    },
+    "normalizedMetadata": {
+      "beforeSha256": "0618ed82809ec2cd90d42a84ff9b6d8b865a977ae61ff2c68ccbe9310ff5b367",
+      "afterSha256": "cc8b7e9784ebbd3015813b6147e51c71324399d05caec1972bf6b32b4a8d2b91",
+      "wholeDatabaseByteExact": false,
+      "schemaExact": true,
+      "userVersionExact": true,
+      "tableStats": {
+        "agents": {
+          "beforeCount": 40,
+          "afterCount": 40,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 39,
+          "changedOldRows": 1,
+          "rowKeySetExact": true
+        },
+        "dismissed_sessions": {
+          "beforeCount": 173,
+          "afterCount": 173,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 173,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        },
+        "sessions": {
+          "beforeCount": 138,
+          "afterCount": 138,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 138,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        },
+        "settings": {
+          "beforeCount": 54,
+          "afterCount": 54,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 54,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        }
+      },
+      "changedColumns": {
+        "agents": {
+          "updated_at": 1
+        },
+        "dismissed_sessions": {},
+        "sessions": {},
+        "settings": {}
+      },
+      "changedSettingValues": [],
+      "allConnectionsClosedVerified": true,
+      "filesAndSignaturesUnchangedByAnalysis": true,
+      "sidecarsAbsentBeforeAndAfter": true
+    },
+    "oldUnsentContent": {
+      "wholeRawExact": true,
+      "wholeParsedStrictExact": true,
+      "beforeComposers": 10,
+      "afterComposers": 10,
+      "composerKeySetExact": true,
+      "oldWholeComposersExact": 10,
+      "composerFieldPresenceAndValueExact": {
+        "text": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        },
+        "attachments": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        },
+        "queueEdit": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        },
+        "pendingConversation": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        },
+        "savedChoice": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        },
+        "choice": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        },
+        "sendPending": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        }
+      },
+      "composerUnknownFieldSetsAndValuesExactCount": 10,
+      "topLevelFieldPresenceAndValueExact": {
+        "version": true,
+        "choice": true,
+        "feedback": true,
+        "queues": true,
+        "activity": true,
+        "templateEdits": true
+      },
+      "topLevelUnknownFieldSetsAndValuesExact": true
+    },
+    "agentSetup": {
+      "wholeRawExact": true,
+      "wholeParsedStrictExact": true,
+      "fieldPresenceAndValueExact": {
+        "version": true,
+        "completed": true,
+        "pending": true,
+        "progress": true,
+        "selections": true
+      },
+      "counts": {
+        "completed": {
+          "before": 23,
+          "after": 23
+        },
+        "pending": {
+          "before": 41,
+          "after": 41
+        },
+        "progress": {
+          "before": 72,
+          "after": 72
+        },
+        "selections": {
+          "before": 23,
+          "after": 23
+        }
+      },
+      "confirmedSelectionsWholeExact": true,
+      "unknownFieldSetsAndValuesExact": true
+    },
+    "writerAttribution": "Root reports zero new AppData fixtures in this combined window. The actual ZIP is in repo output outside capture roots. All changed captured entries/row values remain unknown writers.",
+    "strictPresenceAndTypesCompared": true,
+    "trimNullFalseNormalizationPerformed": false,
+    "rawUserIdsBodiesPrivatePathsConfigValuesCredentialsExported": false,
+    "initialReadOnlyLookupIncident": {
+      "chunk": "7ce0d0",
+      "naturalExit": 1,
+      "reason": "Optional old after-capture/execution-completion.json did not exist at the bounded pre-SQL read. No SQLite/capture reached. Root subsequently supplied the correct root-level capture-completion.json416c; this analysis pins and uses that original, without retrying capture."
+    },
+    "limitations": [
+      "Capture0 and comparison0 are not whole-data equality or continuous preservation.",
+      "The combined window is diagnostic Cancel plus a separate one-ZIP Save, not the original cancel-only intent. Initial enabled controls/Tab do not isolate the earlier disabled-button cause. This data comparison does not independently establish ZIP payload/privacy/restore completeness or whole P18/P35/29x8 completion.",
+      "Actual native UI/ZIP readback remain separate evidence; no new App binary read was performed. Process path hash8abd is not app binary hash5b7e and does not prove or disprove current file identity."
+    ]
+  },
+  "copyDefectAndSourceFix": {
+    "observedInstalledCopy": "Completed result still said continue saving, and persisted after result dismissal",
+    "rootCause": "Parent uses non-null jobId independent of terminal state",
+    "sourceCommit": "829867673e75170ebcbe3db0a8870f58ed0160dd",
+    "fix": "Only two neutral common strings; fold does not claim job continues or restarts",
+    "affectedExistingTests": 95,
+    "independentReview": "No blocker",
+    "installedNeutralCopyVerified": false,
+    "batchDelivery": "Will be combined with newly located passive restored-draft open fix; no separate829candidate/install"
+  },
+  "limits": [
+    "Old8fa disabled Save/Open cause remains unknown",
+    "Selected file is current tool output, not original sent attachment",
+    "No full-history/fidelity/privacy acceptance inferred",
+    "No native midwrite cancellation tested in this window",
+    "Protocol session/new1 not conflated with zero UI new-conversation clicks",
+    "Startup restored-draft auto-open source path newly located; specific native new1 Agent/cause not attributed",
+    "Whole P35 and29x8 remain open"
+  ],
+  "refs": {
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/01-zip-scope.ax.txt": "12a75de8e5f39a2965f2572702bcb761df4caf148d5e0787d55539574bd7f2a2",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/02-zip-ready.ax.txt": "d489ca0b97575c4594e89fc55ed3e209520fb5ca860958757a2dbe09caa2d555",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/03-native-initial.ax.txt": "312daa9c913c615f3cb7000ae43b15f1e422550dc73b8303add9dda6470eebc3",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/04-native-input-committed.ax.txt": "12badb2239634acef061cf1bb9ac2c20f7a7b62c8b59e641cb934d97cb8e6360",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/05-native-name-corrected.ax.txt": "bb19c94954942658937e639745967a9b707d36c543913093e72b5c2cbf391849",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/06-cancelled.ax.txt": "18d687d8ee805f26f8c8a087b6818c2a1946518cad1c53f7cfc579e45eb1a3d2",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/07-one-selected.ax.txt": "38c87267034132e955d3804556c2a99a5496a71395c1d56b3785f2e4d8857015",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/08-write-panel.ax.txt": "b741ae54b1509a376401f414a473a471e82cb4c06c4efc3cf9fd9f758ef2b5fc",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/09-before-save.ax.txt": "a0e86bbdf780a9dcb9a22841548a1c250b507a444cffa0f240a104815925b001",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/10-archive-result.ax.txt": "61972268257f74baea135ed5184e2a6750c9b3eaec84ae995e181b15cb3c566c",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/11-exit-warning.ax.txt": "a26a04f7ee34ff86d40252e1b0098c2d5d4bf1a875bb85c31ec1e717974cabf8",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/01-zip-scope.jpg": "bf9cd66545b26f1e83ebd4d0b20b9a055e74960571918f44d30a61ded07ec90d",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/02-zip-ready.jpg": "f99dbd147fd7e4a3e194f940057e056416578c0e68f673d77888f0c28599fbc9",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/03-native-initial.jpg": "be3e7b2a49d136044395217ca98cc3f343d1bb20b2d031a66a4a30362cb036f2",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/04-native-input-committed.jpg": "6a6a420c79478d3d3609c65c578ad8de73301597d7e0bb5acb91c31641cf003f",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/05-native-name-corrected.jpg": "321198b7b92a69c59aee40243bd7f6d796e5573ba49e0abc5653f57a1d4da247",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/06-cancelled.jpg": "e2146aa1192ddf7f62e2392886dfdd07c0839f2efc3bbcb4cb3bd58f29a87f11",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/07-one-selected.jpg": "a2ee6b6417a4c75e6eaa462ce505c0c0965de896880505a8f014da63f20174ac",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/08-write-panel.jpg": "842552d95357fa5f39fe1263713f6299d44aa9960fb8bff5ce1c4a007434b52f",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/09-before-save.jpg": "8c9a841959fc74c25b56f63d6489bb17d9d9cb73d30d8d72e6feec6b4e2d4ed3",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/10-archive-result.jpg": "7952572eeb4c72e13c39d71967f99c47bca520e204f2e4c95dc08a105961c7e9",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/11-exit-warning.jpg": "e618958d99bad6c6c6f3987de058be0e290cf8a6d449bbea2f9c3ffd8611ed06",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/baseline-intent.json": "ff6207f4428c5d6406b78620b203ca8daadd99269996cea1013bd2e7cd85a80e",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/diagnostic-observation.json": "2b552ad12705845f7d7b7402a3a2648026fcc0f2901dd95649e331fb026bbd63",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/archive-extension-intent.json": "e70e4171b1a47e585b41aa28cea2c9524169f35af973a3e0bc3e5078687a5b1c",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/archive-readback.json": "623e956ff6e13ab34b50f23d5730f812f0d837a1e7a7c35dc880dcf7dfc2447c",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/capture-completion.json": "416c5af28aaccdf532a2603fffcadc0c1ce98fd790f32a2cbffaaae2131c417b",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/after-capture/retention-before-receipt.json": "e5bd36ce5509bc6e716cf0923badee0d52ac228f1e3bb97434e7612e9ec3f166",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/protocol/summary.json": "e5e93aef0104acc715bf011d72ffd9cd10286e6188de686aaad543b65daa96e6",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/protocol/extract-once.py": "09eafe919893a76d1b57157e8025ae47a11a5a719df3ceb2e9239b91a60257ac",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/actual-observation.json": "13e529fc6fcb9791b5f06f978e4959002e57f830b032cb2ad5f5a4e436c18469",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/archive-parent-copy-readonly-review.json": "704a5c9e8b942ac2f885abdcd85b2b8f3d7e75cd8578fbe5a4de1b10a75183a0",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/after-analysis/safe-summary.json": "604cacff4405d8277654010facee9c7154d569ec9b628babeeeb5c7d1df4b9be",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/after-analysis/review.json": "d0e178180cebf990294adfa9bbb3ee4d633b34f87255c0cd713cbd7f28464db7",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/after-analysis/execution-completion.json": "e3d641f769e566f90a5ee3fa8f163b97ad85013897caf093cd1226c154208574",
+    "output/2026-10-18-document-text-delivery/native-dialog-focus-probe/source-checkpoint.json": "7ffbfa867269a557ea935f6f2a89aa4bcc8527c474cdc77fe39aa83cc59b73f7"
+  }
+}

@@ -479,7 +479,7 @@ it.each(["saved-source-auth", "saved-source-read", "current-source-auth"])(
     else
       observeAuthentication("A", cwd, "AUTH_REQUIRED", failedSource, "request");
     try {
-      composer();
+      modelPicker();
       await vi.advanceTimersByTimeAsync(300);
       const view = composer();
       expect(view.props.disabled).toBe(reason === "current-source-auth");
@@ -692,7 +692,7 @@ it("does not reopen a manually disconnected Agent on refresh or return, and an e
 it("checks manual disconnect again before a previously scheduled pre-open can run", async () => {
   vi.useFakeTimers();
   h.enabled = true;
-  composer();
+  modelPicker();
   pauseAutomaticConnection("A");
   // No render between the explicit disconnect and this old timer.
   await vi.advanceTimersByTimeAsync(251);
@@ -755,7 +755,7 @@ async function startEditableDraft(cwd = "/work", serviceContext?: string) {
   ];
   h.open.mockResolvedValue(h.live);
   h.enabled = true;
-  composer();
+  modelPicker();
   await vi.advanceTimersByTimeAsync(251);
   expect(composer().props.disabled).toBe(false);
   expect(h.setConfig).not.toHaveBeenCalled();
@@ -865,7 +865,7 @@ it("does not apply configuration or send when an opening draft leaves the catalo
         finish = resolve;
       }),
   );
-  composer();
+  modelPicker();
   await vi.advanceTimersByTimeAsync(251);
   expect(h.open).toHaveBeenCalledOnce();
   retireAgent();
@@ -1048,7 +1048,7 @@ it.each(["other-directory", "api-source"])(
     h.open.mockResolvedValue(
       freshThreadState("other", "A", newConversationChoice.cwd, "native"),
     );
-    composer();
+    modelPicker();
     await vi.advanceTimersByTimeAsync(251);
     expect(h.open).toHaveBeenCalledOnce();
     expect(preparationFor("A").getSnapshot().explicitReadTargets).toContain(

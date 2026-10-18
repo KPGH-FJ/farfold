@@ -162,6 +162,13 @@ function render(): Element[] {
 function composer(): Element {
   return render().find((node) => node.type === Composer)!;
 }
+function requestPreparation() {
+  const trigger = nodes(composer().props.controls as ReactNode).find(
+    (node) => node.props["aria-label"] === "模型与来源",
+  )!;
+  (trigger.props.onClick as () => void)();
+  composer();
+}
 const credential: Credential = {
   id: "api",
   label: "Service",
@@ -252,7 +259,7 @@ async function presentWarmDraft() {
       },
     );
   });
-  render();
+  requestPreparation();
   await vi.advanceTimersByTimeAsync(300);
   render();
   expect(props.onPreparedKey).toHaveBeenLastCalledWith(state.key);
@@ -337,12 +344,12 @@ async function send() {
   )([{ type: "text", text: "keep" }], composerDrafts.read("new"));
 }
 it.each(["/project", "/project/subdirectory"])(
-  "blocks eager open and a stale direct send for an archived draft at %s without changing draft or permission",
+  "blocks explicitly requested preparation and a stale direct send for an archived draft at %s without changing draft or permission",
   async (cwd) => {
     newConversationChoice.cwd = cwd;
     h.catalogue.archives = [archived];
     const before = JSON.stringify(composerDrafts.read("new"));
-    composer();
+    requestPreparation();
     await vi.advanceTimersByTimeAsync(300);
     expect(h.open).not.toHaveBeenCalled();
     expect(composer().props.disabled).toBe(true);
@@ -364,7 +371,7 @@ it("rechecks catalogue after asynchronous service verification even without a Re
         finish = resolve;
       }),
   );
-  composer();
+  requestPreparation();
   await vi.advanceTimersByTimeAsync(300);
   h.catalogue.archives = [archived];
   finish([credential]);
@@ -373,14 +380,14 @@ it("rechecks catalogue after asynchronous service verification even without a Re
   expect(h.send).not.toHaveBeenCalled();
 });
 it("a remembered archive becoming visible after the timer was scheduled prevents opening", async () => {
-  composer();
+  requestPreparation();
   h.catalogue.archives = [archived];
   await vi.advanceTimersByTimeAsync(300);
   expect(h.open).not.toHaveBeenCalled();
 });
 it("after catalogue restore normal preparation resumes, without sending or changing the saved content", async () => {
   h.catalogue.archives = [archived];
-  composer();
+  requestPreparation();
   await vi.advanceTimersByTimeAsync(300);
   expect(h.open).not.toHaveBeenCalled();
   h.catalogue.archives = [];
@@ -404,7 +411,7 @@ it.each(["recovery", "unrelated", "loading", "error"])(
       ];
     h.catalogue.loading = kind === "loading";
     h.catalogue.error = kind === "error" ? "read failed" : null;
-    composer();
+    requestPreparation();
     await vi.advanceTimersByTimeAsync(300);
     expect(h.open).toHaveBeenCalledTimes(1);
     expect(render().some((n) => n.type === ArchivedWorkLocationNotice)).toBe(
@@ -422,7 +429,7 @@ it("late prepared connection is discarded after its directory is archived even i
         finish = resolve;
       }),
   );
-  composer();
+  requestPreparation();
   await vi.advanceTimersByTimeAsync(300);
   expect(h.open).toHaveBeenCalledOnce();
   h.catalogue.archives = [archived];
@@ -444,7 +451,7 @@ it("archive rejection after service await does not become a permanent generic fa
         finish = resolve;
       }),
   );
-  composer();
+  requestPreparation();
   await vi.advanceTimersByTimeAsync(300);
   h.catalogue.archives = [archived];
   finish([credential]);
@@ -461,7 +468,7 @@ it.each(["loading", "error"])(
   "a previously confirmed archive remains blocked during catalogue %s until a successful list releases it",
   async (kind) => {
     h.catalogue.archives = [archived];
-    composer();
+    requestPreparation();
     await vi.advanceTimersByTimeAsync(300);
     h.catalogue.loading = kind === "loading";
     h.catalogue.error = kind === "error" ? "list failed" : null;
@@ -482,7 +489,7 @@ it.each(["loading", "error"])(
     expect(h.open).toHaveBeenCalledOnce();
   },
 );
-it("a direct send rechecks archive association after service await before opening a session", async () => {
+it("first-send preparation rechecks archive association after service await before opening a session", async () => {
   composer();
   let finish!: (v: Credential[]) => void;
   h.credentials.mockImplementation(
@@ -491,11 +498,12 @@ it("a direct send rechecks archive association after service await before openin
         finish = resolve;
       }),
   );
-  const sending = send();
-  const rejected = expect(sending).rejects.toThrow();
+  expect(await send()).toBe(false);
+  composer();
+  await vi.advanceTimersByTimeAsync(300);
   h.catalogue.archives = [archived];
   finish([credential]);
-  await rejected;
+  for (let i = 0; i < 12; i++) await Promise.resolve();
   expect(h.open).not.toHaveBeenCalled();
   expect(h.send).not.toHaveBeenCalled();
 });
@@ -508,7 +516,7 @@ it("a real service failure is not cleared merely by restoring an archived direct
         finish = resolve;
       }),
   );
-  composer();
+  requestPreparation();
   await vi.advanceTimersByTimeAsync(300);
   h.catalogue.archives = [archived];
   finish([]);
@@ -524,7 +532,7 @@ it("a real service failure is not cleared merely by restoring an archived direct
 });
 it("clearing an archived draft folder retires its barrier without affecting the old cwd or draft", async () => {
   h.catalogue.archives = [archived];
-  composer();
+  requestPreparation();
   await vi.advanceTimersByTimeAsync(300);
   h.catalogue.loading = true;
   composer();
@@ -539,13 +547,13 @@ it("clearing an archived draft folder retires its barrier without affecting the 
   expect(composerDrafts.read("new").text).toBe("Keep this draft");
 });
 
-it("cold slow catalogue delays eager open neutrally before discovering a remembered archive", async () => {
+it("cold slow catalogue delays requested preparation neutrally before discovering a remembered archive", async () => {
   h.catalogue.ready = false;
   h.load.mockImplementation(() => {
     h.catalogue.loading = true;
     return new Promise(() => {});
   });
-  composer();
+  requestPreparation();
   await vi.advanceTimersByTimeAsync(600);
   expect(h.open).not.toHaveBeenCalled();
   expect(render().some((n) => n.type === ArchivedWorkLocationNotice)).toBe(
@@ -571,7 +579,7 @@ it("failed first catalogue is an explicit retry with no claim of archive and nor
   h.catalogue.ready = false;
   h.catalogue.error = "failed";
   const before = JSON.stringify(composerDrafts.read("new"));
-  composer();
+  requestPreparation();
   await vi.advanceTimersByTimeAsync(600);
   expect(h.open).not.toHaveBeenCalled();
   expect(render().some((n) => n.type === ArchivedWorkLocationNotice)).toBe(
@@ -623,7 +631,7 @@ it("an archive discovered during config await rejects and discards the returned 
         };
       }),
   );
-  composer();
+  requestPreparation();
   await vi.advanceTimersByTimeAsync(300);
   expect(h.setConfig).toHaveBeenCalledOnce();
   h.catalogue.archives = [archived];
@@ -634,7 +642,7 @@ it("an archive discovered during config await rejects and discards the returned 
   expect(h.send).not.toHaveBeenCalled();
 });
 
-it("a direct send's late empty draft is discarded after archive admission is withdrawn without a render", async () => {
+it("a first send's late prepared draft is discarded after archive admission is withdrawn without a render", async () => {
   let finish!: (v: ReturnType<typeof freshThreadState>) => void;
   h.open.mockImplementation(
     () =>
@@ -643,9 +651,9 @@ it("a direct send's late empty draft is discarded after archive admission is wit
       }),
   );
   composer();
-  const sending = send();
-  const rejected = expect(sending).rejects.toThrow();
-  for (let i = 0; i < 12; i++) await Promise.resolve();
+  expect(await send()).toBe(false);
+  composer();
+  await vi.advanceTimersByTimeAsync(300);
   expect(h.open).toHaveBeenCalledOnce();
   const state = freshThreadState(
     "late-send",
@@ -656,7 +664,7 @@ it("a direct send's late empty draft is discarded after archive admission is wit
   h.thread = state;
   h.catalogue.archives = [archived];
   finish(state);
-  await rejected;
+  for (let i = 0; i < 12; i++) await Promise.resolve();
   expect(h.send).not.toHaveBeenCalled();
   expect(h.discard).toHaveBeenCalledExactlyOnceWith("late-send");
   expect(composerDrafts.read("new").text).toBe("Keep this draft");
@@ -666,7 +674,7 @@ it.each(["loading", "error"])(
   "A-B-A keeps the last canonical archive association neutral during %s, without carrying it to unrelated B",
   async (kind) => {
     h.catalogue.archives = [archived];
-    composer();
+    requestPreparation();
     const pick = async (path: string) => {
       h.chooseDirectory.mockResolvedValue(path);
       const button = render().find(
