@@ -25,8 +25,8 @@ export const ARCHIVE_STRINGS = {
   save: "选择位置并保存",
   pending: "正在选择位置或准备保存…",
   close: "关闭",
-  continue: "收起，继续保存",
-  closeScope: "收起后保存继续，可在侧栏“文件保存”中查看或取消。",
+  continue: "收起",
+  closeScope: "收起不改变保存状态；进度和结果以保存记录为准。",
   pickerCancelled: "已取消选择保存位置。",
   states: {
     ready: "已准备保存",
