@@ -59,6 +59,16 @@ fn send_open(
     result: oneshot::Sender<Result<OpenDelivery, String>>,
     deadline: Option<tokio::time::Instant>,
 ) {
+    send_open_history(f, connection, native, result, deadline, None);
+}
+fn send_open_history(
+    f: &Fixture,
+    connection: &ManagedConnection,
+    native: &str,
+    result: oneshot::Sender<Result<OpenDelivery, String>>,
+    deadline: Option<tokio::time::Instant>,
+    history: Option<crate::acp_client::history_admission::Permit>,
+) {
     let opening = f
         .manager
         .opening_sessions
@@ -88,7 +98,7 @@ fn send_open(
         // uses send_reserved's standard budget; dispatch and pump are unchanged.
         let lease = connection
             .life
-            .operation(command.operation_key())
+            .operation_with_history(command.operation_key(), history)
             .unwrap()
             .with_opening(Some(opening));
         connection
@@ -100,7 +110,9 @@ fn send_open(
             })
             .unwrap();
     } else {
-        connection.send_reserved(command, Some(opening)).unwrap();
+        connection
+            .send_reserved_with_history(command, Some(opening), history)
+            .unwrap();
     }
 }
 
@@ -358,4 +370,75 @@ async fn open_delivery_unstarted_expired_or_closed_queue_never_sends_load() {
         finish(&f, &connection).await;
         assert!(!sent);
     }
+}
+
+#[tokio::test]
+async fn cold_admission_unconsumed_delivery_holds_slot_until_real_reap() {
+    cold_orphan_slot(false).await;
+}
+#[tokio::test]
+async fn cold_admission_timeout_holds_slot_until_real_reap() {
+    cold_orphan_slot(true).await;
+}
+async fn cold_orphan_slot(timeout: bool) {
+    use crate::acp_client::history_admission::{Admission, Policy};
+    let f = Fixture::new();
+    if timeout {
+        gated_peer(&f);
+    }
+    f.connect().await;
+    let connection = f.manager.lock().unwrap().values().next().unwrap().clone();
+    let gate = Admission::new(Policy {
+        active: 1,
+        pending: 1,
+        bytes: 100,
+    })
+    .unwrap();
+    let owner = |token: &str| gate.fixture_owner("owned", token, "fixture");
+    let permit = gate
+        .enqueue(owner("a"), 1)
+        .unwrap()
+        .acquire()
+        .await
+        .unwrap();
+    let (send, mut receive) = oneshot::channel();
+    // Move the sole A permit into production ownership. No test observer clone.
+    send_open_history(
+        &f,
+        &connection,
+        "retained",
+        send,
+        timeout.then(|| tokio::time::Instant::now() + Duration::from_secs(1)),
+        Some(permit),
+    );
+    let waiting = gate.enqueue(owner("b"), 1).unwrap();
+    if timeout {
+        until(|| f.cwd.join("listed_loading").exists()).await;
+        assert!(
+            tokio::time::timeout(Duration::from_secs(3), receive)
+                .await
+                .unwrap()
+                .unwrap()
+                .is_err()
+        );
+        std::fs::write(f.cwd.join("listed_release"), b"release").unwrap();
+        until(|| available(&f, &connection, "retained") == (true, false)).await;
+    } else {
+        let notice = Arc::new(DeliveryNotice(Notify::new()));
+        assert!(
+            std::pin::Pin::new(&mut receive)
+                .poll(&mut Context::from_waker(&Waker::from(notice.clone())))
+                .is_pending()
+        );
+        tokio::time::timeout(Duration::from_secs(10), notice.0.notified())
+            .await
+            .unwrap();
+        drop(receive);
+        assert_eq!(available(&f, &connection, "retained"), (true, false));
+    }
+    assert_eq!(gate.counts(), (1, 1, 2));
+    assert!(!connection.sessions.lock().unwrap().contains_key("retained"));
+    finish(&f, &connection).await;
+    drop(waiting.acquire().await.unwrap());
+    assert_eq!(gate.counts(), (0, 0, 0));
 }

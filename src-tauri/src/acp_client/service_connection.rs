@@ -86,6 +86,21 @@ impl AcpManager {
         expected: Option<ServiceIdentity>,
         conversation: bool,
     ) -> Result<(AgentConnectionStatus, ManagedConnection), String> {
+        self.connect_selected_owned(agent, cwd, store, selection, expected, conversation, None)
+            .await
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(super) async fn connect_selected_owned(
+        &self,
+        agent: &AgentRow,
+        cwd: &Path,
+        store: &MetaStore,
+        selection: Option<ServiceSelection>,
+        expected: Option<ServiceIdentity>,
+        conversation: bool,
+        history: Option<super::history_admission::Permit>,
+    ) -> Result<(AgentConnectionStatus, ManagedConnection), String> {
         let _configuration = crate::install_job::configuration_guard(&agent.id).await;
         if self.shutting_down.load(Ordering::SeqCst) {
             return Err("应用正在退出，请稍后重试".into());
@@ -101,6 +116,9 @@ impl AcpManager {
                     .ok_or_else(|| "请先重新添加此 Agent".into())
             })
             .await?;
+        if history.is_some() && !super::cold_history_open::same_launch(agent, &current) {
+            return Err("读取设置已变化，本次尚未开始，请重新打开".into());
+        }
         if conversation {
             super::preparation::require_dependencies(&current)?;
         }
@@ -152,7 +170,7 @@ impl AcpManager {
             service: prepared.as_ref().map(|p| p.context.revision.clone()),
         };
         let status = self
-            .connect_launch_diagnosed(
+            .connect_launch_owned(
                 &current,
                 cwd,
                 store,
@@ -160,6 +178,7 @@ impl AcpManager {
                 prepared,
                 key.conversation_id.clone(),
                 None,
+                history,
             )
             .await?;
         let connection = self

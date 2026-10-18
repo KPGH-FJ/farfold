@@ -1,5 +1,13 @@
 use super::*;
 
+// The synchronous history-admission wake probe must never wait for the lock
+// whose release boundary it is testing. Test-only access stays in this file.
+impl ConnectionLife {
+    pub(in crate::acp_client) fn history_activity_unlocked(&self) -> bool {
+        self.activity.try_lock().is_ok()
+    }
+}
+
 fn ready() -> Arc<ConnectionLife> {
     let life = ConnectionLife::new();
     life.ready().unwrap();

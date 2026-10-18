@@ -119,6 +119,9 @@ export class OpeningInquiryOwner {
       ...(this.view.requests.length ? { notice: S.closed } : {}),
     });
   }
+  retireUninterested() {
+    if (!this.current()) this.retire();
+  }
   finish(failed = false) {
     this.available = false;
     this.interested = [];
@@ -216,5 +219,8 @@ class OpeningInquiries {
   retireAll = () => {
     for (const owner of this.owners.values()) owner.retire();
   };
+  retireUninterested() {
+    for (const owner of this.owners.values()) owner.retireUninterested();
+  }
 }
 export const openingInquiries = new OpeningInquiries();

@@ -27,6 +27,7 @@ use crate::meta_store::{MetaStore, SessionRow};
 #[allow(clippy::too_many_arguments)]
 pub async fn session_open(
     app: AppHandle,
+    window: tauri::Window,
     agent_id: String,
     cwd: String,
     native_session_id: Option<String>,
@@ -34,6 +35,7 @@ pub async fn session_open(
     service: Option<crate::credentials::ServiceSelection>,
     open_token: String,
     channel: Channel<Value>,
+    admission_channel: Channel<super::history_admission_commands::HistoryAdmissionPhase>,
 ) -> Result<SessionOpenResult, String> {
     let row = require_agent_row(&app, &agent_id).await?;
     let cwd = validate_cwd_async(&cwd).await?;
@@ -51,38 +53,66 @@ pub async fn session_open(
     });
     let manager = app.state::<AcpManager>();
     let store = app.state::<MetaStore>();
+    // One authoritative cold admission, before any browser transport or
+    // process preparation. The admitted-open method must never enqueue again.
+    let request = native_session_id
+        .as_ref()
+        .map(|_| {
+            super::history_admission_commands::HistoryRequest::from_window(
+                &manager,
+                &window,
+                &open_token,
+                &agent_id,
+                admission_channel,
+            )
+        })
+        .transpose()?;
     // The connected tool starts without page permission. Preview opens use the
     // separate discovery path and do not receive this transient transport.
     use super::transient_mcp::McpUnavailable;
-    let (mcp, browser_unavailable) = if super::browser_capability::eligible(&row) {
-        match app
-            .state::<crate::browser_sharing::BrowserSharing>()
-            .prepare(&app, &agent_id, &cwd)
-        {
-            Ok(mcp) => (Some(mcp), None),
-            Err(_) => {
-                logging::warn(
-                    "acp_client",
-                    format_args!("browser tool preparation unavailable"),
-                );
-                (None, Some(McpUnavailable::PreparationFailed))
-            }
-        }
-    } else {
-        (None, Some(McpUnavailable::SourceNotReviewed))
-    };
+    let (history, (mcp, browser_unavailable)) = manager
+        .prepare_history_open(
+            &row,
+            &cwd,
+            native_session_id.as_deref(),
+            &config,
+            &store,
+            service.as_ref(),
+            request,
+            || {
+                if super::browser_capability::eligible(&row) {
+                    match app
+                        .state::<crate::browser_sharing::BrowserSharing>()
+                        .prepare(&app, &agent_id, &cwd)
+                    {
+                        Ok(mcp) => (Some(mcp), None),
+                        Err(_) => {
+                            logging::warn(
+                                "acp_client",
+                                format_args!("browser tool preparation unavailable"),
+                            );
+                            (None, Some(McpUnavailable::PreparationFailed))
+                        }
+                    }
+                } else {
+                    (None, Some(McpUnavailable::SourceNotReviewed))
+                }
+            },
+        )
+        .await?;
     let open = || async {
         manager
-            .open_session_selected_with_mcp(
+            .open_session_admitted_with_mcp(
                 &row,
                 &cwd,
                 native_session_id.clone(),
-                config.clone(),
+                config,
                 events,
                 &store,
-                service.clone(),
+                service,
                 mcp,
                 browser_unavailable,
+                history,
             )
             .await
     };

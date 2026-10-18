@@ -316,6 +316,7 @@ impl AcpManager {
         .await
     }
 
+    #[cfg(test)]
     #[allow(clippy::too_many_arguments)]
     pub(crate) async fn open_session_selected_with_mcp(
         &self,
@@ -329,6 +330,53 @@ impl AcpManager {
         mcp: Option<super::transient_mcp::TransientMcpOpen>,
         browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
     ) -> Result<OpenedSession, String> {
+        let history = if let Some(native) = &native_session_id {
+            Some(
+                self.admit_cold_history_for_test(
+                    agent,
+                    cwd,
+                    native,
+                    &config_options,
+                    store,
+                    selection.as_ref(),
+                )
+                .await?,
+            )
+        } else {
+            None
+        };
+        self.open_session_admitted_with_mcp(
+            agent,
+            cwd,
+            native_session_id,
+            config_options,
+            events,
+            store,
+            selection,
+            mcp,
+            browser_unavailable,
+            history,
+        )
+        .await
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(super) async fn open_session_admitted_with_mcp(
+        &self,
+        agent: &AgentRow,
+        cwd: &Path,
+        native_session_id: Option<String>,
+        config_options: Vec<(String, Value)>,
+        events: SessionSink,
+        store: &MetaStore,
+        selection: Option<crate::credentials::ServiceSelection>,
+        mcp: Option<super::transient_mcp::TransientMcpOpen>,
+        browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
+        history: Option<super::history_admission::Permit>,
+    ) -> Result<OpenedSession, String> {
+        if native_session_id.is_some() && history.is_none() {
+            return Err("无法确认读取许可，本次尚未开始".into());
+        }
         self.open_session_owned_with_mcp(
             agent,
             cwd,
@@ -341,6 +389,7 @@ impl AcpManager {
             mcp,
             browser_unavailable,
             None,
+            history,
         )
         .await
     }
@@ -369,6 +418,7 @@ impl AcpManager {
             None,
             Some(super::transient_mcp::McpUnavailable::NotEnabledForConversation),
             None,
+            None,
         )
         .await
     }
@@ -395,6 +445,7 @@ impl AcpManager {
             None,
             Some(super::transient_mcp::McpUnavailable::NotEnabledForConversation),
             Some(reservation),
+            None,
         )
         .await
     }
@@ -413,6 +464,7 @@ impl AcpManager {
         mcp: Option<super::transient_mcp::TransientMcpOpen>,
         browser_unavailable: Option<super::transient_mcp::McpUnavailable>,
         reserved: Option<super::lifecycle::OpenReservation>,
+        history: Option<super::history_admission::Permit>,
     ) -> Result<OpenedSession, String> {
         use super::service_connection::{ServiceRecord, recorded_service, selection_for_open};
         let fork_owned = reserved.is_some();
@@ -452,7 +504,15 @@ impl AcpManager {
         let (selection, expected) =
             selection_for_open(native_session_id.is_some(), recorded.as_ref(), selection)?;
         let (_, command_tx) = self
-            .connect_selected(agent, cwd, store, selection, expected, true)
+            .connect_selected_owned(
+                agent,
+                cwd,
+                store,
+                selection,
+                expected,
+                true,
+                history.clone(),
+            )
             .await?;
         if let Some(id) = &native_session_id {
             if !command_tx
@@ -510,7 +570,8 @@ impl AcpManager {
             )
         };
         let (result_tx, result_rx) = oneshot::channel();
-        command_tx.send_reserved(
+        let _history_delivery = history.clone();
+        command_tx.send_reserved_with_history(
             ManagerCommand::OpenSession {
                 fork_owned,
                 native_session_id,
@@ -533,6 +594,7 @@ impl AcpManager {
                 result: result_tx,
             },
             opening,
+            history,
         )?;
         if fork_owned {
             return result_rx

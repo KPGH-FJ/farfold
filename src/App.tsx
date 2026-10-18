@@ -6,6 +6,7 @@ import type { AttachmentSearchRequest } from "./components/AttachmentSearchJump"
 import { currentWorkLocationGuidance } from "./runtime/archived_work_location";
 import { OpeningElicitationList } from "./components/OpeningElicitationList";
 import { openingInquiries } from "./runtime/opening_inquiries";
+import { historyReads } from "./runtime/session_history_admission";
 import { REDESIGN as R } from "./runtime/redesign_strings";
 import { browserSurfaceGuard } from "./runtime/browser_surface";
 import { BrowserSurfaceNotice } from "./components/BrowserSurfaceNotice";
@@ -145,13 +146,38 @@ export default function App() {
   const [loadedSearchRequest, setLoadedSearchRequest] =
     useState<LoadedSearchRequest | null>(null);
   const historyOpen = useRef(0);
+  const historyReadInterest = useRef<AbortController | null>(null);
+  const readInterest = (key: string) => {
+    historyReadInterest.current?.abort();
+    const owner = new AbortController();
+    historyReadInterest.current = owner;
+    return {
+      inquirySignal: owner.signal,
+      inquiryCurrent: () =>
+        historyReadInterest.current === owner &&
+        currentView.current.kind === "thread" &&
+        currentView.current.key === key,
+    };
+  };
   const setView = (next: View) => {
+    historyReadInterest.current?.abort();
+    historyReadInterest.current = null;
     setLoadedSearchRequest(null);
     setAttachmentSearchRequest(null);
-    openingInquiries.retireAll();
     currentView.current = next;
+    queueMicrotask(() => {
+      historyReads.retireUninterested();
+      openingInquiries.retireUninterested();
+    });
     updateView(next);
   };
+  useEffect(
+    () => () => {
+      historyReadInterest.current?.abort();
+      historyReadInterest.current = null;
+    },
+    [],
+  );
   const routeHistory = useRef<View[]>([]);
   const [threadKey, setThreadKey] = useState<string | null>(null);
   const [notificationOnlyKey, setNotificationOnlyKey] = useState<string | null>(
@@ -498,7 +524,7 @@ export default function App() {
     if (target) allowAutomaticConnection(target.agentId);
     const request = ++historyOpen.current;
     try {
-      const state = await threads.reconnect(key);
+      const state = await threads.reconnect(key, readInterest(key));
       followRecovery(key, request, state?.key);
     } catch (error) {
       followRecovery(key, request, historyFailureKey(error));
@@ -539,6 +565,7 @@ export default function App() {
     if (existing && !existing.connectionLost && !existing.openError) return;
     void threads
       .open({
+        ...readInterest(key),
         agentId: row.agentId,
         cwd: row.cwd,
         nativeSessionId: row.nativeSessionId,

@@ -167,6 +167,8 @@ it("allows an explicit history open after manual disconnect and requests the ori
   history.open();
   expect(isAutomaticConnectionAllowed("A")).toBe(true);
   expect(h.open).toHaveBeenCalledWith({
+    inquiryCurrent: expect.any(Function),
+    inquirySignal: expect.any(AbortSignal),
     agentId: "A",
     cwd: "/alias",
     nativeSessionId: "history",
@@ -217,6 +219,8 @@ it.each(["success", "empty"] as const)(
     expect(component("ThreadPage").viewKey).toBe(history.canonical);
     expect(component("ThreadPage").active).toBe(true);
     expect(h.open).toHaveBeenCalledExactlyOnceWith({
+      inquiryCurrent: expect.any(Function),
+      inquirySignal: expect.any(AbortSignal),
       agentId: "A",
       cwd: "/alias",
       nativeSessionId: "history",
@@ -291,7 +295,10 @@ it.each(["success", "empty"] as const)(
     h.threads.delete(history.raw);
     render();
     await history.complete();
-    expect(h.reconnect).toHaveBeenCalledExactlyOnceWith(history.raw);
+    expect(h.reconnect).toHaveBeenCalledExactlyOnceWith(history.raw, {
+      inquiryCurrent: expect.any(Function),
+      inquirySignal: expect.any(AbortSignal),
+    });
     expect(component("ThreadPage").viewKey).toBe(history.canonical);
     expect(component("ThreadPage").active).toBe(true);
   },
@@ -1246,6 +1253,8 @@ it("cold notification navigation waits for an explicit history-open click", asyn
   h.open.mockResolvedValueOnce({ key: "cold-A" });
   (page.onManualOpen as () => void)();
   expect(h.open).toHaveBeenCalledExactlyOnceWith({
+    inquiryCurrent: expect.any(Function),
+    inquirySignal: expect.any(AbortSignal),
     agentId: "A",
     cwd: "/cold-A",
     nativeSessionId: "native-cold",

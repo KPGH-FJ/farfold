@@ -30,6 +30,7 @@ pub(crate) struct Operation {
     pub abandoned: Arc<AtomicBool>,
     cancel: watch::Sender<bool>,
     events: Option<pump::SessionSink>,
+    history: Option<super::history_admission::Permit>,
 }
 
 impl Operation {
@@ -38,6 +39,24 @@ impl Operation {
             abandoned: Arc::new(AtomicBool::new(false)),
             cancel: watch::channel(false).0,
             events: None,
+            history: None,
+        }
+    }
+    fn with_history(mut self, history: Option<super::history_admission::Permit>) -> Self {
+        self.history = history;
+        self
+    }
+    pub(super) fn history(&self) -> Option<super::history_admission::Permit> {
+        self.history.clone()
+    }
+    /// A live route observes interest after opening ends. It must not retain
+    /// the opening's admission; only the real operation/delivery owners do.
+    pub(super) fn observer(&self) -> Self {
+        Self {
+            abandoned: self.abandoned.clone(),
+            cancel: self.cancel.clone(),
+            events: self.events.clone(),
+            history: None,
         }
     }
     pub(crate) fn with_events(mut self, events: pump::SessionSink) -> Self {
@@ -93,9 +112,17 @@ impl super::manager::ManagedConnection {
         command: ManagerCommand,
         opening: Option<super::lifecycle::OpenReservation>,
     ) -> Result<(), String> {
+        self.send_reserved_with_history(command, opening, None)
+    }
+    pub(super) fn send_reserved_with_history(
+        &self,
+        command: ManagerCommand,
+        opening: Option<super::lifecycle::OpenReservation>,
+        history: Option<super::history_admission::Permit>,
+    ) -> Result<(), String> {
         let lease = self
             .life
-            .operation(command.operation_key())?
+            .operation_with_history(command.operation_key(), history)?
             .with_opening(opening);
         let deadline = tokio::time::Instant::now() + command.budget();
         self.command_tx
@@ -254,7 +281,7 @@ pub(crate) async fn run(
         deadline,
         _lease,
     } = queued;
-    let operation = Operation::new();
+    let operation = Operation::new().with_history(_lease.history());
     match command {
         ManagerCommand::AccountStatus { query, result } => {
             execute(

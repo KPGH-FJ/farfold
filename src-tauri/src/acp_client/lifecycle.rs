@@ -147,22 +147,40 @@ impl Drop for ReservedOpen {
 pub(crate) struct OpenIdentity {
     life: Arc<ConnectionLife>,
     opening: Option<OpenReservation>,
+    history: Option<super::history_admission::Permit>,
+    accepted: bool,
 }
 impl OpenIdentity {
     pub fn new(life: Arc<ConnectionLife>, opening: Option<OpenReservation>) -> Self {
-        Self { life, opening }
+        Self {
+            life,
+            opening,
+            history: None,
+            accepted: false,
+        }
+    }
+    pub(super) fn with_history(
+        mut self,
+        history: Option<super::history_admission::Permit>,
+    ) -> Self {
+        self.history = history;
+        self
     }
     pub fn replace(&mut self, opening: OpenReservation) {
         self.opening = Some(opening);
     }
     pub fn delivered(&mut self) {
         self.opening.take();
+        self.accepted = true;
     }
 }
 impl Drop for OpenIdentity {
     fn drop(&mut self) {
         if let Some(opening) = self.opening.take() {
             self.life.retain_opening(opening);
+        }
+        if !self.accepted {
+            self.life.retain_history(self.history.take());
         }
     }
 }
@@ -176,6 +194,8 @@ struct Activity {
     closing_opens: Vec<OpenReservation>,
     closing_admissions: Vec<crate::managed_update::ActivityPermit>,
     starting_admission: Option<crate::managed_update::ActivityPermit>,
+    starting_history: Option<super::history_admission::Permit>,
+    closing_history: Vec<super::history_admission::Permit>,
     detached_work: u64,
 }
 pub(crate) struct ConnectionLife {
@@ -193,6 +213,43 @@ impl ConnectionLife {
             activity.closing_opens.push(opening);
         }
     }
+    fn retain_history(&self, mut history: Option<super::history_admission::Permit>) {
+        match self.activity.lock() {
+            Ok(mut activity) => {
+                if !matches!(self.state.load(Ordering::SeqCst), CLOSED | FAILED)
+                    && let Some(permit) = history.take()
+                {
+                    activity.closing_history.push(permit);
+                }
+            }
+            // Unknown ownership must not invent free capacity.
+            Err(_) => {
+                if let Some(permit) = history.take() {
+                    std::mem::forget(permit);
+                }
+            }
+        }
+        drop(history); // Any last Slot drop is outside the activity lock.
+    }
+    pub(super) fn retain_history_startup(
+        &self,
+        history: Option<super::history_admission::Permit>,
+    ) -> Result<(), String> {
+        self.activity
+            .lock()
+            .map_err(|_| "无法读取连接状态")?
+            .starting_history = history;
+        Ok(())
+    }
+    /// The manager calls this only after releasing its connection-map guard.
+    pub(super) fn release_history_startup(&self) {
+        let history = self.activity.lock().ok().and_then(|mut activity| {
+            (self.state.load(Ordering::SeqCst) == READY)
+                .then(|| activity.starting_history.take())
+                .flatten()
+        });
+        drop(history);
+    }
     pub fn new() -> Arc<Self> {
         Arc::new(Self {
             state: Arc::new(AtomicU8::new(CONNECTING)),
@@ -206,6 +263,8 @@ impl ConnectionLife {
                 closing_opens: Vec::new(),
                 closing_admissions: Vec::new(),
                 starting_admission: None,
+                starting_history: None,
+                closing_history: Vec::new(),
                 detached_work: 0,
             }),
             stop: watch::channel(false).0,
@@ -306,9 +365,21 @@ impl ConnectionLife {
         Ok(())
     }
     pub fn operation(self: &Arc<Self>, key: String) -> Result<OperationLease, String> {
+        self.operation_with_history(key, None)
+    }
+    pub(super) fn operation_with_history(
+        self: &Arc<Self>,
+        key: String,
+        mut history: Option<super::history_admission::Permit>,
+    ) -> Result<OperationLease, String> {
         let admission = crate::managed_update::activity()?;
         let mut state = self.activity.lock().map_err(|_| "无法读取连接状态")?;
         if self.state.load(Ordering::SeqCst) != READY {
+            if self.state.load(Ordering::SeqCst) == CLOSING
+                && let Some(permit) = history.take()
+            {
+                state.closing_history.push(permit);
+            }
             return Err("连接正在关闭，请稍后重试".into());
         }
         if (key == "account_change"
@@ -328,6 +399,7 @@ impl ConnectionLife {
             key,
             opening: None,
             admission: Some(admission),
+            history,
         })
     }
     /// Check and mark under the same lock used by admission; never remove a stale key.
@@ -402,7 +474,7 @@ impl ConnectionLife {
     pub fn finish(&self, outcome: Result<(), String>) {
         // The process owner calls this only after actual reap. Release any open
         // operation abandoned during shutdown at the same completion boundary.
-        let closing_opens = if let Ok(mut activity) = self.activity.lock() {
+        let retained = if let Ok(mut activity) = self.activity.lock() {
             self.state.store(
                 if outcome.is_ok() { CLOSED } else { FAILED },
                 Ordering::SeqCst,
@@ -413,11 +485,15 @@ impl ConnectionLife {
                 std::mem::take(&mut activity.detached_work),
                 Ordering::SeqCst,
             );
-            std::mem::take(&mut activity.closing_opens)
+            (
+                std::mem::take(&mut activity.closing_opens),
+                activity.starting_history.take(),
+                std::mem::take(&mut activity.closing_history),
+            )
         } else {
-            Vec::new()
+            (Vec::new(), None, Vec::new())
         };
-        drop(closing_opens);
+        drop(retained);
         self.done.send_replace(Some(outcome));
     }
     /// The process owner already confirmed this connection's termination
@@ -519,8 +595,12 @@ pub(crate) struct OperationLease {
     key: String,
     opening: Option<OpenReservation>,
     admission: Option<crate::managed_update::ActivityPermit>,
+    history: Option<super::history_admission::Permit>,
 }
 impl OperationLease {
+    pub(super) fn history(&self) -> Option<super::history_admission::Permit> {
+        self.history.clone()
+    }
     pub fn opening(&self) -> Option<OpenReservation> {
         self.opening.clone()
     }
@@ -543,6 +623,11 @@ impl Drop for OperationLease {
                 && let Some(opening) = self.opening.take()
             {
                 state.closing_opens.push(opening);
+            }
+            if self.life.state.load(Ordering::SeqCst) == CLOSING
+                && let Some(history) = self.history.take()
+            {
+                state.closing_history.push(history);
             }
         }
     }

@@ -34,6 +34,7 @@ const h = vi.hoisted(() => ({
     }
   >(),
   open: vi.fn(),
+  invoke: vi.fn(),
   clearDraft: vi.fn(),
   preserveDraft: vi.fn(),
   reconnect: vi.fn(),
@@ -97,7 +98,10 @@ vi.mock("react", async (original) => ({
   useSyncExternalStore: (_subscribe: unknown, read: () => unknown) => read(),
 }));
 vi.mock("@tauri-apps/api/core", () => ({
-  invoke: vi.fn(async () => "/ordinary"),
+  invoke: h.invoke,
+  Channel: class {
+    onmessage = (_: unknown) => {};
+  },
 }));
 vi.mock("@tauri-apps/api/event", () => ({
   listen: vi.fn(
@@ -268,6 +272,7 @@ export async function resetHarness() {
   h.effects = [];
   h.pending = [];
   h.open.mockReset();
+  h.invoke.mockReset().mockResolvedValue("/ordinary");
   h.clearDraft.mockReset();
   h.preserveDraft
     .mockReset()
@@ -313,6 +318,6 @@ export async function resetHarness() {
 }
 export function cleanupHarness() {
   observeAuthentication("A", "/old-A", undefined, "original-api-context");
-  for (const effect of h.effects) effect?.cleanup?.();
+  for (const effect of h.effects.splice(0)) effect?.cleanup?.();
   vi.unstubAllGlobals();
 }

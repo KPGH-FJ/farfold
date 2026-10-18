@@ -69,7 +69,7 @@ pub(crate) async fn open_session_on_connection(
     };
 
     let downstream = events;
-    let interested = operation.clone();
+    let interested = operation.observer();
     let events: SessionSink = Arc::new(move |value| {
         if interested.interested() {
             downstream(value);
@@ -104,7 +104,8 @@ pub(crate) async fn open_session_on_connection(
             // route registration fails. Preserve that unconfirmed state.
             let retention = ops.life.session()?;
             let mut identity =
-                super::super::lifecycle::OpenIdentity::new(ops.life.clone(), ops.opening.take());
+                super::super::lifecycle::OpenIdentity::new(ops.life.clone(), ops.opening.take())
+                    .with_history(operation.history());
             let session_id = response
                 .get("sessionId")
                 .and_then(Value::as_str)
@@ -156,7 +157,8 @@ pub(crate) async fn open_session_on_connection(
                     let mut identity = super::super::lifecycle::OpenIdentity::new(
                         ops.life.clone(),
                         ops.opening.take(),
-                    );
+                    )
+                    .with_history(operation.history());
                     ops.verify_session_identity(&id, true, &mut identity)?;
                     (id, response, guard, retention, identity)
                 }

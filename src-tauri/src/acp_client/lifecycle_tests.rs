@@ -35,6 +35,9 @@ for line in sys.stdin:
  elif method=='session/cancel' and prompt: reply(prompt,{'stopReason':'cancelled'}); prompt=None
 "#;
 
+#[path = "cold_history_open_tests.rs"]
+mod cold_history_open_tests;
+
 #[path = "startup_tests.rs"]
 mod startup_tests;
 

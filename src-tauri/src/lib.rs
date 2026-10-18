@@ -142,15 +142,19 @@ pub fn run() {
             // force-quit before any connection work begins.
             supervisor::startup_cleanup(&app_data_dir);
             let connection_events = app.handle().clone();
-            if !app.manage(
-                acp_client::manager::AcpManager::new(
-                    logging::default_log_dir(),
-                    app_data_dir.clone(),
-                )
-                .with_status_sink(std::sync::Arc::new(move |status| {
-                    ui_transport::emit_event(&connection_events, "agent:status", status);
-                })),
-            ) {
+            let acp_manager = acp_client::manager::AcpManager::new(
+                logging::default_log_dir(),
+                app_data_dir.clone(),
+            )
+            .with_status_sink(std::sync::Arc::new(move |status| {
+                ui_transport::emit_event(&connection_events, "agent:status", status);
+            }));
+            for window in app.webview_windows().values() {
+                acp_manager
+                    .register_history_window(window)
+                    .map_err(std::io::Error::other)?;
+            }
+            if !app.manage(acp_manager) {
                 return Err(std::io::Error::other("acp manager is already initialized").into());
             }
             if !app.manage(agent_catalog::AgentCatalog::new(app_data_dir.clone())) {
@@ -241,6 +245,7 @@ pub fn run() {
                 acp_client::manager::agent_status,
                 acp_client::manager::connection_retention::agent_connection_hold,
                 acp_client::session_commands::session_open,
+                acp_client::history_admission_commands::session_open_cancel_waiting,
                 acp_client::session_fork::session_fork_current,
                 acp_client::session_commands::session_prompt,
                 acp_client::session_commands::session_cancel,

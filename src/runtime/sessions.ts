@@ -75,6 +75,7 @@ import { settledRoundResults } from "./round_result";
 import { uiError } from "./ui_error";
 import { finishHistoryPrefix } from "./history_replay";
 import { SessionOpenReplay } from "./session_open_replay";
+import { historyReads } from "./session_history_admission";
 import {
   isHistoryReadFailure,
   historyFailureKey,
@@ -608,6 +609,7 @@ class ThreadsStore {
     const openingKey = `${draftGroup(input)} ${input.nativeSessionId ?? (input.fresh ? "fresh" : "-")}`;
     const pending = this.openings.get(openingKey);
     if (pending) {
+      historyReads.join(openingKey, input);
       openingInquiries.join(
         openingKey,
         input.inquiryCurrent,
@@ -616,6 +618,8 @@ class ThreadsStore {
       return pending;
     }
     const inquiry = openingInquiries.begin(openingKey, input);
+    const replay = new SessionOpenReplay();
+    const admission = historyReads.begin(openingKey, input, replay.token);
 
     let opened: OpenResult | undefined;
     let routePrepared = false;
@@ -629,7 +633,6 @@ class ThreadsStore {
       routePrepared = true;
       if (retryState) this.channels.delete(retryState.key);
       const channel = new Channel<unknown>();
-      const replay = new SessionOpenReplay();
       const openToken = replay.token;
       let boundKey: string | null = null;
       let historyFailed = false;
@@ -671,6 +674,7 @@ class ThreadsStore {
             }
           : null,
         openToken,
+        admissionChannel: admission?.channel ?? new Channel<unknown>(),
         channel,
       });
       opened = result;
@@ -789,6 +793,7 @@ class ThreadsStore {
         throw error;
       })
       .finally(() => {
+        historyReads.finish(openingKey, admission);
         inquiry.finish();
         this.openings.delete(openingKey);
       });
@@ -1274,23 +1279,30 @@ class ThreadsStore {
     }
   }
 
-  recheckConfig(key: string): Promise<ThreadState> {
+  recheckConfig(
+    key: string,
+    interest?: Pick<OpenInput, "inquiryCurrent" | "inquirySignal">,
+  ): Promise<ThreadState> {
     return recheckConfiguration(
       this.thread(key),
       () => this.thread(key),
       () => this.permissionRevisions.get(key) ?? 0,
-      (input, owner) => this.openTarget(input, owner),
+      (input, owner) => this.openTarget({ ...input, ...interest }, owner),
       () => this.emit(key),
     );
   }
 
-  async reconnect(key: string): Promise<ThreadState | undefined> {
+  async reconnect(
+    key: string,
+    interest?: Pick<OpenInput, "inquiryCurrent" | "inquirySignal">,
+  ): Promise<ThreadState | undefined> {
     const s = this.thread(key);
     if (!s || s.unrecoverable) return;
     try {
       if (hasConfigurationRecheckRecovery(s))
-        return await this.recheckConfig(key);
+        return await this.recheckConfig(key, interest);
       return await this.open({
+        ...interest,
         agentId: s.agentId,
         cwd: s.cwd,
         nativeSessionId: s.nativeSessionId,

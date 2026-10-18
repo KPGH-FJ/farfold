@@ -59,6 +59,9 @@ mod connection_control;
 mod directory_maintenance;
 
 #[cfg(test)]
+#[path = "history_admission_manager_test_support.rs"]
+mod history_admission_test_support;
+#[cfg(test)]
 #[path = "startup_cleanup_tests.rs"]
 mod startup_cleanup_tests;
 
@@ -154,6 +157,7 @@ pub(crate) fn runtime() -> &'static tokio::runtime::Runtime {
 pub struct AcpManager {
     pub(crate) shutting_down: Arc<AtomicBool>,
     pub(crate) opening_sessions: super::lifecycle::OpenReservations,
+    pub(super) history_admission: Arc<super::history_admission::Admission>,
     connections: Arc<Mutex<HashMap<ConnectionKey, ManagedConnection>>>,
     account_admission: Arc<AccountAdmission>,
     log_dir: PathBuf,
@@ -187,6 +191,7 @@ impl AcpManager {
         let manager = Self {
             shutting_down: Arc::new(AtomicBool::new(false)),
             opening_sessions: super::lifecycle::OpenReservations::default(),
+            history_admission: super::history_admission::Admission::production(),
             connections: Arc::new(Mutex::new(HashMap::new())),
             account_admission: Arc::new(AccountAdmission::default()),
             log_dir,
@@ -414,6 +419,31 @@ impl AcpManager {
         conversation_id: Option<String>,
         diagnostics: Option<Arc<Diagnostics>>,
     ) -> Result<AgentConnectionStatus, String> {
+        self.connect_launch_owned(
+            agent,
+            cwd,
+            store,
+            candidate,
+            prepared,
+            conversation_id,
+            diagnostics,
+            None,
+        )
+        .await
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(super) async fn connect_launch_owned(
+        &self,
+        agent: &AgentRow,
+        cwd: &Path,
+        store: &MetaStore,
+        candidate: bool,
+        prepared: Option<super::service_connection::PreparedService>,
+        conversation_id: Option<String>,
+        diagnostics: Option<Arc<Diagnostics>>,
+        history: Option<super::history_admission::Permit>,
+    ) -> Result<AgentConnectionStatus, String> {
         let admission = crate::managed_update::activity()?;
         let launch_identity = LaunchIdentity::from_launch(&agent.command, &agent.args);
         let service = prepared.as_ref().map(|p| p.context.clone());
@@ -471,6 +501,7 @@ impl AcpManager {
         let (init_tx, init_rx) = oneshot::channel::<Result<Handshake, InitializeFailure>>();
         let life = ConnectionLife::new();
         life.retain_startup(admission)?;
+        life.retain_history_startup(history)?;
         let state = life.state.clone();
         let browser_launch = super::browser_capability::reviewed_launch(agent);
         let process = ProcessControl::new(diagnostics.clone()).review_mcp_launch(matches!(
@@ -774,6 +805,10 @@ impl AcpManager {
             format_args!("connected: {agent_label} (pid {pid})"),
         );
         starting.complete = true;
+        // A history slot's final drop can synchronously wake the next opener.
+        // Release outside BOTH the activity lock and this connection-map lock.
+        drop(connections);
+        life.release_history_startup();
         if !candidate {
             diagnostics.outcome(Outcome::Success);
         }
@@ -851,6 +886,7 @@ impl AcpManager {
     /// Never release keys or trust a persisted PID list as proof of Child reap.
     pub fn stop_for_shutdown(&self) {
         self.shutting_down.store(true, Ordering::SeqCst);
+        let _ = self.history_admission.shutdown();
         let lives: Vec<_> = match self.connections.lock() {
             Ok(connections) => connections
                 .values()

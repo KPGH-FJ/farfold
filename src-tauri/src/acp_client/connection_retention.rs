@@ -44,6 +44,11 @@ impl AcpManager {
     }
 
     pub fn release_window_holds(&self, window: &str) -> Result<(), String> {
+        // Closing the real window and cancelling pure waiters precede the
+        // connection-map guard; queue wakes never run under that map lock.
+        self.history_admission
+            .close_window(window)
+            .map_err(super::super::cold_history_open::error)?;
         for connection in self.lock()?.values() {
             connection.life.release_views(window)?;
         }
