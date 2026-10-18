@@ -60,12 +60,8 @@ it("preserves known PDF text/scope across queue edit, resend and uncertain input
   expect(wirePromptBlocks(blocks)).toEqual([
     { type: "text", text: "question" },
     {
-      type: "resource",
-      resource: {
-        uri: PDF_URI,
-        mimeType: "text/plain",
-        text: approvedPdf().text,
-      },
+      type: "text",
+      text: approvedPdf().text,
     },
   ]);
   expect(blocks).toEqual(before);

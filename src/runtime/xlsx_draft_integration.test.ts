@@ -55,12 +55,8 @@ it("keeps full text and ordered all-saved scope across queue editing, resend, ne
   expect(wirePromptBlocks(blocks)).toEqual([
     { type: "text", text: "question" },
     {
-      type: "resource",
-      resource: {
-        uri: XLSX_URI,
-        mimeType: "text/plain",
-        text: attachment.documentText!.text,
-      },
+      type: "text",
+      text: attachment.documentText!.text,
     },
   ]);
   expect(h.invoke).not.toHaveBeenCalled();

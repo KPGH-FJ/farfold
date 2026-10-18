@@ -14,7 +14,6 @@ import { DOCUMENT_INPUT_STRINGS as S } from "./document_input_strings";
 import {
   documentBlock,
   approvedDocument,
-  DOCX_URI,
 } from "./docx_draft.test-support";
 import type { PromptBlock } from "./session_types";
 
@@ -69,12 +68,8 @@ it("actual common drain sends exactly approved text on the official wire and pre
     [
       { type: "text", text: "question without answers" },
       {
-        type: "resource",
-        resource: {
-          uri: DOCX_URI,
-          text: approvedDocument().text,
-          mimeType: "text/plain",
-        },
+        type: "text",
+        text: approvedDocument().text,
       },
     ],
   ]);

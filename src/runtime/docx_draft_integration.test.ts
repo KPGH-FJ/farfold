@@ -40,12 +40,8 @@ it("retains exact approved bytes through prepare, queue edit, resend, new draft 
   expect(sent).toEqual([
     { type: "text", text: "question" },
     {
-      type: "resource",
-      resource: {
-        uri: DOCX_URI,
-        mimeType: "text/plain",
-        text: attachment.documentText!.text,
-      },
+      type: "text",
+      text: attachment.documentText!.text,
     },
   ]);
   expect(h.invoke).not.toHaveBeenCalled();
@@ -155,12 +151,8 @@ it("wire whitelisting strips every local field, including arbitrary nested field
   const wire = wirePromptBlocks(owned);
   expect(wire).toEqual([
     {
-      type: "resource",
-      resource: {
-        uri: DOCX_URI,
-        mimeType: "text/plain",
-        text: block.resource.text,
-      },
+      type: "text",
+      text: block.resource.text,
     },
   ]);
   expect(JSON.stringify(wire)).not.toContain("localDocumentText");

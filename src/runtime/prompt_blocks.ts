@@ -119,8 +119,9 @@ export function resourceDraftAttachment(
   };
 }
 
-/** Enumerate official fields immediately before IPC. Local source metadata
- * remains in the unsent queue but can never reach the Agent. */
+/** Enumerate official fields immediately before IPC. Reviewed document bodies
+ * use baseline Text: a resource URI can make a consumer reread the unreviewed
+ * original instead. Source/version metadata stays in the queue and local message. */
 export function wirePromptBlocks(
   blocks: readonly PromptBlock[],
 ): PromptBlock[] {
@@ -145,6 +146,11 @@ export function wirePromptBlocks(
           ...(block.mimeType ? { mimeType: block.mimeType } : {}),
         };
       case "resource":
+        if (block.localDocumentText !== undefined) {
+          const approved = resourceDocumentText(block);
+          if (!approved?.local) throw new Error(S.failed);
+          return { type: "text", text: approved.text };
+        }
         return {
           type: "resource",
           resource: {
