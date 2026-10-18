@@ -213,7 +213,7 @@
     "Protocol typed cancelled terminal or per-Agent association",
     "All29 Agents/eight standards/P40/all151 complete",
     "Zero change to all user data or runtime directories",
-    "Successful cold history or resume for the new Dirac test record"
+    "Complete bidirectional cold history or resumed prompt for the new Dirac test record;0.5.21 restores the Agent reply only in the measured window"
   ],
   "scopePreserved": {
     "NEW24AffectedNewPromptsRemainPaused": true,
@@ -311,5 +311,112 @@
     "originalUnpaddedRepairClaimed": false,
     "browserPcmOrAudibleAccuracyClaimed": false,
     "formalAppOrFullP13Claimed": false
+  },
+  "diracOfficialProgramUpdate": {
+    "scope": "Distinct existing official Dirac program update through installed Farfold3e; no Farfold source/binary change. Earlier native use and0.5.17 cold-failure results remain separately recorded.",
+    "executionReceiptSha256": "763e90bd5db897c22fafaeee55ab60e7d224f12b5d908a47c6730d365c2c1dab",
+    "actualDiskCatalogSha256": "83fddef9527da772278e2c837f23dd0075a6f302c429b0fb052b6d06a630b2ec",
+    "officialPackage": "dirac-cli@0.5.21",
+    "officialArgs": ["--acp"],
+    "updateConfirmationActions": 1,
+    "actualProgram": {
+      "selectedInstallation": "agent-installations/agent-registry%3Adirac/install-qcyRFG",
+      "storedInitializeAgentInfo": {
+        "name": "dirac",
+        "version": "0.5.21"
+      },
+      "notOnlyRegistryVersionLabel": true,
+      "oldInstallationRetained": true,
+      "nodeCommandAndEnvironmentWholeExact": true,
+      "environmentValuesExported": false
+    },
+    "load": {
+      "explicitRetainedRecordClick": 1,
+      "historicalAgentReplyTokenMatchesOriginal": true,
+      "result": "partialHistoricalReplyRestored",
+      "originalUserBodyNotVisibleInCapturedUi": true,
+      "fullBidirectionalHistoryOrResumeProven": false,
+      "rootCause": "unknown; official nonempty-journal branch is a source candidate, not observed event-subtype evidence",
+      "modelReportMatchesOriginalChoice": true,
+      "reasoning": "Medium",
+      "thinkingBudget": "Off",
+      "providerReportedByConfig": "OpenRouter",
+      "accountIdentity": "not provided",
+      "newPromptActions": 0,
+      "retryActions": 0,
+      "adoptOrSaveModelChoiceActions": 0,
+      "unknownPinnedMessagesExtension": "empty compacted update preserved; not treated as failure"
+    },
+    "independentUiProtocolReviewSha256": "957aa91e25ee5547ba8b111b7731c5e54b77be4d7d3f6f692550160138c54f1b",
+    "contentFreeProtocol": {
+      "summarySha256": "b7bdee5b4c8318153f0f37f89a8c575c1f188f0c1c321bbb98ebaa997154c197",
+      "actualSummaryPath": "dirac-update-protocol/summary.json",
+      "legacyStdoutLabelNotUsedAsEvidence": true,
+      "filesRead": 5,
+      "recordsParsed": 405,
+      "coverageIssues": {},
+      "boundaryUncertainRecords": 0,
+      "outPrompt": 0,
+      "outLoad": 1,
+      "outNew": 1,
+      "newUserConversationActionCountNotWireNewCount": true,
+      "agentAttributionOrUserBodySubtypeKnown": false,
+      "wholeSystemZeroSdkSideEffectsClaimed": false
+    },
+    "normalExit": {
+      "activityPending": 0,
+      "activityRunning": 0,
+      "saveExitAppQuitAndExactProcessZeroObserved": true,
+      "unknownWorkWarningRetained": true
+    },
+    "afterUse": {
+      "safeSummarySha256": "10149da04a5a301fa144f63a8c8fff9bd02954b18a04eb7ad8ce0782ba1aa77b",
+      "beforeReceiptSha256": "0743bd8b03d160b7e318537dd78fa11ec19350d1c8e5db59c3d8edeb0711e1ec",
+      "afterReceiptSha256": "823d4a90802816188aaf79b6f7658da438110515475d152a82a947dde1966222",
+      "strictOriginalExit": 2,
+      "independentCaptureNaturalExit": 0,
+      "independentCaptureCompletionSha256": "f77ef375421bdef9994df9c1d626fb0d2c217244f7d4d4e6e79769e4cd84dbd1",
+      "fullManifestAndRawSignatureExactRootAfter": true,
+      "oldWholeSessionRowsExact": 138,
+      "oldWholeDismissedRowsExact": 173,
+      "oldWholeComposerObjectsExact": 10,
+      "wholeRawUnsentExact": true,
+      "oldSettingsWholeRowsExact": 51,
+      "settingsTotal": 54,
+      "changedSettingCategories": [
+        "programInventory",
+        "previousDiracLaunch",
+        "agentSetup"
+      ],
+      "all23ConfirmedSelectionsAnd41PendingAndCompletedExact": true,
+      "all71OldProgressAnd46OldProgramItemsExact": true,
+      "progressAdded": 1,
+      "programItemsAdded": 1,
+      "previousLaunchSnapshotMatchesBeforeSelectedLaunch": true,
+      "diracOldAgentRowChangedColumns": [
+        "args",
+        "version",
+        "handshake",
+        "updated_at"
+      ],
+      "other39AgentRowsWholeExact": true,
+      "addedManagedInstallationEntries": 15120,
+      "modifiedDirectoryEntries": 7,
+      "removedDirectoryEntries": 0,
+      "oldManagedInstallEntriesRemovedOrModified": 0,
+      "rawMainDatabaseByteEqual": true,
+      "walAndShmByteEqual": false,
+      "normalizedDatabaseWholeByteEqual": false,
+      "writerAttribution": "unknown",
+      "allUserDataUnchangedClaimed": false,
+      "officialAgentHomeBytesOutsideReviewedRootsGuaranteed": false
+    },
+    "sourceCandidates": {
+      "officialRestoreUpdateConditionSha256": "25e3b632353dbf3bea1344ca07f4d1dc12d86c9e1dc981867efd80058f8c6c80",
+      "loadPassivityBoundarySha256": "3fa6cd310381dc1017e47aa60a640bfb8ddff8c25181c5a437e75a5f64483ead",
+      "userReplayBoundarySha256": "142da3df01f4f022d4dcd98b900277bf2fba06b803f46239ce3b66cbbe50c214",
+      "installedUpstreamSourcePatched": false
+    },
+    "allEightStandardsComplete": false
   }
 }
