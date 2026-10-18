@@ -1,6 +1,6 @@
 {
-  "kind": "cold-history-admission-source-and-focused-evidence",
-  "recordedAtUtc": "2026-10-18T22:24:23.674440+00:00",
+  "kind": "cold-history-installed-and-later-scoped-source-evidence",
+  "recordedAtUtc": "2026-10-18T23:13:07.280865+00:00",
   "authority": "Only plans/agent-access.md schedules work. PRODUCT,29x8,151 criteria unchanged. This is an evidence index, not another plan.",
   "sourceCheckpoint": "6dc8ec8742f6514995d48fe008636772297ca114",
   "sourceScope": {
@@ -34,18 +34,55 @@
     "failure": "existing exact16MiB save-failure/recovery case6296ms exceeded5000ms",
     "rustInstallerUpload": "skipped",
     "ci2Original167FailedMarkers": "retained; CI3 did not revalidate Rust",
-    "newWindowsRerun": false
+    "newWindowsRerun": true,
+    "fourthRun": {
+      "id": 39172236277,
+      "source": "3845e41457395e4201fdff050b22309c386d2be1",
+      "status": "in_progress",
+      "frontendStep": "success",
+      "rustStep": "in_progress",
+      "installerArtifact": "pending",
+      "watchNaturalExit": 1,
+      "watchReason": "API EOF, not CI verdict",
+      "subsequentMetadataConfirmedStillRunning": true,
+      "includesLaterSource": false
+    }
   },
   "installedApp": {
     "path": "/Applications/Farfold.app",
-    "source": "1564263f5a58cbea9c3cf40b4b7cec9a936b541d",
-    "binarySha256": "1ea3ae76f26675629170969ad1ffe6a763f72298965cc02a4b4069270e0f8295",
-    "rootLaunchedAfter156Install": false,
-    "currentBatchInstalled": false
+    "source": "3845e41457395e4201fdff050b22309c386d2be1",
+    "binarySha256": "f22b6a222ae3f2b20e1181a05d67d3802e3ac75bb6c5be9ad9d586519c44ad70",
+    "currentBatchInstalled": true,
+    "rootLaunchedAfter3845Install": true,
+    "normalSaveExitObserved": true
   },
-  "full7": null,
-  "candidate": null,
-  "installation": null,
+  "full7": {
+    "source": "3845e41457395e4201fdff050b22309c386d2be1",
+    "passed": 7,
+    "frontendFiles": 602,
+    "frontendTests": 8014,
+    "rustPassed": 1875,
+    "rustIgnored": 6,
+    "inputs": 19246,
+    "inputsStable": true,
+    "verification": {
+      "path": "output/2026-10-19-cold-history-admission-stage/engineering/verification.json",
+      "sha256": "efef86a37de2b94090ad3fdf82d3c7d86ffdd2358cd19a561cb621078cded020",
+      "bytes": 6033131
+    }
+  },
+  "candidate": {
+    "source": "3845e41457395e4201fdff050b22309c386d2be1",
+    "independentPassed": 9,
+    "independentTotal": 9
+  },
+  "installation": {
+    "independentPassed": 10,
+    "independentTotal": 10,
+    "threeManifestsEntries": 232530,
+    "threeManifestsEqual": true,
+    "duplicateGeneratedFilesRemoved": 5
+  },
   "storageCleanup": {
     "deletedExactOldRustObjectLeaves": 12800,
     "reclaimedObservedBytes": 9268473856,
@@ -53,12 +90,12 @@
     "availableSpaceIsPointObservation": true
   },
   "notVerified": [
-    "full7 on this checkpoint",
-    "new candidate/install/formal UI",
+    "Later a371/Windows9 source full7/candidate/install/formal checks",
+    "Actual waiting cancellation, narrow/dark/burst UI",
     "AVIF/FLAC actual default OS open or real Agent media",
-    "global active Agent/output transport backpressure or RSS/long-run limits",
-    "Windows runtime and remaining Windows mutation/material features",
-    "full ARCH49/P13/29x8/151 completion"
+    "Global active Agent/output transport backpressure, RSS and long-run governance",
+    "Windows runtime and remaining mutation/material/dependency mechanisms",
+    "ARCH49/P13/29x8/151 completion"
   ],
   "references": [
     {
@@ -235,6 +272,122 @@
       "path": "output/2026-10-19-arch49-success-burst-investigation/governance-design/implementation-closure/rust-implementation/frontend-integration/cross-wire-visual/completion.json",
       "sha256": "4ac81ae7f2d185308bff3142a615288d7b97ba62531464f2d5a1798712297a1a",
       "bytes": 7438
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/engineering/verification.json",
+      "sha256": "efef86a37de2b94090ad3fdf82d3c7d86ffdd2358cd19a561cb621078cded020",
+      "bytes": 6033131
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/full-source-review/full-source-review.json",
+      "sha256": "02df45a023d49014d2862eb4917dae91314b18b142a8d1a9d2b898a5087e0aeb",
+      "bytes": 20079
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/candidate-preparation/independent/review.json",
+      "sha256": "80b23d4979116ac893ea06a92e917a0e13e680a8a43c7e729873bb9a1ac00264",
+      "bytes": 4256
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/install/installed-independent-review-private.json",
+      "sha256": "00b08f8a279e5fba8708247eec8c136b4a2459c0c8cf01e8bbc6e51ed7ff1223",
+      "bytes": 6492
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/formal-ui/actual-window-and-exit-receipt.json",
+      "sha256": "2b2b45d2ec5b86899ae2e4ce30bddb6e27b8a5b2dbe561aeaaf15104cc568a69",
+      "bytes": 3257
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/formal-ui/protocol/summary.json",
+      "sha256": "508bdd957ec066ad0089cc62ce3e10b71fca1eb1237ffc1e206e42dd89d577ce",
+      "bytes": 5686
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/formal-ui/data-analysis/safe-summary.json",
+      "sha256": "a84c13642edcfab3628277f8067b191693005b3e7d4b53fcbcb6992acc4c3fb1",
+      "bytes": 7641
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/permission-audio-parent-final-review.json",
+      "sha256": "2564547b9060e84f44374b580757066b65991e3862e26458c51d281f76f47d19",
+      "bytes": 2331
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/readonly-preparation-consumer-held-owner-r2/implementation/source-freeze-final.json",
+      "sha256": "36ccae0d5320afc838f8be80e34eb07f8eca7fa063b9f0a45d5c05f9af166a25",
+      "bytes": 6125
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/readonly-preparation-consumer-held-owner-r2/implementation/verification.json",
+      "sha256": "82a0ee57e1b79c11f2cde48ca44e5bf56ae6ff0cfc93b2738e5ae5892298a7af",
+      "bytes": 7972
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/readonly-preparation-consumer-held-owner-r2/implementation/execution-completion.json",
+      "sha256": "8af8d495335e1dc023b9e47619a486f5280f8bcf9fd9fd36cadb02fb330f9f56",
+      "bytes": 6337
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/windows-ci4/metadata-after-watch.json",
+      "sha256": "d4e8984ef443fadddf44f3709040800ea31b8f41b686c865927aba4806419bc1",
+      "bytes": 2615
+    },
+    {
+      "path": "output/2026-10-19-cold-history-admission-stage/permission-audio-independent-actual-final-delta-review.json",
+      "sha256": "8397781a5c48b6d7432cccbe30fc15d048102d9190e5d2ad1b1cc7797ac71677",
+      "bytes": 6999
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/readonly-preparation-consumer-held-owner-r2/implementation/parent-final-review.json",
+      "sha256": "1e1afc8a3eb750233e2c8313a08fa042e811f0aba68fdfbe74cf5b23a056a3d1",
+      "bytes": 13923
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/readonly-preparation-consumer-held-owner-r2/implementation/independent-owner-delta-review/review.json",
+      "sha256": "507801ad53403bc2ca450a9e1c3eb11a61a28f71c4a9c935167f02ce10040d45",
+      "bytes": 20299
+    },
+    {
+      "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/remaining-windows-design/material-followup/readonly-preparation-consumer-held-owner-r2/implementation/source-checkpoint-push.json",
+      "sha256": "249d8b9d32ffb8d3f242d3599937b8d98a90149ab4625bd54b2c943db423891f",
+      "bytes": 728
     }
-  ]
+  ],
+  "formalWindow": {
+    "historyReads": 1,
+    "outgoingPrompt": 0,
+    "outgoingNew": 0,
+    "outgoingLoad": 1,
+    "readingThenReplay": true,
+    "noAccountModelChangeByRoot": true,
+    "completeComposerObjectsPreserved": 10,
+    "wholeUnsentPreserved": true,
+    "settingsRowsPreserved": 54,
+    "sessionRowsPreserved": 138,
+    "dismissedRowsPreserved": 173,
+    "agentUpdatedAtChanged": 1,
+    "manifestAdded": 0,
+    "manifestDeleted": 0,
+    "manifestModified": 7,
+    "writers": "unknown",
+    "limits": [
+      "Current wide/light window only, waiting cancellation and burst untested",
+      "Initial/quit AX are short diff strings, not full AX",
+      "Protocol counts cover one extracted window, not all-system or per-Agent attribution",
+      "Raw first DB content was not reread in sealed comparison; prior capture pins and lstat evidence retained",
+      "Unknown-work quit warning retained"
+    ]
+  },
+  "laterSourceOnly": {
+    "checkpoint": "a371b9b703ada8ec194aefe2a75275ca7975270d",
+    "approvalPublication": "Moved callback outside global permissions lock, exact registration/ownership/options retained; real red and green scoped controls",
+    "audioConversion": "Preallocated indexed byte copy; all256 byte corpus; affected7files121 tests, type and format pass",
+    "Windows9": "Held FileObject scan owner and complete fixed22 leaf observation pairing; host parser5/worktree100/Unix7 and host/Windows strictClippy pass; final source review complete",
+    "full7": null,
+    "installed": false,
+    "realNTFS": null,
+    "deterministicPageInterleaving": null,
+    "WindowsCheckpoint": "233f3eca9e0011eba1707e3ee18cc0eee30b8718"
+  }
 }
