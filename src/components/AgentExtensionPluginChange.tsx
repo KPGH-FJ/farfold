@@ -56,12 +56,14 @@ export function AgentExtensionPluginChange({
         ? S.cancelling
         : view.error || op?.state === "pendingCleanup"
           ? S.pending
-          : request.action === "inventory"
-            ? S.reading
-            : request.action === "inspect"
-              ? S.inspect
-              : S.waiting
-      : request.action === "inventory"
+          : request.action === "sources"
+            ? S.readingSources
+            : request.action === "inventory"
+              ? S.reading
+              : request.action === "inspect"
+                ? S.inspect
+                : S.waiting
+      : ["sources", "inventory"].includes(request.action)
         ? null
         : request.action === "inspect"
           ? review && pluginManagement.canConfirm(owner, review)

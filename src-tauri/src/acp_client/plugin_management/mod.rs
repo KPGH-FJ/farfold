@@ -2,6 +2,7 @@
 mod catalog;
 mod cli;
 mod requests;
+mod sources;
 mod types;
 use crate::{acp_client::extension_inventory as inventory, meta_store::MetaStore};
 use requests::{Input, Job, Plan};
@@ -12,12 +13,46 @@ use std::{
 use tauri::{AppHandle, Manager, Webview};
 pub use types::*;
 
+fn scoped_read(
+    store: &MetaStore,
+    job: &Job,
+    marketplace: &sources::Marketplace,
+) -> Result<Vec<catalog::Entry>> {
+    marketplace.admitted()?;
+    job.source.current(store)?;
+    sources::current(&cli::sources(job)?, marketplace)?;
+    job.source.current(store)?;
+    let entries = cli::read(job, &marketplace.name)?;
+    if entries
+        .iter()
+        .any(|v| v.marketplace_source != marketplace.marketplace_source)
+    {
+        return Err(Code::TargetChanged.into());
+    }
+    job.source.current(store)?;
+    sources::current(&cli::sources(job)?, marketplace)?;
+    job.source.current(store)?;
+    job.within()?;
+    Ok(entries)
+}
 fn query(store: &MetaStore, job: &Job) -> Result<()> {
     job.within()?;
     job.source.current(store)?;
     match &job.input {
+        Input::Sources { .. } => {
+            let rows = cli::sources(job)?;
+            job.source.current(store)?;
+            job.within()?;
+            let public = sources::public(&rows);
+            *job.marketplaces.lock().unwrap_or_else(|p| p.into_inner()) = Some(rows);
+            job.update(|v| v.sources = Some(public));
+        }
         Input::Inventory { .. } => {
-            let entries = cli::read(job, None)?;
+            let entries = scoped_read(
+                store,
+                job,
+                job.marketplace.as_ref().ok_or(Code::TargetUnavailable)?,
+            )?;
             job.source.current(store)?;
             job.within()?;
             let public = catalog::public(&entries);
@@ -26,7 +61,8 @@ fn query(store: &MetaStore, job: &Job) -> Result<()> {
         }
         Input::Inspect { install, .. } => {
             let entry = job.entry.as_ref().ok_or(Code::TargetUnavailable)?;
-            let entries = cli::read(job, Some(&entry.marketplace_name))?;
+            let marketplace = job.marketplace.as_ref().ok_or(Code::TargetUnavailable)?;
+            let entries = scoped_read(store, job, marketplace)?;
             let current = catalog::exact(&entries, entry)?;
             if current != entry {
                 return Err(Code::TargetChanged.into());
@@ -48,6 +84,7 @@ fn query(store: &MetaStore, job: &Job) -> Result<()> {
             *job.review.lock().unwrap_or_else(|p| p.into_inner()) = Some(Arc::new(Plan {
                 public: public.clone(),
                 entry: entry.clone(),
+                marketplace: marketplace.clone(),
                 source: job.source.clone(),
                 born: Instant::now(),
                 consumed: AtomicBool::new(false),
@@ -60,7 +97,7 @@ fn query(store: &MetaStore, job: &Job) -> Result<()> {
             if plan.born.elapsed() >= requests::TTL {
                 return Err(Code::ReviewExpired.into());
             }
-            let before = cli::read(job, Some(&plan.entry.marketplace_name))?;
+            let before = scoped_read(store, job, &plan.marketplace)?;
             if catalog::exact(&before, &plan.entry)? != &plan.entry {
                 return Err(Code::TargetChanged.into());
             }
@@ -78,7 +115,7 @@ fn query(store: &MetaStore, job: &Job) -> Result<()> {
 fn observe(store: &MetaStore, job: &Job, recheck: bool) -> Result<()> {
     let plan = job.plan.as_ref().ok_or(Code::TargetUnavailable)?;
     job.source.current(store)?;
-    let entries = cli::read(job, Some(&plan.entry.marketplace_name))?;
+    let entries = scoped_read(store, job, &plan.marketplace)?;
     let current = catalog::exact(&entries, &plan.entry)?;
     if !current.same_origin(&plan.entry) {
         return Err(Code::TargetChanged.into());
@@ -203,7 +240,7 @@ async fn dispatch(
     }
 }
 #[tauri::command]
-pub async fn agent_plugin_inventory_read(
+pub async fn agent_plugin_sources_read(
     app: AppHandle,
     webview: Webview,
     agent_id: String,
@@ -211,8 +248,22 @@ pub async fn agent_plugin_inventory_read(
     selection_id: String,
     cwd: String,
 ) -> Result<PluginOperation> {
+    let store = inventory::context(&app, &webview, "agent_plugin_sources_read")?;
+    let pair = requests::shared().sources(&agent_id, &request_id, &selection_id, &cwd)?;
+    dispatch(app, store, pair).await
+}
+#[tauri::command]
+pub async fn agent_plugin_inventory_read(
+    app: AppHandle,
+    webview: Webview,
+    agent_id: String,
+    request_id: String,
+    source_request_id: String,
+    source_id: usize,
+) -> Result<PluginOperation> {
     let store = inventory::context(&app, &webview, "agent_plugin_inventory_read")?;
-    let pair = requests::shared().inventory(&agent_id, &request_id, &selection_id, &cwd)?;
+    let pair =
+        requests::shared().inventory(&agent_id, &request_id, &source_request_id, source_id)?;
     dispatch(app, store, pair).await
 }
 #[tauri::command]

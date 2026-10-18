@@ -90,6 +90,9 @@ fn segment(s: &str, dotted: bool) -> bool {
             .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'-' | b'_') || dotted && c == b'.')
         && (!dotted || !s.starts_with('.') && !s.ends_with('.') && !s.contains(".."))
 }
+pub(super) fn marketplace_name(s: &str) -> bool {
+    segment(s, false)
+}
 impl Entry {
     pub fn selector(&self) -> Result<String> {
         if !segment(&self.name, true)
@@ -211,7 +214,7 @@ impl Entry {
             && self.auth_policy == other.auth_policy
     }
 }
-pub(super) fn parse(bytes: &[u8]) -> Result<Vec<Entry>> {
+pub(super) fn validate(bytes: &[u8]) -> Result<()> {
     if bytes.len() > output::STDOUT_LIMIT {
         return Err(Code::OutputLimit.into());
     }
@@ -219,6 +222,10 @@ pub(super) fn parse(bytes: &[u8]) -> Result<Vec<Entry>> {
         return Err(Code::InvalidOutput.into());
     }
     serde_json::from_slice::<UniqueKeys>(bytes).map_err(|_| Code::InvalidOutput)?;
+    Ok(())
+}
+pub(super) fn parse(bytes: &[u8]) -> Result<Vec<Entry>> {
+    validate(bytes)?;
     let wire: Wire = serde_json::from_slice(bytes).map_err(|_| Code::InvalidOutput)?;
     if wire.installed.len().saturating_add(wire.available.len()) > 512 {
         return Err(Code::OutputLimit.into());

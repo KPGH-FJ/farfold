@@ -55,6 +55,30 @@ export interface PluginCatalog {
   sessionApplicability: "unverified";
   items: PluginItem[];
 }
+export const PLUGIN_SOURCE_REASONS = [
+  "unsafeLabel",
+  "invalidSource",
+  "ambiguousSource",
+  "unsupportedSource",
+] as const;
+export type PluginSourceReason = (typeof PLUGIN_SOURCE_REASONS)[number];
+export interface PluginSourceItem {
+  id: number;
+  name: string | null;
+  kind: "local" | "git" | "remote" | "unknown";
+  query: {
+    availability: "available" | "unavailable";
+    reason: PluginSourceReason | null;
+  };
+}
+export interface PluginSourceCatalog {
+  observedAtMs: number;
+  scope: "officialSharedPluginConfiguration";
+  source: "officialCli";
+  complete: false;
+  sessionApplicability: "unverified";
+  items: PluginSourceItem[];
+}
 export interface PluginReview {
   reviewId: string;
   agentId: string;
@@ -76,7 +100,11 @@ export interface PluginRequest {
   agentId: string;
   requestId: string;
   cwd: string;
-  action: "inventory" | "inspect" | "install" | "remove" | "recheck";
+  action:
+    "sources" | "inventory" | "inspect" | "install" | "remove" | "recheck";
+  sourceRequestId?: string;
+  sourceId?: number;
+  querySource?: PluginSourceItem;
   target?: PluginItem;
   install?: boolean;
   operationId?: string;
@@ -97,6 +125,7 @@ export interface PluginOperation {
   review: PluginReview | null;
   observation: PluginObservation | null;
   target: PluginItem | null;
+  sources?: PluginSourceCatalog;
 }
 
 export function pluginFailure(raw: unknown): PluginCode | null {
@@ -197,6 +226,47 @@ function catalog(raw: unknown): PluginCatalog {
     items,
   };
 }
+function sourceCatalog(raw: unknown): PluginSourceCatalog {
+  const v = record(raw, [
+    "observedAtMs",
+    "scope",
+    "source",
+    "complete",
+    "sessionApplicability",
+    "items",
+  ]);
+  if (!Array.isArray(v.items) || v.items.length > 4096 || v.complete !== false)
+    return invalid();
+  const items = v.items.map((raw): PluginSourceItem => {
+    const value = record(raw, ["id", "name", "kind", "query"]);
+    const q = record(value.query, ["availability", "reason"]);
+    const availability = one(q.availability, ["available", "unavailable"]);
+    const reason =
+      q.reason === null ? null : one(q.reason, PLUGIN_SOURCE_REASONS);
+    const name = label(value.name);
+    if (
+      (availability === "available") !== (reason === null) ||
+      (availability === "available" && name === null)
+    )
+      return invalid();
+    return {
+      id: integer(value.id, 4095),
+      name,
+      kind: one(value.kind, ["local", "git", "remote", "unknown"]),
+      query: { availability, reason },
+    };
+  });
+  if (new Set(items.map((item) => item.id)).size !== items.length)
+    return invalid();
+  return {
+    observedAtMs: integer(v.observedAtMs),
+    scope: one(v.scope, ["officialSharedPluginConfiguration"]),
+    source: one(v.source, ["officialCli"]),
+    complete: false,
+    sessionApplicability: one(v.sessionApplicability, ["unverified"]),
+    items,
+  };
+}
 function review(raw: unknown, expected: PluginRequest): PluginReview {
   const v = record(raw, [
     "reviewId",
@@ -236,6 +306,8 @@ export function parsePluginOperation(
   raw: unknown,
   expected: PluginRequest,
 ): PluginOperation {
+  const hasSources =
+    !!raw && typeof raw === "object" && Object.hasOwn(raw, "sources");
   const v = record(raw, [
     "agentId",
     "requestId",
@@ -252,6 +324,7 @@ export function parsePluginOperation(
     "review",
     "observation",
     "target",
+    ...(hasSources ? ["sources"] : []),
   ]);
   if (
     !validInventoryId(expected.requestId) ||
@@ -264,7 +337,7 @@ export function parsePluginOperation(
     return invalid();
   const target = v.target === null ? null : parsePluginItem(v.target);
   if (
-    expected.action === "inventory"
+    ["sources", "inventory"].includes(expected.action)
       ? target !== null
       : target !== null &&
         (!expected.target || !samePluginItem(target, expected.target))
@@ -272,6 +345,8 @@ export function parsePluginOperation(
     return invalid();
   const c = v.catalog === null ? null : catalog(v.catalog);
   const r = v.review === null ? null : review(v.review, expected);
+  if (hasSources && expected.action !== "sources") return invalid();
+  const s = hasSources ? sourceCatalog(v.sources) : null;
   let observation: PluginObservation | null = null;
   if (v.observation !== null) {
     const o = record(v.observation, [
@@ -290,11 +365,12 @@ export function parsePluginOperation(
   if (
     (c !== null && expected.action !== "inventory") ||
     (r !== null && expected.action !== "inspect") ||
-    (observation && ["inventory", "inspect"].includes(expected.action)) ||
+    (observation &&
+      ["sources", "inventory", "inspect"].includes(expected.action)) ||
     (expected.action !== "inventory" && (r || observation) && !target)
   )
     return invalid();
-  const read = expected.action === "inventory" || expected.action === "inspect";
+  const read = ["sources", "inventory", "inspect"].includes(expected.action);
   // Readback flags describe this read-only operation. The controller retains
   // the original confirmation separately, without rewriting its write facts.
   if (
@@ -303,7 +379,9 @@ export function parsePluginOperation(
   )
     return invalid();
   const lifecycleAction =
-    expected.action === "inventory" || expected.action === "inspect"
+    expected.action === "sources" ||
+    expected.action === "inventory" ||
+    expected.action === "inspect"
       ? "inspect"
       : expected.action === "install"
         ? "add"
@@ -318,7 +396,12 @@ export function parsePluginOperation(
     },
     {
       hasReview:
-        read && (expected.action === "inventory" ? c !== null : r !== null),
+        read &&
+        (expected.action === "sources"
+          ? s !== null
+          : expected.action === "inventory"
+            ? c !== null
+            : r !== null),
       hasObservation: observation !== null,
       matching:
         !!observation && observation.reportedInstalled === expected.install,
@@ -336,6 +419,7 @@ export function parsePluginOperation(
     review: r,
     observation,
     target,
+    ...(s ? { sources: s } : {}),
   };
 }
 export function parsePluginCancellation(

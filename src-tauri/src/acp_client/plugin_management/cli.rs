@@ -2,6 +2,7 @@
 use super::{
     catalog::{self, Entry},
     requests::Job,
+    sources::{self, Marketplace},
     types::*,
 };
 use crate::acp_client::extension_inventory::{self as inventory, process};
@@ -16,18 +17,21 @@ fn command(
 ) -> Result<Command> {
     inventory::launch::admission(&job.source.row)?;
     let mut command = Command::new(&job.source.row.command);
-    command
-        .args(&job.source.row.args)
-        .args(["cli", "plugin", action]);
-    if action == "list" {
+    command.args(&job.source.row.args).args(["cli", "plugin"]);
+    if action == "sources" {
+        command.args(["marketplace", "list", "--json"]);
+    } else if action == "list" {
+        let marketplace = marketplace.ok_or(Code::InvalidRequest)?;
+        command.arg("list");
         command.args(["--available", "--json"]);
-        if let Some(marketplace) = marketplace {
-            command.arg(format!("--marketplace={marketplace}"));
-        }
-    } else {
+        command.arg(format!("--marketplace={marketplace}"));
+    } else if matches!(action, "add" | "remove") {
         command
+            .arg(action)
             .args(["--json", "--"])
             .arg(selector.ok_or(Code::InvalidRequest)?);
+    } else {
+        return Err(Code::InvalidRequest.into());
     }
     command
         .current_dir(&job.source.cwd)
@@ -35,11 +39,25 @@ fn command(
         .envs(job.source.row.env.iter().cloned());
     Ok(command)
 }
-pub(super) fn read(job: &Job, marketplace: Option<&str>) -> Result<Vec<Entry>> {
+pub(super) fn sources(job: &Job) -> Result<Vec<Marketplace>> {
     job.within()?;
     job.update(|v| v.phase = Phase::Reading);
     let mut bytes = process::run_owned(
-        command(job, "list", marketplace, None)?,
+        command(job, "sources", None, None)?,
+        job,
+        None,
+        inventory::output::STDOUT_LIMIT,
+    )?;
+    let result = sources::parse(&bytes);
+    bytes.fill(0);
+    job.within()?;
+    result
+}
+pub(super) fn read(job: &Job, marketplace: &str) -> Result<Vec<Entry>> {
+    job.within()?;
+    job.update(|v| v.phase = Phase::Reading);
+    let mut bytes = process::run_owned(
+        command(job, "list", Some(marketplace), None)?,
         job,
         None,
         inventory::output::STDOUT_LIMIT,
@@ -47,9 +65,7 @@ pub(super) fn read(job: &Job, marketplace: Option<&str>) -> Result<Vec<Entry>> {
     let result = catalog::parse(&bytes);
     bytes.fill(0);
     let entries = result?;
-    if let Some(marketplace) = marketplace
-        && entries.iter().any(|v| v.marketplace_name != marketplace)
-    {
+    if entries.iter().any(|v| v.marketplace_name != marketplace) {
         return Err(Code::InvalidOutput.into());
     }
     job.within()?;

@@ -28,8 +28,11 @@ async function setup() {
     cancel = deferred(),
     recheck = deferred();
   const port: PluginManagementPort = {
-    inventory: vi.fn(async ({ selectionId: _, ...input }) =>
-      pluginOperation({ ...input, action: "inventory" }, true),
+    sources: vi.fn(async () =>
+      pluginOperation(client.get(owner.agentId).request!, true),
+    ),
+    inventory: vi.fn(async () =>
+      pluginOperation(client.get(owner.agentId).request!, true),
     ),
     inspect: vi.fn(() => inspect.promise),
     confirm: vi.fn(() => confirm.promise),
@@ -43,8 +46,16 @@ async function setup() {
     () => `aaaaaaaa-aaaa-aaaa-aaaa-${String(++n).padStart(12, "0")}`,
   );
   expect(port.inventory).not.toHaveBeenCalled();
-  client.begin(owner, "/controlled", pluginTicket);
-  await flush();
+  const query = async (selectedOwner = owner, cwd = "/controlled") => {
+    expect(client.begin(selectedOwner, cwd, pluginTicket)).toBe(true);
+    await flush();
+    const source = client.get(owner.agentId).sourceResult!;
+    expect(
+      client.inventory(selectedOwner, source, source.catalog.items[0]),
+    ).toBe(true);
+    await flush();
+  };
+  await query();
   const result = client.get(owner.agentId).result!;
   const startInspect = async () => {
     expect(client.inspect(owner, result, result.catalog.items[0], true)).toBe(
@@ -70,6 +81,7 @@ async function setup() {
     result,
     startInspect,
     reviewed,
+    query,
     close: () => {
       live = false;
       client.retire(owner);
@@ -96,6 +108,85 @@ it("only explicit inventory runs, preserving the original partial catalog receip
   expect(x.client.get(x.owner.agentId).result).toBe(x.result);
   expect(x.client.begin(x.owner, "/controlled", pluginTicket)).toBe(false);
 });
+it("requires the current source receipt and its actual item after each explicit source refresh", async () => {
+  const x = await setup(),
+    prior = x.client.get(x.owner.agentId).sourceResult!;
+  expect(x.port.sources).toHaveBeenCalledOnce();
+  expect(
+    x.client.inventory(x.owner, prior, { ...prior.catalog.items[0] }),
+  ).toBe(false);
+  expect(x.client.begin(x.owner, "/controlled", pluginTicket)).toBe(true);
+  expect(x.client.inventory(x.owner, prior, prior.catalog.items[0])).toBe(
+    false,
+  );
+  expect(
+    x.client.inspect(x.owner, x.result, x.result.catalog.items[0], true),
+  ).toBe(false);
+  await flush();
+  const next = x.client.get(x.owner.agentId).sourceResult!;
+  expect(next.request.requestId).not.toBe(prior.request.requestId);
+  expect(next.catalog.items).toEqual(prior.catalog.items);
+  expect(x.port.inventory).toHaveBeenCalledOnce();
+  expect(x.client.inventory(x.owner, prior, prior.catalog.items[0])).toBe(
+    false,
+  );
+  expect(x.client.inventory(x.owner, next, next.catalog.items[0])).toBe(true);
+  await flush();
+  expect(x.port.inventory).toHaveBeenLastCalledWith({
+    agentId: x.owner.agentId,
+    requestId: x.client.get(x.owner.agentId).request!.requestId,
+    sourceRequestId: next.request.requestId,
+    sourceId: 0,
+  });
+});
+
+it.each([false, true])(
+  "preserves the last dispatched pair through a new Sources read (failed=%s)",
+  async (failed) => {
+    const x = await unknownConfirmation(),
+      pending = deferred();
+    vi.mocked(x.port.sources).mockImplementation(() => pending.promise);
+    x.client.begin(x.owner, "/other", pluginTicket);
+    await flush();
+    const current = x.client.get(x.owner.agentId).request!;
+    expect(x.client.get(x.owner.agentId).originalOperation).toBe(x.original);
+    expect(x.client.recheck(x.owner.agentId, current.requestId)).toBe(false);
+    expect(x.client.isCurrentResult(x.owner, x.result)).toBe(false);
+    pending.resolve(
+      failed
+        ? {
+            ...pluginOperation(current),
+            state: "failed",
+            phase: "complete",
+            settled: true,
+            code: "queryFailed",
+          }
+        : pluginOperation(current, true),
+    );
+    await flush();
+    expect(x.client.get(x.owner.agentId).originalOperation).toBe(x.original);
+    expect(x.client.get(x.owner.agentId).operation?.outcome).toBeNull();
+    expect(x.port.inventory).toHaveBeenCalledOnce();
+    expect(x.client.confirm(x.owner, x.review)).toBe(false);
+    expect(x.client.recheck(x.owner.agentId, current.requestId)).toBe(true);
+    await flush();
+    expect(x.port.recheck).toHaveBeenCalledWith({
+      agentId: x.owner.agentId,
+      requestId: x.client.get(x.owner.agentId).request!.requestId,
+      operationId: x.confirmation.requestId,
+    });
+    expect(x.client.get(x.owner.agentId).request?.target).toEqual(
+      x.confirmation.target,
+    );
+    x.recheck.resolve({
+      ...pluginOperation(x.client.get(x.owner.agentId).request!, true),
+      state: "failed",
+      code: "writeUncertain",
+      outcome: "unknown",
+    });
+    await flush();
+  },
+);
 it("review is read-only, confirmation is explicit and consumed exactly once", async () => {
   const x = await setup(),
     review = await x.reviewed();
@@ -381,6 +472,11 @@ it.each([false, true])(
     vi.mocked(x.port.inventory).mockImplementation(() => pending.promise);
     const owner = { ...x.owner, token: {} };
     expect(x.client.begin(owner, "/other", pluginTicket)).toBe(true);
+    await flush();
+    const source = x.client.get(owner.agentId).sourceResult!;
+    expect(x.client.inventory(owner, source, source.catalog.items[0])).toBe(
+      true,
+    );
     const current = x.client.get(owner.agentId).request!;
     await flush();
     expect(x.client.get(owner.agentId).originalOperation).toBe(x.original);
@@ -431,8 +527,7 @@ it("keeps the last dispatched write through a new review and an undispatched con
     op.catalog!.items[0].name = "newly-selected-package";
     return op;
   });
-  x.client.begin(x.owner, "/controlled", pluginTicket);
-  await flush();
+  await x.query();
   vi.mocked(x.port.inspect).mockImplementation(async () =>
     pluginOperation(x.client.get(x.owner.agentId).request!, true),
   );
@@ -479,8 +574,7 @@ it("keeps the last dispatched write through a new review and an undispatched con
     outcome: "unknown",
   });
   await flush();
-  x.client.begin(x.owner, "/controlled", pluginTicket);
-  await flush();
+  await x.query();
   const nextReview = await inspectAgain();
   vi.mocked(x.port.confirm).mockImplementation(async () => ({
     ...pluginOperation(x.client.get(x.owner.agentId).request!, true),
@@ -517,8 +611,7 @@ it.each(["reviewExpired", "reviewConsumed"] as const)(
   "retains the paired write and readback after a new confirmation is rejected before admission (%s)",
   async (code) => {
     const x = await unknownConfirmation();
-    x.client.begin(x.owner, "/other", pluginTicket);
-    await flush();
+    await x.query(x.owner, "/other");
     vi.mocked(x.port.inspect).mockImplementation(async () =>
       pluginOperation(x.client.get(x.owner.agentId).request!, true),
     );

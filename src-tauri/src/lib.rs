@@ -327,6 +327,7 @@ pub fn run() {
                 acp_client::extension_inventory::agent_extension_inventory_read,
                 acp_client::extension_inventory::agent_extension_inventory_status,
                 acp_client::extension_inventory::agent_extension_inventory_cancel,
+                acp_client::plugin_management::agent_plugin_sources_read,
                 acp_client::plugin_management::agent_plugin_inventory_read,
                 acp_client::plugin_management::agent_plugin_change_inspect,
                 acp_client::plugin_management::agent_plugin_change_confirm,

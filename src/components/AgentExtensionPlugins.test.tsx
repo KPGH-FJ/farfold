@@ -10,6 +10,7 @@ const h = vi.hoisted(() => ({
   >(),
   effects: [] as (() => void)[],
   port: {
+    sources: vi.fn<PluginManagementPort["sources"]>(),
     inventory: vi.fn<PluginManagementPort["inventory"]>(),
     inspect: vi.fn<PluginManagementPort["inspect"]>(),
     confirm: vi.fn<PluginManagementPort["confirm"]>(),
@@ -147,12 +148,19 @@ const text = (change = false) =>
     .join(" ");
 const request = () => pluginManagement.get(props.owner.agentId).request!;
 async function query() {
-  click(S.query);
+  click(
+    pluginManagement.get(props.owner.agentId).sourceResult
+      ? S.queryAgain
+      : S.query,
+  );
+  await flush();
+  render();
+  select(S.querySource, "0");
+  click(S.querySelectedSource);
   await flush();
   render();
 }
 function choose() {
-  select(S.marketplace, item.marketplaceName!);
   select(S.package, String(item.id));
 }
 async function inspect() {
@@ -192,6 +200,32 @@ beforeEach(() => {
     chooseDirectory: vi.fn(),
   };
   Object.values(h.port).forEach((fn) => fn.mockReset());
+  h.port.sources.mockImplementation(async () => ({
+    ...pluginOperation({ ...request(), action: "inventory" }, true),
+    action: "sources",
+    catalog: null,
+    sources: {
+      observedAtMs: Date.now(),
+      scope: "officialSharedPluginConfiguration",
+      source: "officialCli",
+      complete: false,
+      sessionApplicability: "unverified",
+      items: [
+        {
+          id: 0,
+          name: "controlled-source",
+          kind: "unknown",
+          query: { availability: "available", reason: null },
+        },
+        {
+          id: 1,
+          name: "ambiguous-source",
+          kind: "local",
+          query: { availability: "unavailable", reason: "ambiguousSource" },
+        },
+      ],
+    },
+  }));
   h.port.inventory.mockImplementation(async () => {
     const op = pluginOperation(request(), true);
     op.catalog!.items = [structuredClone(item)];
@@ -298,7 +332,7 @@ it("retains the old catalog on a failed refresh and does not unlock a stale targ
     settled: true,
     code: "queryFailed",
   }));
-  click(S.queryAgain);
+  click(S.querySelectedSource);
   await flush();
   expect(pluginManagement.get(props.owner.agentId).result!.catalog).toBe(
     original,
@@ -372,7 +406,7 @@ it.each([false, true])(
       pending = deferred();
     item = { ...item, name: "newly-reported-package" };
     h.port.inventory.mockImplementation(() => pending.promise);
-    click(S.queryAgain);
+    click(S.querySelectedSource);
     await flush();
     expect(text(true)).toContain(oldName);
     expect(button(S.recheck, true)?.props.disabled).toBe(true);
@@ -424,8 +458,7 @@ it("keeps the original unknown target and readback when a new confirmation has n
   await flush();
   const original = request();
   item = { ...item, name: "newly-reviewed-package" };
-  click(S.queryAgain);
-  await flush();
+  await query();
   await inspect();
   h.port.confirm.mockRejectedValue({ code: "reviewExpired" });
   click(S.confirmInstall, true);
@@ -450,3 +483,127 @@ it("keeps the original unknown target and readback when a new confirmation has n
   expect(request().target).toEqual(original.target);
   expect(h.port.confirm).toHaveBeenCalledTimes(2);
 });
+
+it("requires a separate explicit source query and opaque source selection before requesting package inventory", async () => {
+  render();
+  expect(h.port.sources).not.toHaveBeenCalled();
+  expect(h.port.inventory).not.toHaveBeenCalled();
+  click(S.query);
+  await flush();
+  const sourceRequest = request();
+  expect(h.port.sources).toHaveBeenCalledOnce();
+  expect(h.port.inventory).not.toHaveBeenCalled();
+  expect(button("检查所选来源技能包")?.props.disabled).toBe(true);
+  select("查询来源", "1");
+  expect(button("检查所选来源技能包")?.props.disabled).toBe(true);
+  expect(h.port.inventory).not.toHaveBeenCalled();
+  select("查询来源", "0");
+  expect(h.port.inventory).not.toHaveBeenCalled();
+  click("检查所选来源技能包");
+  await flush();
+  expect(h.port.inventory).toHaveBeenCalledWith({
+    agentId: props.owner.agentId,
+    requestId: request().requestId,
+    sourceRequestId: sourceRequest.requestId,
+    sourceId: 0,
+  });
+  expect(text()).toContain(S.partial);
+  expect(h.port.confirm).not.toHaveBeenCalled();
+});
+
+it("requires fresh source and package choices when a refreshed source reuses the same id and name", async () => {
+  await query();
+  choose();
+  const prior = pluginManagement.get(props.owner.agentId).sourceResult!;
+  const oldInspect = button(S.reviewInstall)!.props.onClick as () => void;
+  click(S.queryAgain);
+  await flush();
+  expect(
+    pluginManagement.get(props.owner.agentId).sourceResult!.catalog.items,
+  ).toEqual(prior.catalog.items);
+  expect(
+    pluginManagement.get(props.owner.agentId).sourceResult!.request.requestId,
+  ).not.toBe(prior.request.requestId);
+  expect(button(S.querySelectedSource)?.props.disabled).toBe(true);
+  expect(
+    render().find((node) => node.props["aria-label"] === S.querySource)?.props
+      .value,
+  ).toBe("");
+  expect(
+    render().find((node) => node.props["aria-label"] === S.package)?.props
+      .value,
+  ).toBe("");
+  expect(h.port.inventory).toHaveBeenCalledOnce();
+  oldInspect();
+  expect(h.port.inspect).not.toHaveBeenCalled();
+  select(S.querySource, "0");
+  expect(h.port.inventory).toHaveBeenCalledOnce();
+  click(S.querySelectedSource);
+  await flush();
+  expect(h.port.inventory).toHaveBeenCalledTimes(2);
+  expect(button(S.reviewInstall)).toBeUndefined();
+});
+
+it.each([false, true])(
+  "keeps old catalog read-only and old unknown write paired while Sources is pending or fails (failed=%s)",
+  async (failed) => {
+    h.port.confirm.mockImplementation(async () => ({
+      ...written(request()),
+      state: "failed",
+      code: "writeUncertain",
+      outcome: "unknown",
+    }));
+    await query();
+    await inspect();
+    click(S.confirmInstall, true);
+    await flush();
+    const original = request(),
+      catalog = pluginManagement.get(props.owner.agentId).result!.catalog;
+    const pending = deferred();
+    h.port.sources.mockImplementation(() => pending.promise);
+    click(S.queryAgain);
+    await flush();
+    expect(pluginManagement.get(props.owner.agentId).result!.catalog).toBe(
+      catalog,
+    );
+    expect(button(S.recheck, true)?.props.disabled).toBe(true);
+    expect(
+      render().find((node) => node.props["aria-label"] === S.querySource)?.props
+        .disabled,
+    ).toBe(true);
+    expect(text(true)).toContain("此前修改结果仍未确认");
+    pending.resolve(
+      failed
+        ? {
+            ...pluginOperation(request()),
+            state: "failed",
+            phase: "complete",
+            settled: true,
+            code: "queryFailed",
+          }
+        : pluginOperation(request(), true),
+    );
+    await flush();
+    expect(pluginManagement.get(props.owner.agentId).result!.catalog).toBe(
+      catalog,
+    );
+    expect(button(S.querySelectedSource)?.props.disabled).toBe(true);
+    expect(text(true)).toContain("此前修改结果仍未确认");
+    expect(text(true)).not.toContain(S.verified);
+    h.port.recheck.mockImplementation(async () => ({
+      ...pluginOperation(request(), true),
+      state: "failed",
+      code: "writeUncertain",
+      outcome: "unknown",
+    }));
+    click(S.recheck, true);
+    await flush();
+    expect(h.port.recheck).toHaveBeenCalledWith({
+      agentId: original.agentId,
+      requestId: request().requestId,
+      operationId: original.requestId,
+    });
+    expect(request().target).toEqual(original.target);
+    expect(h.port.confirm).toHaveBeenCalledOnce();
+  },
+);

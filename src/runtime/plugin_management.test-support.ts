@@ -2,6 +2,7 @@ import type {
   PluginItem,
   PluginOperation,
   PluginRequest,
+  PluginSourceItem,
 } from "./plugin_management_types";
 export const pluginItem: PluginItem = {
   id: 0,
@@ -15,6 +16,12 @@ export const pluginItem: PluginItem = {
   authPolicy: "onUse",
   install: { availability: "available", reason: null },
   remove: { availability: "unavailable", reason: "notInstalled" },
+};
+export const pluginSource: PluginSourceItem = {
+  id: 0,
+  name: "controlled-source",
+  kind: "local",
+  query: { availability: "available", reason: null },
 };
 export function pluginOperation(
   request: PluginRequest,
@@ -59,6 +66,18 @@ export function pluginOperation(
           }
         : null,
     observation: null,
+    ...(ready && request.action === "sources"
+      ? {
+          sources: {
+            observedAtMs: Date.now(),
+            scope: "officialSharedPluginConfiguration" as const,
+            source: "officialCli" as const,
+            complete: false as const,
+            sessionApplicability: "unverified" as const,
+            items: [structuredClone(pluginSource)],
+          },
+        }
+      : {}),
   };
 }
 export const pluginTicket = "11111111-1111-1111-1111-111111111111";

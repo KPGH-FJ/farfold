@@ -1,5 +1,5 @@
 //! Single bounded RAM worker. Cancellation never releases process ownership.
-use super::{catalog::Entry, types::*};
+use super::{catalog::Entry, sources::Marketplace, types::*};
 use crate::{
     acp_client::{
         extension_inventory::{self as inventory, process::Control},
@@ -48,6 +48,7 @@ impl Source {
 pub(super) struct Plan {
     pub public: PluginReview,
     pub entry: Entry,
+    pub marketplace: Marketplace,
     pub source: Arc<Source>,
     pub born: Instant,
     pub consumed: AtomicBool,
@@ -55,9 +56,13 @@ pub(super) struct Plan {
 }
 #[derive(Clone, PartialEq, Eq)]
 pub(super) enum Input {
-    Inventory {
+    Sources {
         selection: String,
         cwd: String,
+    },
+    Inventory {
+        sources: String,
+        source: usize,
     },
     Inspect {
         inventory: String,
@@ -75,12 +80,14 @@ pub(super) struct Job {
     pub input: Input,
     pub source: Arc<Source>,
     pub entry: Option<Entry>,
+    pub marketplace: Option<Marketplace>,
     pub plan: Option<Arc<Plan>>,
     pub operation: Operation,
     pub deadline: Instant,
     pub born: Instant,
     pub changed: watch::Sender<PluginOperation>,
     pub entries: Mutex<Option<Vec<Entry>>>,
+    pub marketplaces: Mutex<Option<Vec<Marketplace>>>,
     pub review: Mutex<Option<Arc<Plan>>>,
     pub effectful: AtomicBool,
 }
@@ -109,6 +116,7 @@ impl Job {
             if let Some(error) = error {
                 v.code = Some(error.code);
                 v.catalog = None;
+                v.sources = None;
                 v.review = None;
                 v.state = if error.code == Code::Cancelled && !v.write_dispatched {
                     State::Cancelled
@@ -164,6 +172,7 @@ pub(super) struct Requests(Mutex<Registry>);
 struct Setup {
     source: Arc<Source>,
     entry: Option<Entry>,
+    marketplace: Option<Marketplace>,
     plan: Option<Arc<Plan>>,
     action: Action,
     target: Option<PluginItem>,
@@ -204,6 +213,7 @@ impl Requests {
         let Setup {
             source,
             entry,
+            marketplace,
             plan,
             action,
             target,
@@ -251,6 +261,7 @@ impl Requests {
             write_dispatched: false,
             write_ack: Ack::None,
             outcome: None,
+            sources: None,
             catalog: None,
             review: None,
             observation: None,
@@ -261,19 +272,21 @@ impl Requests {
             input,
             source,
             entry,
+            marketplace,
             plan,
             operation: Operation::new(),
             deadline: now + Duration::from_secs(30),
             born: now,
             changed: watch::channel(public).0,
             entries: Mutex::new(None),
+            marketplaces: Mutex::new(None),
             review: Mutex::new(None),
             effectful: AtomicBool::new(false),
         });
         r.jobs.insert(id.into(), job.clone());
         Ok((job, true))
     }
-    pub fn inventory(
+    pub fn sources(
         &self,
         agent: &str,
         id: &str,
@@ -296,13 +309,55 @@ impl Requests {
         self.begin(
             agent,
             id,
-            Input::Inventory {
+            Input::Sources {
                 selection: selection.into(),
                 cwd: cwd.into(),
             },
             Setup {
                 source,
                 entry: None,
+                marketplace: None,
+                plan: None,
+                action: Action::Sources,
+                target: None,
+            },
+        )
+    }
+    pub fn inventory(
+        &self,
+        agent: &str,
+        id: &str,
+        sources: &str,
+        source: usize,
+    ) -> Result<(Arc<Job>, bool)> {
+        let original = self.get(agent, sources)?;
+        if original.snapshot().state != State::Ready
+            || original.snapshot().action != Action::Sources
+            || original.born.elapsed() >= TTL
+            || !original.operation.interested()
+        {
+            return Err(Code::TargetUnavailable.into());
+        }
+        let marketplace = original
+            .marketplaces
+            .lock()
+            .unwrap_or_else(|p| p.into_inner())
+            .as_ref()
+            .and_then(|v| v.get(source))
+            .cloned()
+            .ok_or(Code::TargetUnavailable)?;
+        marketplace.admitted()?;
+        self.begin(
+            agent,
+            id,
+            Input::Inventory {
+                sources: sources.into(),
+                source,
+            },
+            Setup {
+                source: original.source.clone(),
+                entry: None,
+                marketplace: Some(marketplace),
                 plan: None,
                 action: Action::Inventory,
                 target: None,
@@ -344,6 +399,12 @@ impl Requests {
             Setup {
                 source: original.source.clone(),
                 entry: Some(entry.clone()),
+                marketplace: Some(
+                    original
+                        .marketplace
+                        .clone()
+                        .ok_or(Code::TargetUnavailable)?,
+                ),
                 plan: None,
                 action: Action::Inspect,
                 target: Some(entry.item(item)),
@@ -378,6 +439,7 @@ impl Requests {
             Setup {
                 source: plan.source.clone(),
                 entry: Some(plan.entry.clone()),
+                marketplace: Some(plan.marketplace.clone()),
                 plan: Some(plan.clone()),
                 action: if plan.public.install {
                     Action::Install
@@ -408,6 +470,7 @@ impl Requests {
             Setup {
                 source: previous.source.clone(),
                 entry: previous.entry.clone(),
+                marketplace: previous.marketplace.clone(),
                 plan: previous.plan.clone(),
                 action: Action::Recheck,
                 target: state.target,
@@ -425,7 +488,10 @@ impl Requests {
             if !snapshot.settled {
                 j.operation.abandon();
                 j.update(|v| v.state = State::Cancelling);
-            } else if matches!(snapshot.action, Action::Inventory | Action::Inspect) {
+            } else if matches!(
+                snapshot.action,
+                Action::Sources | Action::Inventory | Action::Inspect
+            ) {
                 // Closing a completed query/review retires its remaining authority;
                 // it does not rewrite the already observed result or rerun anything.
                 j.operation.abandon();

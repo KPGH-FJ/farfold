@@ -8,7 +8,10 @@ import {
 } from "./plugin_management_types";
 import { PluginManagementController } from "./plugin_management_controller";
 import { flush } from "./extension_inventory.test-support";
-import { pluginTicket } from "./plugin_management.test-support";
+import {
+  pluginOperation,
+  pluginTicket,
+} from "./plugin_management.test-support";
 
 // Exact controlled Rust production query/parser/ownership serialization. This
 // fixture is not a real Agent, native application or official plugin install.
@@ -57,13 +60,28 @@ it("actual Rust readback remains read-only while preserving the original confirm
     "remove",
     "recheck",
   ];
-  const ids = order.map((key) => wire[key].requestId);
+  // The original seven byte-exact DTOs predate Sources. Only the two source
+  // preludes are synthetic; no old production response is adapted.
+  const ids = order.flatMap((key, index) =>
+    key === "inventory" || key === "installedInventory"
+      ? [
+          `aaaaaaaa-aaaa-aaaa-aaaa-${String(index).padStart(12, "0")}`,
+          wire[key].requestId,
+        ]
+      : [wire[key].requestId],
+  );
   const owner = {
     agentId: wire.inventory.agentId,
     token: {},
     current: () => true,
   };
   const port = {
+    sources: vi.fn(async () => {
+      const op = pluginOperation(client.get(owner.agentId).request!, true);
+      op.sources!.items[0].name =
+        wire.inventory.catalog!.items[0].marketplaceName;
+      return op;
+    }),
     inventory: vi
       .fn()
       .mockResolvedValueOnce(wire.inventory)
@@ -92,6 +110,9 @@ it("actual Rust readback remains read-only while preserving the original confirm
   );
   client.begin(owner, wire.inventory.cwd, pluginTicket);
   await flush();
+  let source = client.get(owner.agentId).sourceResult!;
+  expect(client.inventory(owner, source, source.catalog.items[0])).toBe(true);
+  await flush();
   let result = client.get(owner.agentId).result!;
   client.inspect(owner, result, result.catalog.items[0], true);
   await flush();
@@ -99,6 +120,9 @@ it("actual Rust readback remains read-only while preserving the original confirm
   await flush();
   expect(client.get(owner.agentId).operation?.outcome).toBe("verified");
   client.begin(owner, wire.installedInventory.cwd, pluginTicket);
+  await flush();
+  source = client.get(owner.agentId).sourceResult!;
+  expect(client.inventory(owner, source, source.catalog.items[0])).toBe(true);
   await flush();
   result = client.get(owner.agentId).result!;
   client.inspect(owner, result, result.catalog.items[0], false);

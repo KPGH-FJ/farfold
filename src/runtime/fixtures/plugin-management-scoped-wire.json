@@ -1,0 +1,224 @@
+{
+  "sources": {
+    "agentId": "codex",
+    "requestId": "daf6ac4e-75ca-2808-74c8-efaf8e0c87d9",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpgG73En",
+    "action": "sources",
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "code": null,
+    "writeDispatched": false,
+    "writeAck": "none",
+    "outcome": null,
+    "sources": {
+      "observedAtMs": 1792308400426,
+      "scope": "officialSharedPluginConfiguration",
+      "source": "officialCli",
+      "complete": false,
+      "sessionApplicability": "unverified",
+      "items": [
+        {
+          "id": 0,
+          "name": "local-market",
+          "kind": "local",
+          "query": {
+            "availability": "available",
+            "reason": null
+          }
+        }
+      ]
+    },
+    "catalog": null,
+    "review": null,
+    "observation": null,
+    "target": null
+  },
+  "inventory": {
+    "agentId": "codex",
+    "requestId": "6e9fe382-b66f-06ef-8876-ad6ad3e86ccd",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpgG73En",
+    "action": "inventory",
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "code": null,
+    "writeDispatched": false,
+    "writeAck": "none",
+    "outcome": null,
+    "catalog": {
+      "observedAtMs": 1792308400538,
+      "scope": "officialSharedPluginConfiguration",
+      "source": "officialCli",
+      "complete": false,
+      "sessionApplicability": "unverified",
+      "items": [
+        {
+          "id": 0,
+          "name": "sample",
+          "marketplaceName": "local-market",
+          "version": "1.0.0",
+          "reportedInstalled": false,
+          "reportedEnabled": false,
+          "source": "local",
+          "installPolicy": "available",
+          "authPolicy": "onUse",
+          "install": {
+            "availability": "available",
+            "reason": null
+          },
+          "remove": {
+            "availability": "unavailable",
+            "reason": "notInstalled"
+          }
+        }
+      ]
+    },
+    "review": null,
+    "observation": null,
+    "target": null
+  },
+  "inspect": {
+    "agentId": "codex",
+    "requestId": "be7a889a-e3e2-c177-9200-f7daaa210e09",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpgG73En",
+    "action": "inspect",
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "code": null,
+    "writeDispatched": false,
+    "writeAck": "none",
+    "outcome": null,
+    "catalog": null,
+    "review": {
+      "reviewId": "e925e7c1-068f-57b0-09ce-0d1821b218b5",
+      "agentId": "codex",
+      "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpgG73En",
+      "target": {
+        "id": 0,
+        "name": "sample",
+        "marketplaceName": "local-market",
+        "version": "1.0.0",
+        "reportedInstalled": false,
+        "reportedEnabled": false,
+        "source": "local",
+        "installPolicy": "available",
+        "authPolicy": "onUse",
+        "install": {
+          "availability": "available",
+          "reason": null
+        },
+        "remove": {
+          "availability": "unavailable",
+          "reason": "notInstalled"
+        }
+      },
+      "install": true,
+      "observedAtMs": 1792308400648,
+      "validForMs": 300000,
+      "scope": "officialSharedPluginConfiguration",
+      "sessionApplicability": "unverified"
+    },
+    "observation": null,
+    "target": {
+      "id": 0,
+      "name": "sample",
+      "marketplaceName": "local-market",
+      "version": "1.0.0",
+      "reportedInstalled": false,
+      "reportedEnabled": false,
+      "source": "local",
+      "installPolicy": "available",
+      "authPolicy": "onUse",
+      "install": {
+        "availability": "available",
+        "reason": null
+      },
+      "remove": {
+        "availability": "unavailable",
+        "reason": "notInstalled"
+      }
+    }
+  },
+  "install": {
+    "agentId": "codex",
+    "requestId": "5ed59390-3f39-5e2c-b304-b865f5415e84",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpgG73En",
+    "action": "install",
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "code": null,
+    "writeDispatched": true,
+    "writeAck": "ok",
+    "outcome": "verified",
+    "catalog": null,
+    "review": null,
+    "observation": {
+      "observedAtMs": 1792308400909,
+      "reportedInstalled": true,
+      "reportedEnabled": true,
+      "sessionApplicability": "unverified"
+    },
+    "target": {
+      "id": 0,
+      "name": "sample",
+      "marketplaceName": "local-market",
+      "version": "1.0.0",
+      "reportedInstalled": false,
+      "reportedEnabled": false,
+      "source": "local",
+      "installPolicy": "available",
+      "authPolicy": "onUse",
+      "install": {
+        "availability": "available",
+        "reason": null
+      },
+      "remove": {
+        "availability": "unavailable",
+        "reason": "notInstalled"
+      }
+    }
+  },
+  "recheck": {
+    "agentId": "codex",
+    "requestId": "3736018d-ddcd-b2d7-c9fa-6ed6586dbe90",
+    "cwd": "/private/var/folders/zy/7b1d9d0955bdjkj8ql938qcc0000gn/T/.tmpgG73En",
+    "action": "recheck",
+    "state": "ready",
+    "phase": "complete",
+    "settled": true,
+    "code": null,
+    "writeDispatched": false,
+    "writeAck": "none",
+    "outcome": "observed",
+    "catalog": null,
+    "review": null,
+    "observation": {
+      "observedAtMs": 1792308401024,
+      "reportedInstalled": true,
+      "reportedEnabled": true,
+      "sessionApplicability": "unverified"
+    },
+    "target": {
+      "id": 0,
+      "name": "sample",
+      "marketplaceName": "local-market",
+      "version": "1.0.0",
+      "reportedInstalled": false,
+      "reportedEnabled": false,
+      "source": "local",
+      "installPolicy": "available",
+      "authPolicy": "onUse",
+      "install": {
+        "availability": "available",
+        "reason": null
+      },
+      "remove": {
+        "availability": "unavailable",
+        "reason": "notInstalled"
+      }
+    }
+  }
+}

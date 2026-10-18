@@ -2,8 +2,9 @@ import { invoke } from "@tauri-apps/api/core";
 
 type Key = { agentId: string; requestId: string };
 export interface PluginManagementPort {
+  sources(input: Key & { selectionId: string; cwd: string }): Promise<unknown>;
   inventory(
-    input: Key & { selectionId: string; cwd: string },
+    input: Key & { sourceRequestId: string; sourceId: number },
   ): Promise<unknown>;
   inspect(
     input: Key & {
@@ -19,6 +20,7 @@ export interface PluginManagementPort {
 }
 // Method names and command semantics remain in the backend's reviewed capability.
 export const pluginManagementPort: PluginManagementPort = {
+  sources: (input) => invoke("agent_plugin_sources_read", { ...input }),
   inventory: (input) => invoke("agent_plugin_inventory_read", { ...input }),
   inspect: (input) => invoke("agent_plugin_change_inspect", { ...input }),
   confirm: (input) => invoke("agent_plugin_change_confirm", { ...input }),

@@ -18,6 +18,77 @@ const request: PluginRequest = {
   cwd: "/controlled",
   action: "inventory",
 };
+it("accepts source discovery as a separate bounded read without package inventory or write authority", () => {
+  const expected = { ...request, action: "sources" as PluginRequest["action"] };
+  const value = {
+    ...pluginOperation(expected, true),
+    catalog: null,
+    sources: {
+      observedAtMs: 1,
+      scope: "officialSharedPluginConfiguration",
+      source: "officialCli",
+      complete: false,
+      sessionApplicability: "unverified",
+      items: [
+        {
+          id: 0,
+          name: "controlled-source",
+          kind: "remote",
+          query: { availability: "available", reason: null },
+        },
+      ],
+    },
+  };
+  expect(parsePluginOperation(value, expected)).toEqual(value);
+});
+it("rejects malformed source authority, private fields, duplicate ids and source payloads on other actions", () => {
+  const expected: PluginRequest = { ...request, action: "sources" };
+  const op = pluginOperation(expected, true),
+    sources = op.sources!,
+    item = sources.items[0];
+  for (const patch of [
+    { complete: true },
+    { items: [item, item] },
+    { items: [{ ...item, root: "/private/source" }] },
+    {
+      items: [
+        {
+          ...item,
+          query: { availability: "available", reason: "unsafeLabel" },
+        },
+      ],
+    },
+    {
+      items: [
+        {
+          ...item,
+          query: { availability: "unavailable", reason: "arbitrary" },
+        },
+      ],
+    },
+  ])
+    expect(() =>
+      parsePluginOperation(
+        { ...op, sources: { ...sources, ...patch } },
+        expected,
+      ),
+    ).toThrow();
+  expect(() =>
+    parsePluginOperation(
+      { ...pluginOperation(request, true), sources },
+      request,
+    ),
+  ).toThrow();
+  expect(() =>
+    parsePluginOperation({ ...op, sources: null }, expected),
+  ).toThrow();
+  expect(() =>
+    parsePluginOperation(
+      { ...op, state: "failed", code: "queryFailed" },
+      expected,
+    ),
+  ).toThrow();
+});
 it("accepts a bounded partial catalog without claiming adoption or installation", () => {
   const wire = pluginOperation(request, true);
   expect(parsePluginOperation(wire, request)).toEqual(wire);

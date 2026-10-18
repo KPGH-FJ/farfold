@@ -17,11 +17,36 @@ entry={'pluginId':'sample@local-market','name':'sample','marketplaceName':'local
  'installed':installed,'enabled':installed,'source':{'source':'local','path':'/PRIVATE_SOURCE'},
  'marketplaceSource':{'sourceType':'local','source':'/PRIVATE_MARKET'},'installPolicy':'AVAILABLE','authPolicy':'ON_USE'}
 if mode=='not-available-policy': entry['installPolicy']='NOT_AVAILABLE'
+if mode=='source-none': entry['marketplaceSource']=None
+if mode=='source-unknown': entry['marketplaceSource']={'sourceType':'future','source':'/PRIVATE_FUTURE','extra':{'v':1}}
+if mode=='source-remote': entry['marketplaceSource']={'sourceType':'remote','source':'PRIVATE_REMOTE'}
+if action=='marketplace':
+ assert args[3:]==['list','--json'], args
+ if mode=='slow-sources': (root/'source-started').write_text('yes');time.sleep(10)
+ row={'name':'local-market','root':'/PRIVATE_MARKET','marketplaceSource':entry['marketplaceSource']}
+ if mode=='root-change' or mode=='root-after-list' and int((root/'reads').read_text())>0: row['root']='/PRIVATE_REPLACED'
+ if mode=='provenance-change': row['marketplaceSource']={'sourceType':'local','source':'/PRIVATE_MARKET','future':2}
+ if mode=='name-change': row['name']='replaced-market'
+ if mode=='global-source': row['name']='openai-curated-remote'
+ if mode=='unsafe-source': row['name']='bad=name'
+ if mode=='bad-root': row['root']='relative'
+ rows=[row]
+ if mode=='source-disappear': rows=[]
+ if mode=='duplicate-source': rows.append({**row,'root':'/PRIVATE_OTHER'})
+ if mode=='sources-stderr': sys.stderr.write('x'*65537)
+ print(json.dumps({'marketplaces':rows}))
+ sys.exit(0)
 if action=='list':
  assert '--available' in args and '--json' in args
  n=int((root/'reads').read_text())+1; (root/'reads').write_text(str(n))
+ if mode=='scoped-only' and '--marketplace=local-market' not in args:
+  rows=[]
+  for i in range(513):
+   row=entry.copy();row.update(pluginId=f'remote{i}@openai-curated-remote',name=f'remote{i}',marketplaceName='openai-curated-remote',source={'source':'remote','id':f'remote{i}'},marketplaceSource=None);rows.append(row)
+  print(json.dumps({'installed':[],'available':rows}));sys.exit(0)
  if mode=='drift' and n>=3: entry['source']['path']='/PRIVATE_REPLACED'
  if mode=='wrong-market': entry['marketplaceName']='other'
+ if mode=='entry-provenance-change': entry['marketplaceSource']={'sourceType':'git','source':'PRIVATE_OTHER'}
  if mode=='post-version' and (root/'written').exists(): entry['version']='2.0.0'
  if mode=='empty-after-write' and (root/'written').exists(): print('{"installed":[],"available":[]}')
  else: print(json.dumps({'installed':[entry] if installed else [],'available':[] if installed else [entry]}))
@@ -109,12 +134,20 @@ impl Fixture {
         result
     }
     fn inventory(&self) -> Arc<Job> {
+        let sources = self.initial_query();
+        self.run(&sources).unwrap();
         let (job, _) = self
             .registry
-            .inventory(&self.row.id, &Self::id(), &self.selection, &self.cwd)
+            .inventory(&self.row.id, &Self::id(), &sources.snapshot().request_id, 0)
             .unwrap();
         self.run(&job).unwrap();
         job
+    }
+    fn initial_query(&self) -> Arc<Job> {
+        self.registry
+            .sources(&self.row.id, &Self::id(), &self.selection, &self.cwd)
+            .unwrap()
+            .0
     }
     fn inspect(&self, inventory: &Job, install: bool) -> Arc<Job> {
         let (job, _) = self
@@ -172,10 +205,15 @@ fn p40_cli_full_install_and_remove_require_exact_scoped_readback() {
             install
         );
         let calls = f.calls();
-        assert_eq!(calls.len(), 5);
-        assert!(calls[1].contains(&"--marketplace=local-market".into()));
+        assert_eq!(calls.len(), 14);
+        assert!(
+            calls
+                .iter()
+                .filter(|v| v[2] == "list")
+                .all(|v| v.contains(&"--marketplace=local-market".into()))
+        );
         assert_eq!(
-            &calls[3][2..],
+            &calls[10][2..],
             [
                 if install { "add" } else { "remove" },
                 "--json",
@@ -183,7 +221,7 @@ fn p40_cli_full_install_and_remove_require_exact_scoped_readback() {
                 "sample@local-market"
             ]
         );
-        assert!(calls[4].contains(&"--marketplace=local-market".into()));
+        assert!(calls[12].contains(&"--marketplace=local-market".into()));
         let public = serde_json::to_string(&result).unwrap();
         assert!(!public.contains("PRIVATE"));
         assert!(!public.contains("SOURCE"));
@@ -214,7 +252,11 @@ fn p40_cli_source_drift_before_dispatch_preserves_the_package() {
     f.mode("drift");
     assert_eq!(f.run(&job).unwrap_err().code, Code::TargetChanged);
     assert!(!job.snapshot().write_dispatched);
-    assert!(f.calls().iter().all(|v| v[2] == "list"));
+    assert!(
+        f.calls()
+            .iter()
+            .all(|v| matches!(v[2].as_str(), "list" | "marketplace"))
+    );
     assert_eq!(job.snapshot().outcome, Some(Outcome::NotDispatched));
 }
 #[test]
@@ -244,7 +286,7 @@ fn p40_cli_unsupported_is_failure_not_a_complete_empty_catalog() {
     f.mode("unsupported");
     let (job, _) = f
         .registry
-        .inventory(&f.row.id, &Fixture::id(), &f.selection, &f.cwd)
+        .sources(&f.row.id, &Fixture::id(), &f.selection, &f.cwd)
         .unwrap();
     assert_eq!(f.run(&job).unwrap_err().code, Code::QueryFailed);
     assert!(job.snapshot().catalog.is_none());
@@ -257,7 +299,7 @@ fn p40_cli_cancel_before_write_and_early_cancel_have_no_dispatch() {
     f.registry.cancel(&f.row.id, &id).unwrap();
     assert_eq!(
         f.registry
-            .inventory(&f.row.id, &id, &f.selection, &f.cwd)
+            .sources(&f.row.id, &id, &f.selection, &f.cwd)
             .err()
             .unwrap()
             .code,
@@ -269,7 +311,11 @@ fn p40_cli_cancel_before_write_and_early_cancel_have_no_dispatch() {
     job.operation.abandon();
     assert_eq!(f.run(&job).unwrap_err().code, Code::Cancelled);
     assert!(!job.snapshot().write_dispatched);
-    assert!(f.calls().iter().all(|v| v[2] == "list"));
+    assert!(
+        f.calls()
+            .iter()
+            .all(|v| matches!(v[2].as_str(), "list" | "marketplace"))
+    );
 }
 #[test]
 fn p40_cli_cancel_after_spawn_retains_unknown_until_owned_child_ends() {
@@ -318,7 +364,11 @@ fn p40_cli_foreign_marketplace_and_changed_selection_never_reach_write() {
     changed.updated_at += 1;
     f.store.replace_agent_launch(&changed).unwrap();
     assert_eq!(f.run(&job).unwrap_err().code, Code::SelectionChanged);
-    assert!(f.calls().iter().all(|v| v[2] == "list"));
+    assert!(
+        f.calls()
+            .iter()
+            .all(|v| matches!(v[2].as_str(), "list" | "marketplace"))
+    );
 }
 #[test]
 fn p40_cli_catalog_policies_and_provenance_do_not_grant_unknown_authority() {
@@ -382,6 +432,15 @@ fn p40_cli_leading_dash_selector_is_data_after_end_of_options() {
     assert_eq!(&args[args.len() - 3..], ["--json", "--", "--odd@--market"]);
     let args = cli::arguments(&job, "list", Some("--market"), None).unwrap();
     assert_eq!(args.last().unwrap(), "--marketplace=--market");
+    assert_eq!(
+        cli::arguments(&job, "list", None, None).unwrap_err().code,
+        Code::InvalidRequest
+    );
+    let args = cli::arguments(&job, "sources", None, None).unwrap();
+    assert_eq!(
+        &args[args.len() - 5..],
+        ["cli", "plugin", "marketplace", "list", "--json"]
+    );
 }
 #[test]
 fn p40_cli_review_is_single_use_and_duplicate_request_is_one_owner() {
@@ -440,7 +499,11 @@ fn p40_cli_closed_review_or_catalog_cannot_authorize_a_later_write() {
             .code,
         Code::TargetUnavailable
     );
-    assert!(f.calls().iter().all(|v| v[2] == "list"));
+    assert!(
+        f.calls()
+            .iter()
+            .all(|v| matches!(v[2].as_str(), "list" | "marketplace"))
+    );
 }
 
 #[test]
@@ -590,4 +653,334 @@ fn p40_cli_removal_still_requires_known_policy_and_configured_source() {
         assert_eq!(target.item(0).remove.reason, Some(reason));
         assert!(target.admitted(false).is_err());
     }
+}
+
+#[test]
+fn p40_scoped_initial_query_offers_sources_without_global_plugin_enumeration() {
+    let f = Fixture::new(false);
+    f.mode("scoped-only");
+    let initial = f.initial_query();
+    assert!(
+        f.run(&initial).is_ok(),
+        "source discovery must not require a global plugin-detail report"
+    );
+    let value = serde_json::to_value(initial.snapshot()).unwrap();
+    assert_eq!(value["sources"]["items"][0]["name"], "local-market");
+    assert_eq!(
+        value["sources"]["items"][0]["query"]["availability"],
+        "available"
+    );
+    assert!(
+        f.calls()
+            .iter()
+            .all(|args| args[2] != "list" || args.contains(&"--marketplace=local-market".into()))
+    );
+}
+
+#[test]
+fn p40_scoped_missing_or_unknown_provenance_can_be_queried_but_not_mutated() {
+    for mode in ["source-none", "source-unknown", "source-remote"] {
+        let f = Fixture::new(false);
+        f.mode(mode);
+        let initial = f.initial_query();
+        f.run(&initial).unwrap();
+        assert_eq!(
+            initial.snapshot().sources.unwrap().items[0]
+                .query
+                .availability,
+            "available"
+        );
+        let (inventory, _) = f
+            .registry
+            .inventory(&f.row.id, &Fixture::id(), &initial.snapshot().request_id, 0)
+            .unwrap();
+        f.run(&inventory).unwrap();
+        assert_eq!(
+            inventory.snapshot().catalog.unwrap().items[0]
+                .install
+                .availability,
+            "unavailable"
+        );
+        assert_eq!(
+            f.registry
+                .inspect(
+                    &f.row.id,
+                    &Fixture::id(),
+                    &inventory.snapshot().request_id,
+                    0,
+                    true
+                )
+                .err()
+                .unwrap()
+                .code,
+            Code::TargetUnavailable
+        );
+        assert!(
+            f.calls()
+                .iter()
+                .all(|v| matches!(v[2].as_str(), "list" | "marketplace"))
+        );
+    }
+}
+
+#[test]
+fn p40_scoped_ambiguous_global_unsafe_or_bad_root_sources_cannot_be_queried() {
+    for (mode, reason) in [
+        ("duplicate-source", "ambiguousSource"),
+        ("global-source", "unsupportedSource"),
+        ("unsafe-source", "unsafeLabel"),
+        ("bad-root", "invalidSource"),
+    ] {
+        let f = Fixture::new(false);
+        f.mode(mode);
+        let initial = f.initial_query();
+        f.run(&initial).unwrap();
+        let items = initial.snapshot().sources.unwrap().items;
+        assert!(items.iter().all(|v| v.query.reason == Some(reason)));
+        assert_eq!(
+            f.registry
+                .inventory(&f.row.id, &Fixture::id(), &initial.snapshot().request_id, 0)
+                .err()
+                .unwrap()
+                .code,
+            Code::TargetUnavailable
+        );
+        assert_eq!(f.calls().len(), 1);
+    }
+}
+
+#[test]
+fn p40_scoped_source_identity_drift_rejects_before_named_list() {
+    for mode in [
+        "root-change",
+        "provenance-change",
+        "name-change",
+        "source-disappear",
+        "duplicate-source",
+    ] {
+        let f = Fixture::new(false);
+        let initial = f.initial_query();
+        f.run(&initial).unwrap();
+        let (inventory, _) = f
+            .registry
+            .inventory(&f.row.id, &Fixture::id(), &initial.snapshot().request_id, 0)
+            .unwrap();
+        f.mode(mode);
+        assert_eq!(f.run(&inventory).unwrap_err().code, Code::TargetChanged);
+        assert!(inventory.snapshot().catalog.is_none());
+        assert!(f.calls().iter().all(|v| v[2] == "marketplace"));
+    }
+}
+
+#[test]
+fn p40_scoped_source_postflight_and_plugin_provenance_cannot_publish_partial_authority() {
+    for mode in ["root-after-list", "entry-provenance-change"] {
+        let f = Fixture::new(false);
+        let initial = f.initial_query();
+        f.run(&initial).unwrap();
+        let (inventory, _) = f
+            .registry
+            .inventory(&f.row.id, &Fixture::id(), &initial.snapshot().request_id, 0)
+            .unwrap();
+        f.mode(mode);
+        assert_eq!(f.run(&inventory).unwrap_err().code, Code::TargetChanged);
+        assert!(inventory.snapshot().catalog.is_none());
+        assert!(inventory.entries.lock().unwrap().is_none());
+        assert_eq!(f.calls().iter().filter(|v| v[2] == "list").count(), 1);
+    }
+}
+
+#[test]
+fn p40_scoped_origin_survives_into_inspect_confirm_and_recheck() {
+    for stage in ["inspect", "confirm", "recheck"] {
+        let f = Fixture::new(false);
+        let inventory = f.inventory();
+        let job = if stage == "inspect" {
+            f.registry
+                .inspect(
+                    &f.row.id,
+                    &Fixture::id(),
+                    &inventory.snapshot().request_id,
+                    0,
+                    true,
+                )
+                .unwrap()
+                .0
+        } else {
+            let inspect = f.inspect(&inventory, true);
+            let confirm = f.confirm(&inspect);
+            if stage == "recheck" {
+                f.run(&confirm).unwrap();
+                f.registry
+                    .recheck(&f.row.id, &Fixture::id(), &confirm.snapshot().request_id)
+                    .unwrap()
+                    .0
+            } else {
+                confirm
+            }
+        };
+        let reads = f.calls().iter().filter(|v| v[2] == "list").count();
+        f.mode("root-change");
+        assert_eq!(f.run(&job).unwrap_err().code, Code::TargetChanged);
+        assert_eq!(f.calls().iter().filter(|v| v[2] == "list").count(), reads);
+        assert!(!job.snapshot().write_dispatched);
+        assert!(job.snapshot().review.is_none());
+        if stage == "recheck" {
+            assert_eq!(job.snapshot().outcome, Some(Outcome::Unknown));
+        }
+    }
+}
+
+#[test]
+fn p40_scoped_source_request_cannot_be_forged_reused_after_retirement_or_replaced_by_catalog() {
+    let f = Fixture::new(false);
+    let initial = f.initial_query();
+    f.run(&initial).unwrap();
+    let id = initial.snapshot().request_id;
+    assert_eq!(
+        f.registry
+            .inventory("other", &Fixture::id(), &id, 0)
+            .err()
+            .unwrap()
+            .code,
+        Code::UnknownRequest
+    );
+    assert_eq!(
+        f.registry
+            .inventory(&f.row.id, &Fixture::id(), &id, 1)
+            .err()
+            .unwrap()
+            .code,
+        Code::TargetUnavailable
+    );
+    let (inventory, _) = f
+        .registry
+        .inventory(&f.row.id, &Fixture::id(), &id, 0)
+        .unwrap();
+    f.run(&inventory).unwrap();
+    assert_eq!(
+        f.registry
+            .inventory(
+                &f.row.id,
+                &Fixture::id(),
+                &inventory.snapshot().request_id,
+                0
+            )
+            .err()
+            .unwrap()
+            .code,
+        Code::TargetUnavailable
+    );
+    f.registry.cancel(&f.row.id, &id).unwrap();
+    assert_eq!(
+        f.registry
+            .inventory(&f.row.id, &Fixture::id(), &id, 0)
+            .err()
+            .unwrap()
+            .code,
+        Code::TargetUnavailable
+    );
+    assert_eq!(f.calls().iter().filter(|v| v[2] == "list").count(), 1);
+}
+
+#[test]
+fn p40_scoped_sources_keep_complete_json_duplicate_depth_count_and_byte_budgets() {
+    let row = json!({"name":"local-market","root":"/PRIVATE_MARKET","marketplaceSource":{"sourceType":"future","source":"PRIVATE","extra":{"v":1}}});
+    let original = serde_json::to_vec(&json!({"marketplaces":[row.clone()]})).unwrap();
+    let rows = sources::parse(&original).unwrap();
+    rows[0].admitted().unwrap();
+    let public = serde_json::to_string(&sources::public(&rows)).unwrap();
+    assert!(!public.contains("PRIVATE"));
+    let mut changed = row.clone();
+    changed["marketplaceSource"]["extra"]["v"] = json!(2);
+    let changed =
+        sources::parse(&serde_json::to_vec(&json!({"marketplaces":[changed]})).unwrap()).unwrap();
+    assert_eq!(
+        sources::current(&changed, &rows[0]).unwrap_err().code,
+        Code::TargetChanged
+    );
+    for raw in [
+        br#"{"marketplaces":[],"marketplaces":[]}"#.as_slice(),
+        br#"{"marketplaces":[{"name":"local-market","root":"/A","marketplaceSource":{"sourceType":"future","sourceType":"local"}}]}"#,
+        br#"{"marketplaces":[{"name":"local-market","root":"/A","marketplaceSource":{"future":[{"x":1,"x":1}]}}]}"#,
+        br#"{"marketplaces":[]} trailing"#,
+    ] { assert_eq!(sources::parse(raw).unwrap_err().code, Code::InvalidOutput); }
+    assert!(
+        sources::parse(&serde_json::to_vec(&json!({"marketplaces":[row.clone(),row]})).unwrap())
+            .is_err()
+    );
+    let many: Vec<_> = (0..513)
+        .map(|i| json!({"name":format!("m{i}"),"root":format!("/PRIVATE_{i}")}))
+        .collect();
+    assert_eq!(
+        sources::parse(&serde_json::to_vec(&json!({"marketplaces":many})).unwrap())
+            .unwrap_err()
+            .code,
+        Code::OutputLimit
+    );
+    assert_eq!(
+        sources::parse(&vec![b' '; inventory::output::STDOUT_LIMIT + 1])
+            .unwrap_err()
+            .code,
+        Code::OutputLimit
+    );
+    let deep = format!("{}0{}", "[".repeat(33), "]".repeat(33));
+    assert_eq!(
+        sources::parse(deep.as_bytes()).unwrap_err().code,
+        Code::InvalidOutput
+    );
+}
+
+#[test]
+fn p40_scoped_source_stderr_limit_and_actual_cancellation_still_apply() {
+    let f = Fixture::new(false);
+    f.mode("sources-stderr");
+    let initial = f.initial_query();
+    assert_eq!(f.run(&initial).unwrap_err().code, Code::OutputLimit);
+    assert!(initial.snapshot().sources.is_none());
+    f.mode("slow-sources");
+    let initial = f.initial_query();
+    let cancellation = initial.clone();
+    let marker = f.root.path().join("source-started");
+    let cancel = std::thread::spawn(move || {
+        let deadline = Instant::now() + Duration::from_secs(5);
+        while !marker.exists() && Instant::now() < deadline {
+            std::thread::sleep(Duration::from_millis(5));
+        }
+        assert!(marker.exists());
+        cancellation.operation.abandon();
+    });
+    assert_eq!(f.run(&initial).unwrap_err().code, Code::Cancelled);
+    cancel.join().unwrap();
+    assert!(initial.snapshot().settled && !initial.snapshot().write_dispatched);
+    f.mode("normal");
+    assert!(f.inventory().snapshot().catalog.is_some());
+}
+
+#[test]
+fn p40_scoped_frontend_wire_from_sources_through_existing_write_and_readback() {
+    let f = Fixture::new(false);
+    let initial = f.initial_query();
+    f.run(&initial).unwrap();
+    let (inventory, _) = f
+        .registry
+        .inventory(&f.row.id, &Fixture::id(), &initial.snapshot().request_id, 0)
+        .unwrap();
+    f.run(&inventory).unwrap();
+    let inspect = f.inspect(&inventory, true);
+    let install = f.confirm(&inspect);
+    f.run(&install).unwrap();
+    let (recheck, _) = f
+        .registry
+        .recheck(&f.row.id, &Fixture::id(), &install.snapshot().request_id)
+        .unwrap();
+    f.run(&recheck).unwrap();
+    let wire = json!({"sources":initial.snapshot(),"inventory":inventory.snapshot(),"inspect":inspect.snapshot(),"install":install.snapshot(),"recheck":recheck.snapshot()});
+    assert!(!wire.to_string().contains("PRIVATE"));
+    assert!(wire["inventory"].get("sources").is_none());
+    assert_eq!(wire["sources"]["writeDispatched"], false);
+    assert_eq!(wire["sources"]["outcome"], Value::Null);
+    assert_eq!(wire["install"]["outcome"], "verified");
+    assert_eq!(wire["recheck"]["outcome"], "observed");
+    println!("P40_SCOPED_FRONTEND_WIRE={wire}");
 }

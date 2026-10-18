@@ -17,6 +17,8 @@ import {
   type PluginOperation,
   type PluginRequest,
   type PluginReview,
+  type PluginSourceCatalog,
+  type PluginSourceItem,
 } from "./plugin_management_types";
 
 export interface PluginResult {
@@ -25,11 +27,18 @@ export interface PluginResult {
   readonly catalog: PluginCatalog;
   readonly stale: boolean;
 }
+export interface PluginSourceResult {
+  readonly owner: InventoryOwner;
+  readonly request: PluginRequest;
+  readonly catalog: PluginSourceCatalog;
+  readonly stale: boolean;
+}
 export interface PluginView {
   request: PluginRequest | null;
   operation: PluginOperation | null;
   originalOperation: PluginOperation | null;
   result: PluginResult | null;
+  sourceResult: PluginSourceResult | null;
   review: PluginReview | null;
   unresolved: boolean;
   checking: boolean;
@@ -43,6 +52,7 @@ const EMPTY: PluginView = Object.freeze({
   operation: null,
   originalOperation: null,
   result: null,
+  sourceResult: null,
   review: null,
   unresolved: false,
   checking: false,
@@ -102,6 +112,12 @@ export class PluginManagementController {
     if (f.view.result && !f.view.result.stale)
       this.publish(f, { result: { ...f.view.result, stale: true } });
   }
+  private staleSources(f: Flight) {
+    if (f.view.sourceResult && !f.view.sourceResult.stale)
+      this.publish(f, {
+        sourceResult: { ...f.view.sourceResult, stale: true },
+      });
+  }
   private replace(
     owner: InventoryOwner,
     request: PluginRequest,
@@ -115,6 +131,7 @@ export class PluginManagementController {
       this.entries.delete(free[0]);
     }
     const priorResult = old?.view.result ?? null;
+    const priorSources = old?.view.sourceResult ?? null;
     if (old) this.retire(old.owner);
     const f: Flight = {
       owner,
@@ -122,6 +139,10 @@ export class PluginManagementController {
         ...EMPTY,
         request: Object.freeze(request),
         originalOperation: old?.view.originalOperation ?? null,
+        sourceResult:
+          request.action !== "sources" && priorSources?.owner === owner
+            ? priorSources
+            : (old?.view.sourceResult ?? null),
         result:
           request.action === "inspect" && priorResult?.owner === owner
             ? priorResult
@@ -157,6 +178,23 @@ export class PluginManagementController {
     )
       return;
     let result = f.view.result;
+    let sourceResult = f.view.sourceResult;
+    if (op.sources && this.current(f) && !f.view.cancelRequested) {
+      const items = op.sources.items.map((item) =>
+        Object.freeze({
+          ...item,
+          query: Object.freeze({ ...item.query }),
+        }),
+      );
+      const catalog = Object.freeze({ ...op.sources, items });
+      Object.freeze(items);
+      sourceResult = Object.freeze({
+        owner: f.owner,
+        request: f.view.request,
+        catalog,
+        stale: false,
+      });
+    }
     if (op.catalog && this.current(f) && !f.view.cancelRequested) {
       const c = { ...op.catalog, items: op.catalog.items.map(freezeItem) };
       Object.freeze(c.items);
@@ -196,6 +234,7 @@ export class PluginManagementController {
       operation: op,
       originalOperation: wrote ? op : f.view.originalOperation,
       result,
+      sourceResult,
       review,
       unresolved: !op.settled,
       checking: false,
@@ -268,7 +307,17 @@ export class PluginManagementController {
       owner.current() &&
       result.owner === owner &&
       !result.stale &&
+      result.request.sourceRequestId ===
+        this.get(owner.agentId).sourceResult?.request.requestId &&
       this.get(owner.agentId).result === result
+    );
+  }
+  isCurrentSources(owner: InventoryOwner, result: PluginSourceResult) {
+    return (
+      owner.current() &&
+      result.owner === owner &&
+      !result.stale &&
+      this.get(owner.agentId).sourceResult === result
     );
   }
   begin(owner: InventoryOwner, cwd: string, selectionId: string): boolean {
@@ -284,14 +333,59 @@ export class PluginManagementController {
         agentId: owner.agentId,
         requestId: this.uuid(),
         cwd,
-        action: "inventory",
+        action: "sources",
       },
       this.entries.get(owner.agentId),
     );
     if (!f) return false;
     this.stale(f);
+    this.staleSources(f);
     this.observe(f, async () => {
       if (!this.current(f) || f.view.cancelRequested) {
+        this.publish(f, { unresolved: false, error: "selectionChanged" });
+        return;
+      }
+      f.dispatched = true;
+      return this.port.sources({
+        agentId: owner.agentId,
+        requestId: f.view.request!.requestId,
+        cwd,
+        selectionId,
+      });
+    });
+    return true;
+  }
+  inventory(
+    owner: InventoryOwner,
+    source: PluginSourceResult,
+    item: PluginSourceItem,
+  ): boolean {
+    if (
+      !this.isCurrentSources(owner, source) ||
+      !source.catalog.items.includes(item) ||
+      item.query.availability !== "available"
+    )
+      return false;
+    const f = this.replace(
+      owner,
+      {
+        agentId: owner.agentId,
+        requestId: this.uuid(),
+        cwd: source.request.cwd,
+        action: "inventory",
+        sourceRequestId: source.request.requestId,
+        sourceId: item.id,
+        querySource: item,
+      },
+      this.entries.get(owner.agentId),
+    );
+    if (!f) return false;
+    this.observe(f, async () => {
+      if (
+        !this.current(f) ||
+        f.view.cancelRequested ||
+        !this.isCurrentSources(owner, source)
+      ) {
         this.publish(f, { unresolved: false, error: "selectionChanged" });
         return;
       }
@@ -299,8 +393,8 @@ export class PluginManagementController {
       return this.port.inventory({
         agentId: owner.agentId,
         requestId: f.view.request!.requestId,
-        cwd,
-        selectionId,
+        sourceRequestId: source.request.requestId,
+        sourceId: item.id,
       });
     });
     return true;
@@ -387,6 +481,7 @@ export class PluginManagementController {
         ...EMPTY,
         request,
         originalOperation: old.view.originalOperation,
+        sourceResult: old.view.sourceResult,
         result: old.view.result,
         unresolved: true,
         reviewRetired: true,
@@ -455,6 +550,7 @@ export class PluginManagementController {
     const f = this.entries.get(owner.agentId);
     if (!f || f.owner !== owner || f.view.cancelRequested) return;
     this.stale(f);
+    this.staleSources(f);
     if (f.view.request)
       this.cancel(owner.agentId, f.view.request.requestId, false);
   }
@@ -466,6 +562,12 @@ export class PluginManagementController {
       !f.retired
     )
       this.cancel(owner.agentId, f.view.request.requestId, false);
+  }
+  retireSourceSelection(owner: InventoryOwner) {
+    const f = this.entries.get(owner.agentId);
+    if (!f || f.owner !== owner) return;
+    this.stale(f);
+    this.retireInspection(owner);
   }
   recheck(agentId: string, requestId: string): boolean {
     const old = this.entries.get(agentId);
@@ -492,6 +594,7 @@ export class PluginManagementController {
         ...EMPTY,
         request,
         result: old.view.result,
+        sourceResult: old.view.sourceResult,
         unresolved: true,
         originalOperation,
       },

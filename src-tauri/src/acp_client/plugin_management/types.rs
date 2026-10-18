@@ -6,6 +6,7 @@ use serde::Serialize;
 #[derive(Clone, Copy, Debug, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub enum Action {
+    Sources,
     Inventory,
     Inspect,
     Install,
@@ -17,6 +18,24 @@ pub enum Action {
 pub struct Availability {
     pub availability: &'static str,
     pub reason: Option<&'static str>,
+}
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PluginSourceItem {
+    pub id: usize,
+    pub name: Option<String>,
+    pub kind: &'static str,
+    pub query: Availability,
+}
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PluginSourceCatalog {
+    pub observed_at_ms: u64,
+    pub scope: &'static str,
+    pub source: &'static str,
+    pub complete: bool,
+    pub session_applicability: &'static str,
+    pub items: Vec<PluginSourceItem>,
 }
 
 #[derive(Clone, Debug, Serialize, PartialEq, Eq)]
@@ -79,6 +98,8 @@ pub struct PluginOperation {
     pub write_dispatched: bool,
     pub write_ack: Ack,
     pub outcome: Option<Outcome>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub sources: Option<PluginSourceCatalog>,
     pub catalog: Option<PluginCatalog>,
     pub review: Option<PluginReview>,
     pub observation: Option<PluginObservation>,

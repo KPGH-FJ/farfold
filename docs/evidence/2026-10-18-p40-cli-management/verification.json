@@ -1,0 +1,52 @@
+{
+  "kind": "P40InstalledPartialEvidenceWithActualQueryFailure",
+  "checkedDate": "2026-10-18",
+  "sourceCommit": "90cc8fcd1fad902e2d3ca44bfc60b4c68717740d",
+  "formalBinarySha256": "eb78e75b5d65f0c3c107cf1ae856aab31e18859763a82c67510bad04d5c4a47d",
+  "engineering": {
+    "actualExit": 0,
+    "checksPassed": 7,
+    "frontendFiles": 590,
+    "frontendPassed": 7859,
+    "rustPassed": 1813,
+    "rustIgnored": 6,
+    "stableInputs": 19173,
+    "receiptSha256": "7858f0625d7ba596bf12d2d9b67a93ab74a935da289117f1972b99234a1951da"
+  },
+  "delivery": {
+    "candidateIndependentChecksPassed": 9,
+    "candidateIndependentReceiptSha256": "f3a5b8de2214389402302e40ed5a5b60a097661c81e77a11c539eca8c57361f4",
+    "installedIndependentChecksPassed": 10,
+    "installedIndependentReceiptSha256": "67b2c1187eeb87e1073278f4f41b6a1f031135b97974e1e07a3aba38e7a41998",
+    "threeInstallManifestEntriesEach": 217407,
+    "threeInstallManifestsStrictEqual": true,
+    "duplicateCandidateCleanupReceiptSha256": "f46bd1ec004f777a15a0a8659a88fc37c506bde8e25e09a56e131d77fb072d99"
+  },
+  "native": {
+    "explicitInventoryQueries": 1,
+    "result": "failedOutputLimit",
+    "rootCause": "unknownBetweenStdoutStderrAndCatalogItemBudgets",
+    "completeCatalogClaimed": false,
+    "packageMutationsRequested": 0,
+    "retries": 0,
+    "newModelPromptsSentByRoot": 0,
+    "uiObservationsSha256": "231556f250561a2e8b5c6d6eb08f5313eedd8367a71e2ef558747e865a1b6e1e",
+    "normalSaveExitObserved": true,
+    "afterUseStrictComparisonExit": 2,
+    "afterUseReceiptSha256": "b6983b894cb4961880b8c80823b88f3f4b4dfbed8a970208456634d3ef1db48b",
+    "directoryModifiedEntries": 6,
+    "directoryAddedOrRemovedEntries": 0,
+    "normalizedDatabaseByteEqual": true,
+    "normalizedDatabaseSha256": "fcb839496f5a269b65cf8ad6a70755797573c775e481644586bb4ca014c40af1",
+    "protocolSummarySha256": "1c54537dd3419ece9975f1d404414289ab26c8ae7ca9851675b84a2b6a77880d",
+    "protocolCoverage": "One validated tap, eight definite records, no coverage or boundary issue; no observed prompt/new/load/config/cancel/permission methods in that window. Startup timeout is not attributed to the package query. This is not proof of no SDK or cache side effects."
+  },
+  "notProven": [
+    "Successful real package catalog query",
+    "Real package install or removal",
+    "Current conversation adoption",
+    "All 29 Agents and eight standards",
+    "P40 or all 151 requirements complete",
+    "Zero change to all runtime data directories"
+  ]
+}
