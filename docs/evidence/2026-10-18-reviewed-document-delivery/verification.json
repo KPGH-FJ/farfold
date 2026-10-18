@@ -808,6 +808,513 @@
     "spacePoint": {
       "path": "output/2026-10-18-document-text-delivery/current-space.json",
       "sha256": "704cba61d3931db1b9ef9f2033217944e348241a554247eb7e7d7d017732023a"
+    },
+    "coldBaseline": {
+      "path": "output/2026-10-18-document-text-delivery/formal-cold-check/baseline-intent.json",
+      "sha256": "000e8668b7d131c7b0b13f442f68eddad6139dbe6d456675eff4ea283ff15255"
+    },
+    "coldActual": {
+      "path": "output/2026-10-18-document-text-delivery/formal-cold-check/actual-observation.json",
+      "sha256": "a0f04b69b8bd53a1e0dedf5e153990eef445eff74ee7f56346550e60ba81cef7"
+    },
+    "coldUiIndependent": {
+      "path": "output/2026-10-18-document-text-delivery/formal-cold-check/independent-observation-review.json",
+      "sha256": "5f0997fb45d9e1527abbc7331a4fdf5dafedeb1df9719c005b5711e3a2f0a075"
+    },
+    "coldOfficialSourceConditions": {
+      "path": "output/2026-10-18-document-text-delivery/formal-cold-check/source-conditions-review.json",
+      "sha256": "e433aadbc9b1c1708481477cc0d7335053ec8dd4f730788d0e08753010d42371"
+    },
+    "coldCompletionProtocolIndependent": {
+      "path": "output/2026-10-18-document-text-delivery/formal-cold-check/completion-protocol-independent-review.json",
+      "sha256": "1f05437bbe375d14023c0061ab5ff4834b6294615f1f9be549e607623ce300c8"
+    },
+    "coldAfterCapture": {
+      "path": "output/2026-10-18-document-text-delivery/formal-cold-check/after-capture/retention-before-receipt.json",
+      "sha256": "818916c596f0897d18d7e15421cce1db830f82ba12f32a09cb0634d0336ac699"
+    },
+    "coldCaptureCompletion": {
+      "path": "output/2026-10-18-document-text-delivery/formal-cold-check/after-capture/execution-completion.json",
+      "sha256": "39be0bcd417a1e3ed4ea398636a19f9d62644267cdb0eef82a95c05e7ee64f6c"
+    },
+    "coldDataSafe": {
+      "path": "output/2026-10-18-document-text-delivery/formal-cold-check/after-analysis/safe-summary.json",
+      "sha256": "296dd9a2e441b092e1ddf177d2fd65f5fa49abe6b554793ea212726d8eb8f80b"
+    },
+    "coldDataReview": {
+      "path": "output/2026-10-18-document-text-delivery/formal-cold-check/after-analysis/review.json",
+      "sha256": "0979e7e8fd086659c88fb22ca899297f65c45b010c6ef4719da80ad80719278a"
+    },
+    "coldDataCompletion": {
+      "path": "output/2026-10-18-document-text-delivery/formal-cold-check/after-analysis/execution-completion.json",
+      "sha256": "b24af68b50f6ad9644305a734ca23ec34a168915edbd013705e70a14f6da30dd"
+    },
+    "coldProtocol": {
+      "path": "output/2026-10-18-document-text-delivery/formal-cold-check/protocol/summary.json",
+      "sha256": "2b854d2dafa73f0e89e9a2710ec80d73e5b2d2e8f63eb3058461e99b5d5769fb"
     }
-  }
+  },
+  "formalColdLoad": {
+    "recordedAtUtc": "2026-10-18T15:08:14.852585+00:00",
+    "sourceCommit": "a8a088817bc008481e3cfcc663b1783a0e5d78ef",
+    "rootNewPromptClicks": 0,
+    "rootConfigChangeClicks": 0,
+    "rootApprovalClicks": 0,
+    "rootNewConversationClicks": 0,
+    "rootFixtureAdditions": 0,
+    "latestCorrectedAssistantReplyExact": true,
+    "latestReplyShownAsHistory": true,
+    "latestUserPromptVisibleInClosedDefaultTree": false,
+    "latestStructuredMessageAttachmentVisibleInClosedDefaultTree": false,
+    "unknownMessagesRemainCollapsedAndUninspected": true,
+    "normalSaveExit": true,
+    "unknownWorkWarningPreserved": true,
+    "newRegressionOrDeletionProven": false,
+    "fullRecoveryResult": "Partial only; user body and structured attachment recovery remain unproven",
+    "modelChoicesPreserved": true,
+    "officialSourceConclusion": "No located Farfold discard of the examined standard user_message_chunk text/resource/image/audio/resource_link shapes. Selected official Dirac0.5.21 has a conditional upstream replay omission path; actual cold-window cause remains unconfirmed.",
+    "conditionalFindings": [
+      {
+        "classification": "LocatedConditionalUpstreamReplayGapNotActualWindowRootCause",
+        "location": "DiracAgent.ts:2153-2193;taskMessageBridge.ts:1051-1061",
+        "condition": "A persisted ACP update list is nonempty but has no user_message_chunk for a saved user MARKDOWN input.",
+        "behavior": "The nonempty-list path replays only persisted session_update/client_annotation entries, restores usage/pinned metadata and returns. It does not supplement absent users from uiMessages. Only the empty-list fallback explicitly reconstructs a nonempty user MARKDOWN as text user_message_chunk.",
+        "reasonConditionCanAriseInReadSource": "Live taskMessageBridge returns before producing user output for role=user; messageTranslator also skips ordinary user MARKDOWN. emitSessionUpdate persists emitted updates. This is a static path condition, not a private-journal observation or full producer impossibility proof.",
+        "bundleCorroboration": "Same nonempty-list return and user fallback found in actual selected installed dist/cli.mjs, bounded1700-character method inspection.",
+        "notProven": "Whether this actual cold conversation used that list path, whether its existing entries contain user chunks, and the contents/shapes of collapsed unknown messages were not inspected."
+      },
+      {
+        "classification": "StructuredLocalAttachmentRecoveryNotInferableFromPlainText",
+        "condition": "Approved local document is intentionally transmitted as plain text after the common correction.",
+        "behavior": "Official fallback constructs text only; it carries no original local DOCX URI/verified local metadata. A correct assistant replay alone cannot recreate the structured original attachment. The persisted-update branch only preserves attachment blocks if supplied in its actual stored updates.",
+        "boundary": "Not a demonstrated new Farfold discard or permission to invent attachment identity, reopen private Agent files, add a second transcript store or patch upstream."
+      }
+    ],
+    "sourceConditionNotActualPrivateJournalTrace": true,
+    "data": {
+      "kind": "IndependentFormalColdLoadSealedDataComparison",
+      "atUtc": "2026-10-18T15:12:43.705168+00:00",
+      "captureSourceCommit": "a8a088817bc008481e3cfcc663b1783a0e5d78ef",
+      "captureBinarySha256": "5b7e7756408d3457e1185240bcce00f7b92b9a9bf5e02a5747d581f82ed9a557",
+      "scope": {
+        "baseline": "Reused post-correction0723 full manifest and sealedbbe7, joined to000e raw-signature/closed point andb330 binding; not another full pre-UI snapshot.",
+        "after": "Root unique34055 capture after cold-load normal SaveExit; before argument selected original capture/normalization algorithm.",
+        "sql": "Exactly two sealed normalized copies mode=ro&immutable=1/query_only; no live/source/first/raw SQLiteOpen, SDK/message/history/config file access.",
+        "noContinuousIntervalClaim": true
+      },
+      "RootCaptureExecution": {
+        "checkedAtUtc": "2026-10-18T15:10:15.364309+00:00",
+        "role": "Cold-load after-use capture; before algorithm selector, not new pre-UI capture",
+        "session": 34055,
+        "initialChunk": "bb76e2",
+        "completionChunk": "33e05e",
+        "naturalExit": 0,
+        "receiptSha256": "818916c596f0897d18d7e15421cce1db830f82ba12f32a09cb0634d0336ac699",
+        "manifestSha256": "876ec1f84fc1a77da366fe9d2b1627f0c7a102dda231144b0437f417fc155fbc",
+        "normalizedSha256": "0618ed82809ec2cd90d42a84ff9b6d8b865a977ae61ff2c68ccbe9310ff5b367",
+        "notDataEqualityVerdict": true
+      },
+      "joins": {
+        "completeManifestsReceiptsRawSignaturesFirstCopyNormalizedBeforeSql": true,
+        "reusedPostCorrectionBaselineNotFreshFullPreUi": true,
+        "baseline000eAndBindingB330PinsExact": true,
+        "helperOnlyOutMigrationExactAndSourceA8a": true,
+        "sharedThreePinsExact": true,
+        "firstCopyAndNormalizedSignaturesBytesExact": true
+      },
+      "completeManifestComparison": {
+        "beforeCount": 232530,
+        "afterCount": 232530,
+        "added": 0,
+        "removed": 0,
+        "modified": 7,
+        "wholeEntryExact": 232523,
+        "modifiedBySafeCategory": {
+          "webkit": 4,
+          "metadataRawFile": 2,
+          "otherAppData": 1
+        },
+        "beforeSha256": "0723b8fb90e16ec0b1808414da049543dbd9785a8a01af5d91d21fb6b7d6b457",
+        "afterSha256": "876ec1f84fc1a77da366fe9d2b1627f0c7a102dda231144b0437f417fc155fbc",
+        "wholeManifestExact": false,
+        "knownRootOwnNewAddition": false,
+        "knownRootAdditionCount": 0,
+        "allAddedEntriesWriterUnknown": 0,
+        "modifiedEntriesWriter": "unknown"
+      },
+      "knownRootFixture": {
+        "newRootAdditions": 0,
+        "priorOwnDocxAlreadyInBaseline": true,
+        "noNewEntryAttributed": true
+      },
+      "rawMetadataComparison": {
+        "farfold.sqlite3": {
+          "bytesAndSha256Exact": true,
+          "wholeRecordedSignatureExact": true
+        },
+        "farfold.sqlite3-wal": {
+          "bytesAndSha256Exact": false,
+          "wholeRecordedSignatureExact": false
+        },
+        "farfold.sqlite3-shm": {
+          "bytesAndSha256Exact": false,
+          "wholeRecordedSignatureExact": false
+        }
+      },
+      "normalizedMetadata": {
+        "beforeSha256": "bbe74196f058efa98861d4893f71b29f711ea6e103ea1d57697d685e26fa8d5d",
+        "afterSha256": "0618ed82809ec2cd90d42a84ff9b6d8b865a977ae61ff2c68ccbe9310ff5b367",
+        "wholeDatabaseByteExact": false,
+        "schemaExact": true,
+        "userVersionExact": true,
+        "tableStats": {
+          "agents": {
+            "beforeCount": 40,
+            "afterCount": 40,
+            "added": 0,
+            "removed": 0,
+            "oldWholeRowsExact": 39,
+            "changedOldRows": 1,
+            "rowKeySetExact": true
+          },
+          "dismissed_sessions": {
+            "beforeCount": 173,
+            "afterCount": 173,
+            "added": 0,
+            "removed": 0,
+            "oldWholeRowsExact": 173,
+            "changedOldRows": 0,
+            "rowKeySetExact": true
+          },
+          "sessions": {
+            "beforeCount": 138,
+            "afterCount": 138,
+            "added": 0,
+            "removed": 0,
+            "oldWholeRowsExact": 138,
+            "changedOldRows": 0,
+            "rowKeySetExact": true
+          },
+          "settings": {
+            "beforeCount": 54,
+            "afterCount": 54,
+            "added": 0,
+            "removed": 0,
+            "oldWholeRowsExact": 54,
+            "changedOldRows": 0,
+            "rowKeySetExact": true
+          }
+        },
+        "changedColumns": {
+          "agents": {
+            "updated_at": 1
+          },
+          "dismissed_sessions": {},
+          "sessions": {},
+          "settings": {}
+        },
+        "changedSettingValues": [],
+        "allConnectionsClosedVerified": true,
+        "filesAndSignaturesUnchangedByAnalysis": true,
+        "sidecarsAbsentBeforeAndAfter": true
+      },
+      "oldUnsentContent": {
+        "wholeRawExact": true,
+        "wholeParsedStrictExact": true,
+        "beforeComposers": 10,
+        "afterComposers": 10,
+        "composerKeySetExact": true,
+        "oldWholeComposersExact": 10,
+        "composerFieldPresenceAndValueExact": {
+          "text": {
+            "presenceEqualCount": 10,
+            "wholeValueExactCount": 10
+          },
+          "attachments": {
+            "presenceEqualCount": 10,
+            "wholeValueExactCount": 10
+          },
+          "queueEdit": {
+            "presenceEqualCount": 10,
+            "wholeValueExactCount": 10
+          },
+          "pendingConversation": {
+            "presenceEqualCount": 10,
+            "wholeValueExactCount": 10
+          },
+          "savedChoice": {
+            "presenceEqualCount": 10,
+            "wholeValueExactCount": 10
+          },
+          "choice": {
+            "presenceEqualCount": 10,
+            "wholeValueExactCount": 10
+          },
+          "sendPending": {
+            "presenceEqualCount": 10,
+            "wholeValueExactCount": 10
+          }
+        },
+        "composerUnknownFieldSetsAndValuesExactCount": 10,
+        "topLevelFieldPresenceAndValueExact": {
+          "version": true,
+          "choice": true,
+          "feedback": true,
+          "queues": true,
+          "activity": true,
+          "templateEdits": true
+        },
+        "topLevelUnknownFieldSetsAndValuesExact": true
+      },
+      "agentSetup": {
+        "wholeRawExact": true,
+        "wholeParsedStrictExact": true,
+        "fieldPresenceAndValueExact": {
+          "version": true,
+          "completed": true,
+          "pending": true,
+          "progress": true,
+          "selections": true
+        },
+        "counts": {
+          "completed": {
+            "before": 23,
+            "after": 23
+          },
+          "pending": {
+            "before": 41,
+            "after": 41
+          },
+          "progress": {
+            "before": 72,
+            "after": 72
+          },
+          "selections": {
+            "before": 23,
+            "after": 23
+          }
+        },
+        "confirmedSelectionsWholeExact": true,
+        "unknownFieldSetsAndValuesExact": true
+      },
+      "writerAttribution": "Root reports zero new own fixtures in this cold window. All changed entries/row values remain unknown writers.",
+      "strictPresenceAndTypesCompared": true,
+      "trimNullFalseNormalizationPerformed": false,
+      "rawUserIdsBodiesPrivatePathsConfigValuesCredentialsExported": false,
+      "initialReadOnlyLookupIncident": null,
+      "limitations": [
+        "Capture0 and comparison0 are not whole-data equality or continuous preservation.",
+        "UI assistant reply visible but original user/attachment absent from default tree is a separate observation, not proof of deletion or a new regression. No whole cold history/attachment/source-label, all29/eight standards or phase-completion claim.",
+        "Formal UI reply correctness and real Agent behavior remain separately reviewed evidence; database comparison does not prove them."
+      ]
+    },
+    "protocolExecution": {
+      "chunk": "f6eeb6",
+      "naturalExit": 0,
+      "toolSha256": "dd420876fe11694914bc5b1b5441257d7902bd10edf467072e68bc0eb01030ae"
+    },
+    "safeProtocol": {
+      "kind": "OneBoundedContentFreeFormalProtocolWindowExtractionNotWholeSystemProof",
+      "atUtc": "2026-10-18T15:10:55.849459+00:00",
+      "window": {
+        "startUtc": "2026-10-18T15:05:05.194935+00:00",
+        "endUtc": "2026-10-18T15:08:26.870539+00:00",
+        "startUnixMicroseconds": 1792335905194935,
+        "endUnixMicroseconds": 1792336106870539,
+        "recordClock": "Integer Unix milliseconds truncated in tap.rs; boundary-intersecting milliseconds are separately uncertain."
+      },
+      "caps": {
+        "perFileBytes": 2179072,
+        "totalCandidateReadBytes": 16777216,
+        "candidateFiles": 64,
+        "directoryEntries": 4096,
+        "lineBytes": 16384,
+        "parsedRecords": 100000,
+        "scanSeconds": 30
+      },
+      "sourcePins": {
+        "src-tauri/src/acp_client/tap.rs": "5106bf33514aaeb3ee6bd6e2fd7e13599b22500d37d48c5bf29158e6a3583e2d",
+        "src-tauri/src/acp_client/startup_diagnostics.rs": "7cd9517112afb5147953f6b50636cf545f4c2e01912456d3b038186c20388cd3",
+        "src-tauri/src/acp_client/process_io.rs": "1d8c9cd22b6b5c27b248086dac19f091e4f94f1677785df99dff89dac7c01921",
+        "src-tauri/src/acp_client/initialization.rs": "ca3601fdb4e46d0dab65128f71d2bed5f95c741f72fd14a44bbed7257d5b8d03"
+      },
+      "sourcePinsUnchanged": true,
+      "sourceSchemaPolicy": "Strict known-key/type/enum validation mirrors safe_record, including optional startup IO/spawn consistency; raw file copies refused if any unknown/invalid/extra field occurs. Public v2 projection only fixed phase/failurePhase/startupOutcome class. No arbitrary disk fields forwarded.",
+      "directoryEnumerationComplete": true,
+      "matchingMetadataFiles": 898,
+      "candidateFiles": 2,
+      "filesRead": 2,
+      "fullyValidatedFiles": 2,
+      "candidateBytesRead": 95135,
+      "recordsParsed": 919,
+      "validDefiniteWindowRecords": 919,
+      "boundaryUncertainRecords": 0,
+      "fileCoverage": [
+        {
+          "filename": "protocol-v1-1792335913032-0.jsonl",
+          "filenameEpochMs": 1792335913032,
+          "rotated": false,
+          "metadataBefore": {
+            "type": "regular",
+            "ownerUid": 501,
+            "ownedByCurrentUser": true,
+            "mode": "0o644",
+            "nlink": 1,
+            "bytes": 3886,
+            "mtimeNs": 1792335973063070012
+          },
+          "status": "validated",
+          "schemaCounts": {
+            "v1": 1,
+            "v2_startup": 7
+          },
+          "windowRecords": 8,
+          "boundaryUncertainRecords": 0,
+          "outsideWindowRecords": 0,
+          "originalSha256": "c48b0411b2083dd7cfc561c2b54778fb7505285ec7ad7c01b20c02cb3f33d7ec",
+          "sourceMetadataStable": true,
+          "invalidCounts": {},
+          "privateExactRawCopySha256": "c48b0411b2083dd7cfc561c2b54778fb7505285ec7ad7c01b20c02cb3f33d7ec",
+          "privateExactWindowLineCopySha256": "c48b0411b2083dd7cfc561c2b54778fb7505285ec7ad7c01b20c02cb3f33d7ec"
+        },
+        {
+          "filename": "protocol-v1-1792335915336-1.jsonl",
+          "filenameEpochMs": 1792335915336,
+          "rotated": false,
+          "metadataBefore": {
+            "type": "regular",
+            "ownerUid": 501,
+            "ownedByCurrentUser": true,
+            "mode": "0o644",
+            "nlink": 1,
+            "bytes": 91249,
+            "mtimeNs": 1792336062753061580
+          },
+          "status": "validated",
+          "schemaCounts": {
+            "v1": 902,
+            "v2_startup": 9
+          },
+          "windowRecords": 911,
+          "boundaryUncertainRecords": 0,
+          "outsideWindowRecords": 0,
+          "originalSha256": "96662181075c2da04c91ea51995ea026dc59497ece928e24915ba936998d3003",
+          "sourceMetadataStable": true,
+          "invalidCounts": {},
+          "privateExactRawCopySha256": "96662181075c2da04c91ea51995ea026dc59497ece928e24915ba936998d3003",
+          "privateExactWindowLineCopySha256": "96662181075c2da04c91ea51995ea026dc59497ece928e24915ba936998d3003"
+        }
+      ],
+      "coverageIssues": {},
+      "targetMethodCounts": {
+        "out": {
+          "session/prompt": 0,
+          "session/new": 0,
+          "session/cancel": 0,
+          "session/request_permission": 0,
+          "session/set_config_option": 0,
+          "session/load": 1,
+          "session/list": 0
+        },
+        "in": {
+          "session/prompt": 0,
+          "session/new": 0,
+          "session/cancel": 0,
+          "session/request_permission": 0,
+          "session/set_config_option": 0,
+          "session/load": 0,
+          "session/list": 0
+        }
+      },
+      "allFixedV1EventCounts": [
+        {
+          "direction": "in",
+          "event": "other",
+          "count": 1
+        },
+        {
+          "direction": "in",
+          "event": "response",
+          "count": 2
+        },
+        {
+          "direction": "in",
+          "event": "session/update",
+          "count": 897
+        },
+        {
+          "direction": "out",
+          "event": "initialize",
+          "count": 2
+        },
+        {
+          "direction": "out",
+          "event": "session/load",
+          "count": 1
+        }
+      ],
+      "fixedProtocolErrorClassCounts": [],
+      "fixedStartupPhaseClassCounts": [
+        {
+          "phase": "cleanup",
+          "failurePhase": "initialize",
+          "startupOutcome": "timeout",
+          "count": 4
+        },
+        {
+          "phase": "cleanup",
+          "failurePhase": "none",
+          "startupOutcome": "success",
+          "count": 4
+        },
+        {
+          "phase": "initialize",
+          "failurePhase": "initialize",
+          "startupOutcome": "timeout",
+          "count": 1
+        },
+        {
+          "phase": "initialize",
+          "failurePhase": "none",
+          "startupOutcome": "success",
+          "count": 1
+        },
+        {
+          "phase": "initialize",
+          "failurePhase": "none",
+          "startupOutcome": "unknown",
+          "count": 4
+        },
+        {
+          "phase": "registration",
+          "failurePhase": "none",
+          "startupOutcome": "unknown",
+          "count": 2
+        }
+      ],
+      "coveredDefiniteRecordsHaveNoNewPrompt": true,
+      "coveredCandidateFilesAllStrictlyValidated": true,
+      "scope": "Only method/class counts in the Root-bound document-text-delivery formal-cold-check window and selected timestamped structured tap files are proved. No Agent attribution field exists. Zero recorded session/prompt is not whole-system/no-side-effect/credential/config/body or unlogged-traffic proof; partial/missing/rotated/capped coverage stays explicit. Incoming request_permission counts are protocol callbacks only, not UI guard clicks.",
+      "startupClassificationLimit": "A typed startupOutcome timeout/failurePhase initialize can classify a covered initialization timeout. It cannot independently identify OpenCode/Codex or explain why initialization timed out; root UI context is separate evidence.",
+      "privateCopies": "Exact original bytes only for fully validated candidate files; may contain safe structured records outside the window. Exact window line bytes are separately preserved. Unknown schema/over-cap files have no raw copy and no arbitrary output.",
+      "actualOperations": {
+        "scanExecutions": 1,
+        "candidateContentReadPassesPerFileMaximum": 1,
+        "rawBodyLogsOpened": 0,
+        "AgentConfigOrSecretFilesOpened": 0,
+        "AppAgentSqlGitActions": 0,
+        "sourceDocsPlanWrites": 0,
+        "logsWritten": 0
+      },
+      "scanElapsedSeconds": 0.007521,
+      "rawValuesPrinted": false
+    },
+    "boundaries": [
+      "Missing default-tree user body/attachment is not full history recovery success, permanent deletion or a newly caused regression. Priorc6d default cold tree also lacked user records.",
+      "No hidden/raw history event, private SDK/config or conversation data store was opened.",
+      "Assistant reply replay is distinct from restored user body, structured attachment/search candidates and resumable correct request semantics."
+    ],
+    "fullRecoveryAcceptance": "not established"
+  },
+  "updatedAtUtc": "2026-10-18T15:14:44.339490+00:00"
 }
