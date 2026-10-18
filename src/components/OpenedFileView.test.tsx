@@ -666,17 +666,27 @@ it("hands verified HTML to the browser once and does not repeat after hide and r
   expect(h.inspectLink).toHaveBeenCalledTimes(2);
 });
 
-it("does not automatically launch another application for binary or executable files", async () => {
-  const file = { ...receipt, name: "program.bin" };
-  h.inspectLink.mockResolvedValue(file);
-  await ready();
-  expect(render().html).toContain(S.other);
-  expect(h.readText).not.toHaveBeenCalled();
-  expect(h.open).not.toHaveBeenCalled();
-  click(S.open);
-  await vi.waitFor(() => expect(h.open).toHaveBeenCalledWith(file));
-  await vi.waitFor(() => expect(render().html).toContain(S.opened));
-});
+it.each(["program.bin", "image.avif", "sound.FLAC"])(
+  "keeps %s outside inline preview and requires an explicit exact-file open action",
+  async (name) => {
+    const path = `${receipt.root}/${name}`;
+    const file = { ...receipt, name, path, resolvedPath: path };
+    props.path = name;
+    h.inspectLink.mockResolvedValue(file);
+    await ready();
+    expect(h.inspectLink).toHaveBeenCalledWith(props.workingDirectory, name);
+    expect(render().html).toContain(S.other);
+    expect(render().html).toContain("暂无内置预览，可在文件夹中选择打开方式。");
+    expect(render().html).not.toContain("data-visual-version");
+    expect(render().html).not.toContain("<audio");
+    expect(h.readText).not.toHaveBeenCalled();
+    expect(h.readVisual).not.toHaveBeenCalled();
+    expect(h.open).not.toHaveBeenCalled();
+    click(S.open);
+    await vi.waitFor(() => expect(h.open).toHaveBeenCalledWith(file));
+    await vi.waitFor(() => expect(render().html).toContain(S.opened));
+  },
+);
 
 it("routes large Markdown to an explicit source fragment, retaining verified file actions", async () => {
   const file = { ...receipt, size: 1024 * 1024 + 1 };

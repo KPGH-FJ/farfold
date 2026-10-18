@@ -17,7 +17,7 @@ export const FILE_OPEN_STRINGS = {
   feedbackHint: "意见对应当前查看的内容，加入输入框后由你发送。",
   html: "可在网页中查看此 HTML。",
   openHtml: "打开网页",
-  other: "此文件可用默认应用打开。",
+  other: "暂无内置预览，可在文件夹中选择打开方式。",
   large: "文件较大，可用默认应用打开查看。",
   open: "用默认应用打开",
   opened: "已交给默认应用打开。",
