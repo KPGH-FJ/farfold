@@ -1,0 +1,813 @@
+{
+  "schemaVersion": 1,
+  "kind": "ReviewedDocumentTextDeliveryAndP32BoundedFormalEvidence",
+  "recordedAtUtc": "2026-10-18T15:03:11.971244+00:00",
+  "schedulingAuthority": "plans/agent-access.md only; evidence is not another active plan",
+  "taskIds": ["P08", "P32"],
+  "wholeTaskClosed": false,
+  "originalFailure": {
+    "source": "c6d3de6b306dc6b7850012b85caa1d7357c3e258",
+    "reviewTextBytes": 1078,
+    "approvedParagraph": "LEFT[未加入：隐藏文字未显示，缺失位置已注明。]RIGHT",
+    "actualVisibleReplies": [
+      "LEFTHIDDEN_ONLY needleRIGHT",
+      "LEFTHIDDEN_ONLY needleRIGHT"
+    ],
+    "scopeFidelityPassed": false,
+    "visibleRepliesDoNotEstablishPromptOrOsReadCount": true,
+    "priorP32SearchPositiveRemainsSeparate": true
+  },
+  "source": {
+    "featureCommit": "41419479d347372ed869c25eb0ec1d2b337bdfec",
+    "installedCommit": "a8a088817bc008481e3cfcc663b1783a0e5d78ef",
+    "followupOnlyTestImportFormatting": true,
+    "changedFiles": {
+      "src/runtime/prompt_blocks.ts": "221a841dba843d0f7eee2418ca7b00d89836d1aeeca1af8f4dd3a9f65169b109",
+      "src/runtime/prompt_document_delivery.test.ts": "e7fe9969185a1d3f5f4ea0c2775d14baefb973dba6d6ff1ec8fb970b5744d0b0",
+      "src/runtime/docx_draft_integration.test.ts": "f31a950659b0839f8592878f736ab99a3d0b5e153facc88af1bf8e416869e823",
+      "src/runtime/pdf_draft_integration.test.ts": "c41dbc2b796e08232aaaa7b4c3b81482ee8450c8b37c26d2f70da8e8ff156041",
+      "src/runtime/xlsx_draft_integration.test.ts": "0c46dcf640a1bbe366b96f6834828202e95a9a8d5417c23cc9629b64e43ba33d",
+      "src/runtime/sessions.docx-input.test.ts": "bc6590ada980eb9c6b7a108364c99ebb5fabdb26c7532d96ee77871f9c3c4fb3"
+    },
+    "commonWireRule": "Explicit reviewed local document text becomes official text exact body without source URI. Local source/version/message attachments are preserved before wire conversion.",
+    "ordinaryAndHistoricalNoLocalFieldResourcesUnchanged": true,
+    "malformedOrMissingExplicitAuthorityRejected": true,
+    "resourceOnlyGateDoesNotApplyToConvertedText": true,
+    "existingFrontendCapabilitySourceAndConsentGuardsRemain": "Covered by focused/common-drain tests; not an assertion of unchanged Rust Resource-only gating",
+    "upstreamAgentOrPrivateConfigurationChanged": false,
+    "newAgentSpecificUiOrSecondLoop": false,
+    "independentScope": "Full frozen/executed input identity and actual seven-log join, plus prior independent semantic review of one production branch and final import-format delta. This is not a new semantic audit of every repository file."
+  },
+  "engineering": {
+    "head": "a8a088817bc008481e3cfcc663b1783a0e5d78ef",
+    "naturalExit": 0,
+    "session": 36562,
+    "chunks": ["20378e", "c446bc", "7cc6f7", "9cdc1f"],
+    "requiredChecks": 7,
+    "frontendFiles": 593,
+    "frontendPassed": 7915,
+    "rustPassed": 1823,
+    "rustIgnored": 6,
+    "stableExecutedInputs": 19188,
+    "steps": [
+      {
+        "command": ["corepack", "pnpm", "format:check"],
+        "exitCode": 0,
+        "startedAtUnix": 1792326439.6950111,
+        "finishedAtUnix": 1792326471.9236329,
+        "log": "output/2026-10-18-document-text-delivery/engineering/run2/01.log",
+        "logSha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "inputsStable": true
+      },
+      {
+        "command": ["corepack", "pnpm", "typecheck"],
+        "exitCode": 0,
+        "startedAtUnix": 1792326471.94561,
+        "finishedAtUnix": 1792326483.504735,
+        "log": "output/2026-10-18-document-text-delivery/engineering/run2/02.log",
+        "logSha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "inputsStable": true
+      },
+      {
+        "command": ["corepack", "pnpm", "test"],
+        "exitCode": 0,
+        "startedAtUnix": 1792326483.5273259,
+        "finishedAtUnix": 1792326545.552842,
+        "log": "output/2026-10-18-document-text-delivery/engineering/run2/03.log",
+        "logSha256": "81189df303bfd01950d1970294354d4e2f97dfe47d5159d5cca8ef181431fc5d",
+        "inputsStable": true
+      },
+      {
+        "command": ["corepack", "pnpm", "build"],
+        "exitCode": 0,
+        "startedAtUnix": 1792326545.575213,
+        "finishedAtUnix": 1792326557.0685482,
+        "log": "output/2026-10-18-document-text-delivery/engineering/run2/04.log",
+        "logSha256": "07519368ebaa371bb21f238229bc3a87a451c705e78b24df8986a1b298b4d764",
+        "inputsStable": true
+      },
+      {
+        "command": [
+          "cargo",
+          "fmt",
+          "--check",
+          "--manifest-path",
+          "src-tauri/Cargo.toml"
+        ],
+        "exitCode": 0,
+        "startedAtUnix": 1792326557.09039,
+        "finishedAtUnix": 1792326559.230381,
+        "log": "output/2026-10-18-document-text-delivery/engineering/run2/05.log",
+        "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "inputsStable": true
+      },
+      {
+        "command": [
+          "cargo",
+          "clippy",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exitCode": 0,
+        "startedAtUnix": 1792326559.2524889,
+        "finishedAtUnix": 1792326560.8874738,
+        "log": "output/2026-10-18-document-text-delivery/engineering/run2/06.log",
+        "logSha256": "e68dbb831082090d6aab9641584d06498d66907f4c3e3d2d36c4824da23e94c8",
+        "inputsStable": true
+      },
+      {
+        "command": [
+          "cargo",
+          "test",
+          "--manifest-path",
+          "src-tauri/Cargo.toml",
+          "--locked"
+        ],
+        "exitCode": 0,
+        "startedAtUnix": 1792326560.9097831,
+        "finishedAtUnix": 1792326693.101701,
+        "log": "output/2026-10-18-document-text-delivery/engineering/run2/07.log",
+        "logSha256": "77c73b0501b1366367a4da1d293d9f6ae23bb89b80efc63ceb97d02a9d17a4e2",
+        "inputsStable": true
+      }
+    ],
+    "firstRun": {
+      "session": 97528,
+      "naturalExit": 1,
+      "onlyFirstFormatCheckExecuted": true,
+      "laterSixNotStarted": true,
+      "reason": "Removed unused test import left a prettier-only formatting difference. Original failure kept; import whitespace fixed before unique second full run."
+    },
+    "proofScope": "Source engineering at frozen inputs before this docs-only checkpoint, not formal Agent evidence"
+  },
+  "installation": {
+    "candidateNine": {
+      "session": 32089,
+      "naturalExit": 0,
+      "passed": 9,
+      "total": 9
+    },
+    "atomicInstall": {
+      "session": 93449,
+      "naturalExit": 0,
+      "uniqueFormalAppOnly": true,
+      "newInodeReplacements": 5,
+      "forcedQuit": false
+    },
+    "installedTen": {
+      "session": 75821,
+      "chunks": ["e51feb", "635b5e"],
+      "naturalExit": 0,
+      "passed": 10,
+      "total": 10
+    },
+    "formalBinarySha256": "5b7e7756408d3457e1185240bcce00f7b92b9a9bf5e02a5747d581f82ed9a557",
+    "threeStrictManifests": {
+      "entriesEach": 232529,
+      "sha256Each": "2cbf83ed4eceee69c0b3d3b326bd2f88231357f704c77b6accfc67243da79671",
+      "matches": true
+    },
+    "duplicateCleanup": {
+      "chunk": "e6aa5c",
+      "naturalExit": 0,
+      "exactFilesRemoved": 5,
+      "formalAppAndZipRetained": true
+    }
+  },
+  "formalCorrection": {
+    "sourceCommit": "a8a088817bc008481e3cfcc663b1783a0e5d78ef",
+    "model": "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "reasoning": "Medium",
+    "provider": "OpenRouter",
+    "thinkingBudget": "Off",
+    "mode": "Act",
+    "autoApprove": false,
+    "YOLO": false,
+    "configChangeClicks": 0,
+    "newPromptClicks": 1,
+    "permissionApprovalClicks": 0,
+    "fixtureBytes": 2452,
+    "actualReviewTextBytes": 1118,
+    "explicitPartialConsent": true,
+    "actualReply": "FARFOLD_REVIEW_LEFT_4141[未加入：隐藏文字未显示，缺失位置已注明。]FARFOLD_REVIEW_RIGHT_4141",
+    "replyExactApprovedParagraph": true,
+    "hiddenAnswerNotProvidedInPrompt": true,
+    "newReplyCompletedAndNotRunning": true,
+    "normalSaveExit": true,
+    "cuaExitObservation": "App quit -10005",
+    "formalProcessCountAfterQuitPoint": 0,
+    "boundary": "Selected real Dirac DOCX body fidelity only. No claim of zero SDK effects, full format/29x8/cold structured attachment retention or whole-data equality."
+  },
+  "formalP32PriorPositive": {
+    "sourceCommit": "c6d3de6b306dc6b7850012b85caa1d7357c3e258",
+    "ownDocxBytes": 2393,
+    "reviewedTextBytes": 1078,
+    "normalFileSelectionAndExplicitReview": true,
+    "realCompletedMessageAttachment": true,
+    "onlyExplicitSelectedFileReadForSearch": true,
+    "searchQuery": "BODY needle",
+    "fileCountRead": 1,
+    "fileCountSelected": 1,
+    "hits": 1,
+    "source": "正文 · 段落1",
+    "literalHit": "BODY needle literal <img src=\"https://example.invalid/DOCX\">",
+    "jump": "Original user message and attachment highlighted, not source DOCX opened or needle highlighted inside DOCX",
+    "firstReplyTokenDoesNotProveAgentUsedDocumentText": true,
+    "wholeP32Closed": false
+  },
+  "postUseData": {
+    "kind": "IndependentFormalDocumentTextCorrectionSealedDataComparison",
+    "atUtc": "2026-10-18T15:01:07.283255+00:00",
+    "captureSourceCommit": "a8a088817bc008481e3cfcc663b1783a0e5d78ef",
+    "captureBinarySha256": "5b7e7756408d3457e1185240bcce00f7b92b9a9bf5e02a5747d581f82ed9a557",
+    "scope": {
+      "baseline": "Reused installation strict-three2cbf manifests and sealedbe4c, joined to baseline35ee raw-signature point; not another full pre-UI snapshot.",
+      "after": "Root unique18619 capture after normal SaveExit; before argument selected original capture/normalization algorithm.",
+      "sql": "Exactly two sealed normalized copies mode=ro&immutable=1/query_only; no live/source/first/raw SQLiteOpen, SDK/message/history/config file access.",
+      "noContinuousIntervalClaim": true
+    },
+    "RootCaptureExecution": {
+      "checkedAtUtc": "2026-10-18T14:56:00.008126+00:00",
+      "role": "After formal correction UI, before algorithm creates fresh sealed standalone backup",
+      "session": 18619,
+      "initialChunk": "fd91ce",
+      "completionChunk": "01cb0c",
+      "naturalExit": 0,
+      "receiptSha256": "fa0cd239a134b67288d46ebee673268d31dc64fb890ebbdbf29c93f74df17e15",
+      "manifestSha256": "0723b8fb90e16ec0b1808414da049543dbd9785a8a01af5d91d21fb6b7d6b457",
+      "normalizedSha256": "bbe74196f058efa98861d4893f71b29f711ea6e103ea1d57697d685e26fa8d5d",
+      "notDataEqualityVerdict": true
+    },
+    "joins": {
+      "completeManifestsReceiptsRawSignaturesFirstCopyNormalizedBeforeSql": true,
+      "installationThreeFullManifestsStrictEqual": true,
+      "baseline35eeAndOwnFixturePinsExact": true,
+      "helperOnlyOutMigrationExactAndSourceA8a": true,
+      "sharedThreePinsExact": true,
+      "firstCopyAndNormalizedSignaturesBytesExact": true
+    },
+    "completeManifestComparison": {
+      "beforeCount": 232529,
+      "afterCount": 232530,
+      "added": 1,
+      "removed": 0,
+      "modified": 8,
+      "wholeEntryExact": 232521,
+      "modifiedBySafeCategory": {
+        "webkit": 4,
+        "metadataRawFile": 3,
+        "otherAppData": 1
+      },
+      "beforeSha256": "2cbf83ed4eceee69c0b3d3b326bd2f88231357f704c77b6accfc67243da79671",
+      "afterSha256": "0723b8fb90e16ec0b1808414da049543dbd9785a8a01af5d91d21fb6b7d6b457",
+      "wholeManifestExact": false,
+      "knownRootOwnDocxAdditionExactPathBytesHash": true,
+      "knownRootAdditionCount": 1,
+      "allOtherAddedEntriesWriterUnknown": 0,
+      "modifiedEntriesWriter": "unknown"
+    },
+    "knownRootFixture": {
+      "creationReceiptSha256": "4ff08f9ebb181be21fe964664084999b9da3310fc08c424ef9f245cdf06fddda",
+      "bytes": 2452,
+      "sha256": "3544d6a467cea9e2ddcadb5b177a57b22c8687b5507ed34d6310e00360061799",
+      "onlyThisAdditionAttributed": true
+    },
+    "rawMetadataComparison": {
+      "farfold.sqlite3": {
+        "bytesAndSha256Exact": false,
+        "wholeRecordedSignatureExact": false
+      },
+      "farfold.sqlite3-wal": {
+        "bytesAndSha256Exact": false,
+        "wholeRecordedSignatureExact": false
+      },
+      "farfold.sqlite3-shm": {
+        "bytesAndSha256Exact": false,
+        "wholeRecordedSignatureExact": false
+      }
+    },
+    "normalizedMetadata": {
+      "beforeSha256": "be4c10854ae657cbf45cd2817ddadbab2118caa4848130919e3d587dbb21610c",
+      "afterSha256": "bbe74196f058efa98861d4893f71b29f711ea6e103ea1d57697d685e26fa8d5d",
+      "wholeDatabaseByteExact": false,
+      "schemaExact": true,
+      "userVersionExact": true,
+      "tableStats": {
+        "agents": {
+          "beforeCount": 40,
+          "afterCount": 40,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 39,
+          "changedOldRows": 1,
+          "rowKeySetExact": true
+        },
+        "dismissed_sessions": {
+          "beforeCount": 173,
+          "afterCount": 173,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 173,
+          "changedOldRows": 0,
+          "rowKeySetExact": true
+        },
+        "sessions": {
+          "beforeCount": 138,
+          "afterCount": 138,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 137,
+          "changedOldRows": 1,
+          "rowKeySetExact": true
+        },
+        "settings": {
+          "beforeCount": 54,
+          "afterCount": 54,
+          "added": 0,
+          "removed": 0,
+          "oldWholeRowsExact": 53,
+          "changedOldRows": 1,
+          "rowKeySetExact": true
+        }
+      },
+      "changedColumns": {
+        "agents": {
+          "updated_at": 1
+        },
+        "dismissed_sessions": {},
+        "sessions": {
+          "updated_at": 1
+        },
+        "settings": {
+          "value": 1
+        }
+      },
+      "changedSettingValues": [
+        {
+          "category": "unsentWork",
+          "beforeValueSha256": "8a33ac63137e60c99a1fcac34c573bc177390f49092acad1d05b2b6270247227",
+          "afterValueSha256": "44d641448622a4d88112113d11cc10fca84f407fa7d0a251e8c5f4e512d287ff"
+        }
+      ],
+      "allConnectionsClosedVerified": true,
+      "filesAndSignaturesUnchangedByAnalysis": true,
+      "sidecarsAbsentBeforeAndAfter": true
+    },
+    "oldUnsentContent": {
+      "wholeRawExact": false,
+      "wholeParsedStrictExact": false,
+      "beforeComposers": 10,
+      "afterComposers": 10,
+      "composerKeySetExact": true,
+      "oldWholeComposersExact": 10,
+      "composerFieldPresenceAndValueExact": {
+        "text": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        },
+        "attachments": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        },
+        "queueEdit": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        },
+        "pendingConversation": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        },
+        "savedChoice": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        },
+        "choice": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        },
+        "sendPending": {
+          "presenceEqualCount": 10,
+          "wholeValueExactCount": 10
+        }
+      },
+      "composerUnknownFieldSetsAndValuesExactCount": 10,
+      "topLevelFieldPresenceAndValueExact": {
+        "version": true,
+        "choice": true,
+        "feedback": true,
+        "queues": true,
+        "activity": false,
+        "templateEdits": true
+      },
+      "topLevelUnknownFieldSetsAndValuesExact": true
+    },
+    "agentSetup": {
+      "wholeRawExact": true,
+      "wholeParsedStrictExact": true,
+      "fieldPresenceAndValueExact": {
+        "version": true,
+        "completed": true,
+        "pending": true,
+        "progress": true,
+        "selections": true
+      },
+      "counts": {
+        "completed": {
+          "before": 23,
+          "after": 23
+        },
+        "pending": {
+          "before": 41,
+          "after": 41
+        },
+        "progress": {
+          "before": 72,
+          "after": 72
+        },
+        "selections": {
+          "before": 23,
+          "after": 23
+        }
+      },
+      "confirmedSelectionsWholeExact": true,
+      "unknownFieldSetsAndValuesExact": true
+    },
+    "writerAttribution": "Only the exact newly added own2452B DOCX can be attributed to Root. All other changed entries/row values remain unknown.",
+    "strictPresenceAndTypesCompared": true,
+    "trimNullFalseNormalizationPerformed": false,
+    "rawUserIdsBodiesPrivatePathsConfigValuesCredentialsExported": false,
+    "initialReadOnlyLookupIncident": {
+      "chunk": "9e992c",
+      "naturalExit": 1,
+      "reason": "Shell unmatched optional source globs; no SQLite/capture opened. Exact bounded rg source-key lookup succeeded separately."
+    },
+    "limitations": [
+      "Capture0 and comparison0 are not whole-data equality or continuous preservation.",
+      "No broad P32, cold attachment/source-label retention, all document formats, all29/eight standards, P13/P18/P35 or phase-completion claim.",
+      "Formal UI reply correctness and real Agent behavior remain separately reviewed evidence; database comparison does not prove them."
+    ]
+  },
+  "protocol": {
+    "executionChunk": "a0dd50",
+    "naturalExit": 0,
+    "toolSha256": "7ad3b9c454c29c2d01db4539552150d3612800ea2bcfe85d87a8bca4697e7bb3",
+    "safeSummary": {
+      "kind": "OneBoundedContentFreeFormalProtocolWindowExtractionNotWholeSystemProof",
+      "atUtc": "2026-10-18T14:57:00.131925+00:00",
+      "window": {
+        "startUtc": "2026-10-18T14:52:22.295520+00:00",
+        "endUtc": "2026-10-18T14:55:37.001299+00:00",
+        "startUnixMicroseconds": 1792335142295520,
+        "endUnixMicroseconds": 1792335337001299,
+        "recordClock": "Integer Unix milliseconds truncated in tap.rs; boundary-intersecting milliseconds are separately uncertain."
+      },
+      "caps": {
+        "perFileBytes": 2179072,
+        "totalCandidateReadBytes": 16777216,
+        "candidateFiles": 64,
+        "directoryEntries": 4096,
+        "lineBytes": 16384,
+        "parsedRecords": 100000,
+        "scanSeconds": 30
+      },
+      "sourcePins": {
+        "src-tauri/src/acp_client/tap.rs": "5106bf33514aaeb3ee6bd6e2fd7e13599b22500d37d48c5bf29158e6a3583e2d",
+        "src-tauri/src/acp_client/startup_diagnostics.rs": "7cd9517112afb5147953f6b50636cf545f4c2e01912456d3b038186c20388cd3",
+        "src-tauri/src/acp_client/process_io.rs": "1d8c9cd22b6b5c27b248086dac19f091e4f94f1677785df99dff89dac7c01921",
+        "src-tauri/src/acp_client/initialization.rs": "ca3601fdb4e46d0dab65128f71d2bed5f95c741f72fd14a44bbed7257d5b8d03"
+      },
+      "sourcePinsUnchanged": true,
+      "sourceSchemaPolicy": "Strict known-key/type/enum validation mirrors safe_record, including optional startup IO/spawn consistency; raw file copies refused if any unknown/invalid/extra field occurs. Public v2 projection only fixed phase/failurePhase/startupOutcome class. No arbitrary disk fields forwarded.",
+      "directoryEnumerationComplete": true,
+      "matchingMetadataFiles": 896,
+      "candidateFiles": 2,
+      "filesRead": 2,
+      "fullyValidatedFiles": 2,
+      "candidateBytesRead": 106165,
+      "recordsParsed": 1040,
+      "validDefiniteWindowRecords": 1040,
+      "boundaryUncertainRecords": 0,
+      "fileCoverage": [
+        {
+          "filename": "protocol-v1-1792335146672-0.jsonl",
+          "filenameEpochMs": 1792335146672,
+          "rotated": false,
+          "metadataBefore": {
+            "type": "regular",
+            "ownerUid": 501,
+            "ownedByCurrentUser": true,
+            "mode": "0o644",
+            "nlink": 1,
+            "bytes": 3883,
+            "mtimeNs": 1792335206703242920
+          },
+          "status": "validated",
+          "schemaCounts": {
+            "v1": 1,
+            "v2_startup": 7
+          },
+          "windowRecords": 8,
+          "boundaryUncertainRecords": 0,
+          "outsideWindowRecords": 0,
+          "originalSha256": "e59181475ded9798d6429258fc834602c25c59a65b7db7ee3abcd352abb254cd",
+          "sourceMetadataStable": true,
+          "invalidCounts": {},
+          "privateExactRawCopySha256": "e59181475ded9798d6429258fc834602c25c59a65b7db7ee3abcd352abb254cd",
+          "privateExactWindowLineCopySha256": "e59181475ded9798d6429258fc834602c25c59a65b7db7ee3abcd352abb254cd"
+        },
+        {
+          "filename": "protocol-v1-1792335148924-1.jsonl",
+          "filenameEpochMs": 1792335148924,
+          "rotated": false,
+          "metadataBefore": {
+            "type": "regular",
+            "ownerUid": 501,
+            "ownedByCurrentUser": true,
+            "mode": "0o644",
+            "nlink": 1,
+            "bytes": 102282,
+            "mtimeNs": 1792335253807103060
+          },
+          "status": "validated",
+          "schemaCounts": {
+            "v1": 1024,
+            "v2_startup": 8
+          },
+          "windowRecords": 1032,
+          "boundaryUncertainRecords": 0,
+          "outsideWindowRecords": 0,
+          "originalSha256": "a43ff8a824309838077f37c4fc2255ab78a8bafdaedae2b49aa63d4b634dee7e",
+          "sourceMetadataStable": true,
+          "invalidCounts": {},
+          "privateExactRawCopySha256": "a43ff8a824309838077f37c4fc2255ab78a8bafdaedae2b49aa63d4b634dee7e",
+          "privateExactWindowLineCopySha256": "a43ff8a824309838077f37c4fc2255ab78a8bafdaedae2b49aa63d4b634dee7e"
+        }
+      ],
+      "coverageIssues": {},
+      "targetMethodCounts": {
+        "out": {
+          "session/prompt": 1,
+          "session/new": 0,
+          "session/cancel": 0,
+          "session/request_permission": 0,
+          "session/set_config_option": 0,
+          "session/load": 1,
+          "session/list": 0
+        },
+        "in": {
+          "session/prompt": 0,
+          "session/new": 0,
+          "session/cancel": 0,
+          "session/request_permission": 0,
+          "session/set_config_option": 0,
+          "session/load": 0,
+          "session/list": 0
+        }
+      },
+      "allFixedV1EventCounts": [
+        {
+          "direction": "in",
+          "event": "other",
+          "count": 1
+        },
+        {
+          "direction": "in",
+          "event": "response",
+          "count": 3
+        },
+        {
+          "direction": "in",
+          "event": "session/update",
+          "count": 1017
+        },
+        {
+          "direction": "out",
+          "event": "initialize",
+          "count": 2
+        },
+        {
+          "direction": "out",
+          "event": "session/load",
+          "count": 1
+        },
+        {
+          "direction": "out",
+          "event": "session/prompt",
+          "count": 1
+        }
+      ],
+      "fixedProtocolErrorClassCounts": [],
+      "fixedStartupPhaseClassCounts": [
+        {
+          "phase": "cleanup",
+          "failurePhase": "initialize",
+          "startupOutcome": "timeout",
+          "count": 4
+        },
+        {
+          "phase": "cleanup",
+          "failurePhase": "none",
+          "startupOutcome": "success",
+          "count": 3
+        },
+        {
+          "phase": "initialize",
+          "failurePhase": "initialize",
+          "startupOutcome": "timeout",
+          "count": 1
+        },
+        {
+          "phase": "initialize",
+          "failurePhase": "none",
+          "startupOutcome": "success",
+          "count": 1
+        },
+        {
+          "phase": "initialize",
+          "failurePhase": "none",
+          "startupOutcome": "unknown",
+          "count": 4
+        },
+        {
+          "phase": "registration",
+          "failurePhase": "none",
+          "startupOutcome": "unknown",
+          "count": 2
+        }
+      ],
+      "coveredDefiniteRecordsHaveNoNewPrompt": false,
+      "coveredCandidateFilesAllStrictlyValidated": true,
+      "scope": "Only method/class counts in the Root-bound document-text-delivery formal-correction window and selected timestamped structured tap files are proved. No Agent attribution field exists. Zero recorded session/prompt is not whole-system/no-side-effect/credential/config/body or unlogged-traffic proof; partial/missing/rotated/capped coverage stays explicit. Incoming request_permission counts are protocol callbacks only, not UI guard clicks.",
+      "startupClassificationLimit": "A typed startupOutcome timeout/failurePhase initialize can classify a covered initialization timeout. It cannot independently identify OpenCode/Codex or explain why initialization timed out; root UI context is separate evidence.",
+      "privateCopies": "Exact original bytes only for fully validated candidate files; may contain safe structured records outside the window. Exact window line bytes are separately preserved. Unknown schema/over-cap files have no raw copy and no arbitrary output.",
+      "actualOperations": {
+        "scanExecutions": 1,
+        "candidateContentReadPassesPerFileMaximum": 1,
+        "rawBodyLogsOpened": 0,
+        "AgentConfigOrSecretFilesOpened": 0,
+        "AppAgentSqlGitActions": 0,
+        "sourceDocsPlanWrites": 0,
+        "logsWritten": 0
+      },
+      "scanElapsedSeconds": 0.007480625000000005,
+      "rawValuesPrinted": false
+    }
+  },
+  "remainingConditions": {
+    "NEW24": "Affected Codex new ordinary requests still paused; no alternate controller/private HOME/upstream patch.",
+    "NEW29": "Selected official Dirac0.5.21 /smol advertisement and historical cards do not establish reliable live begin/busy event route; utility selections/hooks/retries unknown.",
+    "P40": "Official modify interface exists. No concrete owned test package, desired state and shared scope is selected/authorized; no install/remove performed. Current conversation adoption separately unverified."
+  },
+  "notProven": [
+    "Full29/eight standards or151 requirements complete",
+    "Full formats, all Agents, visual fidelity or source extraction parity",
+    "Official cold structured attachment retention or multi-document source naming",
+    "Zero underlying SDK/tool/file/network effects from a no-tool user prompt",
+    "Whole data equality, continuous preservation or unknown writer identity",
+    "New protocol initialization timeout cause or per-Agent attribution",
+    "P13 playback repair, full P18/P32/P35/P40, NEW24/NEW29 closure",
+    "Windows real-system readiness, signing/notarization/public distribution"
+  ],
+  "evidence": {
+    "sourceReview": {
+      "path": "output/2026-10-18-document-text-delivery/source-review.json",
+      "sha256": "30e8941fba5fdd227dad01be26b21a3ac09c8669ca313ccda76fa504e44fe6db"
+    },
+    "fullSourceReview": {
+      "path": "output/2026-10-18-document-text-delivery/full-source-review.json",
+      "sha256": "cf89df58d46853f0a2e141b7753ee2650b59f5f5a2ea3d923f773f56155ea1bd"
+    },
+    "featurePush": {
+      "path": "output/2026-10-18-document-text-delivery/source-push-result.json",
+      "sha256": "3aaf16f7d2c7dcdf35d13a5b09dbeee75568985dc2dd324f37c34b12667c06a9"
+    },
+    "formatPush": {
+      "path": "output/2026-10-18-document-text-delivery/format-followup-push.json",
+      "sha256": "360618f40e463ee3e51916dc0a179621370cf70f55f3e7243160bf0612ec4ce5"
+    },
+    "fullEngineering": {
+      "path": "output/2026-10-18-document-text-delivery/engineering/run2/verification.json",
+      "sha256": "63785ed0eaa1974a1b526d8307d21ff11534801ad9c5d2925dffb0ec6e68717e"
+    },
+    "engineeringCompletion": {
+      "path": "output/2026-10-18-document-text-delivery/engineering/run2/execution-completion.json",
+      "sha256": "addff4b04aec8bfddb0473b6a7bedd0e392a4c010da6792ae94358a050086192"
+    },
+    "firstEngineeringFailure": {
+      "path": "output/2026-10-18-document-text-delivery/engineering/run1/verification.json",
+      "sha256": "e44e6385d4ebfdb271f7b4816f418bac0b76e3058875c432719f43155fe722e8"
+    },
+    "candidate": {
+      "path": "output/2026-10-18-document-text-delivery/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "b6a6dfe5397da2e165a802132cd453bf941b5a71e2b230c4c4b23528bc42748d"
+    },
+    "candidateNine": {
+      "path": "output/2026-10-18-document-text-delivery/candidate-preparation/independent/review.json",
+      "sha256": "d97b3eddbd25c8862deaad6465f85d477cde47f86e28302e8c0d5d1107a44da1"
+    },
+    "atomicInstall": {
+      "path": "output/2026-10-18-document-text-delivery/install/install-result.json",
+      "sha256": "2c8607f0ee4ddc45d438ef37c2127b36ee73d627eb7b9d072d1da02eaf7887bb"
+    },
+    "installedTen": {
+      "path": "output/2026-10-18-document-text-delivery/install/installed-independent-review-private.json",
+      "sha256": "f814e1b48ec67bb49a3aa5e5db0bd58df64fd725b8fa54aa73a481dddf3cef52"
+    },
+    "installBefore": {
+      "path": "output/2026-10-18-document-text-delivery/install/retention-before-receipt.json",
+      "sha256": "a88a80fea6833e6047b379eacfa4d14458af3ef92083dc61e6d6759ccbfd3d9b"
+    },
+    "installPreinstall": {
+      "path": "output/2026-10-18-document-text-delivery/install/retention-preinstall-receipt.json",
+      "sha256": "d3fd5d5e83ace7895a34e50601e06ed3693bb9e52c87e2ef0211c8c899ccd08a"
+    },
+    "installAfter": {
+      "path": "output/2026-10-18-document-text-delivery/install/retention-after-receipt.json",
+      "sha256": "a6bd1dd280d377d2f375af2d430f8150dd4f62dae33280d93a668e36e7ac2c10"
+    },
+    "cleanup": {
+      "path": "output/2026-10-18-document-text-delivery/install/candidate-cleanup.json",
+      "sha256": "9e406553405db6fe3c15069bc02cd90bbb6d2cf20b66ff27871071ffea71afde"
+    },
+    "tenAndCleanupCompletion": {
+      "path": "output/2026-10-18-document-text-delivery/install/ten-and-cleanup-completion.json",
+      "sha256": "8d5af940def62f2507ef9780bbaf3256f5920167def39879e3776aaa6fc6695e"
+    },
+    "formalActual": {
+      "path": "output/2026-10-18-document-text-delivery/formal-correction/actual-observation.json",
+      "sha256": "34e0ccf903f8b585276bd8aca9afc8d06ef6f742c86e3c8fbda1c9b473624b29"
+    },
+    "formalIndependent": {
+      "path": "output/2026-10-18-document-text-delivery/formal-correction/independent-observation-review.json",
+      "sha256": "0236d74057601c456bcbb2e16621dbe39b22e03922ab1e41f1b1c7cb13299e41"
+    },
+    "formalBaseline": {
+      "path": "output/2026-10-18-document-text-delivery/formal-correction/baseline.json",
+      "sha256": "35eeafa0bbf027cb4e78a1905045a8a98151c2d9fa9d4104375b1019025a5463"
+    },
+    "fixtureCreation": {
+      "path": "output/2026-10-18-document-text-delivery/formal-correction/fixture-creation.json",
+      "sha256": "4ff08f9ebb181be21fe964664084999b9da3310fc08c424ef9f245cdf06fddda"
+    },
+    "afterCapture": {
+      "path": "output/2026-10-18-document-text-delivery/formal-correction/after-capture/retention-before-receipt.json",
+      "sha256": "fa0cd239a134b67288d46ebee673268d31dc64fb890ebbdbf29c93f74df17e15"
+    },
+    "afterCaptureCompletion": {
+      "path": "output/2026-10-18-document-text-delivery/formal-correction/after-capture/execution-completion.json",
+      "sha256": "7289b62bede820a87cae48b151230875efc14c224b2d9982bc2fe99b6909ab30"
+    },
+    "sealedDataSafe": {
+      "path": "output/2026-10-18-document-text-delivery/formal-correction/after-analysis/safe-summary.json",
+      "sha256": "f33040559b77745162b9f4eed2ecf0bfe8616df2c52edcaf8f215aa90c3b467e"
+    },
+    "sealedDataReview": {
+      "path": "output/2026-10-18-document-text-delivery/formal-correction/after-analysis/review.json",
+      "sha256": "9c28a6119109154ddfd7b056fbd8e56b7f3998f355e19d82b3783e7c437a344f"
+    },
+    "sealedDataCompletion": {
+      "path": "output/2026-10-18-document-text-delivery/formal-correction/after-analysis/execution-completion.json",
+      "sha256": "cb4abe00e41f9a717d7657dcd21631e267284db9d6bc0c2c66873ff984537bad"
+    },
+    "protocol": {
+      "path": "output/2026-10-18-document-text-delivery/formal-correction/protocol/summary.json",
+      "sha256": "5857f80ac2ee5e5017c3c160dc58c54c930f7c841afadaef442d08549cc55409"
+    },
+    "priorP32Observation": {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p32-normal-input-formal/actual-observation.json",
+      "sha256": "55a2c6c2ac2c649453ed6ff04eab30e62b63dc0db280815330b1b862aa7ff41c"
+    },
+    "priorP32Independent": {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p32-normal-input-formal/independent-observation-review.json",
+      "sha256": "aeed4082d55024c56135fb740587aed98cf5ec7825b2dd96cd2bcc3b6a5fa38c"
+    },
+    "priorP32Data": {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p32-normal-input-formal/after-analysis/safe-summary.json",
+      "sha256": "b895c77e59584f9fc50c3da818c8935eba0625ed54ae2a0b154189b916614c4e"
+    },
+    "priorP32Protocol": {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p32-normal-input-formal/formal-protocol/summary.json",
+      "sha256": "168053c654dcd3fa5bb4c13a3f4c5a643a7433a35b99f160d6f57ced73a74036"
+    },
+    "priorP32Conditions": {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p32-normal-input-conditions/conditions.json",
+      "sha256": "ad6f4f31c2baa7fd49712cb2f826a521babe20f12e092cff53feb42e0ed99a0c"
+    },
+    "new29Conditions": {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/new29-dirac-0521-conditions/conditions.json",
+      "sha256": "ebd7448b58d3b0e39b7121b85b9f470aeeb8316f23f0f650aae73e30314004c3"
+    },
+    "p40Conditions": {
+      "path": "output/2026-10-18-document-text-delivery/p40-next-conditions/conditions.json",
+      "sha256": "60c5cd12e8894f69d68b6974a4536d43f8ba1ac6afcf5b5492d89a11d3c4eb39"
+    },
+    "spacePoint": {
+      "path": "output/2026-10-18-document-text-delivery/current-space.json",
+      "sha256": "704cba61d3931db1b9ef9f2033217944e348241a554247eb7e7d7d017732023a"
+    }
+  }
+}

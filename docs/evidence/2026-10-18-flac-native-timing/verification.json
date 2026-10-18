@@ -1,0 +1,130 @@
+{
+  "kind": "SelectedFlacFileApiFullReadTimingDiagnosticNotPlaybackRepair",
+  "checkedDate": "2026-10-18",
+  "scope": "两个既有公开受控静音样本的Apple文件API元数据与完整PCM读回；非正式应用或Agent媒体验收。",
+  "result": "55B与187B原样输入均完整解码为相同800帧/1600字节静音PCM，0.1秒；WebKit差异的具体层级与原因仍未知。",
+  "samples": [
+    {
+      "case": "original55",
+      "input": {
+        "path": "output/2026-10-17-flac-playback-investigation/original-55.flac",
+        "bytes": 55,
+        "sha256": "219b60a0b78353e43373db25cb911cbc01fcdbbd6ba7fbb185d9e741fefe6c33"
+      },
+      "pcm": {
+        "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p13-flac-next-investigation/r2-preparation/original55.decoded.pcm",
+        "bytes": 1600,
+        "sha256": "e61f41d57db208c5f92a35c4ce7198570924a3fc87eeba83441fceee5d6a2865"
+      }
+    },
+    {
+      "case": "padding128",
+      "input": {
+        "path": "output/2026-10-18-opus-media-stage/flac-probe/padding-128.flac",
+        "bytes": 187,
+        "sha256": "ae3a04b283a73dccb60b0fa56ebe6381f32bf5f4bd89e8134f079d51a850d8b7"
+      },
+      "pcm": {
+        "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p13-flac-next-investigation/r2-preparation/padding128.decoded.pcm",
+        "bytes": 1600,
+        "sha256": "e61f41d57db208c5f92a35c4ce7198570924a3fc87eeba83441fceee5d6a2865"
+      }
+    }
+  ],
+  "r1Preserved": {
+    "session": 26013,
+    "initialChunk": "fcd84e",
+    "completionChunk": "803ddf",
+    "compileNaturalExit": 0,
+    "consumerNaturalExit": 1,
+    "readCalls": 0,
+    "interpretation": "错误要求压缩输入ASBD bits==16；实际bits为0，测试在PCM客户端设置/读取前自行返回-1。这不是系统decoder拒绝，原失败回执保持。"
+  },
+  "r2Actual": {
+    "session": null,
+    "initialChunk": "b712c6",
+    "completionChunk": "b712c6",
+    "naturalCompletionWithinInitialCall": true,
+    "compilerInvocations": 1,
+    "compileNaturalExit": 0,
+    "consumerInvocations": 1,
+    "consumerNaturalExit": 0,
+    "automaticRetry": false,
+    "inputPinsStable": true,
+    "clientFormatReadback": "PCM16LE / mono / 8000Hz",
+    "compressedInputBits": 0,
+    "framesEach": 800,
+    "pcmBytesEach": 1600,
+    "decodedSecondsEach": 0.1,
+    "pcmAllZero": true,
+    "readCallsEach": 2,
+    "eofObservedEach": true,
+    "audioOutputDeviceCreated": false,
+    "closeStatusesZero": true
+  },
+  "selectedMetadataBoth": {
+    "estimatedDurationBeforeAndAfterPacketReadSeconds": 0.1,
+    "extFileLengthBeforeAndAfterFrames": 800,
+    "packetTableValidFrames": 800,
+    "packetTablePrimingFrames": 0,
+    "packetTableRemainderFrames": 3296,
+    "nominalFramesPerPacket": 4096,
+    "packetCount": 1
+  },
+  "interpretation": {
+    "supported": "所选文件API按800个有效样本给出0.1秒；完整PCM输出与原FLAC MD5一致。4096/8000=0.512仅与旧WebKit时钟数值相合，不能据此确定浏览器输出样本数或故障函数。",
+    "oldBrowserFailurePreserved": "原55B的error4和padding128的旧0.512秒时钟仍是各自原观测；本轮未重跑浏览器，也未修复两者差异。",
+    "r1IsNotDecoderFailure": true,
+    "productionFixEstablished": false,
+    "paddingOrTimingWorkaroundIntroduced": false
+  },
+  "independentReview": {
+    "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p13-flac-next-investigation/independent-review.json",
+    "sha256": "0a3a6e2f83033f8d1c62b5ecfefe4ec2f03c82db818fb051cf39c197e25147da",
+    "result": "noBlockingFindingInSelectedDiagnosticConclusion",
+    "reviewerPriorParticipationDisclosed": true,
+    "freshIndependentDecoderOrBrowserExecution": false
+  },
+  "evidence": [
+    {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p13-flac-next-investigation/native-experiment.json",
+      "sha256": "bcd096c0e26ca12ac542c83339ece1c08bef0f8b2e0456d204b184fcbedce66e"
+    },
+    {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p13-flac-next-investigation/structure.json",
+      "sha256": "bb0882b1ada9fa95e9aa9b2a6f61d05877100f921d3bc546e186fe0ba505b597"
+    },
+    {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p13-flac-next-investigation/execution-completion.json",
+      "sha256": "aa576ffec2d57d6f75e59df0d07d7f0ded121818b7d3a1b6f7411d615b840fde"
+    },
+    {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p13-flac-next-investigation/r2-preparation/native-metadata-fullread-r2.c",
+      "sha256": "b10dd8afa5c9630d84ea57d09b6117462d2aaaa6f23be787187ac5eab79661df"
+    },
+    {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p13-flac-next-investigation/r2-preparation/actual-experiment.json",
+      "sha256": "bd3423dd7b3ab585e93537e10a2dffcba86765e2270c8cf71258889dc52ac31d"
+    },
+    {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p13-flac-next-investigation/r2-preparation/conclusion.json",
+      "sha256": "cc1c669fea586674408eb55b3d4b4889b8258eb13116c209346581c79fb8b1d0"
+    },
+    {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p13-flac-next-investigation/r2-preparation/execution-completion.json",
+      "sha256": "035e499a8065d0eccc2ade4defe22bbc540a3e0c0f841efa8143fff467c39701"
+    },
+    {
+      "path": "output/2026-10-18-p18-dirac-0521/tool-step-wording/p13-flac-next-investigation/independent-review.json",
+      "sha256": "0a3a6e2f83033f8d1c62b5ecfefe4ec2f03c82db818fb051cf39c197e25147da"
+    }
+  ],
+  "notProven": [
+    "WebKit/AVFoundation/流式解码或时钟的具体责任层",
+    "浏览器实际PCM样本数、可听声音或精确可听时长",
+    "原55B error4根因或padding可修复产品",
+    "正式Farfold或真实Agent返回媒体成功",
+    "其他FLAC、AAC、内存预算或完整P13通过"
+  ],
+  "productionSourceChanged": false
+}
