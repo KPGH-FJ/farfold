@@ -38,6 +38,9 @@ for line in sys.stdin:
 #[path = "cold_history_open_tests.rs"]
 mod cold_history_open_tests;
 
+#[path = "permission_publication_tests.rs"]
+mod permission_publication_tests;
+
 #[path = "startup_tests.rs"]
 mod startup_tests;
 

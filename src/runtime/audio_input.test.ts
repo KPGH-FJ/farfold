@@ -70,6 +70,37 @@ it("retains the complete independent WAV including RIFF header and checks its wh
     expected: null,
   });
 });
+it("retains every PCM byte value when the binary-string conversion verifies the complete file", async () => {
+  const capture = {
+    ...audioCapture(),
+    file: {
+      ...audioCapture().file,
+      size: 300,
+      sha256:
+        "360911aa5e193cf2adcc660b619ee6faa0d72cae0f36a41dc539fb88be63bef9",
+    },
+    data: "UklGRiQBAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQABAAAAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Ojs8PT4/QEFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaW1xdXl9gYWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXp7fH1+f4CBgoOEhYaHiImKi4yNjo+QkZKTlJWWl5iZmpucnZ6foKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc7P0NHS09TV1tfY2drb3N3e3+Dh4uPk5ebn6Onq6+zt7u/w8fLz9PX29/j5+vv8/f7/",
+    frames: 256,
+    durationMs: 32,
+  };
+  const before = structuredClone(capture);
+  const bytes = Buffer.from(capture.data, "base64");
+  expect(bytes.subarray(44)).toEqual(
+    Buffer.from(Array.from({ length: 256 }, (_, index) => index)),
+  );
+  expect(createHash("sha256").update(bytes).digest("hex")).toBe(
+    capture.file.sha256,
+  );
+  h.invoke.mockResolvedValue(capture);
+  expect(
+    await readAudioInput("file:///chosen/sample.wav", capture.file),
+  ).toEqual(before);
+  expect(capture).toEqual(before);
+  expect(h.invoke).toHaveBeenCalledExactlyOnceWith("draft_attachment_audio", {
+    uri: "file:///chosen/sample.wav",
+    expected: capture.file,
+  });
+});
 it.each([
   "root",
   "path",

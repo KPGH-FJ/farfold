@@ -494,7 +494,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
             match method {
                 "session/request_permission" => {
                     let request_id = next_request_id();
-                    match ctx.pending.lock() {
+                    let publish = match ctx.pending.lock() {
                         Ok(mut map) => {
                             let Ok(lease) = ctx.ops.life.work() else {
                                 let _ = responder.respond_with_error(
@@ -526,13 +526,7 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                                 },
                             );
                             ctx.permission_ids.push(request_id.clone());
-                            (ctx.events)(serde_json::json!({
-                                "kind": "permissionRequest",
-                                "requestId": request_id,
-                                "request": params.clone(),
-                                "toolCall": params.get("toolCall").cloned().unwrap_or(Value::Null),
-                                "options": params.get("options").cloned().unwrap_or(Value::Null),
-                            }));
+                            true
                         }
                         Err(_) => {
                             let _ = responder.respond_with_error(
@@ -540,7 +534,19 @@ fn handle_session_dispatch(dispatch: Dispatch, ctx: &mut DispatchContext<'_>) {
                                     "permission map lock poisoned",
                                 ),
                             );
+                            false
                         }
+                    };
+                    // Publication can synchronously serialize/dispatch IPC or
+                    // re-enter a responder. Never hold the shared table here.
+                    if publish {
+                        (ctx.events)(serde_json::json!({
+                            "kind": "permissionRequest",
+                            "requestId": request_id,
+                            "request": params.clone(),
+                            "toolCall": params.get("toolCall").cloned().unwrap_or(Value::Null),
+                            "options": params.get("options").cloned().unwrap_or(Value::Null),
+                        }));
                     }
                 }
                 "elicitation/create" => {

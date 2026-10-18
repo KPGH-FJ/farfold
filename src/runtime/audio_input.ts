@@ -289,7 +289,10 @@ export async function readAudioInput(
     ).some((key) => local.file[key] !== expected[key])
   )
     throw new AudioInputError("changed");
-  const bytes = Uint8Array.from(decoded, (char) => char.charCodeAt(0));
+  const bytes = new Uint8Array(decoded.length);
+  for (let index = 0; index < decoded.length; index++) {
+    bytes[index] = decoded.charCodeAt(index);
+  }
   const hash = Array.from(
     new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
   )
