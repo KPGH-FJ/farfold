@@ -438,3 +438,94 @@ describe("one-time native input verification", () => {
     expect(page.writes()).toBe(0);
   });
 });
+
+describe("shared authority retirement receipts", () => {
+  it.each(["macos", "windows"] as const)(
+    "marks protected input before dispatch for retirement on %s",
+    async (platform) => {
+      const page = inputPage("INPUT", platform);
+      await page.observe();
+      page.field.attrs.set("type", "password");
+      page.forbidRead();
+      expect(await page.act()).toMatchObject({
+        outcome: "rejected",
+        applied: false,
+        verification: "unverified",
+        sharingInvalidated: true,
+      });
+      expect(page.reads()).toBe(0);
+      expect(page.writes()).toBe(0);
+    },
+  );
+
+  it.each(["password", "otp", "new-protected-field"])(
+    "marks protection introduced by an input handler without changing dispatch: %s",
+    async (change) => {
+      const page = inputPage();
+      await page.observe();
+      page.onInput(() => {
+        page.forbidRead();
+        if (change === "password") page.field.attrs.set("type", "password");
+        if (change === "otp")
+          page.field.attrs.set("autocomplete", "one-time-code");
+        if (change === "new-protected-field") page.addProtected();
+      });
+      expect(await page.act()).toMatchObject({
+        outcome: "dispatched",
+        applied: true,
+        verification: "unverified",
+        sharingInvalidated: true,
+      });
+      expect(page.reads()).toBe(0);
+      expect(page.writes()).toBe(1);
+    },
+  );
+
+  it.each(["queued", "delivered"])(
+    "retires sharing after transient protected mutations are restored: %s",
+    async (delivery) => {
+      const page = inputPage();
+      await page.observe();
+      page.onInput(() => page.transientProtection(delivery));
+      expect(await page.act()).toMatchObject({
+        outcome: "dispatched",
+        applied: true,
+        verification: "unverified",
+        sharingInvalidated: true,
+      });
+      expect(page.field.type).toBe("text");
+      expect(page.reads()).toBe(0);
+      expect(page.writes()).toBe(1);
+    },
+  );
+
+  it.each(["matched", "mismatched"])(
+    "keeps safely compared ordinary input usable when %s",
+    async (verification) => {
+      const page = inputPage();
+      await page.observe();
+      if (verification === "mismatched")
+        page.onInput(() => page.rewrite("DIFFERENT_OWNED_TEXT"));
+      const result = await page.act();
+      expect(result).toMatchObject({
+        outcome: "dispatched",
+        applied: true,
+        verification,
+      });
+      expect(result).not.toHaveProperty("sharingInvalidated");
+      expect(page.reads()).toBe(1);
+      expect(page.writes()).toBe(1);
+    },
+  );
+
+  it("does not retire sharing for an unrelated ordinary pre-dispatch rejection", async () => {
+    const page = inputPage();
+    await page.observe();
+    page.field.attrs.set("aria-label", "Changed ordinary label");
+    const result = await page.act();
+    expect(result).toMatchObject({ outcome: "rejected", applied: false });
+    expect(result).not.toHaveProperty("sharingInvalidated");
+    expect(page.reads()).toBe(0);
+    expect(page.writes()).toBe(0);
+  });
+});

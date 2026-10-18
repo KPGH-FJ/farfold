@@ -254,11 +254,15 @@ impl FixedPageReadScope {
     // Once handed to the native page, withdrawal or a missing receipt does not
     // prove that no effect happened. Preserve this meaning even on gate errors.
     fn complete_control(&self, id: &str, kind: &str, raw: &str) -> Result<Value, String> {
+        if raw.len() > 16_384 {
+            return Err(CONTROL_UNCONFIRMED.into());
+        }
+        let value: Value = serde_json::from_str(raw).map_err(|_| CONTROL_UNCONFIRMED)?;
+        if value.get("sharingInvalidated").and_then(Value::as_bool) == Some(true) {
+            self.revoke();
+            return Err(CONTROL_UNCONFIRMED.into());
+        }
         self.with_valid(|| {
-            if raw.len() > 16_384 {
-                return Err(CONTROL_UNCONFIRMED.into());
-            }
-            let value: Value = serde_json::from_str(raw).map_err(|_| CONTROL_UNCONFIRMED)?;
             let outcome = value
                 .get("outcome")
                 .and_then(Value::as_str)
@@ -562,5 +566,48 @@ mod tests {
         value["blocked"] = json!(true);
         assert!(scope.complete_observation(&value.to_string()).is_err());
         assert!(!scope.is_valid());
+    }
+
+    #[test]
+    fn invalidated_control_retires_the_original_grant_and_all_captured_requests() {
+        for (outcome, applied) in [("rejected", false), ("dispatched", true)] {
+            let (scope, _) = sharing_scope_fixture("agent:/fixture:retirement", "page");
+            let public_observation = observed(&scope);
+            let queued = scope.request_scope();
+            let approved = scope.one_shot().unwrap();
+            let receipt = json!({"outcome":outcome,"applied":applied,"verification":"unverified","sharingInvalidated":true}).to_string();
+            assert_eq!(
+                approved
+                    .complete_control("control", "input", &receipt)
+                    .unwrap_err(),
+                CONTROL_UNCONFIRMED
+            );
+            assert!(!scope.is_valid());
+            assert!(!queued.is_valid());
+            assert!(!approved.is_valid());
+            assert!(scope.complete_observation(&public_observation).is_err());
+            assert!(queued.with_valid(|| Ok(())).is_err());
+
+            let (independent, _) = sharing_scope_fixture("agent:/fixture:other", "other");
+            observed(&independent);
+            assert!(independent.is_valid());
+        }
+    }
+
+    #[test]
+    fn ordinary_control_results_do_not_retire_the_read_grant() {
+        for signal in [Value::Null, json!(false), json!("true")] {
+            let (scope, _) = sharing_scope_fixture("agent:/fixture:ordinary", "page");
+            observed(&scope);
+            let receipt = json!({"outcome":"rejected","applied":false,"sharingInvalidated":signal})
+                .to_string();
+            assert_eq!(
+                scope
+                    .complete_control("control", "input", &receipt)
+                    .unwrap()["outcome"],
+                "rejected"
+            );
+            assert!(scope.is_valid());
+        }
     }
 }

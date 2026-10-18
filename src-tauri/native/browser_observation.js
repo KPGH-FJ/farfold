@@ -323,7 +323,11 @@ const reject = (reason, guardClass) => ({
   observationId,
   documentVersion: version(),
 });
-if (mode !== "act" || blocked) return reject("页面不允许此操作");
+if (mode !== "act" || blocked)
+  return {
+    ...reject("页面不允许此操作"),
+    ...(blocked ? { sharingInvalidated: true } : {}),
+  };
 const stale = (guardClass) =>
   reject("页面或操作目标已变化，请重新观察", guardClass);
 // Preserve the original short-circuit order and comparisons. These classes
@@ -373,6 +377,7 @@ if (kind === "input") {
 else return reject("此操作不受支持");
 await Promise.resolve();
 flush();
+const protectionObserved = pageBlocked(inspectRoots());
 const verifyInput = () => {
   // Recheck protection after website handlers ran, before accessing a value.
   // The input/change events invalidate observation versions themselves, so a
@@ -417,10 +422,18 @@ const verifyInput = () => {
     return "unverified";
   }
 };
+// An unverified input can include a temporarily protected field whose DOM was
+// already restored. Retire the old share instead of inspecting mutation history
+// or assuming the current public-looking field makes that grant safe again.
+const verification =
+  kind === "input" ? (protectionObserved ? "unverified" : verifyInput()) : null;
 return {
   applied: true,
   outcome: "dispatched",
-  ...(kind === "input" ? { verification: verifyInput() } : {}),
+  ...(protectionObserved || verification === "unverified"
+    ? { sharingInvalidated: true }
+    : {}),
+  ...(kind === "input" ? { verification } : {}),
   ...diagnostics(),
   pageChanged:
     observation.version !== version() || observation.url !== location.href,
