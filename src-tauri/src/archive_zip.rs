@@ -63,6 +63,9 @@ pub(crate) fn extract(
     for index in 0..archive.len() {
         check()?;
         let mut entry = archive.by_index(index).map_err(|_| "无法读取压缩文件")?;
+        if entry.name().contains('\\') {
+            return Err("压缩文件中的位置无效".into());
+        }
         let path = entry.enclosed_name().ok_or("压缩文件中的位置无效")?;
         for component in path.components() {
             let Component::Normal(part) = component else {
@@ -161,6 +164,8 @@ mod tests {
             "node/CONOUT$.txt",
             "node/trailing.",
             "node\\escape",
+            "node\\nested/escape",
+            "node/inner\\escape",
         ] {
             let dir = tempfile::tempdir().unwrap();
             assert!(

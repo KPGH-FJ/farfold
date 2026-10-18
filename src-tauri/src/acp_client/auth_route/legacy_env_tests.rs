@@ -149,7 +149,14 @@ fn legacy_terminal_environment_does_not_relax_program_or_script_identity() {
         Route::Unavailable(UnavailableReason::ScriptMismatch)
     ));
     let mut changed = method;
-    changed["_meta"]["terminal-auth"]["command"] = json!("/bin/sh");
+    let other_program = directory.path().join(if cfg!(windows) {
+        "other-program.exe"
+    } else {
+        "other-program"
+    });
+    std::fs::write(&other_program, "#!/bin/sh\nexit 0\n").unwrap();
+    crate::process_platform::set_executable(&other_program).unwrap();
+    changed["_meta"]["terminal-auth"]["command"] = json!(other_program);
     let captured = capture(json!([changed]));
     assert!(matches!(
         route(

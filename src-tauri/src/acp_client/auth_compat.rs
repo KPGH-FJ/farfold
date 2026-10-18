@@ -24,7 +24,10 @@ pub(crate) fn terminal_setup(row: &AgentRow, method: &serde_json::Value) -> Opti
         return None;
     }
     let command = Path::new(&row.command);
-    if !command.is_absolute() || !command.is_file() || command.file_name()?.to_str()? != "node" {
+    if !command.is_absolute()
+        || !command.is_file()
+        || crate::process_platform::program_name(command).as_deref() != Some("node")
+    {
         return None;
     }
     let (entry, protocol_args) = row.args.split_first()?;
@@ -82,7 +85,9 @@ mod tests {
         )
         .unwrap();
         std::fs::write(package.join("cli-entry.js"), "").unwrap();
-        let node = dir.path().join("node");
+        let node = dir
+            .path()
+            .join(if cfg!(windows) { "node.exe" } else { "node" });
         std::fs::write(&node, "").unwrap();
         let row = AgentRow {
             id: "registry:qwen-code".into(),
@@ -116,6 +121,24 @@ mod tests {
                 "--auth-type=openai".into()
             ]
         );
+    }
+
+    #[test]
+    fn does_not_treat_other_programs_or_node_helpers_as_node() {
+        let (dir, row, method) = fixture();
+        let mut names = vec!["other.exe", "node-helper.exe", "node-helper"];
+        if cfg!(unix) {
+            names.push("node.exe");
+        }
+        for name in names {
+            let program = dir.path().join(name);
+            std::fs::write(&program, "").unwrap();
+            let changed = AgentRow {
+                command: program.display().to_string(),
+                ..row.clone()
+            };
+            assert!(terminal_setup(&changed, &method).is_none(), "{name}");
+        }
     }
 
     #[test]
