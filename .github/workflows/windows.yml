@@ -54,7 +54,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           cargo build --manifest-path src-tauri/Cargo.toml --locked --example windows_process_fixture
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          cargo test --manifest-path src-tauri/Cargo.toml --locked
+          cargo test --manifest-path src-tauri/Cargo.toml --locked -- --nocapture
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build unsigned per-user installer
         run: corepack pnpm tauri build --ci --no-sign --target x86_64-pc-windows-msvc --bundles nsis -- --locked

@@ -1,0 +1,377 @@
+{
+  "schema": "FarfoldStageEvidence",
+  "scope": "Reviewed source, actual host engineering, macOS installed bytes and earlier Windows CI; no formal use of156 or Windows acceptance",
+  "recordedAtUtc": "2026-10-18T20:37:48.088442+00:00",
+  "source": {
+    "commit": "1564263f5a58cbea9c3cf40b4b7cec9a936b541d",
+    "checkpoint": {
+      "path": "output/2026-10-19-worktree-browser-delivery/source-checkpoint.json",
+      "sha256": "2a014ac89f16424a46f88f7ef69095e1ef46c722eb81db4415fd50c4653117de"
+    },
+    "fixtureCheckpoint": {
+      "path": "output/2026-10-19-worktree-browser-delivery/extra-skill-roots-fixture-correction/source-checkpoint.json",
+      "sha256": "c6c9459d0c102209b3b3a35a1d3a8e424e973a64615edd2dbe0abcee44f72fe6"
+    },
+    "freeze": {
+      "path": "output/2026-10-19-worktree-browser-delivery/source-freeze-r2.json",
+      "sha256": "dff8d72b5fbcb2d83ba93430f8a79b85c46d99bec35a9adb3c2286b9a7a8fcc3",
+      "fileCount": 19222
+    },
+    "fullSourceReview": {
+      "path": "output/2026-10-19-worktree-browser-delivery/full-source-review.json",
+      "sha256": "8745a9da685a0a0bdd7535710da4e9b257e700744689e1130c3bb6f13e6cfae0"
+    },
+    "joinCompletion": {
+      "path": "output/2026-10-19-worktree-browser-delivery/full-source-review-completion.json",
+      "sha256": "9444513e028e7667b44fe347b0a1524a1427eaafa445dda568b65fe567c4c626"
+    },
+    "candidateInputs": 1881,
+    "reviewedMemberUnion": 86,
+    "sourceReviews": [
+      {
+        "role": "Native Windows44",
+        "author": "audit_native_truth",
+        "independentReviewer": "retained_route",
+        "review": {
+          "path": "output/2026-10-19-windows-continuation-review/implementation/independent-source-review-final.json",
+          "sha256": "42316915eb7fb14054eade7bf06e1cb19dc61bbae07c486c0cd2a5b555015a1d"
+        }
+      },
+      {
+        "role": "Model production2 and original5 tests",
+        "author": "retained_route",
+        "independentReviewer": "Root",
+        "review": {
+          "path": "output/2026-10-19-retention-source-label-delivery/arch49-model-id-investigation/independent-source-review.json",
+          "sha256": "f92a8312a8f8f409a3117fe6eb0f2716f7b716038d6795c870d3d0a64a185d41"
+        }
+      },
+      {
+        "role": "Model final test borrow-only delta",
+        "author": "retained_route",
+        "independentReviewer": "Root",
+        "review": {
+          "path": "output/2026-10-19-retention-source-label-delivery/arch49-model-id-investigation/independent-lint-delta-review.json",
+          "sha256": "6382213db209f7f8a238e0891a89e8effd17b9bb14f61c1fcb1e839ce9f9ddcb"
+        }
+      },
+      {
+        "role": "Attach-owner8",
+        "author": "audit_native_truth",
+        "independentReviewer": "Root",
+        "review": {
+          "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/attach-owner/root-independent-source-review.json",
+          "sha256": "20662ab8b3f4f89a6949a0a233f2d5b89bf3d79cfb63a44b700d3b1de271dab8"
+        }
+      },
+      {
+        "role": "Windows history4",
+        "author": "retained_route",
+        "independentReviewer": "Root",
+        "review": {
+          "path": "output/2026-10-19-windows-continuation-review/history-investigation/implementation/root-independent-source-review.json",
+          "sha256": "2e9105e72628eacd620cf40231e59838eb46023e7e9609bffb018a87faec407b"
+        }
+      },
+      {
+        "role": "Frontend checkout/fixture7",
+        "author": "audio_boundary",
+        "independentReviewer": "Root",
+        "review": {
+          "path": "output/2026-10-19-windows-management-delivery/windows-ci/frontend-diagnosis/root-independent-source-review.json",
+          "sha256": "958b69e522007257e6691f613abdf2c402decffa2d5959fcc3950d64f5b0aa51"
+        }
+      },
+      {
+        "role": "Opening-interest lifetime2",
+        "author": "audio_boundary",
+        "independentReviewer": "Root",
+        "review": {
+          "path": "output/2026-10-19-arch49-opening-interest-lifetime/root-independent-source-review.json",
+          "sha256": "0f93fafa937fdda575c0ff29b80c46df3b14d5750f9dbcc391d1ee44e149a7f3"
+        }
+      },
+      {
+        "role": "P27 protected-control3",
+        "author": "retained_route",
+        "independentReviewer": "Root",
+        "review": {
+          "path": "output/2026-10-19-windows-continuation-review/p27-p29-browser-boundary/root-independent-source-review.json",
+          "sha256": "4b310b5ebcb6ec0de82da15aeab6cb4bd7943788723ccfbe03e8bf9701a85e28"
+        }
+      },
+      {
+        "role": "Windows existing-tree20",
+        "author": "audit_native_truth",
+        "independentReviewer": "retained_route",
+        "review": {
+          "path": "output/2026-10-19-windows-continuation-review/worktree-investigation/existing-tree-implementation/independent-source-review-final.json",
+          "sha256": "1318eb56fd4e4d25b7423c850a8e6170b663341633257eec0e316ee1fac73719"
+        }
+      },
+      {
+        "role": "Extra-skill waiting fixture1",
+        "author": "audit_native_truth",
+        "independentReviewer": "Root",
+        "review": {
+          "path": "output/2026-10-19-worktree-browser-delivery/extra-skill-roots-fixture-correction/root-independent-source-review.json",
+          "sha256": "2885b425a954dde787669cc416c2bf7f198ab31d870165d511202151f5f611be"
+        }
+      }
+    ],
+    "scopeBoundary": "10 composite reviews cover their stated source/test members; joiner does not independently approve own contributions or all repository semantics."
+  },
+  "engineering": {
+    "verification": {
+      "path": "output/2026-10-19-worktree-browser-delivery/engineering-r2/verification.json",
+      "sha256": "02b9e375f02ab96c493bff2a96094ace426012c40a488f759ecf651b2ecaf508"
+    },
+    "completion": {
+      "path": "output/2026-10-19-worktree-browser-delivery/engineering-completion-r2.json",
+      "sha256": "b13a519f08f389435e7bbd9aaa92d65f4bb4361d5e1ffac572448a793503c8b0"
+    },
+    "result": "passed",
+    "steps": 7,
+    "inputCount": 19223,
+    "allInputsStable": true,
+    "frontend": {
+      "files": 598,
+      "passed": 7993
+    },
+    "rust": {
+      "passed": 1850,
+      "ignored": 6
+    },
+    "execution": {
+      "sessionId": 34043,
+      "chunks": [
+        "885d54",
+        "bb2fa1",
+        "b2bcc0",
+        "13e0ac",
+        "829e80",
+        "a8f23e",
+        "7a71e1"
+      ],
+      "naturalExitCode": 0
+    },
+    "logs": [
+      {
+        "path": "output/2026-10-19-worktree-browser-delivery/engineering-r2/01.log",
+        "sha256": "30c8528599555e73b75add48a5e1d93eb278b4d7269e9753e3c065086f09a667",
+        "exitCode": 0
+      },
+      {
+        "path": "output/2026-10-19-worktree-browser-delivery/engineering-r2/02.log",
+        "sha256": "5c01491b1d6eac7573d9000dc623e005710d14e952e6b2b20286269b90045f39",
+        "exitCode": 0
+      },
+      {
+        "path": "output/2026-10-19-worktree-browser-delivery/engineering-r2/03.log",
+        "sha256": "3c4f2c4f55da8faae14185fb3ae230ac0b6b6ab26620637e6ab8d7f6a2d8cfac",
+        "exitCode": 0
+      },
+      {
+        "path": "output/2026-10-19-worktree-browser-delivery/engineering-r2/04.log",
+        "sha256": "e22788c8e697c0308d444c85d1c2f5edf6f504f5d083514c401a0758d6f06443",
+        "exitCode": 0
+      },
+      {
+        "path": "output/2026-10-19-worktree-browser-delivery/engineering-r2/05.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exitCode": 0
+      },
+      {
+        "path": "output/2026-10-19-worktree-browser-delivery/engineering-r2/06.log",
+        "sha256": "641fe5d2ad741df34d8903dd2597043918c03e6a9944f14a2f3a33a0eddbd6e6",
+        "exitCode": 0
+      },
+      {
+        "path": "output/2026-10-19-worktree-browser-delivery/engineering-r2/07.log",
+        "sha256": "e61a834a828545683353790209fe26b843dc842a0a6f5ecc5a62666351036ceb",
+        "exitCode": 0
+      }
+    ],
+    "priorFailure": {
+      "completion": {
+        "path": "output/2026-10-19-worktree-browser-delivery/engineering-completion-failed.json",
+        "sha256": "4140c2f63c1b94e29b9b92db04f72469bbe7bedac7a5cc7bac167d17d60cf7b2"
+      },
+      "sessionId": 1902,
+      "naturalExitCode": 101,
+      "rust": {
+        "passed": 1849,
+        "failed": 1,
+        "ignored": 6
+      },
+      "classification": "Original PID publication fixture readEmpty/parseEmpty failure retained. Single fixture correction independently reviewed before the new R2 execution; no production repair inferred from this fixture failure."
+    }
+  },
+  "implementedScope": {
+    "windowsExistingDirectory": "Explicit inspect/adopt/recheck with private full volume/file identity, held local read context and exact read-only Git command policy. Unix identity representation preserved. Actual Windows runtime unverified.",
+    "unsupportedWindowsMutations": "Creation/material/preparation/recycle/remove/recover remain rejected before durable or background mutation; new metadata implementation under separate development is excluded.",
+    "protectedWebInput": "Protected controls or unverified dispatched input retire the captured shared grant; original dispatch/unknown facts retained. Controlled DOM/host Rust only, not production screenshots or sensitive automation.",
+    "openingInterest": "Terminal finish/retire release interested callable closures, and unavailable owners reject new AbortSignal interest. Existing notice/details/reply/epoch/coalesced surviving callers retained. Logical references only; no measured GC/RSS savings.",
+    "remainingInternalWork": "Global concurrency admission, queue/backpressure and long-session resource governance remain open. Burst measurement alone did not establish a functional failure and no speculative coalescing was implemented."
+  },
+  "macOSDelivery": {
+    "candidate": {
+      "path": "output/2026-10-19-worktree-browser-delivery/candidate-preparation/candidate-output/candidate.json",
+      "sha256": "2450f5890f3ab6f3b271b95351964dd11248726d8375ba76cebf697c83484688"
+    },
+    "candidateCompletion": {
+      "path": "output/2026-10-19-worktree-browser-delivery/candidate-completion.json",
+      "sha256": "419675d8e7059078985aeaa5988624b96b029c69623056164de6e4bd29983848"
+    },
+    "candidateExecution": {
+      "sessionId": 22095,
+      "chunks": ["cb2ced", "5144a0", "9963fe", "411b62"],
+      "naturalExitCode": 0
+    },
+    "candidateReview": {
+      "path": "output/2026-10-19-worktree-browser-delivery/candidate-preparation/independent/review.json",
+      "sha256": "fdcdc4a3a91b67a5b7740a75919b151347ca6ed0c4a1dd7f518d5f5e577695a8"
+    },
+    "candidate9Completion": {
+      "path": "output/2026-10-19-worktree-browser-delivery/candidate-preparation/independent/candidate9-execution-completion.json",
+      "sha256": "dbdd3793e2a0b0cd79815ee58323af11f6a80d38d4a7385b2db5aa647ab8af93"
+    },
+    "candidate9": {
+      "passed": 9,
+      "total": 9,
+      "sessionId": 43752,
+      "chunks": ["c4b0f3", "66367f"],
+      "naturalExitCode": 0
+    },
+    "install": {
+      "path": "output/2026-10-19-worktree-browser-delivery/install/install-result.json",
+      "sha256": "e54a9c61c14063d7802e74a50cab61d128b0a4f9a420ced4dc75d0139c5b91a8"
+    },
+    "installCompletion": {
+      "path": "output/2026-10-19-worktree-browser-delivery/installation-completion.json",
+      "sha256": "8137f03ee22ad5d701a546b6b46dc0f8c7733ef6e1b2f0840257b0f0d5ad2359"
+    },
+    "installExecution": {
+      "sessionId": 48356,
+      "chunks": ["af621c", "8cebc2"],
+      "naturalExitCode": 0
+    },
+    "installedReview": {
+      "path": "output/2026-10-19-worktree-browser-delivery/install/installed-independent-review-private.json",
+      "sha256": "9ef3d6b467737f147436b331df7bb979b7e6ed8c709c7592bb13c5cf7693995a"
+    },
+    "installed10Completion": {
+      "path": "output/2026-10-19-worktree-browser-delivery/install/installed10-execution-completion.json",
+      "sha256": "4b890f6955c071bb75e27d5fb6927aac021e83f4269b56162251f147f52b9ae9"
+    },
+    "installed10": {
+      "passed": 10,
+      "total": 10,
+      "sessionId": 36802,
+      "chunks": ["739544", "ce6904", "c351e2"],
+      "naturalExitCode": 0
+    },
+    "app": "/Applications/Farfold.app",
+    "identifier": "ai.farfold.desktop",
+    "version": "0.1.7",
+    "architecture": "arm64",
+    "binarySha256": "1ea3ae76f26675629170969ad1ffe6a763f72298965cc02a4b4069270e0f8295",
+    "archive": {
+      "sha256": "9869e8a4366a962b8bdffda97ca550c81bdaace78e839b126194066c21a28011",
+      "bytes": 15686219,
+      "preserved": true
+    },
+    "cleanup": {
+      "path": "output/2026-10-19-worktree-browser-delivery/install/candidate-cleanup.json",
+      "sha256": "3041f8602a203ec97954fedd092cfc8df2b91f203bb1146c2fa57c8f7555e821"
+    },
+    "cleanupRemovedExactFiles": 5,
+    "formalFilesAndModesPreserved": true,
+    "formalUse": {
+      "state": "notLaunchedOrUsed",
+      "basis": "Root stated no launch/use after installation, consistent with installed10 closed-without-launch observations. No continuous-absence claim or new protocol capture."
+    }
+  },
+  "installationRetention": {
+    "completion": {
+      "path": "output/2026-10-19-worktree-browser-delivery/retention-completion.json",
+      "sha256": "e6b698cdb4889f3beb9b32b3fbafdef5c15e207d9656b4d73caf00697bcc0f9d"
+    },
+    "receipts": {
+      "before": {
+        "path": "output/2026-10-19-worktree-browser-delivery/install/retention-before-receipt.json",
+        "sha256": "f75ca50c7b5535c3e84fd90b963905797bb68cf9d92a9902805ed4cdd18fbbf9"
+      },
+      "preinstall": {
+        "path": "output/2026-10-19-worktree-browser-delivery/install/retention-preinstall-receipt.json",
+        "sha256": "316ca646a40061b39e734621e755283c95063721f425fa28011b7cfbddb0c4bc"
+      },
+      "after": {
+        "path": "output/2026-10-19-worktree-browser-delivery/install/retention-after-receipt.json",
+        "sha256": "47364ffe733f950c98376855aac87c6a31d47cb1f2630633a5c7889c374c43c0"
+      }
+    },
+    "manifestEntries": 232530,
+    "allThreeStrictlyEqual": true,
+    "manifestSha256": "324585b4a142e2637816f24c0d740db52034bd0b06fab08a82a758d344378541",
+    "sealedBaselineSha256": "f5866ee76ce9db3058fe9299bd0e081755816fd47cc41d6e170baccc4ab855ff",
+    "boundary": "Fresh closed-process point observations and retained/sealed data receipts across installation only; no post-use SQL comparison or continuous closed interval, no previous differences waived."
+  },
+  "windowsCI2": {
+    "runId": 39158427366,
+    "sourceCommit": "203e249a2ecf735f0b0d987914b477d86ac450ad",
+    "finalRun": {
+      "path": "output/2026-10-19-windows-followup-checkpoint/windows-ci/final-run.json",
+      "sha256": "59cf0b605aa2ad31515aa800e7836150c75a6130c3832fa674df9f49ad799752"
+    },
+    "fullCancelledJobLog": {
+      "path": "output/2026-10-19-windows-followup-checkpoint/windows-ci/cancelled-job.log",
+      "sha256": "1eb78b57b25505875fee047ee1854abb26ad8b508e21018f98a03aa9200f2cb6"
+    },
+    "diagnosis": {
+      "path": "output/2026-10-19-windows-followup-checkpoint/windows-ci/cancellation-diagnosis/diagnosis.json",
+      "sha256": "71af4ba7b4f7ca099d527856654362c43d26d9edb013e88b1bfdfa54ac54eba1"
+    },
+    "failedCaseInventory": {
+      "path": "output/2026-10-19-windows-followup-checkpoint/windows-ci/cancellation-diagnosis/failed-cases.json",
+      "sha256": "cae3cda71e02cc468aadb64f5d1d26543732b608039fe3c5232962f103d7c310"
+    },
+    "conclusion": "cancelled",
+    "frontend": {
+      "files": 597,
+      "passed": 7978,
+      "conclusion": "success"
+    },
+    "rustObserved": {
+      "testBanner": 1582,
+      "okMarkers": 674,
+      "failedMarkers": 167,
+      "longRunningWarnings": 2,
+      "finalTestSummary": false,
+      "failureStackInCapturedLog": false,
+      "completedSuiteResult": "unknown"
+    },
+    "nsis": "skipped",
+    "artifact": "skipped",
+    "timeoutInference": "About60 minutes is consistent with the fixed job limit, but cancellation actor and exact hang causes are not proven. ConPTY cursor/drain is a source-supported candidate only; no production fix or library change made.",
+    "current156Boundary": "CI2 was source203, so current156 host engineering/install neither reruns nor proves these Windows paths. Earlier CI1 frontend failure and skipped Rust remain preserved in prior evidence.",
+    "futureObservationOnly": "Existing cargo test receives -- --nocapture for future runs. No timeout/toolchain/test-range change or CI dispatch; not part of already executed source156 engineering."
+  },
+  "authorship": {
+    "recorder": "audio_boundary",
+    "selfAuthored": "Frontend fixture/checkout7, opening-interest2, previous10-file test-only lint proposal, full-source hash/reference join and these public notes.",
+    "independentSemanticCoverage": "Root independently reviewed frontend7 and resource2; Retained independently reviewed the earlier10-file test-only proposal in Native44 final review. Ten source review roles are explicit above.",
+    "notClaimed": "No self-approval of those sources, no independent re-execution of other agents’ checks."
+  },
+  "notProved": [
+    "Formal156 UI/realAgent behavior, including P27 and Windows existing-directory lifecycle",
+    "Complete Windows pipe/Job/PTY/notification/history/worktree runtime or GUI/installer acceptance",
+    "Windows creation/archive/delete/recover/dependency preparation completion",
+    "Global resource governance, transport backpressure, long-history stability or GC/RSS savings",
+    "All151 tasks or29Agents x8 standards; public signing/notarization/distribution"
+  ],
+  "previousEvidence": {
+    "path": "docs/evidence/2026-10-19-windows-management-delivery/verification.json",
+    "sha256": "2ba70e98b711bdaaa3d72b25599f4d4f03ba8f1b9330d284c5754a5753964e1a"
+  }
+}
